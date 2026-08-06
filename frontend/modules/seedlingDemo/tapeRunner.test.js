@@ -583,6 +583,26 @@ describe('the incremental stepping face (watch page)', () => {
     // than duplicating it, and these cases prove the two faces are one.
     const names = fixtureNames();
 
+    /**
+     * ⛔⛔ R5 SLICE 15: THE 10 s DEFAULT IS A FLOOR WITH NO MARGIN, and it
+     * spent two runs of this slice reporting allocation as a defect.
+     *
+     * Each case runs the tape TWICE — `runTape` and then the stepper to
+     * completion — and then deep-compares eight arrays of up to ~900
+     * observations. Measured across three full runs of the same commit, the
+     * L40 cases land anywhere from 5.2 s to 12.5 s: a ±40% spread with the
+     * cap at 10. The green run this slice shipped against had
+     * `r5-l40-join` at **9977 ms**, i.e. 23 ms of headroom, and the next run
+     * of the same code failed three of them.
+     *
+     * ⚠ IT IS NOT A WAIVER. A slowdown this slice DID introduce — a
+     * `{rect, live}` wrapper allocated per solid per query — was caught by
+     * exactly these tests and fixed (`levelWorld.normalizeLive`, 4.2 s ->
+     * 2.0 s on `r5-l40-join`, faster than the parent commit). What the
+     * raised cap removes is the part of the signal that is variance, which
+     * was drowning the part that is not. ⇒ [[feedback_band_floor_with_no_margin]],
+     * one instrument over.
+     */
     it.each(names)('%s: stepping to completion == runTape, byte for byte', (name) => {
         const tape = loadTape(name);
         const whole = runTape(tape, { levelSource });
@@ -602,7 +622,7 @@ describe('the incremental stepping face (watch page)', () => {
         expect(r.value.grants).toEqual(whole.grants);
         expect(r.value.inventory).toEqual(whole.inventory);
         expect(r.value.final).toEqual(whole.final);
-    });
+    }, 60_000);
 
     it('yields tick_count + 1 times, ending on the disarm tick', () => {
         const stepper = createTapeStepper(loadTape('straight-run'), { levelSource });

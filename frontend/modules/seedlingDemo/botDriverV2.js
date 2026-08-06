@@ -90,6 +90,7 @@ import {
 import { MODELLED_ENEMY_CLASSES, unmodelledEnemies } from './spinner.js';
 import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
+import { scanCrusher } from './crusher.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -288,6 +289,14 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // whose only producer is an undriven verb cannot be caught by a
         // green suite. Driven now, in L37 and L40.
         burnedTrees = null,
+        /**
+         * ⛓⛓⛓ R5 slice 15: the NINTH per-visit family. A snapshot, and the
+         * only member of the list that is one — see `plannerBlockerAt`'s own
+         * note. A flood taken while a crusher is mid-charge is a picture of a
+         * world that will not exist next tick; `run.crushersParked` is the
+         * precondition, and `CRUSHER_PLAN`'s phase 2 is where it is checked.
+         */
+        crushers = null,
         // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
@@ -328,7 +337,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
         { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks,
-            pulledRopes, openChests, burnedTrees });
+            pulledRopes, openChests, burnedTrees, crushers });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -988,6 +997,132 @@ export function resolvePresser(world, named, what) {
     // construction.
     assertRect(presser.rect, `${what}: ${presser.tag}@${presser.x},${presser.y} rect`);
     return presser;
+}
+
+/**
+ * ⛓⛓⛓ R5 SLICE 15 — `bait`: PHASE 1 OF THE CRUSHER DOCTRINE, AS A VERB.
+ *
+ * Every other verb in this file is a PRESS or a HOLD: the player does one
+ * thing at one place and the world answers. This one is a CHOREOGRAPHY —
+ * a short sequence of held spans whose whole point is that the world is
+ * moving while it runs — and it exists because the planner is not allowed
+ * to route against a live mover (`CRUSHER_PLAN`).
+ *
+ * ```
+ *   bait: {
+ *     crusher: {x, y},                 the OEL cell — `crusher@x,y`
+ *     spans:   [{key, ticks}, …],      the choreography, in order
+ *     park:    {x, y},                 the ENTITY position it must END at
+ *   }
+ * ```
+ *
+ * ⚠ WHAT MAKES THIS A CLAIM RATHER THAN A REPLAY, in three parts, because
+ * a bait that baits nothing and a bait that works look identical from the
+ * end state:
+ *
+ *   THE POSITIVE CONTROL   the crusher must be at REST and UNSHIELDED and
+ *                          have the player in a lane when the verb starts.
+ *                          A shielded crusher never moves, so "it ended
+ *                          where I said" would be satisfied by a crusher
+ *                          that was already there.
+ *   THE MOVE               it must actually END somewhere else. Same
+ *                          reason, from the other side.
+ *   THE SURVIVAL           `run.crusherContacts` may not grow by one. A
+ *                          contact is 1000 damage and `Bot.noDamage` is
+ *                          what stops the game dying of it, so a
+ *                          choreography that is run over completes exactly
+ *                          as if it had worked. ⇒ [[feedback_graceful_fallback_vacuous_replay]]
+ *
+ * ⛓ AND THE PARK IS ASSERTED AS A POSITION, not as "it stopped". Phase 2
+ * plans against the world this leaves, and a park one pixel from where the
+ * plan thinks it is is a route certified against a different room.
+ */
+function runBait(run, perTick, bait, what) {
+    if (run.crushers === null) {
+        fail(`${what}: a bait is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` steps no crusher under noclip, so the choreography would emit '
+            + 'its ticks, verify nothing and report success.');
+    }
+    const id = `crusher@${bait.crusher?.x},${bait.crusher?.y}`;
+    const before = run.crushers.get(id);
+    if (!before) {
+        fail(`${what}: level ${run.level} has no ${id}; it holds `
+            + `[${[...run.crushers.keys()].join(' ') || 'none'}].`);
+    }
+    if (!run.crushersParked) {
+        fail(`${what}: a crusher in this room is already CHARGING. A bait's spans are `
+            + 'verified against a scan taken at rest, so starting one mid-charge is '
+            + 'planning against a world that has already moved.');
+    }
+    // ⚠ THE POSITIVE CONTROL. `scanCrusher` is asked the same question
+    // `stepCrusher` will ask on the next tick — is the line clear, and is
+    // the player in a lane — so a bait aimed at a shielded crusher fails
+    // HERE rather than passing on an end state it never influenced.
+    const solids = run.world.solidBoxesForMover(livePerVisitOpts(run), id);
+    const scan = scanCrusher({ x: before.x, y: before.y },
+        playerBoxAt(run.state.x, run.state.y), { x: run.state.x, y: run.state.y }, solids);
+    if (scan.shieldedBy) {
+        fail(`${what}: ${id} CANNOT SEE the player at (${run.state.x.toFixed(2)},`
+            + `${run.state.y.toFixed(2)}) — the sight line is blocked by `
+            + `${scan.shieldedBy.rockId ?? scan.shieldedBy.tag ?? 'a Solid'}. A shielded `
+            + 'crusher never scans (`collideLine` is an early exit), so this bait would '
+            + 'emit its ticks and move nothing. In L41 that means the `breakablerock`s '
+            + 'are still standing and the leg is in the wrong ORDER.');
+    }
+    if (scan.dir === null) {
+        fail(`${what}: the player at (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) `
+            + `is in NONE of ${id}'s four lanes — the sight line is clear and nothing `
+            + 'matched. A bait starts INSIDE a lane; standing next to one is standing '
+            + 'where the game does nothing.');
+    }
+    const contactsBefore = run.crusherContacts.length;
+    for (const span of bait.spans ?? []) {
+        const keys = span.key === null || span.key === undefined
+            ? NO_HELD : new Set([span.key]);
+        for (let i = 0; i < span.ticks; i += 1) {
+            perTick.push(keys);
+            const { transition } = run.advance(keys);
+            if (transition) {
+                fail(`${what}: the choreography crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}. A bait stays `
+                    + 'in the room — and a re-entry would reset the crusher to its '
+                    + 'constructor cell, so a plan that left mid-bait would be undoing '
+                    + 'itself.');
+            }
+        }
+    }
+    const after = run.crushers.get(id);
+    const contacts = run.crusherContacts.slice(contactsBefore);
+    if (contacts.length > 0) {
+        fail(`${what}: the choreography was RUN OVER — ${contacts.length} tick(s) with the `
+            + `player inside ${id}'s 32x32 body, first at t${contacts[0].t}. `
+            + '`Crusher.hit()` deals 1000 ("KILL EVERYTHING"), so this is `die()` at any '
+            + '`hitsMax`; the run survived it only because `Bot.noDamage` is on, which is '
+            + 'exactly why the count is asserted and not merely the end position.');
+    }
+    if (!run.crushersParked) {
+        fail(`${what}: ${id} is STILL CHARGING at the end of the choreography `
+            + `(${after.x},${after.y}). Phase 2 plans against a static world; a leg that `
+            + 'handed it a moving one would certify a corridor that closes behind it.');
+    }
+    if (after.x === before.x && after.y === before.y) {
+        fail(`${what}: ${id} ended exactly where it started (${before.x},${before.y}). `
+            + 'A bait that moves nothing is a walk, and the flood that follows it is the '
+            + 'flood that preceded it.');
+    }
+    const park = bait.park;
+    if (park && (after.x !== park.x || after.y !== park.y)) {
+        fail(`${what}: ${id} parked at (${after.x},${after.y}), not the declared `
+            + `(${park.x},${park.y}). The park is a POSITION because phase 2's flood is `
+            + 'taken against it — see `CRUSHER_PLAN.floodsBankWith`.');
+    }
+    return {
+        id,
+        from: { x: before.x, y: before.y },
+        to: { x: after.x, y: after.y },
+        dir: scan.dir,
+        ticks: (bait.spans ?? []).reduce((n, s) => n + s.ticks, 0),
+    };
 }
 
 function runHold(run, perTick, hold, what, before = null) {
@@ -2002,6 +2137,52 @@ function runFire(run, perTick, fire, what) {
                 + '`fire.enemyRoom: "<what the GAME said>"` on this target — see '
                 + '`r5Shaft.SPINNER_WEDGE`.');
         }
+        /**
+         * ⛔⛔⛔ R5 SLICE 15 — AND AN ENEMY IS NOT THE ONLY MOVER THAT WEDGES
+         * A BLOCK. A `Crusher` IS ONE, AND IT IS `type = "Solid"`.
+         *
+         * The refusal above was written for the class whose wedge cost the
+         * shaft its ledger, and it asks about `combat.enemies`. A crusher is
+         * in no combat census — `Crusher extends Activators` — and a block's
+         * `solids` list carries "Solid" from `Mobile` itself, so it does not
+         * need the ctor's two pushes to be stopped by one. It is a STRICTLY
+         * WORSE wedge than a spinner's, for two reasons:
+         *
+         *   ⛓ it is 32x32 and moves in a straight line at 1 px/tick, so it
+         *     crosses a whole glide corridor rather than grazing one;
+         *   ⛔ and its own `moveX` collides only "Solid", so it does not stop
+         *     for the block either — it shoves through the cell the block is
+         *     gliding into and keeps coming.
+         *
+         * ⚠ AND THE CHECK IS THE SCAN, NOT A ROSTER TEST. A crusher this
+         * press cannot wake is harmless, and in L41 that is exactly the
+         * ORDER the room demands: push the block with the `breakablerock`s
+         * STANDING (shielded, inert), break them afterwards. So the question
+         * asked is the game's own — from the press stance, is any crusher
+         * unshielded with the player in a lane, or already moving — and a
+         * plan that gets the order wrong is told which crusher and why.
+         */
+        const liveCrushers = run.crushers;
+        if (liveCrushers && liveCrushers.size > 0 && !fire.enemyRoom) {
+            const box = playerBoxAt(run.state.x, run.state.y);
+            const point = { x: run.state.x, y: run.state.y };
+            for (const [id, c] of liveCrushers) {
+                const solids = run.world.solidBoxesForMover(livePerVisitOpts(run), id);
+                const s = scanCrusher({ x: c.x, y: c.y }, box, point, solids);
+                if (s.dir === null && run.crushersParked) continue;
+                const why = run.crushersParked
+                    ? `it can see the player and its ${s.dir} lane matches`
+                    : 'it is already CHARGING';
+                fail(`${what}: ${id} is AWAKE at this press stance — ${why}. `
+                    + 'A `Crusher` is a 32x32 '
+                    + '`type = "Solid"` that MOVES, and a `PushableBlock`\'s solids list '
+                    + 'carries "Solid" from `Mobile` — so it wedges a glide exactly as a '
+                    + 'spinner does, permanently (a blocked block keeps `v` non-zero and '
+                    + '`hit()` returns on `v.length > 0`), and unlike a spinner it does '
+                    + 'not stop for the block either. Push with the crusher SHIELDED, or '
+                    + 'bait and park it first — the order is the leg. See `CRUSHER_PLAN`.');
+            }
+        }
     }
 
     const at = { x: run.state.x, y: run.state.y };
@@ -2466,7 +2647,7 @@ function runFire(run, perTick, fire, what) {
  * terrain policy, where a join probe is a question about a cell's solidity
  * and must not.
  */
-function liveGeometryOpts(run, extra = {}) {
+export function livePerVisitOpts(run) {
     return {
         openActivators: run.openActivators,
         openChests: run.openChests,
@@ -2475,9 +2656,12 @@ function liveGeometryOpts(run, extra = {}) {
         brokenRocks: run.brokenRocks,
         pulledRopes: run.pulledRopes,
         burnedTrees: run.burnedTrees,
-        avoidVolumes: false,
-        ...extra,
+        // ⛓⛓⛓ R5 slice 15: the NINTH, and the only SNAPSHOT in the list.
+        crushers: run.crushers,
     };
+}
+function liveGeometryOpts(run, extra = {}) {
+    return { ...livePerVisitOpts(run), avoidVolumes: false, ...extra };
 }
 const burnProbeOpts = (run) => liveGeometryOpts(run);
 
@@ -3154,6 +3338,8 @@ export function synthesizeLegs(legs, opts = {}) {
     const arrivals = [];
     const waypoints = [];
     const holds = [];
+    /** ⛓⛓⛓ R5 slice 15: one record per `bait` — phase 1 of `CRUSHER_PLAN`. */
+    const baits = [];
     const touches = [];
     const collects = [];
     /** ⛔⛔ R5 slice 9: one record per chest leg — the join cell of L38. */
@@ -3357,24 +3543,18 @@ export function synthesizeLegs(legs, opts = {}) {
         // Reading them off the run rather than recomputing means the planner
         // and the executor cannot disagree, which is the `openActivators`
         // lesson and the reason all four arrive through this one function.
+        //
+        // ⛔⛔ R5 SLICE 15: AND THIS WAS THE SECOND COPY OF
+        // `liveGeometryOpts`, IN THE SAME FILE. Slice 14 built that function
+        // because three hand-written literals had each dropped a different
+        // key (§28.2) — and did not notice that the leg planner's own
+        // options were a fourth literal listing the same eight families. The
+        // families now come from ONE place (`livePerVisitOpts`) and what
+        // stays here is only what a PLAN adds to them.
         const planNow = (extra) => ({
             ...plan,
             contacts: contactsNow(),
-            openActivators: run.openActivators,
-            openBridges: run.openBridges,
-            pushables: run.pushables,
-            // R5 slice 5: the fifth. Same argument, one mechanic later —
-            // L92's rocks are Solid until seven ticks after their press.
-            brokenRocks: run.brokenRocks,
-            pulledRopes: run.pulledRopes,
-            // R5 slice 9: the sixth, and the one that opens a ROOM.
-            openChests: run.openChests,
-            // ⛓⛓ R5 slice 14: the seventh, and the one whose two answers are
-            // FORTY-ONE TICKS apart rather than seven. `hit()` removes
-            // nothing — the 2x2 is solid for the whole animation — so a leg
-            // that planned on the press tick would walk into a wall it had
-            // just set on fire.
-            burnedTrees: run.burnedTrees,
+            ...livePerVisitOpts(run),
             inventory: run.inventory,
             keys: run.keys,
             ...extra,
@@ -3450,6 +3630,20 @@ export function synthesizeLegs(legs, opts = {}) {
                 const record = runHold(run, perTick, target.hold,
                     `legs[${li}] level ${leg.level} target ${ti} hold`, before);
                 holds.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
+            /**
+             * ⛓⛓⛓ R5 slice 15: the bait, AFTER the arrival and BEFORE any
+             * hold. The arrival is what puts the player in a lane, and
+             * `runBait` asserts exactly that before it emits a tick.
+             */
+            if (target.bait !== undefined) {
+                const from = perTick.length;
+                const record = runBait(run, perTick, target.bait,
+                    `legs[${li}] level ${leg.level} target ${ti} bait`);
+                baits.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
                 });
@@ -3733,6 +3927,12 @@ export function synthesizeLegs(legs, opts = {}) {
         // opened. The tape itself is only empty spans, so this is the ONLY
         // place a consumer can find out that the walk holds anything at all.
         holds: holds.map((h) => ({ ...h, opened: [...h.opened] })),
+        /**
+         * ⛓⛓⛓ R5 slice 15: one per bait — `{id, from, to, dir, ticks}`. The
+         * `from`/`to` pair is what makes "the crusher is the wall" a
+         * measurement in the tape rather than a claim in a comment.
+         */
+        baits: baits.map((b) => ({ ...b })),
         // One record per TOUCH the run verified: which lock, which shield
         // opened it, how long the approach and the input-refused window ran,
         // and the y the lock snapped the player to. As with `holds`, the tape

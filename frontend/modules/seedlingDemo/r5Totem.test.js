@@ -13,7 +13,7 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
-    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD,
+    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -29,6 +29,7 @@ import { rectsOverlap } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
 import { plannerObstacleAt } from './botDriverV2.js';
 import { scanCrusher } from './crusher.js';
+import { createLevelRun } from './levelRun.js';
 import {
     HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE,
     WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS,
@@ -1050,7 +1051,17 @@ describe('⛓⛓ L41\'s crusher — the rocks really do shield it', () => {
     const boxesExcept = (w, self, dropRocks) => w.solids
         .filter((s) => s !== self && !(dropRocks && s.rockId))
         .map((s) => ({ ...s.rect, rockId: s.rockId, tag: s.tag }));
-    const playerAt = (x, y) => ({ ...playerBoxAt(x, y), x, y });
+    /**
+     * ⛔⛔ R5 SLICE 15 CORRECTED THIS HELPER, and the correction is the
+     * §28.8 lesson landing on §28.8's own probe. `{ ...playerBoxAt(x, y),
+     * x, y }` is a CHIMERA: a box whose left/top edge has been overwritten
+     * with the entity point and whose right/bottom has not, i.e. a 2x3 box
+     * shifted 2 px south-east of the real 4x5 one. It reported the right
+     * answer for L41 only because the bait stance has a 40 px margin.
+     * `scanCrusher` takes the two shapes as two arguments now, so the
+     * chimera is unbuildable.
+     */
+    const playerAt = (x, y) => ({ box: playerBoxAt(x, y), point: { x, y } });
 
     it('⛓⛓ shielded with the rocks standing, and charging WEST without them', () => {
         const w = w41();
@@ -1060,12 +1071,12 @@ describe('⛓⛓ L41\'s crusher — the rocks really do shield it', () => {
         });
         const c = { x: self.rect.x + 16, y: self.rect.y + 16 };
         const p = playerAt(L41_SHIELD.baitFrom.x, L41_SHIELD.baitFrom.y);
-        const withRocks = scanCrusher(c, p, boxesExcept(w, self, false));
+        const withRocks = scanCrusher(c, p.box, p.point, boxesExcept(w, self, false));
         expect(withRocks.dir).toBe(null);
         expect(withRocks.shieldedBy?.rockId).toBe(L41_SHIELD.shieldedBy);
         // ⛓ THE OTHER ARM, and it is what makes the first one a finding
         // rather than a wrong shape: with the rocks gone it charges.
-        const without = scanCrusher(c, p, boxesExcept(w, self, true));
+        const without = scanCrusher(c, p.box, p.point, boxesExcept(w, self, true));
         expect(without.shieldedBy).toBe(null);
         expect(without.dir).toBe(L41_SHIELD.unshieldedDir);
         expect(L41_SHIELD.rocks.every((id) => w.solids.some((s) => s.rockId === id))).toBe(true);
@@ -1078,7 +1089,7 @@ describe('⛓⛓ L41\'s crusher — the rocks really do shield it', () => {
         for (const y of [120, 140]) {
             const p = playerAt(256, y);
             for (const drop of [false, true]) {
-                const scan = scanCrusher(c, p, boxesExcept(w, self, drop));
+                const scan = scanCrusher(c, p.box, p.point, boxesExcept(w, self, drop));
                 expect(scan.dir).toBe(null);
                 expect(scan.shieldedBy?.tag).toBe(L41_SHIELD.southBlocked);
             }
@@ -1108,5 +1119,92 @@ describe('⛓ L40\'s NW cluster — three rocks, TWO swings', () => {
         // A 4-tick hold reports "held, and the wall is still solid" — which
         // is what the first cut of the leg did.
         expect(L40_NW.holdTicks).toBeGreaterThan(101);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 15: L41 IS SOLVED, AND THE OBSTACLE IS THE KEY ──────
+ *
+ * §24.6 measured "the part crosses on the crusher alone" and read it as a
+ * wall. It is a wall AND the room's only usable machine. L41 has two gates
+ * that each need a SOLID standing on a button, one pushable block, and the
+ * block's only push stance is inside the first gate — so a player alone
+ * opens neither. `Button.update` collides `["Player","Enemy","Solid"]` and
+ * a `Crusher` is `type = "Solid"`.
+ *
+ * These are DRIVEN, not derived: the three choreographies run through a
+ * real `createLevelRun` and the claims are a park POSITION and an empty
+ * contact list. A bait that is run over completes exactly like one that
+ * works — `Bot.noDamage` is on — so the count is the claim.
+ */
+describe('⛓⛓⛓ L41: three baits walk the crusher onto the cover\'s button', () => {
+    const l41 = () => createLevelRun({
+        levelSource: atlasLevelSource(),
+        boot: { level: 41, x: 208, y: 80 },
+        // The state the rock swing leaves: both `breakablerock`s gone, so
+        // the crusher's west sight line is clear. ⛔ THE ORDER IS THE ROOM —
+        // with them standing it never scans at all (§28.8).
+        persistence: L41_PART3.rocks.map((r) => ({ level: 41, tag: r.tag })),
+        noDamage: true,
+    });
+    const drive = (run, spans) => {
+        for (const s of spans) {
+            const keys = s.key ? new Set([s.key]) : new Set();
+            for (let i = 0; i < s.ticks; i += 1) run.advance(keys);
+        }
+        return run;
+    };
+    const only = (run) => [...run.crushers.values()][0];
+
+    it('⛓⛓⛓ each bait ends at its declared park, with ZERO contacts', () => {
+        const run = l41();
+        expect(only(run)).toMatchObject(L41_PART3.baits[0].from);
+        for (const bait of L41_PART3.baits) {
+            expect(only(run), `before the ${bait.dir} bait`).toMatchObject(bait.from);
+            drive(run, bait.spans);
+            expect(only(run), `after the ${bait.dir} bait`).toMatchObject(bait.park);
+            expect(run.crushersParked).toBe(true);
+            // ⛔ THE SURVIVAL CLAIM. `Crusher.hit()` deals 1000 and
+            // `Bot.noDamage` is what stops the game dying of it, so a
+            // choreography that is run over reaches this line looking
+            // identical to one that worked.
+            expect(run.crusherContacts, `the ${bait.dir} bait was run over`).toEqual([]);
+        }
+        expect(only(run)).toMatchObject(L41_PART3.parks[2].to);
+    });
+
+    /**
+     * ⛓⛓⛓ THE CLAIM THE WHOLE ROOM TURNS ON. The crusher's third park is ON
+     * `button@248,232`, and the cover it publishes to is OPEN — which is the
+     * only way the room's one block ever becomes pushable.
+     */
+    it('⛓⛓⛓ …and the third park PRESSES `button@248,232` — the cover opens', () => {
+        const run = l41();
+        expect(run.openActivators.has(L41_PART3.cover.id)).toBe(false);
+        for (const bait of L41_PART3.baits) drive(run, bait.spans);
+        expect([...run.openActivators]).toEqual([L41_PART3.cover.id]);
+        // ⛓ AND IT STAYS OPEN with the player nowhere near: a `Cover` resets
+        // the tick nothing is in its cell and its button is released, and
+        // this button is held by 32x32 of Solid that is not going anywhere.
+        drive(run, [{ key: null, ticks: 300 }]);
+        expect(run.openActivators.has(L41_PART3.cover.id)).toBe(true);
+        expect(only(run)).toMatchObject(L41_PART3.parks[2].to);
+    });
+
+    /**
+     * ⛔ THE NEGATIVE ARM, and it is the ORDER rather than the spans: with
+     * the rocks STANDING the crusher is shielded, never scans, and the same
+     * three choreographies move it not one pixel. The cover stays shut.
+     */
+    it('⛔ with the rocks STANDING the same spans move nothing — the order is the room', () => {
+        const control = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 41, x: 208, y: 80 },
+            noDamage: true,
+        });
+        for (const bait of L41_PART3.baits) drive(control, bait.spans);
+        expect(only(control)).toMatchObject(L41_PART3.baits[0].from);
+        expect(control.openActivators.has(L41_PART3.cover.id)).toBe(false);
+        expect(control.crusherContacts).toEqual([]);
     });
 });

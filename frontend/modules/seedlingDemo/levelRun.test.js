@@ -26,6 +26,7 @@ import { RELAXED_ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
     DEFAULT_FRICTION, SLIDING_FRICTION, SLIDING_SPEED, WALK_SPEED,
 } from './playerPhysicsV1.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { runTapeToStream } from './tapeRunner.js';
 
@@ -860,5 +861,196 @@ describe('⛓ R5: a level BUILDS differently for a run that already holds the it
         expect(run.level).toBe(94);
         expect(run.inventory.hasFire).toBe(true);  // banked ON arrival...
         expect(plugged(run)).toBe(true);           // ...and the NPC stays put
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, AND THE ONLY CHECK THAT COUNTS ────
+ *
+ * §25.4 called the burn *"wired end to end"* and §28.2 found four call
+ * sites that had been handed an option and silently dropped it — including
+ * `stepV2` itself, the one mover whose collisions decide where a route
+ * goes. 1,745 green tests could not see it, because the only producer of
+ * the option was a verb nothing had driven.
+ *
+ * ⇒ THE ONLY TEST THAT DISCHARGES "WIRED" IS ONE WHERE THE PLAYER'S OWN
+ * SWEEP MEETS A MOVED SOLID. Everything else — the roster, the ledger, the
+ * option's presence in a destructuring list — can be green over a silence.
+ * So this drives a real `createLevelRun` in L41, makes the crusher charge,
+ * and asks the PLAYER where they can and cannot walk.
+ */
+describe('⛓⛓⛓ R5 slice 15: the crusher, driven through the player\'s own sweep', () => {
+    /**
+     * L41 with both `breakablerock`s declared clear, and the boot in the
+     * crusher's WEST lane.
+     *
+     * ⛓ The rocks are what shield it (§28.8), so this boot is the state a
+     * route reaches by breaking them — declared here rather than slashed,
+     * because what is under test is the MOVER and not the press.
+     */
+    const l41 = () => createLevelRun({
+        levelSource,
+        boot: { level: 41, x: 208, y: 80 },
+        persistence: [{ level: 41, tag: 1 }, { level: 41, tag: 2 }],
+        noDamage: true,
+    });
+    const drive = (run, spans, ticks) => {
+        const at = (t) => new Set(
+            spans.filter((s) => t >= s.from && t < s.to).map((s) => s.key),
+        );
+        for (let t = 0; t < ticks; t++) run.advance(at(t));
+        return run;
+    };
+    /** The bait: retreat west two tiles, then drop SOUTH out of the lane. */
+    const BAIT = [{ key: 'left', from: 0, to: 21 }, { key: 'down', from: 21, to: 61 }];
+    const only = (run) => [...run.crushers.values()][0];
+
+    it('⛓⛓ it charges at exactly 1 px/tick, and only once the rocks are gone', () => {
+        const run = l41();
+        expect(only(run)).toMatchObject({ x: 256, y: 80 });
+        const xs = [];
+        for (let t = 0; t < 5; t += 1) { run.advance(new Set()); xs.push(only(run).x); }
+        expect(xs).toEqual([255, 254, 253, 252, 251]);
+        // ⛔ AND THE SHIELD IS REAL: the same boot with the rocks STANDING
+        // never moves it, which is what makes the line above a measurement
+        // of the sight test rather than of the roster.
+        const shielded = createLevelRun({
+            levelSource, boot: { level: 41, x: 208, y: 80 }, noDamage: true,
+        });
+        for (let t = 0; t < 5; t += 1) shielded.advance(new Set());
+        expect(only(shielded)).toMatchObject({ x: 256, y: 80 });
+    });
+
+    /**
+     * ⛓⛓⛓ THE CLAIM THE SLICE EXISTS FOR. After the park, the player walks
+     * EAST into `crusher@240,64`'s own constructor cells — geometry the
+     * level built as a 32x32 Solid — and the sweep lets them through.
+     * Before it, the same walk stops dead against the same cells.
+     *
+     * A model that dropped the `crushers` key in `stepV2` (the §28.2 shape)
+     * passes every other assertion in this file and fails this one, in both
+     * directions at once: it would walk through the spawn box on the BEFORE
+     * arm and into thin air on the AFTER arm.
+     */
+    it('⛓⛓⛓ the PLAYER stands where the STATIC geometry says a Solid is', () => {
+        const run = drive(l41(), BAIT, 220);
+        expect(run.crushersParked).toBe(true);
+        expect(only(run)).toMatchObject({ x: 64, y: 80 });
+        // ⛔ ZERO CONTACTS. `Bot.noDamage` is why a bad bait would not
+        // throw, so the count is the claim.
+        expect(run.crusherContacts).toEqual([]);
+        drive(run, [
+            { key: 'up', from: 0, to: 44 },
+            { key: 'right', from: 44, to: 130 },
+        ], 130);
+        // The crusher's CONSTRUCTOR body is [240,272) x [64,96) and the
+        // player is standing inside it.
+        expect(run.state.x).toBeGreaterThan(240);
+        expect(run.state.x).toBeLessThan(272);
+        expect(run.state.y).toBeGreaterThanOrEqual(64);
+        expect(run.state.y).toBeLessThan(96);
+        expect(run.crusherContacts).toEqual([]);
+        // ⛓⛓⛓ AND THIS PAIR IS THE DISCRIMINATOR §28.2 DID NOT HAVE. The
+        // same box, asked of the same world twice: the STATIC geometry says
+        // Solid and only the live option says otherwise. A `stepV2` that
+        // dropped the `crushers` key — the shape that hid the burn for two
+        // slices behind 1,745 green tests — would have used the static
+        // answer and REFUSED this walk, so the player's arrival here is
+        // itself the proof the key is read.
+        const box = playerBoxAt(run.state.x, run.state.y);
+        expect(run.world.collidesSolid(box, {})).toBeTruthy();
+        expect(run.world.collidesSolid(box, { crushers: run.crushers })).toBe(null);
+    });
+
+    /**
+     * ⛔⛔ A PARKED CRUSHER IS NOT A DISARMED ONE, and this is the finding
+     * the first cut of the test above walked straight into.
+     *
+     * `update()` re-derives `v` on EVERY tick it is at rest, so a park is a
+     * position and not a state. The route that has just walked east through
+     * its constructor cells is standing in its EAST lane, and stepping back
+     * west along that row hands it a fresh sight line and a fresh charge —
+     * from a crusher a plan had written off.
+     *
+     * ⇒ phase 2's precondition is `crushersParked` AT THE TICK IT IS ASKED,
+     * and a leg that re-enters a lane is phase 1 again.
+     */
+    it('⛔⛔ a parked crusher re-arms — walking back into its lane charges it', () => {
+        const run = drive(l41(), BAIT, 220);
+        expect(only(run)).toMatchObject({ x: 64, y: 80 });
+        drive(run, [{ key: 'up', from: 0, to: 44 }, { key: 'left', from: 44, to: 200 }], 200);
+        // It charged EAST this time — the opposite direction to the bait
+        // that parked it — and ran the walk down.
+        expect(only(run).x).toBeGreaterThan(64);
+        expect(run.crusherContacts.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛔⛔ AND A RE-ENTRY PUTS IT BACK. `Crusher.as` writes no persistence
+     * at all — no `check()`, no `removed()` — so every `new Game` rebuilds
+     * it at its constructor cell however far the last visit drove it.
+     *
+     * ⇒ a window plan may NEVER carry a crusher position across a re-boot,
+     * and a botched park is one room-exit from reset.
+     */
+    it('⛔⛔ a rebuilt room puts the crusher back at its constructor cell', () => {
+        const run = drive(l41(), BAIT, 220);
+        expect(only(run).x).toBe(64);
+        // The same run, told the level was rebuilt — which is what a
+        // transition does.
+        const again = drive(l41(), BAIT, 0);
+        expect(only(again)).toMatchObject({ x: 256, y: 80 });
+    });
+
+    /**
+     * ⛔ THE NEGATIVE CONTROL FOR `crusherContacts`. A route that stands
+     * still is run over, and the run REPORTS it rather than dying —
+     * `Bot.noDamage` is on, so a model that threw here would diverge from
+     * the recording it is checked against. A silent list would make every
+     * "the route stayed clear" claim vacuous.
+     */
+    it('⛔ standing in the lane is reported as contacts, not as a death', () => {
+        const run = drive(l41(), [], 60);
+        expect(run.crusherContacts.length).toBeGreaterThan(0);
+        expect(run.crusherContacts[0]).toMatchObject({ level: 41, id: 'crusher@240,64' });
+    });
+
+    /**
+     * ⛓ AND THE PARK IS WHAT MAKES THE PART REACHABLE — measured with the
+     * flood, under the ROUTE's own policy (§28.4). The crusher at its
+     * constructor cell leaves `totempart 3` outside the component even with
+     * every activator open; parked, it is inside.
+     */
+    it('⛓⛓ the park is the mechanic: the part crosses on the crusher alone', () => {
+        const run = drive(l41(), BAIT, 220);
+        const w = run.world;
+        const openAll = new Set(w.solids.filter((s) => s.activatorId).map((s) => s.activatorId));
+        const flood = (crushers) => {
+            const ok = (x, y) => x > 0 && y > 0 && x < 21 * 16 && y < 22 * 16
+                && !w.collidesSolid(playerBoxAt(x, y), { openActivators: openAll, crushers });
+            const start = [184, 136];
+            const seen = new Set([start.join(',')]);
+            const q = [start];
+            while (q.length) {
+                const [x, y] = q.shift();
+                for (const [dx, dy] of [[8, 0], [-8, 0], [0, 8], [0, -8]]) {
+                    if (!ok(x + dx, y + dy)) continue;
+                    const k = `${x + dx},${y + dy}`;
+                    if (seen.has(k)) continue;
+                    seen.add(k); q.push([x + dx, y + dy]);
+                }
+            }
+            return seen;
+        };
+        const spawn = new Map([['crusher@240,64', {
+            id: 'crusher@240,64',
+            rect: { x: 240, y: 64, w: 32, h: 32, right: 272, bottom: 96 },
+        }]]);
+        const parked = flood(run.crushers);
+        const home = flood(spawn);
+        expect(parked.has('248,152')).toBe(true);
+        expect(home.has('248,152')).toBe(false);
+        expect(parked.size).toBe(332);
+        expect(home.size).toBe(305);
     });
 });

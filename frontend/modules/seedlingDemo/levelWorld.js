@@ -3013,6 +3013,132 @@ export function buildLevelWorld(levelRecord, {
      */
     const spinners = [];
     /**
+     * ⛓⛓⛓ R5 SLICE 15: ONE DECISION ABOUT WHETHER A SOLID IS THERE.
+     *
+     * `collidesSolid` and `plannerBlockerAt` each carried their own copy of
+     * the same nine-arm chain — one for every per-visit family — and slice
+     * 14's finding was that three hand-written option literals is how one of
+     * them quietly acquires a different world (§28.2). This is the same
+     * shape one layer down: two hand-written FILTERS, and a ninth family
+     * about to be added to both.
+     *
+     * ⚠ AND A THIRD CONSUMER IS WHAT FORCED IT. A crusher's sight line needs
+     * the LIST of live Solids, not a "does this box hit one" predicate, and
+     * writing that list from a third copy of the chain is exactly the defect
+     * this package spends its comments avoiding.
+     *
+     * ⚠ IT RETURNS THE RECT ITSELF, NOT A WRAPPER, AND THAT IS A
+     * MEASUREMENT. The first cut returned `{rect, live}` and allocated one
+     * object PER SOLID PER QUERY — on a loop the player's sweep runs for
+     * every 1 px of every step, over 200-2,000 solids. Measured: 2.6s ->
+     * 3.6s on `r5-l40-part1`, which pushed eleven long fixtures past the
+     * 10 s test timeout and produced eleven reds that looked like defects
+     * and were allocation. `at !== s.rect` is what tells the callers a box
+     * was SWAPPED, and it needs no wrapper to say so.
+     *
+     * @returns {null|object} `null` = the entity is not in the world's Solid
+     *   list right now; otherwise the box it occupies, which for a mover is
+     *   where the RUN left it and not where the level built it.
+     */
+    /**
+     * ⚠ ONE FIXED SHAPE FOR THE CHAIN'S ARGUMENT, and it is a performance
+     * fact rather than a style one. `liveRectOf` reads eight keys per solid
+     * and the callers hand it option objects of a dozen different shapes
+     * (`{}`, `{openActivators}`, the full driver bag…) — V8 turns that into
+     * a megamorphic load on the hottest loop in the package. Normalised once
+     * per QUERY, the loads are monomorphic.
+     */
+    const normalizeLive = (o) => ({
+        openActivators: o.openActivators ?? null,
+        openBridges: o.openBridges ?? null,
+        brokenRocks: o.brokenRocks ?? null,
+        burnedTrees: o.burnedTrees ?? null,
+        crushers: o.crushers ?? null,
+        openChests: o.openChests ?? null,
+        pulledRopes: o.pulledRopes ?? null,
+        pushables: o.pushables ?? null,
+    });
+    const liveRectOf = (s, o) => {
+        // R2: a lock or cover whose group is held has `type = ""`, which
+        // takes it out of the solids list rather than moving it.
+        // `openActivators` is that list, owned by the RUN (`activators.js`)
+        // because it is per-tick state and this module builds static
+        // geometry.
+        if (o.openActivators && s.activatorId && o.openActivators.has(s.activatorId)) return null;
+        // R4: a bridge whose timer has run out is `type = "Tile"` — it leaves
+        // the solids list and JOINS the walkable ones (see
+        // `nearestWalkableTileWithTie`, which takes the same set).
+        if (o.openBridges && s.bridgeId && o.openBridges.has(s.bridgeId)) return null;
+        // R5: a BreakableRock whose `endAnim` has fired is
+        // `FP.world.remove(this)` — off the list entirely, unlike a lock
+        // (type "") or a bridge (type "Tile"). Per VISIT: a `tag = -1` rock
+        // is rebuilt by the next `new Game`, so this may not be baked into
+        // the geometry the way a persistence clear is.
+        if (o.brokenRocks && s.rockId && o.brokenRocks.has(s.rockId)) return null;
+        // ⛓⛓ R5 SLICE 12: a BurnableTree whose 41-tick animation has
+        // completed. `burnEnd -> die()` writes `type = ""` AND calls
+        // `FP.world.remove(this)`, so — like a broken rock and unlike a lock
+        // — it leaves the list entirely. ⛔ AND IT IS SOLID FOR THE WHOLE
+        // BURN: `hit()` starts the animation and removes nothing, so a set
+        // keyed on the PRESS tick would open a 2x2 cell forty-one ticks
+        // early.
+        if (o.burnedTrees && s.treeId && o.burnedTrees.has(s.treeId)) return null;
+        // ⛓⛓⛓ R5 SLICE 15: a CRUSHER, which is where the run left it and not
+        // where the level built it. The `pushables` arm's shape — and a
+        // stronger version of its reason: a block only moves when the player
+        // presses, a crusher moves when it can SEE the player, so the spawn
+        // rect is wrong from the first tick a bait commits.
+        //
+        // ⚠ NO `removed` ARM, deliberately. Nothing removes a crusher:
+        // `Crusher.as` has no `die()`, no `removed()`, no `check()` and no
+        // persistence write of any kind.
+        if (o.crushers && s.crusherId && o.crushers.has(s.crusherId)) {
+            return o.crushers.get(s.crusherId).rect;
+        }
+        // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()` writes
+        // `type = ""` (Chest.as:77) and the entity then fades for 60 more
+        // ticks before `FP.world.remove` — so the SOLIDITY goes first and the
+        // removal is invisible, which is why one set covers both.
+        if (o.openChests && s.chestId && o.openChests.has(s.chestId)) return null;
+        // ⛓ R5 SLICE 7: a rope the player has PULLED. Not a removal and not a
+        // type flip — `RopeStart.hit()` runs `setHitbox(16, 16, 8, 8)`, so
+        // 112 px of wall becomes 16 px of wall at the span's START. A model
+        // that dropped it would open a tile the game keeps, which is why this
+        // is a rect swap rather than a removal.
+        if (o.pulledRopes && s.ropeId && o.pulledRopes.has(s.ropeId)) {
+            return s.shrunkRect;
+        }
+        // R4: a block that has been pushed is not where the level built it.
+        // ⚠ A MISSING ENTRY FALLS THROUGH to the spawn rect below rather than
+        // being read as "gone". Absent and removed are different facts, and
+        // only one of them means the cell is clear.
+        if (o.pushables && s.pushableId && o.pushables.has(s.pushableId)) {
+            const now = o.pushables.get(s.pushableId);
+            return now.removed ? null : now.rect;
+        }
+        return s.rect;
+    };
+    /**
+     * ⛓⛓⛓ R5 SLICE 15: THE CRUSHERS — the NINTH per-visit geometry family,
+     * and the first whose member is a solid that MOVES ON ITS OWN.
+     *
+     * Every family before this one moves because the PLAYER moved it: a
+     * pushed block, a shrunk rope, a dropped rock, a burnt tree. A
+     * `Crusher` charges at a player it can see, so its box is a function of
+     * the whole run and not of any one press — which is why the roster
+     * carries the ENTITY point as well as the OEL one. `Crusher.update`
+     * grid-snaps `x`/`y` (the entity's, not the box's) with `Math.round`,
+     * and a model that snapped the box corner would park it half a tile out.
+     *
+     * ⚠ AND IT HAS NO PERSISTENCE AT ALL — no `check()`, no `removed()`, no
+     * `setPersistence` anywhere in `Crusher.as`. So unlike a spinner (whose
+     * roster IS filtered by `check()`) this list is unconditional, and every
+     * `new Game` rebuilds a crusher at its constructor cell however far the
+     * last visit drove it. A botched park is one room-exit from reset, and a
+     * window plan may not carry a crusher position across a re-boot.
+     */
+    const crushers = [];
+    /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
      * Published rather than silent, for the same reason the clear list is:
@@ -3607,6 +3733,31 @@ export function buildLevelWorld(levelRecord, {
                     t: tSetOf(e.type, e.attrs),
                 });
             }
+            // ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, on the same `<id>` join as every
+            // family since R4. `tset` is read through `tSetOf` rather than
+            // hard-coded to -1 because the sentinel is the CLASS's meaning of
+            // the value, not the value itself: `alwaysArmed(t)` is what reads
+            // it, and a crusher in a real group would be armed by a button.
+            // (All four in the game carry -1 — asserted, not assumed.)
+            if (cls.as3 === 'Crusher') {
+                solid.crusherId = `${e.type}@${x},${y}`;
+                crushers.push({
+                    id: solid.crusherId,
+                    tag: e.type,
+                    x,
+                    y,
+                    // ⛔ THE ENTITY POINT, and it is a different number from
+                    // `x`/`y`. `Crusher(_x, _y, …)` calls
+                    // `super(_x + Tile.w, _y + Tile.h)` and then
+                    // `setHitbox(32, 32, 16, 16)`, so the box is [x, x+32) and
+                    // the entity sits at its CENTRE. `Math.round(x / Tile.w)`
+                    // in `update()` snaps THIS point.
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    t: tSetOf(e.type, e.attrs),
+                    rect: solid.rect,
+                });
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -3954,6 +4105,20 @@ export function buildLevelWorld(levelRecord, {
          */
         burnableTrees,
         /**
+         * ⛓⛓⛓ R5 slice 15: the crushers, `{id, tag, x, y, ex, ey, t, rect}`.
+         *
+         * The NINTH per-visit family and the first SELF-PROPELLED one. `ex`/
+         * `ey` are the entity point (`x + Tile.w`, `y + Tile.h`), which is
+         * what `update()`'s `Math.round` snap operates on and what
+         * `collideLine` casts for the sight test — the OEL pair is the box's
+         * corner and the two are 16 px apart.
+         *
+         * ⚠ UNFILTERED BY DESIGN. `Spinner`'s roster applies `check()`;
+         * `Crusher` has no persistence of any kind, so every visit gets every
+         * crusher back at its ctor cell.
+         */
+        crushers,
+        /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *
          * ⚠ NOT ACTIVATORS, deliberately (§21.65): a Pulser is Solid either
@@ -4082,12 +4247,12 @@ export function buildLevelWorld(levelRecord, {
          * other side, and it is transcribed rather than tidied because the
          * game's own comment says the order is deliberate.
          */
-        collidesSolid(box, {
-            beforeTypeFlip = false, openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
-            burnedTrees = null,
-            fallenRocks = null,
-        } = {}) {
+        collidesSolid(box, opts = {}) {
+            const {
+                beforeTypeFlip = false,
+                fallenRocks = null,
+            } = opts;
+            const live = normalizeLive(opts);
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
@@ -4106,68 +4271,85 @@ export function buildLevelWorld(levelRecord, {
                 }
             }
             for (const s of (beforeTypeFlip ? objectSolids : solids)) {
-                // R2: a lock or cover whose group is held has `type = ""`,
-                // which takes it out of the solids list rather than moving
-                // it. `openActivators` is that list, owned by the RUN
-                // (`activators.js`) because it is per-tick state and this
-                // module builds static geometry.
-                if (openActivators && s.activatorId && openActivators.has(s.activatorId)) continue;
-                // R4: a bridge whose timer has run out is `type = "Tile"` —
-                // it leaves the solids list and JOINS the walkable ones (see
-                // `nearestWalkableTileWithTie`, which takes the same set).
-                if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
-                // R5: a BreakableRock whose `endAnim` has fired is
-                // `FP.world.remove(this)` — off the list entirely, unlike a
-                // lock (type "") or a bridge (type "Tile"). `brokenRocks` is
-                // the run's per-VISIT set: a `tag = -1` rock is rebuilt by
-                // the next `new Game`, so this may not be baked into the
-                // geometry the way a persistence clear is.
-                if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
-                // ⛓⛓ R5 SLICE 12: a BurnableTree whose 41-tick animation has
-                // completed. `burnEnd -> die()` writes `type = ""` AND calls
-                // `FP.world.remove(this)`, so — like a broken rock and unlike
-                // a lock — it leaves the list entirely. ⛔ AND IT IS SOLID
-                // FOR THE WHOLE BURN: `hit()` starts the animation and
-                // removes nothing, so a set keyed on the PRESS tick would
-                // open a 2x2 cell forty-one ticks early.
-                if (burnedTrees && s.treeId && burnedTrees.has(s.treeId)) continue;
-                // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()`
-                // writes `type = ""` (Chest.as:77) and the entity then fades
-                // for 60 more ticks before `FP.world.remove` — so the
-                // SOLIDITY goes first and the removal is invisible, which is
-                // why one set covers both. Per VISIT and per PERSISTENCE
-                // both: the flag it clears makes `check()` despawn it on the
-                // next `new Game` (PERSISTENCE_RESPONSE.chest), and this set
-                // is the live half in between.
-                if (openChests && s.chestId && openChests.has(s.chestId)) continue;
-                // ⛓ R5 SLICE 7: a rope the player has PULLED. Not a removal
-                // and not a type flip — `RopeStart.hit()` runs
-                // `setHitbox(16, 16, 8, 8)`, so 112 px of wall becomes 16 px
-                // of wall at the span's START. A model that dropped it would
-                // open a tile the game keeps, which is why this is a rect
-                // swap rather than a `continue`.
-                if (pulledRopes && s.ropeId && pulledRopes.has(s.ropeId)) {
-                    if (rectsOverlap(box, s.shrunkRect)) return { ...s, rect: s.shrunkRect };
-                    continue;
-                }
-                // R4: a block that has been pushed is not where the level
-                // built it. `live` is the run's own state (see
-                // `pushables.createPushableState`); WITHOUT it the spawn
-                // rect is used, which is exactly right for every tape that
-                // never presses and is why no frozen fixture moves.
-                if (live && s.pushableId && live.has(s.pushableId)) {
-                    // ⚠ A MISSING ENTRY FALLS THROUGH to the spawn rect
-                    // below rather than being read as "gone". Absent and
-                    // removed are different facts, and only one of them
-                    // means the cell is clear.
-                    const now = live.get(s.pushableId);
-                    if (now.removed) continue;
-                    if (rectsOverlap(box, now.rect)) return { ...s, rect: now.rect, live: true };
-                    continue;
-                }
-                if (rectsOverlap(box, s.rect)) return s;
+                // ⛓⛓⛓ R5 SLICE 15: ONE CHAIN, SHARED WITH THE PLANNER AND
+                // WITH THE CRUSHER'S SIGHT LIST. See `liveRectOf`.
+                const at = liveRectOf(s, live);
+                if (at === null) continue;
+                if (!rectsOverlap(box, at)) continue;
+                // ⚠ THE PLAIN ARM RETURNS THE ENTRY ITSELF, not a copy: two
+                // callers compare blockers by identity, and a spread here
+                // would silently make every one of those comparisons false.
+                if (at === s.rect) return s;
+                return { ...s, rect: at, live: true };
             }
             return null;
+        },
+
+        /**
+         * ⛓⛓⛓ R5 SLICE 15: THE LIVE `"Solid"` LIST, AS A LIST.
+         *
+         * Every consumer before this one asked "does this box hit a solid",
+         * so a predicate was enough. A `Crusher` asks a question no predicate
+         * answers: `collideLine("Solid", x, y, p.x, p.y)` walks the type list
+         * sampling POINTS, so the model needs the boxes themselves.
+         *
+         * ⛔⛔ AND IT IS A NARROWER LIST THAN THE PLAYER'S, WHICH IS WHY IT IS
+         * A SEPARATE ENTRY POINT AND NOT A SPREAD OF `solids`.
+         *
+         * ```
+         *   Player.solids   ["Solid","Tree","Rock","Rope","ShieldBoss"]  (Mobile.as:17)
+         *                 + "LavaBoss"                                   (Player.as:377)
+         *   Crusher.solids  ["Solid"]                                    (Crusher.as:22)
+         * ```
+         *
+         * — and `collideLine`'s type argument is `"Solid"` too. So a `Tree`
+         * neither shields a crusher nor stops its charge, while it does both
+         * for the player. `world.solids` is the PLAYER's list; handing it
+         * over whole would make a crusher stop at a tree and report a clean
+         * "it cannot see you" from behind one. The filter is by AS3 type: a
+         * Tile has no `cls` and is `type = "Solid"` once flipped.
+         *
+         * ⚠ THE OVER-APPROXIMATION WOULD HAVE BEEN INERT TODAY AND WRONG
+         * ANYWAY — L41 and L42 hold 196 and 198 tiles plus 6 and 2
+         * `type: "Solid"` entities between them and no Tree, Rope,
+         * ShieldBoss or LavaBoss at all, so nothing is dropped in either
+         * room. `assertCrusherSolidsBound` is what keeps that a measurement
+         * rather than an assumption ([[feedback_notsolid_is_per_mover]],
+         * which is the same lesson the spinner taught one family ago).
+         *
+         * @param {object} opts   the same live-state options `collidesSolid`
+         *                        takes, so the two can never disagree
+         * @param {string|null} exclude  an id to leave out — the game does it
+         *                        with a temporary `type = "BS"` swap on the
+         *                        scanning crusher itself, and `moveX`'s
+         *                        `collideTypes` excludes `this` too
+         */
+        solidBoxesForMover(opts = {}, exclude = null) {
+            const live = normalizeLive(opts);
+            const out = [];
+            // ⛔⛔ R5 slice 10's family is in no `solids` entry at all — a
+            // parked `FallRock` has `type = ""` at `y = -16` and a landed one
+            // is a 16x16 `"Solid"`. `collidesSolid` handles it above its own
+            // loop for that reason and this has to do the same, or a crusher
+            // charges through a rock the run dropped.
+            if (opts.fallenRocks) {
+                for (const r of opts.fallenRocks.values()) {
+                    out.push({ ...r.rect, id: r.id, tag: 'fallrock' });
+                }
+            }
+            for (const s of solids) {
+                if (s.cls && s.cls.type !== 'Solid') continue;
+                if (exclude !== null && s.crusherId === exclude) continue;
+                const at = liveRectOf(s, live);
+                if (at === null) continue;
+                out.push({
+                    ...at,
+                    id: s.crusherId ?? s.pushableId ?? s.rockId ?? s.treeId ?? s.chestId ?? null,
+                    tag: s.tag,
+                    rockId: s.rockId,
+                });
+            }
+            return out;
         },
 
         /**
@@ -4323,12 +4505,9 @@ export function buildLevelWorld(levelRecord, {
          *                terrain arm models it — so a disabled hazard stops
          *                being an obstacle, and one still armed does not
          */
-        plannerBlockerAt(box, probeRect = null, {
-            noclip = false, noHazards = [], openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
-            burnedTrees = null,
-            fallenRocks = null,
-        } = {}) {
+        plannerBlockerAt(box, probeRect = null, opts = {}) {
+            const { noclip = false, noHazards = [], fallenRocks = null } = opts;
+            const live = normalizeLive(opts);
             if (!noclip) {
                 // ⛔⛔ R5 slice 10: a dropped rock ADDS a solid, so the
                 // planner has to be told about it the same way the collision
@@ -4357,47 +4536,23 @@ export function buildLevelWorld(levelRecord, {
                     }
                 }
                 for (const s of solids) {
-                    if (openActivators && s.activatorId
-                        && openActivators.has(s.activatorId)) continue;
-                    if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
-                    if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
-                // ⛓⛓ R5 SLICE 12: a BurnableTree whose 41-tick animation has
-                // completed. `burnEnd -> die()` writes `type = ""` AND calls
-                // `FP.world.remove(this)`, so — like a broken rock and unlike
-                // a lock — it leaves the list entirely. ⛔ AND IT IS SOLID
-                // FOR THE WHOLE BURN: `hit()` starts the animation and
-                // removes nothing, so a set keyed on the PRESS tick would
-                // open a 2x2 cell forty-one ticks early.
-                if (burnedTrees && s.treeId && burnedTrees.has(s.treeId)) continue;
-                    // ⛔⛔ R5 slice 9: an OPENED chest. The planner has to see
-                    // the join cell open or it cannot route the second half
-                    // of L38 at all — and it must NOT see it open before the
-                    // leg opens it, which is why this is run state and not a
-                    // build option.
-                    if (openChests && s.chestId && openChests.has(s.chestId)) continue;
-                    // ⛓ R5 slice 7: a pulled rope SHRINKS. The planner has
-                    // to see the one cell the game keeps, or it routes
-                    // through the pulley.
-                    if (pulledRopes && s.ropeId && pulledRopes.has(s.ropeId)) {
-                        if (rectsOverlap(box, s.shrunkRect)) {
-                            return { kind: 'solid', blocker: { ...s, rect: s.shrunkRect } };
-                        }
-                        continue;
-                    }
-                    // R4: the planner has to see a pushed block where it
-                    // IS. A planner with its own idea of a block's position
-                    // would certify the corridor the push opened and then
-                    // walk the executor into the block it did not move —
-                    // the `openActivators` lesson, one mechanic later.
-                    if (live && s.pushableId && live.has(s.pushableId)) {
-                        const now = live.get(s.pushableId);
-                        if (now.removed) continue;
-                        if (rectsOverlap(box, now.rect)) {
-                            return { kind: 'solid', blocker: { ...s, rect: now.rect, live: true } };
-                        }
-                        continue;
-                    }
-                    if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
+                    // ⛓⛓⛓ R5 SLICE 15: the SAME chain `collidesSolid` walks
+                    // — `liveRectOf`. Until this slice the two were separate
+                    // transcriptions of nine arms, which is the §28.2 defect
+                    // with the copies one layer lower down.
+                    //
+                    // ⚠ THE PLANNER'S VIEW OF A MOVER IS A SNAPSHOT AND
+                    // CANNOT BE ANYTHING ELSE. A crusher's box here is where
+                    // it is on the tick the question is asked, which is only
+                    // a route-safe answer once it is PARKED — hence
+                    // `CRUSHER_PLAN`'s two phases: a bait choreography
+                    // verified tick by tick against `stepCrusher`, and only
+                    // then a flood against this.
+                    const at = liveRectOf(s, live);
+                    if (at === null) continue;
+                    if (!rectsOverlap(box, at)) continue;
+                    if (at === s.rect) return { kind: 'solid', blocker: s };
+                    return { kind: 'solid', blocker: { ...s, rect: at, live: true } };
                 }
             }
             if (probeRect) {

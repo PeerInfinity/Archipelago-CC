@@ -1326,6 +1326,192 @@ export const L41_SHIELD = Object.freeze({
 });
 
 /**
+ * ── ⛓⛓⛓ R5 SLICE 15: L41 IS SOLVED, AND THE CRUSHER IS THE KEY THAT
+ *    OPENS IT ────────────────────────────────────────────────────────────
+ *
+ * §24.6 measured that `totempart 3` "crosses on the crusher alone" and read
+ * that as an obstacle. It is an obstacle AND it is the room's only usable
+ * machine, and the second half is what makes the room solvable at all.
+ *
+ * ── THE TWO WALLS, and why neither yields to the player alone ─────────
+ *
+ * The part's chamber is rows 7-10 x cols 14-16 and it has exactly ONE
+ * opening: `(15,6)` -> `(15,5)`. `(15,6)` is `wandlock@240,96 {t 1, tag 0}`
+ * and `(15,4)/(15,5)/(16,4)/(16,5)` are the crusher's own constructor body.
+ * So the route needs BOTH gone, and:
+ *
+ *   ⛔ THE WANDLOCK RE-CLOSES THE TICK ITS BUTTON IS RELEASED.
+ *     `Lock.activationStep`'s else arm runs `returnToNormal()` unless
+ *     `collideTypes(["Player","Enemy","Solid"], x, y)` finds something in
+ *     its own cell — and the player cannot be both on `button@176,176`
+ *     and in the doorway. So a SOLID has to hold that button, and the only
+ *     one that can reach it is `pushableblockfire@112,144`.
+ *   ⛔ THE BLOCK CANNOT MOVE UNTIL THE COVER OPENS. Its cell `(7,9)` is
+ *     walled east and west; the only push stance is `(7,8)`, which IS
+ *     `cover@112,128 {t 0}`.
+ *   ⛔ AND THE COVER RE-CLOSES THE TICK ITS BUTTON IS RELEASED, by the same
+ *     shape — `Cover.update`'s else arm calls `reset()` unless something
+ *     that is not a `Chest` is standing in it. Its button is
+ *     `button@248,232` at tile `(15,14)`, eight tiles from the cover.
+ *
+ * ⇒ TWO BUTTONS THAT BOTH NEED A SOLID ON THEM, ONE BLOCK, AND THE BLOCK
+ * IS BEHIND THE FIRST OF THEM.
+ *
+ * ── ⛓⛓⛓ THE ANSWER: THE CRUSHER PRESSES THE COVER'S BUTTON ───────────
+ *
+ * `Button.update` collides `["Player","Enemy","Solid"]` and excludes only a
+ * `Cover`. A `Crusher` is `type = "Solid"`. Baited three times it walks
+ * itself from `(256,80)` to `(256,240)` — which is ON `button@248,232` —
+ * and parks there permanently, because from that cell every lane it can
+ * still see is walled:
+ *
+ * ```
+ *   bait 1  W   (256,80) -> (64,80)    rocks broken; the west lane is the
+ *                                      only one a living player can stand in
+ *   bait 2  S   (64,80)  -> (64,240)   from cols 3-4, the one column pair
+ *                                      whose row 6 is open
+ *   bait 3  E   (64,240) -> (256,240)  along rows 14-15, onto the button
+ * ```
+ *
+ * ⛓ AND THE FIRST BAIT IS ALSO WHAT CLEARS THE DOORWAY, so the same three
+ * moves solve both walls. The crusher is not in the way of the solution; it
+ * IS the solution, which is `CRUSHER_VERBS.park` doing work no other object
+ * in the room can do. ⇒ `hazardVolume`'s hard-avoid is retired on a driven
+ * witness, not on a source read.
+ *
+ * ⚠ AND IT CREATES A STANDING ROUTE CONSTRAINT. Parked on the button the
+ * crusher still re-scans every tick: its WEST lane is cols 11-16 of rows
+ * 14-15. A later leg that walks there charges it OFF the button and the
+ * cover shuts. `AVOID_AFTER_BAIT3` is that volume, named.
+ */
+export const L41_PART3 = Object.freeze({
+    level: 41,
+    /** From L40's `teleporter@944,96`. */
+    arrival: Object.freeze({ tx: 1, ty: 10 }),
+    part: Object.freeze({ x: 240, y: 144, index: 3 }),
+    crusher: 'crusher@240,64',
+    rocks: Object.freeze([
+        Object.freeze({ id: 'breakablerock@224,64', tag: 1 }),
+        Object.freeze({ id: 'breakablerock@224,80', tag: 2 }),
+    ]),
+    block: 'pushableblockfire@112,144',
+    cover: Object.freeze({ id: 'cover@112,128', t: 0, button: Object.freeze({ x: 248, y: 232 }) }),
+    wandlock: Object.freeze({
+        id: 'wandlock@240,96', t: 1, tag: 0, button: Object.freeze({ x: 176, y: 176 }),
+    }),
+    /**
+     * ⛓ The three parks, as ENTITY positions — what `run.crushers` reports
+     * and what `bait.park` asserts. A park is a POSITION because phase 2's
+     * flood is taken against it.
+     */
+    parks: Object.freeze([
+        Object.freeze({ dir: 'W', to: Object.freeze({ x: 64, y: 80 }) }),
+        Object.freeze({ dir: 'S', to: Object.freeze({ x: 64, y: 240 }) }),
+        Object.freeze({ dir: 'E', to: Object.freeze({ x: 256, y: 240 }) }),
+    ]),
+    /**
+     * ⛓⛓⛓ THE THREE CHOREOGRAPHIES, SEARCHED AND DRIVEN — phase 1 of
+     * `CRUSHER_PLAN`, as spans rather than as a plan.
+     *
+     * They are DATA and not a planner output because the planner is not
+     * allowed to route against a live mover: each of these is verified tick
+     * by tick against the same `stepCrusher` the run steps, and the claim is
+     * `crusherContacts.length === 0` plus a park POSITION.
+     *
+     * ⚠ THE MARGIN IS THIN AND IT IS NOT SPEED. A walking player tops out at
+     * 1.2 px/tick against the crusher's 1.0, so a straight retreat gains
+     * 0.2 px/tick — the escape is the PERPENDICULAR step, because a charge
+     * is committed at rest and never re-aimed. Measured: bait 3 with
+     * `down 50` instead of `down 40` is run over 36 times.
+     *
+     * ⛓ Bank 1's prefix is the boot at (208,80) — tile (13,5), the swing
+     * stance's own cell — with both rock tags declared clear, which is the
+     * state the swing leaves.
+     */
+    baits: Object.freeze([
+        Object.freeze({
+            dir: 'W',
+            from: Object.freeze({ x: 256, y: 80 }),
+            park: Object.freeze({ x: 64, y: 80 }),
+            spans: Object.freeze([
+                Object.freeze({ key: 'left', ticks: 21 }),
+                Object.freeze({ key: 'down', ticks: 40 }),
+                Object.freeze({ key: null, ticks: 160 }),
+            ]),
+            why: 'the west lane is the only one a living player can stand in — the north '
+                + 'and east are the room\'s own wall and the south is behind the wandlock. '
+                + 'The escape is SOUTH at col 11, the one column of row 6 that is open '
+                + 'west of the rocks.',
+        }),
+        Object.freeze({
+            dir: 'S',
+            from: Object.freeze({ x: 64, y: 80 }),
+            park: Object.freeze({ x: 64, y: 240 }),
+            spans: Object.freeze([
+                Object.freeze({ key: 'left', ticks: 40 }),
+                Object.freeze({ key: 'down', ticks: 22 }),
+                Object.freeze({ key: 'left', ticks: 70 }),
+                Object.freeze({ key: 'up', ticks: 10 }),
+                Object.freeze({ key: 'down', ticks: 20 }),
+                Object.freeze({ key: 'right', ticks: 40 }),
+                Object.freeze({ key: null, ticks: 220 }),
+            ]),
+            why: 'cols 3-4 are the only column pair whose row 6 is open, so they are the '
+                + 'only south lane the crusher can actually travel. The trigger is one '
+                + 'step NORTH into row 9 and the escape is back south to row 10 and EAST '
+                + 'out of the column.',
+        }),
+        Object.freeze({
+            dir: 'E',
+            from: Object.freeze({ x: 64, y: 240 }),
+            park: Object.freeze({ x: 256, y: 240 }),
+            spans: Object.freeze([
+                Object.freeze({ key: 'down', ticks: 40 }),
+                Object.freeze({ key: 'up', ticks: 12 }),
+                Object.freeze({ key: null, ticks: 260 }),
+            ]),
+            why: '⛓⛓⛓ THE ONE THAT SOLVES THE ROOM: it ends ON `button@248,232`, and a '
+                + 'Crusher is a `"Solid"` that `Button.update` collides. The escape is '
+                + 'NORTH to row 13, and `down 50` instead of `down 40` is run over.',
+        }),
+    ]),
+    /**
+     * ⛔ THE VOLUME THE ROUTE MAY NOT RE-ENTER once bait 3 has landed: the
+     * crusher's WEST lane from `(256,240)`. Walking into it charges the
+     * crusher off `button@248,232`, the cover resets, and — if the block is
+     * not yet parked — the room is shut again.
+     */
+    avoidAfterBait3: Object.freeze({ x: 176, y: 224, right: 272, bottom: 256 }),
+    /**
+     * ⛓ The block's route to `button@176,176`, in tiles. Six pushes, each
+     * with the stance the player fires from. The first is the only one that
+     * needs the cover; every later stance is a cell the block has left or a
+     * corridor the level already had.
+     */
+    pushes: Object.freeze([
+        Object.freeze({ from: [7, 9], to: [7, 10], stance: [7, 8] }),
+        Object.freeze({ from: [7, 10], to: [8, 10], stance: [6, 10] }),
+        Object.freeze({ from: [8, 10], to: [9, 10], stance: [7, 10] }),
+        Object.freeze({ from: [9, 10], to: [9, 11], stance: [9, 9] }),
+        Object.freeze({ from: [9, 11], to: [10, 11], stance: [8, 11] }),
+        Object.freeze({ from: [10, 11], to: [11, 11], stance: [9, 11] }),
+    ]),
+    /** `Lock`'s fade — 101 continuous ticks, and the BLOCK is what holds it. */
+    lockTicks: 101,
+    /**
+     * ⚠ THE FLOOD, WITH THE CONFIGURATION THAT PRODUCED IT (§28.4's rule,
+     * applied to the thing this slice varies). Both taken from the same
+     * post-bait-1 stance under the ROUTE's inventory.
+     */
+    flood: Object.freeze({
+        policy: 'inventory: sword+fire+conch+feather; activators OPEN; rocks {1,2} clear',
+        crusherHome: Object.freeze({ nodes: 305, partReachable: false }),
+        crusherParkedWest: Object.freeze({ nodes: 332, partReachable: true }),
+    }),
+    driven: false,
+});
+
+/**
  * ⛔⛔ The two predictions, as data, so a test asserts the CORRECTION
  * rather than the current string.
  */

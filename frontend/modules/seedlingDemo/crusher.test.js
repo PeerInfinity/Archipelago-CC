@@ -10,16 +10,32 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CEREMONY_RULE, PLAYER_DAMAGE_PATHS, CRUSHER, CRUSHER_VERBS, CrusherError, DIRECTIONS,
-    alwaysArmed, collideLineSolid, crusherRect, detectionRects, scanCrusher, stepCrusher,
+    CEREMONY_RULE, PLAYER_DAMAGE_PATHS, CRUSHER, CRUSHER_PLAN, CRUSHER_VERBS,
+    CrusherError, DIRECTIONS,
+    alwaysArmed, collideLineSolid, crusherRect, detectionRects, laneHitsPlayer,
+    scanCrusher, stepCrusher,
 } from './crusher.js';
 import { hazardVolume } from './hazards.js';
-import { ROLES, buildLevelWorld } from './levelWorld.js';
+import { ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
+import { HITBOX } from './playerPhysicsV1.js';
 
 /** A crusher whose ENTITY position is a cell corner — where a snap leaves it. */
 const at = (x, y) => ({ id: `crusher@${x},${y}`, x, y, vx: 0, vy: 0 });
 const box = (x, y, w = 4, h = 5) => ({ x, y, w, h, right: x + w, bottom: y + h });
+/**
+ * ⛔⛔ R5 SLICE 15: THE ENTITY POINT THAT GOES WITH A BOX, derived once.
+ *
+ * `scanCrusher` takes the box and the point as two arguments now, because
+ * the game asks two different questions — `collideRect("Player", …)` of the
+ * box, `collideLine(…, p.x, p.y)` of the point — and the first cut took one
+ * argument and read both off it. Every caller in this file goes through
+ * here so the pair can never drift, which is the whole reason the signature
+ * changed.
+ */
+const pointOf = (b) => ({ x: b.x + HITBOX.originX, y: b.y + HITBOX.originY });
+const scan = (c, b, solids = []) => scanCrusher(c, b, pointOf(b), solids);
+const withPlayer = (b) => ({ playerBox: b, playerPoint: pointOf(b) });
 
 describe('the geometry, and the two rect derivations that must agree', () => {
     it('the body is 32x32 CENTRED on the entity position', () => {
@@ -65,7 +81,7 @@ describe('⛔ `t == -1` means ALWAYS ON — the opposite of the same literal on 
 
 describe('⛔ the scan: LAST match wins, and sight gates it', () => {
     it('a player due east arms an EAST charge', () => {
-        const s = scanCrusher(at(160, 160), box(200, 158), []);
+        const s = scan(at(160, 160), box(200, 158));
         expect(s.dir).toBe('E');
         expect(s).toMatchObject({ dx: 1, dy: 0 });
     });
@@ -92,28 +108,69 @@ describe('⛔ the scan: LAST match wins, and sight gates it', () => {
             }
         }
         // A true DIAGONAL — outside the plus entirely — arms nothing at all.
-        expect(scanCrusher(c, box(180, 180), []).matched).toEqual([]);
+        expect(scan(c, box(180, 180)).matched).toEqual([]);
         // …and the only two-lane stance is standing on it, which is a kill
         // on the same tick the second match is read.
-        const onIt = scanCrusher(c, box(158, 158), []);
+        const onIt = scan(c, box(158, 158));
         expect(onIt.matched).toEqual(['E', 'N', 'W', 'S']);
         expect(onIt.dir).toBe('S');
-        expect(stepCrusher(c, { player: box(158, 158), lineSolids: [], solids: () => null })
+        expect(stepCrusher(c, { ...withPlayer(box(158, 158)), lineSolids: [], solids: () => null })
             .kills).toBe(true);
     });
 
     it('⛓⛓ ANY Solid on the sight line shields it — and that is L41\'s whole leg', () => {
         const shield = { x: 176, y: 144, right: 192, bottom: 176 };
-        const s = scanCrusher(at(160, 160), box(200, 158), [shield]);
+        const s = scan(at(160, 160), box(200, 158), [shield]);
         expect(s.dir).toBe(null);
         expect(s.shieldedBy).toBe(shield);
         // …and removing it UNLEASHES the crusher, which is why breaking
         // L41's breakablerocks is an ORDER and not a tidy-up.
-        expect(scanCrusher(at(160, 160), box(200, 158), []).dir).toBe('E');
+        expect(scan(at(160, 160), box(200, 158)).dir).toBe('E');
     });
 
     it('a player outside every lane arms nothing', () => {
-        expect(scanCrusher(at(160, 160), box(400, 400), []).dir).toBe(null);
+        expect(scan(at(160, 160), box(400, 400)).dir).toBe(null);
+    });
+
+    /**
+     * ⛔⛔ R5 SLICE 15: THE LANE TEST IS INCLUSIVE AND THE SWEEP'S IS NOT,
+     * and the pixel between them is a pixel of route.
+     *
+     * `Crusher.update` triggers through `World.collideRect` →
+     * `Entity.collideRect` (`Entity.as:263`), four `>=`/`<=`. Everything
+     * else in this package — the sweep, `hit()`, `levelWorld.rectsOverlap` —
+     * is `Entity.as:158`/`:336`'s four `>`/`<`. A model that used the strict
+     * one here reports "it cannot see you" for a stance the game charges at.
+     */
+    it('⛔⛔ a player touching the lane\'s EDGE is seen — `collideRect` is inclusive', () => {
+        const c = at(160, 160);
+        const east = detectionRects(c).find((r) => r.dir === 'E');
+        // The east lane is [144, 240) x [144, 176) as a strict box. A player
+        // whose LEFT edge is exactly on `east.right` shares no area with it
+        // — `rectsOverlap` says no, and the game says yes.
+        const onEdge = box(east.right, 158);
+        expect(rectsOverlap(onEdge, east)).toBe(false);
+        expect(laneHitsPlayer(onEdge, east)).toBe(true);
+        expect(scan(c, onEdge).dir).toBe('E');
+        // …and one pixel further out is outside it under BOTH conventions,
+        // so this is a one-pixel band and not a shifted rect.
+        expect(scan(c, box(east.right + 1, 158)).dir).toBe(null);
+    });
+
+    /**
+     * ⛓⛓ THE SIGNATURE IS THE FIX, not the comment. §28.8's probe had to
+     * hand-build `{ ...playerBoxAt(x, y), x, y }` — a box whose left/top has
+     * been overwritten with the entity point and whose right/bottom has not
+     * — because one argument was doing two jobs. Both malformed shapes are
+     * refused by name now.
+     */
+    it('⛔ refuses a rect literal with no `right`/`bottom`, and a box with no point', () => {
+        const c = at(160, 160);
+        expect(() => scanCrusher(c, { x: 200, y: 158 }, { x: 200, y: 158 }, []))
+            .toThrow(/never overlaps anything/);
+        expect(() => scanCrusher(c, box(200, 158), null, [])).toThrow(/ENTITY position/);
+        expect(() => stepCrusher(c, { playerBox: box(200, 158), lineSolids: [] }))
+            .toThrow(/BOTH/);
     });
 });
 
@@ -145,7 +202,7 @@ describe('⛔ the charge: 1 px/tick, and it PARKS where it stops', () => {
      * between baiting one and being crushed by one.
      */
     const ctx = {
-        player: box(236, 158),
+        ...withPlayer(box(236, 158)),
         lineSolids: [],
         solids: (r) => (r.right > wall.x && r.x < wall.right
             && r.bottom > wall.y && r.y < wall.bottom ? wall : null),
@@ -169,7 +226,7 @@ describe('⛔ the charge: 1 px/tick, and it PARKS where it stops', () => {
         // ⛓ AND THE SIDESTEP IS THE VERB: once the wall has stopped it, a
         // player who has left the lane leaves it parked forever. At rest
         // it snaps and re-scans, finds nothing, and stays.
-        const after = stepCrusher(c, { ...ctx, player: box(400, 400) });
+        const after = stepCrusher(c, { ...ctx, ...withPlayer(box(400, 400)) });
         expect(after.crusher.x).toBe(c.x);
         expect(after.moved).toBe(0);
         expect(after.scan.dir).toBe(null);
@@ -179,16 +236,16 @@ describe('⛔ the charge: 1 px/tick, and it PARKS where it stops', () => {
         // A crusher stopped 7 px into a cell rounds to the NEXT corner; a
         // model that floored would put it a whole tile back.
         const c = stepCrusher({ ...at(0, 0), x: 167, y: 160 },
-            { player: box(400, 400), lineSolids: [], solids: () => null });
+            { ...withPlayer(box(400, 400)), lineSolids: [], solids: () => null });
         expect(c.crusher.x).toBe(160);
         const d = stepCrusher({ ...at(0, 0), x: 169, y: 160 },
-            { player: box(400, 400), lineSolids: [], solids: () => null });
+            { ...withPlayer(box(400, 400)), lineSolids: [], solids: () => null });
         expect(d.crusher.x).toBe(176);
     });
 
     it('⛔ it kills on contact with its BODY, at rest as much as mid-charge', () => {
         const onIt = stepCrusher(at(160, 160), {
-            player: box(158, 158), lineSolids: [], solids: () => null,
+            ...withPlayer(box(158, 158)), lineSolids: [], solids: () => null,
         });
         expect(onIt.kills).toBe(true);
         expect(CRUSHER.damage).toBe(1000);
@@ -246,6 +303,23 @@ describe('⚠⚠ the ceremony rule, and the ruling that replaces hard-avoid', ()
             expect(v.why.length).toBeGreaterThan(40);
             expect(v.risk.length).toBeGreaterThan(40);
         }
+    });
+
+    /**
+     * ⚖⚖ R5 SLICE 15: THE DOCTRINE, AS DATA. The eight families before this
+     * one are MONOTONE — a broken rock stays broken — so a flood taken once
+     * stays true for the leg. A crusher is not, and that is what forces a
+     * planner that cannot route against it into two phases.
+     */
+    it('⚖⚖ the two-phase doctrine names its precondition and its park risk', () => {
+        expect(CRUSHER_PLAN.phases.map((p) => p.verb)).toEqual(['bait/park', 'route']);
+        expect(CRUSHER_PLAN.phases[0].plannedAgainst).toMatch(/stepCrusher/);
+        expect(CRUSHER_PLAN.phases[1].precondition).toBe('run.crushersParked');
+        // ⛔ the two facts a plan gets wrong if it reads only the verbs
+        expect(CRUSHER_PLAN.parkRisk).toMatch(/component cost/);
+        expect(CRUSHER_PLAN.resetIs).toMatch(/never carry a crusher position/i);
+        // ⚠ and the §28.4 rule, restated for the thing THIS slice varies
+        expect(CRUSHER_PLAN.floodsBankWith).toMatch(/configuration/);
     });
 
     it('⚠ and `hazardVolume` STILL says hard-avoid — the two are not reconciled here', () => {

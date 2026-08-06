@@ -3768,3 +3768,138 @@ rock broken, neither part is in the component (L41 356 nodes, L42 304).
 `crusher.js` models the scan, the charge and the park; `levelRun` steps no
 crusher, and wiring one is the `burnedTrees` plumbing chain again for a
 solid that MOVES.
+
+## R5 slice 15 — the crusher is plumbed, and L41 is solved BY the obstacle
+
+The ninth per-visit geometry family, and the first whose member is a solid
+that **moves on its own**. Every family before it moves because the player
+moved it — a pushed block, a shrunk rope, a dropped rock, a burnt tree. A
+`Crusher` charges the moment it can see you, so its box is a function of the
+whole run and of no single event in it.
+
+### The plumbing, and the only check that discharges "wired"
+
+The chain is the one slice 14 named: a roster (`world.crushers`), a
+per-visit state family and a step at the game's own slot in the update list
+(`Game.loadlevel` adds it at `:2142` and `World.addUpdate` prepends, so it
+runs **after every activator and every block and before the player**), and
+its live box in `collidesSolid` / `plannerBlockerAt` / `stepV2`.
+
+Slice 14's finding was that a family can be wired everywhere except the
+player's own sweep, behind 1,745 green tests, because the only producer of
+the option is an undriven verb. The discharge for this one is a driven
+assertion pair:
+
+```
+  the player stands at (269.99, 79.46) — inside crusher@240,64's own
+  constructor body [240,272) x [64,96)
+
+  collidesSolid(box, {})                 -> truthy   (STATIC says Solid)
+  collidesSolid(box, {crushers: live})    -> null     (live says clear)
+```
+
+A `stepV2` that dropped the key would have used the static answer and
+refused the walk, so the player's arrival there **is** the proof. Every
+other check — the roster, the option's presence in a destructuring list, the
+ledger — is satisfiable over a silence.
+
+### `Crusher` writes no persistence, and that cuts both ways
+
+No `check()`, no `removed()`, no `setPersistence` anywhere in the class. So
+every `new Game` rebuilds it at its constructor cell however far the last
+visit drove it:
+
+- a botched park is one room-exit from reset;
+- and **a window plan may never carry a crusher position across a re-boot** —
+  a window boundary inside a bait chain undoes the chain.
+
+### The two-phase doctrine
+
+The eight families before this one are MONOTONE: once a rock is broken the
+cell stays open, so a flood taken once stays true for the leg. A crusher is
+not, so the planner is not allowed to route against a live one:
+
+| phase | verb | planned against |
+|---|---|---|
+| 1 | bait / park | `stepCrusher`, tick by tick |
+| 2 | route | `plannerBlockerAt`, with `run.crushersParked` asserted |
+
+and **a flood banks with the crusher configuration that produced it**, the
+same rule slice 14 learned about the inventory policy.
+
+⚠ **A parked crusher is not a disarmed one.** `update()` re-derives `v` on
+every tick it is at rest, so a park is a position and not a state — walking
+back into a lane charges it again, from whatever direction now matches.
+
+### The margin is the perpendicular step, not speed
+
+A walking player tops out at **1.2 px/tick** against the crusher's 1.0, so a
+straight retreat gains 0.2 px/tick. What saves a bait is that `v` is only
+derived inside the `vx === 0 && vy === 0` branch: **a committed charge is
+never re-aimed**, so one step out of the lane's minor axis ends it. Measured
+— L41's third bait with `down 50` in place of `down 40` is run over 36
+times.
+
+### Two overlap conventions, eleven lines apart
+
+`Crusher.update` triggers through `World.collideRect("Player", …)` →
+`Entity.collideRect` (`Entity.as:263`), four `>=`/`<=`. The sweep, `hit()`'s
+`collideInto` and `levelWorld.rectsOverlap` are `Entity.as:158`/`:336`, four
+`>`/`<`. The strict test reports *"it cannot see you"* for a stance the game
+charges at, which is the dangerous direction.
+
+⚠ And `scanCrusher` used to take ONE `player` argument for two shapes — the
+BOX for the lanes and the ENTITY POINT for the sight line, 2 px apart. Every
+caller had to build a chimera. It takes two arguments now and refuses both
+malformed shapes by name: the fix for "a caller passed the wrong shape" is a
+signature that cannot take it.
+
+### L41 is solved by the obstacle
+
+The room has **two** gates and the player can open neither. `wandlock@240,96`
+is the part chamber's only doorway and `cover@112,128` is the only push
+stance of the room's one block — and both re-close the tick their button is
+released unless something is standing in their own cell. Each needs a SOLID
+on a button; there is one block; the block is behind the first gate.
+
+`Button.update` collides `["Player","Enemy","Solid"]` and excludes only a
+`Cover`. **A `Crusher` is `type = "Solid"`.** Three baits walk it onto
+`button@248,232`, where it holds the cover open permanently — and the first
+of those baits is also what clears the doorway:
+
+```
+  bait 1  W   (256,80)  -> (64,80)     0 contacts, and the doorway opens
+  bait 2  S   (64,80)   -> (64,240)    0 contacts
+  bait 3  E   (64,240)  -> (256,240)   0 contacts, ON the button
+```
+
+⇒ `hazards.hazardVolume`'s hard-avoid is retired as a RULING with a driven
+witness. Not because the damage verdict is wrong — 1000 is `die()` at any
+`hitsMax` — but because the volume it forbids is the volume the solution
+operates.
+
+⚠ The park creates its own constraint: from `(256,240)` the crusher's west
+lane is cols 11–16 of rows 14–15, and a later leg that walks there charges
+it off the button.
+
+### A refactor can be the same work and a different program
+
+Factoring the nine-arm "is this solid there right now" filter out of
+`collidesSolid` and `plannerBlockerAt` (they each had a copy, and a crusher's
+sight line needs a third) was correct and its first cut was a **40%
+slowdown**: it returned a `{rect, live}` wrapper, one allocation per solid
+per query, on the loop the player's sweep runs for every pixel of every
+step. Eleven long fixtures went past the 10 s test timeout and read as
+defects.
+
+The second cause was SHAPE. Callers hand these queries a dozen different
+option shapes, so eight property reads per solid went megamorphic;
+normalising once per query took `r5-l40-join` from 4.2 s to 2.0 s — faster
+than the parent commit. **A gate is where "the same work in one place" turns
+out not to be the same program.**
+
+### Where the ceremonies stand
+
+Still three of five. L41's room is solved and its first three moves are
+driven; its six block pushes, the 101-tick wandlock and the ceremony are
+not, and L42 is unstarted.

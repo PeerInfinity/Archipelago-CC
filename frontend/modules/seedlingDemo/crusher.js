@@ -185,23 +185,80 @@ export function collideLineSolid(solids, fromX, fromY, toX, toY) {
 }
 
 /**
+ * ⛔⛔ R5 SLICE 15 — THE LANE TEST IS `World.collideRect`, AND IT IS
+ * INCLUSIVE WHERE EVERY OTHER OVERLAP IN THIS PACKAGE IS STRICT.
+ *
+ * `Crusher.update` triggers through `FP.world.collideRect("Player", …)`,
+ * which walks the Player type calling `Entity.collideRect` — and that method
+ * (`Entity.as:263`) is
+ *
+ *     x - originX + width >= rX  &&  y - originY + height >= rY
+ *  && x - originX        <= rX + rWidth
+ *  && y - originY        <= rY + rHeight
+ *
+ * — four `>=`/`<=`. The sweep's own `Entity.collide`/`collideInto`
+ * (`:158`, `:336`) are `>`/`<`, which is what `levelWorld.rectsOverlap`
+ * transcribes, and using that one here loses a pixel on all four edges of
+ * every lane.
+ *
+ * ⚠ THE DIRECTION OF THE ERROR IS THE DANGEROUS ONE. A strict test says
+ * "it cannot see you" for a stance the game charges at, so a bait that
+ * relied on it would be a route standing one pixel outside a lane that
+ * reaches it. §19's note recorded the `Entity.collideRect`/`rectsOverlap`
+ * split as a latent ±1 on the SWORD and deliberately did not fix it there,
+ * because a sword press that misses costs a press; here it costs the run.
+ */
+export function laneHitsPlayer(playerBox, r) {
+    return playerBox.right >= r.x && playerBox.bottom >= r.y
+        && playerBox.x <= r.right && playerBox.y <= r.bottom;
+}
+
+/**
  * The scan: which way does a resting crusher charge, if any?
  *
- * @param {object} c        `{x, y}` — the crusher's ENTITY position
- * @param {object} player   `{x, y, right, bottom}` — the player's box
- * @param {Array} solids    every Solid EXCEPT this crusher
+ * ⛔⛔ R5 SLICE 15 — THE PLAYER ARRIVES AS TWO SHAPES, BECAUSE THE GAME ASKS
+ * TWO DIFFERENT QUESTIONS ABOUT IT.
+ *
+ *     collideLine("Solid", x, y, p.x, p.y)   the ENTITY POINT
+ *     collideRect("Player", x+off, …)        the player's BOX
+ *
+ * and on this player those are 2 px apart in x and 2 in y (`HITBOX` is 4x5
+ * with origin (2,2)). The first cut of this function took ONE argument and
+ * read `player.x` off it for the line and `rectsOverlap(player, …)` for the
+ * lanes, so every caller had to hand it a chimera — §28.8's own probe built
+ * `{ ...playerBoxAt(x, y), x, y }`, which is a box whose left/top edge has
+ * been overwritten with the entity point and whose right/bottom has not. It
+ * reported the right answer for L41 by luck of a 40 px margin.
+ *
+ * ⇒ [[feedback_rect_literal_never_overlaps]] one turn further on: the fix
+ * for "a caller passed the wrong shape" is not a better comment, it is a
+ * SIGNATURE that cannot take the wrong shape.
+ *
+ * @param {object} c            `{x, y}` — the crusher's ENTITY position
+ * @param {object} playerBox    `{x, y, right, bottom}` — `playerBoxAt(px, py)`
+ * @param {object} playerPoint  `{x, y}` — the player's ENTITY position
+ * @param {Array} solids        every Solid EXCEPT this crusher, `{x,y,right,bottom}`
  * @returns {{dir:string|null, dx:number, dy:number, shieldedBy:object|null, matched:string[]}}
  */
-export function scanCrusher(c, player, solids = []) {
+export function scanCrusher(c, playerBox, playerPoint, solids = []) {
+    if (!playerBox || !Number.isFinite(playerBox.right) || !Number.isFinite(playerBox.bottom)) {
+        fail('scanCrusher: playerBox must be a full box — {x, y, right, bottom}. A rect '
+            + 'literal missing `right`/`bottom` never overlaps anything and returns a '
+            + 'clean, plausible "it cannot see you".');
+    }
+    if (!playerPoint || !Number.isFinite(playerPoint.x) || !Number.isFinite(playerPoint.y)) {
+        fail('scanCrusher: playerPoint must be the player\'s ENTITY position {x, y} — the '
+            + 'sight line is `collideLine(…, p.x, p.y)` and that is NOT the box corner.');
+    }
     // ⛔ SIGHT FIRST, AND IT IS AN EARLY EXIT. A shielded crusher does not
     // scan at all — which is why breaking the rock in front of one is a
     // step in a route rather than a tidy-up.
-    const shieldedBy = collideLineSolid(solids, c.x, c.y, player.x ?? 0, player.y ?? 0);
+    const shieldedBy = collideLineSolid(solids, c.x, c.y, playerPoint.x, playerPoint.y);
     if (shieldedBy) return { dir: null, dx: 0, dy: 0, shieldedBy, matched: [] };
     const matched = [];
     let pick = { dir: null, dx: 0, dy: 0 };
     for (const r of detectionRects(c)) {
-        if (rectsOverlap(player, r)) {
+        if (laneHitsPlayer(playerBox, r)) {
             matched.push(r.dir);
             // ⛔ NO `break` — the LAST match wins, so this assignment is
             // deliberately unconditional.
@@ -218,13 +275,23 @@ export function scanCrusher(c, player, solids = []) {
  *   `solids(rect)`   does this box hit a Solid other than me? (the charge's
  *                    stopper — ⚠ "Solid" ONLY: it does not stop for the
  *                    player, it kills them)
- *   `player`         the player's box, and its `{x, y}` for the sight line
+ *   `playerBox`      the player's collision box, for the four lanes
+ *   `playerPoint`    the player's ENTITY position, for the sight line
  *   `lineSolids`     the Solids the sight line may hit, self excluded
+ *
+ * ⚠ `playerBox`/`playerPoint` are BOTH required or BOTH absent. A crusher
+ * with no player in the world (`nearestToEntity` returns null) still runs
+ * `moveX`/`moveY`/`hit()` — it just never re-derives `v` — so "no player"
+ * is a real state and not an error, but half a player is neither.
  *
  * @returns {{crusher, moved:number, stopped:boolean, kills:boolean, scan:object|null}}
  */
 export function stepCrusher(c, ctx = {}) {
-    const { solids = () => null, player = null, lineSolids = [] } = ctx;
+    const { solids = () => null, playerBox = null, playerPoint = null, lineSolids = [] } = ctx;
+    if ((playerBox === null) !== (playerPoint === null)) {
+        fail('stepCrusher: pass BOTH `playerBox` and `playerPoint` or neither — the lane '
+            + 'test and the sight line read different shapes of the same player.');
+    }
     let { x, y, vx = 0, vy = 0 } = c;
     let scan = null;
     if (vx === 0 && vy === 0) {
@@ -233,8 +300,8 @@ export function stepCrusher(c, ctx = {}) {
         // model that floored would park it a tile back.
         x = Math.round(x / TILE) * TILE;
         y = Math.round(y / TILE) * TILE;
-        if (player) {
-            scan = scanCrusher({ x, y }, player, lineSolids);
+        if (playerBox) {
+            scan = scanCrusher({ x, y }, playerBox, playerPoint, lineSolids);
             vx = scan.dx * CRUSHER.speed;
             vy = scan.dy * CRUSHER.speed;
         }
@@ -261,7 +328,13 @@ export function stepCrusher(c, ctx = {}) {
     y = sy.pos; vy = sy.v;
     // ⚠ `hit()` runs EVERY armed tick, at rest as much as mid-charge, and
     // its reach is the BODY. The lanes only trigger.
-    const kills = Boolean(player && rectsOverlap(player, crusherRect({ x, y })));
+    //
+    // ⛓ AND THIS ONE IS STRICT, WHERE THE LANE TEST IS NOT. `hit()` is
+    // `collideInto(…)` = `Entity.as:336`'s four `>`/`<`; the lane test is
+    // `World.collideRect` = `Entity.as:263`'s four `>=`/`<=`. Two overlap
+    // conventions in one class, eleven lines apart, and reading either into
+    // the other is a pixel of route in the wrong direction.
+    const kills = Boolean(playerBox && rectsOverlap(playerBox, crusherRect({ x, y })));
     return { crusher: { ...c, x, y, vx, vy }, moved: Math.abs(vx) + Math.abs(vy), stopped, kills, scan };
 }
 
@@ -383,6 +456,75 @@ export const PLAYER_DAMAGE_PATHS = Object.freeze({
  * SOLUTION requires standing in. A route does not avoid a crusher, it
  * OPERATES one.
  */
+/**
+ * ⚖⚖ THE TWO-PHASE DOCTRINE — R5 slice 15.
+ *
+ * Eight per-visit geometry families came before this one and every one of
+ * them is MONOTONE: once a rock is broken, a tree burnt, a chest opened, a
+ * rope pulled, the cell stays open for the rest of the visit. So a leg could
+ * be planned by flooding the world as it is and the flood stayed true for
+ * the whole leg. A crusher breaks that, and it breaks it in the one
+ * direction that matters: a flood taken while one is mid-charge is a picture
+ * of a world that will not exist next tick.
+ *
+ * ⛔ THE PLANNER IS THEREFORE NOT ALLOWED TO ROUTE AGAINST A LIVE MOVER.
+ * Not "should avoid"; cannot, because `plannerBlockerAt` has no notion of
+ * time and giving it one would be a second executor. The split instead:
+ *
+ *   PHASE 1  BAIT/PARK — a short, hand-verified CHOREOGRAPHY, checked tick
+ *            by tick against `stepCrusher` itself and not against a flood.
+ *            It is verifiable because the crusher is 1 px/tick and a walking
+ *            player is 0.8-1.6 px/tick with a 4x5 box: present yourself in a
+ *            lane with a clear sight line, let it commit (`v` is only
+ *            re-derived AT REST, so a committed charge cannot be re-aimed),
+ *            sidestep, and let it run into a Solid. It parks there.
+ *   PHASE 2  THE STATIC WORLD — plan normally, against the world the park
+ *            produced, with `run.crushersParked` asserted first.
+ *
+ * ⚠ AND A FLOOD BANKS WITH THE CONFIGURATION THAT PRODUCED IT. §28.4's
+ * lesson one level up: that one was about the INVENTORY policy (+16 read as
+ * +488 because the recon flooded holding nothing), this one is about WHERE
+ * THE CRUSHERS ARE. Two floods of L41 taken either side of a park are two
+ * different rooms, and a cell count with no configuration beside it is a
+ * number that will mislead the next slice.
+ *
+ * ⛔⛔ A PARKED CRUSHER IS A 2x2 SOLID AND CAN SEAL A ONE-TILE CORRIDOR.
+ * Check the park cell's component cost BEFORE choosing it — the recovery is
+ * to leave the room and come back (`Crusher` writes no persistence, so every
+ * `new Game` rebuilds it at its ctor cell), which is cheap and is still a
+ * whole extra window.
+ */
+export const CRUSHER_PLAN = Object.freeze({
+    phases: Object.freeze([
+        Object.freeze({
+            phase: 1,
+            verb: 'bait/park',
+            plannedAgainst: 'stepCrusher, tick by tick',
+            why: 'the world is changing under the route, so a flood is not a certificate. '
+                + 'The choreography is short and its every tick is simulated by the same '
+                + 'model the run steps.',
+            leans: 'the charge is committed at REST and never re-aimed (`v` is only '
+                + 'derived inside the `vx === 0 && vy === 0` branch), so the sidestep is '
+                + 'free once it has started',
+        }),
+        Object.freeze({
+            phase: 2,
+            verb: 'route',
+            plannedAgainst: 'plannerBlockerAt, with the crusher parked',
+            why: 'a parked crusher is an ordinary static Solid and the eight-family '
+                + 'machinery works unchanged',
+            precondition: 'run.crushersParked',
+        }),
+    ]),
+    floodsBankWith: 'the crusher configuration that produced them — see §28.4 for the '
+        + 'same rule about the inventory policy',
+    parkRisk: 'a parked crusher is a 32x32 Solid: price the park cell\'s component cost '
+        + 'before choosing it, because sealing a one-tile corridor costs a whole window',
+    resetIs: 'leave the room — `Crusher` has no persistence, so every `new Game` rebuilds '
+        + 'it at its constructor cell. ⛔ Which also means a window plan may NEVER carry a '
+        + 'crusher position across a re-boot.',
+});
+
 export const CRUSHER_VERBS = Object.freeze({
     bait: Object.freeze({
         verb: 'bait',

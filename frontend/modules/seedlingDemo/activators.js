@@ -405,6 +405,16 @@ export function createActivatorState(world) {
  * over, so `movingSolids` now carries the boxes of anything the RUN moves
  * (the `pushables` state's rects) and a block on a button presses it.
  *
+ * ⛓⛓⛓ R5 SLICE 15: THE THIRD PRESSER IS A CRUSHER, AND IT IS WHAT SOLVES
+ * L41. `Crusher` is `type = "Solid"` and it moves ON ITS OWN, so it reaches
+ * this list through `movingSolids` exactly as a pushed block does — and the
+ * game's own exclusion list is `Cover` only, so nothing stops it. In L41
+ * three baits walk it onto `button@248,232`, where it holds `cover@112,128`
+ * open FOREVER; the cover is the only push stance the room's one block has,
+ * and that block is the only Solid that can reach the wandlock's button.
+ * ⇒ a room whose two locks each need a Solid on a button, one block, and the
+ * block behind the first lock — solved by making the obstacle the machine.
+ *
  * ⚠ STILL NOT ENEMIES. `hitables[1]` is `"Enemy"` and no enemy is modelled
  * as a mover, so an enemy standing on a button is invisible here. That is
  * the same boundary R2 named, narrowed by one term rather than closed, and

@@ -822,6 +822,18 @@ export function step(state, held, opts = {}) {
          */
         burnedTrees = null,
         fallenRocks = null,
+        /**
+         * ⛓⛓⛓ R5 SLICE 15: THE NINTH, AND THE FIRST THAT MOVES ON ITS OWN.
+         *
+         * Listed here as its own entry rather than folded into the block
+         * above because §28.2's finding was that this exact destructuring
+         * pattern loses keys silently, twice, for four slices. A crusher's
+         * box is the one in this list that can change WITHOUT the player
+         * having done anything, so a sweep that could not see it would walk
+         * into a wall that arrived on its own — the failure mode the burn's
+         * had, minus even the press to hang a suspicion on.
+         */
+        crushers = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1156,7 +1168,7 @@ export function step(state, held, opts = {}) {
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    burnedTrees, fallenRocks, pulledRopes, openChests }),
+                    burnedTrees, fallenRocks, crushers, pulledRopes, openChests }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

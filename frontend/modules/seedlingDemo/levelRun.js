@@ -66,6 +66,7 @@ import {
 import {
     SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
+import { alwaysArmed, crusherRect, stepCrusher } from './crusher.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -260,6 +261,10 @@ export function createLevelRun({
         // it is dropped anyway, because "no item does" is a claim about the
         // current census and not about the mechanism.)
         spinnerStates.delete(n);
+        // R5 slice 15: the crusher roster is built from the world too. No
+        // item grants or removes one today; dropped anyway, for the reason
+        // the spinner's is.
+        crusherStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -372,12 +377,31 @@ export function createLevelRun({
      * filter is here rather than in the reader.
      */
     const movingSolidsNow = () => {
-        const st = pushableStateFor(level);
-        if (st.byId.size === 0) return [];
         const out = [];
-        for (const [id, r] of pushableRects(st)) {
-            if (!r.removed) out.push({ id, rect: r.rect });
+        const st = pushableStateFor(level);
+        if (st.byId.size > 0) {
+            for (const [id, r] of pushableRects(st)) {
+                if (!r.removed) out.push({ id, rect: r.rect });
+            }
         }
+        /**
+         * ⛓⛓⛓ R5 SLICE 15: AND A CRUSHER IS A PRESSER TOO.
+         *
+         * `Button.update` collides `["Player","Enemy","Solid"]` and excludes
+         * only a `Cover`; `Crusher.type` is `"Solid"`. So a crusher parked on
+         * a button holds it down — and in L41 that is not a curiosity, it is
+         * the room's SOLUTION: the crusher is the only Solid that can reach
+         * `button@248,232`, and that button is what holds `cover@112,128`
+         * open long enough for the room's one block to be pushed at all.
+         *
+         * ⚠ IT REACHES EVERY CONSUMER OF THIS LIST, and each one is right:
+         * `Cover.update`'s occupancy arm (`["Solid","Player"]`) and
+         * `Lock.returnToNormal`'s (`["Player","Enemy","Solid"]`) both hold
+         * open for a Solid in their own cell, and a parked crusher is one.
+         * A list that carried it for the PRESS and not for the OCCUPANCY
+         * would be the two-member-list shape again.
+         */
+        for (const [id, c] of crusherRectsNow() ?? []) out.push({ id, rect: c.rect });
         return out;
     };
     const pulledRopeIdsNow = () => {
@@ -417,6 +441,77 @@ export function createLevelRun({
         }
         return fallRockStates.get(n);
     };
+    /**
+     * ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHERS, THE NINTH FAMILY ────────────────
+     *
+     * The first solid on this map that MOVES WITHOUT THE PLAYER TOUCHING IT.
+     * A block moves when a press shoves it, a rope shrinks when it is
+     * pulled, a rock drops when a rope publishes; a crusher charges the
+     * moment it can SEE you, so its box is a function of every tick of the
+     * run and of no single event in it.
+     *
+     * ⚠ THE STATE IS THE ENTITY POINT, NOT THE BOX CORNER. `update()`'s
+     * `Math.round(x / Tile.w) * Tile.w` snaps the entity, which sits at the
+     * body's CENTRE (`setHitbox(32, 32, 16, 16)`), so `ex`/`ey` from the
+     * roster are what this holds and `crusherRect` is what the geometry sees.
+     */
+    const crusherStates = new Map();
+    const crusherStateFor = (n) => {
+        if (!crusherStates.has(n)) {
+            assertCrusherSolidsBound(n);
+            const byId = new Map();
+            for (const c of worldFor(n).crushers ?? []) {
+                byId.set(c.id, { id: c.id, t: c.t, x: c.ex, y: c.ey, vx: 0, vy: 0 });
+            }
+            crusherStates.set(n, byId);
+        }
+        return crusherStates.get(n);
+    };
+    /**
+     * The live boxes, for `collidesSolid`'s `crushers` arm.
+     *
+     * ⚠ RETURNS `null` FOR A ROOM WITH NONE, like `pulledRopeIdsNow` and for
+     * the same reason: 113 of the 116 levels hold no crusher at all and this
+     * is on the hot path.
+     */
+    const crusherRectsNow = () => {
+        const st = crusherStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, c] of st) out.set(id, { id, rect: crusherRect(c), x: c.x, y: c.y });
+        return out;
+    };
+    /**
+     * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
+     *    IN THIS FILE ─────────────────────────────────────────────────────
+     *
+     * `botDriverV2.liveGeometryOpts` was slice 14's answer to three
+     * hand-written option literals in the DRIVER, one of which cost a leg.
+     * This file had FIVE — the block's collide, the spinner's collide, the
+     * chest's `solidOver`, the seal piece's `blockedAt`, and `stepV2` itself
+     * — and adding a ninth family to five literals is how a sixth one
+     * quietly acquires a different world.
+     *
+     * ⚠ `beforeTypeFlip` IS NOT IN HERE. It is a fact about the TICK
+     * (`firstTickInWorld`) rather than about the run's geometry, and only the
+     * queries that run on a live tick want it; the callers that do pass it.
+     */
+    const liveSolidOpts = (extra = {}) => ({
+        // ⚠ COMPUTED LAZILY-BY-CALLER WHERE IT MATTERS: three of the four
+        // call sites already hold this tick's set and pass it in `extra`,
+        // and `openActivatorIds` walks every activator in the room.
+        openActivators: extra.openActivators !== undefined
+            ? extra.openActivators : openActivatorIds(activatorStateFor(level)),
+        openBridges: openBridgeIdsNow(),
+        pushables: pushableRectsNow(),
+        brokenRocks: brokenRockIdsNow(),
+        burnedTrees: burnedTreeIdsNow(),
+        pulledRopes: pulledRopeIdsNow(),
+        fallenRocks: fallenRocksNow(),
+        openChests: openChestIdsNow(),
+        crushers: crusherRectsNow(),
+        ...extra,
+    });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
     const fallenRocksNow = () => {
         const st = fallRockStateFor(level);
@@ -430,6 +525,13 @@ export function createLevelRun({
     };
     /** ⛔⛔ R5 slice 10: `{id, level, t, flag, deadFrames}` per rock dropped. */
     const rockFalls = [];
+    /**
+     * ⛔⛔ R5 slice 15: every tick a crusher's `hit()` found the player inside
+     * its body. `Bot.noDamage` makes the GAME survive it, so this is a route
+     * defect the run REPORTS rather than a death it simulates — see
+     * `stepCrushersNow`.
+     */
+    const crusherContacts = [];
     /**
      * ⛓⛓ Frozen frames this run has spent that the TAPE never sees.
      *
@@ -645,6 +747,25 @@ export function createLevelRun({
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
         // heading north-east — there is no state on the class to carry.
         spinnerStates.delete(n);
+        /**
+         * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
+         * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
+         *
+         * Source-verified: `Crusher.as` has no `check()`, no `removed()` and
+         * no `Game.setPersistence` call of any kind, so unlike a spinner
+         * (whose roster IS filtered by a cleared flag) a crusher is
+         * unconditional AND positionless across a build. Two consequences a
+         * route plan has to hold at once:
+         *
+         *   ⛓ A BOTCHED PARK IS ONE ROOM-EXIT FROM RESET — the recovery from
+         *     sealing a corridor is to leave and come back.
+         *   ⛔ AND EVERY WINDOW BOOT RESETS IT. A window that boots into L41
+         *     gets the crusher at (256,80) however the previous window left
+         *     it, so a plan may NEVER carry a crusher position across a
+         *     re-boot; it re-derives them per boot. `Bot.as:811`'s re-boot to
+         *     a tape's own boot block is the same fact from the driver's side.
+         */
+        crusherStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -959,6 +1080,14 @@ export function createLevelRun({
         // blocks — see the step site), so these are this tick's positions,
         // which is exactly what the game's block collides against.
         const spinners = spinnerRectsNow();
+        // ⚠ BUILT ONCE PER TICK, NOT PER PROBE. `collides` is called for
+        // every 1 px step of every block on both axes, and `liveSolidOpts`
+        // rebuilds eight per-visit views — hoisting it is the difference
+        // between a hot path and a quadratic one. The one thing that MUST
+        // stay per call is `pushables`, which is read live (see below).
+        const base = liveSolidOpts({
+            beforeTypeFlip: firstTickInWorld, openActivators, openBridges,
+        });
         return {
             collides: (rect, self) => {
                 // ⚠ READ LIVE, not off a snapshot taken at the top of the
@@ -971,17 +1100,7 @@ export function createLevelRun({
                 // costs nothing to close.)
                 const withoutSelf = pushableRects(pushState);
                 withoutSelf.set(self.id, { ...withoutSelf.get(self.id), removed: true });
-                const hit = world.collidesSolid(rect, {
-                    beforeTypeFlip: firstTickInWorld,
-                    openActivators,
-                    openBridges,
-                    pushables: withoutSelf,
-                    brokenRocks: brokenRockIdsNow(),
-                    burnedTrees: burnedTreeIdsNow(),
-                    pulledRopes: pulledRopeIdsNow(),
-                    fallenRocks: fallenRocksNow(),
-                    openChests: openChestIdsNow(),
-                });
+                const hit = world.collidesSolid(rect, { ...base, pushables: withoutSelf });
                 if (hit) return hit;
                 // ⛔⛔⛔ THE CELL THAT COST THE SHAFT ITS LEDGER. A
                 // `PushableBlock*`'s ctor pushes "Enemy" onto its own solids
@@ -1037,18 +1156,13 @@ export function createLevelRun({
         // spinner at the position this tick gives it — the two are one tick
         // apart in opposite directions, which is what the update list says.)
         const pushables = pushableRectsNow();
+        // ⚠ ONCE PER TICK — see `pushableCtx`'s note. A spinner's sweep is
+        // 1 px steps on both axes too.
+        const base = liveSolidOpts({
+            beforeTypeFlip: firstTickInWorld, openActivators, openBridges, pushables,
+        });
         return {
-            collides: (rect) => world.collidesSolid(rect, {
-                beforeTypeFlip: firstTickInWorld,
-                openActivators,
-                openBridges,
-                pushables,
-                brokenRocks: brokenRockIdsNow(),
-                burnedTrees: burnedTreeIdsNow(),
-                pulledRopes: pulledRopeIdsNow(),
-                fallenRocks: fallenRocksNow(),
-                openChests: openChestIdsNow(),
-            }),
+            collides: (rect) => world.collidesSolid(rect, base),
             // ⚠ THE ENTITY POINT, not a box centre — they coincide on a
             // spinner and do NOT on a block, whose `input()` probes
             // `x - originX + width/2`. `Enemy.getState()` takes `(x, y)`.
@@ -1094,6 +1208,68 @@ export function createLevelRun({
             + 'refused rather than approximated.');
     };
 
+    /**
+     * ⛓⛓⛓ R5 SLICE 15: THE CRUSHER'S OWN COLLISION QUESTION — and it is
+     * NARROWER than the player's and narrower than the spinner's.
+     *
+     * ```
+     *   Player   ["Solid","Tree","Rock","Rope","ShieldBoss"] + "LavaBoss"
+     *   Spinner  ["Solid","Tree","Rock","Rope","ShieldBoss"]   (Mobile's, untouched)
+     *   Crusher  ["Solid"]                                     (Crusher.as:22)
+     * ```
+     *
+     * and its SIGHT test is `collideLine("Solid", …)`, the same one type. So
+     * a Tree neither shields it nor stops its charge. `solidBoxesForMover`
+     * is the filtered list and `assertCrusherSolidsBound` is what keeps the
+     * "nothing is dropped in L41 or L42" half a measurement.
+     *
+     * ⚠ THE SAME LIST SERVES BOTH HALVES OF THE TICK, deliberately: the
+     * sight line and `moveX`/`moveY` read the identical `"Solid"` type in
+     * the game, and building them separately is how two views of one fact
+     * drift.
+     */
+    const crusherCtx = (self, opts) => {
+        const boxes = world.solidBoxesForMover(opts, self.id);
+        return {
+            // ⚠ `collideTypes(solids, …)` EXCLUDES `this` (`Entity.collide`'s
+            // `e !== this`), so the charge stopper and the sight list are the
+            // same list with the same exclusion — and another crusher is in
+            // BOTH. In L42 that is load-bearing in two directions at once:
+            // each of the two shields the other's sight line, and each is a
+            // wall the other's charge stops against.
+            solids: (rect) => boxes.find((b) => rectsOverlap(rect, b)) ?? null,
+            lineSolids: boxes,
+            // ⛔⛔ THE TWO SHAPES OF ONE PLAYER, and they are 2 px apart.
+            // `collideRect("Player", …)` tests the BOX; `collideLine(…, p.x,
+            // p.y)` takes the ENTITY POINT. §28.8's probe folded them into
+            // one argument and got a chimera; `scanCrusher` refuses that now.
+            playerBox: playerBoxAt(state.x, state.y),
+            playerPoint: { x: state.x, y: state.y },
+        };
+    };
+    /**
+     * ⚠ THE BOUND `crusherCtx` LEANS ON, CHECKED RATHER THAN CLAIMED — the
+     * `assertSpinnerSolidsBound` shape, one mover over and with more to say.
+     *
+     * Two ways the model could be reading a world the game does not have:
+     * a solid whose AS3 type is not `"Solid"` (dropped correctly, but the
+     * drop should be VISIBLE the first time it happens on a route), and a
+     * PIXELMASK, which `collideLineSolid` cannot sample at all.
+     */
+    const assertCrusherSolidsBound = (n) => {
+        const w = worldFor(n);
+        if ((w.crushers ?? []).length === 0) return;
+        const masks = w.pixelmasks ?? [];
+        if (masks.length > 0) {
+            throw new Error(`levelRun: level ${n} holds ${w.crushers.length} crusher(s) AND `
+                + `${masks.length} pixelmask collider(s). A crusher's sight line is `
+                + '`collideLine("Solid", …)`, a 1 px raycast of POINTS, and '
+                + '`collideLineSolid` walks BOXES — so a Building or a CliffSide would '
+                + 'shield it in the model over its whole bounding rect and in the game '
+                + 'only over its opaque pixels. Give the raycast a mask sampler before '
+                + 'routing here.');
+        }
+    };
     /**
      * ⚠ THE BOUND `spinnerCtx` LEANS ON, CHECKED RATHER THAN CLAIMED.
      *
@@ -1596,17 +1772,11 @@ export function createLevelRun({
                     x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
                 };
                 const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
-                return !!world.collidesSolid(box, {
+                return !!world.collidesSolid(box, liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
                     openActivators: openActivatorIds(activators),
-                    openBridges: openBridgeIdsNow(),
-                    pushables: pushableRectsNow(),
-                    brokenRocks: brokenRockIdsNow(),
-                    burnedTrees: burnedTreeIdsNow(),
-                    pulledRopes: pulledRopeIdsNow(),
-                    fallenRocks: fallenRocksNow(),
                     openChests,
-                });
+                }));
             },
         });
         for (const ev of events) {
@@ -1761,6 +1931,76 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R5 SLICE 15: ONE TICK OF EVERY ARMED CRUSHER IN THE ROOM.
+     *
+     * ⚠ THE CTX IS REBUILT PER CRUSHER, ON PURPOSE. `moveX` collides against
+     * the world as it is when THAT entity updates, and in L42 the two are
+     * adjacent — so the second one's charge must see the first where this
+     * loop just left it, and its sight line must be shielded by it there
+     * too. Sharing one snapshot across the loop would give the second
+     * crusher a one-tick-stale wall, which is the `pushableCtx` lesson
+     * (`withoutSelf` read LIVE, not off a snapshot) on a mover that actually
+     * has two instances on a route.
+     *
+     * ⛔ THE ORDER WITHIN THE LOOP IS THE ROSTER'S, which is the extract's,
+     * which is `Game.loadlevel`'s `for each` — and `World.addUpdate`
+     * PREPENDS, so the update list is its REVERSE. Iterated backwards for
+     * that reason; in L42 it decides which of two adjacent crushers reads
+     * the other as already-moved.
+     */
+    function stepCrushersNow() {
+        const st = crusherStateFor(level);
+        if (st.size === 0) return;
+        const ids = [...st.keys()].reverse();
+        for (const id of ids) {
+            const c = st.get(id);
+            // `update()`'s whole body is behind `if (activate || t == -1)`.
+            // ⛔ On a `Lock` that same literal is the KILL-LOCK sentinel;
+            // here it means ON, permanently.
+            //
+            // ⚠ REFUSED RATHER THAN APPROXIMATED for a grouped one. All four
+            // crushers in the game carry `tset -1` (asserted in
+            // `crusher.test.js` against the extract), so the `activate` arm
+            // is reachable in the class and unexercised by the data — and
+            // wiring it would mean deciding whether a `Crusher` joins
+            // `activators`, which is exactly the question §21.65 got wrong
+            // for the `Pulser` (a Solid either way, so "open" would read as
+            // passable). The first placement that needs it gets a name.
+            if (!alwaysArmed(c.t)) {
+                throw new Error(`levelRun: ${id} in level ${level} has tset ${c.t}, not -1. `
+                    + '`Crusher.update` opens on `activate || t == -1` and only the '
+                    + 'sentinel is modelled: a grouped crusher would have to be published '
+                    + 'to by a presser, and whether an "open" Crusher is passable is the '
+                    + '`Pulser` question (§21.65) on a class that also MOVES. No placement '
+                    + 'in the game has one — this needs a ruling, not a default.');
+            }
+            // ⚠ THE OPTS ARE REBUILT PER CRUSHER, and that is the point:
+            // the second one's world contains the first where THIS loop just
+            // left it (`liveSolidOpts` reads `crusherRectsNow()` live).
+            const r = stepCrusher(c, crusherCtx(c, liveSolidOpts()));
+            st.set(id, { ...c, ...r.crusher });
+            if (r.kills) {
+                /**
+                 * ⛔⛔ A CONTACT IS 1000 DAMAGE — `die()` at any `hitsMax` —
+                 * AND IT IS NOT REPORTED AS A DEATH HERE.
+                 *
+                 * `Bot.noDamage` is on for every tape this ladder emits, so
+                 * the GAME survives a contact and the model must not
+                 * pretend otherwise: a run that threw here would diverge
+                 * from the recording it is checked against. What it is
+                 * instead is a ROUTE DEFECT — a stance the plan said was
+                 * clear and was not — so it is recorded, and the leg verbs
+                 * assert the list is empty. A relaxation that hides a
+                 * mistake is only safe while something still counts them.
+                 */
+                crusherContacts.push({
+                    t: ticksCompleted + 1, level, id, x: r.crusher.x, y: r.crusher.y,
+                });
+            }
+        }
+    }
+
+    /**
      * One tick of the live `SealPiece`, if there is one.
      *
      * ⚠ ITS ORDER IS UNOBSERVABLE and that is asserted rather than assumed:
@@ -1776,17 +2016,9 @@ export function createLevelRun({
             playerBox: playerBoxAt(state.x, state.y),
             blockedAt: (x, y) => {
                 const b = sealPieceBox({ x, y });
-                return !!world.collidesSolid(b, {
+                return !!world.collidesSolid(b, liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
-                    openActivators: openActivatorIds(activatorStateFor(level)),
-                    openBridges: openBridgeIdsNow(),
-                    pushables: pushableRectsNow(),
-                    brokenRocks: brokenRockIdsNow(),
-                    burnedTrees: burnedTreeIdsNow(),
-                    pulledRopes: pulledRopeIdsNow(),
-                    fallenRocks: fallenRocksNow(),
-                    openChests: openChestIdsNow(),
-                });
+                }));
             },
         });
         sealPiece = r.piece;
@@ -2586,6 +2818,42 @@ export function createLevelRun({
         get burnedTrees() { return noclip ? null : (burnedTreeIdsNow() ?? new Set()); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
         get pulledRopes() { return noclip ? null : (pulledRopeIdsNow() ?? new Set()); },
+        /**
+         * ⛓⛓⛓ R5 SLICE 15: WHERE EVERY CRUSHER IN THIS ROOM IS RIGHT NOW —
+         * the NINTH family's answer to the question the other eight answer
+         * with a set, and it needs a MAP because the fact is a position.
+         *
+         * ⚠ AND IT IS THE ONE MEMBER OF THE FAMILY A PLANNER MAY NOT TREAT
+         * AS SETTLED. `brokenRocks`, `burnedTrees` and `openChests` are
+         * monotone: once the run has opened a cell it stays open, so a leg
+         * planned against them stays valid for its whole duration. A crusher
+         * moves on its own, so this is a SNAPSHOT and a route flooded
+         * against it is only sound while the crusher is PARKED. That is what
+         * makes the two-phase doctrine a rule and not a style —
+         * `crusherIsParked` is the predicate a phase-2 plan has to check.
+         */
+        get crushers() {
+            if (noclip) return null;
+            return crusherRectsNow() ?? new Map();
+        },
+        /**
+         * ⛓ Is every crusher in this room at rest? The precondition a
+         * phase-2 (static-world) plan has to hold, asked of the run rather
+         * than assumed by it.
+         */
+        get crushersParked() {
+            if (noclip) return true;
+            for (const c of crusherStateFor(level).values()) {
+                if (c.vx !== 0 || c.vy !== 0) return false;
+            }
+            return true;
+        },
+        /**
+         * ⛔⛔ Every tick a crusher's body overlapped the player. `Bot.noDamage`
+         * is why the run continues; this list is why "the route stayed out of
+         * the body" is a CLAIM and not a silence.
+         */
+        get crusherContacts() { return crusherContacts.map((c) => ({ ...c })); },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
         get openChests() { return noclip ? null : (openChestIdsNow() ?? new Set()); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
@@ -2793,6 +3061,31 @@ export function createLevelRun({
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
             if (!noclip) stepPulsersNow(activators, pushState);
+            // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
+            //
+            // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`
+            // PREPENDS, so the update list is reverse add order:
+            //
+            //   pushables (:2216-2218) -> cover (:2194) -> pulser (:2191)
+            //     -> CRUSHER (:2142) -> … -> Player (:2092)
+            //
+            // ⇒ it updates AFTER every activator and every block and BEFORE
+            // the player. Both halves are load-bearing: it charges into
+            // where the pulse just shoved a block, and the player's sweep
+            // this tick reads it where THIS call left it. Placing it below
+            // the player would let a route walk through a charge.
+            //
+            // ⚠ AND IT IS ABOVE THE CEREMONY'S EARLY RETURN, like the blocks
+            // and the LightPole and the spinner — but for the strongest
+            // version of the reason. `Crusher.update` has NO
+            // `Game.freezeObjects` test at all (`CEREMONY_RULE.freezeGated`),
+            // so it moves through a pickup's 150 frozen frames at full
+            // speed. Its `hit()` runs through them too and lands on a no-op,
+            // because every damage path reaches the player through the
+            // freeze-gated `Player.hit` (§27.6) — so the claim a collect
+            // near one has to discharge is ONE FRAME plus a position, and
+            // the position is what this loop computes.
+            if (!noclip) stepCrushersNow();
 
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
@@ -2967,20 +3260,28 @@ export function createLevelRun({
                 noclip,
                 noHazards,
                 beforeTypeFlip: firstTickInWorld,
-                openActivators: noclip ? null : openActivatorIds(activators),
-                // R4: the two per-visit families, live. Under `noclip` there
-                // is no geometry to be part of, so they are inert by the
-                // same argument `openActivators` is.
-                openBridges: noclip ? null : openBridgeIdsNow(),
-                pushables: noclip ? null : pushableRectsNow(),
-                brokenRocks: noclip ? null : brokenRockIdsNow(),
-                burnedTrees: noclip ? null : burnedTreeIdsNow(),
-                pulledRopes: noclip ? null : pulledRopeIdsNow(),
-                fallenRocks: noclip ? null : fallenRocksNow(),
-                // ⛔⛔ R5 slice 9: the join cell L38's chain opens. Without
-                // this the player walks into a chest the run has already
-                // desolidified.
-                openChests: noclip ? null : openChestIdsNow(),
+                // ⛔⛔⛔ R5 SLICE 15: THE PLAYER'S OWN SWEEP, THROUGH THE ONE
+                // BUILDER. Slice 14 found FOUR call sites that had been
+                // handed an option and silently dropped it — and the worst
+                // of them was this one, `stepV2`, the single mover whose
+                // collisions decide where a route actually goes (§28.2).
+                // Every family now arrives here by construction rather than
+                // by a hand-written key, so a tenth cannot be forgotten in
+                // exactly this spot for a third time.
+                //
+                // R4: under `noclip` there is no geometry to be part of, so
+                // they are inert by the same argument `openActivators` is.
+                ...(noclip ? {
+                    openActivators: null,
+                    openBridges: null,
+                    pushables: null,
+                    brokenRocks: null,
+                    burnedTrees: null,
+                    pulledRopes: null,
+                    fallenRocks: null,
+                    openChests: null,
+                    crushers: null,
+                } : liveSolidOpts({ openActivators: openActivatorIds(activators) })),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.
