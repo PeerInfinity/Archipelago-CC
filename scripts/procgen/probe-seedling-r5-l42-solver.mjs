@@ -47,11 +47,17 @@
  * **the escape is not TIMED.** The player must end outside the charge's
  * swept volume and may cross it on the way, on the argument that a walking
  * player is faster than 1 px/tick — which is true (1.2) and is a MARGIN,
- * not a proof. So a plan found here is a CANDIDATE, and the check is
- * `plan-seedling-r5-l42-part4.mjs` driving it through `runBait` against the
- * real `stepCrusher` tick by tick. ⛔ §30.8: an over-approximation a
+ * not a proof. So a plan found here is a CANDIDATE, and the check is the
+ * DRIVEN sections at the bottom of this file, which put the proposal through
+ * the real `stepCrusher` tick by tick. ⛔ §30.8: an over-approximation a
  * POSITIVE result rides on is a wrong answer with a confident shape, and the
  * discipline that answers it is that the search never gets the last word.
+ *
+ * ⛔⛔ IT ALREADY EARNED ITS KEEP TWICE. The PERMISSIVE reading returns a
+ * six-charge ordering — three cheaper, symmetric, and pretty — whose first
+ * escape the game runs over in six ticks. And the PESSIMISTIC reading's own
+ * chain 1 drives perfectly, zero contacts, and finishes the player on the
+ * wrong side of the body it just parked.
  *
  * And PESSIMISTIC in three, which is the safe direction:
  *   - the OTHER crusher is a live scanner throughout the escape, and its
@@ -76,6 +82,7 @@ const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const { buildLevelWorld, ROLES, TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { plannerObstacleAt } = await import(join(MODULE, 'botDriverV2.js'));
+const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
 const { L42_PART4, L42_SOLVE } = await import(join(MODULE, 'r5Totem.js'));
 const {
@@ -84,6 +91,26 @@ const {
 
 const MAP = process.argv.includes('--map');
 const ALL = process.argv.includes('--all');
+/**
+ * ⚖⚖ THE TWO ESCAPE READINGS, AND WHY BOTH ARE BANKED.
+ *
+ * Mid-charge the mover is neither where it was nor where it will be, so
+ * "what shields the player during the escape" has two defensible answers
+ * and the room's answer is different for different charges:
+ *
+ *   default      the mover is ABSENT — it is not a wall and it is not a
+ *                shield. Pessimistic, and it forbids the escape that runs
+ *                behind the body that has just passed.
+ *   --permissive the mover is not a wall (its cells stay passable) AND it
+ *                IS a shield (the other crusher's sight is taken with it at
+ *                its park). Optimistic, and it is what the game does when
+ *                the player escapes into the corridor the body just left.
+ *
+ * ⛔ Neither is a proof and this probe says which one it ran under. The
+ * pessimistic reading returns NINE charges, the permissive one SIX; the
+ * check for either is the drive, and it is in this file.
+ */
+const PERMISSIVE = process.argv.includes('--permissive');
 const levelSource = atlasLevelSource();
 const held = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
 const world = buildLevelWorld(levelSource(42), { roles: ROLES, inventory: held });
@@ -359,8 +386,12 @@ const escapesFrom = (self, stance, cfg, next, swept) => {
     // pessimistic reading is the only one a POSITIVE result may ride on.
     const cfgNoSelf = { ...cfg, [self]: { x: -1000, y: -1000 } };
     // The other crusher scanning with NOTHING but the static world to blind
-    // it — memoised on its own position, since that is all it depends on.
-    const bk = `${cfg[other].x},${cfg[other].y}`;
+    // it (default), or with the mover's PARK in the way (--permissive) —
+    // memoised on both positions, since that is all it depends on.
+    const otherLine = PERMISSIVE
+        ? [...staticSolids, crusherRect(next[self])] : staticSolids;
+    const bk = `${cfg[other].x},${cfg[other].y}`
+        + `|${PERMISSIVE ? `${next[self].x},${next[self].y}` : '-'}`;
     let bare = bareScan.get(bk);
     if (!bare) { bare = new Map(); bareScan.set(bk, bare); }
     const passable = (n) => {
@@ -370,7 +401,7 @@ const escapesFrom = (self, stance, cfg, next, swept) => {
         let d = bare.get(n);
         if (d === undefined) {
             d = scanCrusher(cfg[other], playerBoxAt(cellX(n), cellY(n)),
-                { x: cellX(n), y: cellY(n) }, staticSolids).dir;
+                { x: cellX(n), y: cellY(n) }, otherLine).dir;
             bare.set(n, d);
         }
         return d === null;
@@ -442,7 +473,8 @@ while (queue.length) {
     }
 }
 
-console.log(`\n## the search — ${expanded} state(s) expanded, ${seenStates.size} distinct, `
+console.log(`\n## the search (${PERMISSIVE ? 'PERMISSIVE' : 'pessimistic'} escape) — `
+    + `${expanded} state(s) expanded, ${seenStates.size} distinct, `
     + `${generated} transition(s)`);
 check(solutions.length > 0,
     '⛓⛓⛓ L42 IS SOLVABLE WITH THE RETURN PRICED — a blind BFS finds an ordering',
@@ -455,11 +487,11 @@ if (solutions.length > 0) {
     const sol = solutions[0];
     const got = sol.path.map((x) => `${x.id} ${x.dir} ${x.travel} ${x.park.x},${x.park.y}`);
     const want = L42_SOLVE.ordering.map((x) => `${x.id} ${x.dir} ${x.travel} ${x.park.x},${x.park.y}`);
-    check(got.join(' | ') === want.join(' | '),
+    check(PERMISSIVE || got.join(' | ') === want.join(' | '),
         '⛓⛓ …AND IT IS THE BANKED ONE — `r5Totem.L42_SOLVE.ordering`, re-derived',
         `${got.length} baits against ${want.length}. A search whose answer nobody pins is `
         + 'a search the next slice re-runs and cannot compare.');
-    check(sol.region.size === L42_SOLVE.solved.safeNodes
+    check(PERMISSIVE || sol.region.size === L42_SOLVE.solved.safeNodes
         && holdsPart(sol.region) === L42_SOLVE.solved.partReachable
         && reachesExit(sol.seed, sol.cfg) === L42_SOLVE.solved.exitReachable
         && startComp.size === L42_SOLVE.arrival.safeNodes,
@@ -468,7 +500,8 @@ if (solutions.length > 0) {
         + `exit ${reachesExit(sol.seed, sol.cfg)} against ${L42_SOLVE.solved.safeNodes} / `
         + `${L42_SOLVE.solved.partReachable} / ${L42_SOLVE.solved.exitReachable}; the `
         + `arrival's safe flood ${startComp.size} against ${L42_SOLVE.arrival.safeNodes}.`);
-    check(Object.entries(L42_SOLVE.parks).every(([id, p]) => sol.cfg[id].x === p.x && sol.cfg[id].y === p.y),
+    check(PERMISSIVE
+        || Object.entries(L42_SOLVE.parks).every(([id, p]) => sol.cfg[id].x === p.x && sol.cfg[id].y === p.y),
         '⛓⛓⛓ BOTH BODIES FINISH IN THE TOP ROOM — the one part of the level nothing needs',
         Object.entries(sol.cfg).map(([id, p]) => `${id.slice(8)} (${p.x},${p.y})`).join(', ')
         + '. ⛓ THE TOP ROOM IS THE ANSWER: it is the only region of L42 that is neither '
@@ -548,6 +581,115 @@ for (const sol of solutions.slice(0, ALL ? 8 : 1)) {
         + 'column and row 4 across every column but this one. ⛓ A one-tile dead end that '
         + 'leads nowhere is what makes the whole ordering realisable — which is why the '
         + 'search had to be BLIND: no reading of the room proposes it.');
+}
+
+/**
+ * ⛔⛔⛔ AND THE PERMISSIVE READING IS REFUTED BY THE GAME, IN SIX TICKS.
+ *
+ * `--permissive` returns a SIX-charge ordering, symmetric and pretty: each
+ * crusher does W then N then E and both finish in the top room, which is
+ * three charges cheaper than the pessimistic answer. Its first move is
+ * `A W` with the player escaping NORTH from tile (5,10) into rows 7,8 — and
+ * that escape does not exist.
+ *
+ * A's west lane is rows 9,10, so the player has to be in rows 9,10 to
+ * trigger it at all; A parks in rows 9,10 at cols 4,5; and the only way out
+ * northward is 35 px up the corridor, which is 30 ticks at 1.2 px/tick.
+ * A's left edge starts 6 px from the player's box. Driven, holding `up`
+ * from the stance:
+ *
+ *     the player rises 14 px, stops dead against the arriving body,
+ *     and takes 48 CONTACTS
+ *
+ * ⛓⛓ THIS IS THE WHOLE REASON THE SEARCH IS NOT THE ORACLE. Both readings
+ * are defensible on the geometry; only one survives the clock. ⇒ §30.8's
+ * rule, from the other side: an over-approximation a POSITIVE result rides
+ * on is a wrong answer with a confident shape — and the shape here was a
+ * SHORTER answer, which is exactly the kind a reader wants to believe.
+ */
+{
+    const run = createLevelRun({
+        levelSource, boot: { level: 42, x: 80, y: 176 }, inventory: held, noDamage: true,
+    });
+    const up = new Set(['up']);
+    const y0 = run.state.y;
+    for (let i = 0; i < 60; i += 1) run.advance(up);
+    const c = run.crushers.get(A);
+    console.log('\n## the permissive ordering\'s first escape, DRIVEN');
+    console.log(`   player ${y0.toFixed(2)} -> ${run.state.y.toFixed(2)} `
+        + `(${(y0 - run.state.y).toFixed(2)} px north), A at (${c.x},${c.y}), `
+        + `${run.crusherContacts.length} contact(s)`);
+    check(run.crusherContacts.length > 0 && y0 - run.state.y < 20,
+        '⛔⛔⛔ THE PERMISSIVE READING\'S FIRST ESCAPE IS RUN OVER — 48 contacts, 14 px',
+        `${run.crusherContacts.length} contact(s), ${(y0 - run.state.y).toFixed(2)} px of `
+        + `northward travel, first contact at t${run.crusherContacts[0]?.t}. The player `
+        + 'needs 35 px to clear rows 9,10 and A\'s left edge is 6 px away, so the body '
+        + 'arrives first and then BLOCKS the rest of the climb — `Crusher.solids` is '
+        + '`["Solid"]` so it moves THROUGH the player, and the player\'s own sweep '
+        + 'refuses to move INTO it. ⇒ the six-charge ordering is geometrically real and '
+        + 'physically impossible, and only the drive can tell the difference.');
+}
+
+/**
+ * ⛓⛓⛓ CHAIN 1, DRIVEN — AND ITS THIRD CHARGE ENDS IN THE WRONG REGION.
+ *
+ * The pessimistic ordering's first three charges are one `bait` chain, and
+ * the spans for it are SEARCHED rather than guessed: a beam over 8-tick
+ * blocks, driven through the same `stepCrusher` the run steps, scored on
+ * the crusher's own progress with the player's clearance as the tie-break —
+ * and the tie-break is the whole choreography, because once a charge is
+ * committed every candidate has the SAME crusher and a score made only of
+ * crusher progress ties across the beam.
+ *
+ * Driven, A walks its three charges in 216 ticks with ZERO contacts. And
+ * the player finishes at tile (15,13), which is the wrong side of it:
+ *
+ *   A's east charge from `(80,224)` has exactly two escapes. SOUTH at col 6
+ *   is the only southern exit from its 64 px east lane, and it is worth
+ *   `x - 98` ticks of margin — between 2 and 12, depending where in the
+ *   16 px tile the player stands. EAST is outrunning the body along row 13,
+ *   which always works and always ends behind it, because row 14 is wall at
+ *   cols 13,14 and the parked body plugs cols 11,12.
+ *
+ * ⚠ NOT FOUND IS NOT IMPOSSIBLE, and the bound is stated: two beams (48
+ * wide over 8-tick blocks to depth 27, and 64 wide over 4-tick blocks),
+ * zero contacts and zero throws in both, found no escape ending in the west
+ * region. A ~10 px window in one tile is exactly the size a block search
+ * steps over.
+ */
+{
+    const run = createLevelRun({
+        levelSource, boot: { level: 42, ...L42_SOLVE.chain1.boot }, inventory: held, noDamage: true,
+    });
+    for (const span of L42_SOLVE.chain1.spans) {
+        const keys = span.key ? new Set(span.key.split('+')) : new Set();
+        for (let i = 0; i < span.ticks; i += 1) run.advance(keys);
+    }
+    for (let i = 0; i < 200; i += 1) run.advance(new Set());
+    const c = run.crushers.get(A);
+    console.log('\n## chain 1, driven');
+    console.log(`   ${L42_SOLVE.chain1.ticks} ticks, ${L42_SOLVE.chain1.spans.length} spans — `
+        + `A ends (${c.x},${c.y}), ${run.crusherContacts.length} contact(s), player `
+        + `(${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) tile `
+        + `(${Math.floor(run.state.x / TILE_SIZE)},${Math.floor(run.state.y / TILE_SIZE)})`);
+    check(c.x === L42_SOLVE.chain1.park.x && c.y === L42_SOLVE.chain1.park.y
+        && run.crusherContacts.length === L42_SOLVE.chain1.contacts,
+        '⛓⛓⛓ CHAIN 1 IS DRIVEN — three charges, one choreography, ZERO contacts',
+        `A (${c.x},${c.y}) against the searched park `
+        + `(${L42_SOLVE.chain1.park.x},${L42_SOLVE.chain1.park.y}), `
+        + `${run.crusherContacts.length} contact(s). ⛓ The first three-charge chain on `
+        + 'the arc driven to a park a SEARCH chose rather than a hand trace, and it '
+        + 'survives the 200 idle ticks after it — a park is a position and a live '
+        + 'scanner, so staying there is its own claim.');
+    const west = run.state.x < 112 || (run.state.y >= 240 && run.state.x < 208);
+    check(west === L42_SOLVE.chain1.endsInWestRegion && west === false,
+        '⛔⛔⛔ …AND THE PLAYER FINISHES ON THE WRONG SIDE OF IT — tile (15,13)',
+        `player (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}), in the west region `
+        + `${west}. A's east charge is escapable SOUTH at col 6 (2-12 ticks of margin, `
+        + 'the only southern exit from its lane) or EAST along row 13 (always, and always '
+        + 'behind it). Row 14 is wall at cols 13,14, so the parked body plugs the only '
+        + 'way back and `totempart 4` is west of it. ⇒ THE ORDERING IS NOT YET A '
+        + 'CHOREOGRAPHY, and this is the link that has to give.');
 }
 
 /**

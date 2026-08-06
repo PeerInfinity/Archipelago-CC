@@ -1993,5 +1993,65 @@ export const L42_SOLVE = Object.freeze({
     solved: Object.freeze({ safeNodes: 296, partReachable: true, exitReachable: true }),
     /** ⛔ The slice-16 ordering, priced for the return. */
     bankedOrderingPriced: Object.freeze({ safeNodes: 212, partReachable: true, exitReachable: false }),
+    /**
+     * ⛔⛔⛔ CHAIN 1 IS DRIVEN, AND ITS THIRD CHARGE ENDS IN THE WRONG
+     * REGION — R5 slice 17's own limit, measured rather than suspected.
+     *
+     * The spans below are a beam search over 8-tick blocks driven through
+     * the real `stepCrusher`: 216 ticks, 18 spans, **zero contacts**, and A
+     * walks (112,160) -> (80,160) -> (80,224) -> (192,224) exactly as the
+     * ordering asks. It is the first three-charge chain on the arc driven
+     * to a SEARCHED park rather than a hand-traced one.
+     *
+     * ⛔ And the player finishes at tile (15,13), on the far side of it.
+     * A's east charge from `(80,224)` has exactly two escapes: SOUTH at col
+     * 6 — the only southern exit from its 64 px east lane, worth `x - 98`
+     * ticks of margin, so between 2 and 12 — or EAST, outrunning the body
+     * along row 13. Every candidate the search found took the second, and
+     * row 14 is wall at cols 13,14, so the parked body plugs the only way
+     * back west and the part is on the other side.
+     *
+     * ⚠ NOT FOUND IS NOT IMPOSSIBLE, and the bound is stated rather than
+     * implied: two beams — 48 wide over 8-tick blocks, which EXHAUSTED at
+     * depth 27 (every candidate that parked A did so eastward), and 64 wide
+     * over 4-tick blocks, stopped at depth 32 — with zero contacts and zero
+     * throws in both, found no escape ending in the west region. The
+     * southern escape is a ~10 px window in one 16 px tile, which is
+     * exactly the size a block search steps over.
+     */
+    chain1: Object.freeze({
+        crusher: 'crusher@96,144',
+        boot: Object.freeze({ level: 42, x: 80, y: 176 }),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up+left', ticks: 8 }), Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'down+left', ticks: 8 }), Object.freeze({ key: 'down+right', ticks: 40 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }), Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }), Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }), Object.freeze({ key: 'down+right', ticks: 16 }),
+            Object.freeze({ key: 'right', ticks: 8 }), Object.freeze({ key: 'down+right', ticks: 16 }),
+            Object.freeze({ key: 'up', ticks: 24 }), Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }), Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 16 }), Object.freeze({ key: null, ticks: 8 }),
+        ]),
+        ticks: 216,
+        contacts: 0,
+        park: Object.freeze({ x: 192, y: 224 }),
+        /** ⛔ tile (15,13) — east of the parked body, and row 14 is wall at cols 13,14. */
+        playerEndsAt: Object.freeze({ x: 253.91395298868215, y: 210.00101520273768 }),
+        endsInWestRegion: false,
+    }),
+    /** ⛔ The permissive reading's first escape, DRIVEN, and it is run over. */
+    permissiveRefuted: Object.freeze({
+        ordering: 'A W/N/E then B W/N/E — six charges, three cheaper than the answer',
+        firstEscape: 'north out of rows 9,10 at cols 4,5, into rows 7,8',
+        needsPx: 35,
+        marginPx: 6,
+        drivenTravelPx: 14,
+        drivenContacts: 48,
+        why: 'the player must be IN rows 9,10 to trigger the west charge and A parks in '
+            + 'rows 9,10; the climb out is 35 px at 1.2 px/tick and A\'s left edge is 6 px '
+            + 'away at 1 px/tick. `Crusher.solids` is `["Solid"]`, so it moves THROUGH '
+            + 'the player and then BLOCKS the rest of the climb.',
+    }),
     driven: false,
 });

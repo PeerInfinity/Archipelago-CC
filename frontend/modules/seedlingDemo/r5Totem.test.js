@@ -1584,3 +1584,62 @@ describe('⛓⛓⛓ L42: the ordering that prices the RETURN parks both bodies i
         expect(open).toEqual([[0, 1]]);
     });
 });
+
+describe('⛔⛔⛔ L42: what the DRIVE said about the search, twice', () => {
+    const inv = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const A = 'crusher@96,144';
+    const runFrom = (boot, spans, settle = 0) => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(), boot, inventory: inv, noDamage: true,
+        });
+        for (const s of spans) {
+            const keys = s.key ? new Set(s.key.split('+')) : new Set();
+            for (let i = 0; i < s.ticks; i += 1) run.advance(keys);
+        }
+        for (let i = 0; i < settle; i += 1) run.advance(new Set());
+        return run;
+    };
+
+    /**
+     * ⛓⛓⛓ THE PESSIMISTIC ORDERING'S FIRST CHAIN, DRIVEN. Three charges in
+     * one choreography, and the park is the one the SEARCH chose.
+     */
+    it('⛓⛓⛓ chain 1 walks A through three parks with zero contacts', () => {
+        const run = runFrom({ level: 42, ...L42_SOLVE.chain1.boot },
+            L42_SOLVE.chain1.spans, 200);
+        expect(run.crusherContacts.length).toBe(L42_SOLVE.chain1.contacts);
+        expect({ x: run.crushers.get(A).x, y: run.crushers.get(A).y })
+            .toEqual({ ...L42_SOLVE.chain1.park });
+        // …and the park survives the idle ticks after it: a park is a
+        // position AND a live scanner (§29.8), so staying is its own claim.
+        expect(run.crushersParked).toBe(true);
+    });
+
+    it('⛔⛔ …and finishes the player on the far side of the body it parked', () => {
+        const run = runFrom({ level: 42, ...L42_SOLVE.chain1.boot },
+            L42_SOLVE.chain1.spans, 200);
+        const west = run.state.x < 112 || (run.state.y >= 240 && run.state.x < 208);
+        expect(west).toBe(L42_SOLVE.chain1.endsInWestRegion);
+        expect(west).toBe(false);
+        // The part is west; A's rect plugs cols 11,12 of rows 13,14 and row
+        // 14 is wall at cols 13,14, so there is no way back along the row.
+        expect(L42_SOLVE.chain1.park.x).toBe(192);
+        expect(L42_PART4.part.x).toBeLessThan(run.state.x);
+        expect(L42_SOLVE.driven).toBe(false);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE PERMISSIVE READING IS REFUTED BY THE CLOCK, NOT BY THE
+     * GEOMETRY. Its six-charge ordering is real on the map and its first
+     * escape does not exist: the climb out of rows 9,10 is 35 px and the
+     * body is 6 px away.
+     */
+    it('⛔⛔⛔ the permissive ordering\'s first escape is run over', () => {
+        const run = runFrom({ level: 42, ...L42_SOLVE.chain1.boot },
+            [{ key: 'up', ticks: 60 }]);
+        expect(run.crusherContacts.length).toBe(L42_SOLVE.permissiveRefuted.drivenContacts);
+        const travelled = (L42_SOLVE.chain1.boot.y + 8) - run.state.y;
+        expect(Math.round(travelled)).toBe(L42_SOLVE.permissiveRefuted.drivenTravelPx);
+        expect(travelled).toBeLessThan(L42_SOLVE.permissiveRefuted.needsPx);
+    });
+});
