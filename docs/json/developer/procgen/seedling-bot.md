@@ -3579,3 +3579,25 @@ fell would not fail — it would quietly succeed at something else.
 `control@224,432` looks like the trigger and is not one: it is a parameter
 block read once at `loadlevel`, and its `@x,@y` is the base of an OFFSET
 rather than a place (`r5Totem.L40_FALLTHROUGH`).
+
+### ⛔ Where the burnable trees actually are — and one flood bug worth naming
+
+Every burnable tree in the game, flooded at the planner's 8 px lattice with
+every activator open, shut vs burned:
+
+```
+  L37  burnabletree@128,192 {tag 1}   1 component, 1869 nodes -> 1889   +20
+       a press stance at (120,232) is INSIDE the 32x32 fire rect and in the
+       same component ⇒ a real PAIR, with no chain in front of it
+  L32  burnabletree@64,0    {tag 0}   1 component,  133      ->  145   +12
+       stance (56,40)
+  L40  burnabletree@872,784 {tag 0}   16 components, and NO stance inside the
+       fire rect is in the largest ⇒ the tree is behind `chest@880,816`
+```
+
+⚠ **`world.width` and `world.height` are in TILES, not pixels.** A flood
+bounded at `w.width` covers 40 px of a 640 px region and reports 8 free
+nodes in a whole overworld level — which reads like a level made of walls
+rather than like a bug in the probe. Multiply by `TILE_SIZE`, and sanity-check
+a component count against something you already know before believing a
+reachability verdict.
