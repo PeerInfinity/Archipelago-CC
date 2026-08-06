@@ -43,8 +43,8 @@
  * arm that finds the escape is the COARSEST one run:
  *
  *     8-tick blocks, confined to col 6   FOUND at depth 26, 216 ticks
- *     4-tick blocks, NOT confined        DIED  at depth 27, 108/108 RUN OVER
- *     1-tick blocks, confined            DIED  at depth 63, 72/72 SEEN
+ *     4-tick blocks, NOT confined        DIED  at depth 27,  108/108 RUN OVER
+ *     1-tick blocks, confined            DIED  at depth 243, 72/72 SEEN
  *
  * ⛔⛔ AND THE TWO DEATHS ARE DIFFERENT FAILURES. The unconfined arm is
  * refused by the ROOM: without the wall this score walks the player east

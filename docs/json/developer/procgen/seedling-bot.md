@@ -4137,3 +4137,91 @@ thing that moves the block off the boss-key chamber's approach, and the whole
 tail hangs off it. Every OTHER activator in the level open by fiat and the
 two buttons are still unreached: that necessity arm is what turns "this link
 cannot be opened" into "the chain from this arrival stops here".
+
+## R5 slice 18: a finer step is not a stronger search
+
+### A span's `key` is a held SET, and reading it as one name is a silence
+
+Every verb in `botDriverV2` hands `run.advance` a held set built by the walk
+machinery, which produces diagonals routinely. `bait.spans` is the one place
+a plan AUTHORS the set by name, and it was built as `new Set([span.key])` —
+one string, whatever the string was. That is right for every L41
+choreography (`left`, `down`, `null`) and silently fatal for the first one
+that needs two axes at once: `applyInput` is four independent
+`held.has('up'|'right'|'down'|'left')` tests, so a set holding the single
+string `"down+right"` matches none of them and the player STANDS STILL for
+every tick of a choreography whose whole point is that it moves. The only
+symptom is a crusher that parked somewhere else.
+
+`heldFromKey` splits on `+` and refuses a token that is not in
+`tapeFormat.KEY_CODES`, the one canonical table — because an unrecognised
+name is loud at the boundary or it is a motionless player three hundred
+ticks later. Same shape as the `bait` verb's own first call one slice
+earlier: an authored input whose SHAPE was never checked, because nothing
+had ever authored one.
+
+### Two overlap conventions in one class are a place to STAND, not just a bug
+
+`laneHitsPlayer` is inclusive on all four edges where every other overlap in
+`crusher.js` is strict — eleven lines apart, and slice 15 recorded it as a
+hazard for measurement. It is also the only reason L42 is solvable. A
+crusher parked at entity `(80,224)` has body `[64,96) x [208,240)` and an
+east lane `[64,160] x [208,240]`; a player box with `y == 240` is INSIDE the
+lane and OUTSIDE the body. So there is a stance from which the charge can be
+triggered and which the charging body passes one pixel above — and the col-6
+shaft, the only break in that corridor's floor inside the lane, is where the
+player stands to use it.
+
+The band's other edge is set by LAST-MATCH-WINS rather than by the room:
+`DIRECTIONS` is E,N,W,S with no `break`, so a stance in both the east and
+the south lane is charged at from the south. `box.x` must clear 96, so the
+band is entity `x ∈ [99,110]` — twelve pixels, worth `x - 98` ticks of
+margin. Deriving it from the two functions rather than quoting the earlier
+arithmetic moved its west edge by one pixel.
+
+### A finer step is not a stronger search
+
+The previous slice drove L42's first chain to a park a search chose and
+finished the player on the wrong side of the body, bounded its own negative
+honestly, and attributed it: *"a ~10 px window in one 16 px tile is exactly
+the size a block search steps over."* So the next step was prescribed as a
+one-tick search of that single charge.
+
+Measured, with the same beam and the same driver, the arm that finds the
+escape is the COARSEST one run — 8-tick blocks, at depth 26 — and the
+prescribed one dies. Two of the three arms die for DIFFERENT reasons, which
+is why the counts matter more than the verdicts:
+
+| arm | result | at the death |
+|---|---|---|
+| 8-tick, confined to col 6 | FOUND, 216 ticks | depth 26 |
+| 4-tick, not confined | died | 108/108 successors RUN OVER |
+| 1-tick, confined | died | 72/72 successors ALREADY SEEN |
+
+The unconfined arm is refused by the ROOM. The 1-tick arm is refused by
+ITSELF: every successor is a state the frontier has already expanded, none
+is run over or out of bounds — and with an EXACT dedup signature in place of
+the rounded one it dies at the same depth for the same reason. **A beam over
+a MOVING world may not dedup across depths on the world state alone.** A
+crusher one tick from committing and one that committed sixty ticks ago are
+the same `(x, y)`, so "wait one more tick" is a move the search cannot
+express.
+
+And a block search's reach is `block x depth`: shrinking the block shortens
+the horizon and multiplies the ways two candidates look identical. What was
+missing was a score that knew where the escape was — a proposer's problem,
+not a resolution one. **A search reports a property of the triple (score,
+granularity, constraint)**, and naming one of the three is how a negative
+gets the wrong cause attached to it.
+
+### Progress is arc length along the ordering, not distance from home
+
+A chain that walks a crusher BACK the way it came makes `|current - home|`
+decrease for most of its charges, so a beam scored on it rewards standing
+still. The score has to be cumulative distance along the ordering's own
+sequence of parks: find the segment the body is currently on, add the
+lengths of the segments before it. And the positional hint has to be keyed
+on the crusher's phase — once a charge commits, every candidate shares the
+crusher and a score made of crusher progress ties across the whole beam, so
+a wildcard key for "while the body travels along this row" is what tells the
+player where to be while nothing it does can change the crusher.

@@ -1772,3 +1772,82 @@ describe('⛓⛓⛓ L42: the escape from A\'s east charge, and it ends WEST', ()
         expect(byBlock[1].found).toBe(false);
     });
 });
+
+/**
+ * ⛓⛓⛓ R5 SLICE 18 — CHAIN 2, BEHIND THE PLANNER'S OWN WALK. §31.9 item 2
+ * asked for the search to run behind the tape `synthesizeLegs` emits rather
+ * than behind a boot at the stance tile; this is that, driven end to end
+ * from the L42 arrival through the driver's own `bait` verb.
+ */
+describe('⛓⛓⛓ L42: two baits from the arrival, and the second is chain 2', () => {
+    const C2 = L42_SOLVE.chain2;
+    const E = L42_SOLVE.escape;
+    const centre = (tx, ty) => ({ x: tx * 16 + 8, y: ty * 16 + 8 });
+    const baitOf = (crusher, chain, stance) => ({
+        ...centre(stance.tx, stance.ty),
+        bait: {
+            crusher,
+            approach: chain.approach.map((s) => ({ ...s })),
+            spans: chain.spans.map((s) => ({ ...s })),
+            park: { ...chain.park },
+        },
+    });
+    const walk = (targets) => synthesizeLegs([{ level: 42, targets }], {
+        levelSource: atlasLevelSource(),
+        boot: { level: 42, x: L42_PART4.arrival.tx * 16, y: L42_PART4.arrival.ty * 16 },
+        relax: {
+            noclip: false,
+            noDamage: true,
+            noHazards: [],
+            grants: [{ level: 42, items: [...E.items] }],
+            persistence: [],
+            equips: [],
+            pins: ['sound', 'dead_frames'],
+            roles: [...ROLES],
+        },
+        name: 'l42-two-baits',
+        lattice: 8,
+        allowGrazes: true,
+        maxTicksPerTarget: 6000,
+    });
+
+    /**
+     * ⛓⛓ `runBait`'s three controls are the claim, and they are the verb's
+     * and not this test's: the crusher must be AWAKE after the approach
+     * (a shielded one never moves), it must END somewhere else, and
+     * `crusherContacts` may not grow — a choreography that is run over
+     * completes exactly like one that worked.
+     */
+    it('⛓⛓⛓ walks A and then B to their parks, from the arrival, with zero contacts', () => {
+        const out = walk([
+            baitOf({ x: 96, y: 144 }, E, { tx: 4, ty: 11 }),
+            baitOf({ x: 128, y: 144 }, C2, C2.stance),
+        ]);
+        expect(out.baits).toHaveLength(2);
+        expect(out.baits[0].crusherTo).toEqual({ ...E.park });
+        expect(out.baits[1].crusherTo).toEqual({ ...C2.park });
+        expect(out.baits[0].ticks).toBe(E.ticks);
+        expect(out.baits[1].ticks).toBe(C2.ticks);
+        expect(out.tape.tick_count).toBe(C2.pairTicks);
+    }, 120000);
+
+    /**
+     * ⛔ THE SPLIT IS MEASURED. Both approaches are seven ticks because both
+     * stances sit one step outside the lane — §30.3's "the approach IS the
+     * trigger" falling out of the search rather than being designed in.
+     */
+    it('⛓ both approaches are the walk INTO the lane, and both are seven ticks', () => {
+        expect(E.approach.reduce((n, s) => n + s.ticks, 0)).toBe(7);
+        expect(C2.approach.reduce((n, s) => n + s.ticks, 0)).toBe(7);
+        expect([...C2.approach, ...C2.spans].reduce((n, s) => n + s.ticks, 0)).toBe(C2.ticks);
+    });
+
+    /** ⛓ Chain 2 is a whole chain in one bait: three parks, one verb. */
+    it('⛓⛓ chain 2 is THREE charges in one bait, and the ordering says so', () => {
+        expect(C2.charges).toEqual(['W', 'N', 'E']);
+        const chain2 = L42_SOLVE.ordering.filter((s) => s.chain === 2);
+        expect(chain2.map((s) => s.dir)).toEqual([...C2.charges]);
+        expect(chain2[chain2.length - 1].park).toEqual({ ...C2.park });
+        expect(chain2.every((s) => s.id === C2.crusher)).toBe(true);
+    });
+});

@@ -2129,8 +2129,8 @@ export const L42_SOLVE = Object.freeze({
      * finds the escape is the COARSEST, while the prescribed one dies:
      *
      *     8-tick, confined to col 6    FOUND at depth 26, 216 ticks
-     *     4-tick, NOT confined         DIED  at depth 27, 108/108 RUN OVER
-     *     1-tick, confined             DIED  at depth 63, 72/72 ALREADY SEEN
+     *     4-tick, NOT confined         DIED  at depth 27,  108/108 RUN OVER
+     *     1-tick, confined             DIED  at depth 243, 72/72 ALREADY SEEN
      *
      * ⛔ AND THE TWO DEATHS ARE DIFFERENT FAILURES, which is why the counts
      * are banked and not just the verdicts. The unconfined arm is refused
@@ -2182,6 +2182,78 @@ export const L42_SOLVE = Object.freeze({
                 + 'dedup across depths on a time-varying world is.',
         }),
     ]),
+    /**
+     * ⛓⛓⛓ R5 SLICE 18 — CHAIN 2, DRIVEN BEHIND THE PLANNER'S OWN WALK.
+     *
+     * §31.9 item 2: *"chain 2's search has to run behind the tape
+     * `synthesizeLegs` actually emits, not behind a boot at the stance
+     * tile."* It does — the prefix for this search is the 548-tick tape the
+     * planner emits for `arrival -> chain 1 -> stance`, so the beam runs
+     * from the state the real walk leaves rather than from a boot at the
+     * same cell.
+     *
+     * B walks W -> (80,160), N -> (80,96), E -> (240,96) in **304 ticks,
+     * ZERO contacts**, and the player finishes at tile (6,5) in the top
+     * room. Two baits now drive end to end from the L42 arrival: 852 ticks,
+     * both parks asserted, `runBait`'s three controls green on both.
+     *
+     * ⛓⛓ AND EVERY ESCAPE IN IT IS FORCED BY THE ROOM'S OWN WIDTH. The west
+     * corridor is exactly two tiles wide and a `Crusher` is exactly 32 px,
+     * so a charge along it has no lateral escape at all: the player must be
+     * NORTH of the body before it commits, and the only cell that is both
+     * inside B's lane and clear of its final rect is the top room east of
+     * x = 96. The chain is the room telling the player where to stand.
+     *
+     * ⛔ The split into `{approach, spans}` is MEASURED, not authored: the
+     * approach is every tick up to and including the one on which the body
+     * first moves. Seven ticks, the same as chain 1's — both stances sit
+     * one step outside the lane, which is §30.3's "the approach IS the
+     * trigger" falling out of the search rather than being designed in.
+     */
+    chain2: Object.freeze({
+        crusher: 'crusher@128,144',
+        /** The planner's target — tile (4,11), one step below B's west lane. */
+        stance: Object.freeze({ tx: 4, ty: 11 }),
+        approach: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 7 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 33 }),
+            Object.freeze({ key: null, ticks: 24 }),
+            Object.freeze({ key: 'up+right', ticks: 24 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 24 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 16 }),
+        ]),
+        ticks: 304,
+        contacts: 0,
+        charges: Object.freeze(['W', 'N', 'E']),
+        park: Object.freeze({ x: 240, y: 96 }),
+        playerEndsAt: Object.freeze({ x: 101.35506423269159, y: 83.18666882984384 }),
+        endTile: Object.freeze({ tx: 6, ty: 5 }),
+        /** ⛓ The two baits, driven from the arrival through `synthesizeLegs`. */
+        pairTicks: 852,
+        idleTicks: 200,
+    }),
     /** ⛔ The permissive reading's first escape, DRIVEN, and it is run over. */
     permissiveRefuted: Object.freeze({
         ordering: 'A W/N/E then B W/N/E — six charges, three cheaper than the answer',
