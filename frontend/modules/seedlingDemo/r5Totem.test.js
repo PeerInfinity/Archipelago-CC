@@ -29,7 +29,7 @@ import { fireRect } from './fireVerb.js';
 import { rectsOverlap } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
 import { plannerObstacleAt, synthesizeLegs } from './botDriverV2.js';
-import { scanCrusher } from './crusher.js';
+import { crusherRect, detectionRects, laneHitsPlayer, scanCrusher } from './crusher.js';
 import { createLevelRun } from './levelRun.js';
 import { runTape } from './tapeRunner.js';
 import {
@@ -1641,5 +1641,134 @@ describe('⛔⛔⛔ L42: what the DRIVE said about the search, twice', () => {
         const travelled = (L42_SOLVE.chain1.boot.y + 8) - run.state.y;
         expect(Math.round(travelled)).toBe(L42_SOLVE.permissiveRefuted.drivenTravelPx);
         expect(travelled).toBeLessThan(L42_SOLVE.permissiveRefuted.needsPx);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 18 — AND THE ESCAPE IS THERE. §31.6's negative was a
+ * heuristic's negative, honestly bounded and wrongly explained: the same
+ * three parks, from `L42_PART4.chainA`'s own hand-traced stance, end the
+ * player in the col-6 shaft on the part's side of the room.
+ */
+describe('⛓⛓⛓ L42: the escape from A\'s east charge, and it ends WEST', () => {
+    const E = L42_SOLVE.escape;
+    const A = 'crusher@96,144';
+    const B = 'crusher@128,144';
+    const driveEscape = (settle) => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 42, ...E.boot },
+            noDamage: true,
+            roles: [...ROLES],
+            grants: [{ level: 42, items: [...E.items] }],
+        });
+        for (const s of [...E.approach, ...E.spans]) {
+            const keys = s.key ? new Set(s.key.split('+')) : new Set();
+            for (let i = 0; i < s.ticks; i += 1) run.advance(keys);
+        }
+        const atEnd = { x: run.state.x, y: run.state.y };
+        for (let i = 0; i < settle; i += 1) run.advance(new Set());
+        return { run, atEnd };
+    };
+
+    it('⛓⛓⛓ drives A through the ordering\'s three parks with zero contacts', () => {
+        const { run } = driveEscape(E.idleTicks);
+        expect(run.crusherContacts.length).toBe(E.contacts);
+        expect({ x: run.crushers.get(A).x, y: run.crushers.get(A).y }).toEqual({ ...E.park });
+        // ⛓ B is never woken: the whole chain is one crusher's.
+        expect({ x: run.crushers.get(B).x, y: run.crushers.get(B).y })
+            .toEqual({ ...L42_PART4.crushers[1].home });
+        expect(run.crushersParked).toBe(true);
+        expect([...E.approach, ...E.spans].reduce((n, s) => n + s.ticks, 0)).toBe(E.ticks);
+    });
+
+    it('⛓⛓⛓ …and the player finishes WEST of the body — §31.6 closed', () => {
+        const { run } = driveEscape(E.idleTicks);
+        expect(run.state.x).toBeCloseTo(E.playerEndsAt.x, 9);
+        expect(run.state.y).toBeCloseTo(E.playerEndsAt.y, 9);
+        expect(Math.floor(run.state.x / 16)).toBe(E.endTile.tx);
+        expect(Math.floor(run.state.y / 16)).toBe(E.endTile.ty);
+        expect(playerBoxAt(run.state.x, run.state.y).right).toBeLessThan(E.westOf);
+        expect(E.endsInWestRegion).toBe(true);
+        // ⛔ The refuted chain ended EAST of the same body; the two are the
+        // same ordering and different choreographies.
+        expect(L42_SOLVE.chain1.endsInWestRegion).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ THE STANCE IS 0.09 px OUTSIDE A's NEW WEST LANE, and the run's own
+     * scan is what says so — `crusherScans` is the scan the STEP takes, not
+     * a second copy of the model (§30.6).
+     */
+    it('⛓⛓ holds through the idle tail — both scanners null, not one pixel moved', () => {
+        const { run, atEnd } = driveEscape(E.idleTicks);
+        expect(run.state.x).toBe(atEnd.x);
+        expect(run.state.y).toBe(atEnd.y);
+        for (const scan of run.crusherScans.values()) expect(scan.dir).toBeNull();
+        expect(E.unseenAfterIdle).toBe(true);
+        const laneLeft = E.park.x - 16 - 64;
+        expect(playerBoxAt(run.state.x, run.state.y).right).toBeLessThan(laneLeft);
+        expect(laneLeft - playerBoxAt(run.state.x, run.state.y).right).toBeLessThan(0.1);
+    });
+
+    /**
+     * ⛓ THE STANCE BAND, DERIVED FROM THE TWO TRANSCRIPTIONS RATHER THAN
+     * QUOTED. Its west edge is LAST-MATCH-WINS and not the room: one pixel
+     * further west and `DIRECTIONS`' trailing S matches too.
+     */
+    it('⛓⛓ the band is 12 px wide, and its west edge is the south lane', () => {
+        const body = crusherRect(E.chargeFrom);
+        const lanes = Object.fromEntries(detectionRects(E.chargeFrom).map((r) => [r.dir, r]));
+        const band = [];
+        for (let x = E.col * 16; x < (E.col + 1) * 16; x += 1) {
+            const box = playerBoxAt(x, body.bottom + 2);
+            if (box.x < E.col * 16 || box.right > (E.col + 1) * 16) continue;
+            if (!laneHitsPlayer(box, lanes.E)) continue;
+            if (laneHitsPlayer(box, lanes.S)) continue;
+            band.push({ x, margin: box.x - body.right });
+        }
+        expect(band[0]).toEqual({ x: E.band.x0, margin: E.band.margin0 });
+        expect(band[band.length - 1]).toEqual({ x: E.band.x1, margin: E.band.margin1 });
+        expect(band).toHaveLength(12);
+        // ⛔ §31.6 wrote the band as [98,110]: `x = 98` puts box.x at exactly
+        // 96 and the INCLUSIVE south lane takes it.
+        const at98 = playerBoxAt(98, body.bottom + 2);
+        expect(at98.x).toBe(body.right);
+        expect(laneHitsPlayer(at98, lanes.S)).toBe(true);
+    });
+
+    /**
+     * ⛓⛓ THE ONE-PIXEL SEAM THE WHOLE ESCAPE RIDES ON. `laneHitsPlayer` is
+     * inclusive on all four edges (§29.5) and every other overlap in the
+     * class is strict, so a box sitting exactly on the lane's southern edge
+     * is SEEN from a cell the charging body passes one pixel above.
+     */
+    it('⛓⛓ the lane is inclusive where the body is strict', () => {
+        const body = crusherRect(E.chargeFrom);
+        const lanes = Object.fromEntries(detectionRects(E.chargeFrom).map((r) => [r.dir, r]));
+        const box = playerBoxAt(E.stance.x, body.bottom + 2);
+        expect(box.y).toBe(body.bottom);
+        expect(laneHitsPlayer(box, lanes.E)).toBe(true);
+        expect(box.y < body.bottom && box.bottom > body.y).toBe(false);
+    });
+
+    /**
+     * ⛔ The three arms are a MEASUREMENT of the search, banked because
+     * re-running them is six minutes (`probe-…-l42-escape.mjs --arms`).
+     * What they say is that the finest one is the one that failed.
+     */
+    it('⛔⛔ banks that the COARSEST arm is the one that found it', () => {
+        const byBlock = Object.fromEntries(L42_SOLVE.escapeArms.map((a) => [a.block, a]));
+        // ⛔ The only arm that finds the escape is the one with the LARGEST
+        // block — which is the refutation of §31.6's "a block search steps
+        // over a 10 px window", stated as a comparison rather than a claim.
+        const found = L42_SOLVE.escapeArms.filter((a) => a.found);
+        expect(found).toHaveLength(1);
+        expect(found[0].block).toBe(Math.max(...L42_SOLVE.escapeArms.map((a) => a.block)));
+        // …and the band it had to hit is 12 px, wider than that block.
+        expect(L42_SOLVE.escape.band.x1 - L42_SOLVE.escape.band.x0 + 1)
+            .toBeGreaterThan(byBlock[8].block);
+        expect(byBlock[4].confine).toBeNull();
+        expect(byBlock[1].found).toBe(false);
     });
 });

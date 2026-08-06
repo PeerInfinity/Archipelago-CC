@@ -2040,6 +2040,148 @@ export const L42_SOLVE = Object.freeze({
         playerEndsAt: Object.freeze({ x: 253.91395298868215, y: 210.00101520273768 }),
         endsInWestRegion: false,
     }),
+    /**
+     * ⛓⛓⛓ R5 SLICE 18 — THE ESCAPE IS THERE, AND CHAIN 1 ENDS **WEST**.
+     *
+     * §31.6 drove the ordering's first three charges to a park the search
+     * chose and finished the player at tile (15,13), on the far side of the
+     * body, and bounded its own negative: *"not found is not impossible…
+     * a ~10 px window in one 16 px tile is exactly the size a block search
+     * steps over."* It was not impossible, and the block was not what
+     * stepped over it.
+     *
+     * The same three parks, from `L42_PART4.chainA`'s own hand-traced
+     * stance and approach, with the escape RE-SEARCHED under a score that
+     * names the target cell: **223 ticks, ZERO contacts, and the player
+     * ends at tile (6,15)** — in the col-6 shaft, west of the parked body,
+     * on the part's side of the room.
+     *
+     * ⛓ AND THE SEAM IT TURNS ON IS ONE PIXEL BETWEEN TWO CONVENTIONS.
+     * A parked at (80,224) has body `[64,96) x [208,240)` and an east lane
+     * `[64,160] x [208,240]`. `laneHitsPlayer` is INCLUSIVE (§29.5) and the
+     * sweep's own overlap is STRICT — so a player box with `y == 240` is
+     * SEEN from a cell the charging body passes one pixel above. The col-6
+     * shaft is the only break in that corridor's floor inside the lane.
+     *
+     * ⛓ AND THE STANCE BAND'S WEST EDGE IS LAST-MATCH-WINS, NOT THE ROOM.
+     * `DIRECTIONS` is E,N,W,S with no `break`; A's south lane is
+     * `[64,96] x [208,304]`, so a box with `box.x <= 96` is charged at from
+     * the SOUTH instead. ⇒ the band is entity `x ∈ [99,110]` — TWELVE
+     * pixels, worth `box.x - 96 = x - 98` ticks of margin, 1 to 12.
+     * ⛔ §31.6 wrote the band as `[98,110]` / 2..12; `x = 98` puts `box.x`
+     * at exactly 96 and the inclusive south lane takes it.
+     *
+     * ⛓ The final stance is 0.09 px outside A's new WEST lane, and that is
+     * MEASURED rather than reasoned: after 300 idle ticks both crushers'
+     * `scanCrusher` still returns null and the player has not moved.
+     * ⛓ Inventory-independent: driven with and without the four grants,
+     * byte-identical.
+     */
+    escape: Object.freeze({
+        crusher: 'crusher@96,144',
+        /** `L42_PART4.chainA`'s stance tile (4,11), as a game constructor cell. */
+        boot: Object.freeze({ x: 64, y: 176 }),
+        items: Object.freeze(['sword', 'fire', 'conch', 'feather']),
+        approach: Object.freeze([Object.freeze({ key: 'up', ticks: 7 })]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'right', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 72 }),
+        ]),
+        ticks: 223,
+        contacts: 0,
+        charges: Object.freeze(['W', 'S', 'E']),
+        park: Object.freeze({ x: 192, y: 224 }),
+        /** The third charge — the one §31.6 could only escape eastward. */
+        chargeFrom: Object.freeze({ x: 80, y: 224 }),
+        col: 6,
+        band: Object.freeze({ x0: 99, x1: 110, margin0: 1, margin1: 12 }),
+        stance: Object.freeze({ x: 105 }),
+        playerEndsAt: Object.freeze({ x: 109.90917848745103, y: 240.10929777500078 }),
+        endTile: Object.freeze({ tx: 6, ty: 15 }),
+        endsInWestRegion: true,
+        /** The parked body's own west face — the player's box.right is 111.91. */
+        westOf: 176,
+        idleTicks: 300,
+        /** ⛓ Both `scanCrusher`s still null after the idle tail. */
+        unseenAfterIdle: true,
+    }),
+    /**
+     * ⛔⛔⛔ AND THE THREE ARMS SAY A POSITIVE IS A PROPERTY OF THE SEARCH,
+     * NOT OF THE ROOM — INCLUDING THE ONE THE BRIEF ASKED FOR.
+     *
+     * §31.9 item 1 prescribed *"a 1-tick search of that charge alone"* on
+     * the reading that a ~10 px window is what a block search steps over.
+     * Same beam, same driver, same room, three settings — and the one that
+     * finds the escape is the COARSEST, while the prescribed one dies:
+     *
+     *     8-tick, confined to col 6    FOUND at depth 26, 216 ticks
+     *     4-tick, NOT confined         DIED  at depth 27, 108/108 RUN OVER
+     *     1-tick, confined             DIED  at depth 63, 72/72 ALREADY SEEN
+     *
+     * ⛔ AND THE TWO DEATHS ARE DIFFERENT FAILURES, which is why the counts
+     * are banked and not just the verdicts. The unconfined arm is refused
+     * by the ROOM (every successor takes a contact — without the wall the
+     * beam walks the player into the body). The 1-tick arm is refused by
+     * ITSELF: 72 of 72 successors are states the frontier has already
+     * expanded, zero run over, zero out of bounds — and re-run with an
+     * EXACT signature in place of the rounded one it dies at the same depth
+     * for the same reason. A beam over a MOVING world may not dedup across
+     * depths on the world state alone: a crusher one tick from committing
+     * and one that committed sixty ticks ago are the same `(x, y)`, so
+     * *"wait one more tick"* is a move the search cannot express.
+     *
+     * ⇒ **a finer step is not a stronger search.** A block search's reach
+     * is `block x depth`; shrinking the block shortens the horizon and
+     * multiplies the ways two candidates look identical. What §31.6 was
+     * missing was a score that knew where the escape was — a proposer's
+     * problem, not a resolution one. ⇒ §31.9 item 3, one level up: a search
+     * reports a property of the triple (score, granularity, constraint),
+     * and naming only one of the three is how a negative gets the wrong
+     * cause attached to it.
+     */
+    escapeArms: Object.freeze([
+        Object.freeze({
+            name: '8-tick blocks, confined to col 6', block: 8, confine: 112, width: 12,
+            maxDepth: 40, exact: false, found: true,
+            why: 'the answer, and the COARSEST arm run — 216 ticks after the approach, '
+                + 'found at depth 26. The escape is a 12 px band and an 8 px block found '
+                + 'it, which is the whole refutation of "the block stepped over it".',
+        }),
+        Object.freeze({
+            name: '4-tick blocks, NOT confined', block: 4, confine: null, width: 12,
+            maxDepth: 70, exact: false, found: false,
+            why: '⛔ THE WALL IS DOING REAL WORK, and it is a claim about which escape is '
+                + 'being ASKED FOR rather than about the room: unconfined, this score '
+                + 'walks the player east into the body and every one of the 108 '
+                + 'successors at the death takes a contact. ⛓ A separate, uncommitted '
+                + 'run under a different score and a different prefix DID find the '
+                + 'southern escape unconfined — which is the point: the wall, the block '
+                + 'and the score are not separable, and only the triple has a verdict.',
+        }),
+        Object.freeze({
+            name: '1-tick blocks, confined to col 6', block: 1, confine: 112, width: 8,
+            maxDepth: 250, exact: false, found: false,
+            why: '⛔⛔ THE ARM §31.9 ASKED FOR, AND IT IS THE ONE THAT DIES — at the tick '
+                + 'the crusher parks, with 72 of 72 successors ALREADY SEEN and none '
+                + 'refused by the room. Re-run with an EXACT signature it dies at the '
+                + 'same depth for the same reason, so the rounding is not the cause: '
+                + 'dedup across depths on a time-varying world is.',
+        }),
+    ]),
     /** ⛔ The permissive reading's first escape, DRIVEN, and it is run over. */
     permissiveRefuted: Object.freeze({
         ordering: 'A W/N/E then B W/N/E — six charges, three cheaper than the answer',
