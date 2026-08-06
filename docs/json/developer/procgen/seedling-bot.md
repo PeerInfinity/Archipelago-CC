@@ -4023,3 +4023,117 @@ fixture-level claim about it was unstateable. `crusherContacts`, `crushers`,
 list is a CLAIM (each contact is 1000 damage that `Bot.noDamage` absorbs),
 and where the crushers finished is, in L41, the difference between a held
 button and a shut room.
+
+## R5 slice 17: a search is a proposer, and the clock is the oracle
+
+Two orderings for one room, three charges apart, and only one of them exists.
+Everything here is about the gap between a plan that is geometrically real
+and a plan that survives 1 px/tick.
+
+### Price the ROUND TRIP, not the reach
+
+A room whose obstacle is a mover has a cost function that a reachability
+flood does not express. L42's is:
+
+```
+  arrival  ->  the thing you came for  ->  the way out
+```
+
+and its way out is one tile below its way in. An earlier search asked only
+"can the corridor be cleared", answered yes in six baits, and parked both
+bodies in the return corridor — so the part is collected and the player can
+never leave (212 safe nodes, part reachable, exit not).
+
+⇒ **A park that opens the reach and arms a lane across the return is a
+FAILED state, not a solution.** Put the exit in the goal test and the wrong
+answer refutes itself, with a number.
+
+### The player's graph is the SAFE cells, not the free ones
+
+A parked crusher is a live scanner, so a cell it can see is not a cell the
+player may stand in — standing there IS a charge. Make that the search's
+adjacency rather than a post-hoc audit and three things fall out for free:
+
+- a bait stance is a cell OUTSIDE the player's component, adjacent to it,
+  which is "the approach is the trigger" derived rather than remembered;
+- `scanCrusher` decides the direction, so LAST-MATCH-WINS is driven;
+- the arrival's 304-cell free flood is a 172-cell safe one, and the
+  difference is exactly the room's bait stances.
+
+⛔ And the state needs a HOT variant — an escape that lands in the mover's
+next lane, whose only legal move is the bait that crusher is already
+committed to. Without it a multi-charge chain is pruned at its first link
+and the search reports the room unsolvable, at length.
+
+### Both readings of "what shields the escape" are defensible; drive both
+
+Mid-charge the mover is neither where it was nor where it will be:
+
+```
+  pessimistic   it is ABSENT — not a wall, not a shield
+  permissive    it is not a wall AND it is a shield (sight taken at its park)
+```
+
+In L42 they differ by three charges and the permissive answer is shorter,
+symmetric and pretty. Its first escape does not exist: the player must be in
+the crusher's own row band to trigger the charge, the climb out is 35 px at
+1.2 px/tick, and the body's leading edge is 6 px away at 1.0. Driven, the
+player rises 14 px, stops dead against the arriving body and takes 48
+contacts — `Crusher.solids` is `["Solid"]`, so the body moves THROUGH the
+player and then the player's own sweep refuses to move INTO it.
+
+⇒ An over-approximation a POSITIVE result rides on is a wrong answer with a
+confident shape — and a SHORTER answer is the kind a reader wants to believe.
+Run both readings, name which one produced a plan, and let the drive decide.
+
+### A beam over a choreography needs a tie-break that flips sign
+
+Scoring candidate input sequences by "how far has the crusher got" fails in
+two ways that look nothing alike:
+
+- ⛔ **A committed charge makes every candidate identical.** The score ties
+  across the whole beam, the sort keeps an arbitrary N, and all N are
+  standing in the path — measured, 252 contacts in one depth. The tie-break
+  is the player's own clearance from the 32x32 body, and it has to FLIP
+  SIGN with the crusher's state: while something is charging the player wants
+  clearance; while everything is parked it wants to be close enough to be
+  SEEN, because the next charge is the goal.
+- ⛔ **The goals are transient.** A chain's intermediate parks are held for
+  one tick before the crusher scans again, so a "goals met" count read off
+  the END position reads every achieved goal as unachieved — and the score
+  DEGRADES as the chain succeeds. Count them per tick, during the drive.
+
+### An escape that works and an escape that helps are different questions
+
+The last charge of L42's first chain has two escapes. One is a 10 px window
+in a single tile. The other is "outrun it down the corridor", which always
+works and always finishes the player on the far side of a 32 px body in a
+corridor with no second way round. A search that asks only *did the player
+survive* finds the second every time.
+
+Constrain the END REGION, not just the end position — and state the bound
+when the answer is negative: two beams (8-tick blocks, exhausted; 4-tick
+blocks, stopped) with zero contacts and zero throws found nothing, and a
+10 px window in a 16 px tile is exactly the size a block search steps over.
+**Not found is not impossible**, and a heuristic that says otherwise is
+lying about its own resolution.
+
+### An options-object silence can be in the CALLER
+
+The known shape is a callee that never destructures a key it is handed. The
+mirror image: `plannerObstacleAt(level, x, y, allowTeleporter, opts)` takes
+that argument FOURTH AND POSITIONALLY. Passed inside `opts` it is dropped by
+a parameter list that never had it — so every "can the player reach the exit"
+query silently asked "…without entering it", the answer was always no, and
+the search's goal test could never fire. The room read as unsolvable.
+
+### An ordering can be a dependency even when it was written as a route
+
+`L40_CHAIN`'s eleven links are numbered by the order a WALK MEETS them, which
+invites the reading that a link nothing consumes is a cul-de-sac. Asked
+properly — flood with the link SHUT and see what is still in reach — L40's
+link 4 gates the two buttons that arm the pulser, the pulser is the only
+thing that moves the block off the boss-key chamber's approach, and the whole
+tail hangs off it. Every OTHER activator in the level open by fiat and the
+two buttons are still unreached: that necessity arm is what turns "this link
+cannot be opened" into "the chain from this arrival stops here".
