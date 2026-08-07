@@ -4979,3 +4979,68 @@ against a walk that moves 1.2. ⛔ It does not land *on* 212 — the boss
 updates before the player — and two of this slice's own checks had to learn
 that, one by searching for the clamp's value and finding the player settling
 onto it eleven ticks late.
+
+## R5: enemies come back, as built (CLOSED 2026-08-07)
+
+R5's brief and full as-built record are
+`NewDocs/plans/seedling-bot-r5-opus-kickoff.md` (§§8–37 the slices, §38 the
+close — NewDocs is gitignored, so the file exists only on the working
+machine; this section is the tracked summary).
+
+**The claim, re-derived at slice 22 and closed at slice 23** (§0's "14/14
+over one full playthrough" never ran — the honest statement is the
+re-derived one):
+
+- **Six of six ceremonies real-collected on byte-exact pairs** — five totem
+  parts plus the WAND, the arc's first `hasWand` earned rather than
+  granted, in the cleanest control shape on the arc (the same tape, one
+  boot field apart).
+- **Conch, feather and boss key 1 real-collected** in their own windows;
+  water and waterfall ARMED with driven witnesses on both arms; the first
+  boss kill driven (`r5-bobboss-fire`, all three BobBoss forms) — with the
+  `fire` PICKUP collected by no tape, a named debt.
+- **Every link proved, the chain never run** (`R5_ITINERARY`'s verdict);
+  `blockedOn` = the L40 link-5 stop + the parts-3/4 boot-vs-arrival gap.
+- Gate at close: fork `bot` @ `a9f84ab`, **98 tapes / 1,411 PASS / 0
+  FAIL / zero re-records**; 54 files / 2,065 offline tests. ⚠ The wand
+  pair (tapes 99–100) was verified `--only=` after that sweep — **the
+  roster has never been swept as one run at 100**, which is R6 slice 0's
+  first job by the arc's own gate rule.
+
+**What the rung built**: the director (windowed one-page execution),
+twelve per-visit geometry families (through `bossTotem.js`), the combat
+census + encounter ladder, `enemyDamage` (the enemy side), the verb set
+(`swing`/`kill`/`fire.bumps`/`bait`/`wait`/`holdUntilUnfrozen`/
+`wait.staysShut`), the camera LIVE in `levelRun`, four control shapes, and
+the second AS3 batch: **tape v6's `save` block** (`hasTotemPart[5]` /
+`hasKey[5]` / `hasSealPart[16]` — the last is the ending's own gate) and
+**`botMobiles()`**, a separate `ExternalInterface` callback inert by
+construction and consumed by nothing yet.
+
+**Standing findings** (source-proved; do not re-derive): L40 link 5 has no
+holder and the corpse cannot cross; `WandLock` is a `Lock` with a sprite —
+the wand item opens nothing; the wand seals its own exit (seal flood
+237/189 with the boss wall standing); the BossTotem wake table is
+tick-exact through A+438 and everything after `activationRestTime` drains
+is unmodelled (`levelRun` throws at A+335); `noDamage` is NOT retired —
+three named parts, the camera part downgraded to a modelling cost because
+the recompiled runtime's `Math.random` is a fixed-seed LFSR.
+
+## What R5 hands on, and what still blocks the ending
+
+Ruled 2026-08-07 (the R6 kickoff records the rulings): **R6 = bosses + the
+ending BOOTED** (via the v6 `save` block), staged — the honest
+sixteen-ceremony sweep and the full item chain are **R7's line**.
+
+| item / gate | seal | rung |
+|---|---|---|
+| **BossTotem** ⛓ | `onlyHitBy = "Wand"`, plain shot damage 0.5 ⇒ TEN shots at `hitsMax` 5; L43 opens on his death (`{43,5}`), exit via `magicallock@144,112` (a plain wand shot opens `lockType 0`) | **R6** |
+| **shield** ⛓ | ShieldBoss — first hit always swallowed, the only window is `movedShield`, `(19,0)` written the instant the third hit lands; key 0 sits inside his 48×48 Solid body; the shield also makes the Watcher VISIBLE | **R6** (the R5 W7 ruling, executed at last) |
+| **fire** (pickup) | spawned by a driven kill, collected by no tape — R5 window 1's blocker | **R6** |
+| **the Owl** ⛓ | `onlyHitBy = "Lava"`, `justKnock` — shove him into the 4×4 central lava pool; his rockfall barrage is real gameplay RNG; death fires `Button.activateAll` → the RockLock → L113 | **R6** |
+| **the Watcher + FinalDoor + seed** ⛓ | FinalDoor = all 16 seal parts AND `!checkPersistence(0, 114)` (the Watcher's dialogue exhausted); behind it seed → tree → credits (`menuState 2`). The bloody branch (4 hits on the Watcher) reboots to L1 instead | **R6** (booted) |
+| sixteen real seal ceremonies | 2 of 16 chests driven (L38, L40); the tail needs shield, spear, D8's kill-lock, deep overworld | **R7** |
+| darksword / darkshield / darksuit / ghostsword / firewand | unchanged from the R4 table — D7/D8 access plus the Witch (wand now HELD, so her gate is open) | **R7** |
+| the L40 chain (links 5–11, bosskey 2, both north teleporters) | link 5 has no holder, the corpse cannot cross, and the wand opens no WandLock — a STANDING wall for this machinery | **R7** |
+| LightBoss / TentacleBeast / LavaBoss | deferred by name — none gates anything the ending needs; TentacleBeast is the game's first RNG-coupled fight | deferred |
+| L93's bridge | a TILE (type 29), not a class: one Spear/GhostSword hit then 59 self-decrementing render frames; `type` mutates in `render()` (one-frame lag); no persistence — re-closes every reload. Unit-witnessed on L63 only | R7 (live witness) |
