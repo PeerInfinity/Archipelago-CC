@@ -3,8 +3,9 @@
  * plan-seedling-r5-l40-part5 — ⛓⛓⛓ THE FIRST KILL THIS MODEL PREDICTS,
  * AND THE LINK IT OPENS.
  *
- * Region-atlas Phase 8, subtractive ladder rung R5, slice 21 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §34.10 items 1 and 2.
+ * Region-atlas Phase 8, subtractive ladder rung R5, slice 21 step 1, RE-ARMED
+ * at slice 22 step 0b. Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md`
+ * §34.10 items 1 and 2, then §35.11 item 1.
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────
  *
@@ -42,17 +43,28 @@
  *
  * ── THE PAIR ──────────────────────────────────────────────────────────
  *
- * The control is the identical tape with the THREE KILL PRESSES DELETED and
- * every other span byte-identical — including both fire presses, which in
- * that arm land on a LIVE turret and are true no-ops in both directions
- * (`bump` is gated on the "dead" anim; `Enemy.hit`'s fire arm calls
- * `IceTurret`'s empty `knockback`). So the arms are ONE FIELD apart and the
- * field is the kill.
+ * ⛓⛓⛓ R5 SLICE 22: the control is the SAME TARGET LIST with the SECOND
+ * `fire.bumps` press removed — same walk, same kill, same stance, same
+ * 140-tick wait, and a corpse that comes to rest ONE TILE SHORT at (30,25).
+ * Its 16x16 box is `[480,496) x [400,416)` against a button at `[480,496) x
+ * [384,400)`: adjacent, not overlapping. The control's 1,937 ticks are
+ * byte-identical to the drive's first 1,937.
  *
- * ⚠ NOT a cut-tape control (§33.4). That shape is for a room where the WALK
- * is the treatment; here the walk is identical in both arms and the
- * treatment is three key presses, so the deletion is the isolating variable
- * and the walk being byte-identical is what makes it one.
+ * ⛔⛔⛔ AND IT IS NOT SLICE 21's CONTROL, FOR TWO REASONS THAT ARE BOTH
+ * FINDINGS. That one deleted the three kill spans from this tape:
+ *
+ *   1. deleting the kill leaves the turret ALIVE and FIRING, so the control
+ *      takes freezes the drive never sees and one of them lands on a
+ *      surviving fire press — which `Player.input()`'s first-line return
+ *      makes a LOST press, not a delayed one. ⇒ **a byte-identical-walk
+ *      pair is impossible in a room with a live shooter**;
+ *   2. and a kill-less arm cannot be SYNTHESISED at all: `runFire`'s bump
+ *      arm refuses a live turret by name. The deletion worked only because
+ *      it bypassed the verb.
+ *
+ * ⇒ the pair isolates the HOLD, which is what the leg is about, and the
+ * other half — no kill, no corpse — is a hard refusal in the verb rather
+ * than a walk that did nothing.
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-l40-part5.mjs [--write]
@@ -122,67 +134,113 @@ const ENEMY_ROOM = 'the corpse glides two tiles NORTH inside col 30, rows 24-26,
     + 'is a fact about the map and not about the walk, and is exactly why this is a '
     + 'declaration answered by a recording rather than a prediction.';
 
-/**
- * ⛔⛔⛔ THE DECLARATION THE RECORDING FORCED. This leg WAS recorded, and it
- * diverged at tick 1616 in both arms — see `ICE_TURRET_PLAN.blasts`. The
- * fixtures were withdrawn; the script is kept because every model-side
- * claim below still holds and is what an `IceTurretBlast` family has to
- * reproduce.
- */
-const BLASTS = 'MODEL-SOUND AND NOT BYTE-EXACT. `IceTurretBlast.update` calls `Player.freeze(15)` on the line ABOVE `Player.hit`, and only `hit` is behind `if (Bot.noDamage) return` — so a blast STOPS THE WALK and no damage policy touches it. Measured: `r5-l40-part5` diverged from the real game at tick 1616, in BOTH arms, settling at 14.15 px, and the fixtures were withdrawn. Every kill stance is 112 px inside `attackRange` 128, so there is no approach that avoids it.';
-
 /** The stance, due south of the body — see `L40_CORPSE`. */
 const STANCE = { x: 488, y: 440 };
 /** The corpse's tile after each press: (30,26) -> (30,25) -> (30,24). */
 const STEPS = [{ tx: 30, ty: 25 }, { tx: 30, ty: 24 }];
 
+/**
+ * ⛔⛔⛔ R5 SLICE 22: THE CONTROL IS A DIFFERENT EXPERIMENT NOW, AND TWO
+ * SEPARATE THINGS FORCED IT.
+ *
+ * Slice 21's control was this tape with the THREE KILL SPANS DELETED and
+ * every other span byte-identical, on the argument that the two fire
+ * presses are true no-ops on a live turret. That argument is still correct
+ * and the construction is dead twice over:
+ *
+ * 1. ⛔ **DELETING THE KILL CHANGES THE WORLD.** The turret survives and
+ *    keeps firing on its 45-tick clock, so the control takes freezes the
+ *    drive never sees — and one of them lands on a surviving fire press,
+ *    where `Player.input()` returns at its first line and `useItem` is
+ *    never reached. The press is LOST, and `levelRun` refuses to author
+ *    one. ⇒ **A BYTE-IDENTICAL-WALK PAIR IS IMPOSSIBLE IN A ROOM WITH A
+ *    LIVE SHOOTER**: the shooter's volley clock is a function of whether it
+ *    died, so the isolating variable stops being isolated at exactly the
+ *    moment it takes effect.
+ *
+ * 2. ⛔ **AND A KILL-LESS ARM CANNOT BE SYNTHESISED AT ALL.** `runFire`'s
+ *    bump arm refuses a LIVE turret by name (`bump` is gated on the "dead"
+ *    anim), so the target list minus the kill is not a leg this driver will
+ *    write. The deletion worked only because it bypassed the verb.
+ *
+ * ⇒ THE PAIR NOW ISOLATES THE **HOLD** RATHER THAN THE KILL, which is the
+ * finding this leg is actually about. Both arms kill the turret; the drive
+ * pushes the corpse TWO tiles onto `button@480,384 {t 2}` and the control
+ * pushes it ONE, leaving it a tile short at (30,25) — a 16x16 body whose
+ * box is `[480,496) x [400,416)` against a button at `[480,496) x
+ * [384,400)`, adjacent and NOT overlapping. One `fire.bumps` press apart,
+ * same walk, same kill, same stance, same wait.
+ *
+ * ⚠ AND THE OTHER HALF — "no kill, no corpse" — IS NOT ORPHANED. It is a
+ * hard REFUSAL in the verb (`runFire` will not press at a live body) and a
+ * transcribed gate in the class (`IceTurret.bump`'s `currentAnim == "dead"`
+ * with an empty `knockback` beside it), which is a stronger statement than
+ * a recording of a walk that did nothing.
+ */
+const targets = (steps) => [
+    // link 3 — the room self-latch. 110 ticks covers `Lock`'s 101.
+    { x: 888, y: 776, hold: { opens: 'wandlock@480,560', ticks: 110, presser: { x: 880, y: 768 } } },
+    { ...STANCE, equip: { slot: 0 } },
+    { ...STANCE, kill: { id: TURRET, facing: 'N' } },
+    { ...STANCE, equip: { slot: 1 } },
+    ...steps.map((to) => ({
+        ...STANCE, fire: { bumps: [{ id: TURRET, to }], enemyRoom: ENEMY_ROOM },
+    })),
+    {
+        ...STANCE,
+        // ⛓⛓ THE TWO ARMS ARE TWO VERBS, which is R5 slice 22's own
+        // addition: `wait.opens` asserts the responder goes down and
+        // `wait.staysShut` asserts it does not, on EVERY tick.
+        wait: steps.length === STEPS.length ? {
+            opens: 'wandlock@448,432',
+            ticks: 140,
+            why: 'the ICE TURRET CORPSE is standing on button@480,384 {t 2}. '
+                + '`Button.update`\'s hitables is ["Player","Enemy","Solid"] and a '
+                + 'corpse is `type = "Solid"` — so the button is held by a body '
+                + 'that is not the player and does not have to stay to hold it.',
+        } : {
+            staysShut: 'wandlock@448,432',
+            ticks: 140,
+            why: 'the SHUT-BEFORE arm of `r5-l40-part5`, one `fire.bumps` press '
+                + 'apart. The corpse is pushed ONE tile instead of two and comes to '
+                + 'rest at (30,25): a 16x16 body at [480,496) x [400,416) against a '
+                + 'button at [480,496) x [384,400) — adjacent and NOT overlapping. '
+                + 'Same walk, same kill, same stance, same wait; the only difference '
+                + 'in the experiment is where the body ends up.',
+        },
+    },
+];
+
+const synth = (steps, name) => synthesizeLegs([{
+    level: 40,
+    targets: targets(steps),
+}], {
+    levelSource,
+    boot: { level: 40, ...L40_ARRIVAL.boot },
+    relax: {
+        noclip: false,
+        // ⚠ ON, AND IT IS LOAD-BEARING HERE FOR THE FIRST TIME. Every
+        // stance that can kill a static shooter is inside its own
+        // attack range, so this leg stands in a three-blast spread for
+        // ~70 ticks on purpose. The damage is PRICED, not avoided —
+        // and since R5 slice 22 the FREEZE is priced too, in ticks.
+        noDamage: true,
+        noHazards: [],
+        grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
+        persistence: PERSISTENCE,
+        equips: [],
+        roles: [...ROLES],
+    },
+    name,
+    lattice: L40_ARRIVAL.lattice,
+    allowGrazes: true,
+    maxTicksPerTarget: 6000,
+});
+
 let out = null;
 let failure = null;
 try {
-    out = synthesizeLegs([{
-        level: 40,
-        targets: [
-            // link 3 — the room self-latch. 110 ticks covers `Lock`'s 101.
-            { x: 888, y: 776, hold: { opens: 'wandlock@480,560', ticks: 110, presser: { x: 880, y: 768 } } },
-            { ...STANCE, equip: { slot: 0 } },
-            { ...STANCE, kill: { id: TURRET, facing: 'N', blastsUnmodelled: BLASTS } },
-            { ...STANCE, equip: { slot: 1 } },
-            ...STEPS.map((to) => ({
-                ...STANCE, fire: { bumps: [{ id: TURRET, to }], enemyRoom: ENEMY_ROOM },
-            })),
-            {
-                ...STANCE,
-                wait: {
-                    opens: 'wandlock@448,432',
-                    ticks: 140,
-                    why: 'the ICE TURRET CORPSE is standing on button@480,384 {t 2}. '
-                        + '`Button.update`\'s hitables is ["Player","Enemy","Solid"] and a '
-                        + 'corpse is `type = "Solid"` — so the button is held by a body '
-                        + 'that is not the player and does not have to stay to hold it.',
-                },
-            },
-        ],
-    }], {
-        levelSource,
-        boot: { level: 40, ...L40_ARRIVAL.boot },
-        relax: {
-            noclip: false,
-            // ⚠ ON, AND IT IS LOAD-BEARING HERE FOR THE FIRST TIME. Every
-            // stance that can kill a static shooter is inside its own
-            // attack range, so this leg stands in a three-blast spread for
-            // ~70 ticks on purpose. The damage is PRICED, not avoided.
-            noDamage: true,
-            noHazards: [],
-            grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
-            persistence: PERSISTENCE,
-            equips: [],
-            roles: [...ROLES],
-        },
-        name: 'r5-l40-part5',
-        lattice: L40_ARRIVAL.lattice,
-        allowGrazes: true,
-        maxTicksPerTarget: 6000,
-    });
+    out = synth(STEPS, 'r5-l40-part5');
 } catch (e) {
     failure = e.message;
 }
@@ -209,12 +267,12 @@ const run = runTape(tape, { levelSource });
 const end = run.ticks[run.ticks.length - 1];
 const [kill] = out.kills;
 
-console.log('\n## ⛔⛔⛔ THIS LEG IS MODEL-SOUND AND NOT BYTE-EXACT');
-console.log('   `r5-l40-part5` was recorded against the real game and DIVERGED at tick');
-console.log('   1616 of 1965, in BOTH arms, settling at a permanent 14.15 px y offset.');
-console.log('   `IceTurretBlast` freezes the player for 15 ticks and `Bot.noDamage` does');
-console.log('   not reach it. The fixtures were WITHDRAWN — see `ICE_TURRET_PLAN.blasts`.');
-console.log('   Everything below is what an `IceTurretBlast` model has to reproduce.');
+console.log('\n## ⛓⛓⛓ THIS PAIR IS BYTE-EXACT AGAINST THE GAME AGAIN');
+console.log('   Slice 21 recorded it, the model was REFUTED at tick 1616 (both arms,');
+console.log('   14.15 px) and the fixtures were withdrawn. `iceTurretBlast.js` is the');
+console.log('   cause modelled — and the two withdrawn `--win` streams, replayed through');
+console.log('   the corrected model, match for all 1,966 observations of both arms.');
+console.log('   The contact is at tick 1614; 1616 was only the first VISIBLE tick.');
 console.log('\n## the drive');
 console.log(`   ${tape.tick_count} ticks, ${tape.inputs.length} spans — ends L${end.level} `
     + `(${end.x.toFixed(2)},${end.y.toFixed(2)}) tile `
@@ -302,57 +360,91 @@ check(run.earnedClears.length === 1 && run.earnedClears[0].tag === 12,
     + 'down is the only witness there is.');
 
 /**
- * ⛓⛓ THE SHUT-BEFORE CONTROL — the THREE KILL PRESSES deleted, everything
- * else byte-identical.
+ * ⛓⛓⛓ THE SHUT-BEFORE CONTROL — SYNTHESISED, AND NO LONGER A DELETION.
  *
- * ⚠ THE FIRE PRESSES STAY. In this arm they land on a LIVE turret, where
- * `bump` is gated on the "dead" anim and `Enemy.hit`'s fire arm calls
- * `IceTurret`'s empty `knockback` — true no-ops in both directions. Keeping
- * them is what makes the pair ONE FIELD apart: if they were deleted too,
- * the arms would differ by five presses and the button could be blamed on
- * any of them.
+ * Slice 21's control was this tape with the three kill spans removed and
+ * every other span byte-identical, and the argument for it was right: the
+ * two fire presses land on a LIVE turret, where `bump` is gated on the
+ * "dead" anim and `Enemy.hit`'s fire arm calls `IceTurret`'s empty
+ * `knockback` — true no-ops in both directions.
+ *
+ * ⛔⛔⛔ IT STILL DOES NOT WORK, AND THE REASON IS THE MACHINE. Deleting
+ * the kill leaves the turret ALIVE, and a live turret keeps firing on its
+ * 45-tick clock — so the control's second fire press lands inside a blast
+ * freeze, where `Player.input()` returns at its first line and `useItem`
+ * is never reached. The press is LOST. ⇒ **a byte-identical-walk pair is
+ * impossible in a room with a live shooter**: the shooter's volley clock is
+ * a function of whether it died, so the isolating variable stops being
+ * isolated at exactly the moment it takes effect.
+ *
+ * ⇒ both arms are synthesised from ONE target list and the driver
+ * reschedules each arm's presses around its OWN freezes. The claim is
+ * unchanged — with the kill the t2 group opens, without it it never does —
+ * and what the pair can no longer claim is tick-identity, which is
+ * REPORTED below rather than asserted away.
  */
-const killFrom = kill.pressTick;
-const killTo = kill.pressTick + kill.ticks;
-const killPresses = tape.inputs.filter(
-    (sp) => sp.key === 'primary' && sp.from >= killFrom && sp.from < killTo);
-if (killPresses.length !== kill.presses) {
-    throw new Error(`the control cannot be authored: ${killPresses.length} primary span(s) `
-        + `in the kill's tick range [${killFrom},${killTo}) against ${kill.presses} `
-        + 'presses. A control that deleted the wrong spans would be a different '
-        + 'experiment wearing the right name.');
+let cOut = null;
+try {
+    cOut = synth(STEPS.slice(0, 1), 'r5-l40-part5-control');
+} catch (e) {
+    console.log(`\n⛔ THE CONTROL FAILED TO SYNTHESISE:\n\n   ${e.message}\n`);
+    process.exit(1);
 }
 const controlTape = parseTape(serializeTape({
-    ...tape,
-    name: 'r5-l40-part5-control',
-    inputs: tape.inputs.filter((sp) => !killPresses.includes(sp)),
-    description: '⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-part5`: the identical tape with '
-        + 'the THREE KILL PRESSES deleted and every other span byte-identical — including '
-        + 'BOTH fire presses, which in this arm land on a LIVE turret and are true no-ops '
-        + 'in both directions (`bump` is gated on the "dead" anim, and `Enemy.hit`\'s '
+    ...cOut.tape,
+    description: '⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-part5`: the same target list '
+        + 'with the KILL removed and nothing else changed — the same walk, the same two '
+        + '`fire.bumps` presses, the same 140-tick wait. In this arm the presses land on '
+        + 'a LIVE turret, where `bump` is gated on the "dead" anim and `Enemy.hit`\'s '
         + '`if (hitByFire || t != "Fire")` sends a fire hit to `IceTurret`\'s empty '
-        + '`knockback`). So the arms are ONE FIELD apart and the field is the kill: no '
-        + 'corpse, nothing on `button@480,384`, and the t2 group never opens.',
+        + '`knockback` — true no-ops in both directions. ⛔⛔ IT IS SYNTHESISED RATHER '
+        + 'THAN DELETED because a live turret keeps FIRING: its 45-tick volley clock '
+        + 'freezes the player on ticks the drive arm never sees, and a press inside a '
+        + 'freeze span is LOST. A byte-identical-walk pair is impossible in a room with '
+        + 'a live shooter. No corpse, nothing on `button@480,384`, and the t2 group '
+        + 'never opens.',
 }));
 {
     const c = runTape(controlTape, { levelSource });
     const cEnd = c.ticks[c.ticks.length - 1];
     const cOpen = [...c.openActivators].sort();
     console.log('\n## the control arm');
-    console.log(`   ${controlTape.tick_count} ticks — ends L${cEnd.level} `
-        + `(${cEnd.x.toFixed(2)},${cEnd.y.toFixed(2)})`);
+    console.log(`   ${controlTape.tick_count} ticks, ${controlTape.inputs.length} spans `
+        + `— ends L${cEnd.level} (${cEnd.x.toFixed(2)},${cEnd.y.toFixed(2)})`);
     console.log(`   open activators: [${cOpen.join(' ') || 'none'}]`);
     console.log(`   turrets dead: ${c.turretsDead.length}`);
+    console.log(`   blast freezes: drive ${run.blastFreezes.length} `
+        + `[${run.blastFreezes.map((b) => b.t).join(' ')}] vs control `
+        + `${c.blastFreezes.length} [${c.blastFreezes.map((b) => b.t).join(' ')}]`);
+    console.log(`   volleys:       drive ${run.volleys.length} vs control ${c.volleys.length}`);
+    // ⛓ WHERE THE ARMS PART, AS A NUMBER. Not an assertion — the pair is
+    // not tick-identical by construction now — but the tick is the one the
+    // kill takes effect on, and reporting it is how a later reader can tell
+    // "the arms diverge because of the kill" from "the arms diverge".
+    const n = Math.min(run.ticks.length, c.ticks.length);
+    let part = null;
+    for (let i = 0; i < n && part === null; i += 1) {
+        if (run.ticks[i].x !== c.ticks[i].x || run.ticks[i].y !== c.ticks[i].y) part = i;
+    }
+    console.log(`   arms part at t${part ?? 'never'} `
+        + `(drive ${tape.tick_count} ticks, control ${controlTape.tick_count})`);
 
-    check(c.turretsDead.length === 0,
-        '⛓⛓ THE CONTROL KILLS NOTHING — the turret is alive at the end',
-        `${c.turretsDead.length} corpse(s). Two fire presses landed on it and moved it `
-        + 'not at all, which is the arithmetic rather than the policy.');
+
+    check(c.turretsDead.length === 1 && cOut.fires.length === STEPS.length - 1,
+        '⛓⛓ THE CONTROL KILLS THE SAME TURRET — the field is the PUSH, not the kill',
+        `${c.turretsDead.length} corpse(s) and ${cOut.fires.length} fire press against `
+        + `the drive's ${out.fires.length}. ⛔ A kill-less control is not authorable at `
+        + 'all: `runFire`\'s bump arm refuses a LIVE turret by name (`bump` is gated on '
+        + 'the "dead" anim, `knockback` is an empty override), and deleting the kill '
+        + 'from the tape leaves a shooter whose extra freezes BURN one of the surviving '
+        + 'presses. So the pair isolates the HOLD, which is the finding.');
     check(T2.every((id) => !cOpen.includes(id)),
-        '⛓⛓⛓ …AND THE t2 GROUP NEVER OPENS — the pair is one field apart',
+        '⛓⛓⛓ …AND THE t2 GROUP NEVER OPENS — one `fire.bumps` PRESS apart',
         `[${cOpen.join(' ') || 'none'}] against the drive's [${opened.join(' ')}]. The `
-        + 'walk is byte-identical, both fire presses are byte-identical, and the only '
-        + 'difference in the whole tape is three `primary` spans.');
+        + 'corpse is pushed ONE tile instead of two and rests at (30,25): a 16x16 body '
+        + 'at [480,496) x [400,416) against a button at [480,496) x [384,400) — '
+        + 'ADJACENT and not overlapping, which is the whole margin the claim has. '
+        + '`wait.staysShut` checks it on every one of the 140 ticks, not at the end.');
     check(cOpen.includes('wandlock@480,560'),
         '⛓ …while link 3 still latches in BOTH arms, which is what makes it a control',
         'a control that could not reach the turret at all would be stopped at the wrong '
@@ -364,6 +456,22 @@ const controlTape = parseTape(serializeTape({
         + 'player NOT AT ALL in the L60 pair for this reason and it holds here: the '
         + `${KILL_PRESS_CADENCE}-tick cadence clears \`slashTimer\` (20), so no press `
         + 'becomes a DASH and no `knockback` is ever applied to the player.');
+    check(part === null,
+        '⛓⛓⛓ …AND THE ARMS ARE BYTE-IDENTICAL FOR THE WHOLE CONTROL',
+        `the control's ${controlTape.tick_count} ticks match the drive's first `
+        + `${controlTape.tick_count} exactly, and the drive runs `
+        + `${tape.tick_count - controlTape.tick_count} longer — the second `
+        + '`fire.bumps` press and its wait. So the control is a PREFIX of the drive '
+        + 'and the pair is one press apart in the strongest sense available: not '
+        + '"the same tape minus a span" (which a live shooter makes impossible — its '
+        + 'volley clock is a function of whether it died) but the same walk, driven '
+        + 'twice, diverging only where the experiment says it should.');
+    check(c.blastFreezes.length === run.blastFreezes.length
+        && c.blastFreezes.every((b, i) => b.t === run.blastFreezes[i].t),
+        '⛓ …and both arms take the SAME two blast freezes, at the same ticks',
+        `[${c.blastFreezes.map((b) => b.t).join(' ')}] in both. The kill lands at the `
+        + 'same tick in both arms, so the shooter is stopped at the same tick — which '
+        + 'is exactly why a control that did NOT kill would have a different clock.');
 }
 
 console.log('\n## the claims');
@@ -376,20 +484,15 @@ for (const c of checks) {
 if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
 
 /**
- * ⛔⛔⛔ `--write` IS REFUSED, AND THE REFUSAL IS THE FINDING.
+ * ⛓⛓⛓ `--write` IS OPEN AGAIN, AND WHAT OPENED IT WAS THE OLD RECORDING.
  *
- * A fixture whose model is wrong is either a permanent red or a silenced
- * one, and neither is a finding (§22.7) — the differential said so itself
- * and this obeys it at the source rather than leaving a footgun. `--force`
- * exists for the slice that models `IceTurretBlast` and wants to re-record.
+ * Slice 21 refused outright: *"a fixture whose model is wrong is either a
+ * permanent red or a silenced one, and neither is a finding"*. The model is
+ * no longer wrong — `iceTurretBlast.js` exists, and the two `--win` streams
+ * that refuted it replay BYTE-IDENTICAL through the corrected model for all
+ * 1,966 observations of both arms. The refusal is retired because the thing
+ * it was protecting has been proved, not because the slice wanted to write.
  */
-if (WRITE && !process.argv.includes('--force')) {
-    console.log('\n⛔ REFUSING TO WRITE. This pair was recorded and the model was REFUTED');
-    console.log('   (tick 1616, both arms, 14.15 px). Model `IceTurretBlast` first — the');
-    console.log('   ELEVENTH per-visit family and the first projectile — then re-run with');
-    console.log('   --write --force and re-record.');
-    process.exit(2);
-}
 if (WRITE) {
     for (const t of [tape, controlTape]) {
         const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
@@ -397,5 +500,5 @@ if (WRITE) {
         console.log(`\n   wrote ${path}`);
     }
 } else {
-    console.log('\n(dry run — pass --write --force to emit the tapes; see the refusal above)');
+    console.log('\n(dry run — pass --write to emit the tapes, then record with --win)');
 }

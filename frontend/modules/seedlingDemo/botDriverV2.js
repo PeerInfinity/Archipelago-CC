@@ -478,6 +478,56 @@ const NO_HELD = new Set();
 const TALK_HELD = new Set(['primary']);
 
 /**
+ * ⛓⛓⛓ R5 SLICE 22 — HOLD UNTIL THE FREEZE DRAINS, BEFORE EVERY PRESS.
+ *
+ * `Player.input()` returns at its first line while `frozenTimer > 0`, and
+ * `useItem(Main.primary)` is called from INSIDE `input()` — so a press on a
+ * frozen tick is LOST, not delayed. `levelRun` refuses to author one; this
+ * is the cure, and it belongs beside the press rather than in each verb's
+ * schedule because all three press verbs owe it.
+ *
+ * ⚠ THE PREDICATE IS `> 1`, NOT `> 0`, AND THE FENCEPOST IS `freezeStep`.
+ * `run.frozenTimer` is the value AFTER the last tick's decrement; the press
+ * tick runs `freezeStep()` again BEFORE `input()`, so a timer of 1 becomes
+ * 0 and the gate passes. Waiting for 0 would spend one tick more than the
+ * game does, every time — which is the kind of off-by-one a schedule's
+ * slack hides.
+ *
+ * ⛔ AND IT CANNOT COVER A BLAST THAT ARRIVES ON THE PRESS TICK ITSELF.
+ * That one is a same-tick collision no lookahead in this driver can see,
+ * and `levelRun`'s refusal is what catches it — loudly, naming the tick, so
+ * the plan moves the stance rather than the model growing a tolerance.
+ *
+ * @returns {number} how many ticks were spent waiting
+ */
+function holdUntilUnfrozen(run, perTick, what) {
+    let spent = 0;
+    while ((run.frozenTimer ?? 0) > 1) {
+        if (spent > FREEZE_HOLD_CEILING) {
+            fail(`${what}: still frozen after ${spent} held ticks. One `
+                + '`IceTurretBlast` contact refuses input for 14, so a hold this long '
+                + 'means the stance is inside a volley\'s path and is being re-frozen '
+                + 'faster than it drains — that is a STANCE problem (cover removes a '
+                + 'blast outright), not a wait problem.');
+        }
+        perTick.push(NO_HELD);
+        const r = run.advance(NO_HELD);
+        if (r.transition) {
+            fail(`${what}: waiting out a blast freeze crossed from level `
+                + `${r.transition.from_level} to ${r.transition.to_level}.`);
+        }
+        spent += 1;
+    }
+    return spent;
+}
+
+/**
+ * Two volley periods plus a freeze span. Longer than any legitimate wait
+ * and shorter than a run that has stopped making progress.
+ */
+const FREEZE_HOLD_CEILING = 2 * 45 + 15;
+
+/**
  * ⛔⛔ R5 SLICE 18 — A SPAN'S `key` IS A HELD **SET**, AND READING IT AS ONE
  * NAME IS A SILENCE, NOT AN ERROR.
  *
@@ -1294,19 +1344,87 @@ function runBait(run, perTick, bait, what) {
  * `runHold` lesson, and it is worth repeating here because a wait is the
  * one verb whose ticks would look identical either way.
  */
+/**
+ * The shut-before arm: the same idle span, asserting the responder is up on
+ * EVERY tick of it. See `runWait`'s note for why it is per tick.
+ */
+function runWaitShut(run, perTick, { ticks, staysShut, why }, what) {
+    if (typeof why !== 'string' || why.length === 0) {
+        fail(`${what}: wait.why must say what this arm is the control FOR — which arm `
+            + 'opens the same responder, and by what one difference. A negative with no '
+            + 'positive beside it is a wait that cannot fail for the right reason.');
+    }
+    const responder = run.world.activators.find((a) => a.id === staysShut);
+    if (!responder) {
+        fail(`${what}: level ${run.level} has no activator ${staysShut}; it has `
+            + `[${run.world.activators.map((a) => a.id).join(' ') || 'none'}].`);
+    }
+    if (run.openActivators.has(staysShut)) {
+        fail(`${what}: ${staysShut} is ALREADY OPEN before the wait, so a control that `
+            + 'watches it stay shut is watching the wrong world.');
+    }
+    for (let i = 1; i <= ticks; i += 1) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}.`);
+        }
+        if (run.openActivators.has(staysShut)) {
+            fail(`${what}: ${staysShut} OPENED on tick ${i} of ${ticks}. This arm is the `
+                + 'control and its premise is that nothing here holds that button — so '
+                + 'either the arms are not one field apart or the field is not the one '
+                + 'the pair names.');
+        }
+    }
+    return { staysShut, ticks, openedAt: null, why };
+}
+
 function runWait(run, perTick, wait, what) {
     if (run.openActivators === null) {
         fail(`${what}: a wait is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the wait would emit '
             + 'its ticks, verify nothing and report success.');
     }
-    const { ticks, opens, why } = wait ?? {};
+    const {
+        ticks, opens, why, staysShut = null,
+    } = wait ?? {};
     if (!Number.isInteger(ticks) || ticks <= 0) {
         fail(`${what}: wait.ticks must be a positive integer, got ${JSON.stringify(ticks)}.`);
     }
+    /**
+     * ⛓⛓⛓ R5 SLICE 22 — `wait.staysShut`, THE SHUT-BEFORE ARM'S OWN VERB.
+     *
+     * A pair's two arms are TWO WORLDS, and until this slice only one of
+     * them had a verb: `wait.opens` asserts a responder GOES DOWN, and the
+     * control arm had to be a hand-edited tape because there was nothing
+     * that asserted one STAYS UP. That worked while a control could be made
+     * by deleting spans; it stopped working the moment the control had to
+     * be synthesised (see `plan-seedling-r5-l40-part5.mjs`).
+     *
+     * ⛔ AND IT IS CHECKED ON EVERY TICK, NOT AT THE END. A responder that
+     * opened for eleven ticks and shut again would pass an end-state test
+     * and would mean the control's premise was false the whole time —
+     * exactly the vacuity [[feedback_silent_watcher_vacuous_negative]]
+     * names. The positive control for the negative is the OTHER ARM, which
+     * opens the same responder from the same stance.
+     */
+    if (staysShut !== null && opens !== undefined && opens !== null) {
+        fail(`${what}: wait.opens and wait.staysShut are the two ARMS of one experiment `
+            + 'and a wait is one of them. Naming both is a wait that asserts a '
+            + 'responder both does and does not go down.');
+    }
+    if (staysShut !== null) {
+        if (typeof staysShut !== 'string' || staysShut.length === 0) {
+            fail(`${what}: wait.staysShut must name the responder this arm asserts is `
+                + 'NOT opened.');
+        }
+        return runWaitShut(run, perTick, { ticks, staysShut, why }, what);
+    }
     if (typeof opens !== 'string' || opens.length === 0) {
         fail(`${what}: wait.opens must name the responder this wait is FOR — a wait with `
-            + 'no effect check is an idle span, and an idle span verifies nothing.');
+            + 'no effect check is an idle span, and an idle span verifies nothing. The '
+            + 'shut-before arm of a pair says `wait.staysShut` instead.');
     }
     if (typeof why !== 'string' || why.length === 0) {
         fail(`${what}: wait.why must say what is holding ${opens}'s button, because the `
@@ -2064,18 +2182,19 @@ function runKill(run, perTick, kill, what) {
      * HAS. [[feedback_silent_watcher_vacuous_negative]] would let a green
      * synthesis stand in for a green recording; this will not.
      */
-    if (typeof blastsUnmodelled !== 'string' || blastsUnmodelled.length < 40) {
-        fail(`${what}: kill.blastsUnmodelled must be a sentence saying that this leg is `
-            + 'MODEL-SOUND AND NOT BYTE-EXACT, and why. `IceTurretBlast.update` calls '
-            + `\`Player.freeze(${ICE_TURRET_PLAN.blasts.freezeTicks})\` on the line ABOVE `
-            + '`Player.hit`, and only `hit` is behind `if (Bot.noDamage) return` — so a '
-            + 'blast STOPS THE WALK for fifteen ticks and no damage policy touches it. '
-            + `Measured: \`r5-l40-part5\` diverged from the real game at tick `
-            + `${ICE_TURRET_PLAN.blasts.divergence.tick}, in BOTH arms, settling at `
-            + `${ICE_TURRET_PLAN.blasts.divergence.settlesAt} px. Every kill stance is `
-            + `112 px inside \`attackRange\` ${ICE_TURRET.attackRange}, so there is no `
-            + 'approach that avoids it — model `IceTurretBlast` (the ELEVENTH per-visit '
-            + 'family, and the first projectile) or declare the gap.');
+    // ⛓⛓⛓ R5 SLICE 22: THE DECLARATION IS RETIRED, AND ONLY BECAUSE THE
+    // GAP IT NAMED IS CLOSED. `iceTurretBlast.js` models the projectile and
+    // the same two tapes now replay BYTE-IDENTICAL to the recording that
+    // refuted them. A `blastsUnmodelled` string is REFUSED rather than
+    // ignored: a leg still carrying one is a leg written against the old
+    // model, and silently accepting it is how a retired guard keeps
+    // reporting green ([[feedback_retired_oracle_check_the_regen]]).
+    if (blastsUnmodelled !== null) {
+        fail(`${what}: kill.blastsUnmodelled is RETIRED. \`IceTurretBlast\` is modelled `
+            + `(the ELEVENTH per-visit family) and this leg's freezes are PRICED — `
+            + `${ICE_TURRET_PLAN.blasts.costTicksPerContact} refused input ticks each, `
+            + 'reported as `blastFreezes` on the kill record and on `run.blastFreezes`. '
+            + 'Delete the declaration; the leg is byte-exact now.');
     }
     if (typeof id !== 'string') {
         fail(`${what}: kill.id must be the turret id \`world.iceTurrets\` carries, e.g. `
@@ -2184,7 +2303,19 @@ function runKill(run, perTick, kill, what) {
     }
     const PRESS = new Set(['primary']);
     const pressTick = perTick.length;
+    // ⛓⛓⛓ R5 SLICE 22: WHAT THE STANCE COSTS, MEASURED ACROSS THE LEG.
+    // Every kill stance is 112 px inside `attackRange`, so a kill leg
+    // stands in a three-blast spread on purpose; this counts what that
+    // bought the turret. ⛔ `levelRun` already REFUSES a press that lands
+    // inside a freeze span, so a leg that gets here has spent only ticks.
+    const freezesBefore = (run.blastFreezes ?? []).length;
     for (let k = 0; k < count; k += 1) {
+        // ⛓⛓⛓ R5 SLICE 22: and this is where the stance's own price is
+        // paid. Every kill stance is 112 px inside `attackRange`, so a
+        // volley is in the air for most of the cadence; a press inside its
+        // freeze span would be LOST and the body would take two hits, not
+        // three. The gap below is a floor, so spending ticks here is free.
+        holdUntilUnfrozen(run, perTick, `${what} press ${k + 1}`);
         perTick.push(PRESS);
         const pressed = run.advance(PRESS);
         if (pressed.transition) {
@@ -2278,7 +2409,14 @@ function runKill(run, perTick, kill, what) {
         kind: 'kill',
         id,
         facing,
-        blastsUnmodelled,
+        /**
+         * ⛓⛓ R5 SLICE 22: the freezes this leg took, and the ticks they
+         * cost. Replaces `blastsUnmodelled`: the gap that string declared
+         * is closed, and what a leg owes now is a NUMBER.
+         */
+        blastFreezes: (run.blastFreezes ?? []).slice(freezesBefore),
+        blastFreezeTicks: ((run.blastFreezes ?? []).length - freezesBefore)
+            * ICE_TURRET_PLAN.blasts.costTicksPerContact,
         at,
         pressTick,
         presses: count,
@@ -2464,6 +2602,10 @@ function runSpear(run, perTick, spear, what) {
     // it is one tick because that is what the probe measured, not because a
     // longer one would be worse.
     const at = { x: run.state.x, y: run.state.y };
+    // ⛓ R5 SLICE 22: a press on a frozen tick is LOST — see
+    // `holdUntilUnfrozen`. Held before `pressTick` is read, so the tick the
+    // schedule reports is the tick the press actually landed on.
+    holdUntilUnfrozen(run, perTick, what);
     const pressTick = perTick.length;
     const PRESS = new Set(['primary']);
     perTick.push(PRESS);
@@ -3141,6 +3283,10 @@ function runFire(run, perTick, fire, what) {
     // The hit ticks are T+4..T+8 and `useItem`'s `if (!firing)` swallows a
     // press inside an open window, so the span is one tick and the run's
     // own cadence guard is what refuses a second one too early.
+    // ⛓ R5 SLICE 22: a press on a frozen tick is LOST — see
+    // `holdUntilUnfrozen`. Held before `pressTick` is read, so the tick the
+    // schedule reports is the tick the press actually landed on.
+    holdUntilUnfrozen(run, perTick, what);
     const pressTick = perTick.length;
     const PRESS = new Set(['primary']);
     perTick.push(PRESS);
@@ -4293,6 +4439,40 @@ export function synthesizeLegs(legs, opts = {}) {
                     + `[${(run.world.iceTurrets ?? []).map((r) => r.id).join(', ') || 'none'}].`);
             }
             legContacts.add(`proximity-hazard:${row.tag}@${row.x},${row.y}`);
+        });
+        /**
+         * ⛓⛓⛓ R5 SLICE 22: AND A `fire.bumps` TARGET EARNS THE SAME ONE,
+         * FOR THE SAME REASON AND ONE VERB OVER.
+         *
+         * A bump press has to REACH the body — `Player.genericHit` calls
+         * `IceTurret.bump` from inside the fire rect — so every stance that
+         * can push a turret is inside its 128 px disc, exactly as every
+         * stance that can kill one is. Until this slice the exemption came
+         * free with the `kill` target that always preceded the presses.
+         *
+         * ⛔ AND THE CASE THAT FOUND IT IS THE CONTROL ARM. The shut-before
+         * control is the same target list with the kill REMOVED, and
+         * without this its A* cannot reach its own stance — so the pair
+         * could not be authored at all, and the reason would have read as
+         * "the control is unroutable" rather than "the exemption was
+         * attached to the wrong verb". A control that cannot be built is
+         * the experiment failing quietly.
+         *
+         * ⚠ The same over-permission as the kill's, bounded the same way:
+         * `runFire`'s bump arm checks the stance, the rect, the corpse's
+         * own `bump` gate and the destination tile, so a leg that entered
+         * the disc anywhere else gains nothing from having been allowed to.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            for (const b of t?.fire?.bumps ?? []) {
+                const what = `legs[${li}] level ${leg.level} target ${ti} fire.bumps`;
+                const row = (run.world.iceTurrets ?? []).find((r) => r.id === b?.id);
+                if (!row) {
+                    fail(`${what}: level ${leg.level} holds no ${b?.id}. Known: `
+                        + `[${(run.world.iceTurrets ?? []).map((r) => r.id).join(', ') || 'none'}].`);
+                }
+                legContacts.add(`proximity-hazard:${row.tag}@${row.x},${row.y}`);
+            }
         });
         /**
          * ⚠ A COLLECT'S PICKUP IS **NOT** EXEMPTED, and that is the

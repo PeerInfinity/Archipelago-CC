@@ -611,15 +611,18 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
         });
     };
     /**
-     * ⛔⛔⛔ THE DECLARATION THE RECORDING FORCED. `r5-l40-part5` diverged
-     * from the real game at tick 1616 in BOTH arms — `IceTurretBlast`
-     * freezes the player for 15 ticks and `Bot.noDamage` guards only the
-     * `hit` on the line BELOW it. Every kill leg has to say so.
+     * ⛓⛓⛓ R5 SLICE 22: THE DECLARATION IS GONE, AND THE GAP IT NAMED IS
+     * CLOSED.
+     *
+     * Slice 21's `kill.blastsUnmodelled` was a mandatory sentence saying the
+     * leg was MODEL-SOUND AND NOT BYTE-EXACT, because `IceTurretBlast`
+     * freezes the player for 15 ticks on the line above the
+     * `Bot.noDamage`-guarded `hit` and nothing modelled it. It is modelled
+     * now (`iceTurretBlast.js`), the two withdrawn recordings replay
+     * byte-identical, and `runKill` REFUSES a leg that still carries the
+     * declaration — so the retirement cannot be half-done.
      */
-    const BLASTS = 'MODEL-SOUND AND NOT BYTE-EXACT: `IceTurretBlast` freezes the player '
-        + 'for 15 ticks on the line above the `Bot.noDamage`-guarded `hit`, and '
-        + '`r5-l40-part5` diverged at tick 1616 in both arms, settling at 14.15 px.';
-    const KILL = { x: 488, y: 440, kill: { id: TURRET, facing: 'N', blastsUnmodelled: BLASTS } };
+    const KILL = { x: 488, y: 440, kill: { id: TURRET, facing: 'N' } };
     const SWORD = { x: 488, y: 440, equip: { slot: 0 } };
 
     it('⛓⛓⛓ three presses at the 31-tick cadence make a corpse, and it LATCHES SOLID', async () => {
@@ -700,7 +703,7 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
         it('⛔ a stance whose rect does not reach', async () => {
             await expect(legs([
                 { x: 488, y: 456, equip: { slot: 0 } },
-                { x: 488, y: 456, kill: { id: TURRET, facing: 'N', blastsUnmodelled: BLASTS } },
+                { x: 488, y: 456, kill: { id: TURRET, facing: 'N' } },
             ])).rejects.toThrow(/does not reach|distance gate/);
         });
 
@@ -720,18 +723,22 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
          * comment and is the only thing that stops the next author
          * re-recording the same refuted pair.
          */
-        it('⛔⛔⛔ a kill with no `blastsUnmodelled` declaration', async () => {
-            await expect(legs([SWORD, { ...KILL, kill: { id: TURRET, facing: 'N' } }]))
-                .rejects.toThrow(/MODEL-SOUND AND NOT BYTE-EXACT.*freeze.*STOPS THE WALK/s);
-            // …and a token that says nothing is refused too
-            await expect(legs([SWORD, { ...KILL, kill: { id: TURRET, facing: 'N', blastsUnmodelled: 'yes' } }]))
-                .rejects.toThrow(/must be a sentence/);
-        });
+        it('⛔⛔⛔ a kill that still carries the RETIRED `blastsUnmodelled` declaration',
+            async () => {
+                // ⛓ The retirement is a refusal, not a silence. A leg
+                // written against slice 21's model would otherwise keep
+                // passing while claiming a gap that no longer exists —
+                // [[feedback_retired_oracle_check_the_regen]].
+                await expect(legs([SWORD, {
+                    ...KILL,
+                    kill: { id: TURRET, facing: 'N', blastsUnmodelled: 'anything at all' },
+                }])).rejects.toThrow(/RETIRED/);
+            });
 
         it('⛔ a turret the level does not hold, and a malformed id', async () => {
-            await expect(legs([SWORD, { x: 488, y: 440, kill: { id: 'iceturret@0,0', facing: 'N', blastsUnmodelled: BLASTS } }]))
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { id: 'iceturret@0,0', facing: 'N' } }]))
                 .rejects.toThrow(/holds no iceturret@0,0/);
-            await expect(legs([SWORD, { x: 488, y: 440, kill: { facing: 'N', blastsUnmodelled: BLASTS } }]))
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { facing: 'N' } }]))
                 .rejects.toThrow(/kill.id must be the turret id/);
         });
     });
