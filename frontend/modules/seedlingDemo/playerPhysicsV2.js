@@ -870,6 +870,16 @@ export function step(state, held, opts = {}) {
         // experiment it is in rather than inferring it — the same rule
         // `relax` already follows for `noclip`/`noHazards`/`grants`.
         pins = [],
+        /**
+         * ⛓⛓⛓ R5 SLICE 22: `Player.input()`'s first-line return, threaded.
+         *
+         * The run owns `frozenTimer` (an `IceTurretBlast` is its only writer
+         * in the whole game) and decrements it in the player's own slot,
+         * ABOVE this call, because `freezeStep()` is at `Player.as:532` —
+         * above `super.update()`. See `playerPhysicsV1.step`'s note for why
+         * this is not `frozen`.
+         */
+        inputBlocked = false,
         // ⛓ R5 slice 4: reported when an exact `nearestToPoint` tie is
         // DECIDED by the transcribed list order and its two candidates lead
         // somewhere different. Nothing here consumes it; a planner does.
@@ -1171,6 +1181,11 @@ export function step(state, held, opts = {}) {
         fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
         frozen,
+        // ⛔ A DESCENT ALREADY DROPS THE KEYS (`fall ? NO_KEYS : held` above)
+        // and is a different arm of `Player.update` entirely; the OR here is
+        // the source's own — `!receiveInput || frozenTimer > 0 ||
+        // fallFromCeiling` — with the run supplying the middle term.
+        inputBlocked,
         friction,
         moveSpeed,
         // `Player.input()`'s last act. The feather exempts UPWARD motion

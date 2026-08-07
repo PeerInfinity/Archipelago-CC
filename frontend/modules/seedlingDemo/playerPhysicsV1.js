@@ -367,6 +367,30 @@ export function step(state, held, opts = {}) {
         // model that added it after the sweeps would push the player on a
         // frozen tick, when `mobileUpdate` runs no input at all.
         postInput = null,
+        /**
+         * ⛓⛓⛓ R5 SLICE 22: `Player.input()`'s OWN FIRST LINE, as a seam.
+         *
+         * ```
+         *   if (!receiveInput || frozenTimer > 0 || fallFromCeiling) return;
+         * ```
+         *
+         * ⛔ THIS IS NOT `frozen`, AND THE DIFFERENCE IS THE WHOLE POINT.
+         * `frozen` is `Game.freezeObjects`, which `Mobile.mobileUpdate`
+         * reads one frame HIGHER and which skips `friction()`, both sweeps
+         * and the input together — a ceremony parks the player and PRESERVES
+         * the velocity. This one returns out of `input()` alone, so friction
+         * still decays `v` and both sweeps still run: the player DRIFTS to a
+         * stop and then stands still. The two produce different position
+         * streams from the same tick count, which is exactly how
+         * `IceTurretBlast`'s freeze was found — as a 0.8 px disagreement in
+         * a recording, not as a stopped clock.
+         *
+         * ⚠ AND IT TAKES `postInput` WITH IT. The waterfall push is the LAST
+         * statement of `input()` (`Player.as:1550-1553`), below the return,
+         * so a model that skipped only the direction keys would push a frozen
+         * player down a waterfall the game leaves alone.
+         */
+        inputBlocked = false,
     } = opts;
     const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
@@ -394,8 +418,12 @@ export function step(state, held, opts = {}) {
     let hitY = null;
     if (!frozen) {
         v = applyFriction(v, f);
-        v = applyInput(v, held, moveSpeed);
-        if (postInput) v = postInput(v);
+        // `Player.input()`, whole — the direction arms AND the waterfall
+        // push below them — behind its own first-line return.
+        if (!inputBlocked) {
+            v = applyInput(v, held, moveSpeed);
+            if (postInput) v = postInput(v);
+        }
         // X is FULLY resolved before Y, and Y's probe sees the NEW x —
         // `moveX(v.x); moveY(v.y);` (`Mobile.as:38-39`), where moveY reads
         // the member `x` that moveX has already written. Swapping the two

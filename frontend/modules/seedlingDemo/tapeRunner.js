@@ -392,6 +392,24 @@ export function createTapeStepper(tape, opts = {}) {
             turretsDead: run ? run.turretsDead : [],
             /** ⛓ mid-fight `hits`/`hitsTimer`, so a refused press has a name. */
             turretDamage: run ? run.turretDamage : [],
+            /**
+             * ⛓⛓⛓ R5 SLICE 22 — WHAT STANDING IN RANGE COST, AS A NUMBER.
+             *
+             * `blastFreezes` is one entry per tick an `IceTurretBlast`
+             * reached the player, each worth `freezeTicks - 1` ticks of
+             * refused input; `volleys` is one per three-blast spawn, so a
+             * leg can say the shooter fired N times and hit M. ⛔ The two
+             * together are the only model-side witness of the mechanism
+             * that refuted `r5-l40-part5`: the position stream shows the
+             * DISPLACEMENT, and these say what caused it.
+             *
+             * ⚠ `frozenTimer` is the final value, against the game's own
+             * `botStatus.frozen_timer` — a readout the R5 batch added and
+             * nothing consumed until this slice.
+             */
+            blastFreezes: run ? run.blastFreezes : [],
+            volleys: run ? run.volleys : [],
+            frozenTimer: run ? run.frozenTimer : 0,
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

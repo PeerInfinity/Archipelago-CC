@@ -69,6 +69,14 @@ import { rect } from './levelWorld.js';
 import {
     MOBILE_DEATH_FADE, PIT_FADE, createEnemyDamage, enemyHit, enemyHitUpdate, mobileDeath,
 } from './enemyDamage.js';
+// ⛓⛓⛓ R5 SLICE 22: THE BLAST. The ELEVENTH family and the first
+// projectile. This file owns the SHOOTER — the aim, the volley clock and
+// the two-animation state machine that decides when `endAnim` fires;
+// `iceTurretBlast.js` owns what leaves the barrel.
+import { spawnVolley } from './iceTurretBlast.js';
+// `_timer += _anim._frameRate * FP.elapsed`, with `FP.elapsed` pinned at
+// `Engine.MAX_ELAPSED`. One transcription of that constant for the package.
+import { FP_ELAPSED } from './chasers.js';
 
 export class IceTurretError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretError'; }
@@ -110,6 +118,25 @@ export const ICE_TURRET = Object.freeze({
     distBtwnShots: 12,
     /** `bothRange` — how far from a diagonal both axes still fire. */
     bothRange: 0.1,
+    /** `attackAnimSpeed` — the frameRate of BOTH shot animations. */
+    attackAnimSpeed: 10,
+    /**
+     * ⛓ The two shot animations, and their frame COUNTS are what the
+     * `Spritemap` clock divides. `add(name, frames, rate)` defaults `loop`
+     * to TRUE, so both fire their callback on the WRAP rather than on a
+     * completion — which is why `complete` never goes true for either and
+     * why `endAnim` is reached at all.
+     */
+    anims: Object.freeze({
+        startshot: Object.freeze({ frames: 1, rate: 10, loop: true }),
+        finishshot: Object.freeze({ frames: 5, rate: 10, loop: true }),
+        /** ⛔ rate 0 — `_timer` never advances, so "dead" NEVER calls back. */
+        dead: Object.freeze({ frames: 1, rate: 0, loop: true }),
+        /** ⛔ rate 0, and nothing in the class ever plays it. */
+        hit: Object.freeze({ frames: 1, rate: 0, loop: true }),
+    }),
+    /** ⛔ `var d:int = FP.distance(...)` — the range test TRUNCATES first. */
+    rangeIsTruncated: true,
     /** `bump` is gated on these two attack types and on the "dead" anim. */
     pushedBy: Object.freeze(['Fire', 'Pulse']),
     /**
@@ -182,6 +209,28 @@ export function createIceTurret(x, y) {
         lTile: { x: Math.floor(ex / TILE), y: Math.floor(ey / TILE) },
         /** `sprIceTurret.currentAnim == "dead"` — the corpse predicate. */
         dead: false,
+        // ── ⛓⛓⛓ R5 SLICE 22: THE SHOOTER ────────────────────────────
+        /**
+         * `sprIceTurret.angle`, in DEGREES and UNBOUNDED. `Image.angle` is
+         * a plain public var with no setter and no normalisation, so this
+         * accumulates exactly as the game's does — including past ±180,
+         * which is what makes `FP.angle_difference`'s SINGLE wrap
+         * observable rather than academic.
+         */
+        angle: 0,
+        /** `shootTimer`, seeded 0 — so a turret in range fires on tick ONE. */
+        shootTimer: 0,
+        /**
+         * The `Spritemap`'s own three fields. `currentAnim` is `_anim ?
+         * _anim._name : ""`, and a fresh Spritemap has played nothing —
+         * so the initial value is the empty string, which is exactly the
+         * state `update()`'s range arm requires.
+         */
+        anim: '',
+        animIndex: 0,
+        animTimer: 0,
+        /** A monotonic counter, for blast ids. Not a game field. */
+        volleys: 0,
         /** `type == "Solid"` — a LATCH, set once the player steps off. */
         solid: false,
         /** `Mobile.destroy`, and `fell` once a pit descent completes. */
@@ -194,6 +243,8 @@ export function createIceTurret(x, y) {
         prev1: null,
         prev2: null,
         settled: false,
+        /** R5 slice 22: the blasts THIS tick's `endAnim` produced, or null. */
+        spawned: null,
     };
 }
 
@@ -426,6 +477,161 @@ function moveAxis(state, axis, rel, blockedAt) {
 }
 
 /**
+ * `FP.angle_difference(a0, a1)` — and it wraps ONCE, not to a canonical
+ * range.
+ *
+ * ```
+ *   var d:Number = a0 - a1;
+ *   if (d < -Math.PI) d += 2 * Math.PI;
+ *   if (d >  Math.PI) d -= 2 * Math.PI;
+ * ```
+ *
+ * ⛔ SO A DIFFERENCE BEYOND ±3π COMES BACK UNWRAPPED, and `sprIceTurret.angle`
+ * is an unbounded accumulator — the two facts only meet on a turret that has
+ * chased the player round it several times. Transcribed verbatim rather than
+ * replaced with a modulo, which is the tidier description this arc keeps
+ * being punished for.
+ */
+function angleDifference(a0, a1) {
+    let d = a0 - a1;
+    if (d < -Math.PI) d += 2 * Math.PI;
+    if (d > Math.PI) d -= 2 * Math.PI;
+    return d;
+}
+
+/**
+ * ⛓⛓⛓ `IceTurret.update()`'s AIM-AND-FIRE BLOCK — the tail below its own
+ * `if (Game.freezeObjects) return`.
+ *
+ * ```
+ *   if (currentAnim != "dead") {
+ *       player = FP.world.nearestToEntity("Player", this)
+ *       if (player) {
+ *           var d:int = FP.distance(x, y, player.x, player.y);
+ *           if (d <= attackRange && currentAnim != "startshot"
+ *                                && currentAnim != "finishshot") {
+ *               angle += angle_difference(-atan2(p.y - y, p.x - x),
+ *                                         angle/180*PI) * 180/PI / 10;
+ *               if (shootTimer > 0)      shootTimer--;
+ *               else if (hitsTimer <= 0) { shootTimer = 25; play("startshot"); }
+ *           } else {
+ *               shootTimer = shootTimerMax;          // <- RE-ARMED
+ *           }
+ *       }
+ *       if (currentAnim == "") frame = 0;
+ *   }
+ * ```
+ *
+ * ⛔⛔ **THE `else` RE-ARMS THE CLOCK, AND THE ANIMATION IS INSIDE THE SAME
+ * CONDITION.** So the 25-tick gap is not measured from the shot: it starts
+ * when the animation ENDS, because every tick of the animation runs the
+ * `else` and writes 25 back. [[feedback_else_arm_binds_to_the_nearest_if]]
+ * on the arm rather than on the guard — the condition it belongs to is a
+ * three-term `&&` and only one of the three is the range.
+ *
+ * ⛔ **AND `d` IS AN `int`.** `var d:int = FP.distance(...)` truncates
+ * before `d <= attackRange`, so the real threshold is a distance strictly
+ * below 129, not 128.
+ *
+ * ⛔⛔ **AND THIS BLOCK IS NOT `onScreen`-GATED.** `Enemy.update`'s screen
+ * test returns out of `Enemy.update`, which is `super.update()` — one frame
+ * higher than this. A turret the camera has left still aims and still
+ * fires; what it stops doing is moving, checking its terrain and dying.
+ */
+function iceTurretAim(state, player) {
+    if (state.dead || !player) return;
+    const d = Math.trunc(Math.sqrt((player.x - state.x) * (player.x - state.x)
+        + (player.y - state.y) * (player.y - state.y)));
+    if (d <= ICE_TURRET.attackRange && state.anim !== 'startshot' && state.anim !== 'finishshot') {
+        state.angle += (angleDifference(
+            -Math.atan2(player.y - state.y, player.x - state.x),
+            (state.angle / 180) * Math.PI,
+        ) * 180) / Math.PI / 10;
+        if (state.shootTimer > 0) {
+            state.shootTimer -= 1;
+        } else if (state.hitsTimer <= 0) {
+            state.shootTimer = ICE_TURRET.shootTimerMax;
+            // `play("startshot")` — `_index = 0; _timer = 0; complete = false`.
+            state.anim = 'startshot';
+            state.animIndex = 0;
+            state.animTimer = 0;
+        }
+    } else {
+        state.shootTimer = ICE_TURRET.shootTimerMax;
+    }
+}
+
+/**
+ * ⛓⛓⛓ `Spritemap.update()` — AND IT IS NOT PART OF `Entity.update` AT ALL.
+ *
+ * `World.update`'s loop is
+ * ```
+ *   if (e.active) { …; e.update(); }
+ *   if (e._graphic && e._graphic.active) e._graphic.update();
+ * ```
+ * — the SAME iteration, immediately after the entity. So the animation
+ * advances once per tick, after `IceTurret.update` has run, and `play()`
+ * called during that update gets its first increment on its own tick.
+ *
+ * ⛔⛔⛔ **AND IT IS NOT FREEZE-GATED.** `Game.freezeObjects` is read by
+ * `Mobile.mobileUpdate` and by `IceTurret.update`'s tail; nothing in
+ * `World.update` or `Spritemap.update` looks at it. ⇒ **A CEREMONY DOES
+ * NOT STOP A VOLLEY ALREADY IN THE BARREL**: the animation keeps running
+ * through frozen frames and `endAnim` spawns its three blasts on schedule.
+ * What the freeze stops is the DECISION to start another one.
+ *
+ * ⛓ THE CLOCK, TRANSCRIBED RATHER THAN DIVIDED. `_timer += 10 * 0.0333`
+ * and a `while (_timer >= 1) { _timer--; _index++; }` — ten increments of
+ * 0.333 leave 3.33 and not 10/3, so the wrap ticks are 4 and 16 rather
+ * than the 3 and 15 a division gives (§35's double-precision rule, one
+ * clock over).
+ *
+ * @returns {?Array} the three blasts a `startshot` wrap spawned, or null
+ */
+function iceTurretAnimStep(state, turretId) {
+    const a = ICE_TURRET.anims[state.anim];
+    // `if (_anim && !complete)` — an unknown name (the `play("")` case) and
+    // a rate-0 animation both sit here doing nothing for ever.
+    if (!a || a.rate === 0) return null;
+    let spawned = null;
+    state.animTimer += a.rate * FP_ELAPSED;
+    while (state.animTimer >= 1) {
+        state.animTimer -= 1;
+        state.animIndex += 1;
+        if (state.animIndex === a.frames) {
+            // `_loop` is true for both, so: `_index = 0; callback()`.
+            state.animIndex = 0;
+            if (state.anim === 'startshot') {
+                // `endAnim`'s `case "startshot"`: play("finishshot") FIRST,
+                // then add the three blasts. `play` resets `_timer` to 0
+                // INSIDE the callback, so the remainder is DISCARDED and the
+                // `while` exits — the second animation starts from zero.
+                const angle = state.angle;
+                state.anim = 'finishshot';
+                state.animIndex = 0;
+                state.animTimer = 0;
+                state.volleys += 1;
+                spawned = spawnVolley(turretId, state.volleys, state.x, state.y, angle);
+                break;
+            }
+            if (state.anim === 'finishshot') {
+                // `endAnim`'s `default:` — `play("")`, which finds no anim,
+                // sets `complete = true` and leaves `currentAnim` empty.
+                state.anim = '';
+                state.animIndex = 0;
+                state.animTimer = 0;
+                break;
+            }
+            // ⛔ `case "dead": break;` — unreachable, because the "dead"
+            // animation's frameRate is 0 and `_timer` never gets there.
+            // Transcribed as unreachable rather than pruned.
+            break;
+        }
+    }
+    return spawned;
+}
+
+/**
  * ONE GAME TICK of `IceTurret.update()`, in the game's own order.
  *
  * ⛔⛔ THE FOUR GATES, AND THEY ARE FOUR DIFFERENT GATES:
@@ -450,14 +656,21 @@ function moveAxis(state, axis, rel, blockedAt) {
  * @param {?function} ctx.terrainAt `(x, y) => t`
  * @param {?function} ctx.playerOverlaps `(rect) => boolean` — `collide("Player",
  *   x, y)`, which decides the Solid latch.
+ * @param {?{x:number,y:number}} ctx.player  R5 slice 22: the player's ENTITY
+ *   point, for `FP.world.nearestToEntity("Player", this)` and the range
+ *   test. Omitting it makes the turret inert — which is what a probe about
+ *   the corpse's glide wants and what a ROUTE must never do.
  */
 export function stepIceTurret(state, ctx = {}) {
     const {
         frozen = false, onScreen = true,
-        blockedAt = null, terrainAt = null, playerOverlaps = null,
+        blockedAt = null, terrainAt = null, playerOverlaps = null, player = null,
     } = ctx;
     if (state.removed) return state;
     state.ticks += 1;
+    // The blasts THIS tick spawned, replaced every tick so a caller cannot
+    // drain a stale volley twice.
+    state.spawned = null;
 
     // ── IceTurret.update()'s FIRST line, above `super.update()` ───────
     // ⛓ `dieInWater = hits >= hitsMax` — RE-DERIVED EVERY TICK, so it flips
@@ -523,12 +736,24 @@ export function stepIceTurret(state, ctx = {}) {
     state.prev1 = { x: state.x, y: state.y };
 
     // ── IceTurret.update()'s own tail, below its freeze return ────────
-    if (frozen || state.removed) return state;
-    if (state.dead && !state.solid) {
-        // `else if (!collide("Player", x, y)) type = "Solid"` — a LATCH.
-        const overlaps = playerOverlaps ? playerOverlaps(iceTurretRect(state)) : false;
-        if (!overlaps) state.solid = true;
+    // ⛓⛓ AND THE ANIMATION IS BELOW EVEN THAT. `Spritemap.update` is
+    // called by `World.update` after `e.update()` returns, so it runs on
+    // the frozen ticks the `return` skips — see `iceTurretAnimStep`.
+    if (state.removed) return state;
+    if (frozen) {
+        state.spawned = iceTurretAnimStep(state, state.id);
+        return state;
     }
+    if (state.dead) {
+        // `else if (!collide("Player", x, y)) type = "Solid"` — a LATCH.
+        if (!state.solid) {
+            const overlaps = playerOverlaps ? playerOverlaps(iceTurretRect(state)) : false;
+            if (!overlaps) state.solid = true;
+        }
+    } else {
+        iceTurretAim(state, player);
+    }
+    state.spawned = iceTurretAnimStep(state, state.id);
     return state;
 }
 
@@ -683,8 +908,39 @@ export const ICE_TURRET_PLAN = Object.freeze({
      * come out of. There is no approach that is out of range.
      */
     blasts: Object.freeze({
-        modelled: false,
-        refutedTape: 'r5-l40-part5 / -control (withdrawn — not committed)',
+        /**
+         * ⛓⛓⛓ R5 SLICE 22: BUILT — `iceTurretBlast.js`, and the refuted
+         * recording is what CONFIRMED it.
+         *
+         * The two withdrawn `--win` streams were still on disk, so the
+         * acceptance cost no new recording at all: the same two tapes,
+         * replayed through the corrected model, are BYTE-IDENTICAL to the
+         * real game for all 1,966 observations of both arms. The residue
+         * §35.8 banked — tick 1616, 0.8 px, settling at 14.15, a nine-tick
+         * stop at (499.6,472.75) — is exactly what the fix has to erase,
+         * and a free oracle is a stronger gate than a fresh recording
+         * because it was made BEFORE the model that now matches it.
+         *
+         * ⛔⛔ AND THE DIVERGENCE TICK WAS NEVER THE CONTACT TICK. The
+         * contact is at **1614**; 1616 is the first tick on which the
+         * refusal was VISIBLE, because `Player.input()`'s direction arms
+         * are themselves gated on `v.y > -moveSpeed` and refuse on a fast
+         * tick anyway. Two silent ticks, then nine of dead stop, out of
+         * fourteen refused.
+         *
+         * ⛔⛔⛔ AND THE CAUSE OF THE PHASE WAS THE CAMERA. Getting the
+         * freeze onto tick 1614 needed more than the projectile: an
+         * `IceTurret` off screen does not run `Mobile.mobileUpdate`, so it
+         * has not yet taken `input()`'s 8 px y snap — and eight pixels of
+         * turret moves the 128 px range boundary by six ticks, which moves
+         * the 45-tick volley clock by a whole cycle. `levelRun` runs
+         * `camera.js` live for this.
+         */
+        modelled: true,
+        modelledIn: 'iceTurretBlast.js — the ELEVENTH per-visit family',
+        confirmedBy: 'r5-l40-part5 / -control, byte-identical for 1,966 ticks in BOTH arms',
+        contactTick: 1614,
+        /** The residue the fix had to erase, kept as the acceptance. */
         divergence: Object.freeze({ tick: 1616, dy: -0.8, settlesAt: 14.15, bothArms: true }),
         freezeTicks: 15,
         freezeGuardedByNoDamage: false,
@@ -700,12 +956,37 @@ export const ICE_TURRET_PLAN = Object.freeze({
             + '`Player.hit`, and only `hit` is behind `if (Bot.noDamage) return`. '
             + '`Player.input()` returns while `frozenTimer > 0`, so the blast is a '
             + 'fifteen-tick STOP that no damage policy touches.',
-        needs: 'an `IceTurretBlast` family — the ELEVENTH per-visit geometry family and '
-            + 'the first PROJECTILE: three bodies per volley at 6 px/tick, spawned from '
-            + 'the turret\'s own angle, colliding with ["Player","Tree","Solid","Shield"] '
-            + 'and removed on the first hit. Until it exists, a kill leg is model-sound '
-            + 'and NOT byte-exact, and `runKill` refuses to be authored without saying so.',
+        built: 'three bodies per volley at 6 px/tick from the turret\'s own angle, '
+            + 'colliding with ["Player","Tree","Solid","Shield"] and removed on the first '
+            + 'hit — `iceTurretBlast.js`, with the volley clock in this file.',
+        /**
+         * ⛓⛓ AND THE PRICE IS A NUMBER NOW. Fourteen refused input ticks
+         * per contact, `run.blastFreezes` per leg, and a press inside a
+         * span is a REFUSAL rather than a silent loss.
+         */
+        costTicksPerContact: 14,
     }),
+    /**
+     * ⛔⛔⛔ R5 SLICE 22: `onScreen` IS LOAD-BEARING FOR THE POSITION, NOT
+     * ONLY FOR THE GLIDE — WHICH IS THE HALF SLICE 20 NAMED AND MISSED.
+     *
+     * `stepIceTurretsNow` declared `onScreen: true` with an argued reason:
+     * a corpse only glides on screen, and every leg that pushes one stands
+     * beside it. Both true. But `Enemy.update`'s early return skips the
+     * whole of `Mobile.mobileUpdate`, and this class's `input()` SNAPS ITS
+     * OWN y — a turret at a tile corner moves 8 px the first tick it runs.
+     * So the camera decides where the body IS, which decides when the
+     * player crosses its 128 px range, which sets the phase of a 45-tick
+     * volley clock.
+     *
+     * Measured: with `onScreen: true` from tick 0 the L40 turret stands at
+     * y 424 and fires at 1560/1605/1650; with the camera live it stands at
+     * 416 until the camera reaches it, and the recording's contact lands.
+     *
+     * ⇒ [[feedback_the_obstacle_is_the_machine]]: enumerating what the gate
+     * stops has to include "being where it started".
+     */
+    onScreenDecidesPosition: true,
     /** ⚠ And the corpse is per-VISIT: `new Game` rebuilds a live turret. */
     perVisit: 'a rebuild REVIVES the turret, so the kill, the pushes, the hold and '
         + 'everything downstream of the hold share ONE window',

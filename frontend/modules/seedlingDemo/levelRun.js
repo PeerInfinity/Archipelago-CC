@@ -71,6 +71,15 @@ import {
     createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
 } from './iceTurret.js';
+// ⛓⛓⛓ R5 SLICE 22: the ELEVENTH family, and the first that is created
+// inside a window rather than placed by an `.oel`.
+import {
+    ICE_TURRET_BLAST, blastIsSpent, stepIceTurretBlast,
+} from './iceTurretBlast.js';
+// ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LIVE. Transcribed at slice 2 for the
+// contact envelope and consumed by nothing until a turret's own rest
+// position turned out to depend on it — see `cam` below.
+import { initialCamera, onScreen as camOnScreen, stepCamera } from './camera.js';
 // ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
 // the R4 refusal's reason — "a death moves totalEnemies(), which opens
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
@@ -150,13 +159,25 @@ function applyItem(inventory, name) {
  * }} a live view — `level`/`state`/... are getters over the run's own state,
  *    so a caller may hold the object and read fields after each `advance`.
  *
- * ⚠ `noDamage` IS CARRIED AND NOT CONSUMED, and that is a bounded vacuity
- * rather than an oversight. The JS engine models no enemy, no projectile and
- * no trap, so there is no site at which `Player.hit()` would have been
- * called — `noDamage: false` is equally inert here. It is threaded anyway so
- * the tape schema is symmetric and the field reaches the game, which is
- * where it does something. The witness that would close it is the first
- * fixture whose route is in range of a damage source, i.e. R5.
+ * ⛔⛔⛔ R5 SLICE 22: `noDamage` IS NOW CONSUMED, AND THE NOTE IT REPLACES
+ * WAS WRONG IN THE ONE WAY THAT MATTERED.
+ *
+ * It used to read: *"a bounded vacuity rather than an oversight. The JS
+ * engine models no enemy, no projectile and no trap, so there is no site at
+ * which `Player.hit()` would have been called — `noDamage: false` is
+ * equally inert here."* The premise held until this slice and the
+ * CONCLUSION never did. `IceTurretBlast` calls `Player.freeze(15)` on the
+ * line ABOVE `Player.hit`, and only `hit` is behind
+ * `if (Bot.noDamage) return` — so the flag was never a switch between "the
+ * blast does something" and "the blast does nothing"; it was a switch
+ * between two different things the blast does. A model that had built the
+ * projectile while still believing the note would have priced the freeze
+ * behind the flag and been wrong on every tape.
+ *
+ * ⇒ what `noDamage` now buys is a REFUSAL: a blast that reaches the player
+ * on a tape without it throws, because `hits`/`hitsTimer`/`Game.shake` are
+ * state this model does not carry. The freeze is charged either way.
+ * [[feedback_nodamage_prices_damage_not_freeze]]
  */
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
@@ -587,6 +608,55 @@ export function createLevelRun({
         return out;
     };
     /**
+     * ── ⛓⛓⛓ R5 SLICE 22: THE BLASTS IN FLIGHT, THE ELEVENTH FAMILY ─────
+     *
+     * ⛔ AND IT IS THE FIRST ONE THAT IS NOT A ROSTER. Every family before
+     * it is built from the level's `.oel` placements and lives for the
+     * visit; an `IceTurretBlast` is created by an animation callback, is in
+     * no extract, and dies on its first contact. So this is a LIST that
+     * grows and shrinks, keyed by level only so a world swap drops it —
+     * which is what `Game`'s reconstruction does to every runtime entity.
+     *
+     * ⚠ ORDER IS THE UPDATE LIST'S, NEWEST FIRST. `World.addUpdate`
+     * PREPENDS, so `unshift` here is the transcription and not a
+     * preference. It is unobservable today (blasts do not collide with each
+     * other and a volley shares one velocity) and it is free.
+     */
+    const blastStates = new Map();
+    const blastsFor = (n) => {
+        if (!blastStates.has(n)) blastStates.set(n, []);
+        return blastStates.get(n);
+    };
+    /**
+     * ⛔ THE PRUNE BOUND, COMPUTED FROM THE GEOMETRY RATHER THAN ASSUMED.
+     *
+     * The game gives a blast no lifetime at all, so the model needs a
+     * reason to drop one. The reason is reachability: the player is
+     * hard-clamped inside the level rect every tick and every hitable box
+     * is a box in this world, so a blast outside the union of the two and
+     * receding from it can never touch anything again. Memoised per level —
+     * the union only ever needs the STATIC boxes, because a mover's live
+     * rect is always inside its own family's static footprint plus the
+     * level, and the level rect is in the union anyway.
+     */
+    const blastReachCache = new Map();
+    const blastReachFor = (n) => {
+        if (!blastReachCache.has(n)) {
+            const w = worldFor(n);
+            const r = {
+                x: 0, y: 0, right: w.world.width, bottom: w.world.height,
+            };
+            for (const b of w.solidBoxesForBlast()) {
+                if (b.x < r.x) r.x = b.x;
+                if (b.y < r.y) r.y = b.y;
+                if (b.right > r.right) r.right = b.right;
+                if (b.bottom > r.bottom) r.bottom = b.bottom;
+            }
+            blastReachCache.set(n, r);
+        }
+        return blastReachCache.get(n);
+    };
+    /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
      *    IN THIS FILE ─────────────────────────────────────────────────────
      *
@@ -638,6 +708,35 @@ export function createLevelRun({
      * `stepCrushersNow`.
      */
     const crusherContacts = [];
+    /**
+     * ⛓⛓⛓ R5 SLICE 22: THE PLAYER'S OWN FREEZE, AND IT IS NOT THE OTHER ONE.
+     *
+     * `Player.frozenTimer`, whose ONLY writer in the entire game is
+     * `IceTurretBlast` (grepped, not assumed: `\.freeze\(` has exactly one
+     * call site outside the definition). It gates `Player.input()` and
+     * nothing else — friction and both sweeps still run — so it is a
+     * DISPLACEMENT and not a stopped clock, and `frozenFramesOwed` below,
+     * which counts `Game.freezeObjects` frames the tape never sees, is a
+     * different quantity that must never be merged with it.
+     *
+     * ⚠ PER PLAYER, SO PER WORLD. `Game` builds a fresh `Player` on every
+     * swap and the field is `private var frozenTimer:int = 0` — see
+     * `arriveIn`.
+     */
+    let frozenTimer = 0;
+    /** `IceTurretBlast.freezeTime`, through the family that owns it. */
+    const BLAST_FREEZE_TICKS = ICE_TURRET_BLAST.freezeTicks;
+    /** One per tick a blast reached the player — `{t, level, blast, x, y}`. */
+    const blastFreezes = [];
+    /** One per volley an `endAnim` spawned — `{t, level, turret, blasts}`. */
+    const volleys = [];
+    /**
+     * The dead frames a level load spends with `view()` still running and
+     * the player stationary — `camera.js`'s `cameraTrack` default, and the
+     * arithmetic is forgiving (a load leaves the camera 2 px out and
+     * `2 * 0.9^20 < 0.25`, so anything over ~12 rounds the same).
+     */
+    const CAMERA_LOAD_SETTLE_TICKS = 20;
     /**
      * ⛓⛓ Frozen frames this run has spent that the TAPE never sees.
      *
@@ -960,6 +1059,41 @@ export function createLevelRun({
     // after an arrival is that tick for the destination world, for exactly
     // the same reason. It is per WORLD, not per run.
     let firstTickInWorld = true;
+    /**
+     * ⛔⛔⛔ R5 SLICE 22: THE CAMERA IS LIVE NOW, AND SLICE 20'S NAMED
+     * SIMPLIFICATION IS WHAT THE RECORDING REFUTED.
+     *
+     * `stepIceTurretsNow` declared `onScreen: true` and said so out loud —
+     * *"the camera is a render-side quantity this package does not carry,
+     * and every leg that pushes a corpse stands within a tile of it"*. Both
+     * halves were true and the conclusion was still wrong, because the gate
+     * does not only decide whether a CORPSE glides: `Enemy.update`'s early
+     * return also skips `Mobile.mobileUpdate`, and an `IceTurret`'s
+     * `input()` SNAPS ITS OWN y BY 8 px on the first tick it runs. So the
+     * camera decides WHERE THE TURRET STANDS, which decides when the player
+     * crosses its 128 px range, which decides the phase of a 45-tick volley
+     * clock — and the recording put the freeze 33 ticks from where a
+     * permanently-on-screen turret puts it.
+     *
+     * ⇒ [[feedback_the_obstacle_is_the_machine]] once more: "off screen
+     * means it cannot move" and "off screen means it is where it started"
+     * are the same sentence, and only the first one had been written down.
+     *
+     * ⚠ THE PHASE IS `cameraTrack`'s, LIVE. `view()` runs at the END of
+     * `Game.update`, after every entity — so the camera an enemy is gated
+     * against during tick T is the one produced at the end of T-1, which is
+     * exactly the value this variable holds when `stepIceTurretsNow` runs.
+     * A load settles it through the fade's own `view()` calls first
+     * (`camera.js` header, point 3).
+     */
+    let cam = null;
+    const settleCameraForLoad = () => {
+        cam = initialCamera(state.x, state.y);
+        for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
+            cam = stepCamera(cam, state, worldFor(level).world);
+        }
+    };
+    settleCameraForLoad();
     let ticksCompleted = 0;
     const transitions = [];
     /**
@@ -2319,6 +2453,66 @@ export function createLevelRun({
      * itself. `withoutSelf` is `pushableCtx`'s shape and it is here for
      * exactly the same reason.
      */
+    /**
+     * ⛓⛓⛓ R5 SLICE 22: ONE TICK OF EVERY BLAST IN FLIGHT, AND IT IS FIRST.
+     *
+     * `World.addUpdate` PREPENDS and a blast is added at RUN TIME, so it
+     * sits ahead of every `.oel` entity in the update list — ahead of the
+     * spinners, the blocks, the crusher, its own turret and the player.
+     * Both halves are load-bearing:
+     *
+     *   · it reads the world as the PREVIOUS tick left it, so a wall that
+     *     arrives this tick does not shield a blast already past it;
+     *   · it writes `frozenTimer` BEFORE the player's `freezeStep`, which
+     *     is what makes the contact tick itself the first refused one
+     *     (`iceTurretBlast.FREEZE_SPAN`).
+     *
+     * ⚠ AND IT RUNS THROUGH A CEREMONY. Only the MOVE is behind
+     * `Game.freezeObjects`; the collision test is in `update()`'s own body
+     * below `super.update()`. A blast parked on the player by a freeze
+     * still freezes them.
+     */
+    function stepBlastsNow() {
+        const list = blastsFor(level);
+        if (list.length === 0) return;
+        const opts = liveSolidOpts();
+        const box = playerBoxAt(state.x, state.y);
+        const reach = blastReachFor(level);
+        for (const b of list) {
+            const r = stepIceTurretBlast(b, {
+                frozen: ceremony !== null,
+                playerBox: box,
+                blockedAt: (bx) => !!world.collidesBlast(bx, opts),
+            });
+            if (r.hitPlayer) {
+                // `(hits[i] as Player).freeze(freezeTime)` — UNGATED, the
+                // line above the `Bot.noDamage`-guarded `hit`.
+                frozenTimer = BLAST_FREEZE_TICKS;
+                blastFreezes.push({
+                    t: ticksCompleted + 1, level, blast: b.id, x: b.x, y: b.y,
+                });
+            }
+            // `Player.hit(null, 0, p)` is the next line and, under
+            // `noDamage`, returns at its own first line. The run asserts
+            // that rather than assuming it: a tape WITHOUT `noDamage` that
+            // takes a blast would move `hits`, and this model does not
+            // carry the player's damage.
+            if (r.hitPlayer && !noDamage) {
+                throw new Error(`levelRun: a blast (${b.id}) reached the player at tick `
+                    + `${ticksCompleted + 1} on a tape that does not declare \`noDamage\`. `
+                    + '`Player.hit` would land — `hits += 1`, `hitsTimer = 30`, '
+                    + '`Game.shake += 5` — and this model carries the FREEZE only. '
+                    + 'Declare `noDamage`, or route out of the blast.');
+            }
+        }
+        // `FP.world.remove` is deferred to `updateLists()` at the end of the
+        // frame, so a blast that hit is gone from the NEXT tick and not
+        // from this one. Nothing reads a blast but this loop, so the two
+        // are indistinguishable — filtered here for that reason.
+        const kept = list.filter((b) => !b.removed && !blastIsSpent(b, reach));
+        if (kept.length !== list.length) blastStates.set(level, kept);
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -2331,17 +2525,21 @@ export function createLevelRun({
                 : new Map([...opts.turrets].filter(([k]) => k !== id));
             stepIceTurret(t, {
                 frozen: ceremony !== null,
-                // ⚠ `onScreen` is DECLARED TRUE and that is a modelling
-                // decision with a name. `Enemy.update`'s first line returns
-                // when `!activeOffScreen && !onScreen()`, so a corpse off
-                // camera does not glide — but the camera is a render-side
-                // quantity this package does not carry, and every leg that
-                // pushes a corpse stands within a tile of it for the whole
-                // 32-tick glide (the press has to reach). ⛔ A leg that
-                // walked away mid-glide would be modelled as moving a body
-                // the game had parked, so `ICE_TURRET_PLAN.gates` names it
-                // and the leg verb is what has to hold it.
-                onScreen: true,
+                // ⛔⛔⛔ R5 SLICE 22: COMPUTED, NOT DECLARED — AND SLICE
+                // 20's DECLARATION IS WHAT THE RECORDING REFUTED.
+                //
+                // It used to read `onScreen: true`, with the reason that
+                // "the camera is a render-side quantity this package does
+                // not carry, and every leg that pushes a corpse stands
+                // within a tile of it". True, and beside the point: the
+                // gate also skips `Mobile.mobileUpdate`, and this class's
+                // `input()` SNAPS y by 8 px the first time it runs. A
+                // turret that is on screen from tick 0 stands at y 424; one
+                // the camera has not reached yet stands at y 416 — and
+                // eight pixels of turret is 33 ticks of volley phase, which
+                // is the whole distance between the model's freeze and the
+                // game's. See `cam`.
+                onScreen: camOnScreen(iceTurretRect(t), cam),
                 blockedAt: (x, y) => {
                     const b = iceTurretRect({ ...t, x, y });
                     return !!world.collidesSolid(b, { ...opts, turrets: withoutSelf })
@@ -2349,7 +2547,25 @@ export function createLevelRun({
                 },
                 terrainAt: (x, y) => world.nearestWalkableTile(x, y)?.t ?? 0,
                 playerOverlaps: (r) => rectsOverlap(r, playerBoxAt(state.x, state.y)),
+                // ⛓⛓⛓ R5 SLICE 22: `FP.world.nearestToEntity("Player", this)`.
+                // The ENTITY point, not the box — `FP.distance(x, y, p.x,
+                // p.y)` is between the two entity points, and the turret's
+                // is its 32x32 box's centre while the player's is 2 px in
+                // from the left of a 4x5 box. Handing over the box corner
+                // would move the 128 px range boundary by a tile's third.
+                player: { x: state.x, y: state.y },
             });
+            // ⛓ `endAnim` -> `FP.world.add(new IceTurretBlast(...))` x3, and
+            // `add` is DEFERRED to `updateLists()` at the end of the frame:
+            // a blast spawned this tick first updates on the NEXT one. The
+            // unshift is `addUpdate`'s prepend.
+            if (t.spawned) {
+                blastsFor(level).unshift(...t.spawned);
+                for (const b of t.spawned) b.spawnedAt = ticksCompleted + 1;
+                volleys.push({
+                    t: ticksCompleted + 1, level, turret: id, blasts: t.spawned.length,
+                });
+            }
             st.set(id, t);
         }
     }
@@ -3257,6 +3473,29 @@ export function createLevelRun({
          */
         get turretKills() { return turretKills.map((k) => ({ ...k })); },
         /**
+         * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
+         * KILL RATHER THAN AN ACCIDENT.
+         *
+         * One entry per tick a blast reached the player. Each costs
+         * `ICE_TURRET_BLAST.freezeTicks - 1` ticks of refused input, so a
+         * leg reports a NUMBER for what standing inside a turret's range
+         * cost it. ⛔ It is not `crusherContacts`' shape: a crusher contact
+         * is a ROUTE DEFECT the plan is supposed to have avoided, and a
+         * blast freeze is unavoidable (`BLAST_PLAN.avoidable` is false) —
+         * so this is priced, not refused.
+         */
+        get blastFreezes() { return blastFreezes.map((b) => ({ ...b })); },
+        /** One per volley an `endAnim` spawned — the shooter's own history. */
+        get volleys() { return volleys.map((v) => ({ ...v })); },
+        /** `Player.frozenTimer` right now, against the game's `frozen_timer`. */
+        get frozenTimer() { return frozenTimer; },
+        /** The blasts in flight in the CURRENT level, for a probe. */
+        get blastsInFlight() {
+            return blastsFor(level).map((b) => ({
+                id: b.id, x: b.x, y: b.y, vx: b.v.x, vy: b.v.y, spawnedAt: b.spawnedAt,
+            }));
+        },
+        /**
          * ⛓ The DAMAGE, mid-fight. `hits` climbs 0 -> 3 at the i-frame
          * cadence and `hitsTimer` is what a press has to wait out, so a leg
          * that presses too fast can be told WHICH press was refused rather
@@ -3271,6 +3510,13 @@ export function createLevelRun({
                 // a wall yet — it flips on the first tick the player's box is
                 // off the 16x16 body and never goes back.
                 solid: t.solid,
+                // ⛓⛓ R5 SLICE 22: THE SHOOTER'S OWN CLOCK. `anim` and
+                // `shootTimer` between them say exactly where in the 45-tick
+                // volley cycle the body is, and `angle` is what the next
+                // `endAnim` will fire along — which is the only way a leg can
+                // reason about a volley BEFORE it exists.
+                anim: t.anim, shootTimer: t.shootTimer, angle: t.angle,
+                volleys: t.volleys,
             }));
         },
         /**
@@ -3398,6 +3644,14 @@ export function createLevelRun({
             // branches below both overwrite `prevHeld`. `Input.pressed(k)`
             // is the rising edge, and it is what `useItem` reads.
             const wasHeld = prevHeld;
+
+            // ── ⛓⛓⛓ R5 SLICE 22: THE BLASTS, AND THEY ARE FIRST ──────
+            // Every other family here is placed by an `.oel` and was added
+            // by `Game.loadlevel`; a blast is added at RUN TIME, and
+            // `World.addUpdate` PREPENDS — so it is ahead of the spinners,
+            // the blocks, the crusher, its own turret and the player. See
+            // `stepBlastsNow` for the two consequences.
+            if (!noclip) stepBlastsNow();
 
             // ── R4: the entities that update BEFORE the player ────────
             // `Game.loadlevel` adds the Player at `:2040` and the pushables
@@ -3554,6 +3808,20 @@ export function createLevelRun({
             // switch, a claim about DYING rather than about moving.
             if (!noclip) stepIceTurretsNow();
 
+            // ── ⛓⛓⛓ R5 SLICE 22: `Player.update`'s `freezeStep()` ────
+            //
+            // `Player.as:532`, and its position is the whole arithmetic:
+            // ABOVE `super.update()`, so the decrement for the contact tick
+            // has already happened by the time `input()` reads
+            // `frozenTimer > 0`. A freeze of 15 therefore refuses FOURTEEN
+            // ticks, the first of them the contact tick itself.
+            //
+            // ⛔ AND IT IS ABOVE THE CEREMONY'S EARLY RETURN, because
+            // `Player.update` has no `Game.freezeObjects` gate of its own —
+            // only `Mobile.mobileUpdate` inside it does. A freeze span
+            // DRAINS through a ceremony; what stops is the moving.
+            if (frozenTimer > 0) frozenTimer -= 1;
+
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
             // is a contact the game found on this frame too. Starting one
@@ -3669,6 +3937,14 @@ export function createLevelRun({
                             playerBoxAt(state.x, state.y),
                             { inventory, keys, movingSolids: movingSolidsNow() }));
                     }
+                    // ⛓ R5 SLICE 22: AND `view()` STILL RUNS. `Game.update`
+                    // gates only `super.update()` — on `blackCover`, not on
+                    // `freezeObjects` — so the camera keeps lerping toward
+                    // a stationary player through every frozen frame, which
+                    // is what can bring an enemy on screen during a
+                    // ceremony. The same argument as `freezeStep` above,
+                    // one frame higher up.
+                    cam = stepCamera(cam, state, world.world);
                     // No step: the position is unchanged and — critically —
                     // so is the VELOCITY, which is why the player drifts on
                     // for a few ticks once the freeze lifts.
@@ -3687,7 +3963,20 @@ export function createLevelRun({
             // tape's own `held` is still what the DIALOGUE reads above,
             // because `NPC.talk()` reads `Input.released` from outside
             // `Player.input()` and a refused player can still talk.
-            const acting = lockSnap ? NO_KEYS : held;
+            // ⛓⛓⛓ R5 SLICE 22: AND A BLAST FREEZE DROPS THEM THE SAME WAY,
+            // because it is the SAME LINE. `Player.input()`'s first
+            // statement is `if (!receiveInput || frozenTimer > 0 ||
+            // fallFromCeiling) return` — the touch-lock writes the first
+            // term and a blast writes the second, so a model that gave them
+            // different treatment would be modelling one `if` twice.
+            //
+            // ⛔ THIS IS WHAT BURNS THE PRESS. `useItem(Main.primary)` is
+            // called from inside `input()`, below the return, and
+            // `Input.pressed` is a rising edge the frame clears whether or
+            // not anybody read it. Dropping the keys here is exactly that
+            // loss — see the refusal below, which will not let a tape
+            // schedule one.
+            const acting = (lockSnap || frozenTimer > 0) ? NO_KEYS : held;
             // ── R4: the thrust the last tick's press scheduled ────────
             // After the blocks' own update (the block's `hit` refuses while
             // `v.length > 0`, and `v` is what its own `input()` just set)
@@ -3722,6 +4011,26 @@ export function createLevelRun({
             // STARTED with, which is the value in `state` right now.
             const pressFacing = state.direction;
             const pressed = acting.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
+            // ⛔⛔⛔ R5 SLICE 22: A FREEZE FRAME BURNS A PRESS, LOUDLY.
+            //
+            // The line above already models the loss — `acting` is
+            // `NO_KEYS` — but a silent loss is how a leg comes back from
+            // the game with two of its three kill presses landed and no
+            // reason on the model side. This is the ceremony's own refusal
+            // (`a fire press ... lands inside the window`) applied to the
+            // other gate on the same `if`, and it is a REFUSAL rather than
+            // a warning because the cure is arithmetic the planner owns:
+            // the freeze span is derivable from the volley clock.
+            if (frozenTimer > 0 && held.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip) {
+                throw new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
+                    + `lands on a FROZEN tick (frozenTimer ${frozenTimer} after this `
+                    + 'tick\'s `freezeStep`). `Player.input()` returns at its first line '
+                    + 'while `frozenTimer > 0`, and `useItem(Main.primary)` is called '
+                    + 'from INSIDE `input()` — so the press is LOST, not delayed. An '
+                    + '`IceTurretBlast` contact refuses input for '
+                    + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
+                    + 'contact tick; schedule the press outside that span.');
+            }
             const next = stepV2(state, acting, {
                 level: world,
                 noclip,
@@ -3755,6 +4064,12 @@ export function createLevelRun({
                 // mirror is the only place those live on this side.
                 inventory,
                 pins,
+                // ⛓⛓⛓ R5 SLICE 22. `acting` above already drops the
+                // direction keys; this drops the WATERFALL PUSH too, which
+                // is the last statement of `input()` and below the same
+                // return. Both, because the two halves of one `if` are not
+                // a place to be economical.
+                inputBlocked: frozenTimer > 0,
             });
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
@@ -3797,6 +4112,14 @@ export function createLevelRun({
                 }
             }
             ticksCompleted++;
+            // ── ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LAST ────────────────
+            // `Game.update` is `super.update(); … view();`, so the camera
+            // reads the position every entity has just finished writing —
+            // and the value it lands on is the one the NEXT tick's
+            // `onScreen` tests are gated against. On a transition the swap
+            // happens below and rebuilds it, which is `Game`'s own
+            // reconstruction.
+            if (!next.transition) cam = stepCamera(cam, next, world.world);
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {
@@ -3901,6 +4224,24 @@ export function createLevelRun({
                 };
             }
             firstTickInWorld = true;
+            // ⛓⛓ R5 SLICE 22: AND THE FREEZE DOES NOT CROSS THE DOOR.
+            // `frozenTimer` is `private var frozenTimer:int = 0` on the
+            // Player, and `arriveIn`/`arriveFromFall` build a whole new
+            // one — the same argument that makes `terrain`, `direction` and
+            // `drownTimer` reset, and the OPPOSITE of the swim channel's
+            // (a `Music` static). Named beside the channel's exception so
+            // the two are decided by the same question and not by habit.
+            frozenTimer = 0;
+            // ⛔ AND SO DO THE BLASTS IN FLIGHT. They are runtime entities of
+            // the world being torn down; `Game`'s reconstruction takes them
+            // with it, and a blast that survived a door would be the corpse
+            // bug from the other side.
+            blastStates.delete(next.transition.from_level);
+            // ⛓ AND THE CAMERA IS A NEW `Game`'s TOO — `loadlevel` writes it
+            // raw from the arrival position and the fade's own `view()`
+            // calls settle it, which is `cameraTrack`'s level-change arm as
+            // a live step.
+            settleCameraForLoad();
             // `ticksCompleted` is already the arrival observation's index, so
             // the grant's `t` is that observation — the same tick the
             // transition record carries, and the same tick `Bot.as` applies

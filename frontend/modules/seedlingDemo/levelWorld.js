@@ -299,6 +299,14 @@ export const MODELLED_TILE_TYPES = Object.freeze([
 
 const MODELLED_TILE_SET = new Set(MODELLED_TILE_TYPES);
 
+/**
+ * ⛓ R5 SLICE 22: `IceTurretBlast.hitables` minus `"Player"`, which is not a
+ * member of any geometry list this module owns. A Tile carries no `cls` and
+ * is `type = "Solid"` once flipped, so the filter is only ever applied to
+ * entity entries. See `collidesBlast` for why this is a third list.
+ */
+const BLAST_HITABLE_TYPES = new Set(['Solid', 'Tree', 'Shield']);
+
 /** Why each unmodelled type is out, for the error message. */
 const UNMODELLED_REASON = Object.freeze({
     1: 'Water — `canSwim` is the CONCH, which Karlore.added() gates on hasFire '
@@ -4437,6 +4445,71 @@ export function buildLevelWorld(levelRecord, {
                     tag: s.tag,
                     rockId: s.rockId,
                 });
+            }
+            return out;
+        },
+
+        /**
+         * ⛓⛓⛓ R5 SLICE 22: THE BLAST'S OWN LIST — A THIRD ONE, AND IT
+         * OVERLAPS NEITHER OF THE OTHER TWO.
+         *
+         * ```
+         *   Player.solids            ["Solid","Tree","Rock","Rope","ShieldBoss"]
+         *                          + "LavaBoss"
+         *   Crusher.solids           ["Solid"]
+         *   IceTurretBlast.hitables  ["Player","Tree","Solid","Shield"]
+         * ```
+         *
+         * ⇒ a blast is stopped by a TREE, which a crusher is not, and flies
+         * THROUGH a `Rope`, a `ShieldBoss` and a `LavaBoss`, which the player
+         * is not. Neither existing entry point answers it, and reusing
+         * either would be wrong in a different direction — the player's
+         * over-stops the blast (a rope becomes cover the game does not
+         * give), the crusher's under-stops it (a tree stops being cover the
+         * game does give, and cover is what a kill leg PRICES).
+         * [[feedback_notsolid_is_per_mover]], third mover.
+         *
+         * ⚠ AND `"Player"` IS NOT IN HERE. The blast's own step tests the
+         * player box directly, because the player is not a member of any
+         * geometry list this module owns.
+         */
+        collidesBlast(box, opts = {}) {
+            const { fallenRocks = null } = opts;
+            const live = normalizeLive(opts);
+            // A `Building`/`TreeLarge`/`CliffSide` is `type = "Solid"`, and
+            // the game's `collideTypesInto` runs the same `Pixelmask` test
+            // `collidesSolid` does — the mask, not the bounding rect.
+            for (const p of pixelmasks) {
+                if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) return p;
+            }
+            if (fallenRocks) {
+                for (const r of fallenRocks.values()) {
+                    if (rectsOverlap(box, r.rect)) return { ...r, fallen: true };
+                }
+            }
+            for (const s of solids) {
+                if (s.cls && !BLAST_HITABLE_TYPES.has(s.cls.type)) continue;
+                const at = liveRectOf(s, live);
+                if (at === null) continue;
+                if (!rectsOverlap(box, at)) continue;
+                if (at === s.rect) return s;
+                return { ...s, rect: at, live: true };
+            }
+            return null;
+        },
+
+        /**
+         * The STATIC boxes a blast could ever be stopped by, for the reach
+         * bound that lets a spent blast be dropped. Static on purpose: a
+         * mover's live rect never leaves its own family's footprint by more
+         * than the level rect, which is in the union at the call site.
+         */
+        solidBoxesForBlast() {
+            const out = [];
+            for (const p of pixelmasks) out.push({ ...p.rect });
+            for (const s of solids) {
+                if (s.cls && !BLAST_HITABLE_TYPES.has(s.cls.type)) continue;
+                out.push({ ...s.rect });
             }
             return out;
         },
