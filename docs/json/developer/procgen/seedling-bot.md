@@ -4463,3 +4463,186 @@ sword/spear arms are `Tile`, `PushableBlockSpear`, `BreakableRock` and
 `if (hitByFire || t != "Fire")` sends a fire hit to the empty `knockback`
 override, which is exactly why the bump could be modelled without a damage
 model and why the kill cannot.
+
+## R5 slice 21 — the kill is built, link 4 is repaired, and the blast is the machine
+
+`enemyDamage.js` is the first predictive Enemy arm this model has ever had:
+every rung before it either avoided enemies, drove a kill in the GAME and
+read the result off the observation stream (R5 slice 3's L60 pair), or
+refused the press outright.
+
+### `destroy` is not removal — a body counts for eleven ticks after its animation
+
+`combatVerbs.killWindowTicks` is `1 + deathTicks(tag)` — the hit test's
+one-tick lag plus the death ANIMATION, "during which the body is still an
+entity `Game.totalEnemies()` counts". That is half the wait.
+
+`Mobile.mobileUpdate()`'s last line is an UNCONDITIONAL `death()`, and
+`Mobile.death()` is `alpha -= 0.1; if (alpha <= 0) FP.world.remove(this)`.
+`Image.set alpha` CLAMPS to [0,1], so the read-modify-write goes through a
+clamp — and ten subtractions of 0.1 from 1 leave `1.3877787807814457e-16`,
+which is not `<= 0`. The **eleventh** is the one that removes.
+
+```
+  bob         25 anim + 11 fade = 36   against killWindowTicks 26
+  jellyfish   35 anim + 11 fade = 46   against 36
+```
+
+The L60 kill pair passed anyway, and the reason is worth keeping: its
+assertion is the EFFECT read off the game, and `killSchedule`'s SLACK press
+bought 31 ticks of margin over an arithmetic that was 11 short. A schedule
+that had trusted the arithmetic and dropped the slack would have ended the
+walk standing at a shut lock. The thing that saved it was not the thing
+that was checked.
+
+`Math.ceil(1 / step)` is the closed form and it is off by one for 0.1,
+which is why both fade counts are run as LOOPS — and cross-checked against
+`activators.opensOnTick`, a different module's transcription of the same
+float question.
+
+### `Enemy.hit`'s gate chain is five deep, and the fourth is in no brief
+
+```
+  1  (hitsTimer <= 0 || hitByDarkStuff) && !Game.freezeObjects && canHit
+  2  onlyHitBy == "" || onlyHitBy == t        else: justKnock -> knockback
+  3  hitByFire || t != "Fire"                 else: knockback, NO i-frame
+  4  hits < hitsMax                           else: NOTHING AT ALL
+  5  hits >= hitsMax after `hits += d`        -> startDeath(t)
+```
+
+Gate 4 is what makes a slack press a true no-op instead of a second death:
+a body already at `hitsMax` — mid animation, mid fade — takes no damage, no
+knockback and no i-frame refresh.
+
+Gate 1 has a LATCH in it. `hitByDarkStuff` is assigned
+`(t == "Shield" || t == "Suit")` on every damaging hit and sits in the gate
+as an OR against the i-frame, so one Shield hit makes every subsequent hit
+land regardless of cadence until a non-dark hit clears it. No weapon this
+rung carries sets it; a cadence rule derived without it is wrong for
+exactly the ones that do.
+
+**Damage and i-frames go opposite ways under a freeze.** `Enemy.hit` carries
+`!Game.freezeObjects` INSIDE its own gate, so no damage lands during a
+ceremony; `hitUpdate` is reached from `Enemy.update`'s tail, which has no
+freeze test at all, so the timer keeps running down. Off screen NEITHER
+runs — `Enemy.update`'s first line returns above everything.
+
+### The cadence margin is one tick
+
+A landed hit sets `hitsTimer = 30`. The body's `hitUpdate` runs BEFORE the
+player each tick, so thirty decrements land on the thirty ticks after and
+the gate is open again for the player's update of the thirtieth.
+`KILL_PRESS_CADENCE` is 31 and clears it by one; 29 does not, and the
+stratum drives all three rather than asserting the constant.
+
+One press is at most ONE landed hit: `slashDelayMax` is 0, so `slash()`'s
+hit test runs on every tick the flag is up — five of them — and the i-frame
+refuses four. Which is the mirror image of `fire.bumps`, where five
+dispatches are five EFFECTS.
+
+### A turret kill does not move `totalEnemies()`, and the lift is per class
+
+`IceTurret.death()` INTERCEPTS the first `destroy`: hitbox to 16x16, "dead"
+anim, `destroy` back to false, Enemy/Player pushed onto its own solids. The
+entity is never removed and `classCount(IceTurret)` is unchanged, so a
+`tset == -1` lock in its room stays shut. It moves only if the CORPSE later
+self-destroys — and from a pit that removal is immediate, because the
+descent's own twenty-tick fade has already driven the same alpha to zero.
+
+That is why the R4 blanket refusal (`PRESS_ARM_POLICY.Enemy`, "a death
+moves totalEnemies(), which opens tSet == -1 locks") lifts for ONE class
+rather than for the family. `KILL_ARM_POLICY` is an enumeration over
+`combat.js`'s two tables with every refusal carrying its own reason —
+`Turret` is refused BY NAME, because the plain one has no `death()`
+override and its kill really does move the count.
+
+The machinery still COMPUTES the nil rather than skipping the scan: "there
+were no kill locks" and "nobody looked" print the same thing.
+
+### A `Button` is pressed by an `Enemy` as readily as by a `Solid`
+
+`Button.update`'s hitables is `["Player", "Enemy", "Solid"]` and it excludes
+only a `Cover`. An `IceTurret` is `type = "Enemy"` while it lives and
+`type = "Solid"` once the corpse latches — so it presses on BOTH sides of
+the kill, and `levelRun.movingSolidsNow` has to carry every body, not only
+the standing corpses. Without that the whole corpse-hold is a model that
+says the button never goes down.
+
+### Link 4 is repaired, and the chain stops one link later
+
+`L40_ARRIVAL_BREAK`'s verdict is that the chain from the L40 arrival stops
+at `button@480,384 {t 2}` because "no block in the level can reach" it.
+Every clause of that is still true — **a corpse is not a block**, and the
+kill stance is inside the links-1–3 component, so the walk that opens link 4
+does not need link 4.
+
+```
+  links 1-3, link 4 SHUT       844 cells   kill stance ⛓   button t2 ⛓
+  + the CORPSE on button t2   1052 cells   button t5   ⛓   button t4 ⛔
+```
+
+What replaces the old verdict is sharper: `button@816,400 {t 4}` is behind
+`wandlock@800,400`, whose only opener is the t5 button, and standing on the
+t4 button with that lock shut leaves **8 lattice cells and no way west**.
+So link 5 needs a HOLDER while the player crosses, L40 can make exactly ONE
+corpse, and it is already spent on link 4 — which is what makes the t5
+button reachable at all. One corpse, two holds, strict dependency.
+
+### A ±2 node window at an 8 px lattice is a whole tile
+
+`probe-seedling-r5-l40-link4.mjs` reports the t4 button REACHED in its
+link-4 arm. It is not: `touches()` there tests ±2 nodes — 16 px past the
+point — so it answers "is the walk within a tile of this" and reads as "the
+walk gets here". Three of its rows are REACHED under it for cells the
+planner then refuses outright. Right arithmetic, wrong tolerance. A
+probe's tolerance is not a free parameter; it is the claim.
+
+### `Bot.noDamage` prices the damage and not the FREEZE
+
+The L40 kill pair was recorded against the real game and DIVERGED at tick
+1616 of 1965 — in BOTH arms, at the same tick, by the same 0.8 px, settling
+at a permanent 14.15 px y offset. The fixtures were withdrawn rather than
+committed.
+
+```
+  case "Player":
+      (hits[i] as Player).freeze(freezeTime);              // 15 ticks
+      (hits[i] as Player).hit(null, 0, new Point(x, y));   // Bot.noDamage
+```
+
+`Player.hit`'s WHOLE BODY is behind `if (Bot.noDamage) return`, so the
+damage really is free. `freeze()` is the line ABOVE it and is guarded by
+nothing — and `Player.input()`'s own gate is `if (!receiveInput ||
+frozenTimer > 0 || fallFromCeiling) return`. The recording shows a NINE-TICK
+dead stop the model walks straight through.
+
+"Damage taken is priced, not forbidden" is half the rule: nothing prices
+the freeze, and a freeze is a displacement. The turret's capability set has
+three members — a 32x32 body, contact damage, and a projectile that stops
+the player — and the leg was priced against a model that had only the first.
+
+That the CONTROL diverged identically is the proof of cause: the two arms
+differ only in the three kill presses, so a divergence byte-identical in
+both is a property of the WALK. The pair was authored to isolate the kill
+and it isolated something else, which is the pair doing its job.
+
+`attackRange` is 128 and the slash reach is 16, so every stance that can
+kill one is 112 px inside the volume the blasts come out of. There is no
+approach that is out of range — which is why `runKill` refuses to be
+authored without a `blastsUnmodelled` declaration and the plan script
+refuses `--write` outright, rather than a re-route.
+
+### The wand's gate reads a save array the tape format cannot reach
+
+`Wand.update`'s whole body is behind `p.y < y + Tile.h &&
+Player.hasAllTotemParts() && !p.fallFromCeiling`, and `hasAllTotemParts()`
+reads `Main.SAVE_FILE.data.hasTotemPart[]` — a DIFFERENT array from
+`levelPersistence`. `Bot`'s boot block honours exactly two kinds of state,
+`grants` (Inventory items) and `persistence` (levelPersistence tags), and
+there is no third. So a window that BOOTS into L43 has zero totem parts and
+the pickup is inert. The `|| !doBossActions` arm is dead — `doBossActions`
+is a `private var` initialised true and never assigned.
+
+The only path is the L43 window as the TAIL of a page that has already
+collected all five parts in the real game. The terminal wand window is
+blocked on the ITINERARY, not on the ceremony.
