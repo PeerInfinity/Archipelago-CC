@@ -4937,3 +4937,45 @@ sprite, a constructor that forwards. **No override of anything.** So the
 wand ITEM opens nothing — a WandLock needs its group pressed like any other
 Lock. L40 link 5's wall does not dissolve one rung later; it is a standing
 finding.
+
+### The pair was refuted twice, and only the control could say why
+
+Both arms recorded. Every *semantic* claim held on the first take —
+`hasWand`, five parts presented, four earned clears, 456 dead frames against
+21, `saw_auto_advance` 0 — and both streams diverged.
+
+**The control dashed.** Its deltas decayed at exactly −0.25/tick from
+**2.20** = the coasting 0.20 plus `knockback(2, new Point(x - v.x, y - v.y))`
+(`Player.as:788`). The two arms shared a tape whose `primary` presses meant
+two different things in it: dialogue advances on the drive's frozen ticks,
+**sword dashes** on the control's live ones.
+
+⇒ **an input whose meaning depends on the world is not a shared treatment.**
+"The same tape, one boot field apart" was true of the bytes and false of the
+experiment. Fixed with the configuration §14.9 already proved inert — a
+**31-tick** press cadence, which clears `slashTimer` so no press can dash in
+either arm. *Not* "press at rest": the knockback direction is
+`(x - v.x, y - v.y)`, degenerate at `v = 0`, with no driven witness.
+
+⛓ And the drive's own residue had supported a different, plausible story.
+**A single-arm diagnosis from a single-arm residue is a hypothesis.**
+
+**Then the drive's residue isolated to one step**: `model[t] == game[t-1]`
+for three ticks, then exact re-convergence at rest. **A collapsed frozen
+span ends on a frame that is dead to the tape and live to the player** —
+`Bot.update` reads `Game.freezeObjects` *above* `super.update()`, so the
+frame an entity clears it on records no observation, and that entity
+(prepended) updates before the Player, who then moves. The game's first
+post-ceremony delta was `+1.65` = the model's `+0.95` and `+0.70` summed.
+
+Re-convergence at rest is why it hid for twenty-two slices, and the fix was
+validated against **98 committed recordings, all still byte-exact**.
+⚠ The fact was already in `dropRocksTogether`'s own docblock — *for the boss
+and not for the player.*
+
+**Then both arms came back byte-identical.** The clamp in the game's own
+stream: tick 139 `y=197.05` → tick 140 `y=210.75`, **13.70 px in one tick**
+against a walk that moves 1.2. ⛔ It does not land *on* 212 — the boss
+updates before the player — and two of this slice's own checks had to learn
+that, one by searching for the clamp's value and finding the player settling
+onto it eleven ticks late.
