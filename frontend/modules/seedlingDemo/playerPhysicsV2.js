@@ -834,6 +834,23 @@ export function step(state, held, opts = {}) {
          * had, minus even the press to hang a suspicion on.
          */
         crushers = null,
+        /**
+         * ⛓⛓⛓ R5 SLICE 20: THE TENTH, AND THE ONLY ONE WHOSE DEFAULT IS
+         * "NOT A SOLID".
+         *
+         * Named here, explicitly, for §28.2's reason and for one more: every
+         * other key in this list makes a solid GO AWAY when it is present,
+         * so a dropped key over-blocks and the sweep refuses a walk that was
+         * legal. This one makes a solid APPEAR — a corpse the run has pushed
+         * onto a button is a 16x16 wall the level never built — so a dropped
+         * key UNDER-blocks and the sweep walks THROUGH a body the game stops
+         * it at, byte-for-byte wrong with no refusal to hang it on.
+         *
+         * ⛔ It is also the only key whose absence is not neutral by
+         * accident: `liveRectOf`'s turret arm never falls through to
+         * `s.rect`, so leaving it out is exactly "there is no corpse".
+         */
+        turrets = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1168,7 +1185,8 @@ export function step(state, held, opts = {}) {
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    burnedTrees, fallenRocks, crushers, pulledRopes, openChests }),
+                    burnedTrees, fallenRocks, crushers, turrets, pulledRopes,
+                    openChests }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

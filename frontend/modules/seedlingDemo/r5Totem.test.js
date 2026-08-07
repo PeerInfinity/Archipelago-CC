@@ -2209,8 +2209,47 @@ describe('⛓⛓⛓ L40: the corpse-hold, priced from the loop', () => {
         expect(L40_CORPSE.freeze.gatedIn).toContain('Mobile.mobileUpdate');
         expect(L40_CORPSE.freeze.ungatedAbove).toContain('Enemy.update()');
         expect(L40_CORPSE.freeze.corrects).toBe('§32.6 item 5');
-        // ⚠ And nothing of this is wired — the record says so out loud.
-        expect(L40_CORPSE.wired).toBe(false);
+        // ⛓⛓⛓ AND IT IS WIRED AT SLICE 20 — the module, the roster, the
+        // per-visit state and the step in the game's own slot. The record
+        // said `wired: false` out loud for a slice; it says true now, and
+        // `iceTurret.test.js` is what discharges it.
+        expect(L40_CORPSE.wired).toBe(true);
+        expect(L40_CORPSE.module).toMatch(/iceTurret\.js$/);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE HEADLINE THIS BLOCK BANKED IS CORRECTED BY ITS OWN
+     * BUILD. A press is FIVE bumps on five consecutive ticks, so whichever
+     * phase the first lands on the second lands on the other.
+     */
+    it('⛔⛔⛔ the PARITY is not load-bearing once the press is five bumps', async () => {
+        const { FIRE_WINDOW } = await import('./fireVerb.js');
+        const { createIceTurret, killIceTurret, stepIceTurret, bumpIceTurret } =
+            await import('./iceTurret.js');
+        expect(L40_CORPSE.parityCorrection.loadBearing).toBe(false);
+        expect(L40_CORPSE.parityCorrection.bumpsPerPress).toBe(FIRE_WINDOW.hitTicks.length);
+
+        const run = (parity) => {
+            const c = killIceTurret(createIceTurret(472, 400));
+            for (let i = 0; i < 12 + parity; i += 1) stepIceTurret(c, {});
+            for (let p = 0; p < L40_CORPSE.presses; p += 1) {
+                const point = { x: c.x, y: c.y + 24 };            // stand SOUTH
+                for (let k = 0; k <= FIRE_WINDOW.hitTicks[4]; k += 1) {
+                    stepIceTurret(c, {});
+                    if (FIRE_WINDOW.hitTicks.includes(k)) bumpIceTurret(c, point, 'Fire');
+                }
+                for (let i = 0; i < 40; i += 1) stepIceTurret(c, {});
+            }
+            return { x: c.x, y: c.y };
+        };
+        // BOTH parities land on the button, half a pixel apart — which is
+        // the whole of what the parity is worth.
+        for (const banked of L40_CORPSE.corpseEndsAtByParity) {
+            expect(run(banked.parity)).toEqual({ x: banked.x, y: banked.y });
+        }
+        expect(L40_CORPSE.corpseEndsAt)
+            .toEqual({ x: L40_CORPSE.corpseEndsAtByParity[0].x,
+                y: L40_CORPSE.corpseEndsAtByParity[0].y });
     });
 });
 

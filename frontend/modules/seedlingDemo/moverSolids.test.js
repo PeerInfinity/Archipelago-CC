@@ -53,9 +53,48 @@ describe('⛔⛔ the verdict that was true about the wrong mover', () => {
             .filter(([, row]) => row.type === 'Enemy');
         expect(enemies.length).toBeGreaterThan(10);
         for (const [tag, row] of enemies) {
-            expect(row.collider, `${tag} blocks the player?`).toBe('none');
+            // ⛓⛓ R5 SLICE 20: ONE EXCEPTION, AND IT IS A JOIN RATHER THAN A
+            // COLLIDER. `iceturret` became `type: 'Enemy'` when the slice
+            // corrected the misread that had it Solid from construction —
+            // and it keeps `collider: 'rect'`, because its CORPSE is a real
+            // solid and the entity is the id join `liveRectOf`'s turret arm
+            // looks up (`solid.turretId`). That arm NEVER falls through to
+            // `s.rect`, so the rect here is the live 32x32 body for the
+            // hazard and the aim, and it is in nobody's collision answer.
+            if (tag === 'iceturret') {
+                expect(row.collider).toBe('rect');
+                expect(row.as3).toBe('IceTurret');
+            } else {
+                expect(row.collider, `${tag} blocks the player?`).toBe('none');
+            }
             expect(blocksMover(row.type, 'player'), `${tag} vs player`).toBe(false);
             expect(blocksMover(row.type, 'pushable'), `${tag} vs a block`).toBe(true);
+        }
+    });
+
+    /**
+     * ⛔⛔⛔ R5 SLICE 20 — THE EXCEPTION, ASSERTED AGAINST THE LEVEL SO THE
+     * `collider: 'rect'` ABOVE CANNOT QUIETLY BECOME A WALL AGAIN.
+     *
+     * `IceTurret.type` is "Enemy" from the base ctor and `type = "Solid"` is
+     * the else-arm of `if (currentAnim != "dead")` — the census used to read
+     * it as the else-arm of the attack-range test and price the live body as
+     * an unconditional 32x32 solid. The rect is still built; what changed is
+     * that nothing returns it.
+     */
+    it('⛔⛔⛔ …and the iceturret\'s rect is a JOIN, not a wall — the level agrees', async () => {
+        const { buildLevelWorld, ROLES } = await import('./levelWorld.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        const { playerBoxAt } = await import('./playerPhysicsV2.js');
+        const w = buildLevelWorld(atlasLevelSource()(40), {
+            roles: ROLES, inventory: { hasSword: true, hasFire: true },
+        });
+        const solid = w.solids.find((s) => s.turretId === 'iceturret@472,400');
+        expect(solid, 'the join is still in the solids list').toBeTruthy();
+        expect(solid.rect).toMatchObject({ x: 472, y: 400, right: 504, bottom: 432 });
+        // …and the middle of that rect is walkable, from every option shape.
+        for (const opts of [{}, { turrets: null }, { turrets: new Map() }]) {
+            expect(w.collidesSolid(playerBoxAt(488, 424), opts)).toBeFalsy();
         }
     });
 

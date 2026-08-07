@@ -67,6 +67,9 @@ import {
     SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
 import { alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
+import {
+    createIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret, bumpIceTurret,
+} from './iceTurret.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -265,6 +268,9 @@ export function createLevelRun({
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
         crusherStates.delete(n);
+        // ⛓ R5 slice 20: and the turret roster, for the strongest version of
+        // that reason — a rebuild does not just move it, it REVIVES it.
+        turretStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -482,6 +488,53 @@ export function createLevelRun({
         return out;
     };
     /**
+     * ── ⛓⛓⛓ R5 SLICE 20: THE ICE TURRETS, THE TENTH FAMILY ─────────────
+     *
+     * The only member of the ten that is NOT a solid when the level builds
+     * it. `IceTurret.type` is "Enemy" from the base ctor and `type =
+     * "Solid"` is the else-arm of `if (currentAnim != "dead")` — so it
+     * blocks nothing until the player has killed it AND stepped off the
+     * corpse, and then it blocks for ever (nothing writes the type back).
+     *
+     * ⚠ AND IT IS PER VISIT WITH NOTHING TO CARRY IT: `IceTurret` has no
+     * `check()`, no `removed()`, no `setPersistence` and no tag, so a
+     * rebuild REVIVES it at its constructor cell. The kill, the pushes, the
+     * hold they buy and everything downstream of the hold have to share ONE
+     * window.
+     */
+    const turretStates = new Map();
+    const turretStateFor = (n) => {
+        if (!turretStates.has(n)) {
+            const byId = new Map();
+            for (const t of worldFor(n).iceTurrets ?? []) {
+                byId.set(t.id, createIceTurret(t.x, t.y));
+            }
+            turretStates.set(n, byId);
+        }
+        return turretStates.get(n);
+    };
+    /**
+     * The live boxes, for `collidesSolid`'s `turrets` arm.
+     *
+     * ⛔ EVERY TURRET IS IN THE MAP, ALIVE OR DEAD, and the `solid` flag is
+     * what `liveRectOf` reads. Emitting only the standing corpses would make
+     * "absent" mean two different things — no turret in the room, and a
+     * turret that is not a wall yet — and `liveRectOf`'s turret arm cannot
+     * tell them apart.
+     */
+    const turretRectsNow = () => {
+        const st = turretStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, t] of st) {
+            out.set(id, {
+                id, rect: iceTurretRect(t), x: t.x, y: t.y,
+                solid: t.solid && !t.removed, dead: t.dead, removed: t.removed,
+            });
+        }
+        return out;
+    };
+    /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
      *    IN THIS FILE ─────────────────────────────────────────────────────
      *
@@ -510,6 +563,7 @@ export function createLevelRun({
         fallenRocks: fallenRocksNow(),
         openChests: openChestIdsNow(),
         crushers: crusherRectsNow(),
+        turrets: turretRectsNow(),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -766,6 +820,15 @@ export function createLevelRun({
          *     a tape's own boot block is the same fact from the driver's side.
          */
         crusherStates.delete(n);
+        // ⛓⛓⛓ R5 SLICE 20, AND IT IS THE HARDEST VERSION OF THE RULE ABOVE.
+        // A crusher survives a rebuild as an entity and loses its POSITION;
+        // an `IceTurret` loses its DEATH. `IceTurret` has no `check()`, no
+        // `removed()`, no tag and no `setPersistence` anywhere, so the
+        // rebuilt room holds a live 32x32 shooter where the run left a
+        // corpse on a button — and the button un-presses with it. ⇒ the
+        // kill, the pushes, the hold and EVERYTHING DOWNSTREAM OF THE HOLD
+        // have to share one window; there is no state to carry across.
+        turretStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -2001,6 +2064,56 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R5 SLICE 20: ONE TICK OF EVERY ICE TURRET IN THE ROOM.
+     *
+     * ⚠ THE OPTS ARE REBUILT PER TURRET, for `stepCrushersNow`'s reason: the
+     * corpse's own `solids` list is `Mobile`'s plus the Enemy/Player pushes
+     * `death()` adds, so a second corpse in the same room is a wall to the
+     * first one where THIS loop just left it.
+     *
+     * ⛔ AND THE BODY EXCLUDES ITSELF. `moveX`/`moveY` collide against
+     * `solids` from the entity's own position, and the entity is not in its
+     * own collision list — but its box IS in `turretRectsNow()`, so the
+     * self-entry has to be dropped or every corpse is instantly wedged in
+     * itself. `withoutSelf` is `pushableCtx`'s shape and it is here for
+     * exactly the same reason.
+     */
+    function stepIceTurretsNow() {
+        const st = turretStateFor(level);
+        if (st.size === 0) return;
+        const ids = [...st.keys()].reverse();
+        for (const id of ids) {
+            const t = st.get(id);
+            if (t.removed) continue;
+            const opts = liveSolidOpts();
+            const withoutSelf = opts.turrets === null ? null
+                : new Map([...opts.turrets].filter(([k]) => k !== id));
+            stepIceTurret(t, {
+                frozen: ceremony !== null,
+                // ⚠ `onScreen` is DECLARED TRUE and that is a modelling
+                // decision with a name. `Enemy.update`'s first line returns
+                // when `!activeOffScreen && !onScreen()`, so a corpse off
+                // camera does not glide — but the camera is a render-side
+                // quantity this package does not carry, and every leg that
+                // pushes a corpse stands within a tile of it for the whole
+                // 32-tick glide (the press has to reach). ⛔ A leg that
+                // walked away mid-glide would be modelled as moving a body
+                // the game had parked, so `ICE_TURRET_PLAN.gates` names it
+                // and the leg verb is what has to hold it.
+                onScreen: true,
+                blockedAt: (x, y) => {
+                    const b = iceTurretRect({ ...t, x, y });
+                    return !!world.collidesSolid(b, { ...opts, turrets: withoutSelf })
+                        || rectsOverlap(b, playerBoxAt(state.x, state.y));
+                },
+                terrainAt: (x, y) => world.nearestWalkableTile(x, y)?.t ?? 0,
+                playerOverlaps: (r) => rectsOverlap(r, playerBoxAt(state.x, state.y)),
+            });
+            st.set(id, t);
+        }
+    }
+
+    /**
      * One tick of the live `SealPiece`, if there is one.
      *
      * ⚠ ITS ORDER IS UNOBSERVABLE and that is asserted rather than assumed:
@@ -2855,6 +2968,43 @@ export function createLevelRun({
          */
         get crusherContacts() { return crusherContacts.map((c) => ({ ...c })); },
         /**
+         * ⛓⛓⛓ R5 SLICE 20 — the ice turrets, as `collidesSolid` sees them.
+         *
+         * ⛔ A SNAPSHOT, like the crushers' and for a DIFFERENT reason: a
+         * corpse does not move on its own, but it keeps moving for 32 ticks
+         * after the press that shoved it, so a route flooded against it is
+         * only sound once `turretsSettled` is true.
+         */
+        get turrets() {
+            if (noclip) return null;
+            return turretRectsNow() ?? new Map();
+        },
+        /**
+         * ⛓ Is every corpse in this room done gliding?
+         *
+         * ⛔ `tile == cTile` is the WRONG predicate and never fires — see
+         * `iceTurretSettled`, which uses the FLOOR tile because the
+         * two-cycle straddles `Math.round`'s boundary.
+         */
+        get turretsSettled() {
+            if (noclip) return true;
+            for (const t of turretStateFor(level).values()) {
+                if (t.removed) continue;
+                if (!iceTurretSettled(t)) return false;
+            }
+            return true;
+        },
+        /**
+         * ⛓ The kill ledger's other half: `IceTurret` writes NO persistence,
+         * so the only witness that it died is this.
+         */
+        get turretsDead() {
+            if (noclip) return [];
+            return [...turretStateFor(level).values()]
+                .filter((t) => t.dead)
+                .map((t) => ({ id: t.id, x: t.x, y: t.y, solid: t.solid, removed: t.removed }));
+        },
+        /**
          * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT
          * NOW, ASKED OF THE RUN.
          *
@@ -3118,6 +3268,22 @@ export function createLevelRun({
             // near one has to discharge is ONE FRAME plus a position, and
             // the position is what this loop computes.
             if (!noclip) stepCrushersNow();
+            // ── ⛓⛓⛓ R5 SLICE 20: THE ICE TURRET, IN ITS OWN SLOT ─────
+            //
+            // `Game.loadlevel` adds it at `:2137` and the `crusher` at
+            // `:2144`, and `World.addUpdate` PREPENDS — so the update list
+            // runs CRUSHER then ICETURRET then … then Player, and this call
+            // sits below `stepCrushersNow` for that reason. Both halves
+            // matter for the same reasons the crusher's slot does: a corpse
+            // glides into where a crusher has just parked, and the player's
+            // sweep this tick reads the corpse where THIS call left it.
+            //
+            // ⛔ AND UNLIKE THE CRUSHER IT IS FREEZE-GATED — one level down,
+            // in `Mobile.mobileUpdate`, which is §33.5's correction of
+            // §32.6 item 5. A glide PAUSES for a ceremony and resumes after
+            // it; what runs through a freeze is `Enemy.update`'s terrain
+            // switch, a claim about DYING rather than about moving.
+            if (!noclip) stepIceTurretsNow();
 
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
@@ -3313,6 +3479,7 @@ export function createLevelRun({
                     fallenRocks: null,
                     openChests: null,
                     crushers: null,
+                    turrets: null,
                 } : liveSolidOpts({ openActivators: openActivatorIds(activators) })),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's

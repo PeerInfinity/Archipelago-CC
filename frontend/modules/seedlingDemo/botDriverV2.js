@@ -2860,6 +2860,9 @@ export function livePerVisitOpts(run) {
         burnedTrees: run.burnedTrees,
         // ⛓⛓⛓ R5 slice 15: the NINTH, and the only SNAPSHOT in the list.
         crushers: run.crushers,
+        // ⛓⛓⛓ R5 slice 20: the TENTH, and the only one whose absence means
+        // "not a solid" rather than "still where the level built it".
+        turrets: run.turrets,
     };
 }
 function liveGeometryOpts(run, extra = {}) {

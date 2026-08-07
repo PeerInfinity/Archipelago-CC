@@ -26,12 +26,20 @@
  * same-window problem might not exist. Measured, it is the opposite:
  *
  * ```
- *   links 1-3 open, link 4 SHUT      828 cells
+ *   links 1-3 open, link 4 SHUT      844 cells
  *     button@768,400 {t 5}   ⛔ not reached
  *     button@816,400 {t 4}   ⛔ not reached      <- the PULSER's arm
- *   links 1-3 + link 4              1036 cells   (+208)
+ *   links 1-3 + link 4              1052 cells   (+208)
  *     both buttons           ⛓ reached
  * ```
+ *
+ * ⛔ THE CELL COUNTS ABOVE ARE SLICE 20's, AND THEY ARE +16 ON SLICE 17's.
+ * That slice ran against `ENTITY_CLASSES.iceturret` priced as an
+ * unconditional 32x32 solid; `type = "Solid"` is the else-arm of
+ * `if (currentAnim != "dead")`, so an ALIVE turret blocks nothing and
+ * `iceturret@472,400`'s body was 4x4 phantom nodes in every arm. The +208
+ * and every reachability verdict are unchanged — a constant shift in all
+ * four arms cannot move a comparison between them.
  *
  * and `button@816,400 {t 4}` is what arms `pulser@592,576`, whose pulse is
  * the ONLY thing that moves `pushableblockfire@576,576` off the boss-key

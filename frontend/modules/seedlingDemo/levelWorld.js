@@ -980,18 +980,39 @@ export const ENTITY_CLASSES = Object.freeze({
         },    },
     iceturret: {
         as3: 'IceTurret',
-        roles: ROLES, collider: 'rect', type: 'Solid',
+        roles: ROLES, collider: 'rect', type: 'Enemy',
         dx: 16, dy: 16, w: 32, h: 32, originX: 16, originY: 16,
-        // ⚠ ANOTHER ENEMY THAT IS SOLID, and CONDITIONALLY so:
-        // `IceTurret.as:93-95` is the ELSE-arm of the `d <= attackRange`
-        // test — `else if (!collide("Player", x, y)) type = "Solid"`. It is
-        // "Enemy" from the base ctor and becomes "Solid" on any tick the
-        // player is outside its 128 px range. Priced as an UNCONDITIONAL
-        // solid, which is exact for a route that keeps out of the disc: it
-        // blocks precisely when the player is not already inside the volume
-        // the hazard below makes the route avoid anyway.
+        // ⛔⛔⛔ CORRECTED AT R5 SLICE 20, AND THE OLD READING WAS A MISREAD
+        // OF WHICH `if` THE ELSE BELONGS TO. This entry used to say
+        // "`IceTurret.as:93-95` is the ELSE-arm of the `d <= attackRange`
+        // test … it is 'Enemy' from the base ctor and becomes 'Solid' on any
+        // tick the player is outside its 128 px range", and priced it as an
+        // UNCONDITIONAL 32x32 solid on that basis.
+        //
+        // It is the else-arm of `if (sprIceTurret.currentAnim != "dead")`.
+        // The braces are explicit. So `type = "Solid"` fires ONLY for a
+        // CORPSE, and only on a tick the player's box does not overlap it —
+        // and nothing ever writes the type back, so it is a LATCH.
+        //
+        // ⇒ AN ALIVE ICE TURRET DOES NOT BLOCK THE PLAYER AT ALL. Worth +16
+        // lattice cells in every L40 flood (`L40_ARRIVAL_BREAK`'s four
+        // counts each move by exactly the body's 4x4 nodes; the +208 and
+        // every reachability verdict are unchanged).
+        //
+        // ⛓ THE SOLID IS STILL BUILT, because the corpse is a real solid and
+        // the entity is the id join for it: `solid.turretId` + the
+        // `iceTurrets` roster + `liveRectOf`'s turret arm, which returns
+        // `null` for anything the RUN has not said is a standing corpse.
+        // `solid.rect` here is the ALIVE 32x32 body and `liveRectOf` never
+        // returns it — it is kept because the hazard disc and the aim are
+        // about the live entity.
+        //
+        // ⚠ THE HAZARD BELOW IS STILL STATIC, and a dead turret does not
+        // shoot. Named rather than fixed: making the 129 px disc per-visit
+        // is a `proximityHazards` change with no driven witness, and the
+        // conservative direction is the one it is already in.
 
-        src: 'Game.as:2086 + Projectiles/IceTurretBlast.as:52',
+        src: 'Game.as:2137 + Enemies/IceTurret.as:53-95 + Projectiles/IceTurretBlast.as:52',
         why: 'its projectile calls `(hits[i] as Player).freeze(freezeTime)` — a '
             + 'frozen player runs no friction/input/move block, which is a stream '
             + 'difference, and it does not go through Player.hit()',
@@ -3054,6 +3075,7 @@ export function buildLevelWorld(levelRecord, {
         brokenRocks: o.brokenRocks ?? null,
         burnedTrees: o.burnedTrees ?? null,
         crushers: o.crushers ?? null,
+        turrets: o.turrets ?? null,
         openChests: o.openChests ?? null,
         pulledRopes: o.pulledRopes ?? null,
         pushables: o.pushables ?? null,
@@ -3094,6 +3116,25 @@ export function buildLevelWorld(levelRecord, {
         // persistence write of any kind.
         if (o.crushers && s.crusherId && o.crushers.has(s.crusherId)) {
             return o.crushers.get(s.crusherId).rect;
+        }
+        // ⛔⛔⛔ R5 SLICE 20: AN ICE TURRET, AND IT IS THE ONE ARM THAT NEVER
+        // FALLS THROUGH TO `s.rect`.
+        //
+        // Every family above answers "the level built a solid here; is it
+        // still there / where did it go?". This one answers the opposite
+        // question, because `IceTurret.type` is "Enemy" from the base ctor
+        // and `type = "Solid"` is the else-arm of `if (currentAnim !=
+        // "dead")` — so an ALIVE turret is not a solid at all, and a CORPSE
+        // is one only from the first tick the player's box is off it.
+        //
+        // ⇒ absent run state means NOT SOLID, which is the reverse of the
+        // `pushables` convention two arms down and is said here rather than
+        // left to be inferred. The run's entry carries its own `rect`
+        // (16x16, where the RUN left it after the bumps) and its own `solid`
+        // latch; nothing else can produce either.
+        if (s.turretId) {
+            const now = o.turrets ? o.turrets.get(s.turretId) : null;
+            return now && now.solid ? now.rect : null;
         }
         // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()` writes
         // `type = ""` (Chest.as:77) and the entity then fades for 60 more
@@ -3138,6 +3179,14 @@ export function buildLevelWorld(levelRecord, {
      * window plan may not carry a crusher position across a re-boot.
      */
     const crushers = [];
+    /**
+     * ⛓⛓⛓ R5 SLICE 20: THE ICE TURRETS — the TENTH per-visit geometry
+     * family, and the only one whose member is NOT a solid until the player
+     * has killed it and stepped off it. `iceTurret.js` owns the behaviour;
+     * this is the roster the run builds its state from, and the join is
+     * `solid.turretId` exactly as `crusherId`/`pushableId` before it.
+     */
+    const iceTurrets = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -3758,6 +3807,27 @@ export function buildLevelWorld(levelRecord, {
                     rect: solid.rect,
                 });
             }
+            // ⛓⛓⛓ R5 SLICE 20: AN ICE TURRET. Same `<id>` join as every
+            // family since R4, and the roster carries BOTH boxes because the
+            // two are different sizes: the live 32x32 body (the hazard's and
+            // the aim's) and the 16x16 corpse `death()` shrinks it to, which
+            // is the only one that is ever a Solid.
+            if (cls.as3 === 'IceTurret') {
+                solid.turretId = `${e.type}@${x},${y}`;
+                iceTurrets.push({
+                    id: solid.turretId,
+                    tag: e.type,
+                    x,
+                    y,
+                    // The ENTITY point — `super(_x + Tile.w, _y + Tile.h)`, a
+                    // WHOLE tile, and a tile CORNER. `input()`'s first snap
+                    // moves it 8 px to a centre, so this is not where it
+                    // stands (`iceTurret.js`' two-cycle).
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    aliveRect: solid.rect,
+                });
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -4118,6 +4188,14 @@ export function buildLevelWorld(levelRecord, {
          * crusher back at its ctor cell.
          */
         crushers,
+        /**
+         * ⛓⛓⛓ R5 slice 20: the ice turrets, `{id, tag, x, y, ex, ey,
+         * aliveRect}`. Unconditional like the crushers' — `IceTurret` has no
+         * `check()`, no `removed()` and no persistence of any kind, so a
+         * rebuild REVIVES it and a window plan may never carry a corpse
+         * across a re-boot.
+         */
+        iceTurrets,
         /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *

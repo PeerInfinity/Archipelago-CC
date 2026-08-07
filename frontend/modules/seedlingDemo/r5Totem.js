@@ -1899,10 +1899,27 @@ export const L40_ARRIVAL_BREAK = Object.freeze({
     lattice: 8,
     policy: 'inventory sword+fire+conch+feather; burnabletree tag 0 cleared at build; '
         + 'chest@880,816 opened; avoidVolumes off',
+    /**
+     * ⛔ RE-MEASURED AT R5 SLICE 20, AND EVERY COUNT MOVED BY EXACTLY +16.
+     *
+     * This block banked 828 / 1036 / 1784 / 892 / 1624. Slice 20 corrected
+     * `ENTITY_CLASSES.iceturret` — `type = "Solid"` is the else-arm of
+     * `if (currentAnim != "dead")`, not of the attack-range test, so an
+     * ALIVE turret is not a solid — and `iceturret@472,400`'s phantom 32x32
+     * body was 4x4 nodes of this level's 8 px lattice in every arm.
+     *
+     * ⛓⛓ NOTHING ELSE MOVED. The +208 is identical, both gated buttons are
+     * still out of the necessity arm, the key is still behind a block in
+     * both directions and the break is still at link 4 and nowhere else.
+     * A correction that shifted every arm by the same constant is a
+     * correction that cannot have changed a verdict, and that is worth
+     * saying out loud rather than re-arguing five findings.
+     */
+    correctedAt: 'R5 slice 20 — the iceturret is not a solid while alive; +16 in every arm',
     /** Links 1-3 open, link 4 shut. */
-    withoutLink4: 828,
+    withoutLink4: 844,
     /** …plus link 4's two `Lock`s by fiat. */
-    withLink4: 1036,
+    withLink4: 1052,
     gain: 208,
     /** ⛔ The two the chain continues through, and both are inside the +208. */
     gatedButtons: Object.freeze([
@@ -1910,11 +1927,11 @@ export const L40_ARRIVAL_BREAK = Object.freeze({
         Object.freeze({ id: 'button@816,400', tset: 4, link: 6, arms: 'pulser@592,576' }),
     ]),
     /** ⛓⛓ The NECESSITY arm — every OTHER activator open and still no. */
-    everyOtherActivator: Object.freeze({ cells: 1784, gatedButtonsReached: false }),
+    everyOtherActivator: Object.freeze({ cells: 1800, gatedButtonsReached: false }),
     /** With links 5-8 granted by fiat, the tail closes and nothing else breaks. */
     pastLink4: Object.freeze({
-        keyCells: 892, keyReached: true,
-        afterBosslock: 1624, l41Door: true, l42Door: true, nwCluster: true,
+        keyCells: 908, keyReached: true,
+        afterBosslock: 1640, l41Door: true, l42Door: true, nwCluster: true,
     }),
     verdict: 'THE CHAIN FROM THE L40 ARRIVAL STOPS AT LINK 4. One plain button, whose '
         + 'opening exists only WHILE HELD, whose persistence write is inert because its '
@@ -1987,9 +2004,46 @@ export const L40_CORPSE = Object.freeze({
     /** ⛓ A push that the phase refuses arrives in two ticks, having moved 0.5 px. */
     noOpTicks: 2,
     target: Object.freeze({ id: 'button@480,384', tset: 2, rect: Object.freeze({ x: 484, right: 492, y: 389, bottom: 395 }) }),
-    /** ⛓ Two northward presses, on the phase that moves north. */
+    /**
+     * ⛓ Two northward presses from a stance due south — and slice 20 found
+     * that the PARITY is not part of the recipe.
+     */
     presses: 2,
+    /** ⚠ Parity 0's resting cell. Parity 1 lands at (487.5,392); both press. */
     corpseEndsAt: Object.freeze({ x: 488, y: 391.5 }),
+    corpseEndsAtByParity: Object.freeze([
+        Object.freeze({ parity: 0, x: 488, y: 391.5 }),
+        Object.freeze({ parity: 1, x: 487.5, y: 392 }),
+    ]),
+    /**
+     * ⛔⛔⛔ THE HEADLINE ABOVE IS CORRECTED AT SLICE 20: **THE PARITY IS NOT
+     * LOAD-BEARING.**
+     *
+     * This block measured ONE `bump` and concluded that "a fire press's tick
+     * PARITY is load-bearing, which no press verb in this driver can
+     * express". A press is not one bump. `FIRE_WINDOW.hitTicks` is
+     * `[4,5,6,7,8]` and `Player.genericHit` calls `IceTurret.bump` before
+     * `Enemy.hit` on EVERY dispatch of every hit tick — so one press
+     * re-targets the body five times on five CONSECUTIVE ticks, and
+     * whichever phase bump 1 lands on, bump 2 lands on the other. The
+     * refused direction travels half a pixel and is back in two ticks; it
+     * never gets to settle.
+     *
+     * Measured over all four cardinal stances and both parities
+     * (`probe-seedling-r5-l40-bumps.mjs`): every one moves a tile. What
+     * survives is a ±1 px net and a ±0.5 px cross-axis drift, i.e. the
+     * RESTING POSITION differs by parity and nothing a plan steers does.
+     *
+     * ⇒ `fire.bumps` needs a STANCE and a COUNT, not a tick.
+     */
+    parityCorrection: Object.freeze({
+        loadBearing: false,
+        bumpsPerPress: 5,
+        why: '`Player.genericHit` bumps on every dispatch of every hit tick, and '
+            + '`FIRE_WINDOW.hitTicks` is five consecutive ticks',
+        survivesAs: 'a ±1 px net and a ±0.5 px cross-axis drift in the resting position',
+        probe: 'scripts/procgen/probe-seedling-r5-l40-bumps.mjs',
+    }),
     /**
      * ⛔ THE FREEZE GATE, CORRECTED. §32.6 item 5 said the corpse glides
      * through a ceremony; `Mobile.mobileUpdate` gates `input()` and both
@@ -2003,10 +2057,24 @@ export const L40_CORPSE = Object.freeze({
             + 'and the `fallInPit` descent (moves, spins and fades)',
         corrects: '§32.6 item 5',
     }),
-    wired: false,
-    next: 'a corpse in `levelRun` and a `fire.bumps` verb, both driven — and the verb has '
-        + 'to be able to say WHICH TICK it fires on, because the push direction is a '
-        + 'property of the parity and not only of the stance.',
+    /**
+     * ⛓⛓⛓ WIRED AT R5 SLICE 20. `iceTurret.js` owns the behaviour,
+     * `world.iceTurrets` is the roster, `levelRun` holds the per-visit state
+     * and steps it in the game's own slot, and `liveRectOf`'s turret arm is
+     * the only thing that can make a corpse a wall.
+     *
+     * ⛔ AND THE WIRING CORRECTED THE CENSUS ON THE WAY IN: an ALIVE turret
+     * is not a solid at all (`type = "Solid"` is the else-arm of
+     * `if (currentAnim != "dead")`), which is worth +16 lattice cells in
+     * every arm of `L40_ARRIVAL_BREAK` and changes none of its verdicts.
+     */
+    wired: true,
+    module: 'frontend/modules/seedlingDemo/iceTurret.js',
+    /** ⛔ The four gates a leg has to satisfy at once — `ICE_TURRET_PLAN.gates`. */
+    next: 'the LEG: kill it with the sword (fire cannot — `Enemy.hit`\'s '
+        + '`if (hitByFire || t != "Fire")`), step off the corpse for the Solid latch, two '
+        + 'northward fire presses from due south, and the hold plus everything downstream '
+        + 'of it in ONE window, because a rebuild revives the turret.',
 });
 
 /**
