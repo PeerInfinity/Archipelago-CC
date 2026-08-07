@@ -191,11 +191,24 @@ describe('census: every fixture level is fully classified', () => {
         // list, or no collider on a type that IS, is a transcription error
         // the table can catch about itself.
         //
-        // Three classes on the route change `type` under conditions the
-        // route avoids and are named here rather than silently exempted.
+        // Four classes change `type` under a condition and are named here
+        // rather than silently exempted.
         const CONDITIONAL = {
-            iceturret: 'Enemy at rest, "Solid" whenever the player is outside its '
-                + '128 px range (IceTurret.as:93-95) — priced as the solid',
+            // ⛔ CORRECTED AT R5 SLICE 20 AND THIS COPY ROTTED FOR THREE
+            // SLICES. It said "Enemy at rest, Solid whenever the player is
+            // outside its 128 px range" — the misread of which `if` the
+            // else belongs to that `ENTITY_CLASSES` itself now records at
+            // length. The else is `if (currentAnim != "dead")`, so only a
+            // CORPSE is ever solid. [[feedback_retired_oracle_check_the_regen]]
+            iceturret: '"Enemy" while alive; `type = "Solid"` is the else-arm of '
+                + '`if (currentAnim != "dead")` (IceTurret.as:93-95), so only a corpse '
+                + 'is a wall — and only from the first tick the player is off it',
+            // ⛓⛓⛓ R5 SLICE 23: and the reverse of the turret's, which is
+            // why the pair is worth reading together.
+            bosstotem: '"Solid" until it wakes — `type = "Solid"` is the ELSE of '
+                + '`if (activated)` (BossTotem.as:294-315) — and "Enemy" for ever '
+                + 'after, so an UNWOKEN boss is the wall and the wake is what removes '
+                + 'it. ONE instance (level 43), and nothing had ever been in the room',
             fallrock: '"" and parked off-map while its persistence holds, "Solid" '
                 + 'once a clear arms it (FallRock.as:39-47)',
             fallrocklarge: 'as fallrock (FallRockLarge.as:45-53)',

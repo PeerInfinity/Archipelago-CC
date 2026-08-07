@@ -1054,3 +1054,134 @@ describe('⛓⛓⛓ R5 slice 15: the crusher, driven through the player\'s own s
         expect(home.size).toBe(305);
     });
 });
+
+/**
+ * ⛓⛓⛓ R5 SLICE 23 — THE WAND WINDOW'S JOIN, WHICH IS FIVE FAMILIES DEEP.
+ *
+ * `bossTotem.test.js` owns the boss's own arithmetic. What is only testable
+ * HERE is the JOIN: a v6 `save` block reaching `Wand.update`'s gate, the
+ * gate deciding whether the CONTACT test runs at all, the collect
+ * publishing to tset 0, three `fallrock`s sharing one freeze span, the boss
+ * riding that span, and the clamp being written into the player's own y.
+ *
+ * The two arms are the committed pair, driven from the tapes on disk — so a
+ * fixture edited out from under this file is a red rather than a silence.
+ */
+describe('⛓⛓⛓ R5 slice 23: the L43 wand window, and its shut-before control', () => {
+    const driveTape = (name) => {
+        const t = loadTape(name);
+        const run = createLevelRun({
+            levelSource,
+            boot: t.boot,
+            noclip: t.noclip,
+            noHazards: t.noHazards,
+            noDamage: t.noDamage,
+            grants: t.grants,
+            persistence: t.persistence,
+            equips: t.equips,
+            pins: t.pins,
+            save: t.save,
+        });
+        const stream = [];
+        for (let k = 0; k < t.tick_count; k += 1) {
+            stream.push({ t: k, x: run.state.x, y: run.state.y, level: run.level });
+            run.advance(heldKeysAt(t, k));
+        }
+        return { run, stream, tape: t };
+    };
+    const armed = driveTape('r5-l43-wand');
+    const control = driveTape('r5-l43-wand-control');
+
+    it('the two tapes differ in ONE FIELD and nothing else', () => {
+        const strip = (t) => ({ ...t, save: null, name: null, description: null });
+        expect(JSON.stringify(strip(armed.tape)))
+            .toBe(JSON.stringify(strip(control.tape)));
+        expect(armed.tape.save.totem_parts).toEqual([0, 1, 2, 3, 4]);
+        expect(control.tape.save.totem_parts).toEqual([]);
+    });
+
+    it('⛓⛓⛓ the drive collects the wand and the control cannot', () => {
+        expect(armed.run.collected.map((c) => c.item)).toEqual(['wand']);
+        expect(armed.run.inventory.hasWand).toBe(true);
+        // ⛔ AND THE GATE WRAPS THE CONTACT TEST, not only the fade. The
+        // control walks the same route onto the same 3x8 press rect.
+        expect(control.run.collected).toEqual([]);
+        expect(control.run.inventory.hasWand).toBe(false);
+    });
+
+    it('⛔⛔ the approach FADE is 99 frozen frames and fires before the contact', () => {
+        expect(armed.run.wandFades).toHaveLength(1);
+        expect(armed.run.wandFades[0].deadFrames).toBe(99);
+        // Tick 0: the gate is the player's Y alone, and the boot is inside it.
+        expect(armed.run.wandFades[0].t).toBe(0);
+        expect(control.run.wandFades).toEqual([]);
+    });
+
+    it('⛔⛔ the three tset-0 rocks share ONE span — 186, not 560', () => {
+        expect(armed.run.rockFalls).toHaveLength(3);
+        const spans = armed.run.rockFalls.map((r) => r.deadFrames);
+        expect(new Set(spans).size).toBe(1);
+        expect(spans[0]).toBe(186);
+        // The whole point: summing them would be the freeze the game never
+        // spends, because the EARLIEST camera expiry clears the flag for all.
+        expect(spans.reduce((s, n) => s + n, 0)).toBe(558);
+        expect(armed.run.frozenFramesOwed).toBe(99 + 186);
+        expect(control.run.rockFalls).toEqual([]);
+        expect(control.run.frozenFramesOwed).toBe(0);
+    });
+
+    it('⛓⛓⛓ the CLAMP is an assignment, at A+216, into the player\'s own y', () => {
+        expect(armed.run.bossesWoken).toHaveLength(1);
+        expect(armed.run.bossClamps.length).toBeGreaterThan(0);
+        const first = armed.run.bossClamps[0];
+        expect(first.sinceActivation).toBe(216);
+        expect(first.to).toBe(212);
+        expect(first.from).toBeLessThan(212);
+        // ⛔⛔ AND THE CLAMP'S OWN NUMBER IS NOT IN THE STREAM, because the
+        // boss updates BEFORE the player: `addUpdate` PREPENDS and the
+        // Player is added at `Game.as:2092` against the boss's `:2121`, so
+        // the assignment lands and then THAT SAME TICK's movement runs off
+        // it. The observation after the clamp is 211.20, not 212.
+        //
+        // ⇒ the witness is the JUMP, not the value — 195.60 to 211.20 in
+        // one tick, against a walk that had been climbing at ~1 px/tick. A
+        // test written as `=== 212` would be asserting an update order the
+        // game does not have. [[feedback_divergence_tick_is_not_the_event]]
+        expect(armed.stream[first.t].y).toBe(first.from);
+        const after = armed.stream[first.t + 1].y;
+        expect(after).toBeGreaterThan(first.from + 14);
+        expect(after).toBeLessThan(212);
+        // …and once the keys stop, it comes to REST on the clamp exactly.
+        expect(armed.stream[armed.stream.length - 1].y).toBe(212);
+        expect(control.run.bossesWoken).toEqual([]);
+        expect(control.run.bossClamps).toEqual([]);
+    });
+
+    it('⛓⛓ the arms are byte-identical to the CONTACT and part exactly there', () => {
+        let firstDiff = -1;
+        for (let i = 0; i < armed.stream.length; i += 1) {
+            const a = armed.stream[i];
+            const b = control.stream[i];
+            if (a.x !== b.x || a.y !== b.y || a.level !== b.level) { firstDiff = i; break; }
+        }
+        expect(firstDiff).toBe(10);
+    });
+
+    it('⛓⛓ …and they stop at the SAME NUMBER by two different mechanisms', () => {
+        const north = (s) => Math.min(...s.slice(28).map((o) => o.y));
+        // an ASSIGNMENT for the drive…
+        expect(north(armed.stream)).toBeLessThan(212);
+        expect(armed.stream[armed.stream.length - 1].y).toBe(212);
+        // …and a COLLISION with the unwoken boss's wall for the control:
+        // the box's bottom edge is 212 and the player's origin is 2 px.
+        expect(north(control.stream)).toBeGreaterThan(212);
+        expect(north(control.stream)).toBeLessThan(216);
+    });
+
+    it('⛔ the window is TERMINAL — neither arm leaves level 43', () => {
+        for (const arm of [armed, control]) {
+            expect([...new Set(arm.stream.map((o) => o.level))]).toEqual([43]);
+            expect(arm.run.transitions).toEqual([]);
+        }
+    });
+});

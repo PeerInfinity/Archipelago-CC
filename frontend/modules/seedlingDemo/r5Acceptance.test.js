@@ -843,13 +843,24 @@ describe('⛓ R5: the rung-closing itinerary and the exit criteria', () => {
         // L40 pit is a one-way door into that room.
         const last = R5_ITINERARY.windows[R5_ITINERARY.windows.length - 1];
         expect(last.earns).toMatch(/wand/);
-        expect(last.blocked).toMatch(/TAIL of a chain/);
+        // ⛓⛓ R5 SLICE 23: UNBLOCKED, and it names its tape now. The v6
+        // `save` block turned the chain tail into a boot.
+        expect(last.blocked).toBeNull();
+        expect(last.tape).toBe('r5-l43-wand');
         expect(R5_ITINERARY.blockedOn).toHaveLength(2);
     });
 
-    it('⛓⛓ R6 inherits TWO lines of AS3, each with the wall it unblocks', async () => {
+    it('⛓⛓ the AS3 batch is THREE entries now, each with the wall it unblocks '
+        + 'and what it shipped', async () => {
         const { R6_INHERITS } = await import('./r5Acceptance.js');
-        expect(R6_INHERITS.as3Batch).toHaveLength(2);
+        // ⛓ R5 slice 23 brought the batch forward and expanded it; the third
+        // entry is the one that was EVALUATED and deliberately NOT built.
+        expect(R6_INHERITS.as3Batch).toHaveLength(3);
+        expect(R6_INHERITS.as3Batch.filter((r) => r.asBuilt)).toHaveLength(2);
+        expect(R6_INHERITS.as3Batch[2].shipped).toMatch(/NOT BUILT/);
+        expect(R6_INHERITS.as3NotTaken.length).toBeGreaterThanOrEqual(5);
+        // ⛔ And the one R6 route fact this slice was asked to settle.
+        expect(R6_INHERITS.wandDoesNotOpenAWandLock.overrides).toBe(0);
         for (const row of R6_INHERITS.as3Batch) {
             // A batch entry with no reason is a batch that gets built and
             // then argued about.
@@ -858,4 +869,94 @@ describe('⛓ R5: the rung-closing itinerary and the exit criteria', () => {
         expect(R6_INHERITS.as3Batch.map((r) => r.what).join(' ')).toMatch(/hasTotemPart/);
         expect(R6_INHERITS.mechanics.length).toBeGreaterThanOrEqual(4);
     });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 23 — THE `SAVE_FILE.data` AUDIT, CHECKED RATHER THAN READ.
+ *
+ * An audit record is prose until something re-derives it. The three claims
+ * below are the ones a fixture roster or a level extract can answer, so
+ * they are answered here instead of being believed:
+ *
+ *   - the slot counts the batch validates against are the audit's own;
+ *   - "zero of the committed tapes press C" (the `secondary` skip);
+ *   - "no `Game.time`-coupled entity stands in L43" (the `time` skip) —
+ *     the one that decides whether the wand window is immune.
+ *
+ * ⚠ And every skip must carry a REASON, because an audit whose skip list
+ * is bare and one that examined nothing print the same thing.
+ * [[feedback_bounded_sweep_must_name_what_it_bounded]]
+ */
+describe('⛓ R5 slice 23: the SAVE_FILE.data audit', () => {
+    const tapeDir = new URL('./fixtures/tapes/', import.meta.url);
+    const allTapes = () => readdirSync(tapeDir)
+        .filter((f) => f.endsWith('.json'))
+        .map((f) => JSON.parse(readFileSync(new URL(f, tapeDir), 'utf8')));
+
+    it('closes THREE fields and its slot counts are the parser\'s own', async () => {
+        const { SAVE_FILE_AUDIT } = await import('./r5Acceptance.js');
+        const { SAVE_SLOTS } = await import('./tapeFormat.js');
+        expect(SAVE_FILE_AUDIT.closed).toHaveLength(3);
+        // A record whose slot counts drifted from the validator's would let
+        // a tape declare a seal identity the game has no slot for.
+        const byField = Object.fromEntries(
+            SAVE_FILE_AUDIT.closed.map((c) => [c.field, c.slots]),
+        );
+        expect(byField.hasTotemPart).toBe(SAVE_SLOTS.totem_parts);
+        expect(byField.hasKey).toBe(SAVE_SLOTS.keys);
+        expect(byField.hasSealPart).toBe(SAVE_SLOTS.seal_parts);
+        // ⛔ And the int one is flagged as such IN THE RECORD, because the
+        // whole way to get this field wrong is to read it as a boolean.
+        const seal = SAVE_FILE_AUDIT.closed.find((c) => c.field === 'hasSealPart');
+        expect(seal.kind).toBe('int');
+        expect(seal.shape).toMatch(/IDENTITY SLOTS/);
+    });
+
+    it('⛔ every skipped and evaluated field carries its own reason', async () => {
+        const { SAVE_FILE_AUDIT } = await import('./r5Acceptance.js');
+        expect(SAVE_FILE_AUDIT.skipped.length).toBe(6);
+        for (const row of SAVE_FILE_AUDIT.skipped) {
+            expect(row.why.length).toBeGreaterThan(30);
+        }
+        for (const row of SAVE_FILE_AUDIT.evaluated) {
+            expect(row.verdict).toBe('NO FIELD');
+            expect(row.why.length).toBeGreaterThan(60);
+        }
+        // 19 covered + 3 closed + 2 evaluated + 6 skipped = 30 fields, and
+        // the covered list is grouped rather than one row per boolean.
+        expect(SAVE_FILE_AUDIT.fields).toBe(30);
+    });
+
+    it('⛔ the `secondary` skip is re-derived: no committed tape presses C', async () => {
+        const { SAVE_FILE_AUDIT } = await import('./r5Acceptance.js');
+        const keys = new Set();
+        for (const t of allTapes()) for (const s of t.inputs ?? []) keys.add(s.key);
+        expect(keys.has('secondary')).toBe(false);
+        // The positive control: the histogram is not empty, so the absence
+        // above is a measurement rather than a mis-read fixture directory.
+        expect(keys.has('primary')).toBe(true);
+        const row = SAVE_FILE_AUDIT.evaluated.find((e) => e.field === 'secondary');
+        // ⚠ The record's own sentence names 98 — the roster at the moment
+        // the audit ran. What this test re-derives is the CLAIM (no tape
+        // presses C), not the number in the prose.
+        expect(row.why).toMatch(/ZERO of the \d+ committed tapes/);
+        expect(allTapes()).toHaveLength(100);
+    });
+
+    it('⛔ the `time` skip is re-derived: L43 holds no worldFrame-coupled hazard',
+        async () => {
+            const { combatCensusOf } = await import('./levelWorld.js');
+            const { atlasLevelSource } = await import('./levelSource.js');
+            const source = atlasLevelSource();
+            // `phaseUncertain` is levelWorld's own list of the instances
+            // whose timing rides on Game.time. The wand window's immunity
+            // is exactly this list being empty.
+            expect(combatCensusOf(source(43)).phaseUncertain).toEqual([]);
+            // Positive control: some level DOES hold one, so an empty list
+            // at 43 cannot be an empty accessor.
+            const coupled = [...Array(116).keys()]
+                .filter((lv) => combatCensusOf(source(lv)).phaseUncertain.length > 0);
+            expect(coupled.length).toBeGreaterThan(0);
+            expect(coupled).not.toContain(43);
+        });
 });

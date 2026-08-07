@@ -851,6 +851,23 @@ export function step(state, held, opts = {}) {
          * `s.rect`, so leaving it out is exactly "there is no corpse".
          */
         turrets = null,
+        /**
+         * ⛓⛓⛓ R5 SLICE 23: THE TWELFTH, AND THE ONLY ONE WHOSE DEFAULT IS
+         * "STILL A SOLID" **BY DESIGN RATHER THAN BY INHERITANCE**.
+         *
+         * `liveRectOf`'s boss arm falls through to `s.rect` when the run
+         * says nothing, and that default is load-bearing: an unwoken
+         * `BossTotem` IS `type = "Solid"` (the else of `if (activated)`),
+         * so every flood and every planner query made before this family
+         * existed was made against the correct world. What the key expresses
+         * is the WAKE — the one event that takes the wall away.
+         *
+         * ⛔ So a dropped key here UNDER-BLOCKS in the opposite direction
+         * from the turret's: the sweep would refuse a walk the game allows,
+         * which is the SAFE failure. Named anyway, because "it fails safe"
+         * is how a key stays dropped for four slices.
+         */
+        bosses = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1200,7 +1217,7 @@ export function step(state, held, opts = {}) {
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    burnedTrees, fallenRocks, crushers, turrets, pulledRopes,
+                    burnedTrees, fallenRocks, crushers, turrets, bosses, pulledRopes,
                     openChests }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({

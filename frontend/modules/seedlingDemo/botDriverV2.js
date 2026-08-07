@@ -3622,6 +3622,10 @@ export function livePerVisitOpts(run) {
         // ⛓⛓⛓ R5 slice 20: the TENTH, and the only one whose absence means
         // "not a solid" rather than "still where the level built it".
         turrets: run.turrets,
+        // ⛓⛓⛓ R5 slice 23: the TWELFTH, and the only one whose absence
+        // means "still a solid" — an unwoken BossTotem is a Solid, so the
+        // key expresses the WAKE rather than the wall.
+        bosses: run.bosses,
     };
 }
 function liveGeometryOpts(run, extra = {}) {

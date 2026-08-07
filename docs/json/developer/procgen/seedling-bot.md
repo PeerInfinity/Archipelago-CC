@@ -4774,3 +4774,166 @@ Fixing the original found two more the tolerance had hidden:
 
 Exactly one row moved in the direction that mattered, and it moved to agree
 with the probe that had reached the opposite conclusion independently.
+
+---
+
+## R5 slice 23 — the second AS3 batch, and the family behind the wall
+
+The rung's second and last build. Slice 22 hit ONE wall — `Wand.update` is
+gated on `Player.hasAllTotemParts()`, which reads `SAVE_FILE.data.hasTotemPart[]`,
+and `Bot`'s boot block honoured only `grants` and `persistence` — and wrote
+it down as an instance. **It was a family.**
+
+### The audit: thirty fields, a disposition each
+
+`r5Acceptance.SAVE_FILE_AUDIT` diffs every `SAVE_FILE.data` field against
+what the boot block can present. Nineteen were already covered (thirteen
+item booleans via `grants`; `hitsMax` via `grants: health`, an ADD; `primary`
+via `equips`; `levelPersistence` via `persistence`; level and spawn via
+`boot`). **Three were unreachable and all three are arrays gameplay reads:**
+
+| field | slots | the gate it opens |
+|---|---|---|
+| `hasTotemPart` | 5 | `Wand.update` ← `Player.hasAllTotemParts()` |
+| `hasKey` | 5 | `BossLock.update` ← `Player.hasKey(keyType)` |
+| `hasSealPart` | 16 | `FinalDoor.update` ← `SealController.hasAllSealParts()` |
+
+⛔ **`hasSealPart` is an INT array with IDENTITY SLOTS** — the one way to
+build this field wrong and have it read right. `getSealPart(index)` writes
+the *identity* into the first slot still holding **-1**, and
+`hasAllSealParts()` is `Main.hasSealPart(SEALS - 1) != -1` — *the last slot
+being filled*. A boolean reading would satisfy the ending's gate with sixteen
+writes of any value at all, and the empty value being -1 rather than 0 is
+what makes that silent. So a v6 tape declares the **collection order** and
+`botStart` fills slots 0..n-1; `totem_parts` and `keys` are sorted and
+`seal_parts` is deliberately not.
+
+Six fields are DOCUMENT-SKIP with a reason each. Two of them (`beam`,
+`rockSet`) are one `moonrock` in level 0 whose only lasting effect is a
+persistence clear (`{0,2}`) the boot block already reaches — **the
+capability exists under another name**. And `firstUse`/`extended` are the
+inventory tutorial, which matters because `Inventory.as:178` sets `extended`
+as soon as `Player.hasTotemPartNumber() > 0`: **the new boot field flips a
+field the audit classified as skip**, and the flip is inert only because
+R1's `Inventory.help = false` already exists.
+
+### Tape version 6 — the `save` block
+
+```json
+"tape_version": 6,
+"save": { "totem_parts": [0,1,2,3,4], "keys": [], "seal_parts": [7, 3] }
+```
+
+Applied in `botStart` **before the first world is built** — the persistence
+site, for the persistence reason: `BossTotemPart.check()` and
+`BossKey.check()` remove themselves when the player already holds their
+index, and `check()` runs on a new world's first frame. Value-scoped, not
+presence-scoped, like every field before it. Read back two-sidedly from the
+GAME as `botStatus.save`.
+
+### `botMobiles()` — a readout that is its own callback
+
+The enemy-state readout the arc has owed since slice 3, shipped as **raw
+fields per entity** and as a **separate `ExternalInterface` callback**
+rather than a field on `botStatus`.
+
+That is the design and not a detail. `botStatus` is polled to detect the end
+of a tape, on the same thread as the loop whose render/update **ratio** the
+dead-frame band rides on — so a world walk plus reflection plus a few KB of
+JSON on every poll is a determinism risk. **A callback nobody calls is inert
+by construction**, which is stronger than a flag defaulting to off.
+
+⛓ The set is `Mobile`, not `Enemy`. `Enemy` is what the wall named, and
+picking it would be a guess about which movers a later question is about —
+R5's two hardest measurements were about an `IceTurretBlast` and a
+`PushableBlock`, and neither is one. Rows carry position, velocity, `type`,
+`destroy`, anim/frame/alpha, `onScreen()` and the box, plus a nested `enemy`
+object that is `null` for a row that is not one. **`alpha` is in there
+because `destroy` is not removal** and the eleven-tick fade is the only
+thing that tells a corpse mid-fade from one that is gone.
+
+### `Math.random` is a fixed-seed LFSR — so the camera needs no flag
+
+The batch was asked to EVALUATE a `Game.shake` determinism flag. The answer
+is no, and it comes from the runtime's source rather than from an argument:
+`SWFModernRuntime/src/avm2/avm2_number.c:430-486` implements `Math.random()`
+as a 31-bit XOR-shift LFSR over one global `g_avm2_rng`, seeded from
+`MOCK_DATE_TIME` — **a `-D` at build time**, defaulted to `981152406000`.
+
+⇒ a shaking camera cannot make a recording flaky, which is what "determinism
+pin" meant; what it costs is knowing the global draw count. And forcing
+`Game.shake = 0` would create an execution vanilla cannot produce — a crutch
+wearing a pin's name. ⚠ The seed is baked into the artifact: the hash is
+what pins it.
+
+### The twelfth family — `BossTotem`, and `collider: 'none'` for 22 slices
+
+`ENTITY_CLASSES.bosstotem` said it does not block. `BossTotem.update` ends
+its activation block with `if (activated) { type = "Enemy"; … } else { type
+= "Solid"; }`, so an **unwoken boss is a Solid** — `[112,192) x [180,212)`,
+exactly L43's arena columns 7..11, the whole width of the room. Nothing had
+ever been in the room, so nothing could notice.
+
+It is the ice turret's `liveRectOf` arm run backwards: **absent run state
+means SOLID here and NOT-solid there**, and both defaults are load-bearing
+in opposite directions.
+
+⛔ It also corrects the slice-20 seal flood, in the direction that makes the
+finding stronger: **237 / 189 cells**, not 327 / 279. The 90 nodes are the
+arena north of the boss, shut by collision until the wake. The verdict —
+stairs reached before the drop, gone after, by one rock — is unchanged in
+both readings, and both numbers are kept because the difference IS the wall.
+
+### The wand window, and a fourth control shape
+
+`r5-l43-wand` / `-control` boot into L43 at tile (9,13), take the wand, and
+are caught by the boss's clamp.
+
+⚠ **The `boot` block is `new Game(level,x,y)`'s arguments, not the entity
+point** — `spawnFromBoot` adds `(Tile.w/2, Tile.h/2)`. Writing the tile
+CENTRE spawns a whole tile east and walks straight past a 3 px press rect,
+with no error anywhere.
+
+Three findings the plan did not have:
+
+1. **The fade is 99 frozen frames, not 100, and it fires on APPROACH.**
+   `Wand.update`'s gate is `p.y < y + Tile.h && hasAllTotemParts() &&
+   !fallFromCeiling` — a half-room-wide test on the player's Y alone — and
+   `Game.freezeObjects = alpha < 1` is written AFTER the step, so the
+   hundredth alpha step leaves the flag false and is a live frame. The
+   records' `fadeTicks: 100` is the STEP count; the cost is 99.
+2. **The three rocks share ONE 186-frame span.** Dropping them one at a time
+   charges 186 + 186 + 188 = 560 for a freeze the game spends 186 on: each
+   `fall()` raises the flag and each rock's camera expiry clears it with no
+   arbitration, so the EARLIEST wins. Invisible for thirteen slices because
+   the only other publisher with a rock behind it (L39's rope) has one.
+   **And the boss rides that loop** — its rumble and ramp have no freeze
+   test, so 186 of its 216 ticks to the clamp are spent inside one model tick.
+3. **The clamp is a FLOOR at y 212 and the wand sits at 232.** A window that
+   collected the wand and stood still would report "the clamp holds" having
+   tested nothing. The drive spends the 31 live ticks between the freeze
+   draining (A+185) and `fullyActivated` (A+215) running north through the
+   space the wall occupied, reaches 195.60, and is teleported to 212 on
+   A+216 exactly.
+
+**The pair is a fourth control shape and the cleanest on the arc.** Both
+arms are the SAME TAPE, one boot field apart: byte-identical for ticks 0..9,
+parting at tick 10 — the CONTACT — because one arm's world freezes there and
+the other's does not. And they stop at the same number by two mechanisms:
+the control is walled at **214.05** (the box's bottom edge 212 plus the
+player's 2 px origin) where the drive is **assigned** 212.
+
+⚠⚠ The first cut's control COLLECTED the wand. The model gated the fade on
+`hasAllTotemParts()` and not the CONTACT — and `Wand.update` gates both,
+because `super.update()` (`Pickup.update`, the only caller of
+`collide("Player", …)`) is the ELSE of the alpha ramp *inside the same
+`if`*. **A control that does the thing it exists to refute is not a weak
+control; it is not a control.**
+
+### `WandLock` is a `Lock` with a different sprite
+
+`Puzzlements/WandLock.as` is nineteen lines: `extends Lock`, an embedded
+sprite, a constructor that forwards. **No override of anything.** So the
+wand ITEM opens nothing — a WandLock needs its group pressed like any other
+Lock. L40 link 5's wall does not dissolve one rung later; it is a standing
+finding.

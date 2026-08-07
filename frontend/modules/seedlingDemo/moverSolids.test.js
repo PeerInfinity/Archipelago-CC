@@ -64,9 +64,24 @@ describe('⛔⛔ the verdict that was true about the wrong mover', () => {
             if (tag === 'iceturret') {
                 expect(row.collider).toBe('rect');
                 expect(row.as3).toBe('IceTurret');
+            } else if (tag === 'bosstotem') {
+                // ⛓⛓⛓ R5 SLICE 23: THE SECOND EXCEPTION, AND IT IS THE
+                // TURRET'S RUN BACKWARDS. `BossTotem.type` is "Enemy" from
+                // the base ctor too, but `type = "Solid"` is the ELSE of
+                // `if (activated)` — so an UNWOKEN boss IS a wall and a
+                // woken one is not, where a live turret is not a wall and
+                // its corpse is. Both keep `collider: 'rect'` and both are
+                // joins (`solid.bossId` / `solid.turretId`); the difference
+                // is which way `liveRectOf`'s arm defaults, and that is
+                // named at both sites.
+                expect(row.collider).toBe('rect');
+                expect(row.as3).toBe('BossTotem');
             } else {
                 expect(row.collider, `${tag} blocks the player?`).toBe('none');
             }
+            // ⚠ `blocksMover` is about the TYPE STRING, and both exceptions
+            // above are classes whose type string CHANGES. "Enemy" never
+            // blocks the player; what blocks them is the other value.
             expect(blocksMover(row.type, 'player'), `${tag} vs player`).toBe(false);
             expect(blocksMover(row.type, 'pushable'), `${tag} vs a block`).toBe(true);
         }

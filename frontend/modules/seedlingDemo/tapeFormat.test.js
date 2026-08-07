@@ -33,6 +33,9 @@ import {
     TAPE_VERSION,
     TapeFormatError,
     assertTapeWithinRuntimeBudget,
+    SAVE_SLOTS,
+    emptySaveBlock,
+    saveBlockDeclaresAnything,
 } from './tapeFormat.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
@@ -277,7 +280,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(5);
+        expect(TAPE_VERSION).toBe(6);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -636,7 +639,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -664,8 +667,17 @@ describe('version 2: what a v1 tape may and may not say', () => {
     });
 
     it('rejects an unknown version by name', () => {
-        expect(() => parseTape({ ...base, tape_version: 6 }))
-            .toThrow(/tape_version must be one of 1, 2, 3, 4, 5/);
+        // ⚠ The number here is ONE PAST the newest supported version and has
+        // to move with it. It was a literal 6 until slice 23 shipped version
+        // 6, at which point this test started asserting that a LEGAL version
+        // is rejected — and it failed with "noDamage must be a boolean",
+        // i.e. it had quietly become a test of the v2 arm rather than of the
+        // version gate. [[feedback_coincidental_predicate_rots]]
+        const unknown = Math.max(...SUPPORTED_TAPE_VERSIONS) + 1;
+        expect(() => parseTape({ ...base, tape_version: unknown }))
+            .toThrow(/tape_version must be one of/);
+        expect(() => parseTape({ ...base, tape_version: 0 }))
+            .toThrow(/tape_version must be one of/);
     });
 });
 
@@ -896,5 +908,149 @@ describe('R4: the inventory slot model', () => {
             .toEqual([INVENTORY_ITEM_IDS.firewand]);
         expect(inventorySlotsFor(held('hasSword', 'hasFire', 'hasWand', 'hasFireWand')))
             .toEqual([INVENTORY_ITEM_IDS.sword, INVENTORY_ITEM_IDS.firewand]);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// VERSION 6 — the SAVE-ARRAY BOOT BLOCK (R5 slice 23).
+//
+// The wall slice 22 hit as an INSTANCE (`hasTotemPart[]`, the wand gate)
+// and the audit found to be a FAMILY. The tests that matter are about the
+// SHAPE of `seal_parts`, which is the one field here that can be wrong and
+// still read right: it is an ordered collection LOG whose empty value is
+// -1, not a per-index boolean array.
+// ─────────────────────────────────────────────────────────────────────────
+
+const v6Base = {
+    ...v2Base,
+    tape_version: 6,
+    persistence: [],
+    equips: [],
+    pins: [],
+    save: { totem_parts: [], keys: [], seal_parts: [] },
+};
+const v6With = (save) => ({ ...v6Base, save: { ...v6Base.save, ...save } });
+
+describe('version 6: the save-array boot block', () => {
+    it('normalises an EMPTY block onto every earlier version', () => {
+        for (const t of [base, v2Base]) {
+            expect(parseTape(t).save)
+                .toEqual({ totem_parts: [], keys: [], seal_parts: [] });
+        }
+    });
+
+    it('writes NO save field into a v1..v5 tape, so every fixture round-trips', () => {
+        for (const t of [base, v2Base]) {
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('save');
+        }
+        expect(JSON.parse(serializeTape(v6Base))).toHaveProperty('save');
+    });
+
+    it('rejects a v1..v5 tape that PRESENTS anything, by VALUE not presence', () => {
+        // The value-not-presence rule, the fifth time. A parsed v5 tape
+        // carries an empty block; rejecting on presence would reject every
+        // committed fixture, which is what the first build of the R0 batch
+        // did with `noDamage`.
+        const v5 = { ...v2Base, tape_version: 5, persistence: [], equips: [], pins: [] };
+        expect(() => parseTape({ ...v5, save: { totem_parts: [], keys: [], seal_parts: [] } }))
+            .not.toThrow();
+        expect(() => parseTape({ ...v5, save: { totem_parts: [0], keys: [], seal_parts: [] } }))
+            .toThrow(/versions below 6 mean an EMPTY save block/);
+        expect(() => parseTape({ ...base, save: { totem_parts: [0] } }))
+            .toThrow(/version 1 means an EMPTY save block/);
+    });
+
+    it('is idempotent — a parsed v6 tape survives a second pass', () => {
+        const once = parseTape(v6With({ totem_parts: [0, 1, 2, 3, 4], seal_parts: [7, 3] }));
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(serializeTape(once))).toEqual(once);
+    });
+
+    it('SORTS totem_parts and keys but NEVER seal_parts', () => {
+        // ⛔ The whole shape of the field. `totem_parts` and `keys` index
+        // into boolean arrays, so their order carries nothing and a
+        // re-derivation that changed order must not read as a diff.
+        // `seal_parts` order IS the slot each identity lands in
+        // (SealController.getSealPart fills the first -1), so sorting it
+        // would silently rewrite the save.
+        const p = parseTape(v6With({
+            totem_parts: [3, 0, 1], keys: [4, 2], seal_parts: [9, 2, 15],
+        }));
+        expect(p.save.totem_parts).toEqual([0, 1, 3]);
+        expect(p.save.keys).toEqual([2, 4]);
+        expect(p.save.seal_parts).toEqual([9, 2, 15]);
+    });
+
+    it('bounds each array by ITS OWN slot count, not by a shared one', () => {
+        expect(SAVE_SLOTS).toEqual({ totem_parts: 5, keys: 5, seal_parts: 16 });
+        expect(() => parseTape(v6With({ totem_parts: [5] })))
+            .toThrow(/save\.totem_parts\[0\] is 5, out of range 0\.\.4/);
+        expect(() => parseTape(v6With({ keys: [5] })))
+            .toThrow(/save\.keys\[0\] is 5, out of range 0\.\.4/);
+        expect(() => parseTape(v6With({ seal_parts: [16] })))
+            .toThrow(/save\.seal_parts\[0\] is 16, out of range 0\.\.15/);
+        // A seal identity of 15 is LEGAL and is the one that completes the
+        // gate only when it lands in the LAST SLOT — the bound is on the
+        // identity, the completeness is about the ordinal.
+        expect(parseTape(v6With({ seal_parts: [15] })).save.seal_parts).toEqual([15]);
+    });
+
+    it('refuses -1 by name, because -1 is hasSealPart\'s own EMPTY value', () => {
+        expect(() => parseTape(v6With({ seal_parts: [-1] })))
+            .toThrow(/A negative index is not "none" here/);
+        expect(() => parseTape(v6With({ totem_parts: [-1] })))
+            .toThrow(/out of range 0\.\.4/);
+    });
+
+    it('refuses a repeat in any of the three, and says why', () => {
+        expect(() => parseTape(v6With({ totem_parts: [1, 1] })))
+            .toThrow(/duplicates index 1/);
+        expect(() => parseTape(v6With({ seal_parts: [4, 9, 4] })))
+            .toThrow(/a state the game cannot reach/);
+    });
+
+    it('refuses more entries than slots', () => {
+        expect(() => parseTape(v6With({ totem_parts: [0, 1, 2, 3, 4] }))).not.toThrow();
+        expect(() => parseTape({
+            ...v6Base,
+            save: { totem_parts: [0, 1, 2, 3, 4, 4], keys: [], seal_parts: [] },
+        })).toThrow(/save\.totem_parts has 6 entries but only 5 slots exist/);
+        expect(() => parseTape(v6With({
+            seal_parts: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        }))).not.toThrow();
+    });
+
+    it('refuses an unknown key inside the block rather than ignoring it', () => {
+        // A silently-ignored `save.badges: [...]` would be a directive one
+        // consumer honoured and the other dropped — the whole reason this
+        // format validates loudly.
+        expect(() => parseTape({ ...v6Base, save: { ...v6Base.save, badges: [] } }))
+            .toThrow(/save\.badges is not a save array/);
+    });
+
+    it('refuses a block that is not an object', () => {
+        expect(() => parseTape({ ...v6Base, save: [] })).toThrow(/save must be an object/);
+        expect(() => parseTape({ ...v6Base, save: null })).toThrow(/save must be an object/);
+        expect(() => parseTape({ ...v6Base, save: { totem_parts: 3 } }))
+            .toThrow(/save\.totem_parts must be an array/);
+    });
+
+    it('lets an author OMIT a key they do not use', () => {
+        const p = parseTape({ ...v6Base, save: { totem_parts: [0] } });
+        expect(p.save).toEqual({ totem_parts: [0], keys: [], seal_parts: [] });
+    });
+
+    it('serializes the block in a stable order', () => {
+        const written = JSON.parse(serializeTape(v6With({
+            totem_parts: [4, 0], seal_parts: [11, 1],
+        })));
+        expect(Object.keys(written.save)).toEqual(['totem_parts', 'keys', 'seal_parts']);
+        expect(written.save.seal_parts).toEqual([11, 1]);
+    });
+
+    it('saveBlockDeclaresAnything is the emptiness test, and it is over the ARRAYS', () => {
+        expect(saveBlockDeclaresAnything(undefined)).toBe(false);
+        expect(saveBlockDeclaresAnything(emptySaveBlock())).toBe(false);
+        expect(saveBlockDeclaresAnything({ seal_parts: [0] })).toBe(true);
     });
 });

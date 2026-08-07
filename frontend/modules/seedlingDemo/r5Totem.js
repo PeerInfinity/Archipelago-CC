@@ -2824,8 +2824,29 @@ export const L43_BOSS_WAKE = Object.freeze({
      */
     seal: Object.freeze({
         from: Object.freeze({ x: 152, y: 232 }),
-        cellsBefore: 327,
-        cellsAfter: 279,
+        // ⛔⛔⛔ CORRECTED AT R5 SLICE 23, AND THE CORRECTION MAKES THE
+        // HEADLINE STRONGER RATHER THAN WEAKER.
+        //
+        // Slice 20's flood ran against a `bosstotem` classified
+        // `collider: 'none'` — i.e. against a room where the boss's own
+        // 80x32 wall across the arena's five open columns does not exist.
+        // With the wall standing (which is the state the flood is ABOUT:
+        // before the Wand is taken, `type = "Solid"` is the ELSE of
+        // `if (activated)`), the same flood from the wand's own cell is
+        // **237 / 189**. The 90 nodes are exactly the arena north of the
+        // boss, which the flood was counting as reachable and which is
+        // shut by COLLISION until the wake.
+        //
+        // ⛓ THE VERDICT IS UNCHANGED IN BOTH READINGS: the stairs are
+        // reached before the drop and gone after it, and it is still ONE
+        // rock that does it. Both numbers are kept because the pair is the
+        // finding — the difference between them is the wall.
+        cellsBefore: 237,
+        cellsAfter: 189,
+        cellsBeforeIfWoken: 327,
+        cellsAfterIfWoken: 279,
+        correctedAt: 'R5 slice 23 — slice 20 flooded a room whose `bosstotem` was '
+            + 'classified `collider: \'none\'`; an UNWOKEN BossTotem is a Solid',
         stairsTile: '11,29',
         reachedBefore: true,
         reachedAfter: false,
@@ -3225,8 +3246,209 @@ export const L43_WAND_WINDOW = Object.freeze({
      * this window has run. The wand is LAST or it is nothing.
      */
     mustBeLastInTheItinerary: true,
-    blockedOn: 'the ITINERARY, not the ceremony — see `L43_WAND_WINDOW_BLOCKED`',
+    blockedOn: null,
     plannedAt: 'R5 slice 22, against the model; recorded once, as the chain tail',
+    /**
+     * ⛓⛓⛓ R5 SLICE 23 — DRIVEN, AND THE ENTRY IS A BOOT AFTER ALL.
+     *
+     * `entry` and `arrivalIsFallFromCeiling` above are still TRUE OF THE
+     * PIT, and they are no longer the only way in: the slice-23 AS3 batch's
+     * tape version 6 presents `hasTotemPart[]`, so the window boots at tile
+     * (9,13) — one row north of the wand, one row south of the boss's wall
+     * — with the gate's third term (`!p.fallFromCeiling`) satisfied by
+     * construction rather than by waiting out a descent.
+     *
+     * ⛓ AND THE DRIVE FOUND THREE THINGS THE PLAN DID NOT HAVE:
+     *
+     * 1. **THE FADE IS 99 FROZEN FRAMES, NOT 100, AND IT FIRES ON
+     *    APPROACH.** `Game.freezeObjects = alpha < 1` is written AFTER the
+     *    step, so the hundredth alpha step leaves the flag false and is a
+     *    LIVE frame. `ceremony.fadeTicks: 100` above is the STEP count; the
+     *    cost is 99. And the gate is `p.y < y + Tile.h` — the player's Y
+     *    alone — so all 99 are spent before anything is touched.
+     * 2. **THE THREE ROCKS SHARE ONE 186-FRAME SPAN.** Dropping them one at
+     *    a time would charge 186 + 186 + 188 = 560 for a freeze the game
+     *    spends 186 on: each `fall()` raises the flag and each rock's own
+     *    camera expiry clears it with no arbitration, so the EARLIEST wins.
+     *    Invisible for thirteen slices because the only other publisher
+     *    with a rock behind it (L39's rope) has exactly one.
+     * 3. **AND THE CLAMP IS ONLY WITNESSED BY A WALK THAT GOES NORTH.** It
+     *    is a FLOOR at y 212 and the wand sits at 232, so a window that
+     *    collected it and stood still would report "the clamp holds" having
+     *    tested nothing. The drive spends the 31 live ticks between the
+     *    freeze draining (A+185) and `fullyActivated` (A+215) running north
+     *    through the space the boss's own wall occupied, reaches y 195.60,
+     *    and is teleported to 212 on A+216 exactly.
+     */
+    /**
+     * ⛔⛔⛔ THE REFUTATION, BANKED BEFORE ANY CORRECTION — R5 slice 23,
+     * `r5-l43-wand` replayed headless against the model.
+     *
+     * The window's every SEMANTIC claim came back confirmed on the first
+     * take: `hasWand` true, `save.totem_parts` all five, FOUR earned clears
+     * ({43,0}..{43,3}), 456 dead frames, `saw_auto_advance` 0 (so the
+     * TAPE's own presses drove the dialogue, not `Bot.autoAdvance`). What
+     * was wrong was one tick of ARITHMETIC, and the residue is kept here
+     * because it is the free acceptance corpus for the correction —
+     * [[feedback_refuted_run_leaves_a_game_observation]].
+     *
+     * ```
+     *   t   GAME                  MODEL
+     *   24  226.2                 226.2                 identical
+     *   25  226.2                 226.2                 identical
+     *   26  227.84999999999997    227.14999999999998    ⛔ FIRST DIVERGENCE
+     *   27  228.29999999999995    227.84999999999997
+     *   28  228.49999999999994    228.29999999999995
+     *   29  227.69999999999993    227.69999999999996
+     *   30  226.34999999999994    226.54999999999995
+     *   31  225.24999999999994    225.64999999999995
+     * ```
+     *
+     * ⛓⛓⛓ **AND THE DELTAS NAME THE MECHANISM EXACTLY.**
+     *
+     * ```
+     *   model deltas   +0.95  +0.70  +0.45  -0.60  -1.15  -0.90
+     *   game  deltas   +1.65  +0.45  +0.20  -0.80  -1.35  -1.10
+     *                   ^^^^^
+     *                   0.95 + 0.70 — TWO of the model's steps, in ONE
+     *                   observation. The game's next two deltas are then
+     *                   the model's third and fourth.
+     * ```
+     *
+     * ⇒ **THE CEREMONY'S LAST FRAME MOVES THE PLAYER AND THE TAPE DOES NOT
+     * SEE IT.** `Bot.update` reads `Game.freezeObjects` at the TOP of the
+     * frame, above `super.update()`, so the frame on which
+     * `Pickup.pick_up()`'s `!myText` exit writes `Game.freezeObjects =
+     * false` is counted DEAD and records no observation — and then the
+     * Wand (a run-time-added entity, so PREPENDED and updating before the
+     * player) removes itself and the player's own `mobileUpdate` reads the
+     * cleared flag and MOVES. One unobserved physics step, folded into the
+     * next observation.
+     *
+     * ⛓ It is the A+185 fact one ceremony earlier, and it is why the two
+     * arms re-converge: from the `up` span at tick 28 both are driven by
+     * the same key and the offset is a constant velocity phase, not a
+     * growing error.
+     *
+     * ⚠ AND IT IS INVISIBLE ON EVERY EARLIER DIALOGUED PICKUP because
+     * those walks are at REST when the ceremony ends — an extra step on a
+     * zero velocity moves nothing. `r5-l43-wand` enters its ceremony with
+     * `down` still draining, which is what made the frame observable at
+     * all.
+     */
+    refutation: Object.freeze({
+        at: 'R5 slice 23, headless replay before any --win recording was spent',
+        firstDivergingTick: 26,
+        lastAgreeingTick: 25,
+        game: Object.freeze([226.2, 226.2, 227.84999999999997, 228.29999999999995,
+            228.49999999999994, 227.69999999999993, 226.34999999999994,
+            225.24999999999994]),
+        model: Object.freeze([226.2, 226.2, 227.14999999999998, 227.84999999999997,
+            228.29999999999995, 227.69999999999996, 226.54999999999995,
+            225.64999999999995]),
+        fromTick: 24,
+        confirmedAnyway: Object.freeze({
+            hasWand: true,
+            totemPartsPresented: 5,
+            earnedClears: 4,
+            deadFrames: 456,
+            sawAutoAdvance: 0,
+        }),
+        cause: 'the ceremony\'s LAST frame moves the player and the tape does not see '
+            + 'it — `Bot.update` reads `Game.freezeObjects` above `super.update()`, so '
+            + 'the frame `pick_up()`\'s `!myText` exit clears it on is DEAD to the tape '
+            + 'and live to the player',
+        evidence: 'the game\'s first post-ceremony delta is +1.65 = the model\'s '
+            + '+0.95 and +0.70 summed, and its next two are the model\'s third and '
+            + 'fourth',
+        invisibleBefore: 'every earlier dialogued pickup is collected AT REST, and an '
+            + 'extra step on a zero velocity moves nothing',
+    }),
+    /**
+     * ⛔⛔⛔ AND THE CONTROL REFUTED THE DIAGNOSIS THE DRIVE SUGGESTED —
+     * WHICH IS WHAT A CONTROL IS FOR.
+     *
+     * The control arm's semantics came back exactly as designed:
+     * `hasWand` false, `save.totem_parts` all false, ledger EMPTY, 21 dead
+     * frames (one room load and nothing else) against the drive's 456. The
+     * shut-before claim holds. But its STREAM parts at tick 13:
+     *
+     * ```
+     *   t   GAME                  MODEL
+     *   11  227.84999999999997    227.84999999999997    identical
+     *   12  228.29999999999995    228.29999999999995    identical
+     *   13  230.49999999999994    228.49999999999994    ⛔
+     *   14  232.44999999999993    228.49999999999994
+     *   …   the game keeps accelerating; the model is at REST
+     *
+     *   game  deltas  +0.45  +2.20  +1.95  +1.70  +1.45  +1.20  +0.95
+     *   model deltas  +0.45  +0.20   0      0      0      0      0
+     * ```
+     *
+     * ⛓⛓⛓ **A DECAY OF EXACTLY -0.25 PER TICK FROM 2.20, AND 2.20 IS
+     * 0.20 + 2.00.** That is `Player.as:788`'s
+     * `knockback(2, new Point(x - v.x, y - v.y))` — **A SWORD DASH.**
+     *
+     * ⇒ **THE PAIR'S DESIGN WAS THE DEFECT, NOT THE MODEL'S FREEZE
+     * ACCOUNTING.** The two arms share a tape, and the tape's nine
+     * `primary` presses at a two-tick cadence mean two different things in
+     * it: in the DRIVE they land on the ceremony's frozen ticks and advance
+     * an input-bounded dialogue; in the CONTROL — where the boot field is
+     * shut, so there is no ceremony — they land on LIVE ticks, and a second
+     * press inside `slashTimerMax` (20) dashes the player along their own
+     * velocity.
+     *
+     * ⇒ **AN INPUT WHOSE MEANING DEPENDS ON THE WORLD IS NOT A SHARED
+     * TREATMENT.** "The same tape, one boot field apart" was true of the
+     * BYTES and false of the EXPERIMENT. The fix is the configuration
+     * §14.9 already proved inert: a press cadence of **31 ticks**, which
+     * clears `slashTimer` before every press so no press can become a dash
+     * in either arm — the presses are then inert by CONSTRUCTION in the arm
+     * where they are not the treatment.
+     *
+     * ⚠ And "press at rest" is NOT the fix, however tempting: the
+     * knockback's direction is `(x - v.x, y - v.y)`, which at zero velocity
+     * is the player's own position and a degenerate vector to normalise.
+     * The cadence is the term with a driven witness behind it.
+     */
+    controlRefutation: Object.freeze({
+        at: 'R5 slice 23, the same headless replay',
+        firstDivergingTick: 13,
+        fromTick: 11,
+        game: Object.freeze([227.84999999999997, 228.29999999999995, 230.49999999999994,
+            232.44999999999993, 234.14999999999992, 235.5999999999999,
+            236.7999999999999, 237.7499999999999]),
+        model: Object.freeze([227.84999999999997, 228.29999999999995, 228.49999999999994,
+            228.49999999999994, 228.49999999999994, 228.49999999999994,
+            228.49999999999994, 228.49999999999994]),
+        confirmedAnyway: Object.freeze({
+            hasWand: false, totemPartsPresented: 0, earnedClears: 0, deadFrames: 21,
+        }),
+        cause: 'a SWORD DASH — `Player.as:788` `knockback(2, new Point(x - v.x, '
+            + 'y - v.y))`, fired because a second `primary` press landed inside '
+            + '`slashTimerMax` (20) on a LIVE tick. In the drive the same presses land '
+            + 'on the ceremony\'s frozen ticks and advance the dialogue.',
+        evidence: 'the game\'s deltas decay by exactly -0.25/tick from 2.20, and '
+            + '2.20 = the coasting 0.20 plus knockback\'s 2.00',
+        lesson: 'an input whose MEANING depends on the world is not a shared '
+            + 'treatment; "the same tape" was true of the bytes and false of the '
+            + 'experiment',
+        fix: 'a 31-tick press cadence — §14.9\'s own proven-inert configuration, '
+            + 'which clears `slashTimer` before every press. ⚠ NOT "press at rest": '
+            + 'the knockback direction is `(x - v.x, y - v.y)`, degenerate at v = 0.',
+    }),
+    driven: Object.freeze({
+        at: 'R5 slice 23',
+        pair: Object.freeze(['r5-l43-wand', 'r5-l43-wand-control']),
+        bootTile: Object.freeze({ tx: 9, ty: 13 }),
+        bootBlock: Object.freeze({ level: 43, x: 144, y: 208 }),
+        fadeFrozenFrames: 99,
+        rockFrozenFrames: 186,
+        rockFramesIfDroppedSeparately: 560,
+        northernmostY: 195.6,
+        clampedAtSinceActivation: 216,
+        endsAtSinceActivation: 279,
+    }),
 });
 
 /**
@@ -3271,7 +3493,21 @@ export const L43_WAND_WINDOW = Object.freeze({
 export const L43_WAND_WINDOW_BLOCKED = Object.freeze({
     level: 43,
     plannedBy: '§34.4 (GO for a terminal window), scheduled by §34.10 item 3',
-    blocked: true,
+    /**
+     * ⛓⛓⛓ RETIRED AT R5 SLICE 23, BY THE ONE LINE OF AS3 THIS RECORD'S OWN
+     * `wouldCost` NAMED.
+     *
+     * Kept rather than deleted, because the record's value is now the
+     * ANALYSIS: `SAVE_FILE.data.hasTotemPart[]` really is a different array
+     * from `levelPersistence`, the `|| !doBossActions` arm really is dead,
+     * and the only path that existed under the zero-AS3 rule really was the
+     * chain tail. What changed is the rule, not the reading — and the
+     * audit that followed found the wall was a FAMILY of three arrays
+     * rather than this one instance (`r5Acceptance.SAVE_FILE_AUDIT`).
+     */
+    blocked: false,
+    retiredBy: 'R5 slice 23 — tape version 6\'s `save` block, and the audit that '
+        + 'found the wall was a family of three (hasTotemPart, hasKey, hasSealPart)',
     gate: '`Wand.update` — `p.y < y + Tile.h && Player.hasAllTotemParts() && '
         + '!p.fallFromCeiling`',
     /** ⛔ The state the gate reads, and where it lives. */

@@ -126,10 +126,10 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 5;
+export const TAPE_VERSION = 6;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6]);
 
 /**
  * ── Version 5: the DETERMINISM PINS ───────────────────────────────────
@@ -489,6 +489,127 @@ function parseEquips(raw) {
  * "sound"]` was probably edited by two hands and one of them meant something
  * else.
  */
+/**
+ * ── Version 6: the SAVE-ARRAY BOOT BLOCK (R5 slice 23) ────────────────
+ *
+ * `Bot`'s boot block honoured exactly two kinds of state — `grants`
+ * (Inventory item booleans) and `persistence` (levelPersistence tags) — and
+ * `Main.SAVE_FILE.data` holds three ARRAYS besides that gameplay reads.
+ * Slice 22 hit the wall as an INSTANCE (`hasTotemPart[]`, the wand gate);
+ * the audit found it is a FAMILY, and this closes all three:
+ *
+ *   `totem_parts`  indices 0..4. `Wand.update`'s whole body is gated on
+ *                  `Player.hasAllTotemParts()`, so a window that BOOTS into
+ *                  level 43 finds an inert pickup.
+ *   `keys`         indices 0..4. `BossLock.update` opens on
+ *                  `Player.hasKey(keyType)`.
+ *   `seal_parts`   seal IDENTITIES, **in collection order**, 0..15.
+ *                  `FinalDoor.update` opens on
+ *                  `SealController.hasAllSealParts()` — the ending's gate,
+ *                  which R6 owns.
+ *
+ * ⛔⛔ `seal_parts` IS AN ORDERED LOG, NOT A SET OF FLAGS, and that is the
+ * one way to get this field wrong while it reads correctly.
+ * `SealController.getSealPart(index)` writes `index` into the FIRST slot
+ * still holding **-1**, and `hasAllSealParts()` is
+ * `Main.hasSealPart(SEALS - 1) != -1` — the LAST SLOT being filled. So the
+ * array is a collection LOG whose slot is the ordinal and whose value is
+ * the identity. A `hasSealPartSet(i, true)` reading would satisfy
+ * `hasAllSealParts` with sixteen writes of any value at all, and the empty
+ * value being -1 rather than 0 is what makes that silent.
+ *
+ * ⚠ THE INDICES ARE A SET WITH NO REPEATS in all three arrays. Chest.as:85
+ * rejection-samples `Math.floor(Math.random() * SEALS)` until `getSealPart`
+ * accepts it, i.e. until it draws an identity not already held — so a
+ * repeated seal identity is a state the game cannot reach, and a repeated
+ * totem/key index is a second write of `true`, i.e. a derivation error.
+ *
+ * ⚠ AND IT IS A BOOT PRESENTATION, NOT A GRANT. `Bot.botStart` applies it
+ * BEFORE the first world is built, because `BossTotemPart.check()` and
+ * `BossKey.check()` REMOVE THEMSELVES when the player already holds their
+ * index and `check()` runs on a new world's first frame — the same
+ * "already too late to despawn" fact the R0 grants ruling turned on. There
+ * is no per-level firing rule and no `save` entry can fire twice.
+ */
+export const SAVE_SLOTS = Object.freeze({
+    /** `Player.totemParts` — Player.as:276 */
+    totem_parts: 5,
+    /** `Player.totalKeys` — Player.as:258 */
+    keys: 5,
+    /** `SealController.SEALS` — SealController.as:24 */
+    seal_parts: 16,
+});
+
+export const SAVE_KEYS = Object.freeze(Object.keys(SAVE_SLOTS));
+
+/** The empty `save` block a v1..v5 tape normalises to. */
+export function emptySaveBlock() {
+    return { totem_parts: [], keys: [], seal_parts: [] };
+}
+
+/** Does a `save` block declare anything at all? (the v<6 rejection's test) */
+export function saveBlockDeclaresAnything(save) {
+    if (save === null || typeof save !== 'object' || Array.isArray(save)) return false;
+    return SAVE_KEYS.some((k) => Array.isArray(save[k]) && save[k].length > 0);
+}
+
+function parseSaveIndices(list, what, limit) {
+    if (list === undefined || list === null) return [];
+    if (!Array.isArray(list)) {
+        fail(`${what} must be an array of indices ([] when nothing is presented), `
+            + `got ${JSON.stringify(list)}`);
+    }
+    if (list.length > limit) {
+        fail(`${what} has ${list.length} entries but only ${limit} slots exist`);
+    }
+    const out = [];
+    list.forEach((v, i) => {
+        requireInt(v, `${what}[${i}]`);
+        if (v < 0 || v >= limit) {
+            fail(`${what}[${i}] is ${v}, out of range 0..${limit - 1}. A negative `
+                + 'index is not "none" here — hasSealPart\'s own EMPTY value is -1, '
+                + 'so a -1 entry would write "this slot is empty" into a filled slot.');
+        }
+        if (out.includes(v)) {
+            fail(`${what}[${i}] duplicates index ${v}. All three arrays are index `
+                + 'SETS: a repeated totem/key index is a second write of true, and a '
+                + 'repeated seal identity is a state the game cannot reach '
+                + '(Chest.as:85 rejection-samples until getSealPart accepts).');
+        }
+        out.push(v);
+    });
+    return out;
+}
+
+/**
+ * The version-6 `save` block.
+ *
+ * ⚠ `totem_parts` and `keys` are SORTED (they are sets over a boolean
+ * array, so order carries nothing and a re-derived list that changed order
+ * must not read as a diff). `seal_parts` is **NOT** sorted: its order IS
+ * the collection order, which is the slot each identity lands in.
+ */
+function parseSave(raw) {
+    const save = raw.save;
+    if (save === null || typeof save !== 'object' || Array.isArray(save)) {
+        fail('save must be an object { totem_parts, keys, seal_parts } on a '
+            + `tape_version 6 tape, got ${JSON.stringify(save)}`);
+    }
+    for (const k of Object.keys(save)) {
+        if (!SAVE_KEYS.includes(k)) {
+            fail(`save.${k} is not a save array; legal keys are ${SAVE_KEYS.join(', ')}`);
+        }
+    }
+    const totemParts = parseSaveIndices(save.totem_parts, 'save.totem_parts',
+        SAVE_SLOTS.totem_parts);
+    const keys = parseSaveIndices(save.keys, 'save.keys', SAVE_SLOTS.keys);
+    const sealParts = parseSaveIndices(save.seal_parts, 'save.seal_parts',
+        SAVE_SLOTS.seal_parts);
+    totemParts.sort((a, b) => a - b);
+    keys.sort((a, b) => a - b);
+    return { totem_parts: totemParts, keys, seal_parts: sealParts };
+}
+
 function parsePins(raw) {
     if (!Array.isArray(raw.pins)) {
         fail('pins must be an array of pin names on a tape_version 5 tape '
@@ -660,6 +781,13 @@ export function parseTape(input) {
             noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
             pins: [],
         };
+        // `save` is checked separately below rather than folded in here: it is
+        // the one normalised field that is an OBJECT, so the array/scalar
+        // comparison this loop makes cannot express "empty" for it.
+        if (saveBlockDeclaresAnything(raw.save)) {
+            fail(`tape_version 1 declares save: ${JSON.stringify(raw.save)}, but `
+                + 'version 1 means an EMPTY save block BY DEFINITION.');
+        }
         for (const [field, expected] of Object.entries(v1Semantics)) {
             const got = raw[field];
             if (got === undefined) continue;
@@ -714,6 +842,20 @@ export function parseTape(input) {
             + 'tape_version to 5 to pin anything.');
     }
     const pins = version >= 5 ? parsePins(raw) : [];
+    // The VALUE-not-presence rule, one version on again — and the emptiness
+    // test is over the three ARRAYS rather than over the block, because
+    // `parseTape` normalises a v1..v5 tape into carrying a non-null empty
+    // block and a `!== undefined` check would reject all 98 committed
+    // fixtures. That is not hypothetical: it is what the first build of the
+    // R0 batch did with `noDamage`, and it cost a whole pipeline run.
+    if (version < 6 && saveBlockDeclaresAnything(raw.save)) {
+        fail(`tape_version ${version} declares save: ${JSON.stringify(raw.save)}, `
+            + 'but versions below 6 mean an EMPTY save block BY DEFINITION — the '
+            + 'build had no such field to read, so the game would boot with an empty '
+            + 'save (an inert Wand, a shut BossLock, a shut FinalDoor) while the JS '
+            + 'engine honoured the block. Bump tape_version to 6 to present any.');
+    }
+    const save = version >= 6 ? parseSave(raw) : emptySaveBlock();
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -821,6 +963,11 @@ export function parseTape(input) {
             t: e.t, slot: e.slot,
         }))),
         pins: Object.freeze(pins),
+        save: Object.freeze({
+            totem_parts: Object.freeze(save.totem_parts),
+            keys: Object.freeze(save.keys),
+            seal_parts: Object.freeze(save.seal_parts),
+        }),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -900,6 +1047,15 @@ export function serializeTape(tape) {
         // Same rule again: written ONLY for a v5 tape, so all 57 frozen
         // fixtures round-trip byte-identically past the R5 batch.
         ...(t.tape_version >= 5 ? { pins: [...t.pins] } : {}),
+        // Same rule again: written ONLY for a v6 tape, so all 98 frozen
+        // fixtures round-trip byte-identically past the slice-23 batch.
+        ...(t.tape_version >= 6 ? {
+            save: {
+                totem_parts: [...t.save.totem_parts],
+                keys: [...t.save.keys],
+                seal_parts: [...t.save.seal_parts],
+            },
+        } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };

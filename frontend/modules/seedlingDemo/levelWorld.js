@@ -1159,8 +1159,37 @@ export const ENTITY_CLASSES = Object.freeze({
         hazard: 'unpriced',
     },
     bosstotem: {
-        as3: 'BossTotem', roles: ROLES, collider: 'none', type: 'Enemy',
-        src: 'Game.as:2071 + Enemies/BossTotem.as:284,486',
+        as3: 'BossTotem',
+        roles: ROLES, collider: 'rect', type: 'Enemy',
+        // `setHitbox(80, 32, 40, -12)` — an 80x32 box whose origin is
+        // NEGATIVE in y, so the body sits BELOW the entity point.
+        dx: 0, dy: 0, w: 80, h: 32, originX: 40, originY: -12,
+        // ⛔⛔⛔ CORRECTED AT R5 SLICE 23, AND IT WAS `collider: 'none'` FOR
+        // TWENTY-TWO SLICES BECAUSE NOTHING HAD EVER BEEN IN THE ROOM.
+        //
+        // `BossTotem.update` ends its activation block with
+        //
+        //     if (activated) { type = "Enemy"; ... } else { type = "Solid"; }
+        //
+        // so an UNWOKEN boss is a Solid — and for `bosstotem@152,168` the
+        // box is `[112,192) x [180,212)`, which is EXACTLY L43's arena
+        // columns 7..11, i.e. the whole width of the room. It is the wall
+        // that shuts the north half before the wake, and the CLAMP is what
+        // shuts it after (`bossTotem.bossTotemClampY`, an ASSIGNMENT of the
+        // same 212 this box's bottom edge is).
+        //
+        // ⛓ THE SOLID IS PER-VISIT, like the ice turret's corpse: the
+        // entity is the id join (`solid.bossId` + the `bossTotems` roster),
+        // and `liveRectOf`'s boss arm returns `null` once the run says the
+        // boss has activated. ⛔ `null` MEANS NOT SOLID and must not fall
+        // through to `s.rect` — an activated boss is `"Enemy"`, which is not
+        // in `Mobile.solids`, and the 31 live ticks the player has to run
+        // north through it are the window's whole claim.
+        //
+        // ⚠ ONE INSTANCE IN THE GAME (`bosstotem@152,168`, level 43), so
+        // this correction moves no committed fixture — which is also why it
+        // survived unmeasured for so long.
+        src: 'Game.as:2071 + Enemies/BossTotem.as:280-315,486',
         why: 'writes `p.y` directly during its fight sequence, and consumes RNG',
         hazard: {
             inert: 'it activates on `FP.world.classCount(Wand) <= 0` — i.e. when the '
@@ -3084,6 +3113,7 @@ export function buildLevelWorld(levelRecord, {
         burnedTrees: o.burnedTrees ?? null,
         crushers: o.crushers ?? null,
         turrets: o.turrets ?? null,
+        bosses: o.bosses ?? null,
         openChests: o.openChests ?? null,
         pulledRopes: o.pulledRopes ?? null,
         pushables: o.pushables ?? null,
@@ -3144,6 +3174,24 @@ export function buildLevelWorld(levelRecord, {
             const now = o.turrets ? o.turrets.get(s.turretId) : null;
             return now && now.solid ? now.rect : null;
         }
+        // ⛓⛓⛓ R5 SLICE 23: A BOSS TOTEM, and it is the ice turret's arm
+        // RUN BACKWARDS. `BossTotem.type` is "Enemy" from the base ctor and
+        // `type = "Solid"` is the ELSE of `if (activated)` — so an UNWOKEN
+        // boss IS a solid and a woken one is not, which is the opposite of
+        // the turret's corpse latch above.
+        //
+        // ⇒ absent run state means SOLID here, and the arm falls through to
+        // `s.rect` for exactly that case: a run that has never touched the
+        // Wand has never woken it, and every flood and every planner query
+        // made before the family existed was made against a room where the
+        // boss had not woken. ⚠ THE DEFAULT IS THEREFORE LOAD-BEARING, and
+        // it is the reverse of the turret's for a reason that is in the
+        // source rather than in the convention.
+        if (s.bossId) {
+            const now = o.bosses ? o.bosses.get(s.bossId) : null;
+            if (now && now.activated) return null;
+            return s.rect;
+        }
         // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()` writes
         // `type = ""` (Chest.as:77) and the entity then fades for 60 more
         // ticks before `FP.world.remove` — so the SOLIDITY goes first and the
@@ -3195,6 +3243,15 @@ export function buildLevelWorld(levelRecord, {
      * `solid.turretId` exactly as `crusherId`/`pushableId` before it.
      */
     const iceTurrets = [];
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: THE BOSS TOTEMS — the TWELFTH per-visit geometry
+     * family, and the only one that stops being a solid by WAKING UP.
+     * `bossTotem.js` owns the behaviour; the join is `solid.bossId`.
+     *
+     * ⚠ ONE MEMBER IN THE GAME (`bosstotem@152,168`, level 43), which is
+     * why `collider: 'none'` survived unmeasured until a window walked in.
+     */
+    const bossTotems = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -3847,6 +3904,26 @@ export function buildLevelWorld(levelRecord, {
                     aliveRect: solid.rect,
                 });
             }
+            // ⛓⛓⛓ R5 SLICE 23: A BOSS TOTEM. `solid.rect` here is the
+            // PRE-WAKE wall — the else-arm of `if (activated)` — and
+            // `liveRectOf`'s boss arm returns `null` for a boss the run says
+            // has activated, which is the reverse of the pushables
+            // convention and the same as the turret's.
+            if (cls.as3 === 'BossTotem') {
+                solid.bossId = `${e.type}@${x},${y}`;
+                bossTotems.push({
+                    id: solid.bossId,
+                    tag: e.type,
+                    x,
+                    y,
+                    // The ENTITY point — `super(_x, _y)` with no offset at
+                    // any level of the chain, which is why `dx`/`dy` are 0.
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    persistTag: tagOf(e.type, e.attrs),
+                    preWakeRect: solid.rect,
+                });
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -4215,6 +4292,16 @@ export function buildLevelWorld(levelRecord, {
          * across a re-boot.
          */
         iceTurrets,
+        /**
+         * ⛓⛓⛓ R5 slice 23: the boss totems, `{id, tag, x, y, ex, ey,
+         * persistTag, preWakeRect}`.
+         *
+         * Unconditional, like the turrets': `BossTotem` has a `check()` that
+         * removes it on a CLEARED tag, which `buildLevelWorld`'s own
+         * persistence arm already handles — so a roster entry means the
+         * entity is in the world, and whether it is SOLID is the run's.
+         */
+        bossTotems,
         /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *

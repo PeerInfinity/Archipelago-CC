@@ -2485,13 +2485,27 @@ describe('L43 — the boss wake, and the escape south that does not exist', () =
         const box = L43_BOSS_WAKE.boss.box;
         expect(box.x / T).toBe(L43_BOSS_WAKE.boss.spansCols[0]);
         expect(box.right / T - 1).toBe(L43_BOSS_WAKE.boss.spansCols[1]);
+        // ⛔⛔ R5 SLICE 23: THE QUESTION HAS TO NAME WHICH BOSS IT MEANS.
+        // Until this slice `bosstotem` was `collider: 'none'` and the query
+        // below was about the TILES; now an unwoken boss is a Solid across
+        // exactly these columns, so an unqualified `collidesSolid` answers
+        // "wall" for all five and the assertion would be inverted for a
+        // reason that is not the room's geometry.
+        const woken = new Map([[`bosstotem@${boss.x},${boss.y}`, {
+            id: `bosstotem@${boss.x},${boss.y}`, activated: true,
+            fullyActivated: true, rect: null, clampY: L43_BOSS_WAKE.clamp.y,
+        }]]);
         for (let col = box.x / T; col <= box.right / T - 1; col += 1) {
-            // every column the body covers is open floor in the arena, and
-            // the columns either side of it are the arena's own walls
-            expect(w43.collidesSolid(playerBoxAt(col * T + 8, 196), {})).toBeFalsy();
+            // every column the body covers is open FLOOR in the arena…
+            expect(w43.collidesSolid(playerBoxAt(col * T + 8, 196), { bosses: woken }))
+                .toBeFalsy();
+            // …and a WALL while the boss is unwoken, which is the same five
+            // columns and the other half of why north is shut.
+            expect(w43.collidesSolid(playerBoxAt(col * T + 8, 196), {})).toBeTruthy();
         }
-        expect(w43.collidesSolid(playerBoxAt(box.x - 8, 196), {})).toBeTruthy();
-        expect(w43.collidesSolid(playerBoxAt(box.right + 8, 196), {})).toBeTruthy();
+        expect(w43.collidesSolid(playerBoxAt(box.x - 8, 196), { bosses: woken })).toBeTruthy();
+        expect(w43.collidesSolid(playerBoxAt(box.right + 8, 196), { bosses: woken }))
+            .toBeTruthy();
     });
 
     /**
@@ -2764,11 +2778,18 @@ describe('⛓ L43: the terminal wand window, planned', () => {
         const { L43_WAND_WINDOW, L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');
         expect(L43_WAND_WINDOW.entry).toMatch(/ARRIVAL/);
         expect(L43_WAND_WINDOW.arrivalIsFallFromCeiling).toBe(true);
-        // ⛓ TWO INDEPENDENT REASONS, and the record carries both: the boot
-        // cannot arm `hasTotemPart[]` at all, AND the collect's own gate
-        // excludes the descent tick the arrival lands on.
-        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(true);
+        // ⛓ TWO INDEPENDENT REASONS, and only ONE of them was retired.
+        // ⛔ The boot could not arm `hasTotemPart[]` — R5 slice 23's v6
+        // `save` block does — but the collect's own gate still excludes the
+        // descent tick, so the ARRIVAL half of this record is untouched and
+        // an arriving window would still have to land before it collects.
+        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(false);
+        expect(L43_WAND_WINDOW_BLOCKED.retiredBy).toMatch(/slice 23/);
         expect(L43_WAND_WINDOW.arrivalGate).toMatch(/fallFromCeiling/);
+        // ⛓ …and the window is DRIVEN now, from a boot rather than a pit.
+        expect(L43_WAND_WINDOW.driven.pair)
+            .toEqual(['r5-l43-wand', 'r5-l43-wand-control']);
+        expect(L43_WAND_WINDOW.blockedOn).toBeNull();
         expect(L43_WAND_WINDOW.terminal).toBe(true);
         expect(L43_WAND_WINDOW.mustBeLastInTheItinerary).toBe(true);
     });
@@ -2784,12 +2805,18 @@ describe('⛓ L43: the terminal wand window, planned', () => {
 });
 
 describe('⛔ L43: the terminal wand window cannot be booted', () => {
-    it('⛔ the gate reads a save array `persistence` does not reach', async () => {
+    it('⛔ the gate reads a save array `persistence` does not reach — and slice 23 '
+        + 'reached it', async () => {
         const { L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');
-        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(true);
+        // ⛓ THE ANALYSIS SURVIVES THE RETIREMENT, which is why the record is
+        // kept rather than deleted: `hasTotemPart[]` really IS a different
+        // array from `levelPersistence`, and `wouldCost` named the exact
+        // line that turned out to fix it.
         expect(L43_WAND_WINDOW_BLOCKED.state.isLevelPersistence).toBe(false);
         expect(L43_WAND_WINDOW_BLOCKED.state.count).toBe(5);
         expect(L43_WAND_WINDOW_BLOCKED.bootBlock.totemParts).toBe(null);
+        expect(L43_WAND_WINDOW_BLOCKED.wouldCost).toMatch(/ONE boot field/);
+        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(false);
     });
 
     /**
@@ -2797,27 +2824,39 @@ describe('⛔ L43: the terminal wand window cannot be booted', () => {
      * record's description of it. A field that quietly appeared would make
      * this record wrong, and the record cannot notice that about itself.
      */
-    it('⛓ …and `tapeFormat` really has no field for it — checked, not described', async () => {
-        // ⛓ THE STRATUM IS A COMMITTED ARTIFACT, not a builder call: this is
-        // the richest tape this rung emits — v4, with `grants`,
-        // `persistence` and `equips` all populated — so if a totem-part
-        // field existed anywhere in the format it would be in this file.
+    it('⛓⛓ …and `tapeFormat` HAS a field for it now — checked, not described',
+        async () => {
+        // ⛓ THE SAME STRATUM, INVERTED. Until slice 23 this test asserted
+        // that no committed tape and no round trip through the parser could
+        // carry a totem-part field, which was the record's blocking claim
+        // measured against the artifact rather than described. The batch
+        // added one, so the artifact is what says so.
         const { fixtureNames, loadTape } = await import('./fixtures/index.js');
-        // ⚠ EVERY committed tape, not one chosen name: a totem-part field
-        // that appeared on any of them would make this record wrong, and a
-        // single sample cannot say so.
+        const { parseTape, serializeTape, SAVE_SLOTS } = await import('./tapeFormat.js');
+        // ⛔ EVERY tape carries the block, because `parseTape` NORMALISES —
+        // which is exactly why the AS3's version gate is value-scoped and
+        // not presence-scoped.
         for (const n of fixtureNames()) {
-            expect(Object.keys(loadTape(n)).some((k) => /totem/i.test(k))).toBe(false);
+            expect(loadTape(n).save).toBeTruthy();
         }
-        const tape = loadTape('r5-l40-part1');
-        expect(Object.keys(tape)).toEqual(expect.arrayContaining(['grants', 'persistence']));
-        expect(Object.keys(tape).some((k) => /totem/i.test(k))).toBe(false);
-        // ⛓ AND THE PARSER AGREES, which is the half an artifact cannot
-        // answer on its own: a field no tape happens to carry but the
-        // format would accept is still a field.
-        const { parseTape, serializeTape } = await import('./tapeFormat.js');
-        const round = parseTape(serializeTape(tape));
-        expect(Object.keys(round).some((k) => /totem/i.test(k))).toBe(false);
+        // …and only a v6 tape may DECLARE anything in it.
+        const declaring = fixtureNames().map(loadTape)
+            .filter((t) => (t.save.totem_parts.length + t.save.keys.length
+                + t.save.seal_parts.length) > 0);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const t of declaring) expect(t.tape_version).toBe(6);
+        // ⛓ AND THE ROUND TRIP KEEPS IT, which is the half an artifact
+        // cannot answer alone.
+        const wand = loadTape('r5-l43-wand');
+        expect(wand.save.totem_parts).toHaveLength(SAVE_SLOTS.totem_parts);
+        expect(parseTape(serializeTape(wand)).save.totem_parts)
+            .toEqual(wand.save.totem_parts);
+        // ⛔ …and a v5 tape still carries an EMPTY one, so the pre-slice-23
+        // fixtures are untouched on disk.
+        const older = loadTape('r5-l40-part1');
+        expect(older.save)
+            .toEqual({ totem_parts: [], keys: [], seal_parts: [] });
+        expect(JSON.parse(serializeTape(older))).not.toHaveProperty('save');
     });
 
     it('⛓ …and everything §34.3 measured for the ceremony is untouched', async () => {

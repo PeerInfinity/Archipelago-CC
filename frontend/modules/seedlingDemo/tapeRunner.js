@@ -144,6 +144,12 @@ export function createTapeStepper(tape, opts = {}) {
             // runner that recorded the field and did not pass it on would
             // refuse every armed-water tape ever written.
             pins: t.pins ?? [],
+            // ⛓⛓⛓ R5 slice 23: and the v6 SAVE block, for the `pins`
+            // reason one version on — `Wand.update`'s body is gated on
+            // `Player.hasAllTotemParts()`, so a runner that kept this on
+            // the header would model an inert pickup while the game ran a
+            // ceremony.
+            save: t.save ?? null,
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking

@@ -2200,6 +2200,423 @@ export function l42Part4Findings(replayed) {
 }
 
 /**
+ * ⛓⛓⛓ R5 SLICE 23 — THE TERMINAL WAND WINDOW, AND THE CLEANEST
+ * SHUT-BEFORE CONTROL ON THE ARC.
+ *
+ * The SIXTH ceremony and the LAST window in `R5_ITINERARY`, unblocked by
+ * the same slice's AS3 batch: the v6 `save` block presents
+ * `hasTotemPart[]`, so `Wand.update`'s gate opens and a window that could
+ * only ever be a chain tail becomes a boot like any other.
+ *
+ * ── ⛓⛓ WHAT MAKES THIS PAIR DIFFERENT FROM EVERY EARLIER ONE ─────────
+ *
+ * §36's taxonomy has three control shapes and this is a fourth, cleaner
+ * than all of them: **the treatment is UNCHANGED and only the world's gate
+ * moves.** §36.6 could not delete the kill (a live shooter's volley clock
+ * is a function of whether it died); §33.7 could not hole the crusher
+ * choreographies (the player ends up inside a body); §35's deletion changed
+ * the world. Here both arms are the SAME TAPE — same boot, same spans, same
+ * grants, same pins — one boot field apart.
+ *
+ * ⇒ they are byte-identical for ticks 0..9 and part at tick 10, **the
+ * CONTACT tick**, because in one arm the world freezes there and in the
+ * other it does not.
+ *
+ * ── ⛓⛓⛓ AND THE TWO ARMS STOP AT THE SAME NUMBER BY TWO MECHANISMS ───
+ *
+ * The drive runs north through the space the boss's wall occupied and is
+ * caught by the CLAMP — `p.y := 212`, an ASSIGNMENT at the top of
+ * `BossTotem.update` with no freeze test above it — at A+216 exactly. The
+ * control's identical northward run is stopped by that same wall, a
+ * COLLISION, at y 214.05 (the box's bottom edge 212 plus the player's 2 px
+ * origin). **One number, two mechanisms, and the pair is what tells them
+ * apart.**
+ *
+ * ⚠ AND THE FIRST CUT'S CONTROL COLLECTED THE WAND. The model gated the
+ * approach FADE on `hasAllTotemParts()` and not the CONTACT — and
+ * `Wand.update` gates both, because `super.update()` (`Pickup.update`, the
+ * only caller of `collide("Player", …)`) is the ELSE of the alpha ramp
+ * INSIDE the same `if`. The control woke the boss and reproduced the clamp
+ * tick for tick. A control that does the thing it exists to refute is not a
+ * weak control; it is not a control.
+ */
+export const L43_WAND_PAIR = Object.freeze({
+    drive: 'r5-l43-wand',
+    control: 'r5-l43-wand-control',
+    level: 43,
+    /** ⛓ The tick both arms' streams first disagree on — the CONTACT. */
+    partsAtTick: 10,
+    /**
+     * ⛔ The frozen frames the DRIVE owes and the control does not, and they
+     * are THREE spans rather than one:
+     *   99   the approach FADE (`Wand.update`'s alpha ramp) — before contact
+     *   150  `Pickup.specialTimer`
+     *   186  the three tset-0 `fallrock`s, in ONE span (the earliest camera
+     *        expiry ends the freeze for all of them)
+     * plus the dialogue, whose length is the tape's own release cadence.
+     */
+    frozenSpans: Object.freeze({ fade: 99, specialTimer: 150, rocks: 186 }),
+    /** ⛓ FOUR earned writes: the wand's own tag and one per rock. */
+    earnedClears: Object.freeze([
+        { level: 43, tag: 0 }, { level: 43, tag: 1 },
+        { level: 43, tag: 2 }, { level: 43, tag: 3 },
+    ]),
+    /** The drive is clamped to this y; the control is walled at this one. */
+    clampY: 212,
+    controlWalledAtY: 214.05,
+    clampOnsetSinceActivation: 216,
+});
+
+export function l43WandFindings(replayed) {
+    const drive = replayed?.get(L43_WAND_PAIR.drive);
+    const control = replayed?.get(L43_WAND_PAIR.control);
+    if (!drive || !control) {
+        return [{
+            name: 'R5 L43 wand pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[drive && L43_WAND_PAIR.drive, control && L43_WAND_PAIR.control]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk took the wand" is `
+                + 'not evidence that a boot field decided whether it could, and that is '
+                + 'the whole claim of this pair',
+        }];
+    }
+    const found = [];
+    const items = (w) => w.status?.items ?? {};
+    const save = (w) => w.status?.save ?? {};
+    const yAt = (w, t) => (w.stream?.ticks ?? []).find((o) => o.t === t)?.y;
+
+    /**
+     * ⛓⛓⛓ THE BOOT FIELD ITSELF, read back from the GAME rather than
+     * echoed from the tape. `botStatus.save.totem_parts` is
+     * `Player.hasTotemPart(i)` — the same accessor `hasAllTotemParts()`
+     * reads — so this is the presentation asserted against the gate's own
+     * source and not against the tape that asked for it.
+     */
+    const dParts = save(drive).totem_parts ?? [];
+    const cParts = save(control).totem_parts ?? [];
+    found.push({
+        name: '⛓⛓⛓ R5 L43 wand: the BOOT FIELD landed, in the game\'s own accessor',
+        ok: dParts.length === 5 && dParts.every(Boolean)
+            && save(drive).has_all_totem_parts === true
+            && cParts.length === 5 && cParts.every((v) => v === false)
+            && save(control).has_all_totem_parts === false,
+        detail: `drive [${dParts.join(' ')}] has_all=${save(drive).has_all_totem_parts}, `
+            + `control [${cParts.join(' ')}] has_all=${save(control).has_all_totem_parts}. `
+            + 'Read through `Player.hasTotemPart(i)`, which is what '
+            + '`Player.hasAllTotemParts()` reads — so this is the v6 `save` block '
+            + 'asserted against the gate\'s own source rather than against the tape.',
+    });
+
+    /**
+     * ⛓⛓⛓ THE COLLECTION, and it is the first `hasWand` this arc has ever
+     * EARNED. Thirty-four of the rung's tapes grant an item; this one takes
+     * the wand out of the world.
+     */
+    found.push({
+        name: '⛓⛓⛓ R5 L43 wand: the DRIVE earns `hasWand` and the CONTROL does not',
+        ok: items(drive).hasWand === true && items(control).hasWand === false,
+        detail: `drive hasWand=${items(drive).hasWand}, control `
+            + `hasWand=${items(control).hasWand}, and neither tape grants it `
+            + '(the grants are sword/fire/conch/feather in both). '
+            + '`Wand.removed()` is the only writer, and `removeSelf()` is the '
+            + 'ceremony\'s LAST act — 99 fade frames, 150 `specialTimer` frames and a '
+            + 'two-page dialogue after the contact.',
+    });
+
+    /**
+     * ⛓⛓ THE LEDGER — four earned clears in the drive, none in the control.
+     * ⛔ The wand's own tag AND one per rock, because `fall()`'s FIRST line
+     * is `Game.setPersistence(tag, false)` — at TRIGGER time, 186 frames
+     * before the landing.
+     */
+    const dCleared = [...clearedSet(drive.status)].sort();
+    const cCleared = [...clearedSet(control.status)].sort();
+    const want = L43_WAND_PAIR.earnedClears.map((f) => `${f.level}:${f.tag}`).sort();
+    found.push({
+        name: '⛓⛓ R5 L43 wand: FOUR earned clears — the wand\'s tag and one per rock',
+        ok: dCleared.join() === want.join() && cCleared.length === 0,
+        detail: `drive [${dCleared.join(' ') || 'empty'}], control `
+            + `[${cCleared.join(' ') || 'empty'}], wanted [${want.join(' ')}]. `
+            + '⛔ The rocks\' three are written at TRIGGER time — `fall()`\'s first '
+            + 'line — 186 frames before any of them lands. And `{43,3}` is '
+            + '`fallrock@176,384`, which seals the room\'s only shaft: after this '
+            + 'window every L40 pit is a one-way trip into a sealed room, which is why '
+            + 'the wand is LAST in the itinerary or it is nothing.',
+    });
+
+    /**
+     * ⛓⛓⛓ THE CLAMP, IN THE GAME'S OWN STREAM. A 16 px teleport in one
+     * tick, from a y no walk reaches by accident.
+     */
+    const before = yAt(drive, 55);
+    const after = yAt(drive, 56);
+    found.push({
+        name: '⛓⛓⛓ R5 L43 wand: the CLAMP is an ASSIGNMENT, and the stream shows the '
+            + 'teleport',
+        ok: Number.isFinite(before) && Number.isFinite(after)
+            && before < L43_WAND_PAIR.clampY && after === L43_WAND_PAIR.clampY,
+        detail: `tick 55 y=${before}, tick 56 y=${after} — ${
+            Number.isFinite(before) && Number.isFinite(after)
+                ? (after - before).toFixed(2) : '?'} px in ONE tick, to exactly `
+            + `${L43_WAND_PAIR.clampY}. \`if (p.y < y - originY + height) p.y = ...\` `
+            + 'sits at the TOP of `BossTotem.update`, above the block that sets '
+            + '`fullyActivated` (which is why the onset is one tick after it) and with '
+            + 'no freeze test above it. The player collides with nothing.',
+    });
+
+    /**
+     * ⛓⛓ AND THE CONTROL IS STOPPED AT THE SAME NUMBER BY A DIFFERENT
+     * MECHANISM — which is what makes the pair a measurement of the WAKE
+     * rather than of the geometry.
+     */
+    const cNorth = Math.min(...(control.stream?.ticks ?? [])
+        .filter((o) => o.t >= 28).map((o) => o.y));
+    const dNorth = Math.min(...(drive.stream?.ticks ?? [])
+        .filter((o) => o.t >= 28).map((o) => o.y));
+    found.push({
+        name: '⛓⛓ R5 L43 wand: the control is WALLED where the drive is CLAMPED',
+        ok: Number.isFinite(cNorth) && Number.isFinite(dNorth)
+            && cNorth > L43_WAND_PAIR.clampY && cNorth < 216
+            && dNorth < L43_WAND_PAIR.clampY,
+        detail: `control northernmost y ${Number.isFinite(cNorth) ? cNorth.toFixed(2) : '?'}, `
+            + `drive ${Number.isFinite(dNorth) ? dNorth.toFixed(2) : '?'}. An UNWOKEN `
+            + '`BossTotem` is `type = "Solid"` — the ELSE of `if (activated)` — across '
+            + 'the arena\'s five open columns, `[112,192) x [180,212)`. A woken one is '
+            + '`"Enemy"`, which is not in `Mobile.solids`. So the same 212 stops the '
+            + 'control by COLLISION and the drive by ASSIGNMENT, 31 live ticks apart.',
+    });
+
+    /**
+     * ⛔ AND THE ARMS ARE A BYTE-IDENTICAL PREFIX THAT PARTS AT THE CONTACT.
+     */
+    const dTicks = drive.stream?.ticks ?? [];
+    const cTicks = control.stream?.ticks ?? [];
+    let firstDiff = -1;
+    for (let i = 0; i < Math.min(dTicks.length, cTicks.length); i += 1) {
+        if (dTicks[i].x !== cTicks[i].x || dTicks[i].y !== cTicks[i].y
+            || dTicks[i].level !== cTicks[i].level) { firstDiff = i; break; }
+    }
+    found.push({
+        name: '⛓⛓ R5 L43 wand: the arms part at the CONTACT TICK and nowhere earlier',
+        ok: firstDiff === L43_WAND_PAIR.partsAtTick,
+        detail: firstDiff < 0
+            ? '⛔ they never part — a pair that discriminates nothing'
+            : `first divergence at observation ${firstDiff} (expected `
+            + `${L43_WAND_PAIR.partsAtTick}): drive y ${dTicks[firstDiff].y}, control y `
+            + `${cTicks[firstDiff].y}. One boot field decides whether `
+            + '`Wand.update`\'s body runs at all, and its body contains the contact '
+            + 'test — so the same input freezes one world and not the other, on the '
+            + 'same tick.',
+    });
+
+    /**
+     * ⛓⛓⛓ THE CEREMONY AS A SUBTRACTION, AND THE FADE TERM CANCELS.
+     *
+     * Both arms boot into level 43 and neither transitions, so both pay
+     * exactly ONE room load — which means the difference between the two
+     * `dead_frames` counters is the ceremony and nothing else. The same
+     * shape as L41's pair (§30), and the strongest available: no band
+     * arithmetic in it at all.
+     *
+     * ⛔ AND IT IS THREE SPANS, NOT ONE. 99 (the wand's approach FADE, which
+     * no other pickup has) + 150 (`Pickup.specialTimer`) + 186 (the three
+     * tset-0 rocks, sharing ONE span) + the dialogue, whose length is the
+     * tape's own release cadence and is therefore read from the run rather
+     * than asserted as a constant.
+     */
+    const dDead = drive.status?.dead_frames ?? 0;
+    const cDead = control.status?.dead_frames ?? 0;
+    const fixed = L43_WAND_PAIR.frozenSpans.fade
+        + L43_WAND_PAIR.frozenSpans.specialTimer
+        + L43_WAND_PAIR.frozenSpans.rocks;
+    found.push({
+        name: '⛓⛓⛓ R5 L43 wand: the ceremony is a SUBTRACTION — the fade term cancels',
+        ok: dDead - cDead >= fixed && dDead - cDead <= fixed + 60,
+        detail: `${dDead} dead against the control's ${cDead} — a difference of `
+            + `${dDead - cDead}, against ${fixed} of fixed spans (99 fade + 150 `
+            + 'specialTimer + 186 rocks) plus the DIALOGUE, whose length is the tape\'s '
+            + 'own release cadence. Both arms boot into L43 and neither transitions, so '
+            + 'both pay one room load and the fade term cancels — no band arithmetic in '
+            + 'this claim at all.',
+    });
+
+    /** ⛔ TERMINAL, asserted as such. */
+    const dLevels = [...new Set(dTicks.map((t) => t.level))];
+    found.push({
+        name: '⛔ R5 L43 wand: the window is TERMINAL — neither arm leaves level 43',
+        ok: dLevels.join() === '43'
+            && [...new Set(cTicks.map((t) => t.level))].join() === '43',
+        detail: `drive [${dLevels.join(' ')}], control `
+            + `[${[...new Set(cTicks.map((t) => t.level))].join(' ')}]. South is sealed `
+            + 'by `fallrock@176,384` on the publishing tick; north is '
+            + '`magicallock@144,112` behind a `WandShot` this model does not have, and '
+            + 'the wake rewrites `playerPosition` to (144,352) so even a death respawns '
+            + 'inside the sealed room.',
+    });
+    return found;
+}
+
+/**
+ * ⛓⛓⛓ R5 SLICE 23 — THE `SAVE_FILE.data` AUDIT, FAMILY NOT INSTANCE.
+ *
+ * Slice 22 hit ONE wall — `Wand.update` reads `hasTotemPart[]` and the boot
+ * block cannot present it — and wrote it down as an instance. This is the
+ * audit that asks whether it is a family: **every** field of
+ * `Main.SAVE_FILE.data`, diffed against what `Bot`'s boot block can
+ * actually put there, with a disposition per field and a reason attached
+ * to every skip. A bounded sweep must name what it bounded, and "no
+ * further gaps" and "we only looked at the one that bit us" print the same
+ * thing otherwise. [[feedback_bounded_sweep_must_name_what_it_bounded]]
+ *
+ * **THIRTY FIELDS**, enumerated by grep over `src/` rather than from the
+ * getter list (the two agree; the grep is what makes that a finding).
+ *
+ * ── ⛓ NINETEEN WERE ALREADY COVERED ──────────────────────────────────
+ * The thirteen item booleans via `grants`; `hitsMax` via `grants: health`
+ * (an ADD over `Player.hitsMaxDef` = 3, not a flag); `primary` via
+ * `equips`; `levelPersistence` via `persistence`; and `level` /
+ * `playerPositionX` / `playerPositionY` via the `boot` block.
+ *
+ * ── ⛓⛓⛓ THREE ARE CLOSED BY THIS BATCH, AND THEY ARE A FAMILY ────────
+ * All three are ARRAYS the boot block had no shape for at all:
+ *
+ * ```
+ *   hasTotemPart[5]   Wand.update <- Player.hasAllTotemParts()   THE WAND
+ *   hasKey[5]         BossLock.update <- Player.hasKey(keyType)  BOSS DOORS
+ *   hasSealPart[16]   FinalDoor.update <- hasAllSealParts()      THE ENDING
+ * ```
+ *
+ * ⇒ the wall really was a family, and the instance was the third of three.
+ *
+ * ── ⛔⛔ TWO WERE `EVALUATE` AND BOTH CAME BACK "NO CONSUMER" ──────────
+ *
+ * **`time`** is read by gameplay — that half of the question is YES, and by
+ * more than `Game.as:1755`'s docblock claims. That block says "the
+ * genuinely `Game.time`-coupled family is ONE class"; the grep finds
+ * `Spinner.update` (`hammerAngle`, and the `collideLine` under it calls
+ * `player.hit`), `LightPole.render` (which ASSIGNS `y`, so a hit rect
+ * moves), `LavaChain` and `BeamTower` (both via `worldFrame`). But the
+ * batch does not need a field: `botStatus.game_time` has been a READOUT
+ * since slice 3, so phase is a MEASUREMENT rather than a derivation with a
+ * band; a fresh page boots `Main.time`'s own default `Game.dayLength / 2`;
+ * and **no `Game.time`-coupled entity stands in any R5 window or in the
+ * planned L43 one** (L43 holds fallrocks, a bosstotem, a watcher,
+ * dungeonspires, orbs, a magicallock and two doors — none of them reads
+ * it). ⚠ The verdict flips the moment a window needs a hazard phase no
+ * real prefix can reach; until then a writable `time` would be the first
+ * boot field that makes the model LESS faithful rather than more.
+ *
+ * **`secondary`** is `Player.as:1565`'s `useItem(Main.secondary)` — the C
+ * key. **Zero of the 98 committed tapes press C** (the key histogram is
+ * right/left/down/up/primary and nothing else), and `equips` already
+ * covers `primary`, which is the slot X reads. One more field on the equip
+ * directive covers it the day a rung presses C.
+ *
+ * ── ⛔ SIX ARE DOCUMENT-SKIP, EACH WITH ITS OWN REASON ────────────────
+ *
+ * `beam` and `rockSet` are BOTH the single `moonrock@240,256` in LEVEL 0,
+ * and the skip is stronger than "no reader": the one downstream effect
+ * that outlives the room is `Moonrock.as:135` swapping L0's `Stairs` for a
+ * `Teleporter` and clearing `{0,2}` — **a persistence tag the boot block
+ * already reaches**. So the capability exists; it is spelled
+ * `persistence: [{level: 0, tag: 2}]`. `levelWorld` already models the
+ * unset state exactly (a `moonrock` is not among L0's solids).
+ *
+ * `grassCut` and `hasBadge` have no gameplay reader at all: `grassCut`'s
+ * only consumer is its own setter's 10,000-cut medal, and `hasBadge`'s is
+ * `Main.update`'s Newgrounds/Kongregate submission loop.
+ *
+ * `firstUse` and `extended` are the inventory tutorial, which R1's one-line
+ * `Inventory.help = false` already gates at its source. ⛓⛓ **AND THEY ARE
+ * THE ONE PLACE THIS BATCH TOUCHES SOMETHING IT DID NOT SET OUT TO**:
+ * `Inventory.as:178` sets `extended` as soon as
+ * `Player.hasTotemPartNumber() > 0`, so **presenting a totem part FLIPS
+ * `extended` on the first inventory update** — and the only thing that
+ * makes that inert is R1's line, which turns the setter's tutorial into a
+ * no-op and leaves it writing `offsetMax.x` (a render offset) and nothing
+ * else. A batch that had shipped the boot field without R1's line would
+ * have deadlocked every v6 tape.
+ */
+export const SAVE_FILE_AUDIT = Object.freeze({
+    fields: 30,
+    source: 'Main.as — grep of SAVE_FILE.data.* over src/, 2026-08-07',
+    /** ⛓ Already reachable before this batch. */
+    covered: Object.freeze([
+        Object.freeze({ field: '13 item booleans', via: 'grants' }),
+        Object.freeze({ field: 'hitsMax', via: 'grants: health',
+            note: 'an ADD over Player.hitsMaxDef = 3, not a flag' }),
+        Object.freeze({ field: 'primary', via: 'equips' }),
+        Object.freeze({ field: 'levelPersistence', via: 'persistence' }),
+        Object.freeze({ field: 'level, playerPositionX, playerPositionY', via: 'boot' }),
+    ]),
+    /** ⛓⛓⛓ Closed by the slice-23 batch — a FAMILY, not an instance. */
+    closed: Object.freeze([
+        Object.freeze({ field: 'hasTotemPart', slots: 5, kind: 'Boolean',
+            gate: 'Wand.update <- Player.hasAllTotemParts() (Player.as:1709)',
+            unblocks: 'the L43 terminal wand window as a BOOT rather than a chain tail' }),
+        Object.freeze({ field: 'hasKey', slots: 5, kind: 'Boolean',
+            gate: 'BossLock.update <- Player.hasKey(keyType) (BossLock.as:63)',
+            unblocks: 'a boss-door window without a real-collect in the same window' }),
+        Object.freeze({ field: 'hasSealPart', slots: 16, kind: 'int',
+            gate: 'FinalDoor.update <- SealController.hasAllSealParts()',
+            unblocks: "R6's ending gate",
+            shape: 'IDENTITY SLOTS — getSealPart writes the identity into the first '
+                + 'slot still holding -1, so the array is an ordered collection LOG '
+                + 'and hasAllSealParts() is "the LAST slot is filled"' }),
+    ]),
+    /** ⛔ Evaluated and decided — no field, with the reason. */
+    evaluated: Object.freeze([
+        Object.freeze({
+            field: 'time',
+            gameplayReaders: Object.freeze(['Spinner.update (hammerAngle -> the '
+                + 'collideLine that calls player.hit)', 'LightPole.render (ASSIGNS y, '
+                + 'so the hit rect moves)', 'LavaChain (worldFrame gates the extend)',
+                'BeamTower (worldFrame position bob)']),
+            correctsGameAs1755: 'that docblock says the Game.time-coupled family is ONE '
+                + 'class; the grep finds four, two of them outside the worldFrame set',
+            verdict: 'NO FIELD',
+            why: 'botStatus.game_time has been a READOUT since slice 3, so phase is a '
+                + 'measurement; a fresh page boots Main.time\'s own dayLength/2 default; '
+                + 'and no Game.time-coupled entity stands in any R5 window or in L43',
+            wouldFlipIf: 'a window needs a hazard phase no real prefix can reach',
+        }),
+        Object.freeze({
+            field: 'secondary',
+            verdict: 'NO FIELD',
+            why: 'Player.as:1565 is the C key and ZERO of the 98 committed tapes press '
+                + 'C; `equips` covers `primary`, which is what X reads',
+        }),
+    ]),
+    /** ⛔ Skipped, each with its own named reason. */
+    skipped: Object.freeze([
+        Object.freeze({ field: 'beam', why: 'Moonrock\'s trigger; ONE instance, level 0' }),
+        Object.freeze({ field: 'rockSet',
+            why: 'the same instance. Its one lasting effect — Moonrock.as:135 swapping '
+                + 'L0\'s Stairs for a Teleporter — clears {0,2}, a persistence tag the '
+                + 'boot block ALREADY reaches, so the capability exists under another '
+                + 'name' }),
+        Object.freeze({ field: 'grassCut', why: 'no gameplay reader — the only consumer '
+            + 'is its setter\'s 10,000-cut medal' }),
+        Object.freeze({ field: 'hasBadge', why: 'no gameplay reader — Main.update\'s '
+            + 'Newgrounds/Kongregate submission loop' }),
+        Object.freeze({ field: 'firstUse', why: 'the inventory tutorial, gated at its '
+            + 'source by R1\'s Inventory.help = false' }),
+        Object.freeze({ field: 'extended', why: 'likewise; its one non-tutorial effect '
+            + 'is Inventory.as:336\'s offsetMax.x, a render offset' }),
+    ]),
+    /**
+     * ⛓⛓ THE INTERACTION THE AUDIT FOUND, which is the reason a per-field
+     * sweep is worth more than fixing the instance.
+     */
+    interaction: '`Inventory.as:178` sets `extended` as soon as '
+        + '`Player.hasTotemPartNumber() > 0`, so the totem-part boot field FLIPS a '
+        + 'field this audit classified as skip — and the flip is inert only because '
+        + 'R1\'s `Inventory.help = false` turns the setter\'s tutorial into a no-op. '
+        + 'Without that line every v6 tape would deadlock on a Help nothing can dismiss.',
+});
+
+/**
  * ⛓⛓⛓ R5 SLICE 22 — THE RUNG-CLOSING ITINERARY, AND THE EXIT CRITERIA
  * AGAINST §0, WITH WHAT IS AND IS NOT MET.
  *
@@ -2232,12 +2649,15 @@ export function l42Part4Findings(replayed) {
  */
 export const R5_ITEM_LEDGER = Object.freeze({
     realCollected: Object.freeze(['conch', 'feather', 'bosskey:1',
-        'totempart x5 (part0, part1, shaft, part3, part4)']),
+        'totempart x5 (part0, part1, shaft, part3, part4)',
+        // ⛓⛓⛓ R5 slice 23 — the SIXTH ceremony, and the first `hasWand`
+        // this arc has EARNED rather than granted.
+        'wand (r5-l43-wand, TERMINAL)']),
     grantedEverywhere: Object.freeze(['sword', 'fire', 'conch', 'feather']),
     /** ⛔ Earned nowhere: the kill that spawns it is driven, the pickup is not. */
     spawnedButNotCollected: Object.freeze(['fire']),
-    tapesDeclaringGrants: 34,
-    tapesTotal: 41,
+    tapesDeclaringGrants: 36,
+    tapesTotal: 43,
     against: '§0 — 14/14 over ONE full playthrough with `grants` EMPTY throughout',
     verdict: 'every LINK is proved and the CHAIN has never been run',
 });
@@ -2271,18 +2691,62 @@ export const R5_ITEM_LEDGER = Object.freeze({
  */
 export const R5_NODAMAGE_STATUS = Object.freeze({
     retired: false,
-    tapesDeclaringIt: 40,
+    tapesDeclaringIt: 42,
     theOneWithout: 'r5-contact-control-on',
     wasAPolicy: 'through slice 21 — nothing in the model could be hurt',
     isNowAMissingMechanic: true,
     blockers: Object.freeze([
         'a player damage model — `hits`, `hitsTimer`, the i-frame cycle, `die()` and '
             + 'the respawn at `playerPosition`',
-        '`Game.shake` — two `Math.random()` draws per shaking tick, which makes the '
-            + 'CAMERA non-deterministic, and the camera gates every enemy\'s `onScreen`; '
-            + '`camera.stepCamera` refuses a non-zero shake by name',
+        // ⛓⛓⛓ R5 SLICE 23: DOWNGRADED FROM A DETERMINISM BOUNDARY TO A
+        // MODELLING COST, and the evidence is the RUNTIME's source rather
+        // than an argument.
+        //
+        // `SWFModernRuntime/src/avm2/avm2_number.c:481` — `Math.random()` is
+        // a 31-bit XOR-shift LFSR plus `avm2_random_pure_hasher`, over ONE
+        // global `g_avm2_rng`, seeded from `MOCK_DATE_TIME` (a
+        // `-D` at build time, defaulted to 981152406000 by
+        // `build_wasm_avm2.sh`) and from a hard-coded 987654321 without it.
+        // ⇒ **`Math.random()` IS DETERMINISTIC AND REPRODUCIBLE ON THIS
+        // ARTIFACT.** A shaking camera cannot make a RECORDING flaky, which
+        // is what "determinism pin" meant; what it costs is knowing the
+        // global draw COUNT, which is a modelling job like the sound index
+        // draws.
+        //
+        // ⚠ AND THE SEED IS BAKED INTO THE BUILD. If `MOCK_DATE_TIME` ever
+        // changes, the whole `Math.random` stream shifts and every fixture
+        // whose walk touches a consumer moves with it — the artifact hash is
+        // the only thing that pins it, which is why the R0 gate is stated in
+        // terms of the hash transition.
+        '`Game.shake` — two `Math.random()` draws per shaking tick, which moves the '
+            + 'CAMERA, and the camera gates every enemy\'s `onScreen`. ⛓ NOT a '
+            + 'determinism boundary on this artifact: the recompiled runtime\'s '
+            + '`Math.random` is a fixed-seed LFSR (avm2_number.c:481), so the draws '
+            + 'are reproducible and the cost is MODELLING the global draw count. '
+            + '`camera.stepCamera` still refuses a non-zero shake by name.',
         'a route that survives — which is the half §0 asked for',
     ]),
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: the EVALUATE the AS3 batch was asked to make, and
+     * the answer is NO FLAG.
+     *
+     * A `pins: ["camera_shake"]` that forced `Game.shake = 0` would create an
+     * execution the vanilla game CANNOT produce — vanilla always shakes when
+     * a rock lands — so it would break the pin doctrine at its own
+     * definition ("select which vanilla-reachable execution the run gets and
+     * create no vanilla-unreachable one"). And it is not needed: the draws
+     * are reproducible. ⇒ model-side, and the flag stays unbuilt.
+     */
+    cameraShakeFlag: Object.freeze({
+        built: false,
+        verdict: 'NO FLAG — model-side',
+        why: 'forcing `Game.shake = 0` is an execution vanilla cannot produce, so it '
+            + 'would be a CRUTCH wearing a pin\'s name; and the recompiled runtime\'s '
+            + '`Math.random` is a fixed-seed LFSR, so nothing about the shake is '
+            + 'non-reproducible in the first place',
+        evidence: 'SWFModernRuntime/src/avm2/avm2_number.c:430-486 — `g_avm2_rng`, '
+            + 'one global XOR-shift LFSR seeded from `MOCK_DATE_TIME` at build time',
+    }),
     firstRefusal: '`levelRun`: a blast that reaches the player on a tape without '
         + '`noDamage` throws rather than being modelled',
 });
@@ -2311,11 +2775,12 @@ export const R5_ITINERARY = Object.freeze({
                 + 'reach (§28.5, §32), and the L40 chain from its own arrival stops at '
                 + 'LINK 5 — one corpse, two holds, and the corpse cannot cross '
                 + '(`L40_LINK4_REPAIRED.corpseReach`)' }),
+        // ⛓⛓⛓ R5 SLICE 23: UNBLOCKED, AND IT IS A BOOT AFTER ALL. The
+        // AS3 batch's v6 `save` block presents `hasTotemPart[]`, so the
+        // window that could only ever be a chain tail is a window like any
+        // other — recorded as `r5-l43-wand` / `-control`.
         Object.freeze({ n: 6, at: 'L43', earns: 'the wand — TERMINAL',
-            tape: null, blocked: '⛔ not a boot: `hasAllTotemParts()` reads a save array '
-                + '`persistence` does not reach, so it can only be the TAIL of a chain '
-                + 'that has already collected all five parts. Planned, not recorded — '
-                + '`r5Totem.L43_WAND_WINDOW`' }),
+            tape: 'r5-l43-wand', blocked: null }),
     ]),
     /**
      * ⛔⛔⛔ AND WINDOW 6 IS LAST OR IT IS NOTHING. The wand is the tset-0
@@ -2324,12 +2789,22 @@ export const R5_ITINERARY = Object.freeze({
      * sealed room (§34.2 with §27).
      */
     wandIsLast: true,
-    /** ⛔ The two things that stop the sequence being driven today. */
+    /**
+     * ⛔ The two things that stop the sequence being driven today.
+     *
+     * ⛓ R5 SLICE 23 SHORTENED THE SECOND ONE BY A WINDOW. The wand is no
+     * longer among the rooms that need a page which has walked there: the
+     * v6 `save` block boots it. What remains is parts 3 and 4.
+     */
     blockedOn: Object.freeze([
         'THE L40 CHAIN — from its own arrival it stops at link 5, and the census says '
-            + 'there is no second holder (`L40_LINK4_REPAIRED.holderCensus`)',
-        'THE BOOT-vs-ARRIVAL GAP — parts 3 and 4 and the wand all need a page that '
-            + 'has walked there, and the rung has only ever booted into each room',
+            + 'there is no second holder (`L40_LINK4_REPAIRED.holderCensus`). ⛔ AND IT '
+            + 'DOES NOT DISSOLVE AT R6: `Puzzlements/WandLock.as` is a bare `extends '
+            + 'Lock` with a different sprite and NO override of any kind, so the wand '
+            + 'ITEM opens nothing — a WandLock is a Lock and needs its group pressed.',
+        'THE BOOT-vs-ARRIVAL GAP — parts 3 and 4 boot into clusters their own arrivals '
+            + 'cannot reach. ⛓ The WAND no longer does: slice 23\'s v6 `save` block '
+            + 'boots `hasTotemPart[]`, so window 6 is a window like any other.',
     ]),
 });
 
@@ -2342,32 +2817,129 @@ export const R5_ITINERARY = Object.freeze({
  * why they are written down here instead of being done.
  */
 export const R6_INHERITS = Object.freeze({
+    /**
+     * ⛓⛓⛓ SHIPPED AT R5 SLICE 23 — the batch R6 was going to inherit was
+     * brought forward and EXPANDED, and this is what it closed.
+     *
+     * ⚠ KEPT AS A LIST OF WHAT WAS BUILT rather than deleted, because the
+     * next rung's first question about any of these is "what does it cover
+     * and what did it deliberately leave out", and the answer is `shipped`
+     * plus `SAVE_FILE_AUDIT`.
+     */
     as3Batch: Object.freeze([
         Object.freeze({
             what: 'an ENEMY-STATE readout on `Bot.botStatus`',
+            shipped: 'R5 slice 23 — as `botMobiles()`, its OWN ExternalInterface '
+                + 'callback rather than a field on `botStatus`',
             why: 'every enemy claim this rung makes is witnessed by what it OPENS. A '
                 + 'turret kill opens nothing — `IceTurret.death()` intercepts the '
                 + 'removal, so `classCount` never moves and no persistence is written — '
                 + 'so the ONLY witness that `r5-l40-part5` killed anything is a button '
                 + 'going down two presses later.',
+            asBuilt: '⛓ EVERY `Mobile`, not every `Enemy`, in UPDATE ORDER, as RAW '
+                + 'FIELDS — position, velocity, `type`, `destroy`, anim/frame/alpha, '
+                + '`onScreen()`, plus a nested `enemy` object that is `null` for a row '
+                + 'that is not one. `Enemy` was what the wall named, but choosing it '
+                + 'would have been a GUESS about which movers a later question is '
+                + 'about, and R5\'s two hardest measurements were about an '
+                + '`IceTurretBlast` and a `PushableBlock` — neither of which is one. '
+                + '⛔ AND IT IS A SEPARATE CALLBACK BY DESIGN: `botStatus` is polled '
+                + 'on the same thread as the loop whose render/update RATIO the '
+                + 'dead-frame band rides on, so a world walk plus reflection on every '
+                + 'poll is a determinism risk. A callback nobody calls is inert by '
+                + 'CONSTRUCTION, which is stronger than a flag defaulting to off.',
         }),
         Object.freeze({
             what: 'a `hasTotemPart[]` BOOT FIELD',
+            shipped: 'R5 slice 23 — as tape version 6\'s `save` block, covering ALL '
+                + 'THREE save arrays rather than the one that bit',
             why: 'ONE line. `Wand.update` is gated on `Player.hasAllTotemParts()`, which '
                 + 'reads `SAVE_FILE.data.hasTotemPart[]` — a different array from '
                 + '`levelPersistence`, and `Bot`\'s boot block honours only `grants` and '
                 + '`persistence`. Without it the L43 window can only ever be the tail of '
                 + 'a full itinerary; with it, it is a window like any other.',
+            asBuilt: '⛓ THE WALL WAS A FAMILY. `SAVE_FILE_AUDIT` diffed all thirty '
+                + '`SAVE_FILE.data` fields against the boot block: `hasTotemPart[5]`, '
+                + '`hasKey[5]` and `hasSealPart[16]` were all unreachable, and the '
+                + 'third is R6\'s own ending gate (`FinalDoor` <- '
+                + '`SealController.hasAllSealParts()`). ⛔ `hasSealPart` is an INT '
+                + 'array with IDENTITY SLOTS, not a boolean array — the one way to '
+                + 'build this field wrong and have it read right.',
+        }),
+        Object.freeze({
+            what: 'a `Game.shake` / camera determinism flag',
+            shipped: '⛔ NOT BUILT, and the EVALUATE is why — see '
+                + '`R5_NODAMAGE_STATUS.cameraShakeFlag`',
+            why: 'the recompiled runtime\'s `Math.random` is a fixed-seed LFSR '
+                + '(`avm2_number.c:481`), so a shaking camera is reproducible; and '
+                + 'forcing `Game.shake = 0` would be an execution vanilla cannot '
+                + 'produce, i.e. a crutch wearing a pin\'s name.',
+            asBuilt: null,
         }),
     ]),
-    mechanics: Object.freeze([
-        'the BOSS KEYS and `bosslock@480,352` — `keyType` 2, behind L40 link 9',
-        '`magicallock@144,112` — opened by a `WandShot`, which is a projectile this '
-            + 'model does not have (the TWELFTH family, after `IceTurretBlast`)',
-        'the BOSS itself — `hitsMax` 5, `onlyHitBy = "Wand"`, and L43 opens on its death',
-        'PLAYER DAMAGE, which is what `noDamage`\'s retirement now costs — see '
-            + '`R5_NODAMAGE_STATUS`',
+    /** ⛓ What the slice-23 batch left DELIBERATELY unreached, with reasons. */
+    as3NotTaken: Object.freeze([
+        '`time` — gameplay reads it (Spinner\'s hammer, LightPole\'s y, LavaChain, '
+            + 'BeamTower) but `botStatus.game_time` already makes phase a MEASUREMENT, '
+            + 'and no `Game.time`-coupled entity stands in any R5 window or in L43',
+        '`secondary` — the C key, and zero of the 98 committed tapes press it',
+        '`beam` / `rockSet` — one `moonrock` in level 0, whose only lasting effect is '
+            + 'a persistence clear (`{0,2}`) the boot block already reaches',
+        '`grassCut` / `hasBadge` — no gameplay reader at all',
+        '`firstUse` / `extended` — the inventory tutorial, gated at its source by R1\'s '
+            + '`Inventory.help = false`. ⛓ AND THE TOTEM-PART FIELD FLIPS `extended` '
+            + '(`Inventory.as:178` reads `hasTotemPartNumber() > 0`), which is inert '
+            + 'ONLY because of that line',
+        '`saw_auto_advance` counting on `Game.freezeObjects` rising rather than on its '
+            + 'two known raisers — `sealCeremony.SEAL_AUTOADVANCE_BLIND_SPOT`, owed '
+            + 'since R3 and still owed: it is NOT byte-inert and would move the '
+            + 'reported value for committed fixtures',
     ]),
+    mechanics: Object.freeze([
+        'the BOSS KEYS and `bosslock@480,352` — `keyType` 2, behind L40 link 9. ⛓ The '
+            + 'v6 `save.keys` block can now PRESENT one, so a bosslock window no '
+            + 'longer has to real-collect its key in the same visit',
+        '`magicallock@144,112` — opened by a `WandShot`, which is a projectile this '
+            + 'model does not have (the THIRTEENTH family, after `IceTurretBlast` and '
+            + '`BossTotem`)',
+        'the BOSS itself — `hitsMax` 5, `onlyHitBy = "Wand"`, and L43 opens on its '
+            + 'death. ⛓ Its WAKE is modelled now (`bossTotem.js`); what is not is '
+            + 'everything from `activationRestTime` draining onward — the walk, the '
+            + 'jump and the laser — which is why `levelRun` THROWS at A+335 rather '
+            + 'than carrying on',
+        'PLAYER DAMAGE, which is what `noDamage`\'s retirement now costs — see '
+            + '`R5_NODAMAGE_STATUS`, whose second blocker slice 23 downgraded from a '
+            + 'determinism boundary to a modelling cost',
+        'the ENDING — `FinalDoor.update` needs `SealController.hasAllSealParts()` AND '
+            + '`!Game.checkPersistence(0, 114)` (the Watcher). ⛓ The first is now '
+            + 'presentable through `save.seal_parts` and the second through '
+            + '`persistence`, so R6 can boot the ending room rather than having to '
+            + 'walk sixteen chests to it',
+    ]),
+    /**
+     * ⛔ ONE R6 ROUTE FACT, CHECKED WITH A SINGLE GREP AND RECORDED EITHER
+     * WAY — because "the locks at link 5 are WANDLOCKS" invites exactly the
+     * inference this refutes.
+     *
+     * `Puzzlements/WandLock.as` is NINETEEN LINES: `public class WandLock
+     * extends Lock`, an embedded sprite, and a constructor that forwards to
+     * `super(_x, _y, _t, _tag, sprWandLock)`. **No override of anything.**
+     * So a `WandLock` opens exactly as a `Lock` does — its group being
+     * pressed, or `tSet == -1` and `totalEnemies() == 0` — and the WAND ITEM
+     * has nothing to do with it. The name is a SPRITE.
+     *
+     * ⇒ **link 5's wall does not dissolve one rung later.** R6's route
+     * should know that from day one rather than planning around a door the
+     * wand opens.
+     */
+    wandDoesNotOpenAWandLock: Object.freeze({
+        checked: 'R5 slice 23, `Puzzlements/WandLock.as` read in full',
+        overrides: 0,
+        verdict: 'a WandLock is a Lock with a different sprite; the wand ITEM opens '
+            + 'nothing',
+        consequence: 'L40 link 5\'s wall is a STANDING finding, not a temporary one — '
+            + 'the corpse still cannot cross and there is still no second holder',
+    }),
 });
 
 export function r5AcceptanceFindings(replayed) {
@@ -2387,5 +2959,6 @@ export function r5AcceptanceFindings(replayed) {
         ...l40Part1Findings(replayed),
         ...l41Part3Findings(replayed),
         ...l42Part4Findings(replayed),
+        ...l43WandFindings(replayed),
     ];
 }

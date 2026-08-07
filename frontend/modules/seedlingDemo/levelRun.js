@@ -68,6 +68,10 @@ import {
 } from './spinner.js';
 import { alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
+    createBossTotem, bossTotemClampY, bossTotemSolidRect, stepBossTotem,
+    wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
+} from './bossTotem.js';
+import {
     createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
 } from './iceTurret.js';
@@ -95,7 +99,9 @@ import {
     CEREMONY_DEAD_FRAMES, createSealPiece, sealPieceBox, stepSealPiece,
 } from './sealCeremony.js';
 import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
-import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
+import {
+    ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
+} from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
@@ -187,6 +193,18 @@ export function createLevelRun({
     // REFUSES a wet tick without it rather than modelling the term as zero
     // — so this has to reach the step, not merely be recorded on the tape.
     pins = [],
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: the tape's version-6 SAVE-ARRAY BOOT BLOCK.
+     *
+     * `{totem_parts, keys, seal_parts}` — indices, not booleans, and
+     * `seal_parts` is an ordered collection LOG (see `tapeFormat.SAVE_SLOTS`).
+     * It reaches this run because a gate READS it: `Wand.update`'s body is
+     * behind `Player.hasAllTotemParts()`, so a run that recorded the field
+     * on the tape header and did not thread it here would model an inert
+     * pickup while the game ran a ceremony — the `pins` failure one version
+     * back, exactly.
+     */
+    save = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -212,6 +230,24 @@ export function createLevelRun({
      * run every `added()`. §15.8: **a boot is not an entry.**
      */
     const inventory = initialInventory();
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: THE SAVE-ARRAY MIRROR.
+     *
+     * ⚠ A MIRROR, not the oracle. `botStatus.save` reports the GAME's own
+     * `Player.hasTotemPart(i)` / `hasKey(i)` / `Main.hasSealPart(i)`, and
+     * the differential compares them against these — so a boot block one
+     * side honoured and the other dropped is a named failure at the first
+     * observation rather than a ceremony that mysteriously never starts.
+     *
+     * ⛔ `sealParts` IS AN ARRAY OF SLOTS, initialised to -1, because that
+     * is what the array IS. A `Set` of identities would be a different data
+     * structure that happens to answer one of the two questions.
+     */
+    const bootSave = save ?? { totem_parts: [], keys: [], seal_parts: [] };
+    const totemParts = new Set(bootSave.totem_parts ?? []);
+    const sealParts = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
+    (bootSave.seal_parts ?? []).forEach((identity, slot) => { sealParts[slot] = identity; });
+    const hasAllTotemParts = () => totemParts.size >= SAVE_SLOTS.totem_parts;
     /**
      * R2: the tape's persistence clears, indexed BY LEVEL.
      *
@@ -302,6 +338,9 @@ export function createLevelRun({
         // ⛓ R5 slice 20: and the turret roster, for the strongest version of
         // that reason — a rebuild does not just move it, it REVIVES it.
         turretStates.delete(n);
+        // ⛓ R5 slice 23: and the boss, whose only persistence write is its
+        // DEATH — so a rebuild gets an unwoken boss and its wall back.
+        bossStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -575,6 +614,55 @@ export function createLevelRun({
      * hold they buy and everything downstream of the hold have to share ONE
      * window.
      */
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: THE BOSS TOTEM — the TWELFTH per-visit family, and
+     * the first whose SOLIDITY is removed by an event the player causes
+     * indirectly.
+     *
+     * Every family before this one is a solid the player moves, breaks,
+     * burns, opens or kills. This one stops being a solid because the WAND
+     * LEFT THE WORLD: `BossTotem.update`'s `if (FP.world.classCount(Wand)
+     * <= 0 && !activated)` is the whole trigger, and the Wand leaves only at
+     * the very END of its ceremony.
+     *
+     * ⚠ PER VISIT, and it is a HARD per-visit like the turret's: the boss's
+     * only persistence write is in `removed()` (its death, which is R6's),
+     * so a rebuilt room gets an unwoken boss and its wall back. The wand
+     * window is TERMINAL for a stronger reason than that — the room's only
+     * shaft is sealed on the publishing tick — but the state rule is the
+     * same one.
+     */
+    const bossStates = new Map();
+    const bossStateFor = (n) => {
+        if (!bossStates.has(n)) {
+            const byId = new Map();
+            for (const b of worldFor(n).bossTotems ?? []) {
+                byId.set(b.id, createBossTotem(b.ex, b.ey));
+            }
+            bossStates.set(n, byId);
+        }
+        return bossStates.get(n);
+    };
+    /**
+     * The live boxes, for `collidesSolid`'s `bosses` arm.
+     *
+     * ⛔ EVERY BOSS IS IN THE MAP, WOKEN OR NOT, and `activated` is what
+     * `liveRectOf` reads — the turret's rule, for the turret's reason:
+     * "absent" must not mean both "no boss in the room" and "a boss that is
+     * still a wall".
+     */
+    const bossRectsNow = () => {
+        const st = bossStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, b] of st) {
+            out.set(id, {
+                id, activated: b.activated, fullyActivated: b.fullyActivated,
+                rect: bossTotemSolidRect(b), clampY: bossTotemClampY(b),
+            });
+        }
+        return out;
+    };
     const turretStates = new Map();
     const turretStateFor = (n) => {
         if (!turretStates.has(n)) {
@@ -686,6 +774,7 @@ export function createLevelRun({
         openChests: openChestIdsNow(),
         crushers: crusherRectsNow(),
         turrets: turretRectsNow(),
+        bosses: bossRectsNow(),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -708,6 +797,18 @@ export function createLevelRun({
      * `stepCrushersNow`.
      */
     const crusherContacts = [];
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: every tick `BossTotem`'s clamp overwrote the
+     * player's y, and what it overwrote.
+     *
+     * ⛔ AN ASSIGNMENT, NOT A COLLISION, so it is logged rather than
+     * inferred from a position: `if (p.y < 212) p.y = 212` at the top of
+     * `update()` teleports, and a stream that showed the player at 212
+     * could equally be a walk that stopped there.
+     */
+    const bossClamps = [];
+    /** One record per wand approach FADE — a freeze no other pickup has. */
+    const wandFades = [];
     /**
      * ⛓⛓⛓ R5 SLICE 22: THE PLAYER'S OWN FREEZE, AND IT IS NOT THE OTHER ONE.
      *
@@ -747,6 +848,51 @@ export function createLevelRun({
      * causes (a `SealController`'s is `sealCeremony`'s own).
      */
     let frozenFramesOwed = 0;
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: HAS THE WAND LEFT THE WORLD?
+     *
+     * `BossTotem.update`'s trigger is `FP.world.classCount(Wand) <= 0`, and
+     * `Pickup.pick_up()` reaches `removeSelf()` only at the very END of the
+     * ceremony — after 150 `specialTimer` decrements AND after the dialogue
+     * NPC has been dismissed. So this is the ceremony's LAST act and not its
+     * first, which is the difference between a boss that wakes on contact
+     * and one that wakes 150-plus frames later.
+     */
+    let wandLeftTheWorld = false;
+    /**
+     * ⛓⛓ R5 SLICE 23: has the wand's approach FADE been spent this visit?
+     *
+     * ⛔⛔ THE FADE IS A FREEZE THAT FIRES ON APPROACH, NOT ON CONTACT, and
+     * it is the one ceremony cost no other pickup has. `Wand.update`'s gate
+     * is `p.y < y + Tile.h && Player.hasAllTotemParts() && !p.fallFromCeiling`
+     * — a half-room-wide test on the player's Y ALONE — and while the
+     * graphic's alpha is under 1 it writes `Game.freezeObjects = alpha < 1`
+     * every tick. Ninety-nine frozen frames, before the player has touched
+     * anything.
+     *
+     * ⚠ RESOLVED IN ONE MODEL TICK, the `dropRock` convention, and it is
+     * exact for THIS room: nothing in level 43 advances through a freeze.
+     * There is no button under the player, no lock fading, no pulser, no
+     * lightpole and no crusher; the boss is not activated (the Wand is still
+     * in the world) so its whole `if (activated)` block is dead. A room that
+     * held any of those would need the span ticked rather than collapsed.
+     */
+    let wandFadeSpent = false;
+    /**
+     * Did `dropRocksTogether` run on THIS model tick?
+     *
+     * ⛔ The drop advances the boss itself, once per frozen frame, so the
+     * live-tick stepper below must not add a 187th. A boolean rather than a
+     * tick index because `ticksCompleted` moves inside the same branch.
+     */
+    let droppedRocksThisTick = false;
+    /**
+     * ⛓⛓ Physics steps the model OWES for freeze-clearing frames the tape
+     * never observed — see the loop above the main `stepV2`.
+     *
+     * One per collapsed frozen span, banked where the span is resolved.
+     */
+    let pendingFreeSteps = 0;
     /**
      * ⛓⛓ THE FALL, RESOLVED IN ONE MODEL TICK — because that is what the
      * tape sees.
@@ -788,6 +934,91 @@ export function createLevelRun({
             deadFrames: frames,
         });
         return { state: { ...s, landed: true }, fell: true, write: pub.write, snapY, frames };
+    };
+    /**
+     * ⛓⛓⛓ R5 SLICE 23: SEVERAL ROCKS FALLING AT ONCE, WHICH `dropRock`
+     * CANNOT EXPRESS — AND THE ARITHMETIC IS NOT ADDITION.
+     *
+     * ⛔⛔ THREE SEQUENTIAL `dropRock` CALLS WOULD CHARGE 186 + 186 + 188 =
+     * 560 DEAD FRAMES FOR A SPAN THE GAME SPENDS 186 ON. The rocks fall
+     * TOGETHER: `Wand.removed()` sets `activate = true` on every tset-0
+     * `Activators` in one loop, each `fall()` sets `Game.freezeObjects =
+     * true`, and each rock's own camera expiry sets it FALSE **with no
+     * arbitration** — so the EARLIEST release ends the freeze for all of
+     * them and the later rocks' remaining hold is spent on a game nobody is
+     * frozen in. (`r5Totem.L43_BOSS_WAKE.freeze`, and §34.7's
+     * "harmless overlap".)
+     *
+     * The bug was invisible for thirteen slices because the only publisher
+     * with a rock behind it — L39's rope — has exactly ONE.
+     *
+     * ⛓ AND THE BOSS RIDES THIS LOOP. `BossTotem.update` has no freeze test
+     * above its rumble countdown or its activation ramp, and the update
+     * order is fallrock → bosstotem → player, so the boss takes one step per
+     * frozen frame here. That is where 186 of its 216 ticks to the clamp are
+     * spent, and a model that woke it on the first LIVE tick after the span
+     * would be 186 ticks late.
+     *
+     * @param {Array<[string, object]>} rocks  `[id, state]` pairs to drop
+     * @returns {{frames: number, dropped: Array, snapY: number|null}}
+     */
+    const dropRocksTogether = (rocks) => {
+        const started = [];
+        for (const [id, rock] of rocks) {
+            const pub = publishActivate(rock, true);
+            if (!pub.fell) continue;
+            started.push({ id, state: pub.state, write: pub.write });
+        }
+        if (started.length === 0) return { frames: 0, dropped: [], snapY: null };
+        const bosses = [...bossStateFor(level).values()];
+        const wandGoneNow = wandLeftTheWorld;
+        let frames = 0;
+        let snapY = null;
+        let unfroze = false;
+        for (let i = 1; i <= 2000 && !unfroze; i += 1) {
+            for (const e of started) {
+                const r = stepFallRock(e.state, playerBoxAt(state.x, state.y),
+                    { cleared: true });
+                e.state = r.state;
+                if (r.snapY !== null) snapY = r.snapY;
+                // ⛔ THE FIRST rock to release ends the span for every one of
+                // them, which is why this is `||` over the set and not a
+                // per-rock loop that runs to its own end.
+                if (r.unfroze) unfroze = true;
+            }
+            for (const b of bosses) {
+                stepBossTotem(b, {
+                    wandGone: wandGoneNow,
+                    // ⚠ TRUE FOR THE WHOLE SPAN, including the last frame.
+                    // On the release frame the rock clears the flag BEFORE
+                    // the boss updates (`addUpdate` prepends and the rocks
+                    // are added last), so the boss's rest arm reads FALSE
+                    // there — which cannot matter, because the rest arm is
+                    // behind `fullyActivated` and that lands 30 ticks after
+                    // this span ends. Named rather than relied on.
+                    freezeObjects: true,
+                    playerY: null,
+                });
+            }
+            frames = i;
+        }
+        frozenFramesOwed += frames;
+        // ⛓ THE RELEASE FRAME IS A LIVE PLAYER FRAME. The rock that expires
+        // first clears `Game.freezeObjects` before the Player updates, and
+        // `Bot.update` already counted that frame dead — so the player takes
+        // one step nobody sees.
+        pendingFreeSteps += 1;
+        const dropped = started.map((e) => {
+            rockFalls.push({
+                id: e.id,
+                level,
+                t: ticksCompleted,
+                flag: e.write ? outOfBandFlagFor(level, e.write.tag) : null,
+                deadFrames: frames,
+            });
+            return { id: e.id, state: { ...e.state, landed: true }, write: e.write };
+        });
+        return { frames, dropped, snapY };
     };
     /**
      * ── ⛔⛔ R5 SLICE 9: THE CHESTS, AND THE SEAL PIECE ONE SPAWNS ──────
@@ -980,6 +1211,7 @@ export function createLevelRun({
         // kill, the pushes, the hold and EVERYTHING DOWNSTREAM OF THE HOLD
         // have to share one window; there is no state to carry across.
         turretStates.delete(n);
+        bossStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -2608,12 +2840,18 @@ export function createLevelRun({
     }
 
     /**
-     * ⚠ SIXTEEN PARTS, AND R5 BANKS ONE. `SealController.hasAllSealParts()`
-     * reads `Main.hasSealPart(15)`, which is save state no bot tape carries
-     * and which a fresh `Main` leaves at -1. Written down as a constant so
-     * the rung that changes it has something to change.
+     * ⛓⛓⛓ R5 SLICE 23: NO LONGER A CONSTANT — the rung that had something
+     * to change is this one.
+     *
+     * It used to read: *"`SealController.hasAllSealParts()` reads
+     * `Main.hasSealPart(15)`, which is save state no bot tape carries and
+     * which a fresh `Main` leaves at -1. Written down as a constant so the
+     * rung that changes it has something to change."* The v6 `save` block
+     * carries it, and the predicate is the game's own — **the LAST SLOT,
+     * not the count** — because the array is a collection log and the game
+     * tests `Main.hasSealPart(SEALS - 1) != -1`.
      */
-    const HAS_ALL_SEAL_PARTS = false;
+    const HAS_ALL_SEAL_PARTS = sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
     /** One record per chest this run opened. */
     const chestOpens = [];
     /** One per tick a pulse's `hit()` ran, per pulser. */
@@ -2988,6 +3226,31 @@ export function createLevelRun({
         const box = playerBoxAt(state.x, state.y);
         for (const p of world.pickups) {
             if (collectedPickups.has(pickupKey(level, p))) continue;
+            // ⛔⛔⛓ R5 SLICE 23: THE WAND'S GATE WRAPS THE CONTACT TEST, NOT
+            // ONLY THE FADE — and reading it as "the fade is gated" is a
+            // green control that collects the item it was built to prove
+            // cannot be collected.
+            //
+            // `Wand.update`'s whole body is inside
+            // `if ((p && p.y < y + Tile.h && Player.hasAllTotemParts()
+            //      && !p.fallFromCeiling) || !doBossActions)`,
+            // and `super.update()` — `Pickup.update`, which is the ONLY
+            // thing that ever calls `collide("Player", x, y)` — is the ELSE
+            // of the alpha ramp INSIDE it. So a wand whose gate is shut runs
+            // no update at all: it does not fade, and it does not notice a
+            // player standing on it.
+            //
+            // ⚠ Found by the pair. The first cut gated only the fade, and
+            // the control — which presents NO totem parts — collected the
+            // wand, woke the boss and reproduced the clamp tick for tick.
+            // A control that does the thing it exists to refute is not a
+            // weak control, it is not a control.
+            if (p.tag === 'wand' && !wandFadeGateOpen({
+                playerY: state.y,
+                wandY: p.y,
+                hasAllTotemParts: hasAllTotemParts(),
+                fallFromCeiling: false,
+            })) continue;
             if (rectsOverlap(box, p.rect)) return p;
         }
         return null;
@@ -3437,6 +3700,49 @@ export function createLevelRun({
             return turretRectsNow() ?? new Map();
         },
         /**
+         * ⛓⛓⛓ R5 SLICE 23 — the boss totems, as `collidesSolid` sees them.
+         *
+         * ⛔ AND ITS DEFAULT IS THE OPPOSITE OF THE TURRETS'. An entry with
+         * `activated: false` is a WALL; the map exists to say which bosses
+         * have stopped being one. A `null` here (noclip) means "ask no
+         * questions", and `liveRectOf` then falls through to `s.rect`, which
+         * for an unwoken boss is the right answer anyway.
+         */
+        get bosses() {
+            if (noclip) return null;
+            return bossRectsNow() ?? new Map();
+        },
+        /** ⛓ Has the wand's publication woken the room's boss? */
+        get bossesWoken() {
+            if (noclip) return [];
+            return [...bossStateFor(level).values()]
+                .filter((b) => b.activated)
+                .map((b) => ({
+                    x: b.x, y: b.y,
+                    sinceActivation: b.sinceActivation,
+                    fullyActivated: b.fullyActivated,
+                    activationRestTime: b.activationRestTime,
+                    walking: b.walking,
+                }));
+        },
+        /**
+         * ⛓⛓⛓ Every tick the CLAMP fired, with the y it overwrote.
+         *
+         * ⛔ THE WINDOW'S WHOLE CLAIM IS IN HERE, and an empty list is a
+         * NEGATIVE result rather than a quiet pass: the clamp is a floor at
+         * y 212 and the wand sits at 232, so a walk that collected it and
+         * stood still would never trigger the assignment at all. A window
+         * that asserts "the clamp holds" against an empty list has asserted
+         * nothing. See `r5Totem.L43_WAND_WINDOW`.
+         */
+        get bossClamps() { return bossClamps.map((c) => ({ ...c })); },
+        /**
+         * ⛓⛓ One record per wand APPROACH FADE — the 99 frozen frames no
+         * other pickup has, and the ones a ceremony budget derived from
+         * `CEREMONY_DEAD_FRAMES.pickup` alone would be short by.
+         */
+        get wandFades() { return wandFades.map((f) => ({ ...f })); },
+        /**
          * ⛓ Is every corpse in this room done gliding?
          *
          * ⛔ `tile == cTile` is the WRONG predicate and never fires — see
@@ -3828,6 +4134,36 @@ export function createLevelRun({
             // and stepping one are the same branch: phase A is invisible,
             // so the advance that discovers the contact IS phase B's first
             // frame.
+            // ── ⛓⛓⛓ R5 SLICE 23: THE WAND'S APPROACH FADE ───────────
+            //
+            // Before the contact is even looked for, because the game looks
+            // for it in the other order: `Wand.update`'s gate is the
+            // player's Y and two booleans, and the 99 frozen frames it buys
+            // are spent while the player is still walking toward the
+            // pickup. A model that started the clock at the contact would
+            // be 99 dead frames short and every later observation would
+            // still line up — which is why this is asserted against the
+            // game's own `dead_frames` and not against the stream.
+            if (!wandFadeSpent && !noclip) {
+                const wand = (world.pickups ?? []).find((p) => p.tag === 'wand'
+                    && !collectedPickups.has(pickupKey(level, p)));
+                if (wand && wandFadeGateOpen({
+                    playerY: state.y,
+                    wandY: wand.y,
+                    hasAllTotemParts: hasAllTotemParts(),
+                    // ⛔ The model has no `fallFromCeiling` here because a
+                    // pit ARRIVAL is a transition and this run boots. The
+                    // gate's third term is what makes a BOOT a cleaner
+                    // entry than the pit the room is reached by — see
+                    // `r5Totem.L43_WAND_WINDOW.arrivalGate`.
+                    fallFromCeiling: false,
+                })) {
+                    wandFadeSpent = true;
+                    const fade = wandFadeFreezeTicks();
+                    frozenFramesOwed += fade;
+                    wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
+                }
+            }
             if (ceremony === null) {
                 const hit = pickupUnderfoot();
                 if (hit) {
@@ -3870,6 +4206,49 @@ export function createLevelRun({
                     // property and instead of persistence. R4's whole key
                     // chain hangs off this one line.
                     if (ceremony.keyType !== null) keys.add(ceremony.keyType);
+                    // ── ⛓⛓⛓ R5 SLICE 23: `Wand.removed()` ───────────────
+                    //
+                    // Three writes in one override, and the tape sees all
+                    // three: `Player.hasWand = true` (the item, applied
+                    // above), `Game.setPersistence(tag, false)` (the earned
+                    // clear, which the ceremony's own machinery banks), and
+                    // — uniquely — a loop that sets `activate = true` on
+                    // EVERY tset-0 `Activators` in the room.
+                    //
+                    // ⛔ THE LOOP IS WHAT MAKES THIS PICKUP A PUBLISHER, and
+                    // it is why the wand is LAST in the itinerary: L43's
+                    // three `fallrock`s are all tset 0, and
+                    // `fallrock@176,384` lands on the unique open tile of
+                    // row 24 — the mouth of the shaft the room's only
+                    // stairs sit at the bottom of. `fall()`'s first line is
+                    // `setPersistence(tag, false)`, so the seal holds for
+                    // every later visit.
+                    // [[feedback_the_pickup_seals_its_own_exit]]
+                    if (ceremony.pickup.tag === 'wand' && !noclip) {
+                        wandLeftTheWorld = true;
+                        const group = WAND_PICKUP.tset;
+                        activatorStateFor(level).latched.set(group, true);
+                        const rocks = fallRockStateFor(level);
+                        const together = [...rocks].filter(
+                            ([, r]) => r.t === group && !r.landed,
+                        );
+                        const dropped = dropRocksTogether(together);
+                        droppedRocksThisTick = true;
+                        for (const d of dropped.dropped) {
+                            rocks.set(d.id, d.state);
+                            if (!d.write) continue;
+                            const rf = outOfBandFlagFor(level, d.write.tag);
+                            if (!pendingEarnedClears.has(rf.level)) {
+                                pendingEarnedClears.set(rf.level, new Set());
+                            }
+                            pendingEarnedClears.get(rf.level).add(rf.tag);
+                        }
+                        // ⛔ AND THE SNAP, if the collect was made under a
+                        // landing. Same rule as the rope's: the whole span
+                        // is frozen, so the LAST snap is where the next live
+                        // tick starts from.
+                        if (dropped.snapY !== null) state.y = dropped.snapY;
+                    }
                     collected.push({
                         t: ticksCompleted + 1,
                         level: ceremony.level,
@@ -3956,6 +4335,67 @@ export function createLevelRun({
             } else {
                 prevHeld = new Set(held);
             }
+            // ── ⛓⛓⛓ R5 SLICE 23: THE BOSS, AND THE CLAMP IT ASSIGNS ──
+            //
+            // `Game.loadlevel` adds the boss at `:2121` and the Player at
+            // `:2092`, and `World.addUpdate` PREPENDS — so the boss updates
+            // BEFORE the player and the clamp it writes is the y the
+            // player's own sweep starts this tick from. Below the ceremony
+            // and above the physics, for exactly that reason.
+            //
+            // ⛔ ONLY ON LIVE TICKS, AND THE FROZEN ONES ARE ACCOUNTED
+            // ELSEWHERE. Every frozen span this room can produce is
+            // resolved inside one model tick — the wand's approach fade
+            // (nothing in level 43 advances through it) and the rocks'
+            // 186-frame drop (which steps the boss itself, because
+            // `BossTotem`'s rumble and ramp have no freeze test). A boss
+            // that were somehow activated during a ceremony would need its
+            // ticks spent here too, so that is a REFUSAL rather than an
+            // approximation.
+            if (!noclip && !droppedRocksThisTick) {
+                for (const b of bossStateFor(level).values()) {
+                    if (!b.activated) continue;
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: a BossTotem is awake while a '
+                            + 'ceremony is running. Its rumble and activation ramp '
+                            + 'have NO `Game.freezeObjects` test, so the frozen '
+                            + 'frames would advance it in the game and not here — '
+                            + 'the whole clamp schedule would be short by the '
+                            + 'ceremony\'s length. Model the span rather than '
+                            + 'stepping the boss on live ticks only.');
+                    }
+                    const r = stepBossTotem(b, {
+                        wandGone: wandLeftTheWorld,
+                        freezeObjects: false,
+                        playerY: state.y,
+                    });
+                    if (r.clampedY !== null) {
+                        bossClamps.push({
+                            t: ticksCompleted,
+                            level,
+                            from: state.y,
+                            to: r.clampedY,
+                            sinceActivation: b.sinceActivation,
+                        });
+                        // ⛔ AN ASSIGNMENT. Not a sweep, not a collision
+                        // resolution — one write of one number, which is
+                        // why the record carries the y it overwrote.
+                        state.y = r.clampedY;
+                    }
+                    // ⛔ THE CEILING OF EVERY WINDOW IN THIS ROOM. Past this
+                    // the room holds a mover with a laser and a jump arc,
+                    // and this model has none of it.
+                    if (r.walkingNow) {
+                        throw new Error(`levelRun: the BossTotem in level ${level} `
+                            + `started WALKING at tick ${ticksCompleted}. Everything `
+                            + 'after `activationRestTime` drains is unmodelled — the '
+                            + 'walk, the jump and the laser — so a window must end '
+                            + 'inside `r5Totem.L43_WAND_WINDOW.boundaryBand`, whose '
+                            + 'ceiling is exactly this tick.');
+                    }
+                }
+            }
+            droppedRocksThisTick = false;
             // ⚠ A touch-lock window drops the KEYS, not the tick.
             // `receiveInput` gates `Player.input()` alone, so friction, both
             // sweeps and `getState` all still run — which is why the player
@@ -4031,7 +4471,7 @@ export function createLevelRun({
                     + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
                     + 'contact tick; schedule the press outside that span.');
             }
-            const next = stepV2(state, acting, {
+            const stepOpts = {
                 level: world,
                 noclip,
                 noHazards,
@@ -4058,6 +4498,7 @@ export function createLevelRun({
                     openChests: null,
                     crushers: null,
                     turrets: null,
+                    bosses: null,
                 } : liveSolidOpts({ openActivators: openActivatorIds(activators) })),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
@@ -4070,7 +4511,49 @@ export function createLevelRun({
                 // return. Both, because the two halves of one `if` are not
                 // a place to be economical.
                 inputBlocked: frozenTimer > 0,
-            });
+            };
+            // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
+            //
+            // ⛔⛔ A COLLAPSED FROZEN SPAN ENDS ON A FRAME THAT IS DEAD TO
+            // THE TAPE AND LIVE TO THE PLAYER, and the model owes that step.
+            //
+            // `Bot.update` reads `Game.freezeObjects` at the TOP of the
+            // frame, ABOVE `super.update()`. So the frame on which an entity
+            // CLEARS the flag records no observation and does not advance
+            // the tape — and then that entity (a run-time `add`, so PREPENDED
+            // by `World.addUpdate`, so updating before the Player) clears it,
+            // and the player's own `mobileUpdate` reads the cleared flag and
+            // MOVES. One physics step, folded invisibly into the next
+            // observation.
+            //
+            // ⛓ MEASURED, NOT ARGUED. `r5-l43-wand` replayed against the
+            // game diverged at its collect tick by exactly this: the game's
+            // first post-ceremony delta was +1.65 where the model's was
+            // +0.95, and +1.65 is the model's +0.95 and +0.70 summed. The
+            // arms then re-converged the moment both reached rest, because a
+            // rest position is a fixed point — which is also why this was
+            // invisible for twenty-two slices: every earlier walk that
+            // resolves a frozen span is AT REST when it lifts, and an extra
+            // step on a zero velocity moves nothing.
+            //   (`r5Totem.L43_WAND_WINDOW.refutation`)
+            //
+            // ⚠ A TRANSITION HERE IS OUT OF SCOPE AND IS REFUSED. The step
+            // is unobserved by construction, so a world swap on it would be
+            // a level change the stream cannot show and the transition list
+            // would disagree with the tape.
+            for (let extra = 0; extra < pendingFreeSteps; extra += 1) {
+                const unobserved = stepV2(state, acting, stepOpts);
+                if (unobserved.transition) {
+                    throw new Error('levelRun: the freeze-clearing frame at tick '
+                        + `${ticksCompleted} produced a TRANSITION. That frame is dead `
+                        + 'to the tape by construction, so the crossing would be '
+                        + 'invisible in the stream and the transition list would '
+                        + 'disagree with it. Move the span away from the door.');
+                }
+                state = unobserved;
+            }
+            pendingFreeSteps = 0;
+            const next = stepV2(state, acting, stepOpts);
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
             // inside `Player.input()`, which is where the sweeps happen too
