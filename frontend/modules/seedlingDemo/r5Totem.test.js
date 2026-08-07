@@ -1857,42 +1857,232 @@ describe('⛓⛓⛓ L42: two baits from the arrival, and the second is chain 2',
  * it, because "the search returned nothing" and "the room refuses it" print
  * the same thing otherwise.
  */
-describe('⛔⛔ L42: chain 3 is not found, and the beam was run over', () => {
-    it('⛔ names the depth, the count and the reason it died', () => {
-        const C3 = L42_SOLVE.chain3;
-        expect(C3.found).toBe(false);
-        expect(L42_SOLVE.driven).toBe(false);
-        // ⛔ RUN OVER, not exhausted and not deduped — a different failure
-        // from the 1-tick arm's, and the counts are what say so.
-        expect(C3.diedWith.runOver).toBeGreaterThan(0);
-        expect(C3.diedWith.alreadySeen).toBe(0);
-        expect(C3.diedWith.kept).toBe(0);
-        // ⛓ Two of its three charges DID drive, so the break is located.
-        expect(C3.reachedParks).toHaveLength(2);
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — CHAIN 3 IS FOUND, AND THE WALL IS WHAT FOUND IT.
+ * §32.5 died at depth 43 with 90 of 90 successors run over because the nook
+ * at tile (6,4) was a distance HINT; the same beam with the same block and
+ * the same score, forbidden the rest of the top room while the crusher is
+ * on row 96, finds it at depth 47.
+ */
+describe('⛓⛓⛓ L42: chain 3, and the nook as a WALL', () => {
+    const C3 = L42_SOLVE.chain3;
+
+    it('⛓⛓ is found, ends in the nook, and realises the ordering\'s third chain', () => {
+        expect(C3.found).toBe(true);
+        expect(C3.endTile).toEqual({ ...C3.nook });
+        expect([...C3.approach, ...C3.spans].reduce((n, s) => n + s.ticks, 0)).toBe(C3.ticks);
+        expect(C3.approach.reduce((n, s) => n + s.ticks, 0)).toBe(C3.approachTicks);
         const chain3 = L42_SOLVE.ordering.filter((s) => s.chain === 3);
         expect(chain3.map((s) => s.dir)).toEqual([...C3.charges]);
         expect(chain3[chain3.length - 1].park).toEqual({ ...C3.park });
-        expect(chain3.slice(0, 2).map((s) => ({ ...s.park })))
-            .toEqual(C3.reachedParks.map((p) => ({ ...p })));
+        expect(chain3.every((s) => s.id === C3.crusher)).toBe(true);
     });
 
     /**
-     * ⛓ The nook is the only escape from the third charge, and that is the
-     * solver's own claim re-checked from the other side: the pre-position
-     * the beam DID find is the northernmost cell still inside A's north
-     * lane, which is what the inclusive lane test buys.
+     * ⛔⛔ THE TRIPLE, AND ONLY THE CONSTRAINT MOVED. Same 8-tick blocks,
+     * same arc-length score, same prefix — the arm that dies is the one
+     * that only PREFERS the nook, and its death is RUN OVER rather than
+     * exhausted or deduped, which is what says the room refused it.
      */
-    it('⛓ the pre-position is the lane\'s own northern edge', () => {
-        const box = playerBoxAt(72, L42_SOLVE.chain3.prePositionY);
-        // A parked at (80,224): north lane [64,96] x [144,240].
-        const lanes = Object.fromEntries(
-            detectionRects({ x: 80, y: 224 }).map((r) => [r.dir, r]),
-        );
-        expect(box.bottom).toBe(lanes.N.y);
-        expect(laneHitsPlayer(box, lanes.N)).toBe(true);
-        // One pixel higher and the crusher never sees it.
-        expect(laneHitsPlayer(playerBoxAt(72, L42_SOLVE.chain3.prePositionY - 1), lanes.N))
-            .toBe(false);
+    it('⛔⛔ banks both arms — a hint dies run over, a wall finds it', () => {
+        const [hint, wall] = L42_SOLVE.chain3Arms;
+        expect(hint.found).toBe(false);
+        expect(wall.found).toBe(true);
+        expect(hint.confine).toBeNull();
+        expect(wall.confine).not.toBeNull();
+        // ⛓ The only difference between the arms is the constraint.
+        expect(hint.block).toBe(wall.block);
+        // ⛔ RUN OVER — a different failure from the 1-tick arm's dedup death.
+        expect(hint.diedWith.runOver).toBeGreaterThan(0);
+        expect(hint.diedWith.alreadySeen).toBe(0);
+        expect(hint.diedWith.kept).toBe(0);
+        // ⛓ And the wall is the same one chain 1's escape was found behind.
+        expect(wall.confine.x1).toBe(L42_SOLVE.escape.col * 16 + 16);
+        expect(wall.confine.x0).toBe(L42_SOLVE.escape.col * 16);
+    });
+
+    /**
+     * ⛓⛓ THE NOOK IS THE ONLY FREE CELL IN ROW 4, and that is what makes
+     * the confinement a wall rather than a preference: everything else an
+     * eastward charge in the top room could reach is either the charge's
+     * own swept volume or solid.
+     */
+    it('⛓⛓ the nook is the only free cell in its row', () => {
+        const w = worldFor(42);
+        const room = L42_SOLVE.topRoom;
+        const freeIn = (ty) => {
+            const out = [];
+            for (let tx = room.tx0; tx <= room.tx1; tx += 1) {
+                if (!plannerObstacleAt(w, tx * 16 + 8, ty * 16 + 8, null,
+                    { inventory: HELD, avoidVolumes: false })) out.push(tx);
+            }
+            return out;
+        };
+        // ⛓ Row 4 over the top room's own span: the nook and nothing else.
+        expect(freeIn(C3.nook.ty)).toEqual([C3.nook.tx]);
+        // ⛓ …and the room below it is two tiles tall and open across.
+        expect(freeIn(room.ty0)).toHaveLength(room.tx1 - room.tx0 + 1);
+        expect(freeIn(room.ty1)).toHaveLength(room.tx1 - room.tx0 + 1);
+        // ⛔ A `Crusher` is 32 px — exactly the two rows — so an eastward
+        // charge in it has no lateral escape anywhere but the nook.
+        expect((room.ty1 - room.ty0 + 1) * 16).toBe(32);
+    });
+
+    /**
+     * ⛓⛓⛓ THE SEAM AGAIN, IN THE OTHER AXIS. A parked at (80,96) has body
+     * `[64,96) x [80,112)` and east lane `[64,160] x [80,112]`; a player box
+     * whose `bottom` is exactly 80 is INSIDE the lane and OUTSIDE the body,
+     * so the charge is triggered from a cell the body passes one pixel
+     * below. It is the same inclusive-vs-strict split chain 1 rides.
+     */
+    it('⛓⛓ a box on the lane\'s northern edge triggers east and is not swept', () => {
+        const from = { x: 80, y: 96 };
+        const body = crusherRect(from);
+        const lanes = Object.fromEntries(detectionRects(from).map((r) => [r.dir, r]));
+        // The northernmost stance that still triggers: box.bottom == body.y.
+        const box = playerBoxAt(105, 77);
+        expect(box.bottom).toBe(body.y);
+        expect(laneHitsPlayer(box, lanes.E)).toBe(true);
+        // ⛔ …and it is the ONLY lane that matches: `DIRECTIONS` has no
+        // `break`, so a box also inside N/W/S would be charged at from
+        // whichever matched LAST.
+        expect(['N', 'W', 'S'].filter((d) => laneHitsPlayer(box, lanes[d]))).toEqual([]);
+        // Strict overlap with the swept body: not touching.
+        expect(box.bottom > body.y && box.y < body.bottom).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ THE RECORD'S `dir` IS THE NET DISPLACEMENT. `runBait` derives it
+     * from `after - before`, which is the charge direction for ONE charge
+     * and not for a chain: chain 3 goes W 112, N 128, E 128 and nets
+     * (+16,-128), so the record says N while the last charge is E.
+     */
+    it('⛔ names the field whose value is not any charge', () => {
+        expect(C3.recordDir).toBe('N');
+        expect(C3.lastCharge).toBe('E');
+        expect(C3.charges[C3.charges.length - 1]).toBe(C3.lastCharge);
+        const from = L42_SOLVE.escape.park;
+        const dx = C3.park.x - from.x;
+        const dy = C3.park.y - from.y;
+        expect(Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'E' : 'W') : (dy > 0 ? 'S' : 'N'))
+            .toBe(C3.recordDir);
     });
 });
 
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — THE ROUND TRIP, DRIVEN. Three baits from the L42
+ * arrival, the part collected and the exit taken; this is the plan
+ * `r5-l42-part4` records, driven here through the driver rather than the
+ * tape so the verbs' own controls run.
+ */
+describe('⛓⛓⛓ L42: the round trip — three chains, the part and the exit', () => {
+    const centre = (tx, ty) => ({ x: tx * 16 + 8, y: ty * 16 + 8 });
+    const baitOf = (crusher, chain, stance) => ({
+        ...centre(stance.tx, stance.ty),
+        bait: {
+            crusher,
+            approach: chain.approach.map((s) => ({ ...s })),
+            spans: chain.spans.map((s) => ({ ...s })),
+            park: { ...chain.park },
+        },
+    });
+    const walk = (legs) => synthesizeLegs(legs, {
+        levelSource: atlasLevelSource(),
+        boot: { level: 42, x: L42_PART4.arrival.tx * 16, y: L42_PART4.arrival.ty * 16 },
+        relax: {
+            noclip: false,
+            noDamage: true,
+            noHazards: [],
+            grants: [{ level: 42, items: [...L42_SOLVE.escape.items] }],
+            persistence: [],
+            equips: [],
+            pins: ['sound', 'dead_frames'],
+            roles: [...ROLES],
+        },
+        name: 'l42-round-trip',
+        lattice: 8,
+        allowGrazes: true,
+        maxTicksPerTarget: 6000,
+    });
+
+    it('⛓⛓⛓ walks all three chains from the arrival, both bodies into the top room', () => {
+        const out = walk([{
+            level: 42,
+            targets: [
+                baitOf({ x: 96, y: 144 }, L42_SOLVE.escape, L42_PART4.chainA.stance),
+                baitOf({ x: 128, y: 144 }, L42_SOLVE.chain2, L42_SOLVE.chain2.stance),
+                baitOf({ x: 96, y: 144 }, L42_SOLVE.chain3, L42_SOLVE.chain3.stance),
+            ],
+        }]);
+        expect(out.baits).toHaveLength(3);
+        expect(out.baits[2].crusherTo).toEqual({ ...L42_SOLVE.chain3.park });
+        expect(out.baits[2].ticks).toBe(L42_SOLVE.chain3.ticks);
+        expect(out.baits[2].approachTicks).toBe(L42_SOLVE.chain3.approachTicks);
+        expect(out.tape.tick_count).toBe(L42_SOLVE.chain3.tripleTicks);
+        // ⛔ The record's dir is the NET displacement, not the last charge.
+        expect(out.baits[2].dir).toBe(L42_SOLVE.chain3.recordDir);
+    }, 180000);
+
+    /**
+     * ⛓⛓ THE PARKS' WITNESS IS THE WALK. A crusher's position is in no
+     * readout the game emits, so the claim is where the player may stand:
+     * both dipsticks are inside a constructor body until its chain runs.
+     */
+    it('⛓⛓ both dipstick cells are inside a crusher body at build time', () => {
+        for (const c of L42_PART4.crushers) {
+            const r = crusherRect(c.home);
+            const inside = L42_SOLVE.dipsticks
+                .filter((d) => d.of === c.id)
+                .every((d) => {
+                    const box = playerBoxAt(d.tx * 16 + 8, d.ty * 16 + 8);
+                    return box.x < r.right && box.right > r.x
+                        && box.y < r.bottom && box.bottom > r.y;
+                });
+            expect(inside).toBe(true);
+        }
+        // ⛓ …and both are on the ONLY corridor to the part: rows 9,10.
+        expect(L42_SOLVE.dipsticks.map((d) => d.ty)).toEqual([9, 9]);
+    });
+
+    /**
+     * ⛓ THE COLLECT STANCE IS WEST OF THE PART BECAUSE THE PART'S OWN RECT
+     * STRADDLES A COLUMN BOUNDARY, and col 12 of the chamber is inside A's
+     * parked SOUTH lane. Touching the volume from the west happens at
+     * `box.right == 184`, eight pixels short of it.
+     */
+    it('⛓⛓ the collect touches the part outside A\'s parked south lane', () => {
+        const lanes = Object.fromEntries(
+            detectionRects({ ...L42_SOLVE.parks['crusher@96,144'] }).map((r) => [r.dir, r]),
+        );
+        // The pickup's rect: `pickup('BossTotemPart', …, 16, 16, 8, 8)` at
+        // entity (184+8, 152+8) — [184,200) x [152,168).
+        const rect = { x: 184, right: 200, y: 152, bottom: 168 };
+        expect(rect.right).toBeGreaterThan(lanes.S.x);
+        // The touch from the west: box.right == rect.x.
+        const touch = playerBoxAt(rect.x - 2, 160);
+        expect(touch.right).toBe(rect.x);
+        expect(laneHitsPlayer(touch, lanes.S)).toBe(false);
+        expect(lanes.S.x - touch.right).toBe(8);
+        // …and the stance itself is west of that again.
+        expect(L42_SOLVE.collectStance.tx * 16 + 16).toBeLessThanOrEqual(rect.x);
+    });
+
+    /**
+     * ⛔⛔ AND THE OBVIOUS CONTROL IS NOT A CONTROL — §29.7 one room along.
+     * In a PURSUIT room every corridor cell is in somebody's lane, so an
+     * unplanned walk is a trigger: emptying the charges' spans and keeping
+     * the walks drives the very mechanism the arm exists to withhold.
+     */
+    it('⛔⛔ banks that the choreography-holed arm is run over 1,127 times', () => {
+        const n = L42_SOLVE.naiveControlRefuted;
+        expect(n.contacts).toBeGreaterThan(0);
+        expect(n.collected).toBe(0);
+        expect(n.transitions).toBe(0);
+        // ⛓ Both crushers move, and NEITHER to a park.
+        const parks = new Set(Object.values(L42_SOLVE.parks).map((p) => `${p.x},${p.y}`));
+        expect(n.crushersEndAt).toHaveLength(2);
+        for (const c of n.crushersEndAt) expect(parks.has(`${c.x},${c.y}`)).toBe(false);
+        // ⛓ …and the room is a pursuit BECAUSE most of it is watched.
+        expect(L42_SOLVE.arrival.safeNodes).toBeLessThan(L42_SOLVE.arrival.freeNodes);
+    });
+});

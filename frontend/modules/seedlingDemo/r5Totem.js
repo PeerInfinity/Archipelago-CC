@@ -1976,6 +1976,28 @@ export const L42_SOLVE = Object.freeze({
     arrival: Object.freeze({ freeNodes: 304, safeNodes: 172 }),
     /** The ONE cell that makes an eastward charge in the top room survivable. */
     nook: Object.freeze({ tx: 6, ty: 4 }),
+    /**
+     * ⛓ The part chamber cell WEST of `totempart@184,152`. The pickup's rect
+     * is `[184,200) x [152,168)` — it straddles the col-11/12 boundary — and
+     * col 12 of that chamber is inside A's parked SOUTH lane, so the collect
+     * is walked from the west and touches the volume at `box.right == 184`,
+     * eight pixels short of the lane.
+     */
+    collectStance: Object.freeze({ tx: 10, ty: 9 }),
+    /**
+     * ⛓⛓⛓ THE PARKS' WITNESS, AND IT IS THE WALK. A crusher's position is
+     * in no readout the game emits (§30.4), so a park is asserted by where
+     * the player is ALLOWED TO STAND. Both constructor bodies sit across
+     * rows 9,10 at cols 6..9 — the only corridor to the part — so the route
+     * walks through 32x32 of crusher twice, and the control arm, whose
+     * bodies never move, stops against each one like a wall.
+     */
+    dipsticks: Object.freeze([
+        Object.freeze({ tx: 6, ty: 9, of: 'crusher@96,144' }),
+        Object.freeze({ tx: 8, ty: 9, of: 'crusher@128,144' }),
+    ]),
+    /** The top room, rows 5,6 — cols 4..15 free, and row 4 solid but for the nook. */
+    topRoom: Object.freeze({ tx0: 4, tx1: 15, ty0: 5, ty1: 6 }),
     ordering: Object.freeze([
         Object.freeze({ id: 'crusher@96,144', dir: 'W', travel: 32, park: Object.freeze({ x: 80, y: 160 }), chain: 1 }),
         Object.freeze({ id: 'crusher@96,144', dir: 'S', travel: 64, park: Object.freeze({ x: 80, y: 224 }), chain: 1 }),
@@ -2255,54 +2277,166 @@ export const L42_SOLVE = Object.freeze({
         idleTicks: 200,
     }),
     /**
-     * ⛔⛔⛔ R5 SLICE 18 — CHAIN 3 IS NOT FOUND, AND IT IS §31.6's FAILURE
-     * MODE ONE ROOM UP.
+     * ⛓⛓⛓ R5 SLICE 19 — CHAIN 3 IS FOUND, AND THE WALL IS WHAT FOUND IT.
      *
-     * A's return chain — W -> (80,224), N -> (80,96), E -> (208,96) — gets
-     * its first two charges perfectly: the beam finds the derived
-     * pre-position on its own, running A west along row 14 while the player
-     * climbs the west corridor to `y = 141`, which is the northernmost cell
-     * still inside A's north lane (`box.bottom >= 144`, inclusive), and
-     * that is what buys the 64 ticks the northward outrun needs. The player
-     * clears into the top room east of `x = 96` with A still 90 px below
-     * it.
+     * §32.5 ran this search with the nook at tile (6,4) as a DISTANCE HINT
+     * and the beam died at depth 43 with 90 of 90 successors run over: with
+     * the alternatives merely scored away, the player outran the charge east
+     * along the top room instead of ducking into the one cell that survives
+     * it. Re-run with the SAME score and the SAME 8-tick blocks and ONE
+     * added constraint — while the crusher is anywhere on row 96 the
+     * player's box must lie inside `[96,112]`, the nook's own column — it
+     * finds the chain at depth 47.
      *
-     * ⛔ And then the THIRD charge runs it down. A charges east along the
-     * top room; the room is two tiles tall and a `Crusher` is 32 px, so
-     * there is no lateral escape and no outrunning it into B's parked body
-     * at `x = 224`. The ONLY escape is the nook at tile (6,4) — and the
-     * beam, scored on the crusher's arc length with the nook as a distance
-     * HINT, ran the player east ahead of the charge instead of ducking into
-     * it. Beam died at depth 43 with **90 of 90 successors RUN OVER**.
+     *     the nook as a HINT        DIED  at depth 43, 90/90 RUN OVER
+     *     the nook as a WALL        FOUND at depth 47, 392 ticks
      *
-     * ⇒ **A DISTANCE HINT IS NOT A CONSTRAINT.** §31.9 item 1 already said
-     * this about the room's other end — *"the ordering needs re-searching
-     * with the swept volume of the THIRD charge as an end-cell filter on
-     * the FIRST"* — and this is the same thing one level up: when the
-     * escape is a single tile and everything else is fatal, the search has
-     * to be FORBIDDEN the alternatives, not merely scored away from them.
-     * The confinement that made chain 1's escape findable is exactly that,
-     * and chain 3 was run without one.
+     * ⇒ **A DISTANCE HINT IS NOT A CONSTRAINT**, and this is the same
+     * confinement that made chain 1's escape findable in one run (§32.3).
+     * Nothing else changed: same beam width, same block, same prefix, same
+     * arc-length progress term. A search reports a property of the TRIPLE
+     * (score, granularity, constraint), and here the constraint is the only
+     * term that moved.
+     *
+     * ⛓⛓ AND THE ESCAPE IS A SEAM AGAIN, in the other axis. A parked at
+     * (80,96) has body `[64,96) x [80,112)` and an east lane
+     * `[64,160] x [80,112]`; `laneHitsPlayer` is inclusive and the sweep's
+     * overlap is strict, so a player box with `bottom == 80` is INSIDE the
+     * lane and OUTSIDE the body — it triggers the charge and the body
+     * passes one pixel below it. The nook is the only cell in row 4 that is
+     * free (row 4 is wall at every other column), so the whole return chain
+     * hangs on one tile and one pixel.
+     *
+     * ⛔ The beam does not need the exact pixel: the stance it finds sits
+     * `bottom = 80.3` — a tenth of a pixel INSIDE the swept volume — and
+     * rises out of it inside the `box.x - 96` ticks the charge takes to
+     * arrive. That margin is the same quantity chain 1's band is measured
+     * in, one axis over.
      */
     chain3: Object.freeze({
         crusher: 'crusher@96,144',
+        /** ⛓ Tile (5,13) — in the west corridor, one step outside A's west lane. */
+        stance: Object.freeze({ tx: 5, ty: 13 }),
+        approach: Object.freeze([
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 3 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up+right', ticks: 5 }),
+            Object.freeze({ key: 'down+left', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 24 }),
+            Object.freeze({ key: 'up', ticks: 24 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 16 }),
+            Object.freeze({ key: null, ticks: 80 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 16 }),
+            Object.freeze({ key: null, ticks: 104 }),
+        ]),
+        ticks: 392,
+        contacts: 0,
         charges: Object.freeze(['W', 'N', 'E']),
         park: Object.freeze({ x: 208, y: 96 }),
-        found: false,
-        /** ⛓ The first two charges DO drive — the beam found this unaided. */
-        reachedParks: Object.freeze([Object.freeze({ x: 80, y: 224 }), Object.freeze({ x: 80, y: 96 })]),
-        /** ⛓ The northernmost cell still inside A's north lane: `box.bottom == 144`. */
-        prePositionY: 141,
-        diedAtDepth: 43,
-        diedWith: Object.freeze({ runOver: 90, alreadySeen: 0, kept: 0 }),
-        why: 'the top room is two tiles tall and a Crusher is 32 px, so an eastward '
-            + 'charge there has no lateral escape and B\'s parked body at x = 224 closes '
-            + 'the far end. The nook at tile (6,4) is the only escape and it was a '
-            + 'distance HINT rather than a constraint — so the beam outran the body '
-            + 'instead of ducking, exactly as §31.6\'s did in the corridor below.',
-        next: 'confine the third charge to the nook column the way chain 1\'s escape was '
-            + 'confined to col 6, and re-run. A hint is a preference; the escape is a '
-            + 'single tile.',
+        found: true,
+        /** ⛓ The one free cell in row 4, and the whole chain hangs on it. */
+        nook: Object.freeze({ tx: 6, ty: 4 }),
+        playerEndsAt: Object.freeze({ x: 106.63068393962406, y: 76.92179364315787 }),
+        endTile: Object.freeze({ tx: 6, ty: 4 }),
+        /**
+         * ⛔ NINETEEN TICKS, not seven. Chains 1 and 2 both trigger on the
+         * seventh tick because both stances sit one step outside the lane;
+         * this one starts in the west corridor with A parked twelve tiles
+         * east, so the walk INTO the west lane is three spans long.
+         */
+        approachTicks: 19,
+        /** ⛓ All three baits, driven from the L42 arrival through `synthesizeLegs`. */
+        tripleTicks: 1366,
+        /**
+         * ⛔⛔ AND THE RECORD'S `dir` IS THE NET DISPLACEMENT, WHICH FOR A
+         * CHAIN IS NOT ANY CHARGE. `runBait` derives it from
+         * `after - before` on the reading that "a charge is committed at
+         * rest and never re-aimed, so the net displacement IS the direction
+         * it was charged in" — true of ONE charge. Chain 3 goes W 112, N
+         * 128, E 128 from (192,224) to (208,96): net `(+16,-128)`, so the
+         * record says **N** while the last charge is E. Chains 1 and 2 both
+         * report E and both happen to end on an E charge, which is why
+         * three drives were needed before the field disagreed with itself.
+         */
+        recordDir: 'N',
+        lastCharge: 'E',
+    }),
+    /**
+     * ⛔⛔ THE ARM THAT DIED, BANKED — because "the search returned nothing"
+     * and "the room refuses it" print the same thing otherwise. Same beam,
+     * same 8-tick blocks, same prefix, same arc-length score; the ONLY
+     * difference is whether the nook is a wall or a preference.
+     */
+    chain3Arms: Object.freeze([
+        Object.freeze({
+            name: 'the nook as a distance HINT (slice 18)', confine: null,
+            block: 8, found: false, depth: 43,
+            diedWith: Object.freeze({ runOver: 90, alreadySeen: 0, kept: 0 }),
+            why: '⛔ RUN OVER, not exhausted and not deduped: at the death every one of '
+                + 'the 90 successors put the player inside the body. The top room is two '
+                + 'tiles tall, a `Crusher` is 32 px and B\'s parked body closes the far '
+                + 'end at x = 224, so running east ahead of the charge is a race with no '
+                + 'finish line — and a score that only PREFERS the nook lets the beam '
+                + 'run it.',
+        }),
+        Object.freeze({
+            name: 'the nook as a WALL — box inside [96,112] while the crusher is on row 96',
+            confine: Object.freeze({ x0: 96, x1: 112, whileCrusherOn: 'y = 96' }),
+            block: 8, found: true, depth: 47,
+            diedWith: null,
+            why: '⛓⛓⛓ THE ANSWER. The wall is raised PER STAGE — the first two charges '
+                + 'need the west corridor at cols 4,5 and the third needs col 6 — which '
+                + 'is the whole reason a global confinement could not have been written: '
+                + 'the player must be in A\'s WEST lane (box.right >= 112) to start the '
+                + 'chain at all, and inside [96,112] to finish it.',
+        }),
+    ]),
+    /**
+     * ⛔⛔ R5 SLICE 19 — THE OBVIOUS CONTROL FOR THIS ROOM IS NOT A CONTROL,
+     * AND IT IS §29.7's SHAPE ONE ROOM ALONG.
+     *
+     * L42 has no flag to withhold — no rock shields these crushers, no lock
+     * gates the room, no item is needed — so the isolating variable has to
+     * be the choreography. The obvious way to withhold it is to keep the
+     * tape tick for tick and EMPTY the nine charges' held spans. Measured,
+     * that arm drives the mechanism it exists to withhold: each following
+     * walk was planned from the cell the choreography before it ended in,
+     * so the player begins it somewhere else, the replayed spans carry it
+     * into the lanes, and it is inside a body on **1,127 ticks**.
+     *
+     * ⇒ AND IN A PURSUIT ROOM THAT IS NOT AN ACCIDENT. Every cell of the
+     * corridor is in somebody's lane (`arrival.safeNodes` is 172 of 304),
+     * so an unplanned walk IS a trigger. The recorded control is therefore
+     * the tape CUT at the first bait's stance — tile (4,11), one step
+     * outside all eight lanes, which is exactly what makes it a stance —
+     * and standing still there is a claim about 1,652 null scans.
+     */
+    naiveControlRefuted: Object.freeze({
+        arm: 'the same tape with the nine charges\' held spans emptied, every walk kept',
+        contacts: 1127,
+        crushersEndAt: Object.freeze([
+            Object.freeze({ id: 'crusher@96,144', x: 80, y: 224 }),
+            Object.freeze({ id: 'crusher@128,144', x: 80, y: 192 }),
+        ]),
+        collected: 0,
+        transitions: 0,
+        why: 'both crushers charge — neither to a park — so the arm exercises the crusher '
+            + 'instead of withholding it, and a differential against it would be '
+            + 'measuring the mechanism the pair exists to isolate.',
     }),
     /** ⛔ The permissive reading's first escape, DRIVEN, and it is run over. */
     permissiveRefuted: Object.freeze({
