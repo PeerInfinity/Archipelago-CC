@@ -5014,8 +5014,13 @@ re-derived one):
 - Gate at close: fork `bot` @ `a9f84ab`, **98 tapes / 1,411 PASS / 0
   FAIL / zero re-records**; 54 files / 2,065 offline tests. ⚠ The wand
   pair (tapes 99–100) was verified `--only=` after that sweep — **the
-  roster has never been swept as one run at 100**, which is R6 slice 0's
+  roster had never been swept as one run at 100**, which was R6 slice 0's
   first job by the arc's own gate rule.
+  ⛓⛓ **DISCHARGED at R6 slice 0** (2026-08-07): `--tier=full --win` at
+  clean HEAD `4e1ffe980` — **100 tapes / 1,443 PASS / 0 FAIL**, ~2h05m,
+  zero re-records, and the zero proved by a clean working tree rather than
+  claimed (the run carried no `--record`, so nothing under
+  `fixtures/expectations/` could move).
 
 **What the rung built**: the director (windowed one-page execution),
 twelve per-visit geometry families (through `bossTotem.js`), the combat
