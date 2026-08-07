@@ -2231,6 +2231,14 @@ describe('⛓⛓⛓ L40: the corpse-hold, priced from the loop', () => {
 
         const run = (parity) => {
             const c = killIceTurret(createIceTurret(472, 400));
+            // ⛓⛓ R5 SLICE 21: `startDeath` IS NOT `death()`. `killIceTurret`
+            // sets `destroy` and nothing else now; the corpse is made by the
+            // NEXT tick's `Mobile.death()`, and that tick moves nothing
+            // (`mobileUpdate` gates its whole move block on `!destroy`). Spent
+            // here so the parity index below still means what it meant when
+            // slice 20 measured it — both banked resting positions are
+            // unchanged, which is the point of spending it separately.
+            stepIceTurret(c, {});
             for (let i = 0; i < 12 + parity; i += 1) stepIceTurret(c, {});
             for (let p = 0; p < L40_CORPSE.presses; p += 1) {
                 const point = { x: c.x, y: c.y + 24 };            // stand SOUTH

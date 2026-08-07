@@ -2,8 +2,9 @@ import { describe, it, expect } from 'vitest';
 import {
     ICE_TURRET, ICE_TURRET_PLAN, IceTurretError, bumpIceTurret, createIceTurret,
     iceTurretMovableDirections, iceTurretPhase, iceTurretRect, iceTurretSettled,
-    killIceTurret, stepIceTurret,
+    hitIceTurret, killIceTurret, stepIceTurret,
 } from './iceTurret.js';
+import { MOBILE_DEATH_FADE, PIT_FADE } from './enemyDamage.js';
 import { FIRE_WINDOW } from './fireVerb.js';
 import { L40_CORPSE } from './r5Totem.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
@@ -14,6 +15,14 @@ const OEL = { x: 472, y: 400 };
 const settled = (ticks = 12) => {
     const c = createIceTurret(OEL.x, OEL.y);
     killIceTurret(c);
+    // ⛓⛓ R5 SLICE 21: `startDeath` IS NOT `death()`. `killIceTurret` now sets
+    // only what `Enemy.startDeath` sets — `destroy` — and the corpse is made
+    // by the NEXT tick's `Mobile.death()`, which is where the game makes it.
+    // That tick moves NOTHING (`mobileUpdate` gates the whole move block on
+    // `!destroy`), so it is spent here rather than counted into the settle
+    // budget below, and every parity in this file is unchanged by the fix.
+    stepIceTurret(c, {});
+    if (!c.dead) throw new Error('the staging step did not produce a corpse');
     for (let i = 0; i < ticks; i += 1) stepIceTurret(c, {});
     return c;
 };
@@ -47,12 +56,27 @@ describe('the constructor, and the box that is never where the .oel says', () =>
 
     it('⛓ `death()` shrinks the box to 16x16 centred on the entity', () => {
         const c = killIceTurret(createIceTurret(OEL.x, OEL.y));
+        // ⛔⛔ R5 SLICE 21: THE KILLING BLOW IS NOT THE CORPSE. `startDeath`
+        // sets `destroy` and nothing else; the box is still 32x32 and the
+        // anim is still not "dead" until `Mobile.mobileUpdate` calls
+        // `death()` — which is the NEXT tick, because the body's update for
+        // this one has already run (it updates before the Player, so the hit
+        // that killed it landed after its own turn).
+        expect(c.dead).toBe(false);
+        expect(c.destroy).toBe(true);
+        expect(iceTurretRect(c)).toMatchObject({ x: 472, y: 400, right: 504, bottom: 432 });
+
+        stepIceTurret(c, {});
         expect(c.dead).toBe(true);
         expect(iceTurretRect(c)).toMatchObject({ x: 480, y: 408, right: 496, bottom: 424 });
         // ⛔ `death()` puts `destroy` BACK to false — the corpse is not removed
         // and still answers `classCount(IceTurret)`, so a kill lock stays shut.
         expect(c.destroy).toBe(false);
         expect(c.removed).toBe(false);
+        // ⛔⛔ AND THE STAGING TICK MOVES NOTHING. `mobileUpdate`'s whole
+        // move block is inside `if (!destroy)`, and `destroy` was still true
+        // when it ran — so `input()`'s 8 px snap does not happen either.
+        expect({ x: c.x, y: c.y }).toEqual({ x: 488, y: 416 });
     });
 
     it('⛔ …and the ctor cell is NOT the resting cell — `input()` snaps it 8 px', () => {
@@ -227,7 +251,65 @@ describe('the four gates', () => {
         const c = settled();
         stepIceTurret(c, { terrainAt: () => ICE_TURRET.fatalTiles.lava });
         expect(c.destroy).toBe(true);
+        // ⛔⛔⛔ R5 SLICE 21: AND `destroy` IS NOT REMOVAL. Slice 20 asserted
+        // `removed` on this very tick. `Mobile.death()` is
+        // `alpha -= 0.1; if (alpha <= 0) FP.world.remove(this)`, and
+        // `Image.set alpha` CLAMPS — so it takes ELEVEN calls, ten of which
+        // leave 1.39e-16. The corpse is still `type = "Solid"` for all of
+        // them, which is eleven ticks of wall a route can be priced against.
+        expect(c.removed).toBe(false);
+        expect(c.solid).toBe(true);
+        // fade calls 2 .. n-1: still a wall
+        for (let i = 2; i < MOBILE_DEATH_FADE.ticks; i += 1) {
+            stepIceTurret(c, { terrainAt: () => ICE_TURRET.fatalTiles.lava });
+            expect(c.removed).toBe(false);
+        }
+        // …and the nth is the one that removes.
+        stepIceTurret(c, { terrainAt: () => ICE_TURRET.fatalTiles.lava });
         expect(c.removed).toBe(true);
+        expect(MOBILE_DEATH_FADE.ticks).toBe(11);
+    });
+
+    /**
+     * ⛔⛔⛔ AND A LIVE TURRET ON LAVA BECOMES A CORPSE FIRST.
+     *
+     * `IceTurret.death()`'s gate is the ANIM, not `hits` — so the first
+     * `destroy` is consumed exactly as a kill's would be, and the body dies
+     * on the tick after. `dieInLava` is the base default and this class
+     * clears only `dieInWater`, which is what lets the sequence start.
+     */
+    it('⛔ a LIVE turret on lava is intercepted into a corpse, then dies', () => {
+        const c = createIceTurret(OEL.x, OEL.y);
+        expect(c.dieInLava).toBe(true);
+        expect(c.dieInWater).toBe(false);
+        stepIceTurret(c, { terrainAt: () => ICE_TURRET.fatalTiles.lava });
+        expect(c.dead).toBe(true);
+        expect(c.destroy).toBe(false);
+        expect(c.removed).toBe(false);
+        for (let i = 0; i <= MOBILE_DEATH_FADE.ticks; i += 1) {
+            stepIceTurret(c, { terrainAt: () => ICE_TURRET.fatalTiles.lava });
+        }
+        expect(c.removed).toBe(true);
+    });
+
+    /**
+     * ⛓ AND WATER IS THE ONE THE `hits` GATE DECIDES. `IceTurret`'s ctor
+     * writes `dieInWater = false` and `update()`'s FIRST line re-derives it
+     * as `hits >= hitsMax` — so a live turret standing in water is fine and
+     * a corpse in the same cell drowns.
+     */
+    it('⛓ water kills the CORPSE and spares the live body — `dieInWater = hits >= hitsMax`', () => {
+        const live = createIceTurret(OEL.x, OEL.y);
+        for (let i = 0; i < 20; i += 1) {
+            stepIceTurret(live, { terrainAt: () => ICE_TURRET.fatalTiles.water });
+        }
+        expect(live.destroy).toBe(false);
+        expect(live.dead).toBe(false);
+
+        const corpse = settled();
+        stepIceTurret(corpse, { terrainAt: () => ICE_TURRET.fatalTiles.water });
+        expect(corpse.dieInWater).toBe(true);
+        expect(corpse.destroy).toBe(true);
     });
 
     it('⛓ a pit takes it too, and the descent REPLACES the glide', () => {

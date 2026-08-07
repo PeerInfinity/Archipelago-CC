@@ -61,6 +61,14 @@
  */
 
 import { rect } from './levelWorld.js';
+// ⛓⛓⛓ R5 SLICE 21: THE DAMAGE ARM. `enemyDamage.js` owns `Enemy.hit`'s
+// five gates, the i-frame timer, the death staging and `Mobile.death()`'s
+// eleven-tick fade for EVERY class; this file owns what is specific to
+// `IceTurret` — the `currentAnim != "dead"` gate above `super.hit`, and the
+// `death()` override that consumes the first `destroy`.
+import {
+    MOBILE_DEATH_FADE, PIT_FADE, createEnemyDamage, enemyHit, enemyHitUpdate, mobileDeath,
+} from './enemyDamage.js';
 
 export class IceTurretError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretError'; }
@@ -150,6 +158,19 @@ export function createIceTurret(x, y) {
     const ex = x + ICE_TURRET.ctor.dx;
     const ey = y + ICE_TURRET.ctor.dy;
     return {
+        // ⛓⛓ R5 SLICE 21: the damage fields, from the ONE transcription of
+        // `Enemy.as`'s defaults — `hits`, `hitsMax`, `hitsTimer`,
+        // `hitsTimerMax`, `hitByDarkStuff`, `canHit`, `onlyHitBy`,
+        // `hitByFire`, `justKnock`, `maxForce`, `dying`, `destroy`, `alpha`,
+        // `removed`. Spread FIRST so the fields below win where this class's
+        // constructor overwrites one.
+        ...createEnemyDamage('IceTurret', {
+            // `IceTurret`'s ctor line 51 — the ONE damage field it writes.
+            // ⚠ And it is not a constant: `update()`'s first line is
+            // `dieInWater = hits >= hitsMax`, so it flips the tick after the
+            // killing blow. Seeded false because that is what the ctor does.
+            dieInWater: false,
+        }),
         id: `iceturret@${x},${y}`,
         /** The OEL placement, for the id join with `world.solids`. */
         oel: { x, y },
@@ -159,8 +180,6 @@ export function createIceTurret(x, y) {
         tile: { x: Math.floor(ex / TILE), y: Math.floor(ey / TILE) },
         cTile: { x: Math.floor(ex / TILE), y: Math.floor(ey / TILE) },
         lTile: { x: Math.floor(ex / TILE), y: Math.floor(ey / TILE) },
-        hits: 0,
-        hitsTimer: 0,
         /** `sprIceTurret.currentAnim == "dead"` — the corpse predicate. */
         dead: false,
         /** `type == "Solid"` — a LATCH, set once the player steps off. */
@@ -242,21 +261,83 @@ export function iceTurretMovableDirections(state) {
 }
 
 /**
- * `Enemy.hit` for the types that can actually damage it, and `death()`'s
- * FIRST stage.
+ * ⛓⛓⛓ `IceTurret.hit(f, p, d, t)` — THE OVERRIDE, AND IT IS ONE LINE.
  *
- * ⛔ `death()` INTERCEPTS the removal: the hitbox shrinks to 16x16, the
- * "dead" anim plays, `destroy` goes BACK to false and `solids` gains
- * Enemy/Player. So a killed turret is still `classCount(IceTurret)` — a
- * kill lock in its room stays shut — and it writes NO persistence: there is
- * no `removed()`, no `setPersistence` and no tag anywhere in the class.
+ * ```
+ *   override public function hit(f, p, d, t):void {
+ *       if (sprIceTurret.currentAnim != "dead") super.hit(f, p, d, t);
+ *   }
+ * ```
+ *
+ * So the CORPSE is untouchable by every weapon — which is the reason
+ * `bumpIceTurret` could be modelled in slice 20 without a damage model at
+ * all, and the reason a sword press at a corpse is a genuine no-op rather
+ * than a fourth hit.
+ *
+ * ⛔ AND FIRE STILL CANNOT KILL IT. `Enemy.hit`'s third gate is
+ * `if (hitByFire || t != "Fire")` and `IceTurret` never sets `hitByFire`,
+ * so a fire hit falls to the else and calls `knockback` — which this class
+ * overrides EMPTY. Fire moves a corpse (`bump`, one layer up in
+ * `genericHit`) and does nothing whatever to a live turret.
+ *
+ * @returns the `enemyHit` verdict — see `enemyDamage.js`.
+ */
+export function hitIceTurret(state, { d = 1, f = 0, t = 'Sword', frozen = false } = {}) {
+    return enemyHit(state, { d, f, t, frozen, reachable: !state.dead });
+}
+
+/**
+ * The three sword hits as ONE call, for a probe or a fixture that wants a
+ * corpse without spending 63 ticks landing them at the i-frame cadence.
+ *
+ * ⛔⛔ AND IT NO LONGER PRODUCES A CORPSE. Slice 20's version wrote
+ * `dead = true` directly, which is `startDeath` AND `death()` collapsed into
+ * one instant — and `death()` is a TICK LATER, inside `Mobile.mobileUpdate`,
+ * on an update the killing blow's own tick has already run. What this sets
+ * is exactly what `Enemy.startDeath` sets: `destroy`. The next
+ * `stepIceTurret` is what turns the body into the corpse, because that is
+ * where the game does it. [[feedback_one_press_is_five_dispatches]] — the
+ * same shape one layer down: a death is a SEQUENCE, not a flag.
  */
 export function killIceTurret(state) {
-    if (state.dead) return state;
+    if (state.dead || state.dying) return state;
     state.hits = ICE_TURRET.hitsMax;
+    state.hitsTimer = ICE_TURRET.hitsTimerMax;
+    state.dying = true;
+    // `Enemy.startDeath` — and NOTHING else. The corpse is `death()`'s job.
+    state.destroy = true;
+    return state;
+}
+
+/**
+ * ⛔⛔⛔ `IceTurret.death()` — THE INTERCEPT, as `mobileDeath`'s hook.
+ *
+ * ```
+ *   if (destroy) {
+ *       if (anim == "dead") super.death();
+ *       else { setHitbox(16,16,8,8); play("dead"); destroy = false;
+ *              solids.push("Enemy","Player"); }
+ *   }
+ * ```
+ *
+ * The first call CONSUMES the destroy: the hitbox shrinks to 16x16, the
+ * "dead" anim plays and the body stays in the world. So a killed turret is
+ * still `classCount(IceTurret)` — a `tset == -1` lock in its room stays
+ * shut — and it writes NO persistence: there is no `removed()`, no
+ * `setPersistence` and no tag anywhere in the class.
+ *
+ * ⚠ AND THE GATE IS THE ANIM, NOT `hits`. A LIVE turret destroyed by lava
+ * (`dieInLava` is the base default and this class does not clear it) turns
+ * into a corpse first and dies on the tick after — which is the game, and
+ * is why this hook tests `dead` rather than `hits >= hitsMax`.
+ *
+ * @returns {boolean} true when the override consumed the destroy.
+ */
+function interceptIceTurretDeath(state) {
+    if (state.dead) return false;
     state.dead = true;
     state.destroy = false;
-    return state;
+    return true;
 }
 
 /**
@@ -378,25 +459,39 @@ export function stepIceTurret(state, ctx = {}) {
     if (state.removed) return state;
     state.ticks += 1;
 
+    // ── IceTurret.update()'s FIRST line, above `super.update()` ───────
+    // ⛓ `dieInWater = hits >= hitsMax` — RE-DERIVED EVERY TICK, so it flips
+    // on the tick AFTER the killing blow (the turret updates before the
+    // player, so the hit lands after this line has already run for that
+    // tick). One tick early or late is the difference between a corpse that
+    // drowns and one that does not.
+    state.dieInWater = state.hits >= state.hitsMax;
+
     // ── Enemy.update() ────────────────────────────────────────────────
-    if (ICE_TURRET.activeOffScreen || onScreen) {
+    if (state.activeOffScreen || onScreen) {
         // ⛔ THE TERRAIN SWITCH, ABOVE EVERY FREEZE GATE — and it does NOT
-        // need the body to be mid-glide. `dieInWater` is `hits >= hitsMax`,
-        // set at the top of `IceTurret.update` before `super.update()`, so
-        // it is true for a corpse and false for a live turret.
+        // need the body to be mid-glide.
         if (terrainAt) {
             const t = terrainAt(state.x, state.y);
-            if (t === ICE_TURRET.fatalTiles.water && state.dead) state.destroy = true;
-            else if (t === ICE_TURRET.fatalTiles.lava) state.destroy = true;
-            else if (t === ICE_TURRET.fatalTiles.pit && !state.fallInPit) state.fallInPit = true;
+            if (t === ICE_TURRET.fatalTiles.water && state.dieInWater) state.destroy = true;
+            else if (t === ICE_TURRET.fatalTiles.lava && state.dieInLava) state.destroy = true;
+            else if (t === ICE_TURRET.fatalTiles.pit && state.canFallInPit
+                && !state.fallInPit) state.fallInPit = true;
         }
-        if (!state.destroy && state.fallInPit) {
+        if (!state.destroy && state.fallInPit && state.canFallInPit) {
             // The descent: `Enemy.update`'s own block, which REPLACES the
-            // Mobile update — a body falling into a pit does not glide.
+            // Mobile update — a body falling into a pit does not glide, and
+            // does not reach `death()` either.
+            // ⛔ AND IT FADES THE SAME `alpha` `Mobile.death()` READS. Not a
+            // second counter: `(graphic as Image).alpha -= fallAlphaSpeed` is
+            // literally the field the removal test looks at, which is why a
+            // pit removal is IMMEDIATE where a hazard removal takes eleven
+            // ticks — the descent has already spent the whole budget.
             state.x += (Math.floor(state.x / TILE) * TILE + TILE / 2 - state.x) / 10;
             state.y += (Math.floor(state.y / TILE) * TILE + TILE / 2 - state.y) / 10;
-            state.pitAlpha = (state.pitAlpha ?? 1) - 0.05;
-            if (state.pitAlpha <= 0) { state.destroy = true; state.fell = true; }
+            const next = state.alpha - PIT_FADE.alphaStep;
+            state.alpha = next < 0 ? 0 : (next > 1 ? 1 : next);
+            if (state.alpha <= 0) { state.destroy = true; state.fell = true; }
         } else {
             // Mobile.mobileUpdate()
             if (!state.destroy && !frozen) {
@@ -404,9 +499,18 @@ export function stepIceTurret(state, ctx = {}) {
                 moveAxis(state, 'x', state.v.x, blockedAt);
                 moveAxis(state, 'y', state.v.y, blockedAt);
             }
-            // Mobile.death() — for a corpse, `IceTurret.death()` has already
-            // intercepted, so the second call is what actually removes it.
-            if (state.destroy) state.removed = true;
+            // ⛔⛔⛔ `death()`, AND IT IS UNCONDITIONAL — the last line of
+            // `mobileUpdate`, outside its `if (!destroy)` and outside the
+            // freeze gate. Slice 20 had `if (state.destroy) state.removed =
+            // true`, which is wrong TWICE: the first `destroy` is CONSUMED
+            // by `IceTurret.death()` (the corpse), and the second starts an
+            // eleven-tick alpha fade rather than removing anything. A corpse
+            // killed by a hazard is still a wall for those eleven ticks.
+            mobileDeath(state, interceptIceTurretDeath);
+            // `Enemy.update`'s own tail — and it reads `destroy` AFTER
+            // `death()` may have cleared it, which is why a turret's FIRST
+            // dead tick still runs `hitUpdate`.
+            if (!state.destroy) enemyHitUpdate(state, { onScreen });
         }
     }
 
@@ -490,41 +594,56 @@ export const ICE_TURRET_PLAN = Object.freeze({
             + 'corpse\'s own `solids` list so it also BLOCKS the glide',
     ]),
     /**
-     * ⛔⛔⛔ AND THE KILL IS THE BLOCKER — NAMED, PRICED AND NOT BUILT.
+     * ⛓⛓⛓ THE KILL — BUILT AT R5 SLICE 21, AND IT IS THE FIRST ONE.
      *
-     * The corpse is built, the bump is driven and `fire.bumps` exists; the
-     * leg cannot run because NO ENEMY IN THIS MODEL IS KILLABLE BY ANY
-     * WEAPON. `presses.PRESS_ARM_POLICY.Enemy` is `refused` ("a death moves
-     * totalEnemies(), which opens tSet == -1 locks") and the four modelled
-     * sword/spear arms are Tile, PushableBlockSpear, BreakableRock and
-     * LightPole — none of them an enemy. So a sword press whose slash rect
-     * reaches the turret THROWS one layer below the verb.
+     * `enemyDamage.js` is the arm; `hitIceTurret` is this class's gate above
+     * it, `killIceTurret` is `startDeath` alone, and `stepIceTurret`'s
+     * `mobileDeath` slot is where the corpse is actually made.
      *
-     * ⛓ What the kill needs is small and specific: `Enemy.hit`'s guards
-     * (`hitsTimer <= 0`, `onlyHitBy`, `if (hitByFire || t != "Fire")`, `hits
-     * += d`, `hits >= hitsMax -> startDeath`) plus a `hitsTimer` decrement
-     * in the stepper, plus a `kill` arm on the press verb. What makes it a
-     * SLICE rather than a paragraph is the refusal's own reason: a death
-     * moves `totalEnemies()`, which opens every `tset == -1` lock in the
-     * room, so the first enemy this model kills has to bring the kill-lock
-     * ledger with it.
+     * ⛔ THE CADENCE IS THE I-FRAME, AND THE MARGIN IS ONE TICK. A hit sets
+     * `hitsTimer = 30` during the PLAYER's update; the body's `hitUpdate`
+     * runs BEFORE the player each tick, so thirty decrements land on the
+     * thirty ticks after and the gate is open again on the thirtieth. A
+     * 31-tick press cadence (`combatVerbs.KILL_PRESS_CADENCE`, which is
+     * `max(21, 30 + 1)`) clears it by one — and 30 would not, which is why
+     * "three presses" is only a kill if the presses are SPACED.
      *
-     * ⚠ AND FIRE IS NOT THE WAY IN. `Enemy.hit`'s damage arm is
+     * ⛓ AND ONE PRESS IS AT MOST ONE LANDED HIT. `slashDelayMax` is 0, so
+     * `slash()`'s hit test runs on every tick the flag is up — five of them,
+     * the "slash" anim's own length — and the i-frame refuses four. The
+     * exception is `hitByDarkStuff`, which ORs past the i-frame; no weapon
+     * this rung carries sets it.
+     *
+     * ⛔⛔ AND THE DEATH COSTS THE LEDGER NOTHING, WHICH IS COMPUTED, NOT
+     * ASSUMED. `death()` intercepts, so `classCount(IceTurret)` does not
+     * move and no `tset == -1` lock can open — and L40 has none anyway (all
+     * nine of its locks are `wandlock`s with `tset` 0–5, plus a `keyType`-2
+     * `bosslock`). `enemyDamage.killLockLedger` runs the scan and ASSERTS
+     * the empty set, because "no kill locks" and "nobody looked" print the
+     * same thing.
+     *
+     * ⚠ AND FIRE IS STILL NOT THE WAY IN. `Enemy.hit`'s third gate is
      * `if (hitByFire || t != "Fire")` and `IceTurret` never sets
      * `hitByFire`, so a fire hit falls to the empty `knockback` override —
-     * which is exactly why the BUMP could be modelled without a damage
-     * model, and why the kill cannot.
+     * which is exactly why the BUMP could be modelled a slice before the
+     * damage model existed.
      */
     kill: Object.freeze({
         hits: ICE_TURRET.hitsMax,
-        cadence: ICE_TURRET.hitsTimerMax,
+        /** The i-frame the presses have to clear, in ticks. */
+        iFrames: ICE_TURRET.hitsTimerMax,
+        landedHitsPerPress: 1,
+        landedHitsPerPressWhy: 'the i-frame refuses the other four tests of the five-tick '
+            + 'slash window; `hitByDarkStuff` is the only thing that ORs past it and no '
+            + 'weapon this rung carries sets it',
         notFire: '`Enemy.hit`\'s `if (hitByFire || t != "Fire")` — fire falls to the '
             + 'else and calls the empty `knockback`',
         writes: 'nothing — no `removed()`, no `check()`, no `setPersistence`, no tag',
-        blocked: true,
-        blockedBy: '`presses.PRESS_ARM_POLICY.Enemy` is `refused` — no enemy in this '
-            + 'model is killable by any weapon, and a death moves `totalEnemies()`, '
-            + 'which opens every `tset == -1` lock in the room',
+        /** ⛔ `classCount(IceTurret)` is unchanged by a kill. */
+        movesTotalEnemies: false,
+        corpseIsStagedOnTheNextTick: true,
+        blocked: false,
+        arm: 'enemyDamage.KILL_ARM_POLICY.IceTurret — `modelled`, and the ONLY one',
     }),
     /** ⚠ And the corpse is per-VISIT: `new Game` rebuilds a live turret. */
     perVisit: 'a rebuild REVIVES the turret, so the kill, the pushes, the hold and '
