@@ -1266,7 +1266,17 @@ blocked list beside `fire`/`ghostsword`/`firewand`.
   new was recorded**: all 23 frozen fixtures byte-identical, headline claim
   intact.
 - **The verify sweep has tiers**: `--tier=fast` (18 tapes, ~4 min) and
-  `--tier=full` (the gate).
+  `--tier=full` (the gate). ⛓ R6 slice 0 added two more —
+  `--tier=gate` (90 tapes, the per-slice gate) and `--tier=legacy` (the 10
+  demoted ones, on demand). **`full` still means EVERYTHING**; the
+  pre-push gate was not narrowed. See `fixtures/tiers.js` for the measured
+  evidence, and note the one thing that keeps a NAMED list from rotting:
+  `LEGACY_TAPES` is the only named set and every other tier is its
+  COMPLEMENT over `fixtureNames()`, so a fixture added tomorrow joins the
+  gate automatically and the list can only ever fail SAFE. ⚠ **L49 (the
+  conch room) is the coverage that leaves the gate** — named in
+  `LEGACY_ONLY_LEVELS` and printed by every `--tier=gate` run, because a
+  bounded sweep must name what it bounded.
 
 ⚠ **A clear does more than despawn.** A rope SHRINKS to one cell rather
 than vanishing; a `FallRock` is ARMED by a clear (it is parked off-map
