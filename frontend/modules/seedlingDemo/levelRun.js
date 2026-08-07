@@ -1465,6 +1465,33 @@ export function createLevelRun({
                 hits.push({ as3: 'PushableBlockFire', id, moved, why });
                 continue;
             }
+            if (r.as3 === 'IceTurret') {
+                // ── ⛓⛓⛓ R5 SLICE 20: THE BUMP, THE TENTH FAMILY ───────
+                //
+                // `Player.genericHit`'s ONE class special case:
+                //     if (e is IceTurret) (e as IceTurret).bump(new Point(x, y), t);
+                //     (e as Enemy).hit(f, new Point(x, y), d, t);
+                // — the bump FIRST, then the hit, which for fire is inert
+                // by `Enemy.hit`'s `if (hitByFire || t != "Fire")`.
+                //
+                // ⛔ AND IT RUNS ON EVERY DISPATCH OF EVERY HIT TICK, which
+                // is the whole of §33.5's correction: five bumps on five
+                // consecutive ticks is why the rest cycle's PARITY stops
+                // mattering. Nothing here counts dispatches — `bump` is
+                // idempotent within a tick (it writes a target derived from
+                // the body's own position), so applying it once per hit
+                // tick is the same program.
+                const st = turretStateFor(level);
+                const t = st.get(r.id);
+                if (!t) {
+                    throw new Error(`levelRun: the fire press at tick ${pressTick} reaches `
+                        + `${r.tag}@${r.x},${r.y} in level ${level}, which is not in the `
+                        + "run's turret state.");
+                }
+                const res = bumpIceTurret(t, player, 'Fire');
+                hits.push({ as3: 'IceTurret', id: t.id, moved: res.applied, why: res.why });
+                continue;
+            }
             if (r.as3 === 'BurnableTree') {
                 // ── ⛓⛓ R5 SLICE 12: THE BURN, THE EIGHTH FAMILY ───────
                 //

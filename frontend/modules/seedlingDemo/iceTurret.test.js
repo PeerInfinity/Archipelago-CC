@@ -348,3 +348,137 @@ describe('settling — and the two predicates that lie about it', () => {
         }
     });
 });
+
+/**
+ * ⛓⛓⛓ THE ARM, DRIVEN. `FIRE_ARM_POLICY.IceTurret` was `refused` until this
+ * slice, so a fire press whose 32x32 rect touched the turret THREW one layer
+ * below the verb. It is `modelled` now and `levelRun.applyFire` routes it to
+ * `bumpIceTurret` — and the press is still inert against a LIVE body, which
+ * is the arithmetic rather than the policy.
+ */
+describe('the fire arm, through `levelRun`', () => {
+    const runAt = async (x, y) => {
+        const { createLevelRun } = await import('./levelRun.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        return createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 40, x, y },
+            noclip: false,
+            noDamage: true,
+            grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
+        });
+    };
+
+    it('⛓⛓ a fire press beside the turret no longer throws — the arm is open', async () => {
+        const { FIRE_ARM_POLICY } = await import('./presses.js');
+        expect(FIRE_ARM_POLICY.IceTurret.policy).toBe('modelled');
+        const run = await runAt(488, 448);
+        expect(run.turrets.get('iceturret@472,400')).toBeTruthy();
+        // The press itself: `applyFire`'s IceTurret arm runs and reports.
+        expect(() => {
+            run.equip?.(1);
+            for (let i = 0; i < 20; i += 1) run.advance(new Set());
+        }).not.toThrow();
+    });
+
+    it('⛔ …and it is INERT against a live body, by arithmetic not by policy', async () => {
+        const run = await runAt(488, 448);
+        const before = run.turrets.get('iceturret@472,400');
+        expect(before.dead).toBe(false);
+        expect(before.solid).toBe(false);
+        // A live turret is not a Solid, so the cell it stands in is walkable
+        // — which is the census correction this slice made, seen from the run.
+        for (let i = 0; i < 20; i += 1) run.advance(new Set());
+        const after = run.turrets.get('iceturret@472,400');
+        expect(after.dead).toBe(false);
+        expect(after.solid).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓ `fire.bumps` — THE FOURTH SHAPE OF A FIRE PRESS, and its refusals.
+ *
+ * ⛔⛔ THE LEG ITSELF CANNOT BE DRIVEN YET, and that is the slice's own
+ * finding rather than an omission: the corpse has to be KILLED first and no
+ * enemy in this model is killable by any weapon. `PRESS_ARM_POLICY.Enemy`
+ * is `refused` ("a death moves totalEnemies(), which opens tSet == -1
+ * locks") and only four sword/spear arms are modelled at all
+ * (Tile, PushableBlockSpear, BreakableRock, LightPole). So what is
+ * assertable here is every gate the verb puts in front of that — including
+ * the one that says exactly why.
+ */
+describe('`fire.bumps` — the verb, and the gate that names the blocker', () => {
+    const legs = async (fire, { roles = null, ...extra } = {}) => {
+        const { synthesizeLegs } = await import('./botDriverV2.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        return synthesizeLegs([{
+            level: 40,
+            // ⛔ A BUMP STANCE IS ALWAYS INSIDE THE TURRET'S OWN HAZARD DISC,
+            // and that is geometry rather than sloppiness: the fire rect is
+            // 32x32 around the player and `attackRange` is 128, so every
+            // stance that can reach the body is 96 px inside the volume the
+            // route would otherwise avoid. The leg has to DECLARE it —
+            // which is the right shape, because a live turret really does
+            // shoot and the declaration is what a recording has to answer.
+            contacts: ['proximity-hazard:iceturret@472,400'],
+            targets: [{ x: 488, y: 448, equip: { slot: 1 } }, { x: 488, y: 448, fire }],
+        }], {
+            levelSource: atlasLevelSource(),
+            boot: { level: 40, x: 488, y: 448 },
+            relax: {
+                noclip: false,
+                noDamage: true,
+                noHazards: [],
+                grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
+                equips: [],
+                ...(roles ? { roles } : {}),
+            },
+            ...extra,
+        });
+    };
+    const TO = { tx: 30, ty: 24 };
+    const BUMP = { id: 'iceturret@472,400', to: TO };
+
+    it('⛔⛔ refuses a LIVE turret, and names the kill it needs', async () => {
+        await expect(legs({ bumps: [BUMP], enemyRoom: 'test' }))
+            .rejects.toThrow(/is ALIVE.*undisplaceable.*Kill it first/s);
+    });
+
+    /**
+     * ⛔⛔ THE ENEMY-ROOM REFUSAL, BOTH HALVES — because a corpse collides
+     * with "Enemy" exactly as a pushable block does (`death()` runs
+     * `solids.push("Enemy", "Player")`), so its glide corridor is
+     * uncertifiable in a room with a wandering bob in it.
+     */
+    it('⛔⛔ refuses an ABSENT combat census — not an empty one', async () => {
+        await expect(legs({ bumps: [BUMP] }))
+            .rejects.toThrow(/NO COMBAT CENSUS.*absent census is not an empty one/s);
+    });
+
+    it('⛔ …and refuses the room itself once the census is there', async () => {
+        await expect(legs({ bumps: [BUMP] }, { roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'] }))
+            .rejects.toThrow(/other enem.*enemyRoom/s);
+    });
+
+    it('⛔ refuses a turret the level does not hold', async () => {
+        await expect(legs({ bumps: [{ id: 'iceturret@0,0', to: TO }], enemyRoom: 'test' }))
+            .rejects.toThrow(/holds no iceturret@0,0/);
+    });
+
+    it('⛔ refuses a malformed target and a `to` that is where it already is', async () => {
+        await expect(legs({ bumps: [], enemyRoom: 'test' }))
+            .rejects.toThrow(/non-empty array of \{id, to:\{tx,ty\}\}/);
+        await expect(legs({ bumps: [{ id: 'iceturret@472,400' }], enemyRoom: 'test' }))
+            .rejects.toThrow(/\{id, to:\{tx,ty\}\} with integer tiles/);
+        // ⛓ ALREADY-THERE is a property of the PLAN, so it is checked
+        // before the run-state refusals — which is what lets this assert it
+        // at all while nothing can kill the turret.
+        await expect(legs({ bumps: [{ id: 'iceturret@472,400', to: { tx: 30, ty: 26 } }],
+            enemyRoom: 'test' })).rejects.toThrow(/is ALREADY on \(30,26\)/);
+    });
+
+    it('⛔ and a fire press still names EXACTLY ONE effect', async () => {
+        await expect(legs({ bumps: [BUMP], burns: [{ x: 0, y: 0 }], enemyRoom: 'test' }))
+            .rejects.toThrow(/EXACTLY ONE/);
+    });
+});

@@ -555,10 +555,25 @@ export const FIRE_ARM_POLICY = Object.freeze({
             + 'so an accidental one cannot happen silently.',
     },
     IceTurret: {
-        policy: 'refused',
-        why: '`IceTurret.bump` is gated on `t == "Fire" || t == "Pulse"` — so unlike '
-            + 'every other enemy it takes a SECOND, class-specific arm from a fire '
-            + 'press. Dungeon 5 and L40; refused until a route needs it.',
+        // ⛓⛓⛓ OPENED AT R5 SLICE 20. `IceTurret.bump` is gated on
+        // `t == "Fire" || t == "Pulse"` — so unlike every other enemy it
+        // takes a SECOND, class-specific arm from a fire press, and
+        // `Player.genericHit` calls it BEFORE `Enemy.hit`, on every
+        // dispatch. `iceTurret.js` models it and `levelRun.applyFire`
+        // drives it; the verb is `fire.bumps`.
+        //
+        // ⚠ AND THE OTHER HALF OF THE ARM IS STILL REFUSED: `genericHit`
+        // then calls `(e as Enemy).hit(f, p, d, "Fire")`, which for a
+        // turret is a NO-OP by arithmetic rather than by policy —
+        // `Enemy.hit`'s damage arm is `if (hitByFire || t != "Fire")` and
+        // `IceTurret` never sets `hitByFire`, so a fire hit falls to the
+        // empty `knockback` override. Fire MOVES a corpse and cannot hurt
+        // anything. That is why this can be modelled without an enemy
+        // damage model, and why the KILL still cannot.
+        policy: 'modelled',
+        why: 'the bump — `iceTurret.js` and the run\'s per-visit turret state. The '
+            + '`Enemy.hit` half is inert for fire by `if (hitByFire || t != "Fire")`, '
+            + 'so no damage is implied and none is modelled.',
     },
     BombPusher: {
         policy: 'inert',

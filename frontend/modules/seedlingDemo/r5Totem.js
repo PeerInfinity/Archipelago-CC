@@ -2071,10 +2071,17 @@ export const L40_CORPSE = Object.freeze({
     wired: true,
     module: 'frontend/modules/seedlingDemo/iceTurret.js',
     /** ⛔ The four gates a leg has to satisfy at once — `ICE_TURRET_PLAN.gates`. */
-    next: 'the LEG: kill it with the sword (fire cannot — `Enemy.hit`\'s '
-        + '`if (hitByFire || t != "Fire")`), step off the corpse for the Solid latch, two '
-        + 'northward fire presses from due south, and the hold plus everything downstream '
-        + 'of it in ONE window, because a rebuild revives the turret.',
+    next: 'the LEG, and it is BLOCKED ON THE KILL. `presses.PRESS_ARM_POLICY.Enemy` is '
+        + '`refused` and the four modelled sword/spear arms are Tile, PushableBlockSpear, '
+        + 'BreakableRock and LightPole — NO ENEMY IN THIS MODEL IS KILLABLE BY ANY WEAPON, '
+        + 'so a sword press whose slash rect reaches the turret throws one layer below '
+        + '`fire.bumps`. Fire is not the way in either (`Enemy.hit`\'s '
+        + '`if (hitByFire || t != "Fire")` sends it to the empty `knockback`), which is '
+        + 'exactly why the BUMP could be modelled without a damage model. Build the kill, '
+        + 'then: step off the corpse for the Solid latch, two northward fire presses from '
+        + 'due south, and the hold plus everything downstream of it in ONE window, because '
+        + 'a rebuild revives the turret.',
+    legBlockedOn: 'the KILL — an enemy damage model, which no rung has built',
 });
 
 /**

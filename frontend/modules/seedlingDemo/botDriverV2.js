@@ -91,6 +91,7 @@ import { MODELLED_ENEMY_CLASSES, unmodelledEnemies } from './spinner.js';
 import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { scanCrusher } from './crusher.js';
+import { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -2229,13 +2230,14 @@ function runFire(run, perTick, fire, what) {
             + 'span, change nothing and report success. A tape that fires must declare '
             + 'noclip: false.');
     }
-    const { moves = null, rope = null, burns = null, wait = null } = fire;
-    const named = [moves, rope, burns].filter((e) => e !== null);
+    const { moves = null, rope = null, burns = null, bumps = null, wait = null } = fire;
+    const named = [moves, rope, burns, bumps].filter((e) => e !== null);
     if (named.length !== 1) {
         fail(`${what}: a fire press names EXACTLY ONE of \`moves\` (blocks, by the tile `
             + 'they are on and the tile they should end on), `rope` (a RopeStart, by '
-            + 'its OEL coordinates) or `burns` (BurnableTrees, by their OEL '
-            + 'coordinates). Naming none fires at nothing; naming more than one makes '
+            + 'its OEL coordinates), `burns` (BurnableTrees, by their OEL '
+            + 'coordinates) or `bumps` (IceTurret CORPSES, by id and the tile they '
+            + 'should end on). Naming none fires at nothing; naming more than one makes '
             + 'the effect check ambiguous.');
     }
     /**
@@ -2406,6 +2408,142 @@ function runFire(run, perTick, fire, what) {
                 + 'visit already spent it.');
         }
         expect = { kind: 'rope', id };
+    } else if (bumps) {
+        /**
+         * ── ⛓⛓⛓ THE BUMP ARM (R5 slice 20) ───────────────────────────
+         *
+         * The FOURTH shape of a fire press, and the first whose target is
+         * an ENEMY. `Player.genericHit` has a special case for exactly one
+         * class — `if (e is IceTurret) (e as IceTurret).bump(new Point(x,
+         * y), t)` — and it runs BEFORE `Enemy.hit`, on every dispatch.
+         *
+         * ⛔⛔ THE VERB TAKES A STANCE AND A COUNT, NOT A TICK. §33.5
+         * measured ONE bump, found that the direction flips with the rest
+         * cycle's phase, and concluded that "a fire press's tick PARITY is
+         * load-bearing, which no press verb in this driver can express". A
+         * press is FIVE bumps — `FIRE_WINDOW.hitTicks` is [4,5,6,7,8] — so
+         * whichever phase the first lands on, the second lands on the
+         * other, and the refused direction (half a pixel, back in two
+         * ticks) never settles. All four cardinal pushes move a tile from
+         * both parities. What survives is a ±0.5 px difference in where the
+         * body comes to rest, which is why `to` is a TILE.
+         *
+         * ⛔ AND IT IS THE TILE OF THE ENTITY, not of the box. The corpse's
+         * 16x16 box straddles a tile boundary on one half of the cycle
+         * (`[479.5,495.5)` floors to col 29 where `[480,496)` floors to 30),
+         * so a `to` read off the box would be parity-dependent — which is
+         * exactly the thing this verb exists to stop a plan having to know.
+         */
+        if (!Array.isArray(bumps) || bumps.length === 0) {
+            fail(`${what}: fire.bumps must be a non-empty array of {id, to:{tx,ty}} — the `
+                + 'turret id `world.iceTurrets` carries and the ENTITY tile the corpse '
+                + 'should end on.');
+        }
+        const live = [];
+        for (const b of bumps) {
+            if (!b || typeof b.id !== 'string' || !b.to
+                || !Number.isInteger(b.to.tx) || !Number.isInteger(b.to.ty)) {
+                fail(`${what}: fire.bumps[] must be {id, to:{tx,ty}} with integer tiles, `
+                    + `got ${JSON.stringify(b)}.`);
+            }
+            const row = (run.world.iceTurrets ?? []).find((t) => t.id === b.id);
+            if (!row) {
+                fail(`${what}: level ${run.level} holds no ${b.id}. Known: `
+                    + `[${(run.world.iceTurrets ?? []).map((t) => t.id).join(', ') || 'none'}].`);
+            }
+            const now = (run.turrets ?? new Map()).get(b.id);
+            if (!now) {
+                fail(`${what}: the run has no state for ${b.id}, which means `
+                    + '`levelRun` did not build a roster for this level — a bump against '
+                    + 'no state would report the corpse unmoved and say nothing about why.');
+            }
+            const from = { tx: Math.floor(now.x / TILE_SIZE), ty: Math.floor(now.y / TILE_SIZE) };
+            if (from.tx === b.to.tx && from.ty === b.to.ty) {
+                fail(`${what}: ${b.id} is ALREADY on (${b.to.tx},${b.to.ty}), so a press `
+                    + 'that changed nothing would pass. Name where it should GO.');
+            }
+            live.push({ id: b.id, from, to: { ...b.to } });
+        }
+        /**
+         * ⛔⛔ AND THE ENEMY-ROOM REFUSAL APPLIES HERE TOO, for the SAME
+         * reason it applies to a block: `death()` runs
+         * `solids.push("Enemy", "Player")`, so a corpse is the second mover
+         * in the game that collides with enemies, and the model does not
+         * simulate a single wandering enemy's POSITION. "The corpse glides
+         * two tiles" is a prediction it is not entitled to make in a room
+         * with a live bob in it. The escape hatch is the same declaration
+         * with evidence, not a flag.
+         *
+         * ⚠ THE TURRET'S OWN CORPSE DOES NOT COUNT. It is in the census as
+         * an enemy and it is the thing being pushed; the question is what
+         * ELSE is alive.
+         */
+        // ⛔⛔ AN ABSENT CENSUS IS A REFUSAL, NOT A PASS — the `moves` arm's
+        // own lesson, on the one question this check exists to ask.
+        // [[feedback_silent_watcher_vacuous_negative]].
+        if (!fire.enemyRoom && !run.world?.combat) {
+            fail(`${what}: the run's world for level ${run.level} has NO COMBAT CENSUS, so `
+                + "whether an enemy can wedge this corpse's glide cannot be asked. The "
+                + '`combat` role is opt-in; build the world with it, or declare '
+                + '`fire.enemyRoom: "<what the GAME said>"`. An absent census is not an '
+                + 'empty one.');
+        }
+        const others = (run.world.combat?.enemies ?? []).filter(
+            (e) => !e.removed && !live.some((m) => m.id === `${e.tag}@${e.x},${e.y}`));
+        if (others.length > 0 && !fire.enemyRoom) {
+            fail(`${what}: level ${run.level} holds ${others.length} other enemy/enemies `
+                + `[${[...new Set(others.map((e) => e.tag))].join(', ')}] and a CORPSE `
+                + 'collides with "Enemy" (`death()` runs `solids.push("Enemy","Player")`), '
+                + 'so its glide corridor cannot be certified by a model that does not '
+                + 'simulate their positions. Declare `fire.enemyRoom: "<why>"` — the same '
+                + 'declaration-with-evidence a `moves` press in an enemy room needs, and '
+                + 'the evidence is a recording.');
+        }
+        /**
+         * ⛔⛔ THE POSITIVE CONTROL IS "IT IS DEAD", AND IT IS THE ONE THAT
+         * MATTERS — SO IT IS CHECKED LAST, after every refusal that is a
+         * property of the PLAN. `IceTurret.bump` is gated on the "dead"
+         * anim and `knockback` is an EMPTY override, so a press at a LIVE
+         * turret is a silent no-op in both directions: the effect check
+         * below would report the body unmoved and read as a geometry
+         * mistake on a leg whose geometry was perfect.
+         * [[feedback_failure_detail_describes_the_pass]], pre-empted.
+         *
+         * ⛔⛔⛔ AND IT IS THE SLICE'S OWN BLOCKER, NAMED WHERE IT BITES. No
+         * enemy in this model is killable by any weapon:
+         * `PRESS_ARM_POLICY.Enemy` is `refused` ("a death moves
+         * totalEnemies(), which opens tSet == -1 locks") and the four
+         * modelled sword/spear arms are Tile, PushableBlockSpear,
+         * BreakableRock and LightPole. The corpse is built, the bump is
+         * driven, and the KILL is an enemy damage model nobody has written.
+         */
+        for (const m of live) {
+            const now = run.turrets.get(m.id);
+            if (!now.dead) {
+                fail(`${what}: ${m.id} is ALIVE. \`IceTurret.bump\` is gated on the "dead" `
+                    + 'anim and `knockback` is an empty override, so a live turret is '
+                    + 'undisplaceable by anything — the press would land, the five '
+                    + 'dispatches would run and NOTHING would move. Kill it first: '
+                    + `${ICE_TURRET.hitsMax} hits, and NOT with fire (\`Enemy.hit\`'s `
+                    + '`if (hitByFire || t != "Fire")` sends a fire hit to the empty '
+                    + '`knockback`). ⛔ NO WEAPON IN THIS MODEL KILLS ANYTHING YET — '
+                    + '`PRESS_ARM_POLICY.Enemy` is `refused`, so the kill is the next '
+                    + 'thing that has to be built.');
+            }
+            if (now.removed) {
+                fail(`${what}: ${m.id} is GONE — it reached water, lava or a pit and `
+                    + '`Enemy.death()` ran for real. There is no body to push.');
+            }
+        }
+        expect = {
+            kind: 'bumps',
+            live,
+            // ⛓ The whole roster's positions BEFORE the press — the strays
+            // check's other half, and a snapshot rather than a reference
+            // because `run.turrets` is rebuilt every query.
+            beforeTurrets: new Map([...(run.turrets ?? new Map())]
+                .map(([id, t]) => [id, { x: t.x, y: t.y }])),
+        };
     } else if (burns) {
         /**
          * ── ⛓⛓⛓ THE BURN ARM (R5 slice 14) ───────────────────────────
@@ -2655,8 +2793,27 @@ function runFire(run, perTick, fire, what) {
      * `assertBurnWaitCovers` is the module's own statement of the same
      * obligation and the plan side calls it; this is the driver's floor.
      */
-    const ticks = wait ?? (expect.kind === 'burns'
-        ? BURN_WAIT_AFTER_PRESS_TICKS : PUSH_GLIDE_TICKS);
+    const DEFAULT_WAIT = {
+        burns: BURN_WAIT_AFTER_PRESS_TICKS,
+        bumps: ICE_TURRET_PLAN.waitAfterPressTicks,
+    };
+    const ticks = wait ?? (DEFAULT_WAIT[expect.kind] ?? PUSH_GLIDE_TICKS);
+    /**
+     * ⛓ A BUMP'S WAIT IS NOT A BLOCK'S EITHER, and the coincidence is worth
+     * naming: a block's glide is 32 ticks from the press and a corpse's is
+     * 32 ticks from the END of the five-bump window, so the corpse settles
+     * at T+38 (parity 0) or T+37 (parity 1) against `PUSH_GLIDE_TICKS`'s 40.
+     * It fits, by two ticks, for reasons that have nothing to do with each
+     * other — so the floor is `ICE_TURRET_PLAN.waitAfterPressTicks` and not
+     * the block's constant.
+     */
+    if (expect.kind === 'bumps' && ticks < ICE_TURRET_PLAN.waitAfterPressTicks) {
+        fail(`${what}: fire.wait is ${ticks} and a corpse takes `
+            + `${ICE_TURRET_PLAN.settledBy.parity0} ticks to settle from the press `
+            + `(32 ticks of 0.5 px motion, starting from the LAST of the five bumps at `
+            + `T+${FIRE_WINDOW.lastHitTick}) — wait at least `
+            + `${ICE_TURRET_PLAN.waitAfterPressTicks}.`);
+    }
     if (expect.kind === 'burns' && ticks < BURN_WAIT_AFTER_PRESS_TICKS) {
         fail(`${what}: fire.wait is ${ticks} and a burn is SOLID for `
             + `${BURN_HIT_TO_GONE_TICKS} ticks after the press — `
@@ -2665,6 +2822,7 @@ function runFire(run, perTick, fire, what) {
             + '0.4995 per update.');
     }
     let stillSolidAt = null;
+    let glidingAt = null;
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
         const { transition } = run.advance(NO_HELD);
@@ -2692,6 +2850,34 @@ function runFire(run, perTick, fire, what) {
                     + 'walls the game has not taken down yet.');
             }
             stillSolidAt = i;
+        }
+        /**
+         * ⛓⛓ THE BUMP ARM'S OWN MID-LEG READING, and it is the burn's
+         * shape with the sign flipped: a burning tree must STILL BE THERE
+         * at T+10 and a bumped corpse must ALREADY BE MOVING and NOT YET
+         * ARRIVED. Both are facts about the middle of the leg that the end
+         * state cannot recover — a model that teleported the body to its
+         * target on the press tick would pass every end-state check.
+         */
+        if (expect.kind === 'bumps' && i === FIRE_WINDOW.endTick) {
+            for (const m of expect.live) {
+                const now = run.turrets.get(m.id);
+                const at = { tx: Math.floor(now.x / TILE_SIZE), ty: Math.floor(now.y / TILE_SIZE) };
+                if (at.tx === m.to.tx && at.ty === m.to.ty) {
+                    fail(`${what}: ${m.id} was already on (${m.to.tx},${m.to.ty}) `
+                        + `${i} tick(s) after the press. A corpse glides at `
+                        + `${ICE_TURRET.moveSpeed} px/tick and a tile is ${TILE_SIZE} px, `
+                        + 'so arriving inside the press window is a model that moved it '
+                        + 'instantly rather than one that pushed it.');
+                }
+                if (run.turretsSettled) {
+                    fail(`${what}: ${m.id} reports SETTLED ${i} tick(s) after the press, `
+                        + 'i.e. it never started moving. The five bumps ran and the body '
+                        + 'is where it was — check the stance is inside the 32x32 fire '
+                        + 'rect and the 16 px radius cut.');
+                }
+            }
+            glidingAt = i;
         }
         // ⚠ NOT BEFORE THE WINDOW HAS FIRED. `run.pushesSettled` is true
         // for the first four ticks too — the hits have not landed yet — so
@@ -2750,6 +2936,60 @@ function runFire(run, perTick, fire, what) {
                 + 'without it "the tree burned" is compatible with a model that removed '
                 + 'it on the press tick.');
         }
+    } else if (expect.kind === 'bumps') {
+        // ── ⛓⛓ THE EFFECT: THE NAMED TILE, AND NOTHING ELSE MOVED ────
+        if (!run.turretsSettled) {
+            fail(`${what}: a corpse is STILL GLIDING after ${ticks} tick(s). A route `
+                + 'flooded against a moving body is a route planned against a wall that '
+                + 'is not there yet — wait for `run.turretsSettled`.');
+        }
+        const at = (id) => {
+            const now = run.turrets.get(id);
+            return { tx: Math.floor(now.x / TILE_SIZE), ty: Math.floor(now.y / TILE_SIZE) };
+        };
+        for (const m of expect.live) {
+            const got = at(m.id);
+            if (got.tx !== m.to.tx || got.ty !== m.to.ty) {
+                fail(`${what}: fired at (${at.x},${at.y}) and ${m.id} ended on `
+                    + `(${got.tx},${got.ty}) rather than (${m.to.tx},${m.to.ty}). The push `
+                    + 'is AWAY from the press point and it moves ONE TILE PER AXIS '
+                    + `(\`bothRange ${ICE_TURRET.bothRange}\` lets both arms fire), so a `
+                    + 'stance off the cardinal by more than that moves it diagonally.');
+            }
+            /**
+             * ⛔⛔ AND THE SOLID LATCH IS THE OTHER HALF, because a corpse
+             * that is not a Solid presses no button. `type = "Solid"` is set
+             * only on a tick the player's box is OFF the body, and nothing
+             * ever writes it back — so this is a claim about the WALK as
+             * much as about the push.
+             */
+            if (!run.turrets.get(m.id).solid) {
+                fail(`${what}: ${m.id} is on (${got.tx},${got.ty}) and is NOT a Solid. `
+                    + '`IceTurret.update`\'s `else if (!collide("Player", x, y)) type = '
+                    + '"Solid"` needs one tick with the player off the body, and a corpse '
+                    + 'that is not Solid presses nothing and blocks nothing. Step OFF it.');
+            }
+        }
+        // ⛔ A fire press has no aim and there is no second turret in the
+        // game within a 32x32 rect of the first — but the rule is the
+        // family's, not the level's, and a silence here is what the `moves`
+        // arm's strays check exists to stop.
+        const namedIds = new Set(expect.live.map((m) => m.id));
+        const strays = [];
+        for (const [id, before] of expect.beforeTurrets) {
+            if (namedIds.has(id)) continue;
+            const now = run.turrets.get(id);
+            if (!now || now.x !== before.x || now.y !== before.y) strays.push(id);
+        }
+        if (strays.length > 0) {
+            fail(`${what}: the press at (${at.x},${at.y}) ALSO moved `
+                + `[${strays.join(', ')}], which the leg does not name.`);
+        }
+        if (glidingAt === null) {
+            fail(`${what}: the leg never took the STILL-GLIDING reading — the wait ended `
+                + `before tick ${FIRE_WINDOW.endTick}. Without it "the corpse ended on the `
+                + 'tile" is compatible with a model that teleported it on the press tick.');
+        }
     } else {
         const got = [];
         for (const [id, b] of run.pushables) {
@@ -2804,6 +3044,12 @@ function runFire(run, perTick, fire, what) {
         threadedBy,
         ...(expect.kind === 'rope' ? { id: expect.id } : {}),
         ...(expect.kind === 'blocks' ? { moves: expect.live.map((m) => ({ ...m })) } : {}),
+        ...(expect.kind === 'bumps' ? {
+            bumps: expect.live.map((m) => ({ ...m, to: { ...m.to }, from: { ...m.from } })),
+            // ⛓ The mid-leg reading, reported so a plan can see that the
+            // two-sided claim was actually taken rather than skipped.
+            glidingAt,
+        } : {}),
         ...(expect.kind === 'burns' ? {
             burns: expect.live.map((t) => {
                 // ⛓ THE TIMESTAMPS, REPORTED SEPARATELY, because a SET has

@@ -489,13 +489,42 @@ export const ICE_TURRET_PLAN = Object.freeze({
         'the player OFF the corpse for the Solid latch, and the player is in the '
             + 'corpse\'s own `solids` list so it also BLOCKS the glide',
     ]),
-    /** ⛓ And the kill is not a fire press. */
+    /**
+     * ⛔⛔⛔ AND THE KILL IS THE BLOCKER — NAMED, PRICED AND NOT BUILT.
+     *
+     * The corpse is built, the bump is driven and `fire.bumps` exists; the
+     * leg cannot run because NO ENEMY IN THIS MODEL IS KILLABLE BY ANY
+     * WEAPON. `presses.PRESS_ARM_POLICY.Enemy` is `refused` ("a death moves
+     * totalEnemies(), which opens tSet == -1 locks") and the four modelled
+     * sword/spear arms are Tile, PushableBlockSpear, BreakableRock and
+     * LightPole — none of them an enemy. So a sword press whose slash rect
+     * reaches the turret THROWS one layer below the verb.
+     *
+     * ⛓ What the kill needs is small and specific: `Enemy.hit`'s guards
+     * (`hitsTimer <= 0`, `onlyHitBy`, `if (hitByFire || t != "Fire")`, `hits
+     * += d`, `hits >= hitsMax -> startDeath`) plus a `hitsTimer` decrement
+     * in the stepper, plus a `kill` arm on the press verb. What makes it a
+     * SLICE rather than a paragraph is the refusal's own reason: a death
+     * moves `totalEnemies()`, which opens every `tset == -1` lock in the
+     * room, so the first enemy this model kills has to bring the kill-lock
+     * ledger with it.
+     *
+     * ⚠ AND FIRE IS NOT THE WAY IN. `Enemy.hit`'s damage arm is
+     * `if (hitByFire || t != "Fire")` and `IceTurret` never sets
+     * `hitByFire`, so a fire hit falls to the empty `knockback` override —
+     * which is exactly why the BUMP could be modelled without a damage
+     * model, and why the kill cannot.
+     */
     kill: Object.freeze({
         hits: ICE_TURRET.hitsMax,
         cadence: ICE_TURRET.hitsTimerMax,
         notFire: '`Enemy.hit`\'s `if (hitByFire || t != "Fire")` — fire falls to the '
             + 'else and calls the empty `knockback`',
         writes: 'nothing — no `removed()`, no `check()`, no `setPersistence`, no tag',
+        blocked: true,
+        blockedBy: '`presses.PRESS_ARM_POLICY.Enemy` is `refused` — no enemy in this '
+            + 'model is killable by any weapon, and a death moves `totalEnemies()`, '
+            + 'which opens every `tset == -1` lock in the room',
     }),
     /** ⚠ And the corpse is per-VISIT: `new Game` rebuilds a live turret. */
     perVisit: 'a rebuild REVIVES the turret, so the kill, the pushes, the hold and '
