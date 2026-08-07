@@ -4367,3 +4367,99 @@ worth naming because they are the shapes a slow-oracle failure takes:
 Read the harness's own measured constants before inferring a mechanism from
 its symptoms. Both readings above were available to check in the same file
 that produced the symptom.
+
+## R5 slice 20 — the wand room is a trap, and an alive ice turret was never a wall
+
+Two things a reader gets backwards, and both were in the notes for slices.
+
+### L43: collecting the wand seals the only way out
+
+`BossTotem`'s census row said *"escaped south during its 240-tick rumble"*
+for four rungs. There is no escape south to time. `Wand.tset` is 0 and the
+Wand's `removed()` walks every `Activators` in the world setting
+`activate = true` where `n.t == tset` — and L43's **three `fallrock`s are
+all tset 0**. One of them, `fallrock@176,384 {tag 3}`, lands on tile
+**(11,24)**: the unique open tile of row 24, which is the mouth of the
+col-11 shaft `stairsup@176,464` sits at the bottom of.
+
+```
+  flood from the wand's own cell, 8 px lattice
+    rocks overhead   327 cells   stairs REACHED
+    rocks landed     279 cells   stairs GONE
+```
+
+The other two seal the side alcoves, which nothing needs, so the seal is one
+rock. And it is permanent: `fall()`'s first line is
+`Game.setPersistence(tag, false)` and the constructor reads it back, so
+every later visit finds the shaft plugged. Since every pit in L40 is a
+one-way transport into L43, **after the wand every L40 pit is a one-way trip
+into a sealed room.**
+
+North is no better. The freeze the rocks impose runs from the publishing
+tick to **A+185**, `fullyActivated` lands at **A+215** and the clamp
+(`p.y := 212`, an assignment at the top of `BossTotem.update()` with no
+freeze test above it) bites at **A+216** — 31 live ticks against the 160 px
+`teleporter@144,64` is away. And before the wake the boss is
+`type = "Solid"` across all five arena columns, so north is shut by
+collision before the wand and by assignment after it, with no gap between
+them. **The room opens on the boss's death and at no other time.**
+
+The full tick table is `r5Totem.L43_BOSS_WAKE.ticks` and
+`probe-seedling-r5-l43-boss-wake.mjs` re-derives every number from stepped
+loops rather than closed forms.
+
+⚠ One thing the ceremony vocabulary did not have: **the wand pickup is
+input-bounded.** `Wand.text` splits on `~` into two segments and `NPC.update`
+advances only on `Input.released(Key.X)`, so a tape that presses nothing
+sits frozen for ever. Every other R5 ceremony is a fixed 150.
+
+### The tenth per-visit family, and the `if` that was misread
+
+`ENTITY_CLASSES.iceturret` priced the live body as an unconditional 32x32
+solid, on the reading that `type = "Solid"` is the else-arm of the
+attack-range test. It is the else-arm of
+`if (sprIceTurret.currentAnim != "dead")`. So an **alive ice turret blocks
+nothing**, a corpse blocks only from the first tick the player's box is off
+it, and nothing ever writes the type back — the flip is a latch.
+
+`iceTurret.js` is the family; `liveRectOf`'s turret arm is the only one in
+the chain that **never falls through to `s.rect`**, because absent run state
+means *not a solid* rather than *still where the level built it*. That makes
+`turrets` the one option key in `stepV2` whose absence UNDER-blocks: every
+other family's key makes a solid go away, this one makes one appear.
+
+The correction is worth +16 lattice cells in every arm of
+`L40_ARRIVAL_BREAK` and changes none of its verdicts — a constant shift in
+all four arms cannot move a comparison between them.
+
+### A press is five bumps, so the parity stopped mattering
+
+Slice 19 measured ONE `bump`, found that a standing corpse is a two-cycle
+whose phase decides which way a push moves it, and concluded that a fire
+press's tick parity was load-bearing and inexpressible.
+
+`FIRE_WINDOW.hitTicks` is `[4,5,6,7,8]` and `Player.genericHit` calls
+`IceTurret.bump` before `Enemy.hit` on **every dispatch of every hit tick**.
+One press is five bumps on five consecutive ticks, and the turret updates
+before the player, so bumps 2..5 re-aim a body that is already moving.
+Whichever phase bump 1 lands on, bump 2 lands on the other; the refused
+direction travels half a pixel and is back in two ticks. All four cardinal
+pushes move a tile from both parities.
+
+⇒ **a verb whose effect is a SEQUENCE cannot be priced from one application
+of its primitive.** `fire.bumps` takes a stance and a count, `to` is a tile
+(the box straddles a boundary on one half of the cycle, the entity does
+not), and the resting position differs by half a pixel between parities —
+something an assertion allows for, not something a plan steers.
+
+### And the kill is the blocker
+
+The corpse is built and the bump is driven; the leg cannot run because **no
+enemy in this model is killable by any weapon**.
+`presses.PRESS_ARM_POLICY.Enemy` is `refused` — *"a death moves
+totalEnemies(), which opens tSet == -1 locks"* — and the four modelled
+sword/spear arms are `Tile`, `PushableBlockSpear`, `BreakableRock` and
+`LightPole`. Fire is not a way round it: `Enemy.hit`'s
+`if (hitByFire || t != "Fire")` sends a fire hit to the empty `knockback`
+override, which is exactly why the bump could be modelled without a damage
+model and why the kill cannot.
