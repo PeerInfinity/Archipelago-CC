@@ -35,6 +35,10 @@ import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 // enter and the ledger it may earn all live beside the plan they are a
 // control for, so the two cannot drift apart.
 import { SHAFT_PAIR } from './r5Shaft.js';
+// ⛓ R5 slice 19: L42's pair is the FIRST whose two arms are one LOAD apart —
+// the drive takes the exit teleporter and the control never leaves the room —
+// so the ceremony's subtraction carries a fade term and needs its band.
+import { describeFadeBand, fadeBand } from './deadFrameBand.js';
 
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
@@ -2045,6 +2049,156 @@ export function l41Part3Findings(replayed) {
     return found;
 }
 
+
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — L42 `totempart 4`: THE FIFTH CEREMONY, AND THE FIRST
+ * ROUND TRIP.
+ *
+ * L41 proved a crusher could be OPERATED. L42 is the case with nothing else
+ * in it — no activator, no presser, no pushable, one part, two crushers and
+ * a 2-tile corridor — and its cost is not the reach but the ROUND TRIP:
+ * `teleporter@240,336` is one tile BELOW the arrival, so parking the bodies
+ * anywhere in the row-13/14 return corridor collects the part and strands
+ * the player. Nine charges in three `bait` chains park both in the TOP
+ * ROOM, the one part of the level nothing needs.
+ *
+ * ⛓⛓ THE PAIR IS THE CHOREOGRAPHY, because there is no flag to withhold:
+ * no rock shields these crushers, no lock gates the room, no item is
+ * needed. ⛔ AND THE OBVIOUS WAY TO WITHHOLD IT IS NOT A CONTROL — emptying
+ * the nine charges' spans and keeping every walk puts the player inside a
+ * body on 1,127 ticks, because each walk was planned from the cell the
+ * choreography before it ended in (§29.7 one room along, and in a PURSUIT
+ * room it is structural: 172 of the arrival's 304 free cells are safe, so
+ * an unplanned walk IS a trigger). The control is therefore the tape CUT at
+ * the first bait's stance — tile (4,11), one step outside all eight lanes,
+ * which is exactly what makes it a stance.
+ *
+ * ⛔ SO THE ARMS ARE ONE LOAD APART, unlike L41's, and the ceremony is a
+ * subtraction WITH a fade term rather than without one: the drive crosses
+ * into L40 and the control never leaves L42.
+ */
+export const L42_PART4_PAIR = Object.freeze({
+    drive: 'r5-l42-part4',
+    control: 'r5-l42-part4-control',
+    part: 4,
+    /** ⛔ NOTHING. L42 holds no `Lock`, no `breakablerock` and no chest, and
+     * `BossTotemPart.removed()` writes `Player.hasTotemPartSet(4, true)` —
+     * save-file state, not persistence. Both arms' ledgers are empty. */
+    earns: Object.freeze([]),
+    declares: Object.freeze([]),
+    ceremonyFrames: 150,
+    /** ⛓ The drive loads two rooms, the control one. */
+    loads: Object.freeze({ drive: 2, control: 1 }),
+    /**
+     * ⛓⛓⛓ THE DIPSTICKS — the only witness a park has in the game's own
+     * stream. Both crushers' constructor bodies sit across rows 9,10 at
+     * cols 6..9, the only corridor to the part, so the drive's walk stands
+     * where the level put 32x32 of `type = "Solid"` twice over.
+     */
+    dipsticks: Object.freeze([
+        Object.freeze({ box: Object.freeze({ x: 96, right: 128, y: 144, bottom: 176 }), of: 'crusher@96,144' }),
+        Object.freeze({ box: Object.freeze({ x: 128, right: 160, y: 144, bottom: 176 }), of: 'crusher@128,144' }),
+    ]),
+});
+
+export function l42Part4Findings(replayed) {
+    const drive = replayed?.get(L42_PART4_PAIR.drive);
+    const control = replayed?.get(L42_PART4_PAIR.control);
+    if (!drive || !control) {
+        return [{
+            name: 'R5 L42 part 4 pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[drive && L42_PART4_PAIR.drive, control && L42_PART4_PAIR.control]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk collected a totem `
+                + 'part and left the room" is not evidence that two crushers were ever '
+                + 'across the corridor, and in a pursuit room that is the whole claim',
+        }];
+    }
+    const found = [];
+    const dDead = drive.status?.dead_frames ?? 0;
+    const cDead = control.status?.dead_frames ?? 0;
+    const levels = (w) => [...new Set((w.stream?.ticks ?? []).map((t) => t.level))];
+    /**
+     * ⛓⛓⛓ THE CEREMONY, AND THIS ONE CARRIES A FADE TERM. The arms are the
+     * same 1,920 ticks from the same boot, but the drive LOADS TWO ROOMS
+     * and the control one — so the difference is the freeze PLUS one load,
+     * and the load's own band is what the extra term is priced against.
+     */
+    const extraLoads = L42_PART4_PAIR.loads.drive - L42_PART4_PAIR.loads.control;
+    const band = fadeBand(extraLoads);
+    const residue = dDead - cDead - L42_PART4_PAIR.ceremonyFrames;
+    found.push({
+        name: '⛓⛓⛓ R5 L42 part 4: the FIFTH ceremony — the difference between the arms is '
+            + 'the freeze plus ONE LOAD',
+        ok: residue >= band.lo && residue <= band.hi,
+        detail: `${dDead} dead against the control's ${cDead} — a difference of `
+            + `${dDead - cDead} = ${L42_PART4_PAIR.ceremonyFrames} (the pickup) + `
+            + `${residue} residue, against ${describeFadeBand(extraLoads)}. ⛔ Unlike L41's `
+            + 'pair the fade does NOT cancel: this window crosses into L40 and the control '
+            + 'never leaves L42, so the arms are one load apart and the extra load is a '
+            + 'banded quantity ([[feedback_dead_frame_constant_is_per_level]]). '
+            + '`hasTotemPart` is not in `Bot.itemReadout` (§20.8), so the frozen frames '
+            + 'are the whole of the claim.',
+    });
+    /**
+     * ⛓⛓⛓ THE ROUND TRIP, IN THE GAME'S OWN STREAM. The goal test for this
+     * room is arrival -> part -> exit, and the only part of it the game can
+     * be asked about directly is the door: the drive's levels are [42,40]
+     * and the control's are [42].
+     */
+    found.push({
+        name: '⛓⛓⛓ R5 L42 part 4: the drive TAKES THE EXIT and the control never leaves',
+        ok: levels(drive).join() === '42,40' && levels(control).join() === '42',
+        detail: `drive [${levels(drive).join(' ')}], control [${levels(control).join(' ')}]. `
+            + '⛓ `teleporter@240,336` is ONE TILE BELOW the arrival, which is why the '
+            + 'room\'s cost is the round trip and not the reach: slice 16\'s banked '
+            + 'ordering collects the part and parks both bodies across the only way back. '
+            + '⛔ And a re-entry would rebuild both crushers at their constructor cells — '
+            + '`Crusher` writes no persistence of any kind — so the door has to come '
+            + 'AFTER the part, never between two baits.',
+    });
+    /**
+     * ⛓⛓ THE PARKS' WITNESS IS THE WALK, and it has to be, because a
+     * crusher's position is in NO readout the game exposes (§30.4).
+     */
+    const inBox = (w, b) => (w.stream?.ticks ?? []).some((t) => t.level === 42
+        && t.x >= b.x && t.x < b.right && t.y >= b.y && t.y < b.bottom);
+    const dIn = L42_PART4_PAIR.dipsticks.filter((d) => inBox(drive, d.box));
+    const cIn = L42_PART4_PAIR.dipsticks.filter((d) => inBox(control, d.box));
+    found.push({
+        name: '⛓⛓⛓ R5 L42 part 4: the drive stands inside BOTH constructor bodies, the '
+            + 'control inside neither',
+        ok: dIn.length === L42_PART4_PAIR.dipsticks.length && cIn.length === 0,
+        detail: `drive ${dIn.length}/${L42_PART4_PAIR.dipsticks.length} `
+            + `[${dIn.map((d) => d.of).join(' ') || 'none'}], control ${cIn.length} `
+            + `[${cIn.map((d) => d.of).join(' ') || 'none'}]. Both bodies sit across rows `
+            + '9,10 at cols 6..9 — the ONLY corridor to `totempart 4` — so the route walks '
+            + 'through 32x32 of `type = "Solid"` twice. The control replays the same boot '
+            + 'and the same arrival walk and then stands still at the first bait\'s '
+            + 'stance, and the corridor stays shut.',
+    });
+    /**
+     * ⛔ AND BOTH LEDGERS ARE EMPTY, which is a claim and not an absence:
+     * `persistence_cleared` is DECLARED + EARNED, and this window declares
+     * nothing and earns nothing.
+     */
+    const dCleared = [...clearedSet(drive.status)].sort();
+    const cCleared = [...clearedSet(control.status)].sort();
+    found.push({
+        name: '⛔ R5 L42 part 4: BOTH ledgers are empty — the part writes save-file state',
+        ok: dCleared.length === 0 && cCleared.length === 0,
+        detail: `drive [${dCleared.join(' ') || 'empty'}], control `
+            + `[${cCleared.join(' ') || 'empty'}]. L42 holds no \`Lock\`, no `
+            + '`breakablerock` and no chest, and `BossTotemPart.removed()` is '
+            + '`Player.hasTotemPartSet(4, true)` — SAVE-FILE state, not '
+            + '`Game.setPersistence`. So the ceremony is the only thing either arm could '
+            + 'have written and it writes nothing, which is why the frozen frames carry '
+            + 'the whole claim.',
+    });
+    return found;
+}
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
@@ -2061,5 +2215,6 @@ export function r5AcceptanceFindings(replayed) {
         ...shaftFindings(replayed),
         ...l40Part1Findings(replayed),
         ...l41Part3Findings(replayed),
+        ...l42Part4Findings(replayed),
     ];
 }

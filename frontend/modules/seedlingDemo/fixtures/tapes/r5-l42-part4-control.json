@@ -1,0 +1,119 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-l42-part4-control",
+  "description": "⛓⛓ THE CHOREOGRAPHY-WITHHELD CONTROL for `r5-l42-part4`: the same boot, the same arrival walk to the same cell, and then NOTHING for the rest of the window. L42 has no flag to take away — no rock shields these crushers, no lock gates the room, no item is needed — so the isolating variable is the CHOREOGRAPHY itself. ⛔ AND THE OBVIOUS WAY TO WITHHOLD IT IS NOT A CONTROL: emptying the nine charges' spans and keeping every walk starts each following leg from the wrong cell, and the replayed spans carry the player into the lanes — both crushers charge and the player is inside a body on 1,127 ticks (§29.7 one room along, and in a PURSUIT room it is not an accident: every cell of the corridor is in somebody's lane, so any unplanned walk is a trigger). Here the player stands at tile (4,11), one step outside all eight lanes, which is exactly what makes it a bait stance — and standing still is a CLAIM, not an absence: a resting crusher re-derives `v` every tick, so this is 1,652 scans that come back null. Both bodies stay across the only corridor to the part, neither dipstick cell is enterable, the part is never touched and the teleporter is never reached.",
+  "boot": {
+    "level": 42,
+    "x": 240,
+    "y": 320
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 42,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 1920,
+  "inputs": [
+    {
+      "key": "left",
+      "from": 0,
+      "to": 2
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 97
+    },
+    {
+      "key": "right",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "left",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "key": "right",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "key": "left",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "down",
+      "from": 99,
+      "to": 100
+    },
+    {
+      "key": "left",
+      "from": 101,
+      "to": 227
+    },
+    {
+      "key": "right",
+      "from": 227,
+      "to": 228
+    },
+    {
+      "key": "left",
+      "from": 228,
+      "to": 231
+    },
+    {
+      "key": "right",
+      "from": 232,
+      "to": 234
+    },
+    {
+      "key": "left",
+      "from": 238,
+      "to": 253
+    },
+    {
+      "key": "up",
+      "from": 238,
+      "to": 260
+    },
+    {
+      "key": "right",
+      "from": 253,
+      "to": 254
+    },
+    {
+      "key": "left",
+      "from": 254,
+      "to": 255
+    },
+    {
+      "key": "right",
+      "from": 255,
+      "to": 256
+    },
+    {
+      "key": "down",
+      "from": 262,
+      "to": 264
+    }
+  ]
+}

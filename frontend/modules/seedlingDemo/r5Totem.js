@@ -2536,5 +2536,40 @@ export const L42_SOLVE = Object.freeze({
             + 'away at 1 px/tick. `Crusher.solids` is `["Solid"]`, so it moves THROUGH '
             + 'the player and then BLOCKS the rest of the climb.',
     }),
-    driven: false,
+    /**
+     * ⛓⛓⛓ R5 SLICE 19 — DRIVEN, RECORDED, AND BYTE-EXACT ON THE FIRST TRY.
+     *
+     * `r5-l42-part4` / `-control`, 1,921 observations each, zero diverging
+     * ticks and zero re-records — the FIFTH of five collect ceremonies, and
+     * the first ROUND TRIP: the tape crosses `teleporter@240,336` and comes
+     * to rest in L40 at tile (53,1), the cell this window booted from.
+     *
+     * ⛓⛓ AND THE CEREMONY IS A SUBTRACTION WITH A FADE TERM IN IT, which
+     * L41's was not. Both arms are the same 1,920 ticks from the same boot,
+     * but the drive LOADS TWO ROOMS and the control one:
+     *
+     *     drive    191 dead = 150 (the pickup) + 41 residue, 2 loads
+     *     control   21 dead =   0             + 21 residue, 1 load
+     *     -------------------------------------------------------
+     *     difference 170 = 150 + one load's fade
+     *
+     * ⛔ The park's own witness is the WALK, because a crusher's position is
+     * in no readout the game exposes: the drive stands inside BOTH
+     * constructor bodies — rows 9,10 at cols 6..9, the only corridor to the
+     * part — and the control, which stands still at the first bait's stance
+     * for 1,652 ticks, enters neither.
+     */
+    driven: true,
+    recorded: Object.freeze({
+        pair: Object.freeze(['r5-l42-part4', 'r5-l42-part4-control']),
+        observations: 1921,
+        deadFrames: Object.freeze({ drive: 191, control: 21 }),
+        loads: Object.freeze({ drive: 2, control: 1 }),
+        /** ⛓ 150 of the difference is the freeze; the rest is the extra load. */
+        ceremonyFrames: 150,
+        divergingTicks: 0,
+        reRecords: 0,
+        ceremony: 5,
+        of: 5,
+    }),
 });

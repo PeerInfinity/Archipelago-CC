@@ -32,6 +32,8 @@ import { plannerObstacleAt, synthesizeLegs } from './botDriverV2.js';
 import { crusherRect, detectionRects, laneHitsPlayer, scanCrusher } from './crusher.js';
 import { createLevelRun } from './levelRun.js';
 import { runTape } from './tapeRunner.js';
+import { fadeBand } from './deadFrameBand.js';
+import { readFileSync } from 'node:fs';
 import {
     HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE,
     WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS,
@@ -1625,7 +1627,15 @@ describe('⛔⛔⛔ L42: what the DRIVE said about the search, twice', () => {
         // 14 is wall at cols 13,14, so there is no way back along the row.
         expect(L42_SOLVE.chain1.park.x).toBe(192);
         expect(L42_PART4.part.x).toBeLessThan(run.state.x);
-        expect(L42_SOLVE.driven).toBe(false);
+        // ⛔ THIS CHAIN STAYS REFUTED EVEN THOUGH THE ROOM IS SOLVED. Slice
+        // 17 pinned `driven === false` here as a marker for "the room is
+        // not done yet", which is a claim about the SLICE and not about
+        // this choreography — and slice 19 made it false. What is durable
+        // is that `chain1` and `escape` realise the SAME three parks and
+        // only one of them ends on the part's side of the body.
+        expect(L42_SOLVE.chain1.park).toEqual({ ...L42_SOLVE.escape.park });
+        expect(L42_SOLVE.chain1.endsInWestRegion).toBe(false);
+        expect(L42_SOLVE.escape.endsInWestRegion).toBe(true);
     });
 
     /**
@@ -1869,6 +1879,8 @@ describe('⛓⛓⛓ L42: chain 3, and the nook as a WALL', () => {
 
     it('⛓⛓ is found, ends in the nook, and realises the ordering\'s third chain', () => {
         expect(C3.found).toBe(true);
+        // ⛓⛓⛓ …and the room is DRIVEN AND RECORDED: five of five.
+        expect(L42_SOLVE.driven).toBe(true);
         expect(C3.endTile).toEqual({ ...C3.nook });
         expect([...C3.approach, ...C3.spans].reduce((n, s) => n + s.ticks, 0)).toBe(C3.ticks);
         expect(C3.approach.reduce((n, s) => n + s.ticks, 0)).toBe(C3.approachTicks);
@@ -2197,5 +2209,60 @@ describe('⛓⛓⛓ L40: the corpse-hold, priced from the loop', () => {
         expect(L40_CORPSE.freeze.corrects).toBe('§32.6 item 5');
         // ⚠ And nothing of this is wired — the record says so out loud.
         expect(L40_CORPSE.wired).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — THE FIFTH CEREMONY, RECORDED. The numbers are the
+ * game's, banked here so the arithmetic that makes them a claim cannot
+ * drift from the record that carries them.
+ */
+describe('⛓⛓⛓ L42: the fifth ceremony, and the subtraction that carries a load', () => {
+    const R = L42_SOLVE.recorded;
+
+    it('⛓⛓⛓ is the fifth of five, byte-exact, with no re-records', () => {
+        expect(R.ceremony).toBe(5);
+        expect(R.of).toBe(5);
+        expect(R.divergingTicks).toBe(0);
+        expect(R.reRecords).toBe(0);
+        expect(R.pair).toEqual(['r5-l42-part4', 'r5-l42-part4-control']);
+    });
+
+    /**
+     * ⛔ UNLIKE L41's PAIR, THE FADE DOES NOT CANCEL. Both arms are the same
+     * 1,920 ticks from the same boot, but the drive crosses into L40 and the
+     * control never leaves L42 — so the difference is the freeze PLUS one
+     * load, and the extra load is a BANDED quantity.
+     */
+    it('⛓⛓ the difference is the ceremony plus exactly one load\'s fade', () => {
+        const diff = R.deadFrames.drive - R.deadFrames.control;
+        const extraLoads = R.loads.drive - R.loads.control;
+        expect(extraLoads).toBe(1);
+        const residue = diff - R.ceremonyFrames;
+        const band = fadeBand(extraLoads);
+        expect(residue).toBeGreaterThanOrEqual(band.lo);
+        expect(residue).toBeLessThanOrEqual(band.hi);
+        // ⛓ Each arm's own residue lands in its own load count's band, too.
+        const dBand = fadeBand(R.loads.drive);
+        const dResidue = R.deadFrames.drive - R.ceremonyFrames;
+        expect(dResidue).toBeGreaterThanOrEqual(dBand.lo);
+        expect(dResidue).toBeLessThanOrEqual(dBand.hi);
+        const cBand = fadeBand(R.loads.control);
+        expect(R.deadFrames.control).toBeGreaterThanOrEqual(cBand.lo);
+        expect(R.deadFrames.control).toBeLessThanOrEqual(cBand.hi);
+    });
+
+    it('⛓ the observation count is the tape\'s own tick_count + 1', () => {
+        const tape = parseTape(JSON.parse(readFileSync(
+            new URL('./fixtures/tapes/r5-l42-part4.json', import.meta.url), 'utf8',
+        )));
+        expect(R.observations).toBe(tape.tick_count + 1);
+        // ⛓ …and both arms are the same length, which is what makes the
+        // dead-frame difference a subtraction rather than a budget.
+        const control = parseTape(JSON.parse(readFileSync(
+            new URL('./fixtures/tapes/r5-l42-part4-control.json', import.meta.url), 'utf8',
+        )));
+        expect(control.tick_count).toBe(tape.tick_count);
+        expect(control.boot).toEqual(tape.boot);
     });
 });

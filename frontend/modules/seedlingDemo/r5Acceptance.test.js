@@ -17,6 +17,7 @@ import {
     SWIM_CROSS, SWIM_DROWN, SWIM_LATCH_NAME, SWIM_LATCH_TICKS, SWIM_BOOST,
     SWIM_STEADY_STEP, swimPairFindings, swimLatchFindings,
     WF_SHUT, WF_CLIMB, WF_START_Y, WF_FACE_ROW, WF_CLIMB_ROW, waterfallPairFindings,
+    L42_PART4_PAIR, l42Part4Findings,
 } from './r5Acceptance.js';
 import { rectsOverlap } from './levelWorld.js';
 
@@ -695,5 +696,96 @@ describe('the armed waterfall — the rule is a refusal, so the evidence is one'
         expect(failing(waterfallPairFindings(wfPair({
             status: { drown_timer: 5, items: { hitsMax: 3, canSwim: true } },
         })))).toContain('R5 waterfall: the shut arm never drowned, on UNCOERCED water');
+    });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — THE FIFTH CEREMONY'S PRINTER, MUTATED. The pair itself
+ * is asserted against the LIVE GAME by the differential; what is checked
+ * here is that each of its four claims goes RED when the thing it claims is
+ * false — otherwise a green sweep would mean "the checks ran", not "the
+ * room was solved".
+ */
+describe('the L42 part 4 pair', () => {
+    const inBoth = [
+        { t: 0, x: 104, y: 152, level: 42 },   // crusher@96,144's ctor body
+        { t: 1, x: 136, y: 152, level: 42 },   // crusher@128,144's ctor body
+    ];
+    const l42arm = ({
+        dead = 191, cleared = [], levels = [42, 40], boxes = inBoth,
+    } = {}) => ({
+        stream: {
+            ticks: [
+                ...boxes,
+                ...levels.map((level, i) => ({ t: 100 + i, x: 8, y: 8, level })),
+            ],
+        },
+        status: { persistence_cleared: cleared, dead_frames: dead },
+    });
+    const l42pair = (driveOver = {}, controlOver = {}) => new Map([
+        [L42_PART4_PAIR.drive, l42arm(driveOver)],
+        [L42_PART4_PAIR.control, l42arm({
+            dead: 21, levels: [42], boxes: [{ t: 0, x: 72, y: 184, level: 42 }], ...controlOver,
+        })],
+    ]);
+
+    it('holds for the pair the recording produced', () => {
+        expect(failing(l42Part4Findings(l42pair()))).toEqual([]);
+    });
+
+    it('SKIPS rather than passes when only one arm ran', () => {
+        const one = new Map([[L42_PART4_PAIR.drive, l42arm()]]);
+        const f = l42Part4Findings(one);
+        expect(f).toHaveLength(1);
+        expect(f[0].skipped).toBe(true);
+        expect(f[0].detail).toMatch(/r5-l42-part4\b/);
+        expect(l42Part4Findings(new Map())[0].skipped).toBe(true);
+        expect(l42Part4Findings(null)[0].skipped).toBe(true);
+    });
+
+    /**
+     * ⛔ THE CEREMONY IS THE DIFFERENCE MINUS ONE LOAD'S FADE, so removing
+     * the freeze has to go red — and so does adding a second one, which is
+     * the side a one-sided check would miss.
+     */
+    it('goes red when the drive did not freeze for the ceremony — and when it froze twice', () => {
+        const NAME = '⛓⛓⛓ R5 L42 part 4: the FIFTH ceremony — the difference between the '
+            + 'arms is the freeze plus ONE LOAD';
+        // ⛔ NO CEREMONY: the difference is one load's fade and nothing else.
+        expect(failing(l42Part4Findings(l42pair({ dead: 21 + 20 })))).toContain(NAME);
+        // ⛔ AND THE OTHER SIDE, which a one-sided check would miss: a
+        // second freeze the model did not predict.
+        expect(failing(l42Part4Findings(l42pair({ dead: 191 + 150 })))).toContain(NAME);
+    });
+
+    it('goes red when the drive never took the exit', () => {
+        expect(failing(l42Part4Findings(l42pair({ levels: [42] }))))
+            .toContain('⛓⛓⛓ R5 L42 part 4: the drive TAKES THE EXIT and the control never leaves');
+    });
+
+    it('goes red when the CONTROL leaves the room', () => {
+        expect(failing(l42Part4Findings(l42pair({}, { levels: [42, 40] }))))
+            .toContain('⛓⛓⛓ R5 L42 part 4: the drive TAKES THE EXIT and the control never leaves');
+    });
+
+    /**
+     * ⛓⛓ THE DIPSTICKS ARE THE PARK'S ONLY WITNESS, so BOTH sides matter:
+     * a drive that misses one, and a control that enters one.
+     */
+    it('goes red when the drive misses a constructor body', () => {
+        expect(failing(l42Part4Findings(l42pair({ boxes: [inBoth[0]] }))))
+            .toContain('⛓⛓⛓ R5 L42 part 4: the drive stands inside BOTH constructor bodies, the control inside neither');
+    });
+
+    it('goes red when the CONTROL enters one', () => {
+        expect(failing(l42Part4Findings(l42pair({}, { boxes: inBoth }))))
+            .toContain('⛓⛓⛓ R5 L42 part 4: the drive stands inside BOTH constructor bodies, the control inside neither');
+    });
+
+    it('goes red when either ledger is non-empty', () => {
+        expect(failing(l42Part4Findings(l42pair({ cleared: [{ level: 42, tag: 0 }] }))))
+            .toContain('⛔ R5 L42 part 4: BOTH ledgers are empty — the part writes save-file state');
+        expect(failing(l42Part4Findings(l42pair({}, { cleared: [{ level: 42, tag: 0 }] }))))
+            .toContain('⛔ R5 L42 part 4: BOTH ledgers are empty — the part writes save-file state');
     });
 });
