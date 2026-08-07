@@ -2969,47 +2969,264 @@ export const L40_LINK4_REPAIRED = Object.freeze({
             + 'corpse cannot be moved to the t5 button without re-shutting the locks '
             + 'that reach it',
     }),
-    /** ⚠ The open question this hands the next slice, with its arithmetic. */
-    openQuestion: 'can the corpse be BUMPED the 17½ tiles east from button@480,384 to '
-        + 'button@768,400 — one tile per axis per press, so ~18 presses each needing a '
-        + 'stance — and if it can, does the t2 group re-shutting BEHIND it wall the '
-        + 'corpse (or the player) in? Both halves are geometry this rung already has the '
-        + 'verbs for; neither has been measured.',
-    /** ⛔ The method correction this probe owes its own ancestor. */
+    /**
+     * ⛔⛔⛔ R5 SLICE 22 — THE OPEN QUESTION IS ANSWERED, AND IT IS **NO**.
+     *
+     * It read: *"can the corpse be BUMPED the 17½ tiles east from
+     * button@480,384 to button@768,400 — one tile per axis per press, so
+     * ~18 presses each needing a stance — and if it can, does the t2 group
+     * re-shutting BEHIND it wall the corpse (or the player) in?"*
+     *
+     * `probe-seedling-r5-l40-holder.mjs` searches it as a BFS over the
+     * CORPSE'S TILE, with the activator set a FUNCTION of that tile — the
+     * t2 group is published only while the 16x16 body overlaps
+     * `button@480,384`'s 8x6 press rect — so the feedback the question is
+     * about is in the model rather than in the argument. Every edge is a
+     * driven `fire.bumps` PRESS (five bumps plus the settle, through
+     * `stepIceTurret`) from a player node inside the current component that
+     * `Player.fire()`'s own rect and radius gates admit.
+     *
+     * ⛓ The body CAN be moved: **35 tiles** are reachable. Its east-most
+     * column is **31**, and the t5 button is at column **48**.
+     *
+     * ⚠ THE SEARCH'S FIRST CUT RETURNED ONE TILE, and the reason is §34.6's
+     * headline one layer up: it asked `bumpIceTurret` ONCE. A press is FIVE
+     * bumps, and a single call from a body parked at a tile centre targets
+     * `round(x/16) ± 1` — for a centre that is `tile` and `tile + 2`, so
+     * every direction decodes to "no move".
+     * [[feedback_one_press_is_five_dispatches]] applied to a SEARCH.
+     */
+    openQuestion: 'ANSWERED at slice 22, and it is NO: 35 tiles are reachable by '
+        + 'bumping from (30,24) and the t5 button at tile (48,25) is not one of them — '
+        + "the body's east-most column is 31. See `probe-seedling-r5-l40-holder.mjs`.",
+    corpseReach: Object.freeze({
+        tiles: 35,
+        fromTile: Object.freeze({ tx: 30, ty: 24 }),
+        goalTile: Object.freeze({ tx: 48, ty: 25 }),
+        eastMostColumn: 31,
+        reachesTheGoal: false,
+        probe: 'scripts/procgen/probe-seedling-r5-l40-holder.mjs',
+    }),
+    /**
+     * ⛔⛔⛔ AND THE HOLDER CENSUS RAN — every class in the level, not one.
+     *
+     * §35.6 asserted "exactly one thing in L40 can be put somewhere and
+     * stays". Enumerated: SIXTEEN classes carry a hitable AS3 type, and one
+     * passes all three of TYPE / PLACING / STAYING.
+     *
+     * ⛔ THE ENEMIES FAIL ON **STAYING**, NOT ON TYPE. A `Bob` is an
+     * `"Enemy"`, it is lurable, and it follows — the lure IS the player. And
+     * killing one on the cell buys the death animation plus
+     * `Mobile.death()`'s eleven-tick fade, 36 ticks against a `Lock`'s 101
+     * CONTINUOUS. **A body that fades is not a holder.**
+     */
+    holderCensus: Object.freeze({
+        hitableClasses: 16,
+        holders: 1,
+        holder: 'iceturret',
+        enemiesFailOn: 'staying — a lured Bob follows, and a dying one fades in 36 '
+            + "ticks against a Lock's 101",
+        staticsFailOn: 'placing — nothing in this rung moves a wandlock, a chest, a '
+            + 'dungeonspire or a ruinedpillar',
+        spinnersFailOn: 'both, and a kill writes `setPersistence(tag, false)` besides',
+        blocksFailOn: 'reach — the nearest of the three is 22 tiles of pushing from the '
+            + 't5 button, and slice 16 measured their whole reachable sets (27/1/1 '
+            + 'cells) with neither button in any of them',
+        probe: 'scripts/procgen/probe-seedling-r5-l40-holder.mjs',
+    }),
+    /**
+     * ⛔⛔⛔ THE METHOD CORRECTION, AND AT SLICE 22 IT TURNED OUT TO BE
+     * THREE ERRORS RATHER THAN ONE.
+     *
+     * Slice 21 caught the TOLERANCE and fixed the copy in the kill probe,
+     * leaving the original rotting — [[feedback_retired_oracle_check_the_regen]]
+     * exactly. Fixing the original found two more that the tolerance had
+     * been hiding:
+     *
+     *   1. TOLERANCE — the code swept -1..2, so 32 px, TWO whole tiles,
+     *      reading "within a tile of" as "the walk gets here";
+     *   2. VOLUME — it built a 16x16 box at each entity's `.oel` point, and
+     *      a `button`'s press rect is **8x6** while a `bosskey` is **8x8**.
+     *      Every named target but the blocks and the locks was being asked
+     *      about several times its own area;
+     *   3. THE QUESTION — one predicate for every target. A `Teleporter`'s
+     *      own cells are refused by `plannerObstacleAt` (the planner will
+     *      not route THROUGH a door), so "can the walk stand on it" has a
+     *      guaranteed answer, and the same holds for every `Solid`. The
+     *      kind is DERIVED from the planner's own verdict now — stand-on
+     *      where the cells are walkable, stand-beside where they are not.
+     */
     toleranceCorrection: Object.freeze({
         probe: 'scripts/procgen/probe-seedling-r5-l40-link4.mjs',
-        was: '±2 nodes at an 8 px lattice — 16 px, a whole tile',
-        now: '±1 node (the player box\'s own half-width), with the exact node reported',
-        cost: 'three rows read REACHED for cells the planner refuses outright, '
-            + '`button@816,400 {t 4}` among them',
+        was: '±2 nodes at an 8 px lattice (32 px), a 16x16 box for every target, and '
+            + 'one predicate for all of them',
+        now: "the WORLD's own rect per target, and a predicate derived from whether "
+            + "the planner admits the entity's own cells at all",
+        cost: 'one row of the table was wrong in the direction that mattered — '
+            + "`button@816,400 {t 4}` read REACHED inside link 4's +208 and is NOT, "
+            + 'which is the verdict `probe-…-l40-kill.mjs` reached independently',
+        fixedAt: 'R5 slice 22',
     }),
     probe: 'scripts/procgen/probe-seedling-r5-l40-kill.mjs',
     driven: 'scripts/procgen/plan-seedling-r5-l40-part5.mjs — r5-l40-part5 / -control',
     /**
-     * ⛔⛔⛔ AND THE LEG IS MODEL-SOUND AND NOT BYTE-EXACT. The pair WAS
-     * recorded against the real game and diverged at tick 1616 of 1965, in
-     * BOTH arms, at the same tick and by the same 0.8 px, settling at a
-     * permanent 14.15 px y offset — so the fixtures were WITHDRAWN rather
-     * than committed. The cause is `IceTurretBlast`, which freezes the
-     * player for 15 ticks on the line ABOVE the `Bot.noDamage`-guarded
-     * `hit`. See `iceTurret.ICE_TURRET_PLAN.blasts`.
+     * ⛓⛓⛓ R5 SLICE 22 — THE PAIR IS BYTE-EXACT, AND THE RECORDING THAT
+     * REFUTED IT IS WHAT PROVED THE FIX.
      *
-     * ⛓⛓ THAT THE **CONTROL** DIVERGED IDENTICALLY IS THE PROOF OF CAUSE:
-     * the two arms differ only in the three kill presses, so a divergence
-     * that is byte-identical in both is a property of the WALK. The pair
-     * was authored to isolate the kill and it isolated something else.
+     * Slice 21 recorded both arms, they diverged at tick 1616 by 0.8 px
+     * settling at 14.15, and the fixtures were WITHDRAWN. The two `--win`
+     * streams were still staged, so slice 22's acceptance cost no new
+     * recording at all: the same two tapes through the corrected model are
+     * byte-identical to the real game for all 1,966 observations of BOTH
+     * arms. A free oracle made BEFORE the model that now matches it is a
+     * stronger gate than a fresh recording — and the pair was then
+     * re-planned and re-recorded anyway, byte-exact on the first take.
+     *
+     * ⛔ AND THE DIVERGENCE TICK WAS NEVER THE CONTACT TICK. Contact is at
+     * **1614**; 1616 is the first tick the refusal was VISIBLE, because
+     * `Player.input()`'s direction arms are themselves gated on
+     * `v.y > -moveSpeed` and refuse on a fast tick anyway. Two silent
+     * ticks, then nine of dead stop, out of FOURTEEN refused.
+     *
+     * ⛔⛔ AND THE PAIR'S SHAPE CHANGED, TWICE OVER. The control used to be
+     * this tape with the three kill spans deleted. Deleting the kill leaves
+     * the turret ALIVE and FIRING, so the control takes freezes the drive
+     * never sees and one of them BURNS a surviving fire press — and a
+     * kill-less arm cannot be synthesised at all, because `runFire`'s bump
+     * arm refuses a live turret by name. ⇒ **a byte-identical-walk pair is
+     * impossible in a room with a live shooter**, and the pair now isolates
+     * the HOLD: same walk, same kill, one `fire.bumps` press fewer, and a
+     * corpse that rests one tile short of the button.
      */
     recorded: Object.freeze({
-        byteExact: false,
-        divergesAt: 1616,
-        of: 1965,
-        settlesAtPx: 14.15,
+        byteExact: true,
+        recordedAt: 'R5 slice 22, re-recorded after the refutation',
+        contactTick: 1614,
+        divergedAt: 1616,
+        divergenceWasVisibilityNotContact: true,
+        settledAtPx: 14.15,
         bothArms: true,
         cause: 'IceTurretBlast — `Player.freeze(15)` above the `Bot.noDamage`-guarded hit',
-        fixturesWithdrawn: true,
-        blockedOn: 'an `IceTurretBlast` family — the ELEVENTH per-visit family and the '
-            + 'first PROJECTILE',
+        fixturesWithdrawn: false,
+        pair: Object.freeze(['r5-l40-part5', 'r5-l40-part5-control']),
+        controlShape: 'one `fire.bumps` press fewer — the corpse rests at tile (30,25), '
+            + 'a 16x16 body at [480,496) x [400,416) against a button at '
+            + '[480,496) x [384,400): adjacent, not overlapping',
+        controlIsAPrefixOfTheDrive: true,
+        whyNotADeletion: 'deleting the kill leaves a LIVE shooter whose volley clock '
+            + 'differs, whose extra freezes BURN a surviving press, and whose `bump` '
+            + 'the fire verb refuses outright',
     }),
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 22 — THE TERMINAL WAND WINDOW, PLANNED AGAINST THE MODEL.
+ *
+ * The ruling for this rung is that it records ONCE, as the tail of the
+ * rung-closing chain, where `hasTotemPart[]` is real — so this is the plan
+ * and the schedule, asserted in the model's own harness, with NO live
+ * recording. `L43_WAND_WINDOW_BLOCKED` below is why it cannot be a booted
+ * window; this is what it looks like when it is not one.
+ *
+ * ── ⛔⛔⛔ THE BOUNDARY BAND IS 118 TICKS WIDE, AND IT IS DERIVED ──────
+ *
+ * A window must END AT REST, ≥100 ticks clear of any flag-opening event,
+ * and after every freeze span has drained. Against `L43_BOSS_WAKE.ticks`,
+ * with `A` the tick after `Wand.removeSelf()`:
+ *
+ * ```
+ *   A+  96   the LAST flag event — `fallrock` tag 3 lands and writes {43,3}
+ *   A+ 185   the freeze drains, and it is the first movable player tick
+ *   A+ 196   ...+100 clear of the last flag event
+ *   A+ 216   the CLAMP: `p.y := 212`, an ASSIGNMENT, not a collision
+ *   A+ 335   the boss WALKS — a mover this model does not have
+ *   A+ 438   the first LASER
+ * ```
+ *
+ * ⇒ the floor is the CLAMP, not the freeze and not the flag rule: a
+ * boundary before A+216 is a boundary inside a displacement the window has
+ * not finished taking. The ceiling is the WALK, not the laser: the moment
+ * the boss moves, the room contains an unmodelled mover, and "the laser is
+ * free under `noDamage`" is beside the point.
+ *
+ * ⇒ **[A+217, A+334], 118 ticks.** Wide enough to come to rest in and
+ * narrow enough that it has to be planned rather than padded.
+ *
+ * ── ⛓⛓ AND THE CEREMONY'S COST IS DERIVED, NOT ESTIMATED ─────────────
+ *
+ * The wand is the ONLY R5 ceremony that is INPUT-BOUNDED — `Wand.text`
+ * splits on `~` into two pages and `NPC.update` advances on
+ * `Input.released(Key.X)` — so its tape cost is a function of the RELEASE
+ * CADENCE the tape chooses, which no other ceremony's is. Driven through
+ * `dialogue.stepDialogue`: nine frames at a two-tick cadence (five
+ * releases), and a slower cadence costs more, not less.
+ */
+export const L43_WAND_WINDOW = Object.freeze({
+    level: 43,
+    /**
+     * ⛔ NOT A BOOT. `hasAllTotemParts()` reads `SAVE_FILE.data.hasTotemPart[]`
+     * and `Bot`'s boot block honours only `grants` and `persistence` — see
+     * `L43_WAND_WINDOW_BLOCKED`. The window ARRIVES, down an L40 pit, as
+     * the tail of a chain that has already collected all five parts.
+     */
+    entry: 'ARRIVAL — a one-way pit transport out of L40 (§27), never a boot',
+    /** ⛔ And the arrival is a DESCENT, which the pickup's own gate excludes. */
+    arrivalIsFallFromCeiling: true,
+    arrivalGate: '`Wand.update`\'s body needs `!p.fallFromCeiling`, so the collect '
+        + 'cannot happen on the landing tick — the descent has to finish first',
+    /** ⛓ The approach: the gate is `p.y < y + Tile.h`, so from ABOVE. */
+    approach: 'from the NORTH — `p.y < y + Tile.h`',
+    /**
+     * ⛓ The ceremony, in the order the game spends it. Every number is
+     * `L43_BOSS_WAKE.ceremony`'s or `dialogue.js`'s, not this record's.
+     */
+    ceremony: Object.freeze({
+        fadeTicks: 100,
+        specialTimerTicks: 150,
+        dialoguePages: 2,
+        dialogueKey: 'x',
+        /** ⛓ DRIVEN through `stepDialogue`, at the cheapest cadence. */
+        dialogueFramesAtTwoTickCadence: 9,
+        dialogueReleasesAtTwoTickCadence: 5,
+        cadenceIsTheAuthorsChoice: true,
+    }),
+    /**
+     * ⛔⛔⛔ THE BOUNDARY BAND, AND ITS TWO BINDING TERMS.
+     *
+     * `from` is the CLAMP and `to` is the boss's WALK — neither is the
+     * freeze and neither is the laser, which is the part a summary drops.
+     */
+    boundaryBand: Object.freeze({
+        from: 217,
+        to: 334,
+        width: 118,
+        floorIs: 'the clamp at A+216 — `p.y := 212` is an ASSIGNMENT and a boundary '
+            + 'before it is a boundary inside a displacement',
+        ceilingIs: 'the boss WALKING at A+335 — an unmodelled mover, which is a harder '
+            + 'stop than the first laser at A+438',
+        alsoClears: 'the last flag event (`fallrock` tag 3 at A+96) by 121 ticks, and '
+            + 'the freeze span (drained at A+185) by 32',
+    }),
+    /** ⛓ FOUR earned writes: the wand's own and one per rock it drops. */
+    earnedLedger: Object.freeze(['43:0', '43:1', '43:2', '43:3']),
+    /** ⛔ Where the window comes to rest, and it is not a choice. */
+    restsAt: Object.freeze({ y: 212, why: 'the clamp puts the player there and the '
+        + 'arena is sealed — `L43_BOSS_WAKE.seal`' }),
+    /**
+     * ⛔⛔ AND IT IS TERMINAL IN THE STRONGEST SENSE. South is sealed on
+     * the publishing tick, north is `magicallock@144,112` behind a
+     * `WandShot` and 160 px away against 31 free ticks, and the wake
+     * rewrites `playerPosition` to (144,352) — so a death anywhere after
+     * it respawns INSIDE the sealed room.
+     */
+    terminal: true,
+    /**
+     * ⚠ AND EVERY L40 PIT BECOMES A ONE-WAY TRIP INTO A SEALED ROOM once
+     * this window has run. The wand is LAST or it is nothing.
+     */
+    mustBeLastInTheItinerary: true,
+    blockedOn: 'the ITINERARY, not the ceremony — see `L43_WAND_WINDOW_BLOCKED`',
+    plannedAt: 'R5 slice 22, against the model; recorded once, as the chain tail',
 });
 
 /**

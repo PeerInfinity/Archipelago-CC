@@ -2643,34 +2643,58 @@ describe('⛓⛓⛓ L40: the break at link 4 is repaired', () => {
         expect(turrets).toHaveLength(L40_LINK4_REPAIRED.stopsAt.holders);
         expect(L40_LINK4_REPAIRED.stopsAt.dependency).toMatch(/re-shutting the locks/);
         // ⚠ …and the open question is RECORDED rather than answered.
-        expect(L40_LINK4_REPAIRED.openQuestion).toMatch(/has been measured|neither has been measured/);
+        expect(L40_LINK4_REPAIRED.openQuestion).toMatch(/ANSWERED at slice 22/);
     });
 
     /**
-     * ⛔⛔⛔ AND THE LEG IS NOT BYTE-EXACT, WHICH THE RECORD SAYS OUT LOUD.
-     * The strongest thing this block asserts is a NEGATIVE: there is no
-     * committed fixture for it, because a fixture whose model is wrong is
-     * either a permanent red or a silenced one.
+     * ⛓⛓⛓ R5 SLICE 22 — AND THE PAIR IS BYTE-EXACT NOW, WHICH INVERTS THE
+     * STRONGEST THING THIS BLOCK USED TO ASSERT.
+     *
+     * It used to check a NEGATIVE — that no fixture existed, because a
+     * fixture whose model is wrong is either a permanent red or a silenced
+     * one. The model is right, the two withdrawn recordings replay
+     * byte-identical through it, and both arms were re-recorded. So the
+     * check is the positive: the roster CARRIES both arms.
      */
-    it('⛔⛔⛔ …and the recorded pair REFUTED the model — no fixture exists', async () => {
+    it('⛓⛓⛓ …and the pair is BYTE-EXACT — both arms are on the roster', async () => {
         const { L40_LINK4_REPAIRED } = await import('./r5Totem.js');
         const { ICE_TURRET_PLAN } = await import('./iceTurret.js');
-        expect(L40_LINK4_REPAIRED.recorded.byteExact).toBe(false);
-        expect(L40_LINK4_REPAIRED.recorded.fixturesWithdrawn).toBe(true);
-        // ⛓ THE PROOF OF CAUSE IS THAT THE CONTROL DIVERGED IDENTICALLY:
-        // the arms differ only in the three kill presses, so a divergence
-        // byte-identical in both is a property of the WALK.
-        expect(L40_LINK4_REPAIRED.recorded.bothArms).toBe(true);
-        expect(ICE_TURRET_PLAN.blasts.divergence.tick)
-            .toBe(L40_LINK4_REPAIRED.recorded.divergesAt);
-        expect(ICE_TURRET_PLAN.blasts.modelled).toBe(false);
-        // ⛔ AND THE WITHDRAWAL IS CHECKED, not described: the roster must
-        // not carry either arm.
+        expect(L40_LINK4_REPAIRED.recorded.byteExact).toBe(true);
+        expect(L40_LINK4_REPAIRED.recorded.fixturesWithdrawn).toBe(false);
+        expect(ICE_TURRET_PLAN.blasts.modelled).toBe(true);
+        // ⛔ THE CONTACT TICK IS NOT THE DIVERGENCE TICK, and the record
+        // keeps both: 1614 is when the blast landed, 1616 is the first tick
+        // the refusal was visible in the position stream.
+        expect(L40_LINK4_REPAIRED.recorded.contactTick).toBe(1614);
+        expect(L40_LINK4_REPAIRED.recorded.divergedAt)
+            .toBe(ICE_TURRET_PLAN.blasts.divergence.tick);
+        expect(L40_LINK4_REPAIRED.recorded.divergenceWasVisibilityNotContact).toBe(true);
+        // …and the roster carries both arms, checked rather than described.
         const { fixtureNames } = await import('./fixtures/index.js');
         const names = fixtureNames();
-        expect(names.length).toBeGreaterThan(50);
-        expect(names).not.toContain('r5-l40-part5');
-        expect(names).not.toContain('r5-l40-part5-control');
+        expect(names).toContain('r5-l40-part5');
+        expect(names).toContain('r5-l40-part5-control');
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE OPEN QUESTION IS ANSWERED — the corpse cannot cross.
+     */
+    it('⛔⛔⛔ …and the corpse cannot make the 17½ tiles — `openQuestion` is NO', async () => {
+        const { L40_LINK4_REPAIRED } = await import('./r5Totem.js');
+        const R = L40_LINK4_REPAIRED.corpseReach;
+        expect(R.reachesTheGoal).toBe(false);
+        // ⛓ NOT VACUOUS: the body moves, it just does not get there. A
+        // refusal from a search that could move nothing would be a claim
+        // about the stance model, not about the room.
+        expect(R.tiles).toBeGreaterThan(1);
+        expect(R.eastMostColumn).toBeLessThan(R.goalTile.tx);
+        expect(L40_LINK4_REPAIRED.openQuestion).toMatch(/ANSWERED at slice 22, and it is NO/);
+        // ⛔ …and the holder census RAN, over every class rather than one.
+        const C = L40_LINK4_REPAIRED.holderCensus;
+        expect(C.holders).toBe(1);
+        expect(C.holder).toBe('iceturret');
+        expect(C.hitableClasses).toBeGreaterThan(10);
+        expect(C.enemiesFailOn).toMatch(/staying/);
     });
 });
 
@@ -2680,6 +2704,85 @@ describe('⛓⛓⛓ L40: the break at link 4 is repaired', () => {
  * geometry, not a policy, not an unmodelled mechanic — a piece of state the
  * tape format has no field for.
  */
+/**
+ * ⛓⛓⛓ R5 SLICE 22 — THE TERMINAL WAND WINDOW, PLANNED AGAINST THE MODEL.
+ *
+ * The ruling for this rung is that it records ONCE, as the tail of the
+ * rung-closing chain. So this block asserts the SCHEDULE — derived from the
+ * wake table and from `dialogue.js`, never restated — and nothing here
+ * needs a tape.
+ */
+describe('⛓ L43: the terminal wand window, planned', () => {
+    it('⛔⛔⛔ the boundary band is [A+217, A+334], and BOTH ends are derived', async () => {
+        const { L43_WAND_WINDOW, L43_BOSS_WAKE } = await import('./r5Totem.js');
+        const B = L43_WAND_WINDOW.boundaryBand;
+        // ⛔ THE FLOOR IS THE CLAMP, not the freeze. `p.y := 212` is an
+        // ASSIGNMENT at A+216, so a boundary before it lands inside a
+        // displacement the window has not finished taking.
+        expect(B.from).toBe(L43_BOSS_WAKE.ticks.clampOnset + 1);
+        // ⛔ AND THE CEILING IS THE BOSS WALKING, not the first laser: the
+        // moment it moves the room holds an unmodelled mover, which is a
+        // harder stop than damage `noDamage` makes free.
+        expect(B.to).toBe(L43_BOSS_WAKE.ticks.walkStarts - 1);
+        expect(B.width).toBe(B.to - B.from + 1);
+        // ⛓ …and it clears the two rules that were NOT binding, which is
+        // what makes "the floor is the clamp" a finding rather than a guess.
+        const lastFlag = Math.max(...L43_BOSS_WAKE.rocks.map((r) => r.lands));
+        expect(B.from - lastFlag).toBeGreaterThanOrEqual(100);
+        expect(B.from).toBeGreaterThan(L43_BOSS_WAKE.ticks.freezeReleased);
+    });
+
+    it('⛓⛓ the ceremony cost is DRIVEN through `stepDialogue`, not estimated', async () => {
+        const { L43_WAND_WINDOW } = await import('./r5Totem.js');
+        const { PICKUP_CEREMONY, beginDialogue, stepDialogue } = await import('./dialogue.js');
+        // ⛔ THE WAND IS THE ONLY INPUT-BOUNDED CEREMONY IN R5, so its cost
+        // is a function of the RELEASE CADENCE the tape picks — which no
+        // other ceremony's is, and which is why it is driven here.
+        const d = beginDialogue(PICKUP_CEREMONY.wand.text);
+        expect(d.pages).toHaveLength(L43_WAND_WINDOW.ceremony.dialoguePages);
+        let n = 0; let releases = 0;
+        while (!d.done && n < 2000) {
+            const released = n % 2 === 0;
+            if (released) releases += 1;
+            stepDialogue(d, released);
+            n += 1;
+        }
+        expect(d.done).toBe(true);
+        expect(d.frames).toBe(L43_WAND_WINDOW.ceremony.dialogueFramesAtTwoTickCadence);
+        expect(releases).toBe(L43_WAND_WINDOW.ceremony.dialogueReleasesAtTwoTickCadence);
+        // ⛓ AND A SLOWER CADENCE COSTS MORE, which is the half that makes
+        // the number a CHOICE rather than a constant. `currentCharacter` is
+        // set to `length - 1` rather than `length`, so a release that lands
+        // too late has to be followed by another one.
+        const slow = beginDialogue(PICKUP_CEREMONY.wand.text);
+        let m = 0;
+        while (!slow.done && m < 2000) { stepDialogue(slow, m % 8 === 0); m += 1; }
+        expect(slow.frames).toBeGreaterThan(d.frames);
+    });
+
+    it('⛔ …and the window ARRIVES rather than boots, which its own gate forces', async () => {
+        const { L43_WAND_WINDOW, L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');
+        expect(L43_WAND_WINDOW.entry).toMatch(/ARRIVAL/);
+        expect(L43_WAND_WINDOW.arrivalIsFallFromCeiling).toBe(true);
+        // ⛓ TWO INDEPENDENT REASONS, and the record carries both: the boot
+        // cannot arm `hasTotemPart[]` at all, AND the collect's own gate
+        // excludes the descent tick the arrival lands on.
+        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(true);
+        expect(L43_WAND_WINDOW.arrivalGate).toMatch(/fallFromCeiling/);
+        expect(L43_WAND_WINDOW.terminal).toBe(true);
+        expect(L43_WAND_WINDOW.mustBeLastInTheItinerary).toBe(true);
+    });
+
+    it('⛓ the four earned writes are the wand\'s and one per rock — from the wake table',
+        async () => {
+            const { L43_WAND_WINDOW, L43_BOSS_WAKE } = await import('./r5Totem.js');
+            expect(L43_WAND_WINDOW.earnedLedger).toEqual(L43_BOSS_WAKE.earnedLedger);
+            // …and the count is the rocks' own, not a number typed twice.
+            expect(L43_WAND_WINDOW.earnedLedger).toHaveLength(
+                L43_BOSS_WAKE.rocks.length + 1);
+        });
+});
+
 describe('⛔ L43: the terminal wand window cannot be booted', () => {
     it('⛔ the gate reads a save array `persistence` does not reach', async () => {
         const { L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');

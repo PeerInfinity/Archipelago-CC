@@ -2199,6 +2199,177 @@ export function l42Part4Findings(replayed) {
     return found;
 }
 
+/**
+ * ⛓⛓⛓ R5 SLICE 22 — THE RUNG-CLOSING ITINERARY, AND THE EXIT CRITERIA
+ * AGAINST §0, WITH WHAT IS AND IS NOT MET.
+ *
+ * §0's target is **14/14 over ONE FULL PLAYTHROUGH** — thirteen booleans
+ * plus `hitsMax == 4` as a positive — with `grants` EMPTY throughout and
+ * `noDamage` RETIRED. Forty-two committed R5 tapes later, this is where
+ * that stands, derived from the tapes rather than remembered:
+ *
+ * ── ⛓ WHAT THE RUNG REAL-COLLECTS ────────────────────────────────────
+ *
+ * ```
+ *   conch        r5-d5-conch
+ *   feather      r5-feather
+ *   bosskey 1    r5-bosskey-leg
+ *   totem parts  r5-l40-part0, r5-l40-part1, r5-shaft, r5-l41-part3,
+ *                r5-l42-part4   — FIVE ceremonies, all five parts
+ * ```
+ *
+ * ⛔⛔⛔ **AND EVERY ONE OF THEM IS A SEPARATE WINDOW THAT GRANTS WHAT AN
+ * EARLIER ONE EARNED.** Thirty-four of the forty-one tapes declare a
+ * `grants` list, most of them the same four (`conch+feather+fire+sword`).
+ * The rung has proved every LINK and has never once run the CHAIN — which
+ * is precisely §0's "one full playthrough" and precisely what is left.
+ *
+ * ⛔ AND `fire` IS NOT AMONG THEM. `r5-bobboss-fire` drives the kill that
+ * SPAWNS it (the out-of-band `{32,-1}` write) and no committed tape
+ * collects the pickup, so `fire` is granted everywhere and earned nowhere.
+ * It is the head of §0's own chain, which makes it the itinerary's first
+ * real link rather than a loose end.
+ */
+export const R5_ITEM_LEDGER = Object.freeze({
+    realCollected: Object.freeze(['conch', 'feather', 'bosskey:1',
+        'totempart x5 (part0, part1, shaft, part3, part4)']),
+    grantedEverywhere: Object.freeze(['sword', 'fire', 'conch', 'feather']),
+    /** ⛔ Earned nowhere: the kill that spawns it is driven, the pickup is not. */
+    spawnedButNotCollected: Object.freeze(['fire']),
+    tapesDeclaringGrants: 34,
+    tapesTotal: 41,
+    against: '§0 — 14/14 over ONE full playthrough with `grants` EMPTY throughout',
+    verdict: 'every LINK is proved and the CHAIN has never been run',
+});
+
+/**
+ * ⛔⛔⛔ AND `noDamage` IS NOT RETIRED — WITH A NAMED FIRST BLOCKER THAT IS
+ * NOT A POLICY.
+ *
+ * Forty of the forty-one R5 tapes declare it; the exception is
+ * `r5-contact-control-on`, an 80-tick pair arm whose whole purpose is to
+ * show the flag does something. §0 says "avoid where possible, kill where
+ * required", and until R5 slice 22 the flag was a POLICY: nothing in the
+ * model could be hurt, so turning it off changed nothing on this side.
+ *
+ * ⛓⛓⛓ IT IS A MISSING MECHANIC NOW, AND THE BLAST IS WHAT NAMED IT.
+ * `levelRun` THROWS if a blast reaches the player on a tape without
+ * `noDamage`, because `Player.hit` would write `hits`, `hitsTimer` and
+ * `Game.shake` and this model carries none of the three. So retiring the
+ * flag is no longer "decide to stop declaring it" — it is
+ *
+ *   1. a PLAYER DAMAGE model (`hits`, `hitsTimer`, the i-frame colour
+ *      cycle, `die()` and the respawn at `playerPosition`);
+ *   2. `Game.shake`, which is `Math.random` and would make the CAMERA
+ *      non-deterministic — and since R5 slice 22 the camera is load-bearing
+ *      for enemy `onScreen` gating, so a shaking camera is a model boundary
+ *      rather than a cosmetic one (`camera.stepCamera` already refuses);
+ *   3. and a route that survives, which is the part §0 actually asked for.
+ *
+ * ⇒ term 2 is the interesting one: `noDamage` was a damage policy and it
+ * has become a DETERMINISM pin. [[feedback_the_obstacle_is_the_machine]]
+ */
+export const R5_NODAMAGE_STATUS = Object.freeze({
+    retired: false,
+    tapesDeclaringIt: 40,
+    theOneWithout: 'r5-contact-control-on',
+    wasAPolicy: 'through slice 21 — nothing in the model could be hurt',
+    isNowAMissingMechanic: true,
+    blockers: Object.freeze([
+        'a player damage model — `hits`, `hitsTimer`, the i-frame cycle, `die()` and '
+            + 'the respawn at `playerPosition`',
+        '`Game.shake` — two `Math.random()` draws per shaking tick, which makes the '
+            + 'CAMERA non-deterministic, and the camera gates every enemy\'s `onScreen`; '
+            + '`camera.stepCamera` refuses a non-zero shake by name',
+        'a route that survives — which is the half §0 asked for',
+    ]),
+    firstRefusal: '`levelRun`: a blast that reaches the player on a tape without '
+        + '`noDamage` throws rather than being modelled',
+});
+
+/**
+ * ⛓⛓ THE RUNG-CLOSING ITINERARY — the window chain, in order, with what
+ * each earns and what still blocks the join.
+ *
+ * ⚠ THIS IS THE PLAN, NOT A DRIVEN RESULT. Every window in it exists as a
+ * committed pair or leg; what has never been driven is the SEQUENCE, and
+ * the two named blockers are why.
+ */
+export const R5_ITINERARY = Object.freeze({
+    windows: Object.freeze([
+        Object.freeze({ n: 1, at: 'L32', earns: 'the BobBoss kill, and the `fire` pickup '
+            + 'it spawns', tape: 'r5-bobboss-fire', blocked: 'the pickup is not collected '
+            + 'by any committed tape — the first real link of §0\'s own chain' }),
+        Object.freeze({ n: 2, at: 'L47/L44', earns: 'conch, then `canSwim`',
+            tape: 'r5-karlore-fire -> r5-d5-conch', blocked: null }),
+        Object.freeze({ n: 3, at: 'L87', earns: 'feather', tape: 'r5-feather', blocked: null }),
+        Object.freeze({ n: 4, at: 'L29/L30', earns: 'boss key 1', tape: 'r5-bosskey-leg',
+            blocked: null }),
+        Object.freeze({ n: 5, at: 'L40/L41/L42/L39', earns: 'all five totem parts',
+            tape: 'r5-l40-part0, r5-l40-part1, r5-shaft, r5-l41-part3, r5-l42-part4',
+            blocked: '⛔ parts 3 and 4 BOOT into clusters their own arrivals cannot '
+                + 'reach (§28.5, §32), and the L40 chain from its own arrival stops at '
+                + 'LINK 5 — one corpse, two holds, and the corpse cannot cross '
+                + '(`L40_LINK4_REPAIRED.corpseReach`)' }),
+        Object.freeze({ n: 6, at: 'L43', earns: 'the wand — TERMINAL',
+            tape: null, blocked: '⛔ not a boot: `hasAllTotemParts()` reads a save array '
+                + '`persistence` does not reach, so it can only be the TAIL of a chain '
+                + 'that has already collected all five parts. Planned, not recorded — '
+                + '`r5Totem.L43_WAND_WINDOW`' }),
+    ]),
+    /**
+     * ⛔⛔⛔ AND WINDOW 6 IS LAST OR IT IS NOTHING. The wand is the tset-0
+     * publisher and `fallrock@176,384` seals L43's only shaft on the
+     * publishing tick — so after it, EVERY L40 pit is a one-way trip into a
+     * sealed room (§34.2 with §27).
+     */
+    wandIsLast: true,
+    /** ⛔ The two things that stop the sequence being driven today. */
+    blockedOn: Object.freeze([
+        'THE L40 CHAIN — from its own arrival it stops at link 5, and the census says '
+            + 'there is no second holder (`L40_LINK4_REPAIRED.holderCensus`)',
+        'THE BOOT-vs-ARRIVAL GAP — parts 3 and 4 and the wand all need a page that '
+            + 'has walked there, and the rung has only ever booted into each room',
+    ]),
+});
+
+/**
+ * ⛓⛓ WHAT R6 INHERITS, AS A LIST RATHER THAN AS A SENTENCE.
+ *
+ * ⚠ THE AS3 BATCH IS THE HEADLINE, and it is TWO LINES of source that
+ * unblock two different walls. This rung's zero-build rule forbids both, so
+ * they are a decision about the RUNG rather than about a slice — which is
+ * why they are written down here instead of being done.
+ */
+export const R6_INHERITS = Object.freeze({
+    as3Batch: Object.freeze([
+        Object.freeze({
+            what: 'an ENEMY-STATE readout on `Bot.botStatus`',
+            why: 'every enemy claim this rung makes is witnessed by what it OPENS. A '
+                + 'turret kill opens nothing — `IceTurret.death()` intercepts the '
+                + 'removal, so `classCount` never moves and no persistence is written — '
+                + 'so the ONLY witness that `r5-l40-part5` killed anything is a button '
+                + 'going down two presses later.',
+        }),
+        Object.freeze({
+            what: 'a `hasTotemPart[]` BOOT FIELD',
+            why: 'ONE line. `Wand.update` is gated on `Player.hasAllTotemParts()`, which '
+                + 'reads `SAVE_FILE.data.hasTotemPart[]` — a different array from '
+                + '`levelPersistence`, and `Bot`\'s boot block honours only `grants` and '
+                + '`persistence`. Without it the L43 window can only ever be the tail of '
+                + 'a full itinerary; with it, it is a window like any other.',
+        }),
+    ]),
+    mechanics: Object.freeze([
+        'the BOSS KEYS and `bosslock@480,352` — `keyType` 2, behind L40 link 9',
+        '`magicallock@144,112` — opened by a `WandShot`, which is a projectile this '
+            + 'model does not have (the TWELFTH family, after `IceTurretBlast`)',
+        'the BOSS itself — `hitsMax` 5, `onlyHitBy = "Wand"`, and L43 opens on its death',
+        'PLAYER DAMAGE, which is what `noDamage`\'s retirement now costs — see '
+            + '`R5_NODAMAGE_STATUS`',
+    ]),
+});
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),

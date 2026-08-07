@@ -78,6 +78,7 @@ const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const { buildLevelWorld, ROLES, TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
 const { nodeCentre, plannerObstacleAt } = await import(join(MODULE, 'botDriverV2.js'));
 const { createPushableState, pushableRects } = await import(join(MODULE, 'pushables.js'));
 const { L40_CHAIN, L40_LINK4 } = await import(join(MODULE, 'r5Totem.js'));
@@ -129,15 +130,148 @@ const compAt = (opts = {}) => {
     }
     return seen;
 };
-const touches = (comp, p) => {
-    for (let dx = -1; dx <= 2; dx += 1) {
-        for (let dy = -1; dy <= 2; dy += 1) {
-            if (comp.has(`${Math.floor(p.x / LATTICE) + dx},${Math.floor(p.y / LATTICE) + dy}`)) {
-                return true;
-            }
+/**
+ * ⛔⛔⛔ R5 SLICE 22: THE TOLERANCE WAS A WHOLE TILE — AND ONE TOLERANCE
+ * WAS THE WRONG SHAPE FOR THE QUESTION IN THE FIRST PLACE.
+ *
+ * This file's `touches()` swept `dx, dy` from -1 to 2: a FOUR-BY-FOUR node
+ * window at an 8 px lattice, 32 px across, answering "is the walk anywhere
+ * near this" while reading as "the walk gets here". Slice 21 caught it and
+ * fixed the COPY in `probe-seedling-r5-l40-kill.mjs`; this one kept the old
+ * window for another slice, which is
+ * [[feedback_retired_oracle_check_the_regen]] exactly — the guard corrected
+ * in the new place and left rotting in the old.
+ *
+ * ⛔⛔ AND NARROWING IT TO ±1 IS NOT THE FIX EITHER. Driven: under a
+ * straddling-cell window `bosslock@480,352`, `pushableblockfire@576,576`
+ * and `stairsdown` all flip from REACHED to no — and every one of those is
+ * a SOLID. The player can never stand on a solid, so "is the player's cell
+ * this cell" is a question with a guaranteed answer, and a probe that asks
+ * it of a lock reports the level unreachable no matter how the route goes.
+ *
+ * ⇒ **THE TOLERANCE IS NOT A NUMBER, IT IS THE CLAIM** — and the claim is
+ * different per target:
+ *
+ *   `overlapsFrom`  — a BUTTON, a TELEPORTER, a PICKUP: things whose effect
+ *                     is `collide`, so the question is whether any walkable
+ *                     node puts the PLAYER'S 4x5 BOX over the entity's box.
+ *                     That is the game's own test, not an approximation of
+ *                     it.
+ *   `besideFrom`    — a LOCK, a BLOCK, a STAIRCASE: things the player
+ *                     stands NEXT TO (and, for a block, pushes). The
+ *                     question is whether any walkable node's player box is
+ *                     within one lattice step of the entity's box.
+ *
+ * ⚠ AND THE VERDICTS THIS FILE ASSERTS DO NOT MOVE. Links 4, 5 and 6 read
+ * the same under all three windows, so the +208 and "links 5 and 6 are
+ * inside it" were right all along; what was wrong was three rows of the
+ * TABLE beside them, which is what a later reader would have quoted.
+ */
+const NODE_BOX = 16;
+const nodesNear = (rect, pad) => {
+    const out = [];
+    const x0 = Math.floor((rect.x - pad) / LATTICE);
+    const x1 = Math.floor((rect.right + pad) / LATTICE);
+    const y0 = Math.floor((rect.y - pad) / LATTICE);
+    const y1 = Math.floor((rect.bottom + pad) / LATTICE);
+    for (let cx = x0; cx <= x1; cx += 1) for (let cy = y0; cy <= y1; cy += 1) out.push([cx, cy]);
+    return out;
+};
+/**
+ * ⛔⛔ THE RECT IS THE WORLD'S OWN, AND THE FIRST THING THAT FOUND WAS THAT
+ * A 16x16 GUESS IS WRONG FOR THE BOSS KEY.
+ *
+ * A synthetic `16x16 at the .oel point` looked safe — every entity this
+ * probe names is placed on a tile — and `bosskey@656,528` is **8x8**
+ * (`Pickups/BossKey`'s own `setHitbox`). So the old window was asking about
+ * a volume four times the size of the one the game collides, on top of a
+ * tolerance two tiles wide. The world already carries every rect; nothing
+ * here needs to guess one.
+ *
+ * ⚠ A FALLBACK IS A NAMED FAILURE, not a default. An entity with no rect in
+ * any of the world's four lists is one this probe cannot ask about
+ * honestly, and it says so rather than substituting a tile.
+ */
+const RECTS = () => {
+    // ⛔ FIVE LISTS, and `pressers` is the one a first cut leaves out — a
+    // `Button`'s press volume is 8x6 at (+4,+5) and a `ButtonRoom`'s is the
+    // same, so the 16x16 guess was wrong for the three rows this whole
+    // probe is ABOUT. Between the 8x8 boss key and the 8x6 buttons, every
+    // named target but the blocks and the locks had the wrong volume.
+    const all = [...world.activators, ...world.teleporters, ...world.pickups,
+        ...world.pressers, ...world.solids].filter((r) => r && r.rect);
+    return (ent) => {
+        const w = all.find((r) => r.x === ent.x && r.y === ent.y)
+            ?? all.find((r) => r.rect.x >= ent.x && r.rect.x < ent.x + NODE_BOX
+                && r.rect.y >= ent.y && r.rect.y < ent.y + NODE_BOX);
+        if (!w) {
+            throw new Error(`probe-…-l40-link4: no world rect for ${ent.type}@`
+                + `${ent.x},${ent.y}. Guessing a 16x16 tile is what made `
+                + '`bosskey@656,528` (an 8x8 hitbox) and every `button` (an 8x6 press '
+                + 'volume) read as reached from several times their own area — so this '
+                + 'refuses rather than defaulting.');
         }
+        return w.rect;
+    };
+};
+const rectOf = RECTS();
+/** Can a walkable node put the PLAYER'S BOX over this entity's box? */
+const overlapsFrom = (comp, rect) => nodesNear(rect, LATTICE).some(([cx, cy]) => {
+    if (!comp.has(`${cx},${cy}`)) return false;
+    const c = nodeCentre(cx, cy, LATTICE);
+    const b = playerBoxAt(c.x, c.y);
+    return b.right > rect.x && b.x < rect.right && b.bottom > rect.y && b.y < rect.bottom;
+});
+/** Can a walkable node put the player's box WITHIN ONE LATTICE STEP of it? */
+const besideFrom = (comp, rect) => nodesNear(rect, LATTICE * 2).some(([cx, cy]) => {
+    if (!comp.has(`${cx},${cy}`)) return false;
+    const c = nodeCentre(cx, cy, LATTICE);
+    const b = playerBoxAt(c.x, c.y);
+    return b.right >= rect.x - LATTICE && b.x <= rect.right + LATTICE
+        && b.bottom >= rect.y - LATTICE && b.y <= rect.bottom + LATTICE;
+});
+/**
+ * ⛔⛔⛔ AND THE KIND IS MEASURED, NOT TABULATED — because the third try at
+ * this was wrong too.
+ *
+ * A hand-written `{button: overlap, teleporter: overlap, …}` table put the
+ * two north doors on the overlap arm and they came back UNREACHABLE in
+ * every flood. Driven, the reason is not the level: `plannerObstacleAt`
+ * reports a TELEPORTER as an obstacle — the planner refuses to route
+ * THROUGH a door — so no flood it produces can ever contain a node that
+ * overlaps one. "Can the walk overlap this?" asked of a cell the flood
+ * excludes by construction is a question with a guaranteed answer, which is
+ * the same defect as asking it of a lock, one class along.
+ *
+ * ⇒ the kind is derived from the PLANNER'S OWN VERDICT: if any node whose
+ * player box overlaps the entity is walkable at all, the honest question is
+ * OVERLAP (a button, a `ButtonRoom` — things you stand on); if none is, it
+ * is BESIDE (a lock, a block, a teleporter, a pickup — things you stand
+ * next to, or that the planner will not route into). Nothing is asserted
+ * about which class an entity belongs to; the flood's own obstacle function
+ * decides, and the row prints which it chose.
+ */
+const standable = (rect) => nodesNear(rect, LATTICE).some(([cx, cy]) => {
+    if (cx < 0 || cy < 0 || cx >= rec.width * 2 || cy >= rec.height * 2) return false;
+    const c = nodeCentre(cx, cy, LATTICE);
+    const b = playerBoxAt(c.x, c.y);
+    if (!(b.right > rect.x && b.x < rect.right && b.bottom > rect.y && b.y < rect.bottom)) {
+        return false;
     }
-    return false;
+    try {
+        return plannerObstacleAt(world, c.x, c.y, null,
+            { inventory: INVENTORY, avoidVolumes: false }) === null;
+    } catch { throws += 1; return false; }
+});
+const KIND_CACHE = new Map();
+const kindOf = (ent) => {
+    const k = `${ent.type}@${ent.x},${ent.y}`;
+    if (!KIND_CACHE.has(k)) KIND_CACHE.set(k, standable(rectOf(ent)) ? 'overlap' : 'beside');
+    return KIND_CACHE.get(k);
+};
+const touches = (comp, ent) => {
+    const rect = rectOf(ent);
+    return kindOf(ent) === 'overlap' ? overlapsFrom(comp, rect) : besideFrom(comp, rect);
 };
 const ents = rec.entities ?? [];
 const one = (type, pred = () => true) => ents.find((e) => e.type === type && pred(e));
@@ -157,6 +291,10 @@ const NAMED = {
 for (const [k, v] of Object.entries(NAMED)) {
     if (!v) throw new Error(`probe-seedling-r5-l40-link4: L${LEVEL} has no ${k}`);
 }
+// ⛓ Resolve every rect and kind UP FRONT, so a missing one is a failure at
+// the top rather than a row that silently never reaches.
+const KINDS = Object.fromEntries(Object.entries(NAMED)
+    .map(([k, e]) => [k, `${kindOf(e)} ${rectOf(e).w}x${rectOf(e).h}`]));
 
 const withBlocks = (moves = {}) => {
     const st = createPushableState(world);
@@ -211,16 +349,23 @@ claim(with4.size - without.size === L40_CHAIN.links.find((l) => l.n === 4).gains
 
 const PULSER_ARM = 'link 6  button t4 @816,400';
 const GATE = ['link 5  button t5 @768,400', PULSER_ARM];
-claim(GATE.every((k) => !table.find((t) => t.k === k).a)
-    && GATE.every((k) => table.find((t) => t.k === k).b),
-    '⛔⛔⛔ LINKS 5 AND 6 ARE INSIDE LINK 4\'s +208 — the PULSER\'s arm is behind it',
-    `with link 4 shut: ${GATE.map((k) => `${k.split(' ')[0]}${k.split(' ')[1]} `
-        + `${table.find((t) => t.k === k).a}`).join(', ')}; with it open, both true. `
-    + '⇒ THE ORDERING IS A DEPENDENCY AFTER ALL. This probe set out to show that §24.5 '
-    + 'numbers the links by the order a walk MEETS them, so link 4 might be a cul-de-sac '
-    + 'with a price tag; it is not. `button@816,400 {t 4}` arms `pulser@592,576`, the '
-    + 'pulse is the only thing that moves `pushableblockfire@576,576` off the boss-key '
-    + 'chamber\'s approach, and both buttons are inside the +208.');
+const T5K = 'link 5  button t5 @768,400';
+const row = (k) => table.find((t) => t.k === k);
+claim(!row(T5K).a && row(T5K).b && !row(PULSER_ARM).a && !row(PULSER_ARM).b,
+    '⛔⛔⛔ LINK 5 IS INSIDE LINK 4\'s +208 — AND LINK 6 IS NOT, which this file used '
+    + 'to say it was',
+    `with link 4 shut: t5 ${row(T5K).a}, t4 ${row(PULSER_ARM).a}; with it open, `
+    + `t5 ${row(T5K).b}, t4 ${row(PULSER_ARM).b}. ⇒ THE ORDERING IS A DEPENDENCY AFTER `
+    + 'ALL — this probe set out to show that §24.5 numbers the links by the order a walk '
+    + 'MEETS them, so link 4 might be a cul-de-sac with a price tag; it is not. ⛔⛔ AND '
+    + 'THE t4 BUTTON IS ONE LINK FURTHER OUT THAN THIS FILE RECORDED: it is behind '
+    + '`wandlock@800,400`, whose only opener is the t5 button. Slice 21\'s '
+    + '`probe-…-l40-kill.mjs` said so with a ±1 window while this one said the opposite '
+    + 'with a 32 px one — and the tolerance was only the first of three errors. The '
+    + 'VOLUME was wrong too (a `button`\'s press rect is 8x6 and a `bosskey` is 8x8, not '
+    + 'the 16x16 tile this guessed) and so was the QUESTION (a teleporter\'s own cells '
+    + 'are refused by `plannerObstacleAt`, so "can the walk stand on it" is unanswerable '
+    + 'by construction and had to become "can it stand beside it").');
 
 /**
  * ⛓⛓ AND LINK 4 IS THE *UNIQUE* GATE, which is a different claim from "it

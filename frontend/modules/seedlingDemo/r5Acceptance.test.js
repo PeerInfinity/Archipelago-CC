@@ -7,6 +7,10 @@
  */
 
 import { describe, expect, it } from 'vitest';
+// ⛓ R5 slice 22: the exit-criteria block re-derives its counts from the
+// committed roster on disk, which is the only stratum that can catch a
+// record drifting away from the tapes it describes.
+import { readFileSync, readdirSync } from 'node:fs';
 
 import {
     L60_CONTROL, L60_KILL, L60_LOCK, l60KillFindings,
@@ -787,5 +791,71 @@ describe('the L42 part 4 pair', () => {
             .toContain('⛔ R5 L42 part 4: BOTH ledgers are empty — the part writes save-file state');
         expect(failing(l42Part4Findings(l42pair({}, { cleared: [{ level: 42, tag: 0 }] }))))
             .toContain('⛔ R5 L42 part 4: BOTH ledgers are empty — the part writes save-file state');
+    });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 22 — THE RUNG'S EXIT CRITERIA, ASSERTED FROM THE TAPES.
+ *
+ * The records these check are statements about §0's target, and the whole
+ * risk in such a record is that it drifts from the roster it describes. So
+ * every count is re-derived from the committed tapes here — a record that
+ * said "36 of 42 declare grants" while the roster held 44 would be a
+ * plausible-looking lie, and this is the stratum that catches it.
+ */
+describe('⛓ R5: the rung-closing itinerary and the exit criteria', () => {
+    const tapeDir = new URL('./fixtures/tapes/', import.meta.url);
+    const r5Tapes = () => readdirSync(tapeDir)
+        .filter((f) => f.startsWith('r5-') && f.endsWith('.json'))
+        .map((f) => JSON.parse(readFileSync(new URL(f, tapeDir), 'utf8')));
+
+    it('⛔⛔⛔ `noDamage` is NOT retired, and the count is re-derived', async () => {
+        const { R5_NODAMAGE_STATUS } = await import('./r5Acceptance.js');
+        const tapes = r5Tapes();
+        const withFlag = tapes.filter((t) => t.noDamage === true);
+        expect(R5_NODAMAGE_STATUS.retired).toBe(false);
+        expect(withFlag).toHaveLength(R5_NODAMAGE_STATUS.tapesDeclaringIt);
+        expect(tapes.length - withFlag.length).toBe(1);
+        // ⛓ AND IT IS A MISSING MECHANIC NOW, not a policy — the blast is
+        // what turned the flag from inert into load-bearing.
+        expect(R5_NODAMAGE_STATUS.isNowAMissingMechanic).toBe(true);
+        expect(R5_NODAMAGE_STATUS.blockers.length).toBe(3);
+    });
+
+    it('⛓ the item ledger\'s counts come from the roster, not from memory', async () => {
+        const { R5_ITEM_LEDGER } = await import('./r5Acceptance.js');
+        const tapes = r5Tapes();
+        expect(tapes).toHaveLength(R5_ITEM_LEDGER.tapesTotal);
+        const granting = tapes.filter((t) => (t.grants ?? []).some((g) => g.items.length > 0));
+        expect(granting).toHaveLength(R5_ITEM_LEDGER.tapesDeclaringGrants);
+        // ⛔ AND `fire` IS GRANTED AND NEVER EARNED, which is the one that
+        // makes "every link is proved and the chain has never been run" a
+        // measurement rather than a mood.
+        expect(R5_ITEM_LEDGER.spawnedButNotCollected).toContain('fire');
+    });
+
+    it('⛔ the itinerary names a blocker for every window that has one', async () => {
+        const { R5_ITINERARY } = await import('./r5Acceptance.js');
+        expect(R5_ITINERARY.windows).toHaveLength(6);
+        expect(R5_ITINERARY.wandIsLast).toBe(true);
+        // ⛓ …and the LAST window is the wand's, which is not a preference:
+        // the wand seals L43's only shaft on its publishing tick, and every
+        // L40 pit is a one-way door into that room.
+        const last = R5_ITINERARY.windows[R5_ITINERARY.windows.length - 1];
+        expect(last.earns).toMatch(/wand/);
+        expect(last.blocked).toMatch(/TAIL of a chain/);
+        expect(R5_ITINERARY.blockedOn).toHaveLength(2);
+    });
+
+    it('⛓⛓ R6 inherits TWO lines of AS3, each with the wall it unblocks', async () => {
+        const { R6_INHERITS } = await import('./r5Acceptance.js');
+        expect(R6_INHERITS.as3Batch).toHaveLength(2);
+        for (const row of R6_INHERITS.as3Batch) {
+            // A batch entry with no reason is a batch that gets built and
+            // then argued about.
+            expect(row.why.length).toBeGreaterThan(80);
+        }
+        expect(R6_INHERITS.as3Batch.map((r) => r.what).join(' ')).toMatch(/hasTotemPart/);
+        expect(R6_INHERITS.mechanics.length).toBeGreaterThanOrEqual(4);
     });
 });
