@@ -126,6 +126,9 @@ const {
     EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
 const {
+    LEGACY_ONLY_LEVELS, LEGACY_TAPES, TIERS, assertTiersComplete, tapesInTier,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tiers.js'));
+const {
     DEFAULT_TOLERANCE,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
 const {
@@ -380,8 +383,12 @@ function readPayload(name) {
 const TIER_ARG = process.argv.filter((a) => a.startsWith('--tier='))
     .map((a) => a.slice('--tier='.length).trim()).pop();
 const TIER = TIER_ARG ?? 'full';
-if (!['fast', 'full'].includes(TIER)) {
-    console.error(`--tier must be fast or full, got "${TIER}"`);
+// ⛓ R6 slice 0 added `gate` and `legacy` (the ruled roster trim). `full`
+// still means EVERYTHING — the pre-push gate was not narrowed, and the
+// demotion only leaves the per-slice `gate`. See `fixtures/tiers.js` for
+// the evidence the list rests on and the coverage it names as leaving.
+if (!Object.keys(TIERS).includes(TIER)) {
+    console.error(`--tier must be one of ${Object.keys(TIERS).join(', ')}, got "${TIER}"`);
     process.exit(1);
 }
 /** A tape longer than this is FULL-tier only. The R1 segments start at 910. */
@@ -1070,6 +1077,19 @@ try {
         check('every --only name is a real fixture', unknown.length === 0,
             unknown.length ? `unknown: ${unknown.join(', ')}` : `${ONLY.size} selected`);
     }
+    // ⛔ THE TIER LIST IS ASSERTED AGAINST THE WHOLE ROSTER, ALWAYS — even
+    // under `--only`, and even at `--tier=full` which never skips anything.
+    // A demotion list whose names no longer exist demotes nothing and reads
+    // exactly like one that works, so the check must not be reachable only
+    // from the tier that uses it. See `fixtures/tiers.js`.
+    try {
+        assertTiersComplete(allNames);
+        check('the tier assignment still names real fixtures',
+            true, `${LEGACY_TAPES.length} legacy, ${allNames.length - LEGACY_TAPES.length} gate`);
+    } catch (e) {
+        check('the tier assignment still names real fixtures', false, e.message);
+    }
+
     let names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
     if (TIER === 'fast' && ONLY.size === 0) {
         const deferred = names.filter((n) => loadTape(n).tick_count > FAST_TIER_MAX_TICKS);
@@ -1079,6 +1099,19 @@ try {
         // reporting green. Say what was not run and how to run it.
         console.log(`TIER fast: ${names.length} tape(s); DEFERRED to --tier=full `
             + `(> ${FAST_TIER_MAX_TICKS} ticks): ${deferred.join(', ')}`);
+    } else if ((TIER === 'gate' || TIER === 'legacy') && ONLY.size === 0) {
+        names = tapesInTier(TIER, allNames);
+        const skipped = allNames.filter((n) => !names.includes(n));
+        console.log(`TIER ${TIER}: ${names.length} tape(s); NOT RUN HERE `
+            + `(run them with --tier=${TIER === 'gate' ? 'legacy' : 'gate'} or `
+            + `--tier=full): ${skipped.join(', ')}`);
+        if (TIER === 'gate') {
+            // ⚠ The coverage the demotion bounded, restated on every run that
+            // benefits from it. A bounded sweep must name what it bounded,
+            // and the place to name it is the run that is doing the bounding.
+            console.log(`  ⚠ COVERAGE NOT IN THIS TIER: level(s) `
+                + `${LEGACY_ONLY_LEVELS.join(', ')} are reached by no gate tape.`);
+        }
     } else if (ONLY.size === 0) {
         console.log(`TIER full: ${names.length} tape(s), every one of them`);
     }
