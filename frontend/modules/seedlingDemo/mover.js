@@ -93,6 +93,15 @@
  * waypoints** — which `botDriverV2.planWaypoints` already does. The mover
  * is the instrument for the last few tiles of a race, not a router.
  *
+ * ⛓⛓ **AND THIS TABLE IS A WORST CASE, NOT A CEILING — GEOMETRY HELPS.**
+ * These numbers are open ground, where every direction is available and
+ * the reachable set grows unchecked. In a WALLED room the walls collapse
+ * the state space and the same search goes further: `moverRooms.test.js`
+ * pins a **62 px** leg across L112 finishing at dwell 4 inside 20,000
+ * expansions, which this table says should not answer. The regression
+ * suite asserts the SUCCESS for that reason — a range that silently
+ * shrank would otherwise look like the table being right.
+ *
  * That is enough for the customers §3.3 names, and the numbers say so:
  * the Owl's shove is **3.00 px** perpendicular (R6 slice 0 measured every
  * leg), and L42's escape was **35 px of rise against a body closing 1
