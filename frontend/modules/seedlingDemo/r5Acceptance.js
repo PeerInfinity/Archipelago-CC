@@ -2349,20 +2349,59 @@ export function l43WandFindings(replayed) {
      * ⛓⛓⛓ THE CLAMP, IN THE GAME'S OWN STREAM. A 16 px teleport in one
      * tick, from a y no walk reaches by accident.
      */
-    const before = yAt(drive, 55);
-    const after = yAt(drive, 56);
+    /**
+     * ⚠ THE TICK IS DERIVED FROM THE STREAM, NOT WRITTEN DOWN. The first
+     * cut hardcoded 55/56 — the schedule the pair had before the control's
+     * refutation moved the press cadence from two ticks to 31 — and went
+     * red on a run where the clamp fired perfectly, 83 ticks later. A
+     * literal tick index in a finding is a coincidental predicate waiting
+     * to rot. [[feedback_coincidental_predicate_rots]]
+     *
+     * ⛔⛔ AND THE SEARCH IS FOR THE **JUMP**, NOT FOR THE VALUE — which is
+     * this file's own banked finding, applied one place too late. The
+     * second cut looked for an observation equal to `clampY` and found the
+     * player SETTLING onto it at the very end (211.95 -> 212, +0.05 px),
+     * eleven ticks after the real event.
+     *
+     * `BossTotem` updates BEFORE the Player — `addUpdate` PREPENDS and the
+     * Player is added at `Game.as:2092` against the boss's `:2121` — so the
+     * assignment lands and then THAT SAME TICK's movement runs off it. The
+     * clamp's own number is never an observation. What is unmistakable is
+     * the DISPLACEMENT: ~14 px in one tick, against a walk that moves at
+     * most ~1.2. [[feedback_divergence_tick_is_not_the_event]]
+     */
+    const ticks = drive.stream?.ticks ?? [];
+    let jump = null;
+    for (let i = 1; i < ticks.length; i += 1) {
+        const dy = ticks[i].y - ticks[i - 1].y;
+        // Southward, enormous, from north of the clamp, landing within one
+        // walking step of it: only an assignment can do that.
+        if (ticks[i - 1].y < L43_WAND_PAIR.clampY - 2 && dy > 10
+            && Math.abs(ticks[i].y - L43_WAND_PAIR.clampY) < 2) {
+            jump = { t: i, from: ticks[i - 1].y, to: ticks[i].y };
+            break;
+        }
+    }
     found.push({
         name: '⛓⛓⛓ R5 L43 wand: the CLAMP is an ASSIGNMENT, and the stream shows the '
             + 'teleport',
-        ok: Number.isFinite(before) && Number.isFinite(after)
-            && before < L43_WAND_PAIR.clampY && after === L43_WAND_PAIR.clampY,
-        detail: `tick 55 y=${before}, tick 56 y=${after} — ${
-            Number.isFinite(before) && Number.isFinite(after)
-                ? (after - before).toFixed(2) : '?'} px in ONE tick, to exactly `
-            + `${L43_WAND_PAIR.clampY}. \`if (p.y < y - originY + height) p.y = ...\` `
-            + 'sits at the TOP of `BossTotem.update`, above the block that sets '
-            + '`fullyActivated` (which is why the onset is one tick after it) and with '
-            + 'no freeze test above it. The player collides with nothing.',
+        // ⛔ A WALK CANNOT DO THIS. The player moves at most ~1.2 px/tick,
+        // so a jump of more than 2 px to exactly the clamp's y is not a
+        // step — it is a write.
+        ok: jump !== null,
+        detail: jump === null
+            ? '⛔ NO TELEPORT IN THE STREAM — the walk never got north of '
+            + `${L43_WAND_PAIR.clampY}, so the clamp was never exercised and a green `
+            + 'here would have meant nothing'
+            : `tick ${jump.t - 1} y=${jump.from}, tick ${jump.t} y=${jump.to} — `
+            + `${(jump.to - jump.from).toFixed(2)} px in ONE tick, against a walk `
+            + 'that moves at most ~1.2 px/tick. ⛔ It does not land ON '
+            + `${L43_WAND_PAIR.clampY}: the boss updates BEFORE the player, so the `
+            + 'assignment is followed by that same tick\'s movement. '
+            + '`if (p.y < y - originY + height) p.y = ...` sits at the TOP of '
+            + '`BossTotem.update`, above the block that sets `fullyActivated` (which '
+            + 'is why the onset is one tick after it) and with no freeze test above '
+            + 'it. The player collides with nothing.',
     });
 
     /**

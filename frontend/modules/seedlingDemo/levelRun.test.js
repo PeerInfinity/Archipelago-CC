@@ -1149,7 +1149,15 @@ describe('⛓⛓⛓ R5 slice 23: the L43 wand window, and its shut-before contro
         // game does not have. [[feedback_divergence_tick_is_not_the_event]]
         expect(armed.stream[first.t].y).toBe(first.from);
         const after = armed.stream[first.t + 1].y;
-        expect(after).toBeGreaterThan(first.from + 14);
+        // ⚠ THE PREDICATE IS THE SHAPE, NOT A MAGNITUDE. The first cut
+        // asserted `> first.from + 14` — fitted to the schedule the pair had
+        // before the control's refutation moved the press cadence — and went
+        // red at 13.70 px on a run where the clamp fired perfectly. What no
+        // re-authoring can move: the jump is far larger than a walking step
+        // and lands within one step of the clamp.
+        // [[feedback_coincidental_predicate_rots]]
+        expect(after - first.from).toBeGreaterThan(10);
+        expect(Math.abs(after - 212)).toBeLessThan(2);
         expect(after).toBeLessThan(212);
         // …and once the keys stop, it comes to REST on the clamp exactly.
         expect(armed.stream[armed.stream.length - 1].y).toBe(212);
