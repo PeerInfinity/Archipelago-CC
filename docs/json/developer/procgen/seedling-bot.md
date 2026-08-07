@@ -4646,3 +4646,131 @@ is a `private var` initialised true and never assigned.
 The only path is the L43 window as the TAIL of a page that has already
 collected all five parts in the real game. The terminal wand window is
 blocked on the ITINERARY, not on the ceremony.
+
+## R5 slice 22 — the blast is built, and the camera decides where the turret stands
+
+`iceTurretBlast.js` is the **eleventh** per-visit family and the **first
+projectile**: three bodies per volley at 6 px/tick from the turret's own
+angle, `hitables` `["Player","Tree","Solid","Shield"]`, removed on the
+first contact, and a `Player.freeze(15)` that no damage policy touches.
+
+### The recording that refuted it is what proved the fix
+
+Slice 21 recorded both arms of `r5-l40-part5`, they diverged, and the
+fixtures were withdrawn. The two `--win` streams were still staged under
+`C:\playwright\` — so the acceptance cost **no new recording**: the same
+two tapes through the corrected model are byte-identical to the real game
+for all 1,966 observations of both arms. A free oracle made *before* the
+model that now matches it is a stronger gate than a fresh recording.
+
+Generalisable: **a withdrawn recording is evidence, not waste.** Keep the
+stream and the tape that produced it; the next model that claims to explain
+the divergence has to land on it exactly.
+
+### The freeze is fourteen, and the divergence tick is not the contact tick
+
+`freezeStep()` is at `Player.as:532`, ABOVE `super.update()`, so the
+contact tick's own decrement lands before `input()` reads
+`frozenTimer > 0`: **a freeze of 15 refuses FOURTEEN ticks**, the first of
+them the contact tick.
+
+The recording's first visible disagreement is 1616; the contact is at
+**1614**. `Player.input()`'s direction arms are themselves gated —
+`if (v.y > -moveSpeed) v.y -= accel` — so a blocked input on a fast tick
+and a live input on a fast tick produce the same number. Two silent ticks,
+five of friction decay, then nine of dead stop.
+
+⇒ **a divergence tick is a statement about visibility.** Reading it as the
+event is how a cause gets looked for in the wrong place.
+
+### `onScreen` decides where an enemy IS, not only whether it moves
+
+Modelling the projectile was not enough: with `stepIceTurretsNow`'s
+declared `onScreen: true` the contact landed 33 ticks late.
+`Enemy.update`'s screen gate returns out of `Mobile.mobileUpdate`, and
+`IceTurret.input()` **snaps its own y by 8 px** on the first tick it runs.
+So the camera decides where the body stands, which decides when the player
+crosses its 128 px range, which sets the phase of a 45-tick volley clock:
+
+| | body stands at | range entry |
+|---|---|---|
+| `onScreen: true` from tick 0 | y 424 | t1526 |
+| camera live | y 416 | t1532 |
+
+`camera.js` — transcribed at slice 2 for the contact envelope and consumed
+by nothing for twenty slices — runs live in `levelRun` now. It changed no
+committed fixture.
+
+### Four more from the source
+
+- **the ctor truncates** — `IceTurretBlast(_x:int, _y:int, _v:Point)`, so
+  the off-centre spawn points are truncated toward zero; the velocity is not;
+- **`friction()` still runs with `f = 0`** — the `normalize` is an identity
+  and the two `< 0.05` zeroing tests are not, so a near-axis shot loses its
+  cross component permanently on its first tick;
+- **neither the collision test nor the spritemap is freeze-gated** — only
+  the move is, so a ceremony does not stop a volley already in the barrel:
+  `endAnim` spawns on schedule through frozen frames;
+- **there is no off-world bound** — `Mobile` has none and `Enemy`'s is
+  commented out. The model prunes only what provably cannot reach anything.
+
+`hitables` is a **third** solids list: a blast stops on a `Tree` (a crusher
+does not) and flies through a `Rope`/`ShieldBoss`/`LavaBoss` (the player
+does not). `levelWorld.collidesBlast` exists for that.
+
+### A byte-identical-walk pair is impossible in a room with a live shooter
+
+The old control was this tape with the kill spans deleted. Deleting the
+kill leaves the turret ALIVE and firing, so the control takes freezes the
+drive never sees — and one of them lands on a surviving fire press, where
+`Player.input()` returns at its first line and `useItem` is never reached.
+**The press is lost.** And a kill-less arm cannot be synthesised at all,
+because `runFire`'s bump arm refuses a live turret by name.
+
+⇒ the shooter's volley clock is a function of whether it died, so the
+isolating variable stops being isolated at the moment it takes effect. The
+pair isolates the **hold** now: same walk, same kill, one `fire.bumps`
+press fewer, and a corpse one tile short of the button. The control is a
+byte-identical PREFIX of the drive.
+
+Three verbs came out of authoring it: `holdUntilUnfrozen` before every
+press, `wait.staysShut` (the shut-before arm's own verb, checked on every
+tick rather than at the end), and a `fire.bumps` proximity-hazard exemption
+that had been riding on the `kill` target that always preceded it.
+
+### Link 5 has no holder, and the corpse cannot cross
+
+Enumerated over every class L40 holds, against `Button.update`'s hitables
+and three properties — TYPE, PLACING, STAYING. Sixteen classes carry a
+hitable type; **one** passes all three.
+
+The enemies fail on **staying**, not on type: a Bob *is* an `"Enemy"` and
+it *is* lurable, and the lure is the player. Killing one on the cell buys
+the death animation plus `Mobile.death()`'s eleven-tick fade — **36 ticks
+against a `Lock`'s 101 continuous.** A body that fades is not a holder.
+
+And the open question — can the corpse be bumped the 17½ tiles east? — is
+answered by a BFS over the corpse's tile with the activator set a *function*
+of that tile, every edge a driven five-bump press: **35 tiles reachable,
+east-most column 31, goal at column 48. No.**
+
+⚠ The search's first cut returned one tile, because it asked
+`bumpIceTurret` ONCE. A press is five bumps; a single call from a body at a
+tile centre targets `round(x/16) ± 1` = `tile` and `tile + 2`, so every
+direction decodes to "no move".
+
+### A tolerance is the claim — and it was three errors, not one
+
+Slice 21 fixed the ±2 window in the *copy* and left the original rotting.
+Fixing the original found two more the tolerance had hidden:
+
+1. **tolerance** — the code swept `-1..2`, so 32 px, two whole tiles;
+2. **volume** — a 16x16 box per entity, when a `button`'s press rect is
+   **8x6** and a `bosskey` is **8x8**;
+3. **the question** — one predicate for all targets. A `Teleporter`'s own
+   cells are refused by `plannerObstacleAt`, so "can the walk stand on it"
+   has a guaranteed answer. The kind is derived from the planner's verdict
+   now: stand-on where the cells are walkable, stand-beside where not.
+
+Exactly one row moved in the direction that mattered, and it moved to agree
+with the probe that had reached the opposite conclusion independently.
