@@ -52,8 +52,8 @@ import {
     pushablesSettled, stepPushables,
 } from './pushables.js';
 import {
-    FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY, auditFire, auditPress,
-    slashRect, spearRect,
+    DARK_SWORD_DAMAGE, FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY,
+    SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress, slashRect, spearRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { hitPushableFromPoint } from './pushables.js';
@@ -68,8 +68,18 @@ import {
 } from './spinner.js';
 import { alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
-    createIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret, bumpIceTurret,
+    createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
+    bumpIceTurret,
 } from './iceTurret.js';
+// ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
+// the R4 refusal's reason — "a death moves totalEnemies(), which opens
+// tSet == -1 locks" — from a blanket policy into an arithmetic the run
+// computes at every kill.
+import { killLockLedger } from './enemyDamage.js';
+// ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
+// file does not use — the press rect comes from `presses.slashRect` — but
+// `Player.as:116`'s `swordForce` has one home and this is it.
+import { SWORD_FORCE } from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -408,6 +418,48 @@ export function createLevelRun({
          * would be the two-member-list shape again.
          */
         for (const [id, c] of crusherRectsNow() ?? []) out.push({ id, rect: c.rect });
+        /**
+         * ⛓⛓⛓ R5 SLICE 21: AND AN ICE TURRET PRESSES ONE BOTH WAYS ROUND.
+         *
+         * `Button.update`'s `hitables` is `["Player", "Enemy", "Solid"]` and
+         * the only thing it excludes is a `Cover`. An `IceTurret` is `type =
+         * "Enemy"` while it lives and `type = "Solid"` once the corpse
+         * latches — so it is in that list on BOTH sides of the kill, and
+         * this loop deliberately emits every body rather than only the
+         * standing corpses.
+         *
+         * ⛔⛔ THAT IS WHY LINK 4 IS OPENABLE AT ALL. `button@480,384 {t 2}`
+         * is the one activator in L40 that no block reaches and the player
+         * cannot hold and walk through — and a 16x16 corpse shoved two tiles
+         * north sits on it. This list is the seam where that becomes true.
+         *
+         * ⚠ AND EVERY OTHER ENEMY IN THE ROOM IS A NAMED VACUITY — BOUNDED,
+         * NOT ABSENT. Each of L40's fifteen chasers is `type = "Enemy"` and
+         * would press a button it wandered onto; this model does not
+         * simulate their positions, so a button under one is a button this
+         * run reports UNPRESSED that the game might not. Measured rather
+         * than waved at — the six activators and their nearest chaser at
+         * spawn:
+         *
+         *   buttonroom@272,208 {t0}   bob@304,144        72 px  ⚠
+         *   buttonroom@880,768 {t3}   bobsoldier@880,832 64 px  ⚠
+         *   buttonroom@160,128 {t1}   bob@272,112       113 px
+         *   button@480,384     {t2}   bob@352,416       132 px  <- link 4
+         *   button@816,400     {t4}   puncher@816,128   272 px
+         *   button@768,400     {t5}   puncher@816,128   276 px
+         *
+         * The two flagged are inside a `runRange` of 80 and are exactly the
+         * two no modelled leg touches; link 4's own button is 132 px from
+         * the nearest chaser's SPAWN, which is a fact about the spawn and
+         * not about the walk — which is why `runFire`'s `enemyRoom`
+         * declaration exists and why the leg that pushes this corpse has to
+         * make it. Same bound, same reason, one verb over.
+         */
+        const ts = turretStateFor(level);
+        for (const t of ts.values()) {
+            if (t.removed) continue;
+            out.push({ id: t.id, rect: iceTurretRect(t) });
+        }
         return out;
     };
     const pulledRopeIdsNow = () => {
@@ -1076,6 +1128,18 @@ export function createLevelRun({
     /** ⛓ R5 slice 7: one record per rope PULLED — `{id, level, t, flag}`. */
     const ropePulls = [];
     /**
+     * ⛓⛓⛓ R5 slice 21: one record per ENEMY KILLED, and it is the only
+     * witness a turret kill leaves.
+     *
+     * ⛔ `IceTurret` writes NO persistence — no `removed()`, no `check()`, no
+     * tag — so nothing in the ledger, the flag set or the observation stream
+     * says the body died. Every other per-visit family this rung models
+     * leaves a trace somewhere else; this one leaves it only here, which is
+     * why the record carries the LEDGER ARITHMETIC (how many kill locks the
+     * room held and how many the death opened) rather than just the id.
+     */
+    const turretKills = [];
+    /**
      * `Player.useItem(i)`'s switch, over `Inventory.getItem(i)`.
      *
      * Returns the WEAPON a press would be, or null when the press is a
@@ -1710,6 +1774,12 @@ export function createLevelRun({
             // The block's LIVE rect: a chain's second push aims at where the
             // first one left it.
             pushables: pushableRects(pushState),
+            // ⛓⛓ R5 SLICE 21: and the turret's, for the SAME reason plus one
+            // more — a corpse has a different SIZE as well as a different
+            // position (`death()`'s `setHitbox(16,16,8,8)`), so an audit
+            // against the census box would aim at a 32x32 body that no longer
+            // exists.
+            turrets: turretRectsNow(),
         });
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
@@ -1826,6 +1896,150 @@ export function createLevelRun({
                 hits.push({
                     as3: 'LightPole', id, moved: true, why: null,
                     activate: pole.activate, persistTag: pole.persistTag,
+                });
+            } else if (r.as3 === 'IceTurret') {
+                /**
+                 * ── ⛓⛓⛓ R5 SLICE 21: THE KILL, AND IT IS TWO CALLS ─────
+                 *
+                 * `Player.genericHit`'s one class special case, in the
+                 * game's own order:
+                 *
+                 *     if (e is IceTurret) (e as IceTurret).bump(new Point(x, y), t);
+                 *     (e as Enemy).hit(f, new Point(x, y), d, t);
+                 *
+                 * ⛔ BOTH RUN FOR EVERY WEAPON, and each refuses the other's.
+                 * `bump` is gated on `["Fire","Pulse"]`, so a SWORD press
+                 * reaches it and moves nothing; `Enemy.hit` is gated on
+                 * `hitByFire || t != "Fire"`, so a FIRE press reaches it and
+                 * damages nothing. Modelling one arm and skipping the other
+                 * would be right for exactly one weapon.
+                 *
+                 * ⚠ AND `applyFire` HAS ITS OWN COPY OF THE BUMP HALF. This
+                 * is not a duplicate of it: that dispatch runs five times per
+                 * press (`FIRE_WINDOW.hitTicks`) and never damages, this one
+                 * runs once and never pushes. The shared thing is the
+                 * TRANSCRIPTION in `iceTurret.js`, which is where it belongs.
+                 */
+                const st = turretStateFor(level);
+                const t = st.get(r.turretId);
+                if (!t) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.turretId} in level ${level}, which is not in the `
+                        + "run's turret state. The press census and the run disagree "
+                        + 'about which turrets exist, which is the two-consumers failure '
+                        + 'this state family exists to prevent.');
+                }
+                const type = weapon === 'spear' ? 'Spear' : 'Sword';
+                // ⛓ `bump` FIRST, and it is a real no-op for a sword — kept
+                // because the ORDER is the transcription and a later weapon
+                // (Pulse) makes it matter.
+                const bumped = bumpIceTurret(t, { x: state.x, y: state.y }, type);
+                const before = { hits: t.hits, dead: t.dead };
+                const verdict = hitIceTurret(t, {
+                    d: weapon === 'spear' ? SPEAR_DAMAGE
+                        : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                    // `Player.as:116` — `swordForce = 5`. ⚠ It reaches
+                    // `knockback`, which `IceTurret` overrides EMPTY, so this
+                    // value is never used by this class; passed anyway because
+                    // `Enemy.hit` clamps it against `maxForce` and a model
+                    // that dropped the argument would be wrong for the first
+                    // class that reads it.
+                    f: SWORD_FORCE,
+                    t: type,
+                    // ⛔ `Enemy.hit` carries `!Game.freezeObjects` INSIDE its
+                    // own gate, so a press during a ceremony damages nothing
+                    // — while the i-frame it is waiting on keeps running
+                    // down. The two halves of "frozen" go opposite ways.
+                    frozen: ceremony !== null,
+                });
+                if (verdict.killed) {
+                    /**
+                     * ⛔⛔⛔ THE LEDGER CONSEQUENCE, COMPUTED — NOT SKIPPED.
+                     *
+                     * The R4 refusal this slice lifts was a claim about what
+                     * a death COSTS: it moves `totalEnemies()`, which opens
+                     * every `tset == -1` lock in the room. For this class the
+                     * answer is nil twice over — `death()` intercepts the
+                     * removal so `classCount` never moves, AND the room has
+                     * no kill lock — and the machinery runs the scan for both
+                     * because "there were no kill locks" and "nobody looked"
+                     * print the same thing.
+                     */
+                    const census = world.combat?.enemies ?? null;
+                    const roster = (census ?? [])
+                        .filter((e) => !e.removed)
+                        .map((e) => ({ as3: e.as3 }));
+                    const led = killLockLedger(levelSource(level), {
+                        bodiesBefore: roster,
+                        // ⛓ THE CORPSE IS STILL IN THE ROSTER, which is the
+                        // whole finding: `death()` consumed the destroy, so
+                        // the body was never removed and the count is the
+                        // same list.
+                        bodiesAfter: roster,
+                    });
+                    /**
+                     * ⛔⛔⛔ AN ABSENT CENSUS IS A REFUSAL, NOT A PASS — and
+                     * this is the one question where it would have passed
+                     * QUIETLY AND WRONGLY.
+                     *
+                     * With no `combat` role the roster is EMPTY, so
+                     * `totalEnemies()` reads 0 both sides and
+                     * `checkEnemies`' `== 0` was ALREADY satisfied — which
+                     * `killLockLedger` correctly reports as "this death
+                     * opened nothing" and which is, for a room that really
+                     * holds enemies, a nil computed from a fiction. The scan
+                     * of the ROOM is sound either way (it reads the level
+                     * record), so the refusal is scoped to the case where the
+                     * count is load-bearing: a room WITH a kill lock.
+                     * [[feedback_silent_watcher_vacuous_negative]], and it is
+                     * the same lesson `runFire`'s bump arm banked one slice
+                     * ago about the same census.
+                     */
+                    if (led.locks.length > 0 && census === null) {
+                        throw new Error(`levelRun: the kill of ${r.turretId} in level `
+                            + `${level} happens in a room with ${led.locks.length} `
+                            + '`tset == -1` lock(s), and the world was built with NO '
+                            + 'COMBAT CENSUS — so `totalEnemies()` reads 0 because nothing '
+                            + 'was ASKED, not because the room is empty, and "the lock did '
+                            + 'not open" would be a nil computed from a fiction. Build the '
+                            + 'world with the `combat` role.');
+                    }
+                    if (!led.nil) {
+                        throw new Error(`levelRun: the kill of ${r.turretId} at tick `
+                            + `${pressTick} OPENS ${led.opens.length} kill lock(s) in `
+                            + `level ${level} (${led.why}) — a blocker the walk did not `
+                            + 'earn and this rung does not model. `KILL_ARM_POLICY` lifted '
+                            + 'IceTurret because its death moves NOTHING; a room where it '
+                            + 'does is a room this arm has no verdict for.');
+                    }
+                    turretKills.push({
+                        t: ticksCompleted, level, id: t.id, weapon,
+                        killLocks: led.locks.length,
+                        killLocksOpened: led.opens.length,
+                        // ⚠ `null`, NOT 0, WHEN NOBODY ASKED. An empty roster
+                        // and an empty room print the same number, and this
+                        // record is the walk's only witness that the kill
+                        // happened at all — so it says which one it is.
+                        totalEnemies: census === null ? null : led.totalAfter,
+                        censusAsked: census !== null,
+                        // ⛓ `IceTurret` has no `removed()`, no `check()` and
+                        // no tag, so this is the only witness the kill leaves.
+                        writes: null,
+                    });
+                }
+                hits.push({
+                    as3: 'IceTurret',
+                    id: t.id,
+                    landed: verdict.landed,
+                    killed: verdict.killed,
+                    why: verdict.refusedAt,
+                    hits: t.hits,
+                    was: before,
+                    // ⚠ Recorded even though it is always false for a sword:
+                    // a silent `bump` is the half of the dispatch a reader
+                    // would otherwise have to take on trust.
+                    bumped: bumped.applied,
+                    bumpWhy: bumped.why ?? null,
                 });
             }
         }
@@ -3030,6 +3244,34 @@ export function createLevelRun({
             return [...turretStateFor(level).values()]
                 .filter((t) => t.dead)
                 .map((t) => ({ id: t.id, x: t.x, y: t.y, solid: t.solid, removed: t.removed }));
+        },
+        /**
+         * ⛓⛓⛓ R5 SLICE 21 — THE KILL LEDGER, WITH ITS ARITHMETIC.
+         *
+         * ⛔ AND `turretsDead` IS NOT THE SAME QUESTION. That one asks "is
+         * there a corpse here NOW" (per level, rebuilt by every `new Game`);
+         * this one is the walk's own history, and it carries what the death
+         * COST — the number of `tset == -1` locks the room held and the
+         * number it opened. A leg asserts the second; a flood reads the
+         * first.
+         */
+        get turretKills() { return turretKills.map((k) => ({ ...k })); },
+        /**
+         * ⛓ The DAMAGE, mid-fight. `hits` climbs 0 -> 3 at the i-frame
+         * cadence and `hitsTimer` is what a press has to wait out, so a leg
+         * that presses too fast can be told WHICH press was refused rather
+         * than being told the enemy did not die.
+         */
+        get turretDamage() {
+            if (noclip) return [];
+            return [...turretStateFor(level).values()].map((t) => ({
+                id: t.id, hits: t.hits, hitsMax: t.hitsMax, hitsTimer: t.hitsTimer,
+                dying: t.dying, dead: t.dead, removed: t.removed,
+                // ⛓ The LATCH, so a leg can say whether the corpse has become
+                // a wall yet — it flips on the first tick the player's box is
+                // off the 16x16 body and never goes back.
+                solid: t.solid,
+            }));
         },
         /**
          * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT

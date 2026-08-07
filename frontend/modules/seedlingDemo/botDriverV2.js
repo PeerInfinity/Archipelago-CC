@@ -92,6 +92,18 @@ import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { scanCrusher } from './crusher.js';
 import { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
+// ⛓⛓⛓ R5 SLICE 21: THE KILL VERB'S GEOMETRY AND ITS CADENCE.
+//
+// ⛔ THE SLASH RECT COMES FROM `presses.js`, NOT `combatVerbs.js`, and the
+// two are not the same function: `combatVerbs.slashRect` carries the
+// STALE-SCALE and ghost-sword arms, `presses.slashRect` is the plain-sword
+// 16x32 that `levelRun.applyThrust` audits with. A verb that checked reach
+// against one while the run audited with the other would be a leg that
+// passed its own check and hit nothing.
+import {
+    DARK_SWORD_DAMAGE, SLASH_REACH, SWORD_DAMAGE, distanceRectPoint, slashRect,
+} from './presses.js';
+import { KILL_PRESS_CADENCE } from './combatVerbs.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -1692,8 +1704,30 @@ const KEY_LOCK_WINDOW = opensOnKeyTick(60, 0.05);
 const KEY_LOCK_SLACK = 4;
 /** How long friction is given to bring a face nudge back to a full stop. */
 const FACE_COAST_TICKS = 20;
+/**
+ * `Player.direction`'s own numbering (`Player.sprites()`), hoisted to module
+ * scope at R5 slice 21 when `faceTowards` was lifted out of `runSpear`.
+ * Two press verbs that disagreed about which number "N" is would be a bug
+ * with no symptom until the rect fired at a wall.
+ */
+const FACINGS = { E: 0, N: 1, W: 2, S: 3 };
 /** 32 ticks of glide plus slack — the wait a push that LANDS needs. */
 const PUSH_GLIDE_TICKS = 40;
+/**
+ * ⛓⛓ How long `runKill` waits after its last press before asking whether
+ * there is a corpse.
+ *
+ * The killing blow lands on the tick after the press (`slash()` runs above
+ * `Mobile.input()` in `Player.update`, so the flag is set after that tick's
+ * hit test) and `Mobile.death()` makes the corpse on the tick after THAT
+ * (the body updates before the player, so its turn is already spent). Two
+ * ticks is the arithmetic; this is padded to a whole slash window because
+ * the cost is ticks and the failure is a leg that reports a live turret it
+ * killed. ⚠ NOT `PUSH_GLIDE_TICKS`: a corpse does not glide until it is
+ * bumped, and borrowing another mechanic's constant is how a wait comes to
+ * mean nothing. [[feedback_two_cost_models_must_agree]]
+ */
+const KILL_STAGE_TICKS = 8;
 
 /**
  * ⛓ R5 slice 13: how long a threaded press will wait for its corridor.
@@ -1891,6 +1925,328 @@ export function resolvePickup(world, named, what) {
 }
 
 /**
+ * ⛓ THE FACE NUDGE, EXTRACTED AT R5 SLICE 21 — same code, two callers.
+ *
+ * `runSpear` has carried this since R4 and `runKill` needs it for the same
+ * reason and the same weapon. Lifted VERBATIM rather than rewritten: the
+ * commentary below is the finding it exists to carry, and a second copy is
+ * how two press verbs come to disagree about what "facing N" means.
+ *
+ * ⚠ AND IT IS LIFTED, NOT GENERALISED. It does exactly what it did — one
+ * tap, up to `FACE_COAST_TICKS` of coast, two refusals — and takes no
+ * options. [[feedback_refactor_same_work_different_program]]: the way this
+ * goes wrong is a "cleanup" that changes the program.
+ */
+function faceTowards(run, perTick, facing, what) {
+    const FACE_KEY = { E: 'right', N: 'up', W: 'left', S: 'down' };
+    if (run.state.direction !== FACINGS[facing]) {
+        const before = { x: run.state.x, y: run.state.y };
+        const tap = new Set([FACE_KEY[facing]]);
+        perTick.push(tap);
+        run.advance(tap);
+        for (let i = 0; i < FACE_COAST_TICKS; i++) {
+            if (run.state.vx === 0 && run.state.vy === 0) break;
+            perTick.push(NO_HELD);
+            const { transition } = run.advance(NO_HELD);
+            if (transition) {
+                fail(`${what}: the face nudge crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}.`);
+            }
+        }
+        if (run.state.direction !== FACINGS[facing]) {
+            const names = Object.entries(FACINGS)
+                .find(([, v]) => v === run.state.direction)?.[0] ?? run.state.direction;
+            fail(`${what}: the leg declares facing ${facing}, the player was facing `
+                + `${names} at (${before.x},${before.y}), and a tap of `
+                + `${FACE_KEY[facing]} left them facing ${names} at `
+                + `(${run.state.x},${run.state.y}). A tap that changes nothing means `
+                + 'the stance is pinned against something in the facing direction, so '
+                + 'the press would fire its rect at a wall.');
+        }
+        const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null,
+            liveGeometryOpts(run, {
+                noclip: false, noHazards: run.noHazards, inventory: run.inventory,
+            }));
+        if (o) {
+            fail(`${what}: the face nudge moved the player from (${before.x},${before.y})`
+                + ` to (${run.state.x},${run.state.y}), which is ${describe(o)}. The tap `
+                + 'is a fraction of a pixel, so a stance this close to something is a '
+                + 'stance the route should not have chosen.');
+        }
+    }
+}
+
+/**
+ * ── ⛓⛓⛓ THE KILL PRIMITIVE (R5 slice 21) ─────────────────────────────
+ *
+ * The eleventh leg verb, and the first one whose target is ALIVE.
+ *
+ *     { x: 488, y: 448, kill: { id: 'iceturret@472,400', facing: 'N' } }
+ *
+ * ── ⛔ WHY IT IS NOT `runSpear` WITH A FOURTH TARGET ─────────────────
+ *
+ * Every other press verb is ONE press with ONE effect. A kill is three
+ * presses that must be SPACED: `Enemy.hit`'s first gate is
+ * `hitsTimer <= 0`, a landed hit sets it to 30, and the body's `hitUpdate`
+ * runs BEFORE the player each tick — so the gate reopens on the thirtieth
+ * tick after and `KILL_PRESS_CADENCE` (31) clears it by ONE. Presses closer
+ * than that are not a faster kill; they are presses the enemy refuses,
+ * and the ones inside `SLASH_TIMER_MAX` are a DASH that moves the player.
+ *
+ * ⛓ AND THE COUNT IS A FLOOR, THE ASSERTION IS THE EFFECT — `killSchedule`'s
+ * doctrine, applied. The leg may send a slack press; gate 4 of `Enemy.hit`
+ * (`hits < hitsMax`) makes a press at a dying body a true no-op, so slack
+ * costs ticks and nothing else. What is asserted is that the CORPSE EXISTS.
+ *
+ * ── ⛔⛔ THE FIVE THINGS THAT COULD SILENTLY NOT HAPPEN ──────────────
+ *
+ *   1. the STANCE — at a full stop, so the rect fires where the leg aimed;
+ *   2. the FACING — `faceTowards`, shared with `runSpear`;
+ *   3. the REACH — the slash rect has to CONTAIN the body, and the game
+ *      then applies a 16 px distance gate the rect does not express. A
+ *      press that hits nothing is not an error the game reports;
+ *   4. the POSITIVE CONTROL — the target is ALIVE before the first press,
+ *      because a corpse refuses every hit (`IceTurret.hit` is entirely
+ *      inside `if (currentAnim != "dead")`) and a leg that killed it on an
+ *      earlier visit would pass by doing nothing;
+ *   5. the LEDGER — how many `tset == -1` locks the room holds and how many
+ *      the death opened, asserted as the run COMPUTED them rather than
+ *      assumed nil. "There were no kill locks" and "nobody looked" print
+ *      the same thing.
+ *
+ * ⚠ THE DAMAGE THE PLAYER TAKES IS PRICED, NOT FORBIDDEN. An `IceTurret`
+ * shoots a three-blast spread every 25 ticks inside 128 px and its
+ * `hitPlayer` is worth 1 — a leg that has to stand inside that for ~65
+ * ticks is going to be hit. `Bot.noDamage` and the run's health are what
+ * carry it; this verb refuses to pretend the approach is free.
+ */
+function runKill(run, perTick, kill, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a kill is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null world state, so the presses would emit '
+            + 'their spans, kill nothing and report success. A tape that kills must '
+            + 'declare noclip: false.');
+    }
+    const {
+        id = null, facing = null, presses = null, cadence = KILL_PRESS_CADENCE,
+        wait = null,
+    } = kill;
+    if (typeof id !== 'string') {
+        fail(`${what}: kill.id must be the turret id \`world.iceTurrets\` carries, e.g. `
+            + '"iceturret@472,400". It is the OEL placement, not a live position — the '
+            + 'body moves once it is a corpse.');
+    }
+    if (!(facing in FACINGS)) {
+        fail(`${what}: kill.facing must be one of E/N/W/S, got ${JSON.stringify(facing)}. `
+            + 'Declared rather than derived for `runSpear`\'s reason: `Player.direction` '
+            + 'comes from the last tick that had velocity, so a wall-pinned stance has a '
+            + 'facing and no keys.');
+    }
+    if (cadence < KILL_PRESS_CADENCE) {
+        fail(`${what}: a cadence of ${cadence} is under the ${KILL_PRESS_CADENCE}-tick `
+            + `floor. \`Enemy.hit\`'s i-frame is ${ICE_TURRET.hitsTimerMax} ticks and the `
+            + `body's \`hitUpdate\` runs BEFORE the player, so the gate reopens on the `
+            + `${ICE_TURRET.hitsTimerMax}th tick after a landed hit — the margin is ONE. `
+            + `And anything under \`SLASH_TIMER_MAX\` turns the second press into a DASH, `
+            + 'which MOVES the player and re-aims the rect.');
+    }
+
+    // ── the target, and the two rosters that have to agree about it ───
+    const row = (run.world.iceTurrets ?? []).find((t) => t.id === id);
+    if (!row) {
+        fail(`${what}: level ${run.level} holds no ${id}. Known: `
+            + `[${(run.world.iceTurrets ?? []).map((t) => t.id).join(', ') || 'none'}].`);
+    }
+    const before = (run.turretDamage ?? []).find((t) => t.id === id);
+    if (!before) {
+        fail(`${what}: the run has no damage state for ${id}, which means \`levelRun\` `
+            + 'did not build a turret roster for this level — a kill against no state '
+            + 'would report the body unhurt and say nothing about why.');
+    }
+
+    // ── the positive control, BEFORE anything is pressed ──────────────
+    if (before.dead || before.dying) {
+        fail(`${what}: ${id} is ALREADY ${before.dead ? 'a CORPSE' : 'DYING'} before the `
+            + 'first press, so killing it proves nothing. `IceTurret.hit` is entirely '
+            + 'inside `if (currentAnim != "dead")`, so every press below would be a real '
+            + 'no-op — and the turret is PER VISIT (no `check()`, no tag), so a corpse '
+            + 'here means an earlier leg of THIS window already spent the kill.');
+    }
+    if (before.hits !== 0) {
+        fail(`${what}: ${id} already has ${before.hits}/${before.hitsMax} hits before the `
+            + 'leg starts. The press count below is priced from a full body; starting '
+            + 'part-damaged makes the schedule an over-estimate that would still pass, '
+            + 'which is the shape of a leg that is measuring the wrong thing.');
+    }
+
+    // ── the stance and the facing ─────────────────────────────────────
+    if (run.state.vx !== 0 || run.state.vy !== 0) {
+        fail(`${what}: the stance (${run.state.x},${run.state.y}) is still MOVING — `
+            + `v=(${run.state.vx},${run.state.vy}). The slash rect is anchored on the `
+            + 'player and fires the tick AFTER the press, so a drifting stance aims '
+            + 'somewhere the leg did not choose.');
+    }
+    faceTowards(run, perTick, facing, what);
+    const at = { x: run.state.x, y: run.state.y };
+
+    /**
+     * ── ⛔ THE REACH, CHECKED BEFORE THE FIRST PRESS ─────────────────
+     *
+     * `Player.slash()` collects with `collideRectInto` and then applies
+     * `FP.distanceRectPoint(x, y, <target box>) <= slashingSprite.width *
+     * scaleX` — 16 px from the player's CENTRE POINT to the target's BOX.
+     * So the rect is necessary and not sufficient, and a stance in the
+     * corner of the 16x32 box can be 20 px away and hit nothing.
+     *
+     * ⚠ CHECKED AGAINST THE ALIVE 32x32 BODY, which is the one that is
+     * standing right now. The corpse is 16x16 and this verb never presses
+     * at one.
+     */
+    const rect = slashRect(at.x, at.y, FACINGS[facing]);
+    const body = {
+        x: row.x, y: row.y, right: row.x + ICE_TURRET.alive.w, bottom: row.y + ICE_TURRET.alive.h,
+    };
+    assertRect(body, `${what}: ${id}'s alive body`);
+    if (!rectsOverlap(rect, body)) {
+        fail(`${what}: the ${facing}-facing slash rect from (${at.x},${at.y}) — `
+            + `[${rect.x},${rect.right}) x [${rect.y},${rect.bottom}) — does not reach `
+            + `${id}'s body [${body.x},${body.right}) x [${body.y},${body.bottom}). A `
+            + 'press that hits nothing is not an error the game reports; it is a walk '
+            + 'that stands beside a live enemy pressing X.');
+    }
+    const reach = distanceRectPoint(at.x, at.y, body);
+    if (reach > SLASH_REACH) {
+        fail(`${what}: the rect reaches ${id} and the DISTANCE GATE does not — `
+            + `${reach.toFixed(2)} px from the player's centre to the body, against `
+            + `${SLASH_REACH}. \`Player.slash\` filters the rect's own candidates with `
+            + '`FP.distanceRectPoint(...) <= slashingSprite.width * scaleX`, so a corner '
+            + 'of the 16x32 box is inside the rect and outside the swing.');
+    }
+
+    // ── the presses ───────────────────────────────────────────────────
+    // ⛓ THE COUNT IS A FLOOR. `hitsMax` at this weapon's damage, and the
+    // leg may ask for more; gate 4 (`hits < hitsMax`) makes the extra ones
+    // true no-ops rather than a second death.
+    const need = Math.ceil(ICE_TURRET.hitsMax
+        / (run.inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE));
+    const count = presses ?? need;
+    if (!Number.isInteger(count) || count < need) {
+        fail(`${what}: ${count} press(es) cannot kill ${id} — it takes ${need} landed `
+            + `hits at ${ICE_TURRET.hitsMax} \`hitsMax\` and this weapon's damage. The `
+            + 'count is a FLOOR and the assertion is the corpse; asking for fewer is a '
+            + 'leg that would end beside a live turret and report success.');
+    }
+    const PRESS = new Set(['primary']);
+    const pressTick = perTick.length;
+    for (let k = 0; k < count; k += 1) {
+        perTick.push(PRESS);
+        const pressed = run.advance(PRESS);
+        if (pressed.transition) {
+            fail(`${what}: press ${k + 1} crossed from level `
+                + `${pressed.transition.from_level} to ${pressed.transition.to_level}.`);
+        }
+        // ⚠ THE GAP IS HELD EMPTY, not walked. Any movement here re-aims the
+        // next rect and re-derives the facing, and the whole point of the
+        // cadence is that the player is standing still through it.
+        const gap = k === count - 1 ? 0 : cadence - 1;
+        for (let i = 0; i < gap; i += 1) {
+            perTick.push(NO_HELD);
+            const { transition } = run.advance(NO_HELD);
+            if (transition) {
+                fail(`${what}: the gap after press ${k + 1} crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}.`);
+            }
+        }
+    }
+
+    /**
+     * ── ⛔⛔ THE WAIT, AND IT IS NOT ZERO ────────────────────────────
+     *
+     * The killing blow sets `destroy`; `Mobile.mobileUpdate`'s
+     * unconditional `death()` is what turns the body into the corpse, and
+     * that is the NEXT tick — the body updates BEFORE the player, so its
+     * turn for the killing tick has already been taken.
+     *
+     * ⛓ AND THE CORPSE IS NOT A WALL UNTIL THE PLAYER IS OFF IT.
+     * `type = "Solid"` is `IceTurret.update`'s own tail —
+     * `else if (!collide("Player", x, y))` — and it is a LATCH. A leg that
+     * kills from inside the 16x16 corpse box has to step off before the
+     * flip, which is the NEXT verb's job and is why this one reports
+     * `solid` rather than asserting it.
+     */
+    const ticks = wait ?? KILL_STAGE_TICKS;
+    for (let i = 0; i < ticks; i += 1) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: wait tick ${i + 1} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}.`);
+        }
+    }
+
+    // ── the effect ────────────────────────────────────────────────────
+    const after = (run.turretDamage ?? []).find((t) => t.id === id);
+    if (!after?.dead) {
+        fail(`${what}: ${count} press(es) at ${cadence}-tick cadence from `
+            + `(${at.x},${at.y}) facing ${facing} left ${id} on `
+            + `${after?.hits ?? '?'}/${after?.hitsMax ?? '?'} hits and it is NOT a `
+            + 'corpse. Either the rect missed (the 16 px distance gate, not the box), '
+            + 'the slot holds no sword (a press with an empty `Main.primary` is a '
+            + 'silent no-op), or the presses were closer than the i-frame and the body '
+            + 'refused them.');
+    }
+    if (after.removed) {
+        fail(`${what}: ${id} is GONE, not a corpse. \`IceTurret.death()\` intercepts the `
+            + 'first `destroy`, so a REMOVED body means the corpse then reached water, '
+            + 'lava or a pit and `Mobile.death()` faded it out — there is nothing left '
+            + 'to push.');
+    }
+
+    /**
+     * ⛔⛔⛔ THE LEDGER, ASSERTED FROM WHAT THE RUN COMPUTED.
+     *
+     * This is the half that makes the R4 refusal safe to lift. The run
+     * scans the room's `tset == -1` locks at every kill and throws if any
+     * would open; the leg reads back HOW MANY it found, so a room that
+     * silently stopped having locks — a changed extract, a different level
+     * — is a diff rather than a still-green pass.
+     * [[feedback_bounded_sweep_must_name_what_it_bounded]]
+     */
+    const record = (run.turretKills ?? []).filter((k) => k.id === id);
+    if (record.length !== 1) {
+        fail(`${what}: the run recorded ${record.length} kills of ${id} and the leg is `
+            + 'ONE. A second entry means the body was killed twice, which `IceTurret.hit`'
+            + "'s own `currentAnim != \"dead\"` gate makes impossible — so the two "
+            + 'halves disagree about what happened.');
+    }
+    const [k0] = record;
+    if (k0.killLocksOpened !== 0) {
+        fail(`${what}: the kill of ${id} OPENED ${k0.killLocksOpened} kill lock(s) in `
+            + `level ${run.level}. \`KILL_ARM_POLICY\` lifted IceTurret because its `
+            + 'death moves NOTHING — `death()` intercepts the removal, so `classCount` '
+            + 'is unchanged — and a room where it does is a room this arm has no '
+            + 'verdict for.');
+    }
+
+    return {
+        kind: 'kill',
+        id,
+        facing,
+        at,
+        pressTick,
+        presses: count,
+        cadence,
+        reach,
+        hits: after.hits,
+        solid: after.solid === true,
+        killLocks: k0.killLocks,
+        killLocksOpened: k0.killLocksOpened,
+        totalEnemies: k0.totalEnemies,
+        ticks: perTick.length - pressTick,
+    };
+}
+
+/**
  * ── THE SPEAR PRIMITIVE (R4) ──────────────────────────────────────────
  *
  * The fourth leg verb, and the first one that PRESSES A KEY on purpose.
@@ -1941,7 +2297,6 @@ function runSpear(run, perTick, spear, what) {
             + 'BreakableRock, by OEL coordinates). Naming none presses at nothing; '
             + `naming ${named.length} makes the effect check ambiguous.`);
     }
-    const FACINGS = { E: 0, N: 1, W: 2, S: 3 };
     if (!(facing in FACINGS)) {
         fail(`${what}: \`facing\` must be one of E/N/W/S, got ${JSON.stringify(facing)}. `
             + 'It is DECLARED rather than derived because `Player.direction` comes from '
@@ -1977,42 +2332,7 @@ function runSpear(run, perTick, spear, what) {
      * name if a tap does not fix it — which would mean the stance is pinned
      * against something in the facing direction.
      */
-    const FACE_KEY = { E: 'right', N: 'up', W: 'left', S: 'down' };
-    if (run.state.direction !== FACINGS[facing]) {
-        const before = { x: run.state.x, y: run.state.y };
-        const tap = new Set([FACE_KEY[facing]]);
-        perTick.push(tap);
-        run.advance(tap);
-        for (let i = 0; i < FACE_COAST_TICKS; i++) {
-            if (run.state.vx === 0 && run.state.vy === 0) break;
-            perTick.push(NO_HELD);
-            const { transition } = run.advance(NO_HELD);
-            if (transition) {
-                fail(`${what}: the face nudge crossed from level `
-                    + `${transition.from_level} to ${transition.to_level}.`);
-            }
-        }
-        if (run.state.direction !== FACINGS[facing]) {
-            const names = Object.entries(FACINGS)
-                .find(([, v]) => v === run.state.direction)?.[0] ?? run.state.direction;
-            fail(`${what}: the leg declares facing ${facing}, the player was facing `
-                + `${names} at (${before.x},${before.y}), and a tap of `
-                + `${FACE_KEY[facing]} left them facing ${names} at `
-                + `(${run.state.x},${run.state.y}). A tap that changes nothing means `
-                + 'the stance is pinned against something in the facing direction, so '
-                + 'the press would fire its rect at a wall.');
-        }
-        const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null,
-            liveGeometryOpts(run, {
-                noclip: false, noHazards: run.noHazards, inventory: run.inventory,
-            }));
-        if (o) {
-            fail(`${what}: the face nudge moved the player from (${before.x},${before.y})`
-                + ` to (${run.state.x},${run.state.y}), which is ${describe(o)}. The tap `
-                + 'is a fraction of a pixel, so a stance this close to something is a '
-                + 'stance the route should not have chosen.');
-        }
-    }
+    faceTowards(run, perTick, facing, what);
 
     // ── the positive control, before the press ────────────────────────
     let expect = null;
@@ -3800,6 +4120,15 @@ export function synthesizeLegs(legs, opts = {}) {
     const spears = [];
     /** ⛓ R5 slice 7: one record per FIRE press — see `runFire`. */
     const fires = [];
+    /**
+     * ⛓⛓⛓ R5 slice 21: one record per KILL — see `runKill`.
+     *
+     * ⛔ AND IT IS THE ONLY WITNESS. `IceTurret` writes no persistence and
+     * leaves no entity behind, so nothing in the tape, the flag set or the
+     * observation stream says the body died. This list and the run's own
+     * `turretKills` are the two halves, and `runKill` asserts they agree.
+     */
+    const kills = [];
     const keylocks = [];
     const equips = [];
     const grazes = allowGrazes ? [] : null;
@@ -4157,6 +4486,20 @@ export function synthesizeLegs(legs, opts = {}) {
                     ...record,
                 });
             }
+            // ⛓⛓⛓ R5 SLICE 21: THE KILL, and it sits ABOVE `fire` because
+            // that is the order the leg runs in — a `fire.bumps` press at a
+            // live turret is a silent no-op in both directions, so a window
+            // that fired first would report the corpse unmoved and read as a
+            // geometry mistake on a leg whose geometry was perfect.
+            if (target.kill !== undefined) {
+                const from = perTick.length;
+                const record = runKill(run, perTick, target.kill,
+                    `legs[${li}] level ${leg.level} target ${ti} kill`);
+                kills.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
             if (target.fire !== undefined) {
                 const from = perTick.length;
                 const record = runFire(run, perTick, target.fire,
@@ -4462,6 +4805,18 @@ export function synthesizeLegs(legs, opts = {}) {
         // INTENDED, that says what the rect actually contained.
         spears: spears.map((s2) => ({ ...s2 })),
         fires: fires.map((f) => ({ ...f })),
+        /**
+         * ⛓⛓⛓ One record per KILL — R5 slice 21, and the same rule for the
+         * strongest reason yet: `IceTurret` writes NO persistence and its
+         * body is never removed, so the tape, the flag set and the
+         * observation stream are all silent about the death. Without this
+         * list there is no consumer-visible fact that the walk killed
+         * anything. It carries the LEDGER ARITHMETIC too (how many
+         * `tset == -1` locks the room held, how many the death opened), so
+         * a room that quietly stopped having locks is a diff rather than a
+         * still-green pass.
+         */
+        kills: kills.map((k) => ({ ...k })),
         // One record per BOSSLOCK the run opened with a key: which lock,
         // which key type, which flag it wrote, where the player stood and how
         // long the window ran. The `holds`/`touches`/`spears` rule again —

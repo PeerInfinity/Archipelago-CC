@@ -185,7 +185,7 @@ export function distanceRectPoint(px, py, r) {
  * is empty because nothing was ASKED, not because nothing responds. That
  * distinction is the whole reason this throws.
  */
-export function pressRespondersIn(world, rect, { pushables: live = null } = {}) {
+export function pressRespondersIn(world, rect, { pushables: live = null, turrets = null } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
             + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
@@ -202,6 +202,35 @@ export function pressRespondersIn(world, rect, { pushables: live = null } = {}) 
             const now = live.get(r.pushableId);
             if (now.removed) continue;
             if (rectsOverlap(rect, now.rect)) hits.push({ ...r, rect: now.rect, live: true });
+            continue;
+        }
+        /**
+         * ⛓⛓ R5 SLICE 21: THE SECOND RESPONDER WHOSE RECT IS NOT A CONSTANT
+         * — and it changes SIZE as well as position.
+         *
+         * A pushed block moves; a killed turret moves AND shrinks, because
+         * `death()`'s `setHitbox(16, 16, 8, 8)` replaces the 32x32 the
+         * constructor set. So the census's static box is right for exactly
+         * as long as the body is alive, and a press audited against it after
+         * the kill would report the corpse where the level BUILT it — 8 px
+         * and a whole tile away from where two `fire.bumps` presses left it.
+         *
+         * ⛔ AND AN ABSENT RUN STATE IS "ALIVE", NOT "GONE". `liveRectOf`'s
+         * turret arm made the opposite choice for SOLIDITY (absent means not
+         * a wall) because a turret is only a wall once it is a corpse. Here
+         * the responder EXISTS either way — a live turret takes the hit and
+         * a corpse refuses it — so falling through to the static rect is the
+         * conservative answer and the divergence between the two arms is
+         * deliberate. [[feedback_units_must_survive_the_round_trip]] in
+         * spirit: the same map, read by two consumers who want opposite
+         * defaults, has to say which one it is for.
+         */
+        if (turrets && r.turretId && turrets.has(r.turretId)) {
+            const now = turrets.get(r.turretId);
+            if (now.removed) continue;
+            if (rectsOverlap(rect, now.rect)) {
+                hits.push({ ...r, rect: now.rect, live: true, dead: now.dead === true });
+            }
             continue;
         }
         if (rectsOverlap(rect, r.rect)) hits.push(r);
@@ -250,8 +279,10 @@ export function pressRespondersIn(world, rect, { pushables: live = null } = {}) 
  * reason to prefer the sword where the geometry allows, not a reason to
  * skip the audit.
  */
-export function auditPress(world, rect, { weapon, intended = [], pushables = null } = {}) {
-    const responders = pressRespondersIn(world, rect, { pushables });
+export function auditPress(world, rect, {
+    weapon, intended = [], pushables = null, turrets = null,
+} = {}) {
+    const responders = pressRespondersIn(world, rect, { pushables, turrets });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(
         (r) => weapon === 'spear' || !spearOnly.has(r.as3),
@@ -358,8 +389,56 @@ export const PRESS_ARM_POLICY = Object.freeze({
             + 'press moves one. ⛓ A FIRE press does: see `FIRE_ARM_POLICY`, and '
             + '`r5Shaft` for the room that needs it.',
     },
+    /**
+     * ⚠ STILL REFUSED, AND THE REASON IS UNCHANGED — R5 slice 21 lifted the
+     * SUBCLASS below, not the family. This row is the arm `genericHit`
+     * reaches for every `Enemy` the chain does not name first, and for those
+     * a death really does move `classCount` and really does open every
+     * `tset == -1` lock in the room. `enemyDamage.KILL_ARM_POLICY` is the
+     * per-class table and every one of its rows carries its own reason.
+     */
     Enemy: { policy: 'refused', why: 'a death moves totalEnemies(), which opens tSet == -1 locks' },
-    IceTurret: { policy: 'refused', why: 'the Enemy cost plus a bump; Dungeon 5, off route' },
+    /**
+     * ⛓⛓⛓ R5 SLICE 21 — THE FIRST ENEMY THIS MODEL CAN KILL, AND THE LIFT
+     * IS ONE CLASS WIDE.
+     *
+     * The refusal above was correct and it was a claim about a CONSEQUENCE:
+     * a death moves `totalEnemies()`. For this subclass that consequence is
+     * provably nothing — `IceTurret.death()` intercepts the removal, so the
+     * corpse stays in the world and `classCount(IceTurret)` never moves —
+     * and in the one room the route needs (L40) there is no `tset == -1`
+     * lock to open in any case. Both halves are COMPUTED by
+     * `enemyDamage.killLockLedger` rather than asserted, because "no kill
+     * locks" and "nobody looked" print the same thing.
+     *
+     * ⛔ AND THE ARM IS TWO CALLS, IN THIS ORDER. `Player.genericHit`'s one
+     * class special case runs `bump` BEFORE `Enemy.hit`:
+     *
+     *     if (e is IceTurret) (e as IceTurret).bump(new Point(x, y), t);
+     *     (e as Enemy).hit(f, new Point(x, y), d, t);
+     *
+     * — so a SWORD press does both, and `bump` refuses it (`t` is not in
+     * `["Fire","Pulse"]`) while `hit` takes it. A FIRE press is the mirror:
+     * `bump` moves the corpse and `hit` falls to the empty `knockback`.
+     * Neither call is optional and neither is the other one's fallback.
+     *
+     * ⚠ A PRESS AT A CORPSE IS A REAL NO-OP, NOT AN ERROR. `IceTurret.hit`
+     * is entirely inside `if (currentAnim != "dead")`, and once the corpse
+     * latches `type = "Solid"` it is in `hitables` under a SECOND type — so
+     * a leg that swings near a pushed corpse reaches it, and the arm has to
+     * be modelled for that alone.
+     */
+    IceTurret: {
+        policy: 'modelled',
+        why: '⛓ THE ONE ENEMY WITH A KILL ARM (R5 slice 21). `hitsMax` 3 at the plain '
+            + 'sword\'s damage 1, spaced by the 30-tick i-frame — `KILL_PRESS_CADENCE` '
+            + 'is 31 and the margin is ONE TICK. `death()` intercepts the removal, so '
+            + 'the kill moves NO `classCount` and writes NO persistence (there is no '
+            + '`removed()`, no `check()` and no tag in the class); the corpse is what '
+            + '`fire.bumps` then pushes. NOT killable by fire — `Enemy.hit`\'s '
+            + '`if (hitByFire || t != "Fire")` sends a fire hit to the empty `knockback` '
+            + 'override. See `enemyDamage.js` and `iceTurret.js`.',
+    },
     // ⚠ MODELLED FROM R5 SLICE 5, and it was the FEATHER that ruled it in.
     // L92's two `breakablerock`s are the only thing between L87's door and
     // L91's, L91 is the only way into L89's top, and L89's top is the only

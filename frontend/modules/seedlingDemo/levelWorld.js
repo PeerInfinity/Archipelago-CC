@@ -3643,6 +3643,17 @@ export function buildLevelWorld(levelRecord, {
                     // state and `applyFire` looks it up by this id.
                     ...(cls.as3 === 'BurnableTree'
                         ? { treeId: `${e.type}@${x},${y}` } : {}),
+                    // ⛓⛓⛓ R5 slice 21: the TENTH, and the SECOND responder
+                    // whose rect is not a constant.
+                    //
+                    // ⛔ A pushed block moves; a killed turret moves AND
+                    // SHRINKS — `death()`'s `setHitbox(16, 16, 8, 8)` against
+                    // the ctor's 32x32 — so the box below is true only while
+                    // the body is alive. `pressRespondersIn`'s `turrets` join
+                    // is what makes a press after the kill aim at the corpse
+                    // rather than at where the level built the turret.
+                    ...(cls.as3 === 'IceTurret'
+                        ? { turretId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press

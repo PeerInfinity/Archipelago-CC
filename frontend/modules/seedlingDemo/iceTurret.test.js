@@ -480,14 +480,13 @@ describe('the fire arm, through `levelRun`', () => {
 /**
  * ⛓⛓ `fire.bumps` — THE FOURTH SHAPE OF A FIRE PRESS, and its refusals.
  *
- * ⛔⛔ THE LEG ITSELF CANNOT BE DRIVEN YET, and that is the slice's own
- * finding rather than an omission: the corpse has to be KILLED first and no
- * enemy in this model is killable by any weapon. `PRESS_ARM_POLICY.Enemy`
- * is `refused` ("a death moves totalEnemies(), which opens tSet == -1
- * locks") and only four sword/spear arms are modelled at all
- * (Tile, PushableBlockSpear, BreakableRock, LightPole). So what is
- * assertable here is every gate the verb puts in front of that — including
- * the one that says exactly why.
+ * ⛓⛓⛓ AND THE LEG IS DRIVEN AT R5 SLICE 21 — see the block below this one.
+ * Slice 20 wrote here that it *"cannot be driven yet … no enemy in this
+ * model is killable by any weapon"*; `KILL_ARM_POLICY.IceTurret` is
+ * `modelled` and `runKill` is the verb. What stays true is every gate this
+ * block asserts, including the one that named the blocker — a `fire.bumps`
+ * press at a LIVE turret is still a silent no-op in both directions, which
+ * is why the refusal is checked before the geometry and not after it.
  */
 describe('`fire.bumps` — the verb, and the gate that names the blocker', () => {
     const legs = async (fire, { roles = null, ...extra } = {}) => {
@@ -562,5 +561,155 @@ describe('`fire.bumps` — the verb, and the gate that names the blocker', () =>
     it('⛔ and a fire press still names EXACTLY ONE effect', async () => {
         await expect(legs({ bumps: [BUMP], burns: [{ x: 0, y: 0 }], enemyRoom: 'test' }))
             .rejects.toThrow(/EXACTLY ONE/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE KILL VERB, AND THE LEG IT UNBLOCKS — R5 slice 21.
+ *
+ * Slice 20 built the corpse, built `fire.bumps`, and stopped at the kill.
+ * This block drives the whole of link 4 in the model: three sword presses
+ * at the i-frame cadence, the corpse, two northward bumps, and the
+ * `button@480,384 {t 2}` group opening under the body.
+ *
+ * ⚠ THE ROOM DECLARATION IS THE SAME BOUND `fire.bumps` ALREADY CARRIED.
+ * L40 holds fifteen chasers this model does not simulate, so the corridor
+ * certification is a declaration with evidence rather than a prediction —
+ * which is why the drive here says so and the recorded leg says it against
+ * a tape.
+ */
+describe('`kill` — the first predictive Enemy arm, driven', () => {
+    const ROOM = 'the test drive stands at (488,440) for 313 ticks; L40\'s nearest chaser '
+        + 'to that cell spawns 132 px away against a `runRange` of 80';
+    const TURRET = 'iceturret@472,400';
+    const RELAX = {
+        noclip: false,
+        noDamage: true,
+        noHazards: [],
+        grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
+        persistence: [],
+        equips: [],
+        roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+    };
+    const legs = async (targets) => {
+        const { synthesizeLegs } = await import('./botDriverV2.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        return synthesizeLegs([{
+            level: 40,
+            // ⛔ EVERY KILL STANCE IS INSIDE THE TURRET'S OWN HAZARD DISC.
+            // `attackRange` is 128 and the slash reach is 16, so the leg is
+            // 112 px inside the volume a route would otherwise avoid — which
+            // is not sloppiness, it is what killing a static shooter costs.
+            contacts: [`proximity-hazard:${TURRET}`],
+            targets,
+        }], {
+            levelSource: atlasLevelSource(),
+            boot: { level: 40, x: 488, y: 440 },
+            name: 'r5-l40-kill-drive',
+            description: 'the model-side drive of link 4',
+            relax: RELAX,
+        });
+    };
+    const KILL = { x: 488, y: 440, kill: { id: TURRET, facing: 'N' } };
+    const SWORD = { x: 488, y: 440, equip: { slot: 0 } };
+
+    it('⛓⛓⛓ three presses at the 31-tick cadence make a corpse, and it LATCHES SOLID', async () => {
+        const out = await legs([SWORD, KILL]);
+        expect(out.kills).toHaveLength(1);
+        const [k] = out.kills;
+        expect(k).toMatchObject({
+            id: TURRET, facing: 'N', presses: 3, cadence: 31, hits: 3, solid: true,
+        });
+        // ⛔ THE LEDGER, COMPUTED. L40's nine locks are `wandlock`s at tset
+        // 0..5 plus a `keyType` bosslock, so the scan finds NO kill lock and
+        // the death opens nothing — and the count did not move either, which
+        // is the second, independent reason for the same nil.
+        expect(k.killLocks).toBe(0);
+        expect(k.killLocksOpened).toBe(0);
+        expect(k.totalEnemies).toBe(21);
+        // …and the reach gate the game applies AFTER the rect
+        expect(k.reach).toBeLessThanOrEqual(16);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE WHOLE OF LINK 4, IN ONE WINDOW — the thing §34.9 said
+     * was blocked. `button@480,384 {t 2}` is the one activator in L40 that
+     * no block reaches and the player cannot hold and walk through; a 16x16
+     * corpse shoved two tiles north sits on it, and `Button.update`'s
+     * `hitables` is `["Player", "Enemy", "Solid"]`.
+     */
+    it('⛔⛔⛔ …and the corpse HOLDS button@480,384, which opens the t2 group', async () => {
+        const { runTape } = await import('./tapeRunner.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        const out = await legs([
+            SWORD,
+            KILL,
+            { x: 488, y: 440, equip: { slot: 1 } },
+            { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 25 } }], enemyRoom: ROOM } },
+            { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 24 } }], enemyRoom: ROOM } },
+            { x: 488, y: 440, wait: { opens: 'wandlock@448,432', ticks: 140,
+                why: 'the ice turret CORPSE is standing on button@480,384 {t 2}' } },
+        ]);
+        expect(out.kills).toHaveLength(1);
+        expect(out.fires).toHaveLength(2);
+        const run = runTape(out.tape, { levelSource: atlasLevelSource() });
+        // BOTH t2 locks — `Button.set activate` calls `activateAll`, which
+        // reaches every `Activators` sharing its `t`, so the group is the
+        // unit and naming one of the two would understate the effect.
+        expect([...run.openActivators].sort()).toEqual(
+            ['wandlock@448,432', 'wandlock@512,480'],
+        );
+        // ⛓ AND IT OPENS ON THE LOCK'S OWN FADE, not on the press: 101 ticks
+        // from `activate` latching to `turnOff()`, which `activators` owns.
+        const [w] = out.waits;
+        expect(w.openedAt).toBeGreaterThan(0);
+        expect(w.openedAt).toBeLessThan(140);
+    });
+
+    describe('the refusals, each naming what it caught', () => {
+        it('⛔ a cadence under the i-frame floor', async () => {
+            await expect(legs([SWORD, { ...KILL, kill: { ...KILL.kill, cadence: 20 } }]))
+                .rejects.toThrow(/under the 31-tick floor/);
+        });
+
+        it('⛔ a press count that cannot kill', async () => {
+            await expect(legs([SWORD, { ...KILL, kill: { ...KILL.kill, presses: 2 } }]))
+                .rejects.toThrow(/cannot kill.*count is a FLOOR/s);
+        });
+
+        /**
+         * ⛔ THE POSITIVE CONTROL. A corpse refuses every hit
+         * (`IceTurret.hit` is entirely inside `if (currentAnim != "dead")`),
+         * so a second kill leg in the same window would pass by doing
+         * nothing at all.
+         */
+        it('⛔ a target that is ALREADY a corpse', async () => {
+            await expect(legs([SWORD, KILL, KILL]))
+                .rejects.toThrow(/ALREADY a CORPSE.*proves nothing/s);
+        });
+
+        it('⛔ a stance whose rect does not reach', async () => {
+            await expect(legs([
+                { x: 488, y: 456, equip: { slot: 0 } },
+                { x: 488, y: 456, kill: { id: TURRET, facing: 'N' } },
+            ])).rejects.toThrow(/does not reach|distance gate/);
+        });
+
+        /**
+         * ⛔ AND FACING THE WRONG WAY IS A DIFFERENT FAILURE FROM STANDING
+         * IN THE WRONG PLACE. The stance is fine; the 16x32 rect points
+         * south and contains nothing.
+         */
+        it('⛔ a facing that points the rect away from the body', async () => {
+            await expect(legs([SWORD, { ...KILL, kill: { ...KILL.kill, facing: 'S' } }]))
+                .rejects.toThrow(/does not reach/);
+        });
+
+        it('⛔ a turret the level does not hold, and a malformed id', async () => {
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { id: 'iceturret@0,0', facing: 'N' } }]))
+                .rejects.toThrow(/holds no iceturret@0,0/);
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { facing: 'N' } }]))
+                .rejects.toThrow(/kill.id must be the turret id/);
+        });
     });
 });
