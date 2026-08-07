@@ -4252,3 +4252,88 @@ across a room keeps gliding through a pickup ceremony's 150 frames.
 
 Read the gate's POSITION relative to the `super` call, not just its
 presence.
+
+## R5 slice 19: the wall found what the hint could not, and the round trip closes
+
+### Raise the wall PER STAGE, not over the whole search
+
+Slice 18's lesson was that a single escape tile has to be a constraint and
+not a score term. The obvious way to apply it — confine the whole search to
+the escape's column — is wrong here, and the reason generalises. L42's
+return chain is three charges: the first needs the player inside the
+crusher's WEST lane (`box.right >= 112`), the third needs the player inside
+the nook's own column (`box.right <= 112`). A confinement that held for the
+whole chain would forbid the charge that starts it.
+
+So the wall is keyed the same way the positional hint is — on the crusher's
+own position — and reads "while the crusher is anywhere on row 96, the
+player's box must lie inside `[96,112]`". With that one term added to a beam
+that is otherwise identical (same 8-tick blocks, same width, same
+arc-length progress, same prefix), the search that died at depth 43 with
+90/90 run over finds the chain at depth 47.
+
+A constraint is a statement about ONE stage of a plan. Writing it as a
+property of the search is what makes it look impossible to add.
+
+### Last match wins is a mechanism, not a quirk — twice in one room
+
+`DIRECTIONS` is `E, N, W, S` and the scan loop has no `break`, so a stance
+inside two lanes is charged at from whichever matched LAST. Slice 18 found
+that this sets the west edge of chain 1's stance band. Slice 19 found it
+deciding the whole of chain 3: row 7 at cols 4,5 is free, below the swept
+volume, and would be a perfectly good second escape from the eastward charge
+— except that a box there is inside the crusher's SOUTH lane as well as its
+east one, so presenting the player there charges the crusher the other way
+and the chain never happens.
+
+Which means the nook really is the only escape, and the reason is half
+geometry and half iteration order. A model that recorded only the geometry
+would have called the confinement over-tight.
+
+### The same one-pixel seam, in the other axis
+
+`laneHitsPlayer` is inclusive on all four edges; the swept body's own
+overlap is strict. Chain 1 rides that at the southern edge of a horizontal
+lane; chain 3 rides it at the northern edge of the same lane one room up. In
+the nook the trigger-and-survive band is twelve cells wide and every one of
+them has `box.bottom` exactly 80 — the body's own top edge. The beam does
+not have to land on that pixel: it can trigger from a tenth of a pixel
+inside the volume and rise out of it inside the `box.x - 96` ticks the body
+takes to arrive, which is exactly what the found chain does (its resting box
+ends 0.08 px clear).
+
+### A multi-charge bait's `dir` is the NET displacement
+
+`runBait` derives the direction it reports from `after - before`, on the
+reading that a charge is committed at rest and never re-aimed — true of ONE
+charge. A chain is three, and chain 3 goes W 112, N 128, E 128: net
+`(+16,-128)`, so the record says `N` while the last charge is `E`. Chains 1
+and 2 both report `E` and both happen to end on an E charge, which is why
+three drives were needed before the field disagreed with itself.
+
+Nothing consumes the field, so nothing broke. What it costs is a reader —
+and the fix in the assertions is to compare PARKS, which are what phase 2
+plans against.
+
+### In a pursuit room, the obvious control drives the mechanism
+
+L42 has no flag to withhold: no rock shields its crushers, no lock gates the
+room, no item is needed. The natural control is therefore the same tape with
+the choreographies emptied and every walk kept. Measured, that arm is inside
+a crusher body on 1,127 ticks and moves both crushers — because each walk
+was planned from the cell the choreography before it ended in, so the player
+starts it somewhere else and the replayed spans carry it into the lanes.
+
+This is §29.7's finding one room along, and in a pursuit it is structural
+rather than accidental: 172 of the arrival's 304 free cells are safe, so an
+unplanned walk IS a trigger. The recorded control is the tape CUT at the
+first bait's stance — a cell that is one step outside all eight lanes, which
+is exactly what makes it a stance — and standing still there is a claim
+about 1,652 null scans, not an absence.
+
+### Read a park at the last tick in the ROOM, not at the end of the tape
+
+This window ends in L40. `run.crushers` there is the next room's map, so a
+check written as "both bodies are still on their parks at the end" compares
+two `undefined`s and passes. The audit already walks every tick; the last
+one whose level is still 42 is where that question has an answer.

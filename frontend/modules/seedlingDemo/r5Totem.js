@@ -1925,6 +1925,91 @@ export const L40_ARRIVAL_BREAK = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R5 SLICE 19 — THE CORPSE-HOLD, PRICED FROM THE SOURCE LOOP, AND
+ * NOTHING OF IT IS WIRED.
+ *
+ * `L40_ARRIVAL_BREAK` located the break at link 4: `button@480,384 {tset 2}`
+ * has no block that can reach it and its `Lock.turnOff` write is inert for
+ * a grouped lock, so the only Solid in the level that could hold it down is
+ * the one the room makes — a dead `IceTurret`. `death()` intercepts the
+ * first `destroy`, shrinks the hitbox to 16x16, plays "dead" and pushes
+ * `Enemy`/`Player` into `solids`; `update()` then sets `type = "Solid"` on
+ * the first tick the player is NOT standing in it.
+ *
+ * ⚠ THIS IS A MEASUREMENT, NOT A BUILD. `probe-seedling-r5-l40-corpse.mjs`
+ * TRANSCRIBES `IceTurret.input()` and `Mobile.mobileUpdate()` as a loop and
+ * steps them; no corpse exists in `levelRun`, `fire.bumps` does not exist,
+ * and no route consults any of this. It is what a build has to reproduce.
+ *
+ * ⛓⛓⛓ THE REST POSITION IS A TWO-CYCLE, NOT A FIXED POINT. `input()`
+ * derives `cTile` with `Math.round(x / Tile.w)` and snaps a stationary axis
+ * with `Math.floor(x / Tile.w) * Tile.w + Tile.w/2`. At a tile centre those
+ * disagree — `round(30.5)` is 31, `floor` is 30 — so a standing body
+ * oscillates `(488,423.5) <-> (487.5,424)` forever.
+ *
+ * ⛔⛔⛔ AND `bump` READS THE SAME `round`, SO WHICH WAY A PRESS MOVES THE
+ * BODY DEPENDS ON THE TICK. On one half of the cycle a `tTile - 1` target
+ * is a whole tile away and a `tTile + 1` target is satisfied by the next
+ * tick; half a pixel later it is the other way round. Measured, phase 0
+ * moves NORTH and EAST and phase 1 moves SOUTH and WEST — 16 px in 32 ticks
+ * of motion, observed on the 33rd. ⇒ **a fire press's tick PARITY is
+ * load-bearing**, which no press verb in this driver has ever had to
+ * express.
+ *
+ * ⛔⛔ AND §32.6's FIFTH CORRECTION IS WRONG. It read `super.update()`
+ * sitting above `IceTurret.update()`'s `if (Game.freezeObjects) return;` and
+ * concluded the corpse glides through a ceremony. `super.update()` is
+ * `Enemy.update()`, whose own `super.update()` is `Mobile.mobileUpdate()` —
+ * and THAT method wraps `friction(); input(); moveX(); moveY();` in
+ * `if (!Game.freezeObjects)`. The gate is one level down, not absent, so a
+ * glide PAUSES for a ceremony. What genuinely runs above every gate is
+ * `Enemy.update()`'s terrain switch (water and lava set `destroy`) and its
+ * pit descent — a claim about DYING, not about moving.
+ */
+export const L40_CORPSE = Object.freeze({
+    level: 40,
+    turret: Object.freeze({ id: 'iceturret@472,400', oel: Object.freeze({ x: 472, y: 400 }) }),
+    /** `super(_x + Tile.w, _y + Tile.h)` — a WHOLE tile, and a tile CORNER. */
+    spawn: Object.freeze({ x: 488, y: 416 }),
+    /** ⛓ Where it actually STANDS: `input()` snaps a stationary axis to a centre. */
+    restCycle: Object.freeze([
+        Object.freeze({ x: 488, y: 423.5 }),
+        Object.freeze({ x: 487.5, y: 424 }),
+    ]),
+    /** ⛔⛔⛔ Which pushes move it, per phase of that cycle. */
+    pushesByPhase: Object.freeze([
+        Object.freeze({ phase: 0, at: Object.freeze({ x: 488, y: 423.5 }), moves: Object.freeze(['E', 'N']) }),
+        Object.freeze({ phase: 1, at: Object.freeze({ x: 487.5, y: 424 }), moves: Object.freeze(['S', 'W']) }),
+    ]),
+    /** 16 px at 0.5 px/tick; the loop OBSERVES the arrival on the tick after. */
+    glideTicks: 32,
+    arrivalObservedAt: 33,
+    /** ⛓ A push that the phase refuses arrives in two ticks, having moved 0.5 px. */
+    noOpTicks: 2,
+    target: Object.freeze({ id: 'button@480,384', tset: 2, rect: Object.freeze({ x: 484, right: 492, y: 389, bottom: 395 }) }),
+    /** ⛓ Two northward presses, on the phase that moves north. */
+    presses: 2,
+    corpseEndsAt: Object.freeze({ x: 488, y: 391.5 }),
+    /**
+     * ⛔ THE FREEZE GATE, CORRECTED. §32.6 item 5 said the corpse glides
+     * through a ceremony; `Mobile.mobileUpdate` gates `input()` and both
+     * moves, so it does not. What is ungated is `Enemy.update()`'s terrain
+     * switch and pit descent.
+     */
+    freeze: Object.freeze({
+        motionGated: true,
+        gatedIn: 'Mobile.mobileUpdate — `if (!Game.freezeObjects) { friction(); input(); moveX(); moveY(); }`',
+        ungatedAbove: 'Enemy.update() — the water/lava `getState()` switch (sets `destroy`) '
+            + 'and the `fallInPit` descent (moves, spins and fades)',
+        corrects: '§32.6 item 5',
+    }),
+    wired: false,
+    next: 'a corpse in `levelRun` and a `fire.bumps` verb, both driven — and the verb has '
+        + 'to be able to say WHICH TICK it fires on, because the push direction is a '
+        + 'property of the parity and not only of the stance.',
+});
+
+/**
  * ⛓⛓⛓ L42 IS SOLVED, AND THE SOLUTION IS NORTHWARD — R5 slice 17 step 0.
  *
  * §30.8 read L42 as a PURSUIT and banked a six-bait ordering from a

@@ -12,7 +12,7 @@ import {
     L40_FALLTHROUGH,
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
-    L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
+    L40_ARRIVAL, L40_CHAIN, L40_CORPSE, L40_PREDICTIONS, L41_L42_RECON,
     L37_BURN, L40_JOIN, L40_LINK4, L40_NW, L41_SHIELD, L41_PART3, L42_PART4,
     PARKED_SCAN_AUDIT, L40_ARRIVAL_BREAK, L42_SOLVE,
 } from './r5Totem.js';
@@ -2084,5 +2084,118 @@ describe('⛓⛓⛓ L42: the round trip — three chains, the part and the exit'
         for (const c of n.crushersEndAt) expect(parks.has(`${c.x},${c.y}`)).toBe(false);
         // ⛓ …and the room is a pursuit BECAUSE most of it is watched.
         expect(L42_SOLVE.arrival.safeNodes).toBeLessThan(L42_SOLVE.arrival.freeNodes);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R5 SLICE 19 — THE CORPSE-HOLD, PRICED AND NOT BUILT. The claims are
+ * re-derived here from the SAME transcribed loop the probe steps, so the
+ * banked record cannot drift from the source read that produced it.
+ */
+describe('⛓⛓⛓ L40: the corpse-hold, priced from the loop', () => {
+    const T = 16;
+    const sign = (n) => (n > 0 ? 1 : (n < 0 ? -1 : 0));
+    const make = (x, y) => ({
+        x, y, tile: { x: Math.floor(x / T), y: Math.floor(y / T) }, cTile: null, v: { x: 0, y: 0 },
+    });
+    const input = (c) => {
+        c.cTile = { x: Math.round(c.x / T), y: Math.round(c.y / T) };
+        c.v.x = 0.5 * sign(c.tile.x - c.cTile.x);
+        if (c.v.x === 0) c.x = Math.floor(c.x / T) * T + T / 2;
+        c.v.y = 0.5 * sign(c.tile.y - c.cTile.y);
+        if (c.v.y === 0) c.y = Math.floor(c.y / T) * T + T / 2;
+    };
+    const step = (c) => { input(c); c.x += c.v.x; c.y += c.v.y; };
+    const bump = (c, p) => {
+        const tT = { x: Math.round(c.x / T), y: Math.round(c.y / T) };
+        const a = Math.atan2(-(c.y - 8 + 8) + p.y, p.x - (c.x - 8 + 8));
+        if (Math.abs(Math.sin(a)) - 0.1 < Math.abs(Math.cos(a))) {
+            c.tile.x = Math.cos(a) > 0 ? tT.x - 1 : tT.x + 1;
+        }
+        if (Math.abs(Math.sin(a)) > Math.abs(Math.cos(a)) - 0.1) {
+            c.tile.y = Math.sin(a) > 0 ? tT.y - 1 : tT.y + 1;
+        }
+    };
+
+    it('⛓⛓⛓ the rest position is a TWO-CYCLE, and the ctor cell is not it', () => {
+        const c = make(L40_CORPSE.spawn.x, L40_CORPSE.spawn.y);
+        const seen = [];
+        for (let i = 0; i < 12; i += 1) { step(c); seen.push(`${c.x},${c.y}`); }
+        const cycle = [...new Set(seen.slice(4))];
+        expect(cycle).toHaveLength(2);
+        expect(new Set(cycle))
+            .toEqual(new Set(L40_CORPSE.restCycle.map((p) => `${p.x},${p.y}`)));
+        // ⛓ The ctor puts it on a tile CORNER; `input()` snaps to a CENTRE.
+        expect(L40_CORPSE.spawn.y % T).toBe(0);
+        expect(L40_CORPSE.restCycle.every((p) => p.y !== L40_CORPSE.spawn.y)).toBe(true);
+    });
+
+    /**
+     * ⛔⛔⛔ WHICH PUSHES MOVE IT IS A PROPERTY OF THE TICK. `bump` reads
+     * `Math.round(x / Tile.w)` and the body alternates half a pixel, so the
+     * same press is a whole tile on one tick and nothing on the next.
+     */
+    it('⛔⛔⛔ the two phases of the cycle move OPPOSITE pairs of directions', () => {
+        const PRESS = { N: { dx: 0, dy: 44 }, S: { dx: 0, dy: -44 }, W: { dx: 44, dy: 0 }, E: { dx: -44, dy: 0 } };
+        for (const declared of L40_CORPSE.pushesByPhase) {
+            const moved = [];
+            for (const [dir, p] of Object.entries(PRESS)) {
+                const c = make(L40_CORPSE.spawn.x, L40_CORPSE.spawn.y);
+                for (let i = 0; i < 12 + declared.phase; i += 1) step(c);
+                expect({ x: c.x, y: c.y }).toEqual({ ...declared.at });
+                const before = { x: c.x, y: c.y };
+                bump(c, { x: c.x + p.dx, y: c.y + p.dy });
+                const axis = dir === 'N' || dir === 'S' ? 'y' : 'x';
+                let arrived = null;
+                for (let i = 0; i < 200; i += 1) {
+                    step(c);
+                    if (arrived === null && c.cTile[axis] === c.tile[axis]) arrived = i + 1;
+                }
+                const far = Math.abs(c.x - before.x) >= T || Math.abs(c.y - before.y) >= T;
+                if (far) moved.push(dir);
+                expect(arrived).toBe(far ? L40_CORPSE.arrivalObservedAt : L40_CORPSE.noOpTicks);
+            }
+            expect(moved.sort()).toEqual([...declared.moves].sort());
+        }
+        // ⛓ …and between them the two phases cover all four directions.
+        expect(L40_CORPSE.pushesByPhase.flatMap((p) => [...p.moves]).sort())
+            .toEqual(['E', 'N', 'S', 'W']);
+    });
+
+    it('⛓⛓ two northward presses put the 16x16 corpse over the button rect', () => {
+        const c = make(L40_CORPSE.spawn.x, L40_CORPSE.spawn.y);
+        for (let i = 0; i < 12; i += 1) step(c);
+        let n = 0;
+        let on = false;
+        while (!on && n < 4) {
+            let guard = 0;
+            while (c.y !== Math.floor(c.y / T) * T + T / 2 - 0.5) {
+                step(c);
+                guard += 1;
+                expect(guard).toBeLessThan(8);
+            }
+            bump(c, { x: c.x, y: c.y + 44 });
+            for (let i = 0; i < 200; i += 1) step(c);
+            n += 1;
+            const box = { x: c.x - 8, right: c.x + 8, y: c.y - 8, bottom: c.y + 8 };
+            on = box.x < L40_CORPSE.target.rect.right && box.right > L40_CORPSE.target.rect.x
+                && box.y < L40_CORPSE.target.rect.bottom && box.bottom > L40_CORPSE.target.rect.y;
+        }
+        expect(n).toBe(L40_CORPSE.presses);
+        expect({ x: c.x, y: c.y }).toEqual({ ...L40_CORPSE.corpseEndsAt });
+    });
+
+    /**
+     * ⛔⛔ THE FREEZE GATE, CORRECTED. §32.6 item 5 read the `super.update()`
+     * above `IceTurret`'s own gate and called the corpse ungated; the gate
+     * is one level down, in `Mobile.mobileUpdate`.
+     */
+    it('⛔⛔ records that the MOTION is freeze-gated and the terrain path is not', () => {
+        expect(L40_CORPSE.freeze.motionGated).toBe(true);
+        expect(L40_CORPSE.freeze.gatedIn).toContain('Mobile.mobileUpdate');
+        expect(L40_CORPSE.freeze.ungatedAbove).toContain('Enemy.update()');
+        expect(L40_CORPSE.freeze.corrects).toBe('§32.6 item 5');
+        // ⚠ And nothing of this is wired — the record says so out loud.
+        expect(L40_CORPSE.wired).toBe(false);
     });
 });
