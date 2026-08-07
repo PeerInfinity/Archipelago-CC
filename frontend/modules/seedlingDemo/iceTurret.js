@@ -645,6 +645,67 @@ export const ICE_TURRET_PLAN = Object.freeze({
         blocked: false,
         arm: 'enemyDamage.KILL_ARM_POLICY.IceTurret — `modelled`, and the ONLY one',
     }),
+    /**
+     * ⛔⛔⛔ AND THE BLAST IS THE ONE THAT REFUTED THE LEG — R5 slice 21.
+     *
+     * `plan-seedling-r5-l40-part5.mjs` synthesised clean, drove clean, and
+     * DIVERGED FROM THE REAL GAME at tick 1616 of 1965 — in both arms of
+     * its pair, at the same tick, by the same 0.8 px, growing to a
+     * permanent **14.15 px** y offset. The recording is valid and the model
+     * is refuted.
+     *
+     * ⛓⛓⛓ THE CAUSE IS `IceTurretBlast`, AND IT IS NOT THE DAMAGE:
+     *
+     * ```
+     *   case "Player":
+     *       (hits[i] as Player).freeze(freezeTime);              // 15 ticks
+     *       (hits[i] as Player).hit(null, 0, new Point(x, y));   // Bot.noDamage
+     * ```
+     *
+     * `Player.hit`'s WHOLE BODY is behind `if (Bot.noDamage) return`, so the
+     * damage really is free. `freeze()` is the line ABOVE it and is guarded
+     * by nothing — and `Player.input()`'s own gate is
+     * `if (!receiveInput || frozenTimer > 0 || fallFromCeiling) return`. So a
+     * blast that touches the player STOPS THE WALK for fifteen ticks, and
+     * the recording shows exactly that: a NINE-TICK dead stop at
+     * (499.6,472.8) that the model walks straight through.
+     *
+     * ⇒ **"damage taken is priced, not forbidden" is HALF THE RULE.**
+     * `Bot.noDamage` prices the damage; nothing prices the FREEZE, and a
+     * freeze is a displacement. [[feedback_the_obstacle_is_the_machine]]:
+     * the turret's capability set has three members — a 32x32 body, contact
+     * damage, and a projectile that stops the player — and the leg was
+     * priced against a model that had only the first.
+     *
+     * ⚠ AND IT IS UNAVOIDABLE FOR THIS ERRAND, WHICH IS WHY IT IS A SLICE
+     * AND NOT A RE-ROUTE. `attackRange` is 128 and the slash reach is 16, so
+     * every stance that can kill one is 112 px inside the volume the blasts
+     * come out of. There is no approach that is out of range.
+     */
+    blasts: Object.freeze({
+        modelled: false,
+        refutedTape: 'r5-l40-part5 / -control (withdrawn — not committed)',
+        divergence: Object.freeze({ tick: 1616, dy: -0.8, settlesAt: 14.15, bothArms: true }),
+        freezeTicks: 15,
+        freezeGuardedByNoDamage: false,
+        damageGuardedByNoDamage: true,
+        stallObserved: Object.freeze({ from: 1619, to: 1627, ticks: 9 }),
+        volley: Object.freeze({
+            blasts: ICE_TURRET.blastsPerVolley,
+            everyTicks: ICE_TURRET.shootTimerMax,
+            speed: ICE_TURRET.shotSpeed,
+            range: ICE_TURRET.attackRange,
+        }),
+        why: '`IceTurretBlast.update` calls `Player.freeze(15)` on the line ABOVE '
+            + '`Player.hit`, and only `hit` is behind `if (Bot.noDamage) return`. '
+            + '`Player.input()` returns while `frozenTimer > 0`, so the blast is a '
+            + 'fifteen-tick STOP that no damage policy touches.',
+        needs: 'an `IceTurretBlast` family — the ELEVENTH per-visit geometry family and '
+            + 'the first PROJECTILE: three bodies per volley at 6 px/tick, spawned from '
+            + 'the turret\'s own angle, colliding with ["Player","Tree","Solid","Shield"] '
+            + 'and removed on the first hit. Until it exists, a kill leg is model-sound '
+            + 'and NOT byte-exact, and `runKill` refuses to be authored without saying so.',
+    }),
     /** ⚠ And the corpse is per-VISIT: `new Game` rebuilds a live turret. */
     perVisit: 'a rebuild REVIVES the turret, so the kill, the pushes, the hold and '
         + 'everything downstream of the hold share ONE window',

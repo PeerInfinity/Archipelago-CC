@@ -610,7 +610,16 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
             relax: RELAX,
         });
     };
-    const KILL = { x: 488, y: 440, kill: { id: TURRET, facing: 'N' } };
+    /**
+     * ⛔⛔⛔ THE DECLARATION THE RECORDING FORCED. `r5-l40-part5` diverged
+     * from the real game at tick 1616 in BOTH arms — `IceTurretBlast`
+     * freezes the player for 15 ticks and `Bot.noDamage` guards only the
+     * `hit` on the line BELOW it. Every kill leg has to say so.
+     */
+    const BLASTS = 'MODEL-SOUND AND NOT BYTE-EXACT: `IceTurretBlast` freezes the player '
+        + 'for 15 ticks on the line above the `Bot.noDamage`-guarded `hit`, and '
+        + '`r5-l40-part5` diverged at tick 1616 in both arms, settling at 14.15 px.';
+    const KILL = { x: 488, y: 440, kill: { id: TURRET, facing: 'N', blastsUnmodelled: BLASTS } };
     const SWORD = { x: 488, y: 440, equip: { slot: 0 } };
 
     it('⛓⛓⛓ three presses at the 31-tick cadence make a corpse, and it LATCHES SOLID', async () => {
@@ -691,7 +700,7 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
         it('⛔ a stance whose rect does not reach', async () => {
             await expect(legs([
                 { x: 488, y: 456, equip: { slot: 0 } },
-                { x: 488, y: 456, kill: { id: TURRET, facing: 'N' } },
+                { x: 488, y: 456, kill: { id: TURRET, facing: 'N', blastsUnmodelled: BLASTS } },
             ])).rejects.toThrow(/does not reach|distance gate/);
         });
 
@@ -705,10 +714,24 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
                 .rejects.toThrow(/does not reach/);
         });
 
+        /**
+         * ⛔⛔⛔ AND THE ONE THE RECORDING ADDED. A leg that has not met the
+         * blast finding cannot be authored — which is stronger than a
+         * comment and is the only thing that stops the next author
+         * re-recording the same refuted pair.
+         */
+        it('⛔⛔⛔ a kill with no `blastsUnmodelled` declaration', async () => {
+            await expect(legs([SWORD, { ...KILL, kill: { id: TURRET, facing: 'N' } }]))
+                .rejects.toThrow(/MODEL-SOUND AND NOT BYTE-EXACT.*freeze.*STOPS THE WALK/s);
+            // …and a token that says nothing is refused too
+            await expect(legs([SWORD, { ...KILL, kill: { id: TURRET, facing: 'N', blastsUnmodelled: 'yes' } }]))
+                .rejects.toThrow(/must be a sentence/);
+        });
+
         it('⛔ a turret the level does not hold, and a malformed id', async () => {
-            await expect(legs([SWORD, { x: 488, y: 440, kill: { id: 'iceturret@0,0', facing: 'N' } }]))
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { id: 'iceturret@0,0', facing: 'N', blastsUnmodelled: BLASTS } }]))
                 .rejects.toThrow(/holds no iceturret@0,0/);
-            await expect(legs([SWORD, { x: 488, y: 440, kill: { facing: 'N' } }]))
+            await expect(legs([SWORD, { x: 488, y: 440, kill: { facing: 'N', blastsUnmodelled: BLASTS } }]))
                 .rejects.toThrow(/kill.id must be the turret id/);
         });
     });

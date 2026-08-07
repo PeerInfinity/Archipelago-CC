@@ -2029,8 +2029,54 @@ function runKill(run, perTick, kill, what) {
     }
     const {
         id = null, facing = null, presses = null, cadence = KILL_PRESS_CADENCE,
-        wait = null,
+        wait = null, blastsUnmodelled = null,
     } = kill;
+    /**
+     * ── ⛔⛔⛔ THE DECLARATION THE RECORDING FORCED (R5 slice 21) ──────
+     *
+     * `r5-l40-part5` synthesised clean, drove clean, and DIVERGED FROM THE
+     * REAL GAME at tick 1616 of 1965 — in BOTH arms of its pair, at the
+     * same tick, by the same 0.8 px, growing to a permanent 14.15 px y
+     * offset. The recording is valid; the model is refuted; the fixtures
+     * were withdrawn rather than committed.
+     *
+     * The cause is `IceTurretBlast`, and it is NOT the damage:
+     *
+     *     case "Player":
+     *         (hits[i] as Player).freeze(freezeTime);            // 15 ticks
+     *         (hits[i] as Player).hit(null, 0, new Point(x, y)); // Bot.noDamage
+     *
+     * `Player.hit`'s whole body is behind `if (Bot.noDamage) return`, so
+     * the damage is free. `freeze()` is the line ABOVE it and is guarded by
+     * nothing, and `Player.input()` returns while `frozenTimer > 0` — so a
+     * blast STOPS THE WALK. The recording shows a nine-tick dead stop the
+     * model walks straight through.
+     *
+     * ⛔ AND IT IS UNAVOIDABLE FOR THIS ERRAND. `attackRange` is 128 and
+     * the slash reach is 16, so every stance that can kill one is 112 px
+     * inside the volume the blasts come out of. There is no approach that
+     * is out of range, which is why this is a DECLARATION rather than a
+     * re-route: the leg is model-sound and it is NOT byte-exact, and an
+     * author who has not met that fact should not be able to write one.
+     *
+     * ⚠ THE SAME SHAPE AS `fire.enemyRoom`, and for a stronger reason: that
+     * one is a bound nobody has measured, this one is a divergence somebody
+     * HAS. [[feedback_silent_watcher_vacuous_negative]] would let a green
+     * synthesis stand in for a green recording; this will not.
+     */
+    if (typeof blastsUnmodelled !== 'string' || blastsUnmodelled.length < 40) {
+        fail(`${what}: kill.blastsUnmodelled must be a sentence saying that this leg is `
+            + 'MODEL-SOUND AND NOT BYTE-EXACT, and why. `IceTurretBlast.update` calls '
+            + `\`Player.freeze(${ICE_TURRET_PLAN.blasts.freezeTicks})\` on the line ABOVE `
+            + '`Player.hit`, and only `hit` is behind `if (Bot.noDamage) return` — so a '
+            + 'blast STOPS THE WALK for fifteen ticks and no damage policy touches it. '
+            + `Measured: \`r5-l40-part5\` diverged from the real game at tick `
+            + `${ICE_TURRET_PLAN.blasts.divergence.tick}, in BOTH arms, settling at `
+            + `${ICE_TURRET_PLAN.blasts.divergence.settlesAt} px. Every kill stance is `
+            + `112 px inside \`attackRange\` ${ICE_TURRET.attackRange}, so there is no `
+            + 'approach that avoids it — model `IceTurretBlast` (the ELEVENTH per-visit '
+            + 'family, and the first projectile) or declare the gap.');
+    }
     if (typeof id !== 'string') {
         fail(`${what}: kill.id must be the turret id \`world.iceTurrets\` carries, e.g. `
             + '"iceturret@472,400". It is the OEL placement, not a live position — the '
@@ -2232,6 +2278,7 @@ function runKill(run, perTick, kill, what) {
         kind: 'kill',
         id,
         facing,
+        blastsUnmodelled,
         at,
         pressTick,
         presses: count,
@@ -4206,6 +4253,46 @@ export function synthesizeLegs(legs, opts = {}) {
             assertTouch(t.touch, what);
             const l = resolveTouchLock(run.world, t.touch.lock, what);
             legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
+        });
+        /**
+         * ⛓⛓⛓ AND A KILL'S TURRET IS ONE — R5 slice 21, and it is the
+         * exemption with the largest radius by an order of magnitude.
+         *
+         * `ENTITY_CLASSES.iceturret.hazard` is the 128 px `attackRange`
+         * disc, and the slash reach is 16 — so EVERY stance that can kill
+         * one is 112 px inside the volume a route would otherwise refuse.
+         * Without this the planner cannot reach its own goal and A* reports
+         * the level unreachable, exactly as it did for a hold's button.
+         *
+         * ⛔ AND THE OVER-PERMISSION IS REAL AND IS NOT A SHRUG. A hold's
+         * button is 16x16; this is a 256 px circle, so a leg that declares
+         * a kill has the turret's whole disc exempted for its WHOLE
+         * duration — including the walk in, which is the point (there is no
+         * approach that is outside it) and including any later leg-mate
+         * that wanders back through, which is not. What bounds it is the
+         * verb's own arithmetic rather than the planner: `runKill` checks
+         * the stance, the facing, the rect, the 16 px distance gate and the
+         * corpse, and a leg that entered the disc anywhere else gains
+         * nothing from having been allowed to.
+         *
+         * ⚠ AND THE DAMAGE IS PRICED, NOT WAIVED. The disc is where the
+         * turret SHOOTS — a three-blast spread every 25 ticks — so this
+         * exemption is the planner agreeing to walk into fire, and the
+         * run's health (or `noDamage`) is what carries it. The volume is
+         * not a lie the exemption makes true; it is a cost the leg accepts.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.kill === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} kill`;
+            if (typeof t.kill?.id !== 'string') {
+                fail(`${what}: kill.id must be the turret id \`world.iceTurrets\` carries.`);
+            }
+            const row = (run.world.iceTurrets ?? []).find((r) => r.id === t.kill.id);
+            if (!row) {
+                fail(`${what}: level ${leg.level} holds no ${t.kill.id}. Known: `
+                    + `[${(run.world.iceTurrets ?? []).map((r) => r.id).join(', ') || 'none'}].`);
+            }
+            legContacts.add(`proximity-hazard:${row.tag}@${row.x},${row.y}`);
         });
         /**
          * ⚠ A COLLECT'S PICKUP IS **NOT** EXEMPTED, and that is the

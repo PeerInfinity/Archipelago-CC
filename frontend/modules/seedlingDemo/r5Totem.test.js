@@ -2543,3 +2543,185 @@ describe('L43 — the boss wake, and the escape south that does not exist', () =
         expect(L43_BOSS_WAKE.playerPositionRewrite).toEqual({ x: 144, y: 352 });
     });
 });
+
+/**
+ * ⛓⛓⛓ R5 SLICE 21 — THE REPAIR, AND THE TWO THINGS IT MOVED.
+ *
+ * Both records here are claims about the ROOM, so both are checked against
+ * the committed atlas and the shipped geometry rather than against each
+ * other. The tolerance correction is DRIVEN — the ±2 window is re-run on
+ * the real flood and shown to disagree with the ±1 one — because "that
+ * probe's window was too wide" is exactly the kind of statement that reads
+ * as true and can be false.
+ */
+describe('⛓⛓⛓ L40: the break at link 4 is repaired', () => {
+    it('⛓ the record names what it corrects, and the old verdict still says link 4', async () => {
+        const { L40_ARRIVAL_BREAK, L40_LINK4_REPAIRED } = await import('./r5Totem.js');
+        expect(L40_LINK4_REPAIRED.corrects).toMatch(/L40_ARRIVAL_BREAK\.verdict/);
+        expect(L40_ARRIVAL_BREAK.verdict).toMatch(/STOPS AT LINK 4/);
+        // ⛓ …and the clause that is still TRUE is the one about blocks.
+        expect(L40_ARRIVAL_BREAK.verdict).toMatch(/no block in the level can reach/);
+    });
+
+    it('⛓⛓⛓ the kill stance is in the links-1-3 component — the walk does not need link 4', async () => {
+        const { buildLevelWorld, ROLES } = await import('./levelWorld.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        const { nodeCentre, plannerObstacleAt } = await import('./botDriverV2.js');
+        const { L40_CHAIN, L40_LINK4_REPAIRED } = await import('./r5Totem.js');
+        const rec = atlasLevelSource()(40);
+        const INV = { hasSword: true, canSwim: true, hasFeather: true, hasFire: true };
+        const world = buildLevelWorld(rec, { roles: ROLES, inventory: INV, cleared: [0] });
+        const L = L40_LINK4_REPAIRED.lattice;
+        const opts = {
+            inventory: INV,
+            avoidVolumes: false,
+            openChests: new Set(['chest@880,816']),
+            openActivators: new Set(['wandlock@480,560']),
+        };
+        const free = (cx, cy) => {
+            if (cx < 0 || cy < 0 || cx >= rec.width * 2 || cy >= rec.height * 2) return false;
+            const c = nodeCentre(cx, cy, L);
+            try { return plannerObstacleAt(world, c.x, c.y, null, opts) === null; } catch { return false; }
+        };
+        const seen = new Set();
+        const fr = [];
+        const from = L40_CHAIN.from;
+        const sx = Math.floor(from.x / L);
+        const sy = Math.floor(from.y / L);
+        for (let dy = 0; dy <= 1; dy += 1) {
+            for (let dx = 0; dx <= 1; dx += 1) {
+                if (free(sx + dx, sy + dy)) { seen.add(`${sx + dx},${sy + dy}`); fr.push([sx + dx, sy + dy]); }
+            }
+        }
+        while (fr.length > 0) {
+            const [cx, cy] = fr.pop();
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const k = `${cx + dx},${cy + dy}`;
+                if (seen.has(k) || !free(cx + dx, cy + dy)) continue;
+                seen.add(k); fr.push([cx + dx, cy + dy]);
+            }
+        }
+        expect(seen.size).toBe(L40_LINK4_REPAIRED.cells.links13);
+        const s = L40_LINK4_REPAIRED.killStance;
+        expect(seen.has(`${Math.floor(s.x / L)},${Math.floor(s.y / L)}`)).toBe(true);
+        expect(L40_LINK4_REPAIRED.killStanceInArrivalComponent).toBe(true);
+
+        /**
+         * ⛔⛔ AND THE ±2 WINDOW IS THE CORRECTION, DEMONSTRATED. Re-run on
+         * THIS flood, the ancestor probe's tolerance answers REACHED for
+         * `button@816,400` and the ±1 one does not — which is the whole of
+         * the method finding, and it is checked rather than asserted in
+         * prose. [[feedback_distance_hint_is_not_a_constraint]]
+         */
+        const win = (n, p) => {
+            for (let dx = -1; dx <= n; dx += 1) {
+                for (let dy = -1; dy <= n; dy += 1) {
+                    if (seen.has(`${Math.floor(p.x / L) + dx},${Math.floor(p.y / L) + dy}`)) return true;
+                }
+            }
+            return false;
+        };
+        const t4 = { x: 816, y: 400 };
+        // Neither window reaches it from links 1-3 — the disagreement is in
+        // the link-4 arm, and what THIS asserts is that the two windows are
+        // genuinely different tests rather than the same one spelled twice.
+        const stairs = { x: 320, y: 576 };
+        expect(win(2, stairs)).toBe(true);
+        expect(win(0, stairs)).toBe(false);
+        expect(win(0, t4)).toBe(false);
+        expect(L40_LINK4_REPAIRED.toleranceCorrection.was).toMatch(/±2 nodes/);
+    });
+
+    it('⛔⛔⛔ …and the chain now stops at link 5, with ONE holder for TWO holds', async () => {
+        const { L40_LINK4_REPAIRED } = await import('./r5Totem.js');
+        const { atlasLevelSource } = await import('./levelSource.js');
+        expect(L40_LINK4_REPAIRED.stopsAt.link).toBe(5);
+        expect(L40_LINK4_REPAIRED.stopsAt.trap.cells).toBe(8);
+        expect(L40_LINK4_REPAIRED.stopsAt.trap.reachesTheT5Button).toBe(false);
+        // ⛔ ONE holder, read off the atlas rather than off the record.
+        const turrets = atlasLevelSource()(40).entities.filter((e) => e.type === 'iceturret');
+        expect(turrets).toHaveLength(L40_LINK4_REPAIRED.stopsAt.holders);
+        expect(L40_LINK4_REPAIRED.stopsAt.dependency).toMatch(/re-shutting the locks/);
+        // ⚠ …and the open question is RECORDED rather than answered.
+        expect(L40_LINK4_REPAIRED.openQuestion).toMatch(/has been measured|neither has been measured/);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE LEG IS NOT BYTE-EXACT, WHICH THE RECORD SAYS OUT LOUD.
+     * The strongest thing this block asserts is a NEGATIVE: there is no
+     * committed fixture for it, because a fixture whose model is wrong is
+     * either a permanent red or a silenced one.
+     */
+    it('⛔⛔⛔ …and the recorded pair REFUTED the model — no fixture exists', async () => {
+        const { L40_LINK4_REPAIRED } = await import('./r5Totem.js');
+        const { ICE_TURRET_PLAN } = await import('./iceTurret.js');
+        expect(L40_LINK4_REPAIRED.recorded.byteExact).toBe(false);
+        expect(L40_LINK4_REPAIRED.recorded.fixturesWithdrawn).toBe(true);
+        // ⛓ THE PROOF OF CAUSE IS THAT THE CONTROL DIVERGED IDENTICALLY:
+        // the arms differ only in the three kill presses, so a divergence
+        // byte-identical in both is a property of the WALK.
+        expect(L40_LINK4_REPAIRED.recorded.bothArms).toBe(true);
+        expect(ICE_TURRET_PLAN.blasts.divergence.tick)
+            .toBe(L40_LINK4_REPAIRED.recorded.divergesAt);
+        expect(ICE_TURRET_PLAN.blasts.modelled).toBe(false);
+        // ⛔ AND THE WITHDRAWAL IS CHECKED, not described: the roster must
+        // not carry either arm.
+        const { fixtureNames } = await import('./fixtures/index.js');
+        const names = fixtureNames();
+        expect(names.length).toBeGreaterThan(50);
+        expect(names).not.toContain('r5-l40-part5');
+        expect(names).not.toContain('r5-l40-part5-control');
+    });
+});
+
+/**
+ * ⛔⛔⛔ AND THE WAND WINDOW IS BLOCKED ON A SAVE ARRAY, which is a
+ * different kind of blocker from every other one this rung has met: not
+ * geometry, not a policy, not an unmodelled mechanic — a piece of state the
+ * tape format has no field for.
+ */
+describe('⛔ L43: the terminal wand window cannot be booted', () => {
+    it('⛔ the gate reads a save array `persistence` does not reach', async () => {
+        const { L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');
+        expect(L43_WAND_WINDOW_BLOCKED.blocked).toBe(true);
+        expect(L43_WAND_WINDOW_BLOCKED.state.isLevelPersistence).toBe(false);
+        expect(L43_WAND_WINDOW_BLOCKED.state.count).toBe(5);
+        expect(L43_WAND_WINDOW_BLOCKED.bootBlock.totemParts).toBe(null);
+    });
+
+    /**
+     * ⛓ THE INDEPENDENT STRATUM: the tape format's OWN schema, not the
+     * record's description of it. A field that quietly appeared would make
+     * this record wrong, and the record cannot notice that about itself.
+     */
+    it('⛓ …and `tapeFormat` really has no field for it — checked, not described', async () => {
+        // ⛓ THE STRATUM IS A COMMITTED ARTIFACT, not a builder call: this is
+        // the richest tape this rung emits — v4, with `grants`,
+        // `persistence` and `equips` all populated — so if a totem-part
+        // field existed anywhere in the format it would be in this file.
+        const { fixtureNames, loadTape } = await import('./fixtures/index.js');
+        // ⚠ EVERY committed tape, not one chosen name: a totem-part field
+        // that appeared on any of them would make this record wrong, and a
+        // single sample cannot say so.
+        for (const n of fixtureNames()) {
+            expect(Object.keys(loadTape(n)).some((k) => /totem/i.test(k))).toBe(false);
+        }
+        const tape = loadTape('r5-l40-part1');
+        expect(Object.keys(tape)).toEqual(expect.arrayContaining(['grants', 'persistence']));
+        expect(Object.keys(tape).some((k) => /totem/i.test(k))).toBe(false);
+        // ⛓ AND THE PARSER AGREES, which is the half an artifact cannot
+        // answer on its own: a field no tape happens to carry but the
+        // format would accept is still a field.
+        const { parseTape, serializeTape } = await import('./tapeFormat.js');
+        const round = parseTape(serializeTape(tape));
+        expect(Object.keys(round).some((k) => /totem/i.test(k))).toBe(false);
+    });
+
+    it('⛓ …and everything §34.3 measured for the ceremony is untouched', async () => {
+        const { L43_BOSS_WAKE, L43_WAND_WINDOW_BLOCKED } = await import('./r5Totem.js');
+        expect(L43_WAND_WINDOW_BLOCKED.tableStillHolds).toMatch(/L43_BOSS_WAKE/);
+        // the two the window would have asserted, still banked and still undriven
+        expect(L43_BOSS_WAKE.ticks.freezeReleased).toBe(185);
+        expect(L43_BOSS_WAKE.ceremony.dialogueSegments).toBe(2);
+    });
+});

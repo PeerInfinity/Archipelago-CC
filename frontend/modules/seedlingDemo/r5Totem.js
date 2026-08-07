@@ -2880,3 +2880,205 @@ export const L43_BOSS_WAKE = Object.freeze({
         'ROLES\' `BossTotem.boss` string ("escaped south during its 240-tick rumble")',
     ]),
 });
+
+/**
+ * ⛓⛓⛓ R5 SLICE 21 — THE BREAK AT LINK 4 IS REPAIRED, AND THE CHAIN NOW
+ * STOPS AT LINK 5/6 FOR A DIFFERENT REASON.
+ *
+ * `L40_ARRIVAL_BREAK` (slice 17) reads: *"THE CHAIN FROM THE L40 ARRIVAL
+ * STOPS AT LINK 4. One plain button, whose opening exists only WHILE HELD,
+ * whose persistence write is inert because its group is 2, and which no
+ * block in the level can reach, gates every remaining link — so the boss
+ * key, the bosslock and both north teleporters are unreachable from
+ * (480,896) by this rung's means."*
+ *
+ * Every clause of that is still TRUE. **A corpse is not a block**, and
+ * slice 21 made one: `enemyDamage.js` is the first predictive Enemy arm and
+ * `iceturret@472,400` is the one class it models. Measured
+ * (`probe-seedling-r5-l40-kill.mjs`) and DRIVEN
+ * (`plan-seedling-r5-l40-part5.mjs`, 1,965 ticks, recorded as a pair):
+ *
+ * ```
+ *   links 1-3, link 4 SHUT       844 cells   kill stance ⛓  button t2 ⛓
+ *   + the CORPSE on button t2   1052 cells   button t5   ⛓  button t4 ⛔
+ * ```
+ *
+ * ⛓⛓⛓ **THE KILL STANCE IS INSIDE THE LINKS-1–3 COMPONENT**, so the walk
+ * that opens link 4 does not need link 4 — which is what makes this a
+ * REPAIR rather than a second copy of the same deadlock. And the +208 is
+ * unchanged with the 16x16 body in the flood as a live Solid: the corpse
+ * does not seal its own corridor, which since §34.2 is a question this arc
+ * asks of every hold.
+ *
+ * ⛔⛔⛔ AND WHAT REPLACES THE OLD VERDICT IS SHARPER, NOT VAGUER:
+ *
+ *   · `button@816,400 {t 4}` — the PULSER's arm, and everything past it —
+ *     is NOT inside link 4's +208. It is behind `wandlock@800,400`, whose
+ *     only opener is `button@768,400 {t 5}`;
+ *   · standing on the t4 button with that lock shut leaves **8 lattice
+ *     cells and no way west**: the room is a ONE-WAY TRAP, and a `Button`
+ *     REPUBLISHES rather than latching, so the lock is shut again on the
+ *     tick after the player steps off the t5 button;
+ *   · so link 5 needs a HOLDER while the player crosses, and L40 can make
+ *     exactly ONE corpse — already spent on link 4, which is what makes the
+ *     t5 button reachable at all.
+ *
+ * ⇒ **ONE CORPSE, TWO HOLDS, STRICT DEPENDENCY.**
+ *
+ * ⛔⛔ AND `probe-seedling-r5-l40-link4.mjs` REPORTS THE t4 BUTTON REACHED
+ * IN ITS LINK-4 ARM. It is not. That probe's `touches()` is a **±2 node**
+ * window at an 8 px lattice — 16 px, a WHOLE TILE past the point — so it
+ * answers "is the walk within a tile of this" and reads as "the walk gets
+ * here". Its ARITHMETIC is right and its TOLERANCE is not, and three of its
+ * rows are REACHED under it for cells the planner then refuses outright.
+ * ⇒ [[feedback_distance_hint_is_not_a_constraint]], turned on a probe: a
+ * tolerance is not a free parameter, it is the claim.
+ */
+export const L40_LINK4_REPAIRED = Object.freeze({
+    level: 40,
+    lattice: 8,
+    corrects: 'L40_ARRIVAL_BREAK.verdict — the break was at link 4 and is now at link 5/6',
+    /** ⛓ The whole of why the repair is possible. */
+    killStanceInArrivalComponent: true,
+    killStance: Object.freeze({ x: 488, y: 440 }),
+    cells: Object.freeze({ links13: 844, withCorpse: 1052, withT5: 1064 }),
+    gain: 208,
+    corpseSealsItsOwnCorridor: false,
+    /** ⛔ Where the chain stops now, and the shape of the stop. */
+    stopsAt: Object.freeze({
+        link: 5,
+        what: 'button@768,400 {t 5} needs a HOLDER while the player crosses '
+            + 'wandlock@800,400 to reach button@816,400 {t 4}',
+        trap: Object.freeze({
+            at: 'button@816,400',
+            cells: 8,
+            reachesTheT5Button: false,
+            why: 'a `Button` republishes rather than latching, so `wandlock@800,400` is '
+                + 'shut again on the tick after the player steps off the t5 button — and '
+                + '`Lock.activationStep` only withholds `returnToNormal()` while '
+                + 'something OCCUPIES the lock, which the player cannot do and press the '
+                + 'button at the same time',
+        }),
+        holders: 1,
+        holdersWhy: '`Button.update`\'s hitables is ["Player","Enemy","Solid"] minus a '
+            + 'Cover. L40 has ONE `iceturret`, so it can make one corpse; its three '
+            + 'pushable blocks are all west and reach neither button (the same walls '
+            + '`L40_ARRIVAL_BREAK` measured for link 4); and the player is the thing '
+            + 'that has to be somewhere else.',
+        dependency: 'link 4 being HELD is what makes the t5 button reachable, so the '
+            + 'corpse cannot be moved to the t5 button without re-shutting the locks '
+            + 'that reach it',
+    }),
+    /** ⚠ The open question this hands the next slice, with its arithmetic. */
+    openQuestion: 'can the corpse be BUMPED the 17½ tiles east from button@480,384 to '
+        + 'button@768,400 — one tile per axis per press, so ~18 presses each needing a '
+        + 'stance — and if it can, does the t2 group re-shutting BEHIND it wall the '
+        + 'corpse (or the player) in? Both halves are geometry this rung already has the '
+        + 'verbs for; neither has been measured.',
+    /** ⛔ The method correction this probe owes its own ancestor. */
+    toleranceCorrection: Object.freeze({
+        probe: 'scripts/procgen/probe-seedling-r5-l40-link4.mjs',
+        was: '±2 nodes at an 8 px lattice — 16 px, a whole tile',
+        now: '±1 node (the player box\'s own half-width), with the exact node reported',
+        cost: 'three rows read REACHED for cells the planner refuses outright, '
+            + '`button@816,400 {t 4}` among them',
+    }),
+    probe: 'scripts/procgen/probe-seedling-r5-l40-kill.mjs',
+    driven: 'scripts/procgen/plan-seedling-r5-l40-part5.mjs — r5-l40-part5 / -control',
+    /**
+     * ⛔⛔⛔ AND THE LEG IS MODEL-SOUND AND NOT BYTE-EXACT. The pair WAS
+     * recorded against the real game and diverged at tick 1616 of 1965, in
+     * BOTH arms, at the same tick and by the same 0.8 px, settling at a
+     * permanent 14.15 px y offset — so the fixtures were WITHDRAWN rather
+     * than committed. The cause is `IceTurretBlast`, which freezes the
+     * player for 15 ticks on the line ABOVE the `Bot.noDamage`-guarded
+     * `hit`. See `iceTurret.ICE_TURRET_PLAN.blasts`.
+     *
+     * ⛓⛓ THAT THE **CONTROL** DIVERGED IDENTICALLY IS THE PROOF OF CAUSE:
+     * the two arms differ only in the three kill presses, so a divergence
+     * that is byte-identical in both is a property of the WALK. The pair
+     * was authored to isolate the kill and it isolated something else.
+     */
+    recorded: Object.freeze({
+        byteExact: false,
+        divergesAt: 1616,
+        of: 1965,
+        settlesAtPx: 14.15,
+        bothArms: true,
+        cause: 'IceTurretBlast — `Player.freeze(15)` above the `Bot.noDamage`-guarded hit',
+        fixturesWithdrawn: true,
+        blockedOn: 'an `IceTurretBlast` family — the ELEVENTH per-visit family and the '
+            + 'first PROJECTILE',
+    }),
+});
+
+/**
+ * ⛔⛔⛔ R5 SLICE 21 — THE TERMINAL WAND WINDOW CANNOT BE BOOTED, AND THE
+ * REASON IS A SAVE ARRAY THE TAPE FORMAT DOES NOT REACH.
+ *
+ * §34.4 ruled the L43 wand window GO as a TERMINAL one — boot in L43, take
+ * the wand, come to rest in the sealed arena — and §34.10 item 3 scheduled
+ * it for this slice. It cannot be scheduled at all, for a reason no amount
+ * of window planning fixes:
+ *
+ * ```
+ *   Wand.update()   if ((p && p.y < y + Tile.h && Player.hasAllTotemParts()
+ *                        && !p.fallFromCeiling) || !doBossActions)
+ *   Player.as:1709  hasAllTotemParts() -> Main.hasTotemPart(i), i < 5
+ *   Main.as:190     SAVE_FILE.data.hasTotemPart[i]
+ * ```
+ *
+ * ⛔ `SAVE_FILE.data.hasTotemPart[]` IS A DIFFERENT ARRAY FROM
+ * `levelPersistence`. `Bot`'s boot block honours exactly two kinds of state
+ * — `grants` (Inventory items) and `persistence` (levelPersistence tags) —
+ * and there is no third. So a window that BOOTS into L43 has zero totem
+ * parts, `Wand.update`'s body never runs, the fade never starts, and the
+ * pickup is inert.
+ *
+ * ⛔ AND THE `|| !doBossActions` ARM IS DEAD. `doBossActions` is a
+ * `private var` initialised `true` in `Wand.as:21` and never assigned
+ * anywhere in the class — so it cannot be the way in either.
+ *
+ * ⛓ THE ONE PATH THAT EXISTS: the L43 window as the TAIL of a page that has
+ * already collected all five parts in the real game (windows share one page
+ * BY DESIGN). That needs the full itinerary — and §32/§34 record that parts
+ * 3 and 4's windows boot into clusters their own arrivals cannot reach, so
+ * the itinerary does not exist yet.
+ *
+ * ⇒ the wand window is blocked on the ITINERARY, not on the ceremony, and
+ * every tick-exact number §34.3 banked for it is still correct and still
+ * undriven. ⚠ A boot field for the totem-part array would unblock it in one
+ * line of AS3, which this rung's zero-build rule forbids and which is
+ * therefore a RULING for the user rather than a decision for a slice.
+ */
+export const L43_WAND_WINDOW_BLOCKED = Object.freeze({
+    level: 43,
+    plannedBy: '§34.4 (GO for a terminal window), scheduled by §34.10 item 3',
+    blocked: true,
+    gate: '`Wand.update` — `p.y < y + Tile.h && Player.hasAllTotemParts() && '
+        + '!p.fallFromCeiling`',
+    /** ⛔ The state the gate reads, and where it lives. */
+    state: Object.freeze({
+        reader: 'Player.hasAllTotemParts() (Player.as:1709-1718)',
+        storage: 'Main.SAVE_FILE.data.hasTotemPart[] (Main.as:190)',
+        count: 5,
+        isLevelPersistence: false,
+    }),
+    /** ⛔ What the boot block can actually set. */
+    bootBlock: Object.freeze({
+        grants: 'Inventory items, by level',
+        persistence: 'levelPersistence tags, by {level, tag}',
+        totemParts: null,
+    }),
+    deadArm: '`|| !doBossActions` — `Wand.as:21` initialises it true and nothing in the '
+        + 'class ever assigns it',
+    onlyPath: 'the L43 window as the TAIL of a page that has already collected all five '
+        + 'parts in the real game — i.e. after the full itinerary exists, which it does '
+        + 'not (parts 3 and 4 boot into clusters their own arrivals cannot reach)',
+    wouldCost: 'ONE boot field in `Bot.as` for the totem-part array — forbidden by this '
+        + 'rung\'s zero-build rule, so it is a RULING rather than a slice decision',
+    /** ⛓ And everything §34.3 measured for it survives untouched. */
+    tableStillHolds: 'L43_BOSS_WAKE — the tick table, the NO-GO for leaving L43, the '
+        + 'four earned writes and the input-bounded two-segment dialogue are all '
+        + 'unchanged; what is missing is a way to START the ceremony from a boot',
+});

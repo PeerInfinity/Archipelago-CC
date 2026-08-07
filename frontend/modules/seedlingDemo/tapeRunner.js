@@ -376,6 +376,22 @@ export function createTapeStepper(tape, opts = {}) {
             // a caller cannot read a relaxation as an empty room.
             crushers: run ? run.crushers : null,
             crushersParked: run ? run.crushersParked : null,
+            /**
+             * ⛓⛓⛓ R5 SLICE 21 — THE KILL LEDGER, AND IT IS THE ONLY WITNESS.
+             *
+             * `IceTurret` writes no persistence, its body is never removed
+             * by a kill, and nothing in the tape or the observation stream
+             * says it died — so a replay that could not see these two lists
+             * could not check the claim at all. `turretKills` is the walk's
+             * history WITH the kill-lock arithmetic it computed;
+             * `turretsDead` is which corpses are standing in the level
+             * being replayed right now. Different questions.
+             * ⚠ Both empty (not null) under noclip, where nothing is stepped.
+             */
+            turretKills: run ? run.turretKills : [],
+            turretsDead: run ? run.turretsDead : [],
+            /** ⛓ mid-fight `hits`/`hitsTimer`, so a refused press has a name. */
+            turretDamage: run ? run.turretDamage : [],
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */
