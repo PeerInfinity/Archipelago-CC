@@ -14,10 +14,12 @@ import {
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_CORPSE, L40_PREDICTIONS, L41_L42_RECON,
     L37_BURN, L40_JOIN, L40_LINK4, L40_NW, L41_SHIELD, L41_PART3, L42_PART4,
-    PARKED_SCAN_AUDIT, L40_ARRIVAL_BREAK, L42_SOLVE,
+    PARKED_SCAN_AUDIT, L40_ARRIVAL_BREAK, L42_SOLVE, L43_BOSS_WAKE,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
-import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
+import {
+    FALL_ROCK, createFallRock, fallRockFreezeTicks, publishActivate,
+} from './fallRock.js';
 import { auditFire } from './presses.js';
 import { HAZARD_STATES, parseTape, serializeTape } from './tapeFormat.js';
 import { crossRoomWrites, createActivatorState, stepActivators } from './activators.js';
@@ -2264,5 +2266,233 @@ describe('⛓⛓⛓ L42: the fifth ceremony, and the subtraction that carries a 
         )));
         expect(control.tick_count).toBe(tape.tick_count);
         expect(control.boot).toEqual(tape.boot);
+    });
+});
+
+/**
+ * ⛔⛔⛔ L43 — THE WAND ROOM IS A ONE-WAY TRAP. R5 slice 20 step 0, the
+ * `BossTotem` wake audit. `L43_BOSS_WAKE` is a table of tick numbers, so
+ * every one of them is RE-DERIVED here rather than read back: the ramp by
+ * re-stepping the transcribed loop, the freeze by `fallRock.js`' own
+ * `fallRockFreezeTicks`, and the seal by a flood over the committed
+ * `buildLevelWorld`.
+ */
+describe('L43 — the boss wake, and the escape south that does not exist', () => {
+    const T = 16;
+    const w43 = worldFor(43);
+    const rec43 = source(43);
+    const rockBox = (r) => {
+        const ey = r.y + FALL_ROCK.box.dy;
+        return {
+            x: r.x, right: r.x + FALL_ROCK.box.w,
+            y: ey - FALL_ROCK.box.originY, bottom: ey - FALL_ROCK.box.originY + FALL_ROCK.box.h,
+        };
+    };
+    /** The 8 px lattice flood every R5 route plans at, with extra solids. */
+    const flood = (start, extra = []) => {
+        const P = 8;
+        const hits = (b) => extra.some((r) => b.x < r.right && b.right > r.x
+            && b.y < r.bottom && b.bottom > r.y);
+        const ok = (x, y) => x > 0 && y > 0 && x < rec43.width * T && y < rec43.height * T
+            && !w43.collidesSolid(playerBoxAt(x, y), {}) && !hits(playerBoxAt(x, y));
+        const seen = new Set([`${start.x},${start.y}`]);
+        const q = [[start.x, start.y]];
+        while (q.length) {
+            const [x, y] = q.shift();
+            for (const [dx, dy] of [[P, 0], [-P, 0], [0, P], [0, -P]]) {
+                const k = `${x + dx},${y + dy}`;
+                if (seen.has(k) || !ok(x + dx, y + dy)) continue;
+                seen.add(k);
+                q.push([x + dx, y + dy]);
+            }
+        }
+        return {
+            cells: seen.size,
+            tiles: new Set([...seen].map((k) => {
+                const [a, b] = k.split(',').map(Number);
+                return `${Math.floor(a / T)},${Math.floor(b / T)}`;
+            })),
+        };
+    };
+
+    it('⛓ the room holds exactly the three tset-0 fallrocks the Wand publishes to', () => {
+        expect(w43.fallRocks).toHaveLength(L43_BOSS_WAKE.rocks.length);
+        for (const banked of L43_BOSS_WAKE.rocks) {
+            const live = w43.fallRocks.find((r) => r.id === banked.id);
+            expect(live, `L43 must hold ${banked.id}`).toBeTruthy();
+            // ⛓ `Wand.tset` is 0 and `Wand.removed()` sets `activate` on every
+            // `Activators` whose `t` matches — one press, three drops.
+            expect(live.t).toBe(0);
+            expect(live.persistTag).toBe(banked.persistTag);
+            const box = rockBox(live);
+            expect(box.x / T).toBe(banked.tile.x);
+            expect(box.y / T).toBe(banked.tile.y);
+        }
+    });
+
+    /**
+     * ⛔⛔⛔ THE HEADLINE. `ROLES`' own `BossTotem` row says the boss is
+     * "escaped south during its 240-tick rumble". The rock the pickup drops
+     * lands on the mouth of the only shaft the stairs are at the bottom of.
+     */
+    it('⛔⛔⛔ the south door is reachable before the drop and NOT after it', () => {
+        const stairs = w43.teleporters.find((t) => t.isStairs);
+        const stairsTile = `${stairs.x / T},${stairs.y / T}`;
+        expect(stairsTile).toBe(L43_BOSS_WAKE.seal.stairsTile);
+        const before = flood(L43_BOSS_WAKE.seal.from);
+        const after = flood(L43_BOSS_WAKE.seal.from, w43.fallRocks.map(rockBox));
+        expect(before.tiles.has(stairsTile)).toBe(true);
+        expect(after.tiles.has(stairsTile)).toBe(false);
+        expect(before.cells).toBe(L43_BOSS_WAKE.seal.cellsBefore);
+        expect(after.cells).toBe(L43_BOSS_WAKE.seal.cellsAfter);
+    });
+
+    it('⛔⛔ and it is ONE rock — the other two seal the alcoves nothing needs', () => {
+        const stairsTile = L43_BOSS_WAKE.seal.stairsTile;
+        const blocker = w43.fallRocks.find((r) => r.id === L43_BOSS_WAKE.seal.blocker);
+        expect(blocker).toBeTruthy();
+        // Everything EXCEPT the blocker still reaches the stairs…
+        const without = flood(L43_BOSS_WAKE.seal.from,
+            w43.fallRocks.filter((r) => r !== blocker).map(rockBox));
+        expect(without.tiles.has(stairsTile)).toBe(true);
+        // …and the blocker ALONE does not.
+        const alone = flood(L43_BOSS_WAKE.seal.from, [rockBox(blocker)]);
+        expect(alone.tiles.has(stairsTile)).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ THE FREEZE, AGAINST THE MODULE THAT ALREADY OWNED THE ARITHMETIC.
+     * `fallRockFreezeTicks` was written for L39's rope rock; it is an
+     * independent stratum for this room's numbers because nothing about it
+     * knows L43 exists.
+     */
+    it('⛓⛓ the freeze span is the EARLIEST rock\'s, and no rock is still falling then', () => {
+        const spans = w43.fallRocks.map((r) => ({
+            id: r.id, span: fallRockFreezeTicks(r.y + FALL_ROCK.box.dy),
+        }));
+        // release tick, counted from A (the tick after `Wand.removeSelf()`)
+        const release = (s) => s.span.total - 1;
+        const landing = (s) => s.span.wait + s.span.fall - 1;
+        for (const banked of L43_BOSS_WAKE.rocks) {
+            const s = spans.find((q) => q.id === banked.id);
+            expect(release(s)).toBe(banked.releases);
+            expect(landing(s)).toBe(banked.lands);
+        }
+        const earliest = Math.min(...spans.map(release));
+        const lastLanding = Math.max(...spans.map(landing));
+        expect(earliest).toBe(L43_BOSS_WAKE.ticks.freezeReleased);
+        expect(earliest).toBe(L43_BOSS_WAKE.freeze.deadFrames);
+        // ⛔ The overlap the brief flagged is real and harmless: the three
+        // fall times differ by far less than the 91-tick hold after them.
+        expect(lastLanding).toBeLessThan(earliest);
+        expect(L43_BOSS_WAKE.freeze.noRockStillFallingAtRelease).toBe(true);
+        expect(240 - earliest).toBe(L43_BOSS_WAKE.freeze.rumbleLeft);
+    });
+
+    /**
+     * ⛓⛓⛓ THE RUMBLE CLOCK, RE-STEPPED. `rumblingTime` counts down inside
+     * `if (activated)` with no freeze test; the sine-eased ramp starts at
+     * 120 and the clamp is tested ABOVE the block that sets its flag, so
+     * the onset is one tick later than `fullyActivated`.
+     */
+    it('⛓⛓⛓ the rumble clock is tick-exact: ramp 119, full 215, clamp 216', () => {
+        let rumbling = 240;
+        let stage = 0;
+        let rampAt = null;
+        let fullAt = null;
+        let clampAt = null;
+        for (let t = 0; t <= 400; t += 1) {
+            // the clamp is read at the TOP of update(), before the flag is set
+            if (fullAt !== null && clampAt === null) clampAt = t;
+            if (rumbling > 0) rumbling -= 1;
+            if (rumbling <= 120 && stage < 1) {
+                if (rampAt === null) rampAt = t;
+                const n = 8;
+                stage += 0.02 * (n - 1) / n * Math.sin(stage * Math.PI) + 0.02 / n;
+                if (stage >= 1) { stage = 1; fullAt = t; }
+            }
+        }
+        expect(rampAt).toBe(L43_BOSS_WAKE.ticks.rampStarts);
+        expect(fullAt).toBe(L43_BOSS_WAKE.ticks.fullyActivated);
+        expect(clampAt).toBe(L43_BOSS_WAKE.ticks.clampOnset);
+        expect(clampAt).toBe(fullAt + 1);
+        // ⛓ 97 increments, and the count is the claim rather than the shape.
+        let s = 0;
+        let n = 0;
+        while (s < 1) { s += 0.02 * 7 / 8 * Math.sin(s * Math.PI) + 0.0025; n += 1; }
+        expect(n).toBe(L43_BOSS_WAKE.rampIncrements);
+        expect(fullAt).toBe(rampAt + n - 1);
+    });
+
+    /**
+     * ⛔⛔ THE SHOVE IS AN ASSIGNMENT, and its one number comes out of the
+     * ctor's own `setHitbox(80, 32, 40, -12)`.
+     */
+    it('⛔⛔ the clamp line is `y - originY + height` = 212, and it is freeze-ungated', () => {
+        const boss = w43.combat.enemies.find((e) => e.tag === 'bosstotem');
+        expect(boss).toBeTruthy();
+        expect(boss.y - (-12) + 32).toBe(L43_BOSS_WAKE.clamp.y);
+        expect(L43_BOSS_WAKE.clamp.freezeGated).toBe(false);
+        // ⛓ …and the body it is derived from spans the arena's five open
+        // columns exactly, which is what shuts north BEFORE the wake too.
+        const box = L43_BOSS_WAKE.boss.box;
+        expect(box.x / T).toBe(L43_BOSS_WAKE.boss.spansCols[0]);
+        expect(box.right / T - 1).toBe(L43_BOSS_WAKE.boss.spansCols[1]);
+        for (let col = box.x / T; col <= box.right / T - 1; col += 1) {
+            // every column the body covers is open floor in the arena, and
+            // the columns either side of it are the arena's own walls
+            expect(w43.collidesSolid(playerBoxAt(col * T + 8, 196), {})).toBeFalsy();
+        }
+        expect(w43.collidesSolid(playerBoxAt(box.x - 8, 196), {})).toBeTruthy();
+        expect(w43.collidesSolid(playerBoxAt(box.right + 8, 196), {})).toBeTruthy();
+    });
+
+    /**
+     * ⛔⛔ THE NORTH DOOR, PRICED. The binding term is the FREEZE, not the
+     * clamp: the player is dead for 185 ticks and clamped from 216.
+     */
+    it('⛔⛔ the north door is out of reach — 31 live ticks against 160 px', () => {
+        const north = w43.teleporters.find((t) => !t.isStairs);
+        expect(north.to).toBe(37);
+        const free = L43_BOSS_WAKE.ticks.clampOnset - L43_BOSS_WAKE.ticks.freezeReleased;
+        expect(free).toBe(L43_BOSS_WAKE.north.freeTicks);
+        const needed = L43_BOSS_WAKE.seal.from.y - (north.y + 8);
+        expect(needed).toBe(L43_BOSS_WAKE.north.neededPx);
+        expect(free * L43_BOSS_WAKE.north.walkSpeed)
+            .toBeCloseTo(L43_BOSS_WAKE.north.reachPx, 6);
+        expect(free * L43_BOSS_WAKE.north.walkSpeed).toBeLessThan(needed);
+        // ⛓ and the lock in front of it is a wand shot, not a key
+        const lock = w43.objectSolids.find((s) => s.tag === 'magicallock');
+        expect(`magicallock@${lock.x},${lock.y} {tag 4}`).toBe(L43_BOSS_WAKE.north.lock);
+    });
+
+    /**
+     * ⛓⛓ THE UPDATE ORDER IS THE REVERSE OF THE LOADER, and it is the whole
+     * reason the release tick is already a live tick for the tape and the
+     * reason the camera contest is not a contest.
+     */
+    it('⛓⛓ the loader\'s add order decides both the camera and the first movable tick', () => {
+        const L = L43_BOSS_WAKE.updateOrder;
+        // reverse of the add lines is the update order
+        const byAdd = [...L.order].sort((a, b) => L.addLines[b] - L.addLines[a]);
+        expect(byAdd).toEqual(L.order);
+        expect(L.addLines.player).toBeLessThan(L.addLines.bosstotem);
+        expect(L.addLines.bosstotem).toBeLessThan(L.addLines.fallrock);
+        // ⇒ the boss updates after the rocks, so it wins the camera…
+        expect(L43_BOSS_WAKE.camera.winner).toBe('bosstotem');
+        // …and the player updates after the boss, so the freeze release is live
+        expect(L43_BOSS_WAKE.ticks.firstMovablePlayerTick)
+            .toBe(L43_BOSS_WAKE.ticks.freezeReleased);
+    });
+
+    it('⛓ the window\'s earned ledger is FOUR writes — the wand\'s and one per rock', () => {
+        const expected = ['43:0', ...w43.fallRocks.map((r) => `43:${r.persistTag}`)];
+        expect(new Set(L43_BOSS_WAKE.earnedLedger)).toEqual(new Set(expected));
+        expect(L43_BOSS_WAKE.earnedLedger).toHaveLength(4);
+    });
+
+    it('⛔ and the verdict is NO-GO for any window that leaves L43', () => {
+        expect(L43_BOSS_WAKE.verdict.leaveL43).toBe('NO-GO');
+        expect(L43_BOSS_WAKE.playerPositionRewrite).toEqual({ x: 144, y: 352 });
     });
 });

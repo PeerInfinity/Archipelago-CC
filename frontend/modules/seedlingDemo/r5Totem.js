@@ -2573,3 +2573,235 @@ export const L42_SOLVE = Object.freeze({
         of: 5,
     }),
 });
+
+/**
+ * ⛔⛔⛔ L43 — THE WAND ROOM IS A ONE-WAY TRAP, AND THE ESCAPE SOUTH DOES
+ * NOT EXIST. R5 slice 20 step 0, the `BossTotem` wake audit deferred since
+ * §29.10 and four slices running.
+ *
+ * Probe: `scripts/procgen/probe-seedling-r5-l43-boss-wake.mjs`. Sources read
+ * at first hand: `Enemies/BossTotem.as`, `Pickups/Wand.as`,
+ * `Pickups/Pickup.as`, `Scenery/FallRock.as`, `Puzzlements/MagicalLock.as`,
+ * `NPCs/NPC.as`, `net/flashpunk/Engine.as`, `net/flashpunk/World.as`,
+ * `Game.as` (the loader's add order, `view()`, `shake`).
+ *
+ * ── ⛔⛔⛔ THE HEADLINE ────────────────────────────────────────────────
+ *
+ * `ROLES`' own `BossTotem` row still says "escaped south during its 240-tick
+ * rumble (§2.6.4)". It cannot be. The Wand is the tset-0 publisher and
+ * L43's THREE `fallrock`s are all tset 0; `fallrock@176,384 {tag 3}` lands
+ * on tile (11,24), the UNIQUE open tile of row 24 and therefore the mouth
+ * of the col-11 shaft `stairsup@176,464` sits at the bottom of. The pickup
+ * seals its own way out, on the tick it publishes, permanently.
+ *
+ * ⇒ the escape-south window is not narrow. It is EMPTY, and the number that
+ * would have described it (240 ticks of rumble) never mattered.
+ *
+ * ── ⛓⛓ THE TICK ORIGIN ───────────────────────────────────────────────
+ *
+ * `A` is the tick AFTER `Wand.removeSelf()`. `Engine.update` runs
+ * `world.update()` BEFORE `world.updateLists()`, so a `removeSelf()` on
+ * tick T fires `Wand.removed()` — the tset-0 publish and the wand's own
+ * `setPersistence(0,false)` — at the END of tick T, and drops
+ * `_classCount[Wand]` there too. The boss's `classCount(Wand) <= 0` and the
+ * rocks' first `waitToFallTimer` decrement therefore both land on T+1.
+ *
+ * ⛔ AND THE BRIEF'S "the entity is removed at collect" IS WRONG. The
+ * removal is the LAST act of the ceremony, not the first: `pick_up()` only
+ * reaches `removeSelf()` after 150 `specialTimer` decrements AND after the
+ * dialogue NPC it spawns has been dismissed. The pickup freeze and the
+ * rocks' freeze are two disjoint spans, and nothing of the ceremony burns
+ * rumble.
+ */
+export const L43_BOSS_WAKE = Object.freeze({
+    level: 43,
+    boss: Object.freeze({
+        id: 'bosstotem@152,168',
+        persistTag: 5,
+        /** `setHitbox(80, 32, 40, -12)` ⇒ `[x-40, x+40) x [y+12, y+44)`. */
+        box: Object.freeze({ x: 112, right: 192, y: 180, bottom: 212 }),
+        /** ⛓ Which is EXACTLY the arena's five open columns, 7..11. */
+        spansCols: Object.freeze([7, 11]),
+        kill: Object.freeze({ hits: 5, onlyHitBy: 'Wand', writes: '{43,5} in `removed()`' }),
+    }),
+    /**
+     * ⛔⛔ THE WAND CEREMONY IS INPUT-BOUNDED, which no other R5 ceremony
+     * is. `Wand.text` is "You got the Wand!~It shoots weakly, but far." and
+     * `NPC.addText` splits on `~`, so `myText.length` is 2 and `NPC.update`
+     * advances only on `Input.released(p.keys[6])` = `Key.X`
+     * (`Player.as:59`) — up to two releases per segment (one to finish the
+     * type-on, one to advance). A tape that presses nothing sits frozen for
+     * ever.
+     */
+    ceremony: Object.freeze({
+        fadeTicks: 100,
+        fadeGate: '`Wand.update` — `Game.freezeObjects = alpha < 1`, alphaRate 0.01, and the '
+            + 'whole body is inside `p.y < y + Tile.h && hasAllTotemParts() && !fallFromCeiling`',
+        specialTimerTicks: 150,
+        dialogueSegments: 2,
+        dialogueKey: 'x',
+        dialogueBounded: 'player input — `Input.released(Key.X)`',
+        removalIsLast: true,
+    }),
+    /**
+     * ⛓⛓⛓ THE TABLE. Every number is produced by stepping the transcribed
+     * `BossTotem.update()` and `FallRock.update()` loops in the game's own
+     * update ORDER, not by a closed form.
+     */
+    ticks: Object.freeze({
+        activation: 0,
+        rampStarts: 119,
+        rockLandingsEarly: 94,
+        rockLandingLate: 96,
+        freezeReleased: 185,
+        firstMovablePlayerTick: 185,
+        fullyActivated: 215,
+        clampOnset: 216,
+        restDrained: 334,
+        walkStarts: 335,
+        firstLaser: 438,
+    }),
+    /** ⛓ 97 increments of `0.0175·sin(π·s) + 0.0025` to reach 1. */
+    rampIncrements: 97,
+    /**
+     * ⛔⛔ THE SHOVE IS A CLAMP, NOT A WALL, AND IT IS FREEZE-UNGATED.
+     * `if (p.y < y - originY + height) p.y = y - originY + height` sits at
+     * the TOP of `update()`, above the block that sets `fullyActivated` —
+     * which is why the onset is one tick after the flag. It is an
+     * ASSIGNMENT: the player collides with nothing, it is teleported.
+     */
+    clamp: Object.freeze({
+        y: 212,
+        expr: 'y - originY + height = 168 - (-12) + 32',
+        freezeGated: false,
+        appliesBeforePlayerMoves: true,
+    }),
+    /**
+     * ⛓⛓ THE UPDATE ORDER IS THE REVERSE OF THE LOADER, and it is what
+     * decides the camera contest AND the first movable tick.
+     * `World.addUpdate` PREPENDS (`World.as:937-951`), `Game.as` adds the
+     * Player at :2092 and every object after it.
+     */
+    updateOrder: Object.freeze({
+        order: Object.freeze(['fallrock', 'bosstotem', 'player']),
+        addLines: Object.freeze({ bosstotem: 2121, fallrock: 2187, player: 2092 }),
+        why: '`addUpdate` prepends, so the LAST added updates FIRST',
+    }),
+    /**
+     * ⛓⛓ THE CAMERA CONTEST, ESTABLISHED RATHER THAN ASSUMED: THE BOSS
+     * WINS, UNCONDITIONALLY. Its camera block is at the BOTTOM of
+     * `update()`, outside the `activated`/else split and outside every
+     * freeze, and it updates AFTER the rocks. `Game.cameraTarget` is
+     * consumed by `view()`, which `Game.update` calls after `super.update()`
+     * — so the last writer in the entity pass decides the frame. Every
+     * `cameraTarget` a falling rock writes and every `resetCamera()` it
+     * calls on release is overwritten in the same frame.
+     */
+    camera: Object.freeze({
+        winner: 'bosstotem',
+        range: 120,
+        rangeSrc: '`FP.screen` is 160x160 (`Main.as:36`), and the test is 3/4 of it',
+        consumedBy: '`Game.view()`, after `super.update()`',
+    }),
+    /**
+     * ⛔ `Game.shake` IS CAMERA-ONLY, AND IT IS `Math.random`, NOT THE LFSR.
+     * The brief prices each landing at "shake 30 (LFSR draws x3)".
+     * `Game.as:1868-1873` is two `Math.random()` draws per SHAKING TICK
+     * (not per landing), applied after the camera clamp and before the
+     * round, touching no gameplay state — and `shake` is an ASSIGNMENT, so
+     * the two same-tick landings collapse to one.
+     */
+    shake: Object.freeze({
+        value: 30,
+        drawsPerShakingTick: 2,
+        generator: 'Math.random',
+        isLfsr: false,
+        gameplayEffect: 'none — `FP.camera` only',
+        src: 'Game.as:1868-1873',
+    }),
+    /**
+     * ⛓ THE FREEZE SPAN, AND THE OVERLAP THE BRIEF FLAGGED — RESOLVED.
+     * Only `fall()` sets `Game.freezeObjects = true`; each rock's own camera
+     * expiry sets it FALSE with no arbitration, so the EARLIEST wins for all
+     * three. ⛔ But no rock is still falling then: the three fall times
+     * (35, 35, 37) differ by far less than the 91-tick hold that follows
+     * them, so the two ticks between the first release and the last hold
+     * only `tag 3`'s last camera ticks.
+     */
+    rocks: Object.freeze([
+        Object.freeze({ id: 'fallrock@96,336', persistTag: 2, t: 0, fallTo: 344,
+            tile: Object.freeze({ x: 6, y: 21 }), lands: 94, releases: 185, seals: 'the west alcove' }),
+        Object.freeze({ id: 'fallrock@192,336', persistTag: 1, t: 0, fallTo: 344,
+            tile: Object.freeze({ x: 12, y: 21 }), lands: 94, releases: 185, seals: 'the east alcove' }),
+        Object.freeze({ id: 'fallrock@176,384', persistTag: 3, t: 0, fallTo: 392,
+            tile: Object.freeze({ x: 11, y: 24 }), lands: 96, releases: 187,
+            seals: '⛔⛔⛔ THE SOUTH DOOR — the unique open tile of row 24' }),
+    ]),
+    freeze: Object.freeze({
+        deadFrames: 185,
+        rumbleBurned: 185,
+        rumbleLeft: 55,
+        noRockStillFallingAtRelease: true,
+    }),
+    /**
+     * ⛔⛔⛔ THE SEAL, MEASURED BY FLOOD RATHER THAN BY READING. From the
+     * wand's own cell at the 8 px lattice every R5 route plans at.
+     */
+    seal: Object.freeze({
+        from: Object.freeze({ x: 152, y: 232 }),
+        cellsBefore: 327,
+        cellsAfter: 279,
+        stairsTile: '11,29',
+        reachedBefore: true,
+        reachedAfter: false,
+        blocker: 'fallrock@176,384',
+        /** ⛓ Dropping the other two still reaches the stairs — it is ONE rock. */
+        blockerIsSufficient: true,
+        permanent: '`fall()`\'s first line is `setPersistence(tag, false)` and the ctor reads '
+            + 'it back: a cleared rock boots AT `fallTo`, `type = "Solid"`, `_active` written '
+            + 'directly so `fall()` never re-runs',
+    }),
+    /**
+     * ⛔⛔ THE NORTH DOOR, PRICED AGAINST THE CLOCK — and the binding term is
+     * the FREEZE, not the clamp.
+     */
+    north: Object.freeze({
+        door: 'teleporter@144,64 -> L37',
+        lock: 'magicallock@144,112 {tag 4}',
+        lockOpener: 'a `WandShot` — `lockType 0`, `WandShot.as:118-121`',
+        freeTicks: 31,
+        walkSpeed: 1.2,
+        reachPx: 37.2,
+        neededPx: 160,
+        verdict: 'OUT OF REACH',
+        andBeforeTheWake: 'the boss is `type = "Solid"` across all five arena columns, so '
+            + 'north is shut by COLLISION before the wand and by ASSIGNMENT after it, with '
+            + 'no gap between the two',
+    }),
+    /**
+     * ⛔ THE WAKE REWRITES `playerPosition` TO (144,352) — tile (9,22),
+     * inside the sealed room. `Game.as:1255/1272/1283/1288/1894` all rebuild
+     * the world from it, so a death anywhere after the wake respawns in the
+     * arena. It is not a checkpoint the route chooses.
+     */
+    playerPositionRewrite: Object.freeze({ x: 144, y: 352 }),
+    /** ⛓ FOUR writes, not one: the wand's own and one per rock it drops. */
+    earnedLedger: Object.freeze(['43:0', '43:1', '43:2', '43:3']),
+    /** ⛔ GO / NO-GO for slice 21. */
+    verdict: Object.freeze({
+        leaveL43: 'NO-GO',
+        terminalWindow: 'GO — boot in L43, take the wand, come to rest in the sealed arena; '
+            + 'nothing downstream of it can be scheduled in the same rung',
+        hazard: 'after the wand, EVERY L40 pit is a one-way trip into a sealed room (§27: '
+            + 'every pit in L40 transports into L43). The wand is LAST or it is nothing.',
+        opensOn: 'the boss\'s death — R6',
+    }),
+    corrects: Object.freeze([
+        '§33.8 item 3 / the STEP 0 anchors: the entity is NOT removed at collect',
+        'the ceremony\'s 150 + fades do NOT burn rumble — the rocks\' 185 do',
+        'the south path is NOT routed around the landings — one of them IS the path',
+        '`Game.shake` is `Math.random` and camera-only, not three LFSR draws',
+        'the camera contest is not contested — the boss wins every tick',
+        'ROLES\' `BossTotem.boss` string ("escaped south during its 240-tick rumble")',
+    ]),
+});

@@ -427,8 +427,29 @@ export const ENEMY_CLASSES = Object.freeze({
         hitbox: null, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: '(43, 5)',
-        boss: 'AVOID — activated by COLLECTING the wand, escaped south during '
-            + 'its 240-tick rumble (§2.6.4)',
+        // ⛔⛔⛔ CORRECTED AT R5 SLICE 20. This row said "AVOID — activated by
+        // COLLECTING the wand, escaped south during its 240-tick rumble
+        // (§2.6.4)". There is no escape south to time. The Wand is the
+        // tset-0 publisher and L43's three `fallrock`s are all tset 0, and
+        // `fallrock@176,384 {tag 3}` lands on tile (11,24) — the unique open
+        // tile of row 24 and therefore the mouth of the col-11 shaft
+        // `stairsup@176,464` sits at the bottom of. The pickup seals its own
+        // way out on the tick it publishes, and the seal is persistence, so
+        // it holds for every later visit. Measured in `r5Totem.L43_BOSS_WAKE`.
+        boss: 'R6 — COLLECTING the wand seals the room. The tset-0 publish drops three '
+            + 'fallrocks and one of them plugs the only shaft to `stairsup@176,464`; the '
+            + 'player is frozen for all 185 ticks of the fall, and the 31 live ticks '
+            + 'before the clamp (`p.y := 212`, freeze-ungated, from A+216) buy 37 px of '
+            + 'the 160 the north teleporter is away. The room opens on the boss\'s death.',
+        // ⚠ MODEL GAP, NAMED: `update()`\'s else-arm is `type = "Solid"`, so
+        // an UNWOKEN BossTotem is a solid spanning the arena's five open
+        // columns (cols 7..11, `[112,192) x [180,212)`). This row's
+        // `hitbox: null` keeps it out of `chaseEnvelope`, which is right for
+        // a boss; it also keeps the body out of `world.solids`, which is a
+        // silence. Nothing in R5 routes north of it, so no leg pays for it —
+        // giving it a hitbox without a driven witness would change every
+        // chase envelope this table feeds.
+        preWakeSolid: { w: 80, h: 32, ox: 40, oy: -12, cols: [7, 11], src: 'BossTotem.as:257,315' },
         src: 'Enemies/BossTotem.as:478',
     },
     lavaboss: {
