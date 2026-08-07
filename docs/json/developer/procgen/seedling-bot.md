@@ -4337,3 +4337,33 @@ This window ends in L40. `run.crushers` there is the next room's map, so a
 check written as "both bodies are still on their parks at the end" compares
 two `undefined`s and passes. The audit already walks every tick; the last
 one whose level is still 42 is where that question has an answer.
+
+### Use the `--win` channel for anything longer than a few hundred ticks
+
+`verify-seedling-bot-differential.mjs` has two replay channels. The default
+drives local headless Chromium on SwiftShader, where the recompiled game
+runs at **~0.5 ticks/s** — the constant is measured and stated in the file's
+own header. `--win` drives real-GPU Windows Chrome from WSL at **~24 fps**,
+a 44× speedup, with identical physics (a deterministic tick loop does not
+care what draws it).
+
+Concretely: a 1,920-tick tape is **86 seconds** on `--win` and **~64
+minutes** headless — against an 82-minute deadline, i.e. 25% headroom. Any
+competing load on the box eats that headroom and the tape times out near the
+end, which looks exactly like a dead bot.
+
+Two mis-diagnoses were paid for on the way to relearning this, and both are
+worth naming because they are the shapes a slow-oracle failure takes:
+
+- **30 identical `[pageerror] A valid external Instance reference no longer
+  exists` lines read as "the instance crashed early."** They are the last
+  sixteen seconds of a poll loop that outlived its deadline — the harness
+  prints the last 30 page-log lines, so a spinning poll fills the window
+  regardless of when it started spinning.
+- **A 30-tick fixture passing in 119 s read as "boot-dominated, so the
+  harness is healthy."** At 0.5 ticks/s that is 60 s of replay and 60 s of
+  boot. Dividing it out is what says a 1,920-tick tape needs an hour.
+
+Read the harness's own measured constants before inferring a mechanism from
+its symptoms. Both readings above were available to check in the same file
+that produced the symptom.
