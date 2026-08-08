@@ -268,15 +268,18 @@ describe('the door: one approach, two arms, and a whole-tile constructor', () =>
         r = stepFinalDoor(s, ctx);
         expect(r.event).toBe('open');
         s = r.state;
-        // ...and 57 updates later `animEnd` removes it, which is the
-        // `{113,0}` CLEAR.
+        // ...and `animEnd` removes it on the 57th graphic UPDATE, which is
+        // 56 ticks after the play tick — the play tick is update 1, because
+        // `World.update` runs `e.update()` and `e._graphic.update()` in the
+        // same pass over the same entity. That is the `{113,0}` CLEAR.
         let removedAt = null;
         for (let n = 1; n <= 100 && removedAt === null; n += 1) {
             r = stepFinalDoor(s, ctx);
             s = r.state;
             if (r.event === 'removed') removedAt = n;
         }
-        expect(removedAt).toBe(57);
+        expect(removedAt).toBe(finalDoorOpenUpdates() - 1);
+        expect(removedAt).toBe(56);
         expect(s.removed).toBe(true);
     });
 

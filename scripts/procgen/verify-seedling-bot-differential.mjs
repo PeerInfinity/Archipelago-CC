@@ -1211,6 +1211,46 @@ function checkReadout(name, tape, status, stream) {
                 + 'earns the flag for nothing (trap 102)');
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR'S ROW ────────────────────────
+    //
+    // `FinalDoor.removed()` is `Game.setPersistence(tag, false)` and
+    // `animEnd` is its only caller, so `{113,0}` lands in
+    // `persistence_cleared` on the same tick the 32x32 body stops
+    // colliding — the OPPOSITE fencepost from the ShieldBoss's, whose flag
+    // precedes its corpse by 34 ticks.
+    //
+    // ⛔⛔ TWO-SIDED, and the negative arm is checked from the CEREMONY
+    // rather than from the absence of a write. `r6-final-door-control`
+    // approaches the door and fires the SealController exactly as the drive
+    // does — the overlay is unconditional — and its whole claim is that
+    // `{113,0}` stayed SET because `!checkPersistence(0, 114)` was false.
+    // "The model wrote nothing" is what a broken model also says; "the model
+    // ran the ceremony and wrote nothing" is a claim.
+    const doorFlags = expected.finalDoorFlags ?? [];
+    const sawDoor = (expected.doorCeremonies ?? []).length > 0;
+    if (doorFlags.length > 0) {
+        const missing = doorFlags
+            .filter((f) => !clearedInGame.has(`${f.level}:${f.tag}`))
+            .map((f) => `${f.id} (${f.level}:${f.tag})`);
+        check(`${name}: every FinalDoor the run opened wrote its persistence flag`,
+            missing.length === 0,
+            missing.length === 0
+                ? doorFlags.map((f) => `${f.id} -> ${f.level}:${f.tag} off`).join(', ')
+                + ` (open ${(expected.doorEvents ?? []).find((e) => e.what === 'open')?.t}, `
+                + `removed ${(expected.doorEvents ?? []).find((e) => e.what === 'removed')?.t})`
+                : `${missing.join(', ')} still SET — the model opened a door the game did `
+                + 'not. `animEnd` fires on graphic update 57 and the play frame is update '
+                + '1, so a model one tick out here is a model one tick out everywhere.');
+    } else if (sawDoor) {
+        const wronglyCleared = [...clearedInGame].filter((k) => k === '113:0');
+        check(`${name}: the FinalDoor the run did NOT open kept its flag`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? '{113,0} still set, with the approach driven and the seal ceremony run'
+                : `${wronglyCleared.join(', ')} CLEARED by a run whose second condition `
+                + '(`!checkPersistence(0, 114)`, the Watcher) was never met');
+    }
+
     return expected;
 }
 

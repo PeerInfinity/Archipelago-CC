@@ -493,6 +493,21 @@ export function createTapeStepper(tape, opts = {}) {
              * same without it. (trap 101)
              */
             watcherSeedLive: run ? run.watcherSeedLive : [],
+            /**
+             * ⛓⛓⛓ R6 SLICE 6c — THE FINAL DOOR's three, and the first is a
+             * DEAD-FRAME claim rather than a positional one.
+             *
+             * ⛔ `doorCeremonies` IS THE WINDOW'S SECOND WITNESS. A
+             * `SealController` costs 181 dead frames against a load fade's
+             * ~19, and the differential's dead-frame band reads them — so a
+             * model that predicted the ceremony on the wrong tick, or not at
+             * all, fails on a number the observation stream cannot carry.
+             */
+            doorCeremonies: run ? run.doorCeremonies : [],
+            /** `open` then `removed`, 56 ticks apart — the wall goes on the second. */
+            doorEvents: run ? run.doorEvents : [],
+            /** The `{113,0}` write `removed()` makes. */
+            finalDoorFlags: run ? run.finalDoorFlags : [],
             /** Every tick a shot's own cull was a §11.6 BAND question. */
             bossShotCullBand: run ? run.bossShotCullBand : [],
             /**

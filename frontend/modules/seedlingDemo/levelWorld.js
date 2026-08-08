@@ -3156,8 +3156,8 @@ function intAttr(attrs, name, fallback) {
  */
 export const LIVE_GEOMETRY_KEYS = Object.freeze([
     'openActivators', 'openMagicalLocks', 'openBridges', 'brokenRocks', 'burnedTrees',
-    'crushers', 'turrets', 'bosses', 'shieldBosses', 'openChests', 'pulledRopes',
-    'pushables',
+    'crushers', 'turrets', 'bosses', 'shieldBosses', 'finalDoors', 'openChests',
+    'pulledRopes', 'pushables',
     // ⚠ NOT IN `normalizeLive`. A parked `FallRock` is in no `solids`
     // entry at all, so `collidesSolid` handles it ABOVE its own loop and
     // reads `opts.fallenRocks` directly. It is a live geometry key all the
@@ -3328,6 +3328,8 @@ export function buildLevelWorld(levelRecord, {
         // normalised bag) is still deferred. One key is not a reason to
         // take it now; it is a reason the deferral has a growing bill.
         shieldBosses: o.shieldBosses ?? null,
+        // ⚠ R6 SLICE 6c: the THIRTEENTH key, and §10.10a's bill grows again.
+        finalDoors: o.finalDoors ?? null,
         openChests: o.openChests ?? null,
         pulledRopes: o.pulledRopes ?? null,
         pushables: o.pushables ?? null,
@@ -3434,6 +3436,21 @@ export function buildLevelWorld(levelRecord, {
             if (now && now.removed) return null;
             return s.rect;
         }
+        // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — the ShieldBoss's polarity with
+        // an even simpler mechanism. `FinalDoor.type` is `"Solid"` from the
+        // constructor and is never reassigned, and the ONLY thing that takes
+        // it out of the type list is `animEnd`'s `FP.world.remove(this)`.
+        //
+        // ⛔ THE ANIMATION IS NOT THE GATE. The door is a wall for all 57
+        // updates of the `open` animation — the sprite changes and the body
+        // does not — so an arm keyed on "opening" would walk the player into
+        // the doorway 57 ticks early and, in this room, straight onto a
+        // teleporter the door exists to cover.
+        if (s.finalDoorId) {
+            const now = o.finalDoors ? o.finalDoors.get(s.finalDoorId) : null;
+            if (now && now.removed) return null;
+            return s.rect;
+        }
         // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()` writes
         // `type = ""` (Chest.as:77) and the entity then fades for 60 more
         // ticks before `FP.world.remove` — so the SOLIDITY goes first and the
@@ -3506,6 +3523,25 @@ export function buildLevelWorld(levelRecord, {
      * for five rungs.
      */
     const shieldBosses = [];
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — the FOURTEENTH per-visit geometry
+     * family, and the only one whose member stops being a solid because a
+     * SAVE FILE said so.
+     *
+     * `FinalDoor.type` is `"Solid"` from its constructor and is never
+     * reassigned, so the body is a wall from the tick the level builds it
+     * until `animEnd` runs `FP.world.remove(this)` at the end of a 28-frame
+     * `open` animation. What decides whether that animation ever plays is
+     * three facts none of which is in this level:
+     * `SealController.hasAllSealParts()` (the SAVE array's last slot),
+     * `!Game.checkPersistence(0, 114)` (the WATCHER, in another room) and
+     * an approach inside 32 px.
+     *
+     * ⚠ ONE MEMBER IN THE GAME (`finaldoor@112,0`, level 113), and it
+     * covers both of L113's teleporters to L115 — so it is not merely a
+     * wall, it is the only thing between the player and the ending.
+     */
+    const finalDoors = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -4287,6 +4323,27 @@ export function buildLevelWorld(levelRecord, {
                     aliveRect: solid.rect,
                 });
             }
+            // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR. `solid.rect` here is the
+            // STANDING door — `super(_x + Tile.w, _y + Tile.h)` (a WHOLE
+            // tile, not the half every other class uses) with
+            // `setHitbox(32, 32, 16, 16)`, so the entity is (128,16) and the
+            // body is `[112,144) x [0,32)`. `liveRectOf`'s arm returns
+            // `null` only once the run says the entity has been REMOVED,
+            // which is `animEnd` after the 28-frame `open`; there is no
+            // intermediate non-solid state at all.
+            if (cls.as3 === 'FinalDoor') {
+                solid.finalDoorId = `${e.type}@${x},${y}`;
+                finalDoors.push({
+                    id: solid.finalDoorId,
+                    tag: e.type,
+                    x,
+                    y,
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    persistTag: tagOf(e.type, e.attrs),
+                    standingRect: solid.rect,
+                });
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -4680,6 +4737,16 @@ export function buildLevelWorld(levelRecord, {
          * the run's per-visit business.
          */
         shieldBosses,
+        /**
+         * ⛓⛓⛓ R6 slice 6c: the final door, `{id, tag, x, y, ex, ey,
+         * persistTag, standingRect}`.
+         *
+         * Unconditional, like the bosses': `FinalDoor.check()` removes the
+         * body on a CLEARED tag and the build's own persistence arm already
+         * applies that, so a roster entry means the entity exists and
+         * whether it is still a WALL is the run's per-visit business.
+         */
+        finalDoors,
         /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *

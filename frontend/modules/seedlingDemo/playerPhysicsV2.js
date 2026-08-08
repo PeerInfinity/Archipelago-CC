@@ -915,6 +915,17 @@ export function step(state, held, opts = {}) {
          * family's first drive.
          */
         shieldBosses = null,
+        /**
+         * ⛓⛓⛓ R6 SLICE 6c: the FOURTEENTH, and the one whose absence is
+         * least visible from inside the room. `FinalDoor.type` is `"Solid"`
+         * from its constructor and is never reassigned; the only event that
+         * takes the wall away is `animEnd`'s `FP.world.remove(this)`, 57
+         * updates after the `open` animation starts. So the default "still a
+         * solid" is correct and the key expresses that one event — and
+         * dropping it would walk the player through the ENDING's door into
+         * a teleporter to L115 that the door exists to cover.
+         */
+        finalDoors = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1294,6 +1305,7 @@ export function step(state, held, opts = {}) {
         turrets,
         bosses,
         shieldBosses,
+        finalDoors,
         pulledRopes,
         openChests,
     };

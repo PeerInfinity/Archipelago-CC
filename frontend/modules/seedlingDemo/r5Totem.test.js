@@ -2839,12 +2839,33 @@ describe('⛔ L43: the terminal wand window cannot be booted', () => {
         for (const n of fixtureNames()) {
             expect(loadTape(n).save).toBeTruthy();
         }
-        // …and only a v6 tape may DECLARE anything in it.
+        // …and only a tape at the version that INTRODUCED the field may
+        // DECLARE anything in it.
+        //
+        // ⛔ THIS SAID `toBe(6)` UNTIL R6 SLICE 6c, AND IT WAS A COINCIDENCE.
+        // The claim `tapeFormat` makes is a FLOOR — `parseSave` is reached
+        // only for `version >= 6` and a v5 tape declaring a save block is
+        // rejected by name — and 6 happened to be the newest version for as
+        // long as the roster held no v7 tape that used the field. W-door is
+        // the first: `save.seal_parts` with sixteen identities on a v7 tape,
+        // because the `rng` block and the save block are independent
+        // additions. The rot is trap 89's shape exactly, one slice after two
+        // others were rewritten to stop rotting — so the predicate is now
+        // the one `tapeFormat` actually enforces.
+        const SAVE_FLOOR = 6;
         const declaring = fixtureNames().map(loadTape)
             .filter((t) => (t.save.totem_parts.length + t.save.keys.length
                 + t.save.seal_parts.length) > 0);
         expect(declaring.length).toBeGreaterThan(0);
-        for (const t of declaring) expect(t.tape_version).toBe(6);
+        for (const t of declaring) expect(t.tape_version).toBeGreaterThanOrEqual(SAVE_FLOOR);
+        // ⛓ AND THE FLOOR IS CHECKED FROM THE OTHER SIDE, so it cannot rot
+        // into a vacuous `>= 1`: a v5 tape declaring a save block is a named
+        // parser refusal, not a silently accepted one.
+        expect(() => parseTape({
+            ...JSON.parse(serializeTape(loadTape('r5-l40-part1'))),
+            tape_version: SAVE_FLOOR - 1,
+            save: { totem_parts: [0], keys: [], seal_parts: [] },
+        })).toThrow(/tape_version/);
         // ⛓ AND THE ROUND TRIP KEEPS IT, which is the half an artifact
         // cannot answer alone.
         const wand = loadTape('r5-l43-wand');

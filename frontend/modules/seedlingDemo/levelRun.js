@@ -43,8 +43,8 @@ import {
 // it `fixtures/index.js`, which is node-only; that is sound here because
 // `levelRun` has no browser consumer (the watch page reads `watchViewer`).
 import {
-    TALK_RANGE, beginNpcDialogue, boxHitsWatcherSeed, inTalkRange, stepNpcDialogue,
-    watcherSeedBox, WATCHER,
+    FINAL_DOOR, TALK_RANGE, WATCHER, WATCHER_FLAG, beginNpcDialogue, boxHitsWatcherSeed,
+    freshFinalDoor, inTalkRange, stepFinalDoor, stepNpcDialogue, watcherSeedBox,
 } from './endingChain.js';
 import {
     createActivatorState, openActivatorIds, pressedGroups, ropePublish, stepActivators,
@@ -141,7 +141,7 @@ import { SWORD_FORCE } from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
-    CEREMONY_DEAD_FRAMES, createSealPiece, sealPieceBox, stepSealPiece,
+    CEREMONY_DEAD_FRAMES, createSealPiece, sealControllerTicks, sealPieceBox, stepSealPiece,
 } from './sealCeremony.js';
 import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
 import {
@@ -396,6 +396,8 @@ export function createLevelRun({
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
         watcherStates.delete(n);
+        // ⛓ R6 slice 6c: and the door, whose rebuild re-arms `seenSeal`.
+        finalDoorStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -788,6 +790,43 @@ export function createLevelRun({
      * tagged class the body does NOT despawn on the cleared tag — which is
      * what leaves it standing for W-blood's four sword hits.
      */
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR's per-visit state.
+     *
+     * ⚠ PER VISIT, and the reason is the one field `stepFinalDoor` carries
+     * that nothing else does: `seenSeal`. It is an INSTANCE field reset by
+     * every `new Game`, and leaving the 32 px radius resets it too — so a
+     * re-approach fires a FRESH 181-frame ceremony. A run that carried it
+     * across a rebuild would predict one ceremony where the game runs two.
+     */
+    const finalDoorStates = new Map();
+    const finalDoorStateFor = (n) => {
+        if (!finalDoorStates.has(n)) {
+            const byId = new Map();
+            for (const d of worldFor(n).finalDoors ?? []) {
+                byId.set(d.id, {
+                    id: d.id,
+                    level: n,
+                    ex: d.ex,
+                    ey: d.ey,
+                    persistTag: d.persistTag ?? -1,
+                    ...freshFinalDoor(),
+                    // See `stepFinalDoorsNow`: `FP.world.remove` only queues.
+                    pendingRemove: false,
+                });
+            }
+            finalDoorStates.set(n, byId);
+        }
+        return finalDoorStates.get(n);
+    };
+    /** The live boxes, for `collidesSolid`'s `finalDoors` arm. */
+    const finalDoorRectsNow = () => {
+        const st = finalDoorStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, d] of st) out.set(id, { id, removed: d.removed });
+        return out;
+    };
     const watcherStates = new Map();
     const watcherStateFor = (n) => {
         if (!watcherStates.has(n)) {
@@ -1114,6 +1153,7 @@ export function createLevelRun({
         turrets: turretRectsNow(),
         bosses: bossRectsNow(),
         shieldBosses: shieldBossRectsNow(),
+        finalDoors: finalDoorRectsNow(),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -1235,6 +1275,23 @@ export function createLevelRun({
      * and the stance cleared it by this much.
      */
     const watcherSeedLive = [];
+    // ── ⛓⛓⛓ R6 SLICE 6c: the final door's three ledgers ────────────────
+    /**
+     * `{t, level, id, frames, dismissable}` — one per SealController the
+     * door spawned.
+     *
+     * ⛔ ITS FRAMES ARE DEAD, NOT TICKS, and that is the whole difference
+     * from the Watcher's freeze one family over. A `SealController` sets
+     * `Game.freezeObjects` in its CONSTRUCTOR and never sets `Game.talking`,
+     * so nothing lowers the flag between frames and the bot's dead-frame
+     * gate sees every one of them. They land in `frozenFramesOwed` as a
+     * LUMP, exactly like a pickup's phase A.
+     */
+    const doorCeremonies = [];
+    /** `{t, level, id, what}` per door event — `open` then `removed`. */
+    const doorEvents = [];
+    /** The `{113,0}` write `removed()` makes — keyed like `bossFlags`. */
+    const finalDoorFlags = new Map();
     let bossShotSeq = 0;
     const bossShotStates = new Map();
     const bossShotsFor = (n) => {
@@ -1726,6 +1783,11 @@ export function createLevelRun({
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
         watcherStates.delete(n);
+        // ⛓ R6 slice 6c. A rebuilt door has `seenSeal` false, so a second
+        // visit fires a second ceremony — and if its own tag has been
+        // cleared, `FinalDoor.check()` removes it and the build's
+        // persistence arm never places it at all.
+        finalDoorStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -5128,6 +5190,135 @@ export function createLevelRun({
         return { frozen };
     };
 
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — one approach, two arms, and a
+     * freeze that is DEAD where the Watcher's is a tick.
+     *
+     * `Scenery/FinalDoor.as:47-68`, transcribed by `endingChain.
+     * stepFinalDoor`; this is the wiring, and the three things only the
+     * wiring can say:
+     *
+     *   1. ⛔ **THE CEREMONY'S FRAMES ARE DEAD.** `SealController`'s
+     *      CONSTRUCTOR sets `Game.freezeObjects = true` and the class never
+     *      touches `Game.talking` — so `Game.update`'s `else if (inventory)
+     *      inventory.open = false` never runs (`canInventory()` is true) and
+     *      nothing lowers the flag between frames. The bot's dead-frame gate
+     *      sees every one of them, `autoAdvance` refuses to dispatch into
+     *      them (`freezeUp` is `Game.talking || helpUp`), and the tape's own
+     *      X releases cannot reach `Input.released` through them. ⇒ the
+     *      overlay ALWAYS runs its full length and the span is a LUMP in
+     *      `frozenFramesOwed`, exactly like a pickup's phase A.
+     *   2. ⛓ **THE TRIGGER TICK IS LIVE AND ITS PLAYER IS FROZEN.** The door
+     *      updates before the player (`Game.loadlevel` adds it at `:2190`
+     *      and the Player at `:2092`; `World.addUpdate` PREPENDS), so the
+     *      constructor's write lands before `Mobile.mobileUpdate` reads it —
+     *      but the dead-frame gate at the TOP of that frame saw `false`, so
+     *      the tape's counter advances through it.
+     *   3. ⛔ **AND THE OPEN IS THE SAME APPROACH.** `SealController.
+     *      removed()` nulls `parent.mySealController` from `updateLists()`,
+     *      which runs after `world.update()` — so the door's very next
+     *      update finds the second arm reachable with the player still
+     *      standing inside the 32 px circle. §2.5's "only on a LATER
+     *      approach" is wrong; what IS true is that leaving the radius
+     *      resets `seenSeal` and re-approaching fires a FRESH ceremony.
+     *
+     * @returns {{frozen: boolean}} `frozen` means the player must not move
+     */
+    const stepFinalDoorsNow = () => {
+        const st = finalDoorStateFor(level);
+        if (st.size === 0) return { frozen: false };
+        let frozen = false;
+        // `!Game.checkPersistence(0, 114)` — a CROSS-LEVEL read, and the
+        // only one in the game. `FinalDoor.as:50`'s own comment names it:
+        // "0 is the tag for the Watcher's text, while 114 is the room that
+        // it refers to."
+        const talkedToWatcher = (clearedByLevel.get(WATCHER_FLAG.level) ?? [])
+            .includes(WATCHER_FLAG.tag)
+            || [...watcherFlags.values()].some((f) => f.level === WATCHER_FLAG.level
+                && f.tag === WATCHER_FLAG.tag);
+        // `SealController.hasAllSealParts()` is `Main.hasSealPart(SEALS - 1)
+        // != -1` — the LAST SLOT, not a count. A save with fifteen
+        // identities in slots 0..14 leaves slot 15 at -1 and the door stays
+        // shut, which is exactly what the control declares.
+        const hasAllSealParts = sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
+        for (const d of st.values()) {
+            // ⛔⛔⛔ `updateLists()` RUNS AFTER `world.update()`, AND THE
+            // PLAYER UPDATES INSIDE IT.
+            //
+            // `animEnd` calls `FP.world.remove(this)`, which only QUEUES the
+            // entity: `Engine.update` is `FP._world.update(); FP._world.
+            // updateLists();`, so the door is still in the type list for the
+            // rest of the frame — including the Player's own sweep, which
+            // runs later in the very same pass. ⇒ the wall stands for ONE
+            // MORE tick after the animation ends, and `removed()` (the
+            // `{113,0}` write, and the type-list departure) lands at the end
+            // of that frame, which is the top of this one.
+            //
+            // ⛓ THE GAME REFUTED THE MODEL ON EXACTLY THIS. The first
+            // recording diverged at observation 94 — model 33.50, game 34.50
+            // — and the step SEQUENCE either side was identical (1.55, 1.30,
+            // 1.05, 0.80, 1.35), so the model had taken one extra step and
+            // nothing else was wrong. R5 slice 5 found the same fencepost in
+            // `ShieldBoss` and called it the third of three; this class has
+            // no `destroy` and no fade, so for it the fencepost is the WHOLE
+            // removal. → [[feedback_destroy_is_not_removal]]
+            if (d.pendingRemove) {
+                d.pendingRemove = false;
+                d.removed = true;
+            }
+            const inRadius = Math.sqrt((d.ex - state.x) ** 2 + (d.ey - state.y) ** 2)
+                <= FINAL_DOOR.seeDistance;
+            const r = stepFinalDoor(d, {
+                inRadius,
+                // The overlay is resolved as a LUMP on its own trigger tick
+                // (see 1 above), so by the next model tick it is gone.
+                sealControllerUp: false,
+                hasAllSealParts,
+                talkedToWatcher,
+            });
+            Object.assign(d, r.state);
+            if (r.event === 'ceremony') {
+                const frames = sealControllerTicks();
+                frozenFramesOwed += frames;
+                frozen = true;
+                doorCeremonies.push({
+                    t: ticksCompleted, level, id: d.id, frames,
+                    // ⚠ NAMED FALSE RATHER THAN OMITTED. The overlay IS
+                    // X-dismissable from frame 61 in the game — and no tape
+                    // can supply the release, because every frame of it is a
+                    // dead frame (`sealCeremony.SEAL_AUTOADVANCE_BLIND_SPOT`).
+                    dismissable: false,
+                });
+            } else if (r.event === 'open') {
+                doorEvents.push({ t: ticksCompleted, level, id: d.id, what: 'open' });
+            } else if (r.event === 'removed') {
+                // `stepFinalDoor` reports the ANIMATION's end and sets
+                // `removed`; the wall does not go until `updateLists()`, so
+                // the flag is deferred to the top of the next tick (above).
+                d.removed = false;
+                d.pendingRemove = true;
+                doorEvents.push({
+                    t: ticksCompleted,
+                    level,
+                    id: d.id,
+                    what: 'removed',
+                    // ⛓ The tick the PLAYER can first walk through it — one
+                    // later, and the only number a route may use.
+                    wallOpensAt: ticksCompleted + 1,
+                });
+                if (d.persistTag >= 0) {
+                    const flag = { level, tag: d.persistTag, value: false };
+                    finalDoorFlags.set(ledgerKey(flag), { ...flag, id: d.id, level });
+                    if (!pendingEarnedClears.has(level)) {
+                        pendingEarnedClears.set(level, new Set());
+                    }
+                    pendingEarnedClears.get(level).add(d.persistTag);
+                }
+            }
+        }
+        return { frozen };
+    };
+
     return {
         get level() { return level; },
         get world() { return world; },
@@ -5454,6 +5645,19 @@ export function createLevelRun({
             // Its own loop for that reason: "which openers did this walk use"
             // has to distinguish a dialogue from a kill.
             for (const [key, r] of watcherFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                if (out.some((o) => o.level === n && o.tag === tag)) continue;
+                out.push({ level: n, tag, by: r.id });
+            }
+            // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
+            // `Game.setPersistence(tag, false)` with no test of the cause,
+            // and `animEnd` is the only caller. Its own loop because the
+            // WRITE SITE is what a window has to name: the flag lands 56
+            // ticks after the animation starts and on the same tick the wall
+            // stops colliding, which is the opposite fencepost from the
+            // ShieldBoss's (tag first, wall 34 ticks later).
+            for (const [key, r] of finalDoorFlags) {
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
@@ -5992,6 +6196,29 @@ export function createLevelRun({
                 talkRange: TALK_RANGE,
             }));
         },
+        // ── ⛓⛓⛓ R6 SLICE 6c: the final door's three readouts ──────────
+        /** `{t, level, id, frames, dismissable}` per SealController spawned. */
+        get doorCeremonies() { return doorCeremonies.map((r) => ({ ...r })); },
+        /** `{t, level, id, what}` — `open`, then `removed` 56 ticks later. */
+        get doorEvents() { return doorEvents.map((r) => ({ ...r })); },
+        /** The `{113,0}` write `removed()` makes, keyed like `bossFlags`. */
+        get finalDoorFlags() { return [...finalDoorFlags.values()].map((f) => ({ ...f })); },
+        /** The live door(s), for a stance that has to plan around the wall. */
+        get finalDoors() {
+            const st = finalDoorStateFor(level);
+            return [...st.values()].map((d) => ({
+                id: d.id,
+                x: d.ex,
+                y: d.ey,
+                persistTag: d.persistTag,
+                seenSeal: d.seenSeal,
+                opening: d.opening,
+                openUpdates: d.openUpdates,
+                removed: d.removed,
+                seeDistance: FINAL_DOOR.seeDistance,
+                distance: Math.sqrt((d.ex - state.x) ** 2 + (d.ey - state.y) ** 2),
+            }));
+        },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -6255,6 +6482,34 @@ export function createLevelRun({
                     }
                     prevHeld = new Set(held);
                     return runFrozenTick(activators, 'a Watcher\'s dialogue');
+                }
+            }
+
+            // ── ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR, BESIDE THE WATCHER ──
+            //
+            // `Game.loadlevel` adds it at `:2190` and the Player at `:2092`,
+            // and `World.addUpdate` PREPENDS — so the door updates before
+            // the player and the freeze its `SealController` raises in the
+            // CONSTRUCTOR lands before `Mobile.mobileUpdate` reads it. The
+            // trigger tick is therefore a LIVE tape tick with a frozen
+            // player, and the 181 frames after it are DEAD.
+            //
+            // ⚠ The two families never share a room (the door is L113's, the
+            // watcher L114's), so the order between these two calls is a
+            // bounded vacuity — stated rather than left to be inferred from
+            // the fact that nothing broke.
+            if (!noclip) {
+                const dr = stepFinalDoorsNow();
+                if (dr.frozen) {
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: a SealController and a pickup ceremony '
+                            + `are both up at tick ${ticksCompleted}. Both are DEAD-frame `
+                            + 'freezes with their own lengths and the model resolves each '
+                            + 'as a LUMP, so running them together would double-count one '
+                            + 'span or hide the other. Refused rather than approximated.');
+                    }
+                    prevHeld = new Set(held);
+                    return runFrozenTick(activators, 'the final door\'s seal ceremony');
                 }
             }
 

@@ -396,7 +396,22 @@ export const R6_WINDOWS = Object.freeze([
      * outward there earns the flag at **tick 2, with zero pages read**.
      */
     Object.freeze({ name: 'W-talk', slice: 6, tape: 'r6-watcher-talk', control: 'r6-watcher-control' }),
-    Object.freeze({ name: 'W-door', slice: 6, tape: null, control: null }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE ENDING'S WALL, and the FIRST R6 PAIR THAT IS NOT
+     * A PREFIX. The arms are byte-identical in inputs, length and save
+     * block; they differ in ONE BOOT FIELD — whether `{114,0}` is declared,
+     * which is the thing `W-talk` earns.
+     *
+     * ⛔ The control is not "nothing happens". `SealController` is
+     * UNCONDITIONAL: the approach crosses the 32 px circle on the same tick,
+     * the ceremony fires, and its 181 DEAD frames are the same on both arms
+     * (it even carries a different string — "Face the Watcher and return"
+     * against "Your path to redemption lies here"). What is never reachable
+     * is the door's second arm. ⇒ the pair's discriminator is `{113,0}` in
+     * the game's own `persistence_cleared`, and 14 px of walk into a cell
+     * that stopped being a wall.
+     */
+    Object.freeze({ name: 'W-door', slice: 6, tape: 'r6-final-door', control: 'r6-final-door-control' }),
     Object.freeze({ name: 'W-seed', slice: 6, tape: null, control: null }),
     // ⚖ RULED IN by the user at slice 0 (kickoff §6.2). The bloody branch is
     // the cheapest SECOND witness of the seed/reboot machinery: both arms

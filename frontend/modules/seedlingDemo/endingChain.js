@@ -225,6 +225,22 @@ export function stepNpcDialogue(d, released, inRange) {
  * the half-tile here puts the door and its radius eight pixels north-west
  * of where they are.
  */
+/**
+ * ⛓⛓ THE ONE CROSS-LEVEL PERSISTENCE READ IN THE GAME.
+ *
+ * `FinalDoor.as:50` is `!Game.checkPersistence(0, 114)` and its own comment
+ * says why: *"0 is the tag for the Watcher's text, while 114 is the room
+ * that it refers to."* So the flag that decides whether the ending opens is
+ * read from L113 and written in L114, under a tag indistinguishable from
+ * every other NPC dialogue flag. Named here rather than inlined, because a
+ * bare `(0, 114)` at a call site reads as a typo for `(114, 0)`.
+ *
+ * ⚠ `levelWorld.UNTOUCHABLE_CLEARS` carries the same pair for the OPPOSITE
+ * purpose — it is what a DERIVED clear list may never offer. A tape may
+ * still declare it, and W-door's boot does.
+ */
+export const WATCHER_FLAG = Object.freeze({ level: 114, tag: 0 });
+
 export const FINAL_DOOR = Object.freeze({
     ctor: Object.freeze({ dx: 16, dy: 16, src: 'FinalDoor.as:23 `super(_x + Tile.w, _y + Tile.h)`' }),
     box: Object.freeze({ w: 32, h: 32, originX: 16, originY: 16 }),
@@ -282,7 +298,17 @@ export function stepFinalDoor(state, { inRadius, sealControllerUp, hasAllSealPar
         return { event: 'ceremony', state: { ...state, seenSeal: true } };
     }
     if (!sealControllerUp && hasAllSealParts && talkedToWatcher) {
-        return { event: 'open', state: { ...state, opening: true, openUpdates: 0 } };
+        // ⛔ ONE, NOT ZERO — the play frame IS the animation's first update.
+        // `World.update` is `while (e) { if (e.active) e.update(); if
+        // (e._graphic) e._graphic.update(); e = e._updateNext; }`, so the
+        // very pass that runs `sprFinalDoor.play("open")` inside `update()`
+        // advances the Spritemap immediately afterwards. Starting the count
+        // at 0 puts `animEnd` — and with it the `{113,0}` CLEAR and the
+        // moment the wall stops colliding — one tick late.
+        // ⛓ R6 slice 6c corrected this from 0 when the door was first
+        // driven; the same fencepost R6 slice 4 found in `updateLists()`,
+        // one pass earlier in the frame.
+        return { event: 'open', state: { ...state, opening: true, openUpdates: 1 } };
     }
     return { event: null, state };
 }
