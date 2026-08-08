@@ -475,6 +475,24 @@ export function createTapeStepper(tape, opts = {}) {
             shieldBossStabs: run ? run.shieldBossStabs : [],
             shieldBossHits: run ? run.shieldBossHits : [],
             shieldBossKills: run ? run.shieldBossKills : [],
+            /**
+             * ⛓⛓⛓ R6 SLICE 6c — THE WATCHER'S, and the first row of the
+             * rung's ledger that is not a kill at all.
+             *
+             * ⛔ `cause` TRAVELS WITH IT because the flag alone cannot tell
+             * the two writers apart: `doneTalking()` runs when the pages are
+             * exhausted AND when the radius test tears the dialogue down, and
+             * the second costs two ticks and reads nothing. A differential
+             * that saw only `{114,0}` off would call both of them the window.
+             */
+            watcherTalks: run ? run.watcherTalks : [],
+            /**
+             * ⛔⛔ Every tick the Watcher's live `Seed` existed. The positive
+             * half of a refusal the shipped tapes cannot reach — "the stance
+             * never touched it" and "there was nothing to touch" print the
+             * same without it. (trap 101)
+             */
+            watcherSeedLive: run ? run.watcherSeedLive : [],
             /** Every tick a shot's own cull was a §11.6 BAND question. */
             bossShotCullBand: run ? run.bossShotCullBand : [],
             /**

@@ -1169,6 +1169,48 @@ function checkReadout(name, tape, status, stream) {
                 : `${wronglyCleared.join(', ')} CLEARED by a run that never killed him`);
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 6c: THE WATCHER'S ROW — NOT A KILL ──────────────
+    //
+    // `Watcher.doneTalking()` is `if (Game.checkPersistence(tag))
+    // Game.setPersistence(tag, false)`, so `{114,0}` lands in
+    // `persistence_cleared` with the same polarity as every other row on
+    // this ledger and a completely different cause: a dialogue read to its
+    // last page.
+    //
+    // ⛔⛔ TWO-SIDED, and this pair needs it more than the fights do.
+    // `r6-watcher-control` is ONE X release short of twenty pages and its
+    // whole claim is that `{114,0}` stayed SET — a claim about the game's
+    // array, not the model's. And the negative arm is checked from the
+    // presence of a WATCHER IN THE ROOM (`watcherSeedLive`, or a live
+    // dialogue) rather than from "the model wrote nothing", because "the
+    // model wrote nothing" is exactly what a broken model says.
+    const talks = expected.watcherTalks ?? [];
+    const sawWatcher = talks.length > 0 || (expected.watcherSeedLive ?? []).length > 0;
+    if (talks.length > 0) {
+        const missing = talks
+            .filter((k) => !clearedInGame.has(`${k.flag.level}:${k.flag.tag}`))
+            .map((k) => `${k.id} (${k.flag.level}:${k.flag.tag})`);
+        check(`${name}: every Watcher the run talked out wrote its persistence flag`,
+            missing.length === 0,
+            missing.length === 0
+                ? talks.map((k) => `${k.id} -> ${k.flag.level}:${k.flag.tag} off at tick `
+                    + `${k.t} (cause ${k.cause}, page ${k.page} of ${k.pages})`).join(', ')
+                : `${missing.join(', ')} still SET — the pages are exhausted in the `
+                + 'model and nothing wrote in the game. `doneTalking()` runs from the '
+                + '`talking` '
+                + 'SETTER, so a page count one short leaves the flag alone.');
+    } else if (sawWatcher) {
+        const wronglyCleared = [...clearedInGame].filter((k) => k === '114:0');
+        check(`${name}: the Watcher the run did NOT talk out kept its flag`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? '{114,0} still set, with the dialogue driven and unfinished'
+                : `${wronglyCleared.join(', ')} CLEARED by a run that never exhausted `
+                + 'the pages — either the model is a page out, or the run left the 24 px '
+                + 'circle, which runs `doneTalking()` through the `talking` setter and '
+                + 'earns the flag for nothing (trap 102)');
+    }
+
     return expected;
 }
 

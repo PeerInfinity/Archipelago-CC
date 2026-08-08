@@ -38,6 +38,14 @@ import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE, TALK_KEY,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
+// ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
+// dialogue and its radius. `endingChain` reaches `r6Acceptance` and through
+// it `fixtures/index.js`, which is node-only; that is sound here because
+// `levelRun` has no browser consumer (the watch page reads `watchViewer`).
+import {
+    TALK_RANGE, beginNpcDialogue, boxHitsWatcherSeed, inTalkRange, stepNpcDialogue,
+    watcherSeedBox, WATCHER,
+} from './endingChain.js';
 import {
     createActivatorState, openActivatorIds, pressedGroups, ropePublish, stepActivators,
 } from './activators.js';
@@ -384,6 +392,10 @@ export function createLevelRun({
         // a run that carried the flag across a rebuild would spend three
         // swings for four hits and never land the last one.
         shieldBossStates.delete(n);
+        // ⛓ R6 slice 6c: and the watcher, whose rebuild re-arms `talked` —
+        // see `watcherStateFor`. Nothing an item grants adds or removes one;
+        // dropped anyway, for the reason the spinner's is.
+        watcherStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -760,6 +772,53 @@ export function createLevelRun({
             out.set(id, { id, removed: b.removed, rect: shieldBossBodyRect(b) });
         }
         return out;
+    };
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE WATCHERS — a PLACED NPC's dialogue state.
+     *
+     * ⚠ PER LEVEL AND PER VISIT, like every other roster here, and for a
+     * reason this class states more sharply than most: `talked` is an
+     * INSTANCE field (`NPCs/NPC.as:22`) and `new Game` rebuilds the entity,
+     * so a dialogue exhausted in one visit is offered again in the next —
+     * except that `Watcher.update` gates `super.update()` (and therefore
+     * `talk()`) on `Game.checkPersistence(tag)`, which the first
+     * `doneTalking()` cleared. Two mechanisms, opposite directions, and the
+     * persistence one wins. The `cleared` flag below is the model's copy of
+     * the gate; `Watcher.check()` is overridden EMPTY, so unlike every other
+     * tagged class the body does NOT despawn on the cleared tag — which is
+     * what leaves it standing for W-blood's four sword hits.
+     */
+    const watcherStates = new Map();
+    const watcherStateFor = (n) => {
+        if (!watcherStates.has(n)) {
+            const byId = new Map();
+            for (const w of worldFor(n).watchers ?? []) {
+                byId.set(w.id, {
+                    id: w.id,
+                    level: n,
+                    oel: { x: w.x, y: w.y },
+                    ex: w.ex,
+                    ey: w.ey,
+                    persistTag: w.persistTag ?? -1,
+                    // `Watcher.as:39` — `Game.checkPersistence(_tag) ? _text : _text1`,
+                    // read at CONSTRUCTION. A fresh boot's persistence is all
+                    // `true` (`Main.as:319-330`), so a booted window always gets
+                    // the long text; the short one is what a SECOND visit shows.
+                    text: w.text,
+                    text1: w.text1,
+                    talkingSpeed: w.talkingSpeed,
+                    // `NPC.talked` — "the player has already talked to him since
+                    // he came in range". Only the out-of-range arm resets it.
+                    talked: false,
+                    talking: false,
+                    dialogue: null,
+                    // The model's copy of `Watcher.update`'s own gate.
+                    cleared: (clearedByLevel.get(n) ?? []).includes(w.persistTag ?? -1),
+                });
+            }
+            watcherStates.set(n, byId);
+        }
+        return watcherStates.get(n);
     };
     const turretStates = new Map();
     const turretStateFor = (n) => {
@@ -1149,6 +1208,33 @@ export function createLevelRun({
     const shieldBossKills = [];
     /** The `{19,0}` write `startDeath` makes — keyed like `bossFlags`. */
     const shieldBossFlags = new Map();
+    // ── ⛓⛓⛓ R6 SLICE 6c: the Watcher's three ledgers ───────────────────
+    /**
+     * `{t, level, id, cause, pages, page, flag}` — one per `doneTalking()`.
+     *
+     * ⛔ `cause` IS `'done'` OR `'left'` AND BOTH WRITE THE FLAG. `NPC.talk`'s
+     * out-of-range arm is `talked = false; if (talking) talking = false;` and
+     * the `talking` SETTER's false branch ends with `doneTalking()` — so
+     * walking away mid-dialogue earns `{114,0}` exactly as exhausting the
+     * pages does. The cause is recorded BECAUSE the two are indistinguishable
+     * from the flag alone. → [[feedback_leaving_the_radius_still_pays]]
+     */
+    const watcherTalks = [];
+    /** The `{114,0}` write `doneTalking()` makes — keyed like `bossFlags`. */
+    const watcherFlags = new Map();
+    /**
+     * ⛔⛔⛔ THE POSITIVE WITNESS FOR A REFUSAL THAT MUST NEVER FIRE.
+     *
+     * `Watcher.update:68-74` holds a live `Seed` out while `myCurrentText` is
+     * in `[9,19]`, and taking it is not a lost pickup — it is a SOFT-LOCK
+     * (`endingChain.watcherSeedBox`'s docblock has the chain). The stance
+     * assertion below refuses a tape that touches it, and a refusal no tape
+     * can reach is a check with no witness (trap 101) — so every tick the
+     * seed is LIVE is recorded here with the stance's clearance, and a plan
+     * asserts the positive: the box really was there, for this many ticks,
+     * and the stance cleared it by this much.
+     */
+    const watcherSeedLive = [];
     let bossShotSeq = 0;
     const bossShotStates = new Map();
     const bossShotsFor = (n) => {
@@ -1636,6 +1722,10 @@ export function createLevelRun({
         turretStates.delete(n);
         bossStates.delete(n);
         shieldBossStates.delete(n);
+        // ⛓ R6 slice 6c. `new Game` rebuilds the NPC with `talked` false, and
+        // the CLEARED tag is what keeps `talk()` from running again — the
+        // flag, not the roster, is the memory. See `watcherStateFor`.
+        watcherStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -4800,6 +4890,244 @@ export function createLevelRun({
         return null;
     }
 
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: ONE FROZEN TICK, EXTRACTED — one implementation, two
+     * callers.
+     *
+     * This was the pickup ceremony's `else` arm verbatim, and it stayed there
+     * for three rungs because it had exactly one caller. A PLACED NPC's
+     * dialogue raises the same flag by a different route
+     * (`NPCs/NPC.as:194` — `if (talking) Game.freezeObjects = true`, every
+     * frame, inside `talk()`), and every line below is about the FLAG rather
+     * than about a pickup: the bridge windows, the burnt fire window, the
+     * refused thrust, the activators that keep running, the camera that keeps
+     * lerping, the i-frame that keeps draining. Copying it would have made
+     * two models of one freeze — [[feedback_two_cost_models_must_agree]].
+     *
+     * ⚠ `what` NAMES THE FREEZE'S SOURCE IN EVERY REFUSAL, because "press
+     * outside the ceremony" is unhelpful advice when the freeze is a
+     * dialogue the player walked into.
+     *
+     * @param {object} activators the level's activator state, as of tick top
+     * @param {string} what       what raised the freeze, for the messages
+     */
+    const runFrozenTick = (activators, what) => {
+        // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS MODEL IS
+        // CONCERNED, and a bridge does not know that. `Tile.render` keeps
+        // running, so the game would open one EARLIER than the tick count
+        // says. Named here rather than discovered as a crossing that
+        // happened too soon.
+        assertBridgeWindows({ frozen: true });
+        // `genericHit` returns immediately under `Game.freezeObjects`, so a
+        // thrust scheduled by the press before a freeze would silently do
+        // NOTHING.
+        // ⚠ AND A FROZEN FRAME BURNS A FIRE WINDOW rather than stretching it:
+        // `sprites()` is called unconditionally, so the animation advances
+        // while `genericHit` returns at its first line. The hits are LOST,
+        // silently. (`fireVerb.FIRE_DEAD_FRAME_RULE`.)
+        if (fireWindows.some((w) => w.hitTicks.has(ticksCompleted))) {
+            throw new Error('levelRun: a fire window\'s hit tick '
+                + `${ticksCompleted} falls on a FROZEN tick (${what}). \`sprites()\` `
+                + 'still advances `sprFire` and `genericHit` returns '
+                + 'immediately under `Game.freezeObjects`, so the window '
+                + 'BURNS — the press lands nothing. Press outside the freeze.');
+        }
+        if (pendingThrust) {
+            throw new Error(`levelRun: a ${pendingThrust.weapon} press at tick `
+                + `${pendingThrust.pressTick} would fire its rect on a FROZEN `
+                + `tick (${what}), and \`genericHit\` returns immediately under `
+                + '`Game.freezeObjects` — so the press would do nothing at '
+                + 'all. Press outside the freeze.');
+        }
+        ticksCompleted++;
+        // The game keeps updating every non-Mobile entity through a freeze,
+        // so a Button under the frozen player stays pressed and a Lock's fade
+        // keeps running. Unobservable on R3's route — no ceremony is near a
+        // presser — but transcribed rather than assumed, because "no route
+        // does that yet" is how the statue got its offset wrong for two
+        // slices.
+        if (!noclip) {
+            applyLockEvents(stepActivators(activators, world,
+                playerBoxAt(state.x, state.y),
+                { inventory, keys, movingSolids: movingSolidsNow() }));
+        }
+        // ⛓ R5 SLICE 22: AND `view()` STILL RUNS. `Game.update` gates only
+        // `super.update()` — on `blackCover`, not on `freezeObjects` — so the
+        // camera keeps lerping toward a stationary player through every
+        // frozen frame, which is what can bring an enemy on screen during a
+        // ceremony. The same argument as `freezeStep` above, one frame higher
+        // up.
+        stepCameraNow(state, world.world);
+        // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the SAME reason one
+        // line lower — it sits outside `super.update()` in `Player.update`,
+        // and `Game.freezeObjects` gates only what is inside `mobileUpdate`.
+        // So an i-frame window DRAINS through a ceremony while the hit that
+        // would open one is swallowed by it. Opposite directions, one flag.
+        {
+            const d = stepPlayerDamage(damage);
+            damage = d.state;
+            // The facing hand-back writes `Player.direction`, which lives in
+            // `state` on this side.
+            if (d.recovered && d.direction !== null) {
+                state = { ...state, direction: d.direction };
+            }
+        }
+        // No step: the position is unchanged and — critically — so is the
+        // VELOCITY, which is why the player drifts on for a few ticks once
+        // the freeze lifts.
+        return {
+            transition: null, grant: null, hitX: null, hitY: null, frozen: true,
+        };
+    };
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE WATCHER'S OWN `talk()`, TRANSCRIBED IN PLACE.
+     *
+     * `NPCs/NPC.as:184-236` and `Watcher.as:62-137`, in the game's order —
+     * which is the part a paraphrase gets wrong:
+     *
+     * ```as3
+     *   Watcher.update: if (Game.checkPersistence(tag)) super.update();   // ← talk()
+     *   NPC.talk:
+     *     inRange = FP.distance(x, y, p.x, p.y) <= talkRange;   // a CIRCLE, 24
+     *     hitKey  = Input.released(p.keys[6]);
+     *     if (talking) { Game.freezeObjects = true;  …advance…  if (exhausted) {
+     *                       talking = false;  return; } }        // ← RETURNS
+     *     if (inRange) { if ((hitKey || !keyNeeded) && !Game.talking) startTalking(); }
+     *     else         { talked = false; if (talking) talking = false; }
+     * ```
+     *
+     * Four things that order decides, all of them load-bearing:
+     *
+     *   1. ⛔ **THE FREEZE IS RAISED INSIDE THE `talking` BLOCK, NOT BY THE
+     *      SETTER.** So the START frame is a LIVE tick — the player moves on
+     *      it — and every frame after it is frozen until the pages run out.
+     *   2. ⛔ **THE STARTING RELEASE DOES NOT ALSO ADVANCE A PAGE**, because
+     *      `if (talking)` is tested above `startTalking()`. Letting one
+     *      release do both finishes the dialogue a page early, and for the
+     *      Watcher that moves the live-seed window from index 9 to 8.
+     *   3. ⛔ **THE FINISHING FRAME `return`s**, so the `inRange` arm never
+     *      runs on it — and `talked` is already true, so nothing restarts.
+     *   4. ⛔⛔ **THE OUT-OF-RANGE ARM CALLS `doneTalking()` THROUGH THE
+     *      SETTER**, which for the Watcher is the `{114,0}` write. Walking
+     *      away mid-dialogue EARNS THE TAG. A control built on "walk out of
+     *      range" clears the flag it exists to withhold.
+     *      → [[feedback_leaving_the_radius_still_pays]]
+     *
+     * ⚠ AND `keyNeeded` IS FALSE FOR EVERY WATCHER IN THE EXTRACT.
+     * `Watcher.as:46` is `keyNeeded = !Game.checkPersistence(tag)` and a
+     * fresh boot's persistence array is all `true`, so the dialogue opens on
+     * PROXIMITY with no key at all. That is why this runs before the
+     * ceremony block and why a window can boot into the circle.
+     *
+     * @returns {{frozen: boolean}} `frozen` means the player must not move
+     */
+    const stepWatchersNow = (released) => {
+        const st = watcherStateFor(level);
+        if (st.size === 0) return { frozen: false };
+        const box = playerBoxAt(state.x, state.y);
+        let frozen = false;
+        for (const w of st.values()) {
+            // `Watcher.update` gates `super.update()` — and therefore
+            // `talk()` — on the tag. Once `doneTalking()` has cleared it the
+            // NPC is inert for the rest of the page, and the body stays
+            // (`Watcher.check()` is overridden EMPTY).
+            if (w.cleared || w.persistTag < 0) continue;
+            // `NPC.talk`'s own guard: `p && myText[0].length > 0`.
+            if (!w.text) continue;
+            const player = { x: state.x, y: state.y };
+            const npc = { x: w.ex, y: w.ey };
+            const inRange = inTalkRange(npc, player);
+
+            let finished = null;
+            if (w.talking) {
+                // `Game.freezeObjects = true`, every frame, ABOVE the key test.
+                frozen = true;
+                const r = stepNpcDialogue(w.dialogue, released, inRange);
+                if (w.dialogue.done) {
+                    finished = r.left ? 'left' : 'done';
+                }
+            } else if (inRange && !w.talked) {
+                // `startTalking()` — and NOT an advance this frame (2 above).
+                // ⛓ The RENDER still types, so the frame costs one character
+                // of `Game.talk()`: `stepDialogue(d, false)`.
+                w.dialogue = beginNpcDialogue(w.text, {
+                    talkingSpeed: w.talkingSpeed,
+                    framesThisCharacter,
+                });
+                w.talking = true;
+                w.talked = true;
+                stepDialogue(w.dialogue, false);
+                // ⛔ NOT frozen on this frame — the freeze is raised by the
+                // NEXT frame's `talk()`, and `Game.update`'s
+                // `else if (inventory) inventory.open = false` has already
+                // lowered whatever this frame left up.
+            }
+
+            if (finished !== null) {
+                w.talking = false;
+                frozen = false;
+                framesThisCharacter = w.dialogue.framesThisCharacter;
+                // `Watcher.doneTalking()` — `if (Game.checkPersistence(tag))
+                // Game.setPersistence(tag, false)`. A CLEAR, the polarity the
+                // whole R6 ledger runs on.
+                w.cleared = true;
+                const flag = { level: w.level, tag: w.persistTag, value: false };
+                watcherFlags.set(ledgerKey(flag), { ...flag, id: w.id, level: w.level });
+                if (!pendingEarnedClears.has(w.level)) {
+                    pendingEarnedClears.set(w.level, new Set());
+                }
+                pendingEarnedClears.get(w.level).add(w.persistTag);
+                watcherTalks.push({
+                    t: ticksCompleted + 1,
+                    level: w.level,
+                    id: w.id,
+                    cause: finished,
+                    pages: w.dialogue.pages.length,
+                    page: w.dialogue.page,
+                    frames: w.dialogue.frames,
+                    flag,
+                });
+            }
+
+            // ── the stance, EVERY TICK the seed can be out ──────────────
+            //
+            // `Watcher.update:68-74` — the live `Seed` exists while
+            // `text != "" && talking && checkPersistence(tag) &&
+            // myCurrentText in [seedIndexMin, seedIndexMax]`.
+            const page = w.dialogue?.page ?? 0;
+            const seedLive = w.talking && !w.cleared
+                && page >= WATCHER.seedIndexMin && page <= WATCHER.seedIndexMax;
+            if (seedLive) {
+                if (boxHitsWatcherSeed(box, w.oel)) {
+                    throw new Error('levelRun: the stance overlaps the Watcher\'s LIVE '
+                        + `SEED at tick ${ticksCompleted} (page ${page} of `
+                        + `${w.dialogue.pages.length}, box `
+                        + `${JSON.stringify(watcherSeedBox(w.oel))}). That Seed is `
+                        + '`bloody = false, tree = false`, so collecting it takes '
+                        + '`Seed.update`\'s plain arm — `Game.cutscene[2] = true` and a '
+                        + 'reboot into a level with no `seed` object to grow — and '
+                        + '`Game.as:956` then spawns the player `receiveInput = false; '
+                        + 'visible = false; active = false` for EVERY later world. It '
+                        + 'is a SOFT-LOCK, not a lost pickup, and it looks exactly like '
+                        + 'a dead bot. Move the stance.');
+                }
+                const s = watcherSeedBox(w.oel);
+                watcherSeedLive.push({
+                    t: ticksCompleted,
+                    level: w.level,
+                    id: w.id,
+                    page,
+                    // The stance's clearance from the box, per axis: how far
+                    // the player's box would have to move to touch it.
+                    clearanceX: Math.max(s.x - box.right, box.x - s.right),
+                    clearanceY: Math.max(s.y - box.bottom, box.y - s.bottom),
+                });
+            }
+        }
+        return { frozen };
+    };
+
     return {
         get level() { return level; },
         get world() { return world; },
@@ -5113,6 +5441,19 @@ export function createLevelRun({
             // the totem's nothing — which is why the two are separate loops
             // rather than one "boss died" arm.
             for (const [key, r] of shieldBossFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                if (out.some((o) => o.level === n && o.tag === tag)) continue;
+                out.push({ level: n, tag, by: r.id });
+            }
+            // ⛓⛓⛓ R6 SLICE 6c: THE WATCHER — the same polarity again, and a
+            // site that is not a death at all. `Watcher.doneTalking()` writes
+            // `setPersistence(tag, false)` when the dialogue is exhausted OR
+            // when the player leaves the 24 px circle, so this is the first
+            // entry in the ledger that a route can earn by walking AWAY.
+            // Its own loop for that reason: "which openers did this walk use"
+            // has to distinguish a dialogue from a kill.
+            for (const [key, r] of watcherFlags) {
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
@@ -5611,6 +5952,46 @@ export function createLevelRun({
                 bandRect: shieldBossBandRect(b),
             }));
         },
+        // ── ⛓⛓⛓ R6 SLICE 6c: the Watcher's three readouts ─────────────
+        /**
+         * `{t, level, id, cause, pages, page, frames, flag}` per
+         * `doneTalking()`. ⛔ `cause` is `'done'` or `'left'` and BOTH write
+         * the flag — the pair's whole design turns on that (§16.6).
+         */
+        get watcherTalks() {
+            return watcherTalks.map((r) => ({ ...r, flag: { ...r.flag } }));
+        },
+        /** The `{114,0}` write, keyed like `bossFlags`. */
+        get watcherFlags() { return [...watcherFlags.values()].map((f) => ({ ...f })); },
+        /**
+         * ⛔⛔ Every tick the Watcher's live `Seed` EXISTS, with the stance's
+         * clearance from it. The POSITIVE half of a refusal no shipped tape
+         * can reach: "the box was never touched" and "the box was never
+         * there" print the same without this. (trap 101)
+         */
+        get watcherSeedLive() { return watcherSeedLive.map((r) => ({ ...r })); },
+        /** The live dialogue state, for a plan that has to place a release. */
+        get watchers() {
+            const st = watcherStateFor(level);
+            return [...st.values()].map((w) => ({
+                id: w.id,
+                x: w.ex,
+                y: w.ey,
+                persistTag: w.persistTag,
+                talking: w.talking,
+                talked: w.talked,
+                cleared: w.cleared,
+                page: w.dialogue?.page ?? null,
+                pages: w.dialogue?.pages.length ?? null,
+                currentCharacter: w.dialogue?.currentCharacter ?? null,
+                pageLength: w.dialogue ? w.dialogue.pages[w.dialogue.page]?.length ?? null : null,
+                done: w.dialogue?.done ?? null,
+                seedBox: watcherSeedBox(w.oel),
+                distance: Math.sqrt((w.ex - state.x) ** 2 + (w.ey - state.y) ** 2),
+                inRange: inTalkRange({ x: w.ex, y: w.ey }, state),
+                talkRange: TALK_RANGE,
+            }));
+        },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -5843,6 +6224,40 @@ export function createLevelRun({
             // DRAINS through a ceremony; what stops is the moving.
             if (frozenTimer > 0) frozenTimer -= 1;
 
+            // ── ⛓⛓⛓ R6 SLICE 6c: THE WATCHER, ABOVE THE CEREMONY ─────
+            //
+            // `Game.loadlevel` adds the pickups at `:2100` and the watchers
+            // at `:2237`, and `World.addUpdate` PREPENDS — so the update list
+            // is watcher -> … -> pickup -> … -> Player and the NPC's `talk()`
+            // runs first. Both are above the player, which is what makes the
+            // freeze either one raises visible to `Mobile.mobileUpdate` on
+            // the same frame.
+            //
+            // ⛔ AND THE TWO FREEZES ARE NOT INTERCHANGEABLE. A ceremony's
+            // phase A is DEAD frames (`Game.talking` is false, so nothing
+            // lowers `freezeObjects` and the bot's gate sees it); a dialogue
+            // frame is a TAPE TICK (`Game.update`'s
+            // `else if (inventory) inventory.open = false` lowers it every
+            // frame while `Game.talking`). A window that ran both at once
+            // would have to interleave two clocks — so it is REFUSED rather
+            // than approximated, and the refusal names both.
+            if (!noclip) {
+                const watcherRelease = releasedThisTick(held, TALK_KEY);
+                const wr = stepWatchersNow(watcherRelease);
+                if (wr.frozen) {
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: a Watcher\'s dialogue and a pickup '
+                            + `ceremony are both up at tick ${ticksCompleted}. One X `
+                            + 'release would be read by BOTH `NPC.talk()` calls, and the '
+                            + 'two freezes cost the tape different things — a dialogue '
+                            + 'frame is a TICK, a ceremony\'s phase A is a DEAD frame. '
+                            + 'Refused rather than approximated.');
+                    }
+                    prevHeld = new Set(held);
+                    return runFrozenTick(activators, 'a Watcher\'s dialogue');
+                }
+            }
+
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
             // is a contact the game found on this frame too. Starting one
@@ -5991,79 +6406,9 @@ export function createLevelRun({
                     // one tick long and was the only divergence in the
                     // whole ceremony.
                 } else {
-                    // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS
-                    // MODEL IS CONCERNED, and a bridge does not know that.
-                    // `Tile.render` keeps running, so the game would open one
-                    // EARLIER than the tick count says. Named here rather
-                    // than discovered as a crossing that happened too soon.
-                    assertBridgeWindows({ frozen: true });
-                    // `genericHit` returns immediately under
-                    // `Game.freezeObjects`, so a thrust scheduled by the
-                    // press before a ceremony would silently do NOTHING.
-                    // ⚠ AND A FROZEN FRAME BURNS A FIRE WINDOW rather than
-                    // stretching it: `sprites()` is called unconditionally,
-                    // so the animation advances while `genericHit` returns
-                    // at its first line. The hits are LOST, silently.
-                    // (`fireVerb.FIRE_DEAD_FRAME_RULE`.)
-                    if (fireWindows.some((w) => w.hitTicks.has(ticksCompleted))) {
-                        throw new Error('levelRun: a fire window\'s hit tick '
-                            + `${ticksCompleted} falls on a FROZEN tick. \`sprites()\` `
-                            + 'still advances `sprFire` and `genericHit` returns '
-                            + 'immediately under `Game.freezeObjects`, so the window '
-                            + 'BURNS — the press lands nothing. Press outside the '
-                            + 'ceremony.');
-                    }
-                    if (pendingThrust) {
-                        throw new Error(`levelRun: a ${pendingThrust.weapon} press at tick `
-                            + `${pendingThrust.pressTick} would fire its rect on a FROZEN `
-                            + 'tick, and `genericHit` returns immediately under '
-                            + '`Game.freezeObjects` — so the press would do nothing at '
-                            + 'all. Press outside the ceremony.');
-                    }
-                    ticksCompleted++;
-                    // The game keeps updating every non-Mobile entity
-                    // through a freeze, so a Button under the frozen player
-                    // stays pressed and a Lock's fade keeps running.
-                    // Unobservable on R3's route — no ceremony is near a
-                    // presser — but transcribed rather than assumed,
-                    // because "no route does that yet" is how the statue got
-                    // its offset wrong for two slices.
-                    if (!noclip) {
-                        applyLockEvents(stepActivators(activators, world,
-                            playerBoxAt(state.x, state.y),
-                            { inventory, keys, movingSolids: movingSolidsNow() }));
-                    }
-                    // ⛓ R5 SLICE 22: AND `view()` STILL RUNS. `Game.update`
-                    // gates only `super.update()` — on `blackCover`, not on
-                    // `freezeObjects` — so the camera keeps lerping toward
-                    // a stationary player through every frozen frame, which
-                    // is what can bring an enemy on screen during a
-                    // ceremony. The same argument as `freezeStep` above,
-                    // one frame higher up.
-                    stepCameraNow(state, world.world);
-                    // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the
-                    // SAME reason one line lower — it sits outside
-                    // `super.update()` in `Player.update`, and
-                    // `Game.freezeObjects` gates only what is inside
-                    // `mobileUpdate`. So an i-frame window DRAINS through a
-                    // ceremony while the hit that would open one is
-                    // swallowed by it. Opposite directions, one flag.
-                    {
-                        const d = stepPlayerDamage(damage);
-                        damage = d.state;
-                        // The facing hand-back writes `Player.direction`,
-                        // which lives in `state` on this side.
-                        if (d.recovered && d.direction !== null) {
-                            state = { ...state, direction: d.direction };
-                        }
-                    }
-                    // No step: the position is unchanged and — critically —
-                    // so is the VELOCITY, which is why the player drifts on
-                    // for a few ticks once the freeze lifts.
-                    return {
-                        transition: null, grant: null, hitX: null, hitY: null,
-                        frozen: true,
-                    };
+                    // ⛓ R6 slice 6c: one implementation, two callers — see
+                    // `runFrozenTick`, which is this arm, extracted verbatim.
+                    return runFrozenTick(activators, 'a pickup ceremony');
                 }
             } else {
                 prevHeld = new Set(held);

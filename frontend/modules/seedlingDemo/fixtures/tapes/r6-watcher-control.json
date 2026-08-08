@@ -1,0 +1,234 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-watcher-control",
+  "description": "R6 slice 6c: the one-release-fewer control — the same tape with the FORTIETH and last X release deleted. ⛔ IT IS NOT A WALK-AWAY, and that is the finding it is built on: `NPC.talk`'s out-of-range arm sets `talking = false`, whose setter ends with `doneTalking()`, so leaving the 24 px circle mid-dialogue EARNS `{114,0}` exactly as finishing it does — a walk-away control would clear the flag it exists to withhold. So the tape ENDS INSIDE THE CIRCLE instead, with the dialogue on its twentieth and last page, `talking` still true, `Game.freezeObjects` still up and the player still standing at the boot position. The movement span is byte-identical (one `up` from tick 0; only the `to` differs, because the control is a PREFIX), so the divergence is entirely the missing release: `{114,0}` is never written, `persistence_cleared` stays empty, and the 46 px walk the drive's freed player takes never happens.",
+  "boot": {
+    "level": 114,
+    "x": 72,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 236,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 236
+    },
+    {
+      "key": "primary",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "key": "primary",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "primary",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "primary",
+      "from": 16,
+      "to": 17
+    },
+    {
+      "key": "primary",
+      "from": 21,
+      "to": 22
+    },
+    {
+      "key": "primary",
+      "from": 26,
+      "to": 27
+    },
+    {
+      "key": "primary",
+      "from": 31,
+      "to": 32
+    },
+    {
+      "key": "primary",
+      "from": 36,
+      "to": 37
+    },
+    {
+      "key": "primary",
+      "from": 41,
+      "to": 42
+    },
+    {
+      "key": "primary",
+      "from": 46,
+      "to": 47
+    },
+    {
+      "key": "primary",
+      "from": 51,
+      "to": 52
+    },
+    {
+      "key": "primary",
+      "from": 56,
+      "to": 57
+    },
+    {
+      "key": "primary",
+      "from": 61,
+      "to": 62
+    },
+    {
+      "key": "primary",
+      "from": 66,
+      "to": 67
+    },
+    {
+      "key": "primary",
+      "from": 71,
+      "to": 72
+    },
+    {
+      "key": "primary",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "primary",
+      "from": 81,
+      "to": 82
+    },
+    {
+      "key": "primary",
+      "from": 86,
+      "to": 87
+    },
+    {
+      "key": "primary",
+      "from": 91,
+      "to": 92
+    },
+    {
+      "key": "primary",
+      "from": 96,
+      "to": 97
+    },
+    {
+      "key": "primary",
+      "from": 101,
+      "to": 102
+    },
+    {
+      "key": "primary",
+      "from": 106,
+      "to": 107
+    },
+    {
+      "key": "primary",
+      "from": 111,
+      "to": 112
+    },
+    {
+      "key": "primary",
+      "from": 116,
+      "to": 117
+    },
+    {
+      "key": "primary",
+      "from": 121,
+      "to": 122
+    },
+    {
+      "key": "primary",
+      "from": 126,
+      "to": 127
+    },
+    {
+      "key": "primary",
+      "from": 131,
+      "to": 132
+    },
+    {
+      "key": "primary",
+      "from": 136,
+      "to": 137
+    },
+    {
+      "key": "primary",
+      "from": 141,
+      "to": 142
+    },
+    {
+      "key": "primary",
+      "from": 146,
+      "to": 147
+    },
+    {
+      "key": "primary",
+      "from": 151,
+      "to": 152
+    },
+    {
+      "key": "primary",
+      "from": 156,
+      "to": 157
+    },
+    {
+      "key": "primary",
+      "from": 161,
+      "to": 162
+    },
+    {
+      "key": "primary",
+      "from": 166,
+      "to": 167
+    },
+    {
+      "key": "primary",
+      "from": 171,
+      "to": 172
+    },
+    {
+      "key": "primary",
+      "from": 176,
+      "to": 177
+    },
+    {
+      "key": "primary",
+      "from": 181,
+      "to": 182
+    },
+    {
+      "key": "primary",
+      "from": 186,
+      "to": 187
+    },
+    {
+      "key": "primary",
+      "from": 191,
+      "to": 192
+    }
+  ]
+}
+

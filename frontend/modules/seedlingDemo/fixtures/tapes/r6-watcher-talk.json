@@ -1,0 +1,239 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-watcher-talk",
+  "description": "R6 slice 6c: W-TALK. Boots into L114 at (80,96), sixteen pixels dead south of `watcher@72,72` and INSIDE its 24 px talk circle, and holds `up` for the whole tape. The dialogue opens on the room's first update with no key pressed — `Watcher.as:46` sets `keyNeeded = !Game.checkPersistence(tag)` and a fresh boot's persistence array is all true, so a placed Watcher AUTO-TALKS on proximity. `NPC.talk()` then raises `Game.freezeObjects` above its own key test on every later frame, so the held key is inert for the whole dialogue and the player moves on exactly two frames: the one that opens it and the one that ends it. 40 `primary` releases at a cadence of 5 turn twenty pages (two per page — one skips the typing to `length - 1`, the next finds `currentCharacter >= length`), and the twentieth page exhausts `myText`, which runs `talking = false` -> the setter -> `Watcher.doneTalking()` -> the `{114,0}` CLEAR. The freeze lifts on that frame and the held key walks the player 46 px north into the wall at y 50.05 — which also takes them out of the talk radius ~40 ticks after the write, where `Watcher.update`'s own `checkPersistence` gate now makes `talk()` unreachable. Throughout, the stance clears the WATCHER'S LIVE SEED ([65,75) x [73,87), held out for pages 9..19) by 7 px on y and misses it entirely on x: collecting that seed is not a lost pickup but a soft-lock — `Game.cutscene[2] = true` and a reboot into a level with no `seed` to grow, after which `Game.as:956` spawns every later player input-dead.",
+  "boot": {
+    "level": 114,
+    "x": 72,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 258,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 258
+    },
+    {
+      "key": "primary",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "key": "primary",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "primary",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "primary",
+      "from": 16,
+      "to": 17
+    },
+    {
+      "key": "primary",
+      "from": 21,
+      "to": 22
+    },
+    {
+      "key": "primary",
+      "from": 26,
+      "to": 27
+    },
+    {
+      "key": "primary",
+      "from": 31,
+      "to": 32
+    },
+    {
+      "key": "primary",
+      "from": 36,
+      "to": 37
+    },
+    {
+      "key": "primary",
+      "from": 41,
+      "to": 42
+    },
+    {
+      "key": "primary",
+      "from": 46,
+      "to": 47
+    },
+    {
+      "key": "primary",
+      "from": 51,
+      "to": 52
+    },
+    {
+      "key": "primary",
+      "from": 56,
+      "to": 57
+    },
+    {
+      "key": "primary",
+      "from": 61,
+      "to": 62
+    },
+    {
+      "key": "primary",
+      "from": 66,
+      "to": 67
+    },
+    {
+      "key": "primary",
+      "from": 71,
+      "to": 72
+    },
+    {
+      "key": "primary",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "primary",
+      "from": 81,
+      "to": 82
+    },
+    {
+      "key": "primary",
+      "from": 86,
+      "to": 87
+    },
+    {
+      "key": "primary",
+      "from": 91,
+      "to": 92
+    },
+    {
+      "key": "primary",
+      "from": 96,
+      "to": 97
+    },
+    {
+      "key": "primary",
+      "from": 101,
+      "to": 102
+    },
+    {
+      "key": "primary",
+      "from": 106,
+      "to": 107
+    },
+    {
+      "key": "primary",
+      "from": 111,
+      "to": 112
+    },
+    {
+      "key": "primary",
+      "from": 116,
+      "to": 117
+    },
+    {
+      "key": "primary",
+      "from": 121,
+      "to": 122
+    },
+    {
+      "key": "primary",
+      "from": 126,
+      "to": 127
+    },
+    {
+      "key": "primary",
+      "from": 131,
+      "to": 132
+    },
+    {
+      "key": "primary",
+      "from": 136,
+      "to": 137
+    },
+    {
+      "key": "primary",
+      "from": 141,
+      "to": 142
+    },
+    {
+      "key": "primary",
+      "from": 146,
+      "to": 147
+    },
+    {
+      "key": "primary",
+      "from": 151,
+      "to": 152
+    },
+    {
+      "key": "primary",
+      "from": 156,
+      "to": 157
+    },
+    {
+      "key": "primary",
+      "from": 161,
+      "to": 162
+    },
+    {
+      "key": "primary",
+      "from": 166,
+      "to": 167
+    },
+    {
+      "key": "primary",
+      "from": 171,
+      "to": 172
+    },
+    {
+      "key": "primary",
+      "from": 176,
+      "to": 177
+    },
+    {
+      "key": "primary",
+      "from": 181,
+      "to": 182
+    },
+    {
+      "key": "primary",
+      "from": 186,
+      "to": 187
+    },
+    {
+      "key": "primary",
+      "from": 191,
+      "to": 192
+    },
+    {
+      "key": "primary",
+      "from": 196,
+      "to": 197
+    }
+  ]
+}
+

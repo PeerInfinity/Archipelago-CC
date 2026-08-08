@@ -375,7 +375,27 @@ export const R6_WINDOWS = Object.freeze([
      */
     Object.freeze({ name: 'W-fire', slice: 5, tape: 'r5-bobboss-fire', control: 'r5-bobboss-fire-control' }),
     Object.freeze({ name: 'W-owl', slice: 6, tape: null, control: null }),
-    Object.freeze({ name: 'W-talk', slice: 6, tape: null, control: null }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6c: THE ENDING'S FIRST DRIVEN WINDOW, and the first
+     * ledger row on the ladder that is not a kill.
+     *
+     * The pair is the one-primitive-fewer prefix again, and the primitive is
+     * the FORTIETH and last X release — which the control drops while
+     * keeping its single `up` span byte-identical (§12's separate
+     * generators).
+     *
+     * ⛔⛔⛔ AND THE CONTROL COULD NOT HAVE BEEN A WALK-AWAY, for a reason
+     * slice 6c sharpened. §16.6 found that leaving the 24 px circle runs
+     * `doneTalking()` and so earns `{114,0}` exactly as finishing does. What
+     * driving it showed is that there is no mid-dialogue walk at all:
+     * `NPC.talk`'s `if (talking)` block raises `Game.freezeObjects` on its
+     * first line, above both the key test and the radius test, and the NPC
+     * updates before the player — so the ONLY frame a player can move on is
+     * the one the dialogue opens on, which is live because `startTalking()`
+     * runs below that block. A stance booted ON the circle that steps
+     * outward there earns the flag at **tick 2, with zero pages read**.
+     */
+    Object.freeze({ name: 'W-talk', slice: 6, tape: 'r6-watcher-talk', control: 'r6-watcher-control' }),
     Object.freeze({ name: 'W-door', slice: 6, tape: null, control: null }),
     Object.freeze({ name: 'W-seed', slice: 6, tape: null, control: null }),
     // ⚖ RULED IN by the user at slice 0 (kickoff §6.2). The bloody branch is
