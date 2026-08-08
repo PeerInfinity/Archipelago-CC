@@ -359,11 +359,28 @@ describe('what the run owns', () => {
         // level 1 held an unclassified tag until R5's sweep classified the
         // last 22, so the only level left that refuses is 112, whose `pod`
         // avoid volume is R6's to price.
+        //
+        // ⛓⛓⛓ R6 SLICE 6b: AND NOW NO LEVEL REFUSES — the pod bill is paid,
+        // so L112 builds. The laziness claim is unchanged and still has to be
+        // checked, so the exemplar becomes a SYNTHETIC level the census
+        // genuinely cannot cover: `worldFor` must throw when it reaches it
+        // and must not throw before.
         const run = createLevelRun({ levelSource, boot, noclip: false });
         expect(run.level).toBe(0);
-        expect(() => run.worldFor(112)).toThrow(/"pod".*PROXIMITY HAZARD/s);
+        expect(() => run.worldFor(112)).not.toThrow();
         // ...and it memoises, so a revisited level is not rebuilt.
         expect(run.worldFor(0)).toBe(run.world);
+
+        const withUnknown = (level) => (level === 900 ? {
+            level: 900, class: 'Synthetic', width: 10, height: 10,
+            layers: [{ name: 'tiles', set: 'tileset', tiles: [] }],
+            entities: [{ type: 'notatag', x: 16, y: 16 }],
+        } : levelSource(level));
+        // Constructing the run does NOT reach level 900 — that is the whole
+        // claim — and asking for it does.
+        const lazy = createLevelRun({ levelSource: withUnknown, boot, noclip: false });
+        expect(lazy.level).toBe(0);
+        expect(() => lazy.worldFor(900)).toThrow(/"notatag".*not in the transcribed/s);
     });
 
     it('needs a levelSource — there is no default geometry', () => {

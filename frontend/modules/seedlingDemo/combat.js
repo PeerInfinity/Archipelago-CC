@@ -484,11 +484,37 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     finalboss: {
         ctor: { dx: 8, dy: 8, src: 'FinalBoss.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
-        as3: 'FinalBoss', kill: { hits: null }, aggro: { kind: 'boss', range: 'arena' },
-        hitbox: null, damage: 1,
-        terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
-        offScreen: false, sideWrite: 'own tag + tag+1',
-        boss: 'R6', src: 'Enemies/FinalBoss.as:197,221-222',
+        as3: 'FinalBoss',
+        // ⛓ R6 SLICE 6b: `hitsMax` is the inherited 3 and every one of the
+        // three is a LAVA SELF-HIT — `onlyHitBy = "Lava"`, so a sword press
+        // takes `Enemy.hit`'s `justKnock` arm and moves him without counting.
+        kill: { hits: 3, why: '`onlyHitBy = "Lava"` — the player SHOVES, the lava kills' },
+        aggro: { kind: 'boss', range: 'arena' },
+        // ⛓ `setHitbox(12, 12, 6, 6)` (FinalBoss.as:52). Filled in beside the
+        // totem's and the shield's for the same reason:
+        // `finalBossFight.FINAL_BOSS.hitbox` is the live one and the two are
+        // asserted equal there.
+        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1,
+        // ⛓ `dieInLava = false` — "Handled manually" (FinalBoss.as:58). The
+        // lava does not destroy him; it calls `hit(6, …, "Lava")`, which is
+        // the only type `onlyHitBy` admits.
+        terrain: { water: 'immune (dieInWater false)', lava: 'the KILL MECHANISM, not death: `dieInLava = false` and `update()` calls `hit(6, centre, 1, "Lava")` by hand', pit: 'immune (canFallInPit false)' },
+        // ⛔ R6 SLICE 6b — CORRECTED. `FinalBoss.as:56` sets
+        // `activeOffScreen = true`, so `Enemy.update`'s first line never
+        // returns for him. This row said `false` for five rungs and no tape
+        // had ever been in the room. It matters twice: the barrage aims at
+        // the player from anywhere in the level, and §11.6's 9 px shake band
+        // — which makes `onScreen` three-valued for every other class — can
+        // never make HIM inactive. The one boss with no `onScreen` question.
+        offScreen: true, sideWrite: 'own tag + tag+1, both CLEARED',
+        boss: '⛓⛓⛓ R6 SLICE 6b — KILLED. Three lava self-hits, each a SHOVE the player '
+            + 'buys with a sword press: `justKnock` sets no `hitsTimer`, so all five of '
+            + 'a press\'s hit tests land and compound. `canHit = rockfallTime < 0` makes '
+            + 'him untouchable for all 240 ticks of every barrage, so the fight lives in '
+            + 'the walk phases. ⛔ `death()` is overridden EMPTY and `startDeath` sets '
+            + '`type = "Solid"`: the corpse never fades and never removes, so it is a '
+            + 'PERMANENT WALL wherever the third shove left him.',
+        src: 'Enemies/FinalBoss.as:52,56,58,101-165,197,221-222,236-243',
     },
     lightbosscontroller: {
         ctor: { dx: 0, dy: 0, src: 'LightBossController.as — an `Entity`, not a `Mobile`; it spawns LightBoss rather than standing anywhere' },
@@ -512,6 +538,11 @@ export const ENEMY_CLASSES = Object.freeze({
  *                  jitter-band envelope (§3.2) unless the slice-0
  *                  measurement says the variance is zero.
  *   `activator`  — gated by an `Activators` group as well as its own timer.
+ *   `boss-script` — R6 slice 6b. NOT a clock at all: the state is written
+ *                  by another entity's fight script AND by the player's own
+ *                  overlap, so it is modellable only alongside that fight.
+ *                  The value exists so the absence of a countdown is
+ *                  DECLARED rather than implied by filing it `self`.
  */
 export const PUZZLEMENT_HAZARDS = Object.freeze({
     spinningaxe: {
@@ -566,6 +597,43 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
         why: 'writes the player\'s position absolutely and then `drown()`s '
             + 'them; `noHazards` does not reach it. An avoid volume with a '
             + 'knife edge — gate is overlap AND `FP.distance < 16`.',
+    },
+    /**
+     * ⛓⛓ R6 SLICE 6b — THE FIRST `boss-script` ROW, AND THE NAME IS THE
+     * CLAIM.
+     *
+     * A `Pod` is `Scenery` (an `Entity`, not an `Enemy`), so it belongs in
+     * this table rather than in `ENEMY_CLASSES`, and
+     * `seedlingDamageSites.HARMFUL_CLASSES` finds it at three sites
+     * (`Pod.as:70`, `:71` the position writes, `:73` the `hit`).
+     *
+     * ⛔ ITS `timing` IS A NEW CLASS AND MUST NOT BE FILED AS `self`. The
+     * three existing values all name a clock the modeller can read: `self`
+     * is the entity's own countdown, `worldFrame` is `Game.time`,
+     * `activator` is a group plus a timer. A Pod's animation state has
+     * **two writers and neither is a timer**: `FinalBoss.update` at `:150`,
+     * `:172` and `:179` (`pods[cpod].open = true/false`, i.e. the fight's
+     * own script) and THE PLAYER'S OWN OVERLAP (`Pod.as:78-80` — standing in
+     * an `"opened"` pod plays `"close"`). Filing it `self` would read as
+     * "exactly modellable from its own countdown", which is the one thing it
+     * is not: the schedule is the boss's, and the player is inside it.
+     *
+     * ⚠ `displaces: true` and `damage: 1` are BOTH true and they are not the
+     * same event — the displacement is ungated and per-tick, the damage is
+     * behind `Player.hit`'s own `hitsTimer` AND behind `Bot.noDamage`. The
+     * avoid volume lives on `levelWorld.ENTITY_CLASSES.pod.hazard`, which is
+     * the oel cell exactly.
+     */
+    pod: {
+        ctor: { dx: 8, dy: 8, src: 'Pod.as:24 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
+        as3: 'Pod', timing: 'boss-script', damage: 1, displaces: true,
+        src: 'Scenery/Pod.as:24-45,60-80 + Enemies/FinalBoss.as:150,172,179',
+        why: '⛔ the pin SURVIVES `noDamage` and the damage does not — `p.x = x; '
+            + 'p.y = y; p.v.x = p.v.y = 0` sits ABOVE `p.hit(null, 0, null, 1)` and is '
+            + 'ungated, so a pinned player cannot walk out at any `noDamage` setting. '
+            + 'L112 places FOUR, and the boss opens and closes them on its own '
+            + 'schedule; standing in an OPEN one CLOSES it, so the player is their own '
+            + 'trigger and the volume is live on a fresh boot.',
     },
     pull: {
         ctor: { dx: 0, dy: 0, src: 'Pull `super(_x, _y)`' },
@@ -861,9 +929,13 @@ export const DAMAGE_FAMILY_EXCLUSIONS = Object.freeze({
         + '(RockFall.as:33,37), so the rect is 8x4..24x12 by a draw, and `Game.shake += '
         + 'scale + 1` on landing moves the camera by a draw too. §2.1\'s "no gameplay RNG '
         + 'in R5\'s scope" is TRUE, and this is the named reason it is true.' },
-    Pod: { kind: 'unplaced', why: 'L112 only, and L112\'s `pod` volume is unpriced BY RULING '
-        + '(R6 owns it) — the one holdout in the 115/116 blocking census. Pod.as:64-74 '
-        + 'writes the player\'s position AND calls `hit(null,0,null,1)`.' },
+    // ⛓⛓ R6 SLICE 6b: `Pod`'s exclusion is DELETED, not amended. It said
+    // `kind: 'unplaced'` — L112 places four — and the row that replaces it is
+    // `PUZZLEMENT_HAZARDS.pod`. It is deleted in the SAME CHANGE as the row
+    // because `assertDamageFamilyCovered` used to test `covered.has(cls)`
+    // BEFORE the exclusions, so a class in both tables passed silently and
+    // the stale claim would have survived for ever. See the mutual-exclusion
+    // finding below. → [[feedback_two_tables_one_class_is_a_silence]]
     Tentacle: { kind: 'unplaced', why: 'spawned only by `TentacleBeast.as:188`, whose own '
         + 'spawn positions are `Math.random()`-placed (TentacleBeast.as:138-139,167-168) — '
         + 'the R6 encounter §3.6 banks the RNG-pinning question for.' },
@@ -885,14 +957,54 @@ export const DAMAGE_FAMILY_EXCLUSIONS = Object.freeze({
  * @returns {string[]} findings; empty means the families are covered
  */
 export function assertDamageFamilyCovered(harmfulClasses) {
+    return assertDamageFamilyCoveredWith(harmfulClasses, DAMAGE_FAMILY_EXCLUSIONS);
+}
+
+/**
+ * The same check with the exclusions table INJECTED.
+ *
+ * ⛓ R6 SLICE 6b. The mutual-exclusion arm below cannot be exercised against
+ * the shipped tables — that is the point of fixing it — so the table is a
+ * parameter and the test feeds it a class that carries both a row and an
+ * exclusion. Same seam `combatCensus` already uses for the placement table,
+ * and for the same reason: a partition's violation has to be constructible.
+ *
+ * @param {string[]} harmfulClasses `seedlingDamageSites.HARMFUL_CLASSES`
+ * @param {object} exclusions a `DAMAGE_FAMILY_EXCLUSIONS`-shaped table
+ * @returns {string[]} findings; empty means the families are covered
+ */
+export function assertDamageFamilyCoveredWith(harmfulClasses, exclusions) {
     const findings = [];
     const covered = new Set([
         ...Object.values(ENEMY_CLASSES).map((r) => r.as3),
         ...Object.values(PUZZLEMENT_HAZARDS).map((r) => r.as3),
     ]);
+    // ⛔⛔ R6 SLICE 6b — TRAP 94, FIXED IN THE SAME CHANGE AS THE `Pod` ROW.
+    //
+    // The two tables are a PARTITION and nothing said so. The loop below
+    // `continue`d on `covered.has(cls)` BEFORE it looked at the exclusions,
+    // so a class carrying a real row AND a stale exclusion passed both
+    // checks and printed nothing: adding `PUZZLEMENT_HAZARDS.pod` while
+    // `DAMAGE_FAMILY_EXCLUSIONS.Pod` still claimed `kind: 'unplaced'` would
+    // have left that falsehood unreachable for ever. The reverse check that
+    // already existed guards an exclusion's PRESENCE in the census, not its
+    // consistency with the rows.
+    //
+    // ⚠ This runs over the tables themselves rather than over
+    // `harmfulClasses`, deliberately: a class in both tables is a defect
+    // whether or not the call-site census still finds it dangerous, and
+    // routing it through the census would make the finding depend on the
+    // very thing the exclusion is a claim about.
+    for (const cls of Object.keys(exclusions)) {
+        if (!covered.has(cls)) continue;
+        findings.push(`${cls} is BOTH a row (ENEMY_CLASSES/PUZZLEMENT_HAZARDS) and a `
+            + `DAMAGE_FAMILY_EXCLUSIONS entry ("${exclusions[cls].kind}") `
+            + '— the two tables are a partition. The row is the live claim; delete the '
+            + 'exclusion, whose reason is now stale by construction');
+    }
     for (const cls of harmfulClasses ?? []) {
         if (covered.has(cls)) continue;
-        if (DAMAGE_FAMILY_EXCLUSIONS[cls]) continue;
+        if (exclusions[cls]) continue;
         findings.push(`${cls} reaches the player (seedlingDamageSites) but has no row in `
             + 'ENEMY_CLASSES or PUZZLEMENT_HAZARDS and no entry in '
             + 'DAMAGE_FAMILY_EXCLUSIONS — classify it, or declare why it cannot fire');
@@ -900,7 +1012,7 @@ export function assertDamageFamilyCovered(harmfulClasses) {
     // The other direction: an exclusion for something that is NOT dangerous
     // is a stale claim, and stale claims are how a census rots.
     const harmful = new Set(harmfulClasses ?? []);
-    for (const cls of Object.keys(DAMAGE_FAMILY_EXCLUSIONS)) {
+    for (const cls of Object.keys(exclusions)) {
         if (!harmful.has(cls)) {
             findings.push(`${cls} is declared a damage-family exclusion but the call-site `
                 + 'census does not find it reaching the player — the checkout moved');

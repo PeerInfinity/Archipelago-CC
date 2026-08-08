@@ -34,6 +34,7 @@ import {
     TOTAL_ENEMIES_OMISSIONS,
     aggroDisc,
     assertDamageFamilyCovered,
+    assertDamageFamilyCoveredWith,
     assertNoUnclearableKillLock,
     assertTotalEnemiesTable,
     clearabilityOf,
@@ -46,6 +47,7 @@ import {
 import { DAMAGE_SITES, HARMFUL_CLASSES, DISPLACING_CLASSES } from './seedlingDamageSites.js';
 import {
     ENTITY_CLASSES, ROLES, buildLevelWorld, combatCensusOf, combatPlacementOf,
+    combatRowRequirement,
 } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 
@@ -68,9 +70,48 @@ describe('the damage family, checked against the CALL SITES', () => {
     });
 
     it('goes RED when an exclusion is stale — the checkout moved under it', () => {
-        const withoutPod = HARMFUL_CLASSES.filter((c) => c !== 'Pod');
-        expect(assertDamageFamilyCovered(withoutPod))
-            .toEqual([expect.stringContaining('Pod is declared a damage-family exclusion')]);
+        // ⛓ R6 SLICE 6b: the exemplar was `Pod`, whose exclusion this slice
+        // DELETED. `Tentacle` is the replacement and it is a real one — it is
+        // in `HARMFUL_CLASSES`, its exclusion is `unplaced`, and the R6
+        // deferral of `TentacleBeast` is what keeps it that way.
+        const withoutTentacle = HARMFUL_CLASSES.filter((c) => c !== 'Tentacle');
+        expect(assertDamageFamilyCovered(withoutTentacle))
+            .toEqual([expect.stringContaining(
+                'Tentacle is declared a damage-family exclusion')]);
+    });
+
+    /**
+     * ⛔⛔ R6 SLICE 6b — TRAP 94, AND IT IS THE HALF THAT COULD NOT GO RED.
+     *
+     * `assertDamageFamilyCovered` tested `covered.has(cls)` BEFORE the
+     * exclusions, so a class with a real row AND a stale exclusion passed
+     * both loops in silence. Adding `PUZZLEMENT_HAZARDS.pod` while
+     * `DAMAGE_FAMILY_EXCLUSIONS.Pod` still said `kind: 'unplaced'` (L112
+     * places FOUR) would have made that falsehood permanently unprintable.
+     *
+     * The mutation is done the only way it can be — by asking the checker
+     * about a class that IS in the tables — and the live table is asserted
+     * clean beside it, so the fix and the state it enforces are one test.
+     */
+    it('⛔ a class in BOTH tables is a FINDING, not a silent pass (trap 94)', () => {
+        // The live tables carry no such overlap...
+        const overlap = Object.keys(DAMAGE_FAMILY_EXCLUSIONS).filter((c) => new Set([
+            ...Object.values(ENEMY_CLASSES).map((r) => r.as3),
+            ...Object.values(PUZZLEMENT_HAZARDS).map((r) => r.as3),
+        ]).has(c));
+        expect(overlap).toEqual([]);
+        // ...and `Pod` is why: it has a row now, and no exclusion.
+        expect(PUZZLEMENT_HAZARDS.pod.as3).toBe('Pod');
+        expect(DAMAGE_FAMILY_EXCLUSIONS.Pod).toBeUndefined();
+        // The check itself, exercised on the arm the shipped tables cannot
+        // reach: a rowed class that also claims an exclusion.
+        const findings = assertDamageFamilyCoveredWith(
+            HARMFUL_CLASSES,
+            { ...DAMAGE_FAMILY_EXCLUSIONS, Pod: { kind: 'unplaced', why: 'x'.repeat(50) } },
+        );
+        expect(findings).toEqual([expect.stringContaining(
+            'Pod is BOTH a row (ENEMY_CLASSES/PUZZLEMENT_HAZARDS) and a '
+            + 'DAMAGE_FAMILY_EXCLUSIONS entry')]);
     });
 
     it('names every exclusion with a kind and a reason, never a bare skip', () => {
@@ -355,14 +396,25 @@ describe('the census over the committed extract', () => {
 });
 
 describe('the `combat` ROLE — the builder throws, or the route is blind', () => {
-    it('builds 115 of the 116 levels, and names the holdout', () => {
-        // The same holdout as the blocking census, and for the same reason:
-        // L112's `pod` is unpriced BY RULING (R6 owns it), not by neglect.
+    it('⛓⛓⛓ builds ALL 116 levels — R6 slice 6b paid the last holdout', () => {
+        // Was "115 of 116, and names the holdout": L112's `pod` was unpriced
+        // BY RULING. The row is paid (`PUZZLEMENT_HAZARDS.pod`, timing
+        // `boss-script`) and the Owl's own hazard is classified `entry`, so
+        // the combat census refuses NOTHING.
+        //
+        // ⚠ The empty list is asserted, not the count alone: "0 failed" and
+        // "the loop never ran" print the same, so the roster size is checked
+        // beside it.
         const failed = [];
+        let built = 0;
         for (let level = 0; level < LEVEL_COUNT; level += 1) {
-            try { buildLevelWorld(source(level), { roles: ROLES }); } catch { failed.push(level); }
+            try {
+                buildLevelWorld(source(level), { roles: ROLES }); built += 1;
+            } catch { failed.push(level); }
         }
-        expect(failed).toEqual([112]);
+        expect(failed).toEqual([]);
+        expect(built).toBe(LEVEL_COUNT);
+        expect(LEVEL_COUNT).toBe(116);
     });
 
     it('⛔ IS NOT VACUOUS: a placed tag with no combat row STOPS THE BUILD', () => {
@@ -381,23 +433,49 @@ describe('the `combat` ROLE — the builder throws, or the route is blind', () =
             .toThrow(/not in the transcribed class table|need a COMBAT row/);
     });
 
-    it('⛔ ...and the throw comes from the COMBAT block, not another role\'s', () => {
-        // The load-bearing non-vacuity check, and it needs the role ISOLATED.
-        // With all five consulted, L112 dies in the proximity-hazard block
-        // first (`pod` snaps the player's position), so a five-role throw
-        // proves nothing about combat. Asked alone, the combat block is what
-        // refuses — by NAME, with the reason derived from the call sites
-        // rather than from its own table: `Pod` reaches the player.
-        expect(LOOKS_LIKE_COMBAT.has('pod')).toBe(false);
-        expect(() => buildLevelWorld(source(112), { roles: ['combat'] }))
-            .toThrow(/need a COMBAT row and have none.*"pod" \(Pod\).*reaches the player/s);
-        // And it is the ONLY level that does: 115 of 116 build on the combat
-        // role alone, the same holdout the blocking census has.
+    /**
+     * ⛔⛔ R6 SLICE 6b — THE NON-VACUITY MOVED DOWN A STRATUM, BECAUSE PAYING
+     * THE POD BILL DELETED ITS ONLY WITNESS.
+     *
+     * This test used to isolate `roles: ['combat']` on L112 and assert the
+     * refusal named `"pod" (Pod)`. With the row paid, **no level and no
+     * `ENTITY_CLASSES` tag can reach that throw**: every tag in
+     * `LOOKS_LIKE_COMBAT` has a row and every dangerous `as3` in the extract
+     * does too. The branch is not dead code — a later rung will place
+     * something new — so the check is asserted against the exported
+     * predicate `combatRowRequirement`, which the builder itself calls (one
+     * implementation, two callers).
+     */
+    it('⛔ the combat requirement is REACHABLE and NAMED — on the predicate', () => {
+        // The two positive arms, with real class names the extract does not
+        // place under those tags.
+        expect(combatRowRequirement('nosuchtag', 'Squishle'))
+            .toMatch(/Squishle reaches the player or is summed by totalEnemies\(\)/);
+        expect(combatRowRequirement('nosuchtag', 'Tentacle'))
+            .toMatch(/reaches the player or is summed/);
+        // ...and the vocabulary arm, which fires on the TAG even when the
+        // class means nothing to the census.
+        expect(LOOKS_LIKE_COMBAT.has('pod')).toBe(true);
+        expect(combatRowRequirement('pod', null)).toBeNull();      // paid
+        expect(combatRowRequirement('bulb', 'NotAClass')).toBeNull(); // rowed
+        // The negative: an ordinary scenery tag needs nothing.
+        expect(combatRowRequirement('torch', 'Torch')).toBeNull();
+        // And the state change that removed the integration witness: every
+        // placed tag in the whole extract is priced.
+        const unpriced = new Set();
+        for (let level = 0; level < LEVEL_COUNT; level += 1) {
+            for (const e of source(level).entities ?? []) {
+                const why = combatRowRequirement(e.type, ENTITY_CLASSES[e.type]?.as3 ?? null);
+                if (why) unpriced.add(e.type);
+            }
+        }
+        expect([...unpriced]).toEqual([]);
+        // 116 of 116 on the combat role ALONE, not just under the full set.
         let built = 0;
         for (let level = 0; level < LEVEL_COUNT; level += 1) {
-            try { buildLevelWorld(source(level), { roles: ['combat'] }); built += 1; } catch { /* the holdout */ }
+            try { buildLevelWorld(source(level), { roles: ['combat'] }); built += 1; } catch { /* none */ }
         }
-        expect(built).toBe(115);
+        expect(built).toBe(116);
     });
 
     it('the requirement is sourced from the CALL SITES, not from combat.js', () => {
@@ -419,7 +497,10 @@ describe('the `combat` ROLE — the builder throws, or the route is blind', () =
                 if (as3 && need.has(as3) && !priced.has(as3)) unpriced.add(`${e.type}/${as3}`);
             }
         }
-        expect([...unpriced]).toEqual(['pod/Pod']);
+        // ⛓⛓ R6 SLICE 6b: was `['pod/Pod']`. EMPTY now — every placed tag the
+        // call-site census calls dangerous carries a row. The list stays
+        // asserted so the next tag the extract gains lands here as a red.
+        expect([...unpriced]).toEqual([]);
     });
 
     it('reports NULL, not an empty census, when the role was not consulted', () => {

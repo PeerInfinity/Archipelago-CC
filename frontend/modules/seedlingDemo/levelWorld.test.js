@@ -40,6 +40,7 @@ import {
     buildLevelWorld,
     cliffSideClassFor,
     entityRect,
+    hazardDisposition,
     maskHitsBox,
     maskPlacement,
     rect,
@@ -1186,10 +1187,15 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         // the remaining 22 tags were classified in one sweep and the
         // eighteenth pixelmask was extracted.
         //
-        // ⚠ The single holdout is L112, and it is NOT a blocking question:
-        // `pod` is a proximity hazard whose avoid volume nobody has
-        // transcribed, and `proximity-hazard` is in RELAXED_ROLES — so it
-        // throws for BOTH censuses and the two counts agree at 115.
+        // ⛓⛓⛓ R6 SLICE 6b FINISHED IT: 115 -> **116**, THE WHOLE MAP. The
+        // last holdout was L112, and it was never a blocking question — the
+        // `pod` was a proximity hazard whose avoid volume nobody had
+        // transcribed and the `finalboss` was one whose trigger turned out
+        // not to be proximity at all. Both are classified now, so every
+        // level in the extract builds under BOTH censuses.
+        //
+        // ⚠ 116 is the whole map, so this number can no longer grow. What it
+        // can still do is SHRINK, which is what it is here for.
         let full = 0;
         let relaxed = 0;
         for (const level of atlas.levels) {
@@ -1198,8 +1204,9 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
                 /* an unpriced hazard or a Bridge tile */
             }
         }
-        expect(full).toBe(115);
-        expect(relaxed).toBe(115);
+        expect(full).toBe(116);
+        expect(relaxed).toBe(116);
+        expect(atlas.levels).toHaveLength(116);
     });
 
     it('the R2 route levels ALL build with the full census — that is the bill', () => {
@@ -1240,17 +1247,20 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         // levels. Recorded rather than papered over — the witness that would
         // close it is the next tag the extract gains.
         //
-        // What still has teeth, and is asserted here: the UNKNOWN-TAG arm,
-        // and the unpriced-hazard arm (L112's `pod`, which R6 prices).
+        // What still has teeth, and is asserted here: the UNKNOWN-TAG arm.
         expect(() => buildLevelWorld({
             level: 900, class: 'Synthetic', width: 2, height: 2,
             layers: [{ name: 'tiles', set: 'tileset', tiles: [] }],
             entities: [{ type: 'notatag', x: 16, y: 16 }],
         })).toThrow(/"notatag".*not in the transcribed class table/s);
-        expect(() => buildLevelWorld(levelRecord(112)))
-            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+        // ⛔ R6 SLICE 6b: the unpriced-hazard arm USED to be asserted here on
+        // L112's `pod`, and the pod is paid, so **L112 builds**. That is the
+        // slice's headline for this file and it is stated as an assertion
+        // rather than by the silence of a deleted line — the last refusing
+        // level in the extract stopped refusing.
+        expect(() => buildLevelWorld(levelRecord(112))).not.toThrow();
         expect(() => buildLevelWorld(levelRecord(112), { roles: RELAXED_ROLES }))
-            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+            .not.toThrow();
     });
 
     it('every tag in the extract now answers for the blocking role', () => {
@@ -1321,22 +1331,71 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
             .toMatchObject({ x: 136, y: 112, right: 184, bottom: 160 });
     });
 
-    it('THROWS on a hazard whose volume nobody transcribed', () => {
-        // `'unpriced'` is a classification, not a gap: the tag IS a hazard,
-        // on cited evidence, and the volume is deliberately not guessed.
-        // Same shape as the pixelmask seam — a rung boundary made visible.
-        expect(() => buildLevelWorld({
-            level: 999, width: 2, height: 2, layers: [],
-            entities: [{ type: 'pod', x: 0, y: 0 }],
-        }, { roles: RELAXED_ROLES })).toThrow(/PROXIMITY HAZARD whose avoid volume has not/);
-        // ...and the error carries the evidence, so nobody has to re-derive
-        // why a Pod is not covered by `Bot.noDamage`. Two tags are still
-        // unpriced — `pod` (level 112) and `finalboss` (level 112) — and
-        // both are R6's endgame room, which no R1 route enters.
-        expect(() => buildLevelWorld({
-            level: 999, width: 2, height: 2, layers: [],
-            entities: [{ type: 'pod', x: 0, y: 0 }],
-        }, { roles: RELAXED_ROLES })).toThrow(/snaps `p\.x`\/`p\.y` to its own position/);
+    /**
+     * ⛔⛔ R6 SLICE 6b — THIS TEST'S WITNESS WAS THE POD, AND THE POD IS PAID.
+     *
+     * It used to build a synthetic level holding a `pod` and assert the
+     * PROXIMITY-HAZARD refusal, because `pod` and `finalboss` were the only
+     * two `'unpriced'` rows in the table. Both are priced now, so the
+     * `'unpriced'` disposition has **zero members** and the builder's
+     * refusal arm is unreachable from the shipped table.
+     *
+     * A branch whose failing case has become unreachable from real data is
+     * not a branch to delete — a later rung will add an unpriced row and
+     * will need the refusal. So the witness moves one stratum down, onto
+     * `hazardDisposition`, and the integration side keeps a POSITIVE witness
+     * (L112's four pods really do produce four avoid volumes) in its place.
+     */
+    it('the four hazard dispositions, each witnessed — and `unpriced` is now EMPTY', () => {
+        // The predicate, exercised on all four arms with synthetic rows, so
+        // the refusal path stays checked with nothing in the table to feed it.
+        expect(hazardDisposition(undefined)).toBe('none');
+        expect(hazardDisposition('unpriced')).toBe('unpriced');
+        expect(hazardDisposition({ entry: 'the doorway' })).toBe('entry');
+        expect(hazardDisposition({ inert: 'it cannot fire on a fresh boot' })).toBe('inert');
+        expect(hazardDisposition({ dx: 0, dy: 0, w: 16, h: 16, kind: 'k', effect: 'e' }))
+            .toBe('volume');
+        // ⚠ ORDER, asserted rather than assumed: a row carrying both `entry`
+        // and `inert` reads as `entry`. The table test below forbids the
+        // combination, so this pins the precedence a reader would otherwise
+        // have to derive from source order.
+        expect(hazardDisposition({ entry: 'e', inert: 'i' })).toBe('entry');
+
+        // And the state change, named: no row is `'unpriced'` any more.
+        const byDisposition = {};
+        for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
+            if (!cls.hazard) continue;
+            const d = hazardDisposition(cls.hazard);
+            (byDisposition[d] ??= []).push(tag);
+        }
+        expect(byDisposition.unpriced ?? []).toEqual([]);
+        expect(byDisposition.entry).toEqual(['finalboss']);
+        expect(byDisposition.volume).toContain('pod');
+    });
+
+    it('...and L112 now yields FOUR pod volumes, the oel cells exactly', () => {
+        // The positive witness that replaces the refusal. §14.3's claim 1,
+        // driven: `super(_x + Tile.w/2, _y + Tile.h/2)` + `setHitbox(16, 16,
+        // 8, 8)` means the box is the oel cell and NOT the entity cell — so
+        // every offset in the row is 0 and a rect built from `dx: 8` would be
+        // eight pixels south-east of the thing it is avoiding.
+        const w = buildLevelWorld(levelRecord(112), { roles: RELAXED_ROLES });
+        const pods = w.proximityHazards.filter((h) => h.tag === 'pod');
+        expect(pods).toHaveLength(4);
+        expect(pods.every((h) => h.kind === 'pod-pin')).toBe(true);
+        expect(pods.map((h) => h.rect).sort((a, b) => a.x - b.x || a.y - b.y))
+            .toMatchObject([
+                { x: 40, y: 120, right: 56, bottom: 136 },
+                { x: 112, y: 48, right: 128, bottom: 64 },
+                { x: 112, y: 192, right: 128, bottom: 208 },
+                { x: 184, y: 120, right: 200, bottom: 136 },
+            ]);
+        // ⛓ And the Owl is in the OTHER list — it has no volume at all, and
+        // an empty `proximityHazards` entry for it would have read as "not a
+        // hazard" rather than "not a PROXIMITY hazard".
+        expect(w.proximityHazards.some((h) => h.tag === 'finalboss')).toBe(false);
+        expect(w.entryHazards.map((h) => h.tag)).toEqual(['finalboss']);
+        expect(w.entryHazards[0].entry).toMatch(/ROOM ENTRY, not proximity/);
     });
 
     it('reports overlaps through avoidVolumesAt, and nothing else does', () => {
@@ -1402,9 +1461,23 @@ describe('R1: the priced proximity volumes', () => {
         // be read later as an oversight and quietly "fixed".
         for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
             if (!cls.hazard) continue;
-            if (cls.hazard === 'unpriced') {
+            const disposition = hazardDisposition(cls.hazard);
+            if (disposition === 'unpriced') {
                 expect(cls.why, `${tag} is unpriced with no evidence`).toBeTruthy();
-            } else if (cls.hazard.inert) {
+            } else if (disposition === 'entry') {
+                // ⛓ R6 SLICE 6b — THE FOURTH DISPOSITION. It carries no rect
+                // BY CLAIM: the trigger is world entry, so there is nothing
+                // to route around, and the row has to say what prices the
+                // effects instead. A one-word `entry:` would be exactly the
+                // omission the other three arms exist to prevent.
+                expect(typeof cls.hazard.entry, `${tag} entry with no reason`).toBe('string');
+                expect(cls.hazard.entry.length).toBeGreaterThan(80);
+                expect(cls.hazard.entry, `${tag} entry names no pricer`)
+                    .toMatch(/Priced by/);
+                expect(cls.hazard.w, `${tag} is entry-triggered AND carries a rect`)
+                    .toBeUndefined();
+                expect(cls.hazard.inert, `${tag} is both entry and inert`).toBeUndefined();
+            } else if (disposition === 'inert') {
                 expect(typeof cls.hazard.inert, `${tag} inert with no reason`).toBe('string');
                 expect(cls.hazard.inert.length).toBeGreaterThan(40);
             } else {
@@ -1431,10 +1504,13 @@ describe('R1: the priced proximity volumes', () => {
                     + `[${shapes.join(',')}]`).toBe(1);
             }
         }
-        // The two still unpriced are both in level 112, the endgame room.
+        // ⛓⛓ R6 SLICE 6b: the two that were unpriced were `pod` and
+        // `finalboss`, both in L112, and both are paid. NONE is left — and
+        // the count is asserted as EMPTY rather than deleted, so the next
+        // rung that classifies a tag as unpriced has to come back here.
         const unpriced = Object.entries(ENTITY_CLASSES)
-            .filter(([, c]) => c.hazard === 'unpriced').map(([t]) => t).sort();
-        expect(unpriced).toEqual(['finalboss', 'pod']);
+            .filter(([, c]) => hazardDisposition(c.hazard) === 'unpriced').map(([t]) => t);
+        expect(unpriced).toEqual([]);
     });
 
     it('a lavatrap is a 33 px POINT disc, not a box overlap', () => {
@@ -1592,7 +1668,10 @@ describe('⛓ R5: what a HELD ITEM does at level-BUILD time', () => {
         // 116 refuses the RELAXED census; it is pinned by number, so a build
         // regression that widened the skip list is a red here rather than a
         // completeness claim over a shrinking map.
-        expect(unbuildable).toEqual([112]);
+        // ⛓ R6 SLICE 6b: was `[112]`. The pod bill is paid, so the RELAXED
+        // census refuses nothing at all — and the list stays asserted (as
+        // EMPTY, not deleted) so a future skip has to be declared here.
+        expect(unbuildable).toEqual([]);
         expect(MAP.levels).toHaveLength(116);
     });
 

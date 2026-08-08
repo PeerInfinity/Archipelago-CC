@@ -433,6 +433,64 @@ const HARMFUL_CLASS_SET = new Set(HARMFUL_CLASSES);
 const TOTAL_ENEMIES_SET = new Set(TOTAL_ENEMIES_CLASSES);
 
 /**
+ * Does this placed tag need a combat row, and WHY? `null` means no.
+ *
+ * ⛓⛓ R6 SLICE 6b — EXTRACTED FROM `buildLevelWorld`'s combat block, and the
+ * reason is that paying the Pod bill DELETED THE BLOCK'S ONLY LIVE WITNESS.
+ *
+ * Until this slice, `buildLevelWorld(L112, ROLES)` was the integration
+ * proof that the check fires: `pod` was the one placed tag in the whole
+ * extract with no row. With the row paid, **no level and no
+ * `ENTITY_CLASSES` tag can reach the throw any more** — every tag in
+ * `LOOKS_LIKE_COMBAT` has a row, and every dangerous `as3` in the extract
+ * does too. A check whose failing branch has become unreachable from real
+ * data is a check whose non-vacuity has to move DOWN a stratum rather than
+ * be quietly dropped, so the predicate is exported and tested directly with
+ * class names the extract does not place.
+ * → [[feedback_bounded_sweep_must_name_what_it_bounded]]
+ *
+ * ⚠ ONE implementation, two callers (the block and the test), never a
+ * paraphrase of the block in the test — the two-cost-models law.
+ *
+ * @param {string} tag the entity tag as the extract spells it
+ * @param {string|null} as3 `ENTITY_CLASSES[tag].as3`, or null if unknown
+ * @returns {string|null} the reason it needs a row, or null
+ */
+/**
+ * Which of the FOUR hazard dispositions is this `cls.hazard`?
+ *
+ * ⛓ R6 SLICE 6b. There were three (`'unpriced'` / `inert` / a volume) and
+ * this slice adds `entry` — a hazard whose trigger is WORLD ENTRY, so there
+ * is no rect and no claim that it cannot fire. Extracted for the same reason
+ * as `combatRowRequirement`: paying the Pod bill emptied the `'unpriced'`
+ * disposition, so the builder's refusal arm is no longer reachable from the
+ * shipped table and the branch has to be witnessed one stratum down.
+ *
+ * ⚠ ORDER IS LOAD-BEARING. `entry` is tested before `inert` so that a row
+ * carrying both would be a visible contradiction rather than a silent
+ * precedence — and the table test asserts no row carries two.
+ *
+ * @param {string|object} hazard `ENTITY_CLASSES[tag].hazard`
+ * @returns {'none'|'unpriced'|'entry'|'inert'|'volume'}
+ */
+export function hazardDisposition(hazard) {
+    if (!hazard) return 'none';
+    if (hazard === 'unpriced') return 'unpriced';
+    if (hazard.entry) return 'entry';
+    if (hazard.inert) return 'inert';
+    return 'volume';
+}
+
+export function combatRowRequirement(tag, as3) {
+    if (ENEMY_CLASSES[tag] || PUZZLEMENT_HAZARDS[tag]) return null;
+    if (as3 !== null && (HARMFUL_CLASS_SET.has(as3) || TOTAL_ENEMIES_SET.has(as3))) {
+        return `${as3} reaches the player or is summed by totalEnemies()`;
+    }
+    if (LOOKS_LIKE_COMBAT.has(tag)) return 'it is in the combat vocabulary';
+    return null;
+}
+
+/**
  * The ONE placement table, injected into `combat.js`'s census.
  *
  * `combat.combatCensus` refuses to guess a constructed position, and this is
@@ -1179,9 +1237,42 @@ export const ENTITY_CLASSES = Object.freeze({
     pod: {
         as3: 'Pod', roles: ROLES, collider: 'none', type: 'Pod',
         dx: 8, dy: 8,
-        src: 'Game.as:2191 + Scenery/Pod.as:70-73',
+        src: 'Game.as:2191 + Scenery/Pod.as:24-45,60-80',
         why: 'snaps `p.x`/`p.y` to its own position, then calls Player.hit()',
-        hazard: 'unpriced',
+        // ⛓⛓ R6 SLICE 6b — PRICED. §14.3 transcribed it and deliberately did
+        // not wire it; this is the wiring, and the volume is the oel cell
+        // EXACTLY.
+        //
+        //   ctor  `super(_x + Tile.w/2, _y + Tile.h/2)`  ⇒ entity = oel+(8,8)
+        //         `setHitbox(16, 16, 8, 8)`              ⇒ box = the oel cell
+        //   gate  `collideTypesInto(["Player"], x, y, v)` — the POD's own box
+        //         at the POD's own position, so `dx/dy/originX/originY` are
+        //         all 0 and the rect is `[oel.x, +16) x [oel.y, +16)`.
+        //
+        // ⛔⛔ THE PIN SURVIVES `noDamage` AND THE DAMAGE DOES NOT. The three
+        // position writes sit ABOVE the `p.hit` call (`Pod.as:70-73`), and
+        // `Bot.noDamage` returns at the top of `Player.hit` — so a
+        // `noDamage: true` tape keeps the teleport and loses only the heart.
+        // Same shape as `whirlpool`, and the reason this volume is avoided by
+        // EVERY tape rather than by the damage-taking ones.
+        //
+        // ⛔ STANDING IN AN *OPEN* POD CLOSES IT. `if (v.length > 0 &&
+        // currentAnim == "opened") play("close")` makes the player their own
+        // trigger — 22 updates later the anim is `"closed"` and the pin is
+        // live. So the volume is armed on a fresh boot with no boss action at
+        // all, which is why `inert:` would be the wrong classification.
+        //
+        // ⛓ AND THE PIN IS NOT A ONE-SHOT. `p.hit`'s own `hitsTimer` (20)
+        // rate-limits the hearts; `p.x = x; p.y = y; p.v.x = p.v.y = 0` is
+        // UNGATED and runs on every tick of overlap. A pinned player cannot
+        // walk out.
+        hazard: {
+            dx: 0, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
+            kind: 'pod-pin',
+            effect: 'writes `p.x`/`p.y`/`p.v` ABSOLUTELY every tick of overlap while '
+                + 'its animation is "closed", then calls `p.hit(null, 0, null, 1)` — '
+                + 'and only the second half is inside `noDamage`',
+        },
     },
     bosstotem: {
         as3: 'BossTotem',
@@ -1228,9 +1319,42 @@ export const ENTITY_CLASSES = Object.freeze({
     finalboss: {
         as3: 'FinalBoss', roles: ROLES, collider: 'none', type: 'Enemy',
         dx: 8, dy: 8,
-        src: 'Game.as:2074 + Enemies/FinalBoss.as:92',
+        src: 'Game.as:2074 + Enemies/FinalBoss.as:78-100,131-165,216-222',
         why: 'sets `Game.freezeObjects = true` for its intro, and writes persistence',
-        hazard: 'unpriced',
+        /**
+         * ⛓⛓ R6 SLICE 6b — CLASSIFIED, AND IT IS THE FOURTH DISPOSITION.
+         *
+         * §8.13's second refusal was `hazard: 'unpriced'` and the obvious
+         * discharge is a rect. **There is no rect.** Every one of this
+         * class's hazardous effects is ungated by distance:
+         *
+         *   · the intro `Game.freezeObjects = true` runs in the `!started`
+         *     block on the FIRST update of the room, at any separation, and
+         *     holds until an X RELEASE (`FinalBoss.as:80-99`);
+         *   · `activeOffScreen = true`, so the barrage aims at the player
+         *     from anywhere in the level and `RockFall` lands on the aim
+         *     point, not near the boss;
+         *   · the persistence writes are `endAnim`'s, i.e. the DEATH.
+         *
+         * A volume that expressed any of that would be the whole room, and
+         * "avoid the room" is not a routing instruction — it is the fight.
+         * ⇒ `entry:` says the trigger is WORLD ENTRY rather than proximity,
+         * and names what prices it instead. The class is still a hazard on
+         * the same evidence; what it is not is a *proximity* hazard.
+         *
+         * ⚠ `inert:` would have been the cheap discharge and it would have
+         * been false — this thing fires on a fresh boot with no input at all.
+         */
+        hazard: {
+            entry: 'ROOM ENTRY, not proximity: the `!started` intro raises '
+                + '`Game.freezeObjects` on the room\'s first update from any distance '
+                + 'and holds it until an X RELEASE; `activeOffScreen = true` makes the '
+                + 'rockfall barrage aim at the player anywhere in the level; and the '
+                + '`{112,0}`/`{112,1}` writes are `endAnim`\'s death arm. There is no '
+                + 'avoid volume smaller than the level. Priced by `finalBossFight.js` '
+                + '(the fight model) and by `combat.ENEMY_CLASSES.finalboss` (the '
+                + 'contact damage), never by a rect a planner routes around.',
+        },
     },
 
     // --- everything else: not a trigger, not a pickup, harmless to be
@@ -3079,6 +3203,14 @@ export function buildLevelWorld(levelRecord, {
     // than anything the physics consults — nothing here changes a tick.
     const pickups = [];
     const proximityHazards = [];
+    /**
+     * ⛓ R6 SLICE 6b: hazards whose trigger is WORLD ENTRY rather than
+     * distance, so there is no avoid volume to compute and a planner has
+     * nothing to route around. One class so far (`finalboss`); the list
+     * exists so a room that contains one says so out loud instead of
+     * looking like a room with no hazard in it at all.
+     */
+    const entryHazards = [];
     // R2: the `Activators` groups. `activators` are the responders that stop
     // being solid while their group is held; `pressers` are the volumes that
     // hold it. Both carry the `t` the game groups them by, read from the
@@ -3672,7 +3804,8 @@ export function buildLevelWorld(levelRecord, {
             });
         }
         if (consults.has('proximity-hazard') && cls.hazard) {
-            if (cls.hazard === 'unpriced') {
+            const disposition = hazardDisposition(cls.hazard);
+            if (disposition === 'unpriced') {
                 // Classified as a hazard on evidence, with the avoid volume
                 // deliberately NOT guessed. Same shape as the pixelmask
                 // seam: a rung boundary made visible rather than a rect
@@ -3687,7 +3820,18 @@ export function buildLevelWorld(levelRecord, {
             // hazard, and the reason it cannot fire on a fresh boot is
             // recorded so a later rung (R3 collects for real, which wakes
             // BossTotem) knows exactly what it has to price.
-            if (!cls.hazard.inert) {
+            //
+            // ⛓ R6 SLICE 6b — AND `entry:` IS THE FOURTH. Same act, different
+            // claim: the effects are real and ungated by DISTANCE, so there
+            // is no avoid volume to compute. It is recorded in its own list
+            // rather than dropped, because "the builder said nothing" and
+            // "the builder said the trigger is the doorway" must not print
+            // the same. → `entryHazards`.
+            if (disposition === 'entry') {
+                entryHazards.push({
+                    cls, tag: e.type, x, y, entry: cls.hazard.entry, src: cls.src,
+                });
+            } else if (disposition === 'volume') {
                 proximityHazards.push({
                     cls, tag: e.type, x, y,
                     kind: cls.hazard.kind, effect: cls.hazard.effect,
@@ -4284,16 +4428,10 @@ export function buildLevelWorld(levelRecord, {
     if (consults.has('combat')) {
         const needsRow = [];
         for (const e of levelRecord.entities ?? []) {
-            const cls = ENTITY_CLASSES[e.type];
-            const as3 = cls?.as3 ?? null;
-            const dangerous = as3 !== null
-                && (HARMFUL_CLASS_SET.has(as3) || TOTAL_ENEMIES_SET.has(as3));
-            const hasRow = Boolean(ENEMY_CLASSES[e.type] || PUZZLEMENT_HAZARDS[e.type]);
-            if (!hasRow && (dangerous || LOOKS_LIKE_COMBAT.has(e.type))) {
-                needsRow.push(`"${e.type}" (${as3}) at (${e.x},${e.y}) — `
-                    + (dangerous
-                        ? `${as3} reaches the player or is summed by totalEnemies()`
-                        : 'it is in the combat vocabulary'));
+            const why = combatRowRequirement(e.type, ENTITY_CLASSES[e.type]?.as3 ?? null);
+            if (why) {
+                needsRow.push(`"${e.type}" (${ENTITY_CLASSES[e.type]?.as3 ?? null}) `
+                    + `at (${e.x},${e.y}) — ${why}`);
             }
         }
         if (needsRow.length > 0) {
@@ -4415,6 +4553,7 @@ export function buildLevelWorld(levelRecord, {
         teleporters,
         pickups,
         proximityHazards,
+        entryHazards,
         activators,
         pressers,
         /**

@@ -124,7 +124,7 @@ describe('⛓ the beamtower — the finding §6.6 turns on', () => {
 });
 
 describe('the volumes', () => {
-    it('every placed Puzzlement instance gets one — 79 of them', () => {
+    it('every placed Puzzlement instance gets one — 83 of them', () => {
         let n = 0;
         const byVerdict = {};
         for (let level = 0; level < LEVEL_COUNT; level += 1) {
@@ -143,9 +143,14 @@ describe('the volumes', () => {
                 }
             }
         }
-        expect(n).toBe(79);
-        // 4 crushers + 9 whirlpools are the hard-avoid set.
-        expect(byVerdict['hard-avoid']).toBe(13);
+        // ⛓ R6 SLICE 6b: 79 -> 83. L112 stopped refusing the combat role
+        // when the Pod bill was paid, so its four pods are counted for the
+        // first time — the level was `continue`d past for five rungs.
+        expect(n).toBe(83);
+        // 4 crushers + 9 whirlpools + THE FOUR PODS are the hard-avoid set.
+        // ⛔ The pods are hard-avoid on a damage of ONE: the ladder's rung-4
+        // verdict comes from the ungated position write, not the number.
+        expect(byVerdict['hard-avoid']).toBe(17);
     });
 
     it('refuses a hazard with no transcribed volume rather than answering empty', () => {

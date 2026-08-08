@@ -1083,13 +1083,30 @@ describe('R2: a relaxed walk with collision ON', () => {
         // than by neglect — `pod`, L112, whose avoid volume belongs to R6
         // with the ending. When R6 prices it, this test moves to whatever
         // the census still refuses, and if nothing does, it says so.
+        //
+        // ⛓⛓⛓ R6 SLICE 6b PRICED IT, AND **NOTHING DOES**. That sentence
+        // above was written two rungs ago as an instruction to this moment,
+        // so this is it being carried out rather than a test being loosened:
+        // every level in the extract builds under both censuses now.
+        expect(() => buildLevelWorld(levelSource(112), { roles: RELAXED_ROLES }))
+            .not.toThrow();
         expect(() => synthesizeLegs([{ level: 112, targets: [{ x: 120, y: 120 }] }],
             { levelSource, boot: { level: 112, x: 112, y: 112 }, relax: R2 }))
-            .toThrow(/"pod".*PROXIMITY HAZARD/s);
-        // ...and noclip does not save it either, because `proximity-hazard`
-        // is a CHEAP role: this one is about the volume, not the collider.
-        expect(() => buildLevelWorld(levelSource(112), { roles: RELAXED_ROLES }))
-            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+            .not.toThrow(/PROXIMITY HAZARD/);
+        // ⛔ AND THE REFUSAL IS STILL LIVE, which is the half that would
+        // otherwise be lost: the driver must still refuse geometry nobody
+        // classified. The reachable arm is the UNKNOWN TAG one, asked
+        // through the same `synthesizeLegs` entry point rather than through
+        // `buildLevelWorld` directly — a census the driver stopped
+        // consulting would pass a builder-level assertion.
+        const unknown = (level) => (level === 900 ? {
+            level: 900, class: 'Synthetic', width: 10, height: 10,
+            layers: [{ name: 'tiles', set: 'tileset', tiles: [] }],
+            entities: [{ type: 'notatag', x: 16, y: 16 }],
+        } : levelSource(level));
+        expect(() => synthesizeLegs([{ level: 900, targets: [{ x: 80, y: 80 }] }],
+            { levelSource: unknown, boot: { level: 900, x: 64, y: 64 }, relax: R2 }))
+            .toThrow(/"notatag".*not in the transcribed class table/s);
     });
 
     it('refuses a non-boolean noclip rather than coercing it', () => {

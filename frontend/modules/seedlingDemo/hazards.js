@@ -328,6 +328,38 @@ export function hazardVolume(instance, world) {
                 deferredTo: 'levelWorld proximity-hazard',
             };
         }
+        case 'pod': {
+            // ⛓⛓ R6 SLICE 6b. `Pod.as:24` is `super(_x + Tile.w/2, _y +
+            // Tile.h/2)` and `setHitbox(16, 16, 8, 8)`, so the box is the oel
+            // CELL and `cx`/`cy` — the constructed centre — put it back:
+            // `[cx-8, cx+8) x [cy-8, cy+8)`.
+            //
+            // ⛔ `hard-avoid`, and NOT because the damage is large. The
+            // damage is 1. What makes it unsurvivable is that the position
+            // writes are ABOVE `p.hit` and ungated, so the pin outlives
+            // `noDamage` and the player can never walk out: the ladder's
+            // rung-4 shape with a rung-1 damage number.
+            return {
+                tag,
+                verdict: 'hard-avoid',
+                exactness: 'exact',
+                why: '⛔ the pin SURVIVES `noDamage`: `p.x = x; p.y = y; p.v.x = p.v.y '
+                    + '= 0` (Pod.as:70-72) sits ABOVE `p.hit(null, 0, null, 1)` and is '
+                    + 'ungated, so an overlapping player is re-snapped EVERY TICK while '
+                    + 'the animation is "closed" and cannot leave. And standing in an '
+                    + 'OPEN one plays "close" (Pod.as:78-80), so the player is their own '
+                    + 'trigger — 22 updates later it is closed.',
+                rects: [mk(cx - 8, cy - 8, 16, 16,
+                    'the 16x16 hitbox at its own position — `collideTypesInto(["Player"], '
+                    + 'x, y, v)`')],
+                discs: [],
+                // ⚠ NOT exactly modellable from its own clock: the animation
+                // has two writers, the boss's script and the player's own
+                // overlap. `combat.PUZZLEMENT_HAZARDS.pod.timing` says
+                // `boss-script` for the same reason.
+                timing: 'boss-script',
+            };
+        }
         default:
             throw new Error(`hazardVolume: "${tag}" has no transcribed volume. Every member `
                 + 'of PUZZLEMENT_HAZARDS needs one — an unpriced hazard is a contact '

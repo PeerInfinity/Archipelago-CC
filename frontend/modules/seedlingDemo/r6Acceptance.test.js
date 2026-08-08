@@ -6,6 +6,7 @@ import { fixtureNames, loadTape } from './fixtures/index.js';
 import {
     FP_ELAPSED_CLAMPED, R6_ANIM_CLOCKS, R6_AS3_DECISION, R6_BOSS_KILL_LEDGER,
     R6_CREDITS_WITNESS, R6_ITEM_LEDGER, R6_MENU_WRITERS, R6_WINDOWS,
+    R6_BLOOD_MENU_DERIVATION, menuWriterEliminations,
     R6AcceptanceError, RENDER_SIDE_DRAW_SITES, animCallbackUpdate,
     r6ExitCriteria, r6ExitFindings, rngPostureOf,
 } from './r6Acceptance.js';
@@ -130,8 +131,19 @@ describe('R6 acceptance', () => {
             expect(v.why).toMatch(/AT RISK/);
         });
 
-        it('the render-side census names exactly three sites', () => {
-            expect(RENDER_SIDE_DRAW_SITES).toHaveLength(3);
+        it('⛔ the render-side census names FOUR sites — three was a lexical count', () => {
+            // ⛔ R6 SLICE 6a/6b: was three. `Moonrock.render()` calls
+            // `drawFlares()` twice and `drawFlares` draws 7 per iteration
+            // over 20 iterations, so the fourth site is 280 draws/frame —
+            // bigger than the other three combined by two orders of
+            // magnitude, and missed because the census classified sites by
+            // the function they SIT IN rather than by the call graph.
+            expect(RENDER_SIDE_DRAW_SITES).toHaveLength(4);
+            const moonrock = RENDER_SIDE_DRAW_SITES.find((s) => /Moonrock/.test(s.site));
+            expect(moonrock.draws).toBe(280);
+            // ...and it is NOT in L112, which is the reason the posture
+            // verdict for the Owl is unchanged by the correction.
+            expect(moonrock.where).toMatch(/NOT L112/);
             // ⛔ `Game.shake` must NOT be in here. Its two draws are in
             // `view()`, which `Game.update` calls — the reclassification the
             // whole posture rests on.
@@ -219,17 +231,59 @@ describe('R6 acceptance', () => {
             expect(R6_CREDITS_WITNESS.read).toMatch(/botStatus\.menu/);
         });
 
-        it('exactly one menu writer is left un-eliminated, and it is the Seed', () => {
-            const live = R6_MENU_WRITERS.filter((w) => w.eliminatedBy === null);
+        it('exactly one menu writer is left un-eliminated in W-seed, and it is the Seed', () => {
+            const live = menuWriterEliminations('W-seed').filter((w) => w.live);
             expect(live).toHaveLength(1);
             expect(live[0].site).toBe('Pickups/Seed.as:77');
         });
 
-        it('every other writer carries the assertion that eliminates it', () => {
-            for (const w of R6_MENU_WRITERS.filter((x) => x.eliminatedBy !== null)) {
-                expect(typeof w.eliminatedBy).toBe('string');
-                expect(w.eliminatedBy.length).toBeGreaterThan(10);
+        /**
+         * ⛔⛔⛔ R6 SLICE 6b — AND THE SAME ELIMINATION IS **FALSE** FOR
+         * W-BLOOD, WHICH IS THE §14.6 FINDING.
+         *
+         * The bloody arm reboots into L1; L1 holds `oracle@64,32`; and
+         * `Oracle.doneTalking` under `cutscene[1]` — exactly the flag the
+         * bloody seed set one tick earlier — calls `exitToMenu()`. So the
+         * Oracle row's *"no Oracle in L113/L114/L115"* is true of W-seed and
+         * says nothing at all about W-blood, and the SEED row flips the other
+         * way: the tree arm is unreachable from a bloody seed.
+         *
+         * ⇒ the two windows have DIFFERENT live writers, and neither is a
+         * superset of the other. An `eliminatedBy` that was one string could
+         * not have said so.
+         */
+        it('⛔ ...and W-BLOOD\'s live writer is a DIFFERENT one — the Oracle', () => {
+            const live = menuWriterEliminations('W-blood').filter((w) => w.live);
+            expect(live).toHaveLength(1);
+            expect(live[0].site).toBe('NPCs/Oracle.as:120');
+            // The Seed row, which is W-seed's live one, is ELIMINATED here.
+            const seed = menuWriterEliminations('W-blood')
+                .find((w) => w.site === 'Pickups/Seed.as:77');
+            expect(seed.live).toBe(false);
+            expect(seed.why).toMatch(/cutscene\[1\]/);
+            // ...and the derivation says what to assert instead of "a menu".
+            expect(R6_BLOOD_MENU_DERIVATION.liveWriters).toEqual(['NPCs/Oracle.as:120']);
+            expect(R6_BLOOD_MENU_DERIVATION.landsIn).toBe(1);
+            expect(R6_BLOOD_MENU_DERIVATION.harnessHazard).toMatch(/AUTO_ADVANCE_CADENCE/);
+            expect(R6_BLOOD_MENU_DERIVATION.discriminator).toMatch(/level sequence/);
+        });
+
+        it('every writer carries an eliminating assertion, PER WINDOW', () => {
+            for (const window of ['W-seed', 'W-blood']) {
+                for (const row of menuWriterEliminations(window)) {
+                    if (row.live) continue;
+                    expect(typeof row.why, `${row.site} in ${window}`).toBe('string');
+                    expect(row.why.length).toBeGreaterThan(10);
+                }
             }
+        });
+
+        it('⛔ refuses a window it has no verdict for, rather than defaulting', () => {
+            // The §14.6 defect made unrepeatable: an elimination that does
+            // not name its window is what let W-seed's argument be read as
+            // W-blood's.
+            expect(() => menuWriterEliminations('W-owl'))
+                .toThrow(/has no verdict for window "W-owl"/);
         });
     });
 

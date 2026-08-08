@@ -159,36 +159,152 @@ export const R6_ITEM_LEDGER = Object.freeze([
  *
  * Every `Game.menu = true` in the game, from a grep of the whole tree:
  */
+/**
+ * ⛔⛔⛔ AND THE ELIMINATION IS PER WINDOW, NOT PER TABLE — R6 SLICE 6.
+ *
+ * `eliminatedBy` was a single string per row, which silently asserted that
+ * one argument covers every window. It does not. §14.6 refuted §2.5's "the
+ * bloody branch ends in no menu": `Seed`'s bloody arm reboots into **L1**,
+ * L1 holds `oracle@64,32`, and `Oracle.doneTalking` under `cutscene[1]`
+ * calls `exitToMenu()`. So the Oracle row's elimination — "no Oracle in
+ * L113/L114/L115" — is TRUE for W-seed and FALSE for W-blood, in the one
+ * game state that arms it.
+ *
+ * ⇒ each row now carries `eliminatedBy` as a MAP from window name to the
+ * fact that kills it there, and a row with a live writer in a window says
+ * so with `null` rather than by omission. `menuWriterEliminations(window)`
+ * is the reader.
+ *
+ * ⛓ AND SLICE 6a MADE THE WHOLE ARGUMENT A BELT RATHER THAN THE BRACES.
+ * `botStatus.menu_state` is a direct readout now, so a window asserts
+ * `menu_state === 2` and keeps the elimination as the second stratum. The
+ * elimination is what says the 2 came from the tree; the readout is what
+ * says it is the credits and not some other menu.
+ */
 export const R6_MENU_WRITERS = Object.freeze([
     Object.freeze({
         site: 'Pickups/Seed.as:77',
         what: 'the tree/credits path — `menu = true`, `cutscene[2] = false`, badge 14, '
             + '`new Game(level, currentPlayerPosition, false, 2)`',
-        eliminatedBy: null, // ← this is the one we want
+        // ← the one W-seed wants. ⛔ AND IT IS NOT REACHABLE FROM W-BLOOD AT
+        // ALL: the tree arm needs `tree === true`, which is `Seed`'s 5th
+        // ctor arg, which `Game.as:2185` supplies as `cutscene[2]` — and the
+        // bloody branch sets `cutscene[1]`, never `cutscene[2]`.
+        eliminatedBy: Object.freeze({
+            'W-seed': null,
+            'W-blood': 'the bloody arm sets `cutscene[1]`, and `Seed`\'s tree arm needs '
+                + '`_tree`, which `Game.as:2185` passes as `cutscene[2]`. L1 has no '
+                + '`seed` object to rebuild in any case.',
+        }),
     }),
     Object.freeze({
         site: 'Player.as:489',
         what: 'the DARKSUIT "final (bad) scene" death — `getSuit()` returns '
             + '`sprShrumDark` only when `hasDarkSuit`, and the "die"/"dead" anims '
             + 'exist on no other sprite',
-        eliminatedBy: 'the window holds no darksuit (assert `items.hasDarkSuit` false)',
+        eliminatedBy: Object.freeze({
+            'W-seed': 'the window holds no darksuit (assert `items.hasDarkSuit` false)',
+            // ⚠ The SAME fact, and it is worth restating rather than
+            // sharing: `Oracle.doneTalking`'s cutscene[1] arm branches on
+            // `p.graphic != p.sprShrumDark` and plays `sprShrumDark.play("die")`
+            // when it IS the dark suit — i.e. a darksuit W-blood run reaches
+            // Player.as:489 through the Oracle rather than through a death.
+            // One item, two routes to the same menu.
+            'W-blood': 'the window holds no darksuit (assert `items.hasDarkSuit` false) '
+                + '— which ALSO forces `Oracle.doneTalking` down its `exitToMenu()` arm '
+                + 'rather than its `sprShrumDark.play("die")` one',
+        }),
     }),
     Object.freeze({
         site: 'NPCs/Oracle.as:120',
-        what: 'the Oracle NPC',
-        eliminatedBy: 'no Oracle in L113/L114/L115 (assert from the level records)',
+        what: 'the Oracle NPC — `doneTalking()` under `Game.cutscene[1]` calls '
+            + '`exitToMenu()`, which is `Game.menu = true` plus a world rebuild',
+        eliminatedBy: Object.freeze({
+            'W-seed': 'no Oracle in L113/L114/L115 (assert from the level records)',
+            // ⛔⛔⛔ THE ONE THAT DOES NOT TRANSFER. W-blood LANDS in L1.
+            'W-blood': null,
+        }),
     }),
     Object.freeze({
         site: 'Game.as:1281',
         what: '`Input.released(restartKey)` -> `menu = true` + a RESTART world',
-        eliminatedBy: 'the tape presses no restart key (assert from the tape\'s spans)',
+        eliminatedBy: Object.freeze({
+            'W-seed': 'the tape presses no restart key (assert from the tape\'s spans)',
+            'W-blood': 'the tape presses no restart key — and `restart` is not in the '
+                + 'tape vocabulary at all (`tapeFormat` rejects `R` by name), so this '
+                + 'is a format-level elimination rather than a per-tape one',
+        }),
     }),
     Object.freeze({
         site: 'Game.as:1287',
         what: '`Input.released(escapeKey)` -> `menu = true` + a fresh world',
-        eliminatedBy: 'the tape presses no escape key (assert from the tape\'s spans)',
+        eliminatedBy: Object.freeze({
+            'W-seed': 'the tape presses no escape key (assert from the tape\'s spans)',
+            'W-blood': 'the tape presses no escape key — `Esc` is likewise rejected by '
+                + '`tapeFormat` by name',
+        }),
     }),
 ]);
+
+/**
+ * ⛔⛔⛔ W-BLOOD'S MENU HAS **TWO** LIVE WRITERS, AND THE HARNESS DRIVES ONE.
+ *
+ * The derivation §14.6 asked for, kept as data because it is the reason
+ * W-blood's terminal assertion is shaped differently from W-seed's.
+ *
+ * With the darksuit eliminated and the two key writers out of the
+ * vocabulary, W-blood's reachable `Game.menu = true` writers are:
+ *
+ *   1. `NPCs/Oracle.as:120` — `exitToMenu()`, reached by completing L1's
+ *      13-line Oracle dialogue with `cutscene[1]` set. **LIVE.**
+ *   2. `Game.as:1281`/`:1287` — out of the vocabulary, so not live.
+ *
+ * ⇒ ONE live writer, and that is the finding rather than a relief:
+ * `Bot.AUTO_ADVANCE_CADENCE` presses and releases X every 8 FROZEN frames,
+ * and `NPC.talk()` reads `Input.released(p.keys[6])` directly — past the
+ * `receiveInput = false` that `Game.as:946-954`'s scripted walk sets. So in
+ * exactly the state where the tape has no input, the INSTRUMENT has the
+ * most, and it would walk the Oracle to `doneTalking()` and out through
+ * `exitToMenu()`. A W-blood record that ended in a menu would then be a
+ * claim about the harness, not about the game.
+ *
+ * ⇒ the window's discriminator is NOT "a menu happened". It is the LEVEL
+ * SEQUENCE (114 → 1, against W-seed's 115 → 115 → 115) plus `menu_state`,
+ * and the tape must END before the Oracle's radius is ever entered.
+ * → [[feedback_auto_advance_drives_the_ending]]
+ */
+export const R6_BLOOD_MENU_DERIVATION = Object.freeze({
+    liveWriters: Object.freeze(['NPCs/Oracle.as:120']),
+    landsIn: 1,
+    armedBy: 'Game.cutscene[1], set by `Seed.update`\'s bloody arm one tick before the '
+        + 'reboot (`Seed.as:70-71`)',
+    harnessHazard: 'Bot.AUTO_ADVANCE_CADENCE presses X every 8 frozen frames and '
+        + '`NPC.talk()` reads `Input.released` directly, so the ceremony-dismisser can '
+        + 'BE the Oracle\'s talk input. Every X the dismisser emits must be accounted '
+        + 'for, and the window must end before the talk radius is entered.',
+    discriminator: 'the level sequence (114 -> 1) plus `botStatus.menu_state`; NOT '
+        + '"a menu happened", which both branches can produce',
+});
+
+/**
+ * The facts that eliminate every `Game.menu = true` writer bar one, for a
+ * named window — and the live ones, which are the interesting half.
+ *
+ * @param {string} window a `R6_WINDOWS` name
+ * @returns {{site: string, live: boolean, why: string|null}[]}
+ */
+export function menuWriterEliminations(window) {
+    return R6_MENU_WRITERS.map((row) => {
+        if (!(window in row.eliminatedBy)) {
+            throw new R6AcceptanceError(
+                `menuWriterEliminations: ${row.site} has no verdict for window `
+                + `"${window}" — an elimination that does not name the window it holds `
+                + 'in is the §14.6 defect, not a default');
+        }
+        return { site: row.site, live: row.eliminatedBy[window] === null,
+            why: row.eliminatedBy[window] };
+    });
+}
 
 /**
  * ⛔⛔ AND A MENU IS A REBOOT LOOP, NOT A ROOM.
@@ -344,12 +460,57 @@ export const R6_ANIM_CLOCKS = Object.freeze([
     Object.freeze({ owner: 'WandShot', anim: 'flare', frameRate: 5, frames: 3, expect: 19 }),
     Object.freeze({ owner: 'WandShot', anim: 'die', frameRate: 20, frames: 3, expect: 5 }),
     Object.freeze({ owner: 'MagicalLock', anim: 'destroy', frameRate: 15, frames: 7, expect: 15 }),
+    // ── ⛓ R6 SLICE 6b: THE ENDING'S SIX, derived at 0.0333 (§14.10) ────
+    //
+    // ⛔ THE POD PAIR IS THE ONE A SCHEDULE READS. `FinalBoss.update` writes
+    // `pods[cpod].open = true/false`, which plays `"open"`/`"close"`; the
+    // PIN gates on `currentAnim == "closed"`, which is 22 updates after the
+    // `close` — so a plan that treats a closing pod as already lethal
+    // over-avoids by 22 ticks and one that treats it as safe is 22 ticks
+    // late. Both directions matter, which is why both rows are here.
+    Object.freeze({ owner: 'Pod', anim: 'open', frameRate: 10, frames: 7, expect: 22 }),
+    Object.freeze({ owner: 'Pod', anim: 'close', frameRate: 10, frames: 7, expect: 22 }),
+    // The two one-frame terminal states. They are NOT `sit`-family: their
+    // frameRate is 10, not 0, so the callback really does fire — every 4
+    // updates, for ever, re-entering the same animation.
+    Object.freeze({ owner: 'Pod', anim: 'opened', frameRate: 10, frames: 1, expect: 4 }),
+    Object.freeze({ owner: 'Pod', anim: 'closed', frameRate: 10, frames: 1, expect: 4 }),
+    Object.freeze({ owner: 'Grenade', anim: 'explode', frameRate: 12, frames: 8, expect: 21 }),
+    Object.freeze({ owner: 'Grenade', anim: 'hit', frameRate: 12, frames: 3, expect: 8 }),
+    Object.freeze({ owner: 'Grenade', anim: 'sit', frameRate: 5, frames: 2, expect: 13 }),
+    Object.freeze({ owner: 'RockFall', anim: 'break', frameRate: 15, frames: 8, expect: 17 }),
+    // ⛓ THE SECOND MEMBER OF THE `sit` FAMILY, and the honest answer for a
+    // terminal frame. `sprTreeGrow.add("grown", [6])` takes the default
+    // frameRate 0, so `_timer` never moves and `endAnim` can never fire
+    // again — the tree, once grown, stays grown and the 200-frame fade that
+    // follows is driven by `drawCover`, not by the animation.
+    Object.freeze({ owner: 'Seed', anim: 'grown', frameRate: 0, frames: 1, expect: Infinity }),
 ]);
 
 // ── THE RNG POSTURE ───────────────────────────────────────────────────
 
 /**
- * ⛔⛔⛔ THE RENDER-SIDE DRAW SITES, EXHAUSTIVELY — there are three.
+ * ⛔⛔⛔ THE RENDER-SIDE DRAW SITES — there are FOUR, and the fourth is 280
+ * draws per frame.
+ *
+ * ⛔ R6 SLICE 6a REFUTED THE EXHAUSTIVENESS AND SLICE 6b BANKS THE
+ * CORRECTION. This list said "exactly three" and it was built by classifying
+ * every draw site BY THE FUNCTION IT SITS IN. `Moonrock.render()` contains no
+ * draw at all; it calls `drawFlares()` twice, and `drawFlares` is a
+ * 20-iteration loop of 7 draws — **280 per render frame**, two orders of
+ * magnitude past every other render-side site combined, and invisible to a
+ * lexical classification. Walk the CALL GRAPH out of each phase entry point.
+ * → [[feedback_exhaustive_by_enclosing_function]]
+ *
+ * ⚠ AND THE DOWNSTREAM CONCLUSION SURVIVES, WHICH IS WHY THIS IS A
+ * CORRECTION AND NOT A COLLAPSE: L112 holds no moonrock, so "the Owl's draws
+ * ride the update stream" still holds. What does not survive is the right to
+ * CITE this list as complete — the claim now carries its bound.
+ *
+ * ⛓ The seven are `Rng.cos()` calls as of slice 6a's split, so with
+ * `rng.split` on they move the COSMETIC generator and cost a modelled window
+ * nothing at all. The row stays because the split is DEFAULT-OFF: a tape that
+ * does not ask for it pays all 280.
  *
  * The Owl is the arc's first fight with real gameplay RNG, and the brief
  * (§2.6) opened a "witnessed-not-exact" hatch for it on the grounds that
@@ -393,6 +554,19 @@ export const RENDER_SIDE_DRAW_SITES = Object.freeze([
         draws: 2,
         per: 'render',
         where: '`case 25` waterfall tiles with `spray && _em`',
+    }),
+    // ⛔⛔ THE FOURTH, found at slice 6a and banked here.
+    Object.freeze({
+        site: 'Scenery/Moonrock.as:174,176 -> drawFlares (:193-197)',
+        draws: 280,
+        per: 'render',
+        where: 'the OVERWORLD rooms (OverWorld, OverWorldN, OverWorldExtended, '
+            + 'Dungeon1/Entrance) — NOT L112, which is why §8.3\'s conclusion about '
+            + 'the Owl survives its own refutation',
+        note: '⛔ `render()` calls `drawFlares()` TWICE (once to the screen, once to '
+            + '`nightBmp`), and each call is 20 iterations x 7 draws. Gated on '
+            + '`!trigger && beam && canBeam`. Invisible to a by-enclosing-function '
+            + 'census: the enclosing function contains no `Math.random()` at all.',
     }),
 ]);
 
