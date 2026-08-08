@@ -453,8 +453,49 @@ const FADE_FRAMES = 25;
  * The derivation, the banked observations and the two-sided check now live
  * in `deadFrameBand.js` + `deadFrameBand.test.js`.
  */
-const deadlineFor = (tickCount) =>
-    Math.ceil((tickCount + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
+/**
+ * ⛔⛔⛔ R6 SLICE 4: AND THE BUDGET WAS SCALED FROM THE WRONG QUANTITY.
+ *
+ * `tick_count` is what the BOT counts. What the browser has to render is
+ * ENGINE FRAMES, and every frozen frame a ceremony spends is a frame the
+ * bot does not count — `Game.freezeObjects` gates `Bot.update`'s tick, not
+ * the engine's. `r6-totem-control` is 490 ticks and **~930 engine frames**
+ * (a 99-frame wand fade, a 150-frame `specialTimer`, a 186-frame fallrock
+ * drop), so a budget of `490 * 2.5 s` timed out at 1347 s with the tape
+ * still running — indistinguishable, from the outside, from a dead bot.
+ *
+ * ⇒ the model already knows the number. `runTape`'s `frozenFramesOwed` is
+ * the same quantity the dead-frame budget spends below, so the deadline
+ * spends it too rather than inventing slack.
+ * [[feedback_read_the_harness_own_constants]] — one instrument over.
+ */
+const deadlineFor = (tickCount, deadFrames = 0) =>
+    Math.ceil((tickCount + deadFrames + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
+
+/**
+ * The frozen frames the MODEL says this tape spends — memoised, because
+ * `runTape` is milliseconds offline and the deadline is asked for twice.
+ *
+ * ⚠ A MODEL NUMBER IN A HARNESS BUDGET, and that is sound in exactly one
+ * direction: it can only make the harness WAIT LONGER. A model that
+ * under-counts the freeze produces the timeout that used to happen anyway;
+ * one that over-counts costs patience and nothing else. It is never an
+ * assertion.
+ */
+const deadFrameCache = new Map();
+const modelDeadFrames = (name, tapeObj) => {
+    if (deadFrameCache.has(name)) return deadFrameCache.get(name);
+    let owed = 0;
+    try {
+        owed = runTape(tapeObj, { levelSource: atlasLevelSource() }).frozenFramesOwed ?? 0;
+    } catch {
+        // A tape the model refuses is a tape the comparison will report on
+        // properly in a moment; the budget just falls back to the old one.
+        owed = 0;
+    }
+    deadFrameCache.set(name, owed);
+    return owed;
+};
 
 /** Boot a fresh page with the bot armed-ready. Each tape gets its own. */
 async function freshPage() {
@@ -565,7 +606,8 @@ function runWindowsDriver(name, tapeObj) {
         '--tape', `${WIN_SCRATCH_DOS}\\tape-${name}.json`,
         '--out', `${WIN_SCRATCH_DOS}\\stream-${name}.json`,
         '--progress', `${WIN_SCRATCH_DOS}\\progress-${name}.json`,
-        '--deadline-sec', String(Math.ceil(deadlineFor(tapeObj.tick_count) / 1000)),
+        '--deadline-sec',
+        String(Math.ceil(deadlineFor(tapeObj.tick_count, modelDeadFrames(name, tapeObj)) / 1000)),
     ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 }
 
@@ -1051,6 +1093,44 @@ function checkReadout(name, tape, status, stream) {
                 + 'the flag, so the clear crutch has not actually been retired for it');
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 4: THE BOSS-KILL LEDGER, FROM THE GAME'S OWN ARRAY ──
+    //
+    // The rung's HEADLINE (§3.1) is "kills by persistence tag, asserted
+    // from the game's own persistence readout", and this is where it is
+    // asserted. `BossTotem.removed()` runs `Game.setPersistence(tag,
+    // false)`, so a kill lands in `persistence_cleared` exactly like a
+    // touch-lock's open — the polarity is a CLEAR, not a set.
+    //
+    // ⛔⛔ AND THE NEGATIVE ARM IS ASSERTED TOO, on every tape that reaches
+    // a boss room without killing anything. `r6-totem-control` lands NINE of
+    // the ten shots and its whole claim is that `{43,5}` stayed SET — which
+    // is a statement about the game's array and not about the model's, so
+    // it is checked here rather than only in vitest. A one-sided ledger
+    // ("every kill wrote its flag") would pass on a build that cleared the
+    // flag for every visitor.
+    if ((expected.bossKills ?? []).length > 0) {
+        const missing = expected.bossKills
+            .filter((k) => k.flag && !clearedInGame.has(`${k.flag.level}:${k.flag.tag}`))
+            .map((k) => `${k.id} (${k.flag.level}:${k.flag.tag})`);
+        check(`${name}: every boss the run KILLED wrote its persistence flag`,
+            missing.length === 0,
+            missing.length === 0
+                ? `${expected.bossKills.map((k) => `${k.id} -> ${k.flag.level}:${k.flag.tag} `
+                    + `(kill ${k.killTick}, tag ${k.tagTick})`).join(', ')} off`
+                : `${missing.join(', ')} still SET — the model killed a boss the game did `
+                + 'not, or `removed()` never ran (the white-out is 240 RENDER frames and '
+                + 'the tape may have stopped inside it)');
+    } else if ((expected.bossWalks ?? []).length > 0) {
+        // The run woke a boss and did NOT kill it: its tag must still be on.
+        const wronglyCleared = [...clearedInGame]
+            .filter((k) => k === '43:5');
+        check(`${name}: the boss the run did NOT kill kept its flag`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? '{43,5} still set, with the boss awake and walking'
+                : `${wronglyCleared.join(', ')} CLEARED by a run that never killed him`);
+    }
+
     return expected;
 }
 
@@ -1102,7 +1182,7 @@ async function replay(name, tapeObj) {
         const status = await waitFor(page, `tape ${name} to finish`, async () => {
             const st = await botJsonOn(page, 'botStatus');
             return st.finished ? st : null;
-        }, deadlineFor(tapeObj.tick_count));
+        }, deadlineFor(tapeObj.tick_count, modelDeadFrames(name, tapeObj)));
 
         const drained = await botJsonOn(page, 'botDrain');
         return { stream: withDerivedTransitions(name, drained), status };

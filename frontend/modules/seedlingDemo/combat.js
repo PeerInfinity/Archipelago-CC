@@ -424,7 +424,13 @@ export const ENEMY_CLASSES = Object.freeze({
         ctor: { dx: 0, dy: 0, src: 'BossTotem.as `super(_x, _y)` — no offset at any level of the chain' },
         as3: 'BossTotem', kill: { hits: 5, why: '`onlyHitBy = "Wand"`' },
         aggro: { kind: 'boss', range: 'arena' },
-        hitbox: null, damage: 1,
+        // ⛓ R6 SLICE 4: `setHitbox(80, 32, 40, -12)`. It was `null` for five
+        // rungs and that was HONEST — the census rect is the SPAWN box and
+        // the fight moves it 140 px south. It is filled in now because
+        // `bossTotemFight.BOSS_TOTEM_BODY` is the live one and the two are
+        // asserted equal; a reader who found `null` here would go looking
+        // for a hitbox the class plainly has.
+        hitbox: { w: 80, h: 32, ox: 40, oy: -12 }, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: '(43, 5)',
         // ⛔⛔⛔ CORRECTED AT R5 SLICE 20. This row said "AVOID — activated by
@@ -1020,9 +1026,35 @@ export function enemyHitPlayerFires(enemy, onScreenVerdict) {
  */
 export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
 
+/**
+ * ⛓⛓⛓ R6 SLICE 4: THE BODIES THIS RUNG STEPS *AND* PRICES.
+ *
+ * `bosstotem` leaves the `mover` arm here. `levelRun` now runs its whole
+ * `update()` — `moveY` included — so "the model does not compute this
+ * body's position" stopped being true, which was the ONLY reason a boss was
+ * refused. What replaces the refusal is not the static arm either: the boss
+ * is priced by its OWN `hitPlayer`, in the boss's own step, because its
+ * gate is a `collidable` flag and a 20-tick `hitsTimer` that no census row
+ * can see.
+ *
+ * ⚠ SO `stepContactsNow` MUST STILL SKIP IT. The census scan would price
+ * the body a second time, from a `.oel` placement 140 px above where the
+ * descent has taken it. `kind: 'boss'` is what tells it to.
+ */
+export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem']);
+
 export function contactPricing(tag) {
     const row = ENEMY_CLASSES[tag];
     if (!row) return { kind: 'unknown', why: `"${tag}" has no combat row` };
+    if (CONTACT_BOSS_FAMILIES.includes(tag)) {
+        return {
+            kind: 'boss',
+            why: `${row.as3} is stepped by \`levelRun\` and prices its own \`hitPlayer\` `
+                + 'in its own step (80x32 at force 3, gated on `collidable` and a 20-tick '
+                + '`hitsTimer`). The census rect is its SPAWN box and the descent has '
+                + 'moved it — pricing it here would be a second, wrong contact.',
+        };
+    }
     if (CONTACT_STEPPED_FAMILIES.includes(tag)) {
         return {
             kind: 'stepped',

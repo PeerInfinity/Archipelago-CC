@@ -245,6 +245,27 @@ export const SHAKE_WRITERS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R6 SLICE 4: THE TABLE, DRIVEN. `Game.shake` gets its new value from
+ * the writer's own `op`, so the two operators can never drift apart in a
+ * caller's head — which is exactly what §34.3 did when it wrote all three as
+ * assignments and §8.9 caught it.
+ *
+ * ⛔ AN ASSIGNMENT CAN LOWER THE SHAKE. `BossTotem.laserStep`'s `= 30`
+ * landing on a player who is at 35 from two recent hits DROPS it to 30 —
+ * and that is the game. A `Math.max` here would read as defensive and be a
+ * silent divergence.
+ */
+export function applyShakeWriter(shake, key) {
+    const w = SHAKE_WRITERS[key];
+    if (!w) {
+        fail(`applyShakeWriter: "${key}" is not a shake writer; the roster's are `
+            + `${Object.keys(SHAKE_WRITERS).join(', ')}. A writer this rung reaches and `
+            + 'this table does not name is a hole in `onScreen`, not a missing constant.');
+    }
+    return w.op === '+=' ? shake + w.value : w.value;
+}
+
+/**
  * `Math.random()`'s RANGE, which is all the band needs from the generator.
  *
  * `math_random` returns `(double)(raw & 0x7FFFFFFF) / 2147483648.0`

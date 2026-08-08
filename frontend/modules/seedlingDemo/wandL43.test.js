@@ -265,10 +265,26 @@ describe('the refusals this room can reach', () => {
         expect(run.wandShots.map((s) => s.pressTick)).toEqual([20, 28]);
     });
 
-    it('a shot that reaches the BOSS is refused — the fight is slice 4', () => {
+    it('⛓⛓ a shot that reaches the SLEEPING boss is REFUSED BY THE BOSS', () => {
         // The boot facing is `direction = 3` (down), so a press with no
         // northward nudge shoots into the sleeping totem's 80x32 body.
-        expect(() => drive([{ key: 'primary', from: 5, to: 5 }], { limit: 40 }))
-            .toThrow(/reached the enemy "bosstotem@152,168"/);
+        //
+        // ⛓ R6 SLICE 4: slice 2's `throw` retired here, and what replaced
+        // it is not "the hit lands". `BossTotem.hit` wraps `super.hit` in
+        // `fullyActivated && activationRestTime <= 0`, so a shot at a
+        // SLEEPING boss is a shot spent for nothing — which is the same
+        // verdict the refusal was standing in for, now computed from the
+        // source instead of declared.
+        const { run } = drive([{ key: 'primary', from: 5, to: 5 }], { limit: 40 });
+        expect(run.wandShotHits).toHaveLength(1);
+        expect(run.wandShotHits[0]).toMatchObject({
+            arm: 'enemy',
+            id: 'bosstotem@152,168',
+            landed: false,
+            spentWithoutDamage: true,
+            refusedAt: 'fullyActivated',
+        });
+        expect(run.bossHits).toHaveLength(1);
+        expect(run.bossHits[0]).toMatchObject({ hits: 0, killed: false });
     });
 });

@@ -33,7 +33,7 @@
  * it, rather than eagerly for all 116.
  */
 
-import { addedTimeKey, buildLevelWorld, rectsOverlap } from './levelWorld.js';
+import { addedTimeKey, buildLevelWorld, rect, rectsOverlap } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, TALK_KEY,
     beginDialogue, stepDialogue,
@@ -68,9 +68,16 @@ import {
 } from './spinner.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
-    createBossTotem, bossTotemClampY, bossTotemSolidRect, stepBossTotem,
+    createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
 } from './bossTotem.js';
+// ⛓⛓⛓ R6 SLICE 4: the FOURTEENTH family — the fight itself, and the only
+// per-visit body on the roster that publishes projectiles of its own.
+import {
+    BOSS_TOTEM_BODY, BOSS_TOTEM_DEATH_BLAST, BOSS_TOTEM_FIGHT, BOSS_TOTEM_KILL,
+    BOSS_TOTEM_SHOT, BOSS_TOTEM_WHITE_OUT, bossTotemBodyRect, bossTotemCameraTarget,
+    bossTotemShotRect, bossTotemTakesHit, stepBossTotemShot,
+} from './bossTotemFight.js';
 import {
     createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
@@ -97,6 +104,9 @@ import {
     // ⛓⛓⛓ R6 SLICE 3: the shake half. `stepCameraBand` is what the camera
     // becomes once a hit lands — see `stepCameraNow` below.
     bandIsExact, cameraBand, onScreenUnderShake, shakeAcrossLoad, stepCameraBand,
+    // ⛓ R6 SLICE 4: the writers table, DRIVEN — the totem writes two of the
+    // roster's three shakes and both are `=`, not `+=`.
+    applyShakeWriter,
 } from './camera.js';
 // ⛓⛓⛓ R6 SLICE 3: `Player.hit`/`knockback`/`hitUpdate`/`die`, and the
 // contact source that calls them. `noDamage` stops being a refusal here.
@@ -659,7 +669,11 @@ export function createLevelRun({
         if (!bossStates.has(n)) {
             const byId = new Map();
             for (const b of worldFor(n).bossTotems ?? []) {
-                byId.set(b.id, createBossTotem(b.ex, b.ey));
+                // ⛓ THE ID RIDES ON THE STATE from slice 4: the fight's six
+                // ledgers all attribute by it, and looking it up from the
+                // Map key at four call sites is how two of them would end up
+                // spelling it differently.
+                byId.set(b.id, { ...createBossTotem(b.ex, b.ey), id: b.id });
             }
             bossStates.set(n, byId);
         }
@@ -681,6 +695,15 @@ export function createLevelRun({
             out.set(id, {
                 id, activated: b.activated, fullyActivated: b.fullyActivated,
                 rect: bossTotemSolidRect(b), clampY: bossTotemClampY(b),
+                // ⛔⛔ R6 SLICE 4: A DEFECT SLICE 2 LEFT AND NO TAPE COULD
+                // REACH. `wandShotBlockerAt`'s woken arm reads `b.rect` —
+                // which `bossTotemSolidRect` returns `null` for EXACTLY when
+                // `b.activated` is true, i.e. exactly when that arm runs. It
+                // would have thrown a TypeError on its first live tick. The
+                // woken body is `type = "Enemy"` and has its OWN rect, and
+                // it is `collidable`-gated (the jump and the top wait are
+                // both un-hittable from the un-restored flag — §8.11).
+                bodyRect: b.activated ? bossTotemBodyRect(b) : null,
             });
         }
         return out;
@@ -937,7 +960,7 @@ export function createLevelRun({
         // is `type = "Enemy"` and `liveRectOf` deliberately returns null for
         // it, which is right for the player and wrong for this mover.
         for (const b of (bossRectsNow() ?? new Map()).values()) {
-            if (b.activated && rectsOverlap(box, b.rect)) {
+            if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) {
                 return { kind: 'enemy', id: b.id, boss: true };
             }
         }
@@ -1010,6 +1033,60 @@ export function createLevelRun({
      * could equally be a walk that stopped there.
      */
     const bossClamps = [];
+    /**
+     * ── ⛓⛓⛓ R6 SLICE 4: THE FIGHT'S OWN LEDGERS ──────────────────────
+     *
+     * Six lists, because the six things the fight does to the world are six
+     * different claims and a window has to be able to name which one it
+     * meant. `bossWalks` is R5's boundary-band CEILING, kept as a record now
+     * that it is no longer a throw.
+     */
+    const bossWalks = [];
+    /** `{t, level, y, rects, hitCalls}` — one per laser VOLLEY, hit or miss. */
+    const bossLasers = [];
+    /** `{t, level, id, x, y}` — one per `BossTotemShot` the attack published. */
+    const bossShotsFired = [];
+    /** `{t, level, id, hits, killed, refusedAt}` — one per wand shot AT the boss. */
+    const bossHits = [];
+    /**
+     * `{t, level, id, x, y, killTick, tagTick, flag}` — the kill, its blast,
+     * and the tick `removed()` writes `{43,5}` 240 renders later.
+     */
+    const bossKills = [];
+    /** `{t, level, x, y, hitPlayer}` — every Explosion this room produced. */
+    const bossBlasts = [];
+    /**
+     * ⛓⛓⛓ Every tick a `BossTotemShot`'s own removal was UNCERTAIN under
+     * the shake band. Not an error — the surviving branch is driven and the
+     * shot is asserted to touch nothing — but a window that shows an empty
+     * list has proved something WEAKER than one that shows a full list and
+     * no contact, and the ledger is what tells the two apart.
+     */
+    const bossShotCullBand = [];
+    /**
+     * `Explosion.added()` calls waiting for this tick's `updateLists()`.
+     *
+     * ⛔ NOT APPLIED WHERE THEY ARE CREATED. `FP.world.add` appends to
+     * `_add`, which `Engine.update` drains AFTER `World.update` — so the
+     * disc is tested against the player's END-of-tick origin, one whole
+     * player step later than the hit that spawned it (§8.10).
+     */
+    const pendingBlasts = [];
+    /** The `{43,5}` write `removed()` makes, keyed like `rockFlags`. */
+    const bossFlags = new Map();
+    let bossShotSeq = 0;
+    const bossShotStates = new Map();
+    const bossShotsFor = (n) => {
+        if (!bossShotStates.has(n)) bossShotStates.set(n, []);
+        return bossShotStates.get(n);
+    };
+    /**
+     * `Game.cameraTarget`, a STATIC the boss overwrites every frame he
+     * exists and NOTHING resets until he is removed (§8.16). `null` means
+     * "no boss has ever written it in this world", which is not the same as
+     * `(-1,-1)` — that is an explicit `Game.resetCamera()`.
+     */
+    let bossCameraTarget = null;
     /** One record per wand approach FADE — a freeze no other pickup has. */
     const wandFades = [];
     /**
@@ -1253,6 +1330,11 @@ export function createLevelRun({
                 if (r.unfroze) unfroze = true;
             }
             for (const b of bosses) {
+                // ⛓ R6 SLICE 4: and `render()` runs on every frozen frame
+                // too — it is outside `Game.update` entirely. Without this
+                // the head position would be 186 frames stale on the far
+                // side of the drop.
+                renderBossTotem(b);
                 stepBossTotem(b, {
                     wandGone: wandGoneNow,
                     // ⚠ TRUE FOR THE WHOLE SPAN, including the last frame.
@@ -1627,12 +1709,18 @@ export function createLevelRun({
      * for all 100 of them and this is `stepCamera` with a branch in front.
      */
     const stepCameraNow = (player, worldRec) => {
+        // ⛓⛓⛓ R6 SLICE 4: `Game.cameraTarget`, which the BossTotem
+        // overwrites every frame he exists. It REPLACES the follow (and
+        // with it the inventory term), so the camera jumps by that offset
+        // the tick he comes into range — and it is a STATIC that stays
+        // frozen at the last midpoint through the whole white-out (§8.16).
+        const cameraTarget = bossCameraTarget;
         if (camBand === null && shake === 0) {
-            cam = stepCamera(cam, player, worldRec);
+            cam = stepCamera(cam, player, worldRec, { cameraTarget });
             return;
         }
         if (camBand === null) camBand = cameraBand(cam);
-        const r = stepCameraBand(camBand, player, worldRec, { shake });
+        const r = stepCameraBand(camBand, player, worldRec, { shake, cameraTarget });
         camBand = r.band;
         shake = r.shake;
         // ⛔ THE BAND CAN COLLAPSE BACK TO A POINT, and when it does the
@@ -3276,6 +3364,12 @@ export function createLevelRun({
                 tick: ticksCompleted, frozen: ceremony !== null, cam: cullCam, hitAt,
             });
             if (r.event) {
+                // ⛓ R6 SLICE 4: THE ENEMY ARM AMENDS THE EVENT, SO IT HAS
+                // TO RUN ABOVE THE PUSH. `wandShotHits` takes a SPREAD, so
+                // an amendment below it would be written to an object
+                // nobody reads — the shape [[feedback_dropped_option_key_is_a_silence]]
+                // names, found by this file's own test.
+                if (r.event.arm === 'enemy') applyWandShotToBoss(s, r.event);
                 wandShotHits.push({
                     t: ticksCompleted, level, id: s.id, ...r.event,
                 });
@@ -3286,18 +3380,6 @@ export function createLevelRun({
                         level, id: lock.id, tag: lock.tag, shot: s.id,
                         hitTick: lock.hitTick, openTick: lock.openTick,
                     });
-                }
-                if (r.event.arm === 'enemy' && r.event.landed) {
-                    // ⛔ REFUSED, not silently applied. `Enemy.hit`'s damage
-                    // side is `enemyDamage`'s and the boss fight is slice 4;
-                    // a run that let a shot land damage it does not carry
-                    // would report a kill nobody modelled.
-                    throw new Error(`levelRun: a wand shot (${s.id}) reached the enemy `
-                        + `"${r.event.id}" at tick ${ticksCompleted} in level ${level}. `
-                        + '`Enemy.hit(3, p, 0.5, "Wand")` would land — and the FIGHT '
-                        + 'model (the totem\'s state machine, the ten-shot schedule, the '
-                        + 'death explosion) is R6 slice 4, not this one. Plan the shot '
-                        + 'at a `magicallock`, or route around the body.');
                 }
             }
             // `Music.playSound("Wand Fizzle")` moves the draw stream and
@@ -3312,6 +3394,244 @@ export function createLevelRun({
         }
         const kept = list.filter((s) => !s.removed);
         if (kept.length !== list.length) wandShotStates.set(level, kept);
+    }
+
+    /**
+     * `Enemy.hit(3, p, 0.5, "Wand")` on the one class this rung steps.
+     *
+     * Amends the shot's own event with the BODY's verdict — see the call
+     * site for why it must run above the push.
+     */
+    function applyWandShotToBoss(s, event) {
+        // ⛓⛓⛓ R6 SLICE 4: `Enemy.hit`, LANDED — slice 2's refusal retires
+        // for the one class this rung steps.
+        //
+        // ⛔ `wandShotCheckEntity` KNOWS ONLY THE FREEZE. Its
+        // `landed: !frozen` is `Enemy.hit`'s `&& !Game.freezeObjects` term
+        // and nothing else; the other five gates (`fullyActivated`,
+        // `activationRestTime`, `hitsTimer`, `onlyHitBy`, `hits < hitsMax`)
+        // are the BODY's and live on the body. The event is amended with
+        // the verdict the body gave, so a reader of `wandShotHits` never
+        // sees a `landed: true` the boss refused.
+        const boss = bossStateFor(level).get(event.id);
+        if (!boss) {
+            throw new Error(`levelRun: a wand shot (${s.id}) reached the enemy `
+                + `"${event.id}" at tick ${ticksCompleted} in level ${level}, and it is `
+                + 'not a BossTotem. `Enemy.hit(3, p, 0.5, "Wand")` would land — and the '
+                + 'only fight model this rung carries is the totem\'s. Plan the shot at '
+                + 'a `magicallock`, or route around the body.');
+        }
+        const verdict = bossTotemTakesHit(boss, {
+            type: 'Wand',
+            damage: BOSS_TOTEM_KILL.shotDamage,
+            freezeObjects: ceremony !== null,
+        });
+        event.landed = verdict.landed;
+        event.spentWithoutDamage = !verdict.landed;
+        event.refusedAt = verdict.refusedAt;
+        event.hits = boss.hits;
+        bossHits.push({
+            t: ticksCompleted, level, id: event.id, shot: s.id,
+            hits: boss.hits, landed: verdict.landed,
+            refusedAt: verdict.refusedAt, killed: verdict.killed,
+            bossY: boss.y,
+        });
+        if (!verdict.killed) return;
+        // ⛔ THE BLAST IS ABOUT THE POINT HE DIED AT, and the descent moved
+        // it (§8.10). `dieEffects` runs inside `startDeath`, i.e. during
+        // THIS shot's update, so the boss's y is the one his own `update()`
+        // last wrote — one tick old, and his update this tick will return
+        // at `if (destroy)`.
+        //
+        // ⛓ `added()` fires when `updateLists()` drains `_add` at the END
+        // of this tick, so the disc is tested against where the PLAYER ends
+        // up, not where they are now. Deferred for that reason.
+        pendingBlasts.push({
+            x: boss.x, y: boss.y,
+            radius: BOSS_TOTEM_DEATH_BLAST.radius,
+            damage: BOSS_TOTEM_DEATH_BLAST.damage,
+            force: BOSS_TOTEM_DEATH_BLAST.force,
+            source: 'bossDeathBlast', id: event.id,
+        });
+        bossKills.push({
+            t: ticksCompleted, level, id: event.id,
+            x: boss.x, y: boss.y, killTick: ticksCompleted,
+            tagTick: null, flag: null,
+        });
+    }
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 4: ONE UPDATE OF EVERY `BossTotemShot`.
+     *
+     * Also run-time-added and also PREPENDED, so it sits with the wand
+     * shots ahead of every `.oel` entity. ⛓ BELOW them, because within one
+     * tick `_add` is drained in add order and each entry is PREPENDED — so
+     * the LAST thing added is FIRST in the list, and the boss (early in the
+     * list) publishes before the player (late) does. The two families can
+     * only be added on the same tick by a press that lands on the attack's
+     * `shootFrame`; ordered rather than assumed apart.
+     *
+     * ⚠ NOTHING HERE IS FREEZE-GATED EITHER: `BossTotemShot.update` calls
+     * `super.update()` (which IS gated) and then runs its own hit loop
+     * unconditionally. So a frozen shot stops MOVING and keeps COLLIDING —
+     * the shape §10.6 named for the wand, one class over.
+     */
+    function stepBossShotsNow() {
+        const list = bossShotsFor(level);
+        if (list.length === 0) return;
+        const box = playerBoxAt(state.x, state.y);
+        for (const s of list) {
+            if (s.removed) continue;
+            const verdict = bossShotOnScreenVerdict(s);
+            const r = stepBossTotemShot(s, {
+                playerBox: noDamage ? null : box,
+                onScreenVerdict: verdict,
+            });
+            // ⛔⛔⛔ THE BAND'S BILL, AND IT IS PAID PER SHOT.
+            //
+            // After the first volley `Game.shake` has opened §11.6's band
+            // for the rest of the visit, and these shots END at the bottom
+            // screen edge — so `onScreen` is uncertain for every one of
+            // them and a blanket refusal would make the window unwritable.
+            // The surviving branch is driven instead (a removed shot does
+            // NOTHING, so surviving is a strict over-approximation), and
+            // what is owed in exchange is the assertion below: in the
+            // branch that can act, it never touches the player. Then the
+            // two branches are the same world and the claim holds in both.
+            if (r.removalUncertain) {
+                s.uncertainSince = s.uncertainSince ?? ticksCompleted;
+                bossShotCullBand.push({ t: ticksCompleted, level, id: s.id, y: s.y });
+            }
+            if ((r.playerHit || (r.explodeAt && r.fate === 'bottom')) && s.uncertainSince) {
+                throw new Error(`levelRun: the BossTotemShot ${s.id} acted on the player `
+                    + `at tick ${ticksCompleted} in level ${level}, and its own removal `
+                    + `has been UNCERTAIN since tick ${s.uncertainSince} — `
+                    + '`Game.shake`\'s band (§11.6, which never closes) leaves it both '
+                    + 'alive and culled. The game either did this or did nothing at all, '
+                    + 'and the window cannot claim which. Plan the stance clear of the '
+                    + 'shots\' columns (x 122 and 182, 16 px boxes) and of the room '
+                    + 'bottom, so the two branches agree.');
+            }
+            if (r.playerHit) {
+                // `(hits[i] as Player).hit(null, v.length, new Point(x, y))`
+                // — `d` DEFAULTS to 1 and the force is the SPEED, which for
+                // `(0,2)` is 2. Not the boss's `force`.
+                applyPlayerHit({
+                    source: 'bossShot', id: s.id,
+                    force: Math.sqrt(s.vx * s.vx + s.vy * s.vy),
+                    damage: BOSS_TOTEM_SHOT.playerDamage,
+                    from: { x: s.x, y: s.y },
+                });
+            }
+            if (r.explodeAt) {
+                applyExplosion({
+                    x: r.explodeAt.x, y: r.explodeAt.y,
+                    radius: BOSS_TOTEM_SHOT.explosionHitRadius,
+                    damage: BOSS_TOTEM_SHOT.explosionDamage,
+                    force: BOSS_TOTEM_DEATH_BLAST.force,
+                    source: 'bossShotBlast', id: s.id,
+                });
+            }
+        }
+        const kept = list.filter((s) => !s.removed);
+        if (kept.length !== list.length) bossShotStates.set(level, kept);
+    }
+
+    /**
+     * `World.updateLists()`'s REMOVE half, for the one entity in this rung
+     * that asks to be removed from `render()`.
+     *
+     * ⛓⛓ THE TAG IS 240 RENDERS AND ONE UPDATE AFTER THE KILL. `render()`
+     * increments the white-out counter and calls `FP.world.remove(this)` at
+     * 240; `remove` defers to `_remove`, which the NEXT frame's
+     * `updateLists()` drains. So `removed()` — and with it `{43,5}`,
+     * `Game.shake = 60` and `Game.resetCamera()` — lands 240 renders and one
+     * update after `startDeath`. The ledger row carries BOTH ticks so a
+     * window can never confuse the kill with the flag.
+     */
+    function drainBossRemovals() {
+        for (const b of bossStateFor(level).values()) {
+            if (!b.removeRequested || b.removed) continue;
+            b.removed = true;
+            // `removed()`, `doActions` true — this is the death path, and
+            // `check()`'s despawn (the re-entry) sets it false precisely so
+            // this block does NOT run twice.
+            bossCameraTarget = { x: -1, y: -1 };        // `Game.resetCamera()`
+            shake = applyShakeWriter(shake, 'totemDeath');
+            const w = BOSS_TOTEM_WHITE_OUT.persistenceWrite;
+            const flag = outOfBandFlagFor(level, w.tag);
+            bossFlags.set(ledgerKey(flag), { ...flag, id: b.id ?? 'bosstotem', level });
+            const kill = bossKills.find((k) => k.level === level && k.tagTick === null);
+            if (kill) {
+                kill.tagTick = ticksCompleted;
+                kill.flag = { level: flag.level, tag: flag.tag };
+                kill.whiteOutRenders = b.whiteOutRenders;
+            }
+        }
+    }
+
+    /**
+     * `BossTotem.render()` for every boss in the room, at the END of the
+     * frame — after `update()` and after `updateLists()`, which is where
+     * `Engine`'s loop puts it.
+     *
+     * ⛔ IT RUNS ON EVERY FRAME, INCLUDING FROZEN ONES AND CEREMONY ONES.
+     * `render()` is outside `Game.update` entirely, so the head position the
+     * NEXT tick's laser reads is written even on frames the boss's own
+     * `update()` skipped — and the white-out counter advances through a
+     * freeze for the same reason.
+     */
+    function renderBossesNow() {
+        for (const b of bossStateFor(level).values()) {
+            if (b.removed) continue;
+            renderBossTotem(b);
+        }
+    }
+
+    /**
+     * `Entity.onScreen(20)` for one shot, three-valued.
+     *
+     * ⚠ SEPARATE FROM `onScreenNow`, which THROWS on uncertain. Here the
+     * uncertainty has a caller that can say something more useful about it
+     * than "move the stance" — so the verdict is returned and
+     * `stepBossShotsNow` owns the refusal with the shot's own diagnosis.
+     */
+    const bossShotOnScreenVerdict = (s) => {
+        const box = bossTotemShotRect(s);
+        const margin = BOSS_TOTEM_SHOT.onScreenMargin;
+        if (camBand === null) return camOnScreen(box, cam, margin) ? 'on' : 'off';
+        return onScreenUnderShake(box, camBand, margin);
+    };
+
+    /**
+     * `Projectiles/Explosion.added()` — the SQUARE prefilter, then the
+     * origin-to-origin disc. One call site for both blasts this room can
+     * produce (a shot's r=15.6 and the boss's own r=52), because they differ
+     * in exactly the radius and the point.
+     *
+     * ⛔ ORIGIN TO ORIGIN, NOT RECT OVERLAP (§8.10): the prefilter is a
+     * 104x104 box and the test that follows is `FP.distance(x, y, c.x, c.y)
+     * <= radius`, so a player 60 px away diagonally passes the box and fails
+     * the disc. Both are computed, and the pair is asserted to disagree in
+     * the suite — a model that stopped at the prefilter would report a hit
+     * 21 px outside the blast.
+     */
+    function applyExplosion({ x, y, radius, damage: d, force, source, id }) {
+        // The prefilter is `collideRectInto`, i.e. RECT vs the player's BOX.
+        const inSquare = rectsOverlap(
+            playerBoxAt(state.x, state.y),
+            rect(x - radius, y - radius, radius * 2, radius * 2),
+        );
+        // ...and the test that decides is the player's ORIGIN against the
+        // blast's, which is a strictly smaller set and a different shape.
+        const hit = inSquare
+            && Math.sqrt((state.x - x) ** 2 + (state.y - y) ** 2) <= radius;
+        bossBlasts.push({
+            t: ticksCompleted + 1, level, source, id, x, y, radius,
+            inSquare, hitPlayer: hit,
+        });
+        if (!hit) return;
+        applyPlayerHit({ source, id, force, damage: d, from: { x, y } });
     }
 
     /**
@@ -3425,6 +3745,11 @@ export function createLevelRun({
             if (!rect || !rectsOverlap(rect, box)) continue;
             const id = `${inst.tag}@${inst.x},${inst.y}`;
             const pricing = contactPricing(inst.tag);
+            // ⛓⛓ R6 SLICE 4: a `boss` is priced IN ITS OWN STEP, above.
+            // The census rect here is its `.oel` placement and the descent
+            // has moved it — scanning it would be a second contact, at a
+            // position the fight left 140 px ago.
+            if (pricing.kind === 'boss') continue;
             if (pricing.kind !== 'static') {
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
                     + `${level} at tick ${ticksCompleted + 1} on a tape that does NOT `
@@ -4269,6 +4594,18 @@ export function createLevelRun({
                     by: r.level === n ? by : `${by} (L${r.level}, tag -1)`,
                 });
             }
+            // ⛓⛓⛓ R6 SLICE 4: THE FIRST BOSS KILL ON THE LADDER.
+            // `BossTotem.removed()` runs `Game.setPersistence(tag, false)`,
+            // so a kill is a CLEAR like a broken rock's and not a set — the
+            // same polarity the MagicalLock has (§10.8) and the opposite of
+            // what "a kill sets a flag" suggests. It belongs in this ledger
+            // for that reason and not in a ledger of its own.
+            for (const [key, r] of bossFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                if (out.some((o) => o.level === n && o.tag === tag)) continue;
+                out.push({ level: n, tag, by: r.id });
+            }
             return out;
         },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
@@ -4466,6 +4803,21 @@ export function createLevelRun({
                     fullyActivated: b.fullyActivated,
                     activationRestTime: b.activationRestTime,
                     walking: b.walking,
+                    // ⛓ R6 slice 4: the fight's own state, so a window can
+                    // assert the PHASE it planned against and not just that
+                    // the boss exists.
+                    state: b.state,
+                    anim: b.anim,
+                    rate: b.rate,
+                    collidable: b.collidable,
+                    hits: b.hits,
+                    hitsTimer: b.hitsTimer,
+                    laserWidth: b.laserWidth,
+                    laserHitTime: b.laserHitTime,
+                    waitAtTopTime: b.waitAtTopTime,
+                    destroy: b.destroy,
+                    whiteOutRenders: b.whiteOutRenders,
+                    removed: b.removed,
                 }));
         },
         /**
@@ -4672,6 +5024,39 @@ export function createLevelRun({
         /** One record per contact a shot made, including the ones that paid nothing. */
         get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
         /**
+         * ── ⛓⛓⛓ R6 SLICE 4: THE FIGHT'S SIX LEDGERS ─────────────────
+         *
+         * ⛔ EACH ONE IS A DIFFERENT CLAIM. A window that asserted "the
+         * fight happened" off any single one of them would be asserting
+         * something weaker than it thinks: `bossWalks` says the machine
+         * started, `bossLasers` says the beam fired (with `hitCalls` 0 for a
+         * volley that MISSED, which is the exactness claim), `bossHits` says
+         * the schedule landed — including the shots the 20-tick timer
+         * REFUSED — and `bossKills` carries both the kill tick and the tick
+         * 240 renders later that the tag lands on.
+         */
+        get bossWalks() { return bossWalks.map((w) => ({ ...w })); },
+        get bossLasers() {
+            return bossLasers.map((l) => ({ ...l, rects: l.rects.map((r) => ({ ...r })) }));
+        },
+        get bossShotsFired() { return bossShotsFired.map((s) => ({ ...s })); },
+        get bossHits() { return bossHits.map((h) => ({ ...h })); },
+        get bossKills() { return bossKills.map((k) => ({ ...k })); },
+        get bossBlasts() { return bossBlasts.map((b) => ({ ...b })); },
+        /** Every tick a shot's cull was a band question — see the declaration. */
+        get bossShotCullBand() { return bossShotCullBand.map((b) => ({ ...b })); },
+        /** The live projectiles, for a stance that has to plan around them. */
+        get bossShots() { return bossShotsFor(level).map((s) => ({ ...s })); },
+        /**
+         * ⛓ `Game.cameraTarget` — `null` until a boss writes it, `(-1,-1)`
+         * once `Game.resetCamera()` has. The two are NOT the same state and
+         * a window that merged them would lose the tick the follow came
+         * back.
+         */
+        get bossCameraTarget() {
+            return bossCameraTarget === null ? null : { ...bossCameraTarget };
+        },
+        /**
          * ⛔ One per `MagicalLock` a shot OPENED — `{level, id, tag, shot,
          * hitTick, openTick}`. `openTick` is 15 ticks after `hitTick` and is
          * the first tick the cell is passable; a route that read `hitTick`
@@ -4724,6 +5109,9 @@ export function createLevelRun({
             // named guard rather than a preference.
             if (!noclip) {
                 stepWandShotsNow();
+                // ⛓ R6 SLICE 4: and the boss's own projectiles, below them
+                // (see `stepBossShotsNow` for why the order is that way).
+                stepBossShotsNow();
                 stepMagicalLocksNow();
             }
             if (!noclip) stepBlastsNow();
@@ -5149,10 +5537,23 @@ export function createLevelRun({
                             + 'ceremony\'s length. Model the span rather than '
                             + 'stepping the boss on live ticks only.');
                     }
+                    const bossOpts = liveSolidOpts();
                     const r = stepBossTotem(b, {
                         wandGone: wandLeftTheWorld,
                         freezeObjects: false,
                         playerY: state.y,
+                        playerBox: playerBoxAt(state.x, state.y),
+                        // ⛔ `Mobile.solids` FOR THE BOSS, not for the
+                        // player: the two lists differ (the boss's is the
+                        // base `["Solid","Tree","Rock","Rope","ShieldBoss"]`
+                        // and the player's carries `"LavaBoss"`), and the
+                        // boss must not collide with HIMSELF — `liveRectOf`
+                        // returns null for an activated boss, which is
+                        // exactly the exclusion `Entity.collide`'s
+                        // `e !== this` gives him in the game.
+                        // [[feedback_notsolid_is_per_mover]]
+                        isSolid: (bx) => !!world.collidesSolid(bx, bossOpts),
+                        terrainState: world.nearestWalkableTile(b.x, b.y)?.t ?? null,
                     });
                     if (r.clampedY !== null) {
                         bossClamps.push({
@@ -5167,17 +5568,80 @@ export function createLevelRun({
                         // why the record carries the y it overwrote.
                         state.y = r.clampedY;
                     }
-                    // ⛔ THE CEILING OF EVERY WINDOW IN THIS ROOM. Past this
-                    // the room holds a mover with a laser and a jump arc,
-                    // and this model has none of it.
+                    // ── ⛓⛓⛓ R6 SLICE 4: THE FIGHT, WIRED ─────────────
+                    //
+                    // R5's `A+335` throw retires here. What replaces it is
+                    // the four things the walk arm can do to the player,
+                    // each at the place in the tick the game does it.
                     if (r.walkingNow) {
-                        throw new Error(`levelRun: the BossTotem in level ${level} `
-                            + `started WALKING at tick ${ticksCompleted}. Everything `
-                            + 'after `activationRestTime` drains is unmodelled — the '
-                            + 'walk, the jump and the laser — so a window must end '
-                            + 'inside `r5Totem.L43_WAND_WINDOW.boundaryBand`, whose '
-                            + 'ceiling is exactly this tick.');
+                        bossWalks.push({ t: ticksCompleted, level, id: b.id ?? null });
                     }
+                    // 1. THE LASER. `Game.shake = 30` is written beside the
+                    //    rect test and OUTSIDE it, so the band opens on
+                    //    schedule whether or not the beam connected (§11.6).
+                    if (r.laserFired) {
+                        bossLasers.push({
+                            t: ticksCompleted, level, y: b.y,
+                            rects: (r.laserRects ?? []).map((q) => ({
+                                x: q.x, right: q.right, y: q.y, bottom: q.bottom,
+                                depth: q.depth, cappedAtSweep: q.cappedAtSweep,
+                            })),
+                            hitCalls: r.laserHitCalls,
+                        });
+                        shake = applyShakeWriter(shake, 'totemLaser');
+                        // ⛔ TWO RECTS, TWO `hit` CALLS. `hitPlayers` walks
+                        // a vector both `collideRectInto`s appended to, so a
+                        // player inside both overlapping rects is hit TWICE
+                        // — the second swallowed by their own i-frames and
+                        // not by the boss. Applied as the game applies it.
+                        for (let i = 0; i < r.laserHitCalls; i += 1) {
+                            applyPlayerHit({
+                                source: 'bossLaser', id: b.id ?? 'bosstotem',
+                                force: BOSS_TOTEM_FIGHT.laserForce,
+                                damage: 1,
+                                // `new Point(player.x, y)` — the player's OWN
+                                // x against the BOSS's y, so the knockback is
+                                // pure south. Not the boss's x.
+                                from: { x: state.x, y: b.y },
+                            });
+                        }
+                    }
+                    // 2. THE ATTACK'S TWO PROJECTILES, `FP.world.add`ed and
+                    //    therefore not present until the NEXT tick's list
+                    //    drain — the deferred-add rule the wand shot pays
+                    //    too (`WAND_WINDOW.firstShotUpdateTick`).
+                    if (r.attackShots.length > 0) {
+                        for (const s of r.attackShots) {
+                            const id = `bosstotemshot@${ticksCompleted}:${bossShotSeq += 1}`;
+                            bossShotsFor(level).push({ id, ...s });
+                            bossShotsFired.push({
+                                t: ticksCompleted, level, id, x: s.x, y: s.y,
+                            });
+                        }
+                    }
+                    // 3. THE BODY. §11.10's warning is a computation now:
+                    //    an 80x32 box at force 3, gated on the BOSS's own
+                    //    20-tick `hitsTimer`, so each landed wand shot buys
+                    //    exactly 20 ticks of silence — and the tick the
+                    //    timer reaches 0 is one tick BEFORE the next shot
+                    //    can land, which is why a stance stands clear of
+                    //    the body instead of out-shooting it.
+                    if (r.bodyContact) {
+                        applyPlayerHit({
+                            source: 'bossBody', id: b.id ?? 'bosstotem',
+                            force: BOSS_TOTEM_BODY.force,
+                            damage: BOSS_TOTEM_BODY.damage,
+                            from: { x: b.x, y: b.y },
+                        });
+                    }
+                    // 4. THE CAMERA OVERRIDE, which runs on every frame he
+                    //    exists and is the last thing in his `update()`.
+                    //    ⛓ `Game.cameraTarget` is a STATIC: once he dies his
+                    //    `update()` returns above this block and the target
+                    //    is FROZEN at the last midpoint for the whole
+                    //    240-frame white-out (§8.16), until `removed()`
+                    //    calls `Game.resetCamera()`.
+                    bossCameraTarget = bossTotemCameraTarget(b, state);
                 }
             }
             droppedRocksThisTick = false;
@@ -5385,7 +5849,7 @@ export function createLevelRun({
             // ⚠ THE OPPOSITE OF A TELEPORT, whose old player DOES take a last
             // (never observed) step. Two deferred `FP.world =` writes, two
             // different final ticks, and the difference is one `if`.
-            const next = pendingDeath ? state : stepV2(state, acting, stepOpts);
+            let next = pendingDeath ? state : stepV2(state, acting, stepOpts);
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
             // inside `Player.input()`, which is where the sweeps happen too
@@ -5524,6 +5988,40 @@ export function createLevelRun({
                     { inventory, keys, movingSolids: movingSolidsNow() }));
             }
             const hits = { hitX: next.hitX, hitY: next.hitY };
+            // ── ⛓⛓⛓ R6 SLICE 4: `updateLists()` — THE DEFERRED HALVES ──
+            //
+            // `Engine.update` is `World.update(); World.updateLists();`, so
+            // everything an entity ASKED for this tick lands here: an
+            // `Explosion`'s `added()` (which is where its whole damage pass
+            // lives) and a `removed()` that a `render()` requested on the
+            // PREVIOUS frame.
+            //
+            // ⛓ Both are therefore tested against the player's END-of-tick
+            // position, which is `next` and not `state`. That is §8.10's
+            // "one tick of offset", and it is the difference between a
+            // stance that is outside the disc when the shot lands and one
+            // that is outside it when the disc is drawn.
+            if (!next.transition) {
+                // ⚠ `state` IS ADVANCED FIRST, and it has to be: the blast
+                // reads the player's post-move origin AND `applyPlayerHit`
+                // writes the knockback back into `state`. A drain against a
+                // temporary copy would compute the right disc and throw the
+                // impulse away.
+                state = next;
+                if (pendingBlasts.length > 0) {
+                    for (const b of pendingBlasts.splice(0, pendingBlasts.length)) {
+                        applyExplosion(b);
+                    }
+                    next = state;
+                }
+                drainBossRemovals();
+            }
+            // ── ⛓⛓ …AND THEN `render()`. `Engine.onEnterFrame` is
+            // `update(); render();`, so this is the LAST thing in the frame
+            // — and it writes the `headPos` the NEXT tick's `laserStep`
+            // reads, which is the whole mechanism behind the beam's
+            // one-frame lag.
+            if (!noclip) renderBossesNow();
 
             // ── ⛓⛓⛓ R6 SLICE 3: THE DEATH REBOOT, AT END OF TICK ────
             //

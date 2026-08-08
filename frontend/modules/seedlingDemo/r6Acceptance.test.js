@@ -163,11 +163,20 @@ describe('R6 acceptance', () => {
 
         it('an unclaimed row is ok:false with a detail naming the missing arm', () => {
             const findings = r6ExitFindings(roster);
-            // At slice 0 no window has a tape, so EVERY row must be red.
-            for (const f of findings) expect(f.ok).toBe(false);
+            // ⛔ THIS TEST USED TO PIN THE SLICE-0 WORLD ("no window has a
+            // tape, so EVERY row must be red") and slice 4 turned it red by
+            // doing its job — [[feedback_coincidental_predicate_rots]] with
+            // the shortest possible fuse. What it asserts now is the
+            // MECHANISM: an unclaimed row reads UNCLAIMED, a claimed one
+            // does not, and the count is derived from `R6_WINDOWS` rather
+            // than written down.
+            const claimed = R6_WINDOWS.filter(
+                (w) => roster.includes(w.tape) && roster.includes(w.control),
+            );
+            expect(claimed.map((w) => w.name)).toEqual(['W-totem']);
             expect(findings.some((f) => /UNCLAIMED/.test(f.detail))).toBe(true);
             const done = findings.find((f) => f.name === 'the boss-kill ledger is complete');
-            expect(done.detail).toMatch(/0\/6 tags earned/);
+            expect(done.detail).toMatch(new RegExp(`${claimed.length}/6 tags earned`));
         });
 
         it('a row with a DRIVE and no control is still unclaimed', () => {

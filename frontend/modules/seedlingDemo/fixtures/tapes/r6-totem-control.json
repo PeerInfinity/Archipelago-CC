@@ -1,0 +1,242 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "boot": {
+    "level": 43,
+    "x": 144,
+    "y": 248
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "save": {
+    "totem_parts": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "keys": [],
+    "seal_parts": []
+  },
+  "grants": [],
+  "equips": [],
+  "pins": [],
+  "noDamage": false,
+  "tick_count": 490,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 41
+    },
+    {
+      "key": "primary",
+      "from": 45,
+      "to": 46
+    },
+    {
+      "key": "primary",
+      "from": 49,
+      "to": 50
+    },
+    {
+      "key": "primary",
+      "from": 53,
+      "to": 54
+    },
+    {
+      "key": "primary",
+      "from": 57,
+      "to": 58
+    },
+    {
+      "key": "primary",
+      "from": 61,
+      "to": 62
+    },
+    {
+      "key": "left",
+      "from": 120,
+      "to": 135
+    },
+    {
+      "key": "up",
+      "from": 209,
+      "to": 211
+    },
+    {
+      "key": "primary",
+      "from": 213,
+      "to": 214
+    },
+    {
+      "key": "down",
+      "from": 221,
+      "to": 229
+    },
+    {
+      "key": "up",
+      "from": 233,
+      "to": 234
+    },
+    {
+      "key": "primary",
+      "from": 235,
+      "to": 236
+    },
+    {
+      "key": "down",
+      "from": 243,
+      "to": 251
+    },
+    {
+      "key": "up",
+      "from": 255,
+      "to": 256
+    },
+    {
+      "key": "primary",
+      "from": 257,
+      "to": 258
+    },
+    {
+      "key": "down",
+      "from": 265,
+      "to": 273
+    },
+    {
+      "key": "up",
+      "from": 277,
+      "to": 278
+    },
+    {
+      "key": "primary",
+      "from": 279,
+      "to": 280
+    },
+    {
+      "key": "down",
+      "from": 287,
+      "to": 295
+    },
+    {
+      "key": "up",
+      "from": 299,
+      "to": 300
+    },
+    {
+      "key": "primary",
+      "from": 301,
+      "to": 302
+    },
+    {
+      "key": "down",
+      "from": 309,
+      "to": 317
+    },
+    {
+      "key": "up",
+      "from": 321,
+      "to": 322
+    },
+    {
+      "key": "primary",
+      "from": 323,
+      "to": 324
+    },
+    {
+      "key": "down",
+      "from": 331,
+      "to": 339
+    },
+    {
+      "key": "up",
+      "from": 343,
+      "to": 344
+    },
+    {
+      "key": "primary",
+      "from": 345,
+      "to": 346
+    },
+    {
+      "key": "down",
+      "from": 353,
+      "to": 361
+    },
+    {
+      "key": "up",
+      "from": 365,
+      "to": 366
+    },
+    {
+      "key": "primary",
+      "from": 367,
+      "to": 368
+    },
+    {
+      "key": "down",
+      "from": 375,
+      "to": 383
+    },
+    {
+      "key": "up",
+      "from": 387,
+      "to": 388
+    },
+    {
+      "key": "primary",
+      "from": 389,
+      "to": 390
+    },
+    {
+      "key": "down",
+      "from": 397,
+      "to": 405
+    },
+    {
+      "key": "up",
+      "from": 409,
+      "to": 410
+    },
+    {
+      "key": "down",
+      "from": 419,
+      "to": 427
+    },
+    {
+      "key": "up",
+      "from": 431,
+      "to": 432
+    },
+    {
+      "key": "down",
+      "from": 441,
+      "to": 449
+    },
+    {
+      "key": "up",
+      "from": 453,
+      "to": 454
+    },
+    {
+      "key": "down",
+      "from": 463,
+      "to": 471
+    },
+    {
+      "key": "up",
+      "from": 475,
+      "to": 476
+    }
+  ],
+  "name": "r6-totem-control",
+  "description": "THE NINE-FOR-TEN CONTROL \u2014 r6-totem-kill's spans with the TENTH primary press deleted and nothing else changed. Every movement span is byte-identical, including the two tracking cycles that outlast the presses: the first cut deleted the last cycle along with the last press, the stance stopped tracking at tick 404, D fell through 46, and the BODY killed the player at 467 \u2014 a control that dies of the treatment's absence proves the schedule and not the tenth shot. Nine shots land (0.5 each, hits 4.5 of 5), the boss walks on, {43,5} is NEVER cleared, the arena never opens, and the player takes zero damage for all 490 ticks. The tick count is the kill arm's PREFIX rather than its equal: the treatment's own tail is the 240-render white-out, which on this arm does not exist."
+}

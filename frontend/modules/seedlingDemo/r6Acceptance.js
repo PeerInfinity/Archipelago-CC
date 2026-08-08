@@ -211,7 +211,12 @@ export const R6_CREDITS_WITNESS = Object.freeze({
  * incomplete and one that reads complete because nobody looked.
  */
 export const R6_WINDOWS = Object.freeze([
-    Object.freeze({ name: 'W-totem', slice: 4, tape: null, control: null }),
+    // ⛓⛓⛓ THE RUNG'S FIRST CLAIMED ROW (slice 4). The pair is the R5
+    // hold-pair shape with ONE primitive fewer: the same tape, the tenth
+    // `primary` press deleted. ⚠ The control is a PREFIX (490 against 780)
+    // rather than an equal — the treatment's own tail is the 240-render
+    // white-out and the control has no death to white out.
+    Object.freeze({ name: 'W-totem', slice: 4, tape: 'r6-totem-kill', control: 'r6-totem-control' }),
     Object.freeze({ name: 'W-shield', slice: 5, tape: null, control: null }),
     Object.freeze({ name: 'W-fire', slice: 5, tape: null, control: null }),
     Object.freeze({ name: 'W-owl', slice: 6, tape: null, control: null }),

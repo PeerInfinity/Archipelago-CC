@@ -54,7 +54,7 @@ import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.
  * @param {Function} [opts.levelSource]     `(level) => levelRecord`; selects the
  *                                    v2 engine (see the docblock above)
  * @param {Function} [opts.terrainStateAt]  v1-engine terrain probe (default: ground)
- * @param {Function} [opts.onTick]    called as (t, state, held) after each
+ * @param {Function} [opts.onTick]    called as (t, state, held, run) after each
  *                                    observation is recorded — for tests and
  *                                    the bot driver, never for control flow
  * @returns {{ticks: Array, transitions: Array, final: object}}
@@ -189,7 +189,12 @@ export function createTapeStepper(tape, opts = {}) {
             };
             ticks.push(observation);
             const held = heldKeysAt(t, tick);
-            if (onTick) onTick(tick, now, held);
+            // ⛓ R6 SLICE 4: the RUN is the fourth argument. A window whose
+            // claim is an OFFSET between two moving bodies cannot get it
+            // from a terminal summary, and `createTapeStepper` is tooling
+            // only (see its docblock) — so the per-tick hook is the one
+            // seam a claim may read live state through.
+            if (onTick) onTick(tick, now, held, run);
             yield {
                 observation,
                 state: now,
@@ -438,6 +443,39 @@ export function createTapeStepper(tape, opts = {}) {
             contactsSuppressed: run ? run.contactsSuppressed : [],
             damage: run ? run.damage : { hits: 0, hitsTimer: 0, directionFace: -1 },
             shake: run ? run.shake : 0,
+            /**
+             * ⛓⛓⛓ R6 SLICE 4 — THE FIGHT'S SIX LEDGERS.
+             *
+             * ⛔ SIX, AND NOT ONE SUMMARY, because they are six different
+             * claims and a pair has to be able to name which one it meant.
+             * `bossLasers` carries `hitCalls: 0` for a volley that MISSED —
+             * an exactness claim a "did the player survive" counter cannot
+             * make — and `bossHits` carries the shots the boss's own 20-tick
+             * `hitsTimer` REFUSED beside the ones it took, so a schedule
+             * that is one tick fast reads as nine landings and not as ten.
+             */
+            bossWalks: run ? run.bossWalks : [],
+            bossLasers: run ? run.bossLasers : [],
+            bossShotsFired: run ? run.bossShotsFired : [],
+            bossHits: run ? run.bossHits : [],
+            bossKills: run ? run.bossKills : [],
+            bossBlasts: run ? run.bossBlasts : [],
+            /** Every tick a shot's own cull was a §11.6 BAND question. */
+            bossShotCullBand: run ? run.bossShotCullBand : [],
+            /**
+             * ⛓⛓ THE BOSS'S OWN STATE, PER TICK — the second stratum §3.2
+             * asked for, on the model side.
+             *
+             * ⛔ IT IS ON THE FRAME AND NOT IN A TERMINAL SUMMARY, because
+             * the quantity every stance is about is an OFFSET between two
+             * moving bodies and a terminal snapshot cannot express it. A
+             * window that asserted only the end state would pass on a plan
+             * that spent the whole fight inside the body and stepped out on
+             * the last tick.
+             */
+            bosses: run ? run.bossesWoken : [],
+            /** The clamp's assignments — R5 slice 23's, still the window's spine. */
+            bossClamps: run ? run.bossClamps : [],
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

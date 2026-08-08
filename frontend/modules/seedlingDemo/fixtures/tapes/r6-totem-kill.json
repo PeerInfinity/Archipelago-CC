@@ -1,0 +1,247 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "boot": {
+    "level": 43,
+    "x": 144,
+    "y": 248
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "save": {
+    "totem_parts": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "keys": [],
+    "seal_parts": []
+  },
+  "grants": [],
+  "equips": [],
+  "pins": [],
+  "noDamage": false,
+  "tick_count": 780,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 41
+    },
+    {
+      "key": "primary",
+      "from": 45,
+      "to": 46
+    },
+    {
+      "key": "primary",
+      "from": 49,
+      "to": 50
+    },
+    {
+      "key": "primary",
+      "from": 53,
+      "to": 54
+    },
+    {
+      "key": "primary",
+      "from": 57,
+      "to": 58
+    },
+    {
+      "key": "primary",
+      "from": 61,
+      "to": 62
+    },
+    {
+      "key": "left",
+      "from": 120,
+      "to": 135
+    },
+    {
+      "key": "up",
+      "from": 209,
+      "to": 211
+    },
+    {
+      "key": "primary",
+      "from": 213,
+      "to": 214
+    },
+    {
+      "key": "down",
+      "from": 221,
+      "to": 229
+    },
+    {
+      "key": "up",
+      "from": 233,
+      "to": 234
+    },
+    {
+      "key": "primary",
+      "from": 235,
+      "to": 236
+    },
+    {
+      "key": "down",
+      "from": 243,
+      "to": 251
+    },
+    {
+      "key": "up",
+      "from": 255,
+      "to": 256
+    },
+    {
+      "key": "primary",
+      "from": 257,
+      "to": 258
+    },
+    {
+      "key": "down",
+      "from": 265,
+      "to": 273
+    },
+    {
+      "key": "up",
+      "from": 277,
+      "to": 278
+    },
+    {
+      "key": "primary",
+      "from": 279,
+      "to": 280
+    },
+    {
+      "key": "down",
+      "from": 287,
+      "to": 295
+    },
+    {
+      "key": "up",
+      "from": 299,
+      "to": 300
+    },
+    {
+      "key": "primary",
+      "from": 301,
+      "to": 302
+    },
+    {
+      "key": "down",
+      "from": 309,
+      "to": 317
+    },
+    {
+      "key": "up",
+      "from": 321,
+      "to": 322
+    },
+    {
+      "key": "primary",
+      "from": 323,
+      "to": 324
+    },
+    {
+      "key": "down",
+      "from": 331,
+      "to": 339
+    },
+    {
+      "key": "up",
+      "from": 343,
+      "to": 344
+    },
+    {
+      "key": "primary",
+      "from": 345,
+      "to": 346
+    },
+    {
+      "key": "down",
+      "from": 353,
+      "to": 361
+    },
+    {
+      "key": "up",
+      "from": 365,
+      "to": 366
+    },
+    {
+      "key": "primary",
+      "from": 367,
+      "to": 368
+    },
+    {
+      "key": "down",
+      "from": 375,
+      "to": 383
+    },
+    {
+      "key": "up",
+      "from": 387,
+      "to": 388
+    },
+    {
+      "key": "primary",
+      "from": 389,
+      "to": 390
+    },
+    {
+      "key": "down",
+      "from": 397,
+      "to": 405
+    },
+    {
+      "key": "up",
+      "from": 409,
+      "to": 410
+    },
+    {
+      "key": "primary",
+      "from": 411,
+      "to": 412
+    },
+    {
+      "key": "down",
+      "from": 419,
+      "to": 427
+    },
+    {
+      "key": "up",
+      "from": 431,
+      "to": 432
+    },
+    {
+      "key": "down",
+      "from": 441,
+      "to": 449
+    },
+    {
+      "key": "up",
+      "from": 453,
+      "to": 454
+    },
+    {
+      "key": "down",
+      "from": 463,
+      "to": 471
+    },
+    {
+      "key": "up",
+      "from": 475,
+      "to": 476
+    }
+  ],
+  "name": "r6-totem-kill",
+  "description": "THE TOTEM FIGHT — the ladder's FIRST boss kill, and the first {43,5} written by the game's own removed(). Boots into L43's SOUTH chamber (the unwoken boss is an 80x32 Solid across the whole arena, so a north boot can never reach the wand at all) with the five totem parts presented by the v6 save block, walks north into wand@144,224, pays the 99-frame approach fade and the 150-frame specialTimer, advances the two-page dialogue, and the wand's tset-0 publish drops the three fallrocks — 186 more frozen frames — and takes classCount(Wand) to 0, which is the boss's wake edge. 148 model ticks later the machine walks. Then the fight: the stance stands at x 131.5, west of the laser's FIXED [135,169) band (the boss's x never changes — knockback is overridden empty), and tracks the 0.75 px/tick descent (v.y = rate, MINUS Mobile's 0.25 friction) with an eight-tick down burst per 22-tick cycle, so the offset D = playerY - bossY stays in [48.6, 97.6]: clear of the 80x32 body from below (D >= 46), inside the wand's 16 px spawn plus 48 px of flight (D < 110), and outside the death blast's origin-to-origin r=52 disc at the kill (66.06 px). THE DESCENT AND THE SHOT FIGHT OVER ONE FIELD — direction is written by sprites() from v, so every tracking down turns the wand south; the cycle holds the eight ticks after each press clear and re-faces north with a ONE-TICK up tap two ticks before the next. Ten presses at a 22-tick cadence land ten shots (0.5 damage against hitsMax 5) at 221/244/265/287/309/331/353/377/398/419, every one clearing the boss's own 20-tick hitsTimer; the tenth is the kill. The laser fires once, at 315, and MISSES — which is the exactness claim and not a lucky miss — and Game.shake = 30 opens the permanent camera band anyway. The attack's two BossTotemShots spawn at x 122 and 182 with D at 60.6, so both fall away below the stance. removed() runs 240 white-out renders and one updateLists() after the kill: {43,5} lands at tick 660, and the tape runs 120 ticks past it, at rest."
+}
