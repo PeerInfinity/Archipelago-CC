@@ -414,10 +414,17 @@ export const ENEMY_CLASSES = Object.freeze({
         ctor: { dx: 24, dy: 32, src: 'ShieldBoss.as `super(_x + Tile.w*1.5, _y + Tile.h*2)` — ⚠ asymmetric' },
         as3: 'ShieldBoss', kill: { hits: 4, why: 'the first is always swallowed' },
         aggro: { kind: 'boss', range: 'arena' },
-        hitbox: null, damage: 1,
+        // ⛓ R6 SLICE 5: `setHitbox(48, 48, 24, 24)`, filled in beside the
+        // totem's for the same reason — `shieldBossFight.SHIELD_BOSS.hitbox`
+        // is the live one and the two are asserted equal. ⛔ IT IS NOT HIS
+        // CONTACT VOLUME: see `CONTACT_BOSS_WHY.shieldboss`.
+        hitbox: { w: 48, h: 48, ox: 24, oy: 24 }, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: '(19, 0) at startDeath',
-        boss: 'R5 candidate — the shield\'s only opener (§6.2)',
+        boss: '⛓⛓⛓ R6 SLICE 5 — KILLED. The shield\'s only opener, and the room\'s '
+            + 'only route north: the body is in `Mobile.solids`, it contains '
+            + '`bosskey@96,64`, and the stairs to L20 are behind the `bosslock` that '
+            + 'key opens.',
         src: 'Enemies/ShieldBoss.as:64,103-218',
     },
     bosstotem: {
@@ -1041,7 +1048,31 @@ export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
  * the body a second time, from a `.oel` placement 140 px above where the
  * descent has taken it. `kind: 'boss'` is what tells it to.
  */
-export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem']);
+export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem', 'shieldboss']);
+
+/**
+ * Why each boss family leaves the census arm, one reason per class — and
+ * ⛔ THE TWO REASONS ARE DIFFERENT, which is why this is a table and not a
+ * sentence with a class name interpolated into it.
+ *
+ * The totem's census rect is right at spawn and WRONG for the whole fight;
+ * the Shieldspire never moves a pixel, so his census rect is right for ever
+ * — and pricing it would still be wrong, because his contact volume is not
+ * his hitbox at all.
+ */
+export const CONTACT_BOSS_WHY = Object.freeze({
+    bosstotem: '80x32 at force 3, gated on `collidable` and a 20-tick `hitsTimer`. '
+        + 'The census rect is its SPAWN box and the descent has moved it 140 px south — '
+        + 'pricing it here would be a second, wrong contact.',
+    // ⛓⛓⛓ R6 SLICE 5, and it is the sharper case of the two.
+    shieldboss: '⛔ HIS CONTACT VOLUME IS NOT HIS HITBOX. `ShieldBoss.hitPlayer` is a '
+        + 'full override that collides its OWN rect — `(x-24, y+24, 48, Tile.h)`, the '
+        + '48x16 strip BELOW the body — and damages only on `sprShieldBoss.frame` 5..8, '
+        + 'i.e. six ticks of one stab animation. He never moves, so the census rect is '
+        + 'accurate for ever and pricing it would STILL be wrong: it would charge a '
+        + 'contact for the 48x48 wall the player cannot even touch, and miss the strip '
+        + 'the whole fight is fought in.',
+});
 
 export function contactPricing(tag) {
     const row = ENEMY_CLASSES[tag];
@@ -1050,9 +1081,7 @@ export function contactPricing(tag) {
         return {
             kind: 'boss',
             why: `${row.as3} is stepped by \`levelRun\` and prices its own \`hitPlayer\` `
-                + 'in its own step (80x32 at force 3, gated on `collidable` and a 20-tick '
-                + '`hitsTimer`). The census rect is its SPAWN box and the descent has '
-                + 'moved it — pricing it here would be a second, wrong contact.',
+                + `override in its own step. ${CONTACT_BOSS_WHY[tag]}`,
         };
     }
     if (CONTACT_STEPPED_FAMILIES.includes(tag)) {

@@ -1131,6 +1131,44 @@ function checkReadout(name, tape, status, stream) {
                 : `${wronglyCleared.join(', ')} CLEARED by a run that never killed him`);
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE'S ROW OF THE SAME LEDGER ─────
+    //
+    // ⛔ AND ITS WRITE SITE IS NOT `removed()`. `ShieldBoss.startDeath` is
+    // `Game.setPersistence(tag, false); play("die")` — the flag is written
+    // by the killing HIT, 34 ticks before the body leaves the world. So a
+    // tape that stops between the two still owes `{19,0}` in the game's
+    // array, which is the OPPOSITE fencepost from the totem's (whose flag
+    // lands 241 ticks after the kill and whose tape must NOT stop early).
+    //
+    // ⛔⛔ TWO-SIDED, like the totem's. `r6-shield-control` lands two of the
+    // three hits and its whole claim is that `{19,0}` stayed SET — and it
+    // is a claim about the GAME's array, so a build that cleared the flag
+    // for every visitor would pass a one-sided check.
+    const shieldKills = (expected.shieldBossKills ?? []).filter((k) => k.what === 'tag');
+    const shieldSaw = (expected.shieldBossBand ?? []).length > 0;
+    if (shieldKills.length > 0) {
+        const missing = shieldKills
+            .filter((k) => k.flag && !clearedInGame.has(`${k.flag.level}:${k.flag.tag}`))
+            .map((k) => `${k.id} (${k.flag.level}:${k.flag.tag})`);
+        check(`${name}: every ShieldBoss the run KILLED wrote its persistence flag`,
+            missing.length === 0,
+            missing.length === 0
+                ? shieldKills.map((k) => `${k.id} -> ${k.flag.level}:${k.flag.tag} off at `
+                    + `tick ${k.t} (destroy ${k.destroyTick}, removed ${k.removedTick})`)
+                    .join(', ')
+                : `${missing.join(', ')} still SET — the model killed a ShieldBoss the `
+                + 'game did not. `startDeath` writes the flag INSIDE the killing hit, so '
+                + 'this cannot be a tape that stopped too early.');
+    } else if (shieldSaw) {
+        // The run stood in the band and did NOT finish him: the tag stays on.
+        const wronglyCleared = [...clearedInGame].filter((k) => k === '19:0');
+        check(`${name}: the ShieldBoss the run did NOT kill kept its flag`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? '{19,0} still set, with the fight driven and unfinished'
+                : `${wronglyCleared.join(', ')} CLEARED by a run that never killed him`);
+    }
+
     return expected;
 }
 

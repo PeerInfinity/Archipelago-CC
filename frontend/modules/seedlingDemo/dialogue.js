@@ -302,10 +302,19 @@ export const PICKUP_CEREMONY = Object.freeze({
      * — inherits `Pickup.text = ""` and self-resolves after 150 frozen
      * frames.
      *
-     * It is entered here as the textless case BECAUSE the only reachable
-     * placement is keyType 4. A rung that reaches L19 has to split this
-     * entry by keyType rather than change it, and would find out by the
-     * ceremony costing 150 ticks the recording does not have.
+     * ⛓⛓⛓ AND R6 SLICE 5 IS THE RUNG THAT REACHED L19, EXACTLY AS THIS
+     * DOCBLOCK PREDICTED. Its own words were *"a rung that reaches L19 has
+     * to split this entry by keyType rather than change it, and would find
+     * out by the ceremony costing 150 ticks the recording does not have"* —
+     * and the split is `PICKUP_CEREMONY_BY_KEYTYPE` below, resolved by
+     * `levelRun.ceremonyFor` from the pickup's own `keyType`. A prediction
+     * with a mechanism behind it, kept as a comment, is what turned this
+     * from a silent 150-frame divergence into a two-line change.
+     *
+     * ⚠ THE ENTRY HERE REMAINS THE TEXTLESS ONE, deliberately: it is the
+     * DEFAULT for every keyType the split does not name, so a sixth key
+     * placed by some future map inherits the conservative case rather than
+     * L19's dialogue.
      *
      * `item: null` for the usual reason and one more: `BossKey.removed()`
      * does not call `super.removed()` at all, so unlike every other pickup
@@ -315,6 +324,26 @@ export const PICKUP_CEREMONY = Object.freeze({
      * are taken and only six flags go off.
      */
     bosskey: Object.freeze({ item: null, text: '' }),
+});
+
+/**
+ * ⛓⛓⛓ R6 SLICE 5: the ceremonies whose text depends on a pickup ATTRIBUTE
+ * rather than on its tag.
+ *
+ * One family so far, and the shape is deliberately a nested table rather
+ * than a predicate: `BossKey`'s ctor is `if (keyType == 0) text = "…"`, an
+ * enumeration of one, and a predicate (`keyType < 1`, "the first key") is
+ * exactly the coincidental shape [[feedback_coincidental_predicate_rots]]
+ * warns about. A keyType absent from the inner table falls back to
+ * `PICKUP_CEREMONY`'s own row.
+ */
+export const PICKUP_CEREMONY_BY_KEYTYPE = Object.freeze({
+    bosskey: Object.freeze({
+        0: Object.freeze({
+            item: null,
+            text: 'You got a key!~Keys open locks of their color.',
+        }),
+    }),
 });
 
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */

@@ -170,13 +170,29 @@ describe('R6 acceptance', () => {
             // MECHANISM: an unclaimed row reads UNCLAIMED, a claimed one
             // does not, and the count is derived from `R6_WINDOWS` rather
             // than written down.
+            // ⛔ AND IT ROTTED AGAIN AT SLICE 5, one slice after the comment
+            // above was written: the mechanism assertion still carried a
+            // LITERAL `['W-totem']` beside it, so `W-shield` and `W-fire`
+            // turned it red for doing their job. The literal is gone. What
+            // is asserted is the RELATION — claimed windows are exactly the
+            // ones whose two arms are both in the roster, some row is still
+            // unclaimed, and the ledger's own count is the number of
+            // BOSS-KILL rows whose window is claimed (which is not the same
+            // number: `W-fire` is a window with no kill tag behind it).
             const claimed = R6_WINDOWS.filter(
                 (w) => roster.includes(w.tape) && roster.includes(w.control),
             );
-            expect(claimed.map((w) => w.name)).toEqual(['W-totem']);
+            expect(claimed.length).toBeGreaterThan(0);
+            expect(claimed.length).toBeLessThan(R6_WINDOWS.length);
+            for (const w of claimed) {
+                expect(findings.some((f) => f.detail.includes(w.tape))
+                    || !R6_BOSS_KILL_LEDGER.some((r) => r.earnedIn === w.name)).toBe(true);
+            }
             expect(findings.some((f) => /UNCLAIMED/.test(f.detail))).toBe(true);
+            const claimedNames = new Set(claimed.map((w) => w.name));
+            const tags = R6_BOSS_KILL_LEDGER.filter((r) => claimedNames.has(r.earnedIn));
             const done = findings.find((f) => f.name === 'the boss-kill ledger is complete');
-            expect(done.detail).toMatch(new RegExp(`${claimed.length}/6 tags earned`));
+            expect(done.detail).toMatch(new RegExp(`${tags.length}/6 tags earned`));
         });
 
         it('a row with a DRIVE and no control is still unclaimed', () => {

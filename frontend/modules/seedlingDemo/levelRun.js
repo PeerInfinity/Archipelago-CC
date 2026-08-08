@@ -35,7 +35,7 @@
 
 import { addedTimeKey, buildLevelWorld, rect, rectsOverlap } from './levelWorld.js';
 import {
-    INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, TALK_KEY,
+    INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE, TALK_KEY,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 import {
@@ -53,7 +53,8 @@ import {
 } from './pushables.js';
 import {
     DARK_SWORD_DAMAGE, FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY,
-    SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress, slashRect, spearRect,
+    SLASH_HIT_TICKS, SLASH_REACH, SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress,
+    distanceRectPoint, slashRect, spearRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { hitPushableFromPoint } from './pushables.js';
@@ -78,6 +79,11 @@ import {
     BOSS_TOTEM_SHOT, BOSS_TOTEM_WHITE_OUT, bossTotemBodyRect, bossTotemCameraTarget,
     bossTotemShotRect, bossTotemTakesHit, stepBossTotemShot,
 } from './bossTotemFight.js';
+import {
+    BOSS_KEY, SHIELD_BOSS, advanceShieldBossGraphic, createShieldBoss, shieldBossBandRect,
+    shieldBossBodyRect, shieldBossDeathSchedule, shieldBossTakesHit, shieldBossWindowFor,
+    stepShieldBoss,
+} from './shieldBossFight.js';
 import {
     createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
@@ -373,6 +379,11 @@ export function createLevelRun({
         // ⛓ R5 slice 23: and the boss, whose only persistence write is its
         // DEATH — so a rebuild gets an unwoken boss and its wall back.
         bossStates.delete(n);
+        // ⛓⛓ R6 slice 5: and the ShieldBoss, whose rebuild re-arms
+        // `activated` — the swallowed first hit is a per-ENTRY dispatch, so
+        // a run that carried the flag across a rebuild would spend three
+        // swings for four hits and never land the last one.
+        shieldBossStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -708,6 +719,48 @@ export function createLevelRun({
         }
         return out;
     };
+    /**
+     * ⛓⛓⛓ R6 SLICE 5: THE SHIELD BOSSES — the THIRTEENTH per-visit family.
+     *
+     * ⚠ PER VISIT ONLY IN ONE DIRECTION. The kill writes `{19,0}` and
+     * `ShieldBoss.check()` despawns the body on a CLEARED tag, so a rebuilt
+     * room after a kill has no boss at all — which `buildLevelWorld`'s
+     * persistence arm handles from the run's cleared set, not from here. A
+     * rebuild BEFORE the kill gets a fresh body with `activated` back to
+     * false, which is exactly why the swallowed first hit is a per-ENTRY
+     * dispatch rather than a once-per-fight one.
+     */
+    const shieldBossStates = new Map();
+    const shieldBossStateFor = (n) => {
+        if (!shieldBossStates.has(n)) {
+            const byId = new Map();
+            for (const b of worldFor(n).shieldBosses ?? []) {
+                byId.set(b.id, createShieldBoss({
+                    id: b.id, x: b.ex, y: b.ey, tag: b.persistTag ?? -1,
+                }));
+            }
+            shieldBossStates.set(n, byId);
+        }
+        return shieldBossStates.get(n);
+    };
+    /**
+     * The live boxes, for `collidesSolid`'s `shieldBosses` arm and for the
+     * press census's.
+     *
+     * ⛔ `removed` IS THE ONLY FIELD THAT MATTERS and it is NOT `destroy`.
+     * The body collides for the whole eleven-tick fade after the twenty-
+     * three-update die animation; a map keyed on `destroy` would open the
+     * room — and the key's cage — eleven ticks early.
+     */
+    const shieldBossRectsNow = () => {
+        const st = shieldBossStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, b] of st) {
+            out.set(id, { id, removed: b.removed, rect: shieldBossBodyRect(b) });
+        }
+        return out;
+    };
     const turretStates = new Map();
     const turretStateFor = (n) => {
         if (!turretStates.has(n)) {
@@ -1001,6 +1054,7 @@ export function createLevelRun({
         crushers: crusherRectsNow(),
         turrets: turretRectsNow(),
         bosses: bossRectsNow(),
+        shieldBosses: shieldBossRectsNow(),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -1074,6 +1128,27 @@ export function createLevelRun({
     const pendingBlasts = [];
     /** The `{43,5}` write `removed()` makes, keyed like `rockFlags`. */
     const bossFlags = new Map();
+    // ── ⛓⛓⛓ R6 SLICE 5: the Shieldspire's four ledgers ─────────────────
+    /**
+     * `{t, level, id, inBand, swingTime, anim, hitsTimer}` — EVERY TICK.
+     *
+     * ⚠ A FULL LEDGER RATHER THAN AN EVENT ONE, because the mechanic IS the
+     * counter: "the player stood in the band" is a claim about 120
+     * consecutive ticks and an event log of the 120th proves only that the
+     * model thinks it counted. The window asserts monotonicity over this.
+     */
+    const shieldBossBand = [];
+    /** `{t, level, id, retaliation, windowFrom, windowTo, stabFrom}` per stab. */
+    const shieldBossStabs = [];
+    /** `{t, level, id, swallowed, landed, killed, aborted, hits, refusedAt}` per swing. */
+    const shieldBossHits = [];
+    /**
+     * `{t, level, id, what, tagTick}` — `what` is `'tag'`, `'destroy'` or
+     * `'removed'`, and they are THREE DIFFERENT TICKS 23 and 11 apart.
+     */
+    const shieldBossKills = [];
+    /** The `{19,0}` write `startDeath` makes — keyed like `bossFlags`. */
+    const shieldBossFlags = new Map();
     let bossShotSeq = 0;
     const bossShotStates = new Map();
     const bossShotsFor = (n) => {
@@ -1560,6 +1635,7 @@ export function createLevelRun({
         // have to share one window; there is no state to carry across.
         turretStates.delete(n);
         bossStates.delete(n);
+        shieldBossStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -1804,8 +1880,26 @@ export function createLevelRun({
      * would need a second inheritance channel with its own AS3 side. The R4
      * segmentation puts the key collection and the lock it opens in the SAME
      * segment for that reason; `assertRouteWellFormed` checks it.
+     *
+     * ⛔⛔⛔ R6 SLICE 5: …AND THE v6 `save` BLOCK IS THAT SECOND CHANNEL,
+     * AND THIS SIDE HAD NEVER READ IT.
+     *
+     * R5 slice 23's AS3 batch added `save: {totem_parts, keys, seal_parts}`
+     * and `Bot.as:1027-1028` applies it — `for (si …) Main.hasKeySet(
+     * int(saveKeys[si]), true)` — at the boot, before the first level
+     * builds. `tapeFormat` parses and validates the array. `levelRun`
+     * consumed `totem_parts` and `seal_parts` and **dropped `keys` on the
+     * floor**: `bootSave.keys` appeared nowhere in this file.
+     *
+     * ⇒ a tape declaring `save.keys` would boot a GAME holding the key and
+     * a MODEL that does not, and the two would part at the first
+     * `BossLock` — which gates on exactly this set. Nothing in the roster
+     * declares one, so it is a silence with no witness rather than a red
+     * fixture: the shape [[feedback_silent_watcher_vacuous_negative]] and
+     * the reason this comment is longer than the fix. Found by driving the
+     * L20 shield walk from a keyed boot and watching the lock stay shut.
      */
-    const keys = new Set();
+    const keys = new Set(bootSave.keys ?? []);
     const grantsByLevel = new Map(grants.map((g) => [g.level, g.items]));
     const firedGrants = [];
     const applyGrantsFor = (n) => {
@@ -1868,6 +1962,7 @@ export function createLevelRun({
         // rect against `FP.world`, and by the time it fires the world is the
         // destination's.
         pendingThrust = null;
+        slashRepeats = [];
         state = arrivalFor(world);
         // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
         // SURVIVES THE DOOR — plus the twenty frames the door costs.
@@ -2006,6 +2101,12 @@ export function createLevelRun({
      * animation re-opens this.
      */
     let pendingThrust = null;
+    /**
+     * ⛓ The four EXTRA hit ticks one sword press buys — `presses.SLASH_HIT_TICKS`.
+     * ⚠ Cleared on a world swap with everything else: `slashing` is a Player
+     * field and the Player is reconstructed.
+     */
+    let slashRepeats = [];
     /**
      * ⛓ R5 slice 7: the FIRE windows still open — `{pressTick, hitTicks}`.
      *
@@ -2694,6 +2795,13 @@ export function createLevelRun({
             // against the census box would aim at a 32x32 body that no longer
             // exists.
             turrets: turretRectsNow(),
+            // ⛓⛓⛓ R6 SLICE 5: and the Shieldspire's, which does not move
+            // and does not shrink — it VANISHES. `Player.slash` collects
+            // with `collideRectInto`, which walks the world's type lists,
+            // so a body `FP.world.remove` has drained is not a candidate at
+            // all and an audit against the census box would report a hit on
+            // an entity that is gone.
+            shieldBosses: shieldBossRectsNow(),
         });
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
@@ -2955,6 +3063,131 @@ export function createLevelRun({
                     bumped: bumped.applied,
                     bumpWhy: bumped.why ?? null,
                 });
+            } else if (r.as3 === 'ShieldBoss') {
+                /**
+                 * ── ⛓⛓⛓ R6 SLICE 5: THE SWING AT THE SHIELDSPIRE ───────
+                 *
+                 * ⛔ AND IT IS THE `e is Enemy` ARM, NOT THE ONE WITH HIS
+                 * NAME ON IT. `Player.genericHit` opens with `if (e is
+                 * Enemy)` and `ShieldBoss extends Enemy`, so the `else if
+                 * (e is ShieldBoss)` five arms below is DEAD CODE. The live
+                 * call is `hit(swordForce 5, new Point(x, y), swordDamage,
+                 * "Sword")` and `ShieldBoss.hit`'s override is what
+                 * receives it.
+                 *
+                 * ⛔⛔ THE RECT IS NOT THE HIT TEST. `Player.slash` applies
+                 * TWO filters the press census does not: a 16 px
+                 * `FP.distanceRectPoint` gate and a `collideLine("Solid")`
+                 * line of sight (waived for `type == "Solid"` — which this
+                 * body is NOT; its type is `"ShieldBoss"`). Both are
+                 * applied here, on the LIVE rect, because a swing from
+                 * across the arena would otherwise land a hit the game
+                 * refuses and the whole schedule is counted in hits.
+                 */
+                const st = shieldBossStateFor(level);
+                const b = st.get(r.shieldBossId);
+                if (!b) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.shieldBossId} in level ${level}, which is not in `
+                        + "the run's ShieldBoss state. The press census and the run "
+                        + 'disagree about which bodies exist, which is the two-consumers '
+                        + 'failure this state family exists to prevent.');
+                }
+                const body = shieldBossBodyRect(b);
+                const reach = distanceRectPoint(state.x, state.y, body);
+                if (reach > SLASH_REACH) {
+                    hits.push({
+                        as3: 'ShieldBoss', id: b.id, landed: false, killed: false,
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                            + 'the rect reached him and `slash()`\'s own gate did not',
+                    });
+                } else {
+                    assertShieldBossLineOfSight(b);
+                    const type = weapon === 'spear' ? 'Spear' : 'Sword';
+                    const before = { hits: b.hits, activated: b.activated, anim: b.anim };
+                    const verdict = shieldBossTakesHit(b, {
+                        d: weapon === 'spear' ? SPEAR_DAMAGE
+                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        f: SWORD_FORCE,
+                        t: type,
+                        // `Enemy.hit` carries `!Game.freezeObjects` inside
+                        // its own gate — but ⛔ `ShieldBoss.hit`'s SWALLOW
+                        // and its `sit()` are ABOVE it, so a swing during a
+                        // ceremony still arms the fight and still aborts a
+                        // stab while damaging nothing.
+                        frozen: ceremony !== null,
+                    });
+                    if (verdict.killed) {
+                        // ⛔ `startDeath` HAS ALREADY WRITTEN THE TAG — it is
+                        // the first line of the override, above `play("die")`
+                        // and 34 ticks above the removal. Banked here, on the
+                        // tick it really happens.
+                        const flag = outOfBandFlagFor(level, b.tag);
+                        shieldBossFlags.set(ledgerKey(flag), { ...flag, id: b.id, level });
+                        if (!pendingEarnedClears.has(flag.level)) {
+                            pendingEarnedClears.set(flag.level, new Set());
+                        }
+                        pendingEarnedClears.get(flag.level).add(flag.tag);
+                        b.tagTick = ticksCompleted;
+                        const sched = shieldBossDeathSchedule(ticksCompleted);
+                        shieldBossKills.push({
+                            t: ticksCompleted, level, id: b.id, what: 'tag',
+                            tagTick: ticksCompleted,
+                            destroyTick: sched.destroyTick,
+                            removedTick: sched.removedTick,
+                            flag: { level: flag.level, tag: flag.tag },
+                        });
+                        /**
+                         * ⛔ AND THE KILL-LOCK SCAN, COMPUTED RATHER THAN
+                         * SKIPPED — the `IceTurret` arm's law, on a class
+                         * whose answer is the OTHER one. This death really
+                         * does remove the body, so `classCount(ShieldBoss)`
+                         * really does move; L19 holds no `tset == -1` lock,
+                         * and that nil is computed from the room record.
+                         */
+                        const census = world.combat?.enemies ?? null;
+                        const roster = (census ?? [])
+                            .filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+                        const led = killLockLedger(levelSource(level), {
+                            bodiesBefore: roster,
+                            bodiesAfter: roster.filter((e, i) => !(e.as3 === 'ShieldBoss'
+                                && i === roster.findIndex((x) => x.as3 === 'ShieldBoss'))),
+                        });
+                        if (led.locks.length > 0 && census === null) {
+                            throw new Error(`levelRun: the ShieldBoss kill in level `
+                                + `${level} happens in a room with ${led.locks.length} `
+                                + '`tset == -1` lock(s) and the world was built with NO '
+                                + 'COMBAT CENSUS, so `totalEnemies()` reads 0 because '
+                                + 'nothing was asked. Build the world with the `combat` '
+                                + 'role.');
+                        }
+                        if (!led.nil) {
+                            throw new Error(`levelRun: the ShieldBoss kill at tick `
+                                + `${pressTick} OPENS ${led.opens.length} kill lock(s) in `
+                                + `level ${level} (${led.why}) — a blocker the walk did `
+                                + 'not earn. This arm has no verdict for a room where the '
+                                + 'body\'s removal moves a lock.');
+                        }
+                    }
+                    shieldBossHits.push({
+                        t: ticksCompleted, level, id: b.id, weapon,
+                        swallowed: verdict.swallowed,
+                        landed: verdict.landed,
+                        killed: verdict.killed,
+                        aborted: verdict.aborted,
+                        retaliated: verdict.retaliated,
+                        refusedAt: verdict.refusedAt,
+                        hits: b.hits,
+                        anim: before.anim,
+                    });
+                    hits.push({
+                        as3: 'ShieldBoss', id: b.id,
+                        landed: verdict.landed, killed: verdict.killed,
+                        swallowed: verdict.swallowed, aborted: verdict.aborted,
+                        retaliated: verdict.retaliated,
+                        why: verdict.refusedAt, hits: b.hits, was: before,
+                    });
+                }
             }
         }
         presses.push({
@@ -3635,6 +3868,263 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R6 SLICE 5: ONE `ShieldBoss.update()`, IN ITS OWN SLOT.
+     *
+     * `Game.loadlevel` adds the spinners at `:2250`, the shieldboss at
+     * `:2222`, the pushables at `:2216-2218` and the Player at `:2092`, and
+     * `World.addUpdate` PREPENDS — so the update list runs
+     *
+     *     spinner -> SHIELDBOSS -> pushables -> … -> Player
+     *
+     * and this call sits between the two for that reason. ⚠ L19 is the only
+     * room with a ShieldBoss and it holds no spinner and no block, so the
+     * placement is UNOBSERVABLE today; it is placed correctly anyway,
+     * because the alternative is a slot chosen by convenience that a second
+     * instance would silently invalidate.
+     *
+     * ⛔⛔ AND IT IS ABOVE THE CEREMONY'S EARLY RETURN — with the strongest
+     * version of the crusher's reason and a REFUSAL attached.
+     * `ShieldBoss.hitPlayer` is reached from `Enemy.update`'s tail, which
+     * has no `Game.freezeObjects` test anywhere above it, so the 120-update
+     * stand-under counter runs through a pickup's frozen frames at full
+     * speed. This model does NOT step frozen frames one at a time — phase A
+     * of a ceremony is a lump in `frozenFramesOwed` — so a ceremony begun
+     * beside a live ShieldBoss would advance the game's counter by 150 and
+     * the model's by nothing. `assertNoCeremonyBesideShieldBoss` refuses
+     * that outright rather than approximating it.
+     */
+    function stepShieldBossesNow() {
+        const st = shieldBossStateFor(level);
+        if (st.size === 0) return;
+        const box = playerBoxAt(state.x, state.y);
+        for (const b of st.values()) {
+            if (b.removed) continue;
+            const body = shieldBossBodyRect(b);
+            const before = { hits: b.hits, tagWritten: b.tagWritten, removed: b.removed };
+            const r = stepShieldBoss(b, {
+                playerBox: box,
+                // `Enemy.update`'s first line, and `activeOffScreen` is
+                // false on this class — so a boss the camera has lost stops
+                // counting, stops damaging and stops draining its i-frame.
+                // ⚠ `onScreenNow` THROWS on an uncertain band rather than
+                // guessing; L19's geometry keeps him 24 px clear of the
+                // nearest screen edge at the camera's worst clamp, which is
+                // asserted in `shieldFight.test.js` as a measured minimum.
+                onScreen: onScreenNow(body, `shieldboss ${b.id}`),
+                // `Enemy.getState()` — `nearestToPoint("Tile", x, y)`, the
+                // ENTITY point. L19 is t=5 under him and `stepShieldBoss`
+                // throws on the three lethal ones rather than passing.
+                tileT: world.nearestWalkableTile(b.x, b.y)?.t ?? 0,
+                playerDist: Math.sqrt((state.x - b.x) ** 2 + (state.y - b.y) ** 2),
+            });
+            if (r.startedStab) {
+                shieldBossStabs.push({
+                    t: ticksCompleted, level, id: b.id, retaliation: false,
+                    ...shieldBossWindowRow(ticksCompleted),
+                });
+            }
+            shieldBossBand.push({
+                t: ticksCompleted,
+                level,
+                id: b.id,
+                inBand: r.bandOccupied,
+                swingTime: r.swingTime,
+                anim: r.anim,
+                hitsTimer: b.hitsTimer,
+            });
+            // `hitPlayer`'s damage arm — one call per damaging frame, and
+            // the PLAYER's own i-frames are what stop the rest.
+            for (let i = 0; i < r.hitCalls; i += 1) {
+                applyPlayerHit({
+                    source: 'shieldBossStab',
+                    id: b.id,
+                    force: SHIELD_BOSS.swingForce,
+                    damage: SHIELD_BOSS.damage,
+                    from: { x: b.x, y: b.y },
+                });
+            }
+            // ⛔ THE REMOVAL IS WHAT OPENS THE ROOM, and it is eleven ticks
+            // after `destroy`. Banked here so `earnedClears` can spend it and
+            // so a window can assert the wall's last live tick.
+            if (r.removeRequestedNow) {
+                shieldBossKills.push({
+                    t: ticksCompleted, level, id: b.id,
+                    what: 'removeRequested', tagTick: b.tagTick ?? null,
+                });
+            }
+            // `World.update` calls `e._graphic.update()` AFTER `e.update()`
+            // in the same pass and OUTSIDE `if (e.active)` — so the anim
+            // advances here, below the entity step and ABOVE the player's.
+            // ⛔ AND `destroy` IS SET IN THAT CALL, not in `update()`:
+            // `endAnim` is the Spritemap's callback. A ledger row written
+            // from the entity step would be one tick late.
+            const wasDestroyed = b.destroy;
+            advanceShieldBossGraphic(b);
+            if (b.destroy && !wasDestroyed) {
+                shieldBossKills.push({
+                    t: ticksCompleted, level, id: b.id,
+                    what: 'destroy', tagTick: b.tagTick ?? null,
+                });
+            }
+        }
+    }
+
+    /**
+     * ⛔ `Player.slash`'s SECOND filter, and the reason it is an assertion
+     * rather than a model.
+     *
+     * ```as3
+     *   if (!FP.world.collideLine("Solid", x, y, v[i].x, v[i].y)
+     *       || hasGhostSword || v[i].type == "Solid" || … )
+     * ```
+     *
+     * `collideLine` is FlashPunk's Bresenham walk over the "Solid" type
+     * list, and this body's type is `"ShieldBoss"` — so the waiver does NOT
+     * apply to him and the line really is consulted. Implementing a general
+     * `collideLine` is a whole mover; what this does instead is walk the
+     * segment from the player's point to his ENTITY point at 1 px and refuse
+     * if any Solid is on it. Exact for a straight line, and it refuses
+     * loudly rather than assuming the arena is open.
+     */
+    function assertShieldBossLineOfSight(b) {
+        const blocker = collideLineSolid(state.x, state.y, b.x, b.y);
+        if (blocker) {
+            throw new Error(`levelRun: the swing at (${state.x}, ${state.y}) reaches `
+                + `${b.id}'s rect but \`collideLine("Solid", …)\` finds `
+                + `${blocker.tag ?? 'a Solid'} at (${blocker.at.x}, ${blocker.at.y}) on `
+                + `the line to his entity point (${b.x}, ${b.y}). \`Player.slash\`'s `
+                + 'line-of-sight gate REFUSES that hit — the `v[i].type == "Solid"` '
+                + 'waiver does not apply to a body whose type is "ShieldBoss" — so the '
+                + 'swing would land in the model and miss in the game. Re-aim the stance.');
+        }
+    }
+
+    /**
+     * ⛔⛔⛔ `FP.world.collideLine("Solid", …)` — A **FOURTH** SOLIDS LIST,
+     * AND THE NARROWEST ONE ON THE ARC.
+     *
+     * `levelWorld`'s own header names three (`Player.solids`,
+     * `Crusher.solids`, `IceTurretBlast.hitables`). This is a fourth, and it
+     * is not `Mobile.solids` at all: `collideLine` takes ONE TYPE STRING, so
+     * a `Tree`, a `Rope`, a `LavaBoss` — and the ShieldBoss's own body,
+     * whose type is `"ShieldBoss"` — are all INVISIBLE to it. ⚠ The first
+     * cut of this check asked `world.collidesSolid`, which is the PLAYER's
+     * list, and refused every swing in the room because the boss blocked the
+     * line to himself. `solidBoxesForMover` already filters `cls.type !==
+     * 'Solid'`, which is exactly the set this wants.
+     *
+     * Transcribed from `net/flashpunk/World.as`, three details included:
+     *
+     *   1. **the signature truncates.** `fromX:int … toY:int` — so a player
+     *      at y 90.05 raycasts from y 90, and the fractional part the whole
+     *      physics model carries is DROPPED at this one call;
+     *   2. **the end point is exclusive.** The loop is `while (y > toY)`, so
+     *      the target's own cell is never tested — which matters here,
+     *      because the target's entity point is inside its own body;
+     *   3. **`collidePoint` is half-open** (`>= left && < right`), which a
+     *      1x1 box at integer coordinates reproduces exactly.
+     *
+     * @returns {?{tag: ?string, at: {x, y}}} the first blocker, or null
+     */
+    function collideLineSolid(fromXf, fromYf, toXf, toYf) {
+        const fromX = Math.trunc(fromXf);
+        const fromY = Math.trunc(fromYf);
+        const toX = Math.trunc(toXf);
+        const toY = Math.trunc(toYf);
+        const boxes = world.solidBoxesForMover(liveSolidOpts());
+        const at = (px, py) => {
+            for (const s of boxes) {
+                if (px >= s.x && px < s.right && py >= s.y && py < s.bottom) return s;
+            }
+            return null;
+        };
+        const xDelta = Math.abs(toX - fromX);
+        const yDelta = Math.abs(toY - fromY);
+        // `if (FP.distance(...) < precision)` with precision 1 — the short
+        // sweep, which for a null `p` is `collidePoint(type, fromX, toY)`.
+        // ⚠ THAT IS `fromX` WITH `toY`, a mixed pair, and it is verbatim.
+        if (Math.hypot(toX - fromX, toY - fromY) < 1) {
+            const s = at(fromX, toY);
+            return s ? { tag: s.tag ?? null, at: { x: fromX, y: toY } } : null;
+        }
+        let x = fromX;
+        let y = fromY;
+        let xSign = toX > fromX ? 1 : -1;
+        let ySign = toY > fromY ? 1 : -1;
+        if (xDelta > yDelta) {
+            ySign *= yDelta / xDelta;
+            while (xSign > 0 ? x < toX : x > toX) {
+                const s = at(x, y);
+                if (s) return { tag: s.tag ?? null, at: { x, y } };
+                x += xSign; y += ySign;
+            }
+        } else {
+            xSign *= xDelta / yDelta;
+            while (ySign > 0 ? y < toY : y > toY) {
+                const s = at(x, y);
+                if (s) return { tag: s.tag ?? null, at: { x, y } };
+                x += xSign; y += ySign;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * ⛔⛔⛔ `World.updateLists()` FOR THE SHIELDSPIRE — the one-tick
+     * fencepost the game's own recording set.
+     *
+     * `Mobile.death`'s eleventh fade call runs `FP.world.remove(this)`,
+     * which pushes to `_remove`; `Engine.update` drains it AFTER
+     * `World.update`. The Player is added LAST (`Game.as:2092`) and so
+     * updates LAST, which means the body is still in the `"ShieldBoss"`
+     * type list for the player's own sweep on the request tick. ⇒ the wall
+     * lasts one tick longer than the fade does.
+     *
+     * The first recording of `r6-shield-kill` is the witness: the model
+     * walked north at tick 443 and the game was still pinned at y 90.05.
+     * → [[feedback_destroy_is_not_removal]], one fencepost further along.
+     */
+    function drainShieldBossRemovals() {
+        const st = shieldBossStateFor(level);
+        if (st.size === 0) return;
+        for (const b of st.values()) {
+            if (!b.removeRequested || b.removed) continue;
+            b.removed = true;
+            shieldBossKills.push({
+                t: ticksCompleted, level, id: b.id,
+                what: 'removed', tagTick: b.tagTick ?? null,
+            });
+        }
+    }
+
+    /** The derived window row a stab publishes, for the ledger. */
+    function shieldBossWindowRow(t) {
+        const w = shieldBossWindowFor(t);
+        return { windowFrom: w.windowFrom, windowTo: w.windowTo, stabFrom: w.stabFrom };
+    }
+
+    /**
+     * ⛔ THE REFUSAL THE FREEZE ASYMMETRY EARNS.
+     *
+     * See `stepShieldBossesNow`. Called from the ceremony branch, so a tape
+     * that collects anything in a room with a live Shieldspire fails BY NAME
+     * instead of drifting 150 counter updates from the game.
+     */
+    function assertNoCeremonyBesideShieldBoss(what) {
+        const st = shieldBossStateFor(level);
+        for (const b of st.values()) {
+            if (b.removed) continue;
+            throw new Error(`levelRun: a ${what} ceremony began in level ${level} while `
+                + `the ShieldBoss ${b.id} is still in the world. \`ShieldBoss.hitPlayer\` `
+                + 'is not freeze-gated — its 120-update stand-under counter advances '
+                + 'through every frozen frame — and this model spends a ceremony\'s '
+                + 'phase A as a LUMP in `frozenFramesOwed` rather than as steps. So the '
+                + 'game would count 150 updates the model counts none of. Collect after '
+                + 'the removal, or step the freeze.');
+        }
+    }
+
+    /**
      * The magical locks' own `animEnd`. Below the shots, above the player —
      * `Game.loadlevel` adds the player at `:2092` and the lock at `:2148`,
      * and `addUpdate` prepends.
@@ -3980,6 +4470,15 @@ export function createLevelRun({
 
     /** The item a pickup grants, and the text its ceremony shows. */
     function ceremonyFor(p) {
+        // ⛓⛓⛓ R6 SLICE 5: the ATTRIBUTE split, before the tag lookup.
+        // `BossKey`'s ctor gives a `text` only to `keyType == 0`, so the
+        // L19 key runs a two-page dialogue where every other key on the
+        // ladder self-resolves after 150 frozen frames. R4's own docblock
+        // predicted this rung would find out "by the ceremony costing 150
+        // ticks the recording does not have"; it found out by the key
+        // collecting in ONE tick instead.
+        const byKey = PICKUP_CEREMONY_BY_KEYTYPE[p.tag];
+        if (byKey && p.keyType !== undefined && byKey[p.keyType]) return byKey[p.keyType];
         const entry = PICKUP_CEREMONY[p.tag];
         if (!entry) {
             throw new Error(`levelRun: the player is standing on a "${p.tag}" pickup `
@@ -4606,6 +5105,19 @@ export function createLevelRun({
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
                 out.push({ level: n, tag, by: r.id });
             }
+            // ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE — the same polarity and a
+            // DIFFERENT SITE. `BossTotem` writes from `removed()`, 241 ticks
+            // after the kill; `ShieldBoss.startDeath` writes from inside the
+            // killing HIT, 34 ticks BEFORE the body leaves the world. So a
+            // tape that ends between the two owes this clear and would owe
+            // the totem's nothing — which is why the two are separate loops
+            // rather than one "boss died" arm.
+            for (const [key, r] of shieldBossFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                if (out.some((o) => o.level === n && o.tag === tag)) continue;
+                out.push({ level: n, tag, by: r.id });
+            }
             return out;
         },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
@@ -5063,6 +5575,42 @@ export function createLevelRun({
          * as the opening would walk into a wall for fifteen ticks.
          */
         get magicalLocksOpened() { return magicalLocksOpened.map((l) => ({ ...l })); },
+        // ── ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE'S FOUR LEDGERS ─────────────
+        /** Every tick, `{t, level, id, inBand, swingTime, anim, hitsTimer}`. */
+        get shieldBossBand() { return shieldBossBand.map((r) => ({ ...r })); },
+        /** One per `startStab`, with the DERIVED window the sword must land in. */
+        get shieldBossStabs() { return shieldBossStabs.map((r) => ({ ...r })); },
+        /** One per swing that reached him — swallowed, refused, aborted or landed. */
+        get shieldBossHits() { return shieldBossHits.map((r) => ({ ...r })); },
+        /**
+         * The death's THREE instants — `tag`, `destroy`, `removed` — as
+         * separate rows 23 and 11 ticks apart. ⛔ A consumer that wants "when
+         * did the wall open" must read `removed`; `tag` is the kill witness
+         * and nothing else.
+         */
+        get shieldBossKills() { return shieldBossKills.map((r) => ({ ...r })); },
+        /** The `{19,0}` write, keyed like `bossFlags`. */
+        get shieldBossFlags() { return [...shieldBossFlags.values()].map((f) => ({ ...f })); },
+        /** The live bodies, for a stance that has to plan around the wall. */
+        get shieldBosses() {
+            const st = shieldBossStateFor(level);
+            return [...st.values()].map((b) => ({
+                id: b.id,
+                x: b.x,
+                y: b.y,
+                hits: b.hits,
+                hitsTimer: b.hitsTimer,
+                anim: b.anim,
+                frame: b.frame,
+                swingTime: b.swingTime,
+                activated: b.activated,
+                tagWritten: b.tagWritten,
+                destroy: b.destroy,
+                removed: b.removed,
+                bodyRect: shieldBossBodyRect(b),
+                bandRect: shieldBossBandRect(b),
+            }));
+        },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -5172,6 +5720,16 @@ export function createLevelRun({
                     });
                 }
             }
+            // ── ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE, BETWEEN THEM ────────
+            // `Game.loadlevel` adds the spinners at `:2250`, the shieldboss
+            // at `:2222` and the pushables at `:2216-2218`, and
+            // `World.addUpdate` PREPENDS — so the update list is
+            // spinner -> SHIELDBOSS -> pushables -> … -> Player, and this
+            // sits exactly there. It is ABOVE the ceremony's early return
+            // because `Enemy.update`'s tail has no freeze test; the refusal
+            // in `assertNoCeremonyBesideShieldBoss` is what keeps that
+            // honest rather than approximate.
+            if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
             // `LightPole.update()` is `super.update(); hitUpdate();` and the
@@ -5324,6 +5882,8 @@ export function createLevelRun({
             if (ceremony === null) {
                 const hit = pickupUnderfoot();
                 if (hit) {
+                    // ⛔ R6 slice 5 — see `assertNoCeremonyBesideShieldBoss`.
+                    if (!noclip) assertNoCeremonyBesideShieldBoss(hit.tag ?? 'pickup');
                     const entry = ceremonyFor(hit);
                     ceremony = {
                         pickup: hit,
@@ -5699,7 +6259,43 @@ export function createLevelRun({
             // `Player.update`, above `super.update()`).
             if (pendingThrust) {
                 applyThrust(pendingThrust);
+                /**
+                 * ⛔⛔⛔ R6 SLICE 5: AND FOUR MORE, ON THE FOUR TICKS AFTER.
+                 *
+                 * `Player.slash`'s `slashDelayMax` is ZERO, so the hit test
+                 * runs on every tick `slashing` is up — `T+1 … T+5`, five in
+                 * all (`presses.SLASH_HIT_TICKS`). This model fired ONE for
+                 * five rungs and was right every time, because every arm it
+                 * had reached is idempotent inside five ticks. `ShieldBoss`
+                 * is not: hit 1 spends the swallowed dispatch and hit 2 of
+                 * the SAME press starts a retaliation stab. The game's
+                 * recording is what found it.
+                 *
+                 * ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED. `slashDirection`
+                 * is LATCHED at the press (`set slashing`) so the direction
+                 * does not move, but the RECT is recomputed from the player's
+                 * live position on each tick — `getSlashRect()` reads `x`/`y`
+                 * every call — so a player being knocked back swings from
+                 * where they are, not from where they pressed.
+                 */
+                if (pendingThrust.weapon === 'sword') {
+                    for (let i = 1; i < SLASH_HIT_TICKS; i += 1) {
+                        slashRepeats.push({ ...pendingThrust, at: ticksCompleted + i, repeat: i });
+                    }
+                }
                 pendingThrust = null;
+            }
+            // The four repeats, each on its own tick and against this tick's
+            // position. ⚠ FILTERED IN PLACE rather than shifted, because a
+            // second press inside the window is legal (it re-plays the anim,
+            // which RESETS the clock) and the two windows must not interleave
+            // by index.
+            if (slashRepeats.length > 0) {
+                const due = slashRepeats.filter((r) => r.at === ticksCompleted);
+                if (due.length > 0) {
+                    slashRepeats = slashRepeats.filter((r) => r.at > ticksCompleted);
+                    for (const r of due) applyThrust(r);
+                }
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls
@@ -6015,6 +6611,9 @@ export function createLevelRun({
                     next = state;
                 }
                 drainBossRemovals();
+                // ⛓ R6 slice 5: and the Shieldspire's, in the same
+                // `updateLists()` — see `drainShieldBossRemovals`.
+                drainShieldBossRemovals();
             }
             // ── ⛓⛓ …AND THEN `render()`. `Engine.onEnterFrame` is
             // `update(); render();`, so this is the LAST thing in the frame

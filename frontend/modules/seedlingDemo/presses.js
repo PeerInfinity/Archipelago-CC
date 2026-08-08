@@ -76,6 +76,54 @@ export const ENEMY_HITS_MAX = 3;
 export const ENEMY_HITS_TIMER = 30;
 /** `Player.as:119` — the double-tap window that turns two presses into a DASH. */
 export const SLASH_TIMER_MAX = 20;
+
+/**
+ * ⛔⛔⛔ R6 SLICE 5: **ONE PRESS IS FIVE HIT TESTS**, AND THE LADDER HAD
+ * MODELLED ONE.
+ *
+ * ```as3
+ *   private const slashDelayMax:int = 0;   // Player.as:117
+ *   public function slash():void {
+ *       if (slashTimer > 0) slashTimer--;
+ *       if (slashDelay > 0) slashDelay--;
+ *       else if (slashing) { slashDelay = slashDelayMax; …collide…genericHit… }
+ *   }
+ * ```
+ *
+ * `slashDelayMax` is **zero**, so the `else if` runs on EVERY tick
+ * `slashing` is up — and `slashing` is up from the tick after the press
+ * until `slashEnd`, the `sprSlash` callback, which fires after
+ * `animTicks(5, swordSpeed = 30)` = **6** graphic advances. `sprites()` is
+ * BELOW `slash()` in `Player.update`, so the sixth advance lands after that
+ * tick's hit test: the tests run on `T+1 … T+5`.
+ *
+ * ⚠ IT WAS INVISIBLE FOR FIVE RUNGS BECAUSE EVERY ARM THE LADDER HAD
+ * REACHED IS IDEMPOTENT INSIDE FIVE TICKS. `BreakableRock.hit` early-returns
+ * on a `play("break")` already playing; `IceTurret` has a 30-tick
+ * `hitsTimer`; `Tree`, `BurnableTree` and `Grass` are no-ops for a sword;
+ * `LightPole` and `Tile` are `t == "Spear"` only. The FIRST class where the
+ * repeats bite is `ShieldBoss`, whose swallow arm and whose
+ * `startStab(true)` sit ABOVE `Enemy.hit`'s i-frame gate — so hit 1 of the
+ * first press arms him and hit 2 of the SAME press makes him retaliate.
+ * The game's own recording is what found it: a stab landed 13 ticks after
+ * a press the model called "swallowed".
+ * → [[feedback_one_press_is_not_one_hit]]
+ *
+ * ⚠ AND THE SPEAR REPEATS TOO, THREE TIMES, AND IS DELIBERATELY NOT
+ * MODELLED HERE. `spearDelayMax` is 1, so `spear()` hits on alternate ticks
+ * — `T+1`, `T+3`, `T+5` — across the same six-advance animation. Every
+ * spear arm this ladder drives is either idempotent (a pushable refuses
+ * while `v.length > 0`) or already fitted to the game's own recordings (the
+ * bridge tile's `bridgeOpeningTimer`), so changing it would move committed
+ * fixtures to no measured end. It is named here rather than modelled, and a
+ * slice that reaches a non-idempotent spear arm owes the same fix.
+ */
+export const SLASH_HIT_TICKS = 5;
+export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
+    ticks: Object.freeze([1, 3, 5]),
+    why: '`spearDelayMax` is 1, so the test runs on alternate ticks of the same '
+        + 'six-advance animation. Not modelled — see `SLASH_HIT_TICKS`.',
+});
 /** `Scenery/LightPole.as:20` — ticks before the same pole can be toggled again. */
 export const LIGHTPOLE_HITS_TIMER_MAX = 25;
 
@@ -185,7 +233,9 @@ export function distanceRectPoint(px, py, r) {
  * is empty because nothing was ASKED, not because nothing responds. That
  * distinction is the whole reason this throws.
  */
-export function pressRespondersIn(world, rect, { pushables: live = null, turrets = null } = {}) {
+export function pressRespondersIn(world, rect, {
+    pushables: live = null, turrets = null, shieldBosses = null,
+} = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
             + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
@@ -230,6 +280,29 @@ export function pressRespondersIn(world, rect, { pushables: live = null, turrets
             if (now.removed) continue;
             if (rectsOverlap(rect, now.rect)) {
                 hits.push({ ...r, rect: now.rect, live: true, dead: now.dead === true });
+            }
+            continue;
+        }
+        /**
+         * ⛓⛓⛓ R6 SLICE 5: THE THIRD NON-CONSTANT RECT, and the first that
+         * can vanish.
+         *
+         * `Player.slash()` collects its targets with `collideRectInto`,
+         * which walks FlashPunk's per-type entity lists — so an entity
+         * `FP.world.remove` has drained is not a candidate at all. The two
+         * arms above swap a rect; this one DROPS the responder, because
+         * "the ShieldBoss is still where the level built it, at zero size"
+         * is not a state the game has.
+         *
+         * ⚠ ABSENT RUN STATE IS ALIVE, matching the turret arm and
+         * `liveRectOf`'s: a press in a room the run has never fought in
+         * reaches the body the level built.
+         */
+        if (shieldBosses && r.shieldBossId && shieldBosses.has(r.shieldBossId)) {
+            const now = shieldBosses.get(r.shieldBossId);
+            if (now.removed) continue;
+            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+                hits.push({ ...r, rect: now.rect ?? r.rect, live: true });
             }
             continue;
         }
@@ -280,9 +353,9 @@ export function pressRespondersIn(world, rect, { pushables: live = null, turrets
  * skip the audit.
  */
 export function auditPress(world, rect, {
-    weapon, intended = [], pushables = null, turrets = null,
+    weapon, intended = [], pushables = null, turrets = null, shieldBosses = null,
 } = {}) {
-    const responders = pressRespondersIn(world, rect, { pushables, turrets });
+    const responders = pressRespondersIn(world, rect, { pushables, turrets, shieldBosses });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(
         (r) => weapon === 'spear' || !spearOnly.has(r.as3),
@@ -484,7 +557,26 @@ export const PRESS_ARM_POLICY = Object.freeze({
             + '(`FIRE_ARM_POLICY.RopeStart`, `r5Shaft.ROPE_PULL`). A sword press at one '
             + 'is still unmodelled and still refused.',
     },
-    ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
+    // ⛓⛓⛓ R6 SLICE 5: the sword arm that kills the Shieldspire.
+    //
+    // ⛔ AND THE ARM IS NOT THE ONE THE CLASS NAME SUGGESTS.
+    // `Player.genericHit`'s `else if (e is ShieldBoss)` at `Player.as:1097`
+    // is DEAD CODE — `e is Enemy` catches him twenty lines above it — so
+    // the live call is `Enemy.hit(swordForce 5, new Point(x, y),
+    // swordDamage 1, "Sword")` and `shieldBossFight.shieldBossTakesHit` is
+    // the transcription of the OVERRIDE that receives it. The dead arm is
+    // recorded in `shieldBossFight.SHIELD_BOSS_DEAD_ARM` rather than
+    // modelled, because the two differ only in `f` and `p` and this class's
+    // `knockback` is an empty override.
+    ShieldBoss: {
+        policy: 'modelled',
+        why: 'the encounter script — `shieldBossFight.js` and the run\'s per-visit boss '
+            + 'state. The FIRST hit of every room entry is swallowed (`activated` is an '
+            + 'instance field re-armed by every `new Game`), a hit from `sit` starts a '
+            + 'RETALIATION stab with no vulnerable phase, and only a hit during '
+            + '`movedShield` reaches `super.hit`. `{19,0}` is written by `startDeath`, '
+            + 'inside the third landed hit.',
+    },
     // ⚠ MODELLED FROM R4, and it was ruled in rather than assumed. It is the
     // only entry here whose arm has a real, banked effect that is not
     // geometry: `set activate` calls `Game.setPersistence(tag, !activate)`,

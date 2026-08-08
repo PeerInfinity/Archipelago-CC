@@ -101,8 +101,27 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
         expect(assertKillArmPolicyCovers()).toEqual([]);
     });
 
-    it('⛔ and exactly ONE class is modelled — the lift is per class', () => {
-        expect(MODELLED_KILL_ARMS).toEqual(['IceTurret']);
+    /**
+     * ⛓ THE MECHANISM, NOT THE COUNT. This asserted `['IceTurret']` from R5
+     * slice 21 until R6 slice 5 lifted `ShieldBoss` and turned it red for
+     * doing its job — [[feedback_coincidental_predicate_rots]], the same
+     * fuse `r6Acceptance.test.js` lit one slice earlier. What the rule
+     * actually is: a lift is PER CLASS, so every modelled row must carry a
+     * `CORPSE_COUNTING` row saying what its death does to `classCount`, and
+     * no row may be modelled without one.
+     */
+    it('⛔ the lift is PER CLASS — every modelled arm has staged its own corpse', () => {
+        expect(MODELLED_KILL_ARMS.length).toBeGreaterThan(0);
+        for (const as3 of MODELLED_KILL_ARMS) {
+            expect(CORPSE_COUNTING[as3], `${as3} is modelled with no CORPSE_COUNTING row`)
+                .toBeTruthy();
+            expect(KILL_SIDE_WRITES[as3], `${as3} is modelled with no KILL_SIDE_WRITES row`)
+                .toBeTruthy();
+        }
+        // ...and the two shapes really are different, so the table is not a
+        // rubber stamp: one death moves `classCount` and one does not.
+        expect(MODELLED_KILL_ARMS.map((c) => CORPSE_COUNTING[c].removesBody))
+            .toEqual(expect.arrayContaining([true, false]));
     });
 
     /**

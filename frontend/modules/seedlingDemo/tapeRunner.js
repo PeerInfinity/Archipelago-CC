@@ -460,6 +460,21 @@ export function createTapeStepper(tape, opts = {}) {
             bossHits: run ? run.bossHits : [],
             bossKills: run ? run.bossKills : [],
             bossBlasts: run ? run.bossBlasts : [],
+            /**
+             * ⛓⛓⛓ R6 SLICE 5 — THE SHIELDSPIRE'S FOUR, and they are its
+             * own rather than an extension of the totem's.
+             *
+             * ⛔ `shieldBossKills` CARRIES THREE ROWS PER DEATH — `tag`,
+             * `destroy` and `removed`, 23 and 11 ticks apart — because the
+             * three release different things and a window has to be able to
+             * name which one it meant. The totem's `bossKills` is one row
+             * per kill with a `tagTick` beside it; merging the two shapes
+             * would have forced one of them to lie.
+             */
+            shieldBossBand: run ? run.shieldBossBand : [],
+            shieldBossStabs: run ? run.shieldBossStabs : [],
+            shieldBossHits: run ? run.shieldBossHits : [],
+            shieldBossKills: run ? run.shieldBossKills : [],
             /** Every tick a shot's own cull was a §11.6 BAND question. */
             bossShotCullBand: run ? run.bossShotCullBand : [],
             /**

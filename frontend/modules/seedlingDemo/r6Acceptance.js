@@ -133,7 +133,19 @@ export const R6_ITEM_LEDGER = Object.freeze([
         where: 'L32, spawned by the BobBoss kill `r5-bobboss-fire` already drives',
         gate: 'R5 window 1\'s blocker — the fight RESTARTS on re-entry until '
             + '`hasFire`, so the collect must ride the same visit as the kill.',
-        alsoDoes: 'closes `R5_ITEM_LEDGER.spawnedButNotCollected`.',
+        // ⛓⛓ R6 SLICE 5's FIRST RECON JOB, ANSWERED — and the answer is
+        // that the debt was half the size the ledger said.
+        alsoDoes: '⛔ `R5_ITEM_LEDGER.spawnedButNotCollected` IS A MODEL-SIDE '
+            + 'STATEMENT. The GAME already collects it: `r5-bobboss-fire` drives the '
+            + 'kill, the walk touches the runtime-spawned `Fire`, and `Fire.removed()` '
+            + 'writes `hasFire` plus `{31,29}`. `r5Chain.MODEL_EXEMPT` amends the mirror '
+            + 'with `earned: [\'fire\']` and the differential checks `mirror + earned`, '
+            + 'so a run that fought and lost goes RED. ⇒ W-fire is claimed from that '
+            + 'pair; what remains is the MODEL of the encounter script, deferred by name.',
+        modelDebt: 'the BobBoss encounter script — three forms, two 120-frame '
+            + 'transitions that teleport the player and clear `receiveInput`, and a '
+            + 'reward spawned at runtime that is in no level\'s pickup list. '
+            + '`KILL_ARM_POLICY.BobBoss` stays `refused`.',
     }),
 ]);
 
@@ -217,8 +229,35 @@ export const R6_WINDOWS = Object.freeze([
     // rather than an equal — the treatment's own tail is the 240-render
     // white-out and the control has no death to white out.
     Object.freeze({ name: 'W-totem', slice: 4, tape: 'r6-totem-kill', control: 'r6-totem-control' }),
-    Object.freeze({ name: 'W-shield', slice: 5, tape: null, control: null }),
-    Object.freeze({ name: 'W-fire', slice: 5, tape: null, control: null }),
+    // ⛓⛓⛓ R6 SLICE 5: THE LADDER'S SECOND BOSS KILL. The pair is the
+    // one-primitive-fewer prefix again, and the primitive is the THIRD
+    // landing press — which the control drops while keeping the single `up`
+    // span byte-identical, because the movement and the treatment come from
+    // separate generators (§12's amendment to §3.2).
+    Object.freeze({ name: 'W-shield', slice: 5, tape: 'r6-shield-kill', control: 'r6-shield-control' }),
+    /**
+     * ⛓⛓ AND W-FIRE'S TAPE IS R5's OWN PAIR, WHICH IS THE FINDING.
+     *
+     * ⛔ `R5_ITEM_LEDGER.spawnedButNotCollected: ['fire']` IS TRUE OF THE
+     * MODEL AND FALSE OF THE GAME. `r5-bobboss-fire` drives the whole
+     * BobBoss encounter in the recompiled game, `BobBoss.death` spawns
+     * `new Fire(...)` at runtime, the walk collects it, and `Fire.removed()`
+     * writes `Player.hasFire = true` plus the out-of-band `{31,29}` that
+     * `bobBoss.BOB_BOSS_LEDGER` names. `r5Chain.MODEL_EXEMPT` amends the
+     * mirror with `earned: ['fire']` and the differential then checks the
+     * game against `mirror + earned` — a HARDER assertion than the plain
+     * one, and the reason the entry's own `why` says "a run that fought and
+     * did not win goes RED here".
+     *
+     * ⇒ the item is REAL-COLLECTED inside a driven window with a control,
+     * which is exactly what §3.1's ledger asks of `fire`, and the row is
+     * claimed here rather than left null for a tape that would drive the
+     * same fight a second time. **What is still owed is MODEL-SIDE**: the
+     * 230-line encounter script (three forms, two 120-frame transitions
+     * that teleport the player, a runtime-spawned pickup in no level's
+     * list). That is named in `R6_ITEM_LEDGER` and deferred, not claimed.
+     */
+    Object.freeze({ name: 'W-fire', slice: 5, tape: 'r5-bobboss-fire', control: 'r5-bobboss-fire-control' }),
     Object.freeze({ name: 'W-owl', slice: 6, tape: null, control: null }),
     Object.freeze({ name: 'W-talk', slice: 6, tape: null, control: null }),
     Object.freeze({ name: 'W-door', slice: 6, tape: null, control: null }),
@@ -547,6 +586,23 @@ export const R6_AS3_DECISION = Object.freeze({
             whyNotAWall: '`R6_MENU_WRITERS` eliminates the other four writers from a '
                 + 'W-seed window, so `botStatus.menu === true` is a sound witness — '
                 + 'weaker in form, identical in what it establishes.',
+        }),
+        // ⛓⛓ R6 SLICE 5, and it is the sharpest wanted-not-wall yet: the
+        // surface would have SAVED A RECORDING.
+        Object.freeze({
+            surface: '`ShieldBoss.activated` (and the slash\'s live hit count)',
+            found: 'R6 slice 5 — `activated` is a `private var` and nothing in '
+                + '`botStatus` or `botMobiles()` reports it, so the model\'s claim '
+                + '"the first hit of every entry is swallowed" could only be checked '
+                + 'by its CONSEQUENCE. It was checked that way and it was WRONG: one '
+                + 'press is five hit tests (`slashDelayMax` is 0), so the arming press '
+                + 'armed him on test 1 and made him retaliate on test 2, and the '
+                + 'divergence surfaced 13 ticks later as a knockback in the recording.',
+            whyNotAWall: 'the consequence IS readable and it did the job — the game\'s '
+                + 'own `hits` went to 1 where the model said 0, and the stream showed '
+                + 'the shove. A readout would have named the cause instead of the '
+                + 'symptom and saved one 60-second recording; it would not have changed '
+                + 'the verdict. ⚠ The batch is ruled ZERO (§8.17) and this stays wanted.',
         }),
     ]),
     stillOwed: Object.freeze([

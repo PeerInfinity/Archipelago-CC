@@ -77,7 +77,7 @@
  * that the differential then blames on physics.
  */
 
-import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
+import { LIVE_GEOMETRY_KEYS, rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { coerceTerrainState } from './tapeFormat.js';
 import {
     CHECK_OFFSET_Y,
@@ -898,6 +898,23 @@ export function step(state, held, opts = {}) {
          * is how a key stays dropped for four slices.
          */
         bosses = null,
+        /**
+         * ⛓⛓⛓ R6 SLICE 5: THE THIRTEENTH, and the one that made the
+         * hand-written `collides` bag below into an ASSERTED one.
+         *
+         * A `ShieldBoss` is `type = "ShieldBoss"` — in `Mobile.solids` —
+         * from the tick the level builds it until `FP.world.remove(this)`
+         * fires eleven fade ticks after a twenty-three-update die
+         * animation. So, like the boss totem's, the default "still a solid"
+         * is correct and what the key expresses is the ONE event that takes
+         * the wall away. ⛔ Unlike the totem's, dropping it UNDER-blocks in
+         * the DANGEROUS direction: the room's only route north, and the
+         * only cell `bosskey@96,64` can be taken from, are both inside this
+         * rect — so a dropped key leaves the player walking into a wall the
+         * run has already killed. Which is exactly what happened, on this
+         * family's first drive.
+         */
+        shieldBosses = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1252,6 +1269,46 @@ export function step(state, held, opts = {}) {
         swim = playChannel({ ...swim });
     }
 
+    /**
+     * ⛔⛔⛔ THE LIVE-GEOMETRY BAG, HOISTED AND **ASSERTED** — because a
+     * hand-written copy of it has now silently dropped a family THREE
+     * TIMES (`levelWorld.LIVE_GEOMETRY_KEYS` names all three occasions).
+     *
+     * It was an object literal inside the `collides` closure, rebuilt on
+     * every one of the sweep's per-pixel calls, and an omitted key there is
+     * not an error — it is a cell the PLANNER opens and the PLAYER walks
+     * into. The check below costs one pass over a frozen twelve-element
+     * array per TICK (not per pixel) and turns the fourth omission into a
+     * throw naming the family.
+     */
+    const liveBag = {
+        beforeTypeFlip,
+        openActivators,
+        openMagicalLocks,
+        openBridges,
+        pushables,
+        brokenRocks,
+        burnedTrees,
+        fallenRocks,
+        crushers,
+        turrets,
+        bosses,
+        shieldBosses,
+        pulledRopes,
+        openChests,
+    };
+    if (!noclip) {
+        for (const k of LIVE_GEOMETRY_KEYS) {
+            if (!(k in liveBag)) {
+                throw new PhysicsV2Error(`playerPhysicsV2.step: the live-geometry bag is `
+                    + `missing "${k}", which \`levelWorld.LIVE_GEOMETRY_KEYS\` names as a `
+                    + 'per-visit family. An unlisted key in an options object is a '
+                    + 'SILENCE, not an error: the sweep would treat that family as '
+                    + '"absent" and walk the player through — or into — geometry the run '
+                    + 'has already changed. Add it to the destructure AND to this bag.');
+            }
+        }
+    }
     const next = stepV1({ ...state, ...(drownV ? { vx: drownV.x, vy: drownV.y } : {}) },
         fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
@@ -1275,12 +1332,7 @@ export function step(state, held, opts = {}) {
                 ? { x: v.x, y: v.y + WATERFALL_ACCELERATION } : v)
             : null,
         world: level.world,
-        collides: noclip
-            ? null
-            : (x, y) => level.collidesSolid(playerBoxAt(x, y),
-                { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    burnedTrees, fallenRocks, crushers, turrets, bosses, pulledRopes,
-                    openChests, openMagicalLocks }),
+        collides: noclip ? null : (x, y) => level.collidesSolid(playerBoxAt(x, y), liveBag),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

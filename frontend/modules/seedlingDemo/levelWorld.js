@@ -3005,6 +3005,42 @@ function intAttr(attrs, name, fallback) {
  * builds the level a fresh save sees, which is what every caller before
  * this got and still gets.
  */
+/**
+ * ⛔⛔⛔ THE THIRTEEN PER-VISIT GEOMETRY KEYS, AS A LIST — AND IT EXISTS
+ * BECAUSE THE SAME DEFECT HAS NOW HAPPENED THREE TIMES.
+ *
+ * R5 slice 14 found `burnedTrees` and `fallenRocks` passed to
+ * `playerPhysicsV2.step` and silently DROPPED by its own hand-written
+ * destructure; R6 slice 2 found `openMagicalLocks` reaching
+ * `liveSolidOpts`, `normalizeLive` and `liveRectOf` — all green — and
+ * dropped by the `collides` closure inside the same function; R6 slice 5
+ * found `shieldBosses` dropped in exactly that closure, one family later.
+ * Every time, the model opened a cell for the PLANNER and left it solid
+ * for the PLAYER, and every time the symptom was a walk that stalled on a
+ * wall the run says is gone.
+ *
+ * ⚠ AN UNLISTED KEY IN AN OPTIONS OBJECT IS NOT AN ERROR — IT IS A
+ * SILENCE. This list is what a consumer can be CHECKED against, and
+ * `playerPhysicsV2` asserts its bag covers it rather than being trusted to
+ * have typed thirteen names correctly for a fourth time.
+ *
+ * ⚠ `normalizeLive` stays a fixed-shape LITERAL rather than being derived
+ * from this list: it is allocated per QUERY on the hottest loop in the
+ * package and a derived object costs both the loop and V8's monomorphism
+ * (§10.10a). `levelWorld.test.js` asserts the two agree, which is the
+ * one-table-two-computations shape the rest of this package uses.
+ */
+export const LIVE_GEOMETRY_KEYS = Object.freeze([
+    'openActivators', 'openMagicalLocks', 'openBridges', 'brokenRocks', 'burnedTrees',
+    'crushers', 'turrets', 'bosses', 'shieldBosses', 'openChests', 'pulledRopes',
+    'pushables',
+    // ⚠ NOT IN `normalizeLive`. A parked `FallRock` is in no `solids`
+    // entry at all, so `collidesSolid` handles it ABOVE its own loop and
+    // reads `opts.fallenRocks` directly. It is a live geometry key all the
+    // same, and a consumer that dropped it would walk through a dropped rock.
+    'fallenRocks',
+]);
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null,
 } = {}) {
@@ -3148,6 +3184,12 @@ export function buildLevelWorld(levelRecord, {
         crushers: o.crushers ?? null,
         turrets: o.turrets ?? null,
         bosses: o.bosses ?? null,
+        // ⚠ R6 SLICE 5: the TWELFTH key, and §10.10a's measurement applies —
+        // this object is allocated per QUERY on the hottest loop in the
+        // package, and the named fix (stop re-normalising an already
+        // normalised bag) is still deferred. One key is not a reason to
+        // take it now; it is a reason the deferral has a growing bill.
+        shieldBosses: o.shieldBosses ?? null,
         openChests: o.openChests ?? null,
         pulledRopes: o.pulledRopes ?? null,
         pushables: o.pushables ?? null,
@@ -3234,6 +3276,26 @@ export function buildLevelWorld(levelRecord, {
             if (now && now.activated) return null;
             return s.rect;
         }
+        // ⛓⛓⛓ R6 SLICE 5: A SHIELDBOSS — the THIRTEENTH per-visit family,
+        // and the SIMPLEST polarity of the three boss-shaped arms.
+        //
+        // `ShieldBoss.type` is `"ShieldBoss"` from its own constructor and
+        // it is NEVER reassigned. There is no wake, no corpse latch and no
+        // type flip: the body is a wall from the tick the level builds it
+        // until `FP.world.remove(this)`, which is `Mobile.death`'s eleventh
+        // fade call, twenty-three graphic updates after the tag. ⇒ absent
+        // run state means SOLID (a room nobody has fought in has its wall),
+        // and the ONE thing that opens the cell is `removed`.
+        //
+        // ⛔ `destroy` IS NOT THE GATE. The body keeps colliding for the
+        // whole fade — `FP.world.remove` is what takes it out of the type
+        // list — so an arm keyed on `destroy` would open the room eleven
+        // ticks early and walk the player through a wall.
+        if (s.shieldBossId) {
+            const now = o.shieldBosses ? o.shieldBosses.get(s.shieldBossId) : null;
+            if (now && now.removed) return null;
+            return s.rect;
+        }
         // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()` writes
         // `type = ""` (Chest.as:77) and the entity then fades for 60 more
         // ticks before `FP.world.remove` — so the SOLIDITY goes first and the
@@ -3294,6 +3356,18 @@ export function buildLevelWorld(levelRecord, {
      * why `collider: 'none'` survived unmeasured until a window walked in.
      */
     const bossTotems = [];
+    /**
+     * ⛓⛓⛓ R6 SLICE 5: THE SHIELD BOSSES — the THIRTEENTH per-visit
+     * geometry family, and the only one whose member stops being a solid by
+     * DYING. `shieldBossFight.js` owns the behaviour; the join is
+     * `solid.shieldBossId`, and the press census carries the same id so a
+     * swing after the removal cannot aim at a body that has left the world.
+     *
+     * ⚠ ONE MEMBER IN THE GAME (`shieldboss@80,32`, level 19), which is why
+     * the `check()` despawn and the `bosskey` cage inside it went unpriced
+     * for five rungs.
+     */
+    const shieldBosses = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -3761,6 +3835,16 @@ export function buildLevelWorld(levelRecord, {
                     // rather than at where the level built the turret.
                     ...(cls.as3 === 'IceTurret'
                         ? { turretId: `${e.type}@${x},${y}` } : {}),
+                    // ⛓⛓⛓ R6 SLICE 5: the THIRD responder whose rect is not
+                    // a constant — and the only one whose rect stops
+                    // EXISTING. A pushed block moves, a killed turret moves
+                    // and shrinks; a dead ShieldBoss is simply gone from the
+                    // world thirty-four ticks after the tag, and a press
+                    // audited against the census box after that would report
+                    // a hit on an entity `Player.slash`'s `collideRectInto`
+                    // could not have collected.
+                    ...(cls.as3 === 'ShieldBoss'
+                        ? { shieldBossId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
@@ -3994,6 +4078,29 @@ export function buildLevelWorld(levelRecord, {
                     ey: y + cls.dy,
                     persistTag: tagOf(e.type, e.attrs),
                     preWakeRect: solid.rect,
+                });
+            }
+            // ⛓⛓⛓ R6 SLICE 5: A SHIELD BOSS. `solid.rect` here is the LIVE
+            // body — the 48x48 `setHitbox` around the asymmetric ctor
+            // offset — and `liveRectOf`'s arm returns `null` only once the
+            // run says the entity has been REMOVED (not killed, not
+            // destroyed: removed). ⛔ The `bosskey` this room also places is
+            // INSIDE this rect, so the wall and the key's cage are one
+            // object with one release instant.
+            if (cls.as3 === 'ShieldBoss') {
+                solid.shieldBossId = `${e.type}@${x},${y}`;
+                shieldBosses.push({
+                    id: solid.shieldBossId,
+                    tag: e.type,
+                    x,
+                    y,
+                    // The ENTITY point — `super(_x + Tile.w * 1.5, _y +
+                    // Tile.h * 2)`, which is 24 across and 32 down. ⚠ The
+                    // asymmetry is the class's, not a transcription slip.
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    persistTag: tagOf(e.type, e.attrs),
+                    aliveRect: solid.rect,
                 });
             }
             if (PUSHABLE_FAMILIES[e.type]) {
@@ -4382,6 +4489,17 @@ export function buildLevelWorld(levelRecord, {
          * entity is in the world, and whether it is SOLID is the run's.
          */
         bossTotems,
+        /**
+         * ⛓⛓⛓ R6 slice 5: the shield bosses, `{id, tag, x, y, ex, ey,
+         * persistTag, aliveRect}`.
+         *
+         * Unconditional for the same reason the totems' list is:
+         * `ShieldBoss.check()` removes the body on a CLEARED tag, and the
+         * build's own persistence arm already applies that — so a roster
+         * entry means the entity exists, and whether it is still a WALL is
+         * the run's per-visit business.
+         */
+        shieldBosses,
         /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *

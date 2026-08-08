@@ -247,7 +247,18 @@ export const KILL_ARM_POLICY = Object.freeze({
     Jellyfish: Object.freeze({ policy: 'refused', why: 'the Bob cost with a 35-tick death anim; L60\'s pair drives two IN THE GAME' }),
     Cactus: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
     SandTrap: Object.freeze({ policy: 'refused', why: 'the Bob cost; a static hazard whose volume `hazards.js` prices instead' }),
-    ShieldBoss: Object.freeze({ policy: 'refused', why: 'boss damage with a swallowed first hit — §6.2, an encounter script' }),
+    // ⛓⛓⛓ R6 SLICE 5: THE SECOND `modelled` ROW, AND THE FIRST BOSS IN IT.
+    ShieldBoss: Object.freeze({
+        policy: 'modelled',
+        why: '⛓ THE SHIELDSPIRE. `shieldBossFight.js` owns the encounter script — the '
+            + 'swallowed first `hit()` as the fight\'s ARMING DISPATCH, the 120-update '
+            + 'stand-under band, and `movedShield` as the only animation `super.hit` is '
+            + 'reachable through. The damage half is THIS module\'s `enemyHit`, because '
+            + '`ShieldBoss.hit`\'s window arm is a plain forward. ⛔ Its death REMOVES '
+            + 'the body, so `classCount(ShieldBoss)` moves and every `tset == -1` lock '
+            + 'in the room can open — the ledger consequence is computed, not skipped '
+            + '(L19 has no such lock, and that nil is the assertion).',
+    }),
     Spinner: Object.freeze({
         policy: 'refused',
         why: '⛔ AND ITS DEATH IS THE ONE THAT WRITES. `Spinner.removed()` is '
@@ -379,6 +390,25 @@ export const CORPSE_COUNTING = Object.freeze({
         why: 'the same two-stage shape as Bob, with an eight-frame animation.',
         src: 'Enemies/Jellyfish.as:77-91',
     }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 5. The same two-stage shape as Bob's — and the anim
+     * length does NOT come from `chasers.deathTicks`, because a ShieldBoss
+     * is not a chaser and has no row there. `chaserTag: null` with an
+     * `anim+fade` shape is legal precisely because `removalTicksAfterHit`
+     * takes the count as an ARGUMENT; the caller resolves it from
+     * `shieldBossFight.SHIELD_BOSS_DIE_UPDATES`, which derives it from the
+     * class's own `add("die", [9..19], 15)`.
+     */
+    ShieldBoss: Object.freeze({
+        shape: 'anim+fade', removesBody: true, chaserTag: null,
+        why: '`startDeath` is overridden to `Game.setPersistence(tag, false); play("die")` '
+            + '— it writes the KILL FLAG and does NOT set `destroy`. `endAnim` sets it 23 '
+            + 'graphic updates later, and the eleven-tick fade follows. ⛔ So the tag '
+            + 'precedes the corpse by 23 and the corpse precedes the REMOVAL by 11, and '
+            + 'the removal is the one that matters: the body is in `Mobile.solids` and '
+            + 'the room\'s `bosskey` is inside it.',
+        src: 'Enemies/ShieldBoss.as:62-66 (startDeath), :212-217 (endAnim)',
+    }),
     Spinner: Object.freeze({
         shape: 'fade', removesBody: true, chaserTag: null,
         why: '`Spinner` does NOT override `startDeath`, so `Enemy.startDeath` sets '
@@ -424,8 +454,14 @@ export function removalTicksAfterHit(as3, deathAnimTicks = null) {
 /**
  * ⛓ WHAT A DEATH WRITES TO THE PERSISTENCE ARRAY, PER CLASS.
  *
- * `removed()` is the site — `FP.world.remove(this)` fires it — so a class
- * whose body is never removed never writes, however dead it is.
+ * `removed()` is the site for every class in this table but one — and
+ * ⛔⛔ R6 SLICE 5 IS THE EXCEPTION THAT WIDENS THE PREMISE. `ShieldBoss`
+ * writes from `startDeath`, i.e. inside the killing `hit()` itself, 34
+ * ticks before `removed()` would run. "A class whose body is never removed
+ * never writes" was true of the four rows this table opened with and it is
+ * not a property of the mechanism; the `site` field is what carries the
+ * difference now, and a caller that assumed `removed()` would be 34 ticks
+ * late on the one row that matters most.
  *
  * ⚠ THE CLASSIFICATION EXTENDS `outOfBandLedger.OUT_OF_BAND_WRITERS`
  * RATHER THAN DUPLICATING IT: that module answers "which slot does a −1
@@ -452,8 +488,24 @@ export const KILL_SIDE_WRITES = Object.freeze({
         writes: 'none',
         why: 'the same empty override as Bob, same commented line.',
     }),
+    ShieldBoss: Object.freeze({
+        writes: 'ownTag',
+        site: 'startDeath',
+        guard: null,
+        why: '⛔ THE ONLY ROW WHOSE SITE IS NOT `removed()`. `startDeath` is '
+            + '`Game.setPersistence(tag, false); sprShieldBoss.play("die")` — the flag '
+            + 'is written by the killing HIT, with no `doActions` guard and no wait for '
+            + 'the animation. `removed()` is not overridden at all, so the removal 34 '
+            + 'ticks later writes nothing. ⇒ the kill witness is available immediately '
+            + 'and the WALL is not.',
+        sentinel: '`ShieldBoss(_x, _y, _tag:int = -1)`. A `<shieldboss>` with no `tag` '
+            + 'would write OUT OF BAND through `i * 30 + j`; L19\'s carries `tag="0"` '
+            + 'and it is the only instance in the extract, so the -1 arm is a bounded '
+            + 'vacuity with no witness — named, not skipped.',
+    }),
     Spinner: Object.freeze({
         writes: 'ownTag',
+        site: 'removed',
         guard: 'doActions',
         why: '`removed()` is `if (doActions) Game.setPersistence(tag, false)`. `doActions` '
             + 'is only cleared by `check()` removing the entity at BUILD time, so a '
