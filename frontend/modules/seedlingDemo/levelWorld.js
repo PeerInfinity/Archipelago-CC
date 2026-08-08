@@ -166,6 +166,31 @@ export const SOLIDS_BY_MOVER = Object.freeze({
     pushable: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy', 'Player']),
     /** `Enemy` and its subclasses add nothing — the base list, verbatim. */
     enemy: Object.freeze([...SOLID_ENTITY_TYPES]),
+    /**
+     * ⛔⛔ R6 SLICE 2: `WandShot.as:69` — `solids.push("Enemy")`, and the
+     * FOURTH mover. `Mobile.solids` plus `"Enemy"`, WITHOUT the player's
+     * `"LavaBoss"`: a wand shot is stopped by a spinner and flies through a
+     * LavaBoss, which is the reverse of the player on both names.
+     *
+     * ⛓ AND IT RETIRES A CLAIM OF EXCLUSIVITY. The `spinners` roster's
+     * docblock below said the Enemy-solids movers were *"a
+     * `PushableBlock*`, and nothing else in the game"* — true when it was
+     * written, and false the moment the wand became a verb.
+     * [[feedback_two_member_list_one_member_read]].
+     */
+    wandshot: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy']),
+});
+
+/**
+ * ⛔ R6 slice 2: `Game.as:2148-2149` — the SAME class with a different
+ * `_type` argument, and the `.oel` tag is the only thing that says which.
+ * `MagicalLock.hit`'s `lockType <= shotType` reads it, so a table keyed on
+ * `as3` alone (which is what `ENTITY_CLASSES` is) cannot answer the
+ * question the wand asks.
+ */
+export const MAGICAL_LOCK_TYPE_BY_TAG = Object.freeze({
+    magicallock: 0,
+    magicallockfire: 1,
 });
 
 const SOLID_SETS_BY_MOVER = Object.freeze(Object.fromEntries(
@@ -3061,6 +3086,14 @@ export function buildLevelWorld(levelRecord, {
     const chests = [];
     /** ⛓ R5 slice 12: the level's BurnableTrees, for the burn verb. */
     const burnableTrees = [];
+    /**
+     * ⛔ R6 slice 2: the level's `MagicalLock`s, `{id, tag, lockType, x, y,
+     * ex, ey, rect}` — the roster the wand verb opens.
+     *
+     * ⚠ ALREADY FILTERED BY `check()`, like `burnableTrees`: a lock whose
+     * tag this run has cleared is not built and is in neither list.
+     */
+    const magicalLocks = [];
     const pulsers = [];
     /** ⛔⛔ R5 slice 10: every `FallRock`/`FallRockLarge`, parked or landed. */
     const fallRocks = [];
@@ -3108,6 +3141,7 @@ export function buildLevelWorld(levelRecord, {
      */
     const normalizeLive = (o) => ({
         openActivators: o.openActivators ?? null,
+        openMagicalLocks: o.openMagicalLocks ?? null,
         openBridges: o.openBridges ?? null,
         brokenRocks: o.brokenRocks ?? null,
         burnedTrees: o.burnedTrees ?? null,
@@ -3125,6 +3159,14 @@ export function buildLevelWorld(levelRecord, {
         // because it is per-tick state and this module builds static
         // geometry.
         if (o.openActivators && s.activatorId && o.openActivators.has(s.activatorId)) return null;
+        // ⛔ R6 slice 2: a `MagicalLock` whose destroy animation has WRAPPED.
+        // Like a broken rock and unlike a lock-with-a-tSet, it leaves the
+        // list entirely (`animEnd` is a bare `FP.world.remove`). ⚠ AND IT
+        // IS SOLID FOR THE WHOLE 15-UPDATE ANIMATION — the set must be
+        // keyed on `magicalLock.openTick`, never on the hit tick, which is
+        // the `BurnableTree` lesson with a smaller number.
+        if (o.openMagicalLocks && s.magicalLockId
+            && o.openMagicalLocks.has(s.magicalLockId)) return null;
         // R4: a bridge whose timer has run out is `type = "Tile"` — it leaves
         // the solids list and JOINS the walkable ones (see
         // `nearestWalkableTileWithTie`, which takes the same set).
@@ -3834,6 +3876,36 @@ export function buildLevelWorld(levelRecord, {
                     id: solid.treeId, tag: treeTag, x, y, rect: solid.rect,
                 });
             }
+            // ⛔⛔ R6 SLICE 2: A MAGICAL LOCK — the only solid in the game
+            // whose opener is a PROJECTILE, and the twelfth id join.
+            //
+            // ⛓ ITS `check()` IS ALREADY HANDLED. `MagicalLock` extends
+            // `Entity` (not `Activators`), so it has no `tSet` and its
+            // despawn is the bare `!Game.checkPersistence(tag)` that
+            // `PERSISTENCE_RESPONSE.magicallock = 'despawn'` already
+            // applies at build time. What is new is the WITHIN-VISIT half:
+            // `hit()` starts a 15-update animation and the entity is
+            // `"Solid"` for every tick of it — see `magicalLock.js`.
+            //
+            // ⚠ THE POLARITY IS THE REVERSE OF A BOSS TAG. `hit()` writes
+            // `setPersistence(tag, FALSE)`, so an OPENED lock is a CLEARED
+            // flag; the `openMagicalLocks` set below is the run's own view
+            // and is not the flag.
+            if (cls.as3 === 'MagicalLock') {
+                solid.magicalLockId = `${e.type}@${x},${y}`;
+                solid.persistTag = tagOf(e.type, e.attrs);
+                solid.lockType = MAGICAL_LOCK_TYPE_BY_TAG[e.type];
+                magicalLocks.push({
+                    id: solid.magicalLockId,
+                    tag: solid.persistTag,
+                    lockType: solid.lockType,
+                    x,
+                    y,
+                    ex: solid.rect.x + cls.originX,
+                    ey: solid.rect.y + cls.originY,
+                    rect: solid.rect,
+                });
+            }
             // ── R5 slice 9: the two solids whose state is their own ──────
             if (cls.as3 === 'Chest') {
                 solid.chestId = `${e.type}@${x},${y}`;
@@ -4271,6 +4343,14 @@ export function buildLevelWorld(levelRecord, {
          */
         burnableTrees,
         /**
+         * ⛔ R6 slice 2: the `MagicalLock`s, `{id, tag, lockType, x, y, ex,
+         * ey, rect}`. The `blocking` role already lists each of them in
+         * `solids` (with a `magicalLockId`); this is the same set from the
+         * side the wand verb needs — `lockType` is what decides whether a
+         * plain shot opens it at all.
+         */
+        magicalLocks,
+        /**
          * ⛓⛓⛓ R5 slice 15: the crushers, `{id, tag, x, y, ex, ey, t, rect}`.
          *
          * The NINTH per-visit family and the first SELF-PROPELLED one. `ex`/
@@ -4325,8 +4405,13 @@ export function buildLevelWorld(levelRecord, {
          * In NO solids list — a spinner does not block the PLAYER, and that
          * verdict is still exactly right. It reaches the geometry through the
          * run's per-visit state, and only for the movers whose own `solids`
-         * carry `"Enemy"`: a `PushableBlock*`, and nothing else in the game.
-         * See `spinner.js` and `SOLIDS_BY_MOVER`.
+         * carry `"Enemy"`.
+         *
+         * ⛔ R6 SLICE 2: that used to read *"a `PushableBlock*`, and nothing
+         * else in the game"*, and it is no longer true — `WandShot`'s ctor
+         * pushes `"Enemy"` too, so a spinner STOPS a wand shot. The
+         * exclusivity claim was a census of the movers that existed when it
+         * was written. See `spinner.js` and `SOLIDS_BY_MOVER.wandshot`.
          */
         spinners,
         /**

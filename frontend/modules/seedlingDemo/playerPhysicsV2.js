@@ -876,6 +876,25 @@ export function step(state, held, opts = {}) {
         // errand is in — a sweep that could not be told about it walks into
         // a wall the run has already opened.
         openChests = null,
+        /**
+         * ⛔⛔ R6 slice 2: the SEVENTH, and the one whose opener is not the
+         * player at all.
+         *
+         * A `MagicalLock` is `"Solid"` from the tick the level builds it to
+         * the tick its 15-update destroy animation wraps, and the thing that
+         * starts that animation is a `WandShot` — an entity the run created
+         * and the physics has never heard of. So the sweep cannot infer
+         * this state from anything it holds; it has to be TOLD.
+         *
+         * ⛓ AND IT WAS DROPPED HERE FIRST. The key was added to
+         * `levelRun.liveSolidOpts` and to `levelWorld.normalizeLive`, both
+         * tests green, and the player still walked into the opened cell —
+         * because the `collides` closure below rebuilds the options as a
+         * HAND-WRITTEN LITERAL. [[feedback_dropped_option_key_is_a_silence]],
+         * caught by an end-to-end drive rather than by a unit test, which is
+         * exactly how that lesson was learned the first time.
+         */
+        openMagicalLocks = null,
         // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit` off the
         // Player's statics, so the run's inventory mirror is what decides
         // whether standing on an armed hazard is survivable. Defaulted to
@@ -1218,7 +1237,7 @@ export function step(state, held, opts = {}) {
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
                     burnedTrees, fallenRocks, crushers, turrets, bosses, pulledRopes,
-                    openChests }),
+                    openChests, openMagicalLocks }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

@@ -80,6 +80,15 @@ import {
 import {
     ICE_TURRET_BLAST, blastIsSpent, stepIceTurretBlast,
 } from './iceTurretBlast.js';
+// ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
+// makes, so the first per-visit body a tape is responsible for.
+import { WAND_PRESS_CADENCE, WAND_WINDOW, wandPress } from './wandVerb.js';
+import {
+    createWandShot, stepWandShot, stepWandShotGraphic, wandShotRect,
+} from './wandShot.js';
+import {
+    createMagicalLock, hitMagicalLock, magicalLockIsSolid, stepMagicalLock,
+} from './magicalLock.js';
 // ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LIVE. Transcribed at slice 2 for the
 // contact envelope and consumed by nothing until a turret's own rest
 // position turned out to depend on it — see `cam` below.
@@ -102,7 +111,7 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 import {
     ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
 } from './tapeFormat.js';
-import { spawnFromBoot } from './playerPhysicsV1.js';
+import { clampFor, spawnFromBoot } from './playerPhysicsV1.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
@@ -745,6 +754,186 @@ export function createLevelRun({
         return blastReachCache.get(n);
     };
     /**
+     * ── ⛓⛓⛓ R6 SLICE 2: THE MAGICAL LOCKS, THE TWELFTH ID JOIN ──────────
+     *
+     * Static geometry with per-visit state, exactly like a `BurnableTree` —
+     * and with the same trap: `hit()` starts a 15-update animation and the
+     * lock is `"Solid"` for every tick of it, so the OPEN set is keyed on
+     * `openTick` and never on the hit.
+     */
+    const magicalLockStates = new Map();
+    const magicalLockStateFor = (n) => {
+        if (!magicalLockStates.has(n)) {
+            const byId = new Map();
+            for (const l of worldFor(n).magicalLocks ?? []) {
+                byId.set(l.id, createMagicalLock(l.id, { tag: l.tag, x: l.x, y: l.y }, l.lockType));
+            }
+            magicalLockStates.set(n, byId);
+        }
+        return magicalLockStates.get(n);
+    };
+    const openMagicalLockIdsNow = () => {
+        const st = magicalLockStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Set();
+        for (const [id, l] of st) if (!magicalLockIsSolid(l, ticksCompleted)) out.add(id);
+        return out.size === 0 ? null : out;
+    };
+    /** `{level, id, tag, hitTick, openTick, shot}` per lock a shot has opened. */
+    const magicalLocksOpened = [];
+    /**
+     * ── ⛓⛓⛓ R6 SLICE 2: THE SHOTS IN FLIGHT, THE THIRTEENTH FAMILY ──────
+     *
+     * The blast's list shape, one rung on: keyed by level so a world swap
+     * drops it, `unshift`ed because `World.addUpdate` PREPENDS.
+     *
+     * ⚠ AND THE ORDER *BETWEEN* THE TWO PROJECTILE FAMILIES IS A BOUNDED
+     * VACUITY, asserted rather than assumed. Both are added at run time, so
+     * whichever was added last is nearer the head; no room in the game
+     * holds an `IceTurret` and a reachable wand at once, and
+     * `assertWandShotSolidsBound` fails by name in any room that did.
+     */
+    const wandShotStates = new Map();
+    const wandShotsFor = (n) => {
+        if (!wandShotStates.has(n)) wandShotStates.set(n, []);
+        return wandShotStates.get(n);
+    };
+    /** `{t, level, id, direction, x, y}` per shot the run has fired. */
+    const wandShotsFired = [];
+    /** `{t, level, id, arm, ...}` per contact a shot has made. */
+    const wandShotHits = [];
+    /**
+     * The open wand animations, at most one deep — `useItem`'s
+     * `if (!wanding)` is what makes a second press inside the window a
+     * silent no-op, and the run refuses that rather than swallowing it.
+     */
+    const wandWindows = [];
+    /**
+     * ⛔⛔⛔ THE SHOT'S OWN SOLIDS LIST IS NEITHER THE PLAYER'S NOR THE
+     * BLAST'S, AND THE DIFFERENCE IS ASSERTED AWAY RATHER THAN ASSUMED AWAY.
+     *
+     * ```
+     *   Player.solids    ["Solid","Tree","Rock","Rope","ShieldBoss","LavaBoss"]
+     *   WandShot.solids  ["Solid","Tree","Rock","Rope","ShieldBoss","Enemy"]
+     * ```
+     *
+     * `world.collidesSolid` is the PLAYER's list, so using it for a shot is
+     * wrong in BOTH directions at once: it over-stops on a `LavaBoss` and
+     * under-stops on every `"Enemy"`. This bounds both — the spinner's own
+     * `assertSpinnerSolidsBound` shape, with two names instead of one.
+     *
+     * ⛓ The `"Enemy"` half is not a filter but a SUPPLY problem: an
+     * Enemy-typed body reaches `collidesSolid` only when something flips it
+     * to `"Solid"` (an unwoken totem, a turret corpse), so a live one is
+     * INVISIBLE there and has to come from a roster the run holds. This
+     * refuses any room where a body in the press census has no such roster
+     * — the undriven-producer law pointed at a consumer.
+     */
+    const wandSolidsBoundChecked = new Set();
+    function assertWandShotSolidsBound(n) {
+        if (wandSolidsBoundChecked.has(n)) return;
+        wandSolidsBoundChecked.add(n);
+        const w = worldFor(n);
+        for (const s of w.solids) {
+            if (s.cls && s.cls.type === 'LavaBoss') {
+                throw new Error(`levelRun: level ${n} holds a LavaBoss-typed entity `
+                    + `("${s.tag}"), which is in the PLAYER's solids list and NOT in `
+                    + '`WandShot`\'s (`Mobile.as:17` + `WandShot.as:69` vs '
+                    + '`Player.as:377`). `world.collidesSolid` would stop a shot the '
+                    + 'game lets fly straight through. Give the shot its own list '
+                    + 'before firing one in this room.');
+            }
+        }
+        // Every Enemy-typed body the press census names must have a roster
+        // the run can take a live box from.
+        const boxed = new Set();
+        for (const b of w.bossTotems ?? []) boxed.add(`${b.x},${b.y}`);
+        for (const t of w.iceTurrets ?? []) boxed.add(`${t.x},${t.y}`);
+        for (const s of w.spinners ?? []) boxed.add(`${s.x},${s.y}`);
+        const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`));
+        if (unboxed.length > 0) {
+            const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
+            throw new Error(`levelRun: a WandShot in level ${n} would collide with `
+                + `${unboxed.length} Enemy-typed bod(ies) this run cannot place: ${names}. `
+                + '`WandShot`\'s ctor pushes "Enemy" onto its own solids, so a live enemy '
+                + 'STOPS a shot — and a live enemy is invisible to `collidesSolid`, which '
+                + 'only sees the ones something has flipped to "Solid". Reporting rather '
+                + 'than flying through: a shot that passed through a body would report a '
+                + 'clean corridor that does not exist.');
+        }
+        if ((w.iceTurrets ?? []).length > 0) {
+            throw new Error(`levelRun: level ${n} holds an IceTurret and a WandShot at `
+                + 'once. Both projectile families are added at RUN TIME and '
+                + '`World.addUpdate` prepends, so their relative update order is the '
+                + 'ADD order — which this file models as "wand shots first" on the '
+                + 'grounds that no room has both. This room does.');
+        }
+    }
+    /**
+     * ⚠ `wand()` READS THE POSITION *ABOVE* `Player.update`'s FINAL CLAMP,
+     * and this run cannot see that value.
+     *
+     * `x = Math.min(Math.max(x, originX), FP.width + originX - width)` runs
+     * BELOW `sprites()`, so a shot fired while the player is pinned against
+     * a level edge spawns from the un-clamped position — and `stepV2`
+     * returns only the clamped one (`playerPhysicsV1` applies the clamp
+     * inside the step, as step 4 of the tick).
+     *
+     * ⇒ this refuses at the BOUND rather than at the difference: an
+     * OVER-approximation, in the safe direction. Standing exactly on a
+     * clamp edge does not prove the clamp moved anything; it proves the run
+     * cannot tell. `wandVerb.assertSpawnUnclamped` is the exact test for a
+     * caller that does hold both values.
+     */
+    function assertWandSpawnUnclamped(pos, w) {
+        const c = clampFor(world.world);
+        const atBound = pos.x === c.minX || pos.x === c.maxX
+            || pos.y === c.minY || pos.y === c.maxY;
+        if (!atBound) return;
+        throw new Error(`levelRun: the wand press at tick ${w.pressTick} fires at tick `
+            + `${w.fireTick} with the player at (${pos.x}, ${pos.y}), which is ON level `
+            + `${level}'s clamp bound (x ${c.minX}..${c.maxX}, y ${c.minY}..${c.maxY}). `
+            + '`wand()` reads the position ABOVE that clamp (`sprites()` is the line '
+            + 'above it in `Player.update`) and this run only holds the value below it, '
+            + 'so the spawn point is unknowable here. Refused at the bound rather than '
+            + 'at the difference — move the stance one pixel inward.');
+    }
+    /**
+     * `collideTypes(WandShot.solids, x, y)`, as the blocker the game's
+     * `checkEntity` would receive — CLASSIFIED, because `_e is Enemy` is an
+     * AS3 class test and this package holds runtime types.
+     */
+    const wandShotBlockerAt = (opts) => (x, y, shot) => {
+        const box = wandShotRect({ ...shot, x, y });
+        // (1) everything already flipped to a type in `Mobile.solids`.
+        const s = world.collidesSolid(box, opts);
+        if (s) {
+            if (s.magicalLockId) {
+                return {
+                    kind: 'magicallock', id: s.magicalLockId, lockType: s.lockType,
+                };
+            }
+            // A totem that has not woken, or a turret corpse: still an
+            // `Enemy` INSTANCE, so `_e is Enemy` is true whatever `type` says.
+            if (s.bossId) return { kind: 'enemy', id: s.bossId, boss: true };
+            if (s.turretId) return { kind: 'enemy', id: s.turretId, turret: true };
+            return { kind: 'other', id: s.crusherId ?? s.pushableId ?? s.rockId
+                ?? s.treeId ?? s.chestId ?? s.tag ?? null, tag: s.tag ?? null };
+        }
+        // (2) the `"Enemy"` arm — the bodies (1) cannot see. A WOKEN totem
+        // is `type = "Enemy"` and `liveRectOf` deliberately returns null for
+        // it, which is right for the player and wrong for this mover.
+        for (const b of (bossRectsNow() ?? new Map()).values()) {
+            if (b.activated && rectsOverlap(box, b.rect)) {
+                return { kind: 'enemy', id: b.id, boss: true };
+            }
+        }
+        for (const sp of spinnerRectsNow() ?? []) {
+            if (rectsOverlap(box, sp.rect)) return { kind: 'enemy', id: sp.id, spinner: true };
+        }
+        return null;
+    };
+    /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
      *    IN THIS FILE ─────────────────────────────────────────────────────
      *
@@ -765,6 +954,7 @@ export function createLevelRun({
         // and `openActivatorIds` walks every activator in the room.
         openActivators: extra.openActivators !== undefined
             ? extra.openActivators : openActivatorIds(activatorStateFor(level)),
+        openMagicalLocks: openMagicalLockIdsNow(),
         openBridges: openBridgeIdsNow(),
         pushables: pushableRectsNow(),
         brokenRocks: brokenRockIdsNow(),
@@ -1529,10 +1719,31 @@ export function createLevelRun({
         // directed rect — see `fireVerb.js` for the five-tick window and
         // the eleven-tick cadence, and `applyFire` below for the dispatch.
         if (item === 1) return 'fire';
+        // ⛓⛓⛓ R6 SLICE 2: THE WAND ARM, RETIRED FROM ITS REFUSAL.
+        //
+        // This used to throw *"A WandShot is an entity with its own physics
+        // and is not modelled (R6)"*. It is now `wandShot.js`, the
+        // thirteenth per-visit family, and `useItem` case 2 is
+        // `if (!wanding) wanding = true`.
+        //
+        // ⚠ CASE 5 IS STILL REFUSED. `useItem`'s fire-wand arm sets BOTH
+        // `wanding` and `firing`, which is two verbs on one press and two
+        // windows this run would have to open together — and the FireWand
+        // is not on this rung's honest path (§2.1). Named rather than
+        // folded into the wand arm, because the shot it spawns has a
+        // different hitbox, a different damage and a `shotType` that opens
+        // a lock this one cannot.
+        if (item === 2) return 'wand';
+        if (item === 5) {
+            throw new Error(`levelRun: the tape presses X with slot ${primary} holding the `
+                + 'FIREWAND (item 5). `useItem` case 5 sets `wanding` AND `firing` from '
+                + 'one press — two verbs, two windows — and the fire wand is not on this '
+                + "rung's honest item chain (R6 §2.1). The plain wand (item 2) is "
+                + 'modelled; this is refused rather than approximated by it.');
+        }
         throw new Error(`levelRun: the tape presses X with slot ${primary} holding item `
-            + `${item}, which routes through \`useItem\`'s WAND arm. A WandShot is an `
-            + 'entity with its own physics and is not modelled (R6), so a press that '
-            + 'would spawn one is refused rather than silently dropped.');
+            + `${item}, which no arm of \`useItem\` matches. An unmodelled weapon is `
+            + 'refused rather than silently dropped.');
     };
     /** The arms this rung MODELS; see `presses.PRESS_ARM_POLICY` for the rest. */
     const MODELLED_PRESS_ARMS = new Set(
@@ -2745,6 +2956,83 @@ export function createLevelRun({
         if (kept.length !== list.length) blastStates.set(level, kept);
     }
 
+    /**
+     * ⛓⛓⛓ R6 SLICE 2: ONE UPDATE OF EVERY WAND SHOT, AND IT IS FIRST.
+     *
+     * A shot is added at RUN TIME and `World.addUpdate` PREPENDS, so it sits
+     * ahead of every `.oel` entity — including the lock it is flying at and
+     * the player who fired it. Two consequences, both load-bearing:
+     *
+     *   · it reads the world as the PREVIOUS tick left it;
+     *   · the lock's `play("destroy")` therefore lands ABOVE the lock's own
+     *     graphic pass in the same tick, which is what makes destroy update
+     *     1 the HIT TICK (`magicalLock.MAGICAL_LOCK_CALLBACK_TICK_OFFSET`).
+     *
+     * ⚠ AND NOTHING HERE IS FREEZE-GATED. `WandShot.update` overrides
+     * `Mobile.update` and never consults `Game.freezeObjects` — only
+     * `Enemy.hit` does, which is why a contact during a ceremony is a spent
+     * shot that deals nothing.
+     */
+    function stepWandShotsNow() {
+        const list = wandShotsFor(level);
+        if (list.length === 0) return;
+        const opts = liveSolidOpts();
+        const hitAt = wandShotBlockerAt(opts);
+        const locks = magicalLockStateFor(level);
+        for (const s of list) {
+            const r = stepWandShot(s, {
+                tick: ticksCompleted, frozen: ceremony !== null, cam, hitAt,
+            });
+            if (r.event) {
+                wandShotHits.push({
+                    t: ticksCompleted, level, id: s.id, ...r.event,
+                });
+                if (r.event.arm === 'magicallock' && r.event.opened) {
+                    const lock = locks.get(r.event.id);
+                    hitMagicalLock(lock, s.shotType, ticksCompleted);
+                    magicalLocksOpened.push({
+                        level, id: lock.id, tag: lock.tag, shot: s.id,
+                        hitTick: lock.hitTick, openTick: lock.openTick,
+                    });
+                }
+                if (r.event.arm === 'enemy' && r.event.landed) {
+                    // ⛔ REFUSED, not silently applied. `Enemy.hit`'s damage
+                    // side is `enemyDamage`'s and the boss fight is slice 4;
+                    // a run that let a shot land damage it does not carry
+                    // would report a kill nobody modelled.
+                    throw new Error(`levelRun: a wand shot (${s.id}) reached the enemy `
+                        + `"${r.event.id}" at tick ${ticksCompleted} in level ${level}. `
+                        + '`Enemy.hit(3, p, 0.5, "Wand")` would land — and the FIGHT '
+                        + 'model (the totem\'s state machine, the ten-shot schedule, the '
+                        + 'death explosion) is R6 slice 4, not this one. Plan the shot '
+                        + 'at a `magicallock`, or route around the body.');
+                }
+            }
+            // `Music.playSound("Wand Fizzle")` moves the draw stream and
+            // nothing gameplay-side reads it in any room this rung routes
+            // (§8.3's census) — recorded, not modelled.
+            if (r.fizzled) s.fizzledAt = ticksCompleted;
+            // ⛓ THE GRAPHIC PASS, right after the entity's own update and
+            // outside the `e.active` test (`World.as:58`). Separate call
+            // because the die clock starts on the SAME tick `play("die")`
+            // ran, and folding it in would hide that.
+            stepWandShotGraphic(s, ticksCompleted);
+        }
+        const kept = list.filter((s) => !s.removed);
+        if (kept.length !== list.length) wandShotStates.set(level, kept);
+    }
+
+    /**
+     * The magical locks' own `animEnd`. Below the shots, above the player —
+     * `Game.loadlevel` adds the player at `:2092` and the lock at `:2148`,
+     * and `addUpdate` prepends.
+     */
+    function stepMagicalLocksNow() {
+        const st = magicalLockStateFor(level);
+        if (st.size === 0) return;
+        for (const l of st.values()) stepMagicalLock(l, ticksCompleted);
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -3918,6 +4206,23 @@ export function createLevelRun({
          * a leg say which of the two it meant.
          */
         get presses() { return presses.map((p) => ({ ...p, hits: p.hits.map((h) => ({ ...h })) })); },
+        /**
+         * ⛓ R6 slice 2: one record per shot the run has FIRED —
+         * `{t, level, id, direction, x, y, pressTick}`. `t` is the fire tick
+         * and `pressTick` is the press; they differ by seven BY DERIVATION
+         * (`WAND_WINDOW.fireTick`), and having both is what lets a window
+         * say which of the two it meant.
+         */
+        get wandShots() { return wandShotsFired.map((s) => ({ ...s })); },
+        /** One record per contact a shot made, including the ones that paid nothing. */
+        get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
+        /**
+         * ⛔ One per `MagicalLock` a shot OPENED — `{level, id, tag, shot,
+         * hitTick, openTick}`. `openTick` is 15 ticks after `hitTick` and is
+         * the first tick the cell is passable; a route that read `hitTick`
+         * as the opening would walk into a wall for fifteen ticks.
+         */
+        get magicalLocksOpened() { return magicalLocksOpened.map((l) => ({ ...l })); },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -3957,6 +4262,15 @@ export function createLevelRun({
             // `World.addUpdate` PREPENDS — so it is ahead of the spinners,
             // the blocks, the crusher, its own turret and the player. See
             // `stepBlastsNow` for the two consequences.
+            // ── ⛓⛓⛓ R6 SLICE 2: THE WAND SHOTS, AHEAD OF EVERYTHING ──
+            // Also run-time-added, also prepended. `assertWandShotSolidsBound`
+            // refuses the one room that could make the wand/blast order
+            // observable, so "shots then blasts" is a bounded vacuity with a
+            // named guard rather than a preference.
+            if (!noclip) {
+                stepWandShotsNow();
+                stepMagicalLocksNow();
+            }
             if (!noclip) stepBlastsNow();
 
             // ── R4: the entities that update BEFORE the player ────────
@@ -4489,6 +4803,7 @@ export function createLevelRun({
                 // they are inert by the same argument `openActivators` is.
                 ...(noclip ? {
                     openActivators: null,
+                    openMagicalLocks: null,
                     openBridges: null,
                     pushables: null,
                     brokenRocks: null,
@@ -4590,8 +4905,63 @@ export function createLevelRun({
                         hitTicks: new Set(FIRE_WINDOW.hitTicks.map((k) => ticksCompleted + k)),
                         endTick: ticksCompleted + FIRE_WINDOW.endTick,
                     });
+                } else if (weapon === 'wand') {
+                    // ⚠ THE SAME SWALLOW AS THE FIRE ARM, one flag over.
+                    // `useItem` case 2 is `if (!wanding) wanding = true`, and
+                    // it runs in `super.update()` — ABOVE the `sprites()`
+                    // that fires `wandEnd` and drops `_wanding`. So a press
+                    // ON the window's own end tick does nothing at all, and
+                    // the cadence is derived rather than written down.
+                    const open = wandWindows.find((w) => ticksCompleted <= w.endTick);
+                    if (open) {
+                        throw new Error(`levelRun: a wand press at tick ${ticksCompleted} `
+                            + `lands inside the window the press at tick ${open.pressTick} `
+                            + `opened (\`_wanding\` is up through tick ${open.endTick}). `
+                            + '`useItem`\'s `if (!wanding)` swallows it silently in the '
+                            + `game. The cadence is ${WAND_PRESS_CADENCE}.`);
+                    }
+                    assertWandShotSolidsBound(level);
+                    wandWindows.push({
+                        pressTick: ticksCompleted,
+                        fireTick: ticksCompleted + WAND_WINDOW.fireTick,
+                        endTick: ticksCompleted + WAND_WINDOW.endTick,
+                    });
                 } else if (weapon) {
                     pendingThrust = { weapon, direction: pressFacing, pressTick: ticksCompleted };
+                }
+            }
+            // ── ⛓⛓⛓ R6 SLICE 2: `wandEnd()`, AND IT IS BELOW THE PRESS ──
+            //
+            // `useItem` is inside `input()`, inside `super.update()`;
+            // `sprites()` — which advances `sprWand` and fires `wandEnd` —
+            // is the line BELOW it in `Player.update`. So a fire on the same
+            // tick as a press happens after it, which is the order here.
+            //
+            // ⛓ POSITION IS THIS TICK'S, DIRECTION IS THE PREVIOUS TICK'S.
+            // `wand()` runs from `sprWand.update()`, which `sprites()` calls
+            // BEFORE it recomputes `direction` — so the facing is the value
+            // the last `sprites()` wrote, which is exactly `pressFacing`'s
+            // convention. The position is `super.update()`'s output, which
+            // is `next`. One call, two tick conventions, and the asymmetry
+            // is four lines of `sprites()`.
+            if (!noclip && wandWindows.length > 0) {
+                for (const w of wandWindows) {
+                    if (w.fireTick !== ticksCompleted) continue;
+                    assertWandSpawnUnclamped(next, w);
+                    const p = wandPress(w.pressTick, pressFacing, { x: next.x, y: next.y });
+                    const id = `wand@${level}#${w.pressTick}`;
+                    const shot = createWandShot(id, p.spawn.x, p.spawn.y, p.v);
+                    shot.spawnedAt = ticksCompleted + 1;
+                    // `World.addUpdate` PREPENDS — the blast list's `unshift`
+                    // for the same reason, one family on.
+                    wandShotsFor(level).unshift(shot);
+                    wandShotsFired.push({
+                        t: ticksCompleted, level, id, direction: p.direction,
+                        x: shot.x, y: shot.y, pressTick: w.pressTick,
+                    });
+                }
+                for (let i = wandWindows.length - 1; i >= 0; i -= 1) {
+                    if (ticksCompleted > wandWindows[i].endTick) wandWindows.splice(i, 1);
                 }
             }
             ticksCompleted++;
