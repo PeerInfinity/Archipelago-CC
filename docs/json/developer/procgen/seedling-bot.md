@@ -1731,6 +1731,71 @@ geometry fencepost, findable by reading one `if`. **Diff the deltas before
 you diff the values**; a growing offset is an accumulator, and differing
 deltas are a different question entirely.
 
+### ⛔⛔⛔ A cutscene that LOWERS the freeze, and 338 ticks that looked frozen (R6 slice 6d)
+
+The ending's two `Seed` windows both hand the game control for hundreds of
+frames, and the two halves cost the tape opposite things. Telling them apart
+is one line, four lines below the one it is natural to read.
+
+```as3
+Game.update:  …
+   else if (cutscene[1]) { p.receiveInput = false; p.v.y = -1; if (p.y <= 64) p.v.y = 0; }
+   else if (cutscene[2]) { p.receiveInput = false; p.visible = false; p.active = false; }
+   …
+   if (canInventory()) inventory.update(); else if (inventory) inventory.open = false;
+```
+
+`canInventory()` is `inventory && !talking && p && p.receiveInput &&
+!p.destroy` and `Inventory.set open` **is** `Game.freezeObjects = _open = _o`.
+So **either cutscene arm LOWERS the freeze at the end of every one of its own
+frames**, and every frame of both is a live TAPE TICK.
+
+| span | kind | what holds the player |
+|---|---|---|
+| `Pickup.specialTimer` (150) | DEAD frames | `freezeObjects`, and nothing lowers it |
+| the pickup's NPC dialogue | ticks | `Game.talking` ⇒ the inventory else-arm |
+| `Seed.removeSelf`'s cover (200) | DEAD frames | raised before any cutscene flag exists |
+| `cutscene[1]`'s scripted walk | ticks | `receiveInput = false` — it still MOVES |
+| `cutscene[2]`'s tree (138 + 200) | **ticks** | `active = false` — `Player.update` never runs |
+
+⛓ The rule this generalises to: **"the player cannot move" is at least three
+different mechanisms and they bill differently.** `freezeObjects` gates
+`Mobile.mobileUpdate` (dead frames); `receiveInput = false` gates
+`Player.input()` only (live ticks, friction and sweeps still run);
+`active = false` skips the entity's `update()` entirely (live ticks, nothing
+runs). A window that prices the wrong one is out by its whole length.
+
+⛓⛓ **AND THE `play()` FENCEPOST INVERTS WHEN THE `play()` IS IN A
+CONSTRUCTOR.** The tree's `sprTreeGrow.play("grow")` runs inside the `Seed`
+ctor, which `Game.loadlevel` calls — not inside a `World.update` pass — and
+`Game.update` gates `super.update()` on `blackCover <= 0`, so nothing advances
+during the load fade. The animation's first update is the first LIVE frame of
+the rebuilt world and the count starts at **1** there, which is the opposite
+of the door's. The fencepost above is about a `play()` called from inside
+`update()`; check which one you have.
+
+### ⛔ Three more the ending's own rooms charged for (R6 slice 6d)
+
+- **A dead-frame ledger has to count ceremonies STARTED, not completed.**
+  `Pickup.pick_up()` raises the freeze and spends `specialTimer` on CONTACT
+  and never asks whether the dialogue after it is dismissed. A tape that ends
+  mid-ceremony has paid 150 dead frames and banked no completion — 170 dead
+  against a one-load band of [14.6, 23.6]. The two lists are identical for
+  every fixture that finishes what it starts, which is why the defect can
+  live for six rungs.
+- **An `int` PARAMETER truncates before the constructor's half-tile adds it
+  back.** `new Seed(p.x - 8, p.y - 8, …)` then `super(_x + Tile.w/2, …)`
+  cancels EXACTLY on an integer coordinate and nowhere else, so a spawn
+  documented as "at the player" is at `trunc(p.x - 8) + 8`. A 10x14 box around
+  a 4x5 player still overlaps, so nothing visible breaks.
+- **A talk radius is not a talk gate.** `NPC.keyNeeded` defaults TRUE and only
+  `Watcher` assigns it (`!checkPersistence(tag)`), so a Watcher auto-talks on
+  proximity and an Oracle does not. And `Bot.autoAdvance` is called only from
+  inside the dead-frame gate and returns unless `Game.talking || helpUp` — it
+  can ADVANCE a dialogue and never OPEN one. Both facts are needed to stand
+  inside `oracle@64,32`'s circle with `cutscene[1]` armed and not end in a
+  menu; either alone leaves the trap live.
+
 Three facts only the game knew, from the first collection recording:
 
 1. Contact at observation 23, frozen 24..57 — **34 ticks**, which the model
