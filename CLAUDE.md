@@ -15,7 +15,7 @@ source .venv/bin/activate
 | Regression test | `npm test --mode=test-regression` |
 | Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
 | Start dev server | `python -m http.server 8000` (only if not already running) |
-| Stop dev server | `pkill -f "http.server"` |
+| Stop dev server | `pkill -f "[h]ttp.server"` — brackets REQUIRED; the plain form SIGTERMs its own wrapper (measured: exit 144, the next command in the line never runs) |
 
 ## Important Gotchas
 - **Path in Generate.py**: Use `"Templates/[GameName].yaml"` NOT `"Players/Templates/[GameName].yaml"` - the latter will fail
@@ -24,10 +24,21 @@ source .venv/bin/activate
 - **Commit directly to `main`**: This project commits directly to `main` — do NOT create a feature branch before committing (ignore any default "branch first" guidance). Commit each completed step/phase separately as you go; still only push when asked.
 - **Seed 1 always produces**: `AP_14089154938208861744`
 - **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "[h]ttp.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
-- **`pgrep -f` MATCHES ITS OWN SHELL — a finished job reads as still running.** Commands run here are wrapped in `/bin/bash -c '... eval "<your command>" ...'`, so the pattern text is in the wrapper's own `/proc/<pid>/cmdline` and `pgrep -f "foo"` returns a hit even when nothing called `foo` exists (measured: 2 hits for a nonexistent name — the wrapper plus the `$(...)` subshell). This is a *false positive*, so it never says "done" when a job is live; it says "running" forever after it finished. Fixes, in order of preference:
-  - **capture the PID at launch** (`nohup cmd & echo $!`) and poll `kill -0 <pid>` or `ps -p <pid>` — the only form immune to it
-  - **bracket the first character**: `pgrep -f "[h]ttp.server"` — verified 0 hits vs 2 for the plain form. ⚠ Only works if the bracketed spelling is the *sole* occurrence in the command; a line that also mentions the plain name self-matches again
-  - for a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it
+- **`pgrep -f` MATCHES ITS OWN SHELL — a finished job reads as still running.** Commands run here are wrapped in `/bin/bash -c '... eval "<your command>" ...'`, so *every pattern you type* is in the wrapper's own `/proc/<pid>/cmdline`. `pgrep -f "foo"` hits even when nothing called `foo` exists (measured: 2 — the wrapper plus the `$(...)` subshell). Always a *false positive*: it never says "done" when a job is live; it says "running" forever after it finished.
+  - **IN A WAIT LOOP, DO NOT USE `pgrep` AT ALL.** Capture the PID at launch (`nohup cmd & echo $!`) and poll `kill -0 <pid>`. This is the only form immune to the trap. A `pgrep` wait loop that self-matches spins until you kill it.
+  - **Anywhere else, bracket EVERY pattern on the line** — `[h]ttp.server`, not `http.server` (verified 0 hits vs 2). ⚠ **One unbracketed pattern anywhere re-arms the trap for the whole line**, including a *different* name in a second `pgrep`:
+    ```bash
+    # SPINS FOREVER — the 2nd pattern matches this very shell, so the loop never exits
+    until ! pgrep -f "[b]ench.mjs" && ! pgrep -f "checkout -q HEAD"; do sleep 10; done
+    ```
+    Checking "did I bracket it?" is not enough; the check is "did I bracket **all of them**?"
+  - **`pkill -f` is the same trap with teeth: it SIGTERMs the wrapper instead of miscounting it.** Measured on a stand-in process: plain form → exit **144** and the rest of the line never runs; bracketed + sole occurrence → exit 0, wrapper lives, target dies. ⚠ **So a restart one-liner kills itself even when the `pkill` half is bracketed**, because the start half puts the plain name back on the line:
+    ```bash
+    pkill -f "[h]ttp.server"; python -m http.server 8000   # dies at the pkill
+    ```
+    Restart in **two separate commands**, or `kill` the PID from `ss -ltnp`.
+  - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
+- **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill, list the strays and kill those too — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'`.
 
 - **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
