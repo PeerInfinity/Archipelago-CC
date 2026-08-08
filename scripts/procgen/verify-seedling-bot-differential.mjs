@@ -1000,12 +1000,58 @@ function checkReadout(name, tape, status, stream) {
     const drown = drownFinding(name, status.drown_timer);
     if (drown) check(drown.name, drown.ok, drown.detail);
 
-    // The win statics stay false until R6 actually beats the game. Pinned
-    // here so the terminal assertion has a baseline rather than being
-    // introduced at the rung that needs it to flip.
-    check(`${name}: the win statics are still false`,
-        status.menu === false && status.cutscene.every((c) => c === false),
-        `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
+    // ── ⛓⛓⛓ R6 SLICE 6d: THE WIN STATICS, AND THE FIRST TAPE TO MOVE ONE ──
+    //
+    // The baseline was "they stay false until R6 actually beats the game",
+    // pinned so the terminal assertion had something to flip. W-blood is the
+    // flip: `Seed.update`'s bloody arm sets `Game.cutscene[1] = true` on the
+    // line above `FP.world = new Game(1, 64, 96, false)`.
+    //
+    // ⛔⛔ AND THE EXPECTATION IS DERIVED FROM THE MODEL, not from a new tape
+    // field — `endingReboots` already says which arm ran and therefore which
+    // `cutscene` slot it set. So the check is TWO-SIDED in the strong sense:
+    // a run that declared no ending must leave every static false (the old
+    // pin, unchanged), and a run whose model rebooted must find the flag SET
+    // in the game or the arm never ran.
+    //
+    // ⛔ `menu` STAYS FALSE ON BOTH, and that is the sharpest thing here.
+    // W-blood lands in L1 with `cutscene[1]` armed and parks 23.5 px from an
+    // Oracle whose `doneTalking()` is `exitToMenu()`; a `menu = true` in this
+    // window means the HARNESS walked that dialogue (trap 92), and the record
+    // would be a claim about the instrument. `R6_BLOOD_MENU_DERIVATION`.
+    const armed = new Set((expected.endingReboots ?? []).map((r) => r.cutscene));
+    if (armed.size === 0) {
+        check(`${name}: the win statics are still false`,
+            status.menu === false && status.cutscene.every((c) => c === false),
+            `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
+    } else {
+        const wrong = status.cutscene
+            .map((c, i) => ({ i, c }))
+            .filter(({ i, c }) => c !== armed.has(i));
+        check(`${name}: the ending arm the model ran set its cutscene flag, and only it`,
+            wrong.length === 0,
+            wrong.length === 0
+                ? `cutscene=${JSON.stringify(status.cutscene)} — exactly the `
+                + `${[...armed].map((i) => `[${i}]`).join(', ')} the model's `
+                + `endingReboots declare (${(expected.endingReboots ?? [])
+                    .map((r) => `${r.arm} L${r.fromLevel}->L${r.toLevel}@${r.t}`)
+                    .join(', ')})`
+                : `cutscene=${JSON.stringify(status.cutscene)} against the model's `
+                + `${[...armed].map((i) => `[${i}]`).join(', ')} — `
+                + `${wrong.map(({ i, c }) => `[${i}] is ${c}`).join(', ')}. A flag the `
+                + 'model set and the game did not means the terminal arm never ran; the '
+                + 'other way round means a second arm fired that nothing accounts for.');
+        check(`${name}: …and no menu — the harness did not walk the Oracle`,
+            status.menu === false,
+            status.menu === false
+                ? 'menu=false with `cutscene[1]` armed in L1, which is the whole point '
+                + 'of ending the tape with no key edge: `Oracle.doneTalking()` under '
+                + 'that flag is `exitToMenu()`'
+                : 'menu=TRUE — something completed L1\'s Oracle dialogue. The tape '
+                + 'presses nothing after the reboot, so the only candidate is '
+                + '`Bot.autoAdvance` (trap 92) and this record is a claim about the '
+                + 'harness, not the game');
+    }
 
     // ── ⛓⛓⛓ R6 SLICE 3: WHAT THE RUN TOOK, FROM THE GAME'S OWN READOUT ──
     //
@@ -1251,6 +1297,49 @@ function checkReadout(name, tape, status, stream) {
                 + '(`!checkPersistence(0, 114)`, the Watcher) was never met');
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 6d: THE ENDING REBOOT — A ROW WITH NO FLAG IN IT ──
+    //
+    // Every other line of this ledger is a persistence write. W-blood has
+    // none: `Seed` overrides `removeSelf` with two lines that never reach
+    // `removed()`, so the pickup grants nothing and clears nothing. What it
+    // does instead is move the player to another ROOM, and the game's own
+    // level field is where that shows up.
+    //
+    // ⛔⛔ TWO-SIDED, and the negative arm is checked from the HIT that did
+    // not spawn a seed rather than from the absence of a reboot.
+    // `r6-watcher-blood-control` lands three of the four hits — the sword
+    // reaches him, the counter moves, `hitsTimer` refuses four tests per
+    // press exactly as on the drive — and its whole claim is that
+    // `hits > dieFrames.length` was never met. "The model rebooted nothing"
+    // is what a broken model says too; "the model swung three times and
+    // rebooted nothing" is a claim.
+    const reboots = expected.endingReboots ?? [];
+    const swung = (expected.watcherHits ?? []).filter((h) => h.landed);
+    if (reboots.length > 0) {
+        const want = reboots.map((r) => `${r.fromLevel}->${r.toLevel}`).join(', ');
+        const got = stream.transitions.map((t) => `${t.from_level}->${t.to_level}`).join(', ');
+        check(`${name}: the game took the ending reboot the model ordered`,
+            want === got,
+            want === got
+                ? `${got} at tick(s) ${stream.transitions.map((t) => t.t).join(', ')} — `
+                + `derived from the GAME's own level field, against the model's `
+                + `${reboots.map((r) => `${r.arm}@${r.t}`).join(', ')}`
+                : `the model ordered ${want} and the game's stream shows ${got}. A `
+                + '`Seed` terminal arm is a `FP.world = new Game(...)` written inside a '
+                + 'pickup: if the game did not take it, the cover fade never reached '
+                + '`coverAlpha >= 1` and the ceremony is a different length.');
+    } else if (swung.length > 0) {
+        check(`${name}: the Watcher the run did NOT finish rebooted nothing`,
+            stream.transitions.length === 0,
+            stream.transitions.length === 0
+                ? `${swung.length} hit(s) landed and the run never left level `
+                + `${swung[0].level} — one short of \`hits > dieFrames.length\``
+                : `${swung.length} hit(s) landed and the game changed level `
+                + `(${stream.transitions.map((t) => `${t.from_level}->${t.to_level}`)
+                    .join(', ')}) — the seed spawned in the game and not in the model, `
+                + 'so the hit counter is a hit out.');
+    }
+
     return expected;
 }
 
@@ -1489,9 +1578,17 @@ try {
         // refusal the model cannot account for is still a defect.
         const transports = expectedRun?.transports ?? [];
         const lockSnaps = expectedRun?.lockSnaps ?? [];
+        // ⛓⛓⛓ R6 SLICE 6d ADDS A THIRD WAY TO EARN IT, and it is the
+        // longest-lived: `Game.as:956`'s `cutscene[1]` arm writes
+        // `p.receiveInput = false` on EVERY frame from the bloody reboot to
+        // the end of the tape. A pit transport is ~83 px of falling and a
+        // ShieldLock is ~101 ticks; this one never ends.
+        const endingReboots = expectedRun?.endingReboots ?? [];
         const causes = [
             ...(transports.length ? [`${transports.length} pit transport(s)`] : []),
             ...lockSnaps.map((s) => `${s.id} for ${s.ticks} tick(s)`),
+            ...endingReboots.map((r) => `the cutscene[${r.cutscene}] scripted walk from `
+                + `tick ${r.t} (L${r.fromLevel} -> L${r.toLevel})`),
         ];
         if (causes.length > 0) {
             check(`${name}: the game refused input where the model says it must`,

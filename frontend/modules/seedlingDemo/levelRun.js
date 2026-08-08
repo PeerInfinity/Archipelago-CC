@@ -43,8 +43,10 @@ import {
 // it `fixtures/index.js`, which is node-only; that is sound here because
 // `levelRun` has no browser consumer (the watch page reads `watchViewer`).
 import {
-    FINAL_DOOR, TALK_RANGE, WATCHER, WATCHER_FLAG, beginNpcDialogue, boxHitsWatcherSeed,
-    freshFinalDoor, inTalkRange, stepFinalDoor, stepNpcDialogue, watcherSeedBox,
+    BLOODY_SEED_TEXT, CUTSCENE_1_WALK, FINAL_DOOR, ORACLE, SEED_ARMS, TALK_RANGE, WATCHER,
+    WATCHER_FLAG, beginNpcDialogue, bloodySeedDue, bloodySeedEntity, boxHitsWatcherSeed,
+    coverFadeFrames, freshFinalDoor, inTalkRange, seedBoxAt, stepFinalDoor,
+    stepNpcDialogue, watcherSeedBox, watcherTakesHit,
 } from './endingChain.js';
 import {
     createActivatorState, openActivatorIds, pressedGroups, ropePublish, stepActivators,
@@ -853,6 +855,16 @@ export function createLevelRun({
                     dialogue: null,
                     // The model's copy of `Watcher.update`'s own gate.
                     cleared: (clearedByLevel.get(n) ?? []).includes(w.persistTag ?? -1),
+                    // ⛓⛓⛓ R6 SLICE 6d: the sword half. ⚠ PER VISIT like
+                    // everything else here, and this one is a `new Game`
+                    // reset the GAME agrees with: `hits`, `hitsTimer` and
+                    // `createdSeed` are all instance fields, so a Watcher
+                    // hit three times and left alone is back at zero on the
+                    // next entry. Nothing persists but the tag, which the
+                    // hits do not write.
+                    hits: 0,
+                    hitsTimer: 0,
+                    createdSeed: false,
                 });
             }
             watcherStates.set(n, byId);
@@ -1275,6 +1287,65 @@ export function createLevelRun({
      * and the stance cleared it by this much.
      */
     const watcherSeedLive = [];
+    // ── ⛓⛓⛓ R6 SLICE 6d: the bloody branch's four ledgers ──────────────
+    /**
+     * `{t, level, id, hits, hitsTimer, landed, why}` — one per HIT TEST that
+     * reached a Watcher, landed or not.
+     *
+     * ⛔ EVERY TEST, NOT EVERY PRESS, and that is the claim. One press is
+     * FIVE dispatches (§13.2) and `Watcher.hit`'s `hitsTimer = 25` refuses
+     * four of them; recording only the landings would make "four presses,
+     * four hits" look like a fact about presses instead of the arithmetic it
+     * is. The refused rows ARE the derivation.
+     */
+    const watcherHits = [];
+    /**
+     * `{t, level, id, ex, ey, from}` — one per runtime-spawned `Seed`.
+     *
+     * ⛓ The FIRST pickup on the ladder that is in no level's entity list.
+     * `Watcher.update` adds it with `FP.world.add`, which QUEUES — so its
+     * first update, and therefore the overlap that collects it, is the tick
+     * AFTER the one that created it.
+     */
+    const seedSpawns = [];
+    /**
+     * `{t, level, id, arm, fadeFrames}` — one per `Seed.removeSelf()`.
+     *
+     * ⛔ `Seed` OVERRIDES `removeSelf` AND DOES NOT CALL IT.
+     * `Pickup.removeSelf` is `FP.world.remove(this)`, which runs `removed()`
+     * — the item property and `Game.setPersistence`. The Seed's override is
+     * `Game.freezeObjects = true; drawCover = true;` and nothing else, so
+     * the pickup NEVER leaves the world, grants NOTHING and writes NO flag.
+     * That is why `earnedClears` is empty for a window whose whole subject is
+     * a collected pickup, and why the ledger is here rather than in
+     * `collected`'s flag machinery.
+     */
+    const seedFades = [];
+    /**
+     * ⛓⛓⛓ `{t, arm, fromLevel, toLevel, cutscene}` — one per GAME-INITIATED
+     * reboot the ending chain ordered.
+     *
+     * The third shape of world swap on the ladder, after a teleporter and a
+     * death: a `Seed`'s terminal arm assigns `FP.world = new Game(...)` from
+     * inside a pickup's update, with a level and a position of its own
+     * choosing. §5's "a game-initiated world reboot is a BOOT, not an entry"
+     * as a ledger row.
+     */
+    const endingReboots = [];
+    /**
+     * ⛔⛔⛔ THE POSITIVE WITNESS FOR THE ORACLE REFUSAL — trap 101's shape,
+     * the second time this rung needs it.
+     *
+     * `{t, id, distance, inRange}`, one per tick of a `cutscene[1]` world.
+     * The refusal below throws on an X release inside the 24 px circle,
+     * because `Oracle.doneTalking()` under `cutscene[1]` is `exitToMenu()`
+     * and the record would then be a claim about the harness rather than the
+     * game (`R6_BLOOD_MENU_DERIVATION`). A shipped tape can never reach it —
+     * the walk's spans are refused outright — so the CLEARANCE is recorded
+     * every tick and a plan asserts the positive: the circle really was
+     * entered, and no key was live while it was.
+     */
+    const oracleApproach = [];
     // ── ⛓⛓⛓ R6 SLICE 6c: the final door's three ledgers ────────────────
     /**
      * `{t, level, id, frames, dismissable}` — one per SealController the
@@ -2115,6 +2186,14 @@ export function createLevelRun({
         // destination's.
         pendingThrust = null;
         slashRepeats = [];
+        // ⛓⛓ R6 SLICE 6d: …and a RUNTIME pickup cannot outlive its level
+        // either, for a stronger reason than the thrust's. A placed pickup is
+        // rebuilt by the destination's `loadlevel`; a `Seed` the Watcher added
+        // is in no `.oel` at all, so a `new Game` does not rebuild it — it
+        // simply ceases to exist. Cleared rather than carried, because
+        // "carried" is not a state the game has.
+        runtimeSeeds = [];
+        pendingSeedAdds = [];
         state = arrivalFor(world);
         // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
         // SURVIVES THE DOOR — plus the twenty frames the door costs.
@@ -3338,6 +3417,75 @@ export function createLevelRun({
                         swallowed: verdict.swallowed, aborted: verdict.aborted,
                         retaliated: verdict.retaliated,
                         why: verdict.refusedAt, hits: b.hits, was: before,
+                    });
+                }
+            } else if (r.as3 === 'Watcher') {
+                /**
+                 * ── ⛓⛓⛓ R6 SLICE 6d: THE SWING AT THE WATCHER ──────────
+                 *
+                 * `Player.genericHit`'s LAST `else if` (`Player.as:1130`),
+                 * and the arm takes NO ARGUMENTS at all — no force, no
+                 * damage, no type. `Watcher.hit()` is three terms and a
+                 * counter (`endingChain.watcherTakesHit`).
+                 *
+                 * ⛔⛔ THE RECT IS NOT THE HIT TEST, exactly as for the
+                 * Shieldspire: `Player.slash` applies a 16 px
+                 * `FP.distanceRectPoint` gate and a `collideLine("Solid")`
+                 * line of sight afterwards. Both are applied here — and the
+                 * line of sight is NOT waived, because `Watcher`'s ctor
+                 * overrides `type` to `"Watcher"` and the waiver
+                 * (`v[i].type == "Solid"`) does not fire for it.
+                 *
+                 * ⛓ AND THE BODY IS A CONSTANT, which is why this arm is
+                 * shorter than every other one here: the Watcher never
+                 * moves, never shrinks, and `check()` is overridden EMPTY so
+                 * it never leaves — the census rect is live for the whole
+                 * run and only the COUNTER has to be looked up.
+                 */
+                const st = watcherStateFor(level);
+                const w = st.get(r.watcherId);
+                if (!w) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.watcherId} in level ${level}, which is not in the `
+                        + "run's watcher state. The press census and the run disagree "
+                        + 'about which bodies exist, which is the two-consumers failure '
+                        + 'this state family exists to prevent.');
+                }
+                const body = {
+                    x: w.ex - WATCHER.box.originX,
+                    y: w.ey - WATCHER.box.originY,
+                    right: w.ex - WATCHER.box.originX + WATCHER.box.w,
+                    bottom: w.ey - WATCHER.box.originY + WATCHER.box.h,
+                };
+                const reach = distanceRectPoint(state.x, state.y, body);
+                if (reach > SLASH_REACH) {
+                    watcherHits.push({
+                        t: ticksCompleted, level, id: w.id, landed: false,
+                        hits: w.hits, hitsTimer: w.hitsTimer,
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                            + 'the rect reached him and `slash()`\'s own gate did not',
+                    });
+                    hits.push({ as3: 'Watcher', id: w.id, landed: false });
+                } else {
+                    const blocker = collideLineSolid(state.x, state.y, w.ex, w.ey);
+                    if (blocker) {
+                        throw new Error(`levelRun: the ${weapon} press at tick `
+                            + `${pressTick} reaches ${w.id} through ${blocker}. `
+                            + '`Player.slash`\'s `collideLine("Solid", x, y, v[i].x, '
+                            + 'v[i].y)` refuses a swing with a wall in the way, and the '
+                            + 'waiver is `v[i].type == "Solid"` — which a Watcher\'s '
+                            + '"Watcher" type is not. Re-aim the press.');
+                    }
+                    const verdict = watcherTakesHit(w);
+                    w.hits = verdict.hits;
+                    w.hitsTimer = verdict.hitsTimer;
+                    watcherHits.push({
+                        t: ticksCompleted, level, id: w.id, landed: verdict.landed,
+                        hits: w.hits, hitsTimer: w.hitsTimer, why: verdict.why,
+                    });
+                    hits.push({
+                        as3: 'Watcher', id: w.id, landed: verdict.landed,
+                        hits: w.hits, why: verdict.why,
                     });
                 }
             }
@@ -4605,6 +4753,44 @@ export function createLevelRun({
      * about the state is reset.
      */
     let ceremony = null;
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: THE PICKUPS NO LEVEL RECORD CONTAINS.
+     *
+     * `Watcher.update` does `FP.world.add(new Seed(p.x - 8, p.y - 8, true,
+     * …))` at runtime, so this is a pickup roster the census cannot supply
+     * and the run has to own. Two facts shape the list:
+     *
+     *   1. ⛔ **A `new Game` DESTROYS IT.** A runtime entity is in no
+     *      `.oel`, so a world swap does not rebuild it — it simply ceases.
+     *      Hence a bare array cleared in `enterWorld` rather than the
+     *      per-level Map every census-backed family uses: "per visit" is the
+     *      wrong shape for something that has no second visit.
+     *   2. ⛔ **`FP.world.add` QUEUES.** `Engine.update` is `world.update();
+     *      world.updateLists();`, so an entity added inside frame N first
+     *      updates on frame N+1 — the same fencepost `FP.world.remove` gave
+     *      W-door from the other end (§17.4). `pendingSeedAdds` is that one
+     *      tick, spelled out.
+     */
+    let runtimeSeeds = [];
+    let pendingSeedAdds = [];
+    /**
+     * The reboot a `Seed`'s terminal arm has ordered, consumed at the END of
+     * the tick beside `pendingDeath` — the two are the same shape, and for
+     * the same reason: `FP.world = new Game(...)` is deferred to
+     * `Engine.checkWorld`, which runs after the whole tick.
+     */
+    let pendingSeedReboot = null;
+    /**
+     * ⛓⛓ `Game.as:955-960`'s scripted walk, while it is running.
+     *
+     * `null`, or `{arm: 1, level, from}`. It is NOT a freeze: `cutscene[1]`
+     * writes `p.receiveInput = false`, which `Player.input()` reads and
+     * `Mobile.mobileUpdate` does not — so friction runs, the sweeps run, the
+     * player MOVES, and the tape's tick counter runs with it. The same
+     * distinction a `ShieldLock`'s window draws (`lockSnap`), on a script
+     * the GAME started.
+     */
+    let cutsceneWalk = null;
     /** `${level}:${x},${y}` of every pickup this run has already taken. */
     const collectedPickups = new Set();
     const pickupKey = (n, p) => `${n}:${p.x},${p.y}`;
@@ -5090,19 +5276,29 @@ export function createLevelRun({
         const box = playerBoxAt(state.x, state.y);
         let frozen = false;
         for (const w of st.values()) {
-            // `Watcher.update` gates `super.update()` — and therefore
-            // `talk()` — on the tag. Once `doneTalking()` has cleared it the
-            // NPC is inert for the rest of the page, and the body stays
-            // (`Watcher.check()` is overridden EMPTY).
-            if (w.cleared || w.persistTag < 0) continue;
-            // `NPC.talk`'s own guard: `p && myText[0].length > 0`.
-            if (!w.text) continue;
+            /**
+             * ⛔⛔⛔ R6 SLICE 6d: THE TAG GATES `talk()` AND NOTHING ELSE.
+             *
+             * `Watcher.update`'s first statement is
+             * `if (Game.checkPersistence(tag)) super.update();` — and every
+             * line BELOW it is ungated: the seed-holding arm, the
+             * `hitsTimer` decrement, the `hits` arm that spawns the bloody
+             * `Seed`. Slice 6c's `continue` on `cleared` was correct for the
+             * only half that existed then and would have made W-blood
+             * impossible: the hits gate on the CLEARED tag, so the exact
+             * state that turns `talk()` off is the one that turns the sword
+             * on. Split here rather than moved, so both halves name the
+             * line they come from.
+             */
+            const canTalk = !w.cleared && w.persistTag >= 0 && !!w.text;
             const player = { x: state.x, y: state.y };
             const npc = { x: w.ex, y: w.ey };
             const inRange = inTalkRange(npc, player);
 
             let finished = null;
-            if (w.talking) {
+            if (!canTalk) {
+                // `super.update()` — and therefore `talk()` — did not run.
+            } else if (w.talking) {
                 // `Game.freezeObjects = true`, every frame, ABOVE the key test.
                 frozen = true;
                 const r = stepNpcDialogue(w.dialogue, released, inRange);
@@ -5186,8 +5382,88 @@ export function createLevelRun({
                     clearanceY: Math.max(s.y - box.bottom, box.y - s.bottom),
                 });
             }
+
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE SWORD HALF, BELOW THE TAG GATE ────
+            //
+            // `Watcher.as:86-110`, in the game's own order and ungated:
+            //
+            // ```as3
+            //   if (hitsTimer > 0) { hitsTimer--; }
+            //   if (hits > 0) {
+            //       if (hits > dieFrames.length) {
+            //           if (!createdSeed) { …add the bloody Seed… }
+            //       }
+            //   }
+            // ```
+            //
+            // ⛔ THE DECREMENT IS ABOVE THE SPAWN AND BELOW THE PLAYER'S
+            // PRESS. The Watcher updates BEFORE the Player, so the timer a
+            // hit set on tick N is decremented for the first time on tick
+            // N+1 and reaches 0 twenty-five ticks later — which makes the
+            // press spacing 25 and not 26. Derived here rather than banked
+            // as a constant, because the same class's `hitsTimerMax` is also
+            // 25 and the two numbers being equal is a coincidence of this
+            // ordering.
+            if (w.hitsTimer > 0) w.hitsTimer -= 1;
+            if (w.hits > 0 && bloodySeedDue(w.hits) && !w.createdSeed) {
+                // `p = FP.world.nearestToEntity("Player", this)` then
+                // `new Seed(p.x - 8, p.y - 8, true, …)`. ⛔ THE PLACEMENT IS
+                // THE PLAYER'S LIVE POSITION, not the press's and not the
+                // Watcher's — the seed lands wherever the player is standing
+                // on the tick the WATCHER notices, which is the tick after
+                // the one the hit landed on.
+                w.createdSeed = true;
+                const ent = bloodySeedEntity({ x: state.x, y: state.y });
+                const id = `seed@runtime:${w.id}`;
+                pendingSeedAdds.push({
+                    id,
+                    level: w.level,
+                    ex: ent.x,
+                    ey: ent.y,
+                    text: BLOODY_SEED_TEXT,
+                    arm: 'bloody',
+                    from: w.id,
+                });
+                seedSpawns.push({
+                    t: ticksCompleted, level: w.level, id, ex: ent.x, ey: ent.y,
+                    from: w.id, hits: w.hits,
+                    // ⛓ The tick it can first be COLLECTED, and the only
+                    // number a plan may use: `FP.world.add` queues, so the
+                    // seed's first update is the next tick's.
+                    liveAt: ticksCompleted + 1,
+                });
+            }
         }
         return { frozen };
+    };
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: THE RUNTIME SEED, WHICH UPDATES BEFORE EVERYTHING.
+     *
+     * `World.addUpdate` PREPENDS, so an entity added at runtime is at the
+     * FRONT of the update list — ahead of the Watcher that made it and
+     * ahead of the Player. Its `Pickup.update` therefore finds the overlap
+     * with the position the PREVIOUS tick left, and the `Game.freezeObjects`
+     * its `pick_up()` raises is up before `Mobile.mobileUpdate` reads it.
+     *
+     * ⛓ `_attract` is FALSE for every `Seed` (`Seed.as:31` passes it to
+     * `Pickup`'s fifth parameter), so there is no reach and no acceleration
+     * — collection is pure overlap, exactly as for the Watcher's live one.
+     *
+     * @returns {?object} the seed collected this tick, or null
+     */
+    const runtimeSeedUnderfoot = () => {
+        if (runtimeSeeds.length === 0) return null;
+        const box = playerBoxAt(state.x, state.y);
+        for (const s of runtimeSeeds) {
+            if (s.collected) continue;
+            const b = seedBoxAt({ x: s.ex, y: s.ey });
+            if (box.right > b.x && box.x < b.right
+                && box.bottom > b.y && box.y < b.bottom) {
+                return s;
+            }
+        }
+        return null;
     };
 
     /**
@@ -6194,6 +6470,45 @@ export function createLevelRun({
                 distance: Math.sqrt((w.ex - state.x) ** 2 + (w.ey - state.y) ** 2),
                 inRange: inTalkRange({ x: w.ex, y: w.ey }, state),
                 talkRange: TALK_RANGE,
+                // ⛓⛓⛓ R6 slice 6d: the sword half. `hits` is the counter
+                // `Watcher.hit()` increments and `hitsTimer` is what refuses
+                // four of every press's five dispatches.
+                hits: w.hits,
+                hitsTimer: w.hitsTimer,
+                createdSeed: w.createdSeed,
+            }));
+        },
+        // ── ⛓⛓⛓ R6 SLICE 6d: the bloody branch's five readouts ────────
+        /**
+         * `{t, level, id, landed, hits, hitsTimer, why}` per HIT TEST that
+         * reached a Watcher — the refused four of every press included,
+         * because they are the derivation of "four presses" and not noise.
+         */
+        get watcherHits() { return watcherHits.map((r) => ({ ...r })); },
+        /** `{t, level, id, ex, ey, from, hits, liveAt}` per runtime `Seed`. */
+        get seedSpawns() { return seedSpawns.map((r) => ({ ...r })); },
+        /** `{t, level, id, arm, fadeFrames}` per `Seed.removeSelf()`. */
+        get seedFades() { return seedFades.map((r) => ({ ...r })); },
+        /**
+         * ⛓⛓⛓ `{t, arm, id, fromLevel, toLevel, cutscene, respawn}` per
+         * GAME-INITIATED ending reboot — the window's terminal, and the
+         * discriminator `R6_BLOOD_MENU_DERIVATION` names: the LEVEL
+         * SEQUENCE, never "a menu happened".
+         */
+        get endingReboots() { return endingReboots.map((r) => ({ ...r, respawn: { ...r.respawn } })); },
+        /**
+         * ⛔ `{t, id, distance, inRange}` per tick of a `cutscene[1]` world.
+         * The POSITIVE witness for the Oracle refusal (trap 101, this rung's
+         * second): a shipped tape cannot reach the throw, so what it can
+         * show is that the circle really was entered with nothing live.
+         */
+        get oracleApproach() { return oracleApproach.map((r) => ({ ...r })); },
+        /** The scripted walk, while it runs — `null` outside one. */
+        get cutsceneWalk() { return cutsceneWalk ? { ...cutsceneWalk } : null; },
+        /** The runtime pickups alive in THIS world, `{id, ex, ey, collected}`. */
+        get runtimeSeeds() {
+            return runtimeSeeds.map((s) => ({
+                id: s.id, ex: s.ex, ey: s.ey, arm: s.arm, collected: !!s.collected,
             }));
         },
         // ── ⛓⛓⛓ R6 SLICE 6c: the final door's three readouts ──────────
@@ -6451,6 +6766,81 @@ export function createLevelRun({
             // DRAINS through a ceremony; what stops is the moving.
             if (frozenTimer > 0) frozenTimer -= 1;
 
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE SCRIPTED WALK, AND THE ORACLE ───
+            //
+            // Two refusals and a witness, and the witness is why the
+            // refusals can be trusted. `Game.as:955-960` walks the player
+            // north with `receiveInput = false`, and the room it walks into
+            // holds `oracle@64,32` whose `doneTalking()` under
+            // `Game.cutscene[1]` is `exitToMenu()`. The window's terminal
+            // claim is the LEVEL SEQUENCE, so a menu reached by any route at
+            // all would make the record unreadable
+            // (`r6Acceptance.R6_BLOOD_MENU_DERIVATION`).
+            //
+            // ⛓⛓ AND THE ORACLE'S GATE IS `keyNeeded`, WHICH IS **TRUE**.
+            // `NPCs/NPC.as:41` declares it `true` and `Oracle` — unlike
+            // `Watcher` — never assigns it, so proximity alone does NOT open
+            // the dialogue: it takes an `Input.released(p.keys[6])` while in
+            // range. §17.10 priced the clamp as "a boundary, not a margin"
+            // on the assumption that arriving inside the circle was enough;
+            // it is not, and that is the difference between a window that
+            // has to stop 14 px early and one that can stand in the circle
+            // for as long as it likes with no key live.
+            //
+            // ⛔ THE HARNESS CANNOT SUPPLY THE RELEASE EITHER, and that is
+            // the second half of the same argument. `Bot.autoAdvance` is
+            // called only from inside the DEAD-FRAME gate and returns
+            // immediately unless `Game.talking || helpUp` — so it presses X
+            // only into a dialogue that is ALREADY up. It cannot open one.
+            // Both facts are needed: either alone leaves the trap live.
+            if (cutsceneWalk) {
+                if (held.size > 0) {
+                    throw new Error(`levelRun: the tape holds ${[...held].join(', ')} at `
+                        + `tick ${ticksCompleted}, inside the \`cutscene[${cutsceneWalk.arm}]\` `
+                        + 'scripted walk that began at tick '
+                        + `${cutsceneWalk.startedAt}. \`Game.as:956\` sets `
+                        + '`p.receiveInput = false` every frame of it, so `Player.input()` '
+                        + 'returns at its first line and the span is a SILENT no-op in '
+                        + 'the game — the asymmetry the tape format exists to prevent. '
+                        + 'And an X release here is worse than inert: it is the one input '
+                        + 'that can open L1\'s Oracle, whose `doneTalking()` under '
+                        + '`cutscene[1]` is `exitToMenu()`. End the tape before the '
+                        + 'reboot, or hold nothing after it.');
+                }
+                for (const o of (world.oracles ?? [])) {
+                    const d = Math.sqrt((o.ex - state.x) ** 2 + (o.ey - state.y) ** 2);
+                    const inRange = d <= ORACLE.talkRange;
+                    oracleApproach.push({
+                        t: ticksCompleted, level, id: o.id, distance: d, inRange,
+                    });
+                    if (inRange && releasedThisTick(held, TALK_KEY)) {
+                        throw new Error(`levelRun: an X release at tick ${ticksCompleted} `
+                            + `lands ${d.toFixed(2)} px from ${o.id}, inside its `
+                            + `${ORACLE.talkRange} px talk circle, with `
+                            + `\`Game.cutscene[1]\` set. \`NPC.talk\` reads `
+                            + '`Input.released(p.keys[6])` DIRECTLY — past the '
+                            + '`receiveInput = false` the cutscene set — so this release '
+                            + 'starts the Oracle\'s dialogue, and `Oracle.doneTalking()` '
+                            + 'under `cutscene[1]` calls `exitToMenu()`. The tape would '
+                            + 'end in a menu it never asked for and the record would be a '
+                            + 'claim about the harness. Refused.');
+                    }
+                }
+            }
+            // ── ⛓⛓⛓ R6 SLICE 6d: `updateLists()`'s ADD HALF ──────────
+            //
+            // `Engine.update` is `world.update(); world.updateLists();`, so
+            // an entity added inside a tick joins the update list at the END
+            // of it and first updates on the NEXT one. Drained here, at the
+            // top of the following tick, rather than at the bottom of the
+            // previous one — because a tick can leave through four different
+            // returns (frozen, death, transition, normal) and the bottom is
+            // only one of them. Same shape as `stepFinalDoorsNow`'s
+            // `pendingRemove`, which is the REMOVE half of the same call.
+            if (pendingSeedAdds.length > 0) {
+                runtimeSeeds = [...runtimeSeeds, ...pendingSeedAdds];
+                pendingSeedAdds = [];
+            }
             // ── ⛓⛓⛓ R6 SLICE 6c: THE WATCHER, ABOVE THE CEREMONY ─────
             //
             // `Game.loadlevel` adds the pickups at `:2100` and the watchers
@@ -6549,6 +6939,35 @@ export function createLevelRun({
                     wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
                 }
             }
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE RUNTIME SEED, BEFORE THE PLACED ──
+            //
+            // ⚠ THE ORDER BETWEEN THIS AND THE WATCHER BLOCK ABOVE IS A
+            // BOUNDED VACUITY, NAMED. The seed is added at runtime and
+            // `addUpdate` PREPENDS, so in the game it updates BEFORE the
+            // Watcher that made it — the opposite of the order here. It
+            // cannot be observed: the only Watcher that can spawn one has a
+            // CLEARED tag (that is the hit gate), so its `talk()` never
+            // runs, and the two remaining lines of its update are a counter
+            // and a once-only latch that this tick has already set. Stated
+            // rather than left to be inferred from nothing breaking.
+            if (ceremony === null && !noclip) {
+                const seed = runtimeSeedUnderfoot();
+                if (seed) {
+                    seed.collected = true;
+                    ceremony = {
+                        pickup: { tag: 'seed', x: seed.ex, y: seed.ey, runtime: true },
+                        level,
+                        // ⛔ NOTHING. `Seed` overrides `removeSelf` and never
+                        // reaches `removed()`, so the ceremony grants no item
+                        // and writes no persistence — the only thing it does
+                        // is the fade and the reboot below.
+                        item: null,
+                        keyType: null,
+                        seed: { id: seed.id, arm: seed.arm },
+                        dialogue: beginDialogue(seed.text, { framesThisCharacter }),
+                    };
+                }
+            }
             if (ceremony === null) {
                 const hit = pickupUnderfoot();
                 if (hit) {
@@ -6578,7 +6997,82 @@ export function createLevelRun({
                 prevHeld = new Set(held);
                 if (ceremony.dialogue) stepDialogue(ceremony.dialogue, released);
                 const finishing = ceremony.dialogue === null || ceremony.dialogue.done;
-                if (finishing) {
+                if (finishing && ceremony.seed) {
+                    /**
+                     * ── ⛓⛓⛓ R6 SLICE 6d: `Seed.removeSelf()` — THE PICKUP
+                     * THAT NEVER LEAVES AND NEVER GIVES ANYTHING ────────
+                     *
+                     * Every other pickup's completion is `removeSelf()` ->
+                     * `FP.world.remove` -> `removed()`: the item property and
+                     * `Game.setPersistence(tag, false)`. `Seed` OVERRIDES
+                     * `removeSelf` with two lines that call neither:
+                     *
+                     * ```as3
+                     *   override public function removeSelf():void
+                     *   { Game.freezeObjects = true; drawCover = true; }
+                     * ```
+                     *
+                     * ⇒ no item, NO FLAG (which is why `earnedClears` stays
+                     * empty for a window whose whole subject is a collected
+                     * pickup) and the entity stays in the world drawing a
+                     * cover over the screen for 200 frames.
+                     *
+                     * ⛔⛔ AND THOSE 200 ARE DEAD FRAMES, NOT TICKS.
+                     * `Game.talking` is false for all of them — the dialogue
+                     * ended one frame ago — so `Game.update`'s
+                     * `else if (inventory) inventory.open = false` never runs
+                     * (`canInventory()` is TRUE) and nothing lowers the flag
+                     * between frames. The bot's gate sees every one. A
+                     * recording deadline scaled from the TICK count would
+                     * read this window as a dead bot (§12.14a).
+                     */
+                    const fade = coverFadeFrames();
+                    frozenFramesOwed += fade;
+                    seedFades.push({
+                        t: ticksCompleted, level, id: ceremony.seed.id,
+                        arm: ceremony.seed.arm, fadeFrames: fade,
+                    });
+                    if (ceremony.seed.arm !== 'bloody') {
+                        throw new Error('levelRun: a Seed ceremony finished on the '
+                            + `"${ceremony.seed.arm}" arm, which this rung does not `
+                            + 'model. `Seed.update` has THREE terminal arms and they '
+                            + 'reboot into different levels with different cutscene '
+                            + 'flags; only the BLOODY one (R6 slice 6d) is built.');
+                    }
+                    // ⛓ `Game.cutscene[1] = true` and `FP.world = new
+                    // Game(1, 64, 96, false)` — a reboot the DRIVER did not
+                    // order, deferred to the end of the tick beside a death's
+                    // for the reason both share: `Engine.checkWorld` swaps
+                    // after the whole tick has run.
+                    pendingSeedReboot = {
+                        arm: ceremony.seed.arm,
+                        id: ceremony.seed.id,
+                        fromLevel: level,
+                        toLevel: SEED_ARMS.bloody.reboot.level,
+                        ctor: {
+                            x: SEED_ARMS.bloody.reboot.x,
+                            y: SEED_ARMS.bloody.reboot.y,
+                        },
+                        cutscene: 1,
+                    };
+                    if (ceremony.dialogue) {
+                        framesThisCharacter = ceremony.dialogue.framesThisCharacter;
+                    }
+                    collected.push({
+                        t: ticksCompleted + 1,
+                        level: ceremony.level,
+                        item: null,
+                        keyType: null,
+                        frames: ceremony.dialogue ? ceremony.dialogue.frames : 1,
+                    });
+                    ceremony = null;
+                    // ⚠ AND THEN FALL THROUGH, exactly as an ordinary
+                    // ceremony's completing frame does. The step it takes is
+                    // never observed — `enterWorld` overwrites `state` with
+                    // the arrival at the end of this same tick — but it is
+                    // taken rather than skipped so that the two completions
+                    // do not become two models of one frame.
+                } else if (finishing) {
                     // `removeSelf()` -> `removed()`: the property write and
                     // `Game.setPersistence`. The item lands HERE and not on
                     // contact, which is the whole difference between a real
@@ -6851,7 +7345,13 @@ export function createLevelRun({
             // not anybody read it. Dropping the keys here is exactly that
             // loss — see the refusal below, which will not let a tape
             // schedule one.
-            const acting = (lockSnap || frozenTimer > 0) ? NO_KEYS : held;
+            // ⛓⛓⛓ R6 SLICE 6d: AND `cutscene[1]` IS THE THIRD WRITER OF THE
+            // SAME `if`. `Game.as:956` sets `p.receiveInput = false` on every
+            // frame of the scripted walk, which is the FIRST term of
+            // `Player.input()`'s `if (!receiveInput || frozenTimer > 0 ||
+            // fallFromCeiling) return` — the same line a touch-lock writes.
+            // One statement, three writers, one treatment.
+            const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk) ? NO_KEYS : held;
             // ── R4: the thrust the last tick's press scheduled ────────
             // After the blocks' own update (the block's `hit` refuses while
             // `v.length > 0`, and `v` is what its own `input()` just set)
@@ -7046,6 +7546,32 @@ export function createLevelRun({
             // (never observed) step. Two deferred `FP.world =` writes, two
             // different final ticks, and the difference is one `if`.
             let next = pendingDeath ? state : stepV2(state, acting, stepOpts);
+            // ── ⛓⛓⛓ R6 SLICE 6d: `Game.as:957-959`, BELOW THE WORLD ───
+            //
+            // ```as3
+            //   p.v.y = -1;
+            //   if (p.y <= 64) { p.v.y = 0; }
+            // ```
+            //
+            // ⛔ THE BLOCK IS BELOW `super.update()`, so the velocity it
+            // writes is consumed by the NEXT frame's `mobileUpdate` — the
+            // player is one frame behind the script for the whole walk, and
+            // writing it before the step would make the walk one tick short.
+            // ⛔ AND `Mobile.friction` (0.25) RUNS BEFORE `moveY`, so a
+            // `v.y` of -1 is a step of **0.75** — the same
+            // friction-before-move shape as §12.2's descent, and the reason
+            // the clamp's 64 is never landed on: from y 104 the lattice goes
+            // 64.25 -> 63.5 and stops there, 23.5 px from the Oracle.
+            // ⛓ `p.directionFace = 1` is set on the same lines and is not
+            // written here: the player is moving UP, so `sprites()` derives
+            // direction 1 anyway, and on the clamped frames it keeps the
+            // value it already has. One write, two routes, same answer.
+            if (cutsceneWalk && !pendingDeath) {
+                next = {
+                    ...next,
+                    vy: next.y <= CUTSCENE_1_WALK.clampY ? 0 : CUTSCENE_1_WALK.vy,
+                };
+            }
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
             // inside `Player.input()`, which is where the sweeps happen too
@@ -7256,6 +7782,66 @@ export function createLevelRun({
                 pendingDeath = null;
                 firstTickInWorld = true;
                 return { transition: null, grant, ...hits, death: true };
+            }
+
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE ENDING'S OWN REBOOT ────────────
+            //
+            // The THIRD game-initiated world swap on the ladder, and the
+            // first that CHOOSES ITS DESTINATION. A teleporter goes where
+            // its attributes say; a death goes back to the same `Game`'s
+            // own constructor args; `Seed.update`'s bloody arm is a literal
+            // `FP.world = new Game(1, 64, 96, false)` written inside a
+            // pickup — a different level, a fresh position, and a
+            // `Game.cutscene[1]` set on the line above it.
+            //
+            // ⛔ AND IT DOES PRODUCE A TRANSITION RECORD, unlike a death.
+            // The level FIELD changes, so `deriveTransitions` — the one
+            // derivation both sides share — sees it in the observation
+            // stream and the model must report the same swap or the two
+            // ledgers disagree about how many loads the run paid for.
+            if (pendingSeedReboot) {
+                const reb = pendingSeedReboot;
+                pendingSeedReboot = null;
+                worldCtor = { x: reb.ctor.x, y: reb.ctor.y };
+                const grant = enterWorld({
+                    toLevel: reb.toLevel,
+                    fromLevel: reb.fromLevel,
+                    carriedSwim: next.swim ?? state.swim ?? null,
+                    // `new Game(1, 64, 96, false)` — the ctor args ARE the
+                    // spawn block, and `spawnFromBoot` is the same half tile
+                    // a boot takes. A reboot is a BOOT, not an entry (§5).
+                    arrivalFor: () => arriveAtRespawn(worldFor(reb.toLevel), worldCtor),
+                    ctor: worldCtor,
+                });
+                // ⛓ `Game.cutscene[1] = true` is set on the line ABOVE the
+                // world assignment, so the destination's very first
+                // `Game.update` already takes the scripted-walk arm — which
+                // is why `v.y` is -1 before the first live frame rather than
+                // after it.
+                cutsceneWalk = {
+                    arm: reb.cutscene,
+                    level: reb.toLevel,
+                    from: reb.fromLevel,
+                    startedAt: ticksCompleted,
+                };
+                state = { ...state, vy: CUTSCENE_1_WALK.vy };
+                const record = {
+                    t: ticksCompleted,
+                    from_level: reb.fromLevel,
+                    to_level: reb.toLevel,
+                };
+                transitions.push(record);
+                endingReboots.push({
+                    t: ticksCompleted,
+                    arm: reb.arm,
+                    id: reb.id,
+                    fromLevel: reb.fromLevel,
+                    toLevel: reb.toLevel,
+                    cutscene: reb.cutscene,
+                    respawn: { x: state.x, y: state.y },
+                });
+                firstTickInWorld = true;
+                return { transition: record, grant, ...hits };
             }
 
             if (!next.transition) {

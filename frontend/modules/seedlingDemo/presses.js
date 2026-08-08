@@ -594,7 +594,34 @@ export const PRESS_ARM_POLICY = Object.freeze({
             + 'writes Game.setPersistence(tag, !activate) — a ledger entry, banked',
     },
     LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
-    Watcher: { policy: 'refused', why: 'R6 — the ending' },
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: THE SWING THAT KILLS THE WATCHER, AND IT IS FOUR
+     * PRESSES RATHER THAN FOUR HIT TESTS.
+     *
+     * `Player.genericHit`'s LAST `else if` (`Player.as:1130`), so a plain
+     * sword swing reaches it and `endingChain.watcherTakesHit` is the
+     * transcription of what it finds:
+     *
+     *   · ⛔ the gate is the **CLEARED** tag (`!Game.checkPersistence(tag)`),
+     *     so the hits count only after `doneTalking()` — W-blood is W-talk's
+     *     continuation and never its alternative;
+     *   · ⛔⛔ `hitsTimer = 25` is set on the landing, so §13.2's five hit
+     *     tests give exactly ONE hit per press. The Owl's `justKnock` arm
+     *     sets no timer and takes all five (§14.4) — same dispatch, opposite
+     *     receiver, which is why the count is derived per class;
+     *   · the FOURTH hit (`hits > dieFrames.length`, `dieFrames = [7,8,9]`)
+     *     spawns the bloody `Seed` on the player.
+     *
+     * ⚠ NO DAMAGE MODEL AND NO KNOCKBACK: `Watcher` is not an `Enemy`, its
+     * `hit()` takes no arguments at all, and `check()` is overridden EMPTY so
+     * the body never despawns. The whole arm is a counter and a timer.
+     */
+    Watcher: {
+        policy: 'modelled',
+        why: 'the four sword hits — `endingChain.watcherTakesHit` and the run\'s '
+            + 'per-visit watcher state. One press buys one hit (`hitsTimer` 25 refuses '
+            + 'tests 2..5) and the fourth spawns the bloody `Seed` at the player.',
+    },
 });
 
 export const PRESS_COSTS = Object.freeze({

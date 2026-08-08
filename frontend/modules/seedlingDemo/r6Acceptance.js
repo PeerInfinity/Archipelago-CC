@@ -281,7 +281,42 @@ export const R6_BLOOD_MENU_DERIVATION = Object.freeze({
     harnessHazard: 'Bot.AUTO_ADVANCE_CADENCE presses X every 8 frozen frames and '
         + '`NPC.talk()` reads `Input.released` directly, so the ceremony-dismisser can '
         + 'BE the Oracle\'s talk input. Every X the dismisser emits must be accounted '
-        + 'for, and the window must end before the talk radius is entered.',
+        + 'for, and no key edge may be live inside the talk radius.',
+    /**
+     * ⛓⛓ R6 SLICE 6d: AND THE RADIUS IS NOT THE GATE — MEASURED, TWICE.
+     *
+     * §14.6 and §17.10 both concluded that the window "must end before the
+     * talk radius is entered", which would have made the scripted walk's
+     * own resting place unreachable: it stops at y 63.5, which is 23.5 px
+     * from `oracle@64,32`'s entity point and INSIDE the 24 px circle. There
+     * is no tape that both completes the walk and stays out.
+     *
+     * Two independent facts say the radius is safe with no key live, and
+     * BOTH are needed — either alone leaves the trap open:
+     *
+     *   1. **`keyNeeded` IS TRUE FOR AN ORACLE.** `NPCs/NPC.as:41` declares
+     *      it `true` and `Oracle` never assigns it. `Watcher` does
+     *      (`!Game.checkPersistence(tag)`), which is why a Watcher
+     *      auto-talks and an Oracle does not — proximity alone opens
+     *      nothing.
+     *   2. **`autoAdvance` CANNOT OPEN A DIALOGUE, ONLY ADVANCE ONE.** It is
+     *      called from inside `Bot.update`'s dead-frame gate and returns at
+     *      its own first test unless `Game.talking || helpUp`. During the
+     *      scripted walk `Game.talking` is false and the frames are LIVE, so
+     *      the dismisser never runs at all.
+     *
+     * ⇒ the requirement is "no key edge after the reboot", not "end before
+     * the radius", and `levelRun` enforces the sharper one: any span at all
+     * inside the walk is refused, and an X release in range is refused by
+     * name. `oracleApproach` is the positive witness that the circle really
+     * was entered (trap 101).
+     */
+    radiusGates: Object.freeze([
+        'NPCs/NPC.as:41 — `keyNeeded` defaults TRUE and `Oracle` never assigns it, so '
+        + 'the dialogue needs an `Input.released(p.keys[6])` in range, not proximity',
+        'Bot.autoAdvance returns unless `Game.talking || helpUp`, so it can advance a '
+        + 'dialogue and never open one — and the scripted walk\'s frames are LIVE',
+    ]),
     discriminator: 'the level sequence (114 -> 1) plus `botStatus.menu_state`; NOT '
         + '"a menu happened", which both branches can produce',
 });
@@ -413,12 +448,29 @@ export const R6_WINDOWS = Object.freeze([
      */
     Object.freeze({ name: 'W-door', slice: 6, tape: 'r6-final-door', control: 'r6-final-door-control' }),
     Object.freeze({ name: 'W-seed', slice: 6, tape: null, control: null }),
-    // ⚖ RULED IN by the user at slice 0 (kickoff §6.2). The bloody branch is
-    // the cheapest SECOND witness of the seed/reboot machinery: both arms
-    // drive `Seed.removeSelf` -> a 200-tick frozen fade -> a GAME-INITIATED
-    // `FP.world = new Game(...)`, and they differ only in the trigger and
-    // the landing level (L1 with `cutscene[1]` against the credits).
-    Object.freeze({ name: 'W-blood', slice: 6, tape: null, control: null }),
+    /**
+     * ⚖ RULED IN by the user at slice 0 (kickoff §6.2). The bloody branch is
+     * the cheapest SECOND witness of the seed/reboot machinery: both arms
+     * drive `Seed.removeSelf` -> a 200-frame frozen fade -> a GAME-INITIATED
+     * `FP.world = new Game(...)`, and they differ only in the trigger and
+     * the landing level (L1 with `cutscene[1]` against the credits).
+     *
+     * ⛓⛓⛓ R6 SLICE 6d: CLAIMED, and it is the rung's FIRST window whose
+     * terminal is not a persistence flag. `Seed` overrides `removeSelf` and
+     * never reaches `removed()`, so the pickup grants nothing and clears
+     * nothing — `earnedClears` is empty on both arms. The discriminator is
+     * the LEVEL SEQUENCE (114 -> 1 against 114) plus `Game.cutscene[1]`,
+     * exactly as `R6_BLOOD_MENU_DERIVATION` requires.
+     *
+     * ⛔ The pair is the one-primitive-fewer PREFIX (W-totem's shape) and it
+     * HAS to be a prefix: every `primary` after the fourth press is a
+     * DIALOGUE release, and a dialogue release in a room with no dialogue is
+     * a sword swing that would land the hit the control exists to withhold.
+     */
+    Object.freeze({
+        name: 'W-blood', slice: 6,
+        tape: 'r6-watcher-blood', control: 'r6-watcher-blood-control',
+    }),
 ]);
 
 // ── THE ANIM CLOCK TABLE, derived rather than restated ────────────────

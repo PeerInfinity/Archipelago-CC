@@ -508,6 +508,38 @@ export function createTapeStepper(tape, opts = {}) {
             doorEvents: run ? run.doorEvents : [],
             /** The `{113,0}` write `removed()` makes. */
             finalDoorFlags: run ? run.finalDoorFlags : [],
+            /**
+             * ⛓⛓⛓ R6 SLICE 6d — THE BLOODY BRANCH's five, and the first
+             * window on the ladder whose ledger row has no FLAG in it.
+             *
+             * ⛔ `watcherHits` CARRIES THE REFUSED TESTS TOO, because they
+             * are the derivation: one press is FIVE dispatches (§13.2) and
+             * `hitsTimer = 25` refuses four of them, which is what makes
+             * "four presses" a fact about presses rather than about repeats.
+             * A ledger of landings alone could not tell a four-press
+             * schedule from a one-press one against a receiver with no
+             * timer — which is exactly the Owl (§14.4).
+             */
+            watcherHits: run ? run.watcherHits : [],
+            /** `{t, id, ex, ey, from, hits, liveAt}` per RUNTIME-spawned Seed. */
+            seedSpawns: run ? run.seedSpawns : [],
+            /** `{t, id, arm, fadeFrames}` per `Seed.removeSelf()` cover fade. */
+            seedFades: run ? run.seedFades : [],
+            /**
+             * ⛓⛓⛓ The window's TERMINAL — `{t, arm, fromLevel, toLevel,
+             * cutscene}` per GAME-INITIATED ending reboot. The differential
+             * reads it three ways: the level sequence against the stream's
+             * own, the `cutscene` slot against `botStatus`, and the
+             * `receiveInput` refusal the scripted walk earns.
+             */
+            endingReboots: run ? run.endingReboots : [],
+            /**
+             * ⛔ Every tick of a `cutscene[1]` world, with the distance to
+             * L1's Oracle. The positive half of the second refusal this rung
+             * cannot reach from a shipped tape (trap 101): the walk really
+             * does park INSIDE the 24 px circle, and nothing is live there.
+             */
+            oracleApproach: run ? run.oracleApproach : [],
             /** Every tick a shot's own cull was a §11.6 BAND question. */
             bossShotCullBand: run ? run.bossShotCullBand : [],
             /**

@@ -429,3 +429,162 @@ export const SEED_CEREMONY_FRAMES = Object.freeze({
     get frozenTotal() { return this.specialTimer + this.fade + this.treeGrow + this.fade; },
     reboots: 2,
 });
+
+// ── the BLOODY branch (R6 slice 6d) ───────────────────────────────────
+
+/**
+ * `Watcher.as:98` — the text the runtime-spawned bloody `Seed` carries,
+ * verbatim.
+ *
+ * ⚠ IT IS A CONSTRUCTOR LITERAL, not an oel attribute, which makes it the
+ * THIRD shape a ceremony's text can come from: `PICKUP_CEREMONY`'s per-tag
+ * table (the placed pickups), `PICKUP_CEREMONY_BY_KEYTYPE` (the L19 key)
+ * and this one — a class that spawns another class with a string in the
+ * call. L115's placed seed is a FOURTH (`Game.as:2185` passes `o.@text`),
+ * and the two Seeds therefore run dialogues of different lengths from the
+ * same class.
+ */
+export const BLOODY_SEED_TEXT = 'The seed, covered in the blood of the Watcher, seems '
+    + 'almost to cower from your grasp.~This was supposed to be a triumph...';
+
+/** `Pickups/Seed.as:36` — `setHitbox(10, 14, 5, 7)`. */
+export const SEED_BOX = Object.freeze({ w: 10, h: 14, originX: 5, originY: 7 });
+
+/**
+ * ⛔ WHERE THE BLOODY SEED LANDS — AND IT IS NOT EXACTLY ON THE PLAYER.
+ *
+ * `Watcher.as:97` is `new Seed(p.x - 8, p.y - 8, true, …)` and `Seed`'s
+ * constructor is `Seed(_x:int, _y:int, …)` — an **`int` parameter**, so AS3
+ * truncates the argument toward zero before the ctor's own
+ * `super(_x + Tile.w/2, _y + Tile.h/2)` adds the half tile back. The two
+ * cancel EXACTLY when the player is on an integer coordinate and not
+ * otherwise: a player resting at x 79.95 gets a seed whose entity is at 79.
+ *
+ * §14.8 says the seed spawns "at exactly `(p.x, p.y)`", which is true of
+ * the arithmetic and not of the types. Transcribed rather than simplified,
+ * because the box is 10x14 around a 4x5 player and a 1 px error is
+ * invisible in the OVERLAP and visible in nothing else — the silent kind.
+ */
+export function bloodySeedEntity(player) {
+    return {
+        x: Math.trunc(player.x - 8) + 8,
+        y: Math.trunc(player.y - 8) + 8,
+    };
+}
+
+/** The bloody seed's collide box, from its entity point. */
+export function seedBoxAt(entity) {
+    return {
+        x: entity.x - SEED_BOX.originX,
+        y: entity.y - SEED_BOX.originY,
+        right: entity.x - SEED_BOX.originX + SEED_BOX.w,
+        bottom: entity.y - SEED_BOX.originY + SEED_BOX.h,
+    };
+}
+
+/**
+ * ⛓⛓⛓ `Watcher.hit()` — `NPCs/Watcher.as:117-124`, and the whole of it is
+ * three terms:
+ *
+ * ```as3
+ *   if (!Game.checkPersistence(tag) && hitsTimer <= 0 && text != "")
+ *   { hits++; hitsTimer = hitsTimerMax; }
+ * ```
+ *
+ *   1. ⛔ **THE GATE IS THE *CLEARED* TAG.** `checkPersistence` is TRUE
+ *      while the dialogue is unread, so the hits count only AFTER
+ *      `doneTalking()` — W-blood is W-talk's continuation, never its
+ *      alternative.
+ *   2. ⛔⛔ **`hitsTimer` 25 MAKES ONE PRESS ONE HIT.** §13.2's five hit
+ *      tests all land inside 25 ticks, so tests 2..5 are refused — the
+ *      exact opposite of the Owl (§14.4), whose `justKnock` arm sets no
+ *      timer and takes all five.
+ *   3. ⛓ `text` is the FIELD, i.e. the constructor's `_text` — the LONG
+ *      text — and not `myText`, which is `text1` on a cleared boot. A
+ *      Watcher whose tag is already off still has a non-empty `text`, which
+ *      is the only reason a hit is possible at all.
+ *
+ * @returns {{landed: boolean, hits: number, hitsTimer: number}}
+ */
+export function watcherTakesHit(w) {
+    if (!w.cleared) return { landed: false, hits: w.hits, hitsTimer: w.hitsTimer, why: 'the tag is still SET — `!Game.checkPersistence(tag)` is false until `doneTalking()` has run' };
+    if (w.hitsTimer > 0) {
+        return { landed: false, hits: w.hits, hitsTimer: w.hitsTimer, why: `hitsTimer ${w.hitsTimer} > 0 — one of the press's five hit tests, refused` };
+    }
+    if (!w.text) return { landed: false, hits: w.hits, hitsTimer: w.hitsTimer, why: '`text == ""`' };
+    return { landed: true, hits: w.hits + 1, hitsTimer: WATCHER.hitsTimerMax, why: null };
+}
+
+/**
+ * Does this hit count spawn the bloody seed? `hits > dieFrames.length`,
+ * and `dieFrames` is `[7, 8, 9]` ⇒ the FOURTH hit.
+ */
+export function bloodySeedDue(hits) {
+    return hits > WATCHER.dieFrames;
+}
+
+/**
+ * ⛓⛓⛓ `Game.as:955-960` — THE SCRIPTED WALK THE BLOODY REBOOT LANDS IN.
+ *
+ * ```as3
+ *   else if (cutscene[1]) { p.directionFace = 1; p.receiveInput = false;
+ *                           p.v.y = -1; if (p.y <= 64) p.v.y = 0; }
+ * ```
+ *
+ * Three facts the tick count depends on, none of them in the snippet:
+ *
+ *   1. ⛔ **THE BLOCK RUNS *BELOW* `super.update()`**, so the velocity it
+ *      writes on frame N is the one `Mobile.mobileUpdate` consumes on frame
+ *      N+1. The player is one frame behind the script for the whole walk.
+ *   2. ⛔ **`Mobile.friction` RUNS BEFORE `moveY`**, so a `v.y` of -1 is a
+ *      step of **0.75** — the same friction-before-move shape as §12.2's
+ *      descent and §14.6's transcription, third class in a row.
+ *   3. ⛔ **THE CLAMP IS ON THE VELOCITY, NOT THE POSITION.** `p.y <= 64`
+ *      zeroes `v.y`; nothing moves the player back to 64. Coming down the
+ *      lattice from y 104 in 0.75 steps, 64 is never landed on — the walk
+ *      stops at the first value at or below it, and that value is 63.5.
+ *
+ * ⛔⛔⛔ AND 63.5 IS **INSIDE** THE ORACLE'S TALK CIRCLE. `oracle@64,32` is
+ * an `NPC` (+8,+8) ⇒ entity (72,40), and `|63.5 - 40|` is 23.5 against a
+ * `talkRange` of 24. §17.10 called the clamp "EXACTLY 24 px from the
+ * Oracle" and that was the value the clamp NAMES, not the one the lattice
+ * reaches. Either way it is a boundary and not a margin, and the window has
+ * to end before it. See `ORACLE`.
+ */
+export const CUTSCENE_1_WALK = Object.freeze({
+    /** `p.v.y = -1`, re-assigned every frame below the world update. */
+    vy: -1,
+    /** `if (p.y <= 64) p.v.y = 0` — a velocity clamp, not a position one. */
+    clampY: 64,
+    /** `p.receiveInput = false` — `Player.input()`'s first line returns. */
+    receiveInput: false,
+    src: 'Game.as:955-960',
+});
+
+/**
+ * ⛔⛔⛔ L1's ORACLE — THE RUN-ENDER AT THE END OF THE BLOODY WALK.
+ *
+ * `NPCs/Oracle.as:94-121`: `doneTalking()` under `Game.cutscene[1]` — which
+ * is exactly the flag the bloody `Seed` set one tick before the reboot —
+ * calls `exitToMenu()`, i.e. `Game.menu = true` plus a world rebuild. And
+ * `keyNeeded` is `!Game.checkPersistence(tag)` on a tag no W-blood tape has
+ * ever cleared, so the dialogue opens on PROXIMITY with no key at all.
+ *
+ * ⛔ THE INPUT WOULD BE THE HARNESS'S OWN. `Bot.AUTO_ADVANCE_CADENCE`
+ * presses and releases X every 8 frozen frames and `NPC.talk()` reads
+ * `Input.released(p.keys[6])` DIRECTLY — past the `receiveInput = false`
+ * the cutscene set. So in exactly the state where the tape has no input,
+ * the instrument has the most, and it would walk a 13-line dialogue to
+ * `exitToMenu()`. The record would then be a claim about the harness.
+ * → [[feedback_auto_advance_drives_the_ending]]
+ *
+ * ⇒ `levelRun` REFUSES the radius rather than modelling the dialogue, and
+ * the window's terminal is the LEVEL SEQUENCE plus `menu_state`, never "a
+ * menu happened" (`r6Acceptance.R6_BLOOD_MENU_DERIVATION`).
+ */
+export const ORACLE = Object.freeze({
+    /** `super(_x + Tile.w/2, _y + Tile.h/2)` — `NPCs/NPC.as:47`, as the Watcher. */
+    ctor: Object.freeze({ dx: 8, dy: 8 }),
+    talkRange: TALK_RANGE,
+    src: 'NPCs/Oracle.as:20-40,94-121',
+});

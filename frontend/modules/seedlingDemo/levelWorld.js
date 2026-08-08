@@ -1567,11 +1567,28 @@ export const ENTITY_CLASSES = Object.freeze({
     oracle: {
         as3: 'Oracle',
         roles: ROLES, collider: 'rect', type: 'Solid',
-        dx: 8, dy: 8, w: 16, h: 24, originX: 8, originY: 12,
-        src: 'Game.as:2177 + NPCs/NPC.as:47-59 + NPCs/Oracle.as:13 (Spritemap 16x24)',
-        why: 'NPC, keyNeeded true. Its `FP.world = new Game(...)` (Oracle.as:121) is in '
-            + 'doneTalking(); the proximity check at :63 is inside render() and only '
-            + 'picks an animation',
+        // ⛔⛔ R6 SLICE 6d: 16x16, NOT 16x24 — THE CTOR OVERRIDES THE BASE.
+        //
+        // `NPC`'s constructor derives the box from the graphic
+        // (`setHitbox(g.width, g.height, g.width/2, g.height/2)`, so 16x24
+        // origin (8,12) for a 16x24 Spritemap) and `Oracle.as:38` then calls
+        // `setHitbox(16, 16, 8, 8)` **on the line after `super()`**. The
+        // table read the base and stopped, which put the solid's bottom edge
+        // at y 52 where the game has it at 48.
+        //
+        // ⛓ Found by W-blood, whose scripted walk arrives in L1 from the
+        // SOUTH — i.e. straight at the edge the two answers disagree about —
+        // and unobservable before it, because no fixture had ever entered
+        // L1. The velocity clamp (`p.y <= 64`) stops the walk 14 px short of
+        // either box, so W-blood does not touch it either; it is corrected
+        // because it is wrong, not because a tape needs it.
+        dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
+        src: 'Game.as:2177 + NPCs/NPC.as:47-59 + NPCs/Oracle.as:38 (setHitbox overrides)',
+        why: 'NPC, keyNeeded true — `Oracle` does NOT assign it, so the base\'s `true` '
+            + 'stands and the dialogue needs an X RELEASE, not proximity. Its '
+            + '`FP.world = new Game(...)` (Oracle.as:121) is in doneTalking() under '
+            + '`Game.cutscene[1]`; the proximity check at :63 is inside render() and '
+            + 'only picks an animation',
     },
     hermit: {
         as3: 'Hermit',
@@ -3217,6 +3234,20 @@ export function buildLevelWorld(levelRecord, {
      * `{114,0}` hangs off.
      */
     const watchers = [];
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: every placed `Oracle`, for the ONE question W-blood
+     * has to answer about it — how close did the scripted walk get?
+     *
+     * ⚠ IT IS NOT A SECOND WATCHER ROSTER even though the class is a
+     * sibling, and the difference is the whole reason it is a separate list:
+     * a `Watcher`'s dialogue is MODELLED (its length is the window) and an
+     * `Oracle`'s is REFUSED (its `doneTalking()` under `Game.cutscene[1]` is
+     * `exitToMenu()`, i.e. the end of the run). So this carries the entity
+     * point and the tag and NOT the text, because carrying the text would
+     * read as an offer to run it.
+     * → `endingChain.ORACLE`, `levelRun`'s `oracleApproach`
+     */
+    const oracles = [];
     // R2: the `Activators` groups. `activators` are the responders that stop
     // being solid while their group is held; `pressers` are the volumes that
     // hold it. Both carry the `t` the game groups them by, read from the
@@ -3879,6 +3910,32 @@ export function buildLevelWorld(levelRecord, {
                 talkingSpeed: intAttr(e.attrs, 'frames', 0),
             });
         }
+        // ⛓⛓⛓ R6 SLICE 6d: THE ORACLE ROSTER — the run-ender at the end of
+        // the bloody walk.
+        //
+        // ⛔ AND ITS HITBOX IS **NOT** THE `PRESS_ARMS` ROW'S. `NPC`'s ctor
+        // does `setHitbox(g.width, g.height, g.width/2, g.height/2)` — 16x24
+        // for a 16x24 Spritemap — and `Oracle`'s own ctor then calls
+        // `setHitbox(16, 16, 8, 8)` on the line AFTER `super()`. The class
+        // table's `w: 16, h: 24, originX: 8, originY: 12` is the base's,
+        // taken before the override; the live body is 16x16 about the entity
+        // point. Corrected in the table beside this (`ENTITY_CLASSES.oracle`)
+        // rather than only here, because the solid rect is what a walk in L1
+        // collides with — and the two answers differ by four pixels at the
+        // bottom edge, which is where a walk arrives from.
+        if (consults.has('proximity-hazard') && e.type === 'oracle') {
+            oracles.push({
+                id: `${e.type}@${e.x},${e.y}`,
+                tag: e.type,
+                x, y,
+                // `NPCs/NPC.as:47` — the same half tile the Watcher takes,
+                // transcribed rather than read from `cls.dx` for the reason
+                // the watcher roster gives.
+                ex: x + TILE_SIZE / 2,
+                ey: y + TILE_SIZE / 2,
+                persistTag: entityTag,
+            });
+        }
         if (consults.has('proximity-hazard') && cls.hazard) {
             const disposition = hazardDisposition(cls.hazard);
             if (disposition === 'unpriced') {
@@ -4044,6 +4101,13 @@ export function buildLevelWorld(levelRecord, {
                     // state and `applyFire` looks it up by this id.
                     ...(cls.as3 === 'BurnableTree'
                         ? { treeId: `${e.type}@${x},${y}` } : {}),
+                    // ⛓⛓⛓ R6 slice 6d: the FIFTEENTH family's join, and the
+                    // narrowest of them all — the run holds `hits` and
+                    // `hitsTimer` for a body that never moves, never shrinks
+                    // and never leaves, so the RECT stays the census's and
+                    // only the counter needs looking up.
+                    ...(cls.as3 === 'Watcher'
+                        ? { watcherId: `${e.type}@${x},${y}` } : {}),
                     // ⛓⛓⛓ R5 slice 21: the TENTH, and the SECOND responder
                     // whose rect is not a constant.
                     //
@@ -4652,6 +4716,7 @@ export function buildLevelWorld(levelRecord, {
         proximityHazards,
         entryHazards,
         watchers,
+        oracles,
         activators,
         pressers,
         /**
