@@ -293,6 +293,13 @@ export const R6_ANIM_CLOCKS = Object.freeze([
     Object.freeze({ owner: 'FinalDoor', anim: 'open', frameRate: 15, frames: 28, expect: 57 }),
     Object.freeze({ owner: 'Seed', anim: 'grow', frameRate: 3.5, frames: 16, expect: 138 }),
     Object.freeze({ owner: 'Explosion', anim: 'explode', frameRate: 20, frames: 8, expect: 13 }),
+    // ⛓ R6 SLICE 2: §8.2's last row, split into its two anims, plus the
+    // lock's. Each is DERIVED again in its own module (`wandShot`,
+    // `magicalLock`) and the two derivations are asserted equal there —
+    // one table, two computations, the "two cost models must agree" law.
+    Object.freeze({ owner: 'WandShot', anim: 'flare', frameRate: 5, frames: 3, expect: 19 }),
+    Object.freeze({ owner: 'WandShot', anim: 'die', frameRate: 20, frames: 3, expect: 5 }),
+    Object.freeze({ owner: 'MagicalLock', anim: 'destroy', frameRate: 15, frames: 7, expect: 15 }),
 ]);
 
 // ── THE RNG POSTURE ───────────────────────────────────────────────────
