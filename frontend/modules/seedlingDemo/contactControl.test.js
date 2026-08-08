@@ -123,22 +123,85 @@ describe('the SHUT-BEFORE arm: the guard on, the model exact', () => {
     });
 });
 
-describe('the LIVE arm: the guard off, the game diverges', () => {
-    it('⛓ diverges at the tick the model predicts, plus RECORD-THEN-ACT\'s one', () => {
+describe('the LIVE arm: the guard off, and R6 slice 3 REPRODUCES it', () => {
+    it('⛓⛓⛓ is byte-identical to the model for all 81 observations — the IOU, paid', () => {
+        // ⛔ THIS TEST USED TO ASSERT A DIVERGENCE. R5 could only say WHERE
+        // the model and the game parted company (observation 50) and what
+        // the parting looked like; `playerDamage.js` produces the numbers,
+        // so the same recording now replays exactly. The recording predates
+        // the model by a rung, which is what makes it evidence rather than a
+        // model checking itself.
         const model = modelOf(ON);
         const game = streamOf(ON);
-        let first = null;
-        for (let t = 0; t < game.length && first === null; t += 1) {
-            if (model[t].x !== game[t].x || model[t].y !== game[t].y) first = t;
+        expect(game).toHaveLength(81);
+        for (let t = 0; t < game.length; t += 1) {
+            expect({ t, x: model[t].x, y: model[t].y, level: model[t].level })
+                .toEqual({ t, x: game[t].x, y: game[t].y, level: game[t].level });
         }
-        const predicted = predictedContactTick(model);
-        expect(predicted).toBe(49);
+    });
+
+    it('⛓ and the hit lands on the tick the geometry predicts, plus RECORD-THEN-ACT\'s one', () => {
+        const run = runTape(loadTape(ON), { levelSource });
+        const predicted = predictedContactTick(run.ticks);
         // Observation `t` is the state after `t` completed ticks. The overlap
         // first EXISTS in observation 49; the enemy sees it on the next tick
         // (enemies update before the player), writes the impulse, and the
         // player's own friction and sweep integrate it — so the first
-        // observation that MOVED is 50.
-        expect(first).toBe(predicted + 1);
+        // observation that MOVED is 50, and that is the tick the ledger
+        // stamps.
+        expect(predicted).toBe(49);
+        expect(run.playerHits).toHaveLength(1);
+        expect(run.playerHits[0].t).toBe(predicted + 1);
+        expect(run.playerHits[0].id).toBe('sandtrap@96,128');
+        expect(run.playerHits[0].source).toBe('enemy');
+    });
+
+    it('⛔ ONE hit, and the KNOCKBACK is what ends the contact — not the i-frames', () => {
+        // ⛔⛔ A FINDING THIS TEST WAS WRITTEN TO ASSERT THE OPPOSITE OF, and
+        // the correction matters for what the pair can WITNESS.
+        //
+        // The guess was: the walk finishes standing inside the body (the OFF
+        // arm asserts exactly that), so the trap fires every remaining tick
+        // and the i-frame gate swallows thirty of them. Measured, the
+        // overlap in the LIVE arm is **one tick long** — 49 and no others.
+        // The impulse (|3| at 20 ticks of friction) carries the player clear
+        // of the 16x16 body immediately, so `hitPlayer` never fires again
+        // and `contactsSuppressed` is EMPTY.
+        //
+        // ⇒ THIS TAPE CANNOT WITNESS THE i-FRAME WINDOW AT ALL. Neither
+        // half of it: the tape's last RIGHT is at tick 46 and the hit lands
+        // at 50, so there is no held key to lose either (R5's own note says
+        // so). Both halves of `hitsTimer` — the 20 ticks of refused steering
+        // and the suppression of a second hit — need a tape that HOLDS A KEY
+        // ACROSS THE HIT and STAYS IN THE BODY, which is what the R6 pair is
+        // for. A slice that had assumed this fixture covered them would have
+        // shipped the gate untested and green.
+        const run = runTape(loadTape(ON), { levelSource });
+        expect(run.playerHits).toHaveLength(1);
+        expect(run.damage.hits).toBe(1);
+        expect(run.contactsSuppressed).toEqual([]);
+    });
+
+    it('⛓ the knockback is `Player.knockback`\'s, on BOTH axes', () => {
+        const run = runTape(loadTape(ON), { levelSource });
+        const kb = run.playerHits[0].knockback;
+        // The trap is down-and-right, so the impulse is up and LEFT, and
+        // both components clear their (different) comparators.
+        expect(kb.dx).toBeLessThan(0);
+        expect(kb.dy).toBeLessThan(0);
+        expect(kb.landed).toEqual({ x: true, y: true });
+        // |delta| == force, because `center` is normalized to 1 and both
+        // axes landed: 3 * (cx, cy) with cx^2 + cy^2 == 1.
+        expect(Math.hypot(kb.dx, kb.dy)).toBeCloseTo(3, 12);
+    });
+
+    it('⛓ `Game.shake` took the ADDITION, and then decayed away', () => {
+        const run = runTape(loadTape(ON), { levelSource });
+        // +5 at the hit (`Player.as:1389`), then -1 per `view()`. The tape
+        // runs 30 more ticks, so it is back at 0 by the end — which is what
+        // keeps this fixture's camera exact for the last 25 observations.
+        expect(run.playerHits[0].shake).toBe(5);
+        expect(run.shake).toBe(0);
     });
 
     it('and the divergence has the KNOCKBACK signature, not merely a difference', () => {

@@ -416,6 +416,28 @@ export function createTapeStepper(tape, opts = {}) {
             blastFreezes: run ? run.blastFreezes : [],
             volleys: run ? run.volleys : [],
             frozenTimer: run ? run.frozenTimer : 0,
+            /**
+             * ⛓⛓⛓ R6 SLICE 3 — WHAT THE RUN TOOK, AND WHAT IT SURVIVED.
+             *
+             * `playerHits` / `playerDeaths` / `contactsSuppressed` are the
+             * three halves of `noDamage`'s retirement (the third one is the
+             * negative control: a contact that paid nothing, with the gate
+             * that swallowed it). `damage` is the terminal
+             * `{hits, hitsTimer, directionFace}`, which the differential
+             * checks against the GAME's own `botStatus.hits` /
+             * `hits_timer` readouts — the R5 batch added those and nothing
+             * consumed them until this slice.
+             *
+             * ⚠ `playerDeaths` IS ALSO A LOAD COUNT. A death rebuilds the
+             * `Game` without changing the level, so the dead-frame budget's
+             * `transitions.length + 1` undercounts by exactly its length —
+             * which is a two-sided check rather than a bookkeeping detail.
+             */
+            playerHits: run ? run.playerHits : [],
+            playerDeaths: run ? run.playerDeaths : [],
+            contactsSuppressed: run ? run.contactsSuppressed : [],
+            damage: run ? run.damage : { hits: 0, hitsTimer: 0, directionFace: -1 },
+            shake: run ? run.shake : 0,
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

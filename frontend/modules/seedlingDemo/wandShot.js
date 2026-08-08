@@ -298,6 +298,28 @@ export const WAND_SHOT_CULL = Object.freeze({
         + 'a room whose camera is clamped away from the player (a level narrower than the '
         + 'screen, where `stepCamera` centres instead of tracking) is the case that would '
         + 'change the arithmetic, and that is a property of the ROOM.',
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: THE CAMERA TERM §10.6 SAID THIS ARITHMETIC WOULD
+     * GAIN, added and re-derived rather than left as a note.
+     *
+     * The cull is a point test against `FP.camera`, and a shaking camera is
+     * displaced by up to `shake / 2` on each axis (`camera.js`'s band). The
+     * displacement that MATTERS is the one that moves the boundary TOWARD
+     * the shot, i.e. it eats the margin. The largest `Game.shake` this
+     * rung's roster can produce is `BossTotem.removed()`'s 60
+     * (`camera.SHAKE_WRITERS`), so the worst case eats 30 px.
+     *
+     * ⇒ 48 + 16 + 30 = 94 against 160. Still unreachable, by 66 px — so the
+     * cull's VERDICT is the same for every camera in the band and a run may
+     * evaluate it at any point of one. That is what licenses `levelRun` to
+     * keep culling while the camera is a band, and it is asserted rather
+     * than assumed: the guard reads this flag.
+     */
+    maxRosterShake: 60,
+    get maxShakeDisplacement() { return this.maxRosterShake / 2; },
+    get reachableUnderShake() {
+        return this.travel + this.spawnReach + this.maxShakeDisplacement > this.nearestEdge;
+    },
 });
 
 /**

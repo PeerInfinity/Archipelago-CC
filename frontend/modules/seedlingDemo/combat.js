@@ -948,3 +948,103 @@ export function assertNoUnclearableKillLock(levelRecord, { placementOf } = {}) {
     }
     return findings;
 }
+
+// ── ⛓⛓⛓ R6 SLICE 3: THE CONTACT SOURCE ───────────────────────────────
+
+/**
+ * `Enemy.hitPlayer()`, transcribed (`Enemies/Enemy.as:211-221`).
+ *
+ * ```
+ *   if (!destroy && (!(graphic is Spritemap) || currentAnim != "die") && hitsTimer <= 0)
+ *   {
+ *       var p:Player = collide("Player", x, y) as Player;
+ *       if (p) p.hit(this, 3, new Point(x, y), damage);
+ *   }
+ * ```
+ *
+ * ⛔ THE GATE IS THE **ENEMY's** i-FRAME TIMER, NOT THE PLAYER's. So every
+ * landed sword press buys 30 ticks of contact safety from that body as well
+ * as blocking the next press — and against the totem (whose `hitsTimerMax`
+ * is 20) each landed wand shot buys 20. §8.9's second half, and the reason
+ * the fight's stance owes clearance from the BODY and not only the laser.
+ *
+ * ⛔ AND IT RUNS INSIDE `Enemy.update`, WHICH IS BEHIND `onScreen()` AT ZERO
+ * MARGIN. An off-screen body cannot damage — `camera.js`'s header, from the
+ * other side — so the caller must supply the verdict rather than assume it,
+ * and a band that answers `uncertain` is a stance the window has to move.
+ *
+ * ⚠ `f` IS THE BASE CLASS's 3, NOT A FIELD. `Puncher`, `Spinner` and
+ * `BossTotem` pass their own force from their own overrides; this function
+ * is `Enemy`'s, which is what a plain body contact costs.
+ *
+ * @param {object} enemy `{hitsTimer, destroy, dieAnim}` — the body's own state
+ * @param {'on'|'off'|'uncertain'} onScreenVerdict from `camera.onScreen*`
+ * @returns {{fires:boolean, refusedAt:string|null}}
+ */
+export function enemyHitPlayerFires(enemy, onScreenVerdict) {
+    if (onScreenVerdict === 'uncertain') {
+        return { fires: false, refusedAt: 'onScreen:uncertain' };
+    }
+    if (onScreenVerdict !== 'on') return { fires: false, refusedAt: 'offScreen' };
+    if (enemy.destroy) return { fires: false, refusedAt: 'destroy' };
+    if (enemy.dieAnim) return { fires: false, refusedAt: 'die anim' };
+    if ((enemy.hitsTimer ?? 0) > 0) return { fires: false, refusedAt: 'enemy hitsTimer' };
+    return { fires: true, refusedAt: null };
+}
+
+/**
+ * Which census bodies this rung can price a CONTACT for, and which it
+ * refuses by name.
+ *
+ * ⛔⛔ THE SPLIT IS "DOES THE RUN STEP ITS POSITION", NOT "IS IT DANGEROUS".
+ * A contact is `collide("Player", x, y)` at the body's CURRENT position, so
+ * a body the model does not move is a body whose contact test the model
+ * cannot evaluate — and the honest answer for one of those is a refusal,
+ * not a rect from the `.oel`.
+ *
+ * Three groups:
+ *
+ *   · `static`  — `speed === 0` and `aggro.kind === 'static'`: the body is
+ *                 where `loadlevel` put it forever. `Mobile.mobileUpdate`
+ *                 still runs, but `v` is never written, so `moveX(0)`
+ *                 moves nothing. These are priced.
+ *   · `stepped` — families the run DOES step (`Spinner`, `IceTurret`) but
+ *                 whose own `hitPlayer` override this slice has not wired.
+ *                 Refused by name, so a tape that walks into one is a named
+ *                 failure rather than a silent zero.
+ *   · `mover`   — everything else: its position is an encounter script.
+ *
+ * ⚠ `boss` rows fall in `mover` by construction (`stepBoundFor` returns
+ * null for them), which is what keeps the totem out of this arm until
+ * slice 4 wires its own.
+ */
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
+
+export function contactPricing(tag) {
+    const row = ENEMY_CLASSES[tag];
+    if (!row) return { kind: 'unknown', why: `"${tag}" has no combat row` };
+    if (CONTACT_STEPPED_FAMILIES.includes(tag)) {
+        return {
+            kind: 'stepped',
+            why: `${row.as3} has its own \`hitPlayer\` override and its own stepped state; `
+                + 'R6 slice 3 wired the base-class contact only',
+        };
+    }
+    if (row.speed === 0 && row.aggro?.kind === 'static' && !row.boss) {
+        return { kind: 'static', why: `${row.as3} never writes \`v\`` };
+    }
+    return {
+        kind: 'mover',
+        why: `${row.as3}'s position is an encounter script (speed ${row.speed}, aggro `
+            + `${row.aggro?.kind ?? 'none'}), and a contact tests the body where it IS`,
+    };
+}
+
+/** The contact rect of one census instance — its hitbox at its placement. */
+export function contactRect(instance) {
+    const box = instance.row?.hitbox;
+    if (!box) return null;
+    const x = instance.cx - box.ox;
+    const y = instance.cy - box.oy;
+    return { x, y, right: x + box.w, bottom: y + box.h, w: box.w, h: box.h };
+}

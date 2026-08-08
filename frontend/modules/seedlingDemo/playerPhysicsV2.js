@@ -574,6 +574,36 @@ export function updateTeleporters(level, x, y, latched) {
  */
 export function arriveIn(level, teleporter) {
     const { x, y } = teleporter.arrival;
+    return arriveAt(level, x, y);
+}
+
+/**
+ * ⛓⛓⛓ R6 SLICE 3: THE ARRIVAL A DEATH PRODUCES.
+ *
+ * `Player.die()` -> `Game.restartLevel()` -> `FP.world = new Game(level,
+ * playerPosition.x, playerPosition.y)`, and `playerPosition` is the
+ * constructor args of the world being torn down (`Game.as:624`) — NOT where
+ * the player died. So a death lands exactly where a fresh entry to this
+ * level would, half a tile in, with everything an instance initialiser
+ * resets.
+ *
+ * ⚠ IT IS `arriveIn`'s BODY WITH A DIFFERENT SOURCE FOR THE TWO NUMBERS,
+ * and that is the finding rather than a convenience: the game really does
+ * build the same `Game` and the same `Player` either way, so a respawn that
+ * differed from an arrival in ANY of terrain / direction / drownTimer /
+ * latch would be a model inventing a distinction the source does not make.
+ * The `<player>` object arm of `loadlevel` (`Game.as:2088`) would be that
+ * distinction, and it cannot fire: no level in the checkout has one.
+ *
+ * @param {object} level the already-built destination world (the same one)
+ * @param {{x:number,y:number}} ctor the `Game` constructor's own args
+ */
+export function arriveAtRespawn(level, ctor) {
+    return arriveAt(level, ctor.x + TILE_SIZE / 2, ctor.y + TILE_SIZE / 2);
+}
+
+/** The state a freshly constructed `Player` has at `(x, y)` in `level`. */
+function arriveAt(level, x, y) {
     return {
         x,
         y,
@@ -916,6 +946,15 @@ export function step(state, held, opts = {}) {
          * this is not `frozen`.
          */
         inputBlocked = false,
+        /**
+         * ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s i-frame gate, threaded the
+         * same way and for the same reason — the run owns `hitsTimer`
+         * (`playerDamage.js`) and steps it in the player's own slot, BELOW
+         * this call, because `hitUpdate()` is at `Player.as:1581` — below
+         * `super.update()`. The two gates are different scopes; see
+         * `playerPhysicsV1.step`'s note.
+         */
+        steerBlocked = false,
         // ⛓ R5 slice 4: reported when an exact `nearestToPoint` tie is
         // DECIDED by the transcribed list order and its two candidates lead
         // somewhere different. Nothing here consumes it; a planner does.
@@ -1222,6 +1261,10 @@ export function step(state, held, opts = {}) {
         // the source's own — `!receiveInput || frozenTimer > 0 ||
         // fallFromCeiling` — with the run supplying the middle term.
         inputBlocked,
+        // ⚠ A DESCENT DROPS THE KEYS ANYWAY (`fall ? NO_KEYS : held`), so
+        // this term only ever matters on the ground — which is where every
+        // contact happens.
+        steerBlocked,
         friction,
         moveSpeed,
         // `Player.input()`'s last act. The feather exempts UPWARD motion

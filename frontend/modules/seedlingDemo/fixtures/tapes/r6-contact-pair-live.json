@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 128
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "tick_count": 130,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 130
+    }
+  ],
+  "name": "r6-contact-pair-live",
+  "noDamage": false,
+  "grants": [],
+  "description": "THE CONTACT PAIR v2, arm 1 of 3 \u2014 `noDamage: FALSE`, and the arm that DIES. R5's pair proved the game does something the guard was hiding; it could not say WHAT, because the model carried no damage. R6 slice 3 carries it, so this arm's whole 130-tick stream is a claim about numbers. Booted at (32,128) so the spawn (40,136) is level with `sandtrap@96,128`'s ENTITY CENTRE (104,136), and RIGHT is held for every one of the 130 ticks \u2014 both choices load-bearing. Level with the centre, `center.y` is 0, so `Player.knockback`'s y branch (`Math.abs(center.y) > 0.5`) drops the impulse and the x branch (`>=`) keeps it: every knockback here is a PURE -3.00 px/tick shove west, which is what lets the held RIGHT walk straight back in. Held throughout, the 20-tick steering loss is DIRECTLY visible as the gap between hits (`Player.input`'s four arrow branches sit inside `if (hitsTimer <= 0)`), which R5's tape could not show \u2014 its last RIGHT was at tick 46 and its hit landed at 50, so no held key was left to lose. Three hits at 48 / 72 / 100, `hits >= hitsMax` on the third, and then the thing no tape on this ladder has ever crossed: `Player.die()` -> `Game.restartLevel()` -> `FP.world = new Game(8, 32, 128)`, a GAME-INITIATED world reboot the driver did not order, landing the player back at (40,136) with `hits` and `hitsTimer` fresh. The remaining 30 ticks are the respawn walking again, and they stop short of the fourth hit at 147 on purpose \u2014 one death, stated."
+}

@@ -940,7 +940,14 @@ describe('⛓ R5 slice 23: the SAVE_FILE.data audit', () => {
         // the audit ran. What this test re-derives is the CLAIM (no tape
         // presses C), not the number in the prose.
         expect(row.why).toMatch(/ZERO of the \d+ committed tapes/);
-        expect(allTapes()).toHaveLength(100);
+        // ⛔ R6 SLICE 3: THIS WAS `toHaveLength(100)`, AND IT ROTTED THE
+        // MOMENT THE ROSTER GREW — a hand-kept count in a test whose whole
+        // subject is "a hand-kept count in the prose is not the claim".
+        // Three new fixtures turned it red for the one reason that is not a
+        // defect. What the line is actually for is a POSITIVE CONTROL on
+        // `allTapes()` — that the directory read produced a roster at all —
+        // so it asserts a floor and the r5-era size it was written at.
+        expect(allTapes().length).toBeGreaterThanOrEqual(100);
     });
 
     it('⛔ the `time` skip is re-derived: L43 holds no worldFrame-coupled hazard',

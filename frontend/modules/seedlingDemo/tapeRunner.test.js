@@ -179,21 +179,23 @@ describe('fixture differential', () => {
     });
 
     /**
-     * ⛔ THE ONE FIXTURE WHOSE MODEL AND RECORDING MUST DIFFER.
+     * ⛓⛓⛓ R6 SLICE 3: `r5-contact-control-on` LEFT THIS LIST, AND THAT IS
+     * THE SLICE'S HEADLINE.
      *
-     * `r5-contact-control-on` is R5's POSITIVE CONTROL: the same walk as
-     * `r5-contact-control-off` with `noDamage` flipped and nothing else, driven
-     * into `sandtrap@96,128`. The JS engine models NO damage at all — that is
-     * the whole point — so the game's stream must diverge from it, and the
-     * blanket "matches the recording exactly" sweep would be red for the one
-     * reason that is evidence rather than a defect.
+     * It was R5's one fixture whose model and recording HAD to differ: the
+     * same walk as `r5-contact-control-off` with `noDamage` flipped and
+     * nothing else, driven into `sandtrap@96,128`, against a JS engine that
+     * modelled no damage at all. R5's own note closed with the reason —
+     * *"the divergence IS the claim"* — and an IOU beside it: the live arm
+     * could assert the SHAPE of the divergence (the impulse points away,
+     * friction decays it, the walk never re-accelerates east) and not its
+     * numbers.
      *
-     * ⚠ PINNED BY NAME, and the exclusion is itself checked: the test below
-     * requires each excluded fixture to ACTUALLY diverge, so this list cannot
-     * be used to quiet a genuine drift. See
-     * `feedback_coincidental_predicate_rots` — a predicate like
-     * `!loadTape(n).noDamage` would sweep in every future R5 fixture, all of
-     * which are supposed to match.
+     * `playerDamage.js` produces the numbers, and this tape now replays
+     * BYTE-EXACT through the ordinary sweep above — 81 observations, both
+     * arms, no exemption. ⛔ THE WITNESS IS AS STRONG AS IT GETS: the
+     * recording predates the model by a whole rung, so there is no way the
+     * model could have shaped what it is being checked against.
      */
     /**
      * ⚠ AND THE SECOND ONE, for a DIFFERENT reason worth stating.
@@ -229,8 +231,7 @@ describe('fixture differential', () => {
      * harness asserts the game against `mirror + earned` rather than
      * excusing it. This list is only about the STREAM.
      */
-    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on', 'r5-l60-kill',
-        ...MODEL_EXEMPT_NAMES];
+    const EXPECTED_TO_DIVERGE = ['r5-l60-kill', ...MODEL_EXEMPT_NAMES];
 
     it.each(names.filter((n) => !EXPECTED_TO_DIVERGE.includes(n)))(
         "%s: JS stream matches the real game recording, exactly", (name) => {

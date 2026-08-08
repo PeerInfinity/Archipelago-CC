@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 128
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "tick_count": 130,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 130
+    }
+  ],
+  "name": "r6-contact-pair-control",
+  "noDamage": true,
+  "grants": [],
+  "description": "THE CONTACT PAIR v2, arm 2 of 3 \u2014 `noDamage: TRUE`, ONE FIELD apart from `r6-contact-pair-live` and identical in every other byte. `Player.hit`'s first line is `if (Bot.noDamage) return`, so the guard buys no sound, no shake, no `hits`, no i-frames, no knockback and no `die()`: the player walks straight through the trap's body and keeps walking east for all 130 ticks. This is the arm that makes the other one evidence \u2014 without it, 'the model reproduces the damage' and 'the model reproduces a walk that was never damaged' print the same green."
+}

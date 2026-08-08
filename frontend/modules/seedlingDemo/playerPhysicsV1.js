@@ -391,6 +391,30 @@ export function step(state, held, opts = {}) {
          * player down a waterfall the game leaves alone.
          */
         inputBlocked = false,
+        /**
+         * ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s SECOND gate, and it is a
+         * NARROWER one than `inputBlocked` — deliberately a separate seam.
+         *
+         * ```
+         *   const accel:Number = moveSpeed;
+         *   if (hitsTimer <= 0) { …the four arrow branches… }
+         *   if (onWaterfall && …) v.y += waterfallAcceleration;   // BELOW it
+         *   if (Input.pressed(keys[4])) useItem(Main.primary);    // BELOW it
+         * ```
+         *
+         * ⛔ IT GATES THE ARROWS AND NOTHING ELSE (`Player.as:1524-1553`).
+         * The waterfall push and both item presses sit below the block and
+         * run while the i-frames do — so a player in knockback can still
+         * swing, still fire, and is still pushed by a waterfall. A model
+         * that reused `inputBlocked` for this would silently disarm every
+         * press in a fight, which is the one place presses are the point.
+         *
+         * ⚠ WHICH IS WHY `postInput` STAYS OUTSIDE. `inputBlocked` takes the
+         * waterfall with it because the early RETURN is above it; this gate
+         * does not, because the `if` closes above it. Two gates, two scopes,
+         * four lines apart in the source.
+         */
+        steerBlocked = false,
     } = opts;
     const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
@@ -421,7 +445,10 @@ export function step(state, held, opts = {}) {
         // `Player.input()`, whole — the direction arms AND the waterfall
         // push below them — behind its own first-line return.
         if (!inputBlocked) {
-            v = applyInput(v, held, moveSpeed);
+            // ⚠ The arrows alone are behind `steerBlocked` (the i-frame
+            // window); `postInput` is the waterfall, which is BELOW that
+            // `if` in the source and runs either way.
+            if (!steerBlocked) v = applyInput(v, held, moveSpeed);
             if (postInput) v = postInput(v);
         }
         // X is FULLY resolved before Y, and Y's probe sees the NEW x —

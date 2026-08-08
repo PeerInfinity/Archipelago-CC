@@ -28,16 +28,27 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    CAMERA_DEAD_ZONE_RESIDUE,
     CAMERA_SPEED_DIVISOR,
     INVENTORY_TERM,
+    RANDOM_RANGE,
     SCREEN_H,
     SCREEN_W,
+    SHAKE_WRITERS,
+    bandIsExact,
+    bandWidth,
+    cameraBand,
     cameraTrack,
     initialCamera,
     instanceRect,
     onScreen,
+    onScreenUnderShake,
+    shakeAcrossLoad,
     stepCamera,
+    stepCameraBand,
+    stepCameraJiggled,
 } from './camera.js';
+import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 import { ON_SCREEN_RADIUS } from './bridges.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -97,14 +108,18 @@ describe('one view()', () => {
             .toEqual({ x: -16, y: -32 });
     });
 
-    it('⛔ REFUSES to model a shaking camera', () => {
-        // `Game.shake += 5` on every `Player.hit`, and `view()` then adds
-        // `shake * Math.random() - shake/2` to both axes. R5's claim is
-        // contact-freedom; a shaking camera means the claim already failed,
-        // and answering with a number would be answering a question whose
-        // premise is false.
+    it('⛓⛓⛓ R6 SLICE 3: hands a shaking camera to the BAND instead of refusing it', () => {
+        // R5's message here was "R5's claim is contact-freedom; a shaking
+        // camera means the claim already failed". That refusal is RETIRED —
+        // the module models a shaking camera now — and what is left on this
+        // face is a type constraint: it returns a POINT, and a jiggled
+        // camera is not one. The message names its successor, so a caller
+        // that hits it is told what to call rather than that its run is
+        // broken.
         expect(() => stepCamera({ x: 0, y: 0 }, { x: 8, y: 8 }, big, { shake: 5 }))
-            .toThrow(/contact-freedom; a shaking camera means the claim already failed/);
+            .toThrow(/stepCameraBand/);
+        expect(() => stepCamera({ x: 0, y: 0 }, { x: 8, y: 8 }, big, { shake: 5 }))
+            .not.toThrow(/the claim already failed/);
     });
 
     it('takes a cameraTarget override, and treats (-1,-1) as "none"', () => {
@@ -269,5 +284,214 @@ describe('the track over a committed recording', () => {
         const track = cameraTrack(obs, (l) => (l === 0 ? big : { width: 96, height: 96 }));
         expect(track[0]).toEqual({ t: 0, level: 0, x: 320, y: 320 });
         expect(track[1]).toEqual({ t: 1, level: 1, x: -32, y: -32 });
+    });
+});
+
+// ── ⛓⛓⛓ R6 SLICE 3: THE SHAKE ────────────────────────────────────────
+
+/**
+ * The shake stratum.
+ *
+ * The mutation list: the jiggle inside the `else` (small rooms shake-proof);
+ * a half-amplitude of `shake` instead of `shake/2`; the decay before the
+ * jiggle instead of after; the jiggle before the clamp instead of after; the
+ * band's `hi` endpoint stepping from `lo`; `onScreenUnderShake` collapsing
+ * `uncertain` into `false`; `shakeAcrossLoad` subtracting a mean instead of
+ * refusing. Every one turns a case below red.
+ */
+describe('⛓⛓⛓ the shake: the band is the model, and it is CHECKED', () => {
+    const big = { width: 640, height: 640 };
+    const tiny = { width: 96, height: 96 };
+    const player = { x: 320, y: 320 };
+
+    /** A deterministic spread of draws, including both ends of [0, 1). */
+    const DRAWS = [0, 0.0001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999999];
+
+    it('three writers, TWO operators — and only the player\'s ADDS', () => {
+        expect(SHAKE_WRITERS.playerHit).toMatchObject({ op: '+=', value: 5 });
+        expect(SHAKE_WRITERS.totemLaser).toMatchObject({ op: '=', value: 30 });
+        expect(SHAKE_WRITERS.totemDeath).toMatchObject({ op: '=', value: 60 });
+        const adds = Object.values(SHAKE_WRITERS).filter((w) => w.op === '+=');
+        expect(adds).toHaveLength(1);
+    });
+
+    it('the draw range is [0, 1) — 1 is not attainable', () => {
+        expect(RANDOM_RANGE.lo).toBe(0);
+        expect(RANDOM_RANGE.hi).toBe(1);
+        expect(RANDOM_RANGE.hiAttainable).toBe(false);
+    });
+
+    it('a degenerate band with shake 0 IS `stepCamera`, tick for tick', () => {
+        // The point path is what all 100 committed fixtures take, so the two
+        // faces agreeing is the regression pin for the whole slice.
+        let cam = initialCamera(player.x, player.y);
+        let band = cameraBand(cam);
+        for (let i = 0; i < 40; i += 1) {
+            const p = { x: 300 + i * 3, y: 280 + i * 2 };
+            cam = stepCamera(cam, p, big);
+            const r = stepCameraBand(band, p, big, { shake: 0 });
+            band = r.band;
+            expect(r.shake).toBe(0);
+            expect(bandIsExact(band)).toBe(true);
+            expect({ x: band.x.lo, y: band.y.lo }).toEqual(cam);
+        }
+    });
+
+    it('⛔ CONTAINMENT: every concrete jiggle lands inside the band', () => {
+        // The band claims to be the reachable set. This drives the concrete
+        // transcription at eight draw pairs per tick, for five ticks of a
+        // decaying shake, and requires every result to be inside — a band
+        // that could not be falsified this way would be an assumption
+        // wearing an interval.
+        const start = { x: 240, y: 240 };
+        for (const world of [big, tiny]) {
+            for (const r1 of DRAWS) {
+                for (const r2 of DRAWS) {
+                    let cam = { ...start };
+                    let band = cameraBand(start);
+                    let shake = 30;
+                    let bandShake = 30;
+                    for (let i = 0; i < 5; i += 1) {
+                        const p = { x: 300 + i * 4, y: 260 + i };
+                        const step = stepCameraJiggled(cam, p, world, { shake, r1, r2 });
+                        const bandStep = stepCameraBand(band, p, world, { shake: bandShake });
+                        cam = { x: step.x, y: step.y };
+                        shake = step.shake;
+                        band = bandStep.band;
+                        bandShake = bandStep.shake;
+                        expect(shake, 'the two decays agree').toBe(bandShake);
+                        expect(cam.x, `x r1=${r1} tick ${i}`)
+                            .toBeGreaterThanOrEqual(band.x.lo);
+                        expect(cam.x).toBeLessThanOrEqual(band.x.hi);
+                        expect(cam.y, `y r2=${r2} tick ${i}`)
+                            .toBeGreaterThanOrEqual(band.y.lo);
+                        expect(cam.y).toBeLessThanOrEqual(band.y.hi);
+                    }
+                }
+            }
+        }
+    });
+
+    it('⛔ A ROOM NARROWER THAN THE SCREEN SHAKES TOO', () => {
+        // `view()`'s `if (shake > 0)` sits BELOW the whole clamp/centre
+        // section, so the small-level arm's ASSIGNMENT is jiggled like any
+        // other value. Writing the jiggle inside the `else` reads perfectly
+        // and quietly declares small rooms shake-proof.
+        const r = stepCameraBand(cameraBand({ x: -32, y: -32 }), player, tiny, { shake: 30 });
+        expect(bandWidth(r.band)).toBe(30);
+        const concrete = stepCameraJiggled({ x: -32, y: -32 }, player, tiny,
+            { shake: 30, r1: 0.9, r2: 0.9 });
+        expect(concrete.x).not.toBe(-32);
+    });
+
+    it('the decay is `max(shake - 1, 0)`, and it happens per `view()` call', () => {
+        let shake = 3;
+        for (const want of [2, 1, 0, 0]) {
+            shake = stepCameraBand(cameraBand({ x: 0, y: 0 }), player, big, { shake }).shake;
+            expect(shake).toBe(want);
+        }
+    });
+
+    it('⛔⛔ THE BAND NEVER CLOSES — the ROUND DEAD ZONE freezes it open', () => {
+        // Written to assert the opposite ("the lerp collapses it") and
+        // measured false. The jiggle is written into `FP.camera` itself, so
+        // the perturbation outlives the shake; the lerp then shrinks the
+        // interval until a gap under 5 px rounds straight back, and the two
+        // endpoints freeze independently on opposite sides of the target.
+        //
+        // ⇒ ONE LANDED HIT COSTS UP TO 9 px OF CAMERA KNOWLEDGE FOR THE REST
+        // OF THE VISIT, whatever the shake was. A fight cannot wait it out;
+        // it has to stand away from the edge, or reload the room.
+        for (const shake0 of [1, 2, 5, 10, 30, 60]) {
+            let band = cameraBand({ x: 240, y: 240 });
+            let shake = shake0;
+            let widest = 0;
+            for (let i = 0; i < 300; i += 1) {
+                const r = stepCameraBand(band, player, big, { shake });
+                band = r.band;
+                shake = r.shake;
+                widest = Math.max(widest, bandWidth(band));
+            }
+            expect(shake, 'the shake itself really is spent').toBe(0);
+            expect(widest, `shake ${shake0} really did widen it`).toBeGreaterThan(0);
+            expect(bandIsExact(band), `shake ${shake0} left a point`).toBe(false);
+            expect(bandWidth(band), `shake ${shake0} residue`)
+                .toBeLessThanOrEqual(CAMERA_DEAD_ZONE_RESIDUE.width);
+        }
+        // ...and the ceiling is the dead zone's, not the shake's: a shake of
+        // 60 leaves exactly what a shake of 5 leaves.
+        const settle = (shake0) => {
+            let band = cameraBand({ x: 240, y: 240 });
+            let shake = shake0;
+            for (let i = 0; i < 300; i += 1) {
+                const r = stepCameraBand(band, player, big, { shake });
+                band = r.band;
+                shake = r.shake;
+            }
+            return bandWidth(band);
+        };
+        expect(settle(60)).toBe(settle(5));
+        expect(settle(60)).toBe(CAMERA_DEAD_ZONE_RESIDUE.width);
+    });
+
+    it('`stepCamera` still refuses a shaking camera, and now names its successor', () => {
+        expect(() => stepCamera({ x: 0, y: 0 }, player, big, { shake: 1 }))
+            .toThrow(/stepCameraBand/);
+    });
+});
+
+describe('⛓ `onScreen` under a band is THREE-valued', () => {
+    const band = { x: { lo: 100, hi: 110 }, y: { lo: 100, hi: 100 } };
+    const rectAt = (x, y) => ({ x, y, right: x + 16, bottom: y + 16 });
+
+    it('"on" means on for EVERY camera in the band', () => {
+        expect(onScreenUnderShake(rectAt(150, 150), band)).toBe('on');
+    });
+
+    it('"off" means off for every camera in the band', () => {
+        // Right edge at 79 is left of `lo - 0` = 100, so it is off whatever
+        // the jiggle did.
+        expect(onScreenUnderShake(rectAt(63, 150), band)).toBe('off');
+    });
+
+    it('⛔ AND THE MIDDLE IS "uncertain", NOT "off"', () => {
+        // Right edge at 105: inside the band, so the camera's own x decides.
+        // Collapsing this into `false` is how a band would quietly license a
+        // stance — `Enemy.update` early-returns at ZERO margin, so this is
+        // the difference between a body that damages and one that does not.
+        expect(onScreenUnderShake(rectAt(89, 150), band)).toBe('uncertain');
+    });
+
+    it('a degenerate band agrees with the point predicate everywhere', () => {
+        const cam = { x: 100, y: 100 };
+        const deg = cameraBand(cam);
+        for (let x = -200; x <= 400; x += 17) {
+            for (let y = -200; y <= 400; y += 23) {
+                const r = rectAt(x, y);
+                expect(onScreenUnderShake(r, deg) === 'on', `${x},${y}`)
+                    .toBe(onScreen(r, cam));
+            }
+        }
+    });
+});
+
+describe('⚠ `Game.shake` across a level load is a BAND, so it is refused unless certain', () => {
+    it('anything the SHORTEST fade drains is certain zero', () => {
+        const r = shakeAcrossLoad(5, LEGACY_FADE_PER_LOAD);
+        expect(r).toMatchObject({ shake: 0, certain: true });
+        // A death carries at most `Player.hit`'s 5, which is the arm this
+        // rung actually walks.
+        expect(5).toBeLessThanOrEqual(LEGACY_FADE_PER_LOAD.min);
+    });
+
+    it('a totem-sized shake is NOT certain, and says what the range would be', () => {
+        const r = shakeAcrossLoad(60, LEGACY_FADE_PER_LOAD);
+        expect(r.certain).toBe(false);
+        expect(Number.isNaN(r.shake)).toBe(true);
+        expect(r.why).toMatch(/36\.\.43|range/);
+    });
+
+    it('zero is zero', () => {
+        expect(shakeAcrossLoad(0, LEGACY_FADE_PER_LOAD)).toMatchObject({ shake: 0, certain: true });
     });
 });

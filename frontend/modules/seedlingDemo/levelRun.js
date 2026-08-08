@@ -66,7 +66,7 @@ import {
 import {
     SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
-import { alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
+import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -84,7 +84,7 @@ import {
 // makes, so the first per-visit body a tape is responsible for.
 import { WAND_PRESS_CADENCE, WAND_WINDOW, wandPress } from './wandVerb.js';
 import {
-    createWandShot, stepWandShot, stepWandShotGraphic, wandShotRect,
+    WAND_SHOT_CULL, createWandShot, stepWandShot, stepWandShotGraphic, wandShotRect,
 } from './wandShot.js';
 import {
     createMagicalLock, hitMagicalLock, magicalLockIsSolid, stepMagicalLock,
@@ -92,7 +92,19 @@ import {
 // ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LIVE. Transcribed at slice 2 for the
 // contact envelope and consumed by nothing until a turret's own rest
 // position turned out to depend on it — see `cam` below.
-import { initialCamera, onScreen as camOnScreen, stepCamera } from './camera.js';
+import {
+    initialCamera, onScreen as camOnScreen, stepCamera,
+    // ⛓⛓⛓ R6 SLICE 3: the shake half. `stepCameraBand` is what the camera
+    // becomes once a hit lands — see `stepCameraNow` below.
+    bandIsExact, cameraBand, onScreenUnderShake, shakeAcrossLoad, stepCameraBand,
+} from './camera.js';
+// ⛓⛓⛓ R6 SLICE 3: `Player.hit`/`knockback`/`hitUpdate`/`die`, and the
+// contact source that calls them. `noDamage` stops being a refusal here.
+import {
+    DEATH_REBOOT, PLAYER_DAMAGE, canSteer, createPlayerDamage, playerHit, stepPlayerDamage,
+} from './playerDamage.js';
+import { contactPricing, contactRect, enemyHitPlayerFires } from './combat.js';
+import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
 // the R4 refusal's reason — "a death moves totalEnemies(), which opens
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
@@ -119,6 +131,7 @@ import {
     INITIAL_DIRECTION,
     INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
+    arriveAtRespawn,
     arriveFromFall,
     arriveIn,
     initialLatch,
@@ -1015,6 +1028,69 @@ export function createLevelRun({
      * `arriveIn`.
      */
     let frozenTimer = 0;
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: THE PLAYER'S DAMAGE, AND IT IS THE THIRD TIMER.
+     *
+     * `{hits, hitsTimer, directionFace}` — `playerDamage.createPlayerDamage`.
+     * Three timers now live on this player and no two of them mean the same
+     * thing:
+     *
+     *   `frozenTimer`  an `IceTurretBlast`; gates `Player.input()` WHOLE
+     *                  (arrows, waterfall and both item presses)
+     *   `hitsTimer`    a landed `Player.hit`; gates the ARROWS ONLY, and
+     *                  suppresses the next hit from any source
+     *   `drownTimer`   a hazard tile; cumulative, never reset off-hazard
+     *
+     * ⚠ PER PLAYER, SO PER WORLD, like `frozenTimer` — and a death is a
+     * world swap, so a death resets `hits` to 0 as surely as a door does.
+     * `Main.hitsMax` is the one damage number that survives, which is why
+     * it is read from the inventory mirror and not carried here.
+     */
+    let damage = createPlayerDamage();
+    /** One per landed `Player.hit` — `{t, level, source, id, hits, ...}`. */
+    const playerHits = [];
+    /**
+     * One per contact that reached the player and paid NOTHING — the §10.6
+     * carry, made visible.
+     *
+     * A hit inside a ceremony is swallowed by `Player.hit`'s own
+     * `!Game.freezeObjects`, silently and with no i-frames to show for it;
+     * a hit inside an open i-frame window is swallowed by the first term.
+     * A schedule that assumed either one landed is short by however many,
+     * and without this list the only symptom is a position that drifts.
+     */
+    const contactsSuppressed = [];
+    /**
+     * ⛔⛔⛔ One per DEATH — `{t, level, respawn, hits}` — and a death is a
+     * GAME-INITIATED WORLD REBOOT (§8.8), not an end of run.
+     *
+     * `playerDamage.DEATH_REBOOT` carries the shape; this is where it
+     * happened. The list is the only witness a stream cannot give: the
+     * respawn is the level's own entry point, so a death that costs the
+     * player a whole room's progress can land them exactly where a normal
+     * re-entry would and look, tick for tick, like a tape that walked back.
+     */
+    const playerDeaths = [];
+    /**
+     * Set the instant `hits >= hitsMax`, consumed at the END of the tick.
+     *
+     * ⚠ NOT A FLAG THE PHYSICS READS — it is `Player.dying`, and its first
+     * consequence is that `Player.update`'s `if (!dying) super.update()`
+     * skips the whole move. The world swap is the second, and it is
+     * deferred to `Engine.checkWorld` like every other `FP.world =`.
+     */
+    let pendingDeath = null;
+    /**
+     * The `Game` constructor args of the CURRENT world — what
+     * `restartLevel()` reboots into.
+     *
+     * ⚠ NOT THE PLAYER'S POSITION. `Game.playerPosition` is written once,
+     * by the constructor, from its own args (`Game.as:624`), and walking
+     * never updates it. And the `<player>` object arm of `loadlevel` cannot
+     * fire — no level in the checkout has one — so these two numbers are
+     * the whole of "where does a death put you".
+     */
+    let worldCtor = { x: boot.x, y: boot.y };
     /** `IceTurretBlast.freezeTime`, through the family that owns it. */
     const BLAST_FREEZE_TICKS = ICE_TURRET_BLAST.freezeTicks;
     /** One per tick a blast reached the player — `{t, level, blast, x, y}`. */
@@ -1509,13 +1585,90 @@ export function createLevelRun({
      * (`camera.js` header, point 3).
      */
     let cam = null;
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: `Game.shake`, and the band it turns the camera into.
+     *
+     * `shake` is a `public static` — it survives world swaps and decays
+     * inside `view()`, once per ENGINE frame. `camBand` is null while the
+     * camera is still a point; the first `view()` with `shake > 0` opens it
+     * and it NEVER closes inside a level, because the jiggle is written to
+     * `FP.camera` itself and every later lerp compounds on it. Only a new
+     * `Game` clears it (`loadlevel` writes the camera raw).
+     */
+    let shake = 0;
+    let camBand = null;
     const settleCameraForLoad = () => {
         cam = initialCamera(state.x, state.y);
+        // ⛓ A LOAD CLEARS THE BAND. `loadlevel` writes `FP.camera` from the
+        // arrival position with no history, so whatever the jiggle had
+        // accumulated is gone — the one thing that collapses it.
+        camBand = null;
+        // ...and the fade DRAINS the shake, at one per engine frame. The
+        // fade's length is a BAND, so this is only knowable when the shake
+        // cannot survive the shortest one; `shakeAcrossLoad` refuses
+        // otherwise rather than subtracting a number nobody measured.
+        const carried = shakeAcrossLoad(shake, LEGACY_FADE_PER_LOAD);
+        if (!carried.certain) {
+            throw new Error(`levelRun: Game.shake is ${shake} at a level load in level `
+                + `${level}, and ${carried.why} This rung models the certain arm only.`);
+        }
+        shake = carried.shake;
         for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
             cam = stepCamera(cam, state, worldFor(level).world);
         }
     };
     settleCameraForLoad();
+    /**
+     * One `view()`, whichever face the camera currently has.
+     *
+     * ⚠ THE POINT PATH IS UNCHANGED AND IS THE ONLY ONE ANY COMMITTED TAPE
+     * TAKES. Every fixture through R5 declares `noDamage`, and the roster's
+     * other two shake writers are the totem's (slice 4) — so `shake` is 0
+     * for all 100 of them and this is `stepCamera` with a branch in front.
+     */
+    const stepCameraNow = (player, worldRec) => {
+        if (camBand === null && shake === 0) {
+            cam = stepCamera(cam, player, worldRec);
+            return;
+        }
+        if (camBand === null) camBand = cameraBand(cam);
+        const r = stepCameraBand(camBand, player, worldRec, { shake });
+        camBand = r.band;
+        shake = r.shake;
+        // ⛔ THE BAND CAN COLLAPSE BACK TO A POINT, and when it does the
+        // camera is exactly known again — the round's dead zone is what
+        // makes that happen rather than a decaying interval that never
+        // closes. Reading it back into `cam` keeps every downstream
+        // consumer on the exact path whenever it can be.
+        if (bandIsExact(camBand)) {
+            cam = { x: camBand.x.lo, y: camBand.y.lo };
+            camBand = null;
+        } else {
+            cam = null;
+        }
+    };
+    /**
+     * `Enemy.onScreen()` for a consumer that needs a BOOLEAN.
+     *
+     * An uncertain band is a refusal, not a `false`: "the camera might not
+     * have contained it" and "the camera did not contain it" are the two
+     * answers a silent `false` would merge, and one of them is a stance the
+     * window has to move.
+     */
+    const onScreenNow = (rect, who) => {
+        if (camBand === null) return camOnScreen(rect, cam);
+        const verdict = onScreenUnderShake(rect, camBand);
+        if (verdict === 'uncertain') {
+            throw new Error(`levelRun: whether ${who} is on screen at tick `
+                + `${ticksCompleted} depends on where inside \`Game.shake\`'s jiggle the `
+                + 'camera landed, and the two draws that decide it are not indexable '
+                + '(camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` '
+                + 'early-returns at ZERO margin, so this is the difference between a body '
+                + 'that damages and one that does not. Move the stance away from the '
+                + 'screen edge, or wait the shake out.');
+        }
+        return verdict === 'on';
+    };
     let ticksCompleted = 0;
     const transitions = [];
     /**
@@ -1577,6 +1730,102 @@ export function createLevelRun({
         return record;
     };
     applyGrantsFor(level);
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: THE END-OF-TICK WORLD SWAP, ONCE.
+     *
+     * Every `FP.world = new Game(...)` in this run's reach lands here — the
+     * teleporter's, the pit fall's, and now `restartLevel()`'s. The five
+     * coupled facts this module's docblock names (the arrival offset, the
+     * zeroed velocity, the reset terrain state, the pre-armed latch and the
+     * destination world's own `beforeTypeFlip` tick) plus the six the
+     * slices since have added (the earned clears cashed, the per-visit
+     * state rebuilt, the pending thrust dropped, the freeze cleared, the
+     * blasts torn down, the camera rewritten raw) are ELEVEN facts a second
+     * copy would agree with exactly until one of them was edited.
+     *
+     * ⚠ WHAT IS **NOT** HERE IS THE TRANSITION RECORD, and that is the
+     * difference a death makes. `restartLevel()` reboots into the SAME
+     * level, so the level field never changes and `deriveTransitions` — the
+     * one derivation both sides share — reports nothing. The witness of a
+     * death is the POSITION JUMP in the stream and the `playerDeaths`
+     * ledger beside it, never a transition.
+     *
+     * @param {number} o.toLevel     the destination (the same level, for a death)
+     * @param {number} o.fromLevel   the level being torn down
+     * @param {?object} o.carriedSwim the `Music` channel, which is a static
+     *                                and survives — see the note at the call
+     * @param {Function} o.arrivalFor `(world) => state`
+     * @param {{x:number,y:number}} o.ctor the NEW `Game`'s constructor args
+     * @returns {?object} the grant record this entry fired, if any
+     */
+    const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor }) => {
+        level = toLevel;
+        // A `Game` is constructed here, so this is where `Lock.check()` runs
+        // and where a flag the player turned off finally removes its lock.
+        applyEarnedClears(level);
+        // ...and so is where every `added()` runs again, which is the other
+        // way a memoised world can be the wrong one (R5 slice 4).
+        dropWorldIfBuiltStale(level);
+        world = worldFor(level);
+        // A new `Game` means new entities: every lock is solid again.
+        if (!noclip) freshActivatorState(level);
+        // ⚠ ...and so is every bridge, and every block is back in the
+        // corridor. `Tile.bridgeOpeningTimer` and `PushableBlockFire.tile`
+        // are instance variables with NO persistence — unlike the clear a
+        // shield lock earns, which `applyEarnedClears` above has just
+        // cashed. Two families, two lifetimes, three lines apart on purpose.
+        if (!noclip) freshVisitState(level);
+        // A thrust cannot outlive its level either: `spear()` collides the
+        // rect against `FP.world`, and by the time it fires the world is the
+        // destination's.
+        pendingThrust = null;
+        state = arrivalFor(world);
+        // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
+        // SURVIVES THE DOOR — plus the twenty frames the door costs.
+        //
+        // The arrival builds a WHOLE NEW Player, which is right for
+        // `terrain`, `direction` and `drownTimer` (all instance
+        // initialisers) and WRONG for this: `Music`'s pinned channels are
+        // statics, and `Bot.update` steps them above the armed check and
+        // above the dead-frame gate on purpose — "a mixer does not stop
+        // because the room is fading". Found by the feather walk's first
+        // recording: 0.25 px (`SWIM_BOOST_SPEED`) eight ticks after a door.
+        if (carriedSwim) {
+            state = { ...state, swim: stepChannel({ ...carriedSwim }, LOAD_DEAD_FRAMES) };
+        }
+        firstTickInWorld = true;
+        // ⛓⛓ AND THE FREEZE DOES NOT CROSS THE DOOR. `frozenTimer` is
+        // `private var frozenTimer:int = 0` on the Player and the arrival is
+        // a new one — the same argument that makes `terrain`, `direction`
+        // and `drownTimer` reset, and the OPPOSITE of the swim channel's.
+        frozenTimer = 0;
+        // ⛓⛓⛓ R6 SLICE 3: AND SO DOES THE DAMAGE, FOR THE SAME REASON AND
+        // WITH ONE EXCEPTION THAT IS NOT HERE. `hits`, `hitsTimer` and
+        // `directionFace` are instance fields of the new `Player`;
+        // `Main.hitsMax` is a STATIC and is not touched — which is exactly
+        // why a death costs the run its damage and not its hearts.
+        damage = createPlayerDamage();
+        // ⛔ AND SO DO THE BLASTS AND THE SHOTS IN FLIGHT. They are runtime
+        // entities of the world being torn down; `Game`'s reconstruction
+        // takes them with it, and one that survived a door would be the
+        // corpse bug from the other side.
+        blastStates.delete(fromLevel);
+        wandShotStates.delete(fromLevel);
+        // ⛓ THE NEW `Game`'s OWN ARGS, for a later `restartLevel()`.
+        worldCtor = { x: ctor.x, y: ctor.y };
+        // ⛓ AND THE CAMERA IS A NEW `Game`'s TOO — `loadlevel` writes it raw
+        // from the arrival position and the fade's own `view()` calls settle
+        // it, which is `cameraTrack`'s level-change arm as a live step. It
+        // also drains `Game.shake` and clears the band; see the function.
+        settleCameraForLoad();
+        // `ticksCompleted` is already the arrival observation's index, so the
+        // grant's `t` is that observation — the same tick the transition
+        // record carries, and the same tick `Bot.as` applies it on. Applied
+        // AFTER the swap, so a grant naming the level being LEFT does not
+        // fire on the way out.
+        return applyGrantsFor(level);
+    };
 
     // ── the equip (R4) ────────────────────────────────────────────────
     // `Main.primary` is an INDEX into `Inventory.items`, and
@@ -2770,16 +3019,16 @@ export function createLevelRun({
                     }
                 } else if (reached.arm === 'player') {
                     // ⚠ `Player.hit`'s FIRST LINE is `if (Bot.noDamage) return`
-                    // — no knockback, no sound, no shake. So under the
-                    // ladder's own flag the ring is inert, and without it the
-                    // player is knocked back by a force this rung has not
-                    // modelled. Refused by name rather than ignored.
+                    // — no knockback, no sound, no shake. Under the ladder's
+                    // own flag the ring is inert; R5 refused the other arm by
+                    // name, and ⛓⛓⛓ R6 SLICE 3 MODELS IT: the impulse is
+                    // `Player.knockback` from the PULSER's own origin, which
+                    // is the shape every other source here already has.
                     if (!noDamage) {
-                        throw new Error(`levelRun: ${id}'s pulse reached the player at `
-                            + `tick ${ticksCompleted} with \`noDamage\` OFF. `
-                            + '`Player.hit(null, 6, …, 1)` knocks back, and this rung '
-                            + 'does not model the player\'s knockback. Route outside the '
-                            + '22 px ring, or declare the encounter.');
+                        applyPlayerHit({
+                            source: 'pulse', id, force: PULSER.force, damage: PULSER.damage,
+                            from: { x: r.state.x, y: r.state.y },
+                        });
                     }
                     pulserPlayerHits.push({ t: ticksCompleted + 1, level, id });
                 } else if (reached.arm === 'enemy') {
@@ -2877,6 +3126,23 @@ export function createLevelRun({
                 crusherContacts.push({
                     t: ticksCompleted + 1, level, id, x: r.crusher.x, y: r.crusher.y,
                 });
+                // ⛓⛓⛓ R6 SLICE 3: ...AND ON A TAPE THAT HAS RETIRED THE
+                // FLAG IT IS A DEATH, WHICH IS WHY THE PARAGRAPH ABOVE IS
+                // SCOPED TO `noDamage` RATHER THAN TO THE CRUSHER.
+                //
+                // 1000 damage against any `hitsMax` is `hits >= hitsMax` on
+                // the first contact, so `Player.hit` takes the `die()` arm
+                // and NOT the knockback one — the impulse a crusher would
+                // have applied never exists. The route-defect ledger above
+                // still records it either way, because a stance that was
+                // supposed to be clear and was not is the same defect
+                // whether or not the tape survived it.
+                if (!noDamage) {
+                    applyPlayerHit({
+                        source: 'crusher', id, force: CRUSHER.force,
+                        damage: CRUSHER.damage, from: { x: r.crusher.x, y: r.crusher.y },
+                    });
+                }
             }
         }
     }
@@ -2935,17 +3201,22 @@ export function createLevelRun({
                     t: ticksCompleted + 1, level, blast: b.id, x: b.x, y: b.y,
                 });
             }
-            // `Player.hit(null, 0, p)` is the next line and, under
-            // `noDamage`, returns at its own first line. The run asserts
-            // that rather than assuming it: a tape WITHOUT `noDamage` that
-            // takes a blast would move `hits`, and this model does not
-            // carry the player's damage.
-            if (r.hitPlayer && !noDamage) {
-                throw new Error(`levelRun: a blast (${b.id}) reached the player at tick `
-                    + `${ticksCompleted + 1} on a tape that does not declare \`noDamage\`. `
-                    + '`Player.hit` would land — `hits += 1`, `hitsTimer = 30`, '
-                    + '`Game.shake += 5` — and this model carries the FREEZE only. '
-                    + 'Declare `noDamage`, or route out of the blast.');
+            // ⛓⛓⛓ R6 SLICE 3: `Player.hit(null, 0, new Point(x, y))` is the
+            // NEXT LINE, and it is no longer a refusal.
+            //
+            // R5 threw here because the model carried the freeze and not the
+            // damage — the two are separated by one line and only the second
+            // is behind `Bot.noDamage`
+            // ([[feedback_nodamage_prices_damage_not_freeze]]). Now both
+            // land. ⚠ FORCE ZERO: the blast knocks nothing back, so what a
+            // hit costs here is a heart, twenty i-frames and five of shake —
+            // and the i-frames are what make the SECOND blast of a volley
+            // free.
+            if (r.hitPlayer) {
+                applyPlayerHit({
+                    source: 'blast', id: b.id, force: 0, damage: 1,
+                    from: { x: b.x, y: b.y },
+                });
             }
         }
         // `FP.world.remove` is deferred to `updateLists()` at the end of the
@@ -2980,8 +3251,29 @@ export function createLevelRun({
         const hitAt = wandShotBlockerAt(opts);
         const locks = magicalLockStateFor(level);
         for (const s of list) {
+            // ⛓⛓⛓ R6 SLICE 3: THE CULL'S CAMERA, UNDER SHAKE.
+            //
+            // `cam` is null while the camera is a band, and `stepWandShot`'s
+            // cull is `if (cam && …)` — so passing null would SKIP the cull
+            // silently, which is the exact shape of a dropped option key.
+            // The band's low corner is passed instead, licensed by
+            // `WAND_SHOT_CULL.reachableUnderShake`: with the roster's
+            // largest shake the margin still dominates by 66 px, so the
+            // verdict is the same at every point of the band. Guarded, not
+            // assumed — if that arithmetic ever changes this throws.
+            let cullCam = cam;
+            if (cullCam === null) {
+                if (WAND_SHOT_CULL.reachableUnderShake) {
+                    throw new Error('levelRun: a wand shot is in flight while the camera '
+                        + 'is a shake BAND, and `WAND_SHOT_CULL.reachableUnderShake` is '
+                        + 'now true — so the cull\'s verdict depends on where inside the '
+                        + 'jiggle the camera landed. The cull needs a band test, not a '
+                        + 'point one.');
+                }
+                cullCam = { x: camBand.x.lo, y: camBand.y.lo };
+            }
             const r = stepWandShot(s, {
-                tick: ticksCompleted, frozen: ceremony !== null, cam, hitAt,
+                tick: ticksCompleted, frozen: ceremony !== null, cam: cullCam, hitAt,
             });
             if (r.event) {
                 wandShotHits.push({
@@ -3033,6 +3325,146 @@ export function createLevelRun({
         for (const l of st.values()) stepMagicalLock(l, ticksCompleted);
     }
 
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: `Player.hit(...)`, APPLIED — the ONE call site every
+     * damage source in this run reaches.
+     *
+     * Six sources can reach `Player.hit` on this rung's roster (a body
+     * contact, a pulse ring, an ice blast, a crusher, the totem's laser and
+     * its shots) and they differ in exactly three arguments: the force, the
+     * damage and the point. Everything else — the three-term gate, the
+     * `hits` arithmetic, the i-frame window, the shake ADDITION, and the
+     * die-or-knockback fork — is `Player.hit`'s own body and belongs in one
+     * place, or the sixth source is where the fifth one's lesson gets lost.
+     *
+     * ⚠ THE VELOCITY IS WRITTEN INTO `state` HERE, BEFORE THE PHYSICS STEP,
+     * because that is where the game writes it: the enemies update first,
+     * so `friction()` decays the impulse on the SAME tick it lands.
+     *
+     * @returns the `playerHit` result, so a caller can see `died`/`applied`
+     */
+    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null }) {
+        const r = playerHit(damage, {
+            hitsMax: inventory.hitsMax,
+            force,
+            damage: d,
+            from,
+            at: { x: state.x, y: state.y },
+            direction: state.direction,
+            noDamage,
+            // ⛔ §10.6, ONE CLASS FURTHER ON: the gate is INSIDE `Player.hit`,
+            // so a contact that lands inside a ceremony pays nothing at all
+            // — no damage, no shake, no knockback and no i-frames. It is the
+            // OPPOSITE of `hitUpdate`, which runs through the freeze.
+            frozen: ceremony !== null,
+            hasDarkSuit: !!inventory.hasDarkSuit,
+        });
+        if (!r.applied) {
+            contactsSuppressed.push({
+                t: ticksCompleted + 1, level, source, id, why: r.refusedAt,
+            });
+            return r;
+        }
+        damage = r.state;
+        // `Game.shake += 5` — an ADDITION, and the only one of the roster's
+        // three writers that is (`camera.SHAKE_WRITERS`).
+        shake += r.shakeDelta;
+        if (r.knockback) {
+            state = {
+                ...state,
+                vx: state.vx + r.knockback.dx,
+                vy: state.vy + r.knockback.dy,
+            };
+        }
+        playerHits.push({
+            t: ticksCompleted + 1,
+            level,
+            source,
+            id,
+            hits: r.state.hits,
+            hitsMax: inventory.hitsMax,
+            died: r.died,
+            shake,
+            knockback: r.knockback
+                ? { dx: r.knockback.dx, dy: r.knockback.dy, landed: r.knockback.landed }
+                : null,
+        });
+        if (r.died) {
+            pendingDeath = {
+                t: ticksCompleted + 1, level, source, id, hits: r.state.hits,
+            };
+        }
+        return r;
+    }
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 3: `Enemy.hitPlayer()` FOR EVERY STATIC BODY IN THE ROOM.
+     *
+     * ⛔ ONLY WHEN THE TAPE HAS RETIRED `noDamage`, and that is not an
+     * optimisation. Under the flag `Player.hit` returns at its first line,
+     * so every one of these contacts is byte-inert — running the scan would
+     * change nothing and cost 100 fixtures their hot loop. The ledger says
+     * so out loud instead: `contactsSuppressed` gets the `Bot.noDamage`
+     * reason from the one tape shape that reaches it.
+     *
+     * ⛔⛔ AND A BODY THIS MODEL DOES NOT MOVE IS A REFUSAL, NOT A ZERO.
+     * `collide("Player", x, y)` tests the body where it IS, so a chaser's
+     * contact is a question about a position no line of this file computes.
+     * `combat.contactPricing` splits the census three ways and this arm
+     * prices exactly one of them; the other two throw by name, so a tape
+     * that walks a live route into an unmodelled body is a named failure
+     * instead of a walk that silently took no damage.
+     */
+    function stepContactsNow() {
+        if (noclip || noDamage) return;
+        const census = world.combat?.enemies;
+        if (!census) return;
+        const box = playerBoxAt(state.x, state.y);
+        for (const inst of census) {
+            const rect = contactRect(inst);
+            if (!rect || !rectsOverlap(rect, box)) continue;
+            const id = `${inst.tag}@${inst.x},${inst.y}`;
+            const pricing = contactPricing(inst.tag);
+            if (pricing.kind !== 'static') {
+                throw new Error(`levelRun: the player is standing inside ${id} in level `
+                    + `${level} at tick ${ticksCompleted + 1} on a tape that does NOT `
+                    + `declare \`noDamage\`, and this rung prices it as "${pricing.kind}" `
+                    + `— ${pricing.why}. \`Enemy.hitPlayer\` collides against the body at `
+                    + 'its CURRENT position, so a contact with a body the model does not '
+                    + 'step is a number this run cannot produce. Declare `noDamage`, or '
+                    + 'route clear of it.');
+            }
+            // `Enemy.update`'s own early return is `onScreen()` at ZERO
+            // margin, so an off-screen body neither moves nor damages —
+            // and under shake the verdict can be a refusal.
+            const verdict = enemyHitPlayerFires(
+                // A static trap is never hit on this rung (nothing shoots it),
+                // so its own i-frames and die anim are constants — stated
+                // rather than tracked, and stated where a future stepper
+                // would have to replace them.
+                { hitsTimer: 0, destroy: false, dieAnim: false },
+                onScreenNow(rect, id) ? 'on' : 'off',
+            );
+            if (!verdict.fires) {
+                contactsSuppressed.push({
+                    t: ticksCompleted + 1, level, source: 'enemy', id, why: verdict.refusedAt,
+                });
+                continue;
+            }
+            applyPlayerHit({
+                source: 'enemy',
+                id,
+                // `p.hit(this, 3, new Point(x, y), damage)` — the base
+                // class's force, the instance's `damage`, and the body's
+                // own ENTITY POINT (its centre, not its rect corner).
+                force: PLAYER_DAMAGE.contactForce,
+                damage: inst.row.damage,
+                from: { x: inst.cx, y: inst.cy },
+            });
+            if (pendingDeath) return;
+        }
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -3059,7 +3491,7 @@ export function createLevelRun({
                 // eight pixels of turret is 33 ticks of volley phase, which
                 // is the whole distance between the model's freeze and the
                 // game's. See `cam`.
-                onScreen: camOnScreen(iceTurretRect(t), cam),
+                onScreen: onScreenNow(iceTurretRect(t), `iceturret ${t.id}`),
                 blockedAt: (x, y) => {
                     const b = iceTurretRect({ ...t, x, y });
                     return !!world.collidesSolid(b, { ...opts, turrets: withoutSelf })
@@ -3868,6 +4300,29 @@ export function createLevelRun({
         get unfiredGrantLevels() { return [...grantsByLevel.keys()]; },
         get noDamage() { return noDamage; },
         /**
+         * ⛓⛓⛓ R6 SLICE 3: THE DAMAGE LEDGERS.
+         *
+         * `playerHits` is one row per LANDED `Player.hit` — with its source,
+         * the running `hits`, the knockback that landed on each axis and the
+         * `Game.shake` after the addition. `playerDeaths` is one per world
+         * reboot, with the respawn the `Game` constructor computed.
+         * `contactsSuppressed` is the negative half: a contact that reached
+         * the player and paid NOTHING, with the gate that swallowed it
+         * (`Bot.noDamage`, an open i-frame window, or a ceremony's freeze).
+         *
+         * ⛔ THE THIRD LIST IS THE ONE THAT IS EASY TO LEAVE OUT. A schedule
+         * that leans on a hit landing and a schedule that leans on one being
+         * swallowed produce identical positions when the model is wrong in
+         * either direction; the only difference is here.
+         */
+        get playerHits() { return playerHits.map((h) => ({ ...h })); },
+        get playerDeaths() { return playerDeaths.map((d) => ({ ...d })); },
+        get contactsSuppressed() { return contactsSuppressed.map((c) => ({ ...c })); },
+        /** `{hits, hitsTimer, directionFace}` right now. */
+        get damage() { return { ...damage }; },
+        /** `Game.shake` right now — a static, so it outlives every world. */
+        get shake() { return shake; },
+        /**
          * The tape's hazard-name set, so a caller re-asking the geometry a
          * question mid-drive asks it under the SAME coercion the physics is
          * running. Carried rather than re-derived for the reason `relax` is
@@ -4637,7 +5092,23 @@ export function createLevelRun({
                     // is what can bring an enemy on screen during a
                     // ceremony. The same argument as `freezeStep` above,
                     // one frame higher up.
-                    cam = stepCamera(cam, state, world.world);
+                    stepCameraNow(state, world.world);
+                    // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the
+                    // SAME reason one line lower — it sits outside
+                    // `super.update()` in `Player.update`, and
+                    // `Game.freezeObjects` gates only what is inside
+                    // `mobileUpdate`. So an i-frame window DRAINS through a
+                    // ceremony while the hit that would open one is
+                    // swallowed by it. Opposite directions, one flag.
+                    {
+                        const d = stepPlayerDamage(damage);
+                        damage = d.state;
+                        // The facing hand-back writes `Player.direction`,
+                        // which lives in `state` on this side.
+                        if (d.recovered && d.direction !== null) {
+                            state = { ...state, direction: d.direction };
+                        }
+                    }
                     // No step: the position is unchanged and — critically —
                     // so is the VELOCITY, which is why the player drifts on
                     // for a few ticks once the freeze lifts.
@@ -4710,6 +5181,32 @@ export function createLevelRun({
                 }
             }
             droppedRocksThisTick = false;
+            // ── ⛓⛓⛓ R6 SLICE 3: THE BODIES TOUCH THE PLAYER, LAST ────
+            //
+            // `Enemy.update` ends with `hitUpdate(); hitPlayer();` and every
+            // enemy is EARLIER in the update list than the Player
+            // (`loadlevel` adds the player at `:2092`, the enemies after,
+            // and `World.addUpdate` PREPENDS) — so this is the last thing
+            // that happens before the player's own tick. R5's pair measured
+            // exactly that: the overlap exists in observation 49, the enemy
+            // writes the impulse on the next tick, and the position first
+            // MOVES in observation 50.
+            //
+            // ⚠ AND IT IS **BELOW** THE BOSS, which is the ordering that
+            // decides it: `loadlevel` adds the plain enemies at `:2081` and
+            // the BossTotem at `:2121`, so the PREPEND puts the boss first
+            // and the clamp it writes is already in `state.y` here.
+            //
+            // ⚠ A CEREMONY TICK RETURNS ABOVE THIS LINE, so a contact made
+            // during one is not scanned. That is byte-inert rather than
+            // approximate — `Player.hit`'s own `!Game.freezeObjects` would
+            // have returned, and the only state a scan would have moved is
+            // the ENEMY's `hitsTimer`, which is 0 for every body this arm
+            // prices (nothing on this rung shoots a trap). What is lost is
+            // a `contactsSuppressed` row, and `applyPlayerHit` still
+            // carries `frozen` for the sources that DO run above the return
+            // (the blast, the ring and the crusher).
+            stepContactsNow();
             // ⚠ A touch-lock window drops the KEYS, not the tick.
             // `receiveInput` gates `Player.input()` alone, so friction, both
             // sweeps and `getState` all still run — which is why the player
@@ -4826,6 +5323,14 @@ export function createLevelRun({
                 // return. Both, because the two halves of one `if` are not
                 // a place to be economical.
                 inputBlocked: frozenTimer > 0,
+                // ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s OTHER gate, and it is
+                // NARROWER — `if (hitsTimer <= 0)` wraps the four arrow
+                // branches and closes ABOVE the waterfall push and both
+                // `useItem` presses. So a player in knockback still swings and
+                // is still pushed; what they cannot do is steer. Reusing
+                // `inputBlocked` for this would silently disarm every press in
+                // a fight, which is the one place presses are the point.
+                steerBlocked: !canSteer(damage),
             };
             // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
             //
@@ -4868,7 +5373,19 @@ export function createLevelRun({
                 state = unobserved;
             }
             pendingFreeSteps = 0;
-            const next = stepV2(state, acting, stepOpts);
+            // ── ⛓⛓⛓ R6 SLICE 3: `if (!dying) super.update()` ─────────
+            //
+            // ⛔⛔ A DEATH TICK HAS NO PHYSICS AT ALL. `die()` sets `dying`
+            // during the ENEMIES' update, and `Player.update` tests it before
+            // calling `super.update()` — so there is no friction, no input and
+            // no sweep on the tick the last heart goes. The player stands
+            // exactly where the hit found them while the world swap waits for
+            // end of tick.
+            //
+            // ⚠ THE OPPOSITE OF A TELEPORT, whose old player DOES take a last
+            // (never observed) step. Two deferred `FP.world =` writes, two
+            // different final ticks, and the difference is one `if`.
+            const next = pendingDeath ? state : stepV2(state, acting, stepOpts);
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
             // inside `Player.input()`, which is where the sweeps happen too
@@ -4964,6 +5481,32 @@ export function createLevelRun({
                     if (ticksCompleted > wandWindows[i].endTick) wandWindows.splice(i, 1);
                 }
             }
+            // ── ⛓⛓⛓ R6 SLICE 3: `hitUpdate()`, BELOW THE MOVE ───────
+            //
+            // `Player.update` is `… if (!dying) super.update(); sprites();
+            // hitUpdate(); …` — so the i-frame decrement happens AFTER this
+            // tick's input has already been refused by it. That ordering is
+            // the whole of "20 ticks of steering loss": the window is 20 on
+            // the hit tick itself and reaches 0 on the twentieth one after.
+            //
+            // ⛔ AND IT RUNS ON A FROZEN TICK TOO. `Game.freezeObjects`
+            // gates only what is inside `mobileUpdate`, and this line is
+            // outside it — so a ceremony that SUPPRESSES a hit does not
+            // suspend the window an earlier hit opened. The two halves of
+            // "frozen" go opposite ways (§10.6, one class further on), and
+            // the frozen branch above steps this for exactly that reason.
+            {
+                const d = stepPlayerDamage(damage);
+                damage = d.state;
+                // `direction = directionFace; directionFace = -1;` — the
+                // facing the knockback parked, handed back on the recovery
+                // tick. ⚠ `-1` is a REAL value here ("unset"): a hit with a
+                // null point never wrote `directionFace`, and the game
+                // assigns the -1 anyway.
+                if (d.recovered && d.direction !== null) {
+                    next.direction = d.direction;
+                }
+            }
             ticksCompleted++;
             // ── ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LAST ────────────────
             // `Game.update` is `super.update(); … view();`, so the camera
@@ -4972,7 +5515,7 @@ export function createLevelRun({
             // `onScreen` tests are gated against. On a transition the swap
             // happens below and rebuilds it, which is `Game`'s own
             // reconstruction.
-            if (!next.transition) cam = stepCamera(cam, next, world.world);
+            if (!next.transition) stepCameraNow(next, world.world);
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {
@@ -4981,6 +5524,42 @@ export function createLevelRun({
                     { inventory, keys, movingSolids: movingSolidsNow() }));
             }
             const hits = { hitX: next.hitX, hitY: next.hitY };
+
+            // ── ⛓⛓⛓ R6 SLICE 3: THE DEATH REBOOT, AT END OF TICK ────
+            //
+            // ⛔⛔⛔ A DEATH IS A GAME-INITIATED WORLD SWAP THE DRIVER DID
+            // NOT ORDER (§8.8), and it is reachable from EVERY fight window
+            // rather than only the ending ones. `restartLevel()` rebuilds
+            // the SAME level from the current `Game`'s own constructor args,
+            // so the level field never changes — there is NO transition
+            // record, and the stream's only witness is the position jump.
+            //
+            // ⚠ IT TAKES PRECEDENCE OVER A TRANSITION BY CONSTRUCTION: a
+            // death tick runs no physics, so `next.transition` is null.
+            if (pendingDeath) {
+                playerDeaths.push({
+                    ...pendingDeath,
+                    respawn: spawnFromBoot(worldCtor),
+                });
+                const grant = enterWorld({
+                    toLevel: level,
+                    fromLevel: level,
+                    // The mixer is a `Music` static and does not care that
+                    // the world it was playing in has been torn down — the
+                    // same argument as a door, and the load costs it the
+                    // same dead frames.
+                    carriedSwim: state.swim ?? null,
+                    arrivalFor: (w) => arriveAtRespawn(w, worldCtor),
+                    // ⚠ UNCHANGED. `restartLevel()` passes the current
+                    // `playerPosition` straight back into the new `Game`, so
+                    // a second death respawns in exactly the same place —
+                    // which is what makes a death loop a loop.
+                    ctor: worldCtor,
+                });
+                pendingDeath = null;
+                firstTickInWorld = true;
+                return { transition: null, grant, ...hits, death: true };
+            }
 
             if (!next.transition) {
                 state = next;
@@ -5015,92 +5594,45 @@ export function createLevelRun({
             };
             transitions.push(record);
             if (next.transition.kind === 'fall') transports.push({ ...record });
-            level = next.transition.to_level;
-            // A `Game` is constructed here, so this is where `Lock.check()`
-            // runs and where a flag the player turned off finally removes
-            // its lock.
-            applyEarnedClears(level);
-            // ...and so is where every `added()` runs again, which is the
-            // other way a memoised world can be the wrong one (R5 slice 4).
-            dropWorldIfBuiltStale(level);
-            world = worldFor(level);
-            // A new `Game` means new entities: every lock is solid again.
-            if (!noclip) freshActivatorState(level);
-            // ⚠ ...and so is every bridge, and every block is back in the
-            // corridor. `Tile.bridgeOpeningTimer` and
-            // `PushableBlockFire.tile` are instance variables with NO
-            // persistence — unlike the clear a shield lock earns, which
-            // `applyEarnedClears` above has just cashed. Two families, two
-            // lifetimes, three lines apart on purpose.
-            if (!noclip) freshVisitState(level);
-            // A thrust cannot outlive its level either: `spear()` collides
-            // the rect against `FP.world`, and by the time it fires the
-            // world is the destination's.
-            pendingThrust = null;
-            // ONE swap, TWO arrival kinds. A fall lands the player at the
-            // ctor args `checkFallingInPit` computed, `fallFromCeiling`, 83
-            // px above where it will end up; a teleporter lands them at its
-            // own oel attrs, on the ground. Everything else about the swap —
-            // when it happens, the fresh velocity and terrain, the pre-armed
-            // latch, the destination world's own `beforeTypeFlip` tick — is
-            // shared, which is the point of the transition record carrying a
-            // `kind` rather than the caller sniffing which fields are set.
-            // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
-            // SURVIVES THE DOOR — plus the twenty frames the door costs.
+            // ⛓⛓⛓ R6 SLICE 3: THE SWAP'S TAIL IS `enterWorld`, ONE COPY.
             //
-            // `arriveIn`/`arriveFromFall` build a WHOLE NEW Player, which is
-            // right for `terrain`, `direction` and `drownTimer` (all
-            // instance initialisers) and WRONG for this: `Music`'s pinned
-            // channels are statics, and `Bot.update` steps them above the
-            // armed check and above the dead-frame gate on purpose — "a
-            // mixer does not stop because the room is fading". So the
-            // channel crosses the door AND advances by the load's
-            // `blackCover` frames, which the tape does not count.
-            //
-            // Found by the feather walk's first recording: it swims in L87,
-            // crosses three doors, swims again in L89, and the model was
-            // 0.25 px ahead eight ticks later — `SWIM_BOOST_SPEED` exactly.
-            // ⚠ FROM `next`, NOT FROM `state`. `next` is the stepped tick —
-            // the old player's last, never-observed position — and its
-            // channel is the one that took THIS frame's `pinStep`. Reading
-            // `state` would drop that step and leave the model exactly one
-            // frame behind the game, which is what the first recording
-            // measured before this line said `next`.
-            const carriedSwim = next.swim ?? state.swim ?? null;
-            state = next.transition.kind === 'fall'
-                ? arriveFromFall(world, next.transition.ctor)
-                : arriveIn(world, next.transition.teleporter);
-            if (carriedSwim) {
-                state = {
-                    ...state,
-                    swim: stepChannel({ ...carriedSwim }, LOAD_DEAD_FRAMES),
-                };
-            }
-            firstTickInWorld = true;
-            // ⛓⛓ R5 SLICE 22: AND THE FREEZE DOES NOT CROSS THE DOOR.
-            // `frozenTimer` is `private var frozenTimer:int = 0` on the
-            // Player, and `arriveIn`/`arriveFromFall` build a whole new
-            // one — the same argument that makes `terrain`, `direction` and
-            // `drownTimer` reset, and the OPPOSITE of the swim channel's
-            // (a `Music` static). Named beside the channel's exception so
-            // the two are decided by the same question and not by habit.
-            frozenTimer = 0;
-            // ⛔ AND SO DO THE BLASTS IN FLIGHT. They are runtime entities of
-            // the world being torn down; `Game`'s reconstruction takes them
-            // with it, and a blast that survived a door would be the corpse
-            // bug from the other side.
-            blastStates.delete(next.transition.from_level);
-            // ⛓ AND THE CAMERA IS A NEW `Game`'s TOO — `loadlevel` writes it
-            // raw from the arrival position and the fade's own `view()`
-            // calls settle it, which is `cameraTrack`'s level-change arm as
-            // a live step.
-            settleCameraForLoad();
-            // `ticksCompleted` is already the arrival observation's index, so
-            // the grant's `t` is that observation — the same tick the
-            // transition record carries, and the same tick `Bot.as` applies
-            // it on. Applied AFTER the swap, so a grant naming the level
-            // being LEFT does not fire on the way out.
-            const grant = applyGrantsFor(level);
+            // A death reboot (`Player.die()` -> `restartLevel()`) is the SAME
+            // five coupled facts as a teleport — a whole new `Game`, a fresh
+            // `Player`, the per-visit state back to its `.oel` values, the
+            // pre-armed latch and the destination's own `beforeTypeFlip` tick —
+            // and this module's own docblock says what two copies of that
+            // would do: agree exactly until one of them was edited. So the
+            // tail moved into a function the moment the second caller arrived,
+            // which is the rule that put this file here in the first place.
+            const grant = enterWorld({
+                toLevel: next.transition.to_level,
+                fromLevel: next.transition.from_level,
+                // ⚠ FROM `next`, NOT FROM `state`. `next` is the stepped tick —
+                // the old player's last, never-observed position — and its
+                // channel is the one that took THIS frame's `pinStep`. Reading
+                // `state` would drop that step and leave the model exactly one
+                // frame behind the game, which is what the first recording
+                // measured before this line said `next`.
+                carriedSwim: next.swim ?? state.swim ?? null,
+                // ONE swap, TWO arrival kinds. A fall lands the player at the
+                // ctor args `checkFallingInPit` computed, `fallFromCeiling`, 83
+                // px above where it will end up; a teleporter lands them at its
+                // own oel attrs, on the ground.
+                arrivalFor: (w) => (next.transition.kind === 'fall'
+                    ? arriveFromFall(w, next.transition.ctor)
+                    : arriveIn(w, next.transition.teleporter)),
+                // ⛓ THE NEW `Game`'s CONSTRUCTOR ARGS — what a later
+                // `restartLevel()` would reboot into. A fall passes them
+                // straight through (`new Game(fallthroughLevel, x, y)`); a
+                // teleporter passes its own `playerx`/`playery` attrs, which
+                // are `arrival` minus the Player ctor's half tile.
+                ctor: next.transition.kind === 'fall'
+                    ? { x: next.transition.ctor.x, y: next.transition.ctor.y }
+                    : {
+                        x: next.transition.teleporter.playerx,
+                        y: next.transition.teleporter.playery,
+                    },
+            });
             return { transition: record, grant, ...hits };
         },
     };

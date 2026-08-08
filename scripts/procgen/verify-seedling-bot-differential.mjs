@@ -799,7 +799,17 @@ function checkReadout(name, tape, status, stream) {
     // `CEREMONY_DEAD_FRAMES.pickup` is the measured 150 and
     // `MODEL_EXEMPT[name].freezeFrames` is `rockSchedule().bossSpawnsAt`,
     // which runs the fall as a loop because the closed form rounds wrong.
-    const loads = stream.transitions.length + 1;
+    // ⛓⛓⛓ R6 SLICE 3: A DEATH IS A LOAD THE TRANSITION LIST CANNOT SEE.
+    //
+    // `restartLevel()` builds a whole new `Game` in the SAME level, so the
+    // level field never changes and `deriveTransitions` — the one derivation
+    // both sides share — reports nothing. Its fade is a real fade all the
+    // same, so a run that died and was counted as `transitions + 1` would be
+    // one whole load of dead frames over its ceiling. ⛔ AND THE FIX IS
+    // TWO-SIDED: the term comes from the MODEL's `playerDeaths`, so a model
+    // that invented a death the game did not take blows the band from the
+    // other direction.
+    const loads = stream.transitions.length + 1 + (expected.playerDeaths?.length ?? 0);
     const sealFrames = (expected.sealCollections ?? [])
         .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
     /** Every ordinary `special` pickup the run walked onto. */
@@ -954,6 +964,64 @@ function checkReadout(name, tape, status, stream) {
     check(`${name}: the win statics are still false`,
         status.menu === false && status.cutscene.every((c) => c === false),
         `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
+
+    // ── ⛓⛓⛓ R6 SLICE 3: WHAT THE RUN TOOK, FROM THE GAME'S OWN READOUT ──
+    //
+    // `hits` and `hits_timer` are R5-batch readouts that NOTHING consumed
+    // until this slice — the arc's own "a readout with no reader is a
+    // bounded vacuity" debt, paid. They are the terminal state of
+    // `playerDamage`'s two counters, and asserting them turns every
+    // `noDamage: false` tape into a check on the damage model rather than
+    // only on the positions it produces.
+    //
+    // ⛔ ASSERTED ON EVERY TAPE, not only the ones that take damage. A
+    // guarded tape reporting `hits: 0` is the NEGATIVE control for the whole
+    // model: a build in which `Bot.noDamage` had stopped working would move
+    // this number on ninety-nine fixtures at once, and no position
+    // comparison would say why.
+    //
+    // ⚠ `hits` is a Number in the game (`WandShot` damage is 0.5), so this
+    // compares numerically and not by identity of ints.
+    if (status.hits !== undefined) {
+        check(`${name}: the game's own \`hits\` matches the damage model`,
+            status.hits === expected.damage.hits,
+            `game: ${status.hits}, model: ${expected.damage.hits}`
+            + `${expected.playerHits.length ? ` (${expected.playerHits.length} landed hit(s), `
+                + `${expected.playerDeaths.length} death(s) — a death RESETS \`hits\`, so a `
+                + 'mismatch here can be a death the model placed on the wrong tick)' : ''}`);
+        // ⛔⛔⛔ `hits_timer` IS **NOT** DRAIN-STABLE, AND THE NEW CHECK
+        // FOUND THAT ON ITS FIRST NON-ZERO TAPE.
+        //
+        // `r6-contact-pair-standing` ends mid-window: the model says 1 and
+        // the game said 0, with all 91 observations byte-identical. The
+        // model is not wrong — `hitUpdate()` runs in `Player.update`, which
+        // keeps running after the tape's last observation, and the drain
+        // happens some unbounded number of engine frames later. A countdown
+        // is exactly the quantity a few extra frames destroys, and no
+        // positional comparison could ever have shown it. ⇒ THE SOUND
+        // COMPARISON IS A BOUND, not an equality:
+        //
+        //   · the game's value may only be LOWER (more frames elapsed);
+        //   · a model that says the window is SHUT must find it shut, or
+        //     the model missed a hit entirely.
+        //
+        // ⚠ AND THE WEAK DIRECTION IS NAMED: a model that thought the
+        // window LONGER than it is passes this bound. What catches that is
+        // the position stream — the steering gap between two hits is the
+        // window, and it is compared tick for tick.
+        //
+        // The `hits` equality above is safe by contrast: nothing moves it
+        // after the tape stops except a further hit, and that would fail the
+        // equality loudly rather than quietly.
+        const timerOk = status.hits_timer <= expected.damage.hitsTimer
+            && (expected.damage.hitsTimer !== 0 || status.hits_timer === 0);
+        check(`${name}: the game's own \`hits_timer\` is inside the i-frame window`,
+            timerOk,
+            `game: ${status.hits_timer}, model: ${expected.damage.hitsTimer}`
+            + `${status.hits_timer < expected.damage.hitsTimer
+                ? ` (${expected.damage.hitsTimer - status.hits_timer} frame(s) of drain gap `
+                  + '— `hitUpdate` keeps running after the tape\'s last observation)' : ''}`);
+    }
 
     // ── R3: the first half of the crutch LEDGER ───────────────────────
     // `Lock.turnOff()` calls `Game.setPersistence(tag, false)`, so a lock
