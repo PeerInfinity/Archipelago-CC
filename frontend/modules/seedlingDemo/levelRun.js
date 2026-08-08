@@ -4772,7 +4772,7 @@ export function createLevelRun({
      *   (`canInventory()` is false while `Game.talking`, and the else-arm
      *   `inventory.open = false` IS `Game.freezeObjects = false`).
      */
-    function stepOwlNow({ pressed: pressedPrimary, held: heldPrimary, wasHeld: wasHeldPrimary }) {
+    function stepOwlNow({ held: heldPrimary, wasHeld: wasHeldPrimary }) {
         const { bosses, pods } = owlStateFor(level);
         if (bosses.size === 0) return { frozen: false };
         const stream = owlStreamFor(level);
@@ -4899,25 +4899,21 @@ export function createLevelRun({
         // ── 1d. the boss, then his graphic — one pass, both calls ──────
         const b = [...bosses.values()][0];
         /**
-         * ⛔⛔ THE ONE SPAN SHAPE THE INTRO'S MECHANISM IS AMBIGUOUS ON.
+         * ⚠ A LONGER SPAN IS STILL REFUSED, AND THE REASON HAS CHANGED.
          *
-         * §19.5 measured the intro ending on a length-1 `primary` span's
-         * `from`, twice, off the drift-free position — and named two mechanisms
-         * that both fit: `Bot` delivering a length-1 span's release inside its
-         * own tick, or the recompiled runtime's `Input.released` being true on
-         * the DOWN edge. They agree on a length-1 span and DISAGREE on a longer
-         * one (the first would end the intro on `to`, the second on `from`).
-         * ⇒ a longer span is refused rather than guessed, which keeps the
-         * measurement a measurement instead of turning it into a claim about
-         * the mechanism.
+         * §19.5 refused it because two candidate mechanisms disagreed on it.
+         * Slice 6g SETTLED the mechanism (see `introRelease` below) and the
+         * ambiguity is gone: the intro ends on the RELEASE, wherever it falls.
+         * What is left is that no arm has ever driven a longer one, so the
+         * refusal stays as an unmeasured-shape guard rather than as a
+         * this-model-cannot-decide one.
          */
         if (!b.started && heldPrimary && wasHeldPrimary) {
             throw new Error(`levelRun: the tape holds \`primary\` across tick `
-                + `${ticksCompleted} while the Owl's intro is still up. §19.5 measured `
-                + 'the intro ending on a length-1 span\'s `from` and named two mechanisms '
-                + 'that fit; they DISAGREE on a longer span (one would end it on `to`). '
-                + 'Use a one-tick `primary` span for the intro, or settle the mechanism '
-                + 'with the `pressed`/`released` echo `R6_AS3_DECISION.stillOwed` wants.');
+                + `${ticksCompleted} while the Owl's intro is still up. The intro ends on `
+                + 'the span\'s RELEASE edge (§21, measured), so a longer span is '
+                + 'predictable — but no arm has driven one, so it is refused rather than '
+                + 'assumed. Use a one-tick `primary` span for the intro.');
         }
         const wasDestroyed = b.destroy;
         const step = stepFinalBoss(b, {
@@ -4952,17 +4948,38 @@ export function createLevelRun({
                 x: FINAL_BOSS.podPositions[i].x,
                 y: FINAL_BOSS.podPositions[i].y,
             })),
-            // ⛔⛔ THE INTRO ENDS ON THE SPAN'S `from`, MEASURED TWICE (§19.5).
-            // `FinalBoss.as:88` reads `Input.released(p.keys[6])`, and a
-            // length-1 `primary` span is documented as a press edge on `from`
-            // and a release edge on `to` — but the game put the boss one
-            // 0.5303 px step further along than a release on `to` permits, at
-            // `from = 2` and again at `from = 10`. The model TAKES THE
-            // MEASUREMENT and the mechanism is a wanted readout, not a wall
-            // (`r6Acceptance.R6_AS3_DECISION.stillOwed`). ⚠ A longer span is
-            // where the two candidate mechanisms would disagree, so
-            // `assertIntroSpanIsOnePrimitive` refuses one rather than picking.
-            introRelease: pressedPrimary,
+            /**
+             * ⛔⛔⛔ R6 SLICE 6g: THE INTRO ENDS ON THE SPAN'S `to`, AND §19.5
+             * WAS TWO OFF-BY-ONES THAT CANCELLED.
+             *
+             * `FinalBoss.as:88` reads `Input.released(p.keys[6])` and it means
+             * exactly what it says: `Bot` dispatches the DOWN edge on `from`
+             * and the UP edge on `to`, `Input.onKeyUp` is the only writer of
+             * `_release`, and `Input.update()` runs at the END of the engine
+             * frame — so the release is live on `to` and on no other frame.
+             *
+             * §19.5 read the intro as ending on `from` because the boss's
+             * polled position said he was one 0.5303 px step further along
+             * than a release on `to` permits. He was — and the step is not
+             * his, it is the tape's: `Bot.update` records observation `N` and
+             * DISARMS at the top of the frame whose world update then runs
+             * anyway, so an N-tick tape performs **N + 1** world updates and
+             * the poll sees the extra one. An intro one tick early and a run
+             * one frame short agree on every quantity §19.4 could measure —
+             * the polled draw count and the polled boss position — and
+             * disagree only on WHICH TICK anything happens.
+             *
+             * ⛓⛓⛓ WHAT SEPARATED THEM IS `botStatus.slash.tests`, AND IT
+             * READS **0**. Under the `from` reading the boss lowers the freeze
+             * above the player on the very tick `Input.pressed` is live, so
+             * the press reaches `useItem` and the fight opens with a shove
+             * (§20.3). Under the `to` reading the freeze is still up when the
+             * player updates on `from`, and on `to` the edge is a release —
+             * so the press is swallowed at both ends and NOTHING slashes. The
+             * game ran the plan's first press and counted zero hit tests.
+             * → §21, and [[feedback_two_offbyones_that_cancel]]
+             */
+            introRelease: wasHeldPrimary && !heldPrimary,
         });
         for (const e of step.events) {
             if (e.what === 'lava') {
@@ -8189,7 +8206,13 @@ export function createLevelRun({
                     // The same directness that makes `Bot.autoAdvance` a
                     // hazard for the Oracle (§18.7) makes the intro
                     // dismissable while the world is frozen.
-                    pressed: held.has(TALK_KEY) && !wasHeld.has(TALK_KEY),
+                    //
+                    // ⛓ THE PRESS EDGE IS DELIBERATELY NOT PASSED. Slice 6g
+                    // measured the intro ending on the RELEASE and the press
+                    // being swallowed by the freeze at both ends
+                    // (`botStatus.slash.tests` is 0 on the plan's own first
+                    // press) — so an arm that took `pressed` would be the
+                    // refuted reading kept alive as an unused argument.
                     held: held.has(TALK_KEY),
                     wasHeld: wasHeld.has(TALK_KEY),
                 });

@@ -63,10 +63,7 @@ describe('finalBossRng — the Owl room\'s draw count, from the game', () => {
         // ⛔⛔⛔ THE OFFSET IS THE INSTRUMENT, AND IT IS RECOVERABLE.
         // `botStatus.rng.state` and `botMobiles` are both LIVE reads and
         // `Bot`'s finish does not stop the world (`armed = false; finished =
-        // true;` and nothing else), so both readouts run a few frames past
-        // the tape. Repeats do not remove it — the latency is deterministic
-        // per arm, and the two repeats of the 45-tick arm at seed 101 both
-        // came back one frame late.
+        // true;` and nothing else), so both readouts run past the tape.
         //
         // What makes it harmless is that the SAME offset shows in both
         // quantities, and one of them is QUANTISED: the Owl walks a
@@ -76,6 +73,18 @@ describe('finalBossRng — the Owl room\'s draw count, from the game', () => {
         // count AND the model's boss position both equal the recording's.
         // A model that was wrong about the schedule would have to be wrong
         // about the geometry in the same k to survive that.
+        //
+        // ⛔⛔⛔ R6 SLICE 6g: AND THE OFFSET IS **STRUCTURAL, NOT LATENCY**.
+        // `Bot.update` records observation N and DISARMS at the top of a
+        // frame whose world update then runs anyway, so an N-tick tape
+        // performs **N + 1** world updates and every poll sees the extra one.
+        // That is why k is not noise: it is 1 on every arm that has started
+        // the fight, 0 on the arms that end while the boss is still frozen
+        // (a frozen frame is free), and 2 on the one arm whose repeats both
+        // came back a genuine frame late. §19.4 read the same number as poll
+        // latency, which is why it read k = 0 here: the model was ALSO one
+        // tick early, ending the intro on the span's `from`, and the two
+        // off-by-ones cancelled in both fitted quantities at once.
         const MAX_OFFSET = 3;
         const seen = [];
         for (const row of oracle.rows) {
@@ -83,7 +92,8 @@ describe('finalBossRng — the Owl room\'s draw count, from the game', () => {
             const player = {
                 x: oracle.boot.x + 8, y: oracle.boot.y + 8, vx: 0, vy: 0,
             };
-            // ⛔ `introEndsAt` is the span's `from`, MEASURED — see the probe.
+            // ⛔ `introEndsAt` is the span's `to` — the ORDINARY release edge.
+            // Slice 6g settled it; see the probe and §21.
             for (let t = 0; t < row.ticks; t += 1) {
                 stepOwlRoom(room, { player, introRelease: t === oracle.introEndsAt });
             }
@@ -102,13 +112,29 @@ describe('finalBossRng — the Owl room\'s draw count, from the game', () => {
                 + `the game reported ${row.draws} at `
                 + `(${row.boss?.x}, ${row.boss?.y}) — no offset in [0, ${MAX_OFFSET}] `
                 + 'fits BOTH').not.toBeNull();
-            seen.push(offset);
+            seen.push({ k: offset, ticks: row.ticks, seed: row.seed });
         }
-        // ⚠ AND THE OFFSETS ARE SMALL AND MOSTLY ZERO. If this ever reads
-        // like a free parameter — every arm needing a different large k —
-        // the fit has stopped being evidence and the failure is the model's.
-        expect(Math.max(...seen)).toBeLessThanOrEqual(2);
-        expect(seen.filter((k) => k === 0).length).toBeGreaterThan(seen.length / 2);
+        // ⛓⛓⛓ AND THE OFFSET IS PREDICTED PER ARM, NOT MERELY BOUNDED.
+        // "Small and mostly zero" was the shape of a free parameter; this is
+        // the shape of a mechanism. The tape's own extra world update costs
+        // exactly one boss frame once the fight has started and exactly none
+        // while he is frozen, so an arm's k is a FUNCTION of whether it
+        // reached the release — and an arm that needed a different k would
+        // be the model's failure, not the instrument's.
+        for (const s of seen) {
+            const started = s.ticks > oracle.introEndsAt;
+            expect(s.k, `seed ${s.seed}, ${s.ticks} ticks: an arm that ends `
+                + `${started ? 'after' : 'before'} the intro's release must fit at `
+                + `k ${started ? '>= 1' : '= 0'}`)
+                .toBeGreaterThanOrEqual(started ? 1 : 0);
+            if (!started) expect(s.k).toBe(0);
+        }
+        // ⚠ THE CEILING STAYS, and 2 is earned: one structural frame plus the
+        // one arm whose repeats both came back a genuine frame late (§19.4).
+        expect(Math.max(...seen.map((s) => s.k))).toBeLessThanOrEqual(2);
+        const started = seen.filter((s) => s.ticks > oracle.introEndsAt);
+        expect(started.filter((s) => s.k === 1).length)
+            .toBeGreaterThan(started.length / 2);
     });
 
     it('the repeats agree with each other — the latency is DETERMINISTIC', () => {
@@ -136,6 +162,38 @@ describe('finalBossRng — the Owl room\'s draw count, from the game', () => {
         expect(intro, 'the probe must include an arm shorter than the intro release')
             .toBeTruthy();
         expect(intro.draws).toBe(oracle.levelBuildDraws);
+    });
+
+    it('and that same control REFUTES the span\'s `from` — the reading §19.5 took', () => {
+        /**
+         * ⛔⛔⛔ R6 SLICE 6g: THE FIXTURE ALREADY HELD THE ANSWER.
+         *
+         * The 2-tick arm ends ON the span's `from`. Under §19.5's reading the
+         * intro ends there — and the tape's own extra world update (see the
+         * fit above) would then run the walk arm and book the grenade roll,
+         * so the game would have reported `levelBuildDraws + 1`. It reported
+         * `levelBuildDraws`. Under the `to` reading the release edge is never
+         * dispatched at all (the bot disarms on `from`), the boss stays frozen
+         * for ever, and the count is drift-proof — which is also why this is
+         * the one arm whose repeats never disagreed.
+         *
+         * ⛓ Kept as its own row because it is the cheapest witness on the
+         * rung that the release edge is the ORDINARY one, and because the
+         * quantity it turns on — one draw — is invisible in every other arm.
+         */
+        const arm = oracle.rows.find((r) => r.ticks === 2);
+        expect(arm, 'the probe must keep its 2-tick arm').toBeTruthy();
+        const room = createOwlRoom({ tiles: world.tiles, seed: arm.seed });
+        const player = { x: oracle.boot.x + 8, y: oracle.boot.y + 8, vx: 0, vy: 0 };
+        // The arm, plus the tape's own extra frame, under the REFUTED reading.
+        for (let t = 0; t <= arm.ticks; t += 1) {
+            stepOwlRoom(room, { player, introRelease: t === 2 });
+        }
+        expect(room.stream.count,
+            'under the `from` reading the extra frame runs the walk arm and the game '
+            + 'would have reported one more draw than the level build')
+            .toBe(oracle.levelBuildDraws + 1);
+        expect(arm.draws).toBe(oracle.levelBuildDraws);
     });
 });
 

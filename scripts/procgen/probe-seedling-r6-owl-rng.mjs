@@ -111,18 +111,34 @@ const BOOT = { level: 112, x: 32, y: 208 };
  * that turns several runs into a per-span table rather than several
  * unrelated numbers.
  *
- * ⛔⛔ AND THE RELEASE LANDS ON THE SPAN'S `from`, NOT ON ITS `to`. A
- * length-1 span is documented as a press edge on `from` and a release edge
- * on `to`; the boss's own position says the walk arm ran on `from`. Measured
- * twice, at `from = 2` and at `from = 10`, by reading `botMobiles`: his
- * displacement is an exact multiple of 0.5303300858899106 px (moveSpeed 1,
- * friction 0.25, a 45 degree walk) and the multiple is one MORE than a
- * release on `to` permits. Position carries no poll drift, so this is a
- * fact about the edge and not about the instrument.
+ * ⛔⛔⛔ R6 SLICE 6g: THE RELEASE LANDS ON THE SPAN'S `to`, THE ORDINARY
+ * EDGE — and this probe's first reading said `from` because it was one
+ * off-by-one short of another.
+ *
+ * The boss's displacement IS an exact multiple of 0.5303300858899106 px
+ * (moveSpeed 1, friction 0.25, a 45 degree walk) and the multiple IS one
+ * more than a release on `to` permits — but the extra step is the TAPE's,
+ * not the edge's: `Bot.update` records observation N and disarms at the top
+ * of a frame whose world update then runs anyway, so an N-tick tape performs
+ * N + 1 world updates and every poll here sees the extra one. An intro one
+ * tick early and a run one frame short agree on both quantities this probe
+ * can read.
+ *
+ * ⛓ What separated them is `botStatus.slash.tests`, which reads 0 on a tape
+ * that presses `primary` on the intro tick beside the boss
+ * (`probe-seedling-r6-owl-prefix.mjs`): under the `from` reading the freeze
+ * comes down above the player on the very frame `Input.pressed` is live and
+ * the press would slash. And this probe's OWN 2-tick negative control agrees
+ * — under `from`, its extra frame would run the walk arm and book a third
+ * draw; the game reported two.
  */
 const INTRO_PRESS = { key: 'primary', from: 2, to: 3 };
-/** What the model must be told, derived from the measurement above. */
-const INTRO_ENDS_AT = INTRO_PRESS.from;
+/**
+ * What the model must be told. `Input.onKeyUp` is the only writer of
+ * FlashPunk's `_release` and `Bot` dispatches the UP edge on `to`, so this is
+ * the ordinary reading — restored, not measured afresh.
+ */
+const INTRO_ENDS_AT = INTRO_PRESS.to;
 /** How many times each arm is run; the MINIMUM is the count. */
 const REPEATS = 2;
 
