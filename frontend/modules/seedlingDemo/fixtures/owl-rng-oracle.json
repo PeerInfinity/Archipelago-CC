@@ -1,0 +1,776 @@
+{
+  "note": "R6 slice 6e. The Owl room's DRAW COUNT per tape length, recovered from `botStatus.rng.state` by stepping the modelled LFSR from the declared seed. Written by scripts/procgen/probe-seedling-r6-owl-rng.mjs; read by finalBossRng.test.js. A count, not an order — see the script.",
+  "boot": {
+    "level": 112,
+    "x": 32,
+    "y": 208
+  },
+  "introPress": {
+    "key": "primary",
+    "from": 2,
+    "to": 3
+  },
+  "introEndsAt": 2,
+  "levelBuildDraws": 2,
+  "repeats": 2,
+  "noDamage": true,
+  "split": true,
+  "rows": [
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 2,
+      "why": "the intro ALONE — the boss returns above every draw site he owns, so this arm is the LEVEL BUILD and nothing else. The negative control, and the row that measures `OWL_LEVEL_BUILD_DRAWS`.",
+      "draws": 2,
+      "drawsRuns": [
+        2,
+        2
+      ],
+      "pollDriftObserved": 0,
+      "state": 1812247969,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 72,
+        "y": 104,
+        "vx": 0,
+        "vy": 0,
+        "anim": "",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 12,
+      "why": "ten walk ticks: one grenade roll each, and a grenade is possible (1/40) — the first arm that can show `Enemy.coins`",
+      "draws": 13,
+      "drawsRuns": [
+        13,
+        13
+      ],
+      "pollDriftObserved": 0,
+      "state": 1365213334,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 76.77297077300923,
+        "y": 99.22702922699077,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865476,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 45,
+      "why": "mid-walk, ~43 grenade rolls",
+      "draws": 48,
+      "drawsRuns": [
+        49,
+        48
+      ],
+      "pollDriftObserved": 1,
+      "state": 662128392,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 94.27386360737643,
+        "y": 81.72613639262357,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865476,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 60,
+      "why": "still mid-walk, and the arm the first reading of this probe was mis-diagnosed on",
+      "draws": 63,
+      "drawsRuns": [
+        63,
+        63
+      ],
+      "pollDriftObserved": 0,
+      "state": 1340690158,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 102.22881489572515,
+        "y": 73.77118510427485,
+        "vx": 0.7071067811865475,
+        "vy": -0.7071067811865475,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 90,
+      "why": "the walk's last ticks before the pod arrival",
+      "draws": 93,
+      "drawsRuns": [
+        93,
+        93
+      ],
+      "pollDriftObserved": 0,
+      "state": 1411960422,
+      "cosmetic_state": 1415879948,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 118.13871747242258,
+        "y": 57.86128252757743,
+        "vx": 0.7071067811865448,
+        "vy": -0.7071067811865502,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 1234567,
+      "seedWhy": "an arbitrary declared seed — the window's own",
+      "ticks": 120,
+      "why": "past the arrival: the `rockfallTime == 0` tick draws nothing, the barrage begins, rocks land, and `Game.shake` lifts the jiggle — the only arm that exercises `barrageSpawn` and the feedback loop. ⚠ SLOW: the headless renderer runs a barrage at well under realtime.",
+      "draws": 133,
+      "drawsRuns": [
+        133,
+        133
+      ],
+      "pollDriftObserved": 0,
+      "state": 1741248235,
+      "cosmetic_state": 1415879948,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 121.06066017177983,
+        "y": 55.93933982822017,
+        "vx": 0,
+        "vy": 0,
+        "anim": "",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "closed",
+          "open": false,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 2,
+      "why": "the intro ALONE — the boss returns above every draw site he owns, so this arm is the LEVEL BUILD and nothing else. The negative control, and the row that measures `OWL_LEVEL_BUILD_DRAWS`.",
+      "draws": 2,
+      "drawsRuns": [
+        2,
+        2
+      ],
+      "pollDriftObserved": 0,
+      "state": 603979801,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 72,
+        "y": 104,
+        "vx": 0,
+        "vy": 0,
+        "anim": "",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "open",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 12,
+      "why": "ten walk ticks: one grenade roll each, and a grenade is possible (1/40) — the first arm that can show `Enemy.coins`",
+      "draws": 12,
+      "drawsRuns": [
+        12,
+        12
+      ],
+      "pollDriftObserved": 0,
+      "state": 55377920,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 76.77297077300923,
+        "y": 99.22702922699077,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865476,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 4,
+          "anim": "open",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 45,
+      "why": "mid-walk, ~43 grenade rolls",
+      "draws": 46,
+      "drawsRuns": [
+        46,
+        46
+      ],
+      "pollDriftObserved": 0,
+      "state": 6591488,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 94.80419369326634,
+        "y": 81.19580630673366,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865476,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 60,
+      "why": "still mid-walk, and the arm the first reading of this probe was mis-diagnosed on",
+      "draws": 60,
+      "drawsRuns": [
+        60,
+        60
+      ],
+      "pollDriftObserved": 0,
+      "state": 754975122,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 102.22881489572515,
+        "y": 73.77118510427485,
+        "vx": 0.7071067811865475,
+        "vy": -0.7071067811865475,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 90,
+      "why": "the walk's last ticks before the pod arrival",
+      "draws": 92,
+      "drawsRuns": [
+        92,
+        92
+      ],
+      "pollDriftObserved": 0,
+      "state": 105906384,
+      "cosmetic_state": 1931798629,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 118.13871747242258,
+        "y": 57.86128252757743,
+        "vx": 0.7071067811865448,
+        "vy": -0.7071067811865502,
+        "anim": "walk",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    },
+    {
+      "seed": 101,
+      "seedWhy": "a seed whose first sixty ticks fire NO grenade at all, so an arm of it isolates the walk roll from `Enemy.coins`",
+      "ticks": 120,
+      "why": "past the arrival: the `rockfallTime == 0` tick draws nothing, the barrage begins, rocks land, and `Game.shake` lifts the jiggle — the only arm that exercises `barrageSpawn` and the feedback loop. ⚠ SLOW: the headless renderer runs a barrage at well under realtime.",
+      "draws": 146,
+      "drawsRuns": [
+        146,
+        146
+      ],
+      "pollDriftObserved": 0,
+      "state": 423678797,
+      "cosmetic_state": 1905423410,
+      "dead_frames": 21,
+      "saw_auto_advance": 0,
+      "level": 112,
+      "x": 40,
+      "y": 216,
+      "menu": false,
+      "persistence_cleared": [],
+      "boss": {
+        "x": 121.06066017177983,
+        "y": 55.93933982822017,
+        "vx": 0,
+        "vy": 0,
+        "anim": "",
+        "hits": 0
+      },
+      "pods": [
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 192
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 128,
+          "x": 48
+        },
+        {
+          "type": "Pod",
+          "frame": 6,
+          "anim": "opened",
+          "open": true,
+          "y": 200,
+          "x": 120
+        },
+        {
+          "type": "Pod",
+          "frame": 0,
+          "anim": "closed",
+          "open": false,
+          "y": 56,
+          "x": 120
+        }
+      ]
+    }
+  ]
+}

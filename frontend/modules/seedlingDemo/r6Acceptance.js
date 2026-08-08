@@ -947,5 +947,32 @@ export const R6_AS3_DECISION = Object.freeze({
         '`saw_auto_advance` unification — owed since R3, not byte-inert, so it '
         + 'waits for a batch that re-records (R5 §38.4 item 3, carried). Slice 6a '
         + 'deliberately did NOT bundle it: its gate is zero re-records.',
+        // ⛔⛔ R6 SLICE 6e — a MECHANISM question the game answered and the
+        // readouts cannot attribute.
+        //
+        // `FinalBoss`'s intro ends on `Input.released(p.keys[6])`, and a
+        // length-1 `primary` span is documented as a press edge on `from`
+        // and a release edge on `to`. The game says the boss saw the release
+        // on **`from`** — measured twice, at `from = 2` and `from = 10`, off
+        // the one quantity that carries no poll drift: his own position,
+        // which advances on a 0.5303300858899106 px lattice and so counts
+        // his moving ticks exactly.
+        //
+        // Two mechanisms fit and nothing shipped can separate them: either
+        // `Bot` delivers a length-1 span's release inside its own tick, or
+        // the recompiled runtime's `Input.released` is true on the frame of
+        // the DOWN edge. ⛓ NOT A WALL — the model takes the measurement and
+        // is exact either way, and no committed fixture is affected because
+        // every other release on the ladder is inside a dialogue where only
+        // the COUNT of releases is observable (which is why W-talk's forty
+        // could be byte-exact under either reading).
+        //
+        // A readout would be one boolean: whether `Input.released(KEY_PRIMARY)`
+        // was true when `Bot` handed the frame to `Game.update`.
+        'a `pressed`/`released` echo on `botStatus` — R6 slice 6e measured the '
+        + 'intro ending on a `primary` span\'s `from` rather than its `to`, and '
+        + 'the two candidate mechanisms (Bot\'s edge delivery vs the runtime\'s '
+        + '`Input.released` semantics) are indistinguishable from every shipped '
+        + 'readout. Wanted, NOT a wall: the model takes the measurement.',
     ]),
 });

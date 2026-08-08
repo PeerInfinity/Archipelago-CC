@@ -1812,6 +1812,75 @@ after the ceremony reaches `useItem(Main.primary)`: one is a swing, two
 inside twenty ticks is a **DASH that moves the player**. Every fixture
 spaces them eight apart, and the executor asserts none lands after the end.
 
+### ⛔⛔ The Owl room's DRAW SCHEDULE, and three things the instrument taught (R6 slice 6e)
+
+L112 is the first room on the ladder whose GAMEPLAY reads random numbers, so
+a window there needs more than `rng.js`'s generator: it needs to know how
+many times the game turns the crank on tick N and in what order.
+`finalBossRng.js` is that table and `finalBossFight.js` consumes it.
+`scripts/procgen/probe-seedling-r6-owl-rng.mjs` writes the known answer by
+running real tapes and reading `botStatus.rng.state` — the live uint32 —
+then stepping the modelled LFSR from the declared seed until it matches,
+which recovers the run's draw count exactly.
+
+The schedule, per tick, with `rng: { seed, split: true }` declared:
+
+| phase | draws | sites, in order |
+|---|---|---|
+| intro / frozen / a lava self-hit / the `rockfallTime == 0` tick | 0 | the arm returns above every site |
+| **coast** (shoved, `\|v\| > moveSpeed`) | **0** | NO arm runs at all |
+| barrage, no spawn | 1 | the rock gate |
+| barrage, spawn | 4 | gate, x, y, then `RockFall`'s scale |
+| walk, no grenade | 1 | the grenade gate |
+| walk, grenade | **2** | gate, then `Enemy`'s own ctor draw |
+| `endAnim` "dead" | 10 | 5 x (x argument, ctor scale) |
+| ANY frame with `shake > 0` | **+2** | the camera jiggle, appended LAST |
+
+Four things that table cost:
+
+- **A CENSUS OF SITES IS NOT A SCHEDULE OF TICKS.** A `Grenade` is an
+  `Enemy`, and `Enemies/Enemy.as:30`'s `private const coins:int = 4 +
+  Math.random() * 4` is an instance FIELD INITIALIZER — every construction
+  pays it. The R6 kickoff's schedule said "1 draw per walk tick" while the
+  slice-6a census had already listed the site. The cure is to make the
+  schedule DISPATCH through the census: every site is a method, every method
+  books to a named site, and a test asserts the two key sets are equal.
+  ⛓ `RockFall` extends `Mobile`, not `Enemy`, so a rock costs 3 ctor draws
+  and a grenade 2. "One ctor draw per entity" is wrong for both.
+- **`Bot.botStart`'s RNG RESET LANDS BEFORE THE LEVEL IS BUILT.** The reset
+  sits below `FP.world = new Game(...)` specifically so a model would owe
+  nothing for the world build — but `Game`'s constructor does not build the
+  level. `loadlevel` is in **`begin()`**, which FlashPunk calls when the
+  DEFERRED swap lands, after `botStart` returned. So every seeded tape's
+  stream contains its own build. For L112 that is exactly **2** gameplay
+  draws (`Enemy.coins` for the one boss, `Orb.randVal` for the one orb, in
+  `loadlevel`'s add order) — measured two-sided by a two-tick arm that ends
+  before the intro does.
+- **`botStatus.rng.state` IS A LIVE READ ON A GAME THAT DOES NOT STOP.**
+  `Bot`'s finish is `armed = false; finished = true;` and nothing else, so a
+  post-run poll returns the truth plus the poll latency (measured: 0 or 1
+  frame, never negative). Against one run per arm this produced a
+  NON-MONOTONE offset — impossible between two prefixes of one stream, and
+  therefore always the instrument. The probe now runs every arm twice, takes
+  the MINIMUM, and records the spread; the test asserts the spread's bound.
+- **WHEN A COUNT IS NOISY, READ THE QUANTISED QUANTITY.** The Owl walks a
+  0.5303300858899106 px lattice (`moveSpeed` 1, friction 0.25, a 45° leg), so
+  `botMobiles`'s position counts his moving ticks EXACTLY and carries no
+  drift. It settled the count question and, with it, an edge-timing one the
+  count could not: **the intro ends on the `primary` span's `from` tick, not
+  its `to`** — measured at `from = 2` and again at `from = 10`. The mechanism
+  is not settled (either `Bot` delivers a length-1 span's release inside its
+  own tick, or the runtime's `Input.released` is true on the down edge) and
+  no committed fixture can tell them apart, because every other release on
+  the ladder is inside a dialogue where only the COUNT of releases is
+  observable.
+
+Two numbers the same transcription re-derived and a recording has yet to
+arbitrate: **one unclamped sword press shoves the Owl 68.25 px over 18
+ticks** (not 71.25 — the press tick moves him zero, because the boss updates
+before the player), and **the two persistence writes land 109 ticks after the
+third lava hit** (not 110 — trap 104 in both directions, and they compose).
+
 ### The touch, and the tick the ORACLE moved
 
 `ShieldLock.update` collides at `x - 1`, and with `Player.hasDarkShield` it
