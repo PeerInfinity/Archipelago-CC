@@ -1160,7 +1160,7 @@ export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
  * the body a second time, from a `.oel` placement 140 px above where the
  * descent has taken it. `kind: 'boss'` is what tells it to.
  */
-export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem', 'shieldboss']);
+export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem', 'shieldboss', 'finalboss']);
 
 /**
  * Why each boss family leaves the census arm, one reason per class — and
@@ -1184,6 +1184,31 @@ export const CONTACT_BOSS_WHY = Object.freeze({
         + 'accurate for ever and pricing it would STILL be wrong: it would charge a '
         + 'contact for the 48x48 wall the player cannot even touch, and miss the strip '
         + 'the whole fight is fought in.',
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f, and it is the THIRD distinct reason — the volume is
+     * right and the POSITION is a fight.
+     *
+     * The Owl takes `Enemy.hitPlayer` UNCHANGED: `collide("Player", x, y)`
+     * against his own 12x12 hitbox, `p.hit(this, 3, new Point(x, y), 1)`,
+     * gated on `hitsTimer <= 0` and `currentAnim != "die"`. So unlike the
+     * Shieldspire the census hitbox IS the contact volume — and unlike the
+     * totem the body is not merely displaced once, it walks a pod circuit and
+     * is shoved 50 px at a time by the player's own sword. Pricing the
+     * placement box would charge a contact at (72,104) for a body that has
+     * been somewhere else since the room's second tick.
+     *
+     * ⛔ AND THE `hitsTimer` GATE IS LOAD-BEARING HERE IN A WAY IT IS NOWHERE
+     * ELSE: the lava self-hit sets it to 30, so for the 30 ticks after each
+     * kill-hit the boss cannot damage the player at all. A stance that
+     * survives the shove is standing inside a 30-tick amnesty it earned by
+     * landing the shove.
+     */
+    finalboss: '⛓ THE CENSUS HITBOX IS RIGHT AND THE POSITION IS NOT. `Enemy.hitPlayer` '
+        + 'is inherited unchanged — the 12x12 box at force 3, damage 1, gated on '
+        + '`hitsTimer <= 0` and `currentAnim != "die"` — but he walks a four-pod circuit '
+        + 'and the player shoves him 50 px at a time, so the placement rect is stale from '
+        + 'the room\'s second tick. `activeOffScreen = true`, so there is no `onScreen` '
+        + 'question for him at all: the one boss the shake band cannot make inactive.',
 });
 
 export function contactPricing(tag) {

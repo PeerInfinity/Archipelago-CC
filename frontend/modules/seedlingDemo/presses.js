@@ -234,7 +234,7 @@ export function distanceRectPoint(px, py, r) {
  * distinction is the whole reason this throws.
  */
 export function pressRespondersIn(world, rect, {
-    pushables: live = null, turrets = null, shieldBosses = null,
+    pushables: live = null, turrets = null, shieldBosses = null, finalBosses = null,
 } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
@@ -306,6 +306,43 @@ export function pressRespondersIn(world, rect, {
             }
             continue;
         }
+        /**
+         * ⛓⛓⛓ R6 SLICE 6f: THE FOURTH NON-CONSTANT RECT — and the FIRST that
+         * moves DURING a single press.
+         *
+         * A pushed block moves between presses; a killed turret moves and
+         * shrinks; a dead ShieldBoss vanishes. The Owl moves **inside the
+         * five hit tests of one press**: `justKnock` sets no `hitsTimer`, so
+         * test 1 shoves him and tests 2..5 have to find him where the shove
+         * left him. `Player.slash` re-collects with `collideRectInto` and
+         * re-measures `FP.distanceRectPoint` on EVERY tick, so a body being
+         * knocked away leaves its own hit rect and the later tests simply
+         * miss.
+         *
+         * ⛔⛔ THAT IS WHY "ALL FIVE TESTS LAND" IS AN UPPER BOUND AND NOT A
+         * COUNT. §14.4 derived the five-fold compounding from the RECEIVER's
+         * gate (no i-frame) and §19.6 priced the shove at 5 x force 5. The
+         * DISPATCHER has a gate too — a 16 px reach — and the shove is 4.75
+         * px on the second test and 8.75 on every one after, so the boss
+         * recedes out of the reach part-way through his own press. The count
+         * is geometry and the run computes it; nothing here assumes it.
+         * → [[feedback_a_knocked_receiver_culls_its_own_hit_tests]]
+         *
+         * ⚠ ABSENT RUN STATE IS ALIVE AND WHERE THE LEVEL BUILT HIM, matching
+         * the turret and ShieldBoss arms. `removed` is never true for this
+         * class — `death()` is overridden EMPTY and `FP.world.remove` is
+         * never called — so the field exists for symmetry and the CORPSE is
+         * still a responder, which is right: `Player.slash` collects
+         * `"Solid"` too and the corpse's type is exactly that.
+         */
+        if (finalBosses && r.finalBossId && finalBosses.has(r.finalBossId)) {
+            const now = finalBosses.get(r.finalBossId);
+            if (now.removed) continue;
+            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+                hits.push({ ...r, rect: now.rect ?? r.rect, live: true, dead: now.dead === true });
+            }
+            continue;
+        }
         if (rectsOverlap(rect, r.rect)) hits.push(r);
     }
     // A bridge is a press responder and it is TERRAIN — the one arm of
@@ -354,8 +391,11 @@ export function pressRespondersIn(world, rect, {
  */
 export function auditPress(world, rect, {
     weapon, intended = [], pushables = null, turrets = null, shieldBosses = null,
+    finalBosses = null,
 } = {}) {
-    const responders = pressRespondersIn(world, rect, { pushables, turrets, shieldBosses });
+    const responders = pressRespondersIn(world, rect, {
+        pushables, turrets, shieldBosses, finalBosses,
+    });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(
         (r) => weapon === 'spear' || !spearOnly.has(r.as3),
@@ -621,6 +661,40 @@ export const PRESS_ARM_POLICY = Object.freeze({
         why: 'the four sword hits — `endingChain.watcherTakesHit` and the run\'s '
             + 'per-visit watcher state. One press buys one hit (`hitsTimer` 25 refuses '
             + 'tests 2..5) and the fourth spawns the bloody `Seed` at the player.',
+    },
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE SWING THAT CANNOT DAMAGE, AND IS THE WHOLE FIGHT.
+     *
+     * `Player.genericHit`'s `e is Enemy` arm again (the class has no arm of
+     * its own), so the call is `Enemy.hit(swordForce 5, new Point(x, y),
+     * swordDamage, "Sword")` — and `onlyHitBy = "Lava"` sends it straight
+     * past the damage path to `else if (justKnock) knockback(f, p)`.
+     *
+     *   · ⛔ NO `hitsTimer` IS SET, so the press's five tests are not
+     *     refused by the receiver at all — the LIMIT is the dispatcher's
+     *     16 px reach against a body the first test has already shoved
+     *     (see `pressRespondersIn`'s `finalBosses` arm);
+     *   · ⛔⛔ `maxForce` IS `-1` UNTIL THE FIRST LAVA HIT and `2` after, so
+     *     the first press is worth `5 x 5` and every later one `5 x 2` — the
+     *     one place on the ladder where a press's force depends on the
+     *     TARGET's history rather than the player's;
+     *   · ⛓ the kill is the LAVA's: three `hit(6, centre, 1, "Lava")` calls
+     *     the boss makes on himself when his 12x12 box's first overlapping
+     *     `Tile` is `t == 17`. The press buys the geometry and nothing else.
+     *
+     * ⚠ AND THE CORPSE IS STILL A RESPONDER. `startDeath` sets
+     * `type = "Solid"` and `death()` is overridden EMPTY, so the body never
+     * leaves the world — a later swing reaches a `"Solid"` whose arm is
+     * `Enemy.hit` with `destroy` already true. `finalBossTakesShove` returns
+     * a refusal for it rather than a landing.
+     */
+    FinalBoss: {
+        policy: 'modelled',
+        why: 'the SHOVE — `finalBossFight.finalBossHit`\'s `justKnock` arm and the '
+            + 'run\'s per-visit boss state. `onlyHitBy = "Lava"` means a press can '
+            + 'never damage him; it moves him, and the lava kills. No `hitsTimer` is '
+            + 'set, so the press\'s five tests are culled by the 16 px REACH as the '
+            + 'shove carries him out of his own hit rect.',
     },
 });
 

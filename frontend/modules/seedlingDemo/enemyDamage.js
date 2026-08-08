@@ -288,7 +288,48 @@ export const KILL_ARM_POLICY = Object.freeze({
             + 'route re-crosses), so the arm owes a terrain write as well as a count.',
     }),
     Squishle: Object.freeze({ policy: 'refused', why: 'off every R5 route' }),
-    FinalBoss: Object.freeze({ policy: 'refused', why: 'R6 — the ending' }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f — THE THIRD `modelled` ROW, AND THE PLAYER NEVER DEALS
+     * THE DAMAGE.
+     *
+     * The lift is one class wide and it is lifted IN THE SAME CHANGE that
+     * integrates its consumer (`levelRun`'s Owl family), because a lifted
+     * policy with no consumer is a silence and not a permission.
+     *
+     * ⛔ `onlyHitBy = "Lava"`, so no press can damage him at all — a sword
+     * takes `Enemy.hit`'s `justKnock` arm and only SHOVES. All three hits are
+     * `FinalBoss.update`'s own `hit(6, centre, 1, "Lava")`, fired when his
+     * 12x12 box's FIRST overlapping `Tile` is `t == 17`. The player buys the
+     * geometry; the room does the killing.
+     *
+     * ⛔⛔ AND THE DEATH MOVES `totalEnemies()` BY NOTHING — for
+     * `IceTurret`'s reason with a stronger mechanism. `death()` is overridden
+     * to an EMPTY BODY (not an intercept: there is no second call that ever
+     * reaches `super.death()`), so `Mobile.death`'s fade never runs,
+     * `FP.world.remove` is never called, and `classCount(FinalBoss)` is
+     * exactly where the level build left it — forever. ⇒ no `tset == -1` lock
+     * can move, and the machinery still COMPUTES that nil rather than
+     * skipping the scan.
+     *
+     * ⛔⛔⛔ WHAT DOES OPEN L112 IS NOT THE COUNT. `endAnim`'s "dead" arm runs
+     * `Button.activateAll(null, 0, true)` and TWO direct
+     * `Game.setPersistence` writes — so `rocklock@112,16 {tset 0, tag 1}`
+     * opens from the BUTTON SWEEP and `{112,1}` lands from its own line.
+     * A ledger that read the room's opening off `totalEnemies()` would find
+     * nothing and conclude nothing had happened.
+     */
+    FinalBoss: Object.freeze({
+        policy: 'modelled',
+        why: '⛓ THE THIRD, AND THE ONLY KILL ON THE LADDER THE PLAYER CANNOT DEAL. '
+            + '`onlyHitBy = "Lava"` + `justKnock`: a press SHOVES (no `hitsTimer`, so '
+            + 'the five tests compound until the 16 px reach loses him) and the lava '
+            + 'self-hit kills, three times, one per pod cycle (`hitThisSequence` clears '
+            + 'only on the tick `rockfallTime == 0`). `death()` is an EMPTY override, so '
+            + 'the corpse is never removed and `classCount(FinalBoss)` never moves — the '
+            + 'room opens from `endAnim`\'s `Button.activateAll(null, 0, true)` and its '
+            + 'two direct persistence writes, not from the count. See '
+            + '`finalBossFight.js` for the fight and `finalBossRng.js` for the schedule.',
+    }),
     LavaBoss: Object.freeze({ policy: 'refused', why: 'R6/R7; not in the `totalEnemies` sum at all, and Solid to the player' }),
     LightBossController: Object.freeze({ policy: 'refused', why: 'an `Entity`, not a `Mobile` — it SPAWNS a LightBoss rather than being one' }),
     IceTrap: Object.freeze({ policy: 'refused', why: '`canHit = false` — unkillable AND uncounted; `hazards.js` prices the volume' }),
@@ -409,6 +450,35 @@ export const CORPSE_COUNTING = Object.freeze({
             + 'the room\'s `bosskey` is inside it.',
         src: 'Enemies/ShieldBoss.as:62-66 (startDeath), :212-217 (endAnim)',
     }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: A FOURTH SHAPE, AND IT IS THE ONLY TERMINAL ONE.
+     *
+     * `intercept` says "the first `destroy` is consumed and a LATER one can
+     * still remove the body". The Owl's `death()` is an EMPTY OVERRIDE: there
+     * is no arm, no second call and no path to `super.death()` anywhere in
+     * the class. The corpse is permanent, and — because `startDeath` also
+     * writes `type = "Solid"` — it is a permanent WALL wherever the third
+     * shove left him. `shape: 'never'` says exactly that.
+     *
+     * ⛔ `laterRemovalBy` IS `null` AND THAT IS A MEASUREMENT, NOT AN
+     * OMISSION. `IceTurret`'s row names three routes to a second removal (a
+     * fatal tile, a pit); the Owl has `dieInWater`, `dieInLava` and
+     * `canFallInPit` all false, so `Enemy.update`'s terrain switch cannot set
+     * `destroy` for him either — and `destroy` is already true, so his
+     * `update()` returns above the switch in any case.
+     */
+    FinalBoss: Object.freeze({
+        shape: 'never', removesBody: false, chaserTag: null,
+        why: '`FinalBoss.death()` is `override public function death():void { }` — an '
+            + 'EMPTY body, not an intercept. `Mobile.death`\'s fade never runs, '
+            + '`FP.world.remove` is never called, and `classCount(FinalBoss)` never '
+            + 'moves. ⛔ AND `startDeath` SETS `type = "Solid"`, so the corpse is a '
+            + 'PERMANENT WALL at the third shove\'s endpoint — which is why a plan '
+            + 'chooses where he dies. `dieInWater`/`dieInLava`/`canFallInPit` are all '
+            + 'false, so no terrain can remove him later either.',
+        laterRemovalBy: null,
+        src: 'Enemies/FinalBoss.as:236-243 (death, startDeath), :52-64 (the ctor flags)',
+    }),
     Spinner: Object.freeze({
         shape: 'fade', removesBody: true, chaserTag: null,
         why: '`Spinner` does NOT override `startDeath`, so `Enemy.startDeath` sets '
@@ -502,6 +572,47 @@ export const KILL_SIDE_WRITES = Object.freeze({
             + 'would write OUT OF BAND through `i * 30 + j`; L19\'s carries `tag="0"` '
             + 'and it is the only instance in the extract, so the -1 arm is a bounded '
             + 'vacuity with no witness — named, not skipped.',
+    }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE ONLY ROW THAT WRITES **TWO** FLAGS, and the only
+     * one whose site is an ANIMATION CALLBACK rather than a method.
+     *
+     * `endAnim`'s `"dead"` arm — reached through the GRAPHIC, which
+     * `World.update` advances whether or not the entity is active and whether
+     * or not the world is frozen — spawns five more RockFalls, runs
+     * `Button.activateAll(null, 0, true)`, and then writes
+     * `setPersistence(tag)` AND `setPersistence(tag+1)`, guarded by one
+     * `checkPersistence(tag)`.
+     *
+     * ⛔ SO THE TAG IS NOT AVAILABLE AT THE KILL. `startDeath` writes NOTHING
+     * (it sets `type`, plays "die", clears the level music and sets
+     * `destroy`), which is the exact opposite of the ShieldBoss row above:
+     * there the tag PRECEDES the corpse by 23 ticks, here it FOLLOWS the
+     * killing hit by 109 (`finalBossFight.finalBossDeathSchedule`). A window
+     * that ends on the kill has killed him and witnessed nothing.
+     *
+     * ⛓ `removed()` has its own `setPersistence(tag)` and it is dead code for
+     * this class twice over: it is guarded by `checkPersistence(tag)`, which
+     * `endAnim` has already cleared, and `removed()` is never reached at all
+     * because nothing removes the body.
+     */
+    FinalBoss: Object.freeze({
+        writes: 'ownTag+1',
+        site: 'endAnim("dead")',
+        guard: 'checkPersistence(tag)',
+        why: '⛔ TWO FLAGS FROM ONE ARM, 109 ticks after the third lava hit. `{112,0}` is '
+            + 'the Owl and `{112,1}` is the RockLock, and the second is a DIRECT '
+            + '`setPersistence(tag+1)` — not a consequence of the '
+            + '`Button.activateAll(null, 0, true)` on the line above it, which is a '
+            + 'separate mechanism that opens the same lock by its group. ⇒ the tag does '
+            + 'not depend on the button sweep reaching anything.',
+        sentinel: '`FinalBoss(_x, _y, _tag:int = -1)` and `endAnim` writes `tag` and '
+            + '`tag+1` with no `>= 0` test — so a `<finalboss>` with no `tag` would '
+            + 'write `{level,-1}` and `{level,0}`, i.e. one OUT OF BAND and one at a '
+            + 'neighbour\'s address. L112\'s carries `tag="0"` and it is the only '
+            + 'instance in the extract, so the -1 arm is a bounded vacuity with no '
+            + 'witness — named, not skipped. ⚠ `check()` DOES test `tag >= 0`; the '
+            + 'write does not.',
     }),
     Spinner: Object.freeze({
         writes: 'ownTag',

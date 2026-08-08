@@ -194,13 +194,27 @@ describe('R6 acceptance', () => {
             const claimed = R6_WINDOWS.filter(
                 (w) => roster.includes(w.tape) && roster.includes(w.control),
             );
+            // ⛔⛔ AND IT ROTTED A THIRD TIME AT SLICE 6f — on the OTHER end.
+            // `toBeLessThan(R6_WINDOWS.length)` asserted that SOME window is
+            // still unclaimed, which was a fact about a rung in progress and
+            // not about the machinery. W-owl was the last one, so completing
+            // the rung turned it red for doing its job. Same fuse, third
+            // burn: what is asserted now is that `claimed` is exactly the
+            // windows whose two arms are in the roster, and that the UNCLAIMED
+            // wording appears exactly when one is missing.
             expect(claimed.length).toBeGreaterThan(0);
-            expect(claimed.length).toBeLessThan(R6_WINDOWS.length);
+            expect(claimed.length).toBeLessThanOrEqual(R6_WINDOWS.length);
             for (const w of claimed) {
                 expect(findings.some((f) => f.detail.includes(w.tape))
                     || !R6_BOSS_KILL_LEDGER.some((r) => r.earnedIn === w.name)).toBe(true);
             }
-            expect(findings.some((f) => /UNCLAIMED/.test(f.detail))).toBe(true);
+            const anyUnclaimed = claimed.length < R6_WINDOWS.length;
+            expect(findings.some((f) => /UNCLAIMED/.test(f.detail))).toBe(anyUnclaimed);
+            // ...and the derived roster-independent half: a roster missing one
+            // arm of a claimed window must PRINT the unclaimed wording, so the
+            // predicate keeps a witness even once the rung is complete.
+            const short = roster.filter((n) => n !== claimed[0].control);
+            expect(r6ExitFindings(short).some((f) => /UNCLAIMED/.test(f.detail))).toBe(true);
             const claimedNames = new Set(claimed.map((w) => w.name));
             const tags = R6_BOSS_KILL_LEDGER.filter((r) => claimedNames.has(r.earnedIn));
             const done = findings.find((f) => f.name === 'the boss-kill ledger is complete');

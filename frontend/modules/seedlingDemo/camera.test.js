@@ -35,6 +35,7 @@ import {
     SCREEN_H,
     SCREEN_W,
     SHAKE_WRITERS,
+    applyShakeWriter,
     bandIsExact,
     bandWidth,
     cameraBand,
@@ -307,12 +308,41 @@ describe('⛓⛓⛓ the shake: the band is the model, and it is CHECKED', () => 
     /** A deterministic spread of draws, including both ends of [0, 1). */
     const DRAWS = [0, 0.0001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999999];
 
-    it('three writers, TWO operators — and only the player\'s ADDS', () => {
+    /**
+     * ⛔ THIS ASSERTED `adds).toHaveLength(1)` UNTIL R6 SLICE 6f ADDED THE
+     * ROCK'S — [[feedback_coincidental_predicate_rots]] again, on the same
+     * table `applyShakeWriter` drives. "Only the player's adds" was a fact
+     * about the ROSTER, not about the mechanism; what the mechanism says is
+     * that the two operators are both live and that an `=` can LOWER the
+     * shake while a `+=` cannot. Both are asserted below, by name.
+     */
+    it('FOUR writers, TWO operators — and the fourth has no constant at all', () => {
         expect(SHAKE_WRITERS.playerHit).toMatchObject({ op: '+=', value: 5 });
         expect(SHAKE_WRITERS.totemLaser).toMatchObject({ op: '=', value: 30 });
         expect(SHAKE_WRITERS.totemDeath).toMatchObject({ op: '=', value: 60 });
-        const adds = Object.values(SHAKE_WRITERS).filter((w) => w.op === '+=');
-        expect(adds).toHaveLength(1);
+        expect(SHAKE_WRITERS.rockFallLanding).toMatchObject({ op: '+=', value: null });
+        const ops = new Set(Object.values(SHAKE_WRITERS).map((w) => w.op));
+        expect([...ops].sort()).toEqual(['+=', '=']);
+        // An `=` really can lower it; a `+=` really does compound.
+        expect(applyShakeWriter(35, 'totemLaser')).toBe(30);
+        expect(applyShakeWriter(35, 'playerHit')).toBe(40);
+    });
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: `Game.shake += sprRockFall.scale + 1` — the amount is
+     * a DRAW, so the caller supplies it and a missing one is a REFUSAL.
+     * Defaulting it would silently under-count the shake, and with it the
+     * jiggle's two draws per frame, which is the one quantity the Owl room's
+     * whole exactness claim is counted in.
+     */
+    it('⛔ a draw-valued writer REFUSES a caller that brought no amount', () => {
+        expect(applyShakeWriter(0, 'rockFallLanding', 1.25)).toBeCloseTo(1.25, 12);
+        expect(applyShakeWriter(4, 'rockFallLanding', 1.7499)).toBeCloseTo(5.7499, 12);
+        expect(() => applyShakeWriter(0, 'rockFallLanding'))
+            .toThrow(/has no constant value/);
+        // ...and the mirror: a constant-valued writer refuses an amount.
+        expect(() => applyShakeWriter(0, 'playerHit', 5))
+            .toThrow(/Two sources for one number/);
     });
 
     it('the draw range is [0, 1) — 1 is not attainable', () => {

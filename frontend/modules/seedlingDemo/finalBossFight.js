@@ -409,6 +409,18 @@ export function stepFinalBoss(b, ctx) {
     } = ctx;
     const events = [];
     let introFreeze = false;
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: WHICH ROW OF `OWL_PHASE_SITES` THIS TICK TOOK.
+     *
+     * Reported rather than re-derived by the caller, because the caller cannot
+     * see the arm: the walk/coast split is `v.length <= moveSpeed` measured
+     * AFTER friction, the move and the cap, and a consumer that tested the
+     * boss's speed before or after the step would get the other answer part
+     * of the time. `levelRun` asserts `owlTickDraws(phase, shaking)` against
+     * the stream's own delta on every tick, which is the
+     * one-table-two-computations law applied to a draw schedule.
+     */
+    let phase = 'frozen';
 
     // ── `if (!started)` — the intro (§16.5's `entry:` disposition) ──────
     //
@@ -420,6 +432,7 @@ export function stepFinalBoss(b, ctx) {
     // tick counter advances anyway.
     if (!b.started) {
         introFreeze = true;
+        phase = 'intro';
         if (introRelease) {
             b.started = true;
             introFreeze = false;
@@ -447,7 +460,9 @@ export function stepFinalBoss(b, ctx) {
         if (b.hitsTimer > 0) b.hitsTimer -= 1;
     }
 
-    if (worldFrozen || b.destroy) return { events, introFreeze };
+    if (worldFrozen || b.destroy) {
+        return { events, introFreeze, phase: introFreeze ? 'intro' : 'frozen' };
+    }
 
     // ── the lava self-hit, ABOVE the cap and ABOVE `canHit`'s assignment ──
     const tile = firstTileAt(b.x, b.y);
@@ -467,7 +482,7 @@ export function stepFinalBoss(b, ctx) {
             why: r.why ?? null, x: b.x, y: b.y });
         // ⛔ THE ARM RETURNS. No cap, no `canHit`, no phase — the tick costs
         // the draw stream nothing at all.
-        return { events, introFreeze };
+        return { events, introFreeze, phase: 'lavaHit' };
     }
 
     if (speed(b) > FINAL_BOSS.velocityCap) normalize(b, FINAL_BOSS.velocityCap);
@@ -475,12 +490,14 @@ export function stepFinalBoss(b, ctx) {
     b.canHit = b.rockfallTime < 0;
 
     if (b.rockfallTime > 0) {
+        phase = 'barrage';
         b.rockfallTime -= 1;
         // `sprFinalBoss.play("")` — an unknown anim name, so `_anim` is null
         // and `complete` is true: no updates, no callbacks, no draws.
         b.anim = '';
         b.animAge = null;
         if (stream.barrageRoll()) {
+            phase = 'barrageSpawn';
             const argX = stream.spawnX(player.x, player.vx);
             const argY = stream.spawnY(player.y, player.vy);
             const scale = stream.rockScale();
@@ -488,15 +505,18 @@ export function stepFinalBoss(b, ctx) {
             events.push({ what: 'rock', argX, argY, scale });
         }
     } else if (b.rockfallTime === 0) {
+        phase = 'podTick';
         pods[b.cpod].open = true;
         b.cpod = (b.cpod + 1 + pods.length) % pods.length;
         b.hitThisSequence = false;
         b.rockfallTime -= 1;
         events.push({ what: 'barrageEnded', nextPod: b.cpod });
     } else if (speed(b) <= FINAL_BOSS.moveSpeed) {
+        phase = 'walk';
         if (stream.grenadeRoll()) {
             // `new Grenade(x - 8, y - 8, true, 30)` — and `Enemy`'s field
             // initializer draws once more inside the constructor.
+            phase = 'walkGrenade';
             stream.enemyCoins();
             spawnGrenade(b.x - 8, b.y - 8);
             events.push({ what: 'grenade', x: b.x - 8, y: b.y - 8 });
@@ -527,12 +547,19 @@ export function stepFinalBoss(b, ctx) {
                 events.push({ what: 'barrageBegan', pod: b.cpod });
             }
         }
+    } else {
+        // ⛓ THE COAST ROW: `v.length > moveSpeed` while shoved takes NO arm at
+        // all, so an 18-tick coast costs the stream nothing from him. That is
+        // what makes the shove window modellable. It is an explicit `else`
+        // rather than a fall-through so the PHASE can be named: "no arm ran"
+        // and "the walk arm ran and rolled no grenade" both cost one draw
+        // less than the other, and a schedule that could not tell them apart
+        // would be exactly one draw wrong for eighteen ticks after every
+        // press.
+        phase = 'coast';
     }
-    // ⛓ THE COAST ROW: `v.length > moveSpeed` while shoved takes NO arm at
-    // all, so an 18-tick coast costs the stream nothing from him. That is
-    // what makes the shove window modellable.
 
-    return { events, introFreeze };
+    return { events, introFreeze, phase };
 }
 
 /**
@@ -718,6 +745,122 @@ export function rockFallUpdatesToLand() {
         if (y > 0) return n;
     }
     throw new FinalBossError('rockFallUpdatesToLand: the rock never landed');
+}
+
+// ── THE GRENADES ──────────────────────────────────────────────────────
+
+/**
+ * `Enemies/Grenade.as`, as the Owl builds it: `new Grenade(x - 8, y - 8,
+ * true, 30)`.
+ *
+ * ⛓ THE TWO HALF-TILES CANCEL AND THE `fallHeight` DOES NOT.
+ * `super(_x + Tile.w/2, _y + Tile.h/2 - fallHeight)` with `_x = bossX - 8`
+ * puts the entity at `bossX`, and `endY = _y + Tile.h/2` is `bossY` — so a
+ * grenade is born at the Owl's exact entity point. `_active = true` then
+ * assigns `y = endY` in the constructor, so it never falls at all and the
+ * whole `y < endY` half of `update()` is dead for this call site.
+ *
+ * ⛔⛔ AND `Grenade.update` DOES NOT CALL `super.update()`. It calls
+ * `mobileUpdate()` directly, so `Enemy.update`'s tail — `hitUpdate()` and
+ * **`hitPlayer()`** — never runs: a grenade has NO contact damage at all.
+ * Its only damage is `animEnd`'s radius test, once, at the end of the
+ * explode animation. A model that inherited the base class's contact would
+ * charge the player for standing on one.
+ *
+ * ⛓ `hit()` is an empty override and `knockback()` is too, so a sword press
+ * that reaches one is a real no-op (`PRESS_UNKILLABLE.Grenade`).
+ */
+export const GRENADE = Object.freeze({
+    as3: 'Enemies/Grenade.as',
+    /** `_exTime` — the Owl passes 30, not the class default 60. */
+    explodeTime: 30,
+    /** `const hitRadius:int = 20` — entity-point to entity-point. */
+    hitRadius: 20,
+    /** `const force:int = 2`, `damage = 1`. */
+    force: 2,
+    damage: 1,
+    /** `setHitbox(6, 6, 3, 3)`. Never used for damage; it is what a slash collects. */
+    box: Object.freeze({ w: 6, h: 6, ox: 3, oy: 3 }),
+});
+
+/** One grenade at the Owl's entity point, already on the ground. */
+export function createOwlGrenade(x, y, { id = null } = {}) {
+    return {
+        id,
+        x,
+        // `endY`, which `_active` has already assigned to `y`.
+        y,
+        explodeTime: GRENADE.explodeTime,
+        anim: 'sit',
+        animAge: 0,
+        exploded: false,
+        removeRequested: false,
+    };
+}
+
+/** The grenade's 6x6 box — what `Player.slash`'s `"Enemy"` sweep collects. */
+export function owlGrenadeBox(g) {
+    const { w, h, ox, oy } = GRENADE.box;
+    return { x: g.x - ox, y: g.y - oy, right: g.x - ox + w, bottom: g.y - oy + h };
+}
+
+/**
+ * One `Grenade.update()` — the countdown, and the `play("explode")` that
+ * ends it.
+ *
+ * ⚠ NOT FREEZE-GATED IN THE PLACE YOU WOULD LOOK. The countdown sits above
+ * `mobileUpdate()`, which is where the freeze test lives — so
+ * `explodeTime` drains through a frozen frame and the explosion keeps its
+ * schedule. (In L112 the only freeze is the intro, which is over before any
+ * grenade exists, so this is a bounded vacuity with its bound named.)
+ */
+export function stepOwlGrenade(g) {
+    if (g.removeRequested) return { played: false };
+    if (g.explodeTime > 0) {
+        g.explodeTime -= 1;
+        return { played: false };
+    }
+    if (g.explodeTime === 0) {
+        g.explodeTime = -1;
+        g.anim = 'explode';
+        g.animAge = 0;
+        return { played: true };
+    }
+    return { played: false };
+}
+
+/**
+ * The grenade's graphic, and BOTH of trap 104's directions in one entity.
+ *
+ * `play("explode")` happens inside `update()`, so its first advance is that
+ * same tick and the callback lands `21 - 1 = 20` ticks later.
+ * `play("hit")` happens inside that CALLBACK — i.e. inside the graphic's own
+ * update — so `_timer` is reset after this tick's advance and the `hit`
+ * anim's first advance is the NEXT tick: its callback is a full 8 later.
+ *
+ * @returns {?'exploded'|'removed'} the callback that fired, if any
+ */
+export function advanceOwlGrenadeGraphic(g) {
+    if (g.animAge === null) return null;
+    g.animAge += 1;
+    if (g.anim === 'explode' && g.animAge >= GRENADE_EXPLODE_UPDATES) {
+        g.anim = 'hit';
+        g.animAge = 0;
+        g.exploded = true;
+        return 'exploded';
+    }
+    if (g.anim === 'hit' && g.animAge >= GRENADE_HIT_UPDATES) {
+        g.anim = null;
+        g.animAge = null;
+        g.removeRequested = true;
+        return 'removed';
+    }
+    return null;
+}
+
+/** `FP.distance(x, endY, p.x, p.y) <= hitRadius` — entity point to entity point. */
+export function owlGrenadeReaches(g, px, py) {
+    return Math.hypot(g.x - px, g.y - py) <= GRENADE.hitRadius;
 }
 
 // ── THE PODS ──────────────────────────────────────────────────────────

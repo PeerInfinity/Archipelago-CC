@@ -223,11 +223,17 @@ export function stepCamera(cam, player, world, {
  * driven from it.
  *
  * ⚠ NOT THE WHOLE GAME. These are the writers R6's roster can reach. The
- * checkout holds eight more (`LavaBoss` 15, `TentacleBeast` 5, `Moonrock`
- * 60, `FallRock` 30, `FallRockLarge` 30, `BeamTower` 15, and `RockFall`'s
- * `+= scale + 1`), every one of them in a room this rung defers or on a
- * class it does not step. Named here so "three writers" reads as a scope,
- * not as a census of the game.
+ * checkout holds seven more (`LavaBoss` 15, `TentacleBeast` 5, `Moonrock`
+ * 60, `FallRock` 30, `FallRockLarge` 30, `BeamTower` 15), every one of them
+ * in a room this rung defers or on a class it does not step. Named here so
+ * "four writers" reads as a scope, not as a census of the game.
+ *
+ * ⛓⛓⛓ R6 SLICE 6f: AND THE FOURTH IS THE FIRST WITH NO CONSTANT.
+ * `RockFall.update`'s landing is `Game.shake += sprRockFall.scale + 1`, and
+ * the scale is a DRAW — `Math.random() / 2 + 0.25`, so the amount is in
+ * `[1.25, 1.75)` and is different for every rock. `value: null` says so,
+ * and `applyShakeWriter` REFUSES a null-valued writer with no amount rather
+ * than defaulting to a number nobody measured.
  */
 export const SHAKE_WRITERS = Object.freeze({
     playerHit: Object.freeze({
@@ -242,6 +248,19 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '=', value: 60, src: 'Enemies/BossTotem.as:477 (`removed()`)',
         who: 'the totem\'s removal — slice 4',
     }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f — THE OWL ROOM'S OWN, AND IT IS PER ROCK.
+     *
+     * `Scenery/RockFall.as:66` — `Game.shake += sprRockFall.scale + 1`, on
+     * the landing tick, once per rock. During a 240-tick barrage that fires
+     * ~40 rocks the counter is essentially never 0 against a decay of one
+     * per FRAME, which is why the Owl room's draw schedule carries the
+     * jiggle's two draws on almost every tick (`finalBossRng.js`).
+     */
+    rockFallLanding: Object.freeze({
+        op: '+=', value: null, src: 'Scenery/RockFall.as:66',
+        who: 'every RockFall landing — `scale + 1`, in [1.25, 1.75), a DRAW per rock',
+    }),
 });
 
 /**
@@ -255,12 +274,29 @@ export const SHAKE_WRITERS = Object.freeze({
  * and that is the game. A `Math.max` here would read as defensive and be a
  * silent divergence.
  */
-export function applyShakeWriter(shake, key) {
+export function applyShakeWriter(shake, key, amount = null) {
     const w = SHAKE_WRITERS[key];
     if (!w) {
         fail(`applyShakeWriter: "${key}" is not a shake writer; the roster's are `
             + `${Object.keys(SHAKE_WRITERS).join(', ')}. A writer this rung reaches and `
             + 'this table does not name is a hole in `onScreen`, not a missing constant.');
+    }
+    // ⛔ R6 SLICE 6f: A NULL-VALUED WRITER IS A REFUSAL, NOT A ZERO. The
+    // rock's `+= scale + 1` has no constant, so the caller has to supply the
+    // draw it made; a default would silently under-count the shake and with
+    // it the jiggle's draws, which is the one thing the Owl's schedule is
+    // counted in.
+    if (w.value === null) {
+        if (typeof amount !== 'number' || !Number.isFinite(amount)) {
+            fail(`applyShakeWriter: "${key}" has no constant value (its amount is a `
+                + `DRAW), so the caller must pass one; got ${JSON.stringify(amount)}.`);
+        }
+        return w.op === '+=' ? shake + amount : amount;
+    }
+    if (amount !== null) {
+        fail(`applyShakeWriter: "${key}" has the constant ${w.value} and an amount `
+            + `${amount} was passed as well. Two sources for one number is the drift `
+            + 'this table exists to prevent.');
     }
     return w.op === '+=' ? shake + w.value : w.value;
 }

@@ -2315,6 +2315,29 @@ export const PRESS_ARMS = Object.freeze({
         cost: 'the Enemy cost plus a bump; Dungeon 5, off route',
         src: 'Player.as:1057-1060',
     },
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE OWL — the class with NO arm of its own, and the
+     * only responder on the roster a press cannot damage AND cannot ignore.
+     *
+     * `Player.genericHit` opens with `if (e is Enemy)` and `FinalBoss extends
+     * Enemy`, so the call is the generic one; `onlyHitBy = "Lava"` then sends
+     * it past the whole damage path to `else if (justKnock) knockback(f, p)`.
+     * ⇒ the cost is a POSITION, and this rung's window is built out of
+     * exactly three of them.
+     *
+     * ⛔ THE RECT IS NOT A CONSTANT AND MOVES WITHIN ONE PRESS — see
+     * `presses.pressRespondersIn`'s `finalBosses` arm, which is why the
+     * `finalBossId` join below exists.
+     */
+    FinalBoss: {
+        arm: '(e as Enemy).hit(f, new Point(x, y), d, t) — reached by `e is Enemy`; '
+            + '`onlyHitBy = "Lava"` takes the `justKnock` arm and only SHOVES',
+        cost: 'a KNOCKBACK of `min(swordForce, maxForce)` along the player->boss ray, '
+            + 'with NO `hitsTimer` set — so the press\'s five tests compound until the '
+            + 'shove carries the body out of the 16 px reach. No damage, no persistence, '
+            + 'no `classCount` move: the kill is the LAVA\'s self-hit.',
+        src: 'Player.as:1055-1065 + Enemies/Enemy.as:141-181 + Enemies/FinalBoss.as:101-165',
+    },
 });
 
 /**
@@ -2410,9 +2433,29 @@ export const WATCHER_PRESS_BOX = Object.freeze({
  * `as3`, the way `moveTypes` is (slice 6's `PUSHABLE_FAMILIES` lesson), so
  * a family alias cannot answer for a class.
  */
+/**
+ * ⛓⛓⛓ R6 SLICE 6f: THE OWL's SPAWN box — and it is only ever the SPAWN's.
+ *
+ * `setHitbox(12, 12, 6, 6)` (`FinalBoss.as:52`) against the entity position
+ * `super(_x + Tile.w/2, _y + Tile.h/2, …)` builds, so a `finalboss@64,96`
+ * has a 12x12 box centred on (72,104) — i.e. NOT the placement cell, unlike
+ * the Watcher's, because 6 does not cancel 8.
+ *
+ * ⚠ THE CENSUS RECT IS STALE FROM THE ROOM'S SECOND TICK. He walks. Every
+ * consumer joins through `finalBossId` and reads the run's live rect; this
+ * box exists so the census BUILDS (`entityRect` throws on a class with no
+ * box) and so an unfought room answers with the body the level made.
+ */
+export const FINAL_BOSS_PRESS_BOX = Object.freeze({
+    as3: 'FinalBoss',
+    dx: 8, dy: 8, w: 12, h: 12, originX: 6, originY: 6,
+    src: 'Enemies/FinalBoss.as:52 (setHitbox) + :46 (the ctor half-tile)',
+});
+
 export const PRESS_BOX_OVERRIDES = Object.freeze({
     LightPole: LIGHTPOLE_PRESS_BOX,
     Watcher: WATCHER_PRESS_BOX,
+    FinalBoss: FINAL_BOSS_PRESS_BOX,
 });
 
 /**
@@ -3233,6 +3276,14 @@ export function buildLevelWorld(levelRecord, {
      * dialogue's LENGTH depends on. Eleven in the extract; L114's is the one
      * `{114,0}` hangs off.
      */
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE OWL and HIS PODS — the FIFTEENTH per-visit family.
+     * Rosters rather than solids: `finalboss` and `pod` are both
+     * `collider: 'none'`, and what the run holds for them is a fight state
+     * and an animation, not a rect. `finalBossFight.js` owns the behaviour.
+     */
+    const finalBosses = [];
+    const pods = [];
     const watchers = [];
     /**
      * ⛓⛓⛓ R6 SLICE 6d: every placed `Oracle`, for the ONE question W-blood
@@ -3946,6 +3997,57 @@ export function buildLevelWorld(levelRecord, {
                 persistTag: entityTag,
             });
         }
+        /**
+         * ⛓⛓⛓ R6 SLICE 6f: THE OWL ROSTER — the FIFTEENTH per-visit family,
+         * and the first whose member is not a solid, not a wall and not a
+         * hazard volume at all until it DIES.
+         *
+         * ⚠ THE HALF-TILE IS TRANSCRIBED, for the watcher roster's reason:
+         * `finalboss` is a `collider: 'none'` row, and those DO carry dx/dy
+         * in this table (it is one of the two that do), but reading them here
+         * would make the roster's geometry depend on a field the convention
+         * says may be absent. `finalBossFight.FINAL_BOSS.dx` is asserted
+         * equal to it.
+         */
+        if (consults.has('combat') && e.type === 'finalboss') {
+            finalBosses.push({
+                id: `${e.type}@${e.x},${e.y}`,
+                tag: e.type,
+                x, y,
+                ex: x + TILE_SIZE / 2,
+                ey: y + TILE_SIZE / 2,
+                persistTag: entityTag,
+            });
+        }
+        /**
+         * ⛓⛓⛓ R6 SLICE 6f: THE POD ROSTER — and it is a roster because the
+         * PIN is not the only consumer.
+         *
+         * `hazards.js` already prices the 16x16 pin from `cls.hazard`, which
+         * answers "where must a walk not go". This answers a second question
+         * the volume cannot: **what animation is it playing**. Both the pin
+         * (`currentAnim == "closed"`, 22 updates after a `close`) and the
+         * Owl's own walk arm (`pods[cpod].open`, which is the GETTER over
+         * `"open"`/`"opened"`) read the animation and not the geometry, and
+         * `FinalBoss.check()` fills its `pods` Vector in `podPositions` order
+         * — so the run needs the four of them keyed by that order.
+         *
+         * ⛔ THE ORDER IS `podPositions`', NOT THE `.oel`'s. L112's four pods
+         * are placed (112,48), (112,192), (40,120), (184,120) and the boss
+         * visits them (120,56), (48,128), (120,200), (192,128) — i.e. his
+         * second pod is the level's THIRD. A roster in file order and a
+         * `cpod` index into it would send him to the wrong pod on every
+         * cycle. `finalBossFight` does the reordering, from `podPositions`.
+         */
+        if (consults.has('combat') && e.type === 'pod') {
+            pods.push({
+                id: `${e.type}@${e.x},${e.y}`,
+                tag: e.type,
+                x, y,
+                ex: x + TILE_SIZE / 2,
+                ey: y + TILE_SIZE / 2,
+            });
+        }
         if (consults.has('proximity-hazard') && cls.hazard) {
             const disposition = hazardDisposition(cls.hazard);
             if (disposition === 'unpriced') {
@@ -4139,6 +4241,14 @@ export function buildLevelWorld(levelRecord, {
                     // could not have collected.
                     ...(cls.as3 === 'ShieldBoss'
                         ? { shieldBossId: `${e.type}@${x},${y}` } : {}),
+                    // ⛓⛓⛓ R6 slice 6f: the FOURTH, and the only one whose
+                    // rect moves DURING a single press. A pushed block moves
+                    // between presses, a killed turret between visits; the
+                    // Owl is shoved by test 1 of a press and tests 2..5 have
+                    // to find him where the shove left him — which is what
+                    // decides how many of the five land at all.
+                    ...(cls.as3 === 'FinalBoss'
+                        ? { finalBossId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
@@ -4727,6 +4837,22 @@ export function buildLevelWorld(levelRecord, {
         entryHazards,
         watchers,
         oracles,
+        /**
+         * ⛓⛓⛓ R6 slice 6f: the Owl, `{id, tag, x, y, ex, ey, persistTag}`,
+         * and his four pods, `{id, tag, x, y, ex, ey}` — in `.oel` order.
+         *
+         * ⚠⚠ UNFILTERED, AND THAT IS A NAMED BOUND RATHER THAN A CONVENTION.
+         * `FinalBoss.check()` really does `FP.world.remove(this)` on a CLEARED
+         * tag, so a room REBUILT after the kill has no boss — but `finalboss`
+         * has no `PERSISTENCE_RESPONSE` row, so this package neither offers
+         * `{112,0}` as a clear nor despawns him from one. W-owl never rebuilds
+         * L112 (the window ends 109 ticks after the third lava hit, inside the
+         * same visit), so the case is unreachable from any committed tape and
+         * is left declared rather than modelled. A slice that re-enters the
+         * room after the kill owes the row.
+         */
+        finalBosses,
+        pods,
         activators,
         pressers,
         /**

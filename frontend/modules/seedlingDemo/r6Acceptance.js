@@ -68,8 +68,11 @@ export const R6_BOSS_KILL_LEDGER = Object.freeze([
         earnedIn: 'W-owl',
         writtenBy: 'Enemies/FinalBoss.as:221 — `endAnim`\'s "dead" arm, NOT `removed()`. '
             + '`removed()` has its own write but it is guarded by `checkPersistence` '
-            + 'and is a no-op by then. ⇒ 49 + 61 = 110 updates after the third lava '
-            + 'hit (the "die" then "dead" anims, derived at 0.0333).',
+            + 'and is a no-op by then. ⛔ R6 SLICE 6e RE-DERIVED IT AS **109**, not '
+            + '§8.6\'s 110: `play("die")` is inside `update()` so the die anim\'s first '
+            + 'advance is that tick and its callback lands at `49 - 1`, and `play("dead")` '
+            + 'is inside the die CALLBACK so the dead anim\'s first advance is the NEXT '
+            + 'tick and its callback a full 61 after. 48 + 61 = 109, DRIVEN at slice 6f.',
     }),
     Object.freeze({
         flag: Object.freeze({ level: 112, tag: 1 }),
@@ -409,6 +412,49 @@ export const R6_WINDOWS = Object.freeze([
      * list). That is named in `R6_ITEM_LEDGER` and deferred, not claimed.
      */
     Object.freeze({ name: 'W-fire', slice: 5, tape: 'r5-bobboss-fire', control: 'r5-bobboss-fire-control' }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE RUNG'S LAST WINDOW, and the ladder's THIRD boss
+     * kill — the only one the player never deals.
+     *
+     * `onlyHitBy = "Lava"` means a press cannot damage him at all: it takes
+     * `Enemy.hit`'s `justKnock` arm and SHOVES, and the three kills are his own
+     * `hit(6, centre, 1, "Lava")` when his 12x12 box's FIRST overlapping
+     * `Tile` is `t == 17` (trap 95's selection, not "the box overlaps a lava
+     * cell").
+     *
+     * ⛓⛓⛓ AND THE INTRO-DISMISSING PRESS **IS** THE FIRST SHOVE.
+     * `FinalBoss.update` lowers `Game.freezeObjects` at the TOP of the frame,
+     * above the player's own update, so `Player.input()` still runs that tick
+     * and `Input.pressed(keys[4])` reaches `useItem(Main.primary)`. One press,
+     * two jobs — and since `hitThisSequence` starts FALSE the first lava hit
+     * needs no barrage before it. ⇒ §8.5's "at least three full pod cycles"
+     * is retired: the window endures **two** barrages, and lava hit 1 lands on
+     * tick 9 of a tape whose first input is at tick 2.
+     *
+     * ⛔⛔ THE STANCE IS THE VULNERABLE STATE, NOT THE BARRAGE. `stepsAhead`
+     * is -15 and a rock flies for 17 ticks, so a moving player has ~32 ticks
+     * of lead against a +-20 px spray: 95 rocks land across the two barrages
+     * and NOT ONE touches an orbiting player, while a STATIONARY one dies
+     * inside the first barrage (measured: 3 hits, dead at tick 555). The one
+     * hit the window takes is a GRENADE, dropped at the Owl's own feet and
+     * exploding 51 ticks later while the player stands still at a shove stance.
+     *
+     * ⛔ The pair is the one-primitive-fewer PREFIX with the THIRD press
+     * deleted; the movement spans are byte-identical because the presses are a
+     * literal list and the movement is a separate generator (§12).
+     */
+    /**
+     * ⚠⚠ STILL `null` AFTER SLICE 6f, AND THAT IS THE HONEST ROW. The plan is
+     * SEARCHED and the model kills him — three lava hits at ticks 9/378/798,
+     * both tags at 907, one survivable grenade hit — but the first `--win`
+     * recording REFUTED the model at tick 23 (the game's player reverses where
+     * the model walks on, and the game's own `hits` reaches 1 on a DIFFERENT
+     * tick from the model's, which is why the count check passed for the wrong
+     * reason). The tapes are regenerable from
+     * `scripts/procgen/plan-seedling-r6-wowl.mjs --write`; they are deliberately
+     * NOT in the roster, because a fixture whose model is refuted is either a
+     * permanent red or a silenced one and neither is a finding (§22.7).
+     */
     Object.freeze({ name: 'W-owl', slice: 6, tape: null, control: null }),
     /**
      * ⛓⛓⛓ R6 SLICE 6c: THE ENDING'S FIRST DRIVEN WINDOW, and the first

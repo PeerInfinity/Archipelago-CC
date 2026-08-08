@@ -150,6 +150,13 @@ export function createTapeStepper(tape, opts = {}) {
             // the header would model an inert pickup while the game ran a
             // ceremony.
             save: t.save ?? null,
+            // ⛓⛓⛓ R6 slice 6f: and the v7 `rng` block, for the same reason
+            // one version on — L112's gameplay READS the draw stream, so a
+            // runner that kept this on the header would model the Owl fight
+            // from a stream position nobody declared. `parseTape` normalises
+            // a pre-v7 tape to `{seed: 0, split: false}`, which is exactly
+            // what those tapes mean, and only the Owl refuses it.
+            rng: t.rng ?? null,
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking

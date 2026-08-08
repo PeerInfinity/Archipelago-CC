@@ -96,6 +96,19 @@ import {
     shieldBossBodyRect, shieldBossDeathSchedule, shieldBossTakesHit, shieldBossWindowFor,
     stepShieldBoss,
 } from './shieldBossFight.js';
+// ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
+// the ladder whose GAMEPLAY reads random numbers. `finalBossRng` is the
+// per-tick DRAW SCHEDULE the fight consumes; `finalBossFight` is the fight.
+import {
+    FINAL_BOSS, GRENADE, ROCK_FALL, advanceFinalBossGraphic, advanceOwlGrenadeGraphic,
+    advancePodGraphic, advanceRockFallGraphic, createFinalBoss, createOwlGrenade, createPod,
+    createRockFall, finalBossBox, finalBossDeathSchedule, finalBossHit, finalBossLavaVerdict,
+    firstTileUnder, podIsLethal, rockFallBox, setPodOpen, stepFinalBoss, stepOwlGrenade,
+    stepRockFall,
+} from './finalBossFight.js';
+import {
+    OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, assertOwlStreamPremises, owlTickDraws,
+} from './finalBossRng.js';
 import {
     createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
@@ -255,6 +268,25 @@ export function createLevelRun({
      * back, exactly.
      */
     save = null,
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: the tape's version-7 `rng` BLOCK, threaded for the
+     * `pins`/`save` reason one version on — and this time the field is not
+     * merely READ by a gate, it IS the model.
+     *
+     * L112 is the first room on the ladder whose GAMEPLAY reads random
+     * numbers: every rock's aim, every rock's hitbox and the camera's own
+     * jiggle come out of one stream whose position is the sum of everything
+     * drawn before them. A runner that kept `rng` on the tape header would
+     * model an Owl fight from an unknown stream position — which is not a
+     * small error but an unstated one, because the run would still produce
+     * numbers. `assertOwlStreamPremises` refuses the whole fight without it.
+     *
+     * ⚠ THE DEFAULT IS THE PRE-R6 TAPE'S. `{seed: 0, split: false}` is what
+     * every fixture written before slice 6a declares, and it means "inherit
+     * the page's stream" — an ORIGIN no model has. Nothing but the Owl asks,
+     * so nothing but the Owl is refused.
+     */
+    rng = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -396,6 +428,20 @@ export function createLevelRun({
         // a run that carried the flag across a rebuild would spend three
         // swings for four hits and never land the last one.
         shieldBossStates.delete(n);
+        // ⛓⛓⛓ R6 slice 6f: and the Owl, whose rebuild re-arms `started`,
+        // `rockfallTime`, `cpod`, `hitThisSequence` and `hits` — every one of
+        // them an instance field — and rebuilds his four pods, each replaying
+        // its constructor's `play("open")`. ⛔ THE DRAW STREAM IS NOT DROPPED:
+        // the generator is a `public static`, so its position is a fact about
+        // the PAGE and a re-entry pays a SECOND level build from wherever the
+        // first visit left it. `owlStreamFor` refuses a second room rather
+        // than modelling a position it has not measured.
+        finalBossStates.delete(n);
+        podStates.delete(n);
+        owlRocks = [];
+        owlGrenades = [];
+        owlPendingRocks = [];
+        owlPendingGrenades = [];
         // ⛓ R6 slice 6c: and the watcher, whose rebuild re-arms `talked` —
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
@@ -779,6 +825,129 @@ export function createLevelRun({
         }
         return out;
     };
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE OWL — the FIFTEENTH per-visit family, and the
+     * first whose state includes a RANDOM NUMBER GENERATOR.
+     *
+     * ⚠ PER VISIT LIKE EVERY OTHER ROSTER HERE, and for this class the game
+     * agrees twice over: `started`, `rockfallTime`, `cpod`, `hitThisSequence`
+     * and `hits` are all instance fields a `new Game` rebuilds, and the four
+     * `Pod`s are rebuilt with them (each replaying its constructor's
+     * `play("open")`). ⛔ WHAT DOES NOT COME BACK IS THE DRAW STREAM: the
+     * generator is a `public static` on `Rng` and the room's own build spends
+     * `OWL_LEVEL_BUILD_DRAWS` of it, so a re-entry is NOT a fresh stream.
+     * `owlStream` therefore lives on the RUN and not on the level, and the
+     * builder below refuses a second entry rather than paying the build twice
+     * from a position it cannot know.
+     */
+    const finalBossStates = new Map();
+    /**
+     * The four pods, keyed by the boss's OWN index — `podPositions` order,
+     * which is not the `.oel`'s.
+     *
+     * ⛔ L112's `.oel` places them (112,48), (112,192), (40,120), (184,120)
+     * and `FinalBoss.check()` fills its `pods` Vector by walking
+     * `podPositions` — (120,56), (48,128), (120,200), (192,128) — and
+     * `collide`ing at each. So the boss's pod 1 is the level's pod 2. A
+     * roster in file order with `cpod` as its index would send him to the
+     * wrong pod on every cycle, and the walk would still LOOK plausible.
+     */
+    const podStates = new Map();
+    const owlStateFor = (n) => {
+        if (!finalBossStates.has(n)) {
+            const byId = new Map();
+            for (const b of worldFor(n).finalBosses ?? []) {
+                byId.set(b.id, createFinalBoss({
+                    id: b.id, x: b.ex, y: b.ey, tag: b.persistTag ?? -1,
+                }));
+            }
+            finalBossStates.set(n, byId);
+            const placed = worldFor(n).pods ?? [];
+            // The boss's order, resolved against the placements by POSITION.
+            const pods = FINAL_BOSS.podPositions.map((p, i) => {
+                const found = placed.find((q) => q.ex === p.x && q.ey === p.y);
+                if (byId.size > 0 && !found) {
+                    throw new Error(`levelRun: level ${n} holds a finalboss but no pod at `
+                        + `(${p.x}, ${p.y}) — \`FinalBoss.check()\` walks `
+                        + '`podPositions` and pushes whatever `collide("Pod", …)` finds '
+                        + `there, so a missing one leaves \`pods[${i}]\` undefined and `
+                        + 'his walk arm throws in the GAME. Refused rather than modelled '
+                        + 'with a short Vector.');
+                }
+                return createPod({ id: found?.id ?? `pod${i}`, x: p.x, y: p.y });
+            });
+            podStates.set(n, pods);
+        }
+        return { bosses: finalBossStates.get(n), pods: podStates.get(n) };
+    };
+    /**
+     * The Owl's LIVE box, for the press census's `finalBosses` join.
+     *
+     * ⛔ `removed` IS ALWAYS FALSE FOR THIS CLASS, and the field is here so
+     * the join has the same shape as the turret's and the Shieldspire's
+     * rather than because the case exists: `death()` is an empty override, so
+     * `FP.world.remove` is never called and the corpse is a responder for the
+     * rest of the visit. `dead` is what a caller wants — the corpse's arm is
+     * a refusal, not a landing.
+     */
+    const finalBossRectsNow = () => {
+        const st = owlStateFor(level).bosses;
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, b] of st) {
+            out.set(id, {
+                id, removed: false, dead: b.destroy, rect: finalBossBox(b.x, b.y),
+            });
+        }
+        return out;
+    };
+    /**
+     * ⛓⛓⛓ R6 SLICE 6f: THE RUN'S DRAW STREAM, and it is the run's because
+     * the generator is.
+     *
+     * `null` until a room with an Owl is entered. `assertOwlStreamPremises`
+     * refuses a tape that has not declared `rng: { seed, split: true }` — see
+     * `finalBossRng.js` for why the split is a premise and not a preference
+     * (without it `Music.playSound("Rock", 0)` draws from this stream once
+     * per rock LANDING and the schedule is short by exactly that many).
+     */
+    let owlStream = null;
+    let owlStreamLevel = null;
+    const owlStreamFor = (n) => {
+        if (owlStream !== null) {
+            if (owlStreamLevel !== n) {
+                throw new Error(`levelRun: the Owl's draw stream was opened in level `
+                    + `${owlStreamLevel} and level ${n} is asking for it too. The `
+                    + 'generator is a `public static`, so its position is a fact about '
+                    + 'the PAGE — two rooms sharing one run would each have to pay the '
+                    + "other's build, and this rung has measured only L112's.");
+            }
+            return owlStream;
+        }
+        assertOwlStreamPremises(rng, `the Owl fight in level ${n}`);
+        owlStream = new OwlDrawStream(rng.seed);
+        owlStreamLevel = n;
+        // ⛔⛔ THE LEVEL BUILD IS ON THE SEEDED STREAM. `Bot.botStart` reseeds
+        // BELOW `FP.world = new Game(...)` — but `Game`'s constructor does not
+        // call `loadlevel`; `begin()` does, when the deferred swap lands,
+        // i.e. after `botStart` returned. So the room's own two gameplay ctor
+        // draws come FIRST (§19.3), and a model that started counting at tick
+        // 0 would be two draws behind for the whole run.
+        owlStream.levelBuild();
+        if (owlStream.count !== OWL_LEVEL_BUILD_DRAWS) {
+            throw new Error('levelRun: the Owl stream\'s level build spent '
+                + `${owlStream.count} draws and \`OWL_LEVEL_BUILD_DRAWS\` is `
+                + `${OWL_LEVEL_BUILD_DRAWS}. One of the two is wrong and neither is a `
+                + 'default.');
+        }
+        return owlStream;
+    };
+    /** The rocks and grenades this visit has spawned — RUNTIME bodies. */
+    let owlRocks = [];
+    let owlGrenades = [];
+    let owlPendingRocks = [];
+    let owlPendingGrenades = [];
+    let owlSpawnSeq = 0;
     /**
      * ⛓⛓⛓ R6 SLICE 6c: THE WATCHERS — a PLACED NPC's dialogue state.
      *
@@ -1262,6 +1431,74 @@ export function createLevelRun({
     const shieldBossKills = [];
     /** The `{19,0}` write `startDeath` makes — keyed like `bossFlags`. */
     const shieldBossFlags = new Map();
+    // ── ⛓⛓⛓ R6 SLICE 6f: the Owl's seven ledgers ───────────────────────
+    /**
+     * `{t, level, id, landed, force, reach, dist, why, vx, vy}` — one per HIT
+     * TEST that reached the Owl, landed or not.
+     *
+     * ⛔ EVERY TEST, AND THE `reach` IS THE POINT. One press is five
+     * dispatches and this receiver refuses NONE of them (`justKnock` sets no
+     * `hitsTimer`) — what refuses them is `Player.slash`'s own 16 px
+     * `FP.distanceRectPoint` gate against a body the earlier tests have
+     * already shoved. So "how many of the five land" is GEOMETRY, computed
+     * here per test, and the refused rows with their distances ARE the
+     * derivation. A ledger of landings alone would make the count look like a
+     * constant.
+     */
+    const finalBossShoves = [];
+    /**
+     * `{t, level, id, x, y, hits, killed, firstT, wholly, touching}` — one per
+     * tick the Owl's own lava test fired.
+     *
+     * ⛓ `wholly` AND `firstT` ARE BOTH RECORDED because they answer different
+     * questions. `firstT` is the GAME's predicate (`collide("Tile", x, y)`
+     * returns the first overlap in world order and the test is `t == 17` on
+     * THAT one — trap 95's selection); `wholly` is the order-independent
+     * sufficient condition a plan should aim for. A hit that is `firstT: 17`
+     * and `wholly: false` is a hit that depends on a file's line order.
+     */
+    const finalBossLava = [];
+    /**
+     * `{t, level, id, what, ...}` — `what` is `'kill'`, `'dieAnimEnded'` or
+     * `'tagsWritten'`, and they are 48 and 61 ticks apart.
+     */
+    const finalBossKills = [];
+    /** The `{112,0}` AND `{112,1}` writes `endAnim`'s "dead" arm makes. */
+    const finalBossFlags = new Map();
+    /**
+     * `{t, level, id, x, y, scale, box, shake, hitPlayer}` — one per ROCK that
+     * landed, and the `shake` is the draw it made.
+     */
+    const owlRockLandings = [];
+    /** `{t, level, id, what, x, y, dist, hitPlayer}` per grenade event. */
+    const owlGrenadeEvents = [];
+    /**
+     * `{t, level, phase, draws, shaking, shake, streamCount}` — EVERY TICK the
+     * Owl room ran.
+     *
+     * ⚠ A FULL LEDGER RATHER THAN AN EVENT ONE, for `shieldBossBand`'s reason
+     * with a harder claim: the exactness of this whole family is "the model
+     * turned the crank the same number of times as the game did, in the same
+     * order", and that is a statement about every tick. `finalBossRng`'s
+     * `owlTickDraws` is asserted against the stream's own delta on each of
+     * them, which is the one-table-two-computations shape — a phase row that
+     * disagreed with the sites the stream actually booked fails by name.
+     */
+    const owlTicks = [];
+    /**
+     * ⛔⛔⛔ THE POSITIVE WITNESS FOR THE CORPSE REFUSAL — trap 101's shape,
+     * the third time this rung needs it.
+     *
+     * `{t, id, rect, clearance}` — one per tick after `startDeath`.
+     * `startDeath` sets `type = "Solid"` and `death()` is an EMPTY override,
+     * so the body is a PERMANENT WALL where the third shove left it. This
+     * package does not carry it as a live-geometry key (no committed tape
+     * moves after the kill — the window ends 109 ticks later, standing still),
+     * so the guard is a REFUSAL on any overlap plus this clearance record: a
+     * plan asserts the corpse really existed, for this many ticks, and the
+     * stance cleared it by this much.
+     */
+    const finalBossCorpse = [];
     // ── ⛓⛓⛓ R6 SLICE 6c: the Watcher's three ledgers ───────────────────
     /**
      * `{t, level, id, cause, pages, page, flag}` — one per `doneTalking()`.
@@ -1864,6 +2101,20 @@ export function createLevelRun({
         turretStates.delete(n);
         bossStates.delete(n);
         shieldBossStates.delete(n);
+        // ⛓⛓⛓ R6 slice 6f: and the Owl, whose rebuild re-arms `started`,
+        // `rockfallTime`, `cpod`, `hitThisSequence` and `hits` — every one of
+        // them an instance field — and rebuilds his four pods, each replaying
+        // its constructor's `play("open")`. ⛔ THE DRAW STREAM IS NOT DROPPED:
+        // the generator is a `public static`, so its position is a fact about
+        // the PAGE and a re-entry pays a SECOND level build from wherever the
+        // first visit left it. `owlStreamFor` refuses a second room rather
+        // than modelling a position it has not measured.
+        finalBossStates.delete(n);
+        podStates.delete(n);
+        owlRocks = [];
+        owlGrenades = [];
+        owlPendingRocks = [];
+        owlPendingGrenades = [];
         // ⛓ R6 slice 6c. `new Game` rebuilds the NPC with `talked` false, and
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
@@ -3153,6 +3404,11 @@ export function createLevelRun({
             // all and an audit against the census box would report a hit on
             // an entity that is gone.
             shieldBosses: shieldBossRectsNow(),
+            // ⛓⛓⛓ R6 SLICE 6f: and the Owl's, which is the only one of the
+            // four that moves BETWEEN the five hit tests of a single press —
+            // and therefore the only one where the join decides how many of
+            // them land at all.
+            finalBosses: finalBossRectsNow(),
         });
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
@@ -3537,6 +3793,96 @@ export function createLevelRun({
                         swallowed: verdict.swallowed, aborted: verdict.aborted,
                         retaliated: verdict.retaliated,
                         why: verdict.refusedAt, hits: b.hits, was: before,
+                    });
+                }
+            } else if (r.as3 === 'FinalBoss') {
+                /**
+                 * ── ⛓⛓⛓ R6 SLICE 6f: THE SHOVE ─────────────────────────
+                 *
+                 * `Player.genericHit`'s `e is Enemy` arm — the class has no arm
+                 * of its own — so the call is `Enemy.hit(swordForce 5,
+                 * new Point(x, y), swordDamage, "Sword")` and `onlyHitBy =
+                 * "Lava"` sends it to `else if (justKnock) knockback(f, p)`.
+                 *
+                 * ⛔⛔⛔ AND THIS IS THE ARM WHERE THE FIVE TESTS ARE COUNTED
+                 * BY GEOMETRY. Every other receiver on the ladder refuses the
+                 * repeats with a timer of its own (`Watcher` 25, `IceTurret`
+                 * 30) or is idempotent. This one refuses NOTHING: `justKnock`
+                 * sets no `hitsTimer` at all. What ends the press is the
+                 * DISPATCHER — `Player.slash` re-collects with
+                 * `collideRectInto` and re-measures `FP.distanceRectPoint` on
+                 * every tick, and by test 3 the shove has carried the body 13
+                 * px along the ray. So the count is `SLASH_REACH` against a
+                 * receding 12x12 box, and it is computed here, per test, with
+                 * the distance recorded on the refusals.
+                 *
+                 * ⛔ `maxForce` IS THE BOSS'S OWN HISTORY: -1 (unclamped)
+                 * until the first lava hit and 2 after it, so the first press
+                 * is worth `n x 5` and every later one `n x 2`.
+                 * `finalBossHit` reads it off the state rather than taking it
+                 * as an argument, which is why the arm below passes only the
+                 * raw `swordForce`.
+                 */
+                const st = owlStateFor(level).bosses;
+                const b = st.get(r.finalBossId);
+                if (!b) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.finalBossId} in level ${level}, which is not in the `
+                        + "run's FinalBoss state. The press census and the run disagree "
+                        + 'about which bodies exist, which is the two-consumers failure '
+                        + 'this state family exists to prevent.');
+                }
+                const body = finalBossBox(b.x, b.y);
+                const reach = distanceRectPoint(state.x, state.y, body);
+                if (reach > SLASH_REACH) {
+                    finalBossShoves.push({
+                        t: ticksCompleted, level, id: b.id, landed: false,
+                        reach, force: 0, vx: b.vx, vy: b.vy, x: b.x, y: b.y,
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                            + 'the shove has carried him out of his own hit rect',
+                    });
+                    hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
+                } else if (b.destroy) {
+                    // ⛓ THE CORPSE IS STILL A RESPONDER (its type is "Solid",
+                    // which `Player.slash` collects) and `Enemy.hit`'s gate
+                    // chain refuses it: `canHit` is whatever the last live tick
+                    // left, and `justKnock`'s `knockback` reaches a body that
+                    // no longer runs `mobileUpdate`. Recorded as a refusal so a
+                    // late swing reads as a no-op rather than as a missing
+                    // event.
+                    finalBossShoves.push({
+                        t: ticksCompleted, level, id: b.id, landed: false,
+                        reach, force: 0, vx: b.vx, vy: b.vy, x: b.x, y: b.y,
+                        why: 'the body is a CORPSE — `destroy` is set, so `update()` '
+                            + 'returns above every arm and the knockback moves nothing',
+                    });
+                    hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
+                } else {
+                    assertFinalBossLineOfSight(b);
+                    const before = { x: b.x, y: b.y, vx: b.vx, vy: b.vy, hits: b.hits };
+                    const verdict = finalBossHit(b, {
+                        force: SWORD_FORCE,
+                        fromX: state.x,
+                        fromY: state.y,
+                        // ⛓ NOT "Lava" — a sword press can never be. The type
+                        // is what decides which arm of `Enemy.hit` runs, and
+                        // `onlyHitBy` admits exactly one string.
+                        type: weapon === 'spear' ? 'Spear' : 'Sword',
+                    });
+                    finalBossShoves.push({
+                        t: ticksCompleted, level, id: b.id,
+                        landed: verdict.landed,
+                        force: verdict.force,
+                        reach,
+                        why: verdict.why ?? null,
+                        x: before.x, y: before.y,
+                        vx: b.vx, vy: b.vy,
+                        maxForce: b.maxForce,
+                    });
+                    hits.push({
+                        as3: 'FinalBoss', id: b.id,
+                        landed: verdict.landed, killed: false,
+                        why: verdict.why ?? null, was: before,
                     });
                 }
             } else if (r.as3 === 'Watcher') {
@@ -4390,6 +4736,494 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R6 SLICE 6f: ONE FRAME OF L112, IN THE GAME'S OWN ORDER.
+     *
+     * `Game.loadlevel` adds the Player at `:2101`, the FinalBoss at `:2135`,
+     * the orb at `:2217` and the pods at `:2252`, and `World.addUpdate`
+     * PREPENDS — so the update list is
+     *
+     *     [runtime rocks/grenades, newest first]  ->  pods  ->  …
+     *       ->  orb  ->  rocklock  ->  FINALBOSS  ->  …  ->  Player LAST
+     *
+     * and every one of those positions is load-bearing:
+     *
+     *   1. ⛔ THE ROCKS UPDATE BEFORE THE BOSS, so a rock that lands on tick
+     *      N raises the `Game.shake` that tick N's own `view()` reads. That is
+     *      the feedback loop the draw schedule is built around (§16.8) — the
+     *      rock's `scale` is a draw, the shake it adds is that draw, and the
+     *      jiggle it keeps alive costs two more every frame.
+     *   2. ⛔ THE PODS' ANIMATIONS ADVANCE BEFORE THE BOSS READS THEM, so his
+     *      `pods[cpod].open` getter sees this tick's frame and not last
+     *      tick's — 22 updates of `open`/`close` in the wrong direction is a
+     *      whole barrage's phase.
+     *   3. ⛔ THE PLAYER MOVES LAST, so every position the boss reads (the
+     *      barrage's aim, the grenade's spawn) is the player's from the END of
+     *      the previous tick, and every sword hit the player deals lands
+     *      AFTER this function returns. `applyThrust` is called from the
+     *      player's slot for exactly that reason.
+     *
+     * ⛓ AND `view()` IS NOT IN HERE. The jiggle's two draws are a property of
+     * the FRAME, not of the boss — they fire on ticks he is frozen, dead and
+     * coasting — so they are spent at the camera step, below the player, where
+     * `Game.update` really calls `view()`. `owlJiggleNow` is that call.
+     *
+     * @returns {{frozen: boolean}} `frozen` is the INTRO's freeze, which is a
+     *   `Game.talking` freeze and therefore TAPE TICKS rather than dead frames
+     *   (`canInventory()` is false while `Game.talking`, and the else-arm
+     *   `inventory.open = false` IS `Game.freezeObjects = false`).
+     */
+    function stepOwlNow({ pressed: pressedPrimary, held: heldPrimary, wasHeld: wasHeldPrimary }) {
+        const { bosses, pods } = owlStateFor(level);
+        if (bosses.size === 0) return { frozen: false };
+        const stream = owlStreamFor(level);
+        // `updateLists()`'s ADD half, drained at the TOP of the following tick
+        // — the `pendingSeedAdds` convention, for the same reason: a tick can
+        // leave through four different returns and the bottom is only one.
+        if (owlPendingRocks.length > 0) {
+            owlRocks = [...owlPendingRocks, ...owlRocks];
+            owlPendingRocks = [];
+        }
+        if (owlPendingGrenades.length > 0) {
+            owlGrenades = [...owlPendingGrenades, ...owlGrenades];
+            owlPendingGrenades = [];
+        }
+        const frozenByCeremony = ceremony !== null;
+        const drawsBefore = stream.count;
+        const playerBox = playerBoxAt(state.x, state.y);
+
+        // ── 1a. the rocks, newest first ────────────────────────────────
+        //
+        // ⛓ `RockFall.added()` sets `solids = []` on BOTH sides of its own
+        // overlap test, so the fall collides with nothing and the landing tick
+        // is a pure function of the constants: n = 16, for every scale and
+        // every aim (`rockFallUpdatesToLand`).
+        let rockSpawnedThisTick = false;
+        for (const r of owlRocks) {
+            if (!frozenByCeremony) {
+                const res = stepRockFall(r);
+                if (res.landed) {
+                    // `Game.shake += sprRockFall.scale + 1` — the ONE writer on
+                    // the roster with no constant, because its amount is the
+                    // draw that made the rock (`camera.SHAKE_WRITERS`).
+                    shake = applyShakeWriter(shake, 'rockFallLanding', res.shake);
+                    const box = rockFallBox(r);
+                    // `var p:Player = collide("Player", x, y); if (p) p.hit(...)`
+                    // — the landing tick only, and the box is the TWICE-
+                    // truncated one (trap 108: `setHitbox` takes ints and the
+                    // second call re-derives its origins from the first's).
+                    const hits = rectsOverlap(box, playerBox);
+                    owlRockLandings.push({
+                        t: ticksCompleted, level, id: r.id, x: r.x, y: r.y,
+                        scale: r.scale, box, shake: res.shake, hitPlayer: hits,
+                    });
+                    if (hits) {
+                        applyPlayerHit({
+                            source: 'owlRock',
+                            id: r.id,
+                            force: ROCK_FALL.force,
+                            damage: ROCK_FALL.damage,
+                            from: { x: r.x, y: r.y },
+                        });
+                        if (pendingDeath) return { frozen: false };
+                    }
+                }
+            }
+            // ⛓ THE GRAPHIC IS NEVER FREEZE-GATED (`World.update` advances it
+            // outside the `e.active` test), so a break animation keeps running
+            // through a ceremony and the rock still leaves on schedule.
+            advanceRockFallGraphic(r);
+        }
+
+        // ── 1b. the grenades, newest first ─────────────────────────────
+        for (const g of owlGrenades) {
+            stepOwlGrenade(g);
+            const cb = advanceOwlGrenadeGraphic(g);
+            if (cb === 'exploded') {
+                // `animEnd`'s "explode" arm: `FP.distance(x, endY, p.x, p.y)
+                // <= hitRadius` against the player's ENTITY point, read at the
+                // grenade's slot — i.e. from the end of the previous tick.
+                const dist = Math.hypot(g.x - state.x, g.y - state.y);
+                const reaches = dist <= GRENADE.hitRadius;
+                owlGrenadeEvents.push({
+                    t: ticksCompleted, level, id: g.id, what: 'exploded',
+                    x: g.x, y: g.y, dist, hitPlayer: reaches,
+                });
+                if (reaches) {
+                    applyPlayerHit({
+                        source: 'owlGrenade',
+                        id: g.id,
+                        force: GRENADE.force,
+                        damage: GRENADE.damage,
+                        from: { x: g.x, y: g.y },
+                    });
+                    if (pendingDeath) return { frozen: false };
+                }
+            } else if (cb === 'removed') {
+                owlGrenadeEvents.push({
+                    t: ticksCompleted, level, id: g.id, what: 'removed',
+                    x: g.x, y: g.y, dist: null, hitPlayer: false,
+                });
+                assertGrenadeRemovalOpensNothing(g);
+            }
+        }
+
+        // ── 1c. the pods' animations ───────────────────────────────────
+        for (const p of pods) advancePodGraphic(p);
+        /**
+         * ⛔⛔⛔ THE PIN, AS A REFUSAL — and it survives `noDamage`.
+         *
+         * `Pod.update`'s arm is `p.x = x; p.y = y; p.v.x = p.v.y = 0;` and
+         * THEN `p.hit(null, 0, null, 1)`. The three position writes are ABOVE
+         * the `hit`, so `Bot.noDamage` — which returns at the top of
+         * `Player.hit` — suppresses the heart and leaves the TELEPORT, and the
+         * re-snap runs on every tick of overlap. A pinned player cannot walk
+         * out at any `noDamage` setting, which is why `hazards.js` files the
+         * volume `hard-avoid` on a damage of one.
+         *
+         * ⇒ this rung AVOIDS the cell by construction and asserts it rather
+         * than modelling the pin. A tape that lands in one is not a tape that
+         * takes a heart; it is a tape whose every later position is a fiction.
+         */
+        for (const p of pods) {
+            if (!podIsLethal(p)) continue;
+            const box = { x: p.x - 8, y: p.y - 8, right: p.x + 8, bottom: p.y + 8 };
+            if (!rectsOverlap(box, playerBox)) continue;
+            throw new Error(`levelRun: the player is inside ${p.id}'s 16x16 cell at tick `
+                + `${ticksCompleted} in level ${level} with its animation "closed". `
+                + '`Pod.update` writes `p.x`/`p.y`/`p.v` ABSOLUTELY on every tick of '
+                + 'overlap and the writes sit ABOVE `p.hit`, so `Bot.noDamage` leaves the '
+                + 'TELEPORT and a pinned player cannot walk out at any setting. This rung '
+                + 'avoids the four pod cells by construction. Move the stance.');
+        }
+
+        // ── 1d. the boss, then his graphic — one pass, both calls ──────
+        const b = [...bosses.values()][0];
+        /**
+         * ⛔⛔ THE ONE SPAN SHAPE THE INTRO'S MECHANISM IS AMBIGUOUS ON.
+         *
+         * §19.5 measured the intro ending on a length-1 `primary` span's
+         * `from`, twice, off the drift-free position — and named two mechanisms
+         * that both fit: `Bot` delivering a length-1 span's release inside its
+         * own tick, or the recompiled runtime's `Input.released` being true on
+         * the DOWN edge. They agree on a length-1 span and DISAGREE on a longer
+         * one (the first would end the intro on `to`, the second on `from`).
+         * ⇒ a longer span is refused rather than guessed, which keeps the
+         * measurement a measurement instead of turning it into a claim about
+         * the mechanism.
+         */
+        if (!b.started && heldPrimary && wasHeldPrimary) {
+            throw new Error(`levelRun: the tape holds \`primary\` across tick `
+                + `${ticksCompleted} while the Owl's intro is still up. §19.5 measured `
+                + 'the intro ending on a length-1 span\'s `from` and named two mechanisms '
+                + 'that fit; they DISAGREE on a longer span (one would end it on `to`). '
+                + 'Use a one-tick `primary` span for the intro, or settle the mechanism '
+                + 'with the `pressed`/`released` echo `R6_AS3_DECISION.stillOwed` wants.');
+        }
+        const wasDestroyed = b.destroy;
+        const step = stepFinalBoss(b, {
+            frozen: frozenByCeremony,
+            // The player as the boss sees them: the END of the previous tick,
+            // because he updates first.
+            player: { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
+            solidAt: (x, y) => !!world.collidesSolid(finalBossBox(x, y), liveSolidOpts()),
+            firstTileAt: (x, y) => firstTileUnder(world.tiles, finalBossBox(x, y)),
+            stream,
+            spawnRock: (argX, argY, scale) => {
+                rockSpawnedThisTick = true;
+                owlSpawnSeq += 1;
+                owlPendingRocks.push(createRockFall(argX, argY, scale,
+                    { id: `rock${owlSpawnSeq}@${ticksCompleted}` }));
+            },
+            spawnGrenade: (x, y) => {
+                owlSpawnSeq += 1;
+                // `new Grenade(x - 8, y - 8, true, 30)` — and the two half
+                // tiles cancel, so the grenade is born at the Owl's own entity
+                // point. `createOwlGrenade` takes that point.
+                owlPendingGrenades.push(createOwlGrenade(x + 8, y + 8,
+                    { id: `grenade${owlSpawnSeq}@${ticksCompleted}` }));
+                owlGrenadeEvents.push({
+                    t: ticksCompleted, level, id: `grenade${owlSpawnSeq}@${ticksCompleted}`,
+                    what: 'spawned', x: x + 8, y: y + 8, dist: null, hitPlayer: false,
+                });
+            },
+            pods: pods.map((p, i) => ({
+                get open() { return p.anim === 'open' || p.anim === 'opened'; },
+                set open(v) { setPodOpen(p, v); },
+                x: FINAL_BOSS.podPositions[i].x,
+                y: FINAL_BOSS.podPositions[i].y,
+            })),
+            // ⛔⛔ THE INTRO ENDS ON THE SPAN'S `from`, MEASURED TWICE (§19.5).
+            // `FinalBoss.as:88` reads `Input.released(p.keys[6])`, and a
+            // length-1 `primary` span is documented as a press edge on `from`
+            // and a release edge on `to` — but the game put the boss one
+            // 0.5303 px step further along than a release on `to` permits, at
+            // `from = 2` and again at `from = 10`. The model TAKES THE
+            // MEASUREMENT and the mechanism is a wanted readout, not a wall
+            // (`r6Acceptance.R6_AS3_DECISION.stillOwed`). ⚠ A longer span is
+            // where the two candidate mechanisms would disagree, so
+            // `assertIntroSpanIsOnePrimitive` refuses one rather than picking.
+            introRelease: pressedPrimary,
+        });
+        for (const e of step.events) {
+            if (e.what === 'lava') {
+                const verdict = finalBossLavaVerdict(world.tiles, e.x, e.y);
+                finalBossLava.push({
+                    t: ticksCompleted, level, id: b.id, x: e.x, y: e.y,
+                    hits: e.hits, landed: e.landed, killed: e.killed, why: e.why,
+                    firstT: verdict.firstT, wholly: verdict.wholly,
+                    touching: verdict.touching, overlapped: verdict.overlapped,
+                });
+                if (e.killed) {
+                    const sched = finalBossDeathSchedule(ticksCompleted);
+                    finalBossKills.push({
+                        t: ticksCompleted, level, id: b.id, what: 'kill',
+                        x: e.x, y: e.y,
+                        dieEndsAt: sched.dieEndsAt,
+                        tagTick: sched.tagTick,
+                        ticksFromKill: sched.ticksFromKill,
+                    });
+                }
+            }
+        }
+        // `World.update` calls `e._graphic.update()` AFTER `e.update()` in the
+        // same pass and OUTSIDE `if (e.active)` — so the die/dead chain
+        // advances on ticks the boss himself returns early from, which is
+        // every tick after `startDeath`.
+        let deathArmFired = false;
+        for (const e of advanceFinalBossGraphic(b)) {
+            if (e.what === 'dieAnimEnded') {
+                finalBossKills.push({
+                    t: ticksCompleted, level, id: b.id, what: 'dieAnimEnded',
+                });
+            } else if (e.what === 'deadAnimEnded') {
+                /**
+                 * `endAnim`'s "dead" arm, in ITS OWN ORDER: five RockFalls
+                 * (ten draws), then `Button.activateAll(null, 0, true)`, then
+                 * BOTH persistence writes.
+                 *
+                 * ⛔ THE SECOND FLAG IS A DIRECT WRITE. `setPersistence(tag+1)`
+                 * is its own line; the button sweep beside it opens the same
+                 * `rocklock@112,16 {tset 0}` by its GROUP and the tag does not
+                 * depend on the sweep reaching anything. Two mechanisms, one
+                 * arm, and the ledger records the flag rather than the lock.
+                 */
+                deathArmFired = true;
+                for (let i = 0; i < 5; i += 1) {
+                    const argX = stream.deathRockX();
+                    const scale = stream.rockScale();
+                    owlSpawnSeq += 1;
+                    owlPendingRocks.push(createRockFall(argX, (i / 5) * 32, scale,
+                        { id: `deathrock${i}@${ticksCompleted}` }));
+                }
+                for (const tag of [b.tag, b.tag + 1]) {
+                    const flag = outOfBandFlagFor(level, tag);
+                    finalBossFlags.set(ledgerKey(flag), { ...flag, id: b.id, level });
+                    if (!pendingEarnedClears.has(flag.level)) {
+                        pendingEarnedClears.set(flag.level, new Set());
+                    }
+                    pendingEarnedClears.get(flag.level).add(flag.tag);
+                }
+                finalBossKills.push({
+                    t: ticksCompleted, level, id: b.id, what: 'tagsWritten',
+                    flags: [{ level, tag: b.tag }, { level, tag: b.tag + 1 }],
+                });
+            }
+        }
+        if (b.destroy && !wasDestroyed) {
+            finalBossKills.push({
+                t: ticksCompleted, level, id: b.id, what: 'startDeath', x: b.x, y: b.y,
+            });
+        }
+
+        // ── `Enemy.update`'s TAIL: `hitPlayer()` ──────────────────────
+        //
+        // ⛔ THE OWL TAKES IT UNCHANGED — the 12x12 box at force 3, damage 1,
+        // gated on `hitsTimer <= 0` and `currentAnim != "die"`. `Bot.noDamage`
+        // is what makes it byte-inert for every pre-R6 tape, so the scan is
+        // behind the flag exactly as `stepContactsNow`'s is.
+        //
+        // ⚠ AND IT SITS ONE STATEMENT LATE, WITH THE COUPLING NAMED. In the
+        // game `hitPlayer()` is inside `super.update()`, i.e. ABOVE the lava
+        // test and the phase arms — so a contact that knocks the player back
+        // changes the `p.v` the barrage's aim then reads, on that same tick.
+        // Reaching that ordering needs `stepFinalBoss` split in two, and the
+        // case is unreachable while the pods are avoided (a contact during a
+        // barrage means standing on a boss who is sitting in a pod cell). It
+        // is REFUSED rather than approximated.
+        if (!noclip && !noDamage && !b.destroy && b.hitsTimer <= 0 && !frozenByCeremony) {
+            if (rectsOverlap(finalBossBox(b.x, b.y), playerBox)) {
+                if (rockSpawnedThisTick) {
+                    throw new Error(`levelRun: the Owl's body touched the player at tick `
+                        + `${ticksCompleted} on a tick that also SPAWNED a rock. In the `
+                        + 'game `hitPlayer()` runs inside `super.update()`, above the '
+                        + "phase arms, so the knockback would change the `p.v` the "
+                        + 'barrage aim reads on this very tick — and this model runs the '
+                        + 'contact after the arms. Refused rather than approximated.');
+                }
+                applyPlayerHit({
+                    source: 'owlBody',
+                    id: b.id,
+                    force: PLAYER_DAMAGE.contactForce,
+                    damage: 1,
+                    from: { x: b.x, y: b.y },
+                });
+                if (pendingDeath) return { frozen: false };
+            }
+        }
+
+        /**
+         * ⛔⛔⛔ THE CORPSE, AS A REFUSAL PLUS A POSITIVE WITNESS (trap 101).
+         *
+         * `startDeath` writes `type = "Solid"` and `death()` is an EMPTY
+         * override, so the body is a wall at the third shove's endpoint for
+         * the rest of the visit. This package does NOT carry it as a
+         * live-geometry key — the bound is named: no committed tape moves
+         * after the kill (W-owl stands still for the 109 ticks to the tags),
+         * so a 15th key would have no witness and `LIVE_GEOMETRY_KEYS`' own
+         * lesson is that an unwitnessed key is worse than none. What guards
+         * the bound is this: any overlap throws, and the CLEARANCE is recorded
+         * every tick so a plan can assert the wall really was there.
+         */
+        if (b.destroy) {
+            const corpse = finalBossBox(b.x, b.y);
+            const clearance = distanceRectPoint(state.x, state.y, corpse);
+            finalBossCorpse.push({
+                t: ticksCompleted, level, id: b.id, rect: corpse, clearance,
+            });
+            if (rectsOverlap(corpse, playerBox)) {
+                throw new Error(`levelRun: the player's box overlaps the Owl's CORPSE at `
+                    + `tick ${ticksCompleted} in level ${level}. \`startDeath\` set `
+                    + '`type = "Solid"` and `death()` is an empty override, so the body '
+                    + 'is a permanent wall where the third shove left it — and this rung '
+                    + 'does not carry it as a live-geometry key, because no tape needed '
+                    + 'to. Choose a third endpoint that seals nothing, or add the key.');
+            }
+        }
+
+        // ── `updateLists()`'s REMOVE half ─────────────────────────────
+        owlRocks = owlRocks.filter((r) => !r.removeRequested);
+        owlGrenades = owlGrenades.filter((g) => !g.removeRequested);
+
+        /**
+         * ⛔⛔ THE SCHEDULE, CHECKED AGAINST ITSELF — the one-table-two-
+         * computations law on a DRAW COUNT.
+         *
+         * `owlTickDraws(phase, shaking)` walks `OWL_PHASE_SITES` and counts;
+         * `stream.count` is what the fight actually booked. They are two
+         * computations of one number and a disagreement is the §19.2 defect
+         * (a census of SITES that does not discharge a schedule of TICKS)
+         * happening again — so it throws by name here rather than surfacing as
+         * a rock 40 px from where the game put it.
+         *
+         * ⚠ THE JIGGLE IS NOT IN THIS COMPARISON. It is spent below the
+         * player, at `view()`, so `shaking: false` is right for this call and
+         * `owlJiggleNow` makes its own assertion.
+         */
+        const spent = stream.count - drawsBefore;
+        /**
+         * ⛔⛔ AND THE DEATH ARM IS A SECOND ROW ON THE SAME TICK, WHICH IS
+         * WHAT THIS CHECK CAUGHT ON ITS FIRST RUN.
+         *
+         * `OWL_PHASE_SITES` is keyed on the arm the BOSS's `update()` took,
+         * and on the tag tick that arm is `frozen` — `destroy` is set, so he
+         * returns right after `super.update()` and costs the stream nothing.
+         * The ten draws come from the GRAPHIC: `endAnim`'s "dead" arm, in the
+         * same pass, five rocks at two draws each. So a tick's site list is
+         * `phase ++ (deathAnim if the callback fired) ++ jiggle`, and reading
+         * the phase alone is one row short exactly once per fight.
+         *
+         * ⛓ Found by the check rather than by a recording, which is the whole
+         * reason it is a throw and not a log — §19.2's defect (a census of
+         * SITES that does not discharge a schedule of TICKS) recurring inside
+         * the very slice that banked the lesson.
+         */
+        const owed = owlTickDraws(step.phase, false)
+            + (deathArmFired ? owlTickDraws('deathAnim', false) : 0);
+        if (spent !== owed) {
+            throw new Error(`levelRun: the Owl's tick ${ticksCompleted} took phase `
+                + `"${step.phase}"${deathArmFired ? ' + the death arm' : ''}, which `
+                + `\`OWL_PHASE_SITES\` prices at ${owed} draw(s), and the stream booked `
+                + `${spent}. The schedule and the sites disagree — which is §19.2's `
+                + 'defect (a census of sites is not a schedule of ticks) recurring. Fix '
+                + 'the table, not this check.');
+        }
+        owlTicks.push({
+            t: ticksCompleted,
+            level,
+            phase: step.phase,
+            deathArm: deathArmFired,
+            draws: spent,
+            shake,
+            streamCount: stream.count,
+            bossX: b.x,
+            bossY: b.y,
+            hits: b.hits,
+            rockfallTime: b.rockfallTime,
+            cpod: b.cpod,
+            rocks: owlRocks.length,
+            grenades: owlGrenades.length,
+        });
+        return { frozen: step.introFreeze };
+    }
+
+    /**
+     * `view()`'s two draws, spent where `Game.update` really spends them.
+     *
+     * ⛔ ONE CALL PER FRAME AND IT IS BELOW EVERY ENTITY. `Game.as:1879-1880`
+     * is `FP.camera.x += shake * Math.random() - shake / 2` and the same for
+     * `y`, with the decay `shake = Math.max(shake - 1, 0)` on the line after —
+     * so the draws are made against the shake AFTER every rock that landed
+     * this tick has added to it, and the decay is once per FRAME however many
+     * landed.
+     *
+     * ⚠ THE CAMERA STAYS A BAND. §11.6's carry: the jiggle's VALUES are
+     * modelled now, and `stepCameraBand` still keeps the interval, because
+     * `onScreen` within 9 px of a screen edge is a refusal either way and
+     * collapsing the band would be a second change with no witness. What this
+     * function owns is the STREAM POSITION, which is the quantity the fight
+     * reads.
+     */
+    function owlJiggleNow() {
+        if (owlStream === null || level !== owlStreamLevel) return;
+        if (shake <= 0) return;
+        const before = owlStream.count;
+        owlStream.jiggle(shake);
+        if (owlStream.count - before !== 2) {
+            throw new Error('levelRun: the Owl room\'s jiggle spent '
+                + `${owlStream.count - before} draws, and \`view()\` makes exactly two.`);
+        }
+    }
+
+    /**
+     * ⛓ A grenade's REMOVAL moves `classCount(Grenade)`, and `Grenade` IS in
+     * `totalEnemies()` — so the scan is computed rather than skipped, on the
+     * `IceTurret` arm's law: "there were no kill locks" and "nobody looked"
+     * print the same thing.
+     *
+     * ⚠ AND THE ANSWER FOR L112 IS NIL FOR A REASON THAT IS NOT THE COUNT.
+     * The room's one lock is `rocklock@112,16 {tset 0}` — a GROUP lock, not a
+     * `tset == -1` kill lock — so nothing in the room reads `totalEnemies()`
+     * at all. Computed from the level record so the nil is a measurement.
+     */
+    function assertGrenadeRemovalOpensNothing(g) {
+        const census = world.combat?.enemies ?? null;
+        const roster = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+        // The grenade is a RUNTIME body and is in no census; both sides of the
+        // ledger therefore carry the placed roster and the difference is the
+        // one entity this removal takes out.
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: [...roster, { as3: 'Grenade' }],
+            bodiesAfter: roster,
+        });
+        if (!led.nil) {
+            throw new Error(`levelRun: ${g.id}'s removal at tick ${ticksCompleted} OPENS `
+                + `${led.opens.length} kill lock(s) in level ${level} (${led.why}) — a `
+                + 'blocker the walk did not earn. The Owl\'s grenades are spawned by his '
+                + 'own script, so this would be a route change nothing asked for.');
+        }
+    }
+
+    /**
      * ⛔ `Player.slash`'s SECOND filter, and the reason it is an assertion
      * rather than a model.
      *
@@ -4406,6 +5240,37 @@ export function createLevelRun({
      * if any Solid is on it. Exact for a straight line, and it refuses
      * loudly rather than assuming the arena is open.
      */
+    /**
+     * ⛔ `Player.slash`'s line-of-sight gate, for the Owl.
+     *
+     * `if (!FP.world.collideLine("Solid", x, y, v[i].x, v[i].y) || hasGhostSword
+     * || v[i].type == "Solid" || v[i].type == "Rope" || v[i] is Flyer)` — and
+     * the Owl's `type` is `"Enemy"`, so NONE of the three waivers fires and
+     * the line really is consulted. Same treatment as the Shieldspire's: walk
+     * the segment at 1 px and refuse loudly rather than assume the arena is
+     * open.
+     *
+     * ⛓ AND THE ARENA IS OPEN — that is what makes this cheap. L112's only
+     * `"Solid"` tiles are its walls and the `rocklock`; the whole lava octagon
+     * and its `t == 16` ring are walkable floor, so a stance adjacent to the
+     * boss anywhere in the arena has a clear line. The check exists because
+     * the CORPSE's type becomes `"Solid"` and a second Owl-shaped wall in the
+     * middle of the room is exactly the thing a later press would be blocked
+     * by.
+     */
+    function assertFinalBossLineOfSight(b) {
+        const blocker = collideLineSolid(state.x, state.y, b.x, b.y);
+        if (blocker) {
+            throw new Error(`levelRun: the swing at (${state.x}, ${state.y}) reaches `
+                + `${b.id}'s rect but \`collideLine("Solid", …)\` finds `
+                + `${blocker.tag ?? 'a Solid'} at (${blocker.at.x}, ${blocker.at.y}) on `
+                + `the line to his entity point (${b.x}, ${b.y}). \`Player.slash\`'s `
+                + 'line-of-sight gate REFUSES that hit — the type waivers do not fire for '
+                + 'an `"Enemy"` — so the shove would land in the model and miss in the '
+                + 'game. Re-aim the stance.');
+        }
+    }
+
     function assertShieldBossLineOfSight(b) {
         const blocker = collideLineSolid(state.x, state.y, b.x, b.y);
         if (blocker) {
@@ -6640,6 +7505,74 @@ export function createLevelRun({
                 bandRect: shieldBossBandRect(b),
             }));
         },
+        // ── ⛓⛓⛓ R6 SLICE 6f: THE OWL'S SEVEN LEDGERS ──────────────────
+        /**
+         * One per HIT TEST that reached the Owl — landed or refused, with the
+         * `reach` that decided it.
+         *
+         * ⛔ THE REFUSALS ARE THE DERIVATION. This receiver refuses none of a
+         * press's five dispatches (`justKnock` sets no `hitsTimer`); what ends
+         * the press is `Player.slash`'s own 16 px gate against a body the
+         * earlier tests have already shoved. So "how many of the five land" is
+         * a fact about geometry, and a ledger of landings alone would read as
+         * a constant.
+         */
+        get finalBossShoves() { return finalBossShoves.map((r) => ({ ...r })); },
+        /**
+         * One per tick the lava self-hit fired — with BOTH predicates.
+         * `firstT` is the game's (`collide("Tile", …)` returns the first
+         * overlap in world order, trap 95); `wholly` is the order-independent
+         * one a plan should aim for. A hit that is `firstT: 17, wholly: false`
+         * is a hit that depends on a file's line order.
+         */
+        get finalBossLava() { return finalBossLava.map((r) => ({ ...r })); },
+        /**
+         * The death's four instants — `kill`, `startDeath`, `dieAnimEnded`,
+         * `tagsWritten` — as separate rows. ⛔ The tags are 109 ticks after
+         * the kill and NOTHING is written before them: a window that ends on
+         * the kill has killed him and witnessed nothing.
+         */
+        get finalBossKills() { return finalBossKills.map((r) => ({ ...r })); },
+        /** `{112,0}` AND `{112,1}`, both from `endAnim`'s "dead" arm. */
+        get finalBossFlags() { return [...finalBossFlags.values()].map((f) => ({ ...f })); },
+        /** One per rock that LANDED — its box, the shake it made, and the hit. */
+        get owlRockLandings() { return owlRockLandings.map((r) => ({ ...r })); },
+        /** One per grenade event — `spawned`, `exploded` (with its radius), `removed`. */
+        get owlGrenadeEvents() { return owlGrenadeEvents.map((r) => ({ ...r })); },
+        /**
+         * EVERY TICK of the Owl room: the phase, its draw cost, the shake, the
+         * stream's absolute position and the boss's own state.
+         *
+         * ⛓ This is the family's exactness claim in one list — "the model
+         * turned the crank the same number of times as the game did, in the
+         * same order" is a statement about every tick, and `owlTickDraws` is
+         * asserted against the stream's own delta on each of them.
+         */
+        get owlTicks() { return owlTicks.map((r) => ({ ...r })); },
+        /** One per tick after `startDeath` — the corpse's rect and the clearance. */
+        get finalBossCorpse() { return finalBossCorpse.map((r) => ({ ...r })); },
+        /** The Owl's live state, for a stance that has to plan around him. */
+        get finalBosses() {
+            const st = owlStateFor(level).bosses;
+            return [...st.values()].map((b) => ({
+                id: b.id, x: b.x, y: b.y, vx: b.vx, vy: b.vy,
+                started: b.started, rockfallTime: b.rockfallTime, cpod: b.cpod,
+                hitThisSequence: b.hitThisSequence, hits: b.hits, hitsTimer: b.hitsTimer,
+                maxForce: b.maxForce, canHit: b.canHit, destroy: b.destroy,
+                anim: b.anim, animAge: b.animAge, tagsWritten: b.tagsWritten,
+                box: finalBossBox(b.x, b.y),
+            }));
+        },
+        /** The four pods, in the BOSS's `podPositions` order — see `podStates`. */
+        get owlPods() {
+            return owlStateFor(level).pods.map((p) => ({
+                id: p.id, x: p.x, y: p.y, anim: p.anim, animAge: p.animAge,
+                lethal: podIsLethal(p),
+            }));
+        },
+        /** The draw stream's absolute position, or null if no Owl room was entered. */
+        get owlStreamCount() { return owlStream === null ? null : owlStream.count; },
+        get owlStreamState() { return owlStream === null ? null : owlStream.state; },
         // ── ⛓⛓⛓ R6 SLICE 6c: the Watcher's three readouts ─────────────
         /**
          * `{t, level, id, cause, pages, page, frames, flag}` per
@@ -7218,6 +8151,60 @@ export function createLevelRun({
                     }
                     prevHeld = new Set(held);
                     return runFrozenTick(activators, 'the final door\'s seal ceremony');
+                }
+            }
+
+            // ── ⛓⛓⛓ R6 SLICE 6f: THE OWL ROOM, IN ONE SLOT ────────────
+            //
+            // Rocks, grenades, pods and the boss, in `World.update`'s own
+            // order — see `stepOwlNow` for why each of those four positions is
+            // load-bearing. It sits here, above the ceremony's early return
+            // and above the player, for the ShieldBoss's reason:
+            // `Enemy.update`'s tail (`hitUpdate`, `hitPlayer`) has no
+            // `Game.freezeObjects` test anywhere above it.
+            //
+            // ⚠ AND THE ORDER BETWEEN THIS AND THE OTHER FAMILIES IS A
+            // BOUNDED VACUITY WITH ITS BOUND NAMED: L112 holds no spinner, no
+            // pushable, no crusher, no turret, no chest, no pulser, no
+            // watcher, no door and no pickup — the whole room is four pods,
+            // four plant torches, an orb, a rocklock, two teleporters and the
+            // Owl. The relative slot is therefore unobservable today; it is
+            // placed where the add order says because the alternative is a
+            // slot chosen by convenience that a second room would silently
+            // invalidate.
+            //
+            // ⛔ THE INTRO'S FREEZE IS A TAPE TICK, NOT A DEAD FRAME. It is a
+            // `Game.talking` freeze (`FinalBoss.as:81-86` sets both), and
+            // `Game.update`'s `else if (inventory) inventory.open = false` IS
+            // `Game.freezeObjects = false` — so the flag is lowered at the end
+            // of every one of its own frames and the bot's dead-frame gate
+            // never sees it. `runFrozenTick` is the same treatment the
+            // Watcher's dialogue gets, for the same reason.
+            if (!noclip) {
+                const ow = stepOwlNow({
+                    // ⛔ THE RAW KEYS, NOT `acting`. `FinalBoss.update` reads
+                    // `Input.released(p.keys[6])` DIRECTLY, outside
+                    // `Player.input()` — so neither the intro's own freeze nor
+                    // a touch-lock's `receiveInput = false` can hide the edge.
+                    // The same directness that makes `Bot.autoAdvance` a
+                    // hazard for the Oracle (§18.7) makes the intro
+                    // dismissable while the world is frozen.
+                    pressed: held.has(TALK_KEY) && !wasHeld.has(TALK_KEY),
+                    held: held.has(TALK_KEY),
+                    wasHeld: wasHeld.has(TALK_KEY),
+                });
+                if (ow.frozen) {
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: the Owl\'s intro freeze and a pickup '
+                            + `ceremony are both up at tick ${ticksCompleted}. The intro's `
+                            + 'is a `Game.talking` freeze (its frames are TAPE TICKS) and '
+                            + 'a ceremony\'s phase A is DEAD frames; running them together '
+                            + 'would interleave two clocks. Refused rather than '
+                            + 'approximated.');
+                    }
+                    prevHeld = new Set(held);
+                    owlJiggleNow();
+                    return runFrozenTick(activators, 'the Owl\'s intro');
                 }
             }
 
@@ -8081,6 +9068,13 @@ export function createLevelRun({
             // `onScreen` tests are gated against. On a transition the swap
             // happens below and rebuilds it, which is `Game`'s own
             // reconstruction.
+            // ⛓⛓⛓ R6 SLICE 6f: AND `view()`'s TWO DRAWS ARE PART OF IT.
+            // `Game.as:1879-1880` jiggles the camera from `Game.shake` before
+            // the decay on the line below, so the draws are spent against a
+            // shake every rock that landed this tick has already added to.
+            // Above `stepCameraNow` because that call is what performs the
+            // decay, and the two draws come first.
+            owlJiggleNow();
             if (!next.transition) stepCameraNow(next, world.world);
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
