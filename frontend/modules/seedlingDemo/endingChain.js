@@ -1,0 +1,405 @@
+/**
+ * seedlingDemo/endingChain — THE ENDING, TRANSCRIBED: a placed NPC's
+ * dialogue, the door's two-arm approach, and a Seed with three terminal
+ * branches and two reboots.
+ *
+ * Region-atlas Phase 8, subtractive ladder rung R6, slice 6b. Brief:
+ * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §§14.5–14.9, with §15.14
+ * as the correction list.
+ *
+ * ── WHY THIS IS NOT `dialogue.js` ─────────────────────────────────────
+ *
+ * `dialogue.js` models the ceremony a PICKUP runs: a temporary NPC that is
+ * born already `talking`, with no radius, no key to start it, and no life
+ * after its last page. Every one of those four is different for a PLACED
+ * NPC, and three of them are load-bearing here:
+ *
+ *   · **it has a radius** — `FP.distance(x, y, p.x, p.y) <= talkRange`,
+ *     an origin-to-origin CIRCLE of 24 px, re-evaluated every frame;
+ *   · **leaving the radius ENDS the dialogue** (`NPC.talk`'s `else` arm
+ *     sets `talked = false` and `talking = false`), so a stance that
+ *     drifts out mid-page restarts the whole thing from page 0;
+ *   · **`doneTalking()` is a real override** — for the Watcher it is the
+ *     `{114,0}` write, which is the window's whole claim;
+ *   · and the start needs no key at all, because `keyNeeded` is
+ *     `!Game.checkPersistence(tag)` and a fresh boot's persistence is all
+ *     `true`. A Watcher AUTO-TALKS on proximity.
+ *
+ * The two share `stepDialogue`'s per-frame typing arithmetic and nothing
+ * else, so that is imported and the rest is here.
+ *
+ * ── ⛔⛔ THE TICK/FRAME SPLIT, AND THE LINE THAT DECIDES IT ────────────
+ *
+ * Three freezes appear in this chain and they cost the tape different
+ * things, which is the single most expensive thing to get wrong:
+ *
+ * ```
+ *   Game.update:  … super.update()  …  if (canInventory()) inventory.update()
+ *                                      else if (inventory) inventory.open = false
+ * ```
+ *
+ * `canInventory()` is `inventory && !talking && p && p.receiveInput &&
+ * !p.destroy` (`Game.as:1494`) and `Inventory.set open` is
+ * `Game.freezeObjects = _open = _o` (`Inventory.as:153`). ⇒ **while
+ * `Game.talking` is true, the ELSE arm clears the freeze at the end of
+ * every frame** — so a DIALOGUE frame is raised inside `World.update` and
+ * lowered before the next frame's dead-frame gate reads it, and the tape's
+ * tick counter runs. A freeze raised by anything that does NOT set
+ * `Game.talking` — a `SealController`, a `Pickup`'s phase A, a `Seed`'s
+ * cover fade — is never lowered, and those frames are DEAD.
+ *
+ * That is the mechanism `dialogue.js`'s docblock describes as "a sticky
+ * static with several writers and no per-frame reset" without naming; it
+ * is named here because this rung has to predict BOTH kinds in one window.
+ */
+
+import { INITIAL_FRAMES_THIS_CHARACTER, beginDialogue, stepDialogue } from './dialogue.js';
+import { animCallbackUpdate } from './r6Acceptance.js';
+
+export class EndingError extends Error {
+    constructor(message) { super(message); this.name = 'EndingError'; }
+}
+const fail = (m) => { throw new EndingError(m); };
+
+// ── the placed NPC ────────────────────────────────────────────────────
+
+/** `NPCs/NPC.as:27` — the talk radius, an origin-to-origin CIRCLE. */
+export const TALK_RANGE = 24;
+
+/** `NPCs/NPC.as:45` — a placed NPC's default `_lineLength`. */
+export const NPC_LINE_LENGTH = 28;
+
+/**
+ * `Watcher`'s own constants (`NPCs/Watcher.as:20-30,46-49`).
+ *
+ * ⛓ `talkingSpeed` is the `frames` ATTRIBUTE, not a class constant:
+ * `Game.as:2237` is `new Watcher(o.@x, o.@y, o.@tag, o.@text, o.@text1,
+ * o.@frames)` and the sixth parameter is `_talkingSpeed`. L114's watcher
+ * declares `frames="3"`. Taking the class default (0) instead would type
+ * the whole 20-page dialogue at one character per frame and every page
+ * boundary would land somewhere else.
+ */
+export const WATCHER = Object.freeze({
+    /** `super(_x + Tile.w/2, _y + Tile.h/2)` — `NPCs/NPC.as:47`. */
+    ctor: Object.freeze({ dx: 8, dy: 8 }),
+    /** `setHitbox(16, 16, 8, 8)` — `Watcher.as:49`. */
+    box: Object.freeze({ w: 16, h: 16, originX: 8, originY: 8 }),
+    type: 'Watcher',
+    /** The seed is held out while `myCurrentText` is in this CLOSED range. */
+    seedIndexMin: 9,
+    seedIndexMax: 19,
+    /** `dieFrames` is `[7, 8, 9]`, and the trigger is `hits > length`. */
+    dieFrames: 3,
+    /** `Watcher.hit()` — `hitsTimer = hitsTimerMax` on a landing. */
+    hitsTimerMax: 25,
+    src: 'NPCs/Watcher.as:20-30,40-49,60-124,127-137',
+});
+
+/**
+ * ⛔⛔⛔ THE LIVE SEED THE WATCHER HOLDS OUT — A RUN-ENDER, NOT A PICKUP.
+ *
+ * `Watcher.update:68-74` adds `new Seed(x - 18, y - 8, false)` while the
+ * dialogue index is in `[9, 19]`, and `destroySilently()`s it outside that
+ * range. For `watcher@72,72` the arithmetic is:
+ *
+ * ```
+ *   NPC entity      (72 + 8, 72 + 8)          = (80, 80)
+ *   Seed placement  (80 - 18, 80 - 8)         = (62, 72)
+ *   Seed entity     +(Tile.w/2, Tile.h/2)     = (70, 80)
+ *   setHitbox(10, 14, 5, 7)                   ⇒ [65,75) x [73,87)
+ * ```
+ *
+ * ⛔ COLLECTING IT IS NOT A LOST PICKUP, IT IS A SOFT-LOCK. That Seed is
+ * `bloody = false, tree = false`, so it takes `Seed.update`'s `else` arm:
+ * `Game.cutscene[2] = true` and a reboot into the SAME level — which is
+ * L114, which has no `seed` object, so nothing ever grows and nothing ever
+ * clears the flag. And `Game.as:956`'s `cutscene[2]` arm then spawns the
+ * player `receiveInput = false; visible = false; active = false` in EVERY
+ * later `Game`. The player is inert for the rest of the page, and the
+ * symptom is indistinguishable from a dead bot.
+ *
+ * ⛓ The one thing making the stance survivable at all is that `Seed`'s
+ * ctor passes `_attract = false` (`Seed.as:31`), so it does not reach for
+ * the player: collection is pure overlap. A stance that clears the box
+ * clears it for ever.
+ * → [[feedback_a_stray_pickup_soft_locks_the_run]]
+ */
+export function watcherSeedBox(watcherOel) {
+    const nx = watcherOel.x + WATCHER.ctor.dx;
+    const ny = watcherOel.y + WATCHER.ctor.dy;
+    // `new Seed(x - 18, y - 8, false)` then `super(_x + Tile.w/2, _y + Tile.h/2)`.
+    const sx = (nx - 18) + 8;
+    const sy = (ny - 8) + 8;
+    // `setHitbox(10, 14, 5, 7)` — Seed.as:36.
+    return { x: sx - 5, y: sy - 7, right: sx - 5 + 10, bottom: sy - 7 + 14 };
+}
+
+/** Does a player box overlap the Watcher's live Seed? */
+export function boxHitsWatcherSeed(box, watcherOel) {
+    const s = watcherSeedBox(watcherOel);
+    return box.right > s.x && box.x < s.right && box.bottom > s.y && box.y < s.bottom;
+}
+
+/**
+ * Is the player inside a placed NPC's talk circle?
+ *
+ * ⚠ A CIRCLE, and `FP.distance` is `Math.sqrt(dx*dx + dy*dy)` on ENTITY
+ * positions — not the player's box, and not the NPC's. `levelWorld`'s
+ * `watcher` hazard rect is the circle's bounding SQUARE, which is the safe
+ * over-approximation for routing and the wrong test for a schedule.
+ */
+export function inTalkRange(npcEntity, player, range = TALK_RANGE) {
+    const dx = npcEntity.x - player.x;
+    const dy = npcEntity.y - player.y;
+    return Math.sqrt(dx * dx + dy * dy) <= range;
+}
+
+/**
+ * Begin a PLACED NPC's dialogue — `NPC.startTalking()` + the `talking`
+ * setter.
+ *
+ * ⚠ THE STARTING RELEASE DOES NOT ALSO ADVANCE A PAGE. `NPC.talk()` tests
+ * `if (talking)` BEFORE it tests `if (inRange) … startTalking()`, so on the
+ * frame the dialogue opens the advance arm has already been skipped. A
+ * model that let one release do both would finish every dialogue one page
+ * early — and for the Watcher that is the difference between the seed
+ * window opening at index 9 and at index 8.
+ */
+export function beginNpcDialogue(text, {
+    talkingSpeed,
+    lineLength = NPC_LINE_LENGTH,
+    framesThisCharacter = INITIAL_FRAMES_THIS_CHARACTER,
+} = {}) {
+    if (!Number.isFinite(talkingSpeed)) {
+        fail('beginNpcDialogue: `talkingSpeed` is the NPC\'s own `frames` ATTRIBUTE '
+            + '(Game.as:2237 passes `o.@frames` as `_talkingSpeed`), not a class '
+            + 'default — pass it from the level record');
+    }
+    return beginDialogue(text, {
+        framesThisCharacter, framesPerCharacter: talkingSpeed, lineLength,
+    });
+}
+
+/**
+ * One frame of a placed NPC's dialogue, INCLUDING the radius test.
+ *
+ * @param {object} d       a `beginNpcDialogue` state, MUTATED
+ * @param {boolean} released did the tape release X this frame?
+ * @param {boolean} inRange is the player inside the circle this frame?
+ * @returns {{left: boolean}} `left` means the radius test ended it
+ *
+ * ⛔ THE ORDER IS THE GAME'S: the advance arm runs FIRST, and the radius
+ * `else` runs after it. So a release on the frame the player leaves still
+ * advances the page it was going to advance — and the dialogue is torn down
+ * afterwards. Getting that backwards loses a page on every exit.
+ */
+export function stepNpcDialogue(d, released, inRange) {
+    if (d.done) return { left: false };
+    stepDialogue(d, released);
+    if (d.done) return { left: false };
+    if (!inRange) {
+        // `talked = false; if (talking) talking = false;` — the setter runs
+        // `myCurrentText = 0` and `doneTalking()`. ⛔ SO LEAVING THE RADIUS
+        // CALLS `doneTalking()` TOO: for the Watcher that is the `{114,0}`
+        // write, guarded by `checkPersistence(tag)` — which is still SET, so
+        // **walking away mid-dialogue clears the tag exactly as finishing it
+        // does**. Named here because it is the opposite of what "leaving
+        // cancels it" suggests, and a window that relies on the tag must not
+        // rely on having read the text.
+        d.page = 0;
+        d.currentCharacter = 0;
+        d.done = true;
+        return { left: true };
+    }
+    return { left: false };
+}
+
+// ── the door ──────────────────────────────────────────────────────────
+
+/**
+ * `Scenery/FinalDoor.as`, transcribed. §8.7 confirmed, §14.9's clock taken.
+ *
+ * ⛓ `finaldoor@112,0` is `super(_x + Tile.w, _y + Tile.h)` — a WHOLE tile,
+ * not the half every other class uses — so the entity is **(128, 16)** and
+ * `setHitbox(32, 32, 16, 16)` makes the body `[112,144) x [0,32)`. Getting
+ * the half-tile here puts the door and its radius eight pixels north-west
+ * of where they are.
+ */
+export const FINAL_DOOR = Object.freeze({
+    ctor: Object.freeze({ dx: 16, dy: 16, src: 'FinalDoor.as:23 `super(_x + Tile.w, _y + Tile.h)`' }),
+    box: Object.freeze({ w: 32, h: 32, originX: 16, originY: 16 }),
+    type: 'Solid',
+    /** `FP.distance(x, y, p.x, p.y) <= 32` — an origin-to-origin CIRCLE. */
+    seeDistance: 32,
+    /** `sprFinalDoor.add("open", […28 frames…], 15)`. */
+    openFrames: 28,
+    openFrameRate: 15,
+    src: 'Scenery/FinalDoor.as:17-30,41-45,47-68,79-88',
+});
+
+/** How many updates the door's `open` animation takes to reach `animEnd`. */
+export function finalDoorOpenUpdates() {
+    return animCallbackUpdate(FINAL_DOOR.openFrameRate, FINAL_DOOR.openFrames);
+}
+
+/**
+ * ⛓⛓ THE DOOR'S TWO ARMS, AS A STATE MACHINE — and §8.7's correction is
+ * that they are ONE APPROACH, not two.
+ *
+ * ```
+ *   in radius && !seenSeal   ->  seenSeal = true; spawn a SealController
+ *   in radius &&  seenSeal
+ *              && !mySealController
+ *              && hasAllSealParts && talkedToWatcher  ->  play("open")
+ *   out of radius            ->  seenSeal = false
+ * ```
+ *
+ * `SealController.removed()` nulls `parent.mySealController` (`:219`), so
+ * the second arm becomes reachable on a LATER TICK OF THE SAME APPROACH —
+ * and the door is an `Entity` with no freeze gate, so its `update()` has
+ * been running throughout the ceremony's 180 frozen frames waiting for
+ * exactly that. §2.5's "the door only opens on a LATER approach" is wrong;
+ * what IS true is that leaving the radius resets `seenSeal`, so every
+ * RE-approach fires a fresh ceremony.
+ *
+ * @returns {{event: string|null, state: object}}
+ */
+export function stepFinalDoor(state, { inRadius, sealControllerUp, hasAllSealParts,
+    talkedToWatcher }) {
+    if (state.opening) {
+        const next = { ...state, openUpdates: state.openUpdates + 1 };
+        if (next.openUpdates >= finalDoorOpenUpdates()) {
+            // `animEnd` -> `FP.world.remove(this)` -> `removed()` ->
+            // `Game.setPersistence(tag, false)`. ⛔ A CLEAR, like every other
+            // tag on this rung's ledger.
+            return { event: 'removed', state: { ...next, opening: false, removed: true } };
+        }
+        return { event: null, state: next };
+    }
+    if (state.removed) return { event: null, state };
+    if (!inRadius) return { event: null, state: { ...state, seenSeal: false } };
+    if (!state.seenSeal) {
+        return { event: 'ceremony', state: { ...state, seenSeal: true } };
+    }
+    if (!sealControllerUp && hasAllSealParts && talkedToWatcher) {
+        return { event: 'open', state: { ...state, opening: true, openUpdates: 0 } };
+    }
+    return { event: null, state };
+}
+
+/** A fresh door, as `check()` leaves it. */
+export const freshFinalDoor = () => ({
+    seenSeal: false, opening: false, openUpdates: 0, removed: false,
+});
+
+// ── the seed ──────────────────────────────────────────────────────────
+
+/** `Pickups/Seed.as:21-22` — the cover fade's rate, and its accumulation. */
+export const COVER_ALPHA_RATE = 0.005;
+
+/**
+ * ⛓ HOW MANY FRAMES THE COVER FADE TAKES, by ACCUMULATION.
+ *
+ * `coverAlpha += 0.005` until `>= 1`. ⚠ **THIS IS A BOUNDED VACUITY AND IT
+ * IS RECORDED AS ONE**: the accumulation reaches `1.0000000000000007` on
+ * increment 200 (199 gives 0.995) and the naive `1 / 0.005` is exactly 200
+ * too, so the accumulate-don't-divide law does not bite here. Record the
+ * non-biter with its witness; do NOT conclude the law is optional — the
+ * tree grow is the same shape and there the two answers are 138 and 274.
+ */
+export function coverFadeFrames() {
+    let a = 0;
+    for (let n = 1; n <= 100000; n += 1) {
+        a += COVER_ALPHA_RATE;
+        if (a >= 1) return n;
+    }
+    return fail('coverFadeFrames: the cover never reached 1');
+}
+
+/**
+ * `Pickups/Seed.as:46` — `add("grow", [16 frames], 3.5)`.
+ * ⚠ 138 at the clamped `FP.elapsed`, and 274 at 60 fps. The brief said
+ * "≈274"; that is the 60 fps reading of a 30 fps game.
+ */
+export const TREE_GROW_FRAME_RATE = 3.5;
+export const TREE_GROW_FRAMES = 16;
+export function treeGrowUpdates() {
+    return animCallbackUpdate(TREE_GROW_FRAME_RATE, TREE_GROW_FRAMES);
+}
+
+/**
+ * ⛔⛔⛔ `Seed.update`'s THREE TERMINAL ARMS — and §3.5 named one of them.
+ *
+ * ```as3
+ *   if (coverAlpha >= 1) {
+ *       if (bloody)    { Game.cutscene[1] = true;  FP.world = new Game(1, 64, 96, false); }
+ *       else if (tree) { Game.menu = true; Game.cutscene[2] = false;
+ *                        Main.unlockMedal(Main.badges[14]);
+ *                        FP.world = new Game(level, currentPlayerPosition, false, 2); }
+ *       else           { Game.cutscene[2] = true;
+ *                        FP.world = new Game(level, currentPlayerPosition); }
+ *   }
+ * ```
+ *
+ * ⛓⛓⛓ AND `Game.as:2194` IS WHAT TURNS A SEED INTO THE TREE:
+ * `add(new Seed(o.@x, o.@y, false, o.@text, cutscene[2]))` — the fifth ctor
+ * argument `_tree` **is `cutscene[2]`**. So the plain arm's reboot is what
+ * arms the tree arm, and the two are one chain rather than two options.
+ */
+export const SEED_ARMS = Object.freeze({
+    bloody: Object.freeze({
+        sets: 'Game.cutscene[1] = true',
+        reboot: Object.freeze({ level: 1, x: 64, y: 96 }),
+        why: '⛔ L1 holds `oracle@64,32`, and `Oracle.doneTalking` under `cutscene[1]` '
+            + 'calls `exitToMenu()` — so THIS BRANCH ENDS IN A MENU TOO. §2.5\'s "no '
+            + 'credits, no menu" is refuted by the destination room\'s own contents.',
+    }),
+    tree: Object.freeze({
+        sets: 'Game.menu = true; Game.cutscene[2] = false; badge 14',
+        reboot: 'the SAME level, at `currentPlayerPosition`, with menuIndex 2',
+        why: '⛓⛓⛓ THE CREDITS. `menuIndex` 2 is the value `botStatus.menu_state` '
+            + 'reports directly since slice 6a — the ladder\'s first "the game says it '
+            + 'was beaten".',
+    }),
+    plain: Object.freeze({
+        sets: 'Game.cutscene[2] = true',
+        reboot: 'the SAME level, at `currentPlayerPosition`',
+        why: '⛔ THE ARM §3.5 OMITTED, and L115\'s pickup takes it. It is benign ONLY '
+            + 'because L115 has a `seed` object for the reboot to rebuild with '
+            + '`_tree = true`. Taking the WATCHER\'s seed runs the same arm into L114, '
+            + 'which has none — and `Game.as:956` then spawns every later player '
+            + 'input-dead. Same arm, opposite outcome, decided by the destination.',
+    }),
+});
+
+/**
+ * ⛓⛓ THE WHOLE W-SEED CEREMONY, IN FRAMES — and every one of them is DEAD.
+ *
+ * ```
+ *   150   `Pickup.specialTimer`                      frozen, no Game.talking
+ *   N     the 3-line text NPC                        Game.talking ⇒ TAPE TICKS
+ *   200   `removeSelf` -> drawCover fade             frozen
+ *   ---- REBOOT 1: cutscene[2] = true, same level, the seed rebuilt as the tree
+ *   138   `sprTreeGrow.play("grow")`                 frozen (Game.as:956)
+ *   200   `endAnim` -> drawCover fade                frozen
+ *   ---- REBOOT 2: menu = true, badge 14, menuIndex 2 — THE CREDITS
+ * ```
+ *
+ * ⛔⛔ BOTH 200-FRAME FADES ARE *FROZEN* FRAMES, NOT TICKS. `removeSelf()`
+ * sets `Game.freezeObjects = true` and `Seed.update`'s `drawCover` arm sits
+ * ABOVE every freeze gate, so the fade advances while the world is frozen
+ * and `Game.talking` is false — nothing lowers the flag. §2.5's "200-tick
+ * cover fade" is a FRAME count.
+ *
+ * ⇒ a recording deadline scaled from the TICK count looks at a window that
+ * spends ~690 engine frames and reads it as a dead bot. `deadlineFor` must
+ * scale from `frozenFramesOwed` (§12.14a).
+ */
+export const SEED_CEREMONY_FRAMES = Object.freeze({
+    specialTimer: 150,
+    get fade() { return coverFadeFrames(); },
+    get treeGrow() { return treeGrowUpdates(); },
+    /** Everything but the dialogue, which depends on its own text. */
+    get frozenTotal() { return this.specialTimer + this.fade + this.treeGrow + this.fade; },
+    reboots: 2,
+});
