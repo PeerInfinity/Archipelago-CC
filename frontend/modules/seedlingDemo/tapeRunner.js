@@ -204,6 +204,14 @@ export function createTapeStepper(tape, opts = {}) {
                 transports: run ? run.transports : [],
                 lockSnaps: run ? run.lockSnaps : [],
                 collected: run ? run.collected : [],
+            /**
+             * ⛔ R6 slice 6d: one per ceremony BEGUN, which is what the
+             * dead-frame ledger has to count. `Pickup.pick_up()` spends
+             * phase A on CONTACT and does not ask whether the dialogue
+             * after it is ever dismissed — a tape that ends mid-ceremony
+             * paid 150 dead frames and banked no completion.
+             */
+            ceremonyStarts: run ? run.ceremonyStarts : [],
                 grants: run ? run.grantsFired : [],
                 inventory: run ? run.inventory : null,
                 /**
@@ -264,6 +272,14 @@ export function createTapeStepper(tape, opts = {}) {
             // granted" is exactly the statement that the first is empty and
             // this one is not.
             collected: run ? run.collected : [],
+            /**
+             * ⛔ R6 slice 6d: one per ceremony BEGUN, which is what the
+             * dead-frame ledger has to count. `Pickup.pick_up()` spends
+             * phase A on CONTACT and does not ask whether the dialogue
+             * after it is ever dismissed — a tape that ends mid-ceremony
+             * paid 150 dead frames and banked no completion.
+             */
+            ceremonyStarts: run ? run.ceremonyStarts : [],
             // R3/R4/R5: the flags this run's own openers cleared —
             // `{level, tag, by}`. The other end of the ledger the game
             // reports as `persistence_cleared`, and the only place a
@@ -540,6 +556,22 @@ export function createTapeStepper(tape, opts = {}) {
              * does park INSIDE the 24 px circle, and nothing is live there.
              */
             oracleApproach: run ? run.oracleApproach : [],
+            /**
+             * ⛓ `{t, level, what, r, updates}` — the tree's `endAnim` and
+             * `coverFull`, with the relative tick each fired on. Two
+             * fenceposts, kept apart from the total that hides them.
+             */
+            treeEvents: run ? run.treeEvents : [],
+            /**
+             * ⛓⛓⛓ THE RUNG'S TERMINAL, or `null`. The differential reads it
+             * against `botStatus.menu_state` — the DIRECT readout slice 6a
+             * bundled — and keeps `R6_MENU_WRITERS`'s elimination as the
+             * second stratum: the readout says it is a menu with index 2,
+             * the elimination says the 2 came from the tree.
+             */
+            credits: run ? run.credits : null,
+            /** `Game.cutscene`, the run's own copy of the static. */
+            cutscene: run ? run.cutscene : [false, false, false, false],
             /** Every tick a shot's own cull was a §11.6 BAND question. */
             bossShotCullBand: run ? run.bossShotCullBand : [],
             /**

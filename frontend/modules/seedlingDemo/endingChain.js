@@ -588,3 +588,118 @@ export const ORACLE = Object.freeze({
     talkRange: TALK_RANGE,
     src: 'NPCs/Oracle.as:20-40,94-121',
 });
+
+// ── the BLOODLESS branch (R6 slice 6d) ────────────────────────────────
+
+/**
+ * ⛔⛔⛔ `Game.as:961-966` — THE `cutscene[2]` ARM, AND IT IS **NOT** A
+ * FREEZE.
+ *
+ * ```as3
+ *   else if (cutscene[2]) { p.receiveInput = false; p.visible = false;
+ *                           p.active = false; }
+ * ```
+ *
+ * §14.5 called the tree grow and the second cover fade "frozen frames" and
+ * priced W-seed at "~688 frozen frames plus a dialogue". **That is wrong,
+ * and the line that makes it wrong is four lines further down the same
+ * function.** `Game.update`'s tail is
+ *
+ * ```as3
+ *   if (canInventory()) inventory.update(); else if (inventory) inventory.open = false;
+ * ```
+ *
+ * and `canInventory()` is `inventory && !talking && p && p.receiveInput &&
+ * !p.destroy` (`Game.as:1494`) — so setting `p.receiveInput = false` makes
+ * it FALSE, which runs `Inventory.set open`, which **is**
+ * `Game.freezeObjects = _open = _o` (`Inventory.as:153`). The cutscene
+ * lowers the freeze at the end of every one of its own frames.
+ *
+ * ⇒ the 138 grow frames and the 200 frames of the second cover fade are
+ * **TAPE TICKS**, not dead frames: the bot's gate reads `false`, records an
+ * observation and advances. What makes the player stand still is
+ * `active = false` — `Player.update` is never called at all — and that is a
+ * different mechanism with a different cost. Only the FIRST fade (the one
+ * `Seed.removeSelf` raises, before any cutscene flag is set) is dead.
+ *
+ * ⛓ Same shape as `CUTSCENE_1_WALK`, and the two are the pair that makes
+ * the point: `cutscene[1]` leaves the player ACTIVE and takes its input
+ * away, so it walks; `cutscene[2]` takes the update itself away, so it does
+ * not. Both are live tape ticks; neither is a freeze.
+ */
+export const CUTSCENE_2_HOLD = Object.freeze({
+    receiveInput: false,
+    visible: false,
+    active: false,
+    /** ⛔ The freeze is LOWERED, not raised — see the docblock. */
+    freezeObjects: false,
+    src: 'Game.as:961-966 + Game.as:986-991 + Inventory.as:153',
+});
+
+/**
+ * ⛓⛓⛓ THE TREE, AS A STATE MACHINE — `Seed` with `_tree = true`.
+ *
+ * `Game.as:2185` passes `cutscene[2]` as the fifth ctor argument, so the
+ * plain arm's reboot is what ARMS this: the same `.oel` object is a pickup
+ * on the first build and a tree on the second.
+ *
+ * ```
+ *   r = 1 .. 138    `sprTreeGrow.play("grow")` advances one update per tick
+ *   r = 138         `endAnim` -> play("grown"), drawCover = true
+ *   r = 139 .. 338  `coverAlpha += 0.005`, 200 increments
+ *   r = 338         `coverAlpha >= 1` -> menu = true, cutscene[2] = false,
+ *                   badge 14, `new Game(level, currentPlayerPosition, false, 2)`
+ * ```
+ *
+ * ⛔ **THE PLAY FRAME IS NOT THE FIRST UPDATE HERE, AND THAT IS THE
+ * OPPOSITE OF W-DOOR.** `play("grow")` runs in the `Seed` CONSTRUCTOR,
+ * which `Game.loadlevel` calls — not inside a `World.update` pass. And
+ * `Game.update` gates `super.update()` on `blackCover <= 0`, so nothing
+ * advances during the load fade at all. The animation's first update is
+ * therefore the first LIVE frame of the rebuilt world, and the count starts
+ * at 1 there. Trap 104's fencepost is about a `play()` called from inside
+ * `update()`; this one is called from a constructor, and the difference is
+ * a whole frame either way.
+ *
+ * ⛔ **AND THE FADE STARTS THE TICK AFTER `endAnim`, NOT ON IT.**
+ * `World.update` runs `e.update()` then `e._graphic.update()`, so on the
+ * grow's last tick `Seed.update` has ALREADY run (with `drawCover` still
+ * false, and `else if (!tree)` means it does nothing at all) by the time
+ * the graphic fires the callback that sets it. The first `coverAlpha`
+ * increment is the next tick's.
+ */
+export function treeSchedule() {
+    const grow = treeGrowUpdates();
+    const fade = coverFadeFrames();
+    return {
+        grow,
+        fade,
+        /** The relative tick `endAnim` fires on. */
+        endAnimAt: grow,
+        /** The relative tick the cover reaches 1 and the credits reboot fires. */
+        rebootAt: grow + fade,
+    };
+}
+
+/**
+ * ⛓⛓⛓ THE CREDITS, AND WHY THE TAPE HAS TO STOP DEAD THERE.
+ *
+ * `Game.menuAndRestart()` runs at the TOP of `Game.update` and, while
+ * `Game.menu` is true, sets `Game.freezeObjects = true` on EVERY FRAME. So
+ * every frame after the credits reboot is a dead frame and the tape's tick
+ * counter cannot advance through one — a tape whose `tick_count` runs past
+ * it would be asking for observations the game will never record.
+ *
+ * ⛓ AND `menuState` SURVIVES ITS OWN CONSTRUCTOR ONLY BECAUSE `menu` WAS
+ * SET FIRST. `Game`'s ctor is `if (_menuState >= 0) menuState = _menuState;
+ * end();` and `end()` is `if (!menu) { … menuState = 0; … }` — so the `2`
+ * would be wiped by the very next line if `Seed`'s tree arm had not
+ * assigned `Game.menu = true` before the world assignment. Two statements
+ * one line apart, and the readout depends on the order.
+ */
+export const CREDITS = Object.freeze({
+    menu: true,
+    menuState: 2,
+    badge: 14,
+    src: 'Pickups/Seed.as:76-81 + Game.as:628-651 + Game.as:1265-1270',
+});

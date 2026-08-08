@@ -851,11 +851,39 @@ function checkReadout(name, tape, status, stream) {
     // TWO-SIDED: the term comes from the MODEL's `playerDeaths`, so a model
     // that invented a death the game did not take blows the band from the
     // other direction.
-    const loads = stream.transitions.length + 1 + (expected.playerDeaths?.length ?? 0);
+    // ⛓⛓⛓ R6 SLICE 6d: AND A SAME-LEVEL ENDING REBOOT IS A LOAD NOBODY CAN
+    // SEE EITHER — the death's own argument, on the other two `Seed` arms.
+    // `Seed.update`'s plain and tree arms are both `new Game(level, …)`, so
+    // the level field never changes and `deriveTransitions` reports nothing;
+    // W-seed pays THREE load fades against a transition list of zero. Read
+    // from the MODEL's `endingReboots`, so a model that invented one blows
+    // the band from the other direction.
+    // ⛔ …EXCEPT THE TERMINAL ONE, AND THE FENCEPOST IS THE HARNESS'S.
+    // `Bot.update` disarms at the TOP of the frame `tick >= tickCount`, and
+    // W-seed's credits reboot happens LATER IN THAT SAME FRAME — so its load
+    // fade is never counted, because by the time it starts the bot has
+    // stopped looking. A reboot on the tape's last observation costs the
+    // dead-frame ledger nothing; every earlier one costs a whole fade.
+    const sameLevelReboots = (expected.endingReboots ?? [])
+        .filter((r) => r.sameLevel && r.t < tape.tick_count).length;
+    const loads = stream.transitions.length + 1 + (expected.playerDeaths?.length ?? 0)
+        + sameLevelReboots;
     const sealFrames = (expected.sealCollections ?? [])
         .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
-    /** Every ordinary `special` pickup the run walked onto. */
-    const pickupFrames = (expected.collected ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
+    /**
+     * Every ordinary `special` pickup the run walked ONTO.
+     *
+     * ⛔ STARTED, NOT COMPLETED — R6 slice 6d. `Pickup.pick_up()` raises the
+     * freeze and counts `specialTimer` down on CONTACT, and it does not ask
+     * whether the dialogue after it will ever be dismissed. `collected` is
+     * the completion ledger, so a tape that ends mid-ceremony paid 150 dead
+     * frames the term could not see: `r6-seed-control` reported 170 dead
+     * against 0 modelled and blew the band by 150 on its first recording.
+     * The two lists are identical for every fixture that finishes what it
+     * starts, which is every fixture before this one.
+     */
+    const pickupFrames = (expected.ceremonyStarts ?? expected.collected ?? []).length
+        * CEREMONY_DEAD_FRAMES.pickup;
     const exempt = MODEL_EXEMPT[name] ?? null;
     /** A reward spawned at RUNTIME freezes exactly like a placed pickup. */
     const spawnedFrames = (exempt?.earned ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
@@ -1019,38 +1047,63 @@ function checkReadout(name, tape, status, stream) {
     // Oracle whose `doneTalking()` is `exitToMenu()`; a `menu = true` in this
     // window means the HARNESS walked that dialogue (trap 92), and the record
     // would be a claim about the instrument. `R6_BLOOD_MENU_DERIVATION`.
-    const armed = new Set((expected.endingReboots ?? []).map((r) => r.cutscene));
-    if (armed.size === 0) {
+    // ⛔ THE COMPARISON IS AGAINST THE MODEL'S OWN FINAL ARRAY, not against
+    // the arms it ran — because the tree arm SETS `[2]` on the way in and
+    // CLEARS it on the way out (`Seed.as:78`, the only thing in the game
+    // that does), so W-seed runs two reboots and finishes with every flag
+    // false again. An expectation derived from "which arms fired" would
+    // demand a `true` the game is right not to have.
+    const modelCutscene = expected.cutscene ?? [false, false, false, false];
+    const ranEnding = (expected.endingReboots ?? []).length > 0;
+    if (!ranEnding) {
         check(`${name}: the win statics are still false`,
             status.menu === false && status.cutscene.every((c) => c === false),
             `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
     } else {
-        const wrong = status.cutscene
-            .map((c, i) => ({ i, c }))
-            .filter(({ i, c }) => c !== armed.has(i));
-        check(`${name}: the ending arm the model ran set its cutscene flag, and only it`,
-            wrong.length === 0,
-            wrong.length === 0
-                ? `cutscene=${JSON.stringify(status.cutscene)} — exactly the `
-                + `${[...armed].map((i) => `[${i}]`).join(', ')} the model's `
-                + `endingReboots declare (${(expected.endingReboots ?? [])
+        const same = JSON.stringify(status.cutscene) === JSON.stringify(modelCutscene);
+        check(`${name}: \`Game.cutscene\` is exactly what the model's ending arms left`,
+            same,
+            same
+                ? `cutscene=${JSON.stringify(status.cutscene)} after `
+                + `${(expected.endingReboots ?? [])
                     .map((r) => `${r.arm} L${r.fromLevel}->L${r.toLevel}@${r.t}`)
-                    .join(', ')})`
+                    .join(', ')}`
                 : `cutscene=${JSON.stringify(status.cutscene)} against the model's `
-                + `${[...armed].map((i) => `[${i}]`).join(', ')} — `
-                + `${wrong.map(({ i, c }) => `[${i}] is ${c}`).join(', ')}. A flag the `
-                + 'model set and the game did not means the terminal arm never ran; the '
-                + 'other way round means a second arm fired that nothing accounts for.');
-        check(`${name}: …and no menu — the harness did not walk the Oracle`,
-            status.menu === false,
-            status.menu === false
-                ? 'menu=false with `cutscene[1]` armed in L1, which is the whole point '
-                + 'of ending the tape with no key edge: `Oracle.doneTalking()` under '
-                + 'that flag is `exitToMenu()`'
-                : 'menu=TRUE — something completed L1\'s Oracle dialogue. The tape '
-                + 'presses nothing after the reboot, so the only candidate is '
-                + '`Bot.autoAdvance` (trap 92) and this record is a claim about the '
-                + 'harness, not the game');
+                + `${JSON.stringify(modelCutscene)}. A flag the model set and the game `
+                + 'did not means the terminal arm never ran; the other way round means '
+                + 'a second arm fired that nothing accounts for.');
+        if (expected.credits) {
+            // ── ⛓⛓⛓ THE RUNG'S TERMINAL: "the game says it was beaten" ──
+            //
+            // `menu_state` is a DIRECT readout since slice 6a, so this is a
+            // measurement rather than the elimination §8.8 had to settle
+            // for. The elimination stays as the second stratum — the readout
+            // says it is a menu with index 2, `R6_MENU_WRITERS` says the 2
+            // came from the tree — and `menuWriterEliminations('W-seed')` is
+            // asserted in vitest rather than restated here.
+            check(`${name}: ⛓⛓⛓ THE CREDITS — the game's own \`menu_state\` reads 2`,
+                status.menu === true && status.menu_state === expected.credits.menuState,
+                status.menu === true && status.menu_state === expected.credits.menuState
+                    ? `menu=true, menu_state=${status.menu_state} — the ladder's first `
+                    + '"the game says it was beaten", conditional on the declared save '
+                    + `state. The model reached it at tick ${expected.credits.t}`
+                    : `menu=${status.menu}, menu_state=${status.menu_state} against the `
+                    + `model's ${expected.credits.menuState}. \`menuState\` survives `
+                    + '`Game`\'s constructor only because `Game.menu = true` is assigned '
+                    + 'BEFORE the world (`end()`\'s `if (!menu) menuState = 0` would '
+                    + 'wipe it), so a 0 here means the tree arm did not run.');
+        } else {
+            check(`${name}: …and no menu — the harness did not walk the Oracle`,
+                status.menu === false,
+                status.menu === false
+                    ? 'menu=false with `cutscene[1]` armed in L1, which is the whole point '
+                    + 'of ending the tape with no key edge: `Oracle.doneTalking()` under '
+                    + 'that flag is `exitToMenu()`'
+                    : 'menu=TRUE — something completed L1\'s Oracle dialogue. The tape '
+                    + 'presses nothing after the reboot, so the only candidate is '
+                    + '`Bot.autoAdvance` (trap 92) and this record is a claim about the '
+                    + 'harness, not the game');
+        }
     }
 
     // ── ⛓⛓⛓ R6 SLICE 3: WHAT THE RUN TOOK, FROM THE GAME'S OWN READOUT ──
@@ -1313,7 +1366,13 @@ function checkReadout(name, tape, status, stream) {
     // `hits > dieFrames.length` was never met. "The model rebooted nothing"
     // is what a broken model says too; "the model swung three times and
     // rebooted nothing" is a claim.
-    const reboots = expected.endingReboots ?? [];
+    // ⛔ CROSS-LEVEL ONLY. `deriveTransitions` reads the observation
+    // stream's LEVEL field, so a `Seed` arm that reboots into the same room
+    // is invisible to it by construction — W-seed's two reboots produce
+    // zero transitions and that is correct, not a divergence. Their witness
+    // is the DEAD-FRAME BAND (one load fade each, via `sameLevel`) and the
+    // `cutscene` array, both checked above.
+    const reboots = (expected.endingReboots ?? []).filter((r) => !r.sameLevel);
     const swung = (expected.watcherHits ?? []).filter((h) => h.landed);
     if (reboots.length > 0) {
         const want = reboots.map((r) => `${r.fromLevel}->${r.toLevel}`).join(', ');
@@ -1587,8 +1646,14 @@ try {
         const causes = [
             ...(transports.length ? [`${transports.length} pit transport(s)`] : []),
             ...lockSnaps.map((s) => `${s.id} for ${s.ticks} tick(s)`),
-            ...endingReboots.map((r) => `the cutscene[${r.cutscene}] scripted walk from `
-                + `tick ${r.t} (L${r.fromLevel} -> L${r.toLevel})`),
+            // ⛓ TWO SHAPES, ONE LINE. `cutscene[1]` walks the player north
+            // with `receiveInput = false`; `cutscene[2]` adds
+            // `active = false` and holds them still. Both write the first
+            // term of `Player.input()`'s guard, and the tree arm's reboot
+            // (which CLEARS the flag) is the one that does not.
+            ...endingReboots.filter((r) => r.arm !== 'tree').map((r) => `the `
+                + `cutscene[${r.cutscene}] ${r.arm === 'bloody' ? 'scripted walk' : 'tree hold'} `
+                + `from tick ${r.t} in L${r.toLevel}`),
         ];
         if (causes.length > 0) {
             check(`${name}: the game refused input where the model says it must`,

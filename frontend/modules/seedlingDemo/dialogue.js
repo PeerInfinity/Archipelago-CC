@@ -346,5 +346,29 @@ export const PICKUP_CEREMONY_BY_KEYTYPE = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓⛓ R6 SLICE 6d: the ceremonies whose text is an **`.oel` ATTRIBUTE**.
+ *
+ * The THIRD place a pickup's text can come from, and the first that is not
+ * in the source tree at all. `Game.as:2185` is
+ * `add(new Seed(o.@x, o.@y, false, o.@text, cutscene[2]))` — the text is
+ * DATA, so two `seed` objects in two levels run dialogues of different
+ * lengths from one class, and a table here could only ever hold one of
+ * them. (The fourth place is a constructor literal in another class:
+ * `Watcher.as:97` spawns its bloody `Seed` with the string written in the
+ * call. `endingChain.BLOODY_SEED_TEXT`.)
+ *
+ * ⚠ `item: null` for the usual reason and one more: `Seed` overrides
+ * `removeSelf` and never reaches `removed()`, so it grants nothing and
+ * writes no persistence whatever its text says.
+ */
+export const PICKUP_TEXT_FROM_ATTRIBUTE = Object.freeze({
+    seed: Object.freeze({
+        item: null,
+        attribute: 'text',
+        src: 'Game.as:2185 — `new Seed(o.@x, o.@y, false, o.@text, cutscene[2])`',
+    }),
+});
+
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */
 export const TALK_KEY = 'primary';

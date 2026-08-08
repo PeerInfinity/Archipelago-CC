@@ -447,7 +447,31 @@ export const R6_WINDOWS = Object.freeze([
      * that stopped being a wall.
      */
     Object.freeze({ name: 'W-door', slice: 6, tape: 'r6-final-door', control: 'r6-final-door-control' }),
-    Object.freeze({ name: 'W-seed', slice: 6, tape: null, control: null }),
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: THE RUNG'S HEADLINE — "the game says it was beaten",
+     * conditional on the declared save state, and read from `menu_state`
+     * rather than argued for.
+     *
+     * ⛔ AND THE SECOND HALF OF THE WINDOW IS TICKS, WHICH §14.5 PRICED AS
+     * FROZEN FRAMES. `Game.as:961`'s `cutscene[2]` arm sets
+     * `p.receiveInput = false`, which makes `canInventory()` false, which
+     * runs `inventory.open = false`, which IS `Game.freezeObjects = false`.
+     * So the tree's 138 grow frames and the second cover fade's 200 are
+     * TAPE TICKS; only the FIRST fade (200, raised by `Seed.removeSelf`
+     * before any cutscene flag is set) is dead. What holds the player still
+     * is `p.active = false`, which is a different mechanism with a
+     * different cost. (`endingChain.CUTSCENE_2_HOLD`.)
+     *
+     * ⚖ The boot grants the conch (the ruling) AND the feather — the moat's
+     * second gate is a WATERFALL, which §17.8 did not reach and the ruling
+     * therefore could not have known about. Same decision, same precedent,
+     * a gate the ⚖ did not have in front of it; the alternative was
+     * measured and is a two-pixel corridor through a cliffside pixelmask.
+     */
+    Object.freeze({
+        name: 'W-seed', slice: 6,
+        tape: 'r6-seed-credits', control: 'r6-seed-control',
+    }),
     /**
      * ⚖ RULED IN by the user at slice 0 (kickoff §6.2). The bloody branch is
      * the cheapest SECOND witness of the seed/reboot machinery: both arms

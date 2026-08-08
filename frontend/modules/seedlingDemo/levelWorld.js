@@ -3826,6 +3826,16 @@ export function buildLevelWorld(levelRecord, {
                 // that could not name its type would grant nothing.
                 ...(e.type === 'bosskey'
                     ? { keyType: intAttr(e.attrs, 'keyType', 0) } : {}),
+                // ⛓⛓⛓ R6 slice 6d: a `seed`'s ceremony text is an
+                // ATTRIBUTE, not a class constant — `Game.as:2185` passes
+                // `o.@text` as the fourth ctor argument. The dialogue's
+                // LENGTH is therefore level data, and a census that dropped
+                // it would leave `dialogue.PICKUP_TEXT_FROM_ATTRIBUTE` with
+                // nothing to read. (Same shape as `keyType`: carried only
+                // for the class that needs it, so a missing field is a loud
+                // lookup failure rather than a wrong-length ceremony.)
+                ...(e.type === 'seed'
+                    ? { text: e.attrs?.text ?? '' } : {}),
             });
         }
         if (ACTIVATOR_PRESSERS.has(e.type)) {

@@ -35,7 +35,8 @@
 
 import { addedTimeKey, buildLevelWorld, rect, rectsOverlap } from './levelWorld.js';
 import {
-    INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE, TALK_KEY,
+    INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
+    PICKUP_TEXT_FROM_ATTRIBUTE, TALK_KEY,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 // ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
@@ -43,10 +44,11 @@ import {
 // it `fixtures/index.js`, which is node-only; that is sound here because
 // `levelRun` has no browser consumer (the watch page reads `watchViewer`).
 import {
-    BLOODY_SEED_TEXT, CUTSCENE_1_WALK, FINAL_DOOR, ORACLE, SEED_ARMS, TALK_RANGE, WATCHER,
-    WATCHER_FLAG, beginNpcDialogue, bloodySeedDue, bloodySeedEntity, boxHitsWatcherSeed,
-    coverFadeFrames, freshFinalDoor, inTalkRange, seedBoxAt, stepFinalDoor,
-    stepNpcDialogue, watcherSeedBox, watcherTakesHit,
+    BLOODY_SEED_TEXT, CREDITS, CUTSCENE_1_WALK, CUTSCENE_2_HOLD, FINAL_DOOR, ORACLE,
+    SEED_ARMS, TALK_RANGE, WATCHER, WATCHER_FLAG, beginNpcDialogue, bloodySeedDue,
+    bloodySeedEntity, boxHitsWatcherSeed, coverFadeFrames, freshFinalDoor, inTalkRange,
+    seedBoxAt, stepFinalDoor, stepNpcDialogue, treeSchedule, watcherSeedBox,
+    watcherTakesHit,
 } from './endingChain.js';
 import {
     createActivatorState, openActivatorIds, pressedGroups, ropePublish, stepActivators,
@@ -1346,6 +1348,18 @@ export function createLevelRun({
      * entered, and no key was live while it was.
      */
     const oracleApproach = [];
+    /**
+     * `{t, level, what, r, updates}` — the TREE's two events, `endAnim` and
+     * `coverFull`, with the relative tick each fired on.
+     *
+     * ⛓ Kept as EVENTS rather than as a length, because the two numbers the
+     * window turns on are fenceposts and a total hides both: the grow's
+     * first update is the first LIVE frame of the rebuilt world (the
+     * `play("grow")` runs in the CONSTRUCTOR, not inside an update pass —
+     * the opposite of W-door's trap 104), and the fade's first increment is
+     * the tick AFTER `endAnim` (the graphic update runs below `e.update()`).
+     */
+    const treeEvents = [];
     // ── ⛓⛓⛓ R6 SLICE 6c: the final door's three ledgers ────────────────
     /**
      * `{t, level, id, frames, dismissable}` — one per SealController the
@@ -2239,6 +2253,112 @@ export function createLevelRun({
         // AFTER the swap, so a grant naming the level being LEFT does not
         // fire on the way out.
         return applyGrantsFor(level);
+    };
+
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: THE ENDING'S OWN WORLD SWAP — one implementation,
+     * two callers.
+     *
+     * The THIRD game-initiated swap on the ladder, and the first that
+     * CHOOSES ITS DESTINATION. A teleporter goes where its attributes say; a
+     * death goes back to the same `Game`'s own constructor args;
+     * `Seed.update`'s three terminal arms are literal `FP.world = new
+     * Game(...)` statements written inside a pickup, each with a
+     * `Game.cutscene` write on the line above it.
+     *
+     * ⛔ AND ONLY THE BLOODY ONE PRODUCES A TRANSITION RECORD. The level
+     * FIELD is what `deriveTransitions` reads — the one derivation both
+     * sides share — so a reboot into the SAME level is invisible to it,
+     * exactly like a death. The `plain` and `tree` arms are both
+     * `new Game(level, …)`: they are LOADS the transition list cannot see,
+     * and the dead-frame band has to read them from `endingReboots`
+     * instead or the residue is a whole fade out per reboot.
+     *
+     * @param {object} atTick the tick's own final state (for the mixer)
+     * @param {object} hits   the tick's `{hitX, hitY}`
+     */
+    const finishEndingReboot = (atTick, hits) => {
+        const reb = pendingSeedReboot;
+        pendingSeedReboot = null;
+        worldCtor = { x: reb.ctor.x, y: reb.ctor.y };
+        // ⛓ The flag is set on the line ABOVE the world assignment, so the
+        // destination's very first `Game.update` already takes the cutscene
+        // arm — which for `[1]` is why `v.y` is -1 before the first live
+        // frame, and for `[2]` is why the player is inert from the load
+        // fade onward.
+        if (reb.cutscene !== null) cutscene[reb.cutscene] = true;
+        // `Game.cutscene[2] = false` — the tree arm is the ONLY thing in the
+        // game that clears it, apart from `menuAndRestart`'s save wipe.
+        if (reb.arm === 'tree') cutscene[2] = false;
+        const grant = enterWorld({
+            toLevel: reb.toLevel,
+            fromLevel: reb.fromLevel,
+            carriedSwim: atTick?.swim ?? state.swim ?? null,
+            // The ctor args ARE the spawn block, and `spawnFromBoot` is the
+            // same half tile a boot takes. A reboot is a BOOT (§5).
+            arrivalFor: () => arriveAtRespawn(worldFor(reb.toLevel), worldCtor),
+            ctor: worldCtor,
+        });
+        if (reb.arm === 'bloody') {
+            cutsceneWalk = {
+                arm: reb.cutscene,
+                level: reb.toLevel,
+                from: reb.fromLevel,
+                startedAt: ticksCompleted,
+            };
+            state = { ...state, vy: CUTSCENE_1_WALK.vy };
+        } else if (reb.arm === 'plain') {
+            /**
+             * ⛓⛓⛓ THE TREE, AND IT IS THE SAME `.oel` OBJECT. `loadlevel`
+             * has just rebuilt the room with `cutscene[2]` true, so
+             * `Game.as:2185` hands `Seed` a fifth argument of `true` and
+             * the pickup comes back as a growing tree.
+             * `endingChain.treeSchedule` is the clock; `CUTSCENE_2_HOLD` is
+             * why its frames are TICKS and not dead frames.
+             */
+            cutsceneHold = {
+                arm: 2,
+                id: `seed@tree:${reb.toLevel}`,
+                level: reb.toLevel,
+                enteredAt: ticksCompleted,
+                phase: 'grow',
+                r: 0,
+                ...treeSchedule(),
+            };
+        } else if (reb.arm === 'tree') {
+            // ⛓⛓⛓ THE CREDITS. `menuState` survives the constructor only
+            // because `Game.menu = true` was assigned first: the ctor takes
+            // `_menuState` and then calls `end()`, whose
+            // `if (!menu) { … menuState = 0 … }` would wipe it.
+            credits = {
+                t: ticksCompleted,
+                menuState: CREDITS.menuState,
+                badge: CREDITS.badge,
+                level: reb.toLevel,
+            };
+        }
+        const sameLevel = reb.fromLevel === reb.toLevel;
+        const record = sameLevel ? null : {
+            t: ticksCompleted,
+            from_level: reb.fromLevel,
+            to_level: reb.toLevel,
+        };
+        if (record) transitions.push(record);
+        endingReboots.push({
+            t: ticksCompleted,
+            arm: reb.arm,
+            id: reb.id,
+            fromLevel: reb.fromLevel,
+            toLevel: reb.toLevel,
+            cutscene: reb.cutscene,
+            respawn: { x: state.x, y: state.y },
+            // ⛓ A same-level reboot is a LOAD the transition list cannot
+            // see — the dead-frame band's `loads` term has to read it from
+            // here or the residue is a whole fade out.
+            sameLevel,
+        });
+        firstTickInWorld = true;
+        return { transition: record, grant, ...hits };
     };
 
     // ── the equip (R4) ────────────────────────────────────────────────
@@ -4791,11 +4911,67 @@ export function createLevelRun({
      * the GAME started.
      */
     let cutsceneWalk = null;
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: `Game.cutscene`, the run's own copy.
+     *
+     * `public static var cutscene:Array = new Array(false, false, false,
+     * false)` (`Game.as:614`) — a STATIC, so it survives every world swap,
+     * which is the whole mechanism of the ending: `Seed`'s plain arm sets
+     * `[2]` one line above the reboot and `Game.as:2185` reads it back as
+     * the fifth ctor argument when `loadlevel` rebuilds the same object.
+     *
+     * ⚠ ONLY `[1]` AND `[2]` ARE REACHABLE HERE. `[0]` is the opening wind
+     * scene, which no boot can enter (it needs `Main`'s own start), and
+     * `[3]` is never written by anything in the tree.
+     */
+    const cutscene = [false, false, false, false];
+    /**
+     * ⛓⛓ `Game.as:961-966`'s hold, while it is running — `{arm: 2, level,
+     * enteredAt, phase, r}` or `null`.
+     *
+     * ⛔ NOT A FREEZE, and `endingChain.CUTSCENE_2_HOLD` is the argument.
+     * The cutscene sets `p.receiveInput = false`, which makes
+     * `canInventory()` false, which runs `inventory.open = false`, which
+     * LOWERS `Game.freezeObjects` at the end of every frame. So these are
+     * live TAPE TICKS with a player that cannot move — because
+     * `p.active = false` stops `Player.update` being called at all, not
+     * because anything is frozen. §14.5's "~688 frozen frames" counted them
+     * the other way.
+     */
+    let cutsceneHold = null;
+    /**
+     * The credits, once reached — `{t, menuState, badge}` or `null`.
+     *
+     * ⛔ AND IT IS A TERMINAL, NOT A STATE. `Game.menuAndRestart()` sets
+     * `Game.freezeObjects = true` on every frame while `menu` is true, so
+     * the tape's counter cannot advance past this and a tape that tried
+     * would be asking for observations the game never records. `advance`
+     * refuses rather than producing them.
+     */
+    let credits = null;
     /** `${level}:${x},${y}` of every pickup this run has already taken. */
     const collectedPickups = new Set();
     const pickupKey = (n, p) => `${n}:${p.x},${p.y}`;
     /** One record per completed ceremony, for the acceptance ledger. */
     const collected = [];
+    /**
+     * ⛓⛓⛓ R6 SLICE 6d: one record per ceremony BEGUN — `{t, level, tag,
+     * runtime}`.
+     *
+     * ⛔ AND IT IS A DIFFERENT LIST FROM `collected` FOR EXACTLY ONE REASON,
+     * which the game charged for on the first recording of
+     * `r6-seed-control`. `Pickup.pick_up()` raises `Game.freezeObjects` and
+     * counts `specialTimer` down from 150 on CONTACT; it does not ask
+     * whether the dialogue after it will ever be dismissed. So a tape that
+     * ends mid-ceremony has paid 150 DEAD FRAMES and banked no completion,
+     * and a dead-frame ledger keyed on `collected` reads that as 0 — 170
+     * dead against a one-load band of [14.6, 23.6].
+     *
+     * ⚠ The two lists are identical for every fixture that finishes what it
+     * starts, which is every fixture written before this one. That is why
+     * the defect could exist at all.
+     */
+    const ceremonyStarts = [];
     /**
      * `Game.framesThisCharacter`, which is a `Game` FIELD and not the NPC's.
      *
@@ -4817,6 +4993,23 @@ export function createLevelRun({
         // collecting in ONE tick instead.
         const byKey = PICKUP_CEREMONY_BY_KEYTYPE[p.tag];
         if (byKey && p.keyType !== undefined && byKey[p.keyType]) return byKey[p.keyType];
+        // ⛓⛓⛓ R6 SLICE 6d: the THIRD resolution, and the first that reads
+        // the LEVEL rather than a table. `Game.as:2185` passes `o.@text` as
+        // `Seed`'s fourth ctor argument, so the dialogue's length is data —
+        // two `seed` objects would run two different ceremonies from one
+        // class, which no table keyed on the class can express.
+        const byAttr = PICKUP_TEXT_FROM_ATTRIBUTE[p.tag];
+        if (byAttr) {
+            if (typeof p.text !== 'string') {
+                throw new Error(`levelRun: the "${p.tag}" pickup at (${p.x},${p.y}) in `
+                    + `level ${level} takes its ceremony text from its \`${byAttr.attribute}\` `
+                    + `ATTRIBUTE (${byAttr.src}) and the census carried none. A pickup `
+                    + 'whose dialogue length is level data cannot fall back to a table '
+                    + 'entry — the ceremony would run for the wrong number of ticks and '
+                    + 'every observation after it would be shifted.');
+            }
+            return { item: byAttr.item, text: p.text };
+        }
         const entry = PICKUP_CEREMONY[p.tag];
         if (!entry) {
             throw new Error(`levelRun: the player is standing on a "${p.tag}" pickup `
@@ -5133,6 +5326,21 @@ export function createLevelRun({
                 hasAllTotemParts: hasAllTotemParts(),
                 fallFromCeiling: false,
             })) continue;
+            // ⛓⛓⛓ R6 SLICE 6d: A SEED WITH `cutscene[2]` SET IS A TREE, AND
+            // A TREE IS NOT A PICKUP.
+            //
+            // `Game.as:2185` passes `cutscene[2]` as `Seed`'s fifth ctor
+            // argument, and `Seed.update`'s whole body is
+            // `if (drawCover) {…} else if (!tree) super.update();` — so the
+            // tree branch never reaches `Pickup.update` and therefore never
+            // runs `collide("Player", x, y)`. It cannot be walked onto.
+            //
+            // ⚠ NAMED RATHER THAN LEFT TO `collectedPickups`. The set would
+            // skip it too (the first visit collected it), and that is the
+            // wrong reason: it would also skip a tree in a room the run had
+            // never collected from, and it would stop skipping the moment
+            // anything reset the set.
+            if (p.tag === 'seed' && cutscene[2]) continue;
             if (rectsOverlap(box, p.rect)) return p;
         }
         return null;
@@ -6490,6 +6698,12 @@ export function createLevelRun({
         /** `{t, level, id, arm, fadeFrames}` per `Seed.removeSelf()`. */
         get seedFades() { return seedFades.map((r) => ({ ...r })); },
         /**
+         * ⛔ `{t, level, tag, runtime}` per ceremony BEGUN — the dead-frame
+         * ledger's term, and NOT `collected`. Phase A is paid on contact
+         * whether or not the dialogue after it is ever dismissed.
+         */
+        get ceremonyStarts() { return ceremonyStarts.map((r) => ({ ...r })); },
+        /**
          * ⛓⛓⛓ `{t, arm, id, fromLevel, toLevel, cutscene, respawn}` per
          * GAME-INITIATED ending reboot — the window's terminal, and the
          * discriminator `R6_BLOOD_MENU_DERIVATION` names: the LEVEL
@@ -6505,6 +6719,19 @@ export function createLevelRun({
         get oracleApproach() { return oracleApproach.map((r) => ({ ...r })); },
         /** The scripted walk, while it runs — `null` outside one. */
         get cutsceneWalk() { return cutsceneWalk ? { ...cutsceneWalk } : null; },
+        /** The `cutscene[2]` tree hold, while it runs — `null` outside one. */
+        get cutsceneHold() { return cutsceneHold ? { ...cutsceneHold } : null; },
+        /** `{t, level, what, r, updates}` — `endAnim`, then `coverFull`. */
+        get treeEvents() { return treeEvents.map((r) => ({ ...r })); },
+        /**
+         * ⛓⛓⛓ THE RUNG'S TERMINAL — `{t, menuState, badge, level}` once the
+         * tree's cover has reached 1, `null` before it. `menuState` is 2,
+         * which `botStatus.menu_state` reports directly since slice 6a: the
+         * ladder's first "the game says it was beaten".
+         */
+        get credits() { return credits ? { ...credits } : null; },
+        /** `Game.cutscene`, the run's own copy of the static. */
+        get cutscene() { return [...cutscene]; },
         /** The runtime pickups alive in THIS world, `{id, ex, ey, collected}`. */
         get runtimeSeeds() {
             return runtimeSeeds.map((s) => ({
@@ -6766,6 +6993,97 @@ export function createLevelRun({
             // DRAINS through a ceremony; what stops is the moving.
             if (frozenTimer > 0) frozenTimer -= 1;
 
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE CREDITS ARE A TERMINAL ──────────
+            //
+            // `Game.menuAndRestart()` runs at the TOP of `Game.update` and
+            // sets `Game.freezeObjects = true` on EVERY frame while
+            // `Game.menu` is true. So every frame after the credits reboot
+            // is a dead frame, the bot's counter cannot advance through one,
+            // and a tape whose `tick_count` runs past it is asking for
+            // observations the game will never record. Refused rather than
+            // produced — the alternative is a model stream longer than the
+            // recording, which reads as a physics divergence at the very
+            // moment the run has been WON.
+            if (credits) {
+                throw new Error(`levelRun: the tape asks for tick ${ticksCompleted}, `
+                    + `after the CREDITS reboot at tick ${credits.t}. `
+                    + '`Game.menuAndRestart()` sets `Game.freezeObjects = true` on every '
+                    + 'frame while `Game.menu` is true, so every frame from there on is '
+                    + 'DEAD and the tape\'s counter cannot advance. The window ENDS at '
+                    + `the credits: set \`tick_count\` to ${credits.t}. (And a key `
+                    + 'release would be worse than a wasted tick — '
+                    + '`Input.released(Key.ANY)` is what LEAVES the menu, rebooting the '
+                    + 'world again.)');
+            }
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE TREE, WHICH IS NOT A FREEZE ─────
+            //
+            // ⛔ THESE FRAMES ARE TAPE TICKS, and §14.5 counted them as
+            // frozen. `Game.as:961`'s `cutscene[2]` arm sets
+            // `p.receiveInput = false`, which makes `canInventory()` false,
+            // which runs `inventory.open = false`, which IS
+            // `Game.freezeObjects = false` (`Inventory.as:153`). The
+            // cutscene LOWERS the freeze at the end of every one of its own
+            // frames. What holds the player still is `p.active = false` —
+            // `Player.update` is never called at all — and that costs the
+            // tape a tick per frame, not a dead frame.
+            // (`endingChain.CUTSCENE_2_HOLD`.)
+            //
+            // ⚠ `runFrozenTick` IS STILL THE RIGHT PRIMITIVE and the name is
+            // the only thing wrong with it: every line of it is about a tick
+            // on which the player does not move while the rest of the world
+            // keeps running. The one real difference is that `hitUpdate()`
+            // does NOT drain here (it is inside `Player.update`, which an
+            // inactive player never reaches) — inert in L115, which holds no
+            // damage source, and named rather than left to be discovered.
+            if (cutsceneHold) {
+                if (held.size > 0) {
+                    throw new Error(`levelRun: the tape holds ${[...held].join(', ')} at `
+                        + `tick ${ticksCompleted}, inside the \`cutscene[2]\` hold that `
+                        + `began at tick ${cutsceneHold.enteredAt}. \`Game.as:961\` sets `
+                        + '`p.receiveInput = false` AND `p.active = false` every frame, '
+                        + 'so `Player.update` is never called and the span is a silent '
+                        + 'no-op in the game — the asymmetry the tape format exists to '
+                        + 'prevent.');
+                }
+                cutsceneHold.r += 1;
+                if (cutsceneHold.r === cutsceneHold.endAnimAt) {
+                    // `endAnim` -> `sprTreeGrow.play("grown"); drawCover = true`.
+                    // ⛔ It fires inside the GRAPHIC update, which
+                    // `World.update` runs AFTER `e.update()` — so
+                    // `Seed.update` has already run this tick with
+                    // `drawCover` still false, and the first `coverAlpha`
+                    // increment is the NEXT tick's.
+                    cutsceneHold.phase = 'fade';
+                    treeEvents.push({
+                        t: ticksCompleted, level, what: 'endAnim',
+                        r: cutsceneHold.r, updates: cutsceneHold.grow,
+                    });
+                }
+                if (cutsceneHold.r >= cutsceneHold.rebootAt) {
+                    treeEvents.push({
+                        t: ticksCompleted, level, what: 'coverFull',
+                        r: cutsceneHold.r, updates: cutsceneHold.fade,
+                    });
+                    pendingSeedReboot = {
+                        arm: 'tree',
+                        id: cutsceneHold.id ?? `tree@${level}`,
+                        fromLevel: level,
+                        toLevel: level,
+                        ctor: { ...worldCtor },
+                        // `Game.cutscene[2] = false` — see the reboot block.
+                        cutscene: null,
+                    };
+                    cutsceneHold = null;
+                }
+                prevHeld = new Set(held);
+                const tick = runFrozenTick(activators, 'the tree cutscene');
+                // ⛓ AND THE SWAP IS STILL END-OF-TICK. `runFrozenTick`
+                // returns before the tick's own tail, so the reboot is run
+                // here rather than in the block below — the one place on
+                // this path where the two orders could differ, named.
+                if (pendingSeedReboot) return finishEndingReboot(state, tick);
+                return tick;
+            }
             // ── ⛓⛓⛓ R6 SLICE 6d: THE SCRIPTED WALK, AND THE ORACLE ───
             //
             // Two refusals and a witness, and the witness is why the
@@ -6954,6 +7272,9 @@ export function createLevelRun({
                 const seed = runtimeSeedUnderfoot();
                 if (seed) {
                     seed.collected = true;
+                    ceremonyStarts.push({
+                        t: ticksCompleted, level, tag: 'seed', runtime: true,
+                    });
                     ceremony = {
                         pickup: { tag: 'seed', x: seed.ex, y: seed.ey, runtime: true },
                         level,
@@ -6974,6 +7295,9 @@ export function createLevelRun({
                     // ⛔ R6 slice 5 — see `assertNoCeremonyBesideShieldBoss`.
                     if (!noclip) assertNoCeremonyBesideShieldBoss(hit.tag ?? 'pickup');
                     const entry = ceremonyFor(hit);
+                    ceremonyStarts.push({
+                        t: ticksCompleted, level, tag: hit.tag ?? 'pickup', runtime: false,
+                    });
                     ceremony = {
                         pickup: hit,
                         level,
@@ -6989,6 +7313,13 @@ export function createLevelRun({
                         dialogue: entry.text === ''
                             ? null
                             : beginDialogue(entry.text, { framesThisCharacter }),
+                        // ⛓⛓⛓ R6 SLICE 6d: a PLACED `seed` takes the same
+                        // completion as the Watcher's runtime one — the
+                        // fade and the reboot — and its arm is `plain`
+                        // (`bloody` is false for anything `loadlevel`
+                        // builds, and `tree` is guarded above).
+                        ...(hit.tag === 'seed'
+                            ? { seed: { id: pickupKey(level, hit), arm: 'plain' } } : {}),
                     };
                 }
             }
@@ -7032,29 +7363,78 @@ export function createLevelRun({
                         t: ticksCompleted, level, id: ceremony.seed.id,
                         arm: ceremony.seed.arm, fadeFrames: fade,
                     });
-                    if (ceremony.seed.arm !== 'bloody') {
+                    /**
+                     * ⛓⛓⛓ `Seed.update`'s TERMINAL ARMS, and the branch is
+                     * on the two ctor booleans rather than on the level.
+                     *
+                     *   bloody -> `cutscene[1] = true`, `new Game(1,64,96)`
+                     *   plain  -> `cutscene[2] = true`, THE SAME LEVEL at
+                     *             `Game.currentPlayerPosition` — which the
+                     *             `playerPosition` setter wrote from the
+                     *             CURRENT world's own ctor args, i.e. this
+                     *             run's `worldCtor`, i.e. the boot block.
+                     *
+                     * ⛔ THE PLAIN ARM'S REBOOT IS WHAT ARMS THE TREE.
+                     * `Game.as:2185` passes `cutscene[2]` as `Seed`'s fifth
+                     * ctor argument, so the same `.oel` object comes back as
+                     * a tree. The two arms are one chain, not two options —
+                     * and the SAME arm is a soft-lock in a room with no
+                     * `seed` object (trap 91).
+                     */
+                    if (ceremony.seed.arm === 'bloody') {
+                        // ⛓ `Game.cutscene[1] = true` and `FP.world = new
+                        // Game(1, 64, 96, false)` — a reboot the DRIVER did
+                        // not order, deferred to the end of the tick beside a
+                        // death's for the reason both share:
+                        // `Engine.checkWorld` swaps after the whole tick.
+                        pendingSeedReboot = {
+                            arm: 'bloody',
+                            id: ceremony.seed.id,
+                            fromLevel: level,
+                            toLevel: SEED_ARMS.bloody.reboot.level,
+                            ctor: {
+                                x: SEED_ARMS.bloody.reboot.x,
+                                y: SEED_ARMS.bloody.reboot.y,
+                            },
+                            cutscene: 1,
+                        };
+                    } else if (ceremony.seed.arm === 'plain') {
+                        // ⛔ THE DESTINATION DECIDES WHETHER THIS IS THE
+                        // ENDING OR A SOFT-LOCK, and it is the same code
+                        // either way. A room with a `seed` object grows a
+                        // tree; a room without one leaves `cutscene[2]` set
+                        // for ever, and `Game.as:961` then spawns every
+                        // later player `receiveInput/visible/active = false`.
+                        // Refused by name rather than driven into.
+                        const dest = worldFor(level);
+                        if (!(dest.pickups ?? []).some((p) => p.tag === 'seed')) {
+                            throw new Error(`levelRun: a plain Seed collected in level `
+                                + `${level} reboots into a level with NO \`seed\` object. `
+                                + '`Game.cutscene[2]` is a `public static` cleared only '
+                                + 'by the tree arm or a save wipe, and `Game.as:961` '
+                                + 'then spawns the player `receiveInput = false; visible '
+                                + '= false; active = false` in EVERY later world. That '
+                                + 'is a SOFT-LOCK for the rest of the page, not a lost '
+                                + 'pickup, and it looks exactly like a dead bot.');
+                        }
+                        pendingSeedReboot = {
+                            arm: 'plain',
+                            id: ceremony.seed.id,
+                            fromLevel: level,
+                            toLevel: level,
+                            // `Game.currentPlayerPosition` — written by the
+                            // `playerPosition` SETTER from the current
+                            // `Game`'s own ctor args and never by walking.
+                            ctor: { ...worldCtor },
+                            cutscene: 2,
+                        };
+                    } else {
                         throw new Error('levelRun: a Seed ceremony finished on the '
                             + `"${ceremony.seed.arm}" arm, which this rung does not `
                             + 'model. `Seed.update` has THREE terminal arms and they '
                             + 'reboot into different levels with different cutscene '
-                            + 'flags; only the BLOODY one (R6 slice 6d) is built.');
+                            + 'flags.');
                     }
-                    // ⛓ `Game.cutscene[1] = true` and `FP.world = new
-                    // Game(1, 64, 96, false)` — a reboot the DRIVER did not
-                    // order, deferred to the end of the tick beside a death's
-                    // for the reason both share: `Engine.checkWorld` swaps
-                    // after the whole tick has run.
-                    pendingSeedReboot = {
-                        arm: ceremony.seed.arm,
-                        id: ceremony.seed.id,
-                        fromLevel: level,
-                        toLevel: SEED_ARMS.bloody.reboot.level,
-                        ctor: {
-                            x: SEED_ARMS.bloody.reboot.x,
-                            y: SEED_ARMS.bloody.reboot.y,
-                        },
-                        cutscene: 1,
-                    };
                     if (ceremony.dialogue) {
                         framesThisCharacter = ceremony.dialogue.framesThisCharacter;
                     }
@@ -7794,55 +8174,15 @@ export function createLevelRun({
             // pickup — a different level, a fresh position, and a
             // `Game.cutscene[1]` set on the line above it.
             //
-            // ⛔ AND IT DOES PRODUCE A TRANSITION RECORD, unlike a death.
-            // The level FIELD changes, so `deriveTransitions` — the one
-            // derivation both sides share — sees it in the observation
-            // stream and the model must report the same swap or the two
-            // ledgers disagree about how many loads the run paid for.
-            if (pendingSeedReboot) {
-                const reb = pendingSeedReboot;
-                pendingSeedReboot = null;
-                worldCtor = { x: reb.ctor.x, y: reb.ctor.y };
-                const grant = enterWorld({
-                    toLevel: reb.toLevel,
-                    fromLevel: reb.fromLevel,
-                    carriedSwim: next.swim ?? state.swim ?? null,
-                    // `new Game(1, 64, 96, false)` — the ctor args ARE the
-                    // spawn block, and `spawnFromBoot` is the same half tile
-                    // a boot takes. A reboot is a BOOT, not an entry (§5).
-                    arrivalFor: () => arriveAtRespawn(worldFor(reb.toLevel), worldCtor),
-                    ctor: worldCtor,
-                });
-                // ⛓ `Game.cutscene[1] = true` is set on the line ABOVE the
-                // world assignment, so the destination's very first
-                // `Game.update` already takes the scripted-walk arm — which
-                // is why `v.y` is -1 before the first live frame rather than
-                // after it.
-                cutsceneWalk = {
-                    arm: reb.cutscene,
-                    level: reb.toLevel,
-                    from: reb.fromLevel,
-                    startedAt: ticksCompleted,
-                };
-                state = { ...state, vy: CUTSCENE_1_WALK.vy };
-                const record = {
-                    t: ticksCompleted,
-                    from_level: reb.fromLevel,
-                    to_level: reb.toLevel,
-                };
-                transitions.push(record);
-                endingReboots.push({
-                    t: ticksCompleted,
-                    arm: reb.arm,
-                    id: reb.id,
-                    fromLevel: reb.fromLevel,
-                    toLevel: reb.toLevel,
-                    cutscene: reb.cutscene,
-                    respawn: { x: state.x, y: state.y },
-                });
-                firstTickInWorld = true;
-                return { transition: record, grant, ...hits };
-            }
+            // ── ⛓⛓⛓ R6 SLICE 6d: THE ENDING'S OWN REBOOT, AT END OF TICK ──
+            //
+            // One implementation, TWO callers — the ordinary tail here and
+            // the tree cutscene's own frozen-tick path above, which returns
+            // before this line is reached. Copying it would have been two
+            // models of one `FP.world = new Game(...)`, and the two would
+            // have agreed exactly until one of them was edited.
+            // [[feedback_two_cost_models_must_agree]]
+            if (pendingSeedReboot) return finishEndingReboot(next, hits);
 
             if (!next.transition) {
                 state = next;
