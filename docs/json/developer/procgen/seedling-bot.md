@@ -1641,6 +1641,35 @@ again at the next frame's dead-frame gate; and `NPC.talk()` reads
 `Input.released` from the NPC's own update, outside the frozen block. So a
 `primary` span pages the dialogue and `saw_auto_advance` stays **zero**.
 
+⛓⛓ **R6 SLICE 6b NAMED THE LINE THAT LOWERS IT**, which this paragraph had
+described as an emergent property of "several writers" for three rungs. It
+is one line, and it decides the tick/frame split for the whole ending:
+
+```
+  Game.update:  … super.update()  …  if (canInventory()) inventory.update()
+                                     else if (inventory) inventory.open = false
+```
+
+`canInventory()` is `inventory && !talking && p && p.receiveInput &&
+!p.destroy` (`Game.as:1494`) and `Inventory.set open` **is**
+`Game.freezeObjects = _open = _o` (`Inventory.as:153`). ⇒ **while
+`Game.talking` is true, the ELSE arm clears the freeze at the end of every
+frame.** A DIALOGUE frame is therefore raised inside `World.update` and
+lowered before the next frame's dead-frame gate reads it, and the tape
+ticks. A freeze raised by anything that does NOT set `Game.talking` — a
+`SealController`, a `Pickup`'s phase A, a `Seed`'s cover fade — is never
+lowered, and those frames are DEAD.
+
+⛔⛔ **AND FOR A *PLACED* NPC, LEAVING THE RADIUS IS NOT A CANCEL.**
+`NPC.talk`'s `else` arm is `talked = false; if (talking) talking = false;`
+and the `talking` SETTER's `if (!talking)` branch ends with
+`doneTalking()`. For the Watcher that override is the `{114,0}` write, so
+**walking away mid-dialogue earns the tag exactly as reading it to the end
+does**. A control built on "the same tape, but leave before the last page"
+clears the flag it exists to withhold, and both arms come back identical.
+End the TAPE inside the circle instead. A pickup's ceremony has no radius
+and cannot hit this; every placed NPC can.
+
 Three facts only the game knew, from the first collection recording:
 
 1. Contact at observation 23, frozen 24..57 — **34 ticks**, which the model
