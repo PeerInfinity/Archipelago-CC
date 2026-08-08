@@ -5356,3 +5356,64 @@ sixteen-ceremony sweep and the full item chain are **R7's line**.
 | the L40 chain (links 5–11, bosskey 2, both north teleporters) | link 5 has no holder, the corpse cannot cross, and the wand opens no WandLock — a STANDING wall for this machinery | **R7** |
 | LightBoss / TentacleBeast / LavaBoss | deferred by name — none gates anything the ending needs; TentacleBeast is the game's first RNG-coupled fight | deferred |
 | L93's bridge | a TILE (type 29), not a class: one Spear/GhostSword hit then 59 self-decrementing render frames; `type` mutates in `render()` (one-frame lag); no persistence — re-closes every reload. Unit-witnessed on L63 only | R7 (live witness) |
+
+### ⛓⛓⛓ The Owl, searched — and three things the search paid for (R6 slice 6f)
+
+The fight is `levelRun`'s fifteenth per-visit family and the first whose state
+includes a random number generator. `stepOwlNow` runs the rocks, the grenades,
+the pods and the boss in `World.update`'s order (rocks first, so a rock that
+lands on tick N raises the shake tick N's own `view()` reads; the player LAST,
+so every position the boss reads is from the end of the previous tick), and
+`owlJiggleNow` spends `view()`'s two draws below the player. Every tick asserts
+`owlTickDraws(phase) === the stream's delta` — the schedule and the sites are
+two computations of one number.
+
+**The plan search, and its triple.** Press ticks x stances on a polar grid,
+each candidate a full replay of the real runner. FORBIDDEN rather than scored
+away: a stance overlapping the boss's 12x12 box, `distanceRectPoint > 16`, a
+push ray pointing away from the lava centre, any tile with `t in {16, 17}`
+(**both are lethal** — the ring around the octagon is a 16 px no-go collar, not
+a margin), and the four pod cells. The death is banked too: standing at the
+stance and waiting is **dead at tick 555**, three hits inside the first
+barrage, at every position and seed tried.
+
+- **THE INTRO-DISMISSING PRESS IS THE FIRST SHOVE.** `FinalBoss.update` lowers
+  `Game.freezeObjects` at the TOP of the frame, above the player's own update,
+  so `Player.input()` runs that very tick and `Input.pressed(keys[4])` reaches
+  `useItem(Main.primary)`. One press, two jobs — and `hitThisSequence` starts
+  FALSE, so the first lava hit needs no barrage before it. "At least three full
+  pod cycles" is one barrage too many: the window endures **two**.
+- **95 ROCKS LAND ACROSS TWO BARRAGES AND NOT ONE TOUCHES AN ORBITING PLAYER.**
+  `stepsAhead` is -15 and a rock flies 17 ticks, so a moving player puts ~32
+  ticks of their own velocity between the aim point and where they are. The
+  vulnerable state is the **STANCE**: the one hit the plan takes is a grenade
+  dropped at the Owl's own feet, exploding 51 ticks later while the player
+  stands still waiting to press.
+- **THE FIVE HIT TESTS ARE CULLED AT THE RECT, NOT THE REACH** — 7 of 15 across
+  three presses. `justKnock` sets no `hitsTimer`, so the RECEIVER refuses none
+  of them; what stops them is `Player.slash` re-running `collideRectInto` every
+  tick against a body the previous test threw 8.75 px. A shoved body is not
+  COLLECTED, so it never reaches `FP.distanceRectPoint` and the refusal leaves
+  no ledger row: the witness is the COUNT.
+
+**And the first recording refuted the model at tick 23.** Every scalar check
+passed — dead frames in a one-load band, `saw_auto_advance` 0, `drownTimer` 0,
+the grants, all 14 item properties, `menu`/`cutscene` false — and the stream
+diverged: the game knocks the player 1.66 px west in one tick where the model
+walks on. ⛔ **`game hits 1 == model hits 1` passed while meaning nothing** —
+the model's hit is a grenade at tick 842 and the game's is at ~22. A hit COUNT
+is not a witness that you modelled the hit. The tapes stay out of the roster
+until the divergence is attributed; a fixture whose model is refuted is either
+a permanent red or a silenced one.
+
+Two smaller traps the slice banked:
+
+- **`keysToSpans` drops the key it does not own.** It is the mover's encoder and
+  iterates `up`/`right`/`down`/`left` only, so a per-tick set containing
+  `primary` comes back with no press in it. Symptom: three shoves in the drive,
+  zero in the replay, and a tape whose every tick is the room's intro.
+- **A census of SITES still did not discharge a schedule of TICKS**, inside the
+  slice that banked that lesson — this time the schedule was right and the
+  LOOKUP was short. On the tag tick the boss's own arm is `frozen` (0 draws) and
+  the GRAPHIC's `endAnim` books ten, so a tick's site list is
+  `phase ++ (deathAnim if the callback fired) ++ jiggle`.
