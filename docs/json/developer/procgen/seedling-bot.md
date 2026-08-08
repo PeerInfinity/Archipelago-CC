@@ -1670,6 +1670,67 @@ clears the flag it exists to withhold, and both arms come back identical.
 End the TAPE inside the circle instead. A pickup's ceremony has no radius
 and cannot hit this; every placed NPC can.
 
+⛔⛔⛔ **AND R6 SLICE 6c DROVE IT, WHICH MADE THE FINDING SHARPER: THERE IS NO
+MID-DIALOGUE WALK TO TAKE.** `NPC.talk()`'s `if (talking)` block raises
+`Game.freezeObjects` on its **first line** — above the key test AND above the
+radius test — and the NPC updates before the player. So from the dialogue's
+SECOND frame onward `Mobile.mobileUpdate` returns early and the player cannot
+move at all.
+
+⇒ the out-of-range arm is reachable from exactly ONE frame: the one the
+dialogue OPENS on, which is live only because `startTalking()` sits BELOW the
+block that raises the freeze. A stance booted ON the circle (distance exactly
+`talkRange`, and the test is `<=`) that steps outward there — 0.80 px from
+rest, enough and only just — is out of range when the next frame tests it,
+and the teardown runs `doneTalking()`. **`{114,0}` is earned in two ticks,
+with zero pages read and no key pressed at all.** Both halves are driven in
+`watcherL114.test.js`: that boot earns it at tick 2, and the shipped W-talk
+stance holds `down` for 200 ticks and never moves once.
+
+⛓ The practical rule: when a mechanism BOTH gates movement and READS
+position, enumerate the frames on which both are true before designing any
+control around "leave". The window can be one frame wide, or empty.
+
+### ⛔⛔ Two fenceposts an animation's end has, and they compose (R6 slice 6c)
+
+`FinalDoor` is the cleanest case in the game — no `destroy`, no fade, just an
+animation and a removal — and the model got BOTH of its ticks wrong in ways
+that nearly cancel.
+
+```as3
+World.update:   while (e) { if (e.active) e.update();
+                            if (e._graphic) e._graphic.update();
+                            e = e._updateNext; }
+Engine.update:  FP._world.update();  FP._world.updateLists();
+```
+
+1. **The `play()` frame IS the animation's first update.** `spr.play("open")`
+   runs inside `e.update()` and `e._graphic.update()` follows in the SAME
+   pass over the SAME entity — so `animEnd` fires on graphic update N at
+   **play tick + (N-1)**, not + N. For the door: update 57, tick +56.
+2. **`FP.world.remove(this)` only QUEUES.** The Player sweeps inside
+   `world.update()`, which runs BEFORE `updateLists()` — so the body is still
+   in the type list for the whole frame its animation ends on, and the first
+   free sweep is the NEXT tick. R5 slice 5 found this as the third of
+   `ShieldBoss`'s three fenceposts; for a class with no `destroy` and no fade
+   it is the WHOLE removal.
+
+⛓⛓ **NEITHER CORRECTION ALONE REPRODUCES THE GAME.** With the naive count and
+no queue the model frees one tick early; with the corrected count and no
+queue, one tick early; with the naive count and the queue, one tick late.
+Only both together are byte-exact — which is what makes them a pair of
+findings rather than a tuned constant.
+
+⛓⛓⛓ **AND THE DIAGNOSTIC IS REUSABLE.** The refuting recording diverged at one
+observation and stayed diverged, which reads like drifting physics. It was
+not: the per-tick **deltas** either side were IDENTICAL (1.55, 1.30, 1.05,
+0.80, 1.35) and only the absolute positions differed, by exactly one step.
+Velocity evolves whether or not the position is clamped, so matching deltas
+plus a constant offset means one extra MOVE and nothing else wrong — a
+geometry fencepost, findable by reading one `if`. **Diff the deltas before
+you diff the values**; a growing offset is an accumulator, and differing
+deltas are a different question entirely.
+
 Three facts only the game knew, from the first collection recording:
 
 1. Contact at observation 23, frozen 24..57 — **34 ticks**, which the model
