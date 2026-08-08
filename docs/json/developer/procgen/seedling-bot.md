@@ -194,6 +194,79 @@ re-validates, and the harness sends the PARSED object over the wire — so a
 presence check rejects every v1 fixture. Both sides learned that the hard
 way (see "Rebuilding" below).
 
+## The version 7 tape: the RNG state (R6 slice 6a)
+
+The versions between are documented at their own rungs (v3 persistence
+clears, v4 equips, v5 determinism pins, v6 the save-array boot block). v7 is
+the first field whose reason is that the game is not deterministic **enough**
+from outside.
+
+```json
+{ "tape_version": 7, "rng": { "seed": 12345, "split": true }, ... }
+```
+
+`Math.random()` in the recompiled build is ONE global 31-bit XOR-shift LFSR
+whose entire state is a single uint32
+(`SWFModernRuntime/src/avm2/avm2_number.c`). That makes a page
+**reproducible** — the same tape on a fresh page draws the same numbers —
+and it does NOT make the stream **predictable**, because the position at any
+moment is the whole page's history: three draws per `Tile` constructed, one
+per `Enemy`, one per indexed sound, two per frame of camera shake, in the
+title world as much as this one. The Owl (L112) is the first room whose
+GAMEPLAY reads a draw — `FinalBoss` rolls its rock frequency and position,
+and `RockFall` rolls its scale straight into a `setHitbox`, so whether a
+rock HITS is a draw and a hit is a knockback in the compared stream.
+
+- **`seed`** is written into the generator by `botStart` **AFTER the boot
+  world is built**, which is the whole point: `new Game(...)` runs its
+  constructor synchronously (three draws per tile) and the reset below it
+  means the model owes nothing for the world build or the page's history.
+  **0 means "inherit the page's stream"** — what every pre-R6 tape did — and
+  is not a state the LFSR can reach.
+- **`split`** routes the COSMETIC draws onto a second generator. 31 calls on
+  25 lines in 13 files call `Rng.cos()` instead of `Math.random()`; with
+  `split` false that function IS `Math.random()`, so every fixture recorded
+  before the batch takes a byte-identical path. With it on, sprite frames,
+  particles, sound indices and the camera jiggle stop moving the gameplay
+  stream — and a window's dead frames stop costing the model anything.
+- **The bound is `0..2147483647`, for two independent reasons.** The n = 31
+  tap is `0x48000000` (bit 31 clear), so the orbit is `[1, 2^31)` — nothing
+  above it is a state the game can be in. AND the recompiled runtime's
+  `JSON.parse` coerces an integral Number to **int32**, so a declared
+  2147483648 arrives in `Bot.as` as **-2147483648**. Measured; both
+  validators state it.
+
+⚠ **CLASSIFYING A DRAW IS THE RISKY HALF AND THE ERRORS ARE SILENT.**
+`Tile.addGrass`'s blade positions look like decoration and are gameplay
+(`Grass` has a hitbox and `cut()` increments `Main.grassCut`), and the
+camera jiggle looks cosmetic while `FP.camera` gates `Enemy.update`'s
+`onScreen()`. Route a site only when the drawn value's ONLY readers are
+`render()`, a `Draw` call, an audio channel, or nothing at all. ⛓ And
+`FP.choose`/`FP.rand` are FlashPunk's OWN LCG, seeded once per page from a
+single `Math.random()` — they cost this stream nothing and never needed
+routing.
+
+### The hooks, and the readouts that rode with them
+
+`swfmodern.Rng` (`getDefinitionByName`, so a build without it throws #1065
+rather than silently ignoring a seed) exposes `state`/`setState`,
+`cosmeticState`/`setCosmeticState` and `cosmetic`. ⛓ **`setState` IS the
+reset** — the state is one uint32 and the seed goes straight in — which is
+what lets `botRngProbe(seed, count, cosmetic)` sample the stream and PUT IT
+BACK. That probe is `rng.js`'s oracle: the JS transcription's known answers
+come from the game, and the first run of
+`scripts/procgen/probe-seedling-rng.mjs` caught a wrong xor mask in the
+plan by doing so.
+
+The same rebuild carried three readouts that had been wanted-not-walls since
+slices 0 and 5: `botMobiles().pods` (a `Pod` is Scenery, not a `Mobile`, so
+it needs its own list — with `open`, `anim` and `frame`),
+`botStatus.menu_state` (the credits state, read directly instead of by
+eliminating four menu writers) and, on the enemy row, `activated` for the
+ShieldBoss beside `botStatus.slash = {tests, hits}` — live counters that
+measured "one press is FIVE hit tests" from the game's own side for the
+first time.
+
 ## How the game is driven
 
 `Bot.as` is a **generic, data-driven tape interpreter**, deliberately dumb.

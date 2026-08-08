@@ -126,10 +126,59 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 6;
+export const TAPE_VERSION = 7;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7]);
+
+/**
+ * ── Version 7: the RNG STATE ──────────────────────────────────────────
+ *
+ * `rng: { seed, split }`, and it is the first field whose reason is that the
+ * game is not deterministic ENOUGH from outside rather than too little.
+ *
+ * `Math.random()` in the recompiled build is one global LFSR (`rng.js`), so
+ * a page reproduces exactly and predicts nothing: the value the Owl reads
+ * when he decides whether to drop a rock depends on how many draws the page
+ * has made since it loaded, across every world it has built. A tape that
+ * claims anything about that fight therefore has to DECLARE its stream the
+ * way it already declares its boot level and its save arrays.
+ *
+ *   `seed`   the value written into the generator at `botStart`, AFTER the
+ *            boot world is built — so the tape owes only the draws its own
+ *            window makes. 0 means "inherit the page's stream", which is
+ *            what every tape before this rung did, and is not a state the
+ *            LFSR can reach.
+ *   `split`  route the COSMETIC draws (sprite frames, particles, sound
+ *            indices, the camera jiggle — `Rng.cos()` in the fork, 31 call
+ *            sites) onto a second generator, so they stop shifting the
+ *            gameplay stream. Off means `Rng.cos()` IS `Math.random()`,
+ *            which is why every committed fixture is byte-inert past the
+ *            batch that added it.
+ */
+export const RNG_KEYS = Object.freeze(['seed', 'split']);
+
+/**
+ * The largest declarable seed, and it is 2^31 - 1 for TWO independent
+ * reasons that happen to coincide.
+ *
+ * 1. ⛓ **IT IS THE WHOLE ORBIT.** The n = 31 tap is `0x48000000`, whose top
+ *    bit is clear, so `(u >>> 1) ^ mask` never sets bit 31: every state the
+ *    generator can reach lives in [1, 2^31), which is the `uSequenceLength`
+ *    the runtime computes. A seed above it is not a state the game could
+ *    ever be in.
+ * 2. ⛔ **AND THE TRANSPORT COULD NOT CARRY IT ANYWAY — MEASURED.** The
+ *    recompiled runtime's `JSON.parse` coerces an integral Number to int32,
+ *    so a tape declaring 2147483648 arrives in `Bot.as` as **-2147483648**.
+ *    The first run of `probe-seedling-rng.mjs` hit exactly this and the
+ *    probe's own range check caught it. A field whose two consumers read
+ *    different values is the divergence this whole format exists to
+ *    prevent, so the bound is stated here rather than left to the
+ *    transport to enforce silently.
+ *
+ * 0 stays the "declares nothing" value; it is not a reachable state.
+ */
+export const RNG_SEED_MAX = 2147483647;
 
 /**
  * ── Version 5: the DETERMINISM PINS ───────────────────────────────────
@@ -553,6 +602,57 @@ export function saveBlockDeclaresAnything(save) {
     return SAVE_KEYS.some((k) => Array.isArray(save[k]) && save[k].length > 0);
 }
 
+/** The v7 block a v1..v6 tape normalises to: inherit the stream, no split. */
+export function emptyRngBlock() {
+    return { seed: 0, split: false };
+}
+
+/**
+ * Does an `rng` block declare anything? (the v<7 rejection's test)
+ *
+ * ⚠ VALUE-SCOPED like every rejection above it, and for the sixth time the
+ * same reason: `parseTape` normalises, so a parsed v1..v6 tape carries
+ * `rng: {seed: 0, split: false}` and a presence check would reject all 108
+ * committed fixtures.
+ */
+export function rngBlockDeclaresAnything(rng) {
+    if (rng === null || typeof rng !== 'object' || Array.isArray(rng)) return false;
+    // ⚠ WRITTEN AS A TERNARY, AND KEPT THAT WAY ON PURPOSE. The `||` form
+    // is equivalent and tidier, and simplifying it mid-slice would have
+    // invalidated a running two-and-a-half-hour roster sweep that had
+    // already imported this module — a gate whose result predates the
+    // change is not a gate. Tidy it in a change that re-runs the sweep.
+    return rng.seed !== undefined && rng.seed !== 0 ? true : rng.split === true;
+}
+
+/** The version-7 `rng` block. */
+function parseRng(raw) {
+    const rng = raw.rng;
+    if (rng === null || typeof rng !== 'object' || Array.isArray(rng)) {
+        fail('rng must be an object { seed, split } on a tape_version 7 tape, '
+            + `got ${JSON.stringify(rng)}`);
+    }
+    for (const k of Object.keys(rng)) {
+        if (!RNG_KEYS.includes(k)) {
+            fail(`rng.${k} is not an rng field; legal keys are ${RNG_KEYS.join(', ')}`);
+        }
+    }
+    const seed = rng.seed ?? 0;
+    requireInt(seed, 'rng.seed');
+    if (seed < 0 || seed > RNG_SEED_MAX) {
+        fail(`rng.seed is ${seed}, out of range 0..${RNG_SEED_MAX}. The orbit of `
+            + 'the n=31 tap lives entirely in [1, 2^31), and the recompiled '
+            + 'runtime\'s JSON.parse coerces a larger integer to int32 anyway (a '
+            + 'declared 2147483648 arrives in Bot.as as -2147483648). 0 means '
+            + '"inherit the page\'s stream" and is not a state the LFSR can reach.');
+    }
+    const split = rng.split ?? false;
+    if (typeof split !== 'boolean') {
+        fail(`rng.split must be a boolean, got ${JSON.stringify(split)}`);
+    }
+    return { seed, split };
+}
+
 function parseSaveIndices(list, what, limit) {
     if (list === undefined || list === null) return [];
     if (!Array.isArray(list)) {
@@ -788,6 +888,13 @@ export function parseTape(input) {
             fail(`tape_version 1 declares save: ${JSON.stringify(raw.save)}, but `
                 + 'version 1 means an EMPTY save block BY DEFINITION.');
         }
+        // `rng` is the second normalised OBJECT field and gets the same
+        // separate treatment as `save`, for the same reason: the loop below
+        // compares arrays and scalars and cannot express "empty" for it.
+        if (rngBlockDeclaresAnything(raw.rng)) {
+            fail(`tape_version 1 declares rng: ${JSON.stringify(raw.rng)}, but `
+                + 'version 1 means an EMPTY rng block BY DEFINITION.');
+        }
         for (const [field, expected] of Object.entries(v1Semantics)) {
             const got = raw[field];
             if (got === undefined) continue;
@@ -856,6 +963,20 @@ export function parseTape(input) {
             + 'engine honoured the block. Bump tape_version to 6 to present any.');
     }
     const save = version >= 6 ? parseSave(raw) : emptySaveBlock();
+    // The VALUE-not-presence rule, one version on again, and the emptiness
+    // test is over the block's two FIELDS for the reason `save`'s is over its
+    // three arrays: a parsed v1..v6 tape carries a non-null `{seed: 0, split:
+    // false}` and a `!== undefined` check would reject all 108 committed
+    // fixtures.
+    if (version < 7 && rngBlockDeclaresAnything(raw.rng)) {
+        fail(`tape_version ${version} declares rng: ${JSON.stringify(raw.rng)}, `
+            + 'but versions below 7 mean rng: {seed: 0, split: false} BY DEFINITION '
+            + '— the build had no such field to read, so the game would run on '
+            + 'whatever stream position the page had reached while the JS engine '
+            + 'modelled one that started at the declared seed. Bump tape_version to '
+            + '7 to declare a stream.');
+    }
+    const rng = version >= 7 ? parseRng(raw) : emptyRngBlock();
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -968,6 +1089,7 @@ export function parseTape(input) {
             keys: Object.freeze(save.keys),
             seal_parts: Object.freeze(save.seal_parts),
         }),
+        rng: Object.freeze({ seed: rng.seed, split: rng.split }),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -1055,6 +1177,11 @@ export function serializeTape(tape) {
                 keys: [...t.save.keys],
                 seal_parts: [...t.save.seal_parts],
             },
+        } : {}),
+        // Same rule again: written ONLY for a v7 tape, so all 108 frozen
+        // fixtures round-trip byte-identically past the RNG batch.
+        ...(t.tape_version >= 7 ? {
+            rng: { seed: t.rng.seed, split: t.rng.split },
         } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),

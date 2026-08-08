@@ -558,16 +558,49 @@ export function r6ExitFindings(roster = fixtureNames()) {
 // ── THE AS3 DECISION ──────────────────────────────────────────────────
 
 /**
- * ⚖ ZERO AS3 THIS RUNG, finalized at slice 0 per kickoff §1.6.
+ * ⚖ ONE BATCH, RULED AT SLICE 6 — and the zero-batch rule is what made it
+ * legitimate rather than what it broke.
  *
- * The v6 batch is banked and unconsumed, and a new batch needs a NAMED WALL
- * plus a failed zero-build witness. Two surfaces were found that a batch
- * would improve; neither is a wall, and the difference is recorded rather
- * than glossed:
+ * Slice 0 finalized ZERO and §8.17.4 named the escape clause: a new batch
+ * needs a NAMED WALL plus a failed zero-build witness. Slice 6's recon
+ * found the first surface on the rung to clear that bar. `Math.random()` is
+ * one global LFSR, so the census proving L112 has no render-coupled draw
+ * site establishes that the Owl fight REPRODUCES and not that a model can
+ * PREDICT it: predicting needs the generator's absolute stream position at
+ * window start, which is the whole page's history, and no readout carries
+ * it. The zero-build alternative is not "worse" — it is "the model cannot
+ * state the value at all".
+ *
+ * ⚖ The mechanism is the USER'S OWN PROPOSAL (kickoff §14.2, verbatim
+ * there): expose the state for reading, for writing/reset-from-seed, and
+ * give the game two streams. All three shipped in slice 6a's one batch,
+ * with the split OFF by default so no committed fixture changed path.
+ *
+ * Every surface below was `wanted` before the batch and is `resolved` by
+ * it; each keeps the reason it was NOT a wall, because that is what made
+ * bundling them into a rebuild the batch was having anyway the right call
+ * rather than the excuse.
  */
 export const R6_AS3_DECISION = Object.freeze({
-    batches: 0,
-    wanted: Object.freeze([
+    batches: 1,
+    /**
+     * The wall that justified the batch, in the terms §8.17.4 set.
+     */
+    wall: Object.freeze({
+        surface: 'the `Math.random()` stream position',
+        found: 'R6 slice 6 — a byte-exact Owl window at noDamage:false needs the '
+            + 'LFSR\'s ABSOLUTE draw index at window start (every Tile and Enemy '
+            + 'constructed since page load, every sound index rolled, every frame '
+            + 'of camera shake, in the title world as much as this one). Per-object '
+            + 'draw counts are DELTAS and a delta with no origin predicts nothing.',
+        whyItIsAWall: 'there is no zero-build substitute: no readout carries the '
+            + 'index and none can be derived from one. The other two wanted '
+            + 'surfaces both had sound substitutes; this one has none.',
+        shipped: 'swfmodern.Rng (read/write/reset + a second generator) in '
+            + 'SWFModernRuntime/src/avm2/avm2_number.c, Rng.as in the fork, the '
+            + 'v7 tape block, and rng.js as the model stratum.',
+    }),
+    resolved: Object.freeze([
         Object.freeze({
             surface: '`Pod` state in `botMobiles()`',
             found: 'R6 slice 0 — L112\'s whole `botMobiles()` roster is `FinalBoss, '
@@ -577,6 +610,9 @@ export const R6_AS3_DECISION = Object.freeze({
             whyNotAWall: 'the rung\'s headline is the PERSISTENCE LEDGER, which is '
                 + 'already readable, and the Owl\'s own row (position, hits) is in '
                 + '`botMobiles()`. The pods are a modelling convenience.',
+            shippedIn: 'slice 6a — `botMobiles().pods`, their own list because a '
+                + '`Pod` is Scenery and not a `Mobile`, carrying `open` plus `anim` '
+                + 'and `frame` (the 22-update open/close a tick-exact schedule needs).',
         }),
         Object.freeze({
             surface: '`Game.menuState` on `botStatus`',
@@ -586,6 +622,9 @@ export const R6_AS3_DECISION = Object.freeze({
             whyNotAWall: '`R6_MENU_WRITERS` eliminates the other four writers from a '
                 + 'W-seed window, so `botStatus.menu === true` is a sound witness — '
                 + 'weaker in form, identical in what it establishes.',
+            shippedIn: 'slice 6a — `botStatus.menu_state`, through a public static '
+                + 'getter rather than by widening the field. 6b reads the credits '
+                + 'directly instead of through the four-writer elimination.',
         }),
         // ⛓⛓ R6 SLICE 5, and it is the sharpest wanted-not-wall yet: the
         // surface would have SAVED A RECORDING.
@@ -602,11 +641,26 @@ export const R6_AS3_DECISION = Object.freeze({
                 + 'own `hits` went to 1 where the model said 0, and the stream showed '
                 + 'the shove. A readout would have named the cause instead of the '
                 + 'symptom and saved one 60-second recording; it would not have changed '
-                + 'the verdict. ⚠ The batch is ruled ZERO (§8.17) and this stays wanted.',
+                + 'the verdict. ⚠ It stayed wanted through slice 5 under the '
+                + 'zero-batch ruling, and rode the RNG batch rather than earning '
+                + 'one of its own.',
+            shippedIn: 'slice 6a — `botMobiles()`\'s enemy row carries `activated` '
+                + '(null for every class that has no such field), and '
+                + '`botStatus.slash` carries the LIVE `{tests, hits}` counters, so '
+                + '"one press is five hit tests" is checked against a count instead '
+                + 'of against a knockback 13 ticks downstream.',
         }),
     ]),
+    /**
+     * ⚠ STILL NOTHING. `saw_auto_advance` was NOT bundled: it is the one
+     * wanted change that is not byte-inert, and slice 6a's whole gate is a
+     * full-roster differential with ZERO re-records. Riding it in would have
+     * made every fixture a re-record and destroyed the gate that proves the
+     * batch safe — so it waits for a batch that re-records ON PURPOSE.
+     */
     stillOwed: Object.freeze([
         '`saw_auto_advance` unification — owed since R3, not byte-inert, so it '
-        + 'waits for a batch that re-records (R5 §38.4 item 3, carried).',
+        + 'waits for a batch that re-records (R5 §38.4 item 3, carried). Slice 6a '
+        + 'deliberately did NOT bundle it: its gate is zero re-records.',
     ]),
 });

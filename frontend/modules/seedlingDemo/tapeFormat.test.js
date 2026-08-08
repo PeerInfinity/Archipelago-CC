@@ -36,6 +36,9 @@ import {
     SAVE_SLOTS,
     emptySaveBlock,
     saveBlockDeclaresAnything,
+    emptyRngBlock,
+    rngBlockDeclaresAnything,
+    RNG_SEED_MAX,
 } from './tapeFormat.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
@@ -280,7 +283,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(6);
+        expect(TAPE_VERSION).toBe(7);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -639,7 +642,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1052,5 +1055,122 @@ describe('version 6: the save-array boot block', () => {
         expect(saveBlockDeclaresAnything(undefined)).toBe(false);
         expect(saveBlockDeclaresAnything(emptySaveBlock())).toBe(false);
         expect(saveBlockDeclaresAnything({ seal_parts: [0] })).toBe(true);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// VERSION 7 — the RNG STATE, R6 slice 6a.
+//
+// The first field whose reason is that the game is not deterministic ENOUGH
+// from outside. `Math.random()` is one global LFSR, so a page reproduces
+// exactly and predicts nothing: what the Owl reads when he decides whether
+// to drop a rock is a function of how many draws the page has made since it
+// loaded. `rng.seed` declares the origin; `rng.split` takes the cosmetic
+// draws off the gameplay stream so they stop moving it.
+// ─────────────────────────────────────────────────────────────────────────
+
+const v7Base = {
+    ...v6Base,
+    tape_version: 7,
+    rng: { seed: 0, split: false },
+};
+const v7With = (rng) => ({ ...v7Base, rng: { ...v7Base.rng, ...rng } });
+
+describe('version 7: the RNG state', () => {
+    it('normalises an EMPTY block onto every earlier version', () => {
+        for (const t of [base, v2Base, v6Base]) {
+            expect(parseTape(t).rng).toEqual({ seed: 0, split: false });
+        }
+    });
+
+    it('writes NO rng field into a v1..v6 tape, so all 108 fixtures round-trip', () => {
+        for (const t of [base, v2Base, v6Base]) {
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('rng');
+        }
+        expect(JSON.parse(serializeTape(v7Base))).toHaveProperty('rng');
+    });
+
+    it('rejects a v1..v6 tape that DECLARES anything, by VALUE not presence', () => {
+        // The value-not-presence rule, the SIXTH time. A parsed v6 tape
+        // carries `{seed: 0, split: false}`; rejecting on presence would
+        // reject every committed fixture, which is what the first build of
+        // the R0 batch did with `noDamage`.
+        expect(() => parseTape({ ...v6Base, rng: { seed: 0, split: false } }))
+            .not.toThrow();
+        expect(() => parseTape({ ...v6Base, rng: { seed: 12345, split: false } }))
+            .toThrow(/versions below 7 mean rng: \{seed: 0, split: false\}/);
+        expect(() => parseTape({ ...v6Base, rng: { seed: 0, split: true } }))
+            .toThrow(/versions below 7 mean rng: \{seed: 0, split: false\}/);
+        expect(() => parseTape({ ...base, rng: { seed: 1 } }))
+            .toThrow(/version 1 means an EMPTY rng block/);
+    });
+
+    it('is idempotent — a parsed v7 tape survives a second pass', () => {
+        const once = parseTape(v7With({ seed: 1486967168, split: true }));
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(serializeTape(once))).toEqual(once);
+    });
+
+    it('bounds the seed to the ORBIT, for two independent reasons', () => {
+        // ⛔ 2^31 - 1, not 2^32 - 1, and both halves of the reason are real:
+        // the n=31 tap is 0x48000000 (bit 31 clear), so the generator's
+        // orbit is [1, 2^31) and nothing above it is a state the game can
+        // be in — AND the recompiled runtime's JSON.parse coerces a larger
+        // integer to int32, so 2147483648 arrives in Bot.as as
+        // -2147483648. Measured on the first probe run; a field the two
+        // consumers read differently is what this format exists to stop.
+        expect(RNG_SEED_MAX).toBe(2147483647);
+        expect(parseTape(v7With({ seed: 0 })).rng.seed).toBe(0);
+        expect(parseTape(v7With({ seed: RNG_SEED_MAX })).rng.seed).toBe(RNG_SEED_MAX);
+        expect(() => parseTape(v7With({ seed: 2147483648 })))
+            .toThrow(/out of range 0\.\.2147483647/);
+        expect(() => parseTape(v7With({ seed: -1 })))
+            .toThrow(/out of range 0\.\.2147483647/);
+        expect(() => parseTape(v7With({ seed: 1.5 }))).toThrow(/rng\.seed/);
+    });
+
+    it('refuses a non-boolean split rather than coercing it', () => {
+        // A truthy string honoured by one consumer and dropped by the other
+        // is the divergence this format exists to prevent — and here it
+        // would be a divergence about WHICH STREAM the run is on.
+        expect(() => parseTape(v7With({ split: 'yes' })))
+            .toThrow(/rng\.split must be a boolean/);
+        expect(() => parseTape(v7With({ split: 1 })))
+            .toThrow(/rng\.split must be a boolean/);
+    });
+
+    it('refuses an unknown key inside the block rather than ignoring it', () => {
+        expect(() => parseTape({ ...v7Base, rng: { ...v7Base.rng, cosmetic_seed: 3 } }))
+            .toThrow(/rng\.cosmetic_seed is not an rng field/);
+    });
+
+    it('refuses a block that is not an object', () => {
+        expect(() => parseTape({ ...v7Base, rng: [] })).toThrow(/rng must be an object/);
+        expect(() => parseTape({ ...v7Base, rng: null })).toThrow(/rng must be an object/);
+    });
+
+    it('lets an author OMIT a field they do not use', () => {
+        expect(parseTape({ ...v7Base, rng: { seed: 7 } }).rng)
+            .toEqual({ seed: 7, split: false });
+        expect(parseTape({ ...v7Base, rng: {} }).rng)
+            .toEqual({ seed: 0, split: false });
+    });
+
+    it('serializes the block in a stable order', () => {
+        const written = JSON.parse(serializeTape(v7With({ seed: 99, split: true })));
+        expect(Object.keys(written.rng)).toEqual(['seed', 'split']);
+    });
+
+    it('rngBlockDeclaresAnything is the emptiness test, over BOTH fields', () => {
+        expect(rngBlockDeclaresAnything(undefined)).toBe(false);
+        expect(rngBlockDeclaresAnything(emptyRngBlock())).toBe(false);
+        expect(rngBlockDeclaresAnything({ seed: 1 })).toBe(true);
+        expect(rngBlockDeclaresAnything({ split: true })).toBe(true);
+        expect(rngBlockDeclaresAnything({ seed: 0, split: false })).toBe(false);
+    });
+
+    it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
+        expect(TAPE_VERSION).toBe(7);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 });

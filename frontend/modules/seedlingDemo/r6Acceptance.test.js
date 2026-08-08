@@ -239,16 +239,34 @@ describe('R6 acceptance', () => {
                 .toEqual(['hasShield', 'bosskey:0', 'fire']);
         });
 
-        it('the AS3 batch count is ZERO, and each wanted surface says why it is not a wall', () => {
-            expect(R6_AS3_DECISION.batches).toBe(0);
-            expect(R6_AS3_DECISION.wanted.length).toBeGreaterThan(0);
-            for (const w of R6_AS3_DECISION.wanted) {
+        it('the ONE batch names its wall, and the wall says why it has no substitute', () => {
+            // ⚖ Slice 0 ruled ZERO and §8.17.4 set the escape clause: a
+            // batch needs a NAMED WALL. The count moving from 0 to 1 is only
+            // legitimate with that field filled in, so the test asserts the
+            // pair rather than the number.
+            expect(R6_AS3_DECISION.batches).toBe(1);
+            expect(R6_AS3_DECISION.wall.surface).toMatch(/Math\.random/);
+            expect(R6_AS3_DECISION.wall.whyItIsAWall).toBeTruthy();
+            expect(R6_AS3_DECISION.wall.shipped).toBeTruthy();
+        });
+
+        it('every surface that RODE the batch still records why it was not a wall', () => {
+            // The three bundled readouts were `wanted` and none of them
+            // justified a build. Keeping `whyNotAWall` beside `shippedIn` is
+            // what stops "we rebuilt anyway" from being read backwards as
+            // "each of these was a wall".
+            expect(R6_AS3_DECISION.resolved.length).toBeGreaterThan(0);
+            for (const w of R6_AS3_DECISION.resolved) {
                 expect(w.whyNotAWall, `${w.surface} has no whyNotAWall`).toBeTruthy();
+                expect(w.shippedIn, `${w.surface} has no shippedIn`).toBeTruthy();
             }
         });
 
         it('R3\'s owed `saw_auto_advance` unification is still carried by name', () => {
             expect(R6_AS3_DECISION.stillOwed.join(' ')).toMatch(/saw_auto_advance/);
+            // ⚠ And it is NOT bundled: it is the one wanted change that is
+            // not byte-inert, and 6a's gate is zero re-records.
+            expect(R6_AS3_DECISION.stillOwed.join(' ')).toMatch(/zero re-records/);
         });
     });
 });
