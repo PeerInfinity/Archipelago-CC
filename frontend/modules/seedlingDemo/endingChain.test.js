@@ -43,6 +43,7 @@ import {
     watcherSeedBox,
 } from './endingChain.js';
 import { atlasLevelSource } from './levelSource.js';
+import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { HITBOX } from './playerPhysicsV1.js';
 
 const source = atlasLevelSource();
@@ -154,6 +155,47 @@ describe('the placed NPC: a radius, a start, and an exit that still pays', () =>
         const wide = beginNpcDialogue(long, { talkingSpeed: 3, lineLength: 32 });
         const narrow = beginNpcDialogue(long, { talkingSpeed: 3, lineLength: 28 });
         expect(narrow.pages[0].length).not.toBe(wide.pages[0].length);
+    });
+});
+
+describe('the roster the world hands over agrees with the transcription', () => {
+    it('⛓ `world.watchers` carries the entity point, the tag and the SPEED', () => {
+        // Two derivations of the same three numbers: `levelWorld` transcribes
+        // the NPC ctor's half-tile inline (its `watcher` row is `collider:
+        // 'none'` and carries no dx/dy by convention), and `endingChain`
+        // states it as `WATCHER.ctor`. The law is that they agree.
+        const w = buildLevelWorld(L114, { roles: ROLES });
+        expect(w.watchers).toHaveLength(1);
+        const [watcher] = w.watchers;
+        expect(watcher.ex).toBe(WATCHER_OEL.x + WATCHER.ctor.dx);
+        expect(watcher.ey).toBe(WATCHER_OEL.y + WATCHER.ctor.dy);
+        expect(watcher.persistTag).toBe(0);
+        // ⛔ THE SPEED IS DATA. `Game.as:2237` passes `o.@frames` as
+        // `_talkingSpeed`, so a class default here would retime every page.
+        expect(watcher.talkingSpeed).toBe(3);
+        expect(watcher.text.length).toBeGreaterThan(800);
+    });
+
+    it('all ELEVEN watchers in the extract are rostered, not just L114\'s', () => {
+        // A roster that only worked for the room the slice cared about would
+        // pass every test this slice writes and be wrong for the next one.
+        let n = 0;
+        for (let level = 0; level < 116; level += 1) {
+            n += buildLevelWorld(source(level), { roles: ROLES }).watchers.length;
+        }
+        expect(n).toBe(11);
+    });
+
+    it('⚠ and a talking speed of 0 is a REAL value, not a missing attribute', () => {
+        // AS3's `int("")` is 0 and 0 means one character per frame, so the
+        // roster must not treat an absent `frames` as an error. Asserted over
+        // the extract so the claim is about the data rather than the reader.
+        for (let level = 0; level < 116; level += 1) {
+            for (const w of buildLevelWorld(source(level), { roles: ROLES }).watchers) {
+                expect(Number.isFinite(w.talkingSpeed), w.id).toBe(true);
+                expect(w.talkingSpeed).toBeGreaterThanOrEqual(0);
+            }
+        }
     });
 });
 

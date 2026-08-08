@@ -3211,6 +3211,12 @@ export function buildLevelWorld(levelRecord, {
      * looking like a room with no hazard in it at all.
      */
     const entryHazards = [];
+    /**
+     * ⛓ R6 SLICE 6b: every placed `Watcher`, with the three attributes its
+     * dialogue's LENGTH depends on. Eleven in the extract; L114's is the one
+     * `{114,0}` hangs off.
+     */
+    const watchers = [];
     // R2: the `Activators` groups. `activators` are the responders that stop
     // being solid while their group is held; `pressers` are the volumes that
     // hold it. Both carry the `t` the game groups them by, read from the
@@ -3801,6 +3807,40 @@ export function buildLevelWorld(levelRecord, {
                     flip: intAttr(e.attrs, 'flip', 0) !== 0,
                     persistTag: entityTag,
                 } : {}),
+            });
+        }
+        // ⛓⛓⛓ R6 SLICE 6b: the WATCHER ROSTER, on the same role that already
+        // prices it as an auto-talk volume.
+        //
+        // ⚠ IT IS A ROSTER AND NOT A VOLUME, which is why it is a separate
+        // list rather than more fields on the hazard row. The hazard answers
+        // "where must a walk not go"; this answers "what does the dialogue
+        // COST and what does it write", and the second question needs the
+        // entity's own `text`, `text1` and `frames` — `Game.as:2237` passes
+        // `o.@frames` as `_talkingSpeed`, so the typing cadence is DATA and
+        // taking the class default (0) would retime every page boundary.
+        if (consults.has('proximity-hazard') && e.type === 'watcher') {
+            watchers.push({
+                id: `${e.type}@${e.x},${e.y}`,
+                tag: e.type,
+                x, y,
+                // ⚠ THE HALF-TILE IS TRANSCRIBED, NOT TAKEN FROM `cls.dx`.
+                // `watcher` is a `collider: 'none'` row and those carry no
+                // dx/dy at all by convention (`ctorOffsetOf` returns null for
+                // anything that is not a `rect`), so reading them here would
+                // silently give `NaN` — which is exactly the eight-pixel class
+                // of error the convention exists to prevent. The value is
+                // `NPCs/NPC.as:47`'s `super(_x + Tile.w/2, _y + Tile.h/2)`,
+                // and `endingChain.WATCHER.ctor` is asserted equal to it.
+                ex: x + TILE_SIZE / 2,
+                ey: y + TILE_SIZE / 2,
+                persistTag: entityTag,
+                text: e.attrs?.text ?? '',
+                text1: e.attrs?.text1 ?? '',
+                // ⚠ `int("")` is 0 in AS3 and 0 is a REAL talking speed (one
+                // character per frame), so a missing attribute is not an
+                // error here — it is the game's own value.
+                talkingSpeed: intAttr(e.attrs, 'frames', 0),
             });
         }
         if (consults.has('proximity-hazard') && cls.hazard) {
@@ -4554,6 +4594,7 @@ export function buildLevelWorld(levelRecord, {
         pickups,
         proximityHazards,
         entryHazards,
+        watchers,
         activators,
         pressers,
         /**
