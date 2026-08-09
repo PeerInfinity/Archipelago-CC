@@ -23,6 +23,7 @@ import {
     L40_EAST_RULE,
     NEVER_ENTER_CITE,
     NEVER_ENTER_LEVELS,
+    OVERRULES_TRANSCRIPTION,
     PIXEL_MASK_TAGS,
     PLAYTHROUGH_ENTITY_OVERLAY,
     REFUTATION_FIELDS,
@@ -39,12 +40,43 @@ const lock = (tag, tset, persistTag = '3') => ({
 const base = (tag) => ENTITY_SEMANTICS[tag] ?? null;
 
 describe('the overlay speaks only where the transcription refused', () => {
-    it('every overlay row replaces a `manual` row, and never a ruled one', () => {
+    it('every overlay row fills a `manual` refusal — except the ONE on the allowlist', () => {
         for (const tag of Object.keys(PLAYTHROUGH_ENTITY_OVERLAY)) {
             const b = base(tag);
             expect(b, `"${tag}" is not an entity the transcription knows`).toBeTruthy();
-            expect(b.kind, `"${tag}" already has a transcribed ruling — the overlay must not overwrite it`)
+            if (OVERRULES_TRANSCRIPTION[tag]) continue;
+            expect(b.kind, `"${tag}" already has a transcribed ruling and is not on the `
+                + 'allowlist — overruling the transcription must be enumerated, never silent')
                 .toBe('manual');
+        }
+    });
+
+    it('...and the allowlist is exactly the rows that DO overrule, both ways', () => {
+        // Derived, never typed. A row added to the allowlist that does not
+        // actually overrule anything is as wrong as one that overrules
+        // silently, so the two sets are compared in both directions.
+        const actual = Object.keys(PLAYTHROUGH_ENTITY_OVERLAY)
+            .filter((tag) => base(tag)?.kind !== 'manual').sort();
+        expect(actual).toEqual(Object.keys(OVERRULES_TRANSCRIPTION).sort());
+        for (const [tag, why] of Object.entries(OVERRULES_TRANSCRIPTION)) {
+            expect(typeof why, `"${tag}" overrules the transcription with no reason`).toBe('string');
+            expect(why.length).toBeGreaterThan(20);
+        }
+    });
+
+    it('⛓ Karlore is a DOOR, and the row that says so cites the line', () => {
+        // `NPCs/Karlore.as:added()` -> `if (Player.hasFire) FP.world.remove(this)`.
+        // One overlay row; twenty-five AP regions.
+        const row = PLAYTHROUGH_ENTITY_OVERLAY.karlore;
+        expect(row.kind).toBe('gated');
+        expect(conditionKey(row.condition)).toBe('flag:hasFire');
+        expect(row.cite).toMatch(/Karlore\.as/);
+        expect(row.why).toMatch(/bounded sweep/i);
+        // The transcription still calls every OTHER NPC an unconditional wall,
+        // and that is correct — the bounded sweep found no second one.
+        for (const npc of ['witch', 'hermit', 'oracle', 'sensei', 'yeti', 'totem', 'rekcahdam']) {
+            expect(base(npc).kind).toBe('wall');
+            expect(PLAYTHROUGH_ENTITY_OVERLAY[npc]).toBeUndefined();
         }
     });
 

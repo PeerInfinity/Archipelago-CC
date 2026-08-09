@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-de3b2d97",
+  "atlas_id": "seedling-574cf1d4",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "de3b2d97" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "574cf1d4" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -3581,6 +3581,13 @@
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r18c7",
+            "to": "r2c10",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
           },
           {
             "from": "r2c10",

@@ -175,6 +175,35 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
         'the FinalDoor opens on all sixteen seals plus the {114,0} clear — the seal '
         + 'count is the item half and the only half a rules row can carry.'),
 
+    // --- ⛓⛓⛓ THE NPC THAT IS A DOOR ----------------------------------------
+    //
+    // `NPCs/Karlore.as:added()` — **`if (Player.hasFire) FP.world.remove(this)`**.
+    // Sardol stands on tile (7,17) of L48, the ONE cell joining the arrival
+    // from L47 to the rest of the room, and his own dialogue says what he is:
+    // *"Coming so quickly to the north. But you are unprepared, fool. … Turn
+    // and come back in due time."* He is the door to Dungeon 5 and his key is
+    // FIRE.
+    //
+    // ⛔ THIS ONE ROW IS WHY 34 REGIONS WERE UNREACHABLE. The transcription
+    // classifies every NPC as an unconditional `wall` — right for the twelve
+    // that are scenery, wrong for the one that is a gate — and D5, D6, D7 and
+    // D8 all hang off it. It was misdiagnosed twice before the source settled
+    // it: first as a 4-connectivity resolution defect, then as a physics-model
+    // one. Neither survived reading `added()`.
+    //
+    // ⛓ THE SWEEP THAT BOUNDS IT, so this is a census and not an anecdote:
+    // every `.as` in the game was searched for a self-removal conditioned on a
+    // `Player` flag. **Karlore is the only BLOCKING one.** `BobBoss` shares
+    // the `hasFire` test but is an Enemy (type "Enemy", absent from
+    // `Mobile.solids`); `BossKey` and `BossTotemPart` are pickups vanishing
+    // once collected. No other solid in the game opens on an item this way.
+    karlore: GATED(flag('hasFire'),
+        'NPCs/Karlore.as:26-33 (`added()` -> `if (Player.hasFire) FP.world.remove(this)`) '
+        + '+ Dungeon5 entrance geometry, L48 tile (7,17)',
+        'an NPC that is a DOOR: Sardol seals the north entrance until the player holds '
+        + 'Fire, and removes himself entirely once they do. Bounded sweep: he is the only '
+        + 'blocking entity in the game with an item-conditional self-removal.'),
+
     // --- the moonrock: a wall the SHIELD builds ------------------------------
     moonrock: WALL('Scenery/Moonrock.as:88-118 -> Game.moonrockSet -> Main.rockSet '
         + '(R7 §8.2 item 2, §8.8 item 5)',
@@ -190,6 +219,23 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     // byte-verified against the real game over 121 tapes), and the generator
     // resolves them THROUGH the model rather than approximating here — see
     // `pixelMaskTags`. Listed so the census can prove nothing was forgotten.
+});
+
+/**
+ * ⛔ THE ONE ROW THAT OVERRULES A TRANSCRIBED RULING RATHER THAN FILLING A
+ * REFUSAL — an ALLOWLIST, so a second one can never appear silently.
+ *
+ * `seedlingSemantics` classifies every NPC as an unconditional `wall`, which is
+ * right for the twelve that are scenery. `karlore` is the thirteenth and the
+ * source contradicts the table outright: `added()` removes him on `hasFire`.
+ * Overruling a transcription is a stronger act than filling one of its
+ * refusals, so it is enumerated here and the test asserts that every OTHER
+ * overlay row replaces a `manual` one.
+ */
+export const OVERRULES_TRANSCRIPTION = Object.freeze({
+    karlore: 'the transcription calls every NPC an unconditional wall; `Karlore.added()` '
+        + 'removes this one on `Player.hasFire`, so the table is wrong about exactly one '
+        + 'of the thirteen and right about the rest.',
 });
 
 /**
