@@ -327,6 +327,243 @@ export const SEAM_SIGNATURE = Object.freeze([
 ]);
 
 /**
+ * ⛔⛔ EVERY SIGNATURE ROW NEEDS EXACTLY ONE CHANNEL — R7 slice 1.
+ *
+ * A seam is `boot(N+1) == latch(N)`. The LATCH side is one function
+ * (`Bot.latchSeam`, keyed by these same field strings); the BOOT side is
+ * spread over eight tape blocks, because six rungs of tape versions each
+ * added the state their own slice needed. So the question "can a segment
+ * declare this field" has an answer per row, and this is where it lives:
+ *
+ *   boot        v1 `boot` {level, x, y}
+ *   persistence v3 `persistence` — the CLEAR SET is the whole array (the
+ *               fresh array is all-true and `botStart` re-writes it)
+ *   pins        v5 `pins`
+ *   save        v6 `save` {totem_parts, keys, seal_parts}
+ *   rng         v7 `rng` {seed, split} + R7's {cosmetic, fp}
+ *   seam        v8 `seam` — ⇐ THE ROWS THAT HAD NO CHANNEL BEFORE R7
+ *   derived     reproduced as a CONSEQUENCE of declared rows; compared,
+ *               never declared (the inventory slot array is what
+ *               `addItemsFromSave` builds from the item flags)
+ *   invariant   asserted at a calm arrival rather than carried
+ *   excluded    never compared (`hasBadge`, a distribution fact)
+ *
+ * ⛔ IT IS ASSERTED TOTAL, not written and trusted. A signature row added
+ * tomorrow with no entry here THROWS — which is the only construction that
+ * makes "the v8 block carries the whole signature" a fact rather than a
+ * claim about the day it was written (trap 86, in the shape it takes when
+ * the list is a wire format).
+ */
+export const SEAM_CHANNELS = Object.freeze({
+    level: 'boot',
+    playerPositionX: 'boot',
+    playerPositionY: 'boot',
+    'save.hasKey': 'save',
+    'save.hasTotemPart': 'save',
+    'save.hasSealPart': 'save',
+    'save.levelPersistence': 'persistence',
+    'save.hasBadge': 'excluded',
+    'static.Bot.pins': 'pins',
+    'static.Rng.split': 'rng',
+    'rng.gameplay': 'rng',
+    'rng.cosmetic': 'rng',
+    'fp.seed': 'rng',
+    'static.Game.inventory': 'derived',
+    'static.Game.shake': 'invariant',
+    'static.Game.menu': 'invariant',
+    'static.Game.freezeObjects': 'invariant',
+    'static.Game.talking': 'invariant',
+    'arrival.blackCover': 'invariant',
+    'arrival.velocity': 'invariant',
+    // ── the v8 block ──────────────────────────────────────────────────
+    'save.hasSword': 'seam',
+    'save.hasGhostSword': 'seam',
+    'save.hasShield': 'seam',
+    'save.hasFire': 'seam',
+    'save.hasWand': 'seam',
+    'save.hasFireWand': 'seam',
+    'save.canSwim': 'seam',
+    'save.hasSpear': 'seam',
+    'save.hasDarkShield': 'seam',
+    'save.hasDarkSuit': 'seam',
+    'save.hasDarkSword': 'seam',
+    'save.hasFeather': 'seam',
+    'save.hasTorch': 'seam',
+    'save.beam': 'seam',
+    'save.rockSet': 'seam',
+    'save.hitsMax': 'seam',
+    'save.firstUse': 'seam',
+    'save.extended': 'seam',
+    'save.time': 'seam',
+    'save.primary': 'seam',
+    'save.secondary': 'seam',
+    'save.grassCut': 'seam',
+    'static.Game.cutscene': 'seam',
+    'static.Game.menuState': 'seam',
+    'static.Music.currentSet': 'seam',
+    'static.Music.currentIndex': 'seam',
+});
+
+/**
+ * ⛔⛔⛔ THE v8 `seam` BLOCK'S SCHEMA — the ONE list both validators read.
+ *
+ * `tapeFormat.parseSeam` walks this; `Bot.botLoadTape` states the same
+ * bounds in AS3, each beside the game line that makes it a bound rather
+ * than a taste. **The bounds are not preferences and none of them is
+ * round-numbered by choice:**
+ *
+ *  · `hits_max`, `time`, `primary`, `secondary` — `Main`'s own getters have
+ *    a FALSY ARM (`Main.as:155-161`): a stored 0 returns `Player.hitsMaxDef`
+ *    for `hitsMax` and `Game.dayLength / 2` for `time`. 0 is therefore
+ *    UNREPRESENTABLE for those two and means "not declared" here.
+ *  · `grass_cut` — `Main`'s SETTER calls `unlockMedal` at >= 10000
+ *    (`Main.as:191`), and `unlockMedal` is the distribution path that makes
+ *    `hasBadge` the one excluded signature row. A state declaration must
+ *    not be able to reach outside the game.
+ *  · `menu_state` — `Game`'s ctor honours a `_menuState` argument and then
+ *    calls `end()`, which runs `menuState = 0` for every `!menu` world
+ *    (`Game.as:638-639`, `:665-668`). A calm arrival is `!menu` by
+ *    definition, so 0 is the only value that survives one. Declared and
+ *    bounded rather than dropped, so the row has a channel and the
+ *    impossibility is written where it is checked.
+ *  · `fp` — `FP.randomSeed`'s setter is `_seed = clamp(value, 1,
+ *    2147483646)` (`FP.as:392`), so 2147483647 would be applied as a
+ *    DIFFERENT state than declared. A field whose declared and applied
+ *    values disagree is worse than one that is absent.
+ *
+ * ⚠ `modelled: false` names the fields the JS engine carries and does NOT
+ * simulate. They are transported, validated and compared at the seam; no
+ * physics reads them. Saying which is which is the difference between a
+ * declared field and a silently ignored one.
+ */
+export const SEAM_BOOT_SPEC = Object.freeze([
+    ...['hasSword', 'hasGhostSword', 'hasShield', 'hasFire', 'hasWand', 'hasFireWand',
+        'canSwim', 'hasSpear', 'hasDarkShield', 'hasDarkSuit', 'hasDarkSword',
+        'hasFeather', 'hasTorch'].map((k) => Object.freeze({
+        key: `items.${k}`, field: `save.${k}`, type: 'boolean', modelled: true,
+        why: 'the boot item flags — applied BEFORE the first world builds, which a '
+            + '`grants` row cannot be: a grant fires on the first observation tick in '
+            + 'its level, by which time the pickup it should have despawned is standing',
+    })),
+    Object.freeze({
+        key: 'beam', field: 'save.beam', type: 'boolean', modelled: false,
+        why: 'gates L0\'s 280-draw moonrock flare; `Shield.removed()` sets it',
+    }),
+    Object.freeze({
+        key: 'rock_set', field: 'save.rockSet', type: 'boolean', modelled: false,
+        why: '⚠ GAMEPLAY: `Moonrock`\'s ctor drops the rock and makes it a 48x48 Solid',
+    }),
+    Object.freeze({
+        key: 'hits_max', field: 'save.hitsMax', type: 'int', min: 1, max: 99,
+        zeroMeansUndeclared: true, modelled: true,
+        why: '3 -> 4 once, at L68; 0 is `Main.hitsMax`\'s falsy arm (Player.hitsMaxDef)',
+    }),
+    Object.freeze({
+        key: 'first_use', field: 'save.firstUse', type: 'boolean', modelled: false,
+        why: 'gates a tutorial FREEZE, so it is not cosmetic',
+    }),
+    Object.freeze({
+        key: 'extended', field: 'save.extended', type: 'boolean', modelled: false,
+        why: 'as above',
+    }),
+    Object.freeze({
+        key: 'time', field: 'save.time', type: 'number', min: 0, max: 4294967295,
+        exclusiveMin: true, zeroMeansUndeclared: true, modelled: false,
+        why: 'day/night phase; 0 is `Main.time`\'s falsy arm (Game.dayLength / 2). '
+            + 'Comparable only under `Bot.pinDeadFrames` — it counts DEAD frames too',
+    }),
+    Object.freeze({
+        key: 'primary', field: 'save.primary', type: 'int', min: 0, max: 5,
+        modelled: true,
+        why: 'a SLOT INDEX into the array `Inventory.getItem` reads — six ids exist, so '
+            + 'six slots is what `addItemsFromSave` plus its fusion splices can reach; '
+            + 'an out-of-range write is a SILENT no-op (Inventory.itemCount\'s docblock)',
+    }),
+    Object.freeze({
+        key: 'secondary', field: 'save.secondary', type: 'int', min: 0, max: 5,
+        modelled: false, why: 'as above',
+    }),
+    Object.freeze({
+        key: 'grass_cut', field: 'save.grassCut', type: 'int', min: 0, max: 9999,
+        modelled: false,
+        why: '⛔ the ceiling is a SIDE EFFECT, not a range — `Main`\'s setter calls '
+            + '`unlockMedal` at >= 10000',
+    }),
+    Object.freeze({
+        key: 'cutscene', field: 'static.Game.cutscene', type: 'boolean[]', arity: 4,
+        modelled: true,
+        why: 'GAMEPLAY — `cutscene[2]` is the Seed\'s mode change and every later '
+            + '`Game` then spawns the player inert (trap 91)',
+    }),
+    Object.freeze({
+        key: 'menu_state', field: 'static.Game.menuState', type: 'int', min: 0, max: 0,
+        modelled: true,
+        why: '⛔ 0 IS THE ONLY VALUE A CALM ARRIVAL CAN CARRY — `Game.end()` writes '
+            + '`menuState = 0` for every `!menu` world (Game.as:665-668)',
+    }),
+    Object.freeze({
+        key: 'music.set', field: 'static.Music.currentSet', type: 'string',
+        modelled: false,
+        why: 'the no-repeat REJECTION LOOP\'s state: `playSound` redraws while '
+            + '`cplayIndex == currentIndex && currentSet == strInd`, so these two '
+            + 'decide a DRAW COUNT',
+    }),
+    Object.freeze({
+        key: 'music.index', field: 'static.Music.currentIndex', type: 'int', min: -1,
+        modelled: false,
+        why: 'as above; -1 is "nothing has played" and the fresh-page value',
+    }),
+]);
+
+/**
+ * ⛔ EVERY SIGNATURE ROW HAS A CHANNEL, AND EVERY v8 KEY HAS A ROW.
+ *
+ * Two-sided on purpose: a row with no channel is a field a segment cannot
+ * declare and nobody said so; a spec entry naming a field the signature
+ * does not have is a wire field nothing compares.
+ */
+export function assertSeamChannelsTotal() {
+    const missing = SEAM_SIGNATURE.map((r) => r.field)
+        .filter((f) => !Object.prototype.hasOwnProperty.call(SEAM_CHANNELS, f));
+    if (missing.length) {
+        throw new R7AcceptanceError(
+            `SEAM_CHANNELS has no channel for ${missing.length} signature row(s): `
+            + `${missing.join(', ')}. A row with no channel is a field a segment `
+            + 'cannot declare, and a signature nobody can boot is not a seam.');
+    }
+    const fields = new Set(SEAM_SIGNATURE.map((r) => r.field));
+    const stray = Object.keys(SEAM_CHANNELS).filter((f) => !fields.has(f));
+    if (stray.length) {
+        throw new R7AcceptanceError(
+            `SEAM_CHANNELS names ${stray.join(', ')}, which SEAM_SIGNATURE does not.`);
+    }
+    const seamRows = SEAM_SIGNATURE.filter((r) => SEAM_CHANNELS[r.field] === 'seam')
+        .map((r) => r.field);
+    const spec = new Set(SEAM_BOOT_SPEC.map((s) => s.field));
+    const unspecced = seamRows.filter((f) => !spec.has(f));
+    if (unspecced.length) {
+        throw new R7AcceptanceError(
+            `${unspecced.join(', ')} route to the v8 \`seam\` block and SEAM_BOOT_SPEC `
+            + 'has no entry for them — the block would silently not carry them.');
+    }
+    const orphan = [...spec].filter((f) => !seamRows.includes(f));
+    if (orphan.length) {
+        throw new R7AcceptanceError(
+            `SEAM_BOOT_SPEC declares ${orphan.join(', ')}, which no signature row `
+            + 'routes to the seam block.');
+    }
+    return {
+        rows: SEAM_SIGNATURE.length,
+        seamKeys: SEAM_BOOT_SPEC.length,
+        byChannel: SEAM_SIGNATURE.reduce((acc, r) => {
+            const c = SEAM_CHANNELS[r.field];
+            acc[c] = (acc[c] ?? 0) + 1;
+            return acc;
+        }, {}),
+    };
+}
+
+/**
  * ⛔ THE COVERAGE ASSERTION (trap 86). Every key the GAME normalizes has a
  * row; every row that claims a save key names a real one.
  *
@@ -439,6 +676,147 @@ export function seamFindings(seams = []) {
     });
     return out;
 }
+
+/**
+ * ⛔⛔⛔ THE LATCH CONSUMER — findings DERIVED by mapping the signature over
+ * one `botSeam()` envelope.
+ *
+ * The envelope is `{latched, partial, why, seam}` and `seam` is keyed by
+ * `SEAM_SIGNATURE[].field` verbatim, because `Bot.latchSeam` emits those
+ * strings. So this maps the signature, exactly as `seamFindings` and
+ * `r7GoalFindings` do — trap 119's construction, third instance in this
+ * file. There is no hand-written row for any signature field anywhere here.
+ *
+ * Three ways a row is NOT green, and each is a different fact:
+ *
+ *   · NO LATCH        the run never reached a disarm, or the build has no
+ *                     `botSeam`. Every row UNCLAIMED, and the summary says
+ *                     which — an absent readout must never read as a pass.
+ *   · PARTIAL         a FAILURE disarm (`pinFault`, the equip check) latched
+ *                     what it could. The state is real and worth reporting;
+ *                     the SEAM is unclaimed, because the tape did not reach
+ *                     its declared end (trap 111 + §5's first bullet).
+ *   · MISSING FIELD   the latch is whole and this row is not in it — a
+ *                     signature row the fork does not emit. UNCLAIMED, never
+ *                     skipped: skipping is how a field added on one side
+ *                     goes unreported for a rung.
+ *
+ * ⚠ THE INVARIANT ROWS ARE CHECKED, NOT MERELY PRESENT. A calm arrival is
+ * what makes a latch bootable at all (§5: "end at arrivals, calm"), so
+ * `shake == 0`, no freeze, no dialogue, no menu and a spent fade are
+ * asserted here — against the GAME's own numbers.
+ *
+ * @param {object} envelope `botSeam()` parsed, or null
+ * @param {object} [opts]   `{requireCalm}` — a tape that ends mid-window (a
+ *                          director leg) is not claiming an arrival, so its
+ *                          invariants are reported and not required
+ */
+export function seamLatchFindings(envelope, opts = {}) {
+    const { requireCalm = true } = opts;
+    const latched = Boolean(envelope && envelope.latched);
+    const partial = Boolean(envelope && envelope.partial);
+    const seam = (envelope && envelope.seam) || {};
+    const out = SEAM_SIGNATURE.map((row) => {
+        if (row.comparable === 'excluded') {
+            return {
+                name: `latch: ${row.field}`,
+                ok: true,
+                detail: `EXCLUDED — ${row.why.split('.')[0]}`,
+            };
+        }
+        const has = Object.prototype.hasOwnProperty.call(seam, row.field);
+        if (!latched || !has) {
+            return {
+                name: `latch: ${row.field}`,
+                ok: false,
+                detail: !latched
+                    ? `UNCLAIMED — ${envelope ? 'the run never latched a seam'
+                        : 'no botSeam envelope (a build without the R7 batch?)'}`
+                    : `UNCLAIMED — the latch does not carry it (${row.comparable}; `
+                        + `${row.cite})`,
+            };
+        }
+        const v = seam[row.field];
+        const inv = INVARIANT_CHECKS[row.field];
+        if (inv && requireCalm) {
+            const verdict = inv(v);
+            return {
+                name: `latch: ${row.field}`,
+                ok: verdict.ok,
+                detail: `${verdict.ok ? 'calm' : '⛔ NOT CALM'} — ${verdict.detail} `
+                    + `(${row.invariant ?? row.comparable})`,
+            };
+        }
+        return {
+            name: `latch: ${row.field}`,
+            ok: true,
+            detail: `${row.comparable}: ${JSON.stringify(v)}`,
+        };
+    });
+    out.push({
+        name: 'the latch is whole',
+        ok: latched && !partial,
+        detail: !latched
+            ? `⛔ NOTHING LATCHED${envelope?.why ? ` — ${envelope.why}` : ''}`
+            : partial
+                ? `⛔ PARTIAL — ${envelope.why || '(no reason given)'}; a failure disarm `
+                    + 'latched what it could, so the seam is UNCLAIMED'
+                : `${Object.keys(seam).length} field(s) latched at tick `
+                    + `${seam['latch.tick']}`,
+    });
+    return out;
+}
+
+/**
+ * The calm-arrival invariants, one predicate each, read off the GAME's own
+ * latched numbers.
+ *
+ * ⚠ `static.Game.inventory` is NOT here: the signature's row is "the same
+ * instance across the swap", which is a within-page fact no wire format can
+ * carry, and what the latch sends instead is the SLOT ARRAY — state, not an
+ * identity. It is compared at a seam like any other value.
+ */
+const INVARIANT_CHECKS = Object.freeze({
+    'static.Game.shake': (v) => ({
+        ok: v === 0,
+        detail: `shake=${v}${v === 0 ? '' : ' — it decays in `view()`, which runs on '
+            + 'DEAD frames too, so a nonzero shake drains across a render-coupled fade '
+            + 'and costs 2 gameplay draws a frame while it does'}`,
+    }),
+    'static.Game.menu': (v) => ({
+        ok: v === false, detail: `menu=${v}${v ? ' — a menu is a REBOOT LOOP (trap 69)' : ''}`,
+    }),
+    'static.Game.freezeObjects': (v) => ({
+        ok: v === false,
+        detail: `freezeObjects=${v}${v ? ' — a ceremony is still holding the world' : ''}`,
+    }),
+    'static.Game.talking': (v) => ({
+        ok: v === false,
+        detail: `talking=${v}${v ? ' — a dialogue frame is a TICK, not a dead frame; a '
+            + 'seam inside one is not calm' : ''}`,
+    }),
+    // ⛔ THE LOWER BOUND IS NOT DECORATION, AND THIS MODULE'S OWN MUTATION
+    // TEST IS WHAT FOUND IT. The predicate was `v <= 0`, which is right for
+    // the fade — `blackCover` starts at 1 and decays by 0.05 a step, so a
+    // spent one lands in (-0.05, 0] — and it ALSO accepted **-1**, which is
+    // `latchSeam`'s own sentinel for "no `Game` was current". A latch taken
+    // with no world would have read as the calmest possible arrival. The
+    // window is therefore two-sided: below -0.5 is not a fade, it is a
+    // sentinel or a defect, and either way it is not an arrival.
+    'arrival.blackCover': (v) => ({
+        ok: typeof v === 'number' && v <= 0 && v > -0.5,
+        detail: `blackCover=${v}${typeof v === 'number' && v <= 0 && v > -0.5 ? ''
+            : v === -1 ? ' — NO WORLD WAS CURRENT at the latch (the sentinel, not a '
+                + 'spent fade: `blackCover` decays by 0.05 a step and cannot reach it)'
+                : ' — the fade is still running, so this is a trigger tick and not an '
+                    + 'arrival'}`,
+    }),
+    'arrival.velocity': (v) => ({
+        ok: Boolean(v) && v.vx === 0 && v.vy === 0 && v.hits === 0 && v.hits_timer === 0,
+        detail: v ? `v=(${v.vx}, ${v.vy}) hits=${v.hits} hitsTimer=${v.hits_timer}`
+            : 'NO PLAYER at the latch',
+    }),
+});
 
 // ── THE GOAL LEDGER ───────────────────────────────────────────────────
 

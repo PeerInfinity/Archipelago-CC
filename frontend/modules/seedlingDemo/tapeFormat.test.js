@@ -283,7 +283,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(7);
+        expect(TAPE_VERSION).toBe(8);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -642,7 +642,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1078,8 +1078,12 @@ const v7With = (rng) => ({ ...v7Base, rng: { ...v7Base.rng, ...rng } });
 
 describe('version 7: the RNG state', () => {
     it('normalises an EMPTY block onto every earlier version', () => {
+        // ⚠ FOUR FIELDS SINCE R7: `cosmetic` and `fp` are the OTHER TWO
+        // GENERATORS (trap 96, extended at slice 0), and 0 is their
+        // "declares nothing" value exactly as it is for `seed`.
         for (const t of [base, v2Base, v6Base]) {
-            expect(parseTape(t).rng).toEqual({ seed: 0, split: false });
+            expect(parseTape(t).rng)
+                .toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
         }
     });
 
@@ -1151,12 +1155,16 @@ describe('version 7: the RNG state', () => {
 
     it('lets an author OMIT a field they do not use', () => {
         expect(parseTape({ ...v7Base, rng: { seed: 7 } }).rng)
-            .toEqual({ seed: 7, split: false });
+            .toEqual({ seed: 7, split: false, cosmetic: 0, fp: 0 });
         expect(parseTape({ ...v7Base, rng: {} }).rng)
-            .toEqual({ seed: 0, split: false });
+            .toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
     });
 
     it('serializes the block in a stable order', () => {
+        // ⛔ A v7 TAPE STILL WRITES EXACTLY TWO. All 118 frozen fixtures are
+        // v<=7, so a v7 block that gained R7's `cosmetic`/`fp` pair the
+        // moment anything re-serialized them would be the roster-wide
+        // re-record this batch exists to NOT take.
         const written = JSON.parse(serializeTape(v7With({ seed: 99, split: true })));
         expect(Object.keys(written.rng)).toEqual(['seed', 'split']);
     });
@@ -1170,7 +1178,7 @@ describe('version 7: the RNG state', () => {
     });
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
-        expect(TAPE_VERSION).toBe(7);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7]);
+        expect(TAPE_VERSION).toBe(8);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 });

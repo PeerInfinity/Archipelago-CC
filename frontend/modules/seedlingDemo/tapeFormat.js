@@ -126,10 +126,10 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 7;
+export const TAPE_VERSION = 8;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8]);
 
 /**
  * ── Version 7: the RNG STATE ──────────────────────────────────────────
@@ -156,7 +156,42 @@ export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7]);
  *            which is why every committed fixture is byte-inert past the
  *            batch that added it.
  */
-export const RNG_KEYS = Object.freeze(['seed', 'split']);
+export const RNG_KEYS = Object.freeze(['seed', 'split', 'cosmetic', 'fp']);
+
+/**
+ * ── Version 8's two additions to the rng block: THE OTHER TWO STREAMS ──
+ *
+ * R7's seam is `boot(N+1) == latch(N)`, and a segment does not start its
+ * generators where a fresh page does — it starts them where its predecessor
+ * left them. `seed` alone declares one of three (trap 96, extended at R7
+ * slice 0):
+ *
+ *   `cosmetic`  the second generator behind `Rng.cos()`. It only EXISTS as
+ *               a separate stream while `split` is on; with the split off
+ *               `Rng.cos()` IS `Math.random()` and this field declares a
+ *               generator nothing draws from. 0 keeps the build's own boot
+ *               state, which is what every pre-R7 tape means.
+ *   `fp`        FlashPunk's own Park-Miller LCG (`FP._seed`), seeded ONCE
+ *               per page from one `Math.random()` in `Engine`'s ctor and
+ *               never reset. ⚠ It has NO gameplay consumer in this game —
+ *               every `FP.choose`/`FP.rand` site feeds a graphic angle, a
+ *               sprite mirror or a particle — so it is declared and
+ *               compared, not relied on. 0 means "inherit the page's".
+ *
+ * ⛔ AND `FP.randomSeed`'s GETTER CANNOT READ IT: it returns `_getSeed`,
+ * which only the setter writes, so after one draw it is a stale mirror. The
+ * fork's read hook is `FP.randomSeedLive` (R7 slice 1); the WRITE side is
+ * the existing setter, which is the half that works.
+ */
+export const RNG_COSMETIC_MAX = 2147483647;
+/**
+ * ⛔ 2147483646, NOT 2147483647, and the bound is the SETTER's own.
+ * `FP.randomSeed`'s setter is `_seed = clamp(value, 1, 2147483646)`
+ * (`FP.as:392`), so a declared 2147483647 would be applied as a DIFFERENT
+ * state than the tape names. A seam field whose declared and applied values
+ * disagree is worse than one that is absent.
+ */
+export const RNG_FP_SEED_MAX = 2147483646;
 
 /**
  * The largest declarable seed, and it is 2^31 - 1 for TWO independent
@@ -351,6 +386,18 @@ class TapeFormatError extends Error {
         this.name = 'TapeFormatError';
     }
 }
+
+/**
+ * ⚠ THE ONLY CROSS-MODULE IMPORT IN THIS FILE, and it is read inside
+ * `parseSeam` rather than at module scope — `r7Acceptance` -> `fixtures/
+ * index.js` -> this module is a cycle, and a module-scope derivation would
+ * hit the temporal dead zone whenever `r7Acceptance` is the entry point.
+ * The v8 block's key list has to come FROM the seam signature (trap 86:
+ * assert against a list the owner exports, never retype it), so the cycle
+ * is accepted and defused rather than avoided by duplicating the list.
+ */
+// eslint-disable-next-line import/no-cycle
+import { SEAM_BOOT_SPEC } from './r7Acceptance.js';
 
 function fail(message) {
     throw new TapeFormatError(message);
@@ -604,7 +651,12 @@ export function saveBlockDeclaresAnything(save) {
 
 /** The v7 block a v1..v6 tape normalises to: inherit the stream, no split. */
 export function emptyRngBlock() {
-    return { seed: 0, split: false };
+    return { seed: 0, split: false, cosmetic: 0, fp: 0 };
+}
+
+/** The v8 block a v1..v7 tape normalises to: declare no seam state. */
+export function emptySeamBlock() {
+    return null;
 }
 
 /**
@@ -623,6 +675,41 @@ export function rngBlockDeclaresAnything(rng) {
     // already imported this module — a gate whose result predates the
     // change is not a gate. Tidy it in a change that re-runs the sweep.
     return rng.seed !== undefined && rng.seed !== 0 ? true : rng.split === true;
+}
+
+/**
+ * Does an `rng` block declare either of the VERSION 8 streams?
+ *
+ * ⚠ SEPARATE FROM `rngBlockDeclaresAnything`, deliberately. That one is the
+ * v<7 rejection's test and a v7 tape legitimately declares `{seed, split}`;
+ * this one is the v<8 rejection's, and a v7 tape must NOT declare the other
+ * two streams. Folding them into one predicate would make a v7 tape with a
+ * seed fail the v8 gate.
+ *
+ * Value-scoped, for the seventh time and the unchanged reason: `parseTape`
+ * normalises, so every parsed tape carries `cosmetic: 0, fp: 0` and a
+ * presence check would reject all 118 committed fixtures.
+ */
+export function rngBlockDeclaresV8Streams(rng) {
+    if (rng === null || typeof rng !== 'object' || Array.isArray(rng)) return false;
+    return (rng.cosmetic !== undefined && rng.cosmetic !== 0)
+        || (rng.fp !== undefined && rng.fp !== 0);
+}
+
+/**
+ * Does a `seam` block declare anything?
+ *
+ * ⚠ PRESENCE-SCOPED, AND IT IS THE ONE BLOCK THAT MAY BE. Every earlier
+ * block normalises to a non-null empty value (`grants: []`, `save:
+ * {totem_parts: [], …}`, `rng: {seed: 0, …}`), so a presence check on any
+ * of them would reject every committed fixture — which is the lesson six
+ * comments in this file are about. The seam block normalises to **null**,
+ * because there is no "empty seam": a tape either declares boot state or it
+ * inherits whatever the page had, and those are different runs. So `!= null`
+ * IS the value test here, not a presence test dressed as one.
+ */
+export function seamBlockDeclaresAnything(seam) {
+    return seam !== null && seam !== undefined;
 }
 
 /** The version-7 `rng` block. */
@@ -650,7 +737,188 @@ function parseRng(raw) {
     if (typeof split !== 'boolean') {
         fail(`rng.split must be a boolean, got ${JSON.stringify(split)}`);
     }
-    return { seed, split };
+    // ── the v8 streams ────────────────────────────────────────────────
+    // Parsed unconditionally so a v7 tape's normalised zeros round-trip;
+    // DECLARING them on a v7 tape is refused by `parseTape`'s version gate,
+    // which is the only place that knows the version.
+    const cosmetic = rng.cosmetic ?? 0;
+    requireInt(cosmetic, 'rng.cosmetic');
+    if (cosmetic < 0 || cosmetic > RNG_COSMETIC_MAX) {
+        fail(`rng.cosmetic is ${cosmetic}, out of range 0..${RNG_COSMETIC_MAX} — the `
+            + 'cosmetic generator is the same n=31 orbit as the gameplay one, and 0 '
+            + 'means "keep the build\'s own boot state".');
+    }
+    const fp = rng.fp ?? 0;
+    requireInt(fp, 'rng.fp');
+    if (fp < 0 || fp > RNG_FP_SEED_MAX) {
+        fail(`rng.fp is ${fp}, out of range 0..${RNG_FP_SEED_MAX}. `
+            + '`FP.randomSeed`\'s setter is `_seed = clamp(value, 1, 2147483646)` '
+            + '(FP.as:392), so anything outside that would be APPLIED AS A DIFFERENT '
+            + 'STATE than declared — the one failure a seam field must not have. '
+            + '0 means "inherit the page\'s".');
+    }
+    return { seed, split, cosmetic, fp };
+}
+
+/**
+ * ── The version-8 `seam` block ────────────────────────────────────────
+ *
+ * ⛔ THE SCHEMA IS `r7Acceptance.SEAM_BOOT_SPEC`, WALKED — not retyped
+ * here. The v8 block exists to carry the SEAM SIGNATURE's rows that no
+ * earlier block could express, so its key list has to BE a function of that
+ * signature: a signature row routed to the seam channel with no spec entry
+ * throws in `assertSeamChannelsTotal`, and a spec entry with no parser arm
+ * is impossible because this loop is the parser (trap 86).
+ *
+ * ⚠ THE IMPORT IS READ AT CALL TIME, NOT AT MODULE SCOPE, and that is
+ * load-bearing: `r7Acceptance` imports `fixtures/index.js`, which imports
+ * this module, so the three form a cycle. Function bindings survive one
+ * (they hoist); a module-scope `const` derived from `SEAM_BOOT_SPEC` would
+ * hit the temporal dead zone whenever `r7Acceptance` is the entry point.
+ *
+ * ⚠ AND EVERY BOUND HERE IS TWINNED IN `Bot.botLoadTape`. Both validators
+ * state them, both cite the game line that makes each one a bound rather
+ * than a taste (trap 98) — a transport whose two ends disagree about the
+ * legal range is the divergence this format exists to prevent.
+ */
+function parseSeam(raw) {
+    const seam = raw.seam;
+    if (seam === null || typeof seam !== 'object' || Array.isArray(seam)) {
+        fail('seam must be an object on a tape_version 8 tape (or null/absent to '
+            + `declare no boot state), got ${JSON.stringify(seam)}`);
+    }
+    const spec = SEAM_BOOT_SPEC;
+    const groups = new Set(spec.map((s) => s.key.split('.')[0]));
+    for (const k of Object.keys(seam)) {
+        if (!groups.has(k)) {
+            fail(`seam.${k} is not a seam field; legal keys are `
+                + `${[...groups].join(', ')}`);
+        }
+    }
+    const at = (key) => key.split('.').reduce((o, k) => (o == null ? undefined : o[k]), seam);
+    // Every nested group is itself checked for stray keys, so a typo inside
+    // `items` or `music` is a named error and not a silently ignored field.
+    for (const g of groups) {
+        const nested = spec.filter((s) => s.key.startsWith(`${g}.`));
+        if (nested.length === 0 || seam[g] === undefined || seam[g] === null) continue;
+        if (typeof seam[g] !== 'object' || Array.isArray(seam[g])) {
+            fail(`seam.${g} must be an object`);
+        }
+        const legal = new Set(nested.map((s) => s.key.slice(g.length + 1)));
+        for (const k of Object.keys(seam[g])) {
+            if (!legal.has(k)) {
+                fail(`seam.${g}.${k} is not a seam field; legal keys are `
+                    + `${[...legal].join(', ')}`);
+            }
+        }
+    }
+    const out = {};
+    for (const s of spec) {
+        const v = at(s.key);
+        if (v === undefined || v === null) continue;
+        if (s.type === 'boolean') {
+            if (typeof v !== 'boolean') {
+                fail(`seam.${s.key} must be a boolean, got ${JSON.stringify(v)}`);
+            }
+        } else if (s.type === 'boolean[]') {
+            if (!Array.isArray(v) || v.length !== s.arity
+                || v.some((b) => typeof b !== 'boolean')) {
+                fail(`seam.${s.key} must be an array of ${s.arity} booleans, got `
+                    + `${JSON.stringify(v)}`);
+            }
+        } else if (s.type === 'string') {
+            if (typeof v !== 'string') {
+                fail(`seam.${s.key} must be a string, got ${JSON.stringify(v)}`);
+            }
+        } else if (s.type === 'int') {
+            requireInt(v, `seam.${s.key}`);
+            if (v < s.min || (s.max !== undefined && v > s.max)) {
+                fail(`seam.${s.key} is ${v}, out of range ${s.min}..${s.max}`
+                    + ` — ${s.why}`);
+            }
+        } else if (s.type === 'number') {
+            requireFiniteNumber(v, `seam.${s.key}`);
+            if (s.exclusiveMin ? v <= s.min : v < s.min) {
+                fail(`seam.${s.key} is ${v}, which must be `
+                    + `${s.exclusiveMin ? '>' : '>='} ${s.min} — ${s.why}`);
+            }
+            if (s.max !== undefined && v > s.max) {
+                fail(`seam.${s.key} is ${v}, above ${s.max} — ${s.why}`);
+            }
+        }
+        out[s.key] = Array.isArray(v) ? Object.freeze([...v]) : v;
+    }
+    // ⛔ AN INDEX WITHOUT ITS SET IS HALF A STATE. `Music.playSound`'s
+    // do-while reads BOTH (`cplayIndex == currentIndex && currentSet ==
+    // strInd`), so a declared index with no set names a rejection loop that
+    // cannot be reproduced. Checked here rather than per-field because it is
+    // a relation between two, which no single spec row can hold.
+    if (out['music.index'] !== undefined && out['music.index'] !== -1
+        && (out['music.set'] === undefined || out['music.set'] === '')) {
+        fail(`seam.music.index is ${out['music.index']} with no seam.music.set — `
+            + '`Music.playSound`\'s rejection loop reads both, so an index without '
+            + 'its set is half a state.');
+    }
+    // ⛔ THE PARSED FORM IS THE WIRE FORM, NESTED — like `save` and `rng`
+    // above it, and for a reason this file has paid for before: `parseTape`
+    // is IDEMPOTENT BY DESIGN. Every consumer re-validates, the harness
+    // sends the parsed object over the wire, and `serializeTape` re-parses
+    // its input. Returning the flat validation map would make a parsed tape
+    // unparseable — measured, the first time this function returned one.
+    return deepFreeze(seamToBlock(out));
+}
+
+/** Freeze a seam block and the arrays inside it. */
+function deepFreeze(block) {
+    for (const k of Object.keys(block)) {
+        if (block[k] && typeof block[k] === 'object') deepFreeze(block[k]);
+    }
+    return Object.freeze(block);
+}
+
+/**
+ * A seam BLOCK (`{items: {hasSword: true}, hits_max: 4}`) as a map keyed by
+ * **`SEAM_SIGNATURE[].field`** (`{'save.hasSword': true, 'save.hitsMax': 4}`).
+ *
+ * ⛔ THE TWO KEY SPACES ARE DIFFERENT AND BOTH ARE LOAD-BEARING. The wire
+ * keys are snake_case and grouped for a human authoring a tape; the
+ * signature fields are the game's own names, and they are what
+ * `Bot.latchSeam` emits and what `seamFindings` maps over. This function is
+ * the ONE translation between them, and its table is `SEAM_BOOT_SPEC`, so
+ * neither side is retyped.
+ */
+export function seamFieldsFromBlock(block) {
+    if (block === null || block === undefined) return {};
+    const out = {};
+    for (const s of SEAM_BOOT_SPEC) {
+        const v = s.key.split('.')
+            .reduce((o, k) => (o == null ? undefined : o[k]), block);
+        if (v !== undefined && v !== null) out[s.field] = v;
+    }
+    return out;
+}
+
+/**
+ * The parsed seam's FLAT map (`'items.hasSword' -> true`) back to the
+ * nested wire block. `serializeTape`'s half of the round trip.
+ *
+ * ⚠ Emits only what the tape declared. A seam block that filled in every
+ * key with a default would be a tape claiming state it never measured —
+ * "not declared" and "declared at the fresh-page value" are different
+ * segments, and only one of them can be checked against a predecessor.
+ */
+export function seamToBlock(flat) {
+    const out = {};
+    for (const key of Object.keys(flat)) {
+        const [head, tail] = key.split('.');
+        if (tail === undefined) {
+            out[head] = Array.isArray(flat[key]) ? [...flat[key]] : flat[key];
+        } else {
+            out[head] = out[head] ?? {};
+            out[head][tail] = flat[key];
+        }
+    }
+    return out;
 }
 
 function parseSaveIndices(list, what, limit) {
@@ -976,7 +1244,32 @@ export function parseTape(input) {
             + 'modelled one that started at the declared seed. Bump tape_version to '
             + '7 to declare a stream.');
     }
+    // The VALUE-not-presence rule, one version on again, and it needs its
+    // OWN predicate: a v7 tape may legitimately declare `{seed, split}` and
+    // must not declare the other two streams, so folding the two tests
+    // together would fail every v7 tape that names a seed.
+    if (version < 8 && rngBlockDeclaresV8Streams(raw.rng)) {
+        fail(`tape_version ${version} declares rng: ${JSON.stringify(raw.rng)}, `
+            + 'but versions below 8 mean rng: {cosmetic: 0, fp: 0} BY DEFINITION — '
+            + 'the build had no such field to read, so the game would run the '
+            + 'cosmetic generator and FlashPunk\'s LCG from wherever the page left '
+            + 'them while the JS engine modelled declared states. Bump tape_version '
+            + 'to 8 to declare them.');
+    }
     const rng = version >= 7 ? parseRng(raw) : emptyRngBlock();
+    // ⚠ The seam block's empty value is NULL, not an empty object — see
+    // `seamBlockDeclaresAnything`. There is no "empty seam": a tape either
+    // declares boot state or inherits the page's, and those are different
+    // runs.
+    if (version < 8 && seamBlockDeclaresAnything(raw.seam)) {
+        fail(`tape_version ${version} declares seam: ${JSON.stringify(raw.seam)}, `
+            + 'but versions below 8 mean seam: null BY DEFINITION — the build had no '
+            + 'such block to read, so the game would boot whatever save state the '
+            + 'page had while the JS engine honoured the declaration. Bump '
+            + 'tape_version to 8 to declare boot state.');
+    }
+    const seam = version >= 8 && seamBlockDeclaresAnything(raw.seam)
+        ? parseSeam(raw) : emptySeamBlock();
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -1089,7 +1382,12 @@ export function parseTape(input) {
             keys: Object.freeze(save.keys),
             seal_parts: Object.freeze(save.seal_parts),
         }),
-        rng: Object.freeze({ seed: rng.seed, split: rng.split }),
+        rng: Object.freeze({
+            seed: rng.seed, split: rng.split, cosmetic: rng.cosmetic, fp: rng.fp,
+        }),
+        // ⚠ `null`, not `{}` — see `seamBlockDeclaresAnything`. Frozen when
+        // present; `parseSeam` freezes the array values inside it.
+        seam,
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -1180,8 +1478,20 @@ export function serializeTape(tape) {
         } : {}),
         // Same rule again: written ONLY for a v7 tape, so all 108 frozen
         // fixtures round-trip byte-identically past the RNG batch.
-        ...(t.tape_version >= 7 ? {
+        // ⚠ v7 writes TWO fields and v8 writes four — the same round-trip
+        // rule one version on, and here it is load-bearing twice over: all
+        // 118 frozen fixtures are v<=7 and would otherwise gain a
+        // `cosmetic`/`fp` pair the moment anything re-serialized them, which
+        // is precisely the re-record this batch exists to NOT take.
+        ...(t.tape_version === 7 ? {
             rng: { seed: t.rng.seed, split: t.rng.split },
+        } : {}),
+        ...(t.tape_version >= 8 ? {
+            rng: {
+                seed: t.rng.seed, split: t.rng.split,
+                cosmetic: t.rng.cosmetic, fp: t.rng.fp,
+            },
+            ...(t.seam ? { seam: seamToBlock(t.seam) } : {}),
         } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
