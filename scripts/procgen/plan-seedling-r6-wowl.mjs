@@ -48,10 +48,12 @@
  * barrage. A player holding a 64 px square orbit carries ~32 ticks of lead —
  * about 22 px per axis against a +-20 px spray.
  *
- * ⚠ AND "NOT ONE OF 95 ROCKS" (§20.4) WAS A PROPERTY OF THE OLD PLAN, NOT OF
- * THE ORBIT. This one takes **one rock of ninety-five**, at tick 555, on the
- * approach to the third stance — the vulnerable state is still the STANCE and
- * the walk to it, and `hitsMax` 3 survives one.
+ * ⚠ AND WHETHER A ROCK LANDS AT ALL IS A PROPERTY OF THE PLAN, NOT OF THE
+ * ORBIT. §20.4's plan took none of 95, slice 6g's took one (at tick 555, on
+ * the approach to the third stance), and slice 6h's takes none again — the
+ * vulnerable state is the STANCE and the walk to it either way, and `hitsMax`
+ * 3 survives one. The check is `<= 1`, which is the claim; the count is
+ * reported rather than asserted.
  *
  * ⛔ AND THE ORBIT'S CENTRE IS A CONSTRAINT, NOT A PREFERENCE. `t == 16` —
  * the ring around the lava — is a LETHAL terrain state, so the whole octagon
@@ -146,9 +148,9 @@ const ORBIT = { cx: 56, cy: 56, s: 32, period: 30 };
  * own position at that tick — see `--search`.
  */
 const SHOVES = [
-    { t: 15, x: 60, y: 98 },
-    { t: 296, x: 102, y: 52 },
-    { t: 699, x: 31, y: 132 },
+    { t: 15, x: 61, y: 102 },
+    { t: 298, x: 102, y: 52 },
+    { t: 697, x: 29, y: 134 },
 ];
 /** How long before a press the player leaves the orbit for the stance. */
 const APPROACH = 60;
@@ -246,6 +248,126 @@ function replay(inputs, ticks) {
     const r = freshRun();
     for (let t = 0; t < ticks; t += 1) r.advance(heldKeysAt({ inputs }, t));
     return { run: r };
+}
+
+if (SEARCH) {
+    /**
+     * ── THE SEARCH, RUN RATHER THAN DESCRIBED ─────────────────────────
+     *
+     * Slice 6f kept only the triple; slice 6g had to re-run it when the fix
+     * moved the plan, and a search that lives in a session is a search that
+     * gets re-derived. It is behind a flag because it is minutes of full
+     * `levelRun` replays and the PLAN above is its answer, pinned as a
+     * constant with thirteen checks over it.
+     */
+    const world = buildLevelWorld(atlasLevelSource()(112), { roles: ROLES });
+    const tileAt = (x, y) => world.tiles.find((t) => t.x === Math.floor(x / 16) * 16 + 8
+        && t.y === Math.floor(y / 16) * 16 + 8);
+    const lethalFloor = (x, y) => {
+        const t = tileAt(x, y);
+        return !t || t.t === 16 || t.t === 17;
+    };
+    const LAVA_CENTRE = { x: 120, y: 128 };
+    const RADII = [10, 12, 14, 16, 18];
+    const DIRS = 24;
+    const STEP = 4;
+    const HORIZON = 1500;
+
+    const track = (shoves) => {
+        const { run } = drive(shoves, shoves.map((s) => s.t), HORIZON);
+        const lavaAt = new Set(run.finalBossLava.map((l) => l.t));
+        let armed = true;
+        return run.owlTicks.map((o) => {
+            if (o.phase === 'podTick') armed = true;
+            const row = { t: o.t, x: o.bossX, y: o.bossY, phase: o.phase, hits: o.hits, armed };
+            if (lavaAt.has(o.t)) armed = false;
+            return row;
+        });
+    };
+    /** Contiguous walk blocks in which the (k+1)-th lava hit is still available. */
+    const blocksFor = (rows, k) => {
+        const out = [];
+        for (const o of rows) {
+            if (!(o.armed && o.hits === k
+                && (o.phase === 'walk' || o.phase === 'walkGrenade'))) continue;
+            const last = out[out.length - 1];
+            if (last && o.t === last[last.length - 1] + 1) last.push(o.t); else out.push([o.t]);
+        }
+        return out;
+    };
+    const stances = (rows, T) => {
+        const b = rows.find((o) => o.t === T);
+        const out = [];
+        if (!b) return out;
+        for (const r of RADII) {
+            for (let i = 0; i < DIRS; i += 1) {
+                const ang = (i / DIRS) * Math.PI * 2;
+                const x = Math.round(b.x + r * Math.cos(ang));
+                const y = Math.round(b.y + r * Math.sin(ang));
+                // FORBIDDEN, never scored away.
+                if (lethalFloor(x, y) || lethalFloor(x + 2, y + 2)
+                    || lethalFloor(x - 2, y - 2)) continue;
+                if (Math.abs(x - b.x) < 8 && Math.abs(y - b.y) < 8) continue;
+                if (FINAL_BOSS.podPositions.some((p) => Math.abs(x - p.x) < 12
+                    && Math.abs(y - p.y) < 12)) continue;
+                if ((b.x - x) * (LAVA_CENTRE.x - b.x)
+                    + (b.y - y) * (LAVA_CENTRE.y - b.y) <= 0) continue;
+                out.push({ t: T, x, y, r, dir: i });
+            }
+        }
+        return out;
+    };
+
+    const chosen = [];
+    let tried = 0;
+    let rejected = 0;
+    for (let w = 0; w < 3; w += 1) {
+        const rows = track(chosen);
+        const blocks = blocksFor(rows, w);
+        let best = null;
+        for (const block of blocks) {
+            if (best) break;
+            for (let i = 0; i < block.length; i += STEP) {
+                for (const s of stances(rows, block[i])) {
+                    tried += 1;
+                    const list = [...chosen, { t: s.t, x: s.x, y: s.y }];
+                    let run;
+                    try {
+                        ({ run } = drive(list, list.map((k) => k.t),
+                            Math.min(HORIZON, s.t + 120)));
+                    } catch { rejected += 1; continue; }
+                    if (run.finalBossLava.length < w + 1
+                        || run.playerHits.some((h) => h.died)) { rejected += 1; continue; }
+                    const hits = run.playerHits.length;
+                    const at = run.finalBossLava[w].t;
+                    if (best === null || hits < best.hits
+                        || (hits === best.hits && at < best.at)) best = { s, hits, at };
+                }
+            }
+        }
+        if (!best) {
+            console.error(`\n⛔ the search found no ${w + 1}th shove`);
+            process.exit(1);
+        }
+        chosen.push({ t: best.s.t, x: best.s.x, y: best.s.y });
+    }
+    console.log('\nTHE SEARCH TRIPLE (see the as-built §21.8):');
+    console.log(`  SCORE       three lava self-hits, the kill, both tags, `
+        + `the fewest player hits and then the earliest hit`);
+    console.log(`  GRANULARITY press ticks every ${STEP} eligible walk ticks, block by `
+        + `block; stances on a ${RADII.length}-radius x ${DIRS}-direction polar grid `
+        + `(${RADII.join('/')} px), rounded to integers; ${tried} candidates, each a full `
+        + '`levelRun` replay');
+    console.log('  CONSTRAINT  FORBIDDEN, not scored: a stance overlapping the boss\'s '
+        + '12x12 box; a push whose ray points away from the lava centre; any tile with '
+        + 't in {16, 17} (both are lethal); the four pod cells; a run that throws');
+    console.log(`  rejected ${rejected} of ${tried}`);
+    console.log(`  FOUND ${JSON.stringify(chosen)}`);
+    if (JSON.stringify(chosen) !== JSON.stringify(SHOVES)) {
+        console.error('\n⛔ the search no longer reproduces the pinned plan');
+        process.exit(1);
+    }
+    console.log('  — and it is the plan pinned above, reproduced');
 }
 
 const PRESS_TICKS = SHOVES.map((s) => s.t);
@@ -393,22 +515,36 @@ const landed = a.run.finalBossShoves.filter((h) => h.landed);
  * `pressRespondersIn`'s `finalBosses` join drops it before the run's arm sees
  * it. So the refusal leaves no ledger row: the witness is the COUNT.
  */
-check(a.run.finalBossShoves.length < 3 * 5 && landed.length === a.run.finalBossShoves.length,
-    '⛔⛔ NOT ALL FIVE TESTS LAND — and the cull is at the RECT, one stage before '
-    + 'the 16 px reach: a shoved body is not COLLECTED, so it leaves no refusal row',
-    `${a.run.finalBossShoves.length} of ${3 * 5} hit tests reached him and all `
-    + `${landed.length} of those landed; per press `
+/**
+ * ⛓⛓⛓ AND SLICE 6h's PLAN BUYS A REFUSAL ROW THE OLD ONE COULD NOT.
+ *
+ * The first press's tests run on ticks 16..20 and the boss's own LAVA hit
+ * lands at 18 — which sets `hitsTimer = 30`, and `Enemy.hit`'s first gate is
+ * `hitsTimer <= 0`. So the third test reaches him and is REFUSED, with a
+ * reason, by a different gate from the one that culls the other four. Trap
+ * 114 says the rect's cull leaves no row; this says the i-frame's does, and
+ * the two are visible side by side in one press.
+ */
+const refused = a.run.finalBossShoves.filter((h) => !h.landed);
+check(a.run.finalBossShoves.length < 3 * 5
+    && refused.length === 1 && refused[0].why === 'hitsTimer is 30'
+    && refused[0].t === lava[0].t,
+    '⛔⛔ NOT ALL FIVE TESTS LAND — the cull is at the RECT (no row) and the ONE row '
+    + 'there is comes from the lava i-frame, on the tick the self-hit landed',
+    `${a.run.finalBossShoves.length} of ${3 * 5} hit tests reached him, `
+    + `${landed.length} landed and ${refused.length} was refused `
+    + `(t${refused[0]?.t}: ${refused[0]?.why}); per press `
     + JSON.stringify(PRESS_TICKS.map((P) => a.run.finalBossShoves
         .filter((h) => h.t > P && h.t <= P + 5).length))
     + ' — the shove carries him out of his own hit rect part-way through his own press');
 /**
- * ⛓⛓ THE ORBIT DODGES ALMOST EVERY ROCK, AND THE ONE IT DOES NOT IS THE
- * APPROACH.
+ * ⛓⛓ THE ORBIT DODGES THE ROCKS, AND WHICH ONES IT DOES NOT IS THE PLAN's.
  *
- * §20.4's "not one of 95" belonged to the old plan, not to the orbit: this one
- * takes exactly ONE rock in a hundred, at tick 555, while the player is
- * crossing to the third stance. The vulnerable state is still the STANCE and
- * the walk to it, and `hitsMax` 3 survives one hit with two to spare.
+ * §20.4's plan took none of 95; slice 6g's took one, at tick 555, while the
+ * player crossed to the third stance; this one takes none of 95 again. The
+ * count is a property of three particular walks through a barrage, so it is
+ * REPORTED and the assertion is the claim that survives a re-search: at most
+ * one hit, and no death — `hitsMax` 3 leaves two to spare.
  */
 check(a.run.playerHits.length <= 1 && !a.run.playerHits.some((h) => h.died),
     '⛓⛓ ONE ROCK IN A HUNDRED REACHES HIM — and `hitsMax` 3 survives it',
@@ -452,7 +588,7 @@ check(c.run.finalBossFlags.length === 0 && c.run.finalBossCorpse.length === 0,
  * full shove list either way, so deleting a press cannot change where the
  * player is TOLD to go. It is a closed-loop controller, though, and the
  * control's world stops being the drive's the moment the unshoved Owl walks
- * into the player — which he does, at tick 702, three ticks after the press
+ * into the player — which he does, at tick 709, twelve ticks after the press
  * that would have thrown him. After that the control's player is in i-frames
  * (`Player.input()` gates its whole movement block on `hitsTimer <= 0`) and
  * its spans are a different tape.
@@ -461,23 +597,38 @@ check(c.run.finalBossFlags.length === 0 && c.run.finalBossCorpse.length === 0,
  * divergence tick is asserted to be exactly that contact. "Identical up to
  * here, and here is why" is a stronger pair claim than an identity bought by
  * ending the control early — and it names what the third shove buys.
+ *
+ * ⛔ AND THE COMPARISON IS PER TICK, NOT PER SPAN STRING. A span that is live
+ * when the control's tape ENDS is truncated by its own `tick_count`
+ * (`up:704-750` against `up:704-727`), so two identical drives print two
+ * different span lists. Slice 6f's version compared the strings and passed
+ * only because that plan's last shared span happened to close before the
+ * control did — a coincidental predicate, and it rotted the moment the plan
+ * moved. What the claim is ABOUT is the keys the game holds on each shared
+ * tick, so that is what is compared.
  */
 const contact = c.run.playerHits.find((h) => !a.run.playerHits.some((g) => g.t === h.t));
 const DIVERGES_AT = contact ? contact.t : CONTROL_TICKS;
 const move = (t) => t.inputs.filter((s) => s.key !== 'primary');
-const commonMoves = (t) => move(t).map((s) => `${s.key}:${s.from}-${s.to}`);
-const shared = (t) => commonMoves(t)
-    .filter((s) => Number(s.split(':')[1].split('-')[0]) < DIVERGES_AT);
-check(JSON.stringify(shared(tape)) === JSON.stringify(shared(control)),
+/** The movement keys the GAME holds on tick `t`, primary excluded. */
+const movesAt = (t, tick) => [...heldKeysAt({ inputs: move(t) }, tick)].sort().join('+');
+const sharedTicks = Math.min(DIVERGES_AT, tape.tick_count, control.tick_count);
+let firstMoveDiff = null;
+for (let t = 0; t < sharedTicks && firstMoveDiff === null; t += 1) {
+    if (movesAt(tape, t) !== movesAt(control, t)) firstMoveDiff = t;
+}
+check(firstMoveDiff === null,
     '⛔ THE MOVEMENT SPANS COME FROM A SEPARATE GENERATOR AND ARE IDENTICAL UP TO THE '
     + 'TICK THE CONTROL\'S WORLD DIVERGES',
-    `${shared(tape).length} shared movement spans compared up to t${DIVERGES_AT}; the `
-    + `presses differ by exactly one (${tape.inputs.length - move(tape).length} vs `
+    `${sharedTicks} shared ticks compared key by key up to t${DIVERGES_AT}`
+    + `${firstMoveDiff === null ? '' : ` — FIRST DIFFERENCE AT t${firstMoveDiff}`}; `
+    + `${move(tape).length} vs ${move(control).length} movement spans; the presses differ `
+    + `by exactly one (${tape.inputs.length - move(tape).length} vs `
     + `${control.inputs.length - move(control).length} primary)`);
 check(contact !== undefined && contact.source === 'owlBody'
-    && contact.t > PRESS_TICKS[2] && contact.t < PRESS_TICKS[2] + 10,
+    && contact.t > PRESS_TICKS[2] && contact.t < PRESS_TICKS[2] + 30,
     '⛓⛓⛓ AND WHAT THE THIRD SHOVE BUYS IS MEASURED: without it the Owl WALKS INTO THE '
-    + 'PLAYER, three ticks later',
+    + 'PLAYER, twelve ticks later',
     `drive hits ${JSON.stringify(a.run.playerHits.map((h) => `t${h.t} ${h.source}`))}; `
     + `control hits ${JSON.stringify(c.run.playerHits.map((h) => `t${h.t} ${h.source}`))}`);
 
@@ -492,125 +643,6 @@ console.log(`gameplay draws ${a.run.owlStreamCount} (level build 2 + `
     + `${a.run.owlStreamCount - 2} in the fight); rocks ${a.run.owlRockLandings.length}; `
     + `grenades ${a.run.owlGrenadeEvents.filter((g) => g.what === 'spawned').length}`);
 
-if (SEARCH) {
-    /**
-     * ── THE SEARCH, RUN RATHER THAN DESCRIBED ─────────────────────────
-     *
-     * Slice 6f kept only the triple; slice 6g had to re-run it when the fix
-     * moved the plan, and a search that lives in a session is a search that
-     * gets re-derived. It is behind a flag because it is minutes of full
-     * `levelRun` replays and the PLAN above is its answer, pinned as a
-     * constant with thirteen checks over it.
-     */
-    const world = buildLevelWorld(atlasLevelSource()(112), { roles: ROLES });
-    const tileAt = (x, y) => world.tiles.find((t) => t.x === Math.floor(x / 16) * 16 + 8
-        && t.y === Math.floor(y / 16) * 16 + 8);
-    const lethalFloor = (x, y) => {
-        const t = tileAt(x, y);
-        return !t || t.t === 16 || t.t === 17;
-    };
-    const LAVA_CENTRE = { x: 120, y: 128 };
-    const RADII = [10, 12, 14, 16, 18];
-    const DIRS = 24;
-    const STEP = 4;
-    const HORIZON = 1500;
-
-    const track = (shoves) => {
-        const { run } = drive(shoves, shoves.map((s) => s.t), HORIZON);
-        const lavaAt = new Set(run.finalBossLava.map((l) => l.t));
-        let armed = true;
-        return run.owlTicks.map((o) => {
-            if (o.phase === 'podTick') armed = true;
-            const row = { t: o.t, x: o.bossX, y: o.bossY, phase: o.phase, hits: o.hits, armed };
-            if (lavaAt.has(o.t)) armed = false;
-            return row;
-        });
-    };
-    /** Contiguous walk blocks in which the (k+1)-th lava hit is still available. */
-    const blocksFor = (rows, k) => {
-        const out = [];
-        for (const o of rows) {
-            if (!(o.armed && o.hits === k
-                && (o.phase === 'walk' || o.phase === 'walkGrenade'))) continue;
-            const last = out[out.length - 1];
-            if (last && o.t === last[last.length - 1] + 1) last.push(o.t); else out.push([o.t]);
-        }
-        return out;
-    };
-    const stances = (rows, T) => {
-        const b = rows.find((o) => o.t === T);
-        const out = [];
-        if (!b) return out;
-        for (const r of RADII) {
-            for (let i = 0; i < DIRS; i += 1) {
-                const ang = (i / DIRS) * Math.PI * 2;
-                const x = Math.round(b.x + r * Math.cos(ang));
-                const y = Math.round(b.y + r * Math.sin(ang));
-                // FORBIDDEN, never scored away.
-                if (lethalFloor(x, y) || lethalFloor(x + 2, y + 2)
-                    || lethalFloor(x - 2, y - 2)) continue;
-                if (Math.abs(x - b.x) < 8 && Math.abs(y - b.y) < 8) continue;
-                if (FINAL_BOSS.podPositions.some((p) => Math.abs(x - p.x) < 12
-                    && Math.abs(y - p.y) < 12)) continue;
-                if ((b.x - x) * (LAVA_CENTRE.x - b.x)
-                    + (b.y - y) * (LAVA_CENTRE.y - b.y) <= 0) continue;
-                out.push({ t: T, x, y, r, dir: i });
-            }
-        }
-        return out;
-    };
-
-    const chosen = [];
-    let tried = 0;
-    let rejected = 0;
-    for (let w = 0; w < 3; w += 1) {
-        const rows = track(chosen);
-        const blocks = blocksFor(rows, w);
-        let best = null;
-        for (const block of blocks) {
-            if (best) break;
-            for (let i = 0; i < block.length; i += STEP) {
-                for (const s of stances(rows, block[i])) {
-                    tried += 1;
-                    const list = [...chosen, { t: s.t, x: s.x, y: s.y }];
-                    let run;
-                    try {
-                        ({ run } = drive(list, list.map((k) => k.t),
-                            Math.min(HORIZON, s.t + 120)));
-                    } catch { rejected += 1; continue; }
-                    if (run.finalBossLava.length < w + 1
-                        || run.playerHits.some((h) => h.died)) { rejected += 1; continue; }
-                    const hits = run.playerHits.length;
-                    const at = run.finalBossLava[w].t;
-                    if (best === null || hits < best.hits
-                        || (hits === best.hits && at < best.at)) best = { s, hits, at };
-                }
-            }
-        }
-        if (!best) {
-            console.error(`\n⛔ the search found no ${w + 1}th shove`);
-            process.exit(1);
-        }
-        chosen.push({ t: best.s.t, x: best.s.x, y: best.s.y });
-    }
-    console.log('\nTHE SEARCH TRIPLE (see the as-built §21.8):');
-    console.log(`  SCORE       three lava self-hits, the kill, both tags, `
-        + `the fewest player hits and then the earliest hit`);
-    console.log(`  GRANULARITY press ticks every ${STEP} eligible walk ticks, block by `
-        + `block; stances on a ${RADII.length}-radius x ${DIRS}-direction polar grid `
-        + `(${RADII.join('/')} px), rounded to integers; ${tried} candidates, each a full `
-        + '`levelRun` replay');
-    console.log('  CONSTRAINT  FORBIDDEN, not scored: a stance overlapping the boss\'s '
-        + '12x12 box; a push whose ray points away from the lava centre; any tile with '
-        + 't in {16, 17} (both are lethal); the four pod cells; a run that throws');
-    console.log(`  rejected ${rejected} of ${tried}`);
-    console.log(`  FOUND ${JSON.stringify(chosen)}`);
-    if (JSON.stringify(chosen) !== JSON.stringify(SHOVES)) {
-        console.error('\n⛔ the search no longer reproduces the pinned plan');
-        process.exit(1);
-    }
-    console.log('  — and it is the plan pinned above, reproduced');
-}
 
 if (checks.some((k) => !k.ok)) {
     console.error('\n⛔ at least one check FAILED — nothing written');

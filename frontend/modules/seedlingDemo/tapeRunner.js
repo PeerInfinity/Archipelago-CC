@@ -595,6 +595,30 @@ export function createTapeStepper(tape, opts = {}) {
             bosses: run ? run.bossesWoken : [],
             /** The clamp's assignments — R5 slice 23's, still the window's spine. */
             bossClamps: run ? run.bossClamps : [],
+            /**
+             * ⛓⛓⛓ R6 SLICE 6h — THE OWL'S FOUR, and the rung's LAST ledger
+             * rows travel on `finalBossFlags`.
+             *
+             * ⛔ `finalBossLava` IS WHAT MAKES THE CONTROL'S NEGATIVE ARM A
+             * CLAIM. The Owl can only be killed by his own lava self-hit, so
+             * "no flag was written" is worth nothing on its own — a model
+             * that never reached the room says the same thing. The control's
+             * claim is that the fight RAN (two lava hits, both landed) and
+             * `{112,0}`/`{112,1}` stayed set anyway, which is a statement
+             * about the game's persistence array and not about the model's.
+             *
+             * ⛔ `finalBossShoves` carries the REFUSED test beside the landed
+             * ones for the same reason `watcherHits` does: the first press's
+             * third test reaches him on the tick his own lava hit set
+             * `hitsTimer = 30`, and a ledger of landings alone could not tell
+             * a three-test press from a two-test one.
+             */
+            finalBossLava: run ? run.finalBossLava : [],
+            finalBossShoves: run ? run.finalBossShoves : [],
+            /** `startDeath` / `dieAnimEnded` / `tagsWritten`, 109 ticks apart. */
+            finalBossKills: run ? run.finalBossKills : [],
+            /** The `{112,0}` and `{112,1}` writes `endAnim`'s "dead" arm makes. */
+            finalBossFlags: run ? run.finalBossFlags : [],
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

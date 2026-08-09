@@ -5461,3 +5461,53 @@ Consequences worth carrying:
   `|component| >= 0.5` (`>` for y). A contact at 26 degrees off horizontal
   moves the player in x alone — which is why the refuting tick looked like a
   1.66 px reversal with almost no vertical component.
+
+### ⛔⛔⛔ One ulp, and the Owl falls (R6 slice 6h)
+
+The 6g recording diverged at tick 71 and the whole barrage was wrong behind it
+— not one of the three rocks breaking at tick 74 appeared in both lists, while
+the two bosses had parked within 0.12 px of each other. The cause was the last
+bit of a square root.
+
+**`Point.length` is `sqrt(x*x + y*y)`, and the model used `Math.hypot`.** The
+running system is `SWFRecomp`'s AVM2 core; its `flash.geom.Point` computes
+`length` as `sqrt(x * x + y * y)` and `normalize(t)` as
+`x *= t / length` (`SWFModernRuntime/src/avm2/avm2_globals.c`), and
+`FP.distance` is the game's own `Math.sqrt(dx*dx + dy*dy)`. `Math.hypot`
+computes the same real number to better precision and a **different double**,
+and `(x / s) * l` is not `x * (l / s)`.
+
+**Why one ulp decided an arm.** `Mobile.friction` is
+`v.normalize(Math.max(v.length - f, 0))`, so a coasting body's speed descends
+by exactly 0.25 a tick — through **1.0**, which is `moveSpeed`, which is
+`FinalBoss.update`'s walk/coast split `v.length <= moveSpeed`. The test lands
+ON the boundary once per coast: `Math.hypot` read 1.000000000000000222 and
+coasted a fourteenth tick; the runtime's arithmetic reads 0.9999999999999996
+and re-aims on the thirteenth.
+
+**And the damage was not positional.** The pod arrival is an ABSORBING state
+(`x = pod.x; y = pod.y + 1`), so the lost frame did not delay the arrival at
+all — both bosses snap on the same update and the barrage starts on the same
+tick. What the lost frame cost is that walk tick's **grenade roll**: one
+`Math.random()`, after which the model's draw stream ran one draw behind the
+game's for the rest of the fight, and every barrage roll, aim and scale was a
+different number.
+
+⇒ **if a model's positions agree and its random consequences do not, hunt a
+DRAW, not a pixel.**
+
+Two more things worth carrying:
+
+- **Calibrate a polled arm before comparing two arms.** 6g read the 45-tick
+  arm's `hitsTimer` (game 2, model 4) as two lost boss frames. `hitsTimer`
+  counts UPDATES, and that arm's poll was two updates late: calibrated, the
+  game's boss and the model's are in the same place, before the fix as well as
+  after. The "barrage two to three frames late" it named never existed.
+- **A refuted recording is a known answer.** The fix was confirmed offline
+  against 6g's own refuting census — the parked boss position, all three
+  breaking rocks, the in-flight set and the player's position at the poll, six
+  quantities, all exact — before a new recording was spent.
+
+W-owl is claimed: `{112,0}` and `{112,1}` are off in the game's own
+persistence array, 109 ticks after the kill, and the pair's control keeps both
+flags SET with two of the three lava self-hits driven.

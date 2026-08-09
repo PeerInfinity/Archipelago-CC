@@ -422,40 +422,43 @@ export const R6_WINDOWS = Object.freeze([
      * `Tile` is `t == 17` (trap 95's selection, not "the box overlaps a lava
      * cell").
      *
-     * ⛓⛓⛓ AND THE INTRO-DISMISSING PRESS **IS** THE FIRST SHOVE.
-     * `FinalBoss.update` lowers `Game.freezeObjects` at the TOP of the frame,
-     * above the player's own update, so `Player.input()` still runs that tick
-     * and `Input.pressed(keys[4])` reaches `useItem(Main.primary)`. One press,
-     * two jobs — and since `hitThisSequence` starts FALSE the first lava hit
-     * needs no barrage before it. ⇒ §8.5's "at least three full pod cycles"
-     * is retired: the window endures **two** barrages, and lava hit 1 lands on
-     * tick 9 of a tape whose first input is at tick 2.
+     * ⛔⛔ AND THE INTRO-DISMISSING PRESS IS **NOT** A SHOVE (slice 6g, §21.4).
+     * `FinalBoss.as:88` ends the intro on `Input.released(p.keys[6])` and the
+     * release is live on the span's `to` — so the freeze is still up when the
+     * player updates on `from`, and on `to` the edge is a release. The press
+     * is swallowed at both ends and the game counts ZERO hit tests for it.
+     * `hitThisSequence` still starts FALSE, so the first lava hit needs no
+     * barrage before it — it needs a press of its own, at tick 15.
      *
      * ⛔⛔ THE STANCE IS THE VULNERABLE STATE, NOT THE BARRAGE. `stepsAhead`
      * is -15 and a rock flies for 17 ticks, so a moving player has ~32 ticks
      * of lead against a +-20 px spray: 95 rocks land across the two barrages
-     * and NOT ONE touches an orbiting player, while a STATIONARY one dies
-     * inside the first barrage (measured: 3 hits, dead at tick 555). The one
-     * hit the window takes is a GRENADE, dropped at the Owl's own feet and
-     * exploding 51 ticks later while the player stands still at a shove stance.
+     * and NOT ONE touches this plan's orbiting player, while a STATIONARY one
+     * dies inside the first barrage (measured: 3 hits, dead at tick 555).
      *
      * ⛔ The pair is the one-primitive-fewer PREFIX with the THIRD press
-     * deleted; the movement spans are byte-identical because the presses are a
-     * literal list and the movement is a separate generator (§12).
+     * deleted; the movement spans are identical tick for tick up to the
+     * divergence because the presses are a literal list and the movement is a
+     * separate generator (§12). What the third shove buys is MEASURED: without
+     * it the unshoved Owl walks into the player twelve ticks later, and the
+     * game's own `hits` reads 1 on the control against 0 on the drive.
      */
     /**
-     * ⚠⚠ STILL `null` AFTER SLICE 6f, AND THAT IS THE HONEST ROW. The plan is
-     * SEARCHED and the model kills him — three lava hits at ticks 9/378/798,
-     * both tags at 907, one survivable grenade hit — but the first `--win`
-     * recording REFUTED the model at tick 23 (the game's player reverses where
-     * the model walks on, and the game's own `hits` reaches 1 on a DIFFERENT
-     * tick from the model's, which is why the count check passed for the wrong
-     * reason). The tapes are regenerable from
-     * `scripts/procgen/plan-seedling-r6-wowl.mjs --write`; they are deliberately
-     * NOT in the roster, because a fixture whose model is refuted is either a
-     * permanent red or a silenced one and neither is a finding (§22.7).
+     * ⛓⛓⛓ CLAIMED AT SLICE 6h, AND THE RECORDING ARBITRATED THE CHAIN.
+     * `{112,0}` and `{112,1}` are off in the GAME's own persistence array,
+     * 109 ticks after the kill (705 -> 814) — §19.7's prediction, settled by
+     * the recording exactly as §17.4's precedent said it would be.
+     *
+     * ⛔ What stood between 6f and here was ONE ULP. The model computed
+     * `|v|` with `Math.hypot` where `SWFRecomp`'s `Point.length` is
+     * `sqrt(x*x + y*y)`, and the Owl's walk/coast split reads that number
+     * against `moveSpeed` at exactly the boundary once per coast — so the
+     * model spent a frame coasting that the game spent WALKING, missed that
+     * walk tick's grenade roll, and ran one draw behind the game for the rest
+     * of the fight. Every barrage roll and every rock aim after it differed.
+     * → trap 118, and `finalBossFight.js`'s `pointLength`.
      */
-    Object.freeze({ name: 'W-owl', slice: 6, tape: null, control: null }),
+    Object.freeze({ name: 'W-owl', slice: 6, tape: 'r6-owl-kill', control: 'r6-owl-control' }),
     /**
      * ⛓⛓⛓ R6 SLICE 6c: THE ENDING'S FIRST DRIVEN WINDOW, and the first
      * ledger row on the ladder that is not a kill.

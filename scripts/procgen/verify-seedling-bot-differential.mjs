@@ -1350,6 +1350,51 @@ function checkReadout(name, tape, status, stream) {
                 + '(`!checkPersistence(0, 114)`, the Watcher) was never met');
     }
 
+    // ── ⛓⛓⛓ R6 SLICE 6h: THE OWL'S TWO — THE RUNG'S LAST LEDGER ROWS ──
+    //
+    // `FinalBoss.endAnim`'s "dead" arm writes BOTH `{112,0}` and `{112,1}`
+    // (`setPersistence(tag, false)` twice), 109 ticks after the kill — so the
+    // pair lands in `persistence_cleared` together or not at all, and a model
+    // one tick out on either fencepost of the die/dead chain writes neither.
+    //
+    // ⛔⛔ TWO-SIDED, and the negative arm needs the FIGHT and not just the
+    // room. The Owl is `onlyHitBy = "Lava"`: nothing the player does can
+    // damage him, so "no flag was written" is what a run that never entered
+    // L112 also reports. `r6-owl-control` is the same tape with the THIRD
+    // press deleted — it lands two of the three lava self-hits, the Owl
+    // survives on `hits` 2 of 3, and its whole claim is that both flags
+    // stayed SET. That is a statement about the game's own array.
+    const owlFlags = expected.finalBossFlags ?? [];
+    const owlLava = (expected.finalBossLava ?? []).filter((l) => l.landed);
+    if (owlFlags.length > 0) {
+        const missing = owlFlags
+            .filter((f) => !clearedInGame.has(`${f.level}:${f.tag}`))
+            .map((f) => `${f.id} (${f.level}:${f.tag})`);
+        const tags = (expected.finalBossKills ?? []).find((k) => k.what === 'tagsWritten');
+        const kill = (expected.finalBossKills ?? []).find((k) => k.what === 'startDeath');
+        check(`${name}: every FinalBoss the run killed wrote BOTH persistence flags`,
+            missing.length === 0 && owlFlags.length === 2,
+            missing.length === 0
+                ? `${owlFlags.map((f) => `${f.level}:${f.tag}`).join(' + ')} off, `
+                + `${owlLava.length} lava self-hit(s), kill at tick ${kill?.t} -> tags at `
+                + `${tags?.t} (${tags?.t - kill?.t} ticks — the die/dead chain)`
+                : `${missing.join(', ')} still SET — the model ran endAnim's "dead" arm `
+                + 'and the game did not. The chain is `play("die")` inside `update()` '
+                + '(48 ticks) then `play("dead")` inside the die CALLBACK (61 more), and '
+                + 'either fencepost being one out writes neither flag.');
+    } else if (owlLava.length > 0) {
+        const wronglyCleared = [...clearedInGame]
+            .filter((k) => k === '112:0' || k === '112:1');
+        check(`${name}: the FinalBoss the run did NOT kill kept both flags`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? `{112,0} and {112,1} still set, with ${owlLava.length} of 3 lava `
+                + 'self-hits driven and the Owl alive'
+                : `${wronglyCleared.join(', ')} CLEARED by a run that landed only `
+                + `${owlLava.length} of the three lava self-hits — either the model is a `
+                + 'shove short, or something other than `endAnim` writes this pair');
+    }
+
     // ── ⛓⛓⛓ R6 SLICE 6d: THE ENDING REBOOT — A ROW WITH NO FLAG IN IT ──
     //
     // Every other line of this ledger is a persistence write. W-blood has
