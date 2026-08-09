@@ -16,6 +16,7 @@ import {
     seamRngPosture, seamFindings, R7_GOAL_LEDGER, R7_LEDGER_EXCLUSIONS,
     r7GoalFindings, r7GoalCriteria, R7_BATCH, predictedAttribution,
     SEAM_CHANNELS, SEAM_BOOT_SPEC, assertSeamChannelsTotal, seamLatchFindings,
+    seamBootFields, segmentBootFromLatch,
 } from './r7Acceptance.js';
 import { parseTape, seamFieldsFromBlock, TAPE_VERSION } from './tapeFormat.js';
 
@@ -94,19 +95,280 @@ describe('seamRngPosture — stricter than R6\'s window question', () => {
     });
 });
 
-describe('seamFindings — derived per field per seam', () => {
-    const comparableRows = SEAM_SIGNATURE.filter((r) => r.comparable !== 'excluded');
+/**
+ * A REALISTIC whole latch — every signature field at a value the GAME could
+ * actually have produced at a calm arrival, with the shapes `Bot.latchSeam`
+ * emits (booleans per index for keys/totem parts, an ordered int LOG for
+ * the seals, `{level, tag}` for the persistence CLEAR SET, `{sound,
+ * dead_frames}` for the pins).
+ *
+ * ⛔ IT IS NOT `wholeLatch()`'s all-zeros, and the difference is what makes
+ * the round trip a test. A latch of zeros round-trips through
+ * `segmentBootFromLatch` only by accident (`hits_max: 0` and `time: 0` are
+ * both refused, and `music.index: 0` with `music.set: 0` is not a state);
+ * the boot side's whole job is turning real shapes into the OTHER key
+ * space, and only real shapes exercise it.
+ */
+function realisticLatch(over = {}) {
+    const seam = {
+        level: 94,
+        playerPositionX: 288,
+        playerPositionY: 160,
+        'save.hasSword': true,
+        'save.hasGhostSword': false,
+        'save.hasShield': true,
+        'save.hasFire': false,
+        'save.hasWand': false,
+        'save.hasFireWand': false,
+        'save.canSwim': false,
+        'save.hasSpear': false,
+        'save.hasDarkShield': false,
+        'save.hasDarkSuit': false,
+        'save.hasDarkSword': false,
+        'save.hasFeather': false,
+        'save.hasTorch': false,
+        'save.beam': false,
+        'save.rockSet': true,
+        'save.hitsMax': 3,
+        'save.firstUse': true,
+        'save.extended': false,
+        'save.time': 1234,
+        'save.primary': 0,
+        'save.secondary': 0,
+        'save.grassCut': 7,
+        'save.hasKey': [true, false, false, false, false],
+        'save.hasTotemPart': [false, false, false, false, false],
+        'save.hasSealPart': [3, 11, ...Array.from({ length: 14 }, () => -1)],
+        'save.levelPersistence': [{ level: 10, tag: 4 }, { level: 20, tag: 1 }],
+        'save.hasBadge': [false, false],
+        'static.Game.cutscene': [false, false, false, false],
+        'static.Game.shake': 0,
+        'static.Game.menu': false,
+        'static.Game.menuState': 0,
+        'static.Game.freezeObjects': false,
+        'static.Game.talking': false,
+        'static.Game.inventory': [0],
+        'static.Music.currentSet': 'Rock',
+        'static.Music.currentIndex': 0,
+        'static.Rng.split': false,
+        'static.Bot.pins': { sound: false, dead_frames: true },
+        'rng.gameplay': 1234567891,
+        'rng.cosmetic': 12345,
+        'fp.seed': 987286273,
+        'arrival.blackCover': 0,
+        'arrival.velocity': { vx: 0, vy: 0, hits: 0, hits_timer: 0 },
+        'latch.tick': 61,
+        'latch.dead_frames': 40,
+    };
+    return { latched: true, partial: false, why: '', seam: { ...seam, ...over } };
+}
 
-    it('emits one row per comparable signature field per seam', () => {
-        const seam = { name: 'S1->S2', exit: {}, boot: {} };
-        const f = seamFindings([seam]);
-        // one per field, plus the completeness row
-        expect(f.length).toBe(comparableRows.length + 1);
+/** The tape a latch authors, parsed — the boot side of one seam. */
+function segmentTapeFor(latch, extra = {}) {
+    const blocks = segmentBootFromLatch(latch);
+    return parseTape({
+        tape_version: TAPE_VERSION,
+        game: 'seedling',
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        equips: [],
+        tick_count: 10,
+        inputs: [],
+        ...blocks,
+        ...extra,
+    });
+}
+
+describe('seamBootFields — THE BOOT SIDE (R7 slice 2)', () => {
+    it('carries every channel a tape can declare, and no invariant row', () => {
+        const tape = segmentTapeFor(realisticLatch());
+        const boot = seamBootFields(tape);
+        for (const row of SEAM_SIGNATURE) {
+            const channel = SEAM_CHANNELS[row.field];
+            const present = Object.prototype.hasOwnProperty.call(boot, row.field);
+            if (channel === 'invariant' || channel === 'excluded') {
+                expect(present, `${row.field} (${channel}) must NOT be on the boot side`)
+                    .toBe(false);
+            } else {
+                expect(present, `${row.field} (${channel}) missing from the boot side`)
+                    .toBe(true);
+            }
+        }
+    });
+
+    it('⛓ THE ROUND TRIP: latch -> tape -> boot map reproduces the latch', () => {
+        const latch = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(latch));
+        for (const field of Object.keys(boot)) {
+            expect(JSON.stringify(boot[field]), field)
+                .toBe(JSON.stringify(latch.seam[field]));
+        }
+    });
+
+    it('⛔ an rng field of 0 is UNDECLARED and emits nothing', () => {
+        // `botStart` gates all three writes on a non-zero (Bot.as:1689-1698),
+        // so a 0 inherits the page's stream and must not read as a value.
+        const tape = parseTape({
+            tape_version: TAPE_VERSION, game: 'seedling', noclip: false,
+            noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
+            pins: [], save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: { seed: 0, split: false, cosmetic: 0, fp: 0 },
+            boot: { level: 0, x: 80, y: 128 }, tick_count: 1, inputs: [],
+        });
+        const boot = seamBootFields(tape);
+        expect(Object.prototype.hasOwnProperty.call(boot, 'rng.gameplay')).toBe(false);
+        expect(Object.prototype.hasOwnProperty.call(boot, 'rng.cosmetic')).toBe(false);
+        expect(Object.prototype.hasOwnProperty.call(boot, 'fp.seed')).toBe(false);
+        // `split` is a BOOLEAN with no "undeclared" value, so it is always carried.
+        expect(boot['static.Rng.split']).toBe(false);
+    });
+
+    it('⛔ MUTATION: a PARTIAL item declaration leaves the derived slot array out', () => {
+        // `inventorySlotsFor` reads six flags and treats a missing one as
+        // "not held" — a silent wrong answer in the one row whose nature is
+        // "reproduced as a consequence of declared rows".
+        const latch = realisticLatch();
+        const blocks = segmentBootFromLatch(latch);
+        delete blocks.seam.items.hasWand;
+        const tape = parseTape({
+            tape_version: TAPE_VERSION, game: 'seedling', noclip: false,
+            noDamage: false, noHazards: [], grants: [], equips: [],
+            tick_count: 1, inputs: [], ...blocks,
+        });
+        const boot = seamBootFields(tape);
+        expect(Object.prototype.hasOwnProperty.call(boot, 'static.Game.inventory'))
+            .toBe(false);
+    });
+
+    it('index LISTS become the latch\'s positional shapes', () => {
+        const latch = realisticLatch({
+            'save.hasKey': [false, true, false, false, true],
+            'save.hasTotemPart': [true, false, false, false, false],
+            'save.hasSealPart': [9, ...Array.from({ length: 15 }, () => -1)],
+        });
+        const boot = seamBootFields(segmentTapeFor(latch));
+        expect(boot['save.hasKey']).toEqual([false, true, false, false, true]);
+        expect(boot['save.hasTotemPart']).toEqual([true, false, false, false, false]);
+        expect(boot['save.hasSealPart'][0]).toBe(9);
+        expect(boot['save.hasSealPart'].slice(1).every((v) => v === -1)).toBe(true);
+    });
+});
+
+describe('segmentBootFromLatch — the inverse, and what it REFUSES', () => {
+    it('a partial latch is never a boot state (trap 111)', () => {
+        const l = realisticLatch();
+        expect(() => segmentBootFromLatch({ ...l, partial: true, why: 'pin fault' }))
+            .toThrow(/PARTIAL/);
+        expect(() => segmentBootFromLatch({ ...l, latched: false })).toThrow(/WHOLE latch/);
+        expect(() => segmentBootFromLatch(null)).toThrow(/no envelope at all/);
+    });
+
+    it('⛔ a latched value no tape can DECLARE is refused BY NAME', () => {
+        expect(() => segmentBootFromLatch(realisticLatch({ 'save.hitsMax': 0 })))
+            .toThrow(/hits_max/);
+        expect(() => segmentBootFromLatch(realisticLatch({ 'save.time': 0 })))
+            .toThrow(/time/);
+        expect(() => segmentBootFromLatch(realisticLatch({ 'save.grassCut': 10000 })))
+            .toThrow(/grass_cut/);
+        expect(() => segmentBootFromLatch(realisticLatch({ 'static.Game.menuState': 1 })))
+            .toThrow(/menu_state/);
+        expect(() => segmentBootFromLatch(realisticLatch({ 'rng.gameplay': 0 })))
+            .toThrow(/inherit the page/);
+    });
+
+    it('⛔ a NON-COMPACT seal log is a state the game cannot reach', () => {
+        const seals = Array.from({ length: 16 }, () => -1);
+        seals[0] = 3; seals[2] = 5;   // a filled slot AFTER an empty one
+        expect(() => segmentBootFromLatch(realisticLatch({ 'save.hasSealPart': seals })))
+            .toThrow(/NOT COMPACT/);
+    });
+
+    it('⛔ a music index with no set is half a rejection loop\'s state', () => {
+        expect(() => segmentBootFromLatch(realisticLatch({
+            'static.Music.currentSet': '', 'static.Music.currentIndex': 2,
+        }))).toThrow(/half\s+a state/);
+    });
+
+    it('a signature field the latch omits is named, not defaulted', () => {
+        const l = realisticLatch();
+        delete l.seam['save.grassCut'];
+        expect(() => segmentBootFromLatch(l)).toThrow(/save\.grassCut/);
+    });
+});
+
+describe('seamFindings — derived per field per seam', () => {
+    it('emits one row per signature field per seam, plus the completeness row', () => {
+        const f = seamFindings([{ name: 'S1->S2', exit: {}, boot: {} }]);
+        expect(f.length).toBe(SEAM_SIGNATURE.length + 1);
+    });
+
+    it('⛓ A REAL SEAM IS GREEN: latch -> authored tape -> boot map', () => {
+        const latch = realisticLatch();
+        const f = seamFindings([{
+            name: 'seg1->seg2',
+            exit: latch.seam,
+            boot: seamBootFields(segmentTapeFor(latch)),
+        }]);
+        const reds = f.filter((r) => !r.ok);
+        expect(reds.map((r) => `${r.name} [${r.detail}]`)).toEqual([]);
+    });
+
+    it('⛔⛔ MUTATION: perturbing ANY one field turns exactly that row red', () => {
+        const base = realisticLatch();
+        const bootBase = seamBootFields(segmentTapeFor(base));
+        // Every field the seam actually COMPARES — the equality rows. The
+        // invariant rows are perturbed in their own case below, because
+        // they are not equality rows and a boot cannot declare them.
+        const targets = Object.keys(bootBase);
+        expect(targets.length).toBeGreaterThan(30);
+        for (const target of targets) {
+            const boot = { ...bootBase };
+            boot[target] = Array.isArray(bootBase[target]) ? ['PERTURBED'] : 'PERTURBED';
+            const f = seamFindings([{ name: 'S', exit: base.seam, boot }]);
+            const reds = f.filter((x) => !x.ok);
+            expect(reds.map((r) => r.name), `perturbing ${target}`).toEqual([`S: ${target}`]);
+        }
+    });
+
+    it('⛔ MUTATION: perturbing an INVARIANT turns exactly that row red', () => {
+        const invariantFields = SEAM_SIGNATURE
+            .filter((r) => SEAM_CHANNELS[r.field] === 'invariant').map((r) => r.field);
+        expect(invariantFields.length).toBe(6);
+        const notCalm = {
+            'static.Game.shake': 3,
+            'static.Game.menu': true,
+            'static.Game.freezeObjects': true,
+            'static.Game.talking': true,
+            'arrival.blackCover': 0.5,
+            'arrival.velocity': { vx: 1.5, vy: 0, hits: 0, hits_timer: 0 },
+        };
+        for (const field of invariantFields) {
+            const latch = realisticLatch({ [field]: notCalm[field] });
+            const f = seamFindings([{
+                name: 'S', exit: latch.seam, boot: seamBootFields(segmentTapeFor(latch)),
+            }]);
+            const reds = f.filter((x) => !x.ok);
+            expect(reds.map((r) => r.name), `perturbing ${field}`).toEqual([`S: ${field}`]);
+        }
+    });
+
+    it('⛔ an invariant row the latch does not carry has NO boot side to fall back on', () => {
+        const latch = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(latch));
+        const exit = { ...latch.seam };
+        delete exit['static.Game.shake'];
+        const f = seamFindings([{ name: 'S', exit, boot }]);
+        const row = f.find((x) => x.name === 'S: static.Game.shake');
+        expect(row.ok).toBe(false);
+        expect(row.detail).toMatch(/no boot side/);
     });
 
     it('⛔ MUTATION: a field missing on either side reads UNCLAIMED, never green', () => {
-        const exit = {}; const boot = {};
-        for (const r of comparableRows) { exit[r.field] = 1; boot[r.field] = 1; }
+        const latch = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(latch));
+        const exit = { ...latch.seam };
         delete exit['save.hasSword'];
         const f = seamFindings([{ name: 'S1->S2', exit, boot }]);
         const row = f.find((x) => x.name === 'S1->S2: save.hasSword');
@@ -115,21 +377,24 @@ describe('seamFindings — derived per field per seam', () => {
         expect(row.detail).toMatch(/exit latch does not carry it/);
     });
 
-    it('⛔ MUTATION: perturbing ANY one field turns exactly that row red', () => {
-        for (const target of comparableRows) {
-            const exit = {}; const boot = {};
-            for (const r of comparableRows) { exit[r.field] = 'v'; boot[r.field] = 'v'; }
-            boot[target.field] = 'PERTURBED';
-            const f = seamFindings([{ name: 'S', exit, boot }]);
-            const reds = f.filter((x) => !x.ok);
-            expect(reds.length, `perturbing ${target.field}`).toBe(1);
-            expect(reds[0].name).toBe(`S: ${target.field}`);
-        }
+    it('⛔⛔ KEY ORDER IS NOT STATE — two runtimes serialize objects differently', () => {
+        // The exit side is serialized by AVM2 and the boot side by node.
+        // A `JSON.stringify` comparison would call these two states unequal.
+        const latch = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(latch));
+        const exit = {
+            ...latch.seam,
+            'static.Bot.pins': { dead_frames: true, sound: false },
+            'save.levelPersistence': [{ tag: 4, level: 10 }, { tag: 1, level: 20 }],
+        };
+        const f = seamFindings([{ name: 'S', exit, boot }]);
+        expect(f.filter((r) => !r.ok).map((r) => r.name)).toEqual([]);
     });
 
     it('⛔ MUTATION: no seams at all is NOT green', () => {
         const f = seamFindings([]);
         expect(f.every((r) => r.ok)).toBe(false);
+        expect(f[f.length - 1].detail).toMatch(/ZERO SEAMS/);
     });
 });
 
@@ -159,10 +424,19 @@ describe('R7_GOAL_LEDGER — the census', () => {
 });
 
 describe('r7GoalFindings — trap 119\'s construction, asserted', () => {
+    /**
+     * The DERIVED total. Two families map over the same ledger — every row
+     * once, plus the rows that declare a `durableWitness` a second time —
+     * and one completeness row. Counted from the ledger, never typed: a
+     * hard-coded total is the shape that rots the first time a row is added.
+     */
+    const durableRows = () => R7_GOAL_LEDGER.filter((r) => r.durableWitness).length;
+    const expectedRows = () => R7_GOAL_LEDGER.length + durableRows() + 1;
+
     it('⛔ an empty earner map is 0/N and every row says UNCLAIMED', () => {
         const f = r7GoalFindings({}, []);
         expect(f.filter((r) => r.ok).length).toBe(0);
-        expect(f.length).toBe(R7_GOAL_LEDGER.length + 1);
+        expect(f.length).toBe(expectedRows());
         for (const r of f.slice(0, -1)) expect(r.detail).toMatch(/UNCLAIMED/);
     });
 
@@ -175,7 +449,35 @@ describe('r7GoalFindings — trap 119\'s construction, asserted', () => {
             expect(f.some((x) => x.name.startsWith(row.id)), `${row.id} unreported`).toBe(true);
         }
         // and nothing else does
-        expect(f.length - 1).toBe(R7_GOAL_LEDGER.length);
+        expect(f.length - 1).toBe(R7_GOAL_LEDGER.length + durableRows());
+    });
+
+    it('⛓ THE SHIELD\'S DURABLE WITNESS IS `rockSet`, NOT `beam` (§9.6 item 5)', () => {
+        const shield = R7_GOAL_LEDGER.find((r) => r.id === 'shield@L20');
+        expect(shield.durableWitness).toBe('save.rockSet');
+        expect(shield.durableWhy).toMatch(/beam/);
+        // ⚠ It is its OWN row, not a condition on the earned row: `rockSet`
+        // flips in L0 and the shield is in L20, so the two are very likely
+        // different segments and folding them would report an honest chain
+        // as unearned.
+        const f = r7GoalFindings(
+            { 'shield@L20': { segment: 'seg-d2', witness: 'save.hasShield 0 -> 1' } },
+            ['seg-d2'],
+        );
+        const earned = f.find((x) => x.name.startsWith('shield@L20 (pickup)'));
+        const durable = f.find((x) => x.name.includes('DURABLE'));
+        expect(earned.ok).toBe(true);
+        expect(durable.ok).toBe(false);
+        expect(durable.detail).toMatch(/UNCLAIMED/);
+
+        const both = r7GoalFindings({
+            'shield@L20': {
+                segment: 'seg-d2',
+                witness: 'save.hasShield 0 -> 1',
+                durable: { segment: 'seg-ow', witness: 'save.rockSet 0 -> 1' },
+            },
+        }, ['seg-d2', 'seg-ow']);
+        expect(both.find((x) => x.name.includes('DURABLE')).ok).toBe(true);
     });
 
     it('a row earned by a segment NOT in the roster stays UNCLAIMED', () => {

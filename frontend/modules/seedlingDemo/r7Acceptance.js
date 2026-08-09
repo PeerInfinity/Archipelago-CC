@@ -29,6 +29,25 @@
  */
 
 import { fixtureNames } from './fixtures/index.js';
+/**
+ * ⚠⚠ EVERY BINDING BELOW IS READ INSIDE A FUNCTION AND NEVER AT MODULE
+ * SCOPE, and that is not a style choice — it is what keeps the cycle this
+ * module already sits in from becoming a TDZ crash.
+ *
+ * `tapeFormat` imports `SEAM_BOOT_SPEC` from HERE (trap 86: the v8 key list
+ * must come from the signature's owner, never be retyped), and it defuses
+ * that by reading it inside `parseSeam`. This import closes the loop the
+ * other way. When `tapeFormat` is the entry point the order is
+ * `tapeFormat -> r7Acceptance -> fixtures/index -> tapeFormat (partial)`,
+ * so these five bindings are in their temporal dead zone while this
+ * module's body evaluates. A module-scope `SAVE_SLOTS.keys` would throw —
+ * which is why the array arities below come from `SEAM_SIGNATURE`'s own
+ * `arity` fields instead, and why nothing here is destructured eagerly.
+ */
+// eslint-disable-next-line import/no-cycle
+import {
+    PIN_NAMES, inventorySlotsFor, seamFieldsFromBlock, seamToBlock,
+} from './tapeFormat.js';
 
 export class R7AcceptanceError extends Error {
     constructor(message) {
@@ -628,53 +647,364 @@ export function seamRngPosture(renderSites = [], consumers = []) {
 }
 
 /**
+ * ⛔⛔⛔ THE BOOT SIDE — a WHOLE TAPE, all eight blocks, as a signature
+ * field map. R7 slice 2.
+ *
+ * `seamLatchFindings` reads the EXIT side (one `botSeam()` envelope, keyed
+ * by `SEAM_SIGNATURE[].field` because `Bot.latchSeam` emits those strings).
+ * This is the other half, and until it existed `seamFindings` had nothing
+ * to compare a latch AGAINST — a seam checker with one side is a checker
+ * that cannot fail.
+ *
+ * ⛔ THE MAP IS DRIVEN BY `SEAM_CHANNELS`, NOT BY A SECOND LIST. Every row
+ * routes to exactly one tape block and the routing table already exists and
+ * is already asserted total (`assertSeamChannelsTotal`). So this function
+ * is a switch over CHANNELS, and a signature row added tomorrow arrives
+ * here with its channel already decided — the same construction trap 119
+ * forces on the findings functions, applied to the wire format.
+ *
+ * The eight channels, and what each contributes:
+ *
+ *   boot        `tape.boot` {level, x, y}
+ *   save        `tape.save` — INDEX LISTS on the wire, POSITIONAL ARRAYS in
+ *               the latch, so this is where the two shapes meet
+ *   persistence `tape.persistence` — the CLEAR SET, which is the whole
+ *               state (`Main.startSave` fills the array all-true)
+ *   pins        `tape.pins` — a NAME LIST on the wire, a boolean record in
+ *               the latch
+ *   rng         `tape.rng` — ⚠ 0 means UNDECLARED for three of its four
+ *               fields, so a 0 must emit NOTHING here rather than a 0
+ *   seam        `tape.seam` — the v8 block, via `seamFieldsFromBlock`
+ *   derived     computed FROM declared rows, never declared itself
+ *   invariant   NOT on the boot side at all — see `seamFindings`
+ *   excluded    never compared
+ *
+ * @param {object} tape a PARSED tape (`parseTape`), any version 1..8
+ * @returns {object} `SEAM_SIGNATURE[].field` -> the value this tape declares
+ */
+export function seamBootFields(tape) {
+    if (!tape) return {};
+    const arityOf = (field) => SEAM_SIGNATURE.find((r) => r.field === field)?.arity;
+    const out = {};
+
+    // ── boot ──────────────────────────────────────────────────────────
+    out.level = tape.boot.level;
+    out.playerPositionX = tape.boot.x;
+    out.playerPositionY = tape.boot.y;
+
+    // ── save: index LISTS become positional arrays ────────────────────
+    // ⚠ The two shapes are not a formatting difference. `Player.hasKey(i)`
+    // and `Player.hasTotemPart(i)` are BOOLEANS per index, which is what the
+    // latch pushes; the tape carries the SET of indices it presents. And
+    // `hasSealPart` is neither — it is an ordered INT LOG whose empty slot
+    // is -1 (`SealController.getSealPart` fills the first -1 slot), so the
+    // tape's list is a PREFIX and the rest of the array is sentinel.
+    const asBooleans = (list, n) => Array.from({ length: n }, (_, i) => list.includes(i));
+    out['save.hasKey'] = asBooleans(tape.save.keys, arityOf('save.hasKey'));
+    out['save.hasTotemPart'] = asBooleans(tape.save.totem_parts,
+        arityOf('save.hasTotemPart'));
+    const seals = Array.from({ length: arityOf('save.hasSealPart') }, () => -1);
+    tape.save.seal_parts.forEach((identity, slot) => { seals[slot] = identity; });
+    out['save.hasSealPart'] = seals;
+
+    // ── persistence: the CLEAR SET, note dropped ──────────────────────
+    // `Bot.persistenceClearedAll()` emits `{level, tag}` in (level, tag)
+    // order and the parser sorts the tape's clears the same way, so the two
+    // lists are directly comparable. `note` is authoring documentation and
+    // the game has no field for it.
+    out['save.levelPersistence'] = tape.persistence
+        .map((c) => ({ level: c.level, tag: c.tag }));
+
+    // ── pins: a name LIST becomes the latch's boolean record ──────────
+    out['static.Bot.pins'] = Object.fromEntries(
+        PIN_NAMES.map((n) => [n, tape.pins.includes(n)]));
+
+    // ── rng: ⛔ 0 IS "UNDECLARED", AND EMITTING IT WOULD BE A LIE ─────
+    // `botStart` gates all three writes on a non-zero (`Bot.as:1689-1698`),
+    // so a tape carrying `seed: 0` inherits whatever the page had. A boot
+    // map that reported 0 would compare EQUAL to a latch that happened to
+    // be 0 and UNEQUAL otherwise — in both cases answering a question the
+    // tape never asked. Absent means UNCLAIMED, which is the truth.
+    out['static.Rng.split'] = tape.rng.split;
+    if (tape.rng.seed !== 0) out['rng.gameplay'] = tape.rng.seed;
+    if (tape.rng.cosmetic !== 0) out['rng.cosmetic'] = tape.rng.cosmetic;
+    if (tape.rng.fp !== 0) out['fp.seed'] = tape.rng.fp;
+
+    // ── seam: the v8 block ────────────────────────────────────────────
+    Object.assign(out, seamFieldsFromBlock(tape.seam));
+
+    // ── derived: the inventory SLOT ARRAY ─────────────────────────────
+    // ⛔ ALL SIX FLAGS OR NOTHING. `inventorySlotsFor` reads six item flags
+    // and treats a missing one as "not held", so a partial declaration
+    // would produce a SHORTER array that compares unequal for a reason that
+    // is not a seam defect — a silent wrong answer in the one row whose
+    // whole nature is "reproduced as a consequence of declared rows".
+    const slotItems = ['hasSword', 'hasFire', 'hasWand', 'hasSpear',
+        'hasGhostSword', 'hasFireWand'];
+    if (slotItems.every((k) => out[`save.${k}`] !== undefined)) {
+        out['static.Game.inventory'] = inventorySlotsFor(
+            Object.fromEntries(slotItems.map((k) => [k, out[`save.${k}`]])));
+    }
+    return out;
+}
+
+/**
+ * ⛔ STRUCTURAL EQUALITY, KEY ORDER IGNORED — and it is not a nicety.
+ *
+ * Four signature rows carry OBJECTS across the wire: `static.Bot.pins`
+ * (`{sound, dead_frames}`), `arrival.velocity`, and `save.levelPersistence`
+ * (an array of `{level, tag}`). The exit side of every one of them is
+ * serialized by the AVM2 runtime and the boot side by node, and
+ * `JSON.stringify` on two objects with the same contents in a different
+ * insertion order returns two different strings. Comparing those strings
+ * compares SERIALIZERS, not states
+ * ([[feedback_stringify_equality_across_runtimes]]) — and the first version
+ * of `seamFindings` did exactly that, on a path nothing had ever run.
+ */
+function seamValuesEqual(a, b) {
+    if (a === b) return true;
+    if (typeof a !== typeof b) return false;
+    if (a === null || b === null || typeof a !== 'object') return false;
+    if (Array.isArray(a) !== Array.isArray(b)) return false;
+    if (Array.isArray(a)) {
+        return a.length === b.length && a.every((v, i) => seamValuesEqual(v, b[i]));
+    }
+    const ka = Object.keys(a).sort();
+    const kb = Object.keys(b).sort();
+    return ka.length === kb.length && ka.every((k, i) => k === kb[i])
+        && ka.every((k) => seamValuesEqual(a[k], b[k]));
+}
+
+/**
  * Per-seam findings, DERIVED by mapping the signature over every seam.
  *
- * A seam is `{name, exit, boot}` where `exit` and `boot` are field maps
- * (`SEAM_SIGNATURE[].field` -> value). A field missing on EITHER side is
- * UNCLAIMED — never "pending", never skipped. A partial latch is exactly
- * the case trap 111 predicts and the case §5's first bullet forbids
- * shipping.
+ * A seam is `{name, exit, boot}` where `exit` is a latch's field map
+ * (`seamLatchFindings`' envelope `.seam`) and `boot` is the successor
+ * tape's (`seamBootFields`). A field missing on EITHER side is UNCLAIMED —
+ * never "pending", never skipped. A partial latch is exactly the case trap
+ * 111 predicts and the case §5's first bullet forbids shipping.
+ *
+ * ⛔⛔ THE INVARIANT ROWS ARE NOT EQUALITY ROWS, AND SLICE 2 IS WHERE THAT
+ * STOPPED BEING A COMMENT. Six rows route to the `invariant` channel
+ * (`SEAM_CHANNELS`) precisely because a tape CANNOT declare them: `shake`,
+ * `menu`, `freezeObjects`, `talking`, the spent fade and the arrival
+ * velocity are properties of the state a boot PRODUCES, not of the
+ * declaration that produces it. Demanding `exit == boot` on them would have
+ * made every real seam carry six permanently unclaimed rows — a checker
+ * that is red for a reason that is not a defect is a checker people learn
+ * to ignore. So they are asserted against the GAME's own latched numbers,
+ * with the same predicates `seamLatchFindings` uses, and the boot side is
+ * reported as what it is: not declarable.
  *
  * @param {Array} seams
  */
 export function seamFindings(seams = []) {
     const out = [];
     for (const seam of seams) {
+        const exit = seam.exit ?? {};
+        const boot = seam.boot ?? {};
         for (const row of SEAM_SIGNATURE) {
-            if (row.comparable === 'excluded') continue;
-            const have = Object.prototype.hasOwnProperty.bind(seam.exit ?? {});
-            const haveB = Object.prototype.hasOwnProperty.bind(seam.boot ?? {});
-            const inExit = have(row.field);
-            const inBoot = haveB(row.field);
+            const name = `${seam.name}: ${row.field}`;
+            if (row.comparable === 'excluded') {
+                out.push({ name, ok: true, detail: `EXCLUDED — ${row.why.split('.')[0]}` });
+                continue;
+            }
+            const inExit = Object.prototype.hasOwnProperty.call(exit, row.field);
+            if (SEAM_CHANNELS[row.field] === 'invariant') {
+                const inv = INVARIANT_CHECKS[row.field];
+                if (!inExit) {
+                    out.push({
+                        name,
+                        ok: false,
+                        detail: 'UNCLAIMED — the exit latch does not carry it, and an '
+                            + 'invariant row has no boot side to fall back on '
+                            + `(${row.invariant}; ${row.cite})`,
+                    });
+                    continue;
+                }
+                const verdict = inv(exit[row.field]);
+                out.push({
+                    name,
+                    ok: verdict.ok,
+                    detail: `${verdict.ok ? 'calm' : '⛔ NOT CALM'} — ${verdict.detail} `
+                        + `(asserted at the exit; a boot cannot declare it)`,
+                });
+                continue;
+            }
+            const inBoot = Object.prototype.hasOwnProperty.call(boot, row.field);
+            // ⛔⛔⛔ `declared-not-compared` IS A THIRD CLASS, AND `fp.seed`
+            // EARNS IT ON A FACT ABOUT THE PAGE, NOT ABOUT THE SEAM.
+            //
+            // FlashPunk's LCG is seeded ONCE PER PAGE from a single
+            // `Math.random()` (`Engine.as:50`, `FP.as:401-413`) and never
+            // reset. The differential replays every segment in its OWN
+            // page, so segment N's latched `fp.seed` and segment N+1's are
+            // two different random walks from two different random starts —
+            // an equality there would be red on every run of every chain,
+            // forever, for a reason that is not a defect.
+            //
+            // It is still REQUIRED ON BOTH SIDES. Segment N+1 declaring it
+            // is what makes segment N+1 itself reproducible (the write arm
+            // works: `FP.randomSeed`'s setter is the half of that property
+            // that does), and a row nobody declares is a row nobody can
+            // reason about. So: both sides or UNCLAIMED, and no comparison.
+            // ⛓ Which costs nothing behavioural — slice 0 §8.2 item 3 swept
+            // every `FP.choose`/`FP.rand` consumer in this game and all of
+            // them are render-only.
+            if (row.comparable === 'declared-not-compared' && inExit && inBoot) {
+                out.push({
+                    name,
+                    ok: true,
+                    detail: `DECLARED, NOT COMPARED — exit ${JSON.stringify(exit[row.field])}`
+                        + `, boot ${JSON.stringify(boot[row.field])}. FlashPunk's LCG is `
+                        + 'seeded once per PAGE from `Math.random()` and each segment '
+                        + 'replays in its own page, so the two are different random walks '
+                        + 'and no consumer in this game reads either.',
+                });
+                continue;
+            }
             if (!inExit || !inBoot) {
                 out.push({
-                    name: `${seam.name}: ${row.field}`,
+                    name,
                     ok: false,
                     detail: `UNCLAIMED — ${!inExit && !inBoot ? 'neither side carries it'
                         : !inExit ? 'the exit latch does not carry it'
                             : 'the boot block does not declare it'}`
-                        + ` (${row.comparable}; ${row.cite})`,
+                        + ` (${row.comparable}, channel ${SEAM_CHANNELS[row.field]}; `
+                        + `${row.cite})`,
                 });
                 continue;
             }
-            const a = JSON.stringify(seam.exit[row.field]);
-            const b = JSON.stringify(seam.boot[row.field]);
+            const same = seamValuesEqual(exit[row.field], boot[row.field]);
             out.push({
-                name: `${seam.name}: ${row.field}`,
-                ok: a === b,
-                detail: a === b ? `${row.comparable}: ${a}` : `exit ${a} vs boot ${b}`,
+                name,
+                ok: same,
+                detail: same
+                    ? `${row.comparable}: ${JSON.stringify(exit[row.field])}`
+                    : `exit ${JSON.stringify(exit[row.field])} vs boot `
+                        + `${JSON.stringify(boot[row.field])}`,
             });
         }
     }
     out.push({
         name: 'every seam is checked over the whole signature',
         ok: seams.length > 0,
-        detail: `${seams.length} seam(s) x `
-            + `${SEAM_SIGNATURE.filter((r) => r.comparable !== 'excluded').length} `
-            + `comparable field(s) = ${out.length - 0} row(s)`,
+        detail: seams.length === 0
+            ? '⛔ ZERO SEAMS — a chain with no seam is not a chain that passed'
+            : `${seams.length} seam(s) x ${SEAM_SIGNATURE.length} signature row(s) `
+                + `= ${out.length} row(s)`,
     });
     return out;
+}
+
+/**
+ * ⛔⛔⛔ THE INVERSE — a latch back into the tape blocks that reproduce it.
+ * This is the segment-authoring primitive the whole playthrough runs on.
+ *
+ * `seamBootFields` answers "what does this tape declare"; this answers
+ * "what tape declares this state". It is driven by `SEAM_BOOT_SPEC` and
+ * `SEAM_CHANNELS`, so neither key space is retyped and a signature row
+ * added tomorrow either gets carried or THROWS by name.
+ *
+ * ⛔ IT REFUSES RATHER THAN ROUNDS. Three of the game's own getters have a
+ * falsy arm (`hitsMax`, `time`, and the two slots via `Inventory`), which
+ * makes 0 unrepresentable for two of them; `grassCut` at 10000 reaches
+ * `unlockMedal`, outside the game; `menuState` can only be 0. A latched
+ * state that violates any of those is a state no tape can declare, and
+ * saying so by name is the difference between a chain with a hole in it and
+ * a chain that silently drops a field.
+ *
+ * @param {object} envelope a `botSeam()` envelope (`{latched, partial, seam}`)
+ * @returns {object} `{boot, save, persistence, pins, rng, seam}` — tape blocks
+ */
+export function segmentBootFromLatch(envelope) {
+    if (!envelope || !envelope.latched || !envelope.seam) {
+        throw new R7AcceptanceError(
+            'segmentBootFromLatch needs a WHOLE latch. A segment booted from a '
+            + `partial one would inherit a state nobody measured (${envelope
+                ? `latched=${envelope.latched} partial=${envelope.partial} `
+                    + `why=${envelope.why ?? ''}` : 'no envelope at all'}).`);
+    }
+    if (envelope.partial) {
+        throw new R7AcceptanceError(
+            '⛔ THE LATCH IS PARTIAL — a failure disarm latched what it could '
+            + `(${envelope.why || 'no reason given'}). A partial latch is an `
+            + 'UNCLAIMED seam (trap 111), never a boot state.');
+    }
+    const s = envelope.seam;
+    const need = (field) => {
+        if (!Object.prototype.hasOwnProperty.call(s, field)) {
+            throw new R7AcceptanceError(
+                `the latch does not carry \`${field}\`, which channel `
+                + `${SEAM_CHANNELS[field]} needs to author a boot block`);
+        }
+        return s[field];
+    };
+    const refuse = (why) => { throw new R7AcceptanceError(why); };
+
+    const boot = {
+        level: need('level'), x: need('playerPositionX'), y: need('playerPositionY'),
+    };
+    const indicesOf = (arr) => arr.flatMap((v, i) => (v ? [i] : []));
+    // ⚠ The seal log is a PREFIX, and it is read as one: everything up to
+    // the first -1. A filled slot after an empty one is a state
+    // `SealController.getSealPart` cannot produce (it fills the first -1),
+    // so it is a defect in the latch and not a tape to author.
+    const sealsRaw = need('save.hasSealPart');
+    const firstEmpty = sealsRaw.indexOf(-1);
+    const sealPrefix = firstEmpty === -1 ? sealsRaw.slice() : sealsRaw.slice(0, firstEmpty);
+    if (firstEmpty !== -1 && sealsRaw.slice(firstEmpty).some((v) => v !== -1)) {
+        refuse(`⛔ save.hasSealPart is NOT COMPACT: ${JSON.stringify(sealsRaw)}. `
+            + '`SealController.getSealPart` fills the FIRST -1 slot, so a filled slot '
+            + 'after an empty one is a state the game cannot reach.');
+    }
+    const save = {
+        totem_parts: indicesOf(need('save.hasTotemPart')),
+        keys: indicesOf(need('save.hasKey')),
+        seal_parts: sealPrefix,
+    };
+    const persistence = need('save.levelPersistence')
+        .map((c) => ({ level: c.level, tag: c.tag }));
+    const pinsRecord = need('static.Bot.pins');
+    const pins = PIN_NAMES.filter((n) => pinsRecord[n] === true);
+    const rng = {
+        seed: need('rng.gameplay'),
+        split: need('static.Rng.split'),
+        cosmetic: need('rng.cosmetic'),
+        fp: need('fp.seed'),
+    };
+    if (rng.seed === 0) {
+        refuse('⛔ the latched `rng.gameplay` is 0, which is the tape format\'s '
+            + '"inherit the page\'s stream" value — a segment declaring it would boot '
+            + 'an UNDECLARED stream while claiming to be contiguous.');
+    }
+
+    // ── the v8 block, keyed by SEAM_BOOT_SPEC, refusing what it cannot say
+    const flat = {};
+    for (const spec of SEAM_BOOT_SPEC) {
+        const v = need(spec.field);
+        if (spec.zeroMeansUndeclared && v === 0) {
+            refuse(`⛔ the latched \`${spec.field}\` is 0 and \`${spec.key}\` cannot `
+                + `carry a 0 — ${spec.why}`);
+        }
+        if ((spec.type === 'int' || spec.type === 'number') && spec.min !== undefined
+            && (v < spec.min || (spec.max !== undefined && v > spec.max))) {
+            refuse(`⛔ the latched \`${spec.field}\` is ${v}, outside `
+                + `\`${spec.key}\`'s ${spec.min}..${spec.max ?? '∞'} — ${spec.why}`);
+        }
+        flat[spec.key] = Array.isArray(v) ? [...v] : v;
+    }
+    // ⛔ THE ONE RELATION NO SINGLE SPEC ROW CAN HOLD, refused HERE as well
+    // as in `parseSeam`, because the message a segment author needs names
+    // the LATCH and not the tape: `Music.playSound`'s do-while reads both
+    // `currentIndex` and `currentSet`, so an index without a set is half a
+    // rejection loop's state.
+    if (flat['music.index'] !== -1 && !flat['music.set']) {
+        refuse(`⛔ the latch carries music index ${flat['music.index']} with set `
+            + `${JSON.stringify(flat['music.set'])} — an index without its set is half `
+            + 'a state, and `Music.playSound`\'s rejection loop reads both.');
+    }
+    return { boot, save, persistence, pins, rng, seam: seamToBlock(flat) };
 }
 
 /**
@@ -845,7 +1175,28 @@ const INVARIANT_CHECKS = Object.freeze({
 export const R7_GOAL_LEDGER = Object.freeze([
     ...[
         ['sword', 10, 'hasSword', 'Dungeon1/8.oel:59', 'D1 walk'],
-        ['shield', 20, 'hasShield', 'Dungeon2/7.oel:145', 'ShieldBoss -> bosslock key 0'],
+        // ⛔⛔ THE SHIELD IS THE ONE ROW WITH A SECOND, DURABLE WITNESS, and
+        // R7 slice 1 had to be told so by the game. Slice 0 (§8.2 item 1)
+        // called `Main.beam` "an assertable witness that the shield was
+        // EARNED". It is not a witness at all — it is a ONE-SHOT TRIGGER:
+        // `Moonrock.update` runs `if (beam && canBeam)` for `beamTimeMax =
+        // FPS * 5` frames, plays "Light", then writes `beam = false;
+        // trigger = true` (`Moonrock.as:88-106`), and the fall sets
+        // `rockSet`. Measured in BOTH arms of the v8 probe: a window that
+        // boots `beam: true` in L0 ends with it FALSE.
+        //
+        // ⇒ `save.rockSet` is the durable witness, and it is the same field
+        // that makes the moonrock a 48x48 Solid — one field doing the goal
+        // ledger's job and rules v1's routing job at once (§9.6 item 5).
+        ['shield', 20, 'hasShield', 'Dungeon2/7.oel:145', 'ShieldBoss -> bosslock key 0',
+            {
+                durableWitness: 'save.rockSet',
+                durableCite: 'Pickups/Shield.as:46 -> Scenery/Moonrock.as:88-118',
+                durableWhy: '`Shield.removed()` sets `Moonrock.beam`; the moonrock '
+                    + 'consumes it and writes `rockSet`, which SURVIVES. `beam` does '
+                    + 'not, so a chain that witnessed `beam` would witness a value '
+                    + 'that is false again by the next seam.',
+            }],
         ['wand', 43, 'hasWand', 'Dungeon4/Boss.oel:238', 'all 5 totem parts + BossTotem'],
         ['firewand', 109, 'hasFireWand', 'Dungeon8/11.oel:108', 'D8 depth (L99 kill-lock)'],
         ['conch', 49, 'canSwim', 'Dungeon5/4.oel:53', 'D5 walk'],
@@ -856,8 +1207,9 @@ export const R7_GOAL_LEDGER = Object.freeze([
         ['darksuit', 79, 'hasDarkSuit', 'Dungeon7/8.oel:159', 'D7 depth'],
         ['torchpickup', 30, 'hasTorch', 'Dungeon3/9.oel:491', 'D3, bosslock key 1'],
         ['health', 68, 'hitsMax 3->4', 'Dungeon6/9.oel:39', 'bosslock key 4 + magicallock, stacked'],
-    ].map(([tag, level, flag, cite, gate]) => Object.freeze({
+    ].map(([tag, level, flag, cite, gate, extra]) => Object.freeze({
         id: `${tag}@L${level}`, kind: 'pickup', tag, level, flag, cite, gate,
+        ...(extra ?? {}),
     })),
     ...[[0, 19], [1, 29], [2, 40], [3, 55], [4, 67]].map(([kt, level]) => Object.freeze({
         id: `bosskey${kt}@L${level}`, kind: 'key', tag: 'bosskey', level,
@@ -942,7 +1294,44 @@ export function r7GoalFindings(earnedBy = {}, roster = fixtureNames()) {
                         : `${e.segment}: ${e.witness}`,
         };
     });
+    // ⚠ COUNTED BEFORE THE SECOND FAMILY IS APPENDED. The completeness row
+    // below asserts `claimed === R7_GOAL_LEDGER.length`, which is a claim
+    // about the EARNED rows; folding the durable-witness rows into that
+    // filter would make the total unreachable by construction — a count
+    // that can never be met reads exactly like one that is never met.
     const claimed = out.filter((r) => r.ok).length;
+
+    // ── ⛔ THE DURABLE-WITNESS ROWS, DERIVED THE SAME WAY ──────────────
+    //
+    // A second family, and it is a FILTER over the same ledger rather than
+    // a hand-written row — trap 119's construction does not get an
+    // exception for being a small family. A row that declares a
+    // `durableWitness` is a row whose primary flag is not enough: the
+    // shield's is `hasShield`, which a boot block can declare, while
+    // `rockSet` is a consequence the GAME produces and a declaration
+    // cannot fake inside the level the shield is in.
+    //
+    // ⚠ AND IT IS ITS OWN ROW, NOT A CONDITION ON THE FIRST ONE. `rockSet`
+    // flips when L0's moonrock consumes the beam, which is a different
+    // level from L20 and therefore very likely a different SEGMENT. Folding
+    // it into the shield's `ok` would make an honest chain report the
+    // shield unearned until some later segment revisited the overworld.
+    out.push(...R7_GOAL_LEDGER.filter((row) => row.durableWitness).map((row) => {
+        const e = earnedBy[row.id];
+        const d = e?.durable;
+        return {
+            name: `${row.id}: the DURABLE witness ${row.durableWitness} is observed`,
+            ok: Boolean(d?.segment) && roster.includes(d.segment) && Boolean(d.witness),
+            detail: !d
+                ? `UNCLAIMED — no segment observes ${row.durableWitness}. ${row.durableWhy}`
+                : !roster.includes(d.segment)
+                    ? `UNCLAIMED — segment ${d.segment} is not in the roster`
+                    : !d.witness
+                        ? `UNCLAIMED — segment ${d.segment} names no game-side witness`
+                        : `${d.segment}: ${d.witness} (${row.durableCite})`,
+        };
+    }));
+
     out.push({
         name: 'the goal ledger is complete',
         ok: claimed === R7_GOAL_LEDGER.length,
