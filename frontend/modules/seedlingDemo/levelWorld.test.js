@@ -26,6 +26,7 @@ import {
     CLIFFSIDE_CLASS,
     CLIFFSIDE_FRAME_MASKS,
     ENTITY_CLASSES,
+    LIVE_GEOMETRY_KEYS,
     LevelWorldError,
     MODELLED_TILE_TYPES,
     PLAYER_SOLID_TYPES,
@@ -41,8 +42,10 @@ import {
     cliffSideClassFor,
     entityRect,
     hazardDisposition,
+    isNormalizedLiveOpts,
     maskHitsBox,
     maskPlacement,
+    normalizeLiveOpts,
     rect,
     rectsOverlap,
 } from './levelWorld.js';
@@ -1752,5 +1755,134 @@ describe('⛓ R5: the nearestToPoint TIE-BREAK, transcribed', () => {
         expect(ticks.length).toBe(1678);
         expect(loadTape('r5-d5-conch').noHazards).not.toContain('ice');
         expect(ticks.some((o) => o.level === 47)).toBe(true);
+    });
+});
+
+describe('⛓ R7 slice 4: the normalised live-geometry bag, and its BRAND', () => {
+    // The debt this pays is a per-QUERY allocation on the hottest loop in
+    // the package (+9.7 % measured at R6 slice 2). The fix is a brand, so
+    // the normalise happens once per TICK where the callers already hoist
+    // the bag — and a brand is only as good as what it refuses to believe.
+    const blockWorld = () => buildLevelWorld({
+        level: 999,
+        width: 20,
+        height: 20,
+        layers: [],
+        entities: [
+            { type: 'pushableblockspear', x: 176, y: 128, attrs: {} },
+            { type: 'rock3', x: 96, y: 96, attrs: {} },
+        ],
+    });
+
+    it('covers every LIVE_GEOMETRY_KEYS name, and claims nothing else but the tick fact', () => {
+        // ⚠ THE ASSERTION §11.7 SAID ALREADY EXISTED, AND DID NOT. Nothing
+        // in this tree compared the two lists before this test: the only
+        // reader of `LIVE_GEOMETRY_KEYS` outside `playerPhysicsV2` was one
+        // `toContain('finalDoors')`. Four families have been silently
+        // dropped by a hand-written bag in this package's history, so the
+        // coverage is asserted BOTH WAYS rather than counted once.
+        const out = normalizeLiveOpts({});
+        for (const k of LIVE_GEOMETRY_KEYS) {
+            expect(Object.keys(out), `normalizeLiveOpts drops "${k}"`).toContain(k);
+        }
+        // `beforeTypeFlip` is a fact about the TICK, not about geometry —
+        // it rides along so a normalised bag is a complete substitute for
+        // the caller's own, and it is the ONLY such passenger.
+        expect(Object.keys(out).filter((k) => !LIVE_GEOMETRY_KEYS.includes(k)))
+            .toEqual(['beforeTypeFlip']);
+    });
+
+    it('an absent family reads null, never undefined — which is the whole point', () => {
+        const out = normalizeLiveOpts({});
+        for (const k of LIVE_GEOMETRY_KEYS) expect(out[k]).toBeNull();
+        expect(out.beforeTypeFlip).toBe(false);
+        // ...and a present one survives by identity, not by copy.
+        const live = new Map([['x', { rect: rect(0, 0, 16, 16), removed: false }]]);
+        expect(normalizeLiveOpts({ pushables: live }).pushables).toBe(live);
+    });
+
+    it('SKIPS a bag it already filled — by identity, which is the saving', () => {
+        const once = normalizeLiveOpts({ beforeTypeFlip: true });
+        expect(isNormalizedLiveOpts(once)).toBe(true);
+        expect(normalizeLiveOpts(once)).toBe(once);
+        expect(normalizeLiveOpts(normalizeLiveOpts(once))).toBe(once);
+    });
+
+    it('and does NOT skip a raw bag, however complete it looks', () => {
+        const raw = {};
+        for (const k of LIVE_GEOMETRY_KEYS) raw[k] = null;
+        raw.beforeTypeFlip = false;
+        expect(isNormalizedLiveOpts(raw)).toBe(false);
+        expect(normalizeLiveOpts(raw)).not.toBe(raw);
+    });
+
+    it('⛓ THE SPREAD KEEPS THE BRAND — the hot caller\'s shape, asserted', () => {
+        // `levelRun.pushableCtx` hands `{ ...base, pushables: withoutSelf }`
+        // to `collidesSolid` for every 1 px probe of every block. That is a
+        // FRESH object per probe, which is why an identity cache was
+        // refuted; what survives it is the shape.
+        const base = normalizeLiveOpts({ pushables: new Map() });
+        const withoutSelf = new Map([['a', { rect: rect(0, 0, 16, 16), removed: true }]]);
+        const probe = { ...base, pushables: withoutSelf };
+        expect(isNormalizedLiveOpts(probe)).toBe(true);
+        expect(normalizeLiveOpts(probe)).toBe(probe);
+        expect(probe.pushables).toBe(withoutSelf);
+        // The key ORDER is what makes it the same hidden class, and
+        // `pushables` already being present is why the assignment overwrites
+        // in place instead of appending.
+        expect(Object.keys(probe)).toEqual(Object.keys(base));
+    });
+
+    it('⛔ A PARTIAL BAG CANNOT WEAR THE BRAND — §11.7\'s named hazard', () => {
+        // The brand is a module-private Symbol precisely so that no caller
+        // can mint one. A string brand would be typeable onto a bag missing
+        // a family, and a skipped normalise on a partial bag reads
+        // `undefined` where every consumer was promised `null`.
+        const forged = { __liveNormalized: true, openActivators: null };
+        expect(isNormalizedLiveOpts(forged)).toBe(false);
+        expect(normalizeLiveOpts(forged)).not.toBe(forged);
+        expect(normalizeLiveOpts(forged).turrets).toBeNull();
+        // Nor can a Symbol of the same DESCRIPTION forge it.
+        const lookalike = { [Symbol('levelWorld.normalizeLiveOpts')]: true };
+        expect(isNormalizedLiveOpts(lookalike)).toBe(false);
+        // And the brand is not reachable from the module's exports.
+        expect(Object.getOwnPropertySymbols(normalizeLiveOpts).length).toBe(0);
+    });
+
+    it('the QUERIES answer identically whichever bag they are handed', () => {
+        // The behavioural half: this change is supposed to be byte-inert,
+        // so the same question through a raw bag and through a pre-branded
+        // one must return the same answer — including through the spread
+        // the hot caller does.
+        const w = blockWorld();
+        const live = new Map([['pushableblockspear@176,128', {
+            rect: rect(160, 128, 16, 16), removed: false,
+        }]]);
+        const raw = { pushables: live };
+        const branded = normalizeLiveOpts({ pushables: live });
+        const spread = { ...normalizeLiveOpts({ pushables: new Map() }), pushables: live };
+        for (const [x, y] of [[180, 132], [164, 132], [100, 100]]) {
+            const box = playerBox(x, y);
+            const a = w.collidesSolid(box, raw);
+            const b = w.collidesSolid(box, branded);
+            const c = w.collidesSolid(box, spread);
+            expect(b).toEqual(a);
+            expect(c).toEqual(a);
+            expect(w.plannerBlockerAt(box, null, branded)).toEqual(w.plannerBlockerAt(box, null, raw));
+        }
+    });
+
+    it('⚠ and a branded bag is a COMPLETE substitute — the two keys read off `opts` itself', () => {
+        // `collidesSolid` destructures `fallenRocks` and `beforeTypeFlip`
+        // from the options object ABOVE the loop that reads the normalised
+        // thirteen. If the brand dropped them, a caller that normalised its
+        // bag would walk the player through a rock the run had dropped.
+        const rocks = new Map([['r', { id: 'r', rect: rect(96, 96, 16, 16) }]]);
+        const branded = normalizeLiveOpts({ fallenRocks: rocks, beforeTypeFlip: true });
+        expect(branded.fallenRocks).toBe(rocks);
+        expect(branded.beforeTypeFlip).toBe(true);
+        const w = blockWorld();
+        expect(w.collidesSolid(playerBox(100, 100), branded))
+            .toMatchObject({ fallen: true });
     });
 });

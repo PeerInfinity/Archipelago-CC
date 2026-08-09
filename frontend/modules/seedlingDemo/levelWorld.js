@@ -3218,12 +3218,118 @@ export const LIVE_GEOMETRY_KEYS = Object.freeze([
     'openActivators', 'openMagicalLocks', 'openBridges', 'brokenRocks', 'burnedTrees',
     'crushers', 'turrets', 'bosses', 'shieldBosses', 'finalDoors', 'openChests',
     'pulledRopes', 'pushables',
-    // ⚠ NOT IN `normalizeLive`. A parked `FallRock` is in no `solids`
-    // entry at all, so `collidesSolid` handles it ABOVE its own loop and
-    // reads `opts.fallenRocks` directly. It is a live geometry key all the
-    // same, and a consumer that dropped it would walk through a dropped rock.
+    // ⚠ READ ABOVE THE LOOP, NOT INSIDE IT. A parked `FallRock` is in no
+    // `solids` entry at all, so `collidesSolid` handles it ABOVE its own loop
+    // and reads `opts.fallenRocks` directly — `liveRectOf` never asks for it.
+    // It is a live geometry key all the same, and a consumer that dropped it
+    // would walk through a dropped rock. ⛓ R7 SLICE 4: `normalizeLiveOpts`
+    // now carries it too, because a normalised bag is handed BACK to the
+    // query as its whole options object — see the brand note below.
     'fallenRocks',
 ]);
+
+/**
+ * ⛔⛔⛔ THE BRAND, AND WHY IT IS A SYMBOL — R7 slice 4, paying the
+ * `normalizeLive` debt (owed since R6 slice 2; +9.7 % measured there over
+ * three interleaved A/B pairs, deferred through four slices since).
+ *
+ * The cost was never the normalising; it was normalising the SAME bag again
+ * for every 1 px probe of every sweep. The hot callers already hoist their
+ * bag once per TICK (`levelRun`'s `pushableCtx`/`spinnerCtx` and
+ * `playerPhysicsV2.step` all say so in their own comments) and then hand
+ * that one object to a query that runs hundreds of times per tick — so the
+ * allocation was per PROBE while its input was per TICK.
+ *
+ * ⛔⛔⛔ AND THE DEBT'S OWN PREMISE IS REFUTED BY THE COUNT. R6 §10.10a
+ * attributed a measured +9.7 % to "the per-query ALLOCATION" here, and R7
+ * §11.7 carried that forward as "a per-QUERY allocation on the hottest loop".
+ * Counted rather than argued, on `r5-l40-part5` — the very tape R6 measured:
+ *
+ *     normalizeLive calls  31,191        liveRectOf calls  34,705,483
+ *
+ * **1,113 solids per query.** The allocation this brand removes is under a
+ * tenth of a percent of the work, and an interleaved A/B of this change over
+ * three tapes (`r5-l40-part1`, `r4-walk-full`, `r5-d5-conch`, median of 3,
+ * two passes) sees NOTHING outside noise. ⇒ **this brand is a correctness
+ * and shape change, not a speed-up, and it must not be quoted as one.**
+ *
+ * ⛓ THE REAL LEVER, NAMED WITH ITS NUMBER, for whoever wants the 9.7 % back:
+ * `liveRectOf`'s per-SOLID arms. Each new family adds one load and one branch
+ * to 34.7 M invocations per tape — which is exactly the size of the effect
+ * R6 measured when it added the eleventh key, and R6's own hoisted-boolean
+ * experiment (+13.6 %, "worse, and certainly no better") did not exonerate
+ * the branch: it added a closure-slot read ON TOP of it. The fix that pays
+ * is a per-world PRE-FILTER — a solid with no `magicalLockId` can never take
+ * that arm — not another shape for the argument.
+ *
+ * ⛔ THE OBVIOUS FIX IS REFUTED AND STAYS REFUTED (§11.7): a one-entry cache
+ * keyed on the options object's IDENTITY never hits, because the hottest
+ * caller of all is `world.collidesSolid(rect, { ...base, pushables:
+ * withoutSelf })` — a FRESH literal per probe. The skip cannot be keyed on
+ * identity; it has to be keyed on SHAPE, and the shape has to survive that
+ * spread. It does: `{ ...branded }` copies own enumerable symbol keys and
+ * preserves insertion order, and `pushables` already being a key means the
+ * assignment overwrites in place rather than appending. Same brand, same
+ * hidden class, and the caller's one allocation instead of two.
+ *
+ * ⚠ A SYMBOL, NOT A STRING, AND THAT IS THE HAZARD §11.7 NAMED. A brand a
+ * caller can type is a brand a caller can type onto a PARTIAL bag, and a
+ * partial bag that skips normalisation reads `undefined` where the model
+ * promised `null` — the exact silence `LIVE_GEOMETRY_KEYS` exists to end.
+ * This symbol is module-private and unexported, so the only way to wear the
+ * brand is to have been through the function that fills every key.
+ */
+const LIVE_NORMALIZED = Symbol('levelWorld.normalizeLiveOpts');
+
+/**
+ * ⚠ ONE FIXED SHAPE FOR THE CHAIN'S ARGUMENT, and it is a performance fact
+ * rather than a style one. `liveRectOf` reads thirteen keys per solid and the
+ * callers hand it option objects of a dozen different shapes (`{}`,
+ * `{openActivators}`, the full driver bag…) — V8 turns that into a
+ * megamorphic load on the hottest loop in the package. Normalised, the loads
+ * are monomorphic; branded, they are normalised ONCE.
+ *
+ * ⚠ IT CARRIES ALL FOURTEEN `LIVE_GEOMETRY_KEYS` PLUS `beforeTypeFlip`, so a
+ * normalised bag is a COMPLETE substitute for the caller's own — the queries
+ * destructure `fallenRocks` and `beforeTypeFlip` off `opts` itself, above the
+ * loop that reads the normalised thirteen. `levelWorld.test.js` asserts that
+ * coverage both ways rather than trusting fifteen names typed by hand for a
+ * fifth time.
+ *
+ * ⚠ UNKNOWN KEYS ARE DROPPED, which is why the brand is applied at the
+ * HOISTED bag sites and NOT inside `levelRun.liveSolidOpts`:
+ * `plannerBlockerAt` reads `noclip`/`noHazards` off the same argument, and a
+ * normaliser that silently ate `noclip` would open every wall in the level to
+ * the planner.
+ */
+export function normalizeLiveOpts(o) {
+    if (o[LIVE_NORMALIZED] === true) return o;
+    return {
+        [LIVE_NORMALIZED]: true,
+        openActivators: o.openActivators ?? null,
+        openMagicalLocks: o.openMagicalLocks ?? null,
+        openBridges: o.openBridges ?? null,
+        brokenRocks: o.brokenRocks ?? null,
+        burnedTrees: o.burnedTrees ?? null,
+        crushers: o.crushers ?? null,
+        turrets: o.turrets ?? null,
+        bosses: o.bosses ?? null,
+        shieldBosses: o.shieldBosses ?? null,
+        finalDoors: o.finalDoors ?? null,
+        openChests: o.openChests ?? null,
+        pulledRopes: o.pulledRopes ?? null,
+        pushables: o.pushables ?? null,
+        fallenRocks: o.fallenRocks ?? null,
+        beforeTypeFlip: o.beforeTypeFlip ?? false,
+    };
+}
+
+/**
+ * Is this bag one `normalizeLiveOpts` filled? For the TESTS, which are the
+ * only consumers allowed to ask — the brand itself stays module-private, so
+ * that no caller can mint one.
+ */
+export const isNormalizedLiveOpts = (o) => !!o && o[LIVE_NORMALIZED] === true;
 
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null,
@@ -3387,35 +3493,7 @@ export function buildLevelWorld(levelRecord, {
      *   list right now; otherwise the box it occupies, which for a mover is
      *   where the RUN left it and not where the level built it.
      */
-    /**
-     * ⚠ ONE FIXED SHAPE FOR THE CHAIN'S ARGUMENT, and it is a performance
-     * fact rather than a style one. `liveRectOf` reads eight keys per solid
-     * and the callers hand it option objects of a dozen different shapes
-     * (`{}`, `{openActivators}`, the full driver bag…) — V8 turns that into
-     * a megamorphic load on the hottest loop in the package. Normalised once
-     * per QUERY, the loads are monomorphic.
-     */
-    const normalizeLive = (o) => ({
-        openActivators: o.openActivators ?? null,
-        openMagicalLocks: o.openMagicalLocks ?? null,
-        openBridges: o.openBridges ?? null,
-        brokenRocks: o.brokenRocks ?? null,
-        burnedTrees: o.burnedTrees ?? null,
-        crushers: o.crushers ?? null,
-        turrets: o.turrets ?? null,
-        bosses: o.bosses ?? null,
-        // ⚠ R6 SLICE 5: the TWELFTH key, and §10.10a's measurement applies —
-        // this object is allocated per QUERY on the hottest loop in the
-        // package, and the named fix (stop re-normalising an already
-        // normalised bag) is still deferred. One key is not a reason to
-        // take it now; it is a reason the deferral has a growing bill.
-        shieldBosses: o.shieldBosses ?? null,
-        // ⚠ R6 SLICE 6c: the THIRTEENTH key, and §10.10a's bill grows again.
-        finalDoors: o.finalDoors ?? null,
-        openChests: o.openChests ?? null,
-        pulledRopes: o.pulledRopes ?? null,
-        pushables: o.pushables ?? null,
-    });
+    const normalizeLive = normalizeLiveOpts;
     const liveRectOf = (s, o) => {
         // R2: a lock or cover whose group is held has `type = ""`, which
         // takes it out of the solids list rather than moving it.

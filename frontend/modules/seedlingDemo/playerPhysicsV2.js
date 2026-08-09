@@ -77,7 +77,9 @@
  * that the differential then blames on physics.
  */
 
-import { LIVE_GEOMETRY_KEYS, rectsOverlap, TILE_SIZE } from './levelWorld.js';
+import {
+    LIVE_GEOMETRY_KEYS, normalizeLiveOpts, rectsOverlap, TILE_SIZE,
+} from './levelWorld.js';
 import { coerceTerrainState } from './tapeFormat.js';
 import {
     CHECK_OFFSET_Y,
@@ -1321,6 +1323,16 @@ export function step(state, held, opts = {}) {
             }
         }
     }
+    /**
+     * ⛓ R7 SLICE 4 — normalised ONCE PER TICK, right here, where the bag is
+     * already hoisted. `collides` below runs for every 1 px of every step of
+     * the sweep, and `levelWorld` used to allocate a fresh normalised copy on
+     * each one; the brand makes every probe after the first a property read.
+     * The assert above still runs on the HAND-WRITTEN bag, because that is
+     * the thing whose coverage is in doubt — normalising first would fill in
+     * the very key the check exists to miss.
+     */
+    const liveOpts = noclip ? null : normalizeLiveOpts(liveBag);
     const next = stepV1({ ...state, ...(drownV ? { vx: drownV.x, vy: drownV.y } : {}) },
         fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
@@ -1344,7 +1356,7 @@ export function step(state, held, opts = {}) {
                 ? { x: v.x, y: v.y + WATERFALL_ACCELERATION } : v)
             : null,
         world: level.world,
-        collides: noclip ? null : (x, y) => level.collidesSolid(playerBoxAt(x, y), liveBag),
+        collides: noclip ? null : (x, y) => level.collidesSolid(playerBoxAt(x, y), liveOpts),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

@@ -33,7 +33,9 @@
  * it, rather than eagerly for all 116.
  */
 
-import { addedTimeKey, buildLevelWorld, rect, rectsOverlap } from './levelWorld.js';
+import {
+    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap,
+} from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
     PICKUP_TEXT_FROM_ATTRIBUTE, TALK_KEY,
@@ -2872,9 +2874,13 @@ export function createLevelRun({
         // rebuilds eight per-visit views — hoisting it is the difference
         // between a hot path and a quadratic one. The one thing that MUST
         // stay per call is `pushables`, which is read live (see below).
-        const base = liveSolidOpts({
+        // ⛓ R7 SLICE 4: NORMALISED HERE, once per tick. `normalizeLiveOpts`
+        // brands the shape, `{ ...base, pushables }` below keeps the brand
+        // and the key order, and `levelWorld`'s own normalise-per-query
+        // becomes a single property read on the probe path.
+        const base = normalizeLiveOpts(liveSolidOpts({
             beforeTypeFlip: firstTickInWorld, openActivators, openBridges,
-        });
+        }));
         return {
             collides: (rect, self) => {
                 // ⚠ READ LIVE, not off a snapshot taken at the top of the
@@ -2944,10 +2950,11 @@ export function createLevelRun({
         // apart in opposite directions, which is what the update list says.)
         const pushables = pushableRectsNow();
         // ⚠ ONCE PER TICK — see `pushableCtx`'s note. A spinner's sweep is
-        // 1 px steps on both axes too.
-        const base = liveSolidOpts({
+        // 1 px steps on both axes too, and R7 slice 4's brand means the
+        // normalise is paid once per tick with it.
+        const base = normalizeLiveOpts(liveSolidOpts({
             beforeTypeFlip: firstTickInWorld, openActivators, openBridges, pushables,
-        });
+        }));
         return {
             collides: (rect) => world.collidesSolid(rect, base),
             // ⚠ THE ENTITY POINT, not a box centre — they coincide on a
