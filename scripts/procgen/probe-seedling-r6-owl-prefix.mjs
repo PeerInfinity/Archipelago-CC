@@ -339,8 +339,19 @@ try {
             } : null,
             /** ⛔ THE CENSUS — a body the model does not have is a ROW here. */
             otherMobiles: others,
-            pods: best.mobiles.pods ?? [],
-            modelPods: model.run.owlPods.map((p) => ({ x: p.x, y: p.y, anim: p.anim })),
+            /**
+             * ⚠ COMPARE PODS BY POSITION, NEVER BY INDEX. `botMobiles` walks
+             * `FP.world.getClass(Pod, …)` — the level's ADD order — and the
+             * model's `owlPods` is in `FinalBoss.podPositions` order. In L112
+             * the two are a rotation of each other, so an index-wise print
+             * shows pod 0 closed against pod 3 closed on a run where the two
+             * agree perfectly. Slice 6g nearly spent an attribution on it.
+             */
+            pods: (best.mobiles.pods ?? [])
+                .map((p) => ({ x: p.x, y: p.y, anim: p.anim }))
+                .sort((u, v) => u.x - v.x || u.y - v.y),
+            modelPods: model.run.owlPods.map((p) => ({ x: p.x, y: p.y, anim: p.anim }))
+                .sort((u, v) => u.x - v.x || u.y - v.y),
             firstDivergence: firstDiff,
             perTick: cmp,
         });
@@ -363,9 +374,10 @@ try {
             + `v(${mb?.vx?.toFixed(3)}, ${mb?.vy?.toFixed(3)}) h${mb?.hits} `
             + `ht${mb?.hitsTimer} anim ${mb?.anim}`);
         console.log(`   other mobiles: ${others.length ? JSON.stringify(others) : 'NONE'}`);
-        console.log(`   pods game ${JSON.stringify((best.mobiles.pods ?? [])
-            .map((p) => p.anim))} model ${JSON.stringify(model.run.owlPods
-            .map((p) => p.anim))}`);
+        const podLine = (rows) => JSON.stringify(rows
+            .map((p) => `(${p.x},${p.y}) ${p.anim}`));
+        console.log(`   pods game ${podLine(rows[rows.length - 1].pods)}`);
+        console.log(`        model ${podLine(rows[rows.length - 1].modelPods)}`);
         console.log('    t |        game x, y        |       model x, y        '
             + '|      game dx, dy    |     model dx, dy');
         for (const r of cmp) {
