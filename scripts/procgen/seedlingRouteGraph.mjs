@@ -550,9 +550,35 @@ export function makeRouteGraph({
          *                                  cells in LATTICE coordinates
          * @param {Set}      o.openLocks    activator ids treated as open
          * @param {Set=}     o.openBridges  bridge tile keys treated as open
+         * @param {Set=}     o.forbidLevels levels the flood must NEVER ENTER —
+         *                                  R7 §6.1's trap-boss policy
+         *
+         * ── R7 slice 0: `forbidLevels`, and why the FILTER lives here ─────
+         *
+         * ⛔ THREE ROOMS IN THIS GAME ARE TRAPS: L57 (TentacleBeast) and L69
+         * (LightBoss) create their exit teleporter only on the boss's death
+         * (`TentacleBeast.as:213`, `LightBossController.as:104`), and L82 is
+         * the LavaBoss, whose body IS the door. A planner that wanders in
+         * unprepared soft-locks the run, so the ruled policy is NEVER ENTER
+         * and the question slice 0 must answer is whether that policy costs
+         * the collect-all anything.
+         *
+         * The filter is HERE, in the function that resolves an exit's
+         * destination, rather than in the consumer, because a consumer that
+         * re-derived "which cells are the entry to L82" would be a second
+         * transcription of `exitsOf`'s dilate-the-volume rule — and the two
+         * would drift. The consumer names the LEVELS; this code decides which
+         * CELLS that means, and reports them back in `forbidden` so the same
+         * caller can run the stricter arm (the cells refused outright, not
+         * merely the transition) without transcribing anything either.
+         *
+         * ⚠ ADDITIVE AND DEFAULT-NULL: with `forbidLevels` unset every line
+         * below is the code R5 ran, so `recon-seedling-r5.mjs --flood`
+         * reproduces its committed numbers.
          */
         function directedFlood({
             start, inventory = null, stepRefusal = null, openLocks = null, openBridges = null,
+            forbidLevels = null,
         }) {
             const PLAN_I = inventory ? { ...PLAN, inventory } : PLAN;
             const free = (world, cx, cy, opts = null) => {
@@ -612,6 +638,10 @@ export function makeRouteGraph({
                     const c1 = Math.ceil(rect.right / R2_LATTICE);
                     const r0 = Math.floor(rect.y / R2_LATTICE) - 1;
                     const r1 = Math.ceil(rect.bottom / R2_LATTICE);
+                    // R7 §6.1: a transition INTO a forbidden level is not an
+                    // edge. Its ring cells are still reported (below), so the
+                    // caller can refuse standing on them too.
+                    const banned = Boolean(forbidLevels?.has(payload.level));
                     for (let cy = r0; cy <= r1; cy += 1) {
                         for (let cx = c0; cx <= c1; cx += 1) {
                             if (!test(world, cx, cy)) continue;
@@ -621,6 +651,13 @@ export function makeRouteGraph({
                                     + 'a leg-declared forced contact (R1\'s rule)');
                             }
                             const k = `${cx},${cy}`;
+                            if (banned) {
+                                if (!forbidden.has(level)) forbidden.set(level, new Map());
+                                const f = forbidden.get(level);
+                                if (!f.has(k)) f.set(k, []);
+                                f.get(k).push(`${payload.kind} -> L${payload.level} @${payload.via}`);
+                                continue;
+                            }
                             if (!map.has(k)) map.set(k, []);
                             map.get(k).push(payload);
                         }
@@ -655,6 +692,8 @@ export function makeRouteGraph({
 
             const seen = new Set();
             const assumed = new Map();
+            /** `Map<level, Map<"cx,cy", why[]>>` — rings of refused exits. */
+            const forbidden = new Map();
             const arrivals = [];
             const frontier = [];
             const push = (level, cx, cy) => {
@@ -709,7 +748,7 @@ export function makeRouteGraph({
                         `${exit.kind} L${cur.level}@${exit.via}`);
                 }
             }
-            return { seen, arrivals, assumed };
+            return { seen, arrivals, assumed, forbidden };
         }
 
         return {
