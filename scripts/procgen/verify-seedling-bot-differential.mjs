@@ -128,6 +128,12 @@ const {
 const {
     LEGACY_ONLY_LEVELS, LEGACY_TAPES, TIERS, assertTiersComplete, tapesInTier,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tiers.js'));
+// ⛓ R7 slice 1: the seam latch's consumer, DERIVED by mapping the signature
+// over the game's `botSeam()` envelope. The findings function lives beside
+// the signature it maps, so a row added there cannot go unreported here.
+const {
+    seamLatchFindings,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
 const {
     DEFAULT_TOLERANCE,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
@@ -793,18 +799,37 @@ function checkReadout(name, tape, status, stream) {
     // that FAILS to raise one goes red too. Version-scoped to match
     // `autoAdvance`'s own scoping — a v<=3 tape's counter is
     // bug-compatible and reports 0 however many Helps it dismissed.
+    // ── ⛓⛓⛓ R7 SLICE 1: THE SCOPING IS GONE, AND IT IS THE BATCH'S ────
+    //     ONLY VISIBLE EFFECT ON THE ROSTER
+    //
+    // `Bot.autoAdvance` had three counting rules (v<=3 counted phase-1
+    // RELEASES, v4 a `Help`'s ARRIVAL, v5+ any freeze's arrival) and both
+    // scopings were justified by "the committed expectations of the ~8
+    // frozen R3 collection fixtures say `saw_auto_advance: 0`". ⛔ Measured
+    // at R7 slice 0 over all 118 expectation files: **none of them carries
+    // the field.** They are exactly `{ticks, transitions}`. What asserts it
+    // is THIS LINE, re-derived from the model on every run.
+    //
+    // So the fork unified the counter (one rule, every version: count a
+    // freeze ARRIVAL) and this expectation drops its version arm to match.
+    // Without the co-change the three v<=3 sword tapes — `r3-collect-sword`,
+    // `r3-walk-1-sword`, `r3-walk-full` — go RED BY BEING CORRECT: they
+    // report the `Help(3)` they always raised and always dismissed.
+    //
+    // ⚠ THE PRESS SCHEDULE DID NOT MOVE. `dispatchKey` is unconditional on
+    // every version and stayed that way (the batch's stated refusal), so no
+    // frozen frame shifted, no LFSR draw moved, and the roster is expected
+    // BYTE-IDENTICAL. This is the whole of what changed.
     const swordPickups = (expected.collected ?? []).filter((c) => c.item === 'sword').length;
-    const wantAutoAdvance = (tape.tape_version ?? 1) >= 4 ? swordPickups : 0;
+    const wantAutoAdvance = swordPickups;
     check(`${name}: dialogue auto-advance is exactly what the route earns`,
         status.saw_auto_advance === wantAutoAdvance,
         status.saw_auto_advance === wantAutoAdvance
             ? `saw_auto_advance=${status.saw_auto_advance}, and the route earns `
-                + `${wantAutoAdvance}${tape.tape_version < 4
-                    ? ' (v<=3: the counter is bug-compatible and reports 0)'
-                    : swordPickups > 0
-                        ? ` — ${swordPickups} sword pickup(s), each raising \`Sword.removed()\`'s`
-                            + ' unguarded `Help(3)`'
-                        : ''}`
+                + `${wantAutoAdvance}${swordPickups > 0
+                    ? ` — ${swordPickups} sword pickup(s), each raising \`Sword.removed()\`'s`
+                        + ' unguarded `Help(3)` (R7: counted on EVERY version)'
+                    : ''}`
             : `saw_auto_advance=${status.saw_auto_advance} against ${wantAutoAdvance} earned `
                 + `(${swordPickups} sword pickup(s), tape v${tape.tape_version}). `
                 + (status.saw_auto_advance > wantAutoAdvance
@@ -1164,6 +1189,131 @@ function checkReadout(name, tape, status, stream) {
                   + '— `hitUpdate` keeps running after the tape\'s last observation)' : ''}`);
     }
 
+    // ── ⛓⛓⛓ R7 SLICE 1: `botStatus.save`, CONSUMED AT LAST (R6 debt 6) ─
+    //
+    // `Bot.saveReadout()` has shipped since R5 slice 23, live off
+    // `Player.hasTotemPart(i)` / `Player.hasKey(i)` / `Main.hasSealPart(i)`,
+    // and the sweep read fourteen other `botStatus` fields and not this one.
+    // So the sixteen BOOTED seals and every DRIVEN key collect were asserted
+    // from the model side and the observation stream, never from the game's
+    // own save array — `botMobiles`' shape of debt, one readout later.
+    //
+    // ⛔ THE READOUT MUST BE PRESENT. A build without it would make every
+    // assertion below vacuously true by comparing undefined to undefined,
+    // which is the failure the R0 acceptance-signal check exists to prevent.
+    if (status.save !== undefined) {
+        const want = expected.saveState;
+        const gameKeys = (status.save.keys ?? []).map(Boolean);
+        const gameTotem = (status.save.totem_parts ?? []).map(Boolean);
+        const gameSeals = (status.save.seal_parts ?? []).map(Number);
+        if (!want) {
+            check(`${name}: the model reports a save state to check against`, false,
+                'runTape returned no `saveState` — the v1 engine ran (noclip with no '
+                + 'levelSource), so the game\'s array has nothing to be compared with');
+        } else {
+            // ⛓ KEYS ARE AN EQUALITY, and they are the strong arm: the model
+            // knows every key it booted with (the v6 `save` block) and every
+            // key a ceremony earned (`BossKey.removed()` writes
+            // `Player.hasKeySet(keyType, true)`), so both directions are
+            // real. A key the game holds and the model does not is an
+            // unmodelled collection; the reverse is a ceremony that never
+            // completed.
+            check(`${name}: the game's own \`hasKey\` array matches the model`,
+                gameKeys.join(',') === want.keys.join(','),
+                `game: [${gameKeys}], model: [${want.keys}]`
+                + `${gameKeys.join(',') === want.keys.join(',') ? '' : ' — a key the '
+                    + 'model does not hold was collected (or a ceremony the model '
+                    + 'completed never wrote its flag)'}`);
+            // ⛓ SAME FOR THE TOTEM PARTS, and this arm found its own defect:
+            // the census carried a `bosskey`'s `keyType` and NOT a
+            // `totempart`'s index, so the model could never have said which
+            // of the five moved. Fixed in this batch (`levelWorld`'s pickup
+            // row) — the consumer is what made the silence visible, which is
+            // debt 6's whole shape.
+            check(`${name}: the game's own \`hasTotemPart\` array matches the model`,
+                gameTotem.join(',') === want.totem_parts.join(','),
+                `game: [${gameTotem}], model: [${want.totem_parts}]`);
+            // ⛔⛔ THE SEALS ARE A SHAPE CLAIM, NOT AN IDENTITY ONE, AND
+            // SAYING SO IS THE POINT. `Chest.open()` picks the identity with
+            // a REJECTION SAMPLER — `floor(Math.random()*16)` redrawn until
+            // `getSealPart` finds an unused slot, the commit being a side
+            // effect inside the predicate — so which seal lands in which slot
+            // is a fact about the run's stream position. What the model does
+            // know, exactly:
+            //
+            //   · the boot-declared prefix is untouched (positional, v6);
+            //   · one slot fills per chest OPENED (not per ceremony
+            //     completed — the identity commits at open, so open-and-die
+            //     still awards it);
+            //   · every filled slot holds a legal, UNIQUE identity in 0..15
+            //     and every empty one holds -1, because the sampler cannot
+            //     produce anything else.
+            //
+            // An equality check here would be a check that could only pass by
+            // accident, and a skipped check would be a silence.
+            const filled = gameSeals.filter((v) => v !== -1);
+            const wantFilled = want.bootSealParts.length + want.sealSlotsEarned;
+            const prefixOk = want.bootSealParts
+                .every((id, i) => gameSeals[i] === id);
+            const uniqueOk = new Set(filled).size === filled.length
+                && filled.every((v) => v >= 0 && v < gameSeals.length);
+            const compactOk = gameSeals.slice(filled.length).every((v) => v === -1);
+            check(`${name}: the game's own \`hasSealPart\` array has the shape the run earns`,
+                filled.length === wantFilled && prefixOk && uniqueOk && compactOk,
+                `game: [${gameSeals}] — ${filled.length} filled against `
+                + `${want.bootSealParts.length} booted + ${want.sealSlotsEarned} chest(s) `
+                + `opened${prefixOk ? '' : '; the BOOTED PREFIX MOVED'}`
+                + `${uniqueOk ? '' : '; a repeated or out-of-range identity, which the '
+                    + 'rejection sampler cannot produce'}`
+                + `${compactOk ? '' : '; a -1 BELOW a filled slot, which `getSealPart` '
+                    + '(first empty slot wins) cannot produce'}`
+                + ' (identities are RNG at chest OPEN and are not predicted)');
+        }
+    } else {
+        check(`${name}: botStatus carries the save readout`, false,
+            '`save` is missing — this is a pre-R5-slice-23 build, and every save '
+            + 'assertion would be vacuous against it');
+    }
+
+    // ── ⛓ R7 SLICE 1: THE EDGE ECHO (R6 debt 4) ───────────────────────
+    //
+    // The debt asks for "one boolean that separates the candidate mechanisms
+    // in one run" — did the GAME see the edge on the tick the tape named.
+    // `Bot.recordEdges` latches `Input.pressed`/`released`/`check` at the top
+    // of each armed tick, so the totals are what the game actually received.
+    //
+    // ⛔ ASSERTED AGAINST THE TAPE'S OWN SPANS, which is what makes it a
+    // check rather than a printout: every span is one press and one release,
+    // so the totals are `spans per key` — EXCEPT for `primary`, which
+    // `autoAdvance` also dispatches, and there the tape's count is a LOWER
+    // BOUND. A key whose totals fall short means an edge the game never saw.
+    if (status.input && status.input.press_totals) {
+        const spansPerKey = {};
+        for (const span of tape.inputs) {
+            spansPerKey[span.key] = (spansPerKey[span.key] ?? 0) + 1;
+        }
+        // ⚠ EVERY span is observable, including one ending exactly at
+        // `tick_count`: `recordEdges` runs after the dispatch loops and
+        // BEFORE the disarm, so the final tick's release is latched too.
+        // `autoAdvance`'s presses are NOT — they fire on DEAD frames, which
+        // return before the echo — so `primary` may only ever run OVER.
+        const short = Object.entries(spansPerKey)
+            .filter(([k, n]) => (status.input.press_totals[k] ?? 0) < n
+                || (status.input.release_totals[k] ?? 0) < n)
+            .map(([k, n]) => `${k}: ${status.input.press_totals[k] ?? 0} press / `
+                + `${status.input.release_totals[k] ?? 0} release against ${n} span(s)`);
+        check(`${name}: the game saw every edge the tape dispatched`,
+            short.length === 0,
+            short.length === 0
+                ? `${Object.entries(spansPerKey).map(([k, n]) => `${k} x${n}`).join(', ')
+                    || '(no spans)'} — all seen`
+                + `${(status.input.press_totals.primary ?? 0) > (spansPerKey.primary ?? 0)
+                    ? `; primary +${(status.input.press_totals.primary ?? 0)
+                        - (spansPerKey.primary ?? 0)} from autoAdvance` : ''}`
+                : `${short.join('; ')} — an edge was dispatched and the game never `
+                    + 'reported seeing it');
+    }
+
     // ── R3: the first half of the crutch LEDGER ───────────────────────
     // `Lock.turnOff()` calls `Game.setPersistence(tag, false)`, so a lock
     // the PLAYER opened leaves its flag in `persistence_cleared` — the R3
@@ -1482,8 +1632,8 @@ function checkAcceptance(replayed) {
 /** Replay one tape on its own fresh page and return the drained stream. */
 async function replay(name, tapeObj) {
     if (WIN) {
-        const { stream, status } = replayOnWindows(name, tapeObj);
-        return { stream: withDerivedTransitions(name, stream), status };
+        const { stream, status, seam } = replayOnWindows(name, tapeObj);
+        return { stream: withDerivedTransitions(name, stream), status, seam };
     }
     const page = await freshPage();
     try {
@@ -1498,7 +1648,15 @@ async function replay(name, tapeObj) {
         }, deadlineFor(tapeObj.tick_count, modelDeadFrames(name, tapeObj)));
 
         const drained = await botJsonOn(page, 'botDrain');
-        return { stream: withDerivedTransitions(name, drained), status };
+        // ⛓ R7 slice 1: the seam latch, read ONCE after the tape finished —
+        // its own callback for `botMobiles`' reason (a few KB on a poll that
+        // shares the update/render thread the dead-frame band rides on). A
+        // build without it returns null, which `checkSeamLatch` reports as a
+        // FAILURE rather than skipping: an absent readout that makes every
+        // assertion below it vacuous is the one shape a gate must not have.
+        const rawSeam = await botOn(page, 'botSeam');
+        const seam = rawSeam === null ? null : JSON.parse(rawSeam);
+        return { stream: withDerivedTransitions(name, drained), status, seam };
     } finally {
         await page.close();
     }
@@ -1635,8 +1793,45 @@ try {
             });
             continue;
         }
-        const { stream, status } = result;
+        const { stream, status, seam } = result;
         replayed.set(name, { stream, status });
+
+        // ── ⛓⛓⛓ R7 SLICE 1: THE SEAM LATCH, ON EVERY TAPE ─────────────
+        //
+        // The batch's headline instrument, and the roster is its first
+        // customer. No fixture here ends at a calm ARRIVAL — that convention
+        // arrives with the segments — so the invariants are REPORTED and not
+        // required (`requireCalm: false`). What IS required on all 118 is the
+        // part that would otherwise ship dark, which is exactly the debt-6
+        // shape this batch is paying off elsewhere: the latch FIRES, it is
+        // WHOLE (not a failure disarm's partial), and it carries EVERY
+        // signature row.
+        //
+        // ⛔ A missing envelope is a FAILURE, never a skip. A build without
+        // `botSeam` would make every seam assertion in slice 2 vacuous, and
+        // "the readout must be present" is the R0 acceptance-signal law.
+        const latchRows = seamLatchFindings(seam ?? null, { requireCalm: false });
+        const unclaimed = latchRows.filter((r) => !r.ok);
+        check(`${name}: the seam latch fired and carries the whole signature`,
+            unclaimed.length === 0,
+            unclaimed.length === 0
+                ? `${Object.keys(seam.seam).length} field(s) latched at tick `
+                    + `${seam.seam['latch.tick']} (${latchRows.length - 1} signature rows)`
+                : `${unclaimed.length} row(s) not claimed: `
+                    + `${unclaimed.slice(0, 6).map((r) => `${r.name} [${r.detail}]`).join('; ')}`
+                    + `${unclaimed.length > 6 ? ` …and ${unclaimed.length - 6} more` : ''}`);
+        // ⛓ AND THE MARKER AGREES WITH THE BLOCK. `botStatus.seam` is a
+        // three-field marker served by a DIFFERENT callback from the block
+        // itself; two readouts of one latch that could disagree are two
+        // readouts nobody can trust. Cheap, and it is the only thing that
+        // says the split was done right.
+        if (status.seam) {
+            check(`${name}: botStatus's seam marker agrees with botSeam's block`,
+                status.seam.latched === Boolean(seam?.latched)
+                && status.seam.partial === Boolean(seam?.partial),
+                `marker {latched: ${status.seam.latched}, partial: ${status.seam.partial}} `
+                + `vs block {latched: ${seam?.latched}, partial: ${seam?.partial}}`);
+        }
         const secs = ((Date.now() - t0) / 1000).toFixed(0);
 
         // ⚠ THE READOUT CHECKS ARE THEMSELVES PER-TAPE FALLIBLE, and slice 11

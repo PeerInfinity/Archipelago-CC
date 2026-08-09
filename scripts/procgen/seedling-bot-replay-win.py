@@ -284,10 +284,27 @@ def main():
                       f"dead_frames={status.get('dead_frames')} "
                       f"seconds={elapsed:.1f} frames_per_sec={fps:.2f}", flush=True)
 
+                # ⛓ R7 slice 1: THE SEAM LATCH, drained like the stream.
+                #
+                # ⚠ ITS OWN CALLBACK rather than a field on `botStatus`, on
+                # `botMobiles`' precedent: the block carries a 3,480-flag
+                # array's cleared set and a sixteen-slot seal array, and
+                # `botStatus` is polled once a second on the update/render
+                # thread whose RATIO the dead-frame band rides on. Read ONCE,
+                # here, after the tape has finished.
+                #
+                # ⚠ A build without the callback returns None, and that is
+                # carried rather than raised: the harness on the other side
+                # decides whether a missing latch is a failure (it is), and a
+                # driver that threw here would lose the stream it already has.
+                raw_seam = evaluate_bot(page, "botSeam")
+                seam = json.loads(raw_seam) if raw_seam else None
+
                 windows[-1].update({
                     "stream": {"ticks": ticks,
                                "transitions": drained.get("transitions", [])},
                     "status": status,
+                    "seam": seam,
                 })
 
             # ⚠ THE SHAPE OF `--out` IS THE SINGLE-TAPE SHAPE FOR ONE TAPE,
@@ -297,11 +314,13 @@ def main():
             with open(args.out, "w", encoding="utf-8") as fh:
                 if args.tape:
                     w = windows[0]
-                    json.dump({"stream": w["stream"], "status": w["status"]}, fh)
+                    json.dump({"stream": w["stream"], "status": w["status"],
+                               "seam": w.get("seam")}, fh)
                 else:
                     json.dump({"windows": [
                         {"label": w["label"], "stream": w["stream"],
-                         "status": w["status"], "boundary_before": w["before"],
+                         "status": w["status"], "seam": w.get("seam"),
+                         "boundary_before": w["before"],
                          "boundary_after_start": w["after_start"],
                          "moved_at_boundary": w["moved_at_boundary"]}
                         for w in windows]}, fh)
