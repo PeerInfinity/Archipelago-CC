@@ -1001,27 +1001,32 @@ export const R6_AS3_DECISION = Object.freeze({
         //
         // `FinalBoss`'s intro ends on `Input.released(p.keys[6])`, and a
         // length-1 `primary` span is documented as a press edge on `from`
-        // and a release edge on `to`. The game says the boss saw the release
-        // on **`from`** — measured twice, at `from = 2` and `from = 10`, off
-        // the one quantity that carries no poll drift: his own position,
-        // which advances on a 0.5303300858899106 px lattice and so counts
-        // his moving ticks exactly.
+        // and a release edge on `to`. Slice 6e measured the boss seeing the
+        // release on **`from`** — twice, off the one quantity that carries
+        // no poll drift: his own position, which advances on a
+        // 0.5303300858899106 px lattice and so counts his moving ticks
+        // exactly — and named two candidate mechanisms no shipped readout
+        // could separate.
         //
-        // Two mechanisms fit and nothing shipped can separate them: either
-        // `Bot` delivers a length-1 span's release inside its own tick, or
-        // the recompiled runtime's `Input.released` is true on the frame of
-        // the DOWN edge. ⛓ NOT A WALL — the model takes the measurement and
-        // is exact either way, and no committed fixture is affected because
-        // every other release on the ladder is inside a dialogue where only
-        // the COUNT of releases is observable (which is why W-talk's forty
-        // could be byte-exact under either reading).
+        // ⛔⛔ SLICE 6g SETTLED IT WITHOUT THE READOUT, AND THE MEASUREMENT
+        // WAS THE THING THAT WAS WRONG. The release is live on `to` exactly
+        // as documented; 6e's `from` reading was TWO OFF-BY-ONES THAT
+        // CANCELLED — an intro one tick early and a tape that performs
+        // N + 1 world updates for N ticks move both measured quantities the
+        // same way, so the fit that "confirmed" the reading confirmed their
+        // product. What separated them was a readout with nothing to do with
+        // either: `botStatus.slash`'s hit-test counter, which read
+        // `{tests: 0, hits: 0}` for a press the model believed had landed.
         //
-        // A readout would be one boolean: whether `Input.released(KEY_PRIMARY)`
-        // was true when `Bot` handed the frame to `Game.update`.
-        'a `pressed`/`released` echo on `botStatus` — R6 slice 6e measured the '
-        + 'intro ending on a `primary` span\'s `from` rather than its `to`, and '
-        + 'the two candidate mechanisms (Bot\'s edge delivery vs the runtime\'s '
-        + '`Input.released` semantics) are indistinguishable from every shipped '
-        + 'readout. Wanted, NOT a wall: the model takes the measurement.',
+        // ⇒ the row STANDS, with its reason replaced. It is no longer an
+        // open measurement question — it is a CHEAPER DIAGNOSIS: one
+        // boolean (whether `Input.released(KEY_PRIMARY)` was true when `Bot`
+        // handed the frame to `Game.update`) would have separated the two
+        // candidates in one run instead of over two slices.
+        'a `pressed`/`released` echo on `botStatus` — wanted as a DIAGNOSTIC, '
+        + 'not as a wall. R6 slice 6e mis-measured the Owl\'s intro as ending on '
+        + 'a `primary` span\'s `from`; slice 6g attributed that to two '
+        + 'off-by-ones that cancelled and confirmed the documented `to`. The '
+        + 'echo would have separated the candidate mechanisms in one run.',
     ]),
 });

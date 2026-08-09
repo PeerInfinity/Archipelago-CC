@@ -5340,6 +5340,10 @@ the recompiled runtime's `Math.random` is a fixed-seed LFSR.
 
 ## What R5 hands on, and what still blocks the ending
 
+⚠ **SUPERSEDED for every row R6 touched** — see "What R6 hands on, and what
+R7 inherits" at the end of this document. This table is kept as R5's own
+statement of what it handed over, not as the live blocked list.
+
 Ruled 2026-08-07 (the R6 kickoff records the rulings): **R6 = bosses + the
 ending BOOTED** (via the v6 `save` block), staged — the honest
 sixteen-ceremony sweep and the full item chain are **R7's line**.
@@ -5511,3 +5515,199 @@ Two more things worth carrying:
 W-owl is claimed: `{112,0}` and `{112,1}` are off in the game's own
 persistence array, 109 ticks after the kill, and the pair's control keeps both
 flags SET with two of the three lava self-hits driven.
+
+## R6: bosses and the ending, as built (CLOSED 2026-08-08)
+
+R6's brief and full as-built record are
+`NewDocs/plans/seedling-bot-r6-opus-kickoff.md` (§§8–22 the slices, §23 the
+close — NewDocs is gitignored, so the file exists only on the working
+machine; this section is the tracked summary).
+
+**The claim, as the live readouts state it.** `r6ExitFindings()` over the
+committed roster, quoted rather than paraphrased:
+
+```
+OK  {19,0}  (ShieldBoss)                  W-shield: r6-shield-kill / r6-shield-control
+OK  {43,5}  (BossTotem)                   W-totem:  r6-totem-kill  / r6-totem-control
+OK  {112,0} (FinalBoss — the Owl)         W-owl:    r6-owl-kill    / r6-owl-control
+OK  {112,1} (the RockLock his death opens) W-owl:   r6-owl-kill    / r6-owl-control
+OK  {113,0} (FinalDoor)                   W-door:   r6-final-door  / r6-final-door-control
+OK  {114,0} (the Watcher's dialogue)      W-talk:   r6-watcher-talk/ r6-watcher-control
+OK  the boss-kill ledger is complete            6/6 tags earned (over 118 tapes)
+OK  every R6 window has both arms in the roster 8/8 — unclaimed: (none)
+```
+
+- **Six of six boss-kill tags earned inside driven windows with pairs**, each
+  read back from the game's own `persistence_cleared` rather than echoed from
+  a tape. Three of them are the ladder's first three boss kills (BossTotem,
+  ShieldBoss, the Owl); the Owl's two are CLEARS his own `endAnim` writes 109
+  ticks after the kill, and the pair's control leaves both flags SET.
+- **Eight of eight windows claimed** — W-totem, W-shield, W-fire, W-owl,
+  W-talk, W-door, W-seed, W-blood — every one a tape plus a control, both in
+  the roster and both replayed by `tapeRunner.test.js` on every CI run.
+- **The credits are a MEASUREMENT, not an argument**: `botStatus.menu_state`
+  reads **2** on `r6-seed-credits`. `R6_MENU_WRITERS`'s four-writer
+  elimination is kept as the second stratum — the readout says the state is
+  the credits, the elimination says the 2 came from the tree.
+- **`fire` is real-collected** (R5's named debt): the GAME collects it inside
+  `r5-bobboss-fire`, and `r5Chain.MODEL_EXEMPT` makes the differential check
+  the game against `mirror + earned`, which is the harder assertion.
+- **`bosskey:0` is real-collected** from the vacated ShieldBoss body, with its
+  ceremony priced. ⚠ **`hasShield` is NOT** — see the debts below.
+- The roster at close is **118 tapes**, of which **89 declare `noDamage`** and
+  29 do not. Every count in `r6Acceptance` is derived from `fixtureNames()` at
+  call time; R5 closed with two hand-kept counts that had rotted, and nothing
+  in this module stores a number.
+
+**The staged ending is exactly as staged as the ruling said.** The claim is
+"given this save state, the real game's ending is beatable", and the save
+state is inventoriable tape by tape:
+
+| window | booted / GRANTED | earned inside the window |
+|---|---|---|
+| W-totem | five totem parts in `save.totem_parts`; `noHazards` water/lava/ice/waterfall | the wand ceremony, ten wand shots, `{43,5}`, the arena |
+| W-shield | a sword; `noHazards` as above | `{19,0}`, `bosskey:0` off the corpse |
+| W-owl | a sword | three lava self-hits, `{112,0}` + `{112,1}` |
+| W-talk | nothing at all — a booted stance inside the 24 px circle | `{114,0}` |
+| W-door | **all sixteen `save.seal_parts`** + `{114,0}` declared | `{113,0}` |
+| W-seed | **conch + feather** | the pickup, two game-initiated reboots, `menu_state 2` |
+| W-blood | a sword + `{114,0}` declared | four hits, the bloody seed, the L1 reboot |
+
+⇒ the sixteen seal identities, `{114,0}` where it is a precondition rather
+than the point, the conch and the feather are **BOOTED**. Earning them is the
+honest chain, which is R7's line and was ruled so at slice 0.
+
+**What the rung built.** The mover (`mover.js` — A\* over quantized
+`(x, y, vx, vy)` with the exact stepper as the transition, `planDash` +
+`earliestArrivalTable`, certificates emitted as TAPE SPANS so `runTape` is an
+independent replay stratum); the wand family (`wandVerb` / `wandShot` /
+`magicalLock`); the player damage model + shake/camera (`playerDamage`,
+`camera`, the death reboot in `levelRun`); five new per-visit families — the
+wand shot, the totem fight, the ShieldBoss, the FinalDoor and the Owl with his
+pods — taking `levelRun`'s family counter to **fifteen** (⚠ the docblock
+numbering COLLIDES at fourteen, where `bossTotemFight` and `finalDoors` both
+claim the ordinal; the names are reliable and the index is not); the ending
+machinery (`endingChain`, the seed/reboot chain shared by W-seed and W-blood,
+`finalDoorL113`); **the rung's one AS3/runtime batch** — `swfmodern.Rng`
+(read/write/reset plus a second cosmetic generator) in `SWFRecomp-CC`, `Rng.as`
+and three bundled readouts in the fork, tape **v7**'s `rng` block and `rng.js`
+in the model; and the **roster trim** (`fixtures/tiers.js`, `LEGACY_TAPES` the
+only named set, every other tier its complement so a new fixture can only fail
+safe).
+
+**Standing findings** (source-proved or driven; do not re-derive):
+
+- **The Owl fight is EXACT and the witnessed-not-exact hatch stayed shut.**
+  `Game.shake`'s two draws are in `view()`, which `Game.update` calls, so they
+  are UPDATE-side; L112 has a gameplay draw consumer and no render-side
+  polluter. ⚠ The render-side census is FOUR sites, not three — `Moonrock.render`
+  reaches `drawFlares` for 280 draws a frame, and a by-enclosing-function census
+  could not see it. L112 holds no moonrock, so the conclusion survived its own
+  refutation and now carries its bound.
+- **Reproducible is not predictable.** A byte-exact model of an RNG-coupled
+  fight needs the LFSR's ABSOLUTE stream position at window start — the whole
+  page's history — and no readout carried it. That is the named wall the one
+  AS3 batch paid, on the user's own design.
+- **`Point.length` is `sqrt(x*x + y*y)` and `normalize` is `x *= t / length`.**
+  A model computing the same quantity more accurately diverges from the
+  runtime; one ulp decided a walk/coast arm sitting exactly on `moveSpeed`,
+  and cost a DRAW rather than a pixel.
+- **One press is FIVE hit tests** (`slashDelayMax` is 0), and the RECEIVER's
+  gate decides how many land: an i-frame arm leaves a refusal row, a
+  knock-only arm culls at the rect and leaves none, so the witness is the
+  COUNT.
+- **Three ways a player cannot move, three different bills**: a freeze is dead
+  frames, `receiveInput = false` still runs physics, `active = false` runs
+  nothing. A dialogue frame is a tape TICK; a `SealController`/`Pickup`/cover
+  fade frame is DEAD.
+- **The walk-away does not exist.** `NPC.talk`'s `if (talking)` block raises
+  the freeze above both the key test and the radius test, and leaving the
+  radius runs `doneTalking()` anyway — so a "walk out of range" control would
+  earn the very flag it exists to withhold.
+- **A `play()` frame IS the animation's first update**, and `FP.world.remove`
+  only QUEUES — for a class with no `destroy` and no fade the queue is the
+  whole removal. Both fenceposts are needed; neither alone reproduces a
+  recording.
+- **An N-tick tape performs N + 1 world updates** (`Bot.update` records
+  observation N and disarms at the top of a frame whose world update runs
+  anyway), so every polled arm needs calibrating before two arms are compared.
+- **Tag timing is per class**: `{19,0}` PRECEDES the corpse by 23 updates,
+  `{43,5}` lands 241 ticks after the kill (240 white-out renders plus one
+  `updateLists()`), `{112,0}`/`{112,1}` 109 ticks after it.
+- **The shake band never closes**: the round's dead zone freezes it at −4/+5,
+  so one hit costs 9 px of camera knowledge for the rest of the visit and
+  `onScreen` is three-valued.
+- **L112's teleporter landing point (32,208) is inside a solid** — the game's
+  teleport does not collision-check its destination.
+
+**The close-out debts, by name** — see the R7 table below for the ones that
+are scoped work rather than loose ends:
+
+1. **`saw_auto_advance` unification** — owed since R3, carried through R5's
+   §38.4 and still owed. It is the one wanted change that is NOT byte-inert,
+   so it waits for a batch that re-records ON PURPOSE; the RNG batch's whole
+   gate was zero re-records and bundling it would have destroyed that gate.
+   (`R6_AS3_DECISION.stillOwed`, row 1.)
+2. **`earnedClears` does not carry a PICKUP's own persistence tag** (the
+   shield's `{20,2}`, the wand's) — found at slice 5, named with its blast
+   radius, NOT patched, and untouched since.
+3. **The `normalizeLive` hot-loop fix** — deferred BY NAME since slice 2,
+   where the cost was MEASURED at +9.7 % on the hottest loop (the cause is the
+   11th key re-normalised per `collidesSolid` call, and the fix is a net win
+   for all eleven). It was deferred to "a slice that can afford the `--win`
+   sweep": G2's sweep gates R6's last commit and cannot gate an unwritten
+   change, so the debt's TERMS are unchanged — what changed is that the
+   sweep's price is now measured at close and R7 can budget it.
+4. **The `pressed`/`released` echo on `botStatus`** (`R6_AS3_DECISION.stillOwed`,
+   row 2) — ⚠ its stated justification is STALE. The row was written when the
+   game appeared to end the Owl's intro on a `primary` span's `from`; slice 6g
+   proved that reading was two off-by-ones cancelling and the release is live
+   on `to`. The readout is still WANTED — it would have separated the two
+   candidate mechanisms in one run instead of a slice — but it is a cheaper
+   diagnosis, not an open measurement question.
+5. **`hasShield` is real-collected by NO tape.** `r6-shield-kill` ends in L19
+   at the boss key; the L20 shield walk is modelled (`shieldL20.test.js`) and
+   never driven, and every tape holding a shield is a legacy R1/R2 walk that
+   GRANTS it. The `R6_ITEM_LEDGER` row is undischarged and says so.
+6. **`botStatus.save` has no differential consumer.** The readout carries
+   `totem_parts` / `keys` / `seal_parts` live off the game's own accessors,
+   and the sweep consumes fourteen other status fields and not this one — so
+   the sixteen booted seals and the driven key collect are asserted from the
+   model side and the stream, never from the game's own save array.
+7. **`r6ExitFindings` is gated by vitest only.** The differential runs
+   `r1`–`r5AcceptanceFindings` and not `r6`'s; the rung's exit criteria are a
+   G1 assertion, and the ledger's game-side half is the per-window
+   `persistence_cleared` checks.
+8. **`buildTape` still cannot emit v6 or v7** (`botDriverV1.js:311` caps its
+   version ladder at 5), so every v6/v7 tape on the ladder is hand-authored by
+   a plan script.
+9. **The 10 s vitest cliff was never raised.** Inherited, reproduces at the
+   parent commit, and named at every slice that met it.
+10. **Model refusals carried out of the rung**: the BobBoss encounter script
+    (`KILL_ARM_POLICY.BobBoss` stays `refused`), the spear's three-hit repeat,
+    the FireWand arm, the darksuit retaliation arm (which throws rather than
+    being transcribed untested), and `Explosion`'s Enemy arm.
+11. **R5's walls, untouched**: L40's link 5 has no holder and the corpse
+    cannot cross, `WandLock` is a `Lock` with a sprite, and the wand seals its
+    own exit. `noDamage` is NOT retired roster-wide — 89 of 118 tapes declare
+    it, and whether the flag can retire rides the honest chain.
+
+## What R6 hands on, and what R7 inherits
+
+⚠ This table SUPERSEDES the R5 one above for every row R6 touched.
+
+| item / gate | what R6 did with it | rung |
+|---|---|---|
+| **BossTotem** | KILLED — `{43,5}` earned, ten wand shots, the arena opened, the wand-shot exit priced | **DISCHARGED (R6)** |
+| **ShieldBoss + key 0** | KILLED — `{19,0}` at the third hit, `bosskey:0` collected off the vacated body | **DISCHARGED (R6)** |
+| **fire** (pickup) | real-collected inside `r5-bobboss-fire`; the differential checks `mirror + earned` | **DISCHARGED (R6)** — the encounter SCRIPT stays refused |
+| **the Owl** | KILLED by three lava self-hits — `{112,0}` + `{112,1}`, the first RNG-coupled fight on the ladder, modelled to the last bit of a square root | **DISCHARGED (R6)** |
+| **the Watcher / FinalDoor / seed** | `{114,0}`, `{113,0}`, both seed branches, and `menu_state 2` — the ladder's first "the game says it was beaten", **conditional on the declared save state** | **DISCHARGED (R6), STAGED** |
+| **`hasShield`** | modelled, never driven — no tape reaches L20's `shield@112,48` | **R7** |
+| sixteen real seal ceremonies | **BOOTED** in W-door (`save.seal_parts` all sixteen); 2 of 16 chests ever driven (L38, L40) | **R7** |
+| the honest item chain — darksword / darkshield / darksuit / ghostsword / firewand | untouched this rung; D7/D8 access plus the Witch (the wand is HELD, so her gate is open) | **R7** |
+| the L40 chain (links 5–11, bosskey 2, both north teleporters) | untouched — link 5 has no holder, the corpse cannot cross, the wand opens no `WandLock` | **R7** (a standing wall for this machinery) |
+| L93's bridge | still unit-witnessed on L63 only — a TILE (t=29), one Spear/GhostSword hit then 59 self-decrementing render frames, `type` mutating in `render()` | **R7** (live witness) |
+| LightBoss / TentacleBeast / LavaBoss | deferred by name, unchanged — none gates anything the ending needs; TentacleBeast is the game's first whirlpool-scale RNG fight | deferred |
+| `noDamage` roster-wide retirement | parts 1+2 BUILT (the damage model, shake/camera); 89 of 118 tapes still declare the flag | **R7** — it rides the honest chain |
+| `botStatus.save` as a differential stratum | shipped in the fork, consumed by nothing | **R7** |
