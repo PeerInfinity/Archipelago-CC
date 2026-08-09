@@ -1939,6 +1939,27 @@ export const L40_ARRIVAL_BREAK = Object.freeze({
         + 'link — so the boss key, the bosslock and both north teleporters are '
         + 'unreachable from (480,896) by this rung\'s means. The parts behind them are '
         + 'still collectable from their own boots; the ROUTE is not.',
+    /**
+     * ⛓⛓⛓ R7 SLICE 3 — THE CLOSING CLAUSE IS SUPERSEDED, AND THE ROW STAYS.
+     *
+     * Everything above is what the instruments of R5 said, and the historical
+     * row is kept verbatim by ruling (user, 2026-08-09). What moved is the
+     * last clause — *"the ROUTE is not"* — and the sub-clause it rests on,
+     * *"no block in the level can reach"*.
+     */
+    supersededBy: Object.freeze({
+        at: 'R7 slice 3',
+        probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+        clause: "the verdict's closing 'the ROUTE is not', and 'no block in the level "
+            + "can reach'",
+        finding: '`pushableblockfire@480,480` CAN reach — 36 tiles with the `pushables` '
+            + 'override threaded, and `button@768,400 {t 5}` in 34 fire presses once the '
+            + 'corpse holds `button@480,384 {t 2}`. The R5 figure came from a push search '
+            + "that left the block's own spawn rect in `world.solids`, which this probe "
+            + 'reproduces exactly (1 tile) by omitting one argument.',
+        route: 'ONE honest visit: links 1-3, corpse -> t2 (2 presses), block -> t5 '
+            + '(34 presses), t4 pressed manually, links 7-11.',
+    }),
 });
 
 /**
@@ -2981,6 +3002,19 @@ export const L40_LINK4_REPAIRED = Object.freeze({
                 + 'button at the same time',
         }),
         holders: 1,
+        /** ⛓ R7 slice 3: ONE holder among R5's classes; the level has TWO. */
+        holdersSupersededBy: Object.freeze({
+            at: 'R7 slice 3',
+            probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+            finding: 'the count is 1 only under `blocksFailOn`\'s defective reach '
+                + 'measurement. `pushableblockfire@480,480` is a second holder — a '
+                + '`Solid`, which `Button.update`\'s hitables admits, with `v = 0` once '
+                + 'it arrives and nothing but another fire press to move it.',
+            alsoRefuted: 'the bob family\'s STAYING refusal is scoped to 80 px — '
+                + '`Bob.update`\'s chase block is inside `if (d <= runRange)` and adds '
+                + 'NOTHING past it. RECORDED-NOT-USED by ruling: no instrument here can '
+                + 'witness an ENEMY press (`activators.js` presses only on the player).',
+        }),
         holdersWhy: '`Button.update`\'s hitables is ["Player","Enemy","Solid"] minus a '
             + 'Cover. L40 has ONE `iceturret`, so it can make one corpse; its three '
             + 'pushable blocks are all west and reach neither button (the same walls '
@@ -2989,6 +3023,21 @@ export const L40_LINK4_REPAIRED = Object.freeze({
         dependency: 'link 4 being HELD is what makes the t5 button reachable, so the '
             + 'corpse cannot be moved to the t5 button without re-shutting the locks '
             + 'that reach it',
+        /**
+         * ⛓⛓ R7 SLICE 3 — THE DEPENDENCY IS EXACTLY RIGHT AND IT IS NOT A WALL.
+         * It says the t5 hold needs group 2 published by something that is not the
+         * thing making the journey. That is a description of a SECOND HOLDER, and
+         * the level has one.
+         */
+        dependencySupersededBy: Object.freeze({
+            at: 'R7 slice 3',
+            probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+            resolution: 'the CORPSE takes t2 (two fire presses north of its spawn — where '
+                + '`corpseEndsAt` already puts it) and the BLOCK makes the journey. The '
+                + 'pair is measured one bit apart: without a second holder the corpse '
+                + 'reaches 214 tiles and NOT the t5 button; with one, 207 and REACHED.',
+            necessaryAndSufficient: true,
+        }),
     }),
     /**
      * ⛔⛔⛔ R5 SLICE 22 — THE OPEN QUESTION IS ANSWERED, AND IT IS **NO**.
@@ -3017,6 +3066,24 @@ export const L40_LINK4_REPAIRED = Object.freeze({
      * every direction decodes to "no move".
      * [[feedback_one_press_is_five_dispatches]] applied to a SEARCH.
      */
+    /**
+     * ⛓ R7 SLICE 3: the "NO" below is correct ABOUT THE CORPSE and about the
+     * configuration R5 could express. The question it answers is not the one
+     * that gates the chain — see `openQuestionSupersededBy`.
+     */
+    openQuestionSupersededBy: Object.freeze({
+        at: 'R7 slice 3',
+        probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+        stillTrue: 'the corpse cannot make the crossing while it is ALSO the thing '
+            + 'publishing group 2 — that half never depended on the reach figure',
+        whatMoved: 'R5\'s 35-tile set was additionally depressed by three instrument '
+            + 'bounds: `corpseCellFree` passed no `openActivators` (so link 3\'s own OPEN '
+            + 'plug read Solid to the corpse and sealed it in the northern pocket), the '
+            + 'player component was recomputed from the corpse\'s own press, and a body '
+            + 'resting in a lock cell holding that lock open was not modelled. Lifted, '
+            + 'the same arm reaches 214 tiles — WITH THE SAME VERDICT.',
+        andTheChainOpens: 'because the BLOCK, not the corpse, makes the journey.',
+    }),
     openQuestion: 'ANSWERED at slice 22, and it is NO: 35 tiles are reachable by '
         + 'bumping from (30,24) and the t5 button at tile (48,25) is not one of them — '
         + "the body's east-most column is 31. See `probe-seedling-r5-l40-holder.mjs`.",
@@ -3044,6 +3111,19 @@ export const L40_LINK4_REPAIRED = Object.freeze({
     holderCensus: Object.freeze({
         hitableClasses: 16,
         holders: 1,
+        /** ⛓ R7 slice 3: ONE holder among R5's classes; the level has TWO. */
+        holdersSupersededBy: Object.freeze({
+            at: 'R7 slice 3',
+            probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+            finding: 'the count is 1 only under `blocksFailOn`\'s defective reach '
+                + 'measurement. `pushableblockfire@480,480` is a second holder — a '
+                + '`Solid`, which `Button.update`\'s hitables admits, with `v = 0` once '
+                + 'it arrives and nothing but another fire press to move it.',
+            alsoRefuted: 'the bob family\'s STAYING refusal is scoped to 80 px — '
+                + '`Bob.update`\'s chase block is inside `if (d <= runRange)` and adds '
+                + 'NOTHING past it. RECORDED-NOT-USED by ruling: no instrument here can '
+                + 'witness an ENEMY press (`activators.js` presses only on the player).',
+        }),
         holder: 'iceturret',
         enemiesFailOn: 'staying — a lured Bob follows, and a dying one fades in 36 '
             + "ticks against a Lock's 101",
@@ -3053,6 +3133,26 @@ export const L40_LINK4_REPAIRED = Object.freeze({
         blocksFailOn: 'reach — the nearest of the three is 22 tiles of pushing from the '
             + 't5 button, and slice 16 measured their whole reachable sets (27/1/1 '
             + 'cells) with neither button in any of them',
+        /**
+         * ⛔⛔⛔ R7 SLICE 3 — THIS ROW IS WRONG TWICE, AND THE SECOND IS AN
+         * INSTRUMENT BUG. Kept verbatim above by ruling; the correction is here.
+         */
+        blocksFailOnSupersededBy: Object.freeze({
+            at: 'R7 slice 3',
+            probe: 'scripts/procgen/probe-seedling-r7-l40-holder.mjs',
+            defect1: 'the distance was measured against the **t5** button only — no arm '
+                + 'of `probe-seedling-r5-l40-holder.mjs` ever asked about **t2**, and '
+                + '`pushableblockfire@480,480` is at tile (30,30), the SAME COLUMN as '
+                + '`button@480,384 {t 2}` at (30,24), six clear tiles apart',
+            defect2: 'the inherited "27/1/1 cells" is the signature of a push search that '
+                + "left the block's own spawn rect in `world.solids`, so every push "
+                + 'collided with the block itself. `plannerObstacleAt`/`collidesSolid` '
+                + 'have taken a `pushables` override since R4 for exactly this reason',
+            measured: Object.freeze({
+                nailedToTheMap: 1, overrideThreaded: 36,
+                toT2Presses: 6, toT5PressesWithCorpseOnT2: 34,
+            }),
+        }),
         probe: 'scripts/procgen/probe-seedling-r5-l40-holder.mjs',
     }),
     /**
