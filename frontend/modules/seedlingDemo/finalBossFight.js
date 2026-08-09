@@ -286,15 +286,57 @@ export function createFinalBoss({ id = 'finalboss', x, y, tag = -1 } = {}) {
     };
 }
 
-/** `|v|`. */
-const speed = (b) => Math.hypot(b.vx, b.vy);
+/**
+ * ⛔⛔⛔ R6 SLICE 6h: `Point.length` IS `sqrt(x*x + y*y)`, NOT `Math.hypot`,
+ * AND THE DIFFERENCE IS THE OWL'S LOST FRAME.
+ *
+ * The two are the same number in exact arithmetic and they are NOT the same
+ * double: `Math.hypot` is the accurate one (it scales to avoid the squares'
+ * rounding), and being accurate is precisely what broke this model. The
+ * running system is `SWFRecomp`'s AVM2 core, and its `flash.geom.Point` is
+ * three lines of C (`SWFModernRuntime/src/avm2/avm2_globals.c`):
+ *
+ *     point_get_length:  return sqrt(x * x + y * y);
+ *     point_normalize:   length = sqrt(x * x + y * y);
+ *                        if (length != 0 && !isnan(length)) {
+ *                            norm = thickness / length;
+ *                            x *= norm;  y *= norm;
+ *                        }
+ *
+ * — and `FP.distance` is the game's own `Math.sqrt(dx*dx + dy*dy)` (`FP.as:264`).
+ *
+ * ⛓⛓⛓ WHY A LAST-BIT DIFFERENCE DECIDES A BRANCH. `Mobile.friction` is
+ * `v.normalize(Math.max(v.length - f, 0))`, so a coasting Owl's speed descends
+ * by exactly 0.25 a tick — THROUGH 1.0, which is `moveSpeed`, which is the
+ * walk/coast split `v.length <= moveSpeed`. The test lands ON the boundary
+ * once per coast, so an accumulated error of one ulp is the whole answer:
+ * with `Math.hypot` the post-lava coast reads 1.000000000000000222 and takes
+ * the coast arm; with the runtime's own arithmetic it reads
+ * 0.9999999999999996 and the walk arm resumes — **one boss frame earlier, and
+ * that is the frame §21.11 measured him losing** (→ trap 118).
+ *
+ * ⇒ every length, normalize and distance the Owl's fight computes goes
+ * through these two, in the runtime's own expression order. `(x / s) * l` is
+ * NOT `x * (l / s)`.
+ */
+export const pointLength = (x, y) => Math.sqrt(x * x + y * y);
 
-/** `Point.normalize(l)` — a no-op on a zero vector, as AS3's is. */
+/** `FP.distance(x1, y1, x2, y2)` — `Math.sqrt(dx*dx + dy*dy)`, `FP.as:264`. */
+export const pointDistance = (x1, y1, x2, y2) => pointLength(x2 - x1, y2 - y1);
+
+/** `|v|` — through `Point.length`, so the last bit is the runtime's. */
+const speed = (b) => pointLength(b.vx, b.vy);
+
+/**
+ * `Point.normalize(l)` — the runtime's `x *= thickness / length`, and its own
+ * two guards (a zero length and a NaN one both leave the point untouched).
+ */
 function normalize(b, l) {
     const s = speed(b);
-    if (s === 0) return;
-    b.vx = (b.vx / s) * l;
-    b.vy = (b.vy / s) * l;
+    if (s === 0 || Number.isNaN(s)) return;
+    const norm = l / s;
+    b.vx *= norm;
+    b.vy *= norm;
 }
 
 /**
@@ -521,14 +563,17 @@ export function stepFinalBoss(b, ctx) {
             spawnGrenade(b.x - 8, b.y - 8);
             events.push({ what: 'grenade', x: b.x - 8, y: b.y - 8 });
         }
+        // `var to:Point = new Point(pods[cpod].x - x, …); to.normalize(moveSpeed);
+        //  v = to;` — an ASSIGNMENT, so a zero-length `to` (which
+        // `point_normalize` leaves untouched) would STOP him rather than leave
+        // last tick's velocity in place. He is never exactly on the pod point
+        // — the snap parks him at `pod.y + 1` — but the two differ and the
+        // game's arm is the one modelled.
         const target = FINAL_BOSS.podPositions[b.cpod];
-        const dx = target.x - b.x;
-        const dy = target.y - b.y;
-        const l = Math.hypot(dx, dy);
-        if (l !== 0) {
-            b.vx = (dx / l) * FINAL_BOSS.moveSpeed;
-            b.vy = (dy / l) * FINAL_BOSS.moveSpeed;
-        }
+        const to = { vx: target.x - b.x, vy: target.y - b.y };
+        normalize(to, FINAL_BOSS.moveSpeed);
+        b.vx = to.vx;
+        b.vy = to.vy;
         b.anim = 'walk';
         // `collide("Pod", x, y)` then `pod == pods[cpod]` — the pods are
         // 16x16 about their entity points, so this is a box test.
@@ -539,7 +584,10 @@ export function stepFinalBoss(b, ctx) {
         });
         if (pod && pod === pods[b.cpod]) {
             if (!pod.open) pod.open = true;
-            if (Math.hypot(b.x - pod.x, b.y - pod.y) <= speed(b) * 2) {
+            // ⛓ `FP.distance(x, y, pod.x, pod.y) <= v.length * 2`, and the
+            // right-hand side is the velocity the two lines above JUST SET —
+            // so the threshold is `moveSpeed * 2`, not the speed he arrived at.
+            if (pointDistance(b.x, b.y, pod.x, pod.y) <= speed(b) * 2) {
                 b.x = pod.x;
                 b.y = pod.y + 1;
                 b.rockfallTime = FINAL_BOSS.rockfallTimeMax;
@@ -860,7 +908,7 @@ export function advanceOwlGrenadeGraphic(g) {
 
 /** `FP.distance(x, endY, p.x, p.y) <= hitRadius` — entity point to entity point. */
 export function owlGrenadeReaches(g, px, py) {
-    return Math.hypot(g.x - px, g.y - py) <= GRENADE.hitRadius;
+    return pointDistance(g.x, g.y, px, py) <= GRENADE.hitRadius;
 }
 
 // ── THE PODS ──────────────────────────────────────────────────────────
@@ -1078,6 +1126,9 @@ export function stepOwlRoom(room, ctx = {}) {
     });
     out.events.push(...step.events);
     out.introFreeze = step.introFreeze;
+    // Which row of `OWL_PHASE_SITES` the boss took — reported, never
+    // re-derived by a caller (the walk/coast split is decided INSIDE the step).
+    out.phase = step.phase;
     for (const e of advanceFinalBossGraphic(room.boss)) {
         out.events.push(e);
         if (e.what === 'deadAnimEnded') {

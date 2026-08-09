@@ -7,7 +7,8 @@ import {
     animCallbackUpdates, createFinalBoss, createOwlRoom, createPod, createRockFall,
     finalBossBox, finalBossCoast, finalBossDeathSchedule, finalBossHit,
     finalBossKnockback, finalBossLavaVerdict, firstTileUnder, podIsLethal, podIsOpen,
-    rockFallBox, rockFallUpdatesToLand, setPodOpen, stepOwlRoom, stepRockFall,
+    pointDistance, pointLength, rockFallBox, rockFallUpdatesToLand, setPodOpen,
+    stepOwlRoom, stepRockFall,
 } from './finalBossFight.js';
 import { R6_ANIM_CLOCKS } from './r6Acceptance.js';
 import { buildLevelWorld, ROLES } from './levelWorld.js';
@@ -192,6 +193,78 @@ describe('finalBossFight — the shove, derived on the real loop', () => {
         finalBossKnockback(b, 5, 100, 110);
         expect(b.vx).toBeCloseTo(0, 10);
         expect(b.vy).toBeCloseTo(-5, 10);
+    });
+});
+
+describe('finalBossFight — the runtime\'s own arithmetic (slice 6h, trap 118)', () => {
+    /**
+     * ⛔⛔⛔ THE MODEL MUST NOT BE MORE ACCURATE THAN THE GAME.
+     *
+     * `SWFRecomp`'s `point_get_length` is `sqrt(x*x + y*y)` and its
+     * `point_normalize` is `x *= thickness / length`; `FP.distance` is
+     * `Math.sqrt(dx*dx + dy*dy)`. `Math.hypot` computes the same real number
+     * to better precision and a DIFFERENT double, and the Owl's walk/coast
+     * split reads that double against `moveSpeed` at exactly the boundary.
+     */
+    const V = { x: 0.4265638150199433, y: -0.9044574681628931 };
+
+    it('`pointLength` is `sqrt(x*x + y*y)` — and the witness shows it is not `Math.hypot`', () => {
+        expect(pointLength(V.x, V.y)).toBe(Math.sqrt(V.x * V.x + V.y * V.y));
+        // The positive witness: on this vector the two disagree, so the
+        // assertion above cannot pass because the two happen to coincide.
+        expect(pointLength(V.x, V.y)).not.toBe(Math.hypot(V.x, V.y));
+        expect(Math.hypot(V.x, V.y) - pointLength(V.x, V.y)).toBeGreaterThan(0);
+    });
+
+    it('`pointDistance` is `FP.distance`, and its argument order cannot matter', () => {
+        expect(pointDistance(1, 2, 4, 6)).toBe(5);
+        expect(pointDistance(4, 6, 1, 2)).toBe(pointDistance(1, 2, 4, 6));
+    });
+
+    it('a coast whose speed descends THROUGH `moveSpeed` re-aims a tick sooner '
+        + 'than `Math.hypot` says', () => {
+        // The lava knock's own vector, from the W-owl plan's first hit: the
+        // friction chain then descends 4.00, 3.75, … 1.00 and the split is
+        // `v.length <= moveSpeed`, so it lands ON the boundary once.
+        const KNOCK = { x: 3.25409913814836837531, y: -6.89977481447441043372 };
+        const resumeTick = (len) => {
+            let { x, y } = KNOCK;
+            const norm = (l) => {
+                const s = len(x, y);
+                if (s === 0) return;
+                const n = l / s;
+                x *= n; y *= n;
+            };
+            for (let t = 1; t <= 20; t += 1) {
+                norm(Math.max(len(x, y) - FINAL_BOSS.friction, 0));
+                if (Math.abs(x) < 0.05) x = 0;
+                if (Math.abs(y) < 0.05) y = 0;
+                if (len(x, y) > FINAL_BOSS.velocityCap) norm(FINAL_BOSS.velocityCap);
+                if (len(x, y) <= FINAL_BOSS.moveSpeed) return t;
+            }
+            return null;
+        };
+        // ⇒ the whole defect, in one number: thirteen coast ticks against
+        // fourteen. The frame the model spent coasting is a frame the game
+        // spent WALKING, and a walk tick rolls a grenade — one draw, after
+        // which every random number in the fight is off by one.
+        expect(resumeTick(pointLength)).toBe(13);
+        expect(resumeTick(Math.hypot)).toBe(14);
+    });
+
+    it('the Owl leaves the coast on the tick the runtime\'s arithmetic says, '
+        + 'through the real step', () => {
+        const room = createOwlRoom({ tiles: world.tiles, seed: 1234567 });
+        const player = { x: 40, y: 216, vx: 0, vy: 0 };
+        stepOwlRoom(room, { player, introRelease: true });
+        // Hand him the lava knock where he stands (no lava under him here, so
+        // the arm under test is the COAST and nothing else).
+        room.boss.vx = 3.25409913814836837531;
+        room.boss.vy = -6.89977481447441043372;
+        const phases = [];
+        for (let t = 0; t < 16; t += 1) phases.push(stepOwlRoom(room, { player }).phase);
+        expect(phases.indexOf('walk')).toBe(12); // the 13th tick after the knock
+        expect(phases.slice(0, 12).every((p) => p === 'coast')).toBe(true);
     });
 });
 

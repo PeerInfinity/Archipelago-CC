@@ -103,8 +103,8 @@ import {
     FINAL_BOSS, GRENADE, ROCK_FALL, advanceFinalBossGraphic, advanceOwlGrenadeGraphic,
     advancePodGraphic, advanceRockFallGraphic, createFinalBoss, createOwlGrenade, createPod,
     createRockFall, finalBossBox, finalBossDeathSchedule, finalBossHit, finalBossLavaVerdict,
-    firstTileUnder, podIsLethal, rockFallBox, setPodOpen, stepFinalBoss, stepOwlGrenade,
-    stepRockFall,
+    firstTileUnder, owlGrenadeReaches, podIsLethal, pointDistance, rockFallBox, setPodOpen,
+    stepFinalBoss, stepOwlGrenade, stepRockFall,
 } from './finalBossFight.js';
 import {
     OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, assertOwlStreamPremises, owlTickDraws,
@@ -4842,8 +4842,12 @@ export function createLevelRun({
                 // `animEnd`'s "explode" arm: `FP.distance(x, endY, p.x, p.y)
                 // <= hitRadius` against the player's ENTITY point, read at the
                 // grenade's slot — i.e. from the end of the previous tick.
-                const dist = Math.hypot(g.x - state.x, g.y - state.y);
-                const reaches = dist <= GRENADE.hitRadius;
+                // ⛔ THROUGH `owlGrenadeReaches`, NOT A SECOND COPY OF IT:
+                // `FP.distance` is `sqrt(dx*dx + dy*dy)` and `Math.hypot` is
+                // not the same double (slice 6h, trap 118). `dist` is the
+                // record; the VERDICT is the fight module's own.
+                const dist = pointDistance(g.x, g.y, state.x, state.y);
+                const reaches = owlGrenadeReaches(g, state.x, state.y);
                 owlGrenadeEvents.push({
                     t: ticksCompleted, level, id: g.id, what: 'exploded',
                     x: g.x, y: g.y, dist, hitPlayer: reaches,
