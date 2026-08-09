@@ -51,12 +51,6 @@ import {
     SEAM_SIGNATURE, seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
 } from './r7Acceptance.js';
 import { PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT } from './playthroughWalk.js';
-// ⛓ The generator itself, because the ending-state offset for `rng.gameplay`
-// is a STEP COUNT and an LFSR state cannot be added to. Walking it forward is
-// the only way to check the claim, and `rng.js` is the transcription the whole
-// arc already trusts (asserted against the live game in `rng.test.js`).
-// ⚠ SCHEDULED FOR DELETION with `seamBuildCost` — kickoff §10.1 step 4.
-import { step } from './rng.js';
 
 /**
  * Two LATCHES compared field by field — the ending-state claim, and the
@@ -256,54 +250,38 @@ export function chainFindings(chain, tapes, replayed) {
         offset += t.tick_count;
     });
 
-    // ── 4. THE ENDING STATE, AND THE SEAM'S MEASURED PRICE ────────────
+    // ── 4. THE ENDING STATE — EQUAL, on all 46 rows ───────────────────
     // ⛓ The claim that makes the other three add up to a playthrough. Two
     // runs that walked the same path and ended in different states did not
     // do the same thing, and nothing above would have said so.
+    //
+    // ⛔⛔ AND IT IS AN EQUALITY AGAIN. Slice 2 could not make it one: the
+    // boot side declared a PRE-build stream position while the latch read a
+    // POST-build one, so a segmented chain ended exactly one level build
+    // away from its headline (1562 draws and 21 dead frames for L94,
+    // measured with zero residue). That was bridged by asserting the ENDING
+    // state OFFSET by the seam level's own build cost —
+    // `PLAYTHROUGH_CHAINS[].seamBuildCost` plus two `⚖ the seam costs
+    // EXACTLY…` rows here — an approved bridge with a scheduled deletion.
+    //
+    // R7 slice 2b's begin()-ENTRY latch made the declaration and the latch
+    // the same instant, so the successor's own build consumes the same 1562
+    // draws and the chain lands where the headline lands. THE BRIDGE IS
+    // DELETED, NOT REWORKED (kickoff §10.1 step 4), and it is deleted
+    // DELIBERATELY: everything here stays green with a stale declaration in
+    // place, which is exactly trap 119's shape — a number that is no longer
+    // measuring anything, still passing.
     const lastSeg = seg(chain.segments[chain.segments.length - 1]);
     const agree = latchAgreementFindings(
         `chain ${chain.id} ending state`,
         headline.seam?.seam, lastSeg.seam?.seam, ['headline', 'chain']);
-    const cost = chain.seamBuildCost;
-    // ⛔⛔ THE TWO OFFSET FIELDS ARE ASSERTED OFFSET BY THE DECLARED
-    // AMOUNT, NOT SKIPPED. A chain that ends `deadFrames` and `draws` away
-    // from its headline is a chain whose ONLY difference from the
-    // contiguous walk is the duplicated build; a chain that ends anywhere
-    // ELSE is a defect, and a chain that ends EQUAL means something changed
-    // in the boot path and this declaration is stale. Both directions go
-    // red. That is why the number is here and not a skip.
-    const offsetFields = cost ? ['rng.gameplay', 'save.time'] : [];
-    const disagree = agree.filter((r) => !r.ok
-        && !offsetFields.some((f) => r.name.endsWith(`: ${f}`)));
+    const disagree = agree.filter((r) => !r.ok);
     add(`chain ${chain.id}: ⛓ THE ENDING STATE — the chain ends where the headline ends, `
-        + `field by field${cost ? ` (bar the ${offsetFields.length} fields the seam's `
-            + 'own duplicated build offsets, asserted below)' : ''}`,
+        + 'field by field, with NO offset declared anywhere',
     disagree.length === 0,
     disagree.length === 0 ? `${agree.length} signature rows agree`
         : `${disagree.length} row(s) DIFFER: `
             + disagree.map((r) => `${r.name} [${r.detail}]`).join('; '));
-
-    if (cost) {
-        const h = headline.seam?.seam ?? {};
-        const c = lastSeg.seam?.seam ?? {};
-        // `rng.gameplay`: an LFSR STATE, so the offset is a step COUNT and
-        // the only way to check it is to walk the generator forward.
-        let walked = (h['rng.gameplay'] ?? 0) >>> 0;
-        for (let k = 0; k < cost.draws; k += 1) walked = step(walked);
-        add(`chain ${chain.id}: ⚖ the seam costs EXACTLY one L${cost.level} build — `
-            + `${cost.draws} gameplay draw(s)`,
-        Number.isFinite(h['rng.gameplay']) && Number.isFinite(c['rng.gameplay'])
-            && walked === (c['rng.gameplay'] >>> 0),
-        `headline ${h['rng.gameplay']} advanced ${cost.draws} step(s) is ${walked}; the `
-            + `chain ended at ${c['rng.gameplay']}. ${cost.cite}`);
-        add(`chain ${chain.id}: ⚖ …and EXACTLY one L${cost.level} fade — `
-            + `${cost.deadFrames} dead frame(s) of \`save.time\``,
-        Number.isFinite(h['save.time']) && Number.isFinite(c['save.time'])
-            && c['save.time'] - h['save.time'] === cost.deadFrames,
-        `headline ${h['save.time']} vs chain ${c['save.time']}, delta `
-            + `${c['save.time'] - h['save.time']} (declared ${cost.deadFrames}). `
-            + '`Game.as:832` counts dead frames, which is why this chain is pinned.');
-    }
 
     // ── 5. THE FREE ORACLE, when the sweep has it ─────────────────────
     if (chain.freeOracle && replayed.has(chain.freeOracle)) {

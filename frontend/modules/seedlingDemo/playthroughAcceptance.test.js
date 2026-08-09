@@ -322,7 +322,38 @@ describe('chainFindings — ENDS-MEET v2', () => {
             }),
         });
         expect(reds(f)).toEqual(['chain test: ⛓ THE ENDING STATE — the chain ends where '
-            + 'the headline ends, field by field']);
+            + 'the headline ends, field by field, with NO offset declared anywhere']);
+    });
+
+    it('⛓ THE BRIDGE IS GONE, and the ending state is an EQUALITY on every row', () => {
+        // ⛔ R7 slice 2b step 4 — the step everything stays green without
+        // taking. Slice 2's chain declared `seamBuildCost` and `chainFindings`
+        // EXEMPTED `rng.gameplay` and `save.time` from the ending-state claim,
+        // asserting them offset instead. With the begin()-entry latch the
+        // offset is zero, so the exemption has to go — a declared offset that
+        // is no longer measuring anything still passes, which is trap 119's
+        // shape and the reason this deletion is a named step.
+        for (const chain of PLAYTHROUGH_CHAINS) {
+            expect(chain.seamBuildCost, `${chain.id} must not declare a build cost`)
+                .toBeUndefined();
+        }
+        // …and a chain whose ending state moves on EITHER formerly-exempt row
+        // now goes red, which it could not have done while the bridge stood.
+        for (const field of ['rng.gameplay', 'save.time']) {
+            const base = latchAt().seam;
+            const f = buildChain({
+                replayed: (r) => r.set('S2', {
+                    ...r.get('S2'),
+                    seam: {
+                        ...latchAt({ 'latch.tick': END - CUT }),
+                        seam: { ...base, [field]: base[field] + 1562 },
+                    },
+                }),
+            });
+            expect(reds(f), `ending state must catch a moved ${field}`)
+                .toContain('chain test: ⛓ THE ENDING STATE — the chain ends where the '
+                    + 'headline ends, field by field, with NO offset declared anywhere');
+        }
     });
 
     it('⛔ MUTATION: a boundary tick the two segments disagree about goes red', () => {

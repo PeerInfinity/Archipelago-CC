@@ -102,49 +102,16 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          */
         cuts: Object.freeze([61]),
         endsAt: 109,
-        /**
-         * ⛓⛓⛓ THE SEAM'S PRICE, MEASURED — and this is §6.2's open ruling
-         * standing on a number instead of an argument.
-         *
-         * A segment boundary at an ARRIVAL duplicates exactly one level
-         * BUILD. The contiguous run builds L94 once (it arrives there); the
-         * segmented pair builds it twice (segment 1 arrives into it, segment
-         * 2 boots into it). And `Bot.botStart` applies `Rng.setState` BEFORE
-         * that build — "the declared seed is the build's first number"
-         * (`Bot.as:1689`) — so the boot side's `rng.gameplay` is a PRE-build
-         * quantity while the latch's is a POST-build one. They are not the
-         * same kind of number, and no declaration can make them one.
-         *
-         * ⛔ SO THE ENDING STATE IS NOT ASSERTED EQUAL. IT IS ASSERTED
-         * OFFSET, BY THIS MUCH, and that is a HARDER claim than equality
-         * would have been if it were reachable: a drift of one draw or one
-         * frame goes red. The two numbers are not fitted to the chain —
-         * they are L94's own build cost, measured independently by
-         * `scripts/procgen/probe-seedling-build-cost.mjs` (boot the level
-         * with a declared seed and `tick_count: 0`; the distance from
-         * declaration to latch IS the build):
-         *
-         *     L94's build = 1562 gameplay draws, 21 dead frames
-         *     the seam's delta = 1562 LFSR steps, +21 `save.time`
-         *
-         * Zero residue. 409 tiles x 3 draws (`Tile.as:97-99`) = 1227 of the
-         * 1562; the other 335 are the 33 entity constructions.
-         *
-         * ⚠ THIS BLOCK IS THE FALLBACK, NOT THE PREFERENCE. §6.2's ruled
-         * preference is RNG-CONTIGUOUS seams, and the gap is one named
-         * quantity the fork does not latch today: the stream state at
-         * `Game.begin()` ENTRY of the arrival world. If a later batch latches
-         * that, segment N+1 declares it, its own build consumes the same
-         * 1562 draws, and this whole declaration is DELETED rather than
-         * adjusted.
+        /*
+         * ⛓ NO `seamBuildCost`, AND ITS ABSENCE IS THE RESULT. Slice 2 had to
+         * declare one — a segment boundary duplicated one L94 build (1562
+         * gameplay draws, 21 dead frames, measured with zero residue) because
+         * a tape declared a PRE-build stream position and the latch read a
+         * POST-build one. Slice 2b's begin()-ENTRY latch made those the same
+         * instant, so segment 2's own build consumes the same draws and the
+         * chain ends where the headline ends. The bridge was DELETED rather
+         * than adjusted, per §10.1 step 4 — see `chainFindings`' claim 4.
          */
-        seamBuildCost: Object.freeze({
-            level: 94,
-            draws: 1562,
-            deadFrames: 21,
-            cite: 'probe-seedling-build-cost.mjs --levels=94; Tile.as:97-99; '
-                + 'Game.as:832 (`time += timeRate`, below the blackCover gate)',
-        }),
         /**
          * ⛓ THE WALK ITSELF, so the planner and the tests read ONE source.
          *
