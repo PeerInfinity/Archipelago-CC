@@ -3,58 +3,75 @@
  * probe-seedling-music-pair — the Music no-repeat pair, WITNESSED at last.
  * R7 slice 2, discharging §9.4's named bound.
  *
- * ── THE BOUND SLICE 1 PRINTED, AND WHY IT COULD NOT BE A CHECK ────────
+ * ── ⛔ §9.4's BOUND HAD THE WRONG CAUSE, AND THIS PROBE'S FIRST RUN IS
+ *    WHAT SAID SO ──────────────────────────────────────────────────────
  *
  * `Music.currentSet`/`currentIndex` are two of the twenty-six fields the v8
- * `seam` block carries. Slice 1's probe declared them, and could not
- * witness them: the boot write lands at `botStart`, and then the level load
- * plays a sound of its own and `Music.playSound` OVERWRITES both fields, so
- * what the latch reports at tick 30 is the RUN's music in both arms. §9.4
- * printed that as a bound rather than asserting a check that could only
- * pass by accident.
+ * `seam` block carries. Slice 1's probe declared them and could not witness
+ * them, and wrote the reason down as: "the boot write lands at `botStart`,
+ * and then THE LEVEL LOAD PLAYS A SOUND OF ITS OWN and `Music.playSound`
+ * overwrites both fields, so what the latch reports at tick 30 is the RUN's
+ * music in both arms" (§9.4).
  *
- * ⛔ THE BOUND IS REAL AND THE WITNESS WAS IN THE WRONG PLACE. The pair is
- * not in the signature because anybody wants to read it back — it is there
- * because it GATES A DRAW COUNT:
+ * ⛔ THAT IS NOT WHAT HAPPENED. Measured here, in the same 30-tick L0
+ * window with `beam` NOT declared: the undeclared arm ends at `""/-1` — the
+ * fresh-page value, untouched. **Thirty ticks of L0 play no indexed sound
+ * at all.** What overwrote slice 1's pair was the OTHER field its inert arm
+ * declared: `beam: true` runs `Moonrock`'s five-second beam scene, which
+ * plays "Light" and then drops the rock, which plays "Rock" — and the arm
+ * declared five things at once, so the one that moved the music was read as
+ * "the level load". [[feedback_pair_arms_share_the_input]] in a new
+ * costume: an arm that varies five fields cannot attribute an effect to
+ * one of them.
+ *
+ * ⇒ **THE SOUND-QUIET WINDOW §9.6 ITEM 3 ASKED FOR ALREADY EXISTED**, and
+ * in it the pair is witnessed by the plainest possible means: declare it,
+ * read it back, and get exactly what was declared.
+ *
+ * ── EXPERIMENT 1: THE READBACK, in the quiet window ───────────────────
+ *
+ *   arm `none`      declares no music — must end at `""/-1`, untouched
+ *   arm `index-0`   declares `{set: "Rock", index: 0}` — must end there
+ *   arm `index-1`   declares `{set: "Rock", index: 1}` — must end there
+ *
+ * Three distinct latched values from three declarations is a write that
+ * lands and survives. `none` is the negative arm that makes it evidence:
+ * without it, "declared and applied" and "the run happened to play that"
+ * look identical.
+ *
+ * ── EXPERIMENT 2: THE DRAW COUNT, where a sound actually plays ────────
+ *
+ * The readback is not why the pair is in the signature. It is there because
+ * it GATES A DRAW COUNT:
  *
  *     do { cplayIndex = Math.floor(Rng.cos() * sounds[strInd].length) }
  *     while (cplayIndex == currentIndex && sounds[strInd].length > 1
  *            && currentSet == strInd)                    // Music.as:726-733
  *
- * So the observable effect of declaring the pair is not the pair. It is
- * ONE EXTRA `Rng.cos()` DRAW — and with `Rng.split` false (the default)
- * `Rng.cos()` IS the gameplay stream, so the effect lands in `rng.gameplay`,
- * a field the latch already carries and the seam already compares.
- * [[feedback_graceful_fallback_vacuous_replay]]: assert the EFFECT in the
- * driven system, not the readout.
+ * With `Rng.split` false (the default) `Rng.cos()` IS the gameplay stream,
+ * so a forced redraw lands in `rng.gameplay` — the field the seam already
+ * compares. But a window that plays NOTHING can never show it, which is why
+ * experiment 1's own result made experiment 2 need a different window.
  *
- * ── THE PAIR, AND WHY IT NEEDS NO PRIOR KNOWLEDGE ─────────────────────
+ * A LEVEL ARRIVAL plays from the "Room" set (four sounds — `soundRoom`,
+ * `Music.as:110` — so the rejection loop can fire), and R7's toy chain
+ * measured both of its arrivals landing on index 0. So on a tape that
+ * CROSSES a level boundary:
  *
- * L0's load plays from the "Rock" set, which has exactly two sounds
- * (`soundRock = [sndRock1, sndRock2]`, `Music.as:99`) — the minimum for the
- * rejection loop to be able to fire at all. Whatever index the run would
- * naturally draw first, it is 0 or 1. So:
+ *   arm `room-0`    declares `{set: "Room", index: 0}` — COLLIDES with the
+ *                   natural draw, so `playSound` must redraw: one extra
+ *                   gameplay draw, and a latched index that is NOT 0
+ *   arm `room-1`    declares `{set: "Room", index: 1}` — no collision, so
+ *                   the natural draw stands: no extra draw, index 0
  *
- *   arm `index-0`   declares `music: {set: "Rock", index: 0}`
- *   arm `index-1`   declares `music: {set: "Rock", index: 1}`
- *   arm `none`      declares no music at all — the natural run
+ * ⛓ PREDICTED BEFORE IT RAN, both sides, from the toy chain's measurement.
+ * If the two arms agree on `rng.gameplay`, the rejection loop did not fire
+ * and the declaration did not reach it.
  *
- * EXACTLY ONE of the two declarations collides with the natural first draw
- * and forces a redraw. So:
- *
- *   · if the boot write LANDS, `index-0` and `index-1` MUST differ in
- *     `rng.gameplay`, and exactly one of them must equal `none`;
- *   · if the boot write is accepted and IGNORED — the one failure an
- *     inert-arm probe cannot see — all three are identical.
- *
- * That is a two-sided witness that needs to know nothing in advance about
- * which sound L0 happens to play, which is the half of this that a
- * hand-picked index would have got wrong.
- *
- * ⚠ `friction-stop` is the window: 30 ticks of pure deceleration in L0 with
- * nothing to collide with, and NO `beam` — the 280-draw moonrock flare is
- * exactly the render-side polluter that would drown a one-draw difference
- * (slice 1 measured it at 18 -> 469 dead frames).
+ * ⚠ NO `beam` IN ANY ARM. The 280-draw moonrock flare is exactly the
+ * render-side polluter that would drown a one-draw difference (slice 1
+ * measured it at 18 -> 469 dead frames) — and it is also what confounded
+ * §9.4.
  *
  * Run (dev server on :8000, wasm staged):
  *   node scripts/procgen/probe-seedling-music-pair.mjs
@@ -166,55 +183,108 @@ async function runArm(label, tape) {
 }
 
 try {
-    console.log('# the Music no-repeat pair — witnessed by the DRAW COUNT\n');
+    console.log('# the Music no-repeat pair — two experiments, and the first one '
+        + 'refuted §9.4\'s cause\n');
+
+    // ── EXPERIMENT 1: the READBACK, in the sound-quiet window ─────────
+    console.log('## 1. the readback — `friction-stop`, 30 ticks of L0, no beam\n');
     const none = await runArm('none', v8(null));
     const i0 = await runArm('index-0', v8({ music: { set: 'Rock', index: 0 } }));
     const i1 = await runArm('index-1', v8({ music: { set: 'Rock', index: 1 } }));
+    const pair = (r) => `${JSON.stringify(r.seam['static.Music.currentSet'])}/`
+        + `${r.seam['static.Music.currentIndex']}`;
 
-    const g = (r) => r.seam['rng.gameplay'];
-    // ── ⛓ THE WITNESS ─────────────────────────────────────────────────
-    check('⛓ THE MUSIC PAIR IS WITNESSED — declaring it MOVES the gameplay stream',
-        g(i0) !== g(i1),
-        g(i0) !== g(i1)
-            ? `index-0 ends at ${g(i0)} and index-1 at ${g(i1)}. The two declarations `
-                + 'differ in nothing but the no-repeat index, and exactly one of them '
-                + 'collides with the draw `Music.playSound` would otherwise take — so '
-                + 'one arm pays an extra `Rng.cos()` and the other does not. §9.4\'s '
-                + 'bound is discharged: the pair is not readable at the latch (the run '
-                + 'overwrites it) and it is MEASURABLE in the stream, which is where '
-                + 'the signature carries it for.'
-            : '⛔ IDENTICAL — the boot write was accepted and IGNORED, which is the one '
-                + 'failure an inert arm cannot distinguish from success');
-    // ── the anchor: exactly one arm is the natural run ─────────────────
-    const matchesNone = [['index-0', g(i0)], ['index-1', g(i1)]]
-        .filter(([, v]) => v === g(none)).map(([n]) => n);
-    check('exactly ONE declaration is the run\'s own first draw', matchesNone.length === 1,
-        `undeclared ends at ${g(none)}; ${matchesNone.length === 1
-            ? `${matchesNone[0]} matches it, so the OTHER arm is the one that forced a `
-                + 'redraw — which names which sound L0 plays without anyone having had '
-                + 'to know it in advance'
-            : `${matchesNone.length} arm(s) match it (${matchesNone.join(', ') || 'none'})`}`);
-
-    // ── and the stream is UNMOVED, which is what makes it a seam field ─
-    // ⚠ A pair that also shifted the player would be a boot field a segment
-    // could not carry. One extra gameplay draw is a state difference with no
-    // consumer in this 30-tick window; that it stays that way is the check.
-    const s = (r) => JSON.stringify(r.ticks);
+    // ⛔ THE NEGATIVE ARM FIRST, because it is what makes the other two
+    // evidence rather than coincidence — and because it is the measurement
+    // that overturns §9.4.
+    check('⛔ THIRTY TICKS OF L0 PLAY NO INDEXED SOUND — §9.4\'s cause is refuted',
+        none.seam['static.Music.currentSet'] === ''
+        && none.seam['static.Music.currentIndex'] === -1,
+        `the undeclared arm ended at ${pair(none)}. §9.4 said "the level load plays a `
+        + 'sound of its own and `Music.playSound` overwrites both fields"; the fresh-page '
+        + `${pair(none)} is still there at tick 30. What moved slice 1's pair was the `
+        + 'OTHER field its inert arm declared — `beam: true` runs the moonrock\'s '
+        + 'five-second scene, which plays "Light" and then drops the rock ("Rock"). An '
+        + 'arm that varies five fields cannot attribute an effect to one of them.');
+    check('⛓ THE PAIR IS WITNESSED — declared, and read back exactly',
+        i0.seam['static.Music.currentSet'] === 'Rock'
+        && i0.seam['static.Music.currentIndex'] === 0
+        && i1.seam['static.Music.currentSet'] === 'Rock'
+        && i1.seam['static.Music.currentIndex'] === 1,
+        `none ${pair(none)}, index-0 ${pair(i0)}, index-1 ${pair(i1)} — three `
+        + 'declarations, three distinct latched values, and the negative arm untouched. '
+        + '§9.4\'s bound is DISCHARGED: the sound-quiet window it asked for is the one '
+        + 'slice 1 was already using, with one field too many in it.');
     check('…and the observation stream is UNMOVED in all three arms',
-        s(none) === s(i0) && s(i0) === s(i1),
-        s(none) === s(i0) && s(i0) === s(i1)
-            ? `${none.ticks.length} observations, identical — the draw moved and nothing `
-                + 'in this window consumed it'
+        JSON.stringify(none.ticks) === JSON.stringify(i0.ticks)
+        && JSON.stringify(i0.ticks) === JSON.stringify(i1.ticks),
+        JSON.stringify(none.ticks) === JSON.stringify(i0.ticks)
+        && JSON.stringify(i0.ticks) === JSON.stringify(i1.ticks)
+            ? `${none.ticks.length} observations, identical — a boot field a segment can `
+                + 'carry without moving the run'
             : 'the declaration MOVED THE RUN; it would not be usable as a boot block');
+    check('⛓ …and NO sound plays, so NO draw is taken — the rejection loop needs a '
+        + 'window that plays something',
+        none.seam['rng.gameplay'] === i0.seam['rng.gameplay']
+        && i0.seam['rng.gameplay'] === i1.seam['rng.gameplay'],
+        `all three end at rng.gameplay=${none.seam['rng.gameplay']}. `
+        + '`Music.playSound` is never called in this window, so its do-while never runs '
+        + 'and the declaration cannot cost a draw here. That is not the declaration '
+        + 'failing to land (the readback above says it landed) — it is the wrong window '
+        + 'for the second question, which is what experiment 2 is for.');
 
-    console.log(`\nMUSIC LATCHES: none ${JSON.stringify(none.seam['static.Music.currentSet'])}/`
-        + `${none.seam['static.Music.currentIndex']}, index-0 `
-        + `${JSON.stringify(i0.seam['static.Music.currentSet'])}/`
-        + `${i0.seam['static.Music.currentIndex']}, index-1 `
-        + `${JSON.stringify(i1.seam['static.Music.currentSet'])}/`
-        + `${i1.seam['static.Music.currentIndex']} — the READBACK is still the run's own `
-        + 'music in every arm, exactly as §9.4 said. That bound stands; what is '
-        + 'discharged is the claim that the field could not be witnessed at all.');
+    // ── EXPERIMENT 2: the DRAW COUNT, across a level arrival ──────────
+    console.log('\n## 2. the draw count — a tape that CROSSES a level boundary\n');
+    const crossBase = parseTape(loadTape('r7-ends-meet-1'));
+    const crossing = (music) => parseTape({
+        ...JSON.parse(JSON.stringify(crossBase)),
+        seam: { ...(crossBase.seam ?? {}), music },
+    });
+    const room0 = await runArm('room-0 (COLLIDES)', crossing({ set: 'Room', index: 0 }));
+    const room1 = await runArm('room-1 (no collision)', crossing({ set: 'Room', index: 1 }));
+
+    // ⛔⛔ THE PREDICTION WAS WRONG, AND THE SOURCE SAYS WHY — SO THE CHECK
+    // IS THE CORRECTED CLAIM, NOT THE ORIGINAL ONE.
+    //
+    // Predicted (from the toy chain's arrivals both latching "Room"/0):
+    // declaring index 0 collides, forces a redraw, costs a draw, and lands
+    // elsewhere. MEASURED: both arms end IDENTICAL — same `rng.gameplay`,
+    // both at "Room"/0. Then `Teleporter.as:91`:
+    //
+    //     Music.playSound(sound, soundIndex);   // sound = "Room", index 0
+    //
+    // ⛓ AN EXPLICIT INDEX. `playSound`'s do-while is inside
+    // `if (intInd == -1)` (`Music.as:726`); with an index passed it runs
+    // `cplayIndex = clamp(intInd, ...)` and TAKES NO DRAW AT ALL. So a level
+    // ARRIVAL can never exercise the no-repeat pair — not because the
+    // declaration failed to land (experiment 1 proves it lands), but because
+    // the caller does not use the mechanism.
+    //
+    // ⇒ THE PAIR GATES A DRAW ONLY FOR IMPLICIT-INDEX CALLS ON A SET OF
+    // LENGTH > 1. That is a real and BOUNDED claim, and the bound is named
+    // below rather than left as "somewhere in the game".
+    check('⛓ A LEVEL ARRIVAL CANNOT EXERCISE THE PAIR — it passes an EXPLICIT index',
+        room0.seam['rng.gameplay'] === room1.seam['rng.gameplay']
+        && room0.seam['static.Music.currentIndex'] === 0
+        && room1.seam['static.Music.currentIndex'] === 0,
+        `room-0 (declared "Room"/0) and room-1 (declared "Room"/1) both end at `
+        + `${pair(room0)} / ${pair(room1)} with rng.gameplay=`
+        + `${room0.seam['rng.gameplay']} in both. `
+        + '`Teleporter.as:91` is `Music.playSound(sound, soundIndex)` with '
+        + '`soundIndex = 0` — an EXPLICIT index, and `playSound`\'s rejection do-while '
+        + 'is inside `if (intInd == -1)` (`Music.as:726`). With an index passed it '
+        + 'clamps and takes NO draw. The declaration landed (experiment 1); the caller '
+        + 'simply does not use the mechanism.');
+    console.log('BOUND: the no-repeat pair decides a DRAW COUNT only where `playSound` '
+        + 'is called WITHOUT an index, on a set of length > 1. Source census of '
+        + 'implicit-index call sites: "Rock" x5 (2 sounds), "Text" x5 (2), "Boss Die" '
+        + 'x4 (5), "Enemy Attack" x3+3 (4), "Other" x3+2 (5), "Lava" x3 (3), "Push '
+        + 'Rock" x3 (1 — cannot fire), "Sword" x2 (3), "Wind" x2 (2), "Drill" x2 (2), '
+        + '"Lock" x4 (1 — cannot fire) and ~20 singletons. NONE of them is a level '
+        + 'transition, so no seam in a clean walk can be priced by this field — which '
+        + 'is why the pair is carried as STATE and not as a draw budget. A window that '
+        + 'swings a sword or takes damage is where the draw-count arm belongs, and it '
+        + 'is not this rung\'s cheapest experiment.');
 } finally {
     await browser.close();
 }
