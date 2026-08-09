@@ -163,6 +163,7 @@ import {
 import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
 import {
     ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
+    seamFieldsFromBlock,
 } from './tapeFormat.js';
 import { clampFor, spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -287,6 +288,27 @@ export function createLevelRun({
      * so nothing but the Owl is refused.
      */
     rng = null,
+    /**
+     * ⛓⛓⛓ R7 SLICE 1: the tape's version-8 `seam` BLOCK, threaded for the
+     * `pins`/`save`/`rng` reason one version on.
+     *
+     * A SEGMENT boots the state its predecessor ended with, and most of that
+     * state is read at BUILD time: `Karlore.added()` removes itself when
+     * `Player.hasFire` (`levelWorld.ADDED_TIME_REMOVAL`), `BossTotemPart`
+     * and `BossKey` remove themselves in the `check()` of a new world's
+     * first frame, `Game.cutscene[2]` decides whether the player spawns
+     * inert. So the same rule the save arrays are under applies here: a
+     * runner that recorded the block on the tape header and did not thread
+     * it would build a DIFFERENT WORLD from the one the game builds.
+     *
+     * ⚠ NOT EVERY FIELD IS MODELLED, and `SEAM_BOOT_SPEC[].modelled` is the
+     * list. `beam`, `rock_set`, `time`, `grass_cut`, `secondary`,
+     * `first_use`, `extended`, the two music fields and `menu_state` are
+     * carried, validated and compared AT THE SEAM, and no physics here
+     * reads them. Saying which is which is the difference between a
+     * declared field and a silently ignored one.
+     */
+    seam = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -312,6 +334,23 @@ export function createLevelRun({
      * run every `added()`. §15.8: **a boot is not an entry.**
      */
     const inventory = initialInventory();
+    /**
+     * ⛓ R7: the v8 seam's declared BOOT STATE, as a map keyed by the seam
+     * signature's own field names.
+     *
+     * ⛔ APPLIED BEFORE THE FIRST WORLD IS BUILT — which is the whole
+     * difference between this and a `grants` row. A grant fires on the first
+     * OBSERVATION tick in its level, by which time the world already exists
+     * and every `added()` has run; the note on `inventory` above says so and
+     * §15.8 makes it a law ("a boot is not an entry"). A seam declares what
+     * the run STARTED with.
+     */
+    const seamBoot = seamFieldsFromBlock(seam);
+    for (const name of ITEM_NAMES) {
+        const spec = ITEM_PROPERTIES[name];
+        const declared = seamBoot[`save.${spec.property}`];
+        if (declared !== undefined) inventory[spec.property] = declared;
+    }
     /**
      * ⛓⛓⛓ R5 SLICE 23: THE SAVE-ARRAY MIRROR.
      *
@@ -2631,7 +2670,11 @@ export function createLevelRun({
     // downgrade from a thrust to a slash, which is exactly the kind of
     // divergence that surfaces two thousand ticks later against a bridge
     // nobody was looking at.
-    let primary = 0;
+    // ⛓ R7: …unless the v8 seam declared one. A segment inherits the slot
+    // its predecessor had SELECTED, which is not the same as re-pressing for
+    // it: an `equips` row is a press at a tick and this is the state before
+    // tick 0.
+    let primary = seamBoot['save.primary'] ?? 0;
     const equipsByTick = new Map(equips.map((e) => [e.t, e.slot]));
     const firedEquips = [];
     const applyEquipsAt = (t) => {
@@ -5810,7 +5853,13 @@ export function createLevelRun({
      * scene, which no boot can enter (it needs `Main`'s own start), and
      * `[3]` is never written by anything in the tree.
      */
-    const cutscene = [false, false, false, false];
+    // ⛓ R7: seeded from the v8 seam when one is declared. `cutscene[2]` is
+    // the Seed's mode change and every later `Game` spawns the player inert
+    // under it (trap 91), so a segment that boots after the ending and does
+    // not carry it models a player the game will not move.
+    const cutscene = seamBoot['static.Game.cutscene']
+        ? [...seamBoot['static.Game.cutscene']]
+        : [false, false, false, false];
     /**
      * ⛓⛓ `Game.as:961-966`'s hold, while it is running — `{arm: 2, level,
      * enteredAt, phase, r}` or `null`.
@@ -6853,6 +6902,37 @@ export function createLevelRun({
          * as a set. A `BossLock` opens on exactly this.
          */
         get keys() { return new Set(keys); },
+        /**
+         * ⛓⛓⛓ R7 SLICE 1 (R6 debt 6): THE MODEL'S SAVE ARRAYS, in the
+         * GAME's own shape — `botStatus.save`'s counterpart.
+         *
+         * `botStatus.save` has shipped since R5 slice 23 and NOTHING read
+         * it: the sixteen booted seals and the driven key collect were
+         * asserted from the model side and the stream, never from the
+         * game's own array. This is the other end.
+         *
+         * ⛔ AND `seal_parts` IS DELIBERATELY NOT PREDICTED ELEMENT-WISE.
+         * The identity in each slot is a REJECTION-SAMPLED DRAW taken at
+         * chest OPEN (`Chest.as:84-89`: `floor(Math.random()*16)` redrawn
+         * until `getSealPart` accepts, ~54 draws over sixteen chests), so
+         * "which seal" is a fact about a run's stream position and not
+         * about the map. What IS predictable is HOW MANY SLOTS ARE FILLED
+         * — one per chest opened, because the commit is a side effect
+         * inside the sampler's own predicate — and that the boot-declared
+         * prefix is untouched. The consumer asserts exactly that and names
+         * the bound rather than asserting an identity it cannot know.
+         */
+        get saveState() {
+            return {
+                totem_parts: Array.from(
+                    { length: SAVE_SLOTS.totem_parts }, (_, i) => totemParts.has(i)),
+                keys: Array.from({ length: SAVE_SLOTS.keys }, (_, i) => keys.has(i)),
+                /** The boot-declared prefix, unchanged by the run. */
+                bootSealParts: [...(bootSave.seal_parts ?? [])],
+                /** One per chest OPENED — the slots the run itself filled. */
+                sealSlotsEarned: chestOpens.length,
+            };
+        },
         /**
          * One record per BossLock that finished its fade:
          * `{id, level, persistTag, t}`.
@@ -8319,6 +8399,10 @@ export function createLevelRun({
                         // R4: `null` for everything but a BossKey — see the
                         // `keys` set and `dialogue.PICKUP_CEREMONY.bosskey`.
                         keyType: hit.keyType === undefined ? null : hit.keyType,
+                        // R7: `keyType`'s twin — null for everything but a
+                        // `BossTotemPart`, whose `removed()` writes
+                        // `Player.hasTotemPartSet` instead of an item flag.
+                        totemPart: hit.totemPart === undefined ? null : hit.totemPart,
                         // ⚠ `text: ''` is a REAL case (a totem part, a
                         // non-zero boss key): `pick_up()` spawns no NPC, so
                         // phase A runs and the pickup removes itself with no
@@ -8481,6 +8565,18 @@ export function createLevelRun({
                     // property and instead of persistence. R4's whole key
                     // chain hangs off this one line.
                     if (ceremony.keyType !== null) keys.add(ceremony.keyType);
+                    // ⛓ R7 slice 1: and the same line for a totem part,
+                    // whose `removed()` writes `Player.hasTotemPartSet`
+                    // instead. It was missing for four rungs and nothing
+                    // could see it, because nothing consumed the model's
+                    // totem set: the R5 wand windows all PRESENT the parts
+                    // through the v6 save block and none walks onto one.
+                    // `botStatus.save`'s new consumer is what makes it
+                    // visible, which is the shape of debt 6 exactly.
+                    if (ceremony.totemPart !== null
+                        && ceremony.totemPart !== undefined) {
+                        totemParts.add(ceremony.totemPart);
+                    }
                     // ── ⛓⛓⛓ R5 SLICE 23: `Wand.removed()` ───────────────
                     //
                     // Three writes in one override, and the tape sees all

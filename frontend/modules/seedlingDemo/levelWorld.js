@@ -3877,6 +3877,16 @@ export function buildLevelWorld(levelRecord, {
                 // that could not name its type would grant nothing.
                 ...(e.type === 'bosskey'
                     ? { keyType: intAttr(e.attrs, 'keyType', 0) } : {}),
+                // ⛓ R7 slice 1: `keyType`'s twin, one pickup class over.
+                // `BossTotemPart.removed()` writes `Player.hasTotemPartSet(
+                // totemPart, true)` rather than one of the fourteen item
+                // properties, and `Game.as:2192` passes `o.@totempart` as the
+                // ctor's third argument — so WHICH part it is has to survive
+                // the census or the save consumer added in the same batch
+                // compares the game's five booleans against a model that
+                // never learned which one moved.
+                ...(e.type === 'totempart'
+                    ? { totemPart: intAttr(e.attrs, 'totempart', 0) } : {}),
                 // ⛓⛓⛓ R6 slice 6d: a `seed`'s ceremony text is an
                 // ATTRIBUTE, not a class constant — `Game.as:2185` passes
                 // `o.@text` as the fourth ctor argument. The dialogue's

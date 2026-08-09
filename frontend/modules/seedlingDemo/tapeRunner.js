@@ -157,6 +157,15 @@ export function createTapeStepper(tape, opts = {}) {
             // a pre-v7 tape to `{seed: 0, split: false}`, which is exactly
             // what those tapes mean, and only the Owl refuses it.
             rng: t.rng ?? null,
+            // ⛓⛓⛓ R7 slice 1: and the v8 `seam` block, for the same reason
+            // one version on — most of what it declares is read at BUILD
+            // time (a `Karlore` removes itself when `Player.hasFire`, a
+            // `BossKey` removes itself in the new world's first `check()`,
+            // `cutscene[2]` spawns the player inert), so a runner that kept
+            // it on the header would build a different world from the one
+            // the game builds. `parseTape` normalises a pre-v8 tape to
+            // `null`, which is exactly what those tapes mean.
+            seam: t.seam ?? null,
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking
@@ -628,6 +637,15 @@ export function createTapeStepper(tape, opts = {}) {
             // an acceptance assertion reads `botStatus.items` from the game,
             // not this. See `levelRun.initialInventory`.
             inventory: run ? run.inventory : null,
+            /**
+             * ⛓⛓⛓ R7 slice 1 (R6 debt 6): the model's own save arrays, for
+             * the differential to assert `botStatus.save` against — the
+             * readout has shipped since R5 slice 23 and nothing read it.
+             * See `levelRun.saveState` for why `seal_parts` is a FILLED
+             * COUNT and not an identity list (the identity is a
+             * rejection-sampled draw at chest OPEN).
+             */
+            saveState: run ? run.saveState : null,
             grants: run ? run.grantsFired : [],
             // R4: the equip mirror the differential asserts against the
             // game's own `primary` / `inventory_slots` readout.
