@@ -875,6 +875,34 @@ describe('R7_SECOND_BATCH — the prediction, before the change (R7 slice 2b)', 
         expect(c.fields['rng.fp'].to).toBeNull();
     });
 
+    it('⛓ the OUTCOME is recorded beside the prediction, and the one miss is NAMED',
+        () => {
+            const c = R7_SECOND_BATCH.predictedTapeChange;
+            const o = R7_SECOND_BATCH.outcome;
+            // The file set and the field set were exact — that is the half of
+            // the gate that matters, because an unpredicted FILE or FIELD is a
+            // silent regression and a missed VALUE is arithmetic.
+            expect(o.filesChanged).toBe(1);
+            expect(o.reRecords).toBe(0);
+            expect(Object.keys(o.fields).sort()).toEqual(Object.keys(c.fields).sort());
+            // Two exact, one off by one, and the off-by-one says by how much
+            // and why rather than being quietly rewritten as the prediction.
+            expect(o.fields['rng.seed'].actual).toBe(c.fields['rng.seed'].to);
+            expect(o.fields['rng.seed'].exact).toBe(true);
+            expect(o.fields['seam.time'].exact).toBe(false);
+            expect(o.fields['seam.time'].actual - c.fields['seam.time'].to)
+                .toBe(o.fields['seam.time'].missedBy);
+            // ⛔ AND THE REAL RELATION IS ASSERTED, so the number is not just
+            // a note: the clock's offset is the build's dead frames MINUS the
+            // one swap frame `Bot.update` counts on the outgoing world.
+            expect(c.fields['seam.time'].from - o.fields['seam.time'].actual)
+                .toBe(c.buildDeadFrames - 1);
+            // The unpredicted one stays declared unpredicted on the prediction
+            // side and carries its measured value on the outcome side.
+            expect(c.fields['rng.fp'].to).toBeNull();
+            expect(o.fields['rng.fp'].actual).toBe(987286273);
+        });
+
     it('the batch item carries the no-draw refusal', () => {
         expect(R7_SECOND_BATCH.item.constraint).toMatch(/NO `Math\.random\(\)`/);
         expect(R7_SECOND_BATCH.item.streamEffect).toMatch(/IDENTICAL/);

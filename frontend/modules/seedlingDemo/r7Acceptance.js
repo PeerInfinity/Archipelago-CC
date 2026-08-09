@@ -1756,6 +1756,52 @@ export const R7_SECOND_BATCH = Object.freeze({
             }),
         }),
     }),
+    /**
+     * ⛓⛓ WHAT THE RE-PLAN ACTUALLY PRODUCED — recorded BESIDE the prediction
+     * and never over it, because a prediction overwritten by its outcome is
+     * not a gate, it is a transcript.
+     *
+     * The file set and the field set are exactly as predicted: one tape, three
+     * fields. Two of the three values are exact. One missed by ONE, and the
+     * miss has a cause that was measured independently in the same session
+     * rather than reasoned about afterwards.
+     *
+     * ⛔ `seam.time`: PREDICTED 4880, ACTUAL 4881. The prediction subtracted
+     * L94's 21 dead frames; the clock's real delta across a load is TWENTY.
+     * `probe-seedling-build-cost.mjs` measured that on its own in the same
+     * run — entry 4803 -> terminal 4823 against 21 latched dead frames —
+     * because `Bot.update` counts from the top of `Main.update()`, BEFORE
+     * `Engine.update()` reaches `Game.update()`'s `time += timeRate`, and on
+     * the swap frame the world it reads is the OUTGOING one. So exactly one
+     * frame of the window is countable on either side of the swap. ⚠ THAT IS
+     * R5's per-level dead-frame shape (a load costs 21/20 or 20/19, and an
+     * inherited constant nearly "corrected" a right answer) arriving in a new
+     * place, and the probe now asserts the ±1 BOUND rather than either
+     * equality.
+     *
+     * ⛓ `rng.fp`: 987286273 — which is the chain's own declared `walk.fpSeed`.
+     * That is a measurement, not a coincidence: segment 1 declares that seed
+     * and its begin()-ENTRY reading at the L94 arrival is still that seed, so
+     * SIXTY-ONE TICKS OF L0 TAKE ZERO FP DRAWS. And L94's build does take
+     * them — the same probe read entry 987286273 -> terminal 1861733589, the
+     * old declaration — so the FP count nothing could see before this latch
+     * is now bracketed: zero across the walk, nonzero across the build.
+     */
+    outcome: Object.freeze({
+        filesChanged: 1,
+        reRecords: 0,
+        fields: Object.freeze({
+            'rng.seed': Object.freeze({ actual: 2258182, exact: true }),
+            'seam.time': Object.freeze({
+                actual: 4881,
+                exact: false,
+                missedBy: 1,
+                why: 'the clock advances 20 across a window `Bot` counts as 21 dead '
+                    + 'frames — the swap frame is countable on either side',
+            }),
+            'rng.fp': Object.freeze({ actual: 987286273, exact: null }),
+        }),
+    }),
 });
 
 /**

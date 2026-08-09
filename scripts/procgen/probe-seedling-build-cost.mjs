@@ -226,10 +226,31 @@ try {
                 + `${got} = ${draws} draw(s) later`);
         if (entry && draws > 0) {
             const fade = latch['save.time'] - entry['save.time'];
-            check(`L${level}: …and the fade's dead frames are the clock's whole delta`,
-                fade === latch['latch.dead_frames'],
-                `entry time ${entry['save.time']} -> terminal ${latch['save.time']} = `
-                + `+${fade}, against ${latch['latch.dead_frames']} latched dead frame(s)`);
+            const dead = latch['latch.dead_frames'];
+            // ⛔⛔ A BOUND, NOT AN EQUALITY — and the first run of this check
+            // is why. `Game.as:832`'s `time += timeRate` and `Bot.update`'s
+            // `deadFrames++` both fire once per engine frame while the fade
+            // runs, so the naive claim is `fade === dead`. MEASURED on L94:
+            // **fade +20 against 21 dead frames.** One frame apart, and the
+            // sign is the open question: `Bot.update()` runs from the TOP of
+            // `Main.update()`, BEFORE `Engine.update()` reaches
+            // `Game.update()`, and the world it reads on the boot's swap
+            // frame is the OUTGOING one — so exactly one frame of the window
+            // is countable on either side of the swap depending on which
+            // world was current when it was counted.
+            //
+            // ⚠ THAT IS THE KNOWN PER-LEVEL DEAD-FRAME SHAPE (R5's trap: a
+            // load costs 21/20 or 20/19 and an inherited constant nearly
+            // "corrected" a right answer). So this asserts the bound the two
+            // accountings share and PRINTS both numbers, rather than fitting
+            // an equality to whichever one came out first. A drift of two or
+            // more is a real defect and still goes red.
+            check(`L${level}: …and the clock's delta is the dead-frame count within one `
+                + 'frame (the swap frame is countable on either side)',
+            Math.abs(fade - dead) <= 1,
+            `entry time ${entry['save.time']} -> terminal ${latch['save.time']} = `
+                + `+${fade}, against ${dead} latched dead frame(s) — delta `
+                + `${fade - dead}`);
             console.log(`  L${level} FP: entry ${entry['fp.seed']} -> terminal `
                 + `${latch['fp.seed']} — the build's FP draws, a quantity nothing `
                 + 'measured before this latch existed');
