@@ -48,6 +48,11 @@ import { fixtureNames } from './fixtures/index.js';
 import {
     PIN_NAMES, inventorySlotsFor, seamFieldsFromBlock, seamToBlock,
 } from './tapeFormat.js';
+// ⛓ R7 slice 2b: the LFSR itself, because the second batch's prediction is an
+// ARITHMETIC claim about a state 1562 draws back and an LFSR state cannot be
+// subtracted from. `rng.js` is the transcription the whole arc already trusts
+// (asserted against the live game in `rng.test.js`).
+import { step } from './rng.js';
 
 export class R7AcceptanceError extends Error {
     constructor(message) {
@@ -1535,6 +1540,126 @@ export const R7_BATCH = Object.freeze({
     ]),
     predictedReRecords: 0,
 });
+
+/**
+ * ⛔⛔⛔ THE SECOND BATCH'S PREDICTION, COMMITTED BEFORE THE FORK CHANGED.
+ * R7 slice 2b, kickoff §10.1's five steps, ⚖ ruled §6.2 option (a).
+ *
+ * ── WHAT THE BATCH IS ─────────────────────────────────────────────────
+ *
+ * ONE fork change: latch the stream state (gameplay + cosmetic + FP + the
+ * day/night clock) at `Game.begin()` ENTRY of the arriving world, served
+ * beside the existing terminal seam block. Slice 2 measured the whole gap
+ * and it is one named quantity: `Bot.botStart` writes `Rng.setState` BEFORE
+ * the build (`Bot.as:1689`), so a tape's declared stream is a PRE-build
+ * number while the terminal latch's is a POST-build one, and the two differ
+ * by exactly the arrival level's own build — **1562 gameplay draws and 21
+ * dead frames for L94**, measured independently and with zero residue by
+ * `scripts/procgen/probe-seedling-build-cost.mjs`.
+ *
+ * ⇒ once the successor declares the PRE-build value, its own build consumes
+ * the same 1562 draws and the seam closes EXACTLY. The bridge that stood in
+ * for this (`PLAYTHROUGH_CHAINS[].seamBuildCost` plus two offset rows in
+ * `chainFindings`) is DELETED by the same slice, not reworked — §10.1 step 4,
+ * flagged there as the step everything stays green without doing.
+ *
+ * ── ⛔ THE PREDICTION, AND WHY IT IS SHARPER THAN §10.1's ─────────────
+ *
+ * The change is ADDITIVE and READ-ONLY: a new static written at level-load
+ * time from four field reads, plus one new key in `botSeam()`'s envelope.
+ * It takes no draw and constructs nothing that draws (slice 1's latch
+ * constraint, `R7_BATCH`'s `seam-latch` item). Nothing in the offline model's
+ * `runTape` path is touched at all. ⇒ **zero re-records AND zero reported-
+ * value changes**, on all 121 tapes.
+ *
+ * ⚠ §10.1 step 3 predicts "segment 2's `rng.seed` changes — the ONE expected
+ * fixture change". That is right about the FILE and short by two FIELDS, and
+ * the two extra ride the identical mechanism: `save.time` and `rng.fp` are
+ * applied by `botStart` before the build for exactly the same reason
+ * `rng.seed` is (`Bot.as:1620`, `:1697`), so all three become PRE-build
+ * quantities together. A prediction that named one of the three would have
+ * met two unpredicted changes at the gate and had to call them regressions.
+ *
+ * ⛓ AND TWO OF THE THREE ARE PREDICTABLE TO THE DIGIT, from the build cost
+ * alone — which is what makes this a gate and not a hope. The LFSR step is a
+ * bijection (`rng.js`'s `step`: a Galois right-shift with `XOR_MASK`
+ * 0x48000000, whose bit 30 is the tell), so the PRE-build seed is 1562
+ * INVERSE steps from the committed post-build one, and `predictedSeedIs1562
+ * BehindTheCommittedOne` asserts the arithmetic without either number
+ * touching a fixture.
+ *
+ * `rng.fp` is predicted to CHANGE and its new value is NOT predicted: L94's
+ * build FP draw count has never been measured (`probe-seedling-build-cost`
+ * declares no FP seed, so it could not see it). The begin()-entry latch is
+ * what makes it measurable, and the number is a byproduct this slice reports
+ * rather than a value it claims in advance.
+ */
+export const R7_SECOND_BATCH = Object.freeze({
+    item: Object.freeze({
+        id: 'begin-entry-latch',
+        what: 'latch `Rng.state`, `Rng.cosmeticState`, `FP.randomSeedLive` and '
+            + '`Main.time` at `Game.begin()` ENTRY of every world that loads; serve the '
+            + 'last one beside the terminal seam block as `botSeam().beginEntry`',
+        cite: 'Game.as:682-684 (`begin()`\'s first statement, above `super.begin()` and '
+            + 'above the `loadlevel` that IS the build — trap 112); Bot.as:1689',
+        streamEffect: 'IDENTICAL — four field reads and one Object write, no draw and '
+            + 'nothing constructed that draws',
+        valueEffect: 'none — no readout the sweep already asserts changes',
+        constraint: '⛔ the same refusal as the terminal latch: NO `Math.random()`, no '
+            + '`Rng.cos()`, no `new` on a class whose ctor draws. A draw inside a latch '
+            + 'that exists to report the stream position moves the thing it reports.',
+    }),
+    predictedReRecords: 0,
+    predictedValueChanges: Object.freeze([]),
+    /**
+     * ⛔ ONE FILE, THREE FIELDS. `r7-ends-meet-2` is the only committed tape
+     * whose boot state is authored FROM a latch, so it is the only one a
+     * change in what the latch offers can move. The two `from` values are
+     * what is on disk at `acfe939f7`; `to` is what the batch predicts.
+     */
+    predictedTapeChange: Object.freeze({
+        tape: 'r7-ends-meet-2',
+        seamLevel: 94,
+        buildDraws: 1562,
+        buildDeadFrames: 21,
+        fields: Object.freeze({
+            'rng.seed': Object.freeze({
+                from: 543212246,
+                to: 2258182,
+                why: '1562 INVERSE LFSR steps — the PRE-build state whose 1562 forward '
+                    + 'steps are L94\'s build',
+            }),
+            'seam.time': Object.freeze({
+                from: 4901,
+                to: 4880,
+                why: 'minus the build\'s 21 dead frames (`Game.as:832` counts them; the '
+                    + 'chain is pinned so they are update-determined)',
+            }),
+            'rng.fp': Object.freeze({
+                from: 1861733589,
+                to: null,
+                why: '⚠ PREDICTED TO CHANGE, VALUE NOT PREDICTED — L94\'s build FP draw '
+                    + 'count is unmeasured, and this latch is what makes it measurable',
+            }),
+        }),
+    }),
+});
+
+/**
+ * ⛓ The batch's own arithmetic, checkable without a fixture.
+ *
+ * `predictedTapeChange.fields['rng.seed'].to` stepped forward
+ * `buildDraws` times must land on `.from`. That is the entire claim of the
+ * batch reduced to two numbers and a bijection: if it holds, the new
+ * declaration is the old one minus exactly one L94 build, and the successor's
+ * own build puts it back.
+ */
+export function predictedSeedIs1562BehindTheCommittedOne() {
+    const c = R7_SECOND_BATCH.predictedTapeChange;
+    let u = c.fields['rng.seed'].to >>> 0;
+    for (let i = 0; i < c.buildDraws; i += 1) u = step(u);
+    return { walked: u, want: c.fields['rng.seed'].from >>> 0, draws: c.buildDraws };
+}
 
 /**
  * The two-sided gate, as data.

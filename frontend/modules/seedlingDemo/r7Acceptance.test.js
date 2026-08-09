@@ -17,6 +17,7 @@ import {
     r7GoalFindings, r7GoalCriteria, R7_BATCH, predictedAttribution,
     SEAM_CHANNELS, SEAM_BOOT_SPEC, assertSeamChannelsTotal, seamLatchFindings,
     seamBootFields, segmentBootFromLatch,
+    R7_SECOND_BATCH, predictedSeedIs1562BehindTheCommittedOne,
 } from './r7Acceptance.js';
 import { parseTape, seamFieldsFromBlock, TAPE_VERSION } from './tapeFormat.js';
 
@@ -795,5 +796,56 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
         // translation exists at all.
         expect(Object.keys(seamFieldsFromBlock(t.seam))
             .every((f) => SEAM_CHANNELS[f] === 'seam')).toBe(true);
+    });
+});
+
+/**
+ * ⛔⛔ THE SECOND BATCH'S PREDICTION, ASSERTED BEFORE THE FORK CHANGED.
+ * R7 slice 2b, kickoff §10.1 step 0.
+ *
+ * A prediction that only a human reads is a hope; slice 0 paid for that
+ * lesson once and answered it with `plan-seedling-r7-attribution.mjs
+ * --check`. This batch's prediction is smaller and its load-bearing half is
+ * ARITHMETIC, so the oracle is a test rather than a script: the declared
+ * PRE-build seed stepped forward L94's own build cost must land on the seed
+ * that is committed today.
+ *
+ * ⚠ NEITHER NUMBER TOUCHES A FIXTURE. Both live in
+ * `R7_SECOND_BATCH.predictedTapeChange`, so this test asserts a relation
+ * between two committed constants and cannot be "fixed" by re-recording
+ * anything. When the re-plan lands, the tape has to agree with the constant
+ * or the gate says so by name.
+ */
+describe('R7_SECOND_BATCH — the prediction, before the change (R7 slice 2b)', () => {
+    it('⛓ the predicted PRE-build seed is EXACTLY 1562 draws behind the committed one',
+        () => {
+            const r = predictedSeedIs1562BehindTheCommittedOne();
+            expect(r.draws).toBe(1562);
+            expect(r.walked).toBe(r.want);
+        });
+
+    it('predicts ZERO re-records and ZERO reported-value changes', () => {
+        expect(R7_SECOND_BATCH.predictedReRecords).toBe(0);
+        expect(R7_SECOND_BATCH.predictedValueChanges).toEqual([]);
+    });
+
+    it('⚠ names THREE fields in ONE tape — not the one §10.1 anticipated', () => {
+        const c = R7_SECOND_BATCH.predictedTapeChange;
+        expect(c.tape).toBe('r7-ends-meet-2');
+        expect(Object.keys(c.fields).sort())
+            .toEqual(['rng.fp', 'rng.seed', 'seam.time']);
+        // The clock's offset is the build's dead frames, not an independent
+        // number — stated as the subtraction so a drift in one shows in both.
+        expect(c.fields['seam.time'].from - c.fields['seam.time'].to)
+            .toBe(c.buildDeadFrames);
+        // ⛔ AND THE UNPREDICTED ONE IS DECLARED UNPREDICTED. A `to` of null
+        // is the difference between "measured after the fact" and a value
+        // quietly filled in later to match whatever came out.
+        expect(c.fields['rng.fp'].to).toBeNull();
+    });
+
+    it('the batch item carries the no-draw refusal', () => {
+        expect(R7_SECOND_BATCH.item.constraint).toMatch(/NO `Math\.random\(\)`/);
+        expect(R7_SECOND_BATCH.item.streamEffect).toMatch(/IDENTICAL/);
     });
 });
