@@ -305,9 +305,22 @@ export const SEAM_SIGNATURE = Object.freeze([
             + 'render-side draw site — see `seamRngPosture`.',
     }),
     Object.freeze({
-        field: 'rng.cosmetic', group: 'rng', comparable: 'level-qualified-equality',
-        readout: 'Rng.cosDraw / the cosmetic hooks', cite: 'Rng.as:98-116',
-        why: 'the second generator; IS the gameplay stream while `split` is off',
+        field: 'rng.cosmetic', group: 'rng', comparable: 'split-qualified-equality',
+        qualifier: 'static.Rng.split',
+        readout: 'Rng.cosmeticState / the cosmetic hooks', cite: 'Rng.as:98-116',
+        why: '⛔⛔ THE SECOND GENERATOR IS NOT RUNNING WHILE `split` IS OFF, and R7 '
+            + 'slice 2\'s seam probe is what made that a checkable fact instead of a '
+            + 'sentence. With `Rng.split` false (the default, and what all 118 fixtures '
+            + 'run), `Rng.cos()` draws from the GAMEPLAY stream and `cosmeticState` '
+            + 'never advances — it sits at its boot value, which is 0. And 0 is the '
+            + 'tape format\'s "inherit the page\'s stream" value for this field '
+            + '(`Bot.as:1698`: `if (rngSplit) Rng.setCosmeticState(...)`), so a segment '
+            + 'CANNOT declare it and the row read UNCLAIMED at every seam. ⇒ it is '
+            + 'qualified on `static.Rng.split` exactly as `save.time` is qualified on '
+            + 'the pin: an equality when the generator is running, N/A when it is not. '
+            + '⚠ AND THE DECLARATION IS SILENTLY DROPPED WHEN SPLIT IS OFF — `botStart` '
+            + 'gates the write on `rngSplit`, so a tape declaring a cosmetic state '
+            + 'without `split` names a state the game never applies.',
     }),
     Object.freeze({
         field: 'fp.seed', group: 'rng', comparable: 'declared-not-compared',
@@ -832,34 +845,66 @@ export function seamFindings(seams = []) {
                 continue;
             }
             const inBoot = Object.prototype.hasOwnProperty.call(boot, row.field);
-            // ⛔⛔⛔ `declared-not-compared` IS A THIRD CLASS, AND `fp.seed`
-            // EARNS IT ON A FACT ABOUT THE PAGE, NOT ABOUT THE SEAM.
-            //
-            // FlashPunk's LCG is seeded ONCE PER PAGE from a single
-            // `Math.random()` (`Engine.as:50`, `FP.as:401-413`) and never
-            // reset. The differential replays every segment in its OWN
-            // page, so segment N's latched `fp.seed` and segment N+1's are
-            // two different random walks from two different random starts —
-            // an equality there would be red on every run of every chain,
-            // forever, for a reason that is not a defect.
-            //
-            // It is still REQUIRED ON BOTH SIDES. Segment N+1 declaring it
-            // is what makes segment N+1 itself reproducible (the write arm
-            // works: `FP.randomSeed`'s setter is the half of that property
-            // that does), and a row nobody declares is a row nobody can
-            // reason about. So: both sides or UNCLAIMED, and no comparison.
-            // ⛓ Which costs nothing behavioural — slice 0 §8.2 item 3 swept
-            // every `FP.choose`/`FP.rand` consumer in this game and all of
-            // them are render-only.
-            if (row.comparable === 'declared-not-compared' && inExit && inBoot) {
+            // ⛔ A QUALIFIED ROW ASKS ITS QUALIFIER FIRST — and the qualifier
+            // is read off the EXIT LATCH, i.e. off the game, never off the
+            // declaration. `rng.cosmetic` is the case: while `Rng.split` is
+            // false the cosmetic generator is not running, its state is the
+            // boot 0, and 0 is the format's "inherit" value — so the row is
+            // N/A rather than unclaimed. Reported, never silent: an N/A that
+            // printed nothing would be indistinguishable from a row nobody
+            // wrote.
+            if (row.qualifier && exit[row.qualifier] === false) {
                 out.push({
                     name,
                     ok: true,
-                    detail: `DECLARED, NOT COMPARED — exit ${JSON.stringify(exit[row.field])}`
-                        + `, boot ${JSON.stringify(boot[row.field])}. FlashPunk's LCG is `
-                        + 'seeded once per PAGE from `Math.random()` and each segment '
-                        + 'replays in its own page, so the two are different random walks '
-                        + 'and no consumer in this game reads either.',
+                    detail: `N/A — ${row.qualifier} is false at this seam, so this field `
+                        + 'is not part of the state. ' + row.why.split('⇒')[0].slice(0, 220)
+                        + '…',
+                });
+                continue;
+            }
+            // ⛔⛔⛔ `declared-not-compared` IS A THIRD CLASS, AND `fp.seed`
+            // EARNS IT ON THE SAME FACT `rng.gameplay` DOES — a duplicated
+            // BUILD — not on the one that looks obvious.
+            //
+            // ⚠ THE OBVIOUS REASON IS WRONG, AND R7 SLICE 2'S PROBE
+            // MEASURED IT WRONG. FlashPunk seeds its LCG once per page from
+            // a single `Math.random()` (`Engine.as:50`, `FP.as:401-413`),
+            // which reads as "every page gets a different random start" —
+            // and in THIS build `Math.random()` is the fixed-seed avmplus
+            // LFSR (`rng.js`'s `BOOT_SEED`, R5 slice 23), so every page gets
+            // the SAME start. Measured: two independent probe arms, six page
+            // loads, produced a byte-identical `fp.seed` triple. So the
+            // field is page-DETERMINISTIC, and "it is random" was a story.
+            //
+            // What it still is not is a seam equality, for the reason the
+            // whole slice turns on: a segment boundary at an arrival
+            // duplicates one level BUILD, and the successor's stream is that
+            // build's draws ahead of the contiguous run's. ⛓ And unlike
+            // `rng.gameplay`, nothing behavioural rides on it — slice 0
+            // §8.2 item 3 swept every `FP.choose`/`FP.rand` consumer in this
+            // game and all of them are render-only.
+            //
+            // It is still REQUIRED ON BOTH SIDES: segment N+1 declaring it
+            // is what makes segment N+1 reproducible independently of the
+            // build's boot seed, and a row nobody declares is a row nobody
+            // can reason about. So: both sides or UNCLAIMED, no comparison,
+            // and the agreement REPORTED in the detail — never in the `ok`,
+            // so a chain that does not declare its own FP seed cannot go red
+            // for not having done so.
+            if (row.comparable === 'declared-not-compared' && inExit && inBoot) {
+                const agrees = seamValuesEqual(exit[row.field], boot[row.field]);
+                out.push({
+                    name,
+                    ok: true,
+                    detail: `DECLARED, NOT COMPARED (${agrees ? 'and they AGREE — this '
+                        + 'chain declares its own FP seed' : 'and they DIFFER, which is '
+                        + 'the page-random default'}) — exit `
+                        + `${JSON.stringify(exit[row.field])}, boot `
+                        + `${JSON.stringify(boot[row.field])}. A seam duplicates one `
+                        + 'level BUILD, so the successor\'s LCG is that build\'s FP '
+                        + 'draws ahead; no consumer in this game reads it (every '
+                        + '`FP.choose`/`FP.rand` site is render-only).',
                 });
                 continue;
             }
@@ -977,6 +1022,18 @@ export function segmentBootFromLatch(envelope) {
         refuse('⛔ the latched `rng.gameplay` is 0, which is the tape format\'s '
             + '"inherit the page\'s stream" value — a segment declaring it would boot '
             + 'an UNDECLARED stream while claiming to be contiguous.');
+    }
+    // ⛔ A COSMETIC STATE WITH NO SPLIT IS A DECLARATION THE GAME DROPS.
+    // `botStart` writes it only under `if (rngSplit)` (`Bot.as:1698`), so a
+    // tape naming one without `split` names a state that never lands — the
+    // silent-ignore shape the whole tape format exists to refuse. With
+    // `split` false the generator is not running at all and its 0 is
+    // correct, which is why this refuses only the NON-zero case.
+    if (!rng.split && rng.cosmetic !== 0) {
+        refuse(`⛔ the latch carries \`rng.cosmetic\` ${rng.cosmetic} with `
+            + '`static.Rng.split` false. `botStart` applies a cosmetic state only under '
+            + '`if (rngSplit)`, so a segment declaring this would boot a state the game '
+            + 'silently drops.');
     }
 
     // ── the v8 block, keyed by SEAM_BOOT_SPEC, refusing what it cannot say

@@ -150,7 +150,12 @@ function realisticLatch(over = {}) {
         'static.Game.inventory': [0],
         'static.Music.currentSet': 'Rock',
         'static.Music.currentIndex': 0,
-        'static.Rng.split': false,
+        // ⚠ `split: true` SO THE COSMETIC ROW IS DECLARABLE AT ALL. With
+        // split false the second generator is not running, its state is the
+        // boot 0, and 0 is the format's "inherit" value — so the row is N/A,
+        // which is its own case below. The maximal latch is the one that
+        // exercises every channel.
+        'static.Rng.split': true,
         'static.Bot.pins': { sound: false, dead_frames: true },
         'rng.gameplay': 1234567891,
         'rng.cosmetic': 12345,
@@ -321,7 +326,15 @@ describe('seamFindings — derived per field per seam', () => {
         // Every field the seam actually COMPARES — the equality rows. The
         // invariant rows are perturbed in their own case below, because
         // they are not equality rows and a boot cannot declare them.
-        const targets = Object.keys(bootBase);
+        //
+        // ⚠ AND THE SWEEP NAMES WHAT IT BOUNDED: `fp.seed` is
+        // `declared-not-compared` and is therefore NOT in this sweep. It
+        // gets its own case below, because a field that cannot go red for a
+        // mismatch has to be tested for the thing it CAN do — be absent.
+        const notCompared = SEAM_SIGNATURE
+            .filter((r) => r.comparable === 'declared-not-compared').map((r) => r.field);
+        expect(notCompared).toEqual(['fp.seed']);
+        const targets = Object.keys(bootBase).filter((f) => !notCompared.includes(f));
         expect(targets.length).toBeGreaterThan(30);
         for (const target of targets) {
             const boot = { ...bootBase };
@@ -330,6 +343,35 @@ describe('seamFindings — derived per field per seam', () => {
             const reds = f.filter((x) => !x.ok);
             expect(reds.map((r) => r.name), `perturbing ${target}`).toEqual([`S: ${target}`]);
         }
+    });
+
+    it('⛔⛔ `fp.seed` is DECLARED-NOT-COMPARED — required on both sides, never red '
+        + 'for a mismatch', () => {
+        // FlashPunk seeds its LCG once per PAGE from one `Math.random()`
+        // (`Engine.as:50`) and the differential replays every segment in its
+        // own page, so an equality here would be red on every run of every
+        // chain, forever, for a reason that is not a defect. What it must
+        // still catch is an ABSENCE: a segment that does not declare it is
+        // a segment nobody can reproduce.
+        const latch = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(latch));
+        const mismatched = seamFindings([{
+            name: 'S', exit: { ...latch.seam, 'fp.seed': 42 }, boot,
+        }]);
+        const row = mismatched.find((r) => r.name === 'S: fp.seed');
+        expect(row.ok).toBe(true);
+        expect(row.detail).toMatch(/DECLARED, NOT COMPARED \(and they DIFFER/);
+        // …and when a chain declares its own FP seed, the row says THAT too.
+        const agreeing = seamFindings([{ name: 'S', exit: latch.seam, boot }]);
+        expect(agreeing.find((r) => r.name === 'S: fp.seed').detail)
+            .toMatch(/and they AGREE/);
+        // ⛔ but an ABSENCE is still UNCLAIMED, on either side.
+        const dropped = { ...boot };
+        delete dropped['fp.seed'];
+        const gone = seamFindings([{ name: 'S', exit: latch.seam, boot: dropped }]);
+        const goneRow = gone.find((r) => r.name === 'S: fp.seed');
+        expect(goneRow.ok).toBe(false);
+        expect(goneRow.detail).toMatch(/UNCLAIMED/);
     });
 
     it('⛔ MUTATION: perturbing an INVARIANT turns exactly that row red', () => {

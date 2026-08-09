@@ -1,0 +1,201 @@
+#!/usr/bin/env node
+/**
+ * probe-seedling-build-cost — what does ONE level build cost the gameplay
+ * stream, and how many dead frames does its fade take? R7 slice 2.
+ *
+ * ── WHY THIS EXISTS ───────────────────────────────────────────────────
+ *
+ * `probe-seedling-seam-chain.mjs` measured a segment boundary and found the
+ * segmented run's gameplay state exactly **1562 LFSR steps** ahead of the
+ * contiguous run's, with `save.time` **+21**. The explanation was immediate
+ * and it was still an EXPLANATION: a boundary at an arrival duplicates one
+ * level BUILD and one level FADE, because segment N arrives into the level
+ * and segment N+1 boots into it.
+ *
+ * ⛔ AN EXPLANATION THAT MATCHES A NUMBER IS NOT A MEASUREMENT OF IT. So
+ * this measures the duplicated quantity directly and independently: boot the
+ * level with a DECLARED gameplay seed and `tick_count: 0`, and read the
+ * latch. `Bot.botStart` writes the seed before the build (`Bot.as:1689` —
+ * "the declared seed is the build's first number"), and the build runs in
+ * `Game.begin()` before the first observation, so the distance from the
+ * declared seed to the latched state IS the build's draw count, with nothing
+ * else in it.
+ *
+ * If that number is 1562, the seam's delta is one L94 build and the
+ * attribution is arithmetic. If it is not, the difference is the rest of the
+ * story and it is named rather than assumed.
+ *
+ * ⚠ `pins: ["dead_frames"]`, so the fade's cost is update-determined and the
+ * `latch.dead_frames` reading means the same thing it means in the chain.
+ *
+ * Run (dev server on :8000, wasm staged):
+ *   node scripts/procgen/probe-seedling-build-cost.mjs
+ *   node scripts/procgen/probe-seedling-build-cost.mjs --levels=94,0
+ */
+
+import { chromium } from 'playwright';
+import { dirname, join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..');
+const PAGE_NAME = 'seedling_bot_ap';
+const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
+const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+
+if (!existsSync(join(ARTIFACT, 'game.html'))) {
+    console.log(`SKIP: no wasm artifact at ${ARTIFACT}`);
+    process.exit(0);
+}
+
+const { parseTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
+const { step } = await import(join(REPO, 'frontend/modules/seedlingDemo/rng.js'));
+
+const ATLAS = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+
+/** The arrival each probed level is booted at — the teleporter's own drop. */
+const BOOTS = {
+    94: { level: 94, x: 288, y: 160 },
+    0: { level: 0, x: 80, y: 128 },
+};
+const LEVELS = (process.argv.filter((a) => a.startsWith('--levels='))
+    .flatMap((a) => a.slice('--levels='.length).split(',')).filter(Boolean)
+    .map(Number)).length
+    ? process.argv.filter((a) => a.startsWith('--levels='))
+        .flatMap((a) => a.slice('--levels='.length).split(',')).filter(Boolean).map(Number)
+    : [94];
+
+/** A state the LFSR really occupies, so the origin is not a special case. */
+const SEED = 987286273;
+
+let failures = 0;
+const check = (name, ok, detail) => {
+    if (!ok) failures += 1;
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
+};
+
+const browser = await chromium.launch({
+    args: [
+        '--enable-unsafe-webgpu',
+        '--ignore-gpu-blocklist',
+        '--enable-unsafe-swiftshader',
+        '--use-angle=swiftshader',
+        '--no-sandbox',
+    ],
+});
+
+const call = (page, name, arg) => page.evaluate(([n, a]) => {
+    const g = window.__swfBridge && window.__swfBridge.game;
+    if (!g || typeof g[n] !== 'function') return null;
+    return a === undefined ? g[n]() : g[n](a);
+}, [name, arg]);
+
+async function waitFor(page, desc, fn, timeoutMs = 1800000) {
+    const start = Date.now();
+    for (;;) {
+        const v = await fn();
+        if (v) return v;
+        if (Date.now() - start > timeoutMs) throw new Error(`timeout waiting for: ${desc}`);
+        await page.waitForTimeout(500);
+    }
+}
+
+/** How many LFSR steps from `a` to `b`, or -1 within the bound. */
+function stepsBetween(a, b, bound = 2000000) {
+    let u = a >>> 0;
+    for (let n = 1; n <= bound; n += 1) {
+        u = step(u);
+        if (u === (b >>> 0)) return n;
+    }
+    return -1;
+}
+
+try {
+    console.log('# one level build, measured from a declared origin\n');
+    for (const level of LEVELS) {
+        const boot = BOOTS[level];
+        if (!boot) { console.log(`SKIP level ${level}: no declared arrival point`); continue; }
+        const tape = parseTape({
+            tape_version: 8,
+            game: 'seedling',
+            boot,
+            noclip: false,
+            noDamage: false,
+            noHazards: [],
+            grants: [],
+            persistence: [],
+            equips: [],
+            pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: { seed: SEED, split: false, cosmetic: 0, fp: 0 },
+            seam: null,
+            tick_count: 0,
+            inputs: [],
+        });
+        const page = await browser.newPage();
+        let latch;
+        try {
+            await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
+            await waitFor(page, 'runtime ready',
+                () => page.evaluate(() => !!window.__runtimeReady));
+            await page.click('#btn-start');
+            await waitFor(page, 'bot callbacks',
+                () => page.evaluate(() => !!(window.__swfBridge?.game?.botSeam)));
+            const loaded = await call(page, 'botLoadTape', JSON.stringify(tape));
+            if (loaded !== 'ok') throw new Error(`botLoadTape(L${level}): ${loaded}`);
+            const started = await call(page, 'botStart');
+            if (started !== 'ok') throw new Error(`botStart(L${level}): ${started}`);
+            await waitFor(page, `L${level} to finish`, async () => {
+                const st = JSON.parse(await call(page, 'botStatus'));
+                return st.finished ? st : null;
+            });
+            latch = JSON.parse(await call(page, 'botSeam')).seam;
+        } finally {
+            await page.close();
+        }
+        const got = latch['rng.gameplay'];
+        // ⛔⛔ ZERO IS A MEASUREMENT, NOT A FAILURE — and L0 is what taught
+        // this probe so. `botStart` builds a world only when
+        // `bootLevel != Main.level || !atBootPosition()` (`Bot.as:1638`).
+        // The page boots straight to `new Game(0, 80, 128)` (`Main.as:50`),
+        // so a tape declaring exactly that boot REUSES the world the page
+        // already built and takes NOT ONE DRAW. The latched state is the
+        // declared seed, unmoved.
+        //
+        // ⛓ Which is also the mechanism that would make a chain contiguous
+        // if its segments ran in ONE page: segment N+1 booting the level and
+        // position segment N ended at would not rebuild, and the seam's
+        // duplicated-build offset would be zero. The differential replays
+        // every tape in its own fresh page, so that is not available to a
+        // committed chain — but it is the shape of what an in-page chain
+        // would cost, and it is worth having measured rather than assumed.
+        const draws = got === SEED ? 0 : stepsBetween(SEED, got);
+        const lv = ATLAS.levels.find((l) => l.level === level);
+        const tiles = lv.layers.reduce((n, la) => n + la.tiles.length, 0);
+        check(`L${level}: the build's draw count is measurable from the declared seed`,
+            draws >= 0,
+            draws === 0
+                ? `ZERO — the latched state IS the declared seed (${SEED}). This boot `
+                    + 'matched the page\'s own `new Game(0, 80, 128)` in level AND '
+                    + 'position, so `Bot.as:1638` reused the existing world and no build '
+                    + 'ran. Not a null result: it is the measurement that an in-page '
+                    + 'segment boundary costs nothing.'
+                : draws > 0
+                    ? `declared ${SEED} -> latched ${got} = ${draws} draw(s); the tile `
+                        + `layer alone is ${tiles} tiles x 3 (\`Tile.as:97-99\`) = `
+                        + `${tiles * 3}, so ${draws - tiles * 3} come from the `
+                        + `${lv.entities.length} entity construction(s) and the boot itself`
+                    : `latched ${got} is not reachable from ${SEED} within the bound — `
+                        + 'the build is not the only thing moving this stream');
+        console.log(`  L${level} (${lv.class}, ${lv.width}x${lv.height}): `
+            + `${draws} gameplay draw(s), ${latch['latch.dead_frames']} dead frame(s), `
+            + `time ${latch['save.time']}`);
+    }
+} finally {
+    await browser.close();
+}
+
+console.log(`\n${failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`}`);
+process.exit(failures === 0 ? 0 : 1);

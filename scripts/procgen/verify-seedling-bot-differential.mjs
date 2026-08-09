@@ -163,6 +163,13 @@ const { r4AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r4Acceptance.js'));
 const { r5AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r5Acceptance.js'));
+// ⛓ R7 slice 2: the segment chain. `isPlaythroughSegment` is what decides
+// whether a tape's latch is held to `requireCalm` — the 118 committed
+// fixtures do not end at arrivals and a segment does, by construction.
+const { playthroughAcceptanceFindings } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughAcceptance.js'));
+const { assertChainsWellFormed, isPlaythroughSegment } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
 // ⛔ The declared ENCOUNTER exemption — see `r5Chain.MODEL_EXEMPT`. A
 // scripted boss is not a mechanic the engine can model, so the three
 // mirror checks below are AMENDED by a per-fixture declaration rather than
@@ -360,10 +367,14 @@ function recordCheckpoint(entry) {
  * gitignored.
  */
 const payloadPath = (name) => join(CHECKPOINT_DIR, 'payloads', FINGERPRINT, `${name}.json`);
-function writePayload(name, stream, status) {
+// ⛓ R7 slice 2: the SEAM rides along. Without it a `--resume` run would
+// rebuild `replayed` with no latch and every chain row would read UNCLAIMED
+// — correct behaviour and a useless run, which is exactly the shape a
+// checkpoint must not be able to produce.
+function writePayload(name, stream, status, seam) {
     const dir = dirname(payloadPath(name));
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-    writeFileSync(payloadPath(name), JSON.stringify({ stream, status }));
+    writeFileSync(payloadPath(name), JSON.stringify({ stream, status, seam }));
 }
 function readPayload(name) {
     try { return JSON.parse(readFileSync(payloadPath(name), 'utf8')); } catch { return null; }
@@ -1619,6 +1630,12 @@ function checkAcceptance(replayed) {
         // route or specs — the claim is entirely "what did these two arms,
         // one field apart, do to the game's own ledger".
         ...r5AcceptanceFindings(replayed),
+        // ⛓ R7 slice 2: ENDS-MEET v2. `chainFindings` needs the TAPES as
+        // well as the replays — the boot side of every seam is the
+        // successor tape's own eight blocks — so they are loaded here from
+        // the same `loadTape` the sweep used, never re-derived.
+        ...playthroughAcceptanceFindings(
+            new Map([...replayed.keys()].map((n) => [n, loadTape(n)])), replayed),
     ];
     for (const f of findings) {
         if (f.skipped) {
@@ -1708,6 +1725,17 @@ try {
     } catch (e) {
         check('the tier assignment still names real fixtures', false, e.message);
     }
+    // ⛔ THE SAME RULE FOR THE CHAINS, and for the same reason: a chain
+    // naming a tape that no longer exists asserts nothing and prints the
+    // same green as one that works. Asserted against the WHOLE roster, not
+    // the `--only` selection — a narrowed sweep must not narrow this.
+    try {
+        const r = assertChainsWellFormed(allNames);
+        check('the playthrough chains still name real fixtures', true,
+            `${r.chains} chain(s), ${r.segments} segment(s), ${r.seams} seam(s)`);
+    } catch (e) {
+        check('the playthrough chains still name real fixtures', false, e.message);
+    }
 
     let names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
     if (TIER === 'fast' && ONLY.size === 0) {
@@ -1794,7 +1822,7 @@ try {
             continue;
         }
         const { stream, status, seam } = result;
-        replayed.set(name, { stream, status });
+        replayed.set(name, { stream, status, seam });
 
         // ── ⛓⛓⛓ R7 SLICE 1: THE SEAM LATCH, ON EVERY TAPE ─────────────
         //
@@ -1810,9 +1838,19 @@ try {
         // ⛔ A missing envelope is a FAILURE, never a skip. A build without
         // `botSeam` would make every seam assertion in slice 2 vacuous, and
         // "the readout must be present" is the R0 acceptance-signal law.
-        const latchRows = seamLatchFindings(seam ?? null, { requireCalm: false });
+        // ⛓⛓ R7 SLICE 2: `requireCalm` IS NOW A BRANCH, and this is the
+        // line the segment convention lives on. A committed R1..R6 fixture
+        // ends wherever its window ended, so its invariants are REPORTED;
+        // a SEGMENT claims a level arrival by construction (§3.1), so the
+        // spent fade, the zero shake, the absent freeze/dialogue/menu and
+        // the zero-velocity fresh Player are REQUIRED of it. The six
+        // predicates are `r7Acceptance`'s, already mutation-tested — this
+        // consumes them, it does not restate them.
+        const isSegment = isPlaythroughSegment(name);
+        const latchRows = seamLatchFindings(seam ?? null, { requireCalm: isSegment });
         const unclaimed = latchRows.filter((r) => !r.ok);
-        check(`${name}: the seam latch fired and carries the whole signature`,
+        check(`${name}: the seam latch fired and carries the whole signature`
+            + `${isSegment ? ', AT A CALM ARRIVAL' : ''}`,
             unclaimed.length === 0,
             unclaimed.length === 0
                 ? `${Object.keys(seam.seam).length} field(s) latched at tick `
@@ -2009,7 +2047,7 @@ try {
         // ── ⛓ THE TAPE IS DONE: bank it, evidence and all ──────────────
         const checks = endTape();
         const ok = checks.every((c) => c.ok);
-        if (ok) writePayload(name, stream, status);
+        if (ok) writePayload(name, stream, status, seam);
         recordCheckpoint({
             tape: name, fp: tapeFingerprint(name), ok, checks, secs: Number(secs),
         });

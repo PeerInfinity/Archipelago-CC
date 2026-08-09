@@ -1,0 +1,45 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r7-ends-meet-full",
+    "description": "⛓ THE HEADLINE of chain \"toy-west-pair\" — the same walk in ONE run, so the 2 segments have something to be tick-for-tick IDENTICAL to. Inputs are `transition-west-return`'s, unchanged since R1, truncated at the second ARRIVAL (t=109) so that the LAST segment also ends at one. `pins: [\"dead_frames\"]` makes `save.time` update-determined (it counts dead frames, which are per-RENDER in vanilla); `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE from `Math.random()` and a committed chain cannot inherit a random number. Authored by scripts/procgen/plan-seedling-r7-ends-meet.mjs.",
+    "boot": {
+        "level": 0,
+        "x": 80,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 987286273
+    },
+    "seam": null,
+    "tick_count": 109,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 72
+        },
+        {
+            "key": "right",
+            "from": 88,
+            "to": 109
+        }
+    ]
+}
