@@ -696,6 +696,39 @@ export const SEAM_PREBUILD_FIELDS = Object.freeze(
     SEAM_SIGNATURE.filter((r) => r.prebuild).map((r) => r.field));
 
 /**
+ * ⛓⛓⛓ THE ONE FRAME A BOOT SPENDS IN THE OUTGOING WORLD — measured, with a
+ * negative control. R7 slice 2b, `probe-seedling-boot-clock.mjs`.
+ *
+ * `Bot.botStart` writes `Main.time` and then `FP.world = new Game(...)`, which
+ * only sets `FP._goto`. The swap runs in `Engine.checkWorld()` at the END of
+ * the NEXT `Engine.update()` — and that same `Engine.update()` has ALREADY run
+ * the OUTGOING world's `Game.update()`, whose `time += timeRate` sits below the
+ * `blackCover` gate but outside it (`Game.as:832`). So a boot's declaration is
+ * a PRE-SWAP-FRAME quantity while the begin()-entry latch reads a POST-swap
+ * one, and they are exactly one `Game.update()` apart.
+ *
+ * A CONTIGUOUS arrival has no such gap: its equivalent frame is already inside
+ * the number its own entry latch reads. ⇒ the boot side has to be transformed
+ * by this frame before it can be compared with the exit side, exactly as index
+ * lists are transformed into positional arrays — one more shape change with a
+ * measured citation, not a fudge factor.
+ *
+ * **MEASURED:** a tape declaring `time: 4881` and booting L94 reaches
+ * `Game.begin()` at **4882**. The negative-control arm (L0 at the page's own
+ * boot, where `Bot.as:1638` reuses the world) produces NO entry block at all,
+ * so the +1 cannot be an artefact of the probe.
+ *
+ * ⚠ **AND IT IS A FRAME, NOT A DRAW COUNT.** The same outgoing update could in
+ * principle take gameplay draws, which would need an `rng.gameplay` correction
+ * too. It takes ZERO here, and that is not assumed: every segment boot's
+ * outgoing world is the page's own freshly-booted L0 (the differential replays
+ * each tape in its own page), and the chain's ending-state `rng.gameplay` row
+ * is an EQUALITY that would redden the moment it stopped being zero. So the
+ * clock is corrected and the stream is asserted.
+ */
+export const BOOT_PRESWAP_FRAMES = 1;
+
+/**
  * ⛔⛔⛔ THE EXIT SIDE, AND WHICH INSTANT EACH ROW IS READ AT. R7 slice 2b.
  *
  * A `botSeam()` envelope now carries TWO blocks, because a seam asks two
@@ -830,6 +863,19 @@ export function seamBootFields(tape) {
 
     // ── seam: the v8 block ────────────────────────────────────────────
     Object.assign(out, seamFieldsFromBlock(tape.seam));
+
+    // ── ⛓ the clock: ONE outgoing-world frame forward ─────────────────
+    // ⛔ THE ONLY DECLARED FIELD WHOSE VALUE IS NOT WHAT `Game.begin()` WILL
+    // SEE. `botStart` writes `Main.time` above the `new Game` line and the
+    // swap lands one `Engine.update()` later, after the OUTGOING world's own
+    // `time += timeRate` — measured at exactly +1 with a negative control
+    // (`BOOT_PRESWAP_FRAMES`). Comparing the raw declaration against the
+    // predecessor's entry reading would report that one frame as a seam
+    // defect forever; comparing what the declaration BECOMES is comparing
+    // the same quantity at the same instant.
+    if (out['save.time'] !== undefined) {
+        out['save.time'] += BOOT_PRESWAP_FRAMES;
+    }
 
     // ── derived: the inventory SLOT ARRAY ─────────────────────────────
     // ⛔ ALL SIX FLAGS OR NOTHING. `inventorySlotsFor` reads six item flags
@@ -1157,7 +1203,15 @@ export function segmentBootFromLatch(envelope) {
     // ── the v8 block, keyed by SEAM_BOOT_SPEC, refusing what it cannot say
     const flat = {};
     for (const spec of SEAM_BOOT_SPEC) {
-        const v = need(spec.field);
+        let v = need(spec.field);
+        // ⛓ THE CLOCK IS DECLARED ONE FRAME SHORT, ON PURPOSE — the inverse
+        // of `seamBootFields`' correction and for the same measured reason.
+        // A boot spends one outgoing-world `Game.update()` between its
+        // declaration and `Game.begin()`, so declaring the predecessor's
+        // entry reading verbatim would land the successor one frame PAST it
+        // — which is precisely the single row the slice-2b gate reddened on
+        // (headline 4969 vs chain 4970) before this was measured.
+        if (spec.field === 'save.time') v -= BOOT_PRESWAP_FRAMES;
         if (spec.zeroMeansUndeclared && v === 0) {
             refuse(`⛔ the latched \`${spec.field}\` is 0 and \`${spec.key}\` cannot `
                 + `carry a 0 — ${spec.why}`);
@@ -1761,31 +1815,43 @@ export const R7_SECOND_BATCH = Object.freeze({
      * and never over it, because a prediction overwritten by its outcome is
      * not a gate, it is a transcript.
      *
-     * The file set and the field set are exactly as predicted: one tape, three
-     * fields. Two of the three values are exact. One missed by ONE, and the
-     * miss has a cause that was measured independently in the same session
-     * rather than reasoned about afterwards.
+     * **The file set, the field set and ALL THREE VALUES came out exactly as
+     * predicted.** One tape, three fields, zero re-records.
      *
-     * ⛔ `seam.time`: PREDICTED 4880, ACTUAL 4881. The prediction subtracted
-     * L94's 21 dead frames; the clock's real delta across a load is TWENTY.
-     * `probe-seedling-build-cost.mjs` measured that on its own in the same
-     * run — entry 4803 -> terminal 4823 against 21 latched dead frames —
-     * because `Bot.update` counts from the top of `Main.update()`, BEFORE
-     * `Engine.update()` reaches `Game.update()`'s `time += timeRate`, and on
-     * the swap frame the world it reads is the OUTGOING one. So exactly one
-     * frame of the window is countable on either side of the swap. ⚠ THAT IS
-     * R5's per-level dead-frame shape (a load costs 21/20 or 20/19, and an
-     * inherited constant nearly "corrected" a right answer) arriving in a new
-     * place, and the probe now asserts the ±1 BOUND rather than either
-     * equality.
+     * ⛓⛓⛓ AND `seam.time` IS THE INTERESTING ONE, BECAUSE IT TOOK TWO GOES
+     * AND THE PREDICTION WAS RIGHT BOTH TIMES. The first re-plan produced
+     * **4881**, one past the predicted 4880, and the batch's own full sweep
+     * reddened on exactly ONE row out of 2,691 — the chain's ending state,
+     * headline 4969 against 4970. That frame was a MISSING TRANSFORM in this
+     * model rather than a bad prediction, and it decomposes into two separate
+     * off-by-ones that CANCEL:
      *
-     * ⛓ `rng.fp`: 987286273 — which is the chain's own declared `walk.fpSeed`.
-     * That is a measurement, not a coincidence: segment 1 declares that seed
-     * and its begin()-ENTRY reading at the L94 arrival is still that seed, so
+     *   1. **entry -> terminal inside a segment is +20, not +21.**
+     *      `probe-seedling-build-cost.mjs` measured it: entry 4803 ->
+     *      terminal 4823 against 21 latched dead frames, because `Bot.update`
+     *      counts from the top of `Main.update()` BEFORE `Engine.update()`
+     *      reaches `Game.update()`'s `time += timeRate`, and on the swap frame
+     *      the world it reads is the OUTGOING one.
+     *   2. **a boot spends one MORE outgoing-world frame than a contiguous
+     *      arrival does** — `BOOT_PRESWAP_FRAMES`, measured at exactly +1 by
+     *      `probe-seedling-boot-clock.mjs`, with the reuse path as a negative
+     *      control.
+     *
+     * terminal − 20 − 1 = terminal − 21, and 21 is `latch.dead_frames`. ⇒ the
+     * naive subtraction the prediction used was right for a reason it did not
+     * state, and the model had to grow BOTH frames before it could reproduce
+     * the number. ⚠ Two off-by-ones cancelling is a shape this arc has paid
+     * for before (R6 slice 6g's Owl release, where the same cancellation hid a
+     * wrong mechanism); the difference here is that the gate caught it in the
+     * slice that introduced it instead of a rung later.
+     *
+     * ⛓ `rng.fp`: 987286273 — the chain's own declared `walk.fpSeed`. That is
+     * a measurement, not a coincidence: segment 1 declares that seed and its
+     * begin()-ENTRY reading at the L94 arrival is still that seed, so
      * SIXTY-ONE TICKS OF L0 TAKE ZERO FP DRAWS. And L94's build does take
      * them — the same probe read entry 987286273 -> terminal 1861733589, the
-     * old declaration — so the FP count nothing could see before this latch
-     * is now bracketed: zero across the walk, nonzero across the build.
+     * old declaration — so the FP count nothing could see before this latch is
+     * now bracketed: zero across the walk, nonzero across the build.
      */
     outcome: Object.freeze({
         filesChanged: 1,
@@ -1793,11 +1859,16 @@ export const R7_SECOND_BATCH = Object.freeze({
         fields: Object.freeze({
             'rng.seed': Object.freeze({ actual: 2258182, exact: true }),
             'seam.time': Object.freeze({
-                actual: 4881,
-                exact: false,
-                missedBy: 1,
-                why: 'the clock advances 20 across a window `Bot` counts as 21 dead '
-                    + 'frames — the swap frame is countable on either side',
+                actual: 4880,
+                exact: true,
+                revisions: 2,
+                why: '⛓ 4881 on the first re-plan, 4880 on the second. The PREDICTION was '
+                    + 'right; the MODEL was one transform short. The offset is two frames '
+                    + 'composed — a segment\'s entry->terminal span is +20 (the swap '
+                    + 'frame is countable on either side) and a boot spends one MORE '
+                    + 'outgoing-world update than a contiguous arrival '
+                    + '(`BOOT_PRESWAP_FRAMES`) — and 20 + 1 is the 21 dead frames the '
+                    + 'prediction subtracted. The gate found it: one red row in 2,691.',
             }),
             'rng.fp': Object.freeze({ actual: 987286273, exact: null }),
         }),

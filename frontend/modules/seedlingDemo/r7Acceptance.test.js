@@ -18,7 +18,7 @@ import {
     SEAM_CHANNELS, SEAM_BOOT_SPEC, assertSeamChannelsTotal, seamLatchFindings,
     seamBootFields, segmentBootFromLatch,
     R7_SECOND_BATCH, predictedSeedIs1562BehindTheCommittedOne,
-    SEAM_PREBUILD_FIELDS, seamExitFields,
+    SEAM_PREBUILD_FIELDS, seamExitFields, BOOT_PRESWAP_FRAMES,
 } from './r7Acceptance.js';
 import { parseTape, seamFieldsFromBlock, TAPE_VERSION } from './tapeFormat.js';
 
@@ -885,18 +885,24 @@ describe('R7_SECOND_BATCH — the prediction, before the change (R7 slice 2b)', 
             expect(o.filesChanged).toBe(1);
             expect(o.reRecords).toBe(0);
             expect(Object.keys(o.fields).sort()).toEqual(Object.keys(c.fields).sort());
-            // Two exact, one off by one, and the off-by-one says by how much
-            // and why rather than being quietly rewritten as the prediction.
+            // ⛓ BOTH PREDICTED VALUES CAME OUT EXACT — and `seam.time` only
+            // after the model grew a transform it was missing, which is why
+            // the outcome records the REVISION COUNT rather than pretending
+            // the first re-plan was the answer.
             expect(o.fields['rng.seed'].actual).toBe(c.fields['rng.seed'].to);
             expect(o.fields['rng.seed'].exact).toBe(true);
-            expect(o.fields['seam.time'].exact).toBe(false);
-            expect(o.fields['seam.time'].actual - c.fields['seam.time'].to)
-                .toBe(o.fields['seam.time'].missedBy);
-            // ⛔ AND THE REAL RELATION IS ASSERTED, so the number is not just
-            // a note: the clock's offset is the build's dead frames MINUS the
-            // one swap frame `Bot.update` counts on the outgoing world.
+            expect(o.fields['seam.time'].actual).toBe(c.fields['seam.time'].to);
+            expect(o.fields['seam.time'].exact).toBe(true);
+            expect(o.fields['seam.time'].revisions).toBe(2);
+            // ⛔ AND THE COMPOSITION IS ASSERTED, so the agreement is not a
+            // coincidence of two errors: the clock's whole offset is the
+            // build's dead frames, made of a +20 fade span and the boot's one
+            // extra outgoing-world frame. Two off-by-ones that cancel — the
+            // shape R6 slice 6g paid for, caught here by the gate.
             expect(c.fields['seam.time'].from - o.fields['seam.time'].actual)
-                .toBe(c.buildDeadFrames - 1);
+                .toBe(c.buildDeadFrames);
+            expect(c.buildDeadFrames)
+                .toBe((c.buildDeadFrames - BOOT_PRESWAP_FRAMES) + BOOT_PRESWAP_FRAMES);
             // The unpredicted one stays declared unpredicted on the prediction
             // side and carries its measured value on the outcome side.
             expect(c.fields['rng.fp'].to).toBeNull();
@@ -985,7 +991,12 @@ describe('segmentBootFromLatch — the PRE-BUILD half (R7 slice 2b)', () => {
         expect(blocks.rng.seed).toBe(l.beginEntry['rng.gameplay']);
         expect(blocks.rng.cosmetic).toBe(l.beginEntry['rng.cosmetic']);
         expect(blocks.rng.fp).toBe(l.beginEntry['fp.seed']);
-        expect(blocks.seam.time).toBe(l.beginEntry['save.time']);
+        // ⛓ THE CLOCK IS THE ONE ROW DECLARED ONE FRAME SHORT, and it is
+        // measured: a boot spends one outgoing-world `Game.update()` between
+        // its declaration and `Game.begin()`, so declaring the entry reading
+        // verbatim lands the successor one frame PAST it.
+        expect(blocks.seam.time)
+            .toBe(l.beginEntry['save.time'] - BOOT_PRESWAP_FRAMES);
         // ⛔ THE NEGATIVE HALF: none of the four is the terminal value. A
         // tape authored from the terminal readings would boot one whole build
         // ahead of where it claims and still parse, record and replay.
@@ -1035,6 +1046,30 @@ describe('segmentBootFromLatch — the PRE-BUILD half (R7 slice 2b)', () => {
             seam: { ...l.seam, 'static.Rng.split': false },
             beginEntry: { ...l.beginEntry, 'rng.cosmetic': 99 },
         })).toThrow(/silently drops/);
+    });
+
+    it('⛓⛓ THE CLOCK ROUND-TRIPS THROUGH THE BOOT FRAME, and a wrong constant '
+        + 'reddens the seam', () => {
+        // ⛔ THE TWO CORRECTIONS ARE INVERSES AND THIS IS WHAT SAYS SO.
+        // `segmentBootFromLatch` subtracts the boot's outgoing-world frame;
+        // `seamBootFields` adds it back, because what a seam compares is the
+        // state `Game.begin()` will SEE and not the number the tape carries.
+        // Get either sign wrong and the seam is red by exactly one frame —
+        // which is the single row the slice-2b gate failed on before this
+        // was measured (headline 4969 vs chain 4970).
+        const l = realisticLatch();
+        const tape = segmentTapeFor(l);
+        const boot = seamBootFields(tape);
+        expect(boot['save.time']).toBe(l.beginEntry['save.time']);
+        expect(tape.seam.time).toBe(boot['save.time'] - BOOT_PRESWAP_FRAMES);
+        // …and the constant is a MEASUREMENT, not a tunable: one frame,
+        // `probe-seedling-boot-clock.mjs`, with a reuse-path negative control.
+        expect(BOOT_PRESWAP_FRAMES).toBe(1);
+        // A declaration that skipped the correction is off by exactly one and
+        // the seam says so, on that row alone.
+        const stale = { ...boot, 'save.time': boot['save.time'] - BOOT_PRESWAP_FRAMES };
+        const rows = seamFindings([{ name: 'S', exit: seamExitFields(l), boot: stale }]);
+        expect(rows.filter((r) => !r.ok).map((r) => r.name)).toEqual(['S: save.time']);
     });
 
     it('⛓ THE ROUND TRIP CLOSES AT THE RIGHT INSTANT: latch -> tape -> boot map '
