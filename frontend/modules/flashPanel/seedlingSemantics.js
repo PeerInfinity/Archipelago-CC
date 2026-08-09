@@ -687,10 +687,25 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  * reads as "you need to get through both" rather than as whichever was applied
  * last.
  *
+ * ⛓ R7 slice 4 — `entityOverride`, and why it is a HOOK rather than an edit to
+ * the tables above. The honest-playthrough generator needs entity rulings this
+ * transcription deliberately refuses (`manual` rows: a kill-lock's weapon, a
+ * grouped lock's choreography, a boss body that is a door). Those rulings are
+ * SOURCE-CITED AND OPINIONATED — a puzzle policy, not a transcription — and
+ * folding them in here would silently move the two committed atlas presets,
+ * whose `--check` gates are the only thing keeping this table honest. So the
+ * overlay lives in its own module and rides in through one optional argument;
+ * omitting it reproduces the previous behaviour byte for byte, which
+ * `make-seedling-starter-atlas.mjs --check` proves on every run.
+ *
  * @param {{ x:number, y:number, w:number, h:number }} bounds region bounds
  * @param {object} level a level record from seedling-map.json
+ * @param {{ entityOverride?: (entity:object, base:object|null, level:object) => object|null }} [options]
+ *   `entityOverride` returns replacement semantics for one placed entity, or
+ *   null/undefined to keep what the tables say. It sees the BASE ruling too, so
+ *   an overlay can refine rather than restate.
  */
-export function buildSeedlingRegionGrid(bounds, level) {
+export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     const { w: width, h: height } = bounds;
     const claims = Array.from({ length: width * height }, () => []);
 
@@ -720,9 +735,11 @@ export function buildSeedlingRegionGrid(bounds, level) {
         }
     }
 
+    const { entityOverride = null } = options;
     for (const entity of level?.entities ?? []) {
         if (isLevelPropertyTag(entity.type)) continue;
-        const semantics = entitySemantics(entity);
+        const base = entitySemantics(entity);
+        const semantics = entityOverride ? (entityOverride(entity, base, level) ?? base) : base;
         if (!semantics) {
             unclassified.push({
                 tile: [Math.floor(entity.x / SEEDLING_TILE_SIZE), Math.floor(entity.y / SEEDLING_TILE_SIZE)],

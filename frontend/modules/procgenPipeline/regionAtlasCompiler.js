@@ -316,10 +316,26 @@ export function compileRegionAtlas(atlas, options = {}) {
         if (!a || !b) continue; // unresolvable endpoints are validator errors
         const aName = apRegionNameForBinding(a.region, a.exit.sub_region);
         const bName = apRegionNameForBinding(b.region, b.exit.sub_region);
+        // ⛓ R7 slice 4: `one_way`. A vanilla_layout connection is normally a
+        // BOUNDARY CROSSING, walkable both ways in the original game — which is
+        // true of a doorway and false of a transport. Seedling has exactly one
+        // transition primitive and it is a one-way jump to a declared
+        // destination point (`FP.world = new Game(level, x, y)`), so an atlas
+        // that models transports rather than doorways must be able to say so;
+        // pairing them would invent return edges the game does not have, and
+        // AP's fill would route a collectible back through a pit.
+        //
+        // Both endpoints still count as WIRED — the arrival exit is a real,
+        // deliberately-authored target, not a crossing nobody covered.
         const aExitName = addExit(aName, bName, a.exit.access_rule);
-        const bExitName = addExit(bName, aName, b.exit.access_rule);
         wiredInfo.set(endpointKey(a.region.region_id, a.exit.exit_id),
             { apExitName: aExitName, targetApRegion: bName, target: b });
+        if (conn.one_way === true) {
+            wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
+                { apExitName: null, targetApRegion: null, target: a, arrivalOnly: true });
+            continue;
+        }
+        const bExitName = addExit(bName, aName, b.exit.access_rule);
         wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
             { apExitName: bExitName, targetApRegion: aName, target: a });
     }
@@ -422,6 +438,19 @@ export function compileRegionAtlas(atlas, options = {}) {
     rules.items = { 1: items };
     rules.itempool_counts = { 1: itempoolCounts };
     rules.world['1'].world_directory = gameDirectory;
+    // ⛓ R7 slice 4: a real GOAL. The scaffold's default is `constant true`,
+    // which is right for a partial atlas that is not a game yet and wrong for a
+    // whole map: with a trivially-satisfied completion, AP's fill has nothing to
+    // route toward and the sphere log stops being a collection ORDER. An atlas
+    // that names its goal item gets it; everything else keeps the constant.
+    if (options.completionItem) {
+        rules.game_info['1'].completion_condition = {
+            type: 'item_check', item: options.completionItem,
+        };
+    }
+    // Whatever the generator wants to say about where this graph came from.
+    // Stamped rather than derived, because only the generator knows its inputs.
+    if (options.provenance) rules.provenance = options.provenance;
     // Provenance: which atlas this graph came from. atlas_id ends in the
     // content hash, so a restamped atlas visibly invalidates a stale preset.
     rules.region_atlas = {
