@@ -85,7 +85,8 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
 
 const { parseTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const {
-    SEAM_SIGNATURE, seamBootFields, seamFindings, seamLatchFindings, segmentBootFromLatch,
+    SEAM_SIGNATURE, seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
+    segmentBootFromLatch,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
 
 let failures = 0;
@@ -323,9 +324,14 @@ async function runArm(armName) {
         && seg2Tape.boot.y === WALK.segment2Boot.y,
         `${JSON.stringify(seg2Tape.boot)} vs ${JSON.stringify(WALK.segment2Boot)}`);
 
+    // ⛓ R7 slice 2b: `seamExitFields`, because four rows are PRE-BUILD and
+    // their exit reading is the arrival world's `Game.begin()`-ENTRY latch.
+    // This probe is the instrument that FOUND that distinction (the 1562-draw
+    // offset); comparing against the raw terminal block now would re-open the
+    // very gap the second batch closed.
     const declaration = seamFindings([{
         name: `${armName} seg1->seg2`,
-        exit: seg1.seam.seam,
+        exit: seamExitFields(seg1.seam),
         boot: seamBootFields(seg2Tape),
     }]);
     const unclaimed = declaration.filter((r) => !r.ok);
@@ -365,7 +371,9 @@ async function runArm(armName) {
         deltas.length === 0,
         deltas.length === 0
             ? `${SEAM_SIGNATURE.length} rows compared, zero deltas — the seam is `
-                + 'RNG-contiguous in this arm'
+                + 'RNG-contiguous in this arm, and after R7 slice 2b\'s begin()-entry '
+                + 'latch that is what a closed seam looks like: the 1562-draw offset '
+                + 'this probe measured is now consumed by segment 2\'s own build'
             : `${deltas.length} field(s) DIFFER: `
                 + deltas.map((d) => `${d.field} (${d.comparable}) contiguous `
                     + `${d.contiguous} vs segmented ${d.segmented}`

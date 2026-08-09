@@ -18,6 +18,7 @@ import {
     SEAM_CHANNELS, SEAM_BOOT_SPEC, assertSeamChannelsTotal, seamLatchFindings,
     seamBootFields, segmentBootFromLatch,
     R7_SECOND_BATCH, predictedSeedIs1562BehindTheCommittedOne,
+    SEAM_PREBUILD_FIELDS, seamExitFields,
 } from './r7Acceptance.js';
 import { parseTape, seamFieldsFromBlock, TAPE_VERSION } from './tapeFormat.js';
 
@@ -166,7 +167,37 @@ function realisticLatch(over = {}) {
         'latch.tick': 61,
         'latch.dead_frames': 40,
     };
-    return { latched: true, partial: false, why: '', seam: { ...seam, ...over } };
+    /**
+     * ⛓ R7 slice 2b: THE ENTRY BLOCK, one build BEHIND the terminal one.
+     *
+     * `Bot.latchBeginEntry` reads the stream at `Game.begin()` ENTRY and
+     * `latchSeam` reads it at the terminal disarm; between them sits the
+     * arrival level's whole build (1562 draws and 21 dead frames for L94,
+     * measured). So the four values below differ from the terminal ones on
+     * purpose — a fixture whose two blocks agreed would let a consumer read
+     * either and pass.
+     *
+     * ⛔ `over` ROUTES BY FIELD. A prebuild key lands in the ENTRY block
+     * only, which is what keeps the refusal tests above (`save.time: 0`,
+     * `rng.gameplay: 0`) biting on the block the authoring code reads.
+     */
+    const entry = {
+        'begin.level': 94,
+        'begin.tick': 61,
+        'rng.gameplay': 1234567891,
+        'rng.cosmetic': 12345,
+        'fp.seed': 987286273,
+        'save.time': 1234,
+    };
+    seam['rng.gameplay'] = 2020202;
+    seam['rng.cosmetic'] = 54321;
+    seam['fp.seed'] = 111222333;
+    seam['save.time'] = 1255;
+    const prebuild = new Set(SEAM_PREBUILD_FIELDS);
+    for (const [k, v] of Object.entries(over)) {
+        if (prebuild.has(k)) entry[k] = v; else seam[k] = v;
+    }
+    return { latched: true, partial: false, why: '', seam, beginEntry: entry };
 }
 
 /** The tape a latch authors, parsed — the boot side of one seam. */
@@ -209,7 +240,7 @@ describe('seamBootFields — THE BOOT SIDE (R7 slice 2)', () => {
         const boot = seamBootFields(segmentTapeFor(latch));
         for (const field of Object.keys(boot)) {
             expect(JSON.stringify(boot[field]), field)
-                .toBe(JSON.stringify(latch.seam[field]));
+                .toBe(JSON.stringify(seamExitFields(latch)[field]));
         }
     });
 
@@ -314,7 +345,7 @@ describe('seamFindings — derived per field per seam', () => {
         const latch = realisticLatch();
         const f = seamFindings([{
             name: 'seg1->seg2',
-            exit: latch.seam,
+            exit: seamExitFields(latch),
             boot: seamBootFields(segmentTapeFor(latch)),
         }]);
         const reds = f.filter((r) => !r.ok);
@@ -340,7 +371,7 @@ describe('seamFindings — derived per field per seam', () => {
         for (const target of targets) {
             const boot = { ...bootBase };
             boot[target] = Array.isArray(bootBase[target]) ? ['PERTURBED'] : 'PERTURBED';
-            const f = seamFindings([{ name: 'S', exit: base.seam, boot }]);
+            const f = seamFindings([{ name: 'S', exit: seamExitFields(base), boot }]);
             const reds = f.filter((x) => !x.ok);
             expect(reds.map((r) => r.name), `perturbing ${target}`).toEqual([`S: ${target}`]);
         }
@@ -357,19 +388,19 @@ describe('seamFindings — derived per field per seam', () => {
         const latch = realisticLatch();
         const boot = seamBootFields(segmentTapeFor(latch));
         const mismatched = seamFindings([{
-            name: 'S', exit: { ...latch.seam, 'fp.seed': 42 }, boot,
+            name: 'S', exit: { ...seamExitFields(latch), 'fp.seed': 42 }, boot,
         }]);
         const row = mismatched.find((r) => r.name === 'S: fp.seed');
         expect(row.ok).toBe(true);
         expect(row.detail).toMatch(/DECLARED, NOT COMPARED \(and they DIFFER/);
         // …and when a chain declares its own FP seed, the row says THAT too.
-        const agreeing = seamFindings([{ name: 'S', exit: latch.seam, boot }]);
+        const agreeing = seamFindings([{ name: 'S', exit: seamExitFields(latch), boot }]);
         expect(agreeing.find((r) => r.name === 'S: fp.seed').detail)
             .toMatch(/and they AGREE/);
         // ⛔ but an ABSENCE is still UNCLAIMED, on either side.
         const dropped = { ...boot };
         delete dropped['fp.seed'];
-        const gone = seamFindings([{ name: 'S', exit: latch.seam, boot: dropped }]);
+        const gone = seamFindings([{ name: 'S', exit: seamExitFields(latch), boot: dropped }]);
         const goneRow = gone.find((r) => r.name === 'S: fp.seed');
         expect(goneRow.ok).toBe(false);
         expect(goneRow.detail).toMatch(/UNCLAIMED/);
@@ -390,7 +421,7 @@ describe('seamFindings — derived per field per seam', () => {
         for (const field of invariantFields) {
             const latch = realisticLatch({ [field]: notCalm[field] });
             const f = seamFindings([{
-                name: 'S', exit: latch.seam, boot: seamBootFields(segmentTapeFor(latch)),
+                name: 'S', exit: seamExitFields(latch), boot: seamBootFields(segmentTapeFor(latch)),
             }]);
             const reds = f.filter((x) => !x.ok);
             expect(reds.map((r) => r.name), `perturbing ${field}`).toEqual([`S: ${field}`]);
@@ -400,7 +431,7 @@ describe('seamFindings — derived per field per seam', () => {
     it('⛔ an invariant row the latch does not carry has NO boot side to fall back on', () => {
         const latch = realisticLatch();
         const boot = seamBootFields(segmentTapeFor(latch));
-        const exit = { ...latch.seam };
+        const exit = { ...seamExitFields(latch) };
         delete exit['static.Game.shake'];
         const f = seamFindings([{ name: 'S', exit, boot }]);
         const row = f.find((x) => x.name === 'S: static.Game.shake');
@@ -411,7 +442,7 @@ describe('seamFindings — derived per field per seam', () => {
     it('⛔ MUTATION: a field missing on either side reads UNCLAIMED, never green', () => {
         const latch = realisticLatch();
         const boot = seamBootFields(segmentTapeFor(latch));
-        const exit = { ...latch.seam };
+        const exit = { ...seamExitFields(latch) };
         delete exit['save.hasSword'];
         const f = seamFindings([{ name: 'S1->S2', exit, boot }]);
         const row = f.find((x) => x.name === 'S1->S2: save.hasSword');
@@ -426,7 +457,7 @@ describe('seamFindings — derived per field per seam', () => {
         const latch = realisticLatch();
         const boot = seamBootFields(segmentTapeFor(latch));
         const exit = {
-            ...latch.seam,
+            ...seamExitFields(latch),
             'static.Bot.pins': { dead_frames: true, sound: false },
             'save.levelPersistence': [{ tag: 4, level: 10 }, { tag: 1, level: 20 }],
         };
@@ -847,5 +878,143 @@ describe('R7_SECOND_BATCH — the prediction, before the change (R7 slice 2b)', 
     it('the batch item carries the no-draw refusal', () => {
         expect(R7_SECOND_BATCH.item.constraint).toMatch(/NO `Math\.random\(\)`/);
         expect(R7_SECOND_BATCH.item.streamEffect).toMatch(/IDENTICAL/);
+    });
+});
+
+/**
+ * ⛔⛔⛔ THE PRE-BUILD ROWS, AND WHICH BLOCK EACH SIDE READS. R7 slice 2b.
+ *
+ * Slice 2 shipped a checker that compared a DECLARATION against a latch
+ * taken one whole level build later and papered the 1562-draw gap over with
+ * a declared offset. The batch closes it by latching the stream at
+ * `Game.begin()` ENTRY, and the failure mode this replaces it with is
+ * READING THE WRONG BLOCK — which is silent, because both blocks carry the
+ * same four keys with plausible values.
+ *
+ * So every test below is about the SOURCE, not the value: the realistic
+ * fixture's two blocks differ on purpose, and a consumer that read the
+ * terminal one would pass nothing here.
+ */
+describe('seamExitFields — which instant each row is read at (R7 slice 2b)', () => {
+    it('the prebuild set is DERIVED from the signature, not listed', () => {
+        expect([...SEAM_PREBUILD_FIELDS].sort())
+            .toEqual(['fp.seed', 'rng.cosmetic', 'rng.gameplay', 'save.time']);
+        for (const f of SEAM_PREBUILD_FIELDS) {
+            expect(SEAM_SIGNATURE.find((r) => r.field === f).prebuild).toBe(true);
+        }
+    });
+
+    it('⛓ takes the four prebuild rows from `beginEntry` and everything else from '
+        + 'the terminal block', () => {
+        const l = realisticLatch();
+        const e = seamExitFields(l);
+        for (const f of SEAM_PREBUILD_FIELDS) {
+            expect(e[f], f).toBe(l.beginEntry[f]);
+            // …and the two blocks really do disagree, or this proved nothing.
+            expect(e[f], `${f} must differ from the terminal reading`)
+                .not.toBe(l.seam[f]);
+        }
+        expect(e.level).toBe(l.seam.level);
+        expect(e['save.hitsMax']).toBe(l.seam['save.hitsMax']);
+    });
+
+    it('⛔ NO `beginEntry` DELETES the rows — it never falls back to the terminal '
+        + 'block', () => {
+        const l = realisticLatch();
+        const e = seamExitFields({ ...l, beginEntry: null });
+        for (const f of SEAM_PREBUILD_FIELDS) {
+            expect(Object.prototype.hasOwnProperty.call(e, f), f).toBe(false);
+        }
+        // …and a seam over that map reads UNCLAIMED on exactly those rows,
+        // which is the honest answer for a boot that ran no `begin()` (a
+        // reused world, `Bot.as:1638`) and therefore took no build draws.
+        const boot = seamBootFields(segmentTapeFor(l));
+        const rows = seamFindings([{ name: 'S', exit: e, boot }]);
+        const unclaimed = rows.filter((r) => !r.ok).map((r) => r.name);
+        // ⛔ ALL FOUR, INCLUDING `fp.seed`. `declared-not-compared` requires
+        // BOTH sides before it reports agreement, so a missing exit side
+        // reaches the UNCLAIMED branch like every other row — the class means
+        // "never red for a MISMATCH", not "never red".
+        expect(new Set(unclaimed))
+            .toEqual(new Set(SEAM_PREBUILD_FIELDS.map((f) => `S: ${f}`)));
+        expect(rows.find((r) => r.name === 'S: rng.gameplay').detail)
+            .toMatch(/exit latch does not carry it/);
+    });
+
+    it('a null envelope and a latch with no terminal block are both empty, not '
+        + 'partially filled', () => {
+        expect(seamExitFields(null)).toEqual({});
+        expect(seamExitFields({ latched: false, seam: null, beginEntry: { 'save.time': 5 } }))
+            .toEqual({});
+    });
+});
+
+describe('segmentBootFromLatch — the PRE-BUILD half (R7 slice 2b)', () => {
+    it('⛓ authors the four prebuild fields from `beginEntry`, NOT from the terminal '
+        + 'latch', () => {
+        const l = realisticLatch();
+        const blocks = segmentBootFromLatch(l);
+        expect(blocks.rng.seed).toBe(l.beginEntry['rng.gameplay']);
+        expect(blocks.rng.cosmetic).toBe(l.beginEntry['rng.cosmetic']);
+        expect(blocks.rng.fp).toBe(l.beginEntry['fp.seed']);
+        expect(blocks.seam.time).toBe(l.beginEntry['save.time']);
+        // ⛔ THE NEGATIVE HALF: none of the four is the terminal value. A
+        // tape authored from the terminal readings would boot one whole build
+        // ahead of where it claims and still parse, record and replay.
+        expect(blocks.rng.seed).not.toBe(l.seam['rng.gameplay']);
+        expect(blocks.seam.time).not.toBe(l.seam['save.time']);
+    });
+
+    it('⛔ MUTATION: a missing `beginEntry` REFUSES BY NAME rather than falling back',
+        () => {
+            const l = realisticLatch();
+            expect(() => segmentBootFromLatch({ ...l, beginEntry: null }))
+                .toThrow(/no `beginEntry` block/);
+            expect(() => segmentBootFromLatch({ ...l, beginEntry: null }))
+                .toThrow(/REUSED the current world/);
+        });
+
+    it('⛔ MUTATION: an entry block missing ONE prebuild row is refused, by that '
+        + 'row\'s name', () => {
+        for (const field of SEAM_PREBUILD_FIELDS) {
+            const l = realisticLatch();
+            const beginEntry = { ...l.beginEntry };
+            delete beginEntry[field];
+            expect(() => segmentBootFromLatch({ ...l, beginEntry }), field)
+                .toThrow(new RegExp(field.replace('.', '\\.')));
+        }
+    });
+
+    it('⛔ the refusals that read a prebuild value still bite through the ENTRY '
+        + 'block', () => {
+        // ⚠ These duplicate the refusal tests above ON PURPOSE, because the
+        // BLOCK they read changed. `save.time: 0` and `rng.gameplay: 0` are
+        // refused for reasons about the tape format; if the batch had left
+        // them reading the terminal block, the refusals would have gone
+        // silently vacuous while still passing their original tests.
+        const l = realisticLatch();
+        expect(l.beginEntry['save.time']).not.toBe(0);
+        expect(() => segmentBootFromLatch({
+            ...l, beginEntry: { ...l.beginEntry, 'save.time': 0 },
+        })).toThrow(/time/);
+        expect(() => segmentBootFromLatch({
+            ...l, beginEntry: { ...l.beginEntry, 'rng.gameplay': 0 },
+        })).toThrow(/inherit the page/);
+        // …and a cosmetic state with split off is still the silently-dropped
+        // declaration it always was, read from the entry block now.
+        expect(() => segmentBootFromLatch({
+            ...l,
+            seam: { ...l.seam, 'static.Rng.split': false },
+            beginEntry: { ...l.beginEntry, 'rng.cosmetic': 99 },
+        })).toThrow(/silently drops/);
+    });
+
+    it('⛓ THE ROUND TRIP CLOSES AT THE RIGHT INSTANT: latch -> tape -> boot map '
+        + 'equals `seamExitFields`, field for field', () => {
+        const l = realisticLatch();
+        const boot = seamBootFields(segmentTapeFor(l));
+        const exit = seamExitFields(l);
+        const rows = seamFindings([{ name: 'S', exit, boot }]);
+        expect(rows.filter((r) => !r.ok).map((r) => `${r.name} [${r.detail}]`)).toEqual([]);
     });
 });

@@ -180,11 +180,14 @@ export const SEAM_SIGNATURE = Object.freeze([
     }),
     Object.freeze({
         field: 'save.time', group: 'save', saveKey: 'time', comparable: 'pinned-equality',
-        pin: 'Bot.pinDeadFrames',
+        pin: 'Bot.pinDeadFrames', prebuild: true,
         cite: 'Game.as:832 (`time += timeRate`, below the blackCover gate, outside it)',
         why: 'counts every `Game.update()` INCLUDING dead frames. Vanilla dead-frame '
             + 'counts are per-RENDER and ±2-banded per load; under the pin they are '
-            + 'update-determined and the field is exact.',
+            + 'update-determined and the field is exact. ⛓ R7 slice 2b: PRE-BUILD — '
+            + '`botStart` writes it at `Bot.as:1620`, above the `new Game` line, so the '
+            + 'arrival FADE that follows adds its dead frames on top of the declaration '
+            + '(21 for L94, measured).',
     }),
     Object.freeze({
         field: 'save.primary', group: 'save', saveKey: 'primary', comparable: 'equality',
@@ -305,13 +308,22 @@ export const SEAM_SIGNATURE = Object.freeze([
     // ── 4. the three generators ───────────────────────────────────────
     Object.freeze({
         field: 'rng.gameplay', group: 'rng', comparable: 'level-qualified-equality',
-        readout: 'botStatus.rng.state (R6 slice 6a)', cite: 'Rng.as:118-121',
+        readout: 'botStatus.rng.state (R6 slice 6a) / botSeam().beginEntry (slice 2b)',
+        cite: 'Rng.as:118-121', prebuild: true,
         why: 'one uint32; write == reset. Equality holds only where the level has NO '
-            + 'render-side draw site — see `seamRngPosture`.',
+            + 'render-side draw site — see `seamRngPosture`. ⛓ R7 slice 2b: PRE-BUILD, '
+            + 'and this row is why the second batch exists. `botStart` applies the '
+            + 'declared seed at `Bot.as:1689`, ABOVE the deferred build, so a tape '
+            + 'declares the stream position at `Game.begin()` ENTRY while the terminal '
+            + 'latch reads it one whole build later (1562 draws for L94, measured with '
+            + 'zero residue). ⚠ AND THE QUALIFICATION NOW NAMES A DIFFERENT LEVEL: the '
+            + 'entry state carries the DEPARTURE level\'s render-side draws and none of '
+            + 'the arrival\'s, where the terminal reading was the other way round. '
+            + '`seamRngPosture` is asked about the level whose renders are IN the number.',
     }),
     Object.freeze({
         field: 'rng.cosmetic', group: 'rng', comparable: 'split-qualified-equality',
-        qualifier: 'static.Rng.split',
+        qualifier: 'static.Rng.split', prebuild: true,
         readout: 'Rng.cosmeticState / the cosmetic hooks', cite: 'Rng.as:98-116',
         why: '⛔⛔ THE SECOND GENERATOR IS NOT RUNNING WHILE `split` IS OFF, and R7 '
             + 'slice 2\'s seam probe is what made that a checkable fact instead of a '
@@ -329,6 +341,7 @@ export const SEAM_SIGNATURE = Object.freeze([
     }),
     Object.freeze({
         field: 'fp.seed', group: 'rng', comparable: 'declared-not-compared',
+        prebuild: true,
         readout: '⛔ `FP.randomSeed` DOES NOT ANSWER THIS',
         cite: 'net/flashpunk/FP.as:391-395, :409-423, :715-716',
         why: '⛔⛔ THE OBVIOUS ACCESSOR READS THE WRONG VARIABLE. `FP.randomSeed`\'s '
@@ -344,7 +357,17 @@ export const SEAM_SIGNATURE = Object.freeze([
             + '`scale` comes from `Math.random()` (the GAMEPLAY stream, already hooked). '
             + 'FlashPunk\'s own uses are `Emitter` (waterfall spray, from `render()`) '
             + 'and `Spritemap.randFrame` (uncalled here). ⇒ kickoff §2.1\'s "gameplay-'
-            + 'relevant (RockFall scale/spin)" conflates the two streams.',
+            + 'relevant (RockFall scale/spin)" conflates the two streams. '
+            + '⛓⛓ R7 SLICE 2b REMOVED THE REASON THIS ROW GAVE, AND THE ROW STAYS. Its '
+            + 'stated ground was the duplicated BUILD, and the begin()-entry latch '
+            + 'retires exactly that: the row is PRE-BUILD now, so a chain\'s declared FP '
+            + 'seed and its predecessor\'s entry reading are the same instant and CAN be '
+            + 'compared. What is left is a different fact and a weaker one — FlashPunk\'s '
+            + 'own `Emitter` draws from `render()` (waterfall spray), so in a level with '
+            + 'one the entry state is a RENDER count and ±banded like `save.time` without '
+            + 'the pin. Since no consumer in this game reads the stream at all, the row '
+            + 'reports its agreement and never reddens on it. ⇒ agreement is now the '
+            + 'EXPECTED reading rather than a coincidence, and it is reported as such.',
     }),
 
     // ── 5. the calm-arrival invariants ────────────────────────────────
@@ -665,6 +688,63 @@ export function seamRngPosture(renderSites = [], consumers = []) {
 }
 
 /**
+ * ⛓ The signature rows whose exit reading is taken at `Game.begin()` ENTRY.
+ * Derived from the signature's own `prebuild` flags, never listed — a row
+ * marked tomorrow is carried here with no edit.
+ */
+export const SEAM_PREBUILD_FIELDS = Object.freeze(
+    SEAM_SIGNATURE.filter((r) => r.prebuild).map((r) => r.field));
+
+/**
+ * ⛔⛔⛔ THE EXIT SIDE, AND WHICH INSTANT EACH ROW IS READ AT. R7 slice 2b.
+ *
+ * A `botSeam()` envelope now carries TWO blocks, because a seam asks two
+ * different questions of the same run:
+ *
+ *   `seam`        where the run ENDED — the terminal disarm, POST-build.
+ *                 This is what the ending-state claim compares (two runs
+ *                 that walked the same path must stop in the same state).
+ *   `beginEntry`  the stream position at `Game.begin()` ENTRY of the last
+ *                 world that loaded — PRE-build. This is what a SUCCESSOR
+ *                 must declare, because `botStart` applies a declaration
+ *                 ABOVE the deferred build (`Bot.as:1689`) and the
+ *                 successor's own build then re-consumes the same draws.
+ *
+ * ⛔ SO THE SEAM COMPARES THE ENTRY READING AND THE ENDING STATE COMPARES
+ * THE TERMINAL ONE, AND CONFLATING THEM IS THE BUG SLICE 2 SHIPPED A BRIDGE
+ * FOR. It compared a declaration against the terminal latch, found them
+ * 1562 draws apart, and had to assert the ENDING state OFFSET by L94's own
+ * build cost (`PLAYTHROUGH_CHAINS[].seamBuildCost`, deleted with this
+ * change). The numbers were right; the instants were one build apart.
+ *
+ * ⚠ AN ABSENT `beginEntry` IS AN ABSENT ROW, NEVER A FALLBACK TO `seam`.
+ * Falling back would compare a POST-build number to a PRE-build declaration
+ * and read 1562 draws of drift as a defect — or worse, read the two as
+ * equal in the one case that is genuinely broken: a boot that REUSED the
+ * current world (`Bot.as:1638`) runs no `begin()` and takes no build draws,
+ * and `Bot.clearLatch` nulls the block precisely so that boot reports
+ * UNCLAIMED rather than a plausible number for a build that never ran.
+ *
+ * @param {object} envelope a `botSeam()` envelope, or null
+ * @returns {object} `SEAM_SIGNATURE[].field` -> the value measured at the
+ *                   instant that row is about
+ */
+export function seamExitFields(envelope) {
+    const terminal = envelope?.seam ?? null;
+    if (!terminal) return {};
+    const out = { ...terminal };
+    const entry = envelope.beginEntry ?? null;
+    for (const field of SEAM_PREBUILD_FIELDS) {
+        if (entry && Object.prototype.hasOwnProperty.call(entry, field)) {
+            out[field] = entry[field];
+        } else {
+            delete out[field];
+        }
+    }
+    return out;
+}
+
+/**
  * ⛔⛔⛔ THE BOOT SIDE — a WHOLE TAPE, all eight blocks, as a signature
  * field map. R7 slice 2.
  *
@@ -982,7 +1062,40 @@ export function segmentBootFromLatch(envelope) {
             + 'UNCLAIMED seam (trap 111), never a boot state.');
     }
     const s = envelope.seam;
+    // ⛓ R7 slice 2b: FOUR FIELDS COME FROM THE OTHER BLOCK, and this is the
+    // authoring half of `seamExitFields`. A segment declares the stream
+    // position `botStart` will apply ABOVE its own build (`Bot.as:1689`), so
+    // for those rows the predecessor's `Game.begin()`-ENTRY reading is the
+    // number and its terminal reading is one whole build too late.
+    //
+    // ⛔ IT REFUSES BY NAME RATHER THAN FALLING BACK. A fallback to `seam`
+    // would author a tape 1562 draws ahead of where it claims to be, and the
+    // tape would parse, record, and replay — the silent-wrong-answer shape.
+    // The block is absent exactly when the predecessor loaded no level since
+    // `clearLatch` (a boot that reused the current world, `Bot.as:1638`),
+    // which is a state no segment can inherit from.
+    const entry = envelope.beginEntry ?? null;
+    const prebuild = new Set(SEAM_PREBUILD_FIELDS);
     const need = (field) => {
+        if (prebuild.has(field)) {
+            if (!entry) {
+                throw new R7AcceptanceError(
+                    `⛔ the envelope carries no \`beginEntry\` block, so \`${field}\` — a `
+                    + 'PRE-BUILD row — cannot be authored. `Bot.latchBeginEntry` fires at '
+                    + '`Game.begin()` entry and `Bot.clearLatch` nulls the block, so an '
+                    + 'absent one means the predecessor loaded no level since its tape '
+                    + 'was loaded (a boot that REUSED the current world, `Bot.as:1638`). '
+                    + 'A segment declaring the terminal reading instead would boot one '
+                    + `whole build (${'1562 draws for L94'}) ahead of where it claims.`);
+            }
+            if (!Object.prototype.hasOwnProperty.call(entry, field)) {
+                throw new R7AcceptanceError(
+                    `the \`beginEntry\` block does not carry \`${field}\`, which is a `
+                    + 'PRE-BUILD signature row — the fork emits four and this is not '
+                    + 'one of them');
+            }
+            return entry[field];
+        }
         if (!Object.prototype.hasOwnProperty.call(s, field)) {
             throw new R7AcceptanceError(
                 `the latch does not carry \`${field}\`, which channel `

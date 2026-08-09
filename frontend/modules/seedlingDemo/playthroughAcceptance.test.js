@@ -17,7 +17,9 @@ import {
     playthroughTapeNames,
 } from './playthroughWalk.js';
 import { chainFindings, latchAgreementFindings } from './playthroughAcceptance.js';
-import { SEAM_SIGNATURE, segmentBootFromLatch } from './r7Acceptance.js';
+import {
+    SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
+} from './r7Acceptance.js';
 import { parseTape, TAPE_VERSION } from './tapeFormat.js';
 
 /**
@@ -79,7 +81,41 @@ function latchAt(over = {}) {
         'latch.tick': CUT,
         'latch.dead_frames': 20,
     };
-    return { latched: true, partial: false, why: '', seam: { ...seam, ...over } };
+    /**
+     * ⛓ R7 slice 2b: THE `Game.begin()`-ENTRY BLOCK, and its four values are
+     * DELIBERATELY NOT the terminal ones.
+     *
+     * A boundary at an arrival duplicates one level BUILD, so a real latch's
+     * terminal `rng.gameplay` is one build's draws ahead of its entry
+     * reading and its `save.time` one fade's dead frames ahead. Making the
+     * two blocks agree here would have let a consumer that reads the WRONG
+     * block pass every test — the vacuity that `seamExitFields` and
+     * `segmentBootFromLatch` exist to be pinned against.
+     *
+     * ⛔ AND `over` ROUTES BY FIELD, not to both blocks. A prebuild field in
+     * `over` lands in the ENTRY block only, so the whole-signature mutation
+     * sweep below keeps biting through the block the code really reads. If a
+     * consumer ever went back to the terminal value, that sweep would go
+     * green on four rows and say so.
+     */
+    const entry = {
+        'begin.level': 94,
+        'begin.tick': CUT,
+        'rng.gameplay': 55512345,
+        'rng.cosmetic': 777,
+        'fp.seed': 987286273,
+        'save.time': 900,
+    };
+    // …and the terminal block is one build past all four.
+    seam['rng.gameplay'] = 1414141;
+    seam['rng.cosmetic'] = 999;
+    seam['fp.seed'] = 123456789;
+    seam['save.time'] = 921;
+    const prebuild = new Set(SEAM_PREBUILD_FIELDS);
+    for (const [k, v] of Object.entries(over)) {
+        if (prebuild.has(k)) entry[k] = v; else seam[k] = v;
+    }
+    return { latched: true, partial: false, why: '', seam, beginEntry: entry };
 }
 
 const stream = (from, to, mapper = (t) => ({ t, x: 10 + t, y: 20, level: t >= 0 ? 0 : 0 })) => ({
@@ -319,14 +355,19 @@ describe('latchAgreementFindings — two MEASURED states', () => {
     });
 
     it('`fp.seed` is reported and not compared — the page-lifetime LCG', () => {
-        const f = latchAgreementFindings('X', latchAt().seam,
-            latchAt({ 'fp.seed': 12345 }).seam);
+        // ⛔ THE TERMINAL MAP IS PERTURBED DIRECTLY, NOT THROUGH `over`. R7
+        // slice 2b: `latchAgreementFindings` compares two TERMINAL latches
+        // (the ending-state claim — where two runs stopped), while `over`
+        // routes prebuild fields into the `beginEntry` block that the SEAM
+        // reads. Going through `over` here would leave both terminal maps
+        // identical and the assertion would pass without testing anything.
+        const a = latchAt().seam;
+        const f = latchAgreementFindings('X', a, { ...a, 'fp.seed': 12345 });
         const row = f.find((r) => r.name === 'X: fp.seed');
         expect(row.ok).toBe(true);
         expect(row.detail).toMatch(/DECLARED, NOT COMPARED/);
         // …and every other field still compares.
-        const moved = latchAgreementFindings('X', latchAt().seam,
-            latchAt({ 'save.time': 901 }).seam);
+        const moved = latchAgreementFindings('X', a, { ...a, 'save.time': 901 });
         expect(moved.find((r) => r.name === 'X: save.time').ok).toBe(false);
     });
 });

@@ -136,6 +136,7 @@ try {
         });
         const page = await browser.newPage();
         let latch;
+        let envelope;
         try {
             await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
             await waitFor(page, 'runtime ready',
@@ -151,7 +152,8 @@ try {
                 const st = JSON.parse(await call(page, 'botStatus'));
                 return st.finished ? st : null;
             });
-            latch = JSON.parse(await call(page, 'botSeam')).seam;
+            envelope = JSON.parse(await call(page, 'botSeam'));
+            latch = envelope.seam;
         } finally {
             await page.close();
         }
@@ -192,6 +194,46 @@ try {
         console.log(`  L${level} (${lv.class}, ${lv.width}x${lv.height}): `
             + `${draws} gameplay draw(s), ${latch['latch.dead_frames']} dead frame(s), `
             + `time ${latch['save.time']}`);
+
+        // ── ⛓⛓⛓ R7 SLICE 2b: THIS PROBE IS THE SECOND BATCH'S WITNESS ──
+        //
+        // The batch's whole claim is that `Bot.latchBeginEntry` reads the
+        // stream at the instant `botStart`'s declaration lands — before the
+        // build. This probe declares a seed and runs ZERO ticks, so the
+        // entry reading must be the declared seed EXACTLY, and the distance
+        // from there to the terminal reading must be the same `draws` the
+        // check above computed. Two readings, one number, no argument.
+        //
+        // ⚠ AND THE `save.time` HALF IS THE SAME CLAIM. `botStart` writes
+        // `Main.time` above the `new Game` line too, so the terminal clock is
+        // the entry clock plus the fade's dead frames — the +21 the seam's
+        // delta showed for L94, now readable inside ONE run instead of
+        // inferred across two.
+        const entry = envelope.beginEntry ?? null;
+        check(`L${level}: ⛓ the begin()-ENTRY latch reads the DECLARED seed — the `
+            + 'instant a segment boot reproduces',
+        draws === 0
+            ? entry === null || entry['rng.gameplay'] === SEED
+            : Boolean(entry) && entry['rng.gameplay'] === SEED
+                && entry['begin.level'] === level,
+        entry === null
+            ? '⛔ NO `beginEntry` BLOCK — either this build predates the second batch '
+                + 'or the boot reused the current world and ran no `Game.begin()` '
+                + `(draws measured ${draws}, so ${draws === 0 ? 'the reuse path is the '
+                    + 'expected one here' : 'a build DID run and the block should exist'})`
+            : `entry rng ${entry['rng.gameplay']} (declared ${SEED}) at L`
+                + `${entry['begin.level']} tick ${entry['begin.tick']}; terminal `
+                + `${got} = ${draws} draw(s) later`);
+        if (entry && draws > 0) {
+            const fade = latch['save.time'] - entry['save.time'];
+            check(`L${level}: …and the fade's dead frames are the clock's whole delta`,
+                fade === latch['latch.dead_frames'],
+                `entry time ${entry['save.time']} -> terminal ${latch['save.time']} = `
+                + `+${fade}, against ${latch['latch.dead_frames']} latched dead frame(s)`);
+            console.log(`  L${level} FP: entry ${entry['fp.seed']} -> terminal `
+                + `${latch['fp.seed']} — the build's FP draws, a quantity nothing `
+                + 'measured before this latch existed');
+        }
     }
 } finally {
     await browser.close();

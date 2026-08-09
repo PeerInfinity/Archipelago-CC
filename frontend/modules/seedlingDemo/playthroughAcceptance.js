@@ -48,13 +48,14 @@
  */
 
 import {
-    SEAM_SIGNATURE, seamBootFields, seamFindings, seamLatchFindings,
+    SEAM_SIGNATURE, seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
 } from './r7Acceptance.js';
 import { PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT } from './playthroughWalk.js';
 // ⛓ The generator itself, because the ending-state offset for `rng.gameplay`
 // is a STEP COUNT and an LFSR state cannot be added to. Walking it forward is
 // the only way to check the claim, and `rng.js` is the transcription the whole
 // arc already trusts (asserted against the live game in `rng.test.js`).
+// ⚠ SCHEDULED FOR DELETION with `seamBuildCost` — kickoff §10.1 step 4.
 import { step } from './rng.js';
 
 /**
@@ -221,9 +222,14 @@ export function chainFindings(chain, tapes, replayed) {
         // 3b. the seam itself, and the boundary tick observed twice
         const nextName = chain.segments[i + 1];
         if (nextName) {
+            // ⛓ R7 slice 2b: `seamExitFields`, NOT `here.seam?.seam`. Four
+            // rows are PRE-BUILD and their exit reading is the arrival
+            // world's `Game.begin()`-ENTRY latch; the rest are the terminal
+            // one. Handing the raw terminal block here is what made the seam
+            // compare a declaration against a number one whole build later.
             const rows = seamFindings([{
                 name: `${name}->${nextName}`,
-                exit: here.seam?.seam ?? {},
+                exit: seamExitFields(here.seam),
                 boot: seamBootFields(tape(nextName)),
             }]);
             const bad = rows.filter((r) => !r.ok);
