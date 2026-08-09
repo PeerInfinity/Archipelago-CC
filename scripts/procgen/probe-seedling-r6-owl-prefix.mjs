@@ -116,11 +116,19 @@ const PLAYER_HITS_TIMER_MAX = 20;
  *    the intro, so `botStatus.slash.{tests, hits}` counts the dispatches and
  *    `botMobiles` reports where the shove actually left him.
  */
-const ARMS = [
+const ARMS = (process.env.ARMS === 'shove1' ? [
+    // ⛔ THE SECOND REFUTATION (§21.11): the re-searched tape's own first
+    // SHOVE. Three lengths across the coast the lava knock throws him into,
+    // so the boss's polled position measures the shove's arithmetic at three
+    // points rather than at its end.
+    { kind: 'prefix', ticks: 22 },
+    { kind: 'prefix', ticks: 45 },
+    { kind: 'prefix', ticks: 74 },
+] : [
     { kind: 'prefix', ticks: 24 },
     { kind: 'prefix', ticks: 40 },
     { kind: 'shove', ticks: 26, press: 6 },
-];
+]);
 /** Repeats per arm; the poll drift is never negative, so take the MAX timer. */
 const REPEATS = 2;
 

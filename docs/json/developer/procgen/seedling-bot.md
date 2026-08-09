@@ -5417,3 +5417,47 @@ Two smaller traps the slice banked:
   LOOKUP was short. On the tag tick the boss's own arm is `frozen` (0 draws) and
   the GRAPHIC's `endAnim` books ten, so a tick's site list is
   `phase ++ (deathAnim if the callback fired) ++ jiggle`.
+
+### ⛔⛔⛔ Two off-by-ones that cancelled, and the press that never fired (R6 slice 6g)
+
+The 6f recording diverged at tick 23 and the attribution came off one headless
+arm of the plan's own tape. `botStatus.slash` read **`{tests: 0, hits: 0}`**:
+the shove the fight opens with never happened in the game at all.
+
+**`FinalBoss.as:88`'s `Input.released(p.keys[6])` means exactly what it says.**
+`Bot` dispatches the DOWN edge on a span's `from` and the UP edge on its `to`,
+`Input.onKeyUp` is the only writer of FlashPunk's `_release`, and
+`Engine.onEnterFrame` calls `Input.update()` at the END of the frame — so the
+release is live on `to` and nowhere else. Slice 6e read it as ending on `from`
+because the boss's polled position sat one 0.5303 px step further along than a
+release on `to` permits. It did — **and the step is the TAPE's, not the
+edge's**: `Bot.update` records observation N and disarms at the top of a frame
+whose world update then runs anyway, so an **N-tick tape performs N + 1 world
+updates** and every poll sees the extra one.
+
+An intro one tick early and a run one frame short agree on both quantities the
+6e probe could read — the polled draw count and the polled boss position — and
+disagree only on WHICH TICK anything happens. That is the whole shape of the
+trap: **when two derived off-by-ones move the same measured quantities the same
+way, the fit that "confirms" them confirms their product.** What separated them
+was a readout that had nothing to do with either: a hit-test counter.
+
+Consequences worth carrying:
+
+- **The intro-dismissing press is NOT the first shove.** Under the `to` reading
+  the freeze is still up when the player updates on `from`, and on `to` the
+  edge is a release, so the press is swallowed at both ends. `hitThisSequence`
+  still starts false — the first lava hit needs no barrage, but it needs a
+  press of its own.
+- **A poll offset with a mechanism beats a poll offset with a bound.** The
+  two-quantity fit now PREDICTS its offset per arm (1 once the fight has
+  started, 0 while the boss is frozen), which is a claim a wrong model has to
+  break rather than absorb.
+- **The negative control had the answer for a whole slice.** The 2-tick arm
+  ends ON `from`; under that reading the tape's extra frame runs the walk arm
+  and books a third draw. The game reported two, twice, at both seeds.
+- **`Player.knockback` is not `Enemy.knockback`.** It normalizes
+  `(x - p.x, y - p.y)` to unit length and then writes each axis only if
+  `|component| >= 0.5` (`>` for y). A contact at 26 degrees off horizontal
+  moves the player in x alone — which is why the refuting tick looked like a
+  1.66 px reversal with almost no vertical component.

@@ -3,59 +3,74 @@
  * plan-seedling-r6-wowl — ⛓⛓⛓ THE OWL, AND THE LADDER'S THIRD BOSS KILL IS
  * ONE THE PLAYER NEVER DEALS.
  *
- * Region-atlas Phase 8, subtractive ladder rung R6, slice 6f. Brief:
+ * Region-atlas Phase 8, subtractive ladder rung R6, slices 6f and 6g. Brief:
  * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §8.5, §8.6, §14.4, §16.5,
- * §16.8 and §19 (the pinned draw schedule and fight model this drives).
+ * §16.8, §19 (the pinned draw schedule and fight model this drives), §20 (the
+ * first search) and §21 (the attribution that moved it).
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────
  *
  * `onlyHitBy = "Lava"`: a sword press cannot damage the Owl at all. It takes
  * `Enemy.hit`'s `justKnock` arm and SHOVES him, and the only thing that can
  * kill him is his own `hit(6, centre, 1, "Lava")` — fired when his 12x12
- * box's FIRST overlapping `Tile` is `t == 17`. So the tape is three shoves and
- * a lot of dodging, and every number below came out of a search over the real
- * `levelRun`.
+ * box's FIRST overlapping `Tile` is `t == 17`. So the tape is three shoves
+ * and a lot of dodging, and every number below came out of a search over the
+ * real `levelRun`.
  *
- * ── ⛓⛓⛓ FINDING 1: THE INTRO-DISMISSING PRESS **IS** THE FIRST SHOVE ──
+ * ── ⛔⛔⛔ FINDING 1, RETIRED BY THE GAME (§21) ────────────────────────
  *
- * §16.5's `entry:` disposition says the room's `!started` intro raises
- * `Game.freezeObjects` on the first update from any distance and holds it
- * until an X RELEASE. What nobody had noticed is that the SAME press is
- * `useItem(Main.primary)`: `FinalBoss.update` lowers the freeze at the TOP of
- * the frame, above the player's own update, so `Player.input()` runs on that
- * very tick and `Input.pressed(keys[4])` is still live. One press, two jobs —
- * and because the boss spawns 3.00 px from the lava octagon on his opening
- * leg (§8.5), the shove it buys is enough. **Lava hit 1 lands on tick 9 of a
- * window whose first input is at tick 2.**
+ * Slice 6f opened the fight with the intro-dismissing press, on the reading
+ * that `FinalBoss.update` lowers `Game.freezeObjects` at the top of the frame
+ * and `Player.input()` therefore still runs that tick. **The game counted
+ * ZERO hit tests for that press.** `Bot` dispatches the DOWN edge on a span's
+ * `from` and the UP edge on its `to`, `Input.onKeyUp` is the only writer of
+ * `_release`, and `Input.update()` runs at the END of the engine frame — so
+ * the intro ends on `to`, the freeze is still up when the player updates on
+ * `from`, and the press is swallowed at both ends.
  *
- * ⇒ and that retires §8.5's "the fight is at least three full pod cycles".
- * `hitThisSequence` starts FALSE, so the first hit needs no barrage before
- * it: the window endures **two** barrages, not three.
+ * §19.5 read the edge as `from` because the boss's polled position was one
+ * 0.5303 px step further along than a release on `to` permits. It was, and
+ * the step is the TAPE's: an N-tick tape runs **N + 1** world updates,
+ * because `Bot.update` records observation N and disarms at the top of a
+ * frame whose world update then runs anyway. Two off-by-ones, cancelling in
+ * both quantities the 6e probe could measure.
  *
- * ── ⛓⛓⛓ FINDING 2: A STANDING PLAYER DIES, AND AN ORBITING ONE IS NEVER
- *    TOUCHED ─────────────────────────────────────────────────────────────
+ * ⇒ **the fight opens with no free shove**, and this plan buys its first one.
+ * `hitThisSequence` still starts FALSE, so the first lava hit still needs no
+ * barrage before it — only a press.
+ *
+ * ── ⛓⛓⛓ FINDING 2: A STANDING PLAYER DIES, AND AN ORBITING ONE ALMOST
+ *    NEVER GETS TOUCHED ────────────────────────────────────────────────
  *
  * `stepsAhead` is **-15**, so the barrage is aimed fifteen steps of the
  * player's own velocity BEHIND them, and the rock then takes 17 more ticks to
  * land. A stationary player is aimed at directly and dies inside the first
- * barrage (measured: 3 hits, dead at tick 555). A player holding a 64 px
- * square orbit at ~0.68 px/tick per axis carries ~32 ticks of lead — about 22
- * px per axis against a +-20 px spray — and takes ONE hit in 1500 ticks.
+ * barrage. A player holding a 64 px square orbit carries ~32 ticks of lead —
+ * about 22 px per axis against a +-20 px spray.
+ *
+ * ⚠ AND "NOT ONE OF 95 ROCKS" (§20.4) WAS A PROPERTY OF THE OLD PLAN, NOT OF
+ * THE ORBIT. This one takes **one rock of ninety-five**, at tick 555, on the
+ * approach to the third stance — the vulnerable state is still the STANCE and
+ * the walk to it, and `hitsMax` 3 survives one.
  *
  * ⛔ AND THE ORBIT'S CENTRE IS A CONSTRAINT, NOT A PREFERENCE. `t == 16` —
  * the ring around the lava — is a LETHAL terrain state, so the whole octagon
- * plus a tile of margin is forbidden floor for the player. Two of the four
- * quadrant orbits the search tried DROWNED; the north-west one survives.
+ * plus a tile of margin is forbidden floor for the player.
  *
- * ── ⛓⛓ FINDING 3: THE FIVE HIT TESTS ARE CULLED BY THE REACH ──────────
+ * ── ⛓⛓ FINDING 3: THE FIVE HIT TESTS ARE CULLED BY THE RECT ───────────
  *
  * §14.4/§19.6 derived the shove from the RECEIVER's gate: `justKnock` sets no
  * `hitsTimer`, so all five of a press's tests land and compound. The
- * DISPATCHER has a gate too — `Player.slash`'s 16 px `FP.distanceRectPoint`,
- * re-measured every tick — and the shove is 4.75 px on the second test and
+ * DISPATCHER has gates too — the 16x32 slash rect, which faces where the
+ * player's PREVIOUS tick's velocity pointed, and a 16 px
+ * `FP.distanceRectPoint` — and the shove is 4.75 px on the second test and
  * 8.75 on every one after. So the body recedes out of its own hit rect
  * part-way through its own press, and how many of the five land is GEOMETRY.
- * `run.finalBossShoves` records every test with the distance that decided it.
+ * `run.finalBossShoves` records every test that reached him.
+ *
+ * ⚠ THE COUNT IS STILL A MODEL NUMBER. The game has confirmed the DISPATCH
+ * count (`botStatus.slash.tests` reads 5 for one press) and has not yet been
+ * asked one whose tests land.
  *
  * ── THE PAIR ──────────────────────────────────────────────────────────
  *
@@ -63,7 +78,7 @@
  * THIRD shove press deleted, and the movement spans byte-identical because
  * they come from a separate generator (§12). The control's boss takes two of
  * three lava hits, `{112,0}` and `{112,1}` are never written, and the fight
- * runs on into the third barrage.
+ * runs on.
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r6-wowl.mjs [--write] [--search]
@@ -81,7 +96,7 @@ const SEARCH = process.argv.includes('--search');
 
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
-const { ROLES } = await import(join(MODULE, 'levelWorld.js'));
+const { ROLES, buildLevelWorld } = await import(join(MODULE, 'levelWorld.js'));
 const { serializeTape, parseTape, heldKeysAt } = await import(join(MODULE, 'tapeFormat.js'));
 const { keysToSpans } = await import(join(MODULE, 'mover.js'));
 const { FINAL_BOSS } = await import(join(MODULE, 'finalBossFight.js'));
@@ -90,9 +105,8 @@ const { FINAL_BOSS } = await import(join(MODULE, 'finalBossFight.js'));
  * ⚠ THE BOOT BLOCK IS `new Game(level, x, y)`'s ARGUMENTS, not the entity
  * point — `spawnFromBoot` adds `(Tile.w/2, Tile.h/2)`. (55,101) spawns the
  * player at **(63,109)**, which is 10 px west-north-west of the Owl's own
- * spawn (72,104) — close enough for the slash's 16 px reach, clear of his
- * 12x12 box (so no contact damage), and on a `t == 37` floor tile rather than
- * the lethal `t == 16` ring.
+ * spawn (72,104) — clear of his 12x12 box (so no contact damage) and on a
+ * `t == 37` floor tile rather than the lethal `t == 16` ring.
  */
 const BOOT = { level: 112, x: 55, y: 101 };
 const GRANTS = [{ level: 112, items: ['sword'] }];
@@ -100,9 +114,8 @@ const PINS = ['sound', 'dead_frames'];
 /**
  * ⛔ EMPTY, AND BOTH HALVES ARE EARNED. The lava and its `t == 16` ring are
  * routed around by the plan (the search FORBADE them rather than scoring them
- * away — two of its four candidate orbit centres drowned), and the four pod
- * cells are avoided by construction and asserted every tick by `levelRun`'s
- * own pin refusal.
+ * away), and the four pod cells are avoided by construction and asserted
+ * every tick by `levelRun`'s own pin refusal.
  */
 const NO_HAZARDS = [];
 /**
@@ -118,58 +131,79 @@ const NO_HAZARDS = [];
  */
 const RNG = { seed: 101, split: true };
 
-// ── THE PLAN, AS SEARCHED ─────────────────────────────────────────────
-/** The intro press — which is also shove 1 (see FINDING 1). */
-const PRESS_1 = 2;
-/** The square orbit that dodges both barrages: NW quadrant, 64 px, 30/side. */
+// ── THE PLAN, AS SEARCHED (§21.8) ─────────────────────────────────────
+/**
+ * The intro press. ⛔ NOT a shove — see FINDING 1. It is a one-tick span
+ * because `levelRun` refuses a longer one across the intro (no arm has driven
+ * one), and it costs the fight nothing: the boss is frozen until its `to`.
+ */
+const INTRO_PRESS = 2;
+/** The square orbit that dodges the barrages: NW quadrant, 64 px, 30/side. */
 const ORBIT = { cx: 56, cy: 56, s: 32, period: 30 };
-/** Shove 2: a stance 16 px from the boss's leg to pod1, pressed at tick 326. */
-const PRESS_2 = 326;
-const STANCE_2 = { x: 103, y: 55 };
-/** Shove 3: the KILL, from a stance west of his leg to pod2. */
-const PRESS_3 = 789;
-const STANCE_3 = { x: 37, y: 140 };
+/**
+ * The three shoves: press tick and the stance the player walks to. Each was
+ * found by replaying the real `levelRun` over a polar grid around the boss's
+ * own position at that tick — see `--search`.
+ */
+const SHOVES = [
+    { t: 15, x: 60, y: 98 },
+    { t: 296, x: 102, y: 52 },
+    { t: 699, x: 31, y: 132 },
+];
 /** How long before a press the player leaves the orbit for the stance. */
-const APPROACH = 90;
+const APPROACH = 60;
+/**
+ * ⛔⛔ THE LAST TICKS BEFORE A PRESS HOLD ONE KEY, AND THAT IS THE FACING.
+ *
+ * `Player.slash`'s rect is `getSlashRect()` on `slashDirection`, which
+ * `set slashing` copies from `direction` — and `direction` is written in
+ * `sprites()`, BELOW `slash()` in `Player.update`. So the rect a press throws
+ * is the facing implied by the PREVIOUS tick's velocity, and the rule is
+ * `v.x` first (`< 0` left, `> 0` right) and only then `v.y`. Holding a single
+ * key toward the boss for the ticks below the press is what makes the rect
+ * point at him; a diagonal approach would face him horizontally whatever the
+ * geometry wanted.
+ */
+const FACE = 8;
 
 /**
  * The controller the search drove, kept as the tape's GENERATOR rather than
  * as a hand-written span list.
  *
- * ⛓ THE MOVEMENT AND THE TREATMENT COME FROM SEPARATE GENERATORS (§12): the
- * presses are a literal list and the movement is this closure, so deleting a
- * press cannot perturb a single movement tick. `keysToSpans` is lossless, so
- * the tape's spans ARE these per-tick sets.
+ * ⛓ THE MOVEMENT AND THE TREATMENT COME FROM SEPARATE GENERATORS (§12).
+ * `movement` is the full shove list and decides where the player goes;
+ * `presses` is a literal list and decides what he does when he gets there.
+ * Deleting a press therefore cannot perturb a single movement tick, which is
+ * what makes the control a one-primitive-fewer PREFIX rather than a different
+ * tape.
  */
-function controller(presses) {
-    const phases = [
-        { from: 0, kind: 'hold' },
-        { from: 12, kind: 'orbit' },
-        { from: PRESS_2 - APPROACH, kind: 'goto', ...STANCE_2 },
-        { from: PRESS_2 - 3, kind: 'hold' },
-        { from: PRESS_2 + 8, kind: 'orbit' },
-        { from: PRESS_3 - APPROACH, kind: 'goto', ...STANCE_3 },
-        { from: PRESS_3 - 3, kind: 'hold' },
-    ];
+function controller(movement, presses) {
     return (t, run) => {
         const out = new Set();
-        if (presses.includes(t)) out.add('primary');
-        let ph = null;
-        for (const p of phases) if (t >= p.from) ph = p;
-        if (!ph || ph.kind === 'hold') return out;
+        if (t === INTRO_PRESS || presses.includes(t)) out.add('primary');
+        const own = movement.find((k) => t >= k.t - APPROACH && t <= k.t + 6);
         let tx;
         let ty;
-        if (ph.kind === 'goto') { tx = ph.x; ty = ph.y; } else {
-            const i = Math.floor((t - ph.from) / ORBIT.period) % 4;
+        if (own && t >= own.t - FACE && t <= own.t) {
+            const b = run.finalBosses[0];
+            if (!b) return out;
+            const dx = b.x - run.state.x;
+            const dy = b.y - run.state.y;
+            if (Math.abs(dx) >= Math.abs(dy)) out.add(dx > 0 ? 'right' : 'left');
+            else out.add(dy > 0 ? 'down' : 'up');
+            return out;
+        }
+        if (own && t > own.t) return out; // the six ticks after a press: still
+        if (own) { tx = own.x; ty = own.y; } else {
+            const i = Math.floor(t / ORBIT.period) % 4;
             [tx, ty] = [[ORBIT.cx + ORBIT.s, ORBIT.cy], [ORBIT.cx, ORBIT.cy + ORBIT.s],
                 [ORBIT.cx - ORBIT.s, ORBIT.cy], [ORBIT.cx, ORBIT.cy - ORBIT.s]][i];
         }
         const dx = tx - run.state.x;
         const dy = ty - run.state.y;
-        // ⛔ THE DEADBAND IS THE PLAYER'S OWN STEP. `moveSpeed` is 0.5 and the
-        // per-axis step oscillates 0.41..0.97 (friction is subtractive on the
-        // LENGTH and the input cap is per axis), so a band under 1 px chatters
-        // and one over it parks short. 0.8 is inside both.
+        // ⛔ THE DEADBAND IS THE PLAYER'S OWN STEP. `moveSpeed` is 0.8 on this
+        // floor and the per-axis step oscillates 0.81..1.53 on a diagonal, so
+        // a band under 0.8 chatters and one much over it parks short.
         if (dx > 0.8) out.add('right'); else if (dx < -0.8) out.add('left');
         if (dy > 0.8) out.add('down'); else if (dy < -0.8) out.add('up');
         return out;
@@ -195,33 +229,29 @@ const freshRun = () => createLevelRun({
 });
 
 /** Drive the controller and return the per-tick key sets it chose. */
-function drive(presses, ticks) {
+function drive(movement, presses, ticks) {
     const r = freshRun();
-    const ctrl = controller(presses);
+    const ctrl = controller(movement, presses);
     const keys = [];
-    const stream = [];
     for (let t = 0; t < ticks; t += 1) {
-        stream.push({ t, x: r.state.x, y: r.state.y, level: r.level });
         const k = ctrl(t, r);
         keys.push([...k]);
         r.advance(new Set(k));
     }
-    return { run: r, keys, stream };
+    return { run: r, keys };
 }
 
 /** Replay a SPAN list, which is what the tape carries and the game reads. */
 function replay(inputs, ticks) {
     const r = freshRun();
-    const stream = [];
-    for (let t = 0; t < ticks; t += 1) {
-        stream.push({ t, x: r.state.x, y: r.state.y, level: r.level });
-        r.advance(heldKeysAt({ inputs }, t));
-    }
-    return { run: r, stream };
+    for (let t = 0; t < ticks; t += 1) r.advance(heldKeysAt({ inputs }, t));
+    return { run: r };
 }
 
+const PRESS_TICKS = SHOVES.map((s) => s.t);
+
 // ── the drive, and the tick count derived from the TAGS ────────────────
-const probe = drive([PRESS_1, PRESS_2, PRESS_3], PRESS_3 + 200);
+const probe = drive(SHOVES, PRESS_TICKS, PRESS_TICKS[2] + 200);
 const tagRow = probe.run.finalBossKills.find((k) => k.what === 'tagsWritten');
 if (!tagRow) {
     throw new Error('plan: the three shoves did not reach `endAnim`\'s "dead" arm — '
@@ -235,7 +265,7 @@ if (!tagRow) {
  * nothing.
  */
 const TICKS = tagRow.t + 2;
-const driven = drive([PRESS_1, PRESS_2, PRESS_3], TICKS);
+const driven = drive(SHOVES, PRESS_TICKS, TICKS);
 /**
  * ⛔⛔ AND `keysToSpans` DROPS THE PRESS, SILENTLY.
  *
@@ -247,16 +277,16 @@ const driven = drive([PRESS_1, PRESS_2, PRESS_3], TICKS);
  * say which half was wrong. The presses are appended by name.
  * → [[feedback_span_encoder_drops_the_key_it_does_not_own]]
  */
-const pressSpans = (presses) => presses.map((t) => ({ key: 'primary', from: t, to: t + 1 }));
+const pressSpans = (ts) => ts.map((t) => ({ key: 'primary', from: t, to: t + 1 }));
 const INPUTS = [
     ...keysToSpans(driven.keys),
-    ...pressSpans([PRESS_1, PRESS_2, PRESS_3]),
+    ...pressSpans([INTRO_PRESS, ...PRESS_TICKS]),
 ];
-const CONTROL_TICKS = PRESS_3 + 30;
-const controlDriven = drive([PRESS_1, PRESS_2], CONTROL_TICKS);
+const CONTROL_TICKS = PRESS_TICKS[2] + 30;
+const controlDriven = drive(SHOVES, PRESS_TICKS.slice(0, 2), CONTROL_TICKS);
 const CONTROL_INPUTS = [
     ...keysToSpans(controlDriven.keys),
-    ...pressSpans([PRESS_1, PRESS_2]),
+    ...pressSpans([INTRO_PRESS, ...PRESS_TICKS.slice(0, 2)]),
 ];
 
 const tapeFor = (name, inputs, tickCount, description) => parseTape({
@@ -279,32 +309,34 @@ const tapeFor = (name, inputs, tickCount, description) => parseTape({
 });
 
 const tape = tapeFor('r6-owl-kill', INPUTS, TICKS,
-    'R6 slice 6f: THE OWL. Boots into L112 ten pixels west-north-west of `finalboss@64,96` '
-    + 'and presses `primary` ONCE at tick 2 — which both dismisses the room\'s intro '
-    + '(`FinalBoss.update` lowers `Game.freezeObjects` at the TOP of the frame, so '
-    + '`Player.input()` still runs that tick and the press is not lost) and delivers the '
-    + 'FIRST SHOVE. `onlyHitBy = "Lava"` means no press can damage him: the sword takes '
-    + '`Enemy.hit`\'s `justKnock` arm and moves him, and the kill is his own '
-    + '`hit(6, centre, 1, "Lava")` when his 12x12 box\'s first overlapping Tile is t=17. '
-    + 'Lava hit 1 lands on tick 9. The player then holds a 64 px square orbit in the '
-    + 'north-west quadrant for both 240-tick barrages — `stepsAhead` is -15, so the '
-    + 'rockfall is aimed fifteen steps BEHIND a moving player and lands 17 ticks later, '
-    + 'and a stationary player dies inside the first barrage. Two more presses, at ticks '
-    + '326 and 789, shove him into the octagon from stances the search FORBADE the lethal '
-    + '`t == 16` ring and the four pod cells out of. The third is the kill; '
-    + '`endAnim`\'s "dead" arm writes `{112,0}` AND `{112,1}` 109 ticks later, spawns five '
-    + 'more RockFalls (ten draws) and runs `Button.activateAll(null, 0, true)`. Declares '
+    'R6 slice 6g: THE OWL. Boots into L112 ten pixels west-north-west of `finalboss@64,96` '
+    + 'and presses `primary` at tick 2 to dismiss the room\'s intro — which costs the '
+    + 'fight NOTHING (the intro ends on the span\'s RELEASE, so the freeze is still up '
+    + 'when the player updates on the press tick and the game counts zero hit tests for '
+    + 'it; slice 6f\'s "the intro press IS the first shove" is retired). `onlyHitBy = '
+    + '"Lava"` means no press can damage him: the sword takes `Enemy.hit`\'s `justKnock` '
+    + 'arm and moves him, and the kill is his own `hit(6, centre, 1, "Lava")` when his '
+    + '12x12 box\'s first overlapping Tile is t=17. Three shoves — at ticks 15, 296 and '
+    + '699, each from a stance the search FORBADE the lethal `t == 16` ring and the four '
+    + 'pod cells out of, each preceded by eight ticks of a single held key so the slash '
+    + 'rect faces him — land lava hits at 18, 305 and 706. Between them the player holds '
+    + 'a 64 px square orbit in the north-west quadrant for both 240-tick barrages: '
+    + '`stepsAhead` is -15, so the rockfall is aimed fifteen steps BEHIND a moving player '
+    + 'and lands 17 ticks later, and of ninety-five rocks exactly one reaches him (tick '
+    + '555, on the approach to the third stance). The third hit is the kill; `endAnim`\'s '
+    + '"dead" arm writes `{112,0}` AND `{112,1}` 109 ticks later, spawns five more '
+    + 'RockFalls (ten draws) and runs `Button.activateAll(null, 0, true)`. Declares '
     + '`rng: {seed: 101, split: true}` — the first gameplay consumer of the split stream.');
 
 const control = tapeFor('r6-owl-control', CONTROL_INPUTS, CONTROL_TICKS,
-    'R6 slice 6f: the two-shoves-for-three control — the same tape with the THIRD press '
+    'R6 slice 6g: the two-shoves-for-three control — the same tape with the THIRD press '
     + 'deleted. The movement spans are byte-identical for every tick they share, because '
-    + 'the presses are a literal list and the movement is a separate generator (§12). What '
-    + 'the control shows is not "nothing happens": the boss takes lava hits 1 and 2 on the '
-    + 'same ticks, walks to the same pods, and then walks the third leg UNSHOVED and '
-    + 'starts his third barrage. `hits` stops at 2 of 3, `{112,0}` and `{112,1}` are never '
-    + 'written, and there is no corpse. A PREFIX, not an equal: the drive\'s tail is a '
-    + '109-tick death chain the control has no death to run.');
+    + 'the presses are a literal list and the movement is a separate generator (§12) that '
+    + 'is handed the full shove list either way. What the control shows is not "nothing '
+    + 'happens": the boss takes lava hits 1 and 2 on the same ticks, walks the same legs, '
+    + 'and then walks the third UNSHOVED. `hits` stops at 2 of 3, `{112,0}` and `{112,1}` '
+    + 'are never written, and there is no corpse. A PREFIX, not an equal: the drive\'s '
+    + 'tail is a 109-tick death chain the control has no death to run.');
 
 // ── the gates ────────────────────────────────────────────────────────
 const checks = [];
@@ -335,6 +367,20 @@ check(kill && tags && tags.t - kill.t === 109,
     + 'recording arbitrates it',
     `kill t${kill?.t} -> dieAnimEnded t${kills.find((k) => k.what === 'dieAnimEnded')?.t} `
     + `-> tags t${tags?.t} (${tags && kill ? tags.t - kill.t : '?'} ticks)`);
+/**
+ * ⛔⛔⛔ THE INTRO PRESS IS NOT A SHOVE, AND THIS IS THE ROW THAT SAYS SO.
+ *
+ * §20.3's retirement, kept as an assertion rather than as prose: no hit test
+ * of the tape's FIRST press ever reaches him, because the intro's freeze is
+ * still up when the player updates on the span's `from` and the span's `to`
+ * is a release. The game's own witness is `botStatus.slash.tests`, which read
+ * 0 for exactly this press (§21.4).
+ */
+check(!a.run.finalBossShoves.some((h) => h.t > INTRO_PRESS && h.t <= INTRO_PRESS + 5),
+    '⛔⛔ THE INTRO PRESS DELIVERS NO HIT TEST — §20.3 retired, and asserted',
+    `hit tests in ticks ${INTRO_PRESS + 1}..${INTRO_PRESS + 5}: `
+    + `${a.run.finalBossShoves.filter((h) => h.t > INTRO_PRESS
+        && h.t <= INTRO_PRESS + 5).length}`);
 const landed = a.run.finalBossShoves.filter((h) => h.landed);
 /**
  * ⛔⛔⛔ AND THE CULL IS AT THE **RECT**, NOT AT THE REACH.
@@ -352,30 +398,25 @@ check(a.run.finalBossShoves.length < 3 * 5 && landed.length === a.run.finalBossS
     + 'the 16 px reach: a shoved body is not COLLECTED, so it leaves no refusal row',
     `${a.run.finalBossShoves.length} of ${3 * 5} hit tests reached him and all `
     + `${landed.length} of those landed; per press `
-    + JSON.stringify([2, 326, 789].map((P) => a.run.finalBossShoves
+    + JSON.stringify(PRESS_TICKS.map((P) => a.run.finalBossShoves
         .filter((h) => h.t > P && h.t <= P + 5).length))
     + ' — the shove carries him out of his own hit rect part-way through his own press');
 /**
- * ⛓⛓⛓ THE ORBIT DODGES THE BARRAGE COMPLETELY, AND THE ONE HIT IT DOES NOT
- * DODGE IS NOT A ROCK.
+ * ⛓⛓ THE ORBIT DODGES ALMOST EVERY ROCK, AND THE ONE IT DOES NOT IS THE
+ * APPROACH.
  *
- * 95 rocks land across two barrages and NOT ONE reaches the player: the -15
- * `stepsAhead` plus the rock's own 17-tick flight put ~32 ticks of the player's
- * velocity between the aim point and where he actually is. What does reach him
- * is a GRENADE — dropped at the Owl's own feet during a walk phase, exploding
- * 51 ticks later inside a 20 px radius, while the player is standing still at
- * a shove stance. ⇒ the vulnerable state is not the barrage; it is the STANCE.
+ * §20.4's "not one of 95" belonged to the old plan, not to the orbit: this one
+ * takes exactly ONE rock in a hundred, at tick 555, while the player is
+ * crossing to the third stance. The vulnerable state is still the STANCE and
+ * the walk to it, and `hitsMax` 3 survives one hit with two to spare.
  */
-check(a.run.playerHits.length <= 1
-    && !a.run.owlRockLandings.some((r) => r.hitPlayer)
-    && a.run.playerHits.every((h) => h.source === 'owlGrenade'),
-    '⛓⛓⛓ NOT ONE OF 95 ROCKS TOUCHES HIM — the only hit in two live barrages is a '
-    + 'GRENADE at a stance, and `hitsMax` 3 survives it',
+check(a.run.playerHits.length <= 1 && !a.run.playerHits.some((h) => h.died),
+    '⛓⛓ ONE ROCK IN A HUNDRED REACHES HIM — and `hitsMax` 3 survives it',
     `${a.run.owlRockLandings.length} rocks landed, `
     + `${a.run.owlRockLandings.filter((r) => r.hitPlayer).length} on the player; `
     + `${a.run.playerHits.length} hit(s) total `
     + JSON.stringify(a.run.playerHits.map((h) => `t${h.t} ${h.source}`)));
-check(a.run.owlPods.every((p) => true) && a.run.ticksCompleted === TICKS,
+check(a.run.ticksCompleted === TICKS,
     '⛓ the four pod cells are never entered — `levelRun` asserts the pin every tick',
     `${TICKS} ticks completed with no pin refusal; pods now `
     + JSON.stringify(a.run.owlPods.map((p) => p.anim)));
@@ -403,39 +444,172 @@ check(c.run.finalBossFlags.length === 0 && c.run.finalBossCorpse.length === 0,
     '⛔ `{112,0}` and `{112,1}` are NEVER WRITTEN and there is no corpse',
     `flags ${c.run.finalBossFlags.length}, corpse ticks ${c.run.finalBossCorpse.length}, `
     + `hits ${c.run.finalBosses[0]?.hits} of ${FINAL_BOSS.hitsMax}`);
+/**
+ * ⛔⛔⛔ THE CONTROL'S WORLD DIVERGES, AND THE TICK IT DIVERGES ON IS THE
+ * FINDING.
+ *
+ * §12's separation is about the GENERATOR: the movement closure is handed the
+ * full shove list either way, so deleting a press cannot change where the
+ * player is TOLD to go. It is a closed-loop controller, though, and the
+ * control's world stops being the drive's the moment the unshoved Owl walks
+ * into the player — which he does, at tick 702, three ticks after the press
+ * that would have thrown him. After that the control's player is in i-frames
+ * (`Player.input()` gates its whole movement block on `hitsTimer <= 0`) and
+ * its spans are a different tape.
+ *
+ * ⇒ the identity is asserted over the ticks the two arms SHARE, and the
+ * divergence tick is asserted to be exactly that contact. "Identical up to
+ * here, and here is why" is a stronger pair claim than an identity bought by
+ * ending the control early — and it names what the third shove buys.
+ */
+const contact = c.run.playerHits.find((h) => !a.run.playerHits.some((g) => g.t === h.t));
+const DIVERGES_AT = contact ? contact.t : CONTROL_TICKS;
 const move = (t) => t.inputs.filter((s) => s.key !== 'primary');
 const commonMoves = (t) => move(t).map((s) => `${s.key}:${s.from}-${s.to}`);
-const driveMoves = commonMoves(tape).filter((s) => Number(s.split(':')[1].split('-')[0]) < CONTROL_TICKS - 40);
-const ctrlMoves = commonMoves(control).filter((s) => Number(s.split(':')[1].split('-')[0]) < CONTROL_TICKS - 40);
-check(JSON.stringify(driveMoves) === JSON.stringify(ctrlMoves),
-    '⛔ THE MOVEMENT SPANS COME FROM A SEPARATE GENERATOR AND ARE IDENTICAL',
-    `${driveMoves.length} shared movement spans compared; the presses differ by exactly `
-    + `one (${move(tape).length} vs ${move(control).length} movement spans, `
-    + `${tape.inputs.length - move(tape).length} vs `
+const shared = (t) => commonMoves(t)
+    .filter((s) => Number(s.split(':')[1].split('-')[0]) < DIVERGES_AT);
+check(JSON.stringify(shared(tape)) === JSON.stringify(shared(control)),
+    '⛔ THE MOVEMENT SPANS COME FROM A SEPARATE GENERATOR AND ARE IDENTICAL UP TO THE '
+    + 'TICK THE CONTROL\'S WORLD DIVERGES',
+    `${shared(tape).length} shared movement spans compared up to t${DIVERGES_AT}; the `
+    + `presses differ by exactly one (${tape.inputs.length - move(tape).length} vs `
     + `${control.inputs.length - move(control).length} primary)`);
-check(c.run.playerHits.length === 0,
-    '⛓ and the control takes no damage either — the abort buys a barrage, not a heart',
-    `control hits ${c.run.playerHits.length}`);
+check(contact !== undefined && contact.source === 'owlBody'
+    && contact.t > PRESS_TICKS[2] && contact.t < PRESS_TICKS[2] + 10,
+    '⛓⛓⛓ AND WHAT THE THIRD SHOVE BUYS IS MEASURED: without it the Owl WALKS INTO THE '
+    + 'PLAYER, three ticks later',
+    `drive hits ${JSON.stringify(a.run.playerHits.map((h) => `t${h.t} ${h.source}`))}; `
+    + `control hits ${JSON.stringify(c.run.playerHits.map((h) => `t${h.t} ${h.source}`))}`);
 
 for (const k of checks) {
     console.log(`${k.ok ? '  ok ' : 'FAIL '}${k.name}\n       ${k.detail}`);
 }
 console.log('');
-console.log(`presses ${[PRESS_1, PRESS_2, PRESS_3].join(', ')}; lava hits `
-    + `${lava.map((l) => l.t).join(', ')}; tags ${tags?.t}; drive ${TICKS} ticks, `
+console.log(`intro press ${INTRO_PRESS} (no shove); shoves ${PRESS_TICKS.join(', ')}; `
+    + `lava hits ${lava.map((l) => l.t).join(', ')}; tags ${tags?.t}; drive ${TICKS} ticks, `
     + `control ${CONTROL_TICKS}`);
 console.log(`gameplay draws ${a.run.owlStreamCount} (level build 2 + `
     + `${a.run.owlStreamCount - 2} in the fight); rocks ${a.run.owlRockLandings.length}; `
     + `grenades ${a.run.owlGrenadeEvents.filter((g) => g.what === 'spawned').length}`);
 
 if (SEARCH) {
-    console.log('\nTHE SEARCH TRIPLE (see the as-built §20):');
-    console.log('  SCORE       three lava hits, the kill, both tags, zero damage');
-    console.log('  GRANULARITY press ticks at step 6 over each walk window; stances on a '
-        + '3-radius x 24-direction polar grid (12/14/16 px), rounded to integers');
+    /**
+     * ── THE SEARCH, RUN RATHER THAN DESCRIBED ─────────────────────────
+     *
+     * Slice 6f kept only the triple; slice 6g had to re-run it when the fix
+     * moved the plan, and a search that lives in a session is a search that
+     * gets re-derived. It is behind a flag because it is minutes of full
+     * `levelRun` replays and the PLAN above is its answer, pinned as a
+     * constant with thirteen checks over it.
+     */
+    const world = buildLevelWorld(atlasLevelSource()(112), { roles: ROLES });
+    const tileAt = (x, y) => world.tiles.find((t) => t.x === Math.floor(x / 16) * 16 + 8
+        && t.y === Math.floor(y / 16) * 16 + 8);
+    const lethalFloor = (x, y) => {
+        const t = tileAt(x, y);
+        return !t || t.t === 16 || t.t === 17;
+    };
+    const LAVA_CENTRE = { x: 120, y: 128 };
+    const RADII = [10, 12, 14, 16, 18];
+    const DIRS = 24;
+    const STEP = 4;
+    const HORIZON = 1500;
+
+    const track = (shoves) => {
+        const { run } = drive(shoves, shoves.map((s) => s.t), HORIZON);
+        const lavaAt = new Set(run.finalBossLava.map((l) => l.t));
+        let armed = true;
+        return run.owlTicks.map((o) => {
+            if (o.phase === 'podTick') armed = true;
+            const row = { t: o.t, x: o.bossX, y: o.bossY, phase: o.phase, hits: o.hits, armed };
+            if (lavaAt.has(o.t)) armed = false;
+            return row;
+        });
+    };
+    /** Contiguous walk blocks in which the (k+1)-th lava hit is still available. */
+    const blocksFor = (rows, k) => {
+        const out = [];
+        for (const o of rows) {
+            if (!(o.armed && o.hits === k
+                && (o.phase === 'walk' || o.phase === 'walkGrenade'))) continue;
+            const last = out[out.length - 1];
+            if (last && o.t === last[last.length - 1] + 1) last.push(o.t); else out.push([o.t]);
+        }
+        return out;
+    };
+    const stances = (rows, T) => {
+        const b = rows.find((o) => o.t === T);
+        const out = [];
+        if (!b) return out;
+        for (const r of RADII) {
+            for (let i = 0; i < DIRS; i += 1) {
+                const ang = (i / DIRS) * Math.PI * 2;
+                const x = Math.round(b.x + r * Math.cos(ang));
+                const y = Math.round(b.y + r * Math.sin(ang));
+                // FORBIDDEN, never scored away.
+                if (lethalFloor(x, y) || lethalFloor(x + 2, y + 2)
+                    || lethalFloor(x - 2, y - 2)) continue;
+                if (Math.abs(x - b.x) < 8 && Math.abs(y - b.y) < 8) continue;
+                if (FINAL_BOSS.podPositions.some((p) => Math.abs(x - p.x) < 12
+                    && Math.abs(y - p.y) < 12)) continue;
+                if ((b.x - x) * (LAVA_CENTRE.x - b.x)
+                    + (b.y - y) * (LAVA_CENTRE.y - b.y) <= 0) continue;
+                out.push({ t: T, x, y, r, dir: i });
+            }
+        }
+        return out;
+    };
+
+    const chosen = [];
+    let tried = 0;
+    let rejected = 0;
+    for (let w = 0; w < 3; w += 1) {
+        const rows = track(chosen);
+        const blocks = blocksFor(rows, w);
+        let best = null;
+        for (const block of blocks) {
+            if (best) break;
+            for (let i = 0; i < block.length; i += STEP) {
+                for (const s of stances(rows, block[i])) {
+                    tried += 1;
+                    const list = [...chosen, { t: s.t, x: s.x, y: s.y }];
+                    let run;
+                    try {
+                        ({ run } = drive(list, list.map((k) => k.t),
+                            Math.min(HORIZON, s.t + 120)));
+                    } catch { rejected += 1; continue; }
+                    if (run.finalBossLava.length < w + 1
+                        || run.playerHits.some((h) => h.died)) { rejected += 1; continue; }
+                    const hits = run.playerHits.length;
+                    const at = run.finalBossLava[w].t;
+                    if (best === null || hits < best.hits
+                        || (hits === best.hits && at < best.at)) best = { s, hits, at };
+                }
+            }
+        }
+        if (!best) {
+            console.error(`\n⛔ the search found no ${w + 1}th shove`);
+            process.exit(1);
+        }
+        chosen.push({ t: best.s.t, x: best.s.x, y: best.s.y });
+    }
+    console.log('\nTHE SEARCH TRIPLE (see the as-built §21.8):');
+    console.log(`  SCORE       three lava self-hits, the kill, both tags, `
+        + `the fewest player hits and then the earliest hit`);
+    console.log(`  GRANULARITY press ticks every ${STEP} eligible walk ticks, block by `
+        + `block; stances on a ${RADII.length}-radius x ${DIRS}-direction polar grid `
+        + `(${RADII.join('/')} px), rounded to integers; ${tried} candidates, each a full `
+        + '`levelRun` replay');
     console.log('  CONSTRAINT  FORBIDDEN, not scored: a stance overlapping the boss\'s '
-        + '12x12 box; `distanceRectPoint` > 16; a push whose ray points away from the '
-        + 'lava centre; any tile with t in {16, 17} (both are lethal); the four pod cells');
+        + '12x12 box; a push whose ray points away from the lava centre; any tile with '
+        + 't in {16, 17} (both are lethal); the four pod cells; a run that throws');
+    console.log(`  rejected ${rejected} of ${tried}`);
+    console.log(`  FOUND ${JSON.stringify(chosen)}`);
+    if (JSON.stringify(chosen) !== JSON.stringify(SHOVES)) {
+        console.error('\n⛔ the search no longer reproduces the pinned plan');
+        process.exit(1);
+    }
+    console.log('  — and it is the plan pinned above, reproduced');
 }
 
 if (checks.some((k) => !k.ok)) {
