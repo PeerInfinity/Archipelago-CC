@@ -99,10 +99,49 @@ export const WANDLOCK_IS_A_LOCK = Object.freeze({
  */
 const LOCK_FAMILY = new Set(['lock', 'wandlock', 'grasslock', 'rocklock']);
 
-function lockRuling(entity) {
+/**
+ * ⛓⛓ EVERY CROSS-LEVEL PERSISTENCE WRITE, as a set of `"<level>:<tag>"`.
+ *
+ * `ButtonRoom.as:93` — `Game.setPersistence(t, persist, room)` — lets a button
+ * in ONE room clear a persistence tag in ANOTHER. Four sites in the game; two
+ * of them move a BLOCKING entity (`probe-seedling-r7-map-triggers.mjs` is the
+ * census). ⛔ It was missed on the first pass because the overlay ruled each
+ * entity from the entity alone, and this mechanism is not visible from there —
+ * the opener is in a different level.
+ */
+export function buildCrossLevelOpeners(mapDoc) {
+    const out = new Set();
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            if (e.type !== 'buttonroom') continue;
+            const room = Number(e.attrs?.room);
+            if (!Number.isInteger(room) || room < 0) continue;
+            out.add(`${room}:${e.attrs.tset}`);
+        }
+    }
+    return out;
+}
+
+function lockRuling(entity, ctx) {
     const tSet = Number(entity.attrs?.tset);
     const tag = entity.attrs?.tag;
     if (tSet === -1) {
+        // ⛔ A KILL-LOCK IS NOT ALWAYS A KILL-LOCK. `Lock.check()` honours
+        // persistence whenever `tSet < 0`, so a lock whose tag is cleared by a
+        // ButtonRoom in ANOTHER LEVEL opens from that button too — and the
+        // button half is pure choreography, which the policy makes free. The
+        // weapon rule would be too STRICT here, which is the one direction a
+        // rules row must not be (it seals the map rather than admitting a
+        // hand-authoring row).
+        if (ctx?.crossLevelOpeners?.has(`${ctx.level}:${tag}`)) {
+            return OPEN(
+                'Puzzlements/ButtonRoom.as:93 (`Game.setPersistence(t, persist, room)`) '
+                + '+ Puzzlements/Lock.as:check (the `tSet < 0` persistence guard)',
+                `a kill-lock whose tag is ALSO cleared by a ButtonRoom in another level, so `
+                + '`Or(a weapon, that button)` — and the button half is choreography, which '
+                + 'makes the whole disjunction free. The census is '
+                + '`probe-seedling-r7-map-triggers.mjs`.');
+        }
         return GATED(A_WEAPON,
             'Puzzlements/Lock.as:checkEnemies + Game.as:1811-1839 (totalEnemies) '
             + '+ Player.as:895,960 (genericHit\'s two callers)',
@@ -253,11 +292,11 @@ export const PIXEL_MASK_TAGS = Object.freeze([
  * transcription's. Signature matches `buildSeedlingRegionGrid`'s
  * `entityOverride` hook.
  */
-export function overlayEntitySemantics(entity, base) {
+export function overlayEntitySemantics(entity, base, ctx = null) {
     const tag = entity?.type;
     if (tag === undefined) return null;
     if (LOCK_FAMILY.has(tag)) {
-        const ruled = lockRuling(entity);
+        const ruled = lockRuling(entity, ctx);
         return ruled ? { ...base, ...ruled } : null;
     }
     const row = PLAYTHROUGH_ENTITY_OVERLAY[tag];

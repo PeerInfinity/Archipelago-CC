@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-03ed1723",
+  "atlas_id": "seedling-1f12aa8d",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "03ed1723" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "1f12aa8d" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -2385,58 +2385,31 @@
           "exit_id": "in_L38_144_0",
           "kind": "teleporter",
           "exit_tiles": [[9,38]],
-          "entrance_tile": [9,38],
-          "sub_region": "r38c9"
+          "entrance_tile": [9,38]
         },
         {
           "exit_id": "out_teleporter_144_0",
           "kind": "teleporter",
           "exit_tiles": [[9,0]],
-          "entrance_tile": [9,0],
-          "sub_region": "r0c9"
+          "entrance_tile": [9,0]
         },
         {
           "exit_id": "out_teleporter_144_624",
           "kind": "teleporter",
           "exit_tiles": [[9,39]],
-          "entrance_tile": [9,39],
-          "sub_region": "r38c9"
+          "entrance_tile": [9,39]
         },
         {
           "exit_id": "in_L40_480_912",
           "kind": "teleporter",
           "exit_tiles": [[9,1]],
-          "entrance_tile": [9,1],
-          "sub_region": "r0c9"
+          "entrance_tile": [9,1]
         }
       ],
       "locations": [
-        {
-          "name": "Level 039 - Totem Part 72,40",
-          "tile": [4,2],
-          "vanilla_item": "Totem Shard",
-          "sub_region": "r0c9"
-        }
+        { "name": "Level 039 - Totem Part 72,40", "tile": [4,2], "vanilla_item": "Totem Shard" }
       ],
-      "annotations": { "rules_source": "analyzer" },
-      "subgraph": {
-        "sub_regions": ["r0c9","r38c9"],
-        "internal_exits": [
-          {
-            "from": "r0c9",
-            "to": "r38c9",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
-              ]
-            }
-          }
-        ]
-      }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_40",

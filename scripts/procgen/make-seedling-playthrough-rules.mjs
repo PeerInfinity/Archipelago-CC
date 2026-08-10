@@ -122,7 +122,8 @@ const analyzerOptions = {
     resolveCondition: (c) => OV.resolveOverlayCondition(c) ?? baseOptions.resolveCondition(c),
 };
 
-const entityOverride = (entity, base) => {
+const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
+const entityOverride = (entity, base, level) => {
     if (entity.type === MASK_TAG) {
         return {
             kind: 'wall',
@@ -130,7 +131,7 @@ const entityOverride = (entity, base) => {
             why: 'the real per-pixel outline, from the model that drives the game byte-exact',
         };
     }
-    return OV.overlayEntitySemantics(entity, base);
+    return OV.overlayEntitySemantics(entity, base, { level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS });
 };
 
 // ⛔⛔⛔ THE MASK EXPANSION IS OFF BY DEFAULT, AND THAT IS A MEASUREMENT.
