@@ -133,8 +133,34 @@ const entityOverride = (entity, base) => {
     return OV.overlayEntitySemantics(entity, base);
 };
 
+// ⛔⛔⛔ THE MASK EXPANSION IS OFF BY DEFAULT, AND THAT IS A MEASUREMENT.
+//
+// Layer 3 originally ran `expandPixelMasks` on every level: ask the physics
+// model for a building's real per-pixel outline and hand the analyzer exact
+// 1x1 walls instead of the transcription's sprite rect. More accurate, and
+// **strictly worse**, because tile-granular masking can only ever ADD walls —
+// a tile whose CENTRE is inside the mask becomes solid even when its walkable
+// part is at the edge, and a chain of those seals a path.
+//
+// It sealed the first one. With masks on, L0's Owl's Nest stairs — the way to
+// Dungeon 1 and the sword — landed in a different component from the player's
+// own start, and AP's fixpoint stalled at 13 regions with every exit out of
+// the start needing an item it could not yet have. With masks off:
+//
+//     13 -> 178 of 266 AP regions, 3 -> 30 of 41 locations, and the SEED
+//
+// ⛓ `seedlingSemantics`' own comment predicted this in advance and was not
+// read carefully enough: *"Everything walks THROUGH it in the flood, so a
+// house standing in open ground costs nothing, and a building that is
+// genuinely the only way between two areas becomes a hand-authoring row
+// instead of an invented wall."* A permissive refusal that produces a
+// hand-authoring row beats an accurate wall that produces a sealed map.
+//
+// `--masks` keeps the code alive and runnable for whoever wants to make it
+// sub-tile (where it would be a genuine improvement rather than a coarsening).
+const MASKS = process.argv.includes('--masks');
 const gridFor = (level) => SEM.buildSeedlingRegionGrid(
-    { x: 0, y: 0, w: level.width, h: level.height }, expandPixelMasks(level),
+    { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
     { entityOverride },
 );
 

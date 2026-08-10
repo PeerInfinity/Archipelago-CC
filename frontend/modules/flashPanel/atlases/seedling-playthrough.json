@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-574cf1d4",
+  "atlas_id": "seedling-03ed1723",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "574cf1d4" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "03ed1723" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -18,35 +18,35 @@
           "kind": "teleporter",
           "exit_tiles": [[0,8]],
           "entrance_tile": [0,8],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_0_144",
           "kind": "teleporter",
           "exit_tiles": [[0,9]],
           "entrance_tile": [0,9],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_stairsdown_32_192",
           "kind": "teleporter",
           "exit_tiles": [[2,12]],
           "entrance_tile": [2,12],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_80_96",
           "kind": "teleporter",
           "exit_tiles": [[5,6]],
           "entrance_tile": [5,6],
-          "sub_region": "r6c5"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_160_272",
           "kind": "teleporter",
           "exit_tiles": [[10,17]],
           "entrance_tile": [10,17],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_240_0",
@@ -74,14 +74,14 @@
           "kind": "teleporter",
           "exit_tiles": [[5,7]],
           "entrance_tile": [5,7],
-          "sub_region": "r6c5"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L2_48_16",
           "kind": "teleporter",
           "exit_tiles": [[16,16]],
           "entrance_tile": [16,16],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L12_0_80",
@@ -95,14 +95,14 @@
           "kind": "teleporter",
           "exit_tiles": [[3,12]],
           "entrance_tile": [3,12],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L86_48_64",
           "kind": "teleporter",
           "exit_tiles": [[10,18]],
           "entrance_tile": [10,18],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L89_160_304",
@@ -116,14 +116,14 @@
           "kind": "teleporter",
           "exit_tiles": [[1,8]],
           "entrance_tile": [1,8],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L94_304_176",
           "kind": "teleporter",
           "exit_tiles": [[1,9]],
           "entrance_tile": [1,9],
-          "sub_region": "r7c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_pit_L110_16_17",
@@ -134,13 +134,13 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r1c6","r2c13","r4c16","r6c5","r7c6","r11c19","r14c0"],
+        "sub_regions": ["r1c6","r2c13","r4c16","r8c0","r11c19","r14c0"],
         "internal_exits": [
           {
             "from": "r11c19",
-            "to": "r7c6",
+            "to": "r8c0",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {
@@ -153,7 +153,7 @@
           },
           {
             "from": "r14c0",
-            "to": "r7c6",
+            "to": "r8c0",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
@@ -171,6 +171,7 @@
               ]
             }
           },
+          { "from": "r1c6", "to": "r8c0", "bidirectional": true, "source": "manual" },
           {
             "from": "r2c13",
             "to": "r4c16",
@@ -180,40 +181,27 @@
           },
           {
             "from": "r2c13",
-            "to": "r7c6",
+            "to": "r8c0",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           },
           {
             "from": "r4c16",
-            "to": "r7c6",
+            "to": "r8c0",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           },
           {
-            "from": "r6c5",
-            "to": "r7c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
-              ]
-            }
-          },
-          {
-            "from": "r7c6",
+            "from": "r8c0",
             "to": "r2c13",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
           },
           {
-            "from": "r7c6",
+            "from": "r8c0",
             "to": "r4c16",
             "bidirectional": false,
             "source": "analyzer",
@@ -756,7 +744,7 @@
           "kind": "teleporter",
           "exit_tiles": [[21,43]],
           "entrance_tile": [21,43],
-          "sub_region": "r42c23"
+          "sub_region": "r44c19"
         },
         {
           "exit_id": "out_teleporter_432_352",
@@ -805,7 +793,7 @@
           "kind": "teleporter",
           "exit_tiles": [[21,44]],
           "entrance_tile": [21,44],
-          "sub_region": "r42c23"
+          "sub_region": "r44c19"
         },
         {
           "exit_id": "in_L34_128_0",
@@ -878,9 +866,9 @@
           "sub_region": "r0c19"
         }
       ],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r42c23","r51c1","r55c1"],
+        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r44c19","r51c1","r55c1"],
         "internal_exits": [
           {
             "from": "r0c19",
@@ -911,11 +899,12 @@
           },
           {
             "from": "r0c19",
-            "to": "r42c23",
+            "to": "r44c19",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
-          }
+          },
+          { "from": "r0c37", "to": "r44c19", "bidirectional": true, "source": "manual" }
         ]
       }
     },
@@ -4670,7 +4659,7 @@
           "kind": "teleporter",
           "exit_tiles": [[7,4]],
           "entrance_tile": [7,4],
-          "sub_region": "r5c7"
+          "sub_region": "r8c7"
         },
         {
           "exit_id": "out_teleporter_192_304",
@@ -4705,12 +4694,12 @@
           "kind": "teleporter",
           "exit_tiles": [[7,5]],
           "entrance_tile": [7,5],
-          "sub_region": "r5c7"
+          "sub_region": "r8c7"
         }
       ],
       "locations": [],
       "annotations": { "rules_source": "manual" },
-      "subgraph": { "sub_regions": ["r5c7","r9c8"], "internal_exits": [] }
+      "subgraph": { "sub_regions": ["r8c7","r9c8"], "internal_exits": [] }
     },
     {
       "region_id": "level_63",
@@ -5005,10 +4994,11 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r5c4","r9c8"],
+        "sub_regions": ["r1c2","r5c4","r9c8"],
         "internal_exits": [
+          { "from": "r1c2", "to": "r5c4", "bidirectional": true, "source": "manual" },
           {
             "from": "r5c4",
             "to": "r9c8",
@@ -6649,7 +6639,7 @@
           "kind": "teleporter",
           "exit_tiles": [[7,5]],
           "entrance_tile": [7,5],
-          "sub_region": "r5c7"
+          "sub_region": "r10c7"
         },
         {
           "exit_id": "out_teleporter_112_272",
@@ -6663,13 +6653,13 @@
           "kind": "teleporter",
           "exit_tiles": [[7,6]],
           "entrance_tile": [7,6],
-          "sub_region": "r5c7"
+          "sub_region": "r10c7"
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r5c7","r10c7","r14c7"],
+        "sub_regions": ["r1c0","r1c13","r10c7","r14c7"],
         "internal_exits": [
           {
             "from": "r10c7",
@@ -6684,20 +6674,9 @@
               ]
             }
           },
-          {
-            "from": "r10c7",
-            "to": "r5c7",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r5c7",
-            "to": "r10c7",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          }
+          { "from": "r10c7", "to": "r1c0", "bidirectional": true, "source": "manual" },
+          { "from": "r10c7", "to": "r1c13", "bidirectional": true, "source": "manual" },
+          { "from": "r1c0", "to": "r1c13", "bidirectional": true, "source": "manual" }
         ]
       }
     },
@@ -6739,8 +6718,148 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c16","r3c4"],
+        "sub_regions": ["r2c16","r3c4","r14c0","r15c17","r16c6","r16c12","r16c16"],
         "internal_exits": [
+          {
+            "from": "r14c0",
+            "to": "r15c17",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r14c0",
+            "to": "r16c12",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r14c0",
+            "to": "r16c16",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r14c0",
+            "to": "r16c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r14c0",
+            "to": "r2c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r15c17",
+            "to": "r16c12",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r15c17",
+            "to": "r16c16",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r15c17",
+            "to": "r16c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r15c17",
+            "to": "r2c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r16c12",
+            "to": "r16c16",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r16c12",
+            "to": "r16c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r16c12",
+            "to": "r2c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r16c16",
+            "to": "r16c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r16c16",
+            "to": "r2c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r16c6",
+            "to": "r2c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r2c16",
+            "to": "r14c0",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r2c16",
+            "to": "r15c17",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r2c16",
+            "to": "r16c12",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r2c16",
+            "to": "r16c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r2c16",
+            "to": "r16c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
           {
             "from": "r2c16",
             "to": "r3c4",
@@ -9442,6 +9561,6 @@
         "one_way": true
       }
     ],
-    "start_sub_region": "r7c6"
+    "start_sub_region": "r8c0"
   }
 }
