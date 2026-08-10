@@ -2,7 +2,7 @@
     "tape_version": 9,
     "game": "seedling",
     "name": "r7-act2-5",
-    "description": "⛓ SEGMENT 5 of chain \"act2-to-l8\" — EVERY FIELD OF ITS BOOT STATE IS r7-act2-4's LATCH, read out of the game and handed to `segmentBootFromLatch`. Nothing here is typed: the save arrays, the persistence clear set, the three RNG streams, the day/night phase and the music no-repeat pair are all numbers only the game can produce. That is what makes the seam a MEASURED equality rather than a claim — `boot(N+1) == latch(N)` over the whole SEAM_SIGNATURE, checked by `playthroughAcceptance` on every sweep. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ SEGMENT 5 of chain \"act2-the-sword\" — EVERY FIELD OF ITS BOOT STATE IS r7-act2-4's LATCH, read out of the game and handed to `segmentBootFromLatch`. Nothing here is typed: the save arrays, the persistence clear set, the three RNG streams, the day/night phase and the music no-repeat pair are all numbers only the game can produce. That is what makes the seam a MEASURED equality rather than a claim — `boot(N+1) == latch(N)` over the whole SEAM_SIGNATURE, checked by `playthroughAcceptance` on every sweep. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
         "level": 5,
         "x": 80,

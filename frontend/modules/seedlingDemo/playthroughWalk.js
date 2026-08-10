@@ -377,6 +377,179 @@ export const L6_BOB_DROWN = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓⛓ L8 — THE ROOM WHOSE CEILING IS ITS WEAPON, and the two blocks whose
+ * outcome is a FLAG THE GAME'S OWN KILL WROTE.
+ *
+ * ⛔⛔ COLUMN 6 IS THE ONLY WAY SOUTH and both `sandtrap`s stand in it — a
+ * sandtrap's 16x16 box IS its whole tile, so the walk cannot pass one. It
+ * has to be gone, and nothing in this tree models an Arrow killing an Enemy
+ * (§16.4, still refused). It does not have to:
+ *
+ *   `SandTrap.check()`    removes a body whose tag is cleared
+ *   `SandTrap.removed()`  WRITES that clear (`Game.setPersistence(tag, false)`)
+ *
+ * so each kill's durable consequence is a FLAG the game produces, and a v9
+ * `at`-clear carries it to the model at the tick a block witnessed it —
+ * slice 6d's mechanism, arriving at the room §19.7 predicted it would fit.
+ * (`levelWorld.PERSISTENCE_RESPONSE` gained `sandtrap` for this, and the
+ * combat census gained the clears with it: before that a cleared body was
+ * gone for the route and PRESENT for the contact test.)
+ *
+ * ── ⛔⛔ THE USER'S FIRST MOVE, REFUTED BY THE GAME ────────────────────
+ *
+ * §18.6's route opens "push `pushableblock@112,48` LEFT onto `button@64,48`;
+ * the arrows kill the first sandtrap; push the block UP off the switch". It
+ * is right about the game and this PLANNER cannot author it, for a reason
+ * that is not about the block: a shove releases early by construction
+ * (§17.1) and the leg then WAITS for the block to settle. The block lands on
+ * the button at t~102 of a 128-tick leg and the player spends the remaining
+ * 26 ticks standing at x=96.2 — whose 4-px box overlaps the arrow lane
+ * [98,110) by two tenths of a pixel. **Driven: `hits 1`, and the knockback
+ * left the player 4 px from where the model said they would be.**
+ *
+ * ⛓ AND THE USER'S ROUTE ALREADY MAKES THE PLAYER THE PRESSER FOR THE SECOND
+ * KILL — "stand the switch until sandtrap 2 dies" — because a block pushed
+ * NORTH off the button can never come back (row 1 column 4 is solid, so
+ * nothing can stand north of it to push it south). So the shipped route is
+ * the user's with ONE presser instead of two: park the block one tile short
+ * of the button, out of the doorway it was blocking, and let the PLAYER
+ * press for both kills. Two shoves instead of three, and the player is never
+ * in the lane while the trap is armed.
+ */
+export const L8_ARROWS_SANDTRAP_1 = Object.freeze({
+    id: 'l8-arrows-sandtrap-1',
+    why: '⛓⛓⛓ THE ROOM\'S OWN CEILING KILLS THE FIRST SANDTRAP. `button@64,48` and '
+        + '`arrowtrap@96,16` are both tSet 0, so a player standing on the button rains '
+        + 'three arrows every eleven ticks down column 6 — and `sandtrap@96,80` is the '
+        + 'first thing in it. `Enemy.hitsMax` is 3 through 30-tick i-frames, and the '
+        + 'clear is written by `removed()` at the END of the death animation, so the '
+        + 'hold is long on purpose.',
+    provenance: Object.freeze({
+        probe: 'scripts/procgen/probe-seedling-r7-l8-blocks.mjs',
+        arm: 'kill1',
+        controls: Object.freeze([
+            'kill1-short — HOLDS: the same walk with the hold cut to 40 ticks leaves BOTH '
+                + 'sandtraps alive and `persistence_cleared` empty',
+            'block-onto-button — ⛔ REFUTES §18.6\'s first move: the planner\'s settle '
+                + 'wait stands the player in the lane and the GAME charges `hits 1`',
+        ]),
+        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §20',
+    }),
+    /**
+     * ⛔ BOOT-FORM, AND IT IS A FLOAT BECAUSE IT IS A MEASUREMENT. The two
+     * committed blocks before this one start at level ARRIVALS, which are
+     * the constructor half-tile and therefore integers. This one starts
+     * where an A* target left the player — `DEFAULT_TOLERANCE` is 1 px, not
+     * an equality — and the planner compares `startsAt` EXACTLY on purpose:
+     * the spans below were derived from THIS stance, and a block spliced
+     * onto a different one is a choreography nobody drove.
+     */
+    startsAt: Object.freeze({ level: 8, x: 64.68409192161283, y: 63.882673638459124 }),
+    startsAtTick: 2274,
+    /** ON the button — tile (4,3), which is `button@64,48`'s own cell. */
+    endsAt: Object.freeze({ level: 8, x: 64, y: 48 }),
+    contacts: Object.freeze(['proximity-hazard:button@64,48']),
+    steps: Object.freeze([
+        Object.freeze({ label: 'press', ticks: 21, planned: true }),
+        Object.freeze({ label: 'hold', ticks: 220, planned: false }),
+    ]),
+    ticks: 241,
+    /**
+     * ⛔ THE APPROACH'S SPANS ARE A*'s, FROZEN — L5's rule for L5's reason,
+     * and with L5's planning-only deletion: A* works in whole tiles and will
+     * not end on a cell it is told to avoid, so the press is planned against
+     * a record with `button@64,48` DELETED. That fiction never reaches the
+     * tape, the model's follow, or the game.
+     */
+    spans: Object.freeze([
+        Object.freeze({ key: 'up', from: 0, to: 11 }),
+        Object.freeze({ key: 'down', from: 11, to: 12 }),
+        Object.freeze({ key: 'up', from: 12, to: 14 }),
+        Object.freeze({ key: 'down', from: 15, to: 17 }),
+    ]),
+    earns: Object.freeze([Object.freeze({ level: 8, tag: 0 })]),
+    outcome: Object.freeze({
+        cleared: Object.freeze(['8,0']),
+        /**
+         * ⛔ ONE SANDTRAP LEFT, AND THE CLASS IS DECLARED. `sandtrap@96,128`
+         * survives this block because `pushableblock@96,112` stands between
+         * it and the trap — an Arrow stops on anything it touches, and a
+         * `PushableBlock` is `type = "Solid"`. That shadow is why the second
+         * block has to go into the water before the second kill can happen.
+         */
+        enemyClass: 'SandTrap',
+        enemies: 1,
+    }),
+});
+
+/**
+ * ⛓⛓ THE SECOND KILL, once the shadow is gone.
+ *
+ * Between the two blocks the walk sinks `pushableblock@96,112` into the
+ * water at (5,7) — `SHOVE_SINK_TICKS`' first real customer, discharging
+ * §17.7's bounded vacuity — which clears the arrows' path from the trap all
+ * the way to `sandtrap@96,128`. Then the same button, the same hold, one
+ * room further down.
+ *
+ * ⚠ THE APPROACH IS 101 TICKS BECAUSE IT IS A WALK BACK UP THE ROOM, from
+ * the sink stance at (7,7) to the button at (4,3) — up column 6 and then
+ * WEST ALONG ROW 4, because the parked block occupies (5,3). It is planned
+ * against the record the shoves have edited, which is the whole content of
+ * the defect this room found: a fresh plan puts every pushable back at its
+ * `.oel` cell, and the first cut of this walk therefore routed through the
+ * cell the parked block really stands in and SHOVED IT NORTH out of the way.
+ */
+export const L8_ARROWS_SANDTRAP_2 = Object.freeze({
+    id: 'l8-arrows-sandtrap-2',
+    why: '⛓⛓ THE SAME BUTTON, THE SAME CEILING, ONE SANDTRAP FURTHER DOWN — and it '
+        + 'only works because `pushableblock@96,112` is at the bottom of the water. An '
+        + 'Arrow stops on anything it touches and a PushableBlock is `type = "Solid"`, '
+        + 'so until the sink the second sandtrap stood in the trap\'s SHADOW.',
+    provenance: Object.freeze({
+        probe: 'scripts/procgen/probe-seedling-r7-l8-blocks.mjs',
+        arm: 'kill2',
+        controls: Object.freeze([
+            'kill1 — HOLDS: 220 ticks of arrows with the block still at (6,7) clear {8,0} '
+                + 'and leave {8,1} SET, which is what makes the sink load-bearing',
+            'kill1-short — HOLDS: a 40-tick hold clears nothing at all',
+        ]),
+        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §20',
+    }),
+    /** BOOT-FORM, where the sink leg leaves the player — a float, for the
+     *  reason `L8_ARROWS_SANDTRAP_1.startsAt` gives. Tile (7,7). */
+    startsAt: Object.freeze({ level: 8, x: 104.43409192161285, y: 112.23267363845915 }),
+    startsAtTick: 2706,
+    endsAt: Object.freeze({ level: 8, x: 64, y: 48 }),
+    contacts: Object.freeze(['proximity-hazard:button@64,48']),
+    steps: Object.freeze([
+        Object.freeze({ label: 'press', ticks: 101, planned: true }),
+        Object.freeze({ label: 'hold', ticks: 260, planned: false }),
+    ]),
+    ticks: 361,
+    spans: Object.freeze([
+        Object.freeze({ key: 'left', from: 0, to: 6 }),
+        Object.freeze({ key: 'right', from: 6, to: 7 }),
+        Object.freeze({ key: 'up', from: 0, to: 39 }),
+        Object.freeze({ key: 'down', from: 39, to: 40 }),
+        Object.freeze({ key: 'up', from: 40, to: 41 }),
+        Object.freeze({ key: 'left', from: 45, to: 69 }),
+        Object.freeze({ key: 'right', from: 69, to: 70 }),
+        Object.freeze({ key: 'left', from: 70, to: 72 }),
+        Object.freeze({ key: 'right', from: 74, to: 76 }),
+        Object.freeze({ key: 'up', from: 80, to: 91 }),
+        Object.freeze({ key: 'down', from: 91, to: 92 }),
+        Object.freeze({ key: 'up', from: 92, to: 94 }),
+        Object.freeze({ key: 'down', from: 95, to: 97 }),
+    ]),
+    earns: Object.freeze([Object.freeze({ level: 8, tag: 1 })]),
+    outcome: Object.freeze({
+        cleared: Object.freeze(['8,0', '8,1']),
+        enemyClass: 'SandTrap',
+        enemies: 0,
+    }),
+});
+
 /** The two kinds of unit a walk is made of. */
 const UNIT_KINDS = Object.freeze(['leg', 'phases']);
 
@@ -572,7 +745,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         }),
     }),
     Object.freeze({
-        id: 'act2-to-l8',
+        id: 'act2-the-sword',
         why: '⛓⛓⛓ ACT 2, AND THE FIRST HONEST SEGMENTS. The game\'s own opening, '
             + 'from `new Game(0, 80, 128)` with an empty save and nothing granted, cut '
             + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6 -> L7 -> L8. Segment 5 is '
@@ -596,8 +769,20 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         headline: 'r7-act2-full',
         segments: Object.freeze([
             'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
-            'r7-act2-7',
+            'r7-act2-7', 'r7-act2-8', 'r7-act2-9', 'r7-act2-10', 'r7-act2-11',
         ]),
+        /**
+         * ⛓⛓⛓ THE GOAL LEDGER ROWS THIS CHAIN CLAIMS — R7 slice 6f, and the
+         * rung's headline.
+         *
+         * DECLARED here and MEASURED in `chainGoalFindings`, which reads each
+         * segment's own boot against its own latch and asserts the two sets
+         * are EQUAL. So a row that stops being earned is a red, and a segment
+         * that picks something up without saying so is a red too. Neither is
+         * a progress bar: `R7_GOAL_LEDGER` has 41 rows and this chain earns
+         * two, because ⚖ R7 ends at the SWORD (kickoff §6.5).
+         */
+        earns: Object.freeze(['sword@L10', 'chest@L11']),
         /**
          * ⛔ THE CUTS ARE THE DRIVER'S OWN TRANSITION TICKS, DECLARED HERE
          * AND ASSERTED THERE.
@@ -619,8 +804,8 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * a refusal. (Slice 6d needed exactly that for a candidate segment
          * that stepped out to L4 and back — see `L5_ARROW_BAIT`.)
          */
-        cuts: Object.freeze([183, 230, 475, 822, 1634, 1989]),
-        endsAt: 2135,
+        cuts: Object.freeze([183, 230, 475, 822, 1634, 1989, 2135, 3225, 3347, 3436]),
+        endsAt: 3523,
         /**
          * ⛓ THE WALK IS LEGS, NOT SPANS, and that is the M1 generator's shape
          * arriving where §3.6 said it would.
@@ -783,7 +968,182 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                         exit: Object.freeze({ x: 192, y: 32 }),
                     }),
                 }),
-                Object.freeze({ leg: Object.freeze({ level: 8, targets: Object.freeze([]) }) }),
+                /**
+                 * ⛓⛓ L8 — THE BLOCK IS THE DOOR, SECOND INSTANCE.
+                 *
+                 * ⚠ THIS LEG IS ALSO THE ARRIVAL LEG. Until slice 6f the
+                 * chain ended here on a bare `{level: 8, targets: []}` —
+                 * `synthesizeLegs` refuses an exit on its terminal leg, so a
+                 * group always ends one arrival past its last exit. Now that
+                 * the walk continues INTO the room, that placeholder would be
+                 * a non-final leg with no exit, which the driver refuses by
+                 * name. The arrival is where this leg starts. The east
+                 * pocket the walk arrives into joins the room ONLY through
+                 * `pushableblock@112,48` at (7,3), so the first move is a
+                 * shove; and the block is PARKED at (5,3) rather than pushed
+                 * on to the button, for the measured reason in
+                 * `L8_ARROWS_SANDTRAP_1`'s docblock.
+                 *
+                 * ⚠ THE SECOND TARGET IS THE PRESS STANCE, not decoration:
+                 * the leg has to end BELOW the button rather than on it,
+                 * because a `phases` block's spans start from where the legs
+                 * left the player and the approach onto the button is the
+                 * block's own first step.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 8,
+                        targets: Object.freeze([
+                            Object.freeze({
+                                x: 136,
+                                y: 56,
+                                shove: Object.freeze({
+                                    block: Object.freeze({ x: 112, y: 48 }),
+                                    dir: 'W',
+                                    to: Object.freeze({ tx: 5, ty: 3 }),
+                                }),
+                            }),
+                            Object.freeze({ x: 72, y: 72 }),
+                        ]),
+                    }),
+                }),
+                Object.freeze({ phases: L8_ARROWS_SANDTRAP_1 }),
+                /**
+                 * ⛓⛓⛓ THE SINK — `SHOVE_SINK_TICKS`' FIRST REAL CUSTOMER,
+                 * and §17.7's bounded vacuity discharged.
+                 *
+                 * `pushableblock@96,112` at (6,7) is what shadows the second
+                 * sandtrap from the arrows, and the only cell it can leave
+                 * column 6 for is the water at (5,7). `destroys: true` is
+                 * DECLARED because a destination that turns out to be lethal
+                 * is an opener the route did not plan for.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 8,
+                        contacts: Object.freeze(['proximity-hazard:button@64,48']),
+                        targets: Object.freeze([
+                            Object.freeze({
+                                x: 120,
+                                y: 120,
+                                shove: Object.freeze({
+                                    block: Object.freeze({ x: 96, y: 112 }),
+                                    dir: 'W',
+                                    to: Object.freeze({ tx: 5, ty: 7 }),
+                                    destroys: true,
+                                }),
+                            }),
+                        ]),
+                    }),
+                }),
+                Object.freeze({ phases: L8_ARROWS_SANDTRAP_2 }),
+                /**
+                 * ⛓ AND THE COLUMN-6 WALK, PLANNED — against a record with
+                 * both sandtraps cleared and both blocks where the shoves
+                 * left them. The player steps off the button, which disarms
+                 * the trap, and the arrows already in flight are five pixels
+                 * a tick ahead of a player who moves one and a half.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 8,
+                        contacts: Object.freeze(['proximity-hazard:button@64,48']),
+                        targets: Object.freeze([]),
+                        exit: Object.freeze({ x: 96, y: 192 }),
+                    }),
+                }),
+                /**
+                 * ⛓ L9 — the second corridor, and the cheapest room on the
+                 * route: `teleporter@144,0` in, `teleporter@16,0` out, two
+                 * torches between them.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 9,
+                        targets: Object.freeze([]),
+                        exit: Object.freeze({ x: 16, y: 0 }),
+                    }),
+                }),
+                /**
+                 * ⛓⛓⛓ L10 — **THE SWORD**, and the rung's whole point.
+                 *
+                 * `sword@48,48 {tag 0}` is the goal ledger's first row and
+                 * the sphere log's 0.1. The `collect` verb walks the last
+                 * pixels onto it and then TALKS THE CEREMONY THROUGH: 150
+                 * frozen frames of `Pickup.pick_up()`'s phase A, then the
+                 * `Help(3)` NPC, paged by `Input.released` at `PRESS_GAP`
+                 * spacing until the run reports the pickup collected —
+                 * counted from the GAME's own state rather than to a number,
+                 * because the release count depends on the text.
+                 *
+                 * ⛔ THE STANCE IS (3,4), NOT THE PICKUP'S OWN CELL. A* works
+                 * in whole tiles and a pickup is an avoid volume, so a leg
+                 * that aimed AT the sword would be refused by name; the
+                 * approach inside `runCollect` drives the last pixels.
+                 *
+                 * ⛓ AND THE EARNED ROW IS READ OFF THE LATCH, NOT DECLARED:
+                 * `save.hasSword` false -> true across this segment's own
+                 * window, plus the `{10,0}` clear `Sword.removed()` writes.
+                 * See `playthroughAcceptance.chainGoalFindings`.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 10,
+                        targets: Object.freeze([
+                            Object.freeze({
+                                x: 56,
+                                y: 72,
+                                collect: Object.freeze({
+                                    pickup: Object.freeze({ x: 48, y: 48 }),
+                                }),
+                            }),
+                        ]),
+                        exit: Object.freeze({ x: 48, y: 16 }),
+                    }),
+                }),
+                /**
+                 * ⛓⛓ L11 — **THE FIRST SEAL**, and it rides because the
+                 * route passes it: `stairsup@48,16` is L10's own exit and the
+                 * chest is three tiles from where it lands. ⚖ The R7/R8
+                 * boundary (user, 2026-08-10) rules the seal in only at
+                 * negligible cost, and 87 ticks with no new machinery is
+                 * what that meant.
+                 *
+                 * ⛔ THE STANCE BAND IS TWO PIXELS. `Chest.open()`'s gate is
+                 * the CHEST colliding, and the probe row is y=65 — the rows
+                 * below it miss the line and the rows above are inside the
+                 * chest, which is Solid until the instant it fires. `y: 66`
+                 * is not a tolerance, it is the band.
+                 *
+                 * ⛓ The seal's IDENTITY commits at OPEN (a rejection sampler
+                 * over 16 slots), so the ledger row is keyed by LEVEL and the
+                 * witness is the slot count plus the `{11,0}` clear — never
+                 * "which seal", which is a fact about the run.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 11,
+                        targets: Object.freeze([
+                            Object.freeze({
+                                x: 40,
+                                y: 66,
+                                chest: Object.freeze({
+                                    chest: Object.freeze({ x: 32, y: 48 }),
+                                }),
+                            }),
+                        ]),
+                        exit: Object.freeze({ x: 32, y: 80 }),
+                    }),
+                }),
+                /**
+                 * ⛓ AND BACK DOWN THE STAIRS, so the last segment ends where
+                 * every segment ends: at a CALM LEVEL ARRIVAL. L11's other
+                 * door is `teleporter@32,0` to L3 — the game's own shortcut
+                 * out of D1 — and it lands the player INSIDE L3's return
+                 * teleporter, which is a live trigger to end a chain on.
+                 * R8's campaign can take that door from a fresh boot.
+                 */
+                Object.freeze({ leg: Object.freeze({ level: 10, targets: Object.freeze([]) }) }),
             ]),
             pins: Object.freeze(['dead_frames']),
             /**

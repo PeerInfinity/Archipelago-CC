@@ -2,7 +2,7 @@
     "tape_version": 10,
     "game": "seedling",
     "name": "r7-act2-full",
-    "description": "⛓ THE HEADLINE of chain \"act2-to-l8\" — the game's own opening in ONE run, so the 7 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ THE HEADLINE of chain \"act2-the-sword\" — the game's own opening in ONE run, so the 11 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -18,6 +18,18 @@
             "tag": 0,
             "note": "l5-arrow-bait: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l5-arrows.mjs)",
             "at": 1559
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": "l8-arrows-sandtrap-1: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l8-blocks.mjs)",
+            "at": 2515
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": "l8-arrows-sandtrap-2: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l8-blocks.mjs)",
+            "at": 3067
         }
     ],
     "despawn": [
@@ -44,7 +56,7 @@
         "fp": 987286273
     },
     "seam": null,
-    "tick_count": 2135,
+    "tick_count": 3523,
     "inputs": [
         {
             "key": "right",
@@ -645,6 +657,401 @@
             "key": "down",
             "from": 2129,
             "to": 2135
+        },
+        {
+            "key": "left",
+            "from": 2135,
+            "to": 2146
+        },
+        {
+            "key": "right",
+            "from": 2146,
+            "to": 2147
+        },
+        {
+            "key": "left",
+            "from": 2147,
+            "to": 2149
+        },
+        {
+            "key": "right",
+            "from": 2151,
+            "to": 2154
+        },
+        {
+            "key": "left",
+            "from": 2155,
+            "to": 2157
+        },
+        {
+            "key": "left",
+            "from": 2161,
+            "to": 2199
+        },
+        {
+            "key": "down",
+            "from": 2231,
+            "to": 2242
+        },
+        {
+            "key": "left",
+            "from": 2231,
+            "to": 2264
+        },
+        {
+            "key": "up",
+            "from": 2242,
+            "to": 2243
+        },
+        {
+            "key": "down",
+            "from": 2243,
+            "to": 2244
+        },
+        {
+            "key": "up",
+            "from": 2244,
+            "to": 2245
+        },
+        {
+            "key": "down",
+            "from": 2245,
+            "to": 2246
+        },
+        {
+            "key": "up",
+            "from": 2249,
+            "to": 2251
+        },
+        {
+            "key": "down",
+            "from": 2253,
+            "to": 2255
+        },
+        {
+            "key": "up",
+            "from": 2258,
+            "to": 2259
+        },
+        {
+            "key": "right",
+            "from": 2264,
+            "to": 2265
+        },
+        {
+            "key": "left",
+            "from": 2265,
+            "to": 2266
+        },
+        {
+            "key": "right",
+            "from": 2269,
+            "to": 2270
+        },
+        {
+            "key": "up",
+            "from": 2274,
+            "to": 2285
+        },
+        {
+            "key": "down",
+            "from": 2285,
+            "to": 2286
+        },
+        {
+            "key": "up",
+            "from": 2286,
+            "to": 2288
+        },
+        {
+            "key": "down",
+            "from": 2289,
+            "to": 2291
+        },
+        {
+            "key": "down",
+            "from": 2515,
+            "to": 2526
+        },
+        {
+            "key": "up",
+            "from": 2526,
+            "to": 2527
+        },
+        {
+            "key": "down",
+            "from": 2527,
+            "to": 2529
+        },
+        {
+            "key": "up",
+            "from": 2530,
+            "to": 2532
+        },
+        {
+            "key": "right",
+            "from": 2536,
+            "to": 2563
+        },
+        {
+            "key": "left",
+            "from": 2564,
+            "to": 2566
+        },
+        {
+            "key": "down",
+            "from": 2570,
+            "to": 2597
+        },
+        {
+            "key": "up",
+            "from": 2599,
+            "to": 2601
+        },
+        {
+            "key": "right",
+            "from": 2605,
+            "to": 2616
+        },
+        {
+            "key": "left",
+            "from": 2616,
+            "to": 2617
+        },
+        {
+            "key": "right",
+            "from": 2617,
+            "to": 2619
+        },
+        {
+            "key": "left",
+            "from": 2621,
+            "to": 2624
+        },
+        {
+            "key": "right",
+            "from": 2625,
+            "to": 2627
+        },
+        {
+            "key": "down",
+            "from": 2631,
+            "to": 2642
+        },
+        {
+            "key": "up",
+            "from": 2642,
+            "to": 2643
+        },
+        {
+            "key": "down",
+            "from": 2643,
+            "to": 2645
+        },
+        {
+            "key": "up",
+            "from": 2647,
+            "to": 2650
+        },
+        {
+            "key": "down",
+            "from": 2651,
+            "to": 2653
+        },
+        {
+            "key": "left",
+            "from": 2657,
+            "to": 2663
+        },
+        {
+            "key": "left",
+            "from": 2706,
+            "to": 2712
+        },
+        {
+            "key": "up",
+            "from": 2706,
+            "to": 2745
+        },
+        {
+            "key": "right",
+            "from": 2712,
+            "to": 2713
+        },
+        {
+            "key": "down",
+            "from": 2745,
+            "to": 2746
+        },
+        {
+            "key": "up",
+            "from": 2746,
+            "to": 2747
+        },
+        {
+            "key": "left",
+            "from": 2751,
+            "to": 2775
+        },
+        {
+            "key": "right",
+            "from": 2775,
+            "to": 2776
+        },
+        {
+            "key": "left",
+            "from": 2776,
+            "to": 2778
+        },
+        {
+            "key": "right",
+            "from": 2780,
+            "to": 2782
+        },
+        {
+            "key": "up",
+            "from": 2786,
+            "to": 2797
+        },
+        {
+            "key": "down",
+            "from": 2797,
+            "to": 2798
+        },
+        {
+            "key": "up",
+            "from": 2798,
+            "to": 2800
+        },
+        {
+            "key": "down",
+            "from": 2801,
+            "to": 2803
+        },
+        {
+            "key": "down",
+            "from": 3067,
+            "to": 3078
+        },
+        {
+            "key": "up",
+            "from": 3078,
+            "to": 3079
+        },
+        {
+            "key": "down",
+            "from": 3079,
+            "to": 3081
+        },
+        {
+            "key": "up",
+            "from": 3082,
+            "to": 3084
+        },
+        {
+            "key": "right",
+            "from": 3088,
+            "to": 3115
+        },
+        {
+            "key": "left",
+            "from": 3117,
+            "to": 3119
+        },
+        {
+            "key": "down",
+            "from": 3123,
+            "to": 3225
+        },
+        {
+            "key": "left",
+            "from": 3225,
+            "to": 3332
+        },
+        {
+            "key": "right",
+            "from": 3332,
+            "to": 3333
+        },
+        {
+            "key": "left",
+            "from": 3333,
+            "to": 3334
+        },
+        {
+            "key": "right",
+            "from": 3334,
+            "to": 3335
+        },
+        {
+            "key": "left",
+            "from": 3335,
+            "to": 3336
+        },
+        {
+            "key": "up",
+            "from": 3340,
+            "to": 3358
+        },
+        {
+            "key": "down",
+            "from": 3358,
+            "to": 3359
+        },
+        {
+            "key": "up",
+            "from": 3359,
+            "to": 3361
+        },
+        {
+            "key": "down",
+            "from": 3363,
+            "to": 3366
+        },
+        {
+            "key": "up",
+            "from": 3367,
+            "to": 3369
+        },
+        {
+            "key": "up",
+            "from": 3373,
+            "to": 3383
+        },
+        {
+            "key": "primary",
+            "from": 3383,
+            "to": 3384
+        },
+        {
+            "key": "primary",
+            "from": 3392,
+            "to": 3393
+        },
+        {
+            "key": "primary",
+            "from": 3401,
+            "to": 3402
+        },
+        {
+            "key": "primary",
+            "from": 3410,
+            "to": 3411
+        },
+        {
+            "key": "up",
+            "from": 3412,
+            "to": 3441
+        },
+        {
+            "key": "down",
+            "from": 3443,
+            "to": 3445
+        },
+        {
+            "key": "down",
+            "from": 3512,
+            "to": 3523
         }
     ]
 }

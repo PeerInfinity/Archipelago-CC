@@ -1,18 +1,34 @@
 {
     "tape_version": 8,
     "game": "seedling",
-    "name": "r7-act2-4",
-    "description": "⛓ SEGMENT 4 of chain \"act2-the-sword\" — EVERY FIELD OF ITS BOOT STATE IS r7-act2-3's LATCH, read out of the game and handed to `segmentBootFromLatch`. Nothing here is typed: the save arrays, the persistence clear set, the three RNG streams, the day/night phase and the music no-repeat pair are all numbers only the game can produce. That is what makes the seam a MEASURED equality rather than a claim — `boot(N+1) == latch(N)` over the whole SEAM_SIGNATURE, checked by `playthroughAcceptance` on every sweep. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "name": "r7-act2-9",
+    "description": "⛓ SEGMENT 9 of chain \"act2-the-sword\" — EVERY FIELD OF ITS BOOT STATE IS r7-act2-8's LATCH, read out of the game and handed to `segmentBootFromLatch`. Nothing here is typed: the save arrays, the persistence clear set, the three RNG streams, the day/night phase and the music no-repeat pair are all numbers only the game can produce. That is what makes the seam a MEASURED equality rather than a claim — `boot(N+1) == latch(N)` over the whole SEAM_SIGNATURE, checked by `playthroughAcceptance` on every sweep. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
-        "level": 4,
-        "x": 16,
+        "level": 9,
+        "x": 144,
         "y": 16
     },
     "noclip": false,
     "noDamage": false,
     "noHazards": [],
     "grants": [],
-    "persistence": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        }
+    ],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -23,10 +39,10 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 2057886025,
+        "seed": 539451608,
         "split": false,
         "cosmetic": 0,
-        "fp": 1955308098
+        "fp": 1404334271
     },
     "seam": {
         "items": {
@@ -49,7 +65,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 5334,
+        "time": 8184,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,
@@ -65,37 +81,37 @@
             "index": 0
         }
     },
-    "tick_count": 347,
+    "tick_count": 122,
     "inputs": [
         {
-            "key": "down",
+            "key": "left",
             "from": 0,
-            "to": 40
-        },
-        {
-            "key": "up",
-            "from": 40,
-            "to": 41
+            "to": 107
         },
         {
             "key": "right",
-            "from": 243,
-            "to": 282
-        },
-        {
-            "key": "right",
-            "from": 314,
-            "to": 334
-        },
-        {
-            "key": "up",
-            "from": 314,
-            "to": 347
+            "from": 107,
+            "to": 108
         },
         {
             "key": "left",
-            "from": 334,
-            "to": 335
+            "from": 108,
+            "to": 109
+        },
+        {
+            "key": "right",
+            "from": 109,
+            "to": 110
+        },
+        {
+            "key": "left",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "up",
+            "from": 115,
+            "to": 122
         }
     ]
 }
