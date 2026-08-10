@@ -55,8 +55,26 @@ export default defineConfig({
     // Global test settings
     globals: false,
 
-    // Timeout for tests
-    testTimeout: 10000,
+    // Timeout for tests.
+    //
+    // ⛔ 60 s, not vitest's 10 s default, and the 10 s is a MEASURED cliff
+    // rather than a taste. R6 close-out debt 9 ("the 10 s vitest cliff was
+    // never raised") was carried through every R7 slice: the Seedling bot's
+    // heaviest fixture-differential and choreography tests replay thousands
+    // of game ticks SYNCHRONOUSLY, land between 8 s and 15 s under parallel
+    // CPU contention, and cross the line non-deterministically — the failing
+    // SET changes between runs of an identical tree, and shrinks when the
+    // files run alone. That signature (an error class of `Test timed out`,
+    // zero assertion failures, load-dependent membership) cost every slice a
+    // paragraph of attribution, and a red that has to be attributed by hand
+    // every time is a gate nobody can read.
+    //
+    // ⚠ 60 s is chosen against the measurement, not as a round number: the
+    // slowest observed crossing was 14.75 s (`r5-l42-part4`, baseline run at
+    // f72ec6120), so this is ~4x the worst case seen and still one twentieth
+    // of `vitest.calib.config.js`'s 900 s. The serial slow battery
+    // (`vitest.slow.config.js`) keeps its own 120 s and is unaffected.
+    testTimeout: 60000,
 
     // Benchmark configuration
     benchmark: {
