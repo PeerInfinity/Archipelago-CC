@@ -145,6 +145,109 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
             fpSeed: 987286273,
         }),
     }),
+    Object.freeze({
+        id: 'act2-to-l5',
+        why: '⛓⛓⛓ ACT 2, AND THE FIRST HONEST SEGMENTS. The game\'s own opening, '
+            + 'from `new Game(0, 80, 128)` with an empty save and nothing granted, cut '
+            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5. It ends where the '
+            + 'sword\'s corridor begins — L5\'s arrival, one room short of the kill-lock '
+            + 'the arrow traps open (§15.3) — because L5\'s fight and L5\'s crossing are '
+            + 'DIFFERENT SEGMENTS (§16.5) and this chain is the four that come first.',
+        headline: 'r7-act2-full',
+        segments: Object.freeze(['r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4']),
+        /**
+         * ⛔ THE CUTS ARE THE DRIVER'S OWN TRANSITION TICKS, DECLARED HERE
+         * AND ASSERTED THERE.
+         *
+         * `plan-seedling-r7-act2.mjs` synthesizes the walk from `legs` below
+         * and refuses to author anything unless `transitions` reports exactly
+         * these ticks and `tick_count` is exactly `endsAt`. So the numbers are
+         * a CLAIM about the route that the planner checks, rather than a
+         * transcription of what it happened to produce — a route that shifts
+         * by one tick under a physics edit is a named failure, not a silently
+         * re-cut chain.
+         */
+        cuts: Object.freeze([183, 230, 475]),
+        endsAt: 822,
+        /**
+         * ⛓ THE WALK IS LEGS, NOT SPANS, and that is the M1 generator's shape
+         * arriving where §3.6 said it would.
+         *
+         * The toy chain could carry its inputs literally because they were
+         * `transition-west-return`'s, unchanged since R1. This one cannot:
+         * 41 spans, three of which are a 200-tick button hold and a 39-tick
+         * LEAN on a pushable block, all of them positioned by A* against live
+         * per-visit geometry. Typing them would be transcribing a
+         * measurement; deriving them is what makes `--check` meaningful.
+         *
+         * ── ⛔⛔ THE L4 TARGETS ARE THE WHOLE OF SLICE 6c ─────────────────
+         *
+         * L4's tile layer walls column 2 at every row but (2,4), where
+         * `pushableblock@32,64` stands — **the block IS the door** — and
+         * slice 6b's chain stopped there with the planner calling the room
+         * two components. The room's answer, in its own vocabulary:
+         *
+         *   hold   `button@16,64 {tset 0}` arms `arrowtrap@48,16` and
+         *          `arrowtrap@64,16`. `bob@64,64` chases the player, presses
+         *          against the block's east face in column 3 — which is
+         *          `arrowtrap@48,16`'s own lane — and takes one damage per
+         *          landed arrow through 30-tick i-frames. MEASURED at
+         *          `hits 0 -> 1 -> 2 -> 3`, gone by t~158 of the tape
+         *          (`probe-seedling-r7-l4-block.mjs`).
+         *   shove  then the lean: the block glides (2,4) -> (4,4) and the
+         *          walk goes north up column 3 to `stairsdown@64,16`.
+         *
+         * ⚠ THE HOLD IS 200 AND THE KILL LANDS AT ~115 OF IT. The margin is
+         * deliberate and it is the only number here the model cannot check:
+         * `levelWorld` carries no enemies, so offline the shove succeeds with
+         * a one-tick hold too. The probe's PAIR is what makes 200 evidence —
+         * its control holds the button for ONE tick, and the game leaves the
+         * block on (3,4) with the bob alive on `hits 1`.
+         *
+         * ⚠ AND THE BLOCK STOPS ON (4,4) BECAUSE (5,4) IS A PIT. A third
+         * tile would destroy the block and open the corridor just as well,
+         * and the player following it would stand in `bob@64,64`'s spawn —
+         * which `levelRun` refuses on a tape that does not declare
+         * `noDamage`. The route's two tiles are the game's arithmetic.
+         */
+        walk: Object.freeze({
+            legs: Object.freeze([
+                Object.freeze({ level: 0, targets: Object.freeze([]), exit: Object.freeze({ x: 256, y: 272 }) }),
+                Object.freeze({ level: 2, targets: Object.freeze([]), exit: Object.freeze({ x: 48, y: 96 }) }),
+                Object.freeze({ level: 3, targets: Object.freeze([]), exit: Object.freeze({ x: 128, y: 48 }) }),
+                Object.freeze({
+                    level: 4,
+                    targets: Object.freeze([
+                        Object.freeze({
+                            x: 24,
+                            y: 72,
+                            hold: Object.freeze({ presser: Object.freeze({ x: 16, y: 64 }), ticks: 200 }),
+                        }),
+                        Object.freeze({
+                            x: 24,
+                            y: 72,
+                            shove: Object.freeze({
+                                block: Object.freeze({ x: 32, y: 64 }),
+                                dir: 'E',
+                                to: Object.freeze({ tx: 4, ty: 4 }),
+                            }),
+                        }),
+                    ]),
+                    exit: Object.freeze({ x: 64, y: 16 }),
+                }),
+                Object.freeze({ level: 5, targets: Object.freeze([]) }),
+            ]),
+            pins: Object.freeze(['dead_frames']),
+            /**
+             * ⚠ THE SAME DECLARED FP SEED AS THE TOY CHAIN, for the same
+             * reason and not by inheritance: FlashPunk seeds its LCG once per
+             * PAGE from one `Math.random()`, and a committed chain cannot
+             * depend on a page's coincidence. The value is a state the LCG
+             * really occupies, measured by slice 1's v8 probe.
+             */
+            fpSeed: 987286273,
+        }),
+    }),
 ]);
 
 /**
