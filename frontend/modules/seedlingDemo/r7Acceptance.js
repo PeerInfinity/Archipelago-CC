@@ -1504,6 +1504,114 @@ export const R7_LEDGER_EXCLUSIONS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R7 SLICE 6f — WHAT "HELD" MEANS FOR A LEDGER ROW, read off a SEAM
+ * FIELD MAP (a tape's boot side or a `botSeam()` latch — the two have the
+ * same shape by construction, which is the whole reason the seam machinery
+ * can be reused here at all).
+ *
+ * ⛔ THE ANSWER IS A MONOTONE NUMBER, NEVER A BOOLEAN, because three of the
+ * six kinds are COUNTS. `hasTotemPart` and `hasSealPart` are arrays with one
+ * slot per collected thing and no way back to which PLACEMENT filled a slot
+ * — a seal's identity is a rejection-sampled draw taken at chest OPEN
+ * (§2.2), so "which chest" is a fact about the map and "which seal" is a
+ * fact about the run. Held-count-went-up is the honest reading, and the
+ * PLACEMENT is identified by the second witness below.
+ *
+ * ⚠ `null` is "this map does not carry the field", which is different from
+ * zero and must not be compared: a partial latch would otherwise read as a
+ * collectible nobody holds.
+ */
+export function goalHeldBy(row, fields) {
+    const bool = (v) => (typeof v === 'boolean' ? (v ? 1 : 0) : null);
+    const count = (field, empty) => (Array.isArray(fields[field])
+        ? fields[field].filter((v) => v !== empty).length : null);
+    switch (row.kind) {
+    case 'pickup':
+        // ⚠ `health` is the one pickup whose flag is not a boolean: its row
+        // says `hitsMax 3->4`, and `save.hitsMax` is the field.
+        return row.tag === 'health'
+            ? (typeof fields['save.hitsMax'] === 'number' ? fields['save.hitsMax'] : null)
+            : bool(fields[`save.${row.flag}`]);
+    case 'encounter':
+        return bool(fields[`save.${row.flag}`]);
+    case 'key': {
+        const arr = fields['save.hasKey'];
+        const kt = Number(/\[(\d)\]/.exec(row.flag)?.[1]);
+        return Array.isArray(arr) && Number.isInteger(kt) ? bool(arr[kt]) : null;
+    }
+    case 'totempart':
+        return count('save.hasTotemPart', false);
+    case 'chest':
+        // ⛔ THE SENTINEL IS -1, NOT `false`. `SealController.getSealPart`
+        // fills the first -1 slot with an IDENTITY, so a slot holding 0 is
+        // a collected seal and `filter(Boolean)` would drop it.
+        return count('save.hasSealPart', -1);
+    case 'ending': {
+        const arr = fields['static.Game.cutscene'];
+        return Array.isArray(arr) ? bool(arr[2]) : null;
+    }
+    default:
+        return null;
+    }
+}
+
+/**
+ * ⛔ WHICH KINDS OWE A SECOND, PLACEMENT-IDENTIFYING WITNESS.
+ *
+ * A count going up says a seal was collected; it does not say WHICH CHEST.
+ * The game's own second readout is the persistence clear the pickup writes
+ * (`PICKUP_CLEARS_OWN_TAG`, R6 debt 2, paid at slice 6) — the sword's
+ * `{10,0}`, the L11 chest's `{11,0}` — and a clear names a LEVEL, which is
+ * exactly what a ledger row is keyed on.
+ *
+ * ⚠ TWO KINDS ARE EXEMPT AND SAY WHY. `fire@L32` is a BobBoss drop
+ * constructed with tag -1 and `darksword@L12` is a Witch trade whose stray
+ * write lands on the PREVIOUS level's tag 29 (§2.2), so neither writes a
+ * clear in its own level; the Seed's `End/4.oel` placement is tag -1 and its
+ * readout is `cutscene[2]`. An exemption with no reason is a hole, so each
+ * is named here rather than defaulted.
+ */
+export const GOAL_PLACEMENT_WITNESS = Object.freeze({
+    pickup: true,
+    chest: true,
+    key: true,
+    totempart: true,
+    encounter: false,
+    ending: false,
+});
+
+/**
+ * ⛓⛓⛓ THE EARNED WITNESS — did this row's collectible go from NOT HELD to
+ * HELD *inside* one driven window, and did the game write the clear that
+ * names the placement?
+ *
+ * ⛔ IT COMPARES A SEGMENT'S OWN BOOT AGAINST ITS OWN LATCH, and that is
+ * what makes "EARNED" different from "declared". A boot block can say
+ * `hasSword: true` — that is what every staged-grant tape in six rungs did
+ * — and it can never make the flag FLIP, because the flip is a thing the
+ * game does between tick 0 and the latch. The chain's custody claim
+ * (`boot(N+1) == latch(N)`) is what then carries it forward.
+ *
+ * @returns {string|null} the witness sentence, or null when the row was not
+ *   earned in this window (which includes "neither side carries the field").
+ */
+export function goalEarnedWitness(row, boot, latch) {
+    const before = goalHeldBy(row, boot);
+    const after = goalHeldBy(row, latch);
+    if (before === null || after === null) return null;
+    if (!(after > before)) return null;
+    const clearsOf = (f) => new Set((f['save.levelPersistence'] ?? [])
+        .map((c) => `${c.level},${c.tag}`));
+    const had = clearsOf(boot);
+    const gained = [...clearsOf(latch)]
+        .filter((k) => !had.has(k) && Number(k.split(',')[0]) === row.level);
+    if (GOAL_PLACEMENT_WITNESS[row.kind] && gained.length === 0) return null;
+    return `${row.flag} ${before} -> ${after}`
+        + (gained.length ? `, and levelPersistence gains ${gained.map((k) => `{${k}}`)
+            .join(' ')} in level ${row.level}` : '');
+}
+
+/**
  * ⛔ FINDINGS DERIVED BY MAPPING OVER EVERY ROW — trap 119's construction.
  *
  * `earnedBy` is `{ledgerId: {segment, witness}}`, built from the game's own

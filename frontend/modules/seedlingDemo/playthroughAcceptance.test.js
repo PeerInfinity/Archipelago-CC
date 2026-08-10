@@ -17,7 +17,8 @@ import {
     playthroughSegmentNames, playthroughTapeNames, walkGroups,
 } from './playthroughWalk.js';
 import {
-    chainFindings, latchAgreementFindings, witnessedClearFindings, witnessedDespawnFindings,
+    chainFindings, chainGoalFindings, latchAgreementFindings, witnessedClearFindings,
+    witnessedDespawnFindings,
 } from './playthroughAcceptance.js';
 import {
     SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
@@ -679,5 +680,97 @@ describe('assertWalkUnits — a removal owes the game a count', () => {
     it('⛔ MUTATION: a removes entry that is not {level, id} THROWS', () => {
         expect(() => assertWalkUnits(chainOf({ removes: [{ level: 6 }] })))
             .toThrow(/removes entries are \{level, id\}/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R7 SLICE 6f — THE GOAL LEDGER'S EARNED ROWS. `R7_GOAL_LEDGER` has
+ * existed since slice 0 with no caller for its `earnedBy` argument; these
+ * are the tests for the caller.
+ */
+describe('chainGoalFindings — EARNED is measured, and the set is two-sided', () => {
+    const CUT2 = 40;
+    /**
+     * A three-segment chain whose SECOND segment picks the sword up: it boots
+     * without it (the latch of segment 1) and latches with it, plus the
+     * `{10,0}` clear `Sword.removed()` writes.
+     */
+    const HELD = {
+        'save.hasSword': true,
+        'save.levelPersistence': [{ level: 10, tag: 0 }],
+    };
+    function goalChain(mutate = {}) {
+        // ⚠ `before` feeds BOTH segment 2's boot block and segment 1's latch,
+        // exactly as the planner does it — so a staged-grant arm only has to
+        // move ONE object and the two sides move together. A test that
+        // mutated the latch alone would be testing a chain the planner
+        // cannot author.
+        const before = latchAt({ 'latch.tick': CUT, ...(mutate.before ?? {}) });
+        const after = latchAt({ 'latch.tick': CUT2, ...HELD });
+        const tapes = new Map([
+            ['S1', baseTape({ boot: { ...TRUE_INITIAL_BOOT }, tick_count: CUT })],
+            ['S2', baseTape({ ...segmentBootFromLatch(before), tick_count: CUT2 })],
+        ]);
+        const replayed = new Map([
+            ['S1', { stream: stream(0, CUT), status: {}, seam: before }],
+            ['S2', { stream: stream(0, CUT2), status: {}, seam: after }],
+        ]);
+        if (mutate.replayed) mutate.replayed(replayed);
+        const chain = {
+            id: 'goal', headline: 'H', segments: ['S1', 'S2'],
+            cuts: [CUT], endsAt: CUT + CUT2, earns: mutate.earns ?? ['sword@L10'],
+        };
+        return chainGoalFindings(chain, tapes, replayed);
+    }
+
+    it('⛓⛓⛓ the sword is EARNED in the segment whose latch flipped the flag', () => {
+        const f = goalChain();
+        const row = f.find((r) => r.name.startsWith('sword@L10'));
+        expect(row.ok).toBe(true);
+        expect(row.detail).toMatch(/^S2: /);
+        expect(row.detail).toMatch(/\{10,0\}/);
+        expect(reds(f)).toEqual([]);
+    });
+
+    it('⛔ a DECLARED row nobody earns is RED, and an EARNED row nobody declared is too', () => {
+        // declared, not earned
+        const missing = goalChain({ earns: ['sword@L10', 'shield@L20'] });
+        expect(reds(missing).some((n) => n.includes('EARNED set is exactly'))).toBe(true);
+        expect(missing.find((r) => r.name.includes('EARNED set is exactly')).detail)
+            .toMatch(/DECLARED but not earned: shield@L20/);
+        // earned, not declared
+        const extra = goalChain({ earns: [] });
+        expect(extra.find((r) => r.name.includes('EARNED set is exactly')).detail)
+            .toMatch(/EARNED but not declared: sword@L10/);
+    });
+
+    it('⛔⛔ A STAGED GRANT IS NOT AN EARN — a segment that BOOTS the flag reads '
+        + 'UNCLAIMED', () => {
+        // Both latches hold the sword, so the boot side declares it too and
+        // nothing ever flips. This is the whole difference between §3.3's
+        // "EARNED inside a driven segment" and six rungs of staged tapes.
+        const f = goalChain({ before: HELD });
+        expect(f.find((r) => r.name.startsWith('sword@L10')).ok).toBe(false);
+        expect(f.find((r) => r.name.startsWith('sword@L10')).detail).toMatch(/UNCLAIMED/);
+    });
+
+    it('the progress line is REPORTED, never asserted — R7 ends at the sword', () => {
+        const f = goalChain();
+        const progress = f.find((r) => r.name.includes('goal ledger stands at'));
+        expect(progress.ok).toBe(true);
+        expect(progress.skipped).toBe(true);
+        expect(progress.detail).toMatch(/R8/);
+    });
+
+    it('⛔ a declared id that is not a ledger row is a named failure', () => {
+        const f = goalChain({ earns: ['sword@L10', 'nonsense@L999'] });
+        const row = f.find((r) => r.name.includes('"nonsense@L999"'));
+        expect(row.ok).toBe(false);
+        expect(row.detail).toMatch(/R7_GOAL_LEDGER has no row/);
+    });
+
+    it('⛓ THE REAL CHAIN declares exactly the rows R7 ends on', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11']);
     });
 });

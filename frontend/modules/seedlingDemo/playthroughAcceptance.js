@@ -48,7 +48,8 @@
  */
 
 import {
-    SEAM_SIGNATURE, seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
+    R7_GOAL_LEDGER, SEAM_SIGNATURE, goalEarnedWitness, r7GoalCriteria, r7GoalFindings,
+    seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
 } from './r7Acceptance.js';
 import { PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT } from './playthroughWalk.js';
 
@@ -258,6 +259,101 @@ export function witnessedDespawnFindings(chain, tapes) {
 }
 
 /**
+ * ⛓⛓⛓ THE GOAL LEDGER'S EARNED ROWS, MEASURED — R7 slice 6f, and the rung's
+ * headline.
+ *
+ * `R7_GOAL_LEDGER` and `r7GoalFindings` have existed since slice 0 and
+ * NOTHING HAS EVER BUILT THEIR `earnedBy` ARGUMENT. Seven segments of honest
+ * chain went by with the ledger at zero because the chain collected nothing
+ * — and the machinery that would have said so was a function with no caller,
+ * which is trap 119's own failure mode wearing the shape of a completed
+ * feature. This is the caller.
+ *
+ * ── HOW A ROW IS EARNED, AND WHY IT CANNOT BE FAKED ───────────────────
+ *
+ * For each segment IN CHAIN ORDER, its own boot block and its own latch are
+ * two seam field maps of the same shape, and `goalEarnedWitness` asks
+ * whether the row's collectible went from NOT HELD to HELD BETWEEN THEM —
+ * plus, for every kind that writes one, whether the game's own
+ * `levelPersistence` gained a clear IN THE ROW'S LEVEL. A boot block can
+ * DECLARE `hasSword: true`; it cannot make the flag flip, because the flip
+ * is something the game does between tick 0 and the latch. So "EARNED" here
+ * means what §3.3 said it means, and a staged grant reads as UNCLAIMED.
+ *
+ * ── ⛔ TWO-SIDED, BECAUSE ONE SIDE WOULD BE A PROGRESS BAR ────────────
+ *
+ * The chain DECLARES the ledger ids it claims (`chain.earns`) and this
+ * asserts the declared set and the measured set are EQUAL. A row that stops
+ * being earned goes red; a row that starts being earned WITHOUT being
+ * declared goes red too. Neither direction is decoration: the first is the
+ * regression, the second is a segment that quietly picked something up.
+ *
+ * ⚠ AND THE REMAINING 39 ROWS ARE REPORTED, NOT ASSERTED. R7 ends at the
+ * sword (kickoff §6.5), so `r7GoalFindings`' completeness row — "41/41
+ * earned" — is a claim about a LATER RUNG. It is carried as a named,
+ * non-failing progress line rather than dropped, because a ledger nobody
+ * prints is a ledger nobody reads.
+ */
+export function chainGoalFindings(chain, tapes, replayed) {
+    const declared = [...(chain.earns ?? [])].sort();
+    const rows = [];
+    const earnedBy = {};
+    for (const name of chain.segments) {
+        const t = tapes.get(name);
+        const latch = replayed.get(name)?.seam?.seam;
+        if (!t || !latch) continue;
+        const boot = seamBootFields(t);
+        for (const row of R7_GOAL_LEDGER) {
+            if (earnedBy[row.id]) continue;
+            const witness = goalEarnedWitness(row, boot, latch);
+            if (witness) earnedBy[row.id] = { segment: name, witness };
+        }
+    }
+    const roster = [...tapes.keys()];
+    const derived = new Map(r7GoalFindings(earnedBy, roster).map((r) => [r.name, r]));
+    // ⛔ ONE ROW PER DECLARED ID, and the row itself is `r7GoalFindings`'
+    // own — mapped over the ledger there, selected here. A declared id that
+    // is not a ledger id at all has no row to select and is caught by the
+    // set equality below.
+    for (const id of declared) {
+        const ledger = R7_GOAL_LEDGER.find((r) => r.id === id);
+        const found = ledger
+            && derived.get(`${ledger.id} (${ledger.kind}) is EARNED inside a driven segment`);
+        rows.push(found ?? {
+            name: `chain ${chain.id}: "${id}" is declared EARNED and is not a ledger row`,
+            ok: false,
+            detail: `R7_GOAL_LEDGER has no row "${id}" — a chain claiming a collectible `
+                + 'the census does not carry is a claim nothing can check',
+        });
+    }
+    const measured = Object.keys(earnedBy).sort();
+    const extra = measured.filter((id) => !declared.includes(id));
+    const missing = declared.filter((id) => !measured.includes(id));
+    rows.push({
+        name: `chain ${chain.id}: ⛓ the EARNED set is exactly what the chain declares`,
+        ok: extra.length === 0 && missing.length === 0,
+        detail: extra.length === 0 && missing.length === 0
+            ? `${measured.length} earned: ${measured.join(', ') || '(none)'}`
+            : `${extra.length ? `EARNED but not declared: ${extra.join(', ')}. ` : ''}`
+                + `${missing.length ? `DECLARED but not earned: ${missing.join(', ')}. ` : ''}`
+                + 'A chain that picks something up without saying so is a walk nobody '
+                + 'reviewed; one that declares what it does not earn is a claim nobody met',
+    });
+    const criteria = r7GoalCriteria(earnedBy, roster);
+    rows.push({
+        name: `chain ${chain.id}: the goal ledger stands at ${criteria.earned}/`
+            + `${criteria.total}`,
+        ok: true,
+        detail: `${Object.entries(criteria.byKind)
+            .map(([k, v]) => `${k} ${v.earned}/${v.total}`).join(', ')} — R7 ends at the `
+            + 'SWORD (kickoff §6.5), so the rest is R8\'s campaign and this line is '
+            + 'REPORTED rather than asserted',
+    });
+    rows[rows.length - 1].skipped = true;
+    return rows;
+}
+
+/**
  * One chain's findings. `replayed` is `name -> {stream, status, seam}` and
  * `tapes` is `name -> parsed tape`.
  *
@@ -287,6 +383,9 @@ export function chainFindings(chain, tapes, replayed) {
     // ── THE WITNESSED-CLEAR LAW (slice 6d) ────────────────────────────
     found.push(...witnessedClearFindings(chain, tapes));
     found.push(...witnessedDespawnFindings(chain, tapes));
+
+    // ── ⛓⛓⛓ THE GOAL LEDGER (slice 6f) ───────────────────────────────
+    found.push(...chainGoalFindings(chain, tapes, replayed));
 
     // ── 0. THE CUSTODY BASE CASE ──────────────────────────────────────
     // ⛔ A chain whose first segment inherits a staged state proves nothing

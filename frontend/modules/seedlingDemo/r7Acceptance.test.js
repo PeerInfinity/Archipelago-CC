@@ -19,6 +19,7 @@ import {
     seamBootFields, segmentBootFromLatch,
     R7_SECOND_BATCH, predictedSeedIs1562BehindTheCommittedOne,
     SEAM_PREBUILD_FIELDS, seamExitFields, BOOT_PRESWAP_FRAMES,
+    goalHeldBy, goalEarnedWitness, GOAL_PLACEMENT_WITNESS,
 } from './r7Acceptance.js';
 import { parseTape, seamFieldsFromBlock, TAPE_VERSION } from './tapeFormat.js';
 
@@ -1086,5 +1087,104 @@ describe('segmentBootFromLatch — the PRE-BUILD half (R7 slice 2b)', () => {
         const exit = seamExitFields(l);
         const rows = seamFindings([{ name: 'S', exit, boot }]);
         expect(rows.filter((r) => !r.ok).map((r) => `${r.name} [${r.detail}]`)).toEqual([]);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R7 SLICE 6f — THE EARNED WITNESS. `R7_GOAL_LEDGER` has been on disk
+ * since slice 0 with no caller for its `earnedBy` argument; these are the
+ * tests for the function that finally builds one.
+ */
+describe('goalHeldBy / goalEarnedWitness — EARNED means the flag FLIPPED', () => {
+    const SWORD = R7_GOAL_LEDGER.find((r) => r.id === 'sword@L10');
+    const CHEST11 = R7_GOAL_LEDGER.find((r) => r.id === 'chest@L11');
+    const HEALTH = R7_GOAL_LEDGER.find((r) => r.id === 'health@L68');
+    const KEY0 = R7_GOAL_LEDGER.find((r) => r.id === 'bosskey0@L19');
+    // ⚠ Built from the LEDGER's own flag names rather than typed, so a kind
+    // added tomorrow gets a field here instead of a mystery null.
+    const ITEM_FLAGS = Object.fromEntries(R7_GOAL_LEDGER
+        .filter((r) => /^has|^can/.test(r.flag))
+        .map((r) => [`save.${r.flag}`, false]));
+    const empty = (over = {}) => ({
+        ...ITEM_FLAGS,
+        'save.hasSword': false,
+        'save.hasKey': [false, false, false, false, false],
+        'save.hasTotemPart': [false, false, false, false, false],
+        'save.hasSealPart': Array.from({ length: 16 }, () => -1),
+        'save.hitsMax': 3,
+        'save.levelPersistence': [],
+        'static.Game.cutscene': [false, false, false, false],
+        ...over,
+    });
+
+    it('⛔ a DECLARED flag is not an earned one — boot true, latch true reads UNCLAIMED', () => {
+        const held = empty({ 'save.hasSword': true });
+        expect(goalEarnedWitness(SWORD, held, held)).toBe(null);
+        // ...and the ledger agrees the flag is held on both sides.
+        expect(goalHeldBy(SWORD, held)).toBe(1);
+    });
+
+    it('⛓ the flag FLIPPING inside the window, with the placement clear, is the witness', () => {
+        const boot = empty();
+        const latch = empty({
+            'save.hasSword': true,
+            'save.levelPersistence': [{ level: 10, tag: 0 }],
+        });
+        const w = goalEarnedWitness(SWORD, boot, latch);
+        expect(w).toMatch(/hasSword 0 -> 1/);
+        expect(w).toMatch(/\{10,0\}/);
+    });
+
+    it('⛔ the PLACEMENT witness is required — a flip with no clear in the row\'s level '
+        + 'reads UNCLAIMED', () => {
+        const boot = empty();
+        // the flag flips and the game writes a clear in a DIFFERENT level
+        const latch = empty({
+            'save.hasSword': true,
+            'save.levelPersistence': [{ level: 8, tag: 0 }],
+        });
+        expect(GOAL_PLACEMENT_WITNESS[SWORD.kind]).toBe(true);
+        expect(goalEarnedWitness(SWORD, boot, latch)).toBe(null);
+    });
+
+    it('⛔ a SEAL slot holding identity 0 is COLLECTED — the sentinel is -1, not falsy', () => {
+        const seals = Array.from({ length: 16 }, () => -1);
+        seals[0] = 0;
+        expect(goalHeldBy(CHEST11, empty({ 'save.hasSealPart': seals }))).toBe(1);
+        const w = goalEarnedWitness(CHEST11, empty(), empty({
+            'save.hasSealPart': seals,
+            'save.levelPersistence': [{ level: 11, tag: 0 }],
+        }));
+        expect(w).toMatch(/\{11,0\}/);
+    });
+
+    it('the counted and non-boolean kinds read their own fields', () => {
+        expect(goalHeldBy(HEALTH, empty())).toBe(3);
+        expect(goalHeldBy(HEALTH, empty({ 'save.hitsMax': 4 }))).toBe(4);
+        expect(goalHeldBy(KEY0, empty())).toBe(0);
+        expect(goalHeldBy(KEY0, empty({
+            'save.hasKey': [true, false, false, false, false],
+        }))).toBe(1);
+    });
+
+    it('⛔ a field the map does not carry is null, NEVER zero', () => {
+        // A partial latch must not read as "nobody holds this" — that would
+        // make every row of a broken readout look honestly unclaimed.
+        expect(goalHeldBy(SWORD, {})).toBe(null);
+        expect(goalHeldBy(KEY0, {})).toBe(null);
+        expect(goalHeldBy(CHEST11, {})).toBe(null);
+        expect(goalEarnedWitness(SWORD, {}, empty({ 'save.hasSword': true }))).toBe(null);
+    });
+
+    it('⛔⛔ MUTATION: every ledger kind has a `goalHeldBy` arm and a placement ruling', () => {
+        // Trap 119's construction from the other side — a KIND added
+        // tomorrow must not read null-for-everything and pass quietly.
+        for (const kind of new Set(R7_GOAL_LEDGER.map((r) => r.kind))) {
+            expect(GOAL_PLACEMENT_WITNESS[kind], `${kind} has no placement ruling`)
+                .toBeTypeOf('boolean');
+            const row = R7_GOAL_LEDGER.find((r) => r.kind === kind);
+            expect(goalHeldBy(row, empty()), `${kind} reads null on a full field map`)
+                .not.toBe(null);
+        }
     });
 });
