@@ -264,6 +264,119 @@ export const L5_ARROW_BAIT = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓⛓ THE L6 BAIT — the second `phases` block, and the first one whose
+ * outcome is a BODY rather than a FLAG.
+ *
+ * ⛔⛔ L6 HAS NO CROSSING AT ALL FOR THE MODEL, and that is what makes this a
+ * block. The room is walled three ways by three different mechanisms:
+ * `Water` at (6,2)-(8,2) walls row 2; the `sandtrap` PAIRS at columns 4 and
+ * 10 wall rows 1 and 3 (their 16x16 boxes reach only those rows, so row 2
+ * passes UNDER them — a walk that tries row 1 oscillates at x~56 forever on
+ * `sandtrap@64,16`'s knockback, which `synthesizeLegs` reports as a stall);
+ * and `bob@96,16` at (6,1) and `bob@112,48` at (7,3) sit in EXACTLY the two
+ * cells the weave needs. A `bob` is `combat.contactPricing`'s **`mover`**
+ * (§16.4: `Bob.update` steers straight with no wall test, so its position is
+ * the unmodelled term), so `levelRun` THROWS rather than pricing a contact at
+ * a placement the run does not step. With both bodies present the model has
+ * no route: row 1 is blocked for player centres in x (96,112) and row 3 for
+ * x (112,128), at every y either row allows.
+ *
+ * ⛓⛓⛓ AND THE ROOM REMOVES ONE ITSELF. Two source facts, neither about the
+ * player:
+ *
+ *   `Enemy.update`  `case 1: //Water -> destroy = true`. A chaser whose
+ *                   straight line crosses the water DROWNS, and `Bob` has no
+ *                   wall test to stop it.
+ *   `Bob.as:39`     `solids.push("Enemy")` — a **sandtrap is a WALL for a
+ *                   bob**, though not for the player, whose own solids list
+ *                   does not contain enemies at all.
+ *
+ * ⇒ the stance is the whole solve, and it is one tile: **row 1, column 3**.
+ * From there `bob@112,48`'s line to the player runs north-west ACROSS the
+ * water and it drowns (t~62, measured); `bob@96,16` walks west along row 1
+ * and PARKS against `sandtrap@64,16` at x=84.2 forever, eight pixels short of
+ * ever reaching the player. No weapon, no player kill, no swimming — §18.6's
+ * route, with the mechanism the measurement found underneath it.
+ *
+ * ⛔ THE CONTROLS ARE WHAT MAKE THE STANCE A CLAIM. `stay` never leaves the
+ * arrival, where `bob@112,48` is 86 px away against `Bob.runRange` 80 — it
+ * never wakes and never drowns, so the drowning is the ROUTE's. `south` is
+ * the same column one ROW down, where the bob's line crosses row 2 WEST of
+ * the water and it lives — so the stance's ROW is load-bearing rather than
+ * decorative. Both HOLD; only `bait` removes a body.
+ *
+ * ── ⛓ AND THE OTHER BOB DROWNS TOO, WITHOUT BEING DECLARED ────────────
+ *
+ * `bob@96,16` follows the player east along row 2 during the CROSSING and
+ * drowns at column 6 (t~265, driven). The tape says nothing about it, and
+ * that is correct rather than sloppy: the model keeps a body at a placement
+ * the route never touches, the game removes one the route never touches, and
+ * the two agree everywhere the player is. A `despawn` for it would be a true
+ * statement the model does not need — and every field in a tape is a thing a
+ * future reader has to believe is load-bearing.
+ */
+export const L6_BOB_DROWN = Object.freeze({
+    id: 'l6-bob-drown',
+    why: '⛓⛓⛓ THE DETOUR CELL, EMPTIED BY THE ROOM. Row 1 column 3 is the one stance '
+        + 'whose straight line from `bob@112,48` crosses the water: it drowns itself '
+        + 'reaching the player, while `bob@96,16` parks against `sandtrap@64,16` — '
+        + '`Bob.solids` contains "Enemy" and the player\'s does not. The crossing after '
+        + 'it takes row 3 through the cell the drowned body was standing in.',
+    provenance: Object.freeze({
+        probe: 'scripts/procgen/probe-seedling-r7-l6-bait.mjs',
+        arm: 'bait',
+        controls: Object.freeze([
+            'stay — HOLDS: the arrival is 86 px from bob@112,48 and `Bob.runRange` is '
+                + '80, so it never wakes',
+            'south — HOLDS: one row down, the same bob\'s line crosses row 2 WEST of '
+                + 'the water and it lives',
+        ]),
+        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §19',
+    }),
+    /** BOOT-FORM: `teleporter@48,112` in L5 declares `playerx 32, playery 16`. */
+    startsAt: Object.freeze({ level: 6, x: 32, y: 16 }),
+    startsAtTick: 1634,
+    /** Row 1, column 3 — the stance, in boot form. */
+    endsAt: Object.freeze({ level: 6, x: 48, y: 16 }),
+    steps: Object.freeze([
+        Object.freeze({ label: 'approach', ticks: 26, planned: true }),
+        Object.freeze({ label: 'drown', ticks: 94, planned: false }),
+    ]),
+    ticks: 120,
+    /**
+     * ⛔ THE APPROACH'S SPANS ARE A*'s, FROZEN — the L5 block's rule, for the
+     * L5 block's reason. Re-deriving them inside the chain would be harmless
+     * here (no planning-only deletion is involved) and would still be wrong:
+     * the DWELL's length is measured against the approach that was driven,
+     * and a re-derived approach one tick longer would move the tick the game
+     * was asked about without moving the number in the tape.
+     */
+    spans: Object.freeze([
+        Object.freeze({ key: 'right', from: 0, to: 11 }),
+        Object.freeze({ key: 'left', from: 11, to: 12 }),
+        Object.freeze({ key: 'right', from: 12, to: 14 }),
+        Object.freeze({ key: 'left', from: 16, to: 19 }),
+        Object.freeze({ key: 'right', from: 20, to: 22 }),
+    ]),
+    /**
+     * ⛓ `removes` IS `earns`' TWIN — the body the block takes out of the
+     * world, which every later leg is planned against and which the tape
+     * carries as a v10 `despawn` at this block's own end tick.
+     */
+    removes: Object.freeze([Object.freeze({ level: 6, id: 'bob@112,48' })]),
+    /**
+     * ⛔ THE OUTCOME IS A COUNT, because the GAME's readout is a count. The
+     * `--mobiles` trace reports the bodies alive at block end; one left is
+     * `bob@96,16`, parked against the sandtrap where it will stay until the
+     * crossing pulls it into the water.
+     */
+    outcome: Object.freeze({
+        cleared: Object.freeze([]),
+        enemies: 1,
+    }),
+});
+
 /** The two kinds of unit a walk is made of. */
 const UNIT_KINDS = Object.freeze(['leg', 'phases']);
 
@@ -334,6 +447,32 @@ export function assertWalkUnits(chain) {
                     + 'every later leg is then planned against — and its outcome does not '
                     + 'assert that clear. A block may not change the world the planner '
                     + 'sees without asking the game whether it did.');
+            }
+        }
+        /**
+         * ⛓ R7 slice 6e: `removes` is `earns`' twin — the BODIES the block
+         * takes out of the world, which every later leg is then planned
+         * against and which the tape carries as a v10 `despawn`.
+         *
+         * ⛔ AND ITS OUTCOME OBLIGATION IS A COUNT, not a name, because the
+         * game's own readout is a count. `--mobiles` reports the bodies
+         * alive at block end; a block that removes N of them must say how
+         * many it expects to be LEFT, and `outcome.enemies` is that number.
+         * Removing a body without declaring the count would be a block that
+         * moves the planner's world and asks the game nothing.
+         */
+        for (const r of p.removes ?? []) {
+            if (!Number.isInteger(r.level) || typeof r.id !== 'string') {
+                throw new PlaythroughError(`${what}: removes entries are {level, id} with `
+                    + 'id a level record placement "<type>@<x>,<y>"');
+            }
+            if (typeof p.outcome.enemies !== 'number') {
+                throw new PlaythroughError(`${what}: it REMOVES ${r.id} from level `
+                    + `${r.level} — which every later leg is then planned against — and `
+                    + 'its outcome declares no `enemies` count. The game\'s own readout '
+                    + 'for a removed body is how many are LEFT, so a block that moves a '
+                    + 'body out of the planner\'s world without asking for that number '
+                    + 'is a removal nobody witnessed.');
             }
         }
     });
@@ -433,20 +572,26 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         }),
     }),
     Object.freeze({
-        id: 'act2-to-l6',
+        id: 'act2-to-l7',
         why: '⛓⛓⛓ ACT 2, AND THE FIRST HONEST SEGMENTS. The game\'s own opening, '
             + 'from `new Game(0, 80, 128)` with an empty save and nothing granted, cut '
-            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6. Segment 5 is '
+            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6 -> L7. Segment 5 is '
             + 'the first HETEROGENEOUS walk — L5\'s arrow-bait fight as a `phases` '
             + 'block, then the crossing through the kill-lock it opens as a `leg` — so '
             + 'the chain now reaches PAST the wall the sword sits behind. ⛔ THE FIGHT '
             + 'AND THE CROSSING ARE ONE SEGMENT, and slice 6d measured why they must '
             + 'be: leaving the room to cut a boundary RESPAWNS every enemy in it while '
             + 'the clear stays durable, so the fight does not survive the door. The '
-            + 'lock the fight removes is carried to the model by the v9 `at` clear.',
+            + 'lock the fight removes is carried to the model by the v9 `at` clear. '
+            + '⛓ SEGMENT 6 IS THE SAME SHAPE WITH THE OTHER MODEL-ONLY FIELD: L6 has no '
+            + 'crossing at all while its two bobs stand in the two detour cells, and the '
+            + 'ROOM removes one of them — a stance in row 1 column 3 sends `bob@112,48` '
+            + 'across the water to drown, while `sandtrap@64,16` walls the other one off '
+            + '(`Bob.solids` contains "Enemy"; the player\'s does not). The tape carries '
+            + 'that as a v10 `despawn`.',
         headline: 'r7-act2-full',
         segments: Object.freeze([
-            'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5',
+            'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
         ]),
         /**
          * ⛔ THE CUTS ARE THE DRIVER'S OWN TRANSITION TICKS, DECLARED HERE
@@ -469,8 +614,8 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * a refusal. (Slice 6d needed exactly that for a candidate segment
          * that stepped out to L4 and back — see `L5_ARROW_BAIT`.)
          */
-        cuts: Object.freeze([183, 230, 475, 822]),
-        endsAt: 1634,
+        cuts: Object.freeze([183, 230, 475, 822, 1634]),
+        endsAt: 1989,
         /**
          * ⛓ THE WALK IS LEGS, NOT SPANS, and that is the M1 generator's shape
          * arriving where §3.6 said it would.
@@ -571,6 +716,55 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                     }),
                 }),
                 Object.freeze({ leg: Object.freeze({ level: 6, targets: Object.freeze([]) }) }),
+                /**
+                 * ⛓⛓⛓ THE BAIT — the second `phases` block, and the first
+                 * whose outcome is a BODY rather than a FLAG. Everything
+                 * about it is `L6_BOB_DROWN` above.
+                 */
+                Object.freeze({ phases: L6_BOB_DROWN }),
+                /**
+                 * ⛓ AND THE CROSSING, PLANNED — against a level record with
+                 * `bob@112,48` GONE, because at tick 120 of the block the
+                 * game's own body is at the bottom of the water.
+                 *
+                 * ⚠ THE WAYPOINTS ARE THE WEAVE AND THEY ARE NOT DECORATION.
+                 * A* ignores an enemy's avoid volume (it plans over walkable
+                 * TILES), so a freehand plan walks row 1 straight into
+                 * `sandtrap@64,16` and stalls. The five targets are the
+                 * room's own answer: row 2 under the first sandtrap pair,
+                 * down to row 3 for columns 6-8 (the detour the drowned body
+                 * was standing in), back up to row 2 under the second pair,
+                 * then east to the stairs.
+                 *
+                 * ⛔⛔ AND THE FIRST WAYPOINT (56,40) IS THE WHOLE MARGIN. It
+                 * is straight DOWN from the stance and buys nothing in path
+                 * length; without it A* leaves the stance DIAGONALLY and the
+                 * player grazes `sandtrap@64,16` AND `sandtrap@64,48` on the
+                 * way past column 4. Driven, that route DIED: two hits in the
+                 * model, and the GAME added a third from `bob@96,16` — the
+                 * live chaser the model has parked at its placement — for a
+                 * silent death at t=198 whose only tell was a jump to the
+                 * boot tile with no level change (trap 142). ⛓ THE GENERAL
+                 * SHAPE: a route that can afford one hit in the MODEL cannot
+                 * afford it in a room with a live mover, because the model's
+                 * damage budget is the game's MINUS whatever the chaser adds.
+                 * Descend first, then travel: zero hits, and 20 ticks SHORTER.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 6,
+                        targets: Object.freeze([
+                            Object.freeze({ x: 56, y: 40 }),
+                            Object.freeze({ x: 88, y: 40 }),
+                            Object.freeze({ x: 88, y: 56 }),
+                            Object.freeze({ x: 152, y: 56 }),
+                            Object.freeze({ x: 152, y: 40 }),
+                            Object.freeze({ x: 216, y: 40 }),
+                        ]),
+                        exit: Object.freeze({ x: 224, y: 32 }),
+                    }),
+                }),
+                Object.freeze({ leg: Object.freeze({ level: 7, targets: Object.freeze([]) }) }),
             ]),
             pins: Object.freeze(['dead_frames']),
             /**

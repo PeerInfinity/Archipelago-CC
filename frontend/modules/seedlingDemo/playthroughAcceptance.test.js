@@ -12,12 +12,12 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-    L5_ARROW_BAIT, PLAYTHROUGH_CHAINS, PlaythroughError, TRUE_INITIAL_BOOT,
+    L5_ARROW_BAIT, L6_BOB_DROWN, PLAYTHROUGH_CHAINS, PlaythroughError, TRUE_INITIAL_BOOT,
     assertChainsWellFormed, assertWalkUnits, isPlaythroughSegment,
     playthroughSegmentNames, playthroughTapeNames, walkGroups,
 } from './playthroughWalk.js';
 import {
-    chainFindings, latchAgreementFindings, witnessedClearFindings,
+    chainFindings, latchAgreementFindings, witnessedClearFindings, witnessedDespawnFindings,
 } from './playthroughAcceptance.js';
 import {
     SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
@@ -132,6 +132,7 @@ const baseTape = (over) => parseTape({
     noHazards: [],
     grants: [],
     persistence: [],
+    despawn: [],
     equips: [],
     pins: ['dead_frames'],
     save: { totem_parts: [], keys: [], seal_parts: [] },
@@ -580,5 +581,103 @@ describe('latchAgreementFindings — two MEASURED states', () => {
         // …and every other field still compares.
         const moved = latchAgreementFindings('X', a, { ...a, 'save.time': 901 });
         expect(moved.find((r) => r.name === 'X: save.time').ok).toBe(false);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE SAME LAW FOR THE V10 FIELD (R7 slice 6e) ─────────────────
+ *
+ * A `despawn` is the one tape field that can take a BODY out of the world
+ * mid-run, so it is fenced exactly as `at` is: no removal without a `phases`
+ * block in the same chain that REMOVES that id and whose end tick is `at`.
+ * Without this row the field would be a place to delete any body at any tick
+ * and call it drowned.
+ */
+describe('witnessedDespawnFindings — no removal nobody measured', () => {
+    const block = (over = {}) => ({
+        id: 'b', why: 'w', provenance: { probe: 'p.mjs' },
+        startsAt: { level: 6, x: 32, y: 16 }, startsAtTick: 10,
+        endsAt: { level: 6, x: 48, y: 16 },
+        steps: [{ label: 'a', ticks: 20 }], ticks: 20,
+        spans: [], removes: [{ level: 6, id: 'bob@112,48' }],
+        outcome: { cleared: [], enemies: 1 }, ...over,
+    });
+    const chainWith = (b, at, id = 'bob@112,48') => ({
+        id: 'test',
+        headline: 'H',
+        segments: ['S1'],
+        walk: { units: [{ leg: { level: 6, targets: [] } }, { phases: b }] },
+        tapes: new Map([
+            ['S1', { tick_count: 50, persistence: [], despawn: at === null ? []
+                : [{ level: 6, id, at }] }],
+            ['H', { tick_count: 50, persistence: [], despawn: at === null ? []
+                : [{ level: 6, id, at }] }],
+        ]),
+    });
+    const run = (c) => witnessedDespawnFindings(c, c.tapes);
+
+    it('a removal at the block\'s own end tick is WITNESSED', () => {
+        const rows = run(chainWith(block(), 30));
+        expect(rows.every((r) => r.ok)).toBe(true);
+        expect(rows.length).toBe(2);       // one per tape that carries it
+        expect(rows[0].detail).toMatch(/p\.mjs/);
+        // ⛓ and the row REPORTS the count the game was asked for, so a
+        // reader can tell which measurement backs it without opening the probe
+        expect(rows[0].detail).toMatch(/asked for 1 body/);
+    });
+
+    it('⛔ MUTATION: a removal at ANY OTHER tick goes RED', () => {
+        for (const at of [29, 31, 0]) {
+            const rows = run(chainWith(block(), at));
+            expect(rows.some((r) => !r.ok), `at=${at}`).toBe(true);
+        }
+    });
+
+    it('⛔ MUTATION: a removal of a body NO block removes goes RED', () => {
+        const rows = run(chainWith(block(), 30, 'bob@96,16'));
+        expect(rows.some((r) => !r.ok)).toBe(true);
+        expect(rows.find((r) => !r.ok).detail).toMatch(/NO phases block/);
+    });
+
+    it('⛔ MUTATION: a block that removes NOTHING witnesses nothing', () => {
+        const rows = run(chainWith(block({ removes: [] }), 30));
+        expect(rows.some((r) => !r.ok)).toBe(true);
+        expect(rows.find((r) => !r.ok).detail).toMatch(/removes nothing/);
+    });
+
+    it('a chain with no removal REPORTS the absence rather than going silent', () => {
+        const rows = run(chainWith(block(), null));
+        expect(rows).toHaveLength(1);
+        expect(rows[0].ok).toBe(true);
+        expect(rows[0].name).toMatch(/no tape declares a mid-run despawn/);
+    });
+});
+
+/**
+ * ⛔ THE BLOCK'S OWN SHAPE REFUSAL for the same field: a block may not move a
+ * body out of the PLANNER's world without asking the GAME how many are left.
+ */
+describe('assertWalkUnits — a removal owes the game a count', () => {
+    const chainOf = (over) => ({
+        id: 't',
+        walk: { units: [{ phases: { ...L6_BOB_DROWN, ...over } }] },
+    });
+
+    it('the committed L6 block is the probe\'s own numbers', () => {
+        expect(L6_BOB_DROWN.ticks).toBe(120);
+        expect(L6_BOB_DROWN.steps.reduce((n, s) => n + s.ticks, 0)).toBe(120);
+        expect(L6_BOB_DROWN.removes).toEqual([{ level: 6, id: 'bob@112,48' }]);
+        expect(L6_BOB_DROWN.outcome).toEqual({ cleared: [], enemies: 1 });
+        expect(assertWalkUnits(chainOf({}))).toEqual({ units: 1, legs: 0, phases: 1 });
+    });
+
+    it('⛔ MUTATION: REMOVES a body with no `enemies` count THROWS', () => {
+        expect(() => assertWalkUnits(chainOf({ outcome: { cleared: [] } })))
+            .toThrow(/declares no `enemies` count/);
+    });
+
+    it('⛔ MUTATION: a removes entry that is not {level, id} THROWS', () => {
+        expect(() => assertWalkUnits(chainOf({ removes: [{ level: 6 }] })))
+            .toThrow(/removes entries are \{level, id\}/);
     });
 });

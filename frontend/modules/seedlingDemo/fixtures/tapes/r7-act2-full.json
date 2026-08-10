@@ -1,8 +1,8 @@
 {
-    "tape_version": 9,
+    "tape_version": 10,
     "game": "seedling",
     "name": "r7-act2-full",
-    "description": "⛓ THE HEADLINE of chain \"act2-to-l6\" — the game's own opening in ONE run, so the 5 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3 and L4 to the L5 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ THE HEADLINE of chain \"act2-to-l7\" — the game's own opening in ONE run, so the 6 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -18,6 +18,14 @@
             "tag": 0,
             "note": "l5-arrow-bait: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l5-arrows.mjs)",
             "at": 1559
+        }
+    ],
+    "despawn": [
+        {
+            "level": 6,
+            "id": "bob@112,48",
+            "at": 1754,
+            "note": "l6-bob-drown: the GAME removed this body itself, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l6-bait.mjs)"
         }
     ],
     "equips": [],
@@ -36,7 +44,7 @@
         "fp": 987286273
     },
     "seam": null,
-    "tick_count": 1634,
+    "tick_count": 1989,
     "inputs": [
         {
             "key": "right",
@@ -412,6 +420,166 @@
             "key": "right",
             "from": 1631,
             "to": 1633
+        },
+        {
+            "key": "right",
+            "from": 1634,
+            "to": 1645
+        },
+        {
+            "key": "left",
+            "from": 1645,
+            "to": 1646
+        },
+        {
+            "key": "right",
+            "from": 1646,
+            "to": 1648
+        },
+        {
+            "key": "left",
+            "from": 1650,
+            "to": 1653
+        },
+        {
+            "key": "right",
+            "from": 1654,
+            "to": 1656
+        },
+        {
+            "key": "down",
+            "from": 1754,
+            "to": 1765
+        },
+        {
+            "key": "up",
+            "from": 1765,
+            "to": 1766
+        },
+        {
+            "key": "down",
+            "from": 1766,
+            "to": 1768
+        },
+        {
+            "key": "up",
+            "from": 1770,
+            "to": 1773
+        },
+        {
+            "key": "down",
+            "from": 1774,
+            "to": 1776
+        },
+        {
+            "key": "right",
+            "from": 1780,
+            "to": 1807
+        },
+        {
+            "key": "left",
+            "from": 1808,
+            "to": 1810
+        },
+        {
+            "key": "down",
+            "from": 1814,
+            "to": 1825
+        },
+        {
+            "key": "up",
+            "from": 1825,
+            "to": 1826
+        },
+        {
+            "key": "down",
+            "from": 1826,
+            "to": 1827
+        },
+        {
+            "key": "up",
+            "from": 1827,
+            "to": 1828
+        },
+        {
+            "key": "down",
+            "from": 1828,
+            "to": 1829
+        },
+        {
+            "key": "right",
+            "from": 1833,
+            "to": 1886
+        },
+        {
+            "key": "left",
+            "from": 1886,
+            "to": 1887
+        },
+        {
+            "key": "right",
+            "from": 1887,
+            "to": 1889
+        },
+        {
+            "key": "left",
+            "from": 1890,
+            "to": 1892
+        },
+        {
+            "key": "up",
+            "from": 1896,
+            "to": 1907
+        },
+        {
+            "key": "down",
+            "from": 1907,
+            "to": 1908
+        },
+        {
+            "key": "up",
+            "from": 1908,
+            "to": 1910
+        },
+        {
+            "key": "down",
+            "from": 1912,
+            "to": 1915
+        },
+        {
+            "key": "up",
+            "from": 1916,
+            "to": 1918
+        },
+        {
+            "key": "right",
+            "from": 1922,
+            "to": 1975
+        },
+        {
+            "key": "left",
+            "from": 1975,
+            "to": 1976
+        },
+        {
+            "key": "right",
+            "from": 1976,
+            "to": 1977
+        },
+        {
+            "key": "left",
+            "from": 1977,
+            "to": 1978
+        },
+        {
+            "key": "right",
+            "from": 1978,
+            "to": 1979
+        },
+        {
+            "key": "right",
+            "from": 1983,
+            "to": 1989
         }
     ]
 }

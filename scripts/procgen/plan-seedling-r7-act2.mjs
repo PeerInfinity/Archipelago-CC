@@ -7,7 +7,7 @@
  * segment and the seam), §15.7 (the ruled segment scope: the minimal valid
  * dependency chain, not the strict AP total order), §16.9 (what slice 6c
  * inherits). Chain data: `frontend/modules/seedlingDemo/playthroughWalk.js`,
- * chain `act2-to-l6`.
+ * chain `act2-to-l7`.
  *
  * ── ⛓ WHAT THIS ADDS TO `plan-seedling-r7-ends-meet.mjs` ──────────────
  *
@@ -59,7 +59,7 @@ const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
-const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l6')
+const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l7')
     .slice('--chain='.length);
 
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
@@ -120,6 +120,10 @@ function tapeJson(obj, description) {
         noHazards: parsed.noHazards,
         grants: parsed.grants,
         persistence: parsed.persistence,
+        // ⛓ R7 slice 6e: v10's witnessed body removals, beside the clears
+        // they are modelled on. Written only when the tape carries any —
+        // `requiredTapeVersion` stamps 10 for exactly that reason.
+        ...(parsed.despawn.length ? { despawn: parsed.despawn } : {}),
         equips: parsed.equips,
         pins: parsed.pins,
         save: parsed.save,
@@ -173,7 +177,40 @@ function emit(name, json) {
  * would be false — which is why the entries carry `at` and why
  * `witnessedClearFindings` refuses any `at` no block earns there.
  */
-const levelSource = atlasLevelSource();
+const baseLevelSource = atlasLevelSource();
+/**
+ * ⛓⛓⛓ R7 slice 6e: THE PLANNER'S WORLD LOSES A BODY WHEN THE RUN'S DOES.
+ *
+ * A `phases` block's `removes` moves the world the PLANNER sees from the
+ * block's end onward, exactly as its `earns` does — and for a body the edit
+ * has to be the same one `levelRun` makes, which is a LEVEL RECORD filter
+ * and not a census filter (see `levelRun`'s `recordFor`: one body must not
+ * be able to be gone for the contact test and present for the route).
+ *
+ * ⚠ The wrapper is rebuilt per group rather than mutated, so a group planned
+ * BEFORE a removal cannot see it — which is the whole content of "the model
+ * is told at the block's own end tick".
+ */
+const idOfEntity = (e) => `${e.type}@${e.x},${e.y}`;
+function levelSourceWithout(removed) {
+    if (removed.length === 0) return baseLevelSource;
+    const byLevel = new Map();
+    for (const r of removed) {
+        if (!byLevel.has(r.level)) byLevel.set(r.level, new Set());
+        byLevel.get(r.level).add(r.id);
+    }
+    return (n) => {
+        const rec = baseLevelSource(n);
+        const gone = byLevel.get(n);
+        if (!gone) return rec;
+        const kept = rec.entities.filter((e) => !gone.has(idOfEntity(e)));
+        if (kept.length === rec.entities.length) {
+            throw new Error(`level ${n} has no placement named by [${[...gone].join(' ')}]`);
+        }
+        return { ...rec, entities: kept };
+    };
+}
+const levelSource = baseLevelSource;
 const RELAX = {
     noclip: false,
     noDamage: false,
@@ -218,9 +255,9 @@ const { createLevelRun } =
  * spans really land, and the driven arm says where the GAME lands. Three
  * statements, one number.
  */
-function followPhases(block, boot, persistence) {
+function followPhases(block, boot, persistence, source) {
     const run = createLevelRun({
-        levelSource,
+        levelSource: source,
         boot: { ...boot },
         noclip: false,
         noDamage: false,
@@ -248,11 +285,13 @@ const PHASE_BLOCKS = [];
 let cursorBoot = { ...TRUE_INITIAL_BOOT };
 let cursorTick = 0;
 const cleared = [];
+/** ⛓ R7 slice 6e: the bodies removed SO FAR, the `cleared` list's twin. */
+const removed = [];
 console.log('');
 for (const group of walkGroups(chain)) {
     if (group.kind === 'legs') {
         const plan = synthesizeLegs(group.legs, {
-            levelSource,
+            levelSource: levelSourceWithout(removed),
             boot: { ...cursorBoot },
             name: chain.headline,
             relax: { ...RELAX, persistence: cleared.map((c) => ({ ...c })) },
@@ -299,13 +338,17 @@ for (const group of walkGroups(chain)) {
         console.log(`   phases ${p.id}: ${p.steps.map((s) => `${s.label} ${s.ticks}`)
             .join(' + ')} = ${p.ticks} ticks from t=${cursorTick}, ${p.spans.length} spans`);
         console.log(`      earns [${(p.earns ?? []).map((e) => `${e.level},${e.tag}`)
+            .join(' ') || 'nothing'}]; removes [${(p.removes ?? []).map((r) => r.id)
             .join(' ') || 'nothing'}]; the game is asked for `
             + `[${p.outcome.cleared.join(' ')}] at t=${cursorTick + p.ticks}`);
         WALK_INPUTS.push(...p.spans.map(
             (s) => ({ key: s.key, from: s.from + cursorTick, to: s.to + cursorTick })));
         PHASE_BLOCKS.push({ block: p, from: cursorTick, to: cursorTick + p.ticks });
         cursorTick += p.ticks;
-        const landed = followPhases(p, cursorBoot, cleared);
+        // ⚠ THE FOLLOW USES THE WORLD THE BLOCK STARTED IN, not the one it
+        // ends in: its own removals land at its END tick, so a follow that
+        // pre-applied them would walk a room the block never walked.
+        const landed = followPhases(p, cursorBoot, cleared, levelSourceWithout(removed));
         check(`⛔ the phases block "${p.id}" lands where it says it lands, within `
             + `${DEFAULT_TOLERANCE} px (the MODEL following its spans)`,
         landed.level === p.endsAt.level
@@ -320,6 +363,7 @@ for (const group of walkGroups(chain)) {
         // to move a crossing by one tick.
         cursorBoot = { level: landed.level, x: landed.x - 8, y: landed.y - 8 };
         for (const e of p.earns ?? []) cleared.push({ ...e });
+        for (const r of p.removes ?? []) removed.push({ ...r });
     }
 }
 console.log(`\n   TOTAL ${cursorTick} ticks, ${WALK_INPUTS.length} spans, `
@@ -477,6 +521,28 @@ function timedClearsFor(from, to) {
     return out;
 }
 
+/**
+ * ⛓ R7 slice 6e: the v10 removals a tape must carry, derived from the blocks
+ * exactly as `timedClearsFor` derives the clears — one entry per `removes`,
+ * at the block's own END tick, in the tape's own tick frame.
+ */
+function timedDespawnsFor(from, to) {
+    const out = [];
+    for (const { block, to: end } of PHASE_BLOCKS) {
+        for (const r of block.removes ?? []) {
+            if (end < from || end > to) continue;
+            out.push({
+                level: r.level,
+                id: r.id,
+                at: end - from,
+                note: `${block.id}: the GAME removed this body itself, witnessed at this `
+                    + `tick by a truncated arm (${block.provenance.probe})`,
+            });
+        }
+    }
+    return out;
+}
+
 {
     const spans = chainSpans(chain);
     const base = {
@@ -487,6 +553,7 @@ function timedClearsFor(from, to) {
         noHazards: [],
         grants: [],
         persistence: [],
+        despawn: [],
         equips: [],
         pins: [...chain.walk.pins],
         save: { totem_parts: [], keys: [], seal_parts: [] },
@@ -500,18 +567,23 @@ function timedClearsFor(from, to) {
         name: chain.headline,
         boot: { ...TRUE_INITIAL_BOOT },
         persistence: timedClearsFor(0, chain.endsAt),
+        despawn: timedDespawnsFor(0, chain.endsAt),
         tick_count: chain.endsAt,
         inputs: chainInputsFor(WALK_INPUTS, 0, chain.endsAt),
     }, `⛓ THE HEADLINE of chain "${chain.id}" — the game's own opening in ONE run, so `
         + `the ${chain.segments.length} segments have something to be tick-for-tick `
         + 'IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no '
-        + 'persistence clears and collision ON, through L2, L3 and L4 to the L5 '
-        + 'arrival. L4 is the room slice 6b could not plan: its column 2 is walled at '
+        + 'persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the '
+        + 'L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at '
         + 'every row but the cell `pushableblock@32,64` stands in, so the walk holds '
         + '`button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits '
         + '0->1->2->3, gone by t~158 of that segment) and then LEANS the block from '
         + '(2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with '
-        + 'NO WEAPON and the walk crosses the cell the lock was standing on. '
+        + 'NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: '
+        + 'the room has no crossing at all while its two bobs stand in the two detour '
+        + 'cells, and the ROOM removes one — a stance in row 1 column 3 sends '
+        + '`bob@112,48` across the water to drown while `sandtrap@64,16` walls the '
+        + 'other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. '
         + '`pins: ["dead_frames"]` makes `save.time` '
         + 'update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once '
         + 'per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.'));
@@ -523,6 +595,7 @@ function timedClearsFor(from, to) {
         name: seg1Name,
         boot: { ...TRUE_INITIAL_BOOT },
         persistence: timedClearsFor(spans[0].from, spans[0].to),
+        despawn: timedDespawnsFor(spans[0].from, spans[0].to),
         tick_count: spans[0].to,
         inputs: chainInputsFor(WALK_INPUTS, spans[0].from, spans[0].to),
     };
@@ -565,6 +638,7 @@ function timedClearsFor(from, to) {
                 ...(blocks.persistence ?? []),
                 ...timedClearsFor(spans[i].from, spans[i].to),
             ],
+            despawn: timedDespawnsFor(spans[i].from, spans[i].to),
             tick_count: spans[i].to - spans[i].from,
             inputs: chainInputsFor(WALK_INPUTS, spans[i].from, spans[i].to),
         };

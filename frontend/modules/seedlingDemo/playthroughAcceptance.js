@@ -190,6 +190,74 @@ export function witnessedClearFindings(chain, tapes) {
 }
 
 /**
+ * ⛓⛓⛓ THE SAME LAW FOR THE SAME REASON, ONE CLASS ALONG — R7 slice 6e.
+ *
+ * A v10 tape may declare `despawn: [{level, id, at}]`: a BODY the run's own
+ * play removed at tick `at` (see `tapeFormat`'s v10 docblock). The rule is
+ * `witnessedClearFindings`' with `earns` replaced by `removes`:
+ *
+ *   **NO `despawn` WITHOUT A `phases` BLOCK IN THE SAME CHAIN WHOSE
+ *   `removes` NAMES THAT `(level, id)` AND WHOSE END TICK IS `at`.**
+ *
+ * ⛔ AND IT IS A SEPARATE FUNCTION RATHER THAN A PARAMETERISED ONE. The two
+ * fields are different claims — a clear is a FLAG the game wrote and a
+ * despawn is a BODY the game removed — and their outcome obligations differ
+ * in kind (`persistence_cleared` names the flag; `--mobiles` returns a
+ * COUNT). Folding them would produce one message that names neither
+ * accurately, which is the whole failure mode a derived finding exists to
+ * avoid.
+ *
+ * ⚠ DERIVED BY MAPPING OVER THE TAPES, per trap 119, and the empty case
+ * REPORTS the absence — same construction, same reason.
+ */
+export function witnessedDespawnFindings(chain, tapes) {
+    const blocks = (chain.walk?.units ?? []).filter((u) => u.phases).map((u) => u.phases);
+    const rows = [];
+    const startOf = new Map();
+    let running = 0;
+    for (const name of chain.segments) {
+        startOf.set(name, running);
+        running += tapes.get(name)?.tick_count ?? 0;
+    }
+    startOf.set(chain.headline, 0);
+    for (const name of [...chain.segments, chain.headline]) {
+        const t = tapes.get(name);
+        if (!t) continue;
+        const base = startOf.get(name);
+        for (const d of t.despawn ?? []) {
+            const remover = blocks.find((b) => (b.removes ?? []).some(
+                (r) => r.level === d.level && r.id === d.id)
+                && b.startsAtTick + b.ticks - base === d.at);
+            rows.push({
+                name: `chain ${chain.id}: ⛓ ${name}'s removal of ${d.id} from level `
+                    + `${d.level} at tick ${d.at} is a phases block's WITNESSED outcome`,
+                ok: Boolean(remover),
+                detail: remover
+                    ? `removed by "${remover.id}", whose ${remover.ticks} ticks end there `
+                        + `(provenance: ${remover.provenance.probe}); the game was asked `
+                        + `for ${remover.outcome.enemies} body/bodies left`
+                    : 'NO phases block in this chain removes that body at that tick — a '
+                        + 'despawn nobody measured is a body deleted for the model\'s '
+                        + 'convenience. The chain\'s blocks are '
+                        + `[${blocks.map((b) => `${b.id} [${b.startsAtTick},`
+                            + `${b.startsAtTick + b.ticks}) removes `
+                            + `${(b.removes ?? []).map((r) => r.id).join(' ') || 'nothing'}`)
+                            .join('; ') || 'none'}]`,
+            });
+        }
+    }
+    if (rows.length === 0) {
+        rows.push({
+            name: `chain ${chain.id}: no tape declares a mid-run despawn`,
+            ok: true,
+            detail: 'nothing to witness — the row is here so that the absence is '
+                + 'REPORTED rather than silent',
+        });
+    }
+    return rows;
+}
+
+/**
  * One chain's findings. `replayed` is `name -> {stream, status, seam}` and
  * `tapes` is `name -> parsed tape`.
  *
@@ -218,6 +286,7 @@ export function chainFindings(chain, tapes, replayed) {
 
     // ── THE WITNESSED-CLEAR LAW (slice 6d) ────────────────────────────
     found.push(...witnessedClearFindings(chain, tapes));
+    found.push(...witnessedDespawnFindings(chain, tapes));
 
     // ── 0. THE CUSTODY BASE CASE ──────────────────────────────────────
     // ⛔ A chain whose first segment inherits a staged state proves nothing
@@ -232,7 +301,10 @@ export function chainFindings(chain, tapes, replayed) {
         bootsInitial && first.seam === null
         && first.save.keys.length === 0 && first.save.totem_parts.length === 0
         && first.save.seal_parts.length === 0 && first.grants.length === 0
-        && first.persistence.length === 0,
+        // ⛓ R7 slice 6e: and no v10 removal either. A segment 1 that BOOTED
+        // a body out of the world would be the custody claim's exact
+        // failure, one field newer than the one this line was written for.
+        && first.persistence.length === 0 && (first.despawn ?? []).length === 0,
         `boot ${JSON.stringify(first.boot)} (want ${JSON.stringify(TRUE_INITIAL_BOOT)}), `
         + `seam ${first.seam === null ? 'none' : JSON.stringify(first.seam)}, `
         + `${first.grants.length} grant(s), ${first.persistence.length} clear(s), `
