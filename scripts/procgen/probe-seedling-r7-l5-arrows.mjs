@@ -33,6 +33,21 @@
  * arms the lock, and 100 alpha steps later `turnOff()` writes
  * `Game.setPersistence(0, false)` — the durable clear the walk then crosses.
  *
+ * ⛔⛔ AND AN ARROW DOES **1** DAMAGE, NOT 5. `Enemy.hit`'s signature is
+ * `hit(f:Number, p:Point, d:Number = 1, t:String = "")` — the first argument
+ * is the KNOCKBACK FORCE and the damage is the THIRD, which the Arrow never
+ * passes. So `hit(v.length, new Point(x, y))` is force 5, damage 1, against
+ * `Enemy.hitsMax` 3 — **three landed arrows per Bob**, spaced by
+ * `hitsTimerMax` 30 i-frames, so ~60-90 ticks of standing in a lane. The
+ * volley cadence (3 arrows / 10 ticks) does not change that: only one of a
+ * volley can land while the i-frames run.
+ *
+ * ⚠ The measurement agreed with this all along and an earlier reading of
+ * the arithmetic did not: `stand`'s trace shows a bob at **h2** at t=115 and
+ * dead by t=187, which is 1-damage-plus-i-frames and is impossible under a
+ * one-arrow kill. The lesson is the arc's own: `hit(5, ...)` reads like five
+ * damage and is not, and only the SIGNATURE says so.
+ *
  * ⚠ NOTHING OFFLINE MODELS THIS. `combat.js` prices an arrowtrap as damage
  * to the PLAYER (`seedlingDamageSites.Arrow`); no module in the tree models
  * an Arrow killing an Enemy. So the planner cannot plan this fight and the
@@ -261,10 +276,12 @@ const ARMS = [
  * mobile trace prints where it got to).
  *
  * `hold` is the fight: `ArrowTrap.shootTimerMax` is 10, so a volley lands
- * every 10 ticks; `Arrow`'s damage is `v.length` = 5 against `Bob.hitsMax`
- * 3, so ONE arrow kills; then `Lock.activationStep` drains alpha at 0.01 per
- * update — **100 more ticks before `turnOff()` writes the clear**. A hold
- * that stopped at the kill would report a lock that was about to open.
+ * every 10 ticks, but an Arrow does **1** damage (see the header — the 5 is
+ * the knockback force) and `Enemy.hitsTimerMax` is 30, so a Bob needs THREE
+ * landed arrows over ~60-90 ticks. Then `Lock.activationStep` drains alpha
+ * at 0.01 per update — **100 more ticks before `turnOff()` writes the
+ * clear**. A hold that stopped at the kill would report a lock that was
+ * about to open.
  */
 /**
  * ⛔⛔ AND THE FIRST CUT OF THESE NUMBERS KILLED THE PLAYER, SILENTLY.
@@ -300,10 +317,13 @@ const ARMS = [
  *     t=187  bobs=1  [(56,84) h0]
  *
  * ⇒ **the left pair dies to the traps on its own**, and the `h2` is the
- * receipt: they start in tile column 1, which is `arrowtrap@16,16`'s own lane
- * (x 20/24/28), and standing on the button rains arrows onto them where they
- * already are. It is not drowning and it is not the player — `hits` stays 0
- * for all 700 ticks and the pair is dead by t=187.
+ * receipt twice over: they start in tile column 1, which is
+ * `arrowtrap@16,16`'s own lane (x 20/24/28), so standing on the button rains
+ * arrows onto them where they already are — AND the count is climbing ONE AT
+ * A TIME, which is what pins the damage at 1 per landed arrow rather than at
+ * the 5 that `hit(v.length, ...)` reads like. It is not drowning and it is
+ * not the player: `hits` stays 0 for all 700 ticks and the pair is dead by
+ * t=187.
  *
  * So only ONE bob ever needed baiting, and the first cut sent the player down
  * into all three at once and got it killed at t=187 during the walk back.
