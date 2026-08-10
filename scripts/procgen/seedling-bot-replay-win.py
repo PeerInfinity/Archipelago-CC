@@ -91,6 +91,10 @@ def main():
     ap.add_argument("--out", required=True, help="Windows path for the stream JSON")
     ap.add_argument("--deadline-sec", type=float, default=600.0)
     ap.add_argument("--progress", help="Windows path for a live progress sidecar")
+    ap.add_argument("--mobiles", action="store_true",
+                    help="sample botMobiles on every poll and emit the trace "
+                         "(R7 slice 6 — diagnosis only; OFF by default because the "
+                         "block is KBs and the poll runs 4x/sec)")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
@@ -251,6 +255,7 @@ def main():
                           f"({after.get('x')},{after.get('y')})", flush=True)
 
                 t0 = time.time()
+                mobiles = []
                 # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
                 # caller runs this with `execFileSync` and a pipe, so nothing
                 # printed here is visible until the process exits — and an R1
@@ -264,6 +269,27 @@ def main():
                 def note_progress():
                     status = bot_json(page, "botStatus")
                     now = time.time()
+                    # ── R7 slice 6: THE MOBILE TRACE, opt-in ─────────────
+                    #
+                    # ⛔ OFF BY DEFAULT AND THAT IS LOAD-BEARING. `botMobiles`
+                    # is a few KB per sample and this poll runs four times a
+                    # second; an R1 walk is ten minutes, so an always-on trace
+                    # would be tens of megabytes on every tape the
+                    # differential replays. No existing caller passes the flag
+                    # and the output key is ABSENT (not null) without it, so
+                    # the 121-fixture contract is untouched.
+                    #
+                    # ⚠ It is a SAMPLE, not a tick log — the poll is wall-clock
+                    # and the game is frame-clocked, so `t` on each row is the
+                    # tick the sample was taken at and consecutive rows are ~7
+                    # ticks apart. That is a diagnosis instrument for choreo-
+                    # graphy (where did the enemy go), never a measurement.
+                    if args.mobiles:
+                        try:
+                            mobiles.append(bot_json(page, "botMobiles"))
+                        except RuntimeError:
+                            pass  # a build without the callback traces nothing
+
                     if args.progress and now - last_written[0] >= 1.0:
                         last_written[0] = now
                         with open(args.progress, "w", encoding="utf-8") as fh:
@@ -306,6 +332,14 @@ def main():
                     "status": status,
                     "seam": seam,
                 })
+                if args.mobiles:
+                    # The last sample is taken AFTER the tape finished, so the
+                    # trace always ends on the state the status block describes.
+                    try:
+                        mobiles.append(bot_json(page, "botMobiles"))
+                    except RuntimeError:
+                        pass
+                    windows[-1]["mobiles"] = mobiles
 
             # ⚠ THE SHAPE OF `--out` IS THE SINGLE-TAPE SHAPE FOR ONE TAPE,
             # unchanged, so all 57 committed fixtures keep the same contract
@@ -314,15 +348,21 @@ def main():
             with open(args.out, "w", encoding="utf-8") as fh:
                 if args.tape:
                     w = windows[0]
-                    json.dump({"stream": w["stream"], "status": w["status"],
-                               "seam": w.get("seam")}, fh)
+                    one = {"stream": w["stream"], "status": w["status"],
+                           "seam": w.get("seam")}
+                    # ⚠ ABSENT, not null, when the flag is off — the 121
+                    # committed fixtures' contract is "these three keys".
+                    if args.mobiles:
+                        one["mobiles"] = w.get("mobiles")
+                    json.dump(one, fh)
                 else:
                     json.dump({"windows": [
                         {"label": w["label"], "stream": w["stream"],
                          "status": w["status"], "seam": w.get("seam"),
                          "boundary_before": w["before"],
                          "boundary_after_start": w["after_start"],
-                         "moved_at_boundary": w["moved_at_boundary"]}
+                         "moved_at_boundary": w["moved_at_boundary"],
+                         **({"mobiles": w.get("mobiles")} if args.mobiles else {})}
                         for w in windows]}, fh)
         except Exception as exc:  # noqa: BLE001 — report and fail loudly
             print(f"REPLAY_FAIL {type(exc).__name__}: {exc}", flush=True)
