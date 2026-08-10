@@ -94,7 +94,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
     process.exit(0);
 }
 
-const { parseTape, TAPE_VERSION } =
+const { gameVisibleTape, parseTape, TAPE_VERSION } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { synthesizeLegs } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV2.js'));
@@ -173,7 +173,8 @@ function replayOnWindows(name, tapeObj, deadlineSec) {
     writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
         readFileSync(WIN_DRIVER));
     const outWsl = join(WIN_SCRATCH_WSL, `stream-${name}.json`);
-    writeFileSync(join(WIN_SCRATCH_WSL, `tape-${name}.json`), JSON.stringify(tapeObj));
+    writeFileSync(join(WIN_SCRATCH_WSL, `tape-${name}.json`),
+        JSON.stringify(gameVisibleTape(tapeObj)));
     try { unlinkSync(outWsl); } catch { /* first run */ }
     const progressWsl = join(WIN_SCRATCH_WSL, `progress-${name}.json`);
     try { unlinkSync(progressWsl); } catch { /* first run */ }

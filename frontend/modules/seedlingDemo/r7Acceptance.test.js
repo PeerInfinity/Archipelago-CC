@@ -748,8 +748,11 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
         inputs: [], tick_count: 0,
     };
 
-    it('TAPE_VERSION is 8 and v8 parses', () => {
-        expect(TAPE_VERSION).toBe(8);
+    it('TAPE_VERSION is 9 and v8 parses', () => {
+        // ⚠ The seam block arrived at v8 and did not move at the v9 bump —
+        // v9's only new feature is `persistence[].at`. The pin follows the
+        // constant so the bump is a NAMED edit rather than a silent one.
+        expect(TAPE_VERSION).toBe(9);
         expect(parseTape({ ...base, seam: { hits_max: 4 } }).seam.hits_max).toBe(4);
     });
 

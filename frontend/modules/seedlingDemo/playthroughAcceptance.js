@@ -120,6 +120,76 @@ export function latchAgreementFindings(label, a, b, labels = ['A', 'B']) {
 }
 
 /**
+ * ⛓⛓⛓ THE LAW THAT KEEPS "WITNESSED" MECHANICAL — R7 slice 6d, ⚖ ruled.
+ *
+ * A v9 tape may declare `persistence: [{level, tag, at}]`: a clear the run's
+ * own play made at tick `at`, which the model applies there instead of at
+ * boot (see `tapeFormat`'s v9 docblock for the whole ruling). That field is
+ * powerful enough to be dangerous — a staged grant with extra steps — so it
+ * is fenced by one rule:
+ *
+ *   **NO `at`-CLEAR WITHOUT A `phases` BLOCK IN THE SAME CHAIN WHOSE
+ *   `earns` CARRIES THAT `(level, tag)` AND WHOSE END TICK IS `at`.**
+ *
+ * The block is where the witness lives: its `provenance` names the probe
+ * that measured the mechanism, and the planner's own truncated arm asserts
+ * the GAME's `persistence_cleared` at exactly that tick. So this row is what
+ * connects a tape field to a measurement — and without it the field would be
+ * a place to type any flag at any tick and call it earned.
+ *
+ * ⚠ DERIVED BY MAPPING OVER THE TAPES, per trap 119: one row per `at`-clear
+ * found, so a clear added tomorrow cannot go unreported, and a chain with no
+ * `at`-clears gets one row saying so rather than silence.
+ */
+export function witnessedClearFindings(chain, tapes) {
+    const blocks = (chain.walk?.units ?? []).filter((u) => u.phases).map((u) => u.phases);
+    const rows = [];
+    // Each segment's start, in the WALK's own ticks — derived from the tape
+    // lengths the planner produced, never stored.
+    const startOf = new Map();
+    let running = 0;
+    for (const name of chain.segments) {
+        startOf.set(name, running);
+        running += tapes.get(name)?.tick_count ?? 0;
+    }
+    startOf.set(chain.headline, 0);
+    for (const name of [...chain.segments, chain.headline]) {
+        const t = tapes.get(name);
+        if (!t) continue;
+        const base = startOf.get(name);
+        for (const c of t.persistence) {
+            if (c.at === undefined) continue;
+            const earner = blocks.find((b) => (b.earns ?? []).some(
+                (e) => e.level === c.level && e.tag === c.tag)
+                && b.startsAtTick + b.ticks - base === c.at);
+            rows.push({
+                name: `chain ${chain.id}: ⛓ ${name}'s clear of {${c.level},${c.tag}} at `
+                    + `tick ${c.at} is a phases block's WITNESSED outcome`,
+                ok: Boolean(earner),
+                detail: earner
+                    ? `earned by "${earner.id}", whose ${earner.ticks} ticks end there `
+                        + `(provenance: ${earner.provenance.probe})`
+                    : 'NO phases block in this chain earns that tag at that tick — an '
+                        + '`at`-clear nobody measured is a staged grant with extra steps. '
+                        + `The chain's blocks are [${blocks.map((b) => `${b.id} `
+                            + `[${b.startsAtTick},${b.startsAtTick + b.ticks}) earns `
+                            + `${(b.earns ?? []).map((e) => `{${e.level},${e.tag}}`)
+                                .join('') || 'nothing'}`).join('; ') || 'none'}]`,
+            });
+        }
+    }
+    if (rows.length === 0) {
+        rows.push({
+            name: `chain ${chain.id}: no tape declares a mid-run clear`,
+            ok: true,
+            detail: 'nothing to witness — the row is here so that the absence is '
+                + 'REPORTED rather than silent',
+        });
+    }
+    return rows;
+}
+
+/**
  * One chain's findings. `replayed` is `name -> {stream, status, seam}` and
  * `tapes` is `name -> parsed tape`.
  *
@@ -145,6 +215,9 @@ export function chainFindings(chain, tapes, replayed) {
     const seg = (n) => replayed.get(n);
     const tape = (n) => tapes.get(n);
     const headline = seg(chain.headline);
+
+    // ── THE WITNESSED-CLEAR LAW (slice 6d) ────────────────────────────
+    found.push(...witnessedClearFindings(chain, tapes));
 
     // ── 0. THE CUSTODY BASE CASE ──────────────────────────────────────
     // ⛔ A chain whose first segment inherits a staged state proves nothing

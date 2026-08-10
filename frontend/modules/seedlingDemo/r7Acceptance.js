@@ -843,7 +843,15 @@ export function seamBootFields(tape) {
     // order and the parser sorts the tape's clears the same way, so the two
     // lists are directly comparable. `note` is authoring documentation and
     // the game has no field for it.
+    // ⛔⛔ AND A v9 `at`-CLEAR IS NOT A BOOT CLEAR. It says the RUN cleared
+    // the flag at tick `at`, so at tick 0 the flag is still SET — a boot
+    // side that counted it would claim the segment inherited something its
+    // predecessor never latched, and the seam would go red on a state
+    // nobody actually declared. Found exactly that way: the first chain to
+    // carry one reddened `save.levelPersistence` with `exit [] vs boot
+    // [{5,0}]`, which is the seam doing its job.
     out['save.levelPersistence'] = tape.persistence
+        .filter((c) => c.at === undefined)
         .map((c) => ({ level: c.level, tag: c.tag }));
 
     // ── pins: a name LIST becomes the latch's boolean record ──────────

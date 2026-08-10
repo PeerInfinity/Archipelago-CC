@@ -59,7 +59,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
     process.exit(0);
 }
 
-const { parseTape, TAPE_VERSION } =
+const { gameVisibleTape, parseTape, TAPE_VERSION } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
@@ -152,7 +152,8 @@ async function latchOf(label, tapeObj) {
         await page.click('#btn-start');
         await waitFor(page, 'bot callbacks',
             () => page.evaluate(() => !!(window.__swfBridge?.game?.botSeam)));
-        const loaded = await call(page, 'botLoadTape', JSON.stringify(parseTape(tapeObj)));
+        const loaded = await call(page, 'botLoadTape',
+            JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
         if (loaded !== 'ok') throw new Error(`botLoadTape(${label}): ${loaded}`);
         const started = await call(page, 'botStart');
         if (started !== 'ok') throw new Error(`botStart(${label}): ${started}`);

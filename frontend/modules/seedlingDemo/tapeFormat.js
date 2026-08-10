@@ -126,10 +126,10 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 8;
+export const TAPE_VERSION = 9;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
 /**
  * ── Version 7: the RNG STATE ──────────────────────────────────────────
@@ -435,11 +435,50 @@ function requireFiniteNumber(value, what) {
  * persistence reader guards on `tag >= 0`, so a clear for -1 could never
  * despawn anything — it would be a line in the audit list that does
  * nothing, which is worse than an absent one.
+ *
+ * ── ⛓⛓⛓ VERSION 9: `at` — THE WITNESSED MID-RUN CLEAR ────────────────
+ *
+ * ⚖ RULED (the orchestrating session, R7 slice 6d). A clear may carry
+ * `at: <tick>`, and then it is applied AT THAT TICK instead of before the
+ * first one. It exists for one measured situation and its shape is that
+ * situation's shape:
+ *
+ * L5's `lock@48,112 {5,0}` is a KILL-LOCK the game removes MID-RUN, when
+ * arrows the player never fired kill the last bob. Nothing in this tree
+ * models an Arrow killing an Enemy (§16.4 refuses it by name — the chaser's
+ * position is the unmodelled term), so a segment that walks through that
+ * cell is a recording the MODEL cannot replay: measured, byte-identical for
+ * 816 ticks and then 0.585 px short at the lock's face. The alternative —
+ * split so the crossing BOOTS the clear — is refuted by the GAME: leaving
+ * the room respawns every enemy in it while the clear stays durable, so the
+ * fight does not survive the door.
+ *
+ * ⛔⛔ WHY THIS IS NOT A STAGED GRANT, in three parts:
+ *  1. **The boot stays honest.** `at` says the run's own play cleared the
+ *     flag at tick T; the boot block still declares the state the segment
+ *     really started in, so `chainFindings`' custody claim is untouched.
+ *  2. **`at` is NEVER FITTED.** It is the END TICK of the `phases` block
+ *     that earns it — the same tick a driven arm already asserts the clear
+ *     at, by reading the game's own `persistence_cleared` in a truncated
+ *     run. Nothing between the true clear and the block's end reads the
+ *     flag.
+ *  3. **The check stays TWO-SIDED.** The differential compares the model's
+ *     expected clear set against the game's `persistence_cleared`, so a
+ *     declaration the game did not honour reddens the persistence row. And
+ *     `playthroughAcceptance` adds the law that keeps "witnessed"
+ *     mechanical: NO `at`-CLEAR WITHOUT A `phases` BLOCK WHOSE `earns`
+ *     CARRIES THAT TAG AND WHOSE END TICK IS `at`.
+ *
+ * ⚠ REFUSED BOTH WAYS (trap 98). A tape below version 9 may not carry `at`
+ * at all — the field changes WHEN a clear applies, which is replay
+ * semantics, and a v8 reader silently treating it as a boot clear would
+ * replay a different walk. A v9 tape's `at` must be an integer in
+ * `[0, tick_count]`.
  */
 export const TAGS_PER_LEVEL = 30;   // Game.as:525
 export const LEVEL_COUNT = 116;     // Game.levels.length
 
-function parsePersistence(raw) {
+function parsePersistence(raw, version, tickCount) {
     if (!Array.isArray(raw.persistence)) {
         fail('persistence must be an array of {level, tag, note} on a tape_version 3 '
             + `tape ([] when nothing is cleared), got ${JSON.stringify(raw.persistence)}`);
@@ -464,6 +503,22 @@ function parsePersistence(raw) {
             fail(`${where}.note must be a string naming what it despawns, got `
                 + `${JSON.stringify(c.note)}`);
         }
+        // ⛔ REFUSED BOTH WAYS, per the docblock: below v9 the field cannot
+        // exist, at v9 it must be a tick this tape actually has.
+        if (c.at !== undefined) {
+            if (version < 9) {
+                fail(`${where} declares at: ${JSON.stringify(c.at)}, but tape_version `
+                    + `${version} has no mid-run clear — a clear applies before the `
+                    + 'first live tick BY DEFINITION below version 9, so a reader that '
+                    + 'ignored this would replay a different walk. Bump the tape.');
+            }
+            requireInt(c.at, `${where}.at`);
+            if (c.at < 0 || c.at > tickCount) {
+                fail(`${where}.at ${c.at} is outside this tape's [0, ${tickCount}]. A `
+                    + 'clear that lands after the last tick never happens, and one at a '
+                    + 'negative tick is a boot clear spelled confusingly.');
+            }
+        }
         const key = `${c.level}:${c.tag}`;
         if (seen.has(key)) {
             fail(`${where} duplicates level ${c.level} tag ${c.tag}. A clear is `
@@ -471,7 +526,10 @@ function parsePersistence(raw) {
                 + 'derivation rather than a harmless repeat.');
         }
         seen.add(key);
-        return { level: c.level, tag: c.tag, note: c.note ?? '' };
+        return {
+            level: c.level, tag: c.tag, note: c.note ?? '',
+            ...(c.at === undefined ? {} : { at: c.at }),
+        };
     });
     // Sorted so a re-derived list that changed ORDER is not a diff.
     clears.sort((a, b) => a.level - b.level || a.tag - b.tag);
@@ -1192,7 +1250,17 @@ export function parseTape(input) {
             + 'persistence: [] BY DEFINITION — the build had no such field to read. '
             + 'Bump tape_version to 3 to clear anything.');
     }
-    const persistence = version >= 3 ? parsePersistence(raw) : [];
+    /**
+     * ⚠ The tick bound a v9 `at` is checked against is READ HERE and
+     * validated below. `raw.tick_count` is the declaration; the fallback is
+     * the same "longest span wins" the real parse uses, so an `at` past the
+     * end is refused whether or not the tape spells its length out.
+     */
+    const declaredTicks = Number(raw.tick_count ?? Math.max(0,
+        ...(Array.isArray(raw.inputs) ? raw.inputs.map((s) => Number(s?.to) || 0) : [0])));
+    const persistence = version >= 3
+        ? parsePersistence(raw, version, Number.isFinite(declaredTicks) ? declaredTicks : 0)
+        : [];
     // The VALUE-not-presence rule again, one version on. Written out rather
     // than folded into a loop because each field's message names the build
     // that could not read it, and that sentence is what a reader hitting the
@@ -1372,6 +1440,7 @@ export function parseTape(input) {
         }))),
         persistence: Object.freeze(persistence.map((c) => Object.freeze({
             level: c.level, tag: c.tag, note: c.note,
+            ...(c.at === undefined ? {} : { at: c.at }),
         }))),
         equips: Object.freeze(equips.map((e) => Object.freeze({
             t: e.t, slot: e.slot,
@@ -1436,6 +1505,68 @@ export function keyEdgesAt(tape, t) {
  * it, because writing version 1's own semantics back into a version 1 file
  * would rewrite all eleven committed fixtures for no change in meaning.
  */
+/**
+ * ── ⛓⛓⛓ THE GAME-VISIBLE PROJECTION (R7 slice 6d, ⚖ ruled) ───────────
+ *
+ * The tape a GAME-FACING channel hands to `botLoadTape`. Today it differs
+ * from the parsed tape in exactly two places: the v9 `at` on a persistence
+ * clear is dropped, and the version reported is the newest one whose
+ * features survive that drop.
+ *
+ * ⛔⛔ AND THAT IS NOT A LIE ABOUT THE VERSION — it is a true statement
+ * about the projection's CONTENTS. `at` is a statement about what the GAME
+ * DOES ON ITS OWN (arrows the player never fired kill the last bob and the
+ * kill-lock removes itself); it is emphatically NOT an instruction to the
+ * game. If the game ever consumed it, the check would stop being two-sided:
+ * the whole honesty argument for `at` is that the game clears the flag BY
+ * PLAY and the differential compares that against what the model was told.
+ * So the projection IS the exact tape the game is being asked to run.
+ *
+ * ⛓ THE GENERAL PRINCIPLE, recorded for the arc: **model-only tape features
+ * never cross to the game.** `tapeFormat.test.js`'s pinning test is the
+ * enforcement — it asserts the projection differs in EXACTLY these fields,
+ * so any future v9+ field fails it until someone classifies it: game-visible
+ * (which needs an AS3 change and the batch discipline) or model-only (which
+ * rides this projection for free).
+ *
+ * ⚠ EPHEMERAL. Produced at send time and never written to disk: one artifact
+ * per tape, or the committed projection becomes a second copy that drifts.
+ */
+export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at']);
+
+export function gameVisibleTape(tape) {
+    const t = tape.tape_version === undefined ? parseTape(tape) : tape;
+    // ⚠ EVERY v9 tape projects, not only the ones carrying `at`. The GAME's
+    // loader gates on the VERSION LIST, so a v9 tape with no mid-run clear
+    // is refused for a number rather than for a feature — and it is, in
+    // content, exactly a v8 tape.
+    if (t.tape_version < 9) return t;
+    return {
+        ...t,
+        // ⚠ 8 and not `tape_version - 1`: 9's ONLY new feature is the
+        // dropped field, so what is left is precisely a version 8 tape. A
+        // decrement would be arithmetic pretending to be a claim.
+        tape_version: 8,
+        persistence: (t.persistence ?? []).map(({ at, ...rest }) => rest),
+    };
+}
+
+/**
+ * The LOWEST version that can express this tape — what an author should
+ * stamp on it.
+ *
+ * ⛔ A tape carries ITS OWN version and not the newest one (`serializeTape`'s
+ * rule, which is what keeps a bump from rewriting 121 fixtures). An author
+ * that wrote `TAPE_VERSION` unconditionally would move every tape it touches
+ * to the newest number for no change in meaning — and, since the game gates
+ * on the version LIST, would make tapes the game refuses for a feature they
+ * do not use.
+ */
+export function requiredTapeVersion(tape, floor = 8) {
+    const usesAt = (tape.persistence ?? []).some((c) => c.at !== undefined);
+    return usesAt ? 9 : floor;
+}
+
 export function serializeTape(tape) {
     const t = parseTape(tape);
     const ordered = {
@@ -1457,6 +1588,9 @@ export function serializeTape(tape) {
         ...(t.tape_version >= 3 ? {
             persistence: t.persistence.map((c) => ({
                 level: c.level, tag: c.tag, ...(c.note ? { note: c.note } : {}),
+                // ⚠ Written only when present, so every v3..v8 fixture
+                // round-trips byte-identically past the v9 bump.
+                ...(c.at === undefined ? {} : { at: c.at }),
             })),
         } : {}),
         // Same rule, one version on: written ONLY for a v4 tape, so all 50

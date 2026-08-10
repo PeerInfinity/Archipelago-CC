@@ -120,7 +120,8 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 }
 
 const {
-    deriveTransitions, diffObservationStreams, serializeObservationStream,
+    deriveTransitions, diffObservationStreams, gameVisibleTape,
+    serializeObservationStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const {
     EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
@@ -580,7 +581,10 @@ function replayOnWindows(name, tapeObj) {
     writeFileSync(driverWsl, readFileSync(WIN_DRIVER));
     const tapeWsl = join(WIN_SCRATCH_WSL, `tape-${name}.json`);
     const outWsl = join(WIN_SCRATCH_WSL, `stream-${name}.json`);
-    writeFileSync(tapeWsl, JSON.stringify(tapeObj));
+    // ⛓ R7 slice 6d: the GAME-VISIBLE PROJECTION, at every game-facing
+    // channel. A model-only tape feature never crosses to the game — see
+    // `gameVisibleTape`'s docblock for why that is a claim and not a hack.
+    writeFileSync(tapeWsl, JSON.stringify(gameVisibleTape(tapeObj)));
     try { unlinkSync(outWsl); } catch { /* first run */ }
 
     // ⚠ `execFileSync` with a pipe means NOTHING the driver prints is
@@ -1654,7 +1658,8 @@ async function replay(name, tapeObj) {
     }
     const page = await freshPage();
     try {
-        const loaded = await botOn(page, 'botLoadTape', JSON.stringify(tapeObj));
+        const loaded = await botOn(page, 'botLoadTape',
+            JSON.stringify(gameVisibleTape(tapeObj)));
         if (loaded !== 'ok') throw new Error(`botLoadTape(${name}): ${loaded}`);
         const started = await botOn(page, 'botStart');
         if (started !== 'ok') throw new Error(`botStart(${name}): ${started}`);

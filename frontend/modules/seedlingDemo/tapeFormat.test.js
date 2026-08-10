@@ -15,6 +15,8 @@ import {
     deriveTransitions,
     diffObservationStreams,
     FORBIDDEN_KEYS,
+    GAME_VISIBLE_DROPS,
+    gameVisibleTape,
     heldKeysAt,
     KEY_CODES,
     keyEdgesAt,
@@ -283,7 +285,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(8);
+        expect(TAPE_VERSION).toBe(9);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -642,7 +644,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1178,7 +1180,102 @@ describe('version 7: the RNG state', () => {
     });
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
-        expect(TAPE_VERSION).toBe(8);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+        expect(TAPE_VERSION).toBe(9);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 9: THE WITNESSED MID-RUN CLEAR, AND ITS PROJECTION ───
+ *
+ * `at` says the RUN's own play cleared a flag at tick T; the model applies it
+ * there instead of at boot. Every test here is one of the two fences that
+ * keep it from becoming a staged grant: the format refuses it BOTH ways, and
+ * the game never sees it.
+ */
+describe('version 9: the witnessed mid-run clear', () => {
+    const v9 = (over = {}) => ({
+        tape_version: 9,
+        game: 'seedling',
+        boot: { level: 5, x: 80, y: 32 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 0, split: false },
+        seam: null,
+        tick_count: 100,
+        inputs: [],
+        persistence: [{ level: 5, tag: 0, at: 40 }],
+        ...over,
+    });
+
+    it('parses `at` and carries it through serialization', () => {
+        const t = parseTape(v9());
+        expect(t.persistence[0].at).toBe(40);
+        expect(JSON.parse(serializeTape(t)).persistence[0].at).toBe(40);
+    });
+
+    it('⛔ MUTATION: a tape BELOW v9 may not carry `at` at all', () => {
+        expect(() => parseTape(v9({ tape_version: 8 })))
+            .toThrow(/has no mid-run clear/);
+    });
+
+    it('⛔ MUTATION: `at` must be a tick this tape actually has', () => {
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 101 }] })))
+            .toThrow(/outside this tape's \[0, 100\]/);
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: -1 }] })))
+            .toThrow(/outside this tape's \[0, 100\]/);
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 1.5 }] })))
+            .toThrow(/must be an integer/);
+    });
+
+    it('a boot clear is untouched — no `at`, no field', () => {
+        const t = parseTape(v9({ persistence: [{ level: 5, tag: 0 }] }));
+        expect(t.persistence[0].at).toBeUndefined();
+        expect(JSON.parse(serializeTape(t)).persistence[0]).not.toHaveProperty('at');
+    });
+
+    /**
+     * ⛔⛔ THE PIN THAT ENFORCES "MODEL-ONLY FEATURES NEVER CROSS TO THE
+     * GAME". It asserts the projection differs in EXACTLY the version and
+     * the `at` field — so a future v9+ field fails here until someone
+     * classifies it as game-visible (AS3 + batch discipline) or model-only
+     * (rides the projection free). That classification is now part of
+     * adding any tape field.
+     */
+    it('⛓ the GAME-VISIBLE PROJECTION differs in exactly the version and `at`', () => {
+        const t = parseTape(v9());
+        const g = gameVisibleTape(t);
+        expect(g.tape_version).toBe(8);
+        expect(g.persistence[0]).toEqual({ level: 5, tag: 0, note: '' });
+        const differing = Object.keys(t).filter(
+            (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
+        expect(differing.sort()).toEqual(['persistence', 'tape_version']);
+        // …and the projection is a real v8 tape, which is the whole claim:
+        // "declaring it v8 is a true statement about its contents".
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    /**
+     * ⛔ A v9 TAPE PROJECTS WHETHER OR NOT IT USES `at`, and a tape below v9
+     * is returned IDENTICALLY. The game's loader gates on the version LIST,
+     * so a v9 tape with no mid-run clear is refused for a NUMBER rather than
+     * for a feature — and it is, in content, exactly a v8 tape.
+     *
+     * ⚠ Identity for the lower versions, not equality: a projection that
+     * copied every tape would make the 121 committed fixtures allocate for
+     * nothing and would hide a copy that diverged.
+     */
+    it('projects EVERY v9 tape, and returns anything older untouched', () => {
+        const v9NoAt = parseTape(v9({ persistence: [], tape_version: 9 }));
+        expect(v9NoAt.tape_version).toBe(9);
+        expect(gameVisibleTape(v9NoAt).tape_version).toBe(8);
+        const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
+        expect(gameVisibleTape(v8)).toBe(v8);
+        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at']);
     });
 });

@@ -389,9 +389,52 @@ export function createLevelRun({
      */
     const clearedByLevel = new Map();
     for (const c of persistence) {
+        if (c.at !== undefined) continue;
         if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
         clearedByLevel.get(c.level).push(c.tag);
     }
+    /**
+     * ⛓⛓⛓ R7 slice 6d: THE WITNESSED MID-RUN CLEARS (`at`), pending until
+     * their tick. See `tapeFormat`'s v9 docblock for the ruling and for why
+     * this is not a staged grant.
+     *
+     * ⛔ AND THIS ONE IS APPLIED MID-VISIT, unlike `pendingEarnedClears`
+     * below, because that is what the GAME does: `Lock.turnOff()` writes the
+     * flag and the lock stops being in the way while the player is still
+     * standing in the room. A clear cashed on the transition path would
+     * arrive after the very crossing it exists to open.
+     *
+     * ⚠ WHAT A MID-VISIT REBUILD COSTS, named rather than assumed: dropping
+     * the world memo makes the next `worldFor` build a room without the
+     * despawned entity — and the per-visit RUNTIME state (activators,
+     * pushables, spinners, crushers, turrets) is deliberately NOT dropped,
+     * because the game removes ONE entity and does not rebuild the room. The
+     * oracle for that claim is not this comment: it is the differential's
+     * byte-exact "the model reproduces the recording", which replays a tape
+     * whose arrow traps are armed across this very tick.
+     */
+    const timedClears = persistence.filter((c) => c.at !== undefined)
+        .map((c) => ({ ...c })).sort((a, b) => a.at - b.at);
+    const applyTimedClears = (tick) => {
+        for (const c of timedClears) {
+            if (c.applied || c.at !== tick) continue;
+            c.applied = true;
+            if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
+            const list = clearedByLevel.get(c.level);
+            if (!list.includes(c.tag)) list.push(c.tag);
+            worlds.delete(c.level);
+            /**
+             * ⛔⛔ AND THE LIVE BINDING IS REFRESHED, which dropping the memo
+             * does NOT do. `world` is a `let` set at construction and rebound
+             * only in `enterWorld` — so the first cut of this cleared the map
+             * and left the run holding the old room, and the model walked
+             * into a lock the game had already removed for another 75 ticks.
+             * The tell was a byte-exact replay that stopped 1.34 px short of
+             * a teleporter it should have crossed.
+             */
+            if (c.level === level) world = worldFor(c.level);
+        }
+    };
     /**
      * ⚠ THE CLEARS THE PLAYER EARNS (R3), pending until the next entry.
      *
@@ -8024,6 +8067,11 @@ export function createLevelRun({
          * can, and one that wants them cannot get them back.
          */
         advance(held) {
+            // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
+            // reads geometry this tick — the flag is already false when the
+            // tick numbered `at` begins, which is what "the game cleared it
+            // by then" means.
+            applyTimedClears(ticksCompleted);
             // ── the equip, first thing (R4) ───────────────────────────
             // `Bot.as` applies it immediately after pushing observation
             // `t` and BEFORE dispatching that tick's key edges, so on this
