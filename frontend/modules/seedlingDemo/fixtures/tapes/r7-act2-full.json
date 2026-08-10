@@ -1,8 +1,8 @@
 {
-    "tape_version": 8,
+    "tape_version": 9,
     "game": "seedling",
     "name": "r7-act2-full",
-    "description": "⛓ THE HEADLINE of chain \"act2-to-l5\" — the game's own opening in ONE run, so the 4 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3 and L4 to the L5 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ THE HEADLINE of chain \"act2-to-l6\" — the game's own opening in ONE run, so the 5 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3 and L4 to the L5 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -12,7 +12,14 @@
     "noDamage": false,
     "noHazards": [],
     "grants": [],
-    "persistence": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": "l5-arrow-bait: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l5-arrows.mjs)",
+            "at": 1559
+        }
+    ],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -29,7 +36,7 @@
         "fp": 987286273
     },
     "seam": null,
-    "tick_count": 822,
+    "tick_count": 1634,
     "inputs": [
         {
             "key": "right",
@@ -235,6 +242,176 @@
             "key": "left",
             "from": 809,
             "to": 810
+        },
+        {
+            "key": "down",
+            "from": 822,
+            "to": 833
+        },
+        {
+            "key": "up",
+            "from": 833,
+            "to": 834
+        },
+        {
+            "key": "down",
+            "from": 834,
+            "to": 836
+        },
+        {
+            "key": "up",
+            "from": 838,
+            "to": 841
+        },
+        {
+            "key": "down",
+            "from": 842,
+            "to": 844
+        },
+        {
+            "key": "left",
+            "from": 848,
+            "to": 875
+        },
+        {
+            "key": "right",
+            "from": 877,
+            "to": 879
+        },
+        {
+            "key": "right",
+            "from": 1123,
+            "to": 1134
+        },
+        {
+            "key": "left",
+            "from": 1134,
+            "to": 1135
+        },
+        {
+            "key": "right",
+            "from": 1135,
+            "to": 1137
+        },
+        {
+            "key": "left",
+            "from": 1139,
+            "to": 1142
+        },
+        {
+            "key": "right",
+            "from": 1143,
+            "to": 1145
+        },
+        {
+            "key": "down",
+            "from": 1149,
+            "to": 1183
+        },
+        {
+            "key": "up",
+            "from": 1185,
+            "to": 1187
+        },
+        {
+            "key": "up",
+            "from": 1231,
+            "to": 1265
+        },
+        {
+            "key": "down",
+            "from": 1267,
+            "to": 1269
+        },
+        {
+            "key": "left",
+            "from": 1273,
+            "to": 1284
+        },
+        {
+            "key": "right",
+            "from": 1284,
+            "to": 1285
+        },
+        {
+            "key": "left",
+            "from": 1285,
+            "to": 1287
+        },
+        {
+            "key": "right",
+            "from": 1289,
+            "to": 1292
+        },
+        {
+            "key": "left",
+            "from": 1293,
+            "to": 1295
+        },
+        {
+            "key": "right",
+            "from": 1559,
+            "to": 1570
+        },
+        {
+            "key": "left",
+            "from": 1570,
+            "to": 1571
+        },
+        {
+            "key": "right",
+            "from": 1571,
+            "to": 1573
+        },
+        {
+            "key": "left",
+            "from": 1574,
+            "to": 1576
+        },
+        {
+            "key": "down",
+            "from": 1580,
+            "to": 1607
+        },
+        {
+            "key": "up",
+            "from": 1608,
+            "to": 1610
+        },
+        {
+            "key": "left",
+            "from": 1614,
+            "to": 1625
+        },
+        {
+            "key": "down",
+            "from": 1614,
+            "to": 1634
+        },
+        {
+            "key": "right",
+            "from": 1625,
+            "to": 1626
+        },
+        {
+            "key": "left",
+            "from": 1626,
+            "to": 1627
+        },
+        {
+            "key": "right",
+            "from": 1627,
+            "to": 1628
+        },
+        {
+            "key": "left",
+            "from": 1628,
+            "to": 1629
+        },
+        {
+            "key": "right",
+            "from": 1631,
+            "to": 1633
         }
     ]
 }

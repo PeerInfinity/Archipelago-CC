@@ -5544,6 +5544,23 @@ export function synthesizeLegs(legs, opts = {}) {
     return {
         tape,
         arrivals,
+        /**
+         * ⛓ R7 slice 6d: WHERE THE RUN ENDED — level and CENTRE position.
+         *
+         * ⛔ NOT `arrivals[last]`, and the difference is what cost this its
+         * own field. `arrivals` is one record per TARGET reached, so its last
+         * entry is the last waypoint the walk was aimed at — which for a leg
+         * run ending in a crossing is a stance several rooms back. The
+         * heterogeneous walk (`plan-seedling-r7-act2.mjs`) hands this to the
+         * next group as its boot, and a stance mistaken for an arrival would
+         * plan the whole rest of the chain from the wrong room.
+         *
+         * ⚠ CENTRES, like every other position this module reports. A `boot`
+         * block is the OEL cell and the `Game` ctor adds `Tile.w/2`, so a
+         * consumer turning this into a boot subtracts the half-tile itself
+         * rather than being handed a number in a second convention.
+         */
+        final: { level: run.level, x: run.state.x, y: run.state.y },
         transitions: run.transitions.map((t) => ({ ...t })),
         waypoints,
         // One record per HOLD the run actually verified: which button, for

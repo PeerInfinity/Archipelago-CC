@@ -12,11 +12,13 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-    PLAYTHROUGH_CHAINS, PlaythroughError, TRUE_INITIAL_BOOT,
-    assertChainsWellFormed, isPlaythroughSegment, playthroughSegmentNames,
-    playthroughTapeNames,
+    L5_ARROW_BAIT, PLAYTHROUGH_CHAINS, PlaythroughError, TRUE_INITIAL_BOOT,
+    assertChainsWellFormed, assertWalkUnits, isPlaythroughSegment,
+    playthroughSegmentNames, playthroughTapeNames, walkGroups,
 } from './playthroughWalk.js';
-import { chainFindings, latchAgreementFindings } from './playthroughAcceptance.js';
+import {
+    chainFindings, latchAgreementFindings, witnessedClearFindings,
+} from './playthroughAcceptance.js';
 import {
     SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
 } from './r7Acceptance.js';
@@ -200,6 +202,184 @@ describe('playthroughWalk — the chain as data', () => {
         // ⚠ The headline is NOT a segment: it does not claim an arrival at a
         // boundary, it IS the walk the boundaries partition.
         for (const c of PLAYTHROUGH_CHAINS) expect(isPlaythroughSegment(c.headline)).toBe(false);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R7 SLICE 6d: THE UNITS, AND WHY THEIR SHAPE IS ASSERTED ──────
+ *
+ * A `leg` is planner-authored and cannot lie about its own ticks — A*
+ * derives them and `--check` re-derives them. A `phases` block is the
+ * opposite: every number in it is TYPED, so it is the one place in this
+ * machinery where a stale measurement can sit and still pass. These are the
+ * refusals that make a hand-authored block checkable.
+ */
+describe('playthroughWalk — a walk is a sequence of UNITS', () => {
+    const withUnits = (units) => ({ id: 'test', walk: { units } });
+    const LEG = { leg: { level: 0, targets: [] } };
+    const phasesBlock = (over = {}) => ({
+        phases: {
+            id: 'p', why: 'w', provenance: { probe: 'x' },
+            startsAt: { level: 5, x: 80, y: 32 }, startsAtTick: 0,
+            endsAt: { level: 5, x: 48, y: 48 },
+            steps: [{ label: 'a', ticks: 3 }, { label: 'b', ticks: 7 }],
+            ticks: 10,
+            spans: [{ key: 'left', from: 0, to: 4 }],
+            earns: [{ level: 5, tag: 0 }],
+            outcome: { cleared: ['5,0'], enemies: 0 },
+            ...over,
+        },
+    });
+
+    it('counts the two kinds, and the real chain carries both', () => {
+        expect(assertWalkUnits(withUnits([LEG, phasesBlock(), LEG])))
+            .toEqual({ units: 3, legs: 2, phases: 1 });
+        // ⛔ AGAINST THE COMMITTED CHAIN, not a synthetic one: the whole point
+        // of slice 6d is that a REAL chain is heterogeneous, and a test that
+        // only ever saw synthetic units would stay green through a chain that
+        // quietly went back to being all legs.
+        const mixed = PLAYTHROUGH_CHAINS.filter((c) => c.walk?.units)
+            .map((c) => assertWalkUnits(c));
+        expect(mixed.some((r) => r.legs > 0 && r.phases > 0)).toBe(true);
+    });
+
+    it('⛔ MUTATION: a unit that is both kinds, or neither, THROWS', () => {
+        expect(() => assertWalkUnits(withUnits([{ ...LEG, ...phasesBlock() }])))
+            .toThrow(/exactly one of/);
+        expect(() => assertWalkUnits(withUnits([{}]))).toThrow(/exactly one of/);
+    });
+
+    it('⛔ MUTATION: a phases block whose STEPS do not sum to its ticks THROWS', () => {
+        expect(() => assertWalkUnits(withUnits([phasesBlock({ ticks: 11 })])))
+            .toThrow(/steps sum to 10 and it declares 11/);
+    });
+
+    it('⛔ MUTATION: a span outside [0, ticks) THROWS', () => {
+        expect(() => assertWalkUnits(withUnits([
+            phasesBlock({ spans: [{ key: 'left', from: 0, to: 11 }] })])))
+            .toThrow(/non-empty \[from, to\)/);
+        expect(() => assertWalkUnits(withUnits([
+            phasesBlock({ spans: [{ key: 'left', from: 4, to: 4 }] })])))
+            .toThrow(/non-empty \[from, to\)/);
+    });
+
+    it('⛔ MUTATION: a block with no provenance or no outcome THROWS', () => {
+        for (const field of ['provenance', 'outcome', 'startsAt', 'startsAtTick',
+            'endsAt', 'spans']) {
+            const block = phasesBlock();
+            delete block.phases[field];
+            expect(() => assertWalkUnits(withUnits([block])), `missing ${field}`)
+                .toThrow(new RegExp(`declares no ${field}`));
+        }
+    });
+
+    /**
+     * ⛔⛔ THE SHARPEST ONE. A block's `earns` is what every LATER leg is
+     * planned against — the crossing through L5's kill-lock only has a route
+     * because `{5,0}` is cleared — so a block that earns a clear its outcome
+     * does not assert would move the planner's world without ever asking the
+     * game whether the game moved too. That is a plan against a fiction, and
+     * it would be GREEN everywhere else: the seam compares state, and the
+     * state would agree.
+     */
+    it('⛔ MUTATION: a block that EARNS a clear its outcome does not assert THROWS', () => {
+        expect(() => assertWalkUnits(withUnits([phasesBlock({ outcome: { cleared: [] } })])))
+            .toThrow(/may not change the world the planner sees/);
+        expect(() => assertWalkUnits(withUnits([
+            phasesBlock({ earns: [{ level: 6, tag: 0 }] })])))
+            .toThrow(/may not change the world the planner sees/);
+    });
+
+    it('⛔ MUTATION: a walk that spells itself twice THROWS', () => {
+        expect(() => assertWalkUnits({ id: 't', walk: { units: [LEG], legs: [] } }))
+            .toThrow(/exactly one spelling/);
+    });
+
+    /**
+     * ⛓ THE GROUPING IS WHAT THE PLANNER CALLS `synthesizeLegs` WITH, and
+     * consecutive legs MUST stay in one call: the driver carries a live run
+     * across a crossing, and two calls would re-boot the second half at a
+     * declared position and lose the arrival fade with it.
+     */
+    it('groups consecutive legs into ONE call and cuts only at phases', () => {
+        const g = walkGroups(withUnits([LEG, LEG, phasesBlock(), LEG]));
+        expect(g.map((x) => x.kind)).toEqual(['legs', 'phases', 'legs']);
+        expect(g[0].legs.length).toBe(2);
+        expect(g[2].legs.length).toBe(1);
+    });
+
+    it('the committed L5 block is the probe\'s own numbers', () => {
+        // ⚠ Pinned by ARITHMETIC, not by copying the list: the six steps and
+        // the 737 are the probe's `press 61 + clear 240 + bait 68 + dwell 40
+        // + back 68 + hold 260`, and the spans have to fit inside them.
+        expect(L5_ARROW_BAIT.ticks).toBe(737);
+        expect(L5_ARROW_BAIT.steps.map((s) => s.ticks)).toEqual([61, 240, 68, 40, 68, 260]);
+        expect(L5_ARROW_BAIT.provenance.probe)
+            .toBe('scripts/procgen/probe-seedling-r7-l5-arrows.mjs');
+        // The block's two controls are named, because a single arm that
+        // cleared the lock is a lock that was going to open.
+        expect(L5_ARROW_BAIT.provenance.controls.length).toBe(2);
+        expect(Math.max(...L5_ARROW_BAIT.spans.map((s) => s.to)))
+            .toBeLessThanOrEqual(L5_ARROW_BAIT.ticks);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE WITNESSED-CLEAR LAW (slice 6d, ⚖ ruled) ──────────────────
+ *
+ * A v9 `at`-clear is the one tape field that can move the world MID-RUN, so
+ * it is fenced: no `at` without a `phases` block in the same chain that
+ * EARNS that tag and whose end tick is `at`. Without this row the field
+ * would be a place to type any flag at any tick and call it earned.
+ */
+describe('witnessedClearFindings — no `at`-clear nobody measured', () => {
+    const block = (over = {}) => ({
+        id: 'b', why: 'w', provenance: { probe: 'p.mjs' },
+        startsAt: { level: 5, x: 80, y: 32 }, startsAtTick: 10,
+        endsAt: { level: 5, x: 48, y: 48 },
+        steps: [{ label: 'a', ticks: 20 }], ticks: 20,
+        spans: [], earns: [{ level: 5, tag: 0 }],
+        outcome: { cleared: ['5,0'], enemies: 0 }, ...over,
+    });
+    const chainWith = (b, at) => ({
+        id: 'test',
+        headline: 'H',
+        segments: ['S1'],
+        walk: { units: [{ leg: { level: 5, targets: [] } }, { phases: b }] },
+        tapes: new Map([
+            ['S1', { tick_count: 50, persistence: at === null ? []
+                : [{ level: 5, tag: 0, at }] }],
+            ['H', { tick_count: 50, persistence: at === null ? []
+                : [{ level: 5, tag: 0, at }] }],
+        ]),
+    });
+    const run = (c) => witnessedClearFindings(c, c.tapes);
+
+    it('a clear at the block\'s own end tick is WITNESSED', () => {
+        const rows = run(chainWith(block(), 30));
+        expect(rows.every((r) => r.ok)).toBe(true);
+        expect(rows.length).toBe(2);       // one per tape that carries it
+        expect(rows[0].detail).toMatch(/p\.mjs/);
+    });
+
+    it('⛔ MUTATION: a clear at ANY OTHER tick goes RED', () => {
+        for (const at of [29, 31, 0]) {
+            const rows = run(chainWith(block(), at));
+            expect(rows.some((r) => !r.ok), `at=${at}`).toBe(true);
+        }
+    });
+
+    it('⛔ MUTATION: a clear NO block earns goes RED', () => {
+        const rows = run(chainWith(block({ earns: [] }), 30));
+        expect(rows.some((r) => !r.ok)).toBe(true);
+        expect(rows.find((r) => !r.ok).detail).toMatch(/staged grant with extra steps/);
+    });
+
+    it('a chain with no `at`-clear REPORTS the absence rather than going silent', () => {
+        const rows = run(chainWith(block(), null));
+        expect(rows.length).toBe(1);
+        expect(rows[0].ok).toBe(true);
+        expect(rows[0].name).toMatch(/no tape declares a mid-run clear/);
     });
 });
 

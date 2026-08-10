@@ -54,6 +54,293 @@ export class PlaythroughError extends Error {
 }
 
 /**
+ * ── ⛓⛓⛓ R7 SLICE 6d: A WALK IS A SEQUENCE OF UNITS ───────────────────
+ *
+ * ⚖ **RULED** (the orchestrating session, 2026-08-09, answering §17.6's
+ * design question): **a chain's walk is a sequence of UNITS, each of which
+ * is a `leg` or a `phases` block.**
+ *
+ *   `leg`     PLANNER-AUTHORED. The unit carries a route (level, targets,
+ *             exit) and NOT its ticks; `synthesizeLegs` positions every
+ *             span by A* against live per-visit geometry, and `--check`
+ *             re-derives them. This is what slice 6c shipped.
+ *   `phases`  HAND-AUTHORED CHOREOGRAPHY, COMMITTED AS DATA. The spans are
+ *             FIXED — they are in the file, byte for byte — with the probe
+ *             or pair that witnessed them cited as PROVENANCE, and the
+ *             block's OUTCOME asserted from the GAME's own readouts at
+ *             block end (`persistence_cleared`, the mobile trace), never
+ *             from a fight the model predicted.
+ *
+ * ⛔ THE PRECEDENT SAYS THIS IS NOT A NEW KIND OF THING. Every mover
+ * certificate in this arc has been a tape SPAN, and every R5/R6 window was
+ * a hand-authored plan script; what is new is only that the two kinds sit
+ * in ONE walk. **A seam is indifferent to which kind produced its ticks** —
+ * it compares the game's latch against the successor's boot, and neither
+ * side can tell whether the ticks in between came from A* or from a
+ * choreography. That indifference is what makes the mixture honest rather
+ * than a loophole.
+ *
+ * ⚠ AND `KILL_ARM_POLICY` STAYS REFUSED (§16.4). A `phases` block does not
+ * license the model to predict a kill; it licenses the CHAIN to carry ticks
+ * the model cannot author. The model still owns mechanism and geometry, and
+ * the game still adjudicates every death.
+ */
+
+/**
+ * ⛓⛓⛓ THE L5 ARROW-BAIT CHOREOGRAPHY — the first `phases` block, and the
+ * fight that opens the sword's corridor with NO WEAPON.
+ *
+ * `lock@48,112 {5,0}` is a KILL-LOCK (`tSet -1`) sitting on the L5 -> L6
+ * teleporter's own cell, and `Player.as:782` gates attack on a sword the
+ * player does not have. The game's answer is `Arrow.as:18,51` — an Arrow's
+ * hitables include **"Enemy"** — so the room's four `arrowtrap`s and its
+ * `button@48,48` (all `tSet 0`) are the weapon.
+ *
+ * ⛔ WHY THIS CANNOT BE A LEG. §16.4: nothing in the tree models an Arrow
+ * killing an Enemy, and `KILL_ARM_POLICY.Bob` is REFUSED because
+ * `Bob.update` steers straight at the player with no pathfinding and no
+ * wall test (`Bob.as:59`'s `collideLine` guard is commented out), so the
+ * body's position at any tick is the unmodelled term. `synthesizeLegs`
+ * would have to predict a fight it cannot see.
+ *
+ * ⛓ THE NUMBERS ARE `probe-seedling-r7-l5-arrows.mjs`'s, unchanged, and
+ * they transfer because the probe's boot IS this segment's boot: the probe
+ * declares `{level: 5, x: 80, y: 32}` — L4's `stairsdown@64,16` drops the
+ * player at exactly that tile — and `r7-act2-4` ends there.
+ *
+ * The order is the whole solve (§15.3):
+ *
+ *   press  61   arrival -> `button@48,48`. Planned by A*, in the probe,
+ *               against a level record with the button REMOVED so that A*
+ *               would end on its cell — a PLANNING-ONLY deletion whose
+ *               consequence the model was never going to see either way.
+ *   clear  240  the two left bobs start INSIDE `arrowtrap@16,16`'s lane
+ *               (tile column 1, x 20/24/28), so pressing rains arrows onto
+ *               them where they already are. Measured dead by t=187 of the
+ *               probe's `stand` arm, with `hits 0 -> 1 -> 2` climbing ONE
+ *               AT A TIME (trap 143: an Arrow does 1 damage; the 5 is the
+ *               knockback force).
+ *   bait   68   button -> (72,96). The third bob parks against
+ *               `solid@48,64` in tile column 3 — the ONE column no trap
+ *               covers — and only a stance east of it pulls its straight
+ *               line into lane 4.
+ *   dwell  40   it travels at `Bob.moveSpeed` 0.5 px/tick and has ~16 px of
+ *               shadow to clear. A DRIVE-BY, not a stand: the first cut of
+ *               this arm stood still for 200 ticks with three chasers and
+ *               DIED silently (trap 142).
+ *   back   68   (72,96) -> the button. From there the survivor's straight
+ *               line runs into the solid's EAST face at x ~ 68, which is
+ *               lane 4's own left edge, so it stays in the lane.
+ *   hold   260  three landed arrows per Bob through 30-tick i-frames, and
+ *               then `Lock.activationStep` drains alpha at 0.01/update —
+ *               **100 more ticks before `turnOff()` writes the clear**. A
+ *               hold that stopped at the kill would report a lock that was
+ *               about to open.
+ *
+ * ⛔ `earns` IS WHAT THE BLOCK CHANGES ABOUT THE WORLD, AND IT IS WHY THE
+ * CROSSING AFTER IT CAN BE PLANNED. `Lock.check()` (`Lock.as:39-45`)
+ * removes a `tag >= 0 && tSet < 0` lock whose flag is cleared, and
+ * `levelWorld`'s `lock-despawn` rule already applies it — so the leg AFTER
+ * this block is planned against a level record with `{5,0}` cleared, which
+ * is the state the GAME is really in at that tick. ⚠ The TAPE still boots
+ * with `{5,0}` SET, because its boot is its predecessor's latch and the
+ * flag is cleared MID-RUN.
+ *
+ * ── ⛓⛓⛓ AND THE MODEL IS TOLD, AT THE BLOCK'S OWN END TICK ───────────
+ *
+ * ⚖ RULED (the orchestrating session, slice 6d) after the measurement that
+ * forced the question. The segment carrying this block walks through the
+ * lock's cell, and the MODEL cannot follow: it has no Arrow x Enemy, so it
+ * never despawns a lock the game removed mid-run. Driven and measured —
+ * `tapeRunner` reproduces the recording byte-for-byte for **816 ticks** and
+ * then sits **0.585 px** short at `lock@48,112`'s face; declaring the clear
+ * makes it byte-exact over all 819. One field, whole cause.
+ *
+ * ⛔⛔ AND §16.5's SPLIT — end the fight at an arrival so the CROSSING boots
+ * the clear — IS REFUTED BY THE GAME. The only exit that reaches an arrival
+ * is out to L4 and back (62 ticks; it plans clean and the model follows it
+ * clean). Re-entering L5 RESPAWNS all three bobs while the clear stays
+ * durable: the driven segment took `hits 1`, never reached the teleporter,
+ * and ended at (80.6, 103.6). **The general rule, not an L5 fact: per-visit
+ * enemies against durable persistence means a fight and the crossing it
+ * opens stay ONE segment wherever the fight's room must be left through
+ * itself.**
+ *
+ * ⇒ the tape carries the clear as a v9 `at`, at THIS BLOCK'S END TICK — the
+ * same tick the planner's truncated arm already asserts the game's own
+ * `persistence_cleared` at, so the number is a measurement and not a fit.
+ * `tapeFormat`'s v9 docblock carries the honesty analysis;
+ * `playthroughAcceptance.witnessedClearFindings` carries the law that no
+ * `at`-clear may exist without a block that earns it there.
+ */
+export const L5_ARROW_BAIT = Object.freeze({
+    id: 'l5-arrow-bait',
+    why: '⛓⛓⛓ THE KILL-LOCK, OPENED WITH NO WEAPON. Four arrowtraps and one button, '
+        + 'all tSet 0; the arrows kill the three bobs, `Game.totalEnemies()` reaches 0, '
+        + '`checkEnemies()` arms `lock@48,112 {5,0}` and 100 alpha steps later '
+        + '`turnOff()` writes the durable clear the next leg walks through.',
+    /**
+     * ⛔ THE PROVENANCE IS A THREE-ARM PAIR, not a note. `off` (one tile east
+     * of the button) HOLDS the lock and `stand` (on the button, 700 ticks)
+     * HOLDS IT TOO — the second is what proves the bait is necessary rather
+     * than decorative, and the first is what proves the button is what does
+     * it. Only `bait` clears.
+     */
+    provenance: Object.freeze({
+        probe: 'scripts/procgen/probe-seedling-r7-l5-arrows.mjs',
+        arm: 'bait',
+        controls: Object.freeze(['off — HOLDS: nothing pressed, nothing armed',
+            'stand — HOLDS: the third bob parks in the one column no trap covers']),
+        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §15.3',
+    }),
+    /** ⚠ BOOT-FORM (the `Game` ctor adds a half-tile), asserted against the
+     *  preceding legs' own final arrival. */
+    startsAt: Object.freeze({ level: 5, x: 80, y: 32 }),
+    /**
+     * ⛔ WHERE THE BLOCK SITS IN THE WALK, in the walk's own ticks — the sum
+     * of every unit before it. The planner CHECKS it against its own cursor
+     * and refuses to author if it has moved; `witnessedClearFindings` needs
+     * it to turn a tape's `at` back into "the tick this block ends", which
+     * is the whole of the witnessed-clear law.
+     */
+    startsAtTick: 822,
+    /** Where the `back` leg puts the player, and where the crossing plans from. */
+    endsAt: Object.freeze({ level: 5, x: 48, y: 48 }),
+    /** The block ends STANDING ON the button, which the next leg must declare. */
+    contacts: Object.freeze(['proximity-hazard:button@48,48']),
+    steps: Object.freeze([
+        Object.freeze({ label: 'press', ticks: 61, planned: true }),
+        Object.freeze({ label: 'clear', ticks: 240, planned: false }),
+        Object.freeze({ label: 'bait', ticks: 68, planned: true }),
+        Object.freeze({ label: 'dwell', ticks: 40, planned: false }),
+        Object.freeze({ label: 'back', ticks: 68, planned: true }),
+        Object.freeze({ label: 'hold', ticks: 260, planned: false }),
+    ]),
+    ticks: 737,
+    /**
+     * ⛔ THE SPANS ARE THE ARTIFACT. They are the probe's own — three A*
+     * plans spliced around three idles by its `dwellAt` — frozen here rather
+     * than re-derived, because re-deriving them would need the planning-only
+     * button deletion in the CHAIN's planner, where it would be a fiction
+     * about the level the chain is really walking. Committed as data, with
+     * the probe cited above as the thing that measured them.
+     */
+    spans: Object.freeze([
+        Object.freeze({ key: 'down', from: 0, to: 11 }),
+        Object.freeze({ key: 'up', from: 11, to: 12 }),
+        Object.freeze({ key: 'down', from: 12, to: 14 }),
+        Object.freeze({ key: 'up', from: 16, to: 19 }),
+        Object.freeze({ key: 'down', from: 20, to: 22 }),
+        Object.freeze({ key: 'left', from: 26, to: 53 }),
+        Object.freeze({ key: 'right', from: 55, to: 57 }),
+        Object.freeze({ key: 'right', from: 301, to: 312 }),
+        Object.freeze({ key: 'left', from: 312, to: 313 }),
+        Object.freeze({ key: 'right', from: 313, to: 315 }),
+        Object.freeze({ key: 'left', from: 317, to: 320 }),
+        Object.freeze({ key: 'right', from: 321, to: 323 }),
+        Object.freeze({ key: 'down', from: 327, to: 361 }),
+        Object.freeze({ key: 'up', from: 363, to: 365 }),
+        Object.freeze({ key: 'up', from: 409, to: 443 }),
+        Object.freeze({ key: 'down', from: 445, to: 447 }),
+        Object.freeze({ key: 'left', from: 451, to: 462 }),
+        Object.freeze({ key: 'right', from: 462, to: 463 }),
+        Object.freeze({ key: 'left', from: 463, to: 465 }),
+        Object.freeze({ key: 'right', from: 467, to: 470 }),
+        Object.freeze({ key: 'left', from: 471, to: 473 }),
+    ]),
+    earns: Object.freeze([Object.freeze({ level: 5, tag: 0 })]),
+    /**
+     * ⛔⛔ THE OUTCOME IS ASKED OF THE GAME, AT BLOCK END, AND NOWHERE ELSE.
+     *
+     * `cleared` is read off `persistence_cleared` and `enemies` off the
+     * `--mobiles` trace — both are the running game's own readouts, sampled
+     * by a driven arm that STOPS at tick 737. Asserting them at the end of
+     * the whole segment would be weaker by a whole leg: a lock that opened
+     * during the CROSSING rather than during the fight would pass.
+     */
+    outcome: Object.freeze({
+        cleared: Object.freeze(['5,0']),
+        enemies: 0,
+    }),
+});
+
+/** The two kinds of unit a walk is made of. */
+const UNIT_KINDS = Object.freeze(['leg', 'phases']);
+
+/**
+ * ⛔ EVERY UNIT IS EXACTLY ONE KIND, AND A `phases` BLOCK DECLARES ALL SIX
+ * OF THE THINGS THAT MAKE IT CHECKABLE.
+ *
+ * A hand-authored block is the one place in this machinery where a number
+ * can be typed, so it is the one place that needs a shape refusal: a block
+ * whose `ticks` disagree with its steps, whose spans run past its end, or
+ * which declares no OUTCOME is a choreography nobody can fail.
+ */
+export function assertWalkUnits(chain) {
+    const units = chain.walk?.units;
+    if (units === undefined) return { units: 0, legs: 0, phases: 0 };
+    if (chain.walk.legs !== undefined || chain.walk.inputs !== undefined) {
+        throw new PlaythroughError(
+            `chain "${chain.id}" declares units AND ${chain.walk.legs !== undefined
+                ? 'legs' : 'inputs'}; a walk has exactly one spelling or the planner and `
+                + 'the tests read different walks');
+    }
+    if (!Array.isArray(units) || units.length === 0) {
+        throw new PlaythroughError(`chain "${chain.id}" declares an empty unit list`);
+    }
+    let legs = 0;
+    let phases = 0;
+    units.forEach((u, i) => {
+        const kinds = UNIT_KINDS.filter((k) => u[k] !== undefined);
+        if (kinds.length !== 1) {
+            throw new PlaythroughError(
+                `chain "${chain.id}" unit ${i} declares [${kinds.join(', ') || 'nothing'}]; `
+                + `a unit is exactly one of ${UNIT_KINDS.join(' / ')}`);
+        }
+        if (kinds[0] === 'leg') { legs += 1; return; }
+        phases += 1;
+        const p = u.phases;
+        const what = `chain "${chain.id}" unit ${i} (phases "${p.id ?? '?'}")`;
+        for (const field of ['id', 'why', 'provenance', 'startsAt', 'startsAtTick',
+            'endsAt', 'steps', 'ticks', 'spans', 'outcome']) {
+            if (p[field] === undefined) {
+                throw new PlaythroughError(`${what} declares no ${field}. A hand-authored `
+                    + 'block with no provenance is a number nobody measured, and one with '
+                    + 'no outcome is a choreography that cannot fail.');
+            }
+        }
+        const summed = p.steps.reduce((n, s) => n + s.ticks, 0);
+        if (summed !== p.ticks) {
+            throw new PlaythroughError(`${what}: its steps sum to ${summed} and it declares `
+                + `${p.ticks} ticks. The step table is the block's own account of where its `
+                + 'ticks went; a table that does not add up describes a different block.');
+        }
+        p.spans.forEach((s, si) => {
+            if (!(s.to > s.from) || s.from < 0 || s.to > p.ticks) {
+                throw new PlaythroughError(`${what}: span ${si} ${JSON.stringify(s)} is not `
+                    + `a non-empty [from, to) inside [0, ${p.ticks})`);
+            }
+        });
+        if (!Array.isArray(p.outcome.cleared)) {
+            throw new PlaythroughError(`${what}: outcome.cleared must be a list of `
+                + '"level,tag" strings read off the game\'s own persistence_cleared');
+        }
+        for (const e of p.earns ?? []) {
+            if (!Number.isInteger(e.level) || !Number.isInteger(e.tag)) {
+                throw new PlaythroughError(`${what}: earns entries are {level, tag}`);
+            }
+            if (!p.outcome.cleared.includes(`${e.level},${e.tag}`)) {
+                throw new PlaythroughError(`${what}: it EARNS {${e.level},${e.tag}} — which `
+                    + 'every later leg is then planned against — and its outcome does not '
+                    + 'assert that clear. A block may not change the world the planner '
+                    + 'sees without asking the game whether it did.');
+            }
+        }
+    });
+    return { units: units.length, legs, phases };
+}
+
+/**
  * ⛓ THE TRUE INITIAL STATE — `Main.as:50-51`, verified at slice 0 §8.2.
  *
  * The game's own boot on branch `bot` is `new Game(0, 80, 128)` with an
@@ -146,15 +433,21 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         }),
     }),
     Object.freeze({
-        id: 'act2-to-l5',
+        id: 'act2-to-l6',
         why: '⛓⛓⛓ ACT 2, AND THE FIRST HONEST SEGMENTS. The game\'s own opening, '
             + 'from `new Game(0, 80, 128)` with an empty save and nothing granted, cut '
-            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5. It ends where the '
-            + 'sword\'s corridor begins — L5\'s arrival, one room short of the kill-lock '
-            + 'the arrow traps open (§15.3) — because L5\'s fight and L5\'s crossing are '
-            + 'DIFFERENT SEGMENTS (§16.5) and this chain is the four that come first.',
+            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6. Segment 5 is '
+            + 'the first HETEROGENEOUS walk — L5\'s arrow-bait fight as a `phases` '
+            + 'block, then the crossing through the kill-lock it opens as a `leg` — so '
+            + 'the chain now reaches PAST the wall the sword sits behind. ⛔ THE FIGHT '
+            + 'AND THE CROSSING ARE ONE SEGMENT, and slice 6d measured why they must '
+            + 'be: leaving the room to cut a boundary RESPAWNS every enemy in it while '
+            + 'the clear stays durable, so the fight does not survive the door. The '
+            + 'lock the fight removes is carried to the model by the v9 `at` clear.',
         headline: 'r7-act2-full',
-        segments: Object.freeze(['r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4']),
+        segments: Object.freeze([
+            'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5',
+        ]),
         /**
          * ⛔ THE CUTS ARE THE DRIVER'S OWN TRANSITION TICKS, DECLARED HERE
          * AND ASSERTED THERE.
@@ -167,8 +460,17 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * by one tick under a physics edit is a named failure, not a silently
          * re-cut chain.
          */
-        cuts: Object.freeze([183, 230, 475]),
-        endsAt: 822,
+        /**
+         * ⚠ EVERY CUT IS A TRANSITION, BUT NOT EVERY TRANSITION IS A CUT.
+         * Today the two lists happen to be equal because every segment here
+         * is one room long; the planner checks the cuts as an ORDERED
+         * SUBSEQUENCE of the driver's transitions and NAMES the extras, so a
+         * segment that crosses twice inside itself is describable rather than
+         * a refusal. (Slice 6d needed exactly that for a candidate segment
+         * that stepped out to L4 and back — see `L5_ARROW_BAIT`.)
+         */
+        cuts: Object.freeze([183, 230, 475, 822]),
+        endsAt: 1634,
         /**
          * ⛓ THE WALK IS LEGS, NOT SPANS, and that is the M1 generator's shape
          * arriving where §3.6 said it would.
@@ -211,31 +513,64 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * `noDamage`. The route's two tiles are the game's arithmetic.
          */
         walk: Object.freeze({
-            legs: Object.freeze([
-                Object.freeze({ level: 0, targets: Object.freeze([]), exit: Object.freeze({ x: 256, y: 272 }) }),
-                Object.freeze({ level: 2, targets: Object.freeze([]), exit: Object.freeze({ x: 48, y: 96 }) }),
-                Object.freeze({ level: 3, targets: Object.freeze([]), exit: Object.freeze({ x: 128, y: 48 }) }),
+            units: Object.freeze([
+                Object.freeze({ leg: Object.freeze({ level: 0, targets: Object.freeze([]), exit: Object.freeze({ x: 256, y: 272 }) }) }),
+                Object.freeze({ leg: Object.freeze({ level: 2, targets: Object.freeze([]), exit: Object.freeze({ x: 48, y: 96 }) }) }),
+                Object.freeze({ leg: Object.freeze({ level: 3, targets: Object.freeze([]), exit: Object.freeze({ x: 128, y: 48 }) }) }),
                 Object.freeze({
-                    level: 4,
-                    targets: Object.freeze([
-                        Object.freeze({
-                            x: 24,
-                            y: 72,
-                            hold: Object.freeze({ presser: Object.freeze({ x: 16, y: 64 }), ticks: 200 }),
-                        }),
-                        Object.freeze({
-                            x: 24,
-                            y: 72,
-                            shove: Object.freeze({
-                                block: Object.freeze({ x: 32, y: 64 }),
-                                dir: 'E',
-                                to: Object.freeze({ tx: 4, ty: 4 }),
+                    leg: Object.freeze({
+                        level: 4,
+                        targets: Object.freeze([
+                            Object.freeze({
+                                x: 24,
+                                y: 72,
+                                hold: Object.freeze({ presser: Object.freeze({ x: 16, y: 64 }), ticks: 200 }),
                             }),
-                        }),
-                    ]),
-                    exit: Object.freeze({ x: 64, y: 16 }),
+                            Object.freeze({
+                                x: 24,
+                                y: 72,
+                                shove: Object.freeze({
+                                    block: Object.freeze({ x: 32, y: 64 }),
+                                    dir: 'E',
+                                    to: Object.freeze({ tx: 4, ty: 4 }),
+                                }),
+                            }),
+                        ]),
+                        exit: Object.freeze({ x: 64, y: 16 }),
+                    }),
                 }),
-                Object.freeze({ level: 5, targets: Object.freeze([]) }),
+                /**
+                 * ⚠ THE TERMINAL LEG OF THE FIRST GROUP, and it is why the
+                 * L4 -> L5 crossing lands INSIDE segment 4 rather than at the
+                 * top of segment 5. `synthesizeLegs` refuses an exit on its
+                 * last leg ("the driver asserts a crossing against the NEXT
+                 * leg's level"), so a legs group always ends one arrival past
+                 * its last exit — which is exactly where a segment ends.
+                 */
+                Object.freeze({ leg: Object.freeze({ level: 5, targets: Object.freeze([]) }) }),
+                /**
+                 * ⛓⛓⛓ THE FIGHT — the first `phases` block in the arc. Its
+                 * spans, its provenance, its earned clear and its outcome are
+                 * `L5_ARROW_BAIT` above; nothing about it is planned here and
+                 * nothing about it is predicted anywhere.
+                 */
+                Object.freeze({ phases: L5_ARROW_BAIT }),
+                /**
+                 * ⛓ AND THE CROSSING, PLANNED — against a level record with
+                 * `{5,0}` cleared, because at tick 737 the game's own lock is
+                 * gone. `contacts` declares the button the block left the
+                 * player standing on; without it the leg's own FORCED-CONTACTS
+                 * check would refuse the start it really has.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 5,
+                        contacts: Object.freeze(['proximity-hazard:button@48,48']),
+                        targets: Object.freeze([]),
+                        exit: Object.freeze({ x: 48, y: 112 }),
+                    }),
+                }),
+                Object.freeze({ leg: Object.freeze({ level: 6, targets: Object.freeze([]) }) }),
             ]),
             pins: Object.freeze(['dead_frames']),
             /**
@@ -277,6 +612,28 @@ export function chainInputsFor(inputs, from, to) {
         .map((s) => ({ key: s.key, from: Math.max(s.from, from), to: Math.min(s.to, to) }))
         .filter((s) => s.to > s.from)
         .map((s) => ({ key: s.key, from: s.from - from, to: s.to - from }));
+}
+
+/**
+ * ⛓ THE UNITS, GROUPED FOR THE PLANNER: a run of consecutive `leg`s is ONE
+ * `synthesizeLegs` call, and a `phases` block is a group of its own.
+ *
+ * ⛔ CONSECUTIVE LEGS MUST STAY IN ONE CALL. `synthesizeLegs` carries a live
+ * `createLevelRun` across its legs — the crossing, the arrival fade, the
+ * per-visit geometry of the room it lands in — so splitting a leg run into
+ * two calls would re-boot the second half at a declared position and lose
+ * every one of those. Splitting is only forced where a `phases` block sits,
+ * because that is precisely where the model cannot follow.
+ */
+export function walkGroups(chain) {
+    const groups = [];
+    for (const unit of chain.walk?.units ?? []) {
+        if (unit.phases) { groups.push({ kind: 'phases', block: unit.phases }); continue; }
+        const last = groups[groups.length - 1];
+        if (last && last.kind === 'legs') last.legs.push(unit.leg);
+        else groups.push({ kind: 'legs', legs: [unit.leg] });
+    }
+    return groups;
 }
 
 /** Every segment tape name in every chain, in chain order. */
@@ -351,6 +708,12 @@ export function assertChainsWellFormed(roster = fixtureNames()) {
             }
             seen.add(name);
         }
+        // ⛔ The unit shapes are asserted HERE rather than at the planner,
+        // because the planner runs on a developer's machine with a wasm
+        // artifact staged and this runs on every CI sweep. A malformed
+        // `phases` block that only the planner refuses is a block the tests
+        // never look at.
+        assertWalkUnits(chain);
     }
     return {
         chains: PLAYTHROUGH_CHAINS.length,

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * plan-seedling-r7-act2 — AUTHOR the first honest segments, from the LEGS
+ * plan-seedling-r7-act2 — AUTHOR the first honest segments, from the UNITS
  * and from the GAME's own latch. R7 slice 6c.
  *
  * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.1/§3.2 (the
  * segment and the seam), §15.7 (the ruled segment scope: the minimal valid
  * dependency chain, not the strict AP total order), §16.9 (what slice 6c
  * inherits). Chain data: `frontend/modules/seedlingDemo/playthroughWalk.js`,
- * chain `act2-to-l5`.
+ * chain `act2-to-l6`.
  *
  * ── ⛓ WHAT THIS ADDS TO `plan-seedling-r7-ends-meet.mjs` ──────────────
  *
@@ -59,7 +59,7 @@ const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
-const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l5')
+const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l6')
     .slice('--chain='.length);
 
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
@@ -67,12 +67,13 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
     process.exit(0);
 }
 
-const { parseTape, TAPE_VERSION } =
+const { gameVisibleTape, parseTape, requiredTapeVersion, TAPE_VERSION } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
 const {
-    PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, chainInputsFor, chainSpans,
+    PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, assertWalkUnits, chainInputsFor, chainSpans,
+    walkGroups,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
 const { synthesizeLegs } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV2.js'));
@@ -87,10 +88,11 @@ const check = (name, ok, detail) => {
 
 const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === CHAIN_ID);
 if (!chain) throw new Error(`no chain "${CHAIN_ID}"`);
-if (!chain.walk.legs) {
-    throw new Error(`chain "${CHAIN_ID}" carries literal inputs, not legs — `
+if (!chain.walk.units) {
+    throw new Error(`chain "${CHAIN_ID}" carries literal inputs, not units — `
         + 'author it with plan-seedling-r7-ends-meet.mjs');
 }
+console.log(`## chain ${chain.id} — units: ${JSON.stringify(assertWalkUnits(chain))}`);
 
 /**
  * ⚠ THE SERIALIZED FORM IS WRITTEN FROM A PARSED TAPE, always. `parseTape`
@@ -101,7 +103,14 @@ if (!chain.walk.legs) {
 function tapeJson(obj, description) {
     const parsed = parseTape(obj);
     return `${JSON.stringify({
-        tape_version: TAPE_VERSION,
+        /**
+         * ⛔ EACH TAPE AT ITS OWN VERSION, not the newest one. Only the
+         * tapes that carry a v9 `at` are v9; the rest stay v8, which is what
+         * keeps this chain's first four segments BYTE-IDENTICAL across the
+         * bump — and what keeps the GAME (whose loader gates on the version
+         * LIST) from refusing a tape for a feature it does not use.
+         */
+        tape_version: requiredTapeVersion(parsed),
         game: 'seedling',
         name: obj.name,
         description,
@@ -136,51 +145,222 @@ function emit(name, json) {
     console.log(`WROTE ${path} (${json.length} bytes)`);
 }
 
-// ── the walk, synthesized, and its cuts CHECKED against the declaration ──
+/**
+ * ── ⛓⛓⛓ THE HETEROGENEOUS WALK (R7 slice 6d) ─────────────────────────
+ *
+ * The walk is a sequence of UNITS and this synthesizes it one GROUP at a
+ * time, carrying a CURSOR between them: where the player is, what the world
+ * has had cleared, and which tick the group starts on.
+ *
+ *   a `legs` group   one `synthesizeLegs` call, booted at the cursor,
+ *                    planned against the cursor's persistence. Its spans are
+ *                    DERIVED; `--check` re-derives them.
+ *   a `phases` group its spans are DATA. Nothing is planned; the cursor is
+ *                    advanced by the block's own declared `ticks`, position
+ *                    and `earns`.
+ *
+ * ⛔⛔ AND THE PHASES BLOCK'S START IS CHECKED AGAINST THE ROUTE, not
+ * assumed. `startsAt` is compared to the preceding group's own final arrival
+ * — so a route that shifts by a tile stops the authoring by name instead of
+ * splicing a choreography onto a stance it was never measured from.
+ *
+ * ⚠ THE CURSOR'S PERSISTENCE IS A PLAN-TIME FACT ABOUT A TICK, NEVER A BOOT
+ * DECLARATION. A `phases` block's `earns` moves the world the PLANNER sees
+ * from the block's end onward, and the tape says the same thing in the only
+ * honest way a tape can: a v9 `at`-clear at that same tick (`timedClearsFor`
+ * below). What must never happen is the clear landing in a tape's BOOT
+ * state — that would be a staged grant and `chainFindings`' custody claim
+ * would be false — which is why the entries carry `at` and why
+ * `witnessedClearFindings` refuses any `at` no block earns there.
+ */
 const levelSource = atlasLevelSource();
-const plan = synthesizeLegs(chain.walk.legs, {
-    levelSource,
-    boot: { ...TRUE_INITIAL_BOOT },
-    name: chain.headline,
-    relax: {
+const RELAX = {
+    noclip: false,
+    noDamage: false,
+    noHazards: [],
+    grants: [],
+    equips: [],
+    pins: [...chain.walk.pins],
+    // ⚠ The FULL role set. A walk with collision ON consults every role,
+    // and this one drives a mechanic in `combat`'s (the bob it must not
+    // touch) as well as in `blocking`'s (the block it must move).
+    roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+};
+/** ⚠ The A* arrival tolerance the executor itself uses — 1 px. */
+const { DEFAULT_TOLERANCE } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
+const { createLevelRun } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/levelRun.js'));
+
+/**
+ * ── ⛓⛓⛓ THE MODEL CANNOT AUTHOR A `phases` BLOCK. IT CAN FOLLOW ONE ────
+ *
+ * ⛔⛔ AND THE FIRST CUT OF THIS SCRIPT DID NOT, WHICH COST A WHOLE
+ * RECORDING. It advanced the cursor to the block's DECLARED cell — L5's
+ * `(48,48)`, the button — and planned the next group from there. The game
+ * really leaves the player at **(56.05, 56.40)**, four tenths of a pixel
+ * south of the cell's centre, because an A* arrival is `DEFAULT_TOLERANCE`
+ * and not an equality. Four tenths of a pixel is under half a tick of
+ * travel, and a crossing is a threshold: the plan predicted the L4 -> L5
+ * transition at 62 and the run made it at 61, so the tape ran one tick PAST
+ * its own arrival and the segment latched `v = (0, -1.15)` instead of a calm
+ * one. The chain went red on the LAST claim of a full record run.
+ *
+ * ⇒ the cursor is advanced by RUNNING the block's own spans through
+ * `createLevelRun` — the same model, the same roles, the same persistence —
+ * and reading where the run really ends. The model gets the fight itself
+ * wrong (it has no Arrow x Enemy and its bobs never move), and that does not
+ * matter here: what it is being asked for is the PLAYER's trajectory under a
+ * fixed input list, which it reproduces byte-for-byte (measured: the driven
+ * segment and `tapeRunner` agreed on all 816 ticks up to the lock's face).
+ *
+ * ⚠ `endsAt` is now a CHECK rather than an input, and it is a better one for
+ * being both: the block declares the cell it means, the model says where the
+ * spans really land, and the driven arm says where the GAME lands. Three
+ * statements, one number.
+ */
+function followPhases(block, boot, persistence) {
+    const run = createLevelRun({
+        levelSource,
+        boot: { ...boot },
         noclip: false,
         noDamage: false,
         noHazards: [],
         grants: [],
-        persistence: [],
+        persistence: persistence.map((c) => ({ ...c })),
         equips: [],
         pins: [...chain.walk.pins],
-        // ⚠ The FULL role set. A walk with collision ON consults every role,
-        // and this one drives a mechanic in `combat`'s (the bob it must not
-        // touch) as well as in `blocking`'s (the block it must move).
-        roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
-    },
-});
-const gotCuts = plan.transitions.map((t) => t.t);
-console.log(`\n## chain ${chain.id}\n`);
-console.log(`   ${plan.tape.tick_count} ticks, ${plan.tape.inputs.length} spans, `
+        roles: [...RELAX.roles],
+    });
+    // The held set per tick, from half-open spans — `tapeFormat`'s own rule,
+    // so a span live at the last tick is live here too.
+    for (let t = 0; t < block.ticks; t += 1) {
+        const held = new Set(block.spans.filter((s) => s.from <= t && t < s.to)
+            .map((s) => s.key));
+        run.advance(held);
+    }
+    return { level: run.level, x: run.state.x, y: run.state.y };
+}
+
+const WALK_INPUTS = [];
+const gotCuts = [];
+/** `{block, from, to}` per `phases` unit — the windows the GAME is asked about. */
+const PHASE_BLOCKS = [];
+let cursorBoot = { ...TRUE_INITIAL_BOOT };
+let cursorTick = 0;
+const cleared = [];
+console.log('');
+for (const group of walkGroups(chain)) {
+    if (group.kind === 'legs') {
+        const plan = synthesizeLegs(group.legs, {
+            levelSource,
+            boot: { ...cursorBoot },
+            name: chain.headline,
+            relax: { ...RELAX, persistence: cleared.map((c) => ({ ...c })) },
+        });
+        console.log(`   legs ${group.legs.map((l) => `L${l.level}`).join('->')}: `
+            + `${plan.tape.tick_count} ticks from t=${cursorTick}, `
+            + `${plan.tape.inputs.length} spans, transitions `
+            + `[${plan.transitions.map((t) => t.t + cursorTick).join(' ')}]`);
+        for (const s of plan.shoves) {
+            console.log(`      shove ${s.id} ${s.dir}: contact t+${s.contactTick}, lean `
+                + `${s.leanTicks}, (${s.from.tx},${s.from.ty}) -> (${s.to.tx},${s.to.ty})`);
+        }
+        for (const h of plan.holds) {
+            console.log(`      hold ${h.presser.tag}@${h.presser.x},${h.presser.y} `
+                + `t=${h.presser.t}: ${h.ticks} ticks, traps [${h.traps.join(' ')}], `
+                + `${h.volleys} volleys`);
+        }
+        WALK_INPUTS.push(...plan.tape.inputs.map(
+            (s) => ({ key: s.key, from: s.from + cursorTick, to: s.to + cursorTick })));
+        gotCuts.push(...plan.transitions.map((t) => t.t + cursorTick));
+        cursorTick += plan.tape.tick_count;
+        // ⛔ The cursor's next boot is where the RUN ENDED, in boot form (the
+        // `Game` ctor adds a half-tile to both axes). ⚠ `plan.final`, NOT
+        // `plan.arrivals[last]`: the latter is the last TARGET the walk was
+        // aimed at, which for a group ending in a crossing is a stance two
+        // rooms back — the first cut of this read it and reported the L4 hold
+        // stance as the L5 arrival.
+        cursorBoot = {
+            level: plan.final.level, x: plan.final.x - 8, y: plan.final.y - 8,
+        };
+    } else {
+        const p = group.block;
+        check(`⛔ the phases block "${p.id}" sits where it says it sits in the walk`,
+            p.startsAtTick === cursorTick,
+            `the route reaches it at t=${cursorTick}, it declares ${p.startsAtTick} — and `
+            + 'the witnessed-clear law turns that number back into the tick a tape\'s '
+            + '`at` must carry, so a stale one un-witnesses a real clear');
+        check(`⛔ the phases block "${p.id}" starts where the route left the player`,
+            cursorBoot.level === p.startsAt.level && cursorBoot.x === p.startsAt.x
+                && cursorBoot.y === p.startsAt.y,
+            `route left the player at ${JSON.stringify(cursorBoot)}, the block was `
+            + `measured from ${JSON.stringify(p.startsAt)} — a choreography spliced onto `
+            + 'a different stance is a fight nobody drove');
+        console.log(`   phases ${p.id}: ${p.steps.map((s) => `${s.label} ${s.ticks}`)
+            .join(' + ')} = ${p.ticks} ticks from t=${cursorTick}, ${p.spans.length} spans`);
+        console.log(`      earns [${(p.earns ?? []).map((e) => `${e.level},${e.tag}`)
+            .join(' ') || 'nothing'}]; the game is asked for `
+            + `[${p.outcome.cleared.join(' ')}] at t=${cursorTick + p.ticks}`);
+        WALK_INPUTS.push(...p.spans.map(
+            (s) => ({ key: s.key, from: s.from + cursorTick, to: s.to + cursorTick })));
+        PHASE_BLOCKS.push({ block: p, from: cursorTick, to: cursorTick + p.ticks });
+        cursorTick += p.ticks;
+        const landed = followPhases(p, cursorBoot, cleared);
+        check(`⛔ the phases block "${p.id}" lands where it says it lands, within `
+            + `${DEFAULT_TOLERANCE} px (the MODEL following its spans)`,
+        landed.level === p.endsAt.level
+            && Math.abs(landed.x - (p.endsAt.x + 8)) <= DEFAULT_TOLERANCE
+            && Math.abs(landed.y - (p.endsAt.y + 8)) <= DEFAULT_TOLERANCE,
+        `the model's follow ends at (${landed.x}, ${landed.y}) in level ${landed.level}, `
+            + `the block declares (${p.endsAt.x + 8},${p.endsAt.y + 8}) in level `
+            + `${p.endsAt.level}`);
+        // ⚠ THE CURSOR TAKES THE FOLLOW, NOT THE DECLARATION. See
+        // `followPhases`: the declaration is a cell and the run is 0.4 px
+        // from its centre, which is under half a tick of travel and enough
+        // to move a crossing by one tick.
+        cursorBoot = { level: landed.level, x: landed.x - 8, y: landed.y - 8 };
+        for (const e of p.earns ?? []) cleared.push({ ...e });
+    }
+}
+console.log(`\n   TOTAL ${cursorTick} ticks, ${WALK_INPUTS.length} spans, `
     + `transitions [${gotCuts.join(' ')}]`);
-for (const s of plan.shoves) {
-    console.log(`   shove ${s.id} ${s.dir}: contact t+${s.contactTick}, lean ${s.leanTicks}, `
-        + `(${s.from.tx},${s.from.ty}) -> (${s.to.tx},${s.to.ty})`);
+/**
+ * ⛔ EVERY DECLARED CUT IS A TRANSITION, IN ORDER — and the transitions that
+ * are NOT cuts are named rather than ignored.
+ *
+ * The last cut is a transition and not the end of the tape, because
+ * `synthesizeLegs` refuses an exit on its terminal leg: a legs group always
+ * ends one arrival past its last exit. What changed at slice 6d is that a
+ * SEGMENT may now cross more than one boundary — segment 5 steps out to L4
+ * and back — so equality between the two lists was a claim that held only
+ * while every segment happened to be one room long. The subsequence check
+ * keeps the real property (a cut is a place the game really arrived, and the
+ * cuts come in the declared order) and the extras are printed, so a route
+ * that grew a room says so instead of passing quietly.
+ */
+{
+    const want = [...chain.cuts, chain.endsAt];
+    let i = 0;
+    const extra = [];
+    for (const t of gotCuts) {
+        if (t === want[i]) { i += 1; continue; }
+        extra.push(t);
+    }
+    check("⛔ the chain's DECLARED cuts are transitions the route really makes, in order",
+        i === want.length,
+        `driver [${gotCuts.join(' ')}] vs declared [${want.join(' ')}]`
+        + (extra.length ? `; ${extra.length} non-cut transition(s) INSIDE segments `
+            + `[${extra.join(' ')}]` : '')
+        + ' — a chain whose cuts are taken from whatever the planner produced cannot '
+        + 'notice a route that moved');
 }
-for (const h of plan.holds) {
-    console.log(`   hold ${h.presser.tag}@${h.presser.x},${h.presser.y} t=${h.presser.t}: `
-        + `${h.ticks} ticks, traps [${h.traps.join(' ')}], ${h.volleys} volleys`);
-}
-check("⛔ the route's own transitions are the chain's DECLARED cuts",
-    JSON.stringify(gotCuts) === JSON.stringify([...chain.cuts, chain.endsAt]),
-    `driver [${gotCuts.join(' ')}] vs declared [${[...chain.cuts, chain.endsAt].join(' ')}] `
-    + '— a chain whose cuts are taken from whatever the planner produced cannot notice '
-    + 'a route that moved');
 check('⛔ the route ends exactly where the chain says it ends',
-    plan.tape.tick_count === chain.endsAt,
-    `tick_count ${plan.tape.tick_count}, endsAt ${chain.endsAt}`);
+    cursorTick === chain.endsAt,
+    `tick_count ${cursorTick}, endsAt ${chain.endsAt}`);
 if (failures > 0) {
     console.log('\nrefusing to author from a route that is not the declared one');
     process.exit(1);
 }
-const WALK_INPUTS = plan.tape.inputs;
 
 /**
  * ⛔⛔ THE LATCH COMES OFF REAL-GPU WINDOWS CHROME, AND THAT IS A PRICE
@@ -207,13 +387,13 @@ const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 
-function latchOf(label, tapeObj) {
+function latchOf(label, tapeObj, { mobiles = false } = {}) {
     mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
     writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
         readFileSync(WIN_DRIVER));
     const outWsl = join(WIN_SCRATCH_WSL, `stream-${label}.json`);
     writeFileSync(join(WIN_SCRATCH_WSL, `tape-${label}.json`),
-        JSON.stringify(parseTape(tapeObj)));
+        JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
     try { unlinkSync(outWsl); } catch { /* first run */ }
     const t0 = Date.now();
     let out;
@@ -223,6 +403,7 @@ function latchOf(label, tapeObj) {
             '--url', PAGE_URL,
             '--tape', `${WIN_SCRATCH_DOS}\\tape-${label}.json`,
             '--out', `${WIN_SCRATCH_DOS}\\stream-${label}.json`,
+            ...(mobiles ? ['--mobiles'] : []),
             '--deadline-sec', String(Math.ceil(tapeObj.tick_count * 1.5) + 120),
         ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (e) {
@@ -237,14 +418,70 @@ function latchOf(label, tapeObj) {
     console.log(`    drove ${label}: ${got.stream.ticks.length} observations, `
         + `${got.status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     if (!got.seam) throw new Error(`${label}: the driver returned no seam block`);
-    return { seam: got.seam, ticks: got.stream.ticks, status: got.status };
+    return {
+        seam: got.seam, ticks: got.stream.ticks, status: got.status, mobiles: got.mobiles,
+    };
+}
+
+const clearedIn = (st) => (st.persistence_cleared || [])
+    .map((r) => `${r.level ?? r.l},${r.tag ?? r.t}`);
+
+/**
+ * ⛔⛔ THE SILENT-DEATH DETECTOR, carried over from
+ * `probe-seedling-r7-l5-arrows.mjs` because the same fight is being driven.
+ *
+ * A death is a world reconstruction at `Main.playerPositionX/Y`, so the tell
+ * is a tick that JUMPS to the boot tile WITHOUT a level change — and
+ * `status.hits` cannot see it, because the counter reads the NEW Player.
+ * A phases block whose player died would report a lock that never opened as
+ * "the mechanism did not fire" (trap 142).
+ */
+function respawnJumps(ticks, boot) {
+    const bx = boot.x + 8;
+    const by = boot.y + 8;
+    const jumps = [];
+    for (let i = 1; i < ticks.length; i += 1) {
+        const a = ticks[i - 1];
+        const b = ticks[i];
+        if (b.level !== a.level) continue;
+        if (b.x === bx && b.y === by && (Math.abs(a.x - bx) > 8 || Math.abs(a.y - by) > 8)) {
+            jumps.push(b.t);
+        }
+    }
+    return jumps;
+}
+
+/**
+ * ⛓⛓⛓ THE WITNESSED MID-RUN CLEARS A TAPE MUST CARRY (v9), derived from the
+ * blocks rather than typed: one entry per `earns`, at the block's own END
+ * tick, expressed in the tape's own tick frame.
+ *
+ * ⚠ `from`/`to` is the tape's window in walk ticks, so a clear a tape does
+ * not contain is not written to it — the headline gets all of them at
+ * absolute ticks, and each segment gets the ones its own window covers.
+ */
+function timedClearsFor(from, to) {
+    const out = [];
+    for (const { block, to: end } of PHASE_BLOCKS) {
+        for (const e of block.earns ?? []) {
+            if (end < from || end > to) continue;
+            out.push({
+                level: e.level,
+                tag: e.tag,
+                at: end - from,
+                note: `${block.id}: the GAME's own clear, witnessed at this tick by a `
+                    + `truncated arm (${block.provenance.probe})`,
+            });
+        }
+    }
+    return out;
 }
 
 {
     const spans = chainSpans(chain);
     const base = {
         game: 'seedling',
-        tape_version: TAPE_VERSION,
+        tape_version: TAPE_VERSION,   // the parse ceiling; `tapeJson` stamps the real one
         noclip: false,
         noDamage: false,
         noHazards: [],
@@ -262,6 +499,7 @@ function latchOf(label, tapeObj) {
         ...base,
         name: chain.headline,
         boot: { ...TRUE_INITIAL_BOOT },
+        persistence: timedClearsFor(0, chain.endsAt),
         tick_count: chain.endsAt,
         inputs: chainInputsFor(WALK_INPUTS, 0, chain.endsAt),
     }, `⛓ THE HEADLINE of chain "${chain.id}" — the game's own opening in ONE run, so `
@@ -272,7 +510,9 @@ function latchOf(label, tapeObj) {
         + 'every row but the cell `pushableblock@32,64` stands in, so the walk holds '
         + '`button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits '
         + '0->1->2->3, gone by t~158 of that segment) and then LEANS the block from '
-        + '(2,4) to (4,4). `pins: ["dead_frames"]` makes `save.time` '
+        + '(2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with '
+        + 'NO WEAPON and the walk crosses the cell the lock was standing on. '
+        + '`pins: ["dead_frames"]` makes `save.time` '
         + 'update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once '
         + 'per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.'));
 
@@ -282,6 +522,7 @@ function latchOf(label, tapeObj) {
         ...base,
         name: seg1Name,
         boot: { ...TRUE_INITIAL_BOOT },
+        persistence: timedClearsFor(spans[0].from, spans[0].to),
         tick_count: spans[0].to,
         inputs: chainInputsFor(WALK_INPUTS, spans[0].from, spans[0].to),
     };
@@ -295,6 +536,7 @@ function latchOf(label, tapeObj) {
 
     // ── every later segment: authored FROM the predecessor's latch ─────
     let prev = seg1Obj;
+    const segObjs = [seg1Obj];
     for (let i = 1; i < chain.segments.length; i += 1) {
         const driven = latchOf(chain.segments[i - 1], prev);
         const calm = seamLatchFindings(driven.seam, { requireCalm: true });
@@ -314,6 +556,15 @@ function latchOf(label, tapeObj) {
             ...base,
             ...blocks,
             name,
+            /**
+             * ⛔ THE LATCH'S BOOT CLEARS FIRST, THE WITNESSED ONES AFTER — a
+             * plain overwrite here would DROP whatever the predecessor had
+             * already earned, which is the custody chain's whole content.
+             */
+            persistence: [
+                ...(blocks.persistence ?? []),
+                ...timedClearsFor(spans[i].from, spans[i].to),
+            ],
             tick_count: spans[i].to - spans[i].from,
             inputs: chainInputsFor(WALK_INPUTS, spans[i].from, spans[i].to),
         };
@@ -328,6 +579,109 @@ function latchOf(label, tapeObj) {
             + '`playthroughAcceptance` on every sweep. Authored by '
             + 'scripts/procgen/plan-seedling-r7-act2.mjs.'));
         prev = obj;
+        segObjs.push(obj);
+    }
+
+    /**
+     * ⛔⛔ AND THE LAST SEGMENT IS DRIVEN TOO, for its CALM ARRIVAL alone.
+     *
+     * Nothing needs its latch — there is no successor to author — so the
+     * first cut of this loop stopped at N-1 and the last segment's arrival
+     * went unchecked until the sweep. Slice 6d paid for that: a chain whose
+     * final segment ran ONE TICK past its arrival recorded six tapes, and the
+     * only thing that said so was `chainFindings` at the end of a full
+     * `--record` run. A calm arrival is cheap to ask for here.
+     */
+    {
+        const last = chain.segments[chain.segments.length - 1];
+        const driven = latchOf(last, prev);
+        const calm = seamLatchFindings(driven.seam, { requireCalm: true });
+        const notCalm = calm.filter((r) => !r.ok);
+        check(`${last} ends at a CALM ARRIVAL`, notCalm.length === 0,
+            notCalm.length === 0
+                ? `${calm.length - 1} signature rows latched at tick `
+                    + `${driven.seam.seam['latch.tick']}`
+                : notCalm.map((r) => `${r.name} [${r.detail}]`).join('; '));
+    }
+
+    /**
+     * ── ⛓⛓⛓ THE PHASES BLOCKS' OUTCOME, ASKED OF THE GAME AT BLOCK END ──
+     *
+     * One extra drive per `phases` unit: the containing segment's own tape,
+     * TRUNCATED at the block's last tick, with `--mobiles` on. What it buys
+     * over reading the same fields at the end of the segment is a whole leg:
+     * a lock that opened during the CROSSING rather than during the FIGHT
+     * would satisfy an end-of-segment check and would mean the choreography
+     * did nothing.
+     *
+     * ⚠ IT IS THE SAME TAPE, not a rebuild. The boot block, the RNG streams,
+     * the save arrays and the input spans are the segment's; only
+     * `tick_count` moves. A truncation that re-derived its inputs could
+     * differ from the segment in a way this would never see.
+     */
+    for (const { block, from, to } of PHASE_BLOCKS) {
+        const idx = spans.findIndex((s) => from >= s.from && to <= s.to);
+        if (idx < 0) {
+            throw new Error(`phases "${block.id}" spans ticks ${from}..${to}, which no `
+                + 'single segment contains — a block split across a seam has no one '
+                + 'window to ask the game about');
+        }
+        const host = segObjs[idx];
+        const label = `${chain.segments[idx]}-${block.id}`;
+        const cut = to - spans[idx].from;
+        /**
+         * ⛔ A SPAN THAT STRADDLES THE CUT IS A REFUSAL, NOT A CLIP. Spans
+         * are half-open, so one that STARTS at the cut is entirely outside
+         * the window and drops with no consequence — but one live ACROSS it
+         * would be released by the truncation, and the arm would then be
+         * driving a different last tick than the segment does.
+         */
+        for (const s of host.inputs) {
+            if (s.from < cut && s.to > cut) {
+                throw new Error(`phases "${block.id}": the ${s.key} span [${s.from},`
+                    + `${s.to}) is live across the block's last tick (${cut}); the `
+                    + 'truncated arm would release a key the segment holds');
+            }
+        }
+        const arm = latchOf(label, {
+            ...host, name: label, tick_count: cut,
+            inputs: chainInputsFor(host.inputs, 0, cut),
+        }, { mobiles: true });
+        const end = arm.ticks[arm.ticks.length - 1];
+        const bobs = (arm.mobiles?.[arm.mobiles.length - 1]?.mobiles ?? [])
+            .filter((m) => /Bob/.test(m.cls || m.type || ''));
+
+        // ⛔ FIRST, AND EVERYTHING ELSE IS VACUOUS WITHOUT IT.
+        const jumps = respawnJumps(arm.ticks, host.boot);
+        check(`⛔ phases "${block.id}": the player never died inside the block`,
+            jumps.length === 0,
+            jumps.length === 0
+                ? `${arm.ticks.length} observations, no jump to the boot tile`
+                : `respawn-shaped jump(s) at t=[${jumps.join(' ')}] — every other finding `
+                    + 'about this block is VACUOUS until this is green');
+
+        const got = clearedIn(arm.status);
+        const want = [...block.outcome.cleared];
+        check(`⛓⛓⛓ phases "${block.id}": the GAME cleared [${want.join(' ')}] by tick `
+            + `${cut} of ${chain.segments[idx]}`,
+        want.every((w) => got.includes(w)),
+        `persistence_cleared [${got.join(' ') || 'nothing'}] — this is the block's whole `
+            + 'claim, and it is the game\'s own readout rather than a fight the model '
+            + 'predicted');
+        check(`⛓ phases "${block.id}": ${block.outcome.enemies} enemy body/bodies left`,
+            bobs.length === block.outcome.enemies,
+            `${bobs.length} Bob(s) in the last mobile sample`
+            + (bobs.length ? `: ${bobs.map((b) => `(${Math.round(b.x)},${Math.round(b.y)})`)
+                .join(' ')}` : ''));
+        check(`⛔ phases "${block.id}": it ends where it says it ends, within `
+            + `${DEFAULT_TOLERANCE} px`,
+        Boolean(end) && end.level === block.endsAt.level
+            && Math.abs(end.x - (block.endsAt.x + 8)) <= DEFAULT_TOLERANCE
+            && Math.abs(end.y - (block.endsAt.y + 8)) <= DEFAULT_TOLERANCE,
+        `the game left the player at ${JSON.stringify(end)}, the block declares `
+            + `(${block.endsAt.x + 8},${block.endsAt.y + 8}) in level ${block.endsAt.level}`
+            + ' — and the NEXT leg is planned from that declaration, so a drift here is '
+            + 'a route planned from a stance the run never had');
     }
 }
 

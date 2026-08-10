@@ -1,0 +1,248 @@
+{
+    "tape_version": 9,
+    "game": "seedling",
+    "name": "r7-act2-5",
+    "description": "⛓ SEGMENT 5 of chain \"act2-to-l6\" — EVERY FIELD OF ITS BOOT STATE IS r7-act2-4's LATCH, read out of the game and handed to `segmentBootFromLatch`. Nothing here is typed: the save arrays, the persistence clear set, the three RNG streams, the day/night phase and the music no-repeat pair are all numbers only the game can produce. That is what makes the seam a MEASURED equality rather than a claim — `boot(N+1) == latch(N)` over the whole SEAM_SIGNATURE, checked by `playthroughAcceptance` on every sweep. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "boot": {
+        "level": 5,
+        "x": 80,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": "l5-arrow-bait: the GAME's own clear, witnessed at this tick by a truncated arm (scripts/procgen/probe-seedling-r7-l5-arrows.mjs)",
+            "at": 737
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1726967612,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 750204808
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5701,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Push Rock",
+            "index": 0
+        }
+    },
+    "tick_count": 812,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "up",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 53
+        },
+        {
+            "key": "right",
+            "from": 55,
+            "to": 57
+        },
+        {
+            "key": "right",
+            "from": 301,
+            "to": 312
+        },
+        {
+            "key": "left",
+            "from": 312,
+            "to": 313
+        },
+        {
+            "key": "right",
+            "from": 313,
+            "to": 315
+        },
+        {
+            "key": "left",
+            "from": 317,
+            "to": 320
+        },
+        {
+            "key": "right",
+            "from": 321,
+            "to": 323
+        },
+        {
+            "key": "down",
+            "from": 327,
+            "to": 361
+        },
+        {
+            "key": "up",
+            "from": 363,
+            "to": 365
+        },
+        {
+            "key": "up",
+            "from": 409,
+            "to": 443
+        },
+        {
+            "key": "down",
+            "from": 445,
+            "to": 447
+        },
+        {
+            "key": "left",
+            "from": 451,
+            "to": 462
+        },
+        {
+            "key": "right",
+            "from": 462,
+            "to": 463
+        },
+        {
+            "key": "left",
+            "from": 463,
+            "to": 465
+        },
+        {
+            "key": "right",
+            "from": 467,
+            "to": 470
+        },
+        {
+            "key": "left",
+            "from": 471,
+            "to": 473
+        },
+        {
+            "key": "right",
+            "from": 737,
+            "to": 748
+        },
+        {
+            "key": "left",
+            "from": 748,
+            "to": 749
+        },
+        {
+            "key": "right",
+            "from": 749,
+            "to": 751
+        },
+        {
+            "key": "left",
+            "from": 752,
+            "to": 754
+        },
+        {
+            "key": "down",
+            "from": 758,
+            "to": 785
+        },
+        {
+            "key": "up",
+            "from": 786,
+            "to": 788
+        },
+        {
+            "key": "left",
+            "from": 792,
+            "to": 803
+        },
+        {
+            "key": "down",
+            "from": 792,
+            "to": 812
+        },
+        {
+            "key": "right",
+            "from": 803,
+            "to": 804
+        },
+        {
+            "key": "left",
+            "from": 804,
+            "to": 805
+        },
+        {
+            "key": "right",
+            "from": 805,
+            "to": 806
+        },
+        {
+            "key": "left",
+            "from": 806,
+            "to": 807
+        },
+        {
+            "key": "right",
+            "from": 809,
+            "to": 811
+        }
+    ]
+}
