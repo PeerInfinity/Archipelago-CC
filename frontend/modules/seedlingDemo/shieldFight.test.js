@@ -200,6 +200,29 @@ describe('the window — `r6-shield-kill`', () => {
         expect(took.frames).toBeGreaterThan(1);
         expect(KILL.frozenFramesOwed).toBe(0);      // phase A is a lump, not ticks
     });
+
+    /**
+     * ⛔ R7 slice 6: AND COLLECTING IT BANKS NOTHING. `BossKey.removed()`
+     * writes `Player.hasKeySet(keyType, true)` and no persistence at all —
+     * it is one of the three placed pickup classes in
+     * `PICKUP_WRITES_NO_TAG` — so the tape that collects a boss key must
+     * gain no `earnedClears` row for the KEY, only the `{19,0}` the
+     * ShieldBoss's own `startDeath` wrote.
+     *
+     * ⚠ THIS TEST EXISTS BECAUSE THE MUTATION LIST FOUND A NON-BITER.
+     * Removing the `persistTag !== undefined` guard from the ledger's bank —
+     * so every collected pickup banks its tag, `bosskey` included — passed
+     * every other stratum: the key's row has no `persistTag`, the key
+     * becomes `"19:undefined"`, `Number('undefined')` is NaN, and a
+     * `{level: 19, tag: NaN}` row sat in the ledger with nothing asserting
+     * against it. A guard whose removal changes nothing observable is not a
+     * guard.
+     */
+    it('⛔ …and the KEY banks no clear of its own — only the boss\'s {19,0}', () => {
+        const inL19 = KILL.earnedClears.filter((c) => c.level === 19);
+        expect(inL19).toEqual([{ level: 19, tag: 0, by: 'shieldboss@80,32' }]);
+        for (const c of KILL.earnedClears) expect(Number.isInteger(c.tag), c.by).toBe(true);
+    });
 });
 
 describe('the pair — `r6-shield-control`, one primitive fewer', () => {

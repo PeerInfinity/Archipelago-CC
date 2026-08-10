@@ -263,26 +263,29 @@ describe('L20 — the gates, and which side of the shield they are on', () => {
         }
         expect(run.inventory.hasShield).toBe(true);
         /**
-         * ⚠ AND `{20,2}` IS *NOT* IN `earnedClears`, WHICH IS A GAP THIS
-         * SLICE FOUND AND DID NOT CLOSE.
+         * ⛓⛓⛓ AND `{20,2}` IS IN `earnedClears` — R6 DEBT 2, PAID AT R7
+         * SLICE 6, AND THIS ASSERTION IS THE ONE THAT FLIPPED.
          *
-         * `Shield.removed()` is `hasShield = true; Moonrock.beam = true;
-         * Game.setPersistence(tag, false)` — a real clear. `earnedClears`
-         * enumerates SIX mechanisms (touch locks, boss locks, lightpoles,
-         * buttonrooms, broken rocks, boss kills) and a PICKUP's own tag is
-         * in none of them; `buildLevelWorld` does not even carry a
-         * `persistTag` on a pickup row. So the wand's clear is missing from
-         * the same ledger, and has been since R5 slice 23.
+         * R6 slice 5 wrote this test asserting `false` and named the gap
+         * with its blast radius: `Shield.removed()` is `hasShield = true;
+         * Moonrock.beam = true; Game.setPersistence(tag, false)` — a real
+         * clear — and `earnedClears` enumerated six mechanisms, none of them
+         * a PICKUP's own tag, while `buildLevelWorld` carried no
+         * `persistTag` on a pickup row at all.
          *
-         * ⛔ NOT FIXED HERE, DELIBERATELY. Adding the arm would change the
-         * `earnedClears` of every fixture that collects a tagged pickup —
-         * which the differential's exact-set assertion compares against the
-         * GAME's `persistence_cleared`, and those fixtures are green today.
-         * Either the game's readout does not carry it or the check tolerates
-         * it, and finding out which is a measurement this slice has not
-         * made. Named, with its blast radius, rather than patched blind.
+         * ⛓ The blast radius it worried about was measured rather than
+         * guessed, and it is in the SAFE direction: the differential's
+         * persistence claim is a SUBSET check ("everything the model says
+         * was opened really is off in the game"), and its own comment says
+         * the exact-set version was waiting on exactly these tags. A row
+         * added here can only make that check stricter, never wrong.
+         *
+         * ⚠ A DEBT'S RECORD IS AN ASSERTION THAT MUST FLIP. This one could
+         * only ever have gone red on the slice that paid it, which is the
+         * point of writing the gap down as a test instead of a comment.
          */
-        expect(run.earnedClears.some((c) => c.level === 20 && c.tag === 2)).toBe(false);
+        expect(run.earnedClears).toContainEqual(
+            { level: 20, tag: 2, by: 'shield@112,48' });
         // ⛔ NO GATE WAS CROSSED. The three L20 activators are untouched.
         expect(run.openActivators).not.toContain('lock@32,80');
         expect(run.openActivators).not.toContain('shieldlocknorm@176,16');

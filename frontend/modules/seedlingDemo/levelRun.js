@@ -2077,6 +2077,19 @@ export function createLevelRun({
      * ledger has one entry, not two.
      */
     const rockFlags = new Map();
+    /**
+     * ⛓⛓ R7 slice 6 (R6 debt 2): one record per COLLECTED pickup whose class
+     * clears its own tag — `"<level>:<tag>" -> {id, level, tag, t}`.
+     *
+     * ⛔ BANKED AT THE CEREMONY'S COMPLETION, not read off `world.pickups` at
+     * the end, and the difference is a whole walk. `collectedPickups` is
+     * keyed by position and `world` is only ever the level the run is IN, so
+     * a six-level walk that collected the sword in L10 and finished in L64
+     * could not answer "which tags did I clear" from the world at all. The
+     * completion site is also the only place `doActions` is true, which is
+     * the guard fourteen of the fifteen writes sit behind.
+     */
+    const pickupFlags = new Map();
     /** ⛓ R5 slice 12: one record per BURN — `{id, level, t, goneAt, flag}`. */
     const treeBurns = [];
     const polesOf = (n) => worldFor(n).pressResponders.filter((r) => r.as3 === 'LightPole');
@@ -7120,6 +7133,29 @@ export function createLevelRun({
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
                 out.push({ level: n, tag, by: r.id });
             }
+            // ⛓⛓ R7 SLICE 6 — R6 DEBT 2, PAID. A collected pickup's own
+            // `removed()` runs `Game.setPersistence(tag, false)` for fourteen
+            // of the seventeen placed classes, so the shield's `{20,2}` and
+            // the sword's `{10,0}` belong in this ledger and were missing
+            // from it since R3.
+            //
+            // ⚠ ITS OWN LOOP, like every family above, because "which
+            // openers did this walk use" has to distinguish a PICKUP from a
+            // kill, a break and a dialogue — and because the write site is
+            // different in kind: the other families open a WALL, this one
+            // stops an item respawning.
+            //
+            // ⚠ AND IT IS ADDITIVE IN THE SAFE DIRECTION. The differential's
+            // persistence claim is a SUBSET check — "everything the model
+            // says was opened really is off in the game" — and its own
+            // comment says the exact-set claim was waiting on exactly these
+            // tags. A row added here can only make that check stricter.
+            for (const [key, r] of pickupFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                if (out.some((o) => o.level === n && o.tag === tag)) continue;
+                out.push({ level: n, tag, by: r.id });
+            }
             return out;
         },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
@@ -8563,6 +8599,24 @@ export function createLevelRun({
                     // contact, which is the whole difference between a real
                     // collection and R0's grant.
                     collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
+                    // ⛓⛓ R7 slice 6: and the `Game.setPersistence(tag, false)`
+                    // the same `removed()` runs. `persistTag` is present only
+                    // for the fourteen classes that write it
+                    // (`PICKUP_CLEARS_OWN_TAG`), so a BossKey or a totem part
+                    // banks nothing here and its flag stays set — which is
+                    // what the game does.
+                    if (ceremony.pickup.persistTag !== undefined
+                        && ceremony.pickup.persistTag >= 0) {
+                        pickupFlags.set(
+                            `${ceremony.level}:${ceremony.pickup.persistTag}`,
+                            {
+                                id: `${ceremony.pickup.tag}@${ceremony.pickup.x},`
+                                    + `${ceremony.pickup.y}`,
+                                level: ceremony.level,
+                                tag: ceremony.pickup.persistTag,
+                                t: ticksCompleted + 1,
+                            });
+                    }
                     // `item: null` is a pickup the fourteen-property mirror
                     // does not track (a boss key, a totem part) — the
                     // ceremony is real, there is just nothing to apply.

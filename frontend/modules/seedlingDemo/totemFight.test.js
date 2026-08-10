@@ -148,8 +148,15 @@ describe('the kill arm', () => {
         // (§10.8) and the opposite of what "a kill sets a flag" suggests —
         // which is why the row belongs in `earnedClears` and not in a
         // ledger of its own.
+        // ⛓ R7 slice 6: and a SECOND row, from the same walk and a different
+        // mechanism — `Wand.removed()`'s own `Game.setPersistence(tag,
+        // false)` (R6 debt 2, paid). The two are deliberately separate
+        // families in `earnedClears`: the totem's row is a KILL that opened
+        // a wall, the wand's is a PICKUP that stopped an item respawning,
+        // and "which openers did this walk use" has to tell them apart.
         expect(kill.earnedClears).toEqual([
             { level: 43, tag: 5, by: 'bosstotem@152,168' },
+            { level: 43, tag: 0, by: 'wand@144,224' },
         ]);
     });
 

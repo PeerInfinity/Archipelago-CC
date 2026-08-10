@@ -586,6 +586,58 @@ const levelFlag = (src, what) => Object.freeze({
  * The rect is the ctor's half-tile offset plus `setHitbox`, same algebra as
  * a blocking entry: `[x + 8 - originX, + w) x [y + 8 - originY, + h)`.
  */
+/**
+ * ⛓⛓ THE PICKUPS THAT CLEAR THEIR OWN PERSISTENCE TAG (R6 debt 2, paid at
+ * R7 slice 6).
+ *
+ * `Pickup.as` itself writes NO persistence — the base class's `removeSelf()`
+ * is one line. Fourteen SUBCLASSES override `removed()` and write
+ * `Game.setPersistence(tag, false)` there, which is what stops a collected
+ * item respawning on the next visit. Three placed pickup classes do NOT:
+ * `BossKey` writes `Player.hasKeySet` instead, `BossTotemPart` writes
+ * `Player.hasTotemPartSet`, and `Seed` ends the game.
+ *
+ * ⇒ collecting one of these is an EARNED CLEAR, exactly like breaking a rock
+ * or opening a touch-lock, and until this table existed `earnedClears` could
+ * not say so: `buildLevelWorld` put no `persistTag` on a pickup row at all,
+ * so the shield's `{20,2}` and the sword's `{10,0}` were invisible to the
+ * one ledger whose whole job is "which flags did this walk turn off itself".
+ *
+ * ⚠ THE MEMBERSHIP IS A CLAIM ABOUT SOURCE and `levelWorld.test.js` asserts
+ * its SHAPE (every name is a real pickup tag, and the three exclusions are
+ * named), because a table that quietly grew a wrong member would make the
+ * differential expect a clear the game never writes.
+ *
+ * ⚠ `HealthPickup.as:62` writes its clear OUTSIDE the `doActions` guard,
+ * alone among the fourteen. It does not change this table — the model only
+ * banks a clear on a COMPLETED ceremony, which is `doActions` true — but it
+ * is the one member whose flag would also land on the refused path, and R6
+ * §2.2 already carries it as a modelled fact.
+ */
+export const PICKUP_CLEARS_OWN_TAG = Object.freeze({
+    sword: 'Pickups/Sword.as:47',
+    shield: 'Pickups/Shield.as:47',
+    torchpickup: 'Pickups/TorchPickup.as:49',
+    wand: 'Pickups/Wand.as:71',
+    conch: 'Pickups/Conch.as:45',
+    ghostspear: 'Pickups/GhostSpear.as:46',
+    health: 'Pickups/HealthPickup.as:62 (⚠ OUTSIDE the doActions guard)',
+    darkshield: 'Pickups/DarkShield.as:45',
+    darksuit: 'Pickups/DarkSuit.as:45',
+    feather: 'Pickups/Feather.as:45',
+    ghostsword: 'Pickups/GhostSword.as:46',
+    firewand: 'Pickups/FireWand.as:52',
+    fire: 'Pickups/Fire.as:47',
+    darksword: 'Pickups/DarkSword.as:49',
+});
+
+/** The three placed pickup classes that write no persistence, and why. */
+export const PICKUP_WRITES_NO_TAG = Object.freeze({
+    bosskey: 'BossKey.removed() writes Player.hasKeySet(keyType, true) instead',
+    totempart: 'BossTotemPart.removed() writes Player.hasTotemPartSet instead',
+    seed: 'Seed ends the game; Pickups/Seed.as:73,80,85 reboot the world',
+});
+
 const pickup = (as3, src, w, h, originX, originY) => Object.freeze({
     as3,
     collider: 'none',
@@ -3949,6 +4001,12 @@ export function buildLevelWorld(levelRecord, {
             pickups.push({
                 rect: entityRect(cls.pickup, x, y), cls, tag: e.type, x, y,
                 special: cls.pickup.special,
+                // ⛓ R7 slice 6 (R6 debt 2): the pickup's OWN persistence tag,
+                // carried only for the fourteen classes whose `removed()`
+                // writes it — so a missing field on a `bosskey` is a loud
+                // absence rather than a `{19,-1}` nobody would notice.
+                ...(PICKUP_CLEARS_OWN_TAG[e.type] !== undefined
+                    ? { persistTag: tagOf(e.type, e.attrs) } : {}),
                 // R4: a `BossKey`'s `removed()` writes `Player.hasKeySet`
                 // rather than one of the fourteen item properties, so WHICH
                 // key it is has to survive the census — a `bosskey` ceremony

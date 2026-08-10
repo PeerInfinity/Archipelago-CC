@@ -29,6 +29,8 @@ import {
     LIVE_GEOMETRY_KEYS,
     LevelWorldError,
     MODELLED_TILE_TYPES,
+    PICKUP_CLEARS_OWN_TAG,
+    PICKUP_WRITES_NO_TAG,
     PLAYER_SOLID_TYPES,
     PUSHABLE_FAMILIES,
     PRE_R5_ROLES,
@@ -49,6 +51,7 @@ import {
     rect,
     rectsOverlap,
 } from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
 import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { HITBOX } from './playerPhysicsV1.js';
@@ -1884,5 +1887,70 @@ describe('⛓ R7 slice 4: the normalised live-geometry bag, and its BRAND', () =
         const w = blockWorld();
         expect(w.collidesSolid(playerBox(100, 100), branded))
             .toMatchObject({ fallen: true });
+    });
+});
+
+/**
+ * ⛓⛓ R7 slice 6 — R6 DEBT 2's TABLE, asserted against the class list rather
+ * than typed twice.
+ *
+ * The debt was "`earnedClears` does not carry a PICKUP's own persistence
+ * tag", and the reason it could not was here: no pickup row carried a
+ * `persistTag` at all. The fix is a membership claim about SOURCE — fourteen
+ * `Pickup` subclasses override `removed()` with `Game.setPersistence(tag,
+ * false)` and three do not — so what this stratum can check is that the
+ * claim is COMPLETE and DISJOINT over the classes the game actually places,
+ * which is the half a source read cannot get wrong quietly.
+ */
+describe('a pickup\'s own persistence tag (R6 debt 2)', () => {
+    const placedPickupTags = Object.entries(ENTITY_CLASSES)
+        .filter(([, cls]) => cls.pickup).map(([tag]) => tag);
+
+    it('PARTITIONS every placed pickup class — no member missing, none in both', () => {
+        const clears = Object.keys(PICKUP_CLEARS_OWN_TAG);
+        const writes = Object.keys(PICKUP_WRITES_NO_TAG);
+        // ⛔ DERIVED FROM `ENTITY_CLASSES`, never a typed count. A class
+        // added tomorrow lands in neither table and fails HERE, which is the
+        // only way a new pickup can announce that its `removed()` needs
+        // reading.
+        //
+        // ⚠ Two members are RUNTIME-spawned and have no `.oel` placement —
+        // `fire` (BobBoss's drop) and `darksword` (the Witch's trade) — so
+        // they are in the clears table and not in the class list. They are
+        // named rather than filtered, because a member with no class entry
+        // is otherwise indistinguishable from a typo.
+        const runtimeOnly = ['fire', 'darksword'];
+        for (const t of runtimeOnly) {
+            expect(clears, `${t} is runtime-spawned`).toContain(t);
+            expect(placedPickupTags, `${t} has no .oel placement`).not.toContain(t);
+        }
+        const placedClears = clears.filter((t) => !runtimeOnly.includes(t));
+        expect([...placedClears, ...writes].sort()).toEqual([...placedPickupTags].sort());
+        expect(placedClears.filter((t) => writes.includes(t))).toEqual([]);
+    });
+
+    it('every entry CITES a line, so the membership is checkable at source', () => {
+        for (const [tag, cite] of Object.entries(PICKUP_CLEARS_OWN_TAG)) {
+            expect(cite, tag).toMatch(/^Pickups\/\w+\.as:\d+/);
+        }
+        for (const [tag, why] of Object.entries(PICKUP_WRITES_NO_TAG)) {
+            expect(why.length, tag).toBeGreaterThan(20);
+        }
+    });
+
+    it('⛓ the pickup ROW carries the tag — and only for a class that writes it', () => {
+        // L20 holds `shield {tag 2}` and L19 holds `bosskey {keyType 0}`,
+        // which is the partition's two sides one level apart.
+        const w20 = buildLevelWorld(atlasLevelSource()(20), { roles: ROLES });
+        const shield = w20.pickups.find((p) => p.tag === 'shield');
+        expect(shield.persistTag).toBe(2);
+
+        const w19 = buildLevelWorld(atlasLevelSource()(19), { roles: ROLES });
+        const key = w19.pickups.find((p) => p.tag === 'bosskey');
+        // ⛔ ABSENT, not -1. `BossKey.removed()` writes `hasKeySet` and no
+        // persistence at all, so a sentinel here would be a tag the ledger
+        // could accidentally bank; `undefined` cannot be banked by mistake.
+        expect(key.persistTag).toBeUndefined();
+        expect('persistTag' in key).toBe(false);
     });
 });
