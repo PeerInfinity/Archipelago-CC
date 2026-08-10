@@ -163,6 +163,14 @@ import {
     CEREMONY_DEAD_FRAMES, createSealPiece, sealControllerTicks, sealPieceBox, stepSealPiece,
 } from './sealCeremony.js';
 import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
+// ⛓⛓⛓ R7 SLICE 6b: the SIXTEENTH family. An `ArrowTrap` is the pulsers'
+// shape with the sign flipped — an `Activators` with a `t` that is Solid
+// NEITHER way — so its live state lives here beside theirs and never in
+// `activators`.
+import {
+    ARROW_KILL_PLAN, arrowLane, arrowTrapFires, createArrow, createArrowTrap,
+    lanesOver, shadowOf, stepArrow, stepArrowTrap,
+} from './arrowTrap.js';
 import {
     ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
     seamFieldsFromBlock,
@@ -1998,6 +2006,39 @@ export function createLevelRun({
             pulserStates.set(n, byId);
         }
         return pulserStates.get(n);
+    };
+    /**
+     * ⛓⛓⛓ R7 SLICE 6b: THE ARROW TRAPS, and the live arrows they make.
+     *
+     * The pulsers' shape with the sign flipped. A `Pulser` is `type =
+     * "Solid"` published or not; an `ArrowTrap` is Solid NEITHER way
+     * (`ArrowTrap` calls no `setHitbox` and assigns no `type`), so "open" is
+     * not a question anyone can ask of it either. What its group changes is
+     * that it starts SHOOTING, and the shots are bodies this run owns.
+     *
+     * ⚠ PER VISIT, like the pulsers': `Activators.check()` re-derives
+     * `activate` on every `new Game`, and an arrow in flight is a body of
+     * the old world.
+     */
+    const arrowTrapStates = new Map();
+    const arrowTrapsOf = (n) => worldFor(n).arrowTraps ?? [];
+    const arrowTrapStateFor = (n) => {
+        if (!arrowTrapStates.has(n)) {
+            const byId = new Map();
+            for (const a of arrowTrapsOf(n)) {
+                byId.set(a.id, createArrowTrap({
+                    id: a.id, tag: a.tag, x: a.ex, y: a.ey, t: a.t, shootDefault: a.shootDefault,
+                }));
+            }
+            arrowTrapStates.set(n, byId);
+        }
+        return arrowTrapStates.get(n);
+    };
+    /** Every arrow currently in flight, per level. Cleared on a re-entry. */
+    const arrowsInFlight = new Map();
+    const arrowsFor = (n) => {
+        if (!arrowsInFlight.has(n)) arrowsInFlight.set(n, []);
+        return arrowsInFlight.get(n);
     };
     /**
      * ⛔⛔ THE LIVE SEAL PIECE — at most one, and it is not in the census.
@@ -4088,6 +4129,69 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ ONE TICK OF EVERY `ArrowTrap`, AND THE ARROWS IN FLIGHT.
+     *
+     * `stepPulsersNow`'s shape, and it reads the group the same way and for
+     * the same reason: a trap is not in `activators`, so the flag comes off
+     * `pressedGroups` plus the groups a `room = -1` ButtonRoom has LATCHED.
+     *
+     * ⛔ AND IT IS THE PREVIOUS TICK'S FLAG, WHICH IS THE GAME'S. `Button`
+     * is added at `Game.as:2202` and `arrowtrap` at `:2204`, `World.addUpdate`
+     * PREPENDS, so the update list is reverse add order and the TRAP updates
+     * BEFORE the BUTTON. `activators` here is exactly the previous tick's
+     * state, which is what the game's trap sees — the same off-by-one the
+     * chest/cover pair already documents, needing the note and no special case.
+     *
+     * ⚠ WHAT THIS DOES **NOT** DO, and both absences are claims:
+     *
+     *   1. **It computes no enemy hit.** An `Arrow`'s hitables include
+     *      `"Enemy"`, and this run holds no enemy BODIES —
+     *      `KILL_ARM_POLICY.Bob` is `refused` because a chaser's kill needs
+     *      its POSITION, and an arrow needs the body in a LANE for exactly
+     *      the same reason. The GAME adjudicates the kill (§1.5), which is
+     *      what `probe-seedling-r7-l5-arrows.mjs` is.
+     *   2. **It computes no cover hit and no player hit.** An arrow's
+     *      hitables are a THIRD list — narrower than `Mobile.solids` (no
+     *      `Rock`, no `Rope`, no `ShieldBoss`) and wider in one place
+     *      (`Shield`) — so `collidesSolid`, which is the PLAYER's list,
+     *      would stop arrows the game flies through. And the damage an
+     *      arrow does to the player is ALREADY priced, by
+     *      `combat.PUZZLEMENT_HAZARDS.arrowtrap`; computing it here as well
+     *      would double-bill it. `shadowOf` is the predicate a planner asks
+     *      the cover question with, at plan time, with the boxes in hand.
+     *
+     * ⇒ what this DOES carry is the cadence, the flight, and the volley
+     * ledger — which is the only positive observable a hold on a trap group
+     * has, because a trap has no open state to move.
+     */
+    function stepArrowTrapsNow(activators) {
+        const st = arrowTrapStateFor(level);
+        const flight = arrowsFor(level);
+        if (st.size === 0 && flight.length === 0) return;
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        for (const [, trap] of st) {
+            const armed = pressed.has(trap.t) || activators.latched.get(trap.t) === true;
+            const r = stepArrowTrap(trap, armed);
+            if (!r.fired) continue;
+            arrowVolleysFired.push({
+                t: ticksCompleted + 1,
+                level,
+                id: trap.id,
+                arrows: r.arrows.map((a) => a.id),
+            });
+            flight.push(...r.arrows);
+        }
+        // ⚠ The bound is the LEVEL's, because `Game.as:1930-1931` writes
+        // `FP.width/height` from the loading level's own `.oel` dimensions —
+        // it is not the screen and it moves per level.
+        const bound = { w: world.world.width, h: world.world.height };
+        for (const a of flight) stepArrow(a, { frozen: ceremony !== null, bound });
+        for (let i = flight.length - 1; i >= 0; i -= 1) {
+            if (flight[i].removed) flight.splice(i, 1);
+        }
+    }
+
+    /**
      * One tick of every `Pulser`, and the block it moves.
      *
      * ⚠ THE ACTIVATION IS THE GROUP'S, and a `Pulser` is not in
@@ -5762,6 +5866,28 @@ export function createLevelRun({
     const pulserHits = [];
     /** One per tick a pulse reached the PLAYER — inert under `noDamage`. */
     const pulserPlayerHits = [];
+    /**
+     * ⛓⛓⛓ R7 slice 6b: one per VOLLEY an arrow trap fired —
+     * `{t, level, id, arrows}`.
+     *
+     * ⛔ THE ONLY POSITIVE OBSERVABLE A HOLD ON AN ARROWTRAP GROUP HAS. A
+     * trap has no open state and no armed rect, so "the hold did something"
+     * has to be asked of the SHOTS. `runHold`'s arrowtrap arm asks this.
+     */
+    const arrowVolleysFired = [];
+    /**
+     * One per arrow that hit something — `{t, level, id, types}`.
+     *
+     * ⚠ COVER AND THE PLAYER ONLY, AND THE ABSENCE IS THE CLAIM. An arrow's
+     * `hitables` include `"Enemy"`, and this run does not carry enemy
+     * BODIES: `KILL_ARM_POLICY.Bob` is `refused` because modelling a
+     * chaser's kill needs its POSITION, and an arrow needs the body in a
+     * LANE for exactly the same reason. So an enemy hit is not computed
+     * here, it is adjudicated by the GAME, and `enemyBodiesAsked: false`
+     * says which of the two a row's silence is.
+     * [[feedback_silent_watcher_vacuous_negative]]
+     */
+    const arrowHits = [];
     /** One per block a pulse actually MOVED — the chain's third link. */
     const pulsePushes_ = [];
     /**
@@ -7537,6 +7663,45 @@ export function createLevelRun({
             }
             return armed;
         },
+        /**
+         * ⛓⛓⛓ THE ARROW TRAPS WHOSE GROUP IS PUBLISHED RIGHT NOW.
+         *
+         * ⚠ THE ONLY OBSERVABLE A `hold` ON AN ARROWTRAP GROUP HAS, and it
+         * is the pulsers' reason with the sign flipped: a Pulser is Solid
+         * either way, an ArrowTrap is Solid neither way, and in both cases
+         * `openActivators` can never move. "The hold armed something" has to
+         * be asked of this, and `runHold` does.
+         *
+         * ⛔ `shootDefault` IS APPLIED HERE. Four of the game's eleven traps
+         * fire UNTIL their group is pressed, so "armed" is the XOR and not
+         * the flag — a set built from the flag alone would report L16 and
+         * L67 backwards, and would report them backwards SILENTLY.
+         */
+        get armedArrowTraps() {
+            if (noclip) return null;
+            const armed = new Set();
+            const st = arrowTrapStateFor(level);
+            if (st.size === 0) return armed;
+            const activators = activatorStateFor(level);
+            const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
+                movingSolidsNow());
+            for (const [id, trap] of st) {
+                const group = pressed.has(trap.t) || activators.latched.get(trap.t) === true;
+                if (arrowTrapFires(trap, group)) armed.add(id);
+            }
+            return armed;
+        },
+        /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
+        get arrowVolleys() { return arrowVolleysFired.map((v) => ({ ...v })); },
+        /**
+         * Every arrow in flight in THIS level right now, `{id, x, y}`.
+         *
+         * ⚠ POSITION AND LIFETIME ONLY. Nothing here says what an arrow hit
+         * — see `stepArrowTrapsNow`'s two named absences.
+         */
+        get arrowsInFlight() {
+            return arrowsFor(level).map((a) => ({ id: a.id, x: a.x, y: a.y }));
+        },
         /** One per block a pulse MOVED — link 3 of L38's chain. */
         get pulserPushes() { return pulsePushes_.map((h) => ({ ...h })); },
         /** One per tick a pulse reached the player; inert under `noDamage`. */
@@ -8014,6 +8179,13 @@ export function createLevelRun({
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
             if (!noclip) stepPulsersNow(activators, pushState);
+            // ⛓⛓⛓ R7 SLICE 6b: THE ARROW TRAPS, in the pulsers' own slot.
+            // `Game.loadlevel` adds `arrowtrap` at :2204 — BELOW `pulser`
+            // (:2191) and `button` (:2202) — so a prepending update list
+            // puts it AHEAD of both, and the flag it reads is the previous
+            // tick's. Stepping it here, after the movement, is the same
+            // labelling `stepActivators` already justifies.
+            if (!noclip) stepArrowTrapsNow(activators);
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`

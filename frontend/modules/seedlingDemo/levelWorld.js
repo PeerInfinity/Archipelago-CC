@@ -3518,6 +3518,15 @@ export function buildLevelWorld(levelRecord, {
      */
     const spinners = [];
     /**
+     * ⛓⛓⛓ R7 slice 6b: every `ArrowTrap` — the SIXTEENTH family's roster.
+     *
+     * Unconditional and collected above the `collider === 'none'` bail, for
+     * the third time and for the same reason: `notSolid` is a verdict about
+     * the PLAYER's geometry, and a trap's whole effect is the arrows it
+     * spawns. See the collection site for why it is not an `ACTIVATOR_RESPONDER`.
+     */
+    const arrowTraps = [];
+    /**
      * ⛓⛓⛓ R5 SLICE 15: ONE DECISION ABOUT WHETHER A SOLID IS THERE.
      *
      * `collidesSolid` and `plannerBlockerAt` each carried their own copy of
@@ -4479,6 +4488,49 @@ export function buildLevelWorld(levelRecord, {
                 clearsUsed.add(spinTag);
             }
         }
+        /**
+         * ⛓⛓⛓ R7 SLICE 6b: THE ARROW TRAP ROSTER — and it is NOT an
+         * `ACTIVATOR_RESPONDER`, which §15.7 of the R7 kickoff ruled it
+         * should be. The ruling cannot be executed and the reason is
+         * structural rather than stylistic:
+         *
+         *   1. `ACTIVATOR_RESPONDERS` is the set whose SOLIDITY answers to a
+         *      group, and it is consulted INSIDE the `collider === 'rect'`
+         *      branch below — the branch this bail has already skipped for
+         *      an `arrowtrap`. `ArrowTrap` never calls `setHitbox` and never
+         *      assigns a `type`, so the entry would be unreachable code.
+         *   2. `activators.test.js` pins the set as exactly
+         *      `keys(RESPONDERS) ∪ keys(KEY_RESPONDERS)`, and both of those
+         *      carry an opening FADE. A trap has no open state; it has a
+         *      FIRING state.
+         *
+         * ⇒ it joins the PULSER lane, which exists for exactly this shape:
+         * an `Activators` with a `t` whose activation changes what it DOES
+         * rather than whether it blocks (§21.65 — *"a pulser group's EFFECT
+         * is a different observable"*). `arrowTrap.js` owns the cadence, the
+         * arrows and the lanes; `ARROW_TRAP_CENSUS` re-asserts the
+         * membership the ruling wanted.
+         *
+         * ⚠ `shootDefault` IS CARRIED, and it is not decoration: four of the
+         * game's eleven traps are `shoot="1"` and fire UNTIL their group is
+         * pressed. A roster without it would model L16 and L67 backwards.
+         */
+        if (cls.as3 === 'ArrowTrap') {
+            arrowTraps.push({
+                id: `${e.type}@${x},${y}`,
+                tag: e.type,
+                x,
+                y,
+                // The ENTITY point — `super(_x + Tile.w/2, _y + spr.height/2)`
+                // through `Activators(_x:int, _y:int, …)`, whose int params
+                // TRUNCATE the 2.5 to 2. `arrowTrap.ARROW_TRAP.ctor` is the
+                // one transcription; this is its consumer.
+                ex: x + PUZZLEMENT_HAZARDS.arrowtrap.ctor.dx,
+                ey: y + PUZZLEMENT_HAZARDS.arrowtrap.ctor.dy,
+                t: tSetOf(e.type, e.attrs),
+                shootDefault: Boolean(intAttr(e.attrs, 'shoot', 0)),
+            });
+        }
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
@@ -5102,6 +5154,22 @@ export function buildLevelWorld(levelRecord, {
          * HITS, and `pulser.js` owns that cycle.
          */
         pulsers,
+        /**
+         * ⛓⛓⛓ R7 slice 6b: the arrow traps,
+         * `{id, tag, x, y, ex, ey, t, shootDefault}`.
+         *
+         * ⚠ NOT ACTIVATORS, and the reason is the pulsers' reason with the
+         * sign flipped: a Pulser is Solid either way, and an ArrowTrap is
+         * Solid NEITHER way — `ArrowTrap` calls no `setHitbox` and assigns
+         * no `type`, so it is in no solids list and "open" is not a question
+         * anyone can ask of it. Its `t` decides whether it SHOOTS, and
+         * `arrowTrap.js` owns that cadence and the arrows it makes.
+         *
+         * ⛔ Unconditional, like the spinners' and for the same reason: the
+         * `combat` role is opt-in, and a room whose traps went unmodelled
+         * because nobody asked for combat is §25.3's vacuity again.
+         */
+        arrowTraps,
         /**
          * ⛔⛔ R5 slice 10: the fall rocks, `{id, tag, as3, x, y, t, persistTag}`.
          *

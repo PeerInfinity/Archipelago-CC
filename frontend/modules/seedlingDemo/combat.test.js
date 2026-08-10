@@ -342,7 +342,10 @@ describe('the census over the committed extract', () => {
         expect(ENEMY_CLASSES.iceturret.ctor).toMatchObject({ dx: 16, dy: 16 });
         expect(ENEMY_CLASSES.shieldboss.ctor).toMatchObject({ dx: 24, dy: 32 });
         expect(ENEMY_CLASSES.bosstotem.ctor).toMatchObject({ dx: 0, dy: 0 });
-        expect(PUZZLEMENT_HAZARDS.arrowtrap.ctor).toMatchObject({ dx: 8, dy: 2.5 });
+        // ⛔ R7 slice 6b: this read `dy: 2.5` — the expression's half pixel —
+        // until the Arrow×Enemy family read the ctor it lands on.
+        // `Activators(_x:int, _y:int, …)` truncates it to 2.
+        expect(PUZZLEMENT_HAZARDS.arrowtrap.ctor).toMatchObject({ dx: 8, dy: 2 });
     });
 
     it('AGREES with levelWorld wherever both answer the same question', () => {

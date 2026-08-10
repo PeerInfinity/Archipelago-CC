@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+    ACTIVATOR_RESPONDERS,
     CLIFFSIDE_CLASS,
     CLIFFSIDE_FRAME_MASKS,
     ENTITY_CLASSES,
@@ -1952,5 +1953,51 @@ describe('a pickup\'s own persistence tag (R6 debt 2)', () => {
         // could accidentally bank; `undefined` cannot be banked by mistake.
         expect(key.persistTag).toBeUndefined();
         expect('persistTag' in key).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R7 SLICE 6b — THE ARROW TRAP ROSTER, and the reason it is a roster
+ * rather than an `ACTIVATOR_RESPONDER`.
+ */
+describe('the arrow traps (R7 slice 6b)', () => {
+    it('L5 carries four, with the entity point and the group', () => {
+        const w = buildLevelWorld(atlasLevelSource()(5));
+        expect(w.arrowTraps).toHaveLength(4);
+        const t = w.arrowTraps.find((a) => a.id === 'arrowtrap@16,16');
+        // ⛔ The ENTITY point is `(+8, +2)` — `Activators(_x:int, _y:int, …)`
+        // truncates the sprite's 2.5, which is what `combat.js` now says.
+        expect([t.ex, t.ey]).toEqual([24, 18]);
+        expect(t.t).toBe(0);
+        expect(t.shootDefault).toBe(false);
+    });
+
+    it('⚠ `shootDefault` is CARRIED — L16 and L67 fire until pressed', () => {
+        // Four of the game's eleven traps are the inverted kind. A roster
+        // without this field would model them backwards, and silently.
+        const w16 = buildLevelWorld(atlasLevelSource()(16));
+        expect(w16.arrowTraps).toHaveLength(3);
+        expect(w16.arrowTraps.every((a) => a.shootDefault === true)).toBe(true);
+        const w67 = buildLevelWorld(atlasLevelSource()(67));
+        expect(w67.arrowTraps.every((a) => a.shootDefault === true)).toBe(true);
+    });
+
+    it('⛔ it is NOT an activator and NOT a solid — both, asserted', () => {
+        const w = buildLevelWorld(atlasLevelSource()(5));
+        // Not in the responder set: the entry would be unreachable code,
+        // because the set is consulted inside the `collider === 'rect'`
+        // branch and an `arrowtrap` is `notSolid`.
+        expect(ACTIVATOR_RESPONDERS.has('arrowtrap')).toBe(false);
+        expect(w.activators.map((a) => a.tag)).not.toContain('arrowtrap');
+        // ...and nothing it places blocks the player.
+        expect(ENTITY_CLASSES.arrowtrap.collider).toBe('none');
+    });
+
+    it('a level with none carries an EMPTY roster, never a missing one', () => {
+        // An absent key and an empty array read the same at a call site that
+        // uses `?? []`, and only one of them is a build that ran.
+        const w = buildLevelWorld(atlasLevelSource()(20));
+        expect(Array.isArray(w.arrowTraps)).toBe(true);
+        expect(w.arrowTraps).toHaveLength(0);
     });
 });

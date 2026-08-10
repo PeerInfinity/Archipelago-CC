@@ -1860,3 +1860,81 @@ describe('R5 slice 16: `wait` — the refusals that keep it from being an idle s
             .toThrow(/wait\.ticks must be a positive integer/);
     });
 });
+
+/**
+ * ⛓⛓⛓ R7 SLICE 6b — THE HOLD THAT COULD NOT BE AUTHORED.
+ *
+ * `button@48,48` in L5 presses group `t = 0`, which four `arrowtrap`s
+ * answer and nothing else does. Until this slice `runHold` reported NO
+ * RESPONDER for it — a trap is not in `world.activators`, for the pulsers'
+ * reason with the sign flipped (a Pulser is Solid either way, an ArrowTrap
+ * is Solid NEITHER way) — so `synthesizeLegs` could not author a hold at
+ * the one button the level turns on, and the probe had to hand the planner
+ * a level record with the button DELETED just to get an A* goal on its
+ * tile (kickoff §15.7).
+ *
+ * ⚠ This is a PLANNING claim, not a fight claim. The kill stays the GAME's
+ * to adjudicate (`KILL_ARM_POLICY.Bob` is still `refused`); what the plan
+ * now gets is the ability to STAND ON THE BUTTON on purpose.
+ */
+describe('the arrow-trap hold (R7 slice 6b)', () => {
+    const RELAX = {
+        noclip: false, noDamage: false, noHazards: [], grants: [],
+        persistence: [], equips: [], pins: ['dead_frames'],
+    };
+    const planL5 = (ticks) => synthesizeLegs(
+        [{ level: 5, targets: [{ x: 56, y: 56, hold: { presser: { x: 48, y: 48 }, ticks } }] }],
+        { levelSource: levelRecord, boot: { level: 5, x: 80, y: 32 }, name: 'l5-hold', relax: RELAX },
+    );
+
+    it('⛓⛓⛓ authors the hold with the button IN PLACE, and names the traps', () => {
+        const r = planL5(60);
+        expect(r.holds).toHaveLength(1);
+        expect(r.holds[0].traps.sort()).toEqual([
+            'arrowtrap@16,16', 'arrowtrap@32,48', 'arrowtrap@64,48', 'arrowtrap@80,16',
+        ]);
+        // ...and it opened NOTHING, which is the honest half: L5's only
+        // activator is a `tSet -1` kill-lock that no button can move.
+        expect(r.holds[0].opened).toEqual([]);
+        expect(r.holds[0].armed).toEqual([]);
+    });
+
+    it('⛔ the EFFECT is the volleys, and a trap fires on its first update', () => {
+        // A trap has no open state, so `runHold`'s `shut` check passes
+        // vacuously for this group — the check that CAN fail is this one.
+        const r = planL5(60);
+        expect(r.holds[0].volleys).toBeGreaterThan(0);
+        // Four traps at an 11-tick period over a 60-tick hold plus the
+        // approach's own armed ticks: more than 4, fewer than 4 * 60.
+        expect(r.holds[0].volleys).toBeGreaterThanOrEqual(4);
+        expect(r.holds[0].volleys).toBeLessThan(240);
+    });
+
+    it('⛓ a LONGER hold fires strictly more volleys — the cadence is real', () => {
+        // The one assertion that distinguishes "the flag is set" from "the
+        // trap is being stepped". A flag nobody stepped is constant.
+        expect(planL5(120).holds[0].volleys)
+            .toBeGreaterThan(planL5(30).holds[0].volleys);
+    });
+
+    it('⛔⛔ THE CONTROL — strip the traps and the OLD refusal comes back', () => {
+        // The pair, and it is what makes the three assertions above evidence
+        // rather than a description. The refusal is narrowed by exactly one
+        // term: with L5's four arrowtraps removed from the record, `t = 0`
+        // is answered by nothing again and the hold fails exactly as it did
+        // before this slice — naming the traps it looked for and did not
+        // find.
+        const noTraps = (n) => {
+            const r = levelRecord(n);
+            if (n !== 5) return r;
+            return {
+                ...r,
+                entities: r.entities.filter((e) => (e.name ?? e.type) !== 'arrowtrap'),
+            };
+        };
+        expect(() => synthesizeLegs(
+            [{ level: 5, targets: [{ x: 56, y: 56, hold: { presser: { x: 48, y: 48 }, ticks: 4 } }] }],
+            { levelSource: noTraps, boot: { level: 5, x: 80, y: 32 }, name: 'x', relax: RELAX },
+        )).toThrow(/NO responder in level 5 answers[\s\S]*arrow traps are \[none\]/);
+    });
+});

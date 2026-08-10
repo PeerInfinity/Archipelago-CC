@@ -581,7 +581,15 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
             + 'dead `IceTurret` with the type "Pulse".',
     },
     arrowtrap: {
-        ctor: { dx: 8, dy: 2.5, src: 'ArrowTrap.as:24 `super(_x + Tile.w/2, _y + sprArrowTrap.height/2)` — the sprite is 16x5, so the y offset is 2.5 and NOT a whole pixel' },
+        // ⛔⛔ R7 SLICE 6b — THIS ROW SAID 2.5 AND THE SIGNATURE SAYS 2.
+        // `super(_x + Tile.w/2, _y + sprArrowTrap.height/2, …)` with a 16x5
+        // sprite reads as a half pixel, and the row's old comment said so in
+        // as many words. But the call lands on
+        // `Activators(_x:int, _y:int, _g:Graphic, _t:int)` and the int params
+        // TRUNCATE it — the entity sits at `oel.y + 2`. Trap 143's shape one
+        // class along: the expression is not the signature.
+        // [[feedback_call_site_arg_order_not_meaning]]
+        ctor: { dx: 8, dy: 2, src: 'ArrowTrap.as:24 `super(_x + Tile.w/2, _y + sprArrowTrap.height/2, …)` through `Activators(_x:int, _y:int, …)` — the int params truncate the 2.5 to 2' },
         as3: 'ArrowTrap', timing: 'activator', damage: 1,
         src: 'Puzzlements/ArrowTrap.as:18-19,30-38,48-63 + Projectiles/Arrow.as:49',
         why: '3 arrows every 10 frames at speed 5, downward. ⚠ The arrow\'s '

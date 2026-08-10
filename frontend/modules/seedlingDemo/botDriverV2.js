@@ -1485,6 +1485,25 @@ function runHold(run, perTick, hold, what, before = null) {
      */
     const pulserGroup = (run.world.pulsers ?? []).filter((p) => p.t === presser.t);
     /**
+     * ⛓⛓⛓ R7 SLICE 6b: A GROUP WHOSE ONLY RESPONDER IS AN `ArrowTrap`.
+     *
+     * §21.65's finding for the THIRD time, and the third mechanism wearing
+     * a Button's rect. A trap is not in `world.activators` for the pulsers'
+     * reason with the sign flipped: a Pulser is `type = "Solid"` published
+     * or not, and an `ArrowTrap` is Solid NEITHER way — it calls no
+     * `setHitbox` and assigns no `type` — so in both cases "open" is not a
+     * question `openActivators` can answer.
+     *
+     * ⛔ AND THIS IS THE REFUSAL THAT BLOCKED SPHERE 0. `button@48,48` in L5
+     * presses group `t = 0`, which four arrowtraps answer and nothing else
+     * does, so the check below reported NO RESPONDER and `synthesizeLegs`
+     * could not author a hold at the one button the level turns on — the
+     * probe had to hand the planner a level record with the button DELETED
+     * to get an A* goal on its tile (§15.7). The observable is
+     * `run.armedArrowTraps`, and the effect is the volleys.
+     */
+    const trapGroup = (run.world.arrowTraps ?? []).filter((a) => a.t === presser.t);
+    /**
      * ⛔⛔ AND A THIRD OBSERVABLE: a CROSS-ROOM presser answers nothing in
      * this level at all.
      *
@@ -1503,13 +1522,16 @@ function runHold(run, perTick, hold, what, before = null) {
      * same rect.
      */
     const crossRoom = presser.room >= 0;
-    if (group.length === 0 && pulserGroup.length === 0 && !crossRoom) {
+    if (group.length === 0 && pulserGroup.length === 0 && trapGroup.length === 0
+        && !crossRoom) {
         fail(`${what}: ${presser.tag}@${presser.x},${presser.y} presses group `
             + `t=${presser.t}, which NO responder in level ${run.level} answers — the `
             + `level's responders are [${run.world.activators
                 .map((a) => `${a.id}(t=${a.t})`).join(' ')
                 || 'none'}] and its pulsers are [${(run.world.pulsers ?? [])
-                .map((p) => `${p.id}(t=${p.t})`).join(' ') || 'none'}]. Holding it `
+                .map((p) => `${p.id}(t=${p.t})`).join(' ') || 'none'}] and its arrow `
+            + `traps are [${(run.world.arrowTraps ?? [])
+                .map((a) => `${a.id}(t=${a.t})`).join(' ') || 'none'}]. Holding it `
             + 'would open nothing and arm nothing.');
     }
     // ⚠ THE POSITIVE CONTROL, BEFORE THE NEGATIVE. "The lock is open after
@@ -1525,8 +1547,18 @@ function runHold(run, perTick, hold, what, before = null) {
     // The same control for the pulser arm: quiet before, loud after.
     const armedBefore = before?.armed ?? run.armedPulsers ?? new Set();
     const quietBefore = pulserGroup.filter((p) => !armedBefore.has(p.id));
+    // The same control again for the traps: silent before, shooting after.
+    // ⚠ READ THROUGH `armedArrowTraps`, NOT off the group flag, because
+    // four of the game's eleven traps are `shootDefault` and fire UNTIL
+    // their group is pressed — for those a hold makes the room QUIETER, and
+    // a control built on the flag would call that "already armed".
+    const trapsArmedBefore = before?.trapsArmed ?? run.armedArrowTraps ?? new Set();
+    const trapsChanging = trapGroup.filter(
+        (a) => trapsArmedBefore.has(a.id) === (a.shootDefault === true),
+    );
     const writesBefore = crossRoom ? run.roomWrites.length : 0;
-    if (shutBefore.length === 0 && quietBefore.length === 0 && !crossRoom) {
+    if (shutBefore.length === 0 && quietBefore.length === 0 && trapsChanging.length === 0
+        && !crossRoom) {
         // ⚠ THE DIAGNOSIS BRANCHES ON WHICH ARM IS EMPTY. A group with no
         // pulser in it fails for the reason it always did, in the words it
         // always used; only a group that HAS one has an "already armed"
@@ -1583,6 +1615,39 @@ function runHold(run, perTick, hold, what, before = null) {
             + 'continuous ticks and a Cover 11 — one short opens nothing, and the walk '
             + 'would meet the wall somewhere it was certified clear.');
     }
+    /**
+     * ⛓⛓⛓ R7 SLICE 6b: THE ARROW-TRAP EFFECT, and it is the VOLLEYS.
+     *
+     * A trap has no open state, so the `shut` check above passes vacuously
+     * for a group whose only responders are traps — which is exactly the
+     * shape §21.65 named for the pulsers: *"a hold that changes nothing is a
+     * check that cannot fail"*. The effect is asked of the shots.
+     *
+     * ⛔ AND THE ASSERTION FLIPS WITH `shootDefault`. A `shoot="0"` trap
+     * must START firing during the hold; a `shoot="1"` trap must STOP. Four
+     * of the game's eleven are the second kind, and a one-sided check would
+     * pass for them by describing the room they were already in.
+     */
+    let volleys = null;
+    if (trapGroup.length > 0) {
+        const armedNow = run.armedArrowTraps ?? new Set();
+        const wrong = trapGroup.filter((a) => armedNow.has(a.id) === (a.shootDefault === true));
+        if (wrong.length > 0) {
+            fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
+                + `tick(s) and [${wrong.map((a) => `${a.id}(shootDefault=${a.shootDefault})`)
+                    .join(' ')}] did not change firing state. A trap fires on `
+                + '`activate XOR shootDefault`, so a hold that leaves one where it was '
+                + 'either missed the button or is holding a group nothing answers.');
+        }
+        volleys = run.arrowVolleys.filter((v) => trapGroup.some((a) => a.id === v.id));
+        const firing = trapGroup.filter((a) => armedNow.has(a.id));
+        if (firing.length > 0 && volleys.length === 0) {
+            fail(`${what}: ${firing.length} trap(s) in group t=${presser.t} are ARMED `
+                + 'after the hold and NOT ONE VOLLEY was fired in it. An armed trap '
+                + 'fires on its very first update (`shootTimer` starts at 0), so zero '
+                + 'volleys means the arm is a flag nobody stepped.');
+        }
+    }
     // ⛓ THE CROSS-ROOM EFFECT: the write happened, and it names this presser.
     let wrote = null;
     if (crossRoom) {
@@ -1624,6 +1689,12 @@ function runHold(run, perTick, hold, what, before = null) {
         // ⛓ And the pulsers it ARMED, which open nothing and are the whole
         // effect of L38's link 2.
         armed: quietBefore.map((p) => p.id),
+        // ⛓⛓⛓ …and the arrow traps whose FIRING STATE it flipped, plus the
+        // volleys that flip actually produced. The traps are the ids; the
+        // volleys are the evidence, and a hold that reports traps and no
+        // volleys has already failed above.
+        traps: trapsChanging.map((a) => a.id),
+        volleys: volleys === null ? [] : volleys.length,
         // ⛓ …and the cross-room writes it made, which are the whole effect
         // of L38's entrance button.
         wrote: wrote === null ? [] : wrote.map((w) => ({ level: w.level, tag: w.tag, value: w.value })),
@@ -4646,6 +4717,16 @@ export function synthesizeLegs(legs, opts = {}) {
             const before = {
                 open: run.openActivators === null ? null : new Set(run.openActivators),
                 armed: run.armedPulsers === null ? null : new Set(run.armedPulsers),
+                // ⛓⛓⛓ R7 SLICE 6b: AND THE ARROW TRAPS, for the third time
+                // and the sharpest instance of the reason. A trap fires on
+                // its VERY FIRST update once its group is published
+                // (`shootTimer` starts at 0), so the approach's own last
+                // tick — which lands the player ON the button — has already
+                // armed every trap in the group before `runHold` looks. A
+                // control asked then reports "already armed" on a leg that
+                // did exactly what it was written to do.
+                trapsArmed: run.armedArrowTraps === null
+                    ? null : new Set(run.armedArrowTraps),
                 // ⛔⛔ AND THE CHEST, for the same reason twice over: its
                 // trigger is a LINE the approach crosses, so by the time the
                 // verb runs the chest has already opened and a control asked
