@@ -5711,3 +5711,301 @@ are scoped work rather than loose ends:
 | LightBoss / TentacleBeast / LavaBoss | deferred by name, unchanged — none gates anything the ending needs; TentacleBeast is the game's first whirlpool-scale RNG fight | deferred |
 | `noDamage` roster-wide retirement | parts 1+2 BUILT (the damage model, shake/camera); 89 of 118 tapes still declare the flag | **R7** — it rides the honest chain |
 | `botStatus.save` as a differential stratum | shipped in the fork, consumed by nothing | **R7** |
+
+## R7: the honest playthrough, as built (CLOSED 2026-08-10)
+
+R7's brief and full as-built record are
+`NewDocs/plans/seedling-bot-r7-opus-kickoff.md` (§§8–20 the slices, §21 the
+close — NewDocs is gitignored, so the file exists only on the working
+machine; this section is the tracked summary).
+
+⚖ **The rung's scope was PIVOTED once and its boundary RE-RULED once**, both
+by the user, and both are load-bearing on how to read what follows. The pivot
+(2026-08-09) replaced R6's "the honest chain, shield-first" with a larger
+program: **a full, clean, segmented playthrough from the true initial state**,
+with the reachability knowledge translated into Archipelago access rules so
+that **AP's own pathfinding produces the collection order**, and a tape
+GENERATOR as the eventual deliverable. R7 is that program's **spine**, not its
+campaign. The boundary (2026-08-10) then ended the rung at **the sword
+earned** rather than at D2 and the shield, with the session long and the
+segment tail measured.
+
+**The claim, as the live readouts state it.** The differential over the
+rung's own fifteen tapes, quoted rather than paraphrased (`--win`, no
+`--record`, clean tree afterwards):
+
+```
+PASS  sword@L10 (pickup) is EARNED inside a driven segment
+        r7-act2-10: hasSword 0 -> 1, and levelPersistence gains {10,0} in level 10
+PASS  chest@L11 (chest) is EARNED inside a driven segment
+        r7-act2-11: hasSealPart[] gains a slot 0 -> 1, and levelPersistence
+        gains {11,0} in level 11
+PASS  chain act2-the-sword: the EARNED set is exactly what the chain declares
+        2 earned: chest@L11, sword@L10
+SKIP  chain act2-the-sword: the goal ledger stands at 2/41
+        pickup 1/12, key 0/5, totempart 0/5, chest 1/16, ending 0/1, encounter 0/2
+PASS  chain act2-the-sword: segment 1 boots the TRUE INITIAL STATE and inherits nothing
+        boot {level 0, x 80, y 128}, seam none, 0 grants, 0 clears,
+        save {keys 0, totem 0, seals 0}
+PASS  chain act2-the-sword: the segment tick counts sum to the headline's
+        183 + 47 + 245 + 347 + 812 + 355 + 146 + 1090 + 122 + 89 + 87 = 3523
+PASS  chain act2-the-sword: THE ENDING STATE — the chain ends where the headline
+      ends, field by field, with NO offset declared anywhere — 46 signature rows agree
+```
+
+- **Eleven segments, ten seams, every seam GREEN over the whole 46-row
+  signature**, with each boundary tick observed twice and agreeing, and each
+  segment replayed as the headline's own slice tick for tick.
+  `new Game(0, 80, 128)` → L0 → L2 → L3 → L4 → L5 → L6 → L7 → L8 → L9 →
+  **L10 (the sword)** → **L11 (the first seal)** → L10.
+- **Two rows of the goal ledger are EARNED**, and "earned" is a FLIP measured
+  between a segment's own boot block and its own latch, plus the placement's
+  own persistence clear — ⛔ **a boot block can DECLARE `hasSword: true`; it
+  cannot make the flag flip**, which is the whole difference between this and
+  six rungs of staged tapes, and it is asserted by a test that boots the flag
+  on both sides and reads UNCLAIMED.
+- **The 39 UNCLAIMED rows are REPORTED on a named non-failing line**, never
+  green. R7 ends at the sword, so "41/41" is a claim about R8's campaign and
+  asserting it here would be a gate that can never pass.
+- **The earned set is checked TWO-SIDED**: the chain declares its ledger ids
+  and the finding asserts the declared and the measured sets are EQUAL, so a
+  segment that picks something up **without saying so** is red too.
+- ⛔ **`R7_GOAL_LEDGER` and `r7GoalFindings` shipped at slice 0 and nothing
+  built their `earnedBy` argument until slice 6f.** Six slices of honest chain
+  went past a ledger stuck at zero, and the machinery that should have said so
+  was a function with no caller — **trap 119's own failure mode wearing the
+  shape of a finished feature**. The caller is
+  `playthroughAcceptance.chainGoalFindings`.
+- **The mid-run outcomes are the GAME's, at the block's own end tick**: three
+  `phases` blocks' persistence clears (`{5,0}`, `{8,0}`, `{8,1}`) and one
+  witnessed enemy REMOVAL (`bob@112,48` at L6), each carrying the probe that
+  witnessed it as provenance, each asserted in the segment and again in the
+  headline.
+- **Nothing in the chain is granted, and nothing is relaxed**: zero grants,
+  zero booted clears, collision on, no `noHazards`, `noDamage` absent by
+  construction. **`noDamage` therefore retires the way §3.3 said it would —
+  by construction on the new chain**, not by a campaign against the flag.
+
+**What the rung built.**
+
+- **The segment and the seam.** A segment boots a declared world and runs to
+  a LEVEL-ARRIVAL end (post-fade, calm), carrying at end a LATCHED seam
+  readout; a chain is honest because `boot(N+1) == latch(N)` field for field
+  over a frozen 46-row `SEAM_SIGNATURE` (save arrays, `cutscene`/`time`/
+  `grassCut`, all three RNG states plus `split`, the Music no-repeat state,
+  and calm-arrival invariants asserted rather than carried). The checker
+  derives its findings from the signature per trap 119, so a field added
+  tomorrow cannot go unreported; `segmentBootFromLatch` is the inverse and
+  REFUSES by name.
+- **Two AS3/runtime batches**, both in fork `bot` (`92254fe`, then
+  `7514b96` — the rung's final fork state). Batch 1 was the ONE deliberate
+  re-recording batch owed since R3, with the gate INVERTED (every re-record
+  attributed by a prediction committed BEFORE the fork moved): the
+  `saw_auto_advance` unification, `botStatus.save`'s differential consumer,
+  the seam latch, FP LCG hooks, the `pressed`/`released` echo, the stale
+  docblock. Batch 2 added the **`Game.begin()`-ENTRY latch** on the user's
+  ruling, and its prediction — zero re-records, zero value changes, exactly
+  one fixture file — was stated first and met.
+- **Tape v8, v9 and v10.** v8 is the full seam boot block. v9 is a mid-run
+  persistence clear (`persistence[].at`) and v10 a mid-run enemy REMOVAL
+  (`despawn: [{level, id, at}]`) — both **MODEL-ONLY**: the projection handed
+  to the game drops them, and `GAME_VISIBLE_DROPS` is now a CLASSIFICATION
+  LIST, so **a v11 field fails the pinning test until someone says which side
+  of the line it is on**. An entity `id` is a PLACEMENT (`"<type>@<x>,<y>"`),
+  never an index, because the atlas is a regenerated artifact.
+- **The units walk.** A walk is a sequence of UNITS, each a `leg` (planner-
+  authored: inputs recorded, spans DERIVED from A\*, re-derived on `--check`)
+  or a `phases` block (hand-authored choreography committed as DATA: spans
+  fixed, provenance citing the probe that witnessed them, **outcome asserted
+  from the game's own readouts at block end**). Seams are indifferent to which
+  kind produced the ticks.
+- **Three new leg verbs** — `shove` (the block a weaponless player moves by
+  LEANING, which `pushables` had modelled since R4 and nothing could PLAN),
+  arrow-bait, and shove-sink — plus the **Arrow×Enemy family**: `Arrow.as`
+  lists "Enemy" among its hitables, which is how **the sword is reachable
+  with no weapon at all**.
+- **Rules v1 and the AP path.** A one-way GENERATED artifact (`--check`
+  byte-exact, provenance stamped, the physics model importing nothing back):
+  113 regions, 210 sub-regions, 41 locations, 312 one-way connections, 265 AP
+  regions, shipped as its own preset `seedling_playthrough`. `Generate.py
+  --seed 1` returns a sphere log — **the collection order, directly** — with a
+  REFUTATION LOG carried beside the rules as part of the artifact.
+- **The L40 recon** (a ruled checkpoint): the honest single-visit route
+  EXISTS, and R5's wall was two instrument defects.
+
+**Standing findings** (source-proved or driven; do not re-derive):
+
+- ⛔ **A segment boundary duplicates exactly one level BUILD and one FADE**,
+  and `botStart` reseeds BEFORE the build — so a tape's declared RNG is a
+  PRE-build quantity and a terminal latch's is POST-build. Measured with zero
+  residue (L94: 1,562 gameplay draws, 21 dead frames, four measurements across
+  three arms). The cure was the `begin()`-ENTRY latch, and the interim
+  offset declaration was **DELETED rather than adjusted** — everything stayed
+  green with the stale number in place, which is exactly trap 119's shape.
+- ⛔ **THREE generators, three states.** The gameplay LFSR; the cosmetic
+  generator, **every draw of which IS a gameplay draw while `Rng.split` is
+  off** (3 per Tile at every level build); and FlashPunk's own LCG, seeded
+  once per page and read by nothing that matters. A seam carrying two of the
+  three is not a seam. ⚠ `Math.random()` in this build is a fixed-seed LFSR,
+  so the FP seed is page-DETERMINISTIC — the chain declares it anyway, so its
+  reproducibility does not depend on that coincidence.
+- ⛔ **A fight does not survive the door; the clear does.** Leaving a room to
+  cut a boundary RESPAWNS every enemy in it while the persistence clear stays
+  durable ⇒ a fight and the crossing it opens must be ONE segment, and the
+  lock the fight removed reaches the model as a v9 `at` clear.
+- ⛔ **The model's damage budget is the GAME's minus whatever the live movers
+  add.** A route that can afford one hit in the model cannot afford it in a
+  room with a chaser: target ZERO. ⚠ And a silent death reads as `hits 0`,
+  because the counter reads the NEW Player — the tell is a jump to the boot
+  tile with no level change.
+- ⛓ **The room kills the mover the model refuses to step.** L6 had no
+  crossing at all for the model (both bobs are `mover` class, so `levelRun`
+  throws) — and the ROOM removes one of them: water drowns a chaser that
+  crosses it, a static trap walls the other off. A mechanism, not an anecdote.
+- ⛔ **A planner that re-boots from the LEVEL RECORD forgets every per-visit
+  thing a previous group moved.** A shoved block is back at its `.oel` cell as
+  far as the next group is concerned; A\* routes through the cell it really
+  occupies and the drive shoves it out of its own path. Every group is planned
+  against the record its predecessors' shoves EDITED, derived from the
+  planner's own output rather than declared. ⚠ Nothing here reaches the tape —
+  the game and the replay both move the block live; it is the PLANNER that
+  forgets.
+- ⛔ **A leg's SETTLE WAIT is dead time the room charges for.** A shove
+  releases early by construction and the player then stands still wherever the
+  release left them: here that stance overlapped an arrow lane **by two tenths
+  of a pixel** and the game charged a hit the model does not price. A stance
+  safe to PASS THROUGH is not safe to WAIT IN.
+- ⛔ **A cleared body must be gone for BOTH answers.** A cleared tag removed a
+  body from the world build and not from the combat census — one body, gone
+  for the route and present for the contact test. The predicate is
+  `clearedAwayByTag` and both sides call it.
+- ⛔ **A rule too PERMISSIVE refuses nothing and is only visible in the
+  ORDER.** `lockRuling` called every grouped lock free on a claim about the
+  PRESSER's reachability that it never checked, and AP took the Shield at
+  sphere 0.4 **through a wall**. Generation was green and `--check` was
+  byte-exact. Fixed by a `GROUPED_LOCK_EXCEPTIONS` row keyed to ONE named
+  placement, with the bounded sweep that says it is the only such lock.
+- ⛔ **A reach search must EXCLUDE ITS OWN MOVER** — a mover left in
+  `world.solids` returns 1 cell rather than an error, and R5's L40 refusal was
+  exactly that, twice.
+- ⛔ **A coordinate meaning *where you came from* read as *where you go***,
+  twice in one slice from two different fields: an exit ID encodes the SOURCE
+  teleporter's position, and a pit carries an offset. Both printed their own
+  refutation on the same screen that "confirmed" the wrong diagnosis.
+- ⛔ **An Arrow does 1 damage, not 5** — `Enemy.hit(f, p, d = 1, t)`; the 5 is
+  KNOCKBACK FORCE, and the driven trace had refuted the 5 all along.
+- ⛔ **A truncated arm must clip every `at`-stamped field, not just
+  `tick_count`.** With one hand-authored block per segment the shortcut is
+  invisible; with two, the arm cut at the first block's end is handed the
+  second block's clear at a tick outside its own window. ⚠ `at === cut` is
+  KEPT — that is the instant the arm exists to ask about.
+
+**The close-out debts, by name** — see the R8 table below for the ones that
+are scoped work rather than loose ends:
+
+1. **`normalizeLive`'s remaining consumers** — the hot-loop fix landed as its
+   own second track at slice 4, and the REMAINING call sites have been owed
+   by name for **eight slices**. It is the first stone of M3 (real-time
+   planning in the JS build).
+2. **The L3 → L11 shortcut, named and not taken.** `teleporter@96,128` in L3
+   goes straight to L11, untagged and always live, and it is the route every
+   R1–R4 sword walk uses: **five levels instead of eleven**. The honest chain
+   took the dungeon because D1's rooms are on the campaign's own path — but
+   **the sword itself never required L4–L9**, and a rung pricing a
+   fastest-route campaign should start from this line rather than rediscover
+   it.
+3. **The strict-vs-minimal order question.** Segment scope was ruled at slice
+   6 as the MINIMAL VALID DEPENDENCY CHAIN rather than the strict AP total
+   order through a sphere, with the deviation recorded in the segment
+   metadata. Which of the two the campaign follows is R8's to settle.
+4. **`buildTape` still cannot emit v6–v10** (its version ladder caps at 5),
+   so every modern tape on the ladder is hand-authored by a plan script.
+   Pre-existing since R5, unmoved, and it is the thing M2 has to fix.
+5. **Nothing prices an arrow in flight against the player.** The shipped route
+   never stands in an armed lane, which is a ROUTE property rather than a
+   model one; a future room that must cross one needs the term.
+6. **`HOLD1 = 220` / `HOLD2 = 260` have no unit biter and cannot** — the probe
+   is their stratum, and the `kill1-short` control (40 ticks, nothing cleared)
+   is what makes them numbers rather than habits.
+7. **Model refusals carried out of the rung, unchanged**: the BobBoss
+   encounter script, the spear's three-hit repeat, the FireWand arm, the
+   darksuit retaliation arm, `Explosion`'s Enemy arm — and `KILL_ARM_POLICY`
+   stays refused.
+8. **Two unreconciled Seedling worlds remain three**: `worlds/seedling/`, the
+   atlas presets, and now `seedling_playthrough`. Retiring any of them was
+   ruled a later rung's question.
+9. **`r7-act2`'s `block-onto-button` arm is recorded-not-used** — it is the
+   evidence that the user's L8 first move is right about the game and
+   unplannable by this planner, and it lives in the probe rather than in a
+   fixture.
+
+⛓ **R6's debts, settled at this close**: debt 1 (`saw_auto_advance`) went in
+batch 1; debt 2 (`earnedClears` missing a pickup's own tag) was paid at slice
+6 — the sword's `{10,0}` and the shield's `{20,2}` reach `earnedClears`, and
+it is what turns "a seal was collected" into "THIS chest was opened"; debt 3
+(`normalizeLive`) landed at slice 4 with residue named above; debt 4 (the
+`pressed`/`released` echo) and debt 6 (`botStatus.save`'s consumer) went in
+batch 1; **debt 9 — the 10 s vitest cliff — is paid HERE**, measured both
+sides at the same tree (2,935 passed / 9 timed out, all nine `Test timed out
+in 10000ms` with zero assertion failures → **2,944 passed / 0 failed**), and
+the raise is to 60 s against a worst observed crossing of 14.75 s. Debt 5
+(`hasShield` real-collected by no tape) is **NOT discharged** and moves to
+the head of R8. Debts 7, 8, 10 and 11 stand as rows 4 and 7 above and in the
+table below.
+
+**The retirement decision: NO DEMOTION, and it is a decision rather than an
+omission.** The rung's ruled cadence is evaluate-and-tier per slice; this is
+the evaluation, re-derived at close from the committed expectations' own
+transition records rather than from the slice's table.
+
+| tape | crutches | levels visited | not in the chain |
+|---|---|---|---|
+| the chain (11 segments) | **none at all** | 0,2,3,4,5,6,7,8,9,10,11 | — |
+| `r4-walk-1-sword` | noDamage, 2 noHazards | 0,2,3,10,11 | none |
+| `r3-walk-1-sword` *(already legacy)* | noDamage, 4 noHazards | 0,2,3,10,11 | none |
+| `r3-collect-sword` | noDamage, 4 noHazards | 10 | none |
+| `grant-sword-room` | noclip, noDamage, 5 noHazards, 1 grant | 0,2,3,10,11 | none |
+| `r1-walk-1-sword-shield` | noclip, noDamage, 4 noHazards, 2 grants | 0,2,3,10,11,13,20 | **13, 20** |
+| `r2-walk-1-sword-shield` | noDamage, 4 noHazards, 2 grants | 0,2,3,10,11,13,20 | **13, 20** |
+
+- The four strict-subset tapes satisfy the ruled criterion on their face, and
+  **none of them is demoted**, for two different reasons.
+  `r4-walk-{1..6}` + `r4-walk-full` is an **ENDS-MEET set** — the
+  concatenation identity is asserted across all seven — and the chain
+  supersedes exactly ONE of its six segments; an arithmetic claim with a hole
+  is worse than a redundant tape. `r3-collect-sword` and `grant-sword-room`
+  are **mechanism witnesses** (the pickup ceremony; the grant channel itself),
+  which the rung's own retirement rule keeps unconditionally.
+- `r1-`/`r2-walk-1-sword-shield` are **not superseded at all**: they reach
+  L13 and L20, which is the shield, which is R8's.
+- ⛓ **What the chain adds that nothing else has**: L4, L5, L6, L7 and L9 are
+  reached by **no other fixture in the roster**, and L8 by nothing but four
+  contact-pair fixtures that never leave their stance.
+
+⇒ the R4 set goes when R8's campaign covers the rest of it, not before. The
+roster stands at **133 tapes** (123 gate, 10 legacy) against R6's 118.
+
+## What R7 hands on, and what R8 inherits
+
+⚠ This table SUPERSEDES the R6 one above for every row R7 touched.
+
+| item / gate | what R7 did with it | rung |
+|---|---|---|
+| **the segmented playthrough** | BUILT and PROVEN: 46-row `SEAM_SIGNATURE`, the terminal latch, the `begin()`-ENTRY latch, `seamBootFields`/`segmentBootFromLatch`, `requireCalm` branching on `isPlaythroughSegment` — **eleven segments, ten seams, all green, no offset declared anywhere** | **DISCHARGED (R7)** — the machinery; the campaign is R8's |
+| **`sword@L10`** | **EARNED** in `r7-act2-10`, `hasSword 0 -> 1` plus `{10,0}`, from the true initial state with nothing granted | **DISCHARGED (R7)** |
+| **`chest@L11`** (the first of sixteen seals) | **EARNED** in `r7-act2-11`, a `hasSealPart[]` slot plus `{11,0}` — the identity is RNG at chest OPEN and is not predicted | **DISCHARGED (R7)** |
+| the goal ledger's other **39 rows** | REPORTED UNCLAIMED on a named non-failing line, findings DERIVED from the ledger | **R8's campaign** |
+| **`saw_auto_advance`** (owed since R3) | unified in batch 1, the whole roster re-recorded ONCE with every change attributed by a prediction committed first | **DISCHARGED (R7)** |
+| **`botStatus.save` as a differential stratum** | consumed — `totem_parts` / `keys` / `seal_parts` asserted per tape | **DISCHARGED (R7)** |
+| **`earnedClears` missing a pickup's own tag** (R6 debt 2) | PAID — `PICKUP_CLEARS_OWN_TAG` (14 classes) + `PICKUP_WRITES_NO_TAG` (3); it is what makes a chest's own clear the witness | **DISCHARGED (R7)** |
+| **the 10 s vitest cliff** (R6 debt 9) | PAID at this close — 60 s, measured both sides, nine timeouts converted with zero assertion failures behind them | **DISCHARGED (R7)** |
+| **`hasShield` + the L20 walk** | untouched — no tape real-collects it; L20's near-side is priced and its three gates are BEHIND the shield | **R8, at the head** |
+| **D2 / the ShieldBoss / boss key 0, honestly** | moved to R8's head by the user's boundary re-ruling, with the machinery complete | **R8, at the head** |
+| **rules v1 + the sphere order** | GENERATED, `--check` byte-exact, its own preset; AP's fill accepts it and returns a sphere log; a REFUTATION LOG rides with the artifact | **DISCHARGED (R7)** — refinement is per-segment and continuous |
+| **the L40 chain** (links 5–11, boss key 2, both north teleporters) | ⛔ **the wall is GONE**: the second holder is `pushableblockfire@480,480`, R5's refusal was two instrument defects, and the single-visit route is measured and priced at 2,500–4,000 ticks | **R8** — scheduled, not blocked |
+| **`noDamage` roster-wide retirement** | retires BY CONSTRUCTION on the chain (segments declare nothing); the flag disappears as superseded tapes retire | **R8+**, no separate campaign |
+| the **noclip legacy walks** | evaluated at close, **NO DEMOTION** — the R4 ENDS-MEET set has a hole the chain does not fill, and two mechanism witnesses stay unconditionally | **R8** re-evaluates when the campaign covers the rest |
+| **M2** (`plan-seedling-segment.mjs --from <AP-path-step>`) and **M3** (real-time) | named horizons, untouched; `buildTape`'s v5 cap is M2's first obstacle and `normalizeLive`'s remaining consumers are M3's | later rungs |
+| **LightBoss / TentacleBeast / LavaBoss** | measured OUT — the exclusion costs nothing, in the strict arm as well as the loose one, against a positive control that does register a loss. L57/L69 have NO EXIT until the boss dies ⇒ never-enter | deferred, now with evidence |
+| **L93's bridge, live** | still unit-witnessed on L63 only; it rides the spear or the ghostsword | R8+ |
+| **the BobBoss encounter script** | `KILL_ARM_POLICY.BobBoss` still `refused` | R8+ |
