@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-1f12aa8d",
+  "atlas_id": "seedling-4ba11641",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "1f12aa8d" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "4ba11641" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -702,7 +702,27 @@
           "kind": "teleporter",
           "exit_tiles": [[2,53]],
           "entrance_tile": [2,53],
-          "sub_region": "r51c1"
+          "sub_region": "r0c37",
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Yellow Key" } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Wand" } },
+                  {
+                    "rule": "And",
+                    "children": [
+                      { "rule": "Has", "args": { "item_name": "Fire Wand Fusion" } },
+                      { "rule": "Has", "args": { "item_name": "Wand" } },
+                      { "rule": "Has", "args": { "item_name": "Fire" } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "exit_id": "out_teleporter_40_688",
@@ -828,7 +848,7 @@
           "kind": "teleporter",
           "exit_tiles": [[2,54]],
           "entrance_tile": [2,54],
-          "sub_region": "r55c1"
+          "sub_region": "r0c37"
         },
         {
           "exit_id": "in_L88_96_304",
@@ -863,12 +883,13 @@
           "name": "Level 012 - Witch",
           "tile": [26,24],
           "vanilla_item": "Progressive Sword",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Wand" } },
           "sub_region": "r0c19"
         }
       ],
       "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r44c19","r51c1","r55c1"],
+        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r44c19"],
         "internal_exits": [
           {
             "from": "r0c19",
@@ -2096,7 +2117,18 @@
         }
       ],
       "locations": [
-        { "name": "Level 032 - Bob Boss", "tile": [4,8], "vanilla_item": "Fire" }
+        {
+          "name": "Level 032 - Bob Boss",
+          "tile": [4,8],
+          "vanilla_item": "Fire",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
+        }
       ],
       "annotations": { "rules_source": "manual" }
     },
@@ -2269,49 +2301,14 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c18","r5c33","r9c36","r10c33","r12c30"],
+        "sub_regions": ["r0c18","r5c33","r9c36"],
         "internal_exits": [
           {
             "from": "r0c18",
-            "to": "r12c30",
+            "to": "r5c33",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r10c33",
-            "to": "r12c30",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r10c33",
-            "to": "r5c33",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r10c33",
-            "to": "r9c36",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r12c30",
-            "to": "r5c33",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r12c30",
-            "to": "r9c36",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           },
           {
             "from": "r5c33",
@@ -2898,7 +2895,25 @@
         }
       ],
       "locations": [
-        { "name": "Level 043 - Wand", "tile": [9,14], "vanilla_item": "Wand", "sub_region": "r8c7" }
+        {
+          "name": "Level 043 - Wand",
+          "tile": [9,14],
+          "vanilla_item": "Wand",
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                ]
+              }
+            ]
+          },
+          "sub_region": "r8c7"
+        }
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
@@ -4236,7 +4251,7 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r1c2","r1c4","r2c1","r2c5","r3c4","r4c1","r6c5"],
+        "sub_regions": ["r1c2","r1c4","r2c1","r2c5","r3c3","r4c1","r6c5"],
         "internal_exits": [
           {
             "from": "r1c2",
@@ -4261,7 +4276,7 @@
           },
           {
             "from": "r1c2",
-            "to": "r3c4",
+            "to": "r3c3",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
@@ -4289,7 +4304,7 @@
           },
           {
             "from": "r1c4",
-            "to": "r3c4",
+            "to": "r3c3",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
@@ -4310,7 +4325,7 @@
           },
           {
             "from": "r2c1",
-            "to": "r3c4",
+            "to": "r3c3",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
@@ -4324,7 +4339,7 @@
           },
           {
             "from": "r2c5",
-            "to": "r3c4",
+            "to": "r3c3",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
@@ -4344,14 +4359,14 @@
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           },
           {
-            "from": "r3c4",
+            "from": "r3c3",
             "to": "r4c1",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           },
           {
-            "from": "r3c4",
+            "from": "r3c3",
             "to": "r6c5",
             "bidirectional": true,
             "source": "analyzer",
@@ -4603,76 +4618,65 @@
           "exit_id": "in_L61_112_0",
           "kind": "teleporter",
           "exit_tiles": [[3,18]],
-          "entrance_tile": [3,18],
-          "sub_region": "r9c8"
+          "entrance_tile": [3,18]
         },
         {
           "exit_id": "in_L61_160_0",
           "kind": "teleporter",
           "exit_tiles": [[6,18]],
-          "entrance_tile": [6,18],
-          "sub_region": "r9c8"
+          "entrance_tile": [6,18]
         },
         {
           "exit_id": "out_teleporter_48_304",
           "kind": "teleporter",
           "exit_tiles": [[3,19]],
-          "entrance_tile": [3,19],
-          "sub_region": "r9c8"
+          "entrance_tile": [3,19]
         },
         {
           "exit_id": "out_teleporter_96_304",
           "kind": "teleporter",
           "exit_tiles": [[6,19]],
-          "entrance_tile": [6,19],
-          "sub_region": "r9c8"
+          "entrance_tile": [6,19]
         },
         {
           "exit_id": "out_teleporter_112_64",
           "kind": "teleporter",
           "exit_tiles": [[7,4]],
-          "entrance_tile": [7,4],
-          "sub_region": "r8c7"
+          "entrance_tile": [7,4]
         },
         {
           "exit_id": "out_teleporter_192_304",
           "kind": "teleporter",
           "exit_tiles": [[12,19]],
-          "entrance_tile": [12,19],
-          "sub_region": "r9c8"
+          "entrance_tile": [12,19]
         },
         {
           "exit_id": "out_teleporter_240_304",
           "kind": "teleporter",
           "exit_tiles": [[15,19]],
-          "entrance_tile": [15,19],
-          "sub_region": "r9c8"
+          "entrance_tile": [15,19]
         },
         {
           "exit_id": "in_L63_16_0",
           "kind": "teleporter",
           "exit_tiles": [[12,18]],
-          "entrance_tile": [12,18],
-          "sub_region": "r9c8"
+          "entrance_tile": [12,18]
         },
         {
           "exit_id": "in_L63_64_0",
           "kind": "teleporter",
           "exit_tiles": [[15,18]],
-          "entrance_tile": [15,18],
-          "sub_region": "r9c8"
+          "entrance_tile": [15,18]
         },
         {
           "exit_id": "in_L64_32_96",
           "kind": "teleporter",
           "exit_tiles": [[7,5]],
-          "entrance_tile": [7,5],
-          "sub_region": "r8c7"
+          "entrance_tile": [7,5]
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" },
-      "subgraph": { "sub_regions": ["r8c7","r9c8"], "internal_exits": [] }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_63",
@@ -5191,12 +5195,12 @@
           "name": "Level 071 - Chest",
           "tile": [10,16],
           "vanilla_item": "Seal",
-          "sub_region": "r16c10"
+          "sub_region": "r0c6"
         }
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c6","r13c7","r14c12","r16c10","r16c19"],
+        "sub_regions": ["r0c6","r13c7","r14c12","r16c19"],
         "internal_exits": [
           {
             "from": "r0c6",
@@ -5220,24 +5224,10 @@
           },
           {
             "from": "r0c6",
-            "to": "r16c10",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r0c6",
             "to": "r16c19",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
-          },
-          {
-            "from": "r14c12",
-            "to": "r16c10",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           }
         ]
       }
@@ -5343,66 +5333,31 @@
           "exit_id": "in_L73_64_0",
           "kind": "teleporter",
           "exit_tiles": [[18,8]],
-          "entrance_tile": [18,8],
-          "sub_region": "r8c18"
+          "entrance_tile": [18,8]
         },
         {
           "exit_id": "out_teleporter_16_144",
           "kind": "teleporter",
           "exit_tiles": [[1,9]],
-          "entrance_tile": [1,9],
-          "sub_region": "r2c2"
+          "entrance_tile": [1,9]
         },
         {
           "exit_id": "out_teleporter_288_144",
           "kind": "teleporter",
           "exit_tiles": [[18,9]],
-          "entrance_tile": [18,9],
-          "sub_region": "r8c18"
+          "entrance_tile": [18,9]
         },
         {
           "exit_id": "in_L75_64_0",
           "kind": "teleporter",
           "exit_tiles": [[1,8]],
-          "entrance_tile": [1,8],
-          "sub_region": "r2c2"
+          "entrance_tile": [1,8]
         }
       ],
       "locations": [
-        {
-          "name": "Level 074 - Darkshield",
-          "tile": [3,2],
-          "vanilla_item": "Progressive Shield",
-          "sub_region": "r2c2"
-        }
+        { "name": "Level 074 - Darkshield", "tile": [3,2], "vanilla_item": "Progressive Shield" }
       ],
-      "annotations": { "rules_source": "analyzer" },
-      "subgraph": {
-        "sub_regions": ["r2c2","r3c13","r8c18"],
-        "internal_exits": [
-          {
-            "from": "r2c2",
-            "to": "r3c13",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r2c2",
-            "to": "r8c18",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r3c13",
-            "to": "r8c18",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          }
-        ]
-      }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_75",
@@ -5448,80 +5403,29 @@
           "exit_id": "in_L71_304_256",
           "kind": "teleporter",
           "exit_tiles": [[1,5]],
-          "entrance_tile": [1,5],
-          "sub_region": "r5c0"
+          "entrance_tile": [1,5]
         },
         {
           "exit_id": "out_teleporter_0_80",
           "kind": "teleporter",
           "exit_tiles": [[0,5]],
-          "entrance_tile": [0,5],
-          "sub_region": "r5c0"
+          "entrance_tile": [0,5]
         },
         {
           "exit_id": "out_teleporter_304_112",
           "kind": "teleporter",
           "exit_tiles": [[19,7]],
-          "entrance_tile": [19,7],
-          "sub_region": "r6c18"
+          "entrance_tile": [19,7]
         },
         {
           "exit_id": "in_L77_0_32",
           "kind": "teleporter",
           "exit_tiles": [[18,7]],
-          "entrance_tile": [18,7],
-          "sub_region": "r6c18"
+          "entrance_tile": [18,7]
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "mixed" },
-      "subgraph": {
-        "sub_regions": ["r4c8","r5c0","r5c6","r6c18"],
-        "internal_exits": [
-          {
-            "from": "r4c8",
-            "to": "r5c0",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r4c8",
-            "to": "r5c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r4c8",
-            "to": "r6c18",
-            "bidirectional": true,
-            "source": "manual",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r5c0",
-            "to": "r5c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r5c0",
-            "to": "r6c18",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r5c6",
-            "to": "r6c18",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          }
-        ]
-      }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_77",
@@ -5533,59 +5437,29 @@
           "exit_id": "in_L76_304_112",
           "kind": "teleporter",
           "exit_tiles": [[1,2]],
-          "entrance_tile": [1,2],
-          "sub_region": "r2c0"
+          "entrance_tile": [1,2]
         },
         {
           "exit_id": "out_teleporter_0_32",
           "kind": "teleporter",
           "exit_tiles": [[0,2]],
-          "entrance_tile": [0,2],
-          "sub_region": "r2c0"
+          "entrance_tile": [0,2]
         },
         {
           "exit_id": "out_teleporter_96_304",
           "kind": "teleporter",
           "exit_tiles": [[6,19]],
-          "entrance_tile": [6,19],
-          "sub_region": "r10c4"
+          "entrance_tile": [6,19]
         },
         {
           "exit_id": "in_L78_256_0",
           "kind": "teleporter",
           "exit_tiles": [[6,18]],
-          "entrance_tile": [6,18],
-          "sub_region": "r10c4"
+          "entrance_tile": [6,18]
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
-      "subgraph": {
-        "sub_regions": ["r2c0","r2c3","r10c4"],
-        "internal_exits": [
-          {
-            "from": "r10c4",
-            "to": "r2c0",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r10c4",
-            "to": "r2c3",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r2c0",
-            "to": "r2c3",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          }
-        ]
-      }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_78",
@@ -5625,25 +5499,11 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c2","r0c16","r1c9"],
+        "sub_regions": ["r0c2","r0c16"],
         "internal_exits": [
           {
             "from": "r0c16",
             "to": "r0c2",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r0c16",
-            "to": "r1c9",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r0c2",
-            "to": "r1c9",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {
@@ -5767,9 +5627,9 @@
       "locations": [
         { "name": "Level 080 - Chest", "tile": [1,8], "vanilla_item": "Seal", "sub_region": "r8c1" }
       ],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c2","r6c4","r8c1","r16c1"],
+        "sub_regions": ["r0c2","r6c4","r8c1","r8c4","r12c3","r16c1"],
         "internal_exits": [
           {
             "from": "r0c2",
@@ -5786,10 +5646,31 @@
             "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           },
           {
+            "from": "r12c3",
+            "to": "r8c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r16c1",
+            "to": "r12c3",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
             "from": "r6c4",
             "to": "r8c1",
             "bidirectional": true,
             "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r8c4",
+            "to": "r6c4",
+            "bidirectional": false,
+            "source": "manual",
             "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           }
         ]
@@ -6045,7 +5926,7 @@
           "kind": "teleporter",
           "exit_tiles": [[1,2]],
           "entrance_tile": [1,2],
-          "sub_region": "r3c1"
+          "sub_region": "r1c3"
         },
         {
           "exit_id": "out_teleporter_272_304",
@@ -6101,7 +5982,7 @@
           "kind": "teleporter",
           "exit_tiles": [[1,3]],
           "entrance_tile": [1,3],
-          "sub_region": "r3c1"
+          "sub_region": "r1c3"
         },
         {
           "exit_id": "in_L93_112_272",
@@ -6114,7 +5995,7 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c23","r1c3","r3c1","r7c10","r7c13"],
+        "sub_regions": ["r0c23","r1c3","r7c10","r7c13"],
         "internal_exits": [
           {
             "from": "r0c23",
@@ -6649,7 +6530,13 @@
           },
           { "from": "r10c7", "to": "r1c0", "bidirectional": true, "source": "manual" },
           { "from": "r10c7", "to": "r1c13", "bidirectional": true, "source": "manual" },
-          { "from": "r1c0", "to": "r1c13", "bidirectional": true, "source": "manual" }
+          {
+            "from": "r1c0",
+            "to": "r1c13",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          }
         ]
       }
     },
@@ -6691,7 +6578,7 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c16","r3c4","r14c0","r15c17","r16c6","r16c12","r16c16"],
+        "sub_regions": ["r2c16","r14c0","r15c17","r16c6","r16c12","r16c16"],
         "internal_exits": [
           {
             "from": "r14c0",
@@ -6832,13 +6719,6 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r3c4",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           }
         ]
       }
@@ -6853,101 +6733,53 @@
           "exit_id": "in_L12_0_352",
           "kind": "teleporter",
           "exit_tiles": [[38,4]],
-          "entrance_tile": [38,4],
-          "sub_region": "r2c37"
+          "entrance_tile": [38,4]
         },
         {
           "exit_id": "in_L12_0_368",
           "kind": "teleporter",
           "exit_tiles": [[38,5]],
-          "entrance_tile": [38,5],
-          "sub_region": "r2c37"
+          "entrance_tile": [38,5]
         },
         {
           "exit_id": "in_L59_144_304",
           "kind": "teleporter",
           "exit_tiles": [[2,1]],
-          "entrance_tile": [2,1],
-          "sub_region": "r0c2"
+          "entrance_tile": [2,1]
         },
         {
           "exit_id": "in_L59_160_304",
           "kind": "teleporter",
           "exit_tiles": [[3,1]],
-          "entrance_tile": [3,1],
-          "sub_region": "r0c2"
+          "entrance_tile": [3,1]
         },
         {
           "exit_id": "out_teleporter_32_0",
           "kind": "teleporter",
           "exit_tiles": [[2,0]],
-          "entrance_tile": [2,0],
-          "sub_region": "r0c2"
+          "entrance_tile": [2,0]
         },
         {
           "exit_id": "out_teleporter_48_0",
           "kind": "teleporter",
           "exit_tiles": [[3,0]],
-          "entrance_tile": [3,0],
-          "sub_region": "r0c2"
+          "entrance_tile": [3,0]
         },
         {
           "exit_id": "out_teleporter_624_64",
           "kind": "teleporter",
           "exit_tiles": [[39,4]],
-          "entrance_tile": [39,4],
-          "sub_region": "r2c37"
+          "entrance_tile": [39,4]
         },
         {
           "exit_id": "out_teleporter_624_80",
           "kind": "teleporter",
           "exit_tiles": [[39,5]],
-          "entrance_tile": [39,5],
-          "sub_region": "r2c37"
+          "entrance_tile": [39,5]
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
-      "subgraph": {
-        "sub_regions": ["r0c2","r2c37","r7c8"],
-        "internal_exits": [
-          {
-            "from": "r0c2",
-            "to": "r2c37",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r0c2",
-            "to": "r7c8",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c37",
-            "to": "r7c8",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r7c8",
-            "to": "r0c2",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r7c8",
-            "to": "r2c37",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          }
-        ]
-      }
+      "annotations": { "rules_source": "manual" }
     },
     {
       "region_id": "level_96",
@@ -7058,7 +6890,7 @@
           "kind": "teleporter",
           "exit_tiles": [[6,7]],
           "entrance_tile": [6,7],
-          "sub_region": "r3c7"
+          "sub_region": "r2c7"
         },
         {
           "exit_id": "out_stairsup_48_96",
@@ -7072,7 +6904,7 @@
           "kind": "teleporter",
           "exit_tiles": [[7,7]],
           "entrance_tile": [7,7],
-          "sub_region": "r3c7"
+          "sub_region": "r2c7"
         },
         {
           "exit_id": "in_L100_48_96",
@@ -7085,11 +6917,11 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c4","r3c7"],
+        "sub_regions": ["r2c4","r2c7"],
         "internal_exits": [
           {
             "from": "r2c4",
-            "to": "r3c7",
+            "to": "r2c7",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {
@@ -7132,8 +6964,25 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" },
-      "subgraph": { "sub_regions": ["r2c3","r4c10"], "internal_exits": [] }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r2c3","r4c10"],
+        "internal_exits": [
+          {
+            "from": "r2c3",
+            "to": "r4c10",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_101",
@@ -7519,8 +7368,33 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" },
-      "subgraph": { "sub_regions": ["r2c0","r11c8"], "internal_exits": [] }
+      "annotations": { "rules_source": "mixed" },
+      "subgraph": {
+        "sub_regions": ["r2c0","r5c8","r8c8","r11c8"],
+        "internal_exits": [
+          {
+            "from": "r2c0",
+            "to": "r5c8",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r5c8",
+            "to": "r8c8",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r8c8",
+            "to": "r11c8",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_109",
@@ -7688,13 +7562,15 @@
           "exit_id": "out_teleporter_112_0",
           "kind": "teleporter",
           "exit_tiles": [[7,0]],
-          "entrance_tile": [7,0]
+          "entrance_tile": [7,0],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Seal", "count": 16 } }
         },
         {
           "exit_id": "out_teleporter_128_0",
           "kind": "teleporter",
           "exit_tiles": [[8,0]],
-          "entrance_tile": [8,0]
+          "entrance_tile": [8,0],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Seal", "count": 16 } }
         },
         {
           "exit_id": "in_L114_64_144",
@@ -7722,7 +7598,7 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" }
     },
     {
       "region_id": "level_114",
@@ -7803,17 +7679,10 @@
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c2","r2c5","r4c4","r5c1","r6c7","r8c2","r8c7","r9c4"],
+        "sub_regions": ["r2c2","r4c4","r5c1","r6c7","r8c2","r8c7","r9c4"],
         "internal_exits": [
           {
             "from": "r2c2",
-            "to": "r2c5",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c2",
             "to": "r4c4",
             "bidirectional": true,
             "source": "analyzer",
@@ -7849,48 +7718,6 @@
           },
           {
             "from": "r2c2",
-            "to": "r9c4",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
-            "to": "r4c4",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
-            "to": "r5c1",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
-            "to": "r6c7",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
-            "to": "r8c2",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
-            "to": "r8c7",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c5",
             "to": "r9c4",
             "bidirectional": false,
             "source": "analyzer",
@@ -7989,13 +7816,6 @@
           },
           {
             "from": "r8c2",
-            "to": "r2c5",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r8c2",
             "to": "r4c4",
             "bidirectional": false,
             "source": "analyzer",
@@ -8032,13 +7852,6 @@
           {
             "from": "r8c7",
             "to": "r2c2",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r8c7",
-            "to": "r2c5",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
@@ -8074,13 +7887,6 @@
           {
             "from": "r9c4",
             "to": "r2c2",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r9c4",
-            "to": "r2c5",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }

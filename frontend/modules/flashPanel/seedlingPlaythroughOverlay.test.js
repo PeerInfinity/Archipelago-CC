@@ -15,6 +15,9 @@
  * Every count is derived from a table, never typed.
  */
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import { ENTITY_SEMANTICS, conditionKey } from './seedlingSemantics.js';
@@ -29,8 +32,17 @@ import {
     REFUTATION_FIELDS,
     REFUTATION_LOG,
     WANDLOCK_IS_A_LOCK,
+    CHARGED_DOORS,
+    COMPLETION,
+    IGNEOUS_IS_FREE,
+    LAVATRAP_PULL,
+    LOCATION_GUARDS,
+    PLAYTHROUGH_TILE_OVERLAY,
     isRefutation,
+    lavaTrapPulls,
+    locationGuard,
     overlayEntitySemantics,
+    overlayTileSemantics,
     resolveOverlayCondition,
 } from './seedlingPlaythroughOverlay.js';
 
@@ -192,8 +204,15 @@ describe('the trap rooms, and the L40 ruling', () => {
 });
 
 describe('the refutation log — the mechanism, built before it is needed', () => {
-    it('starts empty, because no segment has driven any of these gates yet', () => {
-        expect(REFUTATION_LOG).toEqual([]);
+    // ⛓ R7 slice 5 gave it its first entry: §13.5's level_76 Dark Suit row put
+    // the Dark Suit behind ITSELF, and AP's fill is what said so.
+    it('carries the level_76 igneous refutation, well-formed', () => {
+        expect(REFUTATION_LOG).toHaveLength(1);
+        for (const entry of REFUTATION_LOG) expect(isRefutation(entry)).toBe(true);
+        expect(REFUTATION_LOG[0].row).toMatch(/level_76/);
+        expect(REFUTATION_LOG[0].observed).toMatch(/prerequisite for itself/);
+        // The refuted row must not still be shipping: the tile is ruled OPEN.
+        expect(overlayTileSemantics(IGNEOUS_IS_FREE.tileType).kind).toBe('open');
     });
 
     it('but its SHAPE is asserted, so the mechanism cannot rot while it waits', () => {
@@ -218,5 +237,93 @@ describe('the overlay-only condition vocabulary', () => {
         // A plain engine flag is the TRANSCRIPTION's to resolve, not ours.
         expect(resolveOverlayCondition({ flag: 'hasFire' })).toBeNull();
         expect(resolveOverlayCondition(null)).toBeNull();
+    });
+});
+
+// ── R7 slice 5: the three gates a TERRAIN analysis can never see ────────────
+
+describe('the LavaTrap lift', () => {
+    const MAP = JSON.parse(readFileSync(
+        fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8',
+    ));
+    const level = (id) => MAP.levels.find((l) => l.level === id);
+
+    it('reels the player onto the trap tile from 32 px, gated on the Dark Suit', () => {
+        expect(LAVATRAP_PULL.chompRange).toBe(32);
+        expect(LAVATRAP_PULL.condition).toEqual({ flag: 'hasDarkSuit' });
+        expect(LAVATRAP_PULL.cite).toMatch(/LavaTrap\.as/);
+        expect(LAVATRAP_PULL.cite).toMatch(/Player\.as:718/);
+    });
+
+    it('reaches exactly two tiles, measured centre to centre', () => {
+        const [pull] = lavaTrapPulls({
+            width: 9, height: 9, entities: [{ type: 'lavatrap', x: 64, y: 64 }],
+        });
+        expect(pull.tile).toEqual([4, 4]);
+        const has = (x, y) => pull.from.some((t) => t[0] === x && t[1] === y);
+        expect(has(4, 2)).toBe(true);   // straight up: exactly 32 px
+        expect(has(4, 1)).toBe(false);  // 48 px
+        expect(has(6, 6)).toBe(false);  // diagonal 45 px
+        expect(has(5, 5)).toBe(true);   // diagonal 22 px
+        expect(has(4, 4)).toBe(false);  // the trap's own tile is not a source
+    });
+
+    it('is what crosses L108, and each of the three hops is exactly one pull', () => {
+        const pulls = lavaTrapPulls(level(108));
+        expect(pulls.map((p) => p.tile)).toEqual([[8, 5], [8, 8], [8, 11]]);
+        const reaches = (i, tile) => pulls[i].from.some((t) => t[0] === tile[0] && t[1] === tile[1]);
+        expect(reaches(0, [8, 3])).toBe(true);
+        expect(reaches(1, [8, 6])).toBe(true);
+        expect(reaches(2, [8, 9])).toBe(true);
+    });
+
+    it('finds every lavatrap in the map and no other trap family', () => {
+        const total = MAP.levels.reduce((n, l) => n + lavaTrapPulls(l).length, 0);
+        const placed = MAP.levels
+            .reduce((n, l) => n + l.entities.filter((e) => e.type === 'lavatrap').length, 0);
+        expect(total).toBe(placed);
+        expect(placed).toBe(9);
+        // A darktrap is a different class and must not be swept in with them.
+        expect(lavaTrapPulls({ width: 5, height: 5, entities: [{ type: 'darktrap', x: 0, y: 0 }] }))
+            .toEqual([]);
+    });
+});
+
+describe('location guards — the gate that is not a door', () => {
+    it('gates the Wand on the totem, the Dark Sword on the Wand, and Fire on a weapon', () => {
+        expect(locationGuard('wand@L43').condition)
+            .toEqual({ all: [{ flag: 'hasTotemPartsAll' }, A_WEAPON] });
+        expect(locationGuard('darksword@L12').condition).toEqual({ flag: 'hasWand' });
+        expect(locationGuard('fire@L32').condition).toEqual(A_WEAPON);
+        expect(locationGuard('sword@L10')).toBeNull();
+    });
+
+    it('cites source for every row and never ships one without a reason', () => {
+        for (const [id, guard] of Object.entries(LOCATION_GUARDS)) {
+            expect(typeof guard.cite, id).toBe('string');
+            expect(guard.cite.length, id).toBeGreaterThan(20);
+            expect(typeof guard.why, id).toBe('string');
+            expect(guard.condition, id).toBeTruthy();
+        }
+    });
+});
+
+describe('the charged doors and the completion condition', () => {
+    it('charges the D7 entrance and BOTH cells the FinalDoor covers', () => {
+        expect(CHARGED_DOORS.map((d) => `${d.level}/${d.exitId}`)).toEqual([
+            '12/out_teleporter_32_848',
+            '113/out_teleporter_112_0',
+            '113/out_teleporter_128_0',
+        ]);
+        for (const door of CHARGED_DOORS.filter((d) => d.level === 113)) {
+            expect(door.condition).toEqual({ seals: 16 });
+        }
+    });
+
+    it('states the goal as the BLOODLESS seed and names the other ending a non-goal', () => {
+        expect(COMPLETION.goal).toMatch(/bloodless/);
+        expect(COMPLETION.witness).toMatch(/menu_state 2/);
+        expect(COMPLETION.excludedBranch).toMatch(/Watcher\.as/);
+        expect(COMPLETION.implied.join(' ')).toMatch(/Watcher/);
     });
 });

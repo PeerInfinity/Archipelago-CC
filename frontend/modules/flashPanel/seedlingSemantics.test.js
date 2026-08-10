@@ -27,6 +27,10 @@ import {
     tileSemantics,
     entitySemantics,
     entityFootprint,
+    entityPixelRect,
+    entitySealedTiles,
+    entityStrandedTiles,
+    cliffSideSemantics,
     isLevelPropertyTag,
     buildFlagItemRules,
     resolveCondition,
@@ -350,16 +354,47 @@ describe('grid construction over real levels', () => {
         expect(grid.cells[1].dirs).toEqual({ N: [flag('hasFeather')] });
     });
 
-    it('treats a cliffsides placement as tile-granular solid', () => {
-        const level = {
-            width: 1,
-            height: 1,
-            layers: [{ name: 'cliffsides', tiles: [[0, 0, 999, 0]] }],
-            entities: [],
-        };
-        const grid = buildSeedlingRegionGrid({ x: 0, y: 0, w: 1, h: 1 }, level);
-        expect(grid.cells[0].kind).toBe('wall');
-        expect(grid.unclassified).toEqual([]);
+    // ⛔ R7 slice 5: a cliffside is HALF a tile. It used to be read as a
+    // whole-tile wall, which sealed L100 and with it Dungeon 8's tail.
+    it('reads a cliffsides placement as a FACE gate, one face per solid half', () => {
+        const cliff = (tx) => buildSeedlingRegionGrid({ x: 0, y: 0, w: 1, h: 1 }, {
+            width: 1, height: 1, entities: [],
+            layers: [{ name: 'cliffsides', tiles: [[0, 0, tx * 16, 0]] }],
+        });
+        // frame 0 = MaskL: the left half is solid, so only the WEST face blocks.
+        expect(cliff(0).cells[0].kind).toBe('directional');
+        expect(cliff(0).cells[0].faces).toEqual({ W: null });
+        expect(cliff(1).cells[0].faces).toEqual({ E: null });
+        expect(cliff(2).cells[0].faces).toEqual({ W: null, N: null });
+        expect(cliff(3).cells[0].faces).toEqual({ E: null, N: null });
+        // Anything past the four named frames is CliffSideMaskU (the default arm
+        // of the switch at Scenery/CliffSide.as:20-30), the top half.
+        expect(cliff(4).cells[0].faces).toEqual({ N: null });
+        expect(cliff(999).cells[0].faces).toEqual({ N: null });
+        expect(cliff(0).unclassified).toEqual([]);
+        // The mutation that would restore the old reading has to go red.
+        for (const tx of [0, 1, 2, 3, 4]) expect(cliff(tx).cells[0].kind).not.toBe('wall');
+    });
+
+    // ⛔ R7 slice 5: an entity claims only the tiles its hitbox COVERS. The 29
+    // off-grid wall entities used to wall four tiles apiece; `planttorch@120,152`
+    // did it in front of L62's north island and cost the Ghost Spear.
+    it('claims only the tiles an entity hitbox fully covers', () => {
+        const tiles = (x, y, semantics = { kind: 'wall' }) => entitySealedTiles({ type: 't', x, y }, semantics);
+        expect(tiles(32, 48)).toEqual([[2, 3]]);                       // aligned 1x1: unchanged
+        expect(tiles(120, 152)).toEqual([]);                           // half-offset 1x1: nothing
+        expect(tiles(32, 48, { kind: 'wall', size: [2, 2] }))
+            .toEqual([[2, 3], [3, 3], [2, 4], [3, 4]]);                 // aligned 2x2
+        expect(tiles(40, 48, { kind: 'wall', size: [2, 2] }))
+            .toEqual([[3, 3], [3, 4]]);                                 // offset in x: one column
+    });
+
+    it('reports a tile whose free remainder is thinner than the player box', () => {
+        // 15 px of a 16 px tile covered in x while spanning it in y: 1 px left.
+        expect(entityStrandedTiles({ type: 't', x: 1, y: 0 }, { kind: 'wall' }))
+            .toContainEqual([0, 0]);
+        // A clean half is 8 px, which the 4x5 player fits through.
+        expect(entityStrandedTiles({ type: 't', x: 8, y: 8 }, { kind: 'wall' })).toEqual([]);
     });
 
     it('reports an unknown entity tag rather than skipping it', () => {

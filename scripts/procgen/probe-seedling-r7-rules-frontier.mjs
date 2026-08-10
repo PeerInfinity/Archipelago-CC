@@ -101,4 +101,108 @@ for (const r of roots) {
 
 console.log('\nNEXT STEP FOR EACH ROOT CAUSE: read the SOURCE for what stands between the '
     + 'reachable piece and the door. It has been an entity every time so far.');
+
+// --- 3: the STRICTNESS frontier ----------------------------------------
+//
+// Once nothing is structurally unreachable, everything `Generate.py` still
+// refuses is a rule that asks for too much. This is AP's own algorithm run
+// offline — flood, harvest every location the flood reached, reflood — and then
+// for each location it never reaches it prints the CHEAPEST rule standing
+// between the frontier and it, with the items that rule wants and the holder
+// does not have. That last part is the whole point: "Ghost Spear" printed twice
+// is one problem, not two.
+const vanillaOf = new Map();
+for (const region of Object.values(regions)) {
+    for (const loc of region.locations ?? []) {
+        const item = typeof loc.item === 'string' ? loc.item : loc.item?.name ?? loc.vanilla_item ?? null;
+        if (item) vanillaOf.set(loc.name, item);
+    }
+}
+if (vanillaOf.size === 0) throw new Error('no vanilla placement in the rules.json — the strictness arm would be vacuous');
+
+const held = new Map();
+const countOf = (n) => held.get(n) ?? 0;
+const evalRule = (node, missing) => {
+    if (!node || typeof node !== 'object') return true;
+    switch (node.rule) {
+        case 'True_': return true;
+        case 'False_': return false;
+        case 'And': return (node.children ?? []).map((c) => evalRule(c, missing)).every(Boolean);
+        case 'Or': {
+            // Evaluate every arm so the missing set names the cheapest way too.
+            const arms = (node.children ?? []).map((c) => evalRule(c, missing));
+            return arms.some(Boolean);
+        }
+        case 'Has': {
+            const want = node.args?.count ?? 1;
+            const have = countOf(node.args?.item_name);
+            if (have < want) missing?.add(`${node.args?.item_name}${want > 1 ? ` x${want}` : ''} (have ${have})`);
+            return have >= want;
+        }
+        default: return true; // an unknown rule is not a wall
+    }
+};
+
+const reachedLive = new Set();
+const collected = new Set();
+for (let pass = 0; pass < 200; pass += 1) {
+    reachedLive.clear();
+    reachedLive.add('Menu');
+    const q = ['Menu'];
+    while (q.length > 0) {
+        const here = q.pop();
+        for (const exit of regions[here]?.exits ?? []) {
+            const to = exit.connected_region;
+            if (!to || reachedLive.has(to)) continue;
+            if (!evalRule(exit.access_rule, null)) continue;
+            reachedLive.add(to);
+            q.push(to);
+        }
+    }
+    let grew = false;
+    for (const [name, region] of Object.entries(regions)) {
+        if (!reachedLive.has(name)) continue;
+        for (const loc of region.locations ?? []) {
+            if (collected.has(loc.name)) continue;
+            if (!evalRule(loc.access_rule, null)) continue;
+            collected.add(loc.name);
+            const item = vanillaOf.get(loc.name);
+            if (item) held.set(item, countOf(item) + 1);
+            grew = true;
+        }
+    }
+    if (!grew) break;
+}
+
+const refused = locations.filter((l) => !collected.has(l.name));
+console.log(`\nSTRICTNESS FRONTIER — the real fill, vanilla placement, run to a fixed point`);
+console.log(`  AP regions reachable: ${reachedLive.size} / ${Object.keys(regions).length}`);
+console.log(`  locations REFUSED: ${refused.length} / ${locations.length}`);
+for (const l of refused) {
+    const inRegion = reachedLive.has(l.region);
+    if (inRegion) {
+        const miss = new Set();
+        evalRule(regions[l.region].locations.find((x) => x.name === l.name)?.access_rule, miss);
+        console.log(`    ${l.name}  (${l.region}) — the ROOM is reachable; the location rule wants ${[...miss].join(', ') || '(nothing?)'}`);
+        continue;
+    }
+    // The cheapest door into this room whose source the fill DID reach.
+    const doors = [];
+    for (const [name, region] of Object.entries(regions)) {
+        if (!reachedLive.has(name)) continue;
+        for (const exit of region.exits ?? []) {
+            if (exit.connected_region !== l.region) continue;
+            const miss = new Set();
+            evalRule(exit.access_rule, miss);
+            doors.push({ from: name, missing: [...miss] });
+        }
+    }
+    doors.sort((a, b) => a.missing.length - b.missing.length);
+    console.log(`    ${l.name}  (${l.region})`);
+    if (doors.length === 0) console.log('      NO reachable room has a door into it — a downstream effect, not its own rule');
+    for (const d of doors.slice(0, verbose ? 99 : 3)) {
+        console.log(`      door from ${d.from} wants: ${d.missing.join(', ') || '(nothing — but it was not taken?)'}`);
+    }
+}
+console.log(`  items the fill ended up holding: ${[...held.entries()].map(([k, v]) => `${k}${v > 1 ? ` x${v}` : ''}`).sort().join(', ')}`);
 process.exit(0);

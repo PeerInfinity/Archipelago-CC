@@ -279,11 +279,64 @@ describe('placing exits and locations', () => {
         expect(hit.component.id).toBe('r0c0');
     });
 
-    it('places a tile on crossing material by proximity, and says so', () => {
-        const hit = componentForTile(grid, componentsResult, [1, 0]);
+    it('places a tile on crossing material by what REACHES it, and prices the crossing', () => {
+        const hit = componentForTile(grid, componentsResult, [1, 0], OPTIONS);
         expect(hit.exact).toBe(false);
-        expect(hit.component.id).toBe('r0c0'); // tie broken by id
-        expect(hit.reason).toMatch(/nearest component/);
+        expect(hit.reachable).toBe(true);
+        expect(hit.free).toBe(false);
+        expect(hit.component.id).toBe('r0c0'); // both sides reach it; tie broken by id
+        expect(hit.conditionSets).toEqual([{ conditions: ['a'] }]);
+        expect(hit.reason).toMatch(/reaches it only through 1 gated way/);
+    });
+
+    // ⛔ R7 slice 5. Proximity picked the wrong side of a one-way face — the
+    // defect that cost Seedling three doors, in three costumes.
+    it('never binds across a face the player cannot cross, however near it is', () => {
+        // A cave mouth between two rooms: its NORTH face is walled both ways, so
+        // only the room BELOW can ever stand on it.
+        const g = gridOf(['.', 'c', '.']);
+        const cr = findComponents(g);
+        expect(cr.components.map((c) => c.id)).toEqual(['r0c0', 'r2c0']);
+        const hit = componentForTile(g, cr, [0, 1], OPTIONS);
+        expect(hit.component.id).toBe('r2c0');   // proximity would tie and pick r0c0
+        expect(hit.reachable).toBe(true);
+        expect(hit.free).toBe(true);
+        expect(hit.reason).toMatch(/reaches it freely/);
+    });
+
+    it('never binds across a DIRECTION gate either, even when the far side is nearer', () => {
+        // 'v' cannot be moved north onto, so only the room ABOVE can reach it —
+        // and the room BELOW is the one proximity finds first (a component hit
+        // at distance 1, while the room above is two steps through material).
+        const g = gridOf(['.', '=', 'v', '.']);
+        const cr = findComponents(g);
+        const hit = componentForTile(g, cr, [0, 2], OPTIONS);
+        expect(hit.component.id).toBe('r0c0');
+        expect(hit.reachable).toBe(true);
+        expect(hit.conditionSets).toEqual([{ conditions: ['b'] }]);
+    });
+
+    it('refuses to reach THROUGH a pit, and says the binding is a finding', () => {
+        // '.o~' — the only neighbour of the gated tile is a sink, and you cannot
+        // walk out of a sink. Nothing reaches it, so the proximity answer is kept
+        // as a last resort (a lost binding seals a map) and flagged as one.
+        const g = gridOf(['.o~']);
+        const cr = findComponents(g);
+        const hit = componentForTile(g, cr, [2, 0], OPTIONS);
+        expect(hit.component.id).toBe('r0c0');
+        expect(hit.reachable).toBe(false);
+        expect(hit.reason).toMatch(/NO component can reach it/);
+        expect(hit.reason).toMatch(/a finding, not a placement/);
+    });
+
+    it('prefers a FREE approach over a nearer gated one', () => {
+        // The cave is free from the south and gated from the north; both at
+        // distance 1, so only the free-first ordering decides.
+        const g = gridOf(['.~c.']);
+        const cr = findComponents(g);
+        const hit = componentForTile(g, cr, [2, 0], OPTIONS);
+        expect(hit.free).toBe(true);
+        expect(hit.component.id).toBe('r0c3');
     });
 
     it('reports a tile outside the grid rather than placing it', () => {

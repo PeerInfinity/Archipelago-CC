@@ -510,20 +510,101 @@ export function entitySemantics(entity) {
     return base;
 }
 
-/** The tile rect an entity covers: top-left tile + its hitbox size in tiles. */
-export function entityFootprint(entity, semantics) {
-    const x = Math.floor(entity.x / SEEDLING_TILE_SIZE);
-    const y = Math.floor(entity.y / SEEDLING_TILE_SIZE);
+/** The entity's hitbox in PIXELS: top-left at its Ogmo x/y, size from the table. */
+export function entityPixelRect(entity, semantics) {
     let [w, h] = semantics?.size ?? [1, 1];
+    let pw = Math.max(1, w) * SEEDLING_TILE_SIZE;
+    const ph = Math.max(1, h) * SEEDLING_TILE_SIZE;
     // RopeStart's hitbox spans from its x to the rope's far end (Game.as:2209,
     // RopeStart.as:25), so its width is a per-placement attribute.
     if (semantics?.spanAttr) {
         const end = Number(entity.attrs?.[semantics.spanAttr]);
-        if (Number.isInteger(end) && end >= entity.x) {
-            w = Math.max(1, Math.ceil((end - entity.x + SEEDLING_TILE_SIZE) / SEEDLING_TILE_SIZE));
+        if (Number.isInteger(end) && end >= entity.x) pw = end - entity.x + SEEDLING_TILE_SIZE;
+    }
+    return { x: entity.x, y: entity.y, w: pw, h: ph };
+}
+
+/** The tile rect an entity covers: top-left tile + its hitbox size in tiles. */
+export function entityFootprint(entity, semantics) {
+    const rect = entityPixelRect(entity, semantics);
+    return {
+        x: Math.floor(entity.x / SEEDLING_TILE_SIZE),
+        y: Math.floor(entity.y / SEEDLING_TILE_SIZE),
+        w: Math.max(1, Math.ceil(rect.w / SEEDLING_TILE_SIZE)),
+        h: Math.max(1, Math.ceil(rect.h / SEEDLING_TILE_SIZE)),
+    };
+}
+
+/**
+ * ⛔ THE TILES AN ENTITY ACTUALLY SEALS — not the ones it merely touches
+ * (R7 slice 5).
+ *
+ * `entityFootprint` snaps the hitbox to `floor(x/16)` and then claims `size`
+ * whole tiles. For the 994 grid-aligned wall entities that is exactly the
+ * hitbox. For the **29 that are placed off the 16 px grid** it is a lie in the
+ * dangerous direction: `planttorch@120,152`'s 16x16 rect covers the bottom-right
+ * QUARTER of tile (7,9) and three more quarters elsewhere, and calling all four
+ * tiles walls sealed the only route to L62's north island — and with it the
+ * Ghost Spear, and with it every location `worlds/seedling/Rules.py` puts behind
+ * the Ghost Spear.
+ *
+ * A tile-granular grid cannot hold a quarter-tile obstacle, and the arc's law
+ * says which way to round: a permissive refusal costs a hand-authoring row, an
+ * accurate-looking wall seals a map
+ * (`feedback_accurate_wall_beats_permissive_refusal`). So an entity claims a
+ * tile only when its hitbox covers that tile COMPLETELY; a partly-covered tile
+ * is walkable, because the player's 4x5 box goes round.
+ *
+ * ⚠ The bound this rounds away, named: an entity offset by 13 px or more would
+ * leave a strip narrower than the player. `entityStrandedTiles` reports every
+ * partly-covered tile whose free remainder is too thin, so the bound is counted
+ * rather than assumed — it is currently ZERO across all 116 levels.
+ */
+export function entitySealedTiles(entity, semantics) {
+    const r = entityPixelRect(entity, semantics);
+    const T = SEEDLING_TILE_SIZE;
+    const tiles = [];
+    for (let ty = Math.floor(r.y / T); ty * T < r.y + r.h; ty += 1) {
+        for (let tx = Math.floor(r.x / T); tx * T < r.x + r.w; tx += 1) {
+            if (tx * T >= r.x && ty * T >= r.y && (tx + 1) * T <= r.x + r.w && (ty + 1) * T <= r.y + r.h) {
+                tiles.push([tx, ty]);
+            }
         }
     }
-    return { x, y, w: Math.max(1, w), h: Math.max(1, h) };
+    return tiles;
+}
+
+/** The player's collision box, from the physics model (playerPhysicsV2). */
+export const SEEDLING_PLAYER_BOX = Object.freeze({ w: 4, h: 5 });
+
+/**
+ * Partly-covered tiles whose free remainder is thinner than the player box in
+ * BOTH axes — the tiles `entitySealedTiles` calls walkable and might be wrong
+ * about. Reported so the bound is measured; see that function's ⚠.
+ */
+export function entityStrandedTiles(entity, semantics) {
+    const r = entityPixelRect(entity, semantics);
+    const T = SEEDLING_TILE_SIZE;
+    const out = [];
+    for (let ty = Math.floor(r.y / T); ty * T < r.y + r.h; ty += 1) {
+        for (let tx = Math.floor(r.x / T); tx * T < r.x + r.w; tx += 1) {
+            const x0 = Math.max(tx * T, r.x);
+            const y0 = Math.max(ty * T, r.y);
+            const x1 = Math.min((tx + 1) * T, r.x + r.w);
+            const y1 = Math.min((ty + 1) * T, r.y + r.h);
+            if (x1 - x0 >= T && y1 - y0 >= T) continue; // fully sealed, not stranded
+            // The widest free strip left in each axis: the tile minus the
+            // covered band, taken on whichever side of it is larger.
+            const freeX = Math.max(x0 - tx * T, (tx + 1) * T - x1);
+            const freeY = Math.max(y0 - ty * T, (ty + 1) * T - y1);
+            const spansX = x1 - x0 >= T;
+            const spansY = y1 - y0 >= T;
+            if ((spansY && freeX < SEEDLING_PLAYER_BOX.w) || (spansX && freeY < SEEDLING_PLAYER_BOX.h)) {
+                out.push([tx, ty]);
+            }
+        }
+    }
+    return out;
 }
 
 // --- flag -> AP item rules ---------------------------------------------------
@@ -660,6 +741,60 @@ export function conditionKey(condition) {
     return `unknown:${JSON.stringify(condition)}`;
 }
 
+// --- cliffsides --------------------------------------------------------------
+
+/**
+ * ⛔ A CLIFFSIDE IS HALF A TILE, NOT A TILE (R7 slice 5).
+ *
+ * `Game.as:2084-2089` builds one `CliffSide` per `<cliffsides>` placement with
+ * `frame = floor(tx / 16)`, and `Scenery/CliffSide.as:15-34` gives each frame a
+ * **Pixelmask**, not a hitbox. All five masks are 16x16 images whose opaque part
+ * is a HALF of the tile (measured from the model's own extraction of the PNGs,
+ * `seedlingDemo/seedlingPixelMasks.js`):
+ *
+ *   0 `CliffSideMaskL`   x 0..7   solid — the left half
+ *   1 `CliffSideMaskR`   x 8..15  solid — the right half
+ *   2 `CliffSideMaskLU`  the top half AND the left half (an L corner)
+ *   3 `CliffSideMaskRU`  the top half AND the right half
+ *   4+ `CliffSideMaskU`  the top half
+ *
+ * Calling the whole cell a wall is therefore an OVER-approximation, and the
+ * arc's own law says which direction that error runs in: an accurate-looking
+ * wall seals a map, where a permissive refusal only costs a hand-authoring row
+ * (`feedback_accurate_wall_beats_permissive_refusal`; the mask expansion of
+ * slice 4 was the same mistake pointing the other way). It sealed L100: the
+ * teleporter to L101 sits east of a column of `MaskL` cells whose free RIGHT
+ * half is the way past, and the whole-tile wall closed the only route to
+ * Dungeon 8's tail.
+ *
+ * The honest reading needs no new vocabulary — a half-solid tile is exactly
+ * what `faces` describes. The free half always touches three of the four edges,
+ * so only the face on the solid side is blocked: you cannot enter a `MaskL`
+ * cell across its WEST face (you would have to be inside the mask), but the
+ * free right half reaches its north, south and east edges. The player box is
+ * 4 px wide against an 8 px free half, so the half really is passable
+ * (`playerPhysicsV2.playerBoxAt`).
+ */
+export const CLIFFSIDE_FRAME_FACES = Object.freeze({
+    0: Object.freeze({ W: null }),
+    1: Object.freeze({ E: null }),
+    2: Object.freeze({ W: null, N: null }),
+    3: Object.freeze({ E: null, N: null }),
+});
+const CLIFFSIDE_DEFAULT_FACES = Object.freeze({ N: null });
+
+/** Traversal semantics of one `<cliffsides>` placement, from its frame. */
+export function cliffSideSemantics(placement) {
+    const frame = Math.floor(placement[2] / SEEDLING_TILE_SIZE);
+    return {
+        kind: 'directional',
+        label: 'cliffside',
+        faces: CLIFFSIDE_FRAME_FACES[frame] ?? CLIFFSIDE_DEFAULT_FACES,
+        note: 'a half-tile Pixelmask (Scenery/CliffSide.as:15-34); only the face on the solid '
+            + 'half is blocked, and the free half carries the other three edges',
+    };
+}
+
 // --- grid construction -------------------------------------------------------
 
 const DIRECTIONS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
@@ -680,8 +815,9 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  * coordinates; `origin` translates back.
  *
  * Layering matches the game's own load order: the `tiles` layer, then
- * `cliffsides` (a per-pixel solid mask, treated as tile-granular solid), then
- * entities. Everything claiming a cell is kept, and the cell takes the
+ * `cliffsides` (a HALF-tile per-pixel mask, read as a face gate —
+ * `cliffSideSemantics`), then entities. Everything claiming a cell is kept,
+ * and the cell takes the
  * STRONGEST claim — wall > manual > sink > gated/directional > open — with the
  * conditions of every gated claim ANDed, so a breakable rock standing in water
  * reads as "you need to get through both" rather than as whichever was applied
@@ -700,16 +836,20 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  *
  * @param {{ x:number, y:number, w:number, h:number }} bounds region bounds
  * @param {object} level a level record from seedling-map.json
- * @param {{ entityOverride?: (entity:object, base:object|null, level:object) => object|null }} [options]
- *   `entityOverride` returns replacement semantics for one placed entity, or
- *   null/undefined to keep what the tables say. It sees the BASE ruling too, so
- *   an overlay can refine rather than restate.
+ * @param {{ entityOverride?: (entity:object, base:object|null, level:object) => object|null,
+ *           tileOverride?: (tileType:number, base:object, level:object) => object|null }} [options]
+ *   `entityOverride` returns replacement semantics for one placed entity, and
+ *   `tileOverride` the same for one TILE TYPE — either may return null/undefined
+ *   to keep what the tables say. Both see the BASE ruling, so an overlay can
+ *   refine rather than restate, and omitting both reproduces the previous
+ *   behaviour byte for byte.
  */
 export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     const { w: width, h: height } = bounds;
     const claims = Array.from({ length: width * height }, () => []);
 
     const unclassified = [];
+    const review = [];
     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
     const claim = (x, y, semantics, origin) => {
         if (inside(x, y)) claims[y * width + x].push({ semantics, origin });
@@ -723,7 +863,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             const y = ty - bounds.y;
             if (!inside(x, y)) continue;
             if (cliffside) {
-                claim(x, y, { kind: 'wall', label: 'cliffside' }, 'cliffsides');
+                claim(x, y, cliffSideSemantics(placement), 'cliffsides');
                 continue;
             }
             const t = tileTypeForPlacement(placement);
@@ -731,7 +871,9 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 unclassified.push({ tile: [tx, ty], what: `tileset column ${Math.floor(placement[2] / SEEDLING_TILE_SIZE)}` });
                 continue;
             }
-            claim(x, y, tileSemantics(t), `tile ${TILE_TYPE_NAMES[t] ?? t}`);
+            const base = tileSemantics(t);
+            const ruled = options.tileOverride ? (options.tileOverride(t, base, level) ?? base) : base;
+            claim(x, y, ruled, `tile ${TILE_TYPE_NAMES[t] ?? t}`);
         }
     }
 
@@ -748,11 +890,17 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             continue;
         }
         if (semantics.kind === 'open') continue;
-        const fp = entityFootprint(entity, semantics);
-        for (let dy = 0; dy < fp.h; dy += 1) {
-            for (let dx = 0; dx < fp.w; dx += 1) {
-                claim(fp.x + dx - bounds.x, fp.y + dy - bounds.y, semantics, `entity ${entity.type}`);
-            }
+        for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
+            claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
+        }
+        for (const [tx, ty] of entityStrandedTiles(entity, semantics)) {
+            if (!inside(tx - bounds.x, ty - bounds.y)) continue;
+            review.push({
+                tile: [tx, ty],
+                reason: `entity ${entity.type} leaves less than the ${SEEDLING_PLAYER_BOX.w}x${SEEDLING_PLAYER_BOX.h} `
+                    + 'player box free on this tile, and a tile grid cannot hold the remainder — called WALKABLE, '
+                    + 'the permissive direction',
+            });
         }
     }
 
@@ -760,7 +908,6 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     // contributes its conditions, faces and manual reasons.
     const RANK = { open: 0, gated: 1, directional: 1, sink: 2, manual: 3, wall: 4 };
     const cells = new Array(width * height);
-    const review = [];
     const sinks = [];
     for (let i = 0; i < cells.length; i += 1) {
         const cell = { kind: 'open', conditions: [], faces: {}, dirs: {}, manual: [], labels: [] };

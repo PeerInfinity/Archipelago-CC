@@ -355,6 +355,277 @@ export const L40_EAST_RULE = Object.freeze({
 });
 
 /**
+ * ⛓ THE D7 APPROACH DOOR — the one exit whose dropped approach cost distorts the
+ * sphere order, hand-ruled where the general charge is refused (R7 slice 5).
+ *
+ * `level_12/out_teleporter_32_848` is the teleporter to L83 and the only way
+ * into Dungeon 7. It sits on a CAVE tile at (2,53); the only approach is from
+ * the south through (2,54), which carries a `bosslock {keyType 4}` and a
+ * `magicallock` stacked in one cell. The exit binds to the component that
+ * reaches it — R7 slice 5's analyzer fix — but the binding does not carry the
+ * charge, and the general charge is measured to seal the map, so this door
+ * carries it by hand.
+ *
+ * THREE INDEPENDENT SOURCES AGREE ON THE SAME GATE, which is why this one is
+ * hand-ruled and the other twenty are logged:
+ *   - the map: the stacked locks at L12 (2,54), read by the analyzer itself as
+ *     `key 4 AND (Wand OR Fire Wand)`;
+ *   - `region1.oel:2969-2971` (R7 §2.4's "with the wand gates the D7 approach");
+ *   - `worlds/seedling/Rules.py`, whose `Dark Shield` wants
+ *     `Conch + Fire + Ghost Spear + Wand + Yellow Key` — the same gate from the
+ *     far side.
+ *
+ * And the symptom it fixes is in the sphere log: without it AP takes the DARK
+ * SHIELD in sphere 1.12, before Fire, the Conch, the Wand and the Ghost Spear.
+ * Strictly stronger than the computed row, which is the only shape a hand
+ * ruling may take.
+ */
+export const CHARGED_DOORS = Object.freeze([
+    Object.freeze({
+        level: 12,
+        exitId: 'out_teleporter_32_848',
+        condition: allOf(key(4), anyOf(flag('hasWand'), flag('hasFireWand'))),
+        cite: 'Dungeon-side region1.oel:2969-2971 + the stacked bosslock{keyType 4} + magicallock '
+            + 'at L12 (2,54) + worlds/seedling/Rules.py Dark Shield',
+        why: 'the door to L83 stands on a cave tile whose only approach crosses the stacked '
+            + 'key-4-and-wand lock, so using it costs what the lock costs.',
+    }),
+    // ⛓⛓⛓ THE ENDGAME DOOR — the same defect standing on the GOAL.
+    //
+    // `finaldoor@112,0 {tag 0}` is a 32x32 Solid at L113 (7,0)..(8,1)
+    // (`Scenery/FinalDoor.as:23-27`), and the two teleporters to L115 sit ON
+    // (7,0) and (8,0). So the door is not BETWEEN anything — it is UNDER the
+    // exits, the binding dropped its cost, and AP took The Seed in sphere 5.3
+    // holding TWELVE of the sixteen seals. The goal itself was ungated.
+    Object.freeze({
+        level: 113,
+        exitId: 'out_teleporter_112_0',
+        condition: { seals: 16 },
+        cite: 'Scenery/FinalDoor.as:52-64 (`SealController.hasAllSealParts() && talkedToWatcher`) '
+            + '+ End/2.oel finaldoor@112,0 sitting under the L115 teleporters',
+        why: 'the FinalDoor opens on all sixteen seals; the teleporters to the Seed room stand on '
+            + 'its own cells, so the seal count has to ride on the exits.',
+    }),
+    Object.freeze({
+        level: 113,
+        exitId: 'out_teleporter_128_0',
+        condition: { seals: 16 },
+        cite: 'Scenery/FinalDoor.as:52-64 + End/2.oel finaldoor@112,0',
+        why: 'the second of the two cells the FinalDoor covers.',
+    }),
+]);
+
+/**
+ * ⚠ THE COMPLETION CONDITION, STATED — and the branch that is NOT the goal.
+ *
+ * The goal is the BLOODLESS Seed: `seed@(4,4)` in L115, whose own text is *"You
+ * have taken a step towards morality"*. Reaching it is the FinalDoor's
+ * condition, which is TWO terms:
+ *
+ *   1. `SealController.hasAllSealParts()` — all sixteen seals. Carried, as the
+ *      `CHARGED_DOORS` rows above.
+ *   2. `talkedToWatcher = !Game.checkPersistence(0, 114)` — the Watcher's speech
+ *      in L114 must have been heard. NOT carried as an item, and it does not
+ *      need to be: L113's teleporters to L114 are free and on the near side of
+ *      the door, so anyone who can stand at the door can already have talked to
+ *      him. Named here rather than modelled, because "topologically implied" is
+ *      a claim a later map change could quietly break.
+ *
+ * ⛔ THE BLOODY BRANCH IS A NAMED NON-GOAL. `NPCs/Watcher.as:97-103` adds a
+ * SECOND Seed — *"covered in the blood of the Watcher"* — when the Watcher is
+ * killed. It is a real second ending and rules v1 does not model it: it would
+ * be an alternate completion reachable without any seals at all, which would
+ * make every seal optional and collapse the collect-everything goal this rung
+ * exists to produce. Excluded deliberately, not overlooked (R7 §13.2d class H
+ * first raised it).
+ */
+export const COMPLETION = Object.freeze({
+    goal: 'the bloodless Seed, L115 seed@(4,4)',
+    witness: 'the credits — menu_state 2',
+    carried: ['all sixteen seals, via CHARGED_DOORS on L113\'s two exits to L115'],
+    implied: ['the Watcher\'s speech in L114 — free and on the near side of the FinalDoor'],
+    excludedBranch: 'the BLOODY seed (NPCs/Watcher.as:97-103) — a second ending reachable with no '
+        + 'seals, which would make every seal optional. A named non-goal.',
+    cite: 'Scenery/FinalDoor.as:52-64 + NPCs/Watcher.as:97-103 + End/4.oel:131',
+});
+
+/**
+ * ⛔⛔ LOCATION GUARDS — the gate that is not a door (R7 slice 5).
+ *
+ * Terrain analysis can only ever produce CROSSING rules, so an item guarded by
+ * something standing in the same room with it is unguarded in the compiled
+ * graph. Slice 4 met the symptom and named it from the other side: §13.6 found
+ * that the overlay's `bosstotem` row "never reached a compiled rules row, so the
+ * L43 Wand is not gated on the five totem parts". The reason is geometric — the
+ * BossTotem is at L43 tile (9,10) and the Wand at (9,14), both inside the same
+ * 98-cell arena `r8c7`, with the stairs from L40 in it too. There is no crossing
+ * for the rule to live on. It has to be the LOCATION's own rule.
+ *
+ * ⛓ THE SPHERE LOG IS WHAT MADE THE SECOND ONE VISIBLE. AP's first order took
+ * `Level 012 - Witch` in sphere 1.2 and the Wand in 1.12 — the Dark Sword ten
+ * steps before the item the Witch demands for it.
+ *
+ * Every row is a source read, and every row makes the logic STRICTER, which is
+ * the direction a guard may only move with a citation behind it.
+ */
+export const LOCATION_GUARDS = Object.freeze({
+    'wand@L43': Object.freeze({
+        condition: allOf({ flag: 'hasTotemPartsAll' }, A_WEAPON),
+        cite: 'Enemies/BossTotem.as hit() (`fullyActivated && activationRestTime <= 0`) '
+            + '+ Dungeon4/Boss.oel:238 — the Wand and the totem share one arena',
+        why: 'the BossTotem must be activated by all five parts before any hit registers, and it '
+            + 'takes damage from either weapon; the Wand lies in its arena, so this is a location '
+            + 'guard and not a crossing.',
+    }),
+    'darksword@L12': Object.freeze({
+        condition: flag('hasWand'),
+        cite: 'NPCs/Witch.as:47-52 — `doneTalking()` spawns the DarkSword only under '
+            + '`Main.hasWand && !Main.hasDarkSword`',
+        why: 'the Witch trades the Dark Sword FOR the Wand. The trade is a dialogue in a room '
+            + 'nothing gates, so no crossing can ever carry it.',
+    }),
+    'fire@L32': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/BobBoss.as:185-199 — the THIRD BobBoss\'s death is what adds the Fire; '
+            + 'the fight is started by `FallRockLarge.as:115-117`',
+        why: 'Fire is a boss DROP in an arena you walk into freely, so the fight is the gate and '
+            + 'the location is the only place to hang it.',
+    }),
+});
+
+/** The guard on one ledger row, or null. */
+export function locationGuard(ledgerId) {
+    return LOCATION_GUARDS[ledgerId] ?? null;
+}
+
+/**
+ * ⛔⛔⛔ THE IGNEOUS TILE IS FREE, AND SLICE 4's HAND RULING ON IT PUT THE DARK
+ * SUIT BEHIND ITSELF (R7 slice 5 — the refutation log's first real customer).
+ *
+ * §13.5 ruled the Igneous-to-Lava tile (type 31) DARK SUIT, reasoning that "the
+ * honest STATIC reading is the worst case — the tile has already converted".
+ * Three source facts say otherwise, and one topological fact says it cannot be
+ * right whatever the source says:
+ *
+ *   1. **It starts walkable and takes work to convert.** `Tile.as:390-424`:
+ *      the countdown only runs while the player's centre is within
+ *      `sqrt(w²+h²)/2` ≈ 11.3 px, it needs `igneousCounterMax` = 8 render
+ *      frames to set `igneousBreakApart`, and then one whole `sprIgneousLava`
+ *      animation (8 frames apiece) before `t = 17`. Walking across costs
+ *      nothing.
+ *   2. **The conversion never survives the room.** `t` is an instance field on
+ *      a `Tile` ENTITY, and `loadlevel` rebuilds every Tile from the .oel at
+ *      every level entry (`Game.as:1966-2010`, and the build is in `begin()` —
+ *      trap 112). Nothing writes it to `levelPersistence`. So a return visit
+ *      finds igneous, not lava.
+ *   3. **The walk order is choreography**, which the ruled puzzle policy makes
+ *      FREE in logic; it is the tape generator's burden.
+ *
+ * ⛓ AND THE TOPOLOGY IS THE WITNESS. The four igneous tiles of L77 are the
+ * "dry corridor" R4 §8.4 measured; with them ruled DARK SUIT, the only route to
+ * L79 crosses lava, the Dark Suit is the only item beyond L76, and AP's own
+ * fill refuses seven locations. A rule that makes an item a prerequisite for
+ * itself is refuted by that alone — the standing instruction is that our logic
+ * is wrong before the game is unbeatable.
+ */
+export const IGNEOUS_IS_FREE = Object.freeze({
+    tileType: 31,
+    semantics: Object.freeze({ kind: 'open', label: 'igneous' }),
+    cite: 'Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 (loadlevel rebuilds every Tile)',
+    why: 'the tile is walkable until eight frames of standing next to it plus a whole '
+        + 'animation convert it, and the conversion is per-Tile state a level entry rebuilds — '
+        + 'so no reachability question ever meets the converted tile.',
+});
+
+/** Tile-type rulings this overlay makes on top of the transcription. */
+export const PLAYTHROUGH_TILE_OVERLAY = Object.freeze({
+    [IGNEOUS_IS_FREE.tileType]: IGNEOUS_IS_FREE,
+});
+
+/** `tileOverride` for `buildSeedlingRegionGrid`: our ruling, or null to keep the table's. */
+export function overlayTileSemantics(tileType) {
+    return PLAYTHROUGH_TILE_OVERLAY[tileType]?.semantics ?? null;
+}
+
+/**
+ * ⛓⛓⛓ THE LAVATRAP IS A TRANSPORT, NOT A HAZARD — and it is the last structural
+ * door in the map (R7 slice 5).
+ *
+ * `Enemies/LavaTrap.as` reads as a monster and behaves as a one-way lift:
+ *
+ *   :22   `chompRange = 32` — it launches when the player's centre is within
+ *         32 px and nothing typed "Solid" stands on the line between them
+ *         (`:82-90`).
+ *   :56-60 while reeled in, `attached.x/y` are driven along the tongue and
+ *         **`attached.onGround = false`** — and `Player.state`'s pit branch is
+ *         `if (onGround)` (`Player.as:718`), so the ride crosses a pit that
+ *         would otherwise kill.
+ *   :61-72 at the end of the tongue: **`if (Player.hasDarkSuit)` you are
+ *         released standing on the trap's own tile; otherwise `die()`.**
+ *
+ * ⇒ every LavaTrap is a **one-way edge onto its own tile from every tile within
+ * 32 px, gated on the DARK SUIT**. L108 is built out of exactly that: a column
+ * of platforms with a pit between each pair and a trap on every second one, and
+ * the three hops (8,3)->(8,5), (8,6)->(8,8), (8,9)->(8,11) are each 32 px to the
+ * pixel. Without this row the Fire Wand is unreachable and no tile-granular
+ * flood can ever say why, because the crossing is not terrain.
+ *
+ * ⚠ THE BOUND, NAMED and NOT patched: the same disc is LETHAL without the suit,
+ * so every tile within 32 px of a trap should also be gated on the Dark Suit.
+ * Rules v1 does not gate the disc — R4 §8.4 already found the L77/L78 corridors
+ * "covered end to end" by these discs, and turning that into a rule is a
+ * strictness change big enough to seal a dungeon, which is the one direction a
+ * rules row must not move without a driven segment behind it. Logged here and
+ * in the artifact as a PERMISSIVENESS finding, the same treatment §13.6 gave
+ * `Health` and `Shards`.
+ */
+export const LAVATRAP_PULL = Object.freeze({
+    tag: 'lavatrap',
+    chompRange: 32,
+    condition: flag('hasDarkSuit'),
+    cite: 'Enemies/LavaTrap.as:22,56-72,82-90 + Player.as:718 (the pit branch is `if (onGround)`)',
+    why: 'the tongue reels the player onto the trap\'s own tile with onGround false, so it '
+        + 'crosses a pit; the Dark Suit is what makes the arrival survivable rather than a death.',
+});
+
+/**
+ * Every LavaTrap pull in one level: the trap's tile, and the tiles it can grab
+ * the player from. Distances are CENTRE TO CENTRE in pixels, the game's own
+ * measure (`LavaTrap.as:29` centres the entity in its tile, `:81` uses
+ * `FP.distance` on the two centres, and `:83` compares with `<=`).
+ *
+ * The line-of-sight test (`collideLine("Solid", ...)`) is NOT applied: it needs
+ * the per-pixel solid set, and leaving it out can only ADD pulls, which is the
+ * permissive direction. Named here rather than folded into the result.
+ */
+export function lavaTrapPulls(level, tileSize = 16) {
+    const out = [];
+    for (const e of level?.entities ?? []) {
+        if (e.type !== LAVATRAP_PULL.tag) continue;
+        const tx = Math.floor(e.x / tileSize);
+        const ty = Math.floor(e.y / tileSize);
+        const cx = tx * tileSize + tileSize / 2;
+        const cy = ty * tileSize + tileSize / 2;
+        const from = [];
+        const reach = Math.ceil(LAVATRAP_PULL.chompRange / tileSize);
+        for (let y = ty - reach; y <= ty + reach; y += 1) {
+            for (let x = tx - reach; x <= tx + reach; x += 1) {
+                if (x < 0 || y < 0 || x >= level.width || y >= level.height) continue;
+                if (x === tx && y === ty) continue;
+                const dx = (x * tileSize + tileSize / 2) - cx;
+                const dy = (y * tileSize + tileSize / 2) - cy;
+                // `FP.distance` is Euclidean and `d` is coerced to int before
+                // the comparison, so the boundary is a floor, not a round.
+                if (Math.floor(Math.sqrt(dx * dx + dy * dy)) > LAVATRAP_PULL.chompRange) continue;
+                from.push([x, y]);
+            }
+        }
+        out.push({ tile: [tx, ty], from });
+    }
+    return out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
+}
+
+/**
  * ⛔ THE REFUTATION LOG — the mechanism §4 slice 4 asks for, built NOW rather
  * than when the first refutation arrives.
  *
@@ -369,7 +640,18 @@ export const L40_EAST_RULE = Object.freeze({
  * test asserts the SHAPE against a fixture rather than the emptiness, so the
  * mechanism cannot rot while it waits.
  */
-export const REFUTATION_LOG = Object.freeze([]);
+export const REFUTATION_LOG = Object.freeze([
+    Object.freeze({
+        row: 'level_76/the Igneous-to-Lava crossing, ruled Has(Dark Suit) at R7 §13.5',
+        refutedBy: 'Generate.py --seed 1 on rules v1 (R7 slice 5) + the offline fixpoint that agrees with it',
+        observed: 'the row makes the DARK SUIT a prerequisite for itself: L76 is the only way into '
+            + 'D7, its every crossing carried the row, and the suit is the only collectible beyond it. '
+            + 'AP refused 7 locations, all of them downstream of Level 079 - Darksuit. At source the '
+            + 'tile is walkable until eight frames of proximity convert it and a level entry rebuilds '
+            + 'it (Tile.as:83-85,390-424) — see IGNEOUS_IS_FREE.',
+        cite: 'Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 + R7 kickoff §14',
+    }),
+]);
 
 /** The shape every refutation entry must have. Exported for the test and the generator. */
 export const REFUTATION_FIELDS = Object.freeze([

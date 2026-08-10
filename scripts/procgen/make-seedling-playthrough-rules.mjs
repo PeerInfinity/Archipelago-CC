@@ -117,9 +117,40 @@ function expandPixelMasks(level) {
 const baseOptions = (await imp('frontend/modules/flashPanel/seedlingAtlasAnalysis.js'))
     .seedlingAnalyzerOptions(GAME_CONFIG);
 
+// ⛔ THE OVERLAY HAS TO BE TRIED AT EVERY LEVEL OF A COMPOSITE, not only at the
+// top. `seedlingSemantics.resolveCondition` recurses into `all`/`any` with the
+// FLAG table alone, so an overlay-only leaf (`hasTotemPartsAll`) inside an
+// `allOf(...)` resolves to null and the whole rule disappears — silently, in the
+// permissive direction. This resolver interleaves the two.
+const resolveFull = (c) => {
+    if (c == null) return null;
+    const own = OV.resolveOverlayCondition(c);
+    if (own) return own;
+    for (const [op, ruleName] of [['any', 'Or'], ['all', 'And']]) {
+        if (!Array.isArray(c[op])) continue;
+        const children = [];
+        const seen = new Set();
+        for (const part of c[op]) {
+            const resolved = resolveFull(part);
+            if (!resolved) return null;
+            const flat = resolved.rule === ruleName && Array.isArray(resolved.children)
+                ? resolved.children : [resolved];
+            for (const child of flat) {
+                const k = JSON.stringify(child);
+                if (seen.has(k)) continue;
+                seen.add(k);
+                children.push(child);
+            }
+        }
+        if (children.length === 0) return null;
+        return children.length === 1 ? children[0] : { rule: ruleName, children };
+    }
+    return baseOptions.resolveCondition(c);
+};
+
 const analyzerOptions = {
     conditionKey: (c) => (c?.seals !== undefined ? `seals:${c.seals}` : SEM.conditionKey(c)),
-    resolveCondition: (c) => OV.resolveOverlayCondition(c) ?? baseOptions.resolveCondition(c),
+    resolveCondition: resolveFull,
 };
 
 const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
@@ -162,7 +193,7 @@ const entityOverride = (entity, base, level) => {
 const MASKS = process.argv.includes('--masks');
 const gridFor = (level) => SEM.buildSeedlingRegionGrid(
     { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
-    { entityOverride },
+    { entityOverride, tileOverride: OV.overlayTileSemantics },
 );
 
 // ── the links, and why every one of them is ONE-WAY ────────────────────────
@@ -322,11 +353,22 @@ function locationsFor(level) {
         }
         if (!entity) throw new Error(`ledger row ${row.id}: no entity for it in level ${row.level}`);
         if (!item) throw new Error(`ledger row ${row.id}: no AP item name`);
-        out.push({
+        const loc = {
             name: `${levelName(level.level)} - ${labelFor(row)}`,
             tile: tileOf(entity),
             vanilla_item: item,
-        });
+        };
+        // ⛔ THE GATE THAT IS NOT A DOOR: an item guarded by something standing
+        // in the same room has no crossing to hang a rule on (OV.LOCATION_GUARDS).
+        const guard = OV.locationGuard(row.id);
+        if (guard) {
+            const rule = analyzerOptions.resolveCondition(guard.condition);
+            if (!rule) throw new Error(`location guard for ${row.id} does not resolve to a rule`);
+            loc.access_rule = rule;
+            locationGuards.push(`${loc.name} — ${guard.cite}`);
+            note(`${regionIdFor(level.level)}: location "${loc.name}" GUARDED — ${guard.why} (${guard.cite})`);
+        }
+        out.push(loc);
     }
     return out;
 }
@@ -348,6 +390,11 @@ export function buildPlaythroughAtlas() {
     notes.length = 0;
     prunedPockets.length = 0;
     droppedRegions.length = 0;
+    lavaTrapLifts.length = 0;
+    locationGuards.length = 0;
+    permissiveBindings.length = 0;
+    crossingCharged.length = 0;
+    arrivalsUncharged.length = 0;
     const session = new AtlasSession(createEmptyAtlas({
         game: 'seedling',
         name: 'Seedling — the honest playthrough (rules v1)',
@@ -471,10 +518,131 @@ export function buildPlaythroughAtlas() {
         for (const b of analysis.bindings) {
             if (!b.component) note(`${regionId}: ${b.kind} "${b.id}" binds to NO walkable component — ${b.reason}`);
         }
+        applyCrossingCostToBindings(session.atlas, regionId, analysis);
+        applyLavaTrapPulls(session.atlas, regionId, level, analysis);
         pruneUnreachableSubRegions(session.atlas, regionId);
     }
     applyHandRulings(session.atlas);
     return session.toDocument();
+}
+
+/**
+ * ⛔⛔ THE COST OF STANDING ON THE DOOR (R7 slice 5).
+ *
+ * An exit drawn on crossing material is not free to use: you have to get onto
+ * that material first. The analyzer now says which component reaches such a
+ * tile AND what the crossing charges (`binding.conditionSets`); dropping the
+ * charge is a PERMISSIVENESS defect with teeth, and the sphere log is where it
+ * showed:
+ *
+ *   L12's teleporter to L83 sits on a cave tile whose only approach is the
+ *   stacked `bosslock{key 4}` + `magicallock` cell one south. Bound to the
+ *   component and charged NOTHING, it opened all of Dungeon 7 in sphere 1 and
+ *   put the DARK SHIELD twelve steps before the Ghost Spear that
+ *   `worlds/seedling/Rules.py` says it needs.
+ *
+ * So the crossing's own Pareto-minimal ways are ORed, ANDed onto whatever the
+ * exit already carries, and the row says where it came from.
+ *
+ * ⛔⛔ AND IT IS OFF BY DEFAULT, BECAUSE IT IS MEASURED AND IT SEALS THE MAP.
+ * Charging all 21 such exits (departures only; arrivals measure the mirror
+ * question and were excluded first) takes the fill from **240 of 250 AP regions
+ * to 19**, with the SWORD unreachable. The cause is visible in one row:
+ * `level_3/out_teleporter_0_64` stands on a water cell whose cheapest approach
+ * the search prices as `And(Ghost Sword Fusion, Ghost Spear, Progressive Sword,
+ * Progressive Swim)` — a CONJUNCTION of everything one path crosses, which is a
+ * sound cost for that path and a wrong cost for the door.
+ *
+ * So the general charge stays behind `--charge-crossings`, runnable by whoever
+ * makes the cost per-approach rather than per-path, and the ONE door whose
+ * dropped cost visibly distorts the sphere order is hand-ruled instead
+ * (`OV.D7_APPROACH_RULE`). Everything else is counted in `permissiveBindings`
+ * and named as a bound rather than folded into the green.
+ *
+ * ⚠ THE OTHER BOUND: the analyzer answers "which component can REACH this
+ * tile", the DEPARTURE question. An ARRIVAL needs the mirror of it, the two
+ * differ across a one-way face, and the atlas exit row carries no direction —
+ * so arrivals are never charged and are counted in `arrivalsUncharged`.
+ */
+const CHARGE_CROSSINGS = process.argv.includes('--charge-crossings');
+
+function applyCrossingCostToBindings(atlas, regionId, analysis) {
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit' || !b.component || !b.reachable) continue;
+        if (!b.conditionSets || b.conditionSets.length === 0) continue;
+        // ⛔ DEPARTURES ONLY. The analyzer answers "which component can REACH
+        // this tile", which is the DEPARTURE question. Charging an ARRIVAL the
+        // same cost measured the wrong direction and sealed the map — 19 of 250
+        // regions, with the SWORD unreachable — so the arrival side is left
+        // permissive and counted instead.
+        if (!b.id.startsWith('out_')) { arrivalsUncharged.push(`${regionId}/${b.id}`); continue; }
+        if (!CHARGE_CROSSINGS) { permissiveBindings.push(`${regionId}/${b.id}`); continue; }
+        const ways = [];
+        for (const set of b.conditionSets) {
+            const parts = set.conditions.map((c) => analyzerOptions.resolveCondition(c));
+            if (parts.some((p) => !p)) { ways.length = 0; break; }
+            ways.push(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
+        }
+        if (ways.length === 0) {
+            permissiveBindings.push(`${regionId}/${b.id}`);
+            note(`${regionId}: exit "${b.id}" stands on gated material whose conditions do NOT `
+                + 'resolve to items — the approach cost is DROPPED, which is permissive');
+            continue;
+        }
+        const cost = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
+        const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+        if (!exit) continue;
+        exit.access_rule = exit.access_rule === undefined
+            ? cost
+            : { rule: 'And', children: [exit.access_rule, cost] };
+        crossingCharged.push(`${regionId}/${b.id}`);
+    }
+}
+
+/**
+ * ⛓ THE LAVATRAP LIFTS — a transport the tile grid has no vocabulary for.
+ *
+ * This is NOT a weakened rule (the shape `applyHandRulings` forbids): it is an
+ * EDGE the source proves exists and terrain analysis cannot see, the same class
+ * as the pits the link pass wires from `<control>`. `LavaTrap.as` reels the
+ * player onto the trap's own tile with `onGround = false` — crossing a pit that
+ * would otherwise kill — and the arrival is survivable only with the Dark Suit
+ * (`OV.LAVATRAP_PULL` carries the citation).
+ *
+ * One ONE-WAY internal exit per (source sub-region -> trap sub-region) pair,
+ * gated on the Dark Suit. A pull inside one sub-region is nothing to add.
+ */
+function applyLavaTrapPulls(atlas, regionId, level, analysis) {
+    const pulls = OV.lavaTrapPulls(level, TILE);
+    if (pulls.length === 0) return;
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    const subs = new Set(region?.subgraph?.sub_regions ?? []);
+    if (subs.size < 2) return;
+    const { indexOf, components } = analysis.componentsResult;
+    const subOf = ([x, y]) => {
+        const i = indexOf[y * level.width + x];
+        return i >= 0 && subs.has(components[i].id) ? components[i].id : null;
+    };
+    const added = new Set();
+    for (const pull of pulls) {
+        const to = subOf(pull.tile);
+        if (!to) continue;
+        for (const tile of pull.from) {
+            const from = subOf(tile);
+            if (!from || from === to || added.has(`${from}>${to}`)) continue;
+            added.add(`${from}>${to}`);
+            region.subgraph.internal_exits.push({
+                from, to, bidirectional: false, source: 'manual', access_rule: DARKSUIT_RULE,
+            });
+        }
+    }
+    if (added.size === 0) return;
+    region.subgraph.internal_exits.sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to));
+    region.annotations.rules_source = 'mixed';
+    lavaTrapLifts.push(...[...added].map((k) => `${regionId}/${k}`));
+    note(`${regionId}: ${added.size} LavaTrap lift(s) added, one-way and gated on the Dark Suit — `
+        + `${OV.LAVATRAP_PULL.why} (${OV.LAVATRAP_PULL.cite})`);
 }
 
 /**
@@ -505,25 +673,38 @@ function applyHandRulings(atlas) {
     note(`level_40: ${strengthened} fire-gated crossing(s) strengthened to fire AND a weapon `
         + `— ${OV.L40_EAST_RULE.why} (${OV.L40_EAST_RULE.cite})`);
 
-    // ── L76, the one crossing the analyzer still refuses ──────────────────
+    // ── ⛔ THE L76 IGNEOUS RULING IS GONE, AND ITS DELETION IS THE SLICE'S
+    //    FIRST REFUTATION (`OV.REFUTATION_LOG[0]`, R7 §14).
     //
-    // `Tile.render` case 31: standing near an Igneous-to-Lava tile counts down
-    // and then turns it into LAVA (t=17) permanently, so its traversal cost
-    // depends on walk order and no static rule expresses it. The honest static
-    // reading is the WORST case — the tile has already converted — and lava
-    // without the Dark Suit damages and drowns (`Player.as:1424`). Strictly
-    // stronger than "free", strictly weaker than "wall", and it is the arm a
-    // segment will actually have to use on a second visit.
-    const l76 = atlas.regions.find((r) => r.region_id === 'level_76');
-    for (const row of l76?.subgraph?.internal_exits ?? []) {
-        if (row.access_rule) continue;
-        row.access_rule = DARKSUIT_RULE;
-        row.source = 'manual';
-        l76.annotations.rules_source = 'mixed';
-        note('level_76: the Igneous-to-Lava crossing ruled DARK SUIT — the tile converts to Lava '
-            + 'permanently (Scenery/Tile.as render case 31), and lava without the suit drowns '
-            + '(Player.as:1424). The worst case is the honest static reading.');
+    // §13.5 ruled the Igneous-to-Lava crossing DARK SUIT on a worst-case
+    // reading. It put the Dark Suit behind ITSELF: L76 is the only door into
+    // D7, the suit is the only collectible past it, and AP refused seven
+    // locations for it. At source the tile is walkable until eight frames of
+    // proximity start a conversion that the next level entry rebuilds away, so
+    // the ruling now lives in the overlay as `IGNEOUS_IS_FREE` and applies to
+    // every igneous tile in the game rather than to one level's leftovers.
+    // ── the hand-charged doors (§14): the two exits whose dropped approach
+    //    cost the SPHERE LOG caught — D7's entrance and the endgame door.
+    for (const door of OV.CHARGED_DOORS) {
+        const region = atlas.regions.find((r) => r.region_id === regionIdFor(door.level));
+        const exit = (region?.exits ?? []).find((e) => e.exit_id === door.exitId);
+        if (!exit) {
+            throw new Error(`charged door ${door.level}/${door.exitId} is not in the atlas — `
+                + 'a hand ruling whose target vanished is a silent hole, not a no-op');
+        }
+        const rule = analyzerOptions.resolveCondition(door.condition);
+        if (!rule) throw new Error(`charged door ${door.level}/${door.exitId} does not resolve to a rule`);
+        exit.access_rule = exit.access_rule === undefined
+            ? rule : { rule: 'And', children: [exit.access_rule, rule] };
+        region.annotations.rules_source = 'mixed';
+        crossingCharged.push(`${regionIdFor(door.level)}/${door.exitId}`);
+        note(`${regionIdFor(door.level)}: ${door.exitId} CHARGED its approach by hand — `
+            + `${door.why} (${door.cite})`);
     }
+
+    note(`igneous tiles: ruled OPEN everywhere — ${OV.IGNEOUS_IS_FREE.why} `
+        + `(${OV.IGNEOUS_IS_FREE.cite}). ⛔ This REFUTES the level_76 Dark Suit row shipped at `
+        + 'R7 §13.5; the refutation log carries it.');
 }
 
 const FIRE_RULE = { rule: 'Has', args: { item_name: 'Fire' } };
@@ -604,6 +785,29 @@ export const prunedPockets = [];
 
 /** Every region this run dropped for having no door at all. */
 export const droppedRegions = [];
+
+/** Every LavaTrap lift this run added, so the count is derived and never typed. */
+export const lavaTrapLifts = [];
+
+/** Every ledger location this run gave a guard rule (OV.LOCATION_GUARDS). */
+export const locationGuards = [];
+
+/**
+ * Every exit or location whose tile is reachable only THROUGH gated crossing
+ * material — the binding carries the component, the rules row does NOT carry
+ * the gate. A named PERMISSIVENESS bound, counted rather than assumed.
+ */
+export const permissiveBindings = [];
+
+/** Every exit this run CHARGED its approach cost to (applyCrossingCostToBindings). */
+export const crossingCharged = [];
+
+/**
+ * Every ARRIVAL exit standing on gated material whose approach cost was NOT
+ * charged. The analyzer measures reach-TO, an arrival needs reach-FROM, and the
+ * two differ across a one-way face — so this is the permissive side, counted.
+ */
+export const arrivalsUncharged = [];
 
 export const analysisNotes = notes;
 export const PLAYTHROUGH_ATLAS_PATH = ATLAS_OUT;

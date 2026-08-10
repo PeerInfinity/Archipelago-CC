@@ -587,26 +587,113 @@ export function buildInternalExits(crossings, options = {}) {
 // --- part 3: the merge -------------------------------------------------------
 
 /**
- * Which component an atlas tile belongs to — or, when it does not sit on a
- * walkable cell at all (a door drawn on a wall tile is the normal case), the
- * nearest one reachable through the crossing material.
+ * Every component that can REACH a cell through the crossing material, with the
+ * Pareto-minimal condition sets that get there.
  *
- * The fallback is reported rather than silent: an exit assigned by proximity is
- * a guess a reviewer should be able to see.
+ * This is `findCrossings` run backwards from one target: the state is
+ * (cell, condition-set) and a cell is expanded to the neighbours that can STEP
+ * ONTO it, so the invariant is "reaching this cell implies reaching the target".
+ * The step rules are `stepCost`'s — the same faces, the same direction gates,
+ * the same refusal to walk out of a sink — which is why a one-way face is
+ * honoured here and proximity never was.
  */
-export function componentForTile(grid, componentsResult, tile) {
+function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
+    const conditionKey = options.conditionKey ?? ((c) => JSON.stringify(c));
     const { width, height } = grid;
-    const ox = grid.origin?.x ?? 0;
-    const oy = grid.origin?.y ?? 0;
-    const x = tile[0] - ox;
-    const y = tile[1] - oy;
-    if (x < 0 || y < 0 || x >= width || y >= height) return { component: null, exact: false, reason: 'outside the analyzed grid' };
     const { components, indexOf } = componentsResult;
-    const direct = indexOf[y * width + x];
-    if (direct >= 0) return { component: components[direct], exact: true };
 
-    // Breadth-first through non-walkable cells until a component is touched.
-    // Ties are broken by component id so the assignment is deterministic.
+    const bitOf = new Map();
+    const conditionOf = [];
+    const bitFor = (condition) => {
+        const k = conditionKey(condition);
+        if (!bitOf.has(k)) {
+            bitOf.set(k, bitOf.size);
+            conditionOf.push(condition);
+        }
+        return bitOf.get(k);
+    };
+
+    const best = new Map(); // "cell|manual" -> masks already reached
+    const queue = [];
+    const push = (state) => {
+        const key = `${state.cellIndex}|${state.manual ? 1 : 0}`;
+        const seen = best.get(key);
+        if (seen) {
+            if (seen.some((m) => isSubset(m, state.mask))) return;
+            best.set(key, [...seen.filter((m) => !isSubset(state.mask, m)), state.mask]);
+        } else {
+            best.set(key, [state.mask]);
+        }
+        queue.push(state);
+    };
+
+    const hits = new Map(); // component index -> ways
+    push({ cellIndex: sy * width + sx, mask: 0, manual: false, reasons: [], depth: 0 });
+    while (queue.length > 0) {
+        const state = queue.shift();
+        const cx = state.cellIndex % width;
+        const cy = (state.cellIndex - cx) / width;
+        for (const dir of DIR_NAMES) {
+            const [dx, dy] = DIRS[dir];
+            const nx = cx + dx;
+            const ny = cy + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const n = ny * width + nx;
+            // Backwards: can the NEIGHBOUR step onto the cell we are standing on?
+            const cost = stepCost(grid, n, state.cellIndex, OPPOSITE[dir]);
+            if (!cost) continue;
+            let mask = state.mask;
+            let overflowed = false;
+            for (const c of cost.conditions) {
+                const bit = bitFor(c);
+                if (bit >= MAX_DISTINCT_CONDITIONS) { overflowed = true; break; }
+                mask |= 1 << bit;
+            }
+            if (overflowed) continue;
+            const next = {
+                cellIndex: n,
+                mask,
+                manual: state.manual || cost.manual,
+                reasons: [...state.reasons, ...cost.manualReasons],
+                depth: state.depth + 1,
+            };
+            if (indexOf[n] >= 0) {
+                if (!hits.has(indexOf[n])) hits.set(indexOf[n], []);
+                hits.get(indexOf[n]).push(next);
+                continue;
+            }
+            push(next);
+        }
+    }
+
+    return [...hits.entries()]
+        .map(([index, ways]) => {
+            const labelled = paretoMinimal(ways.filter((w) => !w.manual));
+            const manualWays = ways.filter((w) => w.manual);
+            const free = labelled.some((w) => w.mask === 0);
+            return {
+                component: components[index],
+                free,
+                manual: labelled.length === 0 && manualWays.length > 0,
+                depth: Math.min(...ways.map((w) => w.depth)),
+                conditionSets: free ? [] : labelled.map((w) => ({
+                    conditions: conditionOf.filter((_, bit) => (w.mask >> bit) & 1),
+                })),
+                manualReasons: labelled.length > 0 ? [] : [...new Set(manualWays.flatMap((w) => w.reasons))],
+            };
+        })
+        .sort((a, b) => (
+            (b.free ? 1 : 0) - (a.free ? 1 : 0)
+            || (a.manual ? 1 : 0) - (b.manual ? 1 : 0)
+            || a.depth - b.depth
+            || a.component.id.localeCompare(b.component.id)
+        ));
+}
+
+/** Nearest component by proximity, ignoring whether you could ever walk there. */
+function nearestComponent(grid, componentsResult, x, y) {
+    const { width, height } = grid;
+    const { components, indexOf } = componentsResult;
     const seen = new Uint8Array(width * height);
     let frontier = [y * width + x];
     seen[y * width + x] = 1;
@@ -629,16 +716,85 @@ export function componentForTile(grid, componentsResult, tile) {
             }
         }
         if (hits.size > 0) {
-            const chosen = [...hits].map((i) => components[i]).sort((a, b) => a.id.localeCompare(b.id))[0];
             return {
-                component: chosen,
-                exact: false,
-                reason: `tile is not walkable; assigned to the nearest component (${hits.size} candidate${hits.size === 1 ? '' : 's'} at distance ${depth + 1})`,
+                component: [...hits].map((i) => components[i]).sort((a, b) => a.id.localeCompare(b.id))[0],
+                candidates: hits.size,
+                depth: depth + 1,
             };
         }
         frontier = next;
     }
-    return { component: null, exact: false, reason: 'no walkable component is reachable from this tile' };
+    return null;
+}
+
+/**
+ * Which component an atlas tile belongs to — or, when it does not sit on a
+ * walkable cell at all (a door drawn on a wall tile is the normal case), the
+ * component that can REACH it through the crossing material.
+ *
+ * ⛔ REACHABLE-FROM, NEVER NEAREST (R7 slice 5). Proximity picked the wrong side
+ * of a one-way face: Seedling's L12 teleporter to L83 sits on a cave mouth whose
+ * north face is walled in both directions, and the nearest component was the one
+ * north of the face — the side you can never come from. The same defect wore two
+ * more costumes in the same map (a teleporter inside a building's footprint, a
+ * teleporter beside a pit), because "nearest" and "reachable" are different
+ * questions and only one of them is the one being asked.
+ *
+ * Three outcomes, all reported:
+ *   - `exact`      the tile is walkable and IS in the component;
+ *   - `reachable`  crossing material stands between them, and the conditions it
+ *                  charges come back in `conditionSets` — a consumer that
+ *                  ignores them is being PERMISSIVE and can count how often;
+ *   - neither      nothing can reach the tile. The proximity answer is kept as
+ *                  a last resort (a lost binding seals a map, and a permissive
+ *                  refusal beats an accurate wall), flagged as the finding it is.
+ */
+export function componentForTile(grid, componentsResult, tile, options = {}) {
+    const { width, height } = grid;
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const x = tile[0] - ox;
+    const y = tile[1] - oy;
+    if (x < 0 || y < 0 || x >= width || y >= height) {
+        return { component: null, exact: false, reachable: false, reason: 'outside the analyzed grid' };
+    }
+    const { components, indexOf } = componentsResult;
+    const direct = indexOf[y * width + x];
+    if (direct >= 0) return { component: components[direct], exact: true, reachable: true };
+
+    const reaching = componentsReaching(grid, componentsResult, x, y, options);
+    if (reaching.length > 0) {
+        const [chosen] = reaching;
+        const how = chosen.free
+            ? 'freely'
+            : (chosen.manual
+                ? `through material with no derivable rule (${chosen.manualReasons.join('; ') || 'unlabelled'})`
+                : `only through ${chosen.conditionSets.length} gated way(s)`);
+        return {
+            component: chosen.component,
+            exact: false,
+            reachable: true,
+            free: chosen.free,
+            manual: chosen.manual,
+            conditionSets: chosen.conditionSets,
+            manualReasons: chosen.manualReasons,
+            reason: `tile is not walkable; assigned to the component that reaches it ${how}`
+                + ` (${reaching.length} candidate${reaching.length === 1 ? '' : 's'} at distance ${chosen.depth})`,
+        };
+    }
+
+    const near = nearestComponent(grid, componentsResult, x, y);
+    if (near) {
+        return {
+            component: near.component,
+            exact: false,
+            reachable: false,
+            reason: 'tile is not walkable and NO component can reach it through the crossing material'
+                + `; assigned to the nearest one by proximity (${near.candidates} candidate${near.candidates === 1 ? '' : 's'}`
+                + ` at distance ${near.depth}) — a finding, not a placement`,
+        };
+    }
+    return { component: null, exact: false, reachable: false, reason: 'no walkable component is reachable from this tile' };
 }
 
 /**
@@ -664,13 +820,13 @@ export function analyzeRegion(region, grid, options = {}) {
 
     const bindings = [];
     for (const exit of region.exits ?? []) {
-        const hit = componentForTile(grid, componentsResult, exit.entrance_tile);
+        const hit = componentForTile(grid, componentsResult, exit.entrance_tile, options);
         bindings.push({
             kind: 'exit', id: exit.exit_id, tile: exit.entrance_tile, ...hit,
         });
     }
     for (const loc of region.locations ?? []) {
-        const hit = componentForTile(grid, componentsResult, loc.tile);
+        const hit = componentForTile(grid, componentsResult, loc.tile, options);
         bindings.push({ kind: 'location', id: loc.name, tile: loc.tile, ...hit });
     }
 
