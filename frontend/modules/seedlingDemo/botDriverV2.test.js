@@ -1938,3 +1938,171 @@ describe('the arrow-trap hold (R7 slice 6b)', () => {
         )).toThrow(/NO responder in level 5 answers[\s\S]*arrow traps are \[none\]/);
     });
 });
+
+describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => {
+    const RELAX = {
+        noclip: false, noDamage: false, noHazards: [], grants: [],
+        persistence: [], equips: [], pins: ['dead_frames'],
+        roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+    };
+    /** `button@16,64`'s floor, the cell west of `pushableblock@32,64`. */
+    const PRESS = { x: 24, y: 72 };
+    const planL4 = (targets, opts = {}) => synthesizeLegs(
+        [{ level: 4, targets, exit: { x: 64, y: 16 } }, { level: 5, targets: [] }],
+        {
+            levelSource: opts.levelSource ?? levelRecord,
+            boot: { level: 4, x: 16, y: 16 },
+            name: 'l4-shove',
+            relax: RELAX,
+        },
+    );
+    /**
+     * ⚠ EVERY SHOVE HERE IS PRECEDED BY A HOLD, and that is L4's route
+     * rather than test scaffolding.
+     *
+     * The block's west face is at x = 32 and the player box is 4 wide, so
+     * the only stance that can lean on it is x = 30 — inside tile (1,4),
+     * which is `button@16,64`'s own cell. A `proximity-hazard` cell is not a
+     * legal A* goal, and a shove does NOT exempt its stance (see the verb's
+     * docblock: a pushable is a plain Solid, so there is nothing of its own
+     * to exempt). The exemption comes from the hold, which the room needs
+     * anyway: the button arms the two arrowtraps that kill `bob@64,64`, and
+     * a live bob is Solid to the block.
+     */
+    const holdShove = (ticks, over = {}) => [
+        { ...PRESS, hold: { presser: { x: 16, y: 64 }, ticks } },
+        {
+            ...PRESS,
+            shove: { block: { x: 32, y: 64 }, dir: 'E', to: { tx: 4, ty: 4 }, ...over },
+        },
+    ];
+
+    it('⛔⛔ THE CONTROL — without the shove, L4 is TWO COMPONENTS and the plan '
+        + 'refuses', () => {
+        // Slice 6b's measured wall, restated as a test so the verb has
+        // something to be evidence about. Column 2 is walled at every row
+        // but (2,4), and `pushableblock@32,64` stands in it.
+        expect(() => planL4([])).toThrow(
+            /no walkable tile path in level 4 from tile \(1,1\) to \(4,1\)/);
+    });
+
+    it('⛓⛓⛓ the shove opens the door: the block goes (2,4) -> (4,4) and the walk '
+        + 'CROSSES to L5', () => {
+        const r = planL4(holdShove(8));
+        expect(r.shoves).toHaveLength(1);
+        expect(r.shoves[0]).toMatchObject({
+            kind: 'shove',
+            id: 'pushableblock@32,64',
+            dir: 'E',
+            key: 'right',
+            from: { tx: 2, ty: 4 },
+            to: { tx: 4, ty: 4 },
+            destroys: false,
+        });
+        expect(r.transitions).toEqual([
+            expect.objectContaining({ from_level: 4, to_level: 5 })]);
+    });
+
+    it('⛔ the LEAN is the emitted span — a shove looks exactly like a walk', () => {
+        // The reason `shoves` exists at all: nothing in the tape distinguishes
+        // "leaned on the block until the door opened" from "walked east into
+        // a wall", and the block writes no persistence to tell them apart
+        // afterwards.
+        const r = planL4(holdShove(8));
+        const s = r.shoves[0];
+        expect(r.tape.inputs).toContainEqual(
+            { key: 'right', from: s.startTick, to: s.startTick + s.leanTicks });
+    });
+
+    it('⛓ the RELEASE is at the commit point, one boundary short of the '
+        + 'destination', () => {
+        // Two tiles of travel is 64 ticks of glide, and the lean is held for
+        // barely half of it: once the block crosses x = 48 its own
+        // `tile - cTile` carries it the rest of the way and the `v == 0` arm
+        // snaps it onto (4,4). A lean held to the landing would be ~64.
+        const s = planL4(holdShove(8)).shoves[0];
+        expect(s.contactTick).toBeGreaterThan(0);
+        expect(s.leanTicks).toBeGreaterThan(32);
+        expect(s.leanTicks).toBeLessThan(64);
+    });
+
+    it('⛔⛔ THE THIRD TILE IS A PIT, AND THE MODEL REFUSES THE ROUTE TO IT', () => {
+        // Why the block stops on (4,4) and not one cell further. (5,4) is
+        // `Pit`, so a third shove would DESTROY the block and open the
+        // corridor just as well — and the player following it stands in
+        // `bob@64,64`'s spawn cell, which `levelRun` prices as a "mover" and
+        // refuses on a tape that does not declare `noDamage`. The route's
+        // own reason for two tiles is the game's, not a preference.
+        expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
+            .toThrow(/standing inside bob@64,64 in level 4[\s\S]*prices it as "mover"/);
+    });
+
+    it('⛔ `destroys` is DECLARED, and its shape is checked before anything is '
+        + 'driven', () => {
+        // A destination that turns out to be water, lava or a pit is an
+        // opener the route did not plan for — so it is a boolean on the leg
+        // and never an inference from the terrain.
+        expect(() => planL4(holdShove(8, { destroys: 'yes' })))
+            .toThrow(/shove\.destroys must be a boolean/);
+        expect(() => planL4(holdShove(8, { to: null })))
+            .toThrow(/a shove must name `to: \{tx, ty\}`/);
+    });
+
+    it('⛔ the positive control: a block already on `to` proves nothing', () => {
+        expect(() => planL4(holdShove(8, { to: { tx: 2, ty: 4 } })))
+            .toThrow(/is ALREADY on \(2,4\), so the shove proves nothing/);
+    });
+
+    it('⛔ a destination off the push axis is a named refusal, not a stall', () => {
+        expect(() => planL4(holdShove(8, { dir: 'N' })))
+            .toThrow(/A shove moves the block along ONE axis/);
+    });
+
+    it('⛔ the CONTACT check separates "out of reach" from "refused"', () => {
+        // A stance in the wrong ROW leans on nothing: the block's `input()`
+        // probes its own hitbox displaced one pixel and needs the player box
+        // overlapping THAT probe. Leaning WEST from the button walks away
+        // from the block and never touches it.
+        expect(() => planL4(holdShove(8, { dir: 'W', to: { tx: 0, ty: 4 } })))
+            .toThrow(/has NOT MOVED/);
+    });
+
+    it('⛔ a `fire`-family block is a PRESS\'s errand and fails by name', () => {
+        // L39's blocks are `PushableBlockFire`. Leaning does nothing to one:
+        // only `hit()` writes its target, and `moveTypes` decides.
+        expect(() => synthesizeLegs(
+            [{
+                level: 39,
+                targets: [{
+                    x: 200,
+                    y: 200,
+                    shove: { block: { x: 192, y: 192 }, dir: 'E', to: { tx: 13, ty: 12 } },
+                }],
+            }],
+            {
+                levelSource: levelRecord, boot: { level: 39, x: 192, y: 208 },
+                name: 'x', relax: RELAX,
+            },
+        )).toThrow(/family|has no pushable at/);
+    });
+
+    it('⛔ the noclip arm REFUSES a shove — a relaxed walk moves no blocks', () => {
+        expect(() => synthesizeLegs(
+            [{ level: 4, targets: holdShove(8) }],
+            {
+                levelSource: levelRecord,
+                boot: { level: 4, x: 16, y: 16 },
+                name: 'x',
+                relax: { ...RELAX, noclip: true, roles: RELAXED_ROLES },
+            },
+        )).toThrow(/noclip arm does not run it/);
+    });
+
+    it('the emitted tape replays to the same crossing through a SECOND consumer', () => {
+        // The suite's own doctrine: the driver's running state proves
+        // nothing. `runTape` is a different consumer of the same physics.
+        const r = planL4(holdShove(8));
+        const stream = replay(parseTape(r.tape));
+        expect(stream.ticks[stream.ticks.length - 1].level).toBe(5);
+    });
+});

@@ -2779,6 +2779,399 @@ function runSpear(run, perTick, spear, what) {
 }
 
 /**
+ * ── ⛓⛓⛓ THE SHOVE (R7 slice 6c) — the verb that presses NOTHING ───────
+ *
+ * The tenth leg verb, and the only one a WEAPONLESS player can use on a
+ * block. `PushableBlock` — the plain one — has no `genericHit` arm at all
+ * (`pushables.hitPushableFromPoint` refuses it by name: *"`PushableBlock`
+ * has no `hit()` at all, so this arm is not merely unknown for it — it does
+ * not exist"*). It moves when the player LEANS: its `input()` probes its own
+ * hitbox displaced one pixel toward each face and re-targets one tile
+ * whenever a Player is found there with a velocity pointing INTO it.
+ *
+ * ⛔⛔ AND THAT IS WHY THE HONEST CHAIN STOPPED AT L4. `synthesizeLegs`
+ * plans over `world.solids`, where a block is a 16x16 Solid like any other,
+ * and L4's tile layer walls column 2 at every row but (2,4) — the cell
+ * `pushableblock@32,64` stands in. **The block IS the door**, the planner
+ * called the level two components, and there was no verb that could move it
+ * (kickoff §16.6). A `spear` press cannot: no weapon reaches this class, and
+ * the player has no weapon anyway.
+ *
+ *     { x: 24, y: 72, shove: { block: {x: 32, y: 64}, dir: 'E',
+ *                              to: {tx: 4, ty: 4} } }
+ *
+ * ── THE FOUR THINGS A SHOVE CHECKS ────────────────────────────────────
+ *
+ *   1. the BLOCK — named by the coordinates the LEVEL built it at (which do
+ *      not change when it moves), and it must be the WALK family. A
+ *      `pushableblockfire` here would be a leg that leans on something the
+ *      game only answers to a press, and it fails by name rather than
+ *      running out of ticks.
+ *   2. the POSITIVE CONTROL — the block is NOT already on `to`. A shove that
+ *      moves nothing is a check that cannot fail (§21.65's rule, and the
+ *      third verb to need it written down).
+ *   3. the CONTACT — the block starts moving within `contactTicks`. That is
+ *      the difference between "the stance was out of reach" and "the push
+ *      was refused", which are different defects with the same symptom.
+ *   4. the EFFECT — the block is ON `to` and everything has SETTLED, read
+ *      off `run.pushables` and `run.pushesSettled` rather than counted.
+ *
+ * ── ⛔⛔⛔ THE RELEASE IS THE MECHANIC, AND IT HAS TO BE EARLY ─────────
+ *
+ * `stepWalkPushable`'s `cTile` is a CEIL where `PushableBlockFire`'s is a
+ * floor, and the whole difference between the two push directions lives in
+ * it. Leaning EAST re-targets to `cTile.x + 1` every tick, so the block
+ * makes progress only while the lean continues — but the target it was last
+ * given SURVIVES the release, so a lean held past a tile boundary sends the
+ * block a whole further tile. In L4 that further tile is `Pit` (5,4): the
+ * block is destroyed, and one lean more walks the player in after it.
+ *
+ * ⛔ AND "RELEASE THE KEY WHEN THE BLOCK LANDS" IS ALREADY TOO LATE — the
+ * first cut of this verb did exactly that and the model refused it by name.
+ * `input()` reads the PLAYER'S VELOCITY, not the held key, and a player who
+ * has been leaning still has four or five ticks of friction left. Every one
+ * of them is another contact tick, and the block is a tile past `to` before
+ * the coast is spent.
+ *
+ * So the release is at the COMMIT POINT instead: the tick the block crosses
+ * into the last tile of its own glide, after which `tile - cTile` carries it
+ * to `to` and the `v == 0` arm SNAPS IT BACK to the grid with no further
+ * contact needed. In pixels that is one boundary short of the destination —
+ * derived from the CEIL rather than fitted, which is why the same expression
+ * serves both push directions even though their arithmetic is inverted (a
+ * WEST shove commits on its very first contact tick, an EAST one on the tick
+ * after it enters the penultimate cell). The over-travel refusal over the
+ * settle window is what makes `to` a claim rather than a hope.
+ *
+ * ⚠ THE MODEL CANNOT SEE ENEMIES, AND THIS VERB IS WHERE THAT BITES.
+ * `PushableBlock`'s ctor pushes "Enemy" onto its own solids list, so a body
+ * standing in the glide corridor STOPS the block — and `levelWorld` collects
+ * no enemies at all (`pushables.js`'s own bound, named there). The model
+ * therefore reports a shove the GAME may refuse, which is the safe direction
+ * for a walk (the tape is longer than it needs to be, never shorter) and is
+ * NOT safe for a route that assumes it: L4's `bob@64,64` presses on this
+ * block's east face for exactly as long as it lives. The route's answer is
+ * the room's own — hold the button first and let the arrow traps do the
+ * killing — and the GAME adjudicates it, per `KILL_ARM_POLICY`.
+ * [[feedback_search_must_exclude_its_own_mover]]
+ */
+/** The lean key for each push direction — `E` shoves the block EAST. */
+const SHOVE_KEYS = Object.freeze({ E: 'right', N: 'up', W: 'left', S: 'down' });
+
+/**
+ * ...and the tile step each one gives the BLOCK. Same table as
+ * `pushables.PUSH_STEP` and NOT imported from it, because that one is
+ * indexed by `Player.direction` and derived from `genericHit`'s `p` vector —
+ * a press's arithmetic, which this verb never runs. The two agree; sharing
+ * the symbol would make a shove's geometry depend on a press's derivation.
+ */
+const SHOVE_STEP = Object.freeze({
+    E: Object.freeze({ dx: 1, dy: 0 }),
+    N: Object.freeze({ dx: 0, dy: -1 }),
+    W: Object.freeze({ dx: -1, dy: 0 }),
+    S: Object.freeze({ dx: 0, dy: 1 }),
+});
+
+/**
+ * How long a shove waits for the block to START moving before calling the
+ * stance out of reach.
+ *
+ * A lean lands on the tick the player box overlaps the block's ±1 px probe
+ * with a velocity into it, and the approach leaves the player at a full stop
+ * a few pixels short, so the walk-in is a handful of ticks. Sixteen is that
+ * with room, and small enough that a stance in the wrong ROW fails fast
+ * instead of burning the whole tape's budget standing next to a wall.
+ */
+const SHOVE_CONTACT_TICKS = 16;
+
+/**
+ * The settle window after the release: the glide's own 32 ticks with slack,
+ * which is also what a block needs to snap back if the release landed
+ * mid-pixel.
+ *
+ * ⚠ NOT borrowed from `PUSH_GLIDE_TICKS` even though the number would do.
+ * That constant is the wait a PRESS takes and this is the wait a RELEASE
+ * takes; they agree today because both are one tile at `moveSpeed`, and
+ * sharing the symbol is how a wait comes to mean nothing when one of them
+ * changes. [[feedback_two_cost_models_must_agree]]
+ */
+const SHOVE_SETTLE_TICKS = 40;
+
+/**
+ * ...and the same window with the sink's eleven alpha frames on top, for a
+ * shove that DESTROYS its block.
+ *
+ * ⚠ The fade cannot start until the block is seen exactly on its target —
+ * `input()`'s sink check is gated on `gridPos(x, y).equals(x, y)` and a
+ * mid-glide x is never a multiple of 16 — so the two costs ADD rather than
+ * overlap. `runSpear` pays the identical bill for the identical reason and
+ * calls it `PUSH_SINK_TICKS`; measured here by the `destroys: true` case
+ * reporting the block on the pit and "STILL THERE" at 40.
+ */
+const SHOVE_SINK_TICKS = 72;
+
+/** Shape-check a `shove` before anything is planned or driven with it. */
+export function assertShove(shove, what) {
+    if (shove === null || typeof shove !== 'object' || Array.isArray(shove)) {
+        fail(`${what}: shove must be { block: {x, y}, dir, to }`);
+    }
+    const b = shove.block;
+    if (!b || !Number.isFinite(b.x) || !Number.isFinite(b.y)) {
+        fail(`${what}: shove.block must be the block's OEL {x, y} — the coordinates the `
+            + 'LEVEL built it at, which do not change when it moves.');
+    }
+    if (!(shove.dir in SHOVE_KEYS)) {
+        fail(`${what}: shove.dir must be one of E/N/W/S, got `
+            + `${JSON.stringify(shove.dir)}. It is DECLARED rather than derived from `
+            + '`to` because the lean is a HELD KEY and a route that named the wrong one '
+            + 'would drive the player into a wall for the whole window and report the '
+            + 'block unmoved.');
+    }
+    const { to } = shove;
+    if (!to || !Number.isInteger(to.tx) || !Number.isInteger(to.ty)) {
+        fail(`${what}: a shove must name \`to: {tx, ty}\` — the tile the block comes to `
+            + 'rest on. Without it the effect check is "something moved", which a lean '
+            + 'in the wrong direction satisfies. ⚠ It is required even when the block '
+            + 'DIES there (`destroys: true`), because the release point is derived from '
+            + 'the destination cell and a shove with no cell has no release.');
+    }
+    if (shove.destroys !== undefined && typeof shove.destroys !== 'boolean') {
+        fail(`${what}: shove.destroys must be a boolean — "the block comes to rest on `
+            + 'water, lava or a pit and fades out". It is DECLARED because a destination '
+            + 'that turns out to be lethal is an opener the route did not plan for, and '
+            + 'the block is gone on re-entry either way.');
+    }
+    if (shove.maxTicks !== undefined
+        && (!Number.isInteger(shove.maxTicks) || shove.maxTicks <= 0)) {
+        fail(`${what}: shove.maxTicks must be a positive integer if given.`);
+    }
+}
+
+/** The WALK-family block a shove names, or a named failure. */
+export function resolveWalkPushable(world, named, what) {
+    const row = (world.pushables ?? []).find((p) => p.x === named.x && p.y === named.y);
+    if (!row) {
+        fail(`${what}: level ${world.level} has no pushable at (${named.x},${named.y}); `
+            + `it has [${(world.pushables ?? []).map((p) => p.id).join(' ') || 'none'}].`);
+    }
+    if (row.family !== 'walk') {
+        fail(`${what}: ${row.id} is the "${row.family}" family (${row.as3}), which moves `
+            + 'when a PRESS hits it — that is `spear`\'s verb, not this one. A lean does '
+            + 'nothing to it: `PushableBlockFire.input()` reads only its own `tile` '
+            + 'target, and only `hit()` writes that.');
+    }
+    return row;
+}
+
+function runShove(run, perTick, shove, what) {
+    if (run.pushables === null) {
+        fail(`${what}: a shove is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null pushable state, so the lean would emit '
+            + 'its ticks, move nothing and report success. A tape that shoves a block '
+            + 'must declare noclip: false.');
+    }
+    assertShove(shove, what);
+    const { block, dir, to, destroys = false, maxTicks = null } = shove;
+    const row = resolveWalkPushable(run.world, block, what);
+    const key = SHOVE_KEYS[dir];
+    const HELD = heldFromKey(key, what);
+
+    // ── the positive control, before the lean ─────────────────────────
+    const live0 = run.pushables.get(row.id);
+    if (!live0) {
+        fail(`${what}: the run carries no live state for ${row.id}, which the world `
+            + 'lists. The two halves disagree about what this level holds.');
+    }
+    if (live0.removed) {
+        fail(`${what}: ${row.id} is ALREADY GONE before the lean. A block is destroyed `
+            + 'per VISIT and rebuilt on re-entry, so this means an earlier leg of this '
+            + 'visit already spent it.');
+    }
+    const tileOf = (l) => ({
+        tx: Math.floor(l.rect.x / TILE_SIZE), ty: Math.floor(l.rect.y / TILE_SIZE),
+    });
+    const from = tileOf(live0);
+    if (from.tx === to.tx && from.ty === to.ty) {
+        fail(`${what}: ${row.id} is ALREADY on (${to.tx},${to.ty}), so the shove proves `
+            + 'nothing. A shove that moves nothing is a check that cannot fail.');
+    }
+    const step = SHOVE_STEP[dir];
+    if ((to.tx - from.tx) * step.dx < 0 || (to.ty - from.ty) * step.dy < 0
+        || (to.tx !== from.tx && step.dx === 0) || (to.ty !== from.ty && step.dy === 0)) {
+        fail(`${what}: ${row.id} is on (${from.tx},${from.ty}) and the leg leans ${dir} `
+            + `to reach (${to.tx},${to.ty}). A shove moves the block along ONE axis, `
+            + 'away from the player — a destination off that axis is a route that has '
+            + 'named the wrong direction or the wrong block.');
+    }
+    /**
+     * ⛔⛔⛔ WHERE A RELEASED BLOCK LANDS, TRANSCRIBED RATHER THAN TIMED.
+     *
+     * `stepWalkPushable` rewrites `tile` ONLY on a contact tick, and it
+     * writes `cTile ± 1` where `cTile = ceil(pos / 16)` is read at the TOP of
+     * that tick. Afterwards the block glides on the surviving target until
+     * `sign(tile - cTile)` reaches zero and the `v == 0` arm snaps it onto
+     * the grid. Composing the two gives a closed form for the resting cell:
+     *
+     *     lastContact.cTile = c   ->   EAST/SOUTH land on c, WEST/NORTH on c-1
+     *
+     * (EAST: `tile = c+1`, and `ceil` reaches `c+1` half a pixel past `16c`,
+     * where the snap floors it back to `16c`. WEST: `tile = c-1`, reached
+     * exactly at `16(c-1)`. The CEIL is the whole asymmetry — the same one
+     * `pushables.js` records as "an east push only makes progress while the
+     * player keeps leaning".)
+     *
+     * So the lean stops on the first tick whose OWN `cTile` puts the landing
+     * on `to`. Nothing is counted and nothing is waited out.
+     *
+     * ⛔ AND THE FIRST CUT OF THIS RULE WAS ONE TICK EARLY AND PASSED ANYWAY.
+     * It released as soon as the block's POST-move position entered the
+     * destination's window, which is the tick BEFORE any contact has read
+     * `cTile == to`. That lands the block one tile short — except that
+     * `input()` reads the player's VELOCITY, not the held key, so the four or
+     * five ticks of friction coast after the release are four or five more
+     * contact ticks and they finished the job. A rule that is right because
+     * of a coast is a rule that breaks the first time a stance arrives
+     * slower. Reading the tick's own `cTile` needs no coast at all — and the
+     * coast is then pure margin, 2.5 px inside a 16 px window.
+     */
+    const ceilTile = (v) => Math.ceil(v / TILE_SIZE);
+    const landsOn = (pre) => {
+        const c = step.dx !== 0 ? ceilTile(pre.x) : ceilTile(pre.y);
+        return (step.dx > 0 || step.dy > 0) ? c : c - 1;
+    };
+    const committed = (pre) => landsOn(pre) === (step.dx !== 0 ? to.tx : to.ty);
+
+    // ── the lean ──────────────────────────────────────────────────────
+    // Held until the block COMMITS, never for a counted number of ticks: the
+    // glide is 32 ticks per tile and the walk-in is however long the approach
+    // left, and a leg that added the two would be fitting a constant to one
+    // room's arithmetic.
+    const at = { x: run.state.x, y: run.state.y };
+    const budget = maxTicks ?? (SHOVE_CONTACT_TICKS
+        + (TILE_SIZE / 0.5) * (Math.abs(to.tx - from.tx) + Math.abs(to.ty - from.ty) + 1));
+    const startTick = perTick.length;
+    let contactTick = -1;
+    let leanTicks = 0;
+    let done = false;
+    for (let i = 1; i <= budget; i += 1) {
+        // ⚠ THE TICK'S OWN `cTile`, read BEFORE it runs. `stepWalkPushable`
+        // computes it at the top of the tick from the position the previous
+        // one left, so this is the value the contact about to happen will
+        // use — reading it after `advance` would be the NEXT tick's.
+        const pre = { ...run.pushables.get(row.id).rect };
+        perTick.push(HELD);
+        const { transition } = run.advance(HELD);
+        leanTicks = i;
+        if (transition) {
+            fail(`${what}: lean tick ${i} crossed from level ${transition.from_level} to `
+                + `${transition.to_level}. A shove leans into a block, and a lean that `
+                + 'walks the player through a trigger is a routing defect — the stance '
+                + 'is on the wrong side of a door.');
+        }
+        const live = run.pushables.get(row.id);
+        if (contactTick < 0 && (live.rect.x !== live0.rect.x || live.rect.y !== live0.rect.y)) {
+            contactTick = i;
+        }
+        if (contactTick < 0 && i >= SHOVE_CONTACT_TICKS) {
+            fail(`${what}: leaned ${key} from (${at.x},${at.y}) for ${i} tick(s) and `
+                + `${row.id} at (${live0.rect.x},${live0.rect.y}) has NOT MOVED. `
+                + '`PushableBlock.input()` probes its own hitbox displaced ONE PIXEL '
+                + 'toward each face and needs a Player box overlapping THAT probe with a '
+                + 'velocity pointing into it — so a stance in the wrong row, or one that '
+                + 'is still braking, leans on nothing. (The model carries no enemies, so '
+                + 'a body of the game\'s standing in the glide corridor also reads as '
+                + 'this: the block is Solid to "Enemy" and stops dead.)');
+        }
+        if (contactTick > 0 && committed(pre)) { done = true; break; }
+    }
+    if (!done) {
+        const live = run.pushables.get(row.id);
+        const now = tileOf(live);
+        fail(`${what}: leaned ${key} for ${leanTicks} tick(s) and ${row.id} is on `
+            + `(${now.tx},${now.ty}) at (${live.rect.x},${live.rect.y}), never committed `
+            + `to (${to.tx},${to.ty}). It started on (${from.tx},${from.ty}) and contact `
+            + `was ${contactTick < 0 ? 'never made' : `made at tick ${contactTick}`}. A `
+            + `block glides ${TILE_SIZE / 0.5} ticks per tile and stops dead against a `
+            + 'Solid, so a shove that stalls has met something — name it in the route '
+            + 'rather than lengthening the window.');
+    }
+
+    // ── the release, and the over-travel refusal ──────────────────────
+    // ⛔ THE TARGET SURVIVES THE RELEASE. `stepWalkPushable` re-reads
+    // `block.target` every tick and only a CONTACT rewrites it, so a block
+    // let go mid-tile keeps gliding to wherever the last lean pointed it.
+    // The settle window is where that shows up, and it is ASSERTED rather
+    // than waited out: a block that walks past `to` under its own momentum
+    // is exactly the failure the commit point exists to prevent, and it must
+    // be a named refusal rather than a longer wait.
+    // ⚠ A SINKING SHOVE'S WINDOW IS THE LONG ONE, and 40 was not enough:
+    // after the last tile's glide the block must be seen exactly on its
+    // target before `input()` sets `destroy`, and only THEN do the eleven
+    // alpha frames run. Found by the `destroys: true` test reporting a block
+    // that was on the pit and "STILL THERE". Same shape as `runSpear`'s
+    // `PUSH_SINK_TICKS`, and separate from it for the same reason.
+    const settleWindow = destroys ? SHOVE_SINK_TICKS : SHOVE_SETTLE_TICKS;
+    for (let i = 1; i <= settleWindow; i += 1) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: settle tick ${i} crossed from level ${transition.from_level} `
+                + `to ${transition.to_level}. The player coasts after a release and a `
+                + 'coast that crosses a trigger is a cut the route did not plan.');
+        }
+        const live = run.pushables.get(row.id);
+        const now = tileOf(live);
+        if (!live.removed && (now.tx !== to.tx || now.ty !== to.ty)
+            && (now.tx - to.tx) * step.dx + (now.ty - to.ty) * step.dy > 0) {
+            fail(`${what}: after the release ${row.id} travelled ON to (${now.tx},`
+                + `${now.ty}), PAST (${to.tx},${to.ty}). The lean outlived the commit `
+                + 'point: `input()` reads the player\'s VELOCITY, not the held key, so a '
+                + 'friction coast is more contact ticks and each one re-targets a tile '
+                + 'further. Fix the stance or the destination, never the window.');
+        }
+        if (!destroys && live.removed) {
+            fail(`${what}: ${row.id} reached (${now.tx},${now.ty}) and was DESTROYED, `
+                + 'which the leg did not declare. A destination that turns out to be '
+                + 'water, lava or a pit is an opener the route did not plan for, and a '
+                + 'block a later leg walks around will not be there.');
+        }
+        if (run.pushesSettled && (!destroys || live.removed)) break;
+    }
+    if (!run.pushesSettled) {
+        fail(`${what}: ${row.id} is STILL MOVING ${settleWindow} tick(s) after the `
+            + 'release. A block is 16 px of solid at a straddling rect until it stops — '
+            + 'walking now would meet it mid-glide.');
+    }
+    const live = run.pushables.get(row.id);
+    const landed = tileOf(live);
+    if (!live.removed && (landed.tx !== to.tx || landed.ty !== to.ty)) {
+        fail(`${what}: the lean committed and ${row.id} came to rest on (${landed.tx},`
+            + `${landed.ty}), not (${to.tx},${to.ty}). Committed means the block needed `
+            + 'no further contact — so something stopped it in the last tile, and a '
+            + 'block stops dead against a Solid.');
+    }
+    if (destroys && !live.removed) {
+        fail(`${what}: the leg declares \`destroys: true\` — "it comes to rest on water, `
+            + 'lava or a pit and fades out" — and the block is on '
+            + `(${landed.tx},${landed.ty}) and STILL THERE.`);
+    }
+    return {
+        kind: 'shove',
+        id: row.id,
+        dir,
+        key,
+        at,
+        from,
+        to: destroys ? null : { ...to },
+        destroys,
+        contactTick,
+        leanTicks,
+        startTick,
+        ticks: perTick.length - startTick,
+    };
+}
+
+/**
  * ── ⛓⛓ THE FIRE PRIMITIVE (R5 slice 7) ────────────────────────────────
  *
  * The sixth leg verb, and the first one with NO FACING.
@@ -4386,6 +4779,18 @@ export function synthesizeLegs(legs, opts = {}) {
     /** ⛔⛔ R5 slice 9: one record per chest leg — the join cell of L38. */
     const chestLegs = [];
     const spears = [];
+    /**
+     * ⛓⛓⛓ R7 slice 6c: one record per SHOVE — the walk-family push, and the
+     * only verb a weaponless player has against a block.
+     *
+     * ⚠ AND IT IS THE ONLY WITNESS, for the `kills` reason one mechanic
+     * over. A `PushableBlock` writes NO persistence — `pushables.js`'s
+     * per-visit lifetime docblock is explicit that a re-entered level
+     * rebuilds every block at its `.oel` cell — so the tape, the flag set
+     * and the observation stream are all silent about the door having been
+     * opened. This list and the run's own `pushedBlocks` are the two halves.
+     */
+    const shoves = [];
     /** ⛓ R5 slice 7: one record per FIRE press — see `runFire`. */
     const fires = [];
     /**
@@ -4573,6 +4978,22 @@ export function synthesizeLegs(legs, opts = {}) {
             const what = `legs[${li}] level ${leg.level} target ${ti} collect`;
             assertCollect(t.collect, what);
             resolvePickup(run.world, t.collect.pickup, what);
+        });
+        /**
+         * ⚠ A SHOVE'S BLOCK IS **NOT** EXEMPTED, and it is the `collect`
+         * trade rather than the `hold` one. A pushable is a plain `blocking`
+         * Solid with no avoid volume of its own, so there is nothing to
+         * exempt — what the planner must keep doing is treating it as the
+         * WALL it is, because the stance the approach drives to is the cell
+         * BESIDE it and a planner that routed through the block would drive
+         * past its own lean point. The shape is validated here so a
+         * malformed one is a named failure before anything is driven.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.shove === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} shove`;
+            assertShove(t.shove, what);
+            resolveWalkPushable(run.world, t.shove.block, what);
         });
         /**
          * ⚠ AND A KEYLOCK'S LINE IS AN EXEMPTED CONTACT, like a hold's
@@ -4834,6 +5255,22 @@ export function synthesizeLegs(legs, opts = {}) {
                 const record = runSpear(run, perTick, target.spear,
                     `legs[${li}] level ${leg.level} target ${ti} spear`);
                 spears.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
+            /**
+             * ⛓⛓⛓ R7 SLICE 6c: THE SHOVE, and it sits BESIDE the spear
+             * because it is the same errand for the other pushable family —
+             * the one no press reaches. It runs AFTER any `hold` on the same
+             * leg on purpose: L4's answer is to arm the traps from the
+             * button and only then lean, and the order is the whole solve.
+             */
+            if (target.shove !== undefined) {
+                const from = perTick.length;
+                const record = runShove(run, perTick, target.shove,
+                    `legs[${li}] level ${leg.level} target ${ti} shove`);
+                shoves.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
                 });
@@ -5156,6 +5593,15 @@ export function synthesizeLegs(legs, opts = {}) {
         // run's own `presses` ledger is the other half: this says what was
         // INTENDED, that says what the rect actually contained.
         spears: spears.map((s2) => ({ ...s2 })),
+        /**
+         * ⛓⛓⛓ One record per SHOVE — R7 slice 6c, and the same rule again
+         * with the sharpest reason of the set: the tape's ticks for a shove
+         * are a HELD DIRECTION KEY, which is what a walk looks like. Nothing
+         * in the emitted tape distinguishes "leaned on the block until the
+         * door opened" from "walked east into a wall for ninety ticks", and
+         * the block writes no persistence to tell them apart afterwards.
+         */
+        shoves: shoves.map((s3) => ({ ...s3 })),
         fires: fires.map((f) => ({ ...f })),
         /**
          * ⛓⛓⛓ One record per KILL — R5 slice 21, and the same rule for the
