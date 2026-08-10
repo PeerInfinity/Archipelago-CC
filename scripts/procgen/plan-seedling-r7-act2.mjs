@@ -7,7 +7,7 @@
  * segment and the seam), §15.7 (the ruled segment scope: the minimal valid
  * dependency chain, not the strict AP total order), §16.9 (what slice 6c
  * inherits). Chain data: `frontend/modules/seedlingDemo/playthroughWalk.js`,
- * chain `act2-to-l8`.
+ * chain `act2-the-sword`.
  *
  * ── ⛓ WHAT THIS ADDS TO `plan-seedling-r7-ends-meet.mjs` ──────────────
  *
@@ -59,8 +59,8 @@ const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
-const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l8')
-    .slice('--chain='.length);
+const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain='))
+    ?? '--chain=act2-the-sword').slice('--chain='.length);
 
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT}`);
@@ -192,25 +192,58 @@ const baseLevelSource = atlasLevelSource();
  * is told at the block's own end tick".
  */
 const idOfEntity = (e) => `${e.type}@${e.x},${e.y}`;
-function levelSourceWithout(removed) {
-    if (removed.length === 0) return baseLevelSource;
+/**
+ * ⛓⛓⛓ R7 slice 6f: …AND A SHOVED BLOCK MOVES IN IT.
+ *
+ * ⛔⛔ THE PLANNER FORGETS PER-VISIT RUNTIME STATE ACROSS A GROUP BOUNDARY,
+ * and until L8 that never cost anything. `synthesizeLegs` boots a fresh
+ * `createLevelRun` from the LEVEL RECORD, so a block a previous group pushed
+ * is back at its `.oel` cell as far as the next group is concerned — and L8
+ * has TWO shoves with a `phases` block between them. Measured: the walk back
+ * to the button was planned with `pushableblock@112,48` still at (7,3), so
+ * A* thought (5,3) — where the block really stands — was FREE, and the drive
+ * SHOVED THE BLOCK NORTH out of its own path. The second hold then cleared
+ * nothing and the exit leg walked into the live `sandtrap@96,128` and died
+ * at t=1025.
+ *
+ * ⇒ every group is planned against the record its predecessors' shoves have
+ * EDITED. Nothing here reaches the tape: a segment is ONE run in the game and
+ * one in `tapeRunner`, and both move the block live. It is the planner that
+ * forgets, so it is the planner that is told — and told from `plan.shoves`,
+ * which is the model's own account of what it just did, never a declaration.
+ *
+ * ⚠ A `to` of `null` REMOVES (the block died on water, lava or a pit); a
+ * `to` MOVES, rewriting the placement — so the edited block's own id changes,
+ * which is correct because the id IS the placement (§19.3).
+ */
+function levelSourceEdited(edits) {
+    if (edits.length === 0) return baseLevelSource;
     const byLevel = new Map();
-    for (const r of removed) {
-        if (!byLevel.has(r.level)) byLevel.set(r.level, new Set());
-        byLevel.get(r.level).add(r.id);
+    for (const e of edits) {
+        if (!byLevel.has(e.level)) byLevel.set(e.level, []);
+        byLevel.get(e.level).push(e);
     }
     return (n) => {
         const rec = baseLevelSource(n);
-        const gone = byLevel.get(n);
-        if (!gone) return rec;
-        const kept = rec.entities.filter((e) => !gone.has(idOfEntity(e)));
-        if (kept.length === rec.entities.length) {
-            throw new Error(`level ${n} has no placement named by [${[...gone].join(' ')}]`);
+        const here = byLevel.get(n);
+        if (!here) return rec;
+        let entities = rec.entities;
+        for (const edit of here) {
+            const at = entities.findIndex((e) => idOfEntity(e) === edit.id);
+            if (at < 0) {
+                throw new Error(`level ${n} has no placement named by ${edit.id}`);
+            }
+            entities = entities.slice();
+            if (edit.to) entities[at] = { ...entities[at], x: edit.to.tx * 16, y: edit.to.ty * 16 };
+            else entities.splice(at, 1);
         }
-        return { ...rec, entities: kept };
+        return { ...rec, entities };
     };
 }
-const levelSource = baseLevelSource;
+/** The record edits a plan's own shoves imply, for every group after it. */
+const editsOfShoves = (shoves) => shoves.map((s) => ({
+    level: s.level, id: s.id, to: s.destroys ? null : { tx: s.to.tx, ty: s.to.ty },
+}));
 const RELAX = {
     noclip: false,
     noDamage: false,
@@ -287,11 +320,14 @@ let cursorTick = 0;
 const cleared = [];
 /** ⛓ R7 slice 6e: the bodies removed SO FAR, the `cleared` list's twin. */
 const removed = [];
+/** ⛓ R7 slice 6f: the record edits the shoves so far have made — see above. */
+const shoved = [];
+const worldEdits = () => [...removed, ...shoved];
 console.log('');
 for (const group of walkGroups(chain)) {
     if (group.kind === 'legs') {
         const plan = synthesizeLegs(group.legs, {
-            levelSource: levelSourceWithout(removed),
+            levelSource: levelSourceEdited(worldEdits()),
             boot: { ...cursorBoot },
             name: chain.headline,
             relax: { ...RELAX, persistence: cleared.map((c) => ({ ...c })) },
@@ -301,8 +337,13 @@ for (const group of walkGroups(chain)) {
             + `${plan.tape.inputs.length} spans, transitions `
             + `[${plan.transitions.map((t) => t.t + cursorTick).join(' ')}]`);
         for (const s of plan.shoves) {
+            // ⚠ `to` is NULL for a shove that DESTROYS its block (water, lava
+            // or a pit): the destination cell is where it died, not where it
+            // rests. Printing `s.to.tx` there is a crash in the log line of
+            // the very run that proves the sink works.
             console.log(`      shove ${s.id} ${s.dir}: contact t+${s.contactTick}, lean `
-                + `${s.leanTicks}, (${s.from.tx},${s.from.ty}) -> (${s.to.tx},${s.to.ty})`);
+                + `${s.leanTicks}, (${s.from.tx},${s.from.ty}) -> `
+                + `${s.to ? `(${s.to.tx},${s.to.ty})` : 'DESTROYED'}`);
         }
         for (const h of plan.holds) {
             console.log(`      hold ${h.presser.tag}@${h.presser.x},${h.presser.y} `
@@ -322,6 +363,9 @@ for (const group of walkGroups(chain)) {
         cursorBoot = {
             level: plan.final.level, x: plan.final.x - 8, y: plan.final.y - 8,
         };
+        // ⛓ …and the world the NEXT group plans against carries this
+        // group's shoves. See `levelSourceEdited`.
+        shoved.push(...editsOfShoves(plan.shoves));
     } else {
         const p = group.block;
         check(`⛔ the phases block "${p.id}" sits where it says it sits in the walk`,
@@ -348,7 +392,7 @@ for (const group of walkGroups(chain)) {
         // ⚠ THE FOLLOW USES THE WORLD THE BLOCK STARTED IN, not the one it
         // ends in: its own removals land at its END tick, so a follow that
         // pre-applied them would walk a room the block never walked.
-        const landed = followPhases(p, cursorBoot, cleared, levelSourceWithout(removed));
+        const landed = followPhases(p, cursorBoot, cleared, levelSourceEdited(worldEdits()));
         check(`⛔ the phases block "${p.id}" lands where it says it lands, within `
             + `${DEFAULT_TOLERANCE} px (the MODEL following its spans)`,
         landed.level === p.endsAt.level
@@ -717,13 +761,45 @@ function timedDespawnsFor(from, to) {
                     + 'truncated arm would release a key the segment holds');
             }
         }
+        /**
+         * ⛔⛔ AND THE TRUNCATION HAS TO CLIP THE TIMED FIELDS TOO — the gap
+         * a SECOND `phases` block in one segment found.
+         *
+         * A v9 `at`-clear and a v10 `despawn` are stamped with the tick they
+         * land on, and `parseTape` refuses one outside `[0, tick_count]` (it
+         * is right to: "a clear that lands after the last tick never
+         * happens"). L8's segment carries TWO blocks, so the arm truncated
+         * at the FIRST block's end was handed the SECOND block's clear at
+         * t=932 in a 380-tick tape and the whole authoring died there. Every
+         * other segment in the arc has carried at most one.
+         *
+         * ⚠ `at === cut` is KEPT: that is the block's own end tick, which is
+         * exactly the thing this arm exists to ask the game about. Boot
+         * clears (no `at`) are kept unconditionally — they are the state the
+         * tape starts in.
+         */
+        const inWindow = (e) => e.at === undefined || e.at <= cut;
         const arm = latchOf(label, {
-            ...host, name: label, tick_count: cut,
+            ...host,
+            name: label,
+            tick_count: cut,
+            persistence: (host.persistence ?? []).filter(inWindow),
+            despawn: (host.despawn ?? []).filter(inWindow),
             inputs: chainInputsFor(host.inputs, 0, cut),
         }, { mobiles: true });
         const end = arm.ticks[arm.ticks.length - 1];
+        /**
+         * ⛔ THE OUTCOME'S BODY CLASS IS DECLARED, and R7 slice 6f is why.
+         * `outcome.enemies` is "how many are LEFT" and the game's readout is
+         * a list of every mobile — so the COUNT is meaningless without the
+         * class it counts. L5 and L6 count `Bob`s in rooms that also hold
+         * sandtraps; L8's blocks count `SandTrap`s in a room with no Bob at
+         * all. Defaulting to `Bob` keeps the two committed blocks' meaning
+         * exactly, and a block that means something else must say so.
+         */
+        const cls = block.outcome.enemyClass ?? 'Bob';
         const bobs = (arm.mobiles?.[arm.mobiles.length - 1]?.mobiles ?? [])
-            .filter((m) => /Bob/.test(m.cls || m.type || ''));
+            .filter((m) => new RegExp(cls).test(m.cls || m.type || ''));
 
         // ⛔ FIRST, AND EVERYTHING ELSE IS VACUOUS WITHOUT IT.
         const jumps = respawnJumps(arm.ticks, host.boot);
@@ -742,9 +818,9 @@ function timedDespawnsFor(from, to) {
         `persistence_cleared [${got.join(' ') || 'nothing'}] — this is the block's whole `
             + 'claim, and it is the game\'s own readout rather than a fight the model '
             + 'predicted');
-        check(`⛓ phases "${block.id}": ${block.outcome.enemies} enemy body/bodies left`,
+        check(`⛓ phases "${block.id}": ${block.outcome.enemies} ${cls} body/bodies left`,
             bobs.length === block.outcome.enemies,
-            `${bobs.length} Bob(s) in the last mobile sample`
+            `${bobs.length} ${cls}(s) in the last mobile sample`
             + (bobs.length ? `: ${bobs.map((b) => `(${Math.round(b.x)},${Math.round(b.y)})`)
                 .join(' ')}` : ''));
         check(`⛔ phases "${block.id}": it ends where it says it ends, within `
