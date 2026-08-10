@@ -1,0 +1,317 @@
+{
+  "generator": "scripts/procgen/make-seedling-sphere-order.mjs",
+  "source_log": "frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+  "seed": 1,
+  "seed_name": "14089154938208861744",
+  "locations": 41,
+  "spheres": 10,
+  "order": [
+    {
+      "sphere": "0.1",
+      "location": "Level 010 - Sword",
+      "item": "Progressive Sword",
+      "level": 10
+    },
+    {
+      "sphere": "0.2",
+      "location": "Level 011 - Chest",
+      "item": "Seal",
+      "level": 11
+    },
+    {
+      "sphere": "0.3",
+      "location": "Level 017 - Chest",
+      "item": "Seal",
+      "level": 17
+    },
+    {
+      "sphere": "0.4",
+      "location": "Level 020 - Shield",
+      "item": "Progressive Shield",
+      "level": 20
+    },
+    {
+      "sphere": "0.5",
+      "location": "Level 086 - Chest",
+      "item": "Seal",
+      "level": 86
+    },
+    {
+      "sphere": "1.1",
+      "location": "Level 012 - Chest",
+      "item": "Seal",
+      "level": 12
+    },
+    {
+      "sphere": "1.2",
+      "location": "Level 019 - Boss Key 0",
+      "item": "Red Key",
+      "level": 19
+    },
+    {
+      "sphere": "1.3",
+      "location": "Level 025 - Chest",
+      "item": "Seal",
+      "level": 25
+    },
+    {
+      "sphere": "1.4",
+      "location": "Level 029 - Boss Key 1",
+      "item": "Green Key",
+      "level": 29
+    },
+    {
+      "sphere": "1.5",
+      "location": "Level 030 - Torchpickup",
+      "item": "Light",
+      "level": 30
+    },
+    {
+      "sphere": "1.6",
+      "location": "Level 036 - Chest",
+      "item": "Seal",
+      "level": 36
+    },
+    {
+      "sphere": "1.7",
+      "location": "Level 038 - Chest",
+      "item": "Seal",
+      "level": 38
+    },
+    {
+      "sphere": "1.8",
+      "location": "Level 039 - Totem Part 72,40",
+      "item": "Totem Shard",
+      "level": 39
+    },
+    {
+      "sphere": "1.9",
+      "location": "Level 040 - Chest",
+      "item": "Seal",
+      "level": 40
+    },
+    {
+      "sphere": "1.10",
+      "location": "Level 040 - Totem Part 160,640",
+      "item": "Totem Shard",
+      "level": 40
+    },
+    {
+      "sphere": "2.1",
+      "location": "Level 032 - Bob Boss",
+      "item": "Fire",
+      "level": 32
+    },
+    {
+      "sphere": "3.1",
+      "location": "Level 040 - Boss Key 2",
+      "item": "Purple Key",
+      "level": 40
+    },
+    {
+      "sphere": "3.2",
+      "location": "Level 049 - Conch",
+      "item": "Progressive Swim",
+      "level": 49
+    },
+    {
+      "sphere": "4.1",
+      "location": "Level 015 - Chest",
+      "item": "Seal",
+      "level": 15
+    },
+    {
+      "sphere": "4.2",
+      "location": "Level 040 - Totem Part 64,144",
+      "item": "Totem Shard",
+      "level": 40
+    },
+    {
+      "sphere": "4.3",
+      "location": "Level 041 - Totem Part 240,144",
+      "item": "Totem Shard",
+      "level": 41
+    },
+    {
+      "sphere": "4.4",
+      "location": "Level 042 - Totem Part 184,152",
+      "item": "Totem Shard",
+      "level": 42
+    },
+    {
+      "sphere": "4.5",
+      "location": "Level 046 - Chest",
+      "item": "Seal",
+      "level": 46
+    },
+    {
+      "sphere": "4.6",
+      "location": "Level 048 - Chest",
+      "item": "Seal",
+      "level": 48
+    },
+    {
+      "sphere": "4.7",
+      "location": "Level 055 - Boss Key 3",
+      "item": "Blue Key",
+      "level": 55
+    },
+    {
+      "sphere": "4.8",
+      "location": "Level 064 - Ghostspear",
+      "item": "Ghost Spear",
+      "level": 64
+    },
+    {
+      "sphere": "4.9",
+      "location": "Level 089 - Feather",
+      "item": "Progressive Swim",
+      "level": 89
+    },
+    {
+      "sphere": "4.10",
+      "location": "Level 090 - Chest",
+      "item": "Seal",
+      "level": 90
+    },
+    {
+      "sphere": "5.1",
+      "location": "Level 043 - Wand",
+      "item": "Wand",
+      "level": 43
+    },
+    {
+      "sphere": "5.2",
+      "location": "Level 067 - Boss Key 4",
+      "item": "Yellow Key",
+      "level": 67
+    },
+    {
+      "sphere": "6.1",
+      "location": "Level 012 - Witch",
+      "item": "Progressive Sword",
+      "level": 12
+    },
+    {
+      "sphere": "6.2",
+      "location": "Level 068 - Health",
+      "item": "Health",
+      "level": 68
+    },
+    {
+      "sphere": "6.3",
+      "location": "Level 071 - Chest",
+      "item": "Seal",
+      "level": 71
+    },
+    {
+      "sphere": "6.4",
+      "location": "Level 074 - Darkshield",
+      "item": "Progressive Shield",
+      "level": 74
+    },
+    {
+      "sphere": "7.1",
+      "location": "Level 079 - Darksuit",
+      "item": "Dark Suit",
+      "level": 79
+    },
+    {
+      "sphere": "8.1",
+      "location": "Level 063 - Chest",
+      "item": "Seal",
+      "level": 63
+    },
+    {
+      "sphere": "8.2",
+      "location": "Level 080 - Chest",
+      "item": "Seal",
+      "level": 80
+    },
+    {
+      "sphere": "8.3",
+      "location": "Level 098 - Chest",
+      "item": "Seal",
+      "level": 98
+    },
+    {
+      "sphere": "8.4",
+      "location": "Level 106 - Ghostsword",
+      "item": "Ghost Sword Fusion",
+      "level": 106
+    },
+    {
+      "sphere": "9.1",
+      "location": "Level 109 - Firewand",
+      "item": "Fire Wand Fusion",
+      "level": 109
+    },
+    {
+      "sphere": "9.2",
+      "location": "Level 115 - The Seed",
+      "item": "The Seed",
+      "level": 115
+    }
+  ],
+  "cross_check": {
+    "ap_equipment_order": [
+      "Progressive Sword",
+      "Progressive Shield",
+      "Light",
+      "Fire",
+      "Progressive Swim",
+      "Ghost Spear",
+      "Progressive Swim",
+      "Wand",
+      "Progressive Sword",
+      "Health",
+      "Progressive Shield",
+      "Dark Suit",
+      "Ghost Sword Fusion",
+      "Fire Wand Fusion"
+    ],
+    "intended_order": [
+      "Progressive Sword",
+      "Progressive Shield",
+      "Fire",
+      "Progressive Swim",
+      "Wand",
+      "Ghost Spear",
+      "Progressive Shield",
+      "Dark Suit",
+      "Progressive Swim"
+    ],
+    "first_divergence": [
+      {
+        "position": 5,
+        "intended": "Wand",
+        "ap": "Ghost Spear",
+        "reading": "positions diverge from here — see `divergences` for the ruling on each"
+      }
+    ]
+  },
+  "divergences": [
+    {
+      "item": "Ghost Spear",
+      "intended_after": "Wand",
+      "ap": "before the Wand",
+      "verdict": "PERMITTED",
+      "why": "nothing in the source makes the spear depend on the wand. The walkthrough takes the wand first because the L43 totem is on its way; rules v1 gates the Wand on all five Totem Shards (LOCATION_GUARDS.wand@L43) and the last three land in the same sphere as the spear, so AP is free to take either first."
+    },
+    {
+      "item": "Progressive Swim (the Feather)",
+      "intended_after": "Dark Suit",
+      "ap": "before the Wand",
+      "verdict": "PERMITTED",
+      "why": "the Feather is ungated by any entity (§2.2, OverWorld/region6.oel:461) — AP grabs it the moment the overworld opens, where a human walks past it until the waterfall climb needs it."
+    },
+    {
+      "item": "Progressive Sword (the Dark Sword)",
+      "intended_after": "—",
+      "ap": "the sphere after the Wand",
+      "verdict": "PERMITTED, and it is a rules v1 FIX",
+      "why": "the Witch trades the Dark Sword FOR the Wand (NPCs/Witch.as:47-52). Rules v1 as shipped at §13.5 had no such gate and AP took it ten steps early; the location guard put it back where the source says it goes."
+    }
+  ],
+  "caveat": "AP's answer under rules v1, which carries named permissiveness bounds. A segment that cannot drive a step here refutes a rules row (seedlingPlaythroughOverlay REFUTATION_LOG), it does not refute the game."
+}
