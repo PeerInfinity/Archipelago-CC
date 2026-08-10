@@ -41,6 +41,7 @@ import {
     emptyRngBlock,
     rngBlockDeclaresAnything,
     RNG_SEED_MAX,
+    requiredTapeVersion,
 } from './tapeFormat.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
@@ -285,7 +286,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(9);
+        expect(TAPE_VERSION).toBe(10);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -644,7 +645,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1180,8 +1181,8 @@ describe('version 7: the RNG state', () => {
     });
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
-        expect(TAPE_VERSION).toBe(9);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        expect(TAPE_VERSION).toBe(10);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
 });
 
@@ -1247,14 +1248,18 @@ describe('version 9: the witnessed mid-run clear', () => {
      * (rides the projection free). That classification is now part of
      * adding any tape field.
      */
-    it('⛓ the GAME-VISIBLE PROJECTION differs in exactly the version and `at`', () => {
+    it('⛓ the GAME-VISIBLE PROJECTION differs in exactly the CLASSIFIED fields', () => {
         const t = parseTape(v9());
         const g = gameVisibleTape(t);
         expect(g.tape_version).toBe(8);
         expect(g.persistence[0]).toEqual({ level: 5, tag: 0, note: '' });
         const differing = Object.keys(t).filter(
             (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
-        expect(differing.sort()).toEqual(['persistence', 'tape_version']);
+        // ⛓ R7 slice 6e: `despawn` joins the list, and it is dropped from a
+        // v9 tape too — EMPTY OR NOT. A projection whose SHAPE depended on
+        // whether a model-only field had entries would hand the game a key
+        // it does not know on exactly the tapes nobody tested.
+        expect(differing.sort()).toEqual(['despawn', 'persistence', 'tape_version']);
         // …and the projection is a real v8 tape, which is the whole claim:
         // "declaring it v8 is a true statement about its contents".
         expect(() => parseTape(g)).not.toThrow();
@@ -1276,6 +1281,121 @@ describe('version 9: the witnessed mid-run clear', () => {
         expect(gameVisibleTape(v9NoAt).tape_version).toBe(8);
         const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
         expect(gameVisibleTape(v8)).toBe(v8);
-        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at']);
+        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn']);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 10: THE WITNESSED MID-RUN ENEMY REMOVAL ──────────────
+ *
+ * v9's shape a second time, so these are v9's tests a second time — the two
+ * fences that keep a model-only field from becoming a staged relaxation: the
+ * format refuses it BOTH ways, and the GAME never sees it.
+ *
+ * ⛔ Plus one fence v9 did not need. A clear's `at` is OPTIONAL because a
+ * boot clear is a state the game really can be in; a despawn with no `at`
+ * would be a body deleted before the first tick, which is a level the game
+ * never builds. The format refuses that rather than leaving it to a
+ * convention nobody can grep for.
+ */
+describe('version 10: the witnessed mid-run enemy removal', () => {
+    const v10 = (over = {}) => ({
+        tape_version: 10,
+        game: 'seedling',
+        boot: { level: 6, x: 32, y: 16 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        persistence: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 0, split: false },
+        seam: null,
+        tick_count: 346,
+        inputs: [],
+        despawn: [{ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' }],
+        ...over,
+    });
+
+    it('parses a removal and carries it through serialization', () => {
+        const t = parseTape(v10());
+        expect(t.despawn).toEqual([{ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' }]);
+        expect(JSON.parse(serializeTape(t)).despawn[0])
+            .toEqual({ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' });
+    });
+
+    it('⛔ MUTATION: a tape BELOW v10 may not carry a removal at all', () => {
+        expect(() => parseTape(v10({ tape_version: 9 })))
+            .toThrow(/versions below 10 mean despawn: \[\] BY DEFINITION/);
+    });
+
+    it('⛔ MUTATION: `at` is REQUIRED — a boot-time deletion is not a removal', () => {
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@112,48' }] })))
+            .toThrow(/declares no at/);
+    });
+
+    it('⛔ MUTATION: `at` must be a tick this tape actually has', () => {
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@1,1', at: 347 }] })))
+            .toThrow(/outside this tape's \[0, 346\]/);
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@1,1', at: -1 }] })))
+            .toThrow(/outside this tape's \[0, 346\]/);
+    });
+
+    /**
+     * ⛔⛔ THE ID IS A PLACEMENT, NOT AN INDEX — the trap the shape exists to
+     * dodge. The atlas is a REGENERATED artifact, so an entity's position in
+     * `entities` is a property of the extract; `type@x,y` is the `.oel`
+     * placement, which is what the level IS.
+     */
+    it('⛔ MUTATION: an id that is not a level record placement is refused', () => {
+        for (const id of [3, '3', 'bob', 'bob@112', 'Bob@112,48', 'bob@112,48 ']) {
+            expect(() => parseTape(v10({ despawn: [{ level: 6, id, at: 10 }] })))
+                .toThrow(/must be a level record placement/);
+        }
+    });
+
+    it('⛔ MUTATION: the same body removed twice is a bookkeeping error', () => {
+        expect(() => parseTape(v10({
+            despawn: [{ level: 6, id: 'bob@1,1', at: 10 }, { level: 6, id: 'bob@1,1', at: 20 }],
+        }))).toThrow(/duplicates bob@1,1/);
+    });
+
+    it('stamps 10 only for a tape that USES it, and 10 beats 9', () => {
+        expect(requiredTapeVersion(parseTape(v10()))).toBe(10);
+        expect(requiredTapeVersion(parseTape(v10({ despawn: [] })))).toBe(8);
+        // ⛔ Highest-first: a tape carrying BOTH features is a v10 tape, and
+        // an arm order that tested `at` first would stamp it 9 and lose the
+        // removal on the next parse.
+        expect(requiredTapeVersion(parseTape(v10({
+            persistence: [{ level: 6, tag: 0, at: 40 }],
+        })))).toBe(10);
+    });
+
+    /**
+     * ⛔⛔ THE PIN, EXTENDED FOR ITS SECOND CUSTOMER (§18.4's classification
+     * step, executed). The projection differs from a v10 tape in exactly the
+     * CLASSIFIED model-only fields, so a v11 field fails here until someone
+     * says which side of the line it is on.
+     */
+    it('⛓ the PROJECTION drops the removal too, and is a real v8 tape', () => {
+        const t = parseTape(v10({ persistence: [{ level: 6, tag: 0, at: 40 }] }));
+        const g = gameVisibleTape(t);
+        expect(g.tape_version).toBe(8);
+        expect(g).not.toHaveProperty('despawn');
+        expect(g.persistence[0]).toEqual({ level: 6, tag: 0, note: '' });
+        const differing = Object.keys(t).filter(
+            (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
+        expect(differing.sort()).toEqual(['despawn', 'persistence', 'tape_version']);
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    it('writes NO despawn field into anything below v10', () => {
+        // The rule every field has followed since version 2, and the one
+        // that decides whether this bump is byte-inert for 121 fixtures.
+        const v9NoDespawn = parseTape(v10({ tape_version: 9, despawn: [] }));
+        expect(v9NoDespawn.despawn).toEqual([]);
+        expect(JSON.parse(serializeTape(v9NoDespawn))).not.toHaveProperty('despawn');
     });
 });

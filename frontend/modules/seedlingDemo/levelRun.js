@@ -262,6 +262,21 @@ function applyItem(inventory, name) {
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
     persistence = [], equips = [], roles,
+    /**
+     * ⛓⛓⛓ R7 SLICE 6e: the tape's version-10 `despawn` LIST — the witnessed
+     * mid-run ENEMY REMOVAL, threaded here for `persistence[].at`'s reason
+     * exactly one class along.
+     *
+     * `combat.contactPricing` REFUSES a `mover` body by name (below), so a
+     * walk past `bob@112,48` in L6 is a recording this model cannot replay
+     * at all — not a walk it replays wrongly. The game removes the body
+     * itself (`Enemy.update`'s `case 1: //Water`), and this is how the model
+     * is told, at the tick a driven arm witnessed it by.
+     *
+     * ⚠ It reaches the RUN and not merely the tape header for the `pins`
+     * lesson's reason: a field a gate reads must be threaded to the gate.
+     */
+    despawn = [],
     // R5 slice 4: the tape's `pins` list, threaded to the physics. The swim
     // sound term is only modellable under `pins: ["sound"]`, and `stepV2`
     // REFUSES a wet tick without it rather than modelling the term as zero
@@ -469,13 +484,66 @@ export function createLevelRun({
         worlds.delete(n);
         activatorStates.delete(n);
     };
+    /**
+     * ⛓⛓⛓ R7 slice 6e: THE DESPAWNED BODIES, BY LEVEL — and they are removed
+     * from the level RECORD rather than from any one list the world derives.
+     *
+     * ⛔ THAT IS THE WHOLE OF THE CHOICE. A body is in `combat.enemies`, in
+     * the avoid volumes the planner reads, in `Game.totalEnemies()`'s count
+     * and in whatever the next role adds; filtering the census alone would
+     * remove it from the contact test and leave it in the planner's — one
+     * body, two answers. Dropping the ENTITY is the only edit that cannot
+     * disagree with itself, and it is also exactly what the game did.
+     */
+    const despawnedByLevel = new Map();
+    const despawnIdOf = (e) => `${e.type}@${e.x},${e.y}`;
+    const recordFor = (n) => {
+        const rec = levelSource(n);
+        const gone = despawnedByLevel.get(n);
+        if (!gone || gone.size === 0) return rec;
+        const kept = rec.entities.filter((e) => !gone.has(despawnIdOf(e)));
+        if (kept.length === rec.entities.length) {
+            throw new Error(`levelRun: despawn names [${[...gone].join(' ')}] in level `
+                + `${n} and the level record has no such placement. The id is a level `
+                + 'record identity ("<type>@<x>,<y>"), and a despawn nobody can find is '
+                + 'a declaration that silently removes nothing — which reads exactly '
+                + 'like one that worked.');
+        }
+        return { ...rec, entities: kept };
+    };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
             const opts = { ...(roles ? { roles } : {}), inventory };
             if (clearedByLevel.has(n)) opts.cleared = clearedByLevel.get(n);
-            worlds.set(n, buildLevelWorld(levelSource(n), opts));
+            worlds.set(n, buildLevelWorld(recordFor(n), opts));
         }
         return worlds.get(n);
+    };
+    /**
+     * The despawns, pending until their tick — `applyTimedClears`' twin, and
+     * deliberately its twin down to the live-binding refresh.
+     *
+     * ⛔⛔ TRAP 149, THE SECOND CUSTOMER. `world` is a `let` rebound only in
+     * `enterWorld`, so dropping the memo alone would leave the run holding
+     * the room the body is still standing in — and the tell would be the
+     * same one slice 6d chased: a byte-exact replay that stops short of
+     * somewhere it should have walked through. Both halves, or neither.
+     *
+     * ⚠ MID-VISIT, like a mid-run clear and for the same reason: the game
+     * removes ONE entity while the player is still in the room and does not
+     * rebuild it, so the per-visit runtime state (activators, pushables,
+     * spinners, crushers, turrets) is deliberately NOT dropped here.
+     */
+    const timedDespawns = despawn.map((d) => ({ ...d })).sort((a, b) => a.at - b.at);
+    const applyTimedDespawns = (tick) => {
+        for (const d of timedDespawns) {
+            if (d.applied || d.at !== tick) continue;
+            d.applied = true;
+            if (!despawnedByLevel.has(d.level)) despawnedByLevel.set(d.level, new Set());
+            despawnedByLevel.get(d.level).add(d.id);
+            worlds.delete(d.level);
+            if (d.level === level) world = worldFor(d.level);
+        }
     };
     /**
      * ⛓ A MEMOISED WORLD CAN GO STALE FOR A SECOND REASON (R5 slice 4).
@@ -8072,6 +8140,11 @@ export function createLevelRun({
             // tick numbered `at` begins, which is what "the game cleared it
             // by then" means.
             applyTimedClears(ticksCompleted);
+            // ⛓ R7 slice 6e: and the witnessed mid-run REMOVALS, beside them
+            // and for the same reason — the body is already gone when the
+            // tick numbered `at` begins, which is what "the game removed it
+            // by then" means.
+            applyTimedDespawns(ticksCompleted);
             // ── the equip, first thing (R4) ───────────────────────────
             // `Bot.as` applies it immediately after pushing observation
             // `t` and BEFORE dispatching that tick's key edges, so on this

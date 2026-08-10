@@ -215,6 +215,7 @@ function tapeFor(label, plan) {
         noHazards: [],
         grants: [],
         persistence: [],
+        despawn: [],
         equips: [],
         pins: ['dead_frames'],
         save: { totem_parts: [], keys: [], seal_parts: [] },

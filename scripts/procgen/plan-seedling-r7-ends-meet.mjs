@@ -183,6 +183,7 @@ try {
             noHazards: [],
             grants: [],
             persistence: [],
+            despawn: [],
             equips: [],
             pins: [...chain.walk.pins],
             save: { totem_parts: [], keys: [], seal_parts: [] },

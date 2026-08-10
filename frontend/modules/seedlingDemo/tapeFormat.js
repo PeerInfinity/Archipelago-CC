@@ -126,10 +126,10 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 9;
+export const TAPE_VERSION = 10;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
 /**
  * ── Version 7: the RNG STATE ──────────────────────────────────────────
@@ -534,6 +534,120 @@ function parsePersistence(raw, version, tickCount) {
     // Sorted so a re-derived list that changed ORDER is not a diff.
     clears.sort((a, b) => a.level - b.level || a.tag - b.tag);
     return clears;
+}
+
+/**
+ * ── ⛓⛓⛓ VERSION 10: `despawn` — THE WITNESSED MID-RUN ENEMY REMOVAL ──
+ *
+ * ⚖ RULED (the orchestrating session, R7 slice 6e) as **v9's shape a second
+ * time**, inheriting v9's whole ruling by construction. Read `persistence`'s
+ * `at` docblock above first: every sentence of its honesty analysis applies
+ * here with "flag the game cleared" replaced by "body the game removed".
+ *
+ * ── WHY IT EXISTS, MEASURED ───────────────────────────────────────────
+ *
+ * L6's crossing is walled three ways: `Water` walls row 2 at columns 6-8,
+ * the two `sandtrap` PAIRS wall rows 1 and 3 at columns 4 and 10, and
+ * `bob@96,16` and `bob@112,48` sit in EXACTLY the two detour cells. A `bob`
+ * is `combat.contactPricing`'s `mover` — `Enemy.hitPlayer` collides against
+ * the body at its CURRENT position and `Bob.update` steers straight at the
+ * player with no pathfinding (§16.4 refuses the class BY NAME) — so with
+ * both bodies at their placements the model has NO crossing at all, and
+ * `levelRun` says so with a throw rather than a silent zero.
+ *
+ * ⛓ AND THE GAME REMOVES ONE ITSELF, with no weapon and no player kill.
+ * `Enemy.update`'s `case 1: //Water -> destroy = true` drowns a chaser whose
+ * straight line crosses the water, and `Bob.solids.push("Enemy")` makes a
+ * `sandtrap` a WALL for the other one. Driven, `--mobiles`: the north stance
+ * drowns `bob@112,48` at t~62 while `bob@96,16` parks against
+ * `sandtrap@64,16` and never reaches the player. ⛓ The MODEL then replays
+ * the whole 346-tick walk **byte-exact** with that ONE body removed. One
+ * field, whole cause — which is the test v9 had to pass too.
+ *
+ * ── THE SHAPE ─────────────────────────────────────────────────────────
+ *
+ *   `level`  the level the body stands in.
+ *   `id`     `"<type>@<x>,<y>"` — the LEVEL RECORD's own identity for the
+ *            placement, the same string `levelRun`'s contact refusal prints
+ *            and the same one `combat`'s census carries.
+ *   `at`     REQUIRED, unlike a clear's. See below.
+ *   `note`   the audit field, exactly as on a clear.
+ *
+ * ⛔⛔ `id` IS A PLACEMENT, NOT AN INDEX, AND THAT IS THE WHOLE POINT. The
+ * atlas is a regenerated artifact and an entity's ORDER in `entities` is a
+ * property of the extract, not of the game — an index would silently name a
+ * different body the first time the extract re-sorted. `type@x,y` is the
+ * `.oel` placement, which is what the level IS; it is also what a reader
+ * hitting the refusal already has in their hand.
+ *
+ * ⛔⛔ AND `at` IS REQUIRED WHERE A CLEAR'S IS OPTIONAL. A clear with no `at`
+ * is a real boot state — the game's `levelPersistence` really can be carried
+ * into a run, and a segment's boot is its predecessor's latch. A DESPAWN with
+ * no `at` would be something else entirely: a body deleted before the first
+ * tick, which is a level the game never builds. That is a staged relaxation
+ * with `noHazards`' shape and none of its honesty, so the format refuses it
+ * rather than leaving it to a convention.
+ *
+ * ⚠ REFUSED BOTH WAYS (trap 98), like every field before it: below v10 the
+ * field cannot exist, and a v10 tape's `at` must be an integer in
+ * `[0, tick_count]`.
+ *
+ * ⛓ MODEL-ONLY. It rides `gameVisibleTape()` and the GAME never sees it —
+ * §18.4's arc principle verbatim: a despawn is a statement about what the
+ * game does ON ITS OWN, never an instruction to it, and if the game ever
+ * consumed it the check would stop being two-sided. The law that keeps
+ * "witnessed" mechanical lives in `playthroughAcceptance`
+ * (`witnessedDespawnFindings`): NO `despawn` WITHOUT A `phases` BLOCK WHOSE
+ * `removes` NAMES THAT ID AND WHOSE END TICK IS `at`.
+ */
+function parseDespawns(raw, version, tickCount) {
+    if (!Array.isArray(raw.despawn)) {
+        fail('despawn must be an array of {level, id, at, note} on a tape_version 10 '
+            + `tape ([] when nothing is removed), got ${JSON.stringify(raw.despawn)}`);
+    }
+    const seen = new Set();
+    const rows = raw.despawn.map((d, i) => {
+        const where = `despawn[${i}]`;
+        if (d === null || typeof d !== 'object' || Array.isArray(d)) {
+            fail(`${where} must be an object { level, id, at, note }`);
+        }
+        requireInt(d.level, `${where}.level`);
+        if (d.level < 0 || d.level >= LEVEL_COUNT) {
+            fail(`${where}.level ${d.level} is not a level (0..${LEVEL_COUNT - 1})`);
+        }
+        if (typeof d.id !== 'string' || !/^[a-z0-9_]+@-?\d+,-?\d+$/.test(d.id)) {
+            fail(`${where}.id must be a level record placement "<type>@<x>,<y>" — the `
+                + 'identity `levelRun`\'s own contact refusal prints — got '
+                + `${JSON.stringify(d.id)}. An INDEX would name a different body the `
+                + 'first time the atlas extract re-sorted.');
+        }
+        if (d.at === undefined) {
+            fail(`${where} declares no at. A despawn with no tick is a body deleted `
+                + 'before the first tick, which is a level the game never builds — a '
+                + 'staged relaxation, not a witnessed removal. `at` is the phases '
+                + "block's own end tick.");
+        }
+        requireInt(d.at, `${where}.at`);
+        if (d.at < 0 || d.at > tickCount) {
+            fail(`${where}.at ${d.at} is outside this tape's [0, ${tickCount}]. A `
+                + 'removal after the last tick never happens.');
+        }
+        if (d.note !== undefined && typeof d.note !== 'string') {
+            fail(`${where}.note must be a string naming what was removed and how, got `
+                + `${JSON.stringify(d.note)}`);
+        }
+        const key = `${d.level}:${d.id}`;
+        if (seen.has(key)) {
+            fail(`${where} duplicates ${d.id} in level ${d.level}. A body is removed `
+                + 'once; a second row is a bookkeeping error in the derivation.');
+        }
+        seen.add(key);
+        return { level: d.level, id: d.id, at: d.at, note: d.note ?? '' };
+    });
+    // Sorted so a re-derived list that changed ORDER is not a diff — the
+    // same rule `parsePersistence` uses, keyed on this row's own identity.
+    rows.sort((a, b) => a.level - b.level || a.at - b.at || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    return rows;
 }
 
 /**
@@ -1261,6 +1375,20 @@ export function parseTape(input) {
     const persistence = version >= 3
         ? parsePersistence(raw, version, Number.isFinite(declaredTicks) ? declaredTicks : 0)
         : [];
+    // The VALUE-not-presence rule again, seven versions on. A tape below 10
+    // means `despawn: []` BY DEFINITION, so a non-empty declaration is the
+    // failure this format exists to prevent: one consumer honouring a body
+    // removal the other never heard of.
+    if (version < 10 && raw.despawn !== undefined
+        && !(Array.isArray(raw.despawn) && raw.despawn.length === 0)) {
+        fail(`tape_version ${version} declares despawn: ${JSON.stringify(raw.despawn)}, `
+            + 'but versions below 10 mean despawn: [] BY DEFINITION — a reader that '
+            + 'ignored this would replay a walk THROUGH a body the recording went '
+            + 'around. Bump tape_version to 10 to remove one.');
+    }
+    const despawn = version >= 10
+        ? parseDespawns(raw, version, Number.isFinite(declaredTicks) ? declaredTicks : 0)
+        : [];
     // The VALUE-not-presence rule again, one version on. Written out rather
     // than folded into a loop because each field's message names the build
     // that could not read it, and that sentence is what a reader hitting the
@@ -1442,6 +1570,9 @@ export function parseTape(input) {
             level: c.level, tag: c.tag, note: c.note,
             ...(c.at === undefined ? {} : { at: c.at }),
         }))),
+        despawn: Object.freeze(despawn.map((d) => Object.freeze({
+            level: d.level, id: d.id, at: d.at, note: d.note,
+        }))),
         equips: Object.freeze(equips.map((e) => Object.freeze({
             t: e.t, slot: e.slot,
         }))),
@@ -1532,22 +1663,36 @@ export function keyEdgesAt(tape, t) {
  * ⚠ EPHEMERAL. Produced at send time and never written to disk: one artifact
  * per tape, or the committed projection becomes a second copy that drifts.
  */
-export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at']);
+/**
+ * ⛓ THE CLASSIFICATION LIST, and it is the thing §18.4 asked for rather than
+ * a convenience. Every field a version above 8 added is either GAME-VISIBLE
+ * (which costs an AS3 change and the batch discipline) or MODEL-ONLY (which
+ * rides this projection for free) — and the pinning test asserts the
+ * projection differs in EXACTLY these, so a v11 field is a named test
+ * failure until someone classifies it.
+ *
+ * ⚠ `despawn` joins as v10's whole content, for v9 `at`'s reason verbatim: a
+ * body the game removed BY PLAY is a statement about what the game did, and
+ * a game that consumed it would be told to remove something instead of being
+ * asked whether it had.
+ */
+export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at', 'despawn']);
 
 export function gameVisibleTape(tape) {
     const t = tape.tape_version === undefined ? parseTape(tape) : tape;
-    // ⚠ EVERY v9 tape projects, not only the ones carrying `at`. The GAME's
-    // loader gates on the VERSION LIST, so a v9 tape with no mid-run clear
-    // is refused for a number rather than for a feature — and it is, in
-    // content, exactly a v8 tape.
+    // ⚠ EVERY v9+ tape projects, not only the ones carrying a model-only
+    // field. The GAME's loader gates on the VERSION LIST, so a v9 tape with
+    // no mid-run clear is refused for a number rather than for a feature —
+    // and it is, in content, exactly a v8 tape.
     if (t.tape_version < 9) return t;
+    const { despawn, ...rest } = t;
     return {
-        ...t,
-        // ⚠ 8 and not `tape_version - 1`: 9's ONLY new feature is the
-        // dropped field, so what is left is precisely a version 8 tape. A
-        // decrement would be arithmetic pretending to be a claim.
+        ...rest,
+        // ⚠ 8, and still not `tape_version - 1`: everything versions 9 and
+        // 10 added is dropped here, so what is left is precisely a version 8
+        // tape. A decrement would be arithmetic pretending to be a claim.
         tape_version: 8,
-        persistence: (t.persistence ?? []).map(({ at, ...rest }) => rest),
+        persistence: (t.persistence ?? []).map(({ at, ...c }) => c),
     };
 }
 
@@ -1563,6 +1708,11 @@ export function gameVisibleTape(tape) {
  * do not use.
  */
 export function requiredTapeVersion(tape, floor = 8) {
+    // ⚠ HIGHEST-FIRST, so a tape carrying both features is not stamped 9 by
+    // an earlier arm. Each version's test is its own FEATURE and never the
+    // declared number, which is what lets a v10 author leave 121 fixtures at
+    // the versions they were written at.
+    if ((tape.despawn ?? []).length > 0) return 10;
     const usesAt = (tape.persistence ?? []).some((c) => c.at !== undefined);
     return usesAt ? 9 : floor;
 }
@@ -1591,6 +1741,14 @@ export function serializeTape(tape) {
                 // ⚠ Written only when present, so every v3..v8 fixture
                 // round-trips byte-identically past the v9 bump.
                 ...(c.at === undefined ? {} : { at: c.at }),
+            })),
+        } : {}),
+        // ⚠ Written ONLY for a v10 tape, so all 121 committed v1..v9
+        // fixtures round-trip byte-identically past this bump — the rule
+        // every field above has followed since version 2.
+        ...(t.tape_version >= 10 ? {
+            despawn: t.despawn.map((d) => ({
+                level: d.level, id: d.id, at: d.at, ...(d.note ? { note: d.note } : {}),
             })),
         } : {}),
         // Same rule, one version on: written ONLY for a v4 tape, so all 50

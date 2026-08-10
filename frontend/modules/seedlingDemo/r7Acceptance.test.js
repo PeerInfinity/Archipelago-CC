@@ -210,6 +210,7 @@ function segmentTapeFor(latch, extra = {}) {
         noDamage: false,
         noHazards: [],
         grants: [],
+        despawn: [],
         equips: [],
         tick_count: 10,
         inputs: [],
@@ -249,7 +250,7 @@ describe('seamBootFields — THE BOOT SIDE (R7 slice 2)', () => {
         // so a 0 inherits the page's stream and must not read as a value.
         const tape = parseTape({
             tape_version: TAPE_VERSION, game: 'seedling', noclip: false,
-            noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
+            noDamage: false, noHazards: [], grants: [], persistence: [], despawn: [], equips: [],
             pins: [], save: { totem_parts: [], keys: [], seal_parts: [] },
             rng: { seed: 0, split: false, cosmetic: 0, fp: 0 },
             boot: { level: 0, x: 80, y: 128 }, tick_count: 1, inputs: [],
@@ -271,7 +272,7 @@ describe('seamBootFields — THE BOOT SIDE (R7 slice 2)', () => {
         delete blocks.seam.items.hasWand;
         const tape = parseTape({
             tape_version: TAPE_VERSION, game: 'seedling', noclip: false,
-            noDamage: false, noHazards: [], grants: [], equips: [],
+            noDamage: false, noHazards: [], grants: [], despawn: [], equips: [],
             tick_count: 1, inputs: [], ...blocks,
         });
         const boot = seamBootFields(tape);
@@ -742,7 +743,7 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
     const base = {
         tape_version: 8, game: 'seedling', noclip: false,
         boot: { level: 0, x: 80, y: 128 },
-        noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
+        noDamage: false, noHazards: [], grants: [], persistence: [], despawn: [], equips: [],
         pins: [], save: { totem_parts: [], keys: [], seal_parts: [] },
         rng: { seed: 0, split: false, cosmetic: 0, fp: 0 },
         inputs: [], tick_count: 0,
@@ -752,7 +753,10 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
         // ⚠ The seam block arrived at v8 and did not move at the v9 bump —
         // v9's only new feature is `persistence[].at`. The pin follows the
         // constant so the bump is a NAMED edit rather than a silent one.
-        expect(TAPE_VERSION).toBe(9);
+        // ⛓ R7 slice 6e: v10 added `despawn` and the seam block did not move
+        // for that either — both new fields are MODEL-ONLY and neither is a
+        // seam channel. The pin still follows the constant.
+        expect(TAPE_VERSION).toBe(10);
         expect(parseTape({ ...base, seam: { hits_max: 4 } }).seam.hits_max).toBe(4);
     });
 

@@ -1210,3 +1210,90 @@ describe('⛓⛓⛓ R5 slice 23: the L43 wand window, and its shut-before contro
         }
     });
 });
+
+/**
+ * ── ⛓⛓⛓ R7 SLICE 6e: THE WITNESSED MID-RUN ENEMY REMOVAL ─────────────
+ *
+ * `persistence[].at`'s twin, and its tests are that field's tests one class
+ * along: the removal lands AT its tick and not before, the live binding is
+ * refreshed and not merely the memo (trap 149), and an id nobody can find is
+ * a named throw rather than a silent no-op.
+ *
+ * ⛔ THE POSITIVE CONTROL IS THE REFUSAL ITSELF. L6's `bob@112,48` is a
+ * `mover`, so walking into its placement box WITHOUT the declaration throws
+ * by name — which is what makes "and with the declaration it does not" a
+ * measurement rather than an absence.
+ */
+describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
+    const L6_BOB = 'bob@112,48';
+    /**
+     * ⚠ BOOTED TWO TILES WEST OF THE BODY AND WALKED STRAIGHT AT IT. The
+     * chain's own route is what a segment does; what a UNIT test needs is
+     * the shortest walk that reaches the placement, so the run boots at
+     * tile (5,3) and holds `right` into (7,3). The contact lands at tick 24.
+     */
+    const runWith = (despawn, ticks = 30) => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 6, x: 80, y: 48 },
+            noclip: false,
+            noDamage: false,
+            despawn,
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        for (let t = 0; t < ticks; t += 1) run.advance(new Set(['right']));
+        return run;
+    };
+
+    it('⛔ THE POSITIVE CONTROL: walking into a `mover` throws BY NAME', () => {
+        expect(() => runWith([])).toThrow(/standing inside bob@112,48 in level 6/);
+        expect(() => runWith([])).toThrow(/prices it as "mover"/);
+    });
+
+    it('⛓ a removal declared at tick 0 makes the same walk legal', () => {
+        const run = runWith([{ level: 6, id: L6_BOB, at: 0 }]);
+        expect(run.level).toBe(6);
+        expect(run.playerHits).toEqual([]);
+        expect(run.world.combat.enemies.some((e) => `${e.tag}@${e.x},${e.y}` === L6_BOB))
+            .toBe(false);
+        // …and the OTHER body is untouched, so this is a removal and not a
+        // switch that turns the census off.
+        expect(run.world.combat.enemies.some((e) => `${e.tag}@${e.x},${e.y}` === 'bob@96,16'))
+            .toBe(true);
+    });
+
+    it('⛔ MUTATION: a removal AFTER the contact does not save it', () => {
+        // The contact lands at tick 24, so a declaration at 29 is a body that
+        // was still standing when the player walked into it.
+        expect(() => runWith([{ level: 6, id: L6_BOB, at: 29 }]))
+            .toThrow(/standing inside bob@112,48/);
+    });
+
+    /**
+     * ⛔⛔ TRAP 149's SECOND CUSTOMER. Dropping the world memo does NOT rebind
+     * the run's live `world`, so a removal applied while the player is
+     * standing in that very level has to refresh both. This asserts the LIVE
+     * binding, which is the half that a memo-only fix leaves broken.
+     */
+    it('⛓ the removal refreshes the LIVE world binding, not just the memo', () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 6, x: 80, y: 48 },
+            noclip: false,
+            noDamage: false,
+            despawn: [{ level: 6, id: L6_BOB, at: 5 }],
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        const has = () => run.world.combat.enemies
+            .some((e) => `${e.tag}@${e.x},${e.y}` === L6_BOB);
+        run.advance(new Set());
+        expect(has()).toBe(true);           // before its tick, the body is there
+        for (let t = 1; t < 6; t += 1) run.advance(new Set());
+        expect(has()).toBe(false);          // …and at it, the LIVE world has lost it
+    });
+
+    it('⛔ MUTATION: an id no placement matches is a NAMED throw', () => {
+        expect(() => runWith([{ level: 6, id: 'bob@1,1', at: 0 }]))
+            .toThrow(/level record has no such placement/);
+    });
+});

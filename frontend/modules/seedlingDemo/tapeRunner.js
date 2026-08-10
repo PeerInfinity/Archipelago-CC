@@ -137,6 +137,11 @@ export function createTapeStepper(tape, opts = {}) {
             noDamage: t.noDamage,
             grants: t.grants,
             persistence: t.persistence,
+            // ⛓⛓⛓ R7 slice 6e: and the v10 `despawn` list, for the reason
+            // every field above it is here — `combat.contactPricing` REFUSES
+            // a `mover` body by name, so a runner that kept this on the
+            // header would throw on a recording the game made cleanly.
+            despawn: t.despawn ?? [],
             equips: t.equips,
             // R5 slice 4: `pins` reaches the PHYSICS, not just the tape
             // header. `stepV2` refuses a wet tick on a tape that does not
