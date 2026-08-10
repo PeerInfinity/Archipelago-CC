@@ -7,7 +7,7 @@
  * segment and the seam), §15.7 (the ruled segment scope: the minimal valid
  * dependency chain, not the strict AP total order), §16.9 (what slice 6c
  * inherits). Chain data: `frontend/modules/seedlingDemo/playthroughWalk.js`,
- * chain `act2-to-l7`.
+ * chain `act2-to-l8`.
  *
  * ── ⛓ WHAT THIS ADDS TO `plan-seedling-r7-ends-meet.mjs` ──────────────
  *
@@ -59,7 +59,7 @@ const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
-const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l7')
+const CHAIN_ID = (process.argv.find((a) => a.startsWith('--chain=')) ?? '--chain=act2-to-l8')
     .slice('--chain='.length);
 
 if (!existsSync(join(ARTIFACT, 'game.html'))) {

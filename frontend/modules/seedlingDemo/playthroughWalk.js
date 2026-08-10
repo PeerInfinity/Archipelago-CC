@@ -572,10 +572,10 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         }),
     }),
     Object.freeze({
-        id: 'act2-to-l7',
+        id: 'act2-to-l8',
         why: '⛓⛓⛓ ACT 2, AND THE FIRST HONEST SEGMENTS. The game\'s own opening, '
             + 'from `new Game(0, 80, 128)` with an empty save and nothing granted, cut '
-            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6 -> L7. Segment 5 is '
+            + 'at every level arrival: L0 -> L2 -> L3 -> L4 -> L5 -> L6 -> L7 -> L8. Segment 5 is '
             + 'the first HETEROGENEOUS walk — L5\'s arrow-bait fight as a `phases` '
             + 'block, then the crossing through the kill-lock it opens as a `leg` — so '
             + 'the chain now reaches PAST the wall the sword sits behind. ⛔ THE FIGHT '
@@ -588,10 +588,15 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
             + 'ROOM removes one of them — a stance in row 1 column 3 sends `bob@112,48` '
             + 'across the water to drown, while `sandtrap@64,16` walls the other one off '
             + '(`Bob.solids` contains "Enemy"; the player\'s does not). The tape carries '
-            + 'that as a v10 `despawn`.',
+            + 'that as a v10 `despawn`. SEGMENT 7 is the cheapest room on the route '
+            + 'and it is here because a chain is a SEQUENCE: L7 is a straight corridor '
+            + 'with two spires and two stairs, one leg, no mechanism at all — and it '
+            + 'puts the walk at L8\'s own door, which is the next room with a puzzle '
+            + 'in it.',
         headline: 'r7-act2-full',
         segments: Object.freeze([
             'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
+            'r7-act2-7',
         ]),
         /**
          * ⛔ THE CUTS ARE THE DRIVER'S OWN TRANSITION TICKS, DECLARED HERE
@@ -614,8 +619,8 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * a refusal. (Slice 6d needed exactly that for a candidate segment
          * that stepped out to L4 and back — see `L5_ARROW_BAIT`.)
          */
-        cuts: Object.freeze([183, 230, 475, 822, 1634]),
-        endsAt: 1989,
+        cuts: Object.freeze([183, 230, 475, 822, 1634, 1989]),
+        endsAt: 2135,
         /**
          * ⛓ THE WALK IS LEGS, NOT SPANS, and that is the M1 generator's shape
          * arriving where §3.6 said it would.
@@ -764,7 +769,21 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                         exit: Object.freeze({ x: 224, y: 32 }),
                     }),
                 }),
-                Object.freeze({ leg: Object.freeze({ level: 7, targets: Object.freeze([]) }) }),
+                /**
+                 * ⛓ L7 — the corridor, and the cheapest unit in the chain.
+                 * `stairsdown@16,32` in, `stairsdown@192,32` out, two
+                 * `dungeonspire`s between them and nothing else: no lock, no
+                 * mover, no terrain. It is one leg with no waypoints, and it
+                 * ends the segment at L8's own arrival.
+                 */
+                Object.freeze({
+                    leg: Object.freeze({
+                        level: 7,
+                        targets: Object.freeze([]),
+                        exit: Object.freeze({ x: 192, y: 32 }),
+                    }),
+                }),
+                Object.freeze({ leg: Object.freeze({ level: 8, targets: Object.freeze([]) }) }),
             ]),
             pins: Object.freeze(['dead_frames']),
             /**

@@ -5,7 +5,7 @@
  *
  * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §18.6 (the USER's own
  * route for L6, supplied from play) and §4 slice 6. Chain data:
- * `frontend/modules/seedlingDemo/playthroughWalk.js`, chain `act2-to-l7`.
+ * `frontend/modules/seedlingDemo/playthroughWalk.js`, chain `act2-to-l8`.
  *
  * ── ⛔⛔ THE QUESTION THE ROUTE TURNED OUT TO ASK ──────────────────────
  *

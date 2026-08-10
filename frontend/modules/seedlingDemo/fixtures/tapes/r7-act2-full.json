@@ -2,7 +2,7 @@
     "tape_version": 10,
     "game": "seedling",
     "name": "r7-act2-full",
-    "description": "⛓ THE HEADLINE of chain \"act2-to-l7\" — the game's own opening in ONE run, so the 6 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ THE HEADLINE of chain \"act2-to-l8\" — the game's own opening in ONE run, so the 7 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -44,7 +44,7 @@
         "fp": 987286273
     },
     "seam": null,
-    "tick_count": 1989,
+    "tick_count": 2135,
     "inputs": [
         {
             "key": "right",
@@ -579,7 +579,72 @@
         {
             "key": "right",
             "from": 1983,
-            "to": 1989
+            "to": 2121
+        },
+        {
+            "key": "up",
+            "from": 1989,
+            "to": 2000
+        },
+        {
+            "key": "down",
+            "from": 2000,
+            "to": 2001
+        },
+        {
+            "key": "up",
+            "from": 2001,
+            "to": 2002
+        },
+        {
+            "key": "down",
+            "from": 2002,
+            "to": 2003
+        },
+        {
+            "key": "up",
+            "from": 2003,
+            "to": 2004
+        },
+        {
+            "key": "down",
+            "from": 2007,
+            "to": 2009
+        },
+        {
+            "key": "up",
+            "from": 2011,
+            "to": 2013
+        },
+        {
+            "key": "down",
+            "from": 2016,
+            "to": 2017
+        },
+        {
+            "key": "left",
+            "from": 2121,
+            "to": 2122
+        },
+        {
+            "key": "right",
+            "from": 2122,
+            "to": 2123
+        },
+        {
+            "key": "left",
+            "from": 2123,
+            "to": 2124
+        },
+        {
+            "key": "right",
+            "from": 2124,
+            "to": 2125
+        },
+        {
+            "key": "down",
+            "from": 2129,
+            "to": 2135
         }
     ]
 }
