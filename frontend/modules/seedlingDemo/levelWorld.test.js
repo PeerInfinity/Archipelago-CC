@@ -264,6 +264,42 @@ describe('census: every fixture level is fully classified', () => {
             .toThrow(/BUILDS IT FALLEN/);
     });
 
+    /**
+     * ⛓⛓ R7 SLICE 6f — A SANDTRAP THE ROOM KILLS WRITES ITS OWN CLEAR, and
+     * the clear is what the model is told.
+     *
+     * L8's puzzle is two sandtraps in one arrowtrap's lane, and nothing in
+     * this tree models an Arrow killing an Enemy (§16.4, still refused). It
+     * does not have to: `SandTrap.check()` removes a body whose tag is
+     * cleared and `SandTrap.removed()` writes that clear, so the kill's
+     * DURABLE consequence is a flag the game produces and a v9 `at`-clear
+     * carries. Before this row the clear THREW by name — which is how the
+     * row was found — so the pair here is the throw's positive control and
+     * the despawn together.
+     */
+    it('a cleared SANDTRAP tag removes the body — L8 is two clears, not a fight', () => {
+        const l8 = levelRecord(8);
+        const roles = [...RELAXED_ROLES, 'combat'];
+        const before = buildLevelWorld(l8, { roles });
+        const traps = (w) => w.combat.enemies.filter((e) => e.tag === 'sandtrap')
+            .map((e) => `${e.x},${e.y}`).sort();
+        expect(traps(before)).toEqual(['96,128', '96,80']);
+
+        // ⛔ ONE TAG, ONE BODY. `{8,0}` is `sandtrap@96,80` and `{8,1}` is
+        // `sandtrap@96,128`, so a route that earns one clear may not walk
+        // through the other's cell.
+        const first = buildLevelWorld(l8, { roles, cleared: [0] });
+        expect(traps(first)).toEqual(['96,128']);
+        const both = buildLevelWorld(l8, { roles, cleared: [0, 1] });
+        expect(traps(both)).toEqual([]);
+
+        // ...and the body is gone from the SOLIDS-for-a-mover view too, not
+        // just from the census — the L6 lesson (`Bob.solids` contains
+        // "Enemy") means one body must never be gone for one list and
+        // present for another.
+        expect(before.combat.enemies.length - both.combat.enemies.length).toBe(2);
+    });
+
     it('a clear can turn a TELEPORTER ON, and one nobody reads is a throw', () => {
         // `Teleporter.checkDeactivated` is
         // `tag >= 0 && (!checkPersistence(tag) == invert)`, so a tagged

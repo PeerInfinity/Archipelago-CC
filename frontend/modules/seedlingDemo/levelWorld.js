@@ -2685,6 +2685,34 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     spinner: 'despawn',               // Enemies/Spinner.as:47-54
     lavaboss: 'despawn',              // Enemies/LavaBoss.as:62 — and it IS Solid
     shieldboss: 'despawn',            // Enemies/ShieldBoss.as:56
+    /**
+     * ⛓⛓ R7 SLICE 6f — THE CLASS THAT MAKES L8's PUZZLE A PERSISTENCE
+     * PROBLEM RATHER THAN A COMBAT ONE.
+     *
+     * `SandTrap.check()` is `if (tag >= 0 && !Game.checkPersistence(tag))
+     * FP.world.remove(this)` (`Enemies/SandTrap.as:44-51`) — `Spinner`'s
+     * shape one class over — and `removed()` is `super.removed();
+     * Game.setPersistence(tag, false)` (`:88-92`), so a sandtrap the room
+     * kills WRITES ITS OWN CLEAR and never comes back.
+     *
+     * ⛔ THAT PAIR IS WHY L8 NEEDS NO NEW VERB. The model owns no Arrow ×
+     * Enemy (§16.4, still refused), so it cannot predict the kill — but it
+     * does not have to: the kill's DURABLE consequence is a flag, the game
+     * writes it, and a v9 `at`-clear carries it to the model at the tick a
+     * `phases` block witnessed it. Undeclared, the clear would have thrown
+     * by name (which is how this row got written) — the guard below is what
+     * turned "L8 is a fight" into "L8 is two clears".
+     */
+    sandtrap: 'despawn',              // Enemies/SandTrap.as:44-51 (+ :88-92 removed())
+    /**
+     * ⚠ AND ITS SUBCLASS, BY INHERITANCE RATHER THAN BY ROUTE.
+     * `DarkTrap extends SandTrap` (`Enemies/DarkTrap.as:12`) and overrides
+     * neither `check()` nor `removed()`, so the row above IS its row. No
+     * segment on this rung clears one — the seven placements are in L62–L65
+     * — and it is declared anyway because the alternative is a throw in a
+     * later rung whose cause is two files away.
+     */
+    darktrap: 'despawn',              // Enemies/DarkTrap.as:12 -> SandTrap.check()
     moonrock: 'despawn',              // Scenery/Moonrock.as:60
     finaldoor: 'despawn',             // Scenery/FinalDoor.as:36
     // ⚠ A PICKUP REMOVES ITSELF ON A CLEARED FLAG, with `doActions = false`
@@ -2732,6 +2760,41 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     // `Oracle` picks which of two strings it says. Its collider does not move.
     oracle: 'cosmetic',               // NPCs/Oracle.as:26
 });
+
+/**
+ * ⛔⛔⛔ R7 SLICE 6f — ONE BODY, ONE ANSWER: does a CLEARED tag take this
+ * entity out of the world?
+ *
+ * This predicate existed inline in `buildLevelWorld`'s entity loop and
+ * NOWHERE ELSE, and that is the defect it was extracted to fix. The loop
+ * builds `solids`, `activators`, `pickups` and every other derived list; the
+ * COMBAT CENSUS is built separately, from the RAW `levelRecord`, by
+ * `combatCensusOf`. So a cleared `sandtrap` vanished from the geometry and
+ * STAYED in the census — gone for the route and present for the contact
+ * test, which is `levelRun`'s throw-on-`mover` and the hazard pricing both.
+ *
+ * ⛓ §19.3 wrote the rule for the v10 field ("the removal edits the LEVEL
+ * RECORD, not any one list the world derives") and this is the same rule
+ * arriving from the v9 side: a body must not be able to be gone for one
+ * list and present for another. L8 is where it bit — its two sandtraps are
+ * removed by the clears their own deaths write, and the walk goes straight
+ * down the column they stand in.
+ *
+ * ⚠ IT IS DELIBERATELY NARROWER THAN "the tag is cleared". `lock-despawn`
+ * needs `tSet < 0` (`Lock.as:42`), an `arm` class is BUILT by a clear, and
+ * `appear`/`press`/`silence`/`cosmetic`/`trigger` classes stay. The loop
+ * below keeps its own throw for an UNDECLARED response, because that check
+ * is about the table's completeness rather than about this entity.
+ */
+export function clearedAwayByTag(e, clearedTags) {
+    if (!clearedTags) return false;
+    const entityTag = tagOf(e.type, e.attrs);
+    if (!(entityTag >= 0) || !clearedTags.has(entityTag)) return false;
+    const response = PERSISTENCE_RESPONSE[e.type];
+    if (response === 'despawn') return true;
+    if (response === 'lock-despawn') return tSetOf(e.type, e.attrs) < 0;
+    return false;
+}
 
 /**
  * ⛓ R5 slice 4: WHAT A HELD ITEM DOES AT LEVEL-BUILD TIME.
@@ -3961,14 +4024,12 @@ export function buildLevelWorld(levelRecord, {
                     + 'different tag.');
             }
             clearsUsed.add(entityTag);
-            if (response === 'despawn') { clearedHere = true; }
-            if (response === 'lock-despawn') {
-                // ⚠ `Lock.check()` ALSO needs `tSet < 0`, and `int("")` is 0
-                // — so a lock with no `tset` attribute is in group 0 and does
-                // NOT despawn. Three route locks and thirteen of fourteen
-                // wandlocks turn on this line.
-                if (tSetOf(e.type, e.attrs) < 0) clearedHere = true;
-            }
+            // ⚠ `Lock.check()` ALSO needs `tSet < 0`, and `int("")` is 0 —
+            // so a lock with no `tset` attribute is in group 0 and does NOT
+            // despawn. Three route locks and thirteen of fourteen wandlocks
+            // turn on that clause, which lives in `clearedAwayByTag` now so
+            // that the COMBAT CENSUS reaches the same verdict as this loop.
+            clearedHere = clearedAwayByTag(e, clearedTags);
             const refusal = REFUSED_CLEAR_RESPONSES[response];
             if (refusal) {
                 fail(`${where}: the tape clears tag ${entityTag}, which is a `
@@ -4920,7 +4981,29 @@ export function buildLevelWorld(levelRecord, {
                 + 'timing class and setHitbox args — a route that consults `combat` has '
                 + 'retired `noDamage`, so an unpriced hazard is a contact nobody planned.');
         }
-        combat = combatCensusOf(levelRecord);
+        /**
+         * ⛔⛔ THE CENSUS SEES THE CLEARS TOO — see `clearedAwayByTag`.
+         *
+         * It used to be `combatCensusOf(levelRecord)`, straight off the raw
+         * record, so a body a clear had removed from the geometry was still
+         * in the census: present for the contact test and the hazard
+         * pricing, absent for the route. L8's two sandtraps are removed by
+         * the clears their own deaths write and the walk goes down their
+         * column, so the disagreement was a `mover`-class throw at best and
+         * a phantom contact at worst.
+         *
+         * ⚠ The filter is applied to the RECORD, not to the census's output
+         * rows, because `combatCensus` also counts and classifies — a
+         * post-filter would leave the counts describing a room that is not
+         * there.
+         */
+        combat = combatCensusOf(clearedTags
+            ? {
+                ...levelRecord,
+                entities: (levelRecord.entities ?? [])
+                    .filter((e) => !clearedAwayByTag(e, clearedTags)),
+            }
+            : levelRecord);
     }
 
     // ⚠ A CLEAR NOBODY RESPONDS TO IS A THROW, not a no-op. The clear list
