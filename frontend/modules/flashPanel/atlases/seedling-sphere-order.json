@@ -26,12 +26,6 @@
     },
     {
       "sphere": "0.4",
-      "location": "Level 020 - Shield",
-      "item": "Progressive Shield",
-      "level": 20
-    },
-    {
-      "sphere": "0.5",
       "location": "Level 086 - Chest",
       "item": "Seal",
       "level": 86
@@ -98,6 +92,12 @@
     },
     {
       "sphere": "2.1",
+      "location": "Level 020 - Shield",
+      "item": "Progressive Shield",
+      "level": 20
+    },
+    {
+      "sphere": "2.2",
       "location": "Level 032 - Bob Boss",
       "item": "Fire",
       "level": 32
@@ -256,8 +256,8 @@
   "cross_check": {
     "ap_equipment_order": [
       "Progressive Sword",
-      "Progressive Shield",
       "Light",
+      "Progressive Shield",
       "Fire",
       "Progressive Swim",
       "Ghost Spear",

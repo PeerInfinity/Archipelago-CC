@@ -73,7 +73,6 @@ Playthrough:
   Level 010 - Sword: Progressive Sword
   Level 011 - Chest: Seal
   Level 017 - Chest: Seal
-  Level 020 - Shield: Progressive Shield
   Level 086 - Chest: Seal
 }
 2: {
@@ -89,6 +88,7 @@ Playthrough:
   Level 040 - Totem Part 160,640: Totem Shard
 }
 3: {
+  Level 020 - Shield: Progressive Shield
   Level 032 - Bob Boss: Fire
 }
 4: {

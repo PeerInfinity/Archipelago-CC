@@ -207,12 +207,36 @@ describe('the refutation log — the mechanism, built before it is needed', () =
     // ⛓ R7 slice 5 gave it its first entry: §13.5's level_76 Dark Suit row put
     // the Dark Suit behind ITSELF, and AP's fill is what said so.
     it('carries the level_76 igneous refutation, well-formed', () => {
-        expect(REFUTATION_LOG).toHaveLength(1);
         for (const entry of REFUTATION_LOG) expect(isRefutation(entry)).toBe(true);
         expect(REFUTATION_LOG[0].row).toMatch(/level_76/);
         expect(REFUTATION_LOG[0].observed).toMatch(/prerequisite for itself/);
         // The refuted row must not still be shipping: the tile is ruled OPEN.
         expect(overlayTileSemantics(IGNEOUS_IS_FREE.tileType).kind).toBe('open');
+    });
+
+    // ⛓ R7 slice 6's entry, and it is the OTHER sign. Entry 1 was a row too
+    // strict — an item behind itself — and AP REFUSED, loudly. This one was a
+    // rule too permissive, and nothing refused at all: the generation stayed
+    // green and only the sphere order was wrong about the game.
+    it('carries the L20 grouped-lock refutation, and the row it refutes is GONE', () => {
+        const entry = REFUTATION_LOG.find((r) => /lock@32,80/.test(r.row));
+        expect(entry, 'the L20 entry').toBeDefined();
+        expect(isRefutation(entry)).toBe(true);
+        expect(entry.observed).toMatch(/THROUGH A WALL/);
+        // ⛔ THE REFUTED ROW MUST NOT STILL BE SHIPPING, asserted through the
+        // ruling function rather than by reading the exception table — a test
+        // that read the table would pass even if `lockRuling` never consulted
+        // it, which is exactly how the first cut of this fix would have looked.
+        const ruled = overlayEntitySemantics(
+            { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } },
+            {}, { level: 20 });
+        expect(ruled.kind).toBe('gated');
+        expect(conditionKey(ruled.condition)).toBe(conditionKey({ flag: 'hasShield' }));
+        // …and the general rule is UNCHANGED for every other grouped lock.
+        const other = overlayEntitySemantics(
+            { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } },
+            {}, { level: 15 });
+        expect(other.kind).toBe('open');
     });
 
     it('but its SHAPE is asserted, so the mechanism cannot rot while it waits', () => {

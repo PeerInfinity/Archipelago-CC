@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-4ba11641",
+  "atlas_id": "seedling-7dc27a95",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "4ba11641" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "7dc27a95" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -1360,7 +1360,7 @@
           "kind": "teleporter",
           "exit_tiles": [[2,3]],
           "entrance_tile": [2,3],
-          "sub_region": "r1c4"
+          "sub_region": "r3c1"
         },
         {
           "exit_id": "in_L19_16_96",
@@ -1374,7 +1374,7 @@
           "kind": "teleporter",
           "exit_tiles": [[1,3]],
           "entrance_tile": [1,3],
-          "sub_region": "r1c4"
+          "sub_region": "r3c1"
         },
         {
           "exit_id": "out_stairsdown_192_48",
@@ -1394,11 +1394,18 @@
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r1c4","r1c12"],
+        "sub_regions": ["r1c4","r1c12","r3c1"],
         "internal_exits": [
           {
             "from": "r1c12",
             "to": "r1c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
+          },
+          {
+            "from": "r1c4",
+            "to": "r3c1",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }

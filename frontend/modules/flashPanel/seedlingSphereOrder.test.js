@@ -96,10 +96,20 @@ describe('the walkthrough cross-check', () => {
     it('compares against the R4 §10 intended order and reports where it parts', () => {
         expect(ORDER.cross_check.intended_order[0]).toBe('Progressive Sword');
         expect(ORDER.cross_check.ap_equipment_order.length).toBeGreaterThan(9);
-        // The first three are the same in both, which is what makes the
+        // The first two are the same in both, which is what makes the
         // comparison meaningful rather than a shape assertion.
-        expect(ORDER.cross_check.ap_equipment_order.slice(0, 2))
-            .toEqual(['Progressive Sword', 'Progressive Shield']);
+        //
+        // ⚠ OVER THE INTENDED VOCABULARY, which is the sequence
+        // `first_divergence` is computed from — NOT over the raw AP order.
+        // The raw form asserted `['Progressive Sword', 'Progressive Shield']`
+        // and went red at R7 slice 6 for a reason that was not a divergence
+        // at all: fixing L20's grouped lock moved the Shield from sphere 0.4
+        // to 2.1, and `Light` — which the walkthrough's list does not mention
+        // — took the adjacent slot. A prefix of a list the comparison does
+        // not use is [[feedback_coincidental_predicate_rots]] again.
+        const vocabulary = new Set(ORDER.cross_check.intended_order);
+        expect(ORDER.cross_check.ap_equipment_order.filter((i) => vocabulary.has(i))
+            .slice(0, 2)).toEqual(['Progressive Sword', 'Progressive Shield']);
     });
 
     it('RULES every divergence rather than listing it', () => {

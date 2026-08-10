@@ -873,8 +873,8 @@
             }
           },
           {
-            "name": "level_13 -> level_20__r1c4",
-            "connected_region": "level_20__r1c4",
+            "name": "level_13 -> level_20__r3c1",
+            "connected_region": "level_20__r3c1",
             "access_rule": {
               "rule": "True_"
             }
@@ -1266,10 +1266,13 @@
             }
           },
           {
-            "name": "level_20__r1c4 -> level_13",
-            "connected_region": "level_13",
+            "name": "level_20__r1c4 -> level_20__r3c1",
+            "connected_region": "level_20__r3c1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
             }
           },
           {
@@ -1308,6 +1311,29 @@
               "args": {
                 "item_name": "Progressive Shield"
               }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_20__r3c1": {
+        "name": "level_20__r3c1",
+        "exits": [
+          {
+            "name": "level_20__r3c1 -> level_20__r1c4",
+            "connected_region": "level_20__r1c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
+            }
+          },
+          {
+            "name": "level_20__r3c1 -> level_13",
+            "connected_region": "level_13",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],

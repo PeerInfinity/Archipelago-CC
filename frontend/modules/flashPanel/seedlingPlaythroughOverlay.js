@@ -122,6 +122,51 @@ export function buildCrossLevelOpeners(mapDoc) {
     return out;
 }
 
+/**
+ * ⛔⛔⛔ THE GROUPED-LOCK EXCEPTION — a lock whose PRESSER is item-gated.
+ *
+ * The `tSet >= 0` arm below calls a grouped lock FREE because "its group's
+ * Button/ButtonRoom is pressed by any body, which is choreography". That
+ * premise is a claim about the PRESSER's reachability, and the general rule
+ * never checks it. Where the presser sits behind an item gate, the premise is
+ * false and the lock is exactly as strong as that gate.
+ *
+ * ⛓ ONE SITE IN THE GAME, and it is on the SHIELD (R7 slice 6). L20's chain,
+ * stated by R6 §13.8 from the other end and re-read here at the map:
+ *
+ *   `shield@112,48` -> `hasShield` opens `shieldlocknorm@176,16` (tSet -2, so
+ *   nothing else can) -> which un-walls `buttonroom@192,16` (tSet 0) -> whose
+ *   press opens `lock@32,80` (tSet 0) -> which un-walls `stairsup@16,48`.
+ *
+ * So the lock's group has exactly one presser and that presser is behind the
+ * shield. And the lock is not decoration: `stairsdown@96,32` in L13 drops the
+ * player at (32,48), and tiles (0,3),(1,3),(2,3),(2,4) are a four-cell ALCOVE
+ * whose only other exit is the lock at (2,5). Ruled OPEN, the analyzer folds
+ * the alcove into the room, `level_13 -> level_20` is `True_`, and AP takes
+ * **Level 020 - Shield at sphere 0.4 for free** — through a wall.
+ *
+ * ⇒ GATED on `hasShield`, which is [[feedback_worst_case_rule_gates_its_own_item]]
+ * read in the other direction: the far side of this door holds the key to it,
+ * so the near side reaches nothing. Strictly STRONGER than the computed row,
+ * which is the only shape a hand ruling may take, and the strictness costs
+ * nothing — L20's room is reached from L19's `stairsup@16,96` regardless.
+ *
+ * Keyed by `<level>:<type>@<x>,<y>` so it names ONE placement and cannot
+ * quietly widen to a family.
+ */
+export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
+    '20:lock@32,80': Object.freeze({
+        condition: flag('hasShield'),
+        cite: 'Dungeon2/7.oel (`lock@32,80 {tset 0, tag 1}` is the ONLY tSet-0 responder '
+            + 'and `buttonroom@192,16` the ONLY presser) + Puzzlements/ShieldLock.as:33 '
+            + '(`shieldlocknorm@176,16` stands between them) + R6 kickoff §13.8',
+        why: 'a GROUPED lock whose group\'s only presser is behind a ShieldLock. The '
+            + 'general rule calls the press choreography; here the choreography is '
+            + 'behind the shield, and the lock seals the L13 arrival into a four-cell '
+            + 'alcove. Without this row AP takes the Shield at sphere 0.4 through it.',
+    }),
+});
+
 function lockRuling(entity, ctx) {
     const tSet = Number(entity.attrs?.tset);
     const tag = entity.attrs?.tag;
@@ -150,6 +195,13 @@ function lockRuling(entity, ctx) {
             + `persistence while tSet < 0 (this one carries tag ${tag}).`);
     }
     if (tSet >= 0) {
+        // ⛔ THE PREMISE IS CHECKED BEFORE IT IS USED. See
+        // `GROUPED_LOCK_EXCEPTIONS`: "any body presses it" is a claim about
+        // the PRESSER's reachability, and at exactly one site in the game the
+        // presser is behind the item the lock's far side holds.
+        const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
+        const ruled = GROUPED_LOCK_EXCEPTIONS[site];
+        if (ruled) return GATED(ruled.condition, ruled.cite, ruled.why);
         return OPEN(
             'Puzzlements/Button.as:activateAll + Puzzlements/Lock.as:check (the '
             + '`tSet < 0` guard) + Puzzlements/ButtonRoom.as:check',
@@ -650,6 +702,28 @@ export const REFUTATION_LOG = Object.freeze([
             + 'tile is walkable until eight frames of proximity convert it and a level entry rebuilds '
             + 'it (Tile.as:83-85,390-424) — see IGNEOUS_IS_FREE.',
         cite: 'Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 + R7 kickoff §14',
+    }),
+    // ⛓ ENTRY 2 — the same defect class with the SIGN REVERSED. Entry 1 was a
+    // row too STRICT (an item behind itself, so AP refused seven locations);
+    // this one is a rule too PERMISSIVE (a wall the analyzer could not see, so
+    // AP walked through it). A permissive defect is quieter by construction:
+    // nothing refuses, the generation is green, and the only symptom is a
+    // sphere order that is wrong about the game.
+    Object.freeze({
+        row: 'lock@32,80 in L20, ruled OPEN by the general tSet >= 0 arm ("any body '
+            + 'presses its button — pure choreography, FREE under the puzzle policy")',
+        refutedBy: 'the map, read against R6 kickoff §13.8 (R7 slice 6)',
+        observed: 'the lock\'s group has exactly ONE presser, `buttonroom@192,16`, and it '
+            + 'stands behind `shieldlocknorm@176,16` — so the press is not free, it costs '
+            + 'the SHIELD. And the lock is the only exit from the four cells L13\'s '
+            + '`stairsdown@96,32` drops the player into ((0,3),(1,3),(2,3),(2,4)), so with '
+            + 'the row ruled OPEN the analyzer folded that alcove into the room and AP took '
+            + '**Level 020 - Shield at sphere 0.4**, before the Red Key it needs, THROUGH A '
+            + 'WALL. Gated on hasShield the alcove becomes its own region, the Shield moves '
+            + 'to sphere 2.1 behind `Level 019 - Boss Key 0` at 1.2, and the walkthrough '
+            + 'cross-check over the intended vocabulary is unchanged.',
+        cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
+            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
     }),
 ]);
 
