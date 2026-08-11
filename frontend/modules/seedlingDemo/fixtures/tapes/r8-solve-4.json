@@ -1,0 +1,101 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-4",
+    "description": "⛓ R8 SLICE 3b — THE LIVE SOLVER's own solution to battery segment 4, from r7-act2-4's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(64,16) — the hand-authored stances/waypoints were NOT handed over. Solver: 253 ticks, 3 decision(s), 0 re-plan(s); hand answer r7-act2-4: 347 ticks. The diff is INFORMATION, not a gate — the differential is the gate. ⛓ L4 — `hold` (slice 3) then `shove` (⚖ §11.8a ruling 1(a): k=2, the minimum tiles such that a corridor plans with the block hypothesised there; k=1 has no corridor and k=3 is the PIT at (5,4)). Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 4,
+        "x": 16,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 2057886025,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1955308098
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5334,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 0
+        }
+    },
+    "tick_count": 253,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 40
+        },
+        {
+            "key": "up",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "right",
+            "from": 149,
+            "to": 188
+        },
+        {
+            "key": "right",
+            "from": 220,
+            "to": 240
+        },
+        {
+            "key": "up",
+            "from": 220,
+            "to": 253
+        },
+        {
+            "key": "left",
+            "from": 240,
+            "to": 241
+        }
+    ]
+}

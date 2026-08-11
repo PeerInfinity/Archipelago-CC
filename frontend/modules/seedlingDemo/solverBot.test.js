@@ -450,6 +450,45 @@ describe('the refusal shapes — never a silent stall', () => {
         expect(refusal.considered.length).toBeGreaterThan(0);
     });
 
+    /**
+     * ⛓⛓⛓ R8 SLICE 3b — L5's WORK ORDER IS NOW THE RIGHT ONE, and that is a
+     * finding rather than a registration.
+     *
+     * ⛔ A `lock` AND A KILL-LOCK ARE THE SAME TAG AND OPPOSITE PROBLEMS. The
+     * selector table is keyed on the census tag, so it named `hold` for
+     * `lock@48,112` — and L5's lock is `tset == -1`, for which NO BUTTON
+     * EXISTS ANYWHERE IN THE GAME: `checkEnemies()` opens it when
+     * `Game.totalEnemies()` reaches zero. The policy went looking for a
+     * presser, found none, and reported the obstacle unresolvable — a
+     * diagnosis that named the right entity and the wrong mechanism.
+     *
+     * Live state refines the table now (`KILL_LOCK_TSET`, the
+     * transcription's own sentinel), so the room's computed work order is
+     * `kill` — which is what the next slice registers.
+     */
+    it('L5: a `tset -1` lock is refined from `hold` to `kill` by LIVE STATE', () => {
+        const { run, committed } = runFromCommitted('r7-act2-5');
+        let refusal = null;
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 112 } }],
+                name: 'probe-l5', boot: committed.boot,
+            });
+        } catch (e) { refusal = e; }
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.obstacle.id).toBe('lock@48,112');
+        // The refinement: `solid:lock` maps to `hold` in the TABLE...
+        expect(OBSTACLE_STRATEGIES['solid:lock']).toBe('hold');
+        // ...and the room's live activator roster says otherwise.
+        expect(run.world.activators.find((a) => a.id === 'lock@48,112').t).toBe(-1);
+        expect(refusal.considered.map((c) => c.option)).toContain('kill');
+        expect(refusal.considered.map((c) => c.option)).not.toContain('hold');
+        // ⛔ AND THE CONTROL: L4's `button@16,64` group is an ORDINARY one, so
+        // the same table row still means `hold` there — a refinement that
+        // fired on every lock would be a rename, not a refinement.
+        expect(OBSTACLE_STRATEGIES['proximity-hazard:button']).toBe('hold');
+    });
+
     it('a COMBAT-BLIND run is refused at the door — the slice\'s own defect, institutionalised', () => {
         // The builder's DEFAULT roles (no `roles` key at all): a world with
         // no combat census. The first battery was solved against exactly

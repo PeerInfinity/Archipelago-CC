@@ -1,0 +1,144 @@
+{
+    "trace_version": 1,
+    "tape": "r8-solve-4",
+    "tick_count": 253,
+    "boot": {
+        "level": 4,
+        "x": 16,
+        "y": 16
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 4,
+                "x": 24,
+                "y": 24,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 72,
+                    "y": 24
+                }
+            },
+            "obstacle": {
+                "kind": "proximity-hazard",
+                "id": "button@16,64"
+            },
+            "strategy": {
+                "verb": "hold"
+            },
+            "rejected": [
+                {
+                    "option": "route-around",
+                    "why": "button@16,64 is a proximity-hazard volume on the frontier of the reachable component, so there is no route around it — A* refuses to plan THROUGH an avoid volume, and a hold is what adds its presser to the exemptions (trap 147)"
+                }
+            ],
+            "keys": [
+                "down"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 149,
+            "saw": {
+                "level": 4,
+                "x": 24,
+                "y": 71.15000000000002,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 72,
+                    "y": 24
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "pushableblock@32,64"
+            },
+            "strategy": {
+                "verb": "shove",
+                "k": 2,
+                "postCondition": "clear-path",
+                "to": {
+                    "tx": 4,
+                    "ty": 4
+                },
+                "dir": "E",
+                "destroys": false
+            },
+            "rejected": [
+                {
+                    "option": "shove E k=1",
+                    "why": "no corridor to (72,24) with the block hypothesised at (3,4)"
+                },
+                {
+                    "option": "shove E k=3 -> (5,4)",
+                    "why": "UNNEEDED — k=2 already plans the corridor, and (5,4) is destructive terrain, which ⚖ §11.8a reserves for a `dispose` post-condition or an explicit last resort"
+                },
+                {
+                    "option": "shove N",
+                    "why": "the near-side stance (40,88) for a N lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "shove W",
+                    "why": "the near-side stance (56,72) for a W lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "shove S",
+                    "why": "the near-side stance (40,56) for a S lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 220,
+            "saw": {
+                "level": 4,
+                "x": 47.699999999999996,
+                "y": 71.15000000000002,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 72,
+                    "y": 24
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 24
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right",
+                "up"
+            ]
+        }
+    ]
+}

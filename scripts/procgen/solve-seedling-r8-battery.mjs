@@ -156,6 +156,45 @@ function goalsFor(segNo) {
     return goals;
 }
 
+/**
+ * ⛓⛓⛓ R8 SLICE 3b — THE ROOMS THE CLASSIFIER EXCLUDES, AND WHY THEY ARE
+ * HERE ANYWAY.
+ *
+ * The derivation above excludes a segment that holds a `phases` block or a
+ * mechanic outside {collect, chest} — because those are the hand
+ * CHOREOGRAPHY the solver's policies exist to replace. Slice 3 registered
+ * `hold`; slice 3b registers `shove` and the AVOID -> TIME -> BAIT -> KILL
+ * ladder, so the policies those segments were excluded FOR now exist.
+ *
+ * ⛔ THE CLASSIFIER IS NOT LOOSENED, and that is deliberate. It answers
+ * "does this segment's HAND walk contain choreography", which is still true
+ * of these rooms and will stay true — the hand answer is not what the solver
+ * runs. Loosening it would erase the record of what was hand-authored. So
+ * these rows are ADDED with their exclusion ASSERTED, and the assertion is
+ * what makes "the solver replaced the choreography" a claim rather than a
+ * relabelling.
+ *
+ * ⚠ THE GOALS COME FROM THE SAME `goalsFor` — the segment's own exits and
+ * collect/chest placements. A `phases` block contributes NO goal, because a
+ * choreography is a HOW and the macro layer only ever names a WHAT.
+ */
+const SLICE_3B_ROWS = Object.freeze([
+    Object.freeze({
+        segNo: 4,
+        why: 'L4 — `hold` (slice 3) then `shove` (⚖ §11.8a ruling 1(a): k=2, the '
+            + 'minimum tiles such that a corridor plans with the block hypothesised '
+            + 'there; k=1 has no corridor and k=3 is the PIT at (5,4))',
+    }),
+    Object.freeze({
+        segNo: 6,
+        why: 'L6 — the LADDER\'s proving room: AVOID has no admissible corridor with '
+            + 'both bodies standing in the two cells the weave needs, TIME refuses on '
+            + '`mover.MOVER_RANGE`\'s own bound, and BAIT derives the stance (56,24) — '
+            + '`L6_BOB_DROWN.endsAt` in boot form — from the leash, the body-kill '
+            + 'regions, `presserSafety` and reachability',
+    }),
+]);
+
 const PROBE_ROWS = [];
 
 // ── 3. solve, emit ────────────────────────────────────────────────────
@@ -218,9 +257,21 @@ function emit(path, json, what) {
     console.log(`  wrote ${path} (${json.length} bytes)`);
 }
 
+for (const row of SLICE_3B_ROWS) {
+    check(`segment ${row.segNo} is STILL excluded by the classifier (the hand walk's `
+        + 'choreography is a fact about the hand walk, not a label)',
+    !battery.includes(row.segNo),
+    `the solver replaces the CHOREOGRAPHY, and this row is what makes that a claim `
+    + 'rather than a relabelling');
+}
+
 const rows = [
     ...battery.map((segNo) => ({
         segNo, name: `r8-solve-${segNo}`, goals: goalsFor(segNo), provenance: null,
+    })),
+    ...SLICE_3B_ROWS.map((r) => ({
+        segNo: r.segNo, name: `r8-solve-${r.segNo}`, goals: goalsFor(r.segNo),
+        provenance: null, slice3b: r.why,
     })),
     ...PROBE_ROWS,
 ];
@@ -261,7 +312,7 @@ for (const row of rows) {
         inputs: folded.inputs,
         tape_version: 8,
     };
-    const description = `⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to `
+    const description = `⛓ R8 SLICE ${row.slice3b ? '3b' : '2'} — THE LIVE SOLVER's own solution to `
         + `${row.provenance ? 'L6 (probe-graduated)' : `battery segment ${row.segNo}`}, `
         + `from ${committedName}'s committed v8 boot block (staged per kickoff §3.5). `
         + `GOALS derived from the chain's own units: ${row.goals.map((g) => g.kind
@@ -271,6 +322,7 @@ for (const row of rows) {
         + `${out.replans} re-plan(s); hand answer ${committedName}: `
         + `${committed.tick_count} ticks. The diff is INFORMATION, not a gate — the `
         + 'differential is the gate. '
+        + `${row.slice3b ? `⛓ ${row.slice3b}. ` : ''}`
         + `${row.provenance ?? ''}`
         + 'Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in '
         + 'fixtures/traces/.';

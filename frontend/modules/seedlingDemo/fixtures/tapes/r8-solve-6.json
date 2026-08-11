@@ -1,0 +1,212 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-6",
+    "description": "⛓ R8 SLICE 3b — THE LIVE SOLVER's own solution to battery segment 6, from r7-act2-6's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(224,32) — the hand-authored stances/waypoints were NOT handed over. Solver: 294 ticks, 2 decision(s), 0 re-plan(s); hand answer r7-act2-6: 355 ticks. The diff is INFORMATION, not a gate — the differential is the gate. ⛓ L6 — the LADDER's proving room: AVOID has no admissible corridor with both bodies standing in the two cells the weave needs, TIME refuses on `mover.MOVER_RANGE`'s own bound, and BAIT derives the stance (56,24) — `L6_BOB_DROWN.endsAt` in boot form — from the leash, the body-kill regions, `presserSafety` and reachability. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 6,
+        "x": 32,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 514746467,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 341033166
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 6533,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 0
+        }
+    },
+    "tick_count": 294,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "left",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "left",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "down",
+            "from": 65,
+            "to": 76
+        },
+        {
+            "key": "up",
+            "from": 76,
+            "to": 77
+        },
+        {
+            "key": "down",
+            "from": 77,
+            "to": 79
+        },
+        {
+            "key": "up",
+            "from": 81,
+            "to": 84
+        },
+        {
+            "key": "down",
+            "from": 85,
+            "to": 87
+        },
+        {
+            "key": "right",
+            "from": 91,
+            "to": 118
+        },
+        {
+            "key": "left",
+            "from": 119,
+            "to": 121
+        },
+        {
+            "key": "down",
+            "from": 125,
+            "to": 136
+        },
+        {
+            "key": "up",
+            "from": 136,
+            "to": 137
+        },
+        {
+            "key": "down",
+            "from": 137,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 138,
+            "to": 139
+        },
+        {
+            "key": "down",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "right",
+            "from": 144,
+            "to": 197
+        },
+        {
+            "key": "left",
+            "from": 197,
+            "to": 198
+        },
+        {
+            "key": "right",
+            "from": 198,
+            "to": 200
+        },
+        {
+            "key": "left",
+            "from": 201,
+            "to": 203
+        },
+        {
+            "key": "up",
+            "from": 207,
+            "to": 218
+        },
+        {
+            "key": "down",
+            "from": 218,
+            "to": 219
+        },
+        {
+            "key": "up",
+            "from": 219,
+            "to": 221
+        },
+        {
+            "key": "down",
+            "from": 223,
+            "to": 226
+        },
+        {
+            "key": "up",
+            "from": 227,
+            "to": 229
+        },
+        {
+            "key": "right",
+            "from": 233,
+            "to": 294
+        }
+    ]
+}

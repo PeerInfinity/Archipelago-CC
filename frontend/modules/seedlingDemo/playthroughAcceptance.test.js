@@ -854,14 +854,18 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
     it('the policy table is TOTAL and every kind is tallied — and staged is REAL now', () => {
         const r = assertChainsWellFormed();
         expect(Object.keys(r.byKind).sort()).toEqual(Object.keys(CHAIN_KINDS).sort());
-        // ⛓ R8 slice 2: the battery's seven one-segment staged chains are
+        // ⛓ R8 slice 2: the battery's seven one-segment staged chains were
         // the first on disk — slice 0's "no staged chain exists yet" bounded
-        // vacuity, discharged. The tallies are DERIVED from the table so a
-        // chain added tomorrow moves this test out loud.
+        // vacuity, discharged. ⛓ R8 slice 3b added L4 (`shove`) and L6 (the
+        // AVOID -> TIME -> BAIT ladder), taking it to NINE. The tallies are
+        // DERIVED from the table so a chain added tomorrow moves this test
+        // out loud — which is exactly what it just did.
         const staged = PLAYTHROUGH_CHAINS.filter((c) => (c.kind ?? 'custody') === 'staged');
         expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length - staged.length);
         expect(r.byKind.staged).toBe(staged.length);
-        expect(staged.length).toBe(7);
+        expect(staged.length).toBe(9);
+        expect(staged.map((c) => c.id)).toContain('r8-battery-4');
+        expect(staged.map((c) => c.id)).toContain('r8-battery-6');
     });
 
     it('⛔ MUTATION: an unknown kind THROWS by name rather than falling through', () => {

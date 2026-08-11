@@ -1279,20 +1279,33 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * tape's description and in kickoff §10 (INFORMATION, not a gate).
      */
     /**
-     * ⚠ NO `r8-battery-6`, AND ITS ABSENCE IS A RECORD (kickoff §10): a
-     * probe-graduated L6 row was ruled in, solved by a COMBAT-BLIND run
-     * (the builder's default `roles` — the slice's own defect, now refused
-     * by `solveSegment` by name), recorded — and the recording REFUTED the
-     * blind plan: the game's player never crosses; it fights the row-1
-     * sandtrap and dies twice, and the census-on model reproduces that
-     * whole stream digit for digit. The withdrawn pair is banked as a free
-     * oracle in `NewDocs/plans/r8-slice2-l6-blind-probe/`; L6 stays slice
-     * 3's room, now with the measurement.
+     * ⛓⛓⛓ R8 SLICE 3b ADDS 4 AND 6, AND `r8-battery-6`'s ARRIVAL IS THE
+     * WITHDRAWN ROW'S OWN STORY FINISHING.
+     *
+     * Slice 2 recorded a probe-graduated L6 and the GAME REFUTED IT: the
+     * solve was COMBAT-BLIND (the builder's default `roles` — the slice's
+     * own defect, now refused by `solveSegment` by name), the game's player
+     * fought the row-1 sandtrap and died twice, and the census-on model
+     * reproduced that whole disaster digit for digit. The withdrawn pair is
+     * still banked as a free oracle in
+     * `NewDocs/plans/r8-slice2-l6-blind-probe/`.
+     *
+     * ⛔ THE ROW THAT REPLACES IT IS A DIFFERENT WALK, not a re-record. It
+     * is authored by a census-ON solver whose ladder REFUSES the blind
+     * corridor before a tick is spent — the danger map gained the
+     * ingredient that was missing (static census bodies; the blind walk's
+     * first sandtrap contact is now a named refusal at plan time) — and its
+     * answer is a BAIT that drowns `bob@112,48`, which the room does
+     * itself. Zero hits, zero deaths, 294 ticks against the hand's 355.
+     *
+     * ⛓ AND `r8-battery-4` IS THE FIRST STAGED CHAIN WHOSE SEGMENT SHOVES.
      */
     ...[
         Object.freeze({ seg: 1, ends: 183, earns: [] }),
         Object.freeze({ seg: 2, ends: 47, earns: [] }),
         Object.freeze({ seg: 3, ends: 245, earns: [] }),
+        Object.freeze({ seg: 4, ends: 253, earns: [] }),
+        Object.freeze({ seg: 6, ends: 294, earns: [] }),
         Object.freeze({ seg: 7, ends: 146, earns: [] }),
         Object.freeze({ seg: 9, ends: 122, earns: [] }),
         Object.freeze({ seg: 10, ends: 90, earns: ['sword@L10'] }),
@@ -1300,7 +1313,8 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
     ].map(({ seg, ends, earns }) => Object.freeze({
         id: `r8-battery-${seg}`,
         kind: 'staged',
-        why: `R8 slice 2: the live solver's own solution to act2 segment ${seg}, from `
+        why: `R8 slice ${[4, 6].includes(seg) ? '3b' : '2'}: the live solver's own `
+            + `solution to act2 segment ${seg}, from `
             + `r7-act2-${seg}'s committed v8 boot block (staged per kickoff §3.5). Goals `
             + 'derived from the chain\'s own units; the hand-authored stances and '
             + 'waypoints were not handed over. See the tape\'s description and the '
