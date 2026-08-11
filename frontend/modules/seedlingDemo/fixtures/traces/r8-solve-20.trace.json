@@ -1,0 +1,137 @@
+{
+    "trace_version": 1,
+    "tape": "r8-solve-20",
+    "tick_count": 365,
+    "boot": {
+        "level": 20,
+        "x": 192,
+        "y": 64
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 20,
+                "x": 200,
+                "y": 72,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 120,
+                    "y": 40
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 5
+            },
+            "path": [
+                {
+                    "x": 200,
+                    "y": 104
+                },
+                {
+                    "x": 168,
+                    "y": 104
+                },
+                {
+                    "x": 168,
+                    "y": 56
+                },
+                {
+                    "x": 136,
+                    "y": 56
+                },
+                {
+                    "x": 120,
+                    "y": 40
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "down"
+            ]
+        },
+        {
+            "tick": 177,
+            "saw": {
+                "level": 20,
+                "x": 120.90591659770337,
+                "y": 51.44913218636919,
+                "vx": 0.6772534035632524,
+                "vy": 1.2016646468693826,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 112,
+                    "y": 48
+                }
+            },
+            "strategy": {
+                "verb": "collect"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "chest",
+                    "why": "placement (112,48) resolves to shield@112,48 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 216,
+            "saw": {
+                "level": 20,
+                "x": 120.90591659770337,
+                "y": 51.44913218636919,
+                "vx": 0.6772534035632524,
+                "vy": 1.2016646468693826,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 200,
+                    "y": 56
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 4
+            },
+            "path": [
+                {
+                    "x": 168,
+                    "y": 72
+                },
+                {
+                    "x": 168,
+                    "y": 104
+                },
+                {
+                    "x": 200,
+                    "y": 104
+                },
+                {
+                    "x": 200,
+                    "y": 56
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "down",
+                "right"
+            ]
+        }
+    ]
+}

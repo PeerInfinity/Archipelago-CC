@@ -1404,6 +1404,50 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         cuts: Object.freeze([]),
         endsAt: ends,
     })),
+    /**
+     * ⛓⛓⛓ R8 SLICE 6 — THE FIRST STAGED CHAIN THAT IS **NOT** AN act2
+     * SEGMENT, and the rung's boundary target.
+     *
+     * Every staged chain before this one re-solves a room the HAND pipeline
+     * had already solved, so its tick count had something to be compared
+     * against and the differential was a second opinion. L20 is the first NEW
+     * room the solver crosses: there is no hand answer, no committed walk and
+     * no prior recording, so **the differential is the entire gate**.
+     *
+     * ⛔ `hasShield` FLIPS INSIDE THE DRIVEN SEGMENT — R6 debt 5, the arc's
+     * oldest undischarged item ("`hasShield` is real-collected by NO tape"),
+     * measured here from the game's own readouts. ⛔ AND IT IS REPORTED,
+     * NEVER CREDITED: the kind is `staged`, so what the boot skips is the
+     * REACHING. `goalEarnedWitness` still wants the flip between boot and
+     * latch, which a declaration cannot fake.
+     *
+     * ⚠ THE `earns` LIST IS EMPTY AND THAT IS THE POINT. `R7_GOAL_LEDGER`'s
+     * `shield@L20` row belongs to the CAMPAIGN's claim; a staged chain that
+     * declared it would be crediting a boot. The flip is asserted by the
+     * plan script and by the tape's own seam, not by the ledger.
+     *
+     * ⚠ NO `clears` PROVENANCE ROW, and the absence is a decision: this walk
+     * declares no timed v9 `at` clear at all. `{20,2}` is EARNED by the
+     * pickup during the run (`earnedClears`), which is a different channel
+     * from a declared clear and needs no provenance — the run computes it end
+     * to end.
+     */
+    Object.freeze({
+        id: 'r8-d2-shield',
+        kind: 'staged',
+        why: 'R8 slice 6: the live solver crosses L20 from the L19 arrival and takes the '
+            + 'shield, from r7-act2-11\'s committed v8 boot block (the campaign\'s own '
+            + 'post-sword latch, staged per kickoff §3.5). ⛔ The three gates '
+            + '(`shieldlocknorm` -> `buttonroom` -> `lock@32,80`) are BEHIND the shield '
+            + 'and open the way OUT to L13; this segment leaves by the stairs it arrived '
+            + 'on, because a segment ends at a LEVEL ARRIVAL.',
+        headline: 'r8-solve-20',
+        segments: Object.freeze(['r8-solve-20']),
+        earns: Object.freeze([]),
+        clears: Object.freeze([]),
+        cuts: Object.freeze([]),
+        endsAt: 365,
+    }),
 ]);
 
 /**
