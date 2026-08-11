@@ -2034,17 +2034,30 @@ describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => 
         // does not declare `noDamage`. The route's own reason for two tiles
         // is the game's, not a preference.
         //
-        // ⛓⛓ R8 SLICE 1 MOVED THE REASON WITHOUT MOVING THE REFUSAL, and
-        // that is the assertion. A `bob` is no longer priced as a "mover" —
-        // the bridge steps the class — but L4 holds two ARROW TRAPS, and this
-        // model's arrows hit nothing, so the run cannot compute how long that
-        // body lives and refuses to step the room at all. Same cell, same
-        // throw, a different and STRICTER reason: the missing family is named
-        // in the message.
+        // ⛓⛓ R8 SLICE 1 MOVED THE REASON WITHOUT MOVING THE REFUSAL: a `bob`
+        // stopped being priced as a "mover" (the bridge steps the class) but
+        // L4 holds two ARROW TRAPS and this model's arrows hit nothing, so
+        // the run could not compute how long that body lived and refused the
+        // whole room.
+        //
+        // ⛓⛓⛓ R8 SLICE 3 RETIRED THAT REFUSAL, AND THE RETIREMENT IS THE
+        // ASSERTION HERE. The Arrow × Enemy family is built, so L4 is STEPPED
+        // — the room's own ceiling kills `bob@64,64` at the tick the game
+        // kills it — and standing in that cell is now a PRICED CONTACT rather
+        // than a named throw. What must not happen is the old message coming
+        // back: a refusal that survives its own cure is a refusal nobody
+        // discharged.
         expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
-            .toThrow(/standing inside bob@64,64 in level 4[\s\S]*NOT STEPPING this room/);
+            .not.toThrow(/NOT STEPPING this room/);
         expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
-            .toThrow(/Arrow x Enemy/);
+            .not.toThrow(/Arrow x Enemy/);
+        // …and the third tile is STILL not a route this planner will take.
+        // The reason has moved from the census to the geometry: the follow
+        // corridor past the sunk block is too tight for the controller, and
+        // the planner says so rather than driving it. Recorded as the current
+        // reason, not as a preference — the two-tile shove stays the answer.
+        expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
+            .toThrow(/PLANNER BUG|standing inside|no walkable tile path/);
     });
 
     it('⛔ `destroys` is DECLARED, and its shape is checked before anything is '

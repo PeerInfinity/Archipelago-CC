@@ -55,6 +55,12 @@ import {
 import {
     deathJumpFindings, parseDecisionTrace, traceTapeAgreementFindings,
 } from './decisionTrace.js';
+// ⛓ R8 slice 3: the staging counts are the modules' own derivations, never
+// numbers typed in a test.
+import { deathTicks } from './chasers.js';
+import { MOBILE_DEATH_FADE } from './enemyDamage.js';
+
+const DEATH_ANIM_TICKS = deathTicks('bob');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TAPES = join(HERE, 'fixtures', 'tapes');
@@ -226,7 +232,16 @@ describe('the trace producer — the first real producer of the slice-0 schema',
 });
 
 describe('the refusal shapes — never a silent stall', () => {
-    it('L4: names the BUTTON on the component frontier and selects `hold`, unregistered', () => {
+    /**
+     * ⛓⛓⛓ R8 SLICE 3 DISCHARGED THIS WORK ORDER, and the test is re-aimed
+     * rather than deleted. Slice 2 asserted that L4 refuses naming
+     * `proximity-hazard:button` with `hold` unregistered; `hold` is
+     * registered now, so what this room proves is the NEXT link: the policy
+     * clears the button and the frontier ADVANCES to the block. The refusal
+     * SHAPE — never a silent stall — is what both versions are really about,
+     * and it still holds one obstacle further in.
+     */
+    it('L4: the button is CLEARED by `hold`, and the refusal advances to the block', () => {
         const { run, committed } = runFromCommitted('r7-act2-4');
         let refusal = null;
         try {
@@ -236,12 +251,16 @@ describe('the refusal shapes — never a silent stall', () => {
             });
         } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
-        expect(refusal.obstacle).toMatchObject({ kind: 'proximity-hazard', tag: 'button' });
+        expect(refusal.obstacle).toMatchObject({ kind: 'solid', tag: 'pushableblock' });
         expect(refusal.considered).toEqual([{
-            option: 'hold',
+            option: 'shove',
             why: expect.stringMatching(/NOT REGISTERED/),
         }]);
-        expect(refusal.message).toMatch(/button@16,64/);
+        expect(refusal.message).toMatch(/pushableblock@32,64/);
+        // …and the trace carries the hold as a DECISION, with the option it
+        // rejected — a strategy applied silently would leave the reader with
+        // a walk that skipped a room's whole first half.
+        expect(refusal.rows.some((r) => r.strategy?.verb === 'hold')).toBe(true);
     });
 
     it('L8: names the PUSHABLE BLOCK (the block is the door) and selects `shove`, unregistered', () => {
@@ -330,8 +349,92 @@ describe('the strategy catalog seam (slice 3 extends, never restructures)', () =
             expect(selected.has(verb) || verb === 'collect',
                 `executor '${verb}' is reachable by no selector row`).toBe(true);
         }
-        // The slice-3 work orders, as data: selected and not yet registered.
+        // The pending work orders, as data: selected and not yet registered.
+        // ⛓ R8 slice 3 took `hold` off this list — which is the whole of the
+        // "adds rows, never restructures" contract, asserted rather than
+        // asserted about. The three that remain are the next slice's, and
+        // they are COMPUTED (each is a live frontier's own answer in a named
+        // room) rather than guessed.
         const pending = [...selected].filter((v) => !STRATEGY_EXECUTORS[v]).sort();
-        expect(pending).toEqual(['hold', 'kill', 'shove', 'touch']);
+        expect(pending).toEqual(['kill', 'shove', 'touch']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE FIRST STRATEGY EXECUTOR WHOSE PARAMETERS ARE DERIVED.
+ *
+ * `collect` and `chest` bind a PLACEMENT the goal already named. `hold` is
+ * the first row where the leg spec's own arguments — which presser, from
+ * which stance, for how many ticks — all have to come out of live state, and
+ * where the answer to "how long" is a CONDITION rather than a number.
+ *
+ * L4 is the room slice 2's frontier computed as this executor's work order
+ * ("proximity-hazard:button → 'hold', not registered this slice").
+ */
+describe('R8 slice 3: `hold` registered — the derived-parameter executor', () => {
+    it('⛓ the executor is registered, and the frontier still selects it', () => {
+        expect(typeof STRATEGY_EXECUTORS.hold).toBe('function');
+        expect(OBSTACLE_STRATEGIES['proximity-hazard:button']).toBe('hold');
+    });
+
+    /**
+     * ⛔⛔⛔ THE WORK ORDER, DISCHARGED — AND THE NEXT ONE, COMPUTED.
+     *
+     * Slice 2's L4 refusal named the BUTTON because the button's own volume
+     * bounds the reachable component (trap 147: A* will not route onto a
+     * proximity-hazard cell, and a hold is what adds its presser to the
+     * exemptions). With `hold` registered the policy stands on it, holds, and
+     * re-plans — and the frontier MOVES: the obstacle is now
+     * `pushableblock@32,64`, which is L4's real door. A registration that
+     * changed nothing would leave the same obstacle in the message.
+     */
+    it('⛔ the frontier ADVANCES from the button to the block', () => {
+        const { run, committed } = runFromCommitted('r7-act2-4');
+        let refusal = null;
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+                name: 'r8-solve-4', boot: committed.boot,
+            });
+        } catch (e) {
+            if (!(e instanceof SolverRefusal)) throw e;
+            refusal = e;
+        }
+        expect(refusal).toBeTruthy();
+        expect(refusal.obstacle.id).toBe('pushableblock@32,64');
+        expect(refusal.considered.map((c) => c.option)).toContain('shove');
+    });
+
+    /**
+     * ⛓⛓⛓ AND THE HOLD'S LENGTH IS AN OBSERVATION, NOT A MARGIN.
+     *
+     * The hand-authored leg says `ticks: 200` and the 200 is a number
+     * somebody measured. The policy holds until the room's own ceiling has
+     * REMOVED the body — an observable that did not exist before this slice's
+     * Arrow × Enemy family — and the tick it stops on is the staging
+     * arithmetic: the kill, then the "die" animation, then the fade.
+     */
+    it('⛓⛓ the hold stops on its OBSERVED condition — the body being gone', () => {
+        const { run, committed } = runFromCommitted('r7-act2-4');
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+                name: 'r8-solve-4', boot: committed.boot,
+            });
+        } catch (e) {
+            if (!(e instanceof SolverRefusal)) throw e;
+        }
+        // The room's ceiling did the killing, and the policy pressed nothing.
+        expect(run.chaserKills).toHaveLength(1);
+        expect(run.chaserKills[0].by).toBe('arrow');
+        expect(run.chasers).toEqual([]);
+        // ⛔ ZERO HITS, ZERO DEATHS — the standing policy, on a walk that
+        // stands still for a hundred ticks under a ceiling that is firing.
+        expect(run.playerHits).toEqual([]);
+        expect(run.playerDeaths).toEqual([]);
+        // …and the hold ended exactly when the body left the world rather
+        // than when a number ran out: the kill plus the death staging.
+        expect(run.ticksCompleted).toBe(run.chaserKills[0].t + DEATH_ANIM_TICKS - 1
+            + MOBILE_DEATH_FADE.ticks);
     });
 });

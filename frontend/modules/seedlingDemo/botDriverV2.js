@@ -1661,8 +1661,34 @@ function runHold(run, perTick, hold, what, before = null) {
             + 'to land the player box inside the button, not near it.');
     }
 
+    /**
+     * ⛓⛓⛓ R8 SLICE 3 — AN OPTIONAL *OBSERVED* STOPPING CONDITION, so a LIVE
+     * policy can hold for a reason instead of for a number.
+     *
+     * A hand-authored leg says `ticks: 200` and the 200 is a margin somebody
+     * measured. A reactive policy knows WHY it is holding — "until the room's
+     * bridged chasers are gone", "until this lock opens" — and, since R8
+     * slice 3, it can SEE the answer. So `hold.until` is a predicate checked
+     * after each tick and `hold.ticks` becomes the BOUND rather than the
+     * plan: a condition that never becomes true inside it fails BY NAME,
+     * which keeps the bound a claim rather than a shrug.
+     *
+     * ⛔ ONE IMPLEMENTATION, NOT TWO. The alternative was an executor with its
+     * own tick loop, which is two cost models the day one of them learns
+     * something ([[feedback_two_cost_models_must_agree]]) — and this verb's
+     * per-tick invariants (no transition, no movement, still inside the
+     * presser) are exactly what a policy-side loop would have re-derived
+     * wrong. Every existing caller passes no `until` and is byte-unchanged.
+     */
+    const until = hold.until ?? null;
+    if (until !== null && (typeof until.test !== 'function' || !until.why)) {
+        fail(`${what}: hold.until must be {why, test} — a stopping condition with no `
+            + 'reason is a number wearing a predicate\'s clothes.');
+    }
+    let heldFor = 0;
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
+        heldFor = i;
         const { transition } = run.advance(NO_HELD);
         if (transition) {
             fail(`${what}: hold tick ${i} of ${ticks} crossed from level `
@@ -1680,6 +1706,17 @@ function runHold(run, perTick, hold, what, before = null) {
             fail(`${what}: hold tick ${i} of ${ticks} is no longer inside `
                 + `${presser.tag}@${presser.x},${presser.y}.`);
         }
+        // ⚠ CHECKED AFTER THE TICK, never before: "the condition already
+        // holds" is a hold that proves nothing, and the caller that wants
+        // zero ticks should not be asking for a hold at all.
+        if (until !== null && until.test(run)) break;
+    }
+    if (until !== null && !until.test(run)) {
+        fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for the whole bound `
+            + `of ${ticks} tick(s) and the condition never became true — ${until.why}. `
+            + 'The bound is a CLAIM about the mechanism, so a hold that runs it out is a '
+            + 'measurement that the claim was wrong, not a hold that needs a bigger '
+            + 'number.');
     }
 
     // ⚠ THE EFFECT, not the ceremony. Everything above says the player stood
@@ -1763,6 +1800,12 @@ function runHold(run, perTick, hold, what, before = null) {
     return {
         presser: { tag: presser.tag, x: presser.x, y: presser.y, t: presser.t },
         ticks,
+        // ⛓ R8 slice 3: what it ACTUALLY held for, which equals `ticks` for
+        // every declared hold and is shorter for one that stopped on its
+        // observed condition. Reported apart so a reader can tell a bound
+        // that was reached from a bound that was hit.
+        heldFor,
+        stoppedOn: until === null ? null : until.why,
         at: { ...start },
         // The responders this hold CHANGED — shut when it started, open when
         // it ended. Not the whole group: one already open proves nothing.
@@ -5790,4 +5833,6 @@ export function synthesizeLegsJson(legs, opts = {}) {
  * and the walk; slice 3's combat/puzzle policies register more names against
  * the same seam rather than restructuring it.
  */
-export { drive, runChest, runCollect, findExit, coastThroughTransport, NO_HELD };
+export {
+    drive, runChest, runCollect, runHold, findExit, coastThroughTransport, NO_HELD,
+};

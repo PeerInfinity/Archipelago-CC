@@ -66,8 +66,10 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, contactsAt, drive, findExit,
-    nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
+    nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect, runHold,
 } from './botDriverV2.js';
+import { resolvePresser } from './botDriverV2.js';
+import { RESPONDERS, opensOnTick } from './activators.js';
 import { dangerAt } from './dangerMap.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { TILE_SIZE } from './levelWorld.js';
@@ -128,11 +130,60 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
     'pickup': 'collect',
 });
 
-/** Executors this slice registers. Slice 3 adds combat/puzzle rows here. */
+/**
+ * Executors registered so far. ⛓ R8 slice 3 added `hold`, which is the first
+ * row that had to DERIVE its own parameters rather than bind a placement: a
+ * leg spec carried `{presser, ticks}` and a live policy has to work out both.
+ */
 export const STRATEGY_EXECUTORS = Object.freeze({
     collect: execCollect,
     chest: execChest,
+    hold: execHold,
 });
+
+/**
+ * ⛔ THE BOUND ON STRATEGY APPLICATIONS PER GOAL, and it is named rather than
+ * generous. Every application must EDIT the world (that is what a verb is),
+ * so a goal that has cleared four distinct obstacles and still has no
+ * corridor is not making progress — it is looping. Four is the most any act2
+ * room needs (L8's two shoves and two holds), stated so a room that needs
+ * five reports the bound rather than spinning.
+ */
+const MAX_STRATEGIES_PER_GOAL = 4;
+
+/**
+ * ⛓⛓⛓ RESOLVE a frontier obstacle into everything its executor needs —
+ * the live counterpart of a leg spec's declared arguments.
+ *
+ * Returns `null` when the obstacle's census row is not one this executor can
+ * bind, which the caller reports as a considered-and-rejected option rather
+ * than as a crash: "the table names a strategy for this kind" and "this
+ * particular body can be acted on" are different claims.
+ */
+function resolveObstacleStrategy(run, strategy, obstacle, contacts) {
+    if (strategy !== 'hold') return null;
+    const presser = (run.world.pressers ?? []).find(
+        (p) => `${p.tag}@${p.x},${p.y}` === obstacle.id,
+    );
+    if (!presser) return null;
+    const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+        `solverBot hold (${obstacle.id})`);
+    const { stance, exempt } = deriveHoldStance(run, resolvedPresser, contacts);
+    return {
+        strategy: 'hold',
+        target: { x: presser.x, y: presser.y },
+        stance,
+        exempt,
+        hold: deriveHold(run, resolvedPresser),
+        rejected: [{
+            option: 'route-around',
+            why: `${obstacle.id} is a proximity-hazard volume on the frontier of the `
+                + 'reachable component, so there is no route around it — A* refuses to '
+                + 'plan THROUGH an avoid volume, and a hold is what adds its presser to '
+                + 'the exemptions (trap 147)',
+        }],
+    };
+}
 
 /** The solver's planning options: the FULL bag, volumes on, live keys. */
 function solverPlanOpts(run, contacts, extra = {}) {
@@ -314,6 +365,154 @@ function deriveStance(run, resolved, contacts) {
         { obstacle: { kind: 'pickup', id: `${p.tag}@${p.x},${p.y}` } });
 }
 
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — HOW LONG TO HOLD, DERIVED FROM THE MECHANISM THE HOLD IS
+ * FOR. The leg spec's `ticks: 200` was a margin somebody measured; a live
+ * policy has to answer the question the margin was hiding.
+ *
+ * Three answers, in the order the group's responders decide:
+ *
+ *   1. **A responder that OPENS** (`Lock` 101 ticks, `Cover` 11) — the count
+ *      is `activators.opensOnTick` over that class's own fade, which is the
+ *      mechanism's arithmetic and not a number typed here. The BOUND is that
+ *      plus slack; the CONDITION is the responder actually being open.
+ *   2. **A trap group with a body to kill** — the condition is OBSERVED
+ *      (`run.chasers` empty in this room), which is a question this model
+ *      could not answer before the Arrow × Enemy family and can now. The
+ *      bound is the mechanism's floor: three landed arrows are at least
+ *      `2 x hitsTimerMax` apart, plus the death staging, plus one leash
+ *      approach — per body.
+ *   3. **A trap group with nothing to kill** — hold long enough for the arm
+ *      to be a measurement rather than a claim: one volley period plus one,
+ *      because `runHold`'s own effect check wants volleys on the ledger.
+ *
+ * ⛔ THE BOUND IS A CLAIM. `runHold` fails BY NAME when a condition never
+ * becomes true inside it, so a wrong derivation here is a measurement rather
+ * than a hold that quietly does nothing.
+ */
+function deriveHold(run, presser) {
+    const group = run.world.activators.filter((a) => a.t === presser.t);
+    const traps = (run.world.arrowTraps ?? []).filter((a) => a.t === presser.t);
+    if (group.length > 0) {
+        const shut = group.filter((a) => !run.openActivators.has(a.id));
+        const cost = Math.max(...shut.map(
+            (a) => opensOnTick(RESPONDERS[a.tag]?.fade ?? RESPONDERS.lock.fade),
+        ));
+        return {
+            ticks: cost + HOLD_SLACK,
+            until: {
+                why: `every shut responder in group t=${presser.t} `
+                    + `[${shut.map((a) => a.id).join(', ')}] is open`,
+                test: (r) => shut.every((a) => r.openActivators.has(a.id)),
+            },
+        };
+    }
+    if (traps.length > 0) {
+        const bodies = run.chasers.length;
+        if (bodies > 0) {
+            return {
+                ticks: bodies * ARROW_KILL_FLOOR + HOLD_SLACK,
+                until: {
+                    why: `every bridged chaser in level ${run.level} has been removed by `
+                        + 'the room\'s own ceiling — the observable the Arrow x Enemy '
+                        + 'family added (R8 slice 3)',
+                    test: (r) => r.chasers.length === 0,
+                },
+            };
+        }
+        return { ticks: TRAP_ARM_TICKS, until: null };
+    }
+    return { ticks: TRAP_ARM_TICKS, until: null };
+}
+
+/**
+ * `ArrowTrap.shootTimerMax` is 10 and the period is ELEVEN (trap 144: a
+ * countdown's LENGTH is not its PERIOD), so a hold shorter than this can
+ * report an armed trap with no volley behind it — which `runHold` already
+ * refuses by name. One period plus the fire tick.
+ */
+const TRAP_ARM_TICKS = 12;
+
+/**
+ * The floor for ONE arrow kill, from the mechanism rather than from a
+ * measurement: `hitsMax` 3 at 1 damage per arrow through `hitsTimerMax` 30
+ * i-frames is 60 ticks between the first landing and the third
+ * (`ARROW_ENEMY_HIT.minTicksToKillDefaultEnemy`), then the death staging —
+ * the "die" animation and `Mobile.death`'s fade — before the body leaves the
+ * world. The leash approach is the term nobody can derive, so it rides in
+ * `HOLD_SLACK` and the bound stays a claim `runHold` can refute.
+ */
+const ARROW_KILL_FLOOR = 60 + 25 + 11;
+
+/** One second of slack at 30 fps — named, so a reader can see it is one. */
+const HOLD_SLACK = 30;
+
+/**
+ * ⛓ THE HOLD STANCE — inside the presser's rect, and REACHABLE.
+ *
+ * `runHold` refuses a hold point that is merely NEAR the button
+ * ("the target before a hold has to land the player box inside the button"),
+ * and A* refuses to route ONTO a `proximity-hazard` cell unless the volume is
+ * exempted — which is the whole of trap 147: a hold is what ADDS its presser
+ * to the contact exemptions, so the stance and the exemption are one
+ * decision. The candidates are lattice cells whose player box overlaps the
+ * presser rect, ordered deterministically, and the reachability probe is
+ * `planWaypoints` itself — the same instrument the walk then follows, so the
+ * stance picked and the stance reachable cannot be two claims.
+ */
+function deriveHoldStance(run, presser, contacts) {
+    const exempt = new Set([...contacts, `proximity-hazard:${presser.tag}@${presser.x},${presser.y}`]);
+    const pitch = DEFAULT_LATTICE;
+    const centre = {
+        x: (presser.rect.x + presser.rect.right) / 2,
+        y: (presser.rect.y + presser.rect.bottom) / 2,
+    };
+    const cell = nodeAt(centre.x, centre.y, pitch);
+    const candidates = [];
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (!rectsOverlapLocal(playerBoxAt(c.x, c.y), presser.rect)) continue;
+            candidates.push({ d: Math.hypot(c.x - centre.x, c.y - centre.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    for (const c of candidates) {
+        try {
+            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                solverPlanOpts(run, exempt));
+            return { stance: { x: c.x, y: c.y }, exempt };
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+        }
+    }
+    throw new SolverRefusal(
+        `solverBot: no REACHABLE stance inside ${presser.tag}@${presser.x},${presser.y} `
+        + `in level ${run.level} — ${candidates.length} cell(s) land the player box in `
+        + 'the button and none of them plans a corridor from '
+        + `(${run.state.x},${run.state.y}). A hold that cannot be stood on is not a `
+        + 'strategy for this obstacle.',
+        { obstacle: { kind: 'proximity-hazard', id: `${presser.tag}@${presser.x},${presser.y}` } });
+}
+
+/** `rectsOverlap`, local so this module keeps its own import list honest. */
+function rectsOverlapLocal(a, b) {
+    return a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y;
+}
+
+/**
+ * Executor: the `hold` verb, with everything a leg spec used to declare
+ * derived from live state — the presser from the frontier's own blocker id,
+ * the stance from the presser's rect, the duration from the mechanism.
+ */
+function execHold(run, perTick, resolved, ctx) {
+    return runHold(run, perTick, {
+        presser: { x: resolved.target.x, y: resolved.target.y },
+        ticks: resolved.hold.ticks,
+        until: resolved.hold.until,
+    }, ctx.what, ctx.before);
+}
+
 /** Executor: the `collect` verb, bound to live state. */
 function execCollect(run, perTick, resolved, ctx) {
     return runCollect(run, perTick, { pickup: { x: resolved.target.x, y: resolved.target.y } },
@@ -404,6 +603,15 @@ export function solveSegment({
     };
     let replans = 0;
     let waypointsPlanned = 0;
+    /**
+     * ⛓ R8 slice 3 — the contact exemptions a STRATEGY earned, carried for
+     * the rest of the segment. `senseContacts` answers "what am I standing
+     * in"; this answers "what did I earn the right to stand in", and the two
+     * are different claims about the same volume.
+     */
+    const exemptions = new Set();
+    /** The strategies applied for the CURRENT goal, for the bound below. */
+    let applied = [];
     const grazes = [];
     const records = [];
 
@@ -503,6 +711,27 @@ export function solveSegment({
         const key = obstacle.tag ? `${obstacle.kind}:${obstacle.tag}` : obstacle.kind;
         const strategy = OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[obstacle.kind] ?? null;
         const considered = [];
+        /**
+         * ⛓⛓⛓ R8 SLICE 3 — A REGISTERED STRATEGY IS APPLIED HERE, AND THIS IS
+         * THE WHOLE OF "adds policies rather than restructuring".
+         *
+         * Slice 2 ended every identification in a refusal because the table
+         * was empty below `collect`/`chest`; the seam it left is this one
+         * branch. A strategy the table knows AND the registry has is RESOLVED
+         * against live state and handed back to `walkTo`, which applies it and
+         * re-plans — a world edit is a re-plan event by the cadence rule
+         * (§10.4 note 6), and the trace carries a row for it.
+         */
+        if (strategy && STRATEGY_EXECUTORS[strategy]) {
+            const resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts);
+            if (resolved) return { obstacle, strategy, resolved, key };
+            considered.push({
+                option: strategy,
+                why: `selected for ${key} and REGISTERED, but the obstacle could not be `
+                    + 'resolved against live state — the census row the frontier named '
+                    + 'is not one this executor can bind',
+            });
+        }
         if (strategy && !STRATEGY_EXECUTORS[strategy]) {
             considered.push({
                 option: strategy,
@@ -530,9 +759,13 @@ export function solveSegment({
      * silent re-plan hides a model divergence; a TRACED one is a decision a
      * reader can audit).
      */
-    const walkTo = (goal, aim, { allowTeleporter = null, crossTo = null, what }) => {
+    const walkTo = (goal, aim, {
+        allowTeleporter = null, crossTo = null, what, contactsOverride = null,
+    }) => {
         for (let attempt = 0; ; attempt += 1) {
-            const contacts = senseContacts(run);
+            const contacts = contactsOverride
+                ? new Set([...senseContacts(run), ...contactsOverride])
+                : new Set([...senseContacts(run), ...exemptions]);
             refuseDanger(run.state.x, run.state.y, goal, what);
             let wps;
             try {
@@ -540,7 +773,74 @@ export function solveSegment({
                     solverPlanOpts(run, contacts));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
-                identifyAndSelect(goal, aim, contacts, e);
+                const plan = identifyAndSelect(goal, aim, contacts, e);
+                /**
+                 * ⛔ THE APPLICATION IS BOUNDED, AND THE BOUND IS NAMED. A
+                 * policy that re-identified for ever would look exactly like
+                 * one that was making progress. Each application must change
+                 * the world (a verb edits it) — so the count is the number of
+                 * DISTINCT obstacles a single goal may be allowed to clear,
+                 * and running it out is a refusal that says which ones it
+                 * cleared.
+                 */
+                if (applied.length >= MAX_STRATEGIES_PER_GOAL) {
+                    refuse(`${what}: applied ${applied.length} strategies for one goal `
+                        + `[${applied.join(', ')}] and the corridor still does not plan. `
+                        + 'A policy that keeps clearing obstacles without a corridor '
+                        + 'appearing is not making progress.', { goal, obstacle: plan.obstacle });
+                }
+                applied.push(`${plan.strategy}(${plan.obstacle.id})`);
+                const before = perTick.length;
+                seeRow({
+                    tick: before,
+                    saw: saw(),
+                    goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
+                    obstacle: { kind: plan.obstacle.kind, id: plan.obstacle.id },
+                    strategy: { verb: plan.strategy },
+                    rejected: plan.resolved.rejected ?? [],
+                    keys: [],
+                });
+                /**
+                 * ⛔⛔ THE SHUT-BEFORE SNAPSHOT, TAKEN BEFORE THE APPROACH —
+                 * `runChest`'s own law, and the first smoke run of this
+                 * executor measured why it applies to a hold too. The stance
+                 * for a hold is INSIDE the presser's volume, so the walk to
+                 * it presses the button: by the time the verb begins, the
+                 * traps it exists to arm are already armed and its positive
+                 * control ("shut before, open after") reports nothing to
+                 * change. "Shut when the strategy was chosen" is the state a
+                 * correct walk is never in at the stance.
+                 */
+                const beforeStrategy = {
+                    open: run.openActivators,
+                    armed: run.armedPulsers ?? new Set(),
+                    trapsArmed: run.armedArrowTraps ?? new Set(),
+                };
+                // The stance first — planned with whatever exemptions the
+                // strategy's own resolution earned (trap 147: a hold is what
+                // ADDS its presser to the exemptions, so the stance and the
+                // exemption are one decision).
+                if (plan.resolved.stance) {
+                    walkTo(goal, plan.resolved.stance, {
+                        what: `${what} -> ${plan.strategy} stance `
+                            + `(${plan.obstacle.id})`,
+                        contactsOverride: plan.resolved.exempt,
+                    });
+                }
+                const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
+                    maxTicksPerTarget,
+                    what: `${what} -> ${plan.strategy}`,
+                    before: beforeStrategy,
+                });
+                records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
+                // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
+                // player standing in the presser's volume, so every later
+                // plan of this segment carries it — which is what
+                // `senseContacts` would answer anyway at that position, and
+                // is stated rather than left to a coincidence of standing
+                // still.
+                for (const c of plan.resolved.exempt ?? []) exemptions.add(c);
+                continue;
             }
             waypointsPlanned += wps.length;
             /**
@@ -646,6 +946,9 @@ export function solveSegment({
 
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
+        // The bound is PER GOAL: clearing L4's button for the crossing says
+        // nothing about how many obstacles the next room's goal may need.
+        applied = [];
         if (goal.kind === 'reach-exit') {
             const { index, teleporter } = findExit(run.world, goal.exit);
             const centre = {
