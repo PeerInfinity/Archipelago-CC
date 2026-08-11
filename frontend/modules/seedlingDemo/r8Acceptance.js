@@ -548,6 +548,27 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'into L6, and the assertion named that too — a right name with the '
                 + 'wrong rooms is a prediction about a different walk.',
         }),
+        /**
+         * ⛓ R8 SLICE 8 — and the guard named it the FIFTH time, the first run
+         * after the driven pair landed. A tape missing from this list is a
+         * tape nobody predicted (trap 89), and this one is here because its
+         * 80-tick walk north leaves L18 — a room with no chaser — for one
+         * that has them.
+         *
+         * ⚠ ITS CONTROL IS **NOT** EXPOSED, and that is the pair working: the
+         * hammer hit the control takes at tick 247 knocks the walk back far
+         * enough that the same 80 ticks never reach the door. Two tapes, one
+         * integer apart, and the exposure list can tell them apart.
+         */
+        Object.freeze({
+            name: 'r8-hammer-arm', levels: Object.freeze([16]), bobs: 1, ticks: 324,
+            addedBy: 'R8 slice 8 (the hammer\'s driven pair)',
+            why: 'the ARM of the hammer-phase pair: it stands out a 244-tick wait in '
+                + 'L18, walks north through `spinner@48,96`\'s disc taking nothing, and '
+                + 'crosses back into L16 — whose chaser the bridge steps for the ticks '
+                + 'the tape has left. ⚠ The LEVELS are the rooms with a BRIDGED body, '
+                + 'not the rooms the walk visits: L18 has spinners and no chaser.',
+        }),
     ]),
 
     /**
@@ -2123,6 +2144,34 @@ export const R8_D2_SHIELD = Object.freeze({
             }),
         ]),
         killsOnTheRoster: 0,
+        /**
+         * ⛓⛓⛓ R8 SLICE 8 — THE TAPES ADDED **AFTER** THE PREDICTION, AND THE
+         * FIRST ONE THAT KILLS.
+         *
+         * `reaching` above is slice 6's claim about the roster as it stood
+         * *"before the arm moved"*, and `killsOnTheRoster: 0` is part of it —
+         * so a slice-8 tape whose whole errand is killing two spinners cannot
+         * be folded into that list without editing a prediction after its
+         * measurement. `R8_ENEMY_BRIDGE.exposedAdded` is the precedent: a
+         * SEPARATE list, one row per slice, added the first time the assertion
+         * names it.
+         *
+         * ⛔ AND A KILL MUST BE STATED BEFORE IT IS MEASURED — the guard's own
+         * words. These rows declare `killed: true` on the sixth landing of
+         * each body, which is what makes the assertion's kill branch a check
+         * on THIS list rather than a blanket refusal.
+         */
+        reachingAdded: Object.freeze([
+            Object.freeze({
+                name: 'r8-solve-18',
+                level: 18,
+                addedBy: 'R8 slice 8 (the honest L18)',
+                why: 'the solver\'s own L18 segment: three landed presses per body under '
+                    + 'the exact-hammer ingredient, `Game.totalEnemies()` to zero, and '
+                    + '`lock@144,112` declared open — the first tape on the roster whose '
+                    + 'press arm KILLS.',
+            }),
+        ]),
     }),
 
     /**
@@ -2411,13 +2460,19 @@ export function assertSpinnerPressExposureIsMeasured(io) {
             + 'landings a replay measures — the SHIPPED gates, not a second reading of '
             + 'them.');
     }
+    /**
+     * ⛓ R8 SLICE 8: the prediction's own list PLUS the rows later slices
+     * added, and the two are kept apart in the DECLARATION so that editing
+     * one cannot silently edit the other.
+     */
     const declared = R8_D2_SHIELD.pressExposure.reaching;
+    const added = R8_D2_SHIELD.pressExposure.reachingAdded ?? [];
     const found = [];
     for (const name of io.tapeNames()) {
         const landings = io.reachingSpinners(name);
         if (landings && landings.length) found.push({ name, landings });
     }
-    const declaredNames = declared.map((r) => r.name).sort();
+    const declaredNames = [...declared, ...added].map((r) => r.name).sort();
     const foundNames = found.map((f) => f.name).sort();
     const missing = foundNames.filter((n) => !declaredNames.includes(n));
     const stale = declaredNames.filter((n) => !foundNames.includes(n));
@@ -2438,12 +2493,22 @@ export function assertSpinnerPressExposureIsMeasured(io) {
          * be UNREACHABLE (the declaration says `killed: false`, so a kill
          * fails the diff first), which is a guard that can never fire.
          */
-        if (f.landings.some((l) => l.killed)) {
+        const addedRow = added.find((r) => r.name === f.name);
+        if (f.landings.some((l) => l.killed) && !addedRow) {
             throw new Error(`R8_D2_SHIELD.pressExposure: "${f.name}" KILLS a spinner, and `
                 + 'the declaration says the roster kills none. A kill moves '
                 + '`classCount` and writes persistence — that is a different prediction '
                 + 'from a knockback, and it must be stated before it is measured.');
         }
+        /**
+         * ⛓ AN ADDED ROW IS A NAMED TAPE, NOT A PER-LANDING TRANSCRIPT. The
+         * prediction's own five rows carry `{t, id, hits, killed}` because
+         * they were MEASURED BEFORE the arm moved and a drift there is a
+         * refutation; a solver-authored tape's landings are re-derived by its
+         * own producer script on every `--check`, so copying them here would
+         * be a second copy of an artifact that already has a byte gate.
+         */
+        if (addedRow) continue;
         const row = declared.find((r) => r.name === f.name);
         const same = row.landings.length === f.landings.length
             && row.landings.every((l, i) => l.t === f.landings[i].t

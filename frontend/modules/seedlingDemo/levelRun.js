@@ -54,7 +54,8 @@ import {
     watcherTakesHit,
 } from './endingChain.js';
 import {
-    createActivatorState, openActivatorIds, pressedGroups, ropePublish, stepActivators,
+    RESPONDERS, createActivatorState, opensOnTick, openActivatorIds, pressedGroups,
+    ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -2055,6 +2056,39 @@ export function createLevelRun({
      * The `angle` is what makes the prediction checkable at all.
      */
     const spinnerContacts = [];
+    /** ⛓ R8 slice 8: the REMOVAL-time kill-lock scan — see the getter. */
+    const spinnerKillLockOpens = [];
+    /**
+     * ⛓ Kill-lock openings the tape does not declare, waiting for the tick the
+     * CLEAR would land on. See `assertSpinnerRemovalIsDeclared` for why the
+     * throw is deferred by a whole fade.
+     */
+    const pendingKillLockThrows = [];
+    const firePendingKillLockThrows = () => {
+        for (let i = 0; i < pendingKillLockThrows.length; i += 1) {
+            const p = pendingKillLockThrows[i];
+            if (ticksCompleted + 1 < p.at) continue;
+            const err = new Error(`levelRun: ${p.id}'s removal at tick ${p.removedAt} `
+                + `OPENS ${p.flags.length} kill lock(s) in level ${p.level} `
+                + `[${p.flags.map((f) => `{${p.level},${f}}`).join(', ')}] (${p.why}), and `
+                + `the \`Lock\`'s own fade lands the durable clear at tick ${p.at} — which `
+                + 'this walk has now reached. The tape DECLARES no clear for them. A '
+                + '`Lock`\'s hundred alpha steps and the write that follows are the '
+                + 'declared v9 `at` channel; computing them here as well would make two '
+                + 'writers of one persistence slot. So a clear this model can see coming '
+                + 'and the tape does not carry is a blocker that opens in the game and '
+                + 'stays shut here.');
+            err.undeclaredKillLock = Object.freeze({
+                level: p.level,
+                flags: Object.freeze([...p.flags]),
+                locks: Object.freeze([...p.locks]),
+                t: p.at,
+                id: p.id,
+                cause: p.cause,
+            });
+            throw err;
+        }
+    };
     const spendCeremonyPhaseA = (tag) => clock.spend(
         CEREMONY_DEAD_FRAMES.pickup, 'ceremony', `pickup phase A (${tag})`, ticksCompleted);
     const spendPickupHelp = (tag) => clock.spend(
@@ -6789,6 +6823,117 @@ export function createLevelRun({
         });
     }
 
+    /**
+     * ⛔⛔⛔ R8 SLICE 8 — **THE ARM §16.3 NAMED AND NOBODY BUILT.**
+     *
+     * Slice 6's `assertSpinnerKillIsAccounted` computes the `classCount`
+     * consequence at the KILLING BLOW and says it *"leaves the opening itself
+     * to `stepActivators`' own kill-lock arm"*. There is no such arm:
+     * `stepActivators`' activation line is `active = a.t >= 0 && …`, so a
+     * `tset == -1` lock is unreachable by construction — as it must be,
+     * because no button in the game answers one.
+     *
+     * ⇒ a spinner room's kill lock could never open in this model, and L18's
+     * exit is BEHIND `lock@144,112`. Driven, the honest solve killed both
+     * bodies with zero hits and then sat out the lock's whole 101-tick fade
+     * waiting for something that had no writer. ⛓ A ledger that PREDICTS an
+     * opening and a mechanism that PERFORMS one are different things, and the
+     * first one printed exactly like the second (trap 119, from the far side).
+     *
+     * The chaser family solved this two slices ago and this is its arm,
+     * verbatim in shape: the clear is the TAPE's declared v9 `at` row (a
+     * second writer of one persistence slot is two cost models), the model
+     * PREDICTS it, an undeclared opening is a STRUCTURED throw, and
+     * `twoPassSolve` reads `undeclaredKillLock` to measure the tick and
+     * declare it.
+     *
+     * ⛔ AND IT IS AT THE **REMOVAL**, not at the kill. `Game.totalEnemies()`
+     * counts entities, so the count moves when `FP.world.remove` runs —
+     * eleven accumulated fade steps after the killing blow
+     * (`SPINNER.deathTicks`). `assertSpinnerKillIsAccounted`'s own docblock
+     * says the kill-time scan is *"a claim about what the removal WILL
+     * open"*; this is the removal.
+     */
+    function assertSpinnerRemovalIsDeclared(sp) {
+        const census = world.combat?.enemies ?? null;
+        const roster = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+        const spSt = spinnerStateFor(level);
+        const goneIds = new Set();
+        for (const [, body] of spSt.byId) if (body.removed) goneIds.add(body.id);
+        const after = (census ?? [])
+            .filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
+            .map((e) => ({ as3: e.as3 }));
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: roster, bodiesAfter: after,
+        });
+        // The census refusal is the chaser arm's, for its reason: with no
+        // `combat` role the roster is empty and the nil is computed from a
+        // fiction. `assertSpinnerKillIsAccounted` has already thrown for this
+        // at the killing blow, so this is the belt to that brace.
+        if (led.locks.length > 0 && census === null) {
+            throw new Error(`levelRun: ${sp.id}'s removal in level ${level} happens in a `
+                + `room with ${led.locks.length} \`tset == -1\` lock(s) and the world was `
+                + 'built with NO COMBAT CENSUS. Build the world with the `combat` role.');
+        }
+        if (led.nil) {
+            spinnerKillLockOpens.push({
+                t: ticksCompleted + 1, level, id: sp.id, opens: [], nil: true, why: led.why,
+            });
+            return;
+        }
+        const declared = persistence.filter((p) => p.level === level);
+        // ⛔ `flag`, NOT `tag` — `killLocksIn` fills `tag` with the ENTITY TYPE
+        // ("lock"). The chaser arm paid for reading the wrong one.
+        const undeclared = led.opens.filter((o) => !declared.some((p) => p.tag === o.flag));
+        if (undeclared.length > 0) {
+            /**
+             * ⛔⛔⛔ THE THROW IS SCHEDULED FOR WHERE THE CLEAR LANDS, NOT FOR
+             * WHERE THE REMOVAL DOES — and the difference is a whole fade.
+             *
+             * `checkEnemies()` opens the lock when the count reaches zero and
+             * a `Lock` then takes `opensOnTick` (101) ALPHA STEPS to stop
+             * being solid; the durable write is at the end of THAT. So the
+             * divergence this check exists to prevent — "a blocker that opens
+             * in the game and stays shut here" — cannot bite before
+             * `removal + fade`, and a walk that ENDS before then has nothing
+             * to declare.
+             *
+             * ⛓ MEASURED, not reasoned: `r8-l18-spinner-press` kills its
+             * second spinner on its LAST tick (removal at 3278 of 3278), so
+             * the game's own clear lands 101 frames after the tape disarms and
+             * the recording never sees it. A throw at the removal would have
+             * refused a committed tape for a divergence that cannot exist
+             * inside it — the same shape as the driven pair's `hits` readout,
+             * one mechanism over.
+             */
+            pendingKillLockThrows.push({
+                // ⛓ THE FADE IS THE LOCK'S OWN, read from its responder row
+                // rather than typed: a `Lock`'s `alpha -= 0.01` accumulates to
+                // 101 steps and `opensOnTick` is the one place that counts
+                // them (simulated, not divided — the arc's own law).
+                at: ticksCompleted + 1
+                    + opensOnTick(RESPONDERS[led.opens[0]?.tag ?? 'lock']?.fade
+                        ?? RESPONDERS.lock.fade),
+                level,
+                flags: undeclared.map((o) => o.flag),
+                locks: undeclared.map((o) => `${o.tag}@${o.x},${o.y}`),
+                removedAt: ticksCompleted + 1,
+                id: sp.id,
+                cause: sp.deathCause ?? 'removed',
+                why: led.why,
+            });
+        }
+        spinnerKillLockOpens.push({
+            t: ticksCompleted + 1,
+            level,
+            id: sp.id,
+            opens: led.opens.map((o) => ({ flag: o.flag, at: `${o.tag}@${o.x},${o.y}` })),
+            nil: false,
+            why: led.why,
+            declaredAt: led.opens.map((o) => declared.find((p) => p.tag === o.flag)?.at ?? null),
+        });
+    }
+
     function assertShieldBossLineOfSight(b) {
         const blocker = collideLineSolid(state.x, state.y, b.x, b.y);
         if (blocker) {
@@ -9114,8 +9259,18 @@ export function createLevelRun({
         get spinnerContacts() { return spinnerContacts.map((c) => ({ ...c })); },
         /** `{t, level, id, tag, weapon, removedTick}` per press-killed spinner. */
         get spinnerPressKills() { return spinnerKills.map((k) => ({ ...k })); },
-        /** The kill-lock scan every spinner kill RUNS — nil included (§9.3). */
-        get spinnerKillLocks() { return spinnerKillLocks.map((k) => ({ ...k })); },
+            get spinnerKillLocks() { return spinnerKillLocks.map((k) => ({ ...k })); },
+        /**
+         * ⛓⛓⛓ R8 SLICE 8: the REMOVAL-time scan — what `Game.totalEnemies()`
+         * really opened, against what the tape declares.
+         *
+         * `spinnerKillLocks` above is the KILL-time prediction ("what the
+         * removal will open"); this is the removal, and it is the one whose
+         * undeclared case THROWS. Two ledgers because they are two instants
+         * eleven fade ticks apart, and a single one would have to pick which
+         * question it was answering.
+         */
+        get spinnerKillLockOpens() { return spinnerKillLockOpens.map((k) => ({ ...k })); },
         /** ⛔⛔ R5 slice 13: `{t, level, pulser, enemy}` per enemy a pulse killed. */
         get pulserEnemyKills() { return pulserEnemyKills.map((k) => ({ ...k })); },
         get spinnerDeaths() {
@@ -10379,6 +10534,9 @@ export function createLevelRun({
             // tick numbered `at` begins, which is what "the game cleared it
             // by then" means.
             applyTimedClears(ticksCompleted);
+            // ⛓ R8 slice 8: and the kill-lock openings the tape owes, checked
+            // at the tick the CLEAR lands rather than at the removal.
+            firePendingKillLockThrows();
             // ⛓ R7 slice 6e: and the witnessed mid-run REMOVALS, beside them
             // and for the same reason — the body is already gone when the
             // tick numbered `at` begins, which is what "the game removed it
@@ -10530,6 +10688,7 @@ export function createLevelRun({
                         outOfBand: flag.outOfBand,
                         cause: s.deathCause,
                     });
+                    assertSpinnerRemovalIsDeclared(s);
                 }
             }
             // ── ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE, BETWEEN THEM ────────

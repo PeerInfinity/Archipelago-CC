@@ -1,0 +1,90 @@
+{
+    "trace_version": 1,
+    "tape": "r8-solve-18",
+    "tick_count": 573,
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 32
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 18,
+                "x": 24,
+                "y": 40,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "lock@144,112"
+            },
+            "strategy": {
+                "verb": "kill",
+                "postCondition": "kill-lock"
+            },
+            "rejected": [
+                {
+                    "option": "kill by the room's own ceiling",
+                    "why": "level 18 has 0 arrow trap(s), so there is no ceiling to arm — the weapon is the player's own press, which `KILL_ARM_POLICY` calls `modelled` for [Spinner, Spinner]"
+                },
+                {
+                    "option": "hold",
+                    "why": "lock@144,112 carries `tset == -1`, so NO button in the game answers it — `checkEnemies()` opens it when `Game.totalEnemies()` reaches zero (§12.8)."
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 386,
+            "saw": {
+                "level": 18,
+                "x": 55.978201027358494,
+                "y": 39.61357546961173,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "spinner@112,48"
+            },
+            "strategy": {
+                "verb": "walk",
+                "rung": "avoid",
+                "climb": 1,
+                "waypoints": 3
+            },
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        }
+    ]
+}

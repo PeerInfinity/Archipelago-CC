@@ -264,11 +264,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // drownings in L6). The prediction's own five stay untouched.
         expect(R8_ENEMY_BRIDGE.exposedAdded.map((t) => t.name)).toEqual([
             'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-6', 'r8-solve-5',
+            // ⛓ R8 slice 8's driven-pair ARM: its walk north out of L18 lands
+            // in L16, which has a bridged body. Its CONTROL is absent because
+            // the hammer hit it takes knocks the same 80 ticks short of the
+            // door — the pair's difference, visible in this ledger.
+            'r8-hammer-arm',
         ]);
-        expect(out.exposed).toBe(10);
+        expect(out.exposed).toBe(11);
         expect(out.tapes).toEqual([
             'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
-            'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
+            'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
+            'r8-solve-5', 'r8-solve-6',
         ]);
     });
 
@@ -315,6 +321,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // about ROOMS and becomes about names again.
             'r8-solve-4': { tape: {}, levels: [4, 5] },
             'r8-solve-6': { tape: {}, levels: [6] },
+            // ⛓ R8 slice 8's pair ARM, at its declared room.
+            'r8-hammer-arm': { tape: {}, levels: [16] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -483,7 +491,11 @@ function syntheticExposureIo(rows) {
         tapeNames: () => Object.keys(rows),
         loadTapeJson: (n) => rows[n].tape,
         levelsVisited: (n) => new Set(rows[n].levels),
-        bridgedLevels: () => new Set([4, 5, 6]),
+        // ⛓ R8 slice 8: L16 joins the synthetic bridged set, because the
+        // driven pair's ARM is declared exposed THERE — a mutation fixture
+        // that could not represent a declared row would test a different
+        // ledger from the one the real check reads.
+        bridgedLevels: () => new Set([4, 5, 6, 16]),
     };
 }
 
@@ -904,15 +916,23 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
         // ⚠ THE MUTATIONS BELOW SUPPLY THE WHOLE DECLARED SET and change one
         // row inside it — a seam that returned a single tape would red on the
         // set comparison first and never reach the row it is testing.
+        // ⛓ R8 slice 8: the DECLARED set is the prediction's rows PLUS the ones
+        // later slices added, so a seam that supplied only the first half
+        // would red on the set comparison before reaching the row under test.
+        // An added row has no per-landing transcript (its producer's byte gate
+        // owns that), so it is fed one landing that satisfies its own arm.
         const all = R8_D2_SHIELD.pressExposure.reaching;
-        const perName = (f) => (n) => f(all.find((r) => r.name === n).landings);
+        const addedNames = R8_D2_SHIELD.pressExposure.reachingAdded.map((r) => r.name);
+        const perName = (f) => (n) => (addedNames.includes(n)
+            ? [{ t: 1, id: 'spinner@0,0', hits: 1, killed: true }]
+            : f(all.find((r) => r.name === n).landings));
         expect(() => assertSpinnerPressExposureIsMeasured({
-            tapeNames: () => all.map((r) => r.name),
+            tapeNames: () => [...all.map((r) => r.name), ...addedNames],
             reachingSpinners: perName((ls) => ls.map((l, i) => (
                 i === 0 ? { ...l, t: l.t + 1 } : l))),
         })).toThrow(/a right count with wrong ticks/);
         expect(() => assertSpinnerPressExposureIsMeasured({
-            tapeNames: () => all.map((r) => r.name),
+            tapeNames: () => [...all.map((r) => r.name), ...addedNames],
             reachingSpinners: perName((ls) => ls.map((l) => ({ ...l, killed: true }))),
         })).toThrow(/KILLS a spinner/);
     });

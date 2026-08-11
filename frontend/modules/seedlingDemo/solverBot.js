@@ -91,9 +91,13 @@ import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
 import { rect, TILE_SIZE } from './levelWorld.js';
 import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET } from './combat.js';
+// ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
+// receiver's i-frames, in one constant `killSchedule` has refused a smaller
+// value than since R5. The press arm never consulted it; the game found out.
+import { KILL_PRESS_CADENCE } from './combatVerbs.js';
 import { MOBILE_DEATH_FADE } from './enemyDamage.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { HITBOX } from './playerPhysicsV1.js';
+import { HITBOX, WALK_SPEED } from './playerPhysicsV1.js';
 import { chestStanceBand } from './chest.js';
 
 export class SolverBotError extends Error {
@@ -1981,8 +1985,42 @@ const REFUGE_CANDIDATES = 12;
  * opportunities in tick order are previewed, because a preview is a walk and
  * a scan that previewed every one of the room's few hundred would spend more
  * time deciding than pressing. The bound is named in the refusal.
+ *
+ * ⛔⛔⛔ R8 SLICE 8 — AND THE BOUND BECAME THE WALL THE MOMENT THE INGREDIENT
+ * GOT ACCURATE, which is trap 171 one layer up.
+ *
+ * Under the 13 px DISC almost no (cell, tick) was safe, so forty
+ * opportunities in tick order spanned hundreds of ticks and the reachable
+ * ones were among them. Under the exact hammer LINE most of the room is safe
+ * most of the time — so the first forty all landed at `i = 2..5`, every one of
+ * them a cell the controller needs forty-plus ticks to reach, and the whole
+ * scan rejected itself with *"a strike the walk cannot reach is a window, not
+ * a plan"*. The conservative ingredient had been HIDING a defect in the bound
+ * ([[feedback_bounded_sweep_must_name_what_it_bounded]] — the truncation was
+ * named, and what it truncated was not).
+ *
+ * ⇒ the candidates are pre-filtered by an ADMISSIBLE lower bound on the ETA
+ * before the truncation runs. `applyInput` clamps EACH AXIS at `WALK_SPEED`,
+ * so no walk can cover `max(|dx|, |dy|)` pixels in fewer than
+ * `ceil(that / WALK_SPEED)` ticks — a bound the movement model cannot beat,
+ * so a candidate it drops was never reachable and the truncation now spends
+ * its forty previews on candidates that can be plans.
  */
 const STRIKE_CANDIDATES = 40;
+
+/**
+ * ⛓ The fewest ticks the controller could possibly need to get from `from` to
+ * `to` — `max(|dx|, |dy|) / WALK_SPEED`, because both axes accelerate
+ * independently and each is clamped at `moveSpeed` (`applyInput`).
+ *
+ * ⚠ ADMISSIBLE, NOT ACCURATE. It ignores the acceleration ramp, the geometry
+ * and the tolerance, all of which can only make the real walk LONGER — which
+ * is the direction a pre-filter has to err in. `previewWalk` is still what
+ * decides; this only stops the scan spending its budget on the impossible.
+ */
+function minTicksBetween(from, to) {
+    return Math.ceil(Math.max(Math.abs(to.x - from.x), Math.abs(to.y - from.y)) / WALK_SPEED);
+}
 
 function deriveStrike(run, bodyId, contacts, notBefore = 0) {
     const index = (run.spinnerBodies ?? []).findIndex((b) => b.id === bodyId);
@@ -1990,11 +2028,17 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
     const horizon = strikeHorizon(run);
     const forecast = run.spinnerForecast(horizon);
     const cells = walkableCells(run, contacts);
+    // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
+    const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
+    let unreachable = 0;
     for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
         for (const c of cells) {
+            // ⛔ BEFORE the truncation, never after: a candidate the movement
+            // model provably cannot reach must not consume one of the forty.
+            if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
             if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) continue;
             if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) continue;
             /**
@@ -2051,7 +2095,18 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
             considered: opportunities.length,
         };
     }
-    return { cell: null, rejected, considered: opportunities.length, horizon };
+    return {
+        cell: null,
+        rejected,
+        considered: opportunities.length,
+        // ⛓ A BOUNDED SWEEP MUST NAME WHAT IT BOUNDED. The refusal now says
+        // how many (cell, tick) pairs the ETA floor dropped as well as how
+        // many were previewed — the two numbers a reader needs to tell "the
+        // room has no strike" from "the scan ran out of budget".
+        unreachable,
+        truncated: opportunities.length >= STRIKE_CANDIDATES,
+        horizon,
+    };
 }
 
 /**
@@ -2779,15 +2834,38 @@ function execKillByPress(run, perTick, resolved, ctx) {
         let strike = null;
         let aimed = false;
         let spent = 0;
+        /**
+         * ⛔⛔⛔ R8 SLICE 8 — THE CADENCE FLOOR, AND THE GAME IS WHAT FOUND IT
+         * MISSING.
+         *
+         * The gate below is the RECEIVER's `hitsTimer`, and that is the right
+         * question one tick too early: a press's hit tests run over
+         * `T+1 … T+SLASH_HIT_TICKS`, so on the tick after a press the body's
+         * timer is still 0 and the loop aims again. Driven, `r8-solve-18`
+         * pressed at 33 and again at 35 — and `slashTimer` is 20, so the
+         * game's own sword text ("double tap to dash") makes the second one a
+         * **DASH THAT MOVES THE PLAYER**. The recording caught it at tick 36,
+         * 2 px apart in x, with every other one of the 477 observations exact.
+         *
+         * ⇒ the schedule honours `combatVerbs.KILL_PRESS_CADENCE` — the floor
+         * `killSchedule` has refused a smaller cadence than since R5, and
+         * which this arm never consulted. ⚠ It is the PRESSER's constraint,
+         * not the receiver's: the receiver's 30-tick i-frame is already in the
+         * floor (`max(KILL_CADENCE_FLOOR, ENEMY_IFRAMES + 1)`), and reading
+         * only the receiver's is how the dash rule went unasked.
+         */
+        let lastPressAt = -KILL_PRESS_CADENCE;
         for (; spent <= bound; spent += 1) {
             const body = (run.spinnerBodies ?? []).find((b) => b.id === plan.id);
             if (!body) break;
             let held = NO_KEYS;
             if (aimed) {
                 held = PRESS;
+                lastPressAt = run.ticksCompleted;
                 aimed = false;
                 strike = null;
-            } else if (body.hitsTimer === 0
+            } else if (run.ticksCompleted - lastPressAt >= KILL_PRESS_CADENCE
+                && body.hitsTimer === 0
                 && distanceRectPoint(run.state.x, run.state.y, body.rect) <= SLASH_REACH
                 && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
                     facingToward(run.state, body.rect)), body.rect)
@@ -2898,8 +2976,30 @@ function execKillByPress(run, perTick, resolved, ctx) {
     const fade = resolved.lock
         ? opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade)
         : 0;
+    if (!resolved.lock) {
+        return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
+            landings, cycles, bodies: resolved.bodies };
+    }
+    /**
+     * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
+     * PREDICATE CAN NEVER BE TRUE.
+     *
+     * `stepActivators`' activation line is `active = a.t >= 0 && (pressed ||
+     * latched)`, so a `tset == -1` lock is unreachable by construction — as it
+     * must be, because no button in the game answers one. What opens it is
+     * `checkEnemies()`, whose model-side channel is the TAPE's declared v9
+     * `at` row (one writer per persistence slot, §11.5), and `applyTimedClears`
+     * then rebuilds the room without the lock.
+     *
+     * ⇒ this is `execKillByCeiling`'s own tail, verbatim in shape: wait out the
+     * fade, and then either the lock is GONE (pass 2 — the declaration was
+     * honest and the corridor exists) or raise a `PendingDeclaration` carrying
+     * the tick the model computed. The press arm was the only kill arm without
+     * it, so a spinner room could kill everything and then sit out a 101-tick
+     * fade waiting for a writer that does not exist.
+     */
     for (let i = 0; i <= fade + HOLD_SLACK; i += 1) {
-        if (!resolved.lock || run.openActivators.has(resolved.lock.id)) {
+        if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
                 landings, cycles, bodies: resolved.bodies };
         }
@@ -2911,10 +3011,38 @@ function execKillByPress(run, perTick, resolved, ctx) {
         perTick.push(NO_KEYS);
         run.advance(NO_KEYS);
     }
-    return fail(`${ctx.what}: every counted body is dead and ${resolved.lock.id} did not `
-        + `open inside its own ${fade}-tick fade plus slack. \`checkEnemies()\` opens a `
-        + '`tset == -1` lock when `Game.totalEnemies()` reaches zero — a lock that does '
-        + 'not is a count this model and the room disagree about.');
+    /**
+     * ⛓ THE TICK IS THE RUN'S OWN LEDGER PLUS THE RESPONDER'S ARITHMETIC —
+     * `spinnerKillLockOpens` is the REMOVAL-time scan (`totalEnemies()` counts
+     * entities, so the count moves at `FP.world.remove`, eleven fade steps
+     * after the killing blow) and `opensOnTick` is the `Lock`'s own hundred
+     * alpha steps. Neither is measured here; both are read.
+     */
+    const opens = (run.spinnerKillLockOpens ?? [])
+        .filter((o) => !o.nil && o.level === run.level);
+    const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
+    const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
+    if (!last) {
+        return fail(`${ctx.what}: every counted body is dead and the run's own kill-lock `
+            + 'ledger (`spinnerKillLockOpens`) recorded NOTHING — so nothing computed the '
+            + 'consequence and there is no tick to declare. A ledger with no entry and a '
+            + 'ledger nobody consulted print the same thing (trap 119).');
+    }
+    throw new PendingDeclaration(`${ctx.what}: \`Game.totalEnemies()\` reached zero at tick `
+        + `${last.t} (${last.id}) and ${resolved.lock.id} is ARMING — its own ${fade}-step `
+        + 'fade has run and `turnOff()` writes the durable clear at the end of it. This '
+        + 'model does not step a kill-lock\'s fade (§11.5: one writer per persistence '
+        + `slot), so the tick is ${last.t} + ${fade} = ${last.t + fade}.`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock.id },
+        perTick: [...perTick],
+        pending: {
+            level: run.level, tag: resolved.lock.persistTag ?? null,
+            source: 'model', at: last.t + fade, removedAt: last.t, fade,
+            lock: resolved.lock.id,
+            why: `\`spinnerKillLockOpens\` computed the removal at ${last.t} and `
+                + `\`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
+                    ?? RESPONDERS.lock.fade})\` is ${fade}`,
+        } });
 }
 
 /** Executor: the `collect` verb, bound to live state. */
