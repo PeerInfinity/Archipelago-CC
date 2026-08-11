@@ -28,6 +28,13 @@ import {
 } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { heldKeysAt } from './tapeFormat.js';
+// ⛓ R8 slice 3: the two staging counts are IMPORTED, never typed — the
+// animation's length is `chasers`' own derivation from `Bob.as:36`'s
+// `add("die", [3,4,5,6], 5)` and the fade's is `enemyDamage`'s loop.
+import { deathTicks } from './chasers.js';
+import { MOBILE_DEATH_FADE } from './enemyDamage.js';
+
+const DEATH_ANIM_TICKS = deathTicks('bob');
 import { runTapeToStream } from './tapeRunner.js';
 
 const levelSource = atlasLevelSource();
@@ -1355,5 +1362,236 @@ describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
     it('⛔ MUTATION: an id no placement matches is a NAMED throw', () => {
         expect(() => runWith([{ level: 6, id: 'bob@1,1', at: 0 }]))
             .toThrow(/level record has no such placement/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE ARROW × ENEMY FAMILY, DRIVEN.
+ *
+ * Slice 1's wall was that this model's arrows hit nothing, so a room with a
+ * ceiling could not be stepped at all (trap 157: a body's position without
+ * its lifetime is wrong for ever after the tick it should have died). These
+ * drive the committed L4 walk — the room the GAME's own measurement covers
+ * (R7 slice 6c: hits `0->1->2->3`, the body gone at t~158) — and assert the
+ * staging the model now owns.
+ *
+ * ⛔ THE TAPE IS THE COMMITTED ONE, replayed offline. Its BYTE-EXACTNESS is
+ * `tapeRunner.test.js`'s claim, not this file's; what is asserted here is the
+ * LEDGER, which the stream cannot show — a byte-exact player stream is not a
+ * witness about bodies (trap 113, and slice 2 paid for that lesson in full).
+ */
+describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is three fenceposts', () => {
+    const ROLES_ON = ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'];
+    const L4_BOB = 'bob@64,64';
+
+    const driveTape = (name) => {
+        const t = loadTape(name);
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: t.boot,
+            noclip: t.noclip,
+            noDamage: t.noDamage,
+            noHazards: t.noHazards,
+            grants: t.grants,
+            persistence: t.persistence,
+            despawn: t.despawn ?? [],
+            equips: t.equips,
+            pins: t.pins ?? [],
+            save: t.save ?? null,
+            rng: t.rng ?? null,
+            seam: t.seam ?? null,
+            roles: ROLES_ON,
+        });
+        for (let i = 0; i < t.tick_count; i += 1) run.advance(new Set(heldKeysAt(t, i)));
+        return run;
+    };
+
+    it('⛓ the L4 bob takes THREE arrows and dies to the third', () => {
+        const run = driveTape('r7-act2-4');
+        const landed = run.arrowBodyHits
+            .filter((h) => h.body === L4_BOB && h.damaged);
+        expect(landed.map((h) => h.hitsAfter)).toEqual([1, 2, 3]);
+        // ⛔ ONE DAMAGE PER ARROW, NOT FIVE — trap 143. `Arrow.as:52` is
+        // `hit(v.length, new Point(x, y))` and `Enemy.hit(f, p, d = 1, t = "")`
+        // says the 5 is the KNOCKBACK FORCE. A model that read the 5 as damage
+        // would kill this body with the FIRST arrow, 67 ticks early.
+        expect(run.chaserKills).toHaveLength(1);
+        expect(run.chaserKills[0]).toMatchObject({ id: L4_BOB, by: 'arrow', hits: 3 });
+    });
+
+    it('⛓ the i-frames really gate it — every arrow between the three is REFUSED by name', () => {
+        const run = driveTape('r7-act2-4');
+        const at = run.arrowBodyHits.filter((h) => h.body === L4_BOB);
+        const refused = at.filter((h) => !h.damaged);
+        // The trap fires three arrows every eleven ticks and the body has 30
+        // i-frames, so the refusals vastly outnumber the landings — and each
+        // one says WHY rather than being a silent miss.
+        expect(refused.length).toBeGreaterThan(at.length - refused.length);
+        expect(refused.every((h) => /i-frames/.test(h.refusedAt))).toBe(true);
+    });
+
+    /**
+     * ⛔⛔ THE FLOOR IS 60 TICKS AND THE CADENCE CANNOT BEAT IT. Derived from
+     * the ledger rather than asserted as a literal: `hitsTimerMax` is 30 and
+     * three landings need two full i-frame windows between them.
+     */
+    it('⛓ the first and third landings are at least 60 ticks apart', () => {
+        const run = driveTape('r7-act2-4');
+        const landed = run.arrowBodyHits.filter((h) => h.body === L4_BOB && h.damaged);
+        expect(landed[2].t - landed[0].t).toBeGreaterThanOrEqual(60);
+    });
+
+    /**
+     * ⛔ THE KILLING HIT TAKES NO KNOCKBACK, and this is the assertion that
+     * separates the `if` arm from the `else` one. `Enemy.hit` is
+     * `if (hits >= hitsMax) { startDeath(t) } else { knockback(f, p) }` — so
+     * the third arrow stages a death and leaves the velocity exactly where
+     * the second one left it. A model that knocked back on every landed hit
+     * would slide every corpse up to fifty pixels the game leaves standing.
+     */
+    it('⛔ the KILLING hit does not knock back — the corpse keeps the velocity it had', () => {
+        const run = driveTape('r7-act2-4');
+        const kill = run.chaserKills[0];
+        const walks = run.chaserWalks.filter((w) => w.id === L4_BOB);
+        const justBefore = walks.filter((w) => w.t < kill.t).pop();
+        const justAfter = walks.find((w) => w.t === kill.t);
+        // The killing tick's own motion is the PREVIOUS tick's velocity minus
+        // friction — never that plus five. `ARROW_ENEMY_HIT.force` is 5 and
+        // `FRICTION` is 0.25, so a knockback would show as a speed JUMP.
+        const speed = (w) => Math.hypot(w.vx, w.vy);
+        if (justAfter) expect(speed(justAfter)).toBeLessThanOrEqual(speed(justBefore));
+    });
+
+    /**
+     * ⛓⛓⛓ THE THREE FENCEPOSTS, apart. `startDeath` plays the animation and
+     * does NOT set `destroy`; `endAnim` sets it 25 graphic updates later;
+     * `Mobile.death`'s fade removes the body eleven ticks after THAT — and
+     * `totalEnemies()` counts it through all of it (trap 87, now with three
+     * posts instead of two).
+     */
+    it('⛓⛓ dying, then destroy, then removed — three ticks, not one', () => {
+        const run = driveTape('r7-act2-4');
+        const kill = run.chaserKills[0];
+        // Replay to the kill tick and step forward reading the getter.
+        const t = loadTape('r7-act2-4');
+        const r2 = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: t.boot,
+            noclip: false,
+            noDamage: false,
+            noHazards: t.noHazards,
+            grants: t.grants,
+            persistence: t.persistence,
+            equips: t.equips,
+            pins: t.pins ?? [],
+            save: t.save ?? null,
+            rng: t.rng ?? null,
+            seam: t.seam ?? null,
+            roles: ROLES_ON,
+        });
+        const seen = { dying: null, destroy: null, gone: null };
+        for (let i = 0; i < t.tick_count; i += 1) {
+            r2.advance(new Set(heldKeysAt(t, i)));
+            const body = r2.chasers.find((c) => c.id === L4_BOB);
+            if (!body) { if (seen.gone === null && seen.dying !== null) seen.gone = i + 1; continue; }
+            if (body.dying && seen.dying === null) seen.dying = i + 1;
+            if (body.destroy && seen.destroy === null) seen.destroy = i + 1;
+        }
+        expect(seen.dying).toBe(kill.t);
+        expect(seen.destroy).toBeGreaterThan(seen.dying);
+        expect(seen.gone).toBeGreaterThan(seen.destroy);
+        // ⛔ THE COUNTS ARE DERIVED, NOT TYPED: the animation is
+        // `chasers.deathTicks('bob')` updates and the fade is
+        // `MOBILE_DEATH_FADE.ticks`. An ARROW kill lands BEFORE the body's own
+        // graphic update in the tick (an Arrow is prepended and updates
+        // first), so the animation's first update is the killing tick itself —
+        // which is one tick earlier than a press's would be.
+        expect(seen.destroy - seen.dying).toBe(DEATH_ANIM_TICKS - 1);
+        expect(seen.gone - seen.destroy).toBe(MOBILE_DEATH_FADE.ticks);
+    });
+
+    /**
+     * ⛔⛔⛔ THE ROOM VERDICT, WIDENED — and what is left of it is NARROWER.
+     */
+    it('⛓ a trap room with only chasers is STEPPED; one with an unstaged static body is not', () => {
+        const l4 = driveTape('r7-act2-4');
+        // L4 holds two arrow traps and one bob: stepped, and the ledger says so.
+        expect(l4.chaserWalks.filter((w) => w.level === 4).length).toBeGreaterThan(0);
+        // L8 holds a trap and two sandtraps whose arrow-death this rung does
+        // NOT stage — refused BY NAME, with the missing thing in the message.
+        const l8 = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 8, x: 64, y: 64 },
+            noclip: false,
+            noDamage: false,
+            roles: ROLES_ON,
+        });
+        l8.advance(new Set());
+        expect(l8.chasers).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ THE KILL-LOCK CONSEQUENCE IS COMPUTED, AND THE DECLARATION IS THE
+     * CHECK (trap 148's shape). L5's three deaths take `totalEnemies()` to
+     * zero and open `lock@48,112` — the room's whole solve — and the tape
+     * DECLARES `{5,0}`. The model does not write the flag (two writers of one
+     * persistence slot is two cost models); it PREDICTS the opening and names
+     * the tick the tape declares.
+     */
+    it('⛓⛓ L5\'s deaths OPEN {5,0}, computed, against the tape\'s own declaration', () => {
+        const run = driveTape('r7-act2-5');
+        const opens = run.chaserKillLockOpens.filter((o) => !o.nil);
+        expect(opens).toHaveLength(1);
+        expect(opens[0].opens).toEqual([{ flag: 0, at: 'lock@48,112' }]);
+        expect(opens[0].declaredAt).toEqual([737]);
+        // …and every EARLIER death computed the nil rather than skipping the
+        // scan ("there were no kill locks" and "nobody looked" print the same
+        // thing — the IceTurret arm's own law).
+        const nils = run.chaserKillLockOpens.filter((o) => o.nil);
+        expect(nils.length).toBe(2);
+        expect(nils.every((o) => /stay shut/.test(o.why))).toBe(true);
+    });
+
+    /**
+     * ⛔ MUTATION, RUN: strip the tape's declared clear and the same walk
+     * THROWS by name. A clear the model can see coming and the tape does not
+     * carry is a blocker that opens in the game and stays shut here — which
+     * is the silent divergence this arm exists to prevent.
+     */
+    it('⛔ MUTATION: an UNDECLARED kill-lock opening is a named throw', () => {
+        const t = loadTape('r7-act2-5');
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: t.boot,
+            noclip: false,
+            noDamage: false,
+            noHazards: t.noHazards,
+            grants: t.grants,
+            persistence: [],              // ⛔ the declaration, removed
+            equips: t.equips,
+            pins: t.pins ?? [],
+            save: t.save ?? null,
+            rng: t.rng ?? null,
+            seam: t.seam ?? null,
+            roles: ROLES_ON,
+        });
+        expect(() => {
+            for (let i = 0; i < t.tick_count; i += 1) run.advance(new Set(heldKeysAt(t, i)));
+        }).toThrow(/OPENS 1 kill lock\(s\) in level 5 \[\{5,0\}\]/);
+    });
+
+    /**
+     * ⛓ COVER IS A RESOURCE, MEASURED. An arrow stops on anything it touches,
+     * and the ledger says which — so "the body is in shadow" stops being a
+     * plan-time prediction and becomes a fact inside the run.
+     */
+    it('⛓ arrows die on COVER as well as on bodies, and the ledger names which', () => {
+        const run = driveTape('r7-act2-5');
+        const arms = new Set(run.arrowBodyHits.map((h) => h.arm));
+        expect(arms.has('cover')).toBe(true);
+        expect(arms.has('chaser')).toBe(true);
+        // Every row names an arrow and a body — a hit with no subject is a
+        // count, and a count is not a witness (trap 113).
+        expect(run.arrowBodyHits.every((h) => h.arrow && h.body)).toBe(true);
     });
 });

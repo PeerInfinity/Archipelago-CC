@@ -51,6 +51,7 @@ import {
     normalizeLiveOpts,
     rect,
     rectsOverlap,
+    ARROW_COVER_TYPES,
 } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
@@ -2035,5 +2036,49 @@ describe('the arrow traps (R7 slice 6b)', () => {
         const w = buildLevelWorld(atlasLevelSource()(20));
         expect(Array.isArray(w.arrowTraps)).toBe(true);
         expect(w.arrowTraps).toHaveLength(0);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE ARROW'S COVER LIST IS A FOURTH MOVER.
+ *
+ * `Arrow.hitables` is `["Player","Enemy","Tree","Solid","Shield"]` and
+ * `Arrow.solids` is EMPTY, so the hitables list is the only thing that stops
+ * an arrow — and it stops on all five whether or not it damages them. Player
+ * and Enemy are the run's business (it holds their positions); the other
+ * three are geometry, and they are NOT the player's list.
+ */
+describe('R8 slice 3: `collidesArrowCover` — the arrow\'s own three types', () => {
+    /**
+     * ⛔ THE EQUALITY WITH THE BLAST'S LIST IS A COINCIDENCE OF TWO AS3
+     * CLASSES, NOT A SHARED DERIVATION — asserted WITH that reason so the day
+     * one of them changes, this row says which. Sharing the symbol is how a
+     * list comes to mean nothing ([[feedback_two_cost_models_must_agree]]).
+     */
+    it('⛓ has the same three members as the blast\'s list today, by coincidence', () => {
+        expect([...ARROW_COVER_TYPES].sort()).toEqual(['Shield', 'Solid', 'Tree']);
+    });
+
+    /**
+     * ⛔ AND IT IS NARROWER THAN THE PLAYER'S. `Rock`, `Rope` and `ShieldBoss`
+     * are in `Mobile.solids` and in no arrow's hitables — a model that reused
+     * `collidesSolid` would stop arrows the game flies through, and cover is
+     * what decides which body a ceiling can reach.
+     */
+    it('⛔ it does NOT carry Rock, Rope or ShieldBoss, which the player\'s list does', () => {
+        for (const t of ['Rock', 'Rope', 'ShieldBoss', 'LavaBoss']) {
+            expect(ARROW_COVER_TYPES.includes(t)).toBe(false);
+        }
+    });
+
+    it('⛓ L5\'s torch stops an arrow, and the query answers with the entry', () => {
+        const w = buildLevelWorld(atlasLevelSource()(5), { roles: RELAXED_ROLES });
+        // Every `type: "Solid"` entry in the room is arrow cover; the query
+        // returns the entry rather than a boolean, which is what lets a
+        // ledger name WHICH body an arrow died on.
+        const solid = w.solids.find((x) => x.cls && x.cls.type === 'Solid');
+        expect(solid).toBeTruthy();
+        const hit = w.collidesArrowCover(solid.rect, {});
+        expect(hit).toBeTruthy();
     });
 });

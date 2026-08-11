@@ -12,6 +12,9 @@ import { ENEMY_CLASSES } from './combat.js';
 import {
     animTicks,
     applyFriction,
+    createDieAnim,
+    createSpriteAnim,
+    stepSpriteAnim,
     chaseImpulse,
     chaserBoxAt,
     chaserStep,
@@ -240,5 +243,66 @@ describe('the placements come from the census, not from here', () => {
             expect(c).not.toHaveProperty('runRange');
             expect(c).not.toHaveProperty('hitbox');
         }
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE DEATH ANIMATION AS A LOOP, because an arrow now
+ * causes one and the run has to carry it between ticks.
+ *
+ * `animTicks` is the closed form and answers "how many updates until the
+ * callback"; `stepSpriteAnim` is `Spritemap.update` verbatim and answers
+ * "where is it now". Two derivations of one number stay one number only if
+ * something asserts it ([[feedback_two_cost_models_must_agree]]).
+ */
+describe('R8 slice 3: `Spritemap.update` as the loop it is', () => {
+    it('⛓ the LOOP and the closed form agree, for every transcribed class', () => {
+        for (const [tag, c] of Object.entries(CHASERS)) {
+            const anim = createDieAnim(tag);
+            let n = 0;
+            let fired = false;
+            while (!fired && n < 500) { fired = stepSpriteAnim(anim); n += 1; }
+            expect(fired).toBe(true);
+            expect(n).toBe(deathTicks(tag));
+            expect(n).toBe(animTicks(c.dieAnim.frames, c.dieAnim.rate));
+        }
+    });
+
+    /**
+     * ⛔ THE CALLBACK IS THE FENCEPOST, NOT THE LAST FRAME. `_index` reaching
+     * `_frameCount` fires it — one PAST the last frame — which is why a
+     * four-frame animation at rate 5 takes 25 updates and not 24. The
+     * plausible wrong answer is the one this asserts against.
+     */
+    it('⛔ the callback fires when the index reaches frameCount, not frameCount - 1', () => {
+        const anim = createSpriteAnim(4, 5);
+        let n = 0;
+        while (!stepSpriteAnim(anim)) n += 1;
+        expect(n + 1).toBe(Math.ceil(4 / (5 * FP_ELAPSED)));
+        expect(anim.index).toBe(3);        // clamped back to the last frame
+        expect(anim.complete).toBe(true);
+    });
+
+    it('⛓ a complete animation never fires again — `complete` is a latch', () => {
+        const anim = createSpriteAnim(4, 5);
+        while (!stepSpriteAnim(anim)) { /* to the callback */ }
+        expect(stepSpriteAnim(anim)).toBe(false);
+        expect(stepSpriteAnim(anim)).toBe(false);
+    });
+
+    /**
+     * ⛔ MUTATION: a rate fast enough to consume two frames in one update
+     * must step the index TWICE, because the game's `while` does. A model
+     * that used an `if` would stretch a fast animation over twice the ticks.
+     */
+    it('⛔ MUTATION: one update can consume more than one frame', () => {
+        const anim = createSpriteAnim(4, 60);   // 60 * 0.0333 ~ 2 frames/update
+        stepSpriteAnim(anim);
+        expect(anim.index).toBeGreaterThanOrEqual(1);
+        expect(anim.index).toBe(Math.floor(60 * FP_ELAPSED));
+    });
+
+    it('⛔ createDieAnim refuses a class it does not transcribe', () => {
+        expect(() => createDieAnim('sandtrap')).toThrow(/not a transcribed chaser/);
     });
 });

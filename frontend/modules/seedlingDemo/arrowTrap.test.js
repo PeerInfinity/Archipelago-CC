@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
-    ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_TRAP, ARROW_TRAP_CENSUS,
+    ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, ARROW_TARGET_DISPOSITIONS,
+    ARROW_TRAP, ARROW_TRAP_CENSUS,
     ARROW_TRAP_PRESSER, arrowLane, arrowRect, arrowTrapEntityPoint, arrowTrapFires,
     arrowVolley, assertArrowTrapCensus, createArrow, createArrowTrap, lanesOver,
     shadowOf, stepArrow, stepArrowTrap,
 } from './arrowTrap.js';
+import { assertArrowTargetPartition } from './r8Acceptance.js';
 import { rect } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
@@ -424,5 +426,113 @@ describe('the mutation list is data, not a comment', () => {
             ARROW_KILL_PLAN.lockFadeTicks]) {
             expect(Number.isFinite(n)).toBe(true);
         }
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE ARROW MEETS A BODY AT LAST.
+ *
+ * `stepArrow`'s `bodies` parameter has defaulted to `[]` since R7 slice 6b,
+ * which is what made the model's arrows fly through everything and scoped
+ * slice 1's enemy bridge by ROOM (trap 157). These are the geometry half;
+ * the PRICING half is `levelRun`'s, and the two are separate on purpose —
+ * this module has no opinion about which world it is stepping.
+ */
+describe('R8 slice 3: bodies, cover, and the removal outside the switch', () => {
+    const body = (id, type, r) => ({ id, type, rect: r });
+
+    it('⛓ an arrow that touches a body STOPS — velocity zeroed, `die` latched', () => {
+        const a = createArrow('a#0', 50, 50, 0, 5);
+        const r = stepArrow(a, {
+            bound: { w: 200, h: 200 },
+            bodies: [body('bob@1,1', 'Enemy', rect(48, 52, 8, 8))],
+        });
+        expect(r.hits).toHaveLength(1);
+        expect(a.v).toEqual({ x: 0, y: 0 });
+        expect(a.die).toBe(true);
+        expect(a.hitTypes).toEqual(['Enemy']);
+    });
+
+    /**
+     * ⛔ COVER IS A RESOURCE, AND IT IS THE `default:` ARM. `Tree`, `Solid`
+     * and `Shield` take no damage and stop the arrow anyway, because the
+     * removal (`if (hits.length > 0)`) sits OUTSIDE the switch.
+     */
+    it('⛔ an arrow dies on COVER, which takes no damage at all', () => {
+        const a = createArrow('a#0', 50, 50, 0, 5);
+        const seen = [];
+        const r = stepArrow(a, {
+            bound: { w: 200, h: 200 },
+            coverAt: (box) => { seen.push(box); return { id: 'torch@48,64', cls: { type: 'Solid' }, rect: rect(48, 52, 16, 16) }; },
+        });
+        expect(seen).toHaveLength(1);
+        expect(r.hits.map((h) => h.type)).toEqual(['Solid']);
+        expect(a.die).toBe(true);
+    });
+
+    /**
+     * ⛔ THE DISPOSITIONS PARTITION `ARROW.hitables`, and the check reads the
+     * transcription's own list rather than a copy typed beside it (trap 89).
+     */
+    it('⛓ the target dispositions are TOTAL over the hitables', () => {
+        expect(assertArrowTargetPartition(ARROW_TARGET_DISPOSITIONS, ARROW.hitables))
+            .toEqual({ types: 5 });
+        expect(ARROW_TARGET_DISPOSITIONS.Player).toBe('priced-elsewhere');
+        expect(ARROW_PLAYER_ARM.damagePricedBy).toBe('combat.PUZZLEMENT_HAZARDS.arrowtrap');
+        expect(ARROW_PLAYER_ARM.damage).toBe(PUZZLEMENT_HAZARDS.arrowtrap.damage);
+    });
+
+    it('⛔ MUTATION: a hitable with no disposition is a NAMED throw', () => {
+        const { Shield, ...short } = ARROW_TARGET_DISPOSITIONS;
+        expect(() => assertArrowTargetPartition(short, ARROW.hitables))
+            .toThrow(/Unclassified: Shield/);
+    });
+
+    it('⛔ MUTATION: a disposition for a type that is not hitable is a NAMED throw', () => {
+        expect(() => assertArrowTargetPartition(
+            { ...ARROW_TARGET_DISPOSITIONS, Rope: 'stops' }, ARROW.hitables,
+        )).toThrow(/not a hitable: Rope/);
+    });
+
+    /**
+     * ⛓ A TYPE THE ARROW DOES NOT HIT IS NOT A STOP. `Rock` and `Rope` are in
+     * the PLAYER's solids list and in no arrow's — a model that reused
+     * `collidesSolid` would stop arrows the game flies through, which is the
+     * over-approximation `collidesArrowCover` exists to avoid.
+     */
+    it('⛓ a body of an unhitable type is flown through', () => {
+        const a = createArrow('a#0', 50, 50, 0, 5);
+        const r = stepArrow(a, {
+            bound: { w: 200, h: 200 },
+            bodies: [body('rock@1,1', 'Rock', rect(48, 52, 8, 8))],
+        });
+        expect(r.hits).toEqual([]);
+        expect(a.die).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ AND A STOPPED ARROW GOES ON OVERLAPPING THE BODY IT HIT for the
+     * whole eleven-tick fade — which is exactly why slice 1's
+     * "a stepped chaser is inside a live arrow" assertion had to be deleted
+     * rather than kept: after the family is built, that condition is the
+     * ORDINARY case.
+     */
+    it('⛓ a stopped arrow keeps its position through the fade', () => {
+        const a = createArrow('a#0', 50, 50, 0, 5);
+        const b = body('bob@1,1', 'Enemy', rect(48, 52, 8, 8));
+        stepArrow(a, { bound: { w: 200, h: 200 }, bodies: [b] });
+        const at = { x: a.x, y: a.y };
+        let ticks = 0;
+        while (!a.removed && ticks < 50) {
+            const r = stepArrow(a, { bound: { w: 200, h: 200 }, bodies: [b] });
+            // ⛔ AND IT DOES NOT HIT AGAIN — `if (v.length > 0)` gates the
+            // whole test block, and the hit ZEROED the velocity. A model that
+            // re-tested a dead arrow would kill a bob three times over.
+            expect(r.hits).toEqual([]);
+            ticks += 1;
+        }
+        expect(a.removed).toBe(true);
+        expect(ticks).toBe(ARROW.fadeTicks - 1);
+        expect({ x: a.x, y: a.y }).toEqual(at);
     });
 });

@@ -88,7 +88,7 @@ import {
 // `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
 import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserBoxAt, chaserSolids, chaserStep,
-    isBridgedChaser,
+    createDieAnim, isBridgedChaser, stepSpriteAnim,
 } from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
@@ -163,7 +163,9 @@ import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // the R4 refusal's reason — "a death moves totalEnemies(), which opens
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
-import { MOBILE_DEATH_FADE, killLockLedger } from './enemyDamage.js';
+import {
+    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, enemyHit, killLockLedger,
+} from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
@@ -179,8 +181,8 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 // NEITHER way — so its live state lives here beside theirs and never in
 // `activators`.
 import {
-    ARROW_KILL_PLAN, arrowLane, arrowRect, arrowTrapFires, createArrow, createArrowTrap,
-    lanesOver, shadowOf, stepArrow, stepArrowTrap,
+    ARROW_ENEMY_HIT, ARROW_KILL_PLAN, arrowLane, arrowRect, arrowTrapFires, createArrow,
+    createArrowTrap, lanesOver, shadowOf, stepArrow, stepArrowTrap,
 } from './arrowTrap.js';
 import {
     ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
@@ -1573,6 +1575,34 @@ export function createLevelRun({
      */
     const chaserTerrainDeaths = [];
     /**
+     * ⛓⛓⛓ R8 SLICE 3 — EVERY ARROW THAT DIED ON SOMETHING, AND WHAT IT WAS.
+     *
+     * `{t, level, arrow, body, type, arm, damaged, killed?, refusedAt?,
+     * hitsAfter?}`. An arrow stops on all five of its hitables and damages
+     * two, so "which body did this arrow die on" is a question with four
+     * different answers and only one of them is a kill. ⛔ The ledger is what
+     * makes L5's column-3 SHADOW a measurement inside the run rather than a
+     * plan-time prediction: the arrows that die on `torch@48,64` say so by
+     * name, and a body under it is not being shot at.
+     */
+    const arrowBodyHits = [];
+    /**
+     * ⛓ One row per body an ARROW killed — `{t, level, id, by, arrow, hits}`.
+     * Kept apart from `chaserTerrainDeaths` because the CAUSE is the claim: a
+     * terrain death is the room doing it for free and an arrow death is the
+     * walk having earned it, and R7 slice 6c's own measurement (hits
+     * `0->1->2->3`) is a statement about this ledger and not that one.
+     */
+    const chaserKills = [];
+    /**
+     * ⛓ The kill-lock consequence of every chaser removal, COMPUTED — `{t,
+     * level, id, cause, opens, nil, why, declaredAt?}`. A nil row is the
+     * measurement that the scan RAN; an `opens` row carries the tags and the
+     * ticks the tape declares them at, which is what a later slice compares
+     * the model's own prediction against.
+     */
+    const chaserKillLockOpens = [];
+    /**
      * ⛓⛓⛓ R5 SLICE 23: every tick `BossTotem`'s clamp overwrote the
      * player's y, and what it overwrote.
      *
@@ -2296,18 +2326,52 @@ export function createLevelRun({
      * be silent. R7 slice 6e's L6 `despawn` is the standing witness that the
      * declared channel is what carries a removal the model cannot compute.
      */
+    /**
+     * ⛓⛓⛓ R8 SLICE 3 — THE REFUSAL IS WIDENED, AND WHAT IS LEFT OF IT IS
+     * NARROWER AND COMPUTED.
+     *
+     * The Arrow × Enemy family is built: `stepArrowTrapsNow` hands `stepArrow`
+     * the room's live bodies, a landed arrow runs `Enemy.hit`'s own gates
+     * through `enemyDamage.enemyHit`, and the death staging (the "die"
+     * Spritemap, `endAnim`, `Mobile.death`'s fade, the removal) is stepped
+     * here. So a bridged chaser's whole LIFETIME is computable in a room with
+     * a ceiling, and the blanket "any room with a trap" refusal is retired.
+     *
+     * ⛔ WHAT REPLACES IT IS THE SAME QUESTION ONE BODY OVER. An arrow stops
+     * on ANYTHING it touches, and a static `SandTrap` is `type = "Enemy"` — so
+     * a trap-room body whose own arrow-death this rung does NOT stage would
+     * stand in the lane for ever as far as this model is concerned, shadowing
+     * whatever is below it. That is trap 157 exactly, with the wrong lifetime
+     * on the COVER instead of on the chaser. Its clear is the tape's DECLARED
+     * v9 `at` row (`r7-act2-8`), and a second writer of one persistence slot
+     * is two cost models — so the body is a STOPPER, its death stays refused,
+     * and a room that mixes the two is refused BY NAME.
+     *
+     * ⚠ AND THE PREDICATE IS COMPUTED FROM THE ROOM, NOT DECLARED. On the
+     * act2 battery the two never meet — L4 and L5 hold traps and only bobs,
+     * L8 holds a trap and only sandtraps, L6 holds no trap — which is the
+     * measurement `R8_ARROW_ENEMY.roomScope` banks. A room that mixed them
+     * would fail here rather than silently.
+     */
     const chaserRoomVerdict = (n) => {
-        const traps = (worldFor(n).arrowTraps ?? []);
-        if (traps.length > 0) {
+        const w = worldFor(n);
+        const traps = (w.arrowTraps ?? []);
+        if (traps.length === 0) return { stepped: true, why: null };
+        const unstaged = (w.combat?.enemies ?? [])
+            .filter((e) => !isBridgedChaser(e.tag) && e.row.speed === 0);
+        if (unstaged.length > 0) {
             return {
                 stepped: false,
                 why: `level ${n} holds ${traps.length} arrow trap(s) `
-                    + `[${traps.map((t) => t.id).join(', ')}], and this model's arrows hit `
-                    + 'NOTHING — `stepArrowTrapsNow` calls `stepArrow` with no `bodies`. '
-                    + 'The GAME kills chasers with them (measured in L4: hits 0->1->2->3, '
-                    + 'body gone at t~158), so a stepped body here would outlive its real '
-                    + 'one and chase a player the game had already freed. The missing '
-                    + 'family is Arrow x Enemy',
+                    + `[${traps.map((t) => t.id).join(', ')}] AND ${unstaged.length} static `
+                    + `"Enemy" bod(ies) [${unstaged.map((e) => `${e.tag}@${e.x},${e.y}`)
+                        .join(', ')}] whose own arrow-death this rung does not stage. An `
+                    + 'arrow stops on anything it touches, so those bodies would shadow the '
+                    + 'lane for ever in this model while the GAME removes them — the same '
+                    + 'wrong-in-the-tail lifetime (trap 157) on the COVER instead of on the '
+                    + 'chaser. Their clear is the tape\'s DECLARED v9 `at` row and a second '
+                    + 'writer of one persistence slot is two cost models. Build the static '
+                    + 'arm, or route clear',
             };
         }
         return { stepped: true, why: null };
@@ -2335,13 +2399,43 @@ export function createLevelRun({
                     x: e.cx,
                     y: e.cy,
                     v: { x: 0, y: 0 },
+                    /**
+                     * ⛓⛓⛓ R8 SLICE 3 — `Enemy`'s OWN FIELDS, SPREAD FROM THE
+                     * ONE TABLE THAT TRANSCRIBES THEM, because an arrow now
+                     * drives them.
+                     *
+                     * Slice 1 carried four of these by hand with a note saying
+                     * nothing on the roster hit a bob. Something does now, and
+                     * `enemyDamage.enemyHit` reads ELEVEN — `hitsMax`,
+                     * `hitsTimerMax`, `canHit`, `onlyHitBy`, `hitByFire`,
+                     * `hitByDarkStuff`, `justKnock`, `maxForce` among them —
+                     * so the state is built from `ENEMY_DAMAGE_DEFAULTS`
+                     * rather than from whichever four a reader remembered.
+                     * A field this file typed itself would be a second
+                     * transcription of `Enemies/Enemy.as:19-51` (trap 86's
+                     * shape, and the `src` key is stripped so the spread
+                     * carries data only).
+                     *
+                     * ⚠ `Bob` overrides NONE of them (`Bob.as` writes
+                     * `moveSpeed`, `runRange`, `sitFrames` — all census
+                     * fields, none of them damage ones), so the defaults ARE
+                     * this class's values; a class that overrode one would
+                     * pass it here the way `createEnemyDamage` takes
+                     * `overrides`.
+                     */
+                    ...(() => { const { src, ...f } = ENEMY_DAMAGE_DEFAULTS; return f; })(),
+                    // ⛔ `damage` is the CENSUS's, not the base class's — the
+                    // spread above would otherwise overwrite the instance's
+                    // own value with the default 1. Re-stated BELOW the
+                    // spread, which is where key order makes it bind (the
+                    // `beforeTypeFlip` lesson, slice 0 §8.3.3).
                     damage: e.row.damage,
-                    // `Enemy`'s own fields, at their class defaults. Nothing
-                    // on this rung's roster hits a bob, so they are carried
-                    // rather than driven — and carried is what makes the
-                    // refusal in `KILL_ARM_POLICY.Bob` a decision.
-                    hits: 0,
-                    hitsTimer: 0,
+                    /**
+                     * The "die" Spritemap, once `startDeath` has played it.
+                     * `null` while the body is alive — an animation nobody
+                     * started is not an animation at frame 0.
+                     */
+                    anim: null,
                     dying: false,
                     // ⛔ `destroy` AND `removed` ARE DIFFERENT FENCEPOSTS, and
                     // trap 87 is the whole reason both exist: `destroy` stops
@@ -4496,27 +4590,34 @@ export function createLevelRun({
      * state, which is what the game's trap sees — the same off-by-one the
      * chest/cover pair already documents, needing the note and no special case.
      *
-     * ⚠ WHAT THIS DOES **NOT** DO, and both absences are claims:
+     * ── ⛓⛓⛓ R8 SLICE 3: THE ARROW × ENEMY FAMILY. THIS DOCBLOCK'S TWO
+     * NAMED ABSENCES ARE PAID; THE THIRD IS NOT, AND SAYS SO ─────────────
      *
-     *   1. **It computes no enemy hit.** An `Arrow`'s hitables include
-     *      `"Enemy"`, and this run holds no enemy BODIES —
-     *      `KILL_ARM_POLICY.Bob` is `refused` because a chaser's kill needs
-     *      its POSITION, and an arrow needs the body in a LANE for exactly
-     *      the same reason. The GAME adjudicates the kill (§1.5), which is
-     *      what `probe-seedling-r7-l5-arrows.mjs` is.
-     *   2. **It computes no cover hit and no player hit.** An arrow's
-     *      hitables are a THIRD list — narrower than `Mobile.solids` (no
-     *      `Rock`, no `Rope`, no `ShieldBoss`) and wider in one place
-     *      (`Shield`) — so `collidesSolid`, which is the PLAYER's list,
-     *      would stop arrows the game flies through. And the damage an
-     *      arrow does to the player is ALREADY priced, by
-     *      `combat.PUZZLEMENT_HAZARDS.arrowtrap`; computing it here as well
-     *      would double-bill it. `shadowOf` is the predicate a planner asks
-     *      the cover question with, at plan time, with the boxes in hand.
+     * What slice 1 measured (trap 157) was that BOTH absences were one
+     * absence: an arrow that hits nothing lets a chaser the game killed keep
+     * chasing, which is why a room with a ceiling could not be stepped at
+     * all. So the arrow now gets its `bodies`, in `ARROW.hitables` order:
      *
-     * ⇒ what this DOES carry is the cadence, the flight, and the volley
-     * ledger — which is the only positive observable a hold on a trap group
-     * has, because a trap has no open state to move.
+     *   · **the player** — a STOP, never a bill. `Arrow.as:51` really does
+     *     call `Player.hit`, and `combat.PUZZLEMENT_HAZARDS.arrowtrap` has
+     *     priced that hit since R7 slice 6b. Billing it here as well is the
+     *     double-bill the old note refused, and the note was right about the
+     *     DAMAGE and wrong about the STOP: an arrow that reaches the player
+     *     dies on the player, which decides whether the body behind them is
+     *     shot. (`ARROW_PLAYER_ARM`.)
+     *   · **the live `"Enemy"` bodies** — the bridged chasers at the position
+     *     THIS run steps them to, plus the static census bodies at their
+     *     placements. The chasers are DAMAGED; the static ones only STOP
+     *     (see `chaserRoomVerdict` for the bound and the reason).
+     *   · **cover** — `world.collidesArrowCover`, the arrow's own type list
+     *     (`Tree`/`Solid`/`Shield`), which is neither the player's nor the
+     *     crusher's. `shadowOf` remains the PLAN-time predicate over the same
+     *     fact; this is the live one, and they answer the same question at
+     *     two different times rather than two questions.
+     *
+     * ⇒ what this carries now is the cadence, the flight, the volley ledger
+     * AND the kill — and the run has, for the first time, a reason to know
+     * which body an arrow died on.
      */
     function stepArrowTrapsNow(activators) {
         const st = arrowTrapStateFor(level);
@@ -4539,10 +4640,158 @@ export function createLevelRun({
         // `FP.width/height` from the loading level's own `.oel` dimensions —
         // it is not the screen and it moves per level.
         const bound = { w: world.world.width, h: world.world.height };
-        for (const a of flight) stepArrow(a, { frozen: ceremony !== null, bound });
+        const frozen = ceremony !== null;
+        // ⚠ ONCE PER TICK, not per arrow — `stepChasersNow`'s note, and the
+        // same brand contract (slice 0). Every arrow in flight this tick sees
+        // one bag, which is also what the game's single world gives them.
+        const solidOpts = normalizeLiveOpts(liveSolidOpts());
+        const bodies = arrowBodiesNow();
+        const coverAt = (box) => world.collidesArrowCover(box, solidOpts);
+        for (const a of flight) {
+            const r = stepArrow(a, {
+                frozen, bound, bodies, coverAt,
+            });
+            for (const h of r.hits) applyArrowHit(a, h, frozen);
+        }
         for (let i = flight.length - 1; i >= 0; i -= 1) {
             if (flight[i].removed) flight.splice(i, 1);
         }
+    }
+
+    /**
+     * ⛓⛓⛓ THE BODIES AN ARROW CAN MEET, IN `ARROW.hitables` ORDER.
+     *
+     * ⛔ THE `"Enemy"` HALF IS TWO ROSTERS AND THEY ARE NOT INTERCHANGEABLE.
+     * A bridged chaser's box is `chaserBoxAt` at the position this run stepped
+     * it to; a static census body's is `contactRect` at its placement, which
+     * IS its position for the whole visit. Reading a chaser off the census
+     * would put every arrow through the cell the body left on its first
+     * chasing tick — the same eight-pixel mistake the live contact-control
+     * pair caught in slice 1, at the other end of the room.
+     *
+     * ⚠ A bridged chaser in a room the verdict REFUSES contributes NOTHING —
+     * this run has no position for it, and a body at its stale placement is a
+     * stop the game may not take. That is the refusal showing through rather
+     * than a gap: `chaserRoomVerdict` names it, and under `noclip`/`noDamage`
+     * the chaser roster is empty by construction (§9.12).
+     */
+    function arrowBodiesNow() {
+        const out = [];
+        out.push({
+            id: 'player',
+            type: 'Player',
+            rect: playerBoxAt(state.x, state.y),
+        });
+        /**
+         * ⛔⛔ THE SAME GATE `stepChasersNow` RETURNS ON, RE-ASKED HERE — and
+         * it has to be, because this function is the THIRD reader of a
+         * chaser's position and the gate's soundness is an argument about how
+         * many readers there are (`R8_ENEMY_BRIDGE.enemyBodyReaders`). Under
+         * `noclip`/`noDamage` nothing steps the bodies, so including them
+         * would put every arrow through a placement the game's body left on
+         * its first chasing tick — a stop the game does not take, on 94
+         * committed fixtures. Asking `chaserStateFor` at all would also BUILD
+         * a roster those runs deliberately never build.
+         */
+        if (!noclip && !noDamage) {
+            for (const c of chaserStateFor(level).values()) {
+                if (c.removed) continue;
+                out.push({
+                    id: c.id, type: 'Enemy', rect: chaserBoxAt(c.tag, c.x, c.y), chaser: c,
+                });
+            }
+        }
+        for (const inst of (world.combat?.enemies ?? [])) {
+            if (isBridgedChaser(inst.tag)) continue;
+            const r = contactRect(inst);
+            if (r) out.push({ id: `${inst.tag}@${inst.x},${inst.y}`, type: 'Enemy', rect: r });
+        }
+        return out;
+    }
+
+    /**
+     * ⛓⛓⛓ ONE `Arrow.update` HIT, DISPATCHED BY WHAT IT LANDED ON.
+     *
+     * `Arrow.as:44-56` — the switch has two arms and a `default:`, and the
+     * removal is outside all three. So the arrow is already stopped by the
+     * time this runs; what is left is who gets billed.
+     *
+     * ⛔ THE KNOCKBACK IS THE `else` ARM, AND THE KILLING HIT DOES NOT TAKE
+     * ONE. `Enemy.hit` is `if (hits >= hitsMax) { startDeath(t) } else {
+     * knockback(f, p) }` — so the third arrow into a bob stages a death and
+     * leaves the body's velocity exactly where the second one left it. A
+     * model that knocked back on every landed hit would slide every corpse
+     * fifty pixels the game leaves standing.
+     */
+    function applyArrowHit(arrow, hit, frozen) {
+        const c = hit.chaser ?? null;
+        if (!c) {
+            // The player (priced by `PUZZLEMENT_HAZARDS.arrowtrap`), a static
+            // `"Enemy"` body (refused by name — see `chaserRoomVerdict`), or
+            // cover (no arm at all: `default:`). All three STOP the arrow,
+            // which `stepArrow` has already done; the ledger records which,
+            // because "the arrow died on the torch" is the whole of L5's
+            // column-3 shadow and a reader should not have to re-derive it.
+            arrowBodyHits.push({
+                t: ticksCompleted + 1,
+                level,
+                arrow: arrow.id,
+                body: hit.id,
+                type: hit.type,
+                arm: hit.cover ? 'cover' : (hit.type === 'Player' ? 'player' : 'static-enemy'),
+                damaged: false,
+            });
+            return;
+        }
+        const verdict = enemyHit(c, {
+            d: ARROW_ENEMY_HIT.damage,
+            f: ARROW_ENEMY_HIT.force,
+            t: ARROW_ENEMY_HIT.type,
+            // `Enemy.hit` carries `!Game.freezeObjects` INSIDE its own gate,
+            // unlike `hitUpdate` — so a ceremony stops the damage and not the
+            // i-frames (`enemyHitUpdate`'s own asymmetry note).
+            frozen,
+        });
+        if (verdict.knockedBack) {
+            /**
+             * `Enemy.knockback(f, p)` — `a = atan2(y - p.y, x - p.x)`, from
+             * the ARROW's own entity point (`new Point(x, y)` in
+             * `Arrow.as:52`), not the trap's. Its own three gates (`p`,
+             * `!destroy`, `currentAnim != "die"`) all hold on a landed
+             * non-killing hit by construction: `enemyHit` only reports
+             * `knockedBack` from arms that reached `knockback` in the source.
+             */
+            const a = Math.atan2(c.y - arrow.y, c.x - arrow.x);
+            c.v.x += verdict.force * Math.cos(a);
+            c.v.y += verdict.force * Math.sin(a);
+        }
+        if (verdict.killed) {
+            // `Bob.startDeath` is `play("die")` and does NOT set `destroy` —
+            // `endAnim` does, `MOBILE_DEATH_FADE` ticks after that, and
+            // `FP.world.remove` after that. Three fenceposts, not one.
+            c.anim = createDieAnim(c.tag);
+            chaserKills.push({
+                t: ticksCompleted + 1,
+                level,
+                id: c.id,
+                by: 'arrow',
+                arrow: arrow.id,
+                hits: c.hits,
+            });
+            assertChaserRemovalIsDeclared(c, 'an arrow kill');
+        }
+        arrowBodyHits.push({
+            t: ticksCompleted + 1,
+            level,
+            arrow: arrow.id,
+            body: hit.id,
+            type: hit.type,
+            arm: 'chaser',
+            damaged: verdict.damaged,
+            killed: verdict.killed,
+            refusedAt: verdict.refusedAt,
+            hitsAfter: c.hits,
+        });
     }
 
     /**
@@ -6240,17 +6489,28 @@ export function createLevelRun({
                 + 'this bridge steps has one, and that nil is why it is refused rather '
                 + 'than approximated.');
         }
-        for (const a of arrowsFor(level)) {
-            if (a.removed) continue;
-            if (!rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), arrowRect(a))) continue;
-            throw new Error(`levelRun: the stepped chaser ${c.id} is inside live arrow `
-                + `${a.id} in level ${level} at tick ${ticksCompleted + 1}. `
-                + '`Arrow.as:52` calls `Enemy.hit(v.length, …)` and three of those kill a '
-                + 'bob — and this model\'s arrows hit NOTHING (`stepArrow` is called with '
-                + 'no `bodies`). `chaserRoomVerdict` refuses a room with a TRAP in it, so '
-                + 'reaching this line means an arrow came from somewhere that check does '
-                + 'not know about. Build Arrow x Enemy.');
-        }
+        /**
+         * ⛓⛓⛓ R8 SLICE 3 — THE ARROW ARM OF THIS ASSERTION IS GONE, AND ITS
+         * DELETION IS THE SLICE.
+         *
+         * It read: *"the stepped chaser is inside live arrow X, and this
+         * model's arrows hit NOTHING — build Arrow × Enemy."* The family is
+         * built, so the condition it fired on is now the ORDINARY case: an
+         * arrow that meets a body stops on it (`die = true`) and then fades
+         * for eleven ticks AT THAT POSITION, overlapping the body it hit for
+         * every one of them. Keeping the arm would make the room it was
+         * written to protect unenterable.
+         *
+         * ⚠ WHAT REPLACED IT IS NOT NOTHING. The gap the arm existed to keep
+         * loud is now covered from the other side and in three places: the
+         * hit is PRICED (`applyArrowHit`), the removal's ledger consequence is
+         * COMPUTED and checked against the tape's declaration
+         * (`assertChaserRemovalIsDeclared`), and a room mixing a trap with a
+         * body whose arrow-death is unstaged is refused BY NAME
+         * (`chaserRoomVerdict`). A deleted assertion whose subject moved into
+         * the model is a discharge; a deleted assertion whose subject did not
+         * is trap 62.
+         */
     }
 
     /**
@@ -6269,15 +6529,48 @@ export function createLevelRun({
      * record. A room where it is NOT nil is a route change nothing asked for,
      * and it fails by name.
      */
-    function assertChaserRemovalOpensNothing(c) {
+    /**
+     * ⛓⛓⛓ R8 SLICE 3 WIDENS THIS FROM A REFUSAL INTO A CHECK — and the
+     * difference is exactly L5.
+     *
+     * Slice 1's version threw whenever a chaser's removal opened a `tset == -1`
+     * lock, because the run could not model what happened next. It still
+     * cannot MODEL it — the lock's own hundred alpha steps and the durable
+     * write that follows are the tape's DECLARED v9 `at` row, and a second
+     * writer of one persistence slot is two cost models. But refusing is now
+     * wrong for a different reason: L5's whole solve IS three arrow kills
+     * opening `lock@48,112`, and a model that threw there could not step the
+     * room the family was built for.
+     *
+     * ⇒ the consequence is COMPUTED as before, and then:
+     *
+     *   · NIL  — recorded as a measurement ("there were no kill locks" and
+     *            "nobody looked" print the same thing, the IceTurret arm's
+     *            own law);
+     *   · OPENS something the tape DECLARES — passes, and the prediction is
+     *     banked in `chaserKillLockOpens` so a later slice can check the
+     *     model's own opening tick against the declared `at`. That is trap
+     *     148's shape: the declaration becomes a CHECK on both sides rather
+     *     than an input nobody audits.
+     *   · OPENS something NOBODY DECLARES — throws BY NAME. A flag the walk
+     *     did not earn and the tape does not carry is a blocker that opens in
+     *     the game and stays shut in the model, which is the silent version
+     *     of the divergence this whole arm exists to prevent.
+     */
+    function assertChaserRemovalIsDeclared(c, cause) {
         const census = world.combat?.enemies ?? null;
         const roster = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
         const st = chaserStateFor(level);
         // The body is still in the census roster (the census is the PLACED
         // list and does not move), so `bodiesAfter` is that list minus the
         // ones this run has removed — including the one being removed now.
-        const goneIds = new Set([...st.values()].filter((o) => o.destroy || o.removed)
-            .map((o) => o.id));
+        // ⛔ `dying` COUNTS HERE AND NOT IN `totalEnemies()`. This ledger asks
+        // "what does the world look like once the staging finishes"; the
+        // ENGINE's count keeps a dying body until `FP.world.remove` (trap 87).
+        // Two different questions, and collapsing them would predict the lock
+        // opening 35 ticks early.
+        const goneIds = new Set([...st.values()]
+            .filter((o) => o.destroy || o.removed || o.dying).map((o) => o.id));
         goneIds.add(c.id);
         const after = (census ?? []).filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
             .map((e) => ({ as3: e.as3 }));
@@ -6289,18 +6582,49 @@ export function createLevelRun({
         // `totalEnemies()` reads 0 both sides and the nil is computed from a
         // fiction. Scoped to the case where the count is load-bearing.
         if (led.locks.length > 0 && census === null) {
-            throw new Error(`levelRun: ${c.id}'s terrain death in level ${level} happens `
+            throw new Error(`levelRun: ${c.id}'s death (${cause}) in level ${level} happens `
                 + `in a room with ${led.locks.length} \`tset == -1\` lock(s), and the `
                 + 'world was built with NO COMBAT CENSUS — so `totalEnemies()` reads 0 '
                 + 'because nothing was ASKED. Build the world with the `combat` role.');
         }
-        if (!led.nil) {
-            throw new Error(`levelRun: the removal of ${c.id} at tick ${ticksCompleted + 1} `
-                + `OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — `
-                + 'a blocker the walk did not earn and this slice does not model. The '
-                + 'bridge steps a chaser\'s POSITION; a room whose lock waits on its DEATH '
-                + 'needs the kill arm too.');
+        if (led.nil) {
+            chaserKillLockOpens.push({
+                t: ticksCompleted + 1, level, id: c.id, cause, opens: [], nil: true, why: led.why,
+            });
+            return;
         }
+        const declared = persistence.filter((p) => p.level === level);
+        /**
+         * ⛔ THE PERSISTENCE TAG IS `flag`, NOT `tag` — and the first cut of
+         * this check read `tag`, which `killLocksIn` fills with the ENTITY
+         * TYPE (`"lock"`). It printed `{5,lock}` and matched no declaration,
+         * so the room the whole family was built for threw. A field called
+         * `tag` that is not the tag a reader means is trap 143's shape on the
+         * other side of the call — read the producer, not the name.
+         */
+        const undeclared = led.opens.filter(
+            (o) => !declared.some((p) => p.tag === o.flag),
+        );
+        if (undeclared.length > 0) {
+            throw new Error(`levelRun: the removal of ${c.id} at tick ${ticksCompleted + 1} `
+                + `(${cause}) OPENS ${undeclared.length} kill lock(s) in level ${level} `
+                + `[${undeclared.map((o) => `{${level},${o.flag}}`).join(', ')}] (${led.why}) `
+                + '— and the tape DECLARES no clear for them. A `Lock`\'s own hundred alpha '
+                + 'steps and the durable write that follows are the declared v9 `at` '
+                + 'channel; computing them here as well would make two writers of one '
+                + 'persistence slot. So a clear this model can see coming and the tape does '
+                + 'not carry is a blocker that opens in the game and stays shut here.');
+        }
+        chaserKillLockOpens.push({
+            t: ticksCompleted + 1,
+            level,
+            id: c.id,
+            cause,
+            opens: led.opens.map((o) => ({ flag: o.flag, at: `${o.tag}@${o.x},${o.y}` })),
+            nil: false,
+            why: led.why,
+            declaredAt: led.opens.map((o) => declared.find((p) => p.tag === o.flag)?.at ?? null),
+        });
     }
 
     function stepChasersNow() {
@@ -6308,9 +6632,18 @@ export function createLevelRun({
         // and it needs one more term, which `R8_ENEMY_BRIDGE.enemyBodyReaders`
         // enumerates: under the flag a chaser's POSITION has no reader in
         // this model at all (the block sweep's Enemy arm is spinners-only,
-        // `stepArrow` gets no bodies, and a wand shot at a chaser already
-        // throws). So stepping is byte-inert here, and running it would cost
-        // 94 committed fixtures their hot loop for a number nobody reads.
+        // and a wand shot at a chaser already throws). So stepping is
+        // byte-inert here, and running it would cost 94 committed fixtures
+        // their hot loop for a number nobody reads.
+        //
+        // ⛔⛔⛔ R8 SLICE 3 GAVE THAT ARGUMENT A THIRD READER, AND THE GATE IS
+        // ONLY STILL SOUND BECAUSE `arrowBodiesNow` ASKS THE SAME QUESTION.
+        // `stepArrow` gets `bodies` now, so a chaser's position IS read under
+        // this flag unless the reader declines it — which it does, by name and
+        // for this reason. A capability that lights up a second control is the
+        // shape that already bit this arc twice
+        // ([[feedback_capability_lights_up_two_controls]]); the cure both
+        // times was to make every predicate ask the question out loud.
         if (noclip || noDamage) return;
         const st = chaserStateFor(level);
         if (st.size === 0) return;
@@ -6341,6 +6674,40 @@ export function createLevelRun({
         for (const id of ids) {
             const c = st.get(id);
             if (c.removed) continue;
+            /**
+             * ⛔⛔⛔ R8 SLICE 3 — THE ENTITY UPDATE AND THE GRAPHIC UPDATE ARE
+             * TWO STEPS, AND THE GAME RUNS THEM IN THAT ORDER IN ONE
+             * ITERATION.
+             *
+             * `World.update` is `if (e.active) { … e.update(); }
+             * if (e._graphic && e._graphic.active) e._graphic.update();` — so
+             * the "die" Spritemap advances AFTER the body's own update, every
+             * tick, OUTSIDE `Enemy.update`'s off-screen early return and
+             * outside the freeze. That is why this loop body is a function
+             * that RETURNS rather than a block that `continue`s: every path
+             * out of the entity half still owes the graphic half.
+             */
+            const stop = stepChaserEntity(c, {
+                st, playerPoint, solidOpts, staticEnemyBoxes,
+            });
+            // `Bob.endAnim` — `destroy = true`, at the animation's end and
+            // not at the killing hit. The third fencepost of the three
+            // (`dying` -> `destroy` -> `removed`).
+            if (c.anim && stepSpriteAnim(c.anim)) c.destroy = true;
+            if (stop === 'player-died') return;
+        }
+    }
+
+    /**
+     * ONE `Enemy.update()` + `Bob.update()` for one body — the ENTITY half.
+     * See `stepChasersNow`'s loop for why the graphic half is its caller's.
+     *
+     * @returns {?string} `'player-died'` when the contact this body billed
+     *   killed the player, which ends the whole family's tick as it did when
+     *   this was a `return` inside the loop.
+     */
+    function stepChaserEntity(c, { st, playerPoint, solidOpts, staticEnemyBoxes }) {
+        {
             const box = chaserBoxAt(c.tag, c.x, c.y);
             const before = { x: c.x, y: c.y };
             /**
@@ -6415,7 +6782,7 @@ export function createLevelRun({
                         x: c.x,
                         y: c.y,
                     });
-                    assertChaserRemovalOpensNothing(c);
+                    assertChaserRemovalIsDeclared(c, 'a terrain death');
                 }
             }
             /**
@@ -6437,11 +6804,27 @@ export function createLevelRun({
              * ⚠ AND `death()` IS OUTSIDE THE FREEZE GATE, so a corpse keeps
              * fading through a ceremony. `assertNoCeremonyBesideLiveChaser`
              * is what refuses the case this model cannot spend as steps.
+             *
+             * ⛔⛔⛔ R8 SLICE 3: IT IS *NOT* OUTSIDE THE OFF-SCREEN GATE, AND
+             * THAT IS A FENCEPOST THIS ARM DID NOT HAVE BEFORE ARROWS COULD
+             * KILL. `death()` is reached through `super.update()`, which is
+             * BELOW `Enemy.update`'s `if (!activeOffScreen && !onScreen())
+             * return;` — so a corpse the camera has lost STOPS FADING and
+             * resumes when the camera comes back. It cost nothing while the
+             * only death was L6's drowning (which happens on screen and
+             * finishes there); an arrow kill can leave a corpse fading in a
+             * room the player is walking away from, and `totalEnemies()`
+             * counts it until the fade ends. The graphic half of the tick is
+             * ungated (`stepChasersNow`'s loop) and this half is not — the
+             * two halves genuinely disagree, which is the whole reason they
+             * are two calls.
              */
             if (c.destroy) {
-                c.alpha -= MOBILE_DEATH_FADE.alphaStep;
-                if (c.alpha <= 0) c.removed = true;
-                continue;
+                if (onScreen) {
+                    c.alpha -= MOBILE_DEATH_FADE.alphaStep;
+                    if (c.alpha <= 0) c.removed = true;
+                }
+                return null;
             }
             const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying }, playerPoint, {
                 onScreen,
@@ -6466,7 +6849,7 @@ export function createLevelRun({
             // which is `enemyHitPlayerFires`, the same predicate the static
             // census arm uses. One implementation, two callers.
             const bodyNow = chaserBoxAt(c.tag, c.x, c.y);
-            if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) continue;
+            if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) return null;
             const verdict = enemyHitPlayerFires(
                 { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying },
                 onScreenNow(bodyNow, `${c.tag} ${c.id}`) ? 'on' : 'off',
@@ -6475,7 +6858,7 @@ export function createLevelRun({
                 contactsSuppressed.push({
                     t: ticksCompleted + 1, level, source: 'chaser', id: c.id, why: verdict.refusedAt,
                 });
-                continue;
+                return null;
             }
             applyPlayerHit({
                 source: 'chaser',
@@ -6487,8 +6870,9 @@ export function createLevelRun({
                 damage: c.damage,
                 from: { x: c.x, y: c.y },
             });
-            if (pendingDeath) return;
+            if (pendingDeath) return 'player-died';
         }
+        return null;
     }
 
     /**
@@ -8278,10 +8662,37 @@ export function createLevelRun({
                 out.push({
                     id: c.id, tag: c.tag, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
                     hits: c.hits, hitsTimer: c.hitsTimer, dying: c.dying,
+                    // ⛓ R8 SLICE 3 — the three fenceposts, reported apart:
+                    // `dying` (the "die" anim is playing, `totalEnemies()`
+                    // still counts it), `destroy` (`endAnim` fired, the fade
+                    // is running, `totalEnemies()` STILL counts it), and the
+                    // absence from this list at all (`FP.world.remove`, which
+                    // is the one that moves the count). A live solver reading
+                    // "is that body a threat" wants the first; one reading
+                    // "will the lock open" wants the third.
+                    destroy: c.destroy,
+                    alpha: c.alpha,
                 });
             }
             return out;
         },
+        /**
+         * ⛓⛓⛓ R8 SLICE 3 — every arrow that died on a body, and on WHICH.
+         * The positive witness for a kill (trap 113: a count is not a
+         * witness), and the live measurement of L5's column-3 SHADOW — the
+         * arrows that die on `torch@48,64` name it.
+         */
+        get arrowBodyHits() { return arrowBodyHits.map((h) => ({ ...h })); },
+        /** One per chaser an ARROW killed — `{t, level, id, by, arrow, hits}`. */
+        get chaserKills() { return chaserKills.map((k) => ({ ...k })); },
+        /**
+         * The kill-lock consequence of every chaser removal, computed. A `nil`
+         * row is the measurement that the scan RAN (the IceTurret arm's law:
+         * "there were no kill locks" and "nobody looked" print the same
+         * thing); an `opens` row carries the tags and the tick the tape
+         * declares each at, which is what makes the declaration a CHECK.
+         */
+        get chaserKillLockOpens() { return chaserKillLockOpens.map((o) => ({ ...o })); },
         /**
          * One row per tick a bridged chaser MOVED. ⚠ The emptiness is a
          * claim: a room whose chasers never wake writes nothing here, which

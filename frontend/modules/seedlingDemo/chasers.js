@@ -115,6 +115,84 @@ export function animTicks(frameCount, frameRate) {
 }
 
 /**
+ * ⛓⛓⛓ R8 SLICE 3 — `Spritemap.update` AS THE LOOP IT IS, because a death
+ * this model now CAUSES has to be staged rather than counted.
+ *
+ * `animTicks` above is the closed form and it is right; it answers "how many
+ * updates until the callback". What an arrow kill needs is the STATE — a body
+ * whose animation is 12 updates in is still an entity `totalEnemies()` counts,
+ * and the run has to carry that between ticks. Both live here and
+ * `chasers.test.js` asserts the loop and the closed form agree, which is the
+ * only way two derivations of one number stay one number
+ * ([[feedback_two_cost_models_must_agree]]).
+ *
+ * ```
+ *   _timer += (FP.fixed ? _frameRate : _frameRate * FP.elapsed) * rate;
+ *   if (_timer >= 1) { while (_timer >= 1) { _timer--; _index++;
+ *       if (_index == _frameCount) { ... _index = _frameCount - 1;
+ *           complete = true; if (callback != null) callback(); break; } } }
+ * ```
+ *
+ * ⛔ AND THE CALLBACK IS THE FENCEPOST, NOT THE LAST FRAME. `_index` reaching
+ * `_frameCount` is what fires it — one past the last frame — which is why a
+ * four-frame animation at rate 5 takes 25 updates and not 24.
+ */
+export function createSpriteAnim(frames, rate) {
+    if (!Number.isInteger(frames) || frames <= 0) {
+        fail(`createSpriteAnim: frames must be a positive integer, got ${frames}`);
+    }
+    if (!(rate > 0)) fail(`createSpriteAnim: rate must be positive, got ${rate}`);
+    return {
+        frames, rate, timer: 0, index: 0, complete: false,
+    };
+}
+
+/**
+ * ONE graphic update of a playing animation.
+ *
+ * ⛔⛔ THE GRAPHIC UPDATE IS NOT THE ENTITY UPDATE, AND THE GAME'S OWN LOOP IS
+ * WHY THIS IS A SEPARATE CALL. `World.update` is
+ * `if (e.active) { … e.update(); } if (e._graphic && e._graphic.active)
+ * e._graphic.update();` — the graphic advances AFTER the entity's own update,
+ * in the same iteration, and it is OUTSIDE the `active` test and outside
+ * `Enemy.update`'s off-screen early return. So a corpse's animation runs while
+ * the camera has lost it and while the body is frozen, and the caller steps
+ * this unconditionally.
+ *
+ * ⛓⛓ THIS IS WHAT MAKES THE REMOVAL DELAY DEPEND ON *WHO* KILLED THE BODY.
+ * An `Arrow` is added at run time and `World.addUpdate` PREPENDS, so it
+ * updates BEFORE every `loadlevel` entity: an arrow's killing hit lands
+ * before the body's own graphic update, so the animation gets its FIRST
+ * update on the killing tick. The Player updates LAST, so a press's would
+ * not. One tick, and it decides when `totalEnemies()` moves.
+ *
+ * @returns {boolean} true on the update the callback fires (`endAnim`).
+ */
+export function stepSpriteAnim(anim) {
+    if (anim.complete) return false;
+    anim.timer += anim.rate * FP_ELAPSED;
+    let fired = false;
+    while (anim.timer >= 1) {
+        anim.timer -= 1;
+        anim.index += 1;
+        if (anim.index === anim.frames) {
+            anim.index = anim.frames - 1;
+            anim.complete = true;
+            fired = true;
+            break;
+        }
+    }
+    return fired;
+}
+
+/** The "die" animation of a transcribed chaser, ready to step. */
+export function createDieAnim(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`createDieAnim: "${tag}" is not a transcribed chaser`);
+    return createSpriteAnim(c.dieAnim.frames, c.dieAnim.rate);
+}
+
+/**
  * The per-class facts a census does not carry, per the header.
  *
  * `dieAnim` is `Spritemap.add("die", frames, rate)`'s own arguments, so the

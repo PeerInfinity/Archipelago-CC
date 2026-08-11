@@ -281,6 +281,58 @@ export const ARROW_ENEMY_HIT = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R8 SLICE 3 — WHAT EACH OF THE FIVE HITABLES DOES TO AN ARROW, AND WHAT
+ * THE ARROW DOES TO IT. A TOTAL PARTITION, checked against `ARROW.hitables`
+ * itself by `r8Acceptance.assertArrowTargetPartition`.
+ *
+ * The switch in `Arrow.update` has two arms and a `default:`, and the removal
+ * (`v = 0; die = true`) sits OUTSIDE it — so three of the five take no damage
+ * and stop the arrow anyway. A model that priced only the damaging arms would
+ * fly its arrows through cover, and in L8 cover is what decides which sandtrap
+ * the ceiling can reach.
+ *
+ *   `damaged`          the run stages this body's whole response — `Enemy.hit`'s
+ *                      gates, the i-frames, the knockback, the death animation,
+ *                      the fade and the removal
+ *   `stops`            the arrow dies on it; this rung models no response
+ *   `priced-elsewhere` the arrow dies on it and the damage is billed by another
+ *                      funnel, so billing it here would double it
+ *
+ * ⚠ THE `Enemy` ROW IS PER CLASS INSIDE THE RUN, not per type: a bridged
+ * chaser is `damaged` and a static `SandTrap` is `stops` (its clear is the
+ * tape's DECLARED v9 `at` row, and a second writer of one persistence slot is
+ * two cost models). `R8_ARROW_ENEMY.refusedHere` carries that split with its
+ * bound; this table carries the TYPE-level fact the AS3 states.
+ */
+export const ARROW_TARGET_DISPOSITIONS = Object.freeze({
+    Player: 'priced-elsewhere',
+    Enemy: 'damaged',
+    Tree: 'stops',
+    Solid: 'stops',
+    Shield: 'stops',
+});
+
+/**
+ * ⛔ WHY THE PLAYER ARM IS `priced-elsewhere` AND NOT `damaged` — stated where
+ * a reader will reach for it, because the honest answer is not "we skipped it".
+ *
+ * `Arrow.as:51` really does call `Player.hit(null, v.length, new Point(x, y))`,
+ * and `combat.PUZZLEMENT_HAZARDS.arrowtrap` already prices exactly that hit
+ * (damage 1, and its `why` field carries the same trap-143 correction this
+ * file's `ARROW_ENEMY_HIT` does). Two funnels for one hit is two cost models.
+ * What this rung ADDS is the STOP: an arrow that reaches the player dies on
+ * the player, which is the difference between a body behind them being shot
+ * and being missed.
+ */
+export const ARROW_PLAYER_ARM = Object.freeze({
+    stops: true,
+    damagePricedBy: 'combat.PUZZLEMENT_HAZARDS.arrowtrap',
+    force: 5,
+    damage: 1,
+    src: 'Projectiles/Arrow.as:44-47 + Player.as `hit(e, f, p, d = 1)`',
+});
+
+/**
  * ⛓⛓ THE BUTTON, TRANSCRIBED HERE BECAUSE THE TRAP'S WHOLE STATE IS ITS
  * OUTPUT — and because two of its three facts are counter-intuitive.
  */
@@ -494,10 +546,20 @@ function arrowFriction(state) {
  * @param {boolean} ctx.frozen        `Game.freezeObjects` — gates the MOVE only
  * @param {?object} ctx.bound         `{w, h}` — the LEVEL's pixel rect
  * @param {?Array}  ctx.bodies        `[{id, type, rect}]` — every hitable body
+ *   whose position the CALLER holds: the player and the live `"Enemy"` bodies.
+ *   In hitables order, because `collideTypesInto` walks the type list in the
+ *   order it is given and `hitTypes` is a ledger a reader compares.
+ * @param {?Function} ctx.coverAt     `(box) => hit|null` — the `Tree`/`Solid`/
+ *   `Shield` query, INJECTED rather than imported for `chaserStep`'s own
+ *   reason: cover is a property of the world being stepped and this module
+ *   has no opinion about which world that is. The three cover types take no
+ *   damage and stop the arrow anyway (`ARROW_TARGET_DISPOSITIONS`).
  * @returns {{hits: Array, removed: boolean}}
  */
 export function stepArrow(state, ctx = {}) {
-    const { frozen = false, bound = null, bodies = [] } = ctx;
+    const {
+        frozen = false, bound = null, bodies = [], coverAt = null,
+    } = ctx;
     if (state.removed) return { hits: [], removed: true };
 
     if (!frozen) {
@@ -514,6 +576,22 @@ export function stepArrow(state, ctx = {}) {
         for (const b of bodies) {
             if (!ARROW.hitables.includes(b.type)) continue;
             if (rectsOverlap(box, b.rect)) hits.push(b);
+        }
+        // ⚠ COVER IS ASKED LAST because `Tree`, `Solid` and `Shield` are the
+        // last three of the five hitables — and it is asked at ALL because
+        // the removal is outside the switch: an arrow that meets a torch dies
+        // on the torch, which is what puts L5's column 3 in shadow.
+        if (coverAt) {
+            const c = coverAt(box);
+            if (c) {
+                hits.push({
+                    id: c.id ?? c.chestId ?? c.pushableId ?? c.treeId ?? c.rockId
+                        ?? `${c.tag ?? 'cover'}@${c.x ?? '?'},${c.y ?? '?'}`,
+                    type: c.cls?.type ?? 'Solid',
+                    rect: c.rect,
+                    cover: true,
+                });
+            }
         }
         if (hits.length > 0) {
             state.v.x = 0;

@@ -370,6 +370,34 @@ const MODELLED_TILE_SET = new Set(MODELLED_TILE_TYPES);
  */
 const BLAST_HITABLE_TYPES = new Set(['Solid', 'Tree', 'Shield']);
 
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE ARROW'S COVER LIST, AND IT IS A FOURTH MOVER.
+ *
+ * `Arrow.hitables` is `["Player", "Enemy", "Tree", "Solid", "Shield"]`
+ * (`Arrow.as:17`) and `Arrow.solids` is EMPTY — so the hitables list is the
+ * only thing that ever stops an arrow, and it stops on all five whether or
+ * not it damages them (the removal is `if (hits.length > 0)`, outside the
+ * switch: cover is a resource).
+ *
+ * ⚠ `"Player"` AND `"Enemy"` ARE NOT IN HERE, for `collidesBlast`'s own
+ * reason one family over: neither is a member of any geometry list this
+ * module owns. The run holds the player's box and the live enemy bodies and
+ * tests them itself.
+ *
+ * ⛔⛔ AND THIS IS ITS OWN SET RATHER THAN A REFERENCE TO THE BLAST'S, WHICH
+ * HAS THE SAME THREE MEMBERS TODAY. They are equal by coincidence of two
+ * different AS3 lists (`IceTurretBlast.hitables` and `Arrow.hitables`), not
+ * by construction, and sharing the symbol is how a list comes to mean nothing
+ * the moment one of the two classes changes
+ * ([[feedback_two_cost_models_must_agree]] — `SHOVE_SETTLE_TICKS` refusing to
+ * borrow `PUSH_GLIDE_TICKS` is the same decision). `levelWorld.test.js`
+ * asserts the equality WITH that reason, so the coincidence is a measurement.
+ */
+const ARROW_HITABLE_TYPES = new Set(['Solid', 'Tree', 'Shield']);
+
+/** The arrow's cover types, for a consumer that wants to derive against them. */
+export const ARROW_COVER_TYPES = Object.freeze([...ARROW_HITABLE_TYPES]);
+
 /** Why each unmodelled type is out, for the error message. */
 const UNMODELLED_REASON = Object.freeze({
     1: 'Water — `canSwim` is the CONCH, which Karlore.added() gates on hasFire '
@@ -5610,6 +5638,39 @@ export function buildLevelWorld(levelRecord, {
             }
             for (const s of solids) {
                 if (s.cls && !BLAST_HITABLE_TYPES.has(s.cls.type)) continue;
+                const at = liveRectOf(s, live);
+                if (at === null) continue;
+                if (!rectsOverlap(box, at)) continue;
+                if (at === s.rect) return s;
+                return { ...s, rect: at, live: true };
+            }
+            return null;
+        },
+
+        /**
+         * ⛓⛓⛓ R8 SLICE 3: THE ARROW'S COVER QUERY — see `ARROW_HITABLE_TYPES`
+         * for why it is a fourth list and not a reuse of the blast's.
+         *
+         * ⚠ THE PIXELMASK ARM IS THE SAME ONE, and it has to be: a `Building`
+         * / `TreeLarge` / `CliffSide` is `type = "Solid"` and the game's
+         * `collideTypesInto` runs FlashPunk's `Pixelmask` test, so an arrow
+         * stops on the MASK and not on the bounding rect. An arrow query that
+         * skipped it would fly through the transparent corner of a tree and
+         * kill a body the game leaves standing.
+         */
+        collidesArrowCover(box, opts = {}) {
+            const { fallenRocks = null } = opts;
+            const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.collidesArrowCover');
+            for (const p of pixelmasks) {
+                if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) return p;
+            }
+            if (fallenRocks) {
+                for (const r of fallenRocks.values()) {
+                    if (rectsOverlap(box, r.rect)) return { ...r, fallen: true };
+                }
+            }
+            for (const s of solids) {
+                if (s.cls && !ARROW_HITABLE_TYPES.has(s.cls.type)) continue;
                 const at = liveRectOf(s, live);
                 if (at === null) continue;
                 if (!rectsOverlap(box, at)) continue;

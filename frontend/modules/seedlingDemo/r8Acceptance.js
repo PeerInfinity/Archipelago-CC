@@ -122,6 +122,22 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
                 + 'half, and the moving half (its siblings) is read live from the roster '
                 + 'rather than through this bag.',
         }),
+        /**
+         * ⛓ ADDED BY R8 SLICE 3, and by the same route: the Arrow × Enemy
+         * family gave `stepArrowTrapsNow` a cover query, and the guard above
+         * failed BY NAME on the count before a line of the test stratum was
+         * written. Two slices running, two additions caught — a re-derived
+         * tally is worth more than a list somebody remembers to edit.
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepArrowTrapsNow',
+            addedBy: 'R8 slice 3', action: 'brand+hoist',
+            why: 'ONCE PER TICK for EVERY arrow in flight, not once per arrow — the '
+                + 'cover query (`world.collidesArrowCover`) is a read and not a step, so '
+                + 'the `crusherScans` half of slice 0\'s contrast applies rather than the '
+                + '`stepCrushersNow` half: nothing this loop does moves the geometry the '
+                + 'next arrow reads.',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'pushableCtx',
             action: 'already', why: 'R7 slice 4 — once per tick, `{...base, pushables}` '
@@ -499,11 +515,27 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
         }),
         Object.freeze({
             reader: 'levelRun.stepArrowTrapsNow',
-            arm: '`stepArrow(a, {frozen, bound})`',
-            reads: 'NOTHING — `bodies` defaults to `[]`',
-            consequence: 'an arrow in this model passes through every body, player and '
-                + 'enemy alike (R7\'s carried arrow debt). This is what the L5 fork below '
-                + 'turns on.',
+            arm: '`stepArrow(a, {frozen, bound, bodies, coverAt})`',
+            /**
+             * ⛓⛓⛓ R8 SLICE 3 REWROTE THIS ROW, and the row is why the
+             * `noDamage` gate is still sound. It read *"NOTHING — `bodies`
+             * defaults to `[]`"*, and that absence is what scoped slice 1's
+             * bridge by ROOM. The family is built, so this IS a reader of a
+             * chaser's position now — and `arrowBodiesNow` re-asks
+             * `stepChasersNow`'s own `noclip || noDamage` gate for exactly
+             * that reason. A capability that lit up a second control is the
+             * shape that has bitten this arc twice
+             * ([[feedback_capability_lights_up_two_controls]]); naming the
+             * reader here is what made the third one cheap.
+             */
+            reads: 'the player box, the LIVE bridged-chaser bodies (behind the same '
+                + '`noclip || noDamage` gate the stepper returns on) and the static '
+                + '"Enemy" census bodies; cover through `world.collidesArrowCover`',
+            consequence: 'an arrow now stops on everything the game stops it on and '
+                + 'DAMAGES the chasers — which is what retires the room-scoped refusal. '
+                + 'The static bodies STOP and are not damaged, and a room mixing a trap '
+                + 'with one is refused by name (`chaserRoomVerdict`).',
+            changedBy: 'R8 slice 3',
         }),
         Object.freeze({
             reader: 'levelRun.applyWandShotToBoss',
