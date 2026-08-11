@@ -6005,7 +6005,30 @@ roster stands at **133 tapes** (123 gate, 10 legacy) against R6's 118.
 | **the L40 chain** (links 5–11, boss key 2, both north teleporters) | ⛔ **the wall is GONE**: the second holder is `pushableblockfire@480,480`, R5's refusal was two instrument defects, and the single-visit route is measured and priced at 2,500–4,000 ticks | **R8** — scheduled, not blocked |
 | **`noDamage` roster-wide retirement** | retires BY CONSTRUCTION on the chain (segments declare nothing); the flag disappears as superseded tapes retire | **R8+**, no separate campaign |
 | the **noclip legacy walks** | evaluated at close, **NO DEMOTION** — the R4 ENDS-MEET set has a hole the chain does not fill, and two mechanism witnesses stay unconditionally | **R8** re-evaluates when the campaign covers the rest |
-| **M2** (`plan-seedling-segment.mjs --from <AP-path-step>`) and **M3** (real-time) | named horizons, untouched; `buildTape`'s v5 cap is M2's first obstacle and `normalizeLive`'s remaining consumers are M3's | later rungs |
+| **M3** (the live reactive bot) | named horizon, untouched — ⚖ and **PROMOTED to R8** by the ruling below; `normalizeLive`'s remaining consumers are its first stone | **R8** |
+| **M2** (`plan-seedling-segment.mjs --from <AP-path-step>`) | named horizon, untouched; `buildTape`'s v5 cap is its first obstacle | ⚠ superseded by the M3 promotion — a live bot needs no tape generator |
 | **LightBoss / TentacleBeast / LavaBoss** | measured OUT — the exclusion costs nothing, in the strict arm as well as the loose one, against a positive control that does register a loss. L57/L69 have NO EXIT until the boss dies ⇒ never-enter | deferred, now with evidence |
 | **L93's bridge, live** | still unit-witnessed on L63 only; it rides the spear or the ghostsword | R8+ |
 | **the BobBoss encounter script** | `KILL_ARM_POLICY.BobBoss` still `refused` | R8+ |
+
+⚖ **RULED AFTER THIS SECTION WAS WRITTEN (user, 2026-08-10): R8 IS THE LIVE
+SOLVER BOT.** The discussion R7's close was written to feed was held while the
+close sweep ran, and it pivoted the ladder: **M3 is promoted to now**, with a
+Cloudberry Kingdom–style procedural generator as the horizon. A reactive
+sense → plan → act bot plays the JS transcription model LIVE with full state
+access; its chosen inputs are recorded as a tape and **the existing wasm
+differential replays them, so the differential stays the oracle per segment**.
+Segments are verified INDIVIDUALLY from any declared boot state; the honest
+chain, the seam signature and the goal ledger built this rung wait UNCHANGED
+until full-game coverage exists, and the bot then re-runs along genuine
+latches to assemble the real playthrough. ⛔ The hand-authored shield segment
+is dead — `hasShield` lands as the first NEW-machinery headline instead — and
+`normalizeLive`'s remaining consumers move onto the critical path. The verb
+library (`shove`, arrow-bait, hold, press, shove-sink) becomes the live bot's
+STRATEGY CATALOG, and the eleven `act2` rooms become its known-answer battery:
+the bot must produce tapes this differential accepts.
+
+⇒ read the table above for what R7 BUILT and what each item's seal is; read
+this note for the ORDER and METHOD R8 takes to them. Nothing above is
+retracted — the pivot changes how the remaining rows get claimed, not what
+they are.
