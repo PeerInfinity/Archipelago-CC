@@ -199,6 +199,22 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
                 + '`playerPhysicsV2` re-normalises its own bag (R7 slice 4) and the '
                 + 'brand now makes that a single property read',
         }),
+        /**
+         * ⛓ ADDED BY R8 SLICE 2 — the live solver's window on the world.
+         * `run.liveGeometryOpts()` returns the run's OWN builder's bag,
+         * normalised and branded, all fourteen families: the solver's
+         * full-bag path (⚖ ruled beside §8.3.1's preserved 8-key legacy
+         * forwarding). Listed here because `assertBatchSitesCoverSource`
+         * found it BY NAME the first run after it landed — the assertion
+         * doing for slice 2 exactly what it did for slice 1's bridge bag.
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'liveGeometryOpts getter',
+            addedBy: 'R8 slice 2', action: 'brand',
+            why: 'the solver hoists it once per PLAN (the cadence the per-visit state '
+                + 'changes at); normalised at the run\'s own builder so the solver never '
+                + 'hand-rosters a family (trap 86)',
+        }),
         // ── botDriverV2.js — `livePerVisitOpts(` call sites ───────────
         //
         // ⛓ ONE CHANGE CONVERTS ALL FOUR. `livePerVisitOpts` is the single

@@ -85,6 +85,13 @@ export const KNOWN_GOAL_KINDS = Object.freeze([
 export const KNOWN_STRATEGY_VERBS = Object.freeze([
     'walk', 'shove', 'hold', 'bait', 'touch', 'kill', 'chest', 'fire', 'spear',
     'wait', 'dodge', 'shove-sink',
+    // ⛓ R8 slice 2: the first producer's own catalog surfaced a verb slice 0
+    // had not listed — `collect` (the pickup-ceremony verb, `runCollect`,
+    // driven since R5). Added rather than left "unknown": the REPORT channel
+    // exists for typos and genuinely new verbs, and a verb the package has
+    // driven for three rungs is neither. The reporting path keeps its own
+    // test coverage against a synthetic unknown.
+    'collect',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

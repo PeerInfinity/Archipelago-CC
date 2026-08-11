@@ -8123,6 +8123,40 @@ export function createLevelRun({
          */
         get noHazards() { return [...noHazards]; },
         /**
+         * ⛓⛓⛓ R8 SLICE 2: THE FULL LIVE-GEOMETRY BAG, BRANDED, FROM THE
+         * RUN'S OWN BUILDER — the live solver's view of the world.
+         *
+         * §8.3.1 measured `botDriverV2.plannerObstacleAt` forwarding 8 of the
+         * 14 `LIVE_GEOMETRY_KEYS` (preserved, not fixed — forwarding the six
+         * would re-route committed legs), and the ruled resolution is that
+         * the SOLVER gets its own full-bag path while the legacy planner
+         * keeps its 8-key behaviour. This is that path's source: the same
+         * `liveSolidOpts` every live query in this file consults, normalised
+         * and branded, all fourteen families — two cost models that must
+         * agree are ONE cost model, so the solver never re-derives a family
+         * from getters by hand (a hand-written roster drops one, trap 86,
+         * five occurrences and counting).
+         *
+         * ⚠ PER CALL, NOT CACHED. The bag is a snapshot of per-visit state
+         * that moves mid-leg (an activator opens, a block glides); the
+         * solver hoists it once per PLAN, which is the cadence the state
+         * changes at, not per pixel.
+         *
+         * ⛔ REFUSED under `noclip`, by name: the arm `advance` runs there
+         * skips the mechanics entirely, so the families this would report
+         * are a world no tick of the run consults — a solver sensing it
+         * would plan against geometry the replay ignores.
+         */
+        liveGeometryOpts() {
+            if (noclip) {
+                throw new Error('levelRun.liveGeometryOpts: this run is noclip — the '
+                    + 'mechanics are not stepped, so a live-geometry bag here would '
+                    + 'describe a world no tick of the run consults. The live solver '
+                    + 'plays honest runs only.');
+            }
+            return normalizeLiveOpts(liveSolidOpts());
+        },
+        /**
          * The activator ids that are NOT solid right now, in the level the
          * run is in — or `null` under `noclip`, matching the arm `advance`
          * hands `stepV2`.

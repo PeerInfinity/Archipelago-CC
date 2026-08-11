@@ -70,7 +70,7 @@ import {
 import { createLevelRun } from './levelRun.js';
 import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
-import { LIVE_GEOMETRY_KEYS, normalizeLiveOpts } from './levelWorld.js';
+import { LIVE_GEOMETRY_KEYS, isNormalizedLiveOpts, normalizeLiveOpts } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
 import {
@@ -355,6 +355,28 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
         keys = null,
+        /**
+         * ⛓⛓⛓ R8 SLICE 2 — THE SOLVER'S FULL-BAG ENTRY, beside the legacy
+         * eight and never replacing them.
+         *
+         * §8.3.1's measurement stands: the eight parameters above are what
+         * this function forwards, the six other `LIVE_GEOMETRY_KEYS` are
+         * dropped, and fixing that re-routes committed legs (no re-record
+         * licence exists this rung). The ⚖ ruled resolution is a SECOND
+         * ENTRY SHAPE: a caller that has the whole world — the live solver,
+         * whose bag comes from `run.liveGeometryOpts()`, the run's own
+         * builder — passes it here as `liveBag`, ALREADY BRANDED, and it is
+         * used in place of the eight-key normalise below. One policy
+         * implementation (the pit/lethal/teleporter/volume arms below run
+         * unchanged), two entry shapes, and the legacy shape is asserted
+         * byte-identical by `r8Acceptance`'s sentinel-derived partition test.
+         *
+         * ⛔ BRANDED OR REFUSED. A hand-assembled bag here would be trap 86's
+         * sixth occurrence in the very function that hosts its fourth; the
+         * brand is only mintable by `normalizeLiveOpts`, so demanding it is
+         * demanding the one builder that fills every key.
+         */
+        liveBag = null,
         // R4: which lethal terrain the run can survive. Defaulted to
         // "neither", which is the conservative arm and is also the truth
         // for every rung below R4 — where both types are coerced anyway,
@@ -389,11 +411,17 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // The caller passes the RUN's own set — the same one `stepV2` consults —
     // so the planner cannot believe a door is open that the engine will
     // find shut.
+    if (liveBag !== null && !isNormalizedLiveOpts(liveBag)) {
+        fail('plannerObstacleAt: `liveBag` must be a bag `normalizeLiveOpts` branded — '
+            + 'the solver\'s full-bag entry exists precisely so no caller hand-assembles '
+            + 'a fourteen-family roster (trap 86, four occurrences in this arc, one of '
+            + 'them in this function). Pass `run.liveGeometryOpts()`.');
+    }
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y), {
-        ...normalizeLiveOpts({
+        ...(liveBag ?? normalizeLiveOpts({
             openActivators, openBridges, pushables, brokenRocks,
             pulledRopes, openChests, burnedTrees, crushers,
-        }),
+        })),
         // ⚠ THE POLICY KEYS RIDE ON TOP OF THE BRANDED BAG, not inside it.
         // `normalizeLiveOpts` drops unknown keys by design, and
         // `plannerBlockerAt` reads `noclip`/`noHazards` off the SAME
@@ -5740,3 +5768,26 @@ export function synthesizeWalk(targets, opts = {}) {
 export function synthesizeLegsJson(legs, opts = {}) {
     return serializeTape(synthesizeLegs(legs, opts).tape);
 }
+
+/**
+ * ⛓⛓⛓ R8 SLICE 2: THE VERB SEAM, exported for the live solver.
+ *
+ * The kickoff's ruling (§3.1): "the VERB LIBRARY is the strategy catalog —
+ * now invoked reactively rather than from a leg spec". These are the same
+ * functions `synthesizeLegs` dispatches on a target's declared mechanic;
+ * `solverBot` invokes them from live state instead, and exporting them —
+ * rather than letting the policy grow its own copies — is what keeps "two
+ * cost models must agree" a non-issue: there is one implementation of each
+ * verb, whoever sequences it.
+ *
+ * `drive` rides along because it IS the walking primitive both callers
+ * share (v1's bang-bang controller, the transition identity check, the
+ * avoid-volume detector, the graze ledger). `findExit` because an exit
+ * names a teleporter by OEL coordinates and that resolution belongs beside
+ * the volume it resolves.
+ *
+ * ⚠ EXPORTS ONLY — no behaviour moves. Slice 2 registers `collect`, `chest`
+ * and the walk; slice 3's combat/puzzle policies register more names against
+ * the same seam rather than restructuring it.
+ */
+export { drive, runChest, runCollect, findExit, coastThroughTransport, NO_HELD };
