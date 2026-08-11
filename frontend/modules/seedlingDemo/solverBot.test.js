@@ -75,13 +75,14 @@ const levelSource = atlasLevelSource();
  * `solveSegment` refuses one by name; see the guard's comment for the
  * defect this slice paid to learn it.
  */
-function runFromCommitted(name, roles = ROLES) {
+function runFromCommitted(name, over = {}) {
+    const { roles = ROLES, ...rest } = over;
     const t = parseTape(JSON.parse(readFileSync(join(TAPES, `${name}.json`), 'utf8')));
     const run = createLevelRun({
         levelSource, boot: t.boot, noclip: false, noHazards: t.noHazards,
         noDamage: false, grants: t.grants, persistence: t.persistence, despawn: [],
         equips: t.equips, pins: t.pins ?? [], save: t.save ?? null,
-        rng: t.rng ?? null, seam: t.seam ?? null, roles,
+        rng: t.rng ?? null, seam: t.seam ?? null, roles, ...rest,
     });
     return { run, committed: t };
 }
@@ -284,22 +285,20 @@ describe('the refusal shapes — never a silent stall', () => {
      * stall and a refusal look identical from the outside; this one names
      * every rung of the ladder and what each said.
      */
-    it('L8: both shoves are DERIVED, the first is driven, and the wall is the SandTrap', () => {
+    it('⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared', () => {
         const { run, committed } = runFromCommitted('r7-act2-8');
-        let refusal = null;
-        try {
-            solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
-                name: 'probe-l8', boot: committed.boot,
-            });
-        } catch (e) { refusal = e; }
-        expect(refusal).toBeInstanceOf(SolverRefusal);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            name: 'probe-l8', boot: committed.boot,
+        });
+        expect(run.level).toBe(9);
+        expect(run.playerHits).toEqual([]);
+        expect(run.playerDeaths).toEqual([]);
 
-        // The first shove RAN: the east pocket's door is open and the block
-        // is where ⚖ ruling 1(a) put it — k=2, the hand answer's cell.
-        const shoves = refusal.rows.filter((r) => r.strategy.verb === 'shove');
-        expect(shoves.map((r) => r.obstacle.id))
-            .toEqual(['pushableblock@112,48', 'pushableblock@96,112']);
+        // The east pocket's door is shoved where ⚖ ruling 1(a) puts it —
+        // k=2, the hand answer's cell.
+        const shoves = out.trace.rows.filter((r) => r.strategy.verb === 'shove');
+        expect(shoves.map((r) => r.obstacle.id)).toEqual(['pushableblock@112,48']);
         expect(shoves[0].strategy).toMatchObject({ k: 2, dir: 'W', to: { tx: 5, ty: 3 } });
 
         // ⛓ AND ITS DESTINATION NAMES THE HYPOTHESIS IT RESTS ON — guard (i)
@@ -309,13 +308,77 @@ describe('the refusal shapes — never a silent stall', () => {
         expect(shoves[0].rejected.some((j) => /hypothesising/.test(j.option)
             && /pushableblock@96,112/.test(j.option))).toBe(true);
 
-        // The wall, with its rung number.
-        expect(refusal.obstacle.kind).toBe('danger');
-        expect(refusal.message).toMatch(/sandtrap@96,80/);
-        expect(refusal.message).toMatch(/REFUSED by name/);
-        for (const rung of ESCALATION_LADDER) {
-            expect(refusal.considered.map((c) => c.option)).toContain(rung);
-        }
+        /**
+         * ⛓⛓⛓ AND BOTH KILL CLIMBS RAN — one per sandtrap, each its OWN
+         * climb starting at the bottom of the ladder (§12.6's numbered
+         * climbs). ⚠ THE SECOND BLOCK IS NEVER A FRONTIER OBSTACLE ON THIS
+         * ARM, and the reason is the tape it was booted from: `r7-act2-8`
+         * declares both clears at the HAND walk's own late ticks (380, 932),
+         * so by the time the corridor south is asked for, the bodies are
+         * already gone and the block is pushed along by the walk itself. The
+         * DERIVED second shove — and its last-resort sink — belong to the
+         * pass that has no declarations, which is the test below.
+         */
+        const kills = out.trace.rows.filter((r) => r.strategy.verb === 'kill');
+        expect(kills.map((r) => r.obstacle.id))
+            .toEqual(['sandtrap@96,80', 'sandtrap@96,128']);
+        expect(kills.map((r) => r.strategy.climb)).toEqual([1, 2]);
+    });
+
+    /**
+     * ⛓⛓⛓ R8 SLICE 4 — AND WITH ITS CLEARS **UNDECLARED**, L8 RAISES THE
+     * DECLARATION IT NEEDS INSTEAD OF STALLING.
+     *
+     * This is the state the two-pass loop's first pass is in on purpose. The
+     * ladder still climbs every rung and still names each one's reason; what
+     * changed is the top rung's answer for a STATIC body: the room's own
+     * ceiling is held for the mechanism's bound, and then the tick is asked
+     * of the GAME rather than invented (§11.4 unweakened — the model computes
+     * nothing about a `SandTrap`'s death).
+     */
+    it('⛔ L8 with its clears UNDECLARED raises a GAME-sourced pending declaration', () => {
+        const { run, committed } = runFromCommitted('r7-act2-8', {
+            persistence: [{ level: 5, tag: 0 }],
+        });
+        let refusal = null;
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+                name: 'probe-l8-pending', boot: committed.boot,
+            });
+        } catch (e) { refusal = e; }
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.name).toBe('PendingDeclaration');
+        expect(refusal.pending).toMatchObject({ level: 8, tag: 0, source: 'game' });
+        expect(refusal.pending.body).toBe('sandtrap@96,80');
+        // ⛔ The refusal carries the TICKS IT SPENT — the prefix the game is
+        // handed. A pending declaration whose walk nobody kept could not be
+        // measured against anything.
+        expect(refusal.perTick.length).toBeGreaterThan(300);
+        expect(refusal.message).toMatch(/§11\.4 refuses/);
+        // ⛓ And the FIRST shove is derived on this arm too — the ladder's
+        // kill rung fires on the way to the SECOND shove's stance, which is
+        // §12.10.2's measured wall, now answered rather than reported.
+        const shoves = refusal.rows.filter((r) => r.strategy.verb === 'shove');
+        expect(shoves.map((r) => r.obstacle.id))
+            .toEqual(['pushableblock@112,48', 'pushableblock@96,112']);
+        expect(shoves[0].strategy).toMatchObject({ k: 2, dir: 'W', to: { tx: 5, ty: 3 } });
+        /**
+         * ⛓⛓⛓ AND THE SECOND BLOCK IS SUNK — BY EXHAUSTION, NOT BY
+         * PREFERENCE. ⚖ Ruling 1(a) reserves a destructive resting cell for
+         * an explicit LAST RESORT, and L8 is the arc's first room to reach
+         * one: column 6 is the only way south, so every non-destructive cell
+         * in every direction leaves the block in the corridor, and the one
+         * direction that would park it clear (E, to `(7,7)`) has its
+         * near-side stance in the water. `(5,7)` is what is left — which is
+         * also the hand answer's cell.
+         *
+         * ⛔ AND THE OFF-THE-MAP REJECTION IS WHAT MAKES THE LAST RESORT
+         * REACHABLE. Before slice 4 the guard compared a TILE index to a
+         * PIXEL width, so the southward scan ran out of the room and returned
+         * a `k` the block cannot physically reach.
+         */
+        expect(shoves[1].strategy).toMatchObject({ dir: 'W', destroys: true });
     });
 
     it('a collect-placement with nothing standing there refuses as a MACRO-layer error', () => {
@@ -435,19 +498,40 @@ describe('the refusal shapes — never a silent stall', () => {
      * ⛔ AND THE REFUSAL SHAPE THIS DESCRIBE BLOCK IS ABOUT IS STILL
      * ASSERTED: when the ladder runs out, it says so with a rung on it.
      */
-    it('a ladder that EXHAUSTS refuses with every rung\'s own reason', () => {
-        const { run, committed } = runFromCommitted('r7-act2-8');
-        let refusal = null;
-        try {
-            solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
-                name: 'probe-l8', boot: committed.boot,
-            });
-        } catch (e) { refusal = e; }
-        expect(refusal).toBeInstanceOf(SolverRefusal);
-        // Whatever L8 refuses on, it refuses by NAME and never by stalling.
-        expect(refusal.message.length).toBeGreaterThan(80);
-        expect(refusal.considered.length).toBeGreaterThan(0);
+    /**
+     * ⛔⛔⛔ R8 SLICE 4 — THE EXHAUSTED LADDER IS NOW A **BOUNDED VACUITY**,
+     * AND THE BOUND IS MEASURED RATHER THAN ASSERTED AWAY.
+     *
+     * Slice 3b drove this shape in L8, where the top rung had no answer for a
+     * static `"Enemy"` body. The static KILL arm answers it now, so no room on
+     * the battery reaches the exhausted branch any more — which is a RESULT,
+     * not a reason to delete the row (trap 62: a control that has stopped
+     * being able to fail is not a weak control, it is not a control).
+     *
+     * ⇒ so the row measures the bound instead of pretending to exercise it:
+     * every battery room is driven and NONE of them exhausts. The day a room
+     * does, this goes red BY NAME and the shape gets its driven arm back.
+     * "There was no exhausted ladder" and "nobody looked" print the same
+     * thing otherwise.
+     */
+    it('⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more', () => {
+        const exhausted = [];
+        for (const [tape, exit] of [
+            ['r7-act2-4', { x: 64, y: 16 }],
+            ['r7-act2-6', { x: 224, y: 32 }],
+            ['r7-act2-8', { x: 96, y: 192 }],
+        ]) {
+            const { run, committed } = runFromCommitted(tape);
+            try {
+                solveSegment({
+                    run, goals: [{ kind: 'reach-exit', exit }],
+                    name: `probe-exhaust-${tape}`, boot: committed.boot,
+                });
+            } catch (e) {
+                if (/combat ladder is EXHAUSTED/.test(e.message)) exhausted.push(tape);
+            }
+        }
+        expect(exhausted).toEqual([]);
     });
 
     /**
@@ -481,8 +565,26 @@ describe('the refusal shapes — never a silent stall', () => {
         expect(OBSTACLE_STRATEGIES['solid:lock']).toBe('hold');
         // ...and the room's live activator roster says otherwise.
         expect(run.world.activators.find((a) => a.id === 'lock@48,112').t).toBe(-1);
-        expect(refusal.considered.map((c) => c.option)).toContain('kill');
-        expect(refusal.considered.map((c) => c.option)).not.toContain('hold');
+        /**
+         * ⛓⛓⛓ R8 SLICE 4 — AND THE WORK ORDER IS NOW EXECUTED. Slice 3b
+         * recorded this as a refusal naming `kill` as SELECTED AND
+         * UNREGISTERED; the executor exists, so what comes back is the
+         * MODEL-SOURCED declaration the room's own mechanism computes: the
+         * ceiling kills all three bodies, `Game.totalEnemies()` reaches zero,
+         * and `lock@48,112` needs its own 101-step fade before `turnOff()`
+         * writes `{5,0}`.
+         *
+         * ⚠ A DEBT'S RECORD IS AN ASSERTION THAT MUST FLIP — R6 debt 2's own
+         * lesson, one slice over. This one could only ever have gone red on
+         * the slice that discharged it.
+         */
+        expect(refusal.name).toBe('PendingDeclaration');
+        expect(refusal.pending).toMatchObject({ level: 5, tag: 0, source: 'model' });
+        expect(refusal.pending.at).toBe(refusal.pending.removedAt + refusal.pending.fade);
+        expect(refusal.pending.fade).toBe(101);
+        // ⛔ Every counted body really is gone — the declaration is about the
+        // FADE, not about a room the policy gave up on.
+        expect(run.chaserKills.length + run.chaserTerrainDeaths.length).toBe(3);
         // ⛔ AND THE CONTROL: L4's `button@16,64` group is an ORDINARY one, so
         // the same table row still means `hold` there — a refinement that
         // fired on every lock would be a rename, not a refinement.
@@ -521,17 +623,16 @@ describe('the strategy catalog seam (slice 3 extends, never restructures)', () =
         // which is the whole of the "adds rows, never restructures" contract,
         // asserted rather than asserted about.
         //
-        // ⛔ `kill` and `touch` REMAIN, and for opposite reasons worth
-        // keeping apart. `touch`'s obstacle is `solid:shieldlock`, which is
-        // L18's — kickoff §4 slice 4 — and it is the LIVE CONTROL for the
-        // claim that a strategy may be named by the table and absent from the
-        // registry (trap 62: a control deleted in the change that widens the
-        // claim is not a control). `kill` is selected by
-        // `solid:magicallock` and is reached through the LADDER rather than
-        // through this table in the rooms this slice drives, so it is
-        // registered as a RUNG and not as a table row.
+        // ⛔ R8 SLICE 4 TOOK `kill` OFF THE LIST — it is reached BOTH ways
+        // now, as a table row (L5's refined `solid:lock`) and as the ladder's
+        // top rung (L8's static body), which is one executor with two
+        // entries rather than two policies. `touch` REMAINS, and it is the
+        // LIVE CONTROL for the claim that a strategy may be named by the
+        // table and absent from the registry (trap 62: a control deleted in
+        // the change that widens the claim is not a control). Its obstacle is
+        // `solid:shieldlock` — L20's `shieldlocknorm@176,16`.
         const pending = [...selected].filter((v) => !STRATEGY_EXECUTORS[v]).sort();
-        expect(pending).toEqual(['kill', 'touch']);
+        expect(pending).toEqual(['touch']);
     });
 });
 
@@ -631,5 +732,54 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
         const shove = out.trace.rows.find((r) => r.strategy.verb === 'shove');
         expect(shove.tick).toBe(run.chaserKills[0].t + DEATH_ANIM_TICKS - 1
             + MOBILE_DEATH_FADE.ticks);
+    });
+});
+
+/**
+ * ⛔⛔⛔ R8 SLICE 4 — THE OFF-THE-MAP GUARD, WHICH HAD BEEN VACUOUS SINCE THE
+ * DAY IT WAS WRITTEN.
+ *
+ * `deriveShove`'s scan bounded `k` with `world.world.width/height` — the room
+ * in PIXELS (192 x 208 for L8) — and compared it to a TILE index, so no `k`
+ * inside a twelve-tile room could ever trip it. L8 is the first room where it
+ * mattered: push-until-path scanned column 6 southward, found every in-room
+ * cell still blocking the only way south, walked out through the floor, and
+ * returned a `k` whose cell the block cannot physically reach. The shove then
+ * leaned for 240 ticks and reported the block had never left its cell.
+ *
+ * ⇒ the row measures the UNITS rather than the outcome, because the outcome
+ * (a sunk block) is reachable by more than one wrong derivation.
+ * [[feedback_units_must_survive_the_round_trip]]
+ */
+describe('the shove scan\'s off-the-map bound — units, measured', () => {
+    it('⛔ `world.width/height` are TILES and `world.world.*` are PIXELS', () => {
+        const { run } = runFromCommitted('r7-act2-8');
+        expect(run.world.width).toBe(12);
+        expect(run.world.height).toBe(13);
+        expect(run.world.world.width).toBe(12 * 16);
+        expect(run.world.world.height).toBe(13 * 16);
+        // ⛓ AND THE TWO ARE NOT INTERCHANGEABLE, which is the whole defect:
+        // a tile index compared against the pixel extent is a guard that
+        // cannot fire in any room this game has.
+        expect(run.world.world.height).toBeGreaterThan(run.world.height);
+    });
+
+    it('⛓ the derived second shove SINKS the block — the last resort, reached by exhaustion', () => {
+        const { run, committed } = runFromCommitted('r7-act2-8', {
+            persistence: [{ level: 5, tag: 0 }],
+        });
+        let refusal = null;
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+                name: 'probe-l8-sink', boot: committed.boot,
+            });
+        } catch (e) { refusal = e; }
+        const shoves = refusal.rows.filter((r) => r.strategy.verb === 'shove');
+        const second = shoves.find((r) => r.obstacle.id === 'pushableblock@96,112');
+        // ⛔ Before the units fix this read `{ dir: 'S', k: 6, destroys: false }`
+        // — a destination six tiles below a block that never moved.
+        expect(second.strategy).toMatchObject({ dir: 'W', destroys: true });
+        expect(second.strategy.to).toEqual({ tx: 5, ty: 7 });
     });
 });

@@ -73,8 +73,8 @@ import { resolvePresser } from './botDriverV2.js';
 import { RESPONDERS, opensOnTick } from './activators.js';
 import { bodyKillRegions, dangerAt, dangerVolumes, forbiddenByDanger } from './dangerMap.js';
 import { planDash } from './mover.js';
-import { arrowLane } from './arrowTrap.js';
-import { chaserBoxAt } from './chasers.js';
+import { ARROW, arrowLane } from './arrowTrap.js';
+import { bridgedChaserTags, chaserBoxAt } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
 import { rect, TILE_SIZE } from './levelWorld.js';
@@ -95,13 +95,35 @@ export class SolverBotError extends Error {
  * so far. A reader gets the whole decision, not a stack trace.
  */
 export class SolverRefusal extends Error {
-    constructor(message, { goal = null, obstacle = null, considered = [], rows = [] } = {}) {
+    constructor(message, {
+        goal = null, obstacle = null, considered = [], rows = [], perTick = [],
+        pending = null,
+    } = {}) {
         super(message);
         this.name = 'SolverRefusal';
         this.goal = goal;
         this.obstacle = obstacle;
         this.considered = considered;
         this.rows = rows;
+        /**
+         * ⛓⛓⛓ R8 SLICE 4 — THE TICKS THE REFUSED PASS DID SPEND.
+         *
+         * The two-pass authoring loop's first pass ENDS in a refusal by
+         * design (the goal is behind a gate nothing has declared yet), and
+         * what it produces is not the refusal — it is the PREFIX. So the keys
+         * ride on the error the same way the trace rows already do: a refused
+         * segment is not only reviewable, it is REPLAYABLE, which is what
+         * lets the GAME answer a question the model refuses to.
+         */
+        this.perTick = perTick;
+        /**
+         * ⛓ AND WHICH DECLARATION WOULD UNBLOCK IT, when the refusal knows.
+         * `{level, tag, source, why}` — a first-class outcome rather than a
+         * string a caller has to parse, because the loop's next step is
+         * decided by `source` (`model` reads the run's own ledger, `game`
+         * truncates the prefix and asks the running game).
+         */
+        this.pending = pending;
     }
 }
 
@@ -153,6 +175,17 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * shape `kill` and the puzzle policy then follow.
      */
     shove: execShove,
+    /**
+     * ⛓⛓⛓ R8 slice 4: the first executor whose completion is a WORLD FACT
+     * NEITHER IT NOR THE MODEL CAN PRODUCE. A `hold` waits for a responder
+     * this model steps; a `shove` edits the world itself. A `kill` by the
+     * room's own ceiling waits for a body to die — and for a KILL-LOCK the
+     * model computes the consequence but not the opening, while for a STATIC
+     * `"Enemy"` body §11.4 refuses to compute the death at all. Both are
+     * finished by a DECLARED clear, which is why this executor is the one
+     * that raises a PENDING declaration instead of inventing a tick.
+     */
+    kill: execKill,
 });
 
 /**
@@ -208,6 +241,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     blocked = []) {
     if (strategy === 'shove') return resolveShoveStrategy(run, obstacle, contacts, aim,
         allowTeleporter, blocked);
+    if (strategy === 'kill') return resolveKillStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
     const presser = (run.world.pressers ?? []).find(
         (p) => `${p.tag}@${p.x},${p.y}` === obstacle.id,
@@ -357,6 +391,59 @@ function solverPlanOpts(run, contacts, extra = {}) {
 }
 
 /**
+ * ⛓⛓⛓ R8 SLICE 4 — THE LANES A PLAN UNPUBLISHES BY ITS OWN FIRST STEP.
+ *
+ * `arrowDanger` prices an ARMED trap's lane at horizon 0 and it is right to
+ * (§9.9 decision 2). But a plan made FROM A BUTTON has a first act — stepping
+ * off it — and `Button.update` republishes its group EVERY TICK, so the group
+ * goes false on that same tick and the lanes the probe is refusing will not
+ * be firing while the player is anywhere near them.
+ *
+ * ⛔ SO THE EXCLUSION IS DERIVED FROM WHERE THE PLAYER IS STANDING, never
+ * carried in a set somebody has to remember to clear. It is empty the instant
+ * the player is not on a presser, which is exactly when the lanes are real
+ * again — a durable "I killed things here once" exemption would have hidden a
+ * live ceiling for the rest of the segment.
+ *
+ * ⛓ AND ONLY THE LANE HALF IS EXCLUDED. `arrowDanger`'s OTHER half — the
+ * arrows ALREADY IN FLIGHT — keeps its own ids and stays priced, because
+ * leaving the button stops the next volley and not the last one. That split
+ * is trap 160's law honoured rather than repeated: the STATE layer answers
+ * the state question, and the thing in the air is not a state question.
+ */
+function lanesUnpublishedByLeaving(run) {
+    /**
+     * ⛔⛔⛔ AND THE COLUMN MUST BE EMPTY FIRST — WHICH THE GAME HAD TO SAY,
+     * BECAUSE THE FIRST CUT OF THIS FUNCTION WAS WRONG AND ONLY A RECORDING
+     * COULD SHOW IT.
+     *
+     * The first reading excluded a lane whenever the player stood on the
+     * presser, on the reasoning above. It is right about the NEXT volley and
+     * silent about the last one: `r8-solve-5`'s first recording walked east
+     * out of `button@48,48` straight through `arrowtrap@64,48`'s column with
+     * 22 arrows still falling, and the GAME knocked the player back at
+     * t≈206 (`hits` 1 against the model's 0, first divergence at 207, 41 dead
+     * frames out of band). ⛔ THE TAPE WAS NOT COMMITTED — it is banked in
+     * `NewDocs/plans/r8-slice4-l5-refuted/` as the free oracle it is.
+     *
+     * ⇒ the exclusion is gated on the column being EMPTY: while any arrow
+     * from a trap in that group is still in the air, its lane stays priced.
+     * That is the same split the docblock already claimed and the code did
+     * not honour — "leaving the button stops the next volley and not the last
+     * one" — asked of the arrows rather than asserted about them.
+     * [[feedback_two_cost_models_must_agree]] one layer down: the STATE layer
+     * answered a question that also has a KINEMATIC half.
+     */
+    const box = playerBoxAt(run.state.x, run.state.y);
+    const groups = new Set((run.world.pressers ?? [])
+        .filter((p) => rectsOverlapLocal(box, p.rect)).map((p) => p.t));
+    if (groups.size === 0) return null;
+    if ((run.arrowsInFlight ?? []).length > 0) return null;
+    const ids = (run.world.arrowTraps ?? []).filter((t) => groups.has(t.t)).map((t) => t.id);
+    return ids.length > 0 ? new Set(ids) : null;
+}
+
+/**
  * SENSE the contacts the player is standing in RIGHT NOW — the reactive
  * replacement for a leg spec's hand-authored `contacts` list. A leg declared
  * them because an arrival is not a position the planner chose; the solver
@@ -377,8 +464,37 @@ function senseContacts(run) {
  * 3's charge); the probe is wired now so the seam exists and the trace can
  * carry what was seen.
  */
-function dangerNow(run, x, y) {
-    return dangerAt(run, run.ticksCompleted, playerBoxAt(x, y));
+function dangerNow(run, x, y, except = null) {
+    return withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y)), except);
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 4 — A NAMED DANGER EXCLUSION, AND WHY ONE IS A MECHANISM FACT
+ * RATHER THAN A FUDGE.
+ *
+ * `dangerMap`'s arrow ingredient prices an ARMED trap's lane at HORIZON ZERO
+ * — §9.9 decision 2, and it is right: the volley that has not fired yet is
+ * the one a policy needs warning about. But the `bait` phase's FIRST ACT is
+ * to step off the button, and `Button.update` republishes its flag every tick
+ * — so the group this order arms goes false on the tick the walk begins, and
+ * the lanes the probe is refusing are lanes that will not be firing while the
+ * player is anywhere near them.
+ *
+ * ⛔ SO THE EXCLUSION IS SCOPED TO THE LANES THIS ORDER'S OWN PRESSER ARMS,
+ * and to the phases in which the presser is provably released. Everything
+ * else the union knows stays priced — including `arrowDanger`'s OTHER half,
+ * the arrows ALREADY IN FLIGHT, which is what makes this a claim about the
+ * ceiling's STATE rather than a hole in the map (trap 160's law, honoured
+ * rather than repeated: the STATE layer answers the state question).
+ *
+ * ⛔ AND THE ORACLE IS STILL THE RUN. `runDwell` asserts NO NEW HITS and the
+ * segment asserts zero hits overall, so an exclusion that was wrong shows up
+ * as a hit rather than as a silence.
+ */
+function withoutSources(d, except) {
+    if (!except || except.size === 0) return d;
+    const sources = d.sources.filter((s) => !except.has(s.id));
+    return { ...d, sources, danger: sources.length > 0 };
 }
 
 /** One goal, shape-checked. The two kinds slice 2 owns. */
@@ -640,9 +756,40 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
         }
         for (let k = 1; k <= MAX_SHOVE_TILES; k += 1) {
             const cell = { tx: from.tx + step.dx * k, ty: from.ty + step.dy * k };
+            /**
+             * ⛔⛔⛔ R8 SLICE 4 — THE OFF-THE-MAP GUARD WAS COMPARING TILES
+             * AGAINST PIXELS, AND HAD BEEN VACUOUS SINCE THE DAY IT WAS
+             * WRITTEN.
+             *
+             * `world.width`/`world.height` are TILES (12 x 13 in L8);
+             * `world.world.width`/`world.world.height` are the same room in
+             * PIXELS (192 x 208). The guard read the second and compared it
+             * to a tile index, so no `k` inside a 12-tile room could ever
+             * trip it — and L8 is the first room where that mattered:
+             * push-until-path scanned column 6 south, found every in-room
+             * cell still blocking, reached the cell BELOW THE FLOOR, found
+             * that a block outside the level blocks nothing, and returned
+             * `k = 6` — a destination the block physically cannot reach. The
+             * shove then leaned for 240 ticks and reported the block had
+             * never left its cell.
+             *
+             * ⛓ The fix makes the LAST RESORT reachable, which is the whole
+             * point: with the map bounded, no NON-destructive cell in any
+             * direction yields a corridor, so ⚖ ruling 1(a)'s explicit last
+             * resort applies and the block goes into the water — which is
+             * what the hand answer does, arrived at by exhausting the
+             * alternatives rather than by preferring the pit.
+             * [[feedback_units_must_survive_the_round_trip]]
+             */
             if (cell.tx < 0 || cell.ty < 0
-                || cell.tx >= run.world.world.width || cell.ty >= run.world.world.height) {
-                rejected.push({ option: `shove ${dir} k=${k}`, why: 'off the map' });
+                || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+                rejected.push({
+                    option: `shove ${dir} k=${k}`,
+                    why: `(${cell.tx},${cell.ty}) is OFF THE MAP — level ${run.level} is `
+                        + `${run.world.width}x${run.world.height} TILES. A block cannot rest `
+                        + 'outside the room, and a hypothesis that puts it there is asking '
+                        + 'whether a corridor exists once the block stops existing.',
+                });
                 break;
             }
             const destroys = blockSinksOn(run.world, cell);
@@ -918,6 +1065,649 @@ function execHold(run, perTick, resolved, ctx) {
  */
 function execShove(run, perTick, resolved, ctx) {
     return runShove(run, perTick, resolved.shove, ctx.what);
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 4 — A PENDING DECLARATION IS AN OUTCOME, NOT A FAILURE.
+ *
+ * `createLevelRun` takes `persistence` **AT CONSTRUCTION**, so a run whose
+ * own walk opens a gate cannot be handed the opening tick: only a solve
+ * produces it. The executor that meets such a gate therefore does the whole
+ * of its mechanical work — arms the ceiling, waits out the mechanism's own
+ * bound — and then RAISES the declaration it needs, carrying the ticks it
+ * spent. The harness (`twoPassSolve`) reads the tick from whichever oracle is
+ * allowed for that mechanism and re-solves.
+ *
+ * ⛔ WHICH ORACLE IS A PROPERTY OF THE MECHANISM, NOT A PREFERENCE:
+ *
+ *   `model` — the run COMPUTES the consequence (`chaserKillLockOpens`, §11.5)
+ *             and the responder's fade is `activators.opensOnTick`. A
+ *             KILL-LOCK opened by chaser deaths is this case.
+ *   `game`  — §11.4 REFUSES the consequence, so the model may not invent it.
+ *             A static `"Enemy"` body's arrow death is this case: its clear
+ *             is the declared v9 row precisely so ONE writer owns the slot.
+ */
+export class PendingDeclaration extends SolverRefusal {
+    constructor(message, opts) {
+        super(message, opts);
+        this.name = 'PendingDeclaration';
+    }
+}
+
+/**
+ * ⛓ THE COUNTED BODIES A KILL-LOCK IS WAITING ON — asked of the census, not
+ * of `run.chasers`.
+ *
+ * `Game.totalEnemies()` counts every counted body in the room, and this
+ * model's live roster (`run.chasers`) holds only the classes the BRIDGE
+ * steps. A room mixing a stepped body with an unstepped counted one would
+ * have two different answers to "how many are left", and the lock answers to
+ * the census's.
+ */
+function countedBodiesLeft(run) {
+    const census = (run.world.combat?.enemies ?? []).filter((e) => e.counted !== false);
+    /**
+     * ⛔ TWO KINDS OF BODY AND TWO DIFFERENT LIVENESS QUESTIONS, and the
+     * verdict is what tells them apart (§12.4's law, one consumer over).
+     *
+     *   a BRIDGED body in a STEPPED room — the census row never moves and
+     *   never disappears, so its liveness is `run.chasers`;
+     *   anything else — the model does not track it, so it is alive for
+     *   exactly as long as the WORLD carries it. A declared clear rebuilds
+     *   the room without the entity, which is precisely how a game-sourced
+     *   declaration becomes observable to the policy.
+     *
+     * Reading `run.chasers` for BOTH would report every static body dead the
+     * moment the roster is empty — and an empty roster has two causes with
+     * opposite consequences (§12.4).
+     */
+    const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
+    const live = new Set((run.chasers ?? []).map((c) => c.id));
+    const bridged = new Set(bridgedChaserTags());
+    return census.filter((e) => {
+        const id = `${e.tag}@${e.x},${e.y}`;
+        if (stepped && bridged.has(e.tag)) return live.has(id);
+        return true;
+    });
+}
+
+/** A census row's own persistence tag — `attrs.tag`, the `.oel` attribute. */
+const persistTagOf = (e) => {
+    const raw = e?.attrs?.tag ?? e?.persistTag;
+    const n = Number(raw);
+    return Number.isInteger(n) && n >= 0 ? n : null;
+};
+
+/**
+ * ⛓⛓⛓ THE KILL WORK ORDER, RESOLVED — ⚖ §11.8a ruling 2's law applied to the
+ * one strategy slice 3b left computed and unregistered (§12.8).
+ *
+ * Two shapes reach here and they are NOT the same problem:
+ *
+ *   · a KILL-LOCK on the frontier (`tset == -1`, L5's `lock@48,112`) — the
+ *     post-condition is `Game.totalEnemies()` reaching zero, so the order is
+ *     over EVERY counted body in the room and its phases are
+ *     `ARROW_KILL_PLAN.phases` (press, clear, bait, dwell, back, hold);
+ *   · a single BODY the ladder wants removed (L8's `sandtrap@96,80`) — the
+ *     post-condition is that one body, and the phases collapse to press+hold.
+ *
+ * ⛔ THE WEAPON IS DERIVED BY MECHANISM IN BOTH: a presser whose group arms a
+ * trap, with `ARROW_KILL_PLAN.presserSafety` asserted at the stance
+ * (`lanesOver(playerBox)` EMPTY — a leg holding a button under a lane is
+ * standing in its own volley).
+ */
+function resolveKillStrategy(run, obstacle, contacts) {
+    const world = run.world;
+    const row = (world.activators ?? []).find((a) => a.id === obstacle.id);
+    if (!row || row.t !== KILL_LOCK_TSET) return null;
+    const bodies = countedBodiesLeft(run);
+    if (bodies.length === 0) return null;
+    const weapon = deriveCeilingWeapon(run, contacts);
+    if (!weapon.presser) {
+        return {
+            strategy: 'kill',
+            weapon: null,
+            rejected: [{ option: 'kill-by-ceiling', why: weapon.why }],
+        };
+    }
+    return {
+        strategy: 'kill',
+        postCondition: 'kill-lock',
+        target: { x: row.x ?? obstacle.x, y: row.y ?? obstacle.y },
+        lock: row,
+        stance: weapon.stance,
+        exempt: weapon.exempt,
+        presser: weapon.presser,
+        bodies: bodies.map((b) => `${b.tag}@${b.x},${b.y}`),
+        rejected: [{
+            option: 'hold',
+            why: `${obstacle.id} carries \`tset == ${KILL_LOCK_TSET}\` `
+                + '(`combat.KILL_LOCK_TSET`), so NO button in the game answers it — '
+                + '`checkEnemies()` opens it when `Game.totalEnemies()` reaches zero. A '
+                + 'policy that went looking for a presser for THIS lock would find none '
+                + 'and report the obstacle unresolvable (§12.8).',
+        }, {
+            option: 'a PRESS arm against the bodies',
+            why: 'the room\'s own ceiling is the weapon this rung uses; a press arm is a '
+                + '`KILL_ARM_POLICY` question and a refusal retired without a driven '
+                + 'witness is trap 101.',
+        }],
+    };
+}
+
+/**
+ * The presser whose group arms at least one trap in this room, nearest first,
+ * with a REACHABLE stance that `ARROW_KILL_PLAN.presserSafety` clears.
+ *
+ * ⛔ SAFETY IS ASKED AT THE STANCE AND AS A WAIT (trap 154). The hold stands
+ * the player still for hundreds of ticks under a firing ceiling; a cell that
+ * is merely safe to walk through is not an answer to that question.
+ */
+function deriveCeilingWeapon(run, contacts) {
+    const world = run.world;
+    const traps = world.arrowTraps ?? [];
+    if (traps.length === 0) {
+        return { presser: null, why: `level ${run.level} has NO arrow trap, so it has no `
+            + 'ceiling to arm. A kill by the room\'s own weapon needs the room to have one.' };
+    }
+    const options = (world.pressers ?? [])
+        .map((presser) => ({ presser, arms: traps.filter((t) => t.t === presser.t) }))
+        .filter((o) => o.arms.length > 0);
+    if (options.length === 0) {
+        return { presser: null, why: `no presser in level ${run.level} arms any of its `
+            + `${traps.length} trap(s) — the room's presser groups are `
+            + `[${(world.pressers ?? []).map((p) => `${p.tag}(t=${p.t})`).join(', ') || 'none'}] `
+            + `and its trap groups are [${[...new Set(traps.map((t) => t.t))].join(', ')}]. `
+            + 'A button that arms nothing is not a weapon.' };
+    }
+    options.sort((a, b) => Math.hypot(a.presser.x - run.state.x, a.presser.y - run.state.y)
+        - Math.hypot(b.presser.x - run.state.x, b.presser.y - run.state.y));
+    const { presser, arms } = options[0];
+    const resolved = resolvePresser(world, { x: presser.x, y: presser.y },
+        `solverBot kill-by-ceiling (${presser.tag}@${presser.x},${presser.y})`);
+    const { stance, exempt } = deriveHoldStance(run, resolved, contacts);
+    const lanes = arms.map((t) => arrowLaneRect(run, t));
+    const over = lanes.filter((l) => rectsOverlapLocal(l, playerBoxAt(stance.x, stance.y)));
+    if (over.length > 0) {
+        return { presser: null, why: `the only reachable stance inside `
+            + `${presser.tag}@${presser.x},${presser.y} sits UNDER `
+            + `${over.length} of the lane(s) that button arms — `
+            + '`ARROW_KILL_PLAN.presserSafety` refuses it by name: a leg holding a button '
+            + 'under a lane is standing in its own volley, and this rung waits there.' };
+    }
+    return {
+        presser: resolved, stance, exempt, arms, lanes,
+        why: `${presser.tag}@${presser.x},${presser.y} (group t=${presser.t}) arms `
+            + `[${arms.map((t) => t.id).join(', ')}] and its stance clears `
+            + '`presserSafety`',
+    };
+}
+
+/**
+ * ⛓ A LANE THIS PRESSER'S GROUP WOULD ARM — armed-or-not.
+ *
+ * ⛔ AND THAT IS DELIBERATELY NOT `dangerMap.bodyKillRegions`. The bait phase
+ * happens with the player OFF the button, so every one of this room's lanes
+ * is DISARMED while the bait is being derived — and a derivation that asked
+ * the live armed set would find nothing to aim at in exactly the room the
+ * plan was written for. The question a bait's post-condition asks is "where
+ * will the ceiling be firing when I go BACK", and the group is what answers
+ * it. (Trap 160's law read forwards: the STATE layer must not answer a
+ * question about the GEOMETRY either.)
+ */
+function ceilingKillRegions(run, weapon) {
+    return weapon.arms.map((t) => ({
+        kind: 'ceiling-lane',
+        id: t.id,
+        rect: arrowLaneRect(run, t),
+        why: `\`${t.id}\` is in group t=${t.t}, which `
+            + `${weapon.presser.tag}@${weapon.presser.x},${weapon.presser.y} arms`,
+    }));
+}
+
+/**
+ * The bait stance for the ceiling phase — `deriveBaitStance`'s four
+ * conditions, with the kill regions supplied by the GROUP rather than by the
+ * live armed set (see `ceilingKillRegions`).
+ */
+function deriveCeilingBait(run, body, contacts, regions) {
+    const rows = ENEMY_CLASSES[body.tag];
+    const leash = typeof rows?.aggro?.range === 'number' ? rows.aggro.range : 0;
+    if (leash === 0 || (rows?.speed ?? 0) === 0) {
+        return { stance: null, why: `${body.id} has leash ${leash} and speed `
+            + `${rows?.speed ?? 0} — it never writes \`v\`, so there is no straight line `
+            + 'to bend and nothing to lure. That body has to be killed where it stands.' };
+    }
+    const pitch = DEFAULT_LATTICE;
+    const here = nodeAt(run.state.x, run.state.y, pitch);
+    const planOpts = solverPlanOpts(run, contacts);
+    const except = new Set(regions.map((r) => r.id));
+    const candidates = [];
+    let inLeash = 0;
+    /**
+     * ⛔ THE LATTICE IS UNBOUNDED AND THE LEVEL IS NOT. The first cut swept
+     * ±8 cells around the live position and handed back `(120,56)` in a room
+     * 112 px wide — a stance OUTSIDE the level, which `corridorPlans` was
+     * happy to certify and the AVOID rung then refused with "outside the
+     * level" three frames later. A candidate the world does not contain is
+     * not a rejected candidate, it is a bug wearing one.
+     */
+    const w = run.world;
+    const nx = (w.width * TILE_SIZE) / pitch;
+    const ny = (w.height * TILE_SIZE) / pitch;
+    for (let dy = -8; dy <= 8; dy += 1) {
+        for (let dx = -8; dx <= 8; dx += 1) {
+            const tx = here.tx + dx;
+            const ty = here.ty + dy;
+            if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) continue;
+            const c = nodeCentre(tx, ty, pitch);
+            if (Math.hypot(c.x - body.x, c.y - body.y) > leash) continue;
+            inLeash += 1;
+            const crossed = regions.find(
+                (r) => segmentCrosses({ x: body.x, y: body.y }, c, r.rect));
+            if (!crossed) continue;
+            /**
+             * ⛔⛔ AND `presserSafety` IS **NOT** ASKED HERE, WHICH IS THE
+             * OPPOSITE OF WHAT THE FIRST CUT DID — because the phase this
+             * stance belongs to is the one in which the ceiling is OFF.
+             *
+             * `ARROW_KILL_PLAN.presserSafety`'s own words are *"assert
+             * `lanesOver(playerBox, lanes)` is EMPTY **at the hold point**"*,
+             * and a bait stance is not a hold point: the player got there by
+             * stepping OFF the button, which unpublishes the group on the
+             * same tick. Filtering the group's own lanes out of the candidate
+             * set here would have refused the hand answer's own stance
+             * `(72,96)` — which sits inside `arrowtrap@80,16`'s lane and took
+             * ZERO hits in the game, because nothing was firing. The lanes
+             * this order arms are excluded from the WAIT question and every
+             * other danger the union knows is still asked.
+             */
+            if (dangerNow(run, c.x, c.y, except).danger) continue;
+            candidates.push({ ...c, crossed, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    for (const c of candidates) {
+        if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null, planOpts)) continue;
+        const travel = Math.hypot(c.x - body.x, c.y - body.y) / (rows.speed || 0.5);
+        return {
+            stance: { x: c.x, y: c.y },
+            crossed: c.crossed,
+            ticks: Math.ceil(travel) + MOBILE_DEATH_FADE.ticks + BAIT_SLACK,
+            leash,
+            why: `the straight line from ${body.id} at (${body.x.toFixed(1)},`
+                + `${body.y.toFixed(1)}) to (${c.x},${c.y}) crosses ${c.crossed.id}'s lane, `
+                + `the stance is inside the leash (${leash}) and outside every lane this `
+                + 'order arms',
+        };
+    }
+    return { stance: null, why: `no stance inside the level and within ${body.id}'s leash `
+        + `(${leash}) pulls its straight line through one of this ceiling's `
+        + `${regions.length} lane(s) from a cell the union map calls calm: ${inLeash} `
+        + `cell(s) in leash, ${candidates.length} of them crossing, none reachable. `
+        + '⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks '
+        + 'the waiting question of everything except the lanes this order itself '
+        + 'unpublishes by walking away from the button.' };
+}
+
+/**
+ * ⛔ THE PENDING SENTINEL — a declaration whose TICK is not known yet.
+ *
+ * Pass 1 must be able to RUN, and `assertChaserRemovalIsDeclared` throws by
+ * name when a removal opens a lock the tape declares no clear for (§11.5) —
+ * which is exactly the state pass 1 is in on purpose. So pass 1 declares the
+ * clear with this `at`, which says "this clear exists and its tick is what I
+ * am about to measure". It is unreachable by construction (no run is
+ * `Number.MAX_SAFE_INTEGER` ticks long), so `applyTimedClears` never fires
+ * it, and `twoPassSolve` asserts that no EMITTED tape ever carries it.
+ */
+export const PENDING_AT = Number.MAX_SAFE_INTEGER;
+
+/**
+ * ⛓⛓⛓ R8 SLICE 4 — THE COLUMN HAS TO DRAIN, AND THE NUMBER IS THE COLUMN'S
+ * OWN ARITHMETIC.
+ *
+ * The hold that killed the body leaves the player standing ON the button with
+ * a volley still falling. `lanesUnpublishedByLeaving` correctly stops pricing
+ * the LANE — the group goes false the tick the walk starts — but the arrows
+ * ALREADY IN THE AIR are real, and a corridor probe evaluated at one instant
+ * cannot price a body moving 5 px per tick: it reports the cell the arrow is
+ * in RIGHT NOW, which is neither where it will be nor where it has been.
+ *
+ * ⇒ so the policy does what the mechanism says: step off the button (which
+ * stops the next volley) to a cell outside every lane this ceiling owns, and
+ * WAIT until the column is empty. ⛔ The bound is not a margin — it is the
+ * distance from the highest spawn row to the floor over `ARROW.speed`, which
+ * is exactly how long the last arrow can still be in the room. Same shape as
+ * "the hold outlasts the kill by the responder's fade", one mechanism over.
+ *
+ * ⚠ AND A ZERO IS RECORDED RATHER THAN SKIPPED. A room whose last volley had
+ * already landed needs no drain, and "there was nothing to wait for" and
+ * "nobody looked" print the same thing otherwise.
+ */
+function drainCeiling(run, perTick, weapon, ctx) {
+    const inFlight = () => (run.arrowsInFlight ?? []).length;
+    if (inFlight() === 0) {
+        return { phase: 'drain', ticks: 0,
+            why: 'the column was already empty when the hold ended — no volley was still '
+                + 'in the air, recorded as a ZERO rather than skipped' };
+    }
+    const lanes = weapon.arms.map((t) => arrowLaneRect(run, t));
+    const pitch = DEFAULT_LATTICE;
+    const here = nodeAt(run.state.x, run.state.y, pitch);
+    const w = run.world;
+    const nx = (w.width * TILE_SIZE) / pitch;
+    const ny = (w.height * TILE_SIZE) / pitch;
+    const planOpts = solverPlanOpts(run, new Set([...senseContacts(run)]));
+    const candidates = [];
+    for (let dy = -4; dy <= 4; dy += 1) {
+        for (let dx = -4; dx <= 4; dx += 1) {
+            const tx = here.tx + dx;
+            const ty = here.ty + dy;
+            if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) continue;
+            const c = nodeCentre(tx, ty, pitch);
+            const box = playerBoxAt(c.x, c.y);
+            // ⛔ OFF THE PRESSER, or the group is still published and the
+            // ceiling keeps refilling the column this wait is draining.
+            if (rectsOverlapLocal(box, weapon.presser.rect)) continue;
+            if (lanes.some((l) => rectsOverlapLocal(l, box))) continue;
+            candidates.push({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const spot = candidates.find(
+        (c) => corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null, planOpts));
+    if (!spot) {
+        throw new SolverRefusal(`${ctx.what}: the ceiling's column is still falling `
+            + `(${inFlight()} arrow(s) in flight) and NO reachable cell within four tiles `
+            + `of the button is both off ${weapon.presser.tag}@${weapon.presser.x},`
+            + `${weapon.presser.y} and outside all ${lanes.length} of its lanes. A wait `
+            + 'that stays on the button refills the column it is waiting to drain.',
+        { perTick: [...perTick] });
+    }
+    ctx.walkTo(ctx.goal, spot, {
+        what: `${ctx.what} -> drain (step off ${weapon.presser.tag})`,
+        contactsOverride: new Set(),
+    });
+    const fromY = Math.min(...weapon.arms.map((t) => arrowLane(
+        { id: t.id, t: t.t, x: t.ex, y: t.ey }).fromY));
+    const bound = Math.ceil((run.world.world.height - fromY) / ARROW.speed) + HOLD_SLACK;
+    if (inFlight() === 0) {
+        return { phase: 'drain', ticks: 0, at: spot,
+            why: 'the walk off the button outlasted the last arrow — the column was empty '
+                + 'on arrival, recorded as a ZERO' };
+    }
+    const rec = runDwell(run, perTick, {
+        ticks: bound,
+        why: `the ceiling's own column has to empty before a corridor through it can be `
+            + `walked — ${inFlight()} arrow(s) are still falling`,
+        until: {
+            why: `level ${run.level} has no arrow in flight`,
+            test: (r) => (r.arrowsInFlight ?? []).length === 0,
+        },
+    }, `${ctx.what} -> drain`);
+    return { phase: 'drain', ticks: rec.ticks, bound, at: spot };
+}
+
+/** The census row a live body's id names — the placement both rosters key on. */
+function censusRowFor(run, id) {
+    const row = (run.world.combat?.enemies ?? []).find((e) => `${e.tag}@${e.x},${e.y}` === id);
+    if (!row) fail(`solverBot: no census row for ${id} in level ${run.level}`);
+    return row;
+}
+
+/**
+ * ⛓⛓⛓ THE `kill` EXECUTOR — `ARROW_KILL_PLAN`'s six phases, every parameter
+ * derived, and the last one raised as a PENDING DECLARATION.
+ *
+ *     press   the stance inside the presser (the loop's own `walkTo`)
+ *     clear   hold — every body already under a lane dies where it stands
+ *     bait    a stance whose straight line pulls a survivor THROUGH a lane
+ *     dwell   the survivor's own travel time at its own `moveSpeed`
+ *     back    the stance -> the presser
+ *     hold    the kill; then the responder's fade, which the tape declares
+ *
+ * ⛔ THE PHASES ARE NOT A SCRIPT — they are a LOOP over the bodies the count
+ * is still waiting on, and the room decides how many turns it takes. L5 needs
+ * one bait (two bodies die in the `clear` phase, the third parks in the one
+ * column no trap covers); a room whose bodies all start under a lane would
+ * never enter the bait arm at all, and the record says which happened.
+ */
+function execKill(run, perTick, resolved, ctx) {
+    if (!resolved.presser) {
+        throw new SolverRefusal(`${ctx.what}: the kill work order has no weapon — `
+            + `${resolved.rejected?.[0]?.why ?? 'no reason recorded'}`,
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+            considered: resolved.rejected ?? [], perTick: [...perTick] });
+    }
+    const weapon = {
+        presser: resolved.presser, arms: resolved.presser.arms ?? resolved.arms,
+        stance: resolved.stance, exempt: resolved.exempt,
+    };
+    const arms = (run.world.arrowTraps ?? []).filter((t) => t.t === resolved.presser.t);
+    weapon.arms = arms;
+    const regions = ceilingKillRegions(run, weapon);
+    /**
+     * ⛓ The lanes this order's own presser arms, by id — the exclusion the
+     * bait/dwell/back phases run under (see `withoutSources`). Scoped to THIS
+     * group; a trap in another group is somebody else's ceiling and stays
+     * priced.
+     */
+    const laneIds = new Set(regions.map((r) => r.id));
+    /**
+     * The responder's own fade, in the responder's own arithmetic — zero when
+     * this order is not about a lock (a single body the ladder wanted gone
+     * has no fade to outlast).
+     */
+    const fadeTicks = resolved.lock
+        ? opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade)
+        : 0;
+    const phases = [];
+    /**
+     * ⛔⛔ THE SHUT-BEFORE SNAPSHOT IS TAKEN BEFORE THE APPROACH — §11.7's law,
+     * and this executor is where it earns its keep twice.
+     *
+     * A hold's stance is INSIDE the presser, so the walk to it already arms
+     * the ceiling: a snapshot taken at hold start describes a room already
+     * firing, and `runHold`'s positive control ("silent before, shooting
+     * after") then reports nothing to change and fails BY NAME. The FIRST
+     * hold's snapshot is the loop's own `ctx.before`, taken before the
+     * strategy's walk; every LATER hold gets one taken before its own `back`
+     * walk, because the bait released the button and the ceiling really did
+     * go quiet in between. Two snapshots, one law.
+     */
+    const snapshot = () => ({
+        open: run.openActivators,
+        armed: run.armedPulsers ?? new Set(),
+        trapsArmed: run.armedArrowTraps ?? new Set(),
+    });
+    /**
+     * ⛓⛓⛓ AND THE HOLD OUTLASTS THE KILL BY THE RESPONDER'S OWN FADE — the
+     * one line of `ARROW_KILL_PLAN` that is about the LOCK rather than the
+     * bodies, and the one the two-pass loop cannot do without.
+     *
+     * *"A hold that stopped at the kill would report a lock that was about to
+     * open."* `checkEnemies()` arms the lock when the count reaches zero and
+     * `Lock.activationStep` drains `opensOnTick(fade)` alpha steps before
+     * `turnOff()` writes the durable flag. So the phase's stopping condition
+     * is TWO claims: the bodies are gone (OBSERVED) and the fade has elapsed
+     * since they went (ARITHMETIC, `activators.opensOnTick`, not a margin).
+     *
+     * ⛔ AND IT IS ONE `runHold` RATHER THAN TWO. A second call at the same
+     * stance would snapshot a ceiling already armed and fail its own positive
+     * control by name — §11.7's shut-before law biting the caller that split
+     * a hold in half. One hold, one condition, two claims inside it.
+     */
+    let zeroAt = null;
+    const holdFor = (label, bodies, before) => {
+        const want = new Set(bodies.map((b) => `${b.tag}@${b.x},${b.y}`));
+        const rec = runHold(run, perTick, {
+            presser: { x: resolved.presser.x, y: resolved.presser.y },
+            ticks: want.size * ARROW_KILL_FLOOR + fadeTicks + HOLD_SLACK,
+            until: {
+                why: `every body this phase is waiting on [${[...want].join(', ')}] has left `
+                    + `level ${run.level}${fadeTicks
+                        ? `, and — if that took the count to zero — ${fadeTicks} more tick(s) `
+                        + `have elapsed for ${resolved.lock?.id ?? 'the lock'}'s own fade`
+                        : ''}`,
+                test: (r) => {
+                    const left = countedBodiesLeft(r);
+                    if (!left.every((b) => !want.has(`${b.tag}@${b.x},${b.y}`))) return false;
+                    if (fadeTicks === 0 || left.length > 0) return true;
+                    if (zeroAt === null) zeroAt = r.ticksCompleted;
+                    return r.ticksCompleted >= zeroAt + fadeTicks;
+                },
+            },
+        }, `${ctx.what} -> ${label}`, before);
+        phases.push({ phase: label, ticks: rec.ticks ?? rec.held ?? null, bodies: [...want] });
+        return rec;
+    };
+
+    // ── press is the loop's own walk to the stance; `clear` starts here ──
+    const underLane = countedBodiesLeft(run).filter((b) => regions.some(
+        (r) => rectsOverlapLocal(r.rect, { x: b.x, y: b.y, right: b.x + 16, bottom: b.y + 16 })));
+    if (underLane.length > 0) holdFor('clear', underLane, ctx.before);
+    else {
+        phases.push({ phase: 'clear', ticks: 0, bodies: [],
+            why: 'no counted body starts under one of this ceiling\'s lanes, so the '
+                + '`clear` phase has nothing to wait for — recorded as a ZERO rather '
+                + 'than skipped, because "nobody was in a lane" and "nobody looked" '
+                + 'print the same thing otherwise' });
+    }
+
+    /**
+     * ⛓ THE BAIT LOOP, BOUNDED BY THE BODIES THEMSELVES. Each turn removes at
+     * least one body or refuses by name; a turn that removed nothing would be
+     * the policy spinning, so the bound is the count it started with.
+     */
+    const started = countedBodiesLeft(run).length;
+    for (let turn = 0; turn < started; turn += 1) {
+        const left = countedBodiesLeft(run);
+        if (left.length === 0) break;
+        const live = (run.chasers ?? []).filter(
+            (c) => left.some((b) => `${b.tag}@${b.x},${b.y}` === c.id));
+        const body = live[0] ?? null;
+        if (!body) {
+            /**
+             * ⛔ THE BODY THE COUNT IS WAITING ON IS NOT ONE THIS RUN STEPS —
+             * so the model cannot watch it die, and §11.4 refuses to compute
+             * the death of a static `"Enemy"` body. That is a GAME-SOURCED
+             * declaration, raised rather than invented.
+             */
+            const stuck = left[0];
+            throw new PendingDeclaration(`${ctx.what}: the count is still waiting on `
+                + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] and none of `
+                + 'them is a body this run STEPS — so the model cannot watch it die, and '
+                + '§11.4 refuses to compute a static `"Enemy"` body\'s arrow death '
+                + '(its clear is the tape\'s DECLARED v9 row, and a second writer of one '
+                + 'persistence slot is two cost models). The tick is the GAME\'s.',
+            { goal: ctx.goal, obstacle: { kind: 'static-enemy', id: `${stuck.tag}@${stuck.x},${stuck.y}` },
+                perTick: [...perTick],
+                pending: {
+                    level: run.level, tag: persistTagOf(stuck), source: 'game',
+                    body: `${stuck.tag}@${stuck.x},${stuck.y}`,
+                    why: '§11.4 refuses to compute a static `"Enemy"` body\'s death',
+                } });
+        }
+        const bait = deriveCeilingBait(run, body, new Set([...(resolved.exempt ?? [])]), regions);
+        if (!bait.stance) {
+            throw new SolverRefusal(`${ctx.what}: ${body.id} survives the ceiling and no `
+                + `bait stance pulls it into a lane — ${bait.why}`,
+            { goal: ctx.goal, obstacle: { kind: 'enemy', id: body.id },
+                considered: [{ option: 'bait', why: bait.why }], perTick: [...perTick] });
+        }
+        ctx.walkTo(ctx.goal, bait.stance, {
+            what: `${ctx.what} -> bait (${body.id}) stance`,
+            contactsOverride: new Set(),
+            dangerExcept: laneIds,
+        });
+        phases.push({ phase: 'bait', stance: bait.stance, target: body.id, why: bait.why });
+        const dwell = runDwell(run, perTick, {
+            ticks: bait.ticks,
+            why: `${body.id}: ${bait.why}`,
+            until: {
+                why: `${body.id} stands inside ${bait.crossed.id}'s lane — the cell the `
+                    + 'ceiling will be firing into once the button is held again',
+                test: (r) => (r.chasers ?? []).some((c) => c.id === body.id
+                    && rectsOverlapLocal(bait.crossed.rect, bodyRectOf(c))),
+            },
+        }, `${ctx.what} -> dwell (${body.id})`);
+        phases.push({ phase: 'dwell', ticks: dwell.ticks, target: body.id });
+        const beforeBack = snapshot();
+        ctx.walkTo(ctx.goal, resolved.stance, {
+            what: `${ctx.what} -> back (${resolved.presser.tag})`,
+            contactsOverride: resolved.exempt,
+            dangerExcept: laneIds,
+        });
+        phases.push({ phase: 'back', stance: resolved.stance });
+        /**
+         * ⛓ THE `hold` PHASE WAITS FOR THIS BODY BY ITS CENSUS IDENTITY, not
+         * by the live object — the id IS the placement (§19.3), and it is the
+         * only name the count and the live roster share.
+         */
+        holdFor('hold', [censusRowFor(run, body.id)], beforeBack);
+    }
+
+    const left = countedBodiesLeft(run);
+    if (left.length > 0) {
+        throw new SolverRefusal(`${ctx.what}: the ceiling removed every body it could and `
+            + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so `
+            + '`Game.totalEnemies()` never reaches zero and the kill-lock never arms.',
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+            perTick: [...perTick] });
+    }
+
+    /**
+     * ⛓⛓⛓ THE COUNT IS ZERO AND THE LOCK IS STILL SHUT — WHICH IS CORRECT,
+     * AND IS THE WHOLE REASON THE LOOP EXISTS.
+     *
+     * `checkEnemies()` arms the lock and `Lock.activationStep` drains 100
+     * alpha steps before `turnOff()` writes the durable flag. This model does
+     * not step a kill-lock's fade — §11.5's ruling, so that ONE writer owns
+     * the persistence slot — so the run's own ledger has the REMOVAL tick and
+     * `activators.opensOnTick` has the fade, and the sum is the declaration.
+     */
+    const opens = (run.chaserKillLockOpens ?? []).filter((o) => !o.nil && o.level === run.level);
+    const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
+    const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
+    if (!last) {
+        throw new SolverRefusal(`${ctx.what}: every counted body is gone and the run's own `
+            + 'kill-lock ledger (`chaserKillLockOpens`) recorded NOTHING — so nothing '
+            + 'computed the consequence and there is no tick to declare. A ledger with no '
+            + 'entry and a ledger nobody consulted print the same thing (trap 119).',
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+            perTick: [...perTick] });
+    }
+    /**
+     * ⛓ AND IF THE LOCK IS ALREADY GONE, THE DECLARATION WAS HONEST. Pass 2
+     * runs with the clear declared, so by the end of the fade hold the world
+     * has been rebuilt without the lock — the executor returns and the loop
+     * re-plans through a corridor that now exists.
+     */
+    const stillThere = (run.world.activators ?? []).some((a) => a.id === resolved.lock.id);
+    if (!stillThere) {
+        phases.push(drainCeiling(run, perTick, weapon, ctx));
+        return {
+            kind: 'kill', lock: resolved.lock.id, phases,
+            removedAt: last.t, fade: fadeTicks, openedAt: run.ticksCompleted,
+        };
+    }
+    throw new PendingDeclaration(`${ctx.what}: \`Game.totalEnemies()\` reached zero at tick `
+        + `${last.t} (${last.id}, ${last.cause}) and ${resolved.lock.id} is ARMING — its own `
+        + `${fadeTicks}-step fade has run and \`turnOff()\` writes the durable clear at the `
+        + 'end of it. This model does not step a kill-lock\'s fade (§11.5: one writer per '
+        + 'persistence slot), so the tick is the run\'s own ledger plus the responder\'s '
+        + `own arithmetic: ${last.t} + ${fadeTicks} = ${last.t + fadeTicks}.`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock.id },
+        perTick: [...perTick],
+        pending: {
+            level: run.level, tag: resolved.lock.persistTag ?? null,
+            source: 'model', at: last.t + fadeTicks, removedAt: last.t, fade: fadeTicks,
+            lock: resolved.lock.id, phases,
+            why: `\`chaserKillLockOpens\` computed the removal at ${last.t} and `
+                + `\`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
+                    ?? RESPONDERS.lock.fade})\` is ${fadeTicks}`,
+        } });
 }
 
 /** Executor: the `collect` verb, bound to live state. */
@@ -1251,7 +2041,9 @@ export function solveSegment({
      * on the error — a refused segment is still reviewable.
      */
     const refuse = (message, extra = {}) => {
-        throw new SolverRefusal(message, { rows: [...rows], ...extra });
+        throw new SolverRefusal(message, {
+            rows: [...rows], perTick: [...perTick], ...extra,
+        });
     };
 
     /**
@@ -1259,8 +2051,8 @@ export function solveSegment({
      * Dodge is slice 3's policy; a policy that walked on past a named
      * danger would be worse than one that stops and says why.
      */
-    const refuseDanger = (x, y, goal, what) => {
-        const d = dangerNow(run, x, y);
+    const refuseDanger = (x, y, goal, what, except = null) => {
+        const d = dangerNow(run, x, y, except);
         if (d.danger) {
             refuse(`${what}: the danger map forbids (${x},${y}) — `
                 + d.sources.map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`).join('; ')
@@ -1444,7 +2236,7 @@ export function solveSegment({
      * segment between them crossed two of them. Eight-pixel samples are finer
      * than any volume on the hazard roster (the smallest is a 16 px box).
      */
-    const probeCorridor = (wps) => {
+    const probeCorridor = (wps, except = null) => {
         const SAMPLE = 8;
         let from = { x: run.state.x, y: run.state.y };
         for (const wp of wps) {
@@ -1453,7 +2245,7 @@ export function solveSegment({
             for (let i = 1; i <= steps; i += 1) {
                 const px = from.x + ((wp.x - from.x) * i) / steps;
                 const py = from.y + ((wp.y - from.y) * i) / steps;
-                const d = dangerNow(run, px, py);
+                const d = dangerNow(run, px, py, except);
                 if (d.danger) return { x: px, y: py, ...d };
             }
             from = wp;
@@ -1469,10 +2261,31 @@ export function solveSegment({
      * emitted tape is an artifact.
      */
     const chooseBodyToRemove = (goal, aim, contacts, allowTeleporter) => {
-        const live = [...(run.chasers ?? [])];
-        live.sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
+        /**
+         * ⛓⛓⛓ R8 SLICE 4 WIDENS THE HYPOTHESIS SET TO THE STATIC HALF, and
+         * the widening is the whole of L8's wall.
+         *
+         * Slice 3b quantified over `run.chasers` — the bodies this run
+         * STEPS — and L8's `sandtrap@96,80` is not one: a `speed 0` census
+         * row in a room the bridge refuses. So the rung asked "which live
+         * body's removal admits a corridor", got "none", and reported the
+         * room unsolvable. But "the model cannot watch it die" and "nothing
+         * can remove it" are DIFFERENT CLAIMS — the room's own ceiling
+         * removes it and the GAME writes the flag. The set is therefore every
+         * body the danger map is pricing, live or static, and what differs is
+         * WHICH ORACLE finishes the job.
+         */
+        const live = [...(run.chasers ?? [])].map((c) => ({ ...c, stepped: true }));
+        const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
+        const bridged = new Set(bridgedChaserTags());
+        const statics = stepped ? [] : (run.world.combat?.enemies ?? [])
+            .filter((e) => !bridged.has(e.tag) || !stepped)
+            .map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, tag: e.tag, x: e.cx ?? e.x,
+                y: e.cy ?? e.y, row: e, stepped: false }));
+        const all = [...live, ...statics];
+        all.sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
             - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
-        for (const c of live) {
+        for (const c of all) {
             const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
             try {
                 planWaypoints(run.world, run.state, aim, allowTeleporter,
@@ -1502,7 +2315,8 @@ export function solveSegment({
      * without ever asking `avoid` is four policies wearing one name, and
      * `r8Acceptance.assertEscalationIsOrdered` is what says so.
      */
-    const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit }) => {
+    const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
+        dangerExcept = null }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -1538,7 +2352,8 @@ export function solveSegment({
         };
 
         // ── rung 1: AVOID — a static re-plan with the threatened cells out ──
-        const vols = dangerVolumes(run, 0);
+        const vols = dangerVolumes(run, 0)
+            .filter((v) => !(dangerExcept && dangerExcept.has(v.id)));
         let refused = null;
         let avoid = null;
         try {
@@ -1550,7 +2365,7 @@ export function solveSegment({
                 + `${vols.length} volume(s) forbidden — ${e.message.slice(0, 200)}` };
         }
         if (avoid) {
-            const still = probeCorridor(avoid);
+            const still = probeCorridor(avoid, dangerExcept);
             if (!still) {
                 rowFor('avoid', null, { waypoints: avoid.length });
                 return { wps: avoid, escalations };
@@ -1644,7 +2459,12 @@ export function solveSegment({
          */
         const body = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
         let baitWhy = null;
-        if (!body) {
+        if (body && body.stepped === false) {
+            baitWhy = `${body.id} is a STATIC census body (\`speed 0\`, and this room's `
+                + 'chaser roster is refused) — it never writes `v`, so there is no straight '
+                + 'line to bend and nothing to lure. That is a KILL question, and the kill '
+                + 'is the room\'s own ceiling.';
+        } else if (!body) {
             baitWhy = 'NO LIVE BODY\'s removal admits a corridor — the danger on this '
                 + `corridor is [${hit.sources.map((sx) => `${sx.kind}:${sx.id}`)
                     .join(', ')}] and this room's live roster is `
@@ -1682,7 +2502,102 @@ export function solveSegment({
         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
         let killWhy = null;
         const target = body ?? null;
-        if (!target) {
+        if (target && target.stepped === false) {
+            /**
+             * ⛓⛓⛓ THE STATIC ARM — the room's ceiling kills it and the GAME
+             * writes the flag. ⛔ §11.4 IS NOT WEAKENED: this model still
+             * computes nothing about the death. What changed is that the
+             * refusal now RAISES the declaration it needs instead of stopping
+             * the room, so the single writer of that persistence slot is
+             * still the tape — and the tick in it is the game's own.
+             */
+            const weapon = deriveCeilingWeapon(run, contacts);
+            if (!weapon.presser) {
+                killWhy = weapon.why;
+            } else {
+                rowFor('kill', refused, { presser: weapon.presser.tag, target: target.id });
+                /**
+                 * ⛔⛔ THE SHUT-BEFORE SNAPSHOT IS TAKEN BEFORE THE APPROACH —
+                 * §11.7's law, and this rung is the third place it bites. The
+                 * stance is INSIDE the presser, so the walk to it arms the
+                 * ceiling; a snapshot taken at hold start describes a room
+                 * already firing and `runHold`'s positive control then reports
+                 * nothing to change and fails BY NAME.
+                 */
+                const before = {
+                    open: run.openActivators,
+                    armed: run.armedPulsers ?? new Set(),
+                    trapsArmed: run.armedArrowTraps ?? new Set(),
+                };
+                walkTo(goal, weapon.stance, {
+                    what: `${what} -> kill (${target.id}) stance`,
+                    contactsOverride: weapon.exempt,
+                });
+                const tag = persistTagOf(target.row);
+                const hits = ENEMY_CLASSES[target.tag]?.kill?.hits ?? 3;
+                const bound = hits * ARROW_KILL_FLOOR + HOLD_SLACK;
+                const gone = (r) => !(r.world.combat?.enemies ?? [])
+                    .some((e) => `${e.tag}@${e.x},${e.y}` === target.id);
+                const spentBefore = perTick.length;
+                try {
+                    const rec = runHold(run, perTick, {
+                        presser: { x: weapon.presser.x, y: weapon.presser.y },
+                        ticks: bound,
+                        until: {
+                            why: `${target.id} has left level ${run.level} — which for a `
+                                + 'static "Enemy" body means its DECLARED clear fired and '
+                                + 'the room was rebuilt without it',
+                            test: gone,
+                        },
+                    }, `${what} -> kill (${target.id})`, before);
+                    for (const c of weapon.exempt) exemptions.add(c);
+                    const drained = drainCeiling(run, perTick, weapon,
+                        { what: `${what} -> kill (${target.id})`, walkTo, goal });
+                    records.push({ goal: goal.kind, strategy: 'kill', target: target.id,
+                        ...rec, drained });
+                    return { escalations };
+                } catch (e) {
+                    /**
+                     * ⛔ ONLY A BOUND THAT RAN OUT BECOMES A DECLARATION.
+                     * `runHold` fails by name for half a dozen reasons — a
+                     * stance off the button, a hold that changes nothing, a
+                     * transition — and converting ANY of them into "ask the
+                     * game" would launder a defect into a measurement. The
+                     * test is arithmetic: the hold spent its whole bound and
+                     * the body is still standing.
+                     */
+                    const spent = perTick.length - spentBefore;
+                    if (!(e instanceof BotDriverV2Error) || gone(run) || spent < bound) throw e;
+                    /**
+                     * ⛔ THE BOUND RAN OUT AND THE BODY IS STILL THERE — WHICH
+                     * FOR THIS CLASS IS THE MEASUREMENT, NOT A FAILED CLAIM.
+                     * The model REFUSES to compute this death (§11.4), so a
+                     * hold that watched for it and saw nothing is exactly the
+                     * state the two-pass loop's game-sourced arm exists for:
+                     * the ticks are spent, the ceiling has been firing, and
+                     * the prefix is what the running game is handed.
+                     */
+                    throw new PendingDeclaration(`${what}: held `
+                        + `${weapon.presser.tag}@${weapon.presser.x},${weapon.presser.y} `
+                        + `for the whole ${bound}-tick bound with `
+                        + `[${weapon.arms.map((t) => t.id).join(', ')}] firing, and `
+                        + `${target.id} is STILL STANDING in this model — which is correct: `
+                        + '§11.4 refuses to compute a static "Enemy" body\'s arrow death, '
+                        + 'because its clear is the tape\'s DECLARED v9 `at` row and a '
+                        + 'second writer of one persistence slot is two cost models. The '
+                        + 'tick is the GAME\'s.',
+                    { goal, obstacle: { kind: 'static-enemy', id: target.id },
+                        rows: [...rows], perTick: [...perTick],
+                        pending: {
+                            level: run.level, tag, source: 'game', body: target.id,
+                            presser: `${weapon.presser.tag}@${weapon.presser.x},${weapon.presser.y}`,
+                            bound,
+                            why: `${hits} hit(s) at \`ARROW_KILL_FLOOR\` ${ARROW_KILL_FLOOR} `
+                                + `+ ${HOLD_SLACK} slack; §11.4 refuses the death staging`,
+                        } });
+                }
+            }
+        } else if (!target) {
             killWhy = 'the danger on this corridor is not a body this run can watch die — '
                 + 'a kill needs a target whose removal the model OBSERVES, and '
                 + '⛔ a static "Enemy" body\'s own arrow death is REFUSED by name (§11.4): '
@@ -1751,12 +2666,23 @@ export function solveSegment({
      */
     const walkTo = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
+        dangerExcept = null,
     }) => {
         for (let attempt = 0; ; attempt += 1) {
             const contacts = contactsOverride
                 ? new Set([...senseContacts(run), ...contactsOverride])
                 : new Set([...senseContacts(run), ...exemptions]);
-            refuseDanger(run.state.x, run.state.y, goal, what);
+            /**
+             * ⛓ The derived exclusion is recomputed PER ATTEMPT, from the
+             * live position — a re-plan after a verb has moved the player off
+             * a button asks the un-excluded question, which is the one that
+             * is true there.
+             */
+            const leaving = lanesUnpublishedByLeaving(run);
+            const except = (dangerExcept || leaving)
+                ? new Set([...(dangerExcept ?? []), ...(leaving ?? [])])
+                : null;
+            refuseDanger(run.state.x, run.state.y, goal, what, except);
             let wps;
             try {
                 wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
@@ -1835,6 +2761,15 @@ export function solveSegment({
                     maxTicksPerTarget,
                     what: `${what} -> ${plan.strategy}`,
                     before: beforeStrategy,
+                    /**
+                     * ⛓ R8 slice 4 — AN EXECUTOR MAY NEED TO WALK. `kill`'s
+                     * bait/back phases move the player between waits, and
+                     * they must move through the SAME planner, danger probe
+                     * and ladder every other walk uses. Handing the loop's
+                     * own `walkTo` down is what keeps that one implementation
+                     * (§11.7's law, read for a verb that sequences).
+                     */
+                    walkTo, goal,
                 });
                 records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
                 // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
@@ -1868,7 +2803,7 @@ export function solveSegment({
              * `forbiddenByDanger`; the probe itself is the seam it plugs
              * into.
              */
-            const hit = probeCorridor(wps);
+            const hit = probeCorridor(wps, except);
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -1880,6 +2815,7 @@ export function solveSegment({
                  */
                 const climbed = climbLadder({
                     goal, aim, contacts, allowTeleporter, what, hit,
+                    dangerExcept: except,
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
@@ -1987,7 +2923,7 @@ export function solveSegment({
             });
         }
         const record = exec(run, perTick, resolved, {
-            maxTicksPerTarget, what, before,
+            maxTicksPerTarget, what, before, walkTo, goal,
         });
         records.push({ goal: 'collect-placement', strategy: resolved.strategy, ...record });
         if (perTick.length === verbTick) {

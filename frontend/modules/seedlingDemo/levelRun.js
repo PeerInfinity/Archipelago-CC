@@ -6614,7 +6614,19 @@ export function createLevelRun({
             (o) => !declared.some((p) => p.tag === o.flag),
         );
         if (undeclared.length > 0) {
-            throw new Error(`levelRun: the removal of ${c.id} at tick ${ticksCompleted + 1} `
+            /**
+             * ⛓⛓⛓ R8 SLICE 4 — THE THROW CARRIES THE LOCK'S OWN IDENTITY.
+             *
+             * The two-pass authoring loop's first pass is in EXACTLY this
+             * state on purpose: it is about to measure the tick nothing has
+             * declared yet. So the error is a STRUCTURED one — the harness
+             * reads `undeclaredKillLock` and re-declares the flag PENDING
+             * rather than parsing this message. ⛔ A caller that had to
+             * string-match would be reading a sentence for what a field
+             * CONTAINS, which is trap 143's shape from the other side; the
+             * MESSAGE stays exactly as it was for every human reader.
+             */
+            const err = new Error(`levelRun: the removal of ${c.id} at tick ${ticksCompleted + 1} `
                 + `(${cause}) OPENS ${undeclared.length} kill lock(s) in level ${level} `
                 + `[${undeclared.map((o) => `{${level},${o.flag}}`).join(', ')}] (${led.why}) `
                 + '— and the tape DECLARES no clear for them. A `Lock`\'s own hundred alpha '
@@ -6622,6 +6634,15 @@ export function createLevelRun({
                 + 'channel; computing them here as well would make two writers of one '
                 + 'persistence slot. So a clear this model can see coming and the tape does '
                 + 'not carry is a blocker that opens in the game and stays shut here.');
+            err.undeclaredKillLock = Object.freeze({
+                level,
+                flags: Object.freeze(undeclared.map((o) => o.flag)),
+                locks: Object.freeze(undeclared.map((o) => `${o.tag}@${o.x},${o.y}`)),
+                t: ticksCompleted + 1,
+                id: c.id,
+                cause,
+            });
+            throw err;
         }
         chaserKillLockOpens.push({
             t: ticksCompleted + 1,
