@@ -105,6 +105,170 @@ export function runTape(tape, opts = {}) {
  * `runTape`: the unfired-grant check fires at the END of the loop, so a
  * consumer that stops early skips it, honestly but silently.
  */
+/**
+ * The STAGING BLOCK of a parsed tape — everything that declares the world,
+ * and nothing that drives it.
+ *
+ * ⛓ A tape is a staging block PLUS inputs. The split is not cosmetic: the
+ * solver is handed a staging block and derives the inputs, the replay is
+ * handed both and obeys them, and until this function existed each caller
+ * spelled the field list out again. `solve-seedling-r8-battery.mjs`'s
+ * `runFromCommitted` was one such spelling and the editor page would have
+ * been the next — which is how a viewer ends up building a different world
+ * from the run it claims to be watching.
+ *
+ * ⚠ `noclip`/`noDamage` ride along because they are declarations about the
+ * world too (they decide the census — see `createRunForStaging`). A caller
+ * that wants an HONEST run from a relaxed tape's staging overrides them
+ * explicitly, and says so.
+ */
+export function stagingFromTape(t) {
+    return {
+        boot: t.boot,
+        noclip: t.noclip,
+        noDamage: t.noDamage,
+        noHazards: t.noHazards,
+        grants: t.grants,
+        persistence: t.persistence,
+        despawn: t.despawn ?? [],
+        equips: t.equips,
+        pins: t.pins ?? [],
+        save: t.save ?? null,
+        rng: t.rng ?? null,
+        seam: t.seam ?? null,
+    };
+}
+
+/**
+ * The staging block a SOLVE may be handed: the declared one with three
+ * fields pinned, each for its own reason.
+ *
+ * ⛔ `noclip` / `noDamage` OFF — the solver requires an HONEST run and
+ * refuses a relaxed one BY NAME (`solveSegment`: under those flags the
+ * bridge getters are empty by construction, so a solver would plan against
+ * geometry the replay ignores).
+ *
+ * ⛔⛔ `despawn` EMPTIED, and this one is a CLAIM rather than a
+ * relaxation. A v10 despawn is a WITNESSED mid-run body removal, admissible
+ * only beside the `phases` block that witnessed it (`tapeFormat`: "NO
+ * despawn WITHOUT a phases block"). That witness belongs to the HAND walk.
+ * A solver re-solving the same room derives its own walk, in which the
+ * removal never happened — so inheriting the list would let it plan
+ * through a body the game still has standing there. `r7-act2-6` declares
+ * exactly one, which is why this is a named pin and not an oversight:
+ * `solve-seedling-r8-battery` hardcoded `despawn: []` from the start, and
+ * the reason was never written down until the two constructions were
+ * unified and the difference had to be explained (editor arc slice 1).
+ *
+ * ⇒ Everything the SOLVE side pins is pinned HERE, once. The alternative —
+ * each caller pinning the two flags it remembers — is how a caller ends up
+ * honest about collision and blind about a despawned bob.
+ */
+export const solveStaging = (staging) => ({
+    ...staging, noclip: false, noDamage: false, despawn: [],
+});
+
+/**
+ * WHICH CENSUS a staging block implies — the roles-by-noclip rule, and
+ * there is exactly one of it.
+ *
+ * ⚠ It takes a PARSED tape's `noclip` (or an explicit staging block's),
+ * never a raw fetched one: a v1 tape's JSON carries no `noclip` field at
+ * all and `parseTape` normalises it to the version's own semantics. A
+ * caller testing `raw.noclip === false` gets the right answer by accident
+ * and `raw.noclip ? …` gets the wrong one — which is precisely why this is
+ * a function and not a line copied into each caller.
+ */
+export const rolesForStaging = (staging) => (staging.noclip ? RELAXED_ROLES : ROLES);
+
+/**
+ * Build the RUN a staging block declares. THE one tape→run construction.
+ *
+ * ⛔ THERE IS EXACTLY ONE, and this is it. It used to be inline in
+ * `createTapeStepper` and hand-copied into every plan/solve script that
+ * needed a run without a tape to replay; the copies agreed by inspection
+ * and would have diverged the first time either side learned a new field.
+ * Every field below arrived because leaving it on the tape header made the
+ * runner model a different world from the game — the per-field notes are
+ * the receipts, and they are why "just pass the four fields I need" is not
+ * an option.
+ *
+ * ⚠ Hoisted VERBATIM (editor arc slice 1): the body is byte-for-byte what
+ * `createTapeStepper` ran, so every existing call path is unchanged. The
+ * hoist's whole content is that a SECOND caller can now reach it.
+ */
+export function createRunForStaging(staging, levelSource) {
+    // The v2 engine's level tracking, world swapping and transition log all
+    // live in `createLevelRun`, because `botDriverV2` advances the same
+    // physics through the same transitions while choosing its keys instead
+    // of reading them — and two copies of a five-fact world swap would
+    // agree until one was edited. See that module's docblock.
+    // `parseTape` normalises a v1 tape's relaxations to version 1's own
+    // semantics, so this reads the same three fields for either version and
+    // no engine carries a version branch.
+    return createLevelRun({
+        levelSource,
+        boot: staging.boot,
+        noclip: staging.noclip,
+        noHazards: staging.noHazards,
+        noDamage: staging.noDamage,
+        grants: staging.grants,
+        persistence: staging.persistence,
+        // ⛓⛓⛓ R7 slice 6e: and the v10 `despawn` list, for the reason
+        // every field above it is here — `combat.contactPricing` REFUSES
+        // a `mover` body by name, so a runner that kept this on the
+        // header would throw on a recording the game made cleanly.
+        despawn: staging.despawn ?? [],
+        equips: staging.equips,
+        // R5 slice 4: `pins` reaches the PHYSICS, not just the tape
+        // header. `stepV2` refuses a wet tick on a tape that does not
+        // pin "sound" — the term reads a wall clock otherwise — so a
+        // runner that recorded the field and did not pass it on would
+        // refuse every armed-water tape ever written.
+        pins: staging.pins ?? [],
+        // ⛓⛓⛓ R5 slice 23: and the v6 SAVE block, for the `pins`
+        // reason one version on — `Wand.update`'s body is gated on
+        // `Player.hasAllTotemParts()`, so a runner that kept this on
+        // the header would model an inert pickup while the game ran a
+        // ceremony.
+        save: staging.save ?? null,
+        // ⛓⛓⛓ R6 slice 6f: and the v7 `rng` block, for the same reason
+        // one version on — L112's gameplay READS the draw stream, so a
+        // runner that kept this on the header would model the Owl fight
+        // from a stream position nobody declared. `parseTape` normalises
+        // a pre-v7 tape to `{seed: 0, split: false}`, which is exactly
+        // what those tapes mean, and only the Owl refuses it.
+        rng: staging.rng ?? null,
+        // ⛓⛓⛓ R7 slice 1: and the v8 `seam` block, for the same reason
+        // one version on — most of what it declares is read at BUILD
+        // time (a `Karlore` removes itself when `Player.hasFire`, a
+        // `BossKey` removes itself in the new world's first `check()`,
+        // `cutscene[2]` spawns the player inert), so a runner that kept
+        // it on the header would build a different world from the one
+        // the game builds. `parseTape` normalises a pre-v8 tape to
+        // `null`, which is exactly what those tapes mean.
+        seam: staging.seam ?? null,
+        // ⚠ The runner consults the SAME census the driver plans with,
+        // and `noclip` is what decides it on both sides. A noclip tape
+        // asks no collider question, so requiring a blocking
+        // classification for every tag in every level it crosses would
+        // make the runner refuse tapes the driver can emit — the two
+        // would disagree about which levels exist. (`pickup` and
+        // `proximity-hazard` stay consulted either way: an unpriced
+        // hazard is a level whose behaviour is not modelled at all, and
+        // saying so at replay time is cheaper than a red recording.)
+        //
+        // ⛔ AND IT IS THE ONE PLACE THE RULE IS WRITTEN. A solver handed
+        // the builder's default `roles` senses a COMBAT-BLIND world and
+        // plans through enemies the replay can see — R8 slice 2's L6
+        // refutation, now refused by name in `solveSegment`. A second
+        // caller spelling `roles: ROLES` for itself would be that fork
+        // written down again; an honest staging block (`noclip: false`)
+        // derives the full `ROLES` from this line and no other.
+        roles: rolesForStaging(staging),
+    });
+}
+
 export function createTapeStepper(tape, opts = {}) {
     const t = parseTape(tape);
     const { terrainStateAt = groundTerrain, onTick, levelSource } = opts;
@@ -120,69 +284,10 @@ export function createTapeStepper(tape, opts = {}) {
         );
     }
 
-    // The v2 engine's level tracking, world swapping and transition log all
-    // live in `createLevelRun`, because `botDriverV2` advances the same
-    // physics through the same transitions while choosing its keys instead
-    // of reading them — and two copies of a five-fact world swap would
-    // agree until one was edited. See that module's docblock.
-    // `parseTape` normalises a v1 tape's relaxations to version 1's own
-    // semantics, so this reads the same three fields for either version and
-    // no engine carries a version branch.
-    const run = levelSource
-        ? createLevelRun({
-            levelSource,
-            boot: t.boot,
-            noclip: t.noclip,
-            noHazards: t.noHazards,
-            noDamage: t.noDamage,
-            grants: t.grants,
-            persistence: t.persistence,
-            // ⛓⛓⛓ R7 slice 6e: and the v10 `despawn` list, for the reason
-            // every field above it is here — `combat.contactPricing` REFUSES
-            // a `mover` body by name, so a runner that kept this on the
-            // header would throw on a recording the game made cleanly.
-            despawn: t.despawn ?? [],
-            equips: t.equips,
-            // R5 slice 4: `pins` reaches the PHYSICS, not just the tape
-            // header. `stepV2` refuses a wet tick on a tape that does not
-            // pin "sound" — the term reads a wall clock otherwise — so a
-            // runner that recorded the field and did not pass it on would
-            // refuse every armed-water tape ever written.
-            pins: t.pins ?? [],
-            // ⛓⛓⛓ R5 slice 23: and the v6 SAVE block, for the `pins`
-            // reason one version on — `Wand.update`'s body is gated on
-            // `Player.hasAllTotemParts()`, so a runner that kept this on
-            // the header would model an inert pickup while the game ran a
-            // ceremony.
-            save: t.save ?? null,
-            // ⛓⛓⛓ R6 slice 6f: and the v7 `rng` block, for the same reason
-            // one version on — L112's gameplay READS the draw stream, so a
-            // runner that kept this on the header would model the Owl fight
-            // from a stream position nobody declared. `parseTape` normalises
-            // a pre-v7 tape to `{seed: 0, split: false}`, which is exactly
-            // what those tapes mean, and only the Owl refuses it.
-            rng: t.rng ?? null,
-            // ⛓⛓⛓ R7 slice 1: and the v8 `seam` block, for the same reason
-            // one version on — most of what it declares is read at BUILD
-            // time (a `Karlore` removes itself when `Player.hasFire`, a
-            // `BossKey` removes itself in the new world's first `check()`,
-            // `cutscene[2]` spawns the player inert), so a runner that kept
-            // it on the header would build a different world from the one
-            // the game builds. `parseTape` normalises a pre-v8 tape to
-            // `null`, which is exactly what those tapes mean.
-            seam: t.seam ?? null,
-            // ⚠ The runner consults the SAME census the driver plans with,
-            // and `noclip` is what decides it on both sides. A noclip tape
-            // asks no collider question, so requiring a blocking
-            // classification for every tag in every level it crosses would
-            // make the runner refuse tapes the driver can emit — the two
-            // would disagree about which levels exist. (`pickup` and
-            // `proximity-hazard` stay consulted either way: an unpriced
-            // hazard is a level whose behaviour is not modelled at all, and
-            // saying so at replay time is cheaper than a red recording.)
-            roles: t.noclip ? RELAXED_ROLES : ROLES,
-        })
-        : null;
+    // ⛓ THE construction — hoisted to `createRunForStaging` (editor arc
+    // slice 1) so the solver's own callers reach the same one. A parsed tape
+    // IS a staging block plus inputs, so it is passed straight through.
+    const run = levelSource ? createRunForStaging(t, levelSource) : null;
     if (!levelSource && t.grants.length > 0) {
         throw new Error(
             'runTape: the tape declares grants but no opts.levelSource was given. The v1 '

@@ -322,6 +322,62 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     };
 }
 
+/**
+ * A SOLVED segment's tape: the staging block it was solved from, plus the
+ * inputs the solver derived.
+ *
+ * ── WHY THIS IS A FUNCTION AND NOT EIGHTEEN LINES IN EACH CALLER ──────
+ *
+ * `buildTape` above is the ONE span fold, and its docblock says the fields
+ * above version 5 are "assembled by callers". That was true and it was the
+ * gap: every solve script assembled the v8 header itself, and the editor
+ * page would have been the next to. The fold is shared and the assembly
+ * was not, so a caller that forgot `seam` would emit a tape the game boots
+ * into a different room — silently, because every OTHER field would match.
+ *
+ * ⚠ THE FOLD IS CALLED WITH EMPTY RELAXATIONS ON PURPOSE. `buildTape`
+ * decides its own version from what it is DECLARED (presence, not value),
+ * and only its `inputs` are used here — the header it returns is thrown
+ * away and replaced by the staging block's real fields. Passing the real
+ * `noHazards`/`grants` to the fold would change nothing but would suggest
+ * the fold's header mattered.
+ *
+ * ⛔ AND IT REFUSES A v10 STAGING BLOCK rather than mislabelling one. The
+ * emitted header says version 8, which is the vocabulary this assembly
+ * writes; a non-empty `despawn` is a version 10 fact and a tape that
+ * declared it under a version 8 label would be read by `parseTape` as a
+ * tape whose despawns "mean [] BY DEFINITION".
+ */
+export function buildStagedTape({ staging, perTick, name }) {
+    if ((staging.despawn ?? []).length > 0) {
+        throw new Error('buildStagedTape: this staging block declares '
+            + `${staging.despawn.length} despawn(s), which is a version 10 field, but this `
+            + 'assembly writes a version 8 header — and a v8 tape means `despawn: []` BY '
+            + 'DEFINITION. Emitting it would silently drop the removals. Extend the '
+            + 'assembly to v10 rather than labelling one version as another.');
+    }
+    const folded = buildTape(perTick, staging.boot, name,
+        { noclip: false, noDamage: false, noHazards: [], grants: [] });
+    return {
+        game: 'seedling',
+        name,
+        boot: staging.boot,
+        noclip: false,
+        noDamage: false,
+        noHazards: staging.noHazards,
+        grants: staging.grants,
+        persistence: staging.persistence,
+        equips: staging.equips,
+        pins: staging.pins,
+        save: staging.save,
+        rng: staging.rng,
+        seam: staging.seam,
+        tick_count: perTick.length,
+        inputs: folded.inputs,
+        tape_version: 8,
+    };
+}
+
 /** Convenience: synthesize and serialize in one step. */
 export function synthesizeTapeJson(targets, opts = {}) {
     return serializeTape(synthesizeTape(targets, opts).tape);

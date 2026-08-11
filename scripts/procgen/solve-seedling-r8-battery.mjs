@@ -77,16 +77,14 @@ const { parseTape, requiredTapeVersion } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { PLAYTHROUGH_CHAINS } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
-const { createLevelRun } =
-    await import(join(REPO, 'frontend/modules/seedlingDemo/levelRun.js'));
 const { atlasLevelSource } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 const { solveSegment } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/solverBot.js'));
-const { buildTape } =
+const { buildStagedTape } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
-const { ROLES } =
-    await import(join(REPO, 'frontend/modules/seedlingDemo/levelWorld.js'));
+const { createRunForStaging, solveStaging, stagingFromTape } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
 
 let failures = 0;
 const check = (name, ok, detail) => {
@@ -198,27 +196,29 @@ const SLICE_3B_ROWS = Object.freeze([
 const PROBE_ROWS = [];
 
 // ── 3. solve, emit ────────────────────────────────────────────────────
-function runFromCommitted(committed) {
-    return createLevelRun({
-        levelSource, boot: committed.boot, noclip: false,
-        noHazards: committed.noHazards, noDamage: false, grants: committed.grants,
-        persistence: committed.persistence, despawn: [], equips: committed.equips,
-        pins: committed.pins ?? [], save: committed.save ?? null,
-        rng: committed.rng ?? null, seam: committed.seam ?? null,
-        /**
-         * ⛔⛔ THE REPLAY'S OWN CENSUS, BY NAME — the slice's own defect,
-         * kept as a comment because it was expensive to see: `roles`
-         * defaults to `PRE_R5_ROLES`, a COMBAT-BLIND world (deliberately —
-         * every R0–R4 fixture is `noDamage`), and `tapeRunner` passes the
-         * full `ROLES` for an honest tape. A solver handed the default
-         * solved every battery room IDENTICALLY and crossed L6 blind to
-         * both bobs, green because the game's own bobs never caught it —
-         * the world the solve sensed and the world the replay runs were
-         * two different worlds, invisible in every room without enemies.
-         */
-        roles: ROLES,
-    });
-}
+/**
+ * The staging block this row is solved from — the committed tape's own,
+ * with the two relaxations pinned OFF.
+ *
+ * ⛔⛔ THE REPLAY'S OWN CENSUS, BY NAME — the slice's own defect, kept as a
+ * comment because it was expensive to see: `buildLevelWorld`'s `roles`
+ * defaults to `PRE_R5_ROLES`, a COMBAT-BLIND world (deliberately — every
+ * R0–R4 fixture is `noDamage`), and `tapeRunner` passes the full `ROLES`
+ * for an honest tape. A solver handed the default solved every battery
+ * room IDENTICALLY and crossed L6 blind to both bobs, green because the
+ * game's own bobs never caught it — the world the solve sensed and the
+ * world the replay runs were two different worlds, invisible in every room
+ * without enemies.
+ *
+ * ⛓ THE FIX IS NOW STRUCTURAL rather than a literal typed here (editor arc
+ * slice 1). `createRunForStaging` is the ONE tape→run construction —
+ * `createTapeStepper`'s own — and it derives the census from `noclip` by
+ * the single `rolesForStaging` rule. `solveStaging` is what makes that
+ * derivation land on the full `ROLES`: this script no longer SAYS `roles:
+ * ROLES`, it declares an honest run and gets the replay's census because
+ * they are the same line of code.
+ */
+const stagingOf = (committed) => solveStaging(stagingFromTape(committed));
 
 /** `tapeJson` — the plan scripts' convention: serialize FROM a parsed tape. */
 function tapeJson(obj, description) {
@@ -282,7 +282,8 @@ for (const row of rows) {
     const committedName = `r7-act2-${row.segNo}`;
     const committed = parseTape(JSON.parse(
         readFileSync(join(TAPES, `${committedName}.json`), 'utf8')));
-    const run = runFromCommitted(committed);
+    const staging = stagingOf(committed);
+    const run = createRunForStaging(staging, levelSource);
     const out = solveSegment({
         run, goals: row.goals, name: row.name, boot: committed.boot,
     });
@@ -291,27 +292,11 @@ for (const row of rows) {
     check(`${row.name}: ZERO hits and ZERO deaths (the standing zero-hit policy)`,
         hits === 0 && deaths === 0, `hits ${hits}, deaths ${deaths}`);
     // The span fold is `buildTape`'s — the ONE fold, shared with every
-    // driver-emitted tape (trap 115: `keysToSpans` drops non-mover keys).
-    const folded = buildTape(out.perTick, committed.boot, row.name,
-        { noclip: false, noDamage: false, noHazards: [], grants: [] });
-    const tape = {
-        game: 'seedling',
-        name: row.name,
-        boot: committed.boot,
-        noclip: false,
-        noDamage: false,
-        noHazards: committed.noHazards,
-        grants: committed.grants,
-        persistence: committed.persistence,
-        equips: committed.equips,
-        pins: committed.pins,
-        save: committed.save,
-        rng: committed.rng,
-        seam: committed.seam,
-        tick_count: out.perTick.length,
-        inputs: folded.inputs,
-        tape_version: 8,
-    };
+    // driver-emitted tape (trap 115: `keysToSpans` drops non-mover keys) —
+    // and the v8 HEADER around it is `buildStagedTape`'s, which is the same
+    // assembly the editor page emits. Two assemblies of one tape shape
+    // would agree until one of them learned a field.
+    const tape = buildStagedTape({ staging, perTick: out.perTick, name: row.name });
     const description = `⛓ R8 SLICE ${row.slice3b ? '3b' : '2'} — THE LIVE SOLVER's own solution to `
         + `${row.provenance ? 'L6 (probe-graduated)' : `battery segment ${row.segNo}`}, `
         + `from ${committedName}'s committed v8 boot block (staged per kickoff §3.5). `
