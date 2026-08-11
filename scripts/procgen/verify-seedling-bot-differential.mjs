@@ -1907,6 +1907,45 @@ try {
             expectedRun = null;
         }
 
+        /**
+         * ⛓⛓⛓ R8 SLICE 8 — **THE ACCUMULATOR'S DIRECT ORACLE, AND IT WAS ON
+         * THE WIRE THE WHOLE TIME.**
+         *
+         * `botStatus.game_time` has been a READOUT since R5 slice 3 and
+         * NOTHING has ever consumed it — a ledger with no caller reads exactly
+         * like a ledger that is empty (trap 119). `gameClock` gives it a
+         * consumer: the model counts `Game.time` from the boot value plus
+         * every `Game.update()`, and this is the GAME's own number for the
+         * same instant.
+         *
+         * ⛔ THE INSTANT IS THE TERMINAL LATCH's, NOT `botStatus`'s.
+         * `botStatus` is served on demand from JS, and `Game.time` keeps
+         * advancing while the page runs — so the status field is a moving
+         * target that can only be compared as a LOWER BOUND. The seam's
+         * terminal block is latched at the disarm and is stable, so the
+         * EQUALITY is asked of that and the status field is asked for the
+         * inequality it can actually answer.
+         *
+         * ⚠ Only where the model HAS a clock — a tape without
+         * `pins: ["dead_frames"]` gets `null` and says why.
+         */
+        if (expectedRun?.gameTime != null) {
+            const latched = seam?.seam?.['save.time'];
+            if (latched !== undefined) {
+                check(`${name}: the game's own latched \`save.time\` is the model's clock`,
+                    latched === expectedRun.gameTime,
+                    `game ${latched}, model ${expectedRun.gameTime}`
+                    + `${latched === expectedRun.gameTime ? '' : ` (Δ ${latched - expectedRun.gameTime}`
+                        + ` over ${expectedRun.deadFramesOwed} dead frame(s) the model counted)`}`);
+            }
+            if (status.game_time !== undefined && status.game_time !== null) {
+                check(`${name}: the live \`game_time\` readout is at or past the model's clock`,
+                    status.game_time >= expectedRun.gameTime,
+                    `game ${status.game_time} >= model ${expectedRun.gameTime} `
+                    + '(the status is served after the disarm and keeps advancing)');
+            }
+        }
+
         // ⚠ `receiveInput == false` stopped being unconditionally a defect at
         // R1. A pit transport refuses input BY DESIGN — `checkFallingInPit`
         // sets it false for the twenty fall-out ticks and the arrival keeps it

@@ -1,0 +1,53 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-hammer-arm",
+    "description": "⚖ R8 SLICE 8 — THE DRIVEN PAIR FOR THE HAMMER'S PHASE, and the two arms are ONE INTEGER apart. Same room (L18), same boot, same 244 ticks of the same EMPTY input; the only difference is the declared `save.time`, which reaches exactly one mechanism on this roster — `hammerAngle = (Game.time % 45)/45·2π` (`Spinner.as:70-72`). `Spinner.update`'s MOTION has no `Game.time` term at all, so the bodies follow identical orbits in both arms and the angle is the only thing that can decide the difference. ⚖ The user's correction — \"the hammer spins in a predictable pattern; forbidding the whole disc it passes through is wrong\" — is what this pair turns from a prediction into a measured capability. Authored by scripts/procgen/plan-seedling-r8-hammer-pair.mjs. ⛓ THIS IS THE ARM: the player stands 15 tick(s) INSIDE `spinner@48,96`'s 13 px hammer disc — 7.75 px past its reach, a stance R8 slice 7's ingredient forbade outright — and takes NOTHING. The model predicts zero contacts and the GAME's own `hits: 0` is what settles it.",
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        },
+        "hits_max": 3,
+        "time": 4800,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 324,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 244,
+            "to": 324
+        }
+    ]
+}
