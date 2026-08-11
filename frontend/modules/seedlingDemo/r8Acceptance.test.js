@@ -12,6 +12,7 @@ import {
     R8_STRATEGY_EXECUTORS, assertShovePostConditionKind,
     assertExecutorParametersAreDerived, assertEscalationIsOrdered,
     R8_TWO_PASS, assertTwoPassPrefixAgrees,
+    R8_ETA_PROBE, assertTransitSamplesCarryEtas,
 } from './r8Acceptance.js';
 import { STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
@@ -25,6 +26,12 @@ import {
     LIVE_GEOMETRY_KEYS, assertNormalizedLiveOpts, isNormalizedLiveOpts, normalizeLiveOpts,
 } from './levelWorld.js';
 import { livePerVisitOpts, plannerObstacleAt } from './botDriverV2.js';
+import { ARROW_PLAYER_ARM } from './arrowTrap.js';
+import { knockbackDelta } from './playerDamage.js';
+import { applyFriction, DEFAULT_FRICTION } from './playerPhysicsV1.js';
+
+/** This file's own directory — the banked fixtures are read relative to it. */
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 /**
  * ⛓⛓⛓ THE PREDICTION, BEFORE THE CHANGE — R8 slice 0 track B.
@@ -547,6 +554,157 @@ describe('R8_TWO_PASS — slice 4\'s prediction, stated before the loop moved', 
 
     it('⛔ declares that NO tape field is added, so the absence is a decision', () => {
         expect(R8_TWO_PASS.tapeFormat).toMatch(/UNTOUCHED/);
+    });
+});
+
+describe('R8_ETA_PROBE — slice 5\'s prediction, stated before the arrow arm moved', () => {
+    it('states a fork with both arms and the expected one named', () => {
+        const p = R8_ETA_PROBE.prediction;
+        expect(p.armA).toMatch(/62\.35484072151636/);
+        expect(p.armB).toMatch(/a committed tape MOVES/);
+        expect(p.expected).toMatch(/armA/);
+        expect(p.armA).not.toBe(p.armB);
+    });
+
+    it('the baseline is MEASURED and names the commit it was measured on (trap 40)', () => {
+        const b = R8_ETA_PROBE.prediction.baseline;
+        expect(b.commit).toBe('6a3b234a7');
+        expect(b.files).toBe(243);
+        expect(b.tests).toBe(6978);
+        expect(b.note).toMatch(/before anything moved/);
+    });
+
+    /**
+     * ⛔ THE TWO DEFECTS ARE NAMED BEFORE THEY ARE FIXED, each with the
+     * measurement that found it — so the as-built cannot quietly become a
+     * story about a probe that also happened to fix two things.
+     */
+    it('⛔ names BOTH model defects, with a witness each', () => {
+        const ids = R8_ETA_PROBE.modelDefects.map((d) => d.id).sort();
+        expect(ids).toEqual(['arrow-moves-on-its-spawn-tick', 'player-arrow-bill-missing']);
+        for (const d of R8_ETA_PROBE.modelDefects) {
+            expect(d.witness.length).toBeGreaterThan(20);
+            expect(d.cure.length).toBeGreaterThan(20);
+            expect(d.claimWas).not.toBe(d.truth);
+        }
+    });
+
+    /**
+     * ⛓ THE CLAIM THAT MADE THE BILL MISSING IS ON DISK AND IS QUOTED
+     * CORRECTLY — read off `arrowTrap.js` rather than remembered, because the
+     * whole defect is that a docblock named a payer nobody had asked.
+     */
+    it('⛓ `ARROW_PLAYER_ARM` really does name PUZZLEMENT_HAZARDS as the payer', () => {
+        expect(ARROW_PLAYER_ARM.damagePricedBy).toMatch(/PUZZLEMENT_HAZARDS\.arrowtrap/);
+        const missing = R8_ETA_PROBE.modelDefects
+            .find((d) => d.id === 'player-arrow-bill-missing');
+        expect(missing.claimWas).toContain(ARROW_PLAYER_ARM.damagePricedBy);
+    });
+
+    /**
+     * ⛔⛔ THE ARITHMETIC IS RE-DERIVED HERE FROM THE MODEL'S OWN FUNCTIONS,
+     * not quoted. `knockbackDelta` is the model's transcription of
+     * `Player.knockback`; the numbers below are the RECORDING's, and this is
+     * the row that says the two meet. It is a step-0 row: it holds before any
+     * fix, because it is about the GAME's arrow position, not the model's.
+     */
+    it('⛔⛔ the recording\'s x at t=207 falls out of the game\'s arrow position', () => {
+        // ⛔ THE RECORDING'S OWN DIGITS, READ OFF DISK — including `y`, which
+        // is 56.39999999999999 and not 56.4. Typing the round number instead
+        // moves the answer by 3 ulps and the whole point of this row is that
+        // it lands on the recording exactly.
+        const expectation = JSON.parse(readFileSync(join(HERE, '..', '..', '..',
+            'NewDocs', 'plans', 'r8-slice4-l5-refuted',
+            'expectation-r8-solve-5.json'), 'utf8'));
+        const at206 = expectation.ticks[206];
+        const at207 = expectation.ticks[207];
+        // The GAME's arrow — one 5 px move BEHIND this model's, which has it
+        // at (68, 63) on the same frame and therefore misses by 0.40 px.
+        const kb = knockbackDelta(at206, { x: 68, y: 58 }, 5);
+        expect(kb.dx).toBe(-4.3951592784836375);
+        // The y impulse is DROPPED by the strict `>` comparator at |cy| = 0.4768.
+        expect(kb.dy).toBe(0);
+        expect(kb.landed).toEqual({ x: true, y: false });
+        // `Mobile.friction()` is `v.normalize(len - f)` — a SCALE, not a
+        // subtraction — and `Mobile.moveX` accumulates in 1 px sub-steps.
+        // Both are transcribed rather than simplified (trap 118), because
+        // either shortcut moves the last digit.
+        const vx = at206.vx ?? 1.45 + kb.dx;
+        const len = Math.abs(vx);
+        let scaled = vx * ((len - DEFAULT_FRICTION) / len);
+        let x = at206.x;
+        for (let i = 0, n = Math.abs(scaled); i < n; i += 1) {
+            x += Math.min(1, n - i) * (scaled < 0 ? -1 : 1);
+        }
+        expect(x).toBe(at207.x);
+        expect(at207.x).toBe(62.35484072151636);
+        // ⚠ `applyFriction` is the same scale, and this row exists so the
+        // hand arithmetic above cannot drift from the module's.
+        scaled = applyFriction({ x: vx, y: 0 }, DEFAULT_FRICTION).x;
+        expect(scaled).toBe(vx * ((len - DEFAULT_FRICTION) / len));
+    });
+
+    it('⚖ carries §13.10a\'s ruled shape, TRANSIT and WAIT kept apart', () => {
+        const s = R8_ETA_PROBE.ruledShape;
+        expect(s.transit).toMatch(/ETA/);
+        expect(s.transit).toMatch(/never a cruder/);
+        expect(s.wait).toMatch(/UNION over the dwell window/);
+        expect(s.arrows).toMatch(/stepArrow/);
+        expect(s.optimismBound).toMatch(/per-tick next-cell check/);
+    });
+
+    it('⛔ both gates name a fixture that is ALREADY ON DISK', () => {
+        expect(R8_ETA_PROBE.gates.negative.fixture).toMatch(/r8-slice4-l5-refuted/);
+        expect(R8_ETA_PROBE.gates.positive.fixture).toMatch(/r7-act2-5/);
+        expect(R8_ETA_PROBE.gates.mutations.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('⛔ declares that NO tape field is added, so the absence is a decision', () => {
+        expect(R8_ETA_PROBE.tapeFormat).toMatch(/UNTOUCHED/);
+    });
+
+    /**
+     * ⛔ THE FIFTH RUNG STAYS REFUSED, IN THE SLICE'S OWN WORDS — ⚖ §13.10a
+     * refused it with a reason, and a refusal that is not written down is a
+     * refusal the next slice re-litigates.
+     */
+    it('⛔ keeps the fifth rung REFUSED, with the ruling\'s reason', () => {
+        const r = R8_ETA_PROBE.refusedHere.find((x) => x.what === 'a fifth ladder rung');
+        expect(r.why).toMatch(/a rung is a STRATEGY and this is an INSTRUMENT/);
+    });
+});
+
+describe('assertTransitSamplesCarryEtas — the probe states its own clock', () => {
+    const walk = (from, n) => Array.from({ length: n },
+        (_, i) => ({ x: i, y: 0, tick: from + i + 1 }));
+
+    it('passes on a walk whose samples advance one tick at a time', () => {
+        expect(assertTransitSamplesCarryEtas(walk(100, 5), 100))
+            .toEqual({ samples: 5, startTick: 100, endTick: 105, span: 5 });
+    });
+
+    it('⛔ refuses a sample with no absolute tick', () => {
+        expect(() => assertTransitSamplesCarryEtas([{ x: 0, y: 0 }], 100))
+            .toThrow(/carries no absolute tick/);
+    });
+
+    /**
+     * ⛔⛔ THE MUTATION ROW ITSELF: degrade the ETA source to a constant and
+     * every sample lands on the plan tick. This is what goes red.
+     */
+    it('⛔⛔ refuses the COLLAPSE — every sample at the plan tick (trap 161)', () => {
+        const collapsed = [0, 1, 2, 3].map((i) => ({ x: i, y: 0, tick: 100 }));
+        expect(() => assertTransitSamplesCarryEtas(collapsed, 100))
+            .toThrow(/does not advance on 100/);
+    });
+
+    it('⛔ refuses a clock that goes backwards', () => {
+        const back = [{ x: 0, y: 0, tick: 101 }, { x: 1, y: 0, tick: 100 }];
+        expect(() => assertTransitSamplesCarryEtas(back, 100)).toThrow(/goes backwards/);
+    });
+
+    it('⛔ refuses an empty sample list — a corridor nobody looked at', () => {
+        expect(() => assertTransitSamplesCarryEtas([], 100)).toThrow(/NO samples/);
     });
 });
 

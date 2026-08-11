@@ -1492,6 +1492,293 @@ export const R8_TWO_PASS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R8 SLICE 5 — THE ETA-AWARE TRANSIT PROBE, AND THE TWO MODEL DEFECTS
+ * THE REFUTED WALK WAS ACTUALLY MADE OF.
+ *
+ * ⚖ §13.10a RULED the fenced question (candidate (a), the eta-aware probe;
+ * candidate (b), a fifth rung, REFUSED with its reason: a rung is a STRATEGY
+ * and this is an INSTRUMENT). This constant is the slice's step 0: it is
+ * committed BEFORE the arrow arm, the danger map or the probe move, because a
+ * gate whose result predates the change is not a gate.
+ *
+ * ── ⛔⛔⛔ WHAT THE BANKED RECORDING SAYS WHEN IT IS ASKED PROPERLY ─────
+ *
+ * §13.2 localised the refutation to the corridor probe and FENCED the design.
+ * Replaying the banked tape through the model — before anything moved —
+ * localises it to THREE things, of which the probe is only the last:
+ *
+ *   a. ⛔ **THE PLAYER-ARROW BILL DOES NOT EXIST.**
+ *      `arrowTrap.ARROW_PLAYER_ARM.damagePricedBy` names
+ *      `combat.PUZZLEMENT_HAZARDS.arrowtrap` and `levelRun`'s own
+ *      `applyArrowHit` repeats the claim in a comment — but
+ *      `PUZZLEMENT_HAZARDS` is a CENSUS table that `levelRun` never reads for
+ *      damage, and `applyPlayerHit`'s sources are `pulse`, `crusher`, `blast`,
+ *      `bossShot`, `shieldBossStab`, `owlRock`, `owlGrenade`, `owlBody`,
+ *      `enemy`, `chaser`, `bossLaser`, `bossBody` — **no `arrow`**. So the
+ *      model's arrows STOP on the player and can never HURT them, and every
+ *      `hits: 0` this arc has claimed in a room with a ceiling is vacuous on
+ *      that one channel. `Arrow.as:49` calls `Player.hit`; the game bills it.
+ *      ⇒ this is [[feedback_two_cost_models_must_agree]] with the second cost
+ *      model MISSING — "priced elsewhere" was never checked against a caller.
+ *
+ *   b. ⛔ **A RUN-TIME-ADDED ARROW MOVES ON ITS SPAWN TICK IN THE MODEL AND
+ *      NOT IN THE GAME.** `Engine.update()` runs `FP._world.update()` and
+ *      calls `FP._world.updateLists()` AFTER it, so an entity added during a
+ *      frame's update joins the update list at the END of that frame and its
+ *      first `update()` is the NEXT one. `stepArrowTrapsNow` pushes the fresh
+ *      volley into `flight` ABOVE the step loop, so every arrow in this model
+ *      is exactly one 5 px move ahead of the game's.
+ *
+ *   c. the corridor probe collapsing the time axis — trap 161, §13.10a's charge.
+ *
+ * ── ⛓⛓⛓ THE ARITHMETIC THAT SAYS SO, TO SIXTEEN DIGITS ───────────────
+ *
+ * At t=206 the model and the recording agree exactly: `x = 65.05`,
+ * `y = 56.39999999999999`, `vx = 1.45`. The GAME's arrow
+ * `arrowtrap@64,48#14.0` is at `(68, 58)` on that frame; THIS MODEL's is at
+ * `(68, 63)`, one move further down, and misses the player's box by **0.40
+ * px** — which is why no probe alone could have made this walk safe, and why
+ * gate (i) below cannot pass until (b) is fixed. With the game's arrow:
+ *
+ *   `knockbackDelta({65.05, 56.39999999999999}, {68, 58}, 5)`
+ *      ⇒ dx = **-4.3951592784836375**, dy = **0** — the y impulse DROPPED by
+ *        `KNOCKBACK_COMPARATORS.y`'s strict `>` at |cy| = 0.4768
+ *   v.x = 1.45 - 4.3951592784836375, then `Mobile.friction()`'s
+ *      `v.normalize(len - 0.25)` — a SCALE, not a subtraction — then
+ *      `Mobile.moveX`'s 1 px sub-step accumulation
+ *   ⇒ x = **62.35484072151636**
+ *
+ * ⚠ AND THE LAST DIGIT IS EARNED THREE TIMES OVER: typing `y = 56.4` for the
+ * recording's `56.39999999999999`, or subtracting 0.25 from the component
+ * instead of scaling the vector, or summing `x + v.x` instead of walking the
+ * sub-steps, each lands 3 ulps away. Trap 118's law is what makes this a
+ * measurement rather than a resemblance.
+ *
+ * — which is the recording's own `x` at t=207, digit for digit, and the walk
+ * was NOT steering that tick because `Player.input()`'s `hitsTimer <= 0` gate
+ * had just shut (`steerBlocked`). The game's whole divergence is accounted
+ * for by (a) and (b) together, and neither is a design question: one is a
+ * missing funnel the AS3 states and the other is FlashPunk's own add order.
+ */
+export const R8_ETA_PROBE = Object.freeze({
+    item: Object.freeze({
+        id: 'eta-aware-transit-probe',
+        what: 'price a MOVING hazard along a corridor on the TIME axis: validate each cell '
+            + 'at that cell\'s own ETA, with the ETAs derived from the controller that will '
+            + 'drive; keep WAIT as the dwell-window union; then record `r8-solve-5` and '
+            + '`r8-solve-8` and close the battery 4/4',
+        why: '§13.2 fenced it and ⚖ §13.10a ruled it. Trap 161: a static corridor probe '
+            + 'prices a whole column for all time, which is the honest answer to "may I '
+            + 'WAIT here" and the wrong answer to "will an arrow be at this cell when I am".',
+        cite: 'kickoff ⚖ §13.10a (the ruling), §13.2 (the deadlock), §13.1 (the '
+            + 'refutation), §9.9 (the map\'s four decisions), §11.4 (the arrow x enemy arm)',
+    }),
+
+    /**
+     * ⛔ NO NEW TAPE FIELD, again — the probe is planner-side and the two model
+     * fixes are inside `levelRun`. `GAME_VISIBLE_DROPS` gains nothing to
+     * classify, and `assertBatchIsModelSide` is the standing check that no
+     * game-facing file (`tapeFormat.js`, `tapeRunner.js`) moved.
+     */
+    tapeFormat: 'UNTOUCHED — no field added, none reclassified',
+
+    /**
+     * ⛔ THE TWO DEFECTS, AS DATA, WITH THE MEASUREMENT THAT FOUND EACH — so
+     * "the model was wrong" is a citation rather than a memory.
+     */
+    modelDefects: Object.freeze([
+        Object.freeze({
+            id: 'player-arrow-bill-missing',
+            claimWas: 'ARROW_PLAYER_ARM.damagePricedBy = combat.PUZZLEMENT_HAZARDS.arrowtrap',
+            truth: '`PUZZLEMENT_HAZARDS` is the CENSUS; no line of `levelRun` bills from it. '
+                + '`applyPlayerHit` has no `arrow` source.',
+            cure: 'a seventh funnel: `applyArrowHit`\'s Player arm calls `applyPlayerHit` '
+                + 'with source `arrow`, force `ARROW.speed` (`v.length` at the call, before '
+                + '`stepArrow` zeroes it), damage 1 (`Player.hit`\'s default — trap 143), '
+                + 'and `from` = the ARROW\'s own entity point.',
+            witness: 'the GAME reported `hits: 1` on `r8-solve-5` where the model reported 0',
+        }),
+        Object.freeze({
+            id: 'arrow-moves-on-its-spawn-tick',
+            claimWas: 'a fired volley is stepped by the same `stepArrowTrapsNow` call that '
+                + 'created it',
+            truth: '`Engine.update` calls `FP._world.updateLists()` AFTER `world.update()`, '
+                + 'so an entity added during a frame is not in the update list until that '
+                + 'frame ends. Its first move — and its first hit test — is the NEXT tick.',
+            cure: 'the volley joins `flight` BELOW the step loop, not above it',
+            witness: 'the game\'s arrow was at (68,58) on frame 206 where this model has it '
+                + 'at (68,63) — and the 62.35484072151636 arithmetic above is exact',
+        }),
+    ]),
+
+    /**
+     * ⚖ §13.10a's shape, as data. The primitive is unchanged; what is new is
+     * that the two DERIVED questions are named apart (trap 154) and the
+     * transit one carries a clock.
+     */
+    ruledShape: Object.freeze({
+        primitive: '`dangerAt(run, tick, box)` — time-indexed since §9.9; the STATIC '
+            + 'CORRIDOR PROBE was the caller that collapsed the axis',
+        transit: 'per CELL at that cell\'s ETA, ETAs from the controller\'s own arithmetic '
+            + '(`botDriverV1.chooseHeld` + the run\'s own `stepV2` options) — never a '
+            + 'cruder movement model (trap 118\'s direction, applied to time)',
+        wait: 'the UNION over the dwell window, unchanged — an armed lane, and an arrow '
+            + 'swept `speed x horizon`, are exactly that union',
+        arrows: 'predicted by `stepArrow`\'s OWN arithmetic, cover included, never a '
+            + 'summary — their flight does not read the player, so it is autonomous',
+        optimismBound: 'the per-tick next-cell check stays live, so a planned gap that '
+            + 'drifts under re-planning is caught at the tick it matters',
+    }),
+
+    /**
+     * ⛔ THE TWO GATES ⚖ §13.10a NAMES, AND BOTH FIXTURES ARE ALREADY ON DISK.
+     */
+    gates: Object.freeze({
+        negative: Object.freeze({
+            fixture: 'NewDocs/plans/r8-slice4-l5-refuted/ (tape + expectation + trace + log)',
+            claim: 'the probe FORBIDS the refuted walk\'s own (cell, tick): the player box '
+                + 'at x=65.05,y=56.4 on absolute tick 206, against '
+                + '`arrowtrap@64,48#14.0` at (68,58) — the arrow that took the hit the '
+                + 'recording carries at t=207.',
+            andTheCollapse: 'the SAME box at the SAME position, asked at the tick the plan '
+                + 'was made on, is CALM — which is what made the walk look safe and what '
+                + 'makes this a measurement of the time axis rather than of the geometry',
+        }),
+        positive: Object.freeze({
+            fixture: 'r7-act2-5 — the committed HAND walk',
+            claim: 'the hand walk leaves `button@48,48` and takes ZERO hits, so a corridor '
+                + 'EXISTS; under the probe the §13.2 deadlock dissolves as ARITHMETIC (the '
+                + 'column\'s arrows clear the walked cells before the player\'s ETAs) '
+                + 'rather than by relaxing anything.',
+        }),
+        mutations: Object.freeze([
+            'ETA source degraded to a constant (every sample at the plan tick) ⇒ the '
+                + 'negative gate goes GREEN-WRONG, i.e. the probe stops forbidding — RED',
+            'the time axis collapsed (transit arm falls back to the swept box at horizon 0) '
+                + '⇒ the negative oracle case reds',
+            'the arrow prediction dropped to a straight line with no cover ⇒ a cell behind '
+                + 'a torch is forbidden that the mechanism clears',
+        ]),
+    }),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST — `outcome` is written BESIDE this, never over
+     * it (the standing R6/R7/R8 shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-11, before the arrow arm, the danger map or the probe moved',
+        baseline: Object.freeze({
+            commit: '6a3b234a7', files: 243, tests: 6978, seconds: 375.44,
+            note: 'MEASURED this session on the unmodified tree before anything moved '
+                + '(trap 40); slice 4\'s own close numbers are the expectation.',
+        }),
+        armA: '⛓ THE MODEL REPRODUCES THE RECORDING IT WAS REFUTED BY. With both defects '
+            + 'fixed, replaying the banked `r8-solve-5` tape gives `hits: 1` at t=206 and '
+            + 'x = 62.35484072151636 at t=207 — the game\'s own stream — and the full '
+            + 'offline differential stays byte-exact at 328/328 with ZERO re-records. Then '
+            + 'the probe\'s two gates pass, L5 and L8 record, and the battery closes 4/4.',
+        armB: '⛔ a committed tape MOVES under the fix. Then the fix is either wrong or the '
+            + 'roster was passing on two errors that cancelled, and the finding is REPORTED '
+            + 'with the tape named — no re-record licence exists this rung, so a moved tape '
+            + 'is a wall, not an edit.',
+        expected: 'armA. The 62.35484072151636 arithmetic is not a hypothesis about the '
+            + 'game — it IS the game\'s recorded digit, reached from the model\'s own '
+            + '`knockbackDelta` and `applyFriction`. ⚠ The named RISK is arm B on L4/L5\'s '
+            + 'committed tapes: shifting every arrow one tick shifts the ticks at which '
+            + 'arrows kill bobs, and `r7-act2-4`, `r7-act2-5` and `r7-act2-full` are the '
+            + 'three tapes slice 1 measured RED when the bridge first moved.',
+        alsoPredicted: Object.freeze([
+            '⛓ THE DEADLOCK DISSOLVES WITHOUT RELAXING THE STATE LAYER\'S HONESTY. '
+                + '`lanesUnpublishedByLeaving`\'s "the column must be EMPTY first" gate was '
+                + 'the STATE layer paying for a KINEMATIC question it could not ask '
+                + '(§13.2\'s own words). Once the transit probe answers the kinematic half '
+                + 'per ETA, that gate is REMOVED and the exclusion goes back to answering '
+                + 'only the state question — the reading the docblock always claimed.',
+            '⛔ AND THE ZERO-HIT CLAIM GETS ITS FIRST HONEST TEST IN AN ARROW ROOM. Before '
+                + 'this slice a walk could stand in a falling volley and the model would '
+                + 'report calm; `r8-solve-4`, `r8-solve-5` and `r8-solve-8` are the rooms '
+                + 'where that mattered.',
+        ]),
+    }),
+
+    /**
+     * ⛔ WHAT THIS SLICE DOES NOT CLAIM.
+     */
+    refusedHere: Object.freeze([
+        Object.freeze({
+            what: 'a fifth ladder rung',
+            why: '⚖ §13.10a REFUSED it by name: a rung is a STRATEGY and this is an '
+                + 'INSTRUMENT. Putting a timing question behind an escalation would starve '
+                + 'the rungs below it — BAIT stances and KILL approaches cross lanes too.',
+        }),
+        Object.freeze({
+            what: 'auditing every other run-time-added entity for the same spawn-tick '
+                + 'deferral',
+            why: 'BOUNDED and NAMED rather than swept: this slice fixes the family the game '
+                + 'refuted (`Arrow`). `iceTurretBlast`, the wand shots and the boss shots '
+                + 'are the other run-time adds on the roster, and the ONE instrument that '
+                + 'can answer for them is the differential — which every one of them '
+                + 'already passes today. A sweep that changed them on this reasoning alone '
+                + 'would be re-recording by argument.',
+        }),
+        Object.freeze({
+            what: 'tightening `r7-act2-5`\'s committed `at: 737`',
+            why: 'unchanged from §13.8 — no re-record licence exists this rung.',
+        }),
+    ]),
+});
+
+/**
+ * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
+ *
+ * ⛔ A PROBE THAT SAMPLES EVERY CELL AT THE PLAN TICK IS THE ONE TRAP 161 IS
+ * ABOUT, and it is indistinguishable from an eta-aware one by its RESULT on a
+ * calm room. So the instrument states its own clock: every sample carries the
+ * ABSOLUTE tick it was asked at, the ticks advance one per simulated tick, and
+ * a corridor longer than one tick must contain at least one sample ABOVE the
+ * tick the plan was made on. Degrade the ETA source to a constant and this is
+ * what goes red — which is the first row of `R8_ETA_PROBE.gates.mutations`.
+ *
+ * @param {Array<{x:number,y:number,tick:number}>} samples in walk order
+ * @param {number} startTick the run's own clock when the corridor was planned
+ */
+export function assertTransitSamplesCarryEtas(samples, startTick,
+    what = 'the transit probe') {
+    if (!Array.isArray(samples) || samples.length === 0) {
+        throw new Error(`${what}: a corridor validated with NO samples is a corridor `
+            + 'nobody looked at. Hand over the walk the controller would drive.');
+    }
+    if (!Number.isFinite(startTick)) {
+        throw new Error(`${what}: the plan tick must be finite; got ${startTick}.`);
+    }
+    let prev = startTick;
+    for (let i = 0; i < samples.length; i += 1) {
+        const s = samples[i];
+        if (!Number.isInteger(s?.tick)) {
+            throw new Error(`${what}: sample ${i} carries no absolute tick — an ETA that is `
+                + 'not written down is an ETA nobody can check (trap 161).');
+        }
+        if (s.tick <= prev) {
+            throw new Error(`${what}: sample ${i} is at tick ${s.tick}, which does not `
+                + `advance on ${prev}. The samples ARE the ticks the controller would `
+                + 'spend; one that repeats or goes backwards is a clock that stopped.');
+        }
+        prev = s.tick;
+    }
+    if (samples.length > 1 && samples[samples.length - 1].tick <= startTick + 1) {
+        throw new Error(`${what}: ${samples.length} samples all landed inside one tick of `
+            + `the plan tick ${startTick}. That is the STATIC probe wearing this one's `
+            + 'name — the collapse trap 161 names.');
+    }
+    return {
+        samples: samples.length,
+        startTick,
+        endTick: samples[samples.length - 1].tick,
+        span: samples[samples.length - 1].tick - startTick,
+    };
+}
+
+/**
  * ⛓⛓⛓ THE LOOP'S OWN NON-VACUITY, AS A FUNCTION — the prefix agreement.
  *
  * ⛔ A DECLARED TICK MEASURED ON A DIFFERENT WALK IS THE DEFECT THIS
