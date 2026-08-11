@@ -455,6 +455,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'the slice\'s own driven arm — the stance the bridge newly prices, and '
                 + 'the only tape on the roster authored to be exposed on purpose',
         }),
+        Object.freeze({
+            name: 'r8-solve-3', levels: Object.freeze([4]), bobs: 1, ticks: 245,
+            addedBy: 'R8 slice 2 (the battery)',
+            why: 'the solver\'s own L3 segment ends at the L4 arrival, and L4 holds '
+                + '`bob@64,64` — the same exposure shape as `r7-act2-3`, whose route it '
+                + 're-derives. L4 is bridge-refused (arrow traps), so the bob is priced '
+                + 'as a parked mover the arrival never overlaps.',
+        }),
     ]),
 
     /**

@@ -1,0 +1,147 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-7",
+    "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 7, from r7-act2-7's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(192,32) — the hand-authored stances/waypoints were NOT handed over. Solver: 146 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-7: 146 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 7,
+        "x": 32,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1892719590,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 882360526
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 6908,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 146,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 132
+        },
+        {
+            "key": "down",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "down",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "left",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "right",
+            "from": 133,
+            "to": 134
+        },
+        {
+            "key": "left",
+            "from": 134,
+            "to": 135
+        },
+        {
+            "key": "right",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 146
+        }
+    ]
+}

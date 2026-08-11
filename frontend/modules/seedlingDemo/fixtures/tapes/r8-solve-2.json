@@ -1,0 +1,76 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-2",
+    "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 2, from r7-act2-2's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(48,96) — the hand-authored stances/waypoints were NOT handed over. Solver: 47 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-2: 47 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 2,
+        "x": 48,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 391493582,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1657746538
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5002,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 2
+        }
+    },
+    "tick_count": 47,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 47
+        }
+    ]
+}

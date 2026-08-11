@@ -361,7 +361,29 @@ export function solveSegment({
      * EMPTY BY CONSTRUCTION (§9.12) and `liveGeometryOpts` refuses — a
      * solver sensing a flag-relaxed world would plan against geometry the
      * replay ignores. The refusal fires at the first plan, by name.
+     *
+     * ⛔⛔⛔ AND THE CENSUS MUST BE THE REPLAY'S OWN. `buildLevelWorld`'s
+     * default `roles` is `PRE_R5_ROLES` — a COMBAT-BLIND world, deliberately
+     * (every R0–R4 fixture is `noDamage`) — while `tapeRunner` gives an
+     * honest tape the full `ROLES`. This slice's own first battery was
+     * solved against the default: identical in every room without enemies,
+     * and BLIND in the one room with them — the solver crossed L6 with both
+     * bobs invisible (empty chaser roster, empty hazard census, every
+     * danger probe vacuously calm) and recorded green because the game's
+     * own bobs woke, chased, and happened never to connect. A run whose
+     * current world carries no combat census is refused HERE, by name,
+     * before a tick is spent — the world the solver senses and the world
+     * the replay runs must be ONE world.
      */
+    if (run.world?.combat?.enemies === undefined) {
+        fail('solveSegment: this run\'s world has NO COMBAT CENSUS — it was built '
+            + 'without the `combat` role (the builder\'s default is PRE_R5_ROLES, a '
+            + 'combat-blind world). The solver senses enemies and hazards through the '
+            + 'census, and the replay (`tapeRunner`) gives an honest tape the full '
+            + '`ROLES` — a solve against the default is blind in exactly the rooms '
+            + 'that matter and identical everywhere else. Pass `roles: ROLES` to '
+            + '`createLevelRun`.');
+    }
     if (run.ticksCompleted !== 0) {
         fail('solveSegment: the run must be fresh (ticksCompleted 0) — the solver owns '
             + 'the whole segment from its declared boot, so the tape and the trace '
@@ -522,35 +544,55 @@ export function solveSegment({
             }
             waypointsPlanned += wps.length;
             /**
-             * ⛓ THE CORRIDOR IS PROBED AGAINST THE DANGER MAP, waypoint by
-             * waypoint, BEFORE a tick is spent on it. The A\* stack plans
-             * over walkable TILES and is deliberately ignorant of threat
-             * (§18.6's measured lesson: a freehand L6 plan walks row 1
-             * straight into a sandtrap) — the danger map is the layer that
-             * knows, and slice 2's response to a hit here is a refusal that
-             * carries the reason list. Slice 3's dodge policy replaces the
-             * refusal with a re-plan against `forbiddenByDanger`; the probe
-             * itself is the seam it plugs into.
+             * ⛓ THE CORRIDOR IS PROBED AGAINST THE DANGER MAP — SEGMENT BY
+             * SEGMENT, SAMPLED, before a tick is spent on it. The A\* stack
+             * plans over walkable TILES and is deliberately ignorant of
+             * threat (§18.6's measured lesson: a freehand L6 plan walks row
+             * 1 straight into a sandtrap) — the danger map is the layer
+             * that knows, and slice 2's response to a hit here is a refusal
+             * that carries the reason list.
+             *
+             * ⛔ SAMPLED ALONG THE SEGMENTS, NOT AT THE WAYPOINTS. The first
+             * cut probed waypoint POINTS only, and the L6 attempt measured
+             * the hole: a string-pulled two-waypoint corridor put both
+             * probe points OUTSIDE the sandtrap volumes while the segment
+             * between them crossed two of them — the walk then discovered
+             * the danger as a 400-tick stall instead of a named refusal.
+             * Eight-pixel samples are finer than any volume on the hazard
+             * roster (the smallest is a 16 px box). Slice 3's dodge policy
+             * replaces the refusal with a re-plan against
+             * `forbiddenByDanger`; the probe itself is the seam it plugs
+             * into.
              */
+            const SAMPLE = 8;
+            let from = { x: run.state.x, y: run.state.y };
             for (const wp of wps) {
-                const d = dangerNow(run, wp.x, wp.y);
-                if (d.danger) {
-                    refuse(`${what}: the planned corridor passes through danger at `
-                        + `(${wp.x},${wp.y}) — `
-                        + d.sources.map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`)
-                            .join('; ')
-                        + '. Slice 2 refuses a dangerous corridor rather than dodging '
-                        + 'through it (combat policy is slice 3; a route the model can '
-                        + 'afford is not one the room with a live hazard can — trap 151).',
-                    {
-                        goal,
-                        obstacle: { kind: 'danger', id: d.sources[0]?.id ?? null },
-                        considered: [
-                            { option: 'dodge', why: 'not a registered policy this slice' },
-                            { option: 'wait-for-window', why: 'not a registered policy this slice' },
-                        ],
-                    });
+                const dist = Math.hypot(wp.x - from.x, wp.y - from.y);
+                const steps = Math.max(1, Math.ceil(dist / SAMPLE));
+                for (let i = 1; i <= steps; i += 1) {
+                    const px = from.x + ((wp.x - from.x) * i) / steps;
+                    const py = from.y + ((wp.y - from.y) * i) / steps;
+                    const d = dangerNow(run, px, py);
+                    if (d.danger) {
+                        refuse(`${what}: the planned corridor passes through danger at `
+                            + `(${px.toFixed(1)},${py.toFixed(1)}) — `
+                            + d.sources.map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`)
+                                .join('; ')
+                            + '. Slice 2 refuses a dangerous corridor rather than '
+                            + 'dodging through it (combat policy is slice 3; a route '
+                            + 'the model can afford is not one the room with a live '
+                            + 'hazard can — trap 151).',
+                        {
+                            goal,
+                            obstacle: { kind: 'danger', id: d.sources[0]?.id ?? null },
+                            considered: [
+                                { option: 'dodge', why: 'not a registered policy this slice' },
+                                { option: 'wait-for-window', why: 'not a registered policy this slice' },
+                            ],
+                        });
+                    }
                 }
+                from = wp;
             }
             seeRow({
                 tick: perTick.length,

@@ -235,9 +235,17 @@ describe('playthroughWalk — the chain as data', () => {
     it('the segment predicate is what `requireCalm` branches on', () => {
         for (const n of playthroughSegmentNames()) expect(isPlaythroughSegment(n)).toBe(true);
         expect(isPlaythroughSegment('transition-west-return')).toBe(false);
-        // ⚠ The headline is NOT a segment: it does not claim an arrival at a
-        // boundary, it IS the walk the boundaries partition.
-        for (const c of PLAYTHROUGH_CHAINS) expect(isPlaythroughSegment(c.headline)).toBe(false);
+        // ⚠ A MULTI-segment chain's headline is NOT a segment: it does not
+        // claim an arrival at a boundary, it IS the walk the boundaries
+        // partition. ⛓ R8 slice 2: a ONE-segment staged chain's headline IS
+        // its segment by definition — "the same walk driven in one run" and
+        // the segment are the same tape, which is what lets the arithmetic,
+        // stream-slice and ending-state rows run with real content instead
+        // of skipping on a missing name.
+        for (const c of PLAYTHROUGH_CHAINS) {
+            expect(isPlaythroughSegment(c.headline))
+                .toBe(c.segments.length === 1 && c.segments[0] === c.headline);
+        }
     });
 });
 
@@ -828,8 +836,14 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
      * 'custody'` would pass just as well if someone had TYPED `kind:
      * 'custody'` into both, which is not the same claim.
      */
-    it('⛔ neither existing chain declares a kind — the entries are byte-unchanged', () => {
-        for (const c of PLAYTHROUGH_CHAINS) {
+    it('⛔ neither PRE-EXISTING chain declares a kind — the entries are byte-unchanged', () => {
+        // ⛓ R8 slice 2 scoped this loop BY NAME: the claim was always about
+        // the two chains that predate the kind (their data on disk must not
+        // gain a character), and slice 2's battery chains DO declare
+        // `staged` — which is the kind existing at all. The two claims are
+        // separated rather than the old one weakened.
+        for (const id of ['toy-west-pair', 'act2-the-sword']) {
+            const c = PLAYTHROUGH_CHAINS.find((x) => x.id === id);
             expect(Object.prototype.hasOwnProperty.call(c, 'kind'), c.id).toBe(false);
             expect(chainKind(c)).toBe('custody');
             expect(chainPolicy(c).custodyBaseCase).toBe(true);
@@ -837,13 +851,17 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
         }
     });
 
-    it('the policy table is TOTAL and every kind is tallied, including a zero', () => {
+    it('the policy table is TOTAL and every kind is tallied — and staged is REAL now', () => {
         const r = assertChainsWellFormed();
         expect(Object.keys(r.byKind).sort()).toEqual(Object.keys(CHAIN_KINDS).sort());
-        expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length);
-        // ⛓ ZERO, and it is PRINTED. A kind nobody uses must be
-        // distinguishable from a kind nobody implemented.
-        expect(r.byKind.staged).toBe(0);
+        // ⛓ R8 slice 2: the battery's seven one-segment staged chains are
+        // the first on disk — slice 0's "no staged chain exists yet" bounded
+        // vacuity, discharged. The tallies are DERIVED from the table so a
+        // chain added tomorrow moves this test out loud.
+        const staged = PLAYTHROUGH_CHAINS.filter((c) => (c.kind ?? 'custody') === 'staged');
+        expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length - staged.length);
+        expect(r.byKind.staged).toBe(staged.length);
+        expect(staged.length).toBe(7);
     });
 
     it('⛔ MUTATION: an unknown kind THROWS by name rather than falling through', () => {

@@ -1252,6 +1252,65 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
             fpSeed: 987286273,
         }),
     }),
+    /**
+     * ⛓⛓⛓ THE R8 BATTERY — the first `staged` chains on disk, ending slice
+     * 0's bounded vacuity ("no staged chain exists yet; slice 2 is the first
+     * producer"). One chain per solver segment, kind `staged`:
+     * per-segment verification IS a one-segment chain (`minSegments` 1), and
+     * registering each brings it under the calm-arrival requirement and the
+     * witnessed-clear/despawn laws the unchained shape measured itself
+     * outside of (kickoff §2.4).
+     *
+     * ⛔ EACH CHAIN'S HEADLINE IS ITS OWN SEGMENT, and that is a definition
+     * rather than a dodge: the headline is "the same walk driven in ONE
+     * run", and a one-segment chain's whole walk IS the segment. The
+     * arithmetic, stream-slice and ending-state rows then run against real
+     * content instead of skipping for a missing name — an acceptance row
+     * that cannot run reads exactly like one that passed (trap 119).
+     *
+     * ⛔ EARNS ARE DECLARED WHERE MEASURED AND ARE REPORTED, NOT CREDITED —
+     * the staged policy's own rule: r8-solve-10 really flips `hasSword`
+     * between its boot and its latch (a declaration cannot fake the flip;
+     * the measurement is taken), but a staged boot skips the REACHING, so
+     * the campaign's credit stays the custody chains' claim.
+     *
+     * ⚠ Tick counts (`endsAt`) are the solver's own, asserted against the
+     * tapes by the arithmetic row; the solver-vs-hand diff lives in each
+     * tape's description and in kickoff §10 (INFORMATION, not a gate).
+     */
+    /**
+     * ⚠ NO `r8-battery-6`, AND ITS ABSENCE IS A RECORD (kickoff §10): a
+     * probe-graduated L6 row was ruled in, solved by a COMBAT-BLIND run
+     * (the builder's default `roles` — the slice's own defect, now refused
+     * by `solveSegment` by name), recorded — and the recording REFUTED the
+     * blind plan: the game's player never crosses; it fights the row-1
+     * sandtrap and dies twice, and the census-on model reproduces that
+     * whole stream digit for digit. The withdrawn pair is banked as a free
+     * oracle in `NewDocs/plans/r8-slice2-l6-blind-probe/`; L6 stays slice
+     * 3's room, now with the measurement.
+     */
+    ...[
+        Object.freeze({ seg: 1, ends: 183, earns: [] }),
+        Object.freeze({ seg: 2, ends: 47, earns: [] }),
+        Object.freeze({ seg: 3, ends: 245, earns: [] }),
+        Object.freeze({ seg: 7, ends: 146, earns: [] }),
+        Object.freeze({ seg: 9, ends: 122, earns: [] }),
+        Object.freeze({ seg: 10, ends: 90, earns: ['sword@L10'] }),
+        Object.freeze({ seg: 11, ends: 87, earns: ['chest@L11'] }),
+    ].map(({ seg, ends, earns }) => Object.freeze({
+        id: `r8-battery-${seg}`,
+        kind: 'staged',
+        why: `R8 slice 2: the live solver's own solution to act2 segment ${seg}, from `
+            + `r7-act2-${seg}'s committed v8 boot block (staged per kickoff §3.5). Goals `
+            + 'derived from the chain\'s own units; the hand-authored stances and '
+            + 'waypoints were not handed over. See the tape\'s description and the '
+            + 'decision-trace sidecar in fixtures/traces/.',
+        headline: `r8-solve-${seg}`,
+        segments: Object.freeze([`r8-solve-${seg}`]),
+        earns: Object.freeze(earns),
+        cuts: Object.freeze([]),
+        endsAt: ends,
+    })),
 ]);
 
 /**

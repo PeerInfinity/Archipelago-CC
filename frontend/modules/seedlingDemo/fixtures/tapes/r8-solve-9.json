@@ -1,0 +1,117 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-9",
+    "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 9, from r7-act2-9's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(16,0) — the hand-authored stances/waypoints were NOT handed over. Solver: 122 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-9: 122 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 9,
+        "x": 144,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 539451608,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1404334271
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8184,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 0
+        }
+    },
+    "tick_count": 122,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 107
+        },
+        {
+            "key": "right",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "left",
+            "from": 108,
+            "to": 109
+        },
+        {
+            "key": "right",
+            "from": 109,
+            "to": 110
+        },
+        {
+            "key": "left",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "up",
+            "from": 115,
+            "to": 122
+        }
+    ]
+}

@@ -28,11 +28,12 @@
  *        -> 'solves segment 10' reds (walkable-but-unreachable ring cell —
  *           the first smoke run's own defect, kept as a regression)
  *
- * ⚠ BOUNDED VACUITY, NAMED: no battery room exercises the DANGER refusal
- * (the seven rooms are clean — that is why they are the battery). The danger
- * arm is tested here against L6's live corridor only as far as sensing goes;
- * the REFUSAL fires on rooms this slice does not solve, and slice 3's combat
- * policy replaces it. The seam is tested; its firing in anger is not.
+ * The danger-refusal arm fires IN ANGER on L6 (the census-on corridor
+ * crosses two sandtrap volumes), which is also the regression for the
+ * slice's own two-part defect: a combat-blind run solved L6 as if empty
+ * and the recording refuted it (kickoff §10). Both halves are pinned:
+ * the blind run is REFUSED at the door, and the census-on corridor is
+ * REFUSED with the sandtrap named.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -46,7 +47,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { buildTape } from './botDriverV1.js';
 import { plannerObstacleAt } from './botDriverV2.js';
 import {
-    LIVE_GEOMETRY_KEYS, isNormalizedLiveOpts, normalizeLiveOpts,
+    LIVE_GEOMETRY_KEYS, ROLES, isNormalizedLiveOpts, normalizeLiveOpts,
 } from './levelWorld.js';
 import {
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, solveSegment,
@@ -59,14 +60,20 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const TAPES = join(HERE, 'fixtures', 'tapes');
 const levelSource = atlasLevelSource();
 
-/** A live run booted from a committed segment's own v8 boot block. */
-function runFromCommitted(name) {
+/**
+ * A live run booted from a committed segment's own v8 boot block —
+ * ⛔ with the REPLAY's own census (`roles: ROLES`, what `tapeRunner` gives
+ * an honest tape). The builder's default is a combat-blind world and
+ * `solveSegment` refuses one by name; see the guard's comment for the
+ * defect this slice paid to learn it.
+ */
+function runFromCommitted(name, roles = ROLES) {
     const t = parseTape(JSON.parse(readFileSync(join(TAPES, `${name}.json`), 'utf8')));
     const run = createLevelRun({
         levelSource, boot: t.boot, noclip: false, noHazards: t.noHazards,
         noDamage: false, grants: t.grants, persistence: t.persistence, despawn: [],
         equips: t.equips, pins: t.pins ?? [], save: t.save ?? null,
-        rng: t.rng ?? null, seam: t.seam ?? null,
+        rng: t.rng ?? null, seam: t.seam ?? null, roles,
     });
     return { run, committed: t };
 }
@@ -273,6 +280,46 @@ describe('the refusal shapes — never a silent stall', () => {
             run, goals: [{ kind: 'kill-everything' }],
             name: 'probe-goal', boot: committed.boot,
         })).toThrow(/unknown goal kind/);
+    });
+
+    it('L6: the census-on corridor is refused WITH THE THREAT NAMED (danger, not a stall)', () => {
+        // The blind solve walked this corridor and the game refuted it with
+        // seven sandtrap contacts and two deaths (kickoff §10, the withdrawn
+        // r8-solve-6). With the census on, the segment-sampled danger probe
+        // names a live threat BEFORE a tick is spent — the NEAREST one on
+        // the corridor is `bob@96,16` inside its own leash (the sandtraps
+        // are the next samples along; the first named threat is the claim).
+        const { run, committed } = runFromCommitted('r7-act2-6');
+        let refusal = null;
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 224, y: 32 } }],
+                name: 'probe-l6', boot: committed.boot,
+            });
+        } catch (e) { refusal = e; }
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.obstacle.kind).toBe('danger');
+        expect(refusal.message).toMatch(/chaser:bob@96,16/);
+        expect(refusal.considered.map((c) => c.option)).toContain('dodge');
+    });
+
+    it('a COMBAT-BLIND run is refused at the door — the slice\'s own defect, institutionalised', () => {
+        // The builder's DEFAULT roles (no `roles` key at all): a world with
+        // no combat census. The first battery was solved against exactly
+        // this — identical in every room without enemies, blind in the one
+        // with them.
+        const t = parseTape(JSON.parse(
+            readFileSync(join(TAPES, 'r7-act2-2.json'), 'utf8')));
+        const run = createLevelRun({
+            levelSource, boot: t.boot, noclip: false, noHazards: t.noHazards,
+            noDamage: false, grants: t.grants, persistence: t.persistence, despawn: [],
+            equips: t.equips, pins: t.pins ?? [], save: t.save ?? null,
+            rng: t.rng ?? null, seam: t.seam ?? null,
+        });
+        expect(() => solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 96 } }],
+            name: 'probe-blind', boot: t.boot,
+        })).toThrow(/NO COMBAT CENSUS/);
     });
 });
 

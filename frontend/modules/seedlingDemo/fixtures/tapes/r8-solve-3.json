@@ -1,0 +1,156 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-3",
+    "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 3, from r7-act2-3's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(128,48) — the hand-authored stances/waypoints were NOT handed over. Solver: 245 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-3: 245 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 3,
+        "x": 64,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1738196989,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 293227988
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5069,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 0
+        }
+    },
+    "tick_count": 245,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "up",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 53
+        },
+        {
+            "key": "right",
+            "from": 55,
+            "to": 57
+        },
+        {
+            "key": "down",
+            "from": 61,
+            "to": 114
+        },
+        {
+            "key": "up",
+            "from": 114,
+            "to": 115
+        },
+        {
+            "key": "down",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "right",
+            "from": 120,
+            "to": 173
+        },
+        {
+            "key": "left",
+            "from": 173,
+            "to": 174
+        },
+        {
+            "key": "right",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "up",
+            "from": 179,
+            "to": 219
+        },
+        {
+            "key": "down",
+            "from": 219,
+            "to": 220
+        },
+        {
+            "key": "up",
+            "from": 220,
+            "to": 221
+        },
+        {
+            "key": "right",
+            "from": 225,
+            "to": 245
+        }
+    ]
+}

@@ -1,0 +1,130 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-solve-1",
+    "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 1, from r7-act2-1's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(256,272) — the hand-authored stances/waypoints were NOT handed over. Solver: 183 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-1: 183 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 0,
+        "x": 80,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 987286273
+    },
+    "seam": null,
+    "tick_count": 183,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 39
+        },
+        {
+            "key": "left",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "left",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "left",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "right",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "left",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "up",
+            "from": 39,
+            "to": 40
+        },
+        {
+            "key": "down",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "up",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "right",
+            "from": 49,
+            "to": 102
+        },
+        {
+            "key": "left",
+            "from": 102,
+            "to": 103
+        },
+        {
+            "key": "right",
+            "from": 103,
+            "to": 104
+        },
+        {
+            "key": "left",
+            "from": 104,
+            "to": 105
+        },
+        {
+            "key": "right",
+            "from": 105,
+            "to": 106
+        },
+        {
+            "key": "down",
+            "from": 110,
+            "to": 183
+        },
+        {
+            "key": "right",
+            "from": 110,
+            "to": 183
+        }
+    ]
+}

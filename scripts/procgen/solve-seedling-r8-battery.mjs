@@ -1,0 +1,298 @@
+#!/usr/bin/env node
+/**
+ * solve-seedling-r8-battery — the LIVE SOLVER re-solves the leg-only act2
+ * rooms from staged boots. R8 slice 2, kickoff §4 slice 2 track B.
+ *
+ * ── THE DERIVATION (stated, then computed — never copied) ─────────────
+ *
+ * The battery is derived from chain `act2-the-sword`'s OWN `walk.units`:
+ *
+ *   1. Units are mapped to segments mechanically: a segment ends at each
+ *      crossing, and a crossing is a leg with an `exit` — so walking the
+ *      unit list with a counter that advances after every exit-leg assigns
+ *      every unit to the segment its ticks run in (trailing units after the
+ *      last exit belong to the last segment; they are the 0-tick terminal
+ *      legs `synthesizeLegs` requires).
+ *   2. A segment QUALIFIES iff it contains NO `phases` unit and no target
+ *      mechanic outside {collect, chest}. A `phases` block is hand-authored
+ *      choreography — the very thing the solver's combat/puzzle policies
+ *      (slice 3) exist to replace; `hold`/`shove`/`bait`/… are mechanics
+ *      whose known-answer rooms kickoff §4 slice 3 claims by name (L4, L5,
+ *      L6, L8). `collect`/`chest` are the two acquisition verbs this
+ *      slice's policy registers.
+ *
+ * Result: segments 1, 2, 3, 7, 9, 10, 11 — seven rooms. The script PRINTS
+ * the derivation so the §10 statement is a copy of the computed answer.
+ *
+ * ── ⛔ THE WITHDRAWN EIGHTH ROW — L6, and what its recording refuted ───
+ *
+ * A probe-graduated `r8-solve-6` was ruled in, solved, recorded — and the
+ * recording REFUTED the solve. The solve was COMBAT-BLIND (the builder's
+ * default `roles` builds a pre-R5 world with no combat census — the
+ * defect `solveSegment` now refuses by name), so the blind model crossed
+ * a room whose sandtraps and bobs it could not see. The GAME, driven by
+ * those same inputs, hit `sandtrap@64,16` at t=20, was knocked back, and
+ * died twice without ever crossing — and the census-on model reproduces
+ * the game's whole stream DIGIT FOR DIGIT, both deaths included. The
+ * withdrawn tape/expectation/trace and the `--mobiles` body witness are
+ * banked in `NewDocs/plans/r8-slice2-l6-blind-probe/` (a withdrawn
+ * recording is a free oracle); L6 stays slice 3's room. Kickoff §10 has
+ * the full account.
+ *
+ * ── WHAT THE SOLVER IS HANDED (and what it is NOT) ────────────────────
+ *
+ * Each row boots the COMMITTED segment tape's own v8 boot block — boot,
+ * save, persistence, rng, seam, pins, verbatim (staged per §3.5: the boot
+ * block is the honest declaration the seam machinery reads; the grants
+ * channel is seam-invisible and stays empty). The GOALS are derived from
+ * the segment's units: each exit-leg contributes `reach-exit` (the OEL
+ * coordinates only), each collect/chest target contributes
+ * `collect-placement` (the PLACEMENT only). ⛔ The hand-authored stance
+ * coordinates, waypoints and hold ticks are NOT handed over — deriving the
+ * how is the solver's whole job; the macro layer names the what.
+ *
+ * Run (model-side; no artifact needed):
+ *   node scripts/procgen/solve-seedling-r8-battery.mjs            # write
+ *   node scripts/procgen/solve-seedling-r8-battery.mjs --check    # verify byte-identical
+ *
+ * Then record the fixtures (the game is the only oracle):
+ *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *       --only=r8-solve-1,r8-solve-2,r8-solve-3,r8-solve-7,r8-solve-9,r8-solve-10,r8-solve-11
+ */
+
+import { dirname, join } from 'node:path';
+import {
+    existsSync, mkdirSync, readFileSync, writeFileSync,
+} from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..');
+const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
+const TRACES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'traces');
+
+const CHECK = process.argv.includes('--check');
+
+const { parseTape, requiredTapeVersion } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
+const { PLAYTHROUGH_CHAINS } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
+const { createLevelRun } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/levelRun.js'));
+const { atlasLevelSource } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
+const { solveSegment } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/solverBot.js'));
+const { buildTape } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
+const { ROLES } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/levelWorld.js'));
+
+let failures = 0;
+const check = (name, ok, detail) => {
+    if (!ok) failures += 1;
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
+};
+
+const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
+const levelSource = atlasLevelSource();
+
+// ── 1. derive the battery from the chain's own units ──────────────────
+const MECHANIC_KEYS = ['hold', 'bait', 'wait', 'touch', 'equip', 'spear', 'shove',
+    'kill', 'fire', 'keylock', 'collect', 'chest'];
+const BATTERY_VERBS = new Set(['collect', 'chest']);
+
+const perSegment = chain.segments.map(() => ({ units: [], phases: 0, mechanics: new Set() }));
+{
+    let seg = 0;
+    for (const unit of chain.walk.units) {
+        const s = perSegment[Math.min(seg, perSegment.length - 1)];
+        s.units.push(unit);
+        if (unit.phases) s.phases += 1;
+        for (const target of unit.leg?.targets ?? []) {
+            for (const k of MECHANIC_KEYS) if (target[k] !== undefined) s.mechanics.add(k);
+        }
+        if (unit.leg?.exit) seg += 1;
+    }
+}
+const battery = [];
+perSegment.forEach((s, i) => {
+    const segNo = i + 1;
+    const blockers = [
+        ...(s.phases ? [`${s.phases} phases block(s)`] : []),
+        ...[...s.mechanics].filter((m) => !BATTERY_VERBS.has(m)).map((m) => `mechanic '${m}'`),
+    ];
+    if (blockers.length) {
+        console.log(`  segment ${segNo}: EXCLUDED — ${blockers.join(', ')} `
+            + '(hand choreography / slice-3 mechanics)');
+        return;
+    }
+    battery.push(segNo);
+    console.log(`  segment ${segNo}: BATTERY — legs only`
+        + `${s.mechanics.size ? ` + [${[...s.mechanics].join(', ')}]` : ''}`);
+});
+console.log(`## derived battery: segments [${battery.join(', ')}] `
+    + `(${battery.length} rooms)`);
+check('the derived battery is the seven leg-only rooms',
+    battery.join(',') === '1,2,3,7,9,10,11',
+    `[${battery.join(', ')}] — a change here is a chain edit or a classifier edit, `
+    + 'and either moves the §10 statement');
+
+// ── 2. goals, derived from each segment's own units ───────────────────
+function goalsFor(segNo) {
+    const goals = [];
+    for (const unit of perSegment[segNo - 1].units) {
+        if (!unit.leg) continue;
+        for (const target of unit.leg.targets ?? []) {
+            if (target.collect) {
+                goals.push({ kind: 'collect-placement', placement: { ...target.collect.pickup } });
+            }
+            if (target.chest) {
+                goals.push({ kind: 'collect-placement', placement: { ...target.chest.chest } });
+            }
+        }
+        if (unit.leg.exit) goals.push({ kind: 'reach-exit', exit: { ...unit.leg.exit } });
+    }
+    return goals;
+}
+
+const PROBE_ROWS = [];
+
+// ── 3. solve, emit ────────────────────────────────────────────────────
+function runFromCommitted(committed) {
+    return createLevelRun({
+        levelSource, boot: committed.boot, noclip: false,
+        noHazards: committed.noHazards, noDamage: false, grants: committed.grants,
+        persistence: committed.persistence, despawn: [], equips: committed.equips,
+        pins: committed.pins ?? [], save: committed.save ?? null,
+        rng: committed.rng ?? null, seam: committed.seam ?? null,
+        /**
+         * ⛔⛔ THE REPLAY'S OWN CENSUS, BY NAME — the slice's own defect,
+         * kept as a comment because it was expensive to see: `roles`
+         * defaults to `PRE_R5_ROLES`, a COMBAT-BLIND world (deliberately —
+         * every R0–R4 fixture is `noDamage`), and `tapeRunner` passes the
+         * full `ROLES` for an honest tape. A solver handed the default
+         * solved every battery room IDENTICALLY and crossed L6 blind to
+         * both bobs, green because the game's own bobs never caught it —
+         * the world the solve sensed and the world the replay runs were
+         * two different worlds, invisible in every room without enemies.
+         */
+        roles: ROLES,
+    });
+}
+
+/** `tapeJson` — the plan scripts' convention: serialize FROM a parsed tape. */
+function tapeJson(obj, description) {
+    const parsed = parseTape(obj);
+    return `${JSON.stringify({
+        tape_version: requiredTapeVersion(parsed),
+        game: 'seedling',
+        name: obj.name,
+        description,
+        boot: parsed.boot,
+        noclip: parsed.noclip,
+        noDamage: parsed.noDamage,
+        noHazards: parsed.noHazards,
+        grants: parsed.grants,
+        persistence: parsed.persistence,
+        equips: parsed.equips,
+        pins: parsed.pins,
+        save: parsed.save,
+        rng: parsed.rng,
+        seam: parsed.seam,
+        tick_count: parsed.tick_count,
+        inputs: parsed.inputs,
+    }, null, 4)}\n`;
+}
+
+function emit(path, json, what) {
+    if (CHECK) {
+        const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
+        check(`${what} is byte-identical to what this solver derives`, have === json,
+            have === null ? 'the file does not exist'
+                : have === json ? `${json.length} bytes`
+                    : '⛔ DRIFT — the committed artifact is not what the solver produces today');
+        return;
+    }
+    writeFileSync(path, json);
+    console.log(`  wrote ${path} (${json.length} bytes)`);
+}
+
+const rows = [
+    ...battery.map((segNo) => ({
+        segNo, name: `r8-solve-${segNo}`, goals: goalsFor(segNo), provenance: null,
+    })),
+    ...PROBE_ROWS,
+];
+
+mkdirSync(TRACES, { recursive: true });
+const summary = [];
+for (const row of rows) {
+    const committedName = `r7-act2-${row.segNo}`;
+    const committed = parseTape(JSON.parse(
+        readFileSync(join(TAPES, `${committedName}.json`), 'utf8')));
+    const run = runFromCommitted(committed);
+    const out = solveSegment({
+        run, goals: row.goals, name: row.name, boot: committed.boot,
+    });
+    const hits = run.playerHits.length;
+    const deaths = run.playerDeaths.length;
+    check(`${row.name}: ZERO hits and ZERO deaths (the standing zero-hit policy)`,
+        hits === 0 && deaths === 0, `hits ${hits}, deaths ${deaths}`);
+    // The span fold is `buildTape`'s — the ONE fold, shared with every
+    // driver-emitted tape (trap 115: `keysToSpans` drops non-mover keys).
+    const folded = buildTape(out.perTick, committed.boot, row.name,
+        { noclip: false, noDamage: false, noHazards: [], grants: [] });
+    const tape = {
+        game: 'seedling',
+        name: row.name,
+        boot: committed.boot,
+        noclip: false,
+        noDamage: false,
+        noHazards: committed.noHazards,
+        grants: committed.grants,
+        persistence: committed.persistence,
+        equips: committed.equips,
+        pins: committed.pins,
+        save: committed.save,
+        rng: committed.rng,
+        seam: committed.seam,
+        tick_count: out.perTick.length,
+        inputs: folded.inputs,
+        tape_version: 8,
+    };
+    const description = `⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to `
+        + `${row.provenance ? 'L6 (probe-graduated)' : `battery segment ${row.segNo}`}, `
+        + `from ${committedName}'s committed v8 boot block (staged per kickoff §3.5). `
+        + `GOALS derived from the chain's own units: ${row.goals.map((g) => g.kind
+            + (g.exit ? `(${g.exit.x},${g.exit.y})` : `(${g.placement.x},${g.placement.y})`))
+            .join(' then ')} — the hand-authored stances/waypoints were NOT handed over. `
+        + `Solver: ${out.perTick.length} ticks, ${out.trace.rows.length} decision(s), `
+        + `${out.replans} re-plan(s); hand answer ${committedName}: `
+        + `${committed.tick_count} ticks. The diff is INFORMATION, not a gate — the `
+        + 'differential is the gate. '
+        + `${row.provenance ?? ''}`
+        + 'Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in '
+        + 'fixtures/traces/.';
+    emit(join(TAPES, `${row.name}.json`), tapeJson(tape, description), row.name);
+    emit(join(TRACES, `${row.name}.trace.json`),
+        `${JSON.stringify(out.trace, null, 4)}\n`, `${row.name} trace`);
+    summary.push({
+        name: row.name, solver: out.perTick.length, hand: committed.tick_count,
+        rows: out.trace.rows.length, replans: out.replans,
+        probe: Boolean(row.provenance),
+    });
+}
+
+console.log('\n## solver vs hand, tick for tick (INFORMATION, not a gate)');
+for (const s of summary) {
+    const d = s.solver - s.hand;
+    console.log(`  ${s.name.padEnd(14)} solver ${String(s.solver).padStart(4)} | `
+        + `hand ${String(s.hand).padStart(4)} | ${d === 0 ? '==' : (d > 0 ? `+${d}` : d)}`
+        + `${s.probe ? '  (probe-graduated; hand = the bait choreography)' : ''}`);
+}
+
+if (CHECK) {
+    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
+    process.exit(failures ? 1 : 0);
+}
