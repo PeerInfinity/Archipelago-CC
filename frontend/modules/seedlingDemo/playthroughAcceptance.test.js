@@ -867,10 +867,20 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
         // chain that is not an act2 segment: L20 is a NEW room with no hand
         // answer, so its differential is the entire gate, and `hasShield`
         // flips inside it (REPORTED, never CREDITED — `earns` is empty).
+        // ⛓⛓⛓ R8 slice 7 adds `r8-d2` — THIRTEEN, and the first staged chain
+        // with MORE THAN ONE SEGMENT: a headline that is a different
+        // recording, a cut decided by PERSISTENCE (trap 150), the ends-meet
+        // arithmetic and an INTERNAL SEAM. Five slices running, this tally has
+        // moved out loud rather than being edited quietly.
         const staged = PLAYTHROUGH_CHAINS.filter((c) => (c.kind ?? 'custody') === 'staged');
         expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length - staged.length);
         expect(r.byKind.staged).toBe(staged.length);
-        expect(staged.length).toBe(12);
+        expect(staged.length).toBe(13);
+        // ⛓ AND EXACTLY ONE OF THEM IS MULTI-SEGMENT, asserted so the claim
+        // "the first chain whose segments have to latch to each other" is a
+        // fact about the table rather than a sentence in a comment.
+        expect(staged.filter((c) => c.segments.length > 1).map((c) => c.id))
+            .toEqual(['r8-d2']);
         expect(staged.map((c) => c.id)).toContain('r8-battery-4');
         expect(staged.map((c) => c.id)).toContain('r8-battery-6');
         expect(staged.map((c) => c.id)).toContain('r8-battery-5');

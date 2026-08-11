@@ -2784,15 +2784,146 @@ export const R8_D2_COMPLETE = Object.freeze({
     }),
 
     /**
+     * ⛔⛔⛔ TRACK A's OUTCOME — L18 IS **REPORTED, NOT RECORDED**, and the
+     * refusal carries the rung it reached.
+     *
+     * ⚖ The orchestrator ruled the STRIKE SCHEDULE in (option A) and it is
+     * BUILT — `derivePressKill` / `deriveStrike` / `deriveRefuge` /
+     * `execKillByPress`, every quantity from mechanism data. What it cannot
+     * yet do is CROSS the room, and the wall is named: the per-tick movement
+     * that carries the player between strikes is a bounded-depth safe step,
+     * and a bounded depth cannot see a corner a body takes twenty ticks to
+     * reach. Driven, the schedule loiters, plans strikes, dodges — and then
+     * walks into L18's south-west corner at (18.0,104.1) with
+     * `spinner@48,96` closing from (34,113), where every one of the five key
+     * sets the controller can produce lands the box inside a disc.
+     *
+     * ⇒ what the movement layer wants is the TIME rung's own instrument —
+     * `mover.findEarliestArrival` with `forbiddenByDanger` as `forbiddenAt`,
+     * whose ~48 px `MOVER_RANGE` is exactly a dodge's scale — driven INSIDE
+     * the executor rather than as a corridor rung. That is the next slice's,
+     * and it is a change to the movement layer rather than to this schedule.
+     *
+     * ⛔ NO TAPE. A room that refuses is REPORTED, never recorded (§11.10.1):
+     * a tape whose solution nobody designed is worse than a missing tape, and
+     * a walk that takes a hammer is not a solve at any tick count.
+     */
+    trackA: Object.freeze({
+        room: 18,
+        built: Object.freeze(['derivePressKill', 'deriveStrike', 'deriveRefuge',
+            'execKillByPress', 'stepToward', 'safeStep', 'trainIsSafeHere']),
+        recorded: null,
+        wall: 'the per-tick movement between strikes is a bounded-depth safe step '
+            + '(STEP_LOOKAHEAD = 4) and a bounded depth cannot see a corner a body takes '
+            + 'twenty ticks to reach — driven, the walk reaches (18.0,104.1) with '
+            + '`spinner@48,96` at (34,113) and every one of the five key sets lands in a '
+            + 'disc',
+        wants: '`mover.findEarliestArrival` with `forbiddenByDanger` as `forbiddenAt` '
+            + '(⚖ §11.8a ruling 2\'s TIME instrument, ~48 px `MOVER_RANGE` — a dodge\'s '
+            + 'own scale) driven INSIDE the executor, which is a movement-layer change '
+            + 'and not a schedule one',
+        census: 'annulusCensus — 60 walkable cells, 1 clear over the horizon, 0 striking',
+        /**
+         * ⛔⛔⛔ ⚖ USER DESIGN CORRECTION (relayed 2026-08-11, mid-slice) —
+         * AND IT IS RIGHT, WITH BOTH HALVES MEASURED.
+         *
+         * *"The hammer spins in a predictable pattern. Opportunistic attack
+         * means waiting until the hammer isn't in the way, or moving to where
+         * the hammer won't be. Forbidding the whole disc the hammer passes
+         * through is wrong."*
+         *
+         * §15.3.3's premise — *"the angle rides `Game.time`, which this model
+         * does not carry, so the honest quantity is the UNION over all 45
+         * phases"* — was true of the MODEL and false of the MECHANISM, and
+         * that distinction is the whole correction. Source-verified in the
+         * fork @ `7514b96`:
+         *
+         *   Spinner.as:71   `(Game.time % Game.timePerFrame) / timePerFrame * 2π`
+         *   Game.as:846     `time += timeRate` — inside `Game.update()`, BELOW
+         *                   the `if (blackCover <= 0) super.update()` gate, so
+         *                   it advances on DEAD frames too
+         *   Game.as:918/959 `timeRate` is written in exactly ONE place, inside
+         *                   `cutscene[0]` (the opening scene), and reset to 1
+         *   Game.as:490-497 `Game.time` IS `Main.time` — `SAVE_FILE.data.time`
+         *
+         * ⇒ outside that one cutscene the clock is `save.time + <world updates
+         * since the boot>`: **deterministic given the walk**. The v8 seam
+         * already CARRIES it (`SEAM_BOOT_SPEC`'s `time` row, `modelled: false`
+         * — "comparable only under `Bot.pinDeadFrames`, it counts DEAD frames
+         * too") and every tape pins dead frames. What the model does not do is
+         * ADVANCE it.
+         *
+         * ⛔ AND THE RE-CENSUS SETTLES THE POLICY QUESTION. The same 60 cells
+         * and the same forecast, priced against the exact hammer LINE instead
+         * of the union disc over a 600-tick horizon:
+         *
+         *   priced by            clear for the horizon   ...AND 3 separated presses
+         *   13 px disc (shipped)  1 (behind the kill-lock)            0
+         *   exact hammer line     16                                  **3**
+         *
+         * — (6,3), (7,5) and (8,5), each with three opportunities on
+         * `spinner@112,48`. A STATIC STANCE EXISTS. ⇒ this slice's own "no
+         * static stance in L18" finding is WITHDRAWN as an artifact of the
+         * conservative model, and the law it leaves behind is the
+         * accurate-wall law biting the instrument written to honour it: **a
+         * CONSERVATIVE INGREDIENT CAN MANUFACTURE A POLICY PROBLEM.**
+         *
+         * ⚠ NOT BUILT THIS SLICE, and the scope is why: it wants a `Game.time`
+         * accumulator advanced per world update including dead frames (a new
+         * MODELLED quantity where the seam transports one today), `hammerLine`
+         * promoted from a bound to a CONTACT with `collideLine`'s integer
+         * raycast, a ruling on whether it BILLS or refuses, ingredient (f) and
+         * `TRANSIT_INGREDIENTS` re-derived from disc to line, and a DRIVEN
+         * PAIR — a stand inside the disc at a predicted-safe angle window and
+         * a control at a predicted-unsafe one — which is the only thing that
+         * makes angle prediction a measured capability rather than a hope.
+         */
+        userCorrection: Object.freeze({
+            what: 'the hammer spins in a PREDICTABLE pattern; forbidding the whole disc '
+                + 'it passes through is wrong',
+            clock: Object.freeze({
+                deterministic: true,
+                law: 'Game.time = save.time + <world updates since the boot>',
+                src: Object.freeze(['Spinner.as:71', 'Game.as:846', 'Game.as:498',
+                    'Game.as:918', 'Game.as:959', 'Game.as:490-497']),
+                caveat: '`timeRate` is written only inside `cutscene[0]`, the opening '
+                    + 'scene; everywhere else it is 1',
+                carriedBy: 'the v8 seam\'s `time` row (`modelled: false` today)',
+            }),
+            recensus: Object.freeze({
+                horizon: 600,
+                cells: 60,
+                clearUnderDisc: 1,
+                strikingUnderDisc: 0,
+                clearUnderLine: 16,
+                strikingUnderLine: 3,
+                stances: Object.freeze(['(6,3)', '(7,5)', '(8,5)']),
+            }),
+            withdraws: 'the "no static stance exists in L18" finding — an artifact of the '
+                + 'conservative disc, not a fact about the room',
+            law: 'A CONSERVATIVE INGREDIENT CAN MANUFACTURE A POLICY PROBLEM',
+            notBuiltBecause: 'a `Game.time` accumulator, `hammerLine` as a CONTACT, a '
+                + 'bill-or-refuse ruling, ingredient (f) and `TRANSIT_INGREDIENTS` '
+                + 're-derived, and the driven pair — a slice, not a track',
+        }),
+    }),
+
+    /**
      * ⛔ THE SEGMENTS, AND THE CHAIN. Named ahead of the work so that a slice
      * that records fewer says so out loud rather than reporting what it got.
      */
     chain: Object.freeze({
         name: 'r8-d2',
         kind: 'staged',
-        segments: Object.freeze(['r8-d2-18', 'r8-d2-19', 'r8-d2-20']),
+        /**
+         * ⚠ TWO, NOT THREE — L18 is `trackA`'s reported wall, so the chain
+         * begins at L19's own arrival from L18. The boot is the same staged
+         * post-sword latch either way; what changes is that the chain no
+         * longer claims a room nobody solved.
+         */
+        segments: Object.freeze(['r8-d2-19', 'r8-d2-20']),
         boot: 'r7-act2-11\'s committed v8 block — the campaign\'s own post-sword latch — '
-            + 'staged at L18\'s own arrival from L16 (16,32)',
+            + 'staged at L19\'s own arrival from L18 (16,144)',
         endsAt: 'L13 (96,48), through `stairsup@16,48`',
         /**
          * ⛔ ONE SEGMENT PER ROOM, AND L19's IS ONE SEGMENT BECAUSE OF TRAP
@@ -2801,9 +2932,99 @@ export const R8_D2_COMPLETE = Object.freeze({
          * decided by PERSISTENCE, not by geography.
          */
         cutRule: 'trap 150 — by PERSISTENCE, not geography',
-        internalSeams: 2,
+        internalSeams: 1,
     }),
 });
+
+/**
+ * ⛔⛔⛔ R8 SLICE 7 — **THE CENSUS THAT LICENSES THE MOVING POLICY**, and it is
+ * an instrument rather than a sentence (⚖ ruling condition 2).
+ *
+ * §15.6.2 and this slice's own charge both describe L18's answer as a CELL:
+ * *"a cell where the body passes through the sword's 16 px reach while the
+ * player's box stays outside the 13 px hammer disc — an annulus about 4 px
+ * wide"*. The arithmetic of the annulus is exact and the CELL does not exist,
+ * and the difference is the room's geometry rather than anybody's reasoning.
+ *
+ * This walks every walkable lattice cell against the run's own
+ * `spinnerForecast` over a NAMED horizon and returns the three numbers that
+ * settle it:
+ *
+ *   `cells`      how many walkable cells the room has;
+ *   `clear`      how many are outside EVERY live body's hammer disc for the
+ *                whole horizon;
+ *   `striking`   how many of those ever get `hitsMax` press opportunities
+ *                separated by the RECEIVER's own `hitsTimerMax`.
+ *
+ * ⛔ A STATIC ANNULUS EXISTS IFF `striking > 0`. Measured in L18 at its own
+ * arrival: 60 / 1 / 0 — the one clear cell is `(10,7)`, which is behind the
+ * kill-lock the fight exists to open, and the second-best cell in the room has
+ * a MINIMUM clearance of −2.38 px. ⚠ And `r8-l18-spinner-press`'s two stances
+ * are the bodies' OWN entity points: a `noDamage` artifact, not a stance.
+ *
+ * ⇒ the claim "no static stance exists in L18" is checkable, and a future room
+ * — or a future forecast — can re-ask it with its own bound.
+ *
+ * @param {object} run  a live honest run in the room being asked about
+ * @param {object} io   `{walkableCells, forecast}` — injected so the census
+ *   can be driven against a constructed room, which is what keeps the
+ *   `striking > 0` arm from being a branch nobody has ever seen taken.
+ */
+export function annulusCensus(run, io) {
+    if (!io || typeof io.walkableCells !== 'function' || typeof io.forecast !== 'function') {
+        throw new Error('annulusCensus: needs an io seam {walkableCells, forecast} — the '
+            + 'solver\'s own two, injected so a constructed room can exercise both arms.');
+    }
+    const horizon = io.horizon ?? 2016;
+    const forecast = io.forecast(horizon);
+    const cells = io.walkableCells();
+    const hammer = io.hammerLength ?? 13;
+    const reach = io.slashReach ?? 16;
+    const hits = io.hitsMax ?? 3;
+    const separation = io.hitsTimerMax ?? 30;
+    let clear = 0;
+    let striking = 0;
+    let bestClearance = -Infinity;
+    for (const c of cells) {
+        let min = Infinity;
+        let safe = true;
+        const last = new Map();
+        const counts = new Map();
+        for (let i = 0; i < horizon && safe; i += 1) {
+            const step = forecast[i];
+            if (!step) break;
+            for (let b = 0; b < step.length; b += 1) {
+                const r = step[b];
+                const cx = r.x + 4;
+                const cy = r.y + 4;
+                const gap = Math.max((cx - hammer) - c.box.right, c.box.x - (cx + hammer),
+                    (cy - hammer) - c.box.bottom, c.box.y - (cy + hammer));
+                if (gap <= 0) { safe = false; break; }
+                if (gap < min) min = gap;
+                if (io.inReach(c, r)) {
+                    const prev = last.get(b);
+                    if (prev === undefined || i - prev >= separation) {
+                        last.set(b, i);
+                        counts.set(b, (counts.get(b) ?? 0) + 1);
+                    }
+                }
+            }
+        }
+        if (!safe) continue;
+        clear += 1;
+        if (min > bestClearance) bestClearance = min;
+        if ([...counts.values()].some((n) => n >= hits)) striking += 1;
+    }
+    return {
+        level: run.level,
+        horizon,
+        cells: cells.length,
+        clear,
+        striking,
+        bestClearance: bestClearance === -Infinity ? null : bestClearance,
+        staticAnnulusExists: striking > 0,
+    };
+}
 
 /**
  * ⛔⛔⛔ ⚖ RULING 1's CLAIM, RE-DERIVED FROM THE RUNNING ATLAS.

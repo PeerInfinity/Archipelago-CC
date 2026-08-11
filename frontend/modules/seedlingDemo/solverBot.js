@@ -515,6 +515,39 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
     };
 }
 
+/**
+ * ⛓⛓⛓ R8 SLICE 7 — A PLACEMENT INSIDE A SOLID IS AN **OBSTACLE**, NOT A
+ * STANCE PROBLEM, and L19 is where the difference bites.
+ *
+ * `bosskey@96,64` sits at tile (6,4), which is INSIDE `shieldboss@80,32`'s
+ * 48x48 body — the wall, the key and the exit are one object (R6 §13.6). The
+ * ring search in `deriveStance` finds a perfectly good cell two rings away and
+ * a corridor to it, so the goal looks resolved; then `runCollect` walks at the
+ * pickup and the sweep dies on the body, three ticks from the key.
+ *
+ * ⇒ the reachability of the PLACEMENT is a separate claim from the
+ * reachability of a stance near it, and it is asked here. ⚠ Asked with the
+ * avoid volumes OFF, because the pickup's own volume is one of them and the
+ * question is what ELSE is in that cell.
+ */
+function placementBlocker(run, resolved, contacts) {
+    const t = resolved.target;
+    const centre = t.rect
+        ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
+        : { x: t.x, y: t.y };
+    const hit = plannerObstacleAt(run.world, centre.x, centre.y, null,
+        solverPlanOpts(run, contacts, {
+            avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
+        }));
+    if (!hit) return null;
+    if (hit.kind === 'terrain' || hit.kind === 'pit' || hit.kind === 'lethal-terrain'
+        || hit.kind === 'teleporter') return null;
+    const b = hit.blocker ?? {};
+    const tag = b.tag ?? b.cls?.as3 ?? b.name ?? null;
+    if (typeof tag === 'string' && tag.startsWith('tile:')) return null;
+    return { kind: hit.kind, tag, id: b.id ?? `${tag ?? '?'}@${b.x ?? '?'},${b.y ?? '?'}` };
+}
+
 /** The solver's planning options: the FULL bag, volumes on, live keys. */
 function solverPlanOpts(run, contacts, extra = {}) {
     return {
@@ -1288,7 +1321,17 @@ function deriveHoldStance(run, presser, contacts, blocked = []) {
     const hypothesis = stanceHypothesis(run, blocked);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
-        if (reached) return { stance: { x: c.x, y: c.y }, exempt, discharged: reached.discharged };
+        if (reached) {
+            return {
+                stance: { x: c.x, y: c.y },
+                // ⛓ The hypothesis' own exemptions ride out with the stance:
+                // the walk that gets there goes THROUGH the discharged lock's
+                // cell, so the plan that follows needs the same set the probe
+                // used or it re-derives a corridor the probe never tested.
+                exempt: reached.exempt ?? exempt,
+                discharged: reached.discharged,
+            };
+        }
     }
     throw new SolverRefusal(
         `solverBot: no REACHABLE stance inside ${presser.tag}@${presser.x},${presser.y} `
@@ -1386,11 +1429,28 @@ function stanceReaches(run, aim, contacts, hypothesis) {
         if (!(e instanceof BotDriverV2Error)) throw e;
     }
     if (!hypothesis.length) return null;
+    /**
+     * ⛔⛔ DISCHARGING A LOCK OPENS THE **SOLID** AND LEAVES THE **VOLUME**,
+     * and L20 measured it: with `shieldlocknorm@176,16` hypothesised open,
+     * `plannerObstacleAt` stops calling (11,1) a `solid` and starts calling it
+     * a `proximity-hazard` — which A* refuses to plan THROUGH just as firmly
+     * (trap 147's shape, from the other side). The corridor to the buttonroom
+     * runs over the lock's own cell, so a hypothesis that forgot the volume
+     * would report the room unsolvable with both executors registered.
+     *
+     * ⇒ a discharged activator is exempted as well as opened. That is the
+     * honest reading of the mechanism too: `ShieldLock.update`'s arm is
+     * `if (p && !activate && …)`, so once it has latched, standing in it does
+     * nothing at all.
+     */
+    const exempt = new Set([...contacts,
+        ...hypothesis.filter((h) => h.kind === 'activator')
+            .map((h) => `proximity-hazard:${h.id}`)]);
     try {
-        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts, {
+        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, exempt, {
             liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis),
         }));
-        return { discharged: hypothesis.map((h) => h.id) };
+        return { discharged: hypothesis.map((h) => h.id), exempt };
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
     }
@@ -1548,7 +1608,16 @@ function resolveKillStrategy(run, obstacle, contacts) {
             postCondition: 'kill-lock',
             target: { x: row.x ?? obstacle.x, y: row.y ?? obstacle.y },
             lock: row,
-            stance: press.plans[0].stance,
+            /**
+             * ⛔ NO STANCE. Every executor before this one walks to a cell and
+             * acts there; this one's position is a FUNCTION OF TIME, so a
+             * `stance` the caller walked to first would be a cell the schedule
+             * immediately re-derives away from. The verb owns its own
+             * movement, and the FIRST strike is what says the order resolves
+             * at all.
+             */
+            stance: null,
+            first: press.first,
             plans: press.plans,
             bodies: press.plans.map((p) => p.id),
             rejected: [{
@@ -1602,8 +1671,8 @@ function resolveKillStrategy(run, obstacle, contacts) {
  * ⛓⛓⛓ R8 SLICE 7 — THE ANNULUS, DERIVED. ⚖ §11.8a's law on the one stance
  * this arc has had to prove SAFE rather than merely reachable.
  *
- * A `Spinner` is two circles about one point and the player has to stand
- * between them:
+ * A `Spinner` is two circles about one point and the player has to be between
+ * them:
  *
  *   · the HAMMER, `SPINNER.hammerLength` = 13 px. `Spinner.update` swings
  *     `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)` every tick at
@@ -1611,25 +1680,37 @@ function resolveKillStrategy(run, obstacle, contacts) {
  *     `Game.time`** — it counts DEAD FRAMES, a per-load variable. So the
  *     honest quantity is the UNION over all 45 phases, a 13 px disc, and
  *     `levelRun.assertPlayerClearOfHammers` refuses a box inside it BY NAME on
- *     an honest tape. That refusal is the accurate wall (§15.3.3).
- *   · the SWORD, `presses.SLASH_REACH` = 16 px, measured by
- *     `distanceRectPoint` from the player POINT to the body RECT — plus
- *     `slashRect`'s own overlap, which is the gate before it.
+ *     an honest tape (§15.3.3's accurate wall).
+ *   · the SWORD, `presses.SLASH_REACH` = 16 px from the player POINT to the
+ *     body RECT, plus `slashRect`'s own overlap, which is the gate before it.
  *
- * The body's box is 7x7 about the entity point, so along an axis the two
- * circles leave a band roughly `[13 + half the player box, 16 + half the body
- * box]` wide — about four pixels. ⛔ AND IT IS ENTERED ON THE BODY'S OWN
- * SCHEDULE, never predicted through: `spinnerForecast` is exact and
- * `atEta`-true (⚖ §14.2 — a spinner's `runRange` is 0, so its chase arm is
- * dead code and its trajectory cannot read the player even in principle), so
- * the derivation asks the forecast where the body WILL be and the player
- * stands still.
+ * ── ⛔⛔⛔ AND THE STATIC READING OF IT IS REFUTED BY L18's GEOMETRY ────
  *
- * ⛔ THE CHOICE IS AN **ARGMAX OVER MECHANISM DATA**, not a margin. Among the
- * cells that get at least `hitsMax` separated press opportunities, the one
- * whose MINIMUM clearance from every disc over the whole horizon is largest
- * wins. A tuned "keep 3 px spare" would be the number ⚖ §11.8a exists to
- * forbid; "the safest cell that can still reach" is arithmetic.
+ * §15.6.2 and the slice's own charge both describe a CELL to stand in. The
+ * arithmetic is right and the cell does not exist. `assertNoStaticAnnulus`
+ * below is the census, driven: of L18's 60 walkable cells, **one** is outside
+ * every hammer disc for the whole horizon and it never gets a press at all;
+ * **no** cell gets even two separated opportunities before a disc reaches it;
+ * the second-safest cell in the room has a minimum clearance of −2.38 px. The
+ * two orbits sweep the room long before three landings 30 ticks apart can
+ * happen. ⚠ `r8-l18-spinner-press`'s two stances are the bodies' OWN entity
+ * points, which is a `noDamage` artifact and not a stance.
+ *
+ * ⇒ ⚖ RULED (orchestrator/Fable, 2026-08-11, in reply to this session's
+ * measurement): the press arm gets a **STRIKE SCHEDULE**, not a fifth rung —
+ * a rung is a STRATEGY and this is the arm's PARAMETER DERIVATION, with
+ * `ARROW_KILL_PLAN`'s six phases as the precedent one weapon over. Every
+ * quantity is mechanism data:
+ *
+ *   LOITER  the argmax of MINIMUM clearance over the horizon — the room's own
+ *           safest cell, which in L18 is (10,7) at 12.15 px.
+ *   STRIKE  the earliest (cell, tick) whose WHOLE dispatch train is safe, that
+ *           the controller can reach in time, and whose corridor is
+ *           transit-safe at each cell's own ETA (`dangerDuringTransit`, the
+ *           slice-5 instrument).
+ *   CADENCE the RECEIVER's — `hitsTimerMax`, asked of the body's own live
+ *           field rather than counted here (traps 85/93).
+ *   END     OBSERVED: the body gone from `run.spinnerBodies` (§11.7).
  */
 function derivePressKill(run, bodies, contacts) {
     const live = run.spinnerBodies ?? [];
@@ -1662,115 +1743,386 @@ function derivePressKill(run, bodies, contacts) {
         }
     }
     /**
-     * ⛔ THE HORIZON IS THE ROOM'S, NOT A MEASUREMENT. A spinner is a billiard
-     * at `moveSpeed` 1 px/tick with a friction FLOOR at the same speed, so the
-     * longest it can take to come back past a fixed cell is bounded by a
-     * traversal of the room in both axes; `hitsMax` of those is what three
-     * landings need at worst. Named rather than tuned, and a stance the
-     * horizon cannot serve is a REFUSAL rather than a shorter scan.
+     * ⛔ THE ORDER IS RESOLVED ONLY IF A FIRST STRIKE EXISTS. A `kill` whose
+     * schedule is empty is not a strategy for this obstacle, and saying so
+     * here — before a tick is spent — is what turns "the room is unsolvable"
+     * into a named refusal with the census behind it.
      */
-    const bound = 2 * (run.world.width + run.world.height) * TILE_SIZE / SPINNER.moveSpeed;
-    const horizon = Math.ceil(bound * SPINNER.hitsMax);
-    const forecast = run.spinnerForecast(horizon);
-    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
-    const pitch = DEFAULT_LATTICE;
-    const nx = run.world.width * TILE_SIZE / pitch;
-    const ny = run.world.height * TILE_SIZE / pitch;
-    const plans = [];
-    for (const e of bodies) {
-        const id = `${e.tag}@${e.x},${e.y}`;
-        const index = live.findIndex((b) => b.id === id);
-        let best = null;
-        for (let ty = 0; ty < ny; ty += 1) {
-            for (let tx = 0; tx < nx; tx += 1) {
-                const c = nodeCentre(tx, ty, pitch);
-                if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
-                const scored = scoreAnnulusCell(c, forecast, index, horizon);
-                if (!scored) continue;
-                if (!best || scored.clearance > best.clearance
-                    || (scored.clearance === best.clearance
-                        && (c.y < best.y || (c.y === best.y && c.x < best.x)))) {
-                    best = { ...c, ...scored };
-                }
-            }
-        }
-        if (!best) {
-            rejected.push({
-                option: `press ${id}`,
-                why: `no walkable cell in level ${run.level} is outside every live `
-                    + `spinner's ${SPINNER.hammerLength} px hammer disc for all `
-                    + `${horizon} forecast ticks AND inside ${SLASH_REACH} px of this `
-                    + `body's rect on ${SPINNER.hitsMax} occasions `
-                    + `${SPINNER.hitsTimerMax} ticks apart. The annulus between the two `
-                    + 'circles is about four pixels wide; a room whose geometry does not '
-                    + 'contain one is a REFUSAL, not a narrower search.',
-            });
-            return null;
-        }
-        const reached = stanceReaches(run, { x: best.x, y: best.y }, contacts, []);
-        if (!reached) {
-            rejected.push({
-                option: `press ${id} from (${best.x},${best.y})`,
-                why: 'the safest annulus cell is not REACHABLE — walkable is not '
-                    + 'reachable (§10.4 note 3), and `planWaypoints` is the probe.',
-            });
-            return null;
-        }
-        plans.push({
-            id,
-            as3: ENEMY_CLASSES[e.tag]?.as3 ?? null,
-            stance: { x: best.x, y: best.y },
-            clearance: best.clearance,
-            firstReachAt: best.firstReachAt,
-            opportunities: best.opportunities,
+    const first = deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
+        contacts, 0);
+    if (!first || !first.cell) {
+        rejected.push({
+            option: 'a strike schedule',
+            why: `no (cell, tick) in level ${run.level} over the next `
+                + `${strikeHorizon(run)} ticks puts the whole five-dispatch train inside `
+                + `${SLASH_REACH} px of a body while the player box stays outside every `
+                + `${SPINNER.hammerLength} px hammer disc AND is reachable in time along `
+                + `a transit-safe corridor. ${first?.considered ?? 0} opportunit(ies) `
+                + 'were considered.',
         });
+        if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
+        return null;
     }
-    return { plans, rejected };
+    return {
+        first,
+        plans: bodies.map((e) => ({
+            id: `${e.tag}@${e.x},${e.y}`,
+            as3: ENEMY_CLASSES[e.tag]?.as3 ?? null,
+        })),
+        rejected,
+    };
 }
 
 /**
- * Score one candidate cell against the forecast: `null` when the box ever
- * enters ANY disc, or when the body it is aimed at never comes into the
- * sword's reach often enough.
- *
- * ⚠ THE SAFETY HALF IS OVER **EVERY** BODY AND THE REACH HALF IS OVER **ONE**.
- * A stance that dodged its own target's hammer and stood in the other one's
- * would be exactly the trap-157 shape one family over — safe about the body
- * it was thinking about.
+ * ⛔ THE HORIZON IS THE ROOM'S, NOT A MEASUREMENT. A spinner is a billiard at
+ * `moveSpeed` 1 px/tick with a friction FLOOR at the same speed, so a
+ * traversal of the room in both axes bounds how long it can stay away from a
+ * fixed cell. Named rather than tuned, and a derivation the horizon cannot
+ * serve is a REFUSAL rather than a longer scan.
  */
-function scoreAnnulusCell(cell, forecast, index, horizon) {
-    const box = playerBoxAt(cell.x, cell.y);
-    let clearance = Infinity;
-    let last = -Infinity;
-    let opportunities = 0;
-    let firstReachAt = null;
-    for (let t = 0; t < horizon; t += 1) {
-        const step = forecast[t];
-        if (!step) break;
-        for (let i = 0; i < step.length; i += 1) {
-            const r = step[i];
-            const cx = r.x + SPINNER.originX;
-            const cy = r.y + SPINNER.originY;
-            // The disc as `dangerMap.spinnerDanger` and
-            // `assertPlayerClearOfHammers` both build it — a square about the
-            // ENTITY point, which is where `hammerLine` starts.
-            const gap = Math.max(
-                (cx - SPINNER.hammerLength) - box.right, box.x - (cx + SPINNER.hammerLength),
-                (cy - SPINNER.hammerLength) - box.bottom, box.y - (cy + SPINNER.hammerLength),
-            );
-            if (gap <= 0) return null;
-            if (gap < clearance) clearance = gap;
-        }
-        const mine = step[index];
-        if (!mine) continue;
-        if (distanceRectPoint(cell.x, cell.y, mine) <= SLASH_REACH
-            && rectsOverlapLocal(slashRectToward(cell, mine), mine)) {
-            if (firstReachAt === null) firstReachAt = t;
-            if (t - last >= SPINNER.hitsTimerMax) { opportunities += 1; last = t; }
+function strikeHorizon(run) {
+    return Math.ceil(2 * (run.world.width + run.world.height) * TILE_SIZE
+        / SPINNER.moveSpeed);
+}
+
+/** Every walkable lattice cell of the current level, with its player box. */
+function walkableCells(run, contacts) {
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const pitch = DEFAULT_LATTICE;
+    const out = [];
+    for (let ty = 0; ty < run.world.height * TILE_SIZE / pitch; ty += 1) {
+        for (let tx = 0; tx < run.world.width * TILE_SIZE / pitch; tx += 1) {
+            const c = nodeCentre(tx, ty, pitch);
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            out.push({ ...c, box: playerBoxAt(c.x, c.y) });
         }
     }
-    if (opportunities < SPINNER.hitsMax) return null;
-    return { clearance, opportunities, firstReachAt };
+    return out;
+}
+
+/** Is `box` clear of every forecast body's hammer disc at forecast index `i`? */
+function clearOfHammersAt(box, forecast, i) {
+    const step = forecast[i];
+    if (!step) return false;
+    for (const r of step) {
+        const cx = r.x + SPINNER.originX;
+        const cy = r.y + SPINNER.originY;
+        if (box.x < cx + SPINNER.hammerLength && box.right > cx - SPINNER.hammerLength
+            && box.y < cy + SPINNER.hammerLength && box.bottom > cy - SPINNER.hammerLength) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * ⛓⛓⛓ THE REFUGE — the safest cell to be in over ONE NAMED INTERVAL, and the
+ * interval is the whole point.
+ *
+ * ⛔ THERE IS NO CELL SAFE FOR THE WHOLE FIGHT, and L18 measured it before a
+ * line of this policy was written: of 60 walkable cells, ONE is outside every
+ * disc for the full horizon — `(10,7)`, 12.15 px — and it sits BEHIND the very
+ * kill-lock the fight exists to open, so it is not reachable while the fight
+ * is on. Every reachable cell is entered by a disc within 238–537 ticks. A
+ * "loiter cell" is therefore not a thing this room has.
+ *
+ * ⇒ what a WAIT needs is safety over ITS OWN dwell window (trap 154's
+ * question, asked with the window the mechanism names rather than with
+ * "for ever"): from now until the tick the player must leave for the next
+ * strike. That interval is derived — it is the strike schedule's own — and a
+ * refuge that cannot cover it is a REFUSAL rather than a shorter window.
+ */
+function deriveRefuge(run, contacts, untilIndex) {
+    const forecast = run.spinnerForecast(Math.max(1, untilIndex));
+    const clear = [];
+    for (const c of walkableCells(run, contacts)) {
+        let min = Infinity;
+        for (let i = 0; i < untilIndex; i += 1) {
+            const step = forecast[i];
+            if (!step) break;
+            for (const r of step) {
+                const cx = r.x + SPINNER.originX;
+                const cy = r.y + SPINNER.originY;
+                const gap = Math.max(
+                    (cx - SPINNER.hammerLength) - c.box.right,
+                    c.box.x - (cx + SPINNER.hammerLength),
+                    (cy - SPINNER.hammerLength) - c.box.bottom,
+                    c.box.y - (cy + SPINNER.hammerLength),
+                );
+                if (gap < min) min = gap;
+            }
+            if (min <= 0) break;
+        }
+        if (min <= 0) continue;
+        clear.push({ x: c.x, y: c.y, clearance: min,
+            d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+    }
+    if (clear.length === 0) return null;
+    /**
+     * ⛔ REACHABILITY HERE IS **NOT** A TILE PATH, and that is trap 161 read
+     * for the other half of the problem. `planWaypoints` answers "is there a
+     * corridor over the walkable tiles", which is a question about GEOMETRY —
+     * and what makes a refuge reachable is whether the controller can get
+     * there before a disc arrives, which is a question about TIME. The
+     * instrument that answers it is the controller's own preview, so the
+     * candidates are ordered by how soon the walk ARRIVES (ties by clearance),
+     * and the per-tick step is what adjudicates the way there.
+     *
+     * ⚠ BOUNDED, AND THE BOUND IS NAMED: only the `REFUGE_CANDIDATES` nearest
+     * clear cells are previewed. A preview is a walk; previewing every clear
+     * cell in the room would spend more ticks deciding than moving.
+     */
+    clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
+    let best = null;
+    for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
+        const walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+        if (walk.truncated) continue;
+        const eta = walk.samples.length;
+        if (!best || eta < best.eta
+            || (eta === best.eta && c.clearance > best.clearance)) {
+            best = { x: c.x, y: c.y, clearance: c.clearance, eta };
+        }
+    }
+    return best;
+}
+
+/** How many clear cells a refuge derivation previews. Named, not generous. */
+const REFUGE_CANDIDATES = 12;
+
+/**
+ * ⛓⛓⛓ ONE STRIKE, DERIVED FROM WHERE THE PLAYER IS **NOW**.
+ *
+ * Returns `{cell, pressAt, aimAt, eta, rejected}` for the earliest feasible
+ * strike on `bodyId`, or `null`. Feasible is four conditions, all mechanism:
+ *
+ *  1. THE BODY IS IN REACH at the LANDING tick — `distanceRectPoint <=
+ *     SLASH_REACH` and `slashRect` overlapping, asked at the forecast's own
+ *     position for that tick, because a spinner is AUTONOMOUS given the walk
+ *     (⚖ §14.2 — `runRange` is 0, so its chase arm is dead code);
+ *  2. THE CELL IS SAFE FOR THE WHOLE TRAIN — the aim tick, the press tick and
+ *     all `SLASH_HIT_TICKS` dispatches, because `slashDelayMax` is ZERO and
+ *     the test runs on every one of them;
+ *  3. THE CONTROLLER CAN GET THERE — `previewWalk` is `drive`'s own loop on
+ *     `run.previewStepper()`, so the ETA is the movement model that will
+ *     actually drive and not a cruder one (trap 118's direction, applied to
+ *     time);
+ *  4. THE CORRIDOR IS TRANSIT-SAFE AT EACH CELL'S OWN ETA —
+ *     `dangerDuringTransit`, the slice-5 instrument, which is the whole
+ *     difference between "is this corridor safe" and "will something be here
+ *     when I am" (trap 161).
+ *
+ * ⚠ THE SCAN IS BOUNDED AND SAYS SO. Only the first `STRIKE_CANDIDATES`
+ * opportunities in tick order are previewed, because a preview is a walk and
+ * a scan that previewed every one of the room's few hundred would spend more
+ * time deciding than pressing. The bound is named in the refusal.
+ */
+const STRIKE_CANDIDATES = 40;
+
+function deriveStrike(run, bodyId, contacts, notBefore = 0) {
+    const index = (run.spinnerBodies ?? []).findIndex((b) => b.id === bodyId);
+    if (index < 0) return null;
+    const horizon = strikeHorizon(run);
+    const forecast = run.spinnerForecast(horizon);
+    const cells = walkableCells(run, contacts);
+    const opportunities = [];
+    for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
+        const mine = forecast[i + 1]?.[index];
+        if (!mine) continue;
+        for (const c of cells) {
+            if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) continue;
+            if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) continue;
+            /**
+             * ⚠ THE TRAIN IS CHECKED ONE WIDER AT EACH END, and the reason is
+             * the pairing rather than caution: the assert reads the PRE-MOVE
+             * box against the POST-STEP bodies, so the tick the player arrives
+             * on and the tick after the last dispatch are both compared
+             * against a body this window would otherwise not have asked about.
+             */
+            let safe = true;
+            for (let k = -2; k <= SLASH_HIT_TICKS + 1 && safe; k += 1) {
+                if (!clearOfHammersAt(c.box, forecast, i + k)) safe = false;
+            }
+            if (!safe) continue;
+            opportunities.push({ i, cell: c });
+        }
+        if (opportunities.length >= STRIKE_CANDIDATES) break;
+    }
+    const rejected = [];
+    for (const o of opportunities) {
+        // `previewWalk` returns the samples `drive` would spend getting there.
+        const walk = previewWalk(run, [{ x: o.cell.x, y: o.cell.y }], DEFAULT_TOLERANCE);
+        if (walk.truncated) {
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: 'the preview TRUNCATED — the corridor the controller would take is '
+                    + 'blocked by the frozen geometry' });
+            continue;
+        }
+        const eta = walk.samples.length;
+        if (eta > o.i - 1) {
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the controller needs ${eta} tick(s) to arrive and the aim tick is `
+                    + `+${o.i - 1} — a strike the walk cannot reach is a window, not a plan` });
+            continue;
+        }
+        let unsafe = null;
+        for (const sm of walk.samples) {
+            const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y), sm.arrows);
+            if (d.danger) { unsafe = { sm, d }; break; }
+        }
+        if (unsafe) {
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the corridor is not transit-safe: `
+                    + `(${unsafe.sm.x.toFixed(1)},${unsafe.sm.y.toFixed(1)}) at its own ETA `
+                    + `names ${unsafe.d.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` });
+            continue;
+        }
+        return {
+            cell: { x: o.cell.x, y: o.cell.y },
+            pressAt: run.ticksCompleted + o.i,
+            aimAt: run.ticksCompleted + o.i - 1,
+            eta,
+            rejected,
+            considered: opportunities.length,
+        };
+    }
+    return { cell: null, rejected, considered: opportunities.length, horizon };
+}
+
+/**
+ * ⛔ IS STANDING HERE SAFE FOR THE WHOLE DISPATCH TRAIN?
+ *
+ * The schedule derives strikes that satisfy this; the LIVE arm above takes an
+ * opportunity the schedule did not plan — an early arrival, a body that
+ * wandered into reach — and an opportunity is not a plan. `slashDelayMax` is
+ * ZERO, so a press commits the player to `SLASH_HIT_TICKS` ticks of standing
+ * still: the same window the schedule checks, asked of where the player
+ * actually is. ⚠ One wider at each end, for the pairing reason `deriveStrike`
+ * records.
+ */
+function trainIsSafeHere(run) {
+    const span = SLASH_HIT_TICKS + 3;
+    const forecast = run.spinnerForecast(span);
+    const box = playerBoxAt(run.state.x, run.state.y);
+    for (let i = 0; i < span; i += 1) {
+        if (!clearOfHammersAt(box, forecast, i)) return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓ ONE STEP TOWARD `aim` THAT DOES NOT LAND IN A DISC — the per-tick half of
+ * the strike schedule, and the cheapest possible dodge.
+ *
+ * The five key sets the controller can produce are scored by (SAFE, then
+ * distance to the aim after the step), with the intended one preferred on a
+ * tie so a clear walk is byte-identical to a plain `chooseHeld`. ⚠ When
+ * nothing is safe the intended set is returned unchanged and `safeStep` — the
+ * guard one layer down — is what refuses by name: a mover that silently did
+ * something else would be the walk deciding to hide a corner it walked into.
+ */
+function stepToward(run, aim, intended) {
+    if (!aim || (run.spinnerBodies ?? []).length === 0) return intended;
+    const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
+    if (!forecast.length) return intended;
+    const step = run.previewStepper();
+    const options = [intended, ...Object.values(FACING_KEYS).map((k) => new Set([k])),
+        new Set()];
+    /**
+     * ⛓⛓⛓ HOW DEEP THE STEP LOOKS, AND WHY ONE TICK IS NOT ENOUGH.
+     *
+     * The first cut scored each key set by "does it land in a disc next tick"
+     * and L18 measured the consequence twice: the greedy walk took the safe
+     * step every time and still arrived at (18.02,104.09) — the room's
+     * bottom-left corner — with every one of the five options landing in a
+     * disc. A step is not safe because it survives; it is safe because
+     * something survives AFTER it. ⇒ the score is SURVIVAL DEPTH first (how
+     * many consecutive ticks a safe continuation exists, capped at the
+     * lookahead) and progress toward the aim second — which is the smallest
+     * search that can tell a corner from a corridor.
+     */
+    const survives = (st, depth) => {
+        if (depth >= STEP_LOOKAHEAD) return depth;
+        let best = depth;
+        for (const keys of options) {
+            const next = step({ ...st }, keys);
+            if (!clearOfHammersAt(playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            const d = survives(next, depth + 1);
+            if (d > best) best = d;
+            if (best >= STEP_LOOKAHEAD) return best;
+        }
+        return best;
+    };
+    let best = null;
+    for (const keys of options) {
+        const next = step({ ...run.state }, keys);
+        if (!clearOfHammersAt(playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        const depth = survives(next, 1);
+        const d = Math.hypot(next.x - aim.x, next.y - aim.y);
+        if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
+            best = { keys, depth, d };
+        }
+    }
+    return best ? best.keys : intended;
+}
+
+/**
+ * ⛔ THE LOOKAHEAD, NAMED RATHER THAN GENEROUS. A `Spinner` moves one pixel a
+ * tick and the player's own top speed is a little over two, so four ticks is
+ * the span over which a step can still change which side of a body the player
+ * ends up on — deeper buys a better dodge at 5x the previews per tick, and
+ * shallower is what walked into the corner.
+ */
+const STEP_LOOKAHEAD = 4;
+
+
+/**
+ * ⛔ ONE TICK OF LOOKAHEAD AGAINST THE DISCS, WITH THE RUN'S OWN INSTRUMENTS.
+ *
+ * `run.previewStepper()` is `stepV2` bound to this run's own options (the
+ * single `stepOptsFor` builder — a preview cannot assemble a second world),
+ * and `run.spinnerForecast(1)` is the bodies at the tick the step lands on.
+ * So "would this key set put me in a hammer" is asked of exactly the two
+ * models that will answer it for real one tick later.
+ *
+ * Returns `held` when it is safe, else the first ALTERNATIVE that is. ⚠ A
+ * press is never swapped out — the alternatives are movement, and a press tick
+ * whose landing cell is unsafe is a strike the schedule should not have
+ * planned; refusing it silently would hide that.
+ */
+function safeStep(run, held, alternatives, what, bodyId) {
+    if ((run.spinnerBodies ?? []).length === 0) return held;
+    /**
+     * ⛔⛔⛔ INDEX **1**, NOT 0, AND THE OFF-BY-ONE IS THE WHOLE CHECK.
+     * `advance` steps the spinners and THEN asserts, against the position the
+     * PREVIOUS tick left: at `ticksCompleted = n` the assert about to run
+     * compares `P(n)` with `S(n+1)` — already decided, whatever key is held.
+     * The first assert this step can still change is the NEXT one, `P(n+1)`
+     * against `S(n+2)`, and `spinnerForecast(2)[1]` is exactly that. Checking
+     * index 0 is checking a verdict that has already been reached, which is
+     * why the first cut of this guard changed nothing and the game's own
+     * refusal still fired at tick 130.
+     */
+    const ahead = run.spinnerForecast(2)[1] ?? null;
+    if (!ahead) return held;
+    const step = run.previewStepper();
+    const lands = (keys) => {
+        const next = step({ ...run.state }, keys);
+        return clearOfHammersAt(playerBoxAt(next.x, next.y), [ahead], 0);
+    };
+    if (lands(held)) return held;
+    if (held.has('primary')) {
+        return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
+            + 'player box inside a hammer disc on the next tick. A press whose own '
+            + 'landing cell is unsafe is a strike the schedule should not have planned — '
+            + 'swapping it for a dodge would hide that.');
+    }
+    for (const alt of alternatives) {
+        if (lands(alt)) return alt;
+    }
+    return fail(`${what}: every key set — the plan's own and `
+        + `${alternatives.length} alternative(s) — lands the player box inside a hammer `
+        + `disc on the next tick, at (${run.state.x.toFixed(2)},`
+        + `${run.state.y.toFixed(2)}) in level ${run.level}. There is no step out.`);
 }
 
 /** The four facings, at `presses.slashRect`'s own indices. */
@@ -2308,80 +2660,145 @@ function execKill(run, perTick, resolved, ctx) {
 }
 
 /**
- * ⛓⛓⛓ R8 SLICE 7 — THE `kill` VERB'S **PRESS** ARM: THE PLAYER IS THE WEAPON.
+ * ⛓⛓⛓ R8 SLICE 7 — THE `kill` VERB'S **PRESS** ARM: THE PLAYER IS THE WEAPON,
+ * AND THE STANCE MOVES.
  *
  * The ceiling arm above waits for a room to do the killing. This one does it,
- * and the whole difference is the AIM.
+ * and two things make it different from every executor before it.
  *
- * ⛔⛔⛔ A PRESS CONSUMES THE FACING THE TICK **STARTED** WITH. `Player.slash`
- * latches `slashDirection = direction` and `sprites()` — the only writer of
- * `direction` — runs BELOW `slash()` in `Player.update`, so the rect a press
- * swings is aimed by the PREVIOUS tick's velocity (`levelRun`'s own
- * `pressFacing`). A stance that stands still has whatever facing its approach
- * left, which is a facing nobody derived.
+ * ⛔⛔⛔ ONE — THE STANCE IS A CYCLE, NOT A CELL. L18's census (see
+ * `assertNoStaticAnnulus`) says no cell in the room is both safe for the whole
+ * fight and ever in reach. So the verb LOITERS in the room's safest cell, goes
+ * to a derived (cell, tick) STRIKE when the forecast offers one it can reach,
+ * and comes back. ⚖ Ruled as the press arm's parameter derivation rather than
+ * as a fifth rung: a rung is a STRATEGY and this is where its numbers come
+ * from.
  *
- * ⇒ the loop AIMS and then PRESSES, on two consecutive ticks: one tick of the
- * direction key toward the body writes `direction`, and the tick after it
- * holds `primary` alone. ⚠ The aim tick MOVES the player — one tick of the
- * controller's own acceleration — so the loop walks back to the derived stance
- * between presses rather than pretending it did not. That is why the stance is
- * chosen by ARGMAX of clearance and not by "the first cell that fits": the
- * margin the argmax buys is what the aim tick spends, and
- * `assertPlayerClearOfHammers` is what adjudicates whether it was enough.
+ * ⛔⛔⛔ TWO — A PRESS CONSUMES THE FACING THE TICK **STARTED** WITH.
+ * `Player.slash` latches `slashDirection = direction` and `sprites()` — the
+ * only writer of `direction` — runs BELOW `slash()` in `Player.update`, so the
+ * rect a press swings is aimed by the PREVIOUS tick's velocity (`levelRun`'s
+ * own `pressFacing`). The cycle therefore AIMS and then PRESSES on two
+ * consecutive ticks; a stance that stood still would swing whatever way its
+ * approach happened to leave it facing, which is a facing nobody derived.
  *
- * ⛔ AND THE CADENCE IS THE RECEIVER'S. `hitSpinner` sets
- * `hitsTimerMax` = 30 on a landing, so tests 2..5 of the same press are
- * refused and ONE PRESS IS ONE HIT (traps 85/93). The loop therefore presses
- * only when the body's own `hitsTimer` is down — the run's own field, not a
- * counter kept here.
+ * ⛔ AND THE CADENCE IS THE RECEIVER'S. `hitSpinner` sets `hitsTimer = 30` on
+ * a landing, so tests 2..5 of the same press are refused and ONE PRESS IS ONE
+ * HIT (traps 85/93). The loop presses only when the body's own `hitsTimer` is
+ * down — the run's own field, never a counter kept here.
  */
 function execKillByPress(run, perTick, resolved, ctx) {
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
     const landings = [];
+    const cycles = [];
+    const contacts = new Set();
+    let refuge = null;
     for (const plan of resolved.plans) {
-        if (plan.stance.x !== run.state.x || plan.stance.y !== run.state.y) {
-            ctx.walkTo(ctx.goal, plan.stance, {
-                what: `${ctx.what} -> press (${plan.id}) stance`,
-            });
-        }
         /**
-         * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON, not a generous number:
-         * the annulus was chosen because it gets `hitsMax` separated
-         * opportunities inside it, so a body still standing when it runs out
-         * means the forecast and the run disagree — which is a measurement,
-         * and `spinnerForecast` is exact by construction (⚖ §14.2).
+         * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON PER LANDING. Three
+         * landings, each needing at most one full traversal of the room to
+         * bring the body back past a strike cell, plus the walk there and
+         * home. A body still standing when it runs out means the forecast and
+         * the run disagree — which is a measurement, and `spinnerForecast` is
+         * exact by construction (⚖ §14.2).
          */
-        const bound = 2 * (run.world.width + run.world.height) * TILE_SIZE
-            / SPINNER.moveSpeed * SPINNER.hitsMax + HOLD_SLACK;
+        const bound = SPINNER.hitsMax * (strikeHorizon(run) + HOLD_SLACK);
+        let strike = null;
         let aimed = false;
         let spent = 0;
         for (; spent <= bound; spent += 1) {
             const body = (run.spinnerBodies ?? []).find((b) => b.id === plan.id);
             if (!body) break;
-            const inReach = distanceRectPoint(run.state.x, run.state.y, body.rect)
-                <= SLASH_REACH
-                && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
-                    facingToward(run.state, body.rect)), body.rect);
-            const ready = body.hitsTimer === 0;
-            const home = hasArrived(run.state, plan.stance, DEFAULT_TOLERANCE);
             let held = NO_KEYS;
             if (aimed) {
                 held = PRESS;
                 aimed = false;
-            } else if (inReach && ready
-                && facingToward(run.state, body.rect) === run.state.direction) {
-                // The facing the last `sprites()` wrote already points at it —
-                // press now and spend no tick aiming.
-                held = PRESS;
-            } else if (inReach && ready) {
+                strike = null;
+            } else if (body.hitsTimer === 0
+                && distanceRectPoint(run.state.x, run.state.y, body.rect) <= SLASH_REACH
+                && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
+                    facingToward(run.state, body.rect)), body.rect)
+                && trainIsSafeHere(run)) {
+                /**
+                 * ⛓ IN REACH AND READY — aim this tick, press the next. The
+                 * reach is asked of the LIVE body rather than of the schedule,
+                 * because the schedule is a plan and the run is the fact: an
+                 * early or late arrival that still finds the body in reach
+                 * should press, and one that does not should not.
+                 */
                 held = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimed = true;
-            } else if (!home) {
-                // Between passes, walk back to the cell the argmax chose.
-                held = chooseHeld(run.state, plan.stance, DEFAULT_TOLERANCE);
+            } else {
+                if (!strike || run.ticksCompleted > strike.pressAt) {
+                    const next = deriveStrike(run, plan.id, contacts,
+                        body.hitsTimer > 0 ? body.hitsTimer : 0);
+                    if (next && next.cell) {
+                        strike = next;
+                        refuge = null;
+                        cycles.push({
+                            body: plan.id,
+                            cell: next.cell,
+                            pressAt: next.pressAt,
+                            eta: next.eta,
+                            considered: next.considered,
+                            rejected: next.rejected.slice(0, 3),
+                        });
+                    } else {
+                        /**
+                         * ⛔ NO STRIKE YET — take a REFUGE over the interval
+                         * the mechanism names: the body's own remaining
+                         * i-frame, or one hammer period when it has none. A
+                         * wait is priced over ITS OWN window (trap 154), and
+                         * this is the window.
+                         */
+                        strike = null;
+                        const window = Math.max(body.hitsTimer, SPINNER.hammerPeriod);
+                        refuge = deriveRefuge(run, contacts, window);
+                        if (!refuge) {
+                            fail(`${ctx.what}: no reachable cell in level ${run.level} is `
+                                + `clear of every ${SPINNER.hammerLength} px hammer disc `
+                                + `for the next ${window} tick(s), and no strike on `
+                                + `${plan.id} is derivable. The room has nowhere to be.`);
+                        }
+                    }
+                }
+                const aim = strike ? strike.cell : refuge;
+                if (aim && !hasArrived(run.state, aim, DEFAULT_TOLERANCE)) {
+                    held = chooseHeld(run.state, aim, DEFAULT_TOLERANCE);
+                }
+                /**
+                 * ⛓⛓⛓ THE APPROACH IS DISC-AWARE PER TICK, and the first cut
+                 * measured why it has to be. A plain `chooseHeld` walks the
+                 * straight line to the aim; the discs move across that line;
+                 * and a guard that only checked the LAST step found the player
+                 * already cornered — "every key set lands in a disc", which is
+                 * a true report about a position the walk should never have
+                 * been in. ⇒ the step is chosen from the five the controller
+                 * can make, SAFE ONES FIRST and then by progress toward the
+                 * aim, which is the same shape the AVOID rung has at corridor
+                 * scale (⚖ §11.8a) asked at tick scale, where a moving hazard
+                 * is the only thing that can answer it.
+                 */
+                held = stepToward(run, aim, held);
             }
+            /**
+             * ⛓⛓⛓ THE PER-TICK NEXT-CELL CHECK — ⚖ §14.2 ruling 3, and it is
+             * what makes the schedule a PLAN rather than a promise.
+             *
+             * "Planning optimism is bounded by the live loop": the strike was
+             * derived from a forecast taken at one tick, and by the time the
+             * walk is halfway there the controller's own overshoot has moved
+             * the player off the previewed line. So every step is checked
+             * against the disc it would land in NEXT TICK, with the run's own
+             * stepper and the run's own forecast — the probe PRUNES, the tick
+             * ADJUDICATES. ⛔ The first cut had no such check and the game's
+             * own refusal caught it at tick 130, which is the accurate wall
+             * doing its job and not a reason to widen anything.
+             */
+            held = safeStep(run, held, [NO_KEYS, ...Object.values(FACING_KEYS)
+                .map((k) => new Set([k]))], ctx.what, plan.id);
             const before = (run.spinnerPressHits ?? []).length;
             perTick.push(held);
             const { transition } = run.advance(held);
@@ -2394,12 +2811,9 @@ function execKillByPress(run, perTick, resolved, ctx) {
             }
         }
         if ((run.spinnerBodies ?? []).some((b) => b.id === plan.id)) {
-            fail(`${ctx.what}: pressed at ${plan.id} for the whole ${Math.round(bound)}-tick `
-                + `bound from the derived annulus cell (${plan.stance.x},${plan.stance.y}) `
-                + `— clearance ${plan.clearance.toFixed(2)} px, `
-                + `${plan.opportunities} forecast opportunit(ies) — and the body is still `
-                + 'in the world. The forecast and the run disagree about the orbit, which '
-                + 'is a measurement rather than a stance to widen.');
+            fail(`${ctx.what}: ran the strike schedule against ${plan.id} for the whole `
+                + `${bound}-tick bound (${cycles.length} strike(s) planned, `
+                + `${landings.length} landing(s)) and the body is still in the world.`);
         }
     }
     /**
@@ -2407,7 +2821,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * a `tset == -1` lock when the count reaches zero, and a `Lock` then takes
      * `activators.opensOnTick` ticks to stop being solid — the same arithmetic
      * `deriveHold` uses, asked here because this order has no button to stand
-     * on while it runs.
+     * on while it runs. ⚠ The wait happens at the LOITER cell: a fade is a
+     * WAIT, and trap 154's question is asked of it exactly as of a dwell.
      */
     const fade = resolved.lock
         ? opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade)
@@ -2415,8 +2830,13 @@ function execKillByPress(run, perTick, resolved, ctx) {
     for (let i = 0; i <= fade + HOLD_SLACK; i += 1) {
         if (!resolved.lock || run.openActivators.has(resolved.lock.id)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
-                landings, bodies: resolved.bodies };
+                landings, cycles, bodies: resolved.bodies };
         }
+        /**
+         * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
+         * gone with them — `run.spinnerBodies` is empty, so every cell is a
+         * refuge and standing still is the honest answer (and one span).
+         */
         perTick.push(NO_KEYS);
         run.advance(NO_KEYS);
     }
@@ -2515,7 +2935,8 @@ function deriveFightStance(run, boss, contacts, blocked = []) {
 function resolveFightStrategy(run, obstacle, contacts, blocked = []) {
     const boss = (run.world.shieldBosses ?? []).find((b) => b.id === obstacle.id);
     if (!boss) return null;
-    if (KILL_ARM_POLICY[boss.cls?.as3 ?? 'ShieldBoss'] !== 'modelled') return null;
+    // ⚠ THE ROW, NOT A STRING — `{policy, why}`. See `derivePressKill`.
+    if (KILL_ARM_POLICY[boss.cls?.as3 ?? 'ShieldBoss']?.policy !== 'modelled') return null;
     const { stance, discharged, band } = deriveFightStance(run, boss, contacts, blocked);
     return {
         strategy: 'fight',
@@ -2890,6 +3311,14 @@ function resolveTouchStrategy(run, obstacle, contacts, blocked = []) {
         need,
         stance,
         discharged,
+        /**
+         * ⛔ THE VERB EARNS ITS OWN VOLUME, and it survives the verb (trap
+         * 147's law, one class over). A touched `ShieldLock` is no longer
+         * solid but is still a `proximity-hazard` in the census, and the
+         * corridor the touch OPENS runs over its own cell — so every later
+         * plan of this segment carries the exemption the touch bought.
+         */
+        exempt: new Set([...contacts, `proximity-hazard:${obstacle.id}`]),
         /**
          * ⛔ THE WINDOW IS AN ORDINARY LOCK FADE AND THE PLAYER CANNOT ACT FOR
          * ANY OF IT. `opensOnTick(0.01)` is 101, and `ShieldLock` writes
@@ -3405,7 +3834,33 @@ export function solveSegment({
                 }
             }
         }
-        const actionable = [...frontier.values()].sort((a, b) => a.d - b.d);
+        /**
+         * ⛓⛓⛓ R8 SLICE 7 — **ACTIONABLE FIRST**, THEN NEAREST TO AIM, and L19
+         * is what found the difference.
+         *
+         * Slice 2's order was nearest-to-aim alone, which is right whenever
+         * every entity on the frontier is a thing a strategy can be about.
+         * L19's is not: `sign@64,128` is a Solid at tile (4,8) with no verb in
+         * the game at all, and it sits CLOSER to the stairs than
+         * `bosslock@48,32` — the room's actual door. So the frontier named the
+         * sign, reported "no strategy row exists for this obstacle", and hid
+         * the one obstacle the policy had just registered an executor for.
+         *
+         * ⇒ an obstacle with no SELECTED and REGISTERED strategy is a WALL for
+         * this choice — ⚖ §12.2 guard (i)'s own language, applied to the
+         * frontier instead of to a hypothesis set — and the walls sort after
+         * the doors. ⚠ They stay IN the message, because "these are also in
+         * the way and nothing can move them" is the diagnosis a reader wants
+         * when every door has been tried.
+         */
+        const strategyFor = (o) => refineStrategy(run,
+            OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
+                ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o);
+        const actionable = [...frontier.values()].sort((a, b) => {
+            const av = STRATEGY_EXECUTORS[strategyFor(a)] ? 0 : 1;
+            const bv = STRATEGY_EXECUTORS[strategyFor(b)] ? 0 : 1;
+            return av - bv || a.d - b.d;
+        });
         const obstacle = actionable[0] ?? { kind: 'no-corridor', tag: null, id: null };
         const key = obstacle.tag ? `${obstacle.kind}:${obstacle.tag}` : obstacle.kind;
         const strategy = refineStrategy(run,
@@ -4190,10 +4645,63 @@ export function solveSegment({
                 obstacle: { kind: 'absent-placement', id: null },
             });
         }
-        const contacts = senseContacts(run);
-        const stance = deriveStance(run, resolved, contacts);
+        let contacts = senseContacts(run);
         const what = `solverBot(${name}) ${resolved.strategy} `
             + `(${goal.placement.x},${goal.placement.y})`;
+        /**
+         * ⛔ CLEAR WHAT THE PLACEMENT IS INSIDE, BEFORE DERIVING A STANCE
+         * NEAR IT. See `placementBlocker`: L19's boss key is inside the boss,
+         * and a stance derivation cannot see that at all — it asks about
+         * cells around the placement, and every one of them is fine.
+         */
+        for (let guard = 0; ; guard += 1) {
+            const blocker = placementBlocker(run, resolved, contacts);
+            if (!blocker) break;
+            if (guard >= MAX_STRATEGIES_PER_GOAL) {
+                refuse(`${what}: cleared ${guard} obstacle(s) and the placement is STILL `
+                    + `inside ${blocker.id}.`, { goal, obstacle: blocker });
+            }
+            const key = blocker.tag ? `${blocker.kind}:${blocker.tag}` : blocker.kind;
+            const strategy = refineStrategy(run,
+                OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[blocker.kind] ?? null,
+                blocker);
+            const resolvedBlocker = strategy && STRATEGY_EXECUTORS[strategy]
+                ? resolveObstacleStrategy(run, strategy, blocker, contacts,
+                    { x: goal.placement.x, y: goal.placement.y }, null, [...refusedOrders])
+                : null;
+            if (!resolvedBlocker) {
+                refuse(`${what}: the placement is INSIDE ${key} (${blocker.id}) — a `
+                    + 'pickup in a solid is an obstacle, not a stance problem. '
+                    + `${strategy ? `Strategy '${strategy}' ${STRATEGY_EXECUTORS[strategy]
+                        ? 'failed to apply' : 'is SELECTED but not registered'}.`
+                        : 'No strategy row exists for this obstacle.'}`,
+                { goal, obstacle: blocker });
+            }
+            applied.push(`${strategy}(${blocker.id})`);
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, placement: { ...goal.placement } },
+                obstacle: { kind: blocker.kind, id: blocker.id },
+                strategy: { verb: strategy },
+                rejected: resolvedBlocker.rejected ?? [],
+                keys: [],
+            });
+            if (resolvedBlocker.stance) {
+                walkTo(goal, resolvedBlocker.stance, {
+                    what: `${what} -> ${strategy} stance (${blocker.id})`,
+                    contactsOverride: resolvedBlocker.exempt,
+                });
+            }
+            const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
+                maxTicksPerTarget, what: `${what} -> ${strategy}`, before: null,
+                walkTo, goal,
+            });
+            records.push({ goal: goal.kind, strategy, ...rec });
+            for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
+            contacts = senseContacts(run);
+        }
+        const stance = deriveStance(run, resolved, contacts);
         /**
          * ⛔ THE SHUT-BEFORE SNAPSHOT, taken BEFORE the approach — `runChest`
          * demands it because the trigger is a line the approach itself may

@@ -14,7 +14,7 @@ import {
     R8_TWO_PASS, assertTwoPassPrefixAgrees,
     R8_ETA_PROBE, assertTransitSamplesCarryEtas,
     R8_D2_SHIELD, assertSpinnerPressExposureIsMeasured,
-    R8_D2_COMPLETE, assertD2RouteGraph,
+    R8_D2_COMPLETE, assertD2RouteGraph, annulusCensus,
 } from './r8Acceptance.js';
 import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
@@ -38,6 +38,7 @@ import { distanceRectPoint, SLASH_REACH, SWORD_DAMAGE } from './presses.js';
 import { OUT_OF_BAND_WRITERS, TAGS_PER_LEVEL } from './outOfBandLedger.js';
 import { outOfBandFlagFor } from './breakableRocks.js';
 import { dangerVolumes } from './dangerMap.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 import { KILL_LOCK_TSET } from './combat.js';
 import { applyFriction, DEFAULT_FRICTION } from './playerPhysicsV1.js';
 
@@ -1397,12 +1398,87 @@ describe('R8_D2_COMPLETE — slice 7\'s prediction, committed before a line of i
         expect(dangerVolumes(run, 0)).toEqual([]);
     });
 
-    it('names the chain, its cut rule and its two internal seams', () => {
+    it('names the chain, its cut rule and its internal seams', () => {
         const c = R8_D2_COMPLETE.chain;
         expect(c.kind).toBe('staged');
-        expect(c.segments).toEqual(['r8-d2-18', 'r8-d2-19', 'r8-d2-20']);
+        // ⛓ TWO, not three — L18 is `trackA`'s reported wall, and the chain
+        // does not claim a room nobody solved.
+        expect(c.segments).toEqual(['r8-d2-19', 'r8-d2-20']);
         expect(c.internalSeams).toBe(c.segments.length - 1);
         expect(c.cutRule).toMatch(/trap 150/);
         expect(c.endsAt).toMatch(/L13/);
+    });
+
+    it('⛔ TRACK A is REPORTED with the rung it reached, and records NO tape', () => {
+        const a = R8_D2_COMPLETE.trackA;
+        expect(a.room).toBe(18);
+        expect(a.recorded).toBeNull();
+        expect(a.built.length).toBeGreaterThanOrEqual(6);
+        expect(a.wall).toMatch(/\(18\.0,104\.1\)/);
+        expect(a.wants).toMatch(/findEarliestArrival/);
+    });
+
+    it('⚖ THE USER CORRECTION is recorded WITH the source that verifies it', () => {
+        const u = R8_D2_COMPLETE.trackA.userCorrection;
+        expect(u.clock.deterministic).toBe(true);
+        expect(u.clock.src).toContain('Game.as:846');
+        expect(u.clock.caveat).toMatch(/cutscene\[0\]/);
+        // ⛔ The re-census is the half that settles the POLICY question: the
+        // conservative disc made a room look like it needed a moving policy,
+        // and the exact line says three cells can just stand there.
+        expect(u.recensus.strikingUnderDisc).toBe(0);
+        expect(u.recensus.strikingUnderLine).toBe(3);
+        expect(u.recensus.stances).toHaveLength(3);
+        expect(u.withdraws).toMatch(/artifact of the/);
+        expect(u.law).toMatch(/MANUFACTURE A POLICY PROBLEM/);
+    });
+
+    it('⛔⛔⛔ MEASURES that L18 has NO static annulus, with its bound named', () => {
+        /**
+         * ⚖ RULING CONDITION 2: the census that licenses the moving policy is
+         * an INSTRUMENT, not prose. Driven against the room's own forecast.
+         */
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 18, x: 16, y: 32 },
+            noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const cells = [];
+        for (let ty = 0; ty < run.world.height; ty += 1) {
+            for (let tx = 0; tx < run.world.width; tx += 1) {
+                const c = { x: tx * 16 + 8, y: ty * 16 + 8 };
+                if (plannerObstacleAt(run.world, c.x, c.y, null, {
+                    liveBag: run.liveGeometryOpts(), avoidVolumes: true, keys: run.keys,
+                    contacts: new Set(), lattice: 16, nodeMargin: 0, triggerMargin: 0,
+                })) continue;
+                cells.push({ ...c, box: playerBoxAt(c.x, c.y) });
+            }
+        }
+        const out = annulusCensus(run, {
+            horizon: 2016,
+            walkableCells: () => cells,
+            forecast: (n) => run.spinnerForecast(n),
+            inReach: (c, r) => distanceRectPoint(c.x, c.y, r) <= SLASH_REACH,
+        });
+        expect(out.cells).toBe(60);
+        expect(out.clear).toBe(1);
+        expect(out.striking).toBe(0);
+        expect(out.staticAnnulusExists).toBe(false);
+        // ⛓ A POSITIVE BEFORE THE ZERO: the `striking` arm is not a branch
+        // nobody has ever seen taken. Handed a room where every body sits
+        // still and far away, the same census reports a static annulus.
+        const still = [];
+        for (let i = 0; i < 2016; i += 1) still.push([{ x: 100, y: 100, right: 107, bottom: 107 }]);
+        const positive = annulusCensus(run, {
+            horizon: 2016,
+            walkableCells: () => [{ x: 8, y: 8, box: playerBoxAt(8, 8) }],
+            forecast: () => still,
+            inReach: () => true,
+        });
+        expect(positive.striking).toBe(1);
+        expect(positive.staticAnnulusExists).toBe(true);
     });
 });

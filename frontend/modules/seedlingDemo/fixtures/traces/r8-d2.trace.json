@@ -1,0 +1,417 @@
+{
+    "trace_version": 1,
+    "tape": "r8-d2",
+    "tick_count": 1645,
+    "boot": {
+        "level": 19,
+        "x": 16,
+        "y": 144
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 19,
+                "x": 24,
+                "y": 152,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 96,
+                    "y": 64
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "shieldboss@80,32"
+            },
+            "strategy": {
+                "verb": "fight"
+            },
+            "rejected": [
+                {
+                    "option": "route around the body",
+                    "why": "shieldboss@80,32 is a 48x48 `Mobile.solids` member standing in the three columns that are this room's only way north — the wall, the key and the exit are one object (R6 §13.6). There is no route around it."
+                },
+                {
+                    "option": "wait out the stab and walk past",
+                    "why": "`hitPlayer`'s band is BOTH the trigger volume of the stand-under and the damage volume of the stab, so the only way to be in it safely is to land a hit inside `movedShield` — `ShieldBoss.hit`'s landing arm calls `sit()`, which aborts the chain BEFORE frames 5..8 damage anything. Standing there without pressing is the one hit this route cannot afford."
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 507,
+            "saw": {
+                "level": 19,
+                "x": 104.0799164417699,
+                "y": 89.3566537958106,
+                "vx": 0,
+                "vy": -1.0500000000000023,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 104,
+                    "y": 56
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 2
+            },
+            "path": [
+                {
+                    "x": 88,
+                    "y": 56
+                },
+                {
+                    "x": 104,
+                    "y": 56
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "left",
+                "up"
+            ]
+        },
+        {
+            "tick": 568,
+            "saw": {
+                "level": 19,
+                "x": 105.41484929315735,
+                "y": 67.29150815332,
+                "vx": 0.5545126707573118,
+                "vy": 1.1834649159913926,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 96,
+                    "y": 64
+                }
+            },
+            "strategy": {
+                "verb": "collect"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "chest",
+                    "why": "placement (96,64) resolves to bosskey@96,64 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 607,
+            "saw": {
+                "level": 19,
+                "x": 105.41484929315735,
+                "y": 67.29150815332,
+                "vx": 0.5545126707573118,
+                "vy": 1.1834649159913926,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 24,
+                    "y": 104
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "bosslock@48,32"
+            },
+            "strategy": {
+                "verb": "keylock",
+                "postCondition": "open"
+            },
+            "rejected": [
+                {
+                    "option": "hold",
+                    "why": "bosslock@48,32 answers to no group at all — `BossLock`'s ctor forces `tSet` to -1, so no `Button.activateAll` ever republishes it and the re-close arm is unreachable. What opens it is the player standing on its one-pixel key line holding the key, which is a THIRD activation shape and not a button."
+                }
+            ],
+            "keys": [
+                "left",
+                "up"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 741,
+            "saw": {
+                "level": 19,
+                "x": 56.13183782085479,
+                "y": 50.06664607117147,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 24,
+                    "y": 104
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 3
+            },
+            "path": [
+                {
+                    "x": 56,
+                    "y": 24
+                },
+                {
+                    "x": 24,
+                    "y": 24
+                },
+                {
+                    "x": 24,
+                    "y": 104
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 864,
+            "saw": {
+                "level": 20,
+                "x": 200,
+                "y": 72,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 120,
+                    "y": 40
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 5
+            },
+            "path": [
+                {
+                    "x": 200,
+                    "y": 104
+                },
+                {
+                    "x": 168,
+                    "y": 104
+                },
+                {
+                    "x": 168,
+                    "y": 56
+                },
+                {
+                    "x": 136,
+                    "y": 56
+                },
+                {
+                    "x": 120,
+                    "y": 40
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "down"
+            ]
+        },
+        {
+            "tick": 1041,
+            "saw": {
+                "level": 20,
+                "x": 120.90591659770337,
+                "y": 51.44913218636919,
+                "vx": 0.6772534035632524,
+                "vy": 1.2016646468693826,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 112,
+                    "y": 48
+                }
+            },
+            "strategy": {
+                "verb": "collect"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "chest",
+                    "why": "placement (112,48) resolves to shield@112,48 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 1080,
+            "saw": {
+                "level": 20,
+                "x": 120.90591659770337,
+                "y": 51.44913218636919,
+                "vx": 0.6772534035632524,
+                "vy": 1.2016646468693826,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 200,
+                    "y": 24
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "shieldlocknorm@176,16"
+            },
+            "strategy": {
+                "verb": "touch",
+                "postCondition": "open"
+            },
+            "rejected": [
+                {
+                    "option": "hold",
+                    "why": "shieldlocknorm@176,16 forces `tSet = -2` (R2's FORCED_TSET finding), so no button in the game republishes it and there is no group to press. `activate` LATCHES on the touch and the fade runs to completion whatever the player does."
+                },
+                {
+                    "option": "route-around",
+                    "why": "lock@32,80 is on the frontier of the reachable component, so there is no route around it — A* refuses to plan THROUGH an avoid volume or a solid, and a hold is what adds its presser to the exemptions (trap 147)"
+                },
+                {
+                    "option": "a presser whose id is lock@32,80",
+                    "why": "there is none, and there never could be — a lock is not a presser. ⚖ §15.7a ruling 1: the obstacle names the WALL and the mechanism data names the WORK, so this resolves through tSet group t=0 to [buttonroom@192,16]"
+                }
+            ],
+            "keys": [
+                "right",
+                "up"
+            ],
+            "note": "merged: hold decided on the same tick; merged: walk decided on the same tick"
+        },
+        {
+            "tick": 1248,
+            "saw": {
+                "level": 20,
+                "x": 173.91331281829937,
+                "y": 23,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 200,
+                    "y": 24
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 200,
+                    "y": 24
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right"
+            ]
+        },
+        {
+            "tick": 1366,
+            "saw": {
+                "level": 20,
+                "x": 200.6633128182994,
+                "y": 23,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 24,
+                    "y": 56
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 5
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 24
+                },
+                {
+                    "x": 72,
+                    "y": 104
+                },
+                {
+                    "x": 40,
+                    "y": 104
+                },
+                {
+                    "x": 40,
+                    "y": 56
+                },
+                {
+                    "x": 24,
+                    "y": 56
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "left"
+            ]
+        }
+    ]
+}

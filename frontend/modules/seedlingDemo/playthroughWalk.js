@@ -1448,6 +1448,67 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         cuts: Object.freeze([]),
         endsAt: 365,
     }),
+
+    /**
+     * ⛓⛓⛓ R8 SLICE 7 — **THE MACHINERY'S FIRST MULTI-SEGMENT STAGED CHAIN**.
+     *
+     * Every staged chain before this one is a single segment whose headline IS
+     * its segment — an honest definition there, because "the same walk driven
+     * in one run" and the segment are the same tape. This one has TWO, so it
+     * exercises everything a one-segment chain never can: a HEADLINE that is a
+     * different recording, a CUT, the ENDS-MEET arithmetic (`864 + 781 =
+     * 1645`), a stream slice, and an INTERNAL SEAM that is a measured equality
+     * over all 46 signature rows.
+     *
+     * ⛔ THE CUT IS DECIDED BY PERSISTENCE, NOT GEOGRAPHY (trap 150). L19's
+     * fight and the crossing it opens are ONE segment because a fight does not
+     * survive the door: the ShieldBoss, his key and his `{19,0}` are all
+     * per-visit, so a cut between the kill and the stairs would boot a room
+     * that has to be fought again.
+     *
+     * ⛔ AND THE SUCCESSOR'S BOOT IS THE **GAME'S** LATCH. Two of the seam's
+     * rows are `modelled: false` — `save.time` advances per `Game.update()`
+     * including dead frames, and the RNG streams advance on draws no model
+     * line makes — so `solve-seedling-r8-d2-chain.mjs` drives segment 1
+     * through the WINDOWS channel and hands its `botSeam()` to
+     * `segmentBootFromLatch`. A boot the model invented for those two would be
+     * a number nobody measured.
+     *
+     * ⚠ L18 IS NOT IN THIS CHAIN, and the reason is a measurement:
+     * `R8_D2_COMPLETE.trackA` records the strike schedule built, driven, and
+     * stopped by the room's south-west corner — and then the user's own
+     * correction, which the re-census confirms, says the wall was the
+     * CONSERVATIVE HAMMER DISC rather than the room. A room that refuses is
+     * REPORTED, never recorded (§11.10.1), so the chain begins at L19's own
+     * arrival from L18 and claims nothing about the room before it.
+     *
+     * ⚠ NO `clears` PROVENANCE ROWS, and the absence is a decision (§14.6a's
+     * two-sided equality is what would red if it were wrong): neither segment
+     * declares a timed v9 `at` clear. Every flag these walks write — `{19,0}`
+     * the boss, `{20,2}` the shield, `{20,0}` the shieldlock, `{20,4}` the
+     * buttonroom — is EARNED during the run, which is a different channel from
+     * a declared clear and needs no provenance because the run computes it end
+     * to end. `{20,1}`, the lock's own, is BANKED for the next build of L20
+     * rather than earned — `Lock.turnOff()`'s write is a permission about the
+     * run (§15.3.2) — and the walk leaves the room before there is one.
+     */
+    Object.freeze({
+        id: 'r8-d2',
+        kind: 'staged',
+        why: 'R8 slice 7: D2\'s last two rooms, driven by the live solver from the '
+            + 'campaign\'s own post-sword latch staged at L19\'s arrival from L18. '
+            + 'Segment 1 fights the ShieldBoss on a schedule DERIVED from '
+            + '`shieldBossWindowFor`, takes the boss key and opens `bosslock@48,32` with '
+            + 'the `keylock` verb; segment 2 takes the shield and crosses WESTWARD '
+            + 'through `shieldlocknorm` (the `touch` verb, registered at last) -> '
+            + '`buttonroom` -> `lock@32,80` -> the alcove -> L13.',
+        headline: 'r8-d2',
+        segments: Object.freeze(['r8-d2-19', 'r8-d2-20']),
+        earns: Object.freeze([]),
+        clears: Object.freeze([]),
+        cuts: Object.freeze([864]),
+        endsAt: 1645,
+    }),
 ]);
 
 /**
