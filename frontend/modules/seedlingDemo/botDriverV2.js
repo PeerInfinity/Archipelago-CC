@@ -70,6 +70,7 @@ import {
 import { createLevelRun } from './levelRun.js';
 import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
+import { LIVE_GEOMETRY_KEYS, normalizeLiveOpts } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
 import {
@@ -275,6 +276,37 @@ export function nodeAt(x, y, pitch) {
  * re-record, not a test update. The v2 driver's teleporter-only policy is
  * what the eleven committed tapes were planned under and stays that way.
  */
+/**
+ * ⛔⛔⛔ R8 SLICE 0, RECON-VERIFY: THIS FUNCTION FORWARDS 8 OF THE 14 LIVE
+ * FAMILIES TO `plannerBlockerAt`, AND TWO OF THE SIX IT DROPS ARE ONES
+ * `livePerVisitOpts` BUILDS AND PASSES IN ON PURPOSE.
+ *
+ * Dropped: `openMagicalLocks`, `turrets`, `bosses`, `shieldBosses`,
+ * `finalDoors`, `fallenRocks`. The first four and the last have no parameter
+ * here at all, so no caller can pass one through; `turrets` and `bosses` ARE
+ * passed — `livePerVisitOpts`' own comments call them "the TENTH" and "the
+ * TWELFTH" — and are destructured nowhere. That is
+ * `LIVE_GEOMETRY_KEYS`' defect for the FOURTH time in this arc, in the
+ * hottest planner query there is.
+ *
+ * ⛔ IT IS PRESERVED EXACTLY RATHER THAN FIXED, and that is a rung decision
+ * rather than an oversight: forwarding the six changes what the planner
+ * believes is walkable, which re-routes legs, which moves committed
+ * recordings — and no re-record license exists this rung. What R8 slice 0
+ * did instead is make the drop MECHANICALLY TOTAL:
+ * `r8Acceptance.assertPlannerLivePartition` asserts the forwarded and
+ * dropped halves partition `LIVE_GEOMETRY_KEYS` exactly, and
+ * `r8Acceptance.test.js` DERIVES which families really survive by driving
+ * this function with fourteen sentinels and reading what arrives. A
+ * fifteenth family cannot be dropped by omission the way these six were.
+ *
+ * ⚠ THE DIRECTION OF THE ERROR IS NOT UNIFORM, which is why it is a named
+ * row rather than a TODO. `bosses: null` makes an unwoken `BossTotem` read
+ * as a WALL; `turrets: null` keeps a dead turret's 32x32 body standing —
+ * the very reading R5 slice 20 introduced the key to end. Both are
+ * conservative, and a wrong "closed" seals the map (trap 139). R8's live
+ * solver will want all fourteen; it starts from this measurement.
+ */
 export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}) {
     const {
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
@@ -348,9 +380,21 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // The caller passes the RUN's own set — the same one `stepV2` consults —
     // so the planner cannot believe a door is open that the engine will
     // find shut.
-    const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
-        { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks,
-            pulledRopes, openChests, burnedTrees, crushers });
+    const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y), {
+        ...normalizeLiveOpts({
+            openActivators, openBridges, pushables, brokenRocks,
+            pulledRopes, openChests, burnedTrees, crushers,
+        }),
+        // ⚠ THE POLICY KEYS RIDE ON TOP OF THE BRANDED BAG, not inside it.
+        // `normalizeLiveOpts` drops unknown keys by design, and
+        // `plannerBlockerAt` reads `noclip`/`noHazards` off the SAME
+        // argument — a normaliser that silently ate `noclip` would open
+        // every wall in the level to the planner. A spread keeps the brand
+        // (own enumerable symbol keys) and the two policy keys sit beside
+        // the fourteen families the way `beforeTypeFlip` does.
+        noclip,
+        noHazards,
+    });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -3816,8 +3860,12 @@ function runFire(run, perTick, fire, what) {
          * from a run that only reports the end state.
          */
         if (expect.kind === 'burns' && i === FIRE_WINDOW.endTick) {
+            // ⛓ R8 SLICE 0: HOISTED — this rebuilt the whole per-visit view
+            // for EVERY candidate tile inside the filter. One bag per
+            // assertion; the run does not move between the probes.
+            const stillSolidOpts = burnProbeOpts(run);
             const walkable = expect.live.filter(
-                (t) => plannerObstacleAt(run.world, t.cx, t.cy, null, burnProbeOpts(run)) === null);
+                (t) => plannerObstacleAt(run.world, t.cx, t.cy, null, stillSolidOpts) === null);
             if (walkable.length > 0) {
                 fail(`${what}: ${walkable.map((t) => t.id).join(', ')} stopped being solid `
                     + `${i} tick(s) after the press, and the game keeps a burning tree `
@@ -4073,7 +4121,21 @@ function runFire(run, perTick, fire, what) {
  * and must not.
  */
 export function livePerVisitOpts(run) {
-    return {
+    /**
+     * ⛓ R8 SLICE 0: BRANDED AT THE BUILDER, which converts all four call
+     * sites at once — `liveGeometryOpts`, `burnProbeOpts` and both
+     * `solidBoxesForMover` probes come through here (R5 slice 15 made this
+     * the single source for exactly that reason).
+     *
+     * ⚠ IT RETURNS NINE OF THE FOURTEEN FAMILIES and the brand fills the
+     * other five with `null` — which is precisely what the consumer's own
+     * per-query normalise already did, so this is a shape change with no
+     * value in it. ⛓ And `{...branded, …}` KEEPS the brand: a spread copies
+     * own enumerable SYMBOL keys and preserves insertion order, which is the
+     * property `liveGeometryOpts` below and R7 slice 4's `{...base,
+     * pushables}` both rely on.
+     */
+    return normalizeLiveOpts({
         openActivators: run.openActivators,
         openChests: run.openChests,
         pushables: run.pushables,
@@ -4090,7 +4152,7 @@ export function livePerVisitOpts(run) {
         // means "still a solid" — an unwoken BossTotem is a Solid, so the
         // key expresses the WAKE rather than the wall.
         bosses: run.bosses,
-    };
+    });
 }
 function liveGeometryOpts(run, extra = {}) {
     return { ...livePerVisitOpts(run), avoidVolumes: false, ...extra };

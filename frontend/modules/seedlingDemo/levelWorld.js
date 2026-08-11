@@ -3446,6 +3446,54 @@ export function normalizeLiveOpts(o) {
  */
 export const isNormalizedLiveOpts = (o) => !!o && o[LIVE_NORMALIZED] === true;
 
+/**
+ * ⛔⛔ THE CONSUMER ENTRY'S OWN CHECK — R8 slice 0, paying the rest of the
+ * `normalizeLive` debt.
+ *
+ * Every query that walks `liveRectOf` calls this on the bag it is about to
+ * use. It asserts TWO things, and neither is the same claim:
+ *
+ *   1. **The bag wears the brand.** The symbol is module-private, so wearing
+ *      it means having been through `normalizeLiveOpts` — the only function
+ *      that fills every key. A bag that reached the loop by another door is
+ *      a bag whose missing keys read `undefined` where the model promised
+ *      `null`, which is the SILENCE `LIVE_GEOMETRY_KEYS` exists to end.
+ *   2. **It covers `LIVE_GEOMETRY_KEYS`, asserted against the LIST.** Not
+ *      against a count and not against a roster typed beside this line —
+ *      trap 89's lesson is that a hardcoded list next to a mechanism
+ *      assertion re-arms the fuse it was written to defuse. A fifteenth
+ *      family added to the list is checked here for free.
+ *
+ * ⚠ IT IS PER QUERY, NOT PER PIXEL, and that is why it is affordable: the
+ * counted ratio on `r5-l40-part5` is 31,191 queries against 34,705,483
+ * `liveRectOf` invocations, so a fourteen-key pass at the entry is under a
+ * tenth of a percent of the same denominator the brand itself lives under.
+ *
+ * ⛓ WHAT MAKES IT NON-VACUOUS: it fires under a mutation of
+ * `normalizeLiveOpts` itself — drop the brand, or drop a key from its fixed
+ * literal, and all four consumers red by name in one run. That is the
+ * mutation this stratum exists to catch, because that literal is the one
+ * place the fourteen names are typed out.
+ */
+export function assertNormalizedLiveOpts(o, what) {
+    if (!isNormalizedLiveOpts(o)) {
+        fail(`${what}: the live-geometry options bag reaching this query does not wear `
+            + '`normalizeLiveOpts`\' brand. The brand is a module-private Symbol, so a '
+            + 'bag without it has not been through the one function that fills every '
+            + 'key — and an unlisted key is a SILENCE, not an error: the query would '
+            + 'read `undefined` for a per-visit family and treat it as absent.');
+    }
+    for (const k of LIVE_GEOMETRY_KEYS) {
+        if (!(k in o)) {
+            fail(`${what}: the normalised live-geometry bag is missing "${k}", which `
+                + '`LIVE_GEOMETRY_KEYS` names as a per-visit family. `normalizeLiveOpts` '
+                + 'is the one place those fourteen names are written out, so this is a '
+                + 'defect in that literal rather than at the call site.');
+        }
+    }
+    return o;
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null,
 } = {}) {
@@ -5384,7 +5432,7 @@ export function buildLevelWorld(levelRecord, {
                 beforeTypeFlip = false,
                 fallenRocks = null,
             } = opts;
-            const live = normalizeLive(opts);
+            const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.collidesSolid');
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
@@ -5457,7 +5505,7 @@ export function buildLevelWorld(levelRecord, {
          *                        `collideTypes` excludes `this` too
          */
         solidBoxesForMover(opts = {}, exclude = null) {
-            const live = normalizeLive(opts);
+            const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.solidBoxesForMover');
             const out = [];
             // ⛔⛔ R5 slice 10's family is in no `solids` entry at all — a
             // parked `FallRock` has `type = ""` at `y = -16` and a landed one
@@ -5510,7 +5558,7 @@ export function buildLevelWorld(levelRecord, {
          */
         collidesBlast(box, opts = {}) {
             const { fallenRocks = null } = opts;
-            const live = normalizeLive(opts);
+            const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.collidesBlast');
             // A `Building`/`TreeLarge`/`CliffSide` is `type = "Solid"`, and
             // the game's `collideTypesInto` runs the same `Pixelmask` test
             // `collidesSolid` does — the mask, not the bounding rect.
@@ -5704,7 +5752,7 @@ export function buildLevelWorld(levelRecord, {
          */
         plannerBlockerAt(box, probeRect = null, opts = {}) {
             const { noclip = false, noHazards = [], fallenRocks = null } = opts;
-            const live = normalizeLive(opts);
+            const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.plannerBlockerAt');
             if (!noclip) {
                 // ⛔⛔ R5 slice 10: a dropped rock ADDS a solid, so the
                 // planner has to be told about it the same way the collision

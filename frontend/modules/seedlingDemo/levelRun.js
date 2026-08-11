@@ -4204,11 +4204,11 @@ export function createLevelRun({
                     x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
                 };
                 const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
-                return !!world.collidesSolid(box, liveSolidOpts({
+                return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
                     openActivators: openActivatorIds(activators),
                     openChests,
-                }));
+                })));
             },
         });
         for (const ev of events) {
@@ -4472,7 +4472,7 @@ export function createLevelRun({
             // ⚠ THE OPTS ARE REBUILT PER CRUSHER, and that is the point:
             // the second one's world contains the first where THIS loop just
             // left it (`liveSolidOpts` reads `crusherRectsNow()` live).
-            const r = stepCrusher(c, crusherCtx(c, liveSolidOpts()));
+            const r = stepCrusher(c, crusherCtx(c, normalizeLiveOpts(liveSolidOpts())));
             st.set(id, { ...c, ...r.crusher });
             if (r.kills) {
                 /**
@@ -4549,7 +4549,7 @@ export function createLevelRun({
     function stepBlastsNow() {
         const list = blastsFor(level);
         if (list.length === 0) return;
-        const opts = liveSolidOpts();
+        const opts = normalizeLiveOpts(liveSolidOpts());
         const box = playerBoxAt(state.x, state.y);
         const reach = blastReachFor(level);
         for (const b of list) {
@@ -4612,7 +4612,7 @@ export function createLevelRun({
     function stepWandShotsNow() {
         const list = wandShotsFor(level);
         if (list.length === 0) return;
-        const opts = liveSolidOpts();
+        const opts = normalizeLiveOpts(liveSolidOpts());
         const hitAt = wandShotBlockerAt(opts);
         const locks = magicalLockStateFor(level);
         for (const s of list) {
@@ -5198,12 +5198,26 @@ export function createLevelRun({
                 + 'assumed. Use a one-tick `primary` span for the intro.');
         }
         const wasDestroyed = b.destroy;
+        /**
+         * ⛓⛓⛓ R8 SLICE 0: HOISTED AND BRANDED — the worst `liveSolidOpts`
+         * site in the file. `solidAt` below is called for every 1 px probe of
+         * the Owl's own move sweep, and each call rebuilt all fourteen
+         * per-visit views and handed `levelWorld` a fresh bag to normalise.
+         *
+         * ⚠ ONCE PER TICK IS THE SAME BAG, and that is a claim about what
+         * `stepFinalBoss` may do: nothing inside it moves a per-visit
+         * geometry family. `spawnRock` queues into `owlPendingRocks`, which
+         * `fallenRocksNow` does not read until a rock has LANDED, and
+         * `spawnGrenade` touches no solid at all. The differential is what
+         * says so — this is the reasoning, not the evidence.
+         */
+        const owlOpts = normalizeLiveOpts(liveSolidOpts());
         const step = stepFinalBoss(b, {
             frozen: frozenByCeremony,
             // The player as the boss sees them: the END of the previous tick,
             // because he updates first.
             player: { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
-            solidAt: (x, y) => !!world.collidesSolid(finalBossBox(x, y), liveSolidOpts()),
+            solidAt: (x, y) => !!world.collidesSolid(finalBossBox(x, y), owlOpts),
             firstTileAt: (x, y) => firstTileUnder(world.tiles, finalBossBox(x, y)),
             stream,
             spawnRock: (argX, argY, scale) => {
@@ -5615,7 +5629,7 @@ export function createLevelRun({
         const fromY = Math.trunc(fromYf);
         const toX = Math.trunc(toXf);
         const toY = Math.trunc(toYf);
-        const boxes = world.solidBoxesForMover(liveSolidOpts());
+        const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
         const at = (px, py) => {
             for (const s of boxes) {
                 if (px >= s.x && px < s.right && py >= s.y && py < s.bottom) return s;
@@ -5871,7 +5885,7 @@ export function createLevelRun({
         for (const id of ids) {
             const t = st.get(id);
             if (t.removed) continue;
-            const opts = liveSolidOpts();
+            const opts = normalizeLiveOpts(liveSolidOpts());
             const withoutSelf = opts.turrets === null ? null
                 : new Map([...opts.turrets].filter(([k]) => k !== id));
             stepIceTurret(t, {
@@ -5932,14 +5946,21 @@ export function createLevelRun({
      */
     function stepSealPieceNow() {
         if (sealPiece === null) return;
+        // ⛓ R8 SLICE 0: HOISTED AND BRANDED — `blockedAt` is the seal piece's
+        // own per-pixel sweep and rebuilt the whole per-visit view on each
+        // probe. Nothing in `stepSealPiece` moves a geometry family: the
+        // piece is `type = "Seal"`, in no `solids` list and in no player
+        // probe, which the docblock above already asserts for the ORDER and
+        // which is the same fact this hoist rests on.
+        const sealOpts = normalizeLiveOpts(liveSolidOpts({
+            beforeTypeFlip: firstTickInWorld,
+        }));
         const r = stepSealPiece(sealPiece, {
             player: { x: state.x, y: state.y },
             playerBox: playerBoxAt(state.x, state.y),
             blockedAt: (x, y) => {
                 const b = sealPieceBox({ x, y });
-                return !!world.collidesSolid(b, liveSolidOpts({
-                    beforeTypeFlip: firstTickInWorld,
-                }));
+                return !!world.collidesSolid(b, sealOpts);
             },
         });
         sealPiece = r.piece;
@@ -7727,8 +7748,18 @@ export function createLevelRun({
         get crusherScans() {
             if (noclip) return null;
             const out = new Map();
+            /**
+             * ⛓⛓ R8 SLICE 0: HOISTED, and the contrast with `stepCrushersNow`
+             * is the whole reason this one may be. That loop REBUILDS the bag
+             * per crusher on purpose — it steps them, so the second one's
+             * world must contain the first where the loop just left it. This
+             * loop MUTATES NOTHING (`scanCrusher` is a pure read), so the
+             * per-crusher rebuild was pure cost — and it is cost a live
+             * sensing policy pays on every tick it polls this getter.
+             */
+            const scanOpts = normalizeLiveOpts(liveSolidOpts());
             for (const [id, c] of crusherStateFor(level)) {
-                const ctx = crusherCtx(c, liveSolidOpts());
+                const ctx = crusherCtx(c, scanOpts);
                 out.set(id, {
                     ...scanCrusher({ x: c.x, y: c.y }, ctx.playerBox, ctx.playerPoint,
                         ctx.lineSolids),
@@ -9035,7 +9066,7 @@ export function createLevelRun({
                             + 'ceremony\'s length. Model the span rather than '
                             + 'stepping the boss on live ticks only.');
                     }
-                    const bossOpts = liveSolidOpts();
+                    const bossOpts = normalizeLiveOpts(liveSolidOpts());
                     const r = stepBossTotem(b, {
                         wandGone: wandLeftTheWorld,
                         freezeObjects: false,
@@ -9302,20 +9333,31 @@ export function createLevelRun({
                 //
                 // R4: under `noclip` there is no geometry to be part of, so
                 // they are inert by the same argument `openActivators` is.
-                ...(noclip ? {
-                    openActivators: null,
-                    openMagicalLocks: null,
-                    openBridges: null,
-                    pushables: null,
-                    brokenRocks: null,
-                    burnedTrees: null,
-                    pulledRopes: null,
-                    fallenRocks: null,
-                    openChests: null,
-                    crushers: null,
-                    turrets: null,
-                    bosses: null,
-                } : liveSolidOpts({ openActivators: openActivatorIds(activators) })),
+                //
+                // ⛔ R8 SLICE 0: AND THE `noclip` HALF WAS A HAND ROSTER THAT
+                // HAD ALREADY ROTTED. It listed TWELVE families where
+                // `LIVE_GEOMETRY_KEYS` names fourteen — `shieldBosses` and
+                // `finalDoors` were never added — directly under a comment
+                // saying a family could not be forgotten in exactly this
+                // spot for a third time. It cost nothing (under `noclip`
+                // `playerPhysicsV2` skips the geometry entirely, and the two
+                // arrived as its own destructure defaults, which are `null`
+                // either way) and it is the fourth occurrence of the defect
+                // `LIVE_GEOMETRY_KEYS` exists to end. Both arms are now
+                // BRANDED, which means both are derived from the one literal
+                // that writes the fourteen names out.
+                // ⚠ `beforeTypeFlip` IS CARRIED THROUGH THE NORMALISE, and it
+                // has to be: a normalised bag always has the key, this spread
+                // sits BELOW the `beforeTypeFlip: firstTickInWorld` line
+                // above, and a normalise that did not carry it would
+                // overwrite the tick's own answer with the default `false` on
+                // every first tick in a world. Found while writing this hoist,
+                // by reading the key order rather than by a test.
+                ...normalizeLiveOpts(noclip ? { beforeTypeFlip: firstTickInWorld }
+                    : liveSolidOpts({
+                        beforeTypeFlip: firstTickInWorld,
+                        openActivators: openActivatorIds(activators),
+                    })),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.

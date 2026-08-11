@@ -4,8 +4,10 @@ import {
     R8_NORMALIZE_LIVE_BATCH, assertBatchSitesCoverSource, assertPlannerLivePartition,
     assertBatchIsModelSide,
 } from './r8Acceptance.js';
-import { LIVE_GEOMETRY_KEYS } from './levelWorld.js';
-import { livePerVisitOpts } from './botDriverV2.js';
+import {
+    LIVE_GEOMETRY_KEYS, assertNormalizedLiveOpts, isNormalizedLiveOpts, normalizeLiveOpts,
+} from './levelWorld.js';
+import { livePerVisitOpts, plannerObstacleAt } from './botDriverV2.js';
 
 /**
  * ⛓⛓⛓ THE PREDICTION, BEFORE THE CHANGE — R8 slice 0 track B.
@@ -76,16 +78,64 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
     });
 
     /**
-     * ⛔ DERIVED FROM `livePerVisitOpts` ITSELF, not restated from a comment.
-     * The claim "the driver BUILDS these two and the planner drops them" is
-     * only a measurement if the builder is the one asked, so the builder is
-     * called and its key set intersected with the dropped half.
+     * ⛔⛔ DERIVED FROM THE RUNNING CODE, not restated from a comment.
+     *
+     * `plannerObstacleAt` is driven with all fourteen families set to
+     * SENTINELS and a stub level that captures what reaches
+     * `plannerBlockerAt`. A family that arrives carrying its sentinel was
+     * forwarded; one that arrives `null` was dropped. That is a measurement
+     * of the drop rather than a second reading of the source the declaration
+     * was written from (trap 97), and it is the half that hides — naming the
+     * classes is the visible half (trap 135).
+     *
+     * ⚠ SENTINEL SHAPE MATTERS: the bag is BRANDED now, so every one of the
+     * fourteen keys is PRESENT on arrival. Presence no longer separates the
+     * halves; the VALUE does.
+     */
+    it('derives the planner\'s forwarded/dropped halves by driving it with sentinels', () => {
+        const seen = [];
+        const stubLevel = {
+            plannerBlockerAt: (box, probeRect, o) => { seen.push(o); return null; },
+            teleporterHit: () => [],
+            nearestWalkableTile: () => null,
+            tiles: [],
+        };
+        const sentinels = Object.fromEntries(
+            LIVE_GEOMETRY_KEYS.map((k) => [k, `SENTINEL:${k}`]));
+        try {
+            plannerObstacleAt(stubLevel, 100, 100, null, { ...sentinels, noclip: false });
+        } catch { /* the stub cannot answer the terrain arms; the capture is what matters */ }
+        expect(seen.length, 'plannerBlockerAt was never reached').toBeGreaterThan(0);
+        const arrived = seen[0];
+        const forwarded = LIVE_GEOMETRY_KEYS
+            .filter((k) => arrived[k] === `SENTINEL:${k}`).sort();
+        const dropped = LIVE_GEOMETRY_KEYS
+            .filter((k) => arrived[k] !== `SENTINEL:${k}`).sort();
+        const p = R8_NORMALIZE_LIVE_BATCH.plannerDropsSixFamilies;
+        expect(forwarded).toEqual([...p.forwarded].sort());
+        expect(dropped).toEqual([...p.dropped].sort());
+        // ⛔ And the policy keys must still arrive — a normaliser that ate
+        // `noclip` would open every wall in the level to the planner.
+        expect('noclip' in arrived).toBe(true);
+        expect('noHazards' in arrived).toBe(true);
+    });
+
+    /**
+     * ⛔ THE SHARPEST HALF, DERIVED FROM THE BUILDER. "The driver BUILDS
+     * these two and the planner drops them" is only a measurement if the
+     * builder is the one asked.
      */
     it('names turrets and bosses as SUPPLIED-AND-DROPPED — derived from the builder', () => {
         const p = R8_NORMALIZE_LIVE_BATCH.plannerDropsSixFamilies;
         for (const k of p.suppliedAndDropped) expect(p.dropped).toContain(k);
-        const built = Object.keys(livePerVisitOpts({}));
-        const suppliedAndDropped = built.filter((k) => p.dropped.includes(k)).sort();
+        // ⚠ `livePerVisitOpts` is BRANDED now, so every key is present. What
+        // separates "supplied" from "filled in by the brand" is that the
+        // builder reads it OFF THE RUN — so the run is given a sentinel and
+        // the families that carry it out are the ones really supplied.
+        const run = Object.fromEntries(LIVE_GEOMETRY_KEYS.map((k) => [k, `RUN:${k}`]));
+        const built = livePerVisitOpts(run);
+        const supplied = LIVE_GEOMETRY_KEYS.filter((k) => built[k] === `RUN:${k}`);
+        const suppliedAndDropped = supplied.filter((k) => p.dropped.includes(k)).sort();
         expect(suppliedAndDropped).toEqual([...p.suppliedAndDropped].sort());
         expect(suppliedAndDropped).toEqual(['bosses', 'turrets']);
     });
@@ -99,6 +149,33 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         const r = assertBatchIsModelSide();
         expect(r.modelSide).toBe(true);
         expect(r.files.sort()).toEqual(['botDriverV2.js', 'levelRun.js']);
+    });
+
+    /**
+     * ⛔ THE CONSUMER ENTRY'S CHECK, WITNESSED IN BOTH DIRECTIONS.
+     *
+     * A brand assertion that only ever sees branded bags is a tautology, and
+     * a tautology dressed as a guard is the shape traps 86/89 keep producing.
+     * So the refusal is exercised on a bag that has every one of the fourteen
+     * keys and simply did not come through the normaliser — which is exactly
+     * the hand-written literal the brand exists to end.
+     */
+    it('refuses a complete-looking bag that never went through the normaliser', () => {
+        const lookalike = Object.fromEntries(LIVE_GEOMETRY_KEYS.map((k) => [k, null]));
+        expect(isNormalizedLiveOpts(lookalike)).toBe(false);
+        expect(() => assertNormalizedLiveOpts(lookalike, 'probe'))
+            .toThrow(/does not wear/);
+        expect(() => assertNormalizedLiveOpts(lookalike, 'probe'))
+            .toThrow(/probe/);
+    });
+
+    it('accepts what the normaliser fills, and returns it unchanged', () => {
+        const bag = normalizeLiveOpts({});
+        expect(assertNormalizedLiveOpts(bag, 'probe')).toBe(bag);
+        // ⛓ And the SPREAD keeps it — the property every hoisted site relies
+        // on (`{...base, pushables}`, `{...branded, noclip, noHazards}`).
+        expect(() => assertNormalizedLiveOpts({ ...bag, noclip: true }, 'probe'))
+            .not.toThrow();
     });
 
     it('declines the per-world pre-filter lever, with a reason and no number', () => {
@@ -132,4 +209,19 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
  *         a behaviour change. ⚠ BOUNDED VACUITY, recorded rather than hidden.
  *  7. add `tapeFormat.js` to `sites`
  *       → `is MODEL-SIDE` reds and the change re-earns its `--win` sweep
+ *  8. `plannerObstacleAt` forwards a 9th family (or stops forwarding one)
+ *       → `derives the planner's forwarded/dropped halves …` reds — and this
+ *         is the row that measures the CODE rather than the declaration
+ *  9. drop `noclip` into the normalised half of that call
+ *       → same row reds on the `'noclip' in arrived` assertion
+ * 10. `normalizeLiveOpts` stops applying the brand
+ *       → `refuses a complete-looking bag …` and `accepts what the normaliser
+ *         fills` red, AND all four consumer entries throw by name across the
+ *         whole seedlingDemo suite
+ * 11. delete a key from `normalizeLiveOpts`' fixed literal
+ *       → the coverage half of `assertNormalizedLiveOpts` fires at every
+ *         consumer entry. ⚠ It cannot be provoked from a CALL SITE — the brand
+ *         is a module-private Symbol, so no external caller can mint an
+ *         incomplete branded bag. MUTATION-ONLY BITER, recorded as such rather
+ *         than dressed up as a call-site guard.
  */
