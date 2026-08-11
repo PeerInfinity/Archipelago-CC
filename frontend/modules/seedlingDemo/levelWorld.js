@@ -164,8 +164,46 @@ export const SOLIDS_BY_MOVER = Object.freeze({
     player: PLAYER_SOLID_TYPES,
     /** `PushableBlock` / `PushableBlockFire` / `PushableBlockSpear`. */
     pushable: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy', 'Player']),
-    /** `Enemy` and its subclasses add nothing — the base list, verbatim. */
+    /**
+     * The base list, verbatim — for the `Enemy` subclasses that add nothing.
+     *
+     * ⛔⛔⛔ R8 SLICE 1: THIS ROW'S OLD DOCBLOCK WAS A CLAIM ABOUT THE WHOLE
+     * FAMILY AND THE SOURCE REFUTES IT. It read *"`Enemy` and its subclasses
+     * add nothing"*. Swept over `Enemies/*.as`, SEVEN of them do:
+     *
+     * ```
+     *   Bob.as:39          solids.push("Enemy")
+     *   Jellyfish.as:35    solids.push("Enemy")
+     *   Drill.as:35        solids.push("Enemy")
+     *   LavaRunner.as:43   solids.push("LavaBoss", "Enemy")   (and Bob's, inherited)
+     *   Puncher.as:48      solids.push("Enemy", "Player")
+     *   IceTurret.as:148   solids.push("Enemy", "Player")     (in its CORPSE arm)
+     *   Flyer.as:45        solids = new Array()               ← the other direction
+     * ```
+     *
+     * The row itself is CORRECT for its one consumer — `SPINNER.solids`, and
+     * `Spinner.as` really does add nothing — so nothing here changes and the
+     * false generalisation does. This is R5 slice 12's own lesson pointed at
+     * the table that recorded it: solidity is per MOVER, and "the subclasses
+     * add nothing" is per SUBCLASS.
+     */
     enemy: Object.freeze([...SOLID_ENTITY_TYPES]),
+    /**
+     * ⛓⛓⛓ R8 SLICE 1 — THE CHASER, AND THE ONE TYPE THAT SEPARATES IT.
+     *
+     * `Mobile.solids` plus `"Enemy"` (`Bob.as:39`). It is not decoration and
+     * it is not symmetric: a static `SandTrap` is `type = "Enemy"`, so a trap
+     * the PLAYER walks straight past is a WALL to a chaser — which is exactly
+     * how L6 parks `bob@96,16` at x≈84.2 forever without anybody killing it
+     * (R7 slice 6e, trap 152). A chaser stepped against the player's list
+     * would walk through that trap and arrive somewhere the game never puts
+     * it.
+     *
+     * ⚠ AND IT LACKS `"LavaBoss"`, which the player's list has. Same shape as
+     * the spinner's row, same treatment: `levelRun` asserts the difference
+     * away by room rather than over-approximating it.
+     */
+    chaser: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy']),
     /**
      * ⛔⛔ R6 SLICE 2: `WandShot.as:69` — `solids.push("Enemy")`, and the
      * FOURTH mover. `Mobile.solids` plus `"Enemy"`, WITHOUT the player's

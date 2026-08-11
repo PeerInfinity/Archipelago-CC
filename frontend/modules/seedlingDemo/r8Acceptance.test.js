@@ -7,8 +7,15 @@ import { describe, it, expect } from 'vitest';
 import {
     R8_NORMALIZE_LIVE_BATCH, assertBatchSitesCoverSource, assertPlannerLivePartition,
     assertBatchIsModelSide,
-    R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured,
+    R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured, assertBridgeRosterMatchesScope,
+    assertSteppedContactPartition,
 } from './r8Acceptance.js';
+import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
+import {
+    CONTACT_STEPPED_FAMILIES, CONTACT_STEPPED_PRICED_BY, CONTACT_STEPPED_WHY,
+    contactPricing,
+} from './combat.js';
+import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
     LIVE_GEOMETRY_KEYS, assertNormalizedLiveOpts, isNormalizedLiveOpts, normalizeLiveOpts,
@@ -276,6 +283,93 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
 
     it('refuses to run without an injected io seam — a default would hide the mutations', () => {
         expect(() => assertBridgeExposureIsMeasured()).toThrow(/needs an io seam/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE BRIDGE'S PARTITIONS — R8 slice 1, and every one of them is
+ * asserted rather than assumed.
+ */
+describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () => {
+    it('the DECLARED scope and the DERIVED roster are the same claim', () => {
+        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob'] });
+    });
+
+    it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
+        expect(() => assertBridgeRosterMatchesScope(() => ['bob', 'jellyfish']))
+            .toThrow(/DECLARED scope and the DERIVED bridge roster disagree/);
+        expect(() => assertBridgeRosterMatchesScope(() => []))
+            .toThrow(/disagree/);
+    });
+
+    /**
+     * ⛔⛔ THE ROSTER IS A DERIVATION OVER TWO TABLES, and the point is that
+     * NEITHER ALONE is the answer: `jellyfish` is transcribed to the same
+     * depth as `bob` in `CHASERS` and has no `MODELLED_ENEMY_CLASSES` row, so
+     * it is transcribed-and-unbridged — which is exactly what makes it usable
+     * as the pair's control.
+     */
+    it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish']);
+        expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
+        expect(bridgedChaserTags()).toEqual(['bob']);
+        expect(contactPricing('jellyfish').kind).toBe('mover');
+    });
+
+    it('the three `stepped` contact tables are ONE key set, and every bridged tag is in it', () => {
+        expect(assertSteppedContactPartition({
+            families: CONTACT_STEPPED_FAMILIES,
+            pricedBy: CONTACT_STEPPED_PRICED_BY,
+            why: CONTACT_STEPPED_WHY,
+            bridged: bridgedChaserTags(),
+        })).toEqual({ families: 3, bridged: ['bob'], refused: ['iceturret', 'spinner'] });
+    });
+
+    it('⛔ MUTATION: a family in one table and not another reds by name (trap 94)', () => {
+        expect(() => assertSteppedContactPartition({
+            families: ['spinner', 'bob'],
+            pricedBy: { spinner: null, bob: 'stepChasersNow', drill: null },
+            why: { spinner: 'x', bob: 'y', drill: 'z' },
+            bridged: ['bob'],
+        })).toThrow(/ONE key set/);
+    });
+
+    it('⛔ MUTATION: a bridged tag with no pricer would make the census scan THROW', () => {
+        expect(() => assertSteppedContactPartition({
+            families: ['bob'], pricedBy: { bob: null }, why: { bob: 'x' }, bridged: ['bob'],
+        })).toThrow(/must name its pricer/);
+    });
+
+    /**
+     * ⛔ THE CONTROL ITSELF, ASSERTED: an unbridged `stepped` family must have
+     * NO pricer, because a pricer would make the census scan SKIP it — a
+     * silent zero for a body nobody prices anywhere.
+     */
+    it('⛔ MUTATION: giving an unbridged family a pricer reds by name', () => {
+        expect(() => assertSteppedContactPartition({
+            families: ['spinner', 'bob'],
+            pricedBy: { spinner: 'stepSpinnersNow', bob: 'stepChasersNow' },
+            why: { spinner: 'x', bob: 'y' },
+            bridged: ['bob'],
+        })).toThrow(/silent zero/);
+    });
+
+    /**
+     * ⛔⛔ SOLIDITY IS PER MOVER, AND THE CHASER'S LIST IS NOT THE PLAYER'S.
+     * The one type that separates them in each direction is asserted, because
+     * "the subclasses add nothing" was a claim about the whole family that
+     * `Bob.as:39` refutes (and six siblings with it).
+     */
+    it('a chaser collides with "Enemy" and NOT with "LavaBoss"', () => {
+        const solids = chaserSolids('bob');
+        expect(solids).toContain('Enemy');
+        expect(solids).not.toContain('LavaBoss');
+        // …and the jellyfish's row is not a copy-paste: it was swept for.
+        expect(chaserSolids('jellyfish')).toEqual(solids);
+    });
+
+    it('⛔ a class with no solids-mover row is a THROW, never the base list', () => {
+        expect(() => chaserSolids('spinner')).toThrow(/not a transcribed chaser/);
     });
 });
 

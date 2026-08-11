@@ -2030,11 +2030,21 @@ describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => 
         // Why the block stops on (4,4) and not one cell further. (5,4) is
         // `Pit`, so a third shove would DESTROY the block and open the
         // corridor just as well — and the player following it stands in
-        // `bob@64,64`'s spawn cell, which `levelRun` prices as a "mover" and
-        // refuses on a tape that does not declare `noDamage`. The route's
-        // own reason for two tiles is the game's, not a preference.
+        // `bob@64,64`'s spawn cell, which `levelRun` refuses on a tape that
+        // does not declare `noDamage`. The route's own reason for two tiles
+        // is the game's, not a preference.
+        //
+        // ⛓⛓ R8 SLICE 1 MOVED THE REASON WITHOUT MOVING THE REFUSAL, and
+        // that is the assertion. A `bob` is no longer priced as a "mover" —
+        // the bridge steps the class — but L4 holds two ARROW TRAPS, and this
+        // model's arrows hit nothing, so the run cannot compute how long that
+        // body lives and refuses to step the room at all. Same cell, same
+        // throw, a different and STRICTER reason: the missing family is named
+        // in the message.
         expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
-            .toThrow(/standing inside bob@64,64 in level 4[\s\S]*prices it as "mover"/);
+            .toThrow(/standing inside bob@64,64 in level 4[\s\S]*NOT STEPPING this room/);
+        expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
+            .toThrow(/Arrow x Enemy/);
     });
 
     it('⛔ `destroys` is DECLARED, and its shape is checked before anything is '

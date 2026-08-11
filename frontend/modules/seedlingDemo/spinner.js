@@ -605,16 +605,90 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
         why: 'runRange 0 and activeOffScreen true ⇒ the motion is a function of the '
             + 'level geometry and the tick index alone',
         stepped: 'levelRun.advance, ABOVE stepPushables',
+        // ⛓ `levelRun.pushableCtx().collides` consults `spinnerRectsNow()`
+        // after `world.collidesSolid`, so this body really is in the block's
+        // sweep — which is what makes `runFire`'s narrowing sound for it.
+        wedgeVisible: true,
+    }),
+    /**
+     * ⛓⛓⛓ R8 SLICE 1 — THE SECOND ROW, AND THE FIRST ONE WHOSE MOTION IS A
+     * FUNCTION OF THE PLAYER.
+     *
+     * A `Spinner` earns its row by being INDEPENDENT of the player: geometry
+     * and a tick index, nothing else. A `Bob` is the opposite — every tick of
+     * its walk is `atan2` to the player's own position — and it earns the row
+     * anyway, because the rule is "a `step*` in this package and a per-visit
+     * state in `levelRun`", not "a motion nobody has to think about".
+     *
+     * ⛔ THE TRANSCRIPTION IS NOT NEW AND IS NOT RE-WRITTEN HERE. `chasers.js`
+     * has carried `chaserStep`/`chaseImpulse` exactly since R5 slice 3 and
+     * NOTHING has ever called them: the bridge is a call site, not a second
+     * model. Two cost models that must agree are one cost model
+     * ([[feedback_two_cost_models_must_agree]]).
+     *
+     * ⚠ WHAT THE ROW DOES *NOT* CLAIM. `chaserStep` is `Enemy.update`'s
+     * movement half — the off-screen return, `Mobile.friction`, the two
+     * sweeps, and the subclass chase block. `Enemy.update`'s TERRAIN switch
+     * (water/lava destroy, the pit fall) is NOT in it, and R7 slice 6e's L6
+     * despawn is the standing witness that the game's own water is what
+     * removes a body the model therefore cannot remove. `levelRun` prices the
+     * i-frame drain and the contact; the terrain arm stays a declared
+     * `despawn` until a slice needs to earn it.
+     */
+    Bob: Object.freeze({
+        module: 'chasers.js',
+        why: 'the walk is `atan2` to the player and a bang-bang impulse toward `toV` — a '
+            + 'function of live state the run already holds, transcribed exactly since R5 '
+            + 'slice 3 and unwired until R8 slice 1',
+        stepped: 'levelRun.advance, the LAST enemy slot — `Game.as:2141` adds `bob` FIRST '
+            + 'of the enemy families and `World.addUpdate` PREPENDS, so a Bob updates '
+            + 'AFTER every other enemy in the room and immediately BEFORE the Player',
+        /**
+         * ⛔⛔⛔ FALSE, AND THIS FIELD EXISTS BECAUSE OF IT.
+         *
+         * `runFire`'s refusal narrows to this roster, and its REASON is the
+         * block wedge: `PushableBlock`'s ctor pushes "Enemy", so a body in
+         * the glide corridor stops the block permanently. `levelRun`'s
+         * `pushableCtx().collides` models that arm for SPINNERS ONLY — a
+         * stepped bob is invisible to a block's sweep. So "the model steps
+         * it" and "the model would predict its wedge" are DIFFERENT CLAIMS,
+         * and a row that answered only the first would have narrowed a
+         * refusal the model cannot honour: the press would be certified and
+         * the real block would jam.
+         *
+         * ⇒ the roster answers the second question too, per row, and
+         * `enemiesUnseenByBlockSweep` reads THIS field rather than mere
+         * membership. Feeding chaser bodies into the block sweep is what
+         * would flip it — and that moves L8/L39/L40 block sweeps, which is a
+         * re-record this rung has no licence for.
+         * ([[feedback_capability_lights_up_two_controls]].)
+         */
+        wedgeVisible: false,
     }),
 });
 
-/** Is every live enemy in this census one the model steps? */
-export function unmodelledEnemies(enemies = []) {
+/**
+ * ⛔ THE QUESTION `runFire` REALLY ASKS: which live bodies in this census
+ * would be INVISIBLE to a pushable block's own sweep?
+ *
+ * ⚠ THIS IS NOT "which classes does the model step", and R8 slice 1 is where
+ * the two came apart. Membership in `MODELLED_ENEMY_CLASSES` says a class has
+ * a stepper and a per-visit position; `wedgeVisible` says `levelRun`'s
+ * `pushableCtx().collides` really consults that body. `runFire`'s refusal is
+ * about the WEDGE, so it is the second question — and a predicate that read
+ * membership would have silently certified a glide the moment `Bob` earned a
+ * row, because a stepped bob is not in the block's sweep at all.
+ *
+ * ⇒ named for the question, not for the table: a caller cannot reach for this
+ * one meaning to ask the other. `MODELLED_ENEMY_CLASSES` is still the roster;
+ * this is one field of it.
+ */
+export function enemiesUnseenByBlockSweep(enemies = []) {
     const names = new Set();
     for (const e of enemies) {
         if (e.removed) continue;
         const as3 = e.as3 ?? e.tag;
-        if (!MODELLED_ENEMY_CLASSES[as3]) names.add(as3);
+        if (MODELLED_ENEMY_CLASSES[as3]?.wedgeVisible !== true) names.add(as3);
     }
     return [...names];
 }

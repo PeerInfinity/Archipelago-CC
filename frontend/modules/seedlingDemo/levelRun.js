@@ -34,6 +34,7 @@
  */
 
 import {
+    PLAYER_SOLID_TYPES,
     addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap,
 } from './levelWorld.js';
 import {
@@ -81,6 +82,14 @@ import {
 import {
     SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
+// ⛓⛓⛓ R8 SLICE 1: THE ENEMY BRIDGE. `chasers.js` has transcribed the walk
+// exactly since R5 slice 3 and nothing has ever called it — this import IS
+// the slice. The roster it is gated on (`bridgedChaserTags`) is DERIVED from
+// `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
+import {
+    ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserBoxAt, chaserSolids, chaserStep,
+    isBridgedChaser,
+} from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
@@ -146,13 +155,15 @@ import {
 import {
     DEATH_REBOOT, PLAYER_DAMAGE, canSteer, createPlayerDamage, playerHit, stepPlayerDamage,
 } from './playerDamage.js';
-import { contactPricing, contactRect, enemyHitPlayerFires } from './combat.js';
+import {
+    TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
+} from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
 // the R4 refusal's reason — "a death moves totalEnemies(), which opens
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
-import { killLockLedger } from './enemyDamage.js';
+import { MOBILE_DEATH_FADE, killLockLedger } from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
@@ -168,7 +179,7 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 // NEITHER way — so its live state lives here beside theirs and never in
 // `activators`.
 import {
-    ARROW_KILL_PLAN, arrowLane, arrowTrapFires, createArrow, createArrowTrap,
+    ARROW_KILL_PLAN, arrowLane, arrowRect, arrowTrapFires, createArrow, createArrowTrap,
     lanesOver, shadowOf, stepArrow, stepArrowTrap,
 } from './arrowTrap.js';
 import {
@@ -543,6 +554,21 @@ export function createLevelRun({
             despawnedByLevel.get(d.level).add(d.id);
             worlds.delete(d.level);
             if (d.level === level) world = worldFor(d.level);
+            /**
+             * ⛔⛔ R8 SLICE 1: AND THE ONE BODY LEAVES THE LIVE ROSTER —
+             * TARGETED, NEVER A ROSTER DROP.
+             *
+             * The docblock above is right that per-visit state is not
+             * dropped here, and a chaser roster is exactly why it matters:
+             * L6 declares ONE despawn (`bob@112,48`, the body the game's own
+             * water drowned) and the OTHER bob has been walking since tick 1.
+             * Dropping the roster would rebuild BOTH at their `.oel` cells
+             * and teleport the survivor backwards; leaving it alone would
+             * keep a body the game removed. Remove exactly the one named.
+             */
+            const st = chaserStates.get(d.level);
+            const body = st?.get(d.id);
+            if (body) body.removed = true;
         }
     };
     /**
@@ -573,6 +599,11 @@ export function createLevelRun({
         // it is dropped anyway, because "no item does" is a claim about the
         // current census and not about the mechanism.)
         spinnerStates.delete(n);
+        // ⛓ R8 slice 1: the chaser roster is built from the world's census,
+        // so a rebuilt world needs a rebuilt roster — the spinner's reason
+        // exactly. (No item grants or removes a chaser today; dropped
+        // anyway, because "no item does" is a claim about the census.)
+        chaserStates.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -1520,6 +1551,28 @@ export function createLevelRun({
      */
     const crusherContacts = [];
     /**
+     * ⛓⛓⛓ R8 SLICE 1: one row per tick a bridged chaser MOVED —
+     * `{t, level, id, x, y, vx, vy}`.
+     *
+     * ⚠ MOVES ONLY, not every tick: a bob out of leash and at rest writes
+     * nothing, so a room whose chasers never wake produces an EMPTY ledger
+     * and that emptiness is a claim ("nothing woke") rather than a silence.
+     * It is the positive witness the pair asserts against — a hit count alone
+     * is not a witness that the body was stepped (trap 113).
+     */
+    const chaserWalks = [];
+    /**
+     * ⛓ One row per body the ROOM removed — `{t, level, id, cause, x, y}`.
+     *
+     * ⛔ THE POSITIVE WITNESS FOR TRAP 152, MOVED FROM A PROBE INTO THE RUN.
+     * R7 slice 6e measured "the room kills them itself" with a truncated
+     * `--mobiles` arm and carried the result as a DECLARED `despawn`. With
+     * the terrain arm transcribed the model computes it, and this ledger is
+     * where it says so — which is what makes "the game removed this body"
+     * checkable against the declaration rather than merely compatible with it.
+     */
+    const chaserTerrainDeaths = [];
+    /**
      * ⛓⛓⛓ R5 SLICE 23: every tick `BossTotem`'s clamp overwrote the
      * player's y, and what it overwrote.
      *
@@ -2192,6 +2245,189 @@ export function createLevelRun({
         return spinnerStates.get(n);
     };
     /**
+     * ⛓⛓⛓ R8 SLICE 1 — THE BRIDGED CHASERS, PER VISIT.
+     *
+     * ⚠ PER VISIT, exactly like a spinner and for the stronger version of its
+     * reason: `Bob` holds `x`/`y`/`v`/`hits` in instance fields and writes no
+     * persistence at all, so a re-entered level rebuilds every one at its
+     * `.oel` cell with zero velocity. R7 slice 6d MEASURED that from the
+     * other side — stepping out of L5 and back respawned all three bobs while
+     * the flag their deaths cleared stayed cleared (trap 150).
+     *
+     * ⛔ THE ROSTER IS `chasers.bridgedChaserTags()`, DERIVED from the two
+     * tables — never a third list here.
+     */
+    /**
+     * ⛔⛔⛔ R8 SLICE 1'S OWN WALL, AND IT IS A CLAIM ABOUT LIFETIME RATHER
+     * THAN ABOUT MOTION — MEASURED, NOT ARGUED.
+     *
+     * Turning the stepper on roster-wide reddened THREE committed tapes
+     * (`r7-act2-4` at tick 282, `r7-act2-5`, `r7-act2-full` — the last with a
+     * PIT DEATH in L4), and the cause is one missing family, not a wrong
+     * transcription: **this model's arrows hit nothing at all.**
+     * `stepArrowTrapsNow` calls `stepArrow(a, {frozen, bound})` and
+     * `stepArrow`'s `bodies` defaults to `[]`, so an arrow flies through
+     * every body in the game. In L4 the GAME's arrows kill `bob@64,64` —
+     * R7 slice 6c measured its hits climbing `0→1→2→3` and the body gone at
+     * t≈158 — and in L5 they kill all three. The model's bobs therefore
+     * SURVIVE, keep chasing, and reach a player who is deliberately standing
+     * still to bait them.
+     *
+     * ⇒ stepping a body whose DEATH the model cannot see is not a partial
+     * model, it is a wrong one: the position is right for as long as the body
+     * should have existed and wrong for ever afterwards. So the roster is
+     * scoped by the question "can this run compute this body's lifetime",
+     * which is `contactPricing`'s own split — *does the run step its
+     * position* — asked one layer deeper.
+     *
+     * ⛔ THE PREDICATE IS THE ROOM'S ARROW TRAPS, and it is deliberately
+     * COARSE: whether a chaser wanders into a lane is a question about a walk
+     * nobody has run, and the leash follows the player, so "this trap cannot
+     * reach that body" is not a claim the level record can support. A room
+     * with a trap is refused whole.
+     *
+     * ⚠ AND THE OTHER LIFETIME MECHANISM IS NOT REFUSED, IT IS ASSERTED.
+     * `Enemy.update`'s terrain switch (water/lava destroy, the pit fall) is
+     * also absent from `chaserStep`, and refusing every room with water would
+     * take L6 — the one room this slice can prove anything in — off the
+     * table. The honest instrument there is a CHECK rather than a refusal:
+     * `assertSteppedChaserLifetime` fails BY NAME the moment a stepped body
+     * stands on lethal terrain or inside a live arrow, so the gap can never
+     * be silent. R7 slice 6e's L6 `despawn` is the standing witness that the
+     * declared channel is what carries a removal the model cannot compute.
+     */
+    const chaserRoomVerdict = (n) => {
+        const traps = (worldFor(n).arrowTraps ?? []);
+        if (traps.length > 0) {
+            return {
+                stepped: false,
+                why: `level ${n} holds ${traps.length} arrow trap(s) `
+                    + `[${traps.map((t) => t.id).join(', ')}], and this model's arrows hit `
+                    + 'NOTHING — `stepArrowTrapsNow` calls `stepArrow` with no `bodies`. '
+                    + 'The GAME kills chasers with them (measured in L4: hits 0->1->2->3, '
+                    + 'body gone at t~158), so a stepped body here would outlive its real '
+                    + 'one and chase a player the game had already freed. The missing '
+                    + 'family is Arrow x Enemy',
+            };
+        }
+        return { stepped: true, why: null };
+    };
+    const chaserStates = new Map();
+    const chaserStateFor = (n) => {
+        if (!chaserStates.has(n)) {
+            // ⚠ HERE rather than at a call site, for `spinnerStateFor`'s own
+            // reason: this is the one place a chaser roster comes into
+            // existence, so the bound cannot be skipped by a path that
+            // forgot to ask.
+            assertChaserSolidsBound(n);
+            const byId = new Map();
+            const verdict = chaserRoomVerdict(n);
+            for (const e of (verdict.stepped ? (worldFor(n).combat?.enemies ?? []) : [])) {
+                if (!isBridgedChaser(e.tag)) continue;
+                byId.set(`${e.tag}@${e.x},${e.y}`, {
+                    id: `${e.tag}@${e.x},${e.y}`,
+                    tag: e.tag,
+                    as3: e.as3,
+                    // ⛔ THE CONSTRUCTED POSITION, not the `.oel` one. The
+                    // census's `cx`/`cy` carry the ctor's half-tile offset,
+                    // and eight pixels is what the live contact-control pair
+                    // caught the first time somebody used the other pair.
+                    x: e.cx,
+                    y: e.cy,
+                    v: { x: 0, y: 0 },
+                    damage: e.row.damage,
+                    // `Enemy`'s own fields, at their class defaults. Nothing
+                    // on this rung's roster hits a bob, so they are carried
+                    // rather than driven — and carried is what makes the
+                    // refusal in `KILL_ARM_POLICY.Bob` a decision.
+                    hits: 0,
+                    hitsTimer: 0,
+                    dying: false,
+                    // ⛔ `destroy` AND `removed` ARE DIFFERENT FENCEPOSTS, and
+                    // trap 87 is the whole reason both exist: `destroy` stops
+                    // the body dead THIS tick, and `FP.world.remove` is ten
+                    // fade ticks later. A model that collapsed them would
+                    // stop counting the body ten ticks early.
+                    destroy: false,
+                    alpha: 1,
+                    removed: false,
+                });
+            }
+            chaserStates.set(n, byId);
+        }
+        return chaserStates.get(n);
+    };
+    /**
+     * ⛔ THE CHASER'S SOLIDS BOUND — `assertSpinnerSolidsBound`'s shape, with
+     * the difference in the OTHER direction.
+     *
+     * A spinner's list is the player's MINUS "LavaBoss"; a chaser's is that
+     * minus "LavaBoss" PLUS "Enemy" (`Bob.as:39`). `stepChasersNow` models
+     * the "Enemy" half itself — the census bodies and the sibling chasers —
+     * and reuses `collidesSolid` for the rest, so the one type it would get
+     * wrong is `LavaBoss`, and that is asserted away by room rather than
+     * over-approximated.
+     *
+     * ⚠ AND THE SECOND HALF IS THE STATE-DEPENDENT `type`. Three classes
+     * REWRITE their own `type` at run time — `IceTurret` to "Solid" in its
+     * corpse arm, `FinalBoss` and `BossTotem` between "Enemy" and "Solid" —
+     * so "is this body in the chaser's way" is not a question the census can
+     * answer for them. Refused by name in any room that holds both, rather
+     * than answered with whichever reading happened to be typed.
+     */
+    const assertChaserSolidsBound = (n) => {
+        const w = worldFor(n);
+        const census = w.combat?.enemies ?? [];
+        if (!census.some((e) => isBridgedChaser(e.tag))) return;
+        /**
+         * ⛔ THE DIFFERENCE IS DERIVED, NOT TYPED. `chaserSolids('bob')` is
+         * the class's own list and `PLAYER_SOLID_TYPES` is what
+         * `collidesSolid` really answers for; the types this sweep would get
+         * wrong are exactly the ones in the player's list and not the
+         * chaser's. Writing "LavaBoss" here instead would be a constant
+         * quoted beside its derivation (trap 97) — and would go stale the
+         * moment either list moved.
+         */
+        const chaserTypes = new Set(chaserSolids(
+            census.find((e) => isBridgedChaser(e.tag)).tag,
+        ));
+        const overReach = PLAYER_SOLID_TYPES.filter((t) => !chaserTypes.has(t));
+        const wrong = (w.solids ?? []).filter((s) => overReach.includes(s.cls?.type));
+        if (wrong.length > 0) {
+            throw new Error(`levelRun: level ${n} holds a bridged chaser AND `
+                + `${wrong.length} solid(s) of type [${[...new Set(wrong.map((s) => s.cls.type))]
+                    .join(', ')}]. \`stepChasersNow\` reuses \`collidesSolid\`, which is `
+                + 'the PLAYER\'s solids list — and a chaser\'s list does NOT carry '
+                + `[${overReach.join(', ')}] (\`SOLIDS_BY_MOVER.chaser\`). The model would `
+                + 'stop the chaser against something the game lets it walk through. Give '
+                + '`collidesSolid` a mover before routing here.');
+        }
+        const shifty = census.filter((e) => TYPE_REWRITING_ENEMIES.includes(e.as3));
+        if (shifty.length > 0) {
+            throw new Error(`levelRun: level ${n} holds a bridged chaser AND `
+                + `[${[...new Set(shifty.map((e) => e.as3))].join(', ')}], whose runtime `
+                + '`type` is rewritten at run time (`IceTurret.as:94`, `FinalBoss.as:233`, '
+                + '`BossTotem.as:296,315`). A chaser\'s `solids` carries "Enemy", so '
+                + 'whether one of those bodies BLOCKS it depends on which side of its own '
+                + 'flip it is on — a question the census cannot answer. Refused rather '
+                + 'than answered with one reading.');
+        }
+    };
+    /**
+     * The live chaser bodies, as `{id, tag, rect}` — the "Enemy" half of a
+     * chaser's own sweep, and the danger map's ingredient (c).
+     */
+    const chaserRectsNow = () => {
+        const st = chaserStateFor(level);
+        if (st.size === 0) return null;
+        const out = [];
+        for (const c of st.values()) {
+            if (c.removed) continue;
+            out.push({ id: c.id, tag: c.tag, rect: chaserBoxAt(c.tag, c.x, c.y) });
+        }
+        return out.length === 0 ? null : out;
+    };
+    /**
      * The live spinner bodies for the block's collision query.
      *
      * ⚠ NULL WHEN THERE IS NOTHING TO SAY, like `pushableRectsNow` — 112 of
@@ -2277,6 +2513,13 @@ export function createLevelRun({
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
         // heading north-east — there is no state on the class to carry.
         spinnerStates.delete(n);
+        // ⛓⛓⛓ R8 slice 1: and every bridged chaser, for the strongest
+        // version of that reason — R7 slice 6d MEASURED it from the other
+        // side. Stepping out of L5 and back respawned all three bobs while
+        // the flag their deaths cleared stayed cleared (trap 150): the
+        // FIGHT is per visit and the CLEAR is durable, which is what decides
+        // where a segment may be cut.
+        chaserStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -5838,6 +6081,35 @@ export function createLevelRun({
             // has moved it — scanning it would be a second contact, at a
             // position the fight left 140 px ago.
             if (pricing.kind === 'boss') continue;
+            // ⛓⛓⛓ R8 SLICE 1: AND A `stepped` FAMILY WITH A PRICER IS THE
+            // SAME SKIP, FOR THE SAME REASON ONE FAMILY OVER. A bridged
+            // chaser's contact is billed by `stepChasersNow` at the position
+            // THIS tick left it; the census rect here is its `.oel` placement,
+            // which a chaser leaves on the first tick the player is inside
+            // `runRange`. Scanning it would be a second contact at a stale
+            // place — the totem's mistake, with a body that moves every tick
+            // instead of once. A `stepped` family with `pricedBy: null` still
+            // falls through to the throw below, and that is the CONTROL: the
+            // partition is between "priced somewhere" and "priced nowhere",
+            // never between two spellings of "stepped".
+            //
+            // ⛔⛔ AND THE SKIP IS PER ROOM, NOT PER CLASS. `chaserRoomVerdict`
+            // refuses to step a body whose LIFETIME this model cannot compute
+            // (today: any room with an arrow trap). Skipping there would be
+            // the worst answer available — a silent zero for a body nobody
+            // prices — so the refusal is re-raised here with the ROOM's own
+            // reason rather than the class's.
+            if (pricing.kind === 'stepped' && pricing.pricedBy) {
+                const verdict = chaserRoomVerdict(level);
+                if (verdict.stepped) continue;
+                throw new Error(`levelRun: the player is standing inside ${id} in level `
+                    + `${level} at tick ${ticksCompleted + 1} on a tape that does NOT `
+                    + `declare \`noDamage\`. \`${pricing.pricedBy}\` would price this `
+                    + `contact — but the bridge is NOT STEPPING this room: ${verdict.why}. `
+                    + 'So the body is where `loadlevel` put it as far as this run is '
+                    + 'concerned, and a contact against a stale placement is a number this '
+                    + 'run cannot produce. Route clear of it, or build the missing family.');
+            }
             if (pricing.kind !== 'static') {
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
                     + `${level} at tick ${ticksCompleted + 1} on a tape that does NOT `
@@ -5875,6 +6147,382 @@ export function createLevelRun({
                 from: { x: inst.cx, y: inst.cy },
             });
             if (pendingDeath) return;
+        }
+    }
+
+    /**
+     * ⛓⛓⛓ R8 SLICE 1 — THE ENEMY BRIDGE. ONE `Bob.update()` PER BODY, IN THE
+     * GAME'S OWN SLOT, AND THE SLOT IS THE LAST ONE BEFORE THE PLAYER.
+     *
+     * `Game.loadlevel` adds `bob` at `:2141` and `World.addUpdate` PREPENDS,
+     * so the update list is the reverse of the add order:
+     *
+     *   spinner (:2273) -> shieldboss (:2245) -> pushables (:2239-2241)
+     *     -> crusher (:2165) -> iceturret (:2161) -> sandtrap (:2156)
+     *     -> finalboss (:2149) -> bosstotem (:2146) -> **BOB (:2141)**
+     *     -> … -> Player (:2115)
+     *
+     * ⛔ SO A BOB UPDATES **AFTER EVERY OTHER ENEMY IN THE ROOM** and
+     * immediately before the player — which is why this call sits beside
+     * `stepContactsNow` at the bottom of the tick and NOT next to the ice
+     * turret, where "one more enemy family" would have put it. The obvious
+     * placement is wrong by nine families.
+     *
+     * ⛔⛔ AND IT IS **BELOW** THE CEREMONY'S EARLY RETURN, which is a
+     * DIFFERENT answer from the crusher's and the spinner's, on purpose:
+     *
+     *   · a bob's MOTION is freeze-gated twice over (`Mobile.mobileUpdate`
+     *     skips the move, and `Bob.update`'s own `|| Game.freezeObjects`
+     *     returns above the chase block), so a ceremony parks it dead;
+     *   · what does keep running through a freeze is `Enemy.update`'s TERRAIN
+     *     switch, `Mobile.death`'s fade and `hitUpdate` — and this rung
+     *     transcribes none of the three for a chaser (see `chasers.js`'s own
+     *     note: the terrain arm is the game's, witnessed by a `despawn`).
+     *
+     * ⇒ the frozen frames a ceremony spends cost a LIVE, UNHIT bob exactly
+     * nothing, and `assertNoCeremonyBesideLiveChaser` refuses the two cases
+     * where that stops being true rather than approximating them.
+     *
+     * ── WHAT THIS CALLS, AND WHAT IT DOES NOT RE-IMPLEMENT ────────────
+     *
+     * `chasers.chaserStep` is the WHOLE movement transcription and has been
+     * since R5 slice 3 — the off-screen return, `Mobile.friction`, the two
+     * 1 px sweeps, the per-class freeze gate and the bang-bang chase impulse.
+     * Nothing here re-derives a line of it: two cost models that must agree
+     * are one cost model. What this function owns is the three things a
+     * transcription cannot know — WHICH world it is stepping (the sweep), the
+     * i-frame drain `iframesTicked` reports, and `Enemy.update`'s tail
+     * (`hitPlayer`, through the run's one `applyPlayerHit` funnel).
+     *
+     * ⚠ `onScreenNow` THROWS on an uncertain shake band, and that is the
+     * POSTURE CHOSEN HERE rather than the one inherited. `Enemy.update`
+     * early-returns at ZERO margin, so the camera decides whether this body
+     * moves AT ALL this tick — not merely whether it damages. Guessing would
+     * make a whole walk's chase a coin flip, and a `false` would freeze a
+     * body the game was still walking. It is the ShieldBoss's decision
+     * (`onScreenNow(body, …)`) taken for the same reason and with a stronger
+     * consequence, and the answer to a red here is to move the stance, never
+     * to widen the band.
+     */
+    /**
+     * ⛔⛔⛔ THE LIFETIME GAP, AS A CHECK RATHER THAN A REFUSAL — because a
+     * refusal here would cost the slice the one room it can prove anything in.
+     *
+     * `chaserStep` is `Enemy.update`'s MOVEMENT half. Two things in the other
+     * half remove a body and neither is transcribed:
+     *
+     *   · the TERRAIN switch — `case 1: //Water` and `case 17: //Lava` set
+     *     `destroy = true` outright, and `case 6` starts the pit fall;
+     *   · an ARROW — `Arrow.as:52` calls `Enemy.hit(v.length, …)`, and three
+     *     of those kill a `bob` (`hitsMax` 3).
+     *
+     * The arrow case is refused by ROOM (`chaserRoomVerdict`). The terrain
+     * case is not, because L6 — the room whose two bobs R7 slice 6e measured
+     * — HOLDS WATER, and one of its bobs drowns in it. That removal is
+     * DECLARED, by the tape's own v10 `despawn`, which is exactly the channel
+     * the arc built for "the game removed this body itself".
+     *
+     * ⇒ what is left is the case where a body the model still believes in
+     * stands somewhere the game would have destroyed it. That must never be
+     * SILENT, so it is a throw by name on the tick it becomes true. In L6 it
+     * never fires — the surviving bob parks at x≈84.2 against a sandtrap,
+     * four pixels WEST of the water (trap 152) — and that nil is a
+     * measurement rather than an assumption.
+     */
+    function assertSteppedChaserLifetime(c) {
+        const t = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+        if (t === ENEMY_PIT_TILE) {
+            throw new Error(`levelRun: the stepped chaser ${c.id} stands on a PIT tile in `
+                + `level ${level} at tick ${ticksCompleted + 1}. \`Enemy.update\`'s `
+                + '`case 6` starts a DESCENT — a lerp to the tile centre plus an 8 deg '
+                + 'spin and a 0.05 fade over 20 ticks — which this rung does not '
+                + 'transcribe (the water and lava arms are instants and are). No room '
+                + 'this bridge steps has one, and that nil is why it is refused rather '
+                + 'than approximated.');
+        }
+        for (const a of arrowsFor(level)) {
+            if (a.removed) continue;
+            if (!rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), arrowRect(a))) continue;
+            throw new Error(`levelRun: the stepped chaser ${c.id} is inside live arrow `
+                + `${a.id} in level ${level} at tick ${ticksCompleted + 1}. `
+                + '`Arrow.as:52` calls `Enemy.hit(v.length, …)` and three of those kill a '
+                + 'bob — and this model\'s arrows hit NOTHING (`stepArrow` is called with '
+                + 'no `bodies`). `chaserRoomVerdict` refuses a room with a TRAP in it, so '
+                + 'reaching this line means an arrow came from somewhere that check does '
+                + 'not know about. Build Arrow x Enemy.');
+        }
+    }
+
+    /**
+     * ⛔ THE LEDGER CONSEQUENCE OF A CHASER'S REMOVAL, COMPUTED — NOT SKIPPED.
+     *
+     * `Bob` IS in `totalEnemies()`, and its removal really does drop
+     * `classCount(Bob)` — which opens every `tset == -1` lock in the room.
+     * That is the exact cost `KILL_ARM_POLICY.Bob` refuses a PRESS over, and
+     * a removal the ROOM causes owes the same arithmetic: the flag does not
+     * care what killed the body.
+     *
+     * ⚠ THE ANSWER FOR L6 IS NIL AND IT IS A MEASUREMENT. The room holds four
+     * sandtraps, two bobs and no lock of any kind — but "there were no kill
+     * locks" and "nobody looked" print the same thing (the IceTurret arm's
+     * own law), so the scan runs and the nil is computed from the level
+     * record. A room where it is NOT nil is a route change nothing asked for,
+     * and it fails by name.
+     */
+    function assertChaserRemovalOpensNothing(c) {
+        const census = world.combat?.enemies ?? null;
+        const roster = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+        const st = chaserStateFor(level);
+        // The body is still in the census roster (the census is the PLACED
+        // list and does not move), so `bodiesAfter` is that list minus the
+        // ones this run has removed — including the one being removed now.
+        const goneIds = new Set([...st.values()].filter((o) => o.destroy || o.removed)
+            .map((o) => o.id));
+        goneIds.add(c.id);
+        const after = (census ?? []).filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
+            .map((e) => ({ as3: e.as3 }));
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: roster, bodiesAfter: after,
+        });
+        // ⛔ AN ABSENT CENSUS IS A REFUSAL, NOT A PASS — the IceTurret arm's
+        // reasoning verbatim: with no `combat` role the roster is empty, so
+        // `totalEnemies()` reads 0 both sides and the nil is computed from a
+        // fiction. Scoped to the case where the count is load-bearing.
+        if (led.locks.length > 0 && census === null) {
+            throw new Error(`levelRun: ${c.id}'s terrain death in level ${level} happens `
+                + `in a room with ${led.locks.length} \`tset == -1\` lock(s), and the `
+                + 'world was built with NO COMBAT CENSUS — so `totalEnemies()` reads 0 '
+                + 'because nothing was ASKED. Build the world with the `combat` role.');
+        }
+        if (!led.nil) {
+            throw new Error(`levelRun: the removal of ${c.id} at tick ${ticksCompleted + 1} `
+                + `OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — `
+                + 'a blocker the walk did not earn and this slice does not model. The '
+                + 'bridge steps a chaser\'s POSITION; a room whose lock waits on its DEATH '
+                + 'needs the kill arm too.');
+        }
+    }
+
+    function stepChasersNow() {
+        // ⛔ THE `noDamage` GATE IS `stepContactsNow`'s ARGUMENT, REUSED —
+        // and it needs one more term, which `R8_ENEMY_BRIDGE.enemyBodyReaders`
+        // enumerates: under the flag a chaser's POSITION has no reader in
+        // this model at all (the block sweep's Enemy arm is spinners-only,
+        // `stepArrow` gets no bodies, and a wand shot at a chaser already
+        // throws). So stepping is byte-inert here, and running it would cost
+        // 94 committed fixtures their hot loop for a number nobody reads.
+        if (noclip || noDamage) return;
+        const st = chaserStateFor(level);
+        if (st.size === 0) return;
+        const playerPoint = { x: state.x, y: state.y };
+        // ⚠ ONCE PER TICK, not per probe — `pushableCtx`'s note, and a
+        // chaser's sweep is 1 px steps on both axes exactly like a block's.
+        // R8 slice 0's brand is what makes the normalise cost per TICK.
+        const solidOpts = normalizeLiveOpts(liveSolidOpts());
+        // ⛓ THE STATIC "Enemy" BODIES, read once. A `SandTrap` is
+        // `type = "Enemy"` and never moves, so a trap the PLAYER walks past
+        // is a WALL to a chaser — L6 parks `bob@96,16` against one forever
+        // (trap 152). The census is the right source for these: their
+        // position is their placement, for the whole visit.
+        const staticEnemyBoxes = [];
+        for (const inst of (world.combat?.enemies ?? [])) {
+            if (isBridgedChaser(inst.tag)) continue;
+            if (inst.row.speed !== 0) continue;
+            const r = contactRect(inst);
+            if (r) staticEnemyBoxes.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
+        }
+        // ⚠ THE UPDATE ORDER WITHIN THE FAMILY IS THE ADD ORDER, and the add
+        // order is the `.oel`'s — `for each (o in xml.objects[0].bob)` walks
+        // the placements in file order and PREPENDS each, so the LAST
+        // placement updates FIRST. Reversed here rather than iterated
+        // forwards, and it is observable the moment two bobs can block each
+        // other, which is exactly L5's and L6's case.
+        const ids = [...st.keys()].reverse();
+        for (const id of ids) {
+            const c = st.get(id);
+            if (c.removed) continue;
+            const box = chaserBoxAt(c.tag, c.x, c.y);
+            const before = { x: c.x, y: c.y };
+            /**
+             * `Mobile.moveX`/`moveY`, transcribed as the sweep this world
+             * really is — 1 px at a time, the last step `min(1, |rel| - i)`,
+             * stopping at the first collider and NOT continuing past it.
+             */
+            const move = (mx, my, dx, dy) => {
+                let x = mx;
+                let y = my;
+                const blocked = (px, py) => {
+                    const r = chaserBoxAt(c.tag, px, py);
+                    if (world.collidesSolid(r, solidOpts)) return true;
+                    for (const b of staticEnemyBoxes) {
+                        if (rectsOverlap(r, b.rect)) return true;
+                    }
+                    // ⛓ AND ITS SIBLINGS, read LIVE: this loop steps them one
+                    // at a time and the game's update list does too, so a
+                    // body that updates later must see the earlier one where
+                    // this tick left it — `pushableCtx`'s own reasoning, and
+                    // here it is not a bounded vacuity: L5 holds three and L6
+                    // holds two.
+                    for (const o of st.values()) {
+                        if (o.id === c.id || o.removed) continue;
+                        if (rectsOverlap(r, chaserBoxAt(o.tag, o.x, o.y))) return true;
+                    }
+                    return false;
+                };
+                const sweep = (rel, axis) => {
+                    const n = Math.abs(rel);
+                    const sign = rel < 0 ? -1 : (rel > 0 ? 1 : 0);
+                    for (let i = 0; i < n; i += 1) {
+                        const step = Math.min(1, n - i) * sign;
+                        const nx = axis === 'x' ? x + step : x;
+                        const ny = axis === 'y' ? y + step : y;
+                        if (blocked(nx, ny)) return;
+                        x = nx;
+                        y = ny;
+                    }
+                };
+                sweep(dx, 'x');
+                sweep(dy, 'y');
+                return { x, y };
+            };
+            const onScreen = onScreenNow(box, `${c.tag} ${c.id}`);
+            /**
+             * ⛓⛓⛓ `Enemy.update`'s TERRAIN SWITCH, AND IT RUNS *ABOVE*
+             * `super.update()` — so it is the first thing this tick, and it
+             * runs on a FROZEN tick too (nothing gates it).
+             *
+             * ⛔ IT IS BELOW THE OFF-SCREEN RETURN, THOUGH, and that is the
+             * fencepost: `if (!activeOffScreen && !onScreen()) return;` is
+             * `Enemy.update`'s FIRST statement and `Bob.activeOffScreen` is
+             * false, so a body the camera has lost does not drown either.
+             * Reading the switch as unconditional would kill bodies the game
+             * leaves standing in water off screen.
+             *
+             * ⚠ THE PIT IS NOT MODELLED and is REFUSED — `case 6` starts a
+             * lerp-to-tile-centre plus a spin and a 0.05 fade, a schedule
+             * rather than an instant, and no room this rung steps has one.
+             */
+            if (onScreen && !c.destroy) {
+                const t = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+                if (t === ENEMY_TERRAIN_DESTROYS.water || t === ENEMY_TERRAIN_DESTROYS.lava) {
+                    c.destroy = true;
+                    c.alpha = 1;
+                    chaserTerrainDeaths.push({
+                        t: ticksCompleted + 1,
+                        level,
+                        id: c.id,
+                        cause: t === ENEMY_TERRAIN_DESTROYS.water ? 'water' : 'lava',
+                        x: c.x,
+                        y: c.y,
+                    });
+                    assertChaserRemovalOpensNothing(c);
+                }
+            }
+            /**
+             * ⛔⛔ A DESTROYED BODY STOPS DEAD, AND THE THREE GATES THAT SAY SO
+             * ARE IN THREE DIFFERENT CLASSES — which is why this is a branch
+             * and not a `continue`.
+             *
+             *   · `Mobile.mobileUpdate`'s `if (!destroy)` skips friction,
+             *     `input()` and BOTH sweeps ⇒ it does not move;
+             *   · `Enemy.update`'s `if (!destroy)` skips `hitUpdate()` and
+             *     `hitPlayer()` ⇒ it damages nothing and its i-frames stop;
+             *   · `Bob.update`'s own `if (destroy || …) return` skips the
+             *     chase block ⇒ `v` stops accumulating.
+             *
+             * What DOES run is `Mobile.death()` — the 0.1 alpha fade, ten
+             * subtractions from 1 (`MOBILE_DEATH_FADE.ticks`, a LOOP and not
+             * a division) — and the `FP.world.remove` it ends in.
+             *
+             * ⚠ AND `death()` IS OUTSIDE THE FREEZE GATE, so a corpse keeps
+             * fading through a ceremony. `assertNoCeremonyBesideLiveChaser`
+             * is what refuses the case this model cannot spend as steps.
+             */
+            if (c.destroy) {
+                c.alpha -= MOBILE_DEATH_FADE.alphaStep;
+                if (c.alpha <= 0) c.removed = true;
+                continue;
+            }
+            const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying }, playerPoint, {
+                onScreen,
+                frozen: ceremony !== null,
+                move,
+            });
+            c.x = r.x;
+            c.y = r.y;
+            c.v = r.v;
+            assertSteppedChaserLifetime(c);
+            // `Enemy.update`'s tail, in its own order: `hitUpdate()` then
+            // `hitPlayer()`, and BOTH are inside `if (!destroy)`.
+            if (r.iframesTicked && c.hitsTimer > 0) c.hitsTimer -= 1;
+            if (before.x !== c.x || before.y !== c.y) {
+                chaserWalks.push({
+                    t: ticksCompleted + 1, level, id: c.id, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
+                });
+            }
+            // ── `Enemy.hitPlayer()`, at the position THIS tick left ──────
+            // `collide("Player", x, y)` against the body's own hitbox, gated
+            // on `!destroy`, `currentAnim != "die"` and `hitsTimer <= 0` —
+            // which is `enemyHitPlayerFires`, the same predicate the static
+            // census arm uses. One implementation, two callers.
+            const bodyNow = chaserBoxAt(c.tag, c.x, c.y);
+            if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) continue;
+            const verdict = enemyHitPlayerFires(
+                { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying },
+                onScreenNow(bodyNow, `${c.tag} ${c.id}`) ? 'on' : 'off',
+            );
+            if (!verdict.fires) {
+                contactsSuppressed.push({
+                    t: ticksCompleted + 1, level, source: 'chaser', id: c.id, why: verdict.refusedAt,
+                });
+                continue;
+            }
+            applyPlayerHit({
+                source: 'chaser',
+                id: c.id,
+                // `p.hit(this, 3, new Point(x, y), damage)` — the base class's
+                // force, the instance's `damage`, and the body's own ENTITY
+                // POINT, which for a chaser is where it stands NOW.
+                force: PLAYER_DAMAGE.contactForce,
+                damage: c.damage,
+                from: { x: c.x, y: c.y },
+            });
+            if (pendingDeath) return;
+        }
+    }
+
+    /**
+     * ⛔ THE REFUSAL THE FREEZE ASYMMETRY EARNS, ONE FAMILY OVER — and it is
+     * NARROWER than the ShieldBoss's on purpose.
+     *
+     * A ceremony's phase A is a LUMP in `frozenFramesOwed`, not a sequence of
+     * steps. For a bob that costs nothing while it is unhurt and unmoving:
+     * the motion is freeze-gated and the model's roster carries no terrain
+     * arm to advance. Two states make it cost something, and only those two
+     * are refused:
+     *
+     *   · `hitsTimer > 0` — `hitUpdate` runs OUTSIDE the freeze gate, so the
+     *     game would drain 150 i-frames the model drains none of;
+     *   · `dying` — `Mobile.death`'s fade runs outside it too, and the
+     *     removal it ends in is what `totalEnemies()` counts.
+     *
+     * ⚠ NOTHING ON THIS RUNG'S ROSTER CAN PUT A BOB IN EITHER STATE — no kill
+     * arm is modelled for the class and no arrow in this model hits a body —
+     * so this is a BOUNDED VACUITY today, and it says so rather than being
+     * left out on the strength of that.
+     */
+    function assertNoCeremonyBesideLiveChaser(what) {
+        if (noclip || noDamage) return;
+        for (const c of chaserStateFor(level).values()) {
+            if (c.removed) continue;
+            if (c.hitsTimer <= 0 && !c.dying) continue;
+            const why = c.dying ? 'DYING' : `inside ${c.hitsTimer} ticks of i-frames`;
+            throw new Error(`levelRun: a ${what} ceremony began in level ${level} while `
+                + `the chaser ${c.id} is ${why}. \`Enemy.hitUpdate\` and \`Mobile.death\` `
+                + 'both sit OUTSIDE `Game.freezeObjects`, so the game advances them through every '
+                + 'frozen frame — and this model spends a ceremony\'s phase A as a LUMP '
+                + 'rather than as steps. Collect after the body is gone, or step the '
+                + 'freeze.');
         }
     }
 
@@ -7576,6 +8224,40 @@ export function createLevelRun({
          */
         get crusherContacts() { return crusherContacts.map((c) => ({ ...c })); },
         /**
+         * ⛓⛓⛓ R8 SLICE 1 — THE LIVE CHASER BODIES IN THIS ROOM, RIGHT NOW.
+         *
+         * `{id, tag, x, y, vx, vy, hits, hitsTimer, dying}` per body the
+         * bridge steps. The danger map's ingredient (c) reads this, and so
+         * does any policy that wants to know where a body IS rather than
+         * where its `.oel` put it.
+         *
+         * ⚠ EMPTY UNDER `noDamage` AND `noclip`, and that is the gate's own
+         * claim made visible rather than hidden: under those flags the
+         * stepper does not run, so there are no live positions to report and
+         * this must not invent any.
+         */
+        get chasers() {
+            if (noclip || noDamage) return [];
+            const out = [];
+            for (const c of chaserStateFor(level).values()) {
+                if (c.removed) continue;
+                out.push({
+                    id: c.id, tag: c.tag, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
+                    hits: c.hits, hitsTimer: c.hitsTimer, dying: c.dying,
+                });
+            }
+            return out;
+        },
+        /**
+         * One row per tick a bridged chaser MOVED. ⚠ The emptiness is a
+         * claim: a room whose chasers never wake writes nothing here, which
+         * is what a pair asserts against when it says "the body was stepped"
+         * — a hit count alone would not (trap 113).
+         */
+        get chaserWalks() { return chaserWalks.map((w) => ({ ...w })); },
+        /** One per chaser the ROOM removed (water/lava), with the cause. */
+        get chaserTerrainDeaths() { return chaserTerrainDeaths.map((d) => ({ ...d })); },
+        /**
          * ⛓⛓⛓ R5 SLICE 20 — the ice turrets, as `collidesSolid` sees them.
          *
          * ⛔ A SNAPSHOT, like the crushers' and for a DIFFERENT reason: a
@@ -8755,6 +9437,10 @@ export function createLevelRun({
                 if (hit) {
                     // ⛔ R6 slice 5 — see `assertNoCeremonyBesideShieldBoss`.
                     if (!noclip) assertNoCeremonyBesideShieldBoss(hit.tag ?? 'pickup');
+                    // ⛓ R8 slice 1: and the chaser's narrower version of the
+                    // same asymmetry — see `assertNoCeremonyBesideLiveChaser`
+                    // for why it refuses two STATES rather than a class.
+                    if (!noclip) assertNoCeremonyBesideLiveChaser(hit.tag ?? 'pickup');
                     const entry = ceremonyFor(hit);
                     ceremonyStarts.push({
                         t: ticksCompleted, level, tag: hit.tag ?? 'pickup', runtime: false,
@@ -9200,6 +9886,18 @@ export function createLevelRun({
             // carries `frozen` for the sources that DO run above the return
             // (the blast, the ring and the crusher).
             stepContactsNow();
+            // ── ⛓⛓⛓ R8 SLICE 1: THE CHASERS, AND THEY ARE **LAST** ────
+            //
+            // `Game.loadlevel` adds `bob` at `:2141`, BEFORE every other
+            // enemy family and AFTER the Player (`:2115`), and
+            // `World.addUpdate` PREPENDS — so a Bob is the last enemy in the
+            // update list and the last thing that runs before the player's
+            // own tick. Below `stepContactsNow`, whose bodies (`sandtrap`
+            // `:2156`) are added AFTER `bob` and therefore update BEFORE it.
+            // See `stepChasersNow` for the whole ordering and for why the
+            // obvious slot — next to the ice turret — is wrong by nine
+            // families.
+            if (!noclip) stepChasersNow();
             // ⚠ A touch-lock window drops the KEYS, not the tick.
             // `receiveInput` gates `Player.input()` alone, so friction, both
             // sweeps and `getState` all still run — which is why the player

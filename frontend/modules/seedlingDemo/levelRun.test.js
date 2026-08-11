@@ -1219,10 +1219,20 @@ describe('⛓⛓⛓ R5 slice 23: the L43 wand window, and its shut-before contro
  * refreshed and not merely the memo (trap 149), and an id nobody can find is
  * a named throw rather than a silent no-op.
  *
- * ⛔ THE POSITIVE CONTROL IS THE REFUSAL ITSELF. L6's `bob@112,48` is a
- * `mover`, so walking into its placement box WITHOUT the declaration throws
- * by name — which is what makes "and with the declaration it does not" a
- * measurement rather than an absence.
+ * ⛔ THE POSITIVE CONTROL WAS THE REFUSAL ITSELF, AND R8 SLICE 1 MOVED IT.
+ * L6's `bob@112,48` used to be a `mover`, so walking into its placement box
+ * WITHOUT the declaration threw by name. The bridge steps a `bob` now: the
+ * body LEAVES its placement on the first tick the player is inside `runRange`
+ * 80, so the old control asserts a throw that can no longer happen — and a
+ * control that has stopped being able to fire is not a weak control, it is
+ * not a control (trap 62's shape).
+ *
+ * ⇒ the refusal is re-pointed at an UNCONVERTED SIBLING, and the sibling is
+ * chosen to make the partition sharp rather than convenient: `jellyfish` is
+ * in `chasers.CHASERS` with the SAME transcription depth as `bob` and has NO
+ * `MODELLED_ENEMY_CLASSES` row, so it is the one class where "transcribed"
+ * and "bridged" visibly differ. Its throw is what proves the bridge converted
+ * ONE class and not a family.
  */
 describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
     const L6_BOB = 'bob@112,48';
@@ -1245,9 +1255,50 @@ describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
         return run;
     };
 
-    it('⛔ THE POSITIVE CONTROL: walking into a `mover` throws BY NAME', () => {
-        expect(() => runWith([])).toThrow(/standing inside bob@112,48 in level 6/);
-        expect(() => runWith([])).toThrow(/prices it as "mover"/);
+    /**
+     * ⛔⛔ THE CONTROL, RE-POINTED: an UNCONVERTED SIBLING still throws BY
+     * NAME. L63 holds two `jellyfish` — transcribed in the same module as
+     * `bob`, with the same `chaserStep`, and deliberately WITHOUT a roster
+     * row. Walking into one is still the `mover` refusal, word for word.
+     */
+    it('⛔ THE CONTROL: an unconverted sibling class still throws BY NAME', () => {
+        // L45's `jellyfish@224,176`, walked into from two tiles north. The
+        // contact lands at tick 14.
+        const drive = () => {
+            const run = createLevelRun({
+                levelSource: atlasLevelSource(),
+                boot: { level: 45, x: 224, y: 144 },
+                noclip: false,
+                noDamage: false,
+                roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+            });
+            for (let t = 0; t < 30; t += 1) run.advance(new Set(['down']));
+        };
+        expect(drive).toThrow(/standing inside jellyfish@224,176 in level 45/);
+        // ⛔ THE WORD IS THE CLAIM: still `mover`, still refused, and the
+        // refusal still names the class rather than the bridge.
+        expect(drive).toThrow(/prices it as "mover"/);
+    });
+
+    /**
+     * ⛓⛓⛓ AND THE CONVERTED CLASS IS PRICED INSTEAD OF REFUSED — the pair's
+     * other half, at the same placement the old control used.
+     *
+     * ⚠ THE WITNESS IS THE WALK, NOT THE HIT (trap 113). A hit count is
+     * invariant under a permutation of its causes; what says the BODY WAS
+     * STEPPED is `chaserWalks` — rows the model can only produce by moving a
+     * body `chaserStep` returned a new position for.
+     */
+    it('⛓ the CONVERTED class is stepped and priced, not refused', () => {
+        const run = runWith([]);
+        expect(run.chaserWalks.length).toBeGreaterThan(0);
+        expect(run.chaserWalks.every((w) => w.level === 6)).toBe(true);
+        // …and the body really LEFT its placement, which is why the census
+        // scan must skip it.
+        const live = run.chasers.find((c) => c.id === L6_BOB);
+        const moved = run.chaserWalks.filter((w) => w.id === L6_BOB);
+        expect(moved.length).toBeGreaterThan(0);
+        if (live) expect(live.x !== 120 || live.y !== 56).toBe(true);
     });
 
     it('⛓ a removal declared at tick 0 makes the same walk legal', () => {
@@ -1262,11 +1313,20 @@ describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
             .toBe(true);
     });
 
-    it('⛔ MUTATION: a removal AFTER the contact does not save it', () => {
-        // The contact lands at tick 24, so a declaration at 29 is a body that
-        // was still standing when the player walked into it.
-        expect(() => runWith([{ level: 6, id: L6_BOB, at: 29 }]))
-            .toThrow(/standing inside bob@112,48/);
+    /**
+     * ⛔ MUTATION, RE-AIMED AT WHAT THE DECLARATION NOW BUYS. Before the
+     * bridge, a late removal left a throw behind; now it leaves a LIVE BODY
+     * behind, and the difference is visible in the ledger rather than in an
+     * exception: declared at tick 0 the body never walks, declared at 29 it
+     * walks for 29 ticks first. A declaration that bought nothing would make
+     * the two identical.
+     */
+    it('⛔ MUTATION: a removal AFTER the tick is a body that walked until then', () => {
+        const late = runWith([{ level: 6, id: L6_BOB, at: 29 }]);
+        const early = runWith([{ level: 6, id: L6_BOB, at: 0 }]);
+        const walked = (r) => r.chaserWalks.filter((w) => w.id === L6_BOB).length;
+        expect(walked(late)).toBeGreaterThan(0);
+        expect(walked(early)).toBe(0);
     });
 
     /**

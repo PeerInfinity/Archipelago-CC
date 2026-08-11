@@ -65,7 +65,8 @@
  */
 
 import { ENEMY_CLASSES } from './combat.js';
-import { rect } from './levelWorld.js';
+import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
+import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 
 export class ChaserError extends Error {
     constructor(message) { super(message); this.name = 'ChaserError'; }
@@ -130,6 +131,8 @@ export const CHASERS = Object.freeze({
         targetOffset: Object.freeze({ x: 0, y: 0 }),
         freezesOnGameFreeze: true,
         dieAnim: Object.freeze({ frames: 4, rate: 5, src: 'Bob.as:36 add("die", [3,4,5,6], 5)' }),
+        // ⛔ `Bob.as:39` — `solids.push("Enemy")`. See `SOLIDS_BY_MOVER.chaser`.
+        solidsMover: 'chaser',
         src: 'Enemies/Bob.as:44-83',
     }),
     jellyfish: Object.freeze({
@@ -138,9 +141,65 @@ export const CHASERS = Object.freeze({
         // ⛔ NOT a copy-paste of the line above — see header note 1.
         freezesOnGameFreeze: false,
         dieAnim: Object.freeze({ frames: 8, rate: 7, src: 'Jellyfish.as:36 add("die", dieFrames, 7)' }),
+        // ⛔ `Jellyfish.as:35` — the same push, and NOT a copy-paste: the
+        // sweep swept every `Enemies/*.as` and this class really has one.
+        solidsMover: 'chaser',
         src: 'Enemies/Jellyfish.as:44-75',
     }),
 });
+
+/**
+ * ⛓⛓⛓ R8 SLICE 1 — WHICH CHASERS ARE BRIDGED INTO THE TICK LOOP, DERIVED.
+ *
+ * A class is bridged when BOTH tables say so: it has a transcription here
+ * (`CHASERS`) and a row in `spinner.MODELLED_ENEMY_CLASSES` whose `module`
+ * names this file. Neither table alone is the answer —
+ *
+ *   · a transcription with no roster row is what `chasers.js` was for three
+ *     rungs: exact, tested, and called by nothing;
+ *   · a roster row naming a module that does not transcribe the class would
+ *     be a permission with no implementation behind it.
+ *
+ * ⚠ DERIVED, NEVER TYPED. A third list of bridged tags beside these two is
+ * trap 89 exactly — and this is the roster `levelRun` gates its stepper on,
+ * `combat.CONTACT_STEPPED_FAMILIES` is cross-asserted against, and
+ * `r8Acceptance`'s exposure prediction is measured with.
+ *
+ * @returns {string[]} CENSUS TAGS (`bob`), sorted — not AS3 class names. The
+ *   roster is keyed on the class and every consumer here holds a census row.
+ */
+export function bridgedChaserTags() {
+    return Object.entries(CHASERS)
+        .filter(([, c]) => MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js')
+        .map(([tag]) => tag)
+        .sort();
+}
+
+/** Is this census tag one the tick loop steps? */
+export function isBridgedChaser(tag) {
+    const c = CHASERS[tag];
+    return !!c && MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js';
+}
+
+/**
+ * The solids list one chaser's own `moveX`/`moveY` sweep collides against.
+ *
+ * ⚠ PER CLASS, and it throws for a class with no `solidsMover` rather than
+ * defaulting to the base list: a default here is the exact silence R5 slice
+ * 12 spent a whole shaft on, one family over.
+ */
+export function chaserSolids(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserSolids: "${tag}" is not a transcribed chaser`);
+    const list = SOLIDS_BY_MOVER[c.solidsMover];
+    if (!list) {
+        fail(`chaserSolids: "${tag}" names solids mover "${c.solidsMover}", which `
+            + `levelWorld.SOLIDS_BY_MOVER does not define (knows `
+            + `[${Object.keys(SOLIDS_BY_MOVER).join(', ')}]). Solidity is a property of `
+            + 'the thing MOVING and a default would answer the wrong mover\'s question.');
+    }
+    return list;
+}
 
 /** Ticks from the killing blow to `destroy` — see header note 4. */
 export function deathTicks(tag) {
@@ -148,6 +207,31 @@ export function deathTicks(tag) {
     if (!c) fail(`deathTicks: "${tag}" is not a transcribed chaser (know ${Object.keys(CHASERS)})`);
     return animTicks(c.dieAnim.frames, c.dieAnim.rate);
 }
+
+/**
+ * ⛔ THE TILE TYPES `Enemy.update`'s TERRAIN SWITCH DESTROYS A BODY ON.
+ *
+ * `Enemies/Enemy.as:68-103` — `case 1: //Water` and `case 17: //Lava` each
+ * set `destroy = true` outright (gated on `dieInWater`/`dieInLava`, both
+ * `true` on the base class and on `Bob`); `case 6` starts the PIT fall, which
+ * is a schedule rather than an instant and is not in this pair.
+ *
+ * ⚠ NOT TRANSCRIBED BY `chaserStep`, ON PURPOSE — see the header. The switch
+ * sits ABOVE `super.update()`, runs through a freeze, and its removal is what
+ * R7 slice 6e's L6 `despawn` DECLARES. This constant exists so a consumer can
+ * ASSERT the gap rather than discover it: a stepped body standing here is one
+ * the game has already destroyed.
+ */
+export const ENEMY_TERRAIN_DESTROYS = Object.freeze({ water: 1, lava: 17 });
+
+/**
+ * `Enemy.update`'s `case 6` — the PIT, which is a SCHEDULE and not an
+ * instant, and is therefore refused rather than transcribed here. It lerps
+ * the body a tenth of the way to its tile centre per tick, spins the graphic
+ * by `fallSpinSpeed` and fades it by `fallAlphaSpeed` 0.05, and only sets
+ * `destroy` when the alpha runs out.
+ */
+export const ENEMY_PIT_TILE = 6;
 
 /** The class's box at a centre, from the CENSUS's hitbox. */
 export function chaserBoxAt(tag, cx, cy) {

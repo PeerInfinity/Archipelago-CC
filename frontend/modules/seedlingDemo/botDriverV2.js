@@ -88,7 +88,7 @@ import {
     HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE_TICKS,
     WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS_TICKS,
 } from './burnableTree.js';
-import { MODELLED_ENEMY_CLASSES, unmodelledEnemies } from './spinner.js';
+import { MODELLED_ENEMY_CLASSES, enemiesUnseenByBlockSweep } from './spinner.js';
 import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { scanCrusher } from './crusher.js';
@@ -121,6 +121,15 @@ export class BotDriverV2Error extends Error {
 }
 
 const fail = (message) => { throw new BotDriverV2Error(message); };
+
+/**
+ * The classes whose body a pushable block's own sweep really consults —
+ * DERIVED from the roster's `wedgeVisible` field, never typed beside the
+ * message that prints it (trap 89). See `runFire`'s refusal for why
+ * membership in `MODELLED_ENEMY_CLASSES` is the wrong question here.
+ */
+const blockSweepClasses = () => Object.entries(MODELLED_ENEMY_CLASSES)
+    .filter(([, row]) => row.wedgeVisible === true).map(([as3]) => as3);
 
 /**
  * Segment-clearance sampling pitch, in pixels.
@@ -3340,8 +3349,16 @@ function runFire(run, perTick, fire, what) {
          * THINGS WITH A `step*`, not a list of things somebody understands.
          * A class earns a row by having a stepper and per-visit state. That
          * is the difference between narrowing this refusal and deleting it.
+         *
+         * ⛔⛔ R8 SLICE 1: AND MEMBERSHIP IS NOT THE PREDICATE — `wedgeVisible`
+         * IS. A row says the model steps the class; this refusal is about the
+         * BLOCK WEDGE, which needs the body to be in `pushableCtx().collides`
+         * as well. `Bob` earned a row and is NOT in that sweep, so it is
+         * still named here — a predicate reading membership would have
+         * deleted the refusal for it silently, on the strength of a stepper
+         * that has nothing to do with the question.
          */
-        const unmodelled = unmodelledEnemies(enemies);
+        const unmodelled = enemiesUnseenByBlockSweep(enemies);
         if (unmodelled.length > 0 && !fire.enemyRoom) {
             fail(`${what}: level ${run.level} holds ${enemies.length} live `
                 + `enem${enemies.length === 1 ? 'y' : 'ies'}, of which `
@@ -3351,10 +3368,10 @@ function runFire(run, perTick, fire, what) {
                 + 'standing in the glide corridor WEDGES the block — permanently, because '
                 + 'a blocked block keeps `v` non-zero and `hit()` returns on '
                 + '`v.length > 0`. The model cannot certify this press. Either model the '
-                + 'class (`spinner.js` is the worked example, and '
-                + `[${Object.keys(MODELLED_ENEMY_CLASSES).join(', ')}] `
-                + 'already ha' + (Object.keys(MODELLED_ENEMY_CLASSES).length === 1 ? 's' : 've')
-                + ' one), CLEAR the room with the encounter ladder\'s kill verb, or declare '
+                + 'class INTO THE BLOCK\'S SWEEP (`spinner.js` is the worked example, and '
+                + `[${blockSweepClasses().join(', ')}] `
+                + 'already ha' + (blockSweepClasses().length === 1 ? 's' : 've')
+                + ' a body in it), CLEAR the room with the encounter ladder\'s kill verb, or declare '
                 + '`fire.enemyRoom: "<what the GAME said>"` on this target — see '
                 + '`r5Shaft.SPINNER_WEDGE`.');
         }

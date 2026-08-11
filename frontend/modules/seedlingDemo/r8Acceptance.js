@@ -102,6 +102,26 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
      */
     sites: Object.freeze([
         // ── levelRun.js — `liveSolidOpts(` ────────────────────────────
+        /**
+         * ⛓ ADDED BY R8 SLICE 1, and it is listed HERE rather than left to
+         * make the count wrong: `assertBatchSitesCoverSource` re-derives the
+         * call-site tally from the source on every run, so the bridge's new
+         * bag failed it BY NAME the first time the suite ran — which is
+         * exactly what that assertion is for (trap 89). The batch's own
+         * CLAIM is unchanged; what grew is the list of sites the claim
+         * covers, and the row says which slice added it.
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepChasersNow',
+            addedBy: 'R8 slice 1', action: 'brand+hoist',
+            why: 'ONCE PER TICK, not per probe — a chaser\'s sweep is 1 px steps on both '
+                + 'axes exactly like a block\'s, and every body in the room shares the one '
+                + 'bag. Contrast `stepCrushersNow` and `stepIceTurretsNow`, which rebuild '
+                + 'per body ON PURPOSE because those loops STEP the geometry they read: a '
+                + 'chaser\'s sweep reads STATIC solids plus an explicitly-passed Enemy '
+                + 'half, and the moving half (its siblings) is read live from the roster '
+                + 'rather than through this bag.',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'pushableCtx',
             action: 'already', why: 'R7 slice 4 — once per tick, `{...base, pushables}` '
@@ -530,6 +550,93 @@ export function assertBridgeExposureIsMeasured(io) {
         }
     }
     return { exposed: found.length, tapes: measured };
+}
+
+/**
+ * ⛔ THE TWO TABLES AGREE, AND THE AGREEMENT IS ASSERTED — never assumed.
+ *
+ * `R8_ENEMY_BRIDGE.bridgedClasses` is a DECLARATION (it is what the
+ * prediction was measured against, one commit before the roster existed);
+ * `chasers.bridgedChaserTags()` is the DERIVATION the run really gates on.
+ * Two independently-written tables plus an equality is this arc's idiom
+ * (`assertKillArmPolicyCovers`), and it is the only shape that makes the
+ * prediction and the code the same claim.
+ *
+ * @param {Function} derived injected `bridgedChaserTags` — injected so the
+ *   disagreement can be constructed, per slice 0 track C's own law: a
+ *   comparison that has never seen one might be comparing nothing.
+ */
+export function assertBridgeRosterMatchesScope(derived) {
+    if (typeof derived !== 'function') {
+        throw new Error('assertBridgeRosterMatchesScope: pass `bridgedChaserTags` — a '
+            + 'default import would make the disagreement case unconstructable.');
+    }
+    const got = [...derived()].sort();
+    const want = [...R8_ENEMY_BRIDGE.bridgedClasses].sort();
+    if (got.join(',') !== want.join(',')) {
+        throw new Error('R8_ENEMY_BRIDGE: the DECLARED scope and the DERIVED bridge '
+            + `roster disagree — declared [${want.join(', ')}], derived [${got.join(', ')}]. `
+            + 'The prediction\'s exposed-tape set was measured against the declaration, so '
+            + 'a roster that has moved makes the prediction a claim about a different '
+            + 'change.');
+    }
+    return { classes: got };
+}
+
+/**
+ * ⛔ THE `stepped` CONTACT TABLES ARE A PARTITION OVER ONE KEY SET.
+ *
+ * `CONTACT_STEPPED_FAMILIES` says which tags are `stepped`;
+ * `CONTACT_STEPPED_PRICED_BY` says which of those price their own contact
+ * (SKIP) and which do not (THROW); `CONTACT_STEPPED_WHY` says why, per class.
+ * A family in one table and not another is trap 94 exactly — it would pass
+ * every check that only looks at the table it IS in, and `contactPricing`
+ * would hand back `why: undefined` while the skip/throw decision silently
+ * took the safe-looking branch.
+ *
+ * ⛓ AND THE BRIDGE ROSTER IS INSIDE THE PARTITION: every bridged tag must be
+ * a `stepped` family with a pricer, or the census scan would go on refusing a
+ * body the run now steps.
+ */
+export function assertSteppedContactPartition({ families, pricedBy, why, bridged }) {
+    const keys = (o) => Object.keys(o).sort();
+    const fam = [...families].sort();
+    for (const [name, table] of [['CONTACT_STEPPED_PRICED_BY', pricedBy], ['CONTACT_STEPPED_WHY', why]]) {
+        const k = keys(table);
+        if (k.join(',') !== fam.join(',')) {
+            throw new Error(`R8_ENEMY_BRIDGE: ${name} covers [${k.join(', ')}] and `
+                + `CONTACT_STEPPED_FAMILIES names [${fam.join(', ')}]. The three tables are `
+                + 'ONE key set: a family in the list with no row here answers the '
+                + 'skip-or-throw question with `undefined` (trap 94).');
+        }
+    }
+    for (const tag of bridged) {
+        if (!families.includes(tag)) {
+            throw new Error(`R8_ENEMY_BRIDGE: "${tag}" is BRIDGED (the run steps it) and is `
+                + 'not a `stepped` contact family — so `stepContactsNow` would still price '
+                + 'it from its `.oel` placement, which the body left on its first chase '
+                + 'tick.');
+        }
+        if (!pricedBy[tag]) {
+            throw new Error(`R8_ENEMY_BRIDGE: "${tag}" is BRIDGED and has no `
+                + '`CONTACT_STEPPED_PRICED_BY` entry, so the census scan would THROW on a '
+                + 'body the run steps and prices. A bridged class must name its pricer.');
+        }
+    }
+    /**
+     * ⛔ AND THE COMPLEMENT IS THE CONTROL, ASSERTED. A `stepped` family that
+     * is NOT bridged must have `pricedBy: null` — that null is the refusal
+     * the pair's control rides on, and a slice that quietly gave one a pricer
+     * would delete the control without deleting the test that names it.
+     */
+    const unbridgedWithPricer = fam.filter((t) => !bridged.includes(t) && pricedBy[t]);
+    if (unbridgedWithPricer.length) {
+        throw new Error('R8_ENEMY_BRIDGE: unbridged `stepped` famil(ies) '
+            + `[${unbridgedWithPricer.join(', ')}] name a pricer. Nothing steps them, so `
+            + 'the pricer cannot exist — and the census scan would SKIP them, which is a '
+            + 'silent zero for a body nobody prices.');
+    }
+    return { families: fam.length, bridged: [...bridged], refused: fam.filter((t) => !pricedBy[t]) };
 }
 
 /**

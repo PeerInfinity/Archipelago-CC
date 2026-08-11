@@ -21,7 +21,7 @@ import { frictionStep } from './pushables.js';
 import {
     MODELLED_ENEMY_CLASSES, SPINNER, SPINNER_CTOR_RNG, SPINNER_TERRAIN_WRITE, SpinnerError,
     createSpinnerState, hammerLine, hammerReach, hitSpinner, newSpinner, spinnerFriction, spinnerRect,
-    spinnerRects, spinnerTerrainWrites, stepSpinner, stepSpinners, unmodelledEnemies,
+    spinnerRects, spinnerTerrainWrites, stepSpinner, stepSpinners, enemiesUnseenByBlockSweep,
 } from './spinner.js';
 
 const source = atlasLevelSource();
@@ -394,29 +394,52 @@ describe('L39, through the real world builder', () => {
 });
 
 describe('the refusal predicate `runFire` narrows to', () => {
-    it('a room of spinners is MODELLED', () => {
-        expect(unmodelledEnemies([{ as3: 'Spinner' }, { as3: 'Spinner' }])).toEqual([]);
+    it('a room of spinners is SEEN by the block sweep', () => {
+        expect(enemiesUnseenByBlockSweep([{ as3: 'Spinner' }, { as3: 'Spinner' }])).toEqual([]);
     });
 
     it('anything else is not, and is named', () => {
-        expect(unmodelledEnemies([{ as3: 'Spinner' }, { as3: 'Bob' }, { as3: 'Puncher' }]))
-            .toEqual(['Bob', 'Puncher']);
+        expect(enemiesUnseenByBlockSweep([{ as3: 'Spinner' }, { as3: 'Puncher' }]))
+            .toEqual(['Puncher']);
+    });
+
+    /**
+     * ⛔⛔⛔ R8 SLICE 1 — THE ROW THAT SEPARATES THE TWO QUESTIONS, AND IT IS
+     * THE WHOLE REASON THIS PREDICATE IS NOT `MODELLED_ENEMY_CLASSES`.
+     *
+     * `Bob` EARNED a roster row: the bridge steps its position every tick.
+     * It is still named here — because `runFire`'s refusal is about the BLOCK
+     * WEDGE, and `levelRun.pushableCtx().collides` consults SPINNERS only. A
+     * predicate reading membership would have deleted the refusal for `Bob`
+     * the moment the bridge landed, on the strength of a stepper that has
+     * nothing to do with the question the verb asks.
+     * ([[feedback_capability_lights_up_two_controls]].)
+     */
+    it('⛔ a BRIDGED class the block sweep cannot see is STILL named', () => {
+        expect(MODELLED_ENEMY_CLASSES.Bob).toBeTruthy();
+        expect(MODELLED_ENEMY_CLASSES.Bob.wedgeVisible).toBe(false);
+        expect(enemiesUnseenByBlockSweep([{ as3: 'Bob' }])).toEqual(['Bob']);
     });
 
     it('a removed enemy is not a live one', () => {
-        expect(unmodelledEnemies([{ as3: 'Bob', removed: true }])).toEqual([]);
+        expect(enemiesUnseenByBlockSweep([{ as3: 'Bob', removed: true }])).toEqual([]);
     });
 
     /**
      * ⚠ THE LIST IS EARNED, NOT ASSERTED. A class is in it because something
      * steps it — the check is that every key names a module this package
-     * actually exports a stepper from.
+     * actually exports a stepper from, and answers BOTH questions.
      */
-    it('every modelled class names its module and its step site', () => {
+    it('every modelled class names its module, its step site and its wedge visibility', () => {
         for (const [as3, row] of Object.entries(MODELLED_ENEMY_CLASSES)) {
             expect(row.module).toMatch(/\.js$/);
             expect(row.stepped).toBeTruthy();
-            expect(as3).toBe('Spinner');
+            // ⛔ A ROW WITHOUT AN ANSWER HERE IS THE DEFECT THIS FIELD EXISTS
+            // FOR: `undefined !== true` would quietly refuse, which is safe —
+            // and a class that really IS in the sweep would then be refused
+            // for ever with nobody noticing. Required, not defaulted.
+            expect(typeof row.wedgeVisible, `${as3} must answer wedgeVisible`).toBe('boolean');
         }
+        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'Spinner']);
     });
 });

@@ -1151,7 +1151,54 @@ export function enemyHitPlayerFires(enemy, onScreenVerdict) {
  * null for them), which is what keeps the totem out of this arm until
  * slice 4 wires its own.
  */
-export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob']);
+
+/**
+ * ⛓⛓⛓ R8 SLICE 1 — WHICH `stepped` FAMILIES PRICE THEIR OWN CONTACT, AND
+ * WHERE. A `stepped` verdict is not one answer, it is two.
+ *
+ * `stepContactsNow`'s census scan cannot price a body it does not place, and
+ * for a family the run DOES step the census rect is the `.oel` placement —
+ * stale from the room's second tick. There are exactly two honest responses
+ * to that, and they are opposite:
+ *
+ *   · **priced in its own step** — the stepper calls `applyPlayerHit` at the
+ *     body's LIVE position, so the census scan must SKIP it or the contact is
+ *     billed twice, once from a place the body has left. This is what a
+ *     `boss` row already does; `bob` joins it.
+ *   · **not wired** — nobody prices it anywhere, so the census scan THROWS by
+ *     name and a tape that walks into one is a named failure rather than a
+ *     silent zero.
+ *
+ * ⛔ THE DIFFERENCE IS A SKIP VERSUS A THROW, so it cannot be left to a reader
+ * of the word "stepped". `contactPricing` returns `pricedBy`, and a `null`
+ * there is the refusal.
+ *
+ * ⚠ THE VALUES ARE FUNCTION NAMES IN `levelRun`, on purpose: a row that says
+ * "somewhere" is not checkable, and `levelRun.test.js` greps for them.
+ */
+export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
+    spinner: null,
+    iceturret: null,
+    bob: 'stepChasersNow',
+});
+
+/**
+ * Why each `stepped` family answers the way it does — one reason per class,
+ * for `CONTACT_BOSS_WHY`'s reason: the answers are not interchangeable.
+ */
+export const CONTACT_STEPPED_WHY = Object.freeze({
+    spinner: 'Spinner has its own stepped state and `spinnerRects` is in the block sweep, '
+        + 'but nothing prices its `hitPlayer`; R6 slice 3 wired the base-class contact only.',
+    iceturret: 'IceTurret is stepped (and its corpse glides), and nothing prices its '
+        + 'contact either — its threat on this rung is the BLAST, which has its own arm.',
+    bob: '⛓ R8 SLICE 1: `chasers.chaserStep` walks the body every tick and '
+        + '`stepChasersNow` calls `applyPlayerHit` from `Enemy.update`\'s own tail, at the '
+        + 'position THIS tick left. The census rect is the `.oel` placement and a chaser '
+        + 'leaves it on the first tick the player is inside `runRange` 80 — so the census '
+        + 'scan must skip the body, exactly as it skips a boss, or the same contact is '
+        + 'billed twice from two different places.',
+});
 
 /**
  * ⛓⛓⛓ R6 SLICE 4: THE BODIES THIS RUNG STEPS *AND* PRICES.
@@ -1169,6 +1216,30 @@ export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret']);
  * descent has taken it. `kind: 'boss'` is what tells it to.
  */
 export const CONTACT_BOSS_FAMILIES = Object.freeze(['bosstotem', 'shieldboss', 'finalboss']);
+
+/**
+ * ⛓⛓⛓ R8 SLICE 1 — THE ENEMY CLASSES WHOSE RUNTIME `type` IS NOT A CONSTANT.
+ *
+ * A chaser's `solids` carries `"Enemy"` (`Bob.as:39`), so "does that body
+ * block this one" is a question about the body's runtime `type` — and for
+ * three classes the answer changes DURING the visit:
+ *
+ * ```
+ *   IceTurret.as:94    type = "Solid"   inside the corpse arm
+ *   FinalBoss.as:233   type = "Solid"
+ *   BossTotem.as:296   type = "Enemy"   ⎫ the woken/unwoken flip, both ways
+ *   BossTotem.as:315   type = "Solid"   ⎭
+ * ```
+ *
+ * ⚠ NOT THE SAME LIST AS THE CTOR OVERRIDES. `BombPusher`, `LavaBoss`,
+ * `ShieldBoss` and `TentacleBeast` also assign a non-`"Enemy"` type — but
+ * they do it ONCE, in the constructor, so the census can carry the answer.
+ * These three cannot be carried; a consumer that needs the answer refuses the
+ * room by name (`levelRun.assertChaserSolidsBound`). Trap 64's shape from the
+ * other end: an unwoken boss is a WALL and a woken one is not, and only one
+ * of those readings was ever written down.
+ */
+export const TYPE_REWRITING_ENEMIES = Object.freeze(['IceTurret', 'FinalBoss', 'BossTotem']);
 
 /**
  * Why each boss family leaves the census arm, one reason per class — and
@@ -1232,8 +1303,11 @@ export function contactPricing(tag) {
     if (CONTACT_STEPPED_FAMILIES.includes(tag)) {
         return {
             kind: 'stepped',
-            why: `${row.as3} has its own \`hitPlayer\` override and its own stepped state; `
-                + 'R6 slice 3 wired the base-class contact only',
+            // ⛔ `pricedBy` IS THE LOAD-BEARING FIELD, not `kind`: a `stepped`
+            // family with a pricer is SKIPPED by the census scan and one
+            // without is a THROW. See `CONTACT_STEPPED_PRICED_BY`.
+            pricedBy: CONTACT_STEPPED_PRICED_BY[tag] ?? null,
+            why: CONTACT_STEPPED_WHY[tag],
         };
     }
     if (row.speed === 0 && row.aggro?.kind === 'static' && !row.boss) {
