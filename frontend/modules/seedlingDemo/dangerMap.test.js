@@ -9,8 +9,10 @@ import {
     DangerMapError, arrowDanger, arrowDangerDuringTransit, bodyKillRegions, chaserDanger,
     crusherDanger, crusherVolumesAt, dangerAt, dangerDuringTransit, dangerVolumes,
     dangerWhileWaiting, forbiddenByDanger, hazardDanger, predictArrows,
-    staticEnemyDanger, DANGER_MODES, HAZARDS_PRICED_LIVE, TRANSIT_INGREDIENTS,
+    staticEnemyDanger, spinnerDanger, DANGER_MODES, HAZARDS_PRICED_LIVE,
+    TRANSIT_INGREDIENTS,
 } from './dangerMap.js';
+import { SPINNER } from './spinner.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -873,5 +875,98 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
         expect(TRANSIT_INGREDIENTS.chasers.coupling).toBe('player-coupled');
         for (const k of keys) expect(TRANSIT_INGREDIENTS[k].why.length).toBeGreaterThan(20);
         expect(Object.keys(DANGER_MODES).sort()).toEqual(['transit', 'wait']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 8 — INGREDIENT (f) RE-DERIVED: FROM THE DISC TO THE LINE.
+ *
+ * ⚖ The user's correction is that the hammer's pattern is predictable, so
+ * forbidding the whole disc it sweeps is wrong. The pair below is the same
+ * room, the same cells and the same horizon under the two arms — and the arm
+ * a run gets is decided by whether its boot can declare a clock, never by a
+ * flag somebody set.
+ */
+describe('(f) live spinners — the exact hammer line, and the disc it replaced', () => {
+    const L18 = { level: 18, x: 16, y: 112 };
+    const spinnerRun = (seam) => createLevelRun({
+        levelSource: source, boot: L18, noclip: false, noDamage: false, roles: ROLES,
+        pins: ['dead_frames'], seam,
+    });
+    /** ⛔ A clockless run: no `time` in the boot block, so the arm is the disc. */
+    const noClock = () => spinnerRun({ items: { hasSword: true } });
+    const withClock = () => spinnerRun({
+        items: { hasSword: true }, time: 8000,
+        cutscene: [false, false, false, false], menu_state: 0,
+    });
+
+    it('the two arms are selected by the CLOCK, and both say which they used', () => {
+        expect(noClock().gameTimeRefusal).toContain('save.time');
+        expect(withClock().gameTimeRefusal).toBeNull();
+    });
+
+    it('⛓⛓ a cell the DISC forbids at every phase is open at most of them', () => {
+        const bare = noClock();
+        const clocked = withClock();
+        const body = bare.spinnerBodies[0];
+        expect(body).toBeTruthy();
+        // A box 8 px east of the body's entity point: inside the 13 px disc,
+        // and on the line only when the hammer is pointing that way.
+        const box = playerBoxAt(body.x + 9, body.y);
+        const disc = spinnerDanger(bare, box, 0);
+        expect(disc).toHaveLength(1);
+        expect(disc[0].arm).toBe('disc');
+        expect(disc[0].why).toContain('UNION');
+        // ⛔ THE POSITIVE BEFORE THE ZERO: the same instrument, the same box,
+        // over a full turn of the clock — it forbids SOME phases and not all,
+        // which is exactly the claim the disc could not make.
+        const forbidden = [];
+        for (let t = 0; t < SPINNER.hammerPeriod; t += 1) {
+            const at = playerBoxAt(body.x + 9, body.y);
+            const rows = spinnerDanger(
+                { ...clocked, gameTimeAt: () => t, spinnerBodies: clocked.spinnerBodies,
+                    spinnerForecast: () => [] },
+                at, 0,
+            );
+            if (rows.length) forbidden.push(t);
+        }
+        expect(forbidden.length).toBeGreaterThan(0);
+        expect(forbidden.length).toBeLessThan(SPINNER.hammerPeriod);
+    });
+
+    it('⛔ the BODY is priced too — narrowing to the line would open a hole', () => {
+        const clocked = withClock();
+        const body = clocked.spinnerBodies[0];
+        // Standing ON the body: `Enemy.hitPlayer`'s `collide("Player", x, y)`
+        // fires at every phase, so the row must be the BODY arm and must not
+        // depend on the hammer's angle at all.
+        const arms = new Set();
+        for (let t = 0; t < SPINNER.hammerPeriod; t += 1) {
+            const rows = spinnerDanger(
+                { ...clocked, gameTimeAt: () => t, spinnerBodies: clocked.spinnerBodies,
+                    spinnerForecast: () => [] },
+                playerBoxAt(body.x, body.y), 0,
+            );
+            expect(rows).toHaveLength(1);
+            arms.add(rows[0].arm);
+        }
+        expect([...arms]).toEqual(['body']);
+    });
+
+    it('a cell far from every body is calm under BOTH arms', () => {
+        const clocked = withClock();
+        const body = clocked.spinnerBodies[0];
+        const far = playerBoxAt(body.x + 200, body.y + 200);
+        expect(spinnerDanger(clocked, far, 0)).toEqual([]);
+        expect(spinnerDanger(noClock(), far, 0)).toEqual([]);
+    });
+
+    it('⛓ the TRANSIT_INGREDIENTS row says the hammer is autonomous now', () => {
+        const row = TRANSIT_INGREDIENTS.spinners;
+        expect(row.coupling).toBe('autonomous');
+        expect(row.atEta).toBe(true);
+        expect(row.why).toContain('AND SO IS THE HAMMER');
+        // The fallback is named in the row, not only in the code.
+        expect(row.why).toContain('45 phases');
     });
 });

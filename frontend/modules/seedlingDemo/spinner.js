@@ -96,6 +96,20 @@
  */
 
 import { rectsOverlap, SOLIDS_BY_MOVER } from './levelWorld.js';
+/**
+ * ⛓⛓ `World.collideLine`, THE ONE TRANSCRIPTION — imported from the module
+ * whose caller happened to need it first.
+ *
+ * The `Solid` in the name is the TYPE `Crusher.update` passes, not a
+ * restriction of the function: it takes a box list and walks the game's own
+ * integer raycast over it (the `int` cast at the signature, the `while (x <
+ * toX)` that never samples the endpoint, the fractional minor axis). The
+ * hammer's line is the same `World.as:411-500` and must not become a second
+ * copy of it — [[feedback_two_cost_models_must_agree]] is exactly what a
+ * "just for the hammer" raycast would be, and the two would agree until one
+ * of them was edited.
+ */
+import { collideLineSolid } from './crusher.js';
 
 export class SpinnerError extends Error {
     constructor(message) { super(message); this.name = 'SpinnerError'; }
@@ -528,9 +542,136 @@ export function hammerLine(s, gameTime) {
  * ⚠ A BOUND, AND IT SAYS SO. The exact test is a line at one angle; this is
  * the union over all 45 of them, which is what a stance held for a whole
  * ceremony has to clear anyway.
+ *
+ * ⛔⛔⛔ R8 SLICE 8 — AND IT IS NO LONGER THE ANSWER, ONLY THE FALLBACK.
+ * ⚖ THE USER'S CORRECTION (kickoff §16.8): *"the hammer spins in a
+ * predictable pattern; forbidding the whole disc it passes through is
+ * wrong."* Measured over the same 60 walkable cells of L18 and the same
+ * 600-tick horizon, the disc left **one** clear stance and the exact line
+ * left **sixteen** — so the conservative ingredient was not merely costing
+ * routes, it had MANUFACTURED the policy problem the slice went on to solve
+ * ([[feedback_conservative_ingredient_makes_the_problem]]).
+ *
+ * ⇒ `hammerHitsPlayer` below is the exact question, and this disc is what a
+ * caller falls back to when the CLOCK is undeclared — the union over all 45
+ * phases is still the honest answer when the phase is unknowable.
  */
 export function hammerReach(s) {
     return { x: s.x, y: s.y, r: SPINNER.hammerLength };
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 8 — ⚖ **THE BILLING RULING, TAKEN FROM THE SOURCE.**
+ *
+ * The charge asked whether a hammer contact should route through
+ * `applyPlayerHit` or keep refusing on the line, and pre-delegated the answer
+ * to what the GAME does. It bills, and the call is four arguments long:
+ *
+ * ```as3
+ *   Spinner.as:72-76
+ *     var player:Player = FP.world.collideLine("Player", x, y,
+ *                            x + hammerLength * Math.cos(hammerAngle),
+ *                            y + hammerLength * Math.sin(hammerAngle)) as Player;
+ *     if (player) { player.hit(this, hitForce, new Point(x, y)); }
+ *   Player.as   public function hit(e:Enemy=null, f:Number=0, p:Point=null, d:Number=1)
+ * ```
+ *
+ * ⇒ FORCE 4 (`Spinner.hitForce`), DAMAGE 1 (`Player.hit`'s own default — the
+ * 4 in the call is the force, trap 143 one family over), and the knockback
+ * point is the spinner's ENTITY POINT. Nothing about it is special: it is an
+ * ordinary priced contact, and the refusal was the conservative era's shape
+ * rather than a property of the mechanism.
+ *
+ * ⛔ AND IT IS THE **SECOND** BILL, NOT THE ONLY ONE. `Enemy.update` calls
+ * `hitUpdate(); hitPlayer();` inside the `super.update()` on the line ABOVE
+ * the hammer, and `hitPlayer` is `collide("Player", x, y)` -> `p.hit(this, 3,
+ * new Point(x, y), damage)`. So a spinner damages through its 7x7 BODY at
+ * force 3 and through its 13 px LINE at force 4, in that order, in one frame
+ * — and the first one to land sets `hitsTimer` and makes the second a no-op
+ * inside `Player.hit`'s own gate. A model that narrowed the refusal to the
+ * line and forgot the body would have opened a hole exactly the size of the
+ * thing the disc used to cover.
+ */
+export const HAMMER_BILLING = Object.freeze({
+    routes: 'applyPlayerHit',
+    force: SPINNER.hitForce,
+    /** `Player.hit`'s `d:Number=1` — the call passes three arguments. */
+    damage: 1,
+    from: 'the spinner ENTITY point (x, y), not a box corner',
+    src: 'Enemies/Spinner.as:70-76 + Player.as `hit(e, f, p, d=1)`',
+    /** The other arm of the same frame, and it fires FIRST. */
+    body: Object.freeze({
+        force: 3,
+        damage: SPINNER.damage,
+        gate: '`!destroy && currentAnim != "die" && hitsTimer <= 0`, on the SPINNER',
+        src: 'Enemies/Enemy.as:104-110,211-221',
+    }),
+    /**
+     * ⚠ THE HAMMER HAS NO `destroy` GATE OF ITS OWN. `Spinner.update` runs
+     * the line unconditionally after `super.update()`, while `hitPlayer` is
+     * inside an `if (!destroy)`. So a spinner mid-`death()` — parked, because
+     * the move is gated and the fade is not — KEEPS SWINGING for its eleven
+     * fade frames and stops touching you with its body. Two arms, two
+     * lifetimes, four lines apart in the source.
+     */
+    dyingStillSwings: true,
+});
+
+/**
+ * ⛔⛔⛔ THE HAMMER, AS A CONTACT: does the line at `gameTime` reach this box?
+ *
+ * `hammerAngle = (Game.time % Game.timePerFrame) / Game.timePerFrame * 2π`
+ * and the test is `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)`.
+ * Transcribed AT THE RUNTIME'S OWN PRECISION (trap 118): the endpoints are
+ * whatever the doubles say and `collideLineSolid` applies the `int` cast the
+ * signature does, which is where the quantisation belongs. A model that
+ * rounded the endpoint itself would be a different — and more "accurate" —
+ * raycast than the one the game runs.
+ *
+ * ⚠ THE ENDPOINT IS NEVER SAMPLED. `World.collideLine`'s loop is
+ * `while (x < toX)`, so the last pixel of the reach is not tested — the
+ * measured skip the crusher's transcription already carries, kept here rather
+ * than re-derived.
+ *
+ * @param {object} s          the spinner state (`x`/`y` are the ENTITY point)
+ * @param {number} gameTime   `Game.time` at the TOP of this frame
+ * @param {object} playerBox  `{x, y, right, bottom}` — the PRE-move box, because
+ *   a spinner updates above the Player (`Game.loadlevel` add order + PREPEND)
+ * @returns {{angle, x0, y0, x1, y1}|null} the line that hit, or null
+ */
+export function hammerHitsPlayer(s, gameTime, playerBox) {
+    if (!Number.isFinite(gameTime)) {
+        fail(`hammerHitsPlayer: ${gameTime} is not a \`Game.time\`. The angle rides on it `
+            + 'and a caller without a clock must ask `hammerReach` — the union over all '
+            + `${SPINNER.hammerPeriod} phases — rather than pass a guess.`);
+    }
+    if (!playerBox || !Number.isFinite(playerBox.right) || !Number.isFinite(playerBox.bottom)) {
+        fail('hammerHitsPlayer: playerBox must be a full box — {x, y, right, bottom}. A '
+            + 'rect literal missing `right`/`bottom` never overlaps anything and returns '
+            + 'a clean, plausible "the hammer missed you".');
+    }
+    const line = hammerLine(s, gameTime);
+    return collideLineSolid([playerBox], line.x0, line.y0, line.x1, line.y1) ? line : null;
+}
+
+/**
+ * ⛓ Every phase of one full turn at which the hammer would reach this box,
+ * for a spinner held at this position.
+ *
+ * ⛔ THE POSITION IS THE CALLER'S PROBLEM AND THE PHASE IS THIS FUNCTION'S.
+ * A spinner MOVES, so "safe at phase p" is only a claim about the tick whose
+ * body position was passed in — which is why the danger map asks per (cell,
+ * tick) rather than once per cell. What this answers is the other half: given
+ * the body HERE, which of the 45 clock residues touch that box.
+ *
+ * @returns {number[]} the residues `Game.time % 45` that hit, ascending
+ */
+export function hammerPhasesHitting(s, playerBox) {
+    const out = [];
+    for (let phase = 0; phase < SPINNER.hammerPeriod; phase += 1) {
+        if (hammerHitsPlayer(s, phase, playerBox)) out.push(phase);
+    }
+    return out;
 }
 
 // ── the run-state family (per VISIT — a spinner has no live persistence) ──

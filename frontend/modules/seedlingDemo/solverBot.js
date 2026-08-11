@@ -77,7 +77,7 @@ import {
 import {
     SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule,
 } from './shieldBossFight.js';
-import { SPINNER } from './spinner.js';
+import { SPINNER, hammerHitsPlayer } from './spinner.js';
 import { KILL_ARM_POLICY } from './enemyDamage.js';
 import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
 import {
@@ -1814,19 +1814,76 @@ function walkableCells(run, contacts) {
     return out;
 }
 
-/** Is `box` clear of every forecast body's hammer disc at forecast index `i`? */
-function clearOfHammersAt(box, forecast, i) {
+/**
+ * ⛓⛓⛓ R8 SLICE 8 — THE ONE PREDICATE THE WHOLE SCHEDULE ASKS, AND IT ASKS
+ * THE **EXACT** MECHANISM NOW.
+ *
+ * ⚖ THE USER'S CORRECTION (kickoff §16.8) reaches the policy layer through
+ * this function and nowhere else: `deriveStrike`, `deriveRefuge`,
+ * `trainIsSafeHere`, `stepToward` and `safeStep` all decide "is this box safe
+ * from the hammers at forecast index i" HERE, so upgrading the question in one
+ * place upgrades every one of them and cannot leave two of them disagreeing.
+ *
+ * With a clock (`run.gameTimeAt`) the test is the game's own two arms — the
+ * 7x7 body's `collide("Player", x, y)` and the 13 px `collideLine` at THIS
+ * index's own phase. Without one it is the union over all 45 phases, the disc
+ * the slice-7 machinery was built under, which is still what is TRUE when the
+ * phase is unknowable.
+ *
+ * ⛔ THE INDEX CONVENTION IS THE FORECAST'S: `forecast[i]` is the state at the
+ * top of tick `ticksCompleted + 1 + i`, so the clock there is
+ * `gameTimeAt(i + 1)` and NOT `gameTimeAt(i)`. Off by one here would price
+ * every stance against the previous tick's hammer, which is a wrong answer
+ * that looks right 44 times in 45.
+ */
+function clearOfHammersAt(run, box, forecast, i) {
     const step = forecast[i];
     if (!step) return false;
+    const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(i + 1) : null;
     for (const r of step) {
         const cx = r.x + SPINNER.originX;
         const cy = r.y + SPINNER.originY;
-        if (box.x < cx + SPINNER.hammerLength && box.right > cx - SPINNER.hammerLength
-            && box.y < cy + SPINNER.hammerLength && box.bottom > cy - SPINNER.hammerLength) {
+        if (at === null) {
+            if (box.x < cx + SPINNER.hammerLength && box.right > cx - SPINNER.hammerLength
+                && box.y < cy + SPINNER.hammerLength && box.bottom > cy - SPINNER.hammerLength) {
+                return false;
+            }
+            continue;
+        }
+        // `Enemy.hitPlayer` — the body, force 3 — then the hammer's line.
+        if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
             return false;
         }
+        if (hammerHitsPlayer({ x: cx, y: cy }, at, box)) return false;
     }
     return true;
+}
+
+/**
+ * ⛓ THE MARGIN A REFUGE PREFERS, WHICH IS NOT THE SAFETY TEST.
+ *
+ * Safety is the exact mechanism above; "which of the safe cells is the best
+ * place to wait" is a ROBUSTNESS preference, and margin in pixels is the
+ * honest way to express it — a raycast has no px clearance to report. So the
+ * refuge FILTERS on the line and SCORES on the disc, and the two are kept
+ * apart by name rather than by one standing in for the other.
+ */
+function discClearanceAt(box, forecast, i) {
+    const step = forecast[i];
+    if (!step) return -Infinity;
+    let min = Infinity;
+    for (const r of step) {
+        const cx = r.x + SPINNER.originX;
+        const cy = r.y + SPINNER.originY;
+        const gap = Math.max(
+            (cx - SPINNER.hammerLength) - box.right,
+            box.x - (cx + SPINNER.hammerLength),
+            (cy - SPINNER.hammerLength) - box.bottom,
+            box.y - (cy + SPINNER.hammerLength),
+        );
+        if (gap < min) min = gap;
+    }
+    return min;
 }
 
 /**
@@ -1850,24 +1907,19 @@ function deriveRefuge(run, contacts, untilIndex) {
     const forecast = run.spinnerForecast(Math.max(1, untilIndex));
     const clear = [];
     for (const c of walkableCells(run, contacts)) {
+        // ⛓ R8 SLICE 8: SAFE is the exact mechanism (`clearOfHammersAt`), and
+        // the px `min` is only the PREFERENCE among the safe ones. Before the
+        // clock the two were one number, which is how a robustness heuristic
+        // came to be the wall a room was declared unsolvable by.
         let min = Infinity;
+        let safe = true;
         for (let i = 0; i < untilIndex; i += 1) {
-            const step = forecast[i];
-            if (!step) break;
-            for (const r of step) {
-                const cx = r.x + SPINNER.originX;
-                const cy = r.y + SPINNER.originY;
-                const gap = Math.max(
-                    (cx - SPINNER.hammerLength) - c.box.right,
-                    c.box.x - (cx + SPINNER.hammerLength),
-                    (cy - SPINNER.hammerLength) - c.box.bottom,
-                    c.box.y - (cy + SPINNER.hammerLength),
-                );
-                if (gap < min) min = gap;
-            }
-            if (min <= 0) break;
+            if (!forecast[i]) break;
+            if (!clearOfHammersAt(run, c.box, forecast, i)) { safe = false; break; }
+            const gap = discClearanceAt(c.box, forecast, i);
+            if (gap < min) min = gap;
         }
-        if (min <= 0) continue;
+        if (!safe) continue;
         clear.push({ x: c.x, y: c.y, clearance: min,
             d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
     }
@@ -1954,7 +2006,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
              */
             let safe = true;
             for (let k = -2; k <= SLASH_HIT_TICKS + 1 && safe; k += 1) {
-                if (!clearOfHammersAt(c.box, forecast, i + k)) safe = false;
+                if (!clearOfHammersAt(run, c.box, forecast, i + k)) safe = false;
             }
             if (!safe) continue;
             opportunities.push({ i, cell: c });
@@ -2018,7 +2070,7 @@ function trainIsSafeHere(run) {
     const forecast = run.spinnerForecast(span);
     const box = playerBoxAt(run.state.x, run.state.y);
     for (let i = 0; i < span; i += 1) {
-        if (!clearOfHammersAt(box, forecast, i)) return false;
+        if (!clearOfHammersAt(run, box, forecast, i)) return false;
     }
     return true;
 }
@@ -2059,7 +2111,7 @@ function stepToward(run, aim, intended) {
         let best = depth;
         for (const keys of options) {
             const next = step({ ...st }, keys);
-            if (!clearOfHammersAt(playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= STEP_LOOKAHEAD) return best;
@@ -2069,7 +2121,7 @@ function stepToward(run, aim, intended) {
     let best = null;
     for (const keys of options) {
         const next = step({ ...run.state }, keys);
-        if (!clearOfHammersAt(playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        if (!clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
         const depth = survives(next, 1);
         const d = Math.hypot(next.x - aim.x, next.y - aim.y);
         if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
@@ -2121,7 +2173,12 @@ function safeStep(run, held, alternatives, what, bodyId) {
     const step = run.previewStepper();
     const lands = (keys) => {
         const next = step({ ...run.state }, keys);
-        return clearOfHammersAt(playerBoxAt(next.x, next.y), [ahead], 0);
+        // ⚠ `[ahead]` is a ONE-ELEMENT forecast whose index 0 is the run's
+        // own index 1, so the clock is asked for `gameTimeAt(2)` by hand
+        // rather than by the shared convention — see the comment above.
+        return clearOfHammersAt(
+            { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
+            playerBoxAt(next.x, next.y), [ahead], 0);
     };
     if (lands(held)) return held;
     if (held.has('primary')) {

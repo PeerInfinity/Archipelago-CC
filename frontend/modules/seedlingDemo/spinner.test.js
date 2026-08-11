@@ -20,7 +20,8 @@ import { buildLevelWorld, ROLES, SOLIDS_BY_MOVER, blocksMover } from './levelWor
 import { frictionStep } from './pushables.js';
 import {
     MODELLED_ENEMY_CLASSES, SPINNER, SPINNER_CTOR_RNG, SPINNER_TERRAIN_WRITE, SpinnerError,
-    createSpinnerState, hammerLine, hammerReach, hitSpinner, newSpinner, spinnerFriction, spinnerRect,
+    HAMMER_BILLING, createSpinnerState, hammerHitsPlayer, hammerLine, hammerPhasesHitting,
+    hammerReach, hitSpinner, newSpinner, spinnerFriction, spinnerRect,
     spinnerRects, spinnerTerrainWrites, stepSpinner, stepSpinners, enemiesUnseenByBlockSweep,
 } from './spinner.js';
 
@@ -441,5 +442,83 @@ describe('the refusal predicate `runFire` narrows to', () => {
             expect(typeof row.wedgeVisible, `${as3} must answer wedgeVisible`).toBe('boolean');
         }
         expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'Spinner']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 8 — THE HAMMER AS A CONTACT.
+ *
+ * ⚖ The billing ruling is read off the source and asserted here so it cannot
+ * drift into a comment: the game bills, at force 4 and damage 1, from the
+ * spinner's own entity point — and the BODY is a separate bill on the same
+ * frame at force 3.
+ */
+describe('the hammer, promoted from a BOUND to a CONTACT', () => {
+    /** A spinner parked at (100, 100) — the entity point, not a corner. */
+    const at = (x, y) => ({ id: 's', x, y });
+    /** A player box centred on (px, py) with the real 4x5 hitbox shape. */
+    const box = (x, y, w = 4, h = 5) => ({ x, y, right: x + w, bottom: y + h });
+
+    it('⚖ the billing ruling carries its source cite and BOTH arms', () => {
+        expect(HAMMER_BILLING.routes).toBe('applyPlayerHit');
+        expect(HAMMER_BILLING.force).toBe(SPINNER.hitForce);
+        expect(HAMMER_BILLING.damage).toBe(1);
+        expect(HAMMER_BILLING.src).toContain('Spinner.as:70-76');
+        // The body's arm is the OTHER bill, and it is a different force.
+        expect(HAMMER_BILLING.body.force).toBe(3);
+        expect(HAMMER_BILLING.body.force).not.toBe(HAMMER_BILLING.force);
+        // ⛔ `Spinner.update` runs the line OUTSIDE `Enemy.update`'s
+        // `if (!destroy)`, so a dying body keeps swinging.
+        expect(HAMMER_BILLING.dyingStillSwings).toBe(true);
+    });
+
+    it('the line at phase 0 points due EAST and reaches exactly 13 px', () => {
+        const l = hammerLine(at(100, 100), 0);
+        expect(l.angle).toBe(0);
+        expect(l.x1).toBe(100 + SPINNER.hammerLength);
+        expect(l.y1).toBe(100);
+        // A box straddling the reach is hit; one past it is not — and the
+        // ENDPOINT ITSELF is not sampled (`while (x < toX)`), which is the
+        // measured skip `collideLineSolid` already carries.
+        expect(hammerHitsPlayer(at(100, 100), 0, box(108, 98))).not.toBeNull();
+        expect(hammerHitsPlayer(at(100, 100), 0, box(113, 98))).toBeNull();
+    });
+
+    it('⛔ the phase is `Game.time % 45` and NOTHING else', () => {
+        const east = hammerHitsPlayer(at(100, 100), 0, box(108, 98));
+        expect(hammerHitsPlayer(at(100, 100), SPINNER.hammerPeriod, box(108, 98)))
+            .toEqual(east);
+        expect(hammerHitsPlayer(at(100, 100), SPINNER.hammerPeriod * 7, box(108, 98)))
+            .toEqual(east);
+    });
+
+    it('⛓⛓ THE WHOLE POINT: most phases MISS a box the disc would forbid', () => {
+        // A box 8 px east of the body is inside the 13 px disc at every phase
+        // — which is what the slice-7 ingredient priced — and the exact line
+        // reaches it on only a handful of the 45.
+        const b = box(108, 98);
+        const disc = hammerReach(at(100, 100));
+        expect(disc.r).toBe(SPINNER.hammerLength);
+        const hitting = hammerPhasesHitting(at(100, 100), b);
+        expect(hitting.length).toBeGreaterThan(0);
+        expect(hitting.length).toBeLessThan(SPINNER.hammerPeriod);
+        // ⛔ AND THE CONSERVATIVE READING IS THE ONE THAT MANUFACTURED THE
+        // PROBLEM: the disc forbids this cell for all 45 phases, the line for
+        // a minority of them.
+        expect(SPINNER.hammerPeriod - hitting.length).toBeGreaterThan(0);
+    });
+
+    it('⛔ MUTATION: a rect literal without right/bottom is a named throw', () => {
+        expect(() => hammerHitsPlayer(at(100, 100), 0, { x: 108, y: 98 }))
+            .toThrow(SpinnerError);
+    });
+
+    it('⛔ MUTATION: no clock is a named throw, not a guessed phase', () => {
+        expect(() => hammerHitsPlayer(at(100, 100), null, box(108, 98)))
+            .toThrow(/not a `Game.time`/);
+    });
+
+    it('a box the line never reaches at ANY phase is outside the reach entirely', () => {
+        expect(hammerPhasesHitting(at(100, 100), box(200, 200))).toEqual([]);
     });
 });

@@ -2979,9 +2979,23 @@ export function annulusCensus(run, io) {
     const forecast = io.forecast(horizon);
     const cells = io.walkableCells();
     const hammer = io.hammerLength ?? 13;
-    const reach = io.slashReach ?? 16;
     const hits = io.hitsMax ?? 3;
     const separation = io.hitsTimerMax ?? 30;
+    /**
+     * ⛓⛓⛓ R8 SLICE 8 — THE ARM. `phaseAt(i)` is `Game.time` at forecast step
+     * `i`; give it and the census asks the EXACT question, withhold it and the
+     * census asks the union. Injected rather than read off the run so the
+     * DISC arm stays drivable after the clock exists — a census that could
+     * only ask the new question could not re-measure the old answer, and
+     * re-measuring it is the whole of trap 171's evidence.
+     */
+    const phaseAt = typeof io.phaseAt === 'function' ? io.phaseAt : null;
+    const lineHits = phaseAt ? io.lineHits : null;
+    if (phaseAt && typeof lineHits !== 'function') {
+        throw new Error('annulusCensus: `phaseAt` without `lineHits` is a census that '
+            + 'knows the clock and cannot use it — pass `spinner.hammerHitsPlayer` as '
+            + '`lineHits(entity, gameTime, box)`.');
+    }
     let clear = 0;
     let striking = 0;
     let bestClearance = -Infinity;
@@ -2995,12 +3009,26 @@ export function annulusCensus(run, io) {
             if (!step) break;
             for (let b = 0; b < step.length; b += 1) {
                 const r = step[b];
+                // ⚠ `+ originX`, not the rect's CENTRE: `spinnerRect` is
+                // `[x-4, x+3)` and its centre is `x - 0.5`. Half a pixel is
+                // nothing to a 13 px pad and everything to a raycast.
                 const cx = r.x + 4;
                 const cy = r.y + 4;
-                const gap = Math.max((cx - hammer) - c.box.right, c.box.x - (cx + hammer),
-                    (cy - hammer) - c.box.bottom, c.box.y - (cy + hammer));
-                if (gap <= 0) { safe = false; break; }
-                if (gap < min) min = gap;
+                if (phaseAt) {
+                    // ⛔ BOTH ARMS THE GAME RUNS: `Enemy.hitPlayer`'s 7x7 body,
+                    // then the hammer's line at THIS step's own phase.
+                    const overlaps = c.box.right > r.x && c.box.x < r.right
+                        && c.box.bottom > r.y && c.box.y < r.bottom;
+                    if (overlaps || lineHits({ x: cx, y: cy }, phaseAt(i), c.box)) {
+                        safe = false;
+                        break;
+                    }
+                } else {
+                    const gap = Math.max((cx - hammer) - c.box.right, c.box.x - (cx + hammer),
+                        (cy - hammer) - c.box.bottom, c.box.y - (cy + hammer));
+                    if (gap <= 0) { safe = false; break; }
+                    if (gap < min) min = gap;
+                }
                 if (io.inReach(c, r)) {
                     const prev = last.get(b);
                     if (prev === undefined || i - prev >= separation) {
@@ -3012,15 +3040,24 @@ export function annulusCensus(run, io) {
         }
         if (!safe) continue;
         clear += 1;
-        if (min > bestClearance) bestClearance = min;
+        // ⚠ THE LINE ARM NEVER WRITES `min` — a raycast has no px clearance —
+        // so it must not be allowed to report the `Infinity` an untouched
+        // accumulator would carry out as a "best".
+        if (!phaseAt && min > bestClearance) bestClearance = min;
         if ([...counts.values()].some((n) => n >= hits)) striking += 1;
     }
     return {
         level: run.level,
         horizon,
+        // ⛓ WHICH QUESTION WAS ASKED, on the answer. A census that reported
+        // 1 and one that reported 16 must not print the same shape.
+        arm: phaseAt ? 'line' : 'disc',
         cells: cells.length,
         clear,
         striking,
+        // ⚠ A DISC-ARM QUANTITY. "How many pixels of clearance" is not a
+        // question a raycast answers, so the line arm reports `null` rather
+        // than a number whose units it does not have.
         bestClearance: bestClearance === -Infinity ? null : bestClearance,
         staticAnnulusExists: striking > 0,
     };

@@ -80,8 +80,8 @@ import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
 } from './burnableTree.js';
 import {
-    SPINNER, createSpinnerState, hitSpinner, spinnerRect, spinnerRects,
-    spinnerTerrainWrites, stepSpinners,
+    HAMMER_BILLING, SPINNER, createSpinnerState, hammerHitsPlayer, hitSpinner, spinnerRect,
+    spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
 // ⛓⛓⛓ R8 SLICE 1: THE ENEMY BRIDGE. `chasers.js` has transcribed the walk
 // exactly since R5 slice 3 and nothing has ever called it — this import IS
@@ -2041,6 +2041,20 @@ export function createLevelRun({
      * `Game.update()`s and `Game.time` takes every one of them. The two
      * readouts disagree on purpose and each says which question it answers.
      */
+    /** The clock's refusal, phrased for a message that has to name a cure. */
+    const gameTimeRefusalText = () => clockRefusal ?? 'the clock is running';
+    /**
+     * ⛓⛓⛓ R8 SLICE 8: EVERY SPINNER CONTACT, BY ARM — `{t, level, id, arm,
+     * gameTime, angle}`.
+     *
+     * ⛔ ONE ROW PER LANDED TEST, AND THE ARM IS THE POINT (trap 113). "The
+     * game charged one hit and so did the model" is invariant under a
+     * permutation of its causes, and a spinner has exactly two — a 7x7 body at
+     * force 3 and a 13 px line at force 4, on the same frame. A ledger that
+     * counted contacts could not tell the driven PAIR's arm from its control.
+     * The `angle` is what makes the prediction checkable at all.
+     */
+    const spinnerContacts = [];
     const spendCeremonyPhaseA = (tag) => clock.spend(
         CEREMONY_DEAD_FRAMES.pickup, 'ceremony', `pickup phase A (${tag})`, ticksCompleted);
     const spendPickupHelp = (tag) => clock.spend(
@@ -6593,57 +6607,109 @@ export function createLevelRun({
      * on the next because the body drifted behind a spire.
      */
     /**
-     * ⛔⛔⛔ R8 SLICE 6 — THE HAMMER IS A BILL THIS MODEL CANNOT PAY, SO IT
-     * REFUSES BY NAME RATHER THAN READING AS A ZERO.
+     * ⛓⛓⛓ R8 SLICE 8 — THE HAMMER IS A **CONTACT** NOW, AND SO IS THE BODY.
      *
-     * `Spinner.update` runs `collideLine("Player", x, y, x + 13·cos a,
-     * y + 13·sin a)` every tick and calls `player.hit(this, 4, …)` on a hit —
-     * and `contactPricing('spinner')` has said `pricedBy: null` since R6
-     * slice 3 ("nothing prices its `hitPlayer`"). The census scan's own
-     * partition (§9.6) is between "priced somewhere" and "priced NOWHERE",
-     * and a body in the second half must THROW: a silent zero in a room the
-     * game is charging for is trap 162's shape exactly — the arrow bill that
-     * did not exist, one family over.
+     * ⚖ THE BILLING RULING, taken from the source as the charge pre-delegated
+     * it (`spinner.HAMMER_BILLING` carries the cite): the GAME bills, so the
+     * model bills. `Spinner.update` is
      *
-     * ⛔ AND THE ANGLE IS NOT PREDICTABLE FROM THIS MODEL'S CLOCK.
-     * `hammerAngle` is `(Game.time % 45) / 45 · 2π`, and `Game.time` counts
-     * DEAD FRAMES — a per-load variable (§22.6) this run does not carry. So
-     * the honest quantity is the UNION over all 45 phases, which is
-     * `spinner.hammerReach`'s disc, and the honest verdict for a player
-     * inside one is REFUSED rather than a hit at a guessed angle.
+     * ```as3
+     *   super.update();                       // Enemy.update -> hitUpdate(); hitPlayer();
+     *   hammerAngle = (Game.time % 45) / 45 * 2π;
+     *   var player = collideLine("Player", x, y, x + 13·cos a, y + 13·sin a);
+     *   if (player) player.hit(this, hitForce, new Point(x, y));
+     * ```
      *
-     * ⇒ the DANGER MAP forbids the disc before a tick is spent
-     * (`dangerMap.spinnerDanger`) and this is what says so if a walk gets
-     * there anyway. ⚠ Under `noDamage` the whole question is inert —
-     * `Player.hit`'s first line is `if (Bot.noDamage) return` — which is why
-     * every committed spinner-room tape has been able to walk straight
-     * through one.
+     * — TWO arms in one frame, in this order: the 7x7 body at force 3 and
+     * `Enemy.damage`, then the 13 px line at force 4 and `Player.hit`'s own
+     * default damage of 1. Whichever lands first sets `hitsTimer` and the
+     * other is refused inside `Player.hit`; both go through the run's one
+     * `applyPlayerHit` funnel, so the refusal is a `contactsSuppressed` row
+     * rather than a silence.
+     *
+     * ⛔⛔ THE REFUSAL SURVIVES, NARROWED TO ITS REAL CONDITION. R8 slice 6
+     * forbade the whole 13 px DISC because *"`Game.time` counts DEAD FRAMES,
+     * which this model does not carry"*. `gameClock` carries it now — but only
+     * where the count is exact, and `run.gameTimeRefusal` says when it is not.
+     * With no clock the honest quantity is still the union over all 45 phases,
+     * and a player inside it is still a contact this run cannot price. So the
+     * disc throw is the FALLBACK arm, with the clock's own reason in it.
+     *
+     * ⛔ AND THE DYING SPINNER SWINGS. `hitPlayer` is inside `Enemy.update`'s
+     * `if (!destroy)`; the hammer block is not, and `Mobile.death` only fades.
+     * So a spinner killed on tick N keeps its line live for its eleven fade
+     * frames while its body stops touching you — two arms, two lifetimes.
+     *
+     * ⚠ Under `noDamage` the whole question is inert (`Player.hit`'s first
+     * line is `if (Bot.noDamage) return`), which is why every spinner-room
+     * tape committed before this slice could walk straight through one.
      */
-    function assertPlayerClearOfHammers(st) {
+    function stepSpinnerContactsNow(st) {
         if (noDamage) return;
-        const box = playerBoxAt(state.x, state.y);
+        const clockNow = clock.now();
         for (const sp of st.byId.values()) {
-            if (sp.removed || sp.destroy) continue;
-            const disc = {
-                x: sp.x - SPINNER.hammerLength,
-                y: sp.y - SPINNER.hammerLength,
-                right: sp.x + SPINNER.hammerLength,
-                bottom: sp.y + SPINNER.hammerLength,
-            };
-            if (!rectsOverlap(box, disc)) continue;
-            throw new Error(`levelRun: at tick ${ticksCompleted + 1} the player box at `
-                + `(${state.x},${state.y}) is inside ${sp.id}'s HAMMER REACH — its `
-                + `entity point is (${sp.x.toFixed(2)},${sp.y.toFixed(2)}) and the reach `
-                + `is ${SPINNER.hammerLength} px — on a tape that does NOT declare `
-                + '`noDamage`. `Spinner.update` swings a `collideLine("Player", …)` at '
-                + '`(Game.time % 45) / 45 · 2π` and calls `player.hit(this, 4, …)`, and '
-                + 'this model does not carry `Game.time` (it counts DEAD FRAMES, a '
-                + 'per-load variable), so the ANGLE is not predictable from the run\'s '
-                + 'own clock. The union over all 45 phases is the disc above; a walk '
-                + 'inside it is a contact this run cannot price, and a silent zero here '
-                + 'would be the arrow bill that did not exist, one family over. Route '
-                + 'clear of the disc (`dangerMap.spinnerDanger` forbids it at plan time), '
-                + 'or declare `noDamage`.');
+            if (sp.removed) continue;
+            const box = playerBoxAt(state.x, state.y);
+            if (clockNow === null) {
+                const disc = {
+                    x: sp.x - SPINNER.hammerLength,
+                    y: sp.y - SPINNER.hammerLength,
+                    right: sp.x + SPINNER.hammerLength,
+                    bottom: sp.y + SPINNER.hammerLength,
+                };
+                if (!rectsOverlap(box, disc)) continue;
+                throw new Error(`levelRun: at tick ${ticksCompleted + 1} the player box at `
+                    + `(${state.x},${state.y}) is inside ${sp.id}'s HAMMER REACH — its `
+                    + `entity point is (${sp.x.toFixed(2)},${sp.y.toFixed(2)}) and the reach `
+                    + `is ${SPINNER.hammerLength} px — on a tape that does NOT declare `
+                    + '`noDamage`, AND whose `Game.time` this run cannot count: '
+                    + `${gameTimeRefusalText()}. \`Spinner.update\` swings a `
+                    + '`collideLine("Player", …)` at `(Game.time % 45) / 45 · 2π` and calls '
+                    + '`player.hit(this, 4, …)`, so without the clock the honest quantity '
+                    + 'is the UNION over all 45 phases — the disc above — and a walk inside '
+                    + 'it is a contact this run cannot price. Declare the boot state the '
+                    + 'clock needs, route clear of the disc '
+                    + '(`dangerMap.spinnerDanger` forbids it at plan time), or declare '
+                    + '`noDamage`.');
+            }
+            // ── `Enemy.update`: `hitUpdate(); hitPlayer();`, ABOVE the hammer ──
+            // The gate is the SPINNER's own state, and `stepSpinner` has already
+            // run this tick's `hitUpdate` decrement — which is the order the
+            // source has (`hitUpdate()` then `hitPlayer()`).
+            if (!sp.destroy && sp.hitsTimer <= 0 && rectsOverlap(box, spinnerRect(sp))) {
+                const billed = applyPlayerHit({
+                    source: 'spinner',
+                    id: sp.id,
+                    // `p.hit(this, 3, new Point(x, y), damage)` — `Enemy`'s own
+                    // contact force and the instance's damage.
+                    force: PLAYER_DAMAGE.contactForce,
+                    damage: SPINNER.damage,
+                    from: { x: sp.x, y: sp.y },
+                });
+                spinnerContacts.push({
+                    t: ticksCompleted + 1, level, id: sp.id, arm: 'body',
+                    gameTime: clockNow, angle: null, applied: billed.applied === true,
+                });
+                if (pendingDeath) return;
+                // ⚠ AND THE HAMMER STILL RUNS. The game does not `return` after
+                // `hitPlayer`; the line is tested on the same frame and refused
+                // by `Player.hit`'s own i-frame gate, which is a
+                // `contactsSuppressed` row and not an absence.
+            }
+            const line = hammerHitsPlayer(sp, clockNow, playerBoxAt(state.x, state.y));
+            if (!line) continue;
+            const billed = applyPlayerHit({
+                source: 'spinner-hammer',
+                id: sp.id,
+                force: HAMMER_BILLING.force,
+                damage: HAMMER_BILLING.damage,
+                from: { x: sp.x, y: sp.y },
+            });
+            spinnerContacts.push({
+                t: ticksCompleted + 1, level, id: sp.id, arm: 'hammer',
+                gameTime: clockNow, angle: line.angle, applied: billed.applied === true,
+            });
+            if (pendingDeath) return;
         }
     }
 
@@ -7003,10 +7069,11 @@ export function createLevelRun({
                  * placement, and a billiard leaves that cell on tick one.
                  * Throwing here would refuse a stance because of where the
                  * body USED to be — and stay silent about where it is.
-                 * `assertPlayerClearOfHammers` is the arm that asks the live
-                 * question (`CONTACT_STEPPED_PRICED_BY.spinner`).
+                 * `stepSpinnerContactsNow` is the arm that asks the live
+                 * question (`CONTACT_STEPPED_PRICED_BY.spinner`) — and since
+                 * R8 slice 8 it BILLS there rather than refusing.
                  */
-                if (pricing.pricedBy === 'assertPlayerClearOfHammers') continue;
+                if (pricing.pricedBy === 'stepSpinnerContactsNow') continue;
                 const verdict = chaserRoomVerdict(level);
                 if (verdict.stepped) continue;
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
@@ -9033,6 +9100,18 @@ export function createLevelRun({
          * alone would be trap 113 exactly.
          */
         get spinnerPressHits() { return spinnerPressHits.map((h) => ({ ...h })); },
+        /**
+         * ⛓⛓⛓ R8 SLICE 8: every spinner contact this run BILLED, by arm, with
+         * the `Game.time` and the hammer ANGLE that produced it.
+         *
+         * ⚠ ONE ROW PER TEST THE GEOMETRY PASSED, `applied` or not. A contact
+         * `Player.hit` refused — i-frames, a freeze — is still a test the
+         * hammer WON, and the driven pair's whole claim is about where the
+         * line was: a ledger of landings alone could not tell "the angle
+         * missed" from "the i-frames refused it". The refusal's own reason is
+         * a `contactsSuppressed` row, exactly like every other source here.
+         */
+        get spinnerContacts() { return spinnerContacts.map((c) => ({ ...c })); },
         /** `{t, level, id, tag, weapon, removedTick}` per press-killed spinner. */
         get spinnerPressKills() { return spinnerKills.map((k) => ({ ...k })); },
         /** The kill-lock scan every spinner kill RUNS — nil included (§9.3). */
@@ -9072,6 +9151,28 @@ export function createLevelRun({
          * this whole ingredient exists to avoid.
          */
         get gameTime() { return clock.now(); },
+        /**
+         * ⛓⛓⛓ `Game.time` at a FORECAST HORIZON — the clock the body at
+         * `spinnerForecast(h)[h-1]` will be swinging under.
+         *
+         * ⛔ THE ASSUMPTION IS NAMED: `h` frames from now the clock has
+         * advanced by `h` ONLY IF none of them is dead. Inside one visit to
+         * one room that holds — a room-load fade ends the room and a ceremony
+         * beside a spinner is refused outright
+         * (`assertDialogueFreeSpinnerRoom`), which are the only two producers
+         * this run has. A horizon that crossed either would be SHORT by them,
+         * so the assumption is stated where a later family can break it rather
+         * than left to be inferred from a plus sign.
+         */
+        gameTimeAt(horizon) {
+            const now = clock.now();
+            if (now === null) return null;
+            if (!Number.isInteger(horizon) || horizon < 0) {
+                throw new Error(`levelRun.gameTimeAt: ${horizon} is not a forecast `
+                    + 'horizon — it indexes `spinnerForecast`, which is integer ticks.');
+            }
+            return now + horizon;
+        },
         /** Why the clock is `null`, or `null` if it is running. */
         get gameTimeRefusal() { return clockRefusal; },
         /** Every dead-frame span the run has spent, with its kind and reason. */
@@ -10342,7 +10443,7 @@ export function createLevelRun({
             if (!noclip && spinState.byId.size > 0) {
                 assertDialogueFreeSpinnerRoom();
                 stepSpinners(spinState, spinnerCtx());
-                assertPlayerClearOfHammers(spinState);
+                stepSpinnerContactsNow(spinState);
                 /**
                  * ⛔⛔ AND THE FLAG A REMOVAL WRITES, BANKED HERE.
                  *

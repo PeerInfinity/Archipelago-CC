@@ -63,7 +63,7 @@ import { contactPricing, contactRect, ENEMY_CLASSES, stepBoundFor } from './comb
 import { chaserBoxAt, isBridgedChaser } from './chasers.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 import { rect, rectsOverlap } from './levelWorld.js';
-import { SPINNER } from './spinner.js';
+import { SPINNER, hammerHitsPlayer, spinnerRect } from './spinner.js';
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
@@ -445,38 +445,69 @@ export function staticEnemyDanger(run, box) {
 }
 
 /**
- * ⛓⛓⛓ INGREDIENT (f) — R8 SLICE 6 — THE LIVE SPINNER BODIES, GROWN BY THE
- * HAMMER, and the map had them in the WRONG PLACE rather than not at all.
+ * ⛓⛓⛓ INGREDIENT (f) — THE LIVE SPINNER BODIES, AND SINCE R8 SLICE 8 IT IS
+ * THE **EXACT** MECHANISM RATHER THAN THE UNION THAT COVERS IT.
  *
- * ⛔ THE DEFECT IS §12.4's, ONE FAMILY OVER, AND IT IS WORSE. A `SandTrap`
- * was invisible to every ingredient; a `Spinner` was VISIBLE TO INGREDIENT
- * (e) AT ITS PLACEMENT — a cell it leaves on the first tick of the visit and
- * never returns to. So the map forbade a cell nothing is in, and called the
- * cell the body is actually in calm. A wrong "closed" seals the map and a
- * wrong "open" gets you hit; this managed both at once.
+ * ⛔ SLICE 6's DEFECT, KEPT ON THE RECORD, because it is the reason the
+ * ingredient exists at all: a `Spinner` was VISIBLE TO INGREDIENT (e) AT ITS
+ * PLACEMENT — a cell it leaves on the first tick of the visit and never
+ * returns to — so the map forbade a cell nothing is in and called the cell the
+ * body is actually in calm. A wrong "closed" seals the map and a wrong "open"
+ * gets you hit; that managed both at once.
  *
- * ⛔⛔ AND WHAT IT IS GROWN BY IS THE **HAMMER**, NOT THE BODY. The 7x7 box
- * is what a press aims at; what damages the player is
- * `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)` — a rotating line
- * whose phase is `(Game.time % 45) / 45 · 2π`. ⛔ THIS MODEL DOES NOT CARRY
- * `Game.time`: it counts DEAD FRAMES, which are a per-load variable (§22.6),
- * so the phase is not predictable from the run's own clock. What IS exact is
- * the UNION over all 45 phases — `spinner.hammerReach`, a disc of
- * `hammerLength` about the entity point — and that union is what a stance
- * must clear whether it passes through or waits (trap 154's two questions
- * have the SAME answer here, which is why this ingredient ignores the mode).
+ * ── ⚖ AND SLICE 6's CURE WAS TOO WIDE, WHICH IS ITS OWN DEFECT ────────
  *
- * ⇒ the map forbids the DISC. A bound that says "somewhere on this circle,
- * and I cannot say where" is the ACCURATE WALL; predicting the angle from a
- * clock this model does not have would be the permissive refusal
- * [[feedback_accurate_wall_beats_permissive_refusal]] warns about.
+ * The cure priced the body grown by the hammer's whole reach — the union over
+ * all 45 phases, `spinner.hammerReach`'s 13 px disc — on the grounds that
+ * *"this model does not carry `Game.time`"*. ⚖ THE USER'S CORRECTION
+ * (kickoff §16.8): *"the hammer spins in a predictable pattern; opportunistic
+ * means waiting until the hammer isn't in the way, or standing where it won't
+ * be. Forbidding the whole disc it passes through is wrong."*
+ *
+ * It is right, and the same 60 walkable cells of L18 over the same 600-tick
+ * horizon measure how right:
+ *
+ * ```
+ *   priced by            clear for the whole horizon   ...AND 3 separated presses
+ *   the 13 px disc                    1 (behind a lock)              0
+ *   the exact hammer line            16                              3
+ * ```
+ *
+ * ⇒ the conservative ingredient had not merely cost routes, it had
+ * MANUFACTURED the policy problem the slice then solved with a moving press
+ * schedule ([[feedback_conservative_ingredient_makes_the_problem]]).
+ *
+ * ── ⛓⛓ WHAT IS PRICED NOW: BOTH ARMS, AT THE CELL'S OWN TICK ─────────
+ *
+ * `Spinner.update` damages twice per frame and the map prices both, because
+ * narrowing to the line alone would open a hole exactly the size of the body
+ * the disc used to cover:
+ *
+ *   (1) `Enemy.hitPlayer` — `collide("Player", x, y)`, the 7x7 BOX, force 3
+ *   (2) the hammer — `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)`
+ *       at `hammerAngle = (Game.time % 45) / 45 · 2π`, force 4
+ *
+ * and the ANGLE comes from `run.gameTimeAt(horizon)`, which is the clock's own
+ * arithmetic and not a second one.
+ *
+ * ⛔ THE DISC SURVIVES AS THE FALLBACK, AND ITS CONDITION IS NAMED. Where the
+ * clock cannot run — a tape with no `pins: ["dead_frames"]`, or a `cutscene[0]`
+ * boot — `run.gameTimeAt` answers `null` and the union over all 45 phases is
+ * once again the honest quantity. That is the accurate wall, not a permissive
+ * refusal: it is what is TRUE when the phase is unknowable
+ * ([[feedback_accurate_wall_beats_permissive_refusal]]).
  *
  * ⚠ CARRIED FORWARD IN TIME UNDER §14.2's LAW, and a spinner is the cleanest
  * AUTONOMOUS body on the roster: `runRange` is 0, so its chase arm is dead
  * code and its trajectory is a function of the level's geometry and the tick
- * index ALONE — it cannot read the player even in principle.
- * `run.spinnerForecast` is the run's own stepper run forward, so a transit
- * query gets the body at the cell's own ETA rather than at horizon zero.
+ * index ALONE — it cannot read the player even in principle. With the clock,
+ * the HAMMER is autonomous-given-the-walk too: the phase is a function of the
+ * same tick index.
+ *
+ * ⚠ THE ENTITY POINT IS RECOVERED FROM THE RECT BY ITS ORIGIN, NOT BY ITS
+ * CENTRE. `spinnerRect` is `[x-4, x+3)`, whose centre is `x - 0.5` — so the
+ * disc slice 6 drew was half a pixel off its own body, invisible under a
+ * 13 px pad and NOT invisible to a raycast from the point.
  */
 export function spinnerDanger(run, box, horizon) {
     const bodies = run.spinnerBodies ?? [];
@@ -484,27 +515,57 @@ export function spinnerDanger(run, box, horizon) {
     // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
     // and it is a list of RECTS in the same order `spinnerBodies` reports.
     const ahead = horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null;
+    const at = typeof run.gameTimeAt === 'function' ? run.gameTimeAt(horizon) : null;
     const out = [];
     bodies.forEach((b, i) => {
         const r = ahead?.[i] ?? null;
-        // The ENTITY point — `hammerLine` starts at `x`/`y`, not at a corner.
-        const cx = r ? (r.x + r.right) / 2 : b.x;
-        const cy = r ? (r.y + r.bottom) / 2 : b.y;
-        const disc = {
-            x: cx - SPINNER.hammerLength,
-            y: cy - SPINNER.hammerLength,
-            right: cx + SPINNER.hammerLength,
-            bottom: cy + SPINNER.hammerLength,
-        };
-        if (!rectsOverlap(box, disc)) return;
+        // ⛔ `+ originX`, not the rect's centre — see the docblock.
+        const ex = r ? r.x + SPINNER.originX : b.x;
+        const ey = r ? r.y + SPINNER.originY : b.y;
+        const at13 = ` — the UNION over all ${SPINNER.hammerPeriod} phases, because `
+            + `\`Game.time\` is not countable on this tape`;
+        const where = `(${ex.toFixed(1)},${ey.toFixed(1)})`
+            + (horizon > 0 ? ` at horizon ${horizon}` : '');
+        if (at === null) {
+            const disc = {
+                x: ex - SPINNER.hammerLength,
+                y: ey - SPINNER.hammerLength,
+                right: ex + SPINNER.hammerLength,
+                bottom: ey + SPINNER.hammerLength,
+            };
+            if (!rectsOverlap(box, disc)) return;
+            out.push({
+                kind: 'spinner',
+                id: b.id,
+                arm: 'disc',
+                why: `a live Spinner body at ${where} grown by its hammer's `
+                    + `${SPINNER.hammerLength} px reach${at13}`,
+            });
+            return;
+        }
+        // (1) `Enemy.hitPlayer` — the 7x7 body, at the position this horizon has it.
+        const bodyRect = r ?? spinnerRect(b);
+        if (rectsOverlap(box, bodyRect)) {
+            out.push({
+                kind: 'spinner',
+                id: b.id,
+                arm: 'body',
+                why: `a live Spinner BODY at ${where} — \`Enemy.hitPlayer\`'s `
+                    + `${SPINNER.w}x${SPINNER.h} \`collide("Player", x, y)\` at force 3`,
+            });
+            return;
+        }
+        // (2) the hammer, at THIS tick's phase and no other.
+        const line = hammerHitsPlayer({ x: ex, y: ey }, at, box);
+        if (!line) return;
         out.push({
             kind: 'spinner',
             id: b.id,
-            why: `a live Spinner body at (${cx.toFixed(1)},${cy.toFixed(1)}) grown by its `
-                + `hammer's ${SPINNER.hammerLength} px reach — the UNION over all `
-                + `${SPINNER.hammerPeriod} phases, because the angle rides on `
-                + '`Game.time` and this model does not carry it'
-                + (horizon > 0 ? ` (forecast to horizon ${horizon})` : ''),
+            arm: 'hammer',
+            why: `a live Spinner's HAMMER at ${where} — the exact `
+                + `${SPINNER.hammerLength} px \`collideLine\` at `
+                + `Game.time ${at} (phase ${at % SPINNER.hammerPeriod}/`
+                + `${SPINNER.hammerPeriod}, angle ${(line.angle * 180 / Math.PI).toFixed(1)}°)`,
         });
     });
     return out;
@@ -777,6 +838,24 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
     hazards: Object.freeze({
         coupling: 'static', atEta: false, why: 'placed volumes do not move',
     }),
+    /**
+     * ⛓⛓⛓ R8 SLICE 8 — THE ROW'S OWN COMMENT DEMANDED THIS BE SAID OUT LOUD,
+     * AND HERE IT IS: **THE HAMMER IS AUTONOMOUS-GIVEN-THE-WALK NOW TOO.**
+     *
+     * The row used to carry a caveat — *"what is NOT predictable is the HAMMER
+     * ANGLE; it rides on `Game.time`, which counts dead frames"* — and that
+     * caveat is what made the ingredient price a DISC. §14.2 ruling 1's
+     * criterion is autonomy given the walk, and a quantity that is a function
+     * of the tick index alone meets it as squarely as the arrow subsystem
+     * does: `gameClock` counts the dead frames the caveat named, so the phase
+     * at horizon `h` is `run.gameTimeAt(h)` and the ingredient prices the
+     * EXACT LINE at that phase.
+     *
+     * ⚠ The coupling is unchanged — `runRange` is 0, so `Spinner.update`'s
+     * chase block is dead code and neither the body nor the hammer can read
+     * the player even in principle. What changed is that the second arm is no
+     * longer over-approximated.
+     */
     spinners: Object.freeze({
         coupling: 'autonomous',
         atEta: true,
@@ -784,10 +863,13 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
             + '`Spinner.update`\'s chase block is dead code and the trajectory is a '
             + 'function of the level geometry and the tick index alone. It cannot read '
             + 'the player even in principle, so `spinnerForecast` (the run\'s OWN '
-            + 'stepper, run forward) is exact. ⚠ What is NOT predictable is the HAMMER '
-            + 'ANGLE — it rides on `Game.time`, which counts dead frames — so the '
-            + 'ingredient forbids the whole disc at every horizon rather than a line at '
-            + 'one of them.',
+            + 'stepper, run forward) is exact. ⛓ AND SO IS THE HAMMER: its phase is '
+            + '`(Game.time % 45)/45·2π` and `gameClock` counts `Game.time` exactly, so '
+            + 'the ingredient prices BOTH arms the game runs — `hitPlayer`\'s 7x7 body '
+            + 'and the 13 px `collideLine` at THIS tick\'s angle. ⛔ Where the clock '
+            + 'cannot run (`run.gameTimeAt` is null) it falls back to the union over all '
+            + '45 phases, the 13 px disc, which is what is TRUE when the phase is '
+            + 'unknowable.',
     }),
     staticEnemies: Object.freeze({
         coupling: 'static', atEta: false, why: 'a `speed 0` census body at its placement',

@@ -33,7 +33,7 @@ import { ARROW_PLAYER_ARM } from './arrowTrap.js';
 import { knockbackDelta } from './playerDamage.js';
 import { createLevelRun } from './levelRun.js';
 import { parseTape, heldKeysAt } from './tapeFormat.js';
-import { hitSpinner, SPINNER } from './spinner.js';
+import { hammerHitsPlayer, hitSpinner, SPINNER } from './spinner.js';
 import { distanceRectPoint, SLASH_REACH, SWORD_DAMAGE } from './presses.js';
 import { OUT_OF_BAND_WRITERS, TAGS_PER_LEVEL } from './outOfBandLedger.js';
 import { outOfBandFlagFor } from './breakableRocks.js';
@@ -1480,5 +1480,95 @@ describe('R8_D2_COMPLETE — slice 7\'s prediction, committed before a line of i
         });
         expect(positive.striking).toBe(1);
         expect(positive.staticAnnulusExists).toBe(true);
+        expect(out.arm).toBe('disc');
+    });
+
+    /**
+     * ⛓⛓⛓ R8 SLICE 8 — ⚖ THE USER'S CORRECTION, RE-MEASURED BY THE SAME
+     * INSTRUMENT, and the disc arm above is its CONTROL.
+     *
+     * *"The hammer spins in a predictable pattern... forbidding the whole disc
+     * it passes through is wrong."* The census is the evidence for trap 171:
+     * one instrument, two questions, the same room and the same horizon — and
+     * the answers are not close.
+     *
+     * ⛔ THE NUMBERS ARE PHASE-DEPENDENT AND THE TEST SAYS SO. "How many cells
+     * are clear for 600 ticks" is a function of WHERE IN THE 45-TICK CYCLE the
+     * visit starts, because the body moves while the hammer turns. So the
+     * assertion is a strict INEQUALITY against the disc arm plus the one thing
+     * that is invariant — that a static striking stance EXISTS at all, which
+     * the disc arm says it does not.
+     */
+    it('⛓⛓⛓ the LINE arm answers a different question, and trap 171 is the gap', () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 18, x: 16, y: 112 },
+            noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null,
+            seam: {
+                items: { hasSword: true }, time: 8000, hits_max: 3,
+                cutscene: [false, false, false, false], menu_state: 0,
+            },
+            roles: ROLES,
+        });
+        expect(run.gameTimeRefusal).toBeNull();
+        const cells = [];
+        for (let ty = 0; ty < run.world.height; ty += 1) {
+            for (let tx = 0; tx < run.world.width; tx += 1) {
+                const c = { x: tx * 16 + 8, y: ty * 16 + 8 };
+                if (plannerObstacleAt(run.world, c.x, c.y, null, {
+                    liveBag: run.liveGeometryOpts(), avoidVolumes: true, keys: run.keys,
+                    contacts: new Set(), lattice: 16, nodeMargin: 0, triggerMargin: 0,
+                })) continue;
+                cells.push({ ...c, box: playerBoxAt(c.x, c.y) });
+            }
+        }
+        const io = {
+            horizon: 600,
+            walkableCells: () => cells,
+            forecast: (n) => run.spinnerForecast(n),
+            inReach: (c, r) => distanceRectPoint(c.x, c.y, r) <= SLASH_REACH,
+        };
+        const disc = annulusCensus(run, io);
+        const line = annulusCensus(run, {
+            ...io, phaseAt: (i) => run.gameTimeAt(i + 1), lineHits: hammerHitsPlayer,
+        });
+        expect(disc.arm).toBe('disc');
+        expect(line.arm).toBe('line');
+        expect(disc.cells).toBe(line.cells);
+        // ⛔ THE HEADLINE, AS AN INEQUALITY: the conservative ingredient left
+        // ONE clear cell and NO static stance; the exact one leaves many and a
+        // stance that gets its three separated presses.
+        expect(disc.clear).toBe(1);
+        expect(disc.striking).toBe(0);
+        expect(disc.staticAnnulusExists).toBe(false);
+        expect(line.clear).toBeGreaterThan(disc.clear);
+        expect(line.striking).toBeGreaterThan(0);
+        expect(line.staticAnnulusExists).toBe(true);
+        // ⚠ THE LINE ARM HAS NO PX CLEARANCE TO REPORT — a raycast does not
+        // produce one, and reporting the disc's would be the disc's answer
+        // wearing the line's label.
+        expect(line.bestClearance).toBeNull();
+        expect(disc.bestClearance).toBeGreaterThan(0);
+    });
+
+    it('⛔ MUTATION: a census that knows the clock and cannot use it is a throw', () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 18, x: 16, y: 112 },
+            noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true }, time: 8000 }, roles: ROLES,
+        });
+        expect(() => annulusCensus(run, {
+            horizon: 4,
+            walkableCells: () => [{ x: 8, y: 8, box: playerBoxAt(8, 8) }],
+            forecast: () => [[]],
+            inReach: () => false,
+            phaseAt: () => 0,
+        })).toThrow(/lineHits/);
     });
 });
