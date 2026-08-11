@@ -1783,3 +1783,127 @@ describe('R8 slice 5 — the refuted recording, replayed through the fixed model
         for (const a of seen.fresh) expect(a.y).toBe(48);
     });
 });
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — THE FORECAST IS THE RUN'S OWN ARITHMETIC, PROVED BY
+ * DRIVING BOTH.
+ *
+ * `arrowForecast()` exists so a corridor probe can ask where the arrows will
+ * be along a walk that has not happened. It calls the same `stepArrowTrap` and
+ * `stepArrow` the live tick calls — but "calls the same functions" is a claim
+ * about a source file, and the law is that two cost models must agree BY
+ * CONSTRUCTION, checked by driving the real path
+ * ([[feedback_two_cost_models_must_agree]]).
+ *
+ * ⛔ SO THIS DRIVES BOTH OVER ONE COMMITTED WALK: the run replays `r7-act2-5`
+ * while a forecast, seeded at tick 0, is stepped along the SAME positions. If
+ * the two ever disagree about one arrow's position, the fast path has drifted
+ * — including on the two facts this slice fixed, the spawn deferral and the
+ * two-frame arming lag, both of which live in exactly one of the two.
+ */
+describe('R8 slice 5 — the arrow forecast agrees with the run it forecasts', () => {
+    const TICKS = 400;
+
+    it('⛓⛓⛓ predicts every arrow position of a committed walk, tick for tick', () => {
+        const t = loadTape('r7-act2-5');
+        const mk = () => createLevelRun({
+            levelSource,
+            boot: t.boot,
+            noclip: t.noclip,
+            noHazards: t.noHazards,
+            noDamage: t.noDamage,
+            grants: t.grants,
+            persistence: t.persistence,
+            equips: t.equips,
+            pins: t.pins,
+            save: t.save,
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        const run = mk();
+        const forecast = mk().arrowForecast();
+        expect(forecast, 'L5 has four arrow traps').not.toBeNull();
+        let comparedTicks = 0;
+        let comparedArrows = 0;
+        const extras = new Set();
+        for (let i = 0; i < TICKS; i += 1) {
+            // The forecast reads the player where the live stepper does: the
+            // position at the START of the tick, before `stepV2`.
+            const predicted = forecast.step({ x: run.state.x, y: run.state.y });
+            run.advance(heldKeysAt(t, i));
+            // The run's own arrows AFTER that tick — the same instant.
+            const live = run.arrowFlights
+                .filter((a) => a.v.x !== 0 || a.v.y !== 0)
+                .map((a) => `${a.id}@${a.x},${a.y}`);
+            const seen = new Set(predicted.map((a) => `${a.id}@${a.x},${a.y}`));
+            /**
+             * ⛔ EVERY LIVE ARROW IS PREDICTED, AT THE SAME PIXEL. That is the
+             * agreement, and it is the direction that matters: a forecast that
+             * lost an arrow would clear a cell the game shoots.
+             */
+            for (const a of live) expect(seen.has(a), `tick ${i}: ${a}`).toBe(true);
+            for (const a of predicted) {
+                if (!live.includes(`${a.id}@${a.x},${a.y}`)) extras.add(a.id);
+            }
+            comparedTicks += 1;
+            comparedArrows += live.length;
+        }
+        // ⛔ THE POSITIVE COUNT, so a pair of empty lists cannot pass for
+        // agreement: this walk holds a ceiling that fires for the whole
+        // window (the silent-watcher law).
+        expect(comparedTicks).toBe(TICKS);
+        expect(comparedArrows).toBeGreaterThan(1000);
+        /**
+         * ⛓⛓ AND THE OVER-APPROXIMATION IS ACCOUNTED FOR, NOT TOLERATED.
+         * The forecast steps `stepArrow` with `bodies: []` on purpose (a body
+         * may have moved or died by the horizon), so an arrow the run killed
+         * on a BOB keeps flying in the forecast. Every extra must therefore be
+         * an arrow the run's own ledger says died on a body — and cover is NOT
+         * an excuse, because the forecast asks the same cover query.
+         */
+        const onBodies = new Set(run.arrowBodyHits
+            .filter((h) => h.arm !== 'cover').map((h) => h.arrow));
+        for (const id of extras) {
+            expect(onBodies.has(id), `${id} flew on in the forecast and the run's `
+                + 'ledger does not say a body stopped it').toBe(true);
+        }
+        // ⛔ AND THERE WERE SOME — otherwise the exclusion above is a
+        // declaration rather than a measurement.
+        expect(extras.size).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛔ MUTATION, RUN: seed the forecast one tick late and it disagrees BY
+     * TICK. A comparison that has never seen a disagreement might be comparing
+     * nothing — this is the row that says it can fail.
+     */
+    it('⛔ a forecast fed the WRONG player positions diverges, and says when', () => {
+        const t = loadTape('r7-act2-5');
+        const mk = () => createLevelRun({
+            levelSource,
+            boot: t.boot,
+            noclip: t.noclip,
+            noHazards: t.noHazards,
+            noDamage: t.noDamage,
+            grants: t.grants,
+            persistence: t.persistence,
+            equips: t.equips,
+            pins: t.pins,
+            save: t.save,
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        const run = mk();
+        const forecast = mk().arrowForecast();
+        // ⛔ THE MUTATION: the walk is told the player never left the spawn, so
+        // the button is never pressed and the ceiling never arms.
+        const spawn = { x: run.state.x, y: run.state.y };
+        let firstDisagreement = null;
+        for (let i = 0; i < TICKS && firstDisagreement === null; i += 1) {
+            const predicted = forecast.step(spawn).map((a) => a.id).sort().join(',');
+            run.advance(heldKeysAt(t, i));
+            const live = run.arrowFlights.filter((a) => a.v.x !== 0 || a.v.y !== 0)
+                .map((a) => a.id).sort().join(',');
+            if (predicted !== live) firstDisagreement = i;
+        }
+        expect(firstDisagreement).not.toBeNull();
+    });
+});

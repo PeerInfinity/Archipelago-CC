@@ -6,10 +6,17 @@ import { buildLevelWorld } from './levelWorld.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { planDash } from './mover.js';
 import {
-    DangerMapError, arrowDanger, bodyKillRegions, chaserDanger, crusherDanger,
-    crusherVolumesAt, dangerAt, dangerVolumes, forbiddenByDanger, hazardDanger,
-    staticEnemyDanger, HAZARDS_PRICED_LIVE,
+    DangerMapError, arrowDanger, arrowDangerDuringTransit, bodyKillRegions, chaserDanger,
+    crusherDanger, crusherVolumesAt, dangerAt, dangerDuringTransit, dangerVolumes,
+    dangerWhileWaiting, forbiddenByDanger, hazardDanger, predictArrows,
+    staticEnemyDanger, DANGER_MODES, HAZARDS_PRICED_LIVE, TRANSIT_INGREDIENTS,
 } from './dangerMap.js';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { heldKeysAt, parseTape } from './tapeFormat.js';
+import { loadTape } from './fixtures/index.js';
+import { rectsOverlap } from './levelWorld.js';
 
 /**
  * ── THE UNION DANGER MAP — R8 slice 1, kickoff §3.3 ───────────────────
@@ -526,3 +533,326 @@ describe('dangerVolumes and bodyKillRegions — the ladder\'s two other shapes',
  *       → `bodyKillRegions names L6's water…` reds, because the water would
  *         then have to be in both
  */
+
+/**
+ * ⛓⛓⛓ ⚖ §13.10a's TWO ORACLE GATES — R8 slice 5.
+ *
+ * The ruling names both fixtures and says they are already on disk. They are
+ * the two halves of one claim: the probe must FORBID the walk the game shot,
+ * and must ADMIT the walk the game accepted. Either alone is cheap — a probe
+ * that forbids everything passes the first, one that forbids nothing passes
+ * the second.
+ *
+ * ⛔ THE INSTRUMENT UNDER TEST IS THE PAIR (forecast + `dangerDuringTransit`),
+ * driven along a walk that really happened, so nothing here depends on the
+ * solver's own planning. The walks are the RECORDING's and the committed hand
+ * tape's; this asks the map about them.
+ */
+describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles', () => {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REFUTED = join(HERE, 'fixtures', 'refuted');
+
+    /** Boot a tape's own L5 world and replay its keys, capturing positions. */
+    const replay = (tape, upTo) => {
+        const run = createLevelRun({
+            levelSource: source, boot: tape.boot, noclip: false,
+            noHazards: tape.noHazards, noDamage: tape.noDamage ?? false,
+            grants: tape.grants, persistence: tape.persistence, despawn: [],
+            equips: tape.equips, pins: tape.pins ?? [], save: tape.save ?? null,
+            rng: tape.rng ?? null, seam: tape.seam ?? null, roles: ROLES,
+        });
+        const at = [];
+        for (let i = 0; i < upTo; i += 1) {
+            at.push({ x: run.state.x, y: run.state.y });
+            run.advance(heldKeysAt(tape, i));
+        }
+        return { run, at };
+    };
+
+    /**
+     * Step the forecast along a walk's OWN positions and return, per tick, the
+     * probe's verdict for the box the walk occupied at that tick.
+     *
+     * ⛔ THE PAIRING IS THE GAME'S: the arrows have moved, the player has not
+     * — an `Arrow` is run-time-added and therefore updates before the Player.
+     */
+    const probeAlong = (run, positions, fromTick) => {
+        const forecast = run.arrowForecast();
+        expect(forecast, 'L5 has four traps; a null forecast is the test not '
+            + 'reaching the subsystem').not.toBeNull();
+        const rows = [];
+        for (let i = 0; i < positions.length; i += 1) {
+            const tick = fromTick + i + 1;
+            const arrows = forecast.step(positions[i]);
+            const box = playerBoxAt(positions[i].x, positions[i].y);
+            rows.push({
+                tick,
+                pos: positions[i],
+                d: dangerDuringTransit(run, tick, box, arrows),
+                arrows,
+            });
+        }
+        return rows;
+    };
+
+    /**
+     * ── GATE (i), THE NEGATIVE ORACLE ─────────────────────────────────
+     *
+     * The recording fixes the exact (cell, tick): the player at
+     * (65.05, 56.39999999999999) on tick 206, hit by `arrowtrap@64,48#14.0`.
+     * The probe must forbid it — and it must do so from a plan made BEFORE the
+     * arrow that hits existed, which is the half a prediction over
+     * arrows-already-in-the-air cannot do.
+     */
+    describe('(i) NEGATIVE — the walk the GAME shot', () => {
+        const tape = parseTape(JSON.parse(
+            readFileSync(join(REFUTED, 'r8-solve-5.tape.json'), 'utf8')));
+        const expectation = JSON.parse(
+            readFileSync(join(REFUTED, 'r8-solve-5.expectation.json'), 'utf8'));
+        // The plan tick: the last tick the walk stood still before going east.
+        const PLAN = 198;
+        const HIT = 206;
+
+        it('⛓ the fixture really is the refuted walk — the hit is at 207', () => {
+            // ⛔ THE POSITIVE COUNT FIRST. Everything below is about a
+            // recording; if the recording is not the one that carries the hit,
+            // the gate is measuring nothing.
+            expect(expectation.ticks[HIT].x).toBe(65.05);
+            expect(expectation.ticks[HIT + 1].x).toBe(62.35484072151636);
+        });
+
+        it('⛔⛔⛔ FORBIDS the refuted walk\'s own (cell, tick), naming the arrow', () => {
+            const { run } = replay(tape, PLAN);
+            expect(run.ticksCompleted).toBe(PLAN);
+            // ⛔ THE ARROW THAT HITS DOES NOT EXIST YET. This is the row that
+            // makes the forecast's trap half load-bearing rather than tidy.
+            expect(run.arrowsInFlight.map((a) => a.id))
+                .not.toContain('arrowtrap@64,48#14.0');
+            const walk = [];
+            for (let t = PLAN; t <= HIT; t += 1) walk.push(expectation.ticks[t]);
+            const rows = probeAlong(run, walk, PLAN - 1);
+            const atHit = rows.find((r) => r.tick === HIT);
+            expect(atHit.pos.x).toBe(65.05);
+            expect(atHit.d.danger).toBe(true);
+            const arrow = atHit.d.sources.find((x) => x.kind === 'arrow');
+            expect(arrow, `sources were ${JSON.stringify(atHit.d.sources)}`)
+                .toBeDefined();
+            expect(arrow.id).toBe('arrowtrap@64,48#14.0');
+            // …and the forecast put that arrow exactly where the game's
+            // knockback arithmetic says it was.
+            const predicted = atHit.arrows.find((a) => a.id === 'arrowtrap@64,48#14.0');
+            expect({ x: predicted.x, y: predicted.y }).toEqual({ x: 68, y: 58 });
+        });
+
+        /**
+         * ⛔⛔ THE COLLAPSE, MEASURED — this is why it is a TIME defect and not
+         * a geometry one. The same cell, asked at the tick the plan was made
+         * on (the static corridor probe's only question), is CALM.
+         */
+        it('⛔⛔ the COLLAPSED question calls the same cell calm (trap 161)', () => {
+            const { run } = replay(tape, PLAN);
+            const box = playerBoxAt(expectation.ticks[HIT].x, expectation.ticks[HIT].y);
+            const now = dangerAt(run, run.ticksCompleted, box);
+            const arrowNow = now.sources.filter((x) => x.kind === 'arrow');
+            expect(arrowNow).toEqual([]);
+            // ⚠ The LANE is still named at that tick — the player is on the
+            // button, so the group is published. The static probe's callers
+            // excluded exactly that source by id, and with it excluded the
+            // corridor read clean. That exclusion plus this collapse IS the
+            // refuted walk.
+            expect(now.sources.some((x) => x.kind === 'arrowLane')).toBe(true);
+        });
+    });
+
+    /**
+     * ── GATE (ii), THE KNOWN ANSWER ───────────────────────────────────
+     *
+     * `r7-act2-5` leaves `button@48,48` at tick 307 with the column full and
+     * takes ZERO hits over 812 ticks. So a corridor out of that button EXISTS,
+     * and §13.2's deadlock — *"the player cannot leave the button while the
+     * column is full, and the column cannot empty while they stand on it"* —
+     * has to dissolve as arithmetic rather than by relaxing anything.
+     */
+    describe('(ii) POSITIVE — the walk the GAME accepted', () => {
+        const tape = loadTape('r7-act2-5');
+        const LEAVES = 306;   // the last tick on the presser; 307 steps off
+        const WINDOW = 40;
+
+        it('⛓ the hand walk really does leave the button with the column live', () => {
+            const { run } = replay(tape, LEAVES + 1);
+            // ⛔ POSITIVE COUNT: arrows in the air, or the gate is about a
+            // room where nothing was falling.
+            expect(run.arrowsInFlight.length).toBeGreaterThan(0);
+            expect(run.playerHits).toEqual([]);
+        });
+
+        it('⛓⛓⛓ ADMITS the hand walk\'s button-leaving corridor — no arrow source', () => {
+            const { run, at } = replay(tape, LEAVES + 1 + WINDOW);
+            const from = createLevelRun({
+                levelSource: source, boot: tape.boot, noclip: false,
+                noHazards: tape.noHazards, noDamage: tape.noDamage ?? false,
+                grants: tape.grants, persistence: tape.persistence, despawn: [],
+                equips: tape.equips, pins: tape.pins ?? [], save: tape.save ?? null,
+                rng: tape.rng ?? null, seam: tape.seam ?? null, roles: ROLES,
+            });
+            for (let i = 0; i < LEAVES; i += 1) from.advance(heldKeysAt(tape, i));
+            const rows = probeAlong(from, at.slice(LEAVES), LEAVES - 1);
+            const shot = rows.filter((r) => r.d.sources.some((x) => x.kind === 'arrow'));
+            expect(shot.map((r) => `${r.tick}:${JSON.stringify(r.pos)}`)).toEqual([]);
+            // ⛔ AND THE WINDOW REALLY CONTAINED ARROWS — a corridor declared
+            // clear over a window with nothing in it is the silent-watcher
+            // defect wearing the probe's clothes.
+            const seen = new Set(rows.flatMap((r) => r.arrows.map((a) => a.id)));
+            expect(seen.size).toBeGreaterThan(3);
+            expect(run.playerHits).toEqual([]);
+        });
+
+        /**
+         * ⛓⛓⛓ THE DEADLOCK, DISSOLVED — the same corridor, two instruments,
+         * opposite verdicts, and the GAME's recording says which is right.
+         */
+        it('⛓⛓⛓ the WAIT reading refuses the corridor the TRANSIT reading admits', () => {
+            const { run, at } = replay(tape, LEAVES + 1 + WINDOW);
+            // ⛔ BOTH QUESTIONS ARE ASKED FROM THE SAME MOMENT — the tick the
+            // hand walk is still on the button with the column live. Asking
+            // one of them from a later run would be comparing two worlds.
+            const from = createLevelRun({
+                levelSource: source, boot: tape.boot, noclip: false,
+                noHazards: tape.noHazards, noDamage: tape.noDamage ?? false,
+                grants: tape.grants, persistence: tape.persistence, despawn: [],
+                equips: tape.equips, pins: tape.pins ?? [], save: tape.save ?? null,
+                rng: tape.rng ?? null, seam: tape.seam ?? null, roles: ROLES,
+            });
+            for (let i = 0; i < LEAVES; i += 1) from.advance(heldKeysAt(tape, i));
+            /**
+             * The cell the walk is heading INTO — the first one it occupies
+             * that any armed lane covers. This is §13.2's deadlock made
+             * concrete: that cell is where "leave the button" goes.
+             */
+            const world = from.worldFor(from.level);
+            const lanes = [...from.armedArrowTraps]
+                .map((id) => (world.arrowTraps ?? []).find((t) => t.id === id));
+            expect(lanes.length).toBeGreaterThan(0);
+            const laneRects = lanes.map((t) => ({
+                x: t.ex - 6, y: t.ey - 2, right: t.ex + 6,
+                bottom: world.world.height,
+            }));
+            const into = at.slice(LEAVES + 1).find((p) => laneRects
+                .some((r) => rectsOverlap(playerBoxAt(p.x, p.y), r)));
+            expect(into, 'the hand walk never enters an armed lane — then this '
+                + 'pair is about a corridor nobody contested').toBeDefined();
+            const box = playerBoxAt(into.x, into.y);
+            // The WAIT question, over the whole window: the union of every
+            // position an arrow passes through, plus the armed lane.
+            const wait = dangerWhileWaiting(from, from.ticksCompleted + WINDOW, box);
+            expect(wait.danger).toBe(true);
+            expect(wait.mode).toBe('wait');
+            // ⚠ And the walk this was asked about took no hits at all — the
+            // WAIT reading is not WRONG, it is answering a question the walk
+            // never asked (trap 154).
+            expect(run.playerHits).toEqual([]);
+        });
+    });
+
+    /**
+     * ── THE MUTATION LIST, RUN RATHER THAN WRITTEN ────────────────────
+     */
+    describe('the mutation list', () => {
+        const tape = parseTape(JSON.parse(
+            readFileSync(join(REFUTED, 'r8-solve-5.tape.json'), 'utf8')));
+        const expectation = JSON.parse(
+            readFileSync(join(REFUTED, 'r8-solve-5.expectation.json'), 'utf8'));
+
+        /**
+         * ⛔ MUTATION 1 — the ETA source degraded to a constant. Every cell
+         * asked at the plan tick: the negative oracle goes quiet.
+         */
+        it('⛔ ETA source degraded to a constant ⇒ the negative oracle stops firing', () => {
+            const { run } = replay(tape, 198);
+            const box = playerBoxAt(expectation.ticks[206].x, expectation.ticks[206].y);
+            const forecast = run.arrowForecast();
+            // The DEGRADED probe: one forecast tick, then every cell asked
+            // against it — the shape a caller gets by hoisting the step out of
+            // the loop.
+            const frozenArrows = forecast.step(expectation.ticks[198]);
+            const degraded = dangerDuringTransit(run, 206, box, frozenArrows);
+            expect(degraded.sources.some((x) => x.kind === 'arrow')).toBe(false);
+        });
+
+        /**
+         * ⛔ MUTATION 2 — the time axis collapsed: the transit arm falls back
+         * to the WAIT arm. The negative oracle's case reds because the swept
+         * box from the plan tick does not reach a cell an arrow only occupies
+         * eight ticks later… and the LANE is what would have covered it, which
+         * is the exclusion the refuted walk removed.
+         */
+        it('⛔ the time axis collapsed ⇒ the arrow source is lost', () => {
+            const { run } = replay(tape, 198);
+            const box = playerBoxAt(expectation.ticks[206].x, expectation.ticks[206].y);
+            const collapsed = arrowDanger(run, box, 0);
+            expect(collapsed.some((x) => x.kind === 'arrow')).toBe(false);
+        });
+
+        /**
+         * ⛔ MUTATION 3 — the arrow prediction drops COVER. L5's `torch@48,64`
+         * is a Solid in `arrowtrap@32,48`'s column, and an arrow that ignores
+         * it flies on through cells the mechanism clears.
+         */
+        it('⛔ dropping COVER makes the prediction outlive the mechanism', () => {
+            const { run } = replay(tape, 198);
+            const withCover = predictArrows(run, 12);
+            const noCover = predictArrows(
+                { ...run, arrowCoverAt: null, arrowFlights: run.arrowFlights,
+                    worldFor: (n) => run.worldFor(n), level: run.level }, 12);
+            // ⛔ THE POSITIVE COUNT: both predicted something, so the
+            // comparison is between two answers rather than two silences.
+            expect(withCover.length).toBeGreaterThan(0);
+            expect(noCover.length).toBeGreaterThanOrEqual(withCover.length);
+            expect(noCover.length).toBeGreaterThan(withCover.length);
+        });
+
+        /**
+         * ⛔ MUTATION 4 — the forecast's TRAP half removed. This is the row
+         * that says the arrows-already-in-the-air reading is not enough: the
+         * volley that hit was fired 5 ticks after the plan.
+         */
+        it('⛔ predicting only the arrows ALREADY in the air misses the hit', () => {
+            const { run } = replay(tape, 198);
+            const box = playerBoxAt(expectation.ticks[206].x, expectation.ticks[206].y);
+            // `predictArrows` is exactly that reading — it steps the flight and
+            // never fires a trap.
+            const arrows = predictArrows(run, 206 - 198);
+            const d = arrowDangerDuringTransit(run, box, 206 - 198, arrows);
+            expect(d.some((x) => x.kind === 'arrow')).toBe(false);
+        });
+
+        it('⛔ an unknown mode is a NAMED throw, not a silent default', () => {
+            const { run } = replay(tape, 10);
+            const box = playerBoxAt(run.state.x, run.state.y);
+            expect(() => dangerAt(run, 10, box, { mode: 'later' }))
+                .toThrow(/is not a mode/);
+        });
+
+        it('⛔ a fractional horizon is refused BY NAME', () => {
+            const { run } = replay(tape, 10);
+            expect(() => predictArrows(run, 2.5)).toThrow(/non-negative integer tick count/);
+        });
+    });
+
+    /**
+     * ⛓ THE PARTITION IS DATA, AND IT IS TOTAL OVER THE UNION'S ARMS.
+     */
+    it('⛓ every ingredient of the union is classified by coupling', () => {
+        const keys = Object.keys(TRANSIT_INGREDIENTS).sort();
+        expect(keys).toEqual(['armedLanes', 'arrows', 'chasers', 'crushers',
+            'hazards', 'staticEnemies']);
+        // ⛔ EXACTLY ONE is carried forward in time, and it is the autonomous
+        // one. A second `atEta: true` row is a design change, not a typo.
+        const atEta = keys.filter((k) => TRANSIT_INGREDIENTS[k].atEta);
+        expect(atEta).toEqual(['arrows']);
+        expect(TRANSIT_INGREDIENTS.arrows.coupling).toBe('autonomous');
+        expect(TRANSIT_INGREDIENTS.chasers.coupling).toBe('player-coupled');
+        for (const k of keys) expect(TRANSIT_INGREDIENTS[k].why.length).toBeGreaterThan(20);
+        expect(Object.keys(DANGER_MODES).sort()).toEqual(['transit', 'wait']);
+    });
+});

@@ -138,6 +138,28 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
                 + '`stepCrushersNow` half: nothing this loop does moves the geometry the '
                 + 'next arrow reads.',
         }),
+        /**
+         * ⛓⛓ ADDED BY R8 SLICE 5, and both are the same bag for the same
+         * subsystem seen from the PLANNER's side rather than the tick's.
+         * `assertBatchSitesCoverSource` named them the first time the suite
+         * ran after the probe landed — the fourth time this guard has done its
+         * job on the slice that followed the one that wrote it (trap 89).
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'arrowCoverAt',
+            action: 'brand',
+            why: 'the arrow\'s own cover query, handed OUT as a closure so a predictor '
+                + 'cannot assemble a second reading of which torches and blocks are '
+                + 'standing. One bag per call, branded through `normalizeLiveOpts`.',
+        }),
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'arrowForecastNow',
+            action: 'brand',
+            why: 'the forecast\'s cover query — hoisted once per FORECAST rather than '
+                + 'per tick of it, which is the cadence the geometry changes at for a '
+                + 'walk that has not happened yet (the same call the live stepper makes '
+                + 'once per tick).',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'pushableCtx',
             action: 'already', why: 'R7 slice 4 — once per tick, `{...base, pushables}` '
@@ -509,6 +531,22 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 't=55 and `bob@96,16` follows the walk into the water at t=205 — two '
                 + 'terrain deaths the model COMPUTES, which is why this tape declares no '
                 + 'v10 despawn where the hand-authored `r7-act2-6` needs one.',
+        }),
+        /**
+         * ⛓ R8 SLICE 5 — and the guard named it the first time the suite ran
+         * after the tape landed, which is the fourth occasion. `r8-solve-5`'s
+         * whole solution IS three bobs dying to the ceiling, so it is the most
+         * exposed tape on the roster by construction.
+         */
+        Object.freeze({
+            name: 'r8-solve-5', levels: Object.freeze([5, 6]), bobs: 3, ticks: 558,
+            addedBy: 'R8 slice 5 (the ETA probe + the battery\'s tail)',
+            why: 'the solver\'s own L5 segment: the room\'s ceiling kills all three '
+                + 'bobs, `Game.totalEnemies()` reaches zero and `lock@48,112` opens. '
+                + 'Every one of those deaths is a stepped body the bridge prices. '
+                + '⚠ The LEVELS are [5, 6] and not [5]: the segment ENDS by crossing '
+                + 'into L6, and the assertion named that too — a right name with the '
+                + 'wrong rooms is a prediction about a different walk.',
         }),
     ]),
 

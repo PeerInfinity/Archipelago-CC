@@ -4639,6 +4639,83 @@ export function createLevelRun({
      * AND the kill — and the run has, for the first time, a reason to know
      * which body an arrow died on.
      */
+    /**
+     * ⛓⛓⛓ R8 SLICE 5 — `stepV2`'s OPTIONS, BUILT IN EXACTLY ONE PLACE.
+     *
+     * This was an object literal inside `advance`. It is a function now for
+     * one reason: the live SOLVER has to be able to ask "where would the
+     * controller be in N ticks", and ⚖ §13.10a's ruling says those ETAs come
+     * from the movement model that will actually drive — never a cruder one.
+     * A preview that assembled its own options would be a second reading of
+     * the world the walk then runs in, which is the defect this file has paid
+     * for one family at a time (`liveSolidOpts`' own docblock, R5 slice 15).
+     *
+     * ⚠ The four per-TICK facts stay parameters, because they are facts about
+     * a tick and not about the run: `beforeTypeFlip` is true only on a world's
+     * first live tick, `openActivators` is this tick's set, and the two input
+     * gates are read off the freeze timer and the damage state.
+     */
+    function stepOptsFor({ beforeTypeFlip, openActivators, inputBlocked, steerBlocked }) {
+        return {
+            level: world,
+            noclip,
+            noHazards,
+            beforeTypeFlip,
+            // ⛔⛔⛔ R5 SLICE 15: THE PLAYER'S OWN SWEEP, THROUGH THE ONE
+            // BUILDER. Slice 14 found FOUR call sites that had been
+            // handed an option and silently dropped it — and the worst
+            // of them was this one, `stepV2`, the single mover whose
+            // collisions decide where a route actually goes (§28.2).
+            // Every family now arrives here by construction rather than
+            // by a hand-written key, so a tenth cannot be forgotten in
+            // exactly this spot for a third time.
+            //
+            // R4: under `noclip` there is no geometry to be part of, so
+            // they are inert by the same argument `openActivators` is.
+            //
+            // ⛔ R8 SLICE 0: AND THE `noclip` HALF WAS A HAND ROSTER THAT
+            // HAD ALREADY ROTTED. It listed TWELVE families where
+            // `LIVE_GEOMETRY_KEYS` names fourteen — `shieldBosses` and
+            // `finalDoors` were never added — directly under a comment
+            // saying a family could not be forgotten in exactly this
+            // spot for a third time. It cost nothing (under `noclip`
+            // `playerPhysicsV2` skips the geometry entirely, and the two
+            // arrived as its own destructure defaults, which are `null`
+            // either way) and it is the fourth occurrence of the defect
+            // `LIVE_GEOMETRY_KEYS` exists to end. Both arms are now
+            // BRANDED, which means both are derived from the one literal
+            // that writes the fourteen names out.
+            // ⚠ `beforeTypeFlip` IS CARRIED THROUGH THE NORMALISE, and it
+            // has to be: a normalised bag always has the key, this spread
+            // sits BELOW the `beforeTypeFlip: firstTickInWorld` line
+            // above, and a normalise that did not carry it would
+            // overwrite the tick's own answer with the default `false` on
+            // every first tick in a world. Found while writing this hoist,
+            // by reading the key order rather than by a test.
+            ...normalizeLiveOpts(noclip ? { beforeTypeFlip }
+                : liveSolidOpts({ beforeTypeFlip, openActivators })),
+            // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
+            // and the waterfall push reads `hasFeather`. The run's
+            // mirror is the only place those live on this side.
+            inventory,
+            pins,
+            // ⛓⛓⛓ R5 SLICE 22. `acting` above already drops the
+            // direction keys; this drops the WATERFALL PUSH too, which
+            // is the last statement of `input()` and below the same
+            // return. Both, because the two halves of one `if` are not
+            // a place to be economical.
+            inputBlocked,
+            // ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s OTHER gate, and it is
+            // NARROWER — `if (hitsTimer <= 0)` wraps the four arrow
+            // branches and closes ABOVE the waterfall push and both
+            // `useItem` presses. So a player in knockback still swings and
+            // is still pushed; what they cannot do is steer. Reusing
+            // `inputBlocked` for this would silently disarm every press in
+            // a fight, which is the one place presses are the point.
+            steerBlocked,
+        };
+    }
+
     function stepArrowTrapsNow(activators) {
         const st = arrowTrapStateFor(level);
         const flight = arrowsFor(level);
@@ -4737,6 +4814,90 @@ export function createLevelRun({
         // `World.updateLists()` — the frame's own additions join HERE, below
         // every update this frame ran.
         flight.push(...spawned);
+    }
+
+    /**
+     * ⛓⛓⛓ R8 SLICE 5 — THE ARROW SUBSYSTEM, FORECAST ALONG A WALK THAT HAS
+     * NOT HAPPENED YET.
+     *
+     * ⚖ §13.10a ruling 2 says an arrow IN FLIGHT is autonomous and exactly
+     * predictable. So is the TRAP, once the walk is fixed — and a corridor
+     * probe is exactly a fixed walk being asked about. `r8-solve-5`'s hit is
+     * the proof that this half is not optional: the arrow that took it did not
+     * exist when the plan was made. It was fired at frame 204 by a trap the
+     * previewed player was still standing on at 202, and a forecast that
+     * predicted only the arrows already in the air would have called that
+     * corridor clear exactly as the static probe did.
+     *
+     * ⛔ ONE ARITHMETIC, TWO DRIVERS. This does not re-implement the
+     * subsystem: it calls the same `stepArrowTrap` and `stepArrow`
+     * `stepArrowTrapsNow` calls, with the same bound, the same cover query,
+     * the same two-frame arming lag and the same spawn deferral. The two are
+     * checked against each other BY DRIVING (`levelRun.test.js` forecasts a
+     * committed walk and compares every arrow position tick by tick), because
+     * a fast path that PREDICTS the slow path drifts
+     * ([[feedback_two_cost_models_must_agree]]).
+     *
+     * ⚠ WHAT IT LEAVES OUT, NAMED: bodies. An arrow that would die on a bob
+     * flies on in the forecast, which can only forbid MORE cells than the walk
+     * will meet (`dangerMap.predictArrows` carries the same bound and the same
+     * reason). And the `latched` half of the arming is read ONCE, at the
+     * forecast's own tick: a group a ButtonRoom has latched stays latched, and
+     * one that a walk would latch is a puzzle step, not a corridor.
+     *
+     * @returns {?{step: Function}} `null` when the room has no trap and no
+     *   arrow — a caller with nothing to forecast should not have to pretend.
+     */
+    function arrowForecastNow() {
+        const st = arrowTrapStateFor(level);
+        const flight = arrowsFor(level);
+        if (st.size === 0 && flight.length === 0) return null;
+        const activators = activatorStateFor(level);
+        const bound = { w: world.world.width, h: world.world.height };
+        const solidOpts = normalizeLiveOpts(liveSolidOpts());
+        const coverAt = (box) => world.collidesArrowCover(box, solidOpts);
+        const traps = new Map();
+        for (const [id, t] of st) traps.set(id, { ...t });
+        const air = flight.map((a) => ({ ...a, v: { x: a.v.x, y: a.v.y } }));
+        // The same two-frame lag the live stepper keeps, seeded with the same
+        // value it holds right now — so tick 1 of a forecast reads what tick
+        // `ticksCompleted + 1` of the run would have read.
+        let seen = arrowTrapPresserSeen;
+        return {
+            /**
+             * One forecast tick. `playerPos` is where the PREVIEWED player is
+             * at the START of this tick — the same reading the live stepper
+             * takes from `state` before `stepV2` runs.
+             */
+            step(playerPos) {
+                const seenNow = seen;
+                seen = { x: playerPos.x, y: playerPos.y };
+                const pressed = seenNow
+                    ? pressedGroups(world, playerBoxAt(seenNow.x, seenNow.y),
+                        movingSolidsNow())
+                    : new Set();
+                const spawned = [];
+                for (const [, trap] of traps) {
+                    const armed = pressed.has(trap.t)
+                        || activators.latched.get(trap.t) === true;
+                    const r = stepArrowTrap(trap, armed);
+                    if (r.fired) spawned.push(...r.arrows);
+                }
+                for (const a of air) {
+                    // ⚠ `bodies: []` and `frozen: false` — see the docblock.
+                    stepArrow(a, { frozen: false, bound, coverAt, bodies: [] });
+                }
+                for (let i = air.length - 1; i >= 0; i -= 1) {
+                    if (air[i].removed) air.splice(i, 1);
+                }
+                air.push(...spawned);
+                // ⛔ A FADING ARROW IS NOT A HAZARD — `stepArrow` gates its hit
+                // test on `v.length > 0`.
+                return air
+                    .filter((a) => a.v.x !== 0 || a.v.y !== 0)
+                    .map((a) => ({ id: a.id, x: a.x, y: a.y, rect: arrowRect(a) }));
+            },
+        };
     }
 
     /**
@@ -9203,6 +9364,86 @@ export function createLevelRun({
         get arrowsInFlight() {
             return arrowsFor(level).map((a) => ({ id: a.id, x: a.x, y: a.y }));
         },
+        /**
+         * ⛓⛓⛓ R8 SLICE 5 — THE SAME ARROWS, WITH THE FIELDS A PREDICTION
+         * NEEDS. `arrowsInFlight` is POSITION AND LIFETIME ONLY and stays
+         * byte-unchanged (its consumers compare its shape); this is the
+         * superset, and the extra fields are exactly what `stepArrow` reads.
+         *
+         * ⛔ `v` AND `die` ARE NOT DECORATION. `stepArrow`'s hit test is gated
+         * on `v.length > 0`, so an arrow that has already hit something is
+         * FADING and can hurt nobody — a predictor that carried only x/y would
+         * forbid cells under corpses. And the velocity is what the prediction
+         * integrates: this model's traps only ever fire (0, 5), but reading it
+         * off the arrow rather than off `ARROW.speed` is the difference
+         * between a prediction and an assumption.
+         */
+        /**
+         * ⛓⛓⛓ R8 SLICE 5 — THE CONTROLLER'S OWN ARITHMETIC, LENT OUT.
+         *
+         * ⚖ §13.10a: a corridor is validated per cell AT THAT CELL'S ETA, and
+         * the ETAs must come from "the same movement model that will drive —
+         * never a cruder one". `mover.js` has a time axis and steps
+         * `playerPhysicsV1`, which knows nothing about this level's geometry;
+         * `drive` steps THIS, through `advance`. So the run hands out a PURE
+         * stepper bound to its own options rather than letting a caller
+         * assemble a fourteenth live-geometry bag.
+         *
+         * ⚠ IT IS A SNAPSHOT AND SAYS SO. The four per-tick facts are frozen
+         * at the values THIS tick has (`beforeTypeFlip` false — a preview is
+         * never a world's first tick; the two input gates as they stand), and
+         * the geometry is the bag as it stands now. A preview across a world
+         * edit is a preview of the world before the edit — which is why the
+         * policy re-plans on world-edit EVENTS and why the per-tick next-cell
+         * check stays live (⚖ §13.10a point 3): planning optimism is bounded
+         * by the loop, not by the preview.
+         *
+         * ⛔ REFUSED under `noclip`, for `liveGeometryOpts`' own reason.
+         */
+        previewStepper() {
+            if (noclip) {
+                throw new Error('levelRun.previewStepper: this run is noclip — the '
+                    + 'mechanics are not stepped, so a preview would walk a world no '
+                    + 'tick of the run consults.');
+            }
+            const opts = stepOptsFor({
+                beforeTypeFlip: false,
+                openActivators: openActivatorIds(activatorStateFor(level)),
+                inputBlocked: frozenTimer > 0,
+                steerBlocked: !canSteer(damage),
+            });
+            return (st, held) => stepV2(st, held, opts);
+        },
+        /**
+         * ⛓ THE ARROW SUBSYSTEM, FORECAST — see `arrowForecastNow`. `null`
+         * when the room holds no trap and no arrow, and `null` under `noclip`,
+         * where nothing is stepped at all.
+         */
+        arrowForecast() {
+            return noclip ? null : arrowForecastNow();
+        },
+        get arrowFlights() {
+            return arrowsFor(level).map((a) => ({
+                id: a.id, x: a.x, y: a.y, v: { x: a.v.x, y: a.v.y },
+                die: a.die, alpha: a.alpha, removed: a.removed,
+            }));
+        },
+        /**
+         * ⛓ THE ARROW'S OWN COVER QUERY, as `stepArrowTrapsNow` builds it.
+         *
+         * ⛔ HANDED OUT AS A CLOSURE RATHER THAN LET A CALLER REBUILD IT.
+         * `collidesArrowCover` needs the run's live-geometry bag, and a
+         * predictor that assembled its own would be a second reading of which
+         * torches, blocks and rocks are standing — the defect this package has
+         * paid for one family at a time. ⚠ `null` under `noclip`, where there
+         * is no geometry to be part of and no arrow is stepped either.
+         */
+        get arrowCoverAt() {
+            if (noclip) return null;
+            const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const w = world;
+            return (box) => w.collidesArrowCover(box, solidOpts);
+        },
         /** One per block a pulse MOVED — link 3 of L38's chain. */
         get pulserPushes() { return pulsePushes_.map((h) => ({ ...h })); },
         /** One per tick a pulse reached the player; inert under `noDamage`. */
@@ -10692,67 +10933,12 @@ export function createLevelRun({
                     + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
                     + 'contact tick; schedule the press outside that span.');
             }
-            const stepOpts = {
-                level: world,
-                noclip,
-                noHazards,
+            const stepOpts = stepOptsFor({
                 beforeTypeFlip: firstTickInWorld,
-                // ⛔⛔⛔ R5 SLICE 15: THE PLAYER'S OWN SWEEP, THROUGH THE ONE
-                // BUILDER. Slice 14 found FOUR call sites that had been
-                // handed an option and silently dropped it — and the worst
-                // of them was this one, `stepV2`, the single mover whose
-                // collisions decide where a route actually goes (§28.2).
-                // Every family now arrives here by construction rather than
-                // by a hand-written key, so a tenth cannot be forgotten in
-                // exactly this spot for a third time.
-                //
-                // R4: under `noclip` there is no geometry to be part of, so
-                // they are inert by the same argument `openActivators` is.
-                //
-                // ⛔ R8 SLICE 0: AND THE `noclip` HALF WAS A HAND ROSTER THAT
-                // HAD ALREADY ROTTED. It listed TWELVE families where
-                // `LIVE_GEOMETRY_KEYS` names fourteen — `shieldBosses` and
-                // `finalDoors` were never added — directly under a comment
-                // saying a family could not be forgotten in exactly this
-                // spot for a third time. It cost nothing (under `noclip`
-                // `playerPhysicsV2` skips the geometry entirely, and the two
-                // arrived as its own destructure defaults, which are `null`
-                // either way) and it is the fourth occurrence of the defect
-                // `LIVE_GEOMETRY_KEYS` exists to end. Both arms are now
-                // BRANDED, which means both are derived from the one literal
-                // that writes the fourteen names out.
-                // ⚠ `beforeTypeFlip` IS CARRIED THROUGH THE NORMALISE, and it
-                // has to be: a normalised bag always has the key, this spread
-                // sits BELOW the `beforeTypeFlip: firstTickInWorld` line
-                // above, and a normalise that did not carry it would
-                // overwrite the tick's own answer with the default `false` on
-                // every first tick in a world. Found while writing this hoist,
-                // by reading the key order rather than by a test.
-                ...normalizeLiveOpts(noclip ? { beforeTypeFlip: firstTickInWorld }
-                    : liveSolidOpts({
-                        beforeTypeFlip: firstTickInWorld,
-                        openActivators: openActivatorIds(activators),
-                    })),
-                // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
-                // and the waterfall push reads `hasFeather`. The run's
-                // mirror is the only place those live on this side.
-                inventory,
-                pins,
-                // ⛓⛓⛓ R5 SLICE 22. `acting` above already drops the
-                // direction keys; this drops the WATERFALL PUSH too, which
-                // is the last statement of `input()` and below the same
-                // return. Both, because the two halves of one `if` are not
-                // a place to be economical.
+                openActivators: noclip ? null : openActivatorIds(activators),
                 inputBlocked: frozenTimer > 0,
-                // ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s OTHER gate, and it is
-                // NARROWER — `if (hitsTimer <= 0)` wraps the four arrow
-                // branches and closes ABOVE the waterfall push and both
-                // `useItem` presses. So a player in knockback still swings and
-                // is still pushed; what they cannot do is steer. Reusing
-                // `inputBlocked` for this would silently disarm every press in
-                // a fight, which is the one place presses are the point.
                 steerBlocked: !canSteer(damage),
-            };
+            });
             // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
             //
             // ⛔⛔ A COLLAPSED FROZEN SPAN ENDS ON A FRAME THAT IS DEAD TO

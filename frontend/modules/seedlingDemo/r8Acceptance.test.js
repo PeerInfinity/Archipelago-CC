@@ -251,12 +251,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // slice 3b's two SOLVE their bob rooms (an arrow kill in L4, two
         // drownings in L6). The prediction's own five stay untouched.
         expect(R8_ENEMY_BRIDGE.exposedAdded.map((t) => t.name)).toEqual([
-            'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-6',
+            'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-6', 'r8-solve-5',
         ]);
-        expect(out.exposed).toBe(9);
+        expect(out.exposed).toBe(10);
         expect(out.tapes).toEqual([
             'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
-            'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-6',
+            'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
         ]);
     });
 
@@ -294,6 +294,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r7-act2-full': { tape: {}, levels: [4, 5, 6] },
             'r8-l6-bob-contact': { tape: {}, levels: [6] },
             'r8-solve-3': { tape: {}, levels: [4] },
+            // ⛓ R8 slice 5's L5 tape, at its DECLARED rooms — it crosses into
+            // L6 at the end, and the ledger says so.
+            'r8-solve-5': { tape: {}, levels: [5, 6] },
             // ⛓ R8 slice 3b's two battery tapes, at their DECLARED rooms — the
             // fixture is the declaration's mirror, so a row added to the
             // ledger has to be added here too or this mutation stops being

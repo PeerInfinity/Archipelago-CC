@@ -58,7 +58,7 @@
  * absence.
  */
 
-import { arrowLane, ARROW } from './arrowTrap.js';
+import { arrowLane, arrowRect, ARROW, stepArrow } from './arrowTrap.js';
 import { contactPricing, contactRect, ENEMY_CLASSES, stepBoundFor } from './combat.js';
 import { chaserBoxAt, isBridgedChaser } from './chasers.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
@@ -142,6 +142,118 @@ export function arrowDanger(run, box, horizon) {
                     why: 'an ARMED trap\'s lane — dangerous at horizon 0, because the '
                         + 'volley that has not fired yet is the one a policy needs '
                         + 'warning about' });
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — WHERE THE ARROWS WILL BE, BY `stepArrow`'s OWN
+ * ARITHMETIC. ⚖ §13.10a ruling 2.
+ *
+ * ⛔ AN ARROW IN FLIGHT IS AUTONOMOUS: nothing about its trajectory reads the
+ * player, so where it will be in `horizon` ticks is not a forecast, it is
+ * arithmetic — and the arithmetic already exists. This runs the SAME
+ * `stepArrow` the run steps its arrows with, over CLONES, rather than
+ * multiplying speed by a horizon. A summary would be a second model of the
+ * flight, and `Mobile.moveY`'s 1 px sub-steps are exactly the kind of detail a
+ * summary drops (trap 118).
+ *
+ * ⛔ COVER IS INCLUDED, AND THAT IS THE HALF A SWEEP CANNOT DO. An arrow that
+ * will die on `torch@48,64` two ticks from now is not a hazard at the cell
+ * below it — which is the whole of L5's column-3 shadow, asked forwards.
+ *
+ * ⚠ BODIES ARE DELIBERATELY EXCLUDED, and the direction is stated: a body that
+ * would eat an arrow may have moved or died by the horizon, so pricing it
+ * would make arrows vanish that the game still has in the air. Leaving it out
+ * lets an arrow fly FURTHER than it might, which forbids more cells and never
+ * fewer. An over-approximation, like `chaseEnvelope`'s growth, and for the
+ * same reason.
+ *
+ * ⚠ AND A FADING ARROW IS NOT A HAZARD. `stepArrow` gates its hit test on
+ * `v.length > 0`, and an arrow that has hit something has `v = 0` and is
+ * spending its eleven fade ticks. `run.arrowFlights` carries `v` precisely so
+ * this can be asked rather than assumed.
+ *
+ * @param {object} run
+ * @param {number} horizon ticks from NOW; 0 returns the live positions
+ * @returns {Array<{id: string, x: number, y: number, rect: object}>}
+ */
+export function predictArrows(run, horizon) {
+    if (!Number.isInteger(horizon) || horizon < 0) {
+        fail(`predictArrows: the horizon must be a non-negative integer tick count, got `
+            + `${horizon}. A fractional horizon is a caller that has a distance and wants `
+            + 'a time.');
+    }
+    const flights = (run.arrowFlights ?? []).map((a) => ({
+        ...a, v: { x: a.v.x, y: a.v.y },
+    }));
+    if (flights.length === 0) return [];
+    const world = run.worldFor(run.level);
+    const bound = { w: world.world.width, h: world.world.height };
+    const coverAt = run.arrowCoverAt;
+    for (let i = 0; i < horizon; i += 1) {
+        for (const a of flights) {
+            if (a.removed) continue;
+            // ⚠ `frozen: false` — a ceremony would park the volley, and a
+            // corridor is planned for a walk, not for a cutscene. `bodies: []`
+            // per the docblock.
+            stepArrow(a, { frozen: false, bound, coverAt, bodies: [] });
+        }
+    }
+    return flights
+        .filter((a) => !a.removed && (a.v.x !== 0 || a.v.y !== 0))
+        .map((a) => ({ id: a.id, x: a.x, y: a.y, rect: arrowRect(a) }));
+}
+
+/**
+ * ⛓⛓⛓ INGREDIENT (a), THE TRANSIT READING — ⚖ §13.10a's TRANSIT half.
+ *
+ * The WAIT reading (`arrowDanger`) sweeps each arrow's box `speed x horizon`,
+ * which is the union over the whole window — the honest answer to *"may I
+ * stand here for the next N ticks"*. A WALK is a different question: the
+ * player is at THIS cell at THIS tick and nowhere near it before or after, so
+ * the union over the window forbids a corridor the arrows have already left.
+ * That is trap 161 exactly, and §13.2's deadlock was made of it.
+ *
+ * ⛔ THE LANE ARM IS UNCHANGED, and that is not an oversight. An ARMED trap
+ * may fire at any moment (§9.9 decision 2), which is a STATE question — the
+ * caller that knows the group is about to be unpublished is the one holding
+ * the presser, and it excludes the lane BY ID. Trap 160's law: the state layer
+ * answers the state question and the kinematic layer answers this one.
+ */
+export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
+    const out = [];
+    /**
+     * ⛔ A CALLER THAT IS PREVIEWING A WALK HANDS ITS OWN FORECAST, and it
+     * must: a walk decides whether the traps keep FIRING, so the arrows at
+     * tick T are a function of the walk and not of the room alone. The
+     * fallback — `predictArrows`, the arrows already in the air — is the
+     * honest answer for a caller with no walk to offer, and it is strictly
+     * weaker: it cannot see a volley that has not been fired yet. `r8-solve-5`
+     * was hit by exactly such a volley.
+     */
+    for (const a of (arrows ?? predictArrows(run, horizon))) {
+        if (rectsOverlap(box, a.rect)) {
+            out.push({ kind: 'arrow', id: a.id, why: `a live arrow AT ITS PREDICTED `
+                + `POSITION (${a.x},${a.y}) ${horizon} tick(s) on, by \`stepArrow\`'s own `
+                + 'arithmetic with cover' });
+        }
+    }
+    const armed = run.armedArrowTraps;
+    if (armed) {
+        const world = run.worldFor(run.level);
+        for (const trap of (world.arrowTraps ?? [])) {
+            if (!armed.has(trap.id)) continue;
+            const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
+            const laneRect = rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
+                Math.max(world.world.height - lane.fromY, 1));
+            if (rectsOverlap(box, laneRect)) {
+                out.push({ kind: 'arrowLane', id: trap.id,
+                    why: 'an ARMED trap\'s lane — a STATE question, and still danger at '
+                        + 'every horizon: the volley that has not fired yet is the one a '
+                        + 'walk needs warning about' });
             }
         }
     }
@@ -490,14 +602,117 @@ export function bodyKillRegions(run) {
 }
 
 /**
+ * ⛓⛓⛓ R8 SLICE 5 — THE TWO DERIVED QUESTIONS, KEPT APART BY NAME.
+ *
+ * ⚖ §13.10a: the PRIMITIVE stays `dangerAt(run, tick, box)` — it was built
+ * time-indexed at §9.9 and the collapse was the CALLER's. What the ruling adds
+ * is that the two questions a policy asks of it are different questions, and
+ * trap 154's law is that they must not share a name:
+ *
+ *   `wait`     may I OCCUPY this box from now to `tick`? The union over the
+ *              dwell window — a swept arrow, an armed lane, a chaser grown by
+ *              its bound. UNCHANGED, and the default, because a stance, a
+ *              settle and a bait are all this question.
+ *   `transit`  will something be AT this box when I am, at `tick`? The arrows
+ *              at their PREDICTED positions rather than swept through every
+ *              position they will pass. This is the question a corridor asks,
+ *              and asking it in the other mode is what refuted `r8-solve-5`.
+ *
+ * ⚠ ONLY THE ARROW ARM DIFFERS, and every other ingredient is shared rather
+ * than re-derived. A chaser's growth by `bound x horizon` is already the right
+ * shape for both (it is where the body COULD be, and it could be there at the
+ * arrival tick); the hazard volumes and the static bodies do not move at all;
+ * the crusher is a snapshot whose own getter says so. A second union would be
+ * a second cost model.
+ */
+export const DANGER_MODES = Object.freeze({
+    wait: Object.freeze({
+        arrows: 'swept `speed x horizon` — the UNION over the dwell window',
+        asks: 'may I occupy this box for the whole window',
+        cite: 'trap 154 — the question a stance/settle/bait asks',
+    }),
+    transit: Object.freeze({
+        arrows: 'predicted by `stepArrow`\'s own arithmetic, cover included',
+        asks: 'will something be at this box at this tick',
+        cite: '⚖ §13.10a / trap 161 — the question a corridor asks',
+    }),
+});
+
+/**
+ * ⛓⛓⛓ WHICH INGREDIENTS A TRANSIT QUESTION MAY CARRY FORWARD IN TIME — AND
+ * THE CRITERION IS **AUTONOMY**, not convenience. Measured, not chosen.
+ *
+ * ⚖ §13.10a ruling 2 gives the reason in its own words: *"arrows in flight are
+ * autonomous and exactly predictable from run state — their flight does not
+ * read the player."* That sentence is a PARTITION, and this table is it.
+ *
+ *   AUTONOMOUS — an arrow. Its trajectory is a function of its own state, so
+ *   "where will it be at tick T" is arithmetic and the answer is exact.
+ *
+ *   PLAYER-COUPLED — a chaser. `Bob.update` steers at the PLAYER, so a
+ *   forecast of it along a walk that has not happened is a forecast of the
+ *   walk, not of the body. Growing its envelope by `bound x horizon` over a
+ *   whole corridor is formally sound and practically useless: at 0.5 px/tick
+ *   over a 120-tick walk the envelope is 60 px in every direction and the
+ *   room is one solid refusal. ⛔ MEASURED, not argued — doing it that way
+ *   made L6's ladder escalate for ever, in the one room the arc has already
+ *   recorded byte-exact.
+ *
+ * ⇒ a TRANSIT query reads the player-coupled ingredients at HORIZON ZERO,
+ * exactly as the static corridor probe always did, and what prices them along
+ * the walk is ⚖ §13.10a point 3: **the per-tick next-cell check**, live, every
+ * tick, against bodies that have actually moved. The probe PRUNES; the tick
+ * ADJUDICATES. A heuristic that tried to be the oracle here would be
+ * `spinnerForecast`'s own doctrine broken by its own map.
+ *
+ * ⚠ THE STATIC INGREDIENTS TAKE NO HORIZON AT ALL and are listed anyway, so
+ * this is a partition of the union rather than a note about two of its arms.
+ */
+export const TRANSIT_INGREDIENTS = Object.freeze({
+    arrows: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: '`stepArrow` reads only the arrow: velocity, the level bound, and cover',
+    }),
+    chasers: Object.freeze({
+        coupling: 'player-coupled',
+        atEta: false,
+        why: '`chaseImpulse` steers at the player, so a long forecast forecasts the '
+            + 'walk. Read LIVE; priced along the corridor by the per-tick next-cell check',
+    }),
+    armedLanes: Object.freeze({
+        coupling: 'state',
+        atEta: false,
+        why: 'whether a trap fires at all is its GROUP\'s state (trap 160) — danger at '
+            + 'every horizon while armed, and the caller holding the presser is the one '
+            + 'that may exclude it by id',
+    }),
+    hazards: Object.freeze({
+        coupling: 'static', atEta: false, why: 'placed volumes do not move',
+    }),
+    staticEnemies: Object.freeze({
+        coupling: 'static', atEta: false, why: 'a `speed 0` census body at its placement',
+    }),
+    crushers: Object.freeze({
+        coupling: 'snapshot', atEta: false,
+        why: 'a charging crusher does not re-derive `v`; the run\'s own getter says the '
+            + 'plan is sound only while `crushersParked`',
+    }),
+});
+
+/**
  * The union, over one box at one absolute tick.
  *
  * @param {object} run  a live `createLevelRun` view
  * @param {number} tick ABSOLUTE — the same clock `forbiddenAt(tick, …)` uses
  * @param {object} box  a player box (`playerPhysicsV2.playerBoxAt`)
- * @returns {{danger: boolean, horizon: number, sources: object[]}}
+ * @param {object} [opts]
+ * @param {'wait'|'transit'} [opts.mode] see `DANGER_MODES`; `wait` by default,
+ *   because it is the older, wider claim and a caller that has not thought
+ *   about the difference should get the one that forbids more.
+ * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
  */
-export function dangerAt(run, tick, box) {
+export function dangerAt(run, tick, box, { mode = 'wait', arrows = null } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
             + 'ones the run has NOW, not the ones a level record was authored with.');
@@ -511,14 +726,53 @@ export function dangerAt(run, tick, box) {
     // a policy asks about NOW; a negative horizon is the second question
     // spelled with the first question's clock.
     const horizon = Math.max(0, tick - run.ticksCompleted);
+    if (!DANGER_MODES[mode]) {
+        fail(`dangerAt: "${mode}" is not a mode. The two questions are `
+            + `[${Object.keys(DANGER_MODES).join(', ')}] and they are kept apart by name `
+            + 'on purpose (trap 154) — a caller that wants a third one has a third '
+            + 'question and should say what it is.');
+    }
+    // ⛔ THE PLAYER-COUPLED ARM READS LIVE IN TRANSIT MODE — see
+    // `TRANSIT_INGREDIENTS` for the criterion and for the measurement that
+    // forced it. The horizon is the ARROW arm's alone.
+    const coupledHorizon = mode === 'transit' ? 0 : horizon;
     const sources = [
-        ...arrowDanger(run, box, horizon),
+        ...(mode === 'transit'
+            ? arrowDangerDuringTransit(run, box, horizon, arrows)
+            : arrowDanger(run, box, horizon)),
         ...hazardDanger(run, box),
-        ...chaserDanger(run, box, horizon),
+        ...chaserDanger(run, box, coupledHorizon),
         ...staticEnemyDanger(run, box),
         ...crusherDanger(run, box),
     ];
-    return { danger: sources.length > 0, horizon, sources };
+    return { danger: sources.length > 0, horizon, mode, sources };
+}
+
+/**
+ * ⚖ §13.10a's TRANSIT question, named. `tick` is the cell's own ETA.
+ *
+ * ⛔ THE ETA IS THE CALLER'S TO DERIVE, and it must come from the controller
+ * that will actually drive (`botDriverV1.chooseHeld` plus the run's own
+ * physics) — never from a distance divided by a speed. Trap 118's direction
+ * applies to time exactly as it does to space: a cruder movement model
+ * produces a schedule the walk does not keep, and a probe checked against a
+ * schedule nobody drives is a probe of nothing.
+ */
+export function dangerDuringTransit(run, tick, box, arrows = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows });
+}
+
+/**
+ * ⚖ §13.10a's WAIT question, named — the union over a dwell window.
+ *
+ * ⚠ THE WINDOW STARTS AT `run.ticksCompleted`, NOT AT `from`, and that is the
+ * conservative direction: a dwell that begins in the future is priced from now
+ * instead, which can only forbid more. Stated rather than left to be inferred
+ * from the horizon arithmetic — a caller that needs the tighter window is
+ * asking a question this map has never been able to answer.
+ */
+export function dangerWhileWaiting(run, untilTick, box) {
+    return dangerAt(run, untilTick, box, { mode: 'wait' });
 }
 
 /**

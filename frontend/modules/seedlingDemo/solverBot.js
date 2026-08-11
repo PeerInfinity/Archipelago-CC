@@ -62,7 +62,7 @@
  */
 
 import {
-    DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET,
+    DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET, chooseHeld, hasArrived,
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, contactsAt, drive, findExit,
@@ -71,7 +71,10 @@ import {
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
 import { RESPONDERS, opensOnTick } from './activators.js';
-import { bodyKillRegions, dangerAt, dangerVolumes, forbiddenByDanger } from './dangerMap.js';
+import {
+    bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
+} from './dangerMap.js';
+import { assertTransitSamplesCarryEtas } from './r8Acceptance.js';
 import { planDash } from './mover.js';
 import { ARROW, arrowLane } from './arrowTrap.js';
 import { bridgedChaserTags, chaserBoxAt } from './chasers.js';
@@ -426,19 +429,29 @@ function lanesUnpublishedByLeaving(run) {
      * frames out of band). ⛔ THE TAPE WAS NOT COMMITTED — it is banked in
      * `NewDocs/plans/r8-slice4-l5-refuted/` as the free oracle it is.
      *
-     * ⇒ the exclusion is gated on the column being EMPTY: while any arrow
-     * from a trap in that group is still in the air, its lane stays priced.
-     * That is the same split the docblock already claimed and the code did
-     * not honour — "leaving the button stops the next volley and not the last
-     * one" — asked of the arrows rather than asserted about them.
-     * [[feedback_two_cost_models_must_agree]] one layer down: the STATE layer
-     * answered a question that also has a KINEMATIC half.
+     * Slice 4's answer was to gate the exclusion on the column being EMPTY.
+     * That is right, and it WALLS the room: the player cannot leave the button
+     * while the column is full, and the column cannot empty while they stand
+     * on it (§13.2's deadlock, exactly).
+     *
+     * ⛓⛓⛓ R8 SLICE 5 REMOVES THAT GATE, because the question it was paying
+     * for is now asked somewhere it can be answered. The empty-column
+     * condition was the STATE layer standing in for a KINEMATIC one — "will an
+     * arrow be at this cell when I am" — and ⚖ §13.10a's transit probe asks
+     * that per cell at that cell's own ETA, against a forecast that steps the
+     * traps AND the arrows along the previewed walk. So this function goes
+     * back to answering only its own question: *is this group published right
+     * now, and does the walk's first act unpublish it*. The arrows already in
+     * the air, and every volley the walk itself causes, are priced by the
+     * probe rather than by a proxy.
+     * [[feedback_two_cost_models_must_agree]]: the fix is not to make one
+     * layer conservative enough to cover the other — it is to build the layer
+     * that was missing.
      */
     const box = playerBoxAt(run.state.x, run.state.y);
     const groups = new Set((run.world.pressers ?? [])
         .filter((p) => rectsOverlapLocal(box, p.rect)).map((p) => p.t));
     if (groups.size === 0) return null;
-    if ((run.arrowsInFlight ?? []).length > 0) return null;
     const ids = (run.world.arrowTraps ?? []).filter((t) => groups.has(t.t)).map((t) => t.id);
     return ids.length > 0 ? new Set(ids) : null;
 }
@@ -455,6 +468,103 @@ function lanesUnpublishedByLeaving(run) {
 function senseContacts(run) {
     return new Set(contactsAt(run.world, run.state.x, run.state.y,
         { avoidVolumes: true, keys: run.keys }));
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — THE WALK THE CONTROLLER WOULD DRIVE, PREVIEWED.
+ *
+ * ⚖ §13.10a: a corridor is validated PER CELL AT THAT CELL'S ETA, and the ETAs
+ * come from the controller's own arithmetic. So this is not a sampler with a
+ * speed model bolted on — it is `drive`'s own loop with `run.advance` swapped
+ * for the run's own PURE stepper: the same `chooseHeld`, the same tolerance,
+ * the same `hasArrived`, the same `stepV2` options. Two movement models would
+ * be two schedules, and a probe checked against a schedule nobody drives is a
+ * probe of nothing (trap 118, on the time axis).
+ *
+ * ⛔ WHAT IT DOES NOT SIMULATE, NAMED RATHER THAN LEFT TO BE DISCOVERED: the
+ * world's own steppers. The previewed player walks through a world frozen at
+ * this tick's geometry — blocks do not glide, locks do not open, and a hit
+ * does not happen (the whole point is to find out whether one WOULD). That is
+ * why the ETAs are a HEURISTIC and why ⚖ §13.10a point 3 keeps the per-tick
+ * next-cell check live: the probe prunes, the tick adjudicates.
+ *
+ * ⛔ AND IT TRUNCATES RATHER THAN GUESSES. A preview that cannot reach a
+ * waypoint inside `DEFAULT_MAX_TICKS_PER_TARGET` — a wall the frozen geometry
+ * has and the real walk will not, a controller limit cycle — stops there and
+ * says so. The samples it did take are still checked; what it must not do is
+ * invent the rest of the schedule, because an ETA nobody could reach is an ETA
+ * that clears any cell you like.
+ *
+ * @returns {{samples: Array<{x,y,tick}>, startTick: number, truncated: ?object}}
+ */
+function previewWalk(run, wps, tolerance = 0) {
+    const startTick = run.ticksCompleted;
+    const step = run.previewStepper();
+    /**
+     * ⛓⛓⛓ THE ARROWS ADVANCE ON THE SAME CLOCK AS THE WALK, AND THE WALK IS
+     * WHAT DECIDES WHETHER THE TRAPS FIRE.
+     *
+     * A forecast of the arrows already in the air is not enough, and
+     * `r8-solve-5` is the receipt: the arrow that hit did not exist when the
+     * plan was made — it was fired by a trap the walk was still standing on.
+     * So the two are stepped together, and each sample carries the arrow rects
+     * as of ITS OWN tick. `run.arrowForecast()` is the run's own subsystem, not
+     * a second copy of it.
+     */
+    const forecast = run.arrowForecast?.() ?? null;
+    let st = { ...run.state };
+    let tick = startTick;
+    const samples = [];
+    let truncated = null;
+    for (const wp of wps) {
+        let spent = 0;
+        while (!hasArrived(st, wp, tolerance)) {
+            if (spent >= DEFAULT_MAX_TICKS_PER_TARGET) {
+                truncated = {
+                    at: { x: wp.x, y: wp.y },
+                    why: `the preview spent ${spent} tick(s) without arriving — the walk `
+                        + 'is checked as far as it was previewed and no further',
+                };
+                break;
+            }
+            // ⛔ THE TRAP READS THE PLAYER BEFORE THE PLAYER MOVES, exactly as
+            // the live tick does — `stepArrowTrapsNow` runs above `stepV2`.
+            tick += 1;
+            spent += 1;
+            const arrows = forecast ? forecast.step(st) : null;
+            /**
+             * ⛔⛔ THE SAMPLE IS THE PRE-MOVE BOX, PAIRED WITH THE ARROWS THAT
+             * HAVE ALREADY MOVED — which is the game's own pairing and not a
+             * convention. An `Arrow` is run-time-added and therefore PREPENDED,
+             * so it updates before the Player: its hit test runs at its
+             * post-move position against the player box the previous tick left.
+             * Sampling the post-move player against the same arrows would test
+             * a pair that never meets.
+             *
+             * ⚠ SO THE FINAL ARRIVAL CELL IS NOT SAMPLED HERE. Standing there
+             * is a WAIT question (trap 154) and `dangerNow`/the stance checks
+             * own it; this is the TRANSIT half.
+             */
+            samples.push({ x: st.x, y: st.y, tick, arrows });
+            // ⛔ `drive`'s own line, including the transport arm: a player in
+            // flight presses nothing, and a preview that steered through a
+            // fall would schedule ticks the game ignores.
+            const held = st.fall ? new Set() : chooseHeld(st, wp, tolerance);
+            st = step(st, held);
+            if (st.transition) {
+                // A crossing ends the preview: the next level is a different
+                // world, and this map is scoped to `run.level`.
+                truncated = {
+                    at: { x: st.x, y: st.y },
+                    why: `the preview crossed to level ${st.transition.to_level}; the `
+                        + 'danger map is scoped to one room',
+                };
+                break;
+            }
+        }
+        if (truncated) break;
+    }
+    return { samples, startTick, truncated };
 }
 
 /**
@@ -2237,18 +2347,31 @@ export function solveSegment({
      * than any volume on the hazard roster (the smallest is a 16 px box).
      */
     const probeCorridor = (wps, except = null) => {
-        const SAMPLE = 8;
-        let from = { x: run.state.x, y: run.state.y };
-        for (const wp of wps) {
-            const dist = Math.hypot(wp.x - from.x, wp.y - from.y);
-            const steps = Math.max(1, Math.ceil(dist / SAMPLE));
-            for (let i = 1; i <= steps; i += 1) {
-                const px = from.x + ((wp.x - from.x) * i) / steps;
-                const py = from.y + ((wp.y - from.y) * i) / steps;
-                const d = dangerNow(run, px, py, except);
-                if (d.danger) return { x: px, y: py, ...d };
-            }
-            from = wp;
+        // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
+        // different criterion would spend different ticks, and the ETAs are
+        // the whole product.
+        const walk = previewWalk(run, wps, tolerance);
+        for (const s of walk.samples) {
+            const d = withoutSources(
+                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows), except);
+            if (d.danger) return { x: s.x, y: s.y, tick: s.tick, eta: s.tick - walk.startTick, ...d };
+        }
+        /**
+         * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
+         * refusal — a probe that found nothing because it sampled nothing
+         * returns exactly what a safe corridor returns.
+         *
+         * ⚠ TWO CASES ARE EXEMPT AND BOTH ARE NAMED. A TRUNCATED preview
+         * carries its own reason (a wall the frozen geometry has, a crossing);
+         * an EMPTY one is a corridor the controller is already standing at the
+         * end of — `hasArrived` is true before the first tick, which happens
+         * whenever a verb re-probes from the stance it just took. Neither is
+         * the collapse: the collapse produces samples that all sit on the plan
+         * tick, and any call with samples still checks.
+         */
+        if (!walk.truncated && walk.samples.length > 0) {
+            assertTransitSamplesCarryEtas(walk.samples, walk.startTick,
+                `solverBot(${name}): the corridor probe`);
         }
         return null;
     };

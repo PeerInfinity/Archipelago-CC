@@ -84,39 +84,51 @@ describe('the MODEL-sourced arm — L5, derived and then WALLED', () => {
      * band). The recording is banked in
      * `NewDocs/plans/r8-slice4-l5-refuted/` and the tape was NOT committed.
      *
-     * The exclusion that permitted that walk is now gated on the column
-     * being EMPTY — the conservative reading, which the game itself argued
-     * for — and with it the room WALLS: the player cannot leave the button
-     * while the column is full, and the column cannot empty while they stand
-     * on it. ⛔ That deadlock is NOT a policy bug: it is a static corridor
-     * probe pricing a MOVING hazard as a whole column for all time. The
-     * lane's honest use is "do not WAIT here"; a WALK needs "will an arrow be
-     * at this cell when I am", which is a timeline question the AVOID rung
-     * does not ask and the TIME rung cannot reach across a room. That is a
-     * DESIGN question beyond ⚖ §11.8a and it is FENCED, not improvised.
+     * Slice 4's conservative fix — exclude the lane only while the column is
+     * EMPTY — walled the room: the player cannot leave the button while the
+     * column is full, and the column cannot empty while they stand on it. ⛔
+     * That deadlock was never a policy bug: it was a static corridor probe
+     * pricing a MOVING hazard as a whole column for all time (trap 161).
+     *
+     * ⛓⛓⛓ R8 SLICE 5 DISSOLVED IT AS ARITHMETIC, and this row is where the
+     * debt's record flips. ⚖ §13.10a's TRANSIT probe validates each cell at
+     * that cell's own ETA against a forecast that steps the traps and the
+     * arrows along the previewed walk, so the state layer went back to
+     * answering only the state question. The room SOLVES — 558 ticks against
+     * the hand's 812, zero hits, and the GAME accepted it (`r8-solve-5`,
+     * recorded byte-exact). The assertion below moved from a refusal to a
+     * walk, which is what a debt's record is for: it could only ever have
+     * gone red on the slice that discharged it.
      */
-    it('⛓⛓⛓ discovers the kill-lock and DERIVES its tick from the run\'s own ledger', async () => {
+    it('⛓⛓⛓ discovers the kill-lock, DERIVES its tick, and CROSSES the room', async () => {
         const { t, base, makeRun } = harnessFor('r7-act2-5');
-        let refusal = null;
-        try {
-            await twoPassSolve({
-                makeRun, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 112 } }],
-                name: 'probe-2pass-l5', boot: t.boot, persistence: base,
-            });
-        } catch (e) { refusal = e; }
-
         // ⛔ THE TICK WAS NOT HANDED OVER. The committed tape declares
         // `{5,0} at 737`; the loop is booted without it.
         expect(base.some((p) => p.level === 5)).toBe(false);
-        expect(refusal).toBeTruthy();
+
+        const out = await twoPassSolve({
+            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 112 } }],
+            name: 'probe-2pass-l5', boot: t.boot, persistence: base,
+        });
 
         /**
          * The DISCOVER and MEASURE passes both ran and the tick they produced
          * is arithmetic, not a number: `chaserKillLockOpens`'s removal plus
-         * `activators.opensOnTick(0.01)`'s 101-step fade.
+         * `activators.opensOnTick(0.01)`'s 101-step fade. ⛔ "Two-pass" is the
+         * MINIMUM and this room takes three.
          */
-        expect(refusal.message).toMatch(/combat ladder is EXHAUSTED/);
-        expect(refusal.message).toMatch(/arrowLane:arrowtrap@64,48/);
+        expect(out.passes.length).toBe(3);
+        expect(out.passes.map((p) => p.kind))
+            .toEqual(['discover', 'measure', 'solve']);
+        const declared = out.declarations.find((d) => d.level === 5 && d.tag === 0);
+        expect(declared.source).toBe('model');
+        // ⛓ AND IT IS FAR BELOW `r7-act2-5`'s COMMITTED `at: 737`, which §11.5
+        // showed is a phases-block end and therefore an UPPER BOUND. ⛔ That
+        // tape is not touched.
+        expect(declared.at).toBeLessThan(737);
+        // ⛔ THE WALK ITSELF, and the zero-hit policy it was refuted on.
+        expect(out.out.perTick.length).toBeGreaterThan(400);
+        expect(out.out.perTick.length).toBeLessThan(t.tick_count);
     });
 
     it('⛓ the derived tick is the removal plus the responder\'s own fade', async () => {
