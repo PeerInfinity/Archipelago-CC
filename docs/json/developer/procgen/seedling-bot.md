@@ -6415,3 +6415,100 @@ The battery closes at **2 of 4** (`r8-solve-4`, `r8-solve-6`), with
 second consequence is measured NIL: both placements carry `tag -1`), L19's
 route through the boss's own body to the bosslock, and L20's shield → shieldlock
 → buttonroom → `lock@32,80` chain — is banked in kickoff §13.10.
+
+## R8 slice 5: the eta-aware transit probe, the arrow that could not hurt you, and the battery's 4/4
+
+⚖ The fenced moving-hazard question was ruled (kickoff §13.10a): a corridor is
+validated **per cell at that cell's own ETA**, with the ETAs coming from the
+controller that will actually drive; a stance keeps the dwell-window union; the
+per-tick next-cell check stays live so planning optimism is bounded by the loop.
+
+### The refutation was three defects, and the probe was the last of them
+
+Before a line of the probe was written, the banked recording was replayed
+through the unmodified model. What it says:
+
+1. **The player-arrow bill did not exist.** `ARROW_PLAYER_ARM` named
+   `PUZZLEMENT_HAZARDS.arrowtrap` as the payer; that is the CENSUS — a roster
+   of placements and their damage numbers — and no line of `levelRun` billed
+   from it. So an arrow could reach the player, stop dead on them, and cost
+   nothing. `Arrow.as:49` calls `Player.hit`, and the game reported `hits: 1`
+   where the model reported 0.
+2. **A fresh volley moved on its spawn tick.** `Engine.update()` runs
+   `world.update()` and calls `updateLists()` *after* it, so an entity added
+   during a frame is not in the update list until that frame ends.
+3. **The trap fired on a flag one frame stale where the game's is two.** The
+   trap updates before the button (both are prepended, arrowtrap added later) —
+   that half was already modelled. The other half is that the Player is added
+   FIRST and therefore updates LAST, so the button that publishes the group saw
+   the player a frame earlier still.
+
+⛓ With all three fixed the model **reproduces the recording it was refuted
+by**: the hit at t=207, source `arrow`, knockback dx −4.3951592784836375 with
+the y impulse dropped by the strict comparator, and x = **62.35484072151636** —
+the game's own digit, reached through `v.normalize(len − 0.25)` and
+`Mobile.moveX`'s 1 px sub-steps. And the whole committed roster replayed
+byte-exact throughout: **three arrow-family corrections, zero re-records.**
+
+⚠ Scope, stated exactly: the arc's zero-hit CLAIMS rest on the game's own hits
+counter inside the recordings, which was always the oracle. What was vacuous is
+the MODEL's arrow-damage channel — a `pricedBy` that named a module nobody
+billed from.
+
+### The instrument, and the law it produced
+
+`previewWalk` is the driver's own loop with `run.advance` swapped for a pure
+stepper bound to the run's own options; `run.arrowForecast()` steps the arrow
+subsystem — the **traps** as well as the arrows — along the previewed walk,
+because the arrow that hit did not exist when the plan was made. Each sample
+pairs the pre-move player box with the post-move arrows, which is the game's own
+pairing.
+
+⚖ **An ingredient may be carried forward in time only under AUTONOMY GIVEN THE
+WALK.** An arrow's flight does not read the player; a chaser's does, so a
+chaser is read live at horizon 0 and priced along the corridor by the per-tick
+check. The measurement that forced the rule: growing a chaser envelope over a
+whole corridor seals the room — 60 px in every direction over a 120-tick walk —
+and L6's ladder escalated for ever in a room already recorded byte-exact.
+
+### The two oracle gates
+
+- **NEGATIVE**: from a plan made at t=198 the probe forbids the refuted walk's
+  own cell at tick 206, naming the arrow and predicting it at (68,58) — the
+  position the game's knockback arithmetic requires. The same cell asked at the
+  plan tick is calm, which is what makes this a defect of the time axis.
+- **POSITIVE**: the hand walk leaves its button with the column live and takes
+  zero hits; the probe admits that corridor at its own ETAs while the WAIT
+  reading refuses it. The deadlock dissolves as arithmetic.
+
+### The battery, 4 of 4, each room's rung named
+
+| tape | room | solver | hand | the rung |
+|---|---|---|---|---|
+| `r8-solve-4` | L4 | 253 | 347 | `hold` then `shove` (push-until-path, k=2) |
+| `r8-solve-5` | L5 | **558** | 812 | `kill` — the ceiling's six phases, under the ETA probe |
+| `r8-solve-6` | L6 | 294 | 355 | the ladder: AVOID → TIME → BAIT |
+| `r8-solve-8` | L8 | **827** | 1090 | two shoves, the second sinking by exhaustion |
+
+Zero hits and zero deaths everywhere. L5's `{5,0}` is declared at **427**,
+model-sourced (the removal at 326 plus the responder's 101-step fade);  L8's two
+clears are game-sourced **truncation boundaries measured on both sides** (246
+carries the tag, 245 does not; 645 and 644 likewise). The hand tape's own
+`at: 737` is not touched.
+
+### A solver chain can now witness its own clears
+
+Registering the two tapes was refused by the witnessed-clear law, which demands
+the outcome of a hand-authored `phases` block — and a solver chain has no walk
+at all. The law was right and its premise predated the solver. The staged arm
+holds a chain's `clears` provenance to the same standard: two-sided set equality
+against the tapes, and evidence that is recomputed (a model tick must add up; a
+game tick must carry both sides of its boundary). Custody chains keep the
+original law verbatim, asserted. The despawn half is pre-agreed, unbuilt — no
+staged tape declares one — and proven to fail closed.
+
+### Where the rung stands
+
+The battery is **4 of 4**. **D2 and `hasShield` are slice 6's**, from the recon
+banked in kickoff §13.10, with L18's press-arm-against-a-moving-body as its own
+paired track.
