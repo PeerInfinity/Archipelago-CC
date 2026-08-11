@@ -6119,3 +6119,46 @@ of that row's own stated reason; a press arm still needs `Enemy.hit`'s five
 gates against a chaser, the 25-tick die ANIMATION (during which
 `totalEnemies()` still counts the body), and the `classCount` move in a room
 that HAS a kill lock — L5, the one room the bridge cannot step.
+
+## R8 slice 2: the solver loop v1, and the world the solve must sense
+
+⛓⛓⛓ **THE POLICY EXISTS AND THE BATTERY IS SOLVED.** `solverBot.js` — the
+sense→plan→act loop beside `botDriverV2` (⚖ §6.2): goals in (placements and
+exits only — never the hand-authored stances), corridors planned against the
+run's OWN live geometry, verbs invoked reactively from the exported catalog,
+a decision-trace row per decision, and a `SolverRefusal` naming the obstacle
+in census vocabulary at every dead end. The derived battery — act2 segments
+1, 2, 3, 7, 9, 10, 11, computed from the chain's own units (no phases, no
+mechanic outside collect/chest) — is solved from the committed segments' own
+v8 boot blocks and recorded byte-exact: **five rooms tick-IDENTICAL to the
+hand-authored segments**, the sword segment +1 tick, the chest segment
+exact. Each tape is a one-segment **staged chain** (the first on disk):
+calm arrivals latched over all 46 signature rows, `sword@L10`'s flip
+measured and REPORTED, NOT CREDITED.
+
+### The full bag, resolved as ruled
+`plannerObstacleAt` gained a second entry shape — `liveBag`, branded, from
+the new `run.liveGeometryOpts()` (the run's own `liveSolidOpts`, all
+fourteen families) — while the legacy 8-of-14 forwarding stays
+byte-untouched. Sentinel tests hold both shapes.
+
+### ⛔⛔⛔ THE FINDING: the combat-blind world, refuted by its own recording
+`createLevelRun`'s `roles` DEFAULT is `PRE_R5_ROLES` — no combat census —
+while `tapeRunner` gives an honest tape the full `ROLES`. The first battery
+was solved against the default: **identical in every room without enemies,
+and blind in the one with them.** The blind model "crossed" L6 in 174 ticks;
+the GAME, driven by those inputs, hit `sandtrap@64,16` at t=20, died TWICE,
+and never crossed — and the census-on model reproduces the game's whole
+disaster **digit for digit**, both deaths included (the sandtrap contact,
+death/reboot and stepped-chaser models all CONFIRMED by a tape none had
+been driven through). The withdrawn row is banked as a free oracle
+(`NewDocs/plans/r8-slice2-l6-blind-probe/`, with a `--mobiles` body
+witness); `solveSegment` now **refuses a combat-blind run by name**; the
+corridor danger probe is segment-SAMPLED (waypoint-only probing measured
+its own hole on the same room).
+
+### Slice 3's work orders, computed from live state
+L4 refuses with `proximity-hazard:button → 'hold', not registered this
+slice`; L8 with `pushableblock → 'shove', not registered` — the component
+frontier names the entity, the selector names the verb, and registering
+executors is adding rows to a proven seam.
