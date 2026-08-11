@@ -1,9 +1,15 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, it, expect } from 'vitest';
 
 import {
     R8_NORMALIZE_LIVE_BATCH, assertBatchSitesCoverSource, assertPlannerLivePartition,
     assertBatchIsModelSide,
+    R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured,
 } from './r8Acceptance.js';
+import { atlasLevelSource } from './levelSource.js';
 import {
     LIVE_GEOMETRY_KEYS, assertNormalizedLiveOpts, isNormalizedLiveOpts, normalizeLiveOpts,
 } from './levelWorld.js';
@@ -185,6 +191,143 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         expect(JSON.stringify(R8_NORMALIZE_LIVE_BATCH)).not.toMatch(/faster|speed-?up/i);
     });
 });
+
+/**
+ * ⛓⛓⛓ THE ENEMY BRIDGE'S PREDICTION — R8 slice 1, stated before the bridge.
+ *
+ * Same shape as track B's above and for the same reason (trap 40). What is
+ * asserted here is that the claim is a FORK with both arms written down and
+ * that the exposed set is re-derived from disk rather than typed.
+ */
+describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
+    it('states BOTH arms of the fork, and names the finding arm as a defect not a re-record', () => {
+        const p = R8_ENEMY_BRIDGE.prediction;
+        expect(p.armA).toMatch(/BYTE-EXACT/);
+        expect(p.armB).toMatch(/RED at the L5 arrow bait/);
+        // ⛔ The whole point: a divergence is a defect, never a moved expectation.
+        expect(p.armB).toMatch(/never a re-record/);
+        // ...and the baseline the gate will be attributed against is recorded
+        // here, measured on the unmodified tree.
+        expect(p.baseline).toEqual({
+            commit: '153f5100b', files: 240, tests: 6829, seconds: 363.72,
+            note: expect.stringContaining('cannot attribute'),
+        });
+    });
+
+    /**
+     * ⛔ RE-DERIVED FROM DISK. The five names are a claim about the committed
+     * roster, and the roster is disk-derived — so the claim is recomputed
+     * from the tapes and their own recorded streams on every run.
+     */
+    it('re-derives the exposed set from the committed roster and its recorded streams', () => {
+        const out = assertBridgeExposureIsMeasured(realExposureIo());
+        expect(out.exposed).toBe(5);
+        expect(out.tapes).toEqual([
+            'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
+        ]);
+    });
+
+    /**
+     * ⛔ THE NON-VACUITY IS WITNESSED, not assumed: a comparison that has
+     * never seen a disagreement might be comparing nothing (slice 0 track C's
+     * own law). Two synthetic rosters, one exposed tape too many and one too
+     * few, and both go red.
+     */
+    it('reds when a tape enters a bridged room and nobody declared it', () => {
+        const io = syntheticExposureIo({
+            'r7-act2-3': { tape: {}, levels: [4] },
+            'a-new-tape': { tape: {}, levels: [0, 4] },
+        });
+        expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/Undeclared and exposed: a-new-tape/);
+    });
+
+    it('reds when a declared tape stops entering a bridged room', () => {
+        const io = syntheticExposureIo({ 'r7-act2-3': { tape: {}, levels: [0] } });
+        expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/no longer exposed/);
+    });
+
+    it('reds when the ROOMS move under a name that still matches', () => {
+        const io = syntheticExposureIo({
+            'r7-act2-3': { tape: {}, levels: [4, 6] },
+            'r7-act2-4': { tape: {}, levels: [4, 5] },
+            'r7-act2-5': { tape: {}, levels: [5, 6] },
+            'r7-act2-6': { tape: {}, levels: [6] },
+            'r7-act2-full': { tape: {}, levels: [4, 5, 6] },
+        });
+        expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
+    });
+
+    /**
+     * ⚠ THE GATE'S OWN PREMISE: a chaser's position is UNREAD under
+     * `noDamage`, and the readers that would make that false are enumerated
+     * rather than left implicit.
+     */
+    it('enumerates every reader an "unread position" claim has to survive', () => {
+        const readers = R8_ENEMY_BRIDGE.enemyBodyReaders.map((r) => r.reader);
+        expect(readers).toEqual([
+            'levelRun.pushableCtx().collides',
+            'levelRun.stepArrowTrapsNow',
+            'levelRun.applyWandShotToBoss',
+        ]);
+        // The block's Enemy arm is SPINNERS ONLY, and that gap is named as a
+        // deliberate non-fix rather than described as coverage.
+        expect(R8_ENEMY_BRIDGE.enemyBodyReaders[0].consequence).toMatch(/NAMED, NOT FIXED/);
+    });
+
+    it('refuses to run without an injected io seam — a default would hide the mutations', () => {
+        expect(() => assertBridgeExposureIsMeasured()).toThrow(/needs an io seam/);
+    });
+});
+
+/** The real roster, read from disk. */
+function realExposureIo() {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const tapesDir = join(here, 'fixtures', 'tapes');
+    const expDir = join(here, 'fixtures', 'expectations');
+    const src = atlasLevelSource();
+    return {
+        tapeNames: () => readdirSync(tapesDir).filter((f) => f.endsWith('.json'))
+            .map((f) => f.slice(0, -5)).sort(),
+        loadTapeJson: (n) => JSON.parse(readFileSync(join(tapesDir, `${n}.json`), 'utf8')),
+        levelsVisited: (n) => {
+            for (const p of [`${n}.json`, `${n}.provisional.json`]) {
+                try {
+                    const s = JSON.parse(readFileSync(join(expDir, p), 'utf8'));
+                    return new Set(s.ticks.map((t) => t.level));
+                } catch { /* try the next */ }
+            }
+            const tape = JSON.parse(readFileSync(join(tapesDir, `${n}.json`), 'utf8'));
+            return new Set([tape.boot?.level ?? 0]);
+        },
+        /**
+         * ⛔ DERIVED FROM THE DECLARED SCOPE, and the scope is cross-checked
+         * against the bridge's own roster one stratum away
+         * (`assertBridgeRosterMatchesScope`). A second class bridged tomorrow
+         * widens this automatically, which is the point.
+         */
+        bridgedLevels: () => {
+            const tags = R8_ENEMY_BRIDGE.bridgedClasses;
+            const out = new Set();
+            for (let l = 0; l < 130; l += 1) {
+                let rec;
+                try { rec = src(l); } catch { continue; }
+                if (!rec?.entities) continue;
+                if (rec.entities.some((e) => tags.includes(e.type))) out.add(l);
+            }
+            return out;
+        },
+    };
+}
+
+/** A synthetic roster, so the mutations above can be constructed. */
+function syntheticExposureIo(rows) {
+    return {
+        tapeNames: () => Object.keys(rows),
+        loadTapeJson: (n) => rows[n].tape,
+        levelsVisited: (n) => new Set(rows[n].levels),
+        bridgedLevels: () => new Set([4, 5, 6]),
+    };
+}
 
 /**
  * ── THE MUTATION LIST FOR THIS STRATUM ────────────────────────────────

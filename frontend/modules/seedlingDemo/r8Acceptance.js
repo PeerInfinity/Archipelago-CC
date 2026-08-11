@@ -320,6 +320,219 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
 });
 
 /**
+ * ⛔⛔⛔ THE ENEMY BRIDGE, CLASS 1 (Bob) — R8 slice 1, AND THE PREDICTION IS
+ * COMMITTED BEFORE A LINE OF THE BRIDGE IS WRITTEN.
+ *
+ * Wiring `chasers.chaserStep` into `levelRun`'s tick dispatch changes what the
+ * MODEL replays for every committed tape whose rooms hold a bridged chaser.
+ * The committed expectations are ORACLE RECORDINGS drained from the game
+ * BEFORE the stepper existed, so they cannot have been fitted to it — which
+ * makes the offline differential the strongest free gate this slice has
+ * (trap 59, "a withdrawn recording is a free oracle", one rung on).
+ *
+ * ⛔ **A DIVERGENCE IS A DEFECT, NEVER A RE-RECORD.** No re-record licence
+ * exists this rung; a moved expectation is a defect by definition.
+ *
+ * ── THE EXPOSURE, MEASURED BEFORE THE CHANGE ──────────────────────────
+ *
+ * Measured against the committed roster on 2026-08-10 at `153f5100b`
+ * (`levelSource` × the tapes' own expectation streams — the LEVELS EACH TAPE
+ * REALLY VISITS, not the levels its boot block names):
+ *
+ *   133 tapes · **94 gated** by `noclip` or `noDamage` · 39 remaining ·
+ *   **5 EXPOSED** — they retire `noDamage` AND enter a room holding a `bob`.
+ *
+ * `exposedTapes` names all five. `assertBridgeExposureIsMeasured` re-derives
+ * the set from disk on every run, so a sixth tape entering a bob room
+ * tomorrow fails BY NAME rather than quietly joining the claim (trap 89).
+ *
+ * ── ⚖ THE `noDamage` GATE IS `stepContactsNow`'s OWN ARGUMENT, REUSED ──
+ *
+ * The stepper is skipped under `noclip || noDamage`, and that is not an
+ * optimisation — it is the same claim `stepContactsNow` already makes one
+ * function away: under the flag `Player.hit` returns at its first line, so
+ * every contact is byte-inert. For a chaser the claim needs one more term,
+ * because a POSITION could have a reader other than the contact scan. It has
+ * none in this model, and the three candidates are named in
+ * `enemyBodyReaders` rather than left as a silence:
+ *   · `pushableCtx.collides`' Enemy arm consults SPINNERS only (the block's
+ *     `solids.push("Enemy")` is modelled for one class);
+ *   · `stepArrowTrapsNow` calls `stepArrow` with NO `bodies` at all, so an
+ *     arrow in this model hits nothing (R7's arrow debt, carried);
+ *   · a wand shot that reaches a non-`BossTotem` enemy is already a THROW by
+ *     name, so no committed walk can take that path.
+ * ⇒ under `noDamage` a chaser's position is unread, and the 94 + 34 tapes
+ * are byte-inert BY GATE rather than by replay luck.
+ *
+ * ── THE PREDICTION, AS A FORK — both arms stated before the measurement ──
+ *
+ * See `prediction`. The honest statement is not "zero diffs" alone: the L5
+ * arrow bait is 737 ticks with three live bobs whose GAME deaths are ARROW
+ * kills, and this model prices no arrow against any body. So the fork is
+ * stated, and whichever way it lands the record says what was believed first.
+ */
+export const R8_ENEMY_BRIDGE = Object.freeze({
+    item: Object.freeze({
+        id: 'enemy-bridge-class-1-bob',
+        what: 'wire `chasers.chaserStep` into `levelRun.advance` as `stepChasersNow`, '
+            + 'gated per `spinner.MODELLED_ENEMY_CLASSES` entry, and add the `Bob` entry; '
+            + 'reprice `contactPricing(\'bob\')` from `mover` to `stepped` and price the '
+            + 'contact through `applyPlayerHit` in the chaser\'s own slot',
+        why: 'the mover throw (`levelRun.js` `stepContactsNow`) and `KILL_ARM_POLICY.Bob` '
+            + 'are one missing thing between them — the chaser\'s POSITION at the tick. '
+            + '`chasers.js` has transcribed the walk since R5 slice 3 and nothing has '
+            + 'ever called it.',
+        cite: 'kickoff §3.2 + §4 slice 1; §8.8 (the roster is an OBJECT — an ENTRY, not a push)',
+    }),
+
+    /**
+     * ⛔ THE FIVE, BY NAME — and the set is RE-DERIVED, never trusted.
+     *
+     * A tape is exposed when it retires `noDamage` (so a contact can land)
+     * AND its own recorded stream enters a level holding a `bob`. Everything
+     * else is byte-inert by the gate above.
+     */
+    exposedTapes: Object.freeze([
+        Object.freeze({ name: 'r7-act2-3', levels: Object.freeze([4]), bobs: 1, ticks: 245 }),
+        Object.freeze({ name: 'r7-act2-4', levels: Object.freeze([4, 5]), bobs: 4, ticks: 347 }),
+        Object.freeze({ name: 'r7-act2-5', levels: Object.freeze([5, 6]), bobs: 5, ticks: 812 }),
+        Object.freeze({ name: 'r7-act2-6', levels: Object.freeze([6]), bobs: 2, ticks: 355 }),
+        Object.freeze({ name: 'r7-act2-full', levels: Object.freeze([4, 5, 6]), bobs: 6, ticks: 3523 }),
+    ]),
+
+    /**
+     * ⛔ THE SLICE'S DECLARED SCOPE — census tags, one class.
+     *
+     * ⚠ A DECLARATION, and it is deliberately NOT the derivation. The
+     * bridge's own roster is `chasers.bridgedChaserTags()`, computed from
+     * `CHASERS` ∩ `MODELLED_ENEMY_CLASSES`; `assertBridgeRosterMatchesScope`
+     * asserts the two agree. Two independently-written tables plus an
+     * equality is this arc's idiom (`assertKillArmPolicyCovers`), and it is
+     * what lets the PREDICTION be committed one commit before the roster it
+     * predicts about exists.
+     */
+    bridgedClasses: Object.freeze(['bob']),
+
+    /** The roster tally the exposure was derived from, at `153f5100b`. */
+    rosterAtPrediction: Object.freeze({
+        tapes: 133, gatedByFlag: 94, retiresNoDamage: 39, exposed: 5,
+    }),
+
+    /**
+     * ⚠ THE READERS AN "UNREAD POSITION" CLAIM HAS TO SURVIVE, enumerated so
+     * a fourth one added tomorrow makes this list wrong out loud rather than
+     * making the `noDamage` gate silently unsound.
+     */
+    enemyBodyReaders: Object.freeze([
+        Object.freeze({
+            reader: 'levelRun.pushableCtx().collides',
+            arm: 'the block\'s `solids.push("Enemy")`',
+            reads: 'spinnerRectsNow() ONLY',
+            consequence: 'a stepped bob is invisible to a pushable block in this model. '
+                + 'NAMED, NOT FIXED — feeding chaser bodies in would move L8/L39/L40 '
+                + 'block sweeps, which is a re-record this rung has no licence for.',
+        }),
+        Object.freeze({
+            reader: 'levelRun.stepArrowTrapsNow',
+            arm: '`stepArrow(a, {frozen, bound})`',
+            reads: 'NOTHING — `bodies` defaults to `[]`',
+            consequence: 'an arrow in this model passes through every body, player and '
+                + 'enemy alike (R7\'s carried arrow debt). This is what the L5 fork below '
+                + 'turns on.',
+        }),
+        Object.freeze({
+            reader: 'levelRun.applyWandShotToBoss',
+            arm: '`WandShot.solids` + "Enemy"',
+            reads: 'the boss roster; anything else THROWS by name',
+            consequence: 'no committed walk fires a wand at a chaser, and one that did '
+                + 'would fail loudly rather than silently.',
+        }),
+    ]),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST. `outcome` is written BESIDE this, never over
+     * it (the R6/R7 shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-10, before the first line of the bridge',
+        baseline: Object.freeze({
+            commit: '153f5100b', files: 240, tests: 6829, seconds: 363.72,
+            note: 'measured THIS session on the unmodified tree — a gate with no baseline '
+                + 'cannot attribute (trap 40).',
+        }),
+        gated: '94 + 34 = 128 tapes are byte-inert BY GATE, not by replay: they either '
+            + 'declare `noclip`/`noDamage` or never enter a room holding a bridged chaser. '
+            + 'This arm is asserted mechanically, not measured by 128 replays.',
+        armA: 'the five exposed tapes replay BYTE-EXACT — the transcription is right and '
+            + 'no stepped bob reaches the player on any of the five walks.',
+        armB: '⛔ `r7-act2-5` and `r7-act2-full` RED at the L5 arrow bait. The GAME kills '
+            + 'all three L5 bobs with arrows; this model prices no arrow against any body, '
+            + 'so its bobs would survive the whole 737-tick block and chase a player who '
+            + 'is deliberately standing still to bait them. That red is a FINDING — the '
+            + 'missing Arrow×Enemy pricing, named in `enemyBodyReaders` — and it is fixed '
+            + 'AT SOURCE or REPORTED as a wall. It is never a re-record.',
+        expected: 'armB for the two L5 tapes; armA for `r7-act2-3`, `r7-act2-6` and (if '
+            + 'the L5 block is what bites) NOT `r7-act2-4`, whose L5 span is only its '
+            + 'last few ticks. Stated as a fork rather than a number because the honest '
+            + 'answer depends on a measurement nobody has taken.',
+    }),
+});
+
+/**
+ * ⛔ THE EXPOSURE IS RE-DERIVED FROM DISK, NOT TRUSTED.
+ *
+ * Reads every committed tape and every committed expectation, recomputes
+ * which tapes retire `noDamage` AND enter a level holding a bridged chaser,
+ * and compares against `exposedTapes`. A sixth exposed tape — a new fixture,
+ * a re-planned route, a class newly bridged — fails here BY NAME.
+ *
+ * ⚠ THE LEVEL SET COMES FROM THE RECORDED STREAM, not from the boot block: a
+ * tape that crosses into a bob room 300 ticks in is exposed and its boot
+ * block does not say so.
+ *
+ * @param {object} io injected so the assertion is testable against a
+ *   synthetic roster — `{tapeNames, loadTapeJson, levelsVisited, bobLevels}`
+ */
+export function assertBridgeExposureIsMeasured(io) {
+    if (!io || typeof io.tapeNames !== 'function') {
+        throw new Error('assertBridgeExposureIsMeasured: needs an io seam '
+            + '{tapeNames, loadTapeJson, levelsVisited, bridgedLevels} — a default that '
+            + 'read the real roster would make the synthetic mutation cases untestable.');
+    }
+    const bridged = io.bridgedLevels();
+    const found = [];
+    for (const name of io.tapeNames()) {
+        const tape = io.loadTapeJson(name);
+        if (tape.noclip || tape.noDamage) continue;
+        const levels = [...io.levelsVisited(name)].filter((l) => bridged.has(l)).sort((a, b) => a - b);
+        if (levels.length) found.push({ name, levels });
+    }
+    const declared = R8_ENEMY_BRIDGE.exposedTapes.map((t) => t.name).sort();
+    const measured = found.map((f) => f.name).sort();
+    const missing = measured.filter((n) => !declared.includes(n));
+    const stale = declared.filter((n) => !measured.includes(n));
+    if (missing.length || stale.length) {
+        throw new Error('R8_ENEMY_BRIDGE: the exposed set on disk is not the one declared. '
+            + `Undeclared and exposed: ${missing.join(', ') || 'none'}; declared and no `
+            + `longer exposed: ${stale.join(', ') || 'none'}. The prediction is a claim `
+            + 'about WHICH tapes the bridge can move — a tape missing from it is a tape '
+            + 'nobody predicted (trap 89).');
+    }
+    for (const f of found) {
+        const row = R8_ENEMY_BRIDGE.exposedTapes.find((t) => t.name === f.name);
+        const same = row.levels.length === f.levels.length
+            && row.levels.every((l, i) => l === f.levels[i]);
+        if (!same) {
+            throw new Error(`R8_ENEMY_BRIDGE: "${f.name}" is declared exposed in levels `
+                + `[${row.levels.join(',')}] and really enters [${f.levels.join(',')}]. `
+                + 'The LEVELS are the claim; a right name with wrong rooms is a prediction '
+                + 'about a different walk.');
+        }
+    }
+    return { exposed: found.length, tapes: measured };
+}
+
+/**
  * ⛔ THE SITE LIST IS RE-DERIVED FROM THE SOURCE, NOT TRUSTED.
  *
  * Counts the live-geometry bag builders in each file and compares against the
