@@ -43,7 +43,31 @@ class TestBase(unittest.TestCase):
         },
         "shapez": {
             "Achievements needing a MAM",  # unreachable with default settings
-        }
+        },
+        # Seedling's map has rooms the game itself never lets the player walk into. They hold no
+        # locations, and their exits are one-way OUT, so the transcription records them faithfully
+        # rather than dropping them. See docs/json/developer/procgen/seedling-bot.md.
+        "Seedling Playthrough": {
+            # L58 is Dungeon5_DeadBoss: entered only by the boss-death level swap, which is not an
+            # edge a player can traverse. The seven rooms form a closed clique with one exit to L46.
+            "level_58__r1c2",
+            "level_58__r1c4",
+            "level_58__r2c1",
+            "level_58__r2c5",
+            "level_58__r3c3",
+            "level_58__r4c1",
+            "level_58__r6c5",
+            # TODO(R8): L82 is NOT settled. R1's fall table verifies `71 ⇓ 82` (pit (12,13) ->
+            # arrival (10,17)) and the R1 bot walked it, but rules v1 emits no entrance at all --
+            # unlike `83 ⇓ 84`, the next row of the same table, which is emitted. Under armed lava
+            # the pit's L71 component is unreachable, so this may be a deliberate drop; if not, the
+            # edge is missing from the transcription and this line should be removed.
+            "level_82",
+            # L84 is a pass-through: the 83 -> 84 fall lands on pit with no walkable neighbour, so
+            # only the arrival room r2c4 is entered. These two components have no inbound edge.
+            "level_84__r0c0",
+            "level_84__r3c0",
+        },
     }
 
     def test_default_all_state_can_reach_everything(self):
