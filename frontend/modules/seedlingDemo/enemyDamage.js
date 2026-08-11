@@ -232,14 +232,47 @@ export const KILL_ARM_POLICY = Object.freeze({
     Grenade: Object.freeze({ policy: 'inert', why: 'Enemies/Grenade.as:70-71 — `{ }`; its hitsMax 1 is unreachable by a press' }),
     BombPusher: Object.freeze({ policy: 'inert', why: 'Enemies/BombPusher.as — `hit(...):void { }` on one line' }),
     // ── every other counted class, refused BY NAME ────────────────────
+    /**
+     * ⛔⛔ R8 SLICE 1 PAID HALF OF THIS ROW'S STATED DEBT AND THE ROW STAYS
+     * `refused` — deliberately, and said out loud rather than left as an
+     * omission.
+     *
+     * The row's own reason was *"modelling it needs the chaser's POSITION at
+     * the press (`chasers.js` transcribes the walk but no route drives one)"*.
+     * A route drives one now: `levelRun.stepChasersNow` walks the body every
+     * tick and `r8-l6-bob-contact` proves the arithmetic against the game,
+     * byte for byte. **That is the position, not the press.**
+     *
+     * ⛔ WHAT IS STILL OWED, and what a slice that flips this row has to
+     * DRIVE rather than argue:
+     *   · `Enemy.hit`'s five gates against a chaser (`hitsTimer`, the freeze,
+     *     `canHit`, `onlyHitBy`, `hits < hitsMax`) — `enemyHit` owns them and
+     *     nothing has ever handed it a bob;
+     *   · the death as an ANIMATION — `startDeath` plays "die" WITHOUT
+     *     setting `destroy` (`chasers.deathTicks` = 25 ticks for a bob), and
+     *     `Game.totalEnemies()` counts the body for every one of them, so a
+     *     kill lock opens ~25 ticks after the killing blow and not on it;
+     *   · the `classCount` consequence IN A ROOM THAT HAS A KILL LOCK. L5 is
+     *     exactly such a room and is exactly the room slice 1 could not step
+     *     (`chaserRoomVerdict` refuses it — the arrows that do the killing
+     *     there are unpriced).
+     *
+     * ⇒ a refusal retired without a driven witness is trap 101's shape, and
+     * this slice's driven arm prices a CONTACT, not a press. It stays refused.
+     */
     Bob: Object.freeze({
         policy: 'refused',
         why: 'a Bob death REMOVES the body (`endAnim` sets `destroy` after 25 ticks, then '
             + 'eleven of `Mobile.death`), so `classCount(Bob)` drops and every '
-            + '`tset == -1` lock in the room can open. Modelling it needs the chaser\'s '
-            + 'POSITION at the press (`chasers.js` transcribes the walk but no route '
-            + 'drives one), and the L60 pair already shows the honest alternative: drive '
-            + 'the kill in the game and read the lock off the stream.',
+            + '`tset == -1` lock in the room can open. ⛓ R8 slice 1 paid the POSITION '
+            + 'half — `levelRun.stepChasersNow` drives `chasers.chaserStep` and the game '
+            + 'confirmed it byte-exact — and the row still refuses, because what a PRESS '
+            + 'arm needs is the damage/death staging: `Enemy.hit`\'s five gates against a '
+            + 'chaser, the 25-tick die ANIMATION during which `totalEnemies()` still '
+            + 'counts the body, and the `classCount` move in a room that has a kill lock '
+            + '(L5 — the one room the bridge cannot step). The L60 pair still shows the '
+            + 'honest alternative: drive the kill in the game and read the lock off the '
+            + 'stream.',
     }),
     BobSoldier: Object.freeze({ policy: 'refused', why: 'the Bob cost plus a shield state nobody has transcribed' }),
     BobBoss: Object.freeze({ policy: 'refused', why: 'boss damage — the encounter SCRIPT owns it (`bobBoss.js`), not a press arm' }),

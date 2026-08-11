@@ -421,6 +421,27 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
     ]),
 
     /**
+     * ⛓ EXPOSED, AND AUTHORED BY THIS SLICE — kept in its OWN list so the
+     * PREDICTION above stays exactly the claim that was committed before the
+     * bridge moved.
+     *
+     * ⛔ `assertBridgeExposureIsMeasured` found it, by name, the first time
+     * the suite ran after track E landed — which is what that assertion is
+     * for (trap 89). Folding this row into `exposedTapes` would have made the
+     * prediction retroactively "right about six", and a prediction edited
+     * after its measurement is not a prediction. The set the assertion
+     * checks is the UNION; the two halves say which is which.
+     */
+    exposedAdded: Object.freeze([
+        Object.freeze({
+            name: 'r8-l6-bob-contact', levels: Object.freeze([6]), bobs: 2, ticks: 30,
+            addedBy: 'R8 slice 1 (track E)',
+            why: 'the slice\'s own driven arm — the stance the bridge newly prices, and '
+                + 'the only tape on the roster authored to be exposed on purpose',
+        }),
+    ]),
+
+    /**
      * ⛔ THE SLICE'S DECLARED SCOPE — census tags, one class.
      *
      * ⚠ A DECLARATION, and it is deliberately NOT the derivation. The
@@ -527,7 +548,8 @@ export function assertBridgeExposureIsMeasured(io) {
         const levels = [...io.levelsVisited(name)].filter((l) => bridged.has(l)).sort((a, b) => a - b);
         if (levels.length) found.push({ name, levels });
     }
-    const declared = R8_ENEMY_BRIDGE.exposedTapes.map((t) => t.name).sort();
+    const all = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded];
+    const declared = all.map((t) => t.name).sort();
     const measured = found.map((f) => f.name).sort();
     const missing = measured.filter((n) => !declared.includes(n));
     const stale = declared.filter((n) => !measured.includes(n));
@@ -539,7 +561,7 @@ export function assertBridgeExposureIsMeasured(io) {
             + 'nobody predicted (trap 89).');
     }
     for (const f of found) {
-        const row = R8_ENEMY_BRIDGE.exposedTapes.find((t) => t.name === f.name);
+        const row = all.find((t) => t.name === f.name);
         const same = row.levels.length === f.levels.length
             && row.levels.every((l, i) => l === f.levels[i]);
         if (!same) {

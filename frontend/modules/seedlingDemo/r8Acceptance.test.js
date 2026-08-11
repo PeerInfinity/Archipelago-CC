@@ -228,9 +228,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
      */
     it('re-derives the exposed set from the committed roster and its recorded streams', () => {
         const out = assertBridgeExposureIsMeasured(realExposureIo());
-        expect(out.exposed).toBe(5);
+        // ⛓ FIVE PREDICTED + ONE AUTHORED. The prediction's own list is
+        // asserted UNCHANGED beside the union, because a prediction edited
+        // after its measurement is not a prediction.
+        expect(R8_ENEMY_BRIDGE.exposedTapes.map((t) => t.name)).toEqual([
+            'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
+        ]);
+        expect(R8_ENEMY_BRIDGE.exposedAdded.map((t) => t.name)).toEqual(['r8-l6-bob-contact']);
+        expect(out.exposed).toBe(6);
         expect(out.tapes).toEqual([
             'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
+            'r8-l6-bob-contact',
         ]);
     });
 
@@ -245,6 +253,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r7-act2-3': { tape: {}, levels: [4] },
             'a-new-tape': { tape: {}, levels: [0, 4] },
         });
+        // ⚠ Several declared tapes are absent from this synthetic roster too,
+        // so the message names BOTH directions — the assertion is checked on
+        // the undeclared-and-exposed half here and on the stale half below.
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/Undeclared and exposed: a-new-tape/);
     });
 
@@ -255,11 +266,15 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
 
     it('reds when the ROOMS move under a name that still matches', () => {
         const io = syntheticExposureIo({
+            // ⚠ Only ONE row moves — every other declared tape is present with
+            // its declared rooms, so the name set matches and the ROOMS are
+            // the only thing left for the assertion to catch.
             'r7-act2-3': { tape: {}, levels: [4, 6] },
             'r7-act2-4': { tape: {}, levels: [4, 5] },
             'r7-act2-5': { tape: {}, levels: [5, 6] },
             'r7-act2-6': { tape: {}, levels: [6] },
             'r7-act2-full': { tape: {}, levels: [4, 5, 6] },
+            'r8-l6-bob-contact': { tape: {}, levels: [6] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
