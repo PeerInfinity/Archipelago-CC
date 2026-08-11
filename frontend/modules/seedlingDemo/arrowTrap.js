@@ -296,7 +296,12 @@ export const ARROW_ENEMY_HIT = Object.freeze({
  *                      the fade and the removal
  *   `stops`            the arrow dies on it; this rung models no response
  *   `priced-elsewhere` the arrow dies on it and the damage is billed by another
- *                      funnel, so billing it here would double it
+ *                      funnel, so billing it here would double it. ⛔ R8 SLICE
+ *                      5: NO type is filed under this any more. `Player` was,
+ *                      and the funnel it named did not exist — the value stays
+ *                      in the vocabulary (trap 62: a control is replaced, not
+ *                      deleted) and the day something is filed under it again,
+ *                      the caller it names is what has to be shown.
  *
  * ⚠ THE `Enemy` ROW IS PER CLASS INSIDE THE RUN, not per type: a bridged
  * chaser is `damaged` and a static `SandTrap` is `stops` (its clear is the
@@ -305,7 +310,10 @@ export const ARROW_ENEMY_HIT = Object.freeze({
  * bound; this table carries the TYPE-level fact the AS3 states.
  */
 export const ARROW_TARGET_DISPOSITIONS = Object.freeze({
-    Player: 'priced-elsewhere',
+    // ⛔ R8 SLICE 5: `damaged`, not `priced-elsewhere`. The switch has an arm
+    // for `Player` and this model now bills it — see `ARROW_PLAYER_ARM` for
+    // the two slices in which the row said somebody else was paying.
+    Player: 'damaged',
     Enemy: 'damaged',
     Tree: 'stops',
     Solid: 'stops',
@@ -313,20 +321,41 @@ export const ARROW_TARGET_DISPOSITIONS = Object.freeze({
 });
 
 /**
- * ⛔ WHY THE PLAYER ARM IS `priced-elsewhere` AND NOT `damaged` — stated where
- * a reader will reach for it, because the honest answer is not "we skipped it".
+ * ⛔⛔⛔ R8 SLICE 5 — THE PLAYER ARM IS A BILL, AND THIS BLOCK USED TO SAY IT
+ * WAS SOMEBODY ELSE'S.
  *
- * `Arrow.as:51` really does call `Player.hit(null, v.length, new Point(x, y))`,
- * and `combat.PUZZLEMENT_HAZARDS.arrowtrap` already prices exactly that hit
- * (damage 1, and its `why` field carries the same trap-143 correction this
- * file's `ARROW_ENEMY_HIT` does). Two funnels for one hit is two cost models.
- * What this rung ADDS is the STOP: an arrow that reaches the player dies on
- * the player, which is the difference between a body behind them being shot
- * and being missed.
+ * `Arrow.as:51` calls `Player.hit(null, v.length, new Point(x, y))` — force 5,
+ * damage 1 (the default; trap 143 again), from the ARROW's own point. R7 slice
+ * 6b filed that as `priced-elsewhere` and named
+ * `combat.PUZZLEMENT_HAZARDS.arrowtrap` as the payer, on the reasoning that
+ * two funnels for one hit is two cost models.
+ *
+ * **The reasoning was right and the premise was false.** `PUZZLEMENT_HAZARDS`
+ * is the CENSUS — a roster of placements and their damage numbers, consulted
+ * by planners — and no line of `levelRun` ever billed the player from it:
+ * `applyPlayerHit`'s sources were pulse, crusher, blast, bossShot,
+ * shieldBossStab, owlRock, owlGrenade, owlBody, enemy, chaser, bossLaser,
+ * bossBody, and no `arrow`. So for two slices an arrow could reach the player,
+ * stop dead on them and cost nothing, and every zero-hit claim in a room with
+ * a ceiling was vacuous on that one channel.
+ *
+ * ⛓ THE GAME IS WHAT SAID SO: `r8-solve-5` came back `hits: 1` against the
+ * model's 0, and the recording's own x at t=207 is `knockbackDelta`'s answer
+ * for this arm and nothing else's (§13.10a / `R8_ETA_PROBE`).
+ * ⇒ [[feedback_two_cost_models_must_agree]], with the second cost model
+ * MISSING — a `pricedBy` that names a module is a claim about a CALLER, and
+ * nobody had asked the caller.
  */
 export const ARROW_PLAYER_ARM = Object.freeze({
     stops: true,
-    damagePricedBy: 'combat.PUZZLEMENT_HAZARDS.arrowtrap',
+    /**
+     * ⛔ THE LIVE FUNNEL, NAMED. `PUZZLEMENT_HAZARDS.arrowtrap` keeps its row
+     * — it is the CENSUS's price for the placement, which is what a planner
+     * reads — and `damagePricedBy` now names the caller that actually bills.
+     */
+    damagePricedBy: 'levelRun.applyArrowHit -> applyPlayerHit({source: "arrow"})',
+    censusRow: 'combat.PUZZLEMENT_HAZARDS.arrowtrap — the PLANNER\'s price for the '
+        + 'placement, and not a bill: no consumer of it damages a player',
     force: 5,
     damage: 1,
     src: 'Projectiles/Arrow.as:44-47 + Player.as `hit(e, f, p, d = 1)`',

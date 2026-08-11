@@ -1635,7 +1635,10 @@ export const R8_ETA_PROBE = Object.freeze({
      */
     gates: Object.freeze({
         negative: Object.freeze({
-            fixture: 'NewDocs/plans/r8-slice4-l5-refuted/ (tape + expectation + trace + log)',
+            fixture: 'fixtures/refuted/r8-solve-5.{tape,expectation}.json — TRACKED, '
+                + 'because `NewDocs` is gitignored and a gate that reads a path a fresh '
+                + 'clone does not have is a gate that disappears. The full bank (trace, '
+                + '`--win` log) stays in NewDocs/plans/r8-slice4-l5-refuted/.',
             claim: 'the probe FORBIDS the refuted walk\'s own (cell, tick): the player box '
                 + 'at x=65.05,y=56.4 on absolute tick 206, against '
                 + '`arrowtrap@64,48#14.0` at (68,58) — the arrow that took the hit the '

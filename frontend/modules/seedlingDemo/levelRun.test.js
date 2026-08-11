@@ -27,7 +27,10 @@ import {
     DEFAULT_FRICTION, SLIDING_FRICTION, SLIDING_SPEED, WALK_SPEED,
 } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { heldKeysAt } from './tapeFormat.js';
+import { heldKeysAt, parseTape } from './tapeFormat.js';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 // ⛓ R8 slice 3: the two staging counts are IMPORTED, never typed — the
 // animation's length is `chasers`' own derivation from `Bob.as:36`'s
 // `add("die", [3,4,5,6], 5)` and the fade's is `enemyDamage`'s loop.
@@ -1633,5 +1636,150 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
         // Every row names an arrow and a body — a hit with no subject is a
         // count, and a count is not a witness (trap 113).
         expect(run.arrowBodyHits.every((h) => h.arrow && h.body)).toBe(true);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — THE RECORDING THAT REFUTED THE MODEL, REPLAYED THROUGH
+ * THE FIXED ONE.
+ *
+ * `r8-solve-5` was withdrawn in slice 4: the GAME reported `hits: 1` against
+ * the model's 0 and the streams parted at t=207. The tape and the game's own
+ * per-tick stream are banked in `fixtures/refuted/`, and this is the whole
+ * point of banking them — a withdrawn recording is a free oracle, and the
+ * cheapest possible statement of a model fix is "the recording that refuted
+ * it now replays through it".
+ *
+ * ⛔ THREE DEFECTS, AND NO ONE OF THEM WOULD HAVE DONE IT ALONE:
+ *
+ *   1. `applyArrowHit` never billed the player — `ARROW_PLAYER_ARM` named
+ *      `PUZZLEMENT_HAZARDS.arrowtrap`, which is a CENSUS row nothing bills
+ *      from. Fix that alone and the model still misses, because…
+ *   2. …a fresh volley was stepped by the same call that created it, where
+ *      `Engine.update` adds it to the world only AFTER the frame's updates.
+ *      Fix that too and the model is STILL one tick early, because…
+ *   3. …the trap fired on a flag one frame stale where the game's is two: the
+ *      Player is added FIRST at `Game.as:2115` and therefore updates LAST, so
+ *      the button that publishes the group saw the player a frame before that.
+ *
+ * ⚠ THE COMPARISON STOPS AT 276 AND SAYS WHY. The knockback this fix restores
+ * pushes the walk west into WATER, and the model refuses an unpinned water
+ * entry BY NAME (`Music.soundPosition("Swim")` is a wall clock). That refusal
+ * is a determinism gate, not a divergence — and the tape is withdrawn, so it
+ * will never be pinned. Comparing 277 of 556 ticks INCLUDING the hit is the
+ * whole of what the recording can adjudicate.
+ */
+describe('R8 slice 5 — the refuted recording, replayed through the fixed model', () => {
+    const REFUTED = join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'refuted');
+    const tape = parseTape(JSON.parse(
+        readFileSync(join(REFUTED, 'r8-solve-5.tape.json'), 'utf8')));
+    const expectation = JSON.parse(
+        readFileSync(join(REFUTED, 'r8-solve-5.expectation.json'), 'utf8'));
+
+    const replay = () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: tape.boot,
+            noclip: false,
+            noHazards: tape.noHazards,
+            noDamage: false,
+            grants: tape.grants,
+            persistence: tape.persistence,
+            despawn: [],
+            equips: tape.equips,
+            pins: tape.pins ?? [],
+            save: tape.save ?? null,
+            rng: tape.rng ?? null,
+            seam: tape.seam ?? null,
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        const diffs = [];
+        let compared = 0;
+        let refusedAt = null;
+        for (let i = 0; i < tape.tick_count; i += 1) {
+            const want = expectation.ticks[i];
+            if (want) {
+                compared += 1;
+                if (run.state.x !== want.x || run.state.y !== want.y
+                    || run.level !== want.level) {
+                    diffs.push({ t: i, want, got: { x: run.state.x, y: run.state.y } });
+                }
+            }
+            try {
+                run.advance(heldKeysAt(tape, i));
+            } catch (e) {
+                refusedAt = { t: i, why: e.message };
+                break;
+            }
+        }
+        return { run, diffs, compared, refusedAt };
+    };
+
+    it('⛓⛓⛓ reproduces the GAME\'s own stream, tick for tick, up to the refusal', () => {
+        const { diffs, compared, refusedAt } = replay();
+        expect(diffs).toEqual([]);
+        // ⛔ NON-VACUITY: a comparison that ran out after ten ticks would also
+        // report no diffs. The hit is at 207, so the compared prefix must
+        // reach past it.
+        expect(compared).toBeGreaterThan(207);
+        expect(refusedAt.t).toBe(276);
+        expect(refusedAt.why).toMatch(/entered Water/);
+    });
+
+    /**
+     * ⛔ THE HIT ITSELF, AND EVERY DIGIT OF IT — the game reported `hits: 1`
+     * and this is the model's own row for the same event.
+     */
+    it('⛓⛓⛓ bills the arrow the GAME billed, from the arrow the GAME hit', () => {
+        const { run } = replay();
+        expect(run.playerHits).toHaveLength(1);
+        const hit = run.playerHits[0];
+        expect(hit.source).toBe('arrow');
+        expect(hit.id).toBe('arrowtrap@64,48#14.0');
+        expect(hit.t).toBe(207);
+        expect(hit.hits).toBe(1);
+        // The y impulse is DROPPED by `KNOCKBACK_COMPARATORS.y`'s strict `>`.
+        expect(hit.knockback.dx).toBe(-4.3951592784836375);
+        expect(hit.knockback.dy).toBe(0);
+        expect(hit.knockback.landed).toEqual({ x: true, y: false });
+        // …and that impulse is what makes the next tick's x the game's.
+        expect(expectation.ticks[207].x).toBe(62.35484072151636);
+    });
+
+    /**
+     * ⛓ THE SECOND DEFECT, MEASURED ON ITS OWN: a volley is in the ledger on
+     * the tick it FIRED and has not moved yet. Two facts, and only one of them
+     * was wrong — reading `arrowVolleys[].t` as "the tick the arrow started
+     * falling" is the mistake this row exists to keep visible.
+     */
+    it('⛓ a fresh volley is at its SPAWN row on the tick after it fired', () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: tape.boot,
+            noclip: false,
+            noHazards: tape.noHazards,
+            noDamage: false,
+            grants: tape.grants,
+            persistence: tape.persistence,
+            equips: tape.equips,
+            pins: tape.pins ?? [],
+            save: tape.save ?? null,
+            rng: tape.rng ?? null,
+            seam: tape.seam ?? null,
+            roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
+        });
+        let seen = null;
+        for (let i = 0; i < 210 && !seen; i += 1) {
+            run.advance(heldKeysAt(tape, i));
+            const volley = run.arrowVolleys.find((v) => v.id === 'arrowtrap@64,48');
+            if (volley && run.ticksCompleted === volley.t) {
+                const fresh = run.arrowsInFlight
+                    .filter((a) => volley.arrows.includes(a.id));
+                if (fresh.length === 3) seen = { volley, fresh };
+            }
+        }
+        expect(seen, 'no volley was observed on its own firing tick').not.toBeNull();
+        // `ARROW_TRAP.spawnDY` below the trap's entity y (50) — UNMOVED.
+        for (const a of seen.fresh) expect(a.y).toBe(48);
     });
 });

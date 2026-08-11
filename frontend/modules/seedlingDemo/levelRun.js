@@ -181,8 +181,9 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 // NEITHER way — so its live state lives here beside theirs and never in
 // `activators`.
 import {
-    ARROW_ENEMY_HIT, ARROW_KILL_PLAN, arrowLane, arrowRect, arrowTrapFires, createArrow,
-    createArrowTrap, lanesOver, shadowOf, stepArrow, stepArrowTrap,
+    ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, arrowLane, arrowRect,
+    arrowTrapFires, createArrow, createArrowTrap, lanesOver, shadowOf, stepArrow,
+    stepArrowTrap,
 } from './arrowTrap.js';
 import {
     ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
@@ -2215,6 +2216,17 @@ export function createLevelRun({
      * the old world.
      */
     const arrowTrapStates = new Map();
+    /**
+     * ⛓ R8 SLICE 5 — WHERE THE BUTTON SAW THE PLAYER, one tick ago.
+     *
+     * The trap fires on a flag two frames stale (`stepArrowTrapsNow`'s own
+     * block has the derivation), so this holds the PRE-MOVE position of the
+     * previous tick. `null` until the second tick of a run, which is the
+     * game's own answer: on frame 0 no button has published anything and an
+     * `Activators` boots `activate = false`, so a player who BOOTS onto a
+     * button still gets one unarmed frame.
+     */
+    let arrowTrapPresserSeen = null;
     const arrowTrapsOf = (n) => worldFor(n).arrowTraps ?? [];
     const arrowTrapStateFor = (n) => {
         if (!arrowTrapStates.has(n)) {
@@ -4630,8 +4642,66 @@ export function createLevelRun({
     function stepArrowTrapsNow(activators) {
         const st = arrowTrapStateFor(level);
         const flight = arrowsFor(level);
+        const seen = arrowTrapPresserSeen;
+        arrowTrapPresserSeen = { x: state.x, y: state.y };
         if (st.size === 0 && flight.length === 0) return;
-        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        /**
+         * ⛔⛔⛔ R8 SLICE 5 — THE TRAP IS TWO FRAMES BEHIND THE PLAYER, NOT
+         * ONE, AND THE SECOND FRAME IS THE PLAYER'S OWN SLOT.
+         *
+         * `ARROW_TRAP_PRESSER.trapReadsPreviousTick` has said since R7 slice
+         * 6b that a trap shoots on the flag the PREVIOUS tick's button wrote —
+         * `World.addUpdate` PREPENDS, `Game.as` adds `button` at :2202 and
+         * `arrowtrap` at :2204, so the update order is trap -> button. True,
+         * and only half of the lag: the Player is added at :2115, EARLIEST of
+         * the three, so it updates LAST — and therefore the button on frame
+         * N-1 collided the player where frame N-2 left them.
+         *
+         * ⇒ the flag a trap fires on is a function of the player's position
+         * TWO frames ago, and this function was reading it one frame ago. The
+         * whole volley schedule of every trap in the game was one tick early.
+         *
+         * ⛓ MEASURED: the banked recording's own hit needs
+         * `arrowtrap@64,48`'s volley 14 fired on frame 204, and one frame of
+         * lag fires it on 203. With both this and the spawn deferral below,
+         * the model reproduces the recording it was refuted by — `hits: 1` and
+         * x = 62.35484072151636 at t=207, the game's own digits.
+         *
+         * ⚠ SCOPED TO THIS FAMILY BY NAME. Every family that reads
+         * `pressedGroups` has its own slot in the update list; a pulser, a
+         * lock and a button-room are three different answers to "how stale is
+         * the flag", and this is the one the game has adjudicated. The others
+         * keep the reading their own fixtures were recorded under.
+         */
+        const pressed = seen
+            ? pressedGroups(world, playerBoxAt(seen.x, seen.y), movingSolidsNow())
+            : new Set();
+        /**
+         * ⛔⛔⛔ R8 SLICE 5 — THE FRESH VOLLEY WAITS FOR THE NEXT TICK, AND
+         * THE GAME IS WHAT SAID SO.
+         *
+         * `Engine.update()` runs `FP._world.update()` and calls
+         * `FP._world.updateLists()` AFTER it — so an `Arrow` created by a
+         * trap's `update()` is in `_add`, not in the update list, for the rest
+         * of that frame. Its first `update()` — and therefore its first move
+         * AND its first hit test — is the NEXT tick. This function used to
+         * push the volley into `flight` above the step loop, which made every
+         * arrow in this model exactly one 5 px move ahead of the game's.
+         *
+         * ⛓ MEASURED, NOT ARGUED, and the measurement is the recording that
+         * refuted `r8-solve-5` (§13.1, banked in
+         * `NewDocs/plans/r8-slice4-l5-refuted/`). On frame 206 the GAME's
+         * `arrowtrap@64,48#14.0` was at (68, 58) and knocked the player from
+         * x=65.05 to x=62.35484072151636; this model had it at (68, 63),
+         * missing the player's box by 0.40 px. The game's digit falls out of
+         * `knockbackDelta` at (68, 58) and out of nothing else.
+         * [[feedback_spawned_entity_updates_next_frame]]
+         *
+         * ⚠ THE LEDGER TICK IS UNCHANGED. `arrowVolleysFired.t` is the tick
+         * the trap FIRED, which is this one; what moved is when the arrow
+         * first moves. Two different facts, and only one of them was wrong.
+         */
+        const spawned = [];
         for (const [, trap] of st) {
             const armed = pressed.has(trap.t) || activators.latched.get(trap.t) === true;
             const r = stepArrowTrap(trap, armed);
@@ -4642,7 +4712,7 @@ export function createLevelRun({
                 id: trap.id,
                 arrows: r.arrows.map((a) => a.id),
             });
-            flight.push(...r.arrows);
+            spawned.push(...r.arrows);
         }
         // ⚠ The bound is the LEVEL's, because `Game.as:1930-1931` writes
         // `FP.width/height` from the loading level's own `.oel` dimensions —
@@ -4664,6 +4734,9 @@ export function createLevelRun({
         for (let i = flight.length - 1; i >= 0; i -= 1) {
             if (flight[i].removed) flight.splice(i, 1);
         }
+        // `World.updateLists()` — the frame's own additions join HERE, below
+        // every update this frame ran.
+        flight.push(...spawned);
     }
 
     /**
@@ -4734,12 +4807,52 @@ export function createLevelRun({
     function applyArrowHit(arrow, hit, frozen) {
         const c = hit.chaser ?? null;
         if (!c) {
-            // The player (priced by `PUZZLEMENT_HAZARDS.arrowtrap`), a static
-            // `"Enemy"` body (refused by name — see `chaserRoomVerdict`), or
-            // cover (no arm at all: `default:`). All three STOP the arrow,
-            // which `stepArrow` has already done; the ledger records which,
-            // because "the arrow died on the torch" is the whole of L5's
-            // column-3 shadow and a reader should not have to re-derive it.
+            /**
+             * ⛔⛔⛔ R8 SLICE 5 — THE PLAYER ARM IS A BILL, AND FOR TWO SLICES
+             * IT WAS A COMMENT NAMING A PAYER NOBODY HAD ASKED.
+             *
+             * This block used to read "the player (priced by
+             * `PUZZLEMENT_HAZARDS.arrowtrap`)", and `ARROW_PLAYER_ARM` says
+             * the same thing one file over. But `PUZZLEMENT_HAZARDS` is the
+             * CENSUS — `combat.js`'s roster of placements and their damage
+             * numbers — and NO line of this file bills from it: the twelve
+             * `applyPlayerHit` sources are pulse, crusher, blast, bossShot,
+             * shieldBossStab, owlRock, owlGrenade, owlBody, enemy, chaser,
+             * bossLaser and bossBody. So an arrow could reach the player, stop
+             * dead on them, and cost nothing — and every zero-hit claim this
+             * arc has made in a room with a ceiling was vacuous on that one
+             * channel. `Arrow.as:49` is `(hits[i] as Player).hit(this,
+             * v.length, new Point(x, y))` and the GAME bills it: `r8-solve-5`
+             * came back `hits: 1` against this model's 0.
+             * ⇒ [[feedback_two_cost_models_must_agree]] with the SECOND cost
+             * model missing entirely — "priced elsewhere" was never checked
+             * against a caller.
+             *
+             * ⛔ THE FORCE IS `ARROW.speed`, NOT `arrow.v`. `v.length` is read
+             * at the call, and `stepArrow` has already zeroed the velocity by
+             * the time this runs — reading it here would bill every arrow a
+             * force of nothing. The DAMAGE is 1, `Player.hit`'s own default
+             * (trap 143: the 5 in the call is the speed).
+             *
+             * ⛔ AND `from` IS THE ARROW'S ENTITY POINT, not the trap's — the
+             * knockback angle is `atan2(y - p.y, x - p.x)` and the two differ
+             * by the whole flight.
+             */
+            const billed = hit.type === 'Player'
+                ? applyPlayerHit({
+                    source: 'arrow',
+                    id: arrow.id,
+                    force: ARROW.speed,
+                    damage: ARROW_PLAYER_ARM.damage,
+                    from: { x: arrow.x, y: arrow.y },
+                })
+                : null;
+            // A static `"Enemy"` body (refused by name — see
+            // `chaserRoomVerdict`) or cover (no arm at all: `default:`) STOP
+            // the arrow, which `stepArrow` has already done; the ledger
+            // records which, because "the arrow died on the torch" is the
+            // whole of L5's column-3 shadow and a reader should not have to
+            // re-derive it.
             arrowBodyHits.push({
                 t: ticksCompleted + 1,
                 level,
@@ -4747,7 +4860,12 @@ export function createLevelRun({
                 body: hit.id,
                 type: hit.type,
                 arm: hit.cover ? 'cover' : (hit.type === 'Player' ? 'player' : 'static-enemy'),
-                damaged: false,
+                // ⛔ NO LONGER A CONSTANT FALSE. The player arm bills through
+                // `applyPlayerHit`, whose own gates (`Bot.noDamage`, the
+                // i-frames, the freeze) can refuse it — and a refusal that
+                // read as "no damage was due" is exactly the silence this
+                // slice found. `contactsSuppressed` carries the reason.
+                damaged: billed ? billed.applied === true : false,
             });
             return;
         }

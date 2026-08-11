@@ -594,11 +594,19 @@ describe('R8_ETA_PROBE — slice 5\'s prediction, stated before the arrow arm mo
      * CORRECTLY — read off `arrowTrap.js` rather than remembered, because the
      * whole defect is that a docblock named a payer nobody had asked.
      */
-    it('⛓ `ARROW_PLAYER_ARM` really does name PUZZLEMENT_HAZARDS as the payer', () => {
-        expect(ARROW_PLAYER_ARM.damagePricedBy).toMatch(/PUZZLEMENT_HAZARDS\.arrowtrap/);
+    it('⛓ `ARROW_PLAYER_ARM` named PUZZLEMENT_HAZARDS as the payer, and now names a caller', () => {
         const missing = R8_ETA_PROBE.modelDefects
             .find((d) => d.id === 'player-arrow-bill-missing');
-        expect(missing.claimWas).toContain(ARROW_PLAYER_ARM.damagePricedBy);
+        // ⛔ THE HISTORICAL CLAIM, kept verbatim — this is what the row said
+        // for two slices, and the census row still carries it because the
+        // CENSUS's price was never the thing that was wrong.
+        expect(missing.claimWas).toContain('PUZZLEMENT_HAZARDS.arrowtrap');
+        expect(ARROW_PLAYER_ARM.censusRow).toMatch(/PUZZLEMENT_HAZARDS\.arrowtrap/);
+        // ⛓ AND THE FLIP: `damagePricedBy` now names a CALLER, which is the
+        // only kind of answer that can be checked. This row is a debt's
+        // record and it could only ever go red on the slice that paid it.
+        expect(ARROW_PLAYER_ARM.damagePricedBy).toMatch(/applyPlayerHit/);
+        expect(ARROW_PLAYER_ARM.damagePricedBy).not.toMatch(/PUZZLEMENT_HAZARDS/);
     });
 
     /**
@@ -613,9 +621,8 @@ describe('R8_ETA_PROBE — slice 5\'s prediction, stated before the arrow arm mo
         // is 56.39999999999999 and not 56.4. Typing the round number instead
         // moves the answer by 3 ulps and the whole point of this row is that
         // it lands on the recording exactly.
-        const expectation = JSON.parse(readFileSync(join(HERE, '..', '..', '..',
-            'NewDocs', 'plans', 'r8-slice4-l5-refuted',
-            'expectation-r8-solve-5.json'), 'utf8'));
+        const expectation = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'refuted', 'r8-solve-5.expectation.json'), 'utf8'));
         const at206 = expectation.ticks[206];
         const at207 = expectation.ticks[207];
         // The GAME's arrow — one 5 px move BEHIND this model's, which has it

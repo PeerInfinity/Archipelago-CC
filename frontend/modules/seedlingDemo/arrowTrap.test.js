@@ -477,9 +477,22 @@ describe('R8 slice 3: bodies, cover, and the removal outside the switch', () => 
     it('⛓ the target dispositions are TOTAL over the hitables', () => {
         expect(assertArrowTargetPartition(ARROW_TARGET_DISPOSITIONS, ARROW.hitables))
             .toEqual({ types: 5 });
-        expect(ARROW_TARGET_DISPOSITIONS.Player).toBe('priced-elsewhere');
-        expect(ARROW_PLAYER_ARM.damagePricedBy).toBe('combat.PUZZLEMENT_HAZARDS.arrowtrap');
+        /**
+         * ⛔⛔ R8 SLICE 5 — THIS ROW FLIPPED, AND THE FLIP IS THE FINDING.
+         * `Player` was `priced-elsewhere` and the payer it named
+         * (`PUZZLEMENT_HAZARDS.arrowtrap`) is a CENSUS row no consumer bills
+         * from. The GAME reported `hits: 1` where this model reported 0.
+         */
+        expect(ARROW_TARGET_DISPOSITIONS.Player).toBe('damaged');
+        expect(ARROW_PLAYER_ARM.damagePricedBy).toMatch(/applyPlayerHit/);
+        expect(ARROW_PLAYER_ARM.censusRow).toMatch(/PUZZLEMENT_HAZARDS\.arrowtrap/);
+        // ⛓ The census's number and the live arm's number are still ONE
+        // number — what changed is which of them is a bill.
         expect(ARROW_PLAYER_ARM.damage).toBe(PUZZLEMENT_HAZARDS.arrowtrap.damage);
+        // ⛔ And nothing is filed `priced-elsewhere` any more; the value stays
+        // in the vocabulary rather than being deleted (trap 62).
+        expect(Object.values(ARROW_TARGET_DISPOSITIONS))
+            .not.toContain('priced-elsewhere');
     });
 
     it('⛔ MUTATION: a hitable with no disposition is a NAMED throw', () => {

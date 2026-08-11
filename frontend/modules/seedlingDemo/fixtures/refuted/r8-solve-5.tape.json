@@ -1,0 +1,203 @@
+{
+    "tape_version": 9,
+    "game": "seedling",
+    "name": "r8-solve-5",
+    "description": "⛓ R8 SLICE 4 — THE LIVE SOLVER's own solution to battery segment 5, authored through the TWO-PASS AUTHORING LOOP (`twoPassSolve`, kickoff §12.10.3). L5 — the KILL-LOCK. `lock@48,112` is `tset == -1`, so no button in the game answers it; the ceiling kills all three bobs, `Game.totalEnemies()` reaches zero, and the tick is `chaserKillLockOpens`'s removal plus `activators.opensOnTick`'s 101-step fade. Both terms are the model's own. The loop took 3 pass(es) [discover -> measure -> solve] and declared {5,0} at 424 — model-sourced, then VERIFIED: pass N and pass N+1 press identical keys on every tick below the declared one (424 compared), because a clear cannot reach the world before its own tick. Boot: r7-act2-5's committed v8 block, staged per kickoff §3.5, with that tape's own timed clear(s) STRIPPED. GOALS derived from the chain's own units; the hand-authored stances, waypoints and hold ticks were NOT handed over. Solver: 555 ticks, 5 decision(s); hand answer r7-act2-5: 812 ticks. ⛔ r7-act2-5's own `at` is NOT touched — §11.5 showed it is the end of a phases block and therefore an UPPER BOUND, and no re-record licence exists this rung. Authored by scripts/procgen/solve-seedling-r8-tail.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 5,
+        "x": 80,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": "model-sourced by twoPassSolve: `chaserKillLockOpens` computed the removal at 323 and `activators.opensOnTick(0.01)` is 101",
+            "at": 424
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1726967612,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 750204808
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5701,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Push Rock",
+            "index": 0
+        }
+    },
+    "tick_count": 555,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "up",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 53
+        },
+        {
+            "key": "right",
+            "from": 55,
+            "to": 57
+        },
+        {
+            "key": "right",
+            "from": 198,
+            "to": 209
+        },
+        {
+            "key": "left",
+            "from": 209,
+            "to": 210
+        },
+        {
+            "key": "right",
+            "from": 210,
+            "to": 212
+        },
+        {
+            "key": "left",
+            "from": 214,
+            "to": 217
+        },
+        {
+            "key": "right",
+            "from": 218,
+            "to": 220
+        },
+        {
+            "key": "left",
+            "from": 274,
+            "to": 288
+        },
+        {
+            "key": "right",
+            "from": 289,
+            "to": 291
+        },
+        {
+            "key": "right",
+            "from": 459,
+            "to": 470
+        },
+        {
+            "key": "left",
+            "from": 470,
+            "to": 471
+        },
+        {
+            "key": "right",
+            "from": 471,
+            "to": 473
+        },
+        {
+            "key": "left",
+            "from": 474,
+            "to": 476
+        },
+        {
+            "key": "down",
+            "from": 480,
+            "to": 507
+        },
+        {
+            "key": "up",
+            "from": 508,
+            "to": 510
+        },
+        {
+            "key": "left",
+            "from": 514,
+            "to": 525
+        },
+        {
+            "key": "right",
+            "from": 525,
+            "to": 526
+        },
+        {
+            "key": "left",
+            "from": 526,
+            "to": 528
+        },
+        {
+            "key": "right",
+            "from": 529,
+            "to": 531
+        },
+        {
+            "key": "down",
+            "from": 535,
+            "to": 555
+        }
+    ]
+}
