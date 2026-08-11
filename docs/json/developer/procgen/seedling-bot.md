@@ -6596,3 +6596,81 @@ derivation (a ~4 px annulus where the sword reaches and the hammer does not),
 L19 needs the ShieldBoss fight as a derived press schedule plus a `keylock`
 executor. `touch` is still the unregistered control and its room is L20's
 westward crossing.
+
+## R8 slice 7: the first boss fight a policy drove, and a disc that made its own problem
+
+D2's last two rooms, as the machinery's **first multi-segment staged chain**:
+
+```
+r8-d2        1,645 ticks   the headline — both rooms in ONE run
+r8-d2-19       864 ticks   the Shieldspire: the fight, the boss key, the bosslock
+r8-d2-20       781 ticks   the shield, and the way OUT westward to L13
+             82 PASS / 0 FAIL · ZERO hits · ZERO deaths · ZERO re-records
+```
+
+Four firsts. **A boss fought by a policy** — R6 killed the same ShieldBoss from
+a hand-authored one-key window; this one derives the stance, reads the press
+window off the run's own ledger and presses three times. **`touch` has its
+room** — the trap-62 control since slice 2 is registered, and *replaced* rather
+than deleted (`solid:wandlock → wand` is the new selected-and-unregistered
+row). **A staged chain with two segments**, so the cut, the ends-meet
+arithmetic, the stream slices and an internal seam are exercised for the first
+time on a solver chain. And **the loop closes**: the chain ends in L13, D2's own
+front door.
+
+### The fight is arithmetic, not choreography
+
+`hitPlayer` counts 120 *consecutive* band ticks and opens `movedShield`, the one
+animation `ShieldBoss.hit` forwards through. `slashDelayMax` is ZERO, so a press
+is five hit tests on five ticks — the press tick is therefore the **earliest T
+whose whole dispatch train lands inside the window**, i.e. `windowFrom − 1`.
+Driven: stabs at 218/343/467, windows [222,237]/[347,362]/[471,486], presses at
+221/346/470, landings at 223/347/471. The first press spends its first dispatch
+on the arming swallow and lands on its second; `hitsTimer = 30` refuses the four
+behind each one. Zero hits is a claim about the *stab*: every landing calls
+`sit()`, aborting before the damaging frames.
+
+The stance is one held key doing four jobs — from a lattice cell under the band
+the slash rect *ends* on the body's bottom edge and overlaps nothing, so the
+verb derives the cell and then holds `up`, which pins the player into the band,
+into reach, and facing the right way.
+
+### Two rulings, as built
+
+A lock on the frontier resolves through the **mechanism graph** to its tSet
+group's openers, never by its own id — L20's `lock@32,80` is opened by
+`buttonroom@192,16`, four tiles away and behind another gate. And a **stance**
+reachable only once another pending strategy-selected obstacle is discharged is
+a legal derivation target, with the hypothesis bounded to registered strategies
+and named in the trace. ⛔ Discharging a lock opens the *solid* and leaves the
+*volume*: an open `shieldlocknorm` becomes a proximity hazard, which A\* refuses
+just as firmly, so a hypothesis must exempt what it discharges.
+
+### ⛔ Two findings about instruments, and the second is the user's
+
+**A ctx snapshot may freeze STATE, but never a ONE-TICK TRANSIENT.**
+`spinnerForecast` reused one collision context across its whole horizon,
+freezing `beforeTypeFlip` — the flag that reads the world before any tile is
+solid. A forecast taken on a level's first tick predicted every body's
+trajectory *in a room with no walls*: divergence at tick 51, bodies 750 px
+outside a twelve-tile room by 1,200. Its consumer is the eta-aware danger arm,
+so on exactly the tick a solver plans its first corridor, the map called the
+cell a body was in calm.
+
+**A conservative ingredient can manufacture a policy problem.** A `Spinner`'s
+hammer is a rotating line; the model did not carry `Game.time`, so the shipped
+ingredient forbade the union over all 45 phases — a 13 px disc. Under it, L18
+had one clear cell (behind the lock the fight opens) and zero attack stances, so
+the room looked like it needed a moving, dodging policy, and one was designed
+and built. The user said the hammer is predictable. It is: `time += timeRate`
+runs once per `Game.update()` below the dead-frame gate, `timeRate`'s only other
+writer is the opening cutscene, and the boot value already rides in the save
+seam — so the clock is deterministic given the walk. Re-censused against the
+exact **line**: 16 clear cells and **three static attack stances**. The policy
+problem was an artifact of the approximation.
+
+⇒ **L18 is REPORTED, not recorded.** The strike schedule is built and driven and
+stops in the room's south-west corner; what it wants next is not a better policy
+but a better instrument — a `Game.time` accumulator, `hammerLine` promoted from
+a bound to a contact, and a driven pair proving a predicted-safe stand takes
+zero hits while a predicted-unsafe one takes the hit at the predicted tick.
