@@ -22,7 +22,7 @@ import { describe, expect, it } from 'vitest';
 import { loadTape } from './fixtures/index.js';
 import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
-import { RELAXED_ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
+import { RELAXED_ROLES, ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
     DEFAULT_FRICTION, SLIDING_FRICTION, SLIDING_SPEED, WALK_SPEED,
 } from './playerPhysicsV1.js';
@@ -36,6 +36,8 @@ import { fileURLToPath } from 'node:url';
 // `add("die", [3,4,5,6], 5)` and the fade's is `enemyDamage`'s loop.
 import { deathTicks } from './chasers.js';
 import { MOBILE_DEATH_FADE, PIT_FADE } from './enemyDamage.js';
+import { DEFAULT_TOLERANCE, chooseHeld, hasArrived } from './botDriverV1.js';
+import { distanceRectPoint, SLASH_REACH } from './presses.js';
 
 const DEATH_ANIM_TICKS = deathTicks('bob');
 import { runTapeToStream } from './tapeRunner.js';
@@ -1905,5 +1907,157 @@ describe('R8 slice 5 — the arrow forecast agrees with the run it forecasts', (
             if (predicted !== live) firstDisagreement = i;
         }
         expect(firstDisagreement).not.toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 6 — THE PRESS ARM AGAINST A BODY THAT MOVES ON ITS OWN.
+ *
+ * `KILL_ARM_POLICY.Spinner` flipped `refused` -> `modelled` this slice. These
+ * rows are the model-side half of the conversion; the game-side half is
+ * `r8-l18-spinner-press`, recorded against the differential.
+ */
+describe('R8 slice 6: the Spinner press arm', () => {
+    const src = atlasLevelSource();
+    const boot = { level: 18, x: 16, y: 112 };
+    const l18 = () => createLevelRun({
+        levelSource: src, boot, noclip: false, noHazards: [], noDamage: true,
+        grants: [], persistence: [], despawn: [], equips: [], pins: [],
+        save: null, rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+
+    /**
+     * ⛔ THE WITNESS IS THE TICK AND THE SOURCE OF EACH TEST, NEVER A COUNT
+     * (trap 113). `spinnerPressHits` is one row per HIT TEST because a press
+     * is five of them and the RECEIVER decides how many land — a ledger keyed
+     * on presses could not say "one landed and four were refused".
+     */
+    it('⛔ ONE PRESS IS FIVE TESTS AND ONE HIT — the receiver\'s i-frame refuses 2..5', () => {
+        const run = l18();
+        // Stand where `spinner@48,96`'s orbit begins and swing once it is in
+        // reach. The stance is chosen; the COUNT is the mechanism's.
+        const stance = { x: 56, y: 104 };
+        for (let i = 0; i < 400; i += 1) {
+            if (hasArrived(run.state, stance, DEFAULT_TOLERANCE)) break;
+            run.advance(chooseHeld(run.state, stance, DEFAULT_TOLERANCE));
+        }
+        let pressed = false;
+        for (let i = 0; i < 200 && !pressed; i += 1) {
+            const b = run.spinnerBodies.find((s) => s.id === 'spinner@48,96');
+            const reach = b ? distanceRectPoint(run.state.x, run.state.y, b.rect) : Infinity;
+            if (reach <= SLASH_REACH && b.hitsTimer === 0) {
+                run.advance(new Set(['primary']));
+                pressed = true;
+            } else {
+                run.advance(new Set());
+            }
+        }
+        expect(pressed).toBe(true);
+        for (let i = 0; i < 8; i += 1) run.advance(new Set());
+        const tests = run.spinnerPressHits;
+        /**
+         * ⛓⛓⛓ AND A THIRD MECHANISM CULLS THE FIVE TESTS — the BODY'S OWN
+         * MOTION, which is new on this roster.
+         *
+         * §14.4 measured two: the RECEIVER's i-frame (a row per refusal) and
+         * the Owl's recession out of the 16 px reach (trap 114 — the reach
+         * gate leaves a row, the sweep's absence does not). A spinner adds
+         * the third: it drifts out of the RECT between tests, and
+         * `pressRespondersIn` then reports no responder at all, so tests 2..5
+         * leave NO ROW. ⇒ the count of rows is not five and asserting five
+         * would be asserting the weapon's animation instead of the mechanism.
+         */
+        expect(tests.length).toBeGreaterThanOrEqual(1);
+        const landed = tests.filter((h) => h.landed);
+        // ⛔ EXACTLY ONE LANDS. The four behind it are refused BY THE
+        // RECEIVER, and each says so — the Owl's `justKnock` arm sets no
+        // timer and takes all five (§14.4), which is why the count is
+        // derived per class rather than assumed per weapon.
+        expect(landed).toHaveLength(1);
+        for (const h of tests.filter((x) => !x.landed && x.reach <= SLASH_REACH)) {
+            expect(h.why).toMatch(/i-frames/);
+        }
+        // The TICKS are consecutive — the five tests are five ticks, not one.
+        const ticks = tests.map((h) => h.t);
+        expect(new Set(ticks).size).toBe(ticks.length);
+    });
+
+    /**
+     * ⛔⛔⛔ THE TWO CONSEQUENCES, BOTH COMPUTED — and this is the first
+     * `modelled` kill arm whose kill-lock scan is NOT a nil.
+     */
+    it('⛔ the second kill takes totalEnemies() to zero and OPENS `lock@144,112`', () => {
+        const tape = JSON.parse(readFileSync(join(
+            dirname(fileURLToPath(import.meta.url)), 'fixtures', 'tapes',
+            'r8-l18-spinner-press.json'), 'utf8'));
+        const t = parseTape(tape);
+        const run = createLevelRun({
+            levelSource: src, boot: t.boot, noclip: t.noclip, noHazards: t.noHazards,
+            noDamage: t.noDamage, grants: t.grants, persistence: t.persistence,
+            despawn: t.despawn ?? [], equips: t.equips, pins: t.pins ?? [],
+            save: t.save ?? null, rng: t.rng ?? null, seam: t.seam ?? null, roles: ROLES,
+        });
+        for (let i = 0; i < t.tick_count; i += 1) run.advance(new Set(heldKeysAt(t, i)));
+        const kills = run.spinnerPressKills;
+        expect(kills).toHaveLength(2);
+        // `CORPSE_COUNTING.Spinner` is a `fade` row — no animation stage — so
+        // the removal is the killing tick plus `MOBILE_DEATH_FADE.ticks`.
+        for (const k of kills) expect(k.removedTick - k.t).toBe(11);
+        const scans = run.spinnerKillLocks;
+        expect(scans).toHaveLength(2);
+        // ⛓ THE FIRST IS A NIL AND THE SECOND IS NOT, and the ledger RAN for
+        // both — "there were no kill locks" and "nobody looked" print the
+        // same thing otherwise (§9.3's law).
+        expect(scans[0].nil).toBe(true);
+        expect(scans[1].nil).toBe(false);
+        expect(scans[1].opens).toEqual([{ level: 18, tag: 0 }]);
+        /**
+         * ⛔ AND EACH REMOVAL WRITES **OUT OF BAND**. Both placements carry
+         * `tag = "-1"`; `Main.levelPersistenceSet` indexes `level*30 + tag`
+         * with no bounds check, so the write lands on {17,29}. Kickoff §13.10
+         * measured this consequence as NIL — "the write is a no-op" — and it
+         * is not.
+         */
+        const writes = run.spinnerWrites;
+        expect(writes).toHaveLength(2);
+        for (const w of writes) {
+            expect(w.outOfBand).toBe(true);
+            expect(w.flag).toEqual({ level: 17, tag: 29, value: false });
+        }
+        /**
+         * ⛔⛔ AND IT IS A LEDGER ENTRY, NEVER A PERMISSION (trap 120's law
+         * from the other side). An out-of-band slot is one no entity reads —
+         * that is what −1 MEANS — so banking it as a clear makes the next
+         * build of that level throw "the tape clears tag(s) 29, which no
+         * entity in this level reads". `r5-feather` measured exactly that.
+         */
+        expect((run.earnedClears ?? []).some((c) => c.level === 17)).toBe(false);
+    });
+
+    /**
+     * ⛔ THE HAMMER IS A NAMED REFUSAL, NOT A SILENT ZERO — the model does
+     * not carry `Game.time`, so the ANGLE is not predictable and the honest
+     * union is the disc.
+     */
+    it('⛔ an honest tape whose player enters the hammer disc is REFUSED by name', () => {
+        const run = createLevelRun({
+            levelSource: src, boot, noclip: false, noHazards: [], noDamage: false,
+            grants: [], persistence: [], despawn: [], equips: [], pins: [],
+            save: null, rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const stance = { x: 56, y: 104 };
+        expect(() => {
+            for (let i = 0; i < 400; i += 1) {
+                run.advance(chooseHeld(run.state, stance, DEFAULT_TOLERANCE));
+            }
+        }).toThrow(/HAMMER REACH/);
+        // ⚠ AND THE SAME WALK UNDER `noDamage` IS FINE — `Player.hit`'s first
+        // line is `if (Bot.noDamage) return`, which is why every committed
+        // spinner-room tape has walked straight through one.
+        const inert = l18();
+        for (let i = 0; i < 400; i += 1) {
+            inert.advance(chooseHeld(inert.state, stance, DEFAULT_TOLERANCE));
+        }
+        expect(inert.playerHits).toHaveLength(0);
     });
 });

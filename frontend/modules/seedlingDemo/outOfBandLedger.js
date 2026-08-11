@@ -173,6 +173,36 @@ export const OUT_OF_BAND_WRITERS = Object.freeze({
             + 'green suite says nothing about it. Only a level whose tree omits the '
             + 'attribute can be the witness, and none exists',
     }),
+    /**
+     * ⛓⛓⛓ R8 SLICE 6 — THE SIXTH MEMBER, AND THE FIRST WITH A LIVE WITNESS
+     * ON A ROUTE THE SOLVER DRIVES.
+     *
+     * ⛔ IT IS ALSO THE FIRST ONE REGISTERED BECAUSE A BANKED RECON WAS
+     * WRONG. Kickoff §13.10 measured L18's second consequence as NIL — *"both
+     * L18 placements carry `tag = "-1"`, so the write is a no-op and there is
+     * no second writer"* — and `KILL_SIDE_WRITES.Spinner` called the −1 arm a
+     * bounded vacuity on the evidence that "every spinner in the committed
+     * extract carries one", which is true of the ATTRIBUTE and false of the
+     * VALUE. A −1 is not a no-op in this game; it is this module.
+     */
+    Spinner: Object.freeze({
+        as3: 'Enemies/Spinner.as:47-64',
+        writeSite: 'removed()',
+        writesWhen: 'always',
+        minusOneFrom: 'the MAP, explicitly. `Spinner(_x, _y, _tag:int = -1)` and L18\'s '
+            + 'two placements both carry `tag="-1"` as an ATTRIBUTE — the sentinel is '
+            + 'authored data here, as it is for L92\'s breakable rocks, rather than a '
+            + 'runtime spawn. L39\'s and L40\'s spinners carry tags 4 and 17/18/19, so '
+            + 'the in-band arm is the one every committed tape has exercised',
+        skipsItsOwnGuard: '`check()` is `if (tag >= 0 && !Game.checkPersistence(tag)) '
+            + '{ doActions = false; FP.world.remove(this) }` — a −1 never enters, so the '
+            + 'body is never despawned at build time AND `doActions` is never cleared. '
+            + 'The guard that would have made the write conditional is the same test '
+            + 'that makes it unconditional',
+        witness: 'r8-l18-spinner-press (R8 slice 6) — the FIRST driven −1 write on this '
+            + 'roster. Every earlier member is registered from the source with an '
+            + 'in-band witness or none at all',
+    }),
     RopeStart: Object.freeze({
         as3: 'Puzzlements/RopeStart.as:41-49',
         writeSite: 'hit()',

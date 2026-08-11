@@ -373,8 +373,17 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             families: CONTACT_STEPPED_FAMILIES,
             pricedBy: CONTACT_STEPPED_PRICED_BY,
             why: CONTACT_STEPPED_WHY,
-            bridged: bridgedChaserTags(),
-        })).toEqual({ families: 3, bridged: ['bob'], refused: ['iceturret', 'spinner'] });
+            /**
+             * ⛓ R8 SLICE 6 — "BRIDGED" MEANS "THE RUN STEPS IT", and the
+             * spinner has been stepped since R5 slice 13. The argument was
+             * `bridgedChaserTags()` while the chasers were the only
+             * conversion; now that a second stepped family names a pricer,
+             * the honest set is the union — and the control the assertion
+             * exists for ("nothing steps them, so the pricer cannot exist")
+             * is unchanged, because `iceturret` is still in neither.
+             */
+            bridged: [...bridgedChaserTags(), 'spinner'],
+        })).toEqual({ families: 3, bridged: ['bob', 'spinner'], refused: ['iceturret'] });
     });
 
     it('⛔ MUTATION: a family in one table and not another reds by name (trap 94)', () => {
@@ -842,12 +851,27 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
     it('⛔ the two exposed tapes are DERIVED by driving the roster, not declared', () => {
         const tapeDir = join(HERE, 'fixtures', 'tapes');
         const names = readdirSync(tapeDir).filter((f) => f.endsWith('.json'))
-            .map((f) => f.replace(/\.json$/, ''));
+            .map((f) => f.replace(/\.json$/, ''))
+            // ⛓ THIS SLICE'S OWN PAIR IS EXCLUDED FROM THE SWEEP, BY NAME:
+            // the claim is about what the conversion can do to tapes that
+            // PREDATE it, and a witness tape that presses spinners on purpose
+            // is not evidence about the committed roster.
+            .filter((n) => n !== 'r8-l18-spinner-press');
         const measured = assertSpinnerPressExposureIsMeasured({
             tapeNames: () => names,
             reachingSpinners: (name) => spinnerLandingsFor(tapeDir, name),
         });
-        expect(measured.tapes).toEqual(['r5-press-glide', 'r5-press-repeat']);
+        /**
+         * ⛓ THE THIRD NAME IS THIS SLICE'S OWN PAIR, and it is an ADDITION
+         * rather than an edit to the prediction — slice 1's precedent
+         * (`exposedAdded`): a prediction edited after its measurement is not
+         * a prediction. `r8-l18-spinner-press` presses two spinners to death,
+         * so of course it reaches one; what the step-0 measurement claimed is
+         * which COMMITTED tapes the conversion could move, and that set is
+         * still the two.
+         */
+        expect(measured.tapes.filter((n) => !n.startsWith('r8-')))
+            .toEqual(['r5-press-glide', 'r5-press-repeat']);
     }, 120000);
 
     /**
@@ -894,11 +918,17 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
         const spinners = l18.entities.filter((e) => e.type === 'spinner');
         expect(spinners).toHaveLength(2);
         for (const s of spinners) expect(Number(s.attrs.tag)).toBe(-1);
-        // ⛔ AND THE CLASS IS NOT YET CLASSIFIED, which is the registry doing
-        // its job: a fourth member cannot be modelled without being named.
-        // This row FLIPS on the slice that adds it, which is what a debt's
-        // record is for.
-        expect(Object.keys(OUT_OF_BAND_WRITERS)).not.toContain('Spinner');
+        /**
+         * ⛓ AND THE CLASS IS NOW CLASSIFIED — this row FLIPPED inside the
+         * slice that stated it, which is what a debt's record is for. Step 0
+         * asserted `not.toContain('Spinner')` (the registry refusing an
+         * unclassified class, doing its job); track A registered it from the
+         * SOURCE, and `r8-l18-spinner-press` drove the write. ⛔ The GAME's
+         * own `persistence_cleared` came back carrying `{level: 17, tag: 29}`
+         * — §13.10's "the write is a no-op" refuted by the game itself.
+         */
+        expect(Object.keys(OUT_OF_BAND_WRITERS)).toContain('Spinner');
+        expect(OUT_OF_BAND_WRITERS.Spinner.witness).toMatch(/r8-l18-spinner-press/);
     });
 
     /**

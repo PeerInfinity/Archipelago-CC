@@ -80,7 +80,8 @@ import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
 } from './burnableTree.js';
 import {
-    SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
+    SPINNER, createSpinnerState, hitSpinner, spinnerRect, spinnerRects,
+    spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
 // ⛓⛓⛓ R8 SLICE 1: THE ENEMY BRIDGE. `chasers.js` has transcribed the walk
 // exactly since R5 slice 3 and nothing has ever called it — this import IS
@@ -165,6 +166,7 @@ import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // computes at every kill.
 import {
     ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, PIT_FADE, enemyHit, killLockLedger,
+    removalTicksAfterHit,
 } from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -2552,6 +2554,28 @@ export function createLevelRun({
         return st.byId.size === 0 ? null : spinnerRects(st);
     };
     /**
+     * ⛓⛓⛓ R8 SLICE 6: the press census's join — `id -> {rect, removed}` over
+     * EVERY body this visit built, the drained ones included.
+     *
+     * ⛔ NOT `spinnerRectsNow`, AND THE DIFFERENCE IS A DEAD BODY'S CELL.
+     * `spinnerRects` drops a removed spinner because its caller is the block
+     * SWEEP, which must not collide with something that is gone. A press
+     * census that dropped it would fall through to the STATIC row and aim at
+     * the `.oel` cell of a body the world has drained — the turret arm's
+     * "absent run state is ALIVE" default, read by the one caller for whom
+     * absent means REMOVED. So the map carries the removal explicitly and
+     * `pressRespondersIn` skips it by name.
+     */
+    const spinnerPressBodiesNow = () => {
+        const st = spinnerStateFor(level);
+        if (st.byId.size === 0) return null;
+        const out = new Map();
+        for (const [id, sp] of st.byId) {
+            out.set(id, { rect: spinnerRect(sp), removed: sp.removed === true });
+        }
+        return out;
+    };
+    /**
      * ── R4: THE LIGHTPOLE, which is per-visit STATE over a BANKED flag ──
      *
      * `LightPole.hit()` toggles `activate` behind a 25-tick `hitsTimer`, and
@@ -3981,6 +4005,13 @@ export function createLevelRun({
             // and therefore the only one where the join decides how many of
             // them land at all.
             finalBosses: finalBossRectsNow(),
+            // ⛓⛓⛓ R8 SLICE 6: and the spinners', which move between the five
+            // tests too — and unlike the Owl's, for reasons that have nothing
+            // to do with the press. `spinnerRectsNow` returns null in the 112
+            // levels that hold none, which the join reads as "no live state",
+            // i.e. the census box; there is no room where that is wrong,
+            // because a room with no spinner has no spinner responder either.
+            spinners: spinnerPressBodiesNow(),
         });
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
@@ -4365,6 +4396,101 @@ export function createLevelRun({
                         swallowed: verdict.swallowed, aborted: verdict.aborted,
                         retaliated: verdict.retaliated,
                         why: verdict.refusedAt, hits: b.hits, was: before,
+                    });
+                }
+            } else if (r.as3 === 'Spinner') {
+                /**
+                 * ── ⛓⛓⛓ R8 SLICE 6: THE SWING AT A BILLIARD ────────────
+                 *
+                 * `Player.genericHit`'s `e is Enemy` arm — a `Spinner` has no
+                 * arm of its own — so the call is `Enemy.hit(swordForce 5,
+                 * new Point(x, y), swordDamage, "Sword")` and `hitSpinner` is
+                 * the transcription that receives it, unchanged since R5
+                 * slice 13 and driven by the PULSER ever since. This is the
+                 * PLAYER half of the same call.
+                 *
+                 * ⛔⛔ AND THE BODY IS SOMEWHERE ELSE ON EVERY TEST. The five
+                 * hit tests are five consecutive ticks and this body moves
+                 * ~1 px per tick with no player term at all, so the reach is
+                 * measured PER TEST against the rect the run has now — never
+                 * against the `.oel` cell, and never against the rect the
+                 * first test saw.
+                 *
+                 * ⛔ THE LANDING COUNT IS THE RECEIVER'S. `hitSpinner` sets
+                 * `hitsTimer = 30`, so tests 2..5 of one press are refused on
+                 * i-frames and ONE press is ONE hit (traps 85/93 — the Owl,
+                 * two arms up, takes all five because `justKnock` sets no
+                 * timer). Every refusal is recorded rather than skipped: the
+                 * pair's witness is the TICK and the SOURCE of each test.
+                 */
+                const spSt = spinnerStateFor(level);
+                const sp = spSt.byId.get(r.spinnerId);
+                if (!sp) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.spinnerId} in level ${level}, which is not in the `
+                        + "run's Spinner state. The press census and the run disagree "
+                        + 'about which bodies exist, which is the two-consumers failure '
+                        + 'this state family exists to prevent.');
+                }
+                const body = spinnerRect(sp);
+                const reach = distanceRectPoint(state.x, state.y, body);
+                if (reach > SLASH_REACH) {
+                    spinnerPressHits.push({
+                        t: ticksCompleted, level, id: sp.id, weapon, landed: false,
+                        killed: false, reach, hits: sp.hits, hitsTimer: sp.hitsTimer,
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                            + 'the rect reached it and `slash()`\'s own gate did not',
+                    });
+                    hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
+                } else {
+                    assertSpinnerLineOfSight(sp);
+                    const before = { hits: sp.hits, hitsTimer: sp.hitsTimer,
+                        destroy: sp.destroy };
+                    const after = hitSpinner(sp, {
+                        force: SWORD_FORCE,
+                        from: { x: state.x, y: state.y },
+                        damage: weapon === 'spear' ? SPEAR_DAMAGE
+                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        // `Enemy.hit`'s own `!Game.freezeObjects` gate. A
+                        // spinner overrides none of the five, so unlike the
+                        // ShieldBoss there is no arm ABOVE the freeze.
+                        frozen: ceremony !== null,
+                    });
+                    spSt.byId.set(sp.id, after);
+                    const landed = after.hits !== before.hits;
+                    const killed = after.destroy && !before.destroy;
+                    if (killed) assertSpinnerKillIsAccounted(after);
+                    spinnerPressHits.push({
+                        t: ticksCompleted, level, id: sp.id, weapon, landed, killed,
+                        reach, hits: after.hits, hitsTimer: after.hitsTimer,
+                        why: landed ? null
+                            : (before.hitsTimer > 0
+                                ? `i-frames — hitsTimer ${before.hitsTimer} > 0`
+                                : (before.destroy ? 'the body is already dying'
+                                    : 'the freeze')),
+                    });
+                    if (killed) {
+                        /**
+                         * ⛔ THE DEATH IS A `fade` SHAPE — no animation stage
+                         * at all. `Enemy.startDeath` sets `destroy` on this
+                         * tick and `Mobile.death`'s ELEVEN accumulated 0.1
+                         * subtractions remove the body, from the ENTITY half
+                         * of `World.update`. So `removalTicksAfterHit` takes
+                         * NO animation argument here, and §11.3's
+                         * who-killed-it fencepost (which is about the GRAPHIC
+                         * half) has nothing to bite.
+                         */
+                        spinnerKills.push({
+                            t: ticksCompleted, level, id: sp.id, tag: sp.persistTag,
+                            weapon,
+                            removedTick: ticksCompleted
+                                + removalTicksAfterHit('Spinner'),
+                        });
+                    }
+                    hits.push({
+                        as3: 'Spinner', id: sp.id, landed, killed,
+                        hits: after.hits, was: before, why: landed ? null : 'refused',
                     });
                 }
             } else if (r.as3 === 'FinalBoss') {
@@ -6363,6 +6489,151 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * ⛔ `Player.slash`'s line-of-sight gate, for a spinner.
+     *
+     * `if (!FP.world.collideLine("Solid", x, y, v[i].x, v[i].y) || hasGhostSword
+     * || v[i].type == "Solid" || v[i].type == "Rope" || v[i] is Flyer)` — a
+     * `Spinner`'s `type` is `"Enemy"` (its ctor does not overwrite it, unlike
+     * `BombPusher`'s), so none of the three waivers fires and the line is
+     * consulted. Same treatment as the Shieldspire's and the Owl's: walk the
+     * segment at 1 px and refuse loudly rather than assume the room is open.
+     *
+     * ⚠ AND THE LINE IS TO THE BODY WHERE IT IS NOW, which for this class is
+     * the whole difficulty — the same swing is clear on one tick and blocked
+     * on the next because the body drifted behind a spire.
+     */
+    /**
+     * ⛔⛔⛔ R8 SLICE 6 — THE HAMMER IS A BILL THIS MODEL CANNOT PAY, SO IT
+     * REFUSES BY NAME RATHER THAN READING AS A ZERO.
+     *
+     * `Spinner.update` runs `collideLine("Player", x, y, x + 13·cos a,
+     * y + 13·sin a)` every tick and calls `player.hit(this, 4, …)` on a hit —
+     * and `contactPricing('spinner')` has said `pricedBy: null` since R6
+     * slice 3 ("nothing prices its `hitPlayer`"). The census scan's own
+     * partition (§9.6) is between "priced somewhere" and "priced NOWHERE",
+     * and a body in the second half must THROW: a silent zero in a room the
+     * game is charging for is trap 162's shape exactly — the arrow bill that
+     * did not exist, one family over.
+     *
+     * ⛔ AND THE ANGLE IS NOT PREDICTABLE FROM THIS MODEL'S CLOCK.
+     * `hammerAngle` is `(Game.time % 45) / 45 · 2π`, and `Game.time` counts
+     * DEAD FRAMES — a per-load variable (§22.6) this run does not carry. So
+     * the honest quantity is the UNION over all 45 phases, which is
+     * `spinner.hammerReach`'s disc, and the honest verdict for a player
+     * inside one is REFUSED rather than a hit at a guessed angle.
+     *
+     * ⇒ the DANGER MAP forbids the disc before a tick is spent
+     * (`dangerMap.spinnerDanger`) and this is what says so if a walk gets
+     * there anyway. ⚠ Under `noDamage` the whole question is inert —
+     * `Player.hit`'s first line is `if (Bot.noDamage) return` — which is why
+     * every committed spinner-room tape has been able to walk straight
+     * through one.
+     */
+    function assertPlayerClearOfHammers(st) {
+        if (noDamage) return;
+        const box = playerBoxAt(state.x, state.y);
+        for (const sp of st.byId.values()) {
+            if (sp.removed || sp.destroy) continue;
+            const disc = {
+                x: sp.x - SPINNER.hammerLength,
+                y: sp.y - SPINNER.hammerLength,
+                right: sp.x + SPINNER.hammerLength,
+                bottom: sp.y + SPINNER.hammerLength,
+            };
+            if (!rectsOverlap(box, disc)) continue;
+            throw new Error(`levelRun: at tick ${ticksCompleted + 1} the player box at `
+                + `(${state.x},${state.y}) is inside ${sp.id}'s HAMMER REACH — its `
+                + `entity point is (${sp.x.toFixed(2)},${sp.y.toFixed(2)}) and the reach `
+                + `is ${SPINNER.hammerLength} px — on a tape that does NOT declare `
+                + '`noDamage`. `Spinner.update` swings a `collideLine("Player", …)` at '
+                + '`(Game.time % 45) / 45 · 2π` and calls `player.hit(this, 4, …)`, and '
+                + 'this model does not carry `Game.time` (it counts DEAD FRAMES, a '
+                + 'per-load variable), so the ANGLE is not predictable from the run\'s '
+                + 'own clock. The union over all 45 phases is the disc above; a walk '
+                + 'inside it is a contact this run cannot price, and a silent zero here '
+                + 'would be the arrow bill that did not exist, one family over. Route '
+                + 'clear of the disc (`dangerMap.spinnerDanger` forbids it at plan time), '
+                + 'or declare `noDamage`.');
+        }
+    }
+
+    function assertSpinnerLineOfSight(sp) {
+        const blocker = collideLineSolid(state.x, state.y, sp.x, sp.y);
+        if (blocker) {
+            throw new Error(`levelRun: the swing at (${state.x}, ${state.y}) reaches `
+                + `${sp.id}'s rect but \`collideLine("Solid", …)\` finds `
+                + `${blocker.tag ?? 'a Solid'} at (${blocker.at.x}, ${blocker.at.y}) on `
+                + `the line to its entity point (${sp.x}, ${sp.y}). \`Player.slash\`'s `
+                + 'line-of-sight gate REFUSES that hit — the type waivers do not fire '
+                + 'for an `"Enemy"` — so the hit would land in the model and miss in '
+                + 'the game. Re-aim the stance.');
+        }
+    }
+
+    /**
+     * ⛔⛔⛔ R8 SLICE 6 — A SPINNER KILL HAS **TWO** CONSEQUENCES AND BOTH ARE
+     * COMPUTED HERE, on the tick the killing blow lands.
+     *
+     * 1. `classCount(Spinner)` moves, so every `tset == -1` lock in the room
+     *    can open. ⛔ UNLIKE every earlier `modelled` kill arm, the answer
+     *    here is NOT a nil: L18's `lock@144,112` is exactly such a lock and
+     *    the room's two spinners are its only openers. So this does not
+     *    throw on a lock — it REQUIRES the room's census to exist, so that
+     *    `totalEnemies()` is an answer rather than an unasked question, and
+     *    leaves the opening itself to `stepActivators`' own kill-lock arm.
+     *    (`IceTurret`'s arm computes the same scan and gets nil; the ledger
+     *    exists so that "there were no kill locks" and "nobody looked" cannot
+     *    print the same thing.)
+     * 2. `removed()` writes `Game.setPersistence(tag, false)` eleven ticks
+     *    later — banked by the spinner step, INCLUDING the out-of-band case
+     *    this room is (`tag = -1`).
+     */
+    function assertSpinnerKillIsAccounted(sp) {
+        const census = world.combat?.enemies ?? null;
+        if (census === null) {
+            throw new Error(`levelRun: a Spinner kill in level ${level} happens in a `
+                + 'room built with NO COMBAT CENSUS, so `totalEnemies()` would read 0 '
+                + 'because nothing was asked rather than because nothing is alive. A '
+                + 'kill whose `classCount` consequence cannot be computed is a kill '
+                + 'this arm refuses. Build the world with the `combat` role.');
+        }
+        /**
+         * ⛔⛔⛔ THE ROSTER IS THE **LIVE** ONE, and the first cut measured why
+         * it has to be. `world.combat.enemies` is the CENSUS — a static list
+         * of placements — and nothing ever sets its `removed`, so a scan
+         * against it reports the same two bodies for the second kill as for
+         * the first and concludes `totalEnemies()` is still 1 when the room
+         * is about to be empty. The kill-lock consequence would then read NIL
+         * in the one room the whole arm was converted for, which is the
+         * shape of a check that cannot fire.
+         *
+         * ⇒ the bodies this run still HAS are the answer: a spinner the run
+         * has already removed is gone from `spinnerStateFor`, and every other
+         * census row is where the level put it. ⚠ `classCount` moves at the
+         * REMOVAL, not at the killing blow (the fade is eleven ticks), so
+         * this scan is a claim about what the removal WILL open — which is
+         * what the lock's own 101-tick fade is then measured from.
+         */
+        const spSt = spinnerStateFor(level);
+        const goneIds = new Set();
+        for (const [id, body] of spSt.byId) if (body.removed) goneIds.add(id);
+        const roster = census
+            .filter((e) => !e.removed)
+            .filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
+            .map((e) => ({ as3: e.as3, id: `${e.tag}@${e.x},${e.y}` }));
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: roster.map((e) => ({ as3: e.as3 })),
+            bodiesAfter: roster.filter((e) => e.id !== sp.id).map((e) => ({ as3: e.as3 })),
+        });
+        spinnerKillLocks.push({
+            t: ticksCompleted, level, id: sp.id,
+            opens: led.opens.map((o) => ({ level, tag: o.flag ?? o.tag })),
+            nil: led.nil,
+            why: led.why,
+        });
+    }
+
     function assertShieldBossLineOfSight(b) {
         const blocker = collideLineSolid(state.x, state.y, b.x, b.y);
         if (blocker) {
@@ -6636,6 +6907,17 @@ export function createLevelRun({
             // prices — so the refusal is re-raised here with the ROOM's own
             // reason rather than the class's.
             if (pricing.kind === 'stepped' && pricing.pricedBy) {
+                /**
+                 * ⛓⛓⛓ R8 SLICE 6 — A SPINNER'S PRICER IS A REFUSAL AT THE
+                 * LIVE POSITION, so this scan skips it for the SAME reason it
+                 * skips a bridged chaser: the census rect is the `.oel`
+                 * placement, and a billiard leaves that cell on tick one.
+                 * Throwing here would refuse a stance because of where the
+                 * body USED to be — and stay silent about where it is.
+                 * `assertPlayerClearOfHammers` is the arm that asks the live
+                 * question (`CONTACT_STEPPED_PRICED_BY.spinner`).
+                 */
+                if (pricing.pricedBy === 'assertPlayerClearOfHammers') continue;
                 const verdict = chaserRoomVerdict(level);
                 if (verdict.stepped) continue;
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
@@ -7451,6 +7733,26 @@ export function createLevelRun({
      */
     const spinnerWrites = [];
     const spinnerWritten = new Set();
+    /**
+     * ⛓⛓⛓ R8 SLICE 6: one row per HIT TEST of every press that reaches a
+     * spinner — the landings AND the refusals, with the reason.
+     *
+     * ⚠ ONE ROW PER TEST, NOT PER PRESS, and that is trap 85/93's shape as a
+     * data structure: a press is five tests and the RECEIVER decides how many
+     * land, so a ledger keyed on presses could not express "one landed and
+     * four were refused on i-frames" — which is exactly what this class does
+     * and exactly what the pair has to witness (trap 113: the witness is the
+     * tick and the source, never a count).
+     */
+    const spinnerPressHits = [];
+    /** `{t, level, id, tag, weapon, removedTick}` per press-killed body. */
+    const spinnerKills = [];
+    /**
+     * ⛓ `{t, level, id, opens, nil, why}` — the kill-lock scan a spinner
+     * death RUNS, whatever it finds. §9.3's law: "there were no kill locks"
+     * and "nobody looked" print the same thing unless the scan is recorded.
+     */
+    const spinnerKillLocks = [];
     /** One per completed seal ceremony, with the dead frames it cost. */
     const sealCollections = [];
     /** Which chest the live piece came from, for the ledger. */
@@ -8592,6 +8894,20 @@ export function createLevelRun({
          * can assert WHEN as well as whether.
          */
         get spinnerWrites() { return spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } })); },
+        /**
+         * ⛓⛓⛓ R8 SLICE 6: every HIT TEST a press spent on a spinner — landed
+         * or refused, with the reason and the reach.
+         *
+         * ⚠ ONE ROW PER TEST. A ledger keyed on PRESSES could not say "one
+         * landed and four were refused on i-frames", which is this class's
+         * whole answer to trap 85 — and a witness that reported the count
+         * alone would be trap 113 exactly.
+         */
+        get spinnerPressHits() { return spinnerPressHits.map((h) => ({ ...h })); },
+        /** `{t, level, id, tag, weapon, removedTick}` per press-killed spinner. */
+        get spinnerPressKills() { return spinnerKills.map((k) => ({ ...k })); },
+        /** The kill-lock scan every spinner kill RUNS — nil included (§9.3). */
+        get spinnerKillLocks() { return spinnerKillLocks.map((k) => ({ ...k })); },
         /** ⛔⛔ R5 slice 13: `{t, level, pulser, enemy}` per enemy a pulse killed. */
         get pulserEnemyKills() { return pulserEnemyKills.map((k) => ({ ...k })); },
         get spinnerDeaths() {
@@ -9872,6 +10188,7 @@ export function createLevelRun({
             if (!noclip && spinState.byId.size > 0) {
                 assertDialogueFreeSpinnerRoom();
                 stepSpinners(spinState, spinnerCtx());
+                assertPlayerClearOfHammers(spinState);
                 /**
                  * ⛔⛔ AND THE FLAG A REMOVAL WRITES, BANKED HERE.
                  *
@@ -9888,15 +10205,74 @@ export function createLevelRun({
                  * ledger claim is phrased over the writes.
                  */
                 for (const s of spinState.byId.values()) {
-                    if (!s.removed || s.persistTag < 0 || spinnerWritten.has(s.id)) continue;
+                    if (!s.removed || spinnerWritten.has(s.id)) continue;
                     spinnerWritten.add(s.id);
-                    if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
-                    pendingEarnedClears.get(level).add(s.persistTag);
+                    /**
+                     * ⛔⛔⛔ R8 SLICE 6 — AND THE `tag = -1` BODIES WRITE TOO.
+                     *
+                     * This loop used to `continue` on `persistTag < 0`, on the
+                     * reading that a negative tag is a no-op. It is not: the
+                     * game's `Main.levelPersistenceSet` indexes
+                     * `level * 30 + tag` with NO bounds check, so the write
+                     * lands on the PREVIOUS level's LAST slot — and
+                     * `Spinner.check()`'s `if (tag >= 0 && …)` is exactly why
+                     * `doActions` is still true to let it through.
+                     *
+                     * ⛓ L18's two placements carry `tag="-1"` in the `.oel`,
+                     * so D2 is the room where the arm stops being a bounded
+                     * vacuity (`OUT_OF_BAND_WRITERS.Spinner`, registered from
+                     * the source this slice). `outOfBandFlagForWriter` is the
+                     * one place the arithmetic lives — a second copy here
+                     * would be the two-cost-models failure this module has
+                     * paid for in four other families.
+                     */
+                    /**
+                     * ⛔ THE BRANCH IS THE CALLER'S, AND THE HELPER SAYS SO.
+                     * `outOfBandFlagForWriter` REFUSES an in-band tag by name
+                     * — "a member of the family can also be built with a real
+                     * tag … the CALLER decides which path it is on" — and
+                     * L39's spinners carry 17/18/19 while L18's carry −1. The
+                     * first cut routed every write through the helper and
+                     * `r5-shaft-control` reddened on that refusal, which is
+                     * the guard doing exactly its job.
+                     */
+                    const flag = s.persistTag < 0
+                        ? outOfBandFlagForWriter({ as3: 'Spinner', level, tag: s.persistTag })
+                        : outOfBandFlagFor(level, s.persistTag);
+                    /**
+                     * ⛔⛔⛔ AND AN OUT-OF-BAND WRITE IS A **LEDGER ENTRY,
+                     * NEVER A PERMISSION** — trap 120's law, met from the
+                     * other side.
+                     *
+                     * `pendingEarnedClears` is what the NEXT BUILD of that
+                     * level is handed, and `buildLevelWorld` refuses a clear
+                     * "which no entity in this level reads" — which an
+                     * out-of-band slot is BY CONSTRUCTION, because landing on
+                     * a slot nobody owns is the whole meaning of the −1.
+                     * `r5-feather` measured it: L92's `tag = -1` spinner
+                     * leaves the world, the first cut banked `{91,29}` as a
+                     * clear, and the level build threw by name on the re-entry.
+                     *
+                     * ⇒ the write is REPORTED (the game's own
+                     * `persistence_cleared` will carry it, so the model owes
+                     * the row) and NOT APPLIED. ⚠ The same branch exists
+                     * unexercised in the `RopeStart` and `BurnableTree` arms,
+                     * whose −1 cases no committed map reaches — named here
+                     * rather than fixed there, because a fix nothing drives is
+                     * a claim nothing checks.
+                     */
+                    if (!flag.outOfBand) {
+                        if (!pendingEarnedClears.has(flag.level)) {
+                            pendingEarnedClears.set(flag.level, new Set());
+                        }
+                        pendingEarnedClears.get(flag.level).add(flag.tag);
+                    }
                     spinnerWrites.push({
                         t: ticksCompleted + 1,
                         level,
                         id: s.id,
-                        flag: { level, tag: s.persistTag, value: false },
+                        flag: { level: flag.level, tag: flag.tag, value: false },
+                        outOfBand: flag.outOfBand,
                         cause: s.deathCause,
                     });
                 }

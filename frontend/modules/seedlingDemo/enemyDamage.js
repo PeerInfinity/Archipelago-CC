@@ -292,13 +292,52 @@ export const KILL_ARM_POLICY = Object.freeze({
             + 'in the room can open — the ledger consequence is computed, not skipped '
             + '(L19 has no such lock, and that nil is the assertion).',
     }),
+    /**
+     * ⛓⛓⛓ R8 SLICE 6 — THE FOURTH `modelled` ROW, AND THE FIRST WHOSE
+     * TARGET MOVES BETWEEN THE FIVE HIT TESTS OF ONE PRESS FOR REASONS OF
+     * ITS OWN.
+     *
+     * The refusal's own terms are what retired it, and they were exact: *"a
+     * spinner kill is a LEDGER ENTRY as well as a `classCount` move … refused
+     * until a route needs it and can declare both consequences."* D2 is that
+     * route — L18's `lock@144,112` is `tset -1`, so the room's two spinners
+     * ARE its openers — and both consequences are now COMPUTED rather than
+     * declared:
+     *
+     *   · the `classCount` move, through `killLockLedger`, in the room where
+     *     it really opens something (the `IceTurret` row computes the same
+     *     scan and gets a nil; this one gets a lock, and that difference is
+     *     the whole point of computing rather than asserting);
+     *   · the `removed()` write, banked by `levelRun`'s spinner step —
+     *     ⛔ INCLUDING the OUT-OF-BAND case, which L18 is: both placements
+     *     carry `tag = "-1"`, `check()`'s `tag >= 0` guard therefore never
+     *     clears `doActions`, and `Main.levelPersistenceSet`'s unchecked
+     *     `level * 30 + tag` lands the write on the PREVIOUS level's last
+     *     slot. §13.10's recon called that a no-op; it is not
+     *     (`outOfBandLedger.OUT_OF_BAND_WRITERS.Spinner`).
+     *
+     * ⛔ AND THE DEATH STAGING HAS NO ANIMATION STAGE, which is why the
+     * who-killed-it fencepost (§11.3: an arrow kill's anim gets its first
+     * update on the killing tick and a press's would not) has nothing to bite
+     * here. `CORPSE_COUNTING.Spinner` is a `fade` row: `Enemy.startDeath`
+     * sets `destroy` on the killing blow and `Mobile.death`'s eleven
+     * accumulated subtractions remove the body, from the ENTITY half of
+     * `World.update`. The press side of that fencepost stays a BOUNDED
+     * VACUITY for the `anim+fade` classes, and this slice does not discharge
+     * it.
+     */
     Spinner: Object.freeze({
-        policy: 'refused',
-        why: '⛔ AND ITS DEATH IS THE ONE THAT WRITES. `Spinner.removed()` is '
-            + '`if (doActions) Game.setPersistence(tag, false)` — UNCONDITIONAL on its '
-            + 'own tag — so a spinner kill is a LEDGER ENTRY as well as a `classCount` '
-            + 'move. `spinner.js` transcribes the body\'s motion; the damage arm is '
-            + 'refused until a route needs it and can declare both consequences.',
+        policy: 'modelled',
+        why: '⛓ THE FIRST PRESS ARM AGAINST A MOVING BODY (R8 slice 6). `hitSpinner` is '
+            + '`Enemy.hit` verbatim and has been driven by the PULSER since R5 slice 13; '
+            + 'this lifts the PLAYER half, which needed the body\'s LIVE rect in the '
+            + 'press census (the FIFTH non-constant one) because a spinner leaves its '
+            + '`.oel` cell on the first tick of the visit. ONE press is ONE hit — the '
+            + 'receiver sets `hitsTimer = 30` and refuses tests 2..5 — so three landed '
+            + 'presses kill. ⛔ BOTH consequences are COMPUTED: the `classCount` move '
+            + 'through `killLockLedger` (L18\'s `lock@144,112` is `tset -1` and this is '
+            + 'the first `modelled` row whose kill really opens one) and the '
+            + '`removed()` write, which for a `tag = -1` body lands OUT OF BAND.',
     }),
     WallFlyer: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
     Puncher: Object.freeze({ policy: 'refused', why: 'the Bob cost; L40 has two and no leg presses either' }),

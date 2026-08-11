@@ -235,6 +235,7 @@ export function distanceRectPoint(px, py, r) {
  */
 export function pressRespondersIn(world, rect, {
     pushables: live = null, turrets = null, shieldBosses = null, finalBosses = null,
+    spinners = null,
 } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
@@ -343,6 +344,35 @@ export function pressRespondersIn(world, rect, {
             }
             continue;
         }
+        /**
+         * ⛓⛓⛓ R8 SLICE 6: THE FIFTH NON-CONSTANT RECT — and the first that
+         * is never where the level built it.
+         *
+         * The four above are moved by something the walk DID: a push, a kill,
+         * a shove. A `Spinner` is a billiard with `runRange 0` and
+         * `activeOffScreen true`, so it leaves its `.oel` cell on the first
+         * tick of the visit and keeps moving whether or not anybody presses.
+         * ⇒ the census box is not "right until something happens to it", it
+         * is wrong immediately, and a press audited against it would aim at a
+         * cell the body left hundreds of ticks ago.
+         *
+         * ⚠ ABSENT RUN STATE IS ALIVE AND WHERE THE LEVEL BUILT IT, matching
+         * the turret, ShieldBoss and Owl arms — a press in a room the run has
+         * no spinner state for reaches the body the level built. ⛔ And a
+         * `removed` one DROPS OUT, the ShieldBoss's treatment rather than the
+         * turret's: `Player.slash` collects with `collideRectInto`, which
+         * walks the world's type lists, so a body `FP.world.remove` has
+         * drained is not a candidate at all. A spinner mid-FADE is still
+         * there (`spinnerRects` filters on `removed`, not `destroy`).
+         */
+        if (spinners && r.spinnerId && spinners.has(r.spinnerId)) {
+            const now = spinners.get(r.spinnerId);
+            if (now.removed) continue;
+            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+                hits.push({ ...r, rect: now.rect ?? r.rect, live: true });
+            }
+            continue;
+        }
         if (rectsOverlap(rect, r.rect)) hits.push(r);
     }
     // A bridge is a press responder and it is TERRAIN — the one arm of
@@ -391,10 +421,10 @@ export function pressRespondersIn(world, rect, {
  */
 export function auditPress(world, rect, {
     weapon, intended = [], pushables = null, turrets = null, shieldBosses = null,
-    finalBosses = null,
+    finalBosses = null, spinners = null,
 } = {}) {
     const responders = pressRespondersIn(world, rect, {
-        pushables, turrets, shieldBosses, finalBosses,
+        pushables, turrets, shieldBosses, finalBosses, spinners,
     });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(
@@ -635,6 +665,36 @@ export const PRESS_ARM_POLICY = Object.freeze({
     },
     LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
     /**
+     * ⛓⛓⛓ R8 SLICE 6: THE FIRST PRESS ARM AGAINST A MOVING BODY, and the
+     * lift is one class wide for the same reason `IceTurret`'s was.
+     *
+     * The `Enemy` row above refuses the family because a death moves
+     * `totalEnemies()`. For a `Spinner` that consequence is REAL — this is
+     * the first `modelled` row whose kill really does open every
+     * `tset == -1` lock in the room — and it is modelled precisely BECAUSE
+     * D2 needs it: L18's `lock@144,112` is `tset -1` and its only openers
+     * are the room's two spinners. The consequence is COMPUTED
+     * (`killLockLedger`) rather than refused, and the second consequence —
+     * `removed()`'s `Game.setPersistence(tag, false)` — is banked with it.
+     *
+     * ⛔ ONE PRESS IS ONE HIT HERE, AND THE RECEIVER IS WHY. `hitSpinner`
+     * sets `hitsTimer = 30` on a landing, so tests 2..5 of the same press
+     * are refused on i-frames (traps 85/93: the Owl's `justKnock` arm sets
+     * no timer and takes all five). The five tests are still DRIVEN, and
+     * their refusals recorded, because a count that assumed one would be a
+     * claim about the weapon where the law is about the receiver.
+     */
+    Spinner: {
+        policy: 'modelled',
+        why: '⛓ THE FIRST PRESS ARM AGAINST A BODY THAT MOVES ON ITS OWN (R8 slice 6). '
+            + '`hitsMax` 3 at the plain sword\'s damage 1 behind a 30-tick i-frame, so '
+            + 'three landed presses kill; `hitSpinner` is `Enemy.hit` verbatim and has '
+            + 'been driven by the PULSER arm since R5 slice 13 — this lifts the PLAYER '
+            + 'half. ⛔ The death moves `classCount(Spinner)`, which is L18\'s whole '
+            + 'solve, and `removed()` writes `setPersistence(tag, false)` — banked, and '
+            + 'OUT OF BAND for a `tag = -1` body (`outOfBandLedger`).',
+    },
+    /**
      * ⛓⛓⛓ R6 SLICE 6d: THE SWING THAT KILLS THE WATCHER, AND IT IS FOUR
      * PRESSES RATHER THAN FOUR HIT TESTS.
      *
@@ -859,6 +919,36 @@ export const FIRE_ARM_POLICY = Object.freeze({
     LavaBoss: { policy: 'refused', why: 'boss damage — R6/R7; declared so the census sees it' },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R6' },
     LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
+    /**
+     * ⛓⛓⛓ R8 SLICE 6: THE FIRST PRESS ARM AGAINST A MOVING BODY, and the
+     * lift is one class wide for the same reason `IceTurret`'s was.
+     *
+     * The `Enemy` row above refuses the family because a death moves
+     * `totalEnemies()`. For a `Spinner` that consequence is REAL — this is
+     * the first `modelled` row whose kill really does open every
+     * `tset == -1` lock in the room — and it is modelled precisely BECAUSE
+     * D2 needs it: L18's `lock@144,112` is `tset -1` and its only openers
+     * are the room's two spinners. The consequence is COMPUTED
+     * (`killLockLedger`) rather than refused, and the second consequence —
+     * `removed()`'s `Game.setPersistence(tag, false)` — is banked with it.
+     *
+     * ⛔ ONE PRESS IS ONE HIT HERE, AND THE RECEIVER IS WHY. `hitSpinner`
+     * sets `hitsTimer = 30` on a landing, so tests 2..5 of the same press
+     * are refused on i-frames (traps 85/93: the Owl's `justKnock` arm sets
+     * no timer and takes all five). The five tests are still DRIVEN, and
+     * their refusals recorded, because a count that assumed one would be a
+     * claim about the weapon where the law is about the receiver.
+     */
+    Spinner: {
+        policy: 'modelled',
+        why: '⛓ THE FIRST PRESS ARM AGAINST A BODY THAT MOVES ON ITS OWN (R8 slice 6). '
+            + '`hitsMax` 3 at the plain sword\'s damage 1 behind a 30-tick i-frame, so '
+            + 'three landed presses kill; `hitSpinner` is `Enemy.hit` verbatim and has '
+            + 'been driven by the PULSER arm since R5 slice 13 — this lifts the PLAYER '
+            + 'half. ⛔ The death moves `classCount(Spinner)`, which is L18\'s whole '
+            + 'solve, and `removed()` writes `setPersistence(tag, false)` — banked, and '
+            + 'OUT OF BAND for a `tag = -1` body (`outOfBandLedger`).',
+    },
     Watcher: { policy: 'refused', why: 'R6 — the ending' },
 });
 

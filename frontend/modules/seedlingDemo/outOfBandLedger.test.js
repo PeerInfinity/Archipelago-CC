@@ -21,14 +21,20 @@ describe('the family registry', () => {
     // SOURCE when the shaft's route needed them — both take `_tag:int = -1`
     // as a CONSTRUCTOR DEFAULT, which is a third way into this family after
     // a runtime spawn (`Fire`) and authored map data (`BreakableRock`).
-    it('has exactly the SIX members read out of the source, each with a citation', () => {
+    it('has exactly the SEVEN members read out of the source, each with a citation', () => {
         // ⛓ R5 slice 12 adds `BurnableTree` — the sixth. Its write is in
         // `removed()`, which has no tag guard, so a `-1` tree clears a flag
         // in the PREVIOUS level exactly as `Fire` and `BreakableRock` do.
         // Both trees in the committed extract are `tag 0`, so the sentinel
         // is reachable and unexercised — which is why the entry is here.
+        // ⛓⛓⛓ R8 SLICE 6 adds `Spinner` — the SEVENTH, and the first with a
+        // DRIVEN witness on a route: L18's two placements carry `tag="-1"` as
+        // authored data, so a press kill there writes {17,29}. Kickoff §13.10
+        // measured that consequence as NIL ("the write is a no-op"); it is
+        // this module.
         expect(Object.keys(OUT_OF_BAND_WRITERS).sort())
-            .toEqual(['BreakableRock', 'BurnableTree', 'DarkSword', 'Fire', 'Lock', 'RopeStart']);
+            .toEqual(['BreakableRock', 'BurnableTree', 'DarkSword', 'Fire', 'Lock',
+                'RopeStart', 'Spinner']);
         for (const [name, entry] of Object.entries(OUT_OF_BAND_WRITERS)) {
             expect(entry.as3, `${name} must cite its file and lines`).toMatch(/\.as:\d+/);
             expect(entry.writeSite, name).toMatch(/\(\)$/);
@@ -97,7 +103,12 @@ describe('outOfBandFlagForWriter', () => {
             .toThrow(/not a classified out-of-band writer/);
         // and the message names the ones it does know, so the fix is
         // obvious from the failure alone
-        expect(() => outOfBandFlagForWriter({ as3: 'Spinner', level: 39, tag: -1 }))
+        // ⛓ R8 SLICE 6: this used `Spinner`, which is now classified — so
+        // the CONTROL moves to a class that still is not. `Bob` is an enemy
+        // whose `removed()` is an EMPTY override (it writes nothing at all),
+        // which is exactly why it has no row here and exactly why asking for
+        // one must throw rather than answer.
+        expect(() => outOfBandFlagForWriter({ as3: 'Bob', level: 5, tag: -1 }))
             .toThrow(/Fire, BreakableRock, DarkSword/);
     });
 

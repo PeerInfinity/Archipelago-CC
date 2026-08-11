@@ -1,0 +1,229 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r8-l18-spinner-press",
+    "description": "⛓⛓⛓ R8 SLICE 6 — THE PRESS ARM'S DRIVEN PAIR. `KILL_ARM_POLICY.Spinner` flipped `refused` -> `modelled` this slice and a refusal retired without a driven witness is trap 101; this is the witness. The player presses L18's two spinners to death and the GAME adjudicates every consequence: 6 LANDED hits out of 15 hit TESTS (⛔ one press is FIVE tests and the RECEIVER decides — `hitSpinner` sets `hitsTimer` 30, so tests 2..5 are refused on i-frames, traps 85/93), two deaths on the `fade` staging, the `classCount` consequence in a room whose `lock@144,112` is `tset -1` (the first `modelled` kill arm whose scan is NOT a nil), and ⛔ TWO OUT-OF-BAND WRITES to {17,29}: both placements carry `tag = \"-1\"` and a −1 is not a no-op — `Main.levelPersistenceSet` indexes `level*30 + tag` unchecked. Kickoff §13.10 measured that consequence as NIL and the game settles it. ⚠ `noDamage` is DECLARED and the reason is a BOUND: the hammer's angle is `(Game.time % 45)/45·2π` and `Game.time` counts DEAD FRAMES, which this model does not carry, so a stance inside the 13 px disc is a contact it cannot price — `levelRun` refuses one BY NAME on an honest tape. This tape claims the ENEMY's half. The stance is CHOSEN, not derived: a pair is a witness, not a solve. Authored by scripts/procgen/plan-seedling-r8-l18-spinner.mjs.",
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": true,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick_count": 3278,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 26
+        },
+        {
+            "key": "down",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "down",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "primary",
+            "from": 210,
+            "to": 211
+        },
+        {
+            "key": "primary",
+            "from": 1242,
+            "to": 1243
+        },
+        {
+            "key": "primary",
+            "from": 2184,
+            "to": 2185
+        },
+        {
+            "key": "up",
+            "from": 2198,
+            "to": 2236
+        },
+        {
+            "key": "right",
+            "from": 2198,
+            "to": 2271
+        },
+        {
+            "key": "down",
+            "from": 2236,
+            "to": 2237
+        },
+        {
+            "key": "up",
+            "from": 2237,
+            "to": 2238
+        },
+        {
+            "key": "down",
+            "from": 2238,
+            "to": 2239
+        },
+        {
+            "key": "up",
+            "from": 2239,
+            "to": 2240
+        },
+        {
+            "key": "down",
+            "from": 2242,
+            "to": 2244
+        },
+        {
+            "key": "up",
+            "from": 2246,
+            "to": 2248
+        },
+        {
+            "key": "down",
+            "from": 2250,
+            "to": 2252
+        },
+        {
+            "key": "up",
+            "from": 2254,
+            "to": 2256
+        },
+        {
+            "key": "down",
+            "from": 2258,
+            "to": 2260
+        },
+        {
+            "key": "up",
+            "from": 2262,
+            "to": 2264
+        },
+        {
+            "key": "down",
+            "from": 2266,
+            "to": 2268
+        },
+        {
+            "key": "up",
+            "from": 2270,
+            "to": 2272
+        },
+        {
+            "key": "left",
+            "from": 2273,
+            "to": 2275
+        },
+        {
+            "key": "down",
+            "from": 2274,
+            "to": 2276
+        },
+        {
+            "key": "up",
+            "from": 2278,
+            "to": 2280
+        },
+        {
+            "key": "right",
+            "from": 2280,
+            "to": 2281
+        },
+        {
+            "key": "down",
+            "from": 2282,
+            "to": 2283
+        },
+        {
+            "key": "primary",
+            "from": 2536,
+            "to": 2537
+        },
+        {
+            "key": "primary",
+            "from": 2567,
+            "to": 2568
+        },
+        {
+            "key": "primary",
+            "from": 2637,
+            "to": 2638
+        },
+        {
+            "key": "primary",
+            "from": 3094,
+            "to": 3095
+        },
+        {
+            "key": "primary",
+            "from": 3125,
+            "to": 3126
+        },
+        {
+            "key": "primary",
+            "from": 3264,
+            "to": 3265
+        }
+    ]
+}

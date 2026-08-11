@@ -63,6 +63,7 @@ import { contactPricing, contactRect, ENEMY_CLASSES, stepBoundFor } from './comb
 import { chaserBoxAt, isBridgedChaser } from './chasers.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 import { rect, rectsOverlap } from './levelWorld.js';
+import { SPINNER } from './spinner.js';
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
@@ -412,8 +413,18 @@ export function staticEnemyDanger(run, box) {
     const out = [];
     const world = run.worldFor(run.level);
     const stepped = run.chaserRoomVerdict(run.level).stepped;
+    /**
+     * ⛔ R8 SLICE 6 — AND THE SPINNERS ARE EXCLUDED BY THE RUN'S OWN ROSTER,
+     * for the reason the bridged chasers are: this room STEPS them, so they
+     * belong to ingredient (f) at their LIVE positions. Pricing them here as
+     * well would forbid a cell every spinner in the game leaves on tick one —
+     * trap 157 wearing the danger map's clothes, which §12.4 named for the
+     * live half and this is the other half of.
+     */
+    const live = new Set((run.spinnerBodies ?? []).map((b) => b.id));
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
+        if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         const pricing = contactPricing(inst.tag);
         if (pricing.kind === 'boss') continue;
         const r = contactRect(inst);
@@ -430,6 +441,72 @@ export function staticEnemyDanger(run, box) {
             });
         }
     }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ INGREDIENT (f) — R8 SLICE 6 — THE LIVE SPINNER BODIES, GROWN BY THE
+ * HAMMER, and the map had them in the WRONG PLACE rather than not at all.
+ *
+ * ⛔ THE DEFECT IS §12.4's, ONE FAMILY OVER, AND IT IS WORSE. A `SandTrap`
+ * was invisible to every ingredient; a `Spinner` was VISIBLE TO INGREDIENT
+ * (e) AT ITS PLACEMENT — a cell it leaves on the first tick of the visit and
+ * never returns to. So the map forbade a cell nothing is in, and called the
+ * cell the body is actually in calm. A wrong "closed" seals the map and a
+ * wrong "open" gets you hit; this managed both at once.
+ *
+ * ⛔⛔ AND WHAT IT IS GROWN BY IS THE **HAMMER**, NOT THE BODY. The 7x7 box
+ * is what a press aims at; what damages the player is
+ * `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)` — a rotating line
+ * whose phase is `(Game.time % 45) / 45 · 2π`. ⛔ THIS MODEL DOES NOT CARRY
+ * `Game.time`: it counts DEAD FRAMES, which are a per-load variable (§22.6),
+ * so the phase is not predictable from the run's own clock. What IS exact is
+ * the UNION over all 45 phases — `spinner.hammerReach`, a disc of
+ * `hammerLength` about the entity point — and that union is what a stance
+ * must clear whether it passes through or waits (trap 154's two questions
+ * have the SAME answer here, which is why this ingredient ignores the mode).
+ *
+ * ⇒ the map forbids the DISC. A bound that says "somewhere on this circle,
+ * and I cannot say where" is the ACCURATE WALL; predicting the angle from a
+ * clock this model does not have would be the permissive refusal
+ * [[feedback_accurate_wall_beats_permissive_refusal]] warns about.
+ *
+ * ⚠ CARRIED FORWARD IN TIME UNDER §14.2's LAW, and a spinner is the cleanest
+ * AUTONOMOUS body on the roster: `runRange` is 0, so its chase arm is dead
+ * code and its trajectory is a function of the level's geometry and the tick
+ * index ALONE — it cannot read the player even in principle.
+ * `run.spinnerForecast` is the run's own stepper run forward, so a transit
+ * query gets the body at the cell's own ETA rather than at horizon zero.
+ */
+export function spinnerDanger(run, box, horizon) {
+    const bodies = run.spinnerBodies ?? [];
+    if (bodies.length === 0) return [];
+    // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
+    // and it is a list of RECTS in the same order `spinnerBodies` reports.
+    const ahead = horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null;
+    const out = [];
+    bodies.forEach((b, i) => {
+        const r = ahead?.[i] ?? null;
+        // The ENTITY point — `hammerLine` starts at `x`/`y`, not at a corner.
+        const cx = r ? (r.x + r.right) / 2 : b.x;
+        const cy = r ? (r.y + r.bottom) / 2 : b.y;
+        const disc = {
+            x: cx - SPINNER.hammerLength,
+            y: cy - SPINNER.hammerLength,
+            right: cx + SPINNER.hammerLength,
+            bottom: cy + SPINNER.hammerLength,
+        };
+        if (!rectsOverlap(box, disc)) return;
+        out.push({
+            kind: 'spinner',
+            id: b.id,
+            why: `a live Spinner body at (${cx.toFixed(1)},${cy.toFixed(1)}) grown by its `
+                + `hammer's ${SPINNER.hammerLength} px reach — the UNION over all `
+                + `${SPINNER.hammerPeriod} phases, because the angle rides on `
+                + '`Game.time` and this model does not carry it'
+                + (horizon > 0 ? ` (forecast to horizon ${horizon})` : ''),
+        });
+    });
     return out;
 }
 
@@ -530,8 +607,18 @@ export function dangerVolumes(run, horizon = 0) {
             why: `a stepped ${c.tag} at its LIVE position`,
         });
     }
+    /**
+     * ⛔ R8 SLICE 6 — AND THE SPINNERS ARE EXCLUDED BY THE RUN'S OWN ROSTER,
+     * for the reason the bridged chasers are: this room STEPS them, so they
+     * belong to ingredient (f) at their LIVE positions. Pricing them here as
+     * well would forbid a cell every spinner in the game leaves on tick one —
+     * trap 157 wearing the danger map's clothes, which §12.4 named for the
+     * live half and this is the other half of.
+     */
+    const live = new Set((run.spinnerBodies ?? []).map((b) => b.id));
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
+        if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         if (contactPricing(inst.tag).kind === 'boss') continue;
         const r = contactRect(inst);
         if (!r) continue;
@@ -690,6 +777,18 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
     hazards: Object.freeze({
         coupling: 'static', atEta: false, why: 'placed volumes do not move',
     }),
+    spinners: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: '⛓ THE CLEANEST AUTONOMOUS BODY ON THE ROSTER — `runRange` is 0, so '
+            + '`Spinner.update`\'s chase block is dead code and the trajectory is a '
+            + 'function of the level geometry and the tick index alone. It cannot read '
+            + 'the player even in principle, so `spinnerForecast` (the run\'s OWN '
+            + 'stepper, run forward) is exact. ⚠ What is NOT predictable is the HAMMER '
+            + 'ANGLE — it rides on `Game.time`, which counts dead frames — so the '
+            + 'ingredient forbids the whole disc at every horizon rather than a line at '
+            + 'one of them.',
+    }),
     staticEnemies: Object.freeze({
         coupling: 'static', atEta: false, why: 'a `speed 0` census body at its placement',
     }),
@@ -742,6 +841,9 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null } = {}) 
             : arrowDanger(run, box, horizon)),
         ...hazardDanger(run, box),
         ...chaserDanger(run, box, coupledHorizon),
+        // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
+        // carried to the cell's own ETA in transit mode exactly as an arrow is.
+        ...spinnerDanger(run, box, horizon),
         ...staticEnemyDanger(run, box),
         ...crusherDanger(run, box),
     ];

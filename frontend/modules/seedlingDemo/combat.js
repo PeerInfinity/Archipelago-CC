@@ -1178,7 +1178,25 @@ export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', '
  * "somewhere" is not checkable, and `levelRun.test.js` greps for them.
  */
 export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
-    spinner: null,
+    /**
+     * ⛓⛓⛓ R8 SLICE 6 — AND THIS PRICER **REFUSES** RATHER THAN BILLING,
+     * which is a third answer the field can carry and is still a pricer.
+     *
+     * The census scan's partition is between "priced somewhere" (SKIP — the
+     * body is billed at its LIVE position) and "priced nowhere" (THROW at the
+     * placement). A spinner was in the second half, and the throw it produced
+     * was about a CELL THE BODY LEFT ON TICK ONE: the census rect is the
+     * `.oel` placement and a spinner is a billiard.
+     *
+     * ⛔ What prices it now is a REFUSAL at the live position:
+     * `levelRun.assertPlayerClearOfHammers` throws by name when the player's
+     * box enters the 13 px hammer disc on an honest tape, because
+     * `hammerAngle` rides on `Game.time` — which counts DEAD FRAMES and which
+     * this model does not carry — so the ANGLE is not predictable and the
+     * honest quantity is the union over all 45 phases. A refusal at the right
+     * place beats a bill at the wrong one, and both beat a silent zero.
+     */
+    spinner: 'assertPlayerClearOfHammers',
     iceturret: null,
     bob: 'stepChasersNow',
 });
@@ -1188,8 +1206,12 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
  * for `CONTACT_BOSS_WHY`'s reason: the answers are not interchangeable.
  */
 export const CONTACT_STEPPED_WHY = Object.freeze({
-    spinner: 'Spinner has its own stepped state and `spinnerRects` is in the block sweep, '
-        + 'but nothing prices its `hitPlayer`; R6 slice 3 wired the base-class contact only.',
+    spinner: '⛓ R8 SLICE 6: Spinner has its own stepped state, `spinnerRects` is in the '
+        + 'block sweep, and its `hitPlayer` — a rotating `collideLine` whose phase is '
+        + '`(Game.time % 45)/45·2π` — is priced by a REFUSAL rather than a bill: this '
+        + 'model does not carry `Game.time`, so `assertPlayerClearOfHammers` forbids the '
+        + 'union over all 45 phases (the 13 px disc) at the LIVE position. The census '
+        + 'scan skips the placement, which is a cell the body leaves on tick one.',
     iceturret: 'IceTurret is stepped (and its corpse glides), and nothing prices its '
         + 'contact either — its threat on this rung is the BLAST, which has its own arm.',
     bob: '⛓ R8 SLICE 1: `chasers.chaserStep` walks the body every tick and '

@@ -22,6 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import { SPINNER } from './spinner.js';
 import {
     ACTIVATOR_RESPONDERS,
     CLIFFSIDE_CLASS,
@@ -37,6 +38,7 @@ import {
     PRE_R5_ROLES,
     RELAXED_ROLES,
     ROLES,
+    SPINNER_PRESS_BOX,
     STAIRS_TAGS,
     ADDED_TIME_REMOVAL,
     ADDED_TIME_PROPERTIES,
@@ -2080,5 +2082,54 @@ describe('R8 slice 3: `collidesArrowCover` — the arrow\'s own three types', ()
         expect(solid).toBeTruthy();
         const hit = w.collidesArrowCover(solid.rect, {});
         expect(hit).toBeTruthy();
+    });
+});
+
+/**
+ * ⛓⛓⛓ R8 SLICE 6 — THE PRESS BOX AND THE STEPPER'S BOX ARE ONE BOX.
+ *
+ * `SPINNER_PRESS_BOX` is TYPED in `levelWorld` rather than imported from
+ * `spinner.js`, and the reason is a cycle: `spinner.js` imports
+ * `SOLIDS_BY_MOVER` from here, so importing back would close a loop. A
+ * duplicated literal is the lesser defect ONLY while something asserts the
+ * two agree — which is this arc's own idiom for two tables that must be one
+ * (`assertKillArmPolicyCovers`, `assertBridgeRosterMatchesScope`).
+ */
+describe('R8 slice 6: the Spinner press box is `spinner.SPINNER`\'s own hitbox', () => {
+    it('agrees with the stepper\'s constants, field by field', () => {
+        expect(SPINNER_PRESS_BOX.w).toBe(SPINNER.w);
+        expect(SPINNER_PRESS_BOX.h).toBe(SPINNER.h);
+        expect(SPINNER_PRESS_BOX.originX).toBe(SPINNER.originX);
+        expect(SPINNER_PRESS_BOX.originY).toBe(SPINNER.originY);
+        // The ctor's half tile — `super(_x + Tile.w/2, _y + Tile.h/2, …)`.
+        expect(SPINNER_PRESS_BOX.dx).toBe(SPINNER.dx);
+        expect(SPINNER_PRESS_BOX.dy).toBe(SPINNER.dy);
+        expect(SPINNER_PRESS_BOX.src).toMatch(/Spinner\.as/);
+    });
+
+    /**
+     * ⛔ AND THE CENSUS REALLY USES IT — the box is only worth asserting if
+     * the press census is the thing that reads it. Without the override
+     * `entityRect` REFUSES a `Spinner` by name (a class with no top-level
+     * box), which is how this slice found the gap: the first L18 probe threw
+     * before it reached the first tick.
+     */
+    it('⛔ makes L18\'s spinners real press RESPONDERS — they were in NO rect list', () => {
+        const world = buildLevelWorld(atlasLevelSource()(18), { roles: ROLES });
+        const spinners = world.pressResponders.filter((r) => r.as3 === 'Spinner');
+        expect(spinners).toHaveLength(2);
+        for (const r of spinners) {
+            // A finite rect, because a rect with a null edge NEVER overlaps
+            // and every query against it would answer "no", silently.
+            expect(Number.isFinite(r.rect.x)).toBe(true);
+            expect(Number.isFinite(r.rect.right)).toBe(true);
+            expect(r.rect.right - r.rect.x).toBe(SPINNER.w);
+            // ⛓ THE JOIN IS WHAT MAKES THE BOX A FALLBACK RATHER THAN AN
+            // ANSWER: a spinner is never at its placement after tick 1.
+            expect(r.spinnerId).toBe(`spinner@${r.x},${r.y}`);
+        }
+        // ⚠ AND THEY LEAVE `pressEnemies`, which is the roster for bodies
+        // with NO rect. A body in both lists would be priced twice.
+        expect((world.pressEnemies ?? []).some((e) => e.as3 === 'Spinner')).toBe(false);
     });
 });

@@ -2447,6 +2447,35 @@ export const PRESS_ARMS = Object.freeze({
      * `presses.pressRespondersIn`'s `finalBosses` arm, which is why the
      * `finalBossId` join below exists.
      */
+    /**
+     * ⛓⛓⛓ R8 SLICE 6: THE FIRST PRESS ARM AGAINST A BODY THAT MOVES ON ITS
+     * OWN — and the key is here for `BurnableTree`'s reason, one family over.
+     *
+     * `genericHit` is an `e is <Class>` chain and `Spinner extends Enemy`, so
+     * the arm it takes is the BASE one, twenty lines above any name of its
+     * own. This table is keyed on the class the chain TESTS and the census
+     * looks it up as `PRESS_ARMS[cls.as3]` — so without this row a spinner
+     * falls to `cls.type === 'Enemy'` and lands in `pressEnemies`, which
+     * carries NO RECT and therefore no press could ever reach one.
+     *
+     * ⛔ THE RECT IS NOT A CONSTANT AND THE REASON IS NEW. A pushed block
+     * moves between presses; a killed turret moves and shrinks; a dead
+     * ShieldBoss vanishes; the Owl is shoved BY the press. A spinner moves
+     * ~1 px every tick for reasons that have nothing to do with the player —
+     * `runRange` 0, `activeOffScreen` true — so it is the first body on this
+     * roster whose position at hit test 3 differs from its position at hit
+     * test 1 whether or not the press lands at all.
+     */
+    Spinner: {
+        arm: '(e as Enemy).hit(f, new Point(x, y), d, t) — reached by `e is Enemy`; '
+            + 'the class overrides none of `Enemy.hit`\'s five gates',
+        cost: '1 damage against `hitsMax` 3 behind a 30-tick `hitsTimer` (so ONE of a '
+            + 'press\'s five tests lands), an atan2 KNOCKBACK at `swordForce` 5 against '
+            + '`moveSpeed` 1 with a friction FLOOR of 1 — twenty ticks of a different '
+            + 'trajectory — and, at the third hit, a death that moves `classCount` AND '
+            + 'writes `Game.setPersistence(tag, false)` from `removed()`.',
+        src: 'Player.as:1055-1065 + Enemies/Enemy.as:141-181 + Enemies/Spinner.as:22-64',
+    },
     FinalBoss: {
         arm: '(e as Enemy).hit(f, new Point(x, y), d, t) — reached by `e is Enemy`; '
             + '`onlyHitBy = "Lava"` takes the `justKnock` arm and only SHOVES',
@@ -2542,6 +2571,37 @@ export const WATCHER_PRESS_BOX = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R8 SLICE 6: THE THIRD `entityRect` CASUALTY — and this one was
+ * unreachable until a press arm existed for the class.
+ *
+ * A `Spinner` is `collider: 'none'` here: it is in NO solids list (a spinner
+ * does not block the PLAYER), so the entity table gives it no top-level box
+ * and `entityRect` refuses by name. That refusal fired on the first probe
+ * this slice ran, which is the guard working — a rect with a non-finite edge
+ * never overlaps anything, so the press census would have answered "nothing
+ * here" for the one body the whole slice is about.
+ *
+ * ⚠ AND THIS BOX IS THE FALLBACK, NOT THE ANSWER. Unlike the lightpole's and
+ * the Watcher's, a spinner is never AT its placement after the first tick of
+ * a visit — `pressRespondersIn`'s `spinners` join supplies the live rect and
+ * this box is what an absent run state falls through to (the turret arm's
+ * "absent means alive, where the level built it" default).
+ *
+ * ⛔ THE NUMBERS ARE `spinner.SPINNER`'s AND THE TWO ARE ASSERTED EQUAL.
+ * `setHitbox(7, 7, 4, 4)` against the ctor's `super(_x + Tile.w/2, _y +
+ * Tile.h/2, …)`. They are re-typed here rather than imported because
+ * `spinner.js` imports `SOLIDS_BY_MOVER` from THIS module and a cycle would
+ * be a worse defect than a duplicated literal — so the equality is a test
+ * (`levelWorld.test.js`), which is this arc's own idiom for two tables that
+ * must agree.
+ */
+export const SPINNER_PRESS_BOX = Object.freeze({
+    as3: 'Spinner',
+    dx: 8, dy: 8, w: 7, h: 7, originX: 4, originY: 4,
+    src: 'Enemies/Spinner.as:31-42 (the ctor half-tile + setHitbox(7,7,4,4))',
+});
+
+/**
  * The press census's per-class box, for the responders whose PRESS volume
  * is not the one the blocking role transcribed.
  *
@@ -2571,6 +2631,7 @@ export const FINAL_BOSS_PRESS_BOX = Object.freeze({
 });
 
 export const PRESS_BOX_OVERRIDES = Object.freeze({
+    Spinner: SPINNER_PRESS_BOX,
     LightPole: LIGHTPOLE_PRESS_BOX,
     Watcher: WATCHER_PRESS_BOX,
     FinalBoss: FINAL_BOSS_PRESS_BOX,
@@ -4579,6 +4640,15 @@ export function buildLevelWorld(levelRecord, {
                     // decides how many of the five land at all.
                     ...(cls.as3 === 'FinalBoss'
                         ? { finalBossId: `${e.type}@${x},${y}` } : {}),
+                    // ⛓⛓⛓ R8 slice 6: the FIFTH, and the first whose body
+                    // moves for a reason unrelated to the press. The four
+                    // before it are moved BY something the walk did (a push, a
+                    // kill, a shove); a spinner is a billiard, so the census
+                    // box is wrong from the first tick of the visit onward and
+                    // `pressRespondersIn`'s `spinners` join is what makes a
+                    // press aim at the body rather than at its `.oel` cell.
+                    ...(cls.as3 === 'Spinner'
+                        ? { spinnerId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press

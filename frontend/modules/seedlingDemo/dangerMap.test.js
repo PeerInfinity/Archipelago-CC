@@ -845,11 +845,30 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
     it('⛓ every ingredient of the union is classified by coupling', () => {
         const keys = Object.keys(TRANSIT_INGREDIENTS).sort();
         expect(keys).toEqual(['armedLanes', 'arrows', 'chasers', 'crushers',
-            'hazards', 'staticEnemies']);
-        // ⛔ EXACTLY ONE is carried forward in time, and it is the autonomous
-        // one. A second `atEta: true` row is a design change, not a typo.
+            'hazards', 'spinners', 'staticEnemies']);
+        /**
+         * ⛔ EVERY `atEta: true` ROW IS AUTONOMOUS, AND THE TWO SETS ARE
+         * ASSERTED EQUAL rather than a count being asserted.
+         *
+         * ⛓ R8 SLICE 6 adds the SECOND — and it is a design change, said out
+         * loud, exactly as this row demanded ("a second `atEta: true` row is
+         * a design change, not a typo"). A `Spinner` has `runRange` 0, so its
+         * chase block is DEAD CODE and its trajectory reads the level's
+         * geometry and the tick index alone: it cannot forecast the walk
+         * because it cannot see the player. `spinnerForecast` is the run's
+         * own stepper run forward.
+         *
+         * ⚠ What is NOT predicted at an ETA is the HAMMER ANGLE — it rides on
+         * `Game.time`, which counts dead frames — so the ingredient forbids
+         * the whole 13 px disc at every horizon. The BODY is autonomous; the
+         * ANGLE is unknown; both facts are in the row's `why`.
+         */
         const atEta = keys.filter((k) => TRANSIT_INGREDIENTS[k].atEta);
-        expect(atEta).toEqual(['arrows']);
+        const autonomous = keys.filter((k) => TRANSIT_INGREDIENTS[k].coupling === 'autonomous');
+        expect(atEta).toEqual(['arrows', 'spinners']);
+        expect(atEta).toEqual(autonomous);
+        expect(TRANSIT_INGREDIENTS.spinners.why).toMatch(/runRange/);
+        expect(TRANSIT_INGREDIENTS.spinners.why).toMatch(/Game\.time/);
         expect(TRANSIT_INGREDIENTS.arrows.coupling).toBe('autonomous');
         expect(TRANSIT_INGREDIENTS.chasers.coupling).toBe('player-coupled');
         for (const k of keys) expect(TRANSIT_INGREDIENTS[k].why.length).toBeGreaterThan(20);

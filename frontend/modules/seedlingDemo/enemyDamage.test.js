@@ -168,7 +168,14 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
 
     it('⛔ a state for a refused class THROWS at birth, not at the press', () => {
         expect(() => createEnemyDamage('Bob')).toThrow(/refused/);
-        expect(() => createEnemyDamage('Spinner')).toThrow(/refused/);
+        // ⛓ R8 SLICE 6: `Spinner` WAS the second exemplar here and is now
+        // `modelled` — a debt's record is an assertion that must flip. The
+        // control is REPLACED rather than deleted (trap 62): `Jellyfish` is
+        // transcribed to the same depth in the same module as `Bob` and is
+        // deliberately unconverted, so it is the class where "transcribed"
+        // and "modelled" still visibly differ.
+        expect(() => createEnemyDamage('Jellyfish')).toThrow(/refused/);
+        expect(createEnemyDamage('Spinner').as3).toBe('Spinner');
         expect(() => createEnemyDamage('Nonesuch')).toThrow(/no KILL_ARM_POLICY row/);
     });
 
