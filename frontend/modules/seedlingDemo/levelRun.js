@@ -34,7 +34,7 @@
  */
 
 import {
-    PLAYER_SOLID_TYPES,
+    PLAYER_SOLID_TYPES, TILE_SIZE,
     addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap,
 } from './levelWorld.js';
 import {
@@ -164,7 +164,7 @@ import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
 import {
-    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, enemyHit, killLockLedger,
+    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, PIT_FADE, enemyHit, killLockLedger,
 } from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -2436,6 +2436,14 @@ export function createLevelRun({
                      * started is not an animation at frame 0.
                      */
                     anim: null,
+                    /**
+                     * `Enemy.fallInPit` — a LATCH, armed by the terrain
+                     * switch's `case 6`, and `fell` is what `removed()`
+                     * would read (`Bob.removed()` is an empty override, so
+                     * nothing here does).
+                     */
+                    fallInPit: false,
+                    fell: false,
                     dying: false,
                     // ⛔ `destroy` AND `removed` ARE DIFFERENT FENCEPOSTS, and
                     // trap 87 is the whole reason both exist: `destroy` stops
@@ -6479,16 +6487,16 @@ export function createLevelRun({
      * measurement rather than an assumption.
      */
     function assertSteppedChaserLifetime(c) {
-        const t = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
-        if (t === ENEMY_PIT_TILE) {
-            throw new Error(`levelRun: the stepped chaser ${c.id} stands on a PIT tile in `
-                + `level ${level} at tick ${ticksCompleted + 1}. \`Enemy.update\`'s `
-                + '`case 6` starts a DESCENT — a lerp to the tile centre plus an 8 deg '
-                + 'spin and a 0.05 fade over 20 ticks — which this rung does not '
-                + 'transcribe (the water and lava arms are instants and are). No room '
-                + 'this bridge steps has one, and that nil is why it is refused rather '
-                + 'than approximated.');
-        }
+        /**
+         * ⛓⛓⛓ R8 SLICE 3 — THE PIT THROW IS RETIRED, AND ITS OWN BOUND IS
+         * WHAT RETIRED IT. It read *"no room this bridge steps has one, and
+         * that nil is why it is refused rather than approximated"* — and this
+         * slice stepped L4, which has pits. G1 threw here at tick 14 on a bob
+         * chasing a player past one. The descent is transcribed above; the
+         * assertion that named the gap is the reason the gap could not be
+         * silent, and a bounded refusal whose bound a later slice invalidates
+         * is exactly the shape that has to fail loudly.
+         */
         /**
          * ⛓⛓⛓ R8 SLICE 3 — THE ARROW ARM OF THIS ASSERTION IS GONE, AND ITS
          * DELETION IS THE SLICE.
@@ -6784,6 +6792,77 @@ export function createLevelRun({
                     });
                     assertChaserRemovalIsDeclared(c, 'a terrain death');
                 }
+                /**
+                 * ⛓⛓⛓ R8 SLICE 3 — `case 6`, THE PIT, TRANSCRIBED AT LAST,
+                 * AND G1 IS WHAT SAID IT HAD TO BE.
+                 *
+                 * Slice 1 REFUSED this arm by name, with a bound: *"no room
+                 * this bridge steps has one, and that nil is why it is
+                 * refused rather than approximated."* Widening the verdict to
+                 * arrow-trap rooms made the bound FALSE — L4 has pits, and
+                 * the first full-config run after the family landed threw
+                 * exactly here, at tick 14, on a bob chasing a player past
+                 * one. That is the refusal doing its job on the slice that
+                 * invalidated it, and the honest answer is to build the arm
+                 * rather than to re-scope the room and lose the ceiling.
+                 *
+                 * `if (canFallInPit && !fallInPit) fallInPit = true` — a
+                 * LATCH, and `Bob.canFallInPit` is the base class's `true`.
+                 * The descent itself is below, because it REPLACES
+                 * `super.update()` rather than following it.
+                 */
+                if (t === ENEMY_PIT_TILE && !c.destroy && !c.fallInPit) c.fallInPit = true;
+            }
+            /**
+             * ⛔⛔⛔ THE DESCENT IS A SCHEDULE, AND IT RUNS *INSTEAD OF*
+             * `super.update()` — which is why it is a branch and not an extra
+             * statement.
+             *
+             * ```
+             *   if (!destroy && fallInPit && canFallInPit) {
+             *       x += (floor(x/Tile.w)*Tile.w + Tile.w/2 - x) / 10;
+             *       y += (floor(y/Tile.h)*Tile.h + Tile.h/2 - y) / 10;
+             *       angle += fallSpinSpeed; alpha -= fallAlphaSpeed;
+             *       if (alpha <= 0) { destroy = true; fell = true; }
+             *   } else { super.update(); if (!destroy) { hitUpdate(); hitPlayer(); } }
+             * ```
+             *
+             * ⇒ no friction, no move, no i-frame tick and NO `hitPlayer` — a
+             * falling body cannot damage the player, which is the whole
+             * reason a route may walk past one. `Bob.update`'s own chase block
+             * still runs (it sits below `super.update()` and tests only
+             * `destroy`/`"die"`/freeze), so `v` keeps accumulating and moves
+             * nothing: exactly `chaserStep`'s OFF-SCREEN shape, reused rather
+             * than re-derived.
+             *
+             * ⚠ `fallSpinSpeed` is `8 * FP.choose(-1, 1)` — an RNG draw, but
+             * a `const` taken in the CONSTRUCTOR for every enemy whether or
+             * not it ever meets a pit, and it moves the GRAPHIC's angle and
+             * nothing else. Named rather than modelled: it is not a position.
+             *
+             * ⛓ AND THE REMOVAL IS IMMEDIATE AFTERWARDS. `PIT_FADE` drives
+             * the same `Image.alpha` `Mobile.death` reads, so by the time
+             * `destroy` is set the alpha is already 0 and the first `death()`
+             * call removes — which `CORPSE_COUNTING.IceTurret`'s
+             * `laterRemovalBy` already said in words.
+             */
+            if (!c.destroy && c.fallInPit) {
+                const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying },
+                    playerPoint, { onScreen: false, frozen: ceremony !== null, move });
+                c.v = r.v;
+                c.x += (Math.floor(c.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.x) / 10;
+                c.y += (Math.floor(c.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.y) / 10;
+                const next = c.alpha - PIT_FADE.alphaStep;
+                c.alpha = next < 0 ? 0 : next;
+                if (c.alpha <= 0) {
+                    c.destroy = true;
+                    c.fell = true;
+                    chaserTerrainDeaths.push({
+                        t: ticksCompleted + 1, level, id: c.id, cause: 'pit', x: c.x, y: c.y,
+                    });
+                    assertChaserRemovalIsDeclared(c, 'a pit fall');
+                }
+                return null;
             }
             /**
              * ⛔⛔ A DESTROYED BODY STOPS DEAD, AND THE THREE GATES THAT SAY SO

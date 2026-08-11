@@ -32,7 +32,7 @@ import { heldKeysAt } from './tapeFormat.js';
 // animation's length is `chasers`' own derivation from `Bob.as:36`'s
 // `add("die", [3,4,5,6], 5)` and the fade's is `enemyDamage`'s loop.
 import { deathTicks } from './chasers.js';
-import { MOBILE_DEATH_FADE } from './enemyDamage.js';
+import { MOBILE_DEATH_FADE, PIT_FADE } from './enemyDamage.js';
 
 const DEATH_ANIM_TICKS = deathTicks('bob');
 import { runTapeToStream } from './tapeRunner.js';
@@ -1578,6 +1578,46 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
         expect(() => {
             for (let i = 0; i < t.tick_count; i += 1) run.advance(new Set(heldKeysAt(t, i)));
         }).toThrow(/OPENS 1 kill lock\(s\) in level 5 \[\{5,0\}\]/);
+    });
+
+    /**
+     * ⛓⛓⛓ THE PIT, AND ITS OWN BOUND IS WHAT BUILT IT.
+     *
+     * Slice 1 refused `Enemy.update`'s `case 6` by name with a bound — "no
+     * room this bridge steps has one". This slice stepped L4, which HAS one,
+     * and the first full-config run threw exactly there. The descent is a
+     * SCHEDULE, not an instant: a lerp a tenth of the way to the tile centre
+     * per tick and a 0.05 fade, and only when the alpha runs out does the
+     * body leave the world.
+     *
+     * ⛔ Driven from a stance that walks the player PAST the pit so the bob's
+     * chase line crosses it — trap 152's own shape ("ask what the ROOM does
+     * to the mover, and pick the stance that makes the room do it").
+     */
+    it('⛓⛓ a chaser that walks into a pit FALLS — a schedule, not an instant', () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            // The stance the dangerMap suite already boots — the one whose
+            // full-config run threw here at tick 14, kept so the witness and
+            // the finding are the same walk.
+            boot: { level: 4, x: 16, y: 64 },
+            noclip: false,
+            noDamage: false,
+            roles: ROLES_ON,
+        });
+        for (let i = 0; i < 400; i += 1) run.advance(new Set());
+        const fell = run.chaserTerrainDeaths.filter((d) => d.cause === 'pit');
+        expect(fell).toHaveLength(1);
+        expect(fell[0].id).toBe(L4_BOB);
+        // ⛔ AND IT TOOK THE SCHEDULE'S OWN LENGTH. The fall is armed on the
+        // tick the body stands on the tile and the body leaves the world when
+        // `PIT_FADE` runs out — a model that read `case 6` as an instant
+        // would remove it twenty ticks early.
+        const armed = run.chaserWalks.filter((w) => w.id === L4_BOB).pop();
+        expect(fell[0].t - armed.t).toBeGreaterThanOrEqual(PIT_FADE.ticks - 1);
+        // …and while it fell it damaged nothing: the descent replaces
+        // `super.update()`, so `hitPlayer()` never runs.
+        expect(run.playerHits).toEqual([]);
     });
 
     /**
