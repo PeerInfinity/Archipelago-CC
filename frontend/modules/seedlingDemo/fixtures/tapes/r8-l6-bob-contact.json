@@ -1,0 +1,24 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r8-l6-bob-contact",
+  "description": "⛓⛓⛓ R8 SLICE 1 — THE ENEMY BRIDGE'S DRIVEN ARM, and it is a stance the model REFUSED until this slice. Boot L6 two tiles west of `bob@112,48` and hold `right` into it on a tape that does NOT declare `noDamage`. Before the bridge `contactPricing('bob')` was a `mover` and `levelRun` threw BY NAME — \"a contact tests the body where it IS\" — because no line of the model computed a chaser's position. Now `stepChasersNow` walks the body with `chasers.chaserStep` (transcribed since R5 slice 3, called by nothing until now) and prices `Enemy.hitPlayer` through `applyPlayerHit` at the position THIS tick left it. ⛔ THE WITNESS IS THE TICK AND THE SOURCE, NOT A COUNT (trap 113): the model predicts the contact at tick 20 with a knockback of dx=-2.998, dy=0 — `Player.knockback` gates each axis and a contact 0 degrees off horizontal moves ONE of them (trap 117) — so the game's own stream has to reproduce that displacement at that tick or the transcription is refuted. ⛓ AND THE OTHER BODY IS THE ROOM'S OWN WORK: `bob@96,16` walks into the water at tick 40 and `Enemy.update`'s terrain switch destroys it, which this slice transcribes rather than declares (R7 slice 6e carried the same fact as a v10 `despawn` because the model could not compute it). The window ends at 30 — after the first contact and before the second at 42 — so the arm asks about ONE priced contact and nothing else. CONTROL: `jellyfish` is transcribed to the same depth in the same module, has no `MODELLED_ENEMY_CLASSES` row, and still throws `prices it as \"mover\"` by name (levelRun.test.js, L45).",
+  "boot": {
+    "level": 6,
+    "x": 80,
+    "y": 48
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 30,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 30
+    }
+  ]
+}
