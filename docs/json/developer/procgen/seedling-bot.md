@@ -6674,3 +6674,409 @@ stops in the room's south-west corner; what it wants next is not a better policy
 but a better instrument — a `Game.time` accumulator, `hammerLine` promoted from
 a bound to a contact, and a driven pair proving a predicted-safe stand takes
 zero hits while a predicted-unsafe one takes the hit at the predicted tick.
+
+## R8 slice 8: the hammer-accurate model, and the honest L18
+
+Slice 7 reported L18 and named five pieces it wanted. All five landed, and the
+room that had refused a policy is a recording:
+
+```
+r8-solve-18   573 ticks   noDamage RETIRED, the GAME's own hits: 0
+                          both spinners killed by PRESS, {18,0} declared at 385,
+                          the exit crossed to L19, 574 observations byte-exact,
+                          46 seam rows latched, the clock exact at 9200
+```
+
+⛔ **Zero spinner contacts on either arm** — neither `Enemy.hitPlayer`'s 7×7
+body at force 3 nor `Spinner.update`'s 13 px `collideLine` at force 4, both of
+which this tape is now billed for. `r8-l18-spinner-press` stays exactly where it
+is as the conservative era's mechanism witness: it declares `noDamage` and this
+one does not.
+
+### `Game.time` becomes a MODELLED quantity, and ten committed latches agree
+
+`Game.as:846`'s `time += timeRate` sits BELOW the `blackCover` gate and outside
+it, so the quantity is the boot value plus **every** `Game.update()` — live,
+frozen, ceremony and room-fade alike, all of which the run already counted
+separately. `gameClock.js` folds them into one span ledger and
+`SEAM_BOOT_SPEC`'s `time` row flips to `modelled: true`.
+
+⛓ **The free oracle was on disk already.** Every chain segment declares its
+successor's `save.time` from a latch the GAME took: **ten pairs, ten exact
+agreements**, including both ceremony segments — where the sword's extra `Help`
+frame is the difference between `r7-act2-10`'s 151 and `r8-d2-19`'s 150, and was
+measurable on the roster before this file existed (`r3-collect-sword` is 171
+dead frames against 170 for every other `r3-collect-*`). ⛓⛓ And a SECOND oracle
+was already on the wire: `botStatus.game_time` had been a readout since R5 slice
+3 with **no consumer** — trap 119 — and the differential now asserts the
+terminal latch against the model's clock on every tape.
+
+⛔ **The flag is true only where the count is exact.** No `pins: ["dead_frames"]`
+⇒ a load's fade is a RENDER count (18..21) and the clock is `null`; a
+`cutscene[0]` boot ⇒ `timeRate` decays and the clock is `null`. Every consumer
+refuses by name rather than billing a guessed phase.
+
+### The hammer is a CONTACT, and it is the SECOND bill
+
+The game bills: `Spinner.as:70-76` calls `player.hit(this, 4, new Point(x, y))`
+and `Player.hit`'s own `d` default is 1 — the 4 is the FORCE. So force 4,
+damage 1, through the run's one `applyPlayerHit` funnel. ⛔ **And it is the
+second bill, not the only one**: `Enemy.update` runs `hitUpdate(); hitPlayer();`
+on the line above, so a spinner damages through its 7×7 BODY at force 3 and
+through its 13 px LINE at force 4, in that order, in one frame. Narrowing the
+refusal to the line alone would have opened a hole exactly the size of the thing
+the disc covered. `hammerHitsPlayer` uses `crusher.collideLineSolid` — the ONE
+transcription of `World.collideLine`, `int` cast and endpoint-skip included.
+
+### The census, re-run against the LINE — and the disc's own arm as the control
+
+Same room, same 60 walkable cells, same 600-tick horizon, one instrument:
+
+| priced by | clear for the whole horizon | ...AND getting 3 separated presses |
+|---|---|---|
+| the 13 px disc | **1** — and it is behind the kill-lock | **0** |
+| the exact line ∪ body | **11** | **3** — (8,1), (6,3), (2,5) |
+
+⚠ The counts are PHASE-DEPENDENT (the body moves while the hammer turns), so
+the assertion is a strict inequality plus the one invariant — that a static
+striking stance EXISTS, which the disc arm says it does not. ⛓ And
+`clearOfHammersAt` is the ONE predicate the whole strike schedule asks, so
+upgrading it upgraded `deriveStrike`, `deriveRefuge`, `trainIsSafeHere`,
+`stepToward` and `safeStep` together and could not leave two of them
+disagreeing. `deriveRefuge` FILTERS on the line and SCORES on the disc: safety
+is the mechanism, margin is a preference.
+
+### The driven pair is ONE INTEGER apart
+
+Same room, same boot, same 324 ticks of the same input. The only difference is
+the declared `save.time`, which on this roster reaches exactly one mechanism:
+
+| | `save.time` | model | GAME |
+|---|---|---|---|
+| `r8-hammer-arm` | 4800 | 15 ticks inside the disc, 7.75 px past its reach, ZERO contacts | **`hits: 0`** |
+| `r8-hammer-control` | 4837 | a HAMMER contact at tick 247, `Game.time` 5104, phase 19/45, angle 152° | **`hits: 1`**, reproduced byte-exact over 325 observations |
+
+⛔ **And the game refuted the first version of it.** A pure 254-tick stand came
+back `hits: 1` against a model predicting 0 — *on the ARM*. Localised rather
+than patched: the model's own next prediction was a BODY contact two ticks past
+the tape's last observation, and the differential reads `hits` from `botStatus`
+AFTER the disarm while the page keeps running. The game's own `hits_timer` dated
+it there. ⇒ **a zero-hit tape has to END CLEAR, not merely run clean**; the walk
+north is that, and it RAISED the arm's disc exposure from ten ticks to fifteen
+rather than lowering it.
+
+### ⛔ Three defects the accurate ingredient uncovered
+
+1. **The scan's bound became the wall.** `deriveStrike` truncates at 40
+   candidates in TICK order. Under the disc those forty spanned hundreds of
+   ticks; under the line most of the room is safe most of the time, so all forty
+   landed at `i = 2..5` — every one a cell the controller needs forty-plus ticks
+   to reach — and the scan rejected itself. **The conservative ingredient had
+   been HIDING a defect in the bound.** Candidates are pre-filtered by an
+   admissible-ETA floor before the truncation now.
+2. **The kill lock had no writer.** Slice 7 said the spinner arm *"leaves the
+   opening itself to `stepActivators`' own kill-lock arm"*. There is no such
+   arm — `active = a.t >= 0 && …` makes a `tset == -1` lock unreachable by
+   construction, as it must be, because no button answers one. Driven, the solve
+   killed both bodies and sat out the lock's whole 101-tick fade waiting for a
+   mechanism nobody built: **a ledger that PREDICTS an opening printed exactly
+   like one that PERFORMS it.** ⛔ And the throw is scheduled for where the CLEAR
+   lands, not where the removal does — `r8-l18-spinner-press` kills its second
+   spinner on its last tick, so its clear lands 101 frames after the tape
+   disarms, and a throw at the removal would have refused a committed tape for a
+   divergence that cannot exist inside it.
+3. **And the game found the third.** The first recording came back refuted at
+   tick 36, 2 px in x, with the other 476 observations exact. The schedule
+   pressed at 33 and again at 35 — and `slashTimer` is 20, so the sword's own
+   *"double tap to dash"* makes the second press a **DASH THAT MOVES THE
+   PLAYER**. The gate was the RECEIVER's `hitsTimer`, which is the right
+   question one tick too early: a press's tests run over `T+1 … T+5`, so the
+   body's timer is still 0 when the loop re-aims. The arm honours
+   `KILL_PRESS_CADENCE` now — the floor `killSchedule` has refused a smaller
+   value than since R5 and which this arm never consulted. Six presses instead
+   of twelve.
+
+## R8: the live solver bot, as built (CLOSED 2026-08-11)
+
+R8's brief and full as-built record are
+`NewDocs/plans/seedling-bot-r8-opus-kickoff.md` (§§0–7 the brief, §§8–17 the ten
+as-builts (slices 0–8, with a 3b), §18 the close — NewDocs is gitignored, so the file exists only on
+the working machine; this section is the tracked summary).
+
+⚖ **The rung's scope was PIVOTED before it began** (user, 2026-08-10, recorded
+at the tail of "What R7 hands on" above): the M1→M2→M3 ladder's ordering is
+superseded, **M3 is promoted to now**, and the end goal is a Cloudberry
+Kingdom–style procedural level generator for Seedling — add an obstacle, re-run
+the solver, check the level still completes. R8 is that program's **player**,
+not its generator. The boundary (`hasShield` earned by the new machinery) was
+ruled at the outset and hit at slice 6; slices 7 and 8 were re-rulings that
+extended the rung rather than re-scoping it.
+
+**What the rung is.** A reactive sense → plan → act policy (`solverBot.js`)
+drives the JS model through its existing single-tick seam `run.advance(held)`,
+identifies the obstacle when no corridor exists, selects a strategy from the
+verb library, derives every free parameter from the room's own transcribed
+mechanism data, and emits per-tick keys into the EXISTING emission and
+verification tail — spans, a tape on disk, `--record --only=`, the byte-exact
+wasm differential. **Twenty tapes**, every one recorded through the game and
+byte-exact, **zero re-records of any committed artifact across all ten as-builts**.
+
+**The claim, as the live readouts state it** (a `--win` differential over the
+rung's own twenty tapes, no `--record`, clean tree afterwards — quoted rather
+than paraphrased):
+
+```
+ALL CHECKS PASSED                       534 PASS / 0 FAIL over 20 tapes
+PASS  r8-solve-18: the game's own `hits` matches the damage model — game: 0, model: 0
+PASS  r8-solve-18: the game's own latched `save.time` is the model's clock
+        game 9200, model 9200
+PASS  r8-hammer-control: the game's own `hits` matches the damage model — game: 1,
+        model: 1 (1 landed hit(s), 0 death(s))
+PASS  r8-d2: every ShieldBoss the run KILLED wrote its persistence flag
+        shieldboss@80,32 -> 19:0 off at tick 471 (destroy 494, removed 506)
+PASS  r8-d2-20: the game refused input where the model says it must
+        shieldlocknorm@176,16 for 100 tick(s) modelled
+PASS  chain r8-d2: the segment tick counts sum to the headline's — 864 + 781 = 1645
+PASS  chain r8-d2: ⛓ THE SEAM r8-d2-19 -> r8-d2-20 is GREEN over the whole
+        signature — 46 signature rows compared
+SKIP  chain r8-d2-shield: ⛓ the EARNED set is exactly what the chain declares
+        EARNED but not declared: shield@L20 — ⚠ REPORTED, NOT CREDITED: a staged
+        boot can DECLARE a flag but cannot have EARNED it, because it skips the
+        reaching. Earning stays the custody chains' claim.
+```
+
+- **The battery is 4/4 and the leg-only rooms are 7/7.** The bot re-solves every
+  room the hand pipeline solved — eleven `act2` segments' worth of rooms — from
+  staged boots, each tape byte-exact, each faster than the hand answer where the
+  hand answer used a margin (L4 253 against 347, L5 558 against 812, L6 294
+  against 355, L8 827 against 1090). ⛔ The hand-authored stances, waypoints and
+  hold ticks were never handed to the solver; goals are PLACEMENTS and EXITS.
+- **`hasShield` is EARNED inside a driven solver segment** — R6 debt 5, the
+  arc's oldest undischarged item, closed at slice 6: `hasShield false -> TRUE`
+  plus the `{20,2}` placement clear, in `r8-solve-20`, 365 ticks, zero hits.
+- **D2 is crossed end to end** as the machinery's first MULTI-SEGMENT staged
+  chain (`r8-d2`, 1,645 ticks; `r8-d2-19` the fight and the bosslock, `r8-d2-20`
+  the shield and the way out) — and it ends in **L13**, D2's own front door.
+- **A boss is fought by a POLICY**, not a hand-authored window: the stance
+  derived under `shieldBossBandRect`, the press ticks read off the run's own
+  `shieldBossStabs` ledger (`windowFrom − 1`, because `slashDelayMax` is zero),
+  three presses for three hits, `hits: 0` over 1,646 observations.
+- **L18 is honest**: `r8-solve-18`, `noDamage` retired, both spinners killed by
+  press under an accurate hammer.
+- **Every refusal conversion is a PAIR.** `Bob` stepped (`r8-l6-bob-contact` —
+  the game confirmed `chaserStep`'s arithmetic digit for digit, three rungs
+  after it was transcribed) with `jellyfish` still throwing by name;
+  `KILL_ARM_POLICY.Spinner` `refused` → `modelled` (`r8-l18-spinner-press`) with
+  `Jellyfish` as the replacement control; `touch` registered with `wandlock`
+  as the replacement control. ⛔ **`KILL_ARM_POLICY.Bob` stays `refused`** — no
+  room drove a press against a chaser, and a refusal retired without a driven
+  witness is worth nothing.
+
+**What the rung built.**
+
+- **`solverBot.js`** — the policy: goal list (`reach-exit`,
+  `collect-placement`), A\* corridor over the run's own branded fourteen-family
+  bag, obstacle identification at the COMPONENT FRONTIER, `OBSTACLE_STRATEGIES`
+  → `STRATEGY_EXECUTORS`, event-driven re-planning. ⛔ A strategy may be
+  SELECTED and not REGISTERED, and the refusal then names it — which turns the
+  next slice's charge into computed work orders rather than a hunt.
+- **The escalation ladder** — AVOID → TIME → BAIT → KILL, cheapest first,
+  `ESCALATION_LADDER` exported so the checker reads the RUNNING order. Climbs
+  are NUMBERED: a new obstacle starts a new climb at the bottom, because a
+  policy that remembered "I escalated last time" would skip the cheap rung for
+  the rest of the segment.
+- **The enemy bridge** — `chasers.chaserStep` has a caller at last
+  (`stepChasersNow`), gated per `MODELLED_ENEMY_CLASSES` row; `contactPricing`
+  reclassified `mover` → `stepped` with `pricedBy` as the load-bearing field
+  (priced in its own step ⇒ the census scan must SKIP; unwired ⇒ it must THROW);
+  and the **Arrow × Enemy family**, which is what made the bridge correct rather
+  than wrong-in-the-tail.
+- **The union danger map** — `dangerAt(run, tick, box, {mode})` over SIX
+  ingredients (live arrows + armed lanes, placed hazards, stepped enemies,
+  crushers, static census bodies, spinner hammers), returning a REASON LIST and
+  never a bare boolean. `HAZARDS_PRICED_LIVE` names, per family, the ingredient
+  that prices it instead of the census.
+- **The ETA-aware transit probe** — `dangerDuringTransit` vs
+  `dangerWhileWaiting`, two named questions that must not share a name;
+  `run.previewStepper()` (the controller's own physics) and
+  `run.arrowForecast()` (the arrow SUBSYSTEM, traps included) predict along the
+  previewed walk. `TRANSIT_INGREDIENTS` is the coupling partition and the law is
+  **autonomy given the walk**.
+- **`gameClock.js`** — `Game.time` as a modelled accumulator over every
+  `Game.update()`, dead frames included, checked against ten committed latches
+  and against `botStatus.game_time` on every tape.
+- **The staged chain kind** — `CHAIN_KINDS` as a POLICY TABLE, not two `if`
+  statements: `staged` skips the custody base case and the goal-ledger CREDIT,
+  keeps its internal seams, the witnessed-clear/despawn laws and the
+  calm-arrival requirement, and takes `minSegments: 1`. Both custody chains are
+  asserted BYTE-UNCHANGED — the test asserts neither entry declares a `kind` at
+  all, because `chainKind(c) === 'custody'` would pass just as well if someone
+  had typed it in.
+- **The staged witnessed-clear arm** — `clears: [{level, tag, at, source,
+  evidence}]` on the chain row, two-sided set equality against the tapes, and
+  the EVIDENCE checkable rather than a comment: `source: 'model'` must add up
+  (`removedAt + fade === at`), `source: 'game'` carries **both sides** of the
+  truncation boundary (`carriesAt === at`, `absentAt === at − 1`).
+- **The two-pass authoring loop** (`twoPassSolve.js`) — solve with the
+  consequence undeclared → read its tick from whichever oracle the MECHANISM
+  allows → declare → re-solve. ⛓ The honesty check is the PREFIX, not the
+  outcome: a clear at `T` cannot reach the world before `T`, so both passes must
+  press identical keys below it.
+- **The decision trace** (`decisionTrace.js`) — a SIDECAR, asserted never to
+  become a tape field; every row's `keys` are exactly what `heldKeysAt` says the
+  tape held on that tick, with the disagreement CONSTRUCTED and watched to go
+  red; trap 142's silent-death query graduated from the probes into it.
+
+**Standing findings** (source-proved or driven; do not re-derive):
+
+- ⛔ **Stepping a body whose DEATH the model cannot see is not a partial model,
+  it is a WRONG one** — the position is right for exactly as long as the body
+  should have existed and wrong for ever afterwards. The roster is scoped by
+  LIFETIME, not by class.
+- ⛔ **A bounded refusal is only as good as somebody re-checking its bound, and
+  the only reliable re-checker is the assertion itself** — paid three times this
+  rung (the pit descent, the static-body arm, the `KILL_SIDE_WRITES` −1 arm).
+- ⛔ **A hazard whose lethality is STATE and whose geometry is STATIC will be
+  priced twice, and the static reading wins** — a disarmed trap's whole column
+  was forbidden for ever, in the room whose only way north it is.
+- ⛔ **A corridor probe evaluated at ONE INSTANT cannot price a hazard that
+  moves, and both wrong answers are silent.** The cure is not a conservative
+  layer; it is the layer that was missing.
+- ⛔ **An ingredient may be carried forward in time ONLY if it is AUTONOMOUS
+  GIVEN THE WALK** — player-coupled ingredients read live at horizon 0. Growing
+  a coupled envelope over a long horizon SEALS ROOMS, and a wrong "closed"
+  seals the map.
+- ⛔ **A conservative ingredient can MANUFACTURE a policy problem** — and hide
+  defects in the bounds around itself. The 13 px hammer disc made L18 look like
+  it needed a moving dodging policy; the exact line gives it three static attack
+  stances.
+- ⛔ **A ctx snapshot may freeze STATE, but never a ONE-TICK TRANSIENT** — a
+  forecast taken on a level's first tick ran its whole horizon in a room with no
+  walls, and its consumer was the ingredient built to keep the policy safe.
+- ⛔ **A −1 write is a LEDGER ENTRY, never a PERMISSION.** A `setPersistence(-1)`
+  in L18 lands on `{17,29}`, the previous level's last slot; the game's own
+  readout confirmed it. The guard that would have made the write conditional is
+  the same test that makes it unconditional.
+- ⛔ **A terminal readout bills frames the tape never drove** — the differential
+  reads `hits` after the disarm while the page keeps running, so a zero-hit tape
+  must END CLEAR, not merely run clean.
+- ⛔ **A receiver-only gate cannot see the PRESSER's cooldown** — gating a press
+  loop on the body's `hitsTimer` is the right question one tick too early, and
+  the second press became a DASH that moved the player 2 px.
+- ⛔ **A committed artifact can stop being what its PRODUCER derives, silently.**
+  The differential replays the ARTIFACT — a fixed input list — so it cannot see
+  that the artifact is no longer a walk its producer would author. Two claims,
+  two instruments.
+- ⛔ **A coverage check placed one function downstream of the roster it polices
+  checks the wrong roster** — and the caller had been two families short for two
+  rungs behind 6,783 green tests.
+- ⛔ **A solver's world is an argument with a default, and the default was tuned
+  for somebody else** — a combat-blind run "crossed" L6 in 174 zero-hit ticks
+  while the game took seven contacts and died twice.
+- ⛓ **A placement inside a solid is an OBSTACLE, not a stance problem**, and
+  **the frontier must prefer doors to walls**: an obstacle with no selected and
+  registered strategy is a WALL for that choice.
+- ⛓ **A lock on the frontier resolves through the MECHANISM GRAPH, never by its
+  own id** — and discharging a lock in a hypothesis opens the SOLID and leaves
+  the VOLUME, which A\* refuses just as firmly.
+
+**The close-out debts, by name.**
+
+1. **`r8-d2` did not grow to three segments.** L18 solves and its latch is what
+   segment 2 would boot from, but PREPENDING it re-authors `r8-d2-19`'s boot
+   block and therefore re-records three committed artifacts. ⚖ **RULED (user,
+   2026-08-11): no re-record licence — the splice is R9's first act**, done once
+   with the campaign's own licence.
+2. **`r8-solve-4`'s drift** — 255 ticks derived against the committed 253, from
+   slice 5's three arrow-family fixes moving L4's arrow kill 114 → 116. The tape
+   and its recording are untouched and byte-exact; what changed is what the
+   producer would author. REPORTED, not re-derived, for the same reason as 1.
+3. **The despawn provenance channel** — pre-agreed
+   (`despawns: [{level, id, at, source, evidence}]`, same two-sided equality)
+   and UNBUILT, because no staged tape declares a despawn and a channel with no
+   caller is the very law being honoured. Proven to fail CLOSED: a staged chain
+   whose tape declares a despawn is refused by name today.
+4. **`plannerObstacleAt`'s legacy 8-of-14 forwarding** — untouched since slice
+   0. The solver's own `liveBag` entry forwards all fourteen; the legacy shape
+   is byte-preserved because forwarding the six re-routes the planner. The drop
+   is a MEASUREMENT with a total partition and a test that derives which
+   families survive by driving the function with fourteen sentinels.
+5. **L14 / L15 / L16 are uncrossed**, so D2 is not reachable from L13 by a
+   contiguous chain — the only path is L13→L14→L15→L16→L18.
+6. **`KILL_ARM_POLICY.Bob` stays `refused`**, and with it the chaser press
+   arm's 25-tick die ANIMATION and the who-killed-it fencepost's press side (a
+   bounded vacuity with its bound re-stated rather than inherited).
+7. **The goal ledger still stands at 2/41**, all of it R7's custody chain's.
+   Everything R8 earned — the shield, the boss key, three L20 flags, `{18,0}` —
+   is on STAGED chains, and a staged boot can DECLARE a flag but cannot EARN
+   one, because what it skips is the REACHING.
+8. **The dash is avoided, not modelled** — `KILL_PRESS_CADENCE` keeps every
+   press outside `slashTimer`, so no walk on the roster produces one.
+9. **Carried unchanged from R7**: `buildTape`'s v5 cap; the L3→L11 shortcut,
+   named and not taken; the strict-vs-minimal order question; three
+   unreconciled Seedling worlds; the model refusals (BobBoss, the spear's
+   three-hit repeat, the FireWand arm, the darksuit retaliation arm,
+   `Explosion`'s Enemy arm); `GROUPED_LOCK_EXCEPTIONS` as a hand row.
+
+**The retirement decision: NO DEMOTION**, and it is a decision rather than an
+omission — re-derived at close from the committed expectations' own
+`transitions` rather than from any slice's table.
+
+| the R8 additions | crutches | boot | levels visited |
+|---|---|---|---|
+| `r8-solve-1` | **none** | the TRUE INITIAL STATE `0@80,128` | 0, 2 |
+| `r8-solve-{2,3,4,5,6,7,8,9,10,11}` | **none** | a declared v8 seam block | one room + its exit |
+| `r8-solve-18`, `r8-solve-20`, `r8-d2`, `r8-d2-19`, `r8-d2-20` | **none** | a declared v8 seam block | 18/19, 19/20, 13/19/20 |
+| `r8-hammer-arm`, `r8-hammer-control` | **none** | a declared v8 seam block | 16, 18 |
+| `r8-l18-spinner-press` | **`noDamage`** | a declared v8 seam block | 18 |
+| `r8-l6-bob-contact` | **none** | a chosen stance (a v3 contact pair) | 6 |
+
+- **Nineteen of the twenty carry no crutch of any kind**, and the twentieth
+  (`r8-l18-spinner-press`) is kept deliberately: it is the conservative era's
+  mechanism witness, and `r8-solve-18` is what makes the contrast a measurement.
+- ⛔ **A staged segment supersedes NOTHING, and that is the load-bearing half of
+  this evaluation.** Eighteen of the twenty boot a declared seam block. On the
+  crutch-and-levels criterion alone, fifty-two roster tapes read as superseded
+  by an R8 tape — which is the criterion being asked a question it cannot
+  answer: what a staged boot skips is the REACHING, so a one-room staged segment
+  cannot retire a walk that arrived under its own power. The two exceptions are
+  checked rather than assumed: `r8-solve-1` boots the true initial state and
+  walks L0→L2, which is `r7-act2-1`'s own room and supersedes nothing
+  `r7-act2-1` did not; `r8-l6-bob-contact` is a 30-tick contact pair.
+- ⛓ **What R8 adds that nothing else has**: **L18 is reached by no other
+  fixture in the roster**, and L16 by nothing but `r8-hammer-arm`'s exit tick.
+- The R4 ENDS-MEET set and the two mechanism witnesses R7 kept are kept for
+  R7's own reasons, unchanged: an arithmetic claim with a hole is worse than a
+  redundant tape, and mechanism-witness pairs are kept unconditionally.
+
+⇒ the roster stands at **153 tapes** against R7's 133.
+
+## What R8 hands on, and what R9 inherits
+
+⚠ This table SUPERSEDES the R7 one above for every row R8 touched.
+
+| item / gate | what R8 did with it | rung |
+|---|---|---|
+| **M3 — the live reactive bot** | **BUILT**: `solverBot.js`, the ladder, the danger map, the ETA probe, the trace — twenty tapes, all byte-exact through the game, zero re-records over ten as-builts | **DISCHARGED (R8)** |
+| **`hasShield` + the L20 walk** (R6 debt 5, the arc's oldest) | **EARNED** in `r8-solve-20`, `false -> TRUE` plus `{20,2}`, inside a driven solver segment — reported-not-credited on a staged chain, with `save.rockSet` named as the witness a D2 walk cannot reach (the moonrock is in L0) | **DISCHARGED (R8)** |
+| **D2 / the ShieldBoss / boss key 0, honestly** | **CROSSED** — `r8-d2`, two segments, one internal seam, the fight derived by the policy, ending in L13 | **DISCHARGED (R8)** |
+| **the act2 known-answer battery** | **11/11 rooms re-solved** by the bot from staged boots (7 leg-only at slice 2, 4 mechanic rooms at slices 3b and 5), every tape byte-exact | **DISCHARGED (R8)** |
+| **`normalizeLive`'s remaining consumers** (R6 debt 3's residue, owed eight slices) | **PAID** at slice 0 — 21 sites converted, every consumer entry asserting the brand against `LIVE_GEOMETRY_KEYS`, two refusals named with the source's own reason | **DISCHARGED (R8)** |
+| **`chasers.js` / `hazards.js` / `encounters.js` orphaned from the driver** | `chaserStep` has a caller and the game confirmed its arithmetic digit for digit; `hazardVolume` and `chaseEnvelope` are danger-map ingredients | **DISCHARGED (R8)** |
+| **nothing prices an arrow in flight against the player** (R7 debt 5) | **PAID** at slice 5 — the model bills the player for an arrow through `applyPlayerHit`; every zero-hit claim in a room with a ceiling is now a real claim on that channel | **DISCHARGED (R8)** |
+| **`KILL_ARM_POLICY.Spinner`** | `refused` → `modelled`, paired, with the hammer as a CONTACT that bills | **DISCHARGED (R8)** |
+| **`KILL_ARM_POLICY.Bob`** | still `refused` — arrows and water were the mechanisms every room needed; nothing drove a PRESS against a chaser | **R9+** |
+| **the three-segment `r8-d2`** | L18 solves and its latch is segment 2's boot; prepending it re-records three committed artifacts. ⚖ **RULED (user, 2026-08-11): R9's FIRST ACT**, with the campaign's own licence | **R9, first** |
+| **`r8-solve-4`'s drift** (255 derived vs 253 committed) | REPORTED twice, never re-derived; the tape replays byte-exact and the producer's `--check` is the instrument that sees it | **R9**, with the same licence |
+| **the goal ledger's other 39 rows** | UNCHANGED at 2/41 — everything R8 earned is on staged chains, which report and never credit | **R9's campaign** |
+| **ASSEMBLY** — solver segments re-run along genuine latches into the honest chain | untouched by design (the pivot's own sequencing); the machinery is complete and the multi-segment staged chain proves the seam works on solver output | **R9+**, on coverage |
+| **the wasm differential's sunset** | still the per-segment oracle, as ruled — and it EARNED that four times this rung (the blind L6 solve, L5's refuted walk, the hammer arm's first version, L18's dash). What R8 exercised through it: 20 new tapes; the chaser bridge; Arrow × Enemy; the arrow-vs-player bill; the spawn-tick deferral and the two-frame arming lag; the spinner press arm and the hammer contact; `Game.time`. What it has NOT exercised: any room in D3–D8, the ending, L14–L17, the trap bosses, any press against a chaser | **R9+**, and the graduation claim stays BOUNDED |
+| **the despawn provenance channel** | pre-agreed, unbuilt, proven to fail CLOSED | **R9+**, when a staged tape declares one |
+| **`plannerObstacleAt`'s legacy 8-of-14 forwarding** | measured, partitioned, byte-preserved; the solver's own entry forwards fourteen | **R9+**, needs a re-record licence |
+| **L14 / L15 / L16** | uncrossed — ⚖ ruled out of scope at slice 7; they are the campaign's rooms to cross when D2 is played from the real chain | **R9's campaign** |
+| **`touch` / `wand`** | `touch` REGISTERED with L20's westward crossing as its driven witness; `solid:wandlock → wand` is the replacement selected-and-unregistered control, and L40's fourteen wandlocks are real obstacles with a real verb | **R9+** |
+| **the design AI / procedural generator** (the pivot's horizon) | untouched by design — it needs the solver first, and the solver now exists and has crossed every mechanic room the hand pipeline solved | **R9+**, the horizon |
+| **the L40 chain** (links 5–11, boss key 2) | untouched; still scheduled, still priced at 2,500–4,000 ticks | **R9+** |
+| **`buildTape`'s v5 cap** | untouched — every v6–v10 tape is still assembled by a plan script | **R9+** |
+| **rules v1 + the sphere order** | untouched; the sphere order is what a campaign slice would walk | **R9's campaign** |
+| **LightBoss / TentacleBeast / LavaBoss** | still measured OUT | deferred |
