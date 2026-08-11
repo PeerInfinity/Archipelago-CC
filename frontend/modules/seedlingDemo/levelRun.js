@@ -8509,6 +8509,43 @@ export function createLevelRun({
          * dead one dead.
          */
         /**
+         * ⛓⛓⛓ R8 SLICE 6 — WHERE THE SPINNERS ARE **NOW**, as bodies.
+         *
+         * `spinnerForecast(n)` has always answered where they WILL be, for the
+         * block sweep's benefit, and nothing exposed the present tense: a
+         * caller asking "is a body inside this press rect on THIS tick" had
+         * `spinnerRectsNow` (module-private) or a second simulation, and a
+         * second simulation is a second cost model
+         * ([[feedback_two_cost_models_must_agree]]).
+         *
+         * ⚠ A READ-ONLY INSTRUMENT, and it is byte-inert BY CONSTRUCTION —
+         * nothing in `advance` consults it and no tape's stream can move
+         * because a getter exists. It is added in this slice's step 0, BEFORE
+         * the press arm, precisely so the arm's exposure can be MEASURED
+         * against the committed roster rather than predicted from a room list
+         * (`R8_D2_SHIELD.pressExposure`).
+         *
+         * ⛔ THE FILTER IS `removed`, NOT `destroy` — `spinnerRects`' own law:
+         * a spinner mid-fade is still an entity in the `"Enemy"` type list, so
+         * it is still something a slash collects and something a block wedges
+         * on. Reporting only the undying ones would make a press at a corpse
+         * read as a press at nothing.
+         */
+        get spinnerBodies() {
+            const st = spinnerStateFor(level);
+            return spinnerRects(st).map(({ id, rect, spinner }) => ({
+                id,
+                rect: { ...rect },
+                x: spinner.x,
+                y: spinner.y,
+                hits: spinner.hits,
+                hitsTimer: spinner.hitsTimer,
+                destroy: spinner.destroy,
+                alpha: spinner.alpha,
+                persistTag: spinner.persistTag,
+            }));
+        },
+        /**
          * ⛓⛓ R5 SLICE 13: WHERE THE SPINNERS WILL BE, for the next `n` ticks.
          *
          * The whole reason `Spinner` is the one enemy worth modelling:

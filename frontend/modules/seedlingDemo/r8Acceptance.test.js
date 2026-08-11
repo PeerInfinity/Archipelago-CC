@@ -13,6 +13,7 @@ import {
     assertExecutorParametersAreDerived, assertEscalationIsOrdered,
     R8_TWO_PASS, assertTwoPassPrefixAgrees,
     R8_ETA_PROBE, assertTransitSamplesCarryEtas,
+    R8_D2_SHIELD, assertSpinnerPressExposureIsMeasured,
 } from './r8Acceptance.js';
 import { STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
@@ -23,11 +24,19 @@ import {
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
-    LIVE_GEOMETRY_KEYS, assertNormalizedLiveOpts, isNormalizedLiveOpts, normalizeLiveOpts,
+    LIVE_GEOMETRY_KEYS, ROLES, assertNormalizedLiveOpts, isNormalizedLiveOpts,
+    normalizeLiveOpts, rectsOverlap,
 } from './levelWorld.js';
 import { livePerVisitOpts, plannerObstacleAt } from './botDriverV2.js';
 import { ARROW_PLAYER_ARM } from './arrowTrap.js';
 import { knockbackDelta } from './playerDamage.js';
+import { createLevelRun } from './levelRun.js';
+import { parseTape, heldKeysAt } from './tapeFormat.js';
+import { hitSpinner, SPINNER } from './spinner.js';
+import { distanceRectPoint, SLASH_REACH, SWORD_DAMAGE } from './presses.js';
+import { OUT_OF_BAND_WRITERS, TAGS_PER_LEVEL } from './outOfBandLedger.js';
+import { outOfBandFlagFor } from './breakableRocks.js';
+import { KILL_LOCK_TSET } from './combat.js';
 import { applyFriction, DEFAULT_FRICTION } from './playerPhysicsV1.js';
 
 /** This file's own directory — the banked fixtures are read relative to it. */
@@ -681,6 +690,291 @@ describe('R8_ETA_PROBE — slice 5\'s prediction, stated before the arrow arm mo
     it('⛔ keeps the fifth rung REFUSED, with the ruling\'s reason', () => {
         const r = R8_ETA_PROBE.refusedHere.find((x) => x.what === 'a fifth ladder rung');
         expect(r.why).toMatch(/a rung is a STRATEGY and this is an INSTRUMENT/);
+    });
+});
+
+
+/**
+ * ⛓⛓⛓ THE SPINNER PRESS EXPOSURE, MEASURED BY DRIVING — the io seam
+ * `assertSpinnerPressExposureIsMeasured` takes.
+ *
+ * ⛔ TWO GATES, BOTH THE SHIPPED ONES. `Player.slash` collects with the RECT
+ * (`presses.slashRect`/`spearRect`, which the run itself records on every
+ * press) and then applies `FP.distanceRectPoint(x, y, box) <= SLASH_REACH` —
+ * 16 px from the player's POINT to the body's BOX. A measurement that used
+ * only the rect over-counts by a third (measured: 18 rect overlaps, 15 within
+ * reach), and one that re-derived either gate would be a second cost model.
+ *
+ * ⛔ THE LANDING COUNT IS `hitSpinner`'s OWN ANSWER, called rather than
+ * re-implemented: the i-frame (`hitsTimer` 30) is what turns a press's FIVE
+ * dispatches into ONE hit, and that is the receiver's rule, not the weapon's
+ * (traps 85/93).
+ *
+ * ⚠ A SHADOW, AND IT SAYS SO. The damage is tracked beside the run rather
+ * than fed into it — this measurement exists BEFORE the arm, so it is an
+ * UPPER BOUND on what the arm will do (a real knockback would move the body
+ * and could take a later dispatch out of reach). Bounding it in the
+ * conservative direction is what makes "no committed tape kills a spinner" a
+ * claim worth stating.
+ *
+ * ⚠ AND THE CANDIDATE SET IS PRE-FILTERED FROM THE COMMITTED EXPECTATIONS,
+ * not from a replay: a tape with no press span, or one whose recorded ticks
+ * never enter a spinner level, cannot reach one. That takes the sweep from
+ * 85 s over the whole roster to under three — and the filter is the GAME's
+ * own record of which rooms the walk was in.
+ */
+let atlasMemo = null;
+/** ⚠ ONE ATLAS FOR THE WHOLE SWEEP — `atlasLevelSource()` re-reads and
+ * re-parses `seedling-map.json` on every call, and this row calls it once per
+ * committed tape. */
+function atlasOnce() {
+    if (!atlasMemo) atlasMemo = atlasLevelSource();
+    return atlasMemo;
+}
+
+let spinnerLevelsMemo = null;
+/**
+ * ⚠ HOISTED AND MEMOISED, and the reason is a measurement: built inside the
+ * per-tape function this scan re-read 130 level records for each of 332
+ * tapes and the row cost 41 s. The atlas does not change between tapes.
+ */
+function spinnerLevelsOnce(src) {
+    if (spinnerLevelsMemo) return spinnerLevelsMemo;
+    spinnerLevelsMemo = new Set();
+    for (let l = 0; l < 130; l += 1) {
+        let rec;
+        try { rec = src(l); } catch { continue; }
+        if ((rec.entities ?? []).some((e) => e.type === 'spinner')) spinnerLevelsMemo.add(l);
+    }
+    return spinnerLevelsMemo;
+}
+
+function spinnerLandingsFor(tapeDir, name) {
+    const src = atlasOnce();
+    const spinnerLevels = spinnerLevelsOnce(src);
+    const raw = JSON.parse(readFileSync(join(tapeDir, `${name}.json`), 'utf8'));
+    if (!(raw.inputs ?? []).some((sp) => sp.key === 'primary' || sp.key === 'secondary')) {
+        return [];
+    }
+    const expDir = join(HERE, 'fixtures', 'expectations');
+    let visited = null;
+    for (const f of [`${name}.json`, `${name}.provisional.json`]) {
+        try {
+            visited = new Set(JSON.parse(readFileSync(join(expDir, f), 'utf8'))
+                .ticks.map((t) => t.level));
+            break;
+        } catch { /* try the next */ }
+    }
+    if (visited && ![...visited].some((l) => spinnerLevels.has(l))) return [];
+    const t = parseTape(raw);
+    const run = createLevelRun({
+        levelSource: src, boot: t.boot, noclip: t.noclip, noHazards: t.noHazards,
+        noDamage: t.noDamage, grants: t.grants, persistence: t.persistence,
+        despawn: t.despawn ?? [], equips: t.equips, pins: t.pins ?? [],
+        save: t.save ?? null, rng: t.rng ?? null, seam: t.seam ?? null, roles: ROLES,
+    });
+    const shadow = new Map();
+    const landings = [];
+    for (let i = 0; i < t.tick_count; i += 1) {
+        const before = run.presses.length;
+        const bodies = spinnerLevels.has(run.level) ? run.spinnerBodies : [];
+        for (const b of bodies) {
+            if (!shadow.has(b.id)) shadow.set(b.id, { hits: 0, hitsTimer: 0, destroy: false });
+            const st = shadow.get(b.id);
+            // `hitUpdate()` runs on the BODY, which updates before the player.
+            if (st.hitsTimer > 0) st.hitsTimer -= 1;
+        }
+        run.advance(new Set(heldKeysAt(t, i)));
+        if (run.presses.length === before) continue;
+        for (const press of run.presses.slice(before)) {
+            for (const b of bodies) {
+                const st = shadow.get(b.id);
+                if (!st || st.destroy) continue;
+                if (!rectsOverlap(press.rect, b.rect)) continue;
+                if (distanceRectPoint(run.state.x, run.state.y, b.rect) > SLASH_REACH) continue;
+                const after = hitSpinner(
+                    { ...st, id: b.id, alpha: 1, removed: false, deathCause: null },
+                    { force: 0, from: { x: run.state.x, y: run.state.y },
+                        damage: SWORD_DAMAGE, t: 'Sword' },
+                );
+                if (after.hits === st.hits) continue;
+                st.hits = after.hits;
+                st.hitsTimer = after.hitsTimer ?? SPINNER.hitsTimerMax;
+                st.destroy = Boolean(after.destroy);
+                landings.push({ t: press.t, id: b.id, hits: st.hits, killed: st.destroy });
+            }
+        }
+    }
+    return landings;
+}
+
+describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm moved', () => {
+    it('states a fork with both arms and the expected one named', () => {
+        const p = R8_D2_SHIELD.prediction;
+        expect(p.armA).toMatch(/MOVES NO COMMITTED TAPE/);
+        expect(p.armB).toMatch(/r5-press-glide/);
+        expect(p.expected).toMatch(/armA/);
+        expect(p.armA).not.toBe(p.armB);
+        // ⛔ THE RISK IS NAMED IN THE PREDICTION ITSELF, not in the as-built
+        // after the fact — arm B has a mechanism and a tick, or it is a hedge.
+        expect(p.expected).toMatch(/block-glide/);
+        expect(p.expected).toMatch(/t=108/);
+    });
+
+    it('the baseline is MEASURED and names the commit it was measured on (trap 40)', () => {
+        const b = R8_D2_SHIELD.prediction.baseline;
+        expect(b.commit).toBe('f42b1c985');
+        expect(b.files).toBe(243);
+        expect(b.tests).toBe(7028);
+        expect(b.note).toMatch(/read-only/);
+    });
+
+    /**
+     * ⛔⛔⛔ THE EXPOSURE IS RE-DERIVED FROM THE RUNNING MODEL — every
+     * committed tape replayed, every press asked against the SHIPPED gates
+     * (`slashRect`/`spearRect` then `distanceRectPoint <= SLASH_REACH`) with
+     * the bodies where `run.spinnerBodies` says they stand on that tick.
+     *
+     * ⚠ THIS IS THE ROW THAT COSTS SECONDS, and it is worth them: the whole
+     * prediction turns on WHICH tapes the arm can move, and a room list would
+     * have named ten where the gates name two.
+     */
+    it('⛔ the two exposed tapes are DERIVED by driving the roster, not declared', () => {
+        const tapeDir = join(HERE, 'fixtures', 'tapes');
+        const names = readdirSync(tapeDir).filter((f) => f.endsWith('.json'))
+            .map((f) => f.replace(/\.json$/, ''));
+        const measured = assertSpinnerPressExposureIsMeasured({
+            tapeNames: () => names,
+            reachingSpinners: (name) => spinnerLandingsFor(tapeDir, name),
+        });
+        expect(measured.tapes).toEqual(['r5-press-glide', 'r5-press-repeat']);
+    }, 120000);
+
+    /**
+     * ⛔ THE NON-VACUITY OF THAT CHECK, CONSTRUCTED — a comparison that has
+     * never seen a disagreement might be comparing nothing.
+     */
+    it('⛔ the exposure check FAILS on an undeclared tape, a wrong tick and a kill', () => {
+        const ok = R8_D2_SHIELD.pressExposure.reaching[0];
+        expect(() => assertSpinnerPressExposureIsMeasured({
+            tapeNames: () => ['brand-new-tape'],
+            reachingSpinners: () => [{ t: 1, id: 'spinner@0,0', hits: 1, killed: false }],
+        })).toThrow(/Undeclared and reaching: brand-new-tape/);
+        // ⚠ THE MUTATIONS BELOW SUPPLY THE WHOLE DECLARED SET and change one
+        // row inside it — a seam that returned a single tape would red on the
+        // set comparison first and never reach the row it is testing.
+        const all = R8_D2_SHIELD.pressExposure.reaching;
+        const perName = (f) => (n) => f(all.find((r) => r.name === n).landings);
+        expect(() => assertSpinnerPressExposureIsMeasured({
+            tapeNames: () => all.map((r) => r.name),
+            reachingSpinners: perName((ls) => ls.map((l, i) => (
+                i === 0 ? { ...l, t: l.t + 1 } : l))),
+        })).toThrow(/a right count with wrong ticks/);
+        expect(() => assertSpinnerPressExposureIsMeasured({
+            tapeNames: () => all.map((r) => r.name),
+            reachingSpinners: perName((ls) => ls.map((l) => ({ ...l, killed: true }))),
+        })).toThrow(/KILLS a spinner/);
+    });
+
+    /**
+     * ⛔⛔⛔ THE OUT-OF-BAND FINDING, CHECKED AGAINST THE TRANSCRIPTION THAT
+     * OWNS THE ARITHMETIC — §13.10's banked recon said the write is a no-op,
+     * and `outOfBandLedger` has said otherwise since R5 slice 5.
+     */
+    it('⛔ a −1-tagged Spinner kill in L18 lands on {17,29}, not on nothing', () => {
+        const declared = R8_D2_SHIELD.outOfBand.forLevel18;
+        const flag = outOfBandFlagFor(18, -1);
+        expect({ level: flag.level, tag: flag.tag }).toEqual(declared);
+        expect(flag.outOfBand).toBe(true);
+        expect(TAGS_PER_LEVEL).toBe(30);
+        // The two placements really do carry the sentinel — read off the
+        // atlas, because the whole finding is that the VALUE is -1 where the
+        // bounded vacuity assumed the attribute's presence was enough.
+        const l18 = atlasLevelSource()(18);
+        const spinners = l18.entities.filter((e) => e.type === 'spinner');
+        expect(spinners).toHaveLength(2);
+        for (const s of spinners) expect(Number(s.attrs.tag)).toBe(-1);
+        // ⛔ AND THE CLASS IS NOT YET CLASSIFIED, which is the registry doing
+        // its job: a fourth member cannot be modelled without being named.
+        // This row FLIPS on the slice that adds it, which is what a debt's
+        // record is for.
+        expect(Object.keys(OUT_OF_BAND_WRITERS)).not.toContain('Spinner');
+    });
+
+    /**
+     * ⛔ THE ROUTE IS CHECKED AGAINST THE MAP, ENTITY BY ENTITY. An anchor
+     * that verifies only the seam NAMES is an anchor about prose; this one
+     * verifies the DATA MODEL the segments will plan against.
+     */
+    it('⛔ every route row is the atlas\'s own — level, size and each named entity', () => {
+        const src = atlasLevelSource();
+        const at = (rec, type) => rec.entities.filter((e) => e.type === type)
+            .map((e) => `${e.x},${e.y}`);
+        for (const row of R8_D2_SHIELD.route) {
+            const rec = src(row.level);
+            // ⚠ THE RECORD'S `width`/`height` ARE ALREADY IN TILES — the built
+            // world's are in PIXELS, and dividing the wrong one by 16 is
+            // [[feedback_units_must_survive_the_round_trip]] in a test.
+            expect(`${rec.width}x${rec.height}`).toBe(row.size);
+            // every `tag@x,y` the row's prose names must really be there
+            for (const [, tag, x, y] of row.what.matchAll(/`(\w+)@(\d+),(\d+)`/g)) {
+                expect(at(rec, tag)).toContain(`${x},${y}`);
+            }
+        }
+    });
+
+    it('⛔ L18\'s lock is a KILL-lock and L19\'s bosslock is keyType 0', () => {
+        const src = atlasLevelSource();
+        const lock18 = src(18).entities.find((e) => e.type === 'lock');
+        expect(Number(lock18.attrs.tset)).toBe(KILL_LOCK_TSET);
+        const bosslock = src(19).entities.find((e) => e.type === 'bosslock');
+        expect(Number(bosslock.attrs.keyType)).toBe(0);
+        const key = src(19).entities.find((e) => e.type === 'bosskey');
+        expect(Number(key.attrs.keyType)).toBe(0);
+        // ⛓ THE KEY IS INSIDE THE BODY — the reason the fight IS the door.
+        const boss = src(19).entities.find((e) => e.type === 'shieldboss');
+        expect(key.x).toBeGreaterThanOrEqual(boss.x);
+        expect(key.x).toBeLessThan(boss.x + 48);
+    });
+
+    /**
+     * ⛓ THE STAGED BOOT IS THE CAMPAIGN'S OWN LATCH, read off the committed
+     * tape rather than typed — a staged boot invented beside the campaign is
+     * a claim about a different game.
+     */
+    it('⛓ the staged boot matches `r7-act2-11`\'s committed v8 block', () => {
+        const t = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'tapes', 'r7-act2-11.json'), 'utf8'));
+        expect(R8_D2_SHIELD.stagedBoot.derivedFrom).toMatch(/r7-act2-11/);
+        expect(t.seam.items.hasSword).toBe(true);
+        expect(t.seam.items.hasShield).toBe(false);
+        const clears = t.persistence.map((p) => `{${p.level},${p.tag}}`).join(' ');
+        expect(R8_D2_SHIELD.stagedBoot.persistence).toContain(clears);
+    });
+
+    it('⛔ the headline is REPORTED, never CREDITED, and says why', () => {
+        expect(R8_D2_SHIELD.headline.credited).toBe(false);
+        expect(R8_D2_SHIELD.headline.why).toMatch(/staged boot can DECLARE a flag/);
+        expect(R8_D2_SHIELD.headline.durableWitness).toMatch(/rockSet/);
+    });
+
+    it('⛔ declares that NO tape field is added, so the absence is a decision', () => {
+        expect(R8_D2_SHIELD.tapeFormat).toMatch(/UNTOUCHED/);
+    });
+
+    /**
+     * ⛔ THE REFUSALS ARE CARRIED WITH THEIR REASONS — a refusal that is not
+     * written down is one the next slice re-litigates.
+     */
+    it('⛔ keeps Bob refused and the despawn channel unbuilt, with reasons', () => {
+        const bob = R8_D2_SHIELD.refusedHere.find((r) => /Bob/.test(r.what));
+        expect(bob.why).toMatch(/die ANIMATION/);
+        const despawn = R8_D2_SHIELD.refusedHere.find((r) => /despawn/.test(r.what));
+        expect(despawn.why).toMatch(/FAILS CLOSED/);
+        // ⛓ The vacuity this slice INHERITS is re-stated rather than assumed
+        // — §11.3's press-side fencepost is about an `anim+fade` class.
+        const fencepost = R8_D2_SHIELD.refusedHere.find((r) => /fencepost/.test(r.what));
+        expect(fencepost.why).toMatch(/anim\+fade/);
     });
 });
 

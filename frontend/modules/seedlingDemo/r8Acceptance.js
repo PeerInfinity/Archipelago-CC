@@ -1872,3 +1872,528 @@ export function assertTwoPassPrefixAgrees(first, second, declaredAt, what = 'the
     }
     return { comparedTicks: declaredAt, pass1: first.length, pass2: second.length };
 }
+
+/**
+ * ⛓⛓⛓ R8 SLICE 6 — D2 AND THE SHIELD: THE RUNG'S BOUNDARY TARGET.
+ *
+ * The prediction, committed BEFORE the press arm, the `touch` executor or a
+ * D2 segment moved — a gate whose statement postdates the change is not a
+ * gate (trap 40), and this rung's own history is that the fork is where the
+ * finding lives (§9.1's missing family, §13.1's refuted walk).
+ *
+ * ── WHAT THE SLICE IS ─────────────────────────────────────────────────
+ *
+ * Three tracks, in the charge's order:
+ *
+ *   A. the PRESS ARM AGAINST A MOVING BODY — `KILL_ARM_POLICY.Spinner`
+ *      `refused` -> `modelled`, with its own PAIR and a control;
+ *   B. `touch` REGISTERED — the last unregistered executor, whose room is
+ *      L20's `shieldlocknorm@176,16`;
+ *   C. D2 ROOM BY ROOM from a STAGED POST-SWORD BOOT, to `hasShield`.
+ */
+export const R8_D2_SHIELD = Object.freeze({
+    item: Object.freeze({
+        id: 'd2-and-the-shield',
+        what: 'convert the Spinner KILL arm (a PRESS against a body that moves every '
+            + 'tick), register `touch`, and drive D2 — L18\'s kill-lock, L19\'s '
+            + 'ShieldBoss and boss key, L20\'s shield — with the live solver from a '
+            + 'staged post-sword boot',
+        why: 'the rung\'s ruled boundary target (⚖ §6.4): `hasShield` EARNED by the new '
+            + 'machinery, which is R6 debt 5 and the arc\'s oldest undischarged item.',
+        cite: 'kickoff §13.10 (the banked recon), §R6 13.8 (the honest route), ⚖ §11.8a '
+            + '(the executor law), ⚖ §12.2 (the hypothesis quantifier and its two '
+            + 'guards), §14.6a (the staged `clears` provenance), §14.2 '
+            + '(autonomy-given-the-walk)',
+    }),
+
+    /**
+     * ⛔ NO NEW TAPE FIELD IS EXPECTED, and the absence is a prediction rather
+     * than a note: D2's segments declare `clears` PROVENANCE on the chain row
+     * (§14.6a, built) and v9 `at` rows in the tape (a channel that has existed
+     * since R7). A despawn would need §14.6a condition 4's pre-agreed half —
+     * which is unbuilt and FAILS CLOSED, so a segment that needs one reports
+     * it rather than silently skipping the witness.
+     */
+    tapeFormat: 'UNTOUCHED — no field added, none reclassified; the despawn provenance '
+        + 'half stays pre-agreed and unbuilt unless a D2 segment declares a despawn',
+
+    /**
+     * ── TRACK A: THE PRESS ARM, AND WHAT IT OWES ──────────────────────
+     *
+     * ⛔ THE MOTION IS ALREADY STEPPED AND IS NOT WHAT THIS CONVERTS.
+     * `Spinner` is the ONE class that has had a `MODELLED_ENEMY_CLASSES` row
+     * since R5 slice 13; `spinner.stepSpinner` walks it and
+     * `spinner.hitSpinner` is `Enemy.hit` verbatim, DRIVEN ALREADY by the
+     * pulser arm (`levelRun`'s `pulseReaches` enemy branch). What is refused
+     * is the PLAYER's press, and the four things it owes are named here so
+     * the conversion is a measurement rather than a policy edit.
+     */
+    pressArm: Object.freeze({
+        row: 'KILL_ARM_POLICY.Spinner',
+        was: 'refused',
+        becomes: 'modelled',
+        owes: Object.freeze([
+            Object.freeze({
+                id: 'five-dispatches',
+                what: 'ONE PRESS IS FIVE HIT TESTS (`presses.SLASH_HIT_TICKS` = 5, '
+                    + '`slashDelayMax` 0) and the count that LANDS is the RECEIVER\'s '
+                    + 'answer, not the weapon\'s — traps 85 and 93. A `Spinner` sets '
+                    + '`hitsTimer = 30` on a landing (`SPINNER.hitsTimerMax`), so tests '
+                    + '2..5 of the SAME press are refused by the i-frame and one press '
+                    + 'is one hit.',
+                differsFrom: 'the Owl, whose `justKnock` arm sets no timer and takes all '
+                    + 'five until the 16 px reach loses him (§14.4)',
+            }),
+            Object.freeze({
+                id: 'the-body-moves-between-the-tests',
+                what: 'a `Spinner` moves ~1 px per tick with no player term at all, and '
+                    + 'the five tests are five consecutive TICKS — so the press census '
+                    + 'needs a LIVE rect join, the FIFTH after the pushable, the ice '
+                    + 'turret, the ShieldBoss and the Owl. ⛔ And it is the first whose '
+                    + 'body moves for a reason that has nothing to do with the press: '
+                    + 'the Owl moves BECAUSE test 1 shoved him.',
+                cure: '`pressRespondersIn` gains a `spinners` arm on the same '
+                    + '`{ ...r, rect: now.rect, live: true }` shape the four before it '
+                    + 'use; `run.spinnerBodies` is the getter that feeds it.',
+            }),
+            Object.freeze({
+                id: 'the-die-staging',
+                what: '`CORPSE_COUNTING.Spinner` is a `fade` row — `Enemy.startDeath` '
+                    + 'sets `destroy` on the killing blow and `Mobile.death`\'s ELEVEN '
+                    + 'accumulated 0.1 subtractions remove the body '
+                    + '(`SPINNER.deathTicks` 11, a LOOP and not a division). ⛔ There is '
+                    + 'NO die ANIMATION stage, so §11.3\'s who-killed-it fencepost — an '
+                    + 'arrow kill gets the anim\'s first update on the killing tick and '
+                    + 'a press\'s would not — has NOTHING TO BITE here: the fade is '
+                    + 'driven from the ENTITY half of `World.update`, not the graphic '
+                    + 'half. That is the prediction, and `removalTicksAfterHit` refusing '
+                    + 'an `animTicks` argument for a `fade` row is the check.',
+                bounded: '§11.3 named the press side a BOUNDED VACUITY (36 vs an arrow '
+                    + 'kill\'s 35) for `Bob`. This slice does not discharge it — a '
+                    + 'Spinner is the wrong class to discharge it with, because its '
+                    + 'shape has no animation stage at all. NAMED, not claimed.',
+            }),
+            Object.freeze({
+                id: 'the-two-consequences',
+                what: 'a Spinner death (a) moves `classCount(Spinner)`, so every '
+                    + '`tset == -1` lock in the room can open — which is L18\'s WHOLE '
+                    + 'SOLVE — and (b) writes `Game.setPersistence(tag, false)` from '
+                    + '`removed()` under `doActions`.',
+                computed: 'both, never asserted: `killLockLedger` for (a) and the run\'s '
+                    + 'own `spinnerWrites`/`spinnerDeaths` for (b).',
+            }),
+        ]),
+        /**
+         * ⛔⛔⛔ AND THE PAIR, WITH THE CONTROL NAMED BEFORE IT IS BUILT.
+         * A refusal retired without a driven witness is trap 101; a witness
+         * that is a COUNT rather than a tick and a source is trap 113.
+         */
+        pair: Object.freeze({
+            arm: 'a driven press in L18 recorded `--win --record --only=` byte-exact, '
+                + 'asserting the TICK and the SOURCE of every landed hit (trap 113: a '
+                + 'hit count is invariant under a permutation of its causes)',
+            control: '`Jellyfish` — transcribed to the same depth in the same module as '
+                + '`Bob`, `KILL_ARM_POLICY` `refused`, and it must STILL THROW BY NAME '
+                + 'when a press reaches one. `assertKillArmPolicyCovers` keeps the '
+                + 'partition total across the flip.',
+            why: 'the same shape as §9.8\'s bridge pair: the class that is transcribed '
+                + 'and NOT converted is the one place "transcribed" and "modelled" '
+                + 'visibly differ.',
+        }),
+    }),
+
+    /**
+     * ⛔⛔⛔ THE EXPOSURE, MEASURED BY DRIVING THE COMMITTED ROSTER — this
+     * slice's step 0, before a line of the arm existed.
+     *
+     * ⚠ THE ROOM LIST IS THE CHEAP QUESTION AND IT IS THE WRONG ONE. Ten
+     * committed tapes fire a weapon press in a room that holds a spinner
+     * (L39/L40/L92); what decides whether the arm can MOVE one is whether a
+     * press really REACHES a body — `Player.slash`'s TWO gates, the rect and
+     * then `FP.distanceRectPoint <= 16` (`presses.SLASH_REACH`), against the
+     * body where it stands on that tick. Measured with `run.spinnerBodies`
+     * (the read-only getter this step added) over every committed tape:
+     *
+     *   · ten tapes press in a spinner room;
+     *   · TWO have a dispatch that reaches one — `r5-press-glide` and
+     *     `r5-press-repeat`, both in L39;
+     *   · under `hitSpinner`'s OWN gates those become **1 landing** and
+     *     **2 landings** respectively, each taking a body to `hits 1/3`;
+     *   · **NO committed tape kills a spinner with a press.** So no
+     *     `classCount` moves and no `removed()` write is added anywhere on
+     *     the roster — the whole exposure is a KNOCKBACK.
+     *
+     * ⛔ AND THE KNOCKBACK IS THE RISK, NOT THE DAMAGE. `Enemy.hit`'s force
+     * for a sword is 5 against `SPINNER.moveSpeed` 1 with a friction FLOOR of
+     * 1, so a landed press is ~20 ticks of a completely different trajectory
+     * (`spinner.js`' own words). In L39 a spinner body is in the pushable
+     * block's sweep (`pushableCtx().collides` consults `spinnerRectsNow`),
+     * and `r5-press-glide` is a BLOCK-GLIDE tape. That is the whole of arm B.
+     */
+    pressExposure: Object.freeze({
+        measuredAt: '2026-08-11, on the committed roster, before the arm moved',
+        instrument: '`run.spinnerBodies` + `presses.slashRect`/`distanceRectPoint`, i.e. '
+            + 'the shipped gates — never a second reading of them',
+        spinnerLevels: Object.freeze([18, 39, 40, 92]),
+        pressesInSpinnerRooms: Object.freeze([
+            'r5-feather', 'r5-l40-join', 'r5-l40-part0', 'r5-l40-part5',
+            'r5-l40-part5-control', 'r5-press-delay', 'r5-press-glide', 'r5-press-repeat',
+            'r5-shaft', 'r5-shaft-control',
+        ]),
+        reaching: Object.freeze([
+            Object.freeze({
+                name: 'r5-press-glide',
+                level: 39,
+                withinReach: 5,
+                landings: Object.freeze([
+                    Object.freeze({ t: 108, id: 'spinner@112,88', hits: 1, killed: false }),
+                ]),
+            }),
+            Object.freeze({
+                name: 'r5-press-repeat',
+                level: 39,
+                withinReach: 10,
+                landings: Object.freeze([
+                    Object.freeze({ t: 108, id: 'spinner@112,88', hits: 1, killed: false }),
+                    Object.freeze({ t: 192, id: 'spinner@224,112', hits: 1, killed: false }),
+                ]),
+            }),
+        ]),
+        killsOnTheRoster: 0,
+    }),
+
+    /**
+     * ⛔⛔⛔ §13.10's BANKED RECON IS REFUTED ON ONE ROW, AND THE REFUTATION IS
+     * THIS SLICE'S FIRST FINDING — trap 159's shape, on a bound that was
+     * written one class away.
+     *
+     * §13.10 measured L18's second consequence as NIL: *"`Spinner.removed()`
+     * writes `setPersistence(tag,false)` unconditionally, and BOTH L18
+     * placements carry `tag = "-1"`, so the write is a no-op and there is no
+     * second writer."* The first half is exact and the conclusion does not
+     * follow: **a −1 tag is not a no-op in this game**, it is an OUT-OF-BAND
+     * WRITE, and this repo transcribed the arithmetic two rungs ago.
+     *
+     * ```
+     *   Game.as:1823-1826  setPersistence(tag, o, _l = -1) ->
+     *                      Main.levelPersistenceSet(_l >= 0 ? _l : Main.level, tag, o)
+     *   Main.as:202        levelPersistence[i * Game.tagsPerLevel + j] = _t
+     * ```
+     *
+     * `j = -1` is unchecked, so a kill in L18 lands on
+     * `18 * 30 - 1` = the PREVIOUS level's LAST slot = **{17,29}**
+     * (`outOfBandLedger.outOfBandFlagFor`).
+     *
+     * ⛓ AND `Spinner.check()` IS WHY THE GUARD DOES NOT SAVE IT.
+     * `if (tag >= 0 && !Game.checkPersistence(tag))` — a −1 never enters, so
+     * `doActions` is never cleared and `removed()` writes with it true. Read
+     * off `Enemies/Spinner.as:47-64` this session, not remembered.
+     *
+     * ⛔ `KILL_SIDE_WRITES.Spinner.sentinel` calls the −1 arm *"a bounded
+     * vacuity with no witness"* on the evidence that "every spinner in the
+     * committed extract carries one" — true of the ATTRIBUTE and false of the
+     * VALUE: L18's two carry `tag="-1"` explicitly. **D2 is the room that
+     * makes the bound false**, exactly as L4's pits made slice 1's bound
+     * false (trap 159), and the cure is the same one: BUILD the arm, do not
+     * re-narrow the scope. `Spinner` joins `OUT_OF_BAND_WRITERS`, which
+     * THROWS for an unclassified class — the registry doing its job on the
+     * fourth member it was designed to catch.
+     */
+    outOfBand: Object.freeze({
+        finding: 'a −1-tagged Spinner kill in L18 writes {17,29}, not nothing',
+        arithmetic: 'level * TAGS_PER_LEVEL + (−1) = (level − 1) * 30 + 29',
+        forLevel18: Object.freeze({ level: 17, tag: 29 }),
+        guard: '`Spinner.check()` is `tag >= 0 && !checkPersistence(tag)`, so a −1 body '
+            + 'is never despawned at build time and `doActions` stays true',
+        refutes: 'kickoff §13.10\'s "the write is a no-op and there is no second writer"',
+        cure: 'a `Spinner` row in `OUT_OF_BAND_WRITERS` (which throws for an '
+            + 'unclassified class) plus the run reporting the write — the model must '
+            + 'predict a `persistence_cleared` row the GAME will carry.',
+    }),
+
+    /**
+     * ── TRACK B: `touch`, THE LAST EXECUTOR ───────────────────────────
+     *
+     * ⛔ THE MECHANISM IS `botDriverV2.runTouch` AND IT IS NOT RE-DERIVED —
+     * §11.7's law (one implementation, whoever sequences it). What the
+     * executor adds is the BINDING to live state: which lock, from which
+     * stance, and a completion that is OBSERVED rather than counted.
+     *
+     * ⚠ AND THE TRAP-62 CONTROL MUST BE REPLACED, NOT DELETED. `touch` has
+     * been the live witness for §10.4 note 4's claim that a strategy may be
+     * SELECTED and not REGISTERED; the moment it is registered that witness
+     * is gone, and §13.10 already names its replacement — L40's `wandlock`,
+     * a real obstacle with a real verb and no solver executor.
+     */
+    touchExecutor: Object.freeze({
+        verb: 'botDriverV2.runTouch',
+        room: 'L20 `shieldlocknorm@176,16` (tile (11,1), `tset -2`, `persistTag 0`)',
+        derived: Object.freeze({
+            lock: 'the frontier\'s own blocker id, resolved against `world.activators` '
+                + 'by `resolveTouchLock` — which REFUSES a tag with no `touchRect` by '
+                + 'name, so "this obstacle opens on a touch" is the transcription\'s '
+                + 'answer and not the table\'s',
+            stance: 'NOT derived — `runTouch` walks its own approach into the lock\'s '
+                + 'centre and is TAKEN OVER when the collide rect fires. The executor '
+                + 'hands it the aim and the budget; a stance derived here would be a '
+                + 'second cost model for the same approach.',
+            completion: 'OBSERVED — the verb waits while `run.inputRefused` and asserts '
+                + '`run.openActivators.has(lock.id)` afterwards. `Lock.activationStep` '
+                + 'fades 0.01/tick and the window is ~101; the executor never counts to '
+                + 'a number of its own (§11.7\'s precedent, one verb over).',
+        }),
+        controlReplacement: 'L40 `wandlock` — `OBSTACLE_STRATEGIES` names a strategy for '
+            + 'it that `STRATEGY_EXECUTORS` does not register, so the '
+            + 'SELECTED-but-not-REGISTERED claim keeps a live witness (trap 62).',
+    }),
+
+    /**
+     * ── TRACK C: THE ROUTE, AS DATA ───────────────────────────────────
+     *
+     * §13.10's banked recon plus §R6 13.8's honest route, re-read against the
+     * atlas THIS session (the anchors verify the DATA MODEL, not the prose):
+     * every row below is checked entity-by-entity in `r8Acceptance.test.js`
+     * against `atlasLevelSource`, so a map edit moves the statement out loud.
+     */
+    route: Object.freeze([
+        Object.freeze({
+            level: 18,
+            size: '12x9',
+            what: 'THE KILL-LOCK. `lock@144,112` is `tset -1` — no button in the game '
+                + 'answers it; `checkEnemies()` opens it when `Game.totalEnemies()` '
+                + 'reaches zero, and the room\'s two bodies are `spinner@48,96` and '
+                + '`spinner@112,48`, both `tag="-1"`.',
+            needs: 'the PRESS ARM (track A) + the two-pass authoring loop, because '
+                + '`createLevelRun` takes `persistence` at construction and the lock\'s '
+                + 'opening tick is the thing the solve derives (§13.3, MODEL-sourced: '
+                + 'the run computes the removal and `activators.opensOnTick` the fade)',
+            exit: 'teleporter@176,112 -> L19 (16,144)',
+        }),
+        Object.freeze({
+            level: 19,
+            size: '11x11',
+            what: 'THE SHIELDSPIRE. `shieldboss@80,32` is a 48x48 Solid covering tiles '
+                + '(5,2)..(7,4); `bosskey@96,64` (keyType 0) sits INSIDE that body at '
+                + 'tile (6,4); `bosslock@48,32` is keyType 0, persistTag 1.',
+            needs: 'a MODELLED kill arm driven as a FIGHT — `KILL_ARM_POLICY.ShieldBoss` '
+                + 'is already `modelled` and `shieldBossFight.js` is stepped, so the '
+                + 'press SCHEDULE is derived from the boss\'s own window arithmetic '
+                + '(`shieldBossWindowFor`, `SHIELD_BOSS.swingTimeMax`), never copied '
+                + 'from `plan-seedling-r6-shieldboss.mjs`. ⛔ Traps 85/93 bind: hit 1 of '
+                + 'the FIRST press is swallowed by `activated`, and hit 2 of the SAME '
+                + 'press finds him sitting and starts a RETALIATION stab.',
+            oneSegment: '⛔ THE FIGHT AND THE CROSSING IT OPENS ARE ONE SEGMENT (trap '
+                + '150): the boss\'s body IS the door — column 1 is stone at rows 7-8, '
+                + 'so the north half is severed from the south — and re-entering the '
+                + 'room respawns him while `{19,0}` stays cleared.',
+            exit: 'stairsup@16,96 -> L20 (192,64)',
+        }),
+        Object.freeze({
+            level: 20,
+            size: '15x9',
+            what: 'THE SHIELD. `shield@112,48` at tile (7,3) in the middle chamber, '
+                + 'reachable from the L19 arrival at tile (12,4) with NO gate at all — '
+                + 'the three gates are BEHIND it, and they are the way OUT to L13: '
+                + '`shieldlocknorm@176,16` (11,1) -> `buttonroom@192,16` (12,1, `tset 0`, '
+                + '`room -1`, so `localPublish` LATCHES group 0) -> `lock@32,80` (2,5) '
+                + '-> the alcove (1,3),(2,3),(2,4) -> `stairsup@16,48` -> L13.',
+            needs: '`touch` (track B) for the shieldlock, and a `hold` whose presser is '
+                + 'the LOCK\'S OWN GROUP rather than the obstacle itself — the lock at '
+                + 'the frontier is not a presser, and its opener is `buttonroom@192,16`, '
+                + 'derived from the activator group `t = 0` the transcription already '
+                + 'carries.',
+            exit: 'stairsup@16,48 -> L13 (96,48)',
+        }),
+    ]),
+
+    /**
+     * ⛔ THE STAGED BOOT, DECLARED — and derived from the campaign's own latch
+     * rather than invented. `r7-act2-11` is the last committed segment of
+     * chain `act2-the-sword`, and its v8 boot block is the honest post-sword
+     * state: `seam.items.hasSword` true, `persistence` [{5,0},{8,0},{8,1},
+     * {10,0}], empty save arrays. D2's segments boot the SAME items and
+     * persistence with their own room's arrival as `boot`.
+     *
+     * ⛔ A STAGED BOOT CANNOT EARN (§3.6). The chain kind is `staged`, so
+     * `hasShield`'s flip, its `{20,2}` clear and `save.rockSet` are REPORTED,
+     * never CREDITED — the honest credit waits for assembly. Stated exactly,
+     * because the difference between "the solver took the shield" and "the
+     * campaign reached the shield" is the whole of what staging costs.
+     */
+    stagedBoot: Object.freeze({
+        derivedFrom: 'r7-act2-11 (the last committed segment of `act2-the-sword`)',
+        items: 'hasSword true, everything else false — the campaign\'s own latch',
+        persistence: '{5,0} {8,0} {8,1} {10,0} — the act2 chain\'s banked clears',
+        whatIsNotDeclared: 'nothing about D2 itself: no spinner clear, no {19,0}, no '
+            + '{20,2}, no key. Those are what the segments are FOR.',
+    }),
+
+    /**
+     * ⛓⛓⛓ THE HEADLINE CLAIM, STATED EXACTLY AND NO MORE.
+     */
+    headline: Object.freeze({
+        claim: '`hasShield` flips NOT-HELD -> HELD inside a DRIVEN SOLVER SEGMENT, with '
+            + 'the `{20,2}` placement clear and the durable `save.rockSet` witness, all '
+            + 'read from the game\'s own readouts through the differential.',
+        credited: false,
+        why: 'the chain is `staged` (§3.6): a staged boot can DECLARE a flag and cannot '
+            + 'EARN one — what it skips is the REACHING. `goalEarnedWitness` still wants '
+            + 'a flip between boot and latch, which a declaration cannot fake, so the '
+            + 'MEASUREMENT is taken and the CREDIT is withheld.',
+        durableWitness: '`save.rockSet` — `Shield.removed()` sets `Moonrock.beam`, which '
+            + 'is a one-shot TRIGGER the moonrock consumes (trap 124); `rockSet` is the '
+            + 'field that survives.',
+    }),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST. `outcome` is written BESIDE this, never over
+     * it (the standing R6/R7/R8 shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-11, before the press arm, the `touch` executor or a D2 '
+            + 'segment moved',
+        baseline: Object.freeze({
+            commit: 'f42b1c985', files: 243, tests: 7028,
+            note: 'MEASURED this session on the tree as slice 5 closed it, carrying only '
+                + 'the read-only `run.spinnerBodies` getter this step added (trap 40).',
+        }),
+        armA: '⛓ THE PRESS ARM MOVES NO COMMITTED TAPE. All 332 tapes replay byte-exact '
+            + 'with `KILL_ARM_POLICY.Spinner` modelled and the live rect joined into the '
+            + 'press census, ZERO re-records — because the model\'s player stream '
+            + 'already matches the GAME\'s on `r5-press-glide` and `r5-press-repeat`, '
+            + 'and the game has always had this arm. Correcting a body whose divergence '
+            + 'never reached the player cannot move the player.',
+        armB: '⛔ `r5-press-glide` or `r5-press-repeat` MOVES. Then the model has been '
+            + 'agreeing with the game by luck in L39 — the un-hit spinner sat where the '
+            + 'hit one would have been for the ticks the block sweep asked about — and '
+            + 'the finding is REPORTED with the tape named. No re-record licence exists '
+            + 'this rung, so a moved tape is a WALL, not an edit.',
+        expected: 'armA, and the reasoning is the measurement above: the two exposed '
+            + 'tapes take ONE and TWO landings, no body dies, no `classCount` moves and '
+            + 'no persistence is written. What changes is ~20 ticks of one body\'s '
+            + 'trajectory per landing, in a room where that body is in a block\'s sweep. '
+            + '⚠ THE NAMED RISK is exactly that sweep: `r5-press-glide` is a block-glide '
+            + 'tape and the landing is at t=108.',
+        alsoPredicted: Object.freeze([
+            '⛔ THE OUT-OF-BAND WRITE IS REAL AND THE MODEL MUST PREDICT IT. A D2 kill '
+                + 'in L18 writes {17,29}; the GAME\'s `persistence_cleared` will carry '
+                + 'it, so a model that reports nothing fails the differential on the '
+                + 'ledger rather than on the stream.',
+            '⛓ L18\'s KILL-LOCK IS MODEL-SOURCED, not game-sourced. Unlike L8\'s '
+                + 'SandTraps (§11.4 refuses their arrow death), this run computes both '
+                + 'terms — the removal (the 11-tick fade after the third landed press) '
+                + 'and `activators.opensOnTick`\'s 101-step lock fade — so '
+                + '`twoPassSolve`\'s `model` arm applies and the `clears` provenance '
+                + 'evidence must ADD UP (`removedAt + fade === at`, §14.6a condition 3).',
+            '⚠ THE SEGMENT COUNT IS NOT PREDICTED. Segmentation is by PERSISTENCE (trap '
+                + '150) and the rooms are cut at calm arrivals; how many segments D2 '
+                + 'yields is a consequence of that rule, stated in the as-built rather '
+                + 'than promised here.',
+        ]),
+    }),
+
+    /**
+     * ⛔ WHAT THIS SLICE DOES NOT CLAIM.
+     */
+    refusedHere: Object.freeze([
+        Object.freeze({
+            what: '`KILL_ARM_POLICY.Bob` -> `modelled`',
+            why: 'unchanged from §11.10.5 and §12.10.5. This slice converts the class D2 '
+                + 'NEEDS; a chaser press arm still owes the 25-tick die ANIMATION and '
+                + 'the who-killed-it fencepost (§11.3\'s 36 vs 35), and a Spinner has '
+                + 'neither — its `CORPSE_COUNTING` shape is `fade`. Converting Bob on '
+                + 'this slice\'s evidence would be retiring a refusal by argument.',
+        }),
+        Object.freeze({
+            what: 'the press side of §11.3\'s removal-delay fencepost',
+            why: 'a BOUNDED VACUITY, carried forward with its bound RE-STATED rather '
+                + 'than quietly inherited: the 36-vs-35 tick difference is about an '
+                + '`anim+fade` class, and this slice drives a `fade` one. Naming it here '
+                + 'is what keeps it from reading as discharged.',
+        }),
+        Object.freeze({
+            what: 'the despawn provenance channel (§14.6a condition 4)',
+            why: 'still a ledger with no caller unless a D2 segment declares a despawn. '
+                + 'The shape is pre-agreed and it FAILS CLOSED — a staged chain whose '
+                + 'tape declares one is refused by name today — so building it '
+                + 'speculatively would be the very trap 119 the condition avoids.',
+        }),
+        Object.freeze({
+            what: '`plannerObstacleAt`\'s legacy 8-of-14 forwarding',
+            why: 'untouched since §8.3.1; the solver plans through the `liveBag` entry '
+                + 'shape and never through the legacy one.',
+        }),
+    ]),
+});
+
+/**
+ * ⛔⛔⛔ THE PRESS ARM'S EXPOSURE, RE-DERIVED BY DRIVING — never re-read from
+ * the declaration it is checking.
+ *
+ * `R8_D2_SHIELD.pressExposure` is a claim about WHICH committed tapes can be
+ * moved by converting `KILL_ARM_POLICY.Spinner`, and the only honest way to
+ * check it is to replay the roster and ask the shipped gates. A tape that
+ * starts reaching a spinner tomorrow — a re-planned leg, a new fixture — is a
+ * tape nobody predicted (trap 89), and this is what says so.
+ *
+ * @param {object} io `{tapeNames, reachingSpinners}` — injected so the
+ *   disagreement can be CONSTRUCTED; a default that read the real roster
+ *   would make the mutation cases untestable (slice 1's own law).
+ */
+export function assertSpinnerPressExposureIsMeasured(io) {
+    if (!io || typeof io.tapeNames !== 'function'
+        || typeof io.reachingSpinners !== 'function') {
+        throw new Error('assertSpinnerPressExposureIsMeasured: needs an io seam '
+            + '{tapeNames, reachingSpinners}. `reachingSpinners(name)` must return the '
+            + 'landings a replay measures — the SHIPPED gates, not a second reading of '
+            + 'them.');
+    }
+    const declared = R8_D2_SHIELD.pressExposure.reaching;
+    const found = [];
+    for (const name of io.tapeNames()) {
+        const landings = io.reachingSpinners(name);
+        if (landings && landings.length) found.push({ name, landings });
+    }
+    const declaredNames = declared.map((r) => r.name).sort();
+    const foundNames = found.map((f) => f.name).sort();
+    const missing = foundNames.filter((n) => !declaredNames.includes(n));
+    const stale = declaredNames.filter((n) => !foundNames.includes(n));
+    if (missing.length || stale.length) {
+        throw new Error('R8_D2_SHIELD.pressExposure: the set of committed tapes whose '
+            + 'press REACHES a live spinner is not the one declared. Undeclared and '
+            + `reaching: ${missing.join(', ') || 'none'}; declared and no longer `
+            + `reaching: ${stale.join(', ') || 'none'}. The prediction is a claim about `
+            + 'WHICH tapes the arm can move (trap 89).');
+    }
+    for (const f of found) {
+        /**
+         * ⛔ THE KILL IS ASKED FIRST, AND THE ORDER IS THE POINT. A landing
+         * that KILLS is a categorically different prediction from one that
+         * knocks back — it moves `classCount` and writes persistence — so it
+         * gets its own message rather than arriving as one unequal field
+         * inside a row diff. Asked after the equality check this branch would
+         * be UNREACHABLE (the declaration says `killed: false`, so a kill
+         * fails the diff first), which is a guard that can never fire.
+         */
+        if (f.landings.some((l) => l.killed)) {
+            throw new Error(`R8_D2_SHIELD.pressExposure: "${f.name}" KILLS a spinner, and `
+                + 'the declaration says the roster kills none. A kill moves '
+                + '`classCount` and writes persistence — that is a different prediction '
+                + 'from a knockback, and it must be stated before it is measured.');
+        }
+        const row = declared.find((r) => r.name === f.name);
+        const same = row.landings.length === f.landings.length
+            && row.landings.every((l, i) => l.t === f.landings[i].t
+                && l.id === f.landings[i].id
+                && l.hits === f.landings[i].hits
+                && l.killed === f.landings[i].killed);
+        if (!same) {
+            throw new Error(`R8_D2_SHIELD.pressExposure: "${f.name}" is declared to take `
+                + `[${row.landings.map((l) => `${l.id}@t${l.t}`).join(', ')}] and really `
+                + `takes [${f.landings.map((l) => `${l.id}@t${l.t}`).join(', ')}]. The `
+                + 'TICK and the BODY are the claim — a right count with wrong ticks is a '
+                + 'prediction about a different walk (trap 113).');
+        }
+    }
+    return { reaching: found.length, tapes: foundNames };
+}
