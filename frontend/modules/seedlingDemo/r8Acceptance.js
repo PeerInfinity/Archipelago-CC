@@ -777,3 +777,165 @@ export function assertBatchIsModelSide() {
     }
     return { modelSide: true, files: [...new Set(R8_NORMALIZE_LIVE_BATCH.sites.map((s) => s.file))] };
 }
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — THE ARROW × ENEMY FAMILY, AND THE PREDICTION IT IS GATED
+ * ON, STATED BEFORE A LINE OF IT MOVED.
+ *
+ * Slice 1's wall was a LIFETIME gap, not a motion one (trap 157): this
+ * model's arrows hit NOTHING, so a room with an arrow trap could not be
+ * stepped at all — the game's arrows kill L4's and L5's bobs and the model's
+ * would have survived to chase a player standing still to bait them.
+ * `chaserRoomVerdict` refuses such a room BY NAME today, and widening that
+ * refusal is this slice's deliverable.
+ *
+ * ⛔ THE GATE IS THE FREE ORACLE, AND ITS ARMS ARE NAMED. The three tapes
+ * slice 1 measured RED are the whole point: with the family built they must
+ * replay BYTE-EXACT, because the model now sees the deaths the game always
+ * took. A divergence is a transcription defect — never a re-record (no
+ * licence exists this rung).
+ */
+export const R8_ARROW_ENEMY = Object.freeze({
+    item: Object.freeze({
+        id: 'arrow-x-enemy-family',
+        what: 'hand `stepArrow` its `bodies` — the room\'s live chaser bodies, its static '
+            + '"Enemy" census bodies, the arrow\'s own cover list and the player — and '
+            + 'price the ENEMY arm through `enemyDamage.enemyHit` with the death staging '
+            + '(`startDeath` -> the "die" Spritemap -> `endAnim` -> `Mobile.death`\'s fade '
+            + '-> `FP.world.remove`); then widen `chaserRoomVerdict` so an arrow-trap room '
+            + 'is stepped',
+        why: 'a body\'s POSITION without its LIFETIME is right for exactly as long as the '
+            + 'body should have existed and wrong for ever afterwards (trap 157). The '
+            + 'lifetime this slice adds is the arrow one; the terrain one is already '
+            + 'built, and the two together are what make L4/L5 steppable.',
+        cite: 'kickoff §4 slice 3 charge A; §9.1 (the banked measurement); §9.7 (what a '
+            + 'PRESS arm still owes)',
+    }),
+
+    /**
+     * ⛔ THE ROOMS ARE DISJOINT, AND THAT IS A MEASUREMENT THAT SCOPES THE
+     * SLICE — taken from the built censuses before any code moved.
+     *
+     * No room on the act2 battery holds BOTH a bridged chaser and a static
+     * "Enemy" body under an arrow trap:
+     *
+     *   L4  2 traps, `bob@64,64`, no static enemy
+     *   L5  4 traps, three bobs, no static enemy
+     *   L6  NO trap, four sandtraps + two bobs   (already stepped, slice 1)
+     *   L8  1 trap, two sandtraps, NO bob
+     *
+     * ⇒ the DAMAGE arm this slice builds is the chaser one; a static body is
+     * an arrow STOPPER whose own death staging stays REFUSED BY NAME — and
+     * the refusal is bounded by this measurement rather than by a hope.
+     */
+    roomScope: Object.freeze([
+        Object.freeze({ level: 4, traps: 2, chasers: 1, staticEnemies: 0 }),
+        Object.freeze({ level: 5, traps: 4, chasers: 3, staticEnemies: 0 }),
+        Object.freeze({ level: 6, traps: 0, chasers: 2, staticEnemies: 4 }),
+        Object.freeze({ level: 8, traps: 1, chasers: 0, staticEnemies: 2 }),
+    ]),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST — `outcome` is written BESIDE this, never over
+     * it (the R6/R7/slice-1 shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-10, before the first line of the family',
+        baseline: Object.freeze({
+            commit: '349aef358', files: 242, tests: 6898, seconds: 354.78,
+            note: 'slice 2\'s close numbers on the identical tree; re-measured this '
+                + 'session before anything moved (a gate with no baseline cannot '
+                + 'attribute — trap 40).',
+        }),
+        armA: '⛓ EVERY committed tape replays BYTE-EXACT with the widened bridge on — '
+            + 'INCLUDING `r7-act2-4`, `r7-act2-5` and `r7-act2-full`, the three slice 1 '
+            + 'measured RED. Those three are the claim: the model now kills the bobs the '
+            + 'game kills, at the ticks the game kills them, so the walks that baited '
+            + 'them replay unchanged.',
+        armB: '⛔ one or more of the three stays RED. That is a TRANSCRIPTION defect in '
+            + 'this family — the damage gates, the knockback the killing hit does NOT '
+            + 'take, the die animation\'s length, the fade\'s eleventh tick, or the update '
+            + 'slot the anim\'s first graphic update falls in — and it is fixed at source '
+            + 'or REPORTED as a wall. It is never a re-record.',
+        expected: 'armA. Stated as the claim rather than as a hope because slice 1 already '
+            + 'measured the cause (arrows hitting nothing) and R7 slice 6c already '
+            + 'measured the game\'s own answer in L4 (hits 0->1->2->3, the body gone at '
+            + 't~158) — so this is a prediction with a number behind it.',
+        alsoPredicted: Object.freeze([
+            'the L4 bob dies to the THIRD arrow and the killing hit takes NO knockback '
+                + '(`Enemy.hit`\'s `startDeath` is the IF arm; `knockback` is the ELSE)',
+            'the i-frame floor is 60 ticks between the first and third landed arrow '
+                + '(`hitsTimerMax` 30, `hitsMax` 3, 1 damage per arrow — trap 143)',
+            'the body still counts in `totalEnemies()` through BOTH staging halves '
+                + '(the 25-update "die" anim and the eleven-tick fade) — trap 87\'s two '
+                + 'fenceposts, now with a third: `endAnim` and `removed()` are not the '
+                + 'same instant either',
+        ]),
+    }),
+
+    /**
+     * ⛔ WHAT THIS SLICE DOES *NOT* CLAIM, so the next one starts from a
+     * refusal rather than from a rediscovery.
+     */
+    refusedHere: Object.freeze([
+        Object.freeze({
+            what: '`KILL_ARM_POLICY.Bob` -> `modelled`',
+            why: 'an arrow kill is not a PRESS. The row\'s stated debt is the cadence a '
+                + 'player press needs against a MOVING body (`combatVerbs.killWindowTicks` '
+                + 'from a stance the router picks); nothing in this slice drives one, and '
+                + 'a refusal retired without a driven witness is trap 101. The DAMAGE '
+                + 'model and the death staging this slice builds are what a later press '
+                + 'arm will reuse — that is the half that is paid.',
+        }),
+        Object.freeze({
+            what: 'a static "Enemy" body\'s own death by arrow (SandTrap)',
+            why: 'its clear is DECLARED by the tape (`r7-act2-8`\'s v9 `at` rows) and the '
+                + 'declaration is the single writer of that flag. Computing it here would '
+                + 'make TWO writers of one persistence slot — two cost models that must '
+                + 'agree, which is one cost model. The body is an arrow STOPPER (which is '
+                + 'strictly more accurate than today, where arrows fly through it) and '
+                + 'its damage is refused by name, bounded by `roomScope` above.',
+        }),
+    ]),
+});
+
+/**
+ * ⛔ THE ARROW'S TARGET PARTITION IS TOTAL, AND IT IS CHECKED — `Arrow`'s own
+ * `hitables` list against the dispositions this model gives them.
+ *
+ * `Arrow.as:17` is `["Player", "Enemy", "Tree", "Solid", "Shield"]` and the
+ * switch in `update()` has TWO arms and a `default:` — so three of the five
+ * take no damage and STOP THE ARROW ANYWAY (the removal is
+ * `if (hits.length > 0)`, outside the switch). A model that priced only the
+ * damaging arms would fly its arrows through cover, and cover is a resource.
+ *
+ * @param {object} dispositions `{[hitableType]: 'damaged'|'stops'|'priced-elsewhere'}`
+ */
+export function assertArrowTargetPartition(dispositions, hitables) {
+    if (!dispositions || typeof dispositions !== 'object') {
+        throw new Error('assertArrowTargetPartition: pass the disposition map');
+    }
+    if (!Array.isArray(hitables)) {
+        throw new Error('assertArrowTargetPartition: pass `ARROW.hitables` — the list is '
+            + 'the transcription\'s, never a copy typed beside this check (trap 89).');
+    }
+    const declared = Object.keys(dispositions).sort();
+    const want = [...hitables].sort();
+    const missing = want.filter((t) => !declared.includes(t));
+    const extra = declared.filter((t) => !want.includes(t));
+    if (missing.length || extra.length) {
+        throw new Error('R8_ARROW_ENEMY: the arrow\'s target dispositions do not partition '
+            + `\`ARROW.hitables\`. Unclassified: ${missing.join(', ') || 'none'}; not a `
+            + `hitable: ${extra.join(', ') || 'none'}. "Everything not listed takes no `
+            + 'damage" is the safe-sounding rule and it is the one that cannot be diffed '
+            + 'against the AS3.');
+    }
+    const known = new Set(['damaged', 'stops', 'priced-elsewhere']);
+    for (const [t, d] of Object.entries(dispositions)) {
+        if (!known.has(d)) {
+            throw new Error(`R8_ARROW_ENEMY: "${t}" has disposition "${d}", which is not `
+                + `one of [${[...known].join(', ')}].`);
+        }
+    }
+    return { types: declared.length };
+}
