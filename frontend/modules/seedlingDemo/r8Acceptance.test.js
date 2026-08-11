@@ -11,6 +11,7 @@ import {
     assertSteppedContactPartition,
     R8_STRATEGY_EXECUTORS, assertShovePostConditionKind,
     assertExecutorParametersAreDerived, assertEscalationIsOrdered,
+    R8_TWO_PASS, assertTwoPassPrefixAgrees,
 } from './r8Acceptance.js';
 import { STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
@@ -487,6 +488,98 @@ describe('R8_STRATEGY_EXECUTORS — slice 3b\'s prediction, stated before an exe
         // against the sentence: a control that has stopped being able to fail
         // is not a weak control, it is not a control (trap 62).
         expect(STRATEGY_EXECUTORS.touch).toBeUndefined();
+    });
+});
+
+describe('R8_TWO_PASS — slice 4\'s prediction, stated before the loop moved', () => {
+    it('states a fork with both arms and the expected one named', () => {
+        const p = R8_TWO_PASS.prediction;
+        expect(p.armA).toMatch(/hasShield/);
+        expect(p.armB).toMatch(/REFUSAL is the deliverable/);
+        expect(p.expected).toMatch(/armA/);
+        // ⛔ The two arms must be DIFFERENT claims (the slice-3b row's law).
+        expect(p.armA).not.toBe(p.armB);
+    });
+
+    it('the baseline is MEASURED and names the commit it was measured on (trap 40)', () => {
+        const b = R8_TWO_PASS.prediction.baseline;
+        expect(b.commit).toBe('01ea0f649');
+        expect(b.files).toBe(242);
+        expect(b.tests).toBe(6954);
+        expect(b.note).toMatch(/before anything moved/);
+    });
+
+    it('⛔ names L18 — NOT the shield — as the slice\'s FORMAT RISK, with the mechanism', () => {
+        const also = R8_TWO_PASS.prediction.alsoPredicted.join(' | ');
+        expect(R8_TWO_PASS.prediction.expected).toMatch(/FORMAT RISK/);
+        expect(R8_TWO_PASS.prediction.expected).toMatch(/it is L18/);
+        expect(also).toMatch(/KILL_ARM_POLICY\.Spinner` is REFUSED/);
+    });
+
+    /**
+     * ⛓⛓⛓ THE SPINNER'S SECOND CONSEQUENCE IS PREDICTED NIL, AND THE
+     * PREDICTION IS CHECKED AGAINST THE LEVEL RECORD RATHER THAN BELIEVED.
+     *
+     * `Spinner.removed()` writes `setPersistence(tag, false)` unconditionally
+     * — §11.4's second-writer shape exactly — and the prediction says both L18
+     * placements carry `tag = "-1"`, which makes the write a no-op. That is a
+     * claim about DATA ON DISK, so it is read off the atlas here. A room whose
+     * spinners carried real tags would be a different problem, and this is
+     * what would say so.
+     */
+    it('⛓ L18\'s two spinners really do carry `tag = -1` — the nil, MEASURED', () => {
+        const rec = atlasLevelSource()(18);
+        const spinners = rec.entities.filter((e) => e.type === 'spinner');
+        expect(spinners.length).toBe(2);
+        for (const s of spinners) expect(String(s.tag ?? s.attrs?.tag)).toBe('-1');
+        expect(R8_TWO_PASS.prediction.alsoPredicted.join(' | '))
+            .toMatch(/both L18 placements carry `tag = "-1"`/);
+    });
+
+    it('the two tick SOURCES are a partition with a mechanism reason each', () => {
+        expect(Object.keys(R8_TWO_PASS.tickSources).sort()).toEqual(['game', 'model']);
+        expect(R8_TWO_PASS.tickSources.model.oracle).toMatch(/chaserKillLockOpens/);
+        expect(R8_TWO_PASS.tickSources.game.oracle).toMatch(/persistence_cleared/);
+        // ⛔ The game arm's own check is a BOUNDARY, not a hit: an arm that
+        // only ever showed the tag present would measure "cleared by now".
+        expect(R8_TWO_PASS.tickSources.game.check).toMatch(/must NOT carry the tag/);
+    });
+
+    it('⛔ declares that NO tape field is added, so the absence is a decision', () => {
+        expect(R8_TWO_PASS.tapeFormat).toMatch(/UNTOUCHED/);
+    });
+});
+
+describe('assertTwoPassPrefixAgrees — the loop\'s only non-vacuity check', () => {
+    const keys = (...ks) => ks.map((k) => new Set(k ? k.split('+') : []));
+
+    it('passes when the two walks agree below the declared tick', () => {
+        const a = keys('right', 'right', 'up', '');
+        const b = keys('right', 'right', 'up', 'left');
+        expect(assertTwoPassPrefixAgrees(a, b, 3))
+            .toEqual({ comparedTicks: 3, pass1: 4, pass2: 4 });
+    });
+
+    /**
+     * ⛔ THE NON-VACUITY IS WITNESSED. A comparison that has never seen a
+     * disagreement might be comparing nothing (§8.4's law, one module over),
+     * so the disagreement is CONSTRUCTED and watched to go red BY TICK.
+     */
+    it('⛔ REDS, naming the tick, when the walks diverge below the declaration', () => {
+        const a = keys('right', 'right', 'up');
+        const b = keys('right', 'left', 'up');
+        expect(() => assertTwoPassPrefixAgrees(a, b, 3))
+            .toThrow(/DISAGREE at tick 1, below the declared tick 3/);
+    });
+
+    it('⛔ REDS when pass 1 never reached the tick it is said to have measured', () => {
+        expect(() => assertTwoPassPrefixAgrees(keys('right'), keys('right', 'right'), 2))
+            .toThrow(/pass 1 spent only 1 tick\(s\) but the clear is declared at 2/);
+    });
+
+    it('⛔ REDS when pass 2 never reached its own declaration', () => {
+        expect(() => assertTwoPassPrefixAgrees(keys('a', 'a', 'a'), keys('a'), 2))
+            .toThrow(/pass 2 spent only 1 tick\(s\)/);
     });
 });
 

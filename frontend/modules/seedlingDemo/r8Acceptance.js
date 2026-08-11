@@ -1320,3 +1320,227 @@ export function assertEscalationIsOrdered(escalations, what = 'the combat ladder
     }
     return { rungs: escalations.length, deepest: last < 0 ? null : order[last] };
 }
+
+/**
+ * ⛓⛓⛓ R8 SLICE 4 — THE TWO-PASS AUTHORING LOOP, THE BATTERY'S TAIL, AND THE
+ * SHIELD. The prediction, committed BEFORE a line of the loop moves.
+ *
+ * ── WHY A LOOP AT ALL, IN ONE PARAGRAPH ───────────────────────────────
+ *
+ * `createLevelRun` takes `persistence` **AT CONSTRUCTION**. A goal behind a
+ * lock the RUN's own walk opens therefore needs, as an INPUT, a tick that
+ * only a solve can produce — the circle §12.10.3 named and refused to
+ * half-build. The loop breaks it in the only honest order: solve with the
+ * consequence UNDECLARED (the solver refuses at the shut gate, and the
+ * refusal carries the ticks it did spend), read the opening tick from
+ * whichever oracle can answer, DECLARE it as a v9 `at` row, and re-solve.
+ *
+ * ⛔ TWO SOURCES, AND WHICH ONE IS ALLOWED IS A PROPERTY OF THE MECHANISM,
+ * NOT A PREFERENCE:
+ *
+ *   · MODEL-SOURCED — the run itself computes the consequence
+ *     (`chaserKillLockOpens`, §11.5). L5's `lock@48,112` is the case: three
+ *     arrow kills take `totalEnemies()` to zero and the model knows the
+ *     removal tick. The declared tick is that removal PLUS the responder's
+ *     own fade (`activators.opensOnTick`) — the model owns both halves.
+ *   · GAME-SOURCED — §11.4 REFUSES to compute the consequence, so the model
+ *     may not invent it. L8's two `SandTrap` clears are the case: a static
+ *     `"Enemy"` body's arrow death is the tape's declared v9 row precisely
+ *     so that ONE writer owns that persistence slot. The tick comes from the
+ *     GAME's own `persistence_cleared`, read off truncated `--win` arms.
+ *
+ * ⛔ AND THE LOOP'S OWN HONESTY CHECK IS THE PREFIX, NOT THE OUTCOME. Pass 2
+ * declares a clear at tick T that was measured on pass 1's walk. That is only
+ * a measurement OF PASS 2 if the two walks agree up to T — the declaration
+ * changes the world at T and cannot change it before. So the loop asserts
+ * `pass2.perTick[i]` equals `pass1.perTick[i]` for every `i < T`, BY NAME. A
+ * declared tick measured on a different walk is the exact defect this
+ * machinery could otherwise manufacture silently.
+ */
+export const R8_TWO_PASS = Object.freeze({
+    item: Object.freeze({
+        id: 'two-pass-authoring-loop',
+        what: 'build the solve -> read the opening tick -> declare -> re-solve loop ONCE, '
+            + 'as solver-harness machinery, with both tick sources; register the `kill` '
+            + 'executor for a KILL-LOCK work order (model-sourced) and for a STATIC body '
+            + 'under the room\'s own ceiling (game-sourced); close the battery with '
+            + '`r8-solve-5` and `r8-solve-8`',
+        why: '§12.10.3 named the missing machinery exactly and refused to half-build it; '
+            + '§12.10.2 measured L8\'s wall as the same shape one oracle over. Both rooms '
+            + 'are COMPUTED work orders, so this slice is implementation.',
+        cite: 'kickoff §12.10 (the two refusals), §11.4 (why the SandTrap arm is refused), '
+            + '§11.5 (the kill-lock consequence as a CHECK), §12.8 (L5\'s work order)',
+    }),
+
+    /**
+     * ⛔ NO NEW TAPE FIELD. The loop is planner/harness-side; what it emits is
+     * a v9 `at` row, which the format has carried since R7 slice 6d.
+     * `GAME_VISIBLE_DROPS` is a CLASSIFICATION list and this slice adds
+     * nothing to classify — stated so the absence is a decision.
+     */
+    tapeFormat: 'UNTOUCHED — v9 `at` rows only; no field added, none reclassified',
+
+    tickSources: Object.freeze({
+        model: Object.freeze({
+            oracle: 'the run\'s own ledger — `chaserKillLockOpens[].t` (the REMOVAL tick) '
+                + 'plus `activators.opensOnTick(RESPONDERS[tag].fade)` (the responder\'s '
+                + 'own fade, 101 for a `Lock`)',
+            allowedWhen: 'the model COMPUTES the consequence end to end',
+            room: 'L5 — `lock@48,112`, `tset == -1`, opened by three arrow kills',
+            check: 'pass 2 recomputes the ledger and its tick must EQUAL the declared one',
+        }),
+        game: Object.freeze({
+            oracle: 'the GAME\'s own `persistence_cleared`, read off TRUNCATED `--win` '
+                + 'arms — the smallest tape length whose end-of-run readout carries the '
+                + 'tag. A poll cannot answer this (`botStatus` is sampled on wall clock, '
+                + 'so it measures a BAND); a truncation is a boundary.',
+            allowedWhen: '§11.4 refuses the consequence, so the model may not invent it',
+            room: 'L8 — `{8,0}` and `{8,1}`, two `SandTrap` bodies killed by '
+                + '`arrowtrap@96,16`\'s column',
+            check: 'the arm one tick BELOW the boundary must NOT carry the tag — a lower '
+                + 'bound and an upper bound, or it is not a boundary',
+        }),
+    }),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST — `outcome` is written BESIDE this, never over
+     * it (the R6/R7/slice-1/3/3b shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-11, before the loop, the `kill` executor or the D2 rooms moved',
+        baseline: Object.freeze({
+            commit: '01ea0f649', files: 242, tests: 6954, seconds: 354.80,
+            note: 'MEASURED this session on the unmodified tree before anything moved '
+                + '(trap 40). It reproduces slice 3b\'s close numbers (242 / 6954) exactly, '
+                + 'which is itself the check that this slice starts from the tree slice 3b '
+                + 'closed on.',
+        }),
+        armA: '⛓ THE BATTERY CLOSES 4/4 and D2 REACHES THE SHIELD: `r8-solve-5` and '
+            + '`r8-solve-8` recorded BYTE-EXACT through the win-channel differential, and '
+            + '`hasShield` flips NOT-HELD -> HELD inside a driven solver segment with the '
+            + '`{20,2}` placement clear and the `save.rockSet` durable witness. Zero '
+            + 're-records; the 326 committed tapes unmoved.',
+        armB: '⛔ a room refuses and the REFUSAL is the deliverable, with its rung number '
+            + 'and its missing mechanism named (§11.10.1 / §12.10.1: a tape whose solution '
+            + 'nobody designed is worse than a missing tape). The two-pass loop itself is '
+            + 'the slice\'s spine and lands either way — a loop that cannot be exercised '
+            + 'on a real room is reported as such rather than shipped on synthetics.',
+        expected: 'armA for L5 (the mechanism is measured: §11.1 already computes all '
+            + 'three deaths on the HAND walk, and §12.8 computed the work order). armA for '
+            + 'L8 (both shoves derive today; only the two declarations are missing). ⚠ D2 '
+            + 'is where this slice budgets its FORMAT RISK, and the named risk is NOT the '
+            + 'shield: it is L18.',
+        alsoPredicted: Object.freeze([
+            '⛓ L5\'s declared tick is the MODEL\'s and it is FAR BELOW `r7-act2-5`\'s '
+                + 'committed `at: 737`, which §11.5 already showed is the end of a PHASES '
+                + 'BLOCK measured by a truncated arm and therefore an UPPER BOUND. §11.5 '
+                + 'predicts the write at ~379 from the hand walk; the SOLVER\'s walk is its '
+                + 'own and will land its own tick. ⛔ `r7-act2-5` is NOT touched — no '
+                + 're-record licence exists and its 737 is not this slice\'s to tighten.',
+            '⛔ L18 IS THE RISK, and it is a KILL ARM: `lock@144,112` is `tset == -1` and '
+                + 'the two bodies are SPINNERS. `MODELLED_ENEMY_CLASSES` already steps a '
+                + 'spinner, but `KILL_ARM_POLICY.Spinner` is REFUSED — so the room needs a '
+                + 'PRESS arm against a MOVING body, which nothing on this arc has ever '
+                + 'driven. The conversion is licensed by §3.2 (a row may flip when the '
+                + 'damage/death staging is transcribed, PAIRED and priced) and it is the '
+                + 'one place this slice may have to report a wall instead.',
+            '⛓ AND THE SPINNER\'S SECOND CONSEQUENCE IS MEASURED TO BE NIL IN L18: '
+                + '`Spinner.removed()` writes `setPersistence(tag, false)` unconditionally, '
+                + 'which would be a SECOND WRITER of a declared slot (§11.4\'s exact '
+                + 'shape) — but both L18 placements carry `tag = "-1"`, so the write is a '
+                + 'no-op. The bound is stated HERE, before the arm is built, because a '
+                + 'room whose spinners DID carry tags is a different problem.',
+            '⛓ the ShieldBoss needs no conversion — `KILL_ARM_POLICY.ShieldBoss` has been '
+                + '`modelled` since R6 slice 5 and `shieldBossFight.js` simulates the '
+                + 'encounter. What is new is the POLICY reaching for it: an '
+                + 'opportunistic-attack rung whose completion is OBSERVED, under R6 trap '
+                + '85\'s cadence (one press is five dispatches; hit 1 arms him and hit 2 '
+                + 'of the SAME press retaliates).',
+            '⛓ `touch` STOPS being the unregistered control, because L20\'s '
+                + '`shieldlocknorm@176,16` is its room — and the control is REPLACED, not '
+                + 'deleted (trap 62): a strategy named by the table and absent from the '
+                + 'registry has to keep having a live example, and L40\'s `wandlock` is a '
+                + 'real obstacle with a real verb and no solver executor.',
+            '⛔ the D2 segments are STAGED chains, so `hasShield`\'s flip is REPORTED and '
+                + 'NEVER CREDITED (§3.6 / §8.5). A staged boot cannot EARN; the claim this '
+                + 'slice makes is the FLIP INSIDE THE DRIVEN WINDOW, stated exactly.',
+        ]),
+    }),
+
+    /**
+     * ⛔ WHAT THIS SLICE DOES NOT CLAIM, stated before it is tempted to.
+     */
+    refusedHere: Object.freeze([
+        Object.freeze({
+            what: 'tightening `r7-act2-5`\'s committed `at: 737`',
+            why: 'no re-record licence exists this rung, and §11.5 recorded the gap as a '
+                + 'FINDING rather than an edit. The solver tape declares its own honest '
+                + 'tick; the hand tape keeps its upper bound.',
+        }),
+        Object.freeze({
+            what: 'computing a `SandTrap`\'s arrow death',
+            why: 'unchanged from §11.4 — its clear is the DECLARED v9 row and a second '
+                + 'writer of one persistence slot is two cost models (trap 160\'s law one '
+                + 'family over). The two-pass loop does not weaken this: it makes the '
+                + 'declaration GAME-SOURCED rather than hand-typed.',
+        }),
+        Object.freeze({
+            what: 'reading (c) — a joint hypothesis over all movable blocks',
+            why: 'FENCED by the orchestrator at §12.2 and still not built speculatively.',
+        }),
+    ]),
+});
+
+/**
+ * ⛓⛓⛓ THE LOOP'S OWN NON-VACUITY, AS A FUNCTION — the prefix agreement.
+ *
+ * ⛔ A DECLARED TICK MEASURED ON A DIFFERENT WALK IS THE DEFECT THIS
+ * MACHINERY MANUFACTURES IF NOBODY LOOKS. Pass 1 spends ticks with the
+ * consequence undeclared; pass 2 spends them with a clear pending at `T`. The
+ * declaration cannot reach the world before `T`, so the two runs must press
+ * IDENTICAL keys on every tick below it. If they do not, the tick pass 2
+ * declares was read off a walk pass 2 did not take.
+ *
+ * @param {Array<Set|Array>} first   pass 1's per-tick key sets
+ * @param {Array<Set|Array>} second  pass 2's per-tick key sets
+ * @param {number} declaredAt        the tick the clear is declared at
+ */
+export function assertTwoPassPrefixAgrees(first, second, declaredAt, what = 'the two-pass loop') {
+    if (!Array.isArray(first) || !Array.isArray(second)) {
+        throw new Error(`${what}: pass 1 and pass 2 must both hand over their per-tick key `
+            + 'sets — the prefix agreement is the loop\'s only non-vacuity check.');
+    }
+    if (!Number.isInteger(declaredAt) || declaredAt < 0) {
+        throw new Error(`${what}: the declared tick must be a non-negative integer; got `
+            + `${JSON.stringify(declaredAt)}.`);
+    }
+    /**
+     * ⛔ PASS 1 MUST REACH THE TICK IT MEASURED. A pass that refused BEFORE
+     * `T` cannot have witnessed the consequence at `T`, and comparing a short
+     * prefix would pass vacuously — which is the shape of a check that has
+     * never seen a disagreement.
+     */
+    if (first.length < declaredAt) {
+        throw new Error(`${what}: pass 1 spent only ${first.length} tick(s) but the clear `
+            + `is declared at ${declaredAt}. The tick was measured on a walk that never `
+            + 'reached it.');
+    }
+    if (second.length < declaredAt) {
+        throw new Error(`${what}: pass 2 spent only ${second.length} tick(s) and the clear `
+            + `is declared at ${declaredAt} — pass 2 never reached its own declaration.`);
+    }
+    const keysOf = (s) => [...s].sort().join('+');
+    for (let i = 0; i < declaredAt; i += 1) {
+        const a = keysOf(first[i]);
+        const b = keysOf(second[i]);
+        if (a !== b) {
+            throw new Error(`${what}: pass 1 and pass 2 DISAGREE at tick ${i}, below the `
+                + `declared tick ${declaredAt} — pass 1 held [${a || 'nothing'}] and pass 2 `
+                + `held [${b || 'nothing'}]. A clear declared at ${declaredAt} cannot reach `
+                + 'the world before it, so the two walks must be identical here. They are '
+                + 'not, which means the declared tick was measured on a walk pass 2 did '
+                + 'not take.');
+        }
+    }
+    return { comparedTicks: declaredAt, pass1: first.length, pass2: second.length };
+}
