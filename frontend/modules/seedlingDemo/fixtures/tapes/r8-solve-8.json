@@ -1,0 +1,394 @@
+{
+    "tape_version": 9,
+    "game": "seedling",
+    "name": "r8-solve-8",
+    "description": "⛓ R8 SLICE 4 — THE LIVE SOLVER's own solution to battery segment 8, authored through the TWO-PASS AUTHORING LOOP (`twoPassSolve`, kickoff §12.10.3). L8 — two `SandTrap` bodies under `arrowtrap@96,16`'s column. §11.4 REFUSES to compute their arrow death so that ONE writer owns each slot, so both ticks are read off the GAME's own `persistence_cleared` by truncation. The loop took 3 pass(es) [measure -> measure -> solve] and declared {8,0} at 246, {8,1} at 645 — game-sourced, then VERIFIED: pass N and pass N+1 press identical keys on every tick below the declared one (246, 645 compared), because a clear cannot reach the world before its own tick. Boot: r7-act2-8's committed v8 block, staged per kickoff §3.5, with that tape's own timed clear(s) STRIPPED. GOALS derived from the chain's own units; the hand-authored stances, waypoints and hold ticks were NOT handed over. Solver: 827 ticks, 7 decision(s); hand answer r7-act2-8: 1090 ticks. ⛔ r7-act2-8's own `at` is NOT touched — §11.5 showed it is the end of a phases block and therefore an UPPER BOUND, and no re-record licence exists this rung. Authored by scripts/procgen/solve-seedling-r8-tail.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 8,
+        "x": 144,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": "game-sourced by twoPassSolve: the GAME's own persistence_cleared: a 246-tick truncation of this walk CARRIES {8,0} and a 245-tick one does NOT — a boundary, measured on both sides",
+            "at": 246
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": "game-sourced by twoPassSolve: the GAME's own persistence_cleared: a 645-tick truncation of this walk CARRIES {8,1} and a 644-tick one does NOT — a boundary, measured on both sides",
+            "at": 645
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 768692529,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1458777947
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 7074,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 2
+        }
+    },
+    "tick_count": 827,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "left",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "left",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 64
+        },
+        {
+            "key": "down",
+            "from": 96,
+            "to": 107
+        },
+        {
+            "key": "left",
+            "from": 96,
+            "to": 129
+        },
+        {
+            "key": "up",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "down",
+            "from": 108,
+            "to": 109
+        },
+        {
+            "key": "up",
+            "from": 109,
+            "to": 110
+        },
+        {
+            "key": "down",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "up",
+            "from": 114,
+            "to": 116
+        },
+        {
+            "key": "down",
+            "from": 118,
+            "to": 120
+        },
+        {
+            "key": "up",
+            "from": 123,
+            "to": 124
+        },
+        {
+            "key": "right",
+            "from": 129,
+            "to": 130
+        },
+        {
+            "key": "left",
+            "from": 130,
+            "to": 131
+        },
+        {
+            "key": "right",
+            "from": 134,
+            "to": 135
+        },
+        {
+            "key": "up",
+            "from": 139,
+            "to": 150
+        },
+        {
+            "key": "down",
+            "from": 150,
+            "to": 151
+        },
+        {
+            "key": "up",
+            "from": 151,
+            "to": 153
+        },
+        {
+            "key": "down",
+            "from": 154,
+            "to": 156
+        },
+        {
+            "key": "down",
+            "from": 247,
+            "to": 258
+        },
+        {
+            "key": "up",
+            "from": 258,
+            "to": 259
+        },
+        {
+            "key": "down",
+            "from": 259,
+            "to": 261
+        },
+        {
+            "key": "up",
+            "from": 262,
+            "to": 264
+        },
+        {
+            "key": "right",
+            "from": 279,
+            "to": 306
+        },
+        {
+            "key": "left",
+            "from": 307,
+            "to": 309
+        },
+        {
+            "key": "down",
+            "from": 313,
+            "to": 340
+        },
+        {
+            "key": "up",
+            "from": 342,
+            "to": 344
+        },
+        {
+            "key": "right",
+            "from": 348,
+            "to": 359
+        },
+        {
+            "key": "left",
+            "from": 359,
+            "to": 360
+        },
+        {
+            "key": "right",
+            "from": 360,
+            "to": 362
+        },
+        {
+            "key": "left",
+            "from": 364,
+            "to": 367
+        },
+        {
+            "key": "right",
+            "from": 368,
+            "to": 370
+        },
+        {
+            "key": "down",
+            "from": 374,
+            "to": 385
+        },
+        {
+            "key": "up",
+            "from": 385,
+            "to": 386
+        },
+        {
+            "key": "down",
+            "from": 386,
+            "to": 388
+        },
+        {
+            "key": "up",
+            "from": 390,
+            "to": 393
+        },
+        {
+            "key": "down",
+            "from": 394,
+            "to": 396
+        },
+        {
+            "key": "left",
+            "from": 400,
+            "to": 406
+        },
+        {
+            "key": "left",
+            "from": 449,
+            "to": 455
+        },
+        {
+            "key": "up",
+            "from": 449,
+            "to": 488
+        },
+        {
+            "key": "right",
+            "from": 455,
+            "to": 456
+        },
+        {
+            "key": "down",
+            "from": 488,
+            "to": 489
+        },
+        {
+            "key": "up",
+            "from": 489,
+            "to": 490
+        },
+        {
+            "key": "left",
+            "from": 494,
+            "to": 518
+        },
+        {
+            "key": "right",
+            "from": 518,
+            "to": 519
+        },
+        {
+            "key": "left",
+            "from": 519,
+            "to": 521
+        },
+        {
+            "key": "right",
+            "from": 523,
+            "to": 525
+        },
+        {
+            "key": "up",
+            "from": 529,
+            "to": 540
+        },
+        {
+            "key": "down",
+            "from": 540,
+            "to": 541
+        },
+        {
+            "key": "up",
+            "from": 541,
+            "to": 543
+        },
+        {
+            "key": "down",
+            "from": 544,
+            "to": 546
+        },
+        {
+            "key": "down",
+            "from": 646,
+            "to": 657
+        },
+        {
+            "key": "up",
+            "from": 657,
+            "to": 658
+        },
+        {
+            "key": "down",
+            "from": 658,
+            "to": 660
+        },
+        {
+            "key": "up",
+            "from": 661,
+            "to": 663
+        },
+        {
+            "key": "right",
+            "from": 690,
+            "to": 717
+        },
+        {
+            "key": "left",
+            "from": 719,
+            "to": 721
+        },
+        {
+            "key": "down",
+            "from": 725,
+            "to": 827
+        }
+    ]
+}

@@ -82,8 +82,23 @@ const check = (name, ok, detail) => {
 };
 
 // ── the Windows replay harness, for the GAME-sourced oracle ───────────
+/**
+ * ⛔ THIRD FIRST-LAUNCH DEFECT: this said `seedling-bot`, with hyphens, and
+ * the artifact on disk is `seedling_bot_ap`. There is no page at that URL, so
+ * the driver waited 180 s for a runtime that was never going to load and
+ * reported a TIMEOUT — a symptom three layers away from the typo. The name is
+ * checked against the artifact below, so the next wrong name fails in a second
+ * with the reason instead of in three minutes without one.
+ */
+const PAGE_NAME = 'seedling_bot_ap';
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + 'seedling-bot/game.html';
+    + `${PAGE_NAME}/game.html`;
+if (USE_GAME && !existsSync(join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm',
+    PAGE_NAME, 'game.html'))) {
+    console.error(`solve-seedling-r8-tail: no game page at ${PAGE_NAME}/game.html — the `
+        + 'Windows driver would wait out its whole deadline on a URL that 404s.');
+    process.exit(1);
+}
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
@@ -141,17 +156,56 @@ const clearedIn = (st) => (st.persistence_cleared || [])
  */
 function makeGameOracle(tapeTemplate) {
     return async ({ perTick, pending, persistence, name }) => {
-        const spans = keysToSpans(perTick);
-        const tapeAt = (n, label) => ({
-            ...tapeTemplate,
-            name: `${name}-probe-${label}`,
-            tape_version: TAPE_VERSION,
-            persistence: persistence.filter((p) => p.at !== undefined
-                ? p.at < n : true).map((p) => ({ ...p })),
-            tick_count: n,
-            inputs: spans.filter((s) => s.from < n)
-                .map((s) => ({ ...s, to: Math.min(s.to, n) })),
-        });
+        /**
+         * ⛔ R8 SLICE 5, FIRST LAUNCH, FIRST DEFECT: `keysToSpans` takes per
+         * tick ARRAYS (`keysPerTick[i].includes(key)`) and the solver's
+         * `perTick` is per tick SETS. §13.6 recorded this oracle as
+         * "IMPLEMENTED, NOT LAUNCHED", and an unlaunched path is an unrun
+         * path — it threw on its first line the first time it was asked. The
+         * conversion is one map and the lesson is the older one: code nobody
+         * has driven is code nobody has tested.
+         */
+        const spans = keysToSpans(perTick.map((k) => [...k]));
+        /**
+         * ⛔ SECOND FIRST-LAUNCH DEFECT: the template stamped
+         * `tape_version: TAPE_VERSION` and declared no `despawn`, so
+         * `parseTape` refused every probe arm by name — a v10 tape must carry
+         * the field, `[]` for "this walk removes nothing". Stamping the
+         * CONSTANT is the same shape `buildTape`'s own docblock warns about
+         * (the version is decided by what the caller DECLARES), so the
+         * agreement is asserted below rather than assumed.
+         */
+        const tapeAt = (n, label) => {
+            const tape = {
+                ...tapeTemplate,
+                name: `${name}-probe-${label}`,
+                tape_version: TAPE_VERSION,
+                persistence: persistence.filter((p) => p.at !== undefined
+                    ? p.at < n : true).map((p) => ({ ...p })),
+                despawn: [],
+                tick_count: n,
+                inputs: spans.filter((s) => s.from < n)
+                    .map((s) => ({ ...s, to: Math.min(s.to, n) })),
+            };
+            /**
+             * ⛓ AND THE VERSION IS DERIVED, WHICH IS THE POINT: these arms
+             * declare a v8 seam and UNTIMED persistence rows, so they are v8
+             * tapes. Stamping the constant made every one of them claim a v10
+             * despawn channel it does not use — and the assertion that caught
+             * it is the one three lines down, kept as the guard rather than
+             * deleted now that it has fired.
+             */
+            const need = requiredTapeVersion(parseTape(tape));
+            const emitted = need >= 10 ? tape : (({ despawn, ...rest }) => rest)(tape);
+            emitted.tape_version = need;
+            if (requiredTapeVersion(parseTape(emitted)) !== need) {
+                throw new Error(`${name}: a probe arm's declared fields and its stamped `
+                    + `version disagree (${need}). The version is decided by what the `
+                    + 'caller declares; a constant here is a tape asking the game for a '
+                    + 'different experiment than the model ran.');
+            }
+            return emitted;
+        };
         const carries = (n, label) => {
             const got = replayOnWindows(`${name}-${label}`, tapeAt(n, label));
             const cleared = clearedIn(got.status);

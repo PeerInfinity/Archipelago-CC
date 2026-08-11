@@ -1,0 +1,345 @@
+{
+    "trace_version": 1,
+    "tape": "r8-solve-8",
+    "tick_count": 827,
+    "boot": {
+        "level": 8,
+        "x": 144,
+        "y": 48
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 8,
+                "x": 152,
+                "y": 56,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 104,
+                    "y": 200
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "pushableblock@112,48"
+            },
+            "strategy": {
+                "verb": "shove",
+                "k": 2,
+                "postCondition": "clear-path",
+                "to": {
+                    "tx": 5,
+                    "ty": 3
+                },
+                "dir": "W",
+                "destroys": false
+            },
+            "rejected": [
+                {
+                    "option": "the corridor WITHOUT hypothesising [pushableblock@96,112]",
+                    "why": "⚖ ruled reading (b): \"a valid path exists\" quantifies over the world where the other PENDING frontier orders are discharged — a plan is exactly that hypothesis. Bounded to obstacles with a SELECTED strategy (guard i); an obstacle with none is a WALL for this quantifier. If any of these refuses later, this destination is RE-DERIVED with it demoted to a wall and the block's REAL position as the input (guard ii)."
+                },
+                {
+                    "option": "shove W k=1",
+                    "why": "no corridor to (104,200) with the block hypothesised at (6,3)"
+                },
+                {
+                    "option": "shove W k=3 -> (4,3)",
+                    "why": "UNNEEDED — k=2 already plans the corridor, and a longer push buys nothing the post-condition asked for"
+                },
+                {
+                    "option": "shove E",
+                    "why": "the near-side stance (104,56) for a E lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "shove N",
+                    "why": "the near-side stance (120,72) for a N lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "shove S",
+                    "why": "the near-side stance (120,40) for a S lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                }
+            ],
+            "keys": [
+                "left"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 96,
+            "saw": {
+                "level": 8,
+                "x": 112.19999999999995,
+                "y": 56,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 120,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "sandtrap@96,80"
+            },
+            "strategy": {
+                "verb": "kill",
+                "rung": "kill",
+                "climb": 1,
+                "presser": "button",
+                "target": "sandtrap@96,80"
+            },
+            "rejected": [
+                {
+                    "option": "avoid",
+                    "why": "no admissible corridor with the danger map's 2 volume(s) forbidden — no walkable tile path in level 8 from tile (7,3) to (7,7). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a"
+                },
+                {
+                    "option": "time",
+                    "why": "the aim is 64 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened."
+                },
+                {
+                    "option": "bait",
+                    "why": "sandtrap@96,80 is a STATIC census body (`speed 0`, and this room's chaser roster is refused) — it never writes `v`, so there is no straight line to bend and nothing to lure. That is a KILL question, and the kill is the room's own ceiling."
+                },
+                {
+                    "option": "the corridor WITHOUT hypothesising [pushableblock@112,48]",
+                    "why": "⚖ ruled reading (b): \"a valid path exists\" quantifies over the world where the other PENDING frontier orders are discharged — a plan is exactly that hypothesis. Bounded to obstacles with a SELECTED strategy (guard i); an obstacle with none is a WALL for this quantifier. If any of these refuses later, this destination is RE-DERIVED with it demoted to a wall and the block's REAL position as the input (guard ii)."
+                },
+                {
+                    "option": "a non-destructive resting cell",
+                    "why": "NONE yielded a corridor, so this is ⚖ §11.8a ruling 1's explicit LAST RESORT. pushableblock@96,112 is GONE for the visit: it can no longer press a button, be pushed again, or wall a chaser (`Bob.as:39` pushes \"Enemy\", so a parked block is a WALL to one)."
+                },
+                {
+                    "option": "shove W k=2 -> (4,7)",
+                    "why": "there is no k+1: the block is DESTROYED at k, so the scan ends there"
+                },
+                {
+                    "option": "shove E",
+                    "why": "the near-side stance (88,120) for a E lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "shove N",
+                    "why": "the near-side stance (104,136) for a N lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                }
+            ],
+            "keys": [
+                "down",
+                "left"
+            ],
+            "note": "merged: bait decided on the same tick; merged: walk decided on the same tick"
+        },
+        {
+            "tick": 247,
+            "saw": {
+                "level": 8,
+                "x": 72.68409192161283,
+                "y": 56.38267363845911,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 72,
+                    "y": 72
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 72
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "down"
+            ]
+        },
+        {
+            "tick": 279,
+            "saw": {
+                "level": 8,
+                "x": 72.68409192161283,
+                "y": 71.88267363845912,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 120,
+                    "y": 120
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 4
+            },
+            "path": [
+                {
+                    "x": 104,
+                    "y": 72
+                },
+                {
+                    "x": 104,
+                    "y": 104
+                },
+                {
+                    "x": 120,
+                    "y": 104
+                },
+                {
+                    "x": 120,
+                    "y": 120
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right"
+            ]
+        },
+        {
+            "tick": 449,
+            "saw": {
+                "level": 8,
+                "x": 112.43409192161285,
+                "y": 120.23267363845915,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 104,
+                    "y": 200
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "sandtrap@96,128"
+            },
+            "strategy": {
+                "verb": "kill",
+                "rung": "kill",
+                "climb": 2,
+                "presser": "button",
+                "target": "sandtrap@96,128"
+            },
+            "rejected": [
+                {
+                    "option": "avoid",
+                    "why": "no admissible corridor with the danger map's 1 volume(s) forbidden — no walkable tile path in level 8 from tile (7,7) to (6,12). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, "
+                },
+                {
+                    "option": "time",
+                    "why": "the aim is 80 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened."
+                },
+                {
+                    "option": "bait",
+                    "why": "sandtrap@96,128 is a STATIC census body (`speed 0`, and this room's chaser roster is refused) — it never writes `v`, so there is no straight line to bend and nothing to lure. That is a KILL question, and the kill is the room's own ceiling."
+                }
+            ],
+            "keys": [
+                "left",
+                "up"
+            ],
+            "note": "merged: bait decided on the same tick; merged: walk decided on the same tick"
+        },
+        {
+            "tick": 646,
+            "saw": {
+                "level": 8,
+                "x": 71.91845608476545,
+                "y": 56.20477144871421,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 72,
+                    "y": 72
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 72
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "down"
+            ]
+        },
+        {
+            "tick": 690,
+            "saw": {
+                "level": 8,
+                "x": 71.91845608476545,
+                "y": 71.70477144871423,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 104,
+                    "y": 200
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 2
+            },
+            "path": [
+                {
+                    "x": 104,
+                    "y": 72
+                },
+                {
+                    "x": 104,
+                    "y": 200
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right"
+            ]
+        }
+    ]
+}

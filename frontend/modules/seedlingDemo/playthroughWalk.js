@@ -1299,21 +1299,92 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * itself. Zero hits, zero deaths, 294 ticks against the hand's 355.
      *
      * ⛓ AND `r8-battery-4` IS THE FIRST STAGED CHAIN WHOSE SEGMENT SHOVES.
+     *
+* ⛓⛓⛓ R8 SLICE 5 ADDS 5 AND 8 — AND THE ROWS CARRY THEIR OWN
+     * PROVENANCE, WHICH IS THE HALF §3.6 DESIGNED AND NOBODY BUILT.
+     *
+     * Both segments DECLARE v9 `at` rows their own walks earn, and the
+     * witnessed-clear law REFUSED them the first time they were registered —
+     * four rows, by name — because it demanded the outcome of a `phases`
+     * block and a solver chain has no walk at all. ⛔ The law was right and
+     * its premise predated the solver: "an `at`-clear nobody measured is a
+     * staged grant with extra steps" is the discipline that should hold.
+     *
+     * ⚖ RULED (orchestrator, mid-slice): the missing piece is the CARRIER,
+     * not the obligation. A staged chain's `clears` rows are held to the same
+     * standard a phases block's `provenance.probe` is — authored, checkable,
+     * refused when absent — and the match is TWO-SIDED, so a provenance no
+     * tape carries reds exactly as loudly as a clear no provenance names.
+     *
+     *   `{5,0}`@427  MODEL-sourced. `chaserKillLockOpens` computes the
+     *                removal at 326 and `activators.opensOnTick` is 101; the
+     *                finding re-adds them rather than trusting the sum.
+     *   `{8,0}`@246  GAME-sourced, and a BOUNDARY MEASURED ON BOTH SIDES: a
+     *   `{8,1}`@645  246-tick truncation of this walk carries the tag and a
+     *                245-tick one does not (645/644 likewise). A one-sided
+     *                reading measures "cleared by now", which is a band.
+     *
+     * ⛔ AND `r8-battery-5` IS THE ROW SLICE 4 COULD NOT ADD. Its first walk
+     * was REFUTED by the game (§13.1) and banked rather than committed; this
+     * one is a different walk, authored under ⚖ §13.10a's ETA-aware transit
+     * probe, and the game accepted it at zero hits.
      */
     ...[
         Object.freeze({ seg: 1, ends: 183, earns: [] }),
         Object.freeze({ seg: 2, ends: 47, earns: [] }),
         Object.freeze({ seg: 3, ends: 245, earns: [] }),
         Object.freeze({ seg: 4, ends: 253, earns: [] }),
+        Object.freeze({
+            seg: 5,
+            ends: 558,
+            earns: [],
+            clears: Object.freeze([Object.freeze({
+                level: 5, tag: 0, at: 427, source: 'model',
+                evidence: Object.freeze({
+                    removedAt: 326,
+                    fade: 101,
+                    why: '`chaserKillLockOpens`\'s removal (the third bob dies to the '
+                        + 'ceiling and `Game.totalEnemies()` reaches zero) plus '
+                        + '`activators.opensOnTick(RESPONDERS.lock.fade)`',
+                }),
+            })]),
+        }),
         Object.freeze({ seg: 6, ends: 294, earns: [] }),
+        Object.freeze({
+            seg: 8,
+            ends: 827,
+            earns: [],
+            clears: Object.freeze([
+                Object.freeze({
+                    level: 8, tag: 0, at: 246, source: 'game',
+                    evidence: Object.freeze({
+                        carriesAt: 246,
+                        absentAt: 245,
+                        why: 'the GAME\'s own `persistence_cleared`, by truncation — '
+                            + '§11.4 REFUSES to compute a static `"Enemy"` body\'s arrow '
+                            + 'death, so the model may not substitute here',
+                    }),
+                }),
+                Object.freeze({
+                    level: 8, tag: 1, at: 645, source: 'game',
+                    evidence: Object.freeze({
+                        carriesAt: 645,
+                        absentAt: 644,
+                        why: 'the second `SandTrap`, the same instrument — a boundary '
+                            + 'measured on both sides rather than a poll',
+                    }),
+                }),
+            ]),
+        }),
         Object.freeze({ seg: 7, ends: 146, earns: [] }),
         Object.freeze({ seg: 9, ends: 122, earns: [] }),
         Object.freeze({ seg: 10, ends: 90, earns: ['sword@L10'] }),
         Object.freeze({ seg: 11, ends: 87, earns: ['chest@L11'] }),
-    ].map(({ seg, ends, earns }) => Object.freeze({
+    ].map(({ seg, ends, earns, clears = [] }) => Object.freeze({
         id: `r8-battery-${seg}`,
         kind: 'staged',
-        why: `R8 slice ${[4, 6].includes(seg) ? '3b' : '2'}: the live solver's own `
+        why: `R8 slice ${[5, 8].includes(seg) ? '5' : ([4, 6].includes(seg) ? '3b' : '2')}: `
+            + 'the live solver\'s own '
             + `solution to act2 segment ${seg}, from `
             + `r7-act2-${seg}'s committed v8 boot block (staged per kickoff §3.5). Goals `
             + 'derived from the chain\'s own units; the hand-authored stances and '
@@ -1322,6 +1393,14 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         headline: `r8-solve-${seg}`,
         segments: Object.freeze([`r8-solve-${seg}`]),
         earns: Object.freeze(earns),
+        /**
+         * ⛓ R8 SLICE 5 — the timed clears this chain's own tapes declare,
+         * with the instrument that measured each. `stagedClearFindings`
+         * matches them against the tapes TWO-SIDED and re-derives the
+         * arithmetic; an empty list is the honest answer for a segment that
+         * clears nothing.
+         */
+        clears: Object.freeze(clears),
         cuts: Object.freeze([]),
         endsAt: ends,
     })),

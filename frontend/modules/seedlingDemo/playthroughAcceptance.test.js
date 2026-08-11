@@ -18,12 +18,13 @@ import {
 } from './playthroughWalk.js';
 import {
     chainFindings, chainGoalFindings, latchAgreementFindings, witnessedClearFindings,
-    witnessedDespawnFindings,
+    witnessedDespawnFindings, stagedClearFindings,
 } from './playthroughAcceptance.js';
 import {
     SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
 } from './r7Acceptance.js';
 import { parseTape, TAPE_VERSION } from './tapeFormat.js';
+import { fixtureNames, loadTape } from './fixtures/index.js';
 
 /**
  * A synthetic two-segment chain, built the way the real one is: segment 2
@@ -857,15 +858,19 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
         // ⛓ R8 slice 2: the battery's seven one-segment staged chains were
         // the first on disk — slice 0's "no staged chain exists yet" bounded
         // vacuity, discharged. ⛓ R8 slice 3b added L4 (`shove`) and L6 (the
-        // AVOID -> TIME -> BAIT ladder), taking it to NINE. The tallies are
+        // AVOID -> TIME -> BAIT ladder), taking it to NINE. ⛓ R8 slice 5 adds
+        // L5 and L8 — the battery's tail, and the first two staged chains that
+        // carry `clears` PROVENANCE — taking it to ELEVEN. The tallies are
         // DERIVED from the table so a chain added tomorrow moves this test
-        // out loud — which is exactly what it just did.
+        // out loud — which is exactly what it just did, three slices running.
         const staged = PLAYTHROUGH_CHAINS.filter((c) => (c.kind ?? 'custody') === 'staged');
         expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length - staged.length);
         expect(r.byKind.staged).toBe(staged.length);
-        expect(staged.length).toBe(9);
+        expect(staged.length).toBe(11);
         expect(staged.map((c) => c.id)).toContain('r8-battery-4');
         expect(staged.map((c) => c.id)).toContain('r8-battery-6');
+        expect(staged.map((c) => c.id)).toContain('r8-battery-5');
+        expect(staged.map((c) => c.id)).toContain('r8-battery-8');
     });
 
     it('⛔ MUTATION: an unknown kind THROWS by name rather than falling through', () => {
@@ -994,3 +999,197 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
  * of the kind at slice 0 — slice 2 is the first producer, and its as-built
  * is where these rows stop being synthetic.
  */
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — THE STAGED ARM OF THE WITNESSED-CLEAR LAW, ⚖ ruled with
+ * four conditions, each of which is a describe below.
+ *
+ * The law's original premise — a timed clear is a `phases` block's witnessed
+ * outcome — is right for a CUSTODY chain and unreachable for a SOLVER one,
+ * which has no walk at all. `r8-solve-5` and `r8-solve-8` hit it: four rows
+ * red, by name, the first time they were registered. What was missing was the
+ * CARRIER, never the obligation.
+ */
+describe('stagedClearFindings — a solver chain witnesses its own clears', () => {
+    const chain = (clears, tapeClears) => ({
+        id: 'test', kind: 'staged', headline: 'H', segments: ['H'],
+        clears,
+        tapes: new Map([['H', { tick_count: 900, persistence: tapeClears }]]),
+    });
+    const MODEL = { level: 5, tag: 0, at: 427, source: 'model',
+        evidence: { removedAt: 326, fade: 101, why: 'the ledger' } };
+    const GAME = { level: 8, tag: 0, at: 246, source: 'game',
+        evidence: { carriesAt: 246, absentAt: 245, why: 'the truncation' } };
+    const run = (c) => stagedClearFindings(c, c.tapes);
+
+    it('a model-sourced clear whose arithmetic ADDS UP is witnessed', () => {
+        const rows = run(chain([MODEL], [{ level: 5, tag: 0, at: 427 }]));
+        expect(rows.every((r) => r.ok)).toBe(true);
+        // ⛔ THREE ROWS, not one: the clear has a row, the row has a clear,
+        // and the evidence checks out. A single row would let two of the
+        // three obligations pass by not being asked.
+        expect(rows.length).toBe(3);
+        expect(rows[2].detail).toMatch(/326 plus the responder's 101-step fade/);
+    });
+
+    it('a game-sourced clear with BOTH sides of the boundary is witnessed', () => {
+        const rows = run(chain([GAME], [{ level: 8, tag: 0, at: 246 }]));
+        expect(rows.every((r) => r.ok)).toBe(true);
+        expect(rows[2].detail).toMatch(/a boundary, measured on both sides/);
+    });
+
+    /** ⚖ CONDITION 2 — the match is TWO-SIDED (trap 119's construction). */
+    describe('⚖ condition 2 — two-sided set equality', () => {
+        it('⛔ a tape clear with NO provenance row reds BY NAME', () => {
+            const rows = run(chain([], [{ level: 5, tag: 0, at: 427 }]));
+            const bad = rows.filter((r) => !r.ok);
+            expect(bad.length).toBe(1);
+            expect(bad[0].detail).toMatch(/NO `clears` row on this chain names that tag/);
+        });
+
+        it('⛔ a provenance row NO TAPE carries reds BY NAME too', () => {
+            const rows = run(chain([MODEL], []));
+            const bad = rows.filter((r) => !r.ok);
+            // The row-has-no-clear finding; the evidence still checks out on
+            // its own terms, which is why the two are separate rows.
+            expect(bad.length).toBe(1);
+            expect(bad[0].detail).toMatch(/a claim about a walk nobody took/);
+        });
+
+        it('⛔ a row at the WRONG TICK reds on both halves — it matches nothing', () => {
+            const rows = run(chain([{ ...MODEL, at: 428 }],
+                [{ level: 5, tag: 0, at: 427 }]));
+            expect(rows.filter((r) => !r.ok).length).toBe(3);
+        });
+    });
+
+    /** ⚖ CONDITION 3 — the evidence is CHECKABLE, not a comment. */
+    describe('⚖ condition 3 — the evidence is recomputed', () => {
+        it('⛔ a model-sourced tick whose removal + fade does NOT add up reds', () => {
+            const rows = run(chain([{ ...MODEL, evidence: { removedAt: 300, fade: 101 } }],
+                [{ level: 5, tag: 0, at: 427 }]));
+            const bad = rows.filter((r) => !r.ok);
+            expect(bad.length).toBe(1);
+            expect(bad[0].detail).toMatch(/300 \+ 101 != 427/);
+        });
+
+        it('⛔⛔ a ONE-SIDED game boundary reds — "cleared by now" is a band', () => {
+            const rows = run(chain([{ ...GAME, evidence: { carriesAt: 246, why: 'x' } }],
+                [{ level: 8, tag: 0, at: 246 }]));
+            const bad = rows.filter((r) => !r.ok);
+            expect(bad.length).toBe(1);
+            expect(bad[0].detail).toMatch(/needs BOTH sides/);
+        });
+
+        it('⛔ the lower side must be exactly `at - 1`, not merely lower', () => {
+            const rows = run(chain([{ ...GAME, evidence: { carriesAt: 246, absentAt: 200 } }],
+                [{ level: 8, tag: 0, at: 246 }]));
+            expect(rows.filter((r) => !r.ok).length).toBe(1);
+        });
+
+        it('⛔ an unknown SOURCE is refused — the two are a property of the mechanism', () => {
+            const rows = run(chain([{ ...MODEL, source: 'probe' }],
+                [{ level: 5, tag: 0, at: 427 }]));
+            const bad = rows.filter((r) => !r.ok);
+            expect(bad[0].detail).toMatch(/is not a tick source/);
+        });
+    });
+
+    it('a staged chain that clears NOTHING reports the absence rather than passing silently', () => {
+        const rows = run(chain([], []));
+        expect(rows.length).toBe(1);
+        expect(rows[0].ok).toBe(true);
+        expect(rows[0].name).toMatch(/no tape declares a mid-run clear/);
+    });
+});
+
+/**
+ * ⚖ CONDITION 1 — SCOPE BY KIND, and the custody half is asserted
+ * BYTE-IDENTICAL rather than assumed (slice 0's own precedent).
+ */
+describe('⚖ condition 1 — the staged arm does not touch custody chains', () => {
+    it('⛓ both committed CUSTODY chains produce exactly the phases-block findings', () => {
+        const tapes = new Map();
+        for (const name of fixtureNames()) tapes.set(name, loadTape(name));
+        const custody = PLAYTHROUGH_CHAINS.filter((c) => chainKind(c) === 'custody');
+        // ⛔ THE POSITIVE COUNT FIRST: if no custody chain existed, every
+        // assertion below would pass against nothing.
+        expect(custody.length).toBe(2);
+        for (const c of custody) {
+            const rows = witnessedClearFindings(c, tapes);
+            expect(rows.length, c.id).toBeGreaterThan(0);
+            for (const r of rows) {
+                expect(r.ok, `${c.id}: ${r.name} — ${r.detail}`).toBe(true);
+                // ⛔ The custody law's own wording, unchanged: a custody row
+                // says "a phases block's WITNESSED outcome" and never mentions
+                // provenance rows.
+                expect(r.name).not.toMatch(/carries its own PROVENANCE/);
+                if (!/no tape declares a mid-run clear/.test(r.name)) {
+                    expect(r.name).toMatch(/phases block's WITNESSED outcome/);
+                }
+            }
+        }
+    });
+
+    it('⛓ and every STAGED chain on disk is green through the new arm', () => {
+        const tapes = new Map();
+        for (const name of fixtureNames()) tapes.set(name, loadTape(name));
+        const staged = PLAYTHROUGH_CHAINS.filter((c) => chainKind(c) === 'staged');
+        expect(staged.length).toBeGreaterThan(0);
+        let withClears = 0;
+        for (const c of staged) {
+            for (const r of witnessedClearFindings(c, tapes)) {
+                expect(r.ok, `${c.id}: ${r.name} — ${r.detail}`).toBe(true);
+            }
+            if ((c.clears ?? []).length > 0) withClears += 1;
+        }
+        // ⛔ AND SOME OF THEM REALLY DECLARE CLEARS — otherwise every row
+        // above is the empty case (the silent-watcher law).
+        expect(withClears).toBe(2);
+    });
+});
+
+/**
+ * ⚖ CONDITION 4 — THE DESPAWN RESIDUE, NAMED AND PROVEN TO FAIL CLOSED.
+ *
+ * `witnessedDespawnFindings` is the same law for v10 `despawn` rows and it
+ * has NOT been given a staged arm. ⛔ That is deliberate and it is trap 119's
+ * own rule: no staged tape on the roster declares a despawn, so a `despawns`
+ * provenance channel would be a ledger with no caller — which reads exactly
+ * like a ledger that is empty. The shape is pre-agreed (`despawns:
+ * [{level, id, at, source, evidence}]`, the same two-sided equality) and the
+ * day a solver tape removes a body it will be built against a real artifact.
+ *
+ * ⛔ WHAT MATTERS MEANWHILE IS THAT IT FAILS CLOSED, and this is the row that
+ * measures it: a staged chain whose tape declares a despawn is REFUSED by
+ * name, not passed. A residue that failed OPEN would be a hole.
+ */
+describe('⚖ condition 4 — the despawn residue fails CLOSED', () => {
+    it('⛔ a staged chain with a despawn and no phases block is REFUSED by name', () => {
+        const c = {
+            id: 'synthetic-staged', kind: 'staged', headline: 'H', segments: ['H'],
+            clears: [],
+            tapes: new Map([['H', {
+                tick_count: 100, persistence: [],
+                despawn: [{ level: 6, id: 'bob@112,48', at: 60 }],
+            }]]),
+        };
+        const rows = witnessedDespawnFindings(c, c.tapes);
+        const bad = rows.filter((r) => !r.ok);
+        // ⚠ TWO rows for one despawn, and that is the law's own shape: it
+        // walks `[...segments, headline]` and a one-segment chain's headline
+        // IS its segment, so the tape is asked twice. What matters here is
+        // that neither answer is "fine".
+        expect(bad.length).toBe(2);
+        expect(bad[0].name).toMatch(/bob@112,48/);
+    });
+
+    it('⛓ and no staged chain on disk declares one yet — the bound, MEASURED', () => {
+        const tapes = new Map();
+        for (const name of fixtureNames()) tapes.set(name, loadTape(name));
+        const staged = PLAYTHROUGH_CHAINS.filter((c) => chainKind(c) === 'staged');
+        const withDespawns = staged.filter((c) => [...c.segments, c.headline]
+            .some((n) => (tapes.get(n)?.despawn ?? []).length > 0));
+        expect(withDespawns.map((c) => c.id)).toEqual([]);
+    });
+});

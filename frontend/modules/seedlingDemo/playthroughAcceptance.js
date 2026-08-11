@@ -147,6 +147,44 @@ export function latchAgreementFindings(label, a, b, labels = ['A', 'B']) {
 export function witnessedClearFindings(chain, tapes) {
     const blocks = (chain.walk?.units ?? []).filter((u) => u.phases).map((u) => u.phases);
     const rows = [];
+    /**
+     * ⛓⛓⛓ R8 SLICE 5 — THE STAGED ARM, AND THE HALF §3.6 DESIGNED AND
+     * NOBODY BUILT.
+     *
+     * The law above demands that a timed clear be the witnessed outcome of a
+     * `phases` block in the chain's own walk. That is exactly right for a
+     * CUSTODY chain — and a SOLVER chain has no walk at all, which is the
+     * whole point of it: nothing was hand-choreographed. So a solver segment
+     * that clears a tag declared a tick the law could not see, and slice 0's
+     * `staged` kind KEPT the witnessed-clear obligation while the carrier for
+     * it went unbuilt (kickoff §3.6 said the witness is "the solver's own
+     * trace + the game's `persistence_cleared`, carried the same way a phases
+     * block's outcome is"; §2.4 measured the gap; R8 slice 5 hit it).
+     *
+     * ⛔ THE CARRIER IS THE CHAIN ROW'S `clears`, and it is held to the SAME
+     * standard a phases block's `provenance.probe` is: authored, checkable,
+     * and refused when absent. What it is NOT is a licence — the obligation is
+     * unchanged and the shape of the evidence is now part of it:
+     *
+     *   `source: 'game'`   the truncation BOUNDARY, both sides:
+     *                      `carriesAt === at` and `absentAt === at - 1`. A
+     *                      one-sided reading measures "cleared by now", which
+     *                      is not a tick.
+     *   `source: 'model'`  the run's own ledger: `removedAt + fade === at`.
+     *
+     * ⛔ AND THE MATCH IS TWO-SIDED (trap 119's construction). A tape clear
+     * with no row reds BY NAME, and a row no tape carries reds BY NAME too — a
+     * provenance with no artifact is a claim about a walk nobody took. Both
+     * halves are DERIVED by mapping, so a row added tomorrow cannot go
+     * unreported.
+     *
+     * ⚠ SCOPED BY KIND. A custody chain never reaches this arm; its findings
+     * are byte-identical across this change and the tests assert that rather
+     * than assume it.
+     */
+    if (chainKind(chain) === 'staged') {
+        return stagedClearFindings(chain, tapes);
+    }
     // Each segment's start, in the WALK's own ticks — derived from the tape
     // lengths the planner produced, never stored.
     const startOf = new Map();
@@ -180,6 +218,112 @@ export function witnessedClearFindings(chain, tapes) {
                                 .join('') || 'nothing'}`).join('; ') || 'none'}]`,
             });
         }
+    }
+    if (rows.length === 0) {
+        rows.push({
+            name: `chain ${chain.id}: no tape declares a mid-run clear`,
+            ok: true,
+            detail: 'nothing to witness — the row is here so that the absence is '
+                + 'REPORTED rather than silent',
+        });
+    }
+    return rows;
+}
+
+/**
+ * ⛓⛓⛓ THE STAGED CHAIN'S OWN WITNESSED-CLEAR LAW — R8 slice 5, ⚖ ruled by
+ * the orchestrator with four conditions, all of them here.
+ *
+ * See `witnessedClearFindings`' staged block for the reasoning. This is a
+ * separate function for `witnessedDespawnFindings`' own stated reason: two
+ * different claims produce one message that names neither accurately when
+ * they are folded.
+ */
+export function stagedClearFindings(chain, tapes) {
+    const rows = [];
+    const provenance = chain.clears ?? [];
+    const key = (c) => `${c.level},${c.tag}@${c.at}`;
+    /** Every timed clear the chain's own tapes actually declare. */
+    const declared = [];
+    for (const name of [...chain.segments, chain.headline]) {
+        const t = tapes.get(name);
+        if (!t) continue;
+        for (const c of t.persistence) {
+            if (c.at === undefined) continue;
+            if (declared.some((d) => d.name === name && key(d) === key(c))) continue;
+            declared.push({ name, level: c.level, tag: c.tag, at: c.at });
+        }
+    }
+    // ── half 1: every tape clear has a provenance row ─────────────────
+    for (const c of declared) {
+        const row = provenance.find((p) => key(p) === key(c));
+        rows.push({
+            name: `chain ${chain.id}: ⛓ ${c.name}'s clear of {${c.level},${c.tag}} at `
+                + `tick ${c.at} carries its own PROVENANCE`,
+            ok: Boolean(row),
+            detail: row
+                ? `${row.source}-sourced — ${row.evidence?.why ?? 'no reason given'}`
+                : 'NO `clears` row on this chain names that tag at that tick — an '
+                    + '`at`-clear nobody measured is a staged grant with extra steps, '
+                    + 'and a staged chain\'s witness is its own oracle rather than a '
+                    + `phases block. The chain declares [${provenance.map(key)
+                        .join('; ') || 'nothing'}]`,
+        });
+    }
+    // ── half 2: every provenance row has a tape clear ─────────────────
+    for (const p of provenance) {
+        const c = declared.find((d) => key(d) === key(p));
+        rows.push({
+            name: `chain ${chain.id}: ⛓ the provenance for {${p.level},${p.tag}} at tick `
+                + `${p.at} names a clear a TAPE declares`,
+            ok: Boolean(c),
+            detail: c
+                ? `declared by ${c.name}`
+                : 'NO tape in this chain declares that clear — a provenance with no '
+                    + 'artifact is a claim about a walk nobody took, and it is exactly '
+                    + 'as wrong as a clear with no provenance (trap 119: a ledger with '
+                    + 'no caller reads like a ledger that is empty)',
+        });
+    }
+    // ── half 3: the EVIDENCE is checkable, per source ─────────────────
+    for (const p of provenance) {
+        const e = p.evidence ?? {};
+        let ok = false;
+        let detail = '';
+        if (p.source === 'game') {
+            /**
+             * ⛔ BOTH SIDES OR IT IS NOT A BOUNDARY. A truncation that only
+             * ever showed the tag PRESENT measures "cleared by now", which is
+             * a band and not a tick — the same law the `--mobiles` poll
+             * taught one family over.
+             */
+            ok = e.carriesAt === p.at && e.absentAt === p.at - 1;
+            detail = ok
+                ? `the GAME's own persistence_cleared: a ${e.carriesAt}-tick truncation `
+                    + `CARRIES the tag and a ${e.absentAt}-tick one does NOT — a boundary, `
+                    + 'measured on both sides'
+                : `a game-sourced tick needs BOTH sides: carriesAt must be ${p.at} and `
+                    + `absentAt ${p.at - 1}; got ${e.carriesAt} and ${e.absentAt}`;
+        } else if (p.source === 'model') {
+            ok = Number.isFinite(e.removedAt) && Number.isFinite(e.fade)
+                && e.removedAt + e.fade === p.at;
+            detail = ok
+                ? `the RUN's own ledger: the removal at ${e.removedAt} plus the `
+                    + `responder's ${e.fade}-step fade`
+                : `a model-sourced tick is removal + fade and must ADD UP: `
+                    + `${e.removedAt} + ${e.fade} != ${p.at}`;
+        } else {
+            detail = `"${p.source}" is not a tick source. The two are \`model\` (the run `
+                + 'computes the consequence end to end) and `game` (§11.4 refuses it, so '
+                + 'the GAME is asked) — and which one is allowed is a property of the '
+                + 'MECHANISM, not a choice.';
+        }
+        rows.push({
+            name: `chain ${chain.id}: ⛓ {${p.level},${p.tag}}@${p.at}'s evidence is `
+                + 'CHECKABLE, not a comment',
+            ok,
+            detail,
+        });
     }
     if (rows.length === 0) {
         rows.push({

@@ -2051,13 +2051,39 @@ describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => 
             .not.toThrow(/NOT STEPPING this room/);
         expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
             .not.toThrow(/Arrow x Enemy/);
-        // …and the third tile is STILL not a route this planner will take.
-        // The reason has moved from the census to the geometry: the follow
-        // corridor past the sunk block is too tight for the controller, and
-        // the planner says so rather than driving it. Recorded as the current
-        // reason, not as a preference — the two-tile shove stays the answer.
+        /**
+         * ⛓⛓⛓ R8 SLICE 5 MOVED THE REASON AGAIN — AND THIS TIME IT IS THE
+         * ROOM'S OWN MECHANISM, ALREADY NAMED IN `holdShove`'s DOCBLOCK.
+         *
+         * That docblock says it in as many words: *"the button arms the two
+         * arrowtraps that kill `bob@64,64`, and a live bob is Solid to the
+         * block."* Slice 5 corrected two arrow-family ticks — a fresh volley
+         * no longer moves on its spawn tick, and a trap now reads its group
+         * TWO frames late rather than one (the Player updates LAST, so the
+         * button that publishes the group saw the player a frame earlier
+         * still). Both are FlashPunk ordering facts and the GAME adjudicated
+         * them: the model now reproduces the recording that refuted
+         * `r8-solve-5`, digit for digit.
+         *
+         * ⛓ MEASURED, on `r7-act2-4`, which still replays BYTE-EXACT: the
+         * bob's hits climb at **49 / 83 / 116** where slice 3 measured
+         * 47 / 81 / 114. Two ticks later, one per fix. So the body is Solid
+         * for two ticks longer, and the third-tile lean — which used to
+         * arrive with nothing in the way — now stops dead against it at
+         * (4,4).
+         *
+         * ⇒ THE REFUSAL IS UNCHANGED IN SUBSTANCE and one step earlier in the
+         * pipeline: the shove itself refuses, rather than the follow corridor
+         * past a block that never got there. The old messages stay in the
+         * pattern so a REGRESSION to a discharged refusal (the census's, or
+         * the tight-corridor one) still reds here rather than reading as this
+         * finding.
+         */
         expect(() => planL4(holdShove(8, { to: { tx: 5, ty: 4 }, destroys: true })))
-            .toThrow(/PLANNER BUG|standing inside|no walkable tile path/);
+            .toThrow(/came to rest on \(4,4\)|PLANNER BUG|standing inside|no walkable tile path/);
+        // ⛔ AND THE TWO-TILE ANSWER IS UNMOVED — which is what makes the row
+        // above a statement about the THIRD tile rather than about the shove.
+        expect(planL4(holdShove(8)).shoves[0]).toMatchObject({ kind: 'shove' });
     });
 
     it('⛔ `destroys` is DECLARED, and its shape is checked before anything is '
