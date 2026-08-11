@@ -6512,3 +6512,87 @@ staged tape declares one — and proven to fail closed.
 The battery is **4 of 4**. **D2 and `hasShield` are slice 6's**, from the recon
 banked in kickoff §13.10, with L18's press-arm-against-a-moving-body as its own
 paired track.
+
+## R8 slice 6: the shield, the press arm, and a −1 the game confirmed
+
+The rung's boundary target, and the arc's oldest undischarged item. R6 debt 5
+has read *"`hasShield` is real-collected by NO tape"* since 2026-08-08 —
+`r6-shield-kill` ends in L19 at the boss key, the L20 walk was only ever
+MODELLED, and every shield-holding tape is a legacy walk that GRANTS it.
+
+**`r8-solve-20`** — the live solver crosses L20 from the L19 arrival and takes
+the shield. 365 ticks, zero hits, recorded `--win --record --only=`: **31 PASS
+/ 0 FAIL**, the model reproducing the recording it just made over 366
+observations, `hasShield` false → TRUE, the `{20,2}` placement clear earned by
+the pickup, the seam latched at a CALM ARRIVAL over all 46 signature rows.
+
+⛔ **REPORTED, NEVER CREDITED** — `r8-d2-shield` is a `staged` chain, and what
+a staged boot skips is the REACHING. The flip is still measured; the credit
+stays the custody chains' claim.
+
+⚠ **`save.rockSet` is NOT witnessed by it.** `Shield.removed()` sets
+`Moonrock.beam`; the MOONROCK consumes it and writes `rockSet`, and the
+moonrock is in L0. A walk that never leaves D2 cannot reach it.
+
+### The route's own shape was the first finding
+
+The recon read as "L20's three gates stand between the walk and the shield".
+They do not: `shield@112,48` is in the middle chamber and the L19 arrival
+reaches it with no gate at all. What `shieldlocknorm` → `buttonroom` →
+`lock@32,80` open is the way OUT, west, to L13. The gates are a SHORTCUT the
+room grants, not the errand it is for — which is why `touch` did not get its
+room this slice: the segment that takes the shield never meets the lock.
+
+### The press arm against a body that moves on its own
+
+`KILL_ARM_POLICY.Spinner` `refused` → `modelled`, with the driven pair
+(`r8-l18-spinner-press`, 25 PASS / 0 FAIL). All 332 committed tapes replay
+byte-exact with the arm on, zero re-records — and that was a real fork: the
+exposure was measured first by driving the roster, and two committed tapes
+really do land presses on a spinner (`r5-press-glide`, `r5-press-repeat`), one
+and two landings each, no kills.
+
+What the conversion needed, and none of it was the transcription:
+
+- **the FIFTH non-constant press rect**, and the first that is never where the
+  level built it — four bodies before it move because the walk did something;
+  a spinner is a billiard. Without a press-box override `entityRect` refused
+  it by name, so the census could not have seen it at all.
+- **one press is one hit, and a THIRD mechanism culls the five tests**: the
+  i-frame refuses (a row), the Owl's recession refuses (a row), and a spinner
+  drifts out of the RECT — which leaves no row at all.
+- **both consequences computed** — the first `modelled` kill arm whose
+  kill-lock scan is NOT a nil (the second death opens L18's `lock@144,112`).
+
+### ⛔ A −1 tag is not a no-op, and an out-of-band write is never a permission
+
+Both L18 placements carry `tag="-1"`, and the recon had banked that as a nil
+second consequence. `Main.levelPersistenceSet` indexes `level*30 + tag` with
+no bounds check, so a kill there writes **{17,29}** — the previous level's
+last slot — and `Spinner.check()`'s `tag >= 0` guard is exactly why
+`doActions` survives to let it through. The GAME's own recorded
+`persistence_cleared` carries it.
+
+⛔ And the first cut banked it as an earned CLEAR, which the next level build
+refused by name: *"the tape clears tag(s) 29, which no entity in this level
+reads"* — which an out-of-band slot is by construction. A −1 write is a
+LEDGER ENTRY and never a PERMISSION.
+
+### The hammer is a refusal, not a bill
+
+`Spinner.update` swings a `collideLine("Player", …)` whose phase is
+`(Game.time % 45)/45·2π`, and `Game.time` counts DEAD FRAMES — a per-load
+variable the model does not carry. So the angle is not predictable and the
+honest quantity is the UNION over all 45 phases: a 13 px disc, forbidden at
+plan time by the danger map's new ingredient and refused at the tick by
+`assertPlayerClearOfHammers`. ⛓ The census scan had been pricing spinners at
+their PLACEMENT — forbidding a cell nothing is in while calling the cell the
+body is in calm.
+
+### Where the rung stands
+
+`hasShield` is **DISCHARGED**. L18 and L19 are not crossed: L18 needs a stance
+derivation (a ~4 px annulus where the sword reaches and the hammer does not),
+L19 needs the ShieldBoss fight as a derived press schedule plus a `keylock`
+executor. `touch` is still the unregistered control and its room is L20's
+westward crossing.

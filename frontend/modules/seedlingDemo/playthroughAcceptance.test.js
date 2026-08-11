@@ -862,15 +862,23 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
         // L5 and L8 — the battery's tail, and the first two staged chains that
         // carry `clears` PROVENANCE — taking it to ELEVEN. The tallies are
         // DERIVED from the table so a chain added tomorrow moves this test
-        // out loud — which is exactly what it just did, three slices running.
+        // out loud — which is exactly what it just did, FOUR slices running.
+        // ⛓⛓⛓ R8 slice 6 adds `r8-d2-shield` — TWELVE, and the FIRST staged
+        // chain that is not an act2 segment: L20 is a NEW room with no hand
+        // answer, so its differential is the entire gate, and `hasShield`
+        // flips inside it (REPORTED, never CREDITED — `earns` is empty).
         const staged = PLAYTHROUGH_CHAINS.filter((c) => (c.kind ?? 'custody') === 'staged');
         expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length - staged.length);
         expect(r.byKind.staged).toBe(staged.length);
-        expect(staged.length).toBe(11);
+        expect(staged.length).toBe(12);
         expect(staged.map((c) => c.id)).toContain('r8-battery-4');
         expect(staged.map((c) => c.id)).toContain('r8-battery-6');
         expect(staged.map((c) => c.id)).toContain('r8-battery-5');
         expect(staged.map((c) => c.id)).toContain('r8-battery-8');
+        expect(staged.map((c) => c.id)).toContain('r8-d2-shield');
+        // ⛔ AND ITS `earns` IS EMPTY, asserted here rather than assumed: a
+        // staged chain that declared `shield@L20` would be crediting a boot.
+        expect(staged.find((c) => c.id === 'r8-d2-shield').earns).toEqual([]);
     });
 
     it('⛔ MUTATION: an unknown kind THROWS by name rather than falling through', () => {
