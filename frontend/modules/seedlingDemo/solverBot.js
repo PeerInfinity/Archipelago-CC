@@ -70,7 +70,16 @@ import {
     runShove, runDwell, SHOVE_STEP,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
-import { RESPONDERS, opensOnTick } from './activators.js';
+import {
+    KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
+    opensOnKeyTick, opensOnTick,
+} from './activators.js';
+import {
+    SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule,
+} from './shieldBossFight.js';
+import { SPINNER } from './spinner.js';
+import { KILL_ARM_POLICY } from './enemyDamage.js';
+import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
@@ -154,6 +163,41 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
     'solid:pushableblockfire': 'shove',
     'solid:lock': 'hold',
     'solid:shieldlock': 'touch',
+    /**
+     * ⛓ R8 slice 7 — L20's own class name. `ShieldLock` is ONE AS3 class with
+     * TWO census tags (`shieldlock` and `shieldlocknorm`, which differ only in
+     * `shieldType`), and `activators.TOUCH_RESPONDERS` has carried both rows
+     * since R3. A table that knew one of them would refuse the room the verb
+     * was written for.
+     */
+    'solid:shieldlocknorm': 'touch',
+    /** ⚖ §15.7a ruling 1's `key -> keylock` opener, at the obstacle's own tag. */
+    'solid:bosslock': 'keylock',
+    /**
+     * ⛔⛔⛔ R8 SLICE 7 — THE TRAP-62 CONTROL, REPLACED RATHER THAN DELETED.
+     *
+     * `touch` was §10.4 note 4's live control from slice 2 to slice 6 — the
+     * claim that a strategy may be SELECTED by this table and ABSENT from the
+     * registry, with a refusal that says so by name. Registering it discharges
+     * the refusal, and a control deleted in the change that widens the claim
+     * is not a control (trap 62), so the row moves to a REAL obstacle with a
+     * REAL verb and no solver executor: L40's `wandlock` is a `Lock` with a
+     * sprite (R6's carried finding) whose opener is the WAND, and
+     * `botDriverV2.runFire` is the verb nobody has bound to a work order.
+     *
+     * ⚠ NOT A SYNTHETIC ROW. Fourteen `wandlock`s stand on the R1 route and
+     * L40's link-5 wall is the one R7 measured as unrouted — so this is a
+     * control that can really fire, which is the whole difference between a
+     * control and a comment.
+     */
+    'solid:wandlock': 'wand',
+    /**
+     * ⛓ R8 slice 7 — the ShieldBoss's 48x48 body IS the door (§13.10's route:
+     * the room's only way north runs through the three columns he stands in),
+     * so the frontier names him as an ordinary `solid` and the strategy is the
+     * fight. Trap 150 is why the fight and the crossing cannot be cut apart.
+     */
+    'solid:shieldboss': 'fight',
     'solid:magicallock': 'kill',
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
@@ -189,6 +233,19 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * that raises a PENDING declaration instead of inventing a tick.
      */
     kill: execKill,
+    /**
+     * ⛓⛓⛓ R8 SLICE 7 — THE THREE THE RUNG'S LAST ROOMS NAME.
+     *
+     * `fight` is the first executor whose completion is a SCHEDULE the
+     * receiver sets: `hitPlayer` counts 120 CONSECUTIVE band ticks and then
+     * opens the one animation `ShieldBoss.hit` forwards through, so the press
+     * ticks are `shieldBossWindowFor`'s arithmetic and nothing else.
+     * `keylock` and `touch` are LATCHES — both mechanisms run to completion
+     * once triggered, which is why neither is a `hold`.
+     */
+    fight: execFight,
+    keylock: execKeylock,
+    touch: execTouch,
 });
 
 /**
@@ -245,27 +302,104 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'shove') return resolveShoveStrategy(run, obstacle, contacts, aim,
         allowTeleporter, blocked);
     if (strategy === 'kill') return resolveKillStrategy(run, obstacle, contacts);
+    if (strategy === 'fight') return resolveFightStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'keylock') return resolveKeylockStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
-    const presser = (run.world.pressers ?? []).find(
-        (p) => `${p.tag}@${p.x},${p.y}` === obstacle.id,
-    );
-    if (!presser) return null;
+    const opener = openerPresserFor(run, obstacle);
+    if (!opener) return null;
+    const presser = opener.presser;
     const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
         `solverBot hold (${obstacle.id})`);
-    const { stance, exempt } = deriveHoldStance(run, resolvedPresser, contacts);
+    const { stance, exempt } = deriveHoldStance(run, resolvedPresser, contacts, blocked);
     return {
         strategy: 'hold',
         target: { x: presser.x, y: presser.y },
         stance,
         exempt,
-        hold: deriveHold(run, resolvedPresser),
+        hold: deriveHold(run, resolvedPresser, opener),
         rejected: [{
             option: 'route-around',
-            why: `${obstacle.id} is a proximity-hazard volume on the frontier of the `
-                + 'reachable component, so there is no route around it — A* refuses to '
-                + 'plan THROUGH an avoid volume, and a hold is what adds its presser to '
-                + 'the exemptions (trap 147)',
-        }],
+            why: `${obstacle.id} is on the frontier of the reachable component, so there `
+                + 'is no route around it — A* refuses to plan THROUGH an avoid volume or '
+                + 'a solid, and a hold is what adds its presser to the exemptions '
+                + '(trap 147)',
+        }, ...opener.rejected],
+    };
+}
+
+/**
+ * ⛓⛓⛓ ⚖ §15.7a RULING 1 — A LOCK ON THE FRONTIER RESOLVES THROUGH THE
+ * **MECHANISM GRAPH**, NEVER BY ITS OWN ID.
+ *
+ * The measured gap (§15.7): `resolveObstacleStrategy`'s hold arm looked the
+ * presser up by the OBSTACLE's own id, which is right for L4 — where the
+ * frontier really does name `button@16,64`, a presser — and answers NOTHING
+ * for a `solid:lock`, because a lock is not a presser and never will be. L20's
+ * `lock@32,80` is the room's own instance: it is `t = 0` and the thing that
+ * opens it is `buttonroom@192,16`, four tiles away and behind another gate.
+ *
+ * ⇒ the obstacle names the WALL and the mechanism data names the WORK. Two
+ * arms, in this order:
+ *
+ *   (a) THE OBSTACLE **IS** THE PRESSER — L4's shape, kept first because it is
+ *       the common one and because a graph walk that also happened to find it
+ *       would report the same answer with a longer story.
+ *   (b) THE OBSTACLE IS AN **ACTIVATOR**, and its opener set is every presser
+ *       sharing its tSet group. Each opener is a SUB-ORDER; the policy
+ *       sequences them by dependency exactly as it sequences any other
+ *       frontier order, because the walk to a presser behind another gate
+ *       re-enters `walkTo` and identifies that gate in turn.
+ *
+ * ⛔ THE GROUP IS ASKED OF THE WORLD'S OWN ROSTER, never of a `t` typed here:
+ * `world.activators` and `world.pressers` are the transcription's, and
+ * `combat.killLocksIn`'s sentinel already owns the one group that has no
+ * presser at all (`refineStrategy`, one function up).
+ *
+ * ⚠ TWO OPENERS IS A REAL SHAPE and it is ordered rather than refused — the
+ * nearest one first, ties by id, because an emitted tape is an artifact. A
+ * group with NO presser is `null`, which the caller reports as
+ * considered-and-rejected: "the table names a strategy for this kind" and
+ * "this particular lock has an opener" are different claims.
+ */
+function openerPresserFor(run, obstacle) {
+    const pressers = run.world.pressers ?? [];
+    const own = pressers.find((p) => `${p.tag}@${p.x},${p.y}` === obstacle.id);
+    if (own) {
+        return {
+            presser: own,
+            via: 'the obstacle IS the presser',
+            group: own.t,
+            rejected: [],
+        };
+    }
+    const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
+    if (!row) return null;
+    const group = pressers.filter((p) => p.t === row.t);
+    if (group.length === 0) return null;
+    const sorted = [...group].sort(
+        (a, b) => Math.hypot(a.x - row.x, a.y - row.y) - Math.hypot(b.x - row.x, b.y - row.y)
+            || (`${a.tag}@${a.x},${a.y}` < `${b.tag}@${b.x},${b.y}` ? -1 : 1),
+    );
+    const presser = sorted[0];
+    return {
+        presser,
+        via: `⚖ §15.7a ruling 1: ${obstacle.id} is an ACTIVATOR in tSet group `
+            + `t=${row.t}, and the group's opener is `
+            + `${presser.tag}@${presser.x},${presser.y}`,
+        group: row.t,
+        rejected: [{
+            option: `a presser whose id is ${obstacle.id}`,
+            why: 'there is none, and there never could be — a lock is not a presser. '
+                + '⚖ §15.7a ruling 1: the obstacle names the WALL and the mechanism data '
+                + `names the WORK, so this resolves through tSet group t=${row.t} to `
+                + `[${sorted.map((p) => `${p.tag}@${p.x},${p.y}`).join(', ')}]`,
+        }, ...(sorted.length > 1 ? [{
+            option: `the other opener(s) in t=${row.t}`,
+            why: `${sorted.slice(1).map((p) => `${p.tag}@${p.x},${p.y}`).join(', ')} `
+                + 'also publish this group; the nearest one is taken and the rest are '
+                + 'sub-orders this order does not need',
+        }] : [])],
     };
 }
 
@@ -1042,7 +1176,7 @@ function deriveStance(run, resolved, contacts) {
  * becomes true inside it, so a wrong derivation here is a measurement rather
  * than a hold that quietly does nothing.
  */
-function deriveHold(run, presser) {
+function deriveHold(run, presser, opener = null) {
     const group = run.world.activators.filter((a) => a.t === presser.t);
     const traps = (run.world.arrowTraps ?? []).filter((a) => a.t === presser.t);
     if (group.length > 0) {
@@ -1050,11 +1184,33 @@ function deriveHold(run, presser) {
         const cost = Math.max(...shut.map(
             (a) => opensOnTick(RESPONDERS[a.tag]?.fade ?? RESPONDERS.lock.fade),
         ));
+        /**
+         * ⛓ R8 slice 7 — A LOCAL-PUBLISH BUTTON **LATCHES**, and the hold is
+         * still the whole fade rather than one tick. `localPublish`
+         * (`ButtonRoom.as:79-91`, the `room == -1` arm) assigns `activate`
+         * directly and the setter's body is behind `if (a)` with the author's
+         * own *"Can't be reset to false!!"*, so walking off changes nothing —
+         * L20's `buttonroom@192,16` is exactly this shape.
+         *
+         * ⛔ THE HOLD IS NOT SHORTENED ON THAT BASIS, and the reason is the
+         * CONDITION rather than the latch: what the next plan needs is the
+         * lock NOT SOLID, and that is `opensOnTick`'s 101 ticks of fade
+         * whoever is standing where. Leaving early would make the walk's own
+         * corridor a race against a fade nobody is watching — and the walk
+         * would then re-plan against a lock that is still a wall. The latch is
+         * recorded because it is what makes leaving SAFE, not because it makes
+         * the wait shorter.
+         */
+        const latch = localPublish(presser);
         return {
             ticks: cost + HOLD_SLACK,
+            latched: latch !== null,
+            why: opener?.via ?? null,
             until: {
                 why: `every shut responder in group t=${presser.t} `
-                    + `[${shut.map((a) => a.id).join(', ')}] is open`,
+                    + `[${shut.map((a) => a.id).join(', ')}] is open`
+                    + (latch ? ' — and the group is LATCHED by `localPublish`, so the '
+                        + 'fade completes whoever is standing where' : ''),
                 test: (r) => shut.every((a) => r.openActivators.has(a.id)),
             },
         };
@@ -1112,7 +1268,7 @@ const HOLD_SLACK = 30;
  * `planWaypoints` itself — the same instrument the walk then follows, so the
  * stance picked and the stance reachable cannot be two claims.
  */
-function deriveHoldStance(run, presser, contacts) {
+function deriveHoldStance(run, presser, contacts, blocked = []) {
     const exempt = new Set([...contacts, `proximity-hazard:${presser.tag}@${presser.x},${presser.y}`]);
     const pitch = DEFAULT_LATTICE;
     const centre = {
@@ -1129,14 +1285,10 @@ function deriveHoldStance(run, presser, contacts) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = stanceHypothesis(run, blocked);
     for (const c of candidates) {
-        try {
-            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
-                solverPlanOpts(run, exempt));
-            return { stance: { x: c.x, y: c.y }, exempt };
-        } catch (e) {
-            if (!(e instanceof BotDriverV2Error)) throw e;
-        }
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
+        if (reached) return { stance: { x: c.x, y: c.y }, exempt, discharged: reached.discharged };
     }
     throw new SolverRefusal(
         `solverBot: no REACHABLE stance inside ${presser.tag}@${presser.x},${presser.y} `
@@ -1151,6 +1303,112 @@ function deriveHoldStance(run, presser, contacts) {
 function rectsOverlapLocal(a, b) {
     return a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y;
 }
+
+/**
+ * ⛓⛓⛓ ⚖ §15.7a RULING 2 — §12.2's HYPOTHESIS QUANTIFIER, APPLIED TO
+ * **STANCES** EXACTLY AS TO SHOVE DESTINATIONS, WITH THE SAME TWO GUARDS.
+ *
+ * The measured case is L20: the opener of `lock@32,80` is
+ * `buttonroom@192,16`, and the buttonroom stands BEHIND `shieldlocknorm@176,16`
+ * — so `planWaypoints`, the reachability probe every stance derivation uses
+ * (§11.7's law), refuses every cell of it while the shieldlock is solid. A
+ * derivation that stopped there would report the room unresolvable with two
+ * registered executors sitting in the registry.
+ *
+ * ⇒ "a stance is reachable" quantifies over the world where the OTHER PENDING
+ * STRATEGY-SELECTED OBSTACLES ARE HYPOTHETICALLY DISCHARGED — which is what a
+ * plan is. The two guards are §12.2's, unchanged:
+ *
+ *  (i)  THE SET IS BOUNDED to obstacles with a SELECTED **and registered**
+ *       strategy, and the trace row NAMES it. An obstacle with no strategy is
+ *       a WALL for this quantifier, not an optimistic gap.
+ *  (ii) A REFUSED DOWNSTREAM ORDER INVALIDATES THE HYPOTHESIS: `blocked` is
+ *       the loop's own `refusedOrders`, and an id in it is a wall here too.
+ *
+ * ⛔ AND THE HYPOTHESIS IS APPLIED TO THE **BAG**, not to a second planner.
+ * `run.liveGeometryOpts()` is the branded fourteen-family bag; discharging an
+ * activator is adding its id to `openActivators` and discharging a ShieldBoss
+ * is marking its roster entry `removed` — the same two fields the real
+ * mechanisms write. The spread keeps the brand (own enumerable SYMBOL keys are
+ * copied), which is the property `deriveShove`'s hypothetical bag already
+ * relies on, so no fourteen-family literal is typed here (trap 86).
+ */
+function stanceHypothesis(run, blocked = []) {
+    const wall = new Set(blocked);
+    const out = [];
+    for (const a of (run.world.activators ?? [])) {
+        if (wall.has(a.id) || run.openActivators.has(a.id)) continue;
+        const strategy = refineStrategy(run,
+            OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
+        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        out.push({ id: a.id, kind: 'activator', strategy });
+    }
+    for (const b of (run.world.shieldBosses ?? [])) {
+        if (wall.has(b.id)) continue;
+        const strategy = OBSTACLE_STRATEGIES['solid:shieldboss'];
+        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        out.push({ id: b.id, kind: 'shieldBoss', strategy });
+    }
+    return out;
+}
+
+/**
+ * The branded bag with a hypothesis set discharged — see `stanceHypothesis`.
+ * ⚠ Returns the bag UNCHANGED when the set is empty, so a room with nothing to
+ * hypothesise pays nothing and probes exactly the world it is in.
+ */
+function bagWithDischarged(run, bag, hypothesis) {
+    if (!hypothesis.length) return bag;
+    const opens = new Set(bag.openActivators ?? []);
+    let bosses = bag.shieldBosses;
+    for (const h of hypothesis) {
+        if (h.kind === 'activator') opens.add(h.id);
+        else if (h.kind === 'shieldBoss' && bosses && bosses.has(h.id)) {
+            if (bosses === bag.shieldBosses) bosses = new Map(bosses);
+            bosses.set(h.id, { ...bosses.get(h.id), removed: true, rect: null });
+        }
+    }
+    return { ...bag, openActivators: opens, shieldBosses: bosses };
+}
+
+/**
+ * Does a corridor reach this stance — first in the world as it IS, and only
+ * then under the hypothesis? The order is the point: a stance reachable today
+ * carries NO hypothesis and therefore no ledger entry to invalidate, and a
+ * derivation that leaned on optimism it did not need would make guard (ii)
+ * fire for nothing.
+ */
+function stanceReaches(run, aim, contacts, hypothesis) {
+    try {
+        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts));
+        return { discharged: [] };
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+    }
+    if (!hypothesis.length) return null;
+    try {
+        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts, {
+            liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis),
+        }));
+        return { discharged: hypothesis.map((h) => h.id) };
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+    }
+    return null;
+}
+
+/**
+ * The trace rejection every hypothesised derivation owes — ⚖ guard (i)'s
+ * "NAMES the set", in the shape `resolveShoveStrategy` already uses.
+ */
+const hypothesisRejection = (discharged) => (discharged?.length ? [{
+    option: `the stance WITHOUT hypothesising [${discharged.join(', ')}]`,
+    why: '⚖ §15.7a ruling 2: a stance reachable only once another pending '
+        + 'strategy-selected obstacle is discharged is a legal derivation target — '
+        + '§12.2\'s quantifier, applied to stances. Bounded to obstacles with a '
+        + 'SELECTED and REGISTERED strategy (guard i); if any of these refuses later it '
+        + 'becomes a wall and this stance is re-derived (guard ii).',
+}] : []);
 
 /**
  * Executor: the `hold` verb, with everything a leg spec used to declare
@@ -1272,6 +1530,41 @@ function resolveKillStrategy(run, obstacle, contacts) {
     if (!row || row.t !== KILL_LOCK_TSET) return null;
     const bodies = countedBodiesLeft(run);
     if (bodies.length === 0) return null;
+    /**
+     * ⛓⛓⛓ R8 SLICE 7 — THE **PRESS** ARM, AND IT IS ASKED FIRST BECAUSE IT
+     * NEEDS NOTHING FROM THE ROOM.
+     *
+     * Slice 3b's kill was the ROOM'S OWN WEAPON — a presser whose group arms
+     * a trap whose lane covers the body — and L18 has no trap at all. What it
+     * has is a SWORD and two bodies whose `KILL_ARM_POLICY` row slice 6
+     * flipped to `modelled`. So the order asked here is "can the player kill
+     * these themselves", and only if not does it go looking for a ceiling.
+     */
+    const press = derivePressKill(run, bodies, contacts);
+    if (press) {
+        return {
+            strategy: 'kill',
+            arm: 'press',
+            postCondition: 'kill-lock',
+            target: { x: row.x ?? obstacle.x, y: row.y ?? obstacle.y },
+            lock: row,
+            stance: press.plans[0].stance,
+            plans: press.plans,
+            bodies: press.plans.map((p) => p.id),
+            rejected: [{
+                option: 'kill by the room\'s own ceiling',
+                why: `level ${run.level} has ${(world.arrowTraps ?? []).length} arrow `
+                    + 'trap(s), so there is no ceiling to arm — the weapon is the '
+                    + 'player\'s own press, which `KILL_ARM_POLICY` calls `modelled` for '
+                    + `[${press.plans.map((p) => p.as3).join(', ')}]`,
+            }, {
+                option: 'hold',
+                why: `${obstacle.id} carries \`tset == ${KILL_LOCK_TSET}\`, so NO button `
+                    + 'in the game answers it — `checkEnemies()` opens it when '
+                    + '`Game.totalEnemies()` reaches zero (§12.8).',
+            }, ...press.rejected],
+        };
+    }
     const weapon = deriveCeilingWeapon(run, contacts);
     if (!weapon.presser) {
         return {
@@ -1303,6 +1596,199 @@ function resolveKillStrategy(run, obstacle, contacts) {
                 + 'witness is trap 101.',
         }],
     };
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 7 — THE ANNULUS, DERIVED. ⚖ §11.8a's law on the one stance
+ * this arc has had to prove SAFE rather than merely reachable.
+ *
+ * A `Spinner` is two circles about one point and the player has to stand
+ * between them:
+ *
+ *   · the HAMMER, `SPINNER.hammerLength` = 13 px. `Spinner.update` swings
+ *     `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)` every tick at
+ *     `a = (Game.time % 45) / 45 · 2π`, and **this model does not carry
+ *     `Game.time`** — it counts DEAD FRAMES, a per-load variable. So the
+ *     honest quantity is the UNION over all 45 phases, a 13 px disc, and
+ *     `levelRun.assertPlayerClearOfHammers` refuses a box inside it BY NAME on
+ *     an honest tape. That refusal is the accurate wall (§15.3.3).
+ *   · the SWORD, `presses.SLASH_REACH` = 16 px, measured by
+ *     `distanceRectPoint` from the player POINT to the body RECT — plus
+ *     `slashRect`'s own overlap, which is the gate before it.
+ *
+ * The body's box is 7x7 about the entity point, so along an axis the two
+ * circles leave a band roughly `[13 + half the player box, 16 + half the body
+ * box]` wide — about four pixels. ⛔ AND IT IS ENTERED ON THE BODY'S OWN
+ * SCHEDULE, never predicted through: `spinnerForecast` is exact and
+ * `atEta`-true (⚖ §14.2 — a spinner's `runRange` is 0, so its chase arm is
+ * dead code and its trajectory cannot read the player even in principle), so
+ * the derivation asks the forecast where the body WILL be and the player
+ * stands still.
+ *
+ * ⛔ THE CHOICE IS AN **ARGMAX OVER MECHANISM DATA**, not a margin. Among the
+ * cells that get at least `hitsMax` separated press opportunities, the one
+ * whose MINIMUM clearance from every disc over the whole horizon is largest
+ * wins. A tuned "keep 3 px spare" would be the number ⚖ §11.8a exists to
+ * forbid; "the safest cell that can still reach" is arithmetic.
+ */
+function derivePressKill(run, bodies, contacts) {
+    const live = run.spinnerBodies ?? [];
+    if (live.length === 0) return null;
+    const liveById = new Map(live.map((b) => [b.id, b]));
+    const rejected = [];
+    for (const e of bodies) {
+        const id = `${e.tag}@${e.x},${e.y}`;
+        const as3 = ENEMY_CLASSES[e.tag]?.as3 ?? null;
+        if (!liveById.has(id)) {
+            rejected.push({
+                option: `press ${id}`,
+                why: 'this run does not track its live position — a press arm needs the '
+                    + 'body\'s POSITION at the press, and the census placement is a cell '
+                    + 'it left on tick one (trap 157).',
+            });
+            return null;
+        }
+        // ⚠ `KILL_ARM_POLICY`'s VALUE IS A ROW, NOT A STRING — `{policy, why}`.
+        // Compared as a string this read `undefined !== 'modelled'` for every
+        // class in the game and the arm could never have been reached.
+        if (KILL_ARM_POLICY[as3]?.policy !== 'modelled') {
+            rejected.push({
+                option: `press ${id}`,
+                why: `\`KILL_ARM_POLICY.${as3}\` is `
+                    + `"${KILL_ARM_POLICY[as3]?.policy ?? 'absent'}", not "modelled" — a `
+                    + 'refusal retired without a driven witness is trap 101.',
+            });
+            return null;
+        }
+    }
+    /**
+     * ⛔ THE HORIZON IS THE ROOM'S, NOT A MEASUREMENT. A spinner is a billiard
+     * at `moveSpeed` 1 px/tick with a friction FLOOR at the same speed, so the
+     * longest it can take to come back past a fixed cell is bounded by a
+     * traversal of the room in both axes; `hitsMax` of those is what three
+     * landings need at worst. Named rather than tuned, and a stance the
+     * horizon cannot serve is a REFUSAL rather than a shorter scan.
+     */
+    const bound = 2 * (run.world.width + run.world.height) * TILE_SIZE / SPINNER.moveSpeed;
+    const horizon = Math.ceil(bound * SPINNER.hitsMax);
+    const forecast = run.spinnerForecast(horizon);
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const pitch = DEFAULT_LATTICE;
+    const nx = run.world.width * TILE_SIZE / pitch;
+    const ny = run.world.height * TILE_SIZE / pitch;
+    const plans = [];
+    for (const e of bodies) {
+        const id = `${e.tag}@${e.x},${e.y}`;
+        const index = live.findIndex((b) => b.id === id);
+        let best = null;
+        for (let ty = 0; ty < ny; ty += 1) {
+            for (let tx = 0; tx < nx; tx += 1) {
+                const c = nodeCentre(tx, ty, pitch);
+                if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+                const scored = scoreAnnulusCell(c, forecast, index, horizon);
+                if (!scored) continue;
+                if (!best || scored.clearance > best.clearance
+                    || (scored.clearance === best.clearance
+                        && (c.y < best.y || (c.y === best.y && c.x < best.x)))) {
+                    best = { ...c, ...scored };
+                }
+            }
+        }
+        if (!best) {
+            rejected.push({
+                option: `press ${id}`,
+                why: `no walkable cell in level ${run.level} is outside every live `
+                    + `spinner's ${SPINNER.hammerLength} px hammer disc for all `
+                    + `${horizon} forecast ticks AND inside ${SLASH_REACH} px of this `
+                    + `body's rect on ${SPINNER.hitsMax} occasions `
+                    + `${SPINNER.hitsTimerMax} ticks apart. The annulus between the two `
+                    + 'circles is about four pixels wide; a room whose geometry does not '
+                    + 'contain one is a REFUSAL, not a narrower search.',
+            });
+            return null;
+        }
+        const reached = stanceReaches(run, { x: best.x, y: best.y }, contacts, []);
+        if (!reached) {
+            rejected.push({
+                option: `press ${id} from (${best.x},${best.y})`,
+                why: 'the safest annulus cell is not REACHABLE — walkable is not '
+                    + 'reachable (§10.4 note 3), and `planWaypoints` is the probe.',
+            });
+            return null;
+        }
+        plans.push({
+            id,
+            as3: ENEMY_CLASSES[e.tag]?.as3 ?? null,
+            stance: { x: best.x, y: best.y },
+            clearance: best.clearance,
+            firstReachAt: best.firstReachAt,
+            opportunities: best.opportunities,
+        });
+    }
+    return { plans, rejected };
+}
+
+/**
+ * Score one candidate cell against the forecast: `null` when the box ever
+ * enters ANY disc, or when the body it is aimed at never comes into the
+ * sword's reach often enough.
+ *
+ * ⚠ THE SAFETY HALF IS OVER **EVERY** BODY AND THE REACH HALF IS OVER **ONE**.
+ * A stance that dodged its own target's hammer and stood in the other one's
+ * would be exactly the trap-157 shape one family over — safe about the body
+ * it was thinking about.
+ */
+function scoreAnnulusCell(cell, forecast, index, horizon) {
+    const box = playerBoxAt(cell.x, cell.y);
+    let clearance = Infinity;
+    let last = -Infinity;
+    let opportunities = 0;
+    let firstReachAt = null;
+    for (let t = 0; t < horizon; t += 1) {
+        const step = forecast[t];
+        if (!step) break;
+        for (let i = 0; i < step.length; i += 1) {
+            const r = step[i];
+            const cx = r.x + SPINNER.originX;
+            const cy = r.y + SPINNER.originY;
+            // The disc as `dangerMap.spinnerDanger` and
+            // `assertPlayerClearOfHammers` both build it — a square about the
+            // ENTITY point, which is where `hammerLine` starts.
+            const gap = Math.max(
+                (cx - SPINNER.hammerLength) - box.right, box.x - (cx + SPINNER.hammerLength),
+                (cy - SPINNER.hammerLength) - box.bottom, box.y - (cy + SPINNER.hammerLength),
+            );
+            if (gap <= 0) return null;
+            if (gap < clearance) clearance = gap;
+        }
+        const mine = step[index];
+        if (!mine) continue;
+        if (distanceRectPoint(cell.x, cell.y, mine) <= SLASH_REACH
+            && rectsOverlapLocal(slashRectToward(cell, mine), mine)) {
+            if (firstReachAt === null) firstReachAt = t;
+            if (t - last >= SPINNER.hitsTimerMax) { opportunities += 1; last = t; }
+        }
+    }
+    if (opportunities < SPINNER.hitsMax) return null;
+    return { clearance, opportunities, firstReachAt };
+}
+
+/** The four facings, at `presses.slashRect`'s own indices. */
+const FACING_KEYS = Object.freeze({ 0: 'right', 1: 'down', 2: 'left', 3: 'up' });
+
+/** Which of the four `Player.direction` values points from `cell` at `target`. */
+function facingToward(cell, target) {
+    const cx = (target.x + target.right) / 2;
+    const cy = (target.y + target.bottom) / 2;
+    const dx = cx - cell.x;
+    const dy = cy - cell.y;
+    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 0 : 2;
+    return dy >= 0 ? 1 : 3;
+}
+
+/** `presses.slashRect` at the facing that points from `cell` at `target`. */
+function slashRectToward(cell, target) {
+    return slashRect(cell.x, cell.y, facingToward(cell, target));
 }
 
 /**
@@ -1584,6 +2070,7 @@ function censusRowFor(run, id) {
  * never enter the bait arm at all, and the record says which happened.
  */
 function execKill(run, perTick, resolved, ctx) {
+    if (resolved.arm === 'press') return execKillByPress(run, perTick, resolved, ctx);
     if (!resolved.presser) {
         throw new SolverRefusal(`${ctx.what}: the kill work order has no weapon — `
             + `${resolved.rejected?.[0]?.why ?? 'no reason recorded'}`,
@@ -1820,6 +2307,125 @@ function execKill(run, perTick, resolved, ctx) {
         } });
 }
 
+/**
+ * ⛓⛓⛓ R8 SLICE 7 — THE `kill` VERB'S **PRESS** ARM: THE PLAYER IS THE WEAPON.
+ *
+ * The ceiling arm above waits for a room to do the killing. This one does it,
+ * and the whole difference is the AIM.
+ *
+ * ⛔⛔⛔ A PRESS CONSUMES THE FACING THE TICK **STARTED** WITH. `Player.slash`
+ * latches `slashDirection = direction` and `sprites()` — the only writer of
+ * `direction` — runs BELOW `slash()` in `Player.update`, so the rect a press
+ * swings is aimed by the PREVIOUS tick's velocity (`levelRun`'s own
+ * `pressFacing`). A stance that stands still has whatever facing its approach
+ * left, which is a facing nobody derived.
+ *
+ * ⇒ the loop AIMS and then PRESSES, on two consecutive ticks: one tick of the
+ * direction key toward the body writes `direction`, and the tick after it
+ * holds `primary` alone. ⚠ The aim tick MOVES the player — one tick of the
+ * controller's own acceleration — so the loop walks back to the derived stance
+ * between presses rather than pretending it did not. That is why the stance is
+ * chosen by ARGMAX of clearance and not by "the first cell that fits": the
+ * margin the argmax buys is what the aim tick spends, and
+ * `assertPlayerClearOfHammers` is what adjudicates whether it was enough.
+ *
+ * ⛔ AND THE CADENCE IS THE RECEIVER'S. `hitSpinner` sets
+ * `hitsTimerMax` = 30 on a landing, so tests 2..5 of the same press are
+ * refused and ONE PRESS IS ONE HIT (traps 85/93). The loop therefore presses
+ * only when the body's own `hitsTimer` is down — the run's own field, not a
+ * counter kept here.
+ */
+function execKillByPress(run, perTick, resolved, ctx) {
+    const NO_KEYS = new Set();
+    const PRESS = new Set(['primary']);
+    const from = perTick.length;
+    const landings = [];
+    for (const plan of resolved.plans) {
+        if (plan.stance.x !== run.state.x || plan.stance.y !== run.state.y) {
+            ctx.walkTo(ctx.goal, plan.stance, {
+                what: `${ctx.what} -> press (${plan.id}) stance`,
+            });
+        }
+        /**
+         * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON, not a generous number:
+         * the annulus was chosen because it gets `hitsMax` separated
+         * opportunities inside it, so a body still standing when it runs out
+         * means the forecast and the run disagree — which is a measurement,
+         * and `spinnerForecast` is exact by construction (⚖ §14.2).
+         */
+        const bound = 2 * (run.world.width + run.world.height) * TILE_SIZE
+            / SPINNER.moveSpeed * SPINNER.hitsMax + HOLD_SLACK;
+        let aimed = false;
+        let spent = 0;
+        for (; spent <= bound; spent += 1) {
+            const body = (run.spinnerBodies ?? []).find((b) => b.id === plan.id);
+            if (!body) break;
+            const inReach = distanceRectPoint(run.state.x, run.state.y, body.rect)
+                <= SLASH_REACH
+                && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
+                    facingToward(run.state, body.rect)), body.rect);
+            const ready = body.hitsTimer === 0;
+            const home = hasArrived(run.state, plan.stance, DEFAULT_TOLERANCE);
+            let held = NO_KEYS;
+            if (aimed) {
+                held = PRESS;
+                aimed = false;
+            } else if (inReach && ready
+                && facingToward(run.state, body.rect) === run.state.direction) {
+                // The facing the last `sprites()` wrote already points at it —
+                // press now and spend no tick aiming.
+                held = PRESS;
+            } else if (inReach && ready) {
+                held = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
+                aimed = true;
+            } else if (!home) {
+                // Between passes, walk back to the cell the argmax chose.
+                held = chooseHeld(run.state, plan.stance, DEFAULT_TOLERANCE);
+            }
+            const before = (run.spinnerPressHits ?? []).length;
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (transition) {
+                fail(`${ctx.what}: the run crossed to level ${transition.to_level} while `
+                    + `pressing ${plan.id}. A kill does not survive the door (trap 150).`);
+            }
+            for (const h of (run.spinnerPressHits ?? []).slice(before)) {
+                if (h.landed) landings.push({ t: h.t, id: h.id, hits: h.hits });
+            }
+        }
+        if ((run.spinnerBodies ?? []).some((b) => b.id === plan.id)) {
+            fail(`${ctx.what}: pressed at ${plan.id} for the whole ${Math.round(bound)}-tick `
+                + `bound from the derived annulus cell (${plan.stance.x},${plan.stance.y}) `
+                + `— clearance ${plan.clearance.toFixed(2)} px, `
+                + `${plan.opportunities} forecast opportunit(ies) — and the body is still `
+                + 'in the world. The forecast and the run disagree about the orbit, which '
+                + 'is a measurement rather than a stance to widen.');
+        }
+    }
+    /**
+     * ⛓ AND THE LOCK'S OWN FADE OUTLASTS THE LAST KILL. `checkEnemies()` opens
+     * a `tset == -1` lock when the count reaches zero, and a `Lock` then takes
+     * `activators.opensOnTick` ticks to stop being solid — the same arithmetic
+     * `deriveHold` uses, asked here because this order has no button to stand
+     * on while it runs.
+     */
+    const fade = resolved.lock
+        ? opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade)
+        : 0;
+    for (let i = 0; i <= fade + HOLD_SLACK; i += 1) {
+        if (!resolved.lock || run.openActivators.has(resolved.lock.id)) {
+            return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
+                landings, bodies: resolved.bodies };
+        }
+        perTick.push(NO_KEYS);
+        run.advance(NO_KEYS);
+    }
+    return fail(`${ctx.what}: every counted body is dead and ${resolved.lock.id} did not `
+        + `open inside its own ${fade}-tick fade plus slack. \`checkEnemies()\` opens a `
+        + '`tset == -1` lock when `Game.totalEnemies()` reaches zero — a lock that does '
+        + 'not is a count this model and the room disagree about.');
+}
+
 /** Executor: the `collect` verb, bound to live state. */
 function execCollect(run, perTick, resolved, ctx) {
     return runCollect(run, perTick, { pickup: { x: resolved.target.x, y: resolved.target.y } },
@@ -1830,6 +2436,566 @@ function execCollect(run, perTick, resolved, ctx) {
 function execChest(run, perTick, resolved, ctx) {
     return runChest(run, perTick, { chest: { x: resolved.target.x, y: resolved.target.y } },
         ctx.maxTicksPerTarget, ctx.what, ctx.before);
+}
+
+// ── R8 SLICE 7 — THE THREE MECHANISMS D2's LAST ROOMS ARE MADE OF ─────
+
+/**
+ * ⛓⛓⛓ THE FIGHT'S STANCE, DERIVED — and it is ONE HELD KEY doing four jobs.
+ *
+ * `ShieldBoss.hitPlayer` counts a player inside its own 48x16 BAND —
+ * `shieldBossBandRect`, the strip directly BELOW the 48x48 body — for
+ * `SHIELD_BOSS.swingTimeMax` CONSECUTIVE updates while the animation is
+ * `"sit"`, and that count is the ONLY thing that opens `movedShield`, the one
+ * animation `ShieldBoss.hit` forwards through. So the stance is not a place to
+ * stand near: it is inside the damage volume, on purpose.
+ *
+ * ⛔ AND A LATTICE CELL IN THE BAND IS NOT ENOUGH. The band and the SLASH have
+ * different reaches: from the cell below the body the box already overlaps the
+ * band, but `slashRect(x, y, UP)` is a 32x16 rect whose top edge is 16 px above
+ * the player, and `Player.slash`'s second gate is
+ * `distanceRectPoint(x, y, bodyRect) <= SLASH_REACH`. Standing at the cell
+ * centre the slash rect ENDS exactly on the body's bottom edge and overlaps
+ * nothing — a press that would look right and hit nothing.
+ *
+ * ⇒ the stance is the cell, and the verb then HOLDS `up`: the walk into the
+ * body PINS the player against it (`Mobile.moveX/moveY` stop at a solid), which
+ * puts the box deep in the band AND inside the slash's reach AND holds
+ * `direction` UP so every latched `slashDirection` aims at the body. R6 slice
+ * 5's own window is one held key for the same four reasons; this derives the
+ * cell it started from rather than booting on top of it.
+ */
+function deriveFightStance(run, boss, contacts, blocked = []) {
+    const band = shieldBossBandRect({ x: boss.ex, y: boss.ey });
+    const body = shieldBossBodyRect({ x: boss.ex, y: boss.ey });
+    const pitch = DEFAULT_LATTICE;
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const centre = { x: (band.x + band.right) / 2, y: (band.y + band.bottom) / 2 };
+    const cell = nodeAt(centre.x, centre.y, pitch);
+    const candidates = [];
+    for (let dy = 0; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            // Under the band's own x span, so the hold walks STRAIGHT up into
+            // the body rather than along its side.
+            if (c.x < band.x || c.x >= band.right) continue;
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            candidates.push({ d: Math.abs(c.x - centre.x) + (c.y - centre.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = stanceHypothesis(run, blocked);
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) {
+            return {
+                stance: { x: c.x, y: c.y },
+                discharged: reached.discharged,
+                band,
+                body,
+            };
+        }
+    }
+    throw new SolverRefusal(
+        `solverBot: no REACHABLE stance under ${boss.id}'s band in level ${run.level} — `
+        + `${candidates.length} walkable cell(s) beneath [${band.x},${band.right}) and `
+        + `none with a corridor from (${run.state.x},${run.state.y}). The band is the `
+        + 'only place the stand-under count runs, so a fight with no stance is not a '
+        + 'strategy for this obstacle.',
+        { obstacle: { kind: 'solid', id: boss.id } });
+}
+
+/**
+ * ⛓ RESOLVE the `fight` work order. The boss's own body IS the obstacle and
+ * the post-condition is its REMOVAL — not its death, which is 34 ticks
+ * earlier: `startDeath` writes `{19,0}` and does NOT set `destroy`, `endAnim`
+ * does, and `Mobile.death`'s eleventh fade call asks for the removal that
+ * `updateLists()` drains one tick later (R6 §13.5's four instants).
+ */
+function resolveFightStrategy(run, obstacle, contacts, blocked = []) {
+    const boss = (run.world.shieldBosses ?? []).find((b) => b.id === obstacle.id);
+    if (!boss) return null;
+    if (KILL_ARM_POLICY[boss.cls?.as3 ?? 'ShieldBoss'] !== 'modelled') return null;
+    const { stance, discharged, band } = deriveFightStance(run, boss, contacts, blocked);
+    return {
+        strategy: 'fight',
+        postCondition: 'removal',
+        target: { x: boss.x, y: boss.y },
+        boss: obstacle.id,
+        stance,
+        discharged,
+        band,
+        rejected: [{
+            option: 'route around the body',
+            why: `${obstacle.id} is a 48x48 \`Mobile.solids\` member standing in the `
+                + 'three columns that are this room\'s only way north — the wall, the key '
+                + 'and the exit are one object (R6 §13.6). There is no route around it.',
+        }, {
+            option: 'wait out the stab and walk past',
+            why: '`hitPlayer`\'s band is BOTH the trigger volume of the stand-under and '
+                + 'the damage volume of the stab, so the only way to be in it safely is '
+                + 'to land a hit inside `movedShield` — `ShieldBoss.hit`\'s landing arm '
+                + 'calls `sit()`, which aborts the chain BEFORE frames 5..8 damage '
+                + 'anything. Standing there without pressing is the one hit this route '
+                + 'cannot afford.',
+        }, ...hypothesisRejection(discharged)],
+    };
+}
+
+/**
+ * ⛓⛓⛓ THE PRESS SCHEDULE, DERIVED FROM THE RECEIVER'S OWN ARITHMETIC — the
+ * ⚖ §11.8a law's hardest case on this arc, because every number here is one a
+ * hand-tuned constant could have stood in for.
+ *
+ * `shieldBossWindowFor(S)` answers where the sword may land, given the tick
+ * `startStab(false)` ran: `moveShield` advances on `S … S+move-1` and swaps at
+ * the END of that last one, so `movedShield` is already up when the PLAYER
+ * updates on `S+move-1`, and it ends when `movedShield`'s own callback fires —
+ * again BEFORE the player. The window is inclusive `[windowFrom, windowTo]`.
+ *
+ * ⛔ AND A PRESS IS NOT A HIT — IT IS FIVE (traps 85/93). `Player.slash`'s
+ * `slashDelayMax` is ZERO, so the test runs on every tick `slashing` is up:
+ * `T+1 … T+SLASH_HIT_TICKS`. So the press tick T must satisfy
+ *
+ *     T + 1 >= windowFrom     (the first dispatch is inside the window)
+ *     T + SLASH_HIT_TICKS <= windowTo   (and so is the last)
+ *
+ * and the EARLIEST such T is taken — `windowFrom - 1`. Earliest rather than
+ * centred because the window is a fixed 16 ticks and every tick spent inside
+ * it is a tick the band counter is not running toward the next one; and
+ * because a schedule that aimed at the middle would be a preference, while
+ * "the first tick whose whole dispatch train fits" is arithmetic.
+ *
+ * ⚠ THE FIRST PRESS OF THE ROOM SPENDS ITS FIRST DISPATCH ON THE ARMING
+ * SWALLOW and lands on its SECOND — `activated` is an instance field with no
+ * persistence behind it, so the first `hit()` after every room entry returns
+ * above everything (R6 §13.2). That costs the schedule NOTHING, which is why
+ * three presses buy three hits: the swallowed dispatch is absorbed by the
+ * first LANDING press, whose `hitsTimer = 30` then refuses the four behind it.
+ */
+export function shieldBossPressTick(window) {
+    const earliest = window.windowFrom - 1;
+    const latest = window.windowTo - SLASH_HIT_TICKS;
+    if (latest < earliest) {
+        fail(`shieldBossPressTick: the window [${window.windowFrom},${window.windowTo}] is `
+            + `shorter than one press's ${SLASH_HIT_TICKS} dispatches — no press tick puts `
+            + 'the whole train inside it, and a press that straddles the edge is a '
+            + 'retaliation waiting to happen.');
+    }
+    return earliest;
+}
+
+/**
+ * Executor: the `fight` verb — one held key, a derived press per window, and a
+ * completion that is OBSERVED rather than scheduled (§11.7's law).
+ *
+ * ⛔ THE COMPLETION IS THE **REMOVAL**, and the run's own ledger is what says
+ * so: `run.shieldBossKills` carries a `removeRequested` row on the tick
+ * `FP.world.remove` was CALLED, and the body is still in the type list for the
+ * rest of that tick — so the wall ends one tick later. Waiting for the tag or
+ * for `destroy` would walk into a solid for 34 or 11 ticks (R6 §13.5, set by
+ * the game's own first recording).
+ */
+function execFight(run, perTick, resolved, ctx) {
+    const id = resolved.boss;
+    const UP = new Set(['up']);
+    const UP_PRESS = new Set(['up', 'primary']);
+    const from = perTick.length;
+    /**
+     * ⛔ THE BOUND IS THE MECHANISM'S, NOT A GENEROUS NUMBER. Three landed
+     * hits need three stand-under cycles of `swingTimeMax`, each preceded by
+     * the walk into the band and followed by the window; then the death's
+     * four instants. `HOLD_SLACK` per cycle is the approach term nobody can
+     * derive, and the bound stays a claim this verb can refute.
+     */
+    const cycles = SHIELD_BOSS.hitsMax;
+    const bound = cycles * (SHIELD_BOSS.swingTimeMax
+        + SHIELD_BOSS.hitsMax * SLASH_HIT_TICKS + HOLD_SLACK)
+        + shieldBossDeathSchedule(0).removedTick + HOLD_SLACK;
+    let pressAt = null;
+    let seenStabs = 0;
+    let presses = 0;
+    const windows = [];
+    const removedAt = () => (run.shieldBossKills ?? []).find(
+        (k) => k.id === id && k.what === 'removeRequested');
+    for (let spent = 0; spent <= bound; spent += 1) {
+        const gone = removedAt();
+        // ⛔ ONE TICK AFTER THE REQUEST — `updateLists()` drains `_remove`
+        // AFTER `World.update`, and the Player updates LAST, so the body is a
+        // wall for the whole of the request tick.
+        if (gone && perTick.length > gone.t + 1) {
+            return {
+                verb: 'fight', target: id, from, ticks: perTick.length - from,
+                presses, windows, removedAt: gone.t,
+            };
+        }
+        /**
+         * ⛓ THE SCHEDULE IS READ OFF THE RUN, not counted here. Every
+         * `startStab(false)` pushes a row carrying its own derived window, so
+         * the policy asks the model the same question the model asked the
+         * transcription — one arithmetic, not two.
+         */
+        const stabs = (run.shieldBossStabs ?? []).filter(
+            (r) => r.id === id && !r.retaliation);
+        if (stabs.length > seenStabs) {
+            seenStabs = stabs.length;
+            const w = stabs[stabs.length - 1];
+            pressAt = shieldBossPressTick(w);
+            windows.push({ startStab: w.t ?? w.startStab, from: w.windowFrom,
+                to: w.windowTo, pressAt });
+        }
+        const press = pressAt !== null && perTick.length === pressAt;
+        if (press) { pressAt = null; presses += 1; }
+        const held = press ? UP_PRESS : UP;
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to `
+                + `${transition.to_level} during the fight with ${id}. A fight does not `
+                + 'survive the door (trap 150) — the body, its key and its persistence '
+                + 'row are all per-visit.');
+        }
+    }
+    return fail(`${ctx.what}: held the band under ${id} for the whole ${bound}-tick bound `
+        + `with ${presses} press(es) across ${windows.length} window(s) and the body is `
+        + 'still in the world. The bound is `swingTimeMax` per cycle plus the death '
+        + 'schedule; a fight that runs it out has a stance the band counter is not '
+        + 'seeing, or a press the window is not carrying.');
+}
+
+/**
+ * ⛓ RESOLVE the `keylock` work order — ⚖ §15.7a ruling 1's `key -> keylock`.
+ *
+ * ⛔ THE GATE IS A SAVE-FILE BOOLEAN, NOT AN ITEM. `BossLock.update` reads
+ * `Player.hasKey(keyType)`, which `BossKey.removed()` writes and which is not
+ * one of the fourteen `botStatus.items` fields — so the resolver asks the
+ * RUN's own key set, and a lock whose key the run does not hold resolves to
+ * nothing rather than to a stance that would stand there for ever.
+ */
+function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
+    const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
+    if (!row || !KEY_RESPONDERS[row.tag]) return null;
+    if (!run.keys?.has(row.keyType)) {
+        return {
+            strategy: 'keylock',
+            held: false,
+            rejected: [{
+                option: `stand on ${obstacle.id}`,
+                why: `\`BossLock.update\` gates on \`Player.hasKey(${row.keyType})\` and `
+                    + `this run holds [${[...(run.keys ?? [])].join(', ') || 'no keys'}]. `
+                    + 'A stance on an unkeyed bosslock is a wait with no mechanism behind '
+                    + 'it — the key is a SUB-ORDER, not a parameter.',
+            }],
+        };
+    }
+    const { stance, discharged } = deriveKeylockStance(run, row, contacts, blocked);
+    const responder = KEY_RESPONDERS[row.tag];
+    return {
+        strategy: 'keylock',
+        postCondition: 'open',
+        target: { x: row.x, y: row.y },
+        lock: obstacle.id,
+        keyType: row.keyType,
+        stance,
+        discharged,
+        /**
+         * ⛔ THE FADE IS NOT A `Lock`'S, and `opensOnKeyTick` is why this is
+         * computed rather than written: `keyTimer` ticks run FIRST and the
+         * first of them shares the frame that latched `activate`, then
+         * `alpha -= 0.05` on a BARE Number that really does go negative. 80,
+         * against a Lock's 101.
+         */
+        hold: {
+            ticks: opensOnKeyTick(responder.keyTimer, responder.fade) + HOLD_SLACK,
+            until: {
+                why: `${obstacle.id} is no longer solid — \`BossLock\`'s `
+                    + `${responder.keyTimer}-tick \`keyTimer\` and then its own fade`,
+                test: (r) => r.openActivators.has(obstacle.id),
+            },
+        },
+        rejected: [{
+            option: 'hold',
+            why: `${obstacle.id} answers to no group at all — \`BossLock\`'s ctor forces `
+                + '`tSet` to -1, so no `Button.activateAll` ever republishes it and the '
+                + 're-close arm is unreachable. What opens it is the player standing on '
+                + 'its one-pixel key line holding the key, which is a THIRD activation '
+                + 'shape and not a button.',
+        }, ...hypothesisRejection(discharged)],
+    };
+}
+
+/**
+ * The keylock's stance: a cell whose player box CONTAINS one of the integer
+ * probes of the lock's own `keyLine`.
+ *
+ * ⛔ AN INTEGER POINT TEST, NOT A RECT OVERLAP — `activators.keyLineTouches`
+ * is the transcription and it is asked here rather than re-derived, because
+ * `World.collideLine`'s raycast is `while (x < toX)` at precision 1 and a rect
+ * overlap would also answer yes for a box that straddles the last probe
+ * without containing it. Half a pixel of over-permission in the one mechanic
+ * whose false positive is a persistence write.
+ *
+ * ⚠ AND THE CELL CENTRES DO NOT REACH IT. The line sits one pixel below a
+ * SOLID lock, so the stance is the cell below it walked NORTH into the wall —
+ * which is what `runHold`'s own approach does from the cell centre. The
+ * candidates are therefore cells from which the walk into the lock lands the
+ * box on the line, tested at the PINNED position rather than at the centre.
+ */
+function deriveKeylockStance(run, row, contacts, blocked = []) {
+    const pitch = DEFAULT_LATTICE;
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const cell = nodeAt((row.rect.x + row.rect.right) / 2,
+        (row.rect.y + row.rect.bottom) / 2, pitch);
+    const candidates = [];
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            if (dx === 0 && dy === 0) continue;
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            // The PINNED box — the walk stops with the box flush against the
+            // lock's own rect on whichever side the cell is.
+            const pinned = pinnedAgainst({ x: c.x, y: c.y }, row.rect);
+            if (!keyLineTouches(playerBoxAt(pinned.x, pinned.y), row.keyLine)) continue;
+            candidates.push({ d: Math.hypot(c.x - row.x, c.y - row.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = stanceHypothesis(run, blocked);
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    }
+    throw new SolverRefusal(
+        `solverBot: no REACHABLE stance on ${row.id}'s key line in level ${run.level} — `
+        + `${candidates.length} cell(s) put the player box on the line when walked into `
+        + `the lock, none with a corridor from (${run.state.x},${run.state.y}).`,
+        { obstacle: { kind: 'solid', id: row.id } });
+}
+
+/**
+ * Where a walk from `cell` into `solid` comes to rest: the box flush against
+ * the solid's own edge on the side the cell is on. `Mobile.moveX`/`moveY` step
+ * one pixel at a time and stop on the first blocked step, so the resting
+ * position is the solid's edge minus the box's own half-extent.
+ *
+ * ⚠ ONE AXIS, chosen by which one the cell is offset on — a diagonal approach
+ * ends against whichever edge it reaches first and is not a stance a
+ * derivation may claim.
+ */
+function pinnedAgainst(cell, solid) {
+    const dx = cell.x < solid.x ? -1 : (cell.x >= solid.right ? 1 : 0);
+    const dy = cell.y < solid.y ? -1 : (cell.y >= solid.bottom ? 1 : 0);
+    if (dx !== 0 && dy !== 0) return cell;
+    if (dx < 0) return { x: solid.x - (HITBOX.width - HITBOX.originX), y: cell.y };
+    if (dx > 0) return { x: solid.right + HITBOX.originX, y: cell.y };
+    if (dy < 0) return { x: cell.x, y: solid.y - (HITBOX.height - HITBOX.originY) };
+    if (dy > 0) return { x: cell.x, y: solid.bottom + HITBOX.originY };
+    return cell;
+}
+
+/**
+ * Executor: the `keylock` verb. The approach walks INTO the lock — the key
+ * line is one pixel below a solid — and then the wait is `runHold`'s, with the
+ * presser argument being the lock itself: one implementation, and its per-tick
+ * invariants (no transition, no movement, still inside) are exactly the ones a
+ * key wait wants.
+ *
+ * ⛔ AND IT IS A LATCH: `activate` is set once and `BossLock`'s ctor forces
+ * `tSet` to -1, so nothing republishes it false. The wait is for the FADE, not
+ * for continued contact — which is why the condition is the lock being open
+ * and not the player still standing there.
+ */
+function execKeylock(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        return fail(`${ctx.what}: ${resolved.lock} needs a key this run does not hold. `
+            + 'The key is a SUB-ORDER — a `collect-placement` goal the macro layer owes '
+            + '— and inventing a stance for an unkeyed lock would be a wait with no '
+            + 'mechanism behind it.');
+    }
+    const NO_KEYS = new Set();
+    const into = leanKeys(run.state, resolved.target);
+    const from = perTick.length;
+    let touched = false;
+    for (let spent = 0; spent < resolved.hold.ticks; spent += 1) {
+        if (resolved.hold.until.test(run)) {
+            return { verb: 'keylock', target: resolved.lock, from,
+                ticks: perTick.length - from, touchedAt: touched };
+        }
+        // Lean into the lock until the key line latches, then stand still: the
+        // latch survives, and a held key would keep the walk pressing a wall
+        // for eighty ticks of span.
+        const held = touched ? NO_KEYS : into;
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed to level ${transition.to_level} while `
+                + `opening ${resolved.lock}.`);
+        }
+        if (!touched && keyLineTouches(playerBoxAt(run.state.x, run.state.y),
+            (run.world.activators ?? []).find((a) => a.id === resolved.lock).keyLine)) {
+            touched = true;
+        }
+    }
+    return fail(`${ctx.what}: ${resolved.lock} did not open inside its own derived bound `
+        + `of ${resolved.hold.ticks} ticks (\`opensOnKeyTick\` + slack), and the key line `
+        + `was ${touched ? '' : 'NEVER '}touched. ${resolved.hold.until.why}.`);
+}
+
+/** The held key set that leans from `state` toward `aim` on ONE axis. */
+function leanKeys(state, aim) {
+    const dx = aim.x - state.x;
+    const dy = aim.y - state.y;
+    if (Math.abs(dx) >= Math.abs(dy)) return new Set([dx >= 0 ? 'right' : 'left']);
+    return new Set([dy >= 0 ? 'down' : 'up']);
+}
+
+/**
+ * ⛓⛓⛓ RESOLVE the `touch` work order — THE CONTROL THAT BECOMES A VERB.
+ *
+ * `touch` has been the live control for §10.4 note 4 since slice 2 (trap 62: a
+ * strategy the table NAMES and the registry LACKS), and §15.2 measured why it
+ * kept missing its room — the three gates are behind the shield, so the
+ * segment that TAKES the shield never meets the lock. Its room is the WESTWARD
+ * crossing, and this is it.
+ *
+ * ⛔ THE GATE IS AN INVENTORY FLAG AND THE MECHANISM IS A LATCH.
+ * `ShieldLock.update` is `p = collide("Player", x - 1, y)` and then
+ * `if (p && !activate && hasShield)` — so the resolver asks the RUN's
+ * inventory, and a lock whose shield the run does not hold resolves to a
+ * REFUSAL naming the item rather than to a stance.
+ */
+function resolveTouchStrategy(run, obstacle, contacts, blocked = []) {
+    const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
+    if (!row || !TOUCH_RESPONDERS[row.tag]) return null;
+    const need = row.shield ?? 'hasShield';
+    if (!run.inventory?.[need]) {
+        return {
+            strategy: 'touch',
+            held: false,
+            need,
+            rejected: [{
+                option: `touch ${obstacle.id}`,
+                why: `\`ShieldLock.update\`'s arm is \`if (p && !activate && `
+                    + `Player.${need})\` and this run does not hold it. The item is a `
+                    + 'SUB-ORDER the macro layer owes, not a parameter of this verb.',
+            }],
+        };
+    }
+    const { stance, discharged } = deriveTouchStance(run, row, contacts, blocked);
+    return {
+        strategy: 'touch',
+        postCondition: 'open',
+        target: { x: row.x, y: row.y },
+        lock: obstacle.id,
+        need,
+        stance,
+        discharged,
+        /**
+         * ⛔ THE WINDOW IS AN ORDINARY LOCK FADE AND THE PLAYER CANNOT ACT FOR
+         * ANY OF IT. `opensOnTick(0.01)` is 101, and `ShieldLock` writes
+         * `p.receiveInput = false` for the whole of it — so the "hold" here is
+         * not a hold at all, it is a window the tape must spend with nothing
+         * pressed.
+         */
+        window: opensOnTick(RESPONDERS[row.tag]?.fade ?? RESPONDERS.lock.fade),
+        rejected: [{
+            option: 'hold',
+            why: `${obstacle.id} forces \`tSet = -2\` (R2's FORCED_TSET finding), so no `
+                + 'button in the game republishes it and there is no group to press. '
+                + '`activate` LATCHES on the touch and the fade runs to completion '
+                + 'whatever the player does.',
+        }, ...hypothesisRejection(discharged)],
+    };
+}
+
+/**
+ * The touch stance: a cell from which the walk into the lock lands the player
+ * box inside its own `touchRect` — the lock's rect shifted ONE PIXEL toward
+ * the side the player comes from, which is `collide("Player", x - 1, y)`.
+ *
+ * ⛔ AND IT IS A ONE-PIXEL BAND. The lock is SOLID, so the box stops flush
+ * against its west edge; the check rect starts one pixel further west. The
+ * only stance that satisfies both is the pinned one, which is why this tests
+ * `pinnedAgainst` rather than the cell centre — a derivation that probed the
+ * centre would find no cell at all and report the room unsolvable.
+ */
+function deriveTouchStance(run, row, contacts, blocked = []) {
+    const pitch = DEFAULT_LATTICE;
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const cell = nodeAt((row.rect.x + row.rect.right) / 2,
+        (row.rect.y + row.rect.bottom) / 2, pitch);
+    const candidates = [];
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            if (dx === 0 && dy === 0) continue;
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            const pinned = pinnedAgainst({ x: c.x, y: c.y }, row.rect);
+            if (!rectsOverlapLocal(playerBoxAt(pinned.x, pinned.y), row.touchRect)) continue;
+            candidates.push({ d: Math.hypot(c.x - row.x, c.y - row.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = stanceHypothesis(run, blocked);
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    }
+    throw new SolverRefusal(
+        `solverBot: no REACHABLE stance against ${row.id}'s touch rect in level `
+        + `${run.level} — ${candidates.length} cell(s) land the pinned box inside `
+        + `[${row.touchRect.x},${row.touchRect.right}) and none plans a corridor from `
+        + `(${run.state.x},${run.state.y}).`,
+        { obstacle: { kind: 'solid', id: row.id } });
+}
+
+/**
+ * Executor: the `touch` verb.
+ *
+ * ⛔⛔⛔ THE ONE THING THIS VERB HAS TO GET RIGHT IS A TERMINAL STATE.
+ * `ShieldLock.turnOff()` restores `receiveInput` ONLY `if (p)`, and `p` is the
+ * collide it re-runs on the tick the fade ends — so a player carried out of
+ * the check rect by the velocity they walked in with NEVER GETS INPUT BACK.
+ * `levelRun` throws by name on exactly that, and the cure is the verb's: the
+ * lean is released the tick the snap fires, so the only thing that could move
+ * the player is friction on a velocity the wall has already stopped.
+ *
+ * ⇒ nothing is pressed for the whole window. That is also what keeps the tape
+ * cheap: 101 ticks of a released key is ONE span (trap 16 / §15.4).
+ */
+function execTouch(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        return fail(`${ctx.what}: ${resolved.lock} needs \`Player.${resolved.need}\`, `
+            + 'which this run does not hold.');
+    }
+    const NO_KEYS = new Set();
+    const into = leanKeys(run.state, resolved.target);
+    const from = perTick.length;
+    const bound = resolved.window + HOLD_SLACK;
+    let snappedAt = null;
+    for (let spent = 0; spent <= bound; spent += 1) {
+        if (run.openActivators.has(resolved.lock)) {
+            return { verb: 'touch', target: resolved.lock, from,
+                ticks: perTick.length - from, snappedAt };
+        }
+        // ⛔ RELEASE ON THE SNAP. `run.inputRefused` is the run's own gate and
+        // it is the honest signal — the game has already taken the player's
+        // input, so a key held past it is a span that buys nothing and a
+        // velocity that could carry them out of the rect.
+        const refused = run.inputRefused;
+        if (refused && snappedAt === null) snappedAt = perTick.length;
+        const held = refused ? NO_KEYS : into;
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed to level ${transition.to_level} while `
+                + `touching ${resolved.lock}.`);
+        }
+    }
+    return fail(`${ctx.what}: ${resolved.lock} did not open inside its own derived bound `
+        + `of ${bound} ticks (\`opensOnTick\` ${resolved.window} + slack), and the snap `
+        + `${snappedAt === null ? 'NEVER FIRED — the pinned box never reached the touch '
+            + 'rect' : `fired at tick ${snappedAt}`}.`);
 }
 
 /**

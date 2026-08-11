@@ -16,7 +16,7 @@ import {
     R8_D2_SHIELD, assertSpinnerPressExposureIsMeasured,
     R8_D2_COMPLETE, assertD2RouteGraph,
 } from './r8Acceptance.js';
-import { STRATEGY_EXECUTORS } from './solverBot.js';
+import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
 import {
     CONTACT_STEPPED_FAMILIES, CONTACT_STEPPED_PRICED_BY, CONTACT_STEPPED_WHY,
@@ -511,13 +511,27 @@ describe('R8_STRATEGY_EXECUTORS — slice 3b\'s prediction, stated before an exe
         expect(R8_STRATEGY_EXECUTORS.prediction.expected).toMatch(/SandTrap/);
     });
 
-    it('keeps `touch` refused AS THE LIVE CONTROL, with the reason', () => {
+    it('⛓ R8 SLICE 7 — `touch` is DISCHARGED and its control is REPLACED', () => {
         const row = R8_STRATEGY_EXECUTORS.refusedHere.find((r) => /touch/.test(r.what));
         expect(row.why).toMatch(/control/);
-        // ⛔ And the control is asserted against the RUNNING registry, not
-        // against the sentence: a control that has stopped being able to fail
-        // is not a weak control, it is not a control (trap 62).
-        expect(STRATEGY_EXECUTORS.touch).toBeUndefined();
+        /**
+         * ⛓ THE ASSERTION THAT FLIPPED. From slice 2 to slice 6 this read
+         * `expect(STRATEGY_EXECUTORS.touch).toBeUndefined()` — the trap-62
+         * control, asserted against the RUNNING registry rather than against
+         * its own sentence. Slice 7 gave the verb its room (§15.2: the gates
+         * are behind the shield, so the WESTWARD crossing is where the lock
+         * is), so the refusal is discharged and the control MOVES.
+         *
+         * ⛔ REPLACED, NOT DELETED. `wandlock` is a real obstacle with a real
+         * verb and no solver executor — the same shape, and the reason the
+         * claim "a strategy may be SELECTED and not REGISTERED" still has
+         * something that can make it false.
+         */
+        expect(typeof STRATEGY_EXECUTORS.touch).toBe('function');
+        expect(row.discharged).toMatch(/slice 7/);
+        expect(row.controlNow).toBe('wandlock');
+        expect(OBSTACLE_STRATEGIES['solid:wandlock']).toBeDefined();
+        expect(STRATEGY_EXECUTORS[OBSTACLE_STRATEGIES['solid:wandlock']]).toBeUndefined();
     });
 });
 
@@ -1276,15 +1290,53 @@ describe('R8_D2_COMPLETE — slice 7\'s prediction, committed before a line of i
         })();
         const escapedAfter = after.some(
             (step) => step.some((r) => r.x < 0 || r.right > width));
-        // The declaration is that the FRESH forecast escapes and the
-        // one-tick-later forecast does not — which is the whole shape of a
-        // frozen ONE-TICK TRANSIENT.
         expect(R8_D2_COMPLETE.forecastTransient.field).toBe('beforeTypeFlip');
         expect(R8_D2_COMPLETE.forecastTransient.frozenCorrectly).toContain('pushables');
-        expect(escaped).toBe(true);
+        /**
+         * ⛓ THE ASSERTION THAT FLIPPED, AND IT COULD ONLY EVER HAVE GONE RED
+         * ON THE COMMIT THAT FIXED IT. Step 0 committed `expect(escaped)
+         * .toBe(true)` — a measurement of the defect, so that the fix had a
+         * baseline to move (trap 40). With the transient given its own
+         * lifetime the FRESH forecast no longer escapes, and the two readings
+         * agree, which is the whole claim.
+         */
+        expect(escaped).toBe(false);
         expect(escapedAfter).toBe(false);
         expect(R8_D2_COMPLETE.forecastTransient.measured.cleanWhenTakenAfterTicks)
             .toEqual([1, 2, 10]);
+    });
+
+    it('⛔ the FIXED forecast agrees with the DRIVEN run from tick 0, tick for tick', () => {
+        /**
+         * ⛔ THE NON-VACUITY, AND IT IS THE ONE THAT MATTERS. "It no longer
+         * escapes" is satisfied by a forecast that returns nothing useful;
+         * this drives BOTH sides and compares the bodies' own entity points,
+         * from the very first tick — the tick the defect was on.
+         */
+        const mk = () => createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 18, x: 16, y: 32 },
+            noclip: false, noHazards: [], noDamage: true, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const N = 200;
+        const forecast = mk().spinnerForecast(N);
+        const driven = mk();
+        const none = new Set();
+        let compared = 0;
+        for (let t = 0; t < N; t += 1) {
+            driven.advance(none);
+            const live = driven.spinnerBodies;
+            for (let i = 0; i < live.length; i += 1) {
+                expect(forecast[t][i].x + 4).toBe(live[i].x);
+                expect(forecast[t][i].y + 4).toBe(live[i].y);
+                compared += 1;
+            }
+        }
+        // A positive before the zero: the comparison really ran.
+        expect(compared).toBe(N * 2);
     });
 
     it('states a fork whose arms are DIFFERENT claims', () => {

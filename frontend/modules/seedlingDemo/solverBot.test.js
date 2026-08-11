@@ -626,13 +626,17 @@ describe('the strategy catalog seam (slice 3 extends, never restructures)', () =
         // ⛔ R8 SLICE 4 TOOK `kill` OFF THE LIST — it is reached BOTH ways
         // now, as a table row (L5's refined `solid:lock`) and as the ladder's
         // top rung (L8's static body), which is one executor with two
-        // entries rather than two policies. `touch` REMAINS, and it is the
-        // LIVE CONTROL for the claim that a strategy may be named by the
-        // table and absent from the registry (trap 62: a control deleted in
-        // the change that widens the claim is not a control). Its obstacle is
-        // `solid:shieldlock` — L20's `shieldlocknorm@176,16`.
+        // entries rather than two policies.
+        //
+        // ⛓⛓⛓ R8 SLICE 7 TOOK `touch` OFF IT, and added `fight` and
+        // `keylock` registered from the start — D2's last three rooms. The
+        // trap-62 CONTROL is therefore REPLACED rather than deleted: `wand`
+        // is selected for `solid:wandlock` (L40's, a real obstacle with a
+        // real verb — `botDriverV2.runFire` — and no solver executor), so the
+        // claim "a strategy may be named by the table and absent from the
+        // registry" still has something that can make it false.
         const pending = [...selected].filter((v) => !STRATEGY_EXECUTORS[v]).sort();
-        expect(pending).toEqual(['touch']);
+        expect(pending).toEqual(['wand']);
     });
 });
 

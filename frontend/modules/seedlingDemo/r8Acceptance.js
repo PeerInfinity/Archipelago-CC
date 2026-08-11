@@ -1191,7 +1191,49 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'cover the target body (`arrowTrap.lanesOver`)',
             'the stance: `presserSafety` — `lanesOver(playerBox)` EMPTY at the hold point',
             'the length: OBSERVED — the room\'s own count reaching zero, plus the '
-                + 'responder\'s own fade (`ARROW_KILL_PLAN.lockFadeTicks`)']),
+                + 'responder\'s own fade (`ARROW_KILL_PLAN.lockFadeTicks`)',
+            '⛓ R8 slice 7 — the PRESS arm: the weapon is the SWORD, so the stance is the '
+                + 'ANNULUS between `spinner.hammerReach` (13 px, the union over all 45 '
+                + 'phases) and `presses.SLASH_REACH` (16 px from the player POINT to the '
+                + 'body RECT), chosen by argmax of the minimum clearance the room\'s own '
+                + '`run.spinnerForecast` leaves over the horizon; the cadence is the '
+                + 'RECEIVER\'s `hitsTimerMax`, and completion is OBSERVED (the body gone '
+                + 'from `run.spinnerBodies`)']),
+        /**
+         * ⛓⛓⛓ R8 SLICE 7 — THE THREE D2's LAST ROOMS NAME. Written at step 0,
+         * before a line of any of them moved, which is what makes the pending
+         * list a work order rather than a report.
+         */
+        fight: Object.freeze([
+            'the stance: the lattice cell UNDER `shieldBossBandRect`\'s own x span — the '
+                + '48x16 strip below the body, which is both the trigger volume of the '
+                + 'stand-under and the damage volume of the stab',
+            'the press ticks: `shieldBossWindowFor`\'s `[windowFrom, windowTo]`, read off '
+                + 'the run\'s own `shieldBossStabs` row rather than counted twice, with '
+                + 'the press tick the EARLIEST T whose five dispatches (`SLASH_HIT_TICKS`, '
+                + 'because `slashDelayMax` is ZERO) all land inside it',
+            'the length: OBSERVED — `run.shieldBossKills`\'s `removeRequested` row plus '
+                + 'ONE tick, because `updateLists()` drains `_remove` AFTER `World.update` '
+                + 'and the Player updates LAST (R6 §13.5\'s fourth instant)']),
+        keylock: Object.freeze([
+            'the gate: `Player.hasKey(keyType)` — a SAVE-FILE boolean the run carries as '
+                + 'its own set, not one of the fourteen `botStatus.items` fields',
+            'the stance: a cell from which the walk INTO the lock lands the player box on '
+                + 'the lock\'s own `keyLine`, tested with `activators.keyLineTouches` (an '
+                + 'INTEGER point test, never a rect overlap)',
+            'the length: `activators.opensOnKeyTick(keyTimer, fade)` — 80, not a Lock\'s '
+                + '101, because `keyTimer` runs first and the fade is 0.05 on a bare '
+                + 'Number that really does go negative']),
+        touch: Object.freeze([
+            'the gate: `Player.hasShield` (the row\'s own `shield` field) — an INVENTORY '
+                + 'flag, and a run without it resolves to a refusal naming the item',
+            'the stance: a cell from which the PINNED box overlaps the row\'s own '
+                + '`touchRect`, which is the lock\'s rect shifted one pixel — '
+                + '`collide("Player", x - 1, y)`. The lock is SOLID, so the band is one '
+                + 'pixel wide and a derivation probing cell CENTRES finds nothing',
+            'the window: `activators.opensOnTick` over the row\'s own fade — 101 ticks '
+                + 'during which `receiveInput` is FALSE, so nothing is pressed and the '
+                + 'whole window is ONE span (trap 16)']),
     }),
 
     /**
@@ -1245,10 +1287,31 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
     refusedHere: Object.freeze([
         Object.freeze({
             what: 'the `touch` executor',
-            why: 'its obstacle is `solid:shieldlock`, which is L18\'s — kickoff §4 slice '
-                + '4. It stays SELECTED-AND-UNREGISTERED on purpose: it is the live '
-                + 'control for §10.4 note 4\'s claim that a strategy may be named by the '
-                + 'table and absent from the registry, and a control deleted in the '
+            /**
+             * ⛓⛓⛓ R8 SLICE 7 — THIS REFUSAL IS DISCHARGED, AND THE CONTROL IS
+             * **REPLACED RATHER THAN DELETED** (§13.10's own instruction).
+             *
+             * `touch` was the live control for §10.4 note 4 from slice 2 to
+             * slice 6 — a strategy the table NAMES and the registry LACKS —
+             * and §15.2 measured why it kept missing its room: the three
+             * gates are BEHIND the shield, so the segment that takes the
+             * shield never meets the lock. Slice 7 crosses L20 WESTWARD,
+             * which is the lock's own side, so the verb is registered and the
+             * refusal flips.
+             *
+             * ⛔ A control deleted in the change that widens the claim is not
+             * a control (trap 62), so `wandlock` takes its place: L40's
+             * `wandlock` is a REAL obstacle with a REAL verb and no solver
+             * executor, which is the same shape and not a synthetic one.
+             */
+            discharged: 'R8 slice 7 — registered, with L20\'s westward crossing as its '
+                + 'driven witness',
+            controlNow: 'wandlock',
+            why: 'its obstacle is `solid:shieldlock`, which was read as L18\'s — kickoff '
+                + '§4 slice 4 — and is really L20\'s (§15.2). It stayed '
+                + 'SELECTED-AND-UNREGISTERED through slices 2-6 on purpose: it was the '
+                + 'live control for §10.4 note 4\'s claim that a strategy may be named by '
+                + 'the table and absent from the registry, and a control deleted in the '
                 + 'change that widens the claim is not a control (trap 62).',
         }),
         Object.freeze({

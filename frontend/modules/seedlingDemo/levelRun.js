@@ -3487,7 +3487,7 @@ export function createLevelRun({
      * the four spinner levels are 18, 39, 40 and 92 and the only `lavaboss`
      * in the game is in Dungeon 7.)
      */
-    const spinnerCtx = () => {
+    const spinnerCtx = (over = {}) => {
         const openBridges = openBridgeIdsNow();
         const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
         // The blocks where the PREVIOUS tick left them: the spinner updates
@@ -3498,8 +3498,17 @@ export function createLevelRun({
         // ⚠ ONCE PER TICK — see `pushableCtx`'s note. A spinner's sweep is
         // 1 px steps on both axes too, and R7 slice 4's brand means the
         // normalise is paid once per tick with it.
+        /**
+         * ⚠ `beforeTypeFlip` IS THE ONE FIELD A CALLER MAY OVERRIDE, and the
+         * only caller that does is `spinnerForecast` — because it is the only
+         * caller that reuses one ctx across more than one tick. See the
+         * ONE-TICK TRANSIENT note there.
+         */
         const base = normalizeLiveOpts(liveSolidOpts({
-            beforeTypeFlip: firstTickInWorld, openActivators, openBridges, pushables,
+            beforeTypeFlip: over.beforeTypeFlip ?? firstTickInWorld,
+            openActivators,
+            openBridges,
+            pushables,
         }));
         return {
             collides: (rect) => world.collidesSolid(rect, base),
@@ -8878,10 +8887,41 @@ export function createLevelRun({
             const live = spinnerStateFor(level);
             if (live.byId.size === 0) return [];
             const st = { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level };
-            const ctx = spinnerCtx();
+            /**
+             * ⛔⛔⛔ R8 SLICE 7 — A CTX SNAPSHOT MAY FREEZE **STATE**, BUT
+             * NEVER A **ONE-TICK TRANSIENT**.
+             *
+             * The freeze above is deliberate for everything `spinnerCtx`
+             * carries EXCEPT one field. `beforeTypeFlip: firstTickInWorld`
+             * is not a fact about the world, it is a fact about ONE TICK —
+             * and `collidesSolid`'s `beforeTypeFlip` arm selects
+             * `objectSolids` instead of `solids`, i.e. the world before any
+             * TILE is solid. Frozen across a horizon it does not make the
+             * forecast slightly stale; it makes the room have NO WALLS for
+             * every step of it.
+             *
+             * ⛔ MEASURED IN L18 BEFORE THIS LINE EXISTED: a forecast taken
+             * on the level's first tick diverges from the driven run at tick
+             * 51 — `spinner@112,48` reflects off the row-0 Stone in the run
+             * and passes straight through it in the forecast — and over
+             * 1,200 ticks the bodies reach x = -751 and +968 in a twelve-tile
+             * room. Taken ONE TICK LATER the same forecast is exact.
+             * `dangerMap.spinnerDanger`'s `atEta` arm asks this question, so
+             * the map called the cell the body is actually in CALM on exactly
+             * the tick a solver plans its first corridor.
+             *
+             * ⇒ the transient gets its own LIFETIME: true for step 1 iff it
+             * is true now, false for every step after it. The frozen STATE —
+             * the pushables where this tick left them, the open activator
+             * set, the freeze — is untouched, because that approximation is
+             * the one `runFire`'s exact effect check is allowed to lean on.
+             */
+            const ctxNow = spinnerCtx();
+            const ctxAfter = firstTickInWorld
+                ? spinnerCtx({ beforeTypeFlip: false }) : ctxNow;
             const out = [];
             for (let i = 0; i < n; i += 1) {
-                stepSpinners(st, ctx);
+                stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
                 out.push(spinnerRects(st).map((s) => s.rect));
             }
             return out;
