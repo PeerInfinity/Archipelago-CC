@@ -49,7 +49,9 @@ import { plannerObstacleAt } from './botDriverV2.js';
 import {
     LIVE_GEOMETRY_KEYS, ROLES, isNormalizedLiveOpts, normalizeLiveOpts,
 } from './levelWorld.js';
+import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
+    ESCALATION_LADDER,
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, solveSegment,
 } from './solverBot.js';
 import {
@@ -233,37 +235,56 @@ describe('the trace producer — the first real producer of the slice-0 schema',
 
 describe('the refusal shapes — never a silent stall', () => {
     /**
-     * ⛓⛓⛓ R8 SLICE 3 DISCHARGED THIS WORK ORDER, and the test is re-aimed
-     * rather than deleted. Slice 2 asserted that L4 refuses naming
-     * `proximity-hazard:button` with `hold` unregistered; `hold` is
-     * registered now, so what this room proves is the NEXT link: the policy
-     * clears the button and the frontier ADVANCES to the block. The refusal
-     * SHAPE — never a silent stall — is what both versions are really about,
-     * and it still holds one obstacle further in.
+     * ⛓⛓⛓ TWO SLICES HAVE NOW DISCHARGED THIS ROOM'S WORK ORDERS, and the
+     * test is re-aimed rather than deleted each time. Slice 2 asserted that
+     * L4 refuses naming `proximity-hazard:button` with `hold` unregistered;
+     * slice 3 registered `hold` and the assertion moved one obstacle in, to
+     * `pushableblock@32,64` with `shove` unregistered; R8 slice 3b registers
+     * `shove` and **the room SOLVES**, so what is left to assert here is that
+     * both strategies really ran and that neither was applied silently.
+     *
+     * ⛔ The refusal SHAPE this describe block is about has not gone
+     * anywhere — it is asserted in the rooms that still refuse (L5, L6, L8
+     * below) and by the danger and absent-placement rows. A room that starts
+     * passing is not a stratum that stopped checking.
      */
-    it('L4: the button is CLEARED by `hold`, and the refusal advances to the block', () => {
+    it('L4: `hold` then `shove` — the room SOLVES, and both decisions are traced', () => {
         const { run, committed } = runFromCommitted('r7-act2-4');
-        let refusal = null;
-        try {
-            solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
-                name: 'probe-l4', boot: committed.boot,
-            });
-        } catch (e) { refusal = e; }
-        expect(refusal).toBeInstanceOf(SolverRefusal);
-        expect(refusal.obstacle).toMatchObject({ kind: 'solid', tag: 'pushableblock' });
-        expect(refusal.considered).toEqual([{
-            option: 'shove',
-            why: expect.stringMatching(/NOT REGISTERED/),
-        }]);
-        expect(refusal.message).toMatch(/pushableblock@32,64/);
-        // …and the trace carries the hold as a DECISION, with the option it
-        // rejected — a strategy applied silently would leave the reader with
-        // a walk that skipped a room's whole first half.
-        expect(refusal.rows.some((r) => r.strategy?.verb === 'hold')).toBe(true);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+            name: 'probe-l4', boot: committed.boot,
+        });
+        expect(run.level).toBe(5);
+        expect(run.playerHits).toEqual([]);
+        expect(run.playerDeaths).toEqual([]);
+        const verbs = out.trace.rows.map((r) => r.strategy.verb);
+        expect(verbs).toContain('hold');
+        expect(verbs).toContain('shove');
+        // ⛓ AND THE SHOVE'S OWN DERIVATION IS IN THE ROW, not in a log: the
+        // `k` it chose and the post-condition it chose it for.
+        const shove = out.trace.rows.find((r) => r.strategy.verb === 'shove');
+        expect(shove.strategy).toMatchObject({
+            k: 2, dir: 'E', to: { tx: 4, ty: 4 }, destroys: false,
+            postCondition: 'clear-path',
+        });
     });
 
-    it('L8: names the PUSHABLE BLOCK (the block is the door) and selects `shove`, unregistered', () => {
+    /**
+     * ⛓⛓⛓ L8 IS THIS SLICE'S armB, AND THE REFUSAL IS THE DELIVERABLE.
+     *
+     * Slice 2 asserted the frontier names `pushableblock@112,48` with `shove`
+     * unregistered. `shove` is registered now and ⚖ the ruled reading (b)
+     * gives it a destination, so the room gets FURTHER — both shoves are
+     * selected and the first is driven — and then stops on the body this rung
+     * refuses by name: `sandtrap@96,80`, whose own arrow death §11.4 declines
+     * to compute because its clear is the tape's DECLARED v9 `at` row and a
+     * second writer of one persistence slot is two cost models.
+     *
+     * ⛔ THE POINT OF THE ROW IS THAT THE WALL HAS A RUNG NUMBER ON IT. A
+     * stall and a refusal look identical from the outside; this one names
+     * every rung of the ladder and what each said.
+     */
+    it('L8: both shoves are DERIVED, the first is driven, and the wall is the SandTrap', () => {
         const { run, committed } = runFromCommitted('r7-act2-8');
         let refusal = null;
         try {
@@ -273,9 +294,28 @@ describe('the refusal shapes — never a silent stall', () => {
             });
         } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
-        expect(refusal.obstacle).toMatchObject({ kind: 'solid', tag: 'pushableblock' });
-        expect(refusal.considered[0].option).toBe('shove');
-        expect(refusal.message).toMatch(/pushableblock@112,48/);
+
+        // The first shove RAN: the east pocket's door is open and the block
+        // is where ⚖ ruling 1(a) put it — k=2, the hand answer's cell.
+        const shoves = refusal.rows.filter((r) => r.strategy.verb === 'shove');
+        expect(shoves.map((r) => r.obstacle.id))
+            .toEqual(['pushableblock@112,48', 'pushableblock@96,112']);
+        expect(shoves[0].strategy).toMatchObject({ k: 2, dir: 'W', to: { tx: 5, ty: 3 } });
+
+        // ⛓ AND ITS DESTINATION NAMES THE HYPOTHESIS IT RESTS ON — guard (i)
+        // of the ruled reading (b). Without hypothesising the OTHER pending
+        // order discharged there is no k at all: the second block stands in
+        // column 6, which is the room's only way south.
+        expect(shoves[0].rejected.some((j) => /hypothesising/.test(j.option)
+            && /pushableblock@96,112/.test(j.option))).toBe(true);
+
+        // The wall, with its rung number.
+        expect(refusal.obstacle.kind).toBe('danger');
+        expect(refusal.message).toMatch(/sandtrap@96,80/);
+        expect(refusal.message).toMatch(/REFUSED by name/);
+        for (const rung of ESCALATION_LADDER) {
+            expect(refusal.considered.map((c) => c.option)).toContain(rung);
+        }
     });
 
     it('a collect-placement with nothing standing there refuses as a MACRO-layer error', () => {
@@ -301,25 +341,113 @@ describe('the refusal shapes — never a silent stall', () => {
         })).toThrow(/unknown goal kind/);
     });
 
-    it('L6: the census-on corridor is refused WITH THE THREAT NAMED (danger, not a stall)', () => {
-        // The blind solve walked this corridor and the game refuted it with
-        // seven sandtrap contacts and two deaths (kickoff §10, the withdrawn
-        // r8-solve-6). With the census on, the segment-sampled danger probe
-        // names a live threat BEFORE a tick is spent — the NEAREST one on
-        // the corridor is `bob@96,16` inside its own leash (the sandtraps
-        // are the next samples along; the first named threat is the claim).
+    /**
+     * ⛓⛓⛓ R8 SLICE 3b — L6 IS THE LADDER'S PROVING ROOM, AND IT SOLVES.
+     *
+     * Slice 2 asserted a REFUSAL here, naming the threat: the blind solve had
+     * walked this corridor and the game refuted it with seven sandtrap
+     * contacts and two deaths (the withdrawn `r8-solve-6`, kickoff §10). ⚖
+     * §11.8a ruling 2's ladder is the registered answer to that refusal, so
+     * the assertion moves to what the ladder DID — and the refusal shape is
+     * still asserted, one room over, by the ladder-exhausted row below.
+     *
+     * ⛓ THE KNOWN-ANSWER EXHIBIT. The bait stance is DERIVED from mechanism
+     * — the leash, the body-kill regions, `presserSafety`, reachability — and
+     * it lands on (56,24), which is `L6_BOB_DROWN.endsAt` (48,16) in boot
+     * form: **row 1, column 3**, the hand answer's one-tile solve. Nobody
+     * handed it over; the four conditions computed it.
+     */
+    it('L6: the ladder climbs AVOID -> TIME -> BAIT and the room SOLVES', () => {
         const { run, committed } = runFromCommitted('r7-act2-6');
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 224, y: 32 } }],
+            name: 'probe-l6', boot: committed.boot,
+        });
+        expect(run.level).toBe(7);
+        expect(run.playerHits).toEqual([]);
+        expect(run.playerDeaths).toEqual([]);
+
+        // ⛔ THE ESCALATION IS ORDERED AND EACH RUNG NAMES THE CHEAPER ONE IT
+        // REFUSED — asserted against the RUNNING ladder, via r8Acceptance.
+        const rungs = out.trace.rows.filter((r) => r.strategy.rung);
+        /**
+         * ⛓⛓⛓ ONE ROW PER CLIMB, AND THE ROW CARRIES THE WHOLE CHAIN. Every
+         * rung of a climb is decided before a tick is spent, so they share a
+         * tick index — and a trace is strictly increasing by contract, so the
+         * producer merges them into the rung that ACTED, whose `rejected`
+         * lists every cheaper rung it refused, in order.
+         *
+         * ⇒ the climb is RECONSTRUCTED from that list and handed to the
+         * running ladder's own checker. This is a stronger assertion than one
+         * row per rung would be: it says the acting rung refused EXACTLY the
+         * rungs below it, in order, with a reason for each.
+         */
+        const climbs = rungs.map((r) => {
+            const chain = r.rejected
+                .filter((j) => ESCALATION_LADDER.includes(j.option))
+                .map((j, i, all) => ({
+                    rung: j.option,
+                    refused: i === 0 ? undefined
+                        : { rung: all[i - 1].option, why: all[i - 1].why },
+                }));
+            const below = r.rejected.filter((j) => ESCALATION_LADDER.includes(j.option));
+            return [...chain, {
+                rung: r.strategy.rung,
+                refused: below.length
+                    ? { rung: below[below.length - 1].option, why: below[below.length - 1].why }
+                    : undefined,
+            }];
+        });
+        const deepest = climbs.map((c) => assertEscalationIsOrdered(c).deepest);
+        expect(deepest).toEqual(['bait', 'avoid']);
+        // ⛔ AND EVERY CLIMB STARTS AT THE BOTTOM. A policy that resumed at
+        // the rung that worked last time would stop being cheapest-first.
+        for (const c of climbs) expect(c[0].rung).toBe(ESCALATION_LADDER[0]);
+        // The first climb really did refuse two cheaper rungs, by name.
+        expect(climbs[0].map((c) => c.rung)).toEqual(['avoid', 'time', 'bait']);
+
+        // AVOID refused because the room really has no corridor with both
+        // bodies standing in the two cells the weave needs — `L6_BOB_DROWN`'s
+        // own docblock, measured here rather than quoted.
+        const bait = rungs.find((r) => r.strategy.rung === 'bait');
+        expect(bait.strategy.target).toBe('bob@112,48');
+        expect(bait.strategy.stance).toEqual({ x: 56, y: 24 });
+        // …and it names BOTH cheaper rungs, in ladder order, with a reason
+        // each — the chain, not just the rung below.
+        expect(bait.rejected.map((j) => j.option)).toEqual(['avoid', 'time']);
+        expect(bait.rejected[0].why).toMatch(/no admissible corridor/);
+        expect(bait.rejected[1].why).toMatch(/MOVER_RANGE/);
+
+        // ⛓ AND THE ROOM DID THE KILLING. Both bodies drown — the baited one
+        // reaching the player, the other following during the crossing —
+        // which is exactly what the hand block declares and what its `removes`
+        // row carries as a v10 despawn.
+        expect(run.chaserTerrainDeaths.map((d) => d.id))
+            .toEqual(['bob@112,48', 'bob@96,16']);
+        for (const d of run.chaserTerrainDeaths) expect(d.cause).toBe('water');
+        // The kill-lock scan RAN and found nothing — a measurement, not an
+        // absence (the IceTurret arm's law: "there were no kill locks" and
+        // "nobody looked" print the same thing).
+        expect(run.chaserKillLockOpens.every((o) => o.nil)).toBe(true);
+    });
+
+    /**
+     * ⛔ AND THE REFUSAL SHAPE THIS DESCRIBE BLOCK IS ABOUT IS STILL
+     * ASSERTED: when the ladder runs out, it says so with a rung on it.
+     */
+    it('a ladder that EXHAUSTS refuses with every rung\'s own reason', () => {
+        const { run, committed } = runFromCommitted('r7-act2-8');
         let refusal = null;
         try {
             solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 224, y: 32 } }],
-                name: 'probe-l6', boot: committed.boot,
+                run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+                name: 'probe-l8', boot: committed.boot,
             });
         } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
-        expect(refusal.obstacle.kind).toBe('danger');
-        expect(refusal.message).toMatch(/chaser:bob@96,16/);
-        expect(refusal.considered.map((c) => c.option)).toContain('dodge');
+        // Whatever L8 refuses on, it refuses by NAME and never by stalling.
+        expect(refusal.message.length).toBeGreaterThan(80);
+        expect(refusal.considered.length).toBeGreaterThan(0);
     });
 
     it('a COMBAT-BLIND run is refused at the door — the slice\'s own defect, institutionalised', () => {
@@ -350,13 +478,21 @@ describe('the strategy catalog seam (slice 3 extends, never restructures)', () =
                 `executor '${verb}' is reachable by no selector row`).toBe(true);
         }
         // The pending work orders, as data: selected and not yet registered.
-        // ⛓ R8 slice 3 took `hold` off this list — which is the whole of the
-        // "adds rows, never restructures" contract, asserted rather than
-        // asserted about. The three that remain are the next slice's, and
-        // they are COMPUTED (each is a live frontier's own answer in a named
-        // room) rather than guessed.
+        // ⛓ R8 slice 3 took `hold` off this list and slice 3b took `shove`,
+        // which is the whole of the "adds rows, never restructures" contract,
+        // asserted rather than asserted about.
+        //
+        // ⛔ `kill` and `touch` REMAIN, and for opposite reasons worth
+        // keeping apart. `touch`'s obstacle is `solid:shieldlock`, which is
+        // L18's — kickoff §4 slice 4 — and it is the LIVE CONTROL for the
+        // claim that a strategy may be named by the table and absent from the
+        // registry (trap 62: a control deleted in the change that widens the
+        // claim is not a control). `kill` is selected by
+        // `solid:magicallock` and is reached through the LADDER rather than
+        // through this table in the rooms this slice drives, so it is
+        // registered as a RUNG and not as a table row.
         const pending = [...selected].filter((v) => !STRATEGY_EXECUTORS[v]).sort();
-        expect(pending).toEqual(['kill', 'shove', 'touch']);
+        expect(pending).toEqual(['kill', 'touch']);
     });
 });
 
@@ -388,21 +524,33 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
      * `pushableblock@32,64`, which is L4's real door. A registration that
      * changed nothing would leave the same obstacle in the message.
      */
-    it('⛔ the frontier ADVANCES from the button to the block', () => {
+    it('⛔ the frontier ADVANCED from the button to the block, and the block MOVED', () => {
         const { run, committed } = runFromCommitted('r7-act2-4');
-        let refusal = null;
-        try {
-            solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
-                name: 'r8-solve-4', boot: committed.boot,
-            });
-        } catch (e) {
-            if (!(e instanceof SolverRefusal)) throw e;
-            refusal = e;
-        }
-        expect(refusal).toBeTruthy();
-        expect(refusal.obstacle.id).toBe('pushableblock@32,64');
-        expect(refusal.considered.map((c) => c.option)).toContain('shove');
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+            name: 'r8-solve-4', boot: committed.boot,
+        });
+        // The two work orders, in the order the frontier computed them: the
+        // button (a proximity hazard on the frontier) and then the block,
+        // which is L4's real door.
+        const obstacles = out.trace.rows.map((r) => r.obstacle?.id).filter(Boolean);
+        expect(obstacles).toEqual(['button@16,64', 'pushableblock@32,64']);
+        /**
+         * …and the block is where the derivation put it — read off the
+         * VERB'S OWN RECORD, which is `runShove`'s answer at the tick it
+         * finished.
+         *
+         * ⛔ NOT off `run.pushables`. The room SOLVES now, so by the end of
+         * the segment the run is in L5 and `run.pushables` is L5's roster —
+         * a getter that would have answered this question one slice ago and
+         * silently answers a different one today. Measure at the layer that
+         * did the thing (`feedback_wrong_witness_fork_effective_time`).
+         */
+        const record = out.records.find((r) => r.kind === 'shove');
+        expect(record).toMatchObject({
+            id: 'pushableblock@32,64', dir: 'E',
+            from: { tx: 2, ty: 4 }, to: { tx: 4, ty: 4 }, destroys: false,
+        });
     });
 
     /**
@@ -416,25 +564,33 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
      */
     it('⛓⛓ the hold stops on its OBSERVED condition — the body being gone', () => {
         const { run, committed } = runFromCommitted('r7-act2-4');
-        try {
-            solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
-                name: 'r8-solve-4', boot: committed.boot,
-            });
-        } catch (e) {
-            if (!(e instanceof SolverRefusal)) throw e;
-        }
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+            name: 'r8-solve-4', boot: committed.boot,
+        });
         // The room's ceiling did the killing, and the policy pressed nothing.
         expect(run.chaserKills).toHaveLength(1);
-        expect(run.chaserKills[0].by).toBe('arrow');
-        expect(run.chasers).toEqual([]);
+        expect(run.chaserKills[0]).toMatchObject({ level: 4, id: 'bob@64,64', by: 'arrow' });
+        // ⚠ `run.chasers` is NOT asserted empty any more, and the reason is
+        // the room solving: the segment now ENDS IN L5, whose own roster is
+        // three live bobs. "The body this hold was waiting for is gone" is
+        // the claim, and `chaserKills` is where it is true; the live roster
+        // stopped being about L4 the moment the walk crossed.
         // ⛔ ZERO HITS, ZERO DEATHS — the standing policy, on a walk that
         // stands still for a hundred ticks under a ceiling that is firing.
         expect(run.playerHits).toEqual([]);
         expect(run.playerDeaths).toEqual([]);
         // …and the hold ended exactly when the body left the world rather
         // than when a number ran out: the kill plus the death staging.
-        expect(run.ticksCompleted).toBe(run.chaserKills[0].t + DEATH_ANIM_TICKS - 1
+        //
+        // ⛓ MEASURED AT THE HOLD'S OWN END, which since slice 3b is the tick
+        // the NEXT decision was taken on rather than the end of the run — the
+        // room does not stop at the hold any more. Reading `ticksCompleted`
+        // here would now be measuring the shove and the walk as well, which
+        // is the wrong-witness shape (a segment's own progress counter is not
+        // a witness that a particular step ended when you think it did).
+        const shove = out.trace.rows.find((r) => r.strategy.verb === 'shove');
+        expect(shove.tick).toBe(run.chaserKills[0].t + DEATH_ANIM_TICKS - 1
             + MOBILE_DEATH_FADE.ticks);
     });
 });

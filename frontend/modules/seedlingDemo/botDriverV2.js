@@ -456,7 +456,12 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // the position write is not. See `r1Walk.R1_PERSISTENCE_EFFECTS`.
     for (const v of extraVolumes) {
         if (v.level !== level.level) continue;
-        if (rectsOverlap(box, v.rect)) return { kind: 'persistence-effect', blocker: v };
+        // ⛓ R8 slice 3b: a volume may NAME its own kind. R1's persistence
+        // effects carry none and keep theirs by default; the solver's AVOID
+        // rung hands DANGER volumes through this same hook and needs them
+        // classified as danger — a frontier that read them as
+        // `persistence-effect` would offer to shove a hazard.
+        if (rectsOverlap(box, v.rect)) return { kind: v.kind ?? 'persistence-effect', blocker: v };
     }
     const probe = grow(terrainProbeRect(x, y), margin);
     for (const tile of level.pitTiles) {
@@ -1537,6 +1542,92 @@ function runWait(run, perTick, wait, what) {
             + 'either a wait that is too short or a presser nothing is standing on.');
     }
     return { opens, ticks, openedAt, why };
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3b — `dwell`: STAND STILL SOMEWHERE THAT IS NOT A BUTTON,
+ * UNTIL AN OBSERVABLE SAYS SO.
+ *
+ * The verb library had two ways to let time pass and neither fits a bait.
+ * `runHold` stands the player ON a presser and its per-tick invariant is
+ * "still inside the presser"; `runWait` idles for a DECLARED number of ticks
+ * and asserts a named responder went down. A bait's wait is neither: the
+ * player stands at a STANCE chosen so a body's own path to them crosses
+ * something that kills it, and what ends the wait is the BODY BEING GONE —
+ * an observable, not a responder and not a count.
+ *
+ * ⛔ SO ITS INVARIANTS ARE ITS OWN, and that is why this is a verb rather
+ * than a flag on `runHold` (§11.7's law read the other way: one
+ * implementation per SET OF INVARIANTS, and these are a different set):
+ *
+ *   no transition   a bait that leaves the room undoes itself — re-entry
+ *                   respawns every enemy while a clear stays durable
+ *                   (R7 slice 6d's measurement, trap 150).
+ *   NO KEYS         the stance was derived; drifting off it changes the
+ *                   straight line the whole bait is about.
+ *   NO NEW HITS     ⛔ THE ONE THAT MAKES IT A CLAIM. `runBait`'s own lesson,
+ *                   from the other side: a choreography that is run over
+ *                   completes exactly as if it had worked, so the survival
+ *                   is ASSERTED rather than inferred from the end state.
+ *                   [[feedback_graceful_fallback_vacuous_replay]]
+ *
+ * ⛔ AND THE CONDITION MUST BE FALSE WHEN THE DWELL BEGINS. A bait whose
+ * body was already gone is a wait that cannot fail — `runHold`'s
+ * shut-before law, one verb over, and the reason it is checked here rather
+ * than trusted to the caller is that the caller is a POLICY and a policy's
+ * mistake looks exactly like a room that was already solved.
+ */
+function runDwell(run, perTick, dwell, what) {
+    const { ticks, until, why } = dwell ?? {};
+    if (!Number.isInteger(ticks) || ticks <= 0) {
+        fail(`${what}: dwell.ticks must be a positive integer BOUND, got `
+            + `${JSON.stringify(ticks)}. The bound is a claim the run can refute; the `
+            + 'stopping condition is `until`.');
+    }
+    if (!until || typeof until.test !== 'function' || typeof until.why !== 'string') {
+        fail(`${what}: a dwell needs \`until: {why, test}\` — the OBSERVABLE that ends it. `
+            + 'A dwell with only a tick count is an idle span, and an idle span verifies '
+            + 'nothing (`runWait`\'s own law).');
+    }
+    if (typeof why !== 'string' || why.length === 0) {
+        fail(`${what}: dwell.why must say what this stance is FOR — which body it is `
+            + 'presenting the player to, and what is supposed to happen to it.');
+    }
+    if (until.test(run)) {
+        fail(`${what}: the dwell's condition (${until.why}) is ALREADY TRUE before a tick `
+            + 'is spent, so waiting for it proves nothing. Either an earlier step did the '
+            + 'work or the policy is baiting a body that is not there.');
+    }
+    const hitsBefore = run.playerHits.length;
+    const deathsBefore = run.playerDeaths.length;
+    const at = { x: run.state.x, y: run.state.y };
+    let metAt = null;
+    for (let i = 1; i <= ticks; i += 1) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: dwell tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}. A bait stays in the `
+                + 'room: leaving RESPAWNS every enemy in it while the clear stays durable, '
+                + 'so a dwell that left would be undoing itself (trap 150).');
+        }
+        if (run.playerHits.length !== hitsBefore || run.playerDeaths.length !== deathsBefore) {
+            fail(`${what}: the dwell was HIT at tick ${i} `
+                + `(hits ${hitsBefore} -> ${run.playerHits.length}, deaths `
+                + `${deathsBefore} -> ${run.playerDeaths.length}). The stance was derived to `
+                + 'be outside every danger the map can name; the GAME says otherwise, which '
+                + 'is the map being a heuristic and the run being the oracle.');
+        }
+        if (until.test(run)) { metAt = i; break; }
+    }
+    if (metAt === null) {
+        fail(`${what}: the dwell's condition (${until.why}) never became true inside its `
+            + `${ticks}-tick bound. The bound is DERIVED from the body's own travel time `
+            + 'at its own `moveSpeed` plus the death staging — so a miss here is a bait '
+            + 'whose straight line does not cross what the derivation thought it crossed, '
+            + 'never a window to lengthen.');
+    }
+    return { kind: 'dwell', at, ticks: metAt, bound: ticks, why, until: until.why };
 }
 
 function runHold(run, perTick, hold, what, before = null) {
@@ -5834,5 +5925,15 @@ export function synthesizeLegsJson(legs, opts = {}) {
  * the same seam rather than restructuring it.
  */
 export {
-    drive, runChest, runCollect, runHold, findExit, coastThroughTransport, NO_HELD,
+    drive, runChest, runCollect, runHold, runShove, runDwell, findExit,
+    coastThroughTransport,
+    NO_HELD,
+    /**
+     * ⛓ R8 slice 3b: the shove's two tables leave this module so the SOLVER
+     * derives a destination with the verb's OWN arithmetic. Two cost models
+     * that must agree are one cost model — a policy with its own copy of
+     * `{E: {dx: 1, dy: 0}, …}` would be a second reading of `input()`'s tile
+     * step, and the two would agree right up until one of them changed.
+     */
+    SHOVE_KEYS, SHOVE_STEP,
 };

@@ -8778,6 +8778,20 @@ export function createLevelRun({
          * is what a pair asserts against when it says "the body was stepped"
          * — a hit count alone would not (trap 113).
          */
+        /**
+         * ⛓⛓⛓ R8 SLICE 3b — IS THIS ROOM'S CHASER ROSTER STEPPED, and if
+         * not, WHY. The union danger map needs it to know which half of the
+         * `"Enemy"` census is its business.
+         *
+         * ⛔ THE VERDICT IS ASKED OF THE RUN, NEVER RE-DERIVED. A second
+         * reading of `chaserRoomVerdict` in the danger map would be two cost
+         * models for one question, and the two would agree right up until a
+         * room mixed a trap with an unstaged static body — which is exactly
+         * the case the verdict exists for. `run.chasers` being EMPTY has two
+         * causes with opposite consequences (every body dead, or the room
+         * refused) and this is what tells them apart.
+         */
+        chaserRoomVerdict(n = level) { return { ...chaserRoomVerdict(n) }; },
         get chaserWalks() { return chaserWalks.map((w) => ({ ...w })); },
         /** One per chaser the ROOM removed (water/lava), with the cause. */
         get chaserTerrainDeaths() { return chaserTerrainDeaths.map((d) => ({ ...d })); },

@@ -6,8 +6,9 @@ import { buildLevelWorld } from './levelWorld.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { planDash } from './mover.js';
 import {
-    DangerMapError, arrowDanger, chaserDanger, crusherDanger, crusherVolumesAt,
-    dangerAt, forbiddenByDanger, hazardDanger,
+    DangerMapError, arrowDanger, bodyKillRegions, chaserDanger, crusherDanger,
+    crusherVolumesAt, dangerAt, dangerVolumes, forbiddenByDanger, hazardDanger,
+    staticEnemyDanger, HAZARDS_PRICED_LIVE,
 } from './dangerMap.js';
 
 /**
@@ -146,12 +147,54 @@ describe('dangerAt — the four ingredients, each measured in a real room', () =
             expect(arrowDanger(flying, ahead, 10).some((s) => s.kind === 'arrow')).toBe(true);
         });
 
-        it('(b) hazard volumes contribute their verdict and their reason', () => {
+        /**
+         * ⛔⛔⛔ R8 SLICE 3b — THE TRAP WAS PRICED TWICE AND THE STATIC
+         * READING WON. This row asserted that `hazardDanger` reports the
+         * arrowtrap's census volume; it does not any more, and the
+         * replacement is the PAIR that shows why.
+         *
+         * `hazardVolume`'s arrowtrap row says it in its own `why`: *"an
+         * Activators group gates it, so whether it fires at all is a STATE
+         * question, not a timing one"* — and the census arm asked it
+         * unconditionally, so a DISARMED trap's whole column was forbidden
+         * for ever. In L4 that column is the only way north out of the room,
+         * and the walk that takes it does so with the button released.
+         *
+         * ⚠ THE EXCLUSION IS ONLY HONEST IF THE OTHER INGREDIENT FIRES, so
+         * both halves are driven: ARMED -> `dangerAt` still names it (through
+         * `arrowDanger`), DISARMED -> silent. A positive before the zero, the
+         * silent-watcher law this file opens with.
+         */
+        it('(b) the arrowtrap is EXCLUDED from the census arm and priced live instead', () => {
             const trap = run.worldFor(4).combat.hazards.find((h) => h.tag === 'arrowtrap');
-            const src = hazardDanger(run, playerBoxAt(trap.cx, trap.cy + 40));
-            expect(src.length).toBeGreaterThan(0);
-            expect(src[0].kind).toBe('hazard');
-            expect(src[0].why).toMatch(/avoid/);
+            expect(HAZARDS_PRICED_LIVE.arrowtrap.by).toBe('arrowDanger');
+            expect(hazardDanger(run, playerBoxAt(trap.cx, trap.cy + 40))).toEqual([]);
+            // ARMED: the union still names it, through the live arm.
+            expect(run.armedArrowTraps.size).toBeGreaterThan(0);
+            const armed = dangerAt(run, run.ticksCompleted,
+                playerBoxAt(trap.cx, trap.cy + 40));
+            expect(armed.sources.some((x) => x.kind === 'arrowLane')).toBe(true);
+        });
+
+        it('...and DISARMED, the same column is silent — the walk L4 actually takes', () => {
+            // Step off the button: `ArrowTrap`'s group goes down and the
+            // lane stops being anything at all.
+            const off = runIn(4, { level: 4, x: 16, y: 64 }, [], 8);
+            for (let t = 0; t < 40; t += 1) off.advance(new Set(['right']));
+            const trap = off.worldFor(4).arrowTraps[0];
+            expect(off.armedArrowTraps.size).toBe(0);
+            const src = dangerAt(off, off.ticksCompleted,
+                playerBoxAt(trap.ex, trap.ey + 60)).sources;
+            expect(src.filter((x) => x.id === trap.id)).toEqual([]);
+        });
+
+        /** A hazard family nobody prices live still contributes, unchanged. */
+        it('(b) a hazard the live arms do NOT price still contributes its verdict', () => {
+            const priced = Object.keys(HAZARDS_PRICED_LIVE);
+            expect(priced.sort()).toEqual(['arrowtrap', 'crusher']);
+            for (const tag of priced) {
+                expect(HAZARDS_PRICED_LIVE[tag].by).toMatch(/Danger$/);
+            }
         });
     });
 
@@ -308,6 +351,113 @@ describe('dangerAt — the union, and the shapes it refuses', () => {
 });
 
 /**
+ * ⛓⛓⛓ INGREDIENT (e) — R8 SLICE 3b — THE STATIC `"Enemy"` BODIES.
+ *
+ * L6 is the room, and it is the room slice 2's free oracle was recorded in:
+ * the GAME hit `sandtrap@64,16` at t=20 and killed the player twice while
+ * every ingredient of this map called the room calm. A sandtrap is an
+ * `"Enemy"` census row with `speed 0` — neither a stepped chaser (c) nor a
+ * placed puzzlement hazard (b) — so nothing on the roster asked about it.
+ */
+describe('(e) static census bodies — the ingredient the free oracle measured missing', () => {
+    const run = runIn(6, { level: 6, x: 32, y: 16 }, [], 1);
+
+    it('names the sandtrap the GAME hit, at its own placement', () => {
+        const src = staticEnemyDanger(run, playerBoxAt(72, 24));
+        expect(src.map((x) => x.id)).toContain('sandtrap@64,16');
+        expect(src[0].kind).toBe('enemy');
+        // Positive before the zero: a box two tiles west names nothing.
+        expect(staticEnemyDanger(run, playerBoxAt(24, 24))).toEqual([]);
+    });
+
+    /**
+     * ⛔ AND THE BRIDGED HALF IS EXCLUDED BY THE RUN'S OWN VERDICT. A body
+     * this room STEPS belongs to ingredient (c) at its LIVE position; pricing
+     * it here as well would double-count a live one at the cell it left on
+     * its first chasing tick, and — worse — would forbid a DEAD one's
+     * placement for ever, which is trap 157 wearing the danger map's clothes.
+     */
+    it('excludes a BRIDGED chaser, and the exclusion is the run\'s verdict', () => {
+        expect(run.chaserRoomVerdict(6).stepped).toBe(true);
+        expect(run.chasers.map((c) => c.id)).toContain('bob@96,16');
+        const live = run.chasers.find((c) => c.id === 'bob@96,16');
+        const onIt = playerBoxAt(live.x, live.y);
+        // The chaser arm names it...
+        expect(chaserDanger(run, onIt, 0).map((x) => x.id)).toContain('bob@96,16');
+        // ...and the static arm does not, so it is priced ONCE.
+        expect(staticEnemyDanger(run, onIt).map((x) => x.id)).not.toContain('bob@96,16');
+    });
+
+    /**
+     * ⛓ THE UNION CARRIES IT, which is the claim that matters — an
+     * ingredient that fires only when called directly is not in the map.
+     */
+    it('the union names it too', () => {
+        const d = dangerAt(run, run.ticksCompleted, playerBoxAt(72, 24));
+        expect(d.danger).toBe(true);
+        expect(d.sources.some((x) => x.kind === 'enemy')).toBe(true);
+    });
+
+    /**
+     * ⚠ NOT GROWN BY THE CHOMP RADIUS, and the decision is EVIDENCE-BOUND
+     * rather than cautious. `ENEMY_CLASSES.sandtrap.aggro.range` is 20 and
+     * the body is 16x16, so a disc from its centre would reach y=44 — and
+     * the hand-authored L6 crossing walks row 2 at y=40, which the GAME
+     * recorded at ZERO hits. A map grown to the chomp radius would refuse a
+     * corridor the game has already certified.
+     */
+    it('prices the BODY, not the wake radius — the row-2 corridor the game certified', () => {
+        expect(staticEnemyDanger(run, playerBoxAt(72, 40))).toEqual([]);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE MAP AS VOLUMES (the AVOID rung) and THE BODY-KILL REGIONS (the
+ * BAIT rung) — ⚖ §11.8a ruling 2's two new shapes of the same ingredients.
+ */
+describe('dangerVolumes and bodyKillRegions — the ladder\'s two other shapes', () => {
+    it('dangerVolumes returns rects `plannerObstacleAt` can route around', () => {
+        const run = runIn(6, { level: 6, x: 32, y: 16 }, [], 1);
+        const vols = dangerVolumes(run, 0);
+        expect(vols.length).toBeGreaterThan(0);
+        for (const v of vols) {
+            expect(v.level).toBe(6);
+            expect(v.kind).toBe('danger');
+            // The rect lesson at the one boundary that matters: a literal
+            // without right/bottom NEVER overlaps, silently.
+            expect(Number.isFinite(v.rect.right)).toBe(true);
+            expect(Number.isFinite(v.rect.bottom)).toBe(true);
+        }
+        expect(vols.map((v) => v.id)).toContain('sandtrap@64,16');
+    });
+
+    /**
+     * ⛔ THE REGIONS THAT KILL A *BODY* ARE NOT THE PLAYER'S DANGER. L6's
+     * answer is the WATER — `Enemy.update`'s terrain switch — and the player
+     * merely cannot walk there.
+     */
+    it('bodyKillRegions names L6\'s water, which no player-danger arm reports', () => {
+        const run = runIn(6, { level: 6, x: 32, y: 16 }, [], 1);
+        const regions = bodyKillRegions(run);
+        expect(regions.some((r) => r.kind === 'terrain')).toBe(true);
+        const water = regions.find((r) => r.kind === 'terrain');
+        // The same cell is NOT in the player's danger union: it is terrain
+        // the planner refuses to walk on, not a threat that reaches out.
+        const mid = { x: (water.rect.x + water.rect.right) / 2,
+            y: (water.rect.y + water.rect.bottom) / 2 };
+        expect(dangerAt(run, run.ticksCompleted, playerBoxAt(mid.x, mid.y))
+            .sources.some((sx) => sx.kind === 'terrain')).toBe(false);
+    });
+
+    it('a room with no kill region says so rather than returning an empty list quietly', () => {
+        // L7 is the corridor: two stairs, two spires, no water, no pit, no
+        // trap. The positive above is what makes this zero mean something.
+        const run = runIn(7, { level: 7, x: 16, y: 32 }, [], 1);
+        expect(bodyKillRegions(run)).toEqual([]);
+    });
+});
+
+/**
  * ── THE MUTATION LIST FOR THIS STRATUM ────────────────────────────────
  *
  * Each row states a mutation and the test it makes go red. RUN, not written:
@@ -322,7 +472,12 @@ describe('dangerAt — the union, and the shapes it refuses', () => {
  *         POINT: a union test in one room cannot police an ingredient that
  *         room does not hold, which is why each ingredient has its OWN room.
  *  2. `dangerAt` drops `hazardDanger`
- *       → `(b) hazard volumes contribute their verdict and their reason` reds
+ *       → `(b) a hazard the live arms do NOT price…` still passes (it reads
+ *         the table), and the L8 sandtrap rows in `solverBot.test.js` red.
+ *         ⚠ WEAKENED BY SLICE 3b's OWN FIX, and named rather than hidden:
+ *         with `arrowtrap` and `crusher` both priced live, the only census
+ *         hazards left on this slice's rooms are ones no test here stands
+ *         in. The honest catcher moved to the ROOM tests.
  *  3. `dangerAt` drops `chaserDanger`
  *       → `grows a WOKEN body…`, `and a horizon of ZERO…`, `reports a reason
  *         list…` and `the map really constrains the search` all red
@@ -349,4 +504,25 @@ describe('dangerAt — the union, and the shapes it refuses', () => {
  * the synthetic `moving the crusher moves the danger` case above. The
  * exclusion is a decision (the census rect is stale for a body that moves),
  * not a measurement, until a room holds both.
+ *
+ * ── slice 3b's rows ───────────────────────────────────────────────────
+ *
+ * 12. `hazardDanger` stops excluding `arrowtrap`
+ *       → `(b) the arrowtrap is EXCLUDED…` reds, AND `solverBot`'s
+ *         `L4: hold then shove — the room SOLVES` reds, because the disarmed
+ *         column goes back to being a permanent wall
+ * 13. `dangerAt` drops `staticEnemyDanger`
+ *       → `(e) the union names it too` reds, and `L6: the census-on corridor
+ *         is refused WITH THE THREAT NAMED` reds on the sandtrap
+ * 14. `staticEnemyDanger` stops excluding bridged chasers
+ *       → `excludes a BRIDGED chaser…` reds (the body is priced twice, once
+ *         at a cell it left)
+ * 15. `staticEnemyDanger` grows the body by `aggro.range`
+ *       → `prices the BODY, not the wake radius` reds — the row the GAME's
+ *         own zero-hit crossing is the evidence for
+ * 16. `dangerVolumes` builds a rect without `right`/`bottom`
+ *       → `dangerVolumes returns rects…` reds (the R1 rect lesson)
+ * 17. `bodyKillRegions` reuses the player's danger set
+ *       → `bodyKillRegions names L6's water…` reds, because the water would
+ *         then have to be in both
  */
