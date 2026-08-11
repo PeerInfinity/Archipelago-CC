@@ -6229,3 +6229,101 @@ the room's transcribed mechanism data, never chosen by unstated policy; the
 ladder is **AVOID → TIME → BAIT → KILL**, each escalation a trace row naming the
 cheaper rung it refused. Slice 3b carries the shove executor, bait, timing and
 the L4/L5/L6/L8 battery.
+
+## R8 slice 3b: the shove derives its destination, and the ladder climbs
+
+⛓⛓⛓ **TWO ROOMS THAT REFUSED NOW SOLVE, AND BOTH DERIVATIONS LAND ON THE
+HAND ANSWER WITHOUT BEING SHOWN IT.** `r8-solve-4` (L4, 253 ticks against the
+hand's 347) is `hold` then `shove`; `r8-solve-6` (L6, 294 against 355) is the
+ladder climbing AVOID → TIME → BAIT. Both recorded `--win --record --only=`
+byte-exact, both one-segment `staged` chains (7 → 9 on disk), both zero hits
+and zero deaths, and a fresh non-recording `--win --only=` run passed every
+acceptance row — calm arrivals latched over all 46 signature rows. Zero
+re-records.
+
+### The shove destination, as ⚖ ruled — and the two neighbours it rejects
+`k` = the minimum tiles such that a corridor plans with the block hypothesised
+at cell `k`, queried against the run's OWN full bag (never the level record —
+trap 153). L4 gives `k=2 → (4,4)`, with `k=1` rejected for NO CORRIDOR (column
+2 is walled at every row but (2,4), so a block at (3,4) is still the door) and
+`k=3` rejected as the PIT at (5,4). Three of the four DIRECTIONS are rejected
+by reachability — a lean is a held key, so the only available directions are
+those whose near-side cell the player can stand in. ⛔ Destruction is never a
+side effect: a destructive cell ENDS the scan for its direction and is taken
+only as the ruling's explicit LAST RESORT, with the irreversibility carried in
+the decision (a destroyed block cannot press, be pushed again, or wall a
+chaser — `Bob.as:39` pushes "Enemy").
+
+### ⚖ RULED MID-SLICE: what "a valid path exists" quantifies over
+L8's corridor needs TWO blocks moved — `pushableblock@112,48` is the east
+pocket's only door and `pushableblock@96,112` stands IN column 6, the room's
+only way south — so no single-block hypothesis yields a path at any `k`. The
+orchestrator ruled that the quantifier ranges over the world where the other
+PENDING frontier orders are discharged, with two guards: the hypothesis set is
+BOUNDED to obstacles with a selected strategy and NAMED in the trace row, and
+a refused downstream order INVALIDATES every shove that leaned on it, forcing
+a re-derivation from the block's real position with that order demoted to a
+wall. ⛔ The obvious alternative — "the post-condition is the frontier
+advancing" — is refuted by L4, where the component grows by exactly one cell
+and stops.
+
+### ⛔⛔ Two danger-map findings, both found by DRIVING
+1. **An arrow trap was priced TWICE and the static reading won.** The census
+   arm walked it unconditionally while the live arm priced ARMED lanes, so a
+   DISARMED trap's whole column was forbidden for ever — and in L4 that column
+   is the only way north. The hazard row's own `why` had said so all along:
+   *"an Activators group gates it, so whether it fires at all is a STATE
+   question, not a timing one."* Now a TABLE (`HAZARDS_PRICED_LIVE`) whose
+   rows each name the ingredient that prices them instead.
+2. **The map had no arm at all for STATIC census bodies.** L6's four sandtraps
+   are neither stepped chasers nor placed hazards, so every ingredient called
+   that room calm — while slice 2's free oracle records the GAME hitting
+   `sandtrap@64,16` at t=20 and killing the player twice. Ingredient (e), with
+   the bridged half excluded by the RUN'S OWN VERDICT
+   (`run.chaserRoomVerdict`): pricing a stepped body here would double-count a
+   live one at the cell it left and forbid a DEAD one's placement for ever —
+   trap 157 in the danger map's clothes. Not grown by the chomp radius,
+   because the hand answer's row-2 corridor passes 8 px under a body at zero
+   hits and the game certified it.
+
+### The ladder, and which body it is really about
+AVOID (a static re-plan with the danger rects forbidden) → TIME
+(`findEarliestArrival` against the danger timeline, whose bound is NAMED
+rather than widened — `MOVER_RANGE` reaches ~48 px, and L6's aim is 193) →
+BAIT → KILL (the room's own weapon, never a press: `KILL_ARM_POLICY.Bob` stays
+refused). ⛓⛓⛓ **The first danger on the corridor is the WRONG target**: L6's
+is `sandtrap@64,16`, a `speed 0` body nothing can bait, while the body that
+has to go is `bob@112,48` — which is not on the original corridor at all. The
+target is the body whose removal ADMITS a corridor, by hypothesis, the same
+shape as push-until-path.
+
+⚖ **"A lane" is the room's own transcribed BODY-kill regions** — armed arrow
+lanes ∪ lethal terrain ∪ pits — deliberately not the player's danger set,
+because a chaser drowns where a player merely cannot walk. L6's bait stance is
+derived from four mechanism conditions (leash, the line crossing a region,
+`presserSafety` asked as a WAIT — trap 154, and reachability) and lands on
+`L6_BOB_DROWN.endsAt`: row 1, column 3. **Both of the hand block's named
+controls fall out as mechanism** — `stay` fails the leash (86 px against
+`runRange` 80) and `south` fails the region crossing.
+
+### Two defects of the trace's own shape, found by the ladder
+A climb's rungs are decided before a tick is spent, so they share a tick — and
+a trace is strictly increasing by contract. The merge rule ("later wins") ate
+the SELECTION row and left three identical `walk` rows for a segment that
+shoved a block; it is now "a substantive decision outranks `walk` on the same
+tick", with rejections UNIONED rather than dropped. And each rung's row now
+carries the WHOLE refusal chain, because relying on the merge made the
+ruling's own requirement depend on a tick collision. ⛓ Climbs are NUMBERED:
+cheapest-first holds WITHIN a climb, and a new obstacle starts a new one at
+the bottom.
+
+### What is left, computed rather than mysterious
+`r8-solve-5` and `r8-solve-8` are NOT recorded, which is the step-0
+prediction's armB — a room that refuses is REPORTED, never recorded. L8 gets
+both shoves derived and the first driven, then stops on `sandtrap@96,80`,
+whose arrow death §11.4 refuses to compute because its clear is the tape's
+DECLARED v9 `at` row. L5's work order was itself a finding: a `lock` and a
+KILL-lock are the same census tag and opposite problems, and live state now
+refines `hold` → `kill` on `KILL_LOCK_TSET`. What L5 still needs is a two-pass
+authoring loop (solve → read the model's own opening tick → declare →
+re-solve), because `createLevelRun` takes `persistence` at construction.

@@ -479,6 +479,37 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 're-derives. L4 is bridge-refused (arrow traps), so the bob is priced '
                 + 'as a parked mover the arrival never overlaps.',
         }),
+        /**
+         * ⛓ R8 SLICE 3b — AND THE ASSERTION FOUND BOTH OF THESE THE FIRST
+         * TIME THE FULL CONFIG RAN AFTER THEY LANDED, by name, which is the
+         * third time this guard has done its job on the slice that followed
+         * the one that wrote it. ⛔ Neither is folded into `exposedTapes`:
+         * a prediction edited after its measurement is not a prediction.
+         *
+         * ⚠ AND THE EXPOSURE IS NO LONGER A "PARKED MOVER" CLAIM FOR EITHER
+         * OF THEM. Slice 3 widened `chaserRoomVerdict`, so L4 and L6 are both
+         * STEPPED — these two tapes drive bridged bodies through their whole
+         * lifetimes (an arrow kill in L4, two drownings in L6) and the game
+         * confirmed every tick of it byte-exact.
+         */
+        Object.freeze({
+            name: 'r8-solve-4', levels: Object.freeze([4, 5]), bobs: 1, ticks: 253,
+            addedBy: 'R8 slice 3b (the battery)',
+            why: 'the solver\'s own L4 segment: it HOLDS the button until the room\'s '
+                + 'own ceiling kills `bob@64,64` (an arrow kill at t=114, the body gone '
+                + 'at 149), then shoves and crosses into L5, whose arrival the three '
+                + 'bobs there never reach. The first battery tape whose exposure is a '
+                + 'body the run STEPS through its whole lifetime rather than one it '
+                + 'walks past.',
+        }),
+        Object.freeze({
+            name: 'r8-solve-6', levels: Object.freeze([6]), bobs: 2, ticks: 294,
+            addedBy: 'R8 slice 3b (the battery)',
+            why: 'the solver\'s own L6 segment: the BAIT stance drowns `bob@112,48` at '
+                + 't=55 and `bob@96,16` follows the walk into the water at t=205 — two '
+                + 'terrain deaths the model COMPUTES, which is why this tape declares no '
+                + 'v10 despawn where the hand-authored `r7-act2-6` needs one.',
+        }),
     ]),
 
     /**
