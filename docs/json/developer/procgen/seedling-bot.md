@@ -6032,3 +6032,90 @@ the bot must produce tapes this differential accepts.
 this note for the ORDER and METHOD R8 takes to them. Nothing above is
 retracted — the pivot changes how the remaining rows get claimed, not what
 they are.
+
+## R8 slice 1: the enemy bridge, and a model that was wrong only in the tail
+
+⛓⛓⛓ **`chasers.chaserStep` HAS A CALLER.** Transcribed exactly at R5 slice 3
+and imported by nothing but probes for three rungs, it is now
+`levelRun.stepChasersNow`, gated per `spinner.MODELLED_ENEMY_CLASSES` entry
+with a `Bob` row. Nothing re-derives a line of it — two cost models that must
+agree are one cost model.
+
+### The slot is wrong by nine families
+`Game.as:2141` adds `bob` **FIRST** of the enemy families and **after** the
+Player (`:2115`), and `World.addUpdate` PREPENDS — so a Bob updates AFTER
+every other enemy in the room and immediately before the player. The obvious
+placement ("one more enemy family, next to the ice turret") is wrong by nine
+families; the call sits beside `stepContactsNow` at the bottom of the tick.
+Read the add order; never infer a slot from the family.
+
+### ⛔ THE FINDING: a partial model is wrong in the TAIL (trap 157)
+Turning the stepper on roster-wide **reddened three committed tapes** —
+`r7-act2-4` (tick 282, in L4), `r7-act2-5`, and `r7-act2-full` (a **pit
+death** in L4). The transcription was not the defect. **This model's arrows
+hit nothing at all**: `stepArrowTrapsNow` calls `stepArrow` with no `bodies`,
+so an arrow flies through every body in the game — while the GAME's arrows
+KILL L4's and L5's bobs (R7 slice 6c measured hits 0→1→2→3, body gone at
+t≈158). The model's bodies survived, kept chasing, and reached a player who
+was standing still to bait them.
+
+⇒ **stepping a body whose DEATH the model cannot see is not a partial model,
+it is a wrong one**: the position is right for exactly as long as the body
+should have existed and wrong for ever afterwards. The roster is therefore
+scoped by **LIFETIME, not by class** — `chaserRoomVerdict` refuses any room
+holding an arrow trap, BY NAME, naming the missing family (Arrow × Enemy).
+L4 and L5 fall back to the pre-bridge pricing verbatim; **L6 is stepped and
+byte-exact.**
+
+### The terrain arm was BUILT, not declared around
+`assertSteppedChaserLifetime` — written as a guard so the gap could never be
+silent — fired on its first run and its message was the measurement: the
+stepped `bob@112,48` **stands on WATER in L6 at tick 54**, 66 ticks before
+the tape's declared `despawn` at 120. `Enemy.update`'s water/lava arm is
+three lines, so it was transcribed: a destroyed body is stopped by three
+gates in three different classes, `destroy` and `removed` stay two fenceposts
+(trap 87), and the ten-tick `MOBILE_DEATH_FADE` is a LOOP and not a division.
+The switch sits **below** the off-screen return, so a body the camera has
+lost does not drown either. The PIT is a *schedule*, not an instant, and is
+refused by name.
+
+⇒ R7 slice 6e's **trap 152 now has a positive witness inside the run**
+(`chaserTerrainDeaths`) rather than only a declaration, and the removal's
+kill-lock consequence is COMPUTED, so L6's nil is a measurement.
+
+### Two old laws reaching new places
+- **A capability flag lit up two controls.** Adding `Bob` to the roster would
+  have narrowed `runFire`'s refusal — whose reason is the BLOCK WEDGE, and
+  `pushableCtx().collides` consults SPINNERS only. "The model steps it" and
+  "the model would predict its wedge" are different claims; the roster answers
+  both (`wedgeVisible`) and the predicate is renamed to the question it really
+  asks (`enemiesUnseenByBlockSweep`).
+- **`SOLIDS_BY_MOVER.enemy`'s docblock was refuted by the source.** It read
+  *"`Enemy` and its subclasses add nothing"*; SEVEN subclasses push their own
+  types (`Bob.as:39` among them — which is what makes a static SandTrap a WALL
+  to a chaser). The ROW was right for its one consumer and the GENERALISATION
+  was not.
+
+### The pair — the game confirmed the transcription digit for digit
+`r8-l6-bob-contact` (31 observations, `--win --record --only=`): the model
+predicted a contact at **tick 20** with a knockback of `dx=-2.998, dy=0`
+(`Player.knockback` gates each axis — trap 117). The game's own stream reads
+`t=19 x=110.04999999999998` → `t=20 x=108.40158204016554` →
+`t=21 x=107.00316408033109`, **byte-identical**. CONTROL: `jellyfish`, same
+module, same transcription depth, no roster row — still throws
+`prices it as "mover"` BY NAME.
+
+### The union danger map v1
+`dangerMap.js` combines the four hazard APIs that had no combiner: live
+arrows + ARMED trap lanes, `hazardVolume` verdict volumes, stepped-enemy
+boxes under `chaseEnvelope`'s leash arithmetic, and crusher trigger lanes at
+the LIVE centre. It is **a search heuristic, never an oracle**, so it returns
+a reason list rather than a bare boolean, and `mover.findEarliestArrival`'s
+`forbiddenAt` hook — waiting since R5 — is its first real consumer.
+
+### Still refused
+**`KILL_ARM_POLICY.Bob`** stays `refused`. The bridge paid the POSITION half
+of that row's own stated reason; a press arm still needs `Enemy.hit`'s five
+gates against a chaser, the 25-tick die ANIMATION (during which
+`totalEnemies()` still counts the body), and the `classCount` move in a room
+that HAS a kill lock — L5, the one room the bridge cannot step.
