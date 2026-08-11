@@ -6327,3 +6327,91 @@ KILL-lock are the same census tag and opposite problems, and live state now
 refines `hold` → `kill` on `KILL_LOCK_TSET`. What L5 still needs is a two-pass
 authoring loop (solve → read the model's own opening tick → declare →
 re-solve), because `createLevelRun` takes `persistence` at construction.
+
+## R8 slice 4: the two-pass authoring loop, and the walk the game shot
+
+Full record: `NewDocs/plans/seedling-bot-r8-opus-kickoff.md` §13 (NewDocs is
+gitignored, so that file exists only on the working machine; this section is
+the tracked summary). Commits `6e9e1ac6c` (step 0, the prediction),
+`2b603d6a0` (the loop and the `kill` executor). Fork untouched.
+
+### The loop, built once
+
+`twoPassSolve` breaks the circle `createLevelRun` creates by taking
+`persistence` AT CONSTRUCTION: solve with the consequence undeclared, read the
+opening tick from whichever oracle the MECHANISM allows, declare it as a v9
+`at` row, re-solve. No new tape field — the loop is harness-side.
+
+**Which oracle is a property of the mechanism, not a preference.** `model`
+where the run computes the consequence end to end (`chaserKillLockOpens`'s
+removal plus `activators.opensOnTick`'s fade — a kill-lock); `game` where
+§11.4 refuses it (a static `"Enemy"` body's arrow death), and there the loop
+refuses to substitute the model BY NAME, because a model that guessed would be
+the second writer of a slot that exists to have one.
+
+**The honesty check is the PREFIX, not the outcome.** A clear at `T` cannot
+reach the world before `T`, so the measuring pass and the verifying pass must
+press identical keys on every tick below it — otherwise the tick was measured
+on a walk the verifying pass did not take. Its disagreement is constructed and
+watched to go red by tick.
+
+**"Two-pass" is the minimum, not the count**: L5 takes three (discover,
+measure, re-solve) and L8 three. A declaration that does not unblock the walk
+that measured it is named at the SECOND occurrence, not at the bound.
+
+### The `kill` executor — `ARROW_KILL_PLAN`'s six phases, driven
+
+Press, clear, bait, dwell, back, hold, as a loop over the bodies the count is
+waiting on. The hold OUTLASTS the kill by the responder's own fade, as ONE
+`runHold` with a two-claim condition — two calls would snapshot a ceiling
+already armed and fail the positive control. The bait derives against the
+regions the presser's GROUP arms rather than the live armed set, because the
+bait happens with the ceiling OFF; and `presserSafety` is deliberately NOT
+applied to a bait stance, because the hand answer's own stance sits inside a
+lane and took zero hits with nothing firing.
+
+Measured: the L5 policy kills all three bobs with no weapon — a drowning at
+t=101 and two arrow kills at 163 and 323, which are §11.1's own numbers on a
+walk the solver derived rather than replayed — and declares `{5,0}` at
+`323 + 101 = 424`, 313 ticks below `r7-act2-5`'s committed upper bound (which
+is NOT touched).
+
+### ⛔ The game refuted the first walk, and the refutation is the slice
+
+`r8-solve-5`'s 555-tick solve walked east out of `button@48,48` through
+`arrowtrap@64,48`'s column with 22 arrows still falling. The GAME knocked the
+player back at t≈206 — `hits` 1 against the model's 0, first divergence at
+207, 41 dead frames out of band. **The tape was not committed**; it is banked
+as a free oracle.
+
+The exclusion that permitted it was reasoned from the mechanism (leaving a
+button unpublishes its group on the same tick) and is **right about the next
+volley and silent about the last one**. Gated on the column being EMPTY — the
+reading the game argued for — the room WALLS, and the deadlock is exact: the
+player cannot leave the button while the column is full, and the column cannot
+empty while they stand on it.
+
+⛔ **That is not a policy bug. It is a static corridor probe pricing a MOVING
+hazard as a whole column for all time.** A lane's honest use is "do not WAIT
+here"; a walk needs "will an arrow be at this cell when I am" — a timeline
+question the AVOID rung does not ask and the TIME rung cannot reach across a
+room. Fenced as a design question rather than improvised around.
+
+### A guard that had been vacuous since the day it was written
+
+`deriveShove`'s off-the-map bound compared TILE indices against
+`world.world.width`/`height`, which are PIXELS. No `k` inside any room in the
+game could trip it. L8 is where it bit: push-until-path walked column 6 out
+through the floor and returned a destination the block cannot reach. With the
+map bounded, no non-destructive cell yields a corridor in any direction, so
+the ruled LAST RESORT applies and the block sinks at `(5,7)` — the hand
+answer's cell, reached by exhaustion rather than by preference.
+
+### Where the rung stands
+
+The battery closes at **2 of 4** (`r8-solve-4`, `r8-solve-6`), with
+`r8-solve-5` and `r8-solve-8` REPORTED and their walls named. **D2 and
+`hasShield` were not reached**; the D2 recon — L18's spinner press arm (whose
+second consequence is measured NIL: both placements carry `tag -1`), L19's
+route through the boss's own body to the bosslock, and L20's shield → shieldlock
+→ buttonroom → `lock@32,80` chain — is banked in kickoff §13.10.
