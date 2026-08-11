@@ -971,3 +971,321 @@ export function assertArrowTargetPartition(dispositions, hitables) {
     }
     return { types: declared.length };
 }
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3b — THE EXECUTORS UNDER THE RULED DESIGN, AND THE
+ * PREDICTION IS COMMITTED BEFORE THE FIRST EXECUTOR MOVES.
+ *
+ * Slice 3 stopped at a genuine design question (kickoff §11.8) and the
+ * orchestrator RULED it (§11.8a). This slice is implementation against that
+ * ruling, and what the ruling settles is carried HERE AS DATA rather than as
+ * prose in a docblock, for the reason trap 119 keeps proving: a rule
+ * consumed by a branch buried in one function lets a consequence go
+ * unreported, and a claim quietly absent reads exactly like a claim that
+ * passed.
+ *
+ * ── ⚖ RULING 1 — THE SHOVE DESTINATION IS THE POST-CONDITION ──────────
+ *
+ * A shove's `to` is never chosen by the verb and never by taste. It is
+ * DERIVED from what the work order needs to be true afterwards, in one of
+ * exactly three kinds. `SHOVE_POST_CONDITIONS` below is that partition, and
+ * `assertShovePostConditionsTotal` is what keeps it one.
+ *
+ * ── ⚖ RULING 2 — THE PARAMETER-DERIVATION LAW ─────────────────────────
+ *
+ * Every strategy executor's free parameters derive from (i) the work order's
+ * post-condition and (ii) the room's TRANSCRIBED mechanism data — never from
+ * unstated policy. `hold.until` (slice 3, §11.7) is the precedent already
+ * shipped: `ticks` became the BOUND and the stopping CONDITION became an
+ * observation. `EXECUTOR_DERIVATIONS` records, per registered executor, what
+ * each free parameter is derived FROM — and
+ * `assertExecutorParametersAreDerived` asserts the registry and this table
+ * are ONE key set, so an executor registered without saying where its
+ * numbers come from is a named failure rather than a silence.
+ *
+ * ── ⚖ RULING 2's LADDER — the combat policy's decision order ──────────
+ *
+ * AVOID -> TIME -> BAIT -> KILL, cheapest first, and **each escalation is a
+ * trace row naming the cheaper rung it refused**. `ESCALATION_LADDER` is the
+ * order as data; `assertEscalationIsOrdered` asserts a run of escalations
+ * only ever moves up it and that every escalation names its predecessor's
+ * refusal — a ladder whose rungs can be taken out of order is four
+ * independent policies wearing one name.
+ */
+export const R8_STRATEGY_EXECUTORS = Object.freeze({
+    item: Object.freeze({
+        id: 'strategy-executors-under-11-8a',
+        what: 'register `shove` (the destination DERIVED from the post-condition), the '
+            + '`kill` strategy (the room\'s own weapon, held until an OBSERVED count '
+            + 'reaches zero) and the `bait` stance (derived per `ARROW_KILL_PLAN.baitRule` '
+            + '+ `presserSafety`), and wire the AVOID -> TIME -> BAIT -> KILL ladder as '
+            + 'the combat policy\'s decision order',
+        why: 'slice 2 left COMPUTED work orders and slice 3 discharged the first of them '
+            + '(`hold`). What stopped slice 3 was not a mechanism but a DESIGN question '
+            + 'with two working answers (§11.8); §11.8a ruled it, so this slice is '
+            + 'implementation. The rooms are L4 (shove), L5 (bait + the kill-lock), L6 '
+            + '(the timing escalation) and L8 (two shoves, two clears).',
+        cite: 'kickoff §11.8a (the rulings), §11.7 (the derived-parameter precedent), '
+            + '§10.4 note 4 (the strategy seam), §9.9 (the danger map)',
+    }),
+
+    /**
+     * ⚖ RULING 1, AS A PARTITION. Three kinds, and the third is the only one
+     * allowed to name a destructive cell on purpose.
+     *
+     * ⛔ DESTRUCTION IS NEVER A SIDE EFFECT. A pit/water/lava resting cell is
+     * reachable by kind `dispose` (the post-condition names it) or by kind
+     * `clear-path` as an explicit LAST RESORT when no non-destructive cell
+     * yields a path first — and then the trace flags the IRREVERSIBILITY,
+     * because a destroyed block is gone for the visit (it cannot press, it
+     * cannot wall a chaser — `Bob.as:39` pushes "Enemy" — and it cannot be
+     * pushed again) while a parked one keeps all three.
+     */
+    shovePostConditions: Object.freeze({
+        'clear-path': Object.freeze({
+            derives: 'k = the MINIMUM tiles such that a valid path exists with the block '
+                + 'hypothesised at cell k, queried offline against the full-bag path',
+            destinationIsDestructive: 'last resort only, and the trace flags it',
+            room: 'L4 (`pushableblock@32,64`), L8 (`pushableblock@112,48`)',
+        }),
+        press: Object.freeze({
+            derives: 'the BUTTON\'s cell, from the puzzle step that wants it held',
+            destinationIsDestructive: 'never — a sunk block presses nothing',
+            room: 'none on this battery; L41\'s `pushableblockfire@176,176` is the shape',
+        }),
+        dispose: Object.freeze({
+            derives: 'the destructive terrain the post-condition NAMES — `shove-sink` '
+                + 'exists for exactly this',
+            destinationIsDestructive: 'yes, BY THE POST-CONDITION',
+            room: 'L8\'s second block (`pushableblock@96,112` into the water at (5,7)), '
+                + 'whose removal is what un-shadows `sandtrap@96,128` from the arrows',
+        }),
+    }),
+
+    /**
+     * ⚖ RULING 2's LADDER, as the ORDER. Cheapest first; an escalation is a
+     * trace row carrying the refused cheaper rung's reason.
+     */
+    ladder: Object.freeze([
+        Object.freeze({
+            rung: 'avoid',
+            tool: 'a static re-plan with the danger map\'s hard verdicts forbidden',
+            refusesWith: 'no admissible corridor exists with the threatened cells removed',
+        }),
+        Object.freeze({
+            rung: 'time',
+            tool: '`mover.findEarliestArrival` with `forbiddenByDanger` as `forbiddenAt` '
+                + '(ABSOLUTE ticks); the certificate\'s spans become the movement and '
+                + '`certifiedAgainst` names the timeline',
+            refusesWith: 'the search returns a NEGATIVE, which always names its own bound',
+        }),
+        Object.freeze({
+            rung: 'bait',
+            tool: 'a stance derived per `ARROW_KILL_PLAN.baitRule` (the body->player '
+                + 'straight line crosses a lane) under `presserSafety` (`lanesOver` EMPTY '
+                + 'at the stance — trap 154: a stance safe to PASS is not safe to WAIT in)',
+            refusesWith: 'no stance both pulls the body through a lane and is itself '
+                + 'outside every lane',
+        }),
+        Object.freeze({
+            rung: 'kill',
+            tool: 'the ROOM\'S OWN WEAPON — hold the presser whose group arms the traps '
+                + 'whose lanes cover the body, until an OBSERVED count reaches zero '
+                + '(`hold.until`, the §11.7 precedent). A PRESS arm is a `KILL_ARM_POLICY` '
+                + 'question and stays refused unless a room actually needs one.',
+            refusesWith: 'no presser in the room arms a lane over the body, or the class '
+                + 'has no modelled kill arm and no ceiling covers it',
+        }),
+    ]),
+
+    /**
+     * ⛓ RULING 2's LAW, per executor. The KEY SET is asserted equal to
+     * `solverBot.STRATEGY_EXECUTORS`, so registering an executor without
+     * saying where its numbers come from is a named failure.
+     */
+    executorDerivations: Object.freeze({
+        collect: Object.freeze(['the placement the goal already named (bound, not derived)',
+            'the stance: nearest walkable ring cell whose corridor PLANS']),
+        chest: Object.freeze(['the placement the goal already named (bound, not derived)',
+            'the stance: `chestStanceBand`\'s own arithmetic, top row']),
+        hold: Object.freeze(['the presser: the frontier\'s own blocker id',
+            'the stance: lattice cells whose player box overlaps the presser rect, '
+                + 'reachability probed by `planWaypoints` itself',
+            'the length: `ticks` is a BOUND from the mechanism (`activators.opensOnTick` '
+                + 'or the arrow-kill floor); the stopping CONDITION is OBSERVED (§11.7)']),
+        shove: Object.freeze(['the direction: the only axis whose near-side stance is '
+                + 'REACHABLE from the live position',
+            'the destination: `k` from the post-condition (`shovePostConditions`)',
+            'the stance: the block\'s own near-side cell — `runShove`\'s lean needs the '
+                + 'player box on the block\'s +-1 px probe with velocity into it']),
+        kill: Object.freeze(['the weapon: the presser group whose armed traps\' lanes '
+                + 'cover the target body (`arrowTrap.lanesOver`)',
+            'the stance: `presserSafety` — `lanesOver(playerBox)` EMPTY at the hold point',
+            'the length: OBSERVED — the room\'s own count reaching zero, plus the '
+                + 'responder\'s own fade (`ARROW_KILL_PLAN.lockFadeTicks`)']),
+    }),
+
+    /**
+     * ⛔ THE FORK, STATED FIRST — `outcome` is written BESIDE this, never
+     * over it (the R6/R7/slice-1/slice-3 shape).
+     */
+    prediction: Object.freeze({
+        statedAt: '2026-08-10, before the first executor moved',
+        baseline: Object.freeze({
+            commit: '34c709760', files: 242, tests: 6926, seconds: 362.72,
+            note: 'MEASURED this session on the unmodified tree before anything moved — a '
+                + 'gate with no baseline cannot attribute (trap 40). It reproduces slice '
+                + '3\'s close numbers (242 / 6926) exactly, which is itself the check that '
+                + 'the tree this slice starts from is the tree slice 3 closed on.',
+        }),
+        armA: '⛓ THE BATTERY CLOSES: `r8-solve-4`, `r8-solve-5`, `r8-solve-6` and '
+            + '`r8-solve-8` are authored by the policy from the committed segments\' own '
+            + 'v8 boot blocks and recorded BYTE-EXACT through the win-channel '
+            + 'differential, with the 324 committed tapes unmoved (zero re-records). L4 '
+            + 'closes on the shove alone; L6 closes on a rung ABOVE avoid; L5 needs bait '
+            + 'and the kill-lock; L8 needs two shoves and two DECLARED clears.',
+        armB: '⛔ a room refuses, and the REFUSAL is the deliverable. The ladder names '
+            + 'which rung it reached and what the cheaper ones said, so a wall is a '
+            + 'measurement with a rung number on it rather than a stall. A room that '
+            + 'refuses is REPORTED, never recorded — a tape whose solution nobody '
+            + 'designed is worse than a missing tape (§11.10.1).',
+        expected: 'armA for L4 (the derivation is arithmetic over a corridor whose two '
+            + 'candidate answers §11.8 already enumerated). armA for L6 and L5 with the '
+            + 'ladder as designed. ⚠ L8 is the room this slice budgets FORMAT RISK for '
+            + '(R7 §21.9 lesson 1): its two kills are a `SandTrap`\'s, whose arrow death '
+            + 'this rung REFUSES to compute (§11.4), so its tape must DECLARE what the '
+            + 'model cannot compute and a staged chain\'s witnessed-clear law then wants a '
+            + 'witness for the declaration.',
+        alsoPredicted: Object.freeze([
+            'L4\'s derived `k` is 2 — block (2,4) -> (4,4) — with k=1 rejected for NO '
+                + 'PATH (column 2 is walled at every row but (2,4), so the block at (3,4) '
+                + 'is still the door) and k=3 rejected as the PIT at (5,4): destructive, '
+                + 'and unneeded because k=2 already plans',
+            'L8\'s first derived `k` is 2 — block (7,3) -> (5,3) — with k=1 rejected '
+                + 'because (6,3) is IN column 6, the room\'s only way south',
+            'both agree with the hand answers, and that agreement is INFORMATION rather '
+                + 'than the justification (§11.8a ruling 1\'s own words)',
+            '`KILL_ARM_POLICY.Bob` stays `refused` — arrows are the expected mechanism '
+                + 'and no room on this battery needs a PRESS arm (trap 101)',
+        ]),
+    }),
+
+    /**
+     * ⛔ WHAT THIS SLICE DOES NOT CLAIM, stated before it is tempted to.
+     */
+    refusedHere: Object.freeze([
+        Object.freeze({
+            what: 'the `touch` executor',
+            why: 'its obstacle is `solid:shieldlock`, which is L18\'s — kickoff §4 slice '
+                + '4. It stays SELECTED-AND-UNREGISTERED on purpose: it is the live '
+                + 'control for §10.4 note 4\'s claim that a strategy may be named by the '
+                + 'table and absent from the registry, and a control deleted in the '
+                + 'change that widens the claim is not a control (trap 62).',
+        }),
+        Object.freeze({
+            what: 'a static "Enemy" body\'s own death by arrow (SandTrap)',
+            why: 'unchanged from §11.4 — its clear is the tape\'s DECLARED v9 `at` row and '
+                + 'the declaration is the single writer of that flag. A solver tape for L8 '
+                + 'declares it the same way a hand-authored one does; what the solver adds '
+                + 'is that the declaration is now CHECKED against the model wherever the '
+                + 'model can compute the consequence (§11.5).',
+        }),
+    ]),
+});
+
+/**
+ * The three post-condition kinds are a PARTITION, and a shove plan's own kind
+ * is checked against it.
+ *
+ * ⛔ "everything else is clear-path" is the safe-sounding default and it is
+ * the one that cannot be diffed against the ruling — a `dispose` mis-typed as
+ * `clear-path` would sink a block as a SIDE EFFECT, which is the one thing
+ * ruling 1 forbids by name.
+ */
+export function assertShovePostConditionKind(kind, what) {
+    const kinds = Object.keys(R8_STRATEGY_EXECUTORS.shovePostConditions);
+    if (!kinds.includes(kind)) {
+        throw new Error(`${what}: shove post-condition "${kind}" is not one of `
+            + `[${kinds.join(', ')}]. ⚖ Kickoff §11.8a ruling 1: a shove's destination is `
+            + 'the WORK ORDER\'s post-condition, and there are exactly three of them. A '
+            + 'fourth is a design change, not a default.');
+    }
+    return kind;
+}
+
+/**
+ * Every registered executor says where its free parameters come from —
+ * ⚖ §11.8a ruling 2, asserted as ONE KEY SET rather than as a habit.
+ */
+export function assertExecutorParametersAreDerived(registry) {
+    if (!registry || typeof registry !== 'object') {
+        throw new Error('assertExecutorParametersAreDerived: pass '
+            + '`solverBot.STRATEGY_EXECUTORS` — the running registry, never a copy typed '
+            + 'beside this check (trap 89).');
+    }
+    const registered = Object.keys(registry).sort();
+    const declared = Object.keys(R8_STRATEGY_EXECUTORS.executorDerivations).sort();
+    const undeclared = registered.filter((k) => !declared.includes(k));
+    /**
+     * ⛓ THE TWO HALVES ARE NOT THE SAME CLAIM, and only one of them is a
+     * defect. An executor REGISTERED with no derivation row is exactly what
+     * ⚖ §11.8a ruling 2 replaced — numbers from nowhere anybody can name —
+     * and it THROWS. A derivation row with no executor yet is this slice's
+     * own WORK ORDER: the table is written at step 0, before a line of the
+     * executor moves, and it is REPORTED so the pending list is a fact a
+     * reader can see rather than a red that has to be tolerated.
+     */
+    if (undeclared.length) {
+        throw new Error('R8_STRATEGY_EXECUTORS: the executor registry has row(s) with no '
+            + `derivation. Registered with no derivation row: ${undeclared.join(', ')}. `
+            + '⚖ §11.8a ruling 2 — an executor whose free parameters come from nowhere '
+            + 'anybody can name is exactly the thing the ruling replaced.');
+    }
+    const pending = declared.filter((k) => !registered.includes(k));
+    for (const [verb, rows] of Object.entries(R8_STRATEGY_EXECUTORS.executorDerivations)) {
+        if (!Array.isArray(rows) || rows.length === 0) {
+            throw new Error(`R8_STRATEGY_EXECUTORS.executorDerivations.${verb} must list at `
+                + 'least one parameter and where it derives from.');
+        }
+    }
+    return { executors: registered.length, pending };
+}
+
+/**
+ * ⛓⛓⛓ THE LADDER IS AN ORDER, AND AN ESCALATION RUN IS CHECKED AGAINST IT.
+ *
+ * Two claims, and they are different:
+ *   1. the rungs a run took are a strictly INCREASING subsequence of
+ *      `ladder` — a policy that reached `kill` without ever asking `avoid`
+ *      is four policies wearing one name;
+ *   2. every escalation NAMES the cheaper rung it refused, in `rejected` —
+ *      which is the whole of ⚖ §11.8a's "each escalation is a trace row
+ *      carrying the refused cheaper rung's reason".
+ */
+export function assertEscalationIsOrdered(escalations, what = 'the combat ladder') {
+    const order = R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung);
+    if (!Array.isArray(escalations)) {
+        throw new Error(`${what}: pass the list of escalations the run took.`);
+    }
+    let last = -1;
+    for (const e of escalations) {
+        const i = order.indexOf(e.rung);
+        if (i < 0) {
+            throw new Error(`${what}: "${e.rung}" is not a rung of the ruled ladder `
+                + `[${order.join(' -> ')}].`);
+        }
+        if (i <= last) {
+            throw new Error(`${what}: escalated to "${e.rung}" (rung ${i}) after rung `
+                + `${last} — the ladder is CHEAPEST FIRST and an escalation that goes `
+                + 'down it, or sideways, is a policy choosing rather than escalating.');
+        }
+        if (i > 0 && !(e.refused && e.refused.rung === order[i - 1])) {
+            throw new Error(`${what}: the escalation to "${e.rung}" does not name the `
+                + `cheaper rung it refused. ⚖ §11.8a: every escalation is a trace row `
+                + `carrying the refused rung's reason; got `
+                + `${JSON.stringify(e.refused ?? null)}.`);
+        }
+        last = i;
+    }
+    return { rungs: escalations.length, deepest: last < 0 ? null : order[last] };
+}

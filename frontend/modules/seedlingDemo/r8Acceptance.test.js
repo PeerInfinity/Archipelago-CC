@@ -9,7 +9,10 @@ import {
     assertBatchIsModelSide,
     R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured, assertBridgeRosterMatchesScope,
     assertSteppedContactPartition,
+    R8_STRATEGY_EXECUTORS, assertShovePostConditionKind,
+    assertExecutorParametersAreDerived, assertEscalationIsOrdered,
 } from './r8Acceptance.js';
+import { STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
 import {
     CONTACT_STEPPED_FAMILIES, CONTACT_STEPPED_PRICED_BY, CONTACT_STEPPED_WHY,
@@ -444,6 +447,118 @@ function syntheticExposureIo(rows) {
     };
 }
 
+describe('R8_STRATEGY_EXECUTORS — slice 3b\'s prediction, stated before an executor moved', () => {
+    it('states a fork with both arms and the expected one named', () => {
+        const p = R8_STRATEGY_EXECUTORS.prediction;
+        expect(p.armA).toMatch(/BYTE-EXACT/);
+        expect(p.armB).toMatch(/REFUSAL is the deliverable/);
+        expect(p.expected).toMatch(/armA/);
+        // ⛔ The fork's arms must be DIFFERENT claims. A prediction whose two
+        // arms both describe success is a hope wearing a fork's shape.
+        expect(p.armA).not.toBe(p.armB);
+    });
+
+    it('names L4\'s and L8\'s derived k BEFORE the derivation exists', () => {
+        const also = R8_STRATEGY_EXECUTORS.prediction.alsoPredicted.join(' | ');
+        expect(also).toMatch(/L4's derived `k` is 2/);
+        expect(also).toMatch(/L8's first derived `k` is 2/);
+        // The agreement with the hand answer is INFORMATION — ⚖ §11.8a's own
+        // words — and the prediction says so rather than leaning on it.
+        expect(also).toMatch(/INFORMATION rather than the justification/);
+    });
+
+    it('budgets FORMAT RISK for L8 by name (R7 §21.9 lesson 1)', () => {
+        expect(R8_STRATEGY_EXECUTORS.prediction.expected).toMatch(/FORMAT RISK/);
+        expect(R8_STRATEGY_EXECUTORS.prediction.expected).toMatch(/SandTrap/);
+    });
+
+    it('keeps `touch` refused AS THE LIVE CONTROL, with the reason', () => {
+        const row = R8_STRATEGY_EXECUTORS.refusedHere.find((r) => /touch/.test(r.what));
+        expect(row.why).toMatch(/control/);
+        // ⛔ And the control is asserted against the RUNNING registry, not
+        // against the sentence: a control that has stopped being able to fail
+        // is not a weak control, it is not a control (trap 62).
+        expect(STRATEGY_EXECUTORS.touch).toBeUndefined();
+    });
+});
+
+describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that keep it one', () => {
+    it('the three shove post-conditions partition, and a fourth is refused', () => {
+        expect(Object.keys(R8_STRATEGY_EXECUTORS.shovePostConditions).sort())
+            .toEqual(['clear-path', 'dispose', 'press']);
+        expect(assertShovePostConditionKind('clear-path', 'x')).toBe('clear-path');
+        expect(() => assertShovePostConditionKind('sink-it', 'x'))
+            .toThrow(/not one of \[clear-path, press, dispose\]/);
+    });
+
+    it('only `dispose` names a destructive destination as its own answer', () => {
+        const k = R8_STRATEGY_EXECUTORS.shovePostConditions;
+        expect(k.dispose.destinationIsDestructive).toMatch(/^yes/);
+        expect(k.press.destinationIsDestructive).toMatch(/never/);
+        expect(k['clear-path'].destinationIsDestructive).toMatch(/last resort/);
+    });
+
+    it('every RUNNING executor has a derivation row, and the rest are PENDING', () => {
+        const out = assertExecutorParametersAreDerived(STRATEGY_EXECUTORS);
+        expect(out.executors).toBe(Object.keys(STRATEGY_EXECUTORS).length);
+        // ⛓ The pending list is this slice's own WORK ORDER, computed from the
+        // running registry rather than typed — it empties as the executors
+        // land, and the as-built quotes it.
+        expect([...out.pending].sort()).toEqual(
+            Object.keys(R8_STRATEGY_EXECUTORS.executorDerivations)
+                .filter((k) => !(k in STRATEGY_EXECUTORS)).sort());
+    });
+
+    it('an executor registered with no derivation row is a NAMED failure', () => {
+        expect(() => assertExecutorParametersAreDerived({
+            ...STRATEGY_EXECUTORS, teleport: () => {},
+        })).toThrow(/Registered with no derivation row: teleport/);
+    });
+
+    it('the ladder is AVOID -> TIME -> BAIT -> KILL and every rung names its tool', () => {
+        expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
+            .toEqual(['avoid', 'time', 'bait', 'kill']);
+        for (const r of R8_STRATEGY_EXECUTORS.ladder) {
+            expect(r.tool.length).toBeGreaterThan(20);
+            expect(r.refusesWith.length).toBeGreaterThan(20);
+        }
+    });
+
+    it('accepts an escalation run that climbs and names each refusal', () => {
+        const out = assertEscalationIsOrdered([
+            { rung: 'avoid' },
+            { rung: 'time', refused: { rung: 'avoid', why: 'no admissible corridor' } },
+            { rung: 'kill', refused: { rung: 'bait', why: 'no safe stance' } },
+        ]);
+        expect(out).toEqual({ rungs: 3, deepest: 'kill' });
+    });
+
+    it('refuses a run that goes DOWN the ladder, or sideways', () => {
+        expect(() => assertEscalationIsOrdered([
+            { rung: 'time', refused: { rung: 'avoid', why: 'x' } }, { rung: 'avoid' },
+        ])).toThrow(/CHEAPEST FIRST/);
+        expect(() => assertEscalationIsOrdered([
+            { rung: 'time', refused: { rung: 'avoid', why: 'x' } },
+            { rung: 'time', refused: { rung: 'avoid', why: 'x' } },
+        ])).toThrow(/CHEAPEST FIRST/);
+    });
+
+    it('refuses an escalation that does not name the cheaper rung it refused', () => {
+        expect(() => assertEscalationIsOrdered([{ rung: 'time' }]))
+            .toThrow(/does not name the cheaper rung it refused/);
+        // ⛔ AND NAMING THE WRONG ONE IS THE SAME FAILURE. "I refused
+        // something" and "I refused the rung below me" are different claims.
+        expect(() => assertEscalationIsOrdered([
+            { rung: 'kill', refused: { rung: 'avoid', why: 'x' } },
+        ])).toThrow(/does not name the cheaper rung it refused/);
+    });
+
+    it('refuses a rung that is not on the ruled ladder', () => {
+        expect(() => assertEscalationIsOrdered([{ rung: 'pray' }]))
+            .toThrow(/not a rung of the ruled ladder/);
+    });
+});
+
 /**
  * ── THE MUTATION LIST FOR THIS STRATUM ────────────────────────────────
  *
@@ -482,4 +597,16 @@ function syntheticExposureIo(rows) {
  *         is a module-private Symbol, so no external caller can mint an
  *         incomplete branded bag. MUTATION-ONLY BITER, recorded as such rather
  *         than dressed up as a call-site guard.
+ *
+ * ── slice 3b's rows ───────────────────────────────────────────────────
+ *
+ * 12. add a fourth `shovePostConditions` key
+ *       → `the three shove post-conditions partition …` reds
+ * 13. register an executor without a derivation row (or delete a row)
+ *       → `the derivation table and the RUNNING registry are one key set` reds
+ * 14. reorder `ladder` (e.g. bait before time)
+ *       → `the ladder is AVOID -> TIME -> BAIT -> KILL …` reds
+ * 15. register `touch`
+ *       → `keeps `touch` refused AS THE LIVE CONTROL` reds — the control is
+ *         asserted against the RUNNING registry, not against its own sentence
  */
