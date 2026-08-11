@@ -505,7 +505,11 @@ const modelDeadFrames = (name, tapeObj) => {
     if (deadFrameCache.has(name)) return deadFrameCache.get(name);
     let owed = 0;
     try {
-        owed = runTape(tapeObj, { levelSource: atlasLevelSource() }).frozenFramesOwed ?? 0;
+        // ⛓ R8 slice 8: `deadFramesOwed`, not `frozenFramesOwed` — the clock's
+        // whole ledger, so the budget stops being short by one room-load fade
+        // per build and one phase A per ceremony. Still never an assertion:
+        // a larger number can only make the harness wait longer.
+        owed = runTape(tapeObj, { levelSource: atlasLevelSource() }).deadFramesOwed ?? 0;
     } catch {
         // A tape the model refuses is a tape the comparison will report on
         // properly in a moment; the budget just falls back to the old one.

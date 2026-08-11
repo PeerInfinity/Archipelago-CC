@@ -528,9 +528,36 @@ export const SEAM_BOOT_SPEC = Object.freeze([
     }),
     Object.freeze({
         key: 'time', field: 'save.time', type: 'number', min: 0, max: 4294967295,
-        exclusiveMin: true, zeroMeansUndeclared: true, modelled: false,
-        why: 'day/night phase; 0 is `Main.time`\'s falsy arm (Game.dayLength / 2). '
-            + 'Comparable only under `Bot.pinDeadFrames` — it counts DEAD frames too',
+        exclusiveMin: true, zeroMeansUndeclared: true,
+        /**
+         * ⛓⛓⛓ R8 SLICE 8: **TRUE, AND THE MACHINERY LANDED WITH THE FLAG.**
+         *
+         * This row was `modelled: false` for four rungs — carried across the
+         * seam, validated, compared, and read by no physics — while one
+         * mechanism needed it the whole time: `Spinner.update`'s hammer is a
+         * `collideLine` at `(Game.time % 45) / 45 · 2π` (`Spinner.as:70-72`),
+         * and both `levelRun.assertPlayerClearOfHammers` and
+         * `dangerMap.spinnerDanger` refused the angle on the grounds that
+         * *"this model does not carry `Game.time`"*.
+         *
+         * `gameClock` is the counting that was missing: `time += timeRate` sits
+         * below `Game.update`'s `blackCover` gate but outside it, so the
+         * quantity is the boot value plus every `Game.update()` — live, frozen,
+         * ceremony and room-fade alike — and every one of those is a number the
+         * run already had. ⛔ THE FLAG IS TRUE ONLY WHERE THE COUNT IS EXACT:
+         * `createLevelRun` refuses the clock (and every consumer refuses with
+         * it) for a tape without `pins: ["dead_frames"]`, where a load's fade
+         * is a RENDER count, and for a boot inside `cutscene[0]`, the one block
+         * in the game that writes `timeRate`.
+         *
+         * ⛓ THE FREE ORACLE THAT CHECKS IT is `gameClock.declaredSeamTimeAfter`
+         * against every committed chain seam: ten pairs, ten exact agreements,
+         * numbers the GAME latched.
+         */
+        modelled: true,
+        why: 'day/night phase, AND `Spinner`\'s hammer angle; 0 is `Main.time`\'s falsy '
+            + 'arm (Game.dayLength / 2). Comparable — and MODELLED — only under '
+            + '`Bot.pinDeadFrames`: it counts DEAD frames too (`gameClock`)',
     }),
     Object.freeze({
         key: 'primary', field: 'save.primary', type: 'int', min: 0, max: 5,

@@ -196,6 +196,9 @@ import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
 import {
+    beginEntryTimeFromDeclared, createGameClock, PICKUP_HELP_DEAD_FRAMES,
+} from './gameClock.js';
+import {
     INITIAL_DIRECTION,
     INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
@@ -392,6 +395,45 @@ export function createLevelRun({
         const declared = seamBoot[`save.${spec.property}`];
         if (declared !== undefined) inventory[spec.property] = declared;
     }
+    /**
+     * ⛓⛓⛓ R8 SLICE 8: `Game.time`, AND THE ROW ABOVE STOPS BEING A LIE.
+     *
+     * `SEAM_BOOT_SPEC`'s `time` row said *"carried, validated and compared AT
+     * THE SEAM, and no physics here reads them"* for four rungs, and one
+     * mechanism has needed it the whole time: `Spinner.update`'s hammer is a
+     * `collideLine` at `(Game.time % 45) / 45 · 2π`. This is the counting the
+     * seam's transport was missing — see `gameClock` for why the quantity is
+     * exact under `Bot.pinDeadFrames` and a refusal without it.
+     *
+     * ⛔ THE PIN IS THE GATE, AND SO IS THE CUTSCENE. `Game.time` advances by
+     * `timeRate` per `Game.update()`, and `timeRate` is 1 everywhere except
+     * inside `cutscene[0]` — the opening wind scene, where it DECAYS. A run
+     * booting into that scene, or without the dead-frame pin, gets a clock
+     * that answers `null` for ever; the hammer's contact then refuses by name
+     * exactly as it did before this slice, rather than billing a guessed
+     * phase. Both conditions are read off the boot block, which declares them
+     * (`SEAM_BOOT_SPEC`'s `cutscene` row is `modelled: true`, and `pins`
+     * reaches this run for the swim term's reason).
+     */
+    const clockDeclared = seamBoot['save.time'];
+    const bootCutscene = seamBoot['static.Game.cutscene'] ?? null;
+    const clockRefusal = (() => {
+        if (clockDeclared === undefined) return 'the boot block declares no `save.time`';
+        if (!pins.includes('dead_frames')) {
+            return 'the tape does not declare `pins: ["dead_frames"]`, so a room load\'s '
+                + 'fade is a RENDER count (18..21, `deadFrameBand.FADE_STATS`) rather '
+                + 'than the fixed twenty this model counts';
+        }
+        if (bootCutscene && bootCutscene[0]) {
+            return '`Game.cutscene[0]` is set at the boot — the opening wind scene, the '
+                + 'one block in the game that writes `timeRate` (`Game.as:918`), where '
+                + 'the clock advances by a DECAYING rate this model does not carry';
+        }
+        return null;
+    })();
+    const clock = createGameClock({
+        bootTime: clockRefusal === null ? beginEntryTimeFromDeclared(clockDeclared) : null,
+    });
     /**
      * ⛓⛓⛓ R5 SLICE 23: THE SAVE-ARRAY MIRROR.
      *
@@ -1976,7 +2018,33 @@ export function createLevelRun({
      * made at all, and this is the accumulator for the freezes the RUN
      * causes (a `SealController`'s is `sealCeremony`'s own).
      */
-    let frozenFramesOwed = 0;
+    /**
+     * ⛓⛓⛓ R8 SLICE 8: NO LONGER ITS OWN COUNTER — a VIEW over the clock's
+     * span ledger, so the run has exactly ONE accumulator for frames it did
+     * not tick through.
+     *
+     * The value is unchanged (the same five sites push the same `freeze`
+     * spans), and that is the point: the clock has to add the room-load fades
+     * and a ceremony's phase A, which this readout has never included — its
+     * own docblock says the caller sums those — and two accumulators over one
+     * quantity are [[feedback_two_cost_models_must_agree]] waiting for an
+     * edit. `spendFrozen` is the one writer.
+     */
+    const spendFrozen = (frames, why) => clock.spend(frames, 'freeze', why, ticksCompleted);
+    /**
+     * ⛔ A PICKUP'S PHASE A — the 150 `specialTimer` frames the OBSERVATION
+     * STREAM cannot see and `frozenFramesOwed` has never counted.
+     *
+     * `ceremony`'s own docblock is explicit that the model does not represent
+     * phase A — *"no ticks, no observations, nothing to reproduce"* — and that
+     * is still right for the STREAM. It is wrong for the CLOCK: those are 150
+     * `Game.update()`s and `Game.time` takes every one of them. The two
+     * readouts disagree on purpose and each says which question it answers.
+     */
+    const spendCeremonyPhaseA = (tag) => clock.spend(
+        CEREMONY_DEAD_FRAMES.pickup, 'ceremony', `pickup phase A (${tag})`, ticksCompleted);
+    const spendPickupHelp = (tag) => clock.spend(
+        PICKUP_HELP_DEAD_FRAMES.frames[tag] ?? 0, 'help', `${tag} Help`, ticksCompleted);
     /**
      * ⛓⛓⛓ R5 SLICE 23: HAS THE WAND LEFT THE WORLD?
      *
@@ -2054,7 +2122,7 @@ export function createLevelRun({
             if (r.snapY !== null) snapY = r.snapY;
             if (r.unfroze) break;
         }
-        frozenFramesOwed += frames;
+        spendFrozen(frames, 'fallrock');
         rockFalls.push({
             id,
             level,
@@ -2136,7 +2204,7 @@ export function createLevelRun({
             }
             frames = i;
         }
-        frozenFramesOwed += frames;
+        spendFrozen(frames, 'fallrocks-together');
         // ⛓ THE RELEASE FRAME IS A LIVE PLAYER FRAME. The rock that expires
         // first clears `Game.freezeObjects` before the Player updates, and
         // `Bot.update` already counted that frame dead — so the player takes
@@ -2762,6 +2830,12 @@ export function createLevelRun({
 
     let level = boot.level;
     let world = worldFor(level);
+    // ⛓ THE BOOT'S OWN FADE. `Game.begin()` runs, then twenty `Game.update()`s
+    // skip `super.update()` while `blackCover` decays — and every one of them
+    // still runs `time += timeRate`. So the clock's first LIVE reading is the
+    // entry value plus `LOAD_FADE_FRAMES`, and this is the build that spends
+    // them (`enterWorld` spends the same for every later world).
+    clock.build(level);
     const spawn = spawnFromBoot(boot);
     let state = {
         x: spawn.x,
@@ -3026,6 +3100,12 @@ export function createLevelRun({
         dropWorldIfBuiltStale(level);
         world = worldFor(level);
         // A new `Game` means new entities: every lock is solid again.
+        // ⛓ R8 slice 8: a new `Game` means a new `blackCover`, which means
+        // `LOAD_FADE_FRAMES` more `Game.update()`s before anything moves — and
+        // the clock counts every one. Spent HERE rather than at the transition
+        // record, because a death reboot and an ending reboot are builds too
+        // and all three come through this one function.
+        clock.build(level);
         if (!noclip) freshActivatorState(level);
         // ⚠ ...and so is every bridge, and every block is back in the
         // corridor. `Tile.bridgeOpeningTimer` and `PushableBlockFire.tile`
@@ -7671,6 +7751,11 @@ export function createLevelRun({
         // `SealController` behind it is 181 more, and the observation
         // stream sees neither — so this costs the tape NO ticks and the
         // evidence is the game's own `dead_frames` counter.
+        // ⛓ R8 slice 8: 150 of phase A and 181 of `SealController`, and the
+        // clock spends both — `sealCollections` has recorded the number since
+        // R5 slice 9 and nothing had a use for it.
+        clock.spend(CEREMONY_DEAD_FRAMES.total, 'ceremony', `sealpiece ${sealPieceFrom}`,
+            ticksCompleted);
         sealCollections.push({
             t: ticksCompleted + 1,
             level,
@@ -8331,6 +8416,10 @@ export function createLevelRun({
                 + 'all. Press outside the freeze.');
         }
         ticksCompleted++;
+        // ⛓ R8 slice 8: a frozen tick is still one `Game.update()`, and
+        // `time += timeRate` sits below the `blackCover` gate, not inside the
+        // freeze — so the clock advances here exactly as it does on a live one.
+        clock.tick();
         // The game keeps updating every non-Mobile entity through a freeze,
         // so a Button under the frozen player stays pressed and a Lock's fade
         // keeps running. Unobservable on R3's route — no ceremony is near a
@@ -8698,7 +8787,7 @@ export function createLevelRun({
             Object.assign(d, r.state);
             if (r.event === 'ceremony') {
                 const frames = sealControllerTicks();
-                frozenFramesOwed += frames;
+                spendFrozen(frames, `door-ceremony ${d.id}`);
                 frozen = true;
                 doorCeremonies.push({
                     t: ticksCompleted, level, id: d.id, frames,
@@ -8967,7 +9056,32 @@ export function createLevelRun({
          * the caller that knows how many loads its window has, because this
          * module does not.
          */
-        get frozenFramesOwed() { return frozenFramesOwed; },
+        get frozenFramesOwed() { return clock.frozenFrames; },
+        /**
+         * ⛓⛓⛓ R8 SLICE 8: `Game.time` AS THIS TICK'S SPINNER READS IT.
+         *
+         * The value at the TOP of the frame `advance` is about to step, which
+         * is the instant `Spinner.update` evaluates
+         * `(Game.time % 45) / 45 · 2π` — `Game.update` runs `super.update()`
+         * ABOVE `time += timeRate`, so every entity in a frame reads what the
+         * previous frame left.
+         *
+         * ⛔ `null` IS A REAL ANSWER and its reason is `gameTimeRefusal`. A
+         * consumer that treated it as a number would be predicting a hammer
+         * phase from a clock the boot never declared — the permissive refusal
+         * this whole ingredient exists to avoid.
+         */
+        get gameTime() { return clock.now(); },
+        /** Why the clock is `null`, or `null` if it is running. */
+        get gameTimeRefusal() { return clockRefusal; },
+        /** Every dead-frame span the run has spent, with its kind and reason. */
+        get deadFrameSpans() { return clock.spans; },
+        /**
+         * ⛓ EVERY frame this run says the game spent that the tape did not
+         * tick through — the load fades and the ceremonies as well as the
+         * freezes. `frozenFramesOwed` is the subset that predates this slice.
+         */
+        get deadFramesOwed() { return clock.deadFrames; },
         /**
          * Ticks the tape's own `equips` name that the run never reached.
          *
@@ -10767,7 +10881,7 @@ export function createLevelRun({
                 })) {
                     wandFadeSpent = true;
                     const fade = wandFadeFreezeTicks();
-                    frozenFramesOwed += fade;
+                    spendFrozen(fade, 'wand-approach-fade');
                     wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
                 }
             }
@@ -10789,6 +10903,7 @@ export function createLevelRun({
                     ceremonyStarts.push({
                         t: ticksCompleted, level, tag: 'seed', runtime: true,
                     });
+                    spendCeremonyPhaseA('seed');
                     ceremony = {
                         pickup: { tag: 'seed', x: seed.ex, y: seed.ey, runtime: true },
                         level,
@@ -10816,6 +10931,7 @@ export function createLevelRun({
                     ceremonyStarts.push({
                         t: ticksCompleted, level, tag: hit.tag ?? 'pickup', runtime: false,
                     });
+                    spendCeremonyPhaseA(hit.tag ?? 'pickup');
                     ceremony = {
                         pickup: hit,
                         level,
@@ -10880,7 +10996,7 @@ export function createLevelRun({
                      * read this window as a dead bot (§12.14a).
                      */
                     const fade = coverFadeFrames();
-                    frozenFramesOwed += fade;
+                    spendFrozen(fade, `seed-cover-fade ${ceremony.seed.id}`);
                     seedFades.push({
                         t: ticksCompleted, level, id: ceremony.seed.id,
                         arm: ceremony.seed.arm, fadeFrames: fade,
@@ -10980,6 +11096,13 @@ export function createLevelRun({
                     // contact, which is the whole difference between a real
                     // collection and R0's grant.
                     collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
+                    // ⛓⛓ R8 slice 8: and the ONE pickup whose `removed()` costs a
+                    // dead frame of its own — `Sword.removed()` adds `Help(3)`,
+                    // which raises the freeze for exactly as long as it takes
+                    // `Bot.autoAdvance()` to press through it
+                    // (`gameClock.PICKUP_HELP_DEAD_FRAMES`, measured twice on the
+                    // committed roster before this line existed).
+                    spendPickupHelp(ceremony.pickup.tag);
                     // ⛓⛓ R7 slice 6: and the `Game.setPersistence(tag, false)`
                     // the same `removed()` runs. `persistTag` is present only
                     // for the fourteen classes that write it
@@ -11594,6 +11717,7 @@ export function createLevelRun({
                 }
             }
             ticksCompleted++;
+            clock.tick();
             // ── ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LAST ────────────────
             // `Game.update` is `super.update(); … view();`, so the camera
             // reads the position every entity has just finished writing —

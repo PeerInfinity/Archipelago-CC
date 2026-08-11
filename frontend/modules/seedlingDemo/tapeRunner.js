@@ -350,6 +350,23 @@ export function createTapeStepper(tape, opts = {}) {
              */
             frozenFramesOwed: run ? run.frozenFramesOwed : 0,
             /**
+             * ⛓⛓⛓ R8 slice 8: EVERY dead frame, not just the freezes — the
+             * room-load fades and a ceremony's phase A as well.
+             *
+             * `frozenFramesOwed` above is the subset that predates the clock,
+             * and its own docblock says the caller has to add the other two.
+             * This is the sum, so a caller that wants "how many engine frames
+             * does this tape really spend" no longer has to know how many
+             * builds it has (`verify-seedling-bot-differential`'s deadline is
+             * exactly that caller).
+             */
+            deadFramesOwed: run ? run.deadFramesOwed : 0,
+            /** The spans behind it — `{frames, kind, why, t}` — for attribution. */
+            deadFrameSpans: run ? run.deadFrameSpans : [],
+            /** `Game.time` at the run's terminal tick, or `null` if undeclared. */
+            gameTime: run ? run.gameTime : null,
+            gameTimeRefusal: run ? run.gameTimeRefusal : 'no v2 run',
+            /**
              * ⛓ R5 slice 10: the armed-pulser ledgers, forwarded.
              *
              * `pulserHits` is every tick a ring fired; `pulserPlayerHits` is
