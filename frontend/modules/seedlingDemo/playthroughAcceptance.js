@@ -51,7 +51,9 @@ import {
     R7_GOAL_LEDGER, SEAM_SIGNATURE, goalEarnedWitness, r7GoalCriteria, r7GoalFindings,
     seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
 } from './r7Acceptance.js';
-import { PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT } from './playthroughWalk.js';
+import {
+    PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, chainKind, chainPolicy,
+} from './playthroughWalk.js';
 
 /**
  * Two LATCHES compared field by field — the ending-state claim, and the
@@ -297,6 +299,34 @@ export function witnessedDespawnFindings(chain, tapes) {
 export function chainGoalFindings(chain, tapes, replayed) {
     const declared = [...(chain.earns ?? [])].sort();
     const rows = [];
+    /**
+     * ⛓⛓⛓ R8 SLICE 0: A STAGED BOOT CAN DECLARE A FLAG; IT CANNOT EARN ONE.
+     *
+     * `goalEarnedWitness` asks whether a collectible went NOT-HELD to HELD
+     * between a segment's own boot block and its own latch, and a declaration
+     * cannot fake that flip — which is exactly why the measurement is still
+     * WORTH TAKING for a staged chain. What a staged boot skips is the
+     * REACHING: the campaign's claim is that the run got to the item
+     * honestly, and a segment that boots post-sword did not.
+     *
+     * ⇒ the rows are still DERIVED and still printed, and every one of them
+     * is marked skipped with the reason named. REPORTED, never CREDITED.
+     * (Trap 119 again: dropping the rows for a staged chain would make an
+     * uncredited ledger and an empty one print the same thing.)
+     */
+    const credits = chainPolicy(chain).goalLedgerCredit;
+    const report = (row) => {
+        if (credits) return row;
+        return {
+            ...row,
+            ok: true,
+            skipped: true,
+            detail: `${row.detail} — ⚠ REPORTED, NOT CREDITED: ${chain.id} is a `
+                + `${chainKind(chain)} chain, and a staged boot can DECLARE a flag but `
+                + 'cannot have EARNED it, because it skips the reaching. Earning stays '
+                + 'the custody chains\' claim.',
+        };
+    };
     const earnedBy = {};
     for (const name of chain.segments) {
         const t = tapes.get(name);
@@ -319,17 +349,17 @@ export function chainGoalFindings(chain, tapes, replayed) {
         const ledger = R7_GOAL_LEDGER.find((r) => r.id === id);
         const found = ledger
             && derived.get(`${ledger.id} (${ledger.kind}) is EARNED inside a driven segment`);
-        rows.push(found ?? {
+        rows.push(report(found ?? {
             name: `chain ${chain.id}: "${id}" is declared EARNED and is not a ledger row`,
             ok: false,
             detail: `R7_GOAL_LEDGER has no row "${id}" — a chain claiming a collectible `
                 + 'the census does not carry is a claim nothing can check',
-        });
+        }));
     }
     const measured = Object.keys(earnedBy).sort();
     const extra = measured.filter((id) => !declared.includes(id));
     const missing = declared.filter((id) => !measured.includes(id));
-    rows.push({
+    rows.push(report({
         name: `chain ${chain.id}: ⛓ the EARNED set is exactly what the chain declares`,
         ok: extra.length === 0 && missing.length === 0,
         detail: extra.length === 0 && missing.length === 0
@@ -338,7 +368,7 @@ export function chainGoalFindings(chain, tapes, replayed) {
                 + `${missing.length ? `DECLARED but not earned: ${missing.join(', ')}. ` : ''}`
                 + 'A chain that picks something up without saying so is a walk nobody '
                 + 'reviewed; one that declares what it does not earn is a claim nobody met',
-    });
+    }));
     const criteria = r7GoalCriteria(earnedBy, roster);
     rows.push({
         name: `chain ${chain.id}: the goal ledger stands at ${criteria.earned}/`
@@ -393,22 +423,41 @@ export function chainFindings(chain, tapes, replayed) {
     // boot (`Main.as:50-51`) and declares NO seam block — there is no
     // predecessor to inherit from, and saying so is the base case of the
     // induction the rest of this function is.
+    //
+    // ⛓⛓ R8 SLICE 0: A `staged` CHAIN SKIPS IT — AND SAYS SO. A staged
+    // chain's segment 1 boots a DECLARED state on purpose, so asserting the
+    // TRUE INITIAL BOOT would be asserting the opposite of what the chain is
+    // for. The row is still EMITTED, marked skipped, with the reason named:
+    // trap 119's law is that a claim quietly absent reads exactly like a
+    // claim that passed, and this is the first place a new chain kind could
+    // make one disappear.
     const first = tape(chain.segments[0]);
-    const bootsInitial = first.boot.level === TRUE_INITIAL_BOOT.level
-        && first.boot.x === TRUE_INITIAL_BOOT.x && first.boot.y === TRUE_INITIAL_BOOT.y;
-    add(`chain ${chain.id}: segment 1 boots the TRUE INITIAL STATE and inherits nothing`,
-        bootsInitial && first.seam === null
-        && first.save.keys.length === 0 && first.save.totem_parts.length === 0
-        && first.save.seal_parts.length === 0 && first.grants.length === 0
-        // ⛓ R7 slice 6e: and no v10 removal either. A segment 1 that BOOTED
-        // a body out of the world would be the custody claim's exact
-        // failure, one field newer than the one this line was written for.
-        && first.persistence.length === 0 && (first.despawn ?? []).length === 0,
-        `boot ${JSON.stringify(first.boot)} (want ${JSON.stringify(TRUE_INITIAL_BOOT)}), `
-        + `seam ${first.seam === null ? 'none' : JSON.stringify(first.seam)}, `
-        + `${first.grants.length} grant(s), ${first.persistence.length} clear(s), `
-        + `save {keys: ${first.save.keys.length}, totem: ${first.save.totem_parts.length}, `
-        + `seals: ${first.save.seal_parts.length}}`);
+    if (!chainPolicy(chain).custodyBaseCase) {
+        add(`chain ${chain.id}: the custody base case is SKIPPED — this is a `
+            + `${chainKind(chain)} chain`, true,
+        `segment 1 (${chain.segments[0]}) boots ${JSON.stringify(first.boot)} by `
+            + 'DECLARATION, which is what a staged chain is: per-segment verification '
+            + 'from any boot the tape declares. Custody is not claimed here — the '
+            + 'seams between its own segments, the witnessed-clear/despawn laws and '
+            + 'the calm-arrival requirement all still are.');
+        found[found.length - 1].skipped = true;
+    } else {
+        const bootsInitial = first.boot.level === TRUE_INITIAL_BOOT.level
+            && first.boot.x === TRUE_INITIAL_BOOT.x && first.boot.y === TRUE_INITIAL_BOOT.y;
+        add(`chain ${chain.id}: segment 1 boots the TRUE INITIAL STATE and inherits nothing`,
+            bootsInitial && first.seam === null
+            && first.save.keys.length === 0 && first.save.totem_parts.length === 0
+            && first.save.seal_parts.length === 0 && first.grants.length === 0
+            // ⛓ R7 slice 6e: and no v10 removal either. A segment 1 that BOOTED
+            // a body out of the world would be the custody claim's exact
+            // failure, one field newer than the one this line was written for.
+            && first.persistence.length === 0 && (first.despawn ?? []).length === 0,
+            `boot ${JSON.stringify(first.boot)} (want ${JSON.stringify(TRUE_INITIAL_BOOT)}), `
+            + `seam ${first.seam === null ? 'none' : JSON.stringify(first.seam)}, `
+            + `${first.grants.length} grant(s), ${first.persistence.length} clear(s), `
+            + `save {keys: ${first.save.keys.length}, totem: ${first.save.totem_parts.length}, `
+            + `seals: ${first.save.seal_parts.length}}`);
+    }
 
     // ── 1. THE ARITHMETIC — R1's claim, kept ──────────────────────────
     const sum = chain.segments.reduce((n, name) => n + tape(name).tick_count, 0);

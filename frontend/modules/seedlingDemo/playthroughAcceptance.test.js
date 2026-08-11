@@ -12,9 +12,9 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-    L5_ARROW_BAIT, L6_BOB_DROWN, PLAYTHROUGH_CHAINS, PlaythroughError, TRUE_INITIAL_BOOT,
-    assertChainsWellFormed, assertWalkUnits, isPlaythroughSegment,
-    playthroughSegmentNames, playthroughTapeNames, walkGroups,
+    CHAIN_KINDS, L5_ARROW_BAIT, L6_BOB_DROWN, PLAYTHROUGH_CHAINS, PlaythroughError,
+    TRUE_INITIAL_BOOT, assertChainsWellFormed, assertWalkUnits, chainKind, chainPolicy,
+    isPlaythroughSegment, playthroughSegmentNames, playthroughTapeNames, walkGroups,
 } from './playthroughWalk.js';
 import {
     chainFindings, chainGoalFindings, latchAgreementFindings, witnessedClearFindings,
@@ -166,11 +166,45 @@ function buildChain(mutate = {}) {
     if (mutate.replayed) mutate.replayed(replayed);
     const chain = {
         id: 'test', headline: 'H', segments: ['S1', 'S2'], cuts: [CUT], endsAt: END,
+        // ⛓ R8 slice 0: undefined by default, which is what makes the
+        // `custody` default the thing under test rather than a setting.
+        ...(mutate.kind === undefined ? {} : { kind: mutate.kind }),
     };
     return chainFindings(chain, tapes, replayed);
 }
 
 const reds = (f) => f.filter((r) => !r.ok).map((r) => r.name);
+
+/**
+ * ⛓ R8 slice 0: the goal-ledger harness with a KIND knob. Same shape as the
+ * R7 block's `goalChain` — segment 2 picks the sword up, so it boots without
+ * the flag and latches with it plus the `{10,0}` clear `Sword.removed()`
+ * writes — with the chain's `kind` as the only extra dial. `undefined` means
+ * the entry declares no kind at all, which is what makes `custody` the
+ * DEFAULT under test rather than a setting.
+ */
+function goalChainKind(kind, earns = ['sword@L10']) {
+    const CUT2 = 40;
+    const HELD = {
+        'save.hasSword': true,
+        'save.levelPersistence': [{ level: 10, tag: 0 }],
+    };
+    const before = latchAt({ 'latch.tick': CUT });
+    const after = latchAt({ 'latch.tick': CUT2, ...HELD });
+    const tapes = new Map([
+        ['S1', baseTape({ boot: { ...TRUE_INITIAL_BOOT }, tick_count: CUT })],
+        ['S2', baseTape({ ...segmentBootFromLatch(before), tick_count: CUT2 })],
+    ]);
+    const replayed = new Map([
+        ['S1', { stream: stream(0, CUT), status: {}, seam: before }],
+        ['S2', { stream: stream(0, CUT2), status: {}, seam: after }],
+    ]);
+    return chainGoalFindings({
+        id: 'goal-kind', headline: 'H', segments: ['S1', 'S2'],
+        cuts: [CUT], endsAt: CUT + CUT2, earns,
+        ...(kind === undefined ? {} : { kind }),
+    }, tapes, replayed);
+}
 
 describe('playthroughWalk — the chain as data', () => {
     // ⛔⛔ AGAINST THE REAL ROSTER ON DISK, and it must be: passing a roster
@@ -719,6 +753,7 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         const chain = {
             id: 'goal', headline: 'H', segments: ['S1', 'S2'],
             cuts: [CUT], endsAt: CUT + CUT2, earns: mutate.earns ?? ['sword@L10'],
+            ...(mutate.kind === undefined ? {} : { kind: mutate.kind }),
         };
         return chainGoalFindings(chain, tapes, replayed);
     }
@@ -774,3 +809,166 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(chain.earns).toEqual(['sword@L10', 'chest@L11']);
     });
 });
+
+/**
+ * ⛓⛓⛓ R8 SLICE 0 TRACK D — THE STAGED CHAIN KIND (kickoff §3.6, ⚖ §6.1).
+ *
+ * R8's solver verifies segments INDIVIDUALLY from a DECLARED boot. Those are
+ * a different kind of chain from R7's custody ones, and the difference is a
+ * POLICY TABLE rather than an `if` — because trap 119's law is that a claim
+ * quietly absent reads exactly like a claim that passed, and a new kind is
+ * precisely the machinery that could make one disappear.
+ */
+describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
+    /**
+     * ⛔⛔ BOTH EXISTING CHAINS ARE BYTE-UNCHANGED, AND THIS IS THE EXACT
+     * ASSERTION RATHER THAN A PROXY FOR IT: neither declares a `kind` at all,
+     * so the entries on disk did not gain a character. "Asserted, not
+     * assumed" is the charge; a test that only checked `chainKind(c) ===
+     * 'custody'` would pass just as well if someone had TYPED `kind:
+     * 'custody'` into both, which is not the same claim.
+     */
+    it('⛔ neither existing chain declares a kind — the entries are byte-unchanged', () => {
+        for (const c of PLAYTHROUGH_CHAINS) {
+            expect(Object.prototype.hasOwnProperty.call(c, 'kind'), c.id).toBe(false);
+            expect(chainKind(c)).toBe('custody');
+            expect(chainPolicy(c).custodyBaseCase).toBe(true);
+            expect(chainPolicy(c).goalLedgerCredit).toBe(true);
+        }
+    });
+
+    it('the policy table is TOTAL and every kind is tallied, including a zero', () => {
+        const r = assertChainsWellFormed();
+        expect(Object.keys(r.byKind).sort()).toEqual(Object.keys(CHAIN_KINDS).sort());
+        expect(r.byKind.custody).toBe(PLAYTHROUGH_CHAINS.length);
+        // ⛓ ZERO, and it is PRINTED. A kind nobody uses must be
+        // distinguishable from a kind nobody implemented.
+        expect(r.byKind.staged).toBe(0);
+    });
+
+    it('⛔ MUTATION: an unknown kind THROWS by name rather than falling through', () => {
+        expect(() => chainKind({ id: 'x', kind: 'freestyle' })).toThrow(PlaythroughError);
+        expect(() => chainKind({ id: 'x', kind: 'freestyle' })).toThrow(/the kinds are/);
+        expect(() => chainKind({ id: 'x', kind: 'freestyle' }))
+            .toThrow(/quietly acquire a custody claim/);
+    });
+
+    /**
+     * ⛓ A CUSTODY CHAIN OF ONE HAS NO SEAM AND IS REFUSED; A STAGED CHAIN OF
+     * ONE IS THE POINT OF THE KIND. Per-segment verification is exactly a
+     * one-segment chain, and it still gets the witnessed-clear/despawn laws
+     * and the calm-arrival requirement — the gap kickoff §2.4 measured for
+     * UNCHAINED tapes.
+     */
+    it('the minimum segment count is per KIND, and both directions are checked', () => {
+        expect(CHAIN_KINDS.custody.minSegments).toBe(2);
+        expect(CHAIN_KINDS.staged.minSegments).toBe(1);
+    });
+
+    it('⛓ a staged chain SKIPS the custody base case and NAMES the reason', () => {
+        const f = buildChain({ kind: 'staged' });
+        const skipped = f.find((r) => r.name.includes('custody base case is SKIPPED'));
+        expect(skipped, 'the skip must be REPORTED, never silently absent').toBeTruthy();
+        expect(skipped.ok).toBe(true);
+        expect(skipped.skipped).toBe(true);
+        expect(skipped.detail).toMatch(/by DECLARATION/);
+        // …and the custody row itself is gone, which is the other half.
+        expect(f.some((r) => r.name.includes('boots the TRUE INITIAL STATE'))).toBe(false);
+    });
+
+    it('a custody chain still asserts the base case, unskipped', () => {
+        const f = buildChain();
+        const row = f.find((r) => r.name.includes('boots the TRUE INITIAL STATE'));
+        expect(row.ok).toBe(true);
+        expect(row.skipped).toBeUndefined();
+        expect(f.some((r) => r.name.includes('custody base case is SKIPPED'))).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ THE LAWS A STAGED CHAIN KEEPS. This is the half that closes kickoff
+     * §2.4's measured gap: an UNCHAINED solver tape's v9 `at`-clears and v10
+     * despawns are never witnessed at all, because `witnessedClearFindings`
+     * iterates CHAINS. A staged chain brings them back under the law.
+     */
+    it('⛓ a staged chain KEEPS the witnessed-clear and witnessed-despawn laws', () => {
+        const f = buildChain({ kind: 'staged' });
+        expect(f.some((r) => r.name.includes('no tape declares a mid-run clear'))).toBe(true);
+        expect(f.some((r) => r.name.includes('no tape declares a mid-run despawn'))).toBe(true);
+    });
+
+    it('⛓ a staged chain KEEPS its internal seams and its arithmetic', () => {
+        const f = buildChain({ kind: 'staged' });
+        expect(f.some((r) => r.name.includes('THE SEAM'))).toBe(true);
+        expect(f.some((r) => r.name.includes('tick counts sum to the headline'))).toBe(true);
+        expect(f.some((r) => r.name.includes('CALM ARRIVAL'))).toBe(true);
+        expect(reds(f)).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔⛔ A STAGED BOOT CAN DECLARE A FLAG; IT CANNOT EARN ONE.
+     *
+     * The measurement is still TAKEN — `goalEarnedWitness` asks for a flip
+     * between boot and latch, which a declaration cannot fake — but the row
+     * is REPORTED rather than CREDITED, because what a staged boot skips is
+     * the REACHING, and the campaign's claim is that the run got there.
+     */
+    it('⛓⛓ a staged chain REPORTS its ledger rows and never CREDITS them', () => {
+        const custody = goalChainKind(undefined);
+        const staged = goalChainKind('staged');
+        const cRow = custody.find((r) => r.name.startsWith('sword@L10'));
+        const sRow = staged.find((r) => r.name.startsWith('sword@L10'));
+        expect(cRow.ok).toBe(true);
+        expect(cRow.skipped).toBeUndefined();
+        expect(sRow.ok).toBe(true);
+        expect(sRow.skipped).toBe(true);
+        expect(sRow.detail).toMatch(/REPORTED, NOT CREDITED/);
+        expect(sRow.detail).toMatch(/cannot have EARNED it/);
+    });
+
+    /**
+     * ⛔ AND A STAGED CHAIN'S RED ROWS GO QUIET TOO — deliberately, and this
+     * is the sharpest edge of the ruling. A declared-but-unearned row is a
+     * FAILURE for a custody chain and a REPORT for a staged one, because a
+     * staged chain never claimed to earn anything. Asserted in both
+     * directions so the difference is a decision rather than a side effect.
+     */
+    it('⛔ a declared-but-unearned row is RED for custody and REPORTED for staged', () => {
+        const custody = goalChainKind(undefined, ['sword@L10', 'shield@L20']);
+        expect(reds(custody).some((n) => n.includes('EARNED set is exactly'))).toBe(true);
+        const staged = goalChainKind('staged', ['sword@L10', 'shield@L20']);
+        expect(reds(staged)).toEqual([]);
+        const row = staged.find((r) => r.name.includes('EARNED set is exactly'));
+        expect(row.skipped).toBe(true);
+        expect(row.detail).toMatch(/DECLARED but not earned: shield@L20/);
+        expect(row.detail).toMatch(/REPORTED, NOT CREDITED/);
+    });
+});
+
+/**
+ * ── THE MUTATION LIST FOR THE CHAIN KIND ──────────────────────────────
+ *
+ *  1. type `kind: 'custody'` into either existing chain entry
+ *       → `neither existing chain declares a kind` reds — which is the
+ *         byte-unchanged claim asserted exactly rather than by proxy
+ *  2. declare an unknown kind
+ *       → `an unknown kind THROWS by name` reds
+ *  3. flip `CHAIN_KINDS.staged.custodyBaseCase` to true
+ *       → `a staged chain SKIPS the custody base case` reds (the row
+ *         disappears and the TRUE INITIAL STATE row returns)
+ *  4. drop the skipped ROW instead of emitting it
+ *       → same test reds on `toBeTruthy()` — trap 119's exact shape: a
+ *         silently absent claim reads like one that passed
+ *  5. flip `CHAIN_KINDS.staged.goalLedgerCredit` to true
+ *       → `a staged chain REPORTS its ledger rows and never CREDITS them` reds
+ *  6. make `witnessedClearFindings` skip staged chains
+ *       → `a staged chain KEEPS the witnessed-clear …` reds
+ *  7. give staged chains `minSegments: 2`
+ *       → `the minimum segment count is per KIND` reds
+ *  8. drop the zero tally from `byKind`
+ *       → `the policy table is TOTAL and every kind is tallied` reds
+ *
+ * ⚠ BOUNDED VACUITY, NAMED: no `staged` chain exists on disk yet, so rows
+ * 3–7 are exercised only against SYNTHETIC chains. That is the honest state
+ * of the kind at slice 0 — slice 2 is the first producer, and its as-built
+ * is where these rows stop being synthetic.
+ */

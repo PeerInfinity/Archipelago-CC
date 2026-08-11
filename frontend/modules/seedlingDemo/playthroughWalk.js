@@ -664,6 +664,102 @@ export function assertWalkUnits(chain) {
 export const TRUE_INITIAL_BOOT = Object.freeze({ level: 0, x: 80, y: 128 });
 
 /**
+ * ⛔⛔⛔ THE CHAIN KINDS, AS A POLICY TABLE — R8 slice 0 track D, ⚖ ruled
+ * (kickoff §3.6 and §6.1).
+ *
+ * R7's chains are CUSTODY chains: segment 1 boots the game's own boot, every
+ * later segment inherits its predecessor's latch through the seam, and what
+ * the chain earns it earned. R8's solver produces something different —
+ * segments verified INDIVIDUALLY from a DECLARED boot (items granted via save
+ * flags, persistence pre-cleared, any RNG), because the bot is RNG-robust and
+ * a tape is not, and a per-segment verification declares its boot. Those are
+ * STAGED chains.
+ *
+ * ── ⛔ WHY THIS IS A TABLE AND NOT TWO `if` STATEMENTS ─────────────────
+ *
+ * Trap 119 is this arc's most expensive law and it has now been proved
+ * TWICE: a ledger with no caller reads exactly like a ledger that is empty.
+ * A `kind` field consumed by an `if` buried in one function would be the same
+ * shape — so every consequence of the kind is a ROW HERE, `chainPolicy`
+ * resolves it, and `chainFindings` DERIVES a named, non-failing row from each
+ * consequence it skips. A staged chain's custody row is REPORTED as skipped
+ * WITH THE REASON, never silently absent.
+ *
+ * ── WHAT A STAGED CHAIN KEEPS, AND WHY ────────────────────────────────
+ *
+ *  · **seams between its own segments** — a staged chain of 2+ segments
+ *    still measures every internal seam. Its BOOT is declared; its
+ *    CONTINUITY is not, and that is exactly the claim a seam makes.
+ *  · **the witnessed-clear and witnessed-despawn laws** — §2.4 of the
+ *    kickoff measured the gap this closes: `witnessedClearFindings` iterates
+ *    CHAINS, so an unchained solver tape's v9 `at`-clears and v10 despawns
+ *    are never witnessed at all. Letting solver segments form a staged chain
+ *    is what brings them back under the law.
+ *  · **calm arrivals** — `isPlaythroughSegment` is chain-derived, so a staged
+ *    segment is required to end calm the same way a custody one is.
+ *    Assembly will demand it; the policy enforces it now.
+ *
+ * ── WHAT IT SKIPS ─────────────────────────────────────────────────────
+ *
+ *  · **the custody base case** — segment 1 of a staged chain boots a DECLARED
+ *    state on purpose. Asserting it boots `TRUE_INITIAL_BOOT` would be
+ *    asserting the opposite of what the chain is for.
+ *  · **goal-ledger CREDIT** — ⛔ A STAGED BOOT CAN DECLARE A FLAG; IT CANNOT
+ *    EARN ONE. `goalEarnedWitness` asks whether a collectible went NOT-HELD
+ *    to HELD between a segment's boot and its latch, which a declaration
+ *    cannot fake — but the campaign's claim is that the run reached the item
+ *    honestly, and a staged boot skips the reaching. So a staged chain's
+ *    ledger rows are REPORTED and never CREDITED; earning stays the custody
+ *    chains' claim.
+ */
+export const CHAIN_KINDS = Object.freeze({
+    custody: Object.freeze({
+        custodyBaseCase: true,
+        goalLedgerCredit: true,
+        minSegments: 2,
+        why: 'R7\'s claim: segment 1 boots the game\'s own boot and every later '
+            + 'segment inherits its predecessor\'s latch, so the whole chain is one '
+            + 'run the game could have played',
+    }),
+    staged: Object.freeze({
+        custodyBaseCase: false,
+        goalLedgerCredit: false,
+        // ⚠ ONE IS LEGAL HERE, and that is the point of the kind. R8 verifies
+        // solver segments INDIVIDUALLY; a chain of one still gets the
+        // witnessed-clear/despawn laws and the calm-arrival requirement,
+        // which is precisely the gap kickoff §2.4 measured for unchained
+        // tapes. A custody chain of one would have no seam, and a seam is
+        // the whole custody claim — hence the two minimums differ.
+        minSegments: 1,
+        why: 'R8\'s per-segment verification: the boot is DECLARED, so custody is not '
+            + 'claimed and the ledger is reported rather than credited — but the seams '
+            + 'between its own segments, the witnessed-clear/despawn laws and the '
+            + 'calm-arrival requirement all still hold',
+    }),
+});
+
+/**
+ * A chain's kind, defaulting to `custody`. ⛔ THE DEFAULT IS WHAT KEEPS BOTH
+ * EXISTING CHAINS BYTE-UNCHANGED: neither declares a `kind` at all, which a
+ * test asserts rather than assumes.
+ */
+export function chainKind(chain) {
+    const k = chain.kind ?? 'custody';
+    if (!CHAIN_KINDS[k]) {
+        throw new PlaythroughError(`chain "${chain.id}" declares kind "${k}"; the kinds `
+            + `are ${Object.keys(CHAIN_KINDS).join(', ')}. An unknown kind would fall `
+            + 'through to whichever branch was written last, which is how a staged boot '
+            + 'would quietly acquire a custody claim.');
+    }
+    return k;
+}
+
+/** The policy row for a chain's kind — one lookup, one table. */
+export function chainPolicy(chain) {
+    return CHAIN_KINDS[chainKind(chain)];
+}
+
+/**
  * ⛔ THE CHAINS, ORDERED. One entry per chain; each names its headline and
  * its segments IN ORDER.
  *
@@ -1252,11 +1348,24 @@ export function isPlaythroughSegment(name) {
  */
 export function assertChainsWellFormed(roster = fixtureNames()) {
     const seen = new Set();
+    const kinds = {};
     for (const chain of PLAYTHROUGH_CHAINS) {
-        if (chain.segments.length < 2) {
+        // ⛓ R8 slice 0: the kind is resolved FIRST, because two of the
+        // invariants below branch on it. `chainKind` refuses an unknown kind
+        // by name rather than letting it fall through to whichever arm was
+        // written last.
+        const kind = chainKind(chain);
+        const policy = CHAIN_KINDS[kind];
+        kinds[kind] = (kinds[kind] ?? 0) + 1;
+        if (chain.segments.length < policy.minSegments) {
             throw new PlaythroughError(
-                `chain "${chain.id}" has ${chain.segments.length} segment(s); a chain `
-                + 'with fewer than two has no seam, and a seam is the whole claim');
+                `chain "${chain.id}" (kind ${kind}) has ${chain.segments.length} `
+                + `segment(s) and its kind needs at least ${policy.minSegments}. `
+                + (kind === 'custody'
+                    ? 'A custody chain with fewer than two has no seam, and a seam is '
+                        + 'the whole claim.'
+                    : 'A staged chain may be a single segment — that is what '
+                        + 'per-segment verification is — but it may not be empty.'));
         }
         if (chain.cuts.length !== chain.segments.length - 1) {
             throw new PlaythroughError(
@@ -1288,9 +1397,16 @@ export function assertChainsWellFormed(roster = fixtureNames()) {
         // never look at.
         assertWalkUnits(chain);
     }
+    // ⛔ THE PARTITION IS TOTAL AND IT IS ASSERTED, not counted by eye. Every
+    // kind in the table gets a tally — including a ZERO one — so a kind
+    // nobody uses is REPORTED rather than being indistinguishable from a kind
+    // nobody implemented (trap 119's shape, one table over).
+    const byKind = Object.fromEntries(
+        Object.keys(CHAIN_KINDS).map((k) => [k, kinds[k] ?? 0]));
     return {
         chains: PLAYTHROUGH_CHAINS.length,
         segments: playthroughSegmentNames().length,
         seams: PLAYTHROUGH_CHAINS.reduce((n, c) => n + c.segments.length - 1, 0),
+        byKind,
     };
 }

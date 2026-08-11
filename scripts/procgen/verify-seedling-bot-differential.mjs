@@ -1736,8 +1736,14 @@ try {
     // the `--only` selection — a narrowed sweep must not narrow this.
     try {
         const r = assertChainsWellFormed(allNames);
+        // ⛓ R8 slice 0: the KIND tally rides along, including a kind with
+        // ZERO chains. A kind nobody uses must be distinguishable from a kind
+        // nobody implemented — trap 119, reported where the gate can see it
+        // rather than only in the offline suite.
+        const kinds = Object.entries(r.byKind).map(([k, n]) => `${n} ${k}`).join(', ');
         check('the playthrough chains still name real fixtures', true,
-            `${r.chains} chain(s), ${r.segments} segment(s), ${r.seams} seam(s)`);
+            `${r.chains} chain(s) (${kinds}), ${r.segments} segment(s), `
+            + `${r.seams} seam(s)`);
     } catch (e) {
         check('the playthrough chains still name real fixtures', false, e.message);
     }
