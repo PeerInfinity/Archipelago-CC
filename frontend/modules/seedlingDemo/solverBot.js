@@ -545,7 +545,21 @@ function placementBlocker(run, resolved, contacts) {
     const b = hit.blocker ?? {};
     const tag = b.tag ?? b.cls?.as3 ?? b.name ?? null;
     if (typeof tag === 'string' && tag.startsWith('tile:')) return null;
-    return { kind: hit.kind, tag, id: b.id ?? `${tag ?? '?'}@${b.x ?? '?'},${b.y ?? '?'}` };
+    /**
+     * ⛔⛔ THE TARGET IS NOT ITS OWN BLOCKER, and G1 caught me: a CHEST is a
+     * Solid with a probe line, so a `collect-placement` naming one resolves to
+     * a placement that is inside a solid — itself. The first cut reported
+     * `chest@32,48` as the obstacle standing in the way of `chest@32,48` and
+     * refused L11, a room this solver has crossed since slice 2.
+     *
+     * ⇒ the question is what ELSE is in that cell. Asked by identity against
+     * the resolved target rather than by tag, because two chests in one room
+     * would be two different obstacles.
+     */
+    const id = b.id ?? `${tag ?? '?'}@${b.x ?? '?'},${b.y ?? '?'}`;
+    const own = t.id ?? `${t.tag ?? '?'}@${t.x},${t.y}`;
+    if (id === own || (b.x === t.x && b.y === t.y)) return null;
+    return { kind: hit.kind, tag, id };
 }
 
 /** The solver's planning options: the FULL bag, volumes on, live keys. */
