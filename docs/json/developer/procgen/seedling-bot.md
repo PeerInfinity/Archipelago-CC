@@ -6162,3 +6162,70 @@ L4 refuses with `proximity-hazard:button → 'hold', not registered this
 slice`; L8 with `pushableblock → 'shove', not registered` — the component
 frontier names the entity, the selector names the verb, and registering
 executors is adding rows to a proven seam.
+
+## R8 slice 3: the arrow meets a body, and a bounded refusal whose bound went false
+
+⛓⛓⛓ **THE FREE ORACLE WENT GREEN.** `stepArrow`'s `bodies` parameter had
+defaulted to `[]` since R7 slice 6b — the absence that scoped slice 1's enemy
+bridge by ROOM (trap 157). With the family built and `chaserRoomVerdict`
+widened, **all 324 `tapeRunner` cases replay byte-exact, including the three
+slice 1 measured RED** (`r7-act2-4`, `r7-act2-5`, `r7-act2-full`). Zero
+re-records. The model now kills L4's bob at t=114 (hits 1→2→3 at 47/81/114,
+every arrow between them refused by name on i-frames) and L5's three deaths
+take `totalEnemies()` to zero and OPEN `lock@48,112`.
+
+### The five hitables, and the removal outside the switch
+An arrow stops on ANYTHING it touches — the removal is `if (hits.length > 0)`,
+outside `Arrow.update`'s two-armed switch — so cover is a resource. The player
+is a STOP and never a bill (`PUZZLEMENT_HAZARDS.arrowtrap` has priced that
+damage since R7 slice 6b, and two funnels for one hit is two cost models); the
+live `"Enemy"` bodies are two rosters that are not interchangeable (a chaser at
+the position this run steps it to, a static census body at its placement); and
+cover is a FOURTH mover list, `collidesArrowCover`, whose three members equal
+the blast's today by coincidence of two AS3 classes and not by construction.
+
+### Death is three fenceposts, and who killed the body decides the third
+`startDeath` plays the "die" Spritemap and does NOT set `destroy`; `endAnim`
+does; `Mobile.death`'s eleven-tick fade removes the body after that — and
+`totalEnemies()` counts it through all of it. ⛓⛓⛓ `World.update` advances an
+entity's GRAPHIC after its own update, in the same iteration, outside the
+off-screen return and outside the freeze — and an `Arrow` is added at run time
+and PREPENDED, so it updates first. **An arrow's killing hit therefore lands
+before the body's own graphic update and the animation gets its first update on
+the killing tick; the Player updates LAST, so a press's would not.** One tick,
+and it decides when the count moves. ⛔ The FADE, by contrast, is *inside* the
+off-screen gate: a corpse the camera has lost stops fading and resumes when the
+camera returns.
+
+### The kill-lock consequence: a refusal became a check
+Slice 1 threw whenever a removal opened a `tset == -1` lock. L5's whole solve
+IS three deaths opening one, so the arm now COMPUTES the consequence and
+compares it against the tape's DECLARED v9 clear: a nil is the measurement that
+the scan ran, a declared opening passes with the tick banked, an UNDECLARED one
+throws by name. The declaration becomes a CHECK on both sides rather than an
+input nobody audits — and it immediately found that `r7-act2-5`'s `at: 737` is
+the phases block's END, not the clear's own tick, which the model can now
+tighten.
+
+### `hold` registered, and its length is an observation
+`runHold` gained an optional `until: {why, test}` — one implementation, not an
+executor with its own tick loop — so the policy holds `button@16,64` until the
+room's own ceiling has REMOVED the body and stops at t=149: the kill plus the
+die animation plus the fade, exactly. The hand leg says 200. The frontier then
+ADVANCES from the button to `pushableblock@32,64`, which is L4's real door.
+
+### ⛔ A bounded refusal is only as good as somebody re-checking its bound
+The first full-config run reddened on slice 1's PIT refusal, whose own words
+were *"no room this bridge steps has one"* — and this slice stepped L4, which
+has pits. The descent was BUILT rather than the room re-scoped: a schedule that
+REPLACES `super.update()` (lerp a tenth of the way to the tile centre, 0.05
+fade over 20 ticks), during which the body cannot damage the player at all.
+
+### What is ruled and what is next
+The shove DESTINATION, the bait stance, the timing escalation and the combat
+policy's decision order were all ⚖ RULED mid-slice (kickoff §11.8a): every
+executor's free parameters are DERIVED from the work order's post-condition and
+the room's transcribed mechanism data, never chosen by unstated policy; the
+ladder is **AVOID → TIME → BAIT → KILL**, each escalation a trace row naming the
+cheaper rung it refused. Slice 3b carries the shove executor, bait, timing and
+the L4/L5/L6/L8 battery.
