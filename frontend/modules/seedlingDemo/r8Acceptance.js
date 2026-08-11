@@ -2397,3 +2397,402 @@ export function assertSpinnerPressExposureIsMeasured(io) {
     }
     return { reaching: found.length, tapes: foundNames };
 }
+
+/**
+ * ⛔⛔⛔ R8 SLICE 7 — D2 COMPLETE: THE STANCE, THE FIGHT, AND THE WAY OUT.
+ * THE PREDICTION, COMMITTED BEFORE A LINE OF IT MOVES.
+ *
+ * The rung's last working slice. Slice 6 discharged `hasShield` and left
+ * three named work orders (§15.7): L18's stance annulus, L19's fight
+ * schedule plus a `keylock`, and L20's WESTWARD crossing — which is
+ * `touch`'s room. This slice takes all three and assembles them into the
+ * machinery's first MULTI-SEGMENT staged chain.
+ *
+ * ⚖ TWO RULINGS TAKEN BEFORE ANY DESIGN (orchestrator/Fable, 2026-08-11, in
+ * reply to this session's pre-design check-in). Both are recorded here as
+ * DATA rather than as prose, because a ruling nobody derives a consumer from
+ * is trap 119's shape:
+ *
+ *  1. **THE CHAIN'S ROUTE.** The charge's sketch — "L13's alcove → L18 → L19
+ *     → L20 → west to L13" — inherited the pre-§15.2 framing and is NOT a
+ *     route: `routeGraph` below is the measured D2 level graph, and **L13 has
+ *     no edge to L18**. Option A is RULED: three CONTIGUOUS staged segments,
+ *     L18 → L19 → L20, ending in L13. The chain ENDS in L13 and does not
+ *     begin there.
+ *  2. **THE FIGHT'S BLINDNESS IS PINNED, NOT CURED.**
+ *     `dangerMap.staticEnemyDanger` skips `contactPricing(...).kind ===
+ *     'boss'` BY NAME, and no other ingredient prices a ShieldBoss — so the
+ *     solver walks into the stab's own 48x16 band with no refusal at all.
+ *     A boss ingredient is REFUSED (the band is the fight's only stance;
+ *     forbidding it would seal the room — §14.2's own law), and the
+ *     blindness becomes an ASSERTION so a future ingredient reds this pin
+ *     instead of silently sealing a room whose solve predates it.
+ */
+export const R8_D2_COMPLETE = Object.freeze({
+    item: Object.freeze({
+        id: 'd2-complete',
+        what: 'derive L18\'s stance annulus and re-drive it HONEST (no `noDamage`), '
+            + 'fight the ShieldBoss on a schedule derived from its own window '
+            + 'arithmetic, register `keylock` and `touch`, cross L20 westward, and '
+            + 'assemble the three segments into ONE staged multi-segment chain',
+        why: 'the rung\'s boundary target is discharged, so what is left of D2 is three '
+            + 'computed work orders and the close. This is the slice that turns the '
+            + 'solver from a room-crosser into a campaign-crosser.',
+        cite: '§15.7 (the three work orders), ⚖ §15.7a (the mechanism graph and the '
+            + 'stance quantifier), ⚖ §11.8a (parameters from mechanism data), ⚖ §12.2 '
+            + '(the hypothesis quantifier and its two guards), §14.6a (the staged '
+            + '`clears` provenance), traps 85/93/113 (the fight), trap 150 (fight and '
+            + 'crossing are ONE segment), trap 16/§15.4 (a tape\'s budget is SPANS)',
+    }),
+
+    /**
+     * ⛔ ⚖ RULING 1's EVIDENCE, AS DATA — the D2 level graph, measured off the
+     * atlas this session before a line moved.
+     *
+     * `assertD2RouteGraph` re-derives every edge from the level source, so
+     * the claim "L13 has no edge to L18" is a MEASUREMENT of the running
+     * atlas and not a second reading of the recon that produced it (trap 97).
+     * The charge's own route text is carried in `charged` so the correction
+     * is legible as a correction rather than as a silent substitution.
+     */
+    routeGraph: Object.freeze({
+        charged: 'L13\'s alcove -> L18 (honest) -> L19 -> L20 (shield) -> west to L13',
+        ruled: 'THREE CONTIGUOUS SEGMENTS: L18 -> L19 -> L20, ending in L13',
+        edges: Object.freeze([
+            Object.freeze({ from: 13, to: 14, via: 'stairsdown@32,32' }),
+            Object.freeze({ from: 13, to: 20, via: 'stairsdown@96,32' }),
+            Object.freeze({ from: 13, to: 0, via: 'stairsup@64,144' }),
+            Object.freeze({ from: 18, to: 16, via: 'stairsdown@16,16' }),
+            Object.freeze({ from: 18, to: 19, via: 'teleporter@176,112' }),
+            Object.freeze({ from: 19, to: 20, via: 'stairsup@16,96' }),
+            Object.freeze({ from: 19, to: 18, via: 'teleporter@0,144' }),
+            Object.freeze({ from: 20, to: 19, via: 'stairsdown@192,48' }),
+            Object.freeze({ from: 20, to: 13, via: 'stairsup@16,48' }),
+        ]),
+        /**
+         * ⛔ THE TWO FACTS THAT MAKE THE CHARGED ROUTE UNWALKABLE, each with
+         * the instrument that says so.
+         */
+        why: Object.freeze([
+            Object.freeze({
+                claim: 'L13 has NO edge to L18',
+                instrument: '`assertD2RouteGraph` walks the atlas\'s own `to` attributes; '
+                    + 'the only L13->L18 path is L13->L14->L15->L16->L18, three rooms this '
+                    + 'slice is not charged with',
+                consequence: '`SEAM_CHANNELS` puts `level`/`playerPositionX`/'
+                    + '`playerPositionY` on the `boot` channel, so a chain with a gap '
+                    + 'between segment N\'s exit and segment N+1\'s boot reds the seam — a '
+                    + 'staged chain declares its FIRST boot and nothing else',
+            }),
+            Object.freeze({
+                claim: 'L13\'s own arrival into L20 lands INSIDE the alcove, behind '
+                    + '`lock@32,80`',
+                instrument: 'the atlas: `stairsdown@96,32 {to: 20, playerx: 32, playery: '
+                    + '48}` = tile (2,3), and the walkability probe puts `lock@32,80` at '
+                    + '(2,5) as the alcove\'s only door',
+                consequence: 'L13 -> L20\'s alcove as segment 1 is a DEAD END at the '
+                    + 'start: the alcove opens only once the buttonroom latches, which is '
+                    + 'the last thing the chain does. ⇒ the "L13\'s alcove first" reading '
+                    + 'is ruled out, not merely unused.',
+            }),
+        ]),
+        /**
+         * ⛔ AND `r8-solve-20` CANNOT BE THE CHAIN'S L20 SEGMENT. It leaves by
+         * the stairs it arrived on (`stairsdown@192,48 -> L19`, §15.2's own
+         * choice), so the segment after it would have to boot in L19 — the
+         * opposite direction. The charge pre-authorised the disposition and it
+         * is taken: a NEW L20 segment for the chain, `r8-solve-20` untouched
+         * as the standalone witness. Never bend a seam to fit a tape.
+         */
+        standaloneWitnessUntouched: 'r8-solve-20',
+    }),
+
+    /**
+     * ⛔⛔⛔ THE STEP-0 FINDING, FOUND BY DRIVING THE INSTRUMENT THIS SLICE
+     * WAS ABOUT TO LEAN ON — and it is a defect in what slice 6 shipped.
+     *
+     * `run.spinnerForecast(n)` builds `spinnerCtx()` **ONCE** and reuses it
+     * for the whole horizon. That is right for the things the ctx freezes on
+     * purpose (the pushables where the previous tick left them; the open
+     * activator set) and WRONG for the one field in it that is a **ONE-TICK
+     * TRANSIENT**: `beforeTypeFlip: firstTickInWorld`.
+     *
+     * `collidesSolid`'s `beforeTypeFlip` arm selects `objectSolids` instead
+     * of `solids` — the world as it exists on its very first live tick, when
+     * **no Tile is solid yet**. So a forecast taken on a level's FIRST tick
+     * runs its entire horizon in a room with no walls: every spinner flies
+     * straight through the geometry and never comes back.
+     *
+     * MEASURED, L18, `spinner@112,48`:
+     *
+     * ```
+     *   forecast taken after 0 driven ticks   first divergence at tick 51
+     *                                          driven y 20.6446 (reflected off
+     *                                          the row-0 Stone), forecast
+     *                                          y 19.9375 (through it)
+     *   forecast taken after 1 driven tick    NO divergence over 120 ticks
+     *   forecast taken after 2 / 10 ticks     NO divergence over 120 ticks
+     *   the 1,200-tick orbit, from tick 0     x reaches -751 and +968 in a
+     *                                          12-tile room
+     * ```
+     *
+     * ⛔ AND THE CONSEQUENCE IS THE ONE §15.3.3 BUILT THE INGREDIENT TO
+     * PREVENT. `dangerMap.spinnerDanger` is the `atEta` arm: it asks
+     * `run.spinnerForecast(horizon)` for the body at the cell's own ETA. On
+     * the first tick of a spinner room — which is exactly when the solver
+     * plans its first corridor — the forecast puts the bodies OUTSIDE the
+     * room, so the hammer disc overlaps nothing and the map calls the cell
+     * the body is actually in CALM. A wrong "open" gets you hit.
+     *
+     * ⇒ THE LAW, general: **a ctx snapshot may freeze STATE, but never a
+     * ONE-TICK TRANSIENT.** Freezing a transient does not make a forecast
+     * slightly stale; it makes the transient true for ever.
+     */
+    forecastTransient: Object.freeze({
+        instrument: 'run.spinnerForecast',
+        field: 'beforeTypeFlip',
+        source: 'levelRun.spinnerCtx() -> levelWorld.collidesSolid\'s '
+            + '`beforeTypeFlip ? objectSolids : solids`',
+        frozenCorrectly: Object.freeze(['pushables', 'openActivators', 'openBridges',
+            'frozen']),
+        frozenWrongly: 'beforeTypeFlip',
+        measured: Object.freeze({
+            level: 18,
+            body: 'spinner@112,48',
+            firstDivergenceTick: 51,
+            drivenY: 20.644660940672694,
+            forecastY: 19.937554159486147,
+            cleanWhenTakenAfterTicks: Object.freeze([1, 2, 10]),
+        }),
+        consumers: Object.freeze(['dangerMap.spinnerDanger (the atEta arm)',
+            'botDriverV2 (the block sweep\'s forecast)']),
+        /**
+         * ⛓ THE FIX IS NOT "REBUILD THE CTX EVERY STEP" — that would re-pay a
+         * `normalizeLive` per forecast tick and would also unfreeze the two
+         * things the block sweep deliberately holds still. It is to hand the
+         * TRANSIENT its own lifetime: the flag is true for forecast step 1
+         * iff it is true now, and false for every step after it.
+         */
+        fix: 'the transient gets its own lifetime — true on step 1 iff `firstTickInWorld`, '
+            + 'false for every step after; the frozen STATE is untouched',
+        /**
+         * ⛔ THE PREDICTION'S FORK, and it is a real fork rather than a
+         * formality.
+         *
+         * ARM A — no committed recording moves. No committed tape is a SOLVER
+         * tape in a spinner room (`r8-l18-spinner-press` is a hand plan that
+         * never asks the forecast; every `r5-*` spinner tape is hand-authored
+         * and predates the solver), and the two consumers are both PLAN-TIME:
+         * they change what a policy DECIDES, and a committed tape's inputs
+         * are already decided. So `tapeRunner` stays byte-exact and the
+         * battery's producer `--check` moves nothing.
+         *
+         * ARM B — a committed solver tape's producer drifts, which would mean
+         * a plan on this roster was resting on the broken forecast. Recorded
+         * as a possibility rather than dismissed: the honest answer is
+         * whichever one the instruments give.
+         */
+        prediction: Object.freeze({
+            armA: 'tapeRunner byte-exact and `solve-seedling-r8-battery.mjs --check` '
+                + 'unchanged from the baseline below',
+            armB: 'a committed solver tape\'s producer drifts ⇒ a plan on this roster '
+                + 'was resting on the broken forecast, and that is the finding',
+        }),
+    }),
+
+    /**
+     * ⛔ THE BASELINE THE PREDICTION IS AGAINST, MEASURED THIS SESSION BEFORE
+     * A LINE MOVED — including trap 169's KNOWN drift.
+     *
+     * `r8-solve-4` has drifted from its producer since slice 5 (§15.8): 255
+     * ticks derived against the committed 253, because slice 5's three arrow
+     * fixes moved L4's arrow kill 114 -> 116. It is REPORTED, NOT RE-DERIVED
+     * — re-deriving means re-recording and no licence exists this rung. So
+     * the baseline is "eight of nine byte-identical, `r8-solve-4` drifting",
+     * and a slice-7 run that shows anything else has moved something.
+     */
+    producerBaseline: Object.freeze({
+        at: '7a0009a92',
+        byteIdentical: Object.freeze(['r8-solve-1', 'r8-solve-2', 'r8-solve-3',
+            'r8-solve-7', 'r8-solve-9', 'r8-solve-10', 'r8-solve-11', 'r8-solve-6']),
+        drifting: Object.freeze([Object.freeze({
+            name: 'r8-solve-4', derived: 255, committed: 253, since: 'slice 5', trap: 169,
+        })]),
+    }),
+
+    /**
+     * ── THE EXECUTORS THIS SLICE OWES, AND WHAT EACH ONE'S PARAMETERS ARE
+     * DERIVED FROM (⚖ §11.8a's law, applied ahead of the code) ──────────
+     *
+     * ⛔ `pending` IS THE LIST THAT MUST SHRINK TO EMPTY. Slice 3b's
+     * `['kill', 'shove', 'touch']` is down to `['touch']` plus the two the
+     * rooms of this slice name; a registration that changed nothing would
+     * leave the same obstacle in the frontier's message.
+     */
+    executors: Object.freeze([
+        Object.freeze({
+            verb: 'kill',
+            arm: 'press',
+            room: 'L18',
+            was: 'the ROOM\'S OWN WEAPON only (§12.6) — a presser whose group arms a trap '
+                + 'whose lane covers the body',
+            adds: 'the PLAYER\'s own press, against a body with a `modelled` '
+                + '`KILL_ARM_POLICY` row (slice 6 flipped `Spinner`)',
+            derivedFrom: '`spinner.hammerReach` (the 13 px disc — the union over all 45 '
+                + 'phases, because `Game.time` counts DEAD FRAMES), `presses.SLASH_REACH` '
+                + '(16), `SPINNER.hitsTimerMax` (30) and `run.spinnerForecast` — the '
+                + 'orbit, which is AUTONOMOUS given the walk (`runRange` is 0, so the '
+                + 'chase arm is dead code)',
+        }),
+        Object.freeze({
+            verb: 'fight',
+            arm: 'shieldboss',
+            room: 'L19',
+            was: 'nothing — `KILL_ARM_POLICY.ShieldBoss` has been `modelled` since R6 '
+                + 'slice 5 and no executor ever drove one',
+            adds: 'a PRESS SCHEDULE, derived',
+            derivedFrom: '`shieldBossFight.shieldBossWindowFor` (the window a player-side '
+                + '`hit()` sees `"movedShield"`), `SHIELD_BOSS.swingTimeMax` (120 '
+                + 'CONSECUTIVE band ticks) and `shieldBossDeathSchedule` (the four '
+                + 'instants). ⛔ NEVER a hand-tuned constant: the mutation is that '
+                + 'replacing the derived window with a literal goes RED.',
+        }),
+        Object.freeze({
+            verb: 'keylock',
+            arm: null,
+            room: 'L19',
+            was: 'unregistered; ⚖ §15.7a ruling 1 names it as the `key` opener',
+            adds: 'the bosslock, opened by standing on it holding key 0',
+            derivedFrom: 'the activator roster\'s own `keyType`/`keyTimer`/`keyLine` — '
+                + '`bosslock@48,32` carries `{keyType: 0, keyTimer: 60}` and '
+                + '`activators.opensOnTick`\'s fade',
+        }),
+        Object.freeze({
+            verb: 'touch',
+            arm: null,
+            room: 'L20',
+            was: 'THE LIVE CONTROL for §10.4 note 4 (trap 62) since slice 2 — a strategy '
+                + 'the table names and the registry lacks',
+            adds: 'the latching TOUCH: `shieldlocknorm@176,16`, `t = -2`, gated on '
+                + '`Player.hasShield`',
+            derivedFrom: 'the activator roster\'s own `touchRect`/`shield`/`snapY`',
+            /**
+             * ⛔ THE CONTROL IS REPLACED, NOT DELETED (§13.10's own
+             * instruction). L40's `wandlock` is a real obstacle with a real
+             * verb and no solver executor, and it becomes the trap-62 control
+             * the moment `touch` stops being one.
+             */
+            controlReplacedBy: 'wandlock (L40) — a real obstacle with a real verb and no '
+                + 'solver executor',
+        }),
+    ]),
+
+    /**
+     * ⚖ RULING 2, AS THE THING IT IS: A PIN.
+     *
+     * ⛔ NOT A CURE. The 48x16 band below the body is the ONLY stance the
+     * fight has — `hitPlayer` counts a player inside it for `swingTimeMax`
+     * consecutive updates and that count is the only thing that opens
+     * `movedShield` — so an ingredient that forbade it would make the room
+     * unsolvable. A wrong "closed" seals the map (§14.2's law, and the arc's
+     * accurate-wall-vs-permissive-refusal law behind it).
+     *
+     * ⇒ what stands in for the danger map here is named, and the blindness
+     * is ASSERTED so a future ingredient reds this row and forces a conscious
+     * decision about the fight's stance rather than quietly sealing a room
+     * whose solve predates it.
+     */
+    bossBlindness: Object.freeze({
+        level: 19,
+        body: 'shieldboss@80,32',
+        skippedBy: 'dangerMap.staticEnemyDanger — `if (pricing.kind === \'boss\') continue`',
+        otherIngredients: 'none — (a) arrows, (b) placed puzzlement hazards, (c) stepped '
+            + 'chasers, (d) crushers, (e) static "Enemy" census bodies and (f) live '
+            + 'spinners are the whole union, and a ShieldBoss is in none of them',
+        standsInFor: Object.freeze([
+            '`shieldBossWindowFor` — the fight\'s own arithmetic, which is what decides '
+                + 'the press schedule',
+            '`run.shieldBossPresses` / the fight ledgers — every dispatch\'s TICK and '
+                + 'SOURCE (trap 113), not a count',
+            'the GAME\'s own `hits: 0` in the recording — which was always the oracle '
+                + 'and is never vacuous (§14.1a\'s scoping)',
+        ]),
+        pin: 'dangerVolumes(L19) is EMPTY with the boss standing',
+    }),
+
+    /**
+     * ⛔ THE SEGMENTS, AND THE CHAIN. Named ahead of the work so that a slice
+     * that records fewer says so out loud rather than reporting what it got.
+     */
+    chain: Object.freeze({
+        name: 'r8-d2',
+        kind: 'staged',
+        segments: Object.freeze(['r8-d2-18', 'r8-d2-19', 'r8-d2-20']),
+        boot: 'r7-act2-11\'s committed v8 block — the campaign\'s own post-sword latch — '
+            + 'staged at L18\'s own arrival from L16 (16,32)',
+        endsAt: 'L13 (96,48), through `stairsup@16,48`',
+        /**
+         * ⛔ ONE SEGMENT PER ROOM, AND L19's IS ONE SEGMENT BECAUSE OF TRAP
+         * 150: a fight does not survive the door, so the fight and the
+         * crossing it opens cannot be cut apart. Segment boundaries are
+         * decided by PERSISTENCE, not by geography.
+         */
+        cutRule: 'trap 150 — by PERSISTENCE, not geography',
+        internalSeams: 2,
+    }),
+});
+
+/**
+ * ⛔⛔⛔ ⚖ RULING 1's CLAIM, RE-DERIVED FROM THE RUNNING ATLAS.
+ *
+ * `R8_D2_COMPLETE.routeGraph.edges` is a claim about which rooms of D2 reach
+ * which, and the whole ruling rests on ONE of its consequences — that L13
+ * has no edge to L18. A declaration nobody derives a consumer from reads
+ * exactly like a declaration that passed (trap 119), and a second READING of
+ * the recon that produced it would not be a measurement (trap 97). So this
+ * walks the level source itself and asserts SET EQUALITY both ways.
+ *
+ * @param {function} levelSource  `atlasLevelSource()` — injected, so the
+ *   disagreement can be CONSTRUCTED by a test handing a doctored atlas.
+ * @param {number[]} [levels]  the D2 rooms whose edges are declared.
+ */
+export function assertD2RouteGraph(levelSource, levels = [13, 18, 19, 20]) {
+    if (typeof levelSource !== 'function') {
+        throw new Error('assertD2RouteGraph: needs a level source function — injected so '
+            + 'a doctored atlas can make this row go red, which is what makes it a check '
+            + 'rather than a restatement.');
+    }
+    const found = [];
+    for (const n of levels) {
+        for (const e of (levelSource(n).entities ?? [])) {
+            if (!e.attrs || e.attrs.to === undefined) continue;
+            found.push({ from: n, to: Number(e.attrs.to), via: `${e.type}@${e.x},${e.y}` });
+        }
+    }
+    /**
+     * ⛔ THE CONSEQUENCE THE RULING RESTS ON IS ASKED **FIRST**, AND THE ORDER
+     * IS THE POINT — `assertSpinnerPressExposureIsMeasured`'s own precedent,
+     * one ledger over. A new L13->L18 edge would fail the SET EQUALITY below
+     * as one undeclared row among nine, and the reader would get a table diff
+     * where the honest message is "the premise ⚖ ruling 1 overturned the
+     * charged route on has changed". Asked after the equality this branch
+     * would be UNREACHABLE, which is a guard that can never fire.
+     */
+    if (found.some((r) => r.from === 13 && r.to === 18)) {
+        throw new Error('R8_D2_COMPLETE.routeGraph: L13 now HAS an edge to L18, which is '
+            + 'the premise ⚖ ruling 1 overturned the charged route on. Re-take the '
+            + 'ruling before trusting the three-segment chain.');
+    }
+    const key = (r) => `${r.from}->${r.to} ${r.via}`;
+    const declared = R8_D2_COMPLETE.routeGraph.edges.filter((r) => levels.includes(r.from));
+    const declaredKeys = declared.map(key).sort();
+    const foundKeys = found.map(key).sort();
+    const missing = foundKeys.filter((k) => !declaredKeys.includes(k));
+    const stale = declaredKeys.filter((k) => !foundKeys.includes(k));
+    if (missing.length || stale.length) {
+        throw new Error('R8_D2_COMPLETE.routeGraph: the declared D2 edges are not the '
+            + `atlas's. On disk and undeclared: ${missing.join(' | ') || 'none'}; `
+            + `declared and not on disk: ${stale.join(' | ') || 'none'}.`);
+    }
+    return { edges: found.length, levels: levels.length };
+}

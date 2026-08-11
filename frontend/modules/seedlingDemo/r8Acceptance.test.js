@@ -14,6 +14,7 @@ import {
     R8_TWO_PASS, assertTwoPassPrefixAgrees,
     R8_ETA_PROBE, assertTransitSamplesCarryEtas,
     R8_D2_SHIELD, assertSpinnerPressExposureIsMeasured,
+    R8_D2_COMPLETE, assertD2RouteGraph,
 } from './r8Acceptance.js';
 import { STRATEGY_EXECUTORS } from './solverBot.js';
 import { bridgedChaserTags, CHASERS, chaserSolids } from './chasers.js';
@@ -36,6 +37,7 @@ import { hitSpinner, SPINNER } from './spinner.js';
 import { distanceRectPoint, SLASH_REACH, SWORD_DAMAGE } from './presses.js';
 import { OUT_OF_BAND_WRITERS, TAGS_PER_LEVEL } from './outOfBandLedger.js';
 import { outOfBandFlagFor } from './breakableRocks.js';
+import { dangerVolumes } from './dangerMap.js';
 import { KILL_LOCK_TSET } from './combat.js';
 import { applyFriction, DEFAULT_FRICTION } from './playerPhysicsV1.js';
 
@@ -1203,3 +1205,152 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
  *       → `keeps `touch` refused AS THE LIVE CONTROL` reds — the control is
  *         asserted against the RUNNING registry, not against its own sentence
  */
+
+describe('R8_D2_COMPLETE — slice 7\'s prediction, committed before a line of it moved', () => {
+    it('carries ⚖ ruling 1 as the CORRECTION it is — the charged route and the ruled one', () => {
+        const g = R8_D2_COMPLETE.routeGraph;
+        // ⛔ The charged text is kept so the correction is legible AS a
+        // correction. A prediction that quietly substituted the right route
+        // would leave nothing for a reader to check the ruling against.
+        expect(g.charged).toMatch(/L13's alcove/);
+        expect(g.ruled).toMatch(/THREE CONTIGUOUS SEGMENTS/);
+        expect(g.charged).not.toBe(g.ruled);
+        expect(g.standaloneWitnessUntouched).toBe('r8-solve-20');
+    });
+
+    it('⛔ RE-DERIVES the D2 edges from the running atlas, both ways', () => {
+        const out = assertD2RouteGraph(atlasLevelSource());
+        expect(out.edges).toBe(R8_D2_COMPLETE.routeGraph.edges.length);
+    });
+
+    it('the route check is NON-VACUOUS — a doctored atlas reds it BY NAME', () => {
+        // ⛔ CONSTRUCTED, not assumed. A set equality that has never seen a
+        // disagreement might be comparing nothing (§8.4's law).
+        const real = atlasLevelSource();
+        const doctored = (n) => (n !== 13 ? real(n) : {
+            ...real(13),
+            entities: [...(real(13).entities ?? []),
+                { type: 'stairsdown', x: 0, y: 0, attrs: { to: '18' } }],
+        });
+        expect(() => assertD2RouteGraph(doctored)).toThrow(/L13 now HAS an edge to L18/);
+    });
+
+    it('states the seam consequence that makes the charged route unwalkable', () => {
+        const why = R8_D2_COMPLETE.routeGraph.why.map((w) => `${w.claim} ${w.consequence}`)
+            .join(' | ');
+        expect(why).toMatch(/L13 has NO edge to L18/);
+        expect(why).toMatch(/SEAM_CHANNELS/);
+        // And the second reading — L13 into L20's alcove — is ruled OUT
+        // rather than merely unused, because it is a dead end at the start.
+        expect(why).toMatch(/DEAD END at the\s+start/);
+    });
+
+    it('⛔⛔⛔ MEASURES the forecast transient rather than asserting it', async () => {
+        /**
+         * The step-0 finding, driven: a forecast taken on a level's FIRST
+         * tick runs its whole horizon with `beforeTypeFlip` frozen TRUE, and
+         * `collidesSolid`'s `beforeTypeFlip` arm selects `objectSolids` — a
+         * world with no solid TILES. So the bodies leave the room and never
+         * return, and `dangerMap.spinnerDanger`'s `atEta` arm then forbids
+         * nothing at all.
+         *
+         * ⛔ THIS TEST IS WRITTEN AGAINST THE DEFECT AND MUST FLIP when the
+         * fix lands. It is here so the fix has a baseline to move, which is
+         * the only thing that makes it a measurement (trap 40).
+         */
+        const mk = () => createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 18, x: 16, y: 32 },
+            noclip: false, noHazards: [], noDamage: true, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const width = mk().world.width * 16;
+        const fresh = mk().spinnerForecast(400);
+        const escaped = fresh.some((step) => step.some((r) => r.x < 0 || r.right > width));
+        const after = (() => {
+            const r = mk();
+            r.advance(new Set());
+            return r.spinnerForecast(400);
+        })();
+        const escapedAfter = after.some(
+            (step) => step.some((r) => r.x < 0 || r.right > width));
+        // The declaration is that the FRESH forecast escapes and the
+        // one-tick-later forecast does not — which is the whole shape of a
+        // frozen ONE-TICK TRANSIENT.
+        expect(R8_D2_COMPLETE.forecastTransient.field).toBe('beforeTypeFlip');
+        expect(R8_D2_COMPLETE.forecastTransient.frozenCorrectly).toContain('pushables');
+        expect(escaped).toBe(true);
+        expect(escapedAfter).toBe(false);
+        expect(R8_D2_COMPLETE.forecastTransient.measured.cleanWhenTakenAfterTicks)
+            .toEqual([1, 2, 10]);
+    });
+
+    it('states a fork whose arms are DIFFERENT claims', () => {
+        const p = R8_D2_COMPLETE.forecastTransient.prediction;
+        expect(p.armA).toMatch(/byte-exact/);
+        expect(p.armB).toMatch(/drifts/);
+        expect(p.armA).not.toBe(p.armB);
+    });
+
+    it('the producer baseline names trap 169\'s KNOWN drift rather than hiding it', () => {
+        const b = R8_D2_COMPLETE.producerBaseline;
+        expect(b.at).toBe('7a0009a92');
+        expect(b.byteIdentical).toHaveLength(8);
+        expect(b.drifting).toHaveLength(1);
+        expect(b.drifting[0]).toMatchObject({ name: 'r8-solve-4', derived: 255, committed: 253 });
+    });
+
+    it('every executor this slice owes names what its parameters are DERIVED from', () => {
+        // ⚖ §11.8a's law, applied to the prediction rather than only to the
+        // code: an executor row with no derivation is a policy choice waiting
+        // to be typed in.
+        expect(R8_D2_COMPLETE.executors.length).toBeGreaterThanOrEqual(4);
+        for (const e of R8_D2_COMPLETE.executors) {
+            expect(typeof e.derivedFrom).toBe('string');
+            expect(e.derivedFrom.length).toBeGreaterThan(40);
+        }
+        const fight = R8_D2_COMPLETE.executors.find((e) => e.verb === 'fight');
+        expect(fight.derivedFrom).toMatch(/shieldBossWindowFor/);
+        expect(fight.derivedFrom).toMatch(/NEVER a hand-tuned constant/);
+        // ⛔ And `touch`'s control is REPLACED, not deleted (§13.10).
+        const touch = R8_D2_COMPLETE.executors.find((e) => e.verb === 'touch');
+        expect(touch.controlReplacedBy).toMatch(/wandlock/);
+    });
+
+    it('⚖ RULING 2 — PINS the boss blindness instead of curing it', () => {
+        const b = R8_D2_COMPLETE.bossBlindness;
+        expect(b.skippedBy).toMatch(/kind === 'boss'/);
+        expect(b.standsInFor.length).toBe(3);
+        /**
+         * ⛔ THE PIN ITSELF, DRIVEN. `dangerVolumes` is EMPTY in L19 with the
+         * body standing — which is a fact about the shipped union, measured
+         * rather than restated. A future boss ingredient reds THIS row and
+         * forces a conscious decision about the fight's only stance, instead
+         * of silently sealing a room whose solve predates it.
+         */
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 19, x: 16, y: 144 },
+            noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [],
+            despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        // A POSITIVE FIRST: the body really is there, so the empty verdict
+        // below is a skip and not an absence (§12.3's own law).
+        expect((run.world.combat?.enemies ?? []).map((e) => e.tag)).toContain('shieldboss');
+        expect(run.world.shieldBosses.length).toBe(1);
+        expect(dangerVolumes(run, 0)).toEqual([]);
+    });
+
+    it('names the chain, its cut rule and its two internal seams', () => {
+        const c = R8_D2_COMPLETE.chain;
+        expect(c.kind).toBe('staged');
+        expect(c.segments).toEqual(['r8-d2-18', 'r8-d2-19', 'r8-d2-20']);
+        expect(c.internalSeams).toBe(c.segments.length - 1);
+        expect(c.cutRule).toMatch(/trap 150/);
+        expect(c.endsAt).toMatch(/L13/);
+    });
+});
