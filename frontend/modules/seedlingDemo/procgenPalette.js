@@ -443,12 +443,6 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     }),
 ]);
 
-export const PRE_SWORD_PALETTE = Object.freeze({
-    name: 'pre-sword',
-    items: PRE_SWORD_ITEMS,
-    templates: PRE_SWORD_TEMPLATES,
-});
-
 /**
  * ⛔⛔⛔ THE EXCLUSIONS, AND EVERY ONE CARRIES ITS OWN MEASUREMENT.
  *
@@ -564,6 +558,266 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
     }),
 ]);
 
+export const PRE_SWORD_PALETTE = Object.freeze({
+    name: 'pre-sword',
+    items: PRE_SWORD_ITEMS,
+    templates: PRE_SWORD_TEMPLATES,
+    excluded: EXCLUDED_TEMPLATES,
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE POST-SWORD BIOME — PoC slice 4 (⚖ kickoff §0's second biome, §4.4)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §0: *"TWO BIOMES: one for before the player has the sword, one for
+ * after."* The biome is the BOOT, and here that is the whole of it.
+ *
+ * ── ⛔⛔⛔ THE HONEST HEADLINE: THIS BIOME ADDS NO TEMPLATE ────────────
+ *
+ * Kickoff §3.3 named three post-sword additions — chest in a corridor,
+ * spinner+kill-lock, key+keylock. ⚖ §10.7 EXPIRED §9.8's advice to carry them
+ * as inherited exclusions and required a re-probe from scratch. Slice 4 ran
+ * that re-probe, plus a ⚖-ruled bounded sweep of a fourth candidate
+ * (`solid:shieldboss → fight`). **None of the four can be offered, and every
+ * one of them is in `POST_SWORD_EXCLUDED_TEMPLATES` below with its verbatim
+ * text.** So the post-sword palette is the pre-sword ROSTER under a different
+ * boot.
+ *
+ * ⚖ AND ONE OF THE FOUR WAS NEVER A CANDIDATE (user, 2026-08-12, mid-slice):
+ * **a chest is a SOLVER CAPABILITY, not a palette family.** What was wanted
+ * from `solid:chest → chest` is that the solver KNOWS it can clear a chest by
+ * collecting it — which the row already provides — not that the generator
+ * deliberately places chests as obstacles. Its row below is therefore
+ * CAPABILITY DOCUMENTATION rather than a rejected candidate, and it is kept
+ * for the same reason every other row is: the geometry it measures is what a
+ * later slice would otherwise re-discover by building the thing.
+ *
+ * ⚠ SAYING THAT OUT LOUD IS THE POINT. A biome that quietly shipped the same
+ * six families under a new name would read as a palette that grew; naming the
+ * gap makes "the post-sword palette has no post-sword-EXCLUSIVE clearer" a
+ * finding the next slice inherits rather than one it re-discovers
+ * (`feedback_bounded_sweep_must_name_what_it_bounded`).
+ *
+ * ── ⛔⛔ AND THE TWO BIOMES CURRENTLY PRODUCE THE SAME LEVEL ───────────
+ *
+ * The roster is shared BY REFERENCE (below) — one array, so a template added
+ * to the palette cannot reach one biome and miss the other. The only other
+ * difference is `items`, and MEASURED, at this palette, it changes nothing the
+ * generator can see: the same room solved under both boots gives the same
+ * verdict and the same tick count in 12 of 12 seeds, and seed 9 at target 8
+ * produces a BYTE-IDENTICAL level record and a byte-identical trace under both
+ * — only the summary differs, because the summary is where `items` is
+ * recorded.
+ *
+ * ⚠⚠ AN EARLIER DRAFT OF THIS DOCBLOCK CLAIMED THE OPPOSITE (113 ticks
+ * pre-sword against 122 post-sword) and it was WRONG: those two numbers came
+ * from rooms with different goal cells, so the comparison was never about the
+ * sword. The claim is recorded here because a palette that asserts a
+ * difference it does not have would be read as the biome doing work.
+ *
+ * ⇒ THE HONEST STATEMENT: with no post-sword-exclusive template, the sword is
+ * an inventory flag no obstacle in this palette consults, so the biome split
+ * is REAL IN THE BOOT and NIL IN THE OUTPUT. ⛓ This is a direct input to
+ * slice 5's REQUIREMENTS REPORT (⚖ §1.10a): its with/without differential will
+ * find NO required item at this palette, and *"rule not established"* is the
+ * verdict that ruling already names for exactly this case. The report will be
+ * right; what it reports is a fact about the palette, not about the report.
+ */
+export const POST_SWORD_ITEMS = Object.freeze({ hasSword: true, hasShield: false });
+
+/**
+ * ⛔ SHARED BY REFERENCE, NOT COPIED. Six families, nine templates — every one
+ * already verified against a BUILT WORLD by `procgenPalette.test.js`, and all
+ * six certify under the post-sword boot as well (driven in
+ * `procgenPostSword.test.js`). A second literal here would be a second roster
+ * to keep in step, which is the one-of-everything law (⚖ §5) applied to the
+ * thing most likely to grow a copy.
+ */
+export const POST_SWORD_TEMPLATES = PRE_SWORD_TEMPLATES;
+
+/**
+ * ⛔⛔⛔ THE POST-SWORD EXCLUSIONS — the re-probe ⚖ §10.7 demanded, from
+ * scratch, and NOTHING here is inherited.
+ *
+ * All measured 2026-08-12 in slice 3's own corridor geometry (a 10x10 bordered
+ * room, a Stone wall across the whole interior with ONE gap, the candidate in
+ * the gap, `torchpickup` collect goal strictly beyond it, boot
+ * `POST_SWORD_ITEMS`, `DEFAULT_BUDGET`) — the shape §11.7 requires, where the
+ * template IS the door rather than a decoration a keep-count cannot tell apart.
+ *
+ * ⚠ THREE OF THE FOUR CAN **THROW** RATHER THAN REFUSE, and that is a stronger
+ * reason to exclude than any of the refusals. `procgenOracle` classifies only
+ * `SolverRefusal` and `BotDriverV2Error`; a `SolverBotError` or a bare
+ * `levelRun` `Error` escapes it and `levelGenerator` turns that into
+ * `GenerationAborted` — so one of these families in the palette would ABORT a
+ * run, not reject a candidate. (⚠ Widening the oracle's catch is exactly what
+ * traps 171/173 forbid doing casually; recorded, not done.)
+ */
+export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
+    Object.freeze({
+        name: 'chest-in-the-gap',
+        family: 'chest',
+        cause: '⚖ NOT A PALETTE FAMILY (user, 2026-08-12) — a SOLVER CAPABILITY. The '
+            + 'geometry below is CAPABILITY DOCUMENTATION, not a rejected candidate.',
+        measured: '⚖ THE RULING FIRST: what `solid:chest → chest` is for is that the '
+            + 'solver KNOWS a chest in its way can be cleared by COLLECTING it; the '
+            + 'generator was never meant to place chests as deliberate obstacles. So '
+            + 'nothing here is an exclusion — it is the bound on the capability, measured '
+            + 'while the question was still open, and worth keeping because a later slice '
+            + 'that reached for a chest DOOR would otherwise measure it again.\n'
+            + '⛓ AND §2/§9.8\'s "chest is proven" DOES NOT TRANSFER — that was measured '
+            + 'on L11\'s own one-tile shaft, and a measured CAPABILITY is as local as a '
+            + 'measured limitation. `chestStanceBand` (`chest.js:167`) searches rows from '
+            + '`py + box.h - 16` DOWNWARD and skips every row whose player box overlaps '
+            + 'the chest\'s own solid, so the stance that fires the open-trigger line is '
+            + 'strictly BELOW the chest — the game\'s own trigger geometry, not a solver '
+            + 'choice. The room\'s start is its fixed NW corner (`SEEDLING_DEFAULTS.start` '
+            + '= (1,1)), so every crossing a SINGLE template can make runs north→south or '
+            + 'west→east ⇒ the opener\'s stance is on the side the player is trying to '
+            + 'reach. Driven both ways: in a HORIZONTAL wall\'s gap the stance is beyond '
+            + 'the wall, and in a VERTICAL wall\'s gap the cell below the chest is the '
+            + 'wall itself. The verb IS selected in both — this is not slice 2\'s '
+            + '"never reached" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a '
+            + 'corridor ever appearing.',
+        refusalText: 'solverBot(chest: h-gap, goal beyond) collect (112,128) stance '
+            + '(ladder-routed: …) -> chest stance (chest@64,80) -> chest stance '
+            + '(chest@64,80) -> chest stance (chest@64,80) -> chest stance (chest@64,80): '
+            + 'applied 4 strategies for one goal [chest(chest@64,80), chest(chest@64,80), '
+            + 'chest(chest@64,80), chest(chest@64,80)] and the corridor still does not '
+            + 'plan. A policy that keeps clearing obstacles without a corridor appearing '
+            + 'is not making progress.',
+        wouldNeed: '⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no '
+            + 'work owed here. Recorded for completeness only: a chest DOOR would need a '
+            + 'room whose route DOUBLES BACK so the crossing runs south→north, which '
+            + 'needs TWO cooperating templates (one to force the player south, one to be '
+            + 'the door) — the depth-1 boundary ⚖ §1.6 draws on purpose (*templates '
+            + 'remove the need for cooperative multi-step placement*). ⚠ THE GOAL-SIDE '
+            + 'SHAPE IS ITS '
+            + 'OWN RESIDUE: a chest whose rect CONTAINS the pickup makes the solve RETURN '
+            + 'UNCERTIFIED rather than refuse — `procgenOracle` catches it as *"the solve '
+            + 'returned but the goal list is not certified — no collect record for '
+            + 'place:112,112. `solveSegment` is supposed to refuse rather than return '
+            + 'short, so this is a seam defect, not a rejected candidate."* Recorded for '
+            + 'a future engine slice; nothing in this arc touches it.',
+    }),
+    Object.freeze({
+        name: 'spinner-killlock',
+        family: 'kill',
+        cause: 'NEEDS A DECLARATION THE SOLVE CANNOT PRODUCE (and the room is too small)',
+        measured: '⛓ THE PRESS ARM IS NOT THE BLOCKER — `KILL_ARM_POLICY.Spinner` IS '
+            + '`modelled` (`enemyDamage.js:329`; `r8Acceptance`\'s "REFUSED" line is a '
+            + 'slice-6 PREDICTION, made before the lift). Swept all 32 interior cells on '
+            + 'the start side with the kill-lock (`tset:-1`) in the door\'s gap: ZERO '
+            + 'solved, and 26 of the 32 THREW. Two distinct causes, and the second is the '
+            + 'one that decides it:\n'
+            + '  (i) TRANSIT — *"every key set — the plan\'s own and 5 alternative(s) — '
+            + 'lands the player box inside a hammer disc on the next tick, at '
+            + '(38.99,49.16) in level 900. There is no step out."* The honest hammer is '
+            + 'the UNION over all 45 phases (a 13 px disc) against `SLASH_REACH`\'s 16 px, '
+            + 'so the safe annulus is about three pixels wide and a single-screen room '
+            + '(⚖ §1.5) has nowhere to stand. ⚠ NOT the door\'s doing: an OPEN 10x10 with '
+            + 'a spinner and NO lock at all also throws or refuses.\n'
+            + '  (ii) THE DECLARATION — and here the kill SUCCEEDS first. The refusal '
+            + 'fires a whole fade LATER, on the durable clear.',
+        refusalText: 'levelRun: spinner@48,16\'s removal at tick 517 OPENS 1 kill lock(s) '
+            + 'in level 900 [{900,0}] (1 kill lock(s) OPEN: totalEnemies() went 1 -> 0), '
+            + 'and the `Lock`\'s own fade lands the durable clear at tick 618 — which this '
+            + 'walk has now reached. The tape DECLARES no clear for them. A `Lock`\'s '
+            + 'hundred alpha steps and the write that follows are the declared v9 `at` '
+            + 'channel; computing them here as well would make two writers of one '
+            + 'persistence slot. So a clear this model can see coming and the tape does '
+            + 'not carry is a blocker that opens in the game and stays shut here.',
+        wouldNeed: '⛔ A DECLARATION CHANNEL, which is ⚖ §3.3\'s contract in its exact '
+            + 'shape: the durable clear is DECLARED by a recorded tape\'s v9 `at` row, and '
+            + 'a GENERATED level has no tape at solve time — the solve is what would '
+            + 'produce one. So this is *"nothing whose clear only the game can date"* '
+            + 'arriving as "nothing whose clear only a RECORDING can declare". ⚠ Re-run '
+            + 'with the lock at `tag:"-1"` (L18\'s own no-op-write trick, since '
+            + '`setPersistence(-1, …)` writes nothing): byte-identical outcomes across the '
+            + 'whole sweep, no wins — so the cure is not the tag. ⛓ THIS IS THE TWO-PASS '
+            + 'DEBT\'S DRIVEN CASE (kickoff §4.4): the PoC really does need a declaration '
+            + 'mechanism for this family, `twoPassSolve` adoption stays disqualified on '
+            + '§10.5\'s three blockers (it re-composes the page path, drops '
+            + '`maxTicksPerTarget`, and is async), and neither would invent a declaration '
+            + 'anyway. ⚖ THE CURE IS RULED AND SCHEDULED (user, 2026-08-12): a SCRATCH / '
+            + 'REVERTABLE PERSISTENCE layer, as its own engine slice (4b) after this one, '
+            + 'and THIS measurement is its driven case. Excluded THIS ARC.',
+    }),
+    Object.freeze({
+        name: 'key-keylock-pair',
+        family: 'keylock',
+        cause: 'UNDIAGNOSED — the verb resolves and the corridor never opens',
+        measured: '⚠⚠ THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the '
+            + '"applied 4 strategies and no corridor" line below is the SYMPTOM; the '
+            + 'diagnosis is OPEN. Nobody should read this exclusion as understood. What '
+            + 'IS established: `resolveKeylockStrategy` gates on the RUN\'s own key set '
+            + '(`BossLock.update` reads `Player.hasKey(keyType)`, a save-file boolean and '
+            + 'not one of the fourteen `botStatus.items` fields), and with no key the '
+            + 'solve THROWS `SolverBotError` — *"the key is a SUB-ORDER — a '
+            + '`collect-placement` goal the macro layer owes — and inventing a stance for '
+            + 'an unkeyed lock would be a wait with no mechanism behind it."* BOTH cures '
+            + 'were driven and BOTH fail identically: (a) the key GRANTED at boot '
+            + '(`staging.save.keys = [0]`, the channel `levelRun.js:3137` reads), and (b) '
+            + 'the key as a FIRST `collect-placement` in an ordered queue — where the key '
+            + 'IS collected (verbs `walk`, `collect`, `keylock`) and the door still never '
+            + 'opens. ⇒ holding the key is NOT the missing piece, which is what makes the '
+            + 'symptom worth recording separately from the guess.',
+        refusalText: 'solverBot(keylock: key granted, lock in h-gap) collect (112,128) '
+            + 'stance (ladder-routed: …) -> keylock stance (bosslock@64,80) -> keylock '
+            + 'stance (bosslock@64,80) -> keylock stance (bosslock@64,80) -> keylock '
+            + 'stance (bosslock@64,80): applied 4 strategies for one goal '
+            + '[keylock(bosslock@64,80), keylock(bosslock@64,80), keylock(bosslock@64,80), '
+            + 'keylock(bosslock@64,80)] and the corridor still does not plan. A policy '
+            + 'that keeps clearing obstacles without a corridor appearing is not making '
+            + 'progress.',
+        wouldNeed: 'FIRST a diagnosis — why the re-plan after a resolved `keylock` still '
+            + 'prices the lock as a wall — because until that is named, any template built '
+            + 'here would be built against a guess. ⚠ Note the SHARED SHAPE with '
+            + '`chest-in-the-gap`: both are verbs that RESOLVE, get applied to '
+            + '`MAX_STRATEGIES_PER_GOAL`, and never move the corridor, while `shove`, '
+            + '`weigh` and `hold` all do. Two families with one symptom is a hint about '
+            + 'the LADDER rather than about either family, and it is the first thing to '
+            + 'ask. ⛔ Since design (b) works as far as collecting the key, the goal-QUEUE '
+            + 'widening (⚖ §1.4) buys nothing here and is NOT proposed.',
+    }),
+    Object.freeze({
+        name: 'shieldboss-door',
+        family: 'fight',
+        cause: 'INCOMPATIBLE WITH v1\'s ONLY GOAL',
+        measured: '⚖ RULED A BOUNDED PROBE (orchestrator, 2026-08-12) after the three '
+            + 'named families all failed: `solid:shieldboss → fight` is a registered '
+            + 'executor, `KILL_ARM_POLICY.ShieldBoss` is `modelled`, and ⚖ §0\'s "before '
+            + 'collecting the shield" is the shieldboss\'s own room — so it was the last '
+            + 'candidate for a post-sword-EXCLUSIVE clearer. NINE geometries (h walls at '
+            + 'ty 3/4/5/6 with a 3-wide gap, v walls at tx 3/4/5 with a 3-tall gap, a '
+            + '1-wide gap, and an open room): ZERO solved, FIVE threw. The `fight` verb '
+            + 'resolves in all of them; two REFUSE on the same '
+            + '"applied 4 strategies … no corridor" line the chest and the keylock give, '
+            + 'and one spends the per-target budget grazing the 48x48 body.',
+        refusalText: 'levelRun: a torchpickup ceremony began in level 900 while the '
+            + 'ShieldBoss shieldboss@64,64 is still in the world. `ShieldBoss.hitPlayer` '
+            + 'is not freeze-gated — its 120-update stand-under counter advances through '
+            + 'every frozen frame — and this model spends a ceremony\'s phase A as a LUMP '
+            + 'in `frozenFramesOwed` rather than as steps. So the game would count 150 '
+            + 'updates the model counts none of. Collect after the removal, or step the '
+            + 'freeze.',
+        wouldNeed: '⛔ NOTHING ABOUT THE FIGHT — the blocker is the GOAL. ⚖ §1.4 makes '
+            + '`collect-placement` v1\'s only goal kind and slice 1 §8.2 makes '
+            + '`torchpickup` the pickup, so EVERY generated level ends in a ceremony; a '
+            + 'live ShieldBoss anywhere in the room refuses that ceremony by name. The '
+            + 'cure the message itself offers — *"collect after the removal"* — is a '
+            + 'template that guarantees the boss dies FIRST, which is an ORDER between a '
+            + 'clearer and the goal that a depth-1 loop with one goal cannot express.',
+    }),
+]);
+
+export const POST_SWORD_PALETTE = Object.freeze({
+    name: 'post-sword',
+    items: POST_SWORD_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
 /**
  * EVERY TEMPLATE, CHECKED — shapes, names, terrains and the roster's own
  * uniqueness. Called at module load, for `procgenLevel.assertTerrainColumns`'s
@@ -624,3 +878,6 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
 }
 
 assertPalette();
+// ⛔ BOTH biomes, at load. They share a roster today, so this is cheap — and it
+// is the check that would fire on the day they stop sharing one.
+assertPalette(POST_SWORD_PALETTE);

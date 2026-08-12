@@ -60,7 +60,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', p));
 
 const { ATTEMPT, STOP, costModel } = await M('levelGenerator.js');
-const { EXCLUDED_TEMPLATES, PRE_SWORD_PALETTE } = await M('procgenPalette.js');
+const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } = await M('procgenPalette.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 
@@ -80,15 +80,17 @@ const BUDGET = {
 };
 
 /**
- * ⚖ SLICE 2 IS PRE-SWORD ONLY, AND THE REFUSAL IS BY NAME. The post-sword
- * biome is slice 3's (kickoff §4.3) — a `--biome=post-sword` that silently
- * generated a pre-sword level would be the worst kind of default.
+ * ⚖ THE TWO BIOMES (kickoff §0), and slice 4 is where the second one arrives.
+ *
+ * The refusal stays BY NAME: a `--biome` this map does not hold must not
+ * silently generate the other biome's level, because the boot is the whole
+ * difference between them and a level generated under the wrong inventory is
+ * a level whose certification is about a run nobody asked for.
  */
-const BIOMES = { 'pre-sword': PRE_SWORD_PALETTE };
+const BIOMES = { 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE };
 if (!BIOMES[BIOME]) {
-    process.stderr.write(`generate-seedling-level: biome "${BIOME}" is not available. `
-        + `Slice 2 ships [${Object.keys(BIOMES).join(', ')}]; the post-sword palette is `
-        + 'slice 3 (kickoff §4.3).\n');
+    process.stderr.write(`generate-seedling-level: biome "${BIOME}" is not available — `
+        + `this build ships [${Object.keys(BIOMES).join(', ')}].\n`);
     process.exit(2);
 }
 
@@ -190,8 +192,13 @@ if (has('json')) {
     say(`certification: ${JSON.stringify(s.finalCertification)}`);
     say(`level sha: ${sha(out.record)}   trace sha: ${sha(out.trace)}`);
     say('');
-    say(`## excluded from this palette (${EXCLUDED_TEMPLATES.length}), each with its measurement`);
-    for (const x of EXCLUDED_TEMPLATES) {
+    // ⛔ THE BIOME'S OWN exclusions, not the pre-sword list under another
+    // name — the two biomes exclude different families for different measured
+    // reasons, and printing one under the other's heading would be a report
+    // that agrees with itself by construction.
+    const excluded = BIOMES[BIOME].excluded ?? [];
+    say(`## excluded from this palette (${excluded.length}), each with its measurement`);
+    for (const x of excluded) {
         say(`  ${x.name.padEnd(22)} ${x.cause}`);
     }
 }
