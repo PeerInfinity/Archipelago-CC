@@ -29,15 +29,41 @@
  * page survives a whole tape.
  *
  * Prereqs: a dev server on :8000 at the REPO ROOT. SKIPs (exit 0) without
- * one, like every other seedling probe.
+ * one, like every other seedling probe — UNLESS `--strict`.
+ *
+ * ── ⛔ `--strict`: THE SKIP IS THE DEFECT (editor arc slice 4, ⚖ §8.9) ──
+ *
+ * That polite exit-0 skip hid a page that could not load AT ALL for two
+ * rungs. `watch.html` broke in R7 slice 1 (a transitive `node:fs` import
+ * reaching the browser) and every gate since stayed green, because the only
+ * browser coverage skipped when no server happened to be up. A graceful
+ * fallback about a PREREQUISITE hides everything that depends on the
+ * prerequisite, not just the prerequisite (trap 176).
+ *
+ * So `--strict` (or `SEEDLING_PROBE_STRICT=1`) FAILS with the reason named
+ * instead of skipping. The default is unchanged — a developer running this
+ * by hand without a server should still be told rather than failed — and
+ * the arc-close run uses strict.
+ *
+ * ⚠ The non-skipping browser gate is `export-seedling-view.mjs`, which
+ * brings its own server on a free port and therefore has nothing to skip
+ * on. This flag is the second half: it makes the SKIP itself addressable.
  *
  * Run: node scripts/procgen/probe-seedling-watch-page.mjs
  *      node scripts/procgen/probe-seedling-watch-page.mjs --tape=r4-walk-full
+ *      node scripts/procgen/probe-seedling-watch-page.mjs --strict
  */
 
 import { chromium } from 'playwright';
 
-const HOST = 'http://localhost:8000';
+/**
+ * ⚠ `--host=` EXISTS SO `--strict` IS TESTABLE. Without it, the only way to
+ * exercise the strict refusal is to stop somebody's dev server, and a
+ * refusal path nobody can run is a refusal path nobody has seen work.
+ * (The sibling `check-seedling-editor-*` rows carry the same flag.)
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host='))
+    ?? '--host=http://localhost:8000').slice('--host='.length);
 const NAME = (process.argv.find((a) => a.startsWith('--tape=')) ?? '--tape=r4-walk-full')
     .slice('--tape='.length);
 const TAPE = `frontend/modules/seedlingDemo/fixtures/tapes/${NAME}.json`;
@@ -47,10 +73,20 @@ const PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
 /** How long the play test runs, and the floor it has to clear. */
 const PLAY_MS = 6000;
 
+/** ⛔ Skip politely, or FAIL by name — see the docblock. */
+const STRICT = process.argv.includes('--strict') || process.env.SEEDLING_PROBE_STRICT === '1';
+
 const alive = await fetch(`${HOST}/${TAPE}`).then((r) => r.ok).catch(() => false);
 if (!alive) {
-    console.log(`SKIP: no dev server serving ${HOST}/${TAPE} — start one at the REPO `
-        + 'ROOT with `python3 -m http.server 8000`');
+    const why = `no dev server serving ${HOST}/${TAPE} — start one at the REPO ROOT `
+        + 'with `python3 -m http.server 8000`';
+    if (STRICT) {
+        console.error(`FAIL: --strict, and there is no server to probe: ${why}`);
+        console.error('      (this probe SKIPPED for two rungs while the page it probes '
+            + 'could not load at all — that is what --strict is for)');
+        process.exit(1);
+    }
+    console.log(`SKIP: ${why}`);
     process.exit(0);
 }
 /**

@@ -3,7 +3,8 @@
   seedlingDemo/watch.html — watch a Seedling bot tape, replayed or SOLVED.
 
   TOOLING ONLY: this page makes no claims and gates nothing. See
-  watchViewer.js's docblock and CC/docs/plans/seedling-bot-watch-page.md.
+  watchViewer.js's docblock, and docs/json/developer/procgen/seedling-bot.md
+  § "The editor arc" for what this page is and its named limits.
 
   Serve from the REPO ROOT (paths resolve against the dev server's cwd):
 
@@ -104,6 +105,21 @@
   is disk-derived, so a saved experiment would silently join the
   differential. Solved and hand-driven tapes live in the page, in the save
   box, in your downloads directory and in your hands.
+
+  ── THE CLI EXPORT (editor arc slice 4) ─────────────────────────────────
+
+  Any view above, as a PNG, with no browser and no dev server — built for
+  agent use, because an agent can Read a picture:
+
+      node scripts/procgen/export-seedling-view.mjs --out=view.png \
+          --tape=…/tapes/r8-solve-4.json --tick=171 --layers=player,arrows
+      node scripts/procgen/export-seedling-view.mjs --out=solve.png --trace \
+          --boot=…/tapes/r7-act2-4.json --level=4 --goals=exit:64,16 --solve=1
+
+  It starts its own static server on a free port, forwards the parameters
+  above verbatim, adds ?shot=1, and screenshots this page. ⛔ It draws
+  NOTHING itself, and a run this page REFUSES exits non-zero with the run's
+  own message and writes no file at all.
 
   Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
   registration. seedlingDemo is an engine-only module and a standalone

@@ -7080,3 +7080,114 @@ omission — re-derived at close from the committed expectations' own
 | **`buildTape`'s v5 cap** | untouched — every v6–v10 tape is still assembled by a plan script | **R9+** |
 | **rules v1 + the sphere order** | untouched; the sphere order is what a campaign slice would walk | **R9's campaign** |
 | **LightBoss / TentacleBeast / LavaBoss** | still measured OUT | deferred |
+
+---
+
+## The editor arc — `watch.html` becomes the lab page (TOOLING, CLOSED 2026-08-11)
+
+Interleaved between R8 and R9 by the user's ruling, in four slices. It built
+no game behaviour and no claim: it grew the replay viewer into the window an
+editor will eventually live behind. **R9 is still the campaign.**
+
+### What the page is now
+
+`frontend/modules/seedlingDemo/watch.html`, served from the repo root, with
+three SOURCES converging on one replay spine:
+
+- **REPLAY** — a committed tape (`?tape=`), as before.
+- **SOLVE** — a level, a tape v8 staging block and goals in the solver's own
+  vocabulary → `solveSegment` runs IN THE PAGE → the result is scrubbed by
+  the same stepper the verifier uses. Solve-then-scrub, ⚖ ruled.
+- **MANUAL** — the same starting conditions, driven by keyboard on the
+  page's own pacer; STOP folds the session with the ONE fold
+  (`buildStagedTape`) and CHECKS that the fold replays frame-for-frame
+  before showing it. A hand drive is a PRODUCER, beside `solveSegment` and
+  the drivers — not a second replay loop.
+
+Over all three: **eight independently toggleable overlay layers** (player ·
+enemies · pushables · arrows, OFF by default ⚖ · action = attack-key edges ·
+damage · events · volumes), every position SAMPLED per tick through
+`createTapeStepper`'s `onTick` hook and never re-simulated; a generated
+legend; a **decision-trace pane** (an in-page solve's own rows, or the
+committed tape's `fixtures/traces/<name>.trace.json` sidecar through the
+producer's validator) with highlight-by-cursor and click-to-seek; and
+**tape I/O** — the current tape in a textarea, with Download, paste-Load and
+Upload, all through `parseTape`.
+
+Everything is reachable from URL parameters: `?tape= ?side= ?speed=
+?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`.
+
+⛔ **The page never writes `fixtures/tapes/` or `fixtures/traces/`.** That
+roster is disk-derived, so a saved experiment would silently join the
+differential. Solved and hand-driven tapes live in the box, in a download,
+and in your hands.
+
+### The CLI export — the same page, headless
+
+    node scripts/procgen/export-seedling-view.mjs --out=view.png \
+        --tape=<repo-relative json> --tick=last --layers=player,enemies,arrows
+    node scripts/procgen/export-seedling-view.mjs --out=solve.png --trace \
+        --boot=<repo-relative json> --level=4 --goals=exit:64,16 --solve=1
+
+Built FOR AGENT USE (⚖ user): an agent can Read a PNG. It starts its own
+static server on a free port, loads the page with the caller's parameters
+plus `?shot=1`, waits on `body[data-shot-ready="1"]`, and screenshots the
+canvas (`--trace` widens it to the toggles, legend, HUD and trace pane).
+
+⛔ **ONE RENDERER**: the CLI adds a server and a PNG. It draws nothing, and
+every view selection is the page's existing URL vocabulary.
+⛔ **A NAMED REFUSAL EXITS NON-ZERO AND WRITES NOTHING** — a lethal terrain,
+water under an unpinned `sound`, a fold-time refusal — with the page's own
+message on stderr. Exit codes: 0 written · 1 usage · 2 the page refused ·
+3 never reached readiness · 4 written, but the page logged errors. A blank
+or partial frame with exit 0 is the defect that rule exists for.
+
+### The three laws the page still runs under
+
+They are in `watchViewer.js`'s docblock, verbatim, and every slice was
+checked against them:
+
+1. **TOOLING ONLY** — the page makes no claims, gates nothing, and nothing
+   that DOES make a claim may depend on it.
+2. **RAW TRUTH** — no interpolation, no smoothing, no elided dead frames; a
+   refusal is surfaced with the run's own message and its tick, and a ledger
+   row that cannot be placed is REPORTED rather than dropped or invented.
+3. **NO PRIVATE TICK LOOP** — one loop (`createTapeStepper` / `run.advance`),
+   one fold (`buildStagedTape`), one run construction (`createRunForStaging`,
+   the runner's own), one renderer.
+
+### ⛔ NAMED LIMITS (v1 bounds, each with a written cause)
+
+- **Six committed boots refuse at fold time.** `buildStagedTape` writes a
+  `tape_version: 8` header and refuses a staging block carrying a v9
+  `persistence[].at` (`r7-act2-5/8/full`, `r8-solve-5/8/18`) or a v10
+  `despawn` (`r7-act2-6`) — BY NAME, at assembly. Extending the assembly to
+  v9/v10 is the real repair and was ⚖ ruled AFTER the arc, with its own gate,
+  for whenever something routinely needs the page to fold those boots.
+- **No live "watch the bot think" mode.** Deferred on a measurement and then
+  dropped on it: an in-page solve of the acceptance segment takes **135–154
+  ms** (node, same code, same machine: 283 ms — chromium is faster). A live
+  decision stream would be showing a search that has already finished. Bound
+  named: one room, one goal, three decision rows; a 10× segment is ~1.5 s.
+- **Starting conditions are JSON only** — a raw v8 staging block with presets
+  harvested from the committed tapes' own boots. A form for the common
+  fields was ⚖ ruled optional polish and was not built.
+- **Not a GL panel.** No `__BUNDLED_MODULES__` entry, no substrate
+  registration; it is a standalone static page. Panel integration is a later
+  decision with its own checklist.
+- **The browser rows other than the CLI still SKIP without a dev server**
+  (`check-seedling-editor-{solve,overlays,manual}.mjs`). That politeness once
+  hid a page that could not load AT ALL for two rungs, so
+  `probe-seedling-watch-page.mjs` now takes `--strict` (fail, named, instead
+  of exit-0 skip) and the CLI — which brings its own server — is the arc's
+  non-skipping browser gate.
+
+### Where the arc's own findings live
+
+The full record is the arc kickoff `NewDocs/plans/seedling-editor-opus-kickoff.md`
+(⚠ `NewDocs/` is deliberately gitignored — working machine only): §8 SOURCE=
+SOLVE and the four transitive `node:fs` imports that had made the page
+unloadable in a browser since R7 slice 1; §9 the overlays, and the engine
+change that turned out not to be needed; §10 manual mode, the tape I/O, and
+the `earnedClears` tick added at each feeder's write funnel so the overlay
+could place clear markers at all; §11 this slice.

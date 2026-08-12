@@ -6,7 +6,14 @@
  * == the committed oracle recording) and
  * `scripts/procgen/verify-seedling-bot-differential.mjs` (the live game ==
  * those recordings); a viewer is a window onto the same run, not a third
- * opinion about it. Design: `CC/docs/plans/seedling-bot-watch-page.md`.
+ * opinion about it. What this page IS, and its named limits:
+ * `docs/json/developer/procgen/seedling-bot.md` § "The editor arc".
+ *
+ * ⚠ That citation used to be `CC/docs/plans/seedling-bot-watch-page.md`,
+ * which has not existed on disk since the docs migration moved it under the
+ * gitignored `NewDocs/` — i.e. the page's only stated design reference was
+ * unreachable to every reader who did not have this working machine. It now
+ * points at the TRACKED section.
  *
  *   watch.html?tape=<repo-relative path>&side=js|wasm[&speed=N]
  *
