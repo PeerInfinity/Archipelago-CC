@@ -184,7 +184,7 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 // NEITHER way — so its live state lives here beside theirs and never in
 // `activators`.
 import {
-    ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, arrowLane, arrowRect,
+    ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, arrowRect,
     arrowTrapFires, createArrow, createArrowTrap, lanesOver, shadowOf, stepArrow,
     stepArrowTrap,
 } from './arrowTrap.js';

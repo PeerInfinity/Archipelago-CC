@@ -3946,9 +3946,64 @@ export function solveSegment({
     /** Trace rows, buffered; keys are filled from `perTick` at finish. */
     const rows = [];
     const seeRow = (row) => { rows.push(row); return row; };
+    /**
+     * ⛓⛓⛓ EDITOR ARC SLICE 9 — THE DANGER QUERIES THIS WALK ACTUALLY MADE.
+     *
+     * ⛔ A RECORDING, NOT A HOOK THAT CAN CHANGE ANYTHING. Nothing reads this
+     * list, nothing branches on it, and no `dangerAt` call exists because of
+     * it — every row is written at a site that had ALREADY asked the union,
+     * from the answer it had already been given. That is the whole of its
+     * byte-inertness argument: a recording callback that could alter a
+     * decision would be a policy wearing an instrument's name.
+     *
+     * ⛔⛔ AND IT IS WHY THE EDITOR PAGE MAY DRAW A DANGER LAYER AT ALL. The
+     * page's own law is that *a viewer is a window, not a third opinion*
+     * (`watchViewer`'s docblock), and slice 6 refused `dangerVolumes` as an
+     * eleventh peer of the layers that show what happened (kickoff §14.4c).
+     * ⚖ Item 9 supersedes that refusal for exactly one shape: a layer drawing
+     * what the SOLVER RECORDED. A page that re-asked `dangerAt` itself would
+     * be the third opinion again — same function, different run state, and a
+     * plausible picture of a warning the bot never got. So the ONLY danger
+     * data that leaves this module is the reason lists it was handed.
+     *
+     * ⚠ TWO CLOCKS, AND THE ROW CARRIES BOTH. `tick` is `perTick.length` —
+     * the TAPE's clock, the one the editor's scrub cursor indexes and the one
+     * `trace.rows[].tick` already uses. `runTick` is `run.ticksCompleted`, the
+     * clock `dangerAt` was asked at. They are NOT the same number: a run
+     * spends DEAD FRAMES (`run.deadFrameSpans`) that the tape does not tick
+     * through, so recording one and calling it the other would put a warning
+     * at a cursor position the walk never had.
+     *
+     * ⚠ NAMED BOUND — the DECISION POINTS, not every query. `deriveBaitStance`
+     * asks the union over a 17x17 lattice of HYPOTHETICAL stances (two sites,
+     * both inside a module-level helper); those are a SEARCH, not positions
+     * this walk held, and recording them would bury the handful of answers the
+     * walk actually acted on under several hundred it discarded. The two sites
+     * here are the ones the loop itself owns: what the bot SENSED where it
+     * stood, and what the gate REFUSED it.
+     */
+    const dangerQueries = [];
+    const recordDanger = (where, x, y, d) => {
+        dangerQueries.push({
+            where,
+            tick: perTick.length,
+            runTick: run.ticksCompleted,
+            level: run.level,
+            x,
+            y,
+            danger: d.danger,
+            mode: d.mode,
+            horizon: d.horizon,
+            // ⛔ The union's own reason strings, verbatim — a paraphrase here
+            // would be a second spelling of the warning, and the warning is
+            // the entire content of the channel.
+            sources: d.sources.map((s) => ({ kind: s.kind, id: s.id ?? null, why: s.why })),
+        });
+    };
     const saw = () => {
         const s = run.state;
         const d = dangerNow(run, s.x, s.y);
+        recordDanger('sense', s.x, s.y, d);
         return {
             level: run.level, x: s.x, y: s.y, vx: s.vx, vy: s.vy,
             danger: d.sources.map((src) => `${src.kind}:${src.id ?? '?'}`),
@@ -4011,6 +4066,10 @@ export function solveSegment({
      */
     const refuseDanger = (x, y, goal, what, except = null) => {
         const d = dangerNow(run, x, y, except);
+        // ⛓ Recorded whichever way it answers: a gate that CLEARED is as much
+        // of the walk's record as one that refused, and a layer that only
+        // showed refusals would draw a bot that was never told it was safe.
+        recordDanger('gate', x, y, d);
         if (d.danger) {
             refuse(`${what}: the danger map forbids (${x},${y}) — `
                 + d.sources.map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`).join('; ')
@@ -5062,5 +5121,14 @@ export function solveSegment({
         replans,
         grazes,
         records,
+        /**
+         * ⛓ EDITOR ARC SLICE 9 — beside `trace`, deliberately, and not inside
+         * it. A trace row is a DECISION and its `saw.danger` is a summary
+         * (`kind:id`, no reason, no box); this is the query itself, with the
+         * union's own `why` on every source. Folding it into the rows would
+         * have changed the committed trace sidecars — which is the one thing
+         * an instrument added to a solver may not do.
+         */
+        dangerQueries,
     };
 }

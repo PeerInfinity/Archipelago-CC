@@ -218,8 +218,8 @@ console.log('\n## the layer as a LAYER — legend, defaults, and OFF really is o
 {
     const all = await at('r8-solve-8', 0);
     const ids = all.toggles.map(([id]) => id);
-    check(ids.includes('lanes') && all.toggles.length === 12,
-        '⛓ `lanes` has a toggle, generated from the roster — TWELVE now',
+    check(ids.includes('lanes') && all.toggles.length === 15,
+        '⛓ `lanes` has a toggle, generated from the roster — FIFTEEN now',
         `${all.toggles.length}: ${ids.join(', ')}`);
     // ⛔ THE DISTINCTION, ON THE PAGE AND NOT ONLY IN THE DOCS. `arrows` is
     // the sampled FLIGHTS and defaults OFF; `lanes` is the trap's GEOMETRY

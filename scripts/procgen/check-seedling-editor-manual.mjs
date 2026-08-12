@@ -43,6 +43,28 @@
  */
 import { chromium } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * ⛔⛔ SLICE 9 — THE ROSTER, IMPORTED, AND WHY THIS ROW NOW READS IT RATHER
+ * THAN COUNTING TO A LITERAL.
+ *
+ * This check asserted **eleven** from slice 6 until slice 9 found it. Slice 8
+ * took the roster to TWELVE and replaced the literal in `-overlays`, `-shapes`
+ * and `-lanes` — trap 62's "replace, never relax" — and never touched this
+ * one, so the row was RED from `8eb641b12` onwards and nobody saw it: the
+ * script SKIPs without a dev server and no CI job starts one.
+ *
+ * ⇒ the literal stays (relaxing it to `>= 11` would be exactly the failure
+ * trap 62 is about) AND it is now tied to the module's own roster, across the
+ * runtime boundary the page cannot be imported over — `SEAM_SIGNATURE`'s
+ * shape. A layer added tomorrow moves BOTH halves at once, so the row cannot
+ * silently drift again.
+ */
+const HERE = dirname(fileURLToPath(import.meta.url));
+const { LAYER_IDS } = await import(
+    join(HERE, '..', '..', 'frontend/modules/seedlingDemo/watchOverlays.js'));
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -137,9 +159,9 @@ async function holdFor(page, codes, ms) {
     }));
     check(/DRIVING/.test(driving.status) && /tick\(s\) recorded/.test(driving.status),
         'the page reports a LIVE drive with its tick count', driving.status);
-    check(driving.toggles === 11,
-        'the ELEVEN layer toggles are mounted over the LIVE drive too (slice 6: +3)',
-        `${driving.toggles} toggle(s)`);
+    check(driving.toggles === 15 && driving.toggles === LAYER_IDS.length,
+        'the FIFTEEN layer toggles are mounted over the LIVE drive too, and they ARE the roster',
+        `${driving.toggles} toggle(s), roster ${LAYER_IDS.length}`);
     if (SHOT) await page.screenshot({ path: `${SHOT}/manual-driving.png` });
 
     await page.click('#manualStop');

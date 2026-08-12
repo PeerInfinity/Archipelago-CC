@@ -73,6 +73,24 @@ import { chaserBoxAt } from './chasers.js';
 import { hammerHitsPlayer, hammerLine } from './spinner.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
+/**
+ * ⛓⛓⛓ SLICE 9 — AND IT IS `detectionRects`, NOT `dangerMap.crusherVolumesAt`.
+ *
+ * BOTH exist and BOTH describe a crusher's four trigger lanes:
+ *
+ *   `crusher.detectionRects(c)`      the lanes `scanCrusher` ITSELF walks
+ *   `dangerMap.crusherVolumesAt(cx, cy)`  the same four, re-derived at a live
+ *                                    centre for the danger union's own use
+ *
+ * The layer draws the ones the SCAN used, because the scan's answer —
+ * `crusherScans[].matched` — is a list of `dir` NAMES, and only
+ * `detectionRects` produces rects those names key into. Pairing `matched`
+ * with the other spelling's rects would be a lane list from one model
+ * labelled with another model's verdicts, which is the two-cost-models trap
+ * with the two costs already known to disagree about their origin
+ * (`c.x - CRUSHER.originX` against `cx - 16`).
+ */
+import { detectionRects } from './crusher.js';
 
 /**
  * ⛔ THE LAYER ROSTER — kickoff §3.2's table, transcribed once.
@@ -136,6 +154,48 @@ export const OVERLAY_LAYERS = Object.freeze([
      * `arrows` stays the only OFF layer.
      */
     Object.freeze({ id: 'lanes', label: 'armed arrow-trap lanes (this tick)', kind: 'shape', on: true }),
+    /**
+     * ── ⛓⛓⛓ SLICE 9'S THREE, AND THE FIRST TWO EXIST BECAUSE THE BASE
+     * ── PICTURE IS WRONG ─────────────────────────────────────────────────
+     *
+     * ⛔ `worldstate` — THE ONE LAYER THAT CORRECTS ANOTHER DRAWING. Slice 1
+     * §8.8 item 4 deliberately draws a SEPARATELY-BUILT, never-advanced world
+     * (the run's own would show END-state geometry at early scrub positions),
+     * and slice 6's audit priced what that costs: a rock broken at tick 50 is
+     * still drawn as a wall at tick 300, a chest opened is still drawn shut
+     * (kickoff §14.3c, measured across all 153 tapes — `openActivators` 23
+     * tapes · `openChests` 7 · `turrets` 8 · `brokenRocks` 2 · `burnedTrees` 2
+     * · `pulledRopes` 2). ⇒ ON by default, and the argument is not
+     * signal-to-noise: a viewer with this layer off is looking at a picture
+     * that is KNOWN to be stale, and the ink is a handful of marks on the
+     * objects that changed.
+     *
+     * ⛔⛔ AND IT MARKS, IT DOES NOT REPAINT. ⚖ The charter's own words: *the
+     * change, not a repaint of the base — mark "this wall is gone", do not
+     * silently un-draw it.* A layer that erased the stale wall would leave
+     * exactly the picture a fresh build gives, and the reader would have no
+     * way to tell a room the run changed from a room drawn correctly the
+     * first time. The base stays; the mark says what is no longer true.
+     *
+     * ⛔ `crushers` — the R5-slice-16 forward finally read. `frames[].crushers`
+     * and `frames[].crusherScans` have ridden on every frame since R5 and were
+     * drawn by NOBODY (kickoff §14.4b, trap 119's family in the hot loop).
+     * ON, for the reason the shape layers are: a crusher room is three rooms
+     * in the whole game and the ink is four outlines on the tick you are
+     * looking at.
+     *
+     * ⚖⚖ `danger` — OFF, AND THE DEFAULT IS PART OF THE RULING. Item 9
+     * supersedes slice 6's refusal of danger-map verdicts (§14.4c) for exactly
+     * one shape: what the SOLVER RECORDED, labelled as the bot's heuristic,
+     * default OFF, and reporting its own absence by name on a source with no
+     * solver. Those four conditions ARE the ruling, not decoration — the
+     * refusal's reason (a forecast drawn beside raw truth in the same ink
+     * vocabulary invites reading the forecast as a fact) is unchanged and is
+     * what the OFF default and the separate ink answer.
+     */
+    Object.freeze({ id: 'worldstate', label: 'world state — what the run has CHANGED (this tick)', kind: 'shape', on: true }),
+    Object.freeze({ id: 'crushers', label: 'crusher bodies + trigger lanes (this tick)', kind: 'shape', on: true }),
+    Object.freeze({ id: 'danger', label: 'danger the SOLVER was told (its heuristic, not truth)', kind: 'shape', on: false }),
 ]);
 
 export const LAYER_IDS = Object.freeze(OVERLAY_LAYERS.map((l) => l.id));
@@ -167,6 +227,56 @@ export function parseLayersParam(raw) {
     }
     return { on, unknown };
 }
+
+/**
+ * ⛓⛓⛓ SLICE 9 — THE WORLD-STATE FAMILIES, AND WHAT THIS TABLE IS AND IS NOT.
+ *
+ * Each row is a JOIN: a live SET the run owns, and the key `buildLevelWorld`
+ * stamps on the base solid that set can name. Nothing else — no geometry, no
+ * threshold, no timing. The rect a mark is drawn on is the SOLID'S OWN
+ * (`s.rect`, or `s.shrunkRect` for a rope, which the builder computed), and
+ * the membership is the RUN'S OWN.
+ *
+ * ⛔⛔ THE AUTHORITY IS `levelWorld.liveRectOf`, AND IT IS NOT IMPORTABLE.
+ * That function — a closure inside `buildLevelWorld` — is where the game's
+ * answer to "is this solid still there, and where" lives, over THIRTEEN
+ * families. It is not exported, and the honest options were (a) hoist it out
+ * as an engine change nobody had chartered, or (b) name the five uniform
+ * joins here and PROVE them against the engine rather than trusting them.
+ * This is (b), and the proof is a differential in `watchOverlays.test.js`:
+ * for every solid this layer marks GONE, `world.collidesSolid` asked at that
+ * rect with the run's OWN `liveGeometryOpts()` must agree that nothing is
+ * there. A polarity that drifts fails that row; it does not quietly draw a
+ * wall that is not there, which is the failure this whole layer exists to
+ * end. ⇒ the hoist is OWED and named (as-built §17), not smuggled.
+ *
+ * ⛔ NAMED BOUND — FIVE FAMILIES HERE, PLUS TURRETS IN THEIR OWN ARM, OUT OF
+ * THIRTEEN. `liveRectOf` also answers for `openBridges`, `openMagicalLocks`,
+ * `bosses`, `shieldBosses`, `finalDoors`, `pushables` and `fallenRocks`.
+ * `pushables` is drawn already (its own path layer since slice 2); the other
+ * six are outside ⚖ the charter's list (*opened activators/chests, dead
+ * turrets, broken rocks, burned trees, pulled ropes*) and are stated here so
+ * "the layer showed nothing" can never be confused with "the room changed
+ * nothing" for a family nobody wired.
+ *
+ * ⚠ `effect` IS THE GAME'S MECHANISM, not a drawing style: a rope is the one
+ * member of the five that SHRINKS rather than leaving — `RopeStart.hit()`
+ * runs `setHitbox(16, 16, 8, 8)`, so 112 px of wall becomes 16 px of wall at
+ * the span's start, and a layer that marked it GONE would open a tile the
+ * game keeps.
+ */
+export const WORLD_STATE_FAMILIES = Object.freeze([
+    Object.freeze({
+        set: 'openActivators', key: 'activatorId', effect: 'gone', verb: 'held OPEN',
+    }),
+    Object.freeze({ set: 'openChests', key: 'chestId', effect: 'gone', verb: 'OPENED' }),
+    Object.freeze({ set: 'brokenRocks', key: 'rockId', effect: 'gone', verb: 'BROKEN' }),
+    Object.freeze({ set: 'burnedTrees', key: 'treeId', effect: 'gone', verb: 'BURNED' }),
+    Object.freeze({
+        set: 'pulledRopes', key: 'ropeId', effect: 'swapped', verb: 'PULLED',
+        rectOf: (s) => s.shrunkRect ?? null,
+    }),
+]);
 
 /**
  * The attack keys, by name — the edges the ACTION layer marks.
@@ -304,8 +414,125 @@ export function sampleMovers(run) {
     let lanes = [];
     let arrowTraps = null;
     let census = null;
+    /**
+     * ⛓⛓⛓ SLICE 9 — WHAT THE RUN HAS CHANGED, AT THIS TICK, over the world the
+     * renderer is drawing.
+     *
+     * ⛔ SAMPLED PER TICK, LIKE EVERY OTHER MOVER CHANNEL, AND FOR A STRONGER
+     * REASON THAN THE OTHERS. `run.brokenRocks` is a live set: reading it once
+     * after the walk and drawing it at every cursor would report a rock as
+     * broken three hundred ticks before it was hit — the END-state picture
+     * slice 1 refused to draw for the geometry, arriving through the back door
+     * as an overlay. Scrubbing must show the world AS OF the cursor tick.
+     *
+     * ⚠ AND THE SCAN IS UNCONDITIONAL, so `placed` is a fact even on the ticks
+     * nothing has changed. A count taken only when there was something to
+     * count cannot tell "this room holds nothing changeable" from "this room
+     * holds nine and the run has touched none" — trap 196's own lesson, and
+     * `worldChangesAt` spends both numbers on saying which.
+     */
+    const changes = [];
+    let changeCounts = null;
     const world = typeof run.worldFor === 'function' ? run.worldFor(run.level) : null;
     if (world) {
+        const sets = {};
+        // `null` is `noclip`: the run steps none of these families and reports
+        // no set at all, which is a different fact from an empty one (the
+        // `armedArrowTraps` distinction, six families over).
+        let blind = 0;
+        for (const f of WORLD_STATE_FAMILIES) {
+            const s = run[f.set];
+            sets[f.set] = s ?? null;
+            if (!s) blind += 1;
+        }
+        const turretsNow = run.turrets ?? null;
+        if (!turretsNow) blind += 1;
+        const placedBy = {};
+        let placedCount = 0;
+        for (const s of world.solids ?? []) {
+            for (const f of WORLD_STATE_FAMILIES) {
+                const id = s[f.key];
+                if (!id) continue;
+                placedCount += 1;
+                placedBy[f.set] = (placedBy[f.set] ?? 0) + 1;
+                const live = sets[f.set];
+                if (!live || !live.has(id)) continue;
+                changes.push({
+                    id,
+                    family: f.set,
+                    tag: s.tag ?? null,
+                    effect: f.effect,
+                    verb: f.verb,
+                    base: s.rect,
+                    // ⛔ The builder's own box, never a page-side resize. A
+                    // rope's shrunk rect is `setHitbox(16, 16, 8, 8)` applied at
+                    // build time; retyping it here would be a second spelling of
+                    // a hitbox, which is the defect this package pays for one
+                    // class at a time.
+                    rect: f.rectOf ? f.rectOf(s) : null,
+                });
+            }
+            /**
+             * ⛔⛔⛔ THE TURRET IS THE ONE FAMILY WHOSE POLARITY IS INVERTED,
+             * and it is the reason this arm is written out rather than being a
+             * sixth table row. `IceTurret.type` is `"Enemy"` from the base ctor
+             * and `type = "Solid"` is the ELSE of `if (currentAnim != "dead")`
+             * — so an ALIVE turret is not a solid at all, and a CORPSE is one
+             * only from the first tick the player's box is off it
+             * (`liveRectOf`'s own note: this is the one arm that never falls
+             * through to `s.rect`).
+             *
+             * ⇒ TWO marks, and both are true statements about the base picture:
+             * the level builds a 32x32 body that the renderer paints as a wall
+             * and the run has NO wall there while it lives (`notsolid`), and
+             * once it dies the wall is a 16x16 corpse WHERE THE RUN LEFT IT
+             * after the bumps (`swapped`), which is neither the base rect nor
+             * the base size.
+             *
+             * ⚠ A `notsolid` mark is therefore NOT a change the run made — it
+             * is the build-time picture being wrong from tick 0 — and the layer
+             * says so in its own vocabulary rather than filing it as a break.
+             */
+            if (s.turretId) {
+                placedCount += 1;
+                placedBy.turrets = (placedBy.turrets ?? 0) + 1;
+                if (!turretsNow) continue;
+                const now = turretsNow.get(s.turretId);
+                if (now && now.solid) {
+                    changes.push({
+                        id: s.turretId,
+                        family: 'turrets',
+                        tag: s.tag ?? null,
+                        effect: 'swapped',
+                        verb: 'DEAD — the corpse is the wall, not the body',
+                        base: s.rect,
+                        rect: now.rect,
+                    });
+                } else {
+                    changes.push({
+                        id: s.turretId,
+                        family: 'turrets',
+                        tag: s.tag ?? null,
+                        effect: 'notsolid',
+                        verb: now
+                            ? 'ALIVE — an ice turret is an Enemy, not a wall'
+                            : 'not solid — the run has no corpse latch for it',
+                        base: s.rect,
+                        rect: null,
+                    });
+                }
+            }
+        }
+        changeCounts = {
+            placed: placedCount,
+            byFamily: placedBy,
+            changed: changes.length,
+            // ⚠ ALL SIX blind is `noclip`; a partial count is impossible (the
+            // getters share one flag) and is reported as the number anyway
+            // rather than as a boolean nobody can check.
+            blind,
+            families: WORLD_STATE_FAMILIES.length + 1,
+        };
         const placed = world.arrowTraps ?? [];
         const armed = run.armedArrowTraps;
         arrowTraps = { placed: placed.length, armed: armed ? armed.size : null };
@@ -344,6 +571,8 @@ export function sampleMovers(run) {
         lanes,
         arrowTraps,
         census,
+        changes,
+        changeCounts,
     };
 }
 
@@ -392,6 +621,8 @@ export function collectRun(tape, levelSource) {
                     lanes: [],
                     arrowTraps: null,
                     census: null,
+                    changes: [],
+                    changeCounts: null,
                 });
         },
     });
@@ -783,6 +1014,200 @@ export function hammerLinesAt(samples, cursor, level) {
         };
     });
     return { lines, why: null };
+}
+
+// ── the SLICE 9 layers ───────────────────────────────────────────────────
+
+/**
+ * ⛓⛓⛓ WHAT THE RUN HAS CHANGED over the build-time base, at this tick.
+ *
+ * ⛔ EVERY ENTRY IS A MARK ON A BOX THE RENDERER ALREADY DREW. `base` is the
+ * solid the level built (and the picture still shows); `rect` is what is TRUE
+ * there now, and `null` means nothing is. The layer's whole job is to make
+ * those two visibly different, because a viewer that quietly redrew the base
+ * would give the reader no way to tell a corrected picture from a picture
+ * that never needed correcting.
+ *
+ * ⚠ FOUR NAMED EMPTIES (trap 196), and the order they are asked in is
+ * deliberate — a room with nothing changeable in it is unchanged whatever the
+ * flags say, so the POPULATION is asked before the run's ability to answer.
+ *
+ * @returns {{changes: Array, why: string|null}}
+ */
+export function worldChangesAt(samples, cursor, level) {
+    const s = samples[cursor];
+    if (!s || s.level !== level) return { changes: [], why: null };
+    const changes = s.changes ?? [];
+    if (changes.length > 0) return { changes, why: null };
+    const c = s.changeCounts;
+    // A sample with no world at all (the v1 engine, a unit-test fake) is an
+    // absence that cannot be explained, only reported.
+    if (!c) return { changes: [], why: null };
+    if (c.placed === 0) {
+        return {
+            changes: [],
+            why: 'no lock, chest, rock, tree, rope or ice turret stands in this room — the '
+                + 'build-time picture has nothing in it whose state a run could change, so '
+                + 'the drawn world is not stale here, it is simply right',
+        };
+    }
+    if (c.blind === c.families) {
+        return {
+            changes: [],
+            why: `${c.placed} changeable object(s) stand here, but this walk is under `
+                + '`noclip`: the run steps none of these families and reports `null` for '
+                + 'every one of them. "Unchanged" is not a question this run can answer — '
+                + 'which is NOT the same fact as "nothing has changed"',
+        };
+    }
+    return {
+        changes: [],
+        why: `${c.placed} changeable object(s) stand in this room and the run has changed `
+            + 'NONE of them by this tick — the drawn world is stale in no respect this '
+            + 'layer covers',
+    };
+}
+
+/**
+ * ⛓⛓⛓ THE CRUSHERS — the R5-slice-16 forward's first reader.
+ *
+ * `frames[].crushers` (id → `{id, rect, x, y}`) and `frames[].crusherScans`
+ * (id → `scanCrusher`'s answer plus `{x, y, resting}`) have ridden on every
+ * frame since R5 and were read by NOBODY on the page — kickoff §14.4b, a
+ * dangling forward in the hot loop, trap 119's family. This draws them.
+ *
+ * ⛔ THE BODY IS THE RUN'S RECT, NOT THE LEVEL'S. A crusher is the one solid
+ * on the map whose box is a function of the whole run rather than of any one
+ * press (it charges at a player it can SEE), so the base picture has it parked
+ * at its constructor cell from the first tick a bait commits.
+ *
+ * ⛔⛔ AND THE LANES ARE LABELLED AS THE QUESTION THEY ARE. `crusherScans` is
+ * a SNAPSHOT — `levelRun`'s own words: *"it says what the next tick's scan
+ * would find IF the crusher is at rest; a charging one does not re-derive
+ * `v` at all"*. So `matched` is not the scan that produced THIS tick's
+ * velocity; it is the same scan asked again at the position the run now
+ * holds. Drawn as "what it can see from here", never as "why it moved" —
+ * the hammer's two-samples-apart lesson (§14.1) applied before it could bite.
+ *
+ * ⚠ `shieldedBy` IS AN EARLY EXIT AND THEREFORE A DIFFERENT PICTURE: a crusher
+ * whose sight line is blocked does not scan at all, so its `matched` is empty
+ * for a reason that has nothing to do with where the player is standing. It
+ * rides on the entry rather than being flattened into "sees nothing".
+ *
+ * @param {object|null} live `{crushers, crusherScans}` — the frame's own maps
+ *   on the REPLAY path, the live run's on the MANUAL one. Never re-derived.
+ * @returns {{crushers: Array, why: string|null}}
+ */
+export function crushersAt(live) {
+    if (!live) return { crushers: [], why: null };
+    const bodies = live.crushers ?? null;
+    const scans = live.crusherScans ?? null;
+    if (!bodies) {
+        return {
+            crushers: [],
+            why: '`run.crushers` is null: this walk is under `noclip`, where crushers are '
+                + 'not stepped at all. WHERE a crusher is and WHAT it can see are not '
+                + 'questions this run can answer — which is NOT the same as "no crusher '
+                + 'stands here"',
+        };
+    }
+    if (bodies.size === 0) {
+        return {
+            crushers: [],
+            why: 'no crusher stands in this room — 113 of the game\'s 116 levels hold none',
+        };
+    }
+    const out = [];
+    for (const [id, body] of bodies) {
+        const scan = scans ? scans.get(id) ?? null : null;
+        const matched = new Set(scan?.matched ?? []);
+        out.push({
+            id,
+            rect: body.rect,
+            x: body.x,
+            y: body.y,
+            resting: scan ? scan.resting : null,
+            shieldedBy: scan?.shieldedBy ? (scan.shieldedBy.id ?? scan.shieldedBy.tag ?? '?') : null,
+            dir: scan?.dir ?? null,
+            // ⛔ `detectionRects`' own rects — the four the scan walks. See the
+            // import block for why this and not `crusherVolumesAt`.
+            lanes: detectionRects({ x: body.x, y: body.y }).map((r) => ({
+                dir: r.dir,
+                rect: { x: r.x, y: r.y, right: r.right, bottom: r.bottom },
+                live: matched.has(r.dir),
+            })),
+        });
+    }
+    return { crushers: out, why: null };
+}
+
+/**
+ * ⛓⛓⛓ THE DANGER THE SOLVER WAS TOLD — ⚖ item 9, and its conditions ARE the
+ * ruling.
+ *
+ * ⛔⛔⛔ THIS FUNCTION RECOMPUTES NOTHING AND MAY NOT BE MADE TO. It is handed
+ * `solveSegment`'s `dangerQueries` — the reason lists `dangerAt` returned to
+ * the BOT, recorded at the sites that had already asked — and it filters them
+ * to a tick. `watchViewer`'s standing law is that *a viewer is a window, not a
+ * third opinion*, and slice 6 refused `dangerVolumes` as an eleventh peer of
+ * the layers that show what happened (§14.4c). The ⚖ supersession is for a
+ * layer that draws what the solver RECORDED; a page that called `dangerAt`
+ * itself would be the refused thing wearing this one's name — the same
+ * function asked at a different run state, drawing a plausible picture of a
+ * warning the bot never got.
+ *
+ * ⚠ `null` AND `[]` ARE DIFFERENT ANSWERS. `null` is "no solver ran" (a REPLAY
+ * of a committed tape, or a MANUAL drive — there is no bot and no heuristic to
+ * show); `[]` is "a solver ran and asked nothing", which has never been
+ * observed and would itself be a finding.
+ *
+ * ⚠ AND THE SPARSENESS IS REPORTED WITH ITS NEIGHBOUR. The bot queries at
+ * DECISION points, so most ticks carry none — an empty layer on tick 137 is
+ * the norm and not a limitation, and the reason says so WITH the count over
+ * the walk and the nearest tick that has one, so a reader can scrub to it
+ * instead of concluding the layer is broken.
+ *
+ * @returns {{queries: Array, why: string|null}}
+ */
+export function dangerQueriesAt(queries, cursor, level) {
+    if (queries === null || queries === undefined) {
+        return {
+            queries: [],
+            why: 'no solver ran — no danger data. This layer draws the reason lists the '
+                + 'SOLVER was handed while it walked, and a REPLAY of a committed tape or a '
+                + 'MANUAL drive has no solver. The page will not recompute them: a viewer is '
+                + 'a window, not a third opinion',
+        };
+    }
+    const here = queries.filter((q) => q.tick === cursor && q.level === level);
+    if (here.length > 0) return { queries: here, why: null };
+    const inLevel = queries.filter((q) => q.level === level);
+    if (queries.length === 0) {
+        return {
+            queries: [],
+            why: 'the solve recorded NO danger query at all — every walk senses at its '
+                + 'decision points, so an empty record is a finding about the solver rather '
+                + 'than about this room',
+        };
+    }
+    if (inLevel.length === 0) {
+        return {
+            queries: [],
+            why: `the solver made ${queries.length} danger query(s) on this walk and NONE of `
+                + `them in level ${level} — this room was crossed by a segment the solver did `
+                + 'not plan in',
+        };
+    }
+    // ⛓ The nearest tick that HAS one, in either direction, so the reason is
+    // actionable rather than merely true.
+    const nearest = inLevel.reduce((best, q) => (
+        Math.abs(q.tick - cursor) < Math.abs(best.tick - cursor) ? q : best), inLevel[0]);
+    return {
+        queries: [],
+        why: `the solver made no danger query on tick ${cursor} — it asks at DECISION `
+            + `points, not every tick. It made ${inLevel.length} in this level `
+            + `(${queries.length} on the walk); the nearest is tick ${nearest.tick}`,
+    };
 }
 
 /**

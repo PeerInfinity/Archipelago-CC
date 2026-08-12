@@ -127,9 +127,10 @@ import {
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
-    activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun, defaultLayerSet,
-    hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
-    parseLayersParam, pathPointsUpTo, traceRowFields, traceSidecarPath,
+    activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun,
+    crushersAt, dangerQueriesAt, defaultLayerSet, hammerLinesAt, LAYER_IDS, MARKER_GLYPHS,
+    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam, pathPointsUpTo,
+    traceRowFields, traceSidecarPath, worldChangesAt,
 } from './watchOverlays.js';
 import {
     clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
@@ -209,6 +210,33 @@ const SHAPE_COLOURS = Object.freeze({
      * distinction and not the picture's.
      */
     lane: '#7fd4ff',
+    /**
+     * ⛓⛓⛓ SLICE 9 — THREE INK FAMILIES, AND THE SEPARATION IS THE POINT.
+     *
+     * `gone`/`swapped`/`notsolid` are CORRECTIONS to the base picture. They
+     * are deliberately a colour nothing else on the canvas uses, because the
+     * mark's whole content is "the grey box under me is not true" — painting
+     * it in the base's own greys would make the correction look like more
+     * base.
+     *
+     * `crusher`/`crusherLane`/`crusherLaneLive` are RAW TRUTH: where the body
+     * is and what the run's own scan can see from there.
+     *
+     * ⛔⛔ `danger`/`dangerClear` ARE NEITHER, AND THE INK SAYS SO LOUDEST.
+     * ⚖ Item 9's supersession of §14.4c is conditional on the layer being
+     * *explicitly labelled as the bot's heuristic*, and a colour shared with
+     * any raw-truth layer would undo that label on the canvas whatever the
+     * legend said. This is the one layer on the page that draws an OPINION,
+     * so it gets an ink no fact wears.
+     */
+    gone: '#ff4f9f',
+    swapped: '#8fff9f',
+    notsolid: '#ffae4f',
+    crusher: '#c04040',
+    crusherLane: '#7a4040',
+    crusherLaneLive: '#ff6a6a',
+    danger: '#b070ff',
+    dangerClear: '#4a3a70',
 });
 
 const $ = (id) => document.getElementById(id);
@@ -423,6 +451,16 @@ function makeRenderer(canvas) {
         hammer: { lines: [], why: null },
         attacks: [],
         lanes: { lanes: [], why: null },
+        /**
+         * ⛓ SLICE 9's three, in the `{…, why}` PAIR SHAPE FROM THE OUTSET —
+         * kickoff §16.9 item 1, and §16.5 is why it is worth saying: the shape
+         * has to be chased into `get drawn()`, which is DOM-side and which no
+         * module test reaches. All three can legitimately draw nothing, so all
+         * three carry a reason.
+         */
+        worldstate: { changes: [], why: null },
+        crushers: { crushers: [], why: null },
+        danger: { queries: [], why: null },
     };
 
     const unknownGlyphs = new Set();
@@ -604,6 +642,114 @@ function makeRenderer(canvas) {
             drawn.hammer = { lines: [], why: null };
             drawn.attacks = [];
             drawn.lanes = { lanes: [], why: null };
+            drawn.worldstate = { changes: [], why: null };
+            drawn.crushers = { crushers: [], why: null };
+            drawn.danger = { queries: [], why: null };
+            /**
+             * ⛓⛓⛓ SLICE 9 — THE WORLD-STATE MARKS, AND THEY ARE DRAWN FIRST
+             * OF THE SHAPE LAYERS ON PURPOSE.
+             *
+             * They belong to the GEOMETRY above them — a correction to the
+             * tiles and object solids already painted — so they sit under
+             * every body, every lane and every line. Ordering them last would
+             * put "this wall is gone" on top of the enemy standing where the
+             * wall was, which reads as a mark on the enemy.
+             *
+             * ⛔ NOTHING IS UN-DRAWN. ⚖ The charter's own condition: the mark
+             * says the base is no longer true; it does not erase the base. A
+             * viewer that repainted the floor would be indistinguishable from
+             * one that had built the world fresh, and the reader would lose
+             * the only evidence that the picture needed correcting at all.
+             */
+            if (opts.on.has('worldstate')) {
+                const w = worldChangesAt(samples, cursor, world.level);
+                drawn.worldstate = { changes: [], why: w.why };
+                for (const ch of w.changes) {
+                    const b = ch.base;
+                    if (ch.effect === 'swapped' && ch.rect) {
+                        // What is TRUE now, filled; what the level built,
+                        // outlined and struck through. Two boxes, because the
+                        // fact is that they are DIFFERENT boxes.
+                        outline(b, SHAPE_COLOURS.gone);
+                        lineAt(b.x, b.y, b.right, b.bottom, SHAPE_COLOURS.gone);
+                        rect(ch.rect, SHAPE_COLOURS.swapped, 0.3);
+                        outline(ch.rect, SHAPE_COLOURS.swapped);
+                    } else {
+                        const ink = ch.effect === 'notsolid'
+                            ? SHAPE_COLOURS.notsolid : SHAPE_COLOURS.gone;
+                        outline(b, ink);
+                        lineAt(b.x, b.y, b.right, b.bottom, ink);
+                        lineAt(b.right, b.y, b.x, b.bottom, ink);
+                    }
+                    drawn.worldstate.changes.push({
+                        id: ch.id, family: ch.family, tag: ch.tag, effect: ch.effect,
+                        verb: ch.verb, base: ch.base, rect: ch.rect,
+                    });
+                }
+            }
+            /**
+             * ⛓⛓⛓ THE CRUSHERS — the dangling R5 forward's first reader.
+             *
+             * ⛔ THE LANE OUTLINES ARE NOT FILLED unless the scan MATCHED
+             * them. A crusher's four lanes are 32x96 each and a filled set
+             * would bury the room the layer exists to explain; a matched lane
+             * is the one fact worth the ink, because it is what will make the
+             * body charge.
+             */
+            if (opts.on.has('crushers')) {
+                const c = crushersAt(opts.live);
+                drawn.crushers = { crushers: [], why: c.why };
+                for (const body of c.crushers) {
+                    for (const lane of body.lanes) {
+                        if (lane.live) rect(lane.rect, SHAPE_COLOURS.crusherLaneLive, 0.15);
+                        outline(lane.rect,
+                            lane.live ? SHAPE_COLOURS.crusherLaneLive : SHAPE_COLOURS.crusherLane,
+                            lane.live ? 2 : 1);
+                    }
+                    rect(body.rect, SHAPE_COLOURS.crusher, 0.3);
+                    outline(body.rect, SHAPE_COLOURS.crusher);
+                    drawn.crushers.crushers.push({
+                        id: body.id, rect: body.rect, x: body.x, y: body.y,
+                        resting: body.resting, shieldedBy: body.shieldedBy, dir: body.dir,
+                        lanes: body.lanes.map((l) => ({ dir: l.dir, live: l.live, rect: l.rect })),
+                        live: body.lanes.filter((l) => l.live).map((l) => l.dir),
+                    });
+                }
+            }
+            if (opts.on.has('danger')) {
+                /**
+                 * ⛓⛓⛓ ⚖ ITEM 9 — WHAT THE SOLVER WAS TOLD, AND NOTHING ELSE.
+                 *
+                 * ⛔ THE BOX IS `playerBoxAt(q.x, q.y)` — the ENGINE's own
+                 * builder, and the very call `dangerNow` made when it asked
+                 * (`dangerAt(run, tick, playerBoxAt(x, y))`). Not a rect this
+                 * page assembled from the recorded position: a box literal
+                 * without `right`/`bottom` never overlaps anything, silently,
+                 * which is a defect this package has already paid for once.
+                 *
+                 * ⚠ AND THE REASONS ARE TEXT, WHICH IS A FACT ABOUT THE UNION
+                 * AND NOT A SHORTCUT HERE. `dangerAt` returns `{kind, id,
+                 * why}` per source and NO GEOMETRY, so there is no shape to
+                 * draw for "an ARMED trap's lane" beyond the query box itself.
+                 * Inventing one — reaching for `dangerVolumes` to fill in the
+                 * picture — is precisely the third opinion the law forbids and
+                 * the refusal §14.4c still stands on.
+                 */
+                const d = dangerQueriesAt(opts.dangerQueries, cursor, world.level);
+                drawn.danger = { queries: [], why: d.why };
+                for (const q of d.queries) {
+                    const box = playerBoxAt(q.x, q.y);
+                    const ink = q.danger ? SHAPE_COLOURS.danger : SHAPE_COLOURS.dangerClear;
+                    rect(box, ink, q.danger ? 0.35 : 0.15);
+                    outline(box, ink, 2);
+                    drawn.danger.queries.push({
+                        where: q.where, tick: q.tick, runTick: q.runTick, x: q.x, y: q.y,
+                        danger: q.danger, mode: q.mode, horizon: q.horizon,
+                        sources: q.sources.map((s) => ({ kind: s.kind, id: s.id, why: s.why })),
+                        box,
+                    });
+                }
+            }
             if (opts.on.has('hitboxes')) {
                 /**
                  * ⛔ SLICE 8: `why` IS CARRIED OUT, exactly as `hammer` has
@@ -696,6 +842,25 @@ function makeRenderer(canvas) {
                 lanes: {
                     lanes: drawn.lanes.lanes.map((l) => ({ ...l })),
                     why: drawn.lanes.why,
+                },
+                /**
+                 * ⛔ SLICE 9 — AND THIS IS THE ACCESSOR §16.5 CAUGHT WRONG.
+                 * All three landed as `{…, why}` pairs at their producers, and
+                 * a copier that spread one of them as a bare array is a page
+                 * that will not load with every module test green. The browser
+                 * row is what exercises these three lines.
+                 */
+                worldstate: {
+                    changes: drawn.worldstate.changes.map((c) => ({ ...c })),
+                    why: drawn.worldstate.why,
+                },
+                crushers: {
+                    crushers: drawn.crushers.crushers.map((c) => ({ ...c })),
+                    why: drawn.crushers.why,
+                },
+                danger: {
+                    queries: drawn.danger.queries.map((q) => ({ ...q })),
+                    why: drawn.danger.why,
                 },
             };
         },
@@ -863,12 +1028,33 @@ function mountLayerControls(on, redraw) {
         // COLUMN while it is armed. Two layers, two rows, two sentences —
         // a legend that said "arrows" twice would be the blur itself.
         swatch(SHAPE_COLOURS.lane, 'armed arrow-trap LANE (the column, not the flights)'),
+        // ⛓ SLICE 9. Six rows for three layers, because three of the strokes
+        // are corrections to the BASE picture and a reader who cannot tell a
+        // correction from a fact has the picture's distinction and not the
+        // legend's — the `unknownShapes` lesson applied to meaning.
+        swatch(SHAPE_COLOURS.gone, 'GONE — the level built a solid here and the run has removed it'),
+        swatch(SHAPE_COLOURS.swapped, 'the box that is REALLY there now (a pulled rope, a turret corpse)'),
+        swatch(SHAPE_COLOURS.notsolid, 'drawn as a wall and NOT one — a live ice turret is an Enemy'),
+        swatch(SHAPE_COLOURS.crusher, 'crusher body, where the RUN left it'),
+        swatch(SHAPE_COLOURS.crusherLaneLive, 'crusher trigger lane the scan MATCHED (dim = not matched)'),
+        // ⚖ The one OPINION on the canvas, and the row says so in words —
+        // item 9's "labelled as the bot's HEURISTIC" is this line plus the ink.
+        swatch(SHAPE_COLOURS.danger, 'the box the SOLVER asked about, and was told DANGER '
+            + '(dim = told clear) — the bot\'s HEURISTIC, not what happened'),
         ...Object.values(MARKER_GLYPHS).map(
             (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
     ].join('');
 }
 
-async function replayTape(tape, label, params, levelSource, traceSource = null) {
+/**
+ * @param {Array|null} [dangerQueries] ⚖ item 9 — `solveSegment`'s record of
+ *   the danger the SOLVER was told, when this replay is a solve's own output.
+ *   `null` on every other path, and the distinction is load-bearing: the layer
+ *   reports "no solver ran" by NAME rather than drawing an empty picture that
+ *   looks like a calm room (trap 196, and item 9 names the sentence).
+ */
+async function replayTape(tape, label, params, levelSource, traceSource = null,
+    dangerQueries = null) {
     replayGeneration += 1;
     const myGeneration = replayGeneration;
     const canvas = $('canvas');
@@ -964,7 +1150,23 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
                     + `  hitsMax=${f.inventory.hitsMax}`
                 : '—'),
         ].join('');
-        renderer.draw(world, f.state, { on, samples, markers, presses, cursor });
+        renderer.draw(world, f.state, {
+            on,
+            samples,
+            markers,
+            presses,
+            cursor,
+            /**
+             * ⛓⛓⛓ SLICE 9 — THE R5 FORWARD, READ OFF THE FRAME ITSELF.
+             * `crushers`/`crusherScans` are the two channels `sampleMovers`
+             * deliberately did NOT copy (its own docblock: they "are already
+             * on the frame"), so the layer takes them from the frame the
+             * scrubber is showing rather than from a second reading. That is
+             * what makes this the FORWARD's reader and not a fifth sampler.
+             */
+            live: { crushers: f.crushers, crusherScans: f.crusherScans },
+            dangerQueries,
+        });
         pane.highlight(cursor);
     };
 
@@ -1127,6 +1329,21 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
      * is the COMMON case and saying so is not a corner-case courtesy.
      */
     if (renderer.drawn.hammer.why) notes.push(`⚠ no hammer line: ${renderer.drawn.hammer.why}`);
+    /**
+     * ⛓ SLICE 9 — THE TWO NEW NAMED ABSENCES THAT ARE WORTH SAYING OUT LOUD
+     * AT LOAD, and the third that is not.
+     *
+     * `worldstate` and `crushers` both draw nothing in most rooms in the game,
+     * and a reader who has just switched a layer on deserves to be told
+     * WHICH nothing before concluding the layer is broken. The DANGER layer is
+     * deliberately NOT here: it is OFF by default (⚖ item 9), so a note about
+     * it at load would be the page explaining a layer nobody asked to see —
+     * and its own `why` is on the readout the moment it is switched on.
+     */
+    if (renderer.drawn.worldstate.why) {
+        notes.push(`⚠ no world-state change drawn: ${renderer.drawn.worldstate.why}`);
+    }
+    if (renderer.drawn.crushers.why) notes.push(`⚠ no crusher drawn: ${renderer.drawn.crushers.why}`);
     // ⚠ A `?tick=` this page could not honour EXACTLY says so — both the
     // unreadable form (`readViewParams`) and the out-of-range one.
     if (params.tickWhy) notes.push(`⚠ ${params.tickWhy}`);
@@ -1167,7 +1384,35 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
             // nothing at most cursor positions, and only this count tells
             // them apart across the tape.
             lanes: channelSummary(samples, 'lanes'),
+            /**
+             * ⛓ SLICE 9: every object the run changed anywhere on the walk.
+             * A rock broken at tick 50 is invisible at every cursor before it
+             * and unremarkable at every cursor after; only this count says the
+             * walk changed anything at all. ⚠ `bodies` counts DISTINCT ids, so
+             * an object changed for 300 ticks contributes ONE — which is the
+             * number a reader wants here.
+             */
+            changes: channelSummary(samples, 'changes'),
         },
+        /**
+         * ⛓⛓⛓ SLICE 9 — THE POPULATION BEHIND AN EMPTY `worldstate` LAYER, at
+         * the scrub tick. `drawn.worldstate.why` says WHICH nothing is on
+         * screen; this is the count that claim rests on (trap 196: never read
+         * an absence without its population count), and it is the census's
+         * shape one layer over.
+         */
+        get changeCounts() {
+            const s = samples[Math.min(Math.max(cursor, 0), samples.length - 1)];
+            return s?.changeCounts ?? null;
+        },
+        /**
+         * ⚖ ITEM 9 — WHETHER THERE IS A SOLVER TO SHOW AT ALL, as a fact
+         * rather than as an inference from an empty layer. `null` here and
+         * `[]` are the two different answers the layer's own first branch is
+         * about; a row that could only see the drawn result could not tell
+         * "REPLAY, so no bot" from "a bot that asked nothing".
+         */
+        dangerQueries: dangerQueries === null ? null : dangerQueries.length,
         /**
          * ⛓ SLICE 8 — THE CENSUS BEHIND AN EMPTY `hitboxes` LAYER, at the
          * scrub tick. `drawn.hitboxes.why` says WHICH nothing is on screen;
@@ -1769,8 +2014,12 @@ async function runSolve(params) {
         // ⛓ The trace goes STRAIGHT into the pane: an in-page solve already
         // holds it, so fetching a sidecar for a tape that was never written
         // would be looking on disk for something in memory.
+        // ⚖ ITEM 9: the danger the SOLVER was told rides straight into the
+        // replay, exactly as its trace does — the solve holds both in memory,
+        // and a page that went looking for either on disk would be looking for
+        // an artifact that was never written.
         const { frames } = await replayTape(solved.tape, name, params, levelSource,
-            { trace: solved.out.trace, why: null });
+            { trace: solved.out.trace, why: null }, solved.out.dangerQueries);
         const replayMs = Math.round(performance.now() - replayT0);
 
         /**
@@ -1945,6 +2194,19 @@ async function runManual(params) {
             // on the tick it fired, exactly as a replayed one does.
             presses: session.run.presses,
             cursor: session.tick,
+            /**
+             * ⛓ SLICE 9 — THE MANUAL ARM HAS NO FRAMES, so it hands the LIVE
+             * run's own two getters. One derivation (`crushersAt`), two
+             * sources, and each is that path's own per-tick reading: the
+             * replay path's is the R5 FORWARD, this one's is the run being
+             * driven right now. A manual drive that showed no crusher because
+             * the forward is a replay artifact would be the layer lying about
+             * the one room it exists for.
+             */
+            live: { crushers: session.run.crushers, crusherScans: session.run.crusherScans },
+            // ⚖ A MANUAL DRIVE HAS NO SOLVER, and `null` is how the layer is
+            // told to say so by name rather than drawing a calm room.
+            dangerQueries: null,
         });
         $('hud').innerHTML = [
             manualRow('tick', String(session.tick)),

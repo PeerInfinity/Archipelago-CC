@@ -37,6 +37,26 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 import { EXIT, readPngHeader } from './exportSeedlingView.js';
+/**
+ * ⛔⛔ SLICE 9 — THE DEFAULT SET, IMPORTED, AND WHY THIS ROW STOPPED COUNTING
+ * TO A LITERAL LIST.
+ *
+ * This row spelled the default set as TEN NAMES from slice 6 until slice 9
+ * found it. Slice 8 took the roster to twelve, replaced the literal in the
+ * three sibling rows that spell it as a NUMBER — and missed this one and
+ * `-manual`, because neither says "eleven" anywhere a grep for the count
+ * would find: one spells the roster as a list of names and the other as a
+ * bare integer. Both were RED from `8eb641b12` and nobody saw it.
+ *
+ * ⇒ the assertion stays EXACT (relaxing it to a subset match is the failure
+ * trap 62 is about) and is now BUILT FROM the roster, so a layer added
+ * tomorrow moves this row with it.
+ */
+import { defaultLayerSet, OVERLAY_LAYERS } from
+    '../../frontend/modules/seedlingDemo/watchOverlays.js';
+
+/** The set the exporter prints, in the roster's own order. */
+const DEFAULT_ON = OVERLAY_LAYERS.filter((l) => defaultLayerSet().has(l.id)).map((l) => l.id);
 
 const run = promisify(execFile);
 const CLI = fileURLToPath(new URL('./export-seedling-view.mjs', import.meta.url));
@@ -93,14 +113,17 @@ check(aPng.isPng && aPng.width > 0 && aPng.height > 0,
     `${aPng.width}x${aPng.height}, ${aPng.bytes?.length ?? 0} bytes`);
 check(/tick 171 of 254 frame\(s\)/.test(a.stdout),
     'the tick the caller asked for is the tick that was drawn', a.stdout.trim().split('\n').pop());
-// ⛓ SLICE 6 widened the roster 8 → 11 (`hitboxes`, `hammer`, `attacks`, all
-// ON). The check is REPLACED, not relaxed: the default set is still asserted
-// EXACTLY, and the ⚖ §1.6 half — arrows OFF — is asserted as its own clause
-// so a future roster change cannot quietly satisfy the pattern by accident.
-check(/layers \[player, enemies, pushables, action, damage, events, volumes, hitboxes, hammer, attacks\]/
-    .test(a.stdout)
-    && !/layers \[[^\]]*arrows/.test(a.stdout),
-'⚖ the default layer set (eleven, slice 6) — and arrow paths are OFF in it');
+// ⛓ SLICE 6 widened the roster 8 → 11, slice 8 → 12 and slice 9 → 15. The
+// check is REPLACED, not relaxed: the default set is still asserted EXACTLY,
+// and the ⚖ halves — `arrows` OFF (§1.6) and `danger` OFF (item 9) — are
+// asserted as their own clauses so a future roster change cannot quietly
+// satisfy the pattern by accident.
+check(a.stdout.includes(`layers [${DEFAULT_ON.join(', ')}]`)
+    && !/layers \[[^\]]*arrows/.test(a.stdout)
+    && !/layers \[[^\]]*danger/.test(a.stdout),
+`⚖ the default layer set (${DEFAULT_ON.length}, built from the roster) — arrow paths AND `
++ 'the solver danger map are OFF in it',
+`[${DEFAULT_ON.join(', ')}]`);
 
 /**
  * ⛔ ITS OWN SERVER, ON A FREE PORT, AND GONE AFTERWARDS. Never :8000,

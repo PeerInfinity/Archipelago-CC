@@ -20,15 +20,25 @@ import { fileURLToPath } from 'node:url';
 
 import {
     ACTION_KEYS, activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun,
-    defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
-    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam, pathPointsUpTo,
-    sampleMovers, traceRowFields, traceSidecarPath,
+    crushersAt, dangerQueriesAt, defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges,
+    LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam,
+    pathPointsUpTo, sampleMovers, traceRowFields, traceSidecarPath, worldChangesAt,
 } from './watchOverlays.js';
 import { formatTraceRow } from './decisionTrace.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createLevelRun } from './levelRun.js';
 import { ROLES, RELAXED_ROLES } from './levelWorld.js';
 import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
+// ⛓ SLICE 9's three: the crusher lanes the SCAN itself walks, the one loop
+// (for the engine differential, which needs the run at the tick the change
+// lands on rather than at the end of the walk), and the SOLVE arm.
+import { detectionRects } from './crusher.js';
+import { createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { solveForPage } from './watchSolve.js';
+import { parseTape } from './tapeFormat.js';
+
+/** One level source for the slice-9 rows — built once, like the page's. */
+const levelSourceForTests = atlasLevelSource();
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const tape = (name) =>
@@ -38,17 +48,26 @@ const tape = (name) =>
 
 describe('the layer roster', () => {
     it('⚖ arrow paths are the ONE layer that defaults OFF (kickoff §1.6)', () => {
-        // ⛓ SLICE 6 widened the roster to eleven and SLICE 8 to twelve;
-        // `arrows` is still the only OFF one, and the reason is unchanged —
-        // it is the only CUMULATIVE layer whose ink scales with bodies ×
-        // ticks. Every layer added since is this-tick-only, so the argument
-        // that put `arrows` off does not reach them (the roster's own notes).
+        // ⛓ SLICE 6 widened the roster to eleven, SLICE 8 to twelve and
+        // SLICE 9 to FIFTEEN. `arrows` was the only OFF one for three slices
+        // and the reason is unchanged — it is the only CUMULATIVE layer whose
+        // ink scales with bodies × ticks, and every layer added since is
+        // this-tick-only, so that argument does not reach them.
+        //
+        // ⚖⚖ SLICE 9 ADDS THE SECOND OFF LAYER, AND ITS DEFAULT IS A RULING
+        // RATHER THAN A TASTE. `danger` is the one layer on the page that
+        // draws an OPINION (what the SOLVER was told), and item 9 supersedes
+        // slice 6's refusal of danger verdicts (§14.4c) only for a layer that
+        // is *default OFF* and labelled as the bot's heuristic. So this row
+        // pins WHICH layers are off and not merely how many — a later tidy-up
+        // that flipped `danger` on would be reversing a ⚖ ruling.
         expect([...defaultLayerSet()].sort()).toEqual([
-            'action', 'attacks', 'damage', 'enemies', 'events', 'hammer', 'hitboxes',
-            'lanes', 'player', 'pushables', 'volumes',
+            'action', 'attacks', 'crushers', 'damage', 'enemies', 'events', 'hammer',
+            'hitboxes', 'lanes', 'player', 'pushables', 'volumes', 'worldstate',
         ]);
         expect(OVERLAY_LAYERS.find((l) => l.id === 'arrows').on).toBe(false);
-        expect(OVERLAY_LAYERS.filter((l) => !l.on).map((l) => l.id)).toEqual(['arrows']);
+        expect(OVERLAY_LAYERS.filter((l) => !l.on).map((l) => l.id))
+            .toEqual(['arrows', 'danger']);
     });
 
     /**
@@ -60,12 +79,14 @@ describe('the layer roster', () => {
      */
     it('⛓ the shape layers are `shape` — this tick, not the walk', () => {
         const shapes = OVERLAY_LAYERS.filter((l) => l.kind === 'shape').map((l) => l.id);
-        expect(shapes).toEqual(['hitboxes', 'hammer', 'attacks', 'lanes']);
+        expect(shapes).toEqual([
+            'hitboxes', 'hammer', 'attacks', 'lanes', 'worldstate', 'crushers', 'danger',
+        ]);
         // The distinction the renderer branches on, pinned: a `path` layer is
         // cumulative to the cursor and a `shape` layer is the cursor's tick.
         expect(OVERLAY_LAYERS.filter((l) => l.kind === 'path').map((l) => l.id))
             .toEqual(['player', 'enemies', 'pushables', 'arrows']);
-        expect(LAYER_IDS).toHaveLength(12);
+        expect(LAYER_IDS).toHaveLength(15);
         const byId = (id) => OVERLAY_LAYERS.find((l) => l.id === id);
         expect({ kind: byId('lanes').kind, on: byId('lanes').on })
             .toEqual({ kind: 'shape', on: true });
@@ -187,6 +208,11 @@ describe('sampleMovers', () => {
             // census or a trap in, which is a different answer from "this
             // room holds none" and must not be spelled `0`.
             lanes: [], arrowTraps: null, census: null,
+            // ⛓ SLICE 9, and `changeCounts: null` carries the same weight as
+            // the two above it: a fake with no world cannot count how many
+            // changeable objects stand in the room, and `0` would be a claim
+            // that it counted and found none.
+            changes: [], changeCounts: null,
         });
     });
 
@@ -856,5 +882,362 @@ describe('slice 8 — the armed arrow-trap LANES layer', () => {
         expect(arrowLanesAt([s], 0, 5).lanes).toHaveLength(1);
         expect(arrowLanesAt([s], 0, 6)).toEqual({ lanes: [], why: null });
         expect(arrowLanesAt([s], 7, 5)).toEqual({ lanes: [], why: null });
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ SLICE 9: THE WORLD-STATE LAYER, THE CRUSHERS AND THE SOLVER'S OWN
+ * ── DANGER ──────────────────────────────────────────────────────────────
+ *
+ * Kickoff §12b item 8(c) + ⚖ item 9. Slice 6's audit priced what the
+ * separately-built, never-advanced world COSTS (§14.3c): a rock broken at
+ * tick 50 is still drawn as a wall at tick 300. These rows drive committed
+ * tapes to the tick the change lands on and assert the mark is there — and,
+ * for every mark that says a solid is GONE, ask the ENGINE whether it agrees.
+ */
+describe('slice 9 — the WORLD-STATE layer', () => {
+    /**
+     * Walk a tape through the ONE loop and stop at the first tick whose sample
+     * carries a change, returning the sample, the derivation AND the engine's
+     * own verdict at that instant.
+     *
+     * ⛔⛔ THE ENGINE VERDICT IS THE POINT OF THIS HELPER. `WORLD_STATE_FAMILIES`
+     * is a page-side JOIN (which run set names which solid key) and the
+     * authority is `levelWorld.liveRectOf`, a closure that cannot be imported.
+     * So every GONE mark is put back to `world.collidesSolid`, asked with the
+     * run's OWN `liveGeometryOpts()`: if the join's polarity ever drifts from
+     * the engine's, this row fails instead of the page quietly drawing a wall
+     * the game has removed.
+     *
+     * ⚠ AND THE VERDICT IS A NEGATIVE, WITH ITS BOUND STATED. `collidesSolid`
+     * returns the FIRST solid overlapping a box, so "something is there" may be
+     * a neighbouring wall tile rather than the entity — which is exactly what
+     * L39's rope sits inside. The assertion is therefore *the engine does not
+     * report THIS ENTITY at its build box*, which no shadowing can fake.
+     */
+    const firstChange = (name) => {
+        let found = null;
+        const stepper = createTapeStepper(tape(name), {
+            levelSource: atlasLevelSource(),
+            onTick: (t, state, held, run) => {
+                if (!run || found) return;
+                const s = sampleMovers(run);
+                const got = worldChangesAt([s], 0, run.level);
+                if (!got.changes.length) return;
+                const world = run.worldFor(run.level);
+                const live = run.liveGeometryOpts();
+                found = {
+                    tick: t,
+                    level: run.level,
+                    sample: s,
+                    got,
+                    // the engine's answer at each marked box, keyed by family
+                    engine: got.changes.map((ch) => {
+                        const key = FAMILY_KEY[ch.family];
+                        const hit = world.collidesSolid(ch.base, live);
+                        return { id: ch.id, effect: ch.effect, stillThere: hit ? hit[key] ?? null : null };
+                    }),
+                };
+            },
+        });
+        for (let r = stepper.next(); !r.done; r = stepper.next()) { if (found) break; }
+        return found;
+    };
+    const FAMILY_KEY = {
+        openActivators: 'activatorId', openChests: 'chestId', brokenRocks: 'rockId',
+        burnedTrees: 'treeId', pulledRopes: 'ropeId', turrets: 'turretId',
+    };
+
+    /**
+     * ⛓⛓⛓ THE DRIVEN CASE, AS A PAIR — a chest drawn shut at tick 0 and
+     * marked OPEN at tick 6, in the SAME room, on the SAME walk. One picture
+     * proves nothing: the row that only showed the mark could not tell a layer
+     * that tracks from a layer that marks everything.
+     */
+    it('⛓⛓⛓ L11\'s chest is unmarked at tick 0 and GONE at tick 6 — and the engine agrees', () => {
+        const c = collectRun(tape('r7-act2-11'), levelSourceForTests);
+        // the population, measured — one changeable object stands in this room
+        expect(c.samples[0].changeCounts.placed).toBe(1);
+        expect(c.samples[0].changeCounts.byFamily).toEqual({ openChests: 1 });
+
+        const before = worldChangesAt(c.samples, 0, 11);
+        expect(before.changes).toEqual([]);
+        // ⛔ AND THE EMPTY SAYS WHICH EMPTY IT IS, with the count in it.
+        expect(before.why).toMatch(/^1 changeable object\(s\) stand in this room and the run has changed NONE/);
+
+        const first = firstChange('r7-act2-11');
+        expect(first.tick).toBe(6);
+        expect(first.got.why).toBe(null);
+        expect(first.got.changes).toEqual([{
+            id: 'chest@32,48',
+            family: 'openChests',
+            tag: expect.anything(),
+            effect: 'gone',
+            verb: 'OPENED',
+            base: { x: 32, y: 48, w: 16, h: 16, right: 48, bottom: 64 },
+            rect: null,
+        }]);
+        // ⛔ THE ENGINE'S OWN VERDICT: nothing solid is at the chest's box.
+        expect(first.engine).toEqual([{ id: 'chest@32,48', effect: 'gone', stillThere: null }]);
+    });
+
+    it('⛓ L37\'s burnable tree is GONE at tick 118, at the 2x2 box the level built', () => {
+        const first = firstChange('r5-l37-burn');
+        expect(first.tick).toBe(118);
+        expect(first.level).toBe(37);
+        expect(first.got.changes.map((c) => [c.id, c.family, c.effect]))
+            .toEqual([['burnabletree@128,192', 'burnedTrees', 'gone']]);
+        // 32x32 — the whole point of marking rather than un-drawing is that the
+        // reader can see WHICH box stopped being true.
+        expect(first.got.changes[0].base).toEqual(
+            { x: 128, y: 192, w: 32, h: 32, right: 160, bottom: 224 });
+        expect(first.engine[0].stillThere).toBe(null);
+    });
+
+    /**
+     * ⛔⛔ THE ROPE IS THE ONE THAT MUST NOT BE MARKED GONE, and the reason is
+     * in `RopeStart.hit()`: `setHitbox(16, 16, 8, 8)` turns 112 px of wall into
+     * 16 px of wall AT THE SPAN'S START. A layer that read "pulled" as "gone"
+     * would open a tile the game keeps — which is the same class of lie as the
+     * stale wall it exists to correct, in the other direction.
+     */
+    it('⛔⛔ L39\'s rope is SWAPPED, not gone — the builder\'s own shrunk box', () => {
+        const first = firstChange('r5-shaft');
+        expect(first.level).toBe(39);
+        const ch = first.got.changes.find((c) => c.family === 'pulledRopes');
+        expect(ch.effect).toBe('swapped');
+        expect(ch.verb).toBe('PULLED');
+        // the live box is REAL and it is SMALLER than the base — asserted as
+        // an inequality on the geometry, so a page-side "resize" that agreed
+        // by accident would still have to agree with the builder.
+        expect(ch.rect).not.toBe(null);
+        // ⚠ AREA, not height: L39's rope runs HORIZONTALLY, and a row that
+        // asserted the shrink on one axis would pass on the vertical ropes and
+        // silently stop meaning anything on this one.
+        const area = (r) => (r.right - r.x) * (r.bottom - r.y);
+        expect(area(ch.rect)).toBeLessThan(area(ch.base));
+        const world = collectRun(tape('r5-shaft'), levelSourceForTests).run.worldFor(39);
+        const solid = world.solids.find((s) => s.ropeId === ch.id);
+        expect(ch.rect).toEqual(solid.shrunkRect);
+        expect(ch.base).toEqual(solid.rect);
+    });
+
+    /**
+     * ⛓⛓⛓ THE ICE TURRET IS THE INVERTED POLARITY, and it is why the layer
+     * has a third verb. `IceTurret.type` is `"Enemy"` from the base ctor, so
+     * the 32x32 body the level builds — and the renderer paints as a wall — is
+     * NOT a wall while it lives. That mark is true from tick 0, before the run
+     * has changed anything at all.
+     */
+    it('⛓⛓⛓ L40\'s LIVE ice turret is drawn as a wall and is NOT one — from tick 0', () => {
+        const first = firstChange('r5-l40-part0');
+        expect(first.tick).toBe(0);
+        expect(first.got.changes.map((c) => [c.id, c.family, c.effect]))
+            .toEqual([['iceturret@472,400', 'turrets', 'notsolid']]);
+        expect(first.got.changes[0].verb).toMatch(/ALIVE/);
+        // ⛔ THE ENGINE AGREES THERE IS NO WALL THERE — which is the assertion
+        // that makes "drawn as a wall and is not one" a fact and not a caption.
+        expect(first.engine[0].stillThere).toBe(null);
+        // …and the room's population is counted across all six families
+        expect(first.sample.changeCounts.placed).toBe(16);
+        expect(first.sample.changeCounts.byFamily.brokenRocks).toBe(3);
+    });
+
+    /** ⚠ THE FOUR NAMED EMPTIES, and none of them is a silent `[]`. */
+    it('⚠ four named empties — and "no world" is reported, never explained', () => {
+        // (a) a sample with no world at all cannot be explained, only reported
+        expect(worldChangesAt([{ level: 1, changes: [], changeCounts: null }], 0, 1))
+            .toEqual({ changes: [], why: null });
+        // (b) a room with nothing changeable in it
+        const bare = { level: 1, changes: [], changeCounts: { placed: 0, byFamily: {}, changed: 0, blind: 0, families: 6 } };
+        expect(worldChangesAt([bare], 0, 1).why).toMatch(/^no lock, chest, rock, tree, rope or ice turret/);
+        // (c) ⚠ noclip: every family reports `null`, so "unchanged" is not a
+        // question this walk can answer — a different fact from "unchanged".
+        const blind = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 6, families: 6 } };
+        expect(worldChangesAt([blind], 0, 1).why).toMatch(/`noclip`/);
+        expect(worldChangesAt([blind], 0, 1).why).toMatch(/NOT the same fact/);
+        // (d) …and the three sentences are three sentences
+        const none = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 0, families: 6 } };
+        const sentences = new Set([bare, blind, none].map((s) => worldChangesAt([s], 0, 1).why));
+        expect(sentences.size).toBe(3);
+    });
+
+    it('is THIS TICK ONLY and filtered to the level being drawn', () => {
+        const s = { level: 5, changes: [{ id: 'a' }], changeCounts: { placed: 1, byFamily: {}, changed: 1, blind: 0, families: 6 } };
+        expect(worldChangesAt([s], 0, 5).changes).toHaveLength(1);
+        expect(worldChangesAt([s], 0, 6)).toEqual({ changes: [], why: null });
+        expect(worldChangesAt([s], 9, 5)).toEqual({ changes: [], why: null });
+    });
+});
+
+describe('slice 9 — the CRUSHERS, the R5 forward\'s first reader', () => {
+    /**
+     * ⛔ FROM THE FRAME, NOT FROM A SECOND SAMPLING. `frames[].crushers` and
+     * `frames[].crusherScans` have ridden on every frame since R5 slice 16 and
+     * were read by NOBODY (kickoff §14.4b). These rows read exactly what the
+     * page reads — the frame the scrubber is showing.
+     */
+    /**
+     * ⚠ ONE WALK, MEMOISED, AND BOUNDED. `r5-l41-part3` is 2,261 ticks; both
+     * rows want frames 0 and 300, and collecting the whole tape twice put each
+     * within a second of the suite's 10 s per-test budget — a red that would
+     * have read as a defect and was a second walk. The stepper is the SAME one
+     * `collectRun` drives; only the stopping point is this row's.
+     */
+    const walks = new Map();
+    const framesOf = (name, upTo) => {
+        if (!walks.has(name)) {
+            const frames = [];
+            const stepper = createTapeStepper(tape(name), { levelSource: levelSourceForTests });
+            for (let r = stepper.next(); !r.done && frames.length <= upTo; r = stepper.next()) {
+                frames.push(r.value);
+            }
+            walks.set(name, frames);
+        }
+        return walks.get(name);
+    };
+    const at = (frames, t) => crushersAt({
+        crushers: frames[t].crushers, crusherScans: frames[t].crusherScans });
+
+    it('⛓⛓⛓ L41\'s crusher is drawn where the RUN has it, with the scan\'s own four lanes', () => {
+        const frames = framesOf('r5-l41-part3', 300);
+        const t0 = at(frames, 0);
+        expect(t0.why).toBe(null);
+        expect(t0.crushers).toHaveLength(1);
+        const c = t0.crushers[0];
+        expect(c.id).toBe('crusher@240,64');
+        expect(c.resting).toBe(true);
+        // ⛔ THE LANES ARE `detectionRects`' OWN — recomputed here from the
+        // engine's export, so a layer that grew its own arithmetic diverges.
+        expect(c.lanes.map((l) => ({ dir: l.dir, rect: l.rect })))
+            .toEqual(detectionRects({ x: c.x, y: c.y }).map((r) => ({
+                dir: r.dir, rect: { x: r.x, y: r.y, right: r.right, bottom: r.bottom },
+            })));
+        // ⛓ …and exactly the lanes the run's own scan MATCHED are live
+        expect(c.lanes.filter((l) => l.live).map((l) => l.dir)).toEqual(['W']);
+    });
+
+    /**
+     * ⛓⛓ THE BODY MOVES, WHICH IS THE WHOLE REASON THE BASE PICTURE CANNOT BE
+     * TRUSTED FOR THIS FAMILY: `Crusher` charges at a player it can SEE, so
+     * the constructor cell is wrong from the first tick a bait commits.
+     */
+    it('⛓⛓ the body MOVES off its build cell, and a SHIELDED crusher says so', () => {
+        const frames = framesOf('r5-l41-part3', 300);
+        const t0 = at(frames, 0).crushers[0];
+        const late = at(frames, 300).crushers[0];
+        expect(late.rect).not.toEqual(t0.rect);
+        // ⛔ AN EARLY EXIT IS A DIFFERENT PICTURE FROM "SEES NOTHING".
+        // `scanCrusher` returns before it walks a single lane when the sight
+        // line is blocked, so an empty `matched` here has nothing to do with
+        // where the player is standing — and the entry says which.
+        expect(late.shieldedBy).toBe('tile:Blue Wall');
+        expect(late.lanes.filter((l) => l.live)).toEqual([]);
+        expect(t0.shieldedBy).toBe(null);
+    });
+
+    it('⚠ the two empties are named, and they are different facts', () => {
+        expect(crushersAt({ crushers: null, crusherScans: null }).why).toMatch(/`noclip`/);
+        expect(crushersAt({ crushers: new Map(), crusherScans: new Map() }).why)
+            .toMatch(/^no crusher stands in this room/);
+        // a view with no per-tick source at all is an absence, not an explanation
+        expect(crushersAt(null)).toEqual({ crushers: [], why: null });
+    });
+});
+
+describe('⚖ slice 9 — the DANGER the SOLVER was told (item 9)', () => {
+    const solveL4 = () => solveForPage({
+        levelSource: levelSourceForTests,
+        staging: stagingFromTape(parseTape(tape('r7-act2-4'))),
+        goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
+        name: 'slice9-L4',
+    });
+
+    /**
+     * ⛔⛔⛔ THE LAYER RENDERS WHAT THE SOLVER RECORDED. Nothing here calls
+     * `dangerAt`, and nothing on the page may: ⚖ item 9 supersedes slice 6's
+     * refusal (§14.4c) only for a layer drawing the bot's own reason lists.
+     */
+    it('⛓⛓⛓ an in-page SOLVE records its own danger queries, at the TAPE\'s clock', () => {
+        const { out } = solveL4();
+        const q = out.dangerQueries;
+        expect(q.length).toBeGreaterThan(0);
+        // ⚠ TWO CLOCKS, BOTH CARRIED. `tick` is the tape's (what the scrub
+        // cursor indexes); `runTick` is the run's. A recording that carried
+        // only one would put a warning at a cursor the walk never had.
+        for (const row of q) {
+            expect(row.tick).toBeLessThanOrEqual(out.perTick.length);
+            expect(row.runTick).toBeGreaterThanOrEqual(row.tick);
+            expect(row.level).toBe(4);
+            expect(['sense', 'gate']).toContain(row.where);
+        }
+        // …and the ticks index into the folded tape the page then replays
+        const drawn = dangerQueriesAt(q, q[0].tick, 4);
+        expect(drawn.why).toBe(null);
+        expect(drawn.queries.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛓⛓⛓ THE SLICE'S MEASURED FINDING, PINNED AS A ROW: on a SUCCESSFUL
+     * segment every recorded query is CLEAR, and that is a theorem rather than
+     * an accident. `refuseDanger` THROWS when the union answers danger, so a
+     * segment that reaches its goal cannot have had a dangerous gate — the
+     * layer's danger ink is the colour of a refusal.
+     *
+     * ⚠ Swept: 30 solves over 9 committed staging blocks, 62+ recorded
+     * queries, ZERO with a non-empty reason list. If this row ever goes red it
+     * has found something worth reading, which is why it asserts the
+     * population rather than merely tolerating it.
+     */
+    it('⛓⛓⛓ every query a SUCCESSFUL solve records is CLEAR — the purple is a refusal\'s colour', () => {
+        const { out } = solveL4();
+        expect(out.dangerQueries.filter((r) => r.danger)).toEqual([]);
+        expect(out.dangerQueries.every((r) => r.sources.length === 0)).toBe(true);
+    });
+
+    /** ⚖ THE CONDITION IN THE RULING: absence reported BY NAME, never redrawn. */
+    it('⚖ a REPLAY or MANUAL source says "no solver ran" — it does not recompute', () => {
+        const d = dangerQueriesAt(null, 0, 4);
+        expect(d.queries).toEqual([]);
+        expect(d.why).toMatch(/^no solver ran — no danger data/);
+        expect(d.why).toMatch(/a window, not a third opinion/);
+        // ⛔ …and `[]` is a DIFFERENT answer from `null`: a solver that ran and
+        // asked nothing is a finding about the solver, not about the source.
+        expect(dangerQueriesAt([], 0, 4).why).toMatch(/^the solve recorded NO danger query/);
+        expect(dangerQueriesAt([], 0, 4).why).not.toEqual(d.why);
+    });
+
+    /**
+     * ⚠ SPARSENESS IS THE NORM AND IS REPORTED WITH ITS NEIGHBOUR. The bot
+     * asks at DECISION points, so most ticks carry none — and a reason that
+     * only said "none here" would leave a reader unable to find the ones that
+     * exist.
+     */
+    it('⚠ a tick with no query names the count AND the nearest tick that has one', () => {
+        const q = solveL4().out.dangerQueries;
+        const gap = dangerQueriesAt(q, q[0].tick + 1, 4);
+        expect(gap.queries).toEqual([]);
+        expect(gap.why).toMatch(/it asks at DECISION points, not every tick/);
+        expect(gap.why).toMatch(new RegExp(`the nearest is tick ${q[0].tick}`));
+        // a level the solve never planned in is its own sentence
+        expect(dangerQueriesAt(q, 0, 99).why).toMatch(/NONE of them in level 99/);
+    });
+
+    /**
+     * ⛔ THE DANGEROUS SHAPE, exercised where it can be: the derivation is
+     * pure, so a query WITH sources is a synthetic row — and it must carry the
+     * union's `why` through VERBATIM, because the reason is the whole content
+     * of the channel.
+     */
+    it('⛔ a query WITH sources carries the union\'s own reason, verbatim', () => {
+        const rows = [{
+            where: 'gate', tick: 5, runTick: 5, level: 4, x: 24, y: 24,
+            danger: true, mode: 'wait', horizon: 0,
+            sources: [{ kind: 'arrowLane', id: 'arrowtrap@96,16', why: 'an ARMED trap\'s lane' }],
+        }];
+        const got = dangerQueriesAt(rows, 5, 4);
+        expect(got.why).toBe(null);
+        expect(got.queries[0].danger).toBe(true);
+        expect(got.queries[0].sources[0].why).toBe('an ARMED trap\'s lane');
     });
 });

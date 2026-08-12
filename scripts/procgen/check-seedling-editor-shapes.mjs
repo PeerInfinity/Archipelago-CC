@@ -272,8 +272,8 @@ console.log('\n## the three layers as LAYERS — legend, ?layers=, and OFF reall
     const all = await drawnAt('r8-hammer-control', 247);
     const ids = all.toggles.map(([id]) => id);
     check(ids.includes('hitboxes') && ids.includes('hammer') && ids.includes('attacks')
-        && ids.includes('lanes') && all.toggles.length === 12,
-    '⛓ all three have a toggle, generated from the roster — TWELVE now (slice 8 added `lanes`)',
+        && ids.includes('lanes') && all.toggles.length === 15,
+    '⛓ all three have a toggle, generated from the roster — FIFTEEN now (slice 9 added three)',
     `${all.toggles.length}: ${ids.join(', ')}`);
     check(all.legend.some((t) => /hammer REACHING/i.test(t))
         && all.legend.some((t) => /enemy hitbox/i.test(t))
