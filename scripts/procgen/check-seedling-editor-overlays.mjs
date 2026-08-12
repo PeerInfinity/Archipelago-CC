@@ -153,8 +153,13 @@ async function load(name, extra = '', shotAt = null) {
         'clicking a trace row seeks to ITS tick',
         `cursor ${firstTick}, first row t${overlays.trace.firstTick}`);
 
-    check(pane.toggles.length === 8 && pane.legend >= 10,
-        'eight layer toggles and a legend, generated from the roster',
+    // ⛓ SLICE 6 widened the roster from eight to ELEVEN. The check is
+    // REPLACED, not relaxed: the number is still asserted exactly, and it is
+    // asserted against the page's OWN roster readout rather than a literal,
+    // so the next layer moves both halves at once.
+    check(pane.toggles.length === 11 && pane.toggles.length === overlays.layers.length
+        && pane.legend >= 14,
+        'ELEVEN layer toggles and a legend, generated from the roster',
         `${pane.toggles.length} toggle(s), ${pane.legend} legend entr(ies)`);
     const arrows = pane.toggles.find(([id]) => id === 'arrows');
     check(arrows && arrows[1] === false, '⚖ arrow paths default OFF', JSON.stringify(arrows));

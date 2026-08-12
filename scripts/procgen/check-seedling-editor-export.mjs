@@ -93,8 +93,14 @@ check(aPng.isPng && aPng.width > 0 && aPng.height > 0,
     `${aPng.width}x${aPng.height}, ${aPng.bytes?.length ?? 0} bytes`);
 check(/tick 171 of 254 frame\(s\)/.test(a.stdout),
     'the tick the caller asked for is the tick that was drawn', a.stdout.trim().split('\n').pop());
-check(/layers \[player, enemies, pushables, action, damage, events, volumes\]/.test(a.stdout),
-    '⚖ the default layer set — and arrow paths are OFF in it');
+// ⛓ SLICE 6 widened the roster 8 → 11 (`hitboxes`, `hammer`, `attacks`, all
+// ON). The check is REPLACED, not relaxed: the default set is still asserted
+// EXACTLY, and the ⚖ §1.6 half — arrows OFF — is asserted as its own clause
+// so a future roster change cannot quietly satisfy the pattern by accident.
+check(/layers \[player, enemies, pushables, action, damage, events, volumes, hitboxes, hammer, attacks\]/
+    .test(a.stdout)
+    && !/layers \[[^\]]*arrows/.test(a.stdout),
+'⚖ the default layer set (eleven, slice 6) — and arrow paths are OFF in it');
 
 /**
  * ⛔ ITS OWN SERVER, ON A FREE PORT, AND GONE AFTERWARDS. Never :8000,

@@ -137,8 +137,8 @@ async function holdFor(page, codes, ms) {
     }));
     check(/DRIVING/.test(driving.status) && /tick\(s\) recorded/.test(driving.status),
         'the page reports a LIVE drive with its tick count', driving.status);
-    check(driving.toggles === 8,
-        'the eight layer toggles are mounted over the LIVE drive too',
+    check(driving.toggles === 11,
+        'the ELEVEN layer toggles are mounted over the LIVE drive too (slice 6: +3)',
         `${driving.toggles} toggle(s)`);
     if (SHOT) await page.screenshot({ path: `${SHOT}/manual-driving.png` });
 

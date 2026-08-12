@@ -127,9 +127,9 @@ import {
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
-    activeTraceIndex, channelSummary, collectRun, defaultLayerSet, LAYER_IDS,
-    MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam,
-    pathPointsUpTo, traceRowFields, traceSidecarPath,
+    activeTraceIndex, attackRectsAt, bodiesAt, channelSummary, collectRun, defaultLayerSet,
+    hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
+    parseLayersParam, pathPointsUpTo, traceRowFields, traceSidecarPath,
 } from './watchOverlays.js';
 import {
     clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
@@ -179,6 +179,28 @@ const PATH_COLOURS = Object.freeze({
     spinner: '#d05090',
     pushable: '#9a8cff',
     arrow: '#8fc7d8',
+});
+
+/**
+ * ⛓ SLICE 6's THREE SHAPE LAYERS, and their ink is deliberately NOT the
+ * matching path colour.
+ *
+ * A chaser's PATH is `#ff9a6a` and its BOX is `#ffd0a0`: two readings of one
+ * body, one cumulative and one at this tick, and a viewer that painted both
+ * in the same colour would make "where it has been" and "where it is"
+ * indistinguishable at exactly the moment they matter — the tick something
+ * touched something.
+ *
+ * `hammerTouch` is the second hammer colour and it is the layer's whole
+ * point: the line is drawn WHITE-HOT on the ticks the engine's own
+ * `hammerHitsPlayer` says it reached the player, so the picture and
+ * `run.spinnerContacts` agree on screen and not merely in a readout.
+ */
+const SHAPE_COLOURS = Object.freeze({
+    hitbox: '#ffd0a0',
+    hammer: '#ff8fd0',
+    hammerTouch: '#ffffff',
+    attack: '#ffd75f',
 });
 
 const $ = (id) => document.getElementById(id);
@@ -346,6 +368,25 @@ function makeRenderer(canvas) {
     };
 
     /**
+     * ⛓ SLICE 6 — a LINE in world coordinates, for the hammer.
+     *
+     * ⛔ THE ENDPOINTS ARE NOT ROUNDED. `dotAt` rounds because a 1x1 rect at a
+     * half-pixel offset nearly vanishes; a stroked line is already several
+     * device pixels long and rounding its ends would MOVE it — and this
+     * line's whole content is where its far end is. The half-pixel offset is
+     * the canvas convention for a crisp 1 px stroke, applied to the stroke and
+     * not to the geometry.
+     */
+    const lineAt = (x0, y0, x1, y1, colour, width = 1) => {
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = Math.max(width, Math.round(scale / 2) * width);
+        ctx.beginPath();
+        ctx.moveTo(x0 * scale + 0.5, y0 * scale + 0.5);
+        ctx.lineTo(x1 * scale + 0.5, y1 * scale + 0.5);
+        ctx.stroke();
+    };
+
+    /**
      * A marker glyph, at the position its ledger's tick names.
      *
      * ⛔ THE `default` ARM IS THE LESSON, NOT DECORATION — the same one the
@@ -353,6 +394,24 @@ function makeRenderer(canvas) {
      * glyph for must SAY SO on the canvas; "nothing drawn" and "nothing
      * happened" are indistinguishable otherwise.
      */
+    /**
+     * ⛓⛓⛓ SLICE 6 — WHAT THE LAST DRAW ACTUALLY PUT ON THE CANVAS.
+     *
+     * ⛔ THE POINT IS THAT IT IS WRITTEN INSIDE THE `if (on.has(…))` ARMS, not
+     * beside them. Slice 5's two findings were both a control writing into
+     * state nobody read, and both were caught by asserting in the DRIVEN
+     * SYSTEM rather than at the widget. A readout derived alongside the draw
+     * would repeat that mistake one layer up: `hammerLinesAt` could be
+     * perfect, the checkbox could be checked, the `if` could be testing the
+     * wrong key, and a derivation-shaped readout would report the line as
+     * present while the canvas stayed empty.
+     *
+     * ⚠ LAST DRAW, not cumulative — these three layers are THIS TICK ONLY, so
+     * the readout is reset at the top of each pass and describes the frame
+     * you are looking at.
+     */
+    const drawn = { hitboxes: [], hammer: { lines: [], why: null }, attacks: [] };
+
     const unknownGlyphs = new Set();
     function glyph(kind, x, y, colour, source) {
         const r = Math.max(3, 2 * scale);
@@ -517,6 +576,50 @@ function makeRenderer(canvas) {
                 }
             }
 
+            /**
+             * ── ⛓ THE SHAPE LAYERS (slice 6) — THIS TICK, NOT THE WALK ────
+             *
+             * Drawn BELOW the player and ABOVE the paths: they are geometry
+             * the run holds right now, so they must not bury the player
+             * sprite, and they must not be buried by three hundred path dots.
+             *
+             * ⛔ EVERY RECT AND EVERY LINE HERE CAME FROM THE ENGINE. This
+             * block chooses colours and z-order and computes no geometry at
+             * all — see `watchOverlays`' one-spelling import block.
+             */
+            drawn.hitboxes = [];
+            drawn.hammer = { lines: [], why: null };
+            drawn.attacks = [];
+            if (opts.on.has('hitboxes')) {
+                for (const b of bodiesAt(samples, cursor, world.level)) {
+                    outline(b.rect, SHAPE_COLOURS.hitbox);
+                    drawn.hitboxes.push({ id: b.id, kind: b.kind, tag: b.tag, rect: b.rect });
+                }
+            }
+            if (opts.on.has('hammer')) {
+                // ⚠ `why` is CARRIED OUT, not swallowed: "no spinner in this
+                // room" and "this run has no clock" both draw nothing, and
+                // only one of them is a limitation of the page.
+                const h = hammerLinesAt(samples, cursor, world.level);
+                drawn.hammer = { lines: [], why: h.why };
+                for (const l of h.lines) {
+                    lineAt(l.x0, l.y0, l.x1, l.y1,
+                        l.touches ? SHAPE_COLOURS.hammerTouch : SHAPE_COLOURS.hammer,
+                        l.touches ? 2 : 1);
+                    drawn.hammer.lines.push({ ...l, degrees: l.angle * 180 / Math.PI });
+                }
+            }
+            if (opts.on.has('attacks')) {
+                for (const p of attackRectsAt(opts.presses, cursor, world.level)) {
+                    rect(p.rect, SHAPE_COLOURS.attack, 0.25);
+                    outline(p.rect, SHAPE_COLOURS.attack);
+                    drawn.attacks.push({
+                        t: p.t, fired: p.fired, weapon: p.weapon, direction: p.direction,
+                        rect: p.rect, hits: (p.hits ?? []).map((h) => h.id ?? h.tag ?? '?'),
+                    });
+                }
+            }
+
             // The player: the collision box and, offset one pixel down, the
             // rect `getState` actually probes with.
             outline(terrainProbeRect(state.x, state.y), '#ffd75f');
@@ -531,6 +634,14 @@ function makeRenderer(canvas) {
             }
         },
         mark(state, level) { trail.push({ x: state.x, y: state.y, level }); },
+        /** ⛓ What the LAST `draw` really put on the canvas (slice 6). */
+        get drawn() {
+            return {
+                hitboxes: drawn.hitboxes.map((b) => ({ ...b })),
+                hammer: { lines: drawn.hammer.lines.map((l) => ({ ...l })), why: drawn.hammer.why },
+                attacks: drawn.attacks.map((a) => ({ ...a })),
+            };
+        },
         /** Shapes met that this renderer has no arm for; empty is the norm. */
         get unknownShapes() { return [...unknownShapes]; },
         /** Marker sources met that this renderer has no GLYPH for; same law. */
@@ -681,6 +792,15 @@ function mountLayerControls(on, redraw) {
         swatch(PATH_COLOURS.spinner, 'spinner'),
         swatch(PATH_COLOURS.pushable, 'pushable'),
         swatch(PATH_COLOURS.arrow, 'arrow'),
+        // ⛓ SLICE 6's three, each with a row of its own. A layer whose ink
+        // nobody can name is the `unknownShapes` lesson applied to colour —
+        // the reason this legend is generated from the tables rather than
+        // written out — and three new strokes with no legend rows would have
+        // re-opened exactly that.
+        swatch(SHAPE_COLOURS.hitbox, 'enemy hitbox (this tick)'),
+        swatch(SHAPE_COLOURS.hammer, 'hammer line'),
+        swatch(SHAPE_COLOURS.hammerTouch, 'hammer REACHING the player'),
+        swatch(SHAPE_COLOURS.attack, 'attack rect (fired)'),
         ...Object.values(MARKER_GLYPHS).map(
             (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
     ].join('');
@@ -742,7 +862,7 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
      */
     const layerParam = layerSetFor(params);
     const on = layerParam.on;
-    const { markers, unplaced } = overlaysFor(collected);
+    const { markers, unplaced, presses } = overlaysFor(collected);
 
     $('scrub').max = String(Math.max(0, frames.length - 1));
     $('status').className = 'ok';
@@ -782,7 +902,7 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
                     + `  hitsMax=${f.inventory.hitsMax}`
                 : '—'),
         ].join('');
-        renderer.draw(world, f.state, { on, samples, markers, cursor });
+        renderer.draw(world, f.state, { on, samples, markers, presses, cursor });
         pane.highlight(cursor);
     };
 
@@ -937,6 +1057,14 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
         notes.push(`⚠ ${renderer.unknownGlyphs.length} marker(s) with no glyph: `
             + renderer.unknownGlyphs.join(', '));
     }
+    /**
+     * ⚠ SLICE 6 — THE HAMMER LAYER'S NAMED ABSENCE. A spinner room whose boot
+     * declares no `save.time` draws no line, and an empty canvas is what "the
+     * hammer is not swinging" looks like too. Only 28 of the 153 committed
+     * tapes ever have a live clock (this slice's roster sweep), so the absence
+     * is the COMMON case and saying so is not a corner-case courtesy.
+     */
+    if (renderer.drawn.hammer.why) notes.push(`⚠ no hammer line: ${renderer.drawn.hammer.why}`);
     // ⚠ A `?tick=` this page could not honour EXACTLY says so — both the
     // unreadable form (`readViewParams`) and the out-of-range one.
     if (params.tickWhy) notes.push(`⚠ ${params.tickWhy}`);
@@ -967,7 +1095,32 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
             enemies: channelSummary(samples, 'enemies'),
             pushables: channelSummary(samples, 'pushables'),
             arrows: channelSummary(samples, 'arrows'),
+            // ⛓ SLICE 6: the shape layers' own emptiness readout. `bodies` is
+            // the collider channel, and it is a DIFFERENT count from `enemies`
+            // whenever a class reports a position but no census hitbox — which
+            // is a fact worth being able to see.
+            bodies: channelSummary(samples, 'bodies'),
         },
+        /**
+         * ⛓⛓⛓ SLICE 6 — WHAT THE RENDERER DREW ON THE CURRENT FRAME, read
+         * back off the renderer itself rather than recomputed here. A check
+         * that recomputed it would be checking a derivation nothing on screen
+         * used, which is `collectRun`'s own reason for living in
+         * `watchOverlays` and slice 5's lesson stated one layer up.
+         *
+         * ⛔⛔ A GETTER, AND THE FIRST CUT WAS NOT — this slice's own defect,
+         * found by its browser row. `drawn: renderer.drawn` EVALUATES the
+         * renderer's getter once, at readout-assembly time, and freezes that
+         * frame for ever. Every `?tick=N` row still passed, because `seek()`
+         * runs before this object is built; the row that SCRUBBED got tick
+         * zero's boxes and read them as tick 120's, so a layer that tracks
+         * perfectly reported a body that never moved. A snapshot wearing a
+         * live readout's name is the same shape as slice 5's two findings —
+         * state that looks like it is being read and is not.
+         */
+        get drawn() { return renderer.drawn; },
+        /** The whole press ledger, so a row can ask "and at a NON-press tick?" */
+        presses: presses.map((p) => ({ t: p.t, fired: p.fired, level: p.level, rect: p.rect })),
         trace: pane.readout,
     };
 
@@ -1706,7 +1859,14 @@ async function runManual(params) {
         const last = session.observations[session.observations.length - 1];
         const { markers } = liveOverlaysFor(session);
         renderer.draw(world, session.run.state, {
-            on: layers.on, samples: session.samples, markers, cursor: session.tick,
+            on: layers.on,
+            samples: session.samples,
+            markers,
+            // ⛓ SLICE 6: the LIVE drive gets the shape layers too, off the
+            // same ledger the replay path reads — a hand swing shows its rect
+            // on the tick it fired, exactly as a replayed one does.
+            presses: session.run.presses,
+            cursor: session.tick,
         });
         $('hud').innerHTML = [
             manualRow('tick', String(session.tick)),

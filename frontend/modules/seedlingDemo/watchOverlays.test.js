@@ -19,10 +19,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    ACTION_KEYS, activeTraceIndex, channelSummary, collectRun, defaultLayerSet,
-    extractMarkers, keyEdges, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS,
-    overlaysFor, parseLayersParam, pathPointsUpTo, sampleMovers, traceRowFields,
-    traceSidecarPath,
+    ACTION_KEYS, activeTraceIndex, attackRectsAt, bodiesAt, channelSummary, collectRun,
+    defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
+    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam, pathPointsUpTo,
+    sampleMovers, traceRowFields, traceSidecarPath,
 } from './watchOverlays.js';
 import { formatTraceRow } from './decisionTrace.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -35,9 +35,27 @@ const tape = (name) =>
 
 describe('the layer roster', () => {
     it('⚖ arrow paths are the ONE layer that defaults OFF (kickoff §1.6)', () => {
-        expect([...defaultLayerSet()].sort())
-            .toEqual(['action', 'damage', 'enemies', 'events', 'player', 'pushables', 'volumes']);
+        // ⛓ SLICE 6 widened the roster to eleven; `arrows` is still the only
+        // OFF one, and the reason is unchanged — it is the only CUMULATIVE
+        // layer whose ink scales with bodies × ticks. The three new ones are
+        // this-tick-only, so the argument that put `arrows` off does not
+        // reach them (the roster's own slice-6 note).
+        expect([...defaultLayerSet()].sort()).toEqual([
+            'action', 'attacks', 'damage', 'enemies', 'events', 'hammer', 'hitboxes',
+            'player', 'pushables', 'volumes',
+        ]);
         expect(OVERLAY_LAYERS.find((l) => l.id === 'arrows').on).toBe(false);
+        expect(OVERLAY_LAYERS.filter((l) => !l.on).map((l) => l.id)).toEqual(['arrows']);
+    });
+
+    it('⛓ SLICE 6: the three new layers are `shape` — this tick, not the walk', () => {
+        const shapes = OVERLAY_LAYERS.filter((l) => l.kind === 'shape').map((l) => l.id);
+        expect(shapes).toEqual(['hitboxes', 'hammer', 'attacks']);
+        // The distinction the renderer branches on, pinned: a `path` layer is
+        // cumulative to the cursor and a `shape` layer is the cursor's tick.
+        expect(OVERLAY_LAYERS.filter((l) => l.kind === 'path').map((l) => l.id))
+            .toEqual(['player', 'enemies', 'pushables', 'arrows']);
+        expect(LAYER_IDS).toHaveLength(11);
     });
 
     it('every layer has a distinct id and a human label', () => {
@@ -140,7 +158,64 @@ describe('sampleMovers', () => {
     it('⚠ null channels (noclip / noDamage) come through EMPTY, never as a throw', () => {
         const s = sampleMovers({ level: 3, chasers: [], spinnerBodies: [], pushables: null,
             arrowsInFlight: null });
-        expect(s).toEqual({ level: 3, enemies: [], pushables: [], arrows: [] });
+        expect(s).toEqual({
+            level: 3, enemies: [], pushables: [], arrows: [],
+            // ⛓ slice 6's three, and `null` where a value would be a guess:
+            // a run with no clock has no hammer phase and a run with no
+            // `state` has no player box to test one against.
+            bodies: [], gameTime: null, player: null,
+        });
+    });
+
+    // ── slice 6: the BODY channel, beside the point channel ──────────────
+
+    it('⛓ SLICE 6: the body COLLIDERS come from the engine, per class', () => {
+        const s = sampleMovers({
+            level: 7,
+            chasers: [{ id: 'bob@1', tag: 'bob', x: 100, y: 100 }],
+            spinnerBodies: [{ id: 'sp@2', x: 30, y: 40, rect: { x: 26, y: 36, w: 7, h: 7, right: 33, bottom: 43 } }],
+            pushables: new Map(),
+            arrowsInFlight: [],
+            gameTime: 900,
+            state: { x: 11, y: 12 },
+        });
+        // The chaser's box is `chaserBoxAt('bob', …)` — the census hitbox,
+        // NOT a retyped literal. bob is 8x8 with a (4,4) origin.
+        expect(s.bodies).toEqual([
+            { id: 'bob@1', kind: 'chaser', tag: 'bob', x: 100, y: 100,
+                rect: { x: 96, y: 96, w: 8, h: 8, right: 104, bottom: 104 } },
+            // The spinner's is the run's own `spinnerRect` output, carried.
+            { id: 'sp@2', kind: 'spinner', tag: 'spinner', x: 30, y: 40,
+                rect: { x: 26, y: 36, w: 7, h: 7, right: 33, bottom: 43 } },
+        ]);
+        expect(s.gameTime).toBe(900);
+        expect(s.player).toEqual({ x: 11, y: 12 });
+    });
+
+    it('⚠ a body whose class has no census hitbox is ABSENT, never boxed by guess', () => {
+        // The point channel still reports it — "we know where it is" and "we
+        // know how big it is" are different claims and the split is the answer.
+        const s = sampleMovers({
+            level: 7, chasers: [{ id: 'x@1', x: 5, y: 5 }], spinnerBodies: [],
+            pushables: new Map(), arrowsInFlight: [],
+        });
+        expect(s.enemies).toHaveLength(1);
+        expect(s.bodies).toEqual([]);
+    });
+
+    it('bodiesAt is THIS TICK ONLY and filtered to the level being drawn', () => {
+        const samples = [
+            { level: 1, bodies: [{ id: 'a', kind: 'chaser' }] },
+            { level: 1, bodies: [{ id: 'b', kind: 'chaser' }] },
+            { level: 2, bodies: [{ id: 'c', kind: 'chaser' }] },
+        ];
+        // Not cumulative — tick 1 shows b and NOT a. That is the whole
+        // difference from `pathPointsUpTo`, and drawing the union would
+        // paint the room.
+        expect(bodiesAt(samples, 1, 1).map((b) => b.id)).toEqual(['b']);
+        expect(bodiesAt(samples, 2, 1)).toEqual([]);
+        expect(bodiesAt(samples, 2, 2).map((b) => b.id)).toEqual(['c']);
+        expect(bodiesAt(samples, 99, 1)).toEqual([]);
     });
 });
 
@@ -402,4 +477,194 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
             traceSidecarPath('frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-18.json')
                 .path))).not.toThrow();
     });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// ⛔⛔⛔ EDITOR ARC SLICE 6 — THE SHAPE LAYERS, AGAINST THE ENGINE'S OWN
+// LEDGERS
+//
+// These are the rows that license `hammerLinesAt` to exist outside the
+// engine at all. The layer picks an INSTANT (which sample's body, which
+// sample's clock); `run.spinnerContacts` is produced INSIDE `advance` by
+// code that shares nothing with it. Two derivations, one answer, or the
+// layer is drawing a plausible lie.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('⛓⛓⛓ slice 6 — the hammer line reproduces run.spinnerContacts', () => {
+    const collect = (name) => collectRun(tape(name), atlasLevelSource());
+
+    it('r8-hammer-control tick 247: the DRAWN angle IS the recorded 152°', () => {
+        const c = collect('r8-hammer-control');
+        const ledger = c.run.spinnerContacts.filter((r) => r.arm === 'hammer');
+        // The committed artifact is the oracle (kickoff §17.6 of the R8 file):
+        // a hammer contact at tick 247, `Game.time` 5104, phase 19/45, 152°.
+        const first = ledger[0];
+        expect(first.t).toBe(247);
+        expect(first.gameTime).toBe(5104);
+        expect(first.gameTime % 45).toBe(19);
+
+        const drawn = hammerLinesAt(c.samples, 247, 18);
+        expect(drawn.why).toBeNull();
+        // ⚠ L18 HOLDS TWO SPINNERS (slice 2's row names both), so the layer
+        // draws TWO lines and exactly ONE of them reaches — which is a
+        // stronger statement than "a line was drawn": a layer that swept the
+        // whole room would touch with both.
+        expect(drawn.lines.map((l) => l.id).sort())
+            .toEqual(['spinner@112,48', 'spinner@48,96']);
+        expect(drawn.lines.filter((l) => l.touches).map((l) => l.id)).toEqual([first.id]);
+        const line = drawn.lines.find((l) => l.id === first.id);
+        // EXACT, not approximate: same function, same doubles.
+        expect(line.angle).toBe(first.angle);
+        expect(line.angle * 180 / Math.PI).toBeCloseTo(152, 9);
+        expect(line.gameTime).toBe(5104);
+        // ⛓⛓⛓ AND IT REACHES THE PLAYER — the damage marker at 247 and the
+        // hammer layer at 247 agree about WHY, which is the acceptance row.
+        expect(line.touches).toBe(true);
+        // …and the marker really is at the same tick, from the OTHER ledger.
+        const { markers } = overlaysFor(c);
+        const damage = markers.filter((m) => m.layer === 'damage');
+        expect(damage.map((m) => m.tick)).toEqual([247]);
+        expect(damage[0].label).toContain('spinner-hammer');
+    }, 60000);
+
+    it('⛔ THE SPLICE IS THE FINDING: one sample gives the wrong angle, the '
+        + 'other gives the wrong place', () => {
+        const c = collect('r8-hammer-control');
+        const at = (i) => hammerLinesAt(c.samples, i, 18).lines.find((l) => l.id === "spinner@48,96");
+        // Sample 247's own clock is 5105 — one tick PAST the contact's — so a
+        // layer that read the body and the clock from the same sample would
+        // draw 160° where the ledger says 152°.
+        expect(c.samples[247].gameTime).toBe(5105);
+        expect(c.samples[246].gameTime).toBe(5104);
+        // And the body moves 0.707 px per axis per tick, so reading BOTH from
+        // 246 gives the right angle attached to a body one step behind — the
+        // dangerous member, because it looks entirely correct.
+        expect(at(247).angle).toBeCloseTo(152 * Math.PI / 180, 12);
+        expect(at(246).angle).toBeCloseTo(144 * Math.PI / 180, 12);
+        expect(at(246).touches).toBe(false);
+    }, 60000);
+
+    it('⛓ …and over the WHOLE walk: every ledger row reproduced, ZERO extras', () => {
+        const c = collect('r8-hammer-control');
+        const ledger = c.run.spinnerContacts
+            .filter((r) => r.arm === 'hammer')
+            .map((r) => `${r.t}|${r.id}|${r.angle}`);
+        const drawn = [];
+        let evaluated = 0;
+        for (let i = 0; i < c.samples.length; i += 1) {
+            for (const l of hammerLinesAt(c.samples, i, 18).lines) {
+                evaluated += 1;
+                if (l.touches) drawn.push(`${i}|${l.id}|${l.angle}`);
+            }
+        }
+        // A differential, not a spot check: 648 lines evaluated across the
+        // walk and the two sets are equal — so the layer neither misses a
+        // contact the engine billed nor invents one it did not.
+        expect(evaluated).toBe(648);
+        expect(drawn).toEqual(ledger);
+        expect(ledger).toHaveLength(4);
+    }, 60000);
+
+    it('⚠ a NAMED absence, not an empty one: no clock ⇒ no line, with the reason', () => {
+        // `r8-l6-bob-contact`'s boot declares no `save.time` (the roster sweep:
+        // only 28 of 153 tapes ever have a live clock), so the honest answer is
+        // a refusal that says so — a disc, not a line, is what a phaseless
+        // hammer is, and `hammerReach` is where that lives.
+        const c = collect('r8-l6-bob-contact');
+        expect(c.run.gameTimeRefusal).toBeTruthy();
+        // Force the clock-absent arm on a sample that carries a spinner body.
+        const samples = [
+            { level: 9, bodies: [], gameTime: null, player: { x: 0, y: 0 } },
+            { level: 9, bodies: [{ id: 's', kind: 'spinner', x: 40, y: 40 }], gameTime: null,
+                player: { x: 0, y: 0 } },
+        ];
+        const r = hammerLinesAt(samples, 1, 9);
+        expect(r.lines).toEqual([]);
+        expect(r.why).toContain('`Game.time`');
+        expect(r.why).toContain('hammerReach');
+        // Tick 0 has its own reason, and it is a DIFFERENT one.
+        const zero = hammerLinesAt(
+            [{ level: 9, bodies: [{ id: 's', kind: 'spinner', x: 40, y: 40 }], gameTime: 10,
+                player: { x: 0, y: 0 } }], 0, 9);
+        expect(zero.why).toContain('tick 0');
+        // ⚠ And "no spinner in this room" is NOT a limitation — no reason.
+        expect(hammerLinesAt([{ level: 9, bodies: [], gameTime: 10 }], 0, 9))
+            .toEqual({ lines: [], why: null });
+    }, 60000);
+});
+
+describe('⛓ slice 6 — the attack rects are the ledger\'s own', () => {
+    it('r8-solve-18: a press rect is drawn on its FIRED tick and overlaps the spinner', () => {
+        const c = collectRun(tape('r8-solve-18'), atlasLevelSource());
+        const { presses } = overlaysFor(c);
+        expect(presses.length).toBeGreaterThan(0);
+        // A press that LANDED on a spinner — `spinnerPressHits` is the other
+        // ledger, and it names the tick from the engine's side.
+        const landed = c.run.spinnerPressHits.filter((h) => h.landed);
+        expect(landed.length).toBeGreaterThan(0);
+        const t = landed[0].t;
+        const at = attackRectsAt(presses, t, landed[0].level);
+        expect(at).toHaveLength(1);
+        // ⛔ The rect is the ledger's — the rect the run COLLIDED — not a
+        // `slashRect` recomputed here from the row's direction.
+        expect(at[0].rect).toBe(presses.find((p) => p.fired === t).rect);
+        // …and it overlaps the spinner's BODY hitbox at that same tick, which
+        // is the two layers agreeing on the canvas.
+        const bodies = bodiesAt(c.samples, t, landed[0].level)
+            .filter((b) => b.kind === 'spinner' && b.id === landed[0].id);
+        expect(bodies).toHaveLength(1);
+        const a = at[0].rect;
+        const b = bodies[0].rect;
+        expect(a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y).toBe(true);
+        // ⚠ AND ABSENT AT A NON-PRESS TICK — the half that makes the first
+        // half mean anything.
+        const quiet = [...Array(60).keys()].map((i) => t + 3 + i)
+            .find((n) => !presses.some((p) => p.fired === n));
+        expect(attackRectsAt(presses, quiet, landed[0].level)).toEqual([]);
+    }, 60000);
+
+    it('⛔ keyed on `fired`, never on `t` — they differ by one BY TRANSCRIPTION', () => {
+        const rows = [{ t: 10, fired: 11, level: 4, rect: { x: 0 } }];
+        expect(attackRectsAt(rows, 11, 4)).toHaveLength(1);
+        expect(attackRectsAt(rows, 10, 4)).toEqual([]);
+        // …and filtered to the level being drawn, like every other layer.
+        expect(attackRectsAt(rows, 11, 5)).toEqual([]);
+        expect(attackRectsAt(undefined, 11, 4)).toEqual([]);
+    });
+});
+
+describe('⛓ slice 6 — the chaser BOX tracks the stepped position tick for tick', () => {
+    it('r7-act2-4: the box is chaserBoxAt of run.chasers, at three sampled ticks', () => {
+        const c = collectRun(tape('r7-act2-4'), atlasLevelSource());
+        // The tape walks a chaser room; `chaserWalks` is the engine's own
+        // per-tick position ledger and is what the boxes are checked against.
+        const walks = c.run.chaserWalks;
+        expect(walks.length).toBeGreaterThan(3);
+        const ticks = [walks[0].t, walks[Math.floor(walks.length / 2)].t,
+            walks[walks.length - 1].t];
+        let checked = 0;
+        for (const t of ticks) {
+            // `chaserWalks` rows are stamped `ticksCompleted + 1`, so the
+            // position they report is the one the sample at THAT index holds
+            // — the same off-by-one the hammer's splice made explicit.
+            const rows = walks.filter((w) => w.t === t);
+            const bodies = bodiesAt(c.samples, t, rows[0].level)
+                .filter((b) => b.kind === 'chaser');
+            for (const row of rows) {
+                const body = bodies.find((b) => b.id === row.id);
+                if (!body) continue;
+                // The box is centred on the ledger's own x/y, at the census
+                // hitbox — position tracked tick for tick, size from the
+                // engine.
+                expect(body.x).toBe(row.x);
+                expect(body.y).toBe(row.y);
+                expect(body.rect.right - body.rect.x).toBe(8);
+                expect(body.rect.bottom - body.rect.y).toBe(8);
+                expect(body.rect.x).toBe(row.x - 4);
+                expect(body.rect.y).toBe(row.y - 4);
+                checked += 1;
+            }
+        }
+        expect(checked).toBeGreaterThanOrEqual(3);
+    }, 60000);
 });

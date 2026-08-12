@@ -41,6 +41,27 @@
 import { KEY_NAMES, parseTape } from './tapeFormat.js';
 import { createTapeStepper } from './tapeRunner.js';
 import { formatTraceRow } from './decisionTrace.js';
+/**
+ * ⛔⛔ THE ONE-SPELLING IMPORTS (editor arc slice 6).
+ *
+ * Every geometry this module hands the renderer comes from the ENGINE'S OWN
+ * exported function, never from a page-side re-derivation:
+ *
+ *   the spinner's 7x7 body   `run.spinnerBodies[].rect` — `spinnerRect`'s output
+ *   a chaser's box           `chaserBoxAt(tag, cx, cy)`
+ *   the hammer's line        `hammerLine(s, gameTime)`
+ *   "did the hammer reach?"  `hammerHitsPlayer(s, gameTime, box)`
+ *   the player's box         `playerBoxAt(x, y)`
+ *   an attack's rect         `run.presses[].rect` — the rect the run COLLIDED
+ *
+ * ⛓ The hammer is the one that would have been easiest to get wrong. Its
+ * angle is `(Game.time % 45) / 45 · 2π`, three symbols long, and a viewer
+ * that retyped it would have been a second cost model of a rotating line —
+ * agreeing until somebody changed `hammerPeriod`. It is imported instead.
+ */
+import { chaserBoxAt } from './chasers.js';
+import { hammerHitsPlayer, hammerLine } from './spinner.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 
 /**
  * ⛔ THE LAYER ROSTER — kickoff §3.2's table, transcribed once.
@@ -62,6 +83,29 @@ export const OVERLAY_LAYERS = Object.freeze([
     Object.freeze({ id: 'damage', label: 'damage / death markers', kind: 'marker', on: true }),
     Object.freeze({ id: 'events', label: 'event markers (clears, grants, transitions)', kind: 'marker', on: true }),
     Object.freeze({ id: 'volumes', label: 'hazard volumes', kind: 'volume', on: true }),
+    /**
+     * ── ⛓ SLICE 6'S THREE, AND THEY ARE `shape`, NOT `path` ──────────────
+     *
+     * The four `path` layers above are CUMULATIVE — every position up to the
+     * cursor, one dot per tick, which is what a trail is for. These three are
+     * THIS TICK ONLY, and the difference is not a style choice:
+     *
+     *  · a BOX per body per tick is 300 overlapping outlines by mid-tape, and
+     *    the union of a 7x7 box swept across a room is a filled room;
+     *  · the HAMMER's whole content is its ANGLE RIGHT NOW — the union over
+     *    ticks is the 13 px disc `hammerReach` already calls a bound, and
+     *    ⚖ the user's own R8 correction was that the disc is the wrong
+     *    picture (kickoff §16.8, one arc over);
+     *  · an ATTACK RECT is drawn on the tick it FIRED, which is what makes
+     *    "absent at a non-press tick" a fact a check can assert.
+     *
+     * ⇒ all three ON by default: each is a few strokes on the tick you are
+     * looking at, so the signal-to-noise argument that put `arrows` OFF
+     * (⚖ §1.6 — one dot per arrow per tick, cumulative) does not reach them.
+     */
+    Object.freeze({ id: 'hitboxes', label: 'enemy body hitboxes (this tick)', kind: 'shape', on: true }),
+    Object.freeze({ id: 'hammer', label: 'spinner hammer line (this tick)', kind: 'shape', on: true }),
+    Object.freeze({ id: 'attacks', label: 'attack rects (the tick they fired)', kind: 'shape', on: true }),
 ]);
 
 export const LAYER_IDS = Object.freeze(OVERLAY_LAYERS.map((l) => l.id));
@@ -155,11 +199,33 @@ export function keyEdges(heldPerTick, keys = ACTION_KEYS) {
  */
 export function sampleMovers(run) {
     const enemies = [];
+    /**
+     * ⛓ SLICE 6 — THE SAME BODIES, AS COLLIDERS.
+     *
+     * `enemies` is a POINT per body per tick and stays byte-unchanged: it is
+     * the cumulative path channel and its consumers compare its shape. This
+     * is the superset the SHAPE layers need — the box the run collides with,
+     * from the class's own function, plus the entity point the hammer swings
+     * from.
+     *
+     * ⛔ THE TWO CLASSES ANSWER THE BOX QUESTION DIFFERENTLY, and neither
+     * answer is this module's. A spinner's `run.spinnerBodies[].rect` is
+     * already `spinnerRect`'s output, carried across by the getter; a chaser
+     * reports only its centre, so the box is `chaserBoxAt(tag, …)`, keyed on
+     * the AS3 class. Retyping either as `x-4, y-4, 7, 7` would have been a
+     * second hitbox table — and the census is where hitboxes live.
+     */
+    const bodies = [];
     for (const c of run.chasers ?? []) {
         enemies.push({ id: c.id, kind: 'chaser', x: c.x, y: c.y });
+        // A partial run object (a unit-test fake) may carry no tag; a body
+        // whose class is unknown has no census hitbox and is reported by its
+        // ABSENCE from this channel rather than by a guessed box.
+        if (c.tag) bodies.push({ id: c.id, kind: 'chaser', tag: c.tag, x: c.x, y: c.y, rect: chaserBoxAt(c.tag, c.x, c.y) });
     }
     for (const s of run.spinnerBodies ?? []) {
         enemies.push({ id: s.id, kind: 'spinner', x: s.x, y: s.y });
+        if (s.rect) bodies.push({ id: s.id, kind: 'spinner', tag: 'spinner', x: s.x, y: s.y, rect: { ...s.rect } });
     }
     const pushables = [];
     // A Map keyed by id — `pushableRects`' own shape. A REMOVED block has no
@@ -170,7 +236,31 @@ export function sampleMovers(run) {
         pushables.push({ id, x: b.rect.x, y: b.rect.y, w: b.rect.w, h: b.rect.h });
     }
     const arrows = (run.arrowsInFlight ?? []).map((a) => ({ id: a.id, x: a.x, y: a.y }));
-    return { level: run.level, enemies, pushables, arrows };
+    /**
+     * ⛓⛓ SLICE 6 — THE CLOCK AND THE PLAYER'S OWN POSITION, at this instant.
+     *
+     * `run.gameTime` is `Game.time` AT THE TOP OF THE FRAME `advance` is about
+     * to step (its own docblock), and `run.state` is the pre-move player — the
+     * exact box `Spinner.update`'s `collideLine("Player", …)` is handed,
+     * because a spinner updates ABOVE the Player in `Game.loadlevel`'s add
+     * order. Both are recorded here so `hammerLinesAt` needs nothing but the
+     * samples: a function that reached back into the run would be reading a
+     * body that has kept moving since (`sampleMovers`' own copy-don't-keep
+     * law, one paragraph up).
+     *
+     * ⚠ `gameTime: null` IS A REAL ANSWER — `run.gameTimeRefusal` says why, and
+     * a boot that declares no `save.time` has no phase to draw. The hammer
+     * layer REPORTS that rather than drawing a line at a guessed angle.
+     */
+    return {
+        level: run.level,
+        enemies,
+        pushables,
+        arrows,
+        bodies,
+        gameTime: run.gameTime ?? null,
+        player: run.state ? { x: run.state.x, y: run.state.y } : null,
+    };
 }
 
 /**
@@ -201,7 +291,18 @@ export function collectRun(tape, levelSource) {
             // A tape with no run (the v1 engine, no levelSource) has no
             // movers — an EMPTY sample, never a missing one.
             samples.push(r ? sampleMovers(r)
-                : { level: parsed.boot.level, enemies: [], pushables: [], arrows: [] });
+                : {
+                    level: parsed.boot.level,
+                    enemies: [],
+                    pushables: [],
+                    arrows: [],
+                    // ⚠ The v1 engine has no bodies, no clock and no run to
+                    // read a player position off — an EMPTY sample in every
+                    // channel, and `null` where a value would be a guess.
+                    bodies: [],
+                    gameTime: null,
+                    player: { x: state.x, y: state.y },
+                });
         },
     });
     const frames = [];
@@ -226,21 +327,28 @@ export function collectRun(tape, levelSource) {
  * layer" is written down once.
  */
 export function overlaysFor({ frames, run }) {
-    return extractMarkers({
-        hits: run?.playerHits ?? [],
-        deaths: run?.playerDeaths ?? [],
-        grants: run?.grantsFired ?? [],
-        transitions: run?.transitions ?? [],
-        clears: run?.earnedClears ?? [],
-        held: frames.map((f) => f.held),
-        frameAt: (t) => (frames[t]
-            ? {
-                level: frames[t].observation.level,
-                x: frames[t].observation.x,
-                y: frames[t].observation.y,
-            }
-            : null),
-    });
+    return {
+        // ⛓ SLICE 6: the ATTACK layer's ledger, named here with the others so
+        // "which ledger feeds which layer" stays written down once. It is the
+        // raw rows — `attackRectsAt` is what picks the tick, and it is pure
+        // and tested, unlike a filter buried in a draw call.
+        presses: run?.presses ?? [],
+        ...extractMarkers({
+            hits: run?.playerHits ?? [],
+            deaths: run?.playerDeaths ?? [],
+            grants: run?.grantsFired ?? [],
+            transitions: run?.transitions ?? [],
+            clears: run?.earnedClears ?? [],
+            held: frames.map((f) => f.held),
+            frameAt: (t) => (frames[t]
+                ? {
+                    level: frames[t].observation.level,
+                    x: frames[t].observation.x,
+                    y: frames[t].observation.y,
+                }
+                : null),
+        }),
+    };
 }
 
 /** The glyph vocabulary. The legend renders THIS — one list, one page. */
@@ -376,6 +484,123 @@ export function pathPointsUpTo(samples, cursor, level, channel) {
         for (const b of s[channel] ?? []) out.push(b);
     }
     return out;
+}
+
+// ── the SHAPE layers (editor arc slice 6) ────────────────────────────────
+
+/**
+ * The live enemy body colliders at EXACTLY this tick, in THIS level.
+ *
+ * ⚠ NOT CUMULATIVE, unlike `pathPointsUpTo`. See the roster's slice-6 note:
+ * a box per body per tick paints the room.
+ */
+export function bodiesAt(samples, cursor, level) {
+    const s = samples[cursor];
+    if (!s || s.level !== level) return [];
+    return (s.bodies ?? []).filter(Boolean);
+}
+
+/**
+ * ⛔⛔⛔ THE HAMMER LINE AT THE ENGINE'S OWN CONTACT INSTANT — and the
+ * instant is a SPLICE OF TWO SAMPLES, which is the slice's headline finding.
+ *
+ * `Spinner.update` is, in this order, inside ONE `Game.update`:
+ *
+ * ```as3
+ *   super.update();                              // Mobile.update MOVES the body
+ *   hammerAngle = (Game.time % 45) / 45 * 2π;    // Game.time is still the TOP-of-frame value
+ *   collideLine("Player", x, y, x + 13·cos a, …) // against the PRE-move player
+ * ```
+ *
+ * `Game.time += timeRate` runs at the BOTTOM of `Game.update`, and the Player
+ * updates BELOW the spinner. So the three ingredients of one contact are
+ * observed at two different sample instants:
+ *
+ * | ingredient | where the walk shows it |
+ * |---|---|
+ * | the body, AFTER its own move in frame `t` | `samples[t]` |
+ * | `Game.time` at the TOP of frame `t` | `samples[t-1].gameTime` |
+ * | the player box the line was tested against | `samples[t-1].player` |
+ *
+ * ⛓ MEASURED, NOT REASONED. Reading both the body and the clock from ONE
+ * sample gives a line that is either at the wrong ANGLE (sample `t`: 160°
+ * where the ledger says 152°) or in the wrong PLACE (sample `t-1`: the right
+ * angle, touching nothing) — and the second one is the dangerous member,
+ * because a line at the correct angle that quietly reaches past the player is
+ * a plausible picture of a miss that was a hit. The splice below reproduces
+ * `run.spinnerContacts` EXACTLY on the committed spinner tapes: every hammer
+ * row at its own tick and angle, and zero touches the ledger does not have.
+ * `watchOverlays.test.js` is that differential, and it is the whole reason
+ * this function may exist outside the engine at all.
+ *
+ * ⚠ THE PREVIOUS SAMPLE'S CLOCK, NEVER `gameTime - 1`. A run spends DEAD
+ * FRAMES (`run.deadFrameSpans`) that the tape does not tick through, so the
+ * clock can advance by more than one between two samples. Subtracting one
+ * would be a second, wrong model of `Game.time`; reading what the walk
+ * actually recorded is not a model at all.
+ *
+ * @returns {{lines: Array, why: string|null}} — `why` is a NAMED absence,
+ *   never a silent empty: "no spinner here" and "this run has no clock" are
+ *   different facts and only one of them is a limitation.
+ */
+export function hammerLinesAt(samples, cursor, level) {
+    const now = samples[cursor];
+    if (!now || now.level !== level) return { lines: [], why: null };
+    const spinners = (now.bodies ?? []).filter((b) => b.kind === 'spinner');
+    if (spinners.length === 0) return { lines: [], why: null };
+    if (cursor === 0) {
+        return {
+            lines: [],
+            why: 'tick 0 has no PREVIOUS sample, and the clock a hammer swings at during a '
+                + 'frame is the one read at the TOP of that frame — so the opening frame\'s '
+                + 'angle is a value this walk never observed',
+        };
+    }
+    const prev = samples[cursor - 1];
+    if (typeof prev?.gameTime !== 'number') {
+        return {
+            lines: [],
+            why: 'this run has no `Game.time` (see `run.gameTimeRefusal`), and the hammer\'s '
+                + 'angle is `(Game.time % 45) / 45 · 2π` and nothing else — with no clock the '
+                + 'only honest quantity is `hammerReach`\'s union over all 45 phases, which '
+                + 'is a disc and not a line',
+        };
+    }
+    // ⛔ The PRE-move player box, from the engine's own `playerBoxAt`.
+    const box = prev.player ? playerBoxAt(prev.player.x, prev.player.y) : null;
+    const lines = spinners.map((b) => {
+        const line = hammerLine({ x: b.x, y: b.y }, prev.gameTime);
+        return {
+            id: b.id,
+            gameTime: prev.gameTime,
+            ...line,
+            // The engine's own test, not a re-implementation of it: a rect
+            // literal without `right`/`bottom` never overlaps anything, and
+            // `hammerHitsPlayer` refuses one by name rather than answering
+            // "the hammer missed you".
+            touches: box ? Boolean(hammerHitsPlayer({ x: b.x, y: b.y }, prev.gameTime, box)) : false,
+        };
+    });
+    return { lines, why: null };
+}
+
+/**
+ * The attack rects that FIRED on this tick, in this level.
+ *
+ * ⛔ `fired`, NOT `t`. The ledger carries both and they differ by one BY
+ * TRANSCRIPTION — `t` is the tape's press tick and `fired` is the tick the
+ * rect was actually collided. A layer keyed on `t` would draw the box one
+ * tick before the engine swung it, which is exactly the off-by-one the
+ * hammer's own splice is about.
+ *
+ * ⚠ And the rect is `run.presses[].rect` — the rect the run COLLIDED, not a
+ * `slashRect(x, y, direction)` this module recomputed from the row's other
+ * fields. The ledger already holds the answer; recomputing it would be a
+ * second spelling that agreed until a weapon changed the branch (the spear's
+ * rect is `spearRect`, and `hasGhostSword` re-routes the whole press).
+ */
+export function attackRectsAt(presses, cursor, level) {
+    return (presses ?? []).filter((p) => p.fired === cursor && p.level === level);
 }
 
 /** How many DISTINCT bodies a channel ever showed — the emptiness readout. */
