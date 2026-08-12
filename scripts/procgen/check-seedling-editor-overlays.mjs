@@ -153,16 +153,25 @@ async function load(name, extra = '', shotAt = null) {
         'clicking a trace row seeks to ITS tick',
         `cursor ${firstTick}, first row t${overlays.trace.firstTick}`);
 
-    // ⛓ SLICE 6 widened the roster from eight to ELEVEN. The check is
-    // REPLACED, not relaxed: the number is still asserted exactly, and it is
-    // asserted against the page's OWN roster readout rather than a literal,
-    // so the next layer moves both halves at once.
-    check(pane.toggles.length === 11 && pane.toggles.length === overlays.layers.length
-        && pane.legend >= 14,
-        'ELEVEN layer toggles and a legend, generated from the roster',
+    // ⛓ SLICE 6 widened the roster from eight to ELEVEN and slice 8 to
+    // TWELVE. The check is REPLACED each time, never relaxed: the number is
+    // still asserted exactly, and it is asserted against the page's OWN
+    // roster readout rather than a literal, so the next layer moves both
+    // halves at once.
+    check(pane.toggles.length === 12 && pane.toggles.length === overlays.layers.length
+        && pane.legend >= 15,
+        'TWELVE layer toggles and a legend, generated from the roster',
         `${pane.toggles.length} toggle(s), ${pane.legend} legend entr(ies)`);
     const arrows = pane.toggles.find(([id]) => id === 'arrows');
     check(arrows && arrows[1] === false, '⚖ arrow paths default OFF', JSON.stringify(arrows));
+    // ⛔ AND THE LANES LAYER IS A DIFFERENT LAYER FROM THE ARROWS ONE — the
+    // distinction slice 8's roster entry is about, asserted rather than
+    // merely documented: `arrows` is the sampled flights (OFF), `lanes` is the
+    // trap's own geometry (ON).
+    const lanes = pane.toggles.find(([id]) => id === 'lanes');
+    check(lanes && lanes[1] === true && arrows[1] === false,
+        '⛓ `lanes` and `arrows` are two layers with two defaults — flights OFF, geometry ON',
+        `lanes=${JSON.stringify(lanes)} arrows=${JSON.stringify(arrows)}`);
 
     check(overlays.unplaced.length === 0 && overlays.unknownGlyphs.length === 0,
         'nothing unplaced and no marker without a glyph',

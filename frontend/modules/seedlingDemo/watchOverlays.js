@@ -53,15 +53,26 @@ import { formatTraceRow } from './decisionTrace.js';
  *   "did the hammer reach?"  `hammerHitsPlayer(s, gameTime, box)`
  *   the player's box         `playerBoxAt(x, y)`
  *   an attack's rect         `run.presses[].rect` — the rect the run COLLIDED
+ *   an armed trap's lane      `arrowLaneForPlacement(t)` + `arrowLaneRect(lane, h)`
  *
  * ⛓ The hammer is the one that would have been easiest to get wrong. Its
  * angle is `(Game.time % 45) / 45 · 2π`, three symbols long, and a viewer
  * that retyped it would have been a second cost model of a rotating line —
  * agreeing until somebody changed `hammerPeriod`. It is imported instead.
+ *
+ * ⛓⛓⛓ AND THE LANE IS THE ONE THAT DID NOT EXIST TO IMPORT. Slice 6 wanted
+ * this layer and REFUSED it (kickoff §14.4a): `arrowLane` was exported, but it
+ * takes a trap's ENTITY point and every caller retyped the placement by hand —
+ * four times in `dangerMap`, twice in `solverBot` — so a page-side seventh
+ * copy was the only way to draw it, and this arc has refused that shape twice
+ * before (§8.6, §9.3). Slice 8 hoisted the adapter into `arrowTrap` and
+ * converged all eleven spellings FIRST; the layer is what the hoist rode in
+ * on, and it computes no lane geometry of its own.
  */
 import { chaserBoxAt } from './chasers.js';
 import { hammerHitsPlayer, hammerLine } from './spinner.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
 
 /**
  * ⛔ THE LAYER ROSTER — kickoff §3.2's table, transcribed once.
@@ -106,6 +117,25 @@ export const OVERLAY_LAYERS = Object.freeze([
     Object.freeze({ id: 'hitboxes', label: 'enemy body hitboxes (this tick)', kind: 'shape', on: true }),
     Object.freeze({ id: 'hammer', label: 'spinner hammer line (this tick)', kind: 'shape', on: true }),
     Object.freeze({ id: 'attacks', label: 'attack rects (the tick they fired)', kind: 'shape', on: true }),
+    /**
+     * ── ⛓ SLICE 8'S LANE LAYER, AND IT IS NOT THE ARROWS LAYER ───────────
+     *
+     * ⛔ TWO LAYERS, TWO MEANINGS, AND THE LEGEND MUST NOT BLUR THEM.
+     * `arrows` is the sampled FLIGHTS — where arrows actually were, one dot
+     * per arrow per tick, cumulative, and OFF because an arrow room fills the
+     * canvas with them. `lanes` is the TRAP'S GEOMETRY — the column its
+     * volleys sweep, drawn while the trap is ARMED. A room can show lanes and
+     * no arrows (armed, not yet fired) or arrows and no lanes (the volley in
+     * flight after the presser was released), and reading either as the other
+     * misreads the room.
+     *
+     * ⇒ ON by default, with slice 6's own argument: the ink is a handful of
+     * outlines on the tick you are looking at (L5's four traps are the most
+     * any room places), not a quantity that scales with bodies × ticks. The
+     * ⚖ §1.6 ruling that put `arrows` OFF is about the cumulative kind, and
+     * `arrows` stays the only OFF layer.
+     */
+    Object.freeze({ id: 'lanes', label: 'armed arrow-trap lanes (this tick)', kind: 'shape', on: true }),
 ]);
 
 export const LAYER_IDS = Object.freeze(OVERLAY_LAYERS.map((l) => l.id));
@@ -252,6 +282,57 @@ export function sampleMovers(run) {
      * a boot that declares no `save.time` has no phase to draw. The hammer
      * layer REPORTS that rather than drawing a line at a guessed angle.
      */
+    /**
+     * ⛓⛓ SLICE 8 — THE ARMED LANES, and the CENSUS the `hitboxes` layer needs
+     * in order to explain an empty picture.
+     *
+     * ⛔ BOTH ARE SAMPLED PER TICK BECAUSE BOTH CHANGE. A trap's ARMED state
+     * is live (a presser drains and refills it mid-walk) and the room itself
+     * changes on a crossing, so a lane list read once at boot would draw L5's
+     * columns over L6. The census counts are per-room facts, but they are
+     * carried on the sample for the same reason: `bodiesAt` is handed nothing
+     * but `samples`, and a derivation that reached back into the run would be
+     * reading a run that has kept moving (this function's own copy-don't-keep
+     * law, three paragraphs up).
+     *
+     * ⚠ `armed: null` AND `armed: 0` ARE DIFFERENT FACTS — `dangerMap` says so
+     * at its own call site. `run.armedArrowTraps` is `null` under `noclip`,
+     * where the traps are not stepped at all and ARMED is not a question this
+     * walk can answer; an empty Set is "no trap is armed right now". A layer
+     * that collapsed them would report a noclip walk as a safe room.
+     */
+    let lanes = [];
+    let arrowTraps = null;
+    let census = null;
+    const world = typeof run.worldFor === 'function' ? run.worldFor(run.level) : null;
+    if (world) {
+        const placed = world.arrowTraps ?? [];
+        const armed = run.armedArrowTraps;
+        arrowTraps = { placed: placed.length, armed: armed ? armed.size : null };
+        if (armed) {
+            lanes = placed.filter((t) => armed.has(t.id)).map((t) => ({
+                id: t.id,
+                t: t.t,
+                // ⛔ The engine's own geometry, through the adapter slice 8
+                // hoisted for exactly this — never a page-side retype.
+                rect: arrowLaneRect(arrowLaneForPlacement(t), world.world.height),
+            }));
+        }
+        const verdict = typeof run.chaserRoomVerdict === 'function'
+            ? run.chaserRoomVerdict(run.level) : null;
+        census = {
+            // ⚠ THE CENSUS COUNTS BOTH CLASSES the `hitboxes` layer draws:
+            // measured, `world.combat.enemies` carries L18's two `spinner`
+            // rows as well as L14's six `bob`s. A count of chasers alone would
+            // call a spinner room empty.
+            enemies: (world.combat?.enemies ?? []).length,
+            // `combat` ABSENT is not `combat` EMPTY: a relaxed-roles run never
+            // built the census, so it has no bodies AND is missing none.
+            consulted: Boolean(world.combat),
+            stepped: verdict ? verdict.stepped : null,
+            refusal: verdict ? verdict.why : null,
+        };
+    }
     return {
         level: run.level,
         enemies,
@@ -260,6 +341,9 @@ export function sampleMovers(run) {
         bodies,
         gameTime: run.gameTime ?? null,
         player: run.state ? { x: run.state.x, y: run.state.y } : null,
+        lanes,
+        arrowTraps,
+        census,
     };
 }
 
@@ -302,6 +386,12 @@ export function collectRun(tape, levelSource) {
                     bodies: [],
                     gameTime: null,
                     player: { x: state.x, y: state.y },
+                    // ⚠ `null`, not `0`: the v1 engine has no world to count a
+                    // census or a trap in, which is a different answer from
+                    // "this room holds none".
+                    lanes: [],
+                    arrowTraps: null,
+                    census: null,
                 });
         },
     });
@@ -493,11 +583,122 @@ export function pathPointsUpTo(samples, cursor, level, channel) {
  *
  * ⚠ NOT CUMULATIVE, unlike `pathPointsUpTo`. See the roster's slice-6 note:
  * a box per body per tick paints the room.
+ *
+ * ⛔⛔ SLICE 8 — THE `why` CHANNEL, AND WHAT IT COST TO NOT HAVE ONE.
+ *
+ * Slice 6 gave `hammer` a named absence and left this layer without one, and
+ * slice 7's route survey walked straight into the consequence. MEASURED at
+ * the survey's own boots, and re-measured by this slice from the run rather
+ * than from the survey's file:
+ *
+ * | room | census | live | the picture |
+ * |---|---|---|---|
+ * | L14 | 6 `bob` | 6 | six hitboxes |
+ * | **L16** | **9** (`bob` + `sandtrap`) | **0** | **nothing at all** |
+ * | L4 | 1 | 1 | one hitbox |
+ *
+ * L16's picture is a long empty corridor with nine bodies standing in it: the
+ * room mixes arrow traps with static `Enemy` bodies whose arrow-death the
+ * model does not stage, so `chaserRoomVerdict` REFUSES the whole roster and
+ * there is no live position for any of them. An empty layer and a room with
+ * no enemies drew the identical picture, which is the named-absence law
+ * (trap 196 — *an empty layer means two things*) unenforced on one layer.
+ *
+ * ⛓ THE REFUSAL'S TEXT IS THE ENGINE'S OWN, verbatim from
+ * `chaserRoomVerdict(level).why` — a page-side paraphrase of a refusal is a
+ * second spelling of the reason, and the reason is the whole content.
+ *
+ * ⇒ FOUR ANSWERS, and the order they are tested in is deliberate: a room with
+ * nothing in its census is empty whatever the verdict says about it, so the
+ * count is asked before the refusal.
+ *
+ * @returns {{bodies: Array, why: string|null}} — `hammerLinesAt`'s shape, for
+ *   the reason that function has it: drawing nothing is an answer, and which
+ *   nothing it is matters.
  */
 export function bodiesAt(samples, cursor, level) {
     const s = samples[cursor];
-    if (!s || s.level !== level) return [];
-    return (s.bodies ?? []).filter(Boolean);
+    if (!s || s.level !== level) return { bodies: [], why: null };
+    const bodies = (s.bodies ?? []).filter(Boolean);
+    if (bodies.length > 0) return { bodies, why: null };
+    const c = s.census;
+    // A sample with no census at all (the v1 engine, a unit-test fake) can be
+    // reported as an absence but not explained as one.
+    if (!c) return { bodies: [], why: null };
+    if (!c.consulted) {
+        return {
+            bodies: [],
+            why: 'this run is COMBAT-BLIND — it was built with relaxed roles, so the world '
+                + 'carries no combat census at all. There are no enemy bodies to draw and '
+                + 'none are missing: the layer is empty because the RUN is, not the room',
+        };
+    }
+    if (c.enemies === 0) {
+        return {
+            bodies: [],
+            why: 'no enemies in this room\'s census — the layer is empty because the ROOM '
+                + 'is, and nothing is being withheld',
+        };
+    }
+    if (c.stepped === false) {
+        return {
+            bodies: [],
+            why: `room refused: ${c.enemies} census bod(ies) stand here and the model has a `
+                + `live position for NONE of them — ${c.refusal}`,
+        };
+    }
+    return {
+        bodies: [],
+        why: `all ${c.enemies} census bod(ies) in this room are gone by this tick — the `
+            + 'roster is stepped and every body in it has died or been removed',
+    };
+}
+
+/**
+ * ⛓⛓⛓ THE ARMED TRAPS' LANES at this tick, in this level — the page consumer
+ * the `arrowLane` hoist rode in on.
+ *
+ * A lane is the column of pixels a trap's volleys sweep, from its spawn row to
+ * the floor. It is drawn while the trap is ARMED, because that is when the
+ * column is dangerous — `dangerMap`'s four arms all say the same thing in
+ * their own words: *"the volley that has not fired yet is the one a policy
+ * needs warning about."*
+ *
+ * ⛔ THIS IS NOT THE `arrows` LAYER. That one draws sampled FLIGHT positions;
+ * this draws the trap's geometry. See the roster entry.
+ *
+ * ⚠ AND THE EMPTY CASES ARE THREE, not one — trap 196 again, on the layer
+ * built in the same slice as the layer that taught it. "No trap in this room",
+ * "traps here but none armed right now", and "this walk cannot answer ARMED at
+ * all" are different facts, and the last one is the only one that is a
+ * limitation.
+ *
+ * @returns {{lanes: Array, why: string|null}}
+ */
+export function arrowLanesAt(samples, cursor, level) {
+    const s = samples[cursor];
+    if (!s || s.level !== level) return { lanes: [], why: null };
+    const lanes = s.lanes ?? [];
+    if (lanes.length > 0) return { lanes, why: null };
+    const a = s.arrowTraps;
+    if (!a) return { lanes: [], why: null };
+    if (a.placed === 0) {
+        return { lanes: [], why: 'no arrow trap stands in this room — nothing to arm' };
+    }
+    if (a.armed === null) {
+        return {
+            lanes: [],
+            why: `${a.placed} arrow trap(s) stand here, but \`run.armedArrowTraps\` is null: `
+                + 'this walk is under `noclip`, where the traps are not stepped at all. ARMED '
+                + 'is not a question this run can answer — which is NOT the same as "no trap '
+                + 'is armed"',
+        };
+    }
+    return {
+        lanes: [],
+        why: `${a.placed} arrow trap(s) stand here and NONE is armed at this tick — a lane is `
+            + 'drawn while its trap is live, and these are not',
+    };
 }
 
 /**

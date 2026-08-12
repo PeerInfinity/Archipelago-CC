@@ -127,7 +127,7 @@ import {
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
-    activeTraceIndex, attackRectsAt, bodiesAt, channelSummary, collectRun, defaultLayerSet,
+    activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun, defaultLayerSet,
     hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
     parseLayersParam, pathPointsUpTo, traceRowFields, traceSidecarPath,
 } from './watchOverlays.js';
@@ -201,6 +201,14 @@ const SHAPE_COLOURS = Object.freeze({
     hammer: '#ff8fd0',
     hammerTouch: '#ffffff',
     attack: '#ffd75f',
+    /**
+     * ⛓ A LANE IS NOT AN ARROW, AND THE INK SAYS SO. `PATH_COLOURS.arrow` is
+     * the flights; this is the trap's column. A distinct hue is the legend's
+     * job made visible — the two layers answer different questions and a
+     * reader who cannot tell them apart on the canvas has the legend's
+     * distinction and not the picture's.
+     */
+    lane: '#7fd4ff',
 });
 
 const $ = (id) => document.getElementById(id);
@@ -410,7 +418,12 @@ function makeRenderer(canvas) {
      * the readout is reset at the top of each pass and describes the frame
      * you are looking at.
      */
-    const drawn = { hitboxes: [], hammer: { lines: [], why: null }, attacks: [] };
+    const drawn = {
+        hitboxes: { boxes: [], why: null },
+        hammer: { lines: [], why: null },
+        attacks: [],
+        lanes: { lanes: [], why: null },
+    };
 
     const unknownGlyphs = new Set();
     function glyph(kind, x, y, colour, source) {
@@ -587,13 +600,40 @@ function makeRenderer(canvas) {
              * block chooses colours and z-order and computes no geometry at
              * all — see `watchOverlays`' one-spelling import block.
              */
-            drawn.hitboxes = [];
+            drawn.hitboxes = { boxes: [], why: null };
             drawn.hammer = { lines: [], why: null };
             drawn.attacks = [];
+            drawn.lanes = { lanes: [], why: null };
             if (opts.on.has('hitboxes')) {
-                for (const b of bodiesAt(samples, cursor, world.level)) {
-                    outline(b.rect, SHAPE_COLOURS.hitbox);
-                    drawn.hitboxes.push({ id: b.id, kind: b.kind, tag: b.tag, rect: b.rect });
+                /**
+                 * ⛔ SLICE 8: `why` IS CARRIED OUT, exactly as `hammer` has
+                 * done since slice 6. An empty hitboxes layer meant two things
+                 * and drew one picture — L16's nine refused bodies looked
+                 * identical to an empty corridor. See `bodiesAt`.
+                 */
+                const b = bodiesAt(samples, cursor, world.level);
+                drawn.hitboxes = { boxes: [], why: b.why };
+                for (const body of b.bodies) {
+                    outline(body.rect, SHAPE_COLOURS.hitbox);
+                    drawn.hitboxes.boxes.push({
+                        id: body.id, kind: body.kind, tag: body.tag, rect: body.rect,
+                    });
+                }
+            }
+            if (opts.on.has('lanes')) {
+                /**
+                 * ⛓ THE ARMED TRAPS' COLUMNS — the trap's GEOMETRY, not the
+                 * `arrows` layer's sampled flights. Outlined and barely
+                 * filled: a lane runs the full height of the room, so a solid
+                 * one would bury everything standing in it, which is exactly
+                 * the population the layer exists to show is in danger.
+                 */
+                const l = arrowLanesAt(samples, cursor, world.level);
+                drawn.lanes = { lanes: [], why: l.why };
+                for (const lane of l.lanes) {
+                    rect(lane.rect, SHAPE_COLOURS.lane, 0.12);
+                    outline(lane.rect, SHAPE_COLOURS.lane);
+                    drawn.lanes.lanes.push({ id: lane.id, t: lane.t, rect: lane.rect });
                 }
             }
             if (opts.on.has('hammer')) {
@@ -634,12 +674,29 @@ function makeRenderer(canvas) {
             }
         },
         mark(state, level) { trail.push({ x: state.x, y: state.y, level }); },
-        /** ⛓ What the LAST `draw` really put on the canvas (slice 6). */
+        /**
+         * ⛓ What the LAST `draw` really put on the canvas (slice 6).
+         *
+         * ⚠ SLICE 8: `hitboxes` and `lanes` are `{…, why}` PAIRS, like
+         * `hammer` — an empty layer and a layer with a reason are different
+         * readouts, and this accessor has to carry the reason out or the
+         * check that reads it cannot tell them apart. (It is also the shape
+         * this getter got WRONG first: it still spread `hitboxes` as a bare
+         * array and the page died on `drawn.hitboxes.map is not a function`,
+         * which the browser row caught on its first run.)
+         */
         get drawn() {
             return {
-                hitboxes: drawn.hitboxes.map((b) => ({ ...b })),
+                hitboxes: {
+                    boxes: drawn.hitboxes.boxes.map((b) => ({ ...b })),
+                    why: drawn.hitboxes.why,
+                },
                 hammer: { lines: drawn.hammer.lines.map((l) => ({ ...l })), why: drawn.hammer.why },
                 attacks: drawn.attacks.map((a) => ({ ...a })),
+                lanes: {
+                    lanes: drawn.lanes.lanes.map((l) => ({ ...l })),
+                    why: drawn.lanes.why,
+                },
             };
         },
         /** Shapes met that this renderer has no arm for; empty is the norm. */
@@ -801,6 +858,11 @@ function mountLayerControls(on, redraw) {
         swatch(SHAPE_COLOURS.hammer, 'hammer line'),
         swatch(SHAPE_COLOURS.hammerTouch, 'hammer REACHING the player'),
         swatch(SHAPE_COLOURS.attack, 'attack rect (fired)'),
+        // ⛓ SLICE 8, and the wording carries the whole distinction: the
+        // ARROW swatch above is the sampled FLIGHTS, this is the trap's own
+        // COLUMN while it is armed. Two layers, two rows, two sentences —
+        // a legend that said "arrows" twice would be the blur itself.
+        swatch(SHAPE_COLOURS.lane, 'armed arrow-trap LANE (the column, not the flights)'),
         ...Object.values(MARKER_GLYPHS).map(
             (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
     ].join('');
@@ -1100,6 +1162,22 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
             // whenever a class reports a position but no census hitbox — which
             // is a fact worth being able to see.
             bodies: channelSummary(samples, 'bodies'),
+            // ⛓ SLICE 8: the armed lanes over the whole walk. A trap that is
+            // armed for three ticks and a trap that is never armed both draw
+            // nothing at most cursor positions, and only this count tells
+            // them apart across the tape.
+            lanes: channelSummary(samples, 'lanes'),
+        },
+        /**
+         * ⛓ SLICE 8 — THE CENSUS BEHIND AN EMPTY `hitboxes` LAYER, at the
+         * scrub tick. `drawn.hitboxes.why` says WHICH nothing is on screen;
+         * this is the population count that claim rests on, so a reader never
+         * has to take the sentence's word for it (trap 196: never read an
+         * absence without its population count).
+         */
+        get census() {
+            const s = samples[Math.min(Math.max(cursor, 0), samples.length - 1)];
+            return s?.census ?? null;
         },
         /**
          * ⛓⛓⛓ SLICE 6 — WHAT THE RENDERER DREW ON THE CURRENT FRAME, read

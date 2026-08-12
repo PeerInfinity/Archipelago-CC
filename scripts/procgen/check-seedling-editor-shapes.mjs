@@ -187,7 +187,7 @@ console.log('\n## r8-solve-18 — the attack rect on its FIRED tick, and not oth
         JSON.stringify(on.drawn.attacks.map((x) => `${x.weapon}@${x.fired}`)));
 
     const r = on.drawn.attacks[0]?.rect;
-    const spinners = on.drawn.hitboxes.filter((h) => h.kind === 'spinner');
+    const spinners = on.drawn.hitboxes.boxes.filter((h) => h.kind === 'spinner');
     const overlaps = r && spinners.some((s) => r.x < s.rect.right && r.right > s.rect.x
         && r.y < s.rect.bottom && r.bottom > s.rect.y);
     check(Boolean(overlaps),
@@ -202,9 +202,9 @@ console.log('\n## r8-solve-18 — the attack rect on its FIRED tick, and not oth
     check(off.drawn.attacks.length === 0,
         `⚠ …and ABSENT at the non-press tick ${quiet}`,
         `${off.drawn.attacks.length} rect(s)`);
-    check(off.drawn.hitboxes.length > 0,
+    check(off.drawn.hitboxes.boxes.length > 0 && off.drawn.hitboxes.why === null,
         '⛓ …while the BODY hitboxes are still there — the canvas did not just go blank',
-        `${off.drawn.hitboxes.length} body/ies`);
+        `${off.drawn.hitboxes.boxes.length} body/ies, why=${off.drawn.hitboxes.why ?? 'none'}`);
     check(unexpectedErrors([...on.errors, ...off.errors]).length === 0,
         'no page errors beyond the expected missing-sidecar 404',
         unexpectedErrors([...on.errors, ...off.errors]).join(' | ') || 'clean');
@@ -240,7 +240,7 @@ console.log('\n## r7-act2-4 — the chaser BOX tracks the stepped position');
             s.value = String(t);
             s.dispatchEvent(new Event('input'));
             return {
-                boxes: window.__editorOverlays.drawn.hitboxes.filter((b) => b.kind === 'chaser'),
+                boxes: window.__editorOverlays.drawn.hitboxes.boxes.filter((b) => b.kind === 'chaser'),
                 cursor: Number(s.value),
             };
         }, tick);
@@ -272,8 +272,8 @@ console.log('\n## the three layers as LAYERS — legend, ?layers=, and OFF reall
     const all = await drawnAt('r8-hammer-control', 247);
     const ids = all.toggles.map(([id]) => id);
     check(ids.includes('hitboxes') && ids.includes('hammer') && ids.includes('attacks')
-        && all.toggles.length === 11,
-    '⛓ all three have a toggle, generated from the roster — eleven now',
+        && ids.includes('lanes') && all.toggles.length === 12,
+    '⛓ all three have a toggle, generated from the roster — TWELVE now (slice 8 added `lanes`)',
     `${all.toggles.length}: ${ids.join(', ')}`);
     check(all.legend.some((t) => /hammer REACHING/i.test(t))
         && all.legend.some((t) => /enemy hitbox/i.test(t))
@@ -289,9 +289,9 @@ console.log('\n## the three layers as LAYERS — legend, ?layers=, and OFF reall
     check(off.drawn.hammer.lines.length === 0 && off.drawn.attacks.length === 0,
         '⛔ a layer left out of ?layers= draws NOTHING — asserted at the renderer, not the widget',
         `hammer ${off.drawn.hammer.lines.length}, attacks ${off.drawn.attacks.length}`);
-    check(off.drawn.hitboxes.length > 0,
+    check(off.drawn.hitboxes.boxes.length > 0,
         '⛓ …while the one that WAS named still draws — the check is not vacuous',
-        `${off.drawn.hitboxes.length} body/ies`);
+        `${off.drawn.hitboxes.boxes.length} body/ies`);
     check(unexpectedErrors([...all.errors, ...off.errors]).length === 0,
         'no page errors beyond the expected missing-sidecar 404',
         unexpectedErrors([...all.errors, ...off.errors]).join(' | ') || 'clean');
