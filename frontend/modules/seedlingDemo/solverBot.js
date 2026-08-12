@@ -1317,12 +1317,40 @@ function deriveStance(run, resolved, contacts) {
      * same instrument the walk then follows, so the stance the solver picks
      * and the stance it can stand on cannot be two different claims.
      */
+    /**
+     * ⛓⛓ PROCGEN PoC SLICE 3 — **A CELL OUTSIDE THE ROOM IS NOT A STANCE**,
+     * and it took a generated room to say so out loud.
+     *
+     * `plannerObstacleAt` answers "what solid is at this point"; OUTSIDE the
+     * level rectangle there is no tile, so it answers `null` — "walkable". The
+     * ring search then offered cells beyond the border ring as candidates, and
+     * `planWaypoints` (which does not bound its goal either) planned a corridor
+     * straight through the border wall to one. Measured on a 10x10 generated
+     * room with the goal at tile (7,8): the derived stance was `(168,88)` —
+     * lattice cell (10,5), one column PAST a room whose last column is 9 — and
+     * the walk spent its whole per-target budget grinding into `tile:Stone` at
+     * (152,72). ⚠ The same room, goal at (1,8), derived `(-8,88)`.
+     *
+     * ⛔ PRE-EXISTING, MEASURED: both refusals are BYTE-IDENTICAL at `a1f08414c`
+     * with this slice's other change reverted — this is not fallout from the
+     * ladder routing below, it is a hole the atlas's own rooms never showed
+     * because their goals sit far from the border. A generated room puts the
+     * goal wherever the seed says.
+     *
+     * The bound is the world's own rectangle, in the ring search's own lattice
+     * units, spelled the way `identifyAndSelect`'s flood spells it.
+     */
+    const nx = run.world.width * TILE_SIZE / DEFAULT_LATTICE;
+    const ny = run.world.height * TILE_SIZE / DEFAULT_LATTICE;
     const candidates = [];
     for (let r = 1; r <= 3; r += 1) {
         for (let dy = -r; dy <= r; dy += 1) {
             for (let dx = -r; dx <= r; dx += 1) {
                 if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
-                const c = nodeCentre(cell.tx + dx, cell.ty + dy, DEFAULT_LATTICE);
+                const tx = cell.tx + dx;
+                const ty = cell.ty + dy;
+                if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) continue;
+                const c = nodeCentre(tx, ty, DEFAULT_LATTICE);
                 if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
                 candidates.push({ d: Math.hypot(c.x - centre.x, c.y - centre.y), ...c });
             }
@@ -1333,17 +1361,72 @@ function deriveStance(run, resolved, contacts) {
         try {
             planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
                 solverPlanOpts(run, contacts));
-            return { x: c.x, y: c.y };
+            return { x: c.x, y: c.y, corridor: true };
         } catch (e) {
             if (!(e instanceof BotDriverV2Error)) throw e;
         }
     }
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 3 — ⚖ THE COLLECT-PATH RULING (user, 2026-08-12):
+     * *"the corridor limitation sounds like a bug that we should fix with
+     * collection goals"*, and *"items should be collectable from any angle"*.
+     *
+     * THE BUG, precisely: "no candidate plans a corridor" was read here as "no
+     * stance exists", and refused. But `walkTo` — the ONE place a corridor
+     * failure is answered — responds to exactly this failure by identifying the
+     * obstacle at the component frontier and applying a strategy (`walkTo`'s
+     * `identifyAndSelect` arm). A REACH-EXIT goal gets that ladder because
+     * `walkTo` is the first thing the exit branch calls; a COLLECT goal never
+     * did, because this derivation ran first and threw. So a corridor-blocking
+     * obstacle refused before its clearer was ever selected — measured across
+     * the whole pre-sword clearer palette (PoC slice 2 §9.1).
+     *
+     * ⇒ THE FIX IS TO STOP ANSWERING A QUESTION THIS FUNCTION CANNOT ANSWER.
+     * Reachability-after-clearing is `walkTo`'s question, and re-asking it here
+     * would be a SECOND ladder (§11.7's one-of-everything law: the ladder is
+     * `walkTo`'s, and the derivation's job is to name a stance). So the
+     * corridorless case returns the best candidate the ring search found,
+     * FLAGGED, and the walk to it enters the same ladder every crossing uses.
+     *
+     * ⚠ The order is the SAME `(d, y, x)` order — the nearest walkable cell to
+     * the pickup. Which is what the caller wants: the ladder clears the
+     * frontier obstacle and re-plans to this aim, and the frontier the ladder
+     * floods to is a property of the LIVE POSITION, not of which candidate is
+     * aimed at, so the choice among corridorless candidates cannot change
+     * WHICH obstacle gets identified — only where the walk ends up afterwards.
+     *
+     * ⚠⚠ NAMED BOUND — one shot, and the degenerate case is a worse MESSAGE,
+     * never a wrong answer. If the candidates are corridorless because they sit
+     * in a pocket no verb opens (the north-pocket case this docblock's ring
+     * search was built around), the ladder refuses instead of this function —
+     * a refusal that names the frontier obstacles and every rung that declined,
+     * possibly after spending up to `MAX_STRATEGIES_PER_GOAL` applications on
+     * obstacles that were never the pocket's wall. Trying candidates one by one
+     * to avoid that is not available: `walkTo` DRIVES, so a candidate cannot be
+     * tried and taken back.
+     *
+     * ⛔ The genuine no-stance case still refuses HERE, unchanged in kind: zero
+     * walkable candidates is a claim the ring search alone can settle.
+     */
+    if (candidates.length > 0) {
+        const c = candidates[0];
+        return {
+            x: c.x,
+            y: c.y,
+            corridor: false,
+            why: `no corridor from (${run.state.x},${run.state.y}) to any of `
+                + `${candidates.length} walkable candidate(s) around `
+                + `${p.tag}@${p.x},${p.y}; the nearest one is the aim and the walk's `
+                + 'own obstacle ladder is what must open it',
+        };
+    }
     throw new SolverRefusal(
-        `solverBot: no REACHABLE stance within 3 lattice rings of `
+        `solverBot: no WALKABLE stance within 3 lattice rings of `
         + `${p.tag}@${p.x},${p.y} in level ${run.level} — `
-        + `${candidates.length} walkable candidate(s), none with a corridor from `
-        + `(${run.state.x},${run.state.y}). The pickup's own cell is an avoid volume `
-        + 'by design; a walkable ring cell in an unreachable component is not a stance.',
+        + `0 walkable candidate(s) from (${run.state.x},${run.state.y}). The pickup's `
+        + 'own cell is an avoid volume by design, and every ring cell around it is '
+        + 'blocked, so there is no cell to aim a walk at — not even one the '
+        + 'obstacle ladder could open a corridor to.',
         { obstacle: { kind: 'pickup', id: `${p.tag}@${p.x},${p.y}` } });
 }
 
@@ -5136,7 +5219,21 @@ export function solveSegment({
          * never in at the stance.
          */
         const before = resolved.strategy === 'chest' ? { chests: run.openChests } : null;
-        walkTo(goal, stance, { what: `${what} stance` });
+        /**
+         * ⛓ PROCGEN PoC SLICE 3 — THE SAME WALK, EITHER WAY. `deriveStance`
+         * now hands back a stance it could not plan a corridor to (flagged
+         * `corridor: false`), and this walk is where that is answered: the
+         * ladder inside `walkTo` identifies the frontier obstacle and clears
+         * it, exactly as a REACH-EXIT crossing's walk always has. The ONLY
+         * difference here is the `what` string, so a refusal downstream says
+         * which kind of stance it was walking to rather than leaving a reader
+         * to infer it from the absence of a corridor.
+         */
+        walkTo(goal, stance, {
+            what: stance.corridor === false
+                ? `${what} stance (ladder-routed: ${stance.why})`
+                : `${what} stance`,
+        });
         refuseDanger(run.state.x, run.state.y, goal, what);
         const verbTick = perTick.length;
         const exec = STRATEGY_EXECUTORS[resolved.strategy];
