@@ -592,13 +592,20 @@ export function sampleMovers(run) {
  * grants into a level it never enters, and the page's answer to that has
  * always been to show what it got and say where it stopped — so the partial
  * frames come back beside the error rather than instead of it.
+ *
+ * ⛓ PROCGEN PoC SLICE 5 — `opts.scratchPersistence`, forwarded and nothing
+ * else. See `createTapeStepper`'s own docblock for what it is and why it is
+ * an option rather than a tape field; the ONE caller that passes it is the
+ * page's GENERATE arm, scrubbing a tape its own scratch solve produced. The
+ * signature stays positional-compatible, so every existing call gets `false`.
  */
-export function collectRun(tape, levelSource) {
+export function collectRun(tape, levelSource, { scratchPersistence = false } = {}) {
     const parsed = parseTape(tape);
     const samples = [];
     let run = null;
     const stepper = createTapeStepper(tape, {
         levelSource,
+        scratchPersistence,
         onTick: (tick, state, held, r) => {
             run = r;
             // A tape with no run (the v1 engine, no levelSource) has no

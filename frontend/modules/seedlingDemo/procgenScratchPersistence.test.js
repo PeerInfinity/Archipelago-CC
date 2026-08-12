@@ -35,6 +35,11 @@
  *     the ORDINARY stepper, still refuses. Scratch mode does not travel with
  *     the artifact, which is the boundary asserted behaviourally rather than
  *     by reading a field.
+ *     ⛓ **SLICE 5 ADDS ITS PAIR**: the same tape re-steps to completion when
+ *     a CALLER passes the option — the page's GENERATE arm scrubbing a walk
+ *     its own scratch solve produced (§13.4's residue, discharged for the
+ *     SCRUB and left open for the FORMAT). The refusing case above is what
+ *     makes the pair a boundary rather than a widening.
  *  6. **The narrowed dialogue guard** — a room with a LIVE spinner still
  *     refuses, with its existing message; only rooms whose spinners are all
  *     removed stopped being asked.
@@ -58,6 +63,7 @@ import {
 import { DEFAULT_BUDGET, bootStaging, collectGoal, solve } from './procgenOracle.js';
 import { atlasOf } from './procgenLevel.js';
 import { buildStagedTape } from './botDriverV1.js';
+import { collectRun } from './watchOverlays.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { parseTape } from './tapeFormat.js';
 import { solveForPage } from './watchSolve.js';
@@ -221,6 +227,68 @@ describe('the boundary — a run is in scratch mode ONLY when a caller says so',
         });
         expect(() => { for (const _ of stepper) { /* drain */ } })
             .toThrow(/two writers of one persistence slot/);
+    });
+
+    /**
+     * ⛓⛓⛓ SLICE 5 — THE OTHER HALF OF THE CASE ABOVE, and the two are a PAIR
+     * rather than a repetition.
+     *
+     * §13.4's residue was *"a generated solve tape replayed through the
+     * ordinary path still throws the undeclared-clear refusal"*, and the case
+     * above is the measurement that keeps it honest. What slice 5 needs is the
+     * SCRUB: the page's GENERATE arm has to draw the walk it just solved, and
+     * a viewer that showed 270 of 379 frames with an error under it would be
+     * showing a broken picture of a level the loop CERTIFIED.
+     *
+     * ⛔ THE CURE IS THE FLAG THAT PRODUCED THE TAPE, NOT A WIDER FORMAT
+     * (⚖ the brief's own exclusion: relaxing `tapeFormat`'s
+     * `persistence[].level` bound is an engine/format question recorded for
+     * R9). So the stepper takes the same option the run does, the ONE caller
+     * is the arm that solved the tape, and the case above still passes —
+     * which is the whole content of "no data path": the same bytes replay
+     * differently only because a CALLER, in code, said so.
+     *
+     * ⚠ THE TWO ASSERTIONS ARE DIFFERENT CLAIMS. That the walk COMPLETES is
+     * the cure; that it completes to the tape's OWN length is the check that
+     * the cure did not merely swallow the refusal and stop early.
+     */
+    it('...and WITH the option the same tape re-steps to completion', () => {
+        const record = killLockRoom();
+        const out = solve(record, stagingFor(record), [roomGoal()], DEFAULT_BUDGET,
+            oracleOpts('scrub-fork'));
+        expect(out.verdict).toBe('SOLVED');
+        expect(out.scratchClears).toHaveLength(1);
+        const levelSource = levelSourceFromAtlas(atlasOf(record));
+        const parsed = parseTape(out.tape);
+        let frames = 0;
+        const stepper = createTapeStepper(parsed, { levelSource, scratchPersistence: true });
+        for (const _ of stepper) frames += 1;
+        expect(frames).toBe(parsed.tick_count + 1);
+        expect(frames).toBe(out.ticks + 1);
+    });
+
+    /**
+     * ⛓ AND THE PARTIAL WALK IS THE MEASUREMENT THAT MAKES THE PAIR ABOVE
+     * NON-VACUOUS. `collectRun` RETURNS a mid-walk throw rather than raising
+     * it (the page shows what it got), so the defect this slice fixes is not
+     * a crash — it is a plausible-looking short replay. The number of frames
+     * the ordinary path collects is strictly fewer than the tape's own, which
+     * is what a reader of the picture could never have seen.
+     */
+    it('the page-side collector shows the SAME fork — short walk, then whole', () => {
+        const record = killLockRoom();
+        const out = solve(record, stagingFor(record), [roomGoal()], DEFAULT_BUDGET,
+            oracleOpts('scrub-fork-collect'));
+        const levelSource = levelSourceFromAtlas(atlasOf(record));
+        const ordinary = collectRun(out.tape, levelSource);
+        expect(ordinary.error).not.toBeNull();
+        expect(ordinary.error.message).toMatch(/two writers of one persistence slot/);
+        expect(ordinary.frames.length).toBeLessThan(out.ticks + 1);
+
+        const scratched = collectRun(out.tape, levelSource, { scratchPersistence: true });
+        expect(scratched.error).toBeNull();
+        expect(scratched.frames.length).toBe(out.ticks + 1);
+        expect(scratched.samples.length).toBe(scratched.frames.length);
     });
 
     it('`solveForPage` without the parameter is NOT scratch', () => {

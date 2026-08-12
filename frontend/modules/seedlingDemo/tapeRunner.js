@@ -422,9 +422,38 @@ export function createRunForStaging(staging, levelSource, { scratchPersistence =
     });
 }
 
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 5 — `opts.scratchPersistence`, THE REPLAY HALF OF
+ * SLICE 4b's BOUNDARY, and it is DELIBERATELY the same shape one seam out.
+ *
+ * §13.4's residue, arriving: a GENERATED level's solve can bank a kill-lock
+ * clear the model computed, and `buildStagedTape` cannot declare it —
+ * `tapeFormat` bounds `persistence[].level` to the real game's 0..115 and a
+ * generated level is 900. So the tape is honest about what it does NOT
+ * declare, and re-stepping it on the ordinary path hits `levelRun`'s
+ * undeclared-clear refusal MID-WALK. MEASURED, not reasoned: post-sword seed
+ * 3 at target 6 collects 270 of its 379 frames and then throws by name.
+ *
+ * ⛔ THE CURE IS THE FLAG THAT PRODUCED THE TAPE, NOT A WIDER FORMAT.
+ * Widening the persistence bound is a change to a guard over the real game's
+ * level space and is nobody's to make in passing (§13.4). What this
+ * parameter does is let the ONE caller that already knows the tape came from
+ * a scratch solve re-step it under the same rule.
+ *
+ * ⛔ AND IT KEEPS 4b's NO-DATA-PATH PROPERTY EXACTLY. It is an `opts` field,
+ * not a tape field: `parseTape` cannot spell it and `stagingFromTape` does
+ * not copy it, so no tape, preset, paste or upload can switch engine
+ * behaviour on. Every pre-existing call site passes no such option and
+ * therefore gets `false` — committed-room replay, the battery, the REPLAY
+ * and SOLVE arms and every acceptance row are outside the flag BY
+ * CONSTRUCTION rather than by convention, which is what makes this addition
+ * byte-inert for all of them.
+ */
 export function createTapeStepper(tape, opts = {}) {
     const t = parseTape(tape);
-    const { terrainStateAt = groundTerrain, onTick, levelSource } = opts;
+    const {
+        terrainStateAt = groundTerrain, onTick, levelSource, scratchPersistence = false,
+    } = opts;
 
     if (!t.noclip && !levelSource) {
         throw new Error(
@@ -440,7 +469,7 @@ export function createTapeStepper(tape, opts = {}) {
     // ⛓ THE construction — hoisted to `createRunForStaging` (editor arc
     // slice 1) so the solver's own callers reach the same one. A parsed tape
     // IS a staging block plus inputs, so it is passed straight through.
-    const run = levelSource ? createRunForStaging(t, levelSource) : null;
+    const run = levelSource ? createRunForStaging(t, levelSource, { scratchPersistence }) : null;
     if (!levelSource && t.grants.length > 0) {
         throw new Error(
             'runTape: the tape declares grants but no opts.levelSource was given. The v1 '
