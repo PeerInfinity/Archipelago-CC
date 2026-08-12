@@ -203,6 +203,33 @@ describe('⛓ THE LADDER ROUTING — a corridor-blocking obstacle reaches its ve
     });
 
     /**
+     * ⛓⛓ THE WRONG-SIDE STANCE — ⚖ "any angle"'s other half.
+     *
+     * The goal sits ONE ROW under the wall, so a ring-3 candidate ABOVE the
+     * wall is corridor-reachable and, by distance alone, answers first. It is
+     * also a cell the pickup cannot be collected from: `runCollect` presses
+     * toward the pickup's centre and the wall is in the way. Measured at
+     * `238f0dbe9` (this slice's own first commit, D3 not yet in): REFUSED with
+     * *"the sweep was blocked by tile:Stone at (120,88)"* — the solver walked
+     * to a stance it could not collect from and said so three ticks later.
+     *
+     * ⛔ THE DISTINCTION THIS PINS: the fix is not "prefer near cells" — the
+     * wrong-side cell was preferred BECAUSE it was near. It is "a stance you
+     * cannot collect from is not a stance", so the below-wall cells win even
+     * though reaching them costs a shove.
+     */
+    it('will not stand on the wrong side of a wall to collect — it shoves instead', () => {
+        const out = solveRoom('wrong-side-stance', {
+            goal: { tx: 7, ty: 7 },
+            walls: wallAcross(5, 4),
+            entities: [{ type: 'pushableblock', tx: 4, ty: 5 }],
+        });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(verbsOf(out)).toContain('shove');
+        expect(out.certification.certified).toBe(true);
+    });
+
+    /**
      * ⛓ THE GENUINE NO-STANCE CASE STILL REFUSES, and the refusal changed its
      * WORD: it is now about walkable cells rather than reachable ones, because
      * "reachable" is the question the ladder answers and this function no

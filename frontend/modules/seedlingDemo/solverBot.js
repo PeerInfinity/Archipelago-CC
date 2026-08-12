@@ -1357,15 +1357,63 @@ function deriveStance(run, resolved, contacts) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    for (const c of candidates) {
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 3 — **A STANCE YOU CANNOT COLLECT FROM IS NOT A
+     * STANCE**, which is the other half of ⚖ "items must be collectable from
+     * any angle".
+     *
+     * The probe above asks ONE question — can the player reach this cell — and
+     * the collect then needs a second one the derivation never asked: can the
+     * PICKUP be reached from that cell. `runCollect` does not follow waypoints;
+     * it presses toward the pickup's centre from wherever the stance is. So a
+     * candidate on the WRONG SIDE of a wall satisfies the first question and
+     * fails the walk three ticks later. Measured (goal at tile (7,7), a wall
+     * across ty=5): the ring-3 cell at ty=4 is reachable, is chosen, and the
+     * drive dies — *"the sweep was blocked by tile:Stone at (120,88)"* — while
+     * the cells that CAN collect, one ring away on the pickup's own side, are
+     * never considered because a nearer-by-distance answer already returned.
+     *
+     * ⛔ IT IS A CANDIDATE FILTER, NOT AN APPROACH SIMULATION. The second
+     * question is asked with `planWaypoints` — the same instrument as the
+     * first, and `planTilePath` reads only `{x, y}` off its `from`, so there is
+     * no synthesised run state and no second geometry here. ⚠ Asked with
+     * `avoidVolumes: false` for `placementBlocker`'s reason one function up:
+     * the pickup's own volume is an avoid volume, and the question is whether
+     * anything ELSE stands between.
+     *
+     * ⚠⚠ IT IS WEAKER THAN THE DRIVE IT MODELS, and that is deliberate. A tile
+     * path may turn a corner the straight drive would not; this filter answers
+     * "same walkable component", not "clear line". Modelling the line would be
+     * new geometry beside a controller that already owns it — and the failure
+     * it would additionally catch is the one `runCollect` reports BY NAME.
+     */
+    const approachOpts = solverPlanOpts(run, contacts, {
+        avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
+    });
+    const plans = (from, to, opts) => {
         try {
-            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
-                solverPlanOpts(run, contacts));
-            return { x: c.x, y: c.y, corridor: true };
+            planWaypoints(run.world, from, to, null, opts);
+            return true;
         } catch (e) {
             if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+    };
+    const canCollectFrom = (c) => plans({ x: c.x, y: c.y }, centre, approachOpts);
+    /**
+     * ⛓ THREE PASSES, AND THE THIRD IS THE COMMITTED CORE'S OWN ANSWER — so
+     * this filter can never make a room worse than it was at `238f0dbe9`. If
+     * NOTHING can collect the pickup as the world currently stands, the filter
+     * has no opinion left to offer and the ladder gets the nearest cell, which
+     * is exactly what the slice's first half already did.
+     */
+    for (const c of candidates) {
+        if (plans(run.state, { x: c.x, y: c.y }, solverPlanOpts(run, contacts))
+            && canCollectFrom(c)) {
+            return { x: c.x, y: c.y, corridor: true };
         }
     }
+    const collectable = candidates.filter(canCollectFrom);
     /**
      * ⛓⛓⛓ PROCGEN PoC SLICE 3 — ⚖ THE COLLECT-PATH RULING (user, 2026-08-12):
      * *"the corridor limitation sounds like a bug that we should fix with
@@ -1409,15 +1457,16 @@ function deriveStance(run, resolved, contacts) {
      * walkable candidates is a claim the ring search alone can settle.
      */
     if (candidates.length > 0) {
-        const c = candidates[0];
+        const c = (collectable.length > 0 ? collectable : candidates)[0];
         return {
             x: c.x,
             y: c.y,
             corridor: false,
-            why: `no corridor from (${run.state.x},${run.state.y}) to any of `
-                + `${candidates.length} walkable candidate(s) around `
-                + `${p.tag}@${p.x},${p.y}; the nearest one is the aim and the walk's `
-                + 'own obstacle ladder is what must open it',
+            why: `no corridor from (${run.state.x},${run.state.y}) to a stance that can `
+                + `collect ${p.tag}@${p.x},${p.y} — ${candidates.length} walkable `
+                + `candidate(s) in range, ${collectable.length} of them with an approach `
+                + 'to the pickup; the nearest of those is the aim and the walk\'s own '
+                + 'obstacle ladder is what must open it',
         };
     }
     throw new SolverRefusal(
