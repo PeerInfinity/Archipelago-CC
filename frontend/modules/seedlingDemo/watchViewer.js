@@ -30,12 +30,40 @@
  * by stepping every committed fixture to completion and comparing byte for
  * byte. A private loop here would be the verifier-shared-assumption trap in
  * tooling clothes.
+ *
+ * ── SOURCE = SOLVE (editor arc slice 1) ───────────────────────────────
+ *
+ * A second way to get a tape: instead of fetching one, SOLVE one. The page
+ * takes a level, a tape v8 staging block and a goal list, runs
+ * `solveSegment` to completion IN THE PAGE, folds the result with the one
+ * fold, and hands the tape to the SAME collect-then-scrub machinery above
+ * (⚖ solve-then-scrub, kickoff §1.2 — a live think-mode is deferred on the
+ * measured latency, which is why the wall clock is displayed rather than
+ * merely taken).
+ *
+ * ⛔ Every one of the three laws survives it. It makes NO CLAIM: the solved
+ * tape is a thing to look at, it is never written to `fixtures/` (the
+ * roster is disk-derived, so a saved experiment would silently join the
+ * differential), and no gate consumes it. It is RAW TRUTH: the solver's
+ * refusals are surfaced with their own message and their trace rows, an
+ * ambiguous default exit is reported rather than guessed, and the solve's
+ * cost is shown in milliseconds. And it adds NO LOOP: `solveSegment`
+ * advances the run, the stepper replays it, and this file drives neither.
+ *
+ * ⛔ IT ALSO BUILDS NO WORLD OF ITS OWN. The run comes from
+ * `createRunForStaging` — the construction `createTapeStepper` uses — so
+ * the world the solver senses is the world the replay runs. See
+ * `watchSolve.js`, which holds everything here that is pure.
  */
 
-import { buildLevelWorld, RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
+import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { createTapeStepper } from './tapeRunner.js';
-import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES } from './tapeFormat.js';
+import { createTapeStepper, rolesForStaging } from './tapeRunner.js';
+import {
+    censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
+    harvestPresets, parseGoalsParam, readSolveParams, solveForPage, stagingFromJson,
+} from './watchSolve.js';
+import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
@@ -76,6 +104,8 @@ function readParams() {
         tape: q.get('tape'),
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
+        // The SOLVE arm's own parameters, parsed where they are testable.
+        ...readSolveParams(window.location.search),
     };
 }
 
@@ -279,20 +309,44 @@ function makeRenderer(canvas, tape) {
 async function runJs(params) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
-    const levelSource = levelSourceFromAtlas(atlas);
+    return replayTape(tape, params.tape, params, levelSourceFromAtlas(atlas));
+}
 
+/**
+ * Draw and scrub a tape — one fetched by REPLAY, or one SOLVE just folded.
+ *
+ * ⚠ ONE REPLAY PATH for both arms, deliberately. A solved tape shown by
+ * some second, simpler renderer would be a picture of a run nobody had
+ * replayed; going through here means the thing on screen is the thing the
+ * stepper produced, which is the thing the differential would check.
+ * `label` is what the status bar calls it — a path for REPLAY, a name for
+ * SOLVE. Returns the collected frames, so a caller can report how many.
+ */
+async function replayTape(tape, label, params, levelSource) {
     const canvas = $('canvas');
     const renderer = makeRenderer(canvas, tape);
-    // The census the TAPE implies — the same rule `runTape` applies, so the
-    // viewer can never refuse to draw a level the run walks through.
-    const roles = tape.noclip === false ? ROLES : RELAXED_ROLES;
+    /**
+     * The census the TAPE implies — the same rule `runTape` applies, so the
+     * viewer can never refuse to draw a level the run walks through.
+     *
+     * ⚠ FROM THE PARSED TAPE, THROUGH THE RUNNER'S OWN RULE. This used to
+     * read `tape.noclip === false ? ROLES : RELAXED_ROLES` off the RAW
+     * fetched JSON: a second spelling of `rolesForStaging` that agreed with
+     * it only by accident, because a v1 tape's JSON carries no `noclip` key
+     * at all. The raw test got the right answer for the wrong reason, and
+     * the obvious tidy-up to `tape.noclip ? …` would have silently flipped
+     * the census on every v1 fixture. One rule, one place — and the rule is
+     * about the PARSED tape, which is what `parseTape` normalises it to.
+     */
+    const parsed = parseTape(tape);
+    const roles = rolesForStaging(parsed);
     // ⚠ AND THE TAPE'S CLEARS, for the same reason as the census: a viewer
     // that built a level the run does not have would draw locks the player
     // walks straight through. Grouped BY LEVEL because `buildLevelWorld`'s
     // orphan guard refuses a tag the level does not own — the same rule
     // `levelRun` follows, and the reason it groups too.
     const clearedByLevel = new Map();
-    for (const c of tape.persistence ?? []) {
+    for (const c of parsed.persistence ?? []) {
         if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
         clearedByLevel.get(c.level).push(c.tag);
     }
@@ -327,17 +381,17 @@ async function runJs(params) {
 
     $('scrub').max = String(Math.max(0, frames.length - 1));
     $('status').className = 'ok';
-    $('status').textContent = `${params.tape} — ${frames.length} observations`;
+    $('status').textContent = `${label} — ${frames.length} observations`;
 
     const hud = () => {
         const f = frames[cursor];
         if (!f) return;
         const world = worldFor(f.observation.level);
         const raw = f.state.terrain ?? 0;
-        const eff = coerceTerrainState(raw, tape.noHazards ?? []);
+        const eff = coerceTerrainState(raw, parsed.noHazards ?? []);
         const fall = f.state.fall;
         $('hud').innerHTML = [
-            row('tick', `${f.observation.t} / ${tape.tick_count}`),
+            row('tick', `${f.observation.t} / ${parsed.tick_count}`),
             row('level', `${f.observation.level} (${world.width}x${world.height})`),
             row('position', `${fmt(f.observation.x)}, ${fmt(f.observation.y)}`),
             row('velocity', `${fmt(f.state.vx)}, ${fmt(f.state.vy)}`),
@@ -459,6 +513,256 @@ async function runJs(params) {
                 ? `  ⚠ ${unknown.length} volume(s) NOT DRAWN — no renderer arm for their `
                 + `shape: ${unknown.join(', ')}`
                 : '');
+    }
+    return { frames, finished };
+}
+
+// ── SOURCE = SOLVE ───────────────────────────────────────────────────────
+
+/**
+ * The default staging block, for arriving with `?level=` and nothing else.
+ *
+ * ⚠ Deliberately the EMPTIEST honest one — no clears, no save, no seam —
+ * because a page that quietly pre-cleared flags would present a room the
+ * game only reaches after work as a room you can boot into. The boot
+ * coordinates are the atlas's own convention for "just inside the top-left
+ * door" and will be wrong for plenty of levels; the solver says so when
+ * they are, which is the honest failure.
+ */
+const DEFAULT_STAGING = Object.freeze({
+    boot: { level: 0, x: 16, y: 16 },
+    noclip: false,
+    noDamage: false,
+    noHazards: [],
+    grants: [],
+    persistence: [],
+    despawn: [],
+    equips: [],
+    pins: [],
+    save: null,
+    rng: null,
+    seam: null,
+});
+
+/**
+ * The SOLVE arm: staging in, the bot's own walk out, scrubbed by REPLAY's
+ * machinery.
+ *
+ * ⚠ The solve is SYNCHRONOUS and blocks the page while it runs — which is
+ * exactly the quantity ⚖ kickoff §1.2 deferred the live think-mode on, so
+ * the page measures it and shows it rather than hiding it behind a
+ * spinner.
+ */
+async function runSolve(params) {
+    const atlas = await fetchJson(ATLAS_URL, 'atlas');
+    const levelSource = levelSourceFromAtlas(atlas);
+
+    // ── the staging block ────────────────────────────────────────────
+    let staging = DEFAULT_STAGING;
+    let origin = 'the page default (nothing cleared, nothing saved)';
+    if (params.boot) {
+        const path = params.boot.replace(/^\/+/, '');
+        staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
+        origin = path;
+    }
+    // ⚠ ?level= OVERRIDES the block's own level and SAYS SO. The boot x/y
+    // belong to the block's level, so pointing it at another one usually
+    // spawns the player somewhere meaningless — a fact worth a line in the
+    // detail bar rather than a mysterious refusal from the solver.
+    const notes = [];
+    if (params.level !== null && Number.isFinite(params.level)) {
+        if (params.level !== staging.boot.level) {
+            notes.push(`?level=${params.level} overrode the staging block's own level `
+                + `${staging.boot.level} — the boot x/y (${staging.boot.x},${staging.boot.y}) `
+                + `are still level ${staging.boot.level}'s`);
+        }
+        staging = { ...staging, boot: { ...staging.boot, level: params.level } };
+    }
+    const name = params.name || `editor-L${staging.boot.level}`;
+    $('title').textContent = `${name} — solving from ${origin}`;
+    $('solveLevel').value = String(staging.boot.level);
+    $('solveBoot').value = JSON.stringify(staging, null, 4);
+    $('solveNote').textContent = notes.join('  ·  ');
+
+    // ── the goal picker, over this staging block's own census ────────
+    let goals = params.goals ? parseGoalsParam(params.goals) : [];
+    const showGoals = () => {
+        $('solveGoals').textContent = goals.length ? formatGoalsParam(goals) : '—';
+    };
+    const fillCensus = (world) => {
+        const options = censusGoalOptions(world);
+        $('solveGoalPick').innerHTML = '';
+        for (const o of options) {
+            const el = document.createElement('option');
+            el.value = o.spec;
+            el.textContent = o.label;
+            // Listed, never dropped — but not selectable, with the reason
+            // in the tooltip. "Shut" and "absent" must not look alike.
+            el.disabled = !o.usable;
+            if (o.why) el.title = o.why;
+            $('solveGoalPick').appendChild(el);
+        }
+        if (!options.length) {
+            $('solveGoalPick').innerHTML =
+                '<option value="">— this level\'s census names no exit and no placement —</option>';
+        }
+    };
+    showGoals();
+
+    // The census needs a built world, and building one can refuse (a level
+    // the atlas does not have, an orphan clear). REPORTED, not swallowed.
+    let world = null;
+    try {
+        world = censusWorld(levelSource, staging);
+        fillCensus(world);
+    } catch (e) {
+        fatal(`level ${staging.boot.level} would not build from this staging block`,
+            e.message);
+    }
+
+    $('solveGoalAdd').onclick = () => {
+        const spec = $('solveGoalPick').value;
+        if (!spec) return;
+        goals = [...goals, ...parseGoalsParam(spec)];
+        showGoals();
+    };
+    $('solveGoalClear').onclick = () => { goals = []; showGoals(); };
+
+    // ── the PRESETS, harvested from the committed tapes' own boots ───
+    // Fired but NOT awaited: with `?boot=` given, a solve should not wait
+    // on a roster fetch it is not going to use.
+    loadTapeIndex(DEFAULT_TAPE_DIR).then((index) => {
+        const sel = $('solvePreset');
+        if (index.error) {
+            sel.innerHTML = `<option value="">— no preset list: ${index.error} —</option>`;
+            return;
+        }
+        const { presets, refused } = harvestPresets(index.records);
+        sel.innerHTML = '<option value="">— boot like… —</option>';
+        for (const p of presets) {
+            const el = document.createElement('option');
+            el.value = p.name;
+            el.textContent = `${p.name} — L${p.staging.boot.level}`;
+            sel.appendChild(el);
+        }
+        // ⚠ A tape that would not parse is NAMED. A preset list that
+        // silently shrank would read as a smaller roster.
+        if (refused.length) {
+            $('solveNote').textContent += `${$('solveNote').textContent ? '  ·  ' : ''}`
+                + `⚠ ${refused.length} tape(s) refused as presets: `
+                + refused.map((r) => `${r.name} (${r.why})`).join('; ');
+        }
+        sel.onchange = () => {
+            const chosen = presets.find((p) => p.name === sel.value);
+            if (!chosen) return;
+            // A full navigation, like the tape picker's — one code path for
+            // "load something else", and the URL stays the whole state.
+            const q = new URLSearchParams(window.location.search);
+            q.set('boot', `${DEFAULT_TAPE_DIR}/${chosen.name}.json`);
+            q.set('level', String(chosen.staging.boot.level));
+            q.delete('goals');
+            q.delete('solve');
+            window.location.search = q.toString();
+        };
+    });
+
+    // ── SOLVE ────────────────────────────────────────────────────────
+    async function solveNow() {
+        $('solveGo').disabled = true;
+        let list = goals;
+        if (!list.length) {
+            if (!world) return;
+            const d = defaultGoalsFromCensus(world);
+            if (!d.goals) {
+                fatal('no goals — and this level has no unambiguous default', d.refusal);
+                window.__editorSolve = { status: 'refused', message: d.refusal };
+                $('solveGo').disabled = false;
+                return;
+            }
+            list = d.goals;
+            goals = list;
+            showGoals();
+        }
+
+        $('status').className = '';
+        $('status').textContent = `solving ${name} in level ${staging.boot.level} `
+            + `toward ${formatGoalsParam(list)}…`;
+        // Yield one frame so the status paints BEFORE the synchronous solve
+        // takes the thread. Without it the page looks frozen with the old
+        // text on it, which is a lie about what it is doing.
+        await new Promise((r) => requestAnimationFrame(r));
+
+        let solved;
+        try {
+            solved = solveForPage({
+                levelSource, staging, goals: list, name, now: () => performance.now(),
+            });
+        } catch (e) {
+            // ⚠ THE SOLVER'S OWN MESSAGE, VERBATIM, with the rows it got
+            // through first — a refused segment is still reviewable, and
+            // `SolverRefusal` carries them for exactly that.
+            const rows = e.rows?.length;
+            fatal('the solver REFUSED — this is its own message, not the page\'s',
+                `${e.message}${rows ? `\n\n(${rows} decision row(s) before the refusal)` : ''}`);
+            window.__editorSolve = { status: 'refused', message: e.message, rows: rows ?? 0 };
+            $('solveGo').disabled = false;
+            return;
+        }
+
+        const solveMs = Math.round(solved.ms);
+        $('solveTime').textContent = `solved in ${solveMs} ms`;
+        const replayT0 = performance.now();
+        const { frames } = await replayTape(solved.tape, name, params, levelSource);
+        const replayMs = Math.round(performance.now() - replayT0);
+
+        /**
+         * ⛓ The TRACE is held for slice 2's pane — and it is not dead
+         * weight in the meantime: its shape is reported here, which is the
+         * same summary `solve-seedling-r8-battery` prints. A ledger with
+         * no consumer is trap 119's family, so this one has the smallest
+         * honest consumer until the pane arrives.
+         */
+        $('detail').textContent = `${$('detail').textContent}`
+            + `${$('detail').textContent ? '  ·  ' : ''}`
+            + `SOLVED: ${solved.out.perTick.length} ticks, `
+            + `${solved.out.trace.rows.length} decision(s), `
+            + `${solved.out.replans} re-plan(s), `
+            + `${solved.run.playerHits.length} hit(s), `
+            + `${solved.run.playerDeaths.length} death(s)  ·  `
+            + `solve ${solveMs} ms + replay ${replayMs} ms`;
+        $('status').className = 'ok';
+        $('status').textContent = `${name} — ${frames.length} observations, `
+            + `solved in ${solveMs} ms`;
+
+        /**
+         * The page's own readout, for `check-seedling-editor-solve.mjs`.
+         * Sets are not JSON, so the held keys travel as arrays IN THE
+         * SOLVER'S OWN ORDER — sorting them here would hide exactly the
+         * kind of difference the acceptance row exists to catch.
+         */
+        window.__editorSolve = {
+            status: 'ok',
+            name,
+            level: staging.boot.level,
+            goals: formatGoalsParam(list),
+            tickCount: solved.out.perTick.length,
+            perTick: solved.out.perTick.map((held) => [...held]),
+            inputs: solved.tape.inputs,
+            traceRows: solved.out.trace.rows.length,
+            solveMs,
+            replayMs,
+            frames: frames.length,
+        };
+        // Slice 2's pane reads this; nothing else does yet.
+        window.__editorTrace = solved.out.trace;
+        $('solveGo').disabled = false;
+    }
+
+    $('solveGo').onclick = solveNow;
+    if (params.solve) await solveNow();
+    else {
+        $('status').textContent = `ready — level ${staging.boot.level} from ${origin}. `
+            + 'Pick goals and press SOLVE.';
     }
 }
 
@@ -629,11 +933,19 @@ const DEFAULT_TAPE_DIR = 'frontend/modules/seedlingDemo/fixtures/tapes';
  * somewhere other than `fixtures/tapes/` lists its own siblings without a
  * second parameter.
  */
-async function populatePicker(params) {
-    const sel = $('tapes');
-    const dir = params.tape
-        ? params.tape.replace(/^\/+/, '').split('/').slice(0, -1).join('/')
-        : DEFAULT_TAPE_DIR;
+/**
+ * Every tape in a directory, fetched ONCE.
+ *
+ * ⛓ Both consumers want the same bytes: the picker wants a one-line
+ * summary per tape and the SOLVE arm wants each tape's staging block for
+ * the presets dropdown. The picker used to fetch the roster for its labels
+ * and nothing kept the second consumer from fetching it all over again —
+ * so the fetch moved here and both read one index.
+ *
+ * `{records, error}` rather than a throw: a static host with no directory
+ * listing is a working page with no picker, not a broken page.
+ */
+async function loadTapeIndex(dir) {
     let names = [];
     try {
         const res = await fetch(`/${dir}/`);
@@ -644,25 +956,44 @@ async function populatePicker(params) {
             .filter((n, i, a) => a.indexOf(n) === i)
             .sort();
     } catch (e) {
+        return { dir, records: [], error: `could not list /${dir}/: ${e.message}` };
+    }
+    const records = await Promise.all(names.map(async (n) => {
+        const name = n.replace(/\.json$/, '');
+        try {
+            return { name, file: n, path: `${dir}/${n}`, tape: await (await fetch(`/${dir}/${n}`)).json() };
+        } catch (e) {
+            // Kept in the list WITHOUT a tape: the file exists, and a
+            // roster that hid the one it could not read would be lying
+            // about its own size.
+            return { name, file: n, path: `${dir}/${n}`, tape: null, why: e.message };
+        }
+    }));
+    return { dir, records, error: null };
+}
+
+async function populatePicker(params, index) {
+    const sel = $('tapes');
+    const dir = index.dir;
+    if (index.error) {
         sel.innerHTML = '<option>— no directory listing —</option>';
         sel.disabled = true;
-        sel.title = `could not list /${dir}/: ${e.message}. The page still works `
-            + 'from ?tape= directly.';
+        sel.title = `${index.error}. The page still works from ?tape= directly.`;
         return;
     }
 
     // A one-line summary per tape, from the tape itself: what it boots into
     // and how long it runs are the two things you pick on.
-    const summarise = async (n) => {
-        try {
-            const t = await (await fetch(`/${dir}/${n}`)).json();
-            const relaxed = (t.noHazards || []);
-            const pit = t.tape_version === 2 && !relaxed.includes('pit') ? ' pit-LIVE' : '';
-            return `${n.replace(/\.json$/, '')} — L${t.boot?.level ?? '?'}, `
-                + `${t.tick_count} ticks, v${t.tape_version}${pit}`;
-        } catch { return n.replace(/\.json$/, ''); }
+    const summarise = (r) => {
+        const t = r.tape;
+        if (!t) return `${r.name} — ⚠ unreadable (${r.why})`;
+        const relaxed = (t.noHazards || []);
+        const pit = t.tape_version === 2 && !relaxed.includes('pit') ? ' pit-LIVE' : '';
+        return `${r.name} — L${t.boot?.level ?? '?'}, `
+            + `${t.tick_count} ticks, v${t.tape_version}${pit}`;
     };
-    const labels = await Promise.all(names.map(summarise));
+    const names = index.records.map((r) => r.file);
+    const labels = index.records.map(summarise);
 
     sel.innerHTML = '';
     names.forEach((n, i) => {
@@ -686,15 +1017,49 @@ async function populatePicker(params) {
     };
 }
 
+/**
+ * The SOURCE selector. Changing it NAVIGATES, like the tape picker —
+ * the URL stays the page's whole state, so every view is a link.
+ */
+function wireSourceSelector(params) {
+    const sel = $('source');
+    sel.value = params.source;
+    $('replayPick').hidden = params.source !== 'replay';
+    $('solvePanel').hidden = params.source !== 'solve';
+    sel.onchange = () => {
+        const q = new URLSearchParams(window.location.search);
+        q.set('source', sel.value);
+        window.location.search = q.toString();
+    };
+}
+
 export async function main() {
     const params = readParams();
+    wireSourceSelector(params);
+
+    if (params.source === 'solve') {
+        // ⚠ NO PICKER FETCH HERE. `runSolve` starts the roster load itself
+        // and does not await it — a solve with `?boot=` given should not
+        // wait on 150 tapes it is not going to read.
+        try {
+            await runSolve(params);
+        } catch (e) {
+            fatal('the solve arm failed', e.stack || e.message);
+            window.__editorSolve = { status: 'refused', message: e.message };
+        }
+        return;
+    }
+
     $('title').textContent = params.tape || '(no tape)';
     // The picker is populated even with no tape, so the page is a launcher
     // rather than an error when you arrive without one.
-    const picking = populatePicker(params);
+    const dir = params.tape
+        ? params.tape.replace(/^\/+/, '').split('/').slice(0, -1).join('/')
+        : DEFAULT_TAPE_DIR;
+    const picking = loadTapeIndex(dir).then((index) => populatePicker(params, index));
     if (!params.tape) {
         await picking;
-        fatal('no ?tape= given — pick one above',
+        fatal('no ?tape= given — pick one above, or switch source to SOLVE',
             'watch.html?tape=frontend/modules/seedlingDemo/fixtures/tapes/'
             + 'pit-fall-chain-85.json&side=js');
         return;

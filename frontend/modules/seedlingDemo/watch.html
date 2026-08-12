@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  seedlingDemo/watch.html — watch a Seedling bot tape replay.
+  seedlingDemo/watch.html — watch a Seedling bot tape, replayed or SOLVED.
 
   TOOLING ONLY: this page makes no claims and gates nothing. See
   watchViewer.js's docblock and CC/docs/plans/seedling-bot-watch-page.md.
@@ -8,6 +8,8 @@
   Serve from the REPO ROOT (paths resolve against the dev server's cwd):
 
       ss -ltn | grep ":8000" || python3 -m http.server 8000
+
+  ── SOURCE = REPLAY (the original page, untouched) ──────────────────────
 
       http://localhost:8000/frontend/modules/seedlingDemo/watch.html
           ?tape=frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json
@@ -17,6 +19,28 @@
   side=wasm  the real recompiled game in an iframe. LOCAL ONLY — the wasm
              artifact is gitignored, and the page says so by name when it
              is absent rather than showing a blank frame.
+
+  ── SOURCE = SOLVE (editor arc slice 1) ─────────────────────────────────
+
+  Pick a level, declare the starting conditions (a tape v8 staging block,
+  either typed or preset from a committed tape's own boot), name the goals
+  in the solver's own vocabulary, and press SOLVE. The bot solves in the
+  page and the result is scrubbed by the SAME machinery REPLAY uses
+  (solve-then-scrub).
+
+      watch.html?boot=frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json
+          &level=4&goals=exit:64,16&solve=1
+
+  ?level=N     the level to solve in (overrides the staging block's own)
+  ?boot=PATH   repo-relative JSON: a whole committed tape, or a bare block
+  ?goals=      `exit:X,Y` / `place:X,Y`, `;`-separated, in solve order
+  ?solve=1     solve on load (without ?goals=, the level's default — which
+               REFUSES rather than guessing when the level has two exits)
+  ?name=       the tape/trace name the solve is recorded under, in memory
+
+  ⛔ THE PAGE NEVER WRITES fixtures/tapes/ OR fixtures/traces/. That roster
+  is disk-derived, so a saved experiment would silently join the
+  differential. Solved tapes live in the page and in your hands.
 
   Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
   registration. seedlingDemo is an engine-only module and a standalone
@@ -60,15 +84,56 @@
   #sidenote { color: #8a8a98; font-size: 11px; }
   #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
   #bar { height: 100%; width: 0; background: #7fe0ff; }
+  /* ── SOURCE = SOLVE ── */
+  select, textarea { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 2px 6px; font: inherit; }
+  #solvePanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  #solvePanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  #solveGoalPick { max-width: 40vw; }
+  #solveGoals { color: #7fe0ff; }
+  #solveTime { color: #7fd88f; }
+  #solveBoot { width: 100%; box-sizing: border-box; }
+  #solveNote { color: #8a8a98; font-size: 11px; }
+  summary { color: #8a8a98; cursor: pointer; }
+  [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <header>
   <h1>Seedling bot — watch <span id="title"></span></h1>
   <div id="pick">
-    <label for="tapes">tape</label>
-    <select id="tapes" disabled><option>loading…</option></select>
-    <span id="sidenote"></span>
+    <label for="source">source</label>
+    <select id="source">
+      <option value="replay">REPLAY — a committed tape</option>
+      <option value="solve">SOLVE — the bot, in this page</option>
+    </select>
+    <span id="replayPick">
+      <label for="tapes">tape</label>
+      <select id="tapes" disabled><option>loading…</option></select>
+      <span id="sidenote"></span>
+    </span>
+  </div>
+  <div id="solvePanel" hidden>
+    <div class="line">
+      <label>level <input id="solveLevel" type="number" min="0" step="1" style="width:5em"></label>
+      <label for="solvePreset">boot like</label>
+      <select id="solvePreset"><option value="">— loading presets… —</option></select>
+      <button id="solveGo">SOLVE</button>
+      <span id="solveTime"></span>
+    </div>
+    <div class="line">
+      <label for="solveGoalPick">goal</label>
+      <select id="solveGoalPick"><option value="">— no level loaded —</option></select>
+      <button id="solveGoalAdd">add</button>
+      <button id="solveGoalClear">clear</button>
+      <span id="solveGoals">—</span>
+    </div>
+    <details>
+      <summary>starting conditions — the tape v8 staging block, raw</summary>
+      <textarea id="solveBoot" rows="12" spellcheck="false"></textarea>
+      <div id="solveNote"></div>
+    </details>
   </div>
   <div id="status">loading…</div>
   <div id="detail"></div>
