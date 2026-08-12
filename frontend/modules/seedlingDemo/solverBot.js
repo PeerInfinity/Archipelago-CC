@@ -306,6 +306,49 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
+ *
+ * `OBSTACLE_STRATEGIES` above is not the only way a verb gets chosen:
+ * `refineStrategy` turns one table answer into another by asking the LEVEL a
+ * question the table cannot ask. That path has existed since R8 slice 3b (the
+ * kill-lock arm) and was never written down anywhere a reader — or a test —
+ * could find it.
+ *
+ * ⛔ AND THE COST OF NOT WRITING IT DOWN WAS ALREADY BEING PAID. The catalog
+ * invariant in `solverBot.test.js` asserts that every registered executor
+ * answers a selector row, computing "selected" from `OBSTACLE_STRATEGIES`
+ * alone — so `kill` satisfied it only because `solid:magicallock` happens to
+ * name `kill` directly. The invariant has never modelled refinement at all;
+ * it passed for a reason unrelated to the claim it makes. `weigh` is the
+ * first refined verb with no table row of its own, which is what surfaced it.
+ *
+ * ⚠ THIS TABLE IS DESCRIPTIVE, NOT EXECUTABLE — `refineStrategy` does not
+ * consult it, because the two predicates are different shapes (a `tset`
+ * comparison and a scan over the group's pressers) and storing them as
+ * functions here would move code rather than make data. That makes it a
+ * SECOND SPELLING, and the guard against drift is that every row is DRIVEN:
+ * `procgenWeigh.test.js` builds its refinement cases FROM this table, so a row
+ * added without a case that exercises the flip is a failing test rather than
+ * an uncounted one (trap 199's structure).
+ */
+export const STRATEGY_REFINEMENTS = Object.freeze([
+    Object.freeze({
+        from: 'hold',
+        to: 'kill',
+        when: 'the lock is a KILL-LOCK (`tset == -1`): no button exists for it anywhere '
+            + 'in the game, and `checkEnemies()` opens it when `Game.totalEnemies()` '
+            + 'reaches zero',
+    }),
+    Object.freeze({
+        from: 'hold',
+        to: 'weigh',
+        when: 'every presser in the lock\'s group REPUBLISHES (`localPublish` is null for '
+            + 'all of them), so the hold cannot outlive the walker — and the game\'s own '
+            + 'answer is a `"Solid"` parked on the button (`Button.as:16`)',
+    }),
+]);
+
+/**
  * Executors registered so far. ⛓ R8 slice 3 added `hold`, which is the first
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
@@ -321,6 +364,14 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * shape `kill` and the puzzle policy then follow.
      */
     shove: execShove,
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 3b (⚖ kickoff §1.9) — the first executor that is
+     * a COMPOSITION of two registered verbs rather than a new one. Its
+     * destination is derived from a MECHANISM (the presser's cell) where
+     * `shove`'s is derived from a post-condition (`clear-path`'s minimum `k`),
+     * which is the whole of the difference between the two rows.
+     */
+    weigh: execWeigh,
     /**
      * ⛓⛓⛓ R8 slice 4: the first executor whose completion is a WORLD FACT
      * NEITHER IT NOR THE MODEL CAN PRODUCE. A `hold` waits for a responder
@@ -384,7 +435,48 @@ function refineStrategy(run, strategy, obstacle) {
      */
     const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
     if (!row || !KILL_LOCK_TAGS.includes(row.tag ?? obstacle.tag)) return strategy;
-    return row.t === KILL_LOCK_TSET ? 'kill' : strategy;
+    if (row.t === KILL_LOCK_TSET) return 'kill';
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 3b (⚖ kickoff §1.9) — THE SECOND REFINEMENT, AND
+     * IT ASKS WHETHER THE HOLD CAN **OUTLIVE THE WALKER**.
+     *
+     * The kill-lock arm above asks "does this lock have a presser at all"; this
+     * one asks the question after it: "can the thing that presses it keep
+     * pressing once the player has left?" — because for a lock ON THE FRONTIER
+     * the player's whole errand is to be on the far side, and a `hold` puts
+     * them on the near one.
+     *
+     * ⛔ `Button.update` IS A REPUBLISH, NOT A LATCH. `Button.as:27-39`
+     * re-collides `hitables` every tick and assigns `activate` from whoever is
+     * standing there, so stepping off shuts the group in the same tick. Slice 3
+     * measured the consequence and excluded the whole family for it: the walk
+     * spends its entire per-target budget *"grazing 396 solid(s): lock at
+     * (64,80)"* — a lock it had just opened and then closed by leaving.
+     *
+     * ⛓ AND THE GAME'S OWN ANSWER IS THE THIRD MEMBER OF THAT COLLIDE LIST.
+     * `hitables` is `["Player", "Enemy", "Solid"]` and `PushableBlock.as:27` is
+     * `type = "Solid"` — so a block parked on the button presses it for ever.
+     * L15 is the room built around exactly that (`Dungeon2/2.oel:107-111`:
+     * `pushableblock@(64,64)`, `button@(112,32) tset=0`,
+     * `lock@(128,48) tset=0`, with the stairs behind the lock).
+     *
+     * ⛔ THE GATE IS `localPublish`, NOT A NEW PREDICATE. `deriveHold` already
+     * computes it for its own reasons (:1532, the `latched` field), and it is
+     * the one honest reading of "this hold survives the walker": a
+     * `ButtonRoom`'s `room == -1` arm assigns `activate` directly behind the
+     * author's own *"Can't be reset to false!!"*, so L20's `buttonroom@192,16`
+     * really does keep its group published after the player leaves and its
+     * `hold` is right. A plain `Button` does not, and its `hold` is a walk
+     * against a closing door.
+     *
+     * ⚠ A LOCK WITH NO PRESSER AT ALL KEEPS `hold`, which then resolves to
+     * `null` and is reported as considered-and-rejected by the caller. "This
+     * lock has no opener" and "this lock's opener cannot be left" are different
+     * facts and only the second one is this arm's.
+     */
+    const group = (run.world.pressers ?? []).filter((p) => p.t === row.t);
+    if (group.length === 0) return strategy;
+    return group.every((p) => localPublish(p) === null) ? 'weigh' : strategy;
 }
 
 /**
@@ -405,7 +497,18 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'fight') return resolveFightStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'keylock') return resolveKeylockStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
+    return resolveHoldStrategy(run, obstacle, contacts, blocked);
+}
+
+/**
+ * The `hold` arm, lifted out of `resolveObstacleStrategy` UNCHANGED so that
+ * `weigh` can fall back to it (see `resolveWeighStrategy`). A pure move: the
+ * body is the same statements in the same order, and the battery is what says
+ * so.
+ */
+function resolveHoldStrategy(run, obstacle, contacts, blocked = [], alsoRejected = []) {
     const opener = openerPresserFor(run, obstacle);
     if (!opener) return null;
     const presser = opener.presser;
@@ -424,7 +527,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
                 + 'is no route around it — A* refuses to plan THROUGH an avoid volume or '
                 + 'a solid, and a hold is what adds its presser to the exemptions '
                 + '(trap 147)',
-        }, ...opener.rejected],
+        }, ...opener.rejected, ...alsoRejected],
     };
 }
 
@@ -661,6 +764,287 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
         k: plan.k,
         stance,
         rejected: rejections,
+    };
+}
+
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 3b — RESOLVE a `weigh` work order: ⚖ §11.8a's
+ * **`press`** POST-CONDITION, which `resolveShoveStrategy`'s docblock named
+ * two slices ago and left for whoever brought a puzzle step that wanted it.
+ *
+ * The difference from `shove` is ONE SENTENCE and everything else is shared:
+ * a `shove` scans for the minimum `k` at which a CORRIDOR appears, and a
+ * `weigh` has its destination handed to it by the mechanism — the presser's
+ * own cell. So there is no scan for "how far", only the question of whether
+ * some block can get there.
+ *
+ * ⛔ AND THE POST-CONDITION IS NOT `clear-path`, which is why it may not
+ * borrow `deriveShove`. A `clear-path` derivation accepts the FIRST cell that
+ * yields a corridor and would happily park the block one tile short of the
+ * button, having satisfied its own question; the corridor here does not open
+ * because the block moved out of the way, it opens because the block is
+ * STANDING ON SOMETHING. Two post-conditions, two derivations, ONE `runShove`
+ * — which is the split §11.7's law actually asks for.
+ *
+ * ⚠ THE ORDER IS NOT ARBITRARY: the resolution is only reached once
+ * `refineStrategy` has ruled the `hold` impossible, so "the block is the only
+ * way" is established before a block is looked for, not assumed by having
+ * looked.
+ */
+function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
+    if (run.pushables === null) return null;
+    const opener = openerPresserFor(run, obstacle);
+    if (!opener) return null;
+    const presser = opener.presser;
+    /**
+     * ⚠ THE PRESSER'S TILE, NOT ITS RECT. A `Button`'s hitbox is 8x6 offset
+     * inside its 16x16 cell (`Button.as:22`, `setHitbox(8, 6, 4, 3)`), and a
+     * block is a full 16x16 on the cell — so "the block covers the button" and
+     * "the block is on the button's tile" are the same claim, and the tile is
+     * the one of the two `runShove` can be given.
+     */
+    const onto = {
+        tx: Math.floor(presser.x / TILE_SIZE), ty: Math.floor(presser.y / TILE_SIZE),
+    };
+    const derived = deriveWeigh(run, onto, contacts, blocked);
+    if (!derived.plan) {
+        /**
+         * ⛔⛔⛔ `weigh` PREEMPTS `hold`; IT DOES NOT REPLACE IT — and L16 is
+         * the room that had to say so.
+         *
+         * The first cut gated `hold` off entirely whenever the group's
+         * pressers all republish, on the reasoning that such a hold cannot
+         * outlive the walker. That reasoning is right about the MECHANISM and
+         * wrong as a SELECTION rule, because it silently narrows what the
+         * policy can bind: `weigh` needs a block that shares an axis with the
+         * presser and `hold` needs nothing at all, so a room with a
+         * non-latching lock and no usable block went from "walk to the
+         * button, climb the ladder, refuse at the top with the combat rung's
+         * own reasons" to "refuse immediately, strategy failed to apply".
+         *
+         * ⛓ MEASURED, not reasoned: L16 carries `lock@320,112 tset=1`,
+         * `button@272,48` and `pushableblock@256,80` — the block is at tile
+         * (16,5) and the button at (17,3), so it shares NEITHER coordinate
+         * and no single lean reaches it (the room wants a CHAIN, which
+         * nobody has ruled on — kickoff §10.7's named unbuilt shape). The
+         * replacing gate turned that room's refusal from *"the combat ladder
+         * is EXHAUSTED"* into *"Strategy 'weigh' failed to apply"*, which is
+         * a committed room made strictly less informative by a slice that
+         * predicted it would not move at all.
+         *
+         * ⇒ the fallback is what makes the addition ADDITIVE: where a block
+         * can reach the presser the new verb takes the room, and everywhere
+         * else the parent's answer stands, byte for byte. The weigh's own
+         * refusals ride along in the hold's `rejected` list, so the trace
+         * still says which blocks were considered and why none of them
+         * served. [[feedback_conservative_ingredient_hides_bound_defects]]
+         */
+        return resolveHoldStrategy(run, obstacle, contacts, blocked, derived.rejected);
+    }
+    const { plan, rejected } = derived;
+    const row = (run.world.pushables ?? []).find((p) => p.id === plan.blockId);
+    const step = SHOVE_STEP[plan.dir];
+    const stance = nodeCentre(plan.from.tx - step.dx, plan.from.ty - step.dy, DEFAULT_LATTICE);
+    /**
+     * ⛓ THE WAIT IS `deriveHold`'s, UNCHANGED. What the next plan needs is the
+     * lock NOT SOLID, and that is the same fade for the same group whoever —
+     * or whatever — is standing on the button. Deriving a second duration here
+     * would be a second answer to a question the mechanism has already
+     * answered (`deriveHold`'s own docblock makes exactly this argument about
+     * the latch).
+     */
+    const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+        `solverBot weigh (${obstacle.id})`);
+    const hold = deriveHold(run, resolvedPresser, opener);
+    return {
+        strategy: 'weigh',
+        postCondition: 'press',
+        target: { x: presser.x, y: presser.y },
+        shove: {
+            block: { x: row.x, y: row.y },
+            dir: plan.dir,
+            to: { ...onto },
+        },
+        k: plan.k,
+        stance,
+        dwell: {
+            ticks: hold.ticks,
+            until: hold.until,
+            why: `${plan.blockId} is parked on ${presser.tag}@${presser.x},${presser.y} and `
+                + 'is not going to walk off it — `Button.update` re-collides '
+                + '`["Player","Enemy","Solid"]` EVERY tick (`Button.as:27-39`) and a '
+                + '`PushableBlock` is a `"Solid"` (`PushableBlock.as:27`), so the group '
+                + 'stays published while the player waits out the fade beside it. L15 is '
+                + 'the room the game built around this.',
+        },
+        rejected: [{
+            option: 'hold',
+            why: `${obstacle.id} answers to group t=${presser.t}, whose pressers are all `
+                + 'plain republishing ones — `Button.update` assigns `activate` from '
+                + 'whoever is standing there on EVERY tick, so the player who leaves to '
+                + 'walk through has already shut the lock. Slice 3 measured the '
+                + 'consequence: the walk spends its whole per-target budget grazing the '
+                + 'lock it just opened.',
+        }, {
+            option: 'route-around',
+            why: `${obstacle.id} is on the frontier of the reachable component, so there `
+                + 'is no route around it',
+        }, ...rejected, ...opener.rejected],
+    };
+}
+
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 3b — WHICH BLOCK CAN REACH THE BUTTON, and by
+ * which lean.
+ *
+ * A shove moves a block along ONE axis away from the player (`runShove`
+ * asserts it), so a block can reach `onto` at all only if it already SHARES
+ * one of the two coordinates with it. That makes the search a filter rather
+ * than a scan: at most one direction per block, and `k` is arithmetic.
+ *
+ * ⛔ EVERY INTERMEDIATE CELL IS ASKED, NOT JUST THE DESTINATION. `deriveShove`
+ * gets this for free because it walks `k` upward and breaks; here `k` is
+ * handed over, so the cells between are asked explicitly — a block that stops
+ * dead against a solid on the way, or sinks into water on the way, never
+ * arrives, and a derivation that only checked the endpoint would order a lean
+ * that quietly does nothing (R8 slice 4's off-the-map guard is the same
+ * defect one axis over: a destination the block physically cannot reach).
+ *
+ * ⚠ AND THE DESTINATION ITSELF MUST NOT SINK. A block destroyed on the
+ * button presses nothing, and `blockSinksOn` is the same instrument
+ * `deriveShove` asks — asked here of a cell it was handed rather than of one
+ * it chose.
+ */
+function deriveWeigh(run, onto, contacts, blocked = []) {
+    const bag = run.liveGeometryOpts();
+    const planOpts = solverPlanOpts(run, contacts);
+    const found = [];
+    const rejected = [];
+    const dirs = Object.keys(SHOVE_STEP);
+    for (const row of (run.world.pushables ?? [])) {
+        if (blocked.includes(row.id)) continue;
+        if (row.family !== 'walk') {
+            /**
+             * ⛔ A `pushableblockfire` MOVES ON A PRESS, NOT ON A LEAN —
+             * `resolveShoveStrategy`'s own refusal, repeated here because the
+             * two resolvers reach the same block roster from different
+             * questions and a silent skip would read as "no block in the room".
+             */
+            rejected.push({
+                option: `weigh with ${row.id}`,
+                why: `it is a \`${row.family}\` pushable — it moves on a PRESS, not on a `
+                    + 'lean, and `runShove` is the lean',
+            });
+            continue;
+        }
+        const live = run.pushables?.get(row.id);
+        if (!live || live.removed) continue;
+        const from = {
+            tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE),
+        };
+        if (from.tx === onto.tx && from.ty === onto.ty) {
+            /**
+             * ⛔ ALREADY THERE — and that is a DEFECT REPORT, not a success.
+             * `refineStrategy` only sends a lock here when its group is
+             * unpublished, so a block already on the presser means the two
+             * halves disagree about what is pressing what. `runShove` refuses
+             * this case by name too ("a shove that moves nothing is a check
+             * that cannot fail"); saying so here keeps the reason readable.
+             */
+            rejected.push({
+                option: `weigh with ${row.id}`,
+                why: `it is ALREADY on (${onto.tx},${onto.ty}) and the group is still `
+                    + 'unpublished — nothing this verb does would change that',
+            });
+            continue;
+        }
+        const dir = dirs.find((d) => {
+            const s = SHOVE_STEP[d];
+            if (s.dx !== 0) return from.ty === onto.ty && Math.sign(onto.tx - from.tx) === s.dx;
+            return from.tx === onto.tx && Math.sign(onto.ty - from.ty) === s.dy;
+        });
+        if (!dir) {
+            rejected.push({
+                option: `weigh with ${row.id}`,
+                why: `it stands on (${from.tx},${from.ty}) and the presser is on `
+                    + `(${onto.tx},${onto.ty}) — a lean moves a block along ONE axis, so a `
+                    + 'block sharing neither coordinate cannot reach it in one shove',
+            });
+            continue;
+        }
+        const step = SHOVE_STEP[dir];
+        const k = step.dx !== 0 ? Math.abs(onto.tx - from.tx) : Math.abs(onto.ty - from.ty);
+        const stance = nodeCentre(from.tx - step.dx, from.ty - step.dy, DEFAULT_LATTICE);
+        if (!corridorPlans(run.world, run.state, stance, null, planOpts)) {
+            rejected.push({
+                option: `weigh ${dir} with ${row.id}`,
+                why: `the near-side stance (${stance.x},${stance.y}) does not plan a `
+                    + 'corridor from the live position — a lean needs the player box on '
+                    + 'the block\'s +-1 px probe with velocity INTO it, so a direction '
+                    + 'whose stance is in another component is not a direction',
+            });
+            continue;
+        }
+        let blockedAt = null;
+        for (let i = 1; i <= k; i += 1) {
+            const cell = { tx: from.tx + step.dx * i, ty: from.ty + step.dy * i };
+            if (blockSinksOn(run.world, cell)) {
+                blockedAt = `(${cell.tx},${cell.ty}) is destructive terrain — the block is `
+                    + `GONE there, so it never reaches (${onto.tx},${onto.ty})`;
+                break;
+            }
+            if (blockBlockedAt(run, bag, row.id, cell)) {
+                blockedAt = `(${cell.tx},${cell.ty}) is Solid to the block, which stops `
+                    + 'dead against one';
+                break;
+            }
+        }
+        if (blockedAt) {
+            rejected.push({ option: `weigh ${dir} k=${k} with ${row.id}`, why: blockedAt });
+            continue;
+        }
+        found.push({ blockId: row.id, dir, dirIndex: dirs.indexOf(dir), k, from });
+    }
+    if (found.length === 0) {
+        /**
+         * ⛔ A ROOM WITH NO PUSHABLE AT ALL MUST SAY SO. Every branch above
+         * pushes a reason, so an EMPTY list can only mean the roster itself
+         * was empty — and "no block could reach the presser" and "the verb
+         * was never considered" would then print the same thing, which is the
+         * bounded-sweep defect exactly. The bound this sweep ran over is the
+         * room's pushable roster, so the roster is what it names.
+         * [[feedback_bounded_sweep_must_name_what_it_bounded]]
+         */
+        if (rejected.length === 0) {
+            rejected.push({
+                option: 'weigh',
+                why: `level ${run.level} holds no pushable block at all, so there is `
+                    + `nothing to park on (${onto.tx},${onto.ty}) — the verb was `
+                    + 'considered and has no material to work with',
+            });
+        }
+        return { plan: null, rejected };
+    }
+    /**
+     * ⛔ SMALLEST `k`, THEN THE TABLE'S OWN DIRECTION ORDER, THEN THE BLOCK'S
+     * ID. The first key is the shortest lean; the last two exist because an
+     * emitted tape is an artifact and a tie broken by roster order is a tie
+     * broken by nothing (`deriveShove`'s own sort, one key shorter — there is
+     * no destructive arm here because a destroyed block cannot press).
+     */
+    found.sort((a, b) => a.k - b.k || a.dirIndex - b.dirIndex
+        || (a.blockId < b.blockId ? -1 : 1));
+    const [plan, ...alternatives] = found;
+    return {
+        plan,
+        rejected: [
+            ...alternatives.map((a) => ({
+                option: `weigh ${a.dir} k=${a.k} with ${a.blockId}`,
+                why: `also reaches the presser, and is ${a.k - plan.k} tile(s) longer or `
+                    + 'later in the direction order',
+            })),
+            ...rejected,
+        ],
     };
 }
 
@@ -1788,6 +2172,43 @@ function execHold(run, perTick, resolved, ctx) {
  */
 function execShove(run, perTick, resolved, ctx) {
     return runShove(run, perTick, resolved.shove, ctx.what);
+}
+
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 3b — Executor: the `weigh` verb, which is TWO
+ * EXISTING VERBS AND NO NEW MECHANICS.
+ *
+ * `runShove` parks the block on the presser and `runDwell` waits out the fade
+ * beside it. Nothing here counts ticks, presses a key, or asks the world a
+ * question the two verbs do not already ask — the whole of what slice 3b adds
+ * to the driver layer is the ORDER, and the order is the mechanism's:
+ * `Button.update` publishes on the tick the block lands, and `Lock`'s fade
+ * runs from there.
+ *
+ * ⛔ `runDwell` RATHER THAN `runHold`, and the difference is the whole slice.
+ * `runHold`'s per-tick invariant is *"still inside the presser"* — a player
+ * standing on the button — which is exactly the thing this strategy exists to
+ * stop needing. The dwell's invariants (no transition, NO KEYS, no new hits)
+ * are the right ones for a walker who is now a bystander to their own hold.
+ *
+ * ⚠ AND ITS SHUT-BEFORE REFUSAL IS LEFT ARMED ON PURPOSE. `runDwell` fails by
+ * name if its condition is already true when it starts. That cannot happen at
+ * the fades this game has — `opensOnTick` is 101 ticks against a release
+ * coast of about five — so if it ever fires it is a real finding about the
+ * shove's tail, and a branch here that swallowed it would be the graceful
+ * fallback that reports a vacuous success. [[feedback_graceful_fallback_vacuous_replay]]
+ */
+function execWeigh(run, perTick, resolved, ctx) {
+    const shove = runShove(run, perTick, resolved.shove, `${ctx.what} (park the block)`);
+    const dwell = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade)`);
+    return {
+        kind: 'weigh',
+        postCondition: 'press',
+        presser: { ...resolved.target },
+        shove,
+        dwell,
+        ticks: (shove.ticks ?? 0) + (dwell.ticks ?? 0),
+    };
 }
 
 /**
@@ -4425,7 +4846,20 @@ export function solveSegment({
         if (strategy && STRATEGY_EXECUTORS[strategy]) {
             const resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
                 aim, allowTeleporter, [...refusedOrders]);
-            if (resolved) return { obstacle, strategy, resolved, key };
+            /**
+             * ⛓ THE RESOLVER'S OWN VERB IS THE ANSWER, not the table's — and
+             * for all eight verbs that existed before slice 3b this is the
+             * SAME STRING, because every resolver already stamps
+             * `resolved.strategy` with its own name. What it buys is the one
+             * case where a refinement can be WRONG about what it can build:
+             * `weigh` falls back to `hold` when no block can reach the
+             * presser (see `resolveWeighStrategy`), and the executor lookup,
+             * the trace row's verb and `applied`'s bound must all follow the
+             * resolution rather than the guess that preceded it.
+             */
+            if (resolved) {
+                return { obstacle, strategy: resolved.strategy ?? strategy, resolved, key };
+            }
             /**
              * ⛓⛓⛓ GUARD (ii), FIRED. This order REFUSED — and an earlier
              * shove may have hypothesised it discharged. ⚖ The ruling: that

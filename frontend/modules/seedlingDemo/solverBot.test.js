@@ -52,7 +52,8 @@ import {
 import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
     ESCALATION_LADDER,
-    OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, solveSegment,
+    OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, SolverRefusal,
+    solveSegment,
 } from './solverBot.js';
 import {
     deathJumpFindings, parseDecisionTrace, traceTapeAgreementFindings,
@@ -613,10 +614,36 @@ describe('the refusal shapes — never a silent stall', () => {
 
 describe('the strategy catalog seam (slice 3 extends, never restructures)', () => {
     it('every registered executor answers a selector row; unregistered rows are the work orders', () => {
-        const selected = new Set(Object.values(OBSTACLE_STRATEGIES));
+        /**
+         * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **A VERB CAN BE SELECTED TWO WAYS**, and
+         * until this slice the invariant only knew one of them.
+         *
+         * `refineStrategy` turns one table answer into another by asking the
+         * LEVEL a question the table cannot ask, and it has done so since R8
+         * slice 3b. This assertion computed "selected" from
+         * `OBSTACLE_STRATEGIES` alone — so `kill` satisfied it only because
+         * `solid:magicallock` happens to name `kill` directly, i.e. for a
+         * reason unrelated to the claim being made. `weigh` is the first
+         * refined verb with no table row of its own, and it is what surfaced
+         * the gap. The refinements are now data (`STRATEGY_REFINEMENTS`) and
+         * this reads them; `procgenWeigh.test.js` DRIVES every row, so the
+         * table cannot silently drift from the function it describes.
+         */
+        const selected = new Set([
+            ...Object.values(OBSTACLE_STRATEGIES),
+            ...STRATEGY_REFINEMENTS.map((r) => r.to),
+        ]);
         for (const verb of Object.keys(STRATEGY_EXECUTORS)) {
             expect(selected.has(verb) || verb === 'collect',
                 `executor '${verb}' is reachable by no selector row`).toBe(true);
+        }
+        // ⛔ AND EVERY REFINEMENT MUST REFINE SOMETHING THE TABLE REALLY SAYS.
+        // A row whose `from` no obstacle selects would be a refinement of a
+        // verb nobody reaches — the arm-nobody-built shape, one layer up.
+        for (const r of STRATEGY_REFINEMENTS) {
+            expect(Object.values(OBSTACLE_STRATEGIES),
+                `refinement ${r.from} -> ${r.to} refines a verb no row selects`)
+                .toContain(r.from);
         }
         // The pending work orders, as data: selected and not yet registered.
         // ⛓ R8 slice 3 took `hold` off this list and slice 3b took `shove`,

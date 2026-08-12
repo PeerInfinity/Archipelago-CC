@@ -1208,6 +1208,32 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the destination: `k` from the post-condition (`shovePostConditions`)',
             'the stance: the block\'s own near-side cell — `runShove`\'s lean needs the '
                 + 'player box on the block\'s +-1 px probe with velocity into it']),
+        /**
+         * ⛓⛓⛓ PROCGEN PoC SLICE 3b (⚖ kickoff §1.9) — `weigh`, and it owes
+         * this row for a reason worth stating: it is a COMPOSITION of two
+         * registered verbs, so a reader could reasonably assume it derives
+         * nothing of its own. It derives two things, and both come from
+         * mechanisms rather than from choices.
+         *
+         * ⛔ ITS DESTINATION IS THE ONE THING THAT SEPARATES IT FROM `shove`.
+         * A `shove` derives `k` from a POST-CONDITION (`clear-path`'s minimum
+         * tiles); a `weigh` is HANDED its destination by the mechanism — the
+         * presser's own cell — and derives only which block and which lean can
+         * reach it. That is why the two share `runShove` and not a resolver.
+         */
+        weigh: Object.freeze(['the destination: NOT derived — the presser\'s own tile, '
+                + 'handed over by the mechanism (`press`, ⚖ §11.8a\'s third post-condition)',
+            'the block and the direction: the only (block, axis) pair that already shares '
+                + 'a coordinate with the presser AND whose every intermediate cell is '
+                + 'free — a lean moves a block along ONE axis, so this is a filter, not '
+                + 'a scan',
+            'the stance: the block\'s own near-side cell, exactly as `shove` derives it — '
+                + 'one lean, one implementation (`runShove`)',
+            'the length: `ticks` is `deriveHold`\'s BOUND for the same group '
+                + '(`activators.opensOnTick`), and the stopping CONDITION is OBSERVED — '
+                + 'the group\'s shut responders opening (§11.7). ⛓ Waited out by '
+                + '`runDwell` rather than `runHold`, because the whole point is that '
+                + 'NOBODY is standing on the presser: the block is']),
         kill: Object.freeze(['the weapon: the presser group whose armed traps\' lanes '
                 + 'cover the target body (`arrowTrap.lanesOver`)',
             'the stance: `presserSafety` — `lanesOver(playerBox)` EMPTY at the hold point',
