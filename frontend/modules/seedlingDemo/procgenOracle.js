@@ -243,11 +243,30 @@ const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
  * @param {object} [o]
  * @param {function} [o.now]     injected clock, for tests
  * @param {string} [o.name]      the tape name the solve records under
+ * @param {boolean} [o.scratchPersistence]  ⛓⛓⛓ SLICE 4b, DEFAULT **TRUE**,
+ *        and this is the ONE place it is turned on in the whole codebase.
+ *
+ *        ⚖ Kickoff §1.13. A kill-lock clear is DECLARED by a recorded tape's
+ *        v9 `at` row, and a generated level has no tape at solve time — the
+ *        solve is what would produce one. So `levelRun` refuses to compute a
+ *        clear the tape does not carry ("two writers of one persistence
+ *        slot"), and that refusal is correct everywhere a tape exists and
+ *        vacuous exactly here. The flag lets the model be the ONE writer for
+ *        slots no declaration owns; `run.scratchClears` says what it wrote.
+ *
+ *        ⛔ THE DEFAULT IS TRUE BECAUSE THIS MODULE IS THE GENERATED-LEVEL
+ *        ORACLE AND HAS NO OTHER CALLERS. Every path that solves a level with
+ *        a tape behind it (`watchViewer`'s SOLVE arm, `watchManual`, the
+ *        battery, every replay stepper) goes through `solveForPage` or
+ *        `createRunForStaging` directly, where the default is FALSE. The
+ *        parameter is here so a probe can turn it OFF and measure the
+ *        parent's behaviour — which is what the flip gate does.
  * @returns {object} `{verdict, ms, budget, …evidence}`
  */
 export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
     now = () => Date.now(),
     name = `procgen-l${levelRecord?.level}`,
+    scratchPersistence = true,
 } = {}) {
     const b = assertBudget(budget);
     if (!Array.isArray(goals) || goals.length === 0) {
@@ -272,6 +291,10 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             // a bound nobody applies (measured: a 7-tick budget still solved
             // in 134 ticks before the pass-through existed).
             maxTicksPerTarget: b.maxTicksPerTarget,
+            // ⛓⛓ Slice 4b: THIS is the one caller that turns the scratch
+            // persistence layer on. See the docblock above `DEFAULT_BUDGET`'s
+            // neighbour below and `levelRun`'s own.
+            scratchPersistence,
         });
     } catch (e) {
         if (!(e instanceof SolverRefusal) && !(e instanceof BotDriverV2Error)) throw e;
@@ -347,6 +370,21 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
         classifiedBy: 'the solver reached every goal within budget',
         ticks: result.out.perTick.length,
         certification: cert,
+        /**
+         * ⛓⛓⛓ SLICE 4b — the scratch ledger, carried out beside the records.
+         *
+         * ⛔ IT IS EVIDENCE, NOT CERTIFICATION. `certifyCollects` above is
+         * unchanged and still reads the solve's OWN collect records (⚖ §3.4).
+         * What this buys is the discharge-existence standard (§12.1) for a
+         * kill-lock family: the final solve must carry a `{strategy:'kill'}`
+         * RECORD naming the template's own body AND a row here naming the
+         * template's own lock flag — an obstacle nobody had to clear can
+         * produce neither. `scratchPersistence` rides beside it because an
+         * empty ledger under the flag and an empty ledger without it are
+         * different facts that print the same thing.
+         */
+        scratchPersistence: result.run.scratchPersistence,
+        scratchClears: result.run.scratchClears,
         tape: result.tape,
         trace: result.out.trace,
         records: result.out.records,

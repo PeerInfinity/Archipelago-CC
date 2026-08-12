@@ -354,6 +354,49 @@ export function createLevelRun({
      * declared field and a silently ignored one.
      */
     seam = null,
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 4b: **SCRATCH PERSISTENCE** — the run's own copy
+     * of the cleared set, writable by the MODEL for the kill-lock family.
+     * ⚖ User ruling, 2026-08-12 (kickoff §1.13).
+     *
+     * ── WHAT IS AND IS NOT NEW HERE ───────────────────────────────────
+     *
+     * The user's sketch is *"a temporary copy of the persistence data that
+     * can be modified and reverted without changing the real save data"* —
+     * and that copy ALREADY EXISTS. `clearedByLevel` is built from the
+     * `persistence` INPUT at construction and mutated only by this run;
+     * nothing here writes anything durable anywhere. So this flag adds no
+     * store and no copy. What it adds is **permission plus a ledger**: for
+     * the two kill-lock arms, permission to write the clear the model can
+     * already compute, and `scratchClears` saying exactly what it wrote.
+     *
+     * ── WHY THE TWO-WRITERS GUARD SURVIVES, BY CONSTRUCTION ───────────
+     *
+     * Both arms compute `undeclared` = the openings MINUS everything
+     * `persistence` declares. The scratch write can therefore only ever
+     * land in a slot the declaration channel left EMPTY — the tape stays
+     * the one writer for its own rows and this layer is the one writer for
+     * the rest. A room whose staging DOES declare the clear takes the
+     * parent's path unchanged, because `undeclared` is empty there and
+     * neither branch is reached. ⛔ This is NOT a mode that silences the
+     * throw: with a declaration present there was never a throw, and
+     * `assertScratchSlotIsFree` refuses by name if a promotion ever names a
+     * flag `persistence` owns.
+     *
+     * ── ⛔ THE OPT-IN IS A PARAMETER AND NOT A STAGING FIELD, ON PURPOSE ─
+     *
+     * `parseTape` cannot spell this and `stagingFromTape` copies twelve
+     * NAMED fields, so no tape, no preset and no hand-typed editor block
+     * can turn it on — it has **no data path at all**. It can only be
+     * passed in code, and the whole chain is
+     * `procgenOracle.solve` → `watchSolve.solveForPage` →
+     * `tapeRunner.createRunForStaging` → here. `createTapeStepper` (every
+     * replay), `watchManual`, `censusWorld` and
+     * `solve-seedling-r8-battery` all call `createRunForStaging` with two
+     * arguments, so committed-room replay and the battery are outside this
+     * flag BY CONSTRUCTION rather than by convention.
+     */
+    scratchPersistence = false,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -489,24 +532,46 @@ export function createLevelRun({
      */
     const timedClears = persistence.filter((c) => c.at !== undefined)
         .map((c) => ({ ...c })).sort((a, b) => a.at - b.at);
+    /**
+     * ⛔⛔⛔ THE MID-VISIT CLEAR **WRITE** — one function, and slice 4b is why
+     * it is a function at all.
+     *
+     * Two ledgers can now schedule a mid-visit clear: the tape's DECLARED v9
+     * `at` rows (`applyTimedClears`, below) and — in scratch mode only — the
+     * kill-lock openings the MODEL computes (`firePendingKillLockThrows`).
+     * They keep their own firing predicates, because each is already correct
+     * for its own ledger's tick convention; what they must not have is two
+     * spellings of the WRITE. ⚠ MEASURED, not assumed, that they differ: a
+     * declared row fires when `ticksCompleted === at` and a pending kill-lock
+     * row fires when `ticksCompleted + 1 >= at` — one apart, and a scratch
+     * row forced through the other's comparison would land its clear a tick
+     * from where its own message says it lands.
+     *
+     * ⚠ The body is byte-for-byte what `applyTimedClears` ran before the
+     * extraction; the whole content of the change is that a SECOND scheduler
+     * can reach it. (`createRunForStaging`'s own lesson, one module over.)
+     */
+    const applyClearNow = (c) => {
+        if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
+        const list = clearedByLevel.get(c.level);
+        if (!list.includes(c.tag)) list.push(c.tag);
+        worlds.delete(c.level);
+        /**
+         * ⛔⛔ AND THE LIVE BINDING IS REFRESHED, which dropping the memo
+         * does NOT do. `world` is a `let` set at construction and rebound
+         * only in `enterWorld` — so the first cut of this cleared the map
+         * and left the run holding the old room, and the model walked
+         * into a lock the game had already removed for another 75 ticks.
+         * The tell was a byte-exact replay that stopped 1.34 px short of
+         * a teleporter it should have crossed.
+         */
+        if (c.level === level) world = worldFor(c.level);
+    };
     const applyTimedClears = (tick) => {
         for (const c of timedClears) {
             if (c.applied || c.at !== tick) continue;
             c.applied = true;
-            if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
-            const list = clearedByLevel.get(c.level);
-            if (!list.includes(c.tag)) list.push(c.tag);
-            worlds.delete(c.level);
-            /**
-             * ⛔⛔ AND THE LIVE BINDING IS REFRESHED, which dropping the memo
-             * does NOT do. `world` is a `let` set at construction and rebound
-             * only in `enterWorld` — so the first cut of this cleared the map
-             * and left the run holding the old room, and the model walked
-             * into a lock the game had already removed for another 75 ticks.
-             * The tell was a byte-exact replay that stopped 1.34 px short of
-             * a teleporter it should have crossed.
-             */
-            if (c.level === level) world = worldFor(c.level);
+            applyClearNow(c);
         }
     };
     /**
@@ -2090,10 +2155,108 @@ export function createLevelRun({
      * throw is deferred by a whole fade.
      */
     const pendingKillLockThrows = [];
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 4b: WHAT THE SCRATCH LAYER WROTE — one row per
+     * self-declared clear, `{level, tag, at, removedAt, by, cause, why}`.
+     *
+     * ⛔ IT IS EVIDENCE, NEVER CERTIFICATION. ⚖ Kickoff §3.4: a solve is
+     * certified by its OWN collect records, and this ledger answers a
+     * different question — "which flags did this run turn off that nobody
+     * declared". `procgenOracle` reads it for the discharge-existence
+     * standard (§12.1) and certifies from `out.records` exactly as before.
+     *
+     * ⛔⛔ AND NOTHING HERE REACHES `pendingEarnedClears`. That channel is
+     * what a NEXT BUILD of the level would cash (R3); a scratch clear that
+     * became a banked one would be this layer writing outside the run it
+     * belongs to, which is the one thing "revertable" has to mean.
+     */
+    const scratchClears = [];
+    /**
+     * The clear's own tick, from the LOCK's own fade — the arithmetic
+     * `assertSpinnerRemovalIsDeclared` already wrote, hoisted so the chaser
+     * arm computes the same number rather than a second one. `opensOnTick`
+     * SIMULATES the hundred alpha steps (never divides — the arc's own law).
+     */
+    const killLockClearTick = (removedAt, opens) => removedAt
+        + opensOnTick(RESPONDERS[opens[0]?.tag ?? 'lock']?.fade ?? RESPONDERS.lock.fade);
+    /**
+     * ⛔ THE GUARD, CHECKED RATHER THAN REASONED. The promoted set is
+     * `led.opens` minus everything `persistence` declares, so a slot the
+     * declaration channel owns is unreachable here BY CONSTRUCTION — and a
+     * construction claim nobody asserts is the shape this arc has been bitten
+     * by. If it is ever false, the run says so instead of writing.
+     */
+    const assertScratchSlotIsFree = (p, flag) => {
+        const owner = persistence.find((c) => c.level === p.level && c.tag === flag);
+        if (!owner) return;
+        throw new Error(`levelRun: the scratch persistence layer was about to self-declare `
+            + `the clear of {${p.level},${flag}} (opened by ${p.id}'s removal at tick `
+            + `${p.removedAt}), and the staging block ALREADY DECLARES that slot`
+            + `${owner.at === undefined ? ' as a boot clear' : ` with at=${owner.at}`}. `
+            + 'The scratch layer exists to be the ONE writer of slots the declaration '
+            + 'channel left empty; two writers of one persistence slot is the exact thing '
+            + 'it must not become. This promotion is a defect in the layer, not a level '
+            + 'verdict.');
+    };
     const firePendingKillLockThrows = () => {
         for (let i = 0; i < pendingKillLockThrows.length; i += 1) {
             const p = pendingKillLockThrows[i];
-            if (ticksCompleted + 1 < p.at) continue;
+            if (p.applied || ticksCompleted + 1 < p.at) continue;
+            /**
+             * ⛓⛓⛓ SLICE 4b — THE SCRATCH BRANCH, and it is the whole layer.
+             *
+             * The throw below says the model *can see the clear coming* and is
+             * forbidden to write it because the tape owns that slot. In a
+             * scratch run there IS no tape — a generated level's solve is what
+             * would produce one — so nobody owns the slot and the model's own
+             * arithmetic is the only writer there could be. It writes through
+             * `applyClearNow`, the same mid-visit write the declared rows use,
+             * on the tick this pending row already computed for the message.
+             */
+            if (scratchPersistence) {
+                p.applied = true;
+                for (let k = 0; k < p.flags.length; k += 1) {
+                    const flag = p.flags[k];
+                    assertScratchSlotIsFree(p, flag);
+                    applyClearNow({ level: p.level, tag: flag });
+                    scratchClears.push({
+                        level: p.level,
+                        tag: flag,
+                        at: p.at,
+                        /**
+                         * ⛔⛔ THE SAME MOMENT, IN THE **v9 `at` SPELLING** —
+                         * and the offset is a real convention difference, not
+                         * a fudge.
+                         *
+                         * A pending kill-lock row fires when
+                         * `ticksCompleted + 1 >= at` (its `at` is in the
+                         * REMOVAL-RECORD convention, where an event is stamped
+                         * `ticksCompleted + 1` because it happens while that
+                         * tick is being completed). A DECLARED v9 row fires
+                         * when `ticksCompleted === at` — *"the flag is already
+                         * false when the tick numbered `at` begins"*. The two
+                         * predicates sit two lines apart in `advance()` and
+                         * are one apart in their arithmetic.
+                         *
+                         * So this is the number a tape must carry for a REPLAY
+                         * to clear the flag in the same advance this run did.
+                         * ⚠ It is computed here, beside both predicates,
+                         * rather than in the fold — the fold copies it and
+                         * owns no arithmetic — and it is MEASURED rather than
+                         * reasoned: `procgenScratchPersistence.test.js`'s
+                         * round-trip replays the emitted tape and asserts the
+                         * declared clear lands on the tick this ledger names.
+                         */
+                        declaredAt: p.at - 1,
+                        removedAt: p.removedAt,
+                        by: p.id,
+                        lock: p.locks[k] ?? null,
+                        cause: p.cause,
+                        why: p.why,
+                    });
+                }
+                continue;
+            }
             const err = new Error(`levelRun: ${p.id}'s removal at tick ${p.removedAt} `
                 + `OPENS ${p.flags.length} kill lock(s) in level ${p.level} `
                 + `[${p.flags.map((f) => `{${p.level},${f}}`).join(', ')}] (${p.why}), and `
@@ -3706,14 +3869,46 @@ export function createLevelRun({
      * `text: ''` — no NPC, no dialogue, and its 150 frozen frames are DEAD
      * frames the tape's counter skips entirely, so the model never ticks
      * through them and the spinner is parked on both sides by construction.
-     * The gap is only reachable by a DIALOGUED pickup in a spinner room, of
-     * which there are none. Refusing is a sentence; forking `stepDialogue`
-     * into a pure "does this tick finish" predicate would be a second
-     * implementation of the rule, which is what this package spends its
-     * comments avoiding.
+     * Refusing is a sentence; forking `stepDialogue` into a pure "does this
+     * tick finish" predicate would be a second implementation of the rule,
+     * which is what this package spends its comments avoiding.
+     *
+     * ── ⛔⛔⛔ PROCGEN PoC SLICE 4b: THE OLD BOUND EXPIRED, AND THE GATE IS
+     * ── NARROWED TO **LIVE** BODIES ────────────────────────────────────
+     *
+     * This docblock used to close with *"The gap is only reachable by a
+     * DIALOGUED pickup in a spinner room, **of which there are none**"* —
+     * and the PoC generates exactly that room. Worse, it refused one where
+     * the claim in its own message was FALSE: the call site gated on
+     * `spinnerStateFor(level).byId.size > 0`, and that map RETAINS a body
+     * after `FP.world.remove`. Measured, in a generated room: the guard
+     * threw *"holds live spinners"* at tick 733 in a room whose only spinner
+     * was removed at tick **517** — 216 ticks earlier.
+     *
+     * ⇒ THE NEW BOUND. With no live body `stepSpinners` moves nothing, so
+     * the one-tick fencepost this guard protects — a spinner the model parks
+     * and the game moves — is VACUOUS: there is no spinner to park. The
+     * state map's retention is a fact about the LEDGER (it is how a
+     * removal's flag and death cause stay readable), never about what can be
+     * stepped, and the engine already spells that distinction: `spinnerRects`
+     * filters on `s.removed` for exactly this reason.
+     *
+     * ⚠ WHAT DOES NOT CHANGE: the refusal itself. A room with a LIVE spinner
+     * and a dialogued ceremony still throws, with this message, unchanged —
+     * the narrowing changes which rooms are ASKED, never what is said when
+     * the answer is yes. Driven both ways in
+     * `procgenScratchPersistence.test.js`.
+     *
+     * ⛓ THIS IS THE **FOURTH** SITE of [[feedback_measured_limitations_expire]]
+     * + traps 171/173 in this package, and the count is the lesson: a bound
+     * written as "there are none" is a measurement with an expiry date, and
+     * a conservative ingredient manufactures the very problem it was written
+     * to avoid. ⚖ Orchestrator ruling (A), 2026-08-12, with the live case
+     * required to be proven untouched.
      */
-    const assertDialogueFreeSpinnerRoom = () => {
+    const assertDialogueFreeSpinnerRoom = (spinState) => {
         if (ceremony === null || ceremony.dialogue === null) return;
+        if (spinnerRects(spinState).length === 0) return;
         throw new Error(`levelRun: level ${level} holds live spinners AND a DIALOGUED `
             + `ceremony (${ceremony.item ?? 'keyType ' + ceremony.keyType}) is running at `
             + `tick ${ticksCompleted}. A spinner is stepped at the top of the tick and the `
@@ -6958,9 +7153,10 @@ export function createLevelRun({
                 // rather than typed: a `Lock`'s `alpha -= 0.01` accumulates to
                 // 101 steps and `opensOnTick` is the one place that counts
                 // them (simulated, not divided — the arc's own law).
-                at: ticksCompleted + 1
-                    + opensOnTick(RESPONDERS[led.opens[0]?.tag ?? 'lock']?.fade
-                        ?? RESPONDERS.lock.fade),
+                // ⛓ SLICE 4b hoisted the arithmetic to `killLockClearTick` so
+                // the chaser arm computes the SAME number rather than a second
+                // one; the value here is unchanged.
+                at: killLockClearTick(ticksCompleted + 1, led.opens),
                 level,
                 flags: undeclared.map((o) => o.flag),
                 locks: undeclared.map((o) => `${o.tag}@${o.x},${o.y}`),
@@ -7523,6 +7719,49 @@ export function createLevelRun({
             (o) => !declared.some((p) => p.tag === o.flag),
         );
         if (undeclared.length > 0) {
+            /**
+             * ⛓⛓⛓ PROCGEN PoC SLICE 4b — THE SCRATCH BRANCH, and it DEFERS
+             * where this arm's throw does not.
+             *
+             * The spinner arm already learned that the divergence cannot bite
+             * before `removal + fade` (its own docblock: `checkEnemies()`
+             * opens the lock and a `Lock` then takes 101 alpha steps before
+             * the durable write). That is a fact about the LOCK, not about
+             * what killed the body — so a scratch clear this arm schedules
+             * lands on the same tick a spinner's would, through the same
+             * pending list and the same `applyClearNow`. ⚠ The NON-scratch
+             * path below is untouched and still throws at the removal: this
+             * arm's immediate refusal is R8 slice 3's ruling and 4b has no
+             * measurement that would revisit it.
+             *
+             * ⛓ THIS IS THE SITE SLICE 4c STANDS ON — a bob or a sandtrap the
+             * sword kills reaches its removal here, so the kill arms inherit
+             * the layer without touching it.
+             */
+            if (scratchPersistence) {
+                pendingKillLockThrows.push({
+                    at: killLockClearTick(ticksCompleted + 1, undeclared),
+                    level,
+                    flags: undeclared.map((o) => o.flag),
+                    locks: undeclared.map((o) => `${o.tag}@${o.x},${o.y}`),
+                    removedAt: ticksCompleted + 1,
+                    id: c.id,
+                    cause,
+                    why: led.why,
+                });
+                chaserKillLockOpens.push({
+                    t: ticksCompleted + 1,
+                    level,
+                    id: c.id,
+                    cause,
+                    opens: led.opens.map((o) => ({ flag: o.flag, at: `${o.tag}@${o.x},${o.y}` })),
+                    nil: false,
+                    why: led.why,
+                    declaredAt: led.opens.map(
+                        (o) => declared.find((p) => p.tag === o.flag)?.at ?? null),
+                });
+                return;
+            }
             /**
              * ⛓⛓⛓ R8 SLICE 4 — THE THROW CARRIES THE LOCK'S OWN IDENTITY.
              *
@@ -9320,6 +9559,24 @@ export function createLevelRun({
          * question it was answering.
          */
         get spinnerKillLockOpens() { return spinnerKillLockOpens.map((k) => ({ ...k })); },
+        /**
+         * ⛓ PROCGEN PoC SLICE 4b — whether this run may self-declare a
+         * kill-lock clear. Exposed so the boundary is ASSERTABLE from outside
+         * rather than inferrable: the battery, `watchManual`, `censusWorld`
+         * and every replay stepper build runs that must answer `false`, and a
+         * test that reads this field is the only way to prove it without
+         * re-deriving the caller list.
+         */
+        get scratchPersistence() { return scratchPersistence; },
+        /**
+         * ⛓ PROCGEN PoC SLICE 4b — the clears the MODEL self-declared, in the
+         * order it wrote them. Empty on every non-scratch run BY
+         * CONSTRUCTION, and empty on a scratch run that opened nothing —
+         * ⚠ which are different facts and print the same thing, so the
+         * consumer that cares (`procgenOracle`) reads `scratchPersistence`
+         * beside it rather than reading emptiness as "no scratch mode".
+         */
+        get scratchClears() { return scratchClears.map((c) => ({ ...c })); },
         /** ⛔⛔ R5 slice 13: `{t, level, pulser, enemy}` per enemy a pulse killed. */
         get pulserEnemyKills() { return pulserEnemyKills.map((k) => ({ ...k })); },
         get spinnerDeaths() {
@@ -10690,7 +10947,12 @@ export function createLevelRun({
             // one parks.
             const spinState = spinnerStateFor(level);
             if (!noclip && spinState.byId.size > 0) {
-                assertDialogueFreeSpinnerRoom();
+                // ⛓ Slice 4b: the STATE goes in, because the guard asks about
+                // LIVE bodies and this map retains removed ones. The block
+                // below is unchanged — narrowing the outer `if` would also
+                // stop the removal scan and the terrain writes, which is a
+                // different (and wrong) change.
+                assertDialogueFreeSpinnerRoom(spinState);
                 stepSpinners(spinState, spinnerCtx());
                 stepSpinnerContactsNow(spinState);
                 /**

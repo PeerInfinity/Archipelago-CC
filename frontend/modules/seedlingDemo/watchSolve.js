@@ -416,13 +416,25 @@ export function censusWorld(levelSource, staging) {
  * second copy of the number here — which is what makes this addition
  * byte-inert for the page, the battery and the acceptance row. Both
  * directions are driven in `watchSolve.test.js`.
+ *
+ * ⛓⛓ PROCGEN PoC SLICE 4b — `scratchPersistence`, THE SAME SHAPE ONE SLICE
+ * ON, and it stops here.
+ *
+ * A generated level has no tape, so a kill-lock clear the model can compute
+ * has no declared writer and `levelRun` refuses to invent one (⚖ kickoff
+ * §1.13). The flag lets it, for solve/generated contexts only. ⛔ THE PAGE
+ * NEVER PASSES IT: `watchViewer`'s SOLVE arm solves ATLAS levels, which have
+ * tapes and declarations; only `procgenOracle` passes `true`. Absent it is
+ * `false`, so the page, the battery and the acceptance row are unchanged —
+ * and `censusWorld` above builds its run without it for the same reason.
  */
 export function solveForPage({
     levelSource, staging, goals, name, now = () => Date.now(), maxTicksPerTarget,
+    scratchPersistence = false,
 }) {
     const honest = solveStaging(staging);
     const t0 = now();
-    const run = createRunForStaging(honest, levelSource);
+    const run = createRunForStaging(honest, levelSource, { scratchPersistence });
     const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget });
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);
@@ -431,6 +443,11 @@ export function solveForPage({
         run,
         ms,
         despawns,
+        // ⛓ Slice 4b: the fold is UNCHANGED — a scratch run's self-declared
+        // clears do NOT ride into the tape, because `tapeFormat` bounds
+        // `persistence[].level` to the real game's 116 levels and a generated
+        // level is 900. See `buildStagedTape`'s docblock for the ruling this
+        // measurement overtook; the rows leave through `run.scratchClears`.
         tape: buildStagedTape({ staging: honest, perTick: out.perTick, name }),
     };
 }

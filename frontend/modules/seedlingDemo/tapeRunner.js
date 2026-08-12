@@ -332,8 +332,22 @@ export const rolesForStaging = (staging) => (staging.noclip ? RELAXED_ROLES : RO
  * ⚠ Hoisted VERBATIM (editor arc slice 1): the body is byte-for-byte what
  * `createTapeStepper` ran, so every existing call path is unchanged. The
  * hoist's whole content is that a SECOND caller can now reach it.
+ *
+ * ⛓⛓⛓ PROCGEN PoC SLICE 4b — the THIRD argument, and it is deliberately an
+ * argument rather than a staging field.
+ *
+ * `scratchPersistence` lets the model self-declare a kill-lock clear it can
+ * compute but no tape declares (⚖ kickoff §1.13; `levelRun`'s own docblock
+ * has the mechanism). It is NOT part of a staging block because a staging
+ * block is a DECLARATION about boot state that arrives as data — `parseTape`
+ * would have to learn a field, `stagingFromTape` would have to copy it, and
+ * a preset or a hand-typed editor block could then switch engine behaviour
+ * on. As an argument it has no data path at all: only a CALLER, in code, can
+ * pass it. Every existing call site passes two arguments and therefore gets
+ * `false`, which is what makes committed-room replay and the battery outside
+ * this flag by construction rather than by convention.
  */
-export function createRunForStaging(staging, levelSource) {
+export function createRunForStaging(staging, levelSource, { scratchPersistence = false } = {}) {
     // The v2 engine's level tracking, world swapping and transition log all
     // live in `createLevelRun`, because `botDriverV2` advances the same
     // physics through the same transitions while choosing its keys instead
@@ -402,6 +416,9 @@ export function createRunForStaging(staging, levelSource) {
         // written down again; an honest staging block (`noclip: false`)
         // derives the full `ROLES` from this line and no other.
         roles: rolesForStaging(staging),
+        // ⛓ PROCGEN PoC slice 4b: the one field that comes from the CALLER
+        // rather than from the staging block. See the docblock.
+        scratchPersistence,
     });
 }
 

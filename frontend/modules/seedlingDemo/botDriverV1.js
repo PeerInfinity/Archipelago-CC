@@ -389,6 +389,33 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
  * that the DROP is safe lives at the other end of the same seam
  * (`tapeRunner.checkSolveDespawns`).
  */
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 4b — THE ARM THAT WAS RULED IN, BUILT, MEASURED AND
+ * THEN **NOT SHIPPED**, and the reason is a fact about the TAPE VOCABULARY.
+ *
+ * ⚖ The orchestrator ruled (2026-08-12) that this fold should emit a scratch
+ * run's self-declared kill-lock clears (`levelRun.scratchClears`) as v9 `at`
+ * rows, so a generated level's solve tape would not be an artifact that lies
+ * about its own replayability — replayed through `createTapeStepper`, where
+ * scratch is off, it would otherwise throw the very refusal the scratch layer
+ * routed around. The ruling carried an escape valve: if the change resisted a
+ * clean cut, stop and ship the residue named instead.
+ *
+ * ⛔⛔ THE CUT WAS CLEAN AND THE **FORMAT** REFUSED. `tapeFormat`'s
+ * `parsePersistence` bounds `persistence[].level` to `0..LEVEL_COUNT-1`
+ * (0..115, `Game.levels.length`) — while `boot.level` carries no such bound.
+ * So a GENERATED level (`SEEDLING_DEFAULTS.level` is 900) can be BOOTED by a
+ * tape and cannot be DECLARED ABOUT by one: the emitted tape stopped parsing
+ * at all, which is strictly worse than one that parses and refuses on replay.
+ * Measured, not reasoned — `procgenScratchPersistence.test.js` pins the
+ * parser's own message as the residue's evidence.
+ *
+ * ⇒ SHIPPED INSTEAD: the ledger rides out of `procgenOracle.solve` as
+ * `scratchClears`, so a consumer that ever needs the declaration has the
+ * rows and their `declaredAt` ticks; the tape carries what it always did.
+ * Widening the persistence bound is a tape-format change guarding the real
+ * game's level space, and it is nobody's to make in passing.
+ */
 export function buildStagedTape({ staging, perTick, name }) {
     if ((staging.despawn ?? []).length > 0) {
         throw new Error('buildStagedTape: this staging block declares '
