@@ -901,7 +901,11 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
          */
         expect(measured.tapes.filter((n) => !n.startsWith('r8-')))
             .toEqual(['r5-press-glide', 'r5-press-repeat']);
-    }, 120000);
+    // 300s, not 120s: this drives the whole disk-derived roster synchronously,
+    // and the quiet-machine cost was already 113.8s at 153 tapes (2026-08-11,
+    // twice red under load at 120s). The bound must survive roster growth and
+    // a busy machine — a gate that reds on contention stops being read.
+    }, 300000);
 
     /**
      * ⛔ THE NON-VACUITY OF THAT CHECK, CONSTRUCTED — a comparison that has
