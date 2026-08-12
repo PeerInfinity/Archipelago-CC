@@ -1102,8 +1102,34 @@ export function createLevelRun({
             }
             finalBossStates.set(n, byId);
             const placed = worldFor(n).pods ?? [];
+            /**
+             * ⛔⛓ THE GATE — and its ABSENCE reported four pods in 153 tapes
+             * out of 153.
+             *
+             * `finalBossStates` above is level-filtered by construction (the
+             * `.oel`'s own `finalBosses` list). This map was NOT: it walked
+             * `FINAL_BOSS.podPositions` unconditionally, so EVERY level — a
+             * corridor, the first room, a level with no boss and no pod
+             * anywhere in its `.oel` — reported `pod0..pod3` standing at the
+             * Owl arena's coordinates (120,56 · 48,128 · 120,200 · 192,128).
+             * The editor arc's slice-6 audit measured it as the highest
+             * hit-rate of any channel in the sweep, and the reason it had
+             * never bitten is that the only readers stand inside the Owl's
+             * own room. A pod OVERLAY built on it would have painted his
+             * arena furniture into every room in the game, at coordinates
+             * plausible enough that nothing on the page could have said so.
+             *
+             * ⛓ THE GATE MATCHES THE GAME, which is why it is this one and
+             * not a level-number test: the `.oel` is what places a `Pod`, so
+             * a room with neither a `finalboss` nor a placed pod HAS no pods,
+             * and `[]` is the whole answer. The `placed.length > 0` arm is
+             * there because the two lists are separate placements and a room
+             * could carry pods without the boss — that room's pods are real
+             * and still resolve by POSITION below.
+             */
+            const hasPods = byId.size > 0 || placed.length > 0;
             // The boss's order, resolved against the placements by POSITION.
-            const pods = FINAL_BOSS.podPositions.map((p, i) => {
+            const pods = !hasPods ? [] : FINAL_BOSS.podPositions.map((p, i) => {
                 const found = placed.find((q) => q.ex === p.x && q.ey === p.y);
                 if (byId.size > 0 && !found) {
                     throw new Error(`levelRun: level ${n} holds a finalboss but no pod at `
@@ -10435,7 +10461,14 @@ export function createLevelRun({
                 box: finalBossBox(b.x, b.y),
             }));
         },
-        /** The four pods, in the BOSS's `podPositions` order — see `podStates`. */
+        /**
+         * The four pods, in the BOSS's `podPositions` order — see `podStates`.
+         *
+         * ⚠ **EMPTY in a room that places neither a `finalboss` nor a pod**,
+         * which is nearly every room. Before the gate in `owlStateFor` this
+         * getter answered `pod0..pod3` at the Owl arena's coordinates from
+         * ANYWHERE — see that docblock for the measurement.
+         */
         get owlPods() {
             return owlStateFor(level).pods.map((p) => ({
                 id: p.id, x: p.x, y: p.y, anim: p.anim, animAge: p.animAge,

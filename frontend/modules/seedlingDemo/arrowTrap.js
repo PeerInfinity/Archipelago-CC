@@ -671,6 +671,62 @@ export function arrowLane(trap) {
 }
 
 /**
+ * ⛓⛓⛓ THE PLACEMENT ADAPTER — `arrowLane` takes a trap's ENTITY point, and
+ * a world's `arrowTraps` row is a PLACEMENT (`{id, tag, x, y, ex, ey}`).
+ *
+ * ⛔ WHY IT EXISTS AT ALL: every caller was retyping the adaptation inline —
+ * `arrowLane({ id: t.id, t: t.t, x: t.ex, y: t.ey })`, **six times** across
+ * `dangerMap` (4) and `solverBot` (2). The editor arc refused an arrow-lane
+ * OVERLAY on exactly that ground (kickoff §14.4a): a page-side seventh copy
+ * of a retype is the one-of-everything violation, and the honest close is to
+ * give the module that OWNS the geometry the adapter. It sits beside
+ * `arrowTrapEntityPoint`, which is the same idea one constructor over —
+ * *"the truncation applied HERE so no caller can forget it"*.
+ *
+ * ⚠ `ex`/`ey` ARE ALREADY THE ENTITY POINT. `createArrowTrap` is handed
+ * `x`/`y` in entity space and `levelWorld` puts the same numbers on the
+ * placement's `ex`/`ey`; this maps the NAMES, it does not re-apply
+ * `arrowTrapEntityPoint`'s `(+8, +2)`. A caller that passed a raw `.oel`
+ * corner here would get a lane two tiles off, and the fix is to build the
+ * placement properly, not to guess in this function.
+ */
+export function arrowLaneForPlacement(placement) {
+    return arrowLane({
+        id: placement.id, t: placement.t, x: placement.ex, y: placement.ey,
+    });
+}
+
+/**
+ * ⛓ THE LANE AS A RECT — the column, given the level's floor.
+ *
+ * `arrowLane` returns a half-open x-interval and a start row, because that is
+ * all the trap's geometry knows: nothing slows an arrow down, so the lane
+ * runs to the bottom of whatever level it is in, and the level is the
+ * CALLER's fact. Five call sites wrote this same arithmetic out —
+ * `rect(x0, fromY, x1 - x0, Math.max(H - fromY, 1))` — in `dangerMap` (4)
+ * and `solverBot` (1).
+ *
+ * ⛔ THE HEIGHT IS A PARAMETER, DELIBERATELY, and that is what made the
+ * convergence provably inert. The five sites did not agree on where the
+ * height came FROM (`run.worldFor(run.level).world.height` in `dangerMap`,
+ * `run.world.world.height` in `solverBot`); they agreed on the ARITHMETIC.
+ * Hoisting the lookup as well would have unified two expressions this
+ * function cannot prove equal — slice 1's `createRunForStaging` lesson, where
+ * two constructions that looked like copies disagreed about a rule. So each
+ * site keeps supplying its own height and this owns only the shape.
+ *
+ * ⚠ THE `Math.max(…, 1)` IS A FLOOR ON THE HEIGHT, NOT A CLAMP ON THE LANE.
+ * A trap whose spawn row is at or below the level's bottom edge would give a
+ * zero-or-negative height, and `rectsOverlap` is half-open — a zero-height
+ * rect overlaps nothing, so the lane would silently stop being dangerous.
+ * One pixel keeps it a rect.
+ */
+export function arrowLaneRect(lane, levelHeight) {
+    return rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
+        Math.max(levelHeight - lane.fromY, 1));
+}
+
+/**
  * Which lanes, if any, a box is inside. A body can be in TWO — L5's traps
  * are 16 px apart at rows 2 and 4 and a 12-px lane leaves a 4-px gap, but
  * a level with traps 8 apart would overlap them.

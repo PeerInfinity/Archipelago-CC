@@ -84,7 +84,7 @@ import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
 import { planDash } from './mover.js';
-import { ARROW, arrowLane } from './arrowTrap.js';
+import { ARROW, arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
 import { bridgedChaserTags, chaserBoxAt } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
@@ -2349,7 +2349,7 @@ function deriveCeilingWeapon(run, contacts) {
     const resolved = resolvePresser(world, { x: presser.x, y: presser.y },
         `solverBot kill-by-ceiling (${presser.tag}@${presser.x},${presser.y})`);
     const { stance, exempt } = deriveHoldStance(run, resolved, contacts);
-    const lanes = arms.map((t) => arrowLaneRect(run, t));
+    const lanes = arms.map((t) => laneRectOf(run, t));
     const over = lanes.filter((l) => rectsOverlapLocal(l, playerBoxAt(stance.x, stance.y)));
     if (over.length > 0) {
         return { presser: null, why: `the only reachable stance inside `
@@ -2382,7 +2382,7 @@ function ceilingKillRegions(run, weapon) {
     return weapon.arms.map((t) => ({
         kind: 'ceiling-lane',
         id: t.id,
-        rect: arrowLaneRect(run, t),
+        rect: laneRectOf(run, t),
         why: `\`${t.id}\` is in group t=${t.t}, which `
             + `${weapon.presser.tag}@${weapon.presser.x},${weapon.presser.y} arms`,
     }));
@@ -2515,7 +2515,7 @@ function drainCeiling(run, perTick, weapon, ctx) {
             why: 'the column was already empty when the hold ended — no volley was still '
                 + 'in the air, recorded as a ZERO rather than skipped' };
     }
-    const lanes = weapon.arms.map((t) => arrowLaneRect(run, t));
+    const lanes = weapon.arms.map((t) => laneRectOf(run, t));
     const pitch = DEFAULT_LATTICE;
     const here = nodeAt(run.state.x, run.state.y, pitch);
     const w = run.world;
@@ -2552,8 +2552,7 @@ function drainCeiling(run, perTick, weapon, ctx) {
         what: `${ctx.what} -> drain (step off ${weapon.presser.tag})`,
         contactsOverride: new Set(),
     });
-    const fromY = Math.min(...weapon.arms.map((t) => arrowLane(
-        { id: t.id, t: t.t, x: t.ex, y: t.ey }).fromY));
+    const fromY = Math.min(...weapon.arms.map((t) => arrowLaneForPlacement(t).fromY));
     const bound = Math.ceil((run.world.world.height - fromY) / ARROW.speed) + HOLD_SLACK;
     if (inFlight() === 0) {
         return { phase: 'drain', ticks: 0, at: spot,
@@ -3835,7 +3834,7 @@ function deriveKillByCeiling(run, body, contacts) {
     const options = [];
     for (const presser of (world.pressers ?? [])) {
         const covering = traps.filter((t) => t.t === presser.t).filter((t) => {
-            const lane = arrowLaneRect(run, t);
+            const lane = laneRectOf(run, t);
             return rectsOverlapLocal(lane, bodyRectOf(body));
         });
         if (covering.length === 0) continue;
@@ -3862,12 +3861,18 @@ function deriveKillByCeiling(run, body, contacts) {
     };
 }
 
-/** An armed-or-not trap's lane, as a rect — `dangerMap`'s own derivation. */
-function arrowLaneRect(run, trap) {
+/**
+ * An armed-or-not trap's lane, as a rect, at THIS run's level height.
+ *
+ * ⚠ NAMED `laneRectOf` AND NOT `arrowLaneRect`: the geometry now lives in
+ * `arrowTrap.arrowLaneRect(lane, levelHeight)` and this is only the height
+ * lookup this module happens to repeat four times. Two identical names, one
+ * imported and one declared, is an ESM duplicate declaration — so the name
+ * going to the owner is not a style call.
+ */
+function laneRectOf(run, trap) {
     const world = run.world;
-    const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
-    return rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
-        Math.max(world.world.height - lane.fromY, 1));
+    return arrowLaneRect(arrowLaneForPlacement(trap), world.world.height);
 }
 
 /** A live body's own box — `chasers.chaserBoxAt`, at the position the run has. */

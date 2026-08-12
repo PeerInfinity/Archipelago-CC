@@ -22,9 +22,14 @@
  * Everything here already existed, in four modules, with no combiner:
  *
  *   a. **arrows** — `run.arrowsInFlight` (position + lifetime, no pricing:
- *      R7's carried debt) and `arrowTrap.arrowLane` for the ARMED traps'
- *      columns. The lane is a PLAN-time shape and the flight is a LIVE one;
- *      this is the first consumer that needs both at once.
+ *      R7's carried debt) and `arrowTrap.arrowLaneForPlacement` +
+ *      `arrowTrap.arrowLaneRect` for the ARMED traps' columns. The lane is a
+ *      PLAN-time shape and the flight is a LIVE one; this is the first
+ *      consumer that needs both at once.
+ *      ⛓ Both adapters are `arrowTrap`'s BECAUSE OF THIS MODULE: the four
+ *      call sites below each retyped the placement and each wrote the
+ *      lane→rect arithmetic out by hand, until the editor arc's slice 8
+ *      hoisted them to the module that owns the geometry.
  *   b. **hazard volumes** — `hazards.hazardVolume`'s per-class rects and
  *      discs, with their `verdict`. Orphaned from the shipping driver since
  *      R5: imported by probe scripts only.
@@ -58,7 +63,9 @@
  * absence.
  */
 
-import { arrowLane, arrowRect, ARROW, stepArrow } from './arrowTrap.js';
+import {
+    arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
+} from './arrowTrap.js';
 import { contactPricing, contactRect, ENEMY_CLASSES, stepBoundFor } from './combat.js';
 import { chaserBoxAt, isBridgedChaser } from './chasers.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
@@ -135,9 +142,8 @@ export function arrowDanger(run, box, horizon) {
         const world = run.worldFor(run.level);
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;
-            const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
-            const laneRect = rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
-                Math.max(world.world.height - lane.fromY, 1));
+            const lane = arrowLaneForPlacement(trap);
+            const laneRect = arrowLaneRect(lane, world.world.height);
             if (rectsOverlap(box, laneRect)) {
                 out.push({ kind: 'arrowLane', id: trap.id,
                     why: 'an ARMED trap\'s lane — dangerous at horizon 0, because the '
@@ -247,9 +253,8 @@ export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
         const world = run.worldFor(run.level);
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;
-            const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
-            const laneRect = rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
-                Math.max(world.world.height - lane.fromY, 1));
+            const lane = arrowLaneForPlacement(trap);
+            const laneRect = arrowLaneRect(lane, world.world.height);
             if (rectsOverlap(box, laneRect)) {
                 out.push({ kind: 'arrowLane', id: trap.id,
                     why: 'an ARMED trap\'s lane — a STATE question, and still danger at '
@@ -623,11 +628,10 @@ export function dangerVolumes(run, horizon = 0) {
     if (armed) {
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;
-            const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
+            const lane = arrowLaneForPlacement(trap);
             out.push({
                 level, kind: 'danger', id: trap.id,
-                rect: rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
-                    Math.max(world.world.height - lane.fromY, 1)),
+                rect: arrowLaneRect(lane, world.world.height),
                 why: 'an ARMED trap\'s lane',
             });
         }
@@ -724,11 +728,10 @@ export function bodyKillRegions(run) {
     if (armed) {
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;
-            const lane = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
+            const lane = arrowLaneForPlacement(trap);
             out.push({
                 kind: 'arrowLane', id: trap.id,
-                rect: rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
-                    Math.max(world.world.height - lane.fromY, 1)),
+                rect: arrowLaneRect(lane, world.world.height),
                 why: 'an ARMED trap\'s lane — `Enemy.hit` through `hitsMax` i-frames',
             });
         }

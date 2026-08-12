@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import {
     ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, ARROW_TARGET_DISPOSITIONS,
     ARROW_TRAP, ARROW_TRAP_CENSUS,
-    ARROW_TRAP_PRESSER, arrowLane, arrowRect, arrowTrapEntityPoint, arrowTrapFires,
+    ARROW_TRAP_PRESSER, arrowLane, arrowLaneForPlacement, arrowLaneRect,
+    arrowRect, arrowTrapEntityPoint, arrowTrapFires,
     arrowVolley, assertArrowTrapCensus, createArrow, createArrowTrap, lanesOver,
     shadowOf, stepArrow, stepArrowTrap,
 } from './arrowTrap.js';
@@ -547,5 +549,112 @@ describe('R8 slice 3: bodies, cover, and the removal outside the switch', () => 
         expect(a.removed).toBe(true);
         expect(ticks).toBe(ARROW.fadeTicks - 1);
         expect({ x: a.x, y: a.y }).toEqual(at);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE HOIST'S EQUIVALENCE GATE (editor arc slice 8) ─────────────────
+ *
+ * `arrowLaneForPlacement` and `arrowLaneRect` did not add geometry — they took
+ * ownership of eleven inline retypes (six placement→lane, five lane→rect) that
+ * `dangerMap` and `solverBot` had each written out by hand. The orchestrator's
+ * binding condition on that hoist was that the equivalence be asserted **PER
+ * SITE, BEFORE the convergence**, and that a site which did not match the
+ * common spelling exactly — a different clamp, a different floor, anything —
+ * be a STOP-AND-REPORT rather than something harmonised into agreement.
+ *
+ * ⛓ That is slice 1's `createRunForStaging` lesson, which is the only reason
+ * the condition exists: two run constructions that looked like copies of each
+ * other disagreed about `despawn`, and the naive unification would have
+ * changed a solve. A refactor that makes two things agree is a behaviour
+ * change wearing a refactor's name.
+ *
+ * ⛔ THE SOURCE ARM IS THE HALF THAT SURVIVES THE CONVERGENCE, and it survives
+ * INVERTED (trap 62 — a check is replaced, never deleted). Before: *every*
+ * `arrowLane(` call in the two modules matches the canonical retype. After:
+ * there are NONE, because the adapter is the only spelling left. The count is
+ * asserted either way, so the day someone writes a twelfth retype the gate
+ * says so instead of the tree quietly growing a second spelling back.
+ */
+describe('the arrowLane placement adapter — the hoist and its equivalence gate', () => {
+    const readSrc = (name) => readFileSync(new URL(`./${name}`, import.meta.url), 'utf8');
+    /** Whitespace-normalised, so a line-wrapped call reads like a one-liner. */
+    const flat = (s) => s.replace(/\s+/g, ' ');
+    const MODULES = ['dangerMap.js', 'solverBot.js'];
+
+    /**
+     * The canonical retype, with the receiver's NAME left free — five sites
+     * call it `trap` and `solverBot`'s sixth calls it `t`, which is the only
+     * difference between them and is not a difference at all.
+     */
+    const RETYPE = /arrowLane\(\s*\{ id: (\w+)\.id, t: \1\.t, x: \1\.ex, y: \1\.ey \}\s*\)/g;
+    /** The canonical lane→rect, with the HEIGHT expression left free. */
+    const LANE_RECT = /rect\(lane\.x0, lane\.fromY, lane\.x1 - lane\.x0, Math\.max\((.+?) - lane\.fromY, 1\)\)/g;
+
+    it('⛔ NO module retypes a placement inline any more — the adapter is the one spelling', () => {
+        for (const m of MODULES) {
+            const src = flat(readSrc(m));
+            // Every `arrowLane(` that is not the adapter's own call site.
+            const calls = src.match(/(?<!ForPlacement|Rect)\barrowLane\(/g) ?? [];
+            expect({ module: m, inlineArrowLaneCalls: calls.length })
+                .toEqual({ module: m, inlineArrowLaneCalls: 0 });
+            const rects = src.match(LANE_RECT) ?? [];
+            expect({ module: m, inlineLaneRects: rects.length })
+                .toEqual({ module: m, inlineLaneRects: 0 });
+        }
+    });
+
+    /**
+     * ⛓ THE BEHAVIOURAL HALF, and it is the one that outlives the source arm.
+     * The retype's spelling is transcribed here VERBATIM from what the eleven
+     * sites said at `55bd867f6`, so this asserts the adapter against the code
+     * it replaced rather than against itself.
+     */
+    it('⛓⛓⛓ reproduces the retyped spelling EXACTLY, on every real L5 placement', () => {
+        const placements = ARROW_TRAP_CENSUS[5].map((p, i) => {
+            const e = arrowTrapEntityPoint(p.x, p.y);
+            return { id: `arrowtrap@${p.x},${p.y}#${i}`, t: p.t, ex: e.x, ey: e.y };
+        });
+        expect(placements.length).toBeGreaterThan(0);
+        for (const trap of placements) {
+            // ── the six sites' spelling, verbatim ──
+            const retyped = arrowLane({ id: trap.id, t: trap.t, x: trap.ex, y: trap.ey });
+            expect(arrowLaneForPlacement(trap)).toEqual(retyped);
+        }
+    });
+
+    it('⛓⛓ …and the lane→rect arithmetic the five rect sites wrote out', () => {
+        const lane = L5_LANES[0];
+        for (const height of [L5_BOUND.h, 128, 256, 16]) {
+            // ── the five sites' spelling, verbatim ──
+            const written = rect(lane.x0, lane.fromY, lane.x1 - lane.x0,
+                Math.max(height - lane.fromY, 1));
+            expect(arrowLaneRect(lane, height)).toEqual(written);
+        }
+    });
+
+    /**
+     * ⚠ THE FLOOR IS A REAL ARM, not defensive noise: a trap whose spawn row
+     * is at or below the level's bottom gives a non-positive height, and
+     * `rectsOverlap` is half-open — a zero-height rect overlaps nothing, so
+     * the lane would silently stop being dangerous instead of being a sliver.
+     */
+    it('⚠ the height floor keeps a below-the-floor lane a RECT, not a nothing', () => {
+        const lane = L5_LANES[0];
+        expect(arrowLaneRect(lane, lane.fromY).h).toBe(1);
+        expect(arrowLaneRect(lane, lane.fromY - 40).h).toBe(1);
+    });
+
+    /**
+     * ⛔ `ex`/`ey` ARE ALREADY THE ENTITY POINT — the adapter maps NAMES and
+     * must not re-apply `arrowTrapEntityPoint`'s `(+8, +2)`. A regression that
+     * did would move every lane two tiles and still look like a lane.
+     */
+    it('⛔ maps names only — it does not re-apply the entity offset', () => {
+        const e = arrowTrapEntityPoint(16, 16);
+        const viaPlacement = arrowLaneForPlacement({ id: 'a', t: 1, ex: e.x, ey: e.y });
+        const viaEntity = arrowLane({ id: 'a', t: 1, x: e.x, y: e.y });
+        expect(viaPlacement).toEqual(viaEntity);
+        expect(viaPlacement.fromY).toBe(e.y + ARROW_TRAP.spawnDY);
     });
 });

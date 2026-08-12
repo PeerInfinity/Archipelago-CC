@@ -2065,3 +2065,81 @@ describe('R8 slice 6: the Spinner press arm', () => {
         expect(inert.playerHits).toHaveLength(0);
     });
 });
+
+/**
+ * ── ⛔⛓ THE POD GATE (editor arc slice 8, charge A) ────────────────────────
+ *
+ * `owlStateFor` level-filtered the BOSS list and not the POD list, so
+ * `run.owlPods` answered `pod0..pod3` at the Owl arena's coordinates from
+ * ANY level — the editor arc's slice-6 audit measured it in **153 tapes out
+ * of 153**, the highest hit-rate of any channel in its sweep (kickoff §14.3b).
+ *
+ * ⛓ WHY IT NEVER BIT, AND WHY THAT IS THE DANGEROUS PART: every present
+ * reader stands inside the Owl's own room, where the answer was right. The
+ * cost was owed to the NEXT reader — a pod overlay would have painted his
+ * arena furniture into every room in the game at plausible coordinates, with
+ * nothing on the page able to say so. These rows are the ones that would have
+ * caught it, written from outside that room.
+ */
+describe('run.owlPods — the level gate the boss half always had', () => {
+    /** A room with no `finalboss` and no `pod` in its `.oel`. */
+    it('⛔ is EMPTY in a bossless room — it used to report four', () => {
+        const run = createLevelRun({ levelSource, boot: { level: 0, x: 80, y: 128 } });
+        expect(run.finalBosses).toEqual([]);
+        expect(run.owlPods).toEqual([]);
+    });
+
+    /**
+     * ⚠ THE SPREAD MATTERS, not one sample. The old behaviour was uniform
+     * across every level, so a single bossless room could be explained away;
+     * a sweep of the rooms this arc's walks actually visit cannot.
+     */
+    it('⛔ …and in EVERY room the campaign route walks through', () => {
+        const rooms = [0, 2, 3, 4, 5, 6, 8, 11, 14, 15, 16, 18];
+        const reported = [];
+        for (const level of rooms) {
+            const run = createLevelRun({ levelSource, boot: { level, x: 16, y: 16 } });
+            if (run.owlPods.length > 0) reported.push({ level, pods: run.owlPods.length });
+        }
+        expect(reported).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ THE POSITIVE CONTROL — the gate must not have cost the Owl his pods.
+     * L112 is his arena, and the four come back in `podPositions` ORDER, which
+     * is NOT the `.oel`'s: `FinalBoss.check()` walks `podPositions` and
+     * collides at each, so the boss's pod 1 is the level's pod 2. The order is
+     * asserted, not just the count, because a gate that rebuilt the list would
+     * be free to rebuild it in file order and the walk would still look
+     * plausible.
+     */
+    it('⛓⛓⛓ the OWL ROOM still has all four, in `podPositions` order', () => {
+        const run = createLevelRun({
+            levelSource, boot: { level: 112, x: 120, y: 176 }, roles: ROLES,
+        });
+        expect(run.finalBosses.length).toBe(1);
+        expect(run.owlPods.map((p) => `${p.x},${p.y}`))
+            .toEqual(['120,56', '48,128', '120,200', '192,128']);
+    });
+
+    /**
+     * ⚠⛔ THE SECOND DELTA, NAMED RATHER THAN DISCOVERED LATER. The gate also
+     * empties `owlPods` for a COMBAT-BLIND run standing in L112 — and that is
+     * the CENSUS's answer, not the gate's invention: `levelWorld` pushes a
+     * `pod` only under `consults.has('combat')`, so a relaxed run's L112
+     * holds no boss AND no pod. Reporting four there was the same manufactured
+     * furniture as reporting four in a corridor, one room further in where it
+     * looked most plausible.
+     *
+     * ⛓ Nothing live reads it: `stepOwlNow` returns at `bosses.size === 0`
+     * before it touches the pod list, which is why the fix is inert.
+     */
+    it('⚠ a COMBAT-BLIND run in L112 reports none — the census refuses them too', () => {
+        const run = createLevelRun({
+            levelSource, boot: { level: 112, x: 120, y: 176 }, roles: RELAXED_ROLES,
+        });
+        expect(run.finalBosses).toEqual([]);
+        expect(run.worldFor(112).pods).toEqual([]);
+        expect(run.owlPods).toEqual([]);
+    });
+});
