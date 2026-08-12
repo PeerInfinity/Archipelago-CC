@@ -63,7 +63,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ci-requirements.txt
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
-        python Launcher.py --update_settings  # make sure host.yaml exists for tests
+        # Launcher.py:28 calls ModuleUpdate.update() with NO arguments, i.e.
+        # yes=False, so any requirement the line above failed to install makes
+        # it call input() — on a runner with no stdin that is an EOFError and a
+        # red job. The line above is the real installer; this second check is
+        # redundant in CI, so skip it. Do NOT hoist this to job/workflow env:
+        # it would also disable the installer above.
+        SKIP_REQUIREMENTS_UPDATE=1 python Launcher.py --update_settings  # make sure host.yaml exists for tests
     - name: Unittests
       env:
         # Force UTF-8 stdio. Without this, Python 3.11 on Windows defaults
@@ -101,6 +107,14 @@ jobs:
         python -m pip install --upgrade pip
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
     - name: Test hosting
+      env:
+        # This test spawns Generate.py / MultiServer.py as SUBPROCESSES, and
+        # each runs ModuleUpdate.update() at __main__ with yes=False. A
+        # dependency that failed to install therefore turns into an input()
+        # call with no stdin — EOFError, red job, and a message that names the
+        # prompt rather than the install failure. Safe here: the install step
+        # above already ran ModuleUpdate --yes --force.
+        SKIP_REQUIREMENTS_UPDATE: "1"
       run: |
         source venv/bin/activate
         export PYTHONPATH=$(pwd)
