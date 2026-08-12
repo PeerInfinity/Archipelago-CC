@@ -7262,6 +7262,59 @@ this arc is where any of them may be taken up.
   of exit-0 skip) and the CLI — which brings its own server — is the arc's
   non-skipping browser gate.
 
+### The ROUTE-ONLY solver coverage survey (editor arc slice 7)
+
+`scripts/procgen/survey-seedling-route.mjs` — the v2 round's last slice, and
+the first thing on this arc that USES the editor rather than growing it.
+⛔ **REPORT ONLY**: it records nothing, writes nothing under `fixtures/`, and
+moved no committed artifact.
+
+It derives the walk from the TRUE GAME START to COLLECTING THE SHIELD, then
+solves every step of it. The route is derived, never read off the chains,
+from three sources intersected: **AP's own 251-region access graph** (the
+authority on which door is open when), the **committed atlas's level edges**
+(each carrying the exit's OEL coordinates and the arrival's
+`playerx`/`playery`), and the **sphere order** (which fixes the three route
+pickups). Three BFS legs, each run with exactly the items the earlier legs
+earned:
+
+    0.1 sword@L10       L0→L2→L3→L4→L5→L6→L7→L8→L9→L10    every room FORCED
+    1.2 boss key 0@L19  L10→L11→L3→L2→L0→L13→L14→L15→L16→L18→L19
+    2.1 shield@L20      L19→L20                           every room FORCED
+
+⛓ **Leg 1 reproduces the R7 honest chain's crossings exactly** — two
+derivations, one answer. Leg 2 admits ONE alternative (16 rooms vs 11,
+avoiding L11). ⛔ **The D2 entry, asked of the rules rather than inferred:**
+L13 *does* have a direct `stairsdown@96,32` to L20, and AP's rule for the
+door out of the chamber it lands in requires **Progressive Shield** — the
+shield is behind itself from that side. L14/L15/L16→L18→L19 is forced, which
+is ⚖ §16.3 ruling 1's route re-derived from another source.
+
+**21 of 29 steps solve today** (16/21 on the shortest route). D2's last three
+rooms re-solve tick for tick (L18 573, L19 864); what stands between the
+solver and the shield is the walk BACK from the sword to D2's door. The
+refusal→mechanism-family table is R9's budget input, and the two findings
+worth carrying off the arc are:
+
+- ⛔ **The route-only bound is itself a refusal cause.** L11's only corridor
+  is one tile wide and `chest@32,48` stands in it. Route-only REFUSES;
+  adding the campaign's own next pickup (`Level 011 - Chest`, AP sphere 0.2)
+  SOLVES it in 119 ticks. ⇒ R9's route must be the SPHERE ORDER's, not the
+  crossing graph's.
+- ⛔ **`solveStaging` drops `despawn` and carries `persistence[].at`**, and
+  those are the same sentence about a flag instead of a body. Measured on L8:
+  inherited, the solve plans around the HAND walk's clear ticks and says
+  nothing; stripped, it refuses by name for a GAME-sourced tick. R8's own
+  scripts strip it BY HAND, in prose, outside the seam. Invisible wherever
+  the model can compute the clear itself (L5: 558 ticks either way).
+  ⚠ Reported, not fixed — ⚖ §14.5 measured that removing the rows is not
+  inert.
+
+⚠ **An empty overlay layer means two different things.** The `hammer` layer
+carries a `why` (⚖ the clock caution); `hitboxes` does not, and L16 draws
+**zero** bodies while its census holds **nine** — the room's chaser roster is
+refused. L14 next door draws 6 of 6. Owed, page-side, small.
+
 ### Where the arc's own findings live
 
 The full record is the arc kickoff `NewDocs/plans/seedling-editor-opus-kickoff.md`
@@ -7273,4 +7326,7 @@ the `earnedClears` tick added at each feeder's write funnel so the overlay
 could place clear markers at all; §11 the CLI export and the v1 close; §12
 the user's V2 SCOPE and §13 slice 5 (the v9 fold, the despawn drop→check,
 the true-start default boot, the boot form — and the SOLVE button that had
-never read its own textarea).
+never read its own textarea); §14 slice 6 (the modeled-but-not-displayed
+audit, the three shape layers, and the hammer contact that lives in TWO
+samples); §15 slice 7 (the route survey above, its 29-row table, its seven
+refusals verbatim and the twenty PNGs each one was read from).
