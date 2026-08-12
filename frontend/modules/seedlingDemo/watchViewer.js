@@ -2001,9 +2001,57 @@ async function runSolve(params) {
             // despawn CHECK's refusal arrives through this same arm, which
             // is why the wording says "the solver" rather than naming one.
             const rows = e.rows?.length;
+            /**
+             * ⛓⛓⛓ ⚖ EDITOR ARC SLICE 10 — THE DANGER RECORD, ON THE ONE
+             * OUTCOME THAT CAN CARRY A NON-EMPTY ONE.
+             *
+             * Slice 9 gave the page a `danger` layer and then measured that
+             * across 30 solves of 9 committed blocks NOT ONE recorded query
+             * came back dangerous (§17.5) — a theorem, not an accident:
+             * `refuseDanger` THROWS when the union answers danger, so a
+             * segment that reaches its goal cannot have had a dangerous gate.
+             * ⇒ the interesting half of that channel lives HERE, on the
+             * refusal path, and until slice 10 nothing read it.
+             *
+             * ⛔ THE READOUT IS THREE DIFFERENT ANSWERS, NOT A COUNT. `null`
+             * = this refusal carries no record at all (thrown by a
+             * module-level helper, which cannot see `solveSegment`'s
+             * recorder — the same bound `rows` and `perTick` already have);
+             * `0` = the bot asked nothing before it stopped; `n` with
+             * `dangerous: 0` = it was told CLEAR every time and stopped for
+             * some other reason. Collapsing those would report "no danger"
+             * for a refusal nobody recorded.
+             */
+            const queries = Array.isArray(e.dangerQueries) ? e.dangerQueries : null;
+            const dangerous = (queries ?? []).filter((q) => q.danger);
+            const dangerLine = queries === null
+                ? '\n\n(this refusal carries NO danger record — it was raised outside '
+                    + 'the solve loop\'s own recorder)'
+                : `\n\n⚖ the danger the bot was told: ${queries.length} query(s), `
+                    + `${dangerous.length} DANGEROUS${dangerous.length
+                        ? `:\n${dangerous.slice(0, 4).map((q) => `  · ${q.where} at tick `
+                            + `${q.tick} (run tick ${q.runTick}), L${q.level} `
+                            + `(${q.x},${q.y}) — ${q.sources
+                                .map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`).join('; ')}`)
+                            .join('\n')}`
+                        : ' — every gate this walk reached answered CLEAR'}`;
             fatal('the solver REFUSED — this is its own message, not the page\'s',
-                `${e.message}${rows ? `\n\n(${rows} decision row(s) before the refusal)` : ''}`);
-            window.__editorSolve = { status: 'refused', message: e.message, rows: rows ?? 0 };
+                `${e.message}${rows ? `\n\n(${rows} decision row(s) before the refusal)` : ''}`
+                + dangerLine);
+            window.__editorSolve = {
+                status: 'refused',
+                message: e.message,
+                rows: rows ?? 0,
+                dangerQueries: queries === null ? null : queries.length,
+                dangerousQueries: queries === null ? null : dangerous.length,
+                /**
+                 * ⛔ THE UNION'S OWN `why` STRINGS, VERBATIM — a paraphrase
+                 * would be a second spelling of the warning, and the warning
+                 * is the entire content of the channel (the recorder's own
+                 * rule, one module over).
+                 */
+                dangerSources: dangerous.flatMap((q) => q.sources.map((s) => s.why)),
+            };
             $('solveGo').disabled = false;
             return;
         }

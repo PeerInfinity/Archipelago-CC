@@ -787,3 +787,268 @@ describe('the shove scan\'s off-the-map bound — units, measured', () => {
         expect(second.strategy.to).toEqual({ tx: 5, ty: 7 });
     });
 });
+
+/**
+ * ⛓⛓⛓ ⚖ EDITOR ARC SLICE 10 (§12d item 11, the USER's ruling — which
+ * SUPERSEDES §12c's deferral) — A CHEST IN THE CORRIDOR IS A CLEARABLE
+ * OBSTACLE.
+ *
+ * L11's only corridor is a one-tile vertical shaft between two bodies of
+ * water and `chest@32,48` stands across it (the route survey's step 11,
+ * §15.4a). Before this row the frontier said *"No strategy row exists for
+ * this obstacle"* and priced a `Chest` — a `Solid` only until `open()` flips
+ * its type — as fixed level geometry.
+ *
+ * ⛓⛓⛓ AND THE BINDING TEST IS A DIFFERENTIAL, not a "it solves now". The
+ * SAME room, from the SAME boot, is solved two ways:
+ *
+ *   · the OBSTACLE side — one `reach-exit` goal; the chest is discovered on
+ *     the frontier and discharged by the verb,
+ *   · the GOAL side — `collect-placement` then `reach-exit`, which is how
+ *     the campaign's own sphere-0.2 route reaches it,
+ *
+ * and the two produce the SAME WALK, key set for key set. That is the claim
+ * worth pinning: the obstacle row does not invent a second way to open a
+ * chest, it reaches the one that was already there. The two differ in
+ * exactly one place — the TRACE — and that difference is asserted too.
+ */
+describe('⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED', () => {
+    const L11_EXIT = { x: 32, y: 0 };
+    const L11_CHEST = { x: 32, y: 48 };
+    const keysOf = (out) => out.perTick.map((s) => [...s].sort().join('+')).join('|');
+
+    it('⛓ the selector row names the verb that was ALREADY registered', () => {
+        expect(OBSTACLE_STRATEGIES['solid:chest']).toBe('chest');
+        expect(typeof STRATEGY_EXECUTORS.chest).toBe('function');
+        // ⛔ The row points at the SAME verb the goal side selects — one
+        // mechanism, one executor. A second "remove" verb would be two cost
+        // models for one `Chest.open()`.
+        expect(OBSTACLE_STRATEGIES['proximity-hazard:chest'])
+            .toBe(OBSTACLE_STRATEGIES['solid:chest']);
+    });
+
+    it('⛔ the frontier names the chest as a SOLID and the trace says which verb', () => {
+        const { run, committed } = runFromCommitted('r7-act2-11');
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
+            name: 'slice10-l11-obstacle', boot: committed.boot,
+        });
+        const row = out.trace.rows.find((r) => r.obstacle?.id === 'chest@32,48');
+        expect(row, 'no trace row names the chest as an obstacle').toBeTruthy();
+        expect(row.obstacle.kind).toBe('solid');
+        expect(row.strategy.verb).toBe('chest');
+        // ⛔ AND THE REJECTED OPTION IS THE ONE A READER WOULD ASK ABOUT.
+        expect(row.rejected.map((r) => r.option)).toContain('route-around');
+    });
+
+    it('⛓⛓⛓ …and the walk it earns is the GOAL-DIRECTED collect\'s, key for key', () => {
+        const a = runFromCommitted('r7-act2-11');
+        const obstacleSide = solveSegment({
+            run: a.run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
+            name: 'slice10-l11-obstacle', boot: a.committed.boot,
+        });
+        const b = runFromCommitted('r7-act2-11');
+        const goalSide = solveSegment({
+            run: b.run,
+            goals: [
+                { kind: 'collect-placement', placement: { ...L11_CHEST } },
+                { kind: 'reach-exit', exit: { ...L11_EXIT } },
+            ],
+            name: 'slice10-l11-goal', boot: b.committed.boot,
+        });
+        expect(keysOf(obstacleSide)).toBe(keysOf(goalSide));
+        // ⛓ The verb's own record is the same record, `openedAt` and all —
+        // which is what makes "the same walk" a claim about the MECHANISM
+        // rather than about two coincidentally equal key streams.
+        // ⚠ MINUS `goal`, which is the one field that MUST differ — the
+        // record says which errand it served, and the whole point is that the
+        // two errands share the mechanism.
+        const chestRecord = (out) => {
+            const { goal, ...rest } = out.records.find((r) => r.strategy === 'chest');
+            return rest;
+        };
+        expect(chestRecord(obstacleSide)).toEqual(chestRecord(goalSide));
+        expect(obstacleSide.records.find((r) => r.strategy === 'chest').goal)
+            .toBe('reach-exit');
+        expect(goalSide.records.find((r) => r.strategy === 'chest').goal)
+            .toBe('collect-placement');
+        // ⛔ THE PERSISTENCE-VISIBLE ACT, in the run's own ledgers.
+        expect(a.run.chestOpens.map((c) => c.id)).toEqual(['chest@32,48']);
+        expect(a.run.sealCollections.map((c) => c.from)).toEqual(['chest@32,48']);
+        expect(a.run.chestOpens).toEqual(b.run.chestOpens);
+        expect(a.run.sealCollections).toEqual(b.run.sealCollections);
+    });
+
+    it('⚠ …and the two differ in exactly ONE thing — the decision they record', () => {
+        const a = runFromCommitted('r7-act2-11');
+        const obstacleSide = solveSegment({
+            run: a.run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
+            name: 'slice10-l11-obstacle', boot: a.committed.boot,
+        });
+        const b = runFromCommitted('r7-act2-11');
+        const goalSide = solveSegment({
+            run: b.run,
+            goals: [
+                { kind: 'collect-placement', placement: { ...L11_CHEST } },
+                { kind: 'reach-exit', exit: { ...L11_EXIT } },
+            ],
+            name: 'slice10-l11-goal', boot: b.committed.boot,
+        });
+        // The obstacle side names an OBSTACLE; the goal side names a GOAL.
+        expect(obstacleSide.trace.rows.some((r) => r.obstacle?.id === 'chest@32,48')).toBe(true);
+        expect(goalSide.trace.rows.some((r) => r.obstacle?.id === 'chest@32,48')).toBe(false);
+        expect(goalSide.trace.rows.some(
+            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'chest')).toBe(true);
+    });
+
+    /**
+     * ⛔ THE TRAP-62 CONTROL FOR THIS ROW, and it is a REAL obstacle rather
+     * than a synthetic one: the census `tag` is what selects, so a room whose
+     * frontier names a solid with no row still refuses BY NAME. `sign@64,128`
+     * in L19 is the measured one (§15.7a: a `Solid` at tile (4,8) with no verb
+     * in the game at all) — the claim "a kind/tag with no row is a refusal
+     * that says so" must still have something that can make it false.
+     */
+    it('⛔ a solid with NO row still refuses by name — the claim is not widened', () => {
+        expect(OBSTACLE_STRATEGIES['solid:sign']).toBeUndefined();
+        expect(OBSTACLE_STRATEGIES['solid:breakablerock']).toBeUndefined();
+    });
+});
+
+/**
+ * ⛓⛓⛓ ⚖ EDITOR ARC SLICE 10 (§12d item 10's first move, §17.10 input 1) —
+ * THE DANGER RECORD RIDES ON THE REFUSAL.
+ *
+ * Slice 9 recorded every danger query `solveSegment` was handed and then
+ * measured that across 30 solves of 9 committed blocks **not one** came back
+ * with a non-empty reason list (§17.5). That is a theorem, not an accident:
+ * `refuseDanger` THROWS when the union answers danger, so a segment that
+ * reaches its goal cannot have had a dangerous gate. ⇒ the interesting half
+ * of the channel lives only on refusals, and until this slice nothing could
+ * read it.
+ */
+describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
+    it('⛓ the field exists and DEFAULTS to an empty list, never undefined', () => {
+        const bare = new SolverRefusal('nothing happened');
+        expect(bare.dangerQueries).toEqual([]);
+    });
+
+    /**
+     * ⛔ NON-VACUOUS: the refusal must carry a POSITIVE population, or the
+     * test would pass just as well against a field nobody ever filled. The
+     * driven case is the route's own step 18 — L16, whose CLIMB reaches every
+     * rung of the ladder and refuses at the top (`refuse()` inside
+     * `climbLadder`, which is a closure arm and therefore one that CAN see
+     * the recorder). Its boot is the survey's staged construction: the
+     * campaign's own post-sword block re-pointed at the room's arrival.
+     */
+    const L16_BOOT = { level: 16, x: 32, y: 64 };
+    const refuseInL16 = () => {
+        const { run } = runFromCommitted('r7-act2-11', { boot: { ...L16_BOOT } });
+        try {
+            solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: 352, y: 80 } }],
+                name: 'slice10-danger-on-refusal', boot: { ...L16_BOOT },
+            });
+        } catch (e) { return e; }
+        return null;
+    };
+
+    it('⛔ a REFUSED segment carries the queries the bot was told, with both clocks', () => {
+        const refusal = refuseInL16();
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.message).toMatch(/combat ladder is EXHAUSTED/);
+        expect(refusal.dangerQueries.length).toBeGreaterThan(0);
+        for (const q of refusal.dangerQueries) {
+            // ⚠ TWO CLOCKS ON EVERY ROW (§17.5): `tick` is the TAPE's, the one
+            // a scrub cursor indexes; `runTick` is `run.ticksCompleted`. Dead
+            // frames make them differ, so a reader needs both.
+            expect(Number.isInteger(q.tick)).toBe(true);
+            expect(Number.isInteger(q.runTick)).toBe(true);
+            expect(['sense', 'gate']).toContain(q.where);
+            expect(Array.isArray(q.sources)).toBe(true);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ AND THE MEASUREMENT SLICE 10 ADDED TO SLICE 9's, AS A ROW.
+     *
+     * §17.5 said the non-empty case *"lives only on REFUSALS"*. With the
+     * record now riding on them, the sweep says something sharper: across all
+     * 39 route-step solves of the survey's two legs — 23 SOLVED, 6 REFUSED, 4
+     * engine-side — **not one recorded query came back dangerous, on either
+     * outcome.** The refusals are *no corridor* and *ladder exhausted*, and
+     * neither is a `refuseDanger` throw. ⇒ the non-empty case lives only on a
+     * refusal **raised BY `refuseDanger`**, and no room on the route raises
+     * one. L16's climb is the driven case here: it reaches every rung, so its
+     * gates are the most-asked on the route — and they all answer CLEAR.
+     *
+     * ⛔ A row that merely tolerated the emptiness would be the finding
+     * wearing a check's clothes (§17.5 consequence 1), so the POPULATION is
+     * asserted before the zero.
+     */
+    it('⛓ …and EVERY gate this refusal reached answered CLEAR — the population, then the zero', () => {
+        const refusal = refuseInL16();
+        expect(refusal.dangerQueries.length).toBeGreaterThan(0);
+        expect(refusal.dangerQueries.filter((q) => q.danger)).toEqual([]);
+        // The union answered, and it answered with an EMPTY reason list —
+        // which is a different fact from "nobody asked".
+        for (const q of refusal.dangerQueries) expect(q.sources).toEqual([]);
+    });
+
+    /**
+     * ⚠ THE DANGEROUS SHAPE IS PINNED SYNTHETICALLY, and it is named as such
+     * — slice 9's own disposition for the ink branch no committed walk
+     * exercises (§17.5 consequence 2), one channel over. The claim is about
+     * the CARRIER, not about a room: a dangerous row survives the throw with
+     * the union's own `why` verbatim.
+     */
+    it('⚠ a DANGEROUS row survives the throw verbatim — pinned synthetically, and said so', () => {
+        const row = {
+            where: 'gate',
+            tick: 12,
+            runTick: 14,
+            level: 6,
+            x: 64,
+            y: 16,
+            danger: true,
+            mode: 'transit',
+            horizon: 0,
+            sources: [{ kind: 'arrow-lane', id: 'sandtrap@64,16', why: 'the lane is ARMED' }],
+        };
+        const thrown = new SolverRefusal('synthetic', { dangerQueries: [row] });
+        expect(thrown.dangerQueries).toEqual([row]);
+        expect(thrown.dangerQueries[0].sources[0].why).toBe('the lane is ARMED');
+    });
+
+    /**
+     * ⛔⛔ AND THE SNAPSHOT IS A COPY. The recorder keeps writing into its own
+     * array for as long as the closure lives, so a refusal that carried the
+     * live reference would report a record that grew after it was thrown.
+     */
+    it('⛔ the carried list is a COPY of the recorder\'s, not the live array', () => {
+        const refusal = refuseInL16();
+        const carried = refusal.dangerQueries;
+        expect(carried).not.toBe(refusal.rows);
+        const before = carried.length;
+        carried.push({ where: 'not-a-real-row' });
+        expect(refusal.dangerQueries.length).toBe(before + 1);
+    });
+
+    /**
+     * ⚠ THE NAMED BOUND, ASSERTED. A `SolverRefusal` raised by a MODULE-LEVEL
+     * helper cannot see `solveSegment`'s recorder — the same bound `rows` and
+     * `perTick` have carried since R8 slice 2 — so its list is EMPTY, and an
+     * empty list means "no record", never "no danger". A reader that
+     * collapsed the two would report a calm walk for a refusal nobody
+     * recorded.
+     */
+    it('⚠ a refusal raised outside the solve loop carries an EMPTY record — a BOUND, not a verdict', () => {
+        const outside = new SolverRefusal('raised by a module-level helper', {
+            obstacle: { kind: 'solid', id: 'x@0,0' },
+        });
+        expect(outside.dangerQueries).toEqual([]);
+        expect(outside.rows).toEqual([]);
+        expect(outside.perTick).toEqual([]);
+    });
+});

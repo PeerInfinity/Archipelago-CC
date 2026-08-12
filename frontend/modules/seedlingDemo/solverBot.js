@@ -162,7 +162,7 @@ export class SolverBotError extends Error {
 export class SolverRefusal extends Error {
     constructor(message, {
         goal = null, obstacle = null, considered = [], rows = [], perTick = [],
-        pending = null,
+        pending = null, dangerQueries = [],
     } = {}) {
         super(message);
         this.name = 'SolverRefusal';
@@ -189,6 +189,29 @@ export class SolverRefusal extends Error {
          * truncates the prefix and asks the running game).
          */
         this.pending = pending;
+        /**
+         * ⛓⛓⛓ EDITOR ARC SLICE 10 — THE DANGER RECORD, ON THE ONE OUTCOME
+         * THAT CAN CARRY A NON-EMPTY ONE.
+         *
+         * Slice 9 added `solveSegment`'s `dangerQueries` and then MEASURED
+         * something nobody had asked (§17.5): across 30 solves of 9 committed
+         * staging blocks, 62+ recorded queries, **ZERO** came back with a
+         * non-empty reason list. That is a theorem rather than an accident —
+         * `refuseDanger` THROWS when the union answers danger, so a segment
+         * that REACHES ITS GOAL cannot have had a dangerous gate. ⇒ the
+         * interesting half of that channel exists ONLY on a refusal, and this
+         * is where a reader can get at it.
+         *
+         * ⚠ THE SAME BOUND `rows` AND `perTick` ALREADY CARRY, stated rather
+         * than discovered: this is filled by `solveSegment`'s own `refuse()`
+         * closure, so a `SolverRefusal` thrown by a MODULE-LEVEL helper
+         * (`deriveFightStance`, `deriveKillByCeiling`'s family, `execKill`'s
+         * `PendingDeclaration`) arrives with an EMPTY list — not because
+         * nothing was asked, but because those functions cannot see the
+         * recorder. An empty list is therefore "no record", never "no
+         * danger"; the readouts say so by name.
+         */
+        this.dangerQueries = dangerQueries;
     }
 }
 
@@ -251,6 +274,29 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      * fight. Trap 150 is why the fight and the crossing cannot be cut apart.
      */
     'solid:shieldboss': 'fight',
+    /**
+     * ⛓⛓⛓ ⚖ EDITOR ARC SLICE 10 (§12d item 11, the USER's ruling — which
+     * SUPERSEDES §12c's deferral of this row to R9) — **A CHEST IN THE
+     * CORRIDOR IS A CLEARABLE OBSTACLE, NEVER FIXED GEOMETRY.**
+     *
+     * The chest already had a strategy row and a registered executor — but
+     * only as a `proximity-hazard`, which is the shape it wears when a GOAL
+     * names its placement (`resolveCollectStrategy`). Standing in a corridor
+     * it wears the other one: `Chest` is a `Solid` until `open()` flips it, so
+     * `plannerObstacleAt` reports it as `solid:chest`, and with no row here
+     * the frontier said *"No strategy row exists for this obstacle"* and
+     * priced a one-tile corridor as a wall. Measured on the route's step 11
+     * (L11, whose only corridor is a one-tile shaft with `chest@32,48` across
+     * it — survey §15.4a).
+     *
+     * ⛔ AND THE SEMANTICS ARE THE PERSISTENCE-VISIBLE ONES, not a
+     * convenience: discharging this obstacle means COLLECTING the chest —
+     * `Chest.open()` spawns the SealPiece, the walk collects it, and the run
+     * earns the clear exactly as a goal-directed collect does. That is why
+     * the row points at the SAME verb rather than at a new "remove" one: one
+     * mechanism, one executor, one ledger entry.
+     */
+    'solid:chest': 'chest',
     'solid:magicallock': 'kill',
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
@@ -354,6 +400,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     blocked = []) {
     if (strategy === 'shove') return resolveShoveStrategy(run, obstacle, contacts, aim,
         allowTeleporter, blocked);
+    if (strategy === 'chest') return resolveChestStrategy(run, obstacle, contacts);
     if (strategy === 'kill') return resolveKillStrategy(run, obstacle, contacts);
     if (strategy === 'fight') return resolveFightStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'keylock') return resolveKeylockStrategy(run, obstacle, contacts, blocked);
@@ -378,6 +425,55 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
                 + 'a solid, and a hold is what adds its presser to the exemptions '
                 + '(trap 147)',
         }, ...opener.rejected],
+    };
+}
+
+/**
+ * ⛓⛓⛓ ⚖ EDITOR ARC SLICE 10 — RESOLVE a `chest` work order raised by the
+ * FRONTIER rather than by a goal.
+ *
+ * `resolveCollectStrategy` answers the goal-side question ("this PLACEMENT is
+ * a chest, so the verb is `chest`") and this answers the obstacle-side one
+ * ("this SOLID on the frontier is a chest, so the verb is `chest`"). Both end
+ * at the same `{strategy, target}` shape and the same executor, because they
+ * are one mechanism asked about from two directions — the `shove` pair one
+ * table row up has exactly this shape.
+ *
+ * ⛔ THE STANCE COMES FROM `deriveStance`, NOT FROM A SECOND DERIVATION.
+ * `chestStanceBand` is the mechanism's own two-pixel answer and the goal path
+ * already reaches it through `deriveStance`; a stance computed here would be a
+ * second spelling of a band `runChest` then checks against (§11.7's law, and
+ * `arrowLaneRect`'s lesson one slice back).
+ *
+ * ⚠ Returns `null` when the frontier's id is not a chest in `world.chests` —
+ * "the table names a strategy for this kind" and "this particular body can be
+ * acted on" are different claims, and the caller reports the second as
+ * considered-and-rejected.
+ */
+function resolveChestStrategy(run, obstacle, contacts) {
+    const chest = (run.world.chests ?? []).find((c) => c.id === obstacle.id);
+    if (!chest) return null;
+    /**
+     * ⛔ AN ALREADY-OPEN CHEST IS NOT AN OBSTACLE THIS VERB CAN DISCHARGE —
+     * and `runChest`'s own positive control fails BY NAME on it ("opening it
+     * proves nothing"). The frontier should not have named it (an open chest
+     * is not Solid), so reaching here means the census and the live state
+     * disagree, and refusing to bind is what surfaces that rather than
+     * spending a leg on it.
+     */
+    if (run.openChests?.has?.(chest.id)) return null;
+    return {
+        strategy: 'chest',
+        target: chest,
+        stance: deriveStance(run, { strategy: 'chest', target: chest }, contacts),
+        rejected: [{
+            option: 'route-around',
+            why: `${chest.id} is on the frontier of the reachable component, so there is `
+                + 'no route around it — and a chest is not a wall: `Chest` is a `Solid` '
+                + 'only until `open()` flips its type, so the corridor is bought by '
+                + 'COLLECTING it (⚖ §12d item 11), which is a persistence-visible act '
+                + 'the run earns a clear for.',
+        }],
     };
 }
 
@@ -4055,7 +4151,12 @@ export function solveSegment({
      */
     const refuse = (message, extra = {}) => {
         throw new SolverRefusal(message, {
-            rows: [...rows], perTick: [...perTick], ...extra,
+            rows: [...rows], perTick: [...perTick],
+            // ⛓ EDITOR ARC SLICE 10 — the same snapshot-by-copy the rows and
+            // the keys already get, for the same reason: the list keeps
+            // growing if a caller catches this and solves again.
+            dangerQueries: [...dangerQueries],
+            ...extra,
         });
     };
 
@@ -4801,6 +4902,20 @@ export function solveSegment({
                     open: run.openActivators,
                     armed: run.armedPulsers ?? new Set(),
                     trapsArmed: run.armedArrowTraps ?? new Set(),
+                    /**
+                     * ⛓ ⚖ SLICE 10 — AND THE CHEST'S OWN SET, for the same
+                     * reason the other three are here. `runChest`'s positive
+                     * control is *"shut when the verb was chosen"*, and the
+                     * chest stance is ON the probe line — so the walk to it
+                     * is exactly what opens the chest, and a snapshot taken
+                     * at verb start would report an already-open chest and
+                     * fail by name. The goal path has taken this snapshot
+                     * since R8 slice 2 (`const before = … { chests: … }`);
+                     * the frontier path is the second caller and needed the
+                     * same field. ⚠ Inert for every other verb: nothing but
+                     * `runChest` reads `before.chests`.
+                     */
+                    chests: run.openChests,
                 };
                 // The stance first — planned with whatever exemptions the
                 // strategy's own resolution earned (trap 147: a hold is what
