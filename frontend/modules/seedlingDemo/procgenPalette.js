@@ -8,26 +8,38 @@
  * footprint, its own clearance rule, its own tiles and entities, and the
  * staging PINS its presence obliges.
  *
- * ── ⛔⛔⛔ THE PALETTE IS FOUR FAMILIES, AND THE OTHER THREE ARE HERE TOO
+ * ── ⛔⛔⛔ THE PALETTE IS FIVE FAMILIES, AND WHAT IS STILL OUT IS HERE TOO
  *
- * ⚖ Kickoff §3.3 names seven pre-sword templates. FOUR of them certify
- * against this arc's oracle and three do not, and slice 2 MEASURED the
- * difference rather than assuming it (⚖ orchestrator ruling, 2026-08-12:
- * ship the four, keep the three as exclusions carrying their measured
- * refusal text). `EXCLUDED_TEMPLATES` below is that list. It is in this file
- * and not in a report because an exclusion nobody can find is an exclusion
- * the next slice re-discovers by building the thing again.
+ * ⚖ Kickoff §3.3 names seven pre-sword templates. Slice 2 certified FOUR and
+ * excluded three, all three for ONE shared cause it measured rather than
+ * assumed: `solveSegment`'s collect branch derived a STANCE before it ever
+ * walked, that derivation needed a corridor with NO strategy applied, and the
+ * obstacle ladder lives inside `walkTo` on the far side of it. So a
+ * corridor-blocking obstacle refused before its clearer was ever selected.
+ * The survey's "proven envelope" had been measured on REACH-EXIT crossings,
+ * where `walkTo` runs first; collect-only was a different question.
  *
- * ⛓⛓ THE CAUSE THEY SHARE — ⚖ §1.4's collect-ONLY goal. `solveSegment`'s
- * collect branch derives a STANCE near the placement (`solverBot.js:1289`)
- * before it ever walks, and that derivation requires a corridor to plan with
- * NO strategy applied. The obstacle ladder — the thing that would shove the
- * block or hold the button — lives inside `walkTo` (`solverBot.js:4844`), on
- * the other side of that derivation. So a corridor-blocking obstacle refuses
- * at stance derivation and its clearer is never selected. The survey's
- * "proven envelope" was measured on REACH-EXIT crossings, where `walkTo` is
- * called directly and the ladder is the first thing that runs; collect-only
- * is a different question and slice 2's probes are its first measurement.
+ * ⚖ THE USER RULED THAT A BUG (2026-08-12) and slice 3 fixed it:
+ * `238f0dbe9` routes the collect stance through `walkTo`'s own ladder, and
+ * `b3522f6fd` stops the derivation choosing a stance the pickup cannot be
+ * collected from. ⇒ the clearer families were RE-PROBED on the fixed path:
+ *
+ *   · `shove`  — PROMOTED. `wall-gap-block-h`/`-v` below. The block in the
+ *                only gap is shoved and the goal collected (204/204/202 ticks
+ *                in three geometries). Slice 2's stated cause for this row —
+ *                "the block lands one tile short" — was measured on GOAL-SIDE
+ *                CONTAINMENT and does not describe the corridor at all.
+ *   · `hold`   — STILL OUT, and for a DIFFERENT reason than the shared one:
+ *                the verb is now SELECTED and the game's own mechanism is
+ *                what defeats it. Fresh text on its row.
+ *   · kill-lock — STILL OUT, and slice 2's cause is STALE: no
+ *                `PendingDeclaration` is reached any more. Fresh text.
+ *
+ * `EXCLUDED_TEMPLATES` below is that list. It is in this file and not in a
+ * report because an exclusion nobody can find is an exclusion the next slice
+ * re-discovers by building the thing again — and slice 3 is the proof of the
+ * other half: a row whose cause has been FIXED is a stale claim, so the row
+ * either moves into the palette or gets re-measured text.
  *
  * ── WHAT A TEMPLATE IS, FIELD BY FIELD ────────────────────────────────
  *
@@ -51,7 +63,7 @@
  * arm's path in the browser.
  */
 
-import { TERRAIN } from './procgenLevel.js';
+import { SINGLE_SCREEN_TILES, TERRAIN } from './procgenLevel.js';
 
 export class ProcgenPaletteError extends Error {
     constructor(message) {
@@ -79,6 +91,16 @@ const paint = (cells, terrain) => Object.freeze(cells.map((c) => Object.freeze({
  * audit trails. ⚖ Kickoff §3.3 splits the two biomes on exactly this flag.
  */
 export const PRE_SWORD_ITEMS = Object.freeze({ hasSword: false, hasShield: false });
+
+/**
+ * ⛓ THE INTERIOR'S OWN SPAN, DERIVED — the width of a single-screen room minus
+ * its border ring. The `wall-gap-block` pair below must cross the whole
+ * interior to be a door rather than a decoration, so the number is read from
+ * `procgenLevel`'s room size rather than typed. `GAP_OFFSET` is a declared
+ * choice (the middle-ish column), not a measurement.
+ */
+const INTERIOR_SPAN = SINGLE_SCREEN_TILES.width - 2;
+const GAP_OFFSET = 4;
 
 /**
  * ⛓ THE FOUR TEMPLATES THE ORACLE CERTIFIES, each measured in an otherwise
@@ -212,6 +234,62 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         why: 'one always-firing trap; its lane is a live column the corridor must avoid, '
             + 'and the lane rect comes from `arrowTrap.arrowLaneForPlacement`',
     }),
+    /**
+     * ⛓⛓⛓ THE DOOR — PoC slice 3's promotion, and the palette's first CLEARER.
+     *
+     * ⚖ Slice 2 excluded every clearer family because `deriveStance` refused a
+     * corridor-blocking obstacle before its verb was ever selected (§9.1). ⚖
+     * The user ruled that a bug; slice 3 fixed it (`238f0dbe9` routes the
+     * collect stance through `walkTo`'s own ladder, `b3522f6fd` stops the
+     * derivation choosing a stance the pickup cannot be collected from). With
+     * both in, a block in the only gap of a wall is SHOVED and the goal
+     * COLLECTED — measured at 204, 204 and 202 ticks in three geometries.
+     *
+     * ⛔ THE WALL MUST SPAN THE WHOLE INTERIOR, and that is not a size choice.
+     * A shorter wall is walked around, the block is never in anyone's way, and
+     * the template becomes an obstacle that obstructs nothing — the same
+     * ingredient failure `shoot="0"` would have been for the arrow lane
+     * (traps 171/173). The span is the interior's own width, so the room's
+     * border ring closes both ends and the gap is genuinely the only way
+     * through. ⇒ the anchor is forced to the interior's first column (or row),
+     * which is a consequence of the span rather than a rule of its own.
+     *
+     * ⚠ NO CLEARANCE RULE, for `wall-segment-h3`'s reason, now measured on
+     * this template too: with the goal in the gap's own COLUMN the shove
+     * slides the block onto it and the collect refuses — *"approaching
+     * torchpickup@64,128, the sweep was blocked by pushableblock at (64,80)"*.
+     * That is a candidate the keep-or-revert loop exists to REJECT, with its
+     * reason in the trace. Pre-filtering it here would hide from the loop the
+     * one placement of this template that fails, and a family whose failures
+     * have been filtered out reports a keep rate that is about the filter.
+     */
+    Object.freeze({
+        name: 'wall-gap-block-h',
+        family: 'shove',
+        footprint: rectCells(INTERIOR_SPAN, 1),
+        clearance: Object.freeze([]),
+        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([Object.freeze({
+            dx: GAP_OFFSET, dy: 0, type: 'pushableblock',
+        })]),
+        pins: Object.freeze([]),
+        why: 'a Stone wall across the whole interior with ONE gap, and a `pushableblock` '
+            + 'standing in it — the corridor exists only after the block is shoved, so '
+            + '`walkTo`\'s ladder selects `shove` and the collect follows',
+    }),
+    Object.freeze({
+        name: 'wall-gap-block-v',
+        family: 'shove',
+        footprint: rectCells(1, INTERIOR_SPAN),
+        clearance: Object.freeze([]),
+        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([Object.freeze({
+            dx: 0, dy: GAP_OFFSET, type: 'pushableblock',
+        })]),
+        pins: Object.freeze([]),
+        why: 'the same door stood on end; the two orientations are two draws, exactly as '
+            + 'the two wall segments are',
+    }),
 ]);
 
 export const PRE_SWORD_PALETTE = Object.freeze({
@@ -235,59 +313,60 @@ export const PRE_SWORD_PALETTE = Object.freeze({
  */
 export const EXCLUDED_TEMPLATES = Object.freeze([
     Object.freeze({
-        name: 'pushable-block',
-        family: 'shove',
-        cause: 'VERB-APPLY',
-        measured: 'the verb IS selected and executed, and the block comes to rest ONE '
-            + 'TILE SHORT of the plan in every direction tried (east, south, north, and '
-            + 'a k=1-forced geometry)',
-        refusalText: 'solverBot(C1-offset-in-pushable) collect (84,84) -> shove: the lean '
-            + 'committed and pushableblock@80,80 came to rest on (6,5), not (7,5). '
-            + 'Committed means the block needed no further contact — so something '
-            + 'stopped it in the last tile, and a block stops dead against a Solid.',
-        wouldNeed: 'R9\'s own `shove` VERB-APPLY family — the survey names it as one of '
-            + 'the six mechanism families the campaign owes. Nothing about the palette '
-            + 'or the placement fixes it.',
-    }),
-    Object.freeze({
         name: 'button-lock-pair',
         family: 'hold',
         cause: 'MECHANISM — a hold is not a latch',
-        measured: 'the `hold` resolves and runs; the approach then fails because a '
-            + '`Lock` is open only WHILE its group is published, and `Button.update` '
-            + 'republishes every tick from whoever stands on it. A player who leaves '
-            + 'the button to walk through has already shut the lock.',
-        refusalText: 'solverBot(C2-offset-in-lock) collect (84,84): approaching '
-            + 'torchpickup@84,84, the sweep was blocked by lock at (80,80) at '
-            + '(98.19289832381838,91.1395258974149). A pickup is not solid, so the '
-            + 'planner and the geometry disagree about the approach.',
+        measured: 'PoC slice 3 RE-MEASURED this one on the corridor, and the verb is now '
+            + 'SELECTED where slice 2 measured it never selected at all (trace row '
+            + 'tick 0, `hold` against `lock@64,80`). It still does not open the way. A '
+            + '`Lock` is open only WHILE its group is published and `Button.update` '
+            + 'republishes every tick from whoever stands on it, so the player who '
+            + 'leaves the button to walk through has already shut the lock: the walk '
+            + 'then spends its whole per-target budget grazing the lock it just opened.',
+        refusalText: 'solverBot(C2-corridor-lock-button) collect (64,128) stance '
+            + '(ladder-routed: …) waypoint 1 (72,120): not reached within 400 ticks; '
+            + 'stalled at (72.6899798657555,76.6929296425152) v=(0,1.05…) in level 900, '
+            + 'aiming at (72,120), after grazing 396 solid(s): lock at (64,80) on the Y '
+            + 'axis, at (72.6899798657555,76.6929296425152) in level 900, aiming at '
+            + '(72,120).',
         wouldNeed: 'the game\'s own answer — a SOLID on the button, because '
-            + '`Button.hitables` is `["Player","Enemy","Solid"]` (L15\'s shape). That is '
-            + 'a pushable block, which is the excluded row above; L15 is itself a survey '
-            + 'failure. ⚠ A lock with NO button at all refuses cleanly — "the placement '
-            + 'is INSIDE solid:lock (lock@80,80) … Strategy \'hold\' failed to apply" — '
-            + 'which is the honest verdict and not a template.',
+            + '`Button.hitables` is `["Player","Enemy","Solid"]` (L15\'s shape). ⛓ The '
+            + 'solid it wants is a `pushableblock`, which slice 3 PROMOTED — but getting '
+            + 'one onto the button needs the ladder to CHAIN shove-onto-button behind a '
+            + 'hold, which is new machinery nobody has ruled on. ⚖ Named as the future '
+            + 'shape, deliberately NOT built (orchestrator, 2026-08-12).',
     }),
     Object.freeze({
-        name: 'water-bob-killlock',
+        name: 'arrow-ceiling-killlock',
         family: 'kill',
-        cause: 'PENDING DECLARATION — a second solve pass this oracle does not have',
-        measured: '`resolveKillStrategy` has exactly two arms and neither closes here. '
-            + 'PRESS needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, '
-            + 'Spinner — none of them pre-sword, and a press needs the sword). CEILING '
-            + 'is L5\'s shape and ends in a `PendingDeclaration`, which only '
-            + '`twoPassSolve` discharges — and `watchSolve.solveForPage` is SINGLE-PASS.',
-        refusalText: 'solverBot: no REACHABLE stance within 3 lattice rings of '
-            + 'torchpickup@64,128 in level 900 — 34 walkable candidate(s), none with a '
-            + 'corridor from (24,24). The pickup\'s own cell is an avoid volume by '
-            + 'design; a walkable ring cell in an unreachable component is not a stance.',
-        wouldNeed: 'a `twoPassSolve` arm in the oracle (⚖ above this slice). ⛓ AND A '
-            + 'CORRECTION TO THE NAME: kickoff §3.3 calls this "water+bob+kill-lock '
-            + '(bait-kill, L5/L6-outbound\'s shape)", but the killer at L5 is the ARROW '
-            + 'CEILING (`ARROW_KILL_PLAN`\'s six phases), not the water. A bob\'s water '
-            + 'death IS modelled (`levelRun`\'s `ENEMY_TERRAIN_DESTROYS`) and the solver '
-            + 'has no plan that baits a body into it; L6\'s drowning is DECLARED by that '
-            + 'tape\'s own v10 despawn row.',
+        cause: 'MECHANISM — the hold outlives its own derived bound',
+        measured: '⛓ SLICE 3 MOVED THIS ONE TWICE OVER and slice 2\'s stated cause is '
+            + 'now STALE. Slice 2 measured a `PendingDeclaration` only `twoPassSolve` '
+            + 'discharges; on the fixed collect path the corridor case never reaches '
+            + 'one (`pending` is null). The ladder selects `kill`, the CEILING arm '
+            + 'resolves, the button arms the trap and the body DIES — and the hold then '
+            + 'runs out the bound its own mechanism derived, waiting on the lock\'s '
+            + '101-tick fade. ⚠ MEASURED IN A PROBE ROOM OF THIS SLICE\'S OWN MAKING, '
+            + 'not in a surveyed one: the number is a fact about that geometry, and it '
+            + 'is NOT a claim that L5\'s shape cannot be templated.',
+        refusalText: 'solverBot(C4-killlock-with-ceiling) collect (64,128) stance '
+            + '(ladder-routed: …) -> kill -> clear: held button@32,48 for the whole '
+            + 'bound of 227 tick(s) and the condition never became true — every body '
+            + 'this phase is waiting on [bob@96,48] has left level 900, and — if that '
+            + 'took the count to zero — 101 more tick(s) have elapsed for lock@64,80\'s '
+            + 'own fade. The bound is a CLAIM about the mechanism, so a hold that runs '
+            + 'it out is a measurement that the claim was wrong, not a hold that needs '
+            + 'a bigger number.',
+        wouldNeed: 'a template whose geometry lets the fade finish inside the derived '
+            + 'bound — which is a MEASUREMENT somebody must take against a surveyed '
+            + 'room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own '
+            + 'reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, '
+            + 'ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND '
+            + 'THE NAME CORRECTION STANDS: kickoff §3.3 calls this "water+bob+kill-lock '
+            + '(bait-kill)", but the killer at L5 is the ARROW CEILING '
+            + '(`ARROW_KILL_PLAN`\'s six phases). A bob\'s water death IS modelled '
+            + '(`levelRun`\'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body '
+            + 'into it; L6\'s drowning is DECLARED by that tape\'s own v10 despawn row.',
     }),
     /**
      * ⚖ Kickoff §3.3's standing exclusions, carried forward unchanged so this
