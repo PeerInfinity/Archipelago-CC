@@ -7313,7 +7313,15 @@ worth carrying off the arc are:
 ⚠ **An empty overlay layer means two different things.** The `hammer` layer
 carries a `why` (⚖ the clock caution); `hitboxes` does not, and L16 draws
 **zero** bodies while its census holds **nine** — the room's chaser roster is
-refused. L14 next door draws 6 of 6. Owed, page-side, small.
+refused. L14 next door draws 6 of 6. ⚖ **RULED to slice 8** (2026-08-12),
+beside that slice's arrow-lanes layer work: it is the named-absence law
+unenforced on one layer.
+
+⚖ **And the `solid:chest` row is DEFERRED TO R9**, on the survey's own
+reasoning: under the sphere-order route that chest is a GOAL before it is
+ever an obstacle, and a strategy-table row changes solver behaviour — so the
+edit belongs where its consequences are watched, not in a slice whose battery
+must stay byte-unchanged.
 
 ### Where the arc's own findings live
 
