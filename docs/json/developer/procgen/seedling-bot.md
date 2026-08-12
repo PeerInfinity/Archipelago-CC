@@ -7109,16 +7109,25 @@ three SOURCES converging on one replay spine:
   before showing it. A hand drive is a PRODUCER, beside `solveSegment` and
   the drivers — not a second replay loop.
 
-Over all three: **eleven independently toggleable overlay layers**, every
+Over all three: **twelve independently toggleable overlay layers**, every
 position SAMPLED per tick through `createTapeStepper`'s `onTick` hook and
 never re-simulated. Four are CUMULATIVE paths (player · enemies · pushables ·
 arrows, the one OFF by default ⚖), four are event MARKERS (action =
-attack-key edges · damage · events · volumes), and three are THIS-TICK
-SHAPES (editor arc slice 6): **enemy body hitboxes** (`spinnerRect` /
-`chaserBoxAt`), the **spinner hammer LINE** at its exact current angle
-(`hammerLine` fed by the run's modelled `Game.time`, drawn white-hot when the
-engine's own `hammerHitsPlayer` says it reaches the player), and the
-**attack rect** on the tick it fired (`run.presses[].rect`). ⛔ Every one of
+attack-key edges · damage · events · volumes), and four are THIS-TICK
+SHAPES: **enemy body hitboxes** (`spinnerRect` / `chaserBoxAt`), the
+**spinner hammer LINE** at its exact current angle (`hammerLine` fed by the
+run's modelled `Game.time`, drawn white-hot when the engine's own
+`hammerHitsPlayer` says it reaches the player), the **attack rect** on the
+tick it fired (`run.presses[].rect`), and — slice 8 — the **armed arrow
+traps' LANES**.
+
+⛔ **A LANE IS NOT AN ARROW PATH, and the two layers are deliberately kept
+apart.** `arrows` is the sampled FLIGHTS: cumulative, one dot per arrow per
+tick, the only layer OFF by default. `lanes` is the trap's own GEOMETRY — the
+column its volleys sweep, drawn while the trap is ARMED, a few outlines on the
+tick you are looking at. A room can show lanes and no arrows (armed, not yet
+fired) or arrows and no lanes (the volley still in flight after the presser
+was released), and reading either as the other misreads the room. ⛔ Every one of
 those geometries is the ENGINE'S OWN exported function — a viewer that
 retyped `(Game.time % 45) / 45 · 2π` would be a second cost model of a
 rotating line. ⚠ A shape layer is the cursor's tick only: the union of a
@@ -7132,6 +7141,49 @@ Upload, all through `parseTape`.
 
 Everything is reachable from URL parameters: `?tape= ?side= ?speed=
 ?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`.
+
+⛓⛓ **A LAYER THAT CAN DRAW NOTHING CARRIES A `why`** — three of the twelve do
+(`hitboxes`, `hammer`, `lanes`), and the rule they establish is worth stating
+once: *an empty layer means two things, so the page says which, in the
+ENGINE's own words, with the population count beside it.* A `hitboxes` layer
+drawing nothing is a room with no enemies, a COMBAT-BLIND run, a roster
+`chaserRoomVerdict` REFUSED (its refusal text carried through verbatim), or a
+room whose bodies are all dead by this tick — four different facts that drew
+one identical picture until slice 8. `__editorOverlays.census` carries the
+count the sentence rests on, so no reader has to take it on trust.
+
+### The two engine defects the arc found and fixed (slice 8)
+
+Both were MEASURED by slice 6's modeled-but-not-displayed audit, left
+REPORTED, and closed in one slice — each predicted BYTE-INERT before the run
+and proven so by the full offline differential plus a byte-unchanged
+`solve-seedling-r8-battery --check`.
+
+- **`run.owlPods` reported four pods in every room of every tape.**
+  `owlStateFor` level-filtered the boss list and not the pod list, so it
+  mapped `FinalBoss.podPositions` unconditionally — **153 tapes out of 153**,
+  the highest hit-rate in the audit's sweep. The gate matches the GAME: the
+  `.oel` places a `Pod`, so a room with neither a `finalboss` nor a placed pod
+  has none. It had never bitten because every reader stands inside the Owl's
+  own room; the cost was owed to the next one, and a pod overlay would have
+  painted his arena furniture into every room in the game at plausible
+  coordinates.
+- **The `arrowLane` placement→lane adapter had no owner**, so every caller
+  retyped it inline. The audit counted five sites; there were **six** — one in
+  `solverBot`'s L5 drain-phase bound that nobody had counted, missed because
+  it is line-wrapped — plus a **second, five-copy lane→rect derivation** the
+  audit had not separated from the first. All eleven spellings now converge on
+  `arrowTrap.arrowLaneForPlacement` and `arrowTrap.arrowLaneRect`, which is
+  what let the arrow-lanes layer exist at all: with only half the hoist, the
+  page would have written the seventh spelling itself.
+  ⛓ **The equivalence was asserted PER SITE, BEFORE the convergence** — the
+  eleven normalise to one spelling and 55 behavioural comparisons found zero
+  mismatches — because a refactor that makes two things AGREE is a behaviour
+  change wearing a refactor's name (slice 1's two run constructions disagreed
+  about `despawn`, and the naive unification would have changed a solve).
+  ⛔ The level HEIGHT stayed a parameter: the five rect sites agreed on the
+  arithmetic but NOT on where the height came from, so hoisting the lookup
+  too would have unified two expressions nobody could prove equal.
 
 ⛔ **The page never writes `fixtures/tapes/` or `fixtures/traces/`.** That
 roster is disk-derived, so a saved experiment would silently join the
@@ -7337,4 +7389,8 @@ the true-start default boot, the boot form — and the SOLVE button that had
 never read its own textarea); §14 slice 6 (the modeled-but-not-displayed
 audit, the three shape layers, and the hammer contact that lives in TWO
 samples); §15 slice 7 (the route survey above, its 29-row table, its seven
-refusals verbatim and the twenty PNGs each one was read from).
+refusals verbatim and the twenty PNGs each one was read from); §16 slice 8
+(the two engine fixes above, the retype nobody had counted, the arrow-lanes
+layer and the hitboxes `why` channel — and the `get drawn()` accessor whose
+SHAPE fell behind its producer's, which every module test passed over because
+no node test reaches a DOM-side copier).
