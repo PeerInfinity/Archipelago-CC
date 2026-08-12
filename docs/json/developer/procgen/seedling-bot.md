@@ -7083,16 +7083,37 @@ omission — re-derived at close from the committed expectations' own
 
 ---
 
-## The editor arc — `watch.html` becomes the lab page (TOOLING; v1 SCOPE CLOSED 2026-08-11)
+## The editor arc — `watch.html` becomes the lab page (TOOLING; CLOSED 2026-08-12)
 
-Interleaved between R8 and R9 by the user's ruling, in four slices. It built
-no game behaviour and no claim: it grew the replay viewer into the window an
-editor will eventually live behind.
+Interleaved between R8 and R9 by the user's ruling. It built no game
+behaviour and no claim: it grew the replay viewer into the window an editor
+will eventually live behind.
 
-⚠ **What closed is this arc's V1 SCOPE** — the four slices below, their gates
-and their named limits. ⚖ **More editor work comes BEFORE the campaign**
-(user, 2026-08-12); it is new work on top of this, not a reopening of it.
-**R9 is still the campaign, and it is still after the editor.**
+**Ten slices, in two rounds.** The **V1 SCOPE** (slices 1–4) closed
+2026-08-11 with the page, its overlays, manual mode and the CLI export. ⚖ The
+user then ruled more editor work BEFORE the campaign, and the **V2 ROUND**
+(slices 5–10) closed 2026-08-12: the v9 fold and the despawn check, the
+modeled-but-not-displayed audit and its layers, the route-only coverage
+survey, the two engine fixes and the arrow-lanes layer, the world-state /
+crusher / solver-danger layers, and finally the L6-return timeout diagnosis
+with the `solid:chest` obstacle rule.
+
+⚖ **What comes next is the procgen PROOF-OF-CONCEPT arc** (user, 2026-08-12)
+— the Cloudberry Kingdom algorithm's first draft, built in this page, limited
+to pre-shield features across two biomes. **R9, the campaign, follows that**;
+its route is ruled to be the SPHERE ORDER's (the survey's own finding, below)
+and its budget is the survey's mechanism-family table.
+
+**The V2 round in one line each** (each slice's detail is a section below):
+
+| slice | what it did |
+|---|---|
+| **5** | the fold derives its own version (six boots that had refused for a whole arc now fold to v9); the despawn DROP becomes a drop **and a check**; the default boot becomes the TRUE GAME START; a sword/shield boot form — **and the SOLVE button that had never read its own textarea** |
+| **6** | the **modeled-but-not-displayed AUDIT** (145 public getters against what the renderer draws, swept over all 153 tapes) and the three shape layers it justified — enemy hitboxes, the hammer LINE at its exact angle, the attack rect. ⛔ Its finding: a hammer contact lives in TWO SAMPLES, body at `t` and clock+box at `t-1` |
+| **7** | the **ROUTE-ONLY coverage survey** — the walk from the true start to the shield derived from AP's own rules, then solved step by step. 21/29. REPORT ONLY, zero engine or page files touched |
+| **8** | the two engine defects the audit had left reported — the **owl-pod gate** and the **`arrowLane` retype** (eleven spellings, two adapters, equivalence per site before converging) — plus the arrow-lanes layer and the hitboxes `why` |
+| **9** | the **world-state**, **crusher** and **solver-danger** layers (roster 12 → 15). ⛔ Its headline is a MISS: two sibling browser rows had been RED for a whole slice behind an exit-0 skip |
+| **10** | the **L6-return timeout diagnosed** (one search, not a loop) and **chests become clearable obstacles** — the V2 close |
 
 ### What the page is now
 
@@ -7397,17 +7418,21 @@ door out of the chamber it lands in requires **Progressive Shield** — the
 shield is behind itself from that side. L14/L15/L16→L18→L19 is forced, which
 is ⚖ §16.3 ruling 1's route re-derived from another source.
 
-**21 of 29 steps solve today** (16/21 on the shortest route). D2's last three
-rooms re-solve tick for tick (L18 573, L19 864); what stands between the
-solver and the shield is the walk BACK from the sword to D2's door. The
-refusal→mechanism-family table is R9's budget input, and the two findings
-worth carrying off the arc are:
+**21 of 29 steps solved when the survey was written** — **22 after slice 10's
+chest row**. D2's last three rooms re-solve tick for tick (L18 573, L19 864);
+what stands between the solver and the shield is the walk BACK from the sword
+to D2's door. The refusal→mechanism-family table is the campaign's budget
+input, and the two findings worth carrying off the arc are:
 
 - ⛔ **The route-only bound is itself a refusal cause.** L11's only corridor
   is one tile wide and `chest@32,48` stands in it. Route-only REFUSES;
   adding the campaign's own next pickup (`Level 011 - Chest`, AP sphere 0.2)
   SOLVES it in 119 ticks. ⇒ R9's route must be the SPHERE ORDER's, not the
-  crossing graph's.
+  crossing graph's. ⚖ **Slice 10 closed the OTHER half of this**: the chest
+  is now a clearable obstacle too, so the room solves in the same 119 ticks
+  from the crossing goal alone — but the ROUTE ruling stands on its own
+  reasoning, which is about what a campaign is FOR, not about what the solver
+  can get past.
 - ⛔ **`solveStaging` drops `despawn` and carries `persistence[].at`**, and
   those are the same sentence about a flag instead of a body. Measured on L8:
   inherited, the solve plans around the HAND walk's clear ticks and says
@@ -7424,11 +7449,124 @@ refused. L14 next door draws 6 of 6. ⚖ **RULED to slice 8** (2026-08-12),
 beside that slice's arrow-lanes layer work: it is the named-absence law
 unenforced on one layer.
 
-⚖ **And the `solid:chest` row is DEFERRED TO R9**, on the survey's own
+~~⚖ **And the `solid:chest` row is DEFERRED TO R9**~~, on the survey's own
 reasoning: under the sphere-order route that chest is a GOAL before it is
 ever an obstacle, and a strategy-table row changes solver behaviour — so the
 edit belongs where its consequences are watched, not in a slice whose battery
 must stay byte-unchanged.
+⚖ **SUPERSEDED by the user, 2026-08-12** (kickoff §12d item 11): the row
+lands in **slice 10** instead, under R9-grade care rather than R9's calendar
+— a prediction stated first, `solve-seedling-r8-battery --check` byte-compared,
+the full offline differential, and a whole-file survey re-run showing exactly
+the predicted flip. The deferral's premise turned out to be answerable rather
+than merely arguable: the battery proved the change moves nothing, and the
+survey proved it moves the one row it was for. See slice 10 below.
+
+### Slice 10 — the timeout diagnosed, and the chest stops being a wall
+
+**⛔ The L6-return TIMEOUT is ONE SEARCH, not a loop.** The survey's single
+timing-out step (A14: the return crossing of L6, where the same room solves
+OUTBOUND in 294 ticks) was hypothesised to be a re-plan/escalation loop. It is
+not. Measured with a Proxy over the run — the only window a SYNCHRONOUS
+runaway has, since no timer fires and no signal is handled inside one
+`solveSegment` call — **100% of thousands of stack samples sit in a single
+`climbLadder → planDash → findEarliestArrival → forbiddenByDanger → dangerAt`
+chain**, with `advance()` frozen at 192 ticks, ONE pass, ONE climb, ONE
+`planDash` call, for over a billion property reads.
+
+The cause, named: the ladder's **TIME** rung finds the aim inside its 48 px
+reach and runs a `planDash`; the search is correctly bounded at
+`TIME_RUNG.maxExpansions = 40000`, and in THIS room each expansion asks the
+hazard union up to **64 times** (16 key sets × dwell 4), so the budget is
+~2.5 million `dangerAt` calls over two static sandtraps, the armed arrow lanes
+and the water. **The bound is expressed in EXPANSIONS and the survey's is in
+SECONDS**, and here they disagree by orders of magnitude.
+
+⛓ **And the outbound/return asymmetry is in the committed trace.**
+`r8-solve-6`'s own TIME-rung refusal reads *"the aim is 193 px away and
+`mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND"* —
+outbound the rung refuses by ARITHMETIC and never searches at all. The whole
+difference between half a second and no answer is which side of a 48 px
+comparison the aim falls on at one instant.
+
+⚖ **The fix is NOT taken, and the reason is a measurement.** Across every
+committed trace the TIME rung appears **3 times and all 3 refuse by that
+arithmetic — no committed derivation has ever executed a `planDash` search**,
+so `TIME_RUNG.maxExpansions` is a free parameter over the whole roster and a
+change to it would be byte-inert BY CONSTRUCTION. It is still not taken
+because **nothing in the record says what the cap should be**: `MOVER_RANGE`
+records the smallest DWELL per distance, not the expansions it used, and no
+committed dash has ever succeeded. Picking a number here would be the generous
+bound this codebase refuses everywhere else. The TIMEOUT verdict stands with
+the cause beside it, and the change is a priced line item for later.
+
+**⚖ Chests are clearable obstacles** (user, superseding the R9 deferral above).
+`OBSTACLE_STRATEGIES` gains `solid:chest` → the **already-registered** chest
+verb: a chest already had a row as a `proximity-hazard`, which is the shape it
+wears when a GOAL names its placement; standing in a corridor it wears the
+other one, because `Chest` is a `Solid` only until `open()` flips its type.
+⛔ **The binding proof is a differential, not "it solves now":** L11 solved
+from one `reach-exit` goal and L11 solved from `collect-placement` then
+`reach-exit` produce **the same walk, key set for key set** — 119 ticks, the
+same `openedAt 6` / `collectedAt 16` verb record, the same `chestOpens` and
+`sealCollections`. The row does not invent a second way to open a chest; it
+reaches the one that was already there, and the only difference is the
+DECISION each trace records.
+
+**⛓⛓ The danger record now rides on the refusal.** `SolverRefusal` carries
+`dangerQueries`, and the page's refusal branch reports **three different
+answers** — `n` (the bot was told things), `0` (the recorder ran and it asked
+nothing), `null` (no record at all: the throw was not a `SolverRefusal`).
+⛔ That sharpens slice 9's finding rather than confirming it: swept over all
+39 route-step solves — 23 solved, 6 refused, 4 engine-side — **not one
+recorded query came back dangerous, on either outcome**. Every route refusal
+is *no corridor* or *ladder exhausted*; none is a danger-gate throw. So the
+non-empty case lives only on a refusal raised BY the danger gate, and no room
+on the route raises one. The dangerous row's shape is pinned synthetically and
+said to be.
+
+### ⛔ WHAT THE V2 ROUND LEAVES OWED (each a bound with a written cause)
+
+The v1 bounds above still stand where they were not lifted. These are the
+v2 round's own, and every one of them is a NAMED absence rather than an
+oversight:
+
+- **`levelWorld.liveRectOf` is not exported**, and it is the game's authority
+  on *"is this solid still there, and where"* over THIRTEEN families. It is a
+  closure inside `buildLevelWorld`. The world-state layer therefore carries a
+  five-row JOIN table page-side — which run set names which solid key — and
+  PROVES it with an engine differential rather than trusting it: every GONE
+  mark is put back to `world.collidesSolid` with the run's own
+  `liveGeometryOpts()`. ⚠ That differential's bound is stated because it is
+  not uniform: `collidesSolid` is FIRST-HIT, so for a rope inside a wall tile
+  the assertion is only *the engine does not report THIS ENTITY at its build
+  box*. **The hoist is OWED** — it is `arrowTrap.arrowLaneForPlacement`'s
+  shape one family-table over, and slice 8 measured what that kind of hoist
+  is worth.
+- **`solveStaging` drops `despawn` and CARRIES `persistence[].at`** — the same
+  sentence about a flag instead of a body (slice 7's finding, above). Reported,
+  not fixed: ⚖ removing the rows was measured NOT inert. It belongs to the
+  PROVENANCE discussion, with the witness-band ruling beside it.
+- **The v10 `despawn` fold guard stays**, with its own standing reason: a fold
+  has no witness to offer, and a solver tape owes declarations only for
+  mechanisms the model cannot compute. No committed boot reaches it.
+- **NEEDS-GAME-ORACLE rooms are not a solver gap.** L8's two sandtraps have
+  arrow deaths the model refuses to compute by name; only the `--win`
+  truncation channel — a RECORDING channel — answers, exactly as it did for
+  `r8-solve-8`.
+- **The bait-stance lattice's danger queries are unrecorded**, deliberately:
+  `deriveBaitStance` asks the union over a 17×17 lattice of HYPOTHETICAL
+  stances, which is a SEARCH rather than positions the walk held. Recording
+  them would bury the handful the walk acted on under hundreds it discarded.
+- **The sibling browser rows still SKIP without a dev server.** ⛔ That
+  politeness is now a MEASURED cost, not a theoretical one: two of them
+  (`-manual`, `-export`) were RED for a whole slice and nobody saw it,
+  because slice 8's "replace, don't relax" sweep was keyed on the toggle
+  COUNT and those two spell the roster as a bare `11` and as a list of ten
+  layer NAMES. ⇒ *a sweep like that must be keyed on the ROSTER, not on the
+  number*; both rows are now built FROM `watchOverlays`' own roster. The rule
+  that follows is short: **before believing any skip-capable row is green,
+  RUN IT.**
 
 ### Where the arc's own findings live
 
@@ -7448,4 +7586,8 @@ refusals verbatim and the twenty PNGs each one was read from); §16 slice 8
 (the two engine fixes above, the retype nobody had counted, the arrow-lanes
 layer and the hitboxes `why` channel — and the `get drawn()` accessor whose
 SHAPE fell behind its producer's, which every module test passed over because
-no node test reaches a DOM-side copier).
+no node test reaches a DOM-side copier); §17 slice 9 (the world-state, crusher
+and solver-danger layers, the `liveRectOf` join proven by an engine
+differential, and the two sibling browser rows that had been RED for a whole
+slice behind an exit-0 skip); §18 slice 10 (the timeout's named cause with its
+stack rows, the chest differential, and the V2 close).
