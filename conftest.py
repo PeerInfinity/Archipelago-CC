@@ -29,10 +29,17 @@ stable.
 
 ``KNOWN_FLAKY_WORLDS`` holds fork worlds that are deliberately parked with
 known seed-dependent generation flakiness (e.g. roving FillError /
-"Failed to generate chain for sphere N" RuntimeErrors in test_implemented and
-test_multiworlds). Unlike WIP_WORLDS these are NOT expected to stabilize —
-they are prototypes not under further development (user ruling 2026-07-17).
-Re-include one only if its development resumes.
+"Failed to generate chain for sphere N" RuntimeErrors in test_implemented,
+test_multiworlds and test_item_links). Unlike WIP_WORLDS these are NOT
+expected to stabilize under their own development: either they are prototypes
+nobody is developing further (user ruling 2026-07-17), or the flake is in
+core fill rather than in the world. Re-include one only if the cause is fixed.
+
+⚠ This set is what the pytest session honours, and it is the ONLY list that
+affects CI. ``scripts/data/template-exclude-list.json`` decides which games
+``scripts/test/test-world-generator.py`` regenerates a ``_worldgen`` world
+FOR; it does not stop pytest collecting a ``_worldgen`` directory that is
+already committed. Excluding a game from CI means adding it HERE.
 """
 
 from __future__ import annotations
@@ -94,6 +101,21 @@ KNOWN_FLAKY_WORLDS: frozenset[str] = frozenset({
     # chose not to develop it further (2026-07-17).
     "apcalc",
     "apcalc_worldgen",
+    # "Links Awakening DX WorldGen" — seed-dependent
+    # ``Fill.FillError: No more spots to place 270 items`` in
+    # test/general/test_items.py::test_item_links (CI run 31572464285,
+    # 2026-08-12; green on the next run with no change). NOT a parked
+    # prototype and NOT a defect in the generated world: item_links pools 270
+    # items and core fill paints itself into a corner on some seeds. The
+    # upstream "ladx" world is already excluded via UPSTREAM_WORLDS, so this
+    # only parks the generated variant. "Links Awakening DX.yaml" is also in
+    # template-exclude-list.json's worldgen_test_exclude_list, which is what
+    # keeps the directory from coming back — this entry only covers the
+    # window until a regeneration run deletes worlds/ladx_worldgen (compare
+    # Mega Man 3, excluded the same way, whose worlds/mm3_worldgen no longer
+    # exists and so needs no entry here). Roving fill is now on its FOURTH
+    # world (apcalc, runner, mm3, ladx): exclusion manages the symptom.
+    "ladx_worldgen",
 })
 
 # Everything dropped from AutoWorldRegister for the pytest session:
