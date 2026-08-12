@@ -243,6 +243,12 @@
       <button id="solveGoalClear">clear</button>
       <span id="solveGoals">—</span>
     </div>
+    <!-- ⛓ THE FORM SITS ABOVE THE `<details>`, NOT INSIDE IT (slice 5). Its
+         first cut was inside, where the whole point of it — reaching the two
+         flags WITHOUT opening the raw editor — is undone by having to open
+         the raw editor. Caught by the acceptance row's visibility check, not
+         by looking at it. -->
+    <div class="line" id="solveForm"><span>boot items:</span></div>
     <details>
       <summary>starting conditions — the tape v8 staging block, raw</summary>
       <textarea id="solveBoot" rows="12" spellcheck="false"></textarea>
@@ -258,6 +264,7 @@
       <button id="manualStop" disabled>STOP &amp; fold</button>
       <span id="manualKeys"></span>
     </div>
+    <div class="line" id="manualForm"><span>boot items:</span></div>
     <details>
       <summary>starting conditions — the tape v8 staging block, raw</summary>
       <textarea id="manualBoot" rows="12" spellcheck="false"></textarea>

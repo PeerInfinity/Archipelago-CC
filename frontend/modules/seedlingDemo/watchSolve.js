@@ -27,8 +27,10 @@
  * geometry, and it would look perfectly fine on screen.
  */
 
-import { parseTape } from './tapeFormat.js';
-import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { parseTape, requiredTapeVersion } from './tapeFormat.js';
+import {
+    checkSolveDespawns, createRunForStaging, solveStaging, stagingFromTape,
+} from './tapeRunner.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { solveSegment } from './solverBot.js';
 
@@ -81,6 +83,28 @@ export function parseGoalsParam(raw) {
 }
 
 /**
+ * ⛓ THE COMMITTED TAPE WHOSE BOOT BLOCK IS THE TRUE GAME START — the
+ * page's default staging, as a NAME rather than as eleven fields (slice 5).
+ *
+ * `act2-the-sword` is R7's honest playthrough and its FIRST SEGMENT starts
+ * where a new game does. The page fetches this tape and takes its boot block
+ * through `stagingFromJson`, so the default is the same artifact the game
+ * and the differential already agreed on rather than a hand transcription of
+ * it — see `watchViewer.trueStartStaging`.
+ *
+ * ⛔ THE NAME IS ASSERTED AGAINST THE CHAIN, NOT TRUSTED. `playthroughWalk`
+ * imports `fixtures/index.js` and therefore `node:fs`, so this page cannot
+ * read `PLAYTHROUGH_CHAINS` at all (slice 1 §8.4: one such import makes the
+ * whole module graph unloadable in a browser). `watchSolve.test.js` runs in
+ * node, where it can — and it asserts this constant IS
+ * `PLAYTHROUGH_CHAINS.find(c => c.id === 'act2-the-sword').segments[0]`.
+ * That is `SEAM_SIGNATURE`'s own shape: a value checked across the boundary
+ * it cannot be imported across, never a second list nobody compares.
+ */
+export const TRUE_START_CHAIN = 'act2-the-sword';
+export const TRUE_START_SEGMENT = 'r7-act2-1';
+
+/**
  * A staging block from whatever JSON the caller has: a whole committed
  * tape, or a bare boot block someone typed into the textarea.
  *
@@ -96,18 +120,137 @@ export function parseGoalsParam(raw) {
  * in here would be choosing an experiment on the caller's behalf and then
  * calling it their declaration. The parser names the first field it is
  * missing; that is the message the page shows.
+ *
+ * ⛓⛓⛓ SLICE 5 — THE TWO COMPLETION FIELDS WERE **LITERALS**, AND BOTH WERE
+ * WRONG FOR EXACTLY THE BOOTS THIS SLICE SET OUT TO UNBLOCK.
+ *
+ * The bare arm wrapped the block in `{tape_version: 8, tick_count: 0}`.
+ * Both are properties of the WRAPPER, not of the block — and `parseTape`
+ * reads them as claims about the block:
+ *
+ *   · `tape_version: 8` means "`persistence[].at` cannot exist" and
+ *     "`despawn` means [] BY DEFINITION", so pasting `r8-solve-18`'s own
+ *     boot block into the textarea and pressing anything got the parser's
+ *     v9 refusal — the SAME mislabelling `buildStagedTape` was making at
+ *     the other end of the page, in the same shape, one module over. ⇒
+ *     `requiredTapeVersion`, the one owner of the rule, exactly as the fold
+ *     now asks it.
+ *   · `tick_count: 0` bounds every declared `at` to `[0, 0]` ("a removal
+ *     after the last tick never happens" — a statement about a TAPE). A
+ *     staging block has no ticks at all, so the bound is not merely tight,
+ *     it is a category error: `r7-act2-6`'s despawn at 120 is legal in the
+ *     tape it came from and unrepresentable here. ⇒ the completion is wide
+ *     enough to hold what the block DECLARES, which is the smallest number
+ *     that stops the wrapper from making claims of its own.
+ *
+ * ⚠ THE ZERO-TICK TAPE IS A VALIDATION VEHICLE AND NOTHING ELSE — it is
+ * never emitted, never replayed and never compared. Widening its
+ * `tick_count` therefore weakens no check that exists; the tapes this page
+ * FOLDS get their bound from `buildStagedTape`, against the run's own
+ * length, which is the place the question is real.
+ *
+ * ⛓ MEASURED, NOT REASONED: the SOLVE arm re-reads this box at press time
+ * (slice 5) and `?boot=r8-solve-18.json&solve=1` refused here before this
+ * change — the CLI's own acceptance row caught it, with the parser's
+ * message, on the first run after the re-read landed.
  */
 export function stagingFromJson(json) {
     const isTape = Array.isArray(json?.inputs) && json?.tick_count !== undefined;
     if (isTape) return stagingFromTape(parseTape(json));
-    return stagingFromTape(parseTape({
+    const declaredTicks = Math.max(0, ...[
+        ...(json?.persistence ?? []).map((c) => c.at),
+        ...(json?.despawn ?? []).map((d) => d.at),
+    ].filter((t) => Number.isFinite(t)));
+    const completed = {
         game: 'seedling',
         name: 'editor-staging',
-        tape_version: 8,
         ...json,
-        tick_count: 0,
+        tick_count: declaredTicks,
         inputs: [],
+    };
+    return stagingFromTape(parseTape({
+        ...completed,
+        tape_version: json?.tape_version ?? requiredTapeVersion(completed, 8),
     }));
+}
+
+/**
+ * ⛓⛓⛓ THE BOOT FORM v1 — the fields a checkbox may edit (slice 5, kickoff
+ * §12.4), and the one place their JSON PATH is written.
+ *
+ * ⛔⛔ THE CHARTER SAYS `save.hasSword` AND THE TAPE HAS NO SUCH FIELD, and
+ * the difference is not cosmetic. A tape's version-6 `save` block is
+ * `{totem_parts, keys, seal_parts}` — three index arrays and nothing else;
+ * `parseSave` refuses any other key BY NAME. The item flags live in the
+ * version-8 `seam` block as `seam.items.hasSword`. ⛓ `save.hasSword` IS a
+ * real name: it is `SEAM_BOOT_SPEC[].field`, the GAME's own property path,
+ * which `Bot.latchSeam` emits and `seamFindings` maps over — the other half
+ * of the two key spaces `seamFieldsFromBlock`'s docblock calls "different
+ * and both load-bearing". So the form's label comes from one space and its
+ * write lands in the other, and this table is the only place that is said.
+ *
+ * ⚠ TWO FIELDS, NOT THIRTEEN. `SEAM_BOOT_SPEC` carries all thirteen item
+ * flags and rendering the lot would be four lines less code — and a form
+ * offering `hasDarkSuit` on a page whose solver has no policy for it is
+ * trap 119's family in UI clothes. Sword and shield are what the ruling
+ * asked for and what the route to the shield needs; the JSON editor is
+ * right there for anything else, which is ⚖ §1.7's whole point.
+ */
+export const ITEM_FORM_FIELDS = Object.freeze([
+    Object.freeze({ id: 'sword', key: 'items.hasSword', field: 'save.hasSword', label: 'sword' }),
+    Object.freeze({ id: 'shield', key: 'items.hasShield', field: 'save.hasShield', label: 'shield' }),
+]);
+
+/**
+ * The form's reading of a staging block: `{sword, shield}`, each `true`,
+ * `false` or **`null`** for "this block declares nothing about it".
+ *
+ * ⚠ THREE STATES, NOT TWO, because the seam has three. `parseSeam` keeps
+ * only the keys a tape DECLARED — "not declared" and "declared false" are
+ * different segments and only one of them can be checked against a
+ * predecessor (`seamToBlock`'s own note). A form that read absence as
+ * `false` would turn every undeclared block into a declaring one the moment
+ * anybody touched a different checkbox.
+ */
+export function itemFlagsOf(staging) {
+    const seam = staging?.seam ?? null;
+    const out = {};
+    for (const f of ITEM_FORM_FIELDS) {
+        const [group, leaf] = f.key.split('.');
+        const v = seam?.[group]?.[leaf];
+        out[f.id] = v === undefined || v === null ? null : v;
+    }
+    return out;
+}
+
+/**
+ * The same block with ONE item flag set — the checkbox's whole write.
+ *
+ * ⛔ IT RETURNS A STAGING BLOCK AND NOT TEXT. The form's source of truth is
+ * the PARSED block: the checkbox edits it, the page re-serialises, and the
+ * textarea re-derives the checkboxes from whatever it then parses. A
+ * function that edited the JSON STRING would be a second serialiser, and
+ * the two would agree until somebody's block had a comment in it.
+ *
+ * ⚠ It CREATES the seam when there is none — `r7-act2-1`, the page's own
+ * default, declares `seam: null`. A partial seam is legal (`parseSeam` skips
+ * every absent key) and a partial one is the honest thing to write: filling
+ * in the other twelve flags would be the page claiming state nobody
+ * measured.
+ */
+export function withItemFlag(staging, id, on) {
+    const f = ITEM_FORM_FIELDS.find((x) => x.id === id);
+    if (!f) {
+        throw new Error(`watchSolve: "${id}" is not a boot-form field; the form covers `
+            + `${ITEM_FORM_FIELDS.map((x) => x.id).join(', ')}. Everything else is the `
+            + 'JSON editor, which is the spine (⚖ kickoff §1.7).');
+    }
+    const [group, leaf] = f.key.split('.');
+    const seam = staging.seam ?? {};
+    return {
+        ...staging,
+        seam: { ...seam, [group]: { ...(seam[group] ?? {}), [leaf]: Boolean(on) } },
+    };
 }
 
 /**
@@ -249,6 +392,13 @@ export function censusWorld(levelSource, staging) {
  * stale run (`ticksCompleted !== 0`), a combat-blind one and an empty goal
  * list, each by name — and those refusals are the page's error text
  * verbatim, never re-worded here.
+ *
+ * ⛓ AND THE DECLARED DESPAWNS ARE CHECKED AFTER THE WALK (slice 5). The
+ * `staging` argument is the block AS DECLARED and `honest` is the dropped
+ * one, so both halves of `solveStaging`'s seam are in scope here and nowhere
+ * else — which is why the check belongs at this call site rather than inside
+ * the drop, which has no run to ask. `despawns` rides out beside `out` for
+ * the page to display; a refusal is the checker's own message, verbatim.
  */
 export function solveForPage({ levelSource, staging, goals, name, now = () => Date.now() }) {
     const honest = solveStaging(staging);
@@ -256,10 +406,12 @@ export function solveForPage({ levelSource, staging, goals, name, now = () => Da
     const run = createRunForStaging(honest, levelSource);
     const out = solveSegment({ run, goals, name, boot: honest.boot });
     const ms = now() - t0;
+    const despawns = checkSolveDespawns(staging, run);
     return {
         out,
         run,
         ms,
+        despawns,
         tape: buildStagedTape({ staging: honest, perTick: out.perTick, name }),
     };
 }

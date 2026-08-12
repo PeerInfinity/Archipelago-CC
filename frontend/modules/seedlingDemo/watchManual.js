@@ -38,7 +38,7 @@
  */
 
 import { KEY_NAMES, parseTape } from './tapeFormat.js';
-import { createRunForStaging, solveStaging } from './tapeRunner.js';
+import { checkSolveDespawns, createRunForStaging, solveStaging } from './tapeRunner.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { collectRun, extractMarkers, sampleMovers } from './watchOverlays.js';
 
@@ -193,6 +193,19 @@ export function createManualSession({ levelSource, staging, name = 'manual' }) {
          */
         fold() {
             return buildStagedTape({ staging: honest, perTick, name });
+        },
+        /**
+         * ⛓ The DECLARED despawns, checked against what this drive computed
+         * (slice 5) — `solveForPage`'s line, one arm over.
+         *
+         * ⚠ ITS OWN METHOD RATHER THAN PART OF `fold()`, because a hand drive
+         * has a mid-session state a solve does not: the check is a statement
+         * about a FINISHED walk, and calling it from inside the fold would
+         * make a legitimate mid-drive save refuse for a body the driver has
+         * not gone anywhere near yet. STOP calls both, in this order.
+         */
+        checkDespawns() {
+            return checkSolveDespawns(staging, run);
         },
     };
 }

@@ -123,7 +123,8 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { rolesForStaging } from './tapeRunner.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
-    harvestPresets, parseGoalsParam, readSolveParams, solveForPage, stagingFromJson,
+    harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
+    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
     activeTraceIndex, channelSummary, collectRun, defaultLayerSet, LAYER_IDS,
@@ -1142,29 +1143,39 @@ function mountTracePane(source, seekTo) {
 // ── SOURCE = SOLVE ───────────────────────────────────────────────────────
 
 /**
- * The default staging block, for arriving with `?level=` and nothing else.
+ * ⛓⛓⛓ THE DEFAULT STAGING BLOCK IS **THE TRUE GAME START** (slice 5,
+ * kickoff §12.3) — and it is FETCHED, never typed.
  *
- * ⚠ Deliberately the EMPTIEST honest one — no clears, no save, no seam —
- * because a page that quietly pre-cleared flags would present a room the
- * game only reaches after work as a room you can boot into. The boot
- * coordinates are the atlas's own convention for "just inside the top-left
- * door" and will be wrong for plenty of levels; the solver says so when
- * they are, which is the honest failure.
+ * ── what it replaced, and why that was worse than it looked ───────────
+ *
+ * It used to be a frozen literal: `{level: 0, x: 16, y: 16}`, everything
+ * else empty, described here as "deliberately the EMPTIEST honest one". It
+ * was honest — nothing was pre-cleared — and it was still a boot state THE
+ * GAME NEVER HAS. `(16,16)` is the atlas's convention for "just inside the
+ * top-left door" and L0's real spawn is `(80,128)`; `pins` was `[]` where
+ * every honest walk in the tree pins `dead_frames`; `rng` was `null` where
+ * the game boots with a live `fp` seed. Arriving at the page with nothing
+ * typed put you in a room the player cannot be standing in, and the first
+ * thing anybody does with an editor is press the button before typing.
+ *
+ * ⛔ SO IT IS THE HONEST CHAIN'S OWN SEGMENT-1 BOOT, THROUGH THE SAME SEAM
+ * A PASTED BLOCK TAKES. `act2-the-sword` is R7's honest playthrough and its
+ * first segment starts where a new game does; its committed tape is the
+ * artifact the game and the differential already agreed on. The page fetches
+ * that tape and runs it through `stagingFromJson` — the `?boot=` path,
+ * unchanged — so the default validates through `parseTape` exactly as any
+ * pasted block does. ⚠ A literal transcription of the same numbers would be
+ * the same eleven fields typed a second time, and the copy would be right
+ * until the chain moved (trap 86: one definition, owned, never retyped).
+ *
+ * ⚠ AND A FETCH CAN FAIL. `?boot=`'s failure is already REPORTED rather than
+ * swallowed and this one is too — there is no literal to silently fall back
+ * to, which is the point: a page that quietly reverted to a made-up boot
+ * would present the fallback as the game's start.
  */
-const DEFAULT_STAGING = Object.freeze({
-    boot: { level: 0, x: 16, y: 16 },
-    noclip: false,
-    noDamage: false,
-    noHazards: [],
-    grants: [],
-    persistence: [],
-    despawn: [],
-    equips: [],
-    pins: [],
-    save: null,
-    rng: null,
-    seam: null,
-});
+const trueStartStaging = async () =>
+    stagingFromJson(await fetchJson(`/${DEFAULT_TAPE_DIR}/${TRUE_START_SEGMENT}.json`,
+        `the true game start (${TRUE_START_SEGMENT})`));
 
 /**
  * "Boot like `r8-solve-18`" — the staging-is-declared law in UI clothes.
@@ -1220,6 +1231,94 @@ function mountBootPresets(sel, source, noteEl = null) {
 }
 
 /**
+ * ⛓⛓⛓ THE BOOT FORM (slice 5, kickoff §12.4) — checkboxes over the SAME
+ * PARSED BLOCK the textarea holds, in BOTH directions.
+ *
+ * ⛔ ONE SOURCE OF TRUTH, AND IT IS THE TEXTAREA'S PARSE. Ticking a box
+ * parses the box's text, edits the resulting BLOCK (`withItemFlag`) and
+ * re-serialises the whole thing back; typing in the textarea re-derives the
+ * boxes from whatever it now parses. Nothing is cached between the two, so
+ * there is no state that can disagree with what is on screen — a form
+ * holding its own copy of the flags is the two-cost-models trap with
+ * checkboxes, and the copy would win silently whenever the user typed.
+ *
+ * ⛔⛔ A TEXTAREA THAT WILL NOT PARSE **DISABLES** THE BOXES, with the
+ * parser's own message. The alternative is guessing: a form that kept the
+ * last good flags would let you tick a box against a block that does not
+ * exist and then write it into text you never meant to keep. Refusing to
+ * offer the control is the honest answer, and the reason is on screen.
+ *
+ * ⚠ THE THIRD STATE IS RENDERED AS `indeterminate`. `itemFlagsOf` returns
+ * `null` for a flag the block declares NOTHING about (the seam keeps only
+ * declared keys), and a dash-filled box says that where an unticked one
+ * would say "declared false". Clicking one writes a real `false`, which is
+ * a declaration — as it should be, because that is what the user just did.
+ *
+ * @param {Function} onChange fired after a box writes, so the arm can
+ *   re-derive anything downstream (the SOLVE arm re-reads its census).
+ */
+function mountBootForm(formEl, boxEl, noteEl, onChange = () => {}) {
+    const boxes = ITEM_FORM_FIELDS.map((f) => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = `${formEl.id}-${f.id}`;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(` ${f.label}`));
+        // The GAME's own property path, so the control says which field it
+        // writes rather than only what it is called.
+        label.title = `${f.field}  (writes seam.${f.key})`;
+        formEl.appendChild(label);
+        return { f, input };
+    });
+    const why = document.createElement('span');
+    formEl.appendChild(why);
+
+    const sync = () => {
+        let staging = null;
+        let refusal = null;
+        try {
+            staging = stagingFromJson(JSON.parse(boxEl.value));
+        } catch (e) {
+            refusal = e.message;
+        }
+        const flags = staging ? itemFlagsOf(staging) : null;
+        for (const { f, input } of boxes) {
+            input.disabled = !staging;
+            input.indeterminate = Boolean(staging) && flags[f.id] === null;
+            input.checked = flags?.[f.id] === true;
+        }
+        why.textContent = refusal
+            ? `  ⚠ the block below will not parse, so these are disabled — ${refusal}`
+            : '';
+        return staging;
+    };
+
+    for (const { f, input } of boxes) {
+        input.onchange = () => {
+            let parsed;
+            try {
+                parsed = stagingFromJson(JSON.parse(boxEl.value));
+            } catch {
+                // Unreachable while the box is enabled — but re-syncing is
+                // the honest answer if it ever is, rather than writing into
+                // text the parser has already refused.
+                sync();
+                return;
+            }
+            boxEl.value = JSON.stringify(withItemFlag(parsed, f.id, input.checked), null, 4);
+            sync();
+            onChange();
+        };
+    }
+    // A block edited by hand re-derives the boxes — the other direction.
+    boxEl.addEventListener('input', () => sync());
+    sync();
+    if (noteEl && !noteEl.textContent) noteEl.textContent = '';
+    return { sync };
+}
+
+/**
  * The SOLVE arm: staging in, the bot's own walk out, scrubbed by REPLAY's
  * machinery.
  *
@@ -1235,12 +1334,16 @@ async function runSolve(params) {
         .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
     // ── the staging block ────────────────────────────────────────────
-    let staging = DEFAULT_STAGING;
-    let origin = 'the page default (nothing cleared, nothing saved)';
+    let staging;
+    let origin;
     if (params.boot) {
         const path = params.boot.replace(/^\/+/, '');
         staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
         origin = path;
+    } else {
+        staging = await trueStartStaging();
+        origin = `THE TRUE GAME START — ${TRUE_START_SEGMENT}'s boot block `
+            + `(${TRUE_START_CHAIN} segment 1)`;
     }
     // ⚠ ?level= OVERRIDES the block's own level and SAYS SO. The boot x/y
     // belong to the block's level, so pointing it at another one usually
@@ -1286,16 +1389,73 @@ async function runSolve(params) {
     };
     showGoals();
 
+    /**
+     * ⛔⛔ THE BLOCK THE BUTTON ACTUALLY SOLVES IS THE ONE IN THE BOX —
+     * and until slice 5 it was not.
+     *
+     * `runSolve` fetched a staging block, printed it into the textarea and
+     * then kept its own closure copy; `solveNow` solved THAT. So every edit
+     * anybody made to the "starting conditions" editor since slice 1 shipped
+     * was silently discarded — the page showed a block, accepted changes to
+     * it, and solved a different one. The MANUAL arm has re-read its own box
+     * at START since slice 3 (`stagingFromJson(JSON.parse(...))`), which is
+     * what makes the asymmetry visible now that a FORM writes into the box:
+     * a sword checkbox over a textarea nobody reads is a control that does
+     * nothing, reporting success.
+     *
+     * ⚠ Found by building the form, not by inspection — the same way slice
+     * 3's load-note was found by its browser row. A feature that consumes an
+     * input is how you learn whether the input was ever consumed.
+     */
+    const stagingNow = () => {
+        const block = stagingFromJson(JSON.parse($('solveBoot').value));
+        return params.level !== null && Number.isFinite(params.level)
+            ? { ...block, boot: { ...block.boot, level: params.level } }
+            : block;
+    };
+
     // The census needs a built world, and building one can refuse (a level
     // the atlas does not have, an orphan clear). REPORTED, not swallowed.
     let world = null;
-    try {
-        world = censusWorld(levelSource, staging);
-        fillCensus(world);
-    } catch (e) {
-        fatal(`level ${staging.boot.level} would not build from this staging block`,
-            e.message);
-    }
+    /**
+     * ⛔⛔ THE CENSUS IS REBUILT FROM THE BLOCK BEING SOLVED, and it has to
+     * take that block as an ARGUMENT rather than re-deriving it.
+     *
+     * The first cut re-read the box here too, and `solveNow` re-read it
+     * again — two readings of one textarea in a single press. Retyping the
+     * level to 4 then produced a refusal naming LEVEL 11's exits: the block
+     * was fresh and the census was the one built at mount. That is the
+     * two-cost-models trap in miniature, and its tell was a message about
+     * the wrong room. ⚠ Caught by the acceptance row, which asserted the
+     * refusal names the level in the box — a check on `__editorSolve.level`
+     * alone would have been green.
+     */
+    const refreshCensus = (block) => {
+        try {
+            world = censusWorld(levelSource, block);
+            fillCensus(world);
+            return true;
+        } catch (e) {
+            fatal(`level ${block.boot.level} would not build from this staging block`,
+                e.message);
+            return false;
+        }
+    };
+    refreshCensus(staging);
+    /**
+     * ⛓ THE FORM'S CONSUMER, IN THE SAME SLICE (trap 119). A ticked sword
+     * rebuilds the world the goal picker offers — `Karlore` removes itself
+     * when the player has fire and a `BossKey` in its own first `check()`,
+     * so an item flag really can change what a level CONTAINS.
+     *
+     * ⚠ And a HAND edit refreshes it on `change` (blur), not on `input`: a
+     * world build per keystroke would rebuild a level for every half-typed
+     * number. The press-time refresh in `solveNow` is what makes the picker's
+     * staleness cosmetic rather than load-bearing.
+     */
+    const refreshFromBox = () => { try { refreshCensus(stagingNow()); } catch { /* shown */ } };
+    mountBootForm($('solveForm'), $('solveBoot'), $('solveNote'), refreshFromBox);
+    $('solveBoot').addEventListener('change', refreshFromBox);
 
     $('solveGoalAdd').onclick = () => {
         const spec = $('solveGoalPick').value;
@@ -1311,6 +1471,25 @@ async function runSolve(params) {
     // ── SOLVE ────────────────────────────────────────────────────────
     async function solveNow() {
         $('solveGo').disabled = true;
+        // ⛔ THE BOX, RE-READ AT PRESS — see `stagingNow`. A refusal here is
+        // the tape parser's own message, exactly as the MANUAL arm's is.
+        let block;
+        try {
+            block = stagingNow();
+        } catch (e) {
+            fatal('the starting conditions would not parse — this is the tape parser\'s '
+                + 'own message', e.message);
+            window.__editorSolve = { status: 'refused', message: e.message };
+            $('solveGo').disabled = false;
+            return;
+        }
+        // ⛔ ONE READING PER PRESS: the census the default goals come from is
+        // rebuilt from the SAME block the solve will run, so a refusal names
+        // the room in the box rather than the room at mount.
+        if (!refreshCensus(block)) {
+            $('solveGo').disabled = false;
+            return;
+        }
         let list = goals;
         if (!list.length) {
             if (!world) return;
@@ -1327,7 +1506,7 @@ async function runSolve(params) {
         }
 
         $('status').className = '';
-        $('status').textContent = `solving ${name} in level ${staging.boot.level} `
+        $('status').textContent = `solving ${name} in level ${block.boot.level} `
             + `toward ${formatGoalsParam(list)}…`;
         // Yield one frame so the status paints BEFORE the synchronous solve
         // takes the thread. Without it the page looks frozen with the old
@@ -1337,12 +1516,14 @@ async function runSolve(params) {
         let solved;
         try {
             solved = solveForPage({
-                levelSource, staging, goals: list, name, now: () => performance.now(),
+                levelSource, staging: block, goals: list, name, now: () => performance.now(),
             });
         } catch (e) {
             // ⚠ THE SOLVER'S OWN MESSAGE, VERBATIM, with the rows it got
             // through first — a refused segment is still reviewable, and
-            // `SolverRefusal` carries them for exactly that.
+            // `SolverRefusal` carries them for exactly that. ⛓ Slice 5: the
+            // despawn CHECK's refusal arrives through this same arm, which
+            // is why the wording says "the solver" rather than naming one.
             const rows = e.rows?.length;
             fatal('the solver REFUSED — this is its own message, not the page\'s',
                 `${e.message}${rows ? `\n\n(${rows} decision row(s) before the refusal)` : ''}`);
@@ -1374,7 +1555,20 @@ async function runSolve(params) {
             + `${solved.out.replans} re-plan(s), `
             + `${solved.run.playerHits.length} hit(s), `
             + `${solved.run.playerDeaths.length} death(s)  ·  `
-            + `solve ${solveMs} ms + replay ${replayMs} ms`;
+            + `solve ${solveMs} ms + replay ${replayMs} ms`
+            /**
+             * ⛓ THE DESPAWN CHECK'S VERDICT, ON SCREEN (slice 5). A check
+             * whose only outcome anybody sees is its REFUSAL is a check
+             * nobody can tell ran — trap 119's family, one channel over. A
+             * reproduced row names the model's own tick beside the declared
+             * witness band so the two numbers are visibly different things.
+             */
+            + (solved.despawns.length
+                ? `  ·  DESPAWN CHECK: ${solved.despawns.map((d) => `${d.id} declared by `
+                    + `${d.at}${d.reproduced ? ` — the model removed it at ${d.t} (${d.cause})`
+                        : ' — NOT reproduced by this walk (the route never caused it)'}`)
+                    .join('; ')}`
+                : '');
         $('status').className = 'ok';
         $('status').textContent = `${name} — ${frames.length} observations, `
             + `solved in ${solveMs} ms`;
@@ -1388,7 +1582,9 @@ async function runSolve(params) {
         window.__editorSolve = {
             status: 'ok',
             name,
-            level: staging.boot.level,
+            level: block.boot.level,
+            despawns: solved.despawns,
+            tapeVersion: solved.tape.tape_version,
             goals: formatGoalsParam(list),
             tickCount: solved.out.perTick.length,
             perTick: solved.out.perTick.map((held) => [...held]),
@@ -1441,12 +1637,16 @@ async function runManual(params) {
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
         .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
-    let staging = DEFAULT_STAGING;
-    let origin = 'the page default (nothing cleared, nothing saved)';
+    let staging;
+    let origin;
     if (params.boot) {
         const path = params.boot.replace(/^\/+/, '');
         staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
         origin = path;
+    } else {
+        staging = await trueStartStaging();
+        origin = `THE TRUE GAME START — ${TRUE_START_SEGMENT}'s boot block `
+            + `(${TRUE_START_CHAIN} segment 1)`;
     }
     if (params.level !== null && Number.isFinite(params.level)) {
         staging = { ...staging, boot: { ...staging.boot, level: params.level } };
@@ -1460,6 +1660,9 @@ async function runManual(params) {
     $('manualKeys').textContent = KEYBOARD_ROWS
         .map((r) => `${r.code.replace(/^(Key|Arrow)/, '')}→${r.key}`).join('  ');
     mountBootPresets($('manualPreset'), 'manual', $('manualNote'));
+    // ⛓ The SAME form, over this arm's own box — and MANUAL has re-read its
+    // box at START since slice 3, so there is nothing downstream to refresh.
+    mountBootForm($('manualForm'), $('manualBoot'), $('manualNote'));
 
     // ⚠ ONCE. The Set IS the live toggle state — the checkboxes mutate it in
     // place, so rebuilding it per draw would undo every toggle every frame.
@@ -1606,8 +1809,21 @@ async function runManual(params) {
          * a tape that looks exactly like a good one.
          */
         const trip = foldRoundTrip(session, levelSource);
+        /**
+         * ⛓ THE DESPAWN CHECK, AT STOP (slice 5). A hand drive is a walk
+         * like any other, so the declared removals owe the same account —
+         * and STOP is where the walk is finished, which is what makes the
+         * question answerable. ⚠ REPORTED, never thrown here: STOP's job is
+         * to hand back what was driven, and a refusal that discarded the
+         * session would lose a real walk over a bookkeeping disagreement.
+         */
+        let despawns = [];
+        let despawnWhy = null;
+        try { despawns = session.checkDespawns(); } catch (e) { despawnWhy = e.message; }
         window.__editorManual = {
             name,
+            despawns,
+            despawnWhy,
             ticks: session.tick,
             observations: session.observations.length,
             frames: trip.frames.length,
@@ -1644,6 +1860,13 @@ async function runManual(params) {
                   ? `  ·  the DRIVE refused at tick ${session.refusal.tick} and the replay `
                     + 'did NOT — the fold lost the refusal'
                   : '');
+        if (despawnWhy) {
+            $('detail').textContent += `  ·  ⛔ DESPAWN CHECK REFUSED — ${despawnWhy}`;
+        } else if (despawns.length) {
+            $('detail').textContent += `  ·  DESPAWN CHECK: ${despawns.map((d) => `${d.id} `
+                + `declared by ${d.at}${d.reproduced ? ` — the model removed it at ${d.t}`
+                    : ' — NOT reproduced by this walk'}`).join('; ')}`;
+        }
 
         // ⛓ And the tape is handed to the page's OWN REPLAY arm, so what you
         // scrub is what the stepper produced — not a picture of the drive.

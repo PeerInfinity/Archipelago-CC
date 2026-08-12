@@ -181,21 +181,64 @@ check(!/past the last frame/.test(last.stdout),
 
 console.log('\n## ⛔ the refusal path — a NAMED refusal, non-zero, and NOTHING written');
 /**
- * The fold-time refusal, which is a DOCUMENTED v1 BOUND rather than a bug
- * (slice 3 §10.3, ⚖ ruled after the arc): six committed boots carry a v9
- * `persistence[].at`, and the v8 fold refuses them BY NAME. It is the
- * cheapest deterministic refusal in the tree, and it is exactly the class
- * a CLI driving arbitrary boots will meet.
+ * ⛓⛓⛓ SLICE 5 — THE CONTROL WAS **REPLACED, NOT DELETED** (trap 62), AND
+ * THE REPLACEMENT IS THE SAME COMMAND.
+ *
+ * This row used to exercise the v8 fold's refusal of a v9 boot: six
+ * committed boots carry a `persistence[].at` and the assembly could not
+ * label them. ⚖ The user promoted the extension (kickoff §12.1), so those
+ * six now FOLD — and a deleted refusal check whose subject moved into the
+ * model is a discharge, while a deleted one whose subject did NOT is trap
+ * 62. The subject here only half-moved, which is why the arguments below
+ * are byte-for-byte the ones this row has always used:
+ *
+ *   `at` is bounded by `[0, tick_count]`, and a FOLD's tick_count is the
+ *   RUN'S. `exit:16,16` is L18's own boot door, so the solve finishes in
+ *   SEVEN ticks and the block's clear at 385 is still unrepresentable —
+ *   the same unparseable artifact, through a different door, refused at
+ *   the same moment of assembly by the same function.
+ *
+ * ⚠ MEASURED BEFORE THE OLD ASSERTION DIED: this exact invocation was run
+ * against the new tree and exits 2 with the message below. And the
+ * feature's own positive is asserted directly beneath it, so the row now
+ * carries BOTH halves — the boot that folds and the one that cannot.
  */
 const refusalOut = `${OUT}/refusal-never-written.png`;
 const r = await cli([`--out=${refusalOut}`, `--boot=${TAPES}/r8-solve-18.json`,
     '--solve=1', '--goals=exit:16,16']);
 check(r.code === EXIT.refused, '⛔ a refused run exits NON-ZERO', `exit ${r.code}`);
-check(/buildStagedTape/.test(r.stderr) && /version 9 field/.test(r.stderr),
+check(/buildStagedTape/.test(r.stderr) && /beyond this run's own \d+ tick\(s\)/.test(r.stderr),
     '⛓ …carrying the RUN\'S OWN message, not the CLI\'s',
-    r.stderr.replace(/\s+/g, ' ').slice(0, 150));
+    r.stderr.replace(/\s+/g, ' ').slice(0, 170));
 check(!existsSync(refusalOut),
     '⛔⛔ …and it wrote NOTHING. A blank frame with exit 0 is the defect this rule exists for');
+
+/**
+ * ⛓⛓⛓ AND THE OTHER HALF — THE SAME BOOT, EXPORTED, BECAUSE IT NOW FOLDS.
+ *
+ * The refusal above and this export differ in ONE argument: the goal. With
+ * L18's far exit the solve runs 573 ticks, past the declared clear at 385,
+ * and the fold stamps VERSION 9 and carries the row. That pair is what
+ * makes the replacement honest rather than a re-aimed regex — the boot that
+ * refused for a whole arc is exported here, from the same CLI, in one run.
+ */
+console.log('\n## ⛓ the v9 boot that refused for a whole arc — EXPORTED (slice 5)');
+const v9Out = `${OUT}/f-v9-folded.png`;
+const v9 = await cli([`--out=${v9Out}`, `--boot=${TAPES}/r8-solve-18.json`,
+    '--solve=1', '--goals=exit:176,112', '--tick=last']);
+check(v9.code === EXIT.ok, 'a v9 boot SOLVES, FOLDS and exports — exit 0', `exit ${v9.code}`);
+check(png(v9Out).isPng && png(v9Out).width > 0,
+    '⛓ …and the PNG is real', `${png(v9Out).width}x${png(v9Out).height}`);
+/**
+ * ⛔ THE TICK COUNT IS THE CLAIM, not the exit code. `--tick=last` resolves
+ * through the page's own readiness contract, so the number the CLI prints
+ * is the frame count of the tape the page REPLAYED — i.e. the v9 tape
+ * really parsed. A run whose fold had been refused could not have printed
+ * one at all.
+ */
+check(/tick 573 of 574/.test(v9.stdout),
+    '⛓⛓ …and the page REPLAYED all 573 folded ticks — the v9 tape parsed',
+    /--tick=last[^\n]*/.exec(v9.stdout)?.[0]);
 
 // A second, different refusal — so the row is about the PATH, not one message.
 const amb = await cli([`--out=${OUT}/refusal2.png`, `--boot=${TAPES}/r8-solve-18.json`, '--solve=1']);

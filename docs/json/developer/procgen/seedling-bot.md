@@ -7167,22 +7167,72 @@ checked against them:
    one fold (`buildStagedTape`), one run construction (`createRunForStaging`,
    the runner's own), one renderer.
 
+### The v2 round (⚖ user, 2026-08-12) — what slice 5 changed
+
+Three of the v1 bounds below were LIFTED by the user's promotion, and the
+section marks each in place rather than rewriting history.
+
+- **The fold derives its own version.** `buildStagedTape` carries a staging
+  block's `persistence[].at` rows and stamps `requiredTapeVersion` (floor 8),
+  so the six boots that refused for a whole arc now fold to v9 and replay.
+  The v10 `despawn` guard STAYS, with a new reason: a fold has no witness to
+  offer, and every row it emits is a fact about the run it just folded.
+  ⛔ What replaces the old refusal is the **bound**: `at` must lie in
+  `[0, tick_count]` and a fold's tick_count is the RUN'S, so a block whose
+  clear is declared past the walk's own end is refused by name at assembly.
+- **The despawn drop is now a drop AND a check.** `solveStaging` still never
+  hands a declared despawn to the run — the witness belongs to the hand walk
+  — but since R8 slice 1 the model computes chaser terrain deaths itself, so
+  `tapeRunner.checkSolveDespawns(declaredBlock, drivenRun)` asserts the drop
+  was safe: an UNBRIDGED family (or a room `chaserRoomVerdict` refuses to
+  step) is the R7-era blindness intact and REFUSES BY NAME; a bridged one is
+  checked by id, and by tick against the witness band.
+  ⛔⛔ **`at` IS THE PHASES BLOCK'S END TICK, NOT THE REMOVAL'S** — the format
+  says so and `witnessedDespawnFindings` enforces the arithmetic. So the
+  comparison is `computed <= declared`, and that is a definition rather than
+  a tolerance. Measured on the driven case: `r7-act2-6` declares
+  `bob@112,48` by tick **120** and the model removes it at **55**, by water,
+  on the hand walk AND on a fresh solve. The game's own `--mobiles` reading
+  of that walk is t~62, which the ten-tick `Mobile.death` fade brackets
+  exactly. ⚠ A walk that never causes the removal REPORTS it and does not
+  refuse — that is what the drop exists for.
+- **The default boot is the TRUE GAME START.** With no `?boot=`, the page
+  fetches `act2-the-sword`'s own segment-1 tape and takes its boot block
+  through the same `stagingFromJson` a pasted block takes. The literal it
+  replaced (`{level: 0, x: 16, y: 16}`, no pins, no rng) was honest and was
+  still a state the game never has.
+- **Boot form v1**: sword and shield checkboxes above the raw editor, two-way
+  bound to the SAME parsed block — ticking edits the block and re-serialises,
+  typing re-derives the boxes, and a block that will not parse DISABLES them
+  with the parser's message. ⚠ The flags live at `seam.items.hasSword`, not
+  in the v6 `save` block; `save.hasSword` is the GAME's property path
+  (`SEAM_BOOT_SPEC[].field`), which is the other of the two key spaces.
+- ⛔ **And the defect the form found: the SOLVE button never read its own
+  textarea.** `runSolve` printed a block into the "starting conditions"
+  editor and solved its closure copy, so every edit made there since slice 1
+  was silently discarded. It re-reads at press time now, and the census the
+  default goals come from is rebuilt from that same block.
+
+Slice 5's browser row is `scripts/procgen/check-seedling-editor-boot.mjs`.
+
 ### ⛔ NAMED LIMITS (v1 bounds, each with a written cause)
 
-- **Six committed boots refuse at fold time.** `buildStagedTape` writes a
-  `tape_version: 8` header and refuses a staging block carrying a v9
+- ~~**Six committed boots refuse at fold time.**~~ ⚖ **LIFTED by slice 5**
+  (see the v2 round above). `buildStagedTape` used to write a fixed
+  `tape_version: 8` header and refuse a staging block carrying a v9
   `persistence[].at` (`r7-act2-5/8/full`, `r8-solve-5/8/18`) or a v10
-  `despawn` (`r7-act2-6`) — BY NAME, at assembly. Extending the assembly to
-  v9/v10 is the real repair and was ⚖ ruled AFTER the arc, with its own gate,
-  for whenever something routinely needs the page to fold those boots.
+  `despawn` (`r7-act2-6`). The six v9 boots fold; the v10 guard remains, for
+  a different reason, and no committed boot reaches it (the solve side empties
+  the list before the assembly sees it).
 - **No live "watch the bot think" mode.** Deferred on a measurement and then
   dropped on it: an in-page solve of the acceptance segment takes **135–154
   ms** (node, same code, same machine: 283 ms — chromium is faster). A live
   decision stream would be showing a search that has already finished. Bound
   named: one room, one goal, three decision rows; a 10× segment is ~1.5 s.
-- **Starting conditions are JSON only** — a raw v8 staging block with presets
-  harvested from the committed tapes' own boots. A form for the common
-  fields was ⚖ ruled optional polish and was not built.
+- **Starting conditions are JSON-FIRST** — a raw v8 staging block with presets
+  harvested from the committed tapes' own boots. ⚖ Slice 5 added the optional
+  polish for TWO fields (sword, shield); everything else is still the editor,
+  which is what ⚖ §1.7 meant by JSON-first.
 - **Not a GL panel.** No `__BUNDLED_MODULES__` entry, no substrate
   registration; it is a standalone static page. Panel integration is a later
   decision with its own checklist.
@@ -7204,4 +7254,7 @@ SOLVE and the four transitive `node:fs` imports that had made the page
 unloadable in a browser since R7 slice 1; §9 the overlays, and the engine
 change that turned out not to be needed; §10 manual mode, the tape I/O, and
 the `earnedClears` tick added at each feeder's write funnel so the overlay
-could place clear markers at all; §11 this slice.
+could place clear markers at all; §11 the CLI export and the v1 close; §12
+the user's V2 SCOPE and §13 slice 5 (the v9 fold, the despawn drop→check,
+the true-start default boot, the boot form — and the SOLVE button that had
+never read its own textarea).

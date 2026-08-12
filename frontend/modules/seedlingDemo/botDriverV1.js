@@ -35,7 +35,7 @@
  * half that. DEFAULT_TOLERANCE is 1.0px, comfortably above 0.85.
  */
 
-import { serializeTape } from './tapeFormat.js';
+import { requiredTapeVersion, serializeTape } from './tapeFormat.js';
 import {
     applyFriction,
     DEFAULT_FRICTION,
@@ -342,53 +342,81 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
  * `noHazards`/`grants` to the fold would change nothing but would suggest
  * the fold's header mattered.
  *
- * ⛔ AND IT REFUSES A v10 STAGING BLOCK rather than mislabelling one. The
- * emitted header says version 8, which is the vocabulary this assembly
- * writes; a non-empty `despawn` is a version 10 fact and a tape that
- * declared it under a version 8 label would be read by `parseTape` as a
- * tape whose despawns "mean [] BY DEFINITION".
+ * ⛔ AND IT REFUSES A v10 STAGING BLOCK rather than mislabelling one — see
+ * the despawn guard below, which is the ONLY version guard left here and is
+ * no longer about labelling at all.
  *
- * ⛔⛔ …AND A v9 ONE, WHICH WAS MISSING AND HAD A LIVE VICTIM (editor arc
- * slice 3). `persistence[].at` — a MID-RUN clear — is a version 9 fact, and
- * `requiredTapeVersion` has always known it (`usesAt ? 9 : floor`). The
- * despawn guard was written and the `at` guard was not, so this assembly
- * emitted a version 8 header around a version 9 field for SIX of the 153
- * committed boots (`r7-act2-5/8/full`, `r8-solve-5/8/18`).
+ * ⛓⛓⛓ EDITOR ARC SLICE 5 — THE VERSION IS NOW DERIVED, AND THE v9 GUARD IS
+ * GONE BECAUSE ITS SUBJECT MOVED INTO THE ASSEMBLY.
  *
- * ⚠ MEASURED, NOT REASONED: solving in the page from `r8-solve-18`'s own
- * boot block produces a tape the page's own REPLAY arm then REFUSES —
- * "`tape_version 8` has no mid-run clear". Slice 1 shipped that arm and
- * slice 2's acceptance row solved from `r7-act2-4`, a v8 boot, so nothing
- * met it. Found by slice 3's manual arm, which folds through this same
- * function and sweeps a wider set of boots.
+ * Slice 3 found this assembly emitting a version 8 header around a version 9
+ * field — `persistence[].at`, a MID-RUN clear — for six of the 153 committed
+ * boots (`r7-act2-5/8/full`, `r8-solve-5/8/18`), and closed the hole with a
+ * REFUSAL, saying in terms that extending the assembly was the real repair
+ * and a deliberate act with its own gate. ⚖ The user promoted it (kickoff
+ * §12.1) and this is that act:
  *
- * The refusal is the fix in scope: an unparseable artifact becomes a named
- * refusal at the moment of assembly. EXTENDING the assembly to v9/v10 is the
- * real repair and is a deliberate act with its own gate — the same sentence
- * the v10 guard has said since it was written.
+ *   · the `at` rows are CARRIED, exactly as `save`/`rng`/`seam` are — this
+ *     assembly has always emitted the staging block's declarations verbatim,
+ *     and `at` was the one it silently dropped;
+ *   · the header is `requiredTapeVersion`'s answer rather than a literal 8.
+ *     ⛔ The rule was never in doubt (`usesAt ? 9 : floor`); what was missing
+ *     was this function ASKING. A second `usesAt` test spelled out here would
+ *     be that rule's second copy, and the first thing a v11 field would
+ *     break. The floor stays 8 — the vocabulary this assembly writes — so a
+ *     boot with no mid-run clear emits the same bytes it emitted yesterday.
+ *
+ * ⛔⛔ AND THE NEW REFUSAL IS THE **BOUND**, NOT THE VERSION. `parseTape`
+ * requires every `at` to lie in `[0, tick_count]` ("a removal after the last
+ * tick never happens"), and a fold's `tick_count` is the RUN'S, not the boot
+ * tape's. So a staging block whose mid-run clear is declared at tick 385 and
+ * a solve that finished in 200 produce a tape the parser refuses — the same
+ * unparseable-artifact failure slice 3 met, through a different door. It is
+ * refused HERE, at the moment of assembly, naming the row and both numbers.
+ * ⚠ And it is not a mislabelling: the run really was handed that clear and
+ * really never reached its tick, so there is no version at which the tape
+ * would be honest.
+ *
+ * ⛔⛔⛔ THE DESPAWN GUARD STAYS, AND ITS REASON IS NOW A DIFFERENT ONE. It
+ * used to say "this assembly writes a version 8 header"; the header is
+ * derived now, so that sentence has expired. What has not is `tapeFormat`'s
+ * own law — a `despawn` is a WITNESSED removal, admissible only beside the
+ * `phases` block that witnessed it — and this assembly has no witness to
+ * offer. Every row it emits is a fact about the run it just folded; a
+ * despawn carried through from a boot block would be a fact about somebody
+ * else's walk, wearing this tape's name. ⛓ kickoff §12.2 in one line: the
+ * fold emits what the run actually WAS, and invents no v10 row. The check
+ * that the DROP is safe lives at the other end of the same seam
+ * (`tapeRunner.checkSolveDespawns`).
  */
 export function buildStagedTape({ staging, perTick, name }) {
     if ((staging.despawn ?? []).length > 0) {
         throw new Error('buildStagedTape: this staging block declares '
-            + `${staging.despawn.length} despawn(s), which is a version 10 field, but this `
-            + 'assembly writes a version 8 header — and a v8 tape means `despawn: []` BY '
-            + 'DEFINITION. Emitting it would silently drop the removals. Extend the '
-            + 'assembly to v10 rather than labelling one version as another.');
+            + `${staging.despawn.length} despawn(s) `
+            + `(${staging.despawn.map((d) => `${d.id}@${d.at}`).join(', ')}), and this `
+            + 'assembly has no witness to offer for one. A v10 despawn is a WITNESSED '
+            + 'mid-run removal — admissible only beside the `phases` block that witnessed '
+            + 'it — so carrying a boot block\'s row into a tape folded from a DIFFERENT '
+            + 'walk would put somebody else\'s measurement under this tape\'s name. The '
+            + 'solve side drops the list (`tapeRunner.solveStaging`) and CHECKS the drop '
+            + 'against the model\'s own computed removals; nothing reaches this assembly '
+            + 'with one still attached.');
     }
-    const midRun = (staging.persistence ?? []).filter((c) => c.at !== undefined);
-    if (midRun.length > 0) {
+    const overrun = (staging.persistence ?? [])
+        .filter((c) => c.at !== undefined && c.at > perTick.length);
+    if (overrun.length > 0) {
         throw new Error('buildStagedTape: this staging block declares '
-            + `${midRun.length} MID-RUN clear(s) (`
-            + `${midRun.map((c) => `{${c.level},${c.tag}}@${c.at}`).join(', ')}`
-            + '), which is a version 9 field, but this assembly writes a version 8 header '
-            + '— and a v8 tape means every clear "applies before the first live tick BY '
-            + 'DEFINITION". Emitting it would produce a tape `parseTape` refuses outright, '
-            + 'which is what it did for six committed boots before this guard existed. '
-            + 'Extend the assembly to v9 rather than labelling one version as another.');
+            + `${overrun.length} MID-RUN clear(s) (`
+            + `${overrun.map((c) => `{${c.level},${c.tag}}@${c.at}`).join(', ')}`
+            + `) beyond this run's own ${perTick.length} tick(s). \`at\` is bounded by `
+            + '`[0, tick_count]` ("a removal after the last tick never happens"), so the '
+            + 'emitted tape would be one `parseTape` refuses outright. The run was handed '
+            + 'that clear and never reached its tick — there is no version at which this '
+            + 'tape is honest. Solve further, or boot from a block whose clears fit.');
     }
     const folded = buildTape(perTick, staging.boot, name,
         { noclip: false, noDamage: false, noHazards: [], grants: [] });
-    return {
+    const tape = {
         game: 'seedling',
         name,
         boot: staging.boot,
@@ -404,8 +432,11 @@ export function buildStagedTape({ staging, perTick, name }) {
         seam: staging.seam,
         tick_count: perTick.length,
         inputs: folded.inputs,
-        tape_version: 8,
     };
+    // ⛔ ASKED, never re-derived — `requiredTapeVersion` owns the rule and
+    // this is the whole of slice 5's half of it. The floor is 8: the
+    // vocabulary this assembly writes, so a v8 boot's bytes do not move.
+    return { ...tape, tape_version: requiredTapeVersion(tape, 8) };
 }
 
 /** Convenience: synthesize and serialize in one step. */

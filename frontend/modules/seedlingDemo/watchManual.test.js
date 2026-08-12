@@ -31,7 +31,7 @@ import {
 import { collectRun } from './watchOverlays.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { KEY_NAMES, parseTape } from './tapeFormat.js';
-import { stagingFromTape } from './tapeRunner.js';
+import { checkSolveDespawns, createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -314,59 +314,104 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
     });
 });
 
-describe('⛔ THE ONE FOLD REFUSES TO MISLABEL ITS OWN VERSION', () => {
+describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
     /**
-     * ⛔ `buildStagedTape` HAD NO TEST AT ALL, which is why one of its two
-     * guards was missing for two slices.
+     * ⛓ SLICE 3 PINNED TWO REFUSALS HERE AND SLICE 5 REPLACES ONE OF THEM
+     * WITH THE FEATURE IT WAS STANDING IN FOR.
      *
-     * The assembly writes a version 8 header. `despawn` (v10) was guarded;
-     * `persistence[].at` (v9) was not — so it emitted a v8 header around a
-     * v9 field for SIX of the committed boots, producing a tape `parseTape`
-     * refuses outright. MEASURED, not reasoned: solving in the page from
-     * `r8-solve-18`'s own boot yielded a tape the page's own REPLAY arm then
-     * refused. Slice 1 shipped that arm; slice 2's row solved from a v8 boot,
-     * so nothing met it. Slice 3's manual arm folds a wider set of boots and
-     * walked into it.
+     * Slice 3 found this assembly emitting a version 8 header around a v9
+     * `persistence[].at` for six committed boots, and closed the hole with a
+     * refusal that said extending the assembly was the real repair. ⚖ The
+     * user promoted it (kickoff §12.1): the `at` rows are now CARRIED and the
+     * header is `requiredTapeVersion`'s answer.
      *
-     * ⚠ BOTH guards are pinned here, not just the new one — a test written
-     * only for the gap that bit leaves the other one exactly as unprotected
-     * as this one was.
+     * ⚠ The v9 refusal test is not DELETED, it is SUPERSEDED by the rows
+     * below that prove the six boots fold AND round-trip — trap 62's
+     * distinction. What replaces it as a refusal is the BOUND (an `at` past
+     * the run's own last tick), which is a different and still-live failure.
      */
     const v8 = () => stagingOf('r7-act2-4');
 
-    it('a v8 staging block folds, and the result PARSES', () => {
+    it('a v8 staging block folds to v8 STILL — the floor does not move', () => {
         const t = buildStagedTape({ staging: v8(), perTick: [new Set(['right'])], name: 'ok' });
         expect(t.tape_version).toBe(8);
         expect(() => parseTape(t)).not.toThrow();
     });
 
-    it('⛔ a MID-RUN clear (v9 `at`) is REFUSED, by name and with the flag', () => {
+    it('⛓⛓⛓ THE SIX BOOTS THAT REFUSED NOW FOLD — v9, and every one REPLAYS', () => {
+        /**
+         * ⛔ THE ROUND TRIP IS THE ROW, not the version number. A tape stamped
+         * 9 that `parseTape` still refused would be the same defect wearing a
+         * bigger number — and refusing is exactly what it did at v8. So each
+         * boot is folded WITH ITS OWN TAPE'S INPUTS (the walk whose length the
+         * declared `at` fits) and then parsed back.
+         */
+        const six = ['r7-act2-5', 'r7-act2-8', 'r7-act2-full',
+            'r8-solve-5', 'r8-solve-8', 'r8-solve-18'];
+        for (const n of six) {
+            const committed = tape(n);
+            // ⚠ `solveStaging`, because that is what the callers hand over —
+            // and `r7-act2-full` is BOTH a v9 `at` boot and the v10 despawn
+            // one, so the raw block would refuse here for the OTHER reason.
+            const staging = solveStaging(stagingOf(n));
+            const perTick = Array.from({ length: committed.tick_count }, () => new Set());
+            for (const s of committed.inputs) {
+                for (let t = s.from; t < s.to && t < perTick.length; t += 1) perTick[t].add(s.key);
+            }
+            const folded = buildStagedTape({ staging, perTick, name: `fold-${n}` });
+            expect(folded.tape_version).toBe(9);
+            const at = folded.persistence.filter((c) => c.at !== undefined);
+            // The rows are CARRIED, not merely tolerated: same count, same ticks.
+            expect(at.map((c) => c.at))
+                .toEqual(committed.persistence.filter((c) => c.at !== undefined).map((c) => c.at));
+            expect(() => parseTape(JSON.parse(JSON.stringify(folded)))).not.toThrow();
+        }
+    });
+
+    it('⛔ an `at` PAST THE RUN\'S LAST TICK is refused — the bound, not the version', () => {
+        /**
+         * The failure that survives the extension, and it is the one a SOLVE
+         * meets: `at` is bounded by `[0, tick_count]` and a fold's tick_count
+         * is the RUN'S. A boot declaring a clear at 385 and a solve that
+         * finished in 100 would emit a tape `parseTape` refuses outright —
+         * the same unparseable artifact, through a different door.
+         */
         const staging = stagingOf('r8-solve-18');
         const midRun = staging.persistence.filter((c) => c.at !== undefined);
-        expect(midRun.length).toBeGreaterThan(0);   // the fixture still has one
-        expect(() => buildStagedTape({ staging, perTick: [], name: 'x' }))
-            .toThrow(/MID-RUN clear\(s\).*version 9 field.*Extend the assembly to v9/s);
-        // The message NAMES the offending flag and its tick, so the reader
-        // knows which boot they cannot fold rather than that some boot fails.
+        expect(midRun.length).toBeGreaterThan(0);
+        const short = Array.from({ length: 100 }, () => new Set());
+        expect(() => buildStagedTape({ staging, perTick: short, name: 'x' }))
+            .toThrow(/beyond this run's own 100 tick\(s\)/);
         let why = '';
-        try { buildStagedTape({ staging, perTick: [], name: 'x' }); } catch (e) { why = e.message; }
+        try { buildStagedTape({ staging, perTick: short, name: 'x' }); } catch (e) { why = e.message; }
         expect(why).toContain(`{${midRun[0].level},${midRun[0].tag}}@${midRun[0].at}`);
+        // ⛓ AND IT IS THE BOUND AND NOT THE FIELD: one tick longer than the
+        // declared clear and the same block folds.
+        const long = Array.from({ length: midRun[0].at }, () => new Set());
+        expect(buildStagedTape({ staging, perTick: long, name: 'x' }).tape_version).toBe(9);
     });
 
-    it('⛔ a DESPAWN (v10) is still refused too — the guard that already existed', () => {
-        const staging = { ...v8(), despawn: [{ level: 20, tag: 0, at: 5 }] };
-        expect(() => buildStagedTape({ staging, perTick: [], name: 'x' }))
-            .toThrow(/version 10 field/);
-    });
-
-    it('⛓ and the SEVEN committed boots that trip it are NAMED, not a mystery', () => {
+    it('⛔ a DESPAWN (v10) is still refused — this assembly has NO WITNESS to offer', () => {
         /**
-         * A bounded sweep that says what it bounded: every committed tape,
-         * and exactly which ones this assembly cannot label — SIX by the v9
-         * `at` (the gap this slice found) and ONE more by the v10 `despawn`
-         * (`r7-act2-6`, which stages `r8-solve-6`). Split by REASON, because
-         * a single count would have hidden that the two guards catch
-         * different boots.
+         * ⚠ The guard survives the version derivation, and its reason CHANGED.
+         * It used to say "this assembly writes a version 8 header"; the header
+         * is derived now. What stands is `tapeFormat`'s own law — a despawn is
+         * a WITNESSED removal — and a fold has no witness: every row it emits
+         * is a fact about the run it just folded. Carrying a boot block's row
+         * would put somebody else's measurement under this tape's name.
+         */
+        const staging = { ...v8(), despawn: [{ level: 20, id: 'bob@16,16', at: 5 }] };
+        expect(() => buildStagedTape({ staging, perTick: [], name: 'x' }))
+            .toThrow(/no witness to offer/);
+        // …and the SOLVE side is what guarantees nothing arrives with one.
+        expect(solveStaging(stagingOf('r7-act2-6')).despawn).toEqual([]);
+    });
+
+    it('⛓ and the committed boots are STILL NAMED, split by what happens to each', () => {
+        /**
+         * The bounded sweep slice 3 wrote, re-aimed: it named seven boots this
+         * assembly could not label. SIX of them now FOLD, and the sweep says
+         * so rather than being deleted along with the refusal it guarded.
          */
         const names = readdirSync(join(HERE, 'fixtures', 'tapes'))
             .filter((f) => f.endsWith('.json')).map((f) => f.replace(/\.json$/, ''));
@@ -378,8 +423,119 @@ describe('⛔ THE ONE FOLD REFUSES TO MISLABEL ITS OWN VERSION', () => {
             'r8-solve-18', 'r8-solve-5', 'r8-solve-8',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
-        expect(new Set([...byAt, ...byDespawn]).size).toBe(7);
         expect(names.length).toBeGreaterThan(140);   // and the sweep really swept
+        // ⛓ THE SIX FOLD; the despawn pair is emptied by `solveStaging` before
+        // it ever reaches the assembly, so NO committed boot refuses now.
+        for (const n of byDespawn) expect(solveStaging(stagingOf(n)).despawn).toEqual([]);
+    });
+});
+
+describe('⛓⛓⛓ THE DESPAWN DROP, NOW A DROP **AND A CHECK** (slice 5)', () => {
+    /**
+     * ⛔ THE DRIVEN CASE, AND ITS NUMBER IS THE SLICE'S MAIN RESULT.
+     *
+     * `r7-act2-6` declares ONE despawn: `bob@112,48` in L6, `at: 120`. The
+     * solve side has dropped it since the two run constructions were unified
+     * (editor arc slice 1), on the R7-era reason that the model could not see
+     * a chaser die. Since R8 slice 1 it CAN — `chaserTerrainDeaths` — and
+     * `levelRun`'s own docblock says that ledger is "what makes 'the game
+     * removed this body' checkable against the declaration rather than merely
+     * compatible with it". This is that check.
+     *
+     * ⛔⛔ MEASURED: the model computes the removal at tick **55**, not 120.
+     * That is NOT a disagreement, and the reason is written in the format
+     * itself: *"`at` is the phases block's own end tick"* — and
+     * `witnessedDespawnFindings` enforces exactly that arithmetic
+     * (`startsAtTick + ticks - base === at`). `L6_BOB_DROWN` is 26 ticks of
+     * approach plus 94 of dwell, and the game was asked ONCE, at the end. So
+     * 120 is the tick the WITNESS CLOSED, and the removal happened somewhere
+     * inside `[0, 120]`. The game's own `--mobiles` reading of that walk is
+     * "t~62" (`tapeFormat` v10 docblock), which brackets the model's 55
+     * exactly as the ten-tick `Mobile.death` fade predicts: destroy at 55,
+     * `FP.world.remove` around 65.
+     */
+    const declaredOf = (n) => stagingFromTape(parseTape(tape(n)));
+    const driveTape = (n) => {
+        const committed = parseTape(tape(n));
+        const run = createRunForStaging(solveStaging(stagingFromTape(committed)), levelSource);
+        const perTick = Array.from({ length: committed.tick_count }, () => new Set());
+        for (const s of committed.inputs) {
+            for (let t = s.from; t < s.to && t < perTick.length; t += 1) perTick[t].add(s.key);
+        }
+        for (const held of perTick) run.advance(held);
+        return run;
+    };
+
+    it('⛓⛓⛓ THE POSITIVE WITNESS — the model computes r7-act2-6\'s declared removal itself', () => {
+        const run = driveTape('r7-act2-6');
+        const rows = checkSolveDespawns(declaredOf('r7-act2-6'), run);
+        expect(rows).toEqual([{
+            level: 6, id: 'bob@112,48', at: 120, reproduced: true, t: 55, cause: 'water',
+        }]);
+        // ⛔ AND THE ID IS THE HALF THAT IS EXACT. The declared row names one
+        // of the room's TWO bobs and the model's ledger names both — the
+        // other drowns at 259, undeclared and correctly so
+        // (`playthroughWalk`'s L6 block rules it "correct rather than
+        // sloppy"). A check keyed on the ledger's LENGTH would have passed
+        // for the wrong body.
+        expect(run.chaserTerrainDeaths.map((d) => `${d.id}@${d.t}`))
+            .toEqual(['bob@112,48@55', 'bob@96,16@259']);
+    });
+
+    it('⛔ a removal computed AFTER the witness closed is a FINDING, not a rounding', () => {
+        // The band's far edge, driven from the same run: move the declaration
+        // one tick BEFORE the computed removal and the check must refuse.
+        const run = driveTape('r7-act2-6');
+        const tight = { ...declaredOf('r7-act2-6'), despawn: [{ level: 6, id: 'bob@112,48', at: 54 }] };
+        expect(() => checkSolveDespawns(tight, run)).toThrow(/1 tick\(s\) LATE/);
+        // …and AT the edge it passes: `<=` is the band, not a slack.
+        const edge = { ...declaredOf('r7-act2-6'), despawn: [{ level: 6, id: 'bob@112,48', at: 55 }] };
+        expect(checkSolveDespawns(edge, run)[0].reproduced).toBe(true);
+    });
+
+    it('⛔ an UNBRIDGED family REFUSES — the R7-era blindness, still whole', () => {
+        const run = driveTape('r7-act2-6');
+        const blind = {
+            ...declaredOf('r7-act2-6'),
+            despawn: [{ level: 6, id: 'sandtrap@64,16', at: 120 }],
+        };
+        expect(() => checkSolveDespawns(blind, run))
+            .toThrow(/not a family this run STEPS/);
+    });
+
+    it('⚠ a walk that never causes the removal REPORTS it, and does NOT refuse', () => {
+        /**
+         * ⛔ THE ROW THE DROP EXISTS FOR. A solve derives its own route;
+         * `r7-act2-6`'s bob drowns because the HAND walk baited it into the
+         * water. A walk that never baits it leaves it standing — in the game
+         * exactly as in the model — so refusing here would make every
+         * despawn-carrying boot unsolvable, which is the failure the drop was
+         * built to avoid.
+         */
+        const declared = declaredOf('r7-act2-6');
+        const run = createRunForStaging(solveStaging(declared), levelSource);
+        for (let i = 0; i < 10; i += 1) run.advance(new Set());
+        expect(run.chaserTerrainDeaths).toEqual([]);
+        expect(checkSolveDespawns(declared, run)).toEqual([{
+            level: 6, id: 'bob@112,48', at: 120, reproduced: false, t: null, cause: null,
+        }]);
+    });
+
+    it('a block with NO despawn checks nothing and says so with an empty list', () => {
+        const run = driveTape('r7-act2-4');
+        expect(checkSolveDespawns(declaredOf('r7-act2-4'), run)).toEqual([]);
+    });
+
+    it('⛓ and a MANUAL session exposes the same check on its own drive', () => {
+        const s = drive(
+            createManualSession({
+                levelSource, staging: declaredOf('r7-act2-6'), name: 'l6-idle',
+            }),
+            [[[], 10]],
+        );
+        expect(s.checkDespawns()).toEqual([{
+            level: 6, id: 'bob@112,48', at: 120, reproduced: false, t: null, cause: null,
+        }]);
     });
 });
 

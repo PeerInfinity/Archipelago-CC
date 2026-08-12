@@ -42,6 +42,7 @@
  */
 
 import { heldKeysAt, parseTape } from './tapeFormat.js';
+import { isBridgedChaser } from './chasers.js';
 import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES } from './levelWorld.js';
 import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.js';
@@ -160,6 +161,30 @@ export function stagingFromTape(t) {
  * the reason was never written down until the two constructions were
  * unified and the difference had to be explained (editor arc slice 1).
  *
+ * ⛓⛓⛓ EDITOR ARC SLICE 5 — HALF OF THAT REASON HAS EXPIRED, AND THE HALF
+ * THAT HAS IS WHY THE DROP IS NOW A DROP **AND A CHECK**.
+ *
+ * The sentence above was written in R7, when the model could not see a
+ * chaser die at all: `chasers.chaserStep` is `Enemy.update`'s MOVEMENT half,
+ * and the terrain switch that drowns a body was the game's alone. Since R8
+ * slice 1 it is transcribed — `chaserTerrainDeaths` — and `levelRun` says in
+ * terms that the ledger is "what makes 'the game removed this body'
+ * checkable against the declaration rather than merely compatible with it".
+ *
+ * ⇒ what expired is the BLINDNESS, not the drop:
+ *
+ *   · the run still never inherits the list. A declared row is a fact about
+ *     a walk this run is not taking, and handing it over would remove a body
+ *     on a tick that means nothing here.
+ *   · but for a family the run STEPS, dropping it costs nothing — if this
+ *     walk causes the removal, the model computes it itself, on its own
+ *     tick. `checkSolveDespawns` is where that is asserted instead of
+ *     assumed.
+ *   · and for a family it does NOT step, the R7 sentence still holds whole:
+ *     the drop is invisible, the body stands for ever, and there is no
+ *     ledger to catch it. That case REFUSES BY NAME rather than solving
+ *     blind.
+ *
  * ⇒ Everything the SOLVE side pins is pinned HERE, once. The alternative —
  * each caller pinning the two flags it remembers — is how a caller ends up
  * honest about collision and blind about a despawned bob.
@@ -167,6 +192,117 @@ export function stagingFromTape(t) {
 export const solveStaging = (staging) => ({
     ...staging, noclip: false, noDamage: false, despawn: [],
 });
+
+/**
+ * ⛓⛓⛓ THE OTHER END OF `solveStaging`'s DROP: what the DECLARED despawns
+ * meant, checked against what the model computed (editor arc slice 5,
+ * kickoff §12.2).
+ *
+ * Call it with the block AS DECLARED (never the `solveStaging` output — that
+ * one has nothing to check) and a run that has been DRIVEN. Per row:
+ *
+ *  1. **Is the family one the tick loop steps?** `isBridgedChaser` is the
+ *     derived roster, never a third list (trap 89). A `no` is the R7-era
+ *     blindness intact and REFUSES: dropping a removal the model cannot
+ *     compute leaves a body standing for the whole walk with nothing able
+ *     to notice.
+ *  2. **Is the ROOM stepped?** `chaserRoomVerdict` is the run's own
+ *     authority and it refuses per ROOM, not per class — an arrow-trap room
+ *     holding a static body whose arrow-death is unstaged is not stepped
+ *     however bridged the declared tag is. A `no` REFUSES with the verdict's
+ *     own sentence.
+ *  3. **Did this walk reproduce it?** If the model computed a removal of
+ *     that id in that level, the agreement is ASSERTED. If it did not, the
+ *     row is REPORTED as not reproduced and that is not an error — see
+ *     below.
+ *
+ * ⛔⛔ (3)'s ABSENCE IS NOT A FAILURE, AND SAYING SO IS THE WHOLE POINT OF
+ * THE DROP. A solve derives its own route; `r7-act2-6`'s bob drowns because
+ * the HAND walk baited it into the water, and a route that never baits it
+ * leaves it standing — in the game exactly as in the model. Refusing there
+ * would make every despawn-carrying boot unsolvable, which is the failure
+ * the drop exists to avoid.
+ *
+ * ⛔⛔⛔ AND THE TICK COMPARISON IS `<=`, WHICH IS NOT A TOLERANCE — IT IS
+ * WHAT `at` MEANS.
+ *
+ * `tapeFormat` defines the field in one line: *"`at` is the phases block's
+ * own end tick"*, and `playthroughAcceptance.witnessedDespawnFindings`
+ * enforces exactly that (`b.startsAtTick + b.ticks - base === d.at`). So a
+ * declared `at` is the tick the GAME WAS ASKED at — the end of a truncated
+ * `--mobiles` arm — and not the tick the body left. The removal happened
+ * somewhere in `[0, at]`; a model that computes it INSIDE that band agrees
+ * with the witness, and one that computes it AFTER the band contradicts a
+ * measurement that already showed the body gone. This is the same "cleared
+ * by now is a BAND and not a tick" law `stagedClearFindings` states one
+ * family over. ⚠ MEASURED, not assumed: `r7-act2-6` declares 120 and the
+ * model computes 55 — see the acceptance row, and slice 5's as-built for
+ * why 120 was never a removal tick.
+ *
+ * ⚠ ONE-DIRECTIONAL BY DESIGN. Every DECLARED row must be accounted for;
+ * a computed removal nobody declared is fine and already ruled so —
+ * `playthroughWalk`'s L6 block says the OTHER bob drowns undeclared and
+ * that this "is correct rather than sloppy", because the model and the game
+ * agree everywhere the player is.
+ *
+ * @returns {{level, id, at, reproduced, t, cause}[]} one row per declaration.
+ */
+export function checkSolveDespawns(staging, run) {
+    const rows = staging.despawn ?? [];
+    const out = [];
+    for (const d of rows) {
+        const tag = d.id.slice(0, d.id.indexOf('@'));
+        if (!isBridgedChaser(tag)) {
+            throw new Error(`checkSolveDespawns: the staging block declares that the game `
+                + `removed ${d.id} in level ${d.level} at tick ${d.at}, and "${tag}" is not `
+                + 'a family this run STEPS. The solve side drops a declared despawn because '
+                + 'the witness belongs to the hand walk — which is safe only when the model '
+                + 'can compute the removal itself. It cannot here, so the body would stand '
+                + 'for the whole walk with no ledger able to notice. Bridge the family '
+                + '(`chasers.CHASERS` + `spinner.MODELLED_ENEMY_CLASSES`), or solve from a '
+                + 'block that does not declare it.');
+        }
+        const verdict = run.chaserRoomVerdict(d.level);
+        if (!verdict.stepped) {
+            throw new Error(`checkSolveDespawns: the staging block declares that the game `
+                + `removed ${d.id} in level ${d.level} at tick ${d.at}, and this run does `
+                + `NOT step that room: ${verdict.why}. The declared removal is dropped and `
+                + 'nothing in the model can recompute it, so the body stands for the whole '
+                + 'walk — the R7-era blindness, unchanged for this room.');
+        }
+        const computed = [
+            ...run.chaserTerrainDeaths.map((r) => ({ ...r, ledger: 'terrain' })),
+            ...run.chaserKills.map((r) => ({ ...r, ledger: 'arrow', cause: 'arrow' })),
+        ].filter((r) => r.level === d.level && r.id === d.id);
+        if (computed.length === 0) {
+            out.push({
+                level: d.level, id: d.id, at: d.at, reproduced: false, t: null, cause: null,
+            });
+            continue;
+        }
+        // Earliest, because that is the removal; a second row for one body
+        // is a bookkeeping error the ledgers already refuse upstream.
+        const first = computed.sort((a, b) => a.t - b.t)[0];
+        if (first.t > d.at) {
+            throw new Error(`checkSolveDespawns: the staging block declares that the game `
+                + `had removed ${d.id} in level ${d.level} BY tick ${d.at} (\`at\` is the `
+                + 'witnessing phases block\'s own end tick), and this run computes the '
+                + `removal at tick ${first.t} — ${first.t - d.at} tick(s) LATE, outside the `
+                + 'band the witness closed. One of the two is wrong about the room: either '
+                + 'the model steps the body differently from the game, or the declaration '
+                + 'names a walk this one is not. This is a finding, not a rounding error.');
+        }
+        out.push({
+            level: d.level,
+            id: d.id,
+            at: d.at,
+            reproduced: true,
+            t: first.t,
+            cause: first.cause,
+        });
+    }
+    return out;
+}
 
 /**
  * WHICH CENSUS a staging block implies — the roles-by-noclip rule, and

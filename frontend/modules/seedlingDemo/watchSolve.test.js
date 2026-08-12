@@ -15,11 +15,15 @@ import { join } from 'node:path';
 
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
-    harvestPresets, parseGoalsParam, readSolveParams, solveForPage, stagingFromJson,
+    harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
+    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
-import { parseTape } from './tapeFormat.js';
-import { createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { parseTape, requiredTapeVersion, SEAM_BOOT_SPEC } from './tapeFormat.js';
+import {
+    createRunForStaging, createTapeStepper, solveStaging, stagingFromTape,
+} from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { TAPES_DIR } from './fixtures/index.js';
 
 const levelSource = atlasLevelSource();
@@ -144,6 +148,45 @@ describe('the staging block, from whatever JSON the caller has', () => {
         expect(() => stagingFromJson({ boot: { level: 4, x: 16, y: 16 } }))
             .toThrow(/noclip must be a boolean/);
     });
+
+    /**
+     * ⛓⛓⛓ SLICE 5 — EVERY COMMITTED BOOT SURVIVES THE TEXTAREA, and six of
+     * them did not before.
+     *
+     * The bare arm completed the block with `{tape_version: 8, tick_count:
+     * 0}` — two literals that are properties of the WRAPPER and that
+     * `parseTape` reads as claims about the BLOCK. v8 means "no
+     * `persistence[].at`" and tick_count 0 bounds every declared `at` to
+     * `[0, 0]`, so a v9 boot and the v10 despawn pair could not round-trip
+     * through the page's own editor at all.
+     *
+     * ⚠ IT MATTERED THE MOMENT ANYTHING READ THE BOX. The MANUAL arm has
+     * re-read it at START since slice 3 and the SOLVE arm now does at press
+     * time, so this was a live refusal on both — found by the CLI's
+     * acceptance row on the first run after the re-read landed, not by
+     * inspection.
+     */
+    it('⛓⛓⛓ EVERY COMMITTED BOOT ROUND-TRIPS THROUGH THE TEXTAREA', () => {
+        const cases = [
+            ['r7-act2-4', 8], ['r8-solve-18', 9], ['r7-act2-6', 10], ['r7-act2-full', 10],
+        ];
+        for (const [name, version] of cases) {
+            const staging = stagingFromJson(readTape(name));
+            // What the page puts in the box, and what it reads back out.
+            const back = stagingFromJson(JSON.parse(JSON.stringify(staging)));
+            expect(back).toEqual(staging);
+            // ⛓ And the version really is DERIVED — a v10 block completed as
+            // a v8 tape was the failure, so the row names the number.
+            expect(requiredTapeVersion(back, 8)).toBe(version);
+        }
+    });
+
+    it('⛔ an explicitly DECLARED version is honoured, not overridden', () => {
+        // A caller who types `tape_version` means it; deriving over the top
+        // would silently accept a block the declared version forbids.
+        expect(() => stagingFromJson({ ...stagingOf('r8-solve-18'), tape_version: 8 }))
+            .toThrow(/tape_version 8 has no mid-run clear/);
+    });
 });
 
 describe('the PRESETS harvest', () => {
@@ -241,5 +284,144 @@ describe('the SOLVE itself', () => {
         const staging = stagingOf('r7-act2-4');
         expect(() => solveForPage({ levelSource, staging, goals: [], name: 'x' }))
             .toThrow(/goals must be a non-empty ordered list/);
+    });
+});
+
+// ── slice 5: the true-start default, and the boot form ───────────────────
+
+describe('⛓⛓⛓ THE DEFAULT BOOT IS THE TRUE GAME START (slice 5)', () => {
+    /**
+     * ⛔ THE CROSS-BOUNDARY ASSERTION, and it is the whole reason the page
+     * may hold a NAME rather than eleven fields.
+     *
+     * `playthroughWalk` imports `fixtures/index.js` and therefore `node:fs`,
+     * so `watch.html` cannot read `PLAYTHROUGH_CHAINS` at all — one such
+     * import made the entire page unloadable for two rungs (slice 1 §8.4).
+     * This file runs in node, where it can, so the constant is CHECKED
+     * against the chain instead of being a second list nobody compares.
+     */
+    it('names the honest chain\'s own SEGMENT 1, checked against the chain', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === TRUE_START_CHAIN);
+        expect(chain).toBeTruthy();
+        expect(TRUE_START_SEGMENT).toBe(chain.segments[0]);
+    });
+
+    it('⛓ and that block really is a NEW GAME — not the atlas\'s door convention', () => {
+        /**
+         * The literal it replaced was `{level: 0, x: 16, y: 16}`, everything
+         * else empty. This row is what makes the change a claim: the real
+         * boot is elsewhere in the room, and it pins the fields the literal
+         * got silently wrong.
+         */
+        const staging = stagingFromJson(readTape(TRUE_START_SEGMENT));
+        expect(staging.boot).toEqual({ level: 0, x: 80, y: 128 });
+        expect(staging.boot).not.toEqual({ level: 0, x: 16, y: 16 });
+        // ⚠ …and the fields a hand-typed default had no way to know:
+        expect(staging.pins).toEqual(['dead_frames']);
+        expect(staging.rng).not.toBeNull();
+        expect(staging.noclip).toBe(false);
+        expect(staging.noDamage).toBe(false);
+        // A start is a start: nothing cleared, nothing carried.
+        expect(staging.persistence).toEqual([]);
+        expect(staging.grants).toEqual([]);
+        expect(staging.despawn).toEqual([]);
+    });
+
+    it('validates through the SAME parser path a pasted block takes', () => {
+        // The page fetches the tape and hands it to `stagingFromJson` — the
+        // `?boot=` path, unchanged — so this is that call, not a stand-in.
+        expect(() => stagingFromJson(readTape(TRUE_START_SEGMENT))).not.toThrow();
+        expect(stagingFromJson(readTape(TRUE_START_SEGMENT)))
+            .toEqual(stagingOf(TRUE_START_SEGMENT));
+    });
+});
+
+describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
+    /**
+     * ⛔⛔ THE FIELD THE RULING NAMES DOES NOT EXIST WHERE IT SOUNDS LIKE IT
+     * DOES. §12.4 says `save.hasSword`; a tape's version-6 `save` block is
+     * `{totem_parts, keys, seal_parts}` and `parseSave` refuses any other
+     * key BY NAME. `save.hasSword` is `SEAM_BOOT_SPEC[].field` — the GAME's
+     * property path — and the wire key is `seam.items.hasSword`. This row
+     * pins the translation so the form cannot drift onto the other space.
+     */
+    it('the form\'s two fields ARE seam spec rows, both key spaces', () => {
+        for (const f of ITEM_FORM_FIELDS) {
+            const row = SEAM_BOOT_SPEC.find((s) => s.key === f.key);
+            expect(row).toBeTruthy();
+            expect(row.field).toBe(f.field);
+            expect(row.type).toBe('boolean');
+            expect(row.modelled).toBe(true);
+        }
+        expect(ITEM_FORM_FIELDS.map((f) => f.id)).toEqual(['sword', 'shield']);
+    });
+
+    it('⚠ reads THREE states — declared true, declared false, and undeclared', () => {
+        // `r7-act2-11` declares the sword true and the shield false; the
+        // page's own default declares no seam at all.
+        expect(itemFlagsOf(stagingOf('r7-act2-11'))).toEqual({ sword: true, shield: false });
+        expect(stagingOf(TRUE_START_SEGMENT).seam).toBeNull();
+        expect(itemFlagsOf(stagingOf(TRUE_START_SEGMENT)))
+            .toEqual({ sword: null, shield: null });
+    });
+
+    it('⛓ a tick WRITES a real declaration, and the block still PARSES', () => {
+        const before = stagingOf(TRUE_START_SEGMENT);
+        const after = withItemFlag(before, 'sword', true);
+        expect(itemFlagsOf(after)).toEqual({ sword: true, shield: null });
+        // ⛔ THE ROUND TRIP IS THE ROW. The page serialises the edited block
+        // into the textarea and re-parses it on the next keystroke, so a
+        // write the parser then refuses would disable the form it came from.
+        const back = stagingFromJson(JSON.parse(JSON.stringify(after)));
+        expect(itemFlagsOf(back)).toEqual({ sword: true, shield: null });
+        expect(back.seam).toEqual({ items: { hasSword: true } });
+    });
+
+    it('⚠ writes ONLY the flag it was given — a partial seam stays partial', () => {
+        /**
+         * A form that filled in the other twelve item flags would make the
+         * page claim state nobody measured — `seamToBlock`'s own law: "not
+         * declared" and "declared at the fresh-page value" are different
+         * segments and only one can be checked against a predecessor.
+         */
+        const both = withItemFlag(withItemFlag(stagingOf(TRUE_START_SEGMENT), 'sword', true),
+            'shield', false);
+        expect(both.seam).toEqual({ items: { hasSword: true, hasShield: false } });
+    });
+
+    it('⛓ and it edits a DECLARED block in place, leaving the other twelve alone', () => {
+        const before = stagingOf('r7-act2-11');
+        const after = withItemFlag(before, 'shield', true);
+        expect(after.seam.items.hasShield).toBe(true);
+        expect(after.seam.items.hasSword).toBe(before.seam.items.hasSword);
+        expect(Object.keys(after.seam).sort()).toEqual(Object.keys(before.seam).sort());
+        expect(after.boot).toEqual(before.boot);
+        expect(after.rng).toEqual(before.rng);
+    });
+
+    it('⛔ an unknown field is a NAMED refusal, not a silently ignored tick', () => {
+        expect(() => withItemFlag(stagingOf(TRUE_START_SEGMENT), 'hasDarkSuit', true))
+            .toThrow(/is not a boot-form field/);
+    });
+
+    it('⛓⛓ THE FLAG REACHES THE RUN — a ticked sword really arms the player', () => {
+        /**
+         * ⛔ THE CONSUMER, ASSERTED IN THE DRIVEN SYSTEM (the graceful-
+         * fallback law). A checkbox that edited JSON nobody built a world
+         * from would pass every row above and change nothing — which is
+         * exactly what the SOLVE arm did with its whole textarea until this
+         * slice re-read it at press time.
+         */
+        const runFor = (staging) => createRunForStaging(solveStaging(staging), levelSource);
+        const off = runFor(stagingOf(TRUE_START_SEGMENT));
+        const on = runFor(withItemFlag(stagingOf(TRUE_START_SEGMENT), 'sword', true));
+        // ⚠ MEASURED AT `run.inventory` — the layer the seam block is APPLIED
+        // to, not at the world the census reads. The sword changes no
+        // placement in L0, so a census check would have been green either way
+        // and proved nothing about whether the flag arrived.
+        expect(off.inventory.hasSword).toBe(false);
+        expect(on.inventory.hasSword).toBe(true);
+        // …and only that flag: a form write is not a fresh inventory.
+        expect({ ...on.inventory, hasSword: false }).toEqual(off.inventory);
     });
 });
