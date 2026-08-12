@@ -347,6 +347,25 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
  * writes; a non-empty `despawn` is a version 10 fact and a tape that
  * declared it under a version 8 label would be read by `parseTape` as a
  * tape whose despawns "mean [] BY DEFINITION".
+ *
+ * ⛔⛔ …AND A v9 ONE, WHICH WAS MISSING AND HAD A LIVE VICTIM (editor arc
+ * slice 3). `persistence[].at` — a MID-RUN clear — is a version 9 fact, and
+ * `requiredTapeVersion` has always known it (`usesAt ? 9 : floor`). The
+ * despawn guard was written and the `at` guard was not, so this assembly
+ * emitted a version 8 header around a version 9 field for SIX of the 153
+ * committed boots (`r7-act2-5/8/full`, `r8-solve-5/8/18`).
+ *
+ * ⚠ MEASURED, NOT REASONED: solving in the page from `r8-solve-18`'s own
+ * boot block produces a tape the page's own REPLAY arm then REFUSES —
+ * "`tape_version 8` has no mid-run clear". Slice 1 shipped that arm and
+ * slice 2's acceptance row solved from `r7-act2-4`, a v8 boot, so nothing
+ * met it. Found by slice 3's manual arm, which folds through this same
+ * function and sweeps a wider set of boots.
+ *
+ * The refusal is the fix in scope: an unparseable artifact becomes a named
+ * refusal at the moment of assembly. EXTENDING the assembly to v9/v10 is the
+ * real repair and is a deliberate act with its own gate — the same sentence
+ * the v10 guard has said since it was written.
  */
 export function buildStagedTape({ staging, perTick, name }) {
     if ((staging.despawn ?? []).length > 0) {
@@ -355,6 +374,17 @@ export function buildStagedTape({ staging, perTick, name }) {
             + 'assembly writes a version 8 header — and a v8 tape means `despawn: []` BY '
             + 'DEFINITION. Emitting it would silently drop the removals. Extend the '
             + 'assembly to v10 rather than labelling one version as another.');
+    }
+    const midRun = (staging.persistence ?? []).filter((c) => c.at !== undefined);
+    if (midRun.length > 0) {
+        throw new Error('buildStagedTape: this staging block declares '
+            + `${midRun.length} MID-RUN clear(s) (`
+            + `${midRun.map((c) => `{${c.level},${c.tag}}@${c.at}`).join(', ')}`
+            + '), which is a version 9 field, but this assembly writes a version 8 header '
+            + '— and a v8 tape means every clear "applies before the first live tick BY '
+            + 'DEFINITION". Emitting it would produce a tape `parseTape` refuses outright, '
+            + 'which is what it did for six committed boots before this guard existed. '
+            + 'Extend the assembly to v9 rather than labelling one version as another.');
     }
     const folded = buildTape(perTick, staging.boot, name,
         { noclip: false, noDamage: false, noHazards: [], grants: [] });

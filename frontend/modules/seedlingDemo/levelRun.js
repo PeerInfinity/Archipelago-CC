@@ -2708,6 +2708,14 @@ export function createLevelRun({
      * ledger entry is derived from the FINAL state and never from a count of
      * hits — which is exactly the shape of error a "count the presses"
      * accounting would make.
+     *
+     * ⛓ The value is `{held, t}` rather than a bare boolean (editor arc slice
+     * 3): `t` is the tick of the write that LEFT it where it is, which for a
+     * toggle is the only honest tick there is. A pole hit at t=40 and again
+     * at t=90 is not cleared at all; one hit at t=40 and a third at t=140 is
+     * cleared AT 140, not at 40. `held` is still what every reader reads —
+     * see `poleFlagFor`, which unwraps it — so the toggle's own rule (final
+     * state, never a hit count) is untouched.
      */
     const poleFlags = new Map();
     const poleKey = (n, tag) => `${n}:${tag}`;
@@ -2740,9 +2748,13 @@ export function createLevelRun({
         if (!poleFlags.has(key)) {
             // `Game.checkPersistence(tag)` — true unless something cleared
             // it, and the tape's declared clears are the only other writer.
-            poleFlags.set(key, !(clearedByLevel.get(n) ?? []).includes(tag));
+            //
+            // ⚠ `t: null` — NOT 0, and not `ticksCompleted`. Nothing was
+            // written here; this is the BOOT reading of a flag the tape
+            // declared (or did not). A tick would say a press happened.
+            poleFlags.set(key, { held: !(clearedByLevel.get(n) ?? []).includes(tag), t: null });
         }
-        return poleFlags.get(key);
+        return poleFlags.get(key).held;
     };
     const poleStates = new Map();
     const poleStateFor = (n) => {
@@ -3946,7 +3958,9 @@ export function createLevelRun({
                     const flag = tag < 0
                         ? outOfBandFlagForWriter({ as3: 'BurnableTree', level, tag })
                         : outOfBandFlagFor(level, tag);
-                    rockFlags.set(ledgerKey(flag), { ...flag, id, level, by: 'burnabletree' });
+                    rockFlags.set(ledgerKey(flag), {
+                        ...flag, id, level, by: 'burnabletree', t: ticksCompleted,
+                    });
                     treeBurns.push({ id, level, t: ticksCompleted, goneAt, flag });
                 }
                 hits.push({ as3: 'BurnableTree', id, burned: started, goneAt, why });
@@ -4239,7 +4253,7 @@ export function createLevelRun({
                     const flag = tag < 0
                         ? outOfBandFlagForWriter({ as3: 'BreakableRock', level, tag })
                         : outOfBandFlagFor(level, tag);
-                    rockFlags.set(ledgerKey(flag), { ...flag, id, level });
+                    rockFlags.set(ledgerKey(flag), { ...flag, id, level, t: ticksCompleted });
                 }
                 hits.push({
                     as3: 'BreakableRock', id, broke: started, goneAt,
@@ -4260,7 +4274,12 @@ export function createLevelRun({
                 pole.hitsTimer = LIGHTPOLE_HITS_TIMER_MAX;
                 // `set activate` — `Game.setPersistence(tag, !activate)`.
                 if (pole.persistTag >= 0) {
-                    poleFlags.set(poleKey(level, pole.persistTag), !pole.activate);
+                    // The WRITE FUNNEL, and the tick is taken here rather
+                    // than derived later: `set activate` IS
+                    // `Game.setPersistence(tag, !activate)`, so this line is
+                    // the moment the flag moves.
+                    poleFlags.set(poleKey(level, pole.persistTag),
+                        { held: !pole.activate, t: ticksCompleted });
                 }
                 hits.push({
                     as3: 'LightPole', id, moved: true, why: null,
@@ -4470,7 +4489,8 @@ export function createLevelRun({
                         // and 34 ticks above the removal. Banked here, on the
                         // tick it really happens.
                         const flag = outOfBandFlagFor(level, b.tag);
-                        shieldBossFlags.set(ledgerKey(flag), { ...flag, id: b.id, level });
+                        shieldBossFlags.set(ledgerKey(flag),
+                            { ...flag, id: b.id, level, t: ticksCompleted });
                         if (!pendingEarnedClears.has(flag.level)) {
                             pendingEarnedClears.set(flag.level, new Set());
                         }
@@ -5879,7 +5899,8 @@ export function createLevelRun({
             shake = applyShakeWriter(shake, 'totemDeath');
             const w = BOSS_TOTEM_WHITE_OUT.persistenceWrite;
             const flag = outOfBandFlagFor(level, w.tag);
-            bossFlags.set(ledgerKey(flag), { ...flag, id: b.id ?? 'bosstotem', level });
+            bossFlags.set(ledgerKey(flag),
+                { ...flag, id: b.id ?? 'bosstotem', level, t: ticksCompleted });
             const kill = bossKills.find((k) => k.level === level && k.tagTick === null);
             if (kill) {
                 kill.tagTick = ticksCompleted;
@@ -8775,7 +8796,8 @@ export function createLevelRun({
                 // whole R6 ledger runs on.
                 w.cleared = true;
                 const flag = { level: w.level, tag: w.persistTag, value: false };
-                watcherFlags.set(ledgerKey(flag), { ...flag, id: w.id, level: w.level });
+                watcherFlags.set(ledgerKey(flag),
+                    { ...flag, id: w.id, level: w.level, t: ticksCompleted });
                 if (!pendingEarnedClears.has(w.level)) {
                     pendingEarnedClears.set(w.level, new Set());
                 }
@@ -9028,7 +9050,8 @@ export function createLevelRun({
                 });
                 if (d.persistTag >= 0) {
                     const flag = { level, tag: d.persistTag, value: false };
-                    finalDoorFlags.set(ledgerKey(flag), { ...flag, id: d.id, level });
+                    finalDoorFlags.set(ledgerKey(flag),
+                        { ...flag, id: d.id, level, t: ticksCompleted });
                     if (!pendingEarnedClears.has(level)) {
                         pendingEarnedClears.set(level, new Set());
                     }
@@ -9454,12 +9477,42 @@ export function createLevelRun({
          * The R3 ledger's other half: the game's `persistence_cleared`
          * readout should be the tape's declared list plus this, and nothing
          * else. Reported per level as `{level, tags}`.
+         *
+         * ── ⛓⛓⛓ THE TICK (editor arc slice 3, ⚖ ruled) ─────────────────
+         *
+         * Every row carries `t`: the tick of the WRITE that earned it.
+         *
+         * ⛔ IT IS NOT COMPUTED HERE. This getter is a DERIVED list over
+         * eleven feeder ledgers, and re-deriving a tick from them — "the
+         * clear must be around where the rock broke" — would be a SECOND
+         * SPELLING of `earnedClears` that agreed with the first until one
+         * moved. That is precisely why the editor's overlay refused to place
+         * these markers from the producing ledgers (kickoff §9.3). So each
+         * feeder records its own write tick AT ITS OWN FUNNEL and this loop
+         * only carries it across; the seven feeders that had no tick gained
+         * one at their `push`/`set`, four already had theirs.
+         *
+         * ⚠ `t: null` IS A REAL ANSWER AND IT IS NOT AN ERROR. A lightpole
+         * flag read at BOOT was never written by this run (`poleFlagFor`'s
+         * initialiser), and a row whose feeder cannot name a tick says so
+         * rather than borrowing one. A consumer that needs a position must
+         * treat null as "nowhere to stand it" — which is what the overlay's
+         * `unplaced` report already exists to say.
+         *
+         * ⚠ AND THE TICK IS THE MODEL'S, NOT THE GAME'S. It is the tick the
+         * model made the write on; the differential compares the SET of
+         * flags against `persistence_cleared` and reads no tick from here
+         * (`verify-seedling-bot-differential.mjs` takes `level`/`tag`/`id`
+         * field by field). Nothing that makes a claim consumes `t`.
          */
         get earnedClears() {
             const out = [];
             for (const r of lockSnaps) {
                 if (r.persistTag < 0) continue;
-                out.push({ level: r.level, tag: r.persistTag, by: r.id });
+                // `to` is the window's END — `Lock.turnOff()`'s third line is
+                // where `Game.setPersistence(tag, false)` runs, so the snap's
+                // closing tick IS the write's tick. No new field was needed.
+                out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.to });
             }
             // R4: a BossLock whose fade completed. Same shape as a snap's,
             // and deliberately a SEPARATE loop: the two are different
@@ -9468,18 +9521,21 @@ export function createLevelRun({
             // from the ledger.
             for (const r of keyOpens) {
                 if (r.persistTag < 0) continue;
-                out.push({ level: r.level, tag: r.persistTag, by: r.id });
+                out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.t });
             }
             // R4: a lit lightpole cleared a flag. ⚠ DERIVED FROM THE FINAL
             // STATE, never from a count of hits — `LightPole.hit()` is a
             // TOGGLE, so an even number of presses leaves the flag exactly
             // as it started and a ledger that counted them would report a
             // clear the game does not have.
-            for (const [key, held] of poleFlags) {
-                if (held) continue;
+            for (const [key, flag] of poleFlags) {
+                if (flag.held) continue;
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                out.push({ level: n, tag, by: 'lightpole' });
+                // ⚠ `flag.t` is the tick of the write that LEFT it off — the
+                // LAST toggle, not the first. For a toggle that is the only
+                // honest answer, and it is `null` for the boot reading.
+                out.push({ level: n, tag, by: 'lightpole', t: flag.t });
             }
             // ⛓ R5 slice 5 step 2: a `ButtonRoom`'s cross-room press.
             // ⚠ FILTERED ON THE VALUE, not on the existence of the write.
@@ -9493,6 +9549,7 @@ export function createLevelRun({
                 out.push({
                     level: r.level, tag: r.tag,
                     by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
+                    t: r.t,
                 });
             }
             // R5: a broken rock. ⚠ NOT a toggle — `endAnim` writes `false`
@@ -9512,6 +9569,7 @@ export function createLevelRun({
                 out.push({
                     level: n, tag,
                     by: r.level === n ? by : `${by} (L${r.level}, tag -1)`,
+                    t: r.t,
                 });
             }
             // ⛓⛓⛓ R6 SLICE 4: THE FIRST BOSS KILL ON THE LADDER.
@@ -9524,7 +9582,7 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id });
+                out.push({ level: n, tag, by: r.id, t: r.t });
             }
             // ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE — the same polarity and a
             // DIFFERENT SITE. `BossTotem` writes from `removed()`, 241 ticks
@@ -9537,7 +9595,7 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id });
+                out.push({ level: n, tag, by: r.id, t: r.t });
             }
             // ⛓⛓⛓ R6 SLICE 6c: THE WATCHER — the same polarity again, and a
             // site that is not a death at all. `Watcher.doneTalking()` writes
@@ -9550,7 +9608,7 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id });
+                out.push({ level: n, tag, by: r.id, t: r.t });
             }
             // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
             // `Game.setPersistence(tag, false)` with no test of the cause,
@@ -9563,7 +9621,7 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id });
+                out.push({ level: n, tag, by: r.id, t: r.t });
             }
             // ⛓⛓ R7 SLICE 6 — R6 DEBT 2, PAID. A collected pickup's own
             // `removed()` runs `Game.setPersistence(tag, false)` for fourteen
@@ -9586,7 +9644,7 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id });
+                out.push({ level: n, tag, by: r.id, t: r.t });
             }
             return out;
         },

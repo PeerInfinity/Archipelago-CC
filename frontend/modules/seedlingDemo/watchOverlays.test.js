@@ -48,7 +48,7 @@ describe('the layer roster', () => {
     it('⛔ every marker source the extractor emits has a GLYPH — no silent marker', () => {
         // The mutation this guards: adding a source to `extractMarkers` and
         // forgetting the legend leaves a marker the renderer cannot draw.
-        const sources = new Set(['action', 'hit', 'death', 'grant', 'transition']);
+        const sources = new Set(['action', 'hit', 'death', 'grant', 'transition', 'clear']);
         expect(new Set(Object.keys(MARKER_GLYPHS))).toEqual(sources);
         for (const g of Object.values(MARKER_GLYPHS)) {
             expect(g.glyph).toBeTruthy();
@@ -179,14 +179,38 @@ describe('extractMarkers', () => {
         expect(markers[0].label).toMatch(/respawn 8,8/);
     });
 
-    it('⛔⛔ a CLEAR has no tick, so it is UNPLACED and says exactly why', () => {
+    it('⛓⛓⛓ a CLEAR PLACES now — the ruled tick, at the tick it names', () => {
+        // Slice 2 asserted the opposite here: `earnedClears` carried no tick
+        // and every clear landed in `unplaced`. ⚖ The designer ruled the
+        // tick in (kickoff §9.9) and this is the consumer it rode in on.
         const { markers, unplaced } = extractMarkers({
-            clears: [{ level: 18, tag: 0, by: 'lock@144,112' }], frameAt,
+            clears: [{ level: 18, tag: 0, by: 'lock@144,112', t: 1 }], frameAt,
+        });
+        expect(unplaced).toEqual([]);
+        expect(markers).toHaveLength(1);
+        expect(markers[0].source).toBe('clear');
+        expect(markers[0].tick).toBe(1);
+        expect(markers[0].label).toMatch(/cleared \{18,0\} by lock@144,112/);
+        // ⛔ AT THE PLAYER'S POSITION ON THAT TICK, from `frameAt` — not at
+        // the flag's own level, which is a fact about the FLAG. A clear
+        // written into another room by a ButtonRoom draws where the presser
+        // was standing, which is the only place a marker can honestly go.
+        expect(markers[0].level).toBe(frameAt(1).level);
+        expect(markers[0].x).toBe(frameAt(1).x);
+    });
+
+    it('⛔ a clear whose feeder has NO tick is still UNPLACED, and says which', () => {
+        // The lightpole read at BOOT: `poleFlagFor`'s initialiser writes
+        // `t: null` because nothing was written. A marker at tick 0 would
+        // claim a press on the opening frame.
+        const { markers, unplaced } = extractMarkers({
+            clears: [{ level: 65, tag: 2, by: 'lightpole', t: null }], frameAt,
         });
         expect(markers).toEqual([]);
         expect(unplaced).toHaveLength(1);
-        expect(unplaced[0].what).toContain('L18 tag 0');
-        expect(unplaced[0].why).toMatch(/NO TICK/);
+        expect(unplaced[0].what).toContain('L65 tag 2');
+        expect(unplaced[0].why).toMatch(/carries no tick/);
+        expect(unplaced[0].why).toMatch(/BOOT/);
     });
 
     it('⛔ a row outside the collected frames is UNPLACED, never clamped', () => {

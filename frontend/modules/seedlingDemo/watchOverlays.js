@@ -60,7 +60,7 @@ export const OVERLAY_LAYERS = Object.freeze([
     Object.freeze({ id: 'arrows', label: 'arrow paths', kind: 'path', on: false }),
     Object.freeze({ id: 'action', label: 'action markers (attack-key edges)', kind: 'marker', on: true }),
     Object.freeze({ id: 'damage', label: 'damage / death markers', kind: 'marker', on: true }),
-    Object.freeze({ id: 'events', label: 'event markers (grants, transitions)', kind: 'marker', on: true }),
+    Object.freeze({ id: 'events', label: 'event markers (clears, grants, transitions)', kind: 'marker', on: true }),
     Object.freeze({ id: 'volumes', label: 'hazard volumes', kind: 'volume', on: true }),
 ]);
 
@@ -250,6 +250,10 @@ export const MARKER_GLYPHS = Object.freeze({
     death: Object.freeze({ glyph: 'diamond', colour: '#ff2f2f', label: 'player death' }),
     grant: Object.freeze({ glyph: 'plus', colour: '#d8c030', label: 'items granted' }),
     transition: Object.freeze({ glyph: 'triangle', colour: '#3fd8ce', label: 'level transition' }),
+    // ⛓ Editor arc slice 3: the arm §3.2's table promised and slice 2 could
+    // not build. `circle` is its own glyph on purpose — a clear is not a
+    // grant, and the legend is the only place that difference is legible.
+    clear: Object.freeze({ glyph: 'circle', colour: '#9a8cff', label: 'persistence flag cleared' }),
 });
 
 /**
@@ -262,12 +266,25 @@ export const MARKER_GLYPHS = Object.freeze({
  * player was never at on that tick, which is the one thing an overlay must
  * not do.
  *
- * ⛔⛔ `clears` IS UNPLACEABLE BY CONSTRUCTION, AND SAYING SO IS THE POINT.
- * `run.earnedClears` is `{level, tag, by}` — it has NO TICK. It is built to
- * be set-compared against the game's `persistence_cleared` readout, and a
- * set comparison never needed one. So every clear lands in `unplaced` with
- * that reason rather than being dropped (a layer silently missing an arm
- * the §3.2 table promised) or invented (a marker at a tick nobody recorded).
+ * ⛓⛓⛓ `clears` NOW PLACE — AND THE REASON THEY DID NOT IS WORTH KEEPING.
+ *
+ * At slice 2 `run.earnedClears` was `{level, tag, by}` with NO TICK, so
+ * every clear landed in `unplaced` (SEVEN on `r1-walk-full`). The tick could
+ * have been re-derived from the six ledgers that PRODUCE the clears —
+ * `lockSnaps`, `keyOpens`, `rockFlags`, … — and that would have been a
+ * SECOND SPELLING of `earnedClears` agreeing with the first until either
+ * moved. The arc's one-of-everything law forbids it, so the absence was
+ * REPORTED and escalated instead (kickoff §9.3).
+ *
+ * ⚖ The designer ruled the tick IN (§9.9), added at each feeder's own write
+ * funnel and carried through by the getter — so this module reads `c.t` and
+ * derives nothing.
+ *
+ * ⚠ AND `t: null` IS STILL A REAL ANSWER. A lightpole flag read at BOOT was
+ * never written by this run, so it has no tick and lands in `unplaced` with
+ * THAT reason — a different fact from "the ledger carries no tick at all",
+ * and the report says which. A permanent absence with a written cause is the
+ * honest shape; a marker at an invented tick is not.
  */
 export function extractMarkers({
     hits = [], deaths = [], grants = [], transitions = [], clears = [],
@@ -316,13 +333,18 @@ export function extractMarkers({
             `transition ${tr.from_level}->${tr.to_level}@${tr.t}`);
     }
     for (const c of clears) {
-        unplaced.push({
-            layer: 'events',
-            what: `earned clear L${c.level} tag ${c.tag} (by ${c.by})`,
-            why: '`run.earnedClears` carries {level, tag, by} and NO TICK — it exists to '
-                + 'be set-compared against the game\'s `persistence_cleared` readout, and '
-                + 'a set comparison never needed one. There is no honest tick to draw it at',
-        });
+        const what = `earned clear L${c.level} tag ${c.tag} (by ${c.by})`;
+        if (typeof c.t !== 'number') {
+            unplaced.push({
+                layer: 'events',
+                what,
+                why: 'this clear\'s feeder carries no tick — a lightpole flag read at BOOT '
+                    + 'was never written by this run, so there is no tick to stand a marker '
+                    + 'on and one drawn anyway would claim a press that never happened',
+            });
+            continue;
+        }
+        place('events', c.t, 'clear', `cleared {${c.level},${c.tag}} by ${c.by}`, what);
     }
     markers.sort((a, b) => a.tick - b.tick);
     return { markers, unplaced };

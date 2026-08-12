@@ -56,9 +56,54 @@
   committed solver tape. Rows at or before the scrub cursor are lit, and
   clicking one seeks to its tick. A tape with no trace says so BY NAME.
 
+  ── SOURCE = MANUAL, AND TAPE I/O (editor arc slice 3) ──────────────────
+
+  Declare the same starting conditions, press START, and drive the player
+  yourself — arrow keys, X (attack) and C (item slot), at the page's own
+  pacing (the speed slider applies). Every tick is recorded and the live
+  overlays are the SAME per-tick sampling the replay uses. STOP folds the
+  session into a tape with the ONE fold, checks that the fold REPLAYS
+  frame-for-frame through the page's own REPLAY arm, and shows the tape in
+  the save box.
+
+      watch.html?source=manual&boot=…/tapes/r7-act2-4.json&level=4
+
+  ⚠ MANUAL is never inferred — `?level=`/`?boot=` are shared with SOLVE, so
+  it must be asked for by name.
+
+  SAVE / LOAD: the current tape — replayed, solved or hand-driven — is in
+  the textarea under the canvas, with a Download button beside it. Paste one
+  in and press Load, or Upload a file; both go through `parseTape`, so a
+  malformed tape refuses with the PARSER's own message.
+
+  ── URL PARAMETERS, THE WHOLE SET ───────────────────────────────────────
+
+  ?tape=   ?side=js|wasm   ?speed=N   ?source=replay|solve|manual
+  ?level=N   ?boot=PATH   ?goals=   ?solve=1   ?name=
+  ?layers=a,b,c   ?tick=N   ?shot=1
+
+  ?tick=N   the initial cursor. The page lands there PAUSED — landing and
+            then playing forward would make the parameter a flicker. Out of
+            range clamps AND says so in the detail bar.
+
+  ?shot=1   ⛓ THE CLI'S CONTRACT (slice 4's exporter waits on this):
+              1. nothing animates — the page starts paused, so the canvas
+                 holds the requested tick indefinitely;
+              2. the frame is DRAWN before the signal is raised — the seek
+                 runs the full draw path synchronously;
+              3. the signal is BOTH `document.body.dataset.shotReady === "1"`
+                 (so a headless waiter needs no page evaluation) AND
+                 `window.__editorShot = {ready, requested, tick, frames,
+                 label, why}` (so the caller can assert WHICH tick was drawn
+                 and why a request could not be honoured exactly).
+            `__editorShot` is set on every replay; the body attribute only
+            under `?shot=1`. A readout that existed only under the parameter
+            would make the parameter untestable from the other side.
+
   ⛔ THE PAGE NEVER WRITES fixtures/tapes/ OR fixtures/traces/. That roster
   is disk-derived, so a saved experiment would silently join the
-  differential. Solved tapes live in the page and in your hands.
+  differential. Solved and hand-driven tapes live in the page, in the save
+  box, in your downloads directory and in your hands.
 
   Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
   registration. seedlingDemo is an engine-only module and a standalone
@@ -114,6 +159,19 @@
   #solveBoot { width: 100%; box-sizing: border-box; }
   #solveNote { color: #8a8a98; font-size: 11px; }
   summary { color: #8a8a98; cursor: pointer; }
+  /* ── SOURCE = MANUAL + TAPE I/O (editor arc slice 3) ── */
+  #manualPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  #manualPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  #manualBoot { width: 100%; box-sizing: border-box; }
+  #manualNote { color: #8a8a98; font-size: 11px; }
+  #manualKeys { color: #7fe0ff; font-size: 11px; }
+  #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
+  #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin: 4px 0; }
+  #tapeName { color: #7fe0ff; }
+  #tapeText { width: 100%; box-sizing: border-box; }
+  #tapeNote { color: #8a8a98; font-size: 11px; white-space: pre-wrap; }
   /* ── OVERLAYS + TRACE PANE (editor arc slice 2) ── */
   #layers { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0; }
   #legend { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 11px;
@@ -146,6 +204,7 @@
     <select id="source">
       <option value="replay">REPLAY — a committed tape</option>
       <option value="solve">SOLVE — the bot, in this page</option>
+      <option value="manual">MANUAL — drive it yourself</option>
     </select>
     <span id="replayPick">
       <label for="tapes">tape</label>
@@ -174,6 +233,21 @@
       <div id="solveNote"></div>
     </details>
   </div>
+  <div id="manualPanel" hidden>
+    <div class="line">
+      <label>level <input id="manualLevel" type="number" min="0" step="1" style="width:5em" disabled></label>
+      <label for="manualPreset">boot like</label>
+      <select id="manualPreset"><option value="">— loading presets… —</option></select>
+      <button id="manualStart">START</button>
+      <button id="manualStop" disabled>STOP &amp; fold</button>
+      <span id="manualKeys"></span>
+    </div>
+    <details>
+      <summary>starting conditions — the tape v8 staging block, raw</summary>
+      <textarea id="manualBoot" rows="12" spellcheck="false"></textarea>
+      <div id="manualNote"></div>
+    </details>
+  </div>
   <div id="status">loading…</div>
   <div id="detail"></div>
   <div id="progress"><div id="bar"></div></div>
@@ -189,6 +263,17 @@
     </div>
     <div id="layers"></div>
     <div id="legend"></div>
+    <details id="tapeIO">
+      <summary>save / load — the tape in your hands (this page NEVER writes fixtures/)</summary>
+      <div class="line">
+        <span id="tapeName"></span>
+        <button id="tapeDownload">Download</button>
+        <button id="tapeLoad">Load from box</button>
+        <label>Upload <input id="tapeUpload" type="file" accept=".json,application/json"></label>
+      </div>
+      <textarea id="tapeText" rows="10" spellcheck="false"></textarea>
+      <div id="tapeNote"></div>
+    </details>
   </div>
   <div id="panel">
     <div id="hud"></div>

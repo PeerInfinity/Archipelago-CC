@@ -77,6 +77,38 @@
  * beside a committed tape, through the producer's own validator) and
  * nothing gates on any of it. See `watchOverlays.js`, which holds
  * everything here that is pure.
+ *
+ * ── SOURCE = MANUAL, AND TAPE I/O (editor arc slice 3) ────────────────
+ *
+ * A third way to get a tape: DRIVE one. Keyboard → held set →
+ * `run.advance` on the page's own pacer, every tick recorded; STOP folds
+ * the session with the one fold and hands it to the REPLAY machinery above.
+ *
+ * ⛔ THE NO-LOOP LAW SURVIVES IT, and the distinction is the one the law
+ * exists for. What it forbids is a second REPLAY loop — two readers of one
+ * tape drift, and the one nobody tests is the one that drifts. A manual
+ * drive is a PRODUCER, beside `solveSegment` and `botDriverV1/V2`: keys in,
+ * `perTick` out, with no tape it claims to reproduce. ⛓ And the join is
+ * ASSERTED rather than asserted-by-comment: STOP runs
+ * `watchManual.foldRoundTrip`, which replays the fold through
+ * `createTapeStepper` and compares EVERY observation and EVERY held set
+ * against what the drive recorded. That comparison is the acceptance row.
+ *
+ * ⛔ RAW TRUTH SURVIVES IT: the live overlays are the replay's own
+ * `sampleMovers`/`extractMarkers` calls over the session's real
+ * observations, never a smoothed or predicted view; a refusal mid-drive
+ * carries the run's own message WITH its tick and keeps the session, so
+ * what was driven up to it can still be folded and looked at.
+ *
+ * ⛔ NO CLAIM SURVIVES IT: a hand-driven tape is never written to
+ * `fixtures/`. It lives in the save box, in a download, and in your hands.
+ *
+ * ⚠ ONE NEW LIFETIME RULE CAME WITH IT — `replayGeneration`. Every arm used
+ * to replay exactly once per document (the picker and the SOURCE selector
+ * both NAVIGATE); a pasted tape and a manual fold have no path to navigate
+ * to, so two animation loops can now exist. The counter retires the
+ * superseded one. It is NOT a conditional re-arm: within a generation a
+ * throw still re-arms and reports its tick, which is R4's lesson and stays.
  */
 
 import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
@@ -91,6 +123,10 @@ import {
     MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam,
     pathPointsUpTo, traceRowFields, traceSidecarPath,
 } from './watchOverlays.js';
+import {
+    clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
+    liveOverlaysFor, parseTapeText, readViewParams, serializeTapeText, tapeKeyForCode,
+} from './watchManual.js';
 import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
@@ -140,6 +176,41 @@ const PATH_COLOURS = Object.freeze({
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => (typeof n === 'number' ? Number(n.toFixed(4)) : n);
 
+/**
+ * ⛓ WHICH REPLAY OWNS THE CANVAS.
+ *
+ * Every arm used to replay exactly once per page load — the picker and the
+ * SOURCE selector both NAVIGATE — so the animation loop could re-arm itself
+ * forever and never meet a successor. Slice 3 breaks that: a PASTED tape has
+ * no path to navigate to and a MANUAL session's fold has no path at all, so
+ * `replayTape` can now run a second time in one document.
+ *
+ * ⛔ WITHOUT THIS COUNTER THE TWO LOOPS BOTH DRAW. The first one keeps its
+ * own `frames`/`cursor` closure and its own rAF chain; the canvas would
+ * flicker between two runs and the HUD would disagree with itself every
+ * other frame — a failure that looks like a rendering bug and is a lifetime
+ * bug.
+ *
+ * ⚠ THE UNCONDITIONAL RE-ARM SURVIVES INTACT, and the distinction matters:
+ * within a generation the loop still re-arms after a THROW (R4's lesson —
+ * a frame that cannot be drawn must report its tick, not stop the clock).
+ * What stops a loop is being SUPERSEDED, which is a decision, not a failure.
+ */
+let replayGeneration = 0;
+
+/**
+ * Replay a tape this page is HOLDING (a paste, an upload, a manual fold).
+ *
+ * Assigned by whichever arm knows the level source; the default refuses by
+ * name rather than doing nothing, because "the button did nothing" is the
+ * one outcome a user cannot act on.
+ */
+let replayLoadedTape = () => {
+    fatal('this page has no level source, so a loaded tape cannot be replayed here',
+        'the wasm side (`?side=wasm`) drives the recompiled game and does not build JS '
+        + 'worlds. Load the tape with &side=js.');
+};
+
 function readParams() {
     const q = new URLSearchParams(window.location.search);
     return {
@@ -151,6 +222,10 @@ function readParams() {
         layers: q.get('layers'),
         // The SOLVE arm's own parameters, parsed where they are testable.
         ...readSolveParams(window.location.search),
+        // ⛓ …and the VIEW parameters (`?tick=`, `?shot=`), for the same
+        // reason and in the same shape. Both are pure decisions about a
+        // string, so both are decided where a test can reach them.
+        ...readViewParams(window.location.search),
     };
 }
 
@@ -174,7 +249,7 @@ async function fetchJson(url, what) {
  * `runTape` picks it — a viewer that consulted a different census could
  * refuse to draw a level the run happily walks through.
  */
-function makeRenderer(canvas, tape) {
+function makeRenderer(canvas) {
     const ctx = canvas.getContext('2d');
     const trail = [];
     let scale = 1;
@@ -301,6 +376,10 @@ function makeRenderer(canvas, tape) {
         case 'triangle':
             ctx.moveTo(px, py - r); ctx.lineTo(px + r, py + r); ctx.lineTo(px - r, py + r);
             ctx.closePath(); ctx.stroke();
+            return;
+        case 'circle':
+            ctx.arc(px, py, r, 0, 7);
+            ctx.stroke();
             return;
         default:
             unknownGlyphs.add(`${source} (glyph "${kind}")`);
@@ -453,8 +532,13 @@ function makeRenderer(canvas, tape) {
 
 async function runJs(params) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
+    const levelSource = levelSourceFromAtlas(atlas);
     const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
-    return replayTape(tape, params.tape, params, levelSourceFromAtlas(atlas),
+    // ⛓ A pasted or uploaded tape has no path to navigate to, so it replays
+    // IN PLACE — through this same function, against this same level source.
+    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
+        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
+    return replayTape(tape, params.tape, params, levelSource,
         await fetchTraceSidecar(params.tape));
 }
 
@@ -497,36 +581,40 @@ async function fetchTraceSidecar(tapePath) {
  * `label` is what the status bar calls it — a path for REPLAY, a name for
  * SOLVE. Returns the collected frames, so a caller can report how many.
  */
-async function replayTape(tape, label, params, levelSource, traceSource = null) {
-    const canvas = $('canvas');
-    const renderer = makeRenderer(canvas, tape);
-    /**
-     * The census the TAPE implies — the same rule `runTape` applies, so the
-     * viewer can never refuse to draw a level the run walks through.
-     *
-     * ⚠ FROM THE PARSED TAPE, THROUGH THE RUNNER'S OWN RULE. This used to
-     * read `tape.noclip === false ? ROLES : RELAXED_ROLES` off the RAW
-     * fetched JSON: a second spelling of `rolesForStaging` that agreed with
-     * it only by accident, because a v1 tape's JSON carries no `noclip` key
-     * at all. The raw test got the right answer for the wrong reason, and
-     * the obvious tidy-up to `tape.noclip ? …` would have silently flipped
-     * the census on every v1 fixture. One rule, one place — and the rule is
-     * about the PARSED tape, which is what `parseTape` normalises it to.
-     */
-    const parsed = parseTape(tape);
-    const roles = rolesForStaging(parsed);
-    // ⚠ AND THE TAPE'S CLEARS, for the same reason as the census: a viewer
-    // that built a level the run does not have would draw locks the player
-    // walks straight through. Grouped BY LEVEL because `buildLevelWorld`'s
-    // orphan guard refuses a tag the level does not own — the same rule
-    // `levelRun` follows, and the reason it groups too.
+/**
+ * The renderer's per-level world source, memoised — ONE rule, and both arms
+ * of the page reach it.
+ *
+ * ⚠ THE CENSUS THE STAGING BLOCK IMPLIES, THROUGH THE RUNNER'S OWN RULE, so
+ * the viewer can never refuse to draw a level the run walks through. This
+ * used to read `tape.noclip === false ? ROLES : RELAXED_ROLES` off the RAW
+ * fetched JSON: a second spelling of `rolesForStaging` that agreed with it
+ * only by accident, because a v1 tape's JSON carries no `noclip` key at all.
+ * The raw test got the right answer for the wrong reason, and the obvious
+ * tidy-up to `tape.noclip ? …` would have silently flipped the census on
+ * every v1 fixture.
+ *
+ * ⚠ AND THE STAGING'S CLEARS, for the same reason as the census: a viewer
+ * that built a level the run does not have would draw locks the player walks
+ * straight through. Grouped BY LEVEL because `buildLevelWorld`'s orphan
+ * guard refuses a tag the level does not own — the same rule `levelRun`
+ * follows, and the reason it groups too.
+ *
+ * ⛓ `staging` is a PARSED TAPE for REPLAY/SOLVE and a MANUAL session's own
+ * honest block for MANUAL. The two carry the same two fields this needs
+ * (`noclip`, `persistence`), which is exactly what makes one rule possible —
+ * `tapeRunner.stagingFromTape`'s whole point is that a tape IS a staging
+ * block plus inputs.
+ */
+function makeWorldFor(levelSource, staging) {
+    const roles = rolesForStaging(staging);
     const clearedByLevel = new Map();
-    for (const c of parsed.persistence ?? []) {
+    for (const c of staging.persistence ?? []) {
         if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
         clearedByLevel.get(c.level).push(c.tag);
     }
     const worlds = new Map();
-    const worldFor = (n) => {
+    return (n) => {
         if (!worlds.has(n)) {
             const cleared = clearedByLevel.get(n);
             worlds.set(n, buildLevelWorld(levelSource(n),
@@ -534,6 +622,69 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
         }
         return worlds.get(n);
     };
+}
+
+/**
+ * The ON set for this page load, and the `?layers=` names nobody knows.
+ *
+ * ⚠ CALLED ONCE PER ARM, and the Set it returns IS the live toggle state —
+ * the checkboxes mutate it in place. Calling it again per draw would rebuild
+ * the defaults every frame and silently undo every toggle.
+ */
+function layerSetFor(params) {
+    const parsed = parseLayersParam(params.layers);
+    return { on: parsed.on ?? defaultLayerSet(), unknown: parsed.unknown };
+}
+
+/**
+ * The per-layer toggles and the LEGEND, both generated from `OVERLAY_LAYERS`
+ * and `MARKER_GLYPHS`.
+ *
+ * ⛔ ONE ROSTER. A hand-written checkbox list would be a second copy of the
+ * layer table, and the day a layer was added the URL parameter and the UI
+ * would disagree about how many there are.
+ *
+ * ⛓ Extracted from `replayTape` at slice 3 so the MANUAL arm gets the same
+ * eight toggles over its LIVE drive — a second copy for the live view would
+ * be the same fork one level down.
+ */
+function mountLayerControls(on, redraw) {
+    const layerBox = $('layers');
+    layerBox.innerHTML = '';
+    for (const l of OVERLAY_LAYERS) {
+        const label = document.createElement('label');
+        const box = document.createElement('input');
+        box.type = 'checkbox';
+        box.id = `layer-${l.id}`;
+        box.checked = on.has(l.id);
+        box.onchange = () => {
+            if (box.checked) on.add(l.id); else on.delete(l.id);
+            redraw();
+        };
+        label.appendChild(box);
+        label.appendChild(document.createTextNode(` ${l.label}`));
+        layerBox.appendChild(label);
+    }
+    const swatch = (colour, text) =>
+        `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
+    $('legend').innerHTML = [
+        swatch(PATH_COLOURS.player, 'player'),
+        swatch(PATH_COLOURS.chaser, 'chaser'),
+        swatch(PATH_COLOURS.spinner, 'spinner'),
+        swatch(PATH_COLOURS.pushable, 'pushable'),
+        swatch(PATH_COLOURS.arrow, 'arrow'),
+        ...Object.values(MARKER_GLYPHS).map(
+            (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
+    ].join('');
+}
+
+async function replayTape(tape, label, params, levelSource, traceSource = null) {
+    replayGeneration += 1;
+    const myGeneration = replayGeneration;
+    const canvas = $('canvas');
+    const renderer = makeRenderer(canvas);
+    const parsed = parseTape(tape);
+    const worldFor = makeWorldFor(levelSource, parsed);
 
     /**
      * ⛓⛓⛓ ONE WALK, TWO READINGS — the frames the scrubber shows and the
@@ -562,7 +713,15 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
             collected.error.message);
     }
     let cursor = 0;
-    let playing = true;
+    /**
+     * ⛓ `?tick=` AND `?shot=` BOTH START PAUSED, and that is the whole
+     * content of "initial cursor". A page that landed on tick 200 and
+     * immediately played forward from it has not shown you tick 200; the
+     * parameter would be a flicker. `?shot=1` needs it for a second reason —
+     * a screenshot of an animating page is a screenshot of whenever the
+     * shutter happened to open.
+     */
+    let playing = !(params.shot || params.tick !== null);
     let speed = params.speed;
 
     /**
@@ -573,8 +732,8 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
      * marker's position is the position the run held on the tick its own
      * ledger names.
      */
-    const layerParam = parseLayersParam(params.layers);
-    const on = layerParam.on ?? defaultLayerSet();
+    const layerParam = layerSetFor(params);
+    const on = layerParam.on;
     const { markers, unplaced } = overlaysFor(collected);
 
     $('scrub').max = String(Math.max(0, frames.length - 1));
@@ -660,6 +819,11 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
      */
     let frameError = null;
     function frame() {
+        // ⛔ SUPERSEDED, so this loop retires. NOT the same thing as the
+        // conditional re-arm the docblock above forbids: a throw still
+        // re-arms below, because a frame that cannot be drawn must report
+        // its tick rather than stop the clock.
+        if (myGeneration !== replayGeneration) return;
         try {
             if (playing && frames.length) {
                 acc += speed;
@@ -696,41 +860,7 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
     $('speed').value = String(speed);
     $('speedv').textContent = `${speed}x`;
 
-    /**
-     * The per-layer toggles and the LEGEND, both generated from
-     * `OVERLAY_LAYERS` and `MARKER_GLYPHS`.
-     *
-     * ⛔ ONE ROSTER. A hand-written checkbox list would be a second copy of
-     * the layer table, and the day a layer was added the URL parameter and
-     * the UI would disagree about how many there are.
-     */
-    const layerBox = $('layers');
-    layerBox.innerHTML = '';
-    for (const l of OVERLAY_LAYERS) {
-        const label = document.createElement('label');
-        const box = document.createElement('input');
-        box.type = 'checkbox';
-        box.id = `layer-${l.id}`;
-        box.checked = on.has(l.id);
-        box.onchange = () => {
-            if (box.checked) on.add(l.id); else on.delete(l.id);
-            hud();
-        };
-        label.appendChild(box);
-        label.appendChild(document.createTextNode(` ${l.label}`));
-        layerBox.appendChild(label);
-    }
-    const swatch = (colour, text) =>
-        `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
-    $('legend').innerHTML = [
-        swatch(PATH_COLOURS.player, 'player'),
-        swatch(PATH_COLOURS.chaser, 'chaser'),
-        swatch(PATH_COLOURS.spinner, 'spinner'),
-        swatch(PATH_COLOURS.pushable, 'pushable'),
-        swatch(PATH_COLOURS.arrow, 'arrow'),
-        ...Object.values(MARKER_GLYPHS).map(
-            (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
-    ].join('');
+    mountLayerControls(on, hud);
 
     // ── the trace pane (kickoff §3.3) ────────────────────────────────
     const pane = mountTracePane(traceSource, (t) => {
@@ -739,7 +869,17 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
         seek(t);
     });
 
-    seek(0);
+    /**
+     * ── ⛓ `?tick=N` — THE INITIAL CURSOR ────────────────────────────────
+     *
+     * Through `clampTick`, which CLAMPS AND SAYS SO: a tape shorter than the
+     * requested tick is a real fact (usually the run threw early), and
+     * landing silently on the last frame would present a truncated run as a
+     * complete one at the wrong cursor.
+     */
+    const landed = clampTick(params.tick, frames.length);
+    seek(landed.tick);
+    $('play').textContent = playing ? 'Pause' : 'Play';
     requestAnimationFrame(frame);
 
     if (finished) {
@@ -789,9 +929,16 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
         notes.push(`⚠ ${renderer.unknownGlyphs.length} marker(s) with no glyph: `
             + renderer.unknownGlyphs.join(', '));
     }
+    // ⚠ A `?tick=` this page could not honour EXACTLY says so — both the
+    // unreadable form (`readViewParams`) and the out-of-range one.
+    if (params.tickWhy) notes.push(`⚠ ${params.tickWhy}`);
+    if (landed.why) notes.push(`⚠ ${landed.why}`);
     if (notes.length) {
         $('detail').textContent += `${$('detail').textContent ? '\n' : ''}${notes.join('\n')}`;
     }
+
+    // ── SAVE / LOAD (kickoff §3.4) ───────────────────────────────────
+    mountTapeIO(tape, label);
 
     /**
      * The overlays' readout, for `check-seedling-editor-overlays.mjs` — the
@@ -815,7 +962,113 @@ async function replayTape(tape, label, params, levelSource, traceSource = null) 
         },
         trace: pane.readout,
     };
+
+    /**
+     * ── ⛓⛓⛓ `?shot=1` — THE CLI'S CONTRACT (kickoff §3.4/§3.5) ─────────
+     *
+     * The readiness signal slice 4's exporter waits on. Three parts, and
+     * each one is load-bearing for a headless screenshot:
+     *
+     *  1. NOTHING IS ANIMATING. `playing` is already false above, so the
+     *     canvas holds the requested tick indefinitely. A shutter opened on
+     *     a playing page photographs whenever it happened to open.
+     *  2. THE FRAME IS DRAWN BEFORE THE FLAG IS SET. `seek()` ran the full
+     *     draw path (`hud()` → `renderer.draw`) synchronously above, so a
+     *     waiter that sees the flag is looking at a painted canvas — not at
+     *     one scheduled to paint on the next rAF.
+     *  3. IT IS BOTH A DOM ATTRIBUTE AND A JS OBJECT. Playwright's
+     *     `waitForSelector('body[data-shot-ready="1"]')` needs no page
+     *     evaluation and no injected script; `window.__editorShot` carries
+     *     the facts a caller should assert AFTER the wait — which tick was
+     *     actually drawn, how many frames existed, and any reason the
+     *     request could not be honoured exactly.
+     *
+     * ⚠ IT IS SET WHETHER OR NOT `?shot=1` WAS ASKED FOR — the flag on the
+     * body is not. A readout that only existed under the parameter would
+     * make the parameter untestable from the other side.
+     */
+    window.__editorShot = {
+        ready: true,
+        requested: params.shot,
+        tick: cursor,
+        frames: frames.length,
+        label,
+        why: [params.tickWhy, landed.why].filter(Boolean).join('  ·  ') || null,
+    };
+    if (params.shot) document.body.dataset.shotReady = '1';
     return { frames, finished };
+}
+
+/**
+ * ── SAVE / LOAD — the tape in your hands (kickoff §3.4, ⚖ §1.3) ─────────
+ *
+ * Save is the CURRENT tape — replayed, solved or manually recorded, all
+ * three arrive here as an object — serialised into the textarea, with a
+ * Download button writing the same bytes. Load is the reverse: paste into
+ * the box, or Upload a file, and the page navigates to it.
+ *
+ * ⛔ THROUGH `parseTape`, VIA `parseTapeText`. A malformed tape refuses with
+ * the PARSER'S own message — the same one the runner and the differential
+ * would give it — rather than a second, laxer opinion held by a page.
+ *
+ * ⛔⛔ AND THE PAGE NEVER WRITES `fixtures/`. The roster is disk-derived
+ * (`fixtures/index.js`), so a saved experiment would silently enter the
+ * differential's roster. A download goes to the browser's download
+ * directory; promotion to a fixture stays a deliberate act outside this arc.
+ *
+ * ⚠ A LOADED TAPE IS HELD IN MEMORY AND REPLAYED IN PLACE — it is NOT put in
+ * the URL. A tape is kilobytes; `?tape=` names a path the server can serve
+ * and a pasted experiment has no path. So the picker's navigate-to-load
+ * remains the route for committed tapes and this is the route for the ones
+ * that exist only here.
+ */
+function mountTapeIO(tape, label) {
+    const box = $('tapeText');
+    if (!box) return;
+    box.value = serializeTapeText(tape);
+    $('tapeName').textContent = label;
+    $('tapeNote').textContent = '';
+
+    $('tapeDownload').onclick = () => {
+        const name = (tape?.name || 'tape').replace(/[^A-Za-z0-9._-]+/g, '-');
+        const url = URL.createObjectURL(
+            new Blob([box.value], { type: 'application/json' }));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${name}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const loadText = async (text, from) => {
+        const got = parseTapeText(text);
+        if (got.error) {
+            $('tapeNote').textContent = `⚠ ${from} REFUSED (${got.error}) — ${got.why}`;
+            return;
+        }
+        // ⛓ The SAME replay path everything else uses. A pasted tape that
+        // was drawn by some second, simpler renderer would be a picture of a
+        // run nobody had replayed.
+        //
+        // ⚠ THE NOTE IS WRITTEN *AFTER* THE REPLAY, and the ordering is a
+        // bug this row caught: the replay re-mounts this whole panel (it is
+        // showing a different tape now, so it must), which clears the note —
+        // so a note written first was wiped by the very load it announced.
+        // The page said nothing about a load that had plainly happened.
+        await replayLoadedTape(got.tape, `${from}: ${got.parsed.name}`);
+        $('tapeNote').textContent = `loaded from ${from}: ${got.parsed.name} — `
+            + `${got.parsed.tick_count} ticks, v${got.parsed.tape_version}`;
+        window.__editorLoaded = { from, name: got.parsed.name, ticks: got.parsed.tick_count };
+    };
+
+    $('tapeLoad').onclick = () => loadText(box.value, 'paste');
+    $('tapeUpload').onchange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const text = await file.text();
+        box.value = text;
+        loadText(text, `upload ${file.name}`);
+    };
 }
 
 /**
@@ -907,6 +1160,59 @@ const DEFAULT_STAGING = Object.freeze({
 });
 
 /**
+ * "Boot like `r8-solve-18`" — the staging-is-declared law in UI clothes.
+ *
+ * The preset is not a hand-typed approximation of a room's starting state,
+ * it is the exact block the game and the differential already agreed on.
+ *
+ * ⛓ ONE DROPDOWN, TWO ARMS (slice 3). SOLVE and MANUAL both need "start me
+ * where that tape started", and a second harvest for the manual panel would
+ * be a second answer to which tapes can be booted from.
+ *
+ * Fired but NOT awaited: with `?boot=` given, an arm should not wait on a
+ * roster fetch it is not going to use.
+ *
+ * `source` rides in the navigation so choosing a preset from the MANUAL
+ * panel lands back in MANUAL rather than silently switching arms.
+ */
+function mountBootPresets(sel, source, noteEl = null) {
+    loadTapeIndex(DEFAULT_TAPE_DIR).then((index) => {
+        if (index.error) {
+            sel.innerHTML = `<option value="">— no preset list: ${index.error} —</option>`;
+            return;
+        }
+        const { presets, refused } = harvestPresets(index.records);
+        sel.innerHTML = '<option value="">— boot like… —</option>';
+        for (const p of presets) {
+            const el = document.createElement('option');
+            el.value = p.name;
+            el.textContent = `${p.name} — L${p.staging.boot.level}`;
+            sel.appendChild(el);
+        }
+        // ⚠ A tape that would not parse is NAMED. A preset list that
+        // silently shrank would read as a smaller roster.
+        if (refused.length && noteEl) {
+            noteEl.textContent += `${noteEl.textContent ? '  ·  ' : ''}`
+                + `⚠ ${refused.length} tape(s) refused as presets: `
+                + refused.map((r) => `${r.name} (${r.why})`).join('; ');
+        }
+        sel.onchange = () => {
+            const chosen = presets.find((p) => p.name === sel.value);
+            if (!chosen) return;
+            // A full navigation, like the tape picker's — one code path for
+            // "load something else", and the URL stays the whole state.
+            const q = new URLSearchParams(window.location.search);
+            q.set('source', source);
+            q.set('boot', `${DEFAULT_TAPE_DIR}/${chosen.name}.json`);
+            q.set('level', String(chosen.staging.boot.level));
+            q.delete('goals');
+            q.delete('solve');
+            window.location.search = q.toString();
+        };
+    });
+}
+
+/**
  * The SOLVE arm: staging in, the bot's own walk out, scrubbed by REPLAY's
  * machinery.
  *
@@ -918,6 +1224,8 @@ const DEFAULT_STAGING = Object.freeze({
 async function runSolve(params) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const levelSource = levelSourceFromAtlas(atlas);
+    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
+        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
     // ── the staging block ────────────────────────────────────────────
     let staging = DEFAULT_STAGING;
@@ -991,42 +1299,7 @@ async function runSolve(params) {
     $('solveGoalClear').onclick = () => { goals = []; showGoals(); };
 
     // ── the PRESETS, harvested from the committed tapes' own boots ───
-    // Fired but NOT awaited: with `?boot=` given, a solve should not wait
-    // on a roster fetch it is not going to use.
-    loadTapeIndex(DEFAULT_TAPE_DIR).then((index) => {
-        const sel = $('solvePreset');
-        if (index.error) {
-            sel.innerHTML = `<option value="">— no preset list: ${index.error} —</option>`;
-            return;
-        }
-        const { presets, refused } = harvestPresets(index.records);
-        sel.innerHTML = '<option value="">— boot like… —</option>';
-        for (const p of presets) {
-            const el = document.createElement('option');
-            el.value = p.name;
-            el.textContent = `${p.name} — L${p.staging.boot.level}`;
-            sel.appendChild(el);
-        }
-        // ⚠ A tape that would not parse is NAMED. A preset list that
-        // silently shrank would read as a smaller roster.
-        if (refused.length) {
-            $('solveNote').textContent += `${$('solveNote').textContent ? '  ·  ' : ''}`
-                + `⚠ ${refused.length} tape(s) refused as presets: `
-                + refused.map((r) => `${r.name} (${r.why})`).join('; ');
-        }
-        sel.onchange = () => {
-            const chosen = presets.find((p) => p.name === sel.value);
-            if (!chosen) return;
-            // A full navigation, like the tape picker's — one code path for
-            // "load something else", and the URL stays the whole state.
-            const q = new URLSearchParams(window.location.search);
-            q.set('boot', `${DEFAULT_TAPE_DIR}/${chosen.name}.json`);
-            q.set('level', String(chosen.staging.boot.level));
-            q.delete('goals');
-            q.delete('solve');
-            window.location.search = q.toString();
-        };
-    });
+    mountBootPresets($('solvePreset'), 'solve', $('solveNote'));
 
     // ── SOLVE ────────────────────────────────────────────────────────
     async function solveNow() {
@@ -1131,6 +1404,255 @@ async function runSolve(params) {
             + 'Pick goals and press SOLVE.';
     }
 }
+
+// ── SOURCE = MANUAL (editor arc slice 3) ─────────────────────────────────
+
+/**
+ * ── ⛓⛓⛓ DRIVE THE PLAYER BY HAND, AND FOLD THE SESSION INTO A TAPE ─────
+ *
+ * ⛔ THE LOOP LAW, ANSWERED. This advances a run tick by tick, and the page's
+ * third law is NO PRIVATE TICK LOOP. It is not one: the law forbids a second
+ * REPLAY loop (two of those drift, and the one nobody tests is the one that
+ * drifts). This is a PRODUCER, beside `solveSegment` and `botDriverV1/V2` —
+ * keys in, `perTick` out, with no tape it claims to reproduce. And the join
+ * is ASSERTED rather than assumed: STOP folds with the ONE fold and replays
+ * the result through the ONE stepper, comparing every observation
+ * (`watchManual.foldRoundTrip`). If a producer ever did drift from the
+ * replay, that comparison is where it shows.
+ *
+ * ⛔ ONE CONSTRUCTION AND ONE FOLD, both `solveForPage`'s:
+ * `createRunForStaging(solveStaging(staging))` and `buildStagedTape`.
+ *
+ * ⚠ THE LIVE OVERLAYS ARE THE REPLAY'S OWN CALLS. `sampleMovers` per tick
+ * (slice 2's line, no new mechanism) and `extractMarkers` over the session's
+ * observations — so what you see while driving and what you see scrubbing
+ * the tape you just recorded are the same derivation, not two that agree.
+ */
+async function runManual(params) {
+    const atlas = await fetchJson(ATLAS_URL, 'atlas');
+    const levelSource = levelSourceFromAtlas(atlas);
+    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
+        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
+
+    let staging = DEFAULT_STAGING;
+    let origin = 'the page default (nothing cleared, nothing saved)';
+    if (params.boot) {
+        const path = params.boot.replace(/^\/+/, '');
+        staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
+        origin = path;
+    }
+    if (params.level !== null && Number.isFinite(params.level)) {
+        staging = { ...staging, boot: { ...staging.boot, level: params.level } };
+    }
+    const name = params.name || `manual-L${staging.boot.level}`;
+    $('title').textContent = `${name} — driving from ${origin}`;
+    $('manualLevel').value = String(staging.boot.level);
+    $('manualBoot').value = JSON.stringify(staging, null, 4);
+    // ⛓ ONE ROSTER, ONE TABLE: the key legend is rendered FROM the binding
+    // map, so a rebinding cannot leave the page describing the old keys.
+    $('manualKeys').textContent = KEYBOARD_ROWS
+        .map((r) => `${r.code.replace(/^(Key|Arrow)/, '')}→${r.key}`).join('  ');
+    mountBootPresets($('manualPreset'), 'manual', $('manualNote'));
+
+    // ⚠ ONCE. The Set IS the live toggle state — the checkboxes mutate it in
+    // place, so rebuilding it per draw would undo every toggle every frame.
+    const layers = layerSetFor(params);
+    if (layers.unknown.length) {
+        $('manualNote').textContent += `${$('manualNote').textContent ? '  ·  ' : ''}`
+            + `⚠ ?layers= names ${layers.unknown.length} unknown layer(s): `
+            + `${layers.unknown.join(', ')} — the roster is ${LAYER_IDS.join(', ')}`;
+    }
+
+    const canvas = $('canvas');
+    let session = null;
+    let driving = false;
+    let speed = params.speed;
+    const codes = new Set();
+    let renderer = null;
+    let worldFor = null;
+
+    /**
+     * ⚠ THE KEYBOARD IS READ FROM PHYSICAL CODES AND ONLY WHILE DRIVING.
+     *
+     * `preventDefault` on the bound keys, or the arrows scroll the page out
+     * from under the canvas mid-run — and a run you cannot see is a run you
+     * cannot drive. Deliberately NOT captured when the session is stopped:
+     * typing a boot block into the textarea must not press X.
+     */
+    const onKey = (down) => (e) => {
+        if (!driving) return;
+        if (!tapeKeyForCode(e.code)) return;
+        e.preventDefault();
+        if (down) codes.add(e.code); else codes.delete(e.code);
+    };
+    window.addEventListener('keydown', onKey(true));
+    window.addEventListener('keyup', onKey(false));
+    // A window that loses focus mid-press would otherwise hold that key for
+    // the rest of the session — the tape would record a hold nobody made.
+    window.addEventListener('blur', () => codes.clear());
+
+    const drawLive = () => {
+        const world = worldFor(session.run.level);
+        const last = session.observations[session.observations.length - 1];
+        const { markers } = liveOverlaysFor(session);
+        renderer.draw(world, session.run.state, {
+            on: layers.on, samples: session.samples, markers, cursor: session.tick,
+        });
+        $('hud').innerHTML = [
+            manualRow('tick', String(session.tick)),
+            manualRow('level', `${last.level} (${world.width}x${world.height})`),
+            manualRow('position', `${fmt(last.x)}, ${fmt(last.y)}`),
+            manualRow('held', [...heldFromCodes(codes)].sort().join(' + ') || '—'),
+            manualRow('hits', `${session.run.playerHits.length}`),
+            manualRow('deaths', `${session.run.playerDeaths.length}`),
+            manualRow('clears', `${session.run.earnedClears.length}`),
+        ].join('');
+        $('status').textContent = `${name} — DRIVING, ${session.tick} tick(s) recorded`;
+    };
+
+    /**
+     * ⚠ THE PACER IS THE PAGE'S OWN, and `speed` means the same thing it
+     * means in REPLAY: ticks per animation frame. At 1x that is the game's
+     * own rate on a 60 Hz display.
+     *
+     * ⛔ THE PER-FRAME STEP COUNT IS CAPPED. A backgrounded tab wakes with a
+     * multi-second delta, and an uncapped accumulator would drive hundreds
+     * of ticks in one frame with whatever keys were down — recording a walk
+     * nobody made, at full speed, into the tape.
+     */
+    let acc = 0;
+    const MAX_STEPS_PER_FRAME = 8;
+    function manualFrame() {
+        try {
+            if (driving && session) {
+                acc += speed;
+                let steps = 0;
+                while (acc >= 1 && steps < MAX_STEPS_PER_FRAME) {
+                    acc -= 1;
+                    steps += 1;
+                    const held = heldFromCodes(codes);
+                    session.step(held);
+                    renderer.mark(session.run.state, session.run.level);
+                }
+                if (acc >= 1) acc = 0;
+                drawLive();
+            }
+        } catch (e) {
+            driving = false;
+            // The run REFUSED (a soft-lock stance, an orphan clear). Its own
+            // message, with the tick — and the session is kept, so STOP can
+            // still fold what was driven up to it.
+            fatal(`the run refused at tick ${session?.tick} — this is its own message`,
+                `${e.message}\n${e.stack ?? ''}`);
+            $('manualStop').disabled = false;
+        }
+        requestAnimationFrame(manualFrame);
+    }
+
+    $('manualStart').onclick = () => {
+        let block;
+        try {
+            block = stagingFromJson(JSON.parse($('manualBoot').value));
+        } catch (e) {
+            fatal('the starting conditions would not parse — this is the tape parser\'s '
+                + 'own message', e.message);
+            return;
+        }
+        try {
+            session = createManualSession({ levelSource, staging: block, name });
+        } catch (e) {
+            fatal(`level ${block.boot.level} would not build from this staging block`,
+                e.message);
+            return;
+        }
+        // ⛔ SUPERSEDES ANY REPLAY THAT OWNS THE CANVAS — see
+        // `replayGeneration`. Without it a previously folded tape's loop
+        // would keep drawing over the live drive.
+        replayGeneration += 1;
+        worldFor = makeWorldFor(levelSource, session.staging);
+        renderer = makeRenderer(canvas);
+        renderer.reset();
+        renderer.fit(worldFor(session.run.level));
+        driving = true;
+        acc = 0;
+        $('manualStart').disabled = true;
+        $('manualStop').disabled = false;
+        $('status').className = '';
+        $('detail').textContent = '';
+        mountLayerControls(layers.on, drawLive);
+        drawLive();
+        requestAnimationFrame(manualFrame);
+    };
+
+    $('manualStop').onclick = async () => {
+        if (!session) return;
+        driving = false;
+        $('manualStart').disabled = false;
+        $('manualStop').disabled = true;
+
+        /**
+         * ⛓⛓⛓ THE ACCEPTANCE ROW, PERFORMED BY THE PAGE ITSELF.
+         *
+         * Fold with the one fold, replay through the one stepper, compare
+         * every observation and every held set. Reported on the page rather
+         * than merely computed: a round trip that silently failed would show
+         * a tape that looks exactly like a good one.
+         */
+        const trip = foldRoundTrip(session, levelSource);
+        window.__editorManual = {
+            name,
+            ticks: session.tick,
+            observations: session.observations.length,
+            frames: trip.frames.length,
+            roundTrip: trip.ok,
+            faithful: trip.faithful,
+            refusal: session.refusal,
+            reproduced: trip.reproduced,
+            mismatches: trip.mismatches,
+            error: trip.error ? trip.error.message : null,
+            inputs: trip.tape.inputs,
+            clears: session.run.earnedClears.length,
+        };
+        $('status').className = trip.ok ? 'ok' : 'bad';
+        $('status').textContent = `${name} — ${session.tick} tick(s) driven, folded into `
+            + `${trip.tape.inputs.length} input span(s)`;
+        // ⚠ THREE OUTCOMES, NOT TWO. A drive the run REFUSED is a legitimate
+        // session whose tape legitimately refuses; calling that a broken
+        // round trip would teach the next reader to ignore a red.
+        $('detail').textContent = trip.ok
+            ? `⛓ ROUND TRIP OK — the fold replays frame-for-frame: `
+              + `${session.observations.length} observation(s) driven, `
+              + `${trip.frames.length} frame(s) replayed, every position and every held `
+              + 'set identical'
+              + (trip.reproduced
+                  ? `  ·  and the run's REFUSAL at tick ${session.refusal.tick} reproduced `
+                    + 'identically'
+                  : '')
+            : `⛔ ROUND TRIP FAILED — ${trip.mismatches.length} mismatch(es): `
+              + trip.mismatches.slice(0, 6).map(
+                  (m) => `t${m.tick} ${m.what}: drove ${m.drove}, replayed ${m.replayed}`)
+                  .join('  ·  ')
+              + (trip.error ? `  ·  the replay threw: ${trip.error.message}` : '')
+              + (session.refusal && !trip.error
+                  ? `  ·  the DRIVE refused at tick ${session.refusal.tick} and the replay `
+                    + 'did NOT — the fold lost the refusal'
+                  : '');
+
+        // ⛓ And the tape is handed to the page's OWN REPLAY arm, so what you
+        // scrub is what the stepper produced — not a picture of the drive.
+        await replayTape(trip.tape, `${name} (manual fold)`, params, levelSource, null);
+        // replayTape rewrites status/detail; the round-trip verdict is the
+        // headline and goes back on top of it.
+        $('detail').textContent = `${$('detail').textContent}\n`
+            + (trip.ok ? '⛓ manual fold: round trip OK'
+                : `⛔ manual fold: ROUND TRIP FAILED (${trip.mismatches.length})`);
+    };
+
+    $('status').textContent = `ready — level ${staging.boot.level} from ${origin}. `
+        + 'Press START, then drive with the arrow keys and X/C.';
+}
+
+const manualRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
 
 // ── side=wasm ────────────────────────────────────────────────────────────
 
@@ -1392,6 +1914,7 @@ function wireSourceSelector(params) {
     sel.value = params.source;
     $('replayPick').hidden = params.source !== 'replay';
     $('solvePanel').hidden = params.source !== 'solve';
+    $('manualPanel').hidden = params.source !== 'manual';
     sel.onchange = () => {
         const q = new URLSearchParams(window.location.search);
         q.set('source', sel.value);
@@ -1412,6 +1935,20 @@ export async function main() {
         } catch (e) {
             fatal('the solve arm failed', e.stack || e.message);
             window.__editorSolve = { status: 'refused', message: e.message };
+        }
+        return;
+    }
+
+    if (params.source === 'manual') {
+        // ⚠ MANUAL IS NEVER INFERRED, only asked for by `?source=manual`.
+        // `?level=`/`?boot=` are shared with SOLVE, so inferring it would
+        // make every existing SOLVE link ambiguous — and the arm that
+        // WAITS for a keypress must not be the one a stale URL lands in.
+        try {
+            await runManual(params);
+        } catch (e) {
+            fatal('the manual arm failed', e.stack || e.message);
+            window.__editorManual = { status: 'refused', message: e.message };
         }
         return;
     }
