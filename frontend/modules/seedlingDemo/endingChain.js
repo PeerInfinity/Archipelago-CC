@@ -54,7 +54,9 @@
  */
 
 import { INITIAL_FRAMES_THIS_CHARACTER, beginDialogue, stepDialogue } from './dialogue.js';
-import { animCallbackUpdate } from './r6Acceptance.js';
+// ⛓ From the browser-safe half: `r6Acceptance` reaches `node:fs` and the
+// live run needs this module in a browser (editor arc slice 1).
+import { animCallbackUpdate } from './r6AnimClock.js';
 
 export class EndingError extends Error {
     constructor(message) { super(message); this.name = 'EndingError'; }

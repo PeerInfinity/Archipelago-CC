@@ -28,25 +28,30 @@
  * total is `ledger.length` or a filter over the roster at call time.
  */
 
-import { fixtureNames } from './fixtures/index.js';
 /**
- * ⚠⚠ EVERY BINDING BELOW IS READ INSIDE A FUNCTION AND NEVER AT MODULE
- * SCOPE, and that is not a style choice — it is what keeps the cycle this
- * module already sits in from becoming a TDZ crash.
+ * ⛓ THERE IS NO LONGER A CYCLE HERE — and this docblock used to explain how
+ * one was survived, so it says what is true now instead of being orphaned.
  *
- * `tapeFormat` imports `SEAM_BOOT_SPEC` from HERE (trap 86: the v8 key list
- * must come from the signature's owner, never be retyped), and it defuses
- * that by reading it inside `parseSeam`. This import closes the loop the
- * other way. When `tapeFormat` is the entry point the order is
- * `tapeFormat -> r7Acceptance -> fixtures/index -> tapeFormat (partial)`,
- * so these five bindings are in their temporal dead zone while this
- * module's body evaluates. A module-scope `SAVE_SLOTS.keys` would throw —
- * which is why the array arities below come from `SEAM_SIGNATURE`'s own
- * `arity` fields instead, and why nothing here is destructured eagerly.
+ * UNTIL EDITOR ARC SLICE 1: `tapeFormat` imported `SEAM_BOOT_SPEC` from
+ * this module while this module imported four bindings back, and the loop
+ * `tapeFormat -> r7Acceptance -> fixtures/index -> tapeFormat (partial)`
+ * put those four in their temporal dead zone while this body evaluated. A
+ * module-scope `SAVE_SLOTS.keys` would have thrown, so every binding was
+ * read INSIDE a function and the array arities came from
+ * `SEAM_SIGNATURE`'s own `arity` fields rather than from an eager
+ * destructure.
+ *
+ * NOW: `SEAM_BOOT_SPEC`'s definition lives in `tapeFormat` (where the v8
+ * boot block's schema belongs — see the re-export below), `tapeFormat`
+ * imports nothing from here, and the dependency is one-way. The TDZ hazard
+ * is GONE, not merely defused.
+ *
+ * ⚠ THE LAZY READS BELOW STAY ANYWAY. They are correct, they cost nothing,
+ * and unwinding them would be an unrelated rewrite in a slice whose licence
+ * is behaviour-preserving repair — belt and braces, deliberately kept.
  */
-// eslint-disable-next-line import/no-cycle
 import {
-    PIN_NAMES, inventorySlotsFor, seamFieldsFromBlock, seamToBlock,
+    PIN_NAMES, SEAM_BOOT_SPEC, inventorySlotsFor, seamFieldsFromBlock, seamToBlock,
 } from './tapeFormat.js';
 // ⛓ R7 slice 2b: the LFSR itself, because the second batch's prediction is an
 // ARITHMETIC claim about a state 1562 draws back and an LFSR state cannot be
@@ -465,143 +470,34 @@ export const SEAM_CHANNELS = Object.freeze({
 });
 
 /**
- * ⛔⛔⛔ THE v8 `seam` BLOCK'S SCHEMA — the ONE list both validators read.
+ * ⛔⛔⛔ THE v8 `seam` BLOCK'S SCHEMA — RE-EXPORTED, NOT DEFINED HERE.
  *
- * `tapeFormat.parseSeam` walks this; `Bot.botLoadTape` states the same
- * bounds in AS3, each beside the game line that makes it a bound rather
- * than a taste. **The bounds are not preferences and none of them is
- * round-numbered by choice:**
+ * ⚠ THE DEFINITION MOVED TO `tapeFormat.js` (editor arc slice 1), and it
+ * moved because a BROWSER could not load the engine: this module imports
+ * `fixtures/index.js`, which imports `node:fs`, and an ES module runs its
+ * imports before any export is reachable — so `tapeFormat` importing one
+ * frozen table from here dragged `node:fs` into every browser that loaded
+ * the tape format. `watch.html` had been unloadable since R7 slice 1
+ * because of it, and only a browser could ever have said so.
  *
- *  · `hits_max`, `time`, `primary`, `secondary` — `Main`'s own getters have
- *    a FALSY ARM (`Main.as:155-161`): a stored 0 returns `Player.hitsMaxDef`
- *    for `hitsMax` and `Game.dayLength / 2` for `time`. 0 is therefore
- *    UNREPRESENTABLE for those two and means "not declared" here.
- *  · `grass_cut` — `Main`'s SETTER calls `unlockMedal` at >= 10000
- *    (`Main.as:191`), and `unlockMedal` is the distribution path that makes
- *    `hasBadge` the one excluded signature row. A state declaration must
- *    not be able to reach outside the game.
- *  · `menu_state` — `Game`'s ctor honours a `_menuState` argument and then
- *    calls `end()`, which runs `menuState = 0` for every `!menu` world
- *    (`Game.as:638-639`, `:665-668`). A calm arrival is `!menu` by
- *    definition, so 0 is the only value that survives one. Declared and
- *    bounded rather than dropped, so the row has a channel and the
- *    impossibility is written where it is checked.
- *  · `fp` — `FP.randomSeed`'s setter is `_seed = clamp(value, 1,
- *    2147483646)` (`FP.as:392`), so 2147483647 would be applied as a
- *    DIFFERENT state than declared. A field whose declared and applied
- *    values disagree is worse than one that is absent.
+ * ⛓ TRAP 86 IS SATISFIED, NOT BENT. Its law is ONE DEFINITION, OWNED,
+ * NEVER RETYPED — and the definition moved WHOLE, with this re-export
+ * keeping every existing importer working and no copy anywhere. Ownership
+ * landing in `tapeFormat` is right by the law's own logic: the v8 boot
+ * block is the tape FORMAT's schema and `parseSeam` is its first reader.
+ * The 46-row `SEAM_SIGNATURE` — the COMPARISON spec, a different claim —
+ * stays here, and `assertSeamCoverage` still checks the two against each
+ * other across the boundary exactly as it did.
  *
- * ⚠ `modelled: false` names the fields the JS engine carries and does NOT
- * simulate. They are transported, validated and compared at the seam; no
- * physics reads them. Saying which is which is the difference between a
- * declared field and a silently ignored one.
+ * ⛓ AND THE CYCLE IS GONE rather than defused. `tapeFormat` no longer
+ * imports this module at all, so the loop this file used to sit in — and
+ * read every binding lazily to survive — is now a one-way dependency:
+ * `r7Acceptance -> tapeFormat`.
  */
-export const SEAM_BOOT_SPEC = Object.freeze([
-    ...['hasSword', 'hasGhostSword', 'hasShield', 'hasFire', 'hasWand', 'hasFireWand',
-        'canSwim', 'hasSpear', 'hasDarkShield', 'hasDarkSuit', 'hasDarkSword',
-        'hasFeather', 'hasTorch'].map((k) => Object.freeze({
-        key: `items.${k}`, field: `save.${k}`, type: 'boolean', modelled: true,
-        why: 'the boot item flags — applied BEFORE the first world builds, which a '
-            + '`grants` row cannot be: a grant fires on the first observation tick in '
-            + 'its level, by which time the pickup it should have despawned is standing',
-    })),
-    Object.freeze({
-        key: 'beam', field: 'save.beam', type: 'boolean', modelled: false,
-        why: 'gates L0\'s 280-draw moonrock flare; `Shield.removed()` sets it',
-    }),
-    Object.freeze({
-        key: 'rock_set', field: 'save.rockSet', type: 'boolean', modelled: false,
-        why: '⚠ GAMEPLAY: `Moonrock`\'s ctor drops the rock and makes it a 48x48 Solid',
-    }),
-    Object.freeze({
-        key: 'hits_max', field: 'save.hitsMax', type: 'int', min: 1, max: 99,
-        zeroMeansUndeclared: true, modelled: true,
-        why: '3 -> 4 once, at L68; 0 is `Main.hitsMax`\'s falsy arm (Player.hitsMaxDef)',
-    }),
-    Object.freeze({
-        key: 'first_use', field: 'save.firstUse', type: 'boolean', modelled: false,
-        why: 'gates a tutorial FREEZE, so it is not cosmetic',
-    }),
-    Object.freeze({
-        key: 'extended', field: 'save.extended', type: 'boolean', modelled: false,
-        why: 'as above',
-    }),
-    Object.freeze({
-        key: 'time', field: 'save.time', type: 'number', min: 0, max: 4294967295,
-        exclusiveMin: true, zeroMeansUndeclared: true,
-        /**
-         * ⛓⛓⛓ R8 SLICE 8: **TRUE, AND THE MACHINERY LANDED WITH THE FLAG.**
-         *
-         * This row was `modelled: false` for four rungs — carried across the
-         * seam, validated, compared, and read by no physics — while one
-         * mechanism needed it the whole time: `Spinner.update`'s hammer is a
-         * `collideLine` at `(Game.time % 45) / 45 · 2π` (`Spinner.as:70-72`),
-         * and both `levelRun.assertPlayerClearOfHammers` and
-         * `dangerMap.spinnerDanger` refused the angle on the grounds that
-         * *"this model does not carry `Game.time`"*.
-         *
-         * `gameClock` is the counting that was missing: `time += timeRate` sits
-         * below `Game.update`'s `blackCover` gate but outside it, so the
-         * quantity is the boot value plus every `Game.update()` — live, frozen,
-         * ceremony and room-fade alike — and every one of those is a number the
-         * run already had. ⛔ THE FLAG IS TRUE ONLY WHERE THE COUNT IS EXACT:
-         * `createLevelRun` refuses the clock (and every consumer refuses with
-         * it) for a tape without `pins: ["dead_frames"]`, where a load's fade
-         * is a RENDER count, and for a boot inside `cutscene[0]`, the one block
-         * in the game that writes `timeRate`.
-         *
-         * ⛓ THE FREE ORACLE THAT CHECKS IT is `gameClock.declaredSeamTimeAfter`
-         * against every committed chain seam: ten pairs, ten exact agreements,
-         * numbers the GAME latched.
-         */
-        modelled: true,
-        why: 'day/night phase, AND `Spinner`\'s hammer angle; 0 is `Main.time`\'s falsy '
-            + 'arm (Game.dayLength / 2). Comparable — and MODELLED — only under '
-            + '`Bot.pinDeadFrames`: it counts DEAD frames too (`gameClock`)',
-    }),
-    Object.freeze({
-        key: 'primary', field: 'save.primary', type: 'int', min: 0, max: 5,
-        modelled: true,
-        why: 'a SLOT INDEX into the array `Inventory.getItem` reads — six ids exist, so '
-            + 'six slots is what `addItemsFromSave` plus its fusion splices can reach; '
-            + 'an out-of-range write is a SILENT no-op (Inventory.itemCount\'s docblock)',
-    }),
-    Object.freeze({
-        key: 'secondary', field: 'save.secondary', type: 'int', min: 0, max: 5,
-        modelled: false, why: 'as above',
-    }),
-    Object.freeze({
-        key: 'grass_cut', field: 'save.grassCut', type: 'int', min: 0, max: 9999,
-        modelled: false,
-        why: '⛔ the ceiling is a SIDE EFFECT, not a range — `Main`\'s setter calls '
-            + '`unlockMedal` at >= 10000',
-    }),
-    Object.freeze({
-        key: 'cutscene', field: 'static.Game.cutscene', type: 'boolean[]', arity: 4,
-        modelled: true,
-        why: 'GAMEPLAY — `cutscene[2]` is the Seed\'s mode change and every later '
-            + '`Game` then spawns the player inert (trap 91)',
-    }),
-    Object.freeze({
-        key: 'menu_state', field: 'static.Game.menuState', type: 'int', min: 0, max: 0,
-        modelled: true,
-        why: '⛔ 0 IS THE ONLY VALUE A CALM ARRIVAL CAN CARRY — `Game.end()` writes '
-            + '`menuState = 0` for every `!menu` world (Game.as:665-668)',
-    }),
-    Object.freeze({
-        key: 'music.set', field: 'static.Music.currentSet', type: 'string',
-        modelled: false,
-        why: 'the no-repeat REJECTION LOOP\'s state: `playSound` redraws while '
-            + '`cplayIndex == currentIndex && currentSet == strInd`, so these two '
-            + 'decide a DRAW COUNT',
-    }),
-    Object.freeze({
-        key: 'music.index', field: 'static.Music.currentIndex', type: 'int', min: -1,
-        modelled: false,
-        why: 'as above; -1 is "nothing has played" and the fresh-page value',
-    }),
-]);
-
+// ⚠ Re-exported from the LOCAL binding above, not `export … from`: this
+// module reads the table itself (`assertSeamCoverage`, `segmentBootFromLatch`),
+// and a bare re-export creates no local binding for those readers.
+export { SEAM_BOOT_SPEC };
 /**
  * ⛔ EVERY SIGNATURE ROW HAS A CHANNEL, AND EVERY v8 KEY HAS A ROW.
  *
@@ -1650,7 +1546,23 @@ export function goalEarnedWitness(row, boot, latch) {
  * @param {object} earnedBy
  * @param {string[]} [roster]
  */
-export function r7GoalFindings(earnedBy = {}, roster = fixtureNames()) {
+/**
+ * ⚠ `roster` IS REQUIRED (editor arc slice 1). It used to default to
+ * `fixtureNames()`, and that one import — `fixtures/index.js`, which
+ * imports `node:fs` — made this whole module unloadable in a browser, and
+ * with it every engine module that reads a table from here. The default
+ * was never exercised: both callers in the tree (`playthroughAcceptance`
+ * and this module's own tests) pass a roster explicitly, always have, and
+ * a findings list computed over a roster the caller did not choose is a
+ * silent scope change anyway. So it is named rather than defaulted.
+ */
+export function r7GoalFindings(earnedBy = {}, roster) {
+    if (!Array.isArray(roster)) {
+        throw new R7AcceptanceError('r7GoalFindings: pass the roster explicitly — '
+            + '`fixtureNames()` from ./fixtures/index.js in node. It used to '
+            + 'default to that, and the import made this module unloadable in a '
+            + 'browser (editor arc slice 1).');
+    }
     const out = R7_GOAL_LEDGER.map((row) => {
         const e = earnedBy[row.id];
         const inRoster = Boolean(e?.segment) && roster.includes(e.segment);
@@ -1716,7 +1628,23 @@ export function r7GoalFindings(earnedBy = {}, roster = fixtureNames()) {
 }
 
 /** The ledger's own totals, derived. Nothing here is stored. */
-export function r7GoalCriteria(earnedBy = {}, roster = fixtureNames()) {
+/**
+ * ⚠ `roster` IS REQUIRED (editor arc slice 1). It used to default to
+ * `fixtureNames()`, and that one import — `fixtures/index.js`, which
+ * imports `node:fs` — made this whole module unloadable in a browser, and
+ * with it every engine module that reads a table from here. The default
+ * was never exercised: both callers in the tree (`playthroughAcceptance`
+ * and this module's own tests) pass a roster explicitly, always have, and
+ * a findings list computed over a roster the caller did not choose is a
+ * silent scope change anyway. So it is named rather than defaulted.
+ */
+export function r7GoalCriteria(earnedBy = {}, roster) {
+    if (!Array.isArray(roster)) {
+        throw new R7AcceptanceError('r7GoalCriteria: pass the roster explicitly — '
+            + '`fixtureNames()` from ./fixtures/index.js in node. It used to '
+            + 'default to that, and the import made this module unloadable in a '
+            + 'browser (editor arc slice 1).');
+    }
     const byKind = {};
     for (const row of R7_GOAL_LEDGER) {
         byKind[row.kind] = byKind[row.kind] ?? { total: 0, earned: 0 };

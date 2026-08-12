@@ -1854,54 +1854,22 @@ export const R8_ETA_PROBE = Object.freeze({
 });
 
 /**
- * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
+ * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY — RE-EXPORTED, NOT DEFINED HERE.
  *
- * ⛔ A PROBE THAT SAMPLES EVERY CELL AT THE PLAN TICK IS THE ONE TRAP 161 IS
- * ABOUT, and it is indistinguishable from an eta-aware one by its RESULT on a
- * calm room. So the instrument states its own clock: every sample carries the
- * ABSOLUTE tick it was asked at, the ticks advance one per simulated tick, and
- * a corridor longer than one tick must contain at least one sample ABOVE the
- * tick the plan was made on. Degrade the ETA source to a constant and this is
- * what goes red — which is the first row of `R8_ETA_PROBE.gates.mutations`.
+ * ⚠ THE DEFINITION MOVED TO `solverBot.js` (editor arc slice 1), and the
+ * move was forced by a BROWSER: `solverBot` is the only caller, this module
+ * imports `node:fs` for `assertBatchSitesCoverSource`'s source grep, and an
+ * ES module runs its imports before any export is reachable — so importing
+ * one pure assertion from here dragged `node:fs` into every browser that
+ * loaded the solver, and the editor page died on it before its first line
+ * ran. The same lesson `atlasSource.js` was split out for, one module
+ * family along: "the function has no node dependency" and "the module can
+ * be imported in a browser" are different claims.
  *
- * @param {Array<{x:number,y:number,tick:number}>} samples in walk order
- * @param {number} startTick the run's own clock when the corridor was planned
+ * Re-exported so every existing importer of this module is untouched. ONE
+ * definition, in the module that consumes it; no copy lives here.
  */
-export function assertTransitSamplesCarryEtas(samples, startTick,
-    what = 'the transit probe') {
-    if (!Array.isArray(samples) || samples.length === 0) {
-        throw new Error(`${what}: a corridor validated with NO samples is a corridor `
-            + 'nobody looked at. Hand over the walk the controller would drive.');
-    }
-    if (!Number.isFinite(startTick)) {
-        throw new Error(`${what}: the plan tick must be finite; got ${startTick}.`);
-    }
-    let prev = startTick;
-    for (let i = 0; i < samples.length; i += 1) {
-        const s = samples[i];
-        if (!Number.isInteger(s?.tick)) {
-            throw new Error(`${what}: sample ${i} carries no absolute tick — an ETA that is `
-                + 'not written down is an ETA nobody can check (trap 161).');
-        }
-        if (s.tick <= prev) {
-            throw new Error(`${what}: sample ${i} is at tick ${s.tick}, which does not `
-                + `advance on ${prev}. The samples ARE the ticks the controller would `
-                + 'spend; one that repeats or goes backwards is a clock that stopped.');
-        }
-        prev = s.tick;
-    }
-    if (samples.length > 1 && samples[samples.length - 1].tick <= startTick + 1) {
-        throw new Error(`${what}: ${samples.length} samples all landed inside one tick of `
-            + `the plan tick ${startTick}. That is the STATIC probe wearing this one's `
-            + 'name — the collapse trap 161 names.');
-    }
-    return {
-        samples: samples.length,
-        startTick,
-        endTick: samples[samples.length - 1].tick,
-        span: samples[samples.length - 1].tick - startTick,
-    };
-}
+export { assertTransitSamplesCarryEtas } from './solverBot.js';
 
 /**
  * ⛓⛓⛓ THE LOOP'S OWN NON-VACUITY, AS A FUNCTION — the prefix agreement.

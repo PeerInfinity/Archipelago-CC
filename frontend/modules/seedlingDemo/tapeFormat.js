@@ -397,7 +397,144 @@ class TapeFormatError extends Error {
  * is accepted and defused rather than avoided by duplicating the list.
  */
 // eslint-disable-next-line import/no-cycle
-import { SEAM_BOOT_SPEC } from './r7Acceptance.js';
+
+/**
+ * ⛔⛔⛔ THE v8 `seam` BLOCK'S SCHEMA — the ONE list both validators read.
+ *
+ * `tapeFormat.parseSeam` walks this; `Bot.botLoadTape` states the same
+ * bounds in AS3, each beside the game line that makes it a bound rather
+ * than a taste. **The bounds are not preferences and none of them is
+ * round-numbered by choice:**
+ *
+ *  · `hits_max`, `time`, `primary`, `secondary` — `Main`'s own getters have
+ *    a FALSY ARM (`Main.as:155-161`): a stored 0 returns `Player.hitsMaxDef`
+ *    for `hitsMax` and `Game.dayLength / 2` for `time`. 0 is therefore
+ *    UNREPRESENTABLE for those two and means "not declared" here.
+ *  · `grass_cut` — `Main`'s SETTER calls `unlockMedal` at >= 10000
+ *    (`Main.as:191`), and `unlockMedal` is the distribution path that makes
+ *    `hasBadge` the one excluded signature row. A state declaration must
+ *    not be able to reach outside the game.
+ *  · `menu_state` — `Game`'s ctor honours a `_menuState` argument and then
+ *    calls `end()`, which runs `menuState = 0` for every `!menu` world
+ *    (`Game.as:638-639`, `:665-668`). A calm arrival is `!menu` by
+ *    definition, so 0 is the only value that survives one. Declared and
+ *    bounded rather than dropped, so the row has a channel and the
+ *    impossibility is written where it is checked.
+ *  · `fp` — `FP.randomSeed`'s setter is `_seed = clamp(value, 1,
+ *    2147483646)` (`FP.as:392`), so 2147483647 would be applied as a
+ *    DIFFERENT state than declared. A field whose declared and applied
+ *    values disagree is worse than one that is absent.
+ *
+ * ⚠ `modelled: false` names the fields the JS engine carries and does NOT
+ * simulate. They are transported, validated and compared at the seam; no
+ * physics reads them. Saying which is which is the difference between a
+ * declared field and a silently ignored one.
+ */
+export const SEAM_BOOT_SPEC = Object.freeze([
+    ...['hasSword', 'hasGhostSword', 'hasShield', 'hasFire', 'hasWand', 'hasFireWand',
+        'canSwim', 'hasSpear', 'hasDarkShield', 'hasDarkSuit', 'hasDarkSword',
+        'hasFeather', 'hasTorch'].map((k) => Object.freeze({
+        key: `items.${k}`, field: `save.${k}`, type: 'boolean', modelled: true,
+        why: 'the boot item flags — applied BEFORE the first world builds, which a '
+            + '`grants` row cannot be: a grant fires on the first observation tick in '
+            + 'its level, by which time the pickup it should have despawned is standing',
+    })),
+    Object.freeze({
+        key: 'beam', field: 'save.beam', type: 'boolean', modelled: false,
+        why: 'gates L0\'s 280-draw moonrock flare; `Shield.removed()` sets it',
+    }),
+    Object.freeze({
+        key: 'rock_set', field: 'save.rockSet', type: 'boolean', modelled: false,
+        why: '⚠ GAMEPLAY: `Moonrock`\'s ctor drops the rock and makes it a 48x48 Solid',
+    }),
+    Object.freeze({
+        key: 'hits_max', field: 'save.hitsMax', type: 'int', min: 1, max: 99,
+        zeroMeansUndeclared: true, modelled: true,
+        why: '3 -> 4 once, at L68; 0 is `Main.hitsMax`\'s falsy arm (Player.hitsMaxDef)',
+    }),
+    Object.freeze({
+        key: 'first_use', field: 'save.firstUse', type: 'boolean', modelled: false,
+        why: 'gates a tutorial FREEZE, so it is not cosmetic',
+    }),
+    Object.freeze({
+        key: 'extended', field: 'save.extended', type: 'boolean', modelled: false,
+        why: 'as above',
+    }),
+    Object.freeze({
+        key: 'time', field: 'save.time', type: 'number', min: 0, max: 4294967295,
+        exclusiveMin: true, zeroMeansUndeclared: true,
+        /**
+         * ⛓⛓⛓ R8 SLICE 8: **TRUE, AND THE MACHINERY LANDED WITH THE FLAG.**
+         *
+         * This row was `modelled: false` for four rungs — carried across the
+         * seam, validated, compared, and read by no physics — while one
+         * mechanism needed it the whole time: `Spinner.update`'s hammer is a
+         * `collideLine` at `(Game.time % 45) / 45 · 2π` (`Spinner.as:70-72`),
+         * and both `levelRun.assertPlayerClearOfHammers` and
+         * `dangerMap.spinnerDanger` refused the angle on the grounds that
+         * *"this model does not carry `Game.time`"*.
+         *
+         * `gameClock` is the counting that was missing: `time += timeRate` sits
+         * below `Game.update`'s `blackCover` gate but outside it, so the
+         * quantity is the boot value plus every `Game.update()` — live, frozen,
+         * ceremony and room-fade alike — and every one of those is a number the
+         * run already had. ⛔ THE FLAG IS TRUE ONLY WHERE THE COUNT IS EXACT:
+         * `createLevelRun` refuses the clock (and every consumer refuses with
+         * it) for a tape without `pins: ["dead_frames"]`, where a load's fade
+         * is a RENDER count, and for a boot inside `cutscene[0]`, the one block
+         * in the game that writes `timeRate`.
+         *
+         * ⛓ THE FREE ORACLE THAT CHECKS IT is `gameClock.declaredSeamTimeAfter`
+         * against every committed chain seam: ten pairs, ten exact agreements,
+         * numbers the GAME latched.
+         */
+        modelled: true,
+        why: 'day/night phase, AND `Spinner`\'s hammer angle; 0 is `Main.time`\'s falsy '
+            + 'arm (Game.dayLength / 2). Comparable — and MODELLED — only under '
+            + '`Bot.pinDeadFrames`: it counts DEAD frames too (`gameClock`)',
+    }),
+    Object.freeze({
+        key: 'primary', field: 'save.primary', type: 'int', min: 0, max: 5,
+        modelled: true,
+        why: 'a SLOT INDEX into the array `Inventory.getItem` reads — six ids exist, so '
+            + 'six slots is what `addItemsFromSave` plus its fusion splices can reach; '
+            + 'an out-of-range write is a SILENT no-op (Inventory.itemCount\'s docblock)',
+    }),
+    Object.freeze({
+        key: 'secondary', field: 'save.secondary', type: 'int', min: 0, max: 5,
+        modelled: false, why: 'as above',
+    }),
+    Object.freeze({
+        key: 'grass_cut', field: 'save.grassCut', type: 'int', min: 0, max: 9999,
+        modelled: false,
+        why: '⛔ the ceiling is a SIDE EFFECT, not a range — `Main`\'s setter calls '
+            + '`unlockMedal` at >= 10000',
+    }),
+    Object.freeze({
+        key: 'cutscene', field: 'static.Game.cutscene', type: 'boolean[]', arity: 4,
+        modelled: true,
+        why: 'GAMEPLAY — `cutscene[2]` is the Seed\'s mode change and every later '
+            + '`Game` then spawns the player inert (trap 91)',
+    }),
+    Object.freeze({
+        key: 'menu_state', field: 'static.Game.menuState', type: 'int', min: 0, max: 0,
+        modelled: true,
+        why: '⛔ 0 IS THE ONLY VALUE A CALM ARRIVAL CAN CARRY — `Game.end()` writes '
+            + '`menuState = 0` for every `!menu` world (Game.as:665-668)',
+    }),
+    Object.freeze({
+        key: 'music.set', field: 'static.Music.currentSet', type: 'string',
+        modelled: false,
+        why: 'the no-repeat REJECTION LOOP\'s state: `playSound` redraws while '
+            + '`cplayIndex == currentIndex && currentSet == strInd`, so these two '
+            + 'decide a DRAW COUNT',
+    }),
+    Object.freeze({
+        key: 'music.index', field: 'static.Music.currentIndex', type: 'int', min: -1,
+        modelled: false,
+        why: 'as above; -1 is "nothing has played" and the fresh-page value',
+    }),
+]);
 
 function fail(message) {
     throw new TapeFormatError(message);
@@ -935,18 +1072,28 @@ function parseRng(raw) {
 /**
  * ── The version-8 `seam` block ────────────────────────────────────────
  *
- * ⛔ THE SCHEMA IS `r7Acceptance.SEAM_BOOT_SPEC`, WALKED — not retyped
- * here. The v8 block exists to carry the SEAM SIGNATURE's rows that no
- * earlier block could express, so its key list has to BE a function of that
- * signature: a signature row routed to the seam channel with no spec entry
- * throws in `assertSeamChannelsTotal`, and a spec entry with no parser arm
- * is impossible because this loop is the parser (trap 86).
+ * ⛔ THE SCHEMA IS `SEAM_BOOT_SPEC`, WALKED — not retyped here. The v8
+ * block exists to carry the SEAM SIGNATURE's rows that no earlier block
+ * could express, so its key list has to BE a function of that signature: a
+ * signature row routed to the seam channel with no spec entry throws in
+ * `r7Acceptance.assertSeamChannelsTotal`, and a spec entry with no parser
+ * arm is impossible because this loop is the parser (trap 86).
  *
- * ⚠ THE IMPORT IS READ AT CALL TIME, NOT AT MODULE SCOPE, and that is
- * load-bearing: `r7Acceptance` imports `fixtures/index.js`, which imports
- * this module, so the three form a cycle. Function bindings survive one
- * (they hoist); a module-scope `const` derived from `SEAM_BOOT_SPEC` would
- * hit the temporal dead zone whenever `r7Acceptance` is the entry point.
+ * ⛓ THE TABLE LIVES IN THIS MODULE (editor arc slice 1). It used to live in
+ * `r7Acceptance` and be imported from there, which formed a cycle —
+ * `tapeFormat -> r7Acceptance -> fixtures/index -> tapeFormat` — that this
+ * function defused by reading the binding at CALL TIME rather than at
+ * module scope. The cycle also dragged `fixtures/index.js`'s `node:fs`
+ * into every browser that loaded this module, which is why `watch.html`
+ * could not load at all from R7 slice 1 until the editor arc's first
+ * browser caller found it.
+ *
+ * Trap 86's law is one definition, owned, never retyped: the definition
+ * MOVED whole, `r7Acceptance` re-exports it so its importers are
+ * untouched, and ownership landing here is right — the v8 boot block is
+ * the tape FORMAT's schema and this parser is its first reader. The 46-row
+ * `SEAM_SIGNATURE`, which is the COMPARISON spec and a different claim,
+ * stays in `r7Acceptance` and is still checked against this table.
  *
  * ⚠ AND EVERY BOUND HERE IS TWINNED IN `Bot.botLoadTape`. Both validators
  * state them, both cite the game line that makes each one a bound rather
