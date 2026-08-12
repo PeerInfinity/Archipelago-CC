@@ -7109,17 +7109,19 @@ three SOURCES converging on one replay spine:
   before showing it. A hand drive is a PRODUCER, beside `solveSegment` and
   the drivers — not a second replay loop.
 
-Over all three: **twelve independently toggleable overlay layers**, every
+Over all three: **fifteen independently toggleable overlay layers**, every
 position SAMPLED per tick through `createTapeStepper`'s `onTick` hook and
 never re-simulated. Four are CUMULATIVE paths (player · enemies · pushables ·
-arrows, the one OFF by default ⚖), four are event MARKERS (action =
-attack-key edges · damage · events · volumes), and four are THIS-TICK
+arrows, OFF by default ⚖), four are event MARKERS (action =
+attack-key edges · damage · events · volumes), and SEVEN are THIS-TICK
 SHAPES: **enemy body hitboxes** (`spinnerRect` / `chaserBoxAt`), the
 **spinner hammer LINE** at its exact current angle (`hammerLine` fed by the
 run's modelled `Game.time`, drawn white-hot when the engine's own
 `hammerHitsPlayer` says it reaches the player), the **attack rect** on the
-tick it fired (`run.presses[].rect`), and — slice 8 — the **armed arrow
-traps' LANES**.
+tick it fired (`run.presses[].rect`), the **armed arrow traps' LANES**
+(slice 8), and slice 9's three: the **WORLD STATE** — what the run has
+CHANGED over the build-time base — the **CRUSHER** bodies and their trigger
+lanes, and the **DANGER the SOLVER was told** (⚖ default OFF).
 
 ⛔ **A LANE IS NOT AN ARROW PATH, and the two layers are deliberately kept
 apart.** `arrows` is the sampled FLIGHTS: cumulative, one dot per arrow per
@@ -7142,8 +7144,9 @@ Upload, all through `parseTape`.
 Everything is reachable from URL parameters: `?tape= ?side= ?speed=
 ?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`.
 
-⛓⛓ **A LAYER THAT CAN DRAW NOTHING CARRIES A `why`** — three of the twelve do
-(`hitboxes`, `hammer`, `lanes`), and the rule they establish is worth stating
+⛓⛓ **A LAYER THAT CAN DRAW NOTHING CARRIES A `why`** — six of the fifteen do
+(`hitboxes`, `hammer`, `lanes`, `worldstate`, `crushers`, `danger`), and slice
+9 landed its three in the pair shape FROM THE OUTSET. The rule is worth stating
 once: *an empty layer means two things, so the page says which, in the
 ENGINE's own words, with the population count beside it.* A `hitboxes` layer
 drawing nothing is a room with no enemies, a COMBAT-BLIND run, a roster
@@ -7184,6 +7187,58 @@ and proven so by the full offline differential plus a byte-unchanged
   ⛔ The level HEIGHT stayed a parameter: the five rect sites agreed on the
   arithmetic but NOT on where the height came from, so hoisting the lookup
   too would have unified two expressions nobody could prove equal.
+
+### Slice 9 — the drawn world stops lying, and the bot's own danger
+
+Slice 6's audit priced what the separately-built, never-advanced world COSTS:
+a rock broken at tick 50 is still drawn as a wall at tick 300, a chest opened
+is still drawn shut. Measured across all 153 committed tapes —
+`openActivators` 23 · `openChests` 7 · `turrets` 8 · `brokenRocks` 2 ·
+`burnedTrees` 2 · `pulledRopes` 2. The **`worldstate`** layer marks it.
+
+⛔ **IT MARKS, IT DOES NOT REPAINT** (⚖ the charter's own condition). A layer
+that erased the stale wall would leave exactly the picture a fresh build
+gives, and a reader could no longer tell a CORRECTED picture from one that
+never needed correcting. So the base box stays and the mark says what is no
+longer true about it, in three verbs the GAME distinguishes: **GONE** (a
+broken rock, a burnt tree, an opened chest, a held-open lock leave the solid
+list entirely), **SWAPPED** (a pulled rope is `setHitbox(16, 16, 8, 8)` — 112 px
+of wall becomes 16 px of wall, and marking it gone would open a tile the game
+KEEPS), and **NOT SOLID** — the ice turret's inverted polarity, where the
+32x32 body the level builds is an `Enemy` and not a wall at all until it dies
+and the player steps off the corpse. That last mark is true from tick 0,
+before the run has changed anything: the base picture is simply wrong there.
+
+⛓ **The `crushers` layer is the R5-slice-16 forward's FIRST READER.**
+`frames[].crushers` and `frames[].crusherScans` have ridden on every frame
+since R5 and were drawn by nobody — trap 119's family in the hot loop. The
+body is where the RUN left it (a crusher charges at a player it can SEE, so
+the constructor cell is wrong from the first tick a bait commits), the four
+trigger lanes are `crusher.detectionRects`' own — **not**
+`dangerMap.crusherVolumesAt`, because `crusherScans[].matched` is a list of
+`dir` names and only `detectionRects` produces rects those names key into —
+and a SHIELDED crusher says so by name rather than reporting "sees nothing":
+`scanCrusher` returns before it walks a single lane when the sight line is
+blocked, which has nothing to do with where the player is standing.
+
+⚖ **The `danger` layer draws what the SOLVER RECORDED, and nothing else.**
+Slice 6 refused danger-map verdicts as an eleventh peer of the layers that
+show what happened, on the standing law that *a viewer is a window, not a
+third opinion*; ⚖ item 9 supersedes that refusal for exactly one shape, under
+four conditions that ARE the ruling: the data is the reason lists
+`solveSegment` was HANDED (recorded additively at the two sites that had
+already asked the union — no new `dangerAt` call exists), the layer is
+labelled the bot's HEURISTIC in its own ink, it defaults **OFF**, and on a
+REPLAY or MANUAL source it reports *"no solver ran — no danger data"* BY NAME
+rather than recomputing. A page-side re-ask would be the refused thing wearing
+the new layer's name.
+
+⛔⛓ **AND THE PURPLE IS A REFUSAL'S COLOUR.** Measured over 30 solves of 9
+committed staging blocks: **every** danger query a SUCCESSFUL segment records
+comes back CLEAR, with an empty reason list. That is a theorem, not an
+accident — `refuseDanger` THROWS when the union answers danger, so a segment
+that reaches its goal cannot have had a dangerous gate. The non-empty case
+lives only on refusals, which is where the next slice should look for it.
 
 ⛔ **The page never writes `fixtures/tapes/` or `fixtures/traces/`.** That
 roster is disk-derived, so a saved experiment would silently join the
