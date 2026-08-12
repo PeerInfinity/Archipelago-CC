@@ -154,9 +154,9 @@ describe('the kill arm', () => {
         // families in `earnedClears`: the totem's row is a KILL that opened
         // a wall, the wand's is a PICKUP that stopped an item respawning,
         // and "which openers did this walk use" has to tell them apart.
-        expect(kill.earnedClears).toEqual([
-            { level: 43, tag: 5, by: 'bosstotem@152,168' },
-            { level: 43, tag: 0, by: 'wand@144,224' },
+        expect(kill.earnedClears.map((c) => [c.level, c.tag, c.by])).toEqual([
+            [43, 5, 'bosstotem@152,168'],
+            [43, 0, 'wand@144,224'],
         ]);
     });
 

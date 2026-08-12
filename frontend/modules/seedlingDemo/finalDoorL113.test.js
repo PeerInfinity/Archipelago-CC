@@ -175,12 +175,15 @@ describe('the open: the body collides for all of it', () => {
     it('the removal writes `{113,0}` — a CLEAR — into `earnedClears`', () => {
         const run = newRun();
         walk(run, 100);
-        expect(run.finalDoorFlags).toEqual([
-            { level: 113, tag: 0, value: false, id: 'finaldoor@112,0' },
-        ]);
-        expect(run.earnedClears).toEqual([
-            { level: 113, tag: 0, by: 'finaldoor@112,0' },
-        ]);
+        // ⚠ FIELD-WISE, not whole-row. A ledger row is a record that grows —
+        // `t` arrived with the editor arc's clears layer — and an exact
+        // whole-object comparison turns every future field into a red in a
+        // test that is not about that field. The projection names exactly
+        // what THIS test pins, so the count and the order stay exact.
+        expect(run.finalDoorFlags.map((f) => [f.level, f.tag, f.value, f.id]))
+            .toEqual([[113, 0, false, 'finaldoor@112,0']]);
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[113, 0, 'finaldoor@112,0']]);
     });
 });
 
@@ -262,9 +265,9 @@ describe('⛔⛔⛔ the cross-level read: the door\'s other condition', () => {
         // ⛓⛓⛓ BOTH ROWS OF THE ENDING'S LEDGER, EARNED IN ONE RUN AND
         // DECLARED IN NEITHER: the door's `!checkPersistence(0, 114)` read
         // the flag the dialogue wrote 300 ticks and one world swap earlier.
-        expect(run.earnedClears).toEqual([
-            { level: 114, tag: 0, by: 'watcher@72,72' },
-            { level: 113, tag: 0, by: 'finaldoor@112,0' },
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by])).toEqual([
+            [114, 0, 'watcher@72,72'],
+            [113, 0, 'finaldoor@112,0'],
         ]);
     });
 });

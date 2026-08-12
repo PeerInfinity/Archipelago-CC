@@ -181,7 +181,8 @@ describe('the twenty pages, and the `{114,0}` CLEAR they earn', () => {
     it('...and it reaches `earnedClears`, which is what the differential reads', () => {
         const run = newRun();
         drive(run, 260, { keys: ['up'] });
-        expect(run.earnedClears).toEqual([{ level: 114, tag: 0, by: 'watcher@72,72' }]);
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[114, 0, 'watcher@72,72']]);
     });
 
     it('one release fewer leaves the tag SET, still talking, on the last page', () => {
@@ -252,7 +253,8 @@ describe('⛔⛔⛔ LEAVING THE RADIUS PAYS — AND IT IS ONE FRAME WIDE (trap 1
         expect(run.watcherTalks).toHaveLength(1);
         expect(run.watcherTalks[0]).toMatchObject({ t: 2, cause: 'left', page: 0 });
         expect(run.watcherTalks[0].flag).toEqual({ level: 114, tag: 0, value: false });
-        expect(run.earnedClears).toEqual([{ level: 114, tag: 0, by: 'watcher@72,72' }]);
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[114, 0, 'watcher@72,72']]);
     });
 
     it('...and from the shipped stance no walk exists at all — the freeze pins it', () => {

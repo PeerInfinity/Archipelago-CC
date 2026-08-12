@@ -221,7 +221,10 @@ describe('R4: the spear press, the bridge and the block', () => {
         // it could not miss.
         expect(run.presses[2].hits.map((h) => h.as3).sort())
             .toEqual(['LightPole', 'PushableBlockSpear']);
-        expect(run.earnedClears).toEqual([{ level: 65, tag: 2, by: 'lightpole' }]);
+        // ⚠ FIELD-WISE (see `finalDoorL113.test.js`): the row grew a `t` with
+        // the editor arc's clears layer, and this test is about the POLE.
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[65, 2, 'lightpole']]);
     });
 
     it('⚠ the lightpole is a TOGGLE, so the ledger reads the FINAL state', () => {
@@ -745,7 +748,8 @@ describe('R3: the touch-lock window', () => {
         expect(run.inputRefused).toBe(true);
         for (let t = 0; t < 200 && run.inputRefused; t++) run.advance(new Set());
         expect(run.lockSnaps).toHaveLength(1);
-        expect(run.earnedClears).toEqual([{ level: 71, tag: 2, by: LOCK }]);
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[71, 2, LOCK]]);
 
         // Still THERE for the rest of this visit — non-solid, but present.
         // Despawning it now would be a tick early and on the very tick the

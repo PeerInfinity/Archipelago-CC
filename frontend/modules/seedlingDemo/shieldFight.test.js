@@ -220,7 +220,8 @@ describe('the window — `r6-shield-kill`', () => {
      */
     it('⛔ …and the KEY banks no clear of its own — only the boss\'s {19,0}', () => {
         const inL19 = KILL.earnedClears.filter((c) => c.level === 19);
-        expect(inL19).toEqual([{ level: 19, tag: 0, by: 'shieldboss@80,32' }]);
+        expect(inL19.map((c) => [c.level, c.tag, c.by]))
+            .toEqual([[19, 0, 'shieldboss@80,32']]);
         for (const c of KILL.earnedClears) expect(Number.isInteger(c.tag), c.by).toBe(true);
     });
 });

@@ -284,8 +284,8 @@ describe('L20 — the gates, and which side of the shield they are on', () => {
          * only ever have gone red on the slice that paid it, which is the
          * point of writing the gap down as a test instead of a comment.
          */
-        expect(run.earnedClears).toContainEqual(
-            { level: 20, tag: 2, by: 'shield@112,48' });
+        expect(run.earnedClears.map((c) => [c.level, c.tag, c.by]))
+            .toContainEqual([20, 2, 'shield@112,48']);
         // ⛔ NO GATE WAS CROSSED. The three L20 activators are untouched.
         expect(run.openActivators).not.toContain('lock@32,80');
         expect(run.openActivators).not.toContain('shieldlocknorm@176,16');
