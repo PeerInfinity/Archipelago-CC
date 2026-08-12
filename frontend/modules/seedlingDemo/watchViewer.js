@@ -136,6 +136,11 @@ import {
     clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
     liveOverlaysFor, parseTapeText, readViewParams, serializeTapeText, tapeKeyForCode,
 } from './watchManual.js';
+import {
+    agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
+    generateStep, generationRows, ladderCost, readGenerateParams,
+} from './watchGenerate.js';
+import { atlasOf } from './procgenLevel.js';
 import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
@@ -279,7 +284,16 @@ let replayLoadedTape = () => {
 
 function readParams() {
     const q = new URLSearchParams(window.location.search);
+    /**
+     * ⛓ THE GENERATE ARM'S PARAMETERS, parsed where they are testable — and
+     * its `source` WINS when it applies. `?source=generate` says so outright
+     * and `?gen=` is unambiguous (nothing else in the page's vocabulary
+     * spells it); everything else the arm reads (`?seed=`, `?count=`) is a
+     * bound, not a selector, so a stale SOLVE link cannot land here.
+     */
+    const gen = readGenerateParams(window.location.search);
     return {
+        gen,
         tape: q.get('tape'),
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
@@ -292,6 +306,10 @@ function readParams() {
         // reason and in the same shape. Both are pure decisions about a
         // string, so both are decided where a test can reach them.
         ...readViewParams(window.location.search),
+        // ⛔ LAST, so it WINS over `readSolveParams`' inference. `?gen=` with
+        // no `?source=` has to select GENERATE, and `readSolveParams` would
+        // have already answered `replay` for that URL.
+        ...(gen.isGenerate ? { source: 'generate' } : {}),
     };
 }
 
@@ -1054,7 +1072,7 @@ function mountLayerControls(on, redraw) {
  *   looks like a calm room (trap 196, and item 9 names the sentence).
  */
 async function replayTape(tape, label, params, levelSource, traceSource = null,
-    dangerQueries = null) {
+    dangerQueries = null, { scratchPersistence = false } = {}) {
     replayGeneration += 1;
     const myGeneration = replayGeneration;
     const canvas = $('canvas');
@@ -1082,7 +1100,19 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
      * in its other form, a seam with no consumer because the consumer
      * already had one.
      */
-    const collected = collectRun(tape, levelSource);
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 5 — THE SCRUB FORK, and the ONE caller that
+     * passes the flag is the GENERATE arm.
+     *
+     * §13.4's residue: a generated solve can bank a kill-lock clear that
+     * `tapeFormat` cannot declare (`persistence[].level` is bounded to the
+     * real game's 0..115 and a generated level is 900), so re-stepping that
+     * tape on the ordinary path throws MID-WALK — measured, 270 of 379
+     * frames. The default here is FALSE, so every other arm (REPLAY, SOLVE,
+     * MANUAL, a paste, an upload) scrubs exactly as it always did and a
+     * committed tape's undeclared clear is still the refusal it should be.
+     */
+    const collected = collectRun(tape, levelSource, { scratchPersistence });
     const { frames, samples, finished, run } = collected;
     if (collected.error) {
         fatal('the run threw before finishing — the viewer shows what it got',
@@ -2432,6 +2462,332 @@ async function runManual(params) {
 
 const manualRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
 
+// ── SOURCE = GENERATE (PROCGEN PoC slice 5) ──────────────────────────────
+
+/**
+ * The GENERATION trace, in its own pane beside the decision trace.
+ *
+ * ⛔ TWO PANES BECAUSE THERE ARE TWO TRACES, and they answer different
+ * questions about different things. The decision trace is the SOLVER's, one
+ * row per obstacle it reasoned about, indexed by TICK — which is why its rows
+ * are clickable and light up as the scrubber passes them. A generation row is
+ * an ATTEMPT: a template, an anchor, a verdict class and (⚖ §7.4) the
+ * refusal's own verbatim text. It has no tick and nothing to seek to.
+ * Rendering them in one list would need a row shape that is a superset of
+ * both and true of neither.
+ *
+ * ⚠ THE REASON TEXT IS THE ROW'S BODY, not a tooltip. Trap 202: the danger
+ * channel is empty on every success BY CONSTRUCTION, so the refusals are the
+ * evidence channel — and evidence you have to hover to see is evidence
+ * nobody reads.
+ */
+function mountGenerationPane(rows) {
+    const box = $('genTrace');
+    box.innerHTML = '';
+    if (!rows.length) {
+        const el = document.createElement('div');
+        el.className = 'traceNone';
+        el.textContent = 'no generation trace yet — this is the SKELETON, the bordered '
+            + 'room and its goal before any template was drawn (⚖ the loop\'s own control)';
+        box.appendChild(el);
+        return { rows: 0 };
+    }
+    for (const r of rows) {
+        const el = document.createElement('div');
+        el.className = `tr past${r.outcome === 'KEPT' ? ' kept' : ''}`;
+        el.innerHTML = `<b>${r.label}</b> <span class="s">${r.template}</span>`
+            + (r.at ? ` <span class="g">${r.at}</span>` : '')
+            + ` → <span class="${r.outcome === 'KEPT' ? 'g' : 'o'}">${r.outcome}</span>`
+            + (r.verdict ? ` <span class="rj">${r.verdict}</span>` : '')
+            + (r.ticks !== null ? ` <span class="rj">${r.ticks}t</span>` : '')
+            + (r.classifiedBy ? `<div class="rj">by: ${r.classifiedBy}</div>` : '')
+            + (r.reasonText ? `<div class="rj">${r.reasonText}</div>` : '');
+        box.appendChild(el);
+    }
+    return { rows: rows.length };
+}
+
+/**
+ * ── ⛓⛓⛓ THE FOURTH SOURCE: GENERATE ONE, LOOK AT IT, KEEP STEPPING ─────
+ *
+ * ⚖ Kickoff §3.5 and ruling §1.3: seed + biome + obstacle-count target (+
+ * budget) → the Cloudberry loop runs IN THE PAGE. STEP places one template
+ * and re-solves; RUN-ALL runs to the target or to saturation, and the display
+ * updates after EVERY placement — the current level drawn, the LATEST SOLVE's
+ * path layers over it, and the verdict / kept-or-reverted template / verbatim
+ * refusal as pane rows.
+ *
+ * ⛔ ALL THREE OF THE PAGE'S LAWS SURVIVE IT, and each bites somewhere:
+ *
+ * NO CLAIM: a generated level is never written to `fixtures/` (the roster is
+ * disk-derived, so a saved experiment would silently join the differential).
+ * It lives in the box, in a download and in your hands. No gate consumes it —
+ * the acceptance batch runs the same loop from a script.
+ *
+ * RAW TRUTH: the loop's refusals arrive VERBATIM; a saturated run says
+ * SATURATED and names the bound that ended it; a `?gen=` payload that
+ * disagrees with what this page generated is REPORTED rather than redrawn;
+ * and the display solve is compared against the trace row that accepted the
+ * record, because "they must agree" is a claim and not an excuse to skip it.
+ *
+ * NO PRIVATE TICK LOOP: the walk is `solveSegment`'s, folded by the one fold,
+ * scrubbed by the one stepper — `replayTape`, unchanged, exactly as SOLVE and
+ * MANUAL reach it. ⛓ WITH ONE OPTION: the scrub is told the tape came from a
+ * SCRATCH solve (§13.4's residue; see `createTapeStepper`'s docblock). That
+ * is the one caller in the codebase that passes it.
+ *
+ * ⛔ AND NO SECOND GENERATOR LOOP. STEP is "obstacleTarget = k, re-run" —
+ * see `watchGenerate`'s docblock for the prefix property that makes it sound
+ * and for the O(N²) price it costs, which is stated before it is spent.
+ */
+async function runGenerate(params) {
+    const gp = params.gen;
+    let seed = gp.seed;
+    let biome = gp.biome;
+    let bounds = { ...gp.bounds };
+    const budget = { ...gp.budget };
+
+    /**
+     * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
+     * seed/biome/count REPLACE the URL's. The page then generates and
+     * COMPARES (⚖ `agreementWithPayload`): one path into the page, and the
+     * export becomes a cross-runtime determinism check rather than a picture
+     * of a file.
+     */
+    let payload = null;
+    if (gp.gen) {
+        payload = await fetchJson(gp.gen.startsWith('/') ? gp.gen : `/${gp.gen}`,
+            'the generated payload');
+        seed = payload.seed;
+        biome = payload.biome;
+        bounds = { ...bounds, ...(payload.bounds ?? {}) };
+    }
+
+    $('genSeed').value = String(seed);
+    $('genCount').value = String(bounds.obstacleTarget);
+    $('genTries').value = String(bounds.triesPerStep);
+    $('genK').value = String(bounds.saturationK);
+    const biomeSel = $('genBiome');
+    biomeSel.innerHTML = BIOME_NAMES
+        .map((b) => `<option value="${b}">${b}</option>`).join('');
+    biomeSel.value = biome;
+
+    const atlas = await fetchJson(ATLAS_URL, 'atlas');
+    /**
+     * ⛔ THE PAGE'S ATLAS IS FETCHED AND THEN NOT USED FOR THE LEVEL — a
+     * generated room is not in it. `atlasOf(record)` wraps the ONE record in
+     * the atlas shape `levelSourceFromAtlas` takes (⚖ kickoff §2: the
+     * atlas-record JSON IS the PoC's level format), which is exactly what
+     * `procgenOracle` does on the other side of the seam. The real atlas is
+     * still fetched because the TAPE I/O and the loaded-tape path below need
+     * a source for committed levels.
+     */
+    const atlasSource = levelSourceFromAtlas(atlas);
+    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, atlasSource, null)
+        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
+
+    let step = 0;
+    let state = null;
+    let lastPayload = null;
+
+    const cost = ladderCost(bounds, 139);
+    $('genNote').textContent = cost.why;
+
+    const busy = (on) => {
+        for (const id of ['genStep', 'genRunAll', 'genReset']) $(id).disabled = on;
+    };
+
+    /**
+     * ONE DISPLAY UPDATE, called after EVERY placement (⚖ ruling §1.3).
+     *
+     * ⚠ IT RETURNS THE READOUT RATHER THAN SETTING IT, so RUN-ALL can decide
+     * what to do next from the same object the acceptance row reads.
+     */
+    async function show(why) {
+        const t0 = performance.now();
+        const solved = displaySolve(state);
+        const solveMs = Math.round(performance.now() - t0);
+        const agreement = agreementWithTrace(state, solved);
+        const genRows = generationRows(state.trace);
+        const paneReadout = mountGenerationPane(genRows);
+        lastPayload = {
+            generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
+            seed,
+            biome,
+            bounds: state.bounds,
+            budget: state.budget,
+            summary: state.summary,
+            level: state.record,
+            trace: state.trace,
+        };
+        const label = `generated-s${seed}-${biome}-step${step}`;
+        $('title').textContent = `${label} — the Cloudberry loop, in this page`;
+
+        if (solved.verdict !== 'SOLVED') {
+            /**
+             * ⛔ A REFUSED DISPLAY SOLVE IS A DISAGREEMENT, NOT A VIEW. Every
+             * record on the ladder is one the LOOP accepted, so a refusal here
+             * means the same room answered two ways. Reported with the
+             * solver's own text; nothing is drawn over the last good frame.
+             */
+            fatal(`the DISPLAY solve of step ${step} came back ${solved.verdict} — the loop `
+                + 'KEPT this record, so the same room has answered two ways',
+                `${solved.reasonText ?? solved.classifiedBy ?? '(no text)'}`);
+            window.__editorGenerate = {
+                status: 'refused', step, seed, biome,
+                verdict: solved.verdict, message: solved.reasonText ?? null,
+            };
+            return { solved, agreement, drew: false };
+        }
+
+        const levelSource = levelSourceFromAtlas(atlasOf(state.record));
+        const { frames } = await replayTape(solved.tape, label, params, levelSource,
+            { trace: solved.trace, why: null }, solved.dangerQueries,
+            // ⛓ THE SCRUB FORK — see `replayTape`'s own note. This arm is the
+            // one caller: the tape it is scrubbing came from a scratch solve.
+            { scratchPersistence: true });
+
+        $('status').className = 'ok';
+        $('status').textContent = `${label} — ${frames.length} observations, `
+            + `${solved.ticks} ticks${why ? ` · ${why}` : ''}`;
+        $('detail').textContent = `${describeState(state, solved)}  ·  display solve `
+            + `${solveMs} ms`
+            + (agreement.compared
+                ? `  ·  trace/display agreement: ${agreement.agrees ? 'YES' : 'NO'}`
+                : '')
+            + (agreement.agrees ? '' : `  ·  ⛔ ${agreement.why}`)
+            + (payload
+                ? `  ·  ?gen= reproduction: ${payload.__check?.agrees === false
+                    ? `⛔ DIFFERS in [${payload.__check.differences.join(', ')}]`
+                    : (payload.__check ? 'byte-identical' : '(checked at the target)')}`
+                : '');
+
+        /**
+         * The page's own readout, for `check-seedling-editor-generate.mjs`.
+         * ⛔ Every bound that ran is in it — a readout that named the level
+         * and not the bounds would let a batch quote a number nobody could
+         * reproduce (⚖ kickoff §5).
+         */
+        window.__editorGenerate = {
+            status: 'ok',
+            seed,
+            biome,
+            step,
+            bounds: state.bounds,
+            budget: state.budget,
+            stop: state.stop,
+            saturated: state.saturated,
+            keptCount: state.summary?.keptCount ?? 0,
+            attempts: state.summary?.attempts ?? 0,
+            genRows: genRows.length,
+            paneRows: paneReadout.rows,
+            vetoes: genRows.filter((r) => r.outcome !== 'KEPT')
+                .map((r) => ({ label: r.label, template: r.template, outcome: r.outcome,
+                    verdict: r.verdict, reasonText: r.reasonText })),
+            verdict: solved.verdict,
+            ticks: solved.ticks,
+            certified: solved.certification?.certified ?? null,
+            strategies: (solved.records ?? []).map((r) => r.strategy),
+            scratchClears: solved.scratchClears ?? [],
+            frames: frames.length,
+            agreement,
+            payloadCheck: payload?.__check ?? null,
+        };
+        window.__editorGenerated = lastPayload;
+        return { solved, agreement, drew: true };
+    }
+
+    async function goTo(target, why) {
+        busy(true);
+        try {
+            for (let k = step + 1; k <= target; k += 1) {
+                $('status').className = '';
+                $('status').textContent = `generating step ${k} of ${target} `
+                    + `(seed ${seed}, ${biome})…`;
+                // Yield a frame so the status paints BEFORE the synchronous
+                // loop takes the thread — without it the page looks frozen
+                // with the old text on it, which is a lie about what it does.
+                await new Promise((r) => requestAnimationFrame(r));
+                state = generateStep({ seed, biome, step: k, bounds, budget });
+                step = k;
+                const out = await show(why);
+                if (!out.drew) return;
+                if (state.saturated) {
+                    $('status').textContent += `  ·  SATURATED — ${bounds.saturationK} `
+                        + 'consecutive step(s) kept nothing, so the loop stopped short of '
+                        + `the target of ${bounds.obstacleTarget}`;
+                    break;
+                }
+            }
+        } finally {
+            busy(false);
+        }
+    }
+
+    $('genStep').onclick = () => {
+        seed = Number($('genSeed').value);
+        biome = $('genBiome').value;
+        bounds = {
+            obstacleTarget: Number($('genCount').value),
+            triesPerStep: Number($('genTries').value),
+            saturationK: Number($('genK').value),
+        };
+        return goTo(Math.min(step + 1, bounds.obstacleTarget), 'STEP');
+    };
+    $('genRunAll').onclick = () => {
+        seed = Number($('genSeed').value);
+        biome = $('genBiome').value;
+        bounds = {
+            obstacleTarget: Number($('genCount').value),
+            triesPerStep: Number($('genTries').value),
+            saturationK: Number($('genK').value),
+        };
+        return goTo(bounds.obstacleTarget, 'RUN-ALL');
+    };
+    $('genReset').onclick = async () => {
+        seed = Number($('genSeed').value);
+        biome = $('genBiome').value;
+        step = 0;
+        state = generateStep({ seed, biome, step: 0, bounds, budget });
+        await show('RESET — the skeleton');
+    };
+    /**
+     * ⛔ THE DOWNLOAD IS THE CLI'S OWN PAYLOAD SHAPE, so a level generated in
+     * the page can be handed straight back to `--gen=` (and to the batch's
+     * report). A second shape here would be a second thing to keep in step.
+     */
+    $('genDownload').onclick = () => {
+        if (!lastPayload) return;
+        const blob = new Blob([`${JSON.stringify(lastPayload, null, 2)}\n`],
+            { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `generated-s${seed}-${biome}-c${step}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    };
+
+    // ── the skeleton, before anything is drawn ───────────────────────────
+    state = generateStep({ seed, biome, step: 0, bounds, budget });
+    await show('the SKELETON');
+
+    if (gp.run || payload) {
+        await goTo(bounds.obstacleTarget, payload ? '?gen= reproduction' : 'RUN-ALL (?run=1)');
+        if (payload) {
+            /**
+             * ⛔ CHECKED AT THE TARGET AND REPORTED EITHER WAY. A payload that
+             * matches is a determinism statement across node and the browser;
+             * one that does not is a FINDING, and the page keeps showing what
+             * IT generated.
+             */
+            payload.__check = agreementWithPayload(payload, state);
+            await show(payload.__check.agrees
+                ? '?gen= reproduced byte-identically'
+                : `⛔ ?gen= DIFFERS in [${payload.__check.differences.join(', ')}]`);
+        }
+    }
+}
+
 // ── side=wasm ────────────────────────────────────────────────────────────
 
 /**
@@ -2693,6 +3049,11 @@ function wireSourceSelector(params) {
     $('replayPick').hidden = params.source !== 'replay';
     $('solvePanel').hidden = params.source !== 'solve';
     $('manualPanel').hidden = params.source !== 'manual';
+    $('generatePanel').hidden = params.source !== 'generate';
+    // ⛓ The generation pane only exists for the arm that produces one — a
+    // permanently empty "GENERATION TRACE" heading on the REPLAY page would
+    // be a channel with nothing in it and no way to tell why.
+    $('genTraceSection').hidden = params.source !== 'generate';
     sel.onchange = () => {
         const q = new URLSearchParams(window.location.search);
         q.set('source', sel.value);
@@ -2713,6 +3074,19 @@ export async function main() {
         } catch (e) {
             fatal('the solve arm failed', e.stack || e.message);
             window.__editorSolve = { status: 'refused', message: e.message };
+        }
+        return;
+    }
+
+    if (params.source === 'generate') {
+        // ⚠ NEVER INFERRED FROM A BOUND. `?source=generate` or `?gen=` — the
+        // arm spends SECONDS of synchronous solve per press, so a stale URL
+        // must not land in it (MANUAL's own rule, for the same reason).
+        try {
+            await runGenerate(params);
+        } catch (e) {
+            fatal('the generate arm failed', e.stack || e.message);
+            window.__editorGenerate = { status: 'refused', message: e.message };
         }
         return;
     }

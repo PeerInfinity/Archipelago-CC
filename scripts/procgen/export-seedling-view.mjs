@@ -14,6 +14,11 @@
  *   # any page parameter, forwarded verbatim — the CLI adds no vocabulary
  *   --layers=player,enemies,arrows   --tick=247   --side=js   --speed=1
  *   --boot=<repo-relative json> --level=4 --goals=exit:64,16 --solve=1
+ *   --source=generate --seed=3 --biome=post-sword --count=6 --run=1
+ *
+ *   # a GENERATED level (PROCGEN PoC slice 5), from a payload on disk
+ *   node scripts/procgen/export-seedling-view.mjs --out=/tmp/gen.png --trace \
+ *       --generated=/tmp/seed-3-post-sword.json --tick=last
  *
  * ⚠ `?shot=1` HOLDS THE CURSOR WHERE IT LANDS, and with no `--tick=` that
  * is FRAME 0 — the room before anything has happened in it. Pass a tick, or
@@ -25,6 +30,16 @@
  *   --out=<file.png>   where to write (required; the ONLY file it writes)
  *   --trace            include the HUD and the decision-trace pane, not
  *                      just the canvas
+ *   --generated=<f>    ⛓ PROCGEN PoC slice 5 — a payload
+ *                      `generate-seedling-level.mjs` emitted. Its bytes are
+ *                      served at a synthetic route and the page is handed
+ *                      `?gen=<route>&run=1`: the GENERATE arm REGENERATES
+ *                      from the payload's own seed and biome and COMPARES.
+ *                      ⛔ So the picture is of what the browser generated,
+ *                      and the payload's role is to say what node generated
+ *                      for the same seed — a cross-runtime determinism check
+ *                      rather than a picture of a file. Nothing is drawn
+ *                      here; see `serveRepoRoot`.
  *   --params="a=b&c=d" a raw query string (individual flags win over it)
  *   --host=http://…    use an EXISTING server instead of starting one
  *   --timeout=ms       how long to wait for the page (default 180000)
@@ -84,80 +99,32 @@
  * in `~/.cache/ms-playwright` after a plain `npm ci`. Slice 1's own note.
  */
 import { chromium } from '@playwright/test';
-import { createServer } from 'node:http';
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { dirname, extname, join, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
+
 import {
-    EXIT, buildViewUrl, classify, isExpectedSidecar404, parseArgs, readPngHeader, wantsLastTick,
+    EXIT, GENERATED_ROUTE, buildViewUrl, classify, isExpectedSidecar404, parseArgs,
+    readPngHeader, wantsLastTick,
 } from './exportSeedlingView.js';
 
-const REPO_ROOT = resolve(fileURLToPath(new URL('../../', import.meta.url)));
-
-const MIME = {
-    '.html': 'text/html; charset=utf-8',
-    // ⛔ ES MODULES NEED A JAVASCRIPT MIME TYPE — a browser refuses to
-    // execute a module served as octet-stream, and the page is all modules.
-    '.js': 'text/javascript; charset=utf-8',
-    '.mjs': 'text/javascript; charset=utf-8',
-    '.json': 'application/json; charset=utf-8',
-    '.css': 'text/css; charset=utf-8',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.wasm': 'application/wasm',
-    '.txt': 'text/plain; charset=utf-8',
-    '.map': 'application/json; charset=utf-8',
-    '.jsonl': 'application/x-ndjson',
-};
-
-/** A read-only static file server over the repo root, on a free port. */
-function serveRepoRoot() {
-    const server = createServer((req, res) => {
-        let rel;
-        try {
-            rel = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-        } catch {
-            res.writeHead(400).end('bad path');
-            return;
-        }
-        const file = join(REPO_ROOT, rel);
-        // ⛔ Never above the root, whatever the caller asks for.
-        if (!file.startsWith(REPO_ROOT) || !existsSync(file)) {
-            res.writeHead(404).end('not found');
-            return;
-        }
-        /**
-         * ⛓ DIRECTORY LISTINGS, BECAUSE THE PAGE READS THEM.
-         *
-         * `loadTapeIndex` builds the tape picker AND the boot presets from
-         * the dev server's own listing (`href="…json"`), deliberately — a
-         * committed manifest would go stale between a recording and the
-         * regeneration that noticed. A server without one is a working page
-         * with NO PICKER, which is a different page than the one a person
-         * sees at :8000, and this tool exports what the page shows.
-         *
-         * Same shape as `python3 -m http.server`'s listing, which is the
-         * documented dev server and therefore the thing to be equivalent to.
-         */
-        if (statSync(file).isDirectory()) {
-            const names = readdirSync(file).sort();
-            const links = names
-                .map((n) => `<li><a href="${encodeURIComponent(n)}">${n}</a></li>`).join('\n');
-            res.writeHead(200, { 'Content-Type': MIME['.html'] })
-                .end(`<!DOCTYPE html><title>${rel}</title><ul>\n${links}\n</ul>`);
-            return;
-        }
-        res.writeHead(200, { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' })
-            .end(readFileSync(file));
-    });
-    return new Promise((ok, no) => {
-        server.once('error', no);
-        server.listen(0, '127.0.0.1', () => ok(server));
-    });
-}
+/**
+ * ⛓⛓⛓ PROCGEN PoC SLICE 5 — the server MOVED to `serveRepoRoot.js`, verbatim.
+ *
+ * It used to live here, and slice 4's own docblock is why that mattered: a
+ * tool that starts its own server has nothing to SKIP on, which is what made
+ * this the arc's non-skipping browser gate. The moment a SECOND row wanted
+ * that property (`check-seedling-editor-generate.mjs`), the choice was one
+ * server or two — and two static servers that must agree about MIME types
+ * and directory listings is a fork nobody notices until a module is served
+ * as octet-stream on one of them.
+ *
+ * ⛓ `routes` is the ONE addition: bytes the caller holds that do not live
+ * under the repo root at all — `--generated=`'s payload, served at
+ * `GENERATED_ROUTE`. The CLI still draws nothing.
+ */
 
 // ── the caller's arguments ───────────────────────────────────────────────
 
@@ -188,17 +155,56 @@ let browser = null;
 /** ⛔ EVERY EXIT PATH GOES THROUGH HERE, the refusals included. */
 async function shutdown() {
     if (browser) await browser.close().catch(() => {});
-    if (server) {
-        server.closeAllConnections?.();
-        await new Promise((r) => server.close(r));
-    }
+    await closeServer(server);
 }
 function done(code, why) {
     if (why) console.error(why);
     return shutdown().then(() => process.exit(code));
 }
 
-if (!opts.host) server = await serveRepoRoot();
+/**
+ * ⛓ `--generated=` — read the payload HERE and refuse by name if it is not
+ * one. A file that does not parse, or that carries no `seed`, would reach the
+ * page as a fetch the arm cannot use, and the caller would get a `--timeout`
+ * about the wrong thing.
+ */
+let generatedBytes = null;
+if (opts.generated) {
+    if (!existsSync(opts.generated)) {
+        console.error(`--generated=${opts.generated} does not exist`);
+        process.exit(EXIT.usage);
+    }
+    generatedBytes = readFileSync(opts.generated);
+    let parsed = null;
+    try {
+        parsed = JSON.parse(generatedBytes.toString('utf8'));
+    } catch (e) {
+        console.error(`--generated=${opts.generated} is not JSON: ${e.message}`);
+        process.exit(EXIT.usage);
+    }
+    if (!Number.isInteger(parsed?.seed) || typeof parsed?.biome !== 'string') {
+        console.error(`--generated=${opts.generated} is not a generate-seedling-level `
+            + 'payload — it carries no integer `seed` and/or no `biome`, which are what '
+            + 'the page regenerates from.');
+        process.exit(EXIT.usage);
+    }
+    if (parsed.aborted) {
+        // ⛔ AN ABORTED RUN HAS NO LEVEL TO DRAW, and its payload says so
+        // (the CLI exits 3 and emits the trace up to the abort). Refusing
+        // here names the reason; forwarding it would time the page out.
+        console.error(`--generated=${opts.generated} is an ABORTED run's payload `
+            + `(${parsed.cause?.name ?? 'unknown'}: ${parsed.cause?.message ?? ''}). There is `
+            + 'no finished level in it to draw.');
+        process.exit(EXIT.usage);
+    }
+    if (!opts.quiet) {
+        console.log(`--generated: seed ${parsed.seed}, biome ${parsed.biome}, serving at `
+            + `${GENERATED_ROUTE} — the page will REGENERATE and compare`);
+    }
+}
+
+if (!opts.host) server = await serveRepoRoot(
+    generatedBytes ? { routes: { [GENERATED_ROUTE]: generatedBytes } } : {});
 const origin = opts.host || `http://127.0.0.1:${server.address().port}`;
 
 browser = await chromium.launch();

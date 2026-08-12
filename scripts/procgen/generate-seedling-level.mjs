@@ -60,9 +60,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', p));
 
 const { ATTEMPT, STOP, costModel } = await M('levelGenerator.js');
-const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } = await M('procgenPalette.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
+const { GENERATE_BIOMES } = await M('watchGenerate.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -86,8 +86,13 @@ const BUDGET = {
  * silently generate the other biome's level, because the boot is the whole
  * difference between them and a level generated under the wrong inventory is
  * a level whose certification is about a run nobody asked for.
+ *
+ * ⛓ SLICE 5 — IMPORTED, NOT SPELLED. The page's GENERATE arm needs the same
+ * map, and the moment there were two of them "the CLI and the page generate
+ * different levels for the same `--biome`" became possible. One map
+ * (`watchGenerate.GENERATE_BIOMES`), two readers.
  */
-const BIOMES = { 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE };
+const BIOMES = GENERATE_BIOMES;
 if (!BIOMES[BIOME]) {
     process.stderr.write(`generate-seedling-level: biome "${BIOME}" is not available — `
         + `this build ships [${Object.keys(BIOMES).join(', ')}].\n`);

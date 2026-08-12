@@ -28,7 +28,22 @@
  */
 export const CLI_FLAGS = Object.freeze([
     'out', 'trace', 'params', 'host', 'timeout', 'json', 'help', 'quiet',
+    /**
+     * ⛓⛓⛓ PROCGEN PoC SLICE 5 — `--generated=<payload.json>`, and it is a
+     * CLI flag rather than a page parameter for one reason: the page's `?gen=`
+     * takes a URL THIS SERVER CAN SERVE, and a payload the caller just
+     * generated lives wherever they put it (a scratch dir, `/tmp`, anywhere).
+     * So the CLI reads the file and SERVES it at a fixed synthetic route,
+     * then hands the page `?gen=<that route>`. ⛔ It still draws nothing: the
+     * level enters the page through the page's own GENERATE arm, which
+     * REGENERATES from the payload's seed and compares. One renderer, and the
+     * export is a cross-runtime determinism check into the bargain.
+     */
+    'generated',
 ]);
+
+/** The route `--generated=` serves the payload at. */
+export const GENERATED_ROUTE = '/__generated-payload.json';
 
 /**
  * The page's URL parameters (watch.html's docblock, "the whole set").
@@ -38,6 +53,8 @@ export const CLI_FLAGS = Object.freeze([
 export const PAGE_PARAMS = Object.freeze([
     'tape', 'side', 'speed', 'source', 'level', 'boot', 'goals', 'solve',
     'name', 'layers', 'tick', 'shot',
+    // ⛓ PROCGEN PoC slice 5 — the GENERATE arm's own vocabulary.
+    'seed', 'biome', 'count', 'tries', 'k', 'budgetms', 'tickbudget', 'run', 'gen',
 ]);
 
 /** `--name=value` / `--name` → `{name, value}`; anything else → null. */
@@ -59,7 +76,10 @@ function readFlag(arg) {
  * winning — they are the more specific statement.
  */
 export function parseArgs(argv) {
-    const opts = { trace: false, json: false, quiet: false, out: '', host: '', timeout: 180000 };
+    const opts = {
+        trace: false, json: false, quiet: false, out: '', host: '', timeout: 180000,
+        generated: '',
+    };
     const page = new Map();
     const unknown = [];
     const bad = [];
@@ -94,10 +114,25 @@ export function parseArgs(argv) {
     if (!opts.help) {
         if (!opts.out) bad.push('--out=<file.png> is required');
         else if (!opts.out.endsWith('.png')) bad.push(`--out= must name a .png file, got "${opts.out}"`);
-        if (!page.has('tape') && !page.has('boot') && !page.has('level')) {
+        if (!page.has('tape') && !page.has('boot') && !page.has('level')
+            && !page.has('seed') && !page.has('gen') && !opts.generated
+            && page.get('source') !== 'generate') {
             bad.push('nothing to draw: give the page a view — --tape=<repo-relative json>, '
-                + 'or --boot=<repo-relative json> with --solve=1');
+                + 'or --boot=<repo-relative json> with --solve=1, or --source=generate '
+                + 'with --seed=N (or --generated=<payload.json>)');
         }
+    }
+    /**
+     * ⛓⛓ `--generated=` IMPLIES THE ARM AND THE ROUTE, and it says so rather
+     * than making the caller spell three flags that must agree. The page is
+     * handed `?gen=<route>` and `?run=1` — the payload names its own seed,
+     * biome and bounds, so anything else here would be a second declaration
+     * of the same facts with no way to notice when they drift apart.
+     */
+    if (opts.generated) {
+        page.set('source', 'generate');
+        page.set('gen', GENERATED_ROUTE);
+        page.set('run', '1');
     }
     return { opts, page, unknown, bad };
 }

@@ -77,11 +77,55 @@
   in and press Load, or Upload a file; both go through `parseTape`, so a
   malformed tape refuses with the PARSER's own message.
 
+  ── SOURCE = GENERATE (PROCGEN PoC slice 5) ─────────────────────────────
+
+  A FOURTH way to get a level: GENERATE one. ⚖ Kickoff §3.5 and ruling §1.3
+  — seed + biome + obstacle-count target (+ budget) run the Cloudberry loop
+  IN THIS PAGE: start from an empty bordered room that solves, add one
+  template at a time, re-solve after each, keep it if the room still
+  completes and throw the candidate away if it does not.
+
+      watch.html?source=generate&seed=3&biome=post-sword&count=6
+
+  STEP places ONE template and re-solves. RUN-ALL runs to the target or to
+  SATURATION, and the display updates after EVERY placement: the current
+  level drawn, the LATEST SOLVE's path layers over it, and the verdict /
+  kept-or-reverted template / VERBATIM refusal in the generation pane on the
+  right. The finished level flows into the existing spine unchanged — it is
+  solvable, scrubable, manual-drivable, and its tape is in the save box.
+
+  ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
+  ?biome=    pre-sword | post-sword — the BOOT INVENTORY, and the whole
+             difference between the two palettes
+  ?count=N   obstacle target   ?tries=N per step   ?k=N saturation
+  ?budgetms=  ?tickbudget=     the per-solve budget, both named in the trace
+             (⚠ `?tickbudget=`, not `?ticks=` — `?tick=` is the scrub cursor)
+  ?run=1     RUN-ALL on load (what the CLI uses to reach a finished level)
+  ?gen=PATH  a payload `generate-seedling-level.mjs` emitted: its seed,
+             biome and bounds REPLACE the ones above, the page generates
+             from them, and the result is COMPARED against the payload's own
+             level and trace. A difference is REPORTED and the page keeps
+             showing what IT generated — the export is then a determinism
+             check across node and the browser, not a picture of a file.
+
+  ⚠ STEP IS "obstacleTarget = k, RE-RUN", which costs O(N²) solves for a
+  RUN-ALL to N. The loop is synchronous and cannot be paused; the prefix
+  property (a run to k IS a run to k+1 truncated) is what makes the cheap
+  version sound, and it is asserted in `watchGenerate.test.js` rather than
+  assumed. The price is printed under the controls before you press.
+  ⛓ The payoff: the page's step-k level IS
+  `generate-seedling-level.mjs --seed=S --biome=B --count=k`, byte for byte.
+
+  ⛔ AND THE PAGE STILL NEVER WRITES fixtures/. A generated level lives in
+  the box, in the Download button and in your hands.
+
   ── URL PARAMETERS, THE WHOLE SET ───────────────────────────────────────
 
-  ?tape=   ?side=js|wasm   ?speed=N   ?source=replay|solve|manual
+  ?tape=   ?side=js|wasm   ?speed=N   ?source=replay|solve|manual|generate
   ?level=N   ?boot=PATH   ?goals=   ?solve=1   ?name=
   ?layers=a,b,c   ?tick=N   ?shot=1
+  ?seed=N  ?biome=  ?count=N  ?tries=N  ?k=N  ?budgetms=  ?tickbudget=
+  ?run=1  ?gen=PATH
 
   ?tick=N   the initial cursor. The page lands there PAUSED — landing and
             then playing forward would make the parameter a flicker. Out of
@@ -181,6 +225,21 @@
     margin-bottom: 4px; }
   #manualBoot { width: 100%; box-sizing: border-box; }
   #manualNote { color: #8a8a98; font-size: 11px; }
+  /* ── SOURCE = GENERATE (PROCGEN PoC slice 5) ── */
+  #generatePanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  #generatePanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  #genNote { color: #8a8a98; font-size: 11px; }
+  #genTrace { max-height: 34vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #genTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
+  #genTrace .tr.kept { border-left: 2px solid #7fd88f; }
+  #genTrace .tr b { color: #7fe0ff; font-weight: 600; }
+  #genTrace .g { color: #7fd88f; }
+  #genTrace .o { color: #ff9a6a; }
+  #genTrace .s { color: #ffd75f; }
+  #genTrace .rj { color: #8a8a98; font-size: 11px; }
+  #genTrace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
   #manualKeys { color: #7fe0ff; font-size: 11px; }
   #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
   #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -221,6 +280,7 @@
       <option value="replay">REPLAY — a committed tape</option>
       <option value="solve">SOLVE — the bot, in this page</option>
       <option value="manual">MANUAL — drive it yourself</option>
+      <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
     </select>
     <span id="replayPick">
       <label for="tapes">tape</label>
@@ -271,6 +331,27 @@
       <div id="manualNote"></div>
     </details>
   </div>
+  <!-- ⛓ SOURCE = GENERATE (PROCGEN PoC slice 5, ⚖ kickoff §3.5 / ruling §1.3).
+       Every control here is a BOUND the loop runs under, and every one of them
+       is echoed into the trace and the readout — a knob whose value nobody
+       could reproduce would be a bound nobody named (⚖ kickoff §5). -->
+  <div id="generatePanel" hidden>
+    <div class="line">
+      <label>seed <input id="genSeed" type="number" step="1" style="width:6em"></label>
+      <label for="genBiome">biome</label>
+      <select id="genBiome"></select>
+      <label>obstacles <input id="genCount" type="number" min="1" step="1" style="width:4em"></label>
+      <label>tries/step <input id="genTries" type="number" min="1" step="1" style="width:4em"></label>
+      <label>saturation K <input id="genK" type="number" min="1" step="1" style="width:4em"></label>
+    </div>
+    <div class="line">
+      <button id="genStep">STEP — one template</button>
+      <button id="genRunAll">RUN-ALL</button>
+      <button id="genReset">RESET to the skeleton</button>
+      <button id="genDownload">Download level JSON + trace</button>
+    </div>
+    <div id="genNote"></div>
+  </div>
   <div id="status">loading…</div>
   <div id="detail"></div>
   <div id="progress"><div id="bar"></div></div>
@@ -300,6 +381,15 @@
   </div>
   <div id="panel">
     <div id="hud"></div>
+    <!-- ⛔ TWO PANES BECAUSE THERE ARE TWO TRACES. The decision trace is the
+         SOLVER's, one row per obstacle it reasoned about, indexed by TICK and
+         clickable. A generation row is an ATTEMPT — template, anchor, verdict
+         class, verbatim refusal — with no tick and nothing to seek to. See
+         `mountGenerationPane`. -->
+    <div id="genTraceSection" hidden>
+      <h2>generation trace</h2>
+      <div id="genTrace"></div>
+    </div>
     <h2>decision trace</h2>
     <div id="trace"></div>
   </div>
