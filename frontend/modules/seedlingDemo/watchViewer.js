@@ -54,15 +54,44 @@
  * `createRunForStaging` — the construction `createTapeStepper` uses — so
  * the world the solver senses is the world the replay runs. See
  * `watchSolve.js`, which holds everything here that is pure.
+ *
+ * ── OVERLAYS + THE TRACE PANE (editor arc slice 2) ────────────────────
+ *
+ * Eight independently toggleable layers over the same canvas — the player
+ * trail, the movers' paths, and markers for actions, damage and events —
+ * plus a pane rendering the decision trace beside them.
+ *
+ * ⛔ ALL THREE LAWS SURVIVE IT, and each one bites somewhere specific:
+ *
+ * NO LOOP: every mover position is SAMPLED from the live run through
+ * `createTapeStepper`'s `onTick` hook, once per tick, inside the collect
+ * loop that was already running. A layer that re-stepped the world to find
+ * out where a spinner was would be a second cost model with pixels.
+ *
+ * RAW TRUTH: sampled positions, one per tick, never interpolated; a marker
+ * stands at the position the run held on the tick its ledger names, and a
+ * ledger row that cannot be placed there — `earnedClears` carries no tick —
+ * is REPORTED by name rather than dropped or invented.
+ *
+ * NO CLAIM: the pane renders the trace the solver produced (or the sidecar
+ * beside a committed tape, through the producer's own validator) and
+ * nothing gates on any of it. See `watchOverlays.js`, which holds
+ * everything here that is pure.
  */
 
 import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { createTapeStepper, rolesForStaging } from './tapeRunner.js';
+import { rolesForStaging } from './tapeRunner.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, parseGoalsParam, readSolveParams, solveForPage, stagingFromJson,
 } from './watchSolve.js';
+import {
+    activeTraceIndex, channelSummary, collectRun, defaultLayerSet, LAYER_IDS,
+    MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam,
+    pathPointsUpTo, traceRowFields, traceSidecarPath,
+} from './watchOverlays.js';
+import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
@@ -95,6 +124,19 @@ const TILE_COLOURS = {
 const SOLID_COLOUR = '#3a3a42';
 const FLOOR_COLOUR = '#6b6152';
 
+/**
+ * The overlay palette, by channel. Named here and rendered into the LEGEND
+ * from the same table, so a colour nobody can identify is impossible —
+ * `unknownShapes`' lesson applied to ink instead of geometry.
+ */
+const PATH_COLOURS = Object.freeze({
+    player: '#7fe0ff',
+    chaser: '#ff9a6a',
+    spinner: '#d05090',
+    pushable: '#9a8cff',
+    arrow: '#8fc7d8',
+});
+
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => (typeof n === 'number' ? Number(n.toFixed(4)) : n);
 
@@ -104,6 +146,9 @@ function readParams() {
         tape: q.get('tape'),
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
+        // ⚠ RAW. `parseLayersParam` is where it is decided, and it is pure so
+        // the decision is tested; an absent parameter is not an empty one.
+        layers: q.get('layers'),
         // The SOLVE arm's own parameters, parsed where they are testable.
         ...readSolveParams(window.location.search),
     };
@@ -199,6 +244,69 @@ function makeRenderer(canvas, tape) {
             (r.right - r.x) * scale - 1, (r.bottom - r.y) * scale - 1);
     };
 
+    /**
+     * One sampled position, as a device-pixel dot.
+     *
+     * ⚠ THE SAME ROUNDING THE BREADCRUMB TRAIL USES, and for the same
+     * reason: a 1x1 rect at a half-pixel offset is anti-aliased across four
+     * pixels at ~25% alpha each, which at scale 1 makes a whole path nearly
+     * invisible. It is a rasterisation detail, not smoothing — nothing about
+     * the sampled position itself is adjusted, and the HUD still reports the
+     * exact doubles.
+     */
+    const dotAt = (x, y, colour, alpha = 1) => {
+        const d = Math.max(1, scale);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = colour;
+        ctx.fillRect(Math.round(x * scale) - (d >> 1), Math.round(y * scale) - (d >> 1), d, d);
+        ctx.globalAlpha = 1;
+    };
+
+    /**
+     * A marker glyph, at the position its ledger's tick names.
+     *
+     * ⛔ THE `default` ARM IS THE LESSON, NOT DECORATION — the same one the
+     * hazard-shape loop learned at R4. A marker source this renderer has no
+     * glyph for must SAY SO on the canvas; "nothing drawn" and "nothing
+     * happened" are indistinguishable otherwise.
+     */
+    const unknownGlyphs = new Set();
+    function glyph(kind, x, y, colour, source) {
+        const r = Math.max(3, 2 * scale);
+        const px = Math.round(x * scale);
+        const py = Math.round(y * scale);
+        ctx.strokeStyle = colour;
+        ctx.fillStyle = colour;
+        ctx.lineWidth = Math.max(1, Math.round(scale / 2));
+        ctx.beginPath();
+        switch (kind) {
+        case 'square':
+            ctx.strokeRect(px - r, py - r, 2 * r, 2 * r);
+            return;
+        case 'cross':
+            ctx.moveTo(px - r, py - r); ctx.lineTo(px + r, py + r);
+            ctx.moveTo(px + r, py - r); ctx.lineTo(px - r, py + r);
+            ctx.stroke();
+            return;
+        case 'plus':
+            ctx.moveTo(px - r, py); ctx.lineTo(px + r, py);
+            ctx.moveTo(px, py - r); ctx.lineTo(px, py + r);
+            ctx.stroke();
+            return;
+        case 'diamond':
+            ctx.moveTo(px, py - r); ctx.lineTo(px + r, py);
+            ctx.lineTo(px, py + r); ctx.lineTo(px - r, py);
+            ctx.closePath(); ctx.fill();
+            return;
+        case 'triangle':
+            ctx.moveTo(px, py - r); ctx.lineTo(px + r, py + r); ctx.lineTo(px - r, py + r);
+            ctx.closePath(); ctx.stroke();
+            return;
+        default:
+            unknownGlyphs.add(`${source} (glyph "${kind}")`);
+        }
+    }
+
     return {
         reset() { trail.length = 0; },
         fit,
@@ -243,7 +351,7 @@ function makeRenderer(canvas, tape) {
             //
             // The `default` arm is the lesson, not decoration: a fourth
             // shape should say so on the canvas rather than stop the clock.
-            if (opts.volumes) {
+            if (opts.on.has('volumes')) {
                 for (const p of world.pickups) rect(p.rect, '#d8c030', 0.4);
                 for (const h of world.proximityHazards) {
                     if (h.rect) {
@@ -287,29 +395,96 @@ function makeRenderer(canvas, tape) {
             // which at scale 1 makes the whole trail nearly invisible over
             // the floor colour. The HUD still reports the exact doubles, and
             // nothing about the path itself is adjusted.
-            const dot = Math.max(1, scale);
-            ctx.fillStyle = '#7fe0ff';
-            for (const p of trail) {
-                if (p.level !== world.level) continue;
-                ctx.fillRect(Math.round(p.x * scale) - (dot >> 1),
-                    Math.round(p.y * scale) - (dot >> 1), dot, dot);
+            if (opts.on.has('player')) {
+                for (const p of trail) {
+                    if (p.level !== world.level) continue;
+                    dotAt(p.x, p.y, PATH_COLOURS.player);
+                }
+            }
+
+            /**
+             * ── THE MOVER PATHS (kickoff §3.2) ──────────────────────────
+             *
+             * ⛔ FROM THE PER-TICK SAMPLES, NEVER FROM `world`. The world
+             * this renderer draws is built SEPARATELY from the run's and is
+             * never advanced (slice 1's §8.8 note, deliberate: the run's own
+             * world would show END-state geometry at early scrub positions).
+             * So its bodies are where the LEVEL put them, not where the run
+             * has them, and a mover overlay read off it would draw every
+             * enemy parked at its spawn for the whole tape.
+             */
+            const { samples, cursor } = opts;
+            if (opts.on.has('enemies')) {
+                for (const e of pathPointsUpTo(samples, cursor, world.level, 'enemies')) {
+                    dotAt(e.x, e.y, PATH_COLOURS[e.kind] ?? PATH_COLOURS.chaser);
+                }
+            }
+            if (opts.on.has('pushables')) {
+                for (const b of pathPointsUpTo(samples, cursor, world.level, 'pushables')) {
+                    dotAt(b.x + b.w / 2, b.y + b.h / 2, PATH_COLOURS.pushable);
+                }
+            }
+            if (opts.on.has('arrows')) {
+                for (const a of pathPointsUpTo(samples, cursor, world.level, 'arrows')) {
+                    dotAt(a.x, a.y, PATH_COLOURS.arrow);
+                }
             }
 
             // The player: the collision box and, offset one pixel down, the
             // rect `getState` actually probes with.
             outline(terrainProbeRect(state.x, state.y), '#ffd75f');
             rect(playerBoxAt(state.x, state.y), '#ffffff', 0.9);
+
+            // Markers LAST, so the one the player is standing on is not
+            // painted over by the player.
+            for (const m of markersVisibleAt(opts.markers, cursor, world.level, opts.on)) {
+                const g = MARKER_GLYPHS[m.source];
+                if (!g) { unknownGlyphs.add(`${m.source}@${m.tick} (no glyph)`); continue; }
+                glyph(g.glyph, m.x, m.y, g.colour, `${m.source}@${m.tick}`);
+            }
         },
         mark(state, level) { trail.push({ x: state.x, y: state.y, level }); },
         /** Shapes met that this renderer has no arm for; empty is the norm. */
         get unknownShapes() { return [...unknownShapes]; },
+        /** Marker sources met that this renderer has no GLYPH for; same law. */
+        get unknownGlyphs() { return [...unknownGlyphs]; },
     };
 }
 
 async function runJs(params) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
-    return replayTape(tape, params.tape, params, levelSourceFromAtlas(atlas));
+    return replayTape(tape, params.tape, params, levelSourceFromAtlas(atlas),
+        await fetchTraceSidecar(params.tape));
+}
+
+/**
+ * A committed tape's decision trace, if it has one.
+ *
+ * ⚠ A MISSING SIDECAR IS THE NORM, NOT AN ERROR — most of the roster is
+ * hand-authored and only the solver's tapes carry a trace. So this NEVER
+ * throws and always returns a reason: the pane renders "no trace for this
+ * tape — <why>", with the path it looked for, and a fetch that failed for
+ * some other reason (a malformed sidecar, a server error) is distinguishable
+ * from a tape that simply never had one.
+ *
+ * ⛔ THROUGH `parseDecisionTrace`, the producer's own validator. A sidecar
+ * this page rendered without validating would be a second, laxer reader of
+ * a format that already has one.
+ */
+async function fetchTraceSidecar(tapePath) {
+    const { path, why } = traceSidecarPath(tapePath);
+    if (!path) return { trace: null, why };
+    try {
+        const res = await fetch(`/${path}`);
+        if (!res.ok) {
+            return { trace: null, why: `${path} — HTTP ${res.status} (only the solver's `
+                + 'tapes carry a trace sidecar)' };
+        }
+        return { trace: parseDecisionTrace(await res.json(), path), why: null };
+    } catch (e) {
+        return { trace: null, why: `${path} — ${e.message}` };
+    }
 }
 
 /**
@@ -322,7 +497,7 @@ async function runJs(params) {
  * `label` is what the status bar calls it — a path for REPLAY, a name for
  * SOLVE. Returns the collected frames, so a caller can report how many.
  */
-async function replayTape(tape, label, params, levelSource) {
+async function replayTape(tape, label, params, levelSource, traceSource = null) {
     const canvas = $('canvas');
     const renderer = makeRenderer(canvas, tape);
     /**
@@ -360,24 +535,47 @@ async function replayTape(tape, label, params, levelSource) {
         return worlds.get(n);
     };
 
-    let stepper = createTapeStepper(tape, { levelSource });
-    let frames = [];           // every yielded step, so scrubbing is exact
+    /**
+     * ⛓⛓⛓ ONE WALK, TWO READINGS — the frames the scrubber shows and the
+     * per-tick mover SAMPLES the overlays draw, collected together by
+     * `watchOverlays.collectRun`.
+     *
+     * Collect eagerly: a tape is at most a few thousand ticks and the whole
+     * point of scrubbing is that going BACK costs nothing. It is still the
+     * one loop — every frame and every sample comes from the stepper, and
+     * the samples come through its `onTick` hook, whose own docblock calls
+     * it "the one seam a claim may read live state through".
+     *
+     * ⛔ THIS IS WHY NO ENGINE CHANGE WAS NEEDED, and slice 1's §8.8 note
+     * expected one. That note read the stepper's RETURN OBJECT (`{tape,
+     * tickCount, worldFor, next, …}`, which indeed exposes no run) and
+     * concluded slice 2 needed an additive `run` getter. It does not: the
+     * hook has forwarded the run since R6 slice 4. A getter beside it would
+     * have been a second way to reach the same object — trap 119's family
+     * in its other form, a seam with no consumer because the consumer
+     * already had one.
+     */
+    const collected = collectRun(tape, levelSource);
+    const { frames, samples, finished, run } = collected;
+    if (collected.error) {
+        fatal('the run threw before finishing — the viewer shows what it got',
+            collected.error.message);
+    }
     let cursor = 0;
     let playing = true;
     let speed = params.speed;
-    let finished = null;
 
-    // Collect eagerly: a tape is at most a few thousand ticks and the whole
-    // point of scrubbing is that going BACK costs nothing. This is still the
-    // one loop — every frame comes from the stepper.
-    try {
-        for (let r = stepper.next(); ; r = stepper.next()) {
-            if (r.done) { finished = r.value; break; }
-            frames.push(r.value);
-        }
-    } catch (e) {
-        fatal('the run threw before finishing — the viewer shows what it got', e.message);
-    }
+    /**
+     * ── THE LAYERS, THE MARKERS AND THE LEGEND (kickoff §3.2) ──────────
+     *
+     * Derived ONCE, from the ledgers the run already kept and the frames
+     * just collected. Nothing here re-simulates anything, and every
+     * marker's position is the position the run held on the tick its own
+     * ledger names.
+     */
+    const layerParam = parseLayersParam(params.layers);
+    const on = layerParam.on ?? defaultLayerSet();
+    const { markers, unplaced } = overlaysFor(collected);
 
     $('scrub').max = String(Math.max(0, frames.length - 1));
     $('status').className = 'ok';
@@ -417,7 +615,8 @@ async function replayTape(tape, label, params, levelSource) {
                     + `  hitsMax=${f.inventory.hitsMax}`
                 : '—'),
         ].join('');
-        renderer.draw(world, f.state, { volumes: $('volumes').checked });
+        renderer.draw(world, f.state, { on, samples, markers, cursor });
+        pane.highlight(cursor);
     };
 
     const itemProp = (name) => {
@@ -494,9 +693,51 @@ async function replayTape(tape, label, params, levelSource) {
     };
     $('scrub').oninput = (e) => { playing = false; $('play').textContent = 'Play'; seek(Number(e.target.value)); };
     $('speed').oninput = (e) => { speed = Number(e.target.value); $('speedv').textContent = `${speed}x`; };
-    $('volumes').onchange = hud;
     $('speed').value = String(speed);
     $('speedv').textContent = `${speed}x`;
+
+    /**
+     * The per-layer toggles and the LEGEND, both generated from
+     * `OVERLAY_LAYERS` and `MARKER_GLYPHS`.
+     *
+     * ⛔ ONE ROSTER. A hand-written checkbox list would be a second copy of
+     * the layer table, and the day a layer was added the URL parameter and
+     * the UI would disagree about how many there are.
+     */
+    const layerBox = $('layers');
+    layerBox.innerHTML = '';
+    for (const l of OVERLAY_LAYERS) {
+        const label = document.createElement('label');
+        const box = document.createElement('input');
+        box.type = 'checkbox';
+        box.id = `layer-${l.id}`;
+        box.checked = on.has(l.id);
+        box.onchange = () => {
+            if (box.checked) on.add(l.id); else on.delete(l.id);
+            hud();
+        };
+        label.appendChild(box);
+        label.appendChild(document.createTextNode(` ${l.label}`));
+        layerBox.appendChild(label);
+    }
+    const swatch = (colour, text) =>
+        `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
+    $('legend').innerHTML = [
+        swatch(PATH_COLOURS.player, 'player'),
+        swatch(PATH_COLOURS.chaser, 'chaser'),
+        swatch(PATH_COLOURS.spinner, 'spinner'),
+        swatch(PATH_COLOURS.pushable, 'pushable'),
+        swatch(PATH_COLOURS.arrow, 'arrow'),
+        ...Object.values(MARKER_GLYPHS).map(
+            (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
+    ].join('');
+
+    // ── the trace pane (kickoff §3.3) ────────────────────────────────
+    const pane = mountTracePane(traceSource, (t) => {
+        playing = false;
+        $('play').textContent = 'Play';
+        seek(t);
+    });
 
     seek(0);
     requestAnimationFrame(frame);
@@ -514,7 +755,128 @@ async function replayTape(tape, label, params, levelSource) {
                 + `shape: ${unknown.join(', ')}`
                 : '');
     }
+
+    /**
+     * ⚠ THE OVERLAYS' OWN ABSENCES, REPORTED. Three of them, and every one
+     * reads as "quiet run" on a canvas if nobody says otherwise:
+     * a `?layers=` name nobody knows, a ledger row with nowhere to stand,
+     * and a marker source with no glyph.
+     */
+    const notes = [];
+    if (layerParam.unknown.length) {
+        notes.push(`⚠ ?layers= names ${layerParam.unknown.length} unknown layer(s): `
+            + `${layerParam.unknown.join(', ')} — the roster is ${LAYER_IDS.join(', ')}`);
+    }
+    if (unplaced.length) {
+        // ⚠ "NOT PLACED", not "NOT DRAWN", and the two words are two facts.
+        // A volume is NOT DRAWN because this renderer has no arm for its
+        // SHAPE; a ledger row is NOT PLACED because there is no tick to
+        // stand it on. `probe-seedling-watch-page` asserts on the first
+        // phrase, and one word for both would have made an unplaceable
+        // clear read as a renderer that had lost a hazard shape.
+        // Grouped BY REASON: a full walk has seven tickless clears and all
+        // seven carry the same paragraph. The rows are still named
+        // individually — the reason is what repeats, not the finding.
+        const byWhy = new Map();
+        for (const u of unplaced) {
+            if (!byWhy.has(u.why)) byWhy.set(u.why, []);
+            byWhy.get(u.why).push(u.what);
+        }
+        notes.push(`⚠ ${unplaced.length} ledger row(s) NOT PLACED: `
+            + [...byWhy].map(([why, what]) => `${what.join(', ')} — ${why}`).join('  ·  '));
+    }
+    if (renderer.unknownGlyphs.length) {
+        notes.push(`⚠ ${renderer.unknownGlyphs.length} marker(s) with no glyph: `
+            + renderer.unknownGlyphs.join(', '));
+    }
+    if (notes.length) {
+        $('detail').textContent += `${$('detail').textContent ? '\n' : ''}${notes.join('\n')}`;
+    }
+
+    /**
+     * The overlays' readout, for `check-seedling-editor-overlays.mjs` — the
+     * same contract `window.__editorSolve` is for slice 1's row. It carries
+     * the DERIVED facts (every marker, every unplaced row, the per-channel
+     * body counts), not a picture: the acceptance rows are ledger facts and
+     * a screenshot is evidence, never the gate.
+     */
+    window.__editorOverlays = {
+        label,
+        frames: frames.length,
+        layers: OVERLAY_LAYERS.map((l) => ({ id: l.id, on: on.has(l.id) })),
+        unknownLayerParams: layerParam.unknown,
+        markers,
+        unplaced,
+        unknownGlyphs: renderer.unknownGlyphs,
+        channels: {
+            enemies: channelSummary(samples, 'enemies'),
+            pushables: channelSummary(samples, 'pushables'),
+            arrows: channelSummary(samples, 'arrows'),
+        },
+        trace: pane.readout,
+    };
     return { frames, finished };
+}
+
+/**
+ * ── THE TRACE PANE (kickoff §3.3) ────────────────────────────────────────
+ *
+ * `source` is `{trace}` for a trace this page already holds (an in-page
+ * SOLVE's `out.trace`) or `{why}` for one it could not get — and BOTH are
+ * rendered. A tape with no sidecar says so BY NAME, with the path it looked
+ * for: "no trace" and "a trace this page failed to fetch" are different
+ * facts and an empty pane would state neither.
+ *
+ * Rows at or before the cursor are highlighted (a trace is SPARSE, so the
+ * last such row is the decision in force right now); clicking one seeks to
+ * its tick.
+ */
+function mountTracePane(source, seekTo) {
+    const box = $('trace');
+    const rows = source?.trace?.rows ?? [];
+    if (!rows.length) {
+        const why = source?.why
+            ?? (source?.trace ? 'the trace has no rows' : 'no trace was offered');
+        box.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'traceNone';
+        el.textContent = `no trace for this tape — ${why}`;
+        box.appendChild(el);
+        return { highlight() {}, readout: { rows: 0, why } };
+    }
+
+    box.innerHTML = '';
+    const els = rows.map((row) => {
+        const f = traceRowFields(row);
+        const el = document.createElement('div');
+        el.className = 'tr';
+        el.title = f.line;      // the CLI's own line — one summary, two views
+        el.innerHTML = `<b>t${f.tick}</b> <span class="g">${f.goal}</span>`
+            + ` <span class="o">${f.obstacle}</span> → <span class="s">${f.strategy}</span>`
+            + (f.rejected.length
+                ? `<div class="rj">rejected: ${f.rejected.join('; ')}</div>`
+                : '<div class="rj none">rejected: (nothing else considered)</div>');
+        el.onclick = () => seekTo(row.tick);
+        box.appendChild(el);
+        return { el, tick: row.tick };
+    });
+
+    let lastActive = -2;
+    return {
+        highlight(cursor) {
+            const active = activeTraceIndex(rows, cursor);
+            if (active === lastActive) return;
+            lastActive = active;
+            els.forEach((r, i) => {
+                r.el.classList.toggle('past', i <= active);
+                r.el.classList.toggle('now', i === active);
+            });
+            if (active >= 0) {
+                els[active].el.scrollIntoView({ block: 'nearest' });
+            }
+        },
+        readout: { rows: rows.length, why: null, firstTick: rows[0].tick },
+    };
 }
 
 // ── SOURCE = SOLVE ───────────────────────────────────────────────────────
@@ -712,15 +1074,18 @@ async function runSolve(params) {
         const solveMs = Math.round(solved.ms);
         $('solveTime').textContent = `solved in ${solveMs} ms`;
         const replayT0 = performance.now();
-        const { frames } = await replayTape(solved.tape, name, params, levelSource);
+        // ⛓ The trace goes STRAIGHT into the pane: an in-page solve already
+        // holds it, so fetching a sidecar for a tape that was never written
+        // would be looking on disk for something in memory.
+        const { frames } = await replayTape(solved.tape, name, params, levelSource,
+            { trace: solved.out.trace, why: null });
         const replayMs = Math.round(performance.now() - replayT0);
 
         /**
-         * ⛓ The TRACE is held for slice 2's pane — and it is not dead
-         * weight in the meantime: its shape is reported here, which is the
-         * same summary `solve-seedling-r8-battery` prints. A ledger with
-         * no consumer is trap 119's family, so this one has the smallest
-         * honest consumer until the pane arrives.
+         * ⛓ The trace's SHAPE, beside the run's own counts — the same
+         * summary `solve-seedling-r8-battery` prints. The rows themselves
+         * are in the pane (slice 2), which is the consumer this readout was
+         * standing in for.
          */
         $('detail').textContent = `${$('detail').textContent}`
             + `${$('detail').textContent ? '  ·  ' : ''}`
@@ -753,7 +1118,8 @@ async function runSolve(params) {
             replayMs,
             frames: frames.length,
         };
-        // Slice 2's pane reads this; nothing else does yet.
+        // The pane reads the object above directly; this is the same trace,
+        // exposed for a CLI or a console that wants the rows without the DOM.
         window.__editorTrace = solved.out.trace;
         $('solveGo').disabled = false;
     }

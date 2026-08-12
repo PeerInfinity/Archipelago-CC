@@ -66,7 +66,11 @@ const stream = await (await fetch(`${HOST}/${STREAM}`)).json();
 const browser = await chromium.launch();
 const page = await browser.newPage();
 const errors = [];
-page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+// ⚠ WITH THE RESOURCE URL. A bare "Failed to load resource: 404" names
+// nothing, so a row that allows one expected 404 could only allow them all.
+page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(`${m.text()} [${m.location()?.url ?? '?'}]`);
+});
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
 
 const scrubValue = () => page.evaluate(() => Number(document.getElementById('scrub').value));
@@ -149,7 +153,18 @@ check(after > busiest[1],
     `plays THROUGH level ${busiest[0]} (from ${from}, ${PLAY_MS / 1000}s at 8x)`,
     `scrub reached ${after}; level ${busiest[0]} starts at ${busiest[1]}`);
 
-check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
+/**
+ * ⚠ ONE CLASS OF EXPECTED 404, NAMED RATHER THAN TOLERATED (editor arc
+ * slice 2). The page asks for `<tape>.trace.json` on every load and only
+ * the SOLVER's tapes have one, so a hand-authored walk like this one draws
+ * a 404 that IS the answer — the pane renders "no trace for this tape" with
+ * that path in it. Filtered on the sidecar suffix, so any other missing
+ * resource still reds this row.
+ */
+const sidecar404 = errors.filter((e) => /\.trace\.json/.test(e));
+const unexpected = errors.filter((e) => !/\.trace\.json/.test(e));
+check(unexpected.length === 0, 'no page errors beyond the expected missing-trace 404',
+    unexpected.join(' | ') || `clean (${sidecar404.length} expected trace-sidecar 404)`);
 // ...and the renderer's own report of shapes it had no arm for.
 const detail = await page.textContent('#detail');
 check(!detail.includes('NOT DRAWN'), 'every volume shape has a renderer arm', detail);

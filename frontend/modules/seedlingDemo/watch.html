@@ -38,6 +38,24 @@
                REFUSES rather than guessing when the level has two exits)
   ?name=       the tape/trace name the solve is recorded under, in memory
 
+  ── OVERLAYS + THE TRACE PANE (editor arc slice 2) ──────────────────────
+
+  Every layer is an independently toggleable pass drawn from per-tick
+  SAMPLES taken inside the one loop — never a second simulation. The
+  checkboxes under the canvas are generated from the layer roster itself,
+  the legend names every glyph, and ?layers= selects the ON set:
+
+      &layers=player,enemies,action,damage
+
+  player · enemies (chasers + spinners) · pushables · arrows (OFF by
+  default, ⚖) · action (attack-key edges) · damage (hits + deaths) ·
+  events (grants + transitions) · volumes.
+
+  The pane on the right renders the decision trace: an in-page SOLVE's own
+  rows, or the fetched fixtures/traces/<name>.trace.json sidecar for a
+  committed solver tape. Rows at or before the scrub cursor are lit, and
+  clicking one seeks to its tick. A tape with no trace says so BY NAME.
+
   ⛔ THE PAGE NEVER WRITES fixtures/tapes/ OR fixtures/traces/. That roster
   is disk-derived, so a saved experiment would silently join the
   differential. Solved tapes live in the page and in your hands.
@@ -96,6 +114,27 @@
   #solveBoot { width: 100%; box-sizing: border-box; }
   #solveNote { color: #8a8a98; font-size: 11px; }
   summary { color: #8a8a98; cursor: pointer; }
+  /* ── OVERLAYS + TRACE PANE (editor arc slice 2) ── */
+  #layers { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0; }
+  #legend { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 11px;
+    color: #8a8a98; margin-bottom: 6px; }
+  .sw { display: flex; gap: 4px; align-items: center; }
+  .sw i { width: 9px; height: 9px; display: inline-block; }
+  #panel h2 { font-size: 11px; color: #8a8a98; font-weight: 600; margin: 10px 0 2px;
+    text-transform: uppercase; letter-spacing: .06em; }
+  #trace { max-height: 46vh; overflow-y: auto; border: 1px solid #1a1a20; }
+  #trace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; cursor: pointer;
+    opacity: .45; }
+  #trace .tr:hover { background: #1a1a22; }
+  #trace .tr.past { opacity: 1; }
+  #trace .tr.now { background: #1e2a30; border-left: 2px solid #7fe0ff; }
+  #trace .tr b { color: #7fe0ff; font-weight: 600; }
+  #trace .g { color: #7fd88f; }
+  #trace .o { color: #ff9a6a; }
+  #trace .s { color: #ffd75f; }
+  #trace .rj { color: #8a8a98; font-size: 11px; }
+  #trace .rj.none { opacity: .55; }
+  #trace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -147,10 +186,15 @@
       <button id="play">Pause</button>
       <input id="scrub" type="range" min="0" max="0" value="0">
       <label>speed <input id="speed" type="range" min="0.1" max="8" step="0.1" value="1"><span id="speedv">1x</span></label>
-      <label><input id="volumes" type="checkbox" checked> avoid volumes</label>
     </div>
+    <div id="layers"></div>
+    <div id="legend"></div>
   </div>
-  <div id="panel"><div id="hud"></div></div>
+  <div id="panel">
+    <div id="hud"></div>
+    <h2>decision trace</h2>
+    <div id="trace"></div>
+  </div>
 </main>
 <script type="module">
   import { main } from './watchViewer.js';
