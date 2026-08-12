@@ -23,6 +23,7 @@ import {
     createRunForStaging, createTapeStepper, solveStaging, stagingFromTape,
 } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
 import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { TAPES_DIR } from './fixtures/index.js';
 
@@ -284,6 +285,39 @@ describe('the SOLVE itself', () => {
         const staging = stagingOf('r7-act2-4');
         expect(() => solveForPage({ levelSource, staging, goals: [], name: 'x' }))
             .toThrow(/goals must be a non-empty ordered list/);
+    });
+
+    /**
+     * ⛓⛓ PROCGEN PoC SLICE 1 — the `maxTicksPerTarget` pass-through, DRIVEN
+     * IN BOTH DIRECTIONS.
+     *
+     * An optional parameter tested only when it is present proves nothing
+     * about the case every existing caller is in, and one tested only when it
+     * is absent proves nothing at all. So: absent must still reach
+     * `solveSegment`'s own default (the row above pins that derivation at 255
+     * ticks — this asserts the DEFAULT is what produces it), and present must
+     * actually bound the walk.
+     */
+    it('maxTicksPerTarget ABSENT still reaches the solver\'s own default', () => {
+        const staging = stagingOf('r7-act2-4');
+        const goals = parseGoalsParam('exit:64,16');
+        const absent = solveForPage({ levelSource, staging, goals, name: 'r8-solve-4' });
+        const explicit = solveForPage({
+            levelSource, staging, goals, name: 'r8-solve-4',
+            maxTicksPerTarget: DEFAULT_MAX_TICKS_PER_TARGET,
+        });
+        expect(absent.out.perTick).toHaveLength(255);
+        // ⛔ Passing the default EXPLICITLY must be the same solve, key for
+        // key — which is what "the absence forwards `undefined`" means.
+        expect(explicit.out.perTick).toEqual(absent.out.perTick);
+    });
+
+    it('maxTicksPerTarget PRESENT bounds the walk, and the refusal names it', () => {
+        const staging = stagingOf('r7-act2-4');
+        const goals = parseGoalsParam('exit:64,16');
+        expect(() => solveForPage({
+            levelSource, staging, goals, name: 'r8-solve-4', maxTicksPerTarget: 10,
+        })).toThrow(/within 10 ticks/);
     });
 });
 

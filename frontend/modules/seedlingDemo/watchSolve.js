@@ -399,12 +399,31 @@ export function censusWorld(levelSource, staging) {
  * else — which is why the check belongs at this call site rather than inside
  * the drop, which has no run to ask. `despawns` rides out beside `out` for
  * the page to display; a refusal is the checker's own message, verbatim.
+ *
+ * ⛓⛓ PROCGEN PoC SLICE 1 — `maxTicksPerTarget`, PASSED THROUGH AND NOT
+ * DEFAULTED HERE.
+ *
+ * `solveSegment` has always taken a per-target tick budget and this call site
+ * never offered one, so every caller got the solver's own
+ * `DEFAULT_MAX_TICKS_PER_TARGET` whatever it asked for — which is fine until
+ * something wants to BOUND a solve. The procgen loop does: it runs hundreds
+ * of solves against generated rooms, and a budget it names but cannot enforce
+ * would be a bound nobody applies (the generator's own oracle caught exactly
+ * that, by measuring a 7-tick budget still solving in 134 ticks).
+ *
+ * ⛔ THE DEFAULT STAYS THE SOLVER'S. `undefined` is forwarded, so the
+ * parameter's absence reaches `solveSegment`'s own default rather than a
+ * second copy of the number here — which is what makes this addition
+ * byte-inert for the page, the battery and the acceptance row. Both
+ * directions are driven in `watchSolve.test.js`.
  */
-export function solveForPage({ levelSource, staging, goals, name, now = () => Date.now() }) {
+export function solveForPage({
+    levelSource, staging, goals, name, now = () => Date.now(), maxTicksPerTarget,
+}) {
     const honest = solveStaging(staging);
     const t0 = now();
     const run = createRunForStaging(honest, levelSource);
-    const out = solveSegment({ run, goals, name, boot: honest.boot });
+    const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget });
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);
     return {
