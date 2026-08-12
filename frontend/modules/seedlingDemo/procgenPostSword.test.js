@@ -197,30 +197,41 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
     });
 
     /**
-     * ⛓ THE SPINNER + KILL-LOCK. ⚠ ONE cell of the 32-cell sweep — the sweep
-     * is in the as-built. What this pins is the CLASS of the failure, because
-     * a throw is what makes the family unfit for the palette: `procgenOracle`
-     * classifies only `SolverRefusal` and `BotDriverV2Error`, so anything else
-     * reaches `levelGenerator` as `GenerationAborted` and kills the RUN rather
-     * than the candidate.
+     * ⛓⛓⛓ THE SPINNER + KILL-LOCK, RE-CUT BY SLICE 4b.
+     *
+     * ⛔ SLICE 4's DECISIVE CAUSE IS DISCHARGED. This row used to pin the
+     * DECLARATION refusal (*"the tape DECLARES no clear for them"*) as the
+     * text that decided the exclusion; slice 4b's scratch persistence layer
+     * makes the model the one writer of that slot and the family now SOLVES in
+     * the sweep's two viable cells (`records=[kill,collect]`, a `scratchClears`
+     * row naming the lock — see `procgenScratchPersistence.test.js`).
+     *
+     * What still decides it is the TRANSIT throw, and the reason is about the
+     * LOOP: `procgenOracle` classifies only `SolverRefusal` and
+     * `BotDriverV2Error`, so a `SolverBotError` reaches `levelGenerator` as
+     * `GenerationAborted` and kills the RUN rather than the candidate. ⚠ ONE
+     * cell here; the sweep is `scripts/procgen/sweep-seedling-killlock.mjs`,
+     * committed so its numbers can be re-run rather than quoted.
      */
     it('spinner-killlock: the failure ESCAPES the oracle — an abort, not a revert', () => {
         const out = attempt('spinner-killlock', {
             goal: { tx: 7, ty: 8 },
             entities: [
-                { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '0' } },
+                { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '1' } },
                 { type: 'spinner', tx: 6, ty: 2, attrs: { tag: '-1' } },
             ],
         });
         expect(out.verdict).not.toBe('SOLVED');
-        expect(out.threw).toBeTruthy();
-        expect(['SolverBotError', 'Error']).toContain(out.threw);
-        // The row's decisive text is the DECLARATION one, and it names the channel.
-        expect(excludedNamed('spinner-killlock').refusalText)
-            .toMatch(/The tape DECLARES no clear for them/);
-        expect(excludedNamed('spinner-killlock').refusalText)
-            .toMatch(/declared v9 `at` channel/);
-        expect(excludedNamed('spinner-killlock').wouldNeed).toMatch(/TWO-PASS DEBT/);
+        // ⛔ THE CLASS IS THE POINT: a SolverBotError is not an oracle verdict.
+        expect(out.threw).toBe('SolverBotError');
+        expect(out.reasonText).toMatch(/hammer disc/);
+        // The row's decisive text is now the TRANSIT one…
+        expect(excludedNamed('spinner-killlock').refusalText).toMatch(/hammer disc/);
+        expect(excludedNamed('spinner-killlock').cause).toMatch(/ABORT\*\*, NOT A REVERT/);
+        // …and the declaration cause is recorded as DISCHARGED rather than deleted.
+        expect(excludedNamed('spinner-killlock').measured).toMatch(/DISCHARGED/);
+        expect(excludedNamed('spinner-killlock').wouldNeed)
+            .toMatch(/TRANSIT THROW MADE CLASSIFIABLE/);
     });
 
     /**
