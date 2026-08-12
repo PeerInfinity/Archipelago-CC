@@ -7083,11 +7083,16 @@ omission — re-derived at close from the committed expectations' own
 
 ---
 
-## The editor arc — `watch.html` becomes the lab page (TOOLING, CLOSED 2026-08-11)
+## The editor arc — `watch.html` becomes the lab page (TOOLING; v1 SCOPE CLOSED 2026-08-11)
 
 Interleaved between R8 and R9 by the user's ruling, in four slices. It built
 no game behaviour and no claim: it grew the replay viewer into the window an
-editor will eventually live behind. **R9 is still the campaign.**
+editor will eventually live behind.
+
+⚠ **What closed is this arc's V1 SCOPE** — the four slices below, their gates
+and their named limits. ⚖ **More editor work comes BEFORE the campaign**
+(user, 2026-08-12); it is new work on top of this, not a reopening of it.
+**R9 is still the campaign, and it is still after the editor.**
 
 ### What the page is now
 
@@ -7175,6 +7180,9 @@ checked against them:
 - **Not a GL panel.** No `__BUNDLED_MODULES__` entry, no substrate
   registration; it is a standalone static page. Panel integration is a later
   decision with its own checklist.
+
+Each of these is a v1 bound, not a verdict: the editor work ⚖ ruled for after
+this arc is where any of them may be taken up.
 - **The browser rows other than the CLI still SKIP without a dev server**
   (`check-seedling-editor-{solve,overlays,manual}.mjs`). That politeness once
   hid a page that could not load AT ALL for two rungs, so
