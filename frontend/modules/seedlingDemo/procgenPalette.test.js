@@ -59,7 +59,10 @@ describe('the palette itself is well formed', () => {
 
     it('every family in the roster is represented, and the count comes FROM the roster', () => {
         const families = new Set(PRE_SWORD_TEMPLATES.map((t) => t.family));
-        expect([...families].sort()).toEqual(['arrow-lane', 'pit', 'shove', 'wall', 'water']);
+        // ⛓ PoC slice 3b added `weigh` — the palette's SECOND clearer family
+        // and the first whose template places three cooperating entities.
+        expect([...families].sort())
+            .toEqual(['arrow-lane', 'pit', 'shove', 'wall', 'water', 'weigh']);
         expect(PRE_SWORD_PALETTE.templates).toBe(PRE_SWORD_TEMPLATES);
         expect(PRE_SWORD_PALETTE.items).toEqual({ hasSword: false, hasShield: false });
     });
@@ -175,6 +178,108 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
     });
 
     /**
+     * ⛓⛓⛓ THE LOCKED DOOR — PoC slice 3b's promotion, verified the same way.
+     *
+     * Three claims, because it places three things and any two without the
+     * third is a room with no answer (⚖ §1.2's atomic placement at its
+     * fullest): the LOCK is in the wall's gap and in `world.activators`; the
+     * BUTTON is in `world.pressers` and in the SAME tSet group; the BLOCK is
+     * in `world.pushables` and shares the button's lane so a single lean
+     * reaches it. The last one is the constraint `runShove` enforces — a lean
+     * moves a block along ONE axis — and it is asserted here rather than
+     * trusted, because a template whose block and button shared neither
+     * coordinate would be L16's shape, which needs a chain nobody has ruled on.
+     */
+    for (const [name, at, axis] of [
+        ['wall-gap-lock-weigh-h', { tx: 1, ty: 4 }, 'row'],
+        ['wall-gap-lock-weigh-v', { tx: 4, ty: 1 }, 'column'],
+    ]) {
+        it(`${name} stands a lock in the gap and a block that can reach its button`, () => {
+            const m = model();
+            const t = byName(name);
+            const world = worldFor(placedAt(m, name, at));
+            const entityAt = (type) => {
+                const e = t.entities.find((x) => x.type === type);
+                return { tx: at.tx + e.dx, ty: at.ty + e.dy };
+            };
+
+            // ── the LOCK, in the gap the wall leaves ──────────────────
+            const lockCell = entityAt('lock');
+            expect(world.activators).toHaveLength(1);
+            const lock = world.activators[0];
+            expect(lock.tag).toBe('lock');
+            expect(lock.id).toBe(`lock@${lockCell.tx * TILE_SIZE},${lockCell.ty * TILE_SIZE}`);
+            // ⛔ and it really is in a HOLE: the template paints no wall there.
+            expect(t.terrain.some((c) => at.tx + c.dx === lockCell.tx
+                && at.ty + c.dy === lockCell.ty)).toBe(false);
+
+            // ── the BUTTON, publishing the lock's OWN group ───────────
+            expect(world.pressers).toHaveLength(1);
+            const button = world.pressers[0];
+            expect(button.tag).toBe('button');
+            // ⛔ THE GROUP IS COMPARED, NOT ASSUMED. A button in a different
+            // tSet would build perfectly and open nothing — the template
+            // would place an obstacle and a decoration.
+            expect(button.t).toBe(lock.t);
+
+            // ── the BLOCK, in the button's own lane ───────────────────
+            expect(world.pushables).toHaveLength(1);
+            const block = world.pushables[0];
+            expect(block.tag).toBe('pushableblock');
+            expect(block.family).toBe('walk');
+            const blockTile = { tx: block.x / TILE_SIZE, ty: block.y / TILE_SIZE };
+            const buttonTile = {
+                tx: Math.floor(button.x / TILE_SIZE), ty: Math.floor(button.y / TILE_SIZE),
+            };
+            if (axis === 'row') {
+                expect(blockTile.ty).toBe(buttonTile.ty);
+                expect(buttonTile.tx).toBeGreaterThan(blockTile.tx);
+            } else {
+                expect(blockTile.tx).toBe(buttonTile.tx);
+                expect(buttonTile.ty).toBeGreaterThan(blockTile.ty);
+            }
+        });
+    }
+
+    /**
+     * ⛔⛔ THE S1 GUARD, AND IT IS TEMPLATE LEGALITY RATHER THAN A SOLVER
+     * SPECIAL CASE. `legalAt` tests footprint ∪ clearance with `isFree`, and
+     * `isFree` refuses the start and the goal cells — so declaring the cells
+     * the block slides THROUGH (clearance) and the cell it lands ON (the
+     * button, footprint) makes it structurally impossible to anchor this
+     * template where the shove would put a block on the goal.
+     *
+     * ⚠ Slice 3 met that shape on `wall-gap-block` and correctly left it to
+     * the LOOP to reject, because there the destination is derived per-room
+     * and unknowable at anchor time. Here the destination IS the button and
+     * the button is part of the template. Same law, different information —
+     * which is why this assertion can exist for one family and not the other.
+     */
+    it('the weigh templates declare the whole slide path, so no anchor can '
+        + 'land the block on the goal', () => {
+        for (const name of ['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']) {
+            const t = byName(name);
+            const block = t.entities.find((e) => e.type === 'pushableblock');
+            const button = t.entities.find((e) => e.type === 'button');
+            const declared = new Set([...t.footprint, ...t.clearance]
+                .map((c) => `${c.dx},${c.dy}`));
+            // Every cell from the block to the button INCLUSIVE — the ones the
+            // block occupies at some point during the lean.
+            const dx = Math.sign(button.dx - block.dx);
+            const dy = Math.sign(button.dy - block.dy);
+            const steps = Math.max(Math.abs(button.dx - block.dx),
+                Math.abs(button.dy - block.dy));
+            for (let i = 0; i <= steps; i += 1) {
+                const key = `${block.dx + dx * i},${block.dy + dy * i}`;
+                expect(declared, `${name}: slide cell ${key} is not declared, so an anchor `
+                    + 'could put the goal there').toContain(key);
+            }
+            // AND the stance behind the block, or the lean cannot start.
+            expect(declared).toContain(`${block.dx - dx},${block.dy - dy}`);
+        }
+    });
+
+    /**
      * ⛔ THE SPAN IS THE INTERIOR'S, AND THAT IS THE WHOLE DESIGN. A shorter
      * wall is walked around, the block is never in the way, and the template
      * becomes an obstacle that obstructs nothing (traps 171/173 — the same
@@ -203,24 +308,106 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * places the door, the solver shoves the block, and the run certifies its
      * collect — end to end, from the generator's own seed.
      */
-    it('the door is KEPT in a generated room, and that room certifies its collect', () => {
-        const out = generateSeedlingLevel({ seed: 1, bounds: { obstacleTarget: 6 } });
-        const doors = out.trace.filter((r) => r.family === 'shove' && r.outcome === 'KEPT');
-        expect(doors.length).toBeGreaterThan(0);
-        for (const d of doors) {
-            expect(d.verdict).toBe('SOLVED');
-            expect(d.ticks).toBeGreaterThan(0);
+    /**
+     * ⛔ BOUND NAMED: seeds 1..20 at `obstacleTarget: 6`, and the search stops
+     * at the first run that keeps the family. The bound is stated because a
+     * search that found nothing and a search that was never run print the same
+     * thing otherwise. [[feedback_bounded_sweep_must_name_what_it_bounded]]
+     *
+     * ⛓ Slice 3b widened this from ONE PINNED SEED to a named search, because
+     * the palette is part of the draw stream: adding the two `weigh` templates
+     * moved what seed 1 draws, and a test pinned to one seed is a test about
+     * the draw order rather than about the family.
+     *
+     * ⛔⛔⛔ AND THE TICK CLAIM MOVED WITH IT, BECAUSE THE OLD ONE WAS NOT TRUE
+     * OF THE FAMILY — it was true of one seed. `trace[].ticks` is the WHOLE
+     * ROOM's solve after that placement, so it rises only when the obstacle is
+     * on the route at all, and a full-span door with the goal on the START's
+     * side is kept (the room still solves) having cost nothing. Comparing a
+     * kept row against the SKELETON also mis-attributes: at seed 1 the water
+     * pool placed after a weigh door reports the door's 330 as its own. The
+     * honest comparison is against the row BEFORE it, and the honest claim is
+     * an EXISTENCE one.
+     */
+    it('every CLEARER family is KEPT in a generated room that certifies its collect', () => {
+        // Built FROM the roster's clearer families, so a third one added
+        // without a case here is a missing test rather than an uncounted one.
+        const clearers = [...new Set(PRE_SWORD_TEMPLATES.map((t) => t.family))]
+            .filter((f) => f === 'shove' || f === 'weigh');
+        expect(clearers.sort()).toEqual(['shove', 'weigh']);
+        for (const family of clearers) {
+            let found = null;
+            for (let seed = 1; seed <= 20 && !found; seed += 1) {
+                const out = generateSeedlingLevel({ seed, bounds: { obstacleTarget: 6 } });
+                const kept = out.trace.filter((r) => r.family === family
+                    && r.outcome === 'KEPT');
+                if (kept.length) found = { out, kept };
+            }
+            expect(found, `no ${family} template was KEPT in seeds 1..20 at target 6`)
+                .not.toBeNull();
+            for (const d of found.kept) {
+                expect(d.verdict).toBe('SOLVED');
+                expect(d.ticks).toBeGreaterThan(0);
+            }
         }
-        // The skeleton's own solve is the baseline; a kept door COSTS ticks,
-        // which is the evidence it constrains rather than decorates.
-        const skeleton = out.trace.find((r) => r.family === 'skeleton');
-        expect(doors[0].ticks).toBeGreaterThan(skeleton.ticks);
+    });
+
+    /**
+     * ⛓⛓⛓ NON-VACUITY — the `weigh` door is not merely KEPT in generated
+     * rooms, it is CROSSED in one.
+     *
+     * ⛔ THIS IS THE ASSERTION THE `shove` FAMILY WOULD FAIL, and finding that
+     * out is what this test exists for. Measured over seeds 1..20 at target 6
+     * (2026-08-12), splitting kept/reverted rows by whether the goal is beyond
+     * the template's wall from the start:
+     *
+     *   | family | NEAR (goal on the start's side) | FAR (goal beyond it) |
+     *   |---|---|---|
+     *   | `weigh` | 15 KEPT, 0 REVERTED | **3 KEPT**, 3 REVERTED |
+     *   | `shove` | 11 KEPT, 0 REVERTED | **0 KEPT**, 4 REVERTED |
+     *
+     * ⇒ `wall-gap-block` is kept in a generated room exactly when it is
+     * IRRELEVANT, and refuses every time it is the room's actual door
+     * (*"Obstacle: solid:pushableblock … Strategy 'shove' failed to apply"*).
+     * Slice 3 promoted it on three dedicated probe geometries, which were
+     * real; the GENERATED-room evidence for it has always been vacuous, and a
+     * KEPT row looks identical whether or not the obstacle was ever in the
+     * way. ⚠ NOT slice 3b's to fix — the family and its derivation are slice
+     * 3's — but recorded here so the next slice starts from a measurement
+     * rather than from a keep-count. [[feedback_graceful_skip_hides_the_surface]]
+     *
+     * The assertion is deliberately the EXISTENCE one for `weigh` only: a
+     * count asserted here would be a test about the draw order again.
+     */
+    it('⛔ the weigh door is CROSSED in a generated room, not merely kept beside one', () => {
+        let crossing = null;
+        for (let seed = 1; seed <= 20 && !crossing; seed += 1) {
+            const out = generateSeedlingLevel({ seed, bounds: { obstacleTarget: 6 } });
+            const goal = seedlingModel({ seed }).goalCell;
+            let prev = out.trace.find((r) => r.family === 'skeleton').ticks;
+            for (const r of out.trace) {
+                if (r.outcome !== 'KEPT' || r.family === 'skeleton') continue;
+                const isFar = r.template.endsWith('-h')
+                    ? goal.ty > r.at.ty : goal.tx > r.at.tx;
+                if (r.family === 'weigh' && isFar && r.ticks > prev) {
+                    crossing = { seed, template: r.template, before: prev, after: r.ticks };
+                    break;
+                }
+                prev = r.ticks;
+            }
+        }
+        expect(crossing, 'no generated room in seeds 1..20 placed a `weigh` door BEYOND '
+            + 'which the goal lay AND paid ticks for it — the family would then be kept '
+            + 'only where it is irrelevant, which is what `shove` does').not.toBeNull();
+        // The measured instance, as the record of what "crossed" cost.
+        expect(crossing.after).toBeGreaterThan(crossing.before);
     });
 
     it('EVERY template in the roster is verified above — by name, not by count', () => {
         // The list this test compares against is the one the cases assert on.
         const verified = ['wall-segment-h3', 'wall-segment-v3', 'water-pool-2x2',
-            'pit-patch-2x1', 'arrow-lane', 'wall-gap-block-h', 'wall-gap-block-v'];
+            'pit-patch-2x1', 'arrow-lane', 'wall-gap-block-h', 'wall-gap-block-v',
+            'wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v'];
         expect(PRE_SWORD_TEMPLATES.map((t) => t.name).sort()).toEqual([...verified].sort());
     });
 });

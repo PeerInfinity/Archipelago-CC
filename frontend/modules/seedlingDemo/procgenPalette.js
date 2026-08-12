@@ -103,6 +103,32 @@ const INTERIOR_SPAN = SINGLE_SCREEN_TILES.width - 2;
 const GAP_OFFSET = 4;
 
 /**
+ * ⛓⛓⛓ PoC SLICE 3b — THE WEIGH TEMPLATE'S THREE OFFSETS, and every one of
+ * them is a CONSTRAINT rather than a preference.
+ *
+ * The lock sits in the door's gap; the button and the block stand in the lane
+ * one cell back from the wall, on the START side of it. Along that lane:
+ *
+ *   `BLOCK_OFFSET - 1`  the STANCE. `runShove`'s lean needs the player box on
+ *                       the block's ±1 px probe, so the cell behind the block
+ *                       must be standable — which is why the block is not at
+ *                       the lane's first cell.
+ *   `BLOCK_OFFSET`      the block.
+ *   between them        the SLIDE PATH, declared as `clearance` (below).
+ *   `BUTTON_OFFSET`     the button, and therefore the block's destination.
+ *
+ * ⛔ THE TWO MUST SHARE THE LANE, because a lean moves a block along ONE axis
+ * (`runShove` asserts it) — a template whose block and button shared neither
+ * coordinate would be L16's shape, which needs a CHAIN nobody has ruled on.
+ */
+const BLOCK_OFFSET = 1;
+const BUTTON_OFFSET = 5;
+/** The cells the block slides THROUGH — free, and not written. */
+const SLIDE_PATH = Object.freeze(
+    Array.from({ length: BUTTON_OFFSET - BLOCK_OFFSET - 1 }, (_, i) => BLOCK_OFFSET + 1 + i),
+);
+
+/**
  * ⛓ THE FOUR TEMPLATES THE ORACLE CERTIFIES, each measured in an otherwise
  * empty bordered 10x10 room with a `torchpickup` collect goal (slice 2's
  * probe; the module test re-drives every one against a BUILT WORLD).
@@ -290,6 +316,105 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         why: 'the same door stood on end; the two orientations are two draws, exactly as '
             + 'the two wall segments are',
     }),
+    /**
+     * ⛓⛓⛓ THE LOCKED DOOR — PoC slice 3b's promotion, and L15's mechanism in
+     * a room this arc can generate (⚖ kickoff §1.9).
+     *
+     * A Stone wall across the whole interior with ONE gap, a `lock` standing
+     * in the gap, and — in the lane one cell back on the START side — the
+     * `button` that opens its group and a `pushableblock` sharing that lane.
+     * ⚖ §1.2's atomic placement in its fullest form so far: the obstacle, its
+     * opener, AND the thing that works the opener, placed together, because
+     * any two of the three without the third is a room with no answer.
+     *
+     * ⛔ WHY THE BLOCK IS NOT OPTIONAL. `Button.update` re-collides
+     * `["Player","Enemy","Solid"]` EVERY tick (`Button.as:27-39`), so the
+     * group is published only while something is standing there — and the
+     * player's whole errand is to be on the FAR side of the lock. Slice 3
+     * measured the consequence and excluded the button+lock pair for it (the
+     * walk spends its entire per-target budget grazing the lock it just
+     * opened). The third member of the collide list is the answer:
+     * `PushableBlock.as:27` is `type = "Solid"`, so a block parked on the
+     * button holds it for ever. `button-lock-pair` stays in `EXCLUDED_TEMPLATES`
+     * precisely because it is this template MINUS the block.
+     *
+     * ⛔⛔ THE SLIDE PATH IS `clearance`, AND THAT IS THE S1 GUARD — encoded as
+     * template LEGALITY rather than as a solver special case. `legalAt` tests
+     * footprint ∪ clearance with `isFree`, and `isFree` refuses the start and
+     * the goal cells; so declaring the cells the block slides through (and the
+     * button cell it lands on, which is footprint) makes it structurally
+     * impossible for this template to be anchored where the shove would put a
+     * block on the goal. ⚠ Slice 3 met that shape on `wall-gap-block` and
+     * correctly left it to the LOOP to reject, because there the block's
+     * destination is derived per-room and cannot be known at anchor time.
+     * Here it can: the destination is the button, and the button is part of
+     * the template. Same law, different information.
+     *
+     * ⚠ NO CLEARANCE ON THE FAR SIDE, deliberately. A wall that seals the goal
+     * off is exactly the candidate the keep-or-revert loop exists to reject
+     * (`wall-segment-h3`'s precedent), and pre-filtering it would hide this
+     * family's only real failure from the loop (traps 171/173).
+     *
+     * Attrs transcribed from L15 (`Dungeon2/2.oel:110-111`), the room the game
+     * built around this mechanism: `button {tset: "0"}`, `lock {tset: "0",
+     * tag: "0"}`.
+     */
+    Object.freeze({
+        name: 'wall-gap-lock-weigh-h',
+        family: 'weigh',
+        footprint: Object.freeze([
+            ...rectCells(INTERIOR_SPAN, 1),
+            cell(BLOCK_OFFSET, -1),
+            cell(BUTTON_OFFSET, -1),
+        ]),
+        clearance: Object.freeze([
+            cell(BLOCK_OFFSET - 1, -1),
+            ...SLIDE_PATH.map((dx) => cell(dx, -1)),
+        ]),
+        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([
+            Object.freeze({
+                dx: GAP_OFFSET, dy: 0, type: 'lock', attrs: Object.freeze({ tset: '0', tag: '0' }),
+            }),
+            Object.freeze({
+                dx: BUTTON_OFFSET, dy: -1, type: 'button', attrs: Object.freeze({ tset: '0' }),
+            }),
+            Object.freeze({ dx: BLOCK_OFFSET, dy: -1, type: 'pushableblock' }),
+        ]),
+        pins: Object.freeze([]),
+        why: 'a Stone wall across the whole interior with a `lock` in its ONE gap, plus '
+            + 'the `button` that opens the lock\'s group and a `pushableblock` sharing '
+            + 'the button\'s lane — the corridor exists only after the block is parked on '
+            + 'the button, so `refineStrategy` selects `weigh` and the player walks '
+            + 'through a lock nobody is holding',
+    }),
+    Object.freeze({
+        name: 'wall-gap-lock-weigh-v',
+        family: 'weigh',
+        footprint: Object.freeze([
+            ...rectCells(1, INTERIOR_SPAN),
+            cell(-1, BLOCK_OFFSET),
+            cell(-1, BUTTON_OFFSET),
+        ]),
+        clearance: Object.freeze([
+            cell(-1, BLOCK_OFFSET - 1),
+            ...SLIDE_PATH.map((dy) => cell(-1, dy)),
+        ]),
+        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([
+            Object.freeze({
+                dx: 0, dy: GAP_OFFSET, type: 'lock', attrs: Object.freeze({ tset: '0', tag: '0' }),
+            }),
+            Object.freeze({
+                dx: -1, dy: BUTTON_OFFSET, type: 'button', attrs: Object.freeze({ tset: '0' }),
+            }),
+            Object.freeze({ dx: -1, dy: BLOCK_OFFSET, type: 'pushableblock' }),
+        ]),
+        pins: Object.freeze([]),
+        why: 'the same locked door stood on end, with the lane running down the column '
+            + 'beside it — a SOUTH lean rather than an EAST one, which is a different '
+            + '`SHOVE_STEP` row and therefore a real second draw',
+    }),
 ]);
 
 export const PRE_SWORD_PALETTE = Object.freeze({
@@ -329,12 +454,23 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
             + 'aiming at (72,120), after grazing 396 solid(s): lock at (64,80) on the Y '
             + 'axis, at (72.6899798657555,76.6929296425152) in level 900, aiming at '
             + '(72,120).',
-        wouldNeed: 'the game\'s own answer — a SOLID on the button, because '
-            + '`Button.hitables` is `["Player","Enemy","Solid"]` (L15\'s shape). ⛓ The '
-            + 'solid it wants is a `pushableblock`, which slice 3 PROMOTED — but getting '
-            + 'one onto the button needs the ladder to CHAIN shove-onto-button behind a '
-            + 'hold, which is new machinery nobody has ruled on. ⚖ Named as the future '
-            + 'shape, deliberately NOT built (orchestrator, 2026-08-12).',
+        wouldNeed: '⛓ DISCHARGED BY PoC SLICE 3b, AND THE ROW STAYS ANYWAY. What this '
+            + 'needed was the game\'s own answer — a SOLID on the button, because '
+            + '`Button.hitables` is `["Player","Enemy","Solid"]` and `PushableBlock` is a '
+            + '`"Solid"` (L15\'s shape). Slice 3b built it: `weigh` (a `refineStrategy` '
+            + 'arm selected when every presser in the group republishes) parks a block on '
+            + 'the button with `runShove` and waits out the fade with `runDwell`, and the '
+            + 'palette now carries `wall-gap-lock-weigh-h`/`-v`. ⛔ THIS ROW IS NOT THAT '
+            + 'TEMPLATE — it is that template MINUS THE BLOCK, and it is still excluded '
+            + 'for its original measured reason, which no longer has a workaround inside '
+            + 'it: a button+lock pair with no pushable in the room has nothing to hold '
+            + 'the group, and the walk still spends its whole per-target budget grazing '
+            + 'the lock it just opened (RE-MEASURED at slice 3b with the `weigh` arm '
+            + 'live: the verb is considered, refuses for want of a block by name, and '
+            + 'the derivation falls back to exactly the `hold` measured above). ⚠ The '
+            + 'shape that remains unbuilt is the CHAIN — a block that needs two leans to '
+            + 'reach the button, which is L16\'s room (block at tile (16,5), button at '
+            + '(17,3), sharing neither coordinate). ⚖ Nobody has ruled on it.',
     }),
     Object.freeze({
         name: 'arrow-ceiling-killlock',
