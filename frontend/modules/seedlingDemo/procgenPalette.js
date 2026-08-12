@@ -288,6 +288,32 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * reason in the trace. Pre-filtering it here would hide from the loop the
      * one placement of this template that fails, and a family whose failures
      * have been filtered out reports a keep rate that is about the filter.
+     *
+     * ⛓⛓⛓ PoC SLICE 4 — §11.7's VACUITY FINDING IS SUPERSEDED, AND WHAT WAS
+     * WRONG WAS THE INSTRUMENT.
+     *
+     * Slice 3b split this family's generated-room rows by whether the goal
+     * lies beyond the template's own wall from the start, read 0 KEPT / 4
+     * REVERTED on the FAR side, and concluded that `wall-gap-block` is *"KEPT
+     * exactly when it is IRRELEVANT"*. That label is computed from the
+     * template IN ISOLATION; in a room already holding five other obstacles it
+     * does not mean "the door is on the route", because the route detours and
+     * a NEAR door can be squarely on it.
+     *
+     * ⛔ THE NON-VACUOUS INSTRUMENT IS THE FINAL LEVEL'S OWN SOLVE — a
+     * `{strategy:'shove'}` RECORD naming this template's own block, which an
+     * obstacle nobody walked into cannot produce. Measured over seeds 1..40:
+     * discharged in seeds 10, 21, 27 and 38 (27 and 38 keep no `weigh`
+     * template at all, so the pushable is unambiguously this one's).
+     *
+     * ⛔ AND THE FOUR FAR REFUSALS WERE ALL CORRECT. Each candidate re-placed
+     * ALONE at the same anchor SOLVES (216/216/207/211 ticks), so the cause is
+     * INTERACTION, not this template and not the verb; an ablation through the
+     * same oracle attributes each one — seeds 9 and 13 are sealed by the
+     * candidate's WALL (the room refuses with the block deleted too), seed 15
+     * by the block having no resting cell that leaves a corridor. Nothing to
+     * fix here, and `procgenShoveEvidence.test.js` is where all of it is
+     * driven.
      */
     Object.freeze({
         name: 'wall-gap-block-h',
