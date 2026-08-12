@@ -176,11 +176,44 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
         return { ok: true, lane, laneRect };
     };
 
+    /**
+     * ⛓⛓⛓ THE DOOR RULE — SLICE 4e, and it is a LEGALITY rule for the same
+     * reason `laneClear` is: the model knows the answer at anchor time.
+     *
+     * A `door: 'h'|'v'` template spans the interior and its clearer is the only
+     * way past it. If the GOAL is on the start's side of that wall, the wall is
+     * decoration — and for the kill-lock family that is not merely uninformative,
+     * it is a **RUN ABORT**: the walk collects the torch with the spinner still
+     * alive, and `levelRun.assertDialogueFreeSpinnerRoom` refuses by name
+     * (*"level 900 holds live spinners AND a DIALOGUED ceremony (torch) is
+     * running"*) as a bare `Error` that no oracle classifies. Measured at three
+     * of twelve legal anchors before this rule existed.
+     *
+     * ⛔ THE RULE IS THE MECHANISM'S OWN, not a heuristic: with the goal strictly
+     * beyond the wall, no route reaches it until the lock opens, the lock opens
+     * only on the body's death, so the body is dead before the ceremony can
+     * start. The abort is not made less likely — it is made UNREACHABLE.
+     *
+     * ⚠ "BEYOND" IS `>` BECAUSE THE START IS THE FIXED NW CORNER
+     * (`SEEDLING_DEFAULTS.start`), so a larger row or column is the far side.
+     * A template that ever wants a start somewhere else must re-derive this,
+     * and the assertion below is what will tell it.
+     */
+    const doorClear = (template, tx, ty) => {
+        if (d.start.tx > tx || d.start.ty > ty) {
+            fail(`procgenSeedling: the door rule assumes the start (${d.start.tx},`
+                + `${d.start.ty}) is north-west of every anchor, and this one is `
+                + `(${tx},${ty}). "Beyond" would no longer mean "greater".`);
+        }
+        return template.door === 'h' ? goalCell.ty > ty : goalCell.tx > tx;
+    };
+
     const legalAt = (record, template, tx, ty) => {
         for (const c of [...template.footprint, ...(template.clearance ?? [])]) {
             if (!isFree(record, tx + c.dx, ty + c.dy)) return false;
         }
         if (template.lane === 'avoidable' && !laneClear(record, tx, ty).ok) return false;
+        if (template.door && !doorClear(template, tx, ty)) return false;
         return true;
     };
 
@@ -194,6 +227,7 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
         interiorCells,
         isFree,
         laneClear,
+        doorClear,
         skeleton,
         /**
          * One shuffle, then the first legal cell — see the docblock. The

@@ -1,11 +1,23 @@
 /**
- * seedlingDemo/procgenPostSword.test — **THE SECOND BIOME, AND THE FOUR
- * FAMILIES MEASUREMENT KEPT OUT OF IT.**
+ * seedlingDemo/procgenPostSword.test — **THE SECOND BIOME: THE ONE FAMILY IT
+ * EARNED, AND THE THREE MEASUREMENT KEPT OUT.**
  *
  * Seedling PROCGEN PoC arc, slice 4 (kickoff §4.4). ⚖ §0 splits the arc into
  * TWO BIOMES on one flag; ⚖ §10.7 expired §9.8's advice to carry the
  * post-sword clearer families across as inherited exclusions and required a
  * re-probe FROM SCRATCH. This file is that re-probe, driven.
+ *
+ * ── ⛓⛓⛓ SLICE 4e MOVED ONE ROW OUT OF THE TABLE AND INTO THE PALETTE ──
+ *
+ * `spinner-killlock` was excluded for three causes, discharged one slice at a
+ * time (declaration 4b · tag law 4b · the transit throw 4e), plus a fourth the
+ * promotion itself exposed (the dialogue ceremony, answered by the `door`
+ * legality rule). Its two cases below now prove the DISCHARGE rather than the
+ * exclusion — and **two assertions in this file were rewritten rather than
+ * deleted**, each carrying the claim it used to make and why that claim was
+ * right until it wasn't: the roster's by-reference identity, and the
+ * byte-identical two-biome level. They were pre-declared as intended reds at
+ * 4b's S9 and they went red exactly as declared.
  *
  * ── ⛔ THE EXCLUSION CASES ARE BUILT **FROM** THE EXCLUSION TABLE ──────
  *
@@ -68,18 +80,40 @@ function doorRoom({ goal, gapTy = 5, gapTx = 4, entities = [] }) {
 function attempt(name, spec, items = POST_SWORD_ITEMS, save = null) {
     const record = doorRoom(spec);
     const staging = bootStaging({
-        boot: bootAtTile(record, START.tx, START.ty), items, pins: ['dead_frames'],
+        boot: bootAtTile(record, START.tx, START.ty),
+        items,
+        pins: ['dead_frames'],
+        // ⛓ SLICE 4e: `time: null` is the PRE-4e boot — no `save.time`, so the
+        // hammer is the all-phases disc. A spec that does not ask for it gets
+        // the declared clock, which is what every generated solve now has.
+        ...(spec.time === undefined ? {} : { time: spec.time }),
     });
     if (save) staging.save = { totem_parts: [], keys: [], seal_parts: [], ...save };
     try {
         const out = solve(record, staging,
-            [collectGoal(spec.goal.tx * 16, spec.goal.ty * 16)], DEFAULT_BUDGET, { name });
+            [collectGoal(spec.goal.tx * 16, spec.goal.ty * 16)], DEFAULT_BUDGET,
+            // ⛔ THE CLOCK IS INJECTED — §13.8's flake: the wall-clock budget is
+            // POST-HOC, so a loaded machine turns a verdict into a fact about
+            // the machine.
+            { name, now: () => 0 });
         const verbs = new Set();
         for (const r of out.rows ?? []) if (r.strategy?.verb) verbs.add(r.strategy.verb);
         for (const r of out.records ?? []) if (r.strategy) verbs.add(r.strategy);
-        return { verdict: out.verdict, ticks: out.ticks, verbs, reasonText: out.reasonText };
+        return {
+            verdict: out.verdict,
+            ticks: out.ticks,
+            verbs,
+            reasonText: out.reasonText,
+            scratchClears: out.scratchClears ?? [],
+        };
     } catch (e) {
-        return { verdict: `THREW:${e.name}`, threw: e.name, reasonText: e.message, verbs: new Set() };
+        return {
+            verdict: `THREW:${e.name}`,
+            threw: e.name,
+            reasonText: e.message,
+            verbs: new Set(),
+            scratchClears: [],
+        };
     }
 }
 
@@ -93,17 +127,59 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
         expect(PRE_SWORD_ITEMS.hasSword).toBe(false);
     });
 
-    it('shares the roster BY REFERENCE, so a template cannot reach one biome only', () => {
-        expect(POST_SWORD_TEMPLATES).toBe(PRE_SWORD_TEMPLATES);
+    /**
+     * ⛓⛓⛓ REWRITTEN AT SLICE 4e, AND THE OLD ASSERTION IS QUOTED RATHER THAN
+     * DELETED — it was PRE-DECLARED as an intended red (4b's S9).
+     *
+     * It read `expect(POST_SWORD_TEMPLATES).toBe(PRE_SWORD_TEMPLATES)`, and it
+     * was the right claim for slices 4/4b/4c: with no sword-gated family, one
+     * array was the guarantee that *a template cannot reach one biome and miss
+     * the other*. Slice 4e promoted `spinner+kill-lock`, whose whole point is
+     * that it reaches ONE biome — so the identity is now exactly the wrong
+     * invariant, and what survives it is CONTAINMENT plus a named difference.
+     */
+    it('is a strict SUPERSET of the pre-sword roster, and the extra is sword-gated', () => {
+        expect(POST_SWORD_TEMPLATES).not.toBe(PRE_SWORD_TEMPLATES);
+        for (const t of PRE_SWORD_TEMPLATES) expect(POST_SWORD_TEMPLATES).toContain(t);
+        const extra = POST_SWORD_TEMPLATES.filter((t) => !PRE_SWORD_TEMPLATES.includes(t));
+        expect(extra.map((t) => t.name)).toEqual([
+            'wall-gap-spinner-killlock-h', 'wall-gap-spinner-killlock-v',
+        ]);
+        // ⛔ Every added row is the KILL family and every one is a DOOR — the
+        // two properties the promotion rests on, asserted rather than assumed.
+        for (const t of extra) {
+            expect(t.family).toBe('kill');
+            expect(['h', 'v']).toContain(t.door);
+        }
         expect(assertPalette(POST_SWORD_PALETTE)).toBe(true);
+    });
+
+    /**
+     * ⛔⛔ THE TAG LAW, BY CONSTRUCTION (4b §13.7.2 — *a clear is a FLAG*).
+     * Asserted as a RELATION between the two, never as two literals: a slice
+     * that changed the goal tag would otherwise leave this passing.
+     */
+    it('every kill lock takes a tag the GOAL does not own', () => {
+        const locks = POST_SWORD_TEMPLATES
+            .filter((t) => t.family === 'kill')
+            .flatMap((t) => t.entities.filter((e) => e.type === 'lock'));
+        expect(locks.length).toBeGreaterThan(0);
+        for (const l of locks) {
+            expect(l.attrs.tset).toBe('-1');
+            expect(l.attrs.tag).not.toBe(SEEDLING_DEFAULTS.goalTag);
+        }
     });
 
     it('each biome carries its OWN exclusions, and they are different lists', () => {
         expect(PRE_SWORD_PALETTE.excluded).not.toBe(POST_SWORD_PALETTE.excluded);
         const post = POST_SWORD_EXCLUDED_TEMPLATES.map((x) => x.name);
+        // ⛓ SLICE 4e: `spinner-killlock` LEFT THIS LIST — it is a template now.
+        // The list is asserted whole rather than by length so a row that
+        // vanished silently would still be a failure.
         expect(post).toEqual([
-            'chest-in-the-gap', 'spinner-killlock', 'key-keylock-pair', 'shieldboss-door',
+            'chest-in-the-gap', 'key-keylock-pair', 'shieldboss-door',
         ]);
+        expect(post).not.toContain('spinner-killlock');
         for (const x of POST_SWORD_EXCLUDED_TEMPLATES) {
             for (const field of ['cause', 'measured', 'refusalText', 'wouldNeed']) {
                 expect(typeof x[field]).toBe('string');
@@ -122,13 +198,33 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * is what slice 5's requirements report will find, and it is a fact about
      * the palette rather than about the report.
      */
-    it('⛔ generates a BYTE-IDENTICAL level and trace to the pre-sword biome', () => {
+    /**
+     * ⛓⛓⛓ REWRITTEN AT SLICE 4e — the SECOND pre-declared intended red (4b's
+     * S9), and it is quoted rather than deleted for the same reason.
+     *
+     * It asserted that the two biomes generate a BYTE-IDENTICAL level and
+     * trace, and that assertion WAS the slice-4 headline: *"the biome is REAL
+     * IN THE BOOT and NIL IN THE OUTPUT"*. It is false now, and its falsity is
+     * the whole content of this slice's promotion — so the case is inverted and
+     * made to say WHY, rather than dropped for being inconvenient.
+     *
+     * ⛔ THE DIFFERENCE IS ASSERTED AT ITS SOURCE, not merely observed: the
+     * post-sword run draws from a longer roster, so the records diverge — and
+     * the pre-sword run must still contain NO kill template, which is the claim
+     * that would actually be broken if the split leaked.
+     */
+    it('⛔ no longer generates the pre-sword level — the roster split is REAL', () => {
         const bounds = { obstacleTarget: 6 };
         const pre = generateSeedlingLevel({ seed: 9, palette: PRE_SWORD_PALETTE, bounds });
         const post = generateSeedlingLevel({ seed: 9, palette: POST_SWORD_PALETTE, bounds });
-        expect(JSON.stringify(post.record)).toBe(JSON.stringify(pre.record));
-        expect(JSON.stringify(post.trace)).toBe(JSON.stringify(pre.trace));
-        // …and the ONE thing that does differ is the inventory it was solved under.
+        expect(JSON.stringify(post.record)).not.toBe(JSON.stringify(pre.record));
+        // ⛔ THE SWORD-GATED FAMILY CANNOT REACH THE PRE-SWORD BIOME. This is
+        // the claim the old by-reference roster used to make structurally.
+        const killNames = POST_SWORD_TEMPLATES
+            .filter((t) => t.family === 'kill').map((t) => t.name);
+        for (const k of pre.summary.kept) expect(killNames).not.toContain(k.template);
+        for (const row of pre.trace) expect(killNames).not.toContain(row.template);
+        // …and the inventory each was solved under is still recorded.
         expect(post.summary.items).toEqual(POST_SWORD_ITEMS);
         expect(pre.summary.items).toEqual(PRE_SWORD_ITEMS);
         expect(post.summary.palette).toBe('post-sword');
@@ -197,23 +293,28 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
     });
 
     /**
-     * ⛓⛓⛓ THE SPINNER + KILL-LOCK, RE-CUT BY SLICE 4b.
+     * ⛓⛓⛓ THE SPINNER + KILL-LOCK — **PROMOTED AT SLICE 4e**, and the case
+     * that used to pin its exclusion now pins its DISCHARGE.
      *
-     * ⛔ SLICE 4's DECISIVE CAUSE IS DISCHARGED. This row used to pin the
-     * DECLARATION refusal (*"the tape DECLARES no clear for them"*) as the
-     * text that decided the exclusion; slice 4b's scratch persistence layer
-     * makes the model the one writer of that slot and the family now SOLVES in
-     * the sweep's two viable cells (`records=[kill,collect]`, a `scratchClears`
-     * row naming the lock — see `procgenScratchPersistence.test.js`).
+     * The row it drove asserted `out.threw === 'SolverBotError'` — that the
+     * failure ESCAPED the oracle and killed the run rather than the candidate.
+     * Three things changed that, and this case drives all three:
      *
-     * What still decides it is the TRANSIT throw, and the reason is about the
-     * LOOP: `procgenOracle` classifies only `SolverRefusal` and
-     * `BotDriverV2Error`, so a `SolverBotError` reaches `levelGenerator` as
-     * `GenerationAborted` and kills the RUN rather than the candidate. ⚠ ONE
-     * cell here; the sweep is `scripts/procgen/sweep-seedling-killlock.mjs`,
-     * committed so its numbers can be re-run rather than quoted.
+     *  1. The BOOT declares `save.time`, so `dangerMap.spinnerDanger` prices
+     *     the exact hammer line instead of the 13 px union over 45 phases. The
+     *     committed sweep went 2 SOLVED / 26 THREW to 21 / 7.
+     *  2. `procgenOracle` classifies the hammer-SAFETY refusals that remain, so
+     *     the seven are REVERTS and not aborts.
+     *  3. The template carries `door`, so the loop can never anchor it with the
+     *     goal on the START's side — where the walk would collect the torch
+     *     with the spinner alive and `assertDialogueFreeSpinnerRoom` would kill
+     *     the run BY NAME. (3 of 12 legal anchors did exactly that before it.)
+     *
+     * ⚠ ONE GEOMETRY HERE, as ever; the sweep is
+     * `scripts/procgen/sweep-seedling-killlock.mjs`, which now carries a
+     * `--no-clock` flag so the pre-4e arm stays runnable rather than quoted.
      */
-    it('spinner-killlock: the failure ESCAPES the oracle — an abort, not a revert', () => {
+    it('spinner-killlock: SOLVES, and the clear is DISCHARGED in the records', () => {
         const out = attempt('spinner-killlock', {
             goal: { tx: 7, ty: 8 },
             entities: [
@@ -221,17 +322,34 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
                 { type: 'spinner', tx: 6, ty: 2, attrs: { tag: '-1' } },
             ],
         });
+        expect(out.threw).toBeUndefined();
+        expect(out.verdict).toBe('SOLVED');
+        // ⛔ DISCHARGE EXISTENCE (§12.1): the kill RECORD and the scratch row
+        // naming the lock. A keep-count could not tell this apart from an
+        // obstacle nobody walked into.
+        expect(out.verbs.has('kill')).toBe(true);
+        expect(out.scratchClears.length).toBeGreaterThan(0);
+        expect(out.scratchClears[0].lock).toMatch(/^lock@/);
+        expect(out.scratchClears[0].cause).toBe('sword');
+    });
+
+    /**
+     * ⛔ THE CONTROL FOR THE ROW ABOVE, and it is what makes the promotion a
+     * measurement rather than a story: with the boot declaring NO `save.time`
+     * — the state every generated solve was in until this slice — the same room
+     * still THROWS the hammer-transit refusal past the oracle.
+     */
+    it('…and with the clock UNDECLARED the same room throws, as it always did', () => {
+        const out = attempt('spinner-killlock-no-clock', {
+            goal: { tx: 7, ty: 8 },
+            entities: [
+                { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '1' } },
+                { type: 'spinner', tx: 6, ty: 2, attrs: { tag: '-1' } },
+            ],
+            time: null,
+        });
         expect(out.verdict).not.toBe('SOLVED');
-        // ⛔ THE CLASS IS THE POINT: a SolverBotError is not an oracle verdict.
-        expect(out.threw).toBe('SolverBotError');
         expect(out.reasonText).toMatch(/hammer disc/);
-        // The row's decisive text is now the TRANSIT one…
-        expect(excludedNamed('spinner-killlock').refusalText).toMatch(/hammer disc/);
-        expect(excludedNamed('spinner-killlock').cause).toMatch(/ABORT\*\*, NOT A REVERT/);
-        // …and the declaration cause is recorded as DISCHARGED rather than deleted.
-        expect(excludedNamed('spinner-killlock').measured).toMatch(/DISCHARGED/);
-        expect(excludedNamed('spinner-killlock').wouldNeed)
-            .toMatch(/TRANSIT THROW MADE CLASSIFIABLE/);
     });
 
     /**
@@ -265,8 +383,11 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
 
     /** Trap 199: a row added without a driven case is a FAILING test. */
     it('every excluded row above is one this file actually drove', () => {
+        // ⛓ SLICE 4e: `spinner-killlock` is DRIVEN TWICE in this file and is on
+        // NEITHER list — it left the exclusions for the palette, and the two
+        // cases above became its promotion's evidence.
         const driven = new Set([
-            'chest-in-the-gap', 'key-keylock-pair', 'spinner-killlock', 'shieldboss-door',
+            'chest-in-the-gap', 'key-keylock-pair', 'shieldboss-door',
         ]);
         for (const x of POST_SWORD_EXCLUDED_TEMPLATES) expect(driven.has(x.name)).toBe(true);
         expect(driven.size).toBe(POST_SWORD_EXCLUDED_TEMPLATES.length);
@@ -275,23 +396,38 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
 
 describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARGED clearer', () => {
     /**
-     * ⚖ Kickoff §4.4 scope 3, restated honestly under the orchestrator's
-     * ruling: the discharged clearer is `weigh` IN A POST-SWORD LEVEL, and it
-     * is NOT a post-sword-exclusive one — there is no such family (see the
-     * exclusions above). The claim is the §11.7 standard: a RECORD, never a
-     * keep-count.
+     * ⛓⛓⛓ RE-PINNED AT SLICE 4e, AND THE CLAIM GOT STRONGER RATHER THAN
+     * WEAKER — the old case is quoted, not deleted.
+     *
+     * It was **seed 13**, and its claim was carefully hedged by the
+     * orchestrator's slice-4 ruling: *"a discharged clearer IN a post-sword
+     * level, NOT a post-sword-EXCLUSIVE one — there is no such family"*. The
+     * verb was `weigh`, which a swordless boot clears just as well.
+     *
+     * The promotion made two things true at once. There IS such a family now,
+     * so the hedge can go; and the roster it added is part of the draw stream,
+     * so seed 13 no longer keeps its `weigh` door at all — the old case failed
+     * on `expect(weighs).toHaveLength(1)`, which is exactly what a roster change
+     * should do to a seed-pinned demonstration. **Seed 3 replaces it**, and its
+     * discharged clearer is the sword-gated one.
+     *
+     * ⚠ The standard is unchanged and is the arc's own (§12.1): a RECORD in the
+     * FINAL level's solve, never a keep-count.
      */
-    it('seed 13: >= 5 kept obstacles over >= 3 families, and `weigh` is DISCHARGED', () => {
+    it('seed 3: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 13, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 3, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
         const families = new Set(gen.summary.kept.map((k) => k.family));
         expect(families.size).toBeGreaterThanOrEqual(3);
         expect(gen.summary.items).toEqual(POST_SWORD_ITEMS);
+        // ⛔ THE SWORD-GATED FAMILY IS ACTUALLY IN THE LEVEL.
+        const killKept = gen.summary.kept.filter((k) => k.family === 'kill');
+        expect(killKept).toHaveLength(1);
 
-        const model = seedlingModel({ seed: 13 });
+        const model = seedlingModel({ seed: 3 });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
             templates: gen.summary.kept
                 .map((k) => POST_SWORD_TEMPLATES.find((t) => t.name === k.template)),
@@ -299,13 +435,17 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         expect(out.verdict).toBe('SOLVED');
         expect(out.certification.certified).toBe(true);
 
-        const weighs = (out.records ?? []).filter((r) => r.strategy === 'weigh');
-        expect(weighs).toHaveLength(1);
-        // ⛔ THE DWELL IS THE PROOF (§11.6): a dwell that ended on the group's
-        // own observable is a lock that opened with NOBODY on the presser — a
-        // `hold` cannot produce that record, and neither can an obstacle the
-        // walk never met.
-        expect(weighs[0].dwell?.until).toMatch(/is open/);
-        expect(weighs[0].shove?.from).not.toEqual(weighs[0].shove?.to);
+        // ⛔ DISCHARGE EXISTENCE, BOTH HALVES. The kill RECORD says the walk
+        // fought the body; the scratch row says the fight is what opened the
+        // lock. An obstacle nobody had to clear produces neither.
+        const kills = (out.records ?? []).filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(out.scratchClears).toHaveLength(1);
+        expect(out.scratchClears[0].cause).toBe('sword');
+        expect(out.scratchClears[0].by).toMatch(/^spinner@/);
+        expect(out.scratchClears[0].lock).toMatch(/^lock@/);
+        // ⛓ …and the flag it cleared is NOT the goal's (the tag law, driven in
+        // a generated room rather than only on the template literal).
+        expect(String(out.scratchClears[0].tag)).not.toBe(SEEDLING_DEFAULTS.goalTag);
     });
 });

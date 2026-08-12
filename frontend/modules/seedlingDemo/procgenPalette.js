@@ -572,16 +572,25 @@ export const PRE_SWORD_PALETTE = Object.freeze({
  * ⚖ §0: *"TWO BIOMES: one for before the player has the sword, one for
  * after."* The biome is the BOOT, and here that is the whole of it.
  *
- * ── ⛔⛔⛔ THE HONEST HEADLINE: THIS BIOME ADDS NO TEMPLATE ────────────
+ * ── ⛓⛓⛓ SLICE 4e: THE BIOME NOW ADDS ONE, AND THE HEADLINE BELOW IS ITS
+ * ── OWN HISTORY RATHER THAN THE CURRENT STATE ────────────────────────
  *
  * Kickoff §3.3 named three post-sword additions — chest in a corridor,
  * spinner+kill-lock, key+keylock. ⚖ §10.7 EXPIRED §9.8's advice to carry them
  * as inherited exclusions and required a re-probe from scratch. Slice 4 ran
  * that re-probe, plus a ⚖-ruled bounded sweep of a fourth candidate
- * (`solid:shieldboss → fight`). **None of the four can be offered, and every
- * one of them is in `POST_SWORD_EXCLUDED_TEMPLATES` below with its verbatim
- * text.** So the post-sword palette is the pre-sword ROSTER under a different
- * boot.
+ * (`solid:shieldboss → fight`), and NONE of the four could be offered — so
+ * for slices 4, 4b and 4c the post-sword palette was the pre-sword ROSTER
+ * under a different boot, and this docblock said so at length.
+ *
+ * ⛔ **SLICE 4e PROMOTED `spinner+kill-lock`** (`KILL_LOCK_TEMPLATES`), so
+ * three of the four remain excluded and the biome finally has a family a
+ * pre-sword boot cannot clear. The paragraphs below are KEPT rather than
+ * rewritten, because the reasoning they record is what the promotion had to
+ * discharge — and because the last of the three causes was a CONSERVATIVE
+ * INGREDIENT (a 13 px all-phases hammer disc standing in for an exact line the
+ * boot could have made countable all along), which is the arc's third arrival
+ * of traps 171/173 and worth being able to re-read.
  *
  * ⚖ AND ONE OF THE FOUR WAS NEVER A CANDIDATE (user, 2026-08-12, mid-slice):
  * **a chest is a SOLVER CAPABILITY, not a palette family.** What was wanted
@@ -626,14 +635,173 @@ export const PRE_SWORD_PALETTE = Object.freeze({
 export const POST_SWORD_ITEMS = Object.freeze({ hasSword: true, hasShield: false });
 
 /**
- * ⛔ SHARED BY REFERENCE, NOT COPIED. Six families, nine templates — every one
- * already verified against a BUILT WORLD by `procgenPalette.test.js`, and all
- * six certify under the post-sword boot as well (driven in
- * `procgenPostSword.test.js`). A second literal here would be a second roster
- * to keep in step, which is the one-of-everything law (⚖ §5) applied to the
- * thing most likely to grow a copy.
+ * ⛓⛓⛓ SLICE 4e — THE SPINNER OFFSET, AND IT IS MEASURED RATHER THAN CHOSEN.
+ *
+ * The spinner stands one cell back from the wall on the START side, and WHERE
+ * along that lane decides how many anchors the family can certify at. Swept on
+ * the dedicated door geometry, seeds 1..4, every legal anchor:
+ *
+ *   offset      1      2      3      5      6
+ *   discharged  7      5      8      9     12
+ *   refused    13     15     12     11      8
+ *
+ * Zero throws at every offset (the door rule below is what buys that), so the
+ * offset is a YIELD parameter and not a safety one. Six is the far end of the
+ * wall, the end away from the start corner — which is the room the strike
+ * derivation needs, and the sweep is what says so.
  */
-export const POST_SWORD_TEMPLATES = PRE_SWORD_TEMPLATES;
+const SPINNER_OFFSET = 6;
+
+/**
+ * ⛓⛓⛓ SLICE 4e — THE POST-SWORD-EXCLUSIVE FAMILY, AND THE ARC'S FIRST ONE.
+ *
+ * A wall across the whole interior, a `tset:-1` KILL LOCK in its one gap, and a
+ * `spinner` standing behind the wall on the start's side. The lock opens when
+ * the room's enemy count reaches zero, so the only way past is to KILL — with
+ * the sword, which is what makes this the first template in the arc that a
+ * pre-sword boot cannot clear.
+ *
+ * ── WHAT HAD TO HAPPEN BEFORE THIS ROW COULD EXIST ────────────────────
+ *
+ * Three causes excluded it, and they were discharged one slice at a time:
+ *
+ *  1. **THE DECLARATION** (slice 4 §12.3.ii) — the durable clear was a v9 TAPE
+ *     declaration a generated level has none of. Discharged by 4b's scratch
+ *     persistence layer: the model is the one writer of a slot no tape owns.
+ *  2. **THE TAG COLLISION** (4b §13.7.2) — *a clear is a FLAG*, so a lock on
+ *     the goal's own tag removes the GOAL. Discharged BY CONSTRUCTION here: the
+ *     lock's tag is `'1'` and `SEEDLING_DEFAULTS.goalTag` is `'0'`, and
+ *     `procgenPostSword.test.js` asserts the two are different rather than
+ *     trusting the literals.
+ *  3. **THE THROW** (4b §13.7.iv) — the hammer-transit refusal ABORTED the run,
+ *     and *a family the loop cannot REJECT is not one the palette can OFFER*.
+ *     Discharged TWICE OVER at slice 4e: the countable clock retired 19 of the
+ *     sweep's 26 transit throws (the 13 px all-phases disc was manufacturing
+ *     them — traps 171/173, third arrival), and `procgenOracle` now classifies
+ *     the seven that remain as REFUSALS.
+ *
+ * ⛔ AND A FOURTH THE PROMOTION ITSELF EXPOSED: with the goal on the START's
+ * side of the wall, the walk collects the torch while the spinner is still
+ * alive and `levelRun.assertDialogueFreeSpinnerRoom` kills the run by name.
+ * That is why these two rows carry `door`, and the rule is in
+ * `procgenSeedling.legalAt` beside `laneClear` — the model's own legality, not
+ * a hope. Measured: three of twelve legal anchors before the rule, zero after.
+ *
+ * ── THE EVIDENCE, TO THE ARC'S OWN STANDARD (§12.1) ───────────────────
+ *
+ * ⚠ Slice 3 promoted on dedicated probes; 3b re-cut that evidence standard; 4
+ * re-cut the instrument. So this row is certified by DISCHARGE EXISTENCE in the
+ * FINAL level's own solve, never by keep-counts:
+ *
+ *  · DEDICATED, seeds 1..24, every legal anchor of both rows: **81 SOLVED and
+ *    discharged, 41 REFUSED, ZERO THROWN.**
+ *  · GENERATED, seed 3 at target 6: the loop KEEPS `-h` at (1,2), and the
+ *    finished six-obstacle level re-solves in 378 ticks with a
+ *    `{strategy:'kill'}` record AND
+ *    `scratchClears [{tag:1, by:'spinner@112,16', lock:'lock@80,32'}]` — the
+ *    template's OWN spinner and its OWN lock, which an obstacle nobody had to
+ *    clear can produce neither of.
+ *  · REACH, seeds 1..72 at target 6: **13 seeds keep one** (3, 27, 31, 36, 44,
+ *    45, 49, 60, 61, 66, 69, 70, 71), so the family is not a probe curiosity.
+ *
+ * ── ⚠⚠ THE COST THIS ROW SHIPS WITH, MEASURED AND NOT SOFTENED ────────
+ *
+ * The same 72 seeds at target 6, like for like:
+ *
+ *   the committed nine-template roster    **1 of 72** runs ABORT (seed 66)
+ *   this eleven-template roster           **6 of 72** (15, 20, 25, 54, 55, 57)
+ *
+ * Every one is a `PhysicsV2Error` — §9.3's own sentence, *the approach drive
+ * clips lethal terrain the corridor planner routed around* — and the class is
+ * PRE-EXISTING: it fires at the committed roster with no spinner anywhere in
+ * the room. What this row changes is the FREQUENCY, and the honest statement of
+ * that is: **direction consistent, not excluded, not proven** (n=72 a side,
+ * p≈0.11). One of the aborting rooms (seed 15) provably held a kill template;
+ * a hazard-driven step is a plausible mechanism and is not a demonstrated one.
+ *
+ * ⛔ THE CATCH IS NOT WIDENED TO IT, and that is deliberate: a `PhysicsV2Error`
+ * is the ENGINE saying the route stepped where it must not, and classifying it
+ * would hide a real defect behind "that candidate didn't work out"
+ * (traps 171/173). ⚖ Endorsed by the orchestrator, 2026-08-12, and recorded as
+ * a SOLVER question for R9 — the approach drive, now measured at three separate
+ * moments (§9.3, the committed 1/72, this 6/72).
+ *
+ * ⛓ ⚖ AND SLICE 5's BATCH INHERITS AN OBLIGATION: an aborting seed is VISIBLE
+ * (the CLI exits 3) and is simply not chosen — so the acceptance batch must
+ * REPORT how many seeds it skipped and why. A batch that quietly picks five
+ * clean levels out of thirteen carriers reads as "generation is abort-free"
+ * when it is not (`feedback_bounded_sweep_must_name_what_it_bounded`).
+ */
+const KILL_LOCK_TEMPLATES = Object.freeze([
+    Object.freeze({
+        name: 'wall-gap-spinner-killlock-h',
+        family: 'kill',
+        door: 'h',
+        footprint: Object.freeze([...rectCells(INTERIOR_SPAN, 1), cell(SPINNER_OFFSET, -1)]),
+        clearance: Object.freeze([]),
+        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([
+            Object.freeze({
+                dx: GAP_OFFSET,
+                dy: 0,
+                type: 'lock',
+                // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own spelling), and
+                // `tag: '1'` is the tag law: never the goal's.
+                attrs: Object.freeze({ tset: '-1', tag: '1' }),
+            }),
+            Object.freeze({
+                dx: SPINNER_OFFSET, dy: -1, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
+            }),
+        ]),
+        pins: Object.freeze([]),
+        why: 'a Stone wall across the whole interior with a KILL LOCK in its ONE gap and '
+            + 'the spinner whose death opens it standing behind the wall — `refineStrategy` '
+            + 'takes the `tset == -1` lock to `kill`, the press schedule strikes on '
+            + '`KILL_PRESS_CADENCE`, and the durable clear is written by 4b\'s scratch '
+            + 'layer on the tick the lock\'s own fade names. ⛓ THE ONLY TEMPLATE IN THE '
+            + 'ARC A PRE-SWORD BOOT CANNOT CLEAR: `weaponForPress` returns null with no '
+            + 'sword slot, so the press is a silent no-op and the lock never opens',
+    }),
+    Object.freeze({
+        name: 'wall-gap-spinner-killlock-v',
+        family: 'kill',
+        door: 'v',
+        footprint: Object.freeze([...rectCells(1, INTERIOR_SPAN), cell(-1, SPINNER_OFFSET)]),
+        clearance: Object.freeze([]),
+        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
+        entities: Object.freeze([
+            Object.freeze({
+                dx: 0, dy: GAP_OFFSET, type: 'lock', attrs: Object.freeze({ tset: '-1', tag: '1' }),
+            }),
+            Object.freeze({
+                dx: -1, dy: SPINNER_OFFSET, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
+            }),
+        ]),
+        pins: Object.freeze([]),
+        why: 'the same killed door stood on end — the wall runs down a column and the '
+            + 'spinner stands in the column beside it, which is a different approach '
+            + 'geometry for `deriveStrike` and therefore a real second draw',
+    }),
+]);
+
+/**
+ * ⛔⛔ NO LONGER SHARED BY REFERENCE — SLICE 4e, and this is the roster split
+ * §12.2 and §13.9 both predicted and neither could make.
+ *
+ * Seven families, eleven templates: the pre-sword nine, PLUS the kill-lock pair
+ * above, which a pre-sword boot cannot clear. ⛓ Until this slice the two
+ * biomes were one array on purpose — *"so a template added to the palette
+ * cannot reach one biome and miss the other"* — and that was the honest shape
+ * while no family was sword-gated. It is exactly the wrong shape now: the whole
+ * point of this pair is that it reaches ONE biome.
+ *
+ * ⛓ The pre-sword roster is spread rather than referenced so the post-sword
+ * array is a superset BY CONSTRUCTION; `procgenPostSword.test.js` asserts the
+ * containment, which is the claim "shared by reference" used to buy.
+ */
+export const POST_SWORD_TEMPLATES = Object.freeze([
+    ...PRE_SWORD_TEMPLATES, ...KILL_LOCK_TEMPLATES,
+]);
 
 /**
  * ⛔⛔⛔ THE POST-SWORD EXCLUSIONS — the re-probe ⚖ §10.7 demanded, from
@@ -700,73 +868,21 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'short, so this is a seam defect, not a rejected candidate."* Recorded for '
             + 'a future engine slice; nothing in this arc touches it.',
     }),
-    Object.freeze({
-        name: 'spinner-killlock',
-        family: 'kill',
-        cause: 'THE FAILURE MODE IS AN **ABORT**, NOT A REVERT — the transit refusal '
-            + 'THROWS, and a candidate that kills the run cannot be in a palette',
-        measured: '⛓⛓⛓ SLICE 4b RE-MEASURED THIS ROW END TO END AND **BOTH OF SLICE 4\'S '
-            + 'CAUSES ARE NOW DISCHARGED**. The mechanism WORKS; the family is still out, '
-            + 'and for a third reason neither slice had named. Instrument: '
-            + '`scripts/procgen/sweep-seedling-killlock.mjs` (COMMITTED this time — slice '
-            + '4\'s sweep lived in a scratchpad and could not be re-run, which is why its '
-            + 'published "26 of 32 threw" cannot be reconciled against the rebuild\'s '
-            + '28). Bounds: wall ty=5, gap tx=5, goal (7,8), start (1,1), post-sword boot, '
-            + '`DEFAULT_BUDGET`; swept = the spinner\'s cell, all 32 interior cells on the '
-            + 'start side.\n'
-            + '  (i) TRANSIT — *"every key set — the plan\'s own and 5 alternative(s) — '
-            + 'lands the player box inside a hammer disc on the next tick … There is no '
-            + 'step out."* The honest hammer is the UNION over all 45 phases (a 13 px '
-            + 'disc) against `SLASH_REACH`\'s 16 px, so the safe annulus is about three '
-            + 'pixels wide and a single-screen room (⚖ §1.5) has nowhere to stand. ⚠ NOT '
-            + 'the door\'s doing: an OPEN 10x10 with a spinner and NO lock also throws. '
-            + '**26 of 32 cells, and UNCHANGED by everything 4b built** — predicted before '
-            + 'the gate ran, and the prediction held.\n'
-            + '  (ii) THE DECLARATION — ⛔ **DISCHARGED.** Slice 4b\'s scratch persistence '
-            + 'layer makes the model the ONE writer of a slot no tape declares, so the '
-            + 'clear it could always compute is now written on the tick its own refusal '
-            + 'named. Measured: `--no-scratch` gives 2 `THREW:undeclared-clear`, the '
-            + 'default gives **2 SOLVED** at the same two cells, with `records=[kill,'
-            + 'collect]` and a `scratchClears` row naming the lock — ⚖ §12.1\'s '
-            + 'discharge-existence standard, met.\n'
-            + '  (iii) ⛔ THE TAG COLLISION, a TEMPLATE-DESIGN LAW the layer exposed by '
-            + 'working. **A clear is a FLAG, not an entity** '
-            + '(`levelWorld.persistenceClearsFor`): with the lock on the goal\'s own tag '
-            + 'the scratch clear correctly removed the GOAL PICKUP too, and the solve '
-            + 'refused with *"level 900 has no pickup at (112,128); it has [none]"*. '
-            + 'Re-run it with `--lock-tag=0` and the two wins become two refusals. ⇒ any '
-            + 'template placing a tagged blocker must give it a tag the goal does not own '
-            + '— which is a sentence slice 4d\'s enemy templates need as well.\n'
-            + '  (iv) ⛔⛔ **THE DECIDING CAUSE, AND IT IS ABOUT THE LOOP RATHER THAN THE '
-            + 'ROOM.** A template is anchored wherever the loop finds a legal cell, and '
-            + 'the wall spans the whole interior, so the anchor is a ROW. Six anchors '
-            + 'probed (wall rows 5/6/7 x the two spinner columns the sweep proved): '
-            + '**2 SOLVED, 4 THREW `SolverBotError`** on (i). `procgenOracle` classifies '
-            + 'only `SolverRefusal` and `BotDriverV2Error`, so a transit throw reaches '
-            + '`levelGenerator` as `GenerationAborted` and kills the RUN rather than the '
-            + 'candidate (§12.6 residue 2, arriving as a blocker). A family the loop '
-            + 'cannot REJECT is not a family the palette can OFFER.',
-        refusalText: 'solverBot: every key set — the plan\'s own and 5 alternative(s) — '
-            + 'lands the player box inside a hammer disc on the next tick, at '
-            + '(38.99,49.16) in level 900. There is no step out.',
-        wouldNeed: '⛔ THE TRANSIT THROW MADE CLASSIFIABLE — and nothing else. The '
-            + 'declaration channel this row asked for at slice 4 EXISTS now '
-            + '(`levelRun`\'s `scratchPersistence`, ⚖ §1.13, shipped at slice 4b), and '
-            + 'with it the family SOLVES in the proven geometry. What blocks promotion is '
-            + 'that its failure mode is a THROW: either `solverBot` refuses the '
-            + 'hammer-transit case instead of throwing it, or `procgenOracle` widens its '
-            + 'catch — and widening the catch is exactly what traps 171/173 forbid doing '
-            + 'casually, because a loop that quietly reverted an engine throw would hide '
-            + 'its own bugs behind "that candidate didn\'t work out". ⚠ AND A DEDICATED '
-            + 'PROBE IS NOT ENOUGH ANYWAY: slice 3 promoted `shove` on three probe '
-            + 'geometries, slice 3b re-cut that evidence standard and slice 4 re-cut the '
-            + 'instrument (§12.1). Two solving cells out of thirty-two, at two anchors out '
-            + 'of six, is a mechanism proven and a family unproven. ⛓ THE TWO-PASS DEBT '
-            + '(kickoff §4.4) IS CLOSED REGARDLESS: the PoC needed a declaration mechanism '
-            + 'and now has one; `twoPassSolve` adoption stays disqualified on §10.5\'s '
-            + 'three blockers and was never built. Excluded THIS ARC, on a cause nobody '
-            + 'had measured before.',
-    }),
+    /**
+     * ⛓⛓⛓ `spinner-killlock` WAS HERE, AND IT IS NOW A TEMPLATE.
+     *
+     * SLICE 4e PROMOTED IT (`KILL_LOCK_TEMPLATES`, above). The three causes
+     * this row carried are all discharged and the promotion's docblock tells
+     * the whole chain: the DECLARATION by 4b's scratch layer, the TAG COLLISION
+     * by construction (lock tag 1, goal tag 0), and the THROW by the countable
+     * clock plus the ONE named widening in `procgenOracle` — 26 of 32 transit
+     * throws were the all-phases disc's doing, and 19 of them went away when
+     * the boot declared `save.time`.
+     *
+     * ⚠ THE ROW IS GONE RATHER THAN KEPT-AND-MARKED because `assertPalette`'s
+     * own invariant is that nothing excluded is also offered, and
+     * `procgenPostSword.test.js` drives it. The measurement did not go with it.
+     */
     Object.freeze({
         name: 'key-keylock-pair',
         family: 'keylock',
@@ -890,6 +1006,14 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
                     + 'legality check reserves, so a write outside it would paint a cell '
                     + 'nobody checked was free.');
             }
+        }
+        // ⛔ SLICE 4e: a `door` typo would SILENTLY DISABLE the legality rule
+        // that keeps the kill-lock family from aborting runs, and the template
+        // would still place — the named-arm-nobody-built shape, one field over.
+        if (t.door !== undefined && t.door !== 'h' && t.door !== 'v') {
+            fail(`procgenPalette: template "${t.name}" has door "${t.door}"; the rule in `
+                + '`procgenSeedling.legalAt` reads \'h\' or \'v\' and anything else would '
+                + 'be silently ignored — a legality gate that does not gate.');
         }
         for (const e of t.entities ?? []) {
             if (typeof e.type !== 'string' || !seen.has(`${e.dx},${e.dy}`)) {
