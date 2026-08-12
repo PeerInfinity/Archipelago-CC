@@ -7109,10 +7109,21 @@ three SOURCES converging on one replay spine:
   before showing it. A hand drive is a PRODUCER, beside `solveSegment` and
   the drivers — not a second replay loop.
 
-Over all three: **eight independently toggleable overlay layers** (player ·
-enemies · pushables · arrows, OFF by default ⚖ · action = attack-key edges ·
-damage · events · volumes), every position SAMPLED per tick through
-`createTapeStepper`'s `onTick` hook and never re-simulated; a generated
+Over all three: **eleven independently toggleable overlay layers**, every
+position SAMPLED per tick through `createTapeStepper`'s `onTick` hook and
+never re-simulated. Four are CUMULATIVE paths (player · enemies · pushables ·
+arrows, the one OFF by default ⚖), four are event MARKERS (action =
+attack-key edges · damage · events · volumes), and three are THIS-TICK
+SHAPES (editor arc slice 6): **enemy body hitboxes** (`spinnerRect` /
+`chaserBoxAt`), the **spinner hammer LINE** at its exact current angle
+(`hammerLine` fed by the run's modelled `Game.time`, drawn white-hot when the
+engine's own `hammerHitsPlayer` says it reaches the player), and the
+**attack rect** on the tick it fired (`run.presses[].rect`). ⛔ Every one of
+those geometries is the ENGINE'S OWN exported function — a viewer that
+retyped `(Game.time % 45) / 45 · 2π` would be a second cost model of a
+rotating line. ⚠ A shape layer is the cursor's tick only: the union of a
+hammer over ticks is the 13 px disc ⚖ ruled the wrong picture at R8, and a
+box per body per tick fills the room. Also a generated
 legend; a **decision-trace pane** (an in-page solve's own rows, or the
 committed tape's `fixtures/traces/<name>.trace.json` sidecar through the
 producer's validator) with highlight-by-cursor and click-to-seek; and
