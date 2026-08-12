@@ -62,6 +62,13 @@
  *   3  the page never reached readiness within --timeout (nothing written)
  *   4  the view was written, but the page logged errors (see stderr)
  *
+ * ⚖ RULED (2026-08-12): **exit 4 keeps its file.** A real frame plus a
+ * non-zero exit is the honest pair when the page logged errors — the picture
+ * is evidence, and the exit code is what stops a caller from reading a
+ * throwing page as a clean one. Failing WITHOUT a file here would discard
+ * that evidence exactly when somebody most needs to look at it. (2 and 3 are
+ * different: there, what would be written is a refused or unfinished view.)
+ *
  * `check-seedling-editor-export.mjs` is the acceptance row and drives all
  * of these, the refusal included.
  *

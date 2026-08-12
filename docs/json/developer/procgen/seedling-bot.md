@@ -7147,6 +7147,12 @@ message on stderr. Exit codes: 0 written · 1 usage · 2 the page refused ·
 3 never reached readiness · 4 written, but the page logged errors. A blank
 or partial frame with exit 0 is the defect that rule exists for.
 
+⚖ **Exit 4 keeps its file** (ruled 2026-08-12): a real frame plus a non-zero
+exit is the honest pair when the page logged errors — the picture is
+evidence, and the code is what stops a caller reading a throwing page as a
+clean one. 2 and 3 write nothing because what they would write is a refused
+or unfinished view.
+
 ### The three laws the page still runs under
 
 They are in `watchViewer.js`'s docblock, verbatim, and every slice was
