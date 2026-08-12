@@ -73,7 +73,7 @@
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
-import { SolverRefusal } from './solverBot.js';
+import { SolverBotError, SolverRefusal } from './solverBot.js';
 import { atlasOf } from './procgenLevel.js';
 import { solveForPage } from './watchSolve.js';
 
@@ -134,6 +134,49 @@ export function assertBudget(budget = DEFAULT_BUDGET) {
 }
 
 /**
+ * ⛓⛓⛓ THE GENERATED BOOT'S `Game.time` — SLICE 4e, AND IT IS `dayLength / 2`
+ * RATHER THAN THE ZERO THE BRIEF ASKED FOR.
+ *
+ * ⚖ THE SEMANTIC BASIS, ruled 2026-08-12 and kept verbatim: **for a synthetic
+ * level the generator OWNS the boot, so a declared `save.time` is
+ * definitionally faithful** — the survey's staged-boot semantics, *"this room
+ * is solvable FROM THIS DECLARED STATE"*. Nothing outside this file has a
+ * competing claim about what o'clock a generated room starts at.
+ *
+ * ⛔ **BUT ZERO IS UNREPRESENTABLE, AND THE FORMAT SAYS SO IN ITS OWN WORDS.**
+ * `SEAM_BOOT_SPEC`'s `time` row is `{min: 0, exclusiveMin: true,
+ * zeroMeansUndeclared: true}` because `Main.as:158` is
+ * `get time() { if (!SAVE_FILE.data.time) return Game.dayLength / 2; … }` — a
+ * stored 0 is APPLIED as `dayLength / 2`, which is the one failure a seam
+ * field must not have. Measured through `parseTape`, not assumed:
+ *
+ *   seam.time 0 -> REFUSED: *"seam.time is 0, which must be > 0 — day/night
+ *   phase, AND `Spinner`'s hammer angle; 0 is `Main.time`'s falsy arm
+ *   (Game.dayLength / 2)"*
+ *
+ * ⇒ the honest declaration is the value zero MEANS, spelled out: `dayLength /
+ * 2`, derived from `Game.as:460`'s `dayLength = 160 * Main.FPS` and
+ * `Main.as:27`'s `FPS = 60` rather than typed as 4800. ⛓ It has a COMMITTED
+ * WITNESS — `fixtures/tapes/r8-hammer-arm.json` declares `seam.time` 4800, so
+ * this is a clock the roster already boots under and not a number invented
+ * here.
+ *
+ * ⚠ WHY THE CONSTANT LIVES IN THIS FILE and not in `gameClock`, said out loud:
+ * `gameClock` owns the COUNTING and this is a DECLARATION — the PoC's own
+ * choice of boot state, in the same file as the rest of the boot block. Moving
+ * it into the engine would be an engine edit this slice is not entitled to.
+ *
+ * ⛓ THE LINEAGE — [[feedback_declared_bound_excludes_generated_ids]], the
+ * SECOND arrival in this arc. Slice 4b (§13.4) found `tapeFormat` bounding
+ * `persistence[].level` to 0..115 while leaving `boot.level` unbounded, so a
+ * generated level can be BOOTED by a tape and never DECLARED ABOUT by one.
+ * This is the same shape one field over: a bound written for the real game's
+ * value space excluding the value a generator would naturally pick. There the
+ * bound blocked the arm; here it only renames it.
+ */
+export const GENERATED_BOOT_TIME = (160 * 60) / 2;
+
+/**
  * THE PoC's STAGING BLOCK — a biome boot, in the tape vocabulary.
  *
  * ⚠ EVERY FIELD IS DECLARED, none defaulted by the engine: `parseTape` refuses
@@ -148,17 +191,60 @@ export function assertBudget(budget = DEFAULT_BUDGET) {
  * wall clock otherwise). Slice 2/3's water templates own that addition, and
  * the parameter is here so it is an argument rather than an edit.
  *
+ * ⛓⛓⛓ SLICE 4e — AND `time` IS DECLARED, WHICH IS WHAT MAKES THE HAMMER EXACT.
+ *
+ * `Spinner.update`'s hammer is a `collideLine` at `(Game.time % 45) / 45 · 2π`
+ * (`Spinner.as:70-72`). `dangerMap.spinnerDanger` prices that exact line iff
+ * `run.gameTimeAt(horizon)` answers a number, and `createLevelRun` gives it one
+ * iff the BOOT declares `save.time` (`levelRun.js:462`, `gameClock`). Until
+ * this slice this block declared none, so **every generated solve since slice 1
+ * priced a spinner by the 13 px union over all 45 phases** — the fallback whose
+ * own text says *"because `Game.time` is not countable on this tape"*, which
+ * was true and was this block's own doing.
+ *
+ * ⛔ THAT IS [[feedback_conservative_ingredient_makes_the_problem]] — traps
+ * 171/173 — arriving in this arc for the THIRD time (after §10.4's density
+ * ceiling that was D3, and §11.4's `weigh` gate that was right about the
+ * mechanism and wrong as a selection rule). R8 slice 8 had already measured
+ * what the disc costs on the same mechanism: over L18's 60 walkable cells, the
+ * disc left **1** cell clear for the horizon and the exact line left **16**,
+ * with 3 separated presses against 0 (`dangerMap`'s own docblock). The kill-lock
+ * sweep's 26-of-32 `THREW:transit` rows (§13.6) are that measurement's shadow
+ * in a generated room.
+ *
  * @param {object} o
  * @param {{level:number,x:number,y:number}} o.boot   `procgenLevel.bootAtTile`
  * @param {object} [o.items]   seam item flags, e.g. `{hasSword: true}`
  * @param {string[]} [o.pins]
+ * @param {number|null} [o.time]  the boot's `Game.time`, `GENERATED_BOOT_TIME`
+ *        by default. ⛔ `null` DECLARES NOTHING and is the PARENT's behaviour —
+ *        the clock refuses, the hammer falls back to the disc. It exists so the
+ *        flip can be driven in BOTH directions from one code path rather than
+ *        measured against a reverted checkout; it is not an option any biome
+ *        takes.
  */
-export function bootStaging({ boot, items = null, pins = ['dead_frames'] }) {
+export function bootStaging({
+    boot, items = null, pins = ['dead_frames'], time = GENERATED_BOOT_TIME,
+}) {
     if (!boot || !Number.isInteger(boot.level)
         || !Number.isFinite(boot.x) || !Number.isFinite(boot.y)) {
         fail(`procgenOracle: bootStaging needs boot {level, x, y} — `
             + `got ${JSON.stringify(boot)}. \`procgenLevel.bootAtTile\` builds one.`);
     }
+    if (time !== null && !(Number.isFinite(time) && time > 0)) {
+        // The format's own bound, restated where the value is chosen rather
+        // than left for `parseSeam` to discover on a block that may never be
+        // parsed: this staging reaches `createLevelRun` directly.
+        fail(`procgenOracle: bootStaging's \`time\` must be a positive number or null, `
+            + `got ${JSON.stringify(time)}. \`SEAM_BOOT_SPEC\`'s \`time\` row is `
+            + '`exclusiveMin` at 0 because `Main.time`\'s getter applies a stored 0 as '
+            + '`Game.dayLength / 2` — a field whose declared and applied values '
+            + 'disagree. `null` declares nothing at all.');
+    }
+    const seam = {
+        ...(items ? { items: { ...items } } : {}),
+        ...(time === null ? {} : { time }),
+    };
     return {
         boot: { ...boot },
         noclip: false,
@@ -175,7 +261,11 @@ export function bootStaging({ boot, items = null, pins = ['dead_frames'] }) {
         // It is not a generation seed; see `procgenRng`'s docblock for why
         // the two must never be confused.
         rng: { seed: 0, split: false, cosmetic: 0, fp: 987286273 },
-        seam: items ? { items: { ...items } } : null,
+        // ⛔ `null` ONLY WHEN THE BLOCK IS GENUINELY EMPTY. `parseSeam` reads
+        // `null`/absent as "declares no boot state", so an empty object and a
+        // null are the same claim — but a block holding `time` alone must not
+        // be flattened to null by a test that only asks about `items`.
+        seam: Object.keys(seam).length > 0 ? seam : null,
     };
 }
 
@@ -230,6 +320,61 @@ export function certifyCollects(goals, records) {
 /** Does a refusal message name the tick budget this call passed in? */
 const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
     `\\b${maxTicksPerTarget} ticks?\\b`).test(message ?? '');
+
+/**
+ * ⛓⛓⛓ SLICE 4e — THE ONE CLASS THE CATCH WIDENS BY, AND ITS BOUND IS NAMED.
+ *
+ * ⛔ THE DECISION WAS MADE ON A RE-MEASUREMENT, not on a hunch (⚖ kickoff
+ * §4.4e step 3). With the clock counting, the kill-lock sweep's transit class
+ * collapsed from **26 of 32 cells to 7** and its wins went 2 -> 21 — but the
+ * class did not reach zero, and two of the spinner+kill-lock template's own
+ * legal anchors still land in it. A family whose failure mode ABORTS the run
+ * cannot be offered to the loop (§13.7.iv), so this is the difference between
+ * a family the palette can carry and one it cannot.
+ *
+ * ── WHY THESE FOUR SITES ARE A REFUSAL AND NOT A DEFECT ───────────────
+ *
+ * The four are `solverBot`'s hammer-SAFETY refusals, and every one is a claim
+ * about the LEVEL — "there is nowhere in this room to stand, step or strike
+ * from" — which is exactly what `VERDICT.REFUSED` means. They throw
+ * `SolverBotError` rather than `SolverRefusal` because of WHERE they are
+ * raised (inside the kill schedule, below the goal loop), not because of what
+ * they claim:
+ *
+ *   `deriveStrike`  :2475  no cell outside every hammer disc is reachable in
+ *                          time to press from
+ *   `safeStep`      :2939  the derived PRESS tick's own landing cell is unsafe
+ *   `safeStep`      :2947  every key set — the plan's and its alternatives —
+ *                          lands in a hammer on the next tick
+ *   `deriveRefuge`  :3607  no reachable cell is hammer-clear for the window,
+ *                          and no strike is derivable ("nowhere to be")
+ *
+ * ⛔⛔ **AND NOTHING ELSE WIDENS.** A `LevelWorldError`, a `TypeError`, the
+ * dialogue-ceremony guard's bare `Error`, an unkeyed `bosslock`'s
+ * `SolverBotError` — all still PROPAGATE and still kill the run, because those
+ * are defects in the generator or families it must not be offering, and a loop
+ * that quietly reverted them would hide its own bugs behind "that candidate
+ * didn't work out" (traps 171/173, which forbid widening CASUALLY and not
+ * widening at all).
+ *
+ * ⚠⚠ NAMED BOUND — THIS IS THE FILE'S SECOND TEXT TEST, and it is weaker than
+ * `namesTickBudget` because the string is prose rather than a number the caller
+ * passed in. It is used anyway, and the alternative is stated rather than
+ * hidden: the structured fix is a field on the throw (`err.hammerSafety`, the
+ * shape `err.undeclaredKillLock` already has), which is an ENGINE edit
+ * `solverBot` would have to carry and this slice is not entitled to make.
+ * ⇒ RESIDUE, recorded: the day `solverBot` is open for another reason, stamp
+ * the four sites and this predicate becomes a field read.
+ *
+ * ⛓ AND A FINDING THE PREDICATE DEPENDS ON, WHICH IS ITSELF STALE PROSE: three
+ * of the four messages say "13 px hammer disc" even when the clock is counting
+ * and `clearOfHammersAt` decided on the exact `collideLine`. The DECISION is
+ * the line; the SENTENCE still names the union. Reported, not fixed —
+ * `solverBot` is a read surface this slice (⚖ the charge's own boundary) — and
+ * it is why this predicate keys on the phrase both eras share.
+ */
+const isHammerSafetyRefusal = (e) => e instanceof SolverBotError
+    && /hammer disc/.test(e.message ?? '');
 
 /**
  * SOLVE ONE LEVEL — the §3.2 seam's oracle half.
@@ -297,7 +442,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             scratchPersistence,
         });
     } catch (e) {
-        if (!(e instanceof SolverRefusal) && !(e instanceof BotDriverV2Error)) throw e;
+        if (!(e instanceof SolverRefusal) && !(e instanceof BotDriverV2Error)
+            && !isHammerSafetyRefusal(e)) throw e;
         thrown = e;
     }
     const ms = now() - t0;
@@ -330,7 +476,11 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             ms,
             reasonText: thrown.message,
             errorName: thrown.name,
-            classifiedBy: 'the solver refused within budget',
+            classifiedBy: isHammerSafetyRefusal(thrown)
+                ? 'the kill schedule refused on HAMMER SAFETY — a `SolverBotError` whose '
+                  + 'claim is about the level ("nowhere to stand, step or strike from"), '
+                  + 'carried as a refusal by the ONE named widening slice 4e made'
+                : 'the solver refused within budget',
             refusalGoal: thrown.goal ?? null,
             obstacle: thrown.obstacle ?? null,
             considered: thrown.considered ?? [],

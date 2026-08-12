@@ -238,9 +238,23 @@ describe('the boundary — a run is in scratch mode ONLY when a caller says so',
 
 describe('the layer — the model self-declares the clear its own refusal named', () => {
     /**
-     * THE CONTROL, and it is the parent's behaviour verbatim. The numbers in
-     * the message are the ones slice 4 recorded in the palette's exclusion
-     * row for this family, from a room of the same shape.
+     * THE CONTROL, and it is the parent's behaviour verbatim.
+     *
+     * ⛓⛓⛓ **EVERY TICK IN THIS DESCRIBE BLOCK MOVED AT SLICE 4e, AND THE MOVE
+     * IS THE OTHER SLICE'S HEADLINE.** The numbers were 517 (removal) and 618
+     * (the clear), measured when a generated boot declared no `save.time` and
+     * `dangerMap.spinnerDanger` therefore priced the spinner as a 13 px union
+     * over all 45 hammer phases. 4e declares the clock, the map prices the
+     * exact `collideLine`, and the walk reaches the body **359 ticks sooner**:
+     *
+     *   removal   517 -> 158        the durable clear   618 -> 259
+     *
+     * ⛔ THE ARITHMETIC IS UNCHANGED and that is worth seeing rather than
+     * asserting: the clear is still removal + the `Lock`'s own 101-step fade
+     * (158 + 101 = 259, as 517 + 101 = 618 was). What moved is WHEN THE WALK
+     * ARRIVES, which is a fact about the danger map and not about this layer.
+     * These cases are re-pinned, not weakened — the relation between the two
+     * numbers is asserted below as well as the numbers themselves.
      */
     it('WITHOUT the flag the run still refuses, and names the tick the clear lands on', () => {
         const record = killLockRoom();
@@ -250,14 +264,16 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(thrown.undeclaredKillLock.level).toBe(LEVEL);
         expect(thrown.undeclaredKillLock.flags).toEqual([1]);
         expect(thrown.message).toMatch(/two writers of one persistence slot/);
-        expect(thrown.message).toMatch(/lands the durable clear at tick 618/);
+        expect(thrown.message).toMatch(/removal at tick 158/);
+        expect(thrown.message).toMatch(/lands the durable clear at tick 259/);
     });
 
     /**
      * ⛔⛔⛔ THE SLICE, IN ONE ASSERTION: the tick the parent's refusal NAMED
-     * (618) is the tick the scratch layer WRITES. Same room, same walk, same
-     * arithmetic — the only difference is whether the model is allowed to be
-     * the writer of a slot nobody declared.
+     * (259 — 618 before slice 4e; see the block docblock) is the tick the
+     * scratch layer WRITES. Same room, same walk, same arithmetic — the only
+     * difference is whether the model is allowed to be the writer of a slot
+     * nobody declared.
      */
     it('WITH the flag it writes instead, on that same tick, and says what it wrote', () => {
         const record = killLockRoom();
@@ -268,9 +284,9 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(run.scratchClears).toEqual([{
             level: LEVEL,
             tag: 1,
-            at: 618,
-            declaredAt: 617,
-            removedAt: 517,
+            at: 259,
+            declaredAt: 258,
+            removedAt: 158,
             by: 'spinner@48,16',
             lock: 'lock@80,80',
             cause: 'sword',
@@ -289,7 +305,12 @@ describe('the layer — the model self-declares the clear its own refusal named'
      */
     it('a slot the staging block DECLARES is never written by the layer', () => {
         const record = killLockRoom();
-        const staging = stagingFor(record, { persistence: [{ level: LEVEL, tag: 1, at: 300 }] });
+        // ⛓ 4e: the declared tick must not be in the walk's FUTURE, or the
+        // solver raises `PendingDeclaration` before the arm is reached and the
+        // case stops being about the layer at all. It was 300 against a walk
+        // that killed at 517; the walk now kills at 158, so 300 was ahead of
+        // it. Re-pinned to the tick the model itself derives (158 + 101).
+        const staging = stagingFor(record, { persistence: [{ level: LEVEL, tag: 1, at: 259 }] });
         const { run, thrown } = driveSolve(record, staging, { scratchPersistence: true });
         expect(thrown).toBeNull();
         expect(run.scratchClears).toEqual([]);
@@ -384,10 +405,15 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
 
     /**
      * ⛓ AND THE ROOM THE OLD GATE REFUSED FOR A CLAIM THAT WAS FALSE. The
-     * kill-lock room's ceremony begins at tick ~733 and its only spinner was
-     * REMOVED at 517 — 216 ticks earlier — so *"holds live spinners"* was not
-     * true of it. The room now solves; the previous case shows the guard did
-     * not lose its teeth. RED at the parent, where this room threw.
+     * kill-lock room's only spinner is REMOVED well before its ceremony begins,
+     * so *"holds live spinners"* was not true of it. The room now solves; the
+     * previous case shows the guard did not lose its teeth. RED at the parent,
+     * where this room threw.
+     *
+     * ⚠ 4e RE-PINNED THE TICK (517 -> 158) for the block's own reason, and the
+     * claim is asserted as the ORDER rather than only as a literal — "the
+     * removal precedes the ceremony" is what this case is about, and a bare
+     * number cannot say it.
      */
     it('a room whose spinner is already REMOVED is no longer asked', () => {
         const record = killLockRoom();
@@ -395,7 +421,8 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
             oracleOpts('removed-spinner'));
         expect(out.verdict).toBe('SOLVED');
         // The removal really did precede the ceremony — the ledger's own row.
-        expect(out.scratchClears[0].removedAt).toBe(517);
+        expect(out.scratchClears[0].removedAt).toBe(158);
+        expect(out.scratchClears[0].at).toBeGreaterThan(out.scratchClears[0].removedAt);
         expect(out.ticks).toBeGreaterThan(out.scratchClears[0].at);
     });
 });

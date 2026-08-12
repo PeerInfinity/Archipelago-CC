@@ -49,9 +49,25 @@
  * row is therefore partly about this machine — which is what §8.3's post-hoc
  * wall clock means — and it is a distinct class for exactly that reason.
  *
+ * ── ⛓⛓ SLICE 4e ADDED ONE FLAG, AND THIS IS WHY ──────────────────────
+ *
+ * `--no-clock` stages the boot WITHOUT `save.time`, which is what every
+ * generated boot did until 4e. `dangerMap.spinnerDanger` then prices a spinner
+ * by the 13 px union over all 45 hammer phases instead of the exact
+ * `collideLine`, because `run.gameTimeAt` answers `null` — and that fallback
+ * is what produced this sweep's 26 `THREW:transit` rows at 4b.
+ *
+ * The flag exists for the same reason `--no-scratch` does: **the parent arm of
+ * a flip must stay runnable from the committed instrument**, or the next slice
+ * is comparing against a number in a document (§13.6's own lesson, which is why
+ * this script exists at all). Without it the 4b column could only be reproduced
+ * by checking out an older tree.
+ *
  * Usage:
  *   node scripts/procgen/sweep-seedling-killlock.mjs
- *   node scripts/procgen/sweep-seedling-killlock.mjs --no-scratch   (the parent)
+ *   node scripts/procgen/sweep-seedling-killlock.mjs --no-scratch   (the 4b parent)
+ *   node scripts/procgen/sweep-seedling-killlock.mjs --no-clock     (the 4e parent:
+ *                       no `save.time`, so the hammer is the all-phases disc)
  *   node scripts/procgen/sweep-seedling-killlock.mjs --lock-tag=0   (the tag
  *                       collision: a clear is a FLAG, so tag 0 takes the goal)
  */
@@ -60,7 +76,7 @@ import {
     bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain,
 } from '../../frontend/modules/seedlingDemo/procgenLevel.js';
 import {
-    DEFAULT_BUDGET, bootStaging, collectGoal, solve,
+    DEFAULT_BUDGET, GENERATED_BOOT_TIME, bootStaging, collectGoal, solve,
 } from '../../frontend/modules/seedlingDemo/procgenOracle.js';
 import { POST_SWORD_ITEMS } from '../../frontend/modules/seedlingDemo/procgenPalette.js';
 import { SEEDLING_DEFAULTS } from '../../frontend/modules/seedlingDemo/procgenSeedling.js';
@@ -76,6 +92,8 @@ const BOUNDS = Object.freeze({
     lockTag: String(flag('lock-tag', '1')),
     goal: Object.freeze({ tx: Number(flag('goal-tx', 7)), ty: Number(flag('goal-ty', 8)) }),
     scratch: !process.argv.includes('--no-scratch'),
+    /** ⛔ `null` DECLARES NO `save.time` — the pre-4e boot. See the header. */
+    bootTime: process.argv.includes('--no-clock') ? null : GENERATED_BOOT_TIME,
 });
 
 const START = SEEDLING_DEFAULTS.start;
@@ -109,6 +127,7 @@ function attemptAt(tx, ty) {
         boot: bootAtTile(record, START.tx, START.ty),
         items: POST_SWORD_ITEMS,
         pins: ['dead_frames'],
+        time: BOUNDS.bootTime,
     });
     const goal = collectGoal(BOUNDS.goal.tx * 16, BOUNDS.goal.ty * 16);
     try {
@@ -144,7 +163,9 @@ console.log(`# BOUNDS  wall ty=${BOUNDS.wallTy} · gap tx=${BOUNDS.gapTx} · loc
     + `${BOUNDS.lockTag} (goal tag ${SEEDLING_DEFAULTS.goalTag}) · goal `
     + `(${BOUNDS.goal.tx},${BOUNDS.goal.ty}) · start (${START.tx},${START.ty}) · boot `
     + `post-sword · budget ${JSON.stringify(DEFAULT_BUDGET)} · scratchPersistence=`
-    + `${BOUNDS.scratch}`);
+    + `${BOUNDS.scratch} · boot save.time=${BOUNDS.bootTime === null
+        ? 'UNDECLARED (hammer = the all-phases disc)'
+        : `${BOUNDS.bootTime} (hammer = the exact collideLine)`}`);
 console.log(`# SWEPT   the spinner's cell — ${rows.length} interior cell(s) on the start side`);
 console.log('');
 for (const r of rows) {
