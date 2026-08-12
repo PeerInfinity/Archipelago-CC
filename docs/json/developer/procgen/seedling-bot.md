@@ -7190,7 +7190,12 @@ section marks each in place rather than rewriting history.
   ⛔⛔ **`at` IS THE PHASES BLOCK'S END TICK, NOT THE REMOVAL'S** — the format
   says so and `witnessedDespawnFindings` enforces the arithmetic. So the
   comparison is `computed <= declared`, and that is a definition rather than
-  a tolerance. Measured on the driven case: `r7-act2-6` declares
+  a tolerance. ⚖ **RULED 2026-08-12: the band STANDS and no removal-tick
+  field is added** — `at` is the witnessing arm's ASK tick and the removal
+  tick was never recorded by anyone, so a field whose only consumer would be
+  upgrading one check from `<=` to `==` is a ledger with no caller. If the
+  removal tick is ever recorded it arrives as EVIDENCE on the despawn
+  PROVENANCE side, not as a change to what committed v10 tapes claim. Measured on the driven case: `r7-act2-6` declares
   `bob@112,48` by tick **120** and the model removes it at **55**, by water,
   on the hand walk AND on a fresh solve. The game's own `--mobiles` reading
   of that walk is t~62, which the ten-tick `Mobile.death` fade brackets
