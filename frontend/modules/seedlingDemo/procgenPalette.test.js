@@ -20,10 +20,12 @@ import { ROLES, TILE_SIZE, buildLevelWorld } from './levelWorld.js';
 import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
 import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
-    EXCLUDED_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError,
-    assertPalette,
+    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES,
+    ProcgenPaletteError, assertPalette,
 } from './procgenPalette.js';
-import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
+import {
+    generateSeedlingLevel, placementGroupId, seedlingModel, seedlingOracle,
+} from './procgenSeedling.js';
 import { rngFor } from './procgenRng.js';
 
 const model = () => seedlingModel({ seed: 1 });
@@ -55,6 +57,81 @@ describe('the palette itself is well formed', () => {
                 { name: 'x', family: 'b', footprint: [{ dx: 0, dy: 0 }] },
             ],
         })).toThrow(/must be unique/);
+    });
+
+    /**
+     * ⛔⛔⛔ THE GROUP SLOT'S INVARIANTS — every one of them forbids a shape
+     * that would look FIXED AND BEHAVE BROKEN, which is why they are checked
+     * at module load rather than reviewed.
+     */
+    describe('the placement-group slot is declared, not assumed', () => {
+        const withEntities = (entities, extra = {}) => ({
+            name: 'g',
+            family: 'g',
+            footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+            terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
+            entities,
+            ...extra,
+        });
+        const slot = (dx) => ({ dx, dy: 0, type: 'lock', attrs: { tset: PLACEMENT_GROUP } });
+
+        it('refuses the HALF-CONVERTED row — a third entity left on a literal', () => {
+            expect(() => assertPalette({
+                name: 'half',
+                templates: [withEntities([
+                    slot(0), slot(1), { dx: 2, dy: 0, type: 'button', attrs: { tset: '0' } },
+                ], { groups: 1 })],
+            })).toThrow(/still carries the LITERAL tset/);
+        });
+
+        it('refuses a SOLO group — one entity that can publish to nothing', () => {
+            expect(() => assertPalette({
+                name: 'solo',
+                templates: [withEntities([slot(0)], { groups: 1 })],
+            })).toThrow(/A group of one/);
+        });
+
+        it('refuses the slot with NO `groups` — it would reach the level as a literal', () => {
+            expect(() => assertPalette({
+                name: 'undeclared',
+                templates: [withEntities([slot(0), slot(1)])],
+            })).toThrow(/declares no `groups`/);
+        });
+
+        /**
+         * ⛓ THE INJECTIVITY GUARD. The id is derived from the anchor cell, so
+         * two kept placements sharing an anchor would share a group. They
+         * cannot, because `isFree` refuses a painted or occupied cell — but
+         * only if the template WRITES its own (0,0). This keeps that true by
+         * construction instead of by a lucky reading of two geometries.
+         */
+        it('refuses a group-bearing template that does not consume its own anchor', () => {
+            expect(() => assertPalette({
+                name: 'loose',
+                templates: [{
+                    name: 'g', family: 'g',
+                    // (0,0) is OCCUPIED but never written — no terrain, no
+                    // entity — so a later placement could anchor in it.
+                    footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+                    terrain: [{ dx: 1, dy: 0, terrain: 'wall' }],
+                    entities: [slot(1), slot(2)], groups: 1,
+                }],
+            })).toThrow(/occupy AND write its own anchor/);
+        });
+
+        it('the shipped rows that carry the slot are exactly the weigh pair', () => {
+            const carriers = PRE_SWORD_TEMPLATES.filter((t) => t.groups !== undefined);
+            expect(carriers.map((t) => t.name))
+                .toEqual(['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']);
+            // ⚠ BY NAME rather than by count: a new switch/door template that
+            // forgot the slot would keep the count at 2 and arrive silently.
+            for (const t of carriers) {
+                expect(t.groups).toBe(1);
+                expect(t.entities.filter(
+                    (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
+                )).toHaveLength(2);
+            }
+        });
     });
 
     it('every family in the roster is represented, and the count comes FROM the roster', () => {
@@ -240,6 +317,101 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
             }
         });
     }
+
+    /**
+     * ⛔⛔⛔ THE CLAIM THE ONE ABOVE COULD NOT MAKE — and the user's
+     * 2026-08-13 defect lived in the gap between them for the whole arc.
+     *
+     * `expect(button.t).toBe(lock.t)` is a claim about ONE placement, and it
+     * is true of a shared literal and a private group alike: it passed on
+     * every commit while *"both of the switches open both of the doors"* was
+     * true of every two-pair level the generator emitted. The missing claim is
+     * the CROSS-placement one, so it is made here, of a world holding two.
+     *
+     * ⛓ MEASURED BEFORE THE FIX (`--seed=1 --count=4`, the default seed):
+     * `lock@80,48 t=0`, `button@96,32 t=0`, `lock@80,80 t=0`,
+     * `button@96,64 t=0` — one group, four entities, and
+     * `activators.js`'s setter publishes to every one of them.
+     */
+    it('⛔ TWO placements are TWO groups — the user-reported defect, as a test', () => {
+        const m = model();
+        const two = m.place(
+            m.place(m.skeleton(), byName('wall-gap-lock-weigh-h'), { tx: 1, ty: 3 }),
+            byName('wall-gap-lock-weigh-h'), { tx: 1, ty: 6 },
+        );
+        const world = worldFor(two);
+        expect(world.activators).toHaveLength(2);
+        expect(world.pressers).toHaveLength(2);
+
+        const [lockA, lockB] = world.activators;
+        expect(lockA.t).not.toBe(lockB.t);
+
+        // ⛔ THE PAIRING ITSELF, asked the way `solverBot.refineStrategy` asks
+        // it (`pressers.filter((p) => p.t === row.t)`): each lock has EXACTLY
+        // ONE opener. Before the fix this returned two for both locks — the
+        // solver was already asking the group question correctly and the
+        // palette was answering it wrongly.
+        for (const lock of world.activators) {
+            expect(world.pressers.filter((p) => p.t === lock.t)).toHaveLength(1);
+        }
+    });
+
+    it('⛔ neither group is 0, −1 or −2 — the ranges the ENGINE has claimed', () => {
+        const m = model();
+        // `tSetOf` returns 0 for a MISSING tset, so group 0 is "every unmarked
+        // activator in the room"; `FORCED_TSET` holds −1 (bosslock) and −2
+        // (shieldlock), and `levelWorld` reads t < 0 as lock-despawn. A
+        // generated group in any of those is a collision with the game itself.
+        for (const c of m.interiorCells(m.skeleton())) {
+            expect(placementGroupId(c, m.defaults.height)).toBeGreaterThan(0);
+        }
+    });
+
+    /**
+     * ⚖ THE DETERMINISM DECLARATION, DRIVEN — `placementGroupId`'s docblock
+     * says the allocator is the ANCHOR and not a counter, and the reason is
+     * that `levelGenerator` calls `place` on rejected candidates too. A
+     * counter would make a kept placement's group a function of how many
+     * candidates were thrown away first; this asserts it is not.
+     */
+    it('the group is a function of the ANCHOR — not of what the loop tried first', () => {
+        const m = model();
+        const at = { tx: 2, ty: 5 };
+        const t = byName('wall-gap-lock-weigh-h');
+        const lockOf = (record) => worldFor(record).activators[0].t;
+
+        const straight = lockOf(m.place(m.skeleton(), t, at));
+        // The same anchor, reached after two OTHER placements the loop would
+        // have reverted — placed here on a record that keeps them, which is
+        // strictly harder than the reverting case.
+        const after = lockOf(m.place(
+            m.place(m.place(m.skeleton(), byName('wall-segment-h3'), { tx: 5, ty: 1 }),
+                byName('wall-segment-v3'), { tx: 7, ty: 4 }),
+            t, at,
+        ));
+        expect(after).toBe(straight);
+        expect(straight).toBe(placementGroupId(at, m.defaults.height));
+
+        // ...and two anchors are two groups, over the whole interior.
+        const cells = m.interiorCells(m.skeleton());
+        const ids = cells.map((c) => placementGroupId(c, m.defaults.height));
+        expect(new Set(ids).size).toBe(cells.length);
+    });
+
+    it('⛔ NO SENTINEL SURVIVES INTO A LEVEL — an unresolved slot parses as group 0', () => {
+        const m = model();
+        const record = m.place(m.skeleton(), byName('wall-gap-lock-weigh-v'), { tx: 4, ty: 1 });
+        for (const e of record.entities) {
+            for (const v of Object.values(e.attrs ?? {})) expect(v).not.toBe(PLACEMENT_GROUP);
+        }
+        // And the guard is real: a template carrying the slot with no `groups`
+        // declaration is refused BY NAME rather than written as a literal.
+        const undeclared = {
+            ...byName('wall-gap-lock-weigh-v'), name: 'undeclared', groups: undefined,
+        };
+        expect(() => m.place(m.skeleton(), undeclared, { tx: 4, ty: 1 }))
+            .toThrow(/declares no `groups`/);
+    });
 
     /**
      * ⛔⛔ THE S1 GUARD, AND IT IS TEMPLATE LEGALITY RATHER THAN A SOLVER

@@ -129,6 +129,56 @@ const SLIDE_PATH = Object.freeze(
 );
 
 /**
+ * ⛓⛓⛓ THE PER-PLACEMENT GROUP SLOT — the one attribute a FROZEN template
+ * cannot hold a value for, and the defect that made it necessary.
+ *
+ * ⚖ USER-REPORTED, 2026-08-13: *"when the generator generates two different
+ * pairs of switches and switch-opened doors, both of the switches open both of
+ * the doors."* Measured before anything was built — `--seed=1 --count=4`, the
+ * DEFAULT seed, keeps `wall-gap-lock-weigh-h` twice and emits:
+ *
+ *     lock@(80,48)  {tset:'0', tag:'0'}     button@(96,32) {tset:'0'}
+ *     lock@(80,80)  {tset:'0', tag:'0'}     button@(96,64) {tset:'0'}
+ *
+ * ⛔ THE GROUP IS THE WHOLE MECHANISM, and it was a LITERAL in the table.
+ * `levelWorld.tSetOf` reads `intAttr(attrs, 'tset', 0)`, and a press publishes
+ * to every `Activators` sharing that number (`activators.js`'s transcription of
+ * the setter: `if (v[i] != this && v[i].t == t)`). Two placements of one
+ * template therefore put all four entities in group 0 — so it is a property of
+ * THIS TABLE, not of the placement loop, and no seed avoids it.
+ *
+ * ⛓ IT IS ALSO WRONG ON THE SOLVE SIDE, which is the half a play-test would
+ * have missed: `solverBot.refineStrategy` binds a lock's openers with
+ * `pressers.filter((p) => p.t === row.t)`, so with one shared group each lock
+ * sees BOTH buttons. The solver was already asking the group question the
+ * right way; only the palette was answering it wrongly.
+ *
+ * ── WHY A SENTINEL AND NOT A TEMPLATE FACTORY ─────────────────────────
+ *
+ * The obvious shape — make `entities` a function of the placement — dissolves
+ * every invariant this file is built on: `assertPalette` walks static
+ * footprints at module load, `POST_SWORD_TEMPLATES` is a superset of the
+ * pre-sword roster BY CONSTRUCTION (a spread of frozen rows, which
+ * `procgenPostSword.test.js` drives), and each row's measurements are attached
+ * to a row a reader can see. It also buys power the defect does not need: a
+ * factory may vary ANYTHING per placement.
+ *
+ * So the table stays frozen and the slot is DECLARED IN IT. A reader of the
+ * row sees `tset: PLACEMENT_GROUP` and knows the value is per-placement; the
+ * template declares `groups: 1`; and `procgenSeedling.place` — the ONE writer
+ * that turns template entities into level entities — resolves it.
+ *
+ * ⚠ THE SENTINEL'S OWN FAILURE MODE IS THE DANGEROUS ONE, so it is guarded
+ * rather than hoped about: an UNRESOLVED sentinel would reach `intAttr`, which
+ * parses any non-numeric string as **0** — i.e. silently back into the exact
+ * collision this exists to end. `place` throws by name on an unresolved slot
+ * and `assertPalette` refuses the half-converted row below (a lock on the slot
+ * beside a button on a literal), because both are the shape that would look
+ * fixed and behave broken.
+ */
+export const PLACEMENT_GROUP = '@placement-group';
+
+/**
  * ⛓ THE FOUR TEMPLATES THE ORACLE CERTIFIES, each measured in an otherwise
  * empty bordered 10x10 room with a `torchpickup` collect goal (slice 2's
  * probe; the module test re-drives every one against a BUILT WORLD).
@@ -384,10 +434,34 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * Attrs transcribed from L15 (`Dungeon2/2.oel:110-111`), the room the game
      * built around this mechanism: `button {tset: "0"}`, `lock {tset: "0",
      * tag: "0"}`.
+     *
+     * ⛔ THE GROUP IS THE ONE FIELD THAT DOES NOT SURVIVE THE TRANSCRIPTION,
+     * and the user's 2026-08-13 report is why: L15 holds ONE pair, so its
+     * `tset: "0"` is a room's private group; a PALETTE row is placed many
+     * times in one room, where the same literal is one shared group and every
+     * button opens every lock. Both entities carry `PLACEMENT_GROUP` and
+     * `groups: 1` declares the slot — see the sentinel's own docblock.
+     *
+     * ⚠ `tag: '0'` IS LEFT AS THE TRANSCRIPTION SAYS, and it is a SEPARATE
+     * OPEN QUESTION rather than a field this slice cleared. It is the
+     * PERSISTENCE flag, not the broadcast group: a plain `Lock` that fades
+     * open writes `Game.setPersistence(tag, false)` (`activators.js`'s
+     * transcription of `turnOff()`'s third line), and `SEEDLING_DEFAULTS`
+     * `goalTag` is ALSO `'0'` — the very collision `KILL_LOCK_TEMPLATES`
+     * discharges by construction with its `tag: '1'` ("a clear is a FLAG, so a
+     * lock on the goal's own tag removes the GOAL"). ⛔ NOT FIXED HERE, and
+     * NOT because it was judged harmless: the right value is not a literal
+     * either (`'1'` is the kill-lock's, so two placements would collide there
+     * instead), so it wants this same per-placement treatment on a field whose
+     * blast radius — the goal, the scratch layer, `botDriverV1`'s v9 `at`
+     * declarations — has not been measured. ⚖ Reported to the user with the
+     * evidence, 2026-08-13; the slot mechanism above is field-agnostic and
+     * will serve `tag` unchanged when that measurement exists.
      */
     Object.freeze({
         name: 'wall-gap-lock-weigh-h',
         family: 'weigh',
+        groups: 1,
         footprint: Object.freeze([
             ...rectCells(INTERIOR_SPAN, 1),
             cell(BLOCK_OFFSET, -1),
@@ -400,10 +474,16 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
         entities: Object.freeze([
             Object.freeze({
-                dx: GAP_OFFSET, dy: 0, type: 'lock', attrs: Object.freeze({ tset: '0', tag: '0' }),
+                dx: GAP_OFFSET,
+                dy: 0,
+                type: 'lock',
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: '0' }),
             }),
             Object.freeze({
-                dx: BUTTON_OFFSET, dy: -1, type: 'button', attrs: Object.freeze({ tset: '0' }),
+                dx: BUTTON_OFFSET,
+                dy: -1,
+                type: 'button',
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
             }),
             Object.freeze({ dx: BLOCK_OFFSET, dy: -1, type: 'pushableblock' }),
         ]),
@@ -417,6 +497,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     Object.freeze({
         name: 'wall-gap-lock-weigh-v',
         family: 'weigh',
+        groups: 1,
         footprint: Object.freeze([
             ...rectCells(1, INTERIOR_SPAN),
             cell(-1, BLOCK_OFFSET),
@@ -429,10 +510,16 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
         entities: Object.freeze([
             Object.freeze({
-                dx: 0, dy: GAP_OFFSET, type: 'lock', attrs: Object.freeze({ tset: '0', tag: '0' }),
+                dx: 0,
+                dy: GAP_OFFSET,
+                type: 'lock',
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: '0' }),
             }),
             Object.freeze({
-                dx: -1, dy: BUTTON_OFFSET, type: 'button', attrs: Object.freeze({ tset: '0' }),
+                dx: -1,
+                dy: BUTTON_OFFSET,
+                type: 'button',
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
             }),
             Object.freeze({ dx: -1, dy: BLOCK_OFFSET, type: 'pushableblock' }),
         ]),
@@ -959,6 +1046,74 @@ export const POST_SWORD_PALETTE = Object.freeze({
 });
 
 /**
+ * ⛔⛔⛔ THE GROUP SLOT'S OWN INVARIANTS — three, and every one of them exists
+ * because the shape it forbids would look FIXED AND BEHAVE BROKEN.
+ *
+ * 1. **NO HALF-CONVERTED ROW.** A template that declares `groups` may not also
+ *    carry a LITERAL `tset` on any entity. Convert the lock and leave the
+ *    button on `'0'` and the level is *worse* than before: the lock sits alone
+ *    in a private group and the door never opens at all, while the table reads
+ *    as parameterized.
+ * 2. **NO SOLO GROUP.** Fewer than two entities on the slot is an entity that
+ *    can neither publish to nor hear from anything — a group of one is not a
+ *    group, and it is what a half-finished edit produces.
+ * 3. **THE ANCHOR MUST BE CONSUMED**, which is what makes the id INJECTIVE.
+ *    `procgenSeedling` derives the group from the anchor CELL, so two kept
+ *    placements sharing an anchor would share a group and re-open the whole
+ *    defect. They cannot: `isFree` refuses a cell whose terrain was painted or
+ *    which holds an entity, so a template that WRITES its own `(0,0)` consumes
+ *    the anchor for every later placement. ⛓ That is true of both weigh rows
+ *    today by their geometry — this check is what keeps it true BY
+ *    CONSTRUCTION rather than by a lucky reading, per the standing law that a
+ *    derived property nobody asserts is a property that quietly stops holding.
+ */
+function assertGroupSlot(t, footprintKeys) {
+    const onSlot = (t.entities ?? []).filter(
+        (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
+    );
+    if (t.groups === undefined) {
+        if (onSlot.length > 0) {
+            fail(`procgenPalette: template "${t.name}" puts ${onSlot.length} entit`
+                + `${onSlot.length === 1 ? 'y' : 'ies'} on the placement-group slot but `
+                + 'declares no `groups`. `place` resolves the slot only for a template '
+                + 'that declares it, so the sentinel would reach the level as a literal '
+                + 'and `intAttr` parses any non-numeric string as 0 — silently back into '
+                + 'the shared group this slot exists to end.');
+        }
+        return;
+    }
+    if (t.groups !== 1) {
+        fail(`procgenPalette: template "${t.name}" declares groups=${t.groups}; the only `
+            + 'supported count is 1. `procgenSeedling` derives ONE id from the anchor '
+            + 'cell, and a second group would need a spacing rule that keeps the ids '
+            + 'injective — which nobody has written.');
+    }
+    if (onSlot.length < 2) {
+        fail(`procgenPalette: template "${t.name}" declares groups=1 but only `
+            + `${onSlot.length} of its entities carry PLACEMENT_GROUP. A group of one `
+            + 'publishes to nothing and hears from nothing — this is the half-converted '
+            + 'row (the lock moved to a private group, the button left on a literal), '
+            + 'which reads as parameterized and never opens.');
+    }
+    for (const e of t.entities ?? []) {
+        if (e.attrs?.tset !== undefined && e.attrs.tset !== PLACEMENT_GROUP) {
+            fail(`procgenPalette: template "${t.name}" declares groups=1 and its `
+                + `"${e.type}" still carries the LITERAL tset "${e.attrs.tset}". One `
+                + 'placement would then span two groups, which is not a mechanism '
+                + 'anybody designed.');
+        }
+    }
+    const writesAnchor = (t.terrain ?? []).some((w) => w.dx === 0 && w.dy === 0)
+        || (t.entities ?? []).some((e) => e.dx === 0 && e.dy === 0);
+    if (!footprintKeys.has('0,0') || !writesAnchor) {
+        fail(`procgenPalette: template "${t.name}" declares groups=1 but does not `
+            + 'occupy AND write its own anchor (0,0). The group id is derived from the '
+            + 'anchor cell, so an unconsumed anchor lets a later placement anchor in the '
+            + 'same cell and land in the SAME group — the defect, restored.');
+    }
+}
+
+/**
  * EVERY TEMPLATE, CHECKED — shapes, names, terrains and the roster's own
  * uniqueness. Called at module load, for `procgenLevel.assertTerrainColumns`'s
  * own reason: a malformed template is a defect in THIS file and there is no
@@ -1021,6 +1176,7 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
                     + `"${e.type}" at (${e.dx},${e.dy}), which is not in its footprint.`);
             }
         }
+        assertGroupSlot(t, seen);
     }
     return true;
 }

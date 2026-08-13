@@ -43,7 +43,7 @@ import {
 import {
     DEFAULT_BUDGET, VERDICT, assertBudget, bootStaging, collectGoal, solve,
 } from './procgenOracle.js';
-import { PRE_SWORD_PALETTE } from './procgenPalette.js';
+import { PLACEMENT_GROUP, PRE_SWORD_PALETTE } from './procgenPalette.js';
 import { generateLevel } from './levelGenerator.js';
 import { rngFor } from './procgenRng.js';
 
@@ -73,6 +73,68 @@ export const SEEDLING_DEFAULTS = Object.freeze({
     goalTag: '0',
     start: Object.freeze({ tx: 1, ty: 1 }),
 });
+
+/**
+ * ⛓⛓⛓ THE PLACEMENT'S OWN ACTIVATOR GROUP, DERIVED FROM ITS ANCHOR.
+ *
+ * ⚖ USER-REPORTED DEFECT, 2026-08-13 (`procgenPalette.PLACEMENT_GROUP` carries
+ * the measurement): two placements of a switch/door template shared the group
+ * literal in the table, so every button opened every lock. The group has to
+ * become a per-PLACEMENT value, and WHICH per-placement value is a claim about
+ * determinism rather than a detail — so it is declared here rather than left to
+ * be read off a diff.
+ *
+ * ── ⛔ THE ALLOCATOR IS THE ANCHOR, NOT A COUNTER, AND THAT IS THE POINT
+ *
+ * Three shapes were on the table and two of them make the level a function of
+ * something other than its own geometry:
+ *
+ *  · **a counter bumped in `place`** — ⛔ `levelGenerator` calls `place` on
+ *    EVERY candidate, including the ones the oracle then rejects (:330, above
+ *    the `keep` at :380). So the kept groups would come out sparse (3, 7, …)
+ *    and the id would encode the REJECTION HISTORY: still deterministic, but a
+ *    different function of the seed, and one that moves the moment a bound or
+ *    an oracle verdict changes. It also makes `place` impure — two calls with
+ *    the same arguments would stop returning the same record.
+ *  · **a counter bumped at KEEP** — contiguous ids, but the value is not in the
+ *    record `place` built, so the level would need a second pass. ⛔ That
+ *    breaks ⚖ §1.2's ATOMIC placement, which exists so no record ever holds an
+ *    obstacle without its clearer.
+ *  · **the anchor** — what this is. `place` STAYS PURE, and the id is a
+ *    function of the level's own geometry: the same template kept at the same
+ *    cell is the same group whatever the loop tried and threw away first.
+ *
+ * ⇒ ⚖ DECLARED: **same seed, same level** is preserved, and the stronger
+ * property is preserved with it — a placement's group depends on WHERE IT
+ * LANDED and on nothing else.
+ *
+ * ── WHY THE ARITHMETIC IS SAFE, FIELD BY FIELD ────────────────────────
+ *
+ * ⛓ **INJECTIVE**: `tx * height + ty` is the standard column-major index and
+ * `ty <= height - 2` inside the interior, so no two cells share an id. Two kept
+ * placements cannot share an anchor anyway — `assertGroupSlot` requires a
+ * group-bearing template to WRITE its own `(0,0)`, and `isFree` refuses a
+ * painted or occupied cell — so the two guarantees are belt and braces on
+ * purpose: the arithmetic holds even if the loop ever placed at a repeated
+ * anchor, and the palette check holds even if the arithmetic changed.
+ *
+ * ⛔ **STRICTLY POSITIVE**, via the `+ 1`, and that is a HARD requirement
+ * rather than tidiness. The engine's group vocabulary is signed and the
+ * negatives are CLAIMED: `levelWorld.FORCED_TSET` holds −1 (`bosslock`) and −2
+ * (`shieldlock`), and `levelWorld` reads `tSetOf(...) < 0` as *lock-despawn*
+ * in two places. Group **0** is claimed too — it is what `intAttr` returns for
+ * a MISSING `tset`, i.e. the group every unmarked activator in the room is
+ * already in. Ids from 1 up are the only unclaimed range.
+ *
+ * ⚠ **NOT BOUNDED ABOVE**, and it does not need to be: the group is matched by
+ * EQUALITY, never used as an index (`activators.js`'s transcription of the
+ * setter — `if (v[i] != this && v[i].t == t)` — and `solverBot`'s
+ * `pressers.filter((p) => p.t === row.t)`). The atlas's habit of small integers
+ * is a fact about hand-built rooms, not a ceiling this has to respect.
+ */
+export function placementGroupId(at, height) {
+    return at.tx * height + at.ty + 1;
+}
 
 /** The interior cells of a room — everything the wall ring does not hold. */
 export function interiorCells(record) {
@@ -256,10 +318,39 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
                 })));
             }
             if ((template.entities ?? []).length > 0) {
+                /**
+                 * ⛓ THE GROUP SLOT, RESOLVED — see `placementGroupId` for why
+                 * the anchor is the allocator, and `procgenPalette`'s
+                 * `PLACEMENT_GROUP` for the defect that made the slot exist.
+                 *
+                 * ⛔ THE THROW IS THE WHOLE GUARD, because the failure it
+                 * catches is SILENT: an unresolved sentinel reaches
+                 * `levelWorld.tSetOf`, which is `intAttr(attrs, 'tset', 0)`,
+                 * and `int("@placement-group")` is **0** — the shared group
+                 * this slot exists to end, restored without a symptom. A
+                 * template that declares no `groups` and carries the sentinel
+                 * anyway is refused by `assertPalette` at module load; this is
+                 * the same claim at the one place that writes the value.
+                 */
+                const group = template.groups ? placementGroupId(at, d.height) : null;
+                const resolveAttrs = (attrs) => Object.fromEntries(
+                    Object.entries(attrs).map(([k, v]) => {
+                        if (v !== PLACEMENT_GROUP) return [k, v];
+                        if (group === null) {
+                            fail(`procgenSeedling: template "${template.name}" carries `
+                                + `the placement-group slot on "${k}" but declares no `
+                                + '`groups`, so there is no id to resolve it to. An '
+                                + 'unresolved slot parses as group 0 — every unmarked '
+                                + 'activator in the room — which is exactly the '
+                                + 'collision the slot exists to end.');
+                        }
+                        return [k, String(group)];
+                    }),
+                );
                 next = withEntities(next, template.entities.map((e) => ({
                     type: e.type,
                     ...oelAtTile(at.tx + e.dx, at.ty + e.dy),
-                    ...(e.attrs ? { attrs: { ...e.attrs } } : {}),
+                    ...(e.attrs ? { attrs: resolveAttrs(e.attrs) } : {}),
                 })));
             }
             if (next === record) {

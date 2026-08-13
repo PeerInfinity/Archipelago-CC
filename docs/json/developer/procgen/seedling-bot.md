@@ -8277,3 +8277,131 @@ with no measurement under it.
 ⛓ **The general lesson: a tool whose job is showing you the truth needs one
 reading about ITSELF.** Without it, "your fix does not work" and "your fix
 never reached me" are the same sentence.
+
+### Every generated switch opened every generated door (2026-08-13)
+
+⚖ The user's report, in their words: *"when the generator generates two
+different pairs of switches and switch-opened doors, both of the switches open
+both of the doors. Each switch should only affect its own door."*
+
+**It was a property of the PALETTE, not of the placement loop, so no seed
+avoided it.** `wall-gap-lock-weigh-h`/`-v` each hardcoded `tset: '0'` on their
+lock AND their button. `levelWorld.tSetOf` is `intAttr(attrs, 'tset', 0)`, and a
+press publishes to every `Activators` sharing that number — so two placements
+of one template put all four entities in group 0.
+
+⛓ MEASURED FIRST, on `--seed=1 --count=4`, the DEFAULT seed:
+
+```
+lock@80,48 {tset:'0'}  button@96,32 {tset:'0'}
+lock@80,80 {tset:'0'}  button@96,64 {tset:'0'}
+```
+
+⛔ **AND IT WAS WRONG ON THE SOLVE SIDE TOO** — the half a play-test would
+miss. `solverBot.refineStrategy` binds a lock's openers with
+`pressers.filter((p) => p.t === row.t)`, so each lock saw BOTH buttons. The
+solver was already asking the group question correctly; only the palette was
+answering it wrongly.
+
+#### The fix: a DECLARED slot in a still-frozen table
+
+The obvious shape — templates become factories of their placement — dissolves
+every invariant this file has: `assertPalette` walks static footprints at load,
+`POST_SWORD_TEMPLATES` is a superset BY CONSTRUCTION, and each row's
+measurements are attached to a row a reader can see. So the table stays frozen
+and the slot is declared IN it: both entities carry `PLACEMENT_GROUP`, the
+template declares `groups: 1`, and `procgenSeedling.place` — the ONE writer
+that turns template entities into level entities — resolves it.
+
+⚖ **THE ALLOCATOR IS THE ANCHOR, AND THAT IS A DECLARATION, NOT A DETAIL.**
+`levelGenerator` calls `place` on EVERY candidate including rejected ones
+(:330, above the `keep` at :380), so a counter would make a kept placement's
+group a function of the REJECTION HISTORY — still deterministic, but a
+different function of the seed, and one that moves when a bound or a verdict
+changes. Allocating at keep-time instead would break ⚖ §1.2's atomic placement.
+Deriving it from the anchor cell keeps `place` PURE and gives the stronger
+property: **a placement's group depends on where it landed and on nothing
+else.** `placementGroupId(at, height) = tx * height + ty + 1`.
+
+⛔ The `+ 1` is a hard requirement: the engine's group vocabulary is signed and
+the negatives are claimed (`FORCED_TSET` −1/−2, and `t < 0` is *lock-despawn*),
+while **0 is claimed too** — it is what `intAttr` returns for a MISSING `tset`,
+i.e. the group every unmarked activator is already in. ⚠ There is no upper
+bound to respect: the group is matched by EQUALITY, never used as an index
+(`if (v[i] != this && v[i].t == t)`), so the atlas's habit of small integers is
+a fact about hand-built rooms and not a ceiling.
+
+#### The measurement, seeds 1–24 at target 6
+
+| | before | after |
+|---|---|---|
+| seeds keeping ≥1 weigh template | 18 | **18** (identical) |
+| seeds keeping ≥2 | 3 (1, 14, 19) | 2 (14, 19) |
+| **seeds with a SHARED group** | **3 — all of them** | **0** |
+| aborts | 0 | 0 |
+
+Seed 14, after: `lock@96,80 t=62 / button@80,96 t=62` and
+`lock@128,80 t=82 / button@112,96 t=82` — two pairs, two groups, one opener
+each. ⇒ the palette did NOT lose the ability to place two pairs.
+
+⛓ **Seed 1 now keeps ONE weigh template instead of two, and that is the fix
+working.** The second placement is REVERTED (`BUDGET_EXHAUSTED`, *"no corridor
+… to a stance that can collect torchpickup"*): with a shared group the first
+pair's parked block held the second lock open from the moment it was placed, so
+the loop was keeping a door that was never a door. Made independent, that
+candidate does not solve, and the loop rejects it.
+
+#### ⛔ The suite could not see this defect, and the reason generalises
+
+The full 3683-test suite passed UNCHANGED on the fix — nothing had to be
+re-recorded, because nothing had ever asserted the group ACROSS placements. The
+test that existed was
+
+```js
+expect(button.t).toBe(lock.t);   // one placement
+```
+
+which is true of a shared literal and a private group alike. It passed on every
+commit of the arc while the defect was live.
+
+⇒ **A RELATIVE CLAIM ABOUT ONE INSTANCE CANNOT SEE A COLLISION BETWEEN TWO.**
+The new test places the template twice and asks the pairing the way the SOLVER
+asks it — each lock has exactly one presser — and it is mutation-checked:
+resolving the slot to `'0'` fails it and the other 42 palette tests still pass.
+
+Three invariants now run at module load, each forbidding a shape that would
+look fixed and behave broken: no HALF-CONVERTED row (lock on the slot, button
+on a literal — which is *worse* than the bug: the door never opens at all), no
+SOLO group, and a group-bearing template must WRITE its own `(0,0)` so the
+anchor is consumed and the ids stay injective.
+
+#### ⚖ What this slice did NOT fix, with the evidence
+
+**`tag: '0'` on both weigh locks is a SECOND collision, and it is with the
+GOAL.** `tag` is the PERSISTENCE flag, not the broadcast group. A plain `Lock`
+that fades open writes `Game.setPersistence(tag, false)` (`activators.js`, the
+transcription of `turnOff()`'s third line), and `SEEDLING_DEFAULTS.goalTag` is
+also `'0'` — the exact collision `KILL_LOCK_TEMPLATES` discharges by
+construction with its `tag: '1'`, under its own stated law: *a clear is a FLAG,
+so a lock on the goal's own tag removes the GOAL.*
+
+⛔ NOT FIXED HERE, and NOT because it was judged harmless: the right value is
+not a literal either (`'1'` is the kill-lock's, so two placements would collide
+there instead), so it wants this same per-placement treatment on a field whose
+blast radius — the goal, 4b's scratch layer, `botDriverV1`'s v9 `at`
+declarations — has not been measured. The slot mechanism is field-agnostic and
+will serve `tag` unchanged when that measurement exists.
+
+⚠ Also measured and RULED OUT as part of this: the arrow trap's `tset: '0'`
+(palette:256) does NOT widen the collision. `arrowtrap` never enters the group
+census — the only two push sites are `pressers.push` and `activators.push`, and
+it feeds `arrowTraps` instead — so its `tset` is a faithful transcription of the
+atlas attr that the model never reads.
+
+#### Gates
+
+`npx vitest run frontend/modules/seedlingDemo/` **3692/3692** (3683 + 9 new);
+all **11** `check-seedling-editor-*.mjs` PASS, `generate` included; the R8
+battery `--check` still hashes to `1fedb0ab35b7cd74accecf0345bdc893` (28 PASS,
+exit 1, the two standing `r8-solve-4` drift rows) — a palette change has no
+reach into committed tapes, which is what that row was there to say.
