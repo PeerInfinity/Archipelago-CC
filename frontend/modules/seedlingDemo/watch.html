@@ -144,6 +144,24 @@
   the run uses the scratch-persistence fork because a generated room has no
   tape to declare a kill-lock clear.
 
+  ⛓ SOLVE and MANUAL open with the level ALREADY DRAWN — no press needed —
+  and `◀ ▶` beside the level field step through the atlas's own level list.
+  The level field WRITES `boot.level` into the block below it. ⚠ Only 42 of
+  the atlas's 116 levels have a committed boot in the tape roster, so for the
+  rest the page CHOOSES a spawn (the nearest walkable non-pit cell where the
+  player box clears the solids) and says that it chose — a convenience for
+  looking around, never a position the game used, and nothing may rest on it.
+
+  ⛓ The goal list is pre-filled from `defaultGoalsFromCensus` — every
+  placement plus the single live exit — and left EMPTY, with the alternatives
+  named, when a level has more than one live exit. The page does not choose
+  between them: which one you mean is a fact about you.
+
+  ⛓ `engine` (REPLAY only) switches JS ↔ wasm in place. Leaving the wasm side
+  points its iframe at `about:blank`, which discards the runtime — the wasm
+  side cannot rewind the GAME, and that discard is the whole of what it needed
+  a page reload for.
+
   ⚠ `window.__editorLifetime` is the page's account of what it tore down —
   the live arm, the retired ones, the loops each stopped and the listeners
   each dropped. `check-seedling-editor-switch.mjs` asserts on it BESIDE a

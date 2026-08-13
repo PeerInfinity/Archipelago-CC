@@ -7870,9 +7870,60 @@ generator's output. Provenance notes need an ORDER, not just a set.
 - `window.__editorLifetime` reports the live arm, the retired ones, the loops
   each stopped and the listeners each dropped.
 
+### Group A — the user's follow-on batch (2026-08-12)
+
+Six more items, in three commits, all in the arm-mount and panel code the arc
+had just refactored:
+
+- **⛔ The drawn level IS the page's level.** The bridge armed itself on its
+  two BUTTONS, so the obvious route — GENERATE → MANUAL with the SOURCE
+  SELECTOR — found an empty box, fell back to `?boot=` and dropped you at the
+  true game start in level 0. Handing over is now a consequence of DRAWING.
+  ⚠ Stated price: a hand-typed block is replaced the moment GENERATE draws.
+- **Every arm draws its level on mount** (`previewLevel`) — SOLVE drew nothing
+  without `?solve=1` and MANUAL nothing until START. Same construction the
+  arms press into; one draw, no loop.
+- **The level stepper** (`◀ ▶` + a `#bootLevel` that WRITES the block) walks
+  the ATLAS'S OWN level list, not `level ± 1`.
+- **⛓ The boot position has THREE outcomes and three sentences.** Measured: 42
+  of 116 levels have a committed boot in the tape roster, so two thirds of the
+  stepper's destinations have no position the game ever used. Committed boot ·
+  a cell THIS PAGE CHOSE (nearest walkable non-pit where `playerBoxAt` clears
+  the solids — a convenience nothing may rest on) · a stale one it could not
+  replace. Three degrees of trust must not read alike.
+- **The goal pre-fill is `defaultGoalsFromCensus`** — the page's own law, not a
+  second policy (see the trap below).
+- **The trace pane scrolls itself**, and **`?side=` became a picker** whose
+  round trip is where the iframe `about:blank` teardown becomes observable.
+
+⛓ **TRAP: a convenience that quietly overrules a refusal.** The goal pre-fill's
+first cut took "the first usable option" always — which overruled the one case
+`defaultGoalsFromCensus` exists for, a level with two live exits, where the
+page refuses because a solve toward the wrong one prints a tick count that
+looks like an answer. `check-seedling-editor-boot.mjs` went red on level 4 and
+that is what caught it. The second cut fired only on a census with exactly ONE
+option of any kind — honouring the law but almost never firing, since level 0
+has eight and seven are pickups nobody is ambiguous about. ⇒ **ask the function
+that already knows.** The pre-fill and the press now agree by construction.
+
+⛓ **TRAP: a pixel witness that counts the wrong thing.** The row asserting the
+canvas is drawn counted pixels differing from the renderer's background
+`#101014` — and an untouched canvas is transparent BLACK, differing in all
+three channels, so a canvas never drawn on scored **102400/102400** and passed
+the check written to catch exactly that. Alpha separates them; the colour count
+keeps a flat fill from passing as a room. *A measurement that cannot come out
+any other way is not a measurement.*
+
+⚠ **A machine-dependent claim is not a claim.** The engine picker's row asserts
+the SWITCH (arm named for its engine, old one retired, URL moved) and says
+nothing about whether the wasm artifact is present — it is gitignored and
+machine-local. And it waits on the LIFETIME, not `__editorArm`: that marker
+means "the mount function returned", and `runWasm` does not return until the
+tape starts, which needs one real click by design.
+
 ### The acceptance
 
-`scripts/procgen/check-seedling-editor-switch.mjs` — 30 claims, brings its own
+`scripts/procgen/check-seedling-editor-switch.mjs` — 51 claims, brings its own
 server, cannot skip. ⛔ **Its leak claims are BEHAVIOURAL, never the page's own
 account alone**: a lifetime that never registered a listener and one whose
 listeners leaked both report the same number. The witness is `preventDefault` —
