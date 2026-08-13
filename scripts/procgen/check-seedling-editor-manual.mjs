@@ -137,8 +137,15 @@ async function holdFor(page, codes, ms) {
     console.log(`\n## SOURCE=MANUAL — driven by real key events\n   ${url}`);
 
     await page.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
-    check(await page.isVisible('#manualPanel'),
-        'the MANUAL panel is the one shown for ?source=manual');
+    /**
+     * ⛓ SWITCH SLICE 3: SOLVE and MANUAL now share ONE boot panel and differ
+     * only in the ACTIONS beside it, so "the right panel is up" is two facts
+     * rather than one — the shared block is there, and the buttons are this
+     * arm's. Asserting only the first would pass under SOLVE.
+     */
+    check(await page.isVisible('#bootPanel') && await page.isVisible('#manualActions')
+        && !(await page.isVisible('#solveActions')),
+        'the shared boot panel is up with MANUAL\'s actions, and SOLVE\'s are not');
     check(!(await page.isVisible('#solvePanel')) && !(await page.isVisible('#replayPick')),
         'and the other two arms are hidden — one panel per source');
 

@@ -207,29 +207,22 @@
   #sidenote { color: #8a8a98; font-size: 11px; }
   #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
   #bar { height: 100%; width: 0; background: #7fe0ff; }
-  /* ── SOURCE = SOLVE ── */
   select, textarea { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
     padding: 2px 6px; font: inherit; }
-  #solvePanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
-  #solvePanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  /* ── ⛓ EVERY ARM'S PANEL, ONE RULE (switch slice 3). The three panels each
+     carried their own identical copy of this, so an arm added later looked
+     subtly unlike the others until somebody noticed and pasted the block a
+     fourth time. The `.note` and `.box` classes are the same story for the
+     note lines and the two full-width textareas. ── */
+  .armPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  .armPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
     margin-bottom: 4px; }
+  .note { color: #8a8a98; font-size: 11px; }
+  .box { width: 100%; box-sizing: border-box; }
   #solveGoalPick { max-width: 40vw; }
   #solveGoals { color: #7fe0ff; }
   #solveTime { color: #7fd88f; }
-  #solveBoot { width: 100%; box-sizing: border-box; }
-  #solveNote { color: #8a8a98; font-size: 11px; }
   summary { color: #8a8a98; cursor: pointer; }
-  /* ── SOURCE = MANUAL + TAPE I/O (editor arc slice 3) ── */
-  #manualPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
-  #manualPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    margin-bottom: 4px; }
-  #manualBoot { width: 100%; box-sizing: border-box; }
-  #manualNote { color: #8a8a98; font-size: 11px; }
-  /* ── SOURCE = GENERATE (PROCGEN PoC slice 5) ── */
-  #generatePanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
-  #generatePanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    margin-bottom: 4px; }
-  #genNote { color: #8a8a98; font-size: 11px; }
   #genTrace { max-height: 34vh; overflow-y: auto; border: 1px solid #1a1a20;
     margin-bottom: 8px; }
   #genTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
@@ -288,15 +281,32 @@
       <span id="sidenote"></span>
     </span>
   </div>
-  <div id="solvePanel" hidden>
+  <!-- ⛓⛓⛓ ONE BOOT PANEL, SHARED BY SOLVE AND MANUAL (switch slice 3).
+       Both arms start from a staging block, and until now each had its own
+       level field, its own preset picker, its own item form, its own textarea
+       and its own note — the same panel twice, drifting apart in small ways
+       (MANUAL's level input was `disabled` and SOLVE's was not, for no stated
+       reason). ⛔ AND TWO BOXES CANNOT SHARE A BLOCK: the whole ask that
+       started this arc is that the level you are looking at follows you
+       between modes, which a second textarea makes impossible however
+       carefully the two are kept in step. One box, one block, one truth. -->
+  <div id="bootPanel" class="armPanel" hidden>
     <div class="line">
-      <label>level <input id="solveLevel" type="number" min="0" step="1" style="width:5em"></label>
-      <label for="solvePreset">boot like</label>
-      <select id="solvePreset"><option value="">— loading presets… —</option></select>
-      <button id="solveGo">SOLVE</button>
-      <span id="solveTime"></span>
+      <label>level <input id="bootLevel" type="number" min="0" step="1" style="width:5em" readonly></label>
+      <label for="bootPreset">boot like</label>
+      <select id="bootPreset"><option value="">— loading presets… —</option></select>
+      <!-- The arm-specific actions, side by side against the shared block. -->
+      <span id="solveActions">
+        <button id="solveGo">SOLVE</button>
+        <span id="solveTime"></span>
+      </span>
+      <span id="manualActions">
+        <button id="manualStart">START</button>
+        <button id="manualStop" disabled>STOP &amp; fold</button>
+        <span id="manualKeys"></span>
+      </span>
     </div>
-    <div class="line">
+    <div class="line" id="solveGoalLine">
       <label for="solveGoalPick">goal</label>
       <select id="solveGoalPick"><option value="">— no level loaded —</option></select>
       <button id="solveGoalAdd">add</button>
@@ -308,34 +318,18 @@
          flags WITHOUT opening the raw editor — is undone by having to open
          the raw editor. Caught by the acceptance row's visibility check, not
          by looking at it. -->
-    <div class="line" id="solveForm"><span>boot items:</span></div>
+    <div class="line" id="bootForm"><span>boot items:</span></div>
     <details>
       <summary>starting conditions — the tape v8 staging block, raw</summary>
-      <textarea id="solveBoot" rows="12" spellcheck="false"></textarea>
-      <div id="solveNote"></div>
-    </details>
-  </div>
-  <div id="manualPanel" hidden>
-    <div class="line">
-      <label>level <input id="manualLevel" type="number" min="0" step="1" style="width:5em" disabled></label>
-      <label for="manualPreset">boot like</label>
-      <select id="manualPreset"><option value="">— loading presets… —</option></select>
-      <button id="manualStart">START</button>
-      <button id="manualStop" disabled>STOP &amp; fold</button>
-      <span id="manualKeys"></span>
-    </div>
-    <div class="line" id="manualForm"><span>boot items:</span></div>
-    <details>
-      <summary>starting conditions — the tape v8 staging block, raw</summary>
-      <textarea id="manualBoot" rows="12" spellcheck="false"></textarea>
-      <div id="manualNote"></div>
+      <textarea id="bootBox" class="box" rows="12" spellcheck="false"></textarea>
+      <div id="bootNote" class="note"></div>
     </details>
   </div>
   <!-- ⛓ SOURCE = GENERATE (PROCGEN PoC slice 5, ⚖ kickoff §3.5 / ruling §1.3).
        Every control here is a BOUND the loop runs under, and every one of them
        is echoed into the trace and the readout — a knob whose value nobody
        could reproduce would be a bound nobody named (⚖ kickoff §5). -->
-  <div id="generatePanel" hidden>
+  <div id="generatePanel" class="armPanel" hidden>
     <div class="line">
       <label>seed <input id="genSeed" type="number" step="1" style="width:6em"></label>
       <label for="genBiome">biome</label>
@@ -350,7 +344,7 @@
       <button id="genReset">RESET to the skeleton</button>
       <button id="genDownload">Download level JSON + trace</button>
     </div>
-    <div id="genNote"></div>
+    <div id="genNote" class="note"></div>
   </div>
   <div id="status">loading…</div>
   <div id="detail"></div>

@@ -1030,13 +1030,12 @@ function makeRenderer(canvas) {
 }
 
 async function runJs(params, lifetime) {
-    const atlas = await fetchJson(ATLAS_URL, 'atlas');
-    const levelSource = levelSourceFromAtlas(atlas);
-    const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
     // ⛓ A pasted or uploaded tape has no path to navigate to, so it replays
-    // IN PLACE — through this same function, against this same level source.
-    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
-        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
+    // IN PLACE — through the same `replayLoadedTape` hook every arm sets, and
+    // against this same level source (`armPrelude`).
+    const { levelSource } = await armPrelude(params, lifetime);
+    const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
+    if (!lifetime.alive()) return undefined;
     return replayTape(tape, params.tape, params, levelSource,
         await fetchTraceSidecar(params.tape));
 }
@@ -1990,30 +1989,66 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
 }
 
 /**
- * The SOLVE arm: staging in, the bot's own walk out, scrubbed by REPLAY's
- * machinery.
+ * ⛓ THE ATLAS, ONCE PER DOCUMENT. Every arm needs it and every arm fetched
+ * its own copy — which cost nothing when an arm mount meant a page load, and
+ * costs a re-fetch per SOURCE switch now that it does not.
  *
- * ⚠ The solve is SYNCHRONOUS and blocks the page while it runs — which is
- * exactly the quantity ⚖ kickoff §1.2 deferred the live think-mode on, so
- * the page measures it and shows it rather than hiding it behind a
- * spinner.
+ * ⚠ A REJECTION IS NOT CACHED. Memoising the promise itself would pin a
+ * transient failure (a server restart mid-switch) for the life of the tab,
+ * and the arm would report "the atlas is missing" forever with no way back
+ * short of a reload — the one thing this arc removed.
  */
-async function runSolve(params, lifetime) {
-    const atlas = await fetchJson(ATLAS_URL, 'atlas');
+let atlasPromise = null;
+function loadAtlas() {
+    if (!atlasPromise) {
+        atlasPromise = fetchJson(ATLAS_URL, 'atlas')
+            .catch((e) => { atlasPromise = null; throw e; });
+    }
+    return atlasPromise;
+}
+
+/**
+ * ⛓ WHAT EVERY ARM DOES FIRST, and did in four copies: get the atlas, build
+ * a level source over it, and point the page's "replay a tape I am holding"
+ * hook at it. The copies were identical, which is how they stayed correct —
+ * and is exactly why the fifth one would not have been.
+ */
+async function armPrelude(params, lifetime) {
+    const atlas = await loadAtlas();
     const levelSource = levelSourceFromAtlas(atlas);
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
-        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
+        .catch((e) => lifetime.report(`a loaded tape would not replay: ${e.message}`,
+            () => fatal('the loaded tape would not replay', e.stack || e.message)));
+    return { atlas, levelSource };
+}
 
-    // ── the staging block ────────────────────────────────────────────
-    let { staging, origin, kept } = await stagingForMount($('solveBoot'), params);
-    // ⛔ EVERY AWAIT ABOVE IS A PLACE THE PAGE CAN HAVE CHANGED HANDS. A
-    // mount that kept writing after its arm was retired would paint this
-    // arm's title and block over the one the user actually switched to.
-    if (!lifetime.alive()) return;
+/**
+ * ── ⛓⛓⛓ THE BOOT PANEL, SHARED BY SOLVE AND MANUAL (switch slice 3) ───
+ *
+ * Both arms start from a staging block and both built the same panel around
+ * it: level readout, preset picker, item form, textarea, note. Two copies of
+ * a panel drift — MANUAL's level input was `disabled` and SOLVE's was not —
+ * and, more to the point, ⛔ TWO BOXES CANNOT SHARE A BLOCK. The ask this arc
+ * came from is that the level you are looking at follows you between modes,
+ * and no amount of copying between two textareas is as honest as having one.
+ *
+ * ⚠ `#bootLevel` IS A READOUT AND NOW SAYS SO. It was written by both arms
+ * and read by neither: in SOLVE you could type a level into it and nothing
+ * whatsoever consumed the number (MANUAL marked the same field `disabled`,
+ * which is the same fact with better manners). The level lives INSIDE the
+ * block — ⛔ one source of truth, and it is the textarea's parse — so the
+ * field is `readonly` rather than made into a second writer of it.
+ */
+async function mountBootPanel(params, lifetime, {
+    verb, namePrefix, onBoxChange = () => {},
+} = {}) {
+    let { staging, origin, kept } = await stagingForMount($('bootBox'), params);
+    if (!lifetime.alive()) return { staging: null, name: null };
+
     // ⚠ ?level= OVERRIDES the block's own level and SAYS SO. The boot x/y
     // belong to the block's level, so pointing it at another one usually
     // spawns the player somewhere meaningless — a fact worth a line in the
-    // detail bar rather than a mysterious refusal from the solver.
+    // note rather than a mysterious refusal from the solver.
     const notes = [];
     if (params.level !== null && Number.isFinite(params.level)) {
         if (params.level !== staging.boot.level) {
@@ -2028,11 +2063,58 @@ async function runSolve(params, lifetime) {
             + 'SOURCE switch — they are not what this URL names, so a copy of the link '
             + 'will not show them');
     }
-    const name = params.name || `editor-L${staging.boot.level}`;
-    $('title').textContent = `${name} — solving from ${origin}`;
-    $('solveLevel').value = String(staging.boot.level);
-    $('solveBoot').value = JSON.stringify(staging, null, 4);
-    $('solveNote').textContent = notes.join('  ·  ');
+    /**
+     * ⚠ THE DEFAULT NAME STAYS PER-ARM. It is not decoration: it rides into
+     * the tape a MANUAL session FOLDS, so unifying it here would quietly
+     * rename every hand-driven tape from `manual-L0` to the solver's own
+     * prefix — a shared panel must not relabel the artifacts its arms produce.
+     */
+    const name = params.name || `${namePrefix}-L${staging.boot.level}`;
+    $('title').textContent = `${name} — ${verb} from ${origin}`;
+    $('bootLevel').value = String(staging.boot.level);
+    $('bootLevel').title = 'the level the block below boots into — a READOUT of '
+        + '`boot.level`, which is where the level actually lives. Edit it in the block, '
+        + 'or override it with ?level=.';
+    $('bootBox').value = JSON.stringify(staging, null, 4);
+    $('bootNote').textContent = notes.join('  ·  ');
+
+    // ⛓ ONE ROSTER, ONE TABLE: the key legend is rendered FROM the binding
+    // map, so a rebinding cannot leave the page describing the old keys.
+    $('manualKeys').textContent = KEYBOARD_ROWS
+        .map((r) => `${r.code.replace(/^(Key|Arrow)/, '')}→${r.key}`).join('  ');
+    // ⚠ The preset navigation carries THIS arm's source, so choosing a preset
+    // from MANUAL lands back in MANUAL. It still navigates — a preset is an
+    // explicit "load something else", and the reload is what makes it beat
+    // the kept block (`stagingForMount`).
+    mountBootPresets($('bootPreset'), params.source, $('bootNote'));
+    mountBootForm($('bootForm'), $('bootBox'), $('bootNote'), lifetime, onBoxChange);
+    return { staging, origin, kept, name };
+}
+
+/**
+ * The SOLVE arm: staging in, the bot's own walk out, scrubbed by REPLAY's
+ * machinery.
+ *
+ * ⚠ The solve is SYNCHRONOUS and blocks the page while it runs — which is
+ * exactly the quantity ⚖ kickoff §1.2 deferred the live think-mode on, so
+ * the page measures it and shows it rather than hiding it behind a
+ * spinner.
+ */
+async function runSolve(params, lifetime) {
+    const { levelSource } = await armPrelude(params, lifetime);
+    // ⛔ EVERY AWAIT IS A PLACE THE PAGE CAN HAVE CHANGED HANDS. A mount that
+    // kept writing after its arm was retired would paint this arm's title and
+    // block over the one the user actually switched to.
+    if (!lifetime.alive()) return;
+
+    const { staging, name } = await mountBootPanel(params, lifetime, {
+        verb: 'solving',
+        namePrefix: 'editor',
+        // ⛓ The SOLVE arm's own consumer: a ticked sword rebuilds the world
+        // the goal picker offers, so the census follows the box.
+        onBoxChange: () => refreshFromBox(),
+    });
+    if (!lifetime.alive()) return;
 
     // ── the goal picker, over this staging block's own census ────────
     let goals = params.goals ? parseGoalsParam(params.goals) : [];
@@ -2078,7 +2160,7 @@ async function runSolve(params, lifetime) {
      * input is how you learn whether the input was ever consumed.
      */
     const stagingNow = () => {
-        const block = stagingFromJson(JSON.parse($('solveBoot').value));
+        const block = stagingFromJson(JSON.parse($('bootBox').value));
         return params.level !== null && Number.isFinite(params.level)
             ? { ...block, boot: { ...block.boot, level: params.level } }
             : block;
@@ -2123,9 +2205,8 @@ async function runSolve(params, lifetime) {
      * number. The press-time refresh in `solveNow` is what makes the picker's
      * staleness cosmetic rather than load-bearing.
      */
-    const refreshFromBox = () => { try { refreshCensus(stagingNow()); } catch { /* shown */ } };
-    mountBootForm($('solveForm'), $('solveBoot'), $('solveNote'), lifetime, refreshFromBox);
-    lifetime.on($('solveBoot'), 'change', refreshFromBox);
+    function refreshFromBox() { try { refreshCensus(stagingNow()); } catch { /* shown */ } }
+    lifetime.on($('bootBox'), 'change', refreshFromBox);
 
     $('solveGoalAdd').onclick = () => {
         const spec = $('solveGoalPick').value;
@@ -2134,9 +2215,6 @@ async function runSolve(params, lifetime) {
         showGoals();
     };
     $('solveGoalClear').onclick = () => { goals = []; showGoals(); };
-
-    // ── the PRESETS, harvested from the committed tapes' own boots ───
-    mountBootPresets($('solvePreset'), 'solve', $('solveNote'));
 
     // ── SOLVE ────────────────────────────────────────────────────────
     async function solveNow() {
@@ -2354,41 +2432,25 @@ async function runSolve(params, lifetime) {
  * the tape you just recorded are the same derivation, not two that agree.
  */
 async function runManual(params, lifetime) {
-    const atlas = await fetchJson(ATLAS_URL, 'atlas');
-    const levelSource = levelSourceFromAtlas(atlas);
-    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
-        .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
-
-    // ⛓ THE SAME RULE AS SOLVE'S, through the same function: a box already
-    // holding a block wins over `?boot=`, and the note says so.
-    let { staging, origin, kept } = await stagingForMount($('manualBoot'), params);
+    const { levelSource } = await armPrelude(params, lifetime);
     if (!lifetime.alive()) return;
-    if (params.level !== null && Number.isFinite(params.level)) {
-        staging = { ...staging, boot: { ...staging.boot, level: params.level } };
-    }
-    const name = params.name || `manual-L${staging.boot.level}`;
-    $('title').textContent = `${name} — driving from ${origin}`;
-    $('manualLevel').value = String(staging.boot.level);
-    $('manualBoot').value = JSON.stringify(staging, null, 4);
-    $('manualNote').textContent = kept
-        ? '⛓ the starting conditions below are THIS TAB\'S OWN, kept across a SOURCE '
-            + 'switch — they are not what this URL names, so a copy of the link will not '
-            + 'show them'
-        : '';
-    // ⛓ ONE ROSTER, ONE TABLE: the key legend is rendered FROM the binding
-    // map, so a rebinding cannot leave the page describing the old keys.
-    $('manualKeys').textContent = KEYBOARD_ROWS
-        .map((r) => `${r.code.replace(/^(Key|Arrow)/, '')}→${r.key}`).join('  ');
-    mountBootPresets($('manualPreset'), 'manual', $('manualNote'));
-    // ⛓ The SAME form, over this arm's own box — and MANUAL has re-read its
-    // box at START since slice 3, so there is nothing downstream to refresh.
-    mountBootForm($('manualForm'), $('manualBoot'), $('manualNote'), lifetime);
+
+    /**
+     * ⛓ THE SAME PANEL SOLVE MOUNTS, over the SAME box — which is what makes
+     * a block edited in SOLVE the block you drive here. ⚠ MANUAL passes no
+     * `onBoxChange`: it re-reads the box at START (slice 3 of the editor arc),
+     * so there is nothing downstream to refresh in between.
+     */
+    const { staging, name } = await mountBootPanel(params, lifetime, {
+        verb: 'driving', namePrefix: 'manual',
+    });
+    if (!lifetime.alive()) return;
 
     // ⚠ ONCE. The Set IS the live toggle state — the checkboxes mutate it in
     // place, so rebuilding it per draw would undo every toggle every frame.
     const layers = layerSetFor(params);
     if (layers.unknown.length) {
-        $('manualNote').textContent += `${$('manualNote').textContent ? '  ·  ' : ''}`
+        $('bootNote').textContent += `${$('bootNote').textContent ? '  ·  ' : ''}`
             + `⚠ ?layers= names ${layers.unknown.length} unknown layer(s): `
             + `${layers.unknown.join(', ')} — the roster is ${LAYER_IDS.join(', ')}`;
     }
@@ -2526,7 +2588,7 @@ async function runManual(params, lifetime) {
     $('manualStart').onclick = () => {
         let block;
         try {
-            block = stagingFromJson(JSON.parse($('manualBoot').value));
+            block = stagingFromJson(JSON.parse($('bootBox').value));
         } catch (e) {
             fatal('the starting conditions would not parse — this is the tape parser\'s '
                 + 'own message', e.message);
@@ -2758,7 +2820,7 @@ async function runGenerate(params, lifetime) {
         .map((b) => `<option value="${b}">${b}</option>`).join('');
     biomeSel.value = biome;
 
-    const atlas = await fetchJson(ATLAS_URL, 'atlas');
+    const atlas = await loadAtlas();
     /**
      * ⛔ THE PAGE'S ATLAS IS FETCHED AND THEN NOT USED FOR THE LEVEL — a
      * generated room is not in it. `atlasOf(record)` wraps the ONE record in
@@ -3291,16 +3353,29 @@ async function populatePicker(params, index) {
     };
 }
 
-/** Which panels belong to an arm. One table, read on mount and on switch. */
-function showPanelsFor(source) {
-    $('replayPick').hidden = source !== 'replay';
-    $('solvePanel').hidden = source !== 'solve';
-    $('manualPanel').hidden = source !== 'manual';
-    $('generatePanel').hidden = source !== 'generate';
+/**
+ * Which panels belong to an arm. ONE TABLE, read on mount and on switch.
+ *
+ * ⛓ THE BOOT PANEL IS SHARED, so it is shown for BOTH arms that start from a
+ * staging block and only the ACTIONS beside it change. That is the visible
+ * half of "one box, one block": the panel does not blink out and back when
+ * you move between SOLVE and MANUAL, because it is the same panel.
+ */
+const PANELS = Object.freeze({
+    replayPick: (s) => s === 'replay',
+    bootPanel: (s) => s === 'solve' || s === 'manual',
+    solveActions: (s) => s === 'solve',
+    solveGoalLine: (s) => s === 'solve',
+    manualActions: (s) => s === 'manual',
+    generatePanel: (s) => s === 'generate',
     // ⛓ The generation pane only exists for the arm that produces one — a
     // permanently empty "GENERATION TRACE" heading on the REPLAY page would
     // be a channel with nothing in it and no way to tell why.
-    $('genTraceSection').hidden = source !== 'generate';
+    genTraceSection: (s) => s === 'generate',
+});
+
+function showPanelsFor(source) {
+    for (const [id, belongs] of Object.entries(PANELS)) $(id).hidden = !belongs(source);
 }
 
 /**

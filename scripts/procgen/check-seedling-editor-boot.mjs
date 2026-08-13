@@ -67,7 +67,7 @@ async function open(url) {
     return { page, errors };
 }
 
-const bootBlock = async (page) => JSON.parse(await page.inputValue('#solveBoot'));
+const bootBlock = async (page) => JSON.parse(await page.inputValue('#bootBox'));
 
 /**
  * ⚠ The RAW editor lives behind a `<details>` on purpose — the form is the
@@ -75,14 +75,14 @@ const bootBlock = async (page) => JSON.parse(await page.inputValue('#solveBoot')
  * into the textarea has to open it, exactly as a user would.
  */
 const openRawEditor = (page) =>
-    page.$eval('#solvePanel details', (d) => { d.open = true; });
+    page.$eval('#bootPanel details', (d) => { d.open = true; });
 
 // ── ROW 1: the DEFAULT boot is the true game start ───────────────────────
 
 console.log('\n## the default boot — no ?boot=, nothing typed');
 {
     const { page, errors } = await open(`${PAGE}?source=solve`);
-    await page.waitForFunction(() => document.querySelector('#solveBoot')?.value?.length > 0);
+    await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
     const block = await bootBlock(page);
 
     /**
@@ -114,9 +114,9 @@ console.log('\n## the default boot — no ?boot=, nothing typed');
 console.log('\n## the boot form — two checkboxes over ONE parsed block');
 {
     const { page, errors } = await open(`${PAGE}?source=solve`);
-    await page.waitForFunction(() => document.querySelector('#solveBoot')?.value?.length > 0);
+    await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
 
-    check(await page.isVisible('#solveForm-sword') && await page.isVisible('#solveForm-shield'),
+    check(await page.isVisible('#bootForm-sword') && await page.isVisible('#bootForm-shield'),
         'the two checkboxes are mounted, generated from ITEM_FORM_FIELDS');
     /**
      * ⚠ THE THIRD STATE IS ON SCREEN. `r7-act2-1` declares `seam: null`, so
@@ -124,12 +124,12 @@ console.log('\n## the boot form — two checkboxes over ONE parsed block');
      * different segments (`seamToBlock`'s law). An unticked box would say
      * the wrong one.
      */
-    check(await page.$eval('#solveForm-sword', (el) => el.indeterminate === true),
+    check(await page.$eval('#bootForm-sword', (el) => el.indeterminate === true),
         '⚠ an UNDECLARED flag renders indeterminate, not unticked',
         'the default block declares no seam at all');
 
     // ── direction 1: the box writes the block ──
-    await page.check('#solveForm-sword');
+    await page.check('#bootForm-sword');
     const afterTick = await bootBlock(page);
     check(afterTick.seam?.items?.hasSword === true,
         '⛓ ticking the box WROTE seam.items.hasSword into the textarea',
@@ -141,16 +141,16 @@ console.log('\n## the boot form — two checkboxes over ONE parsed block');
     // ── direction 2: the block writes the boxes ──
     const edited = { ...afterTick, seam: { items: { hasSword: false, hasShield: true } } };
     await openRawEditor(page);
-    await page.fill('#solveBoot', JSON.stringify(edited, null, 4));
-    await page.waitForFunction(() => document.querySelector('#solveForm-shield').checked === true);
-    check(await page.$eval('#solveForm-sword', (el) => !el.checked && !el.indeterminate)
-        && await page.$eval('#solveForm-shield', (el) => el.checked),
+    await page.fill('#bootBox', JSON.stringify(edited, null, 4));
+    await page.waitForFunction(() => document.querySelector('#bootForm-shield').checked === true);
+    check(await page.$eval('#bootForm-sword', (el) => !el.checked && !el.indeterminate)
+        && await page.$eval('#bootForm-shield', (el) => el.checked),
         '⛓⛓ …and TYPING in the box re-derives the boxes — one source of truth, both ways');
 
     // ── the refusal: a box that cannot parse disables the controls ──
-    await page.fill('#solveBoot', '{ not json');
-    await page.waitForFunction(() => document.querySelector('#solveForm-sword').disabled === true);
-    const why = await page.textContent('#solveForm');
+    await page.fill('#bootBox', '{ not json');
+    await page.waitForFunction(() => document.querySelector('#bootForm-sword').disabled === true);
+    const why = await page.textContent('#bootForm');
     check(/will not parse/.test(why),
         '⛔ a textarea that will not parse DISABLES the boxes, with the parser\'s message',
         why.replace(/\s+/g, ' ').trim().slice(0, 110));
@@ -171,11 +171,11 @@ console.log('\n## ⛔ the SOLVE button solves what is IN THE BOX (the slice\'s o
      */
     const boot = `${TAPES}/r7-act2-11.json`;
     const { page, errors } = await open(`${PAGE}?source=solve&boot=${boot}`);
-    await page.waitForFunction(() => document.querySelector('#solveBoot')?.value?.length > 0);
+    await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
 
-    check(await page.$eval('#solveForm-sword', (el) => el.checked),
+    check(await page.$eval('#bootForm-sword', (el) => el.checked),
         'the form reads r7-act2-11\'s DECLARED sword as ticked');
-    await page.uncheck('#solveForm-sword');
+    await page.uncheck('#bootForm-sword');
     const block = await bootBlock(page);
     check(block.seam.items.hasSword === false,
         '…and unticking wrote a real `false` into the block');
@@ -187,7 +187,7 @@ console.log('\n## ⛔ the SOLVE button solves what is IN THE BOX (the slice\'s o
      * read: the parser's own message must come back out of the SOLVE button.
      */
     await openRawEditor(page);
-    await page.fill('#solveBoot', '{ "boot": { "level": 4 } }');
+    await page.fill('#bootBox', '{ "boot": { "level": 4 } }');
     await page.click('#solveGo');
     await page.waitForFunction(() => window.__editorSolve?.status === 'refused',
         null, { timeout: 30000 });
@@ -203,7 +203,7 @@ console.log('\n## ⛔ the SOLVE button solves what is IN THE BOX (the slice\'s o
      * r7-act2-11's own L11 block would have named something else entirely.
      */
     const l4 = { ...block, boot: { level: 4, x: 16, y: 16 } };
-    await page.fill('#solveBoot', JSON.stringify(l4, null, 4));
+    await page.fill('#bootBox', JSON.stringify(l4, null, 4));
     await page.click('#solveGo');
     await page.waitForFunction(
         () => /live exit/.test(window.__editorSolve?.message ?? ''), null, { timeout: 30000 });

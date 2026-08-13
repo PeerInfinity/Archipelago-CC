@@ -96,7 +96,7 @@ const finish = async (code) => {
  * Drive the page's own selector, and wait for the ARRIVING arm to finish.
  *
  * ⛔ WAITING ON `__editorArm`, NOT ON THE ARM'S BOX. The first cut of this row
- * waited for `#solveBoot` to be non-empty — which is true the instant the
+ * waited for `#bootBox` to be non-empty — which is true the instant the
  * switch begins, because keeping that box full across a switch is the feature
  * being tested. The wait returned immediately, the row read the OUTGOING
  * arm's page, and it reported a missing note that the page wrote a moment
@@ -120,10 +120,10 @@ const armState = () => page.evaluate(() => ({
     stamp: window.__switchProbe ?? null,
     editorSolve: window.__editorSolve ?? null,
     editorManual: window.__editorManual ?? null,
-    solveBox: document.getElementById('solveBoot').value,
-    solveNote: document.getElementById('solveNote').textContent,
-    solveFormControls: document.querySelectorAll('#solveForm input[type=checkbox]').length,
-    swordTicked: document.getElementById('solveForm-sword')?.checked ?? null,
+    bootBox: document.getElementById('bootBox').value,
+    bootNote: document.getElementById('bootNote').textContent,
+    bootFormControls: document.querySelectorAll('#bootForm input[type=checkbox]').length,
+    swordTicked: document.getElementById('bootForm-sword')?.checked ?? null,
 }));
 
 /**
@@ -141,18 +141,18 @@ try {
     const url = `${origin}${PAGE_PATH}?source=solve&boot=${BOOT}`;
     console.log(`page: ${url}`);
     await page.goto(url, { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => document.getElementById('solveBoot').value.length > 0,
+    await page.waitForFunction(() => document.getElementById('bootBox').value.length > 0,
         null, { timeout: 120000 });
     await page.evaluate(() => { window.__switchProbe = 'the original document'; });
 
     // ── CLAIM 5a: an edit, made through the page's own form ──────────
-    await page.click('#solveForm-sword');
+    await page.click('#bootForm-sword');
     const edited = await armState();
     check(edited.swordTicked === true, 'the sword box is ticked in SOLVE, and the block took it',
-        `block declares hasSword: ${JSON.parse(edited.solveBox).seam?.items?.hasSword}`);
-    check(edited.solveFormControls === ITEM_FORM_FIELDS.length,
+        `block declares hasSword: ${JSON.parse(edited.bootBox).seam?.items?.hasSword}`);
+    check(edited.bootFormControls === ITEM_FORM_FIELDS.length,
         'one row of boot-form controls on the first mount',
-        `${edited.solveFormControls} control(s)`);
+        `${edited.bootFormControls} control(s)`);
 
     // ── CLAIM 1: switch to MANUAL without a reload ───────────────────
     await switchTo('manual');
@@ -170,6 +170,16 @@ try {
         + 'arm before last', inManual.editorSolve ? 'still present' : 'cleared');
     check(!inManual.title.includes('solving from'),
         'and the title is MANUAL\'s, not the solve it replaced', inManual.title);
+
+    // ── CLAIM 7 (slice 3): ONE BOX, so the block FOLLOWS you ─────────
+    check(JSON.parse(inManual.bootBox).seam?.items?.hasSword === true,
+        '⛓⛓⛓ THE SHARED BOOT PANEL: the sword ticked in SOLVE is in the block MANUAL is '
+        + 'about to drive — one box, one block, and no copying between two of them');
+    check(/kept across a SOURCE switch/.test(inManual.bootNote),
+        'and MANUAL says the block is the tab\'s own too', inManual.bootNote);
+    check(await page.$eval('#bootLevel', (el) => el.readOnly),
+        '⚠ the shared level field is a READOUT — it was written by both arms and read by '
+        + 'neither, and SOLVE let you type into it');
 
     // ── CLAIM 3a: drive, so the keyboard and the loop are both LIVE ──
     await page.click('#manualStart');
@@ -211,16 +221,16 @@ try {
     check(back.swordTicked === true,
         '⛓⛓⛓ THE POINT OF THE ARC: the sword ticked before the switch is still ticked '
         + 'after SOLVE → MANUAL → SOLVE');
-    check(JSON.parse(back.solveBox).seam?.items?.hasSword === true,
+    check(JSON.parse(back.bootBox).seam?.items?.hasSword === true,
         'and the block in the box is the EDITED one, not the one ?boot= names');
-    check(/kept across a SOURCE switch/.test(back.solveNote),
+    check(/kept across a SOURCE switch/.test(back.bootNote),
         '⛔ and the page SAYS the block is this tab\'s own — a view showing edits the link '
-        + 'does not carry must not look like a view of the link', back.solveNote);
+        + 'does not carry must not look like a view of the link', back.bootNote);
 
     // ── CLAIM 6: nothing doubled over three mounts ───────────────────
-    check(back.solveFormControls === ITEM_FORM_FIELDS.length,
+    check(back.bootFormControls === ITEM_FORM_FIELDS.length,
         'the boot form still has ONE row of controls after re-mounting',
-        `${back.solveFormControls} control(s), expected ${ITEM_FORM_FIELDS.length}`);
+        `${back.bootFormControls} control(s), expected ${ITEM_FORM_FIELDS.length}`);
 
     // ── and no errors anywhere in the sequence ───────────────────────
     check(errors.length === 0, 'no page errors across the whole sequence',
