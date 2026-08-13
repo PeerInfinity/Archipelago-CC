@@ -1782,8 +1782,21 @@ function mountTracePane(source, seekTo) {
                 r.el.classList.toggle('past', i <= active);
                 r.el.classList.toggle('now', i === active);
             });
+            /**
+             * ⛔ THE PANE SCROLLS, NOT THE PAGE (group A, item 8).
+             *
+             * `scrollIntoView` scrolls EVERY scrollable ancestor, and the
+             * document is one of them — so following a solve's trace dragged
+             * the whole page up and down under the reader once per highlighted
+             * row, which is the "why does it keep jumping" complaint. Moving
+             * the pane's own `scrollTop` by the overshoot keeps the active row
+             * visible and leaves the document exactly where it was put.
+             */
             if (active >= 0) {
-                els[active].el.scrollIntoView({ block: 'nearest' });
+                const r = els[active].el.getBoundingClientRect();
+                const b = box.getBoundingClientRect();
+                if (r.top < b.top) box.scrollTop -= (b.top - r.top);
+                else if (r.bottom > b.bottom) box.scrollTop += (r.bottom - b.bottom);
             }
         },
         readout: { rows: rows.length, why: null, firstTick: rows[0].tick },
@@ -3914,6 +3927,12 @@ function wireSourceSelector(params, onSwitch) {
     sel.value = params.source;
     showPanelsFor(params.source);
     sel.onchange = () => onSwitch(sel.value);
+
+    // ⛓ The engine picker rides the same switch — REPLAY-only, because the
+    // other three arms build JS worlds and the wasm side builds none.
+    const sideSel = $('side');
+    sideSel.value = params.side;
+    sideSel.onchange = () => onSwitch('replay', sideSel.value);
 }
 
 /** `replay-js` and `replay-wasm` are two machines with two teardowns. */
@@ -4032,9 +4051,17 @@ async function mountArm(params, lifetime) {
  * has to land somewhere visible, which is what the arms' own
  * `lifetime.report` paths do.
  */
-async function switchArm(source) {
+async function switchArm(source, side = null) {
     const q = new URLSearchParams(window.location.search);
     q.set('source', source);
+    /**
+     * ⛓ THE ENGINE MOVES THE SAME WAY THE ARM DOES (item 11). `?side=` was
+     * URL-only, so trying the other engine meant editing the address bar —
+     * and the in-place switch already knows how to retire a wasm arm (the
+     * iframe's `about:blank` teardown rides on `onRetire`), so there was
+     * nothing left to build but the control.
+     */
+    if (side) q.set('side', side);
     /**
      * ⛔ THE ARM'S OWN BOUNDS DO NOT FOLLOW IT. `?tickbudget=` means one thing
      * to GENERATE and `?tick=` means another to the scrub cursor; what makes

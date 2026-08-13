@@ -417,6 +417,125 @@ try {
     check(errors.length === 0, 'no page errors across the stepper sequence',
         errors.join(' | ') || 'none');
 
+    // ── ⛓ THE TRACE PANE SCROLLS ITSELF, NOT THE PAGE (item 8) ───────
+    /**
+     * `scrollIntoView` scrolls EVERY scrollable ancestor, the document
+     * included, so following a solve's trace dragged the whole page under the
+     * reader once per highlighted row. The witness is the pair: the PANE must
+     * move (the active row is still being kept visible) and the DOCUMENT must
+     * not (that is the complaint). Asserting only the second would pass on a
+     * pane that had stopped following at all.
+     */
+    {
+        // ⛓ `check-seedling-editor-solve.mjs`'s own subject — r7-act2-4's
+        // boot into level 4 toward the battery's `goalsFor(4)`. A known-good
+        // combination, because this row is testing SCROLLING and has no
+        // business discovering a solve that refuses.
+        const solveUrl = `${origin}${PAGE_PATH}?source=solve`
+            + '&boot=frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json'
+            + '&level=4&goals=exit%3A64%2C16&solve=1';
+        console.log(`\npage: ${solveUrl}`);
+        await page.setViewportSize({ width: 900, height: 500 });
+        await page.goto(solveUrl, { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(() => window.__editorSolve?.status === 'ok',
+            null, { timeout: 300000 });
+        const rows = await page.evaluate(() => document.querySelectorAll('#trace .tr').length);
+        check(rows > 1, 'the solve produced a trace with rows to follow', `${rows} row(s)`);
+
+        const moved = await page.evaluate(() => {
+            const doc = document.scrollingElement;
+            const pane = document.getElementById('trace');
+            const scrub = document.getElementById('scrub');
+            doc.scrollTop = 0;
+            pane.scrollTop = 0;
+            // Drive the cursor to the end, which is what walks the highlight
+            // down the pane and used to walk the page with it.
+            scrub.value = scrub.max;
+            scrub.dispatchEvent(new Event('input', { bubbles: true }));
+            return { doc: doc.scrollTop, pane: pane.scrollTop,
+                scrollable: doc.scrollHeight > doc.clientHeight,
+                paneScrollable: pane.scrollHeight > pane.clientHeight };
+        });
+        check(moved.scrollable && moved.paneScrollable,
+            '⚠ both the page and the pane CAN scroll here — otherwise neither half of the '
+            + 'claim below has a subject',
+            `page ${moved.scrollable}, pane ${moved.paneScrollable}`);
+        check(moved.pane > 0,
+            '⛓ the PANE followed the active row', `pane scrollTop ${moved.pane}`);
+        check(moved.doc === 0,
+            '⛓⛓⛓ …AND THE PAGE DID NOT MOVE — no more jumping under the reader',
+            `document scrollTop ${moved.doc}`);
+        await page.setViewportSize({ width: 1280, height: 720 });
+    }
+
+    // ── ⛓ THE ENGINE PICKER (item 11) ────────────────────────────────
+    /**
+     * ⛔ ASSERTED ON THE LIFETIME, NOT ON `__editorArm`, AND THAT IS A FACT
+     * ABOUT THE WASM ARM RATHER THAN A CONVENIENCE. `__editorArm` means "the
+     * mount function RETURNED", and `runWasm` does not return until the tape
+     * has started — which needs ONE REAL CLICK inside the frame, by design.
+     * A row waiting on it here would hang on any machine that HAS the wasm
+     * artifact and pass on any machine that does not.
+     *
+     * ⚠ AND NOTHING IS ASSERTED ABOUT THE ARTIFACT'S PRESENCE. It is
+     * gitignored and machine-local: this box has it, CI does not, and a claim
+     * that flips on that is a claim about the machine. What is asserted is the
+     * SWITCH — a new arm named for its engine, the old one retired, the URL
+     * moved — which is true either way.
+     */
+    const replayUrl = `${origin}${PAGE_PATH}?tape=${BOOT}&side=js`;
+    console.log(`\npage: ${replayUrl}`);
+    await page.goto(replayUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorArm?.source === 'replay',
+        null, { timeout: 120000 });
+    check(await page.isVisible('#side'), 'the engine picker is up for REPLAY');
+    check((await page.evaluate(() => window.__editorLifetime.current.name)) === 'replay-js',
+        'and the live arm is named for its engine',
+        await page.evaluate(() => window.__editorLifetime.current.name));
+
+    await page.selectOption('#side', 'wasm');
+    await page.waitForFunction(
+        () => window.__editorLifetime.current?.name === 'replay-wasm', null, { timeout: 120000 });
+    const wasm = await page.evaluate(() => ({
+        url: window.location.search,
+        retired: window.__editorLifetime.retired.map((r) => r.name),
+        frameShown: !document.getElementById('frame').hidden
+            && document.getElementById('frame').style.display !== 'none',
+    }));
+    check(/side=wasm/.test(wasm.url),
+        '⛓ the engine picker switched IN PLACE — a new arm named for its engine, and the '
+        + 'URL says so', wasm.url);
+    check(wasm.retired.includes('replay-js'),
+        'and the JS arm was retired rather than left running beside it',
+        wasm.retired.join(', '));
+
+    // ── ⛓⛓ AND BACK, WHICH IS WHERE THE IFRAME TEARDOWN SHOWS ────────
+    await page.evaluate(() => { delete window.__editorArm; });
+    await page.selectOption('#side', 'js');
+    await page.waitForFunction(() => window.__editorArm?.source === 'replay',
+        null, { timeout: 120000 });
+    const backToJs = await page.evaluate(() => ({
+        arm: window.__editorLifetime.current.name,
+        frameSrc: document.getElementById('frame').getAttribute('src'),
+        canvasShown: document.getElementById('canvas').style.display !== 'none',
+        retiredWasm: window.__editorLifetime.retired.some((r) => r.name === 'replay-wasm'),
+    }));
+    check(backToJs.arm === 'replay-js' && backToJs.retiredWasm,
+        'switching back retires the wasm arm',
+        `${backToJs.arm}, retired: ${backToJs.retiredWasm}`);
+    /**
+     * ⛓⛓⛓ THE ONE TEARDOWN THE RELOAD WAS ACTUALLY PROTECTING. The wasm side
+     * cannot rewind the GAME — `botReset` forgets the tape, not the world — so
+     * leaving it must discard the whole runtime. `about:blank` is that, and it
+     * is the observable: the iframe is pointed away and the canvas comes back.
+     */
+    check(backToJs.frameSrc === 'about:blank' && backToJs.canvasShown,
+        '⛓⛓⛓ …AND THE RUNTIME IS DISCARDED — the iframe is blanked, which is the whole of '
+        + 'what the wasm side needed a page reload for', `src=${backToJs.frameSrc}`);
+    check(errors.length === 0 || errors.every((e) => /404/.test(e)),
+        'no page errors beyond the wasm artifact\'s own fetches',
+        errors.slice(0, 2).join(' | ') || 'none');
+
     // ── ⛓ THE SELECTOR ROUTE OUT OF GENERATE (item 1) ────────────────
     /**
      * The bridge BUTTONS were the only thing that armed the hand-over, so the

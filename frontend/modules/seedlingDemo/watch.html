@@ -308,6 +308,14 @@
     <span id="replayPick">
       <label for="tapes">tape</label>
       <select id="tapes" disabled><option>loading…</option></select>
+      <!-- ⛓ THE ENGINE, AS A CONTROL (group A, item 11). Replay-only: the
+           other three arms build JS worlds, and the wasm side drives the
+           recompiled game instead of building any. -->
+      <label for="side">engine</label>
+      <select id="side">
+        <option value="js">JS — drawn on canvas, works anywhere</option>
+        <option value="wasm">wasm — the real recompiled game (LOCAL ONLY)</option>
+      </select>
       <span id="sidenote"></span>
     </span>
   </div>
