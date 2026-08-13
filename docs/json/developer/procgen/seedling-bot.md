@@ -7935,3 +7935,173 @@ Standing gates unchanged: the 10 existing editor rows, 3656 `seedlingDemo`
 tests, and `solve-seedling-r8-battery.mjs --check` byte-identical
 (`1fedb0ab35b7cd74accecf0345bdc893`, 28 PASS, exit 1 — the two standing drift
 rows).
+
+### Group B — the renderer, the overlays and the ceremony text (2026-08-12)
+
+Five more items, in two commits, in the code Group A deliberately left alone —
+the renderer, the overlay roster and the engine's read surfaces. **Two of the
+five turned out to be about a picture the page was drawing CORRECTLY and
+explaining to nobody**, which is the finding worth carrying off the batch.
+
+- **⛓ The sword you can never see — and the swing window was already right.**
+  The first question was whether a swing's active window is DERIVABLE or would
+  have to be assumed. It is derivable, and the layer was already drawing all of
+  it: `Player.slash`'s `slashDelayMax` is **0**, so the hit test runs on every
+  tick `slashing` is up, and the run pushes a press row for each.
+  ⛔ **MEASURED across the committed tapes** (`r5-l60-kill`, `r6-shield-kill`,
+  `r6-owl-kill`, `r5-l40-part0`, `r4-walk-full`):
+
+  | weapon | rows in `run.presses` per press | `fired` ticks |
+  |---|---|---|
+  | sword | **5** (`presses.SLASH_HIT_TICKS`) | T+1 … T+5, consecutive |
+  | spear | 1 | T+1 |
+
+  Five ticks is **83 ms** at the pacer's speed 1. *That* is the blink — so the
+  fix is an afterimage and it is a **DISPLAY CHOICE**, which is why it rides in
+  its own readout channel (`drawn.attacksHeld`), its own desaturated
+  outline-only ink, its own legend row with the words in it, and its own knob
+  (`?attackhold=`, default 15, 0 = raw). `drawn.attacks` is byte-unchanged and
+  still means *the tick the run collided a rect*.
+  ⚠ The spear's real T+1/T+3/T+5 window is a **named model bound**
+  (`presses.SPEAR_HIT_TICKS_UNMODELLED`), carried in the readout so one rect
+  where the game tests three times is an absence with a written cause.
+
+- **⚖ Which box is the player's real hitbox.** The page drew two overlapping
+  boxes one pixel apart and told nobody which was which. ⚖ The user kept both
+  and ruled that the fix was to SAY:
+  - **white, filled — `playerBoxAt(x, y)`.** THE hitbox. The engine's own
+    `HITBOX` origin/width/height, the box the physics collides solids with, the
+    box `dangerAt` is queried with, the box `hammerHitsPlayer` is handed. If a
+    question was "did that touch the player", this rect answered it.
+  - **yellow, outline — `terrainProbeRect(x, y)`.** NOT a collision volume and
+    never consulted as one. The same box shifted DOWN by `checkOffsetY` (= 1),
+    which `Player.getState()` (`Player.as:660`) compares the nearest tile
+    against to decide the terrain type. ⚠ The one-pixel overlap **is the
+    point**: it is why a player can be collision-clear of a pit and reading
+    `pit`.
+
+- **⛔ A pushed block is still drawn at its starting position — true for seven
+  slices.** The world-state roster excused the family in writing: *"`pushables`
+  is drawn already (its own path layer since slice 2)"*. It is not the same
+  picture. That layer is **one dot at the block's centre per tick**; the 16x16
+  GREY BOX a reader sees is the BASE world's, built once per level and never
+  advanced. So the two readings together said *"the block is here now"* and
+  *"the block is ALSO still there"*, and only one was true. Pushables are now a
+  world-state family **in their own arm**, because the join is a **rect
+  comparison** and not set membership — every block is in `run.pushables` from
+  tick 0 whether or not anything touched it. The glide is drawn, not snapped
+  (0.5 px/tick, off the 16 px grid), and the engine differential asks
+  `collidesSolid` in **both** directions: the wall IS at the drawn rect, and —
+  once the block clears its spawn cell — is NOT at the base.
+
+- **⛓ A pushable and a breakable rock are not one colour.** Every entity solid
+  was `#55506a` — 1219 of them across 116 levels, so the two things a room's
+  puzzle is usually made of looked like each other and like a dresser.
+  Coloured by the **run's own join** (`pushableId`, `rockId`, …) — the same
+  field `liveRectOf` switches on — never by tag, which would split one family
+  across seven names (`lock`/`cover`/`wandlock`/`bosslock`/`shieldlock`/
+  `rocklock`/`grasslock`) and merge two (`breakablerock` +
+  `breakablerockghost`). ⛔ **MEASURED FIRST: no solid in the atlas carries two
+  id fields** — activatorId 70 · rockId 24 · pushableId 19 · chestId 16 ·
+  treeId 6 · magicalLockId 6 · bridgeId 5 · pulserId 4 · crusherId 4 · ropeId 3
+  · turretId 2 · shieldBossId 1 · bossId 1 · finalDoorId 1, **zero
+  multi-keyed** — so "first field that matches" is a total function and not a
+  precedence rule that happens to work. The other **1057** carry none, keep the
+  grey, and the legend NAMES them as scenery.
+
+- **⛔ The ceremony text — a display half and an advance half, with different
+  answers.**
+
+  **The display needed a read surface that did not exist.** The model has had
+  the whole dialogue since R3 (`dialogue.beginDialogue` — pages, current page,
+  character count, frame cadence) and `levelRun` exposed a **boolean**
+  (`inCeremony`). That is everything a fixture author needs and nothing a
+  WATCHER needs. `run.ceremonyNow` is the surface — additive, read-only, and in
+  **`get watchers()`'s own field names**, because a Watcher's placed-NPC
+  dialogue is the same state and has been reported field for field since R6
+  slice 6c. It **copies**: `stepDialogue` mutates in place, so a getter that
+  handed the object back would make every collected sample point at one object
+  and the page would draw the final page at every scrub position. It rides on
+  `sampleMovers`, so ONE derivation feeds the box while DRIVING and while
+  SCRUBBING a replay.
+
+  **The advance was already written, once, somewhere unreachable.**
+  `botDriverV2.runCollect` has driven ceremonies since R3 with a `PRESS_GAP`-
+  spaced press/release cadence — inside a `while (…) { run.advance(…) }` loop,
+  which a page driven by a keyboard pacer cannot call. Retyping it would have
+  been a second cadence agreeing until somebody changed `PRESS_GAP`; this arc
+  has refused that shape three times (§8.6, §9.3, slice 8's `arrowLane`). ⇒
+  `ceremonyCadenceStep` is **hoisted**, `runCollect` uses it, and the committed
+  tapes are byte-identical across the extraction.
+
+  ⚖ Auto-advance is **ON by default** (the user's own suggestion) and is a
+  **switch**, because it makes the page dispatch keys the driver did not press
+  — and those keys are **RECORDED**. That is the honest outcome and exactly why
+  turning it off must be possible; the fold round-trips them.
+
+  ⚠ **Four named absences, and the third is the one that matters.** A boss key
+  or a totem part has `text: ''`, so `Pickup.pick_up()` spawns no NPC and the
+  ceremony freezes the screen for 150 frames with **nothing to press**. That
+  looks exactly like a hang, so it gets the box and a sentence saying so.
+
+#### ⛓ The traps this batch adds
+
+⛓ **A "diagnostic overlay" nobody labelled is a second hitbox.** Two of the
+five items were not defects in what the page DREW — the swing was already five
+ticks, the two player boxes were already the right two boxes. They were defects
+in what the page SAID, and they cost a user's time either way. *A picture with
+no legend row is not a picture of anything.*
+
+⛓ **A layer that "already covers" a family may be answering a different
+question.** The pushables path layer really does draw the block's position
+every tick — as a **dot**, in the trail vocabulary — and the roster's own note
+took that as covering the family for seven slices. The reader's eye is on the
+16x16 grey box, which is a different reading, from a different source, that
+nothing was correcting. ⇒ when a roster excuses a family, check what the
+excusing layer actually PUTS ON SCREEN, not what it is named.
+
+⛓ **A knob mounted in a roster's container becomes a member of the roster.**
+MEASURED: the attack-hold field was first added to `#layers`, which three
+acceptance rows enumerate as one input per `OVERLAY_LAYERS` row. It reported
+the roster as **16 against a roster of 15** and reddened `world`, `lanes` and
+`shapes` simultaneously, each complaining *"FIFTEEN now — 16"*. It lives in
+`#viewknobs` now and the **container is a contract** the checks assert. *The
+`?layers=` roster is addressed by DOM position as well as by name.*
+
+⛓ **A differential with a missing key vacuously passes.** The world-state
+engine differential looks up `hit[FAMILY_KEY[family]]` — and `hit[undefined]`
+is `undefined ?? null`, i.e. **exactly what "the engine agrees the solid is
+gone" looks like**. Adding a family to the layer without adding it to that
+table does not fail the differential, it silently stops asking. The table entry
+landed with the family.
+
+⛓ **An observation that does not overlap the event sees the aftermath.** The
+browser row for the ceremony text first released the key after 700 ms and
+started polling afterwards: page ONE had been and gone, so the row saw a *paged*
+ceremony and could not see it *type*. The poll now runs while the key is down —
+which also made the claim stronger, since holding a DIRECTION through the whole
+ceremony proves the cadence **replaces** the driver's keys rather than merging
+with them.
+
+#### The acceptance
+
+New claims in the existing rows, never a relaxed one:
+
+- `check-seedling-editor-shapes.mjs` — the **partition** (at a tick past the
+  swing the raw channel is empty and the held one is not, and no press row is
+  ever in both), the off switch (`?attackhold=0` restores the raw picture and
+  *nothing else changed*, asserted), and the legend wording.
+- `check-seedling-editor-world.mjs` — the pushed block (three blocks counted
+  from tick 0, ONE marked, at the measured tick, gliding 0.5 px/tick), the
+  object-solid palette, and the two player boxes named by function.
+- `check-seedling-editor-manual.mjs` — a real-key drive onto the sword that
+  reads both of `Pickups/Sword.as`' pages off the page, with the fold still
+  round-tripping the X releases the page dispatched.
+- `watchOverlays.test.js` / `watchManual.test.js` — 18 new, including the
+  **control arm** the auto-advance claim needs: the same hands-off drive with
+  the switch OFF is still in the ceremony after the budget the other arm
+  finished inside.
+
+Standing gates: **3674** `seedlingDemo` tests, all **11** browser rows green,
+and `solve-seedling-r8-battery.mjs --check` byte-identical
+(`1fedb0ab35b7cd74accecf0345bdc893`).
