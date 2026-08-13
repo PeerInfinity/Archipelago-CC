@@ -63,15 +63,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ci-requirements.txt
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
-        # Launcher.py:28 calls ModuleUpdate.update() with NO arguments, i.e.
-        # yes=False, so any requirement the line above failed to install makes
-        # it call input() — on a runner with no stdin that is an EOFError and a
-        # red job. The line above is the real installer; this second check is
-        # redundant in CI, so skip it. Do NOT hoist this to job/workflow env:
-        # it would also disable the installer above.
-        SKIP_REQUIREMENTS_UPDATE=1 python Launcher.py --update_settings  # make sure host.yaml exists for tests
+    # Its OWN step so the env below cannot reach the installer above, which
+    # SKIP_REQUIREMENTS_UPDATE would disable. Launcher.py:28 calls
+    # ModuleUpdate.update() with NO arguments, i.e. yes=False, so any
+    # requirement the installer failed to fetch makes it call input() — on a
+    # runner with no stdin that is an EOFError naming the prompt instead of
+    # the install failure. That second check is redundant in CI.
+    # ⚠ Must be `env:`, NOT a `VAR=1 cmd` prefix: the Windows runners default
+    # to PowerShell, where that POSIX form is parsed as a command name and
+    # fails with "The term 'SKIP_REQUIREMENTS_UPDATE=1' is not recognized".
+    - name: Create host.yaml for tests
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+      run: |
+        python Launcher.py --update_settings
     - name: Unittests
       env:
+        # Same prompt, one step later: a missing requirement makes world
+        # loading call input() under pytest's capture, which raises
+        # "OSError: pytest: reading from stdin while output is captured" on
+        # every affected test (42 of them on 2026-08-13) and buries the real
+        # cause. With this set, a genuinely missing dependency surfaces as an
+        # ImportError that test_no_failed_world_loads names.
+        SKIP_REQUIREMENTS_UPDATE: "1"
         # Force UTF-8 stdio. Without this, Python 3.11 on Windows defaults
         # sys.stdout to a cp1252 TextIOWrapper, and pytest-xdist's parent-
         # worker stdout teardown trips a "ValueError: underlying buffer has
