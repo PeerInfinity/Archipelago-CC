@@ -214,9 +214,16 @@ try {
         + 'about to drive — one box, one block, and no copying between two of them');
     check(/kept across a SOURCE switch/.test(inManual.bootNote),
         'and MANUAL says the block is the tab\'s own too', inManual.bootNote);
-    check(await page.$eval('#bootLevel', (el) => el.readOnly),
-        '⚠ the shared level field is a READOUT — it was written by both arms and read by '
-        + 'neither, and SOLVE let you type into it');
+    /**
+     * ⛓ IT WAS `readonly` FOR ONE SLICE, and that was the right answer while
+     * both arms wrote it and neither read it. Item 7 made it a WRITER — it
+     * edits `boot.level` in the block, through the block — so the claim
+     * inverts: what has to be true now is that typing a level CHANGES the
+     * block, which is asserted with the stepper below.
+     */
+    check(!(await page.$eval('#bootLevel', (el) => el.readOnly)),
+        '⛓ the shared level field is a CONTROL again — it writes boot.level through the '
+        + 'block, the way the item checkboxes do');
 
     // ── CLAIM 3a: drive, so the keyboard and the loop are both LIVE ──
     await page.click('#manualStart');
@@ -241,9 +248,12 @@ try {
     // ⚠ FOUR, not the three on `window`: the boot form's own `input` listener
     // is registered against the same lifetime, and it is the one that would
     // otherwise ACCUMULATE across re-mounts.
-    check(retiredManual?.alive === false && retiredManual?.listeners === 4,
-        'it is retired, and it held all four listeners it registered — the three on window '
-        + 'plus the boot form\'s',
+    // ⚠ SIX: the three on `window`, the boot form's `input`, and the shared
+    // panel's two (`#bootLevel` change, `#bootBox` change). The number is
+    // asserted rather than bounded because a listener that stops being
+    // registered is as much a defect as one that leaks.
+    check(retiredManual?.alive === false && retiredManual?.listeners === 6,
+        'it is retired, and it held all six listeners it registered',
         `alive ${retiredManual?.alive}, ${retiredManual?.listeners} listener(s)`);
     check((retiredManual?.stopped ?? []).includes('manual-frame'),
         '⛓⛓ THE LOOP STOPPED, and being NAMED is what proves it was both running and '
@@ -327,6 +337,84 @@ try {
         'the solve was of the generated room, not of something the atlas holds',
         `level ${solved.level}`);
     check(errors.length === 0, 'no page errors across the bridge sequence',
+        errors.join(' | ') || 'none');
+
+    // ── ⛓⛓ THE LEVEL STEPPER AND THE AUTO-GOAL (items 7 + 10) ────────
+    /**
+     * The stepper walks the ATLAS'S OWN level list, so what has to be true is
+     * that ▶ lands on a level the atlas HAS, that the block says so, that the
+     * canvas shows a DIFFERENT room afterwards, and that SOLVE is pressable
+     * without a trip to the goal dropdown. ⚠ The canvas comparison is what
+     * separates "the number changed" from "the level changed": every readout
+     * would move either way.
+     */
+    await page.goto(`${origin}${PAGE_PATH}?source=solve&boot=${BOOT}`,
+        { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorArm?.source === 'solve',
+        null, { timeout: 120000 });
+    errors.length = 0;
+    const before = await page.evaluate(() => ({
+        level: JSON.parse(document.getElementById('bootBox').value).boot.level,
+        goals: document.getElementById('solveGoals').textContent,
+        note: document.getElementById('bootNote').textContent,
+    }));
+    const inkBefore = await canvasInk();
+    /**
+     * ⛔ BOTH SIDES OF THE LAW, ON TWO REAL LEVELS. The pre-fill is
+     * `defaultGoalsFromCensus` — the page's OWN existing rule — and not a
+     * second policy: every placement plus the single live exit, and a REFUSAL
+     * naming the alternatives when there is not exactly one.
+     *
+     * ⚠ Level 0 is the overworld and has EIGHT live exits, so it is the
+     * refusing case; level 1 has one, so it is the pre-filling case. Asserting
+     * only the convenient half is how the first cut of this feature shipped an
+     * auto-pick that silently overruled the refusal — `check-seedling-editor-
+     * boot.mjs` went red on level 4 and that is what caught it.
+     */
+    check(before.goals === '—' && /no goals pre-filled/.test(before.note)
+        && /8 live exit\(s\)/.test(before.note),
+        '⛓⛓⛓ AN AMBIGUOUS LEVEL IS NOT GUESSED AT — level 0 has 8 live exits, so the page '
+        + 'refuses and NAMES them', before.note.slice(-120));
+
+    await page.click('#bootNext');
+    await page.waitForFunction((l) =>
+        JSON.parse(document.getElementById('bootBox').value).boot.level !== l,
+    before.level, { timeout: 60000 });
+    await page.waitForTimeout(400);
+    const after = await page.evaluate(() => ({
+        level: JSON.parse(document.getElementById('bootBox').value).boot.level,
+        field: document.getElementById('bootLevel').value,
+        note: document.getElementById('bootNote').textContent,
+        goals: document.getElementById('solveGoals').textContent,
+        x: JSON.parse(document.getElementById('bootBox').value).boot.x,
+    }));
+    const inkAfter = await canvasInk();
+    check(/pre-filled from this level's census/.test(after.note)
+        && /SAME default SOLVE would use/.test(after.note),
+        '⛓⛓⛓ …AND AN UNAMBIGUOUS ONE IS PRE-FILLED — level 1 has exactly one live exit, so '
+        + 'SOLVE is pressable without a trip to the dropdown, from the SAME default the '
+        + 'press itself would use', after.note.slice(-90));
+    check(after.level > before.level && Number(after.field) === after.level,
+        '⛓ ▶ steps to the next level the ATLAS holds, and the block and the field agree',
+        `${before.level} → ${after.level}`);
+    check(inkAfter.colours !== inkBefore.colours || inkAfter.opaque !== inkBefore.opaque,
+        '⛓ and the CANVAS redraws — a different room, not just a different number',
+        `${inkBefore.colours} colours → ${inkAfter.colours}`);
+    /**
+     * ⛔ THREE OUTCOMES, AND THE NOTE MUST NAME WHICH ONE. Only 42 of the
+     * atlas's 116 levels have a committed boot, so the common case is the
+     * page CHOOSING a cell — which is a convenience and must never read like
+     * a position the game used.
+     */
+    check(/booting at \(/.test(after.note) || /THIS PAGE CHOSE/.test(after.note)
+        || /no free cell could be chosen/.test(after.note),
+        '⛔ the boot POSITION names its own provenance — committed boot, a cell this page '
+        + 'chose, or a stale one it could not replace', after.note);
+    if (/THIS PAGE CHOSE/.test(after.note)) {
+        check(/not a position the game ever used/.test(after.note),
+            '⛔⛔ and a CHOSEN cell says it is a convenience nothing may rest on');
+    }
+    check(errors.length === 0, 'no page errors across the stepper sequence',
         errors.join(' | ') || 'none');
 
     // ── ⛓ THE SELECTOR ROUTE OUT OF GENERATE (item 1) ────────────────

@@ -1843,13 +1843,50 @@ const trueStartStaging = async () =>
  * `source` rides in the navigation so choosing a preset from the MANUAL
  * panel lands back in MANUAL rather than silently switching arms.
  */
+/**
+ * ⛓⛓ A COMMITTED BOOT PER LEVEL, harvested from the same roster the preset
+ * dropdown lists (group A, item 10).
+ *
+ * The level stepper needs somewhere to PUT the player. `boot.x/y` belong to
+ * the level the block came from, so stepping to another one and keeping them
+ * usually spawns you inside a wall — the `?level=` override note has said
+ * exactly this since the editor arc. A tape that starts in the target level
+ * already knows a position the game itself used.
+ *
+ * ⚠ FIRST WINS, and the roster order is the directory listing's, so this is
+ * "a committed boot" and never "the canonical one" — the map is only ever
+ * consulted for a starting position, never for a claim.
+ * ⚠ EMPTY UNTIL THE ROSTER LOADS, which is a real state the stepper reports
+ * rather than waits on: 150 tapes should not block the first press.
+ */
+const committedBootByLevel = new Map();
+
+/**
+ * ⛓ THE ROSTER LOAD, AS A PROMISE THE STEPPER CAN AWAIT — resolved once per
+ * document, because `loadAtlas`'s reason applies here too.
+ *
+ * ⚠ MEASURED BY THE BROWSER ROW: it pressed ▶ within milliseconds of mount,
+ * the map was still empty, and the level stepped with the PREVIOUS level's
+ * boot position and a note saying so. Honest, and the worse of the two
+ * outcomes for anybody who clicks fast. Awaiting the fetch that is already in
+ * flight costs a human nothing (they click seconds later) and gets the row —
+ * and a fast hand — the committed boot instead of the caveat.
+ */
+let bootRosterReady = null;
+
 function mountBootPresets(sel, source, noteEl = null) {
-    loadTapeIndex(DEFAULT_TAPE_DIR).then((index) => {
+    bootRosterReady = loadTapeIndex(DEFAULT_TAPE_DIR).then((index) => {
         if (index.error) {
             sel.innerHTML = `<option value="">— no preset list: ${index.error} —</option>`;
             return;
         }
         const { presets, refused } = harvestPresets(index.records);
+        for (const p of presets) {
+            const lvl = p.staging.boot.level;
+            if (!committedBootByLevel.has(lvl)) {
+                committedBootByLevel.set(lvl, { name: p.name, boot: p.staging.boot });
+            }
+        }
         sel.innerHTML = '<option value="">— boot like… —</option>';
         for (const p of presets) {
             const el = document.createElement('option');
@@ -1991,6 +2028,45 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
     sync();
     if (noteEl && !noteEl.textContent) noteEl.textContent = '';
     return { sync };
+}
+
+/**
+ * ── ⛓⛓ WHERE TO PUT THE PLAYER IN A LEVEL NOBODY HAS A TAPE FOR ──────
+ *
+ * ⚠ MEASURED FIRST: 42 of the atlas's 116 levels have a committed boot in the
+ * tape roster. So two thirds of the level stepper's destinations have no
+ * position the game itself ever used, and carrying the previous level's `x/y`
+ * into them drops the player inside a wall about as often as not — which
+ * makes MANUAL unusable for exactly the rooms you most want to look at.
+ *
+ * ⛔ SO THE PAGE CHOOSES ONE, AND SAYS THAT IT CHOSE. The nearest WALKABLE,
+ * NON-PIT tile to where the player already was, rejecting any cell where the
+ * engine's own `playerBoxAt` would overlap a solid. That is a tooling
+ * convenience and NOT a fact about the game: no claim may rest on it, and the
+ * note in the panel calls it a choice rather than a boot.
+ *
+ * ⚠ `walkableTiles` and the solid rosters are the ENGINE's own, through
+ * `censusWorld` — the same world build the arms press into. A spawn picked
+ * from a second idea of "walkable" would put the player somewhere this page
+ * thinks is fine and the physics does not.
+ */
+function chooseSpawn(levelSource, block, level) {
+    const world = censusWorld(levelSource, { ...block, boot: { ...block.boot, level } });
+    const blockers = [...(world.solids ?? []), ...(world.objectSolids ?? [])].map((s) => s.rect);
+    const pits = new Set((world.pitTiles ?? []).map((t) => `${t.rect.x},${t.rect.y}`));
+    const hits = (r) => blockers.some((s) =>
+        r.x < s.right && r.right > s.x && r.y < s.bottom && r.bottom > s.y);
+    let best = null;
+    let bestD = Infinity;
+    for (const t of world.walkableTiles ?? []) {
+        if (pits.has(`${t.rect.x},${t.rect.y}`)) continue;
+        const x = t.rect.x + TILE_SIZE / 2;
+        const y = t.rect.y + TILE_SIZE / 2;
+        if (hits(playerBoxAt(x, y))) continue;
+        const d = ((x - block.boot.x) ** 2) + ((y - block.boot.y) ** 2);
+        if (d < bestD) { bestD = d; best = { x, y }; }
+    }
+    return best;
 }
 
 /**
@@ -2149,7 +2225,7 @@ async function armPrelude(params, lifetime) {
  * field is `readonly` rather than made into a second writer of it.
  */
 async function mountBootPanel(params, lifetime, {
-    verb, namePrefix, levelSource, layers, onBoxChange = () => {},
+    verb, namePrefix, levelSource, layers, atlas, onBoxChange = () => {},
 } = {}) {
     let { staging, origin, kept } = await stagingForMount($('bootBox'), params);
     if (!lifetime.alive()) return { staging: null, name: null };
@@ -2214,15 +2290,160 @@ async function mountBootPanel(params, lifetime, {
     // the kept block (`stagingForMount`).
     mountBootPresets($('bootPreset'), params.source, $('bootNote'));
     mountBootForm($('bootForm'), $('bootBox'), $('bootNote'), lifetime, onBoxChange);
+
+    /**
+     * ⛓ THE BLOCK IN THE BOX, RE-READ — never a closure copy. Editor slice 5's
+     * whole finding was a form editing a block nobody read, and every control
+     * added since answers to that: the box's parse is the one source of truth.
+     */
+    const blockNow = () => stagingFromJson(JSON.parse($('bootBox').value));
+
     // ⛓ THE LEVEL IS ON SCREEN BEFORE ANY BUTTON IS PRESSED (item 9). Both
     // arms that mount this panel get it, from the block the panel is showing.
-    const preview = previewLevel(levelSource, staging, layers, lifetime);
-    // ⚠ The controls under the canvas belong to whatever is drawn there, and
-    // until now nothing was, so they arrived with the first run. The still
-    // frame redraws through the SAME function, so a toggle means the same
-    // thing before and after a press.
-    mountLayerControls(layers.on, () => previewLevel(levelSource, staging, layers, lifetime));
-    return { staging, origin, kept, name, preview };
+    let preview = previewLevel(levelSource, staging, layers, lifetime);
+
+    /**
+     * ⚠ DEBOUNCED, AND GUARDED. Holding ▶ fires a change per click and each
+     * one builds a world; the delay coalesces a run of them into one draw.
+     * ⛔ Through `lifetime.guard`, because a pending timer that fires after
+     * the arm is retired would paint this arm's level onto the next one's
+     * canvas — the exact hazard the switch arc exists to close, re-introduced
+     * by a convenience.
+     */
+    let pending = null;
+    const redraw = lifetime.guard('boot-panel-redraw', () => {
+        pending = null;
+        try {
+            preview = previewLevel(levelSource, blockNow(), layers, lifetime);
+        } catch { /* the box will not parse; the form already says so */ }
+        onBoxChange();
+    });
+    const scheduleRedraw = () => {
+        if (pending !== null) clearTimeout(pending);
+        pending = setTimeout(redraw, 120);
+    };
+    lifetime.onRetire(() => { if (pending !== null) clearTimeout(pending); });
+    mountLayerControls(layers.on, redraw);
+
+    /**
+     * ── ⛓⛓⛓ THE LEVEL STEPPER (group A, items 7 and 10) ───────────────
+     *
+     * ⛔ IT WALKS THE ATLAS'S OWN LEVEL LIST, not `level ± 1`. The atlas has
+     * gaps, and a stepper that counted integers would hand you a refusal from
+     * `levelSourceFromAtlas` for a room the game does not have — a control
+     * that produces errors for pressing it is not a control.
+     *
+     * ⚠ A GENERATED LEVEL IS NOT IN THAT LIST (900 is nobody's neighbour), so
+     * stepping from one LEAVES it, and the note says so rather than the
+     * button doing nothing.
+     */
+    const atlasLevels = [...(atlas?.levels ?? []).map((l) => l.level)].sort((a, b) => a - b);
+    const stepLevel = async (dir) => {
+        // ⛓ The roster is already in flight from the preset mount; this is a
+        // no-op by the time a human presses.
+        await bootRosterReady?.catch(() => {});
+        if (!lifetime.alive()) return;
+        let block;
+        try {
+            block = blockNow();
+        } catch (e) {
+            $('bootNote').textContent = `the block will not parse, so the level cannot be `
+                + `stepped — ${e.message}`;
+            return;
+        }
+        const here = block.boot.level;
+        const at = atlasLevels.indexOf(here);
+        const next = at === -1
+            ? (dir > 0 ? atlasLevels[0] : atlasLevels[atlasLevels.length - 1])
+            : atlasLevels[at + dir];
+        if (next === undefined) {
+            $('bootNote').textContent = `level ${here} is the ${dir > 0 ? 'last' : 'first'} `
+                + `level this atlas holds (${atlasLevels.length} of them), so there is no `
+                + `${dir > 0 ? 'next' : 'previous'} one`;
+            return;
+        }
+        await setLevel(next, at === -1
+            ? `level ${here} is not in the atlas (a generated room is nobody's neighbour), `
+                + 'so stepping left it'
+            : null);
+    };
+
+    /**
+     * ⛔ THE BOOT POSITION IS THE PART THAT CANNOT BE GUESSED, so it is either
+     * TAKEN FROM A COMMITTED TAPE or KEPT AND DECLARED STALE. `boot.x/y`
+     * belong to the level they came from; carrying them into another room
+     * usually spawns the player inside a wall, and the arms would then report
+     * a refusal about geometry when the real fact is about the spawn.
+     */
+    async function setLevel(level, why = null) {
+        await bootRosterReady?.catch(() => {});
+        if (!lifetime.alive()) return;
+        let block;
+        try {
+            block = blockNow();
+        } catch (e) {
+            $('bootNote').textContent = `the block will not parse — ${e.message}`;
+            return;
+        }
+        const committed = committedBootByLevel.get(level);
+        const notes2 = [];
+        if (why) notes2.push(why);
+        if (committed) {
+            block = { ...block, boot: { ...block.boot, ...committed.boot, level } };
+            notes2.push(`level ${level} — booting at (${committed.boot.x},${committed.boot.y}) `
+                + `from ${committed.name}'s own boot block, a position the game itself used`);
+        } else {
+            /**
+             * ⛔ THREE OUTCOMES, THREE DIFFERENT SENTENCES. "The game booted
+             * here", "this page picked a spot" and "nothing could be picked,
+             * so the old position stands and may be inside a wall" are three
+             * different degrees of trust, and a note that read the same for
+             * all three would make the weakest look like the strongest.
+             */
+            let chosen = null;
+            try {
+                chosen = chooseSpawn(levelSource, block, level);
+            } catch (e) {
+                notes2.push(`⚠ level ${level}'s world would not build, so no spawn could be `
+                    + `chosen — ${e.message}`);
+            }
+            if (chosen) {
+                block = { ...block, boot: { ...block.boot, ...chosen, level } };
+                notes2.push(`level ${level} — ⚠ NO COMMITTED BOOT EXISTS for it (42 of the `
+                    + `atlas's 116 levels have one), so THIS PAGE CHOSE (${chosen.x},`
+                    + `${chosen.y}): the nearest walkable non-pit cell where the player box `
+                    + 'clears the solids. A convenience for looking around, not a position '
+                    + 'the game ever used — nothing may rest on it');
+            } else {
+                block = { ...block, boot: { ...block.boot, level } };
+                notes2.push(`level ${level} — ⚠ no committed boot, AND no free cell could be `
+                    + `chosen, so the boot position (${block.boot.x},${block.boot.y}) is `
+                    + 'still the previous level\'s and may be inside a wall');
+            }
+        }
+        $('bootBox').value = JSON.stringify(block, null, 4);
+        $('bootLevel').value = String(level);
+        $('bootNote').textContent = notes2.join('  ·  ');
+        scheduleRedraw();
+    }
+
+    $('bootPrev').onclick = () => stepLevel(-1);
+    $('bootNext').onclick = () => stepLevel(1);
+    // ⛓ TYPING A LEVEL WRITES THE BLOCK, through the same function the arrows
+    // use — one path from "a level was chosen" to "the block says so".
+    lifetime.on($('bootLevel'), 'change', () => {
+        const wanted = Number($('bootLevel').value);
+        if (Number.isInteger(wanted)) setLevel(wanted);
+    });
+    // ⚠ The roster decides where the player STARTS, so the stepper is only
+    // meaningfully pressable once it has answered. Enabled either way — a
+    // control that vanishes is worse than one that reports a caveat — but the
+    // await above is what makes the caveat rare.
+    // A hand edit of the block itself redraws too — on `change` (blur) rather
+    // than per keystroke, which would build a world for every half-typed number.
+    lifetime.on($('bootBox'), 'change', scheduleRedraw);
+
+    return { staging, origin, kept, name, preview, setLevel, redraw };
 }
 
 /**
@@ -2235,7 +2456,7 @@ async function mountBootPanel(params, lifetime, {
  * spinner.
  */
 async function runSolve(params, lifetime) {
-    const { levelSource } = await armPrelude(params, lifetime);
+    const { levelSource, atlas } = await armPrelude(params, lifetime);
     // ⛔ EVERY AWAIT IS A PLACE THE PAGE CAN HAVE CHANGED HANDS. A mount that
     // kept writing after its arm was retired would paint this arm's title and
     // block over the one the user actually switched to.
@@ -2247,6 +2468,7 @@ async function runSolve(params, lifetime) {
         namePrefix: 'editor',
         levelSource,
         layers,
+        atlas,
         // ⛓ The SOLVE arm's own consumer: a ticked sword rebuilds the world
         // the goal picker offers, so the census follows the box.
         onBoxChange: () => refreshFromBox(),
@@ -2255,6 +2477,13 @@ async function runSolve(params, lifetime) {
 
     // ── the goal picker, over this staging block's own census ────────
     let goals = params.goals ? parseGoalsParam(params.goals) : [];
+    /**
+     * ⛔ WHETHER THE GOAL LIST IS THE USER'S. `?goals=` and every press of
+     * add/clear make it theirs, and the auto-pick below then keeps its hands
+     * off — a control that re-chose for you after you cleared it would be
+     * fighting you, once per level change.
+     */
+    let goalsAreYours = goals.length > 0;
     const showGoals = () => {
         $('solveGoals').textContent = goals.length ? formatGoalsParam(goals) : '—';
     };
@@ -2274,6 +2503,46 @@ async function runSolve(params, lifetime) {
         if (!options.length) {
             $('solveGoalPick').innerHTML =
                 '<option value="">— this level\'s census names no exit and no placement —</option>';
+            return;
+        }
+        /**
+         * ── ⛓⛓⛓ THE GOALS, PRE-FILLED FROM THE CENSUS (group A, item 10) ──
+         *
+         * Browsing levels with ◀ ▶ is unusable if every step needs a trip to
+         * the dropdown before SOLVE can be pressed. So the list is filled on
+         * arrival — ⛔ BY `defaultGoalsFromCensus`, THE PAGE'S OWN EXISTING
+         * LAW, and never by a second policy invented here.
+         *
+         * ⚠ MEASURED, TWICE OVER. The first cut auto-picked "the first usable
+         * option", which quietly overruled the one case that law exists for —
+         * a level with two live exits, where the page refuses because a solve
+         * toward the wrong one prints a tick count that looks like an answer.
+         * `check-seedling-editor-boot.mjs` went red on exactly that (level 4).
+         * The second cut fired only when the census had ONE usable option of
+         * any kind, which honoured the law but almost never fired: level 0 has
+         * eight, seven of them pickups nobody is ambiguous about.
+         *
+         * ⇒ ASK THE FUNCTION THAT ALREADY KNOWS. It takes every placement and
+         * the single live exit when there is exactly one, and REFUSES — with
+         * the alternatives named — when there is not. That is precisely the
+         * set of decisions this page is entitled to make, so the pre-fill and
+         * the press now agree by construction rather than by care.
+         */
+        if (!goalsAreYours) {
+            const d = defaultGoalsFromCensus(world);
+            const usable = options.filter((o) => o.usable);
+            if (usable.length) $('solveGoalPick').value = usable[0].spec;
+            if (d.goals) {
+                goals = d.goals;
+                showGoals();
+                $('bootNote').textContent += `${$('bootNote').textContent ? '  ·  ' : ''}`
+                    + `⛓ goals pre-filled from this level's census — ${formatGoalsParam(d.goals)}`
+                    + '. This is the SAME default SOLVE would use on an empty list, not a '
+                    + 'second opinion about it; add or clear to make the list yours.';
+            } else {
+                $('bootNote').textContent += `${$('bootNote').textContent ? '  ·  ' : ''}`
+                    + `⚠ no goals pre-filled — ${d.refusal}`;
+            }
         }
     };
     showGoals();
@@ -2343,15 +2612,20 @@ async function runSolve(params, lifetime) {
      * staleness cosmetic rather than load-bearing.
      */
     function refreshFromBox() { try { refreshCensus(stagingNow()); } catch { /* shown */ } }
-    lifetime.on($('bootBox'), 'change', refreshFromBox);
+    // ⛓ NO SECOND `change` LISTENER ON THE BOX. The panel's own redraw calls
+    // `onBoxChange` — which IS this function — so registering here too would
+    // rebuild the census twice per edit: harmless, invisible, and exactly the
+    // kind of duplicate work the shared panel exists to stop.
 
     $('solveGoalAdd').onclick = () => {
         const spec = $('solveGoalPick').value;
         if (!spec) return;
-        goals = [...goals, ...parseGoalsParam(spec)];
+        // ⛓ Touching the list makes it YOURS — the auto-pick stops choosing.
+        goals = [...(goalsAreYours ? goals : []), ...parseGoalsParam(spec)];
+        goalsAreYours = true;
         showGoals();
     };
-    $('solveGoalClear').onclick = () => { goals = []; showGoals(); };
+    $('solveGoalClear').onclick = () => { goals = []; goalsAreYours = true; showGoals(); };
 
     // ── SOLVE ────────────────────────────────────────────────────────
     async function solveNow() {
@@ -2584,7 +2858,7 @@ async function runSolve(params, lifetime) {
  * the tape you just recorded are the same derivation, not two that agree.
  */
 async function runManual(params, lifetime) {
-    const { levelSource } = await armPrelude(params, lifetime);
+    const { levelSource, atlas } = await armPrelude(params, lifetime);
     if (!lifetime.alive()) return;
 
     /**
@@ -2599,7 +2873,7 @@ async function runManual(params, lifetime) {
     // will use or a layer would mean two different things either side of START.
     const layers = layerSetFor(params);
     const { staging, name } = await mountBootPanel(params, lifetime, {
-        verb: 'driving', namePrefix: 'manual', levelSource, layers,
+        verb: 'driving', namePrefix: 'manual', levelSource, layers, atlas,
     });
     if (!lifetime.alive()) return;
 

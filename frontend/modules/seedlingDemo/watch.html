@@ -322,7 +322,13 @@
        carefully the two are kept in step. One box, one block, one truth. -->
   <div id="bootPanel" class="armPanel" hidden>
     <div class="line">
-      <label>level <input id="bootLevel" type="number" min="0" step="1" style="width:5em" readonly></label>
+      <!-- ⛓ THE LEVEL IS A CONTROL AGAIN, and this time it WRITES: it edits
+           `boot.level` in the block below, through the block, exactly as the
+           item checkboxes do. It was `readonly` for one slice because both
+           arms wrote it and neither read it. -->
+      <label>level <input id="bootLevel" type="number" min="0" step="1" style="width:5em"></label>
+      <button id="bootPrev" title="the previous level in the atlas">◀</button>
+      <button id="bootNext" title="the next level in the atlas">▶</button>
       <label for="bootPreset">boot like</label>
       <select id="bootPreset"><option value="">— loading presets… —</option></select>
       <!-- The arm-specific actions, side by side against the shared block. -->
