@@ -608,5 +608,99 @@ try {
     check(false, 'the switch sequence ran to completion', e.message);
 }
 
+// ── ⚖ THE OPENING FRAME — a bare `watch.html` draws a level too ─────────
+/**
+ * ⚖ THE USER'S REPORT: *"when the page first loads, it doesn't load and
+ * display the level."*
+ *
+ * ⛔ ONE ARM DID NOT, AND IT IS THE ONE YOU LAND ON. Group A's item 9 was
+ * "every arm draws its level on mount", and SOLVE, MANUAL, GENERATE and a
+ * REPLAY-with-a-tape all do — the row above measures SOLVE at 102400/102400.
+ * A bare `watch.html` is REPLAY with NO `?tape=`, which reported the missing
+ * parameter and RETURNED before drawing anything, so the page's default entry
+ * point was the only black canvas on it. MEASURED before the fix:
+ * **0/102400 opaque, 0 distinct colours.**
+ *
+ * ⛔⛔ AND THE REFUSAL MUST SURVIVE THE FIX. "There is no tape here" is still
+ * the actionable fact; a preview that had REPLACED it would be a page
+ * pretending to have loaded something. So BOTH are asserted — the room is on
+ * screen AND the message still says what is missing.
+ */
+try {
+    const fresh = await browser.newPage();
+    const errs = [];
+    fresh.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+    fresh.on('console', (m) => { if (m.type() === 'error') errs.push(m.text().slice(0, 90)); });
+    console.log('\n## A BARE watch.html — no parameters at all, the way you land on it');
+    await fresh.goto(`${origin}${PAGE_PATH}`, { waitUntil: 'domcontentloaded' });
+    // ⚠ WAIT ON THE DRAWING, not on a timer: the preview needs the atlas and
+    // the true-start block, both fetched. A fixed sleep would be a flake on a
+    // cold cache and a lie about what was being waited for.
+    await fresh.waitForFunction(() => window.__editorSpawn != null, null, { timeout: 120000 });
+    const opening = await fresh.evaluate(() => {
+        const c = document.getElementById('canvas');
+        const { data } = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+        const colours = new Set();
+        let opaque = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] === 255) {
+                opaque += 1;
+                colours.add((data[i] << 16) | (data[i + 1] << 8) | data[i + 2]);
+            }
+        }
+        return {
+            opaque, colours: colours.size, of: c.width * c.height,
+            spawn: window.__editorSpawn,
+            status: document.getElementById('status').textContent,
+        };
+    });
+    check(opening.opaque === opening.of && opening.colours > 3,
+        '⚖ A PAGE OPENED WITH NO PARAMETERS DRAWS ITS LEVEL — the last arm that did not',
+        `${opening.opaque}/${opening.of} opaque, ${opening.colours} distinct colours`);
+    // ⛓ …and it is the TRUE GAME START, which is the page's own existing
+    // answer to "where does the game begin" rather than a level picked here.
+    check(opening.spawn?.level === 0 && opening.spawn?.clear === true,
+        '⛓ …the TRUE GAME START, with the player standing somewhere they fit',
+        JSON.stringify(opening.spawn && {
+            level: opening.spawn.level, player: opening.spawn.player, clear: opening.spawn.clear,
+        }));
+    check(/no \?tape= given/.test(opening.status),
+        '⛔⛔ …and the REFUSAL SURVIVES — the drawing is a preview, not a loaded tape',
+        opening.status);
+    /**
+     * ⛓⛓ THE SOURCE STAMP — the page saying which copy of itself is running.
+     *
+     * ⚖ It exists because a report about behaviour could not be told apart
+     * from a browser serving a stale module: this dev server is a plain
+     * `python -m http.server` and sends no `Cache-Control` at all. The stamp
+     * reads the browser's OWN resource-timing entry, which is the only
+     * authority available, and distinguishes THREE states — taken from cache
+     * without asking (the only stale one), revalidated 304 (cached and
+     * current), and downloaded. All three were exercised while it was built;
+     * the third needed a server that actually sends the header.
+     *
+     * ⚠ WHAT IS ASSERTED HERE IS THAT IT SPOKE, not which state it found:
+     * whether a headless run downloads or revalidates is the browser's
+     * business and would make this a flake. A stamp that said nothing is the
+     * failure — that is the state the page was in before.
+     */
+    const stamp = await fresh.evaluate(() => ({
+        text: document.getElementById('sourceStamp')?.textContent ?? '',
+        cls: document.getElementById('sourceStamp')?.className ?? '',
+    }));
+    check(/downloaded fresh|REVALIDATED|FROM YOUR BROWSER'S CACHE|no timing entry/
+        .test(stamp.text),
+    '⛓⛓ the page STAMPS which copy of its own script is running — cache, 304 or network',
+    stamp.text.slice(0, 100));
+    check(/server copy |server answered no HEAD/.test(stamp.text),
+        '⛓ …beside the server\'s current copy, so "mine is older" is answerable at a glance',
+        /server copy [^·]*/.exec(stamp.text)?.[0]?.trim() ?? stamp.text.slice(-40));
+    check(errs.length === 0, 'no page errors on the opening frame',
+        errs.slice(0, 2).join(' | ') || 'clean');
+    await fresh.close();
+} catch (e) {
+    check(false, 'the opening-frame sequence ran to completion', e.message);
+}
+
 console.log(failed ? `\n${failed} CHECK(S) FAILED` : '\nALL CHECKS PASSED');
 await finish(failed ? 1 : 0);

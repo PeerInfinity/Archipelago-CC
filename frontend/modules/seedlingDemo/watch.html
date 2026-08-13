@@ -233,6 +233,11 @@
   #status { font-size: 12px; }
   #status.ok { color: #7fd88f; }
   #status.bad { color: #ff8080; }
+  /* ⛓ The source stamp's alarm state — the one reading on this page that is
+     about the PAGE rather than about a run, and the only one whose remedy is
+     a keystroke in the browser rather than a change to the code. */
+  #sourceStamp { font-size: 11px; color: #6a6a78; }
+  #sourceStamp.bad { color: #ff8080; }
   #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
   main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
   #stage { flex: 1 1 auto; min-width: 0; }
@@ -454,6 +459,25 @@
     </div>
     <div id="genNote" class="note"></div>
   </div>
+  <!--
+    ⛓⛓⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK?
+
+    ⚖ The question that cost a round trip: a change landed, the page still
+    behaved the old way, and there was no way to tell "the fix is wrong" from
+    "your browser did not fetch it". The dev server here is a plain
+    `python -m http.server`, which sends `Last-Modified` and NO
+    `Cache-Control` at all — so a browser is free to apply heuristic freshness
+    and serve `watchViewer.js` from cache without asking. There was nothing on
+    the page that could distinguish the two, which made every report about
+    behaviour ambiguous.
+
+    ⛔ THIS IS A DIAGNOSTIC, NOT A FIX. It cannot make the browser re-fetch;
+    it can only say, out loud, which copy is running — and a hard reload
+    (Ctrl+Shift+R) is what changes the answer. The main frontend has carried a
+    stamp for exactly this reason since the "phone shows old UI" diagnosis;
+    this page had none.
+  -->
+  <div id="sourceStamp" class="note"></div>
   <div id="status">loading…</div>
   <div id="detail"></div>
   <div id="progress"><div id="bar"></div></div>

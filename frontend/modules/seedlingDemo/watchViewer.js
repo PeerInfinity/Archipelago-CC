@@ -4790,6 +4790,56 @@ async function mountArm(params, lifetime) {
             'no ?tape= given — pick one above, or switch source to SOLVE',
             'watch.html?tape=frontend/modules/seedlingDemo/fixtures/tapes/'
             + 'pit-fall-chain-85.json&side=js'));
+        /**
+         * ⛓⛓⛓ …AND IT STILL DRAWS A LEVEL. ⚖ THE USER'S REPORT: *"when the
+         * page first loads, it doesn't load and display the level"*.
+         *
+         * ⛔ THIS WAS THE ONE ARM THAT DID NOT, AND IT IS THE ONE YOU LAND ON.
+         * Group A's item was "every arm draws its level on mount" and SOLVE,
+         * MANUAL, GENERATE and a REPLAY-with-a-tape all do — MEASURED at
+         * 102400/102400 opaque pixels each. A bare `watch.html` is REPLAY with
+         * no `?tape=`, which reported the missing parameter and RETURNED, so
+         * the default entry point to the page was the only black canvas on it.
+         *
+         * ⛔⛔ IT DRAWS THE TRUE GAME START, WHICH IS NOT A TAPE AND IS NOT A
+         * GUESS. `trueStartStaging` is the same block `stagingForMount` hands
+         * SOLVE and MANUAL when nothing else is named — the committed boot of
+         * `TRUE_START_SEGMENT` — so this is the page's existing answer to
+         * "where does the game begin", drawn instead of withheld. No tape is
+         * invented, no run is stepped, and `previewLevel` hands every history
+         * channel an EMPTY array: it is a still frame of a room, which is
+         * exactly what the other arms put up.
+         *
+         * ⚠ THE REFUSAL SURVIVES INTACT AND IS REPORTED FIRST. "There is no
+         * tape here" is still true and still on screen; what changes is that
+         * the reader can see the room the picker is about to launch them into.
+         * A drawing that had REPLACED the message would be a page pretending
+         * to have loaded something.
+         *
+         * ⚠ `side=wasm` IS EXCLUDED BY NATURE, not by preference: that arm
+         * iframes the recompiled game and builds no JS worlds at all, so there
+         * is nothing here for it to draw.
+         */
+        if (params.side !== 'wasm') {
+            try {
+                const { levelSource } = await armPrelude(params, lifetime);
+                if (!lifetime.alive()) return;
+                const staging = await trueStartStaging();
+                if (!lifetime.alive()) return;
+                previewLevel(levelSource, staging, layerSetFor(params), lifetime);
+            } catch (e) {
+                /**
+                 * ⚠ REPORTED, AND THE TAPE REFUSAL IS NOT OVERWRITTEN. The
+                 * missing `?tape=` is the actionable fact and a failure to
+                 * draw a courtesy preview must not bury it — so this appends
+                 * rather than calling `fatal` a second time.
+                 */
+                lifetime.report(`the opening preview would not draw: ${e.message}`, () => {
+                    $('detail').textContent = `${$('detail').textContent}\n⚠ and the opening `
+                        + `preview of the true game start would not draw — ${e.message}`;
+                });
+            }
+        }
         return;
     }
     document.body.dataset.side = params.side;
@@ -4847,8 +4897,106 @@ async function switchArm(source, side = null) {
         `the SOURCE selector switched to ${source}`));
 }
 
+/**
+ * ⛓⛓⛓ WHICH COPY OF THIS SCRIPT IS RUNNING — the stamp, and why a page whose
+ * whole job is showing you the truth needed one about itself.
+ *
+ * ⚖ A user reported an arm not drawing its level on load. Every arm was
+ * measured drawing it, in a fresh browser, at every window size — and there
+ * was no way, from the page, to tell "the fix is wrong" from "your browser
+ * never fetched the fix". The dev server is a plain `python -m http.server`:
+ * it sends `Last-Modified` and NO `Cache-Control`, so a browser may apply
+ * heuristic freshness and serve this module from cache without revalidating.
+ *
+ * ⛔ THE WITNESS IS THE RESOURCE TIMING ENTRY, NOT A GUESS. A response the
+ * browser took from its own cache reports `transferSize === 0` with a
+ * non-zero `decodedBodySize`; one that came off the network reports bytes.
+ * That is the browser's own account of what it did, which is the only
+ * authority here — a page cannot otherwise know what it was served.
+ *
+ * ⚠ AND IT IS REPORTED, NEVER ACTED ON. This does not bust the cache, add a
+ * query string or reload anything: a page that silently re-fetched itself
+ * would make the same ambiguity unobservable in the other direction, and a
+ * reader would have no way to know their browser was ever holding stale code.
+ * Ctrl+Shift+R is the fix; saying so is this function's whole job.
+ *
+ * ⚠ `null` IS A REAL ANSWER in both channels — a browser that exposes no
+ * resource entry for the module, or a server that answers no HEAD, is a
+ * limitation of the reading and says so rather than claiming "fresh".
+ */
+async function stampSource() {
+    const el = $('sourceStamp');
+    if (!el) return;
+    const href = new URL('./watchViewer.js', import.meta.url).href;
+    /**
+     * ⛔⛔ THREE STATES, NOT TWO — AND THE MIDDLE ONE IS THE COMMON ONE.
+     * MEASURED against this very server: a second load in a warm context
+     * reported **300 bytes**, which is not a download (the module is ~250 KB)
+     * and not a silent cache hit either. It is a **304 revalidation**: the
+     * browser asked, the server said "unchanged", and the body came from
+     * cache. A two-state reading called that "fetched from the network", which
+     * is false, and would have called it "cached/stale" just as wrongly.
+     *
+     *   `transferSize === 0`              taken from cache WITHOUT asking — the
+     *                                     only state that can be stale
+     *   `0 < transferSize < decoded`      REVALIDATED (304) — cached AND current
+     *   `transferSize >= decodedBodySize` downloaded in full
+     */
+    let state = null;
+    let bytes = null;
+    let decoded = null;
+    try {
+        const entry = performance.getEntriesByType('resource').find((e) => e.name === href);
+        if (entry && entry.decodedBodySize > 0) {
+            bytes = entry.transferSize;
+            decoded = entry.decodedBodySize;
+            if (entry.transferSize === 0) state = 'cache';
+            else if (entry.transferSize < entry.decodedBodySize) state = 'revalidated';
+            else state = 'network';
+        }
+    } catch { /* the API is optional; `null` says so */ }
+    let onDisk = null;
+    try {
+        // ⛔ `no-store` ON THIS ONE REQUEST, so the answer is the SERVER's and
+        // not another reading of the same cache the question is about.
+        const r = await fetch(href, { method: 'HEAD', cache: 'no-store' });
+        onDisk = r.headers.get('last-modified');
+    } catch { /* offline or blocked — reported as an absence below */ }
+    const disk = onDisk ? `server copy ${onDisk}` : 'server answered no HEAD';
+    if (state === 'cache') {
+        el.className = 'note bad';
+        // ⚠ IT SAYS WHAT IT MEASURED, AND NOT WHY. The browser's own timing
+        // entry is evidence that the body came from cache; WHICH header let it
+        // is not something this reading asked about, and a message that
+        // blamed the server would be a second claim with no measurement under
+        // it. The remedy is the same either way.
+        el.textContent = `⚠ THIS PAGE'S SCRIPT CAME FROM YOUR BROWSER'S CACHE WITHOUT `
+            + `ASKING THE SERVER (transferSize 0), so it may be older than what is on `
+            + `disk — HARD RELOAD (Ctrl+Shift+R) before believing anything about the `
+            + `page's behaviour. ${disk}`;
+        return;
+    }
+    el.className = 'note';
+    if (state === 'revalidated') {
+        // ⚠ THE HEALTHY CACHE HIT, NAMED AS ONE. The body came from cache and
+        // the server was asked whether that was still right — so this is
+        // CURRENT, and calling it "cached" would send a reader chasing a
+        // problem they do not have.
+        el.textContent = `script REVALIDATED with the server (304, ${bytes} B of headers `
+            + `for ${decoded} B of script) — cached but current · ${disk}`;
+        return;
+    }
+    el.textContent = state === 'network'
+        ? `script downloaded fresh (${bytes} B) · ${disk}`
+        : '⚠ this browser reports no timing entry for the page script, so whether it came '
+            + `from cache is not a question it can answer · ${disk}`;
+}
+
 export async function main() {
     const params = readParams();
+    // ⛓ FIRST, AND NOT AWAITED: the stamp is a diagnostic ABOUT the page and
+    // must not delay the page. A failure in it may not stop an arm mounting.
+    stampSource().catch(() => {});
     /**
      * ⛓⛓⛓ GROUP B — `?attackhold=` IS APPLIED ONCE, AT THE DOCUMENT'S BOOT,
      * AND NOT AT EVERY ARM MOUNT.
