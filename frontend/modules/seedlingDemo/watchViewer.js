@@ -111,11 +111,16 @@
  * `fixtures/`. It lives in the save box, in a download, and in your hands.
  *
  * ⚠ ONE NEW LIFETIME RULE CAME WITH IT — `replayGeneration`. Every arm used
- * to replay exactly once per document (the picker and the SOURCE selector
- * both NAVIGATE); a pasted tape and a manual fold have no path to navigate
- * to, so two animation loops can now exist. The counter retires the
- * superseded one. It is NOT a conditional re-arm: within a generation a
- * throw still re-arms and reports its tick, which is R4's lesson and stays.
+ * to replay exactly once per document, because every way of leaving one
+ * NAVIGATED; a pasted tape and a manual fold have no path to navigate to, so
+ * two animation loops can now exist. The counter retires the superseded one.
+ * It is NOT a conditional re-arm: within a generation a throw still re-arms
+ * and reports its tick, which is R4's lesson and stays.
+ *
+ * ⛓⛓ AND THE SWITCH ARC GENERALISED IT (`watchLifetime`): the SOURCE
+ * selector no longer navigates either, so ARMS now supersede each other in
+ * one document too. Two counters, two questions — a manual fold supersedes a
+ * REPLAY without ending the MANUAL arm that started it.
  */
 
 import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
@@ -251,11 +256,13 @@ const fmt = (n) => (typeof n === 'number' ? Number(n.toFixed(4)) : n);
 /**
  * ⛓ WHICH REPLAY OWNS THE CANVAS.
  *
- * Every arm used to replay exactly once per page load — the picker and the
- * SOURCE selector both NAVIGATE — so the animation loop could re-arm itself
- * forever and never meet a successor. Slice 3 breaks that: a PASTED tape has
- * no path to navigate to and a MANUAL session's fold has no path at all, so
- * `replayTape` can now run a second time in one document.
+ * Every arm used to replay exactly once per page load — leaving one always
+ * NAVIGATED — so the animation loop could re-arm itself forever and never
+ * meet a successor. Editor slice 3 breaks that: a PASTED tape has no path to
+ * navigate to and a MANUAL session's fold has no path at all, so `replayTape`
+ * can now run a second time in one document. ⚠ Since the switch arc the
+ * SOURCE selector does not navigate either — but an ARM change is
+ * `armLifetimes`' question, not this counter's.
  *
  * ⛔ WITHOUT THIS COUNTER THE TWO LOOPS BOTH DRAW. The first one keeps its
  * own `frames`/`cursor` closure and its own rAF chain; the canvas would
@@ -289,12 +296,10 @@ let replayLoadedTape = () => {
  * two must stay separate: a manual fold supersedes a REPLAY without ending
  * the MANUAL arm that started it).
  *
- * ⚠ EVERY ARM MOUNTS AGAINST ONE OF THESE FROM THIS SLICE ON, while the
- * SOURCE selector still navigates. That looks like machinery for nothing —
- * a document teardown retires everything anyway — and it is the deliberate
- * order: the mechanism lands and is proved on its own, and the switch that
- * makes it load-bearing lands next. A teardown written in the same commit as
- * its first user is a teardown tested only through that user.
+ * ⚠ IT LANDED ONE SLICE BEFORE ITS FIRST USER, deliberately: the teardown was
+ * built and proved while the selector still navigated and a document teardown
+ * still retired everything anyway. A teardown written in the same commit as
+ * the switch that needs it is a teardown tested only through that switch.
  *
  * The readout is what the browser row asserts on. It names the live arm and
  * keeps the retired ones, because "did the manual loop stop when I left it"
@@ -3474,11 +3479,21 @@ async function populatePicker(params, index) {
         sel.appendChild(o);
     });
     sel.disabled = false;
-    // Load on select. A full navigation rather than an in-place swap: the
-    // wasm side cannot rewind the GAME (`botReset` forgets the tape, not the
-    // world — every tape needs a fresh page, which is the same rule the
-    // recording harness follows), and reloading keeps both sides on one
-    // code path instead of giving the JS side a teardown nobody tests.
+    /**
+     * Load on select. A full navigation rather than an in-place swap: the
+     * wasm side cannot rewind the GAME (`botReset` forgets the tape, not the
+     * world — every tape needs a fresh page, which is the same rule the
+     * recording harness follows).
+     *
+     * ⚠ THE SECOND HALF OF THIS REASON IS SPENT, AND THE FIRST IS NOT. It
+     * used to add "and reloading keeps both sides on one code path instead of
+     * giving the JS side a teardown nobody tests" — the switch arc built that
+     * teardown and a browser row tests it, so that argument is gone. What
+     * stands is the wasm one, and picking a tape stays a navigation for a
+     * second reason worth keeping: it is an explicit "load something else",
+     * and the reload is what lets it BEAT the block `stagingForMount` would
+     * otherwise keep.
+     */
     sel.onchange = () => {
         const q = new URLSearchParams(window.location.search);
         q.set('tape', sel.value);

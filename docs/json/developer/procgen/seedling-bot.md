@@ -7757,3 +7757,130 @@ both arms to R9, §15 the countable clock and the first sword-gated promotion,
 §16 the GENERATE arm with the acceptance batch and the requirements report,
 **§17 the consolidated residue R9 inherits**, and **§18 the exit criteria
 answered one by one with their evidence**.
+
+---
+
+## The switch arc — the page stops reloading itself (TOOLING; user-directed, 2026-08-12)
+
+A user-directed follow-on to the editor and PoC arcs, in four slices. It built
+no game behaviour and no claim. The ask was one sentence — *keep the level data
+loaded when switching between the four modes* — and the answer turned out to be
+a lifetime problem rather than a persistence one.
+
+**Why the page reloaded in the first place.** Every way of leaving an arm
+NAVIGATED: the SOURCE selector, the tape picker and the boot presets all
+assigned `window.location.search`. `populatePicker`'s own docblock stated the
+trade — reloading "keeps both sides on one code path instead of giving the JS
+side a teardown nobody tests". A document teardown stops every rAF chain, drops
+every listener and forgets every closure, for free. It also throws away
+everything you typed, which is the whole complaint.
+
+**⛔ The blocker was narrower than it read.** "Every tape needs a fresh page"
+is about the WASM side — `botReset` forgets the tape, not the world — and an
+iframe pointed at `about:blank` gives it a fresh document without reloading the
+parent. Everything else was JS-side, and the mechanism already existed in
+miniature: `replayGeneration` was added at editor slice 3 because a MANUAL fold
+supersedes a replay in place.
+
+| slice | what it did |
+|---|---|
+| **1** | `watchLifetime` — one lifetime per arm mount, retired by the next: `on` (listeners that die with it), `guard` (self-scheduling loops that stop and SAY they stopped), `report` (a retired arm's message kept rather than painted over the live one), `onRetire`. Landed while the selector still navigated |
+| **2** | the SOURCE selector switches IN PLACE — `replaceState` for the URL, chrome cleared between arms, and `stagingForMount`: a box already holding a block BEATS `?boot=` |
+| **3** | ONE boot panel shared by SOLVE and MANUAL; `armPrelude`, `loadAtlas`, `mountBootPanel`, `PANELS`, and the CSS each panel had copied |
+| **4** | the GENERATE bridge — hand the generated record to SOLVE or MANUAL in memory, with the model's own goal, the composite level source and the scratch fork |
+
+### The teardown the reload was doing
+
+Enumerated by wiring it, not by inspection. Each of these was harmless while
+leaving an arm meant leaving the document:
+
+- **`manualFrame` had no supersession check of any kind.** It re-arms from its
+  own tail; retired, it would step the session for the life of the tab under
+  whichever arm came next.
+- **MANUAL's keydown/keyup/blur are on WINDOW** and `preventDefault` the bound
+  keys. A retired MANUAL would eat arrow keys — and the page's scrolling with
+  them — under SOLVE and GENERATE. Nothing throws: the keyboard is haunted.
+- **The boot form's `input` listener ACCUMULATES.** An arm mounted twice
+  re-derives the checkboxes twice per keystroke. Nothing breaks; it just does
+  the work N times.
+- **GENERATE's RUN-ALL driver** yields a frame per step and spends seconds per
+  iteration, so a switch lands mid-run.
+- **The wasm poll chains** run to a 180 s fuse and would time out under another
+  arm, painting a wasm refusal over its readout.
+- **`mountBootForm` appended** into a div holding a static label, so a second
+  mount gave the arm a second row of sword checkboxes.
+
+### ⛓ The traps this arc adds
+
+**A leak witness that is a SNAPSHOT cannot see the leak, because leaks are what
+happen next.** Hit TWICE, one level apart. The holder pushed `state()` at
+retirement, so a retired arm's `stopped` list was always empty — a guarded
+loop's one blocked tick is the frame that was ALREADY SCHEDULED, and lands
+after the snapshot. Then `window.__editorLifetime` was ASSIGNED on publish, for
+exactly the same reason, and the browser row came back with an empty list for a
+loop it had just watched stop. Both are getters now. ⚖ The
+readout-assigned-from-a-getter family, in the very instrument built to report
+leaks.
+
+**A settle condition the previous state already satisfies is not a wait.** The
+switch row waited for the arriving arm by watching its boot box — which is full
+the instant the switch begins, BECAUSE KEEPING IT FULL IS THE FEATURE. The wait
+returned immediately and the row asserted against the outgoing arm's page,
+reporting a missing note the page wrote a moment later. `window.__editorArm`
+(set only when a mount COMPLETES, and cleared by the chrome reset) is the
+honest thing to wait on.
+
+**A structural check that cannot fail against the code it was written for is a
+check of nothing.** The row asserting no bare `addEventListener` in
+`watchViewer.js` first matched `/(?<![\w.])addEventListener\(/`, whose negative
+lookbehind excludes a leading dot — so it skipped `window.addEventListener(`,
+which is every call it existed to catch. It went green against all five live
+listeners.
+
+**A conditional keyed on "am I holding one" when the question is "is THIS the
+one".** The scratch-persistence fork was first keyed on
+`Boolean(heldGeneratedLevel)`. Hand a generated room to SOLVE, then paste a
+COMMITTED tape, and that tape's v9 `at` row would compete with the model for
+the slot its own tape already declares. `isHeldLevel(level)` asks the question
+actually being asked.
+
+**Two true sentences, and the weaker one is the wrong one.** A handed-over
+generated level IS "a block the box was already holding", so the kept-block
+note applies to it — and says the block is your edits when it is the
+generator's output. Provenance notes need an ORDER, not just a set.
+
+### What the page does now
+
+- The SOURCE selector rewrites the URL with `replaceState` and swaps the arm in
+  place. Every view is still a link; what survives is the DOCUMENT.
+- SOLVE and MANUAL share ONE boot panel. **A box holding a parseable block
+  beats `?boot=`, and the panel SAYS so** — a view showing edits the link does
+  not carry must not look like a view of the link. Unparseable text is KEPT and
+  reported with the parser's own message, never overwritten. Presets and the
+  tape picker still navigate, which is what lets them win.
+- `#bootLevel` is a READOUT (`readonly`). It was written by both arms and read
+  by neither: SOLVE let you type a level into it and nothing consumed the
+  number, while MANUAL marked the same field `disabled`.
+- GENERATE hands its record to SOLVE or MANUAL **in memory**, with the model's
+  own goal in `?goals=` (the receiving arm's census-derived defaults are NOT
+  the list the generator certified against), a composite level source
+  (generated record for its level, atlas for everything else) and the scratch
+  fork. THIS TAB holds it; a reload loses it; the link describes the
+  GENERATION, not the room — and the note says all three.
+- `window.__editorLifetime` reports the live arm, the retired ones, the loops
+  each stopped and the listeners each dropped.
+
+### The acceptance
+
+`scripts/procgen/check-seedling-editor-switch.mjs` — 30 claims, brings its own
+server, cannot skip. ⛔ **Its leak claims are BEHAVIOURAL, never the page's own
+account alone**: a lifetime that never registered a listener and one whose
+listeners leaked both report the same number. The witness is `preventDefault` —
+a driving MANUAL cancels a synthetic ArrowRight and a retired one does not —
+and **BOTH readings are taken**, because the "after" alone passes just as well
+when the listener was never registered.
+
+Standing gates unchanged: the 10 existing editor rows, 3656 `seedlingDemo`
+tests, and `solve-seedling-r8-battery.mjs --check` byte-identical
+(`1fedb0ab35b7cd74accecf0345bdc893`, 28 PASS, exit 1 — the two standing drift
+rows).
