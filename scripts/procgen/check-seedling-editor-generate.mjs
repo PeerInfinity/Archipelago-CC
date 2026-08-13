@@ -253,6 +253,32 @@ async function load(query, { timeout = 300000 } = {}) {
         errors.join(' | ') || 'none');
 }
 
+// ── CLAIM 3b: THE SEED IS THE LEVEL'S IDENTITY, and the form says so ──
+{
+    /**
+     * ⛓ A LADDER BELONGS TO ONE SEED. Step 2 of seed A followed by step 3 of
+     * seed B would be a display that has never shown a level any single run
+     * produces — so a changed seed RESETS to the skeleton. Driven, because
+     * "the control edits a value nobody reads" is exactly the defect the
+     * editor arc's slice 5 found in the SOLVE button.
+     */
+    const q = `source=generate&seed=${PRE.seed}&biome=${PRE.biome}&count=${PRE.count}&run=1`;
+    await load(q);
+    await page.fill('#genSeed', String(PRE.seed + 1));
+    await page.click('#genStep');
+    await page.waitForFunction((s) => window.__editorGenerate?.seed === s,
+        PRE.seed + 1, { timeout: 300000 });
+    const after = await page.evaluate(() => ({
+        gen: window.__editorGenerate, level: window.__editorGenerated.level,
+    }));
+    const nodeOther = generateStep({ ...PRE, seed: PRE.seed + 1, step: 1 });
+    check(after.gen.step === 1,
+        'retyping the seed RESTARTS the ladder at step 1 rather than continuing the old one',
+        `step ${after.gen.step} (was ${PRE.count})`);
+    check(json(after.level) === json(nodeOther.record),
+        'and the level it shows is the NEW seed\'s own step 1, byte for byte');
+}
+
 // ── CLAIM 4: ?gen= reproduces node's payload in the browser ──────────
 if (!host) {
     const web = await load(`gen=${GEN_ROUTE}`);

@@ -2697,9 +2697,42 @@ async function runGenerate(params) {
         return { solved, agreement, drew: true };
     }
 
+    /**
+     * ⛔ READ THE FORM, AND RESET THE LADDER IF ITS IDENTITY CHANGED.
+     *
+     * The seed IS the level's identity (⚖ kickoff §5). Pressing STEP after
+     * retyping the seed must not continue somebody else's ladder: step 3 of
+     * seed 9 followed by step 4 of seed 10 is a display that has never shown
+     * a level any single run produces. So a changed seed or biome RESETS to
+     * the skeleton and SAYS so — the same shape as the SOLVE arm re-reading
+     * its own textarea at press time (⛓ slice 5 of the editor arc, whose
+     * whole finding was a control that edited a value nobody read).
+     */
+    function readForm() {
+        const nextSeed = Number($('genSeed').value);
+        const nextBiome = $('genBiome').value;
+        const reset = nextSeed !== seed || nextBiome !== biome;
+        seed = nextSeed;
+        biome = nextBiome;
+        bounds = {
+            obstacleTarget: Number($('genCount').value),
+            triesPerStep: Number($('genTries').value),
+            saturationK: Number($('genK').value),
+        };
+        return reset;
+    }
+
     async function goTo(target, why) {
         busy(true);
         try {
+            if (step >= target) {
+                // ⚠ SAID, not silently nothing. "The button did nothing" is
+                // the one outcome a user cannot act on.
+                $('status').className = '';
+                $('status').textContent = `already at step ${step}, and the obstacle target `
+                    + `is ${target} — raise the target, or press RESET to start over`;
+                return;
+            }
             for (let k = step + 1; k <= target; k += 1) {
                 $('status').className = '';
                 $('status').textContent = `generating step ${k} of ${target} `
@@ -2724,32 +2757,24 @@ async function runGenerate(params) {
         }
     }
 
-    $('genStep').onclick = () => {
-        seed = Number($('genSeed').value);
-        biome = $('genBiome').value;
-        bounds = {
-            obstacleTarget: Number($('genCount').value),
-            triesPerStep: Number($('genTries').value),
-            saturationK: Number($('genK').value),
-        };
+    const resetToSkeleton = async (why) => {
+        step = 0;
+        state = generateStep({ seed, biome, step: 0, bounds, budget });
+        await show(why);
+    };
+    $('genStep').onclick = async () => {
+        if (readForm()) await resetToSkeleton('the seed or biome changed — RESET to the '
+            + 'skeleton, because the seed IS the level\'s identity');
         return goTo(Math.min(step + 1, bounds.obstacleTarget), 'STEP');
     };
-    $('genRunAll').onclick = () => {
-        seed = Number($('genSeed').value);
-        biome = $('genBiome').value;
-        bounds = {
-            obstacleTarget: Number($('genCount').value),
-            triesPerStep: Number($('genTries').value),
-            saturationK: Number($('genK').value),
-        };
+    $('genRunAll').onclick = async () => {
+        if (readForm()) await resetToSkeleton('the seed or biome changed — RESET to the '
+            + 'skeleton, because the seed IS the level\'s identity');
         return goTo(bounds.obstacleTarget, 'RUN-ALL');
     };
     $('genReset').onclick = async () => {
-        seed = Number($('genSeed').value);
-        biome = $('genBiome').value;
-        step = 0;
-        state = generateStep({ seed, biome, step: 0, bounds, budget });
-        await show('RESET — the skeleton');
+        readForm();
+        await resetToSkeleton('RESET — the skeleton');
     };
     /**
      * ⛔ THE DOWNLOAD IS THE CLI'S OWN PAYLOAD SHAPE, so a level generated in
