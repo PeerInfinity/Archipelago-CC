@@ -148,6 +148,14 @@ import {
 } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
+/**
+ * ⛓⛓⛓ THE ENTRANCES — ⚖ the user's item, and the module docblock is where the
+ * measurements live (280 teleporters, 112 of 116 levels with an entrance, the
+ * four without, and the half-tile between a boot block and a player position).
+ */
+import {
+    BOOT_TO_PLAYER_OFFSET, collectEntrances, entranceLabel, entrancesTo, playerPointFor,
+} from './watchEntrances.js';
 import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
@@ -2385,8 +2393,38 @@ function chooseSpawn(levelSource, block, level) {
         const x = t.rect.x + TILE_SIZE / 2;
         const y = t.rect.y + TILE_SIZE / 2;
         if (hits(playerBoxAt(x, y))) continue;
-        const d = ((x - block.boot.x) ** 2) + ((y - block.boot.y) ** 2);
-        if (d < bestD) { bestD = d; best = { x, y }; }
+        // ⚠ THE DISTANCE IS MEASURED IN THE SAME SPACE THE ANSWER IS GIVEN IN.
+        // `block.boot` is ctor args and `(x, y)` is a tile centre, so the old
+        // comparison carried a half-tile bias in both axes — harmless at this
+        // resolution, and exactly the kind of mixed-space arithmetic that
+        // produced the bug below. Both sides are corners now.
+        const cx = x - BOOT_TO_PLAYER_OFFSET;
+        const cy = y - BOOT_TO_PLAYER_OFFSET;
+        const d = ((cx - block.boot.x) ** 2) + ((cy - block.boot.y) ** 2);
+        /**
+         * ⛔⛔⛔ THE TILE'S CORNER, NOT ITS CENTRE — AND THIS WAS A REAL
+         * DEFECT, MEASURED.
+         *
+         * A staging block's `boot.x`/`boot.y` are the `Game` CONSTRUCTOR'S
+         * ARGS (`playerx`/`playery`), and the Player ctor re-centres onto the
+         * tile (`Player.as:357`) — so the player is observed at `boot + 8`.
+         * This loop validates a tile CENTRE (`playerBoxAt(cx, cy)` clears the
+         * solids) and used to write that centre straight into `boot`, which
+         * the engine then offset again: the player landed half a tile DOWN AND
+         * RIGHT of the cell that had been checked.
+         *
+         * ⛓ MEASURED over a twelve-level sample while the entrances item was
+         * being built: **five of the twelve spawned INSIDE A SOLID** — L58,
+         * L84, L70, L90 and L110 — which is the precise failure this function
+         * exists to prevent. The cell is right; the field it was written into
+         * was wrong.
+         *
+         * ⇒ the corner, which is `centre - BOOT_TO_PLAYER_OFFSET` and is also
+         * exactly the form a teleporter's own `playerx`/`playery` take. *A
+         * validated coordinate written into a field somebody else offsets has
+         * not been validated.*
+         */
+        if (d < bestD) { bestD = d; best = { x: cx, y: cy }; }
     }
     return best;
 }
@@ -2443,8 +2481,48 @@ function previewLevel(levelSource, staging, layers, lifetime) {
             // is told to SAY so rather than drawing a calm room.
             dangerQueries: null,
         });
+        /**
+         * ⛓⛓⛓ WHERE THE PLAYER ACTUALLY IS IN THE DRAWN ROOM, AND WHETHER
+         * THEY FIT — ⚖ the entrances item's own witness.
+         *
+         * ⛔ IT IS THE RUN'S STATE, NOT THE BLOCK'S NUMBERS. `run.state` is
+         * what `createRunForStaging` produced from the boot block, so it has
+         * ALREADY had the Player ctor's half tile applied — which is the whole
+         * quantity the item turned on. A readout that re-derived the position
+         * from `boot.x + 8` would be a second spelling of the very offset it
+         * exists to check, and would agree with a wrong boot block perfectly.
+         *
+         * ⛔⛔ AND `clear` IS ASKED OF THE DRAWN WORLD'S OWN SOLIDS with the
+         * ENGINE's `playerBoxAt`. `chooseSpawn` used to validate a tile centre
+         * and write it into a field the engine offsets, so the cell it checked
+         * and the cell the player stood in were different cells — measured, 5
+         * of a 12-level sample spawned inside a solid. This is the reading
+         * that fails when that is true, and it is taken from the picture the
+         * page is showing rather than from the function under suspicion.
+         */
+        const box = playerBoxAt(run.state.x, run.state.y);
+        const blockers = [...(world.solids ?? []), ...(world.objectSolids ?? [])];
+        const inside = blockers.find((s) => box.x < s.rect.right && box.right > s.rect.x
+            && box.y < s.rect.bottom && box.bottom > s.rect.y);
+        window.__editorSpawn = {
+            level: run.level,
+            boot: { x: staging.boot.x, y: staging.boot.y },
+            player: { x: run.state.x, y: run.state.y },
+            offset: BOOT_TO_PLAYER_OFFSET,
+            clear: !inside,
+            // ⚠ THE BLOCKER IS NAMED. "The player is inside something" and
+            // "the player is inside `tile:Stone` at 96,64" are the same
+            // verdict and very different findings.
+            inside: inside ? { tag: inside.tag ?? null, rect: inside.rect } : null,
+            solids: blockers.length,
+        };
         return { drew: true, level: run.level, why: null };
     } catch (e) {
+        // ⚠ A REFUSED PREVIEW HAS NO SPAWN TO REPORT, and `null` says so
+        // rather than leaving the LAST level's answer standing — a stale
+        // `clear: true` under a room that would not build is the readout
+        // lying about the room on screen.
+        window.__editorSpawn = null;
         lifetime.report(`the level preview refused: ${e.message}`, () => {
             $('detail').textContent = `⚠ this block will not build, so nothing is drawn yet — `
                 + `${e.message}`;
@@ -2654,6 +2732,110 @@ async function mountBootPanel(params, lifetime, {
     mountLayerControls(layers.on, redraw);
 
     /**
+     * ⛓ THE ATLAS'S OWN LEVEL LIST — hoisted above the entrance index, which
+     * scans it, and still the stepper's list. One enumeration of "the rooms
+     * this atlas has"; two of them would drift the day the atlas grew a gap.
+     */
+    const atlasLevels = [...(atlas?.levels ?? []).map((l) => l.level)].sort((a, b) => a - b);
+
+    /**
+     * ── ⛓⛓⛓ WHERE THE PLAYER STARTS (⚖ the user's item) ────────────────
+     *
+     * ⛔ THE INDEX IS BUILT ONCE PER PANEL MOUNT, AND EAGERLY. An entrance to
+     * L10 lives in L9 and L11, so answering "where do I start in L10" needs
+     * every OTHER level scanned — a lazy per-level build would do the same
+     * whole-atlas walk on the first press and again on every cache miss.
+     * MEASURED at 93 ms for all 116 rooms with `roles: ['trigger']`, which is
+     * what makes eager affordable and is why the cheap role set is not an
+     * optimisation but the reason this control can exist at all.
+     *
+     * ⚠ REFUSALS ARE CARRIED, not swallowed: a room that will not build is one
+     * whose exits are missing from this index, and `entrancesTo` folds that
+     * into the sentence it gives for an empty answer.
+     */
+    const entranceIndex = collectEntrances(levelSource, atlasLevels);
+    if (entranceIndex.refused.length > 0) {
+        lifetime.report(`${entranceIndex.refused.length} level(s) would not build while `
+            + 'indexing entrances', () => {});
+    }
+
+    /**
+     * ⛔⛔ ONE WRITER FOR THE BOOT POSITION, AND IT IS THIS.
+     *
+     * Every control that can change where the player starts — the selector,
+     * the two number fields, the level stepper — goes through here, so "what
+     * is in the block" and "what the selector says" cannot drift apart. The
+     * page has paid for the other shape once already (editor slice 5: a form
+     * editing a block nobody read).
+     *
+     * @param {{x:number,y:number}} at the `Game` CONSTRUCTOR'S ARGS — not the
+     *   player's position. See `watchEntrances`' docblock for the half tile.
+     * @param {string} source the `#bootStart` value this came from
+     */
+    const writeStart = (at, source, extraNote = null) => {
+        let block;
+        try {
+            block = blockNow();
+        } catch (e) {
+            $('bootNote').textContent = `the block will not parse — ${e.message}`;
+            return;
+        }
+        block = { ...block, boot: { ...block.boot, x: at.x, y: at.y } };
+        $('bootBox').value = JSON.stringify(block, null, 4);
+        $('bootX').value = String(at.x);
+        $('bootY').value = String(at.y);
+        $('bootStart').value = source;
+        const p = playerPointFor(at);
+        // ⚠ BOTH NUMBERS, ALWAYS. The block holds ctor args and the HUD shows
+        // the player's position, and they differ by the half tile — a readout
+        // that printed one of them would make the other look like a bug.
+        const note = `start ${at.x},${at.y} — the \`Game\` ctor's own args, so the player is `
+            + `observed at (${p.x},${p.y})`;
+        $('bootNote').textContent = extraNote ? `${extraNote}  ·  ${note}` : note;
+        scheduleRedraw();
+    };
+
+    /**
+     * ⛔ THE OPTIONS ARE THE LADDER, IN DESCENDING ORDER OF TRUST, and each one
+     * carries its own sentence rather than a shared one.
+     *
+     * ⚠ `chooseSpawn` IS STILL OFFERED AND IS STILL LAST. It is the only
+     * answer for the four rooms nothing leads into (58, 69, 81, 84 — measured)
+     * and it is still *a convenience for looking around, not a position the
+     * game ever used*. What changed is that it is no longer the DEFAULT for
+     * the 74 levels that have no committed boot: 112 of 116 rooms now get the
+     * game's own arrival point instead.
+     */
+    const startOptionsFor = (level) => {
+        const opts = [];
+        const committed = committedBootByLevel.get(level);
+        if (committed) {
+            opts.push({
+                value: 'committed',
+                label: `COMMITTED BOOT — ${committed.boot.x},${committed.boot.y} `
+                    + `(from ${committed.name}, a position the game itself used)`,
+                at: { x: committed.boot.x, y: committed.boot.y },
+                note: `level ${level} — booting at (${committed.boot.x},${committed.boot.y}) `
+                    + `from ${committed.name}'s own boot block, a position the game itself used`,
+            });
+        }
+        const { entrances, why } = entrancesTo(entranceIndex, level);
+        for (const e of entrances) {
+            opts.push({
+                value: `entrance:${e.id}`,
+                label: `ENTRANCE — ${entranceLabel(e)}`,
+                at: { x: e.x, y: e.y },
+                note: `level ${level} — the ENTRANCE from L${e.from}`
+                    + `${e.isStairs ? ' (stairs)' : ''}: where the game itself puts the player `
+                    + 'when they walk in, from that teleporter\'s own `playerx`/`playery`'
+                    + `${e.deactivated ? '. ⚠ THIS TELEPORTER IS DEACTIVATED on a fresh boot, '
+                        + 'so the route in is shut even though the arrival point is real' : ''}`,
+            });
+        }
+        return { opts, why };
+    };
+
+    /**
      * ── ⛓⛓⛓ THE LEVEL STEPPER (group A, items 7 and 10) ───────────────
      *
      * ⛔ IT WALKS THE ATLAS'S OWN LEVEL LIST, not `level ± 1`. The atlas has
@@ -2665,7 +2847,6 @@ async function mountBootPanel(params, lifetime, {
      * stepping from one LEAVES it, and the note says so rather than the
      * button doing nothing.
      */
-    const atlasLevels = [...(atlas?.levels ?? []).map((l) => l.level)].sort((a, b) => a - b);
     const stepLevel = async (dir) => {
         // ⛓ The roster is already in flight from the preset mount; this is a
         // no-op by the time a human presses.
@@ -2697,11 +2878,29 @@ async function mountBootPanel(params, lifetime, {
     };
 
     /**
-     * ⛔ THE BOOT POSITION IS THE PART THAT CANNOT BE GUESSED, so it is either
-     * TAKEN FROM A COMMITTED TAPE or KEPT AND DECLARED STALE. `boot.x/y`
-     * belong to the level they came from; carrying them into another room
-     * usually spawns the player inside a wall, and the arms would then report
-     * a refusal about geometry when the real fact is about the spawn.
+     * ⛔⛔ THE BOOT POSITION IS NO LONGER GUESSED FOR 112 OF THE 116 ROOMS.
+     *
+     * Group A shipped this with two answers and a warning: a COMMITTED BOOT
+     * from the tape roster (42 levels) or `chooseSpawn`, *a convenience for
+     * looking around, not a position the game ever used*. ⚖ The user's item
+     * replaces the second one wherever the game itself has an answer — and it
+     * does, in the shape of a teleporter: **an entrance to level N is any
+     * teleporter whose `to` is N**, and its `playerx`/`playery` are the very
+     * ctor args `levelRun`'s transition arm passes when the player walks in.
+     *
+     * ⛔ FOUR OUTCOMES NOW, AND STILL FOUR DIFFERENT SENTENCES — the same rule
+     * Group A wrote this comment for. "A tape booted here", "the game puts you
+     * here when you walk in", "this page picked a spot" and "nothing could be
+     * picked, so the old position stands and may be inside a wall" are four
+     * degrees of trust, and a note that read the same for all of them would
+     * make the weakest look like the strongest.
+     *
+     * ⚠ THE COMMITTED BOOT STILL WINS WHERE IT EXISTS, and that is a decision
+     * rather than an oversight. MEASURED: of the 42, exactly **21 sit on an
+     * entrance and 21 do not** — `r3-collect-shield` boots at (112,72) in L20,
+     * mid-room, to isolate one mechanism. Both are positions the game used and
+     * they answer different questions; the SELECTOR offers every entrance
+     * regardless, so nothing is hidden by the default.
      */
     async function setLevel(level, why = null) {
         await bootRosterReady?.catch(() => {});
@@ -2713,47 +2912,187 @@ async function mountBootPanel(params, lifetime, {
             $('bootNote').textContent = `the block will not parse — ${e.message}`;
             return;
         }
-        const committed = committedBootByLevel.get(level);
-        const notes2 = [];
-        if (why) notes2.push(why);
-        if (committed) {
-            block = { ...block, boot: { ...block.boot, ...committed.boot, level } };
-            notes2.push(`level ${level} — booting at (${committed.boot.x},${committed.boot.y}) `
-                + `from ${committed.name}'s own boot block, a position the game itself used`);
-        } else {
-            /**
-             * ⛔ THREE OUTCOMES, THREE DIFFERENT SENTENCES. "The game booted
-             * here", "this page picked a spot" and "nothing could be picked,
-             * so the old position stands and may be inside a wall" are three
-             * different degrees of trust, and a note that read the same for
-             * all three would make the weakest look like the strongest.
-             */
-            let chosen = null;
-            try {
-                chosen = chooseSpawn(levelSource, block, level);
-            } catch (e) {
-                notes2.push(`⚠ level ${level}'s world would not build, so no spawn could be `
-                    + `chosen — ${e.message}`);
-            }
-            if (chosen) {
-                block = { ...block, boot: { ...block.boot, ...chosen, level } };
-                notes2.push(`level ${level} — ⚠ NO COMMITTED BOOT EXISTS for it (42 of the `
-                    + `atlas's 116 levels have one), so THIS PAGE CHOSE (${chosen.x},`
-                    + `${chosen.y}): the nearest walkable non-pit cell where the player box `
-                    + 'clears the solids. A convenience for looking around, not a position '
-                    + 'the game ever used — nothing may rest on it');
-            } else {
-                block = { ...block, boot: { ...block.boot, level } };
-                notes2.push(`level ${level} — ⚠ no committed boot, AND no free cell could be `
-                    + `chosen, so the boot position (${block.boot.x},${block.boot.y}) is `
-                    + 'still the previous level\'s and may be inside a wall');
-            }
-        }
+        block = { ...block, boot: { ...block.boot, level } };
         $('bootBox').value = JSON.stringify(block, null, 4);
         $('bootLevel').value = String(level);
+        const { opts, why: noEntranceWhy } = startOptionsFor(level);
+        mountStartOptions(opts, noEntranceWhy);
+        const notes2 = [];
+        if (why) notes2.push(why);
+        if (opts.length > 0) {
+            // ⛔ THE LADDER'S HEAD — committed first where it exists, then the
+            // entrances in atlas order. `startOptionsFor` builds it in that
+            // order and this takes the front rather than re-deciding, so the
+            // selector's first row and the block's contents cannot disagree.
+            const pick = opts[0];
+            notes2.push(pick.note);
+            writeStart(pick.at, pick.value, notes2.join('  ·  '));
+            return;
+        }
+        /**
+         * ⚠ ONLY THE FOUR ROOMS NOTHING LEADS INTO REACH THIS (58, 69, 81, 84
+         * — measured), and the reason the entrance index gave is printed with
+         * the fallback rather than replaced by it: "this page picked a spot"
+         * is much easier to trust than it should be without "…because nothing
+         * in the atlas walks into this room" beside it.
+         */
+        if (noEntranceWhy) notes2.push(noEntranceWhy);
+        let chosen = null;
+        try {
+            chosen = chooseSpawn(levelSource, block, level);
+        } catch (e) {
+            notes2.push(`⚠ level ${level}'s world would not build, so no spawn could be `
+                + `chosen — ${e.message}`);
+        }
+        if (chosen) {
+            notes2.push(`level ${level} — ⚠ THIS PAGE CHOSE (${chosen.x},${chosen.y}): the `
+                + 'nearest walkable non-pit cell where the player box clears the solids. A '
+                + 'convenience for looking around, not a position the game ever used — '
+                + 'nothing may rest on it');
+            mountStartOptions([{
+                value: 'page-chose',
+                label: `THIS PAGE CHOSE — ${chosen.x},${chosen.y} (nearest clear cell; not a `
+                    + 'position the game ever used)',
+                at: chosen,
+                note: notes2[notes2.length - 1],
+            }], noEntranceWhy);
+            writeStart(chosen, 'page-chose', notes2.join('  ·  '));
+            return;
+        }
+        notes2.push(`level ${level} — ⚠ no entrance, no committed boot, AND no free cell `
+            + `could be chosen, so the boot position (${block.boot.x},${block.boot.y}) is `
+            + 'still the previous level\'s and may be inside a wall');
         $('bootNote').textContent = notes2.join('  ·  ');
+        $('bootX').value = String(block.boot.x);
+        $('bootY').value = String(block.boot.y);
         scheduleRedraw();
     }
+
+    /**
+     * ⛓⛓⛓ THE SELECTOR'S OPTIONS, PLUS THE ONE THAT IS ALWAYS THERE.
+     *
+     * ⚠ `custom` IS NOT A PLACE, IT IS AN ATTRIBUTION. Every other row names
+     * where its numbers came from; this one says a human typed them, which is
+     * the honest label for a coordinate with no provenance — and it is exactly
+     * what the two number fields select when they are edited.
+     */
+    let startOptions = [];
+    function mountStartOptions(opts, noEntranceWhy) {
+        startOptions = opts;
+        const sel = $('bootStart');
+        sel.innerHTML = '';
+        for (const o of opts) {
+            const el = document.createElement('option');
+            el.value = o.value;
+            el.textContent = o.label;
+            sel.appendChild(el);
+        }
+        const custom = document.createElement('option');
+        custom.value = 'custom';
+        custom.textContent = 'CUSTOM — the x/y beside this box, typed by hand';
+        sel.appendChild(custom);
+        // ⚠ A NAMED ABSENCE ON THE CONTROL ITSELF. A selector holding nothing
+        // but "custom" reads as a broken control; the reason it is empty is a
+        // fact about the atlas and belongs where the emptiness is.
+        sel.title = opts.length > 0
+            ? 'where the start position came from — the game\'s own answers first'
+            : (noEntranceWhy ?? 'no start position could be derived for this level');
+    }
+
+    lifetime.on($('bootStart'), 'change', () => {
+        const want = $('bootStart').value;
+        if (want === 'custom') {
+            // ⚠ Selecting CUSTOM changes nothing but the label: the numbers in
+            // the fields are already what is in force, and moving the player
+            // because a dropdown was opened would be a control with a side
+            // effect nobody asked for.
+            writeStart({ x: Number($('bootX').value), y: Number($('bootY').value) }, 'custom',
+                'CUSTOM — these coordinates are yours; nothing in the game or the tape '
+                + 'roster claims them');
+            return;
+        }
+        const opt = startOptions.find((o) => o.value === want);
+        if (opt) writeStart(opt.at, opt.value, opt.note);
+    });
+
+    /**
+     * ⛓ THE TWO NUMBER FIELDS, AND EDITING ONE SWITCHES THE ATTRIBUTION.
+     *
+     * ⛔ A HAND-TYPED COORDINATE MAY NOT KEEP AN ENTRANCE'S LABEL. The whole
+     * item is about knowing where a start position came from; a selector still
+     * reading "ENTRANCE from L9" over numbers somebody had since edited would
+     * be the page asserting a provenance that is no longer true.
+     */
+    const onCoordEdit = () => {
+        const x = Number($('bootX').value);
+        const y = Number($('bootY').value);
+        if (!Number.isInteger(x) || !Number.isInteger(y)) {
+            // ⚠ SNAP BACK rather than write NaN into the block: the field then
+            // SHOWS what is in force, which is the only way to tell a rejected
+            // edit from an accepted one.
+            let block;
+            try { block = blockNow(); } catch { return; }
+            $('bootX').value = String(block.boot.x);
+            $('bootY').value = String(block.boot.y);
+            $('bootNote').textContent = 'a start coordinate is a whole number of pixels — '
+                + 'the `Game` constructor takes ints, so a fraction is not a position the '
+                + 'engine can be booted at. The previous value stands';
+            return;
+        }
+        writeStart({ x, y }, 'custom',
+            'CUSTOM — these coordinates are yours; nothing in the game or the tape roster '
+            + 'claims them');
+    };
+    lifetime.on($('bootX'), 'change', onCoordEdit);
+    lifetime.on($('bootY'), 'change', onCoordEdit);
+
+    /**
+     * ⛓⛓⛓ READ THE BLOCK AND SAY WHERE ITS POSITION CAME FROM — WITHOUT
+     * MOVING IT.
+     *
+     * ⛔⛔ THIS IS THE HALF THAT MUST NOT WRITE. A panel mounts holding a block
+     * that came from a preset, a `?boot=` tape or the kept block of a previous
+     * arm, and that position is the user's. `setLevel` CHOOSES a position (the
+     * level changed, so the old one is meaningless); this only ATTRIBUTES the
+     * one already there. A mount that ran the chooser would silently replace a
+     * hand-tuned boot every time the SOURCE selector was touched — and since
+     * the switch arc the selector no longer reloads, that would happen over
+     * and over in one document.
+     *
+     * ⚠ AND AN UNMATCHED POSITION IS `custom`, NOT THE FIRST OPTION. A block
+     * whose coordinates are nobody's entrance is exactly the case the label
+     * exists for; defaulting the selector to the head of the ladder would
+     * caption somebody's own numbers with a provenance they do not have.
+     */
+    function syncStartControls() {
+        let block;
+        try {
+            block = blockNow();
+        } catch {
+            // The form already says the block will not parse; leaving the
+            // fields as they are beats writing a guess into them.
+            return;
+        }
+        const { opts, why: noEntranceWhy } = startOptionsFor(block.boot.level);
+        mountStartOptions(opts, noEntranceWhy);
+        $('bootX').value = String(block.boot.x);
+        $('bootY').value = String(block.boot.y);
+        $('bootLevel').value = String(block.boot.level);
+        const match = opts.find((o) => o.at.x === block.boot.x && o.at.y === block.boot.y);
+        $('bootStart').value = match ? match.value : 'custom';
+    }
+    syncStartControls();
+    /**
+     * ⚠ AND AGAIN ONCE THE TAPE ROSTER LANDS. `committedBootByLevel` is filled
+     * by a fetch, so the first render can legitimately be missing the
+     * COMMITTED BOOT row — the same race the level stepper documents and
+     * answers by awaiting. Here the answer is to render twice: immediately, so
+     * the control is never empty, and again when the roster resolves, so the
+     * option appears. ⛔ Guarded on the lifetime, because a retired arm's
+     * promise still settles.
+     */
+    bootRosterReady?.then(() => { if (lifetime.alive()) syncStartControls(); })
+        .catch(() => {});
 
     $('bootPrev').onclick = () => stepLevel(-1);
     $('bootNext').onclick = () => stepLevel(1);
@@ -2761,15 +3100,49 @@ async function mountBootPanel(params, lifetime, {
     // use — one path from "a level was chosen" to "the block says so".
     lifetime.on($('bootLevel'), 'change', () => {
         const wanted = Number($('bootLevel').value);
-        if (Number.isInteger(wanted)) setLevel(wanted);
+        if (!Number.isInteger(wanted)) return;
+        /**
+         * ⛔⛔ A CHANGE TO THE LEVEL ALREADY IN FORCE IS NOT A CHANGE, AND
+         * TREATING IT AS ONE CLOBBERS A DELIBERATE CHOICE.
+         *
+         * `setLevel` PICKS a start position — that is its job, because a new
+         * room makes the old coordinates meaningless. So a spurious re-fire
+         * for the SAME level throws away whatever the user selected in the
+         * meantime and silently reinstates the head of the ladder.
+         *
+         * ⛓ MEASURED, and it is not hypothetical: a number input fires
+         * `change` on BLUR as well as on commit, so the sequence "type a
+         * level, then click the entrance picker" delivered a second `change`
+         * from the field losing focus. The browser row caught it as an
+         * entrance selection that reverted to the committed boot between one
+         * read and the next — `48,32` back to `48,80` with the selector
+         * flipping itself to `committed`.
+         *
+         * ⇒ the level field answers "take me to a different room", and the
+         * start-position controls answer "put me somewhere in this one". A
+         * control that quietly did both is why this guard exists.
+         */
+        let here = null;
+        try { here = blockNow().boot.level; } catch { /* the form says so */ }
+        if (here === wanted) return;
+        setLevel(wanted);
     });
     // ⚠ The roster decides where the player STARTS, so the stepper is only
     // meaningfully pressable once it has answered. Enabled either way — a
     // control that vanishes is worse than one that reports a caveat — but the
     // await above is what makes the caveat rare.
-    // A hand edit of the block itself redraws too — on `change` (blur) rather
-    // than per keystroke, which would build a world for every half-typed number.
-    lifetime.on($('bootBox'), 'change', scheduleRedraw);
+    /**
+     * A hand edit of the block itself redraws too — on `change` (blur) rather
+     * than per keystroke, which would build a world for every half-typed number.
+     *
+     * ⛓ AND IT RE-ATTRIBUTES THE START POSITION FIRST. Typing an entrance's
+     * coordinates into the textarea makes the selector say `ENTRANCE from L9`;
+     * typing anything else makes it say CUSTOM. ⚠ ONE LISTENER DOING BOTH,
+     * deliberately: a second `change` on the same element would be a second
+     * thing to retire and a second ordering to reason about, for a handler
+     * that is two statements.
+     */
+    lifetime.on($('bootBox'), 'change', () => { syncStartControls(); scheduleRedraw(); });
 
     return { staging, origin, kept, name, preview, setLevel, redraw };
 }

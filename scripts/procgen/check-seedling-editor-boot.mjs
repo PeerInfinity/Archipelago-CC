@@ -253,6 +253,198 @@ console.log('\n## ⛓⛓⛓ the despawn check — r7-act2-6\'s declared bob, on 
     await page.close();
 }
 
+// ── WHERE THE PLAYER STARTS — the entrances, the picker, the coordinates ─
+/**
+ * ⚖ THE USER'S ITEM: *"instead of guessing the player's start position in each
+ * level, it read[s] the start position from entrances to that level, if
+ * possible. There should also be a way to select between entrances when there
+ * are more than one, and also a way to select specific coordinates."*
+ *
+ * ⛔ THE DERIVATION IS PROVED IN VITEST (`watchEntrances.test.js`), including
+ * the row that matters most: for all 280 entrances in the atlas, BOOTING at
+ * one lands the player exactly where `arriveIn` puts them when they walk
+ * through that teleporter. What is proved HERE is the PAGE'S PATH to it — the
+ * selector really populated, the fields really write the block, and the
+ * attribution really changes when a human types.
+ *
+ * ⚠ L10 IS THE SUBJECT AND THE REASON IS MEASURED. It has exactly TWO
+ * entrances (from L9 and from L11's stairs) plus a committed boot that sits ON
+ * the L9 one — so "more than one to select between" is real here, and the
+ * ladder's head is checkable against a known answer.
+ */
+{
+    const { page, errors } = await open(`${PAGE}?source=solve&boot=${TAPES}/r7-act2-1.json`);
+    console.log('\n## WHERE THE PLAYER STARTS — entrances, the picker, and typed coordinates');
+    await page.waitForSelector('#bootStart', { timeout: 60000 });
+    // Step to L10 through the page's own control, not by URL: the write path
+    // is the subject.
+    await page.fill('#bootLevel', '10');
+    await page.dispatchEvent('#bootLevel', 'change');
+    await page.waitForFunction(
+        () => JSON.parse(document.getElementById('bootBox').value).boot.level === 10,
+        null, { timeout: 60000 });
+    await page.waitForTimeout(300);
+
+    const read = () => page.evaluate(() => ({
+        block: JSON.parse(document.getElementById('bootBox').value).boot,
+        sel: document.getElementById('bootStart').value,
+        options: [...document.getElementById('bootStart').options]
+            .map((o) => ({ value: o.value, label: o.textContent })),
+        x: document.getElementById('bootX').value,
+        y: document.getElementById('bootY').value,
+        note: document.getElementById('bootNote').textContent,
+    }));
+
+    const at10 = await read();
+    const entranceOpts = at10.options.filter((o) => o.value.startsWith('entrance:'));
+    check(entranceOpts.length === 2,
+        '⛔ L10\'s TWO entrances are both offered — "select between them" needs more than one',
+        entranceOpts.map((o) => o.value).join(', '));
+    check(entranceOpts.some((o) => /from L9/.test(o.label))
+        && entranceOpts.some((o) => /from L11/.test(o.label) && /stairs/.test(o.label)),
+    '⛓ …each labelled by the room you came from, with the stairs one marked',
+    entranceOpts.map((o) => o.label).join(' | '));
+    check(at10.options.some((o) => o.value === 'custom'),
+        '⛔ …and CUSTOM is always offered — "a way to select specific coordinates"');
+    /**
+     * ⛔⛔ THE LADDER'S HEAD. L10 HAS a committed boot, so it wins — Group A's
+     * ruling, unchanged, and the entrances are additions rather than a
+     * replacement for a position a real tape used.
+     */
+    check(at10.sel === 'committed' && /COMMITTED BOOT/.test(
+        at10.options.find((o) => o.value === at10.sel)?.label ?? ''),
+    '⛔⛔ L10 has a committed boot, so THAT is the default — entrances did not displace it',
+    `${at10.sel} → ${at10.block.x},${at10.block.y}`);
+    check(Number(at10.x) === at10.block.x && Number(at10.y) === at10.block.y,
+        '⛓ the x/y fields hold exactly what the block holds', `${at10.x},${at10.y}`);
+
+    // ── PICK THE OTHER ENTRANCE ─────────────────────────────────────
+    const stairs = entranceOpts.find((o) => /from L11/.test(o.label));
+    await page.selectOption('#bootStart', stairs.value);
+    await page.waitForTimeout(300);
+    const picked = await read();
+    check(picked.block.x !== at10.block.x || picked.block.y !== at10.block.y,
+        '⛔⛔⛔ PICKING AN ENTRANCE REWRITES THE BLOCK — the control does the thing',
+        `${at10.block.x},${at10.block.y} → ${picked.block.x},${picked.block.y}`);
+    check(Number(picked.x) === picked.block.x && Number(picked.y) === picked.block.y
+        && picked.sel === stairs.value,
+    '⛓ …and the fields and the selector follow it — one writer, no drift',
+    `${picked.sel} → ${picked.x},${picked.y}`);
+    /**
+     * ⛔⛔ BOTH COORDINATE PAIRS, ALWAYS. The block holds `Game`'s ctor args
+     * and the player is observed at +8,+8; a note printing one of them makes
+     * the other look like a bug. This is the confusion that produced the
+     * `chooseSpawn` defect the item uncovered.
+     */
+    const obs = /observed at \((\d+),(\d+)\)/.exec(picked.note);
+    check(Boolean(obs) && Number(obs[1]) === picked.block.x + 8
+        && Number(obs[2]) === picked.block.y + 8,
+    '⛔⛔ the note prints the ctor args AND the observed player point, a half tile apart',
+    /start [-\d]+,[-\d]+ —[^·]*/.exec(picked.note)?.[0]?.trim() ?? picked.note.slice(0, 90));
+
+    /**
+     * ⛔⛔⛔ AND A RE-COMMIT OF THE SAME LEVEL MUST NOT CLOBBER THE CHOICE.
+     *
+     * ⛓ MEASURED — this is a defect the row found. `setLevel` PICKS a start
+     * position, which is right when the room changes and destructive when it
+     * does not; a number input fires `change` on BLUR as well as on commit, so
+     * "type a level, then click the entrance picker" delivered a second
+     * `change` and silently reinstated the head of the ladder. The entrance
+     * selection reverted from 48,32 to 48,80 between one read and the next.
+     */
+    await page.dispatchEvent('#bootLevel', 'change');
+    await page.waitForTimeout(250);
+    const requeried = await read();
+    check(requeried.block.x === picked.block.x && requeried.block.y === picked.block.y
+        && requeried.sel === picked.sel,
+    '⛔⛔⛔ re-committing the SAME level leaves the picked entrance alone — the level field '
+        + 'changes ROOMS, the start controls change POSITION',
+    `${requeried.sel} → ${requeried.block.x},${requeried.block.y}`);
+
+    // ── TYPE A COORDINATE ───────────────────────────────────────────
+    await page.fill('#bootX', String(picked.block.x + 32));
+    await page.dispatchEvent('#bootX', 'change');
+    await page.waitForTimeout(50);
+    await page.waitForTimeout(250);
+    const typed = await read();
+    check(typed.block.x === picked.block.x + 32 && typed.block.y === picked.block.y,
+        '⛔ TYPING A COORDINATE WRITES THE BLOCK — and moves only the axis that was typed',
+        `${typed.block.x},${typed.block.y}`);
+    /**
+     * ⛔⛔⛔ AND THE ATTRIBUTION FOLLOWS THE EDIT. The whole item is about
+     * knowing where a start position came from; a selector still reading
+     * "ENTRANCE from L11" over numbers somebody had since edited would be the
+     * page asserting a provenance that is no longer true.
+     */
+    check(typed.sel === 'custom' && /CUSTOM/.test(typed.note),
+        '⛔⛔⛔ …and the selector STOPS claiming the entrance — a typed number is CUSTOM',
+        `${typed.sel} · ${typed.note.slice(0, 70)}`);
+
+    // ⚠ A FRACTION IS REFUSED AND THE FIELD SNAPS BACK, so a rejected edit and
+    // an accepted one cannot look the same.
+    await page.fill('#bootY', '12.5');
+    await page.dispatchEvent('#bootY', 'change');
+    await page.waitForTimeout(250);
+    const frac = await read();
+    check(frac.block.y === typed.block.y && Number(frac.y) === typed.block.y
+        && /whole number of pixels/.test(frac.note),
+    '⚠ a fractional coordinate is REFUSED by name and the field snaps back to what is '
+        + 'in force', `y=${frac.y}, ${frac.note.slice(0, 60)}`);
+
+    // ── THE FOUR ROOMS NOTHING WALKS INTO ───────────────────────────
+    /**
+     * ⛔⛔ L58 IS ONE OF THE FOUR (58, 69, 81, 84 — measured). It falls through
+     * to the page's own chooser, and the row that matters is that the chosen
+     * cell is one the player can actually STAND in: `chooseSpawn` validated a
+     * tile CENTRE and wrote it into a field the engine offsets by the half
+     * tile, so five of a twelve-level sample used to spawn INSIDE A SOLID.
+     * L58 was one of them.
+     */
+    await page.fill('#bootLevel', '58');
+    await page.dispatchEvent('#bootLevel', 'change');
+    await page.waitForFunction(
+        () => JSON.parse(document.getElementById('bootBox').value).boot.level === 58,
+        null, { timeout: 60000 });
+    await page.waitForTimeout(400);
+    const l58 = await read();
+    check(l58.options.filter((o) => o.value.startsWith('entrance:')).length === 0
+        && /no teleporter anywhere in the atlas leads into level 58/.test(l58.note),
+    '⛔ L58 has NO entrance, and the page says so by name rather than showing an empty box',
+    l58.note.slice(0, 120));
+    check(l58.sel === 'page-chose' && /not a position the game ever used/.test(l58.note),
+        '⛔ …so it falls back to the chooser, still labelled as a convenience nothing may '
+        + 'rest on', `${l58.sel} → ${l58.block.x},${l58.block.y}`);
+    /**
+     * ⛔⛔⛔ AND THE CHOSEN CELL IS ONE THE PLAYER FITS IN. The page draws the
+     * level from that block, so the witness is the drawn world: the player box
+     * at the OBSERVED point must clear every solid the renderer painted.
+     */
+    const spawn = await page.evaluate(() => window.__editorSpawn);
+    /**
+     * ⚠ THE READOUT'S EXISTENCE IS ASSERTED FIRST, AND SEPARATELY. A claim
+     * written as `probe ? probe.clear === true : true` cannot fail when the
+     * probe is missing — it reports a green on exactly the machine where the
+     * measurement did not happen, which is this arc's own trap and was the
+     * first shape of this row.
+     */
+    check(Boolean(spawn) && spawn.level === 58,
+        'the page publishes where the player actually stands in the room it drew',
+        JSON.stringify(spawn && { level: spawn.level, boot: spawn.boot, player: spawn.player }));
+    check(spawn.player.x === spawn.boot.x + spawn.offset
+        && spawn.player.y === spawn.boot.y + spawn.offset,
+    '⛓ …and the player is the boot block plus the half tile the Player ctor adds — the '
+        + 'offset that made the old chooser wrong',
+    `boot ${spawn.boot.x},${spawn.boot.y} → player ${spawn.player.x},${spawn.player.y}`);
+    check(spawn.clear === true,
+        '⛔⛔⛔ the chosen cell is one the player BOX fits in AT THE OBSERVED POINT — the '
+        + 'half-tile defect this item found (L58 was one of the five that spawned inside '
+        + 'a solid)',
+        spawn.inside ? `INSIDE ${spawn.inside.tag} ${JSON.stringify(spawn.inside.rect)}`
+            : `clear of ${spawn.solids} solid(s)`);
+    check(errors.length === 0, 'no page errors — clean', errors.slice(0, 2).join(' | '));
+    await page.close();
+}
+
 await browser.close();
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);
 process.exit(failed === 0 ? 0 : 1);

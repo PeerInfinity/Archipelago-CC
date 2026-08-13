@@ -245,15 +245,25 @@ try {
     const retiredManual = (lt.retired ?? []).find((r) => r.name === 'manual');
     check(Boolean(retiredManual), 'the readout names the retired MANUAL arm',
         (lt.retired ?? []).map((r) => `${r.name}#${r.generation}`).join(', '));
-    // ⚠ FOUR, not the three on `window`: the boot form's own `input` listener
-    // is registered against the same lifetime, and it is the one that would
-    // otherwise ACCUMULATE across re-mounts.
-    // ⚠ SIX: the three on `window`, the boot form's `input`, and the shared
-    // panel's two (`#bootLevel` change, `#bootBox` change). The number is
-    // asserted rather than bounded because a listener that stops being
-    // registered is as much a defect as one that leaks.
-    check(retiredManual?.alive === false && retiredManual?.listeners === 6,
-        'it is retired, and it held all six listeners it registered',
+    /**
+     * ⚠ FOUR, not the three on `window`: the boot form's own `input` listener
+     * is registered against the same lifetime, and it is the one that would
+     * otherwise ACCUMULATE across re-mounts. Then SIX, with the shared panel's
+     * `#bootLevel` and `#bootBox` changes.
+     *
+     * ⛓ NOW NINE — the START-POSITION controls (⚖ the user's entrances item)
+     * add `#bootStart`, `#bootX` and `#bootY`. ⛔ REPLACED, NOT RELAXED (trap
+     * 62): the literal is asserted rather than bounded because a listener that
+     * stops being REGISTERED is as much a defect as one that leaks, and `>= 6`
+     * would have passed on either.
+     *
+     * ⚠ AND IT IS NINE RATHER THAN TEN ON PURPOSE. The block textarea keeps
+     * ONE `change` listener that re-attributes the start position and then
+     * redraws; a second one for the new half would have been a second thing to
+     * retire and a second ordering to reason about.
+     */
+    check(retiredManual?.alive === false && retiredManual?.listeners === 9,
+        'it is retired, and it held all nine listeners it registered',
         `alive ${retiredManual?.alive}, ${retiredManual?.listeners} listener(s)`);
     check((retiredManual?.stopped ?? []).includes('manual-frame'),
         '⛓⛓ THE LOOP STOPPED, and being NAMED is what proves it was both running and '
@@ -401,18 +411,46 @@ try {
         '⛓ and the CANVAS redraws — a different room, not just a different number',
         `${inkBefore.colours} colours → ${inkAfter.colours}`);
     /**
-     * ⛔ THREE OUTCOMES, AND THE NOTE MUST NAME WHICH ONE. Only 42 of the
-     * atlas's 116 levels have a committed boot, so the common case is the
-     * page CHOOSING a cell — which is a convenience and must never read like
-     * a position the game used.
+     * ⛔ FOUR OUTCOMES NOW, AND THE NOTE MUST NAME WHICH ONE. ⚖ The user's
+     * entrances item added the second: 42 of the 116 levels have a committed
+     * boot and **112 have an ENTRANCE**, so the common case is no longer the
+     * page choosing a cell — it is the game's own arrival point. The page
+     * CHOOSING one survives for the four rooms nothing walks into (58, 69, 81,
+     * 84) and must still never read like a position the game used.
      */
-    check(/booting at \(/.test(after.note) || /THIS PAGE CHOSE/.test(after.note)
+    check(/booting at \(/.test(after.note) || /the ENTRANCE from L/.test(after.note)
+        || /THIS PAGE CHOSE/.test(after.note)
         || /no free cell could be chosen/.test(after.note),
-        '⛔ the boot POSITION names its own provenance — committed boot, a cell this page '
-        + 'chose, or a stale one it could not replace', after.note);
+        '⛔ the boot POSITION names its own provenance — committed boot, the game\'s own '
+        + 'ENTRANCE, a cell this page chose, or a stale one it could not replace',
+        after.note.slice(0, 140));
     if (/THIS PAGE CHOSE/.test(after.note)) {
         check(/not a position the game ever used/.test(after.note),
             '⛔⛔ and a CHOSEN cell says it is a convenience nothing may rest on');
+    }
+    if (/the ENTRANCE from L/.test(after.note)) {
+        /**
+         * ⛔⛔ AN ENTRANCE PRINTS BOTH COORDINATE PAIRS. The block holds the
+         * `Game` ctor's args and the HUD shows the player's position, and they
+         * differ by the half tile the Player ctor adds — a note that printed
+         * one of them would make the other look like a bug, which is exactly
+         * the confusion that produced the `chooseSpawn` defect this item fixed.
+         */
+        check(/ctor's own args/.test(after.note) && /observed at \(/.test(after.note),
+            '⛔⛔ …and an ENTRANCE prints BOTH the ctor args and the observed player point',
+            after.note.slice(0, 160));
+        const startSel = await page.evaluate(() => ({
+            value: document.getElementById('bootStart').value,
+            options: [...document.getElementById('bootStart').options].map((o) => o.value),
+            x: document.getElementById('bootX').value,
+            y: document.getElementById('bootY').value,
+        }));
+        check(startSel.value.startsWith('entrance:')
+            && startSel.options.includes('custom')
+            && Number(startSel.x) === after.x,
+        '⛔⛔⛔ …and the SELECTOR agrees with the block: it names the entrance in force, '
+        + 'offers CUSTOM, and the x/y fields hold what the block holds',
+        `${startSel.value}, ${startSel.options.length} option(s), x=${startSel.x}`);
     }
     check(errors.length === 0, 'no page errors across the stepper sequence',
         errors.join(' | ') || 'none');

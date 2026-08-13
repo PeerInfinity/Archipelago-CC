@@ -370,6 +370,29 @@
       <button id="bootNext" title="the next level in the atlas">▶</button>
       <label for="bootPreset">boot like</label>
       <select id="bootPreset"><option value="">— loading presets… —</option></select>
+    </div>
+    <!--
+      ⛓⛓⛓ WHERE THE PLAYER STARTS — ⚖ the user's item, and it is TWO controls
+      because it is two questions.
+
+      `#bootStart` says WHERE THE NUMBER CAME FROM: an ENTRANCE (a teleporter
+      somewhere in the atlas whose `to` is this level — the game's own answer,
+      available for 112 of 116 rooms), the level's COMMITTED BOOT (a position a
+      real tape used, 42 rooms), or a cell THIS PAGE CHOSE (the old fallback,
+      now needed only where nothing leads in). Three degrees of trust, and the
+      note under the block says which is in force in words.
+
+      `#bootX`/`#bootY` are the coordinates THEMSELVES, always editable. ⚠ They
+      are the `Game` CONSTRUCTOR'S ARGS, not the player's position — the ctor
+      re-centres onto the tile, so the player is observed at (x+8, y+8) and the
+      note prints both. Typing in them switches the selector to "custom",
+      because a number nobody can attribute is exactly what this item was about.
+    -->
+    <div class="line">
+      <label for="bootStart">start at</label>
+      <select id="bootStart" style="max-width:34em"></select>
+      <label>x <input id="bootX" type="number" step="1" style="width:6em"></label>
+      <label>y <input id="bootY" type="number" step="1" style="width:6em"></label>
       <!-- The arm-specific actions, side by side against the shared block. -->
       <span id="solveActions">
         <button id="solveGo">SOLVE</button>
