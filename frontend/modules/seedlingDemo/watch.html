@@ -344,6 +344,16 @@
       <button id="genReset">RESET to the skeleton</button>
       <button id="genDownload">Download level JSON + trace</button>
     </div>
+    <!-- ⛓⛓⛓ THE BRIDGE (switch slice 4): hand the level you are looking at
+         to the arms that take one. In memory and in place — a generated room
+         is not in the atlas and not on disk, so the alternative was a
+         download and a re-import, or regenerating it from the seed in a
+         second code path. -->
+    <div class="line">
+      <button id="genToSolve" disabled>SOLVE this level</button>
+      <button id="genToManual" disabled>DRIVE it by hand</button>
+      <span id="genBridgeNote" class="note"></span>
+    </div>
     <div id="genNote" class="note"></div>
   </div>
   <div id="status">loading…</div>

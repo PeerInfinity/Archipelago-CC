@@ -54,7 +54,7 @@
  * the two-cost-models trap with pixels.
  */
 
-import { DEFAULT_BUDGET, assertBudget } from './procgenOracle.js';
+import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
 import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
 import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
@@ -280,12 +280,42 @@ export function keptTemplatesOf(summary, palette) {
  * seeing rather than an exception to swallow).
  */
 export function displaySolve(state) {
-    const oracle = seedlingOracle({
-        model: state.model,
+    return oracleFor(state).solve(state.record, { templates: state.keptTemplates });
+}
+
+/** The state's own oracle — one construction, two callers. */
+const oracleFor = (state) => seedlingOracle({
+    model: state.model,
+    items: state.palette.items ?? null,
+    budget: state.budget,
+});
+
+/**
+ * ── ⛓⛓⛓ THE STAGING BLOCK THIS RECORD IS SOLVED UNDER (switch slice 4) ──
+ *
+ * The bridge hands a generated level to the SOLVE and MANUAL arms, and those
+ * arms start from a staging block in a textarea. This is the block the
+ * generator's own oracle uses, built from the same three inputs
+ * (`model.boot()`, the palette's items, the pin union over the kept
+ * templates) through the same `bootStaging`.
+ *
+ * ⛔ THE PINS ARE THE PART THAT IS EASY TO DROP AND EXPENSIVE TO LOSE. They
+ * are computed from the KEPT TEMPLATES — the water template obliges `'sound'`
+ * BY ARGUMENT (⚖ §9.4) — so a block built without them would solve the same
+ * room under fewer pins than the loop did, and quietly answer a different
+ * question than the certification.
+ *
+ * ⚠ ITS EQUALITY WITH THE DISPLAY SOLVE IS ASSERTED, NOT ASSUMED: the oracle
+ * builds its staging internally, so this reconstructs rather than shares, and
+ * `watchGenerate.test.js` solves a record BOTH ways and compares the verdict
+ * and the tick count. A reconstruction nobody compares is a second cost model.
+ */
+export function displayStaging(state) {
+    return bootStaging({
+        boot: state.model.boot(),
         items: state.palette.items ?? null,
-        budget: state.budget,
+        pins: oracleFor(state).pinsFor(state.keptTemplates),
     });
-    return oracle.solve(state.record, { templates: state.keptTemplates });
 }
 
 /**

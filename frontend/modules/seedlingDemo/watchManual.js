@@ -117,9 +117,26 @@ export function heldFromCodes(codes) {
  * run some other way would be driving a different world from the one its own
  * saved tape replays in.
  */
-export function createManualSession({ levelSource, staging, name = 'manual' }) {
+/**
+ * @param {object} o
+ * @param {boolean} [o.scratchPersistence] ⛓⛓ THE ONE FLAG A GENERATED LEVEL
+ *   NEEDS, passed through to `createRunForStaging` and DEFAULT FALSE here for
+ *   the same reason it is false there: a kill-lock clear is DECLARED by a
+ *   recorded tape's v9 `at` row, and every level with a tape behind it must
+ *   keep `levelRun`'s refusal to compute one the tape does not carry ("two
+ *   writers of one persistence slot").
+ *
+ *   A generated room has no tape — driving it IS what would produce one — so
+ *   the refusal is correct everywhere else and vacuous exactly there. ⚠ The
+ *   flag is therefore a statement about the LEVEL'S PROVENANCE and not a
+ *   convenience: `watchViewer` sets it only for a level the GENERATE arm
+ *   handed over, and says so in the panel when it does.
+ */
+export function createManualSession({
+    levelSource, staging, name = 'manual', scratchPersistence = false,
+}) {
     const honest = solveStaging(staging);
-    const run = createRunForStaging(honest, levelSource);
+    const run = createRunForStaging(honest, levelSource, { scratchPersistence });
     const perTick = [];
     const observations = [];
     const samples = [];

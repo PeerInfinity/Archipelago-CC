@@ -232,8 +232,64 @@ try {
         'the boot form still has ONE row of controls after re-mounting',
         `${back.bootFormControls} control(s), expected ${ITEM_FORM_FIELDS.length}`);
 
-    // ── and no errors anywhere in the sequence ───────────────────────
-    check(errors.length === 0, 'no page errors across the whole sequence',
+    check(errors.length === 0, 'no page errors across the switch sequence',
+        errors.join(' | ') || 'none');
+
+    // ── ⛓⛓⛓ THE BRIDGE (slice 4): GENERATE → SOLVE ──────────────────
+    /**
+     * A generated room is not in the atlas and not on disk, so the bridge
+     * hands the RECORD over in memory. What has to be true afterwards is not
+     * "a button was pressed" but that the receiving arm can actually SOLVE the
+     * room it was handed — which exercises the composite level source (the
+     * generated level AND the atlas behind it) and the scratch-persistence
+     * fork in one press.
+     *
+     * ⚠ seed 1 / count 1 is the cheapest ladder that keeps a template; the
+     * arm's cost is O(N²) solves and this row is not where levels get big.
+     */
+    const genUrl = `${origin}${PAGE_PATH}?source=generate&seed=1&biome=pre-sword&count=1&run=1`;
+    console.log(`\npage: ${genUrl}`);
+    errors.length = 0;
+    await page.goto(genUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorGenerate?.status === 'ok'
+        && window.__editorGenerate?.step === 1, null, { timeout: 300000 });
+    const generated = await page.evaluate(() => window.__editorGenerated.level);
+
+    await page.evaluate(() => { delete window.__editorArm; });
+    await page.click('#genToSolve');
+    await page.waitForFunction(() => window.__editorArm?.source === 'solve',
+        null, { timeout: 120000 });
+    const bridged = await page.evaluate(() => ({
+        box: document.getElementById('bootBox').value,
+        note: document.getElementById('bootNote').textContent,
+        level: document.getElementById('bootLevel').value,
+        goals: document.getElementById('solveGoals').textContent,
+        url: window.location.search,
+    }));
+    check(JSON.parse(bridged.box).boot.level === generated.level,
+        '⛓ the block SOLVE mounted boots into the GENERATED level',
+        `block level ${JSON.parse(bridged.box).boot.level}, generated ${generated.level}`);
+    check(/WAS GENERATED IN THIS PAGE/.test(bridged.note) && /a reload loses it/.test(bridged.note),
+        '⛔ and the arm SAYS it is holding a room the URL does not name', bridged.note);
+    check(!/[?&]boot=/.test(bridged.url) && !/[?&]level=/.test(bridged.url),
+        '?boot= and ?level= are dropped — a stale committed tape must not be re-read '
+        + 'over the handed level', bridged.url);
+    check(/goals=place/.test(bridged.url) && bridged.goals.startsWith('place:'),
+        '⛓ the MODEL\'s own goal rode across, so the arm walks the certified question '
+        + 'rather than one the census guessed', `${bridged.url} · picker shows ${bridged.goals}`);
+
+    await page.click('#solveGo');
+    await page.waitForFunction(() => window.__editorSolve, null, { timeout: 300000 });
+    const solved = await page.evaluate(() => window.__editorSolve);
+    check(solved.status === 'ok',
+        '⛓⛓⛓ AND IT SOLVES IT — the composite level source and the scratch fork, in one '
+        + 'press', solved.status === 'ok'
+            ? `level ${solved.level}, ${solved.tickCount} ticks`
+            : solved.message);
+    check(solved.level === generated.level,
+        'the solve was of the generated room, not of something the atlas holds',
+        `level ${solved.level}`);
+    check(errors.length === 0, 'no page errors across the bridge sequence',
         errors.join(' | ') || 'none');
 } catch (e) {
     check(false, 'the switch sequence ran to completion', e.message);

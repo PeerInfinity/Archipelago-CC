@@ -138,7 +138,7 @@ import {
 } from './watchManual.js';
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
-    generateStep, generationRows, ladderCost, readGenerateParams,
+    displayStaging, generateStep, generationRows, ladderCost, readGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
@@ -2008,6 +2008,53 @@ function loadAtlas() {
 }
 
 /**
+ * ── ⛓⛓⛓ THE LEVEL THE GENERATE ARM HANDED OVER (switch slice 4) ───────
+ *
+ * ⛔ IT IS A LEVEL, NOT A FILE AND NOT A SEED. The GENERATE arm holds the
+ * record it just generated; the bridge hands that RECORD to SOLVE or MANUAL
+ * directly, in memory. Regenerating from `?seed=` would be a second path to
+ * a level and a second chance to disagree — the page's standing rule is that
+ * every level it draws came out of the loop, IN THE PAGE, once.
+ *
+ * ⚠ IT SURVIVES A SWITCH AND NOT A RELOAD, which is the honest boundary: a
+ * generated room is not in the atlas and not on disk, so a link to it could
+ * only ever be a link to the GENERATION (`?source=generate&seed=…`), and that
+ * is what the address bar keeps saying. The arms SAY they are holding one.
+ */
+let heldGeneratedLevel = null;
+
+/**
+ * A source that answers for the held generated level and defers to the atlas
+ * for everything else.
+ *
+ * ⛔ BOTH HALVES ARE NEEDED, and the composite is not decoration: the
+ * generated room is the only level the arm is looking at, but the TAPE I/O
+ * box, a pasted tape and any teleporter whose `to` names a real room all ask
+ * this same source for committed levels. A source that held only the
+ * generated record would refuse them by name — see `runGenerate`'s own note,
+ * which fetches the real atlas for exactly this reason.
+ */
+function levelSourceWithHeld(atlasSource, held) {
+    if (!held) return atlasSource;
+    return (level) => (level === held.record.level ? held.record : atlasSource(level));
+}
+
+/**
+ * ⛔⛔ THE SCRATCH FORK IS ABOUT **THIS RUN'S LEVEL**, not about whether the
+ * page happens to be holding a generated one.
+ *
+ * The first cut keyed it on `Boolean(heldGeneratedLevel)`, which is wrong in a
+ * way that only shows on the paths nobody looks at twice: hand a generated
+ * room to SOLVE, then paste a COMMITTED tape into the box below the canvas,
+ * and that tape — which has a v9 `at` row declaring its own kill-lock clear —
+ * would replay with the model as a second writer of the slot its tape already
+ * owns. The flag is vacuous exactly where no tape exists and correct
+ * everywhere else, so it asks about the LEVEL.
+ */
+const isHeldLevel = (level) =>
+    Boolean(heldGeneratedLevel) && level === heldGeneratedLevel.record.level;
+
+/**
  * ⛓ WHAT EVERY ARM DOES FIRST, and did in four copies: get the atlas, build
  * a level source over it, and point the page's "replay a tape I am holding"
  * hook at it. The copies were identical, which is how they stayed correct —
@@ -2015,8 +2062,9 @@ function loadAtlas() {
  */
 async function armPrelude(params, lifetime) {
     const atlas = await loadAtlas();
-    const levelSource = levelSourceFromAtlas(atlas);
-    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
+    const levelSource = levelSourceWithHeld(levelSourceFromAtlas(atlas), heldGeneratedLevel);
+    replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null,
+        undefined, { scratchPersistence: isHeldLevel(t?.boot?.level) })
         .catch((e) => lifetime.report(`a loaded tape would not replay: ${e.message}`,
             () => fatal('the loaded tape would not replay', e.stack || e.message)));
     return { atlas, levelSource };
@@ -2058,7 +2106,24 @@ async function mountBootPanel(params, lifetime, {
         }
         staging = { ...staging, boot: { ...staging.boot, level: params.level } };
     }
-    if (kept) {
+    /**
+     * ⛔ PROVENANCE, IN THE ORDER THAT MATTERS. A handed-over generated level
+     * is ALSO "a block the box was already holding", so the kept note is true
+     * of it — and it is the wrong sentence, because it says the block is your
+     * edits when it is the generator's output. The stronger fact wins and
+     * says everything the weaker one would have.
+     */
+    if (isHeldLevel(staging.boot.level)) {
+        const h = heldGeneratedLevel;
+        notes.push(`⛓⛓ LEVEL ${h.record.level} WAS GENERATED IN THIS PAGE — seed ${h.seed}, `
+            + `${h.biome}, step ${h.step} — and handed over by the GENERATE arm. It is not `
+            + 'in the atlas and not on disk: THIS TAB holds it, a reload loses it, and the '
+            + 'link above describes the GENERATION and not the room. The run uses the '
+            + 'SCRATCH PERSISTENCE fork, because a generated room has no tape to declare a '
+            + 'kill-lock clear (⚖ kickoff §1.13) — so a clear it banks leaves through '
+            + '`run.scratchClears` and NOT through the folded tape, whose `persistence[].'
+            + 'level` is bounded to the real game\'s 116 levels.');
+    } else if (kept) {
         notes.push('⛓ the starting conditions below are THIS TAB\'S OWN, kept across a '
             + 'SOURCE switch — they are not what this URL names, so a copy of the link '
             + 'will not show them');
@@ -2265,6 +2330,18 @@ async function runSolve(params, lifetime) {
         try {
             solved = solveForPage({
                 levelSource, staging: block, goals: list, name, now: () => performance.now(),
+                /**
+                 * ⛓⛓ THE SCRATCH FORK, AND ONLY FOR A LEVEL WITH NO TAPE
+                 * BEHIND IT. A kill-lock clear is DECLARED by a recorded
+                 * tape's v9 `at` row; a level the GENERATE arm just handed
+                 * over has no tape at all, so `levelRun`'s refusal to compute
+                 * a clear nobody declared is vacuous exactly there and
+                 * correct everywhere else. ⛔ Keyed on the HELD LEVEL, never
+                 * on the level NUMBER: 900 is a convention, and a flag that
+                 * read it would turn any block someone typed 900 into a
+                 * scratch solve.
+                 */
+                scratchPersistence: isHeldLevel(block.boot.level),
             });
         } catch (e) {
             // ⚠ THE SOLVER'S OWN MESSAGE, VERBATIM, with the rows it got
@@ -2339,7 +2416,10 @@ async function runSolve(params, lifetime) {
         // and a page that went looking for either on disk would be looking for
         // an artifact that was never written.
         const { frames } = await replayTape(solved.tape, name, params, levelSource,
-            { trace: solved.out.trace, why: null }, solved.out.dangerQueries);
+            { trace: solved.out.trace, why: null }, solved.out.dangerQueries,
+            // ⛓ The tape being scrubbed came from a scratch solve iff the
+            // solve above was one — the same fork, kept in step by construction.
+            { scratchPersistence: isHeldLevel(block.boot.level) });
         const replayMs = Math.round(performance.now() - replayT0);
 
         /**
@@ -2595,7 +2675,13 @@ async function runManual(params, lifetime) {
             return;
         }
         try {
-            session = createManualSession({ levelSource, staging: block, name });
+            session = createManualSession({
+                levelSource, staging: block, name,
+                // ⛓ Same fork, same reason as SOLVE's — a generated room has
+                // no tape to declare a clear, and driving it is what would
+                // produce one.
+                scratchPersistence: isHeldLevel(block.boot.level),
+            });
         } catch (e) {
             fatal(`level ${block.boot.level} would not build from this staging block`,
                 e.message);
@@ -2942,8 +3028,56 @@ async function runGenerate(params, lifetime) {
             payloadCheck: payload?.__check ?? null,
         };
         window.__editorGenerated = lastPayload;
+        // ⛓ THE BRIDGE IS ARMED ONLY BY A DRAWN LEVEL. A refused display
+        // solve returns above this line, so the buttons can never hand over a
+        // room the page could not show — the one state in which "solve this
+        // level" would mean two different rooms.
+        $('genToSolve').disabled = false;
+        $('genToManual').disabled = false;
+        $('genBridgeNote').textContent = `hand step ${step} (seed ${seed}, ${biome}) to `
+            + 'the arm that takes a level — in memory, and in this tab only';
         return { solved, agreement, drew: true };
     }
+
+    /**
+     * ── ⛓⛓⛓ HAND THIS LEVEL TO ANOTHER ARM (switch slice 4) ───────────
+     *
+     * ⛔ THE RECORD ITSELF, AND THE MODEL'S OWN GOAL WITH IT. The receiving
+     * arm builds its default goals from the level's CENSUS, which is not the
+     * same list the generator certified against — the model names one goal
+     * (`collectGoal(goalOel)`) and a census can offer several. Handing the
+     * record over without the goal would give you a walk that looks like the
+     * certified one and answers a different question, silently. So the goal
+     * rides in `?goals=`, where it is visible, editable and part of the link.
+     *
+     * ⚠ WHAT DOES **NOT** RIDE: the level. `?seed=` still describes the
+     * GENERATION, so the address bar keeps pointing at the thing that IS
+     * reproducible, and the arms say out loud that they are holding a room
+     * the URL does not name.
+     */
+    async function handOver(source) {
+        if (!state?.record) return;
+        heldGeneratedLevel = {
+            record: state.record,
+            seed,
+            biome,
+            step,
+            bounds: state.bounds,
+            budget: state.budget,
+        };
+        // ⛔ THE GENERATOR'S OWN BLOCK, through `displayStaging` — pins
+        // included. Building one here would be a second staging for the same
+        // room, differing exactly where it matters least visibly.
+        $('bootBox').value = JSON.stringify(displayStaging(state), null, 4);
+        const q = new URLSearchParams(window.location.search);
+        q.set('goals', formatGoalsParam(state.model.goals));
+        q.delete('boot');
+        q.delete('level');
+        window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
+        await switchArm(source);
+    }
+    $('genToSolve').onclick = () => handOver('solve');
+    $('genToManual').onclick = () => handOver('manual');
 
     /**
      * ⛔ READ THE FORM, AND RESET THE LADDER IF ITS IDENTITY CHANGED.

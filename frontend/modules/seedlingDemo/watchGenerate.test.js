@@ -29,9 +29,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
     BIOME_NAMES, GENERATE_BIOMES, agreementWithPayload, agreementWithTrace, describeState,
-    displaySolve, generateStep, generationRows, keptTemplatesOf, ladderCost, paletteFor,
-    readGenerateParams,
+    displaySolve, displayStaging, generateStep, generationRows, keptTemplatesOf, ladderCost,
+    paletteFor, readGenerateParams,
 } from './watchGenerate.js';
+import { atlasOf } from './procgenLevel.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { solveForPage } from './watchSolve.js';
 import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel } from './procgenSeedling.js';
@@ -311,5 +314,52 @@ describe('saturation — ⚖ §7.5\'s other case, reported and never silent', ()
         expect(s.saturated).toBe(true);
         expect(s.stop).toBe(STOP.SATURATED);
         expect(describeState(s)).toMatch(/stop: SATURATED/);
+    });
+});
+
+// ── the bridge's staging block (switch slice 4) ──────────────────────────
+
+describe('displayStaging — the block the bridge hands to SOLVE and MANUAL', () => {
+    /**
+     * ⛔ THE CLAIM IS THAT IT IS THE **SAME SOLVE**, and it is asserted rather
+     * than asserted-about. `seedlingOracle` builds its staging internally, so
+     * `displayStaging` RECONSTRUCTS the block from the same three inputs; a
+     * reconstruction nobody compares is a second cost model waiting to drift.
+     * Solving the record both ways and comparing the walk is the comparison
+     * that would catch a dropped pin, a dropped item flag or a moved boot.
+     */
+    it('⛓⛓ solves the record to the SAME walk the display solve does', () => {
+        const state = generateStep({ seed: 1, biome: 'pre-sword', step: 2 });
+        const shown = displaySolve(state);
+        expect(shown.verdict).toBe('SOLVED');
+
+        const viaBridge = solveForPage({
+            levelSource: levelSourceFromAtlas(atlasOf(state.record)),
+            staging: displayStaging(state),
+            goals: state.model.goals,
+            name: 'bridge',
+            maxTicksPerTarget: state.budget.maxTicksPerTarget,
+            // The fork the page turns on for exactly this level — see
+            // `watchViewer.isHeldLevel`.
+            scratchPersistence: true,
+        });
+        expect(viaBridge.out.perTick.length).toBe(shown.ticks);
+    });
+
+    it('carries the PIN UNION over the kept templates, not just the boot', () => {
+        // ⚖ §9.4: a water template obliges `'sound'` BY ARGUMENT. A block
+        // built without the pins would solve the same room under fewer of
+        // them than the loop did.
+        const state = generateStep({ seed: 1, biome: 'pre-sword', step: 2 });
+        const pins = new Set(state.keptTemplates.flatMap((t) => t.pins ?? []));
+        for (const p of pins) expect(displayStaging(state).pins).toContain(p);
+        expect(displayStaging(state).pins).toContain('dead_frames');
+    });
+
+    it('declares the biome\'s own boot inventory', () => {
+        const pre = generateStep({ seed: 1, biome: 'pre-sword', step: 1 });
+        const post = generateStep({ seed: 36, biome: 'post-sword', step: 1 });
+        expect(displayStaging(pre).seam.items.hasSword).toBe(false);
+        expect(displayStaging(post).seam.items.hasSword).toBe(true);
     });
 });
