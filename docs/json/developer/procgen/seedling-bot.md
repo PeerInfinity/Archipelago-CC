@@ -8220,3 +8220,60 @@ is asserted separately** from its verdict.
 
 Standing gates: **3683** `seedlingDemo` tests, all **11** browser rows green,
 battery hash `1fedb0ab35b7cd74accecf0345bdc893`.
+
+#### The opening frame, and the stamp that ended an ambiguity (2026-08-13)
+
+⚖ Two follow-up reports, and **only one of them was a defect I could find** —
+which is itself the finding.
+
+**⛔ "When the page first loads, it doesn't display the level." REPRODUCED.**
+Group A's item 9 was *every arm draws its level on mount*, and SOLVE, MANUAL,
+GENERATE and REPLAY-with-a-tape all do — measured at 102400/102400 opaque
+pixels each. A bare `watch.html` is REPLAY with **no `?tape=`**, which reported
+the missing parameter and RETURNED before drawing: measured at **0/102400**.
+The one arm that did not draw was the page's own default entry point. It now
+draws `trueStartStaging` — the same block `stagingForMount` hands the other
+arms when nothing else is named, so no level is picked here and no tape is
+invented — and ⚠ **the refusal survives and is reported first**, because a
+drawing that replaced it would be a page pretending to have loaded something.
+
+**⚠ "In manual mode it's still not displaying the level on first load." NOT
+REPRODUCED — and the negative was MEASURED.** MANUAL was checked bare, with
+`?boot=`, `?tape=`, `?side=`, `?speed=`, `?layers=`, after a reload, via the
+SOURCE selector, and at five window sizes from 1920x1080 to 1280x600. It drew
+in all of them, from the first 300 ms sample, fully above the fold every time.
+
+⛓ **THE TRAP THAT LEFT: a question the page could not answer about itself.**
+Is the fix wrong, or is the browser running an older copy? The dev server is a
+plain `python -m http.server` — `Last-Modified` and **no `Cache-Control`** — so
+a browser may serve the module from cache without revalidating, indefinitely,
+and nothing on the page distinguished that from a defect. Every report about
+behaviour was ambiguous and neither side could tell.
+
+⇒ the page **stamps which copy of itself is running**, from the browser's own
+resource-timing entry, in **three** states — and the third is the one a
+two-state reading gets wrong:
+
+| reading | meaning |
+|---|---|
+| `transferSize === 0` | taken from cache **without asking** — the only state that can be stale |
+| `0 < transferSize < decodedBodySize` | **revalidated (304)** — cached AND current |
+| `transferSize >= decodedBodySize` | downloaded in full |
+
+⛔ MEASURED against this very server: a warm load reports **300 bytes**, which
+is neither a download (the module is ~250 KB) nor a silent cache hit — it is a
+304. A two-state reading called that *"fetched from the network"*, which is
+false, and would have called it *"cached/stale"* just as wrongly. All three
+branches were exercised; the first needed a server that **actually sends
+`Cache-Control`**, because Playwright's `route.fulfill` re-times the resource
+and never produces a true hit.
+
+⚠ It REPORTS and never acts — a page that silently re-fetched itself would make
+the same ambiguity unobservable from the other side — and the loud message says
+what it **measured**, not why: which header let the browser cache it is not
+something this reading asked, and blaming the server would be a second claim
+with no measurement under it.
+
+⛓ **The general lesson: a tool whose job is showing you the truth needs one
+reading about ITSELF.** Without it, "your fix does not work" and "your fix
+never reached me" are the same sentence.
