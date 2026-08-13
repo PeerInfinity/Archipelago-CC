@@ -127,6 +127,37 @@ const armState = () => page.evaluate(() => ({
 }));
 
 /**
+ * ⛓ IS ANYTHING ACTUALLY DRAWN? "The arm mounted" and "the level is on
+ * screen" are different claims and only the second is item 9 — every readout
+ * looks identical either way, so the canvas itself has to be read.
+ *
+ * ⛔⛔ IT COUNTS **OPAQUE** PIXELS AND **DISTINCT COLOURS**, and the first cut
+ * counted neither. It counted pixels differing from the renderer's background
+ * `#101014` — and an untouched canvas is transparent BLACK, every channel
+ * zero, which differs from `#101014` in all three. So a canvas that had never
+ * been drawn on scored 100% and the check passed on exactly the failure it
+ * was written to catch. It reported `102400/102400`, which is the tell: a
+ * measurement that cannot come out any other way is not a measurement.
+ *
+ * Alpha separates them cleanly — the renderer's own `fillRect` makes every
+ * pixel opaque — and the colour count keeps a single flat fill from passing
+ * as a room.
+ */
+const canvasInk = () => page.evaluate(() => {
+    const c = document.getElementById('canvas');
+    const { data } = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+    const colours = new Set();
+    let opaque = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] === 255) {
+            opaque += 1;
+            colours.add((data[i] << 16) | (data[i + 1] << 8) | data[i + 2]);
+        }
+    }
+    return { opaque, colours: colours.size, of: c.width * c.height };
+});
+
+/**
  * ⛓ THE KEYBOARD WITNESS. Cancelled means a live MANUAL is listening; not
  * cancelled means nothing on `window` claims the key any more.
  */
@@ -144,6 +175,12 @@ try {
     await page.waitForFunction(() => document.getElementById('bootBox').value.length > 0,
         null, { timeout: 120000 });
     await page.evaluate(() => { window.__switchProbe = 'the original document'; });
+
+    // ── CLAIM 0 (item 9): the level is DRAWN before anything is pressed ──
+    const atMount = await canvasInk();
+    check(atMount.opaque === atMount.of && atMount.colours > 3,
+        '⛓⛓⛓ SOLVE DRAWS ITS LEVEL ON MOUNT — no press, no ?solve=1, not a black canvas',
+        `${atMount.opaque}/${atMount.of} opaque, ${atMount.colours} distinct colours`);
 
     // ── CLAIM 5a: an edit, made through the page's own form ──────────
     await page.click('#bootForm-sword');
@@ -290,6 +327,37 @@ try {
         'the solve was of the generated room, not of something the atlas holds',
         `level ${solved.level}`);
     check(errors.length === 0, 'no page errors across the bridge sequence',
+        errors.join(' | ') || 'none');
+
+    // ── ⛓ THE SELECTOR ROUTE OUT OF GENERATE (item 1) ────────────────
+    /**
+     * The bridge BUTTONS were the only thing that armed the hand-over, so the
+     * obvious route — switch GENERATE → MANUAL with the SOURCE SELECTOR —
+     * found an empty boot box, fell back to `?boot=`, and dropped you at the
+     * true game start in level 0 with the generated room gone. Two ways of
+     * saying the same thing must leave the same state behind, so this row
+     * takes the route that was broken.
+     */
+    await page.goto(genUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorGenerate?.status === 'ok'
+        && window.__editorGenerate?.step === 1, null, { timeout: 300000 });
+    errors.length = 0;
+    await switchTo('manual');
+    const viaSelector = await page.evaluate(() => ({
+        box: document.getElementById('bootBox').value,
+        note: document.getElementById('bootNote').textContent,
+        title: document.getElementById('title').textContent,
+    }));
+    check(JSON.parse(viaSelector.box).boot.level === generated.level,
+        '⛓⛓⛓ THE SOURCE SELECTOR KEEPS THE GENERATED LEVEL — not the true start in level 0',
+        `block level ${JSON.parse(viaSelector.box).boot.level}, generated ${generated.level}`);
+    check(/WAS GENERATED IN THIS PAGE/.test(viaSelector.note),
+        'and MANUAL states the provenance on this route too');
+    const genInk = await canvasInk();
+    check(genInk.opaque === genInk.of && genInk.colours > 3,
+        'and MANUAL draws the generated room on mount, before START',
+        `${genInk.opaque}/${genInk.of} opaque, ${genInk.colours} distinct colours`);
+    check(errors.length === 0, 'no page errors across the selector route',
         errors.join(' | ') || 'none');
 } catch (e) {
     check(false, 'the switch sequence ran to completion', e.message);

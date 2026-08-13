@@ -125,7 +125,7 @@
 
 import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { rolesForStaging } from './tapeRunner.js';
+import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
@@ -1994,6 +1994,62 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
 }
 
 /**
+ * ── ⛓⛓⛓ DRAW THE LEVEL NOW, BEFORE ANYTHING RUNS (group A, item 9) ────
+ *
+ * SOLVE drew nothing until you pressed SOLVE (or passed `?solve=1`) and
+ * MANUAL drew nothing until you pressed START, so both arms opened on a black
+ * canvas: the page had the level in its hands and was showing you nothing.
+ * This builds the run the arm is ABOUT to use and draws its first frame.
+ *
+ * ⛔ IT IS NOT A SECOND CONSTRUCTION. `createRunForStaging(solveStaging(…))`
+ * is the same pair `solveForPage` and `createManualSession` use, so the room
+ * you are looking at before you press anything is the room the press will run
+ * in — a preview built some other way could differ from it in exactly the
+ * ways that matter (a `solveStaging` relaxation, a scratch clear).
+ *
+ * ⛔ AND IT IS NOT A LOOP. One `draw`, no rAF, nothing scheduled — the page's
+ * third law is about tick loops, and a still frame has no tick to advance.
+ * Anything that starts afterwards (a solve's scrub, a manual drive) builds its
+ * own renderer and supersedes this frame in the ordinary way.
+ *
+ * ⚠ A REFUSAL IS REPORTED AND NOT FATAL TO THE MOUNT. A block that will not
+ * build is worth saying — with the builder's own message — but the arm must
+ * still finish mounting, or a bad `?level=` would leave you with no panel to
+ * fix it in.
+ */
+function previewLevel(levelSource, staging, layers, lifetime) {
+    try {
+        const run = createRunForStaging(solveStaging(staging), levelSource,
+            { scratchPersistence: isHeldLevel(staging.boot.level) });
+        const world = makeWorldFor(levelSource, staging)(run.level);
+        const renderer = makeRenderer($('canvas'));
+        renderer.reset();
+        renderer.fit(world);
+        renderer.draw(world, run.state, {
+            on: layers.on,
+            // The still frame has no history and no run behind it: every
+            // channel that would describe one is EMPTY rather than absent, so
+            // the layers draw nothing instead of drawing something stale.
+            samples: [],
+            markers: [],
+            presses: [],
+            cursor: 0,
+            live: { crushers: run.crushers, crusherScans: run.crusherScans },
+            // ⚖ Nothing has solved this room yet, and `null` is how the layer
+            // is told to SAY so rather than drawing a calm room.
+            dangerQueries: null,
+        });
+        return { drew: true, level: run.level, why: null };
+    } catch (e) {
+        lifetime.report(`the level preview refused: ${e.message}`, () => {
+            $('detail').textContent = `⚠ this block will not build, so nothing is drawn yet — `
+                + `${e.message}`;
+        });
+        return { drew: false, level: staging?.boot?.level ?? null, why: e.message };
+    }
+}
+
+/**
  * ⛓ THE ATLAS, ONCE PER DOCUMENT. Every arm needs it and every arm fetched
  * its own copy — which cost nothing when an arm mount meant a page load, and
  * costs a re-fetch per SOURCE switch now that it does not.
@@ -2093,7 +2149,7 @@ async function armPrelude(params, lifetime) {
  * field is `readonly` rather than made into a second writer of it.
  */
 async function mountBootPanel(params, lifetime, {
-    verb, namePrefix, onBoxChange = () => {},
+    verb, namePrefix, levelSource, layers, onBoxChange = () => {},
 } = {}) {
     let { staging, origin, kept } = await stagingForMount($('bootBox'), params);
     if (!lifetime.alive()) return { staging: null, name: null };
@@ -2158,7 +2214,15 @@ async function mountBootPanel(params, lifetime, {
     // the kept block (`stagingForMount`).
     mountBootPresets($('bootPreset'), params.source, $('bootNote'));
     mountBootForm($('bootForm'), $('bootBox'), $('bootNote'), lifetime, onBoxChange);
-    return { staging, origin, kept, name };
+    // ⛓ THE LEVEL IS ON SCREEN BEFORE ANY BUTTON IS PRESSED (item 9). Both
+    // arms that mount this panel get it, from the block the panel is showing.
+    const preview = previewLevel(levelSource, staging, layers, lifetime);
+    // ⚠ The controls under the canvas belong to whatever is drawn there, and
+    // until now nothing was, so they arrived with the first run. The still
+    // frame redraws through the SAME function, so a toggle means the same
+    // thing before and after a press.
+    mountLayerControls(layers.on, () => previewLevel(levelSource, staging, layers, lifetime));
+    return { staging, origin, kept, name, preview };
 }
 
 /**
@@ -2177,9 +2241,12 @@ async function runSolve(params, lifetime) {
     // block over the one the user actually switched to.
     if (!lifetime.alive()) return;
 
+    const layers = layerSetFor(params);
     const { staging, name } = await mountBootPanel(params, lifetime, {
         verb: 'solving',
         namePrefix: 'editor',
+        levelSource,
+        layers,
         // ⛓ The SOLVE arm's own consumer: a ticked sword rebuilds the world
         // the goal picker offers, so the census follows the box.
         onBoxChange: () => refreshFromBox(),
@@ -2526,14 +2593,16 @@ async function runManual(params, lifetime) {
      * `onBoxChange`: it re-reads the box at START (slice 3 of the editor arc),
      * so there is nothing downstream to refresh in between.
      */
+    // ⚠ ONCE, AND BEFORE THE PANEL. The Set IS the live toggle state — the
+    // checkboxes mutate it in place, so rebuilding it per draw would undo
+    // every toggle every frame, and the preview must share the one the drive
+    // will use or a layer would mean two different things either side of START.
+    const layers = layerSetFor(params);
     const { staging, name } = await mountBootPanel(params, lifetime, {
-        verb: 'driving', namePrefix: 'manual',
+        verb: 'driving', namePrefix: 'manual', levelSource, layers,
     });
     if (!lifetime.alive()) return;
 
-    // ⚠ ONCE. The Set IS the live toggle state — the checkboxes mutate it in
-    // place, so rebuilding it per draw would undo every toggle every frame.
-    const layers = layerSetFor(params);
     if (layers.unknown.length) {
         $('bootNote').textContent += `${$('bootNote').textContent ? '  ·  ' : ''}`
             + `⚠ ?layers= names ${layers.unknown.length} unknown layer(s): `
@@ -3037,50 +3106,70 @@ async function runGenerate(params, lifetime) {
         // solve returns above this line, so the buttons can never hand over a
         // room the page could not show — the one state in which "solve this
         // level" would mean two different rooms.
+        /**
+         * ── ⛓⛓⛓ THE DRAWN LEVEL **IS** THE PAGE'S LEVEL (group A, item 1) ──
+         *
+         * ⛔ HANDING OVER IS NOT A BUTTON ANY MORE, IT IS A CONSEQUENCE OF
+         * DRAWING. Slice 4 armed the bridge on the two buttons alone, which
+         * left the obvious route broken: switching GENERATE → MANUAL with the
+         * SOURCE SELECTOR found an empty boot box, fell back to `?boot=`, and
+         * dropped you at the true game start in level 0 — the generated room
+         * you were looking at simply gone. The buttons and the selector are
+         * two ways of saying the same thing, so they must leave the same state
+         * behind.
+         *
+         * ⚠ THE PRICE IS STATED, because it is a real one: a block you typed
+         * by hand in SOLVE is REPLACED the moment GENERATE draws a level. That
+         * is the honest reading of "this is the page's current level", and the
+         * note below says so where it happens rather than leaving you to
+         * discover it two switches later.
+         */
+        heldGeneratedLevel = {
+            record: state.record, seed, biome, step, bounds: state.bounds, budget: state.budget,
+        };
+        // ⛔ THE GENERATOR'S OWN BLOCK, through `displayStaging` — pins
+        // included. Building one here would be a second staging for the same
+        // room, differing exactly where it matters least visibly.
+        $('bootBox').value = JSON.stringify(displayStaging(state), null, 4);
+        /**
+         * ⛔ AND THE MODEL'S OWN GOAL WITH IT. The receiving arm builds its
+         * defaults from the level's CENSUS, which is not the list the
+         * generator certified against — the model names one goal
+         * (`collectGoal(goalOel)`) and a census can offer several. Without
+         * this the other arm walks a question that LOOKS like the certified
+         * one, silently. `?boot=`/`?level=` go, so a stale committed tape
+         * cannot be re-read over the handed level.
+         */
+        const q = new URLSearchParams(window.location.search);
+        q.set('goals', formatGoalsParam(state.model.goals));
+        q.delete('boot');
+        q.delete('level');
+        window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
+
         $('genToSolve').disabled = false;
         $('genToManual').disabled = false;
-        $('genBridgeNote').textContent = `hand step ${step} (seed ${seed}, ${biome}) to `
-            + 'the arm that takes a level — in memory, and in this tab only';
+        $('genBridgeNote').textContent = `step ${step} (seed ${seed}, ${biome}) IS the page's `
+            + 'current level: the shared starting-conditions block now holds it, so SOLVE and '
+            + 'MANUAL take it however you reach them — these buttons or the SOURCE selector. '
+            + '⚠ A block you had typed by hand was replaced.';
         return { solved, agreement, drew: true };
     }
 
     /**
-     * ── ⛓⛓⛓ HAND THIS LEVEL TO ANOTHER ARM (switch slice 4) ───────────
-     *
-     * ⛔ THE RECORD ITSELF, AND THE MODEL'S OWN GOAL WITH IT. The receiving
-     * arm builds its default goals from the level's CENSUS, which is not the
-     * same list the generator certified against — the model names one goal
-     * (`collectGoal(goalOel)`) and a census can offer several. Handing the
-     * record over without the goal would give you a walk that looks like the
-     * certified one and answers a different question, silently. So the goal
-     * rides in `?goals=`, where it is visible, editable and part of the link.
+     * ── ⛓⛓⛓ HAND THIS LEVEL TO ANOTHER ARM ───────────────────────────
      *
      * ⚠ WHAT DOES **NOT** RIDE: the level. `?seed=` still describes the
      * GENERATION, so the address bar keeps pointing at the thing that IS
      * reproducible, and the arms say out loud that they are holding a room
      * the URL does not name.
      */
-    async function handOver(source) {
-        if (!state?.record) return;
-        heldGeneratedLevel = {
-            record: state.record,
-            seed,
-            biome,
-            step,
-            bounds: state.bounds,
-            budget: state.budget,
-        };
-        // ⛔ THE GENERATOR'S OWN BLOCK, through `displayStaging` — pins
-        // included. Building one here would be a second staging for the same
-        // room, differing exactly where it matters least visibly.
-        $('bootBox').value = JSON.stringify(displayStaging(state), null, 4);
-        const q = new URLSearchParams(window.location.search);
-        q.set('goals', formatGoalsParam(state.model.goals));
-        q.delete('boot');
-        q.delete('level');
-        window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
-        await switchArm(source);
-    }
+    /**
+     * The buttons are now SHORTCUTS, not the mechanism — `show()` has already
+     * left the level, the block and the goal where any route to another arm
+     * will find them. Kept because "SOLVE this level" is what you actually
+     * want to say, and hunting the SOURCE selector to say it is friction.
+     */
+    const handOver = (source) => (state?.record ? switchArm(source) : undefined);
     $('genToSolve').onclick = () => handOver('solve');
     $('genToManual').onclick = () => handOver('manual');
 
