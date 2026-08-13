@@ -290,6 +290,8 @@
   #tapeNote { color: #8a8a98; font-size: 11px; white-space: pre-wrap; }
   /* ── OVERLAYS + TRACE PANE (editor arc slice 2) ── */
   #layers { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0; }
+  #viewknobs { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0;
+    font-size: 11px; color: #8a8a98; }
   #legend { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 11px;
     color: #8a8a98; margin-bottom: 6px; }
   .sw { display: flex; gap: 4px; align-items: center; }
@@ -432,6 +434,18 @@
       <label>speed <input id="speed" type="range" min="0.1" max="8" step="0.1" value="1"><span id="speedv">1x</span></label>
     </div>
     <div id="layers"></div>
+    <!--
+      ⛓⛓⛓ GROUP B — THE VIEW KNOBS, AND THEY ARE A SEPARATE BOX ON PURPOSE.
+
+      `#layers` holds exactly one input per `OVERLAY_LAYERS` row, and three
+      acceptance rows enumerate it (`[...document.querySelectorAll('#layers
+      input')]`) to assert that the toggles and the roster agree on how many
+      layers there are. A knob that is NOT a layer must therefore not live in
+      that box: dropping the attack-hold field in there made the roster count
+      16 against a roster of 15 and reddened `world`, `lanes` and `shapes` at
+      once. ⚠ The container is the contract — see `mountLayerControls`.
+    -->
+    <div id="viewknobs"></div>
     <div id="legend"></div>
     <details id="tapeIO">
       <summary>save / load — the tape in your hands (this page NEVER writes fixtures/)</summary>

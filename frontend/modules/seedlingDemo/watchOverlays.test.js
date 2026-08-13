@@ -19,11 +19,15 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    ACTION_KEYS, activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun,
-    crushersAt, dangerQueriesAt, defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges,
-    LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam,
-    pathPointsUpTo, sampleMovers, traceRowFields, traceSidecarPath, worldChangesAt,
+    ACTION_KEYS, activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt,
+    attackRectsAt, bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt,
+    defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
+    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseAttackHold, parseLayersParam,
+    pathPointsUpTo, sampleMovers, SWING_WINDOW_NOTE, traceRowFields, traceSidecarPath,
+    worldChangesAt,
 } from './watchOverlays.js';
+import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
+import { PUSHABLE_SPEED, TICKS_PER_TILE } from './pushables.js';
 import { formatTraceRow } from './decisionTrace.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createLevelRun } from './levelRun.js';
@@ -943,9 +947,17 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         for (let r = stepper.next(); !r.done; r = stepper.next()) { if (found) break; }
         return found;
     };
+    /**
+     * ⚠ GROUP B — `pushables` IS IN THIS TABLE AND HAS TO BE. `hit[key]` with
+     * an absent key is `undefined ?? null`, i.e. exactly what "the engine
+     * agrees the solid is gone" looks like — so a family missing from here
+     * does not fail the differential, it VACUOUSLY PASSES it. The instrument
+     * would be reporting agreement it never asked for.
+     */
     const FAMILY_KEY = {
         openActivators: 'activatorId', openChests: 'chestId', brokenRocks: 'rockId',
         burnedTrees: 'treeId', pulledRopes: 'ropeId', turrets: 'turretId',
+        pushables: 'pushableId',
     };
 
     /**
@@ -1038,8 +1050,12 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         // ⛔ THE ENGINE AGREES THERE IS NO WALL THERE — which is the assertion
         // that makes "drawn as a wall and is not one" a fact and not a caption.
         expect(first.engine[0].stillThere).toBe(null);
-        // …and the room's population is counted across all six families
-        expect(first.sample.changeCounts.placed).toBe(16);
+        // ⛓⛓⛓ GROUP B: …and the room's population is counted across all SEVEN
+        // families — the five table rows, the turret arm and the pushable arm.
+        // L40 gained 3 (`pushables` in `byFamily`), 16 -> 19.
+        expect(first.sample.changeCounts.placed).toBe(19);
+        expect(first.sample.changeCounts.byFamily.pushables).toBe(3);
+        expect(first.sample.changeCounts.families).toBe(7);
         expect(first.sample.changeCounts.byFamily.brokenRocks).toBe(3);
     });
 
@@ -1049,21 +1065,22 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         expect(worldChangesAt([{ level: 1, changes: [], changeCounts: null }], 0, 1))
             .toEqual({ changes: [], why: null });
         // (b) a room with nothing changeable in it
-        const bare = { level: 1, changes: [], changeCounts: { placed: 0, byFamily: {}, changed: 0, blind: 0, families: 6 } };
-        expect(worldChangesAt([bare], 0, 1).why).toMatch(/^no lock, chest, rock, tree, rope or ice turret/);
+        const bare = { level: 1, changes: [], changeCounts: { placed: 0, byFamily: {}, changed: 0, blind: 0, families: 7 } };
+        expect(worldChangesAt([bare], 0, 1).why)
+            .toMatch(/^no lock, chest, rock, tree, rope, ice turret or pushable block/);
         // (c) ⚠ noclip: every family reports `null`, so "unchanged" is not a
         // question this walk can answer — a different fact from "unchanged".
-        const blind = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 6, families: 6 } };
+        const blind = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 7, families: 7 } };
         expect(worldChangesAt([blind], 0, 1).why).toMatch(/`noclip`/);
         expect(worldChangesAt([blind], 0, 1).why).toMatch(/NOT the same fact/);
         // (d) …and the three sentences are three sentences
-        const none = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 0, families: 6 } };
+        const none = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 0, families: 7 } };
         const sentences = new Set([bare, blind, none].map((s) => worldChangesAt([s], 0, 1).why));
         expect(sentences.size).toBe(3);
     });
 
     it('is THIS TICK ONLY and filtered to the level being drawn', () => {
-        const s = { level: 5, changes: [{ id: 'a' }], changeCounts: { placed: 1, byFamily: {}, changed: 1, blind: 0, families: 6 } };
+        const s = { level: 5, changes: [{ id: 'a' }], changeCounts: { placed: 1, byFamily: {}, changed: 1, blind: 0, families: 7 } };
         expect(worldChangesAt([s], 0, 5).changes).toHaveLength(1);
         expect(worldChangesAt([s], 0, 6)).toEqual({ changes: [], why: null });
         expect(worldChangesAt([s], 9, 5)).toEqual({ changes: [], why: null });
@@ -1239,5 +1256,258 @@ describe('⚖ slice 9 — the DANGER the SOLVER was told (item 9)', () => {
         expect(got.why).toBe(null);
         expect(got.queries[0].danger).toBe(true);
         expect(got.queries[0].sources[0].why).toBe('an ARMED trap\'s lane');
+    });
+});
+
+/**
+ * ⛓⛓⛓ GROUP B — THE SWING'S LENGTH, AND THE AFTERIMAGE THAT IS NOT IT.
+ *
+ * ⛔ THE ROWS BELOW EXIST TO KEEP TWO THINGS APART. `attackRectsAt` is what
+ * the run COLLIDED and `attackHoldsAt` is what the page is still showing you
+ * afterwards, and the danger is not that either is wrong on its own — it is
+ * that they merge. So the load-bearing row is the PARTITION: no press row may
+ * ever be in both channels at one cursor, on any tape, at any hold.
+ */
+describe('group B — the attack window and the held afterimage', () => {
+    /**
+     * ⛔ THE MEASUREMENT THAT SETTLED THE ITEM, PINNED. The complaint was "the
+     * sword is never visible" and the first question was whether a swing's
+     * active window is derivable at all. It is: `slashDelayMax` is 0, so the
+     * hit test runs on every tick `slashing` is up, and the run pushes a press
+     * row for each — FIVE consecutive `fired` ticks per sword press. ⇒ the
+     * layer was already drawing the engine's whole window and the blink is
+     * 83 ms of wall clock, which is what makes the hold a DISPLAY choice
+     * rather than a correction.
+     */
+    it('⛔ a SWORD press is `SLASH_HIT_TICKS` rows on consecutive ticks — measured', () => {
+        const presses = collectRun(tape('r5-l60-kill'), levelSourceForTests).run.presses;
+        const byPress = new Map();
+        for (const p of presses) {
+            if (!byPress.has(p.t)) byPress.set(p.t, []);
+            byPress.get(p.t).push(p);
+        }
+        expect(byPress.size).toBeGreaterThan(0);
+        for (const [t, rows] of byPress) {
+            expect(rows.every((r) => r.weapon === 'sword')).toBe(true);
+            expect(rows).toHaveLength(SLASH_HIT_TICKS);
+            // T+1 … T+SLASH_HIT_TICKS, consecutive and in order.
+            expect(rows.map((r) => r.fired))
+                .toEqual(Array.from({ length: SLASH_HIT_TICKS }, (_, i) => t + 1 + i));
+        }
+    });
+
+    /**
+     * ⚠ AND THE SPEAR IS THE MODEL'S BOUND, NOT THE GAME'S TIMING. The game
+     * tests on T+1/T+3/T+5; the ladder fires ONE, by a named decision
+     * (`SPEAR_HIT_TICKS_UNMODELLED`). The layer draws the hit test this run
+     * MADE, and the readout carries the reason the other two are absent — an
+     * absence with no written cause reads as a room where nothing happened.
+     */
+    it('⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound', () => {
+        const presses = collectRun(tape('r4-walk-full'), levelSourceForTests).run.presses;
+        expect(presses.length).toBeGreaterThan(0);
+        expect(presses.every((p) => p.weapon === 'spear')).toBe(true);
+        expect(presses.every((p) => p.fired === p.t + 1)).toBe(true);
+        expect(new Set(presses.map((p) => p.t)).size).toBe(presses.length);
+        // the readout says WHICH fact the absence is, and it says it in the
+        // engine's own numbers rather than in a page-side paraphrase
+        expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
+        expect(SWING_WINDOW_NOTE.spear).toContain('1, 3, 5');
+        expect(SWING_WINDOW_NOTE.spear).toMatch(/bound on the\s+MODEL/);
+    });
+
+    /**
+     * ⛔⛔ THE PARTITION — the one row that makes the hold safe to exist.
+     *
+     * Asserted at EVERY cursor of a real tape rather than at a chosen one: the
+     * failure this guards against is an off-by-one in the age window
+     * (`age <= 0` vs `age < 0`), which shows up at exactly one cursor per press
+     * and nowhere else.
+     */
+    it('⛔⛔ no press row is EVER in both channels, at any cursor', () => {
+        const { run, frames } = collectRun(tape('r5-l60-kill'), levelSourceForTests);
+        const { presses } = run;
+        const level = frames[0].observation.level;
+        let sawBoth = 0;
+        for (let c = 0; c < frames.length; c += 1) {
+            const raw = attackRectsAt(presses, c, level);
+            const held = attackHoldsAt(presses, c, level, 40);
+            const key = (p) => `${p.t}/${p.fired}`;
+            const rawKeys = new Set(raw.map(key));
+            for (const h of held) expect(rawKeys.has(key(h))).toBe(false);
+            if (raw.length && held.length) sawBoth += 1;
+        }
+        // ⚠ AND THE TAPE ACTUALLY EXERCISES IT. A partition that held because
+        // one channel was empty at every cursor would be a row about nothing —
+        // the same shape as a check whose lookbehind excluded every call site.
+        expect(sawBoth).toBeGreaterThan(0);
+    });
+
+    it('⚠ a hold of 0 restores the RAW picture exactly', () => {
+        const { run, frames } = collectRun(tape('r5-l60-kill'), levelSourceForTests);
+        const level = frames[0].observation.level;
+        for (let c = 0; c < frames.length; c += 1) {
+            expect(attackHoldsAt(run.presses, c, level, 0)).toEqual([]);
+        }
+    });
+
+    it('the age is STRICTLY after the fired tick and bounded by the hold', () => {
+        const presses = [
+            { t: 4, fired: 5, level: 60, weapon: 'sword', direction: 3, rect: {}, hits: [] },
+        ];
+        expect(attackHoldsAt(presses, 5, 60, 3)).toEqual([]);       // the fired tick is RAW
+        expect(attackHoldsAt(presses, 6, 60, 3).map((p) => p.age)).toEqual([1]);
+        expect(attackHoldsAt(presses, 8, 60, 3).map((p) => p.age)).toEqual([3]);
+        expect(attackHoldsAt(presses, 9, 60, 3)).toEqual([]);       // one past the hold
+        expect(attackHoldsAt(presses, 4, 60, 3)).toEqual([]);       // never before the swing
+        // …and FILTERED TO THE LEVEL, like every other channel on this page.
+        expect(attackHoldsAt(presses, 6, 61, 3)).toEqual([]);
+        // the hold it was drawn under rides on the row, so a readout can say
+        // which knob produced the picture rather than only that one did
+        expect(attackHoldsAt(presses, 6, 60, 3)[0].hold).toBe(3);
+    });
+
+    it('`?attackhold=` reports a bad value by name and never throws', () => {
+        expect(parseAttackHold(null)).toEqual({ hold: ATTACK_HOLD_DEFAULT, why: null });
+        expect(parseAttackHold('')).toEqual({ hold: ATTACK_HOLD_DEFAULT, why: null });
+        // ⚠ absent and 0 are DIFFERENT, and 0 is a reader asking for raw truth
+        expect(parseAttackHold('0')).toEqual({ hold: 0, why: null });
+        expect(parseAttackHold('40')).toEqual({ hold: 40, why: null });
+        for (const bad of ['-1', '2.5', 'lots', 'NaN']) {
+            const got = parseAttackHold(bad);
+            expect(got.hold).toBe(ATTACK_HOLD_DEFAULT);
+            expect(got.why).toContain('whole number of ticks');
+        }
+    });
+
+    it('the swing note quotes the ENGINE\'s number, not a retyped one', () => {
+        expect(SWING_WINDOW_NOTE.sword).toContain(`${SLASH_HIT_TICKS} hit tests`);
+        expect(SWING_WINDOW_NOTE.hold).toMatch(/DISPLAY CHOICE/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ GROUP B — THE PUSHED BLOCK, WHICH THE BASE PICTURE DRAWS AT ITS SPAWN
+ * CELL FOREVER.
+ *
+ * The `pushables` PATH layer has drawn a dot per tick since slice 2 and was
+ * taken as covering this. It does not: the 16x16 grey box a reader sees is the
+ * BASE world's, built once per level and never advanced, so a pushed block is
+ * drawn as a wall where it no longer is, with a line of dots leading away.
+ * These rows are the correction, and the last one asks the ENGINE.
+ */
+describe('group B — a pushed block is marked where it REALLY is', () => {
+    /**
+     * ⛔ THE PAIR, in ONE room on ONE walk — slice 9's own standard. A layer
+     * that marked every block would pass a row that only showed the mark.
+     * L39 holds THREE blocks and the walk pushes one.
+     */
+    it('⛔ L39\'s three blocks are counted from tick 0 and NONE is marked until the push', () => {
+        let tick0 = null;
+        let firstMark = null;
+        const stepper = createTapeStepper(tape('r5-press-glide'), {
+            levelSource: levelSourceForTests,
+            onTick: (t, state, held, run) => {
+                if (!run) return;
+                const s = sampleMovers(run);
+                if (t === 0) tick0 = s;
+                const marks = s.changes.filter((c) => c.family === 'pushables');
+                if (marks.length && !firstMark) firstMark = { t, marks, sample: s, run };
+            },
+        });
+        for (let r = stepper.next(); !r.done; r = stepper.next()) { /* the whole walk */ }
+
+        // ⚠ POPULATION IS A FACT EVEN WHEN NOTHING HAS MOVED (trap 196): a
+        // count taken only when there was something to count cannot tell "this
+        // room holds no blocks" from "it holds three and none has been pushed".
+        expect(tick0.changeCounts.byFamily.pushables).toBe(3);
+        expect(tick0.changes.filter((c) => c.family === 'pushables')).toEqual([]);
+
+        expect(firstMark.t).toBe(16);
+        expect(firstMark.marks).toHaveLength(1);
+        const m = firstMark.marks[0];
+        expect(m.id).toBe('pushableblockfire@208,80');
+        expect(m.effect).toBe('swapped');
+        expect(m.verb).toMatch(/PUSHED/);
+        // ⛔ THE DEFECT, STATED AS AN INEQUALITY: the box the level built is
+        // NOT the box the block is in, and the mark's whole job is to make
+        // those two visibly different.
+        expect(m.rect.x).not.toBe(m.base.x);
+        expect(m.base.x).toBe(208);
+        expect(m.rect.x).toBe(208 - PUSHABLE_SPEED);
+    });
+
+    /**
+     * ⛔⛔ THE GLIDE IS DRAWN, NOT SNAPPED. A block walks to its target at
+     * 0.5 px/tick — 32 ticks per tile — and is a SOLID at every intermediate
+     * position. A mark that jumped to the target cell would open the far cell
+     * 32 ticks early and close the near one 32 ticks late, which is the whole
+     * width of the corridor R4's route walks through.
+     */
+    it('⛔⛔ the marked rect walks at `PUSHABLE_SPEED`, one sample per tick', () => {
+        const xs = [];
+        const stepper = createTapeStepper(tape('r5-press-glide'), {
+            levelSource: levelSourceForTests,
+            onTick: (t, state, held, run) => {
+                if (!run) return;
+                const m = sampleMovers(run).changes
+                    .find((c) => c.family === 'pushables' && c.id === 'pushableblockfire@208,80');
+                if (m && xs.length < TICKS_PER_TILE) xs.push(m.rect.x);
+            },
+        });
+        for (let r = stepper.next(); !r.done; r = stepper.next()) {
+            if (xs.length >= TICKS_PER_TILE) break;
+        }
+        expect(xs).toHaveLength(TICKS_PER_TILE);
+        for (let i = 1; i < xs.length; i += 1) {
+            expect(xs[i - 1] - xs[i]).toBeCloseTo(PUSHABLE_SPEED, 10);
+        }
+        // …and the intermediate positions are OFF the 16 px grid, which is the
+        // fact a snapped model could not produce.
+        expect(xs.some((x) => x % 16 !== 0)).toBe(true);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE ENGINE AGREES, IN BOTH DIRECTIONS.
+     *
+     * The join this arm adds is page-side (`s.pushableId` against
+     * `run.pushables`) and the authority is `levelWorld.liveRectOf`, which is
+     * a closure and cannot be imported. So the mark is put back to
+     * `world.collidesSolid` with the run's OWN `liveGeometryOpts()`, twice:
+     * the wall IS at the box the layer draws, and — once the block has cleared
+     * its spawn cell — it is NOT at the box the base picture still shows.
+     *
+     * ⚠ THE SECOND HALF IS THE ONE THAT MATTERS and the one that needs a late
+     * tick: 0.5 px into the glide the block still overlaps its own build box,
+     * so a row asked at the first marked tick would have found a wall at the
+     * base and proved nothing.
+     */
+    it('⛔⛔⛔ the engine puts the wall at the DRAWN rect and not at the base', () => {
+        let last = null;
+        const stepper = createTapeStepper(tape('r5-press-glide'), {
+            levelSource: levelSourceForTests,
+            onTick: (t, state, held, run) => {
+                if (!run) return;
+                const m = sampleMovers(run).changes
+                    .find((c) => c.family === 'pushables' && c.id === 'pushableblockfire@208,80');
+                if (!m) return;
+                const world = run.worldFor(run.level);
+                const live = run.liveGeometryOpts();
+                last = {
+                    t,
+                    mark: m,
+                    atRect: world.collidesSolid(m.rect, live)?.pushableId ?? null,
+                    atBase: world.collidesSolid(m.base, live)?.pushableId ?? null,
+                };
+            },
+        });
+        for (let r = stepper.next(); !r.done; r = stepper.next()) { /* to the end */ }
+
+        expect(last).not.toBe(null);
+        // the block has finished its tile (and then some — it slid south too)
+        expect(last.mark.rect.x).toBe(192);
+        expect(last.atRect).toBe('pushableblockfire@208,80');
+        // ⛔ …and NOTHING is at the box the base picture is still drawing.
+        expect(last.atBase).toBe(null);
     });
 });

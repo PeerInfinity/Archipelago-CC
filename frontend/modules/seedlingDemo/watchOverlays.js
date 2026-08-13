@@ -91,6 +91,46 @@ import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
  * (`c.x - CRUSHER.originX` against `cx - 16`).
  */
 import { detectionRects } from './crusher.js';
+/**
+ * ⛓⛓⛓ GROUP B — THE SWING'S OWN LENGTH, FROM THE ENGINE THAT DEFINES IT.
+ *
+ * The `attacks` layer draws a press's rect on the tick it FIRED, and the
+ * complaint that opened this item was that the sword is never visible. The
+ * first thing that needed settling was whether a swing's ACTIVE WINDOW is
+ * derivable at all or would have to be assumed. It is derivable, and it is
+ * not one tick — MEASURED over the committed tapes (`r5-l60-kill`,
+ * `r6-shield-kill`, `r6-owl-kill`, `r5-l40-part0`, `r4-walk-full`):
+ *
+ * | weapon | rows in `run.presses` per press | `fired` ticks |
+ * |---|---|---|
+ * | sword | **5** | T+1 … T+5, consecutive |
+ * | spear | 1 | T+1 |
+ *
+ * `Player.slash`'s `slashDelayMax` is ZERO, so the hit test runs on every
+ * tick `slashing` is up — `presses.SLASH_HIT_TICKS`, and the run pushes a
+ * press row for each. ⇒ THE LAYER ALREADY DRAWS THE ENGINE'S WHOLE SWORD
+ * WINDOW; five ticks is simply 83 ms at the pacer's speed 1, which is the
+ * blink. Nothing about the engine's timing needs assuming, and nothing about
+ * it is changed here.
+ *
+ * ⚠ THE SPEAR IS THE ONE PLACE THE PICTURE IS SHORT OF THE GAME, and it is
+ * short because the MODEL is, by a named decision and not by an oversight:
+ * `spearDelayMax` is 1, so the game tests on T+1, T+3 and T+5, and
+ * `presses.SPEAR_HIT_TICKS_UNMODELLED` records that the ladder fires ONE.
+ * A layer that drew three rects for a spear would be showing hit tests this
+ * run never made — so it draws the one the run made, and the readout says
+ * which fact the absence of the other two is.
+ *
+ * ⛔⛔ AND THE HOLD BELOW IS A DISPLAY CHOICE, WHICH IS WHY IT IS A SEPARATE
+ * CHANNEL AND NOT A LONGER `attackRectsAt`. `drawn.attacks` stays EXACTLY the
+ * ticks the run collided a rect on — the fact `check-seedling-editor-shapes`
+ * asserts ("the attack rect IS DRAWN on its fired tick, and not otherwise")
+ * — and the held afterimage rides in `drawn.attacksHeld` with its own ink,
+ * its own legend row and its own age. A page that widened the raw channel to
+ * make the sword easier to see would be answering "when did the game swing?"
+ * with a number the page picked.
+ */
+import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
 
 /**
  * ⛔ THE LAYER ROSTER — kickoff §3.2's table, transcribed once.
@@ -134,7 +174,16 @@ export const OVERLAY_LAYERS = Object.freeze([
      */
     Object.freeze({ id: 'hitboxes', label: 'enemy body hitboxes (this tick)', kind: 'shape', on: true }),
     Object.freeze({ id: 'hammer', label: 'spinner hammer line (this tick)', kind: 'shape', on: true }),
-    Object.freeze({ id: 'attacks', label: 'attack rects (the tick they fired)', kind: 'shape', on: true }),
+    /**
+     * ⛓⛓⛓ GROUP B: the label says "tickS", plural, because a SWORD press is
+     * five of them (`SLASH_HIT_TICKS`) and the layer has always drawn all
+     * five — see the `SLASH_HIT_TICKS` import block for the measurement, and
+     * `attackHoldsAt` for the afterimage this toggle also governs. ⚠ ONE
+     * TOGGLE, TWO CHANNELS, deliberately: turning `attacks` off must leave
+     * nothing behind, and a separate switch for the afterimage would be a
+     * second way to have half a layer on screen.
+     */
+    Object.freeze({ id: 'attacks', label: 'attack rects (the ticks they fired + a held afterimage)', kind: 'shape', on: true }),
     /**
      * ── ⛓ SLICE 8'S LANE LAYER, AND IT IS NOT THE ARROWS LAYER ───────────
      *
@@ -250,14 +299,28 @@ export function parseLayersParam(raw) {
  * wall that is not there, which is the failure this whole layer exists to
  * end. ⇒ the hoist is OWED and named (as-built §17), not smuggled.
  *
- * ⛔ NAMED BOUND — FIVE FAMILIES HERE, PLUS TURRETS IN THEIR OWN ARM, OUT OF
- * THIRTEEN. `liveRectOf` also answers for `openBridges`, `openMagicalLocks`,
- * `bosses`, `shieldBosses`, `finalDoors`, `pushables` and `fallenRocks`.
- * `pushables` is drawn already (its own path layer since slice 2); the other
- * six are outside ⚖ the charter's list (*opened activators/chests, dead
- * turrets, broken rocks, burned trees, pulled ropes*) and are stated here so
- * "the layer showed nothing" can never be confused with "the room changed
- * nothing" for a family nobody wired.
+ * ⛔ NAMED BOUND — FIVE FAMILIES HERE, PLUS TURRETS AND PUSHABLES IN THEIR OWN
+ * ARMS, OUT OF THIRTEEN. `liveRectOf` also answers for `openBridges`,
+ * `openMagicalLocks`, `bosses`, `shieldBosses`, `finalDoors` and
+ * `fallenRocks`. Those five are outside ⚖ the charter's list (*opened
+ * activators/chests, dead turrets, broken rocks, burned trees, pulled ropes*)
+ * and are stated here so "the layer showed nothing" can never be confused with
+ * "the room changed nothing" for a family nobody wired.
+ *
+ * ⛓⛓⛓ GROUP B — AND `pushables` USED TO BE ON THAT EXCUSED LIST, WRONGLY.
+ * The note above this one said *"`pushables` is drawn already (its own path
+ * layer since slice 2)"*, and it is not: that layer draws ONE DOT at the
+ * block's centre per tick, cumulative, in the trail vocabulary. The 16x16
+ * GREY BOX the reader actually sees is the BASE picture's, built once per
+ * level and never advanced (`makeWorldFor`) — so a block pushed at tick 40 is
+ * still drawn, as a wall, at its spawn cell for the rest of the tape, with a
+ * thin line of dots leading away from it. ⚠ THE DOTS ARE NOT A CORRECTION:
+ * "the block is here now" and "the block is ALSO still there" are what the two
+ * readings say together, and only one of them is true. ⇒ a pushable is a
+ * `swapped` world-state mark like a rope or a turret corpse, in its own arm
+ * (below) because its "has it changed?" test is a RECT COMPARISON and not a
+ * set membership — the block is in `run.pushables` from tick 0 whether or not
+ * anything has touched it.
  *
  * ⚠ `effect` IS THE GAME'S MECHANISM, not a drawing style: a rope is the one
  * member of the five that SHRINKS rather than leaving — `RopeStart.hit()`
@@ -447,6 +510,12 @@ export function sampleMovers(run) {
         }
         const turretsNow = run.turrets ?? null;
         if (!turretsNow) blind += 1;
+        // ⚠ `null` IS `noclip`, exactly as it is for the five table families
+        // and for the turrets: `run.pushables` is `noclip ? null : …`, so an
+        // absent map is "this walk cannot answer WHERE the blocks are", which
+        // is not the same fact as "no block has moved".
+        const pushablesNow = run.pushables ?? null;
+        if (!pushablesNow) blind += 1;
         const placedBy = {};
         let placedCount = 0;
         for (const s of world.solids ?? []) {
@@ -522,16 +591,86 @@ export function sampleMovers(run) {
                     });
                 }
             }
+            /**
+             * ⛓⛓⛓ GROUP B — THE PUSHED BLOCK, AND IT IS AN ARM RATHER THAN A
+             * SIXTH TABLE ROW FOR ONE REASON: THE JOIN IS NOT MEMBERSHIP.
+             *
+             * Every family in `WORLD_STATE_FAMILIES` answers "is this solid's
+             * id in the run's CHANGED set?" — `openChests`, `brokenRocks` and
+             * the rest hold only the ones something happened to. `run.pushables`
+             * is not that shape: it is `pushableRects(state)`, EVERY block in
+             * the room keyed by id, present from tick 0 at its spawn rect. So
+             * membership is always true and the question is a rect comparison —
+             * `liveRectOf`'s own arm, in the same words: *"a block that has been
+             * pushed is not where the level built it"*.
+             *
+             * ⛔ POSITION ONLY, NEVER SIZE. `pushableRect` is `setHitbox(16,
+             * 16)` with a (0,0) origin for every block in the game, so the box
+             * cannot change shape and a comparison that also read `w`/`h` would
+             * be asking a question the model has no way to answer differently.
+             *
+             * ⚠ AND A MISSING ENTRY IS NOT A REMOVAL — `liveRectOf` falls
+             * through to the spawn rect for one, and this arm draws no mark for
+             * the same reason. *Absent and removed are different facts, and only
+             * one of them means the cell is clear.*
+             *
+             * ⚠ `destroy` RIDES ON THE VERB RATHER THAN ON THE EFFECT. A block
+             * resting over Water/Lava/Pit sets `destroy` and fades at 0.1 alpha
+             * per frame, and it is SOLID for every one of those frames
+             * (`pushables.js`' own note) — so it is still a `swapped` box that
+             * is really there, and calling it `gone` ten ticks early would open
+             * a cell the game keeps.
+             */
+            if (s.pushableId) {
+                placedCount += 1;
+                placedBy.pushables = (placedBy.pushables ?? 0) + 1;
+                if (!pushablesNow) continue;
+                const now = pushablesNow.get(s.pushableId);
+                if (!now) continue;
+                if (now.removed) {
+                    changes.push({
+                        id: s.pushableId,
+                        family: 'pushables',
+                        tag: s.tag ?? null,
+                        effect: 'gone',
+                        verb: 'SUNK — the block came to rest over water, lava or a pit',
+                        base: s.rect,
+                        rect: null,
+                    });
+                } else if (now.rect.x !== s.rect.x || now.rect.y !== s.rect.y) {
+                    changes.push({
+                        id: s.pushableId,
+                        family: 'pushables',
+                        tag: s.tag ?? null,
+                        effect: 'swapped',
+                        verb: now.destroy
+                            ? 'PUSHED, and SINKING — still a wall for the whole fade'
+                            : 'PUSHED — the wall is here now, not where the level built it',
+                        base: s.rect,
+                        // ⛔ The run's own rect, straight off `pushableRects`.
+                        // A block GLIDES at 0.5 px/tick for 32 ticks per tile
+                        // and is a solid at every intermediate position, so a
+                        // page that snapped it to the target cell would draw a
+                        // wall in a cell the game has not reached.
+                        rect: now.rect,
+                    });
+                }
+            }
         }
         changeCounts = {
             placed: placedCount,
             byFamily: placedBy,
             changed: changes.length,
-            // ⚠ ALL SIX blind is `noclip`; a partial count is impossible (the
+            // ⚠ ALL SEVEN blind is `noclip`; a partial count is impossible (the
             // getters share one flag) and is reported as the number anyway
             // rather than as a boolean nobody can check.
             blind,
-            families: WORLD_STATE_FAMILIES.length + 1,
+            // ⛓ The five table rows, PLUS the turret arm and the pushable arm.
+            // A count that read `WORLD_STATE_FAMILIES.length` alone would make
+            // `blind === families` unreachable and turn the noclip reason into
+            // dead text — the check that the reason is right is that the number
+            // it is compared against counts the same things `blind` does.
+            families: WORLD_STATE_FAMILIES.length + 2,
         };
         const placed = world.arrowTraps ?? [];
         const armed = run.armedArrowTraps;
@@ -1053,9 +1192,9 @@ export function worldChangesAt(samples, cursor, level) {
     if (c.placed === 0) {
         return {
             changes: [],
-            why: 'no lock, chest, rock, tree, rope or ice turret stands in this room — the '
-                + 'build-time picture has nothing in it whose state a run could change, so '
-                + 'the drawn world is not stale here, it is simply right',
+            why: 'no lock, chest, rock, tree, rope, ice turret or pushable block stands in '
+                + 'this room — the build-time picture has nothing in it whose state a run '
+                + 'could change, so the drawn world is not stale here, it is simply right',
         };
     }
     if (c.blind === c.families) {
@@ -1234,6 +1373,106 @@ export function dangerQueriesAt(queries, cursor, level) {
  */
 export function attackRectsAt(presses, cursor, level) {
     return (presses ?? []).filter((p) => p.fired === cursor && p.level === level);
+}
+
+/**
+ * ⛓⛓⛓ GROUP B — THE DEFAULT HOLD, AND WHY IT IS A NUMBER SOMEBODY PICKED.
+ *
+ * ⚠ 15 TICKS IS A QUARTER-SECOND AT THE PACER'S SPEED 1 AND HAS NO BASIS IN
+ * THE GAME. It is long enough to read a swing while the tape plays and short
+ * enough that two presses 31 ticks apart (`r5-l60-kill`'s cadence, measured)
+ * never overlap. The engine's own window is `SLASH_HIT_TICKS` and is drawn at
+ * full strength whatever this is set to; ⇒ setting the hold to 0 restores the
+ * raw picture exactly, which is what makes this a knob rather than a claim.
+ */
+export const ATTACK_HOLD_DEFAULT = 15;
+
+/**
+ * The sentence the readout and the legend BOTH spend on saying what a swing's
+ * length is, so the page cannot come to hold two answers.
+ */
+export const SWING_WINDOW_NOTE = Object.freeze({
+    sword: `a sword press fires ${SLASH_HIT_TICKS} hit tests, on T+1…T+${SLASH_HIT_TICKS} `
+        + '(`presses.SLASH_HIT_TICKS` — `slashDelayMax` is 0, so the test runs on every tick '
+        + '`slashing` is up), and the run records a press row for each. The rect is '
+        + 'RECOMPUTED per tick from the live position, so a player being knocked back swings '
+        + 'from where they are',
+    spear: `a spear press records ONE row. The game tests on ticks `
+        + `${SPEAR_HIT_TICKS_UNMODELLED.ticks.join(', ')} of the same animation and the model `
+        + `fires the first only — ${SPEAR_HIT_TICKS_UNMODELLED.why} That is a bound on the `
+        + 'MODEL, not a fact about the swing, and the two extra rects are absent because '
+        + 'this run never made those hit tests',
+    hold: 'the HOLD is a DISPLAY CHOICE of this page and not the game\'s timing — a rect '
+        + 'kept on screen for N ticks after the engine stopped swinging, drawn dimmer and '
+        + 'outline-only so it can never be read as a hit test. Set it to 0 for the raw '
+        + 'picture',
+});
+
+/**
+ * `?attackhold=N` — the afterimage length, decided where a test can reach it.
+ *
+ * ⚠ A BAD VALUE IS REPORTED, NOT REFUSED AND NOT IGNORED — `parseLayersParam`'s
+ * own law, for its own reason: throwing would take the page down over a typo in
+ * a query string, and silently substituting the default would show one hold
+ * under a URL that asked for another.
+ *
+ * ⚠ AN ABSENT PARAMETER AND `?attackhold=0` ARE DIFFERENT, and the difference
+ * is the whole point of the knob: absent is the page's chosen default, 0 is a
+ * reader who has deliberately asked for the raw picture.
+ */
+export function parseAttackHold(raw) {
+    if (raw === null || raw === undefined || raw === '') {
+        return { hold: ATTACK_HOLD_DEFAULT, why: null };
+    }
+    const n = Number(raw);
+    if (!Number.isInteger(n) || n < 0) {
+        return {
+            hold: ATTACK_HOLD_DEFAULT,
+            why: `?attackhold=${JSON.stringify(String(raw))} is not a whole number of ticks `
+                + `≥ 0, so the hold stays at the page default (${ATTACK_HOLD_DEFAULT}). It is `
+                + 'a count of ticks to keep a fired attack rect on screen AFTER the engine '
+                + 'stopped swinging; 0 is the raw picture',
+        };
+    }
+    return { hold: n, why: null };
+}
+
+/**
+ * ⛔ THE AFTERIMAGE — the rects the engine has ALREADY STOPPED SWINGING, kept
+ * on screen for `holdTicks` ticks so a five-tick swing can be seen.
+ *
+ * ⛔⛔ STRICTLY AFTER: `age` is `cursor - p.fired` and the range is `0 < age <=
+ * holdTicks`, so a row this function returns is NEVER one `attackRectsAt`
+ * returns. The two channels partition the presses, and the renderer draws them
+ * in different ink — which is the whole reason the hold may exist on a page
+ * whose first law is that it makes no claims. A held rect that could also
+ * appear in the raw channel would make "the game swung here" and "this page is
+ * still showing you where it swung" the same picture.
+ *
+ * ⚠ AND IT IS PER ROW, NOT PER SWING. A sword press is five rows at five
+ * positions (measured: `r6-owl-kill`'s rect walks 2.2 px across its five hit
+ * ticks as the player is knocked back), so holding "the swing" would mean
+ * picking one of the five to keep — a choice with no honest answer. Each row
+ * fades on its own clock and the five overlap into the shape the swing swept,
+ * which is the one picture that is a reading of all five.
+ *
+ * ⚠ `holdTicks <= 0` RETURNS EMPTY rather than being an error: 0 is the
+ * meaningful "no afterimage" setting and the control offers it.
+ *
+ * @returns {Array} rows shaped like `attackRectsAt`'s, each with an `age`
+ *   (ticks since it fired) and the `hold` it was drawn under.
+ */
+export function attackHoldsAt(presses, cursor, level, holdTicks = ATTACK_HOLD_DEFAULT) {
+    const hold = Number.isFinite(holdTicks) ? Math.floor(holdTicks) : 0;
+    if (hold <= 0) return [];
+    const out = [];
+    for (const p of presses ?? []) {
+        if (p.level !== level) continue;
+        const age = cursor - p.fired;
+        if (age <= 0 || age > hold) continue;
+        out.push({ ...p, age, hold });
+    }
+    return out;
 }
 
 /** How many DISTINCT bodies a channel ever showed — the emptiness readout. */

@@ -188,6 +188,129 @@ console.log('## r7-act2-11 (L11) — one chest, drawn shut at tick 0 and MARKED 
     await page.close();
 }
 
+// ── 1b. GROUP B: THE PUSHED BLOCK — the base picture's oldest stale box ──
+/**
+ * ⛔⛔ THE ITEM WAS "a pushed block is still drawn at its starting position",
+ * AND IT WAS TRUE FOR SEVEN SLICES.
+ *
+ * The `pushables` PATH layer has drawn a dot per tick since slice 2, and the
+ * world-state roster's own note excused the family on those grounds — *"drawn
+ * already (its own path layer since slice 2)"*. It is not the same picture: a
+ * dot at the block's centre is one pixel, and the 16x16 GREY BOX the reader
+ * sees is the base world's, built once per level and never advanced. So a
+ * pushed block was drawn as a wall where it no longer was, with a thin line of
+ * dots leading away from it, and the two readings together said "the block is
+ * here now" and "the block is ALSO still there".
+ *
+ * ⚠ THE ROOM IS THE CONTROL AND THE TREATMENT AT ONCE. L39 holds THREE blocks
+ * and this walk pushes ONE, so "the layer marks what moved" and "the layer
+ * does not mark what did not" are the same two numbers.
+ */
+console.log('\n## r5-press-glide (L39) — three blocks, one pushed, and only one marked');
+{
+    const { page, errors } = await open('r5-press-glide', 0);
+    const before = await readout(page);
+    check(before.drawn.worldstate.changes.filter((c) => c.family === 'pushables').length === 0,
+        'at tick 0 no block is marked — nothing has been pushed yet',
+        `${before.drawn.worldstate.changes.length} mark(s) of any family`);
+    check(before.changeCounts && before.changeCounts.byFamily.pushables === 3,
+        '⛓ …while the page counts the room\'s THREE blocks anyway (trap 196: an absence '
+        + 'is only legible beside its population)',
+        JSON.stringify(before.changeCounts.byFamily));
+
+    // ⚠ MEASURED, never a chosen tick: scrub and ask the page.
+    const found = await page.evaluate(() => {
+        const s = document.getElementById('scrub');
+        const max = Number(s.max);
+        for (let t = 0; t <= max; t += 1) {
+            s.value = String(t);
+            s.dispatchEvent(new Event('input'));
+            const marks = window.__editorOverlays.drawn.worldstate.changes
+                .filter((c) => c.family === 'pushables');
+            if (marks.length > 0) return { tick: t, marks };
+        }
+        return null;
+    });
+    check(found !== null && found.marks.length === 1,
+        '⛓⛓⛓ the page MARKS the block the tick it starts to move — and marks ONLY it',
+        found ? `first at tick ${found.tick}, ${found.marks.length} of 3 block(s)` : 'never marked');
+    const m = found?.marks?.[0];
+    check(Boolean(m) && m.effect === 'swapped' && /PUSHED/.test(m.verb),
+        '⛓ …as SWAPPED, in the family\'s own vocabulary',
+        m ? `${m.id} ${m.effect} — ${m.verb}` : 'none');
+    // ⛔⛔ THE WHOLE DEFECT, AS AN INEQUALITY ON THE CANVAS: the box the level
+    // built and the box the block is in are DIFFERENT boxes, and the layer's
+    // job is to make that visible rather than to repaint one over the other.
+    check(Boolean(m) && m.base && m.rect && m.rect.x !== m.base.x,
+        '⛔⛔ …and the DRAWN box is not the box the base picture is still showing',
+        m ? `base x=${m.base.x} → live x=${m.rect.x}` : 'none');
+
+    // ⛔⛔⛔ AND IT GLIDES. A block walks its tile at 0.5 px/tick over 32 ticks
+    // and is a solid at every intermediate position; a mark that snapped to
+    // the target would open the far cell 32 ticks early.
+    const glide = await page.evaluate((from) => {
+        const s = document.getElementById('scrub');
+        const xs = [];
+        for (let t = from; t < from + 8; t += 1) {
+            s.value = String(t);
+            s.dispatchEvent(new Event('input'));
+            const mark = window.__editorOverlays.drawn.worldstate.changes
+                .find((c) => c.family === 'pushables');
+            if (mark) xs.push(mark.rect.x);
+        }
+        return xs;
+    }, found.tick);
+    const steps = glide.slice(1).map((x, i) => Number((glide[i] - x).toFixed(6)));
+    check(glide.length === 8 && steps.every((d) => d === 0.5),
+        '⛔⛔⛔ …one 0.5 px step per tick, drawn OFF the 16 px grid — the glide, not a snap',
+        `x: ${glide.join(' → ')}`);
+
+    if (SHOT && found) {
+        await page.locator('#canvas').screenshot({ path: `${SHOT}/r5-press-glide-pushed.png` });
+    }
+    check(unexpectedErrors(errors).length === 0, 'no page errors',
+        unexpectedErrors(errors).join(' | ') || 'clean');
+    await page.close();
+}
+
+// ── 1c. GROUP B: A PUSHABLE AND A BREAKABLE ROCK ARE NOT ONE COLOUR ─────
+/**
+ * ⛔ EVERY ENTITY SOLID USED TO BE `#55506a` — 1219 boxes across 116 levels in
+ * one grey, so the two things a room's puzzle is usually made of looked like
+ * each other and like a dresser. The palette is keyed on the RUN'S OWN JOIN
+ * (`pushableId`, `rockId`, …), the same field `liveRectOf` switches on, and
+ * MEASURED to be unambiguous: no solid in the atlas carries two of them.
+ *
+ * ⚠ THE LEGEND IS THE CHECK. This page's standing rule is that a colour nobody
+ * can identify is impossible, and a hue with no legend row is exactly that —
+ * so what is asserted is that the two families the item named are NAMED, and
+ * that the 87% with no run-changeable state are named as scenery rather than
+ * left as an unexplained default.
+ */
+console.log('\n## the object-solid palette — a pushable, a rock and a dresser are three colours');
+{
+    const a = await at('r5-press-glide', 0);
+    const row = (re) => a.legend.find((l) => re.test(l));
+    check(Boolean(row(/PUSHABLE block/)), '⛓ the legend names the PUSHABLE family',
+        row(/PUSHABLE block/) ?? '(missing)');
+    check(Boolean(row(/BREAKABLE rock/)), '⛓ …and the BREAKABLE rock family',
+        row(/BREAKABLE rock/) ?? '(missing)');
+    check(Boolean(row(/^scenery/)),
+        '⛔ …and the grey that is LEFT is named as scenery, not left as an unexplained default',
+        row(/^scenery/) ?? '(missing)');
+    // ⛓ THE PLAYER'S TWO BOXES — ⚖ the user kept both drawn and ruled that the
+    // fix was to say which is which. These two rows ARE that fix.
+    check(Boolean(row(/PLAYER HITBOX/)) && /playerBoxAt/.test(row(/PLAYER HITBOX/)),
+        '⚖ the legend names the WHITE box as the collision hitbox, by function',
+        row(/PLAYER HITBOX/) ?? '(missing)');
+    const probe = row(/TERRAIN PROBE/);
+    check(Boolean(probe) && /NOT a collision volume/.test(probe),
+        '⚖ …and the YELLOW one as the terrain probe, with "NOT a collision volume" in words',
+        probe ?? '(missing)');
+    check(unexpectedErrors(a.errors).length === 0, 'no page errors',
+        unexpectedErrors(a.errors).join(' | ') || 'clean');
+}
+
 // ── 2. THE INVERTED POLARITY — a wall the base draws and the run has not ─
 console.log('\n## r5-l40-part0 (L40) — the ice turret: drawn as a wall, and it is not one');
 {
@@ -199,11 +322,16 @@ console.log('\n## r5-l40-part0 (L40) — the ice turret: drawn as a wall, and it
     check(Boolean(turret) && /ALIVE/.test(turret.verb),
         '⛓ …and says WHY in the family\'s own vocabulary: an ice turret is an Enemy',
         turret?.verb ?? 'none');
-    // ⛓ THE ROOM'S POPULATION across all six families, so the single mark is
-    // legible as one of sixteen rather than as "the layer found one thing".
-    check(a.changeCounts && a.changeCounts.placed === 16
-        && a.changeCounts.byFamily.brokenRocks === 3,
-    '⛓ …in a room the page counts SIXTEEN changeable objects in, three of them rocks',
+    // ⛓ THE ROOM'S POPULATION across all SEVEN families, so the single mark is
+    // legible as one of nineteen rather than as "the layer found one thing".
+    // ⛓⛓⛓ GROUP B: 16 -> 19, the three PUSHABLE blocks L40 holds. They were
+    // outside the scan until the pushed-block item, which is exactly why a
+    // reader could watch one glide away from the grey box still drawn at its
+    // spawn cell and be told the room had changed nothing.
+    check(a.changeCounts && a.changeCounts.placed === 19
+        && a.changeCounts.byFamily.brokenRocks === 3
+        && a.changeCounts.byFamily.pushables === 3,
+    '⛓ …in a room the page counts NINETEEN changeable objects in, three rocks and three blocks',
     JSON.stringify(a.changeCounts.byFamily));
     check(a.drawn.worldstate.why === null,
         '⛔ …and `why` is NULL — a layer with something to draw explains nothing',

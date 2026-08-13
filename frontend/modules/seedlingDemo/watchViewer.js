@@ -132,10 +132,11 @@ import {
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
-    activeTraceIndex, arrowLanesAt, attackRectsAt, bodiesAt, channelSummary, collectRun,
-    crushersAt, dangerQueriesAt, defaultLayerSet, hammerLinesAt, LAYER_IDS, MARKER_GLYPHS,
-    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseLayersParam, pathPointsUpTo,
-    traceRowFields, traceSidecarPath, worldChangesAt,
+    activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt, attackRectsAt,
+    bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt, defaultLayerSet,
+    hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
+    parseAttackHold, parseLayersParam, pathPointsUpTo, SWING_WINDOW_NOTE, traceRowFields,
+    traceSidecarPath, worldChangesAt,
 } from './watchOverlays.js';
 import {
     clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
@@ -150,6 +151,10 @@ import { createLifetimeHolder } from './watchLifetime.js';
 import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
+// ⛓ GROUP B: the legend states the swing's LENGTH, and it states the engine's
+// own number rather than a page-side "5" — the one-spelling law, applied to a
+// sentence. See `watchOverlays`' `SLASH_HIT_TICKS` import block.
+import { SLASH_HIT_TICKS } from './presses.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
 /** Paths are resolved against the REPO ROOT — the dev server's cwd. */
@@ -179,6 +184,62 @@ const TILE_COLOURS = {
 };
 const SOLID_COLOUR = '#3a3a42';
 const FLOOR_COLOUR = '#6b6152';
+
+/**
+ * ⛓⛓⛓ GROUP B — THE OBJECT SOLIDS, BY FAMILY, AND THE COMPLAINT THAT FORCED
+ * IT: *a pushable block and a breakable rock are the same grey box.*
+ *
+ * They were. Every entity solid — 1219 of them across the atlas's 116 levels —
+ * was drawn `#55506a`, so the two things a room's puzzle is usually MADE of
+ * were indistinguishable from each other and from a dresser.
+ *
+ * ⛔ THE KEY IS THE RUN'S OWN JOIN, NOT THE TAG. `levelWorld` stamps exactly
+ * one id field per changeable solid (`pushableId`, `rockId`, `chestId`, …) —
+ * the same field `liveRectOf` switches on and the same one the world-state
+ * layer marks through. Colouring by `s.tag` instead would be a second
+ * classification of the same objects: `breakablerock` and `breakablerockghost`
+ * are two tags and one family, `lock`/`cover`/`wandlock`/`bosslock`/
+ * `shieldlock`/`rocklock`/`grasslock` are seven tags and one, and the day a
+ * class was added the palette would quietly fall back to grey while the
+ * mechanics kept working.
+ *
+ * ⛔⛔ MEASURED FIRST: NO SOLID CARRIES TWO OF THESE FIELDS. Over all 116
+ * levels — activatorId 70 · rockId 24 · pushableId 19 · chestId 16 · treeId 6
+ * · magicalLockId 6 · bridgeId 5 · pulserId 4 · crusherId 4 · ropeId 3 ·
+ * turretId 2 · shieldBossId 1 · bossId 1 · finalDoorId 1, and **zero**
+ * multi-keyed. So "first field that matches" is a total function here and not
+ * a precedence rule that happens to work; if that ever stops being true the
+ * order below becomes a silent choice, which is why the measurement is written
+ * down rather than assumed.
+ *
+ * ⚠ 1057 OF THE 1219 CARRY NO FIELD AT ALL and stay grey — trees, poles,
+ * spires, statues, furniture. That is the honest answer: they are scenery with
+ * no run-changeable state, the legend says so, and a palette that gave every
+ * tag its own hue would spend the reader's whole colour budget on the 87% of
+ * boxes nothing can happen to.
+ */
+const OBJECT_SOLID_FAMILIES = Object.freeze([
+    Object.freeze({ key: 'pushableId', colour: '#6f5fd0', label: 'PUSHABLE block — a press or a lean moves it one tile' }),
+    Object.freeze({ key: 'rockId', colour: '#a8703a', label: 'BREAKABLE rock — a press destroys it' }),
+    Object.freeze({ key: 'chestId', colour: '#c0a038', label: 'chest' }),
+    Object.freeze({ key: 'activatorId', colour: '#3f7f8a', label: 'lock / cover — opens while its group is held' }),
+    Object.freeze({ key: 'magicalLockId', colour: '#8a3f8a', label: 'magical lock — the wand opens it' }),
+    Object.freeze({ key: 'treeId', colour: '#3f7a3f', label: 'burnable tree' }),
+    Object.freeze({ key: 'ropeId', colour: '#9a7a4a', label: 'rope — a pull SHRINKS it to one cell, it does not vanish' }),
+    Object.freeze({ key: 'bridgeId', colour: '#6b4a2a', label: 'bridge — solid until something spears it' }),
+    Object.freeze({ key: 'pulserId', colour: '#b04070', label: 'pulser — solid always; its flag makes it HIT' }),
+    Object.freeze({ key: 'crusherId', colour: '#c04040', label: 'crusher — charges at a player it can SEE' }),
+    Object.freeze({ key: 'turretId', colour: '#7fb0c0', label: 'ice turret — an ENEMY while alive, a wall once dead' }),
+    Object.freeze({ key: 'bossId', colour: '#8a5f2a', label: 'boss totem — a wall until the wand WAKES it' }),
+    Object.freeze({ key: 'shieldBossId', colour: '#9a4040', label: 'shield boss' }),
+    Object.freeze({ key: 'finalDoorId', colour: '#5a5a9a', label: 'final door' }),
+]);
+/** Scenery: an object solid with no run-changeable state at all. */
+const SCENERY_COLOUR = '#55506a';
+const objectSolidColour = (s) => {
+    for (const f of OBJECT_SOLID_FAMILIES) if (s[f.key]) return f.colour;
+    return SCENERY_COLOUR;
+};
 
 /**
  * The overlay palette, by channel. Named here and rendered into the LEGEND
@@ -213,6 +274,15 @@ const SHAPE_COLOURS = Object.freeze({
     hammer: '#ff8fd0',
     hammerTouch: '#ffffff',
     attack: '#ffd75f',
+    /**
+     * ⛓⛓⛓ GROUP B — THE AFTERIMAGE, AND ITS INK IS A DESATURATED `attack` ON
+     * PURPOSE. It has to read as *the same swing, no longer live*: a hue of
+     * its own would make it look like a different event, and the FULL `attack`
+     * yellow would make a display choice indistinguishable from the tick the
+     * engine collided a rect on. So it is the same colour drained, drawn
+     * outline-only, and the legend row says the word "display choice".
+     */
+    attackHeld: '#8a7638',
     /**
      * ⛓ A LANE IS NOT AN ARROW, AND THE INK SAYS SO. `PATH_COLOURS.arrow` is
      * the flights; this is the trap's column. A distinct hue is the legend's
@@ -343,6 +413,10 @@ function readParams() {
         // ⚠ RAW. `parseLayersParam` is where it is decided, and it is pure so
         // the decision is tested; an absent parameter is not an empty one.
         layers: q.get('layers'),
+        // ⛓ GROUP B: `?attackhold=N`, raw for the same reason — the decision
+        // is `parseAttackHold`'s, which is pure and reports a bad value by
+        // name instead of silently falling back.
+        attackHold: q.get('attackhold'),
         // The SOLVE arm's own parameters, parsed where they are testable.
         ...readSolveParams(window.location.search),
         // ⛓ …and the VIEW parameters (`?tick=`, `?shot=`), for the same
@@ -613,6 +687,16 @@ function makeRenderer(canvas) {
         hitboxes: { boxes: [], why: null },
         hammer: { lines: [], why: null },
         attacks: [],
+        /**
+         * ⛓⛓⛓ GROUP B — ITS OWN CHANNEL, AND THAT IS THE WHOLE SAFEGUARD.
+         * `attacks` is what the run COLLIDED; this is what the page is still
+         * showing you afterwards. Folding the afterimage into `attacks` would
+         * have made `check-seedling-editor-shapes`' claim — *"the attack rect
+         * is drawn on its fired tick, and NOT OTHERWISE"* — pass on a picture
+         * that no longer says that, which is a check measuring the page's
+         * decoration instead of the game's timing.
+         */
+        attacksHeld: [],
         lanes: { lanes: [], why: null },
         /**
          * ⛓ SLICE 9's three, in the `{…, why}` PAIR SHAPE FROM THE OUTSET —
@@ -687,7 +771,9 @@ function makeRenderer(canvas) {
             // place the sticky resolver is observable. Left as background.
 
             // Object solids (buildings, statues, NPCs...) and pixelmasks.
-            for (const s of world.objectSolids) rect(s.rect, '#55506a', 0.85);
+            // ⛓ GROUP B: coloured by the run's own family join, not by tag —
+            // see `OBJECT_SOLID_FAMILIES`. Scenery keeps the old grey.
+            for (const s of world.objectSolids) rect(s.rect, objectSolidColour(s), 0.85);
             for (const p of world.pixelmasks) outline(p.rect, '#a06060');
 
             // Volumes. Teleporters and pits are TRANSPORT; the rest are
@@ -804,6 +890,7 @@ function makeRenderer(canvas) {
             drawn.hitboxes = { boxes: [], why: null };
             drawn.hammer = { lines: [], why: null };
             drawn.attacks = [];
+            drawn.attacksHeld = [];
             drawn.lanes = { lanes: [], why: null };
             drawn.worldstate = { changes: [], why: null };
             drawn.crushers = { crushers: [], why: null };
@@ -959,6 +1046,26 @@ function makeRenderer(canvas) {
                 }
             }
             if (opts.on.has('attacks')) {
+                /**
+                 * ⛓⛓⛓ GROUP B — THE HELD RECTS FIRST, SO THE LIVE ONE IS ON
+                 * TOP. A sword's five hit ticks overlap heavily (measured:
+                 * `r6-owl-kill`'s rect walks 2.2 px across them), and drawing
+                 * the afterimage last would put a dim outline over the bright
+                 * fill of the tick the engine is actually swinging on.
+                 *
+                 * ⛔ OUTLINE ONLY, NEVER FILLED. `attackRectsAt`'s rows are
+                 * filled AND outlined; these are the same geometry with the
+                 * engine no longer behind it, and the difference has to be
+                 * legible at a glance rather than only in the readout.
+                 */
+                for (const p of attackHoldsAt(
+                    opts.presses, cursor, world.level, opts.attackHold)) {
+                    outline(p.rect, SHAPE_COLOURS.attackHeld);
+                    drawn.attacksHeld.push({
+                        t: p.t, fired: p.fired, weapon: p.weapon, direction: p.direction,
+                        rect: p.rect, age: p.age, hold: p.hold,
+                    });
+                }
                 for (const p of attackRectsAt(opts.presses, cursor, world.level)) {
                     rect(p.rect, SHAPE_COLOURS.attack, 0.25);
                     outline(p.rect, SHAPE_COLOURS.attack);
@@ -969,8 +1076,36 @@ function makeRenderer(canvas) {
                 }
             }
 
-            // The player: the collision box and, offset one pixel down, the
-            // rect `getState` actually probes with.
+            /**
+             * ── ⛓⛓⛓ GROUP B: THE PLAYER IS TWO BOXES, AND ONLY ONE OF THEM
+             * ── IS A COLLISION VOLUME ─────────────────────────────────────
+             *
+             * ⚖ The user asked which of the two overlapping boxes is the real
+             * hitbox, and ruled that BOTH stay drawn once the answer was in
+             * hand — so the answer lives here and in the legend rather than in
+             * a layer toggle. It is:
+             *
+             *  · **WHITE, FILLED — `playerBoxAt(x, y)`.** THE hitbox. The
+             *    engine's own `HITBOX` origin/width/height, the box the
+             *    physics collides solids with, the box `dangerAt` is queried
+             *    with (`dangerAt(run, tick, playerBoxAt(x, y))`), and the box
+             *    `hammerHitsPlayer` is handed. If a question is "did that
+             *    touch the player", this is the rect that answered it.
+             *
+             *  · **YELLOW, OUTLINE — `terrainProbeRect(x, y)`.** NOT a
+             *    collision volume and never consulted as one. It is the same
+             *    box shifted DOWN by `checkOffsetY = 1`, and it exists because
+             *    `Player.getState()` (`Player.as:660`) compares the NEAREST
+             *    TILE against that shifted rect to decide which terrain the
+             *    player is standing in — water, ice, pit, lava. So it is a
+             *    diagnostic of terrain PROBING: when the two boxes straddle a
+             *    tile boundary, the yellow one is why the terrain readout says
+             *    what it says.
+             *
+             * ⚠ THE ONE-PIXEL OVERLAP IS THE POINT, not a rendering artefact.
+             * They differ by exactly `checkOffsetY`, which is the whole reason
+             * a player can be collision-clear of a pit and reading `pit`.
+             */
             outline(terrainProbeRect(state.x, state.y), '#ffd75f');
             rect(playerBoxAt(state.x, state.y), '#ffffff', 0.9);
 
@@ -1002,6 +1137,7 @@ function makeRenderer(canvas) {
                 },
                 hammer: { lines: drawn.hammer.lines.map((l) => ({ ...l })), why: drawn.hammer.why },
                 attacks: drawn.attacks.map((a) => ({ ...a })),
+                attacksHeld: drawn.attacksHeld.map((a) => ({ ...a })),
                 lanes: {
                     lanes: drawn.lanes.lanes.map((l) => ({ ...l })),
                     why: drawn.lanes.why,
@@ -1140,6 +1276,25 @@ function layerSetFor(params) {
 }
 
 /**
+ * ⛓⛓⛓ GROUP B — THE ATTACK HOLD, AND IT IS PAGE STATE RATHER THAN ARM STATE.
+ *
+ * The layer SET is per arm (`mountLayerControls` is handed one), because which
+ * layers you want is a question about the walk you are looking at. How long an
+ * afterimage should linger is a question about YOUR EYES, so it survives an arm
+ * switch the way `?speed=` does — and the switch arc's whole point is that
+ * changing SOURCE no longer reloads, which would otherwise be the only thing
+ * resetting it.
+ *
+ * ⛔ IT IS READ AT DRAW TIME, NEVER CAPTURED. Every draw site passes
+ * `attackHold: attackHoldNow()`, so the control's `onchange` needs to do
+ * nothing but write and redraw — a value closed over at mount would go stale
+ * the first time the knob moved, silently, and only on the arm that mounted
+ * first.
+ */
+let attackHold = ATTACK_HOLD_DEFAULT;
+const attackHoldNow = () => attackHold;
+
+/**
  * The per-layer toggles and the LEGEND, both generated from `OVERLAY_LAYERS`
  * and `MARKER_GLYPHS`.
  *
@@ -1168,6 +1323,48 @@ function mountLayerControls(on, redraw) {
         label.appendChild(document.createTextNode(` ${l.label}`));
         layerBox.appendChild(label);
     }
+    /**
+     * ⛓⛓⛓ GROUP B — THE HOLD KNOB, NEXT TO the toggles and NOT INSIDE THEM.
+     *
+     * ⛔⛔ `#viewknobs`, NOT `#layers`, AND THE CONTAINER IS A CONTRACT. Three
+     * acceptance rows enumerate `#layers input` to assert that the toggle count
+     * and `OVERLAY_LAYERS` agree — so a field that is not a layer, mounted in
+     * that box, reports the roster as one longer than it is. MEASURED: the
+     * first cut put it there and reddened `check-seedling-editor-world`,
+     * `-lanes` and `-shapes` simultaneously, each complaining "FIFTEEN now — 16".
+     * It is a knob about the DISPLAY, not a member of the roster, and it now
+     * lives where that is true of the DOM as well as of the prose.
+     *
+     * ⚠ `.onchange`, NOT `addEventListener` — the idiom every control in this
+     * function already uses, and the one `watchLifetime.test.js` asserts
+     * STRUCTURALLY over this source. The box is rebuilt on every arm mount, so
+     * the handler dies with the element and there is nothing to retire.
+     */
+    const knobBox = $('viewknobs');
+    knobBox.innerHTML = '';
+    const holdLabel = document.createElement('label');
+    holdLabel.title = `${SWING_WINDOW_NOTE.hold}\n\n${SWING_WINDOW_NOTE.sword}`
+        + `\n\n${SWING_WINDOW_NOTE.spear}`;
+    const holdInput = document.createElement('input');
+    holdInput.type = 'number';
+    holdInput.id = 'attack-hold';
+    holdInput.min = '0';
+    holdInput.step = '1';
+    holdInput.style.width = '52px';
+    holdInput.value = String(attackHoldNow());
+    holdInput.onchange = () => {
+        const n = Number(holdInput.value);
+        // ⚠ A TYPED-IN NONSENSE VALUE SNAPS BACK rather than being accepted as
+        // NaN and quietly drawing nothing — the field then SHOWS what is in
+        // force, which is the only way a reader can tell the two apart.
+        attackHold = Number.isInteger(n) && n >= 0 ? n : attackHoldNow();
+        holdInput.value = String(attackHoldNow());
+        redraw();
+    };
+    holdLabel.appendChild(document.createTextNode('attack hold '));
+    holdLabel.appendChild(holdInput);
+    holdLabel.appendChild(document.createTextNode(' ticks (display choice)'));
+    knobBox.appendChild(holdLabel);
     const swatch = (colour, text) =>
         `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
     $('legend').innerHTML = [
@@ -1184,7 +1381,15 @@ function mountLayerControls(on, redraw) {
         swatch(SHAPE_COLOURS.hitbox, 'enemy hitbox (this tick)'),
         swatch(SHAPE_COLOURS.hammer, 'hammer line'),
         swatch(SHAPE_COLOURS.hammerTouch, 'hammer REACHING the player'),
-        swatch(SHAPE_COLOURS.attack, 'attack rect (fired)'),
+        swatch(SHAPE_COLOURS.attack, 'attack rect (fired) — a SWORD press fires '
+            + `${SLASH_HIT_TICKS}, on T+1…T+${SLASH_HIT_TICKS}; a spear records ONE`),
+        // ⛓⛓⛓ GROUP B. The row says "display choice" in words for the same
+        // reason the `danger` row says "the bot's HEURISTIC": this is the only
+        // other stroke on the canvas that is not something the run did, and a
+        // reader who cannot tell it from the live rect has the page's own
+        // afterimage back as evidence.
+        swatch(SHAPE_COLOURS.attackHeld, 'the same rect HELD after the swing ended — '
+            + 'a DISPLAY CHOICE of this page, not the game\'s timing (set the hold to 0)'),
         // ⛓ SLICE 8, and the wording carries the whole distinction: the
         // ARROW swatch above is the sampled FLIGHTS, this is the trap's own
         // COLUMN while it is armed. Two layers, two rows, two sentences —
@@ -1203,6 +1408,29 @@ function mountLayerControls(on, redraw) {
         // item 9's "labelled as the bot's HEURISTIC" is this line plus the ink.
         swatch(SHAPE_COLOURS.danger, 'the box the SOLVER asked about, and was told DANGER '
             + '(dim = told clear) — the bot\'s HEURISTIC, not what happened'),
+        /**
+         * ⛓⛓⛓ GROUP B — THE PLAYER'S TWO BOXES, NAMED.
+         *
+         * ⚖ The user's question was "which of these is the real hitbox?", and
+         * that it had to be asked at all is the finding: the page drew two
+         * overlapping boxes one pixel apart and told nobody which was which.
+         * ⚖ The ruling was to keep both and DOCUMENT them, so these two rows
+         * are the fix. See the draw site for the mechanism.
+         */
+        swatch('#ffffff', 'the PLAYER HITBOX — `playerBoxAt`, the box that collides '
+            + 'solids and the box `dangerAt` is asked about'),
+        swatch('#ffd75f', 'the TERRAIN PROBE — `terrainProbeRect`, the hitbox shifted down '
+            + '`checkOffsetY` (1 px), which `getState` compares the nearest tile against. '
+            + 'NOT a collision volume'),
+        /**
+         * ⛓⛓⛓ GROUP B — ONE ROW PER OBJECT-SOLID FAMILY, generated from the
+         * table the renderer colours from, for `OVERLAY_LAYERS`' own reason: a
+         * hand-written list would be a second copy, and the day a family was
+         * added the canvas would grow a hue with no name.
+         */
+        ...OBJECT_SOLID_FAMILIES.map((f) => swatch(f.colour, f.label)),
+        swatch(SCENERY_COLOUR, 'scenery — an object solid with no state a run can change '
+            + '(trees, poles, statues, furniture: 1057 of the atlas\'s 1219)'),
         ...Object.values(MARKER_GLYPHS).map(
             (g) => swatch(g.colour, `${g.glyph} = ${g.label}`)),
     ].join('');
@@ -1329,6 +1557,8 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
             samples,
             markers,
             presses,
+            // ⛓ GROUP B: read at DRAW time, never captured — see `attackHold`.
+            attackHold: attackHoldNow(),
             cursor,
             /**
              * ⛓⛓⛓ SLICE 9 — THE R5 FORWARD, READ OFF THE FRAME ITSELF.
@@ -1541,6 +1771,23 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
         frames: frames.length,
         layers: OVERLAY_LAYERS.map((l) => ({ id: l.id, on: on.has(l.id) })),
         unknownLayerParams: layerParam.unknown,
+        /**
+         * ⛓⛓⛓ GROUP B — THE SWING, AS A READOUT, so a check can assert the
+         * distinction the ink is making rather than only look at it.
+         *
+         * `hold` is the DISPLAY CHOICE in force; `window` is the ENGINE's own
+         * answer, and the two are named apart here for the same reason they are
+         * drawn apart. ⚠ `spearHitTicksUnmodelled` is carried BY NAME because
+         * it is a bound on the model that the picture cannot show: a spear
+         * draws one rect where the game tests three times, and an absence with
+         * no written cause reads as a room where nothing happened.
+         */
+        attackSwing: {
+            hold: attackHoldNow(),
+            holdDefault: ATTACK_HOLD_DEFAULT,
+            swordHitTicks: SLASH_HIT_TICKS,
+            note: SWING_WINDOW_NOTE,
+        },
         markers,
         unplaced,
         unknownGlyphs: renderer.unknownGlyphs,
@@ -2122,6 +2369,12 @@ function previewLevel(levelSource, staging, layers, lifetime) {
             samples: [],
             markers: [],
             presses: [],
+            // ⛓ GROUP B: passed even though `presses` is empty, so the still
+            // frame's emptiness is the CHANNEL's and not a missing option —
+            // an omitted key here would fall through to `attackHoldsAt`'s own
+            // default and make this site behave differently from the other two
+            // for a reason nothing on the page states.
+            attackHold: attackHoldNow(),
             cursor: 0,
             live: { crushers: run.crushers, crusherScans: run.crusherScans },
             // ⚖ Nothing has solved this room yet, and `null` is how the layer
@@ -2945,6 +3198,9 @@ async function runManual(params, lifetime) {
             // same ledger the replay path reads — a hand swing shows its rect
             // on the tick it fired, exactly as a replayed one does.
             presses: session.run.presses,
+            // ⛓ GROUP B: the LIVE drive gets the afterimage too — a hand swing
+            // is five ticks and a blink exactly like a replayed one.
+            attackHold: attackHoldNow(),
             cursor: session.tick,
             /**
              * ⛓ SLICE 9 — THE MANUAL ARM HAS NO FRAMES, so it hands the LIVE
@@ -4079,6 +4335,21 @@ async function switchArm(source, side = null) {
 
 export async function main() {
     const params = readParams();
+    /**
+     * ⛓⛓⛓ GROUP B — `?attackhold=` IS APPLIED ONCE, AT THE DOCUMENT'S BOOT,
+     * AND NOT AT EVERY ARM MOUNT.
+     *
+     * The hold is page state (see `attackHold`), so re-reading the parameter
+     * on each SOURCE switch would silently undo a knob the reader had turned —
+     * the switch arc's whole premise is that switching does not reload, and a
+     * setting that reset itself on a switch anyway would be that premise
+     * leaking. ⚠ A BAD VALUE IS REPORTED, not swallowed: the parse hands back
+     * the default with a reason, and the page says the reason where it says
+     * every other parameter's.
+     */
+    const holdParam = parseAttackHold(params.attackHold);
+    attackHold = holdParam.hold;
+    if (holdParam.why) $('detail').textContent = `⚠ ${holdParam.why}`;
     wireSourceSelector(params, switchArm);
     await mountArm(params, armLifetimes.start(armNameFor(params), 'the page loaded'));
 }

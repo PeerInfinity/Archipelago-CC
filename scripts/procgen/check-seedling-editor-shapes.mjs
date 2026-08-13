@@ -103,6 +103,13 @@ async function drawnAt(name, tick, extra = '') {
         legend: [...document.querySelectorAll('#legend .sw')].map((s) => s.textContent),
         toggles: [...document.querySelectorAll('#layers input')].map(
             (i) => [i.id.replace(/^layer-/, ''), i.checked]),
+        // ⛓⛓⛓ GROUP B: the swing readout, and the knob's OWN box. `#layers`
+        // is enumerated above as one input per roster row, so the hold field
+        // must be reachable from somewhere else or it is a sixteenth layer.
+        attackSwing: window.__editorOverlays.attackSwing,
+        holdInLayers: Boolean(document.querySelector('#layers #attack-hold')),
+        holdInKnobs: Boolean(document.querySelector('#viewknobs #attack-hold')),
+        holdValue: document.getElementById('attack-hold')?.value ?? null,
         detail: document.getElementById('detail').textContent,
     }));
     if (SHOT) {
@@ -208,6 +215,86 @@ console.log('\n## r8-solve-18 — the attack rect on its FIRED tick, and not oth
     check(unexpectedErrors([...on.errors, ...off.errors]).length === 0,
         'no page errors beyond the expected missing-sidecar 404',
         unexpectedErrors([...on.errors, ...off.errors]).join(' | ') || 'clean');
+}
+
+// ── 3b. GROUP B: THE HELD AFTERIMAGE, AND THE LINE IT MAY NOT CROSS ─────
+/**
+ * ⛔⛔ THE ITEM WAS "the sword is never visible", AND THE FIX IS A DISPLAY
+ * CHOICE — so the rows that matter are the ones that keep it from being read
+ * as anything else.
+ *
+ * The engine's own window turned out to be derivable and already drawn: a
+ * sword press is `SLASH_HIT_TICKS` = 5 hit tests on consecutive ticks, and the
+ * `attacks` layer has always drawn all five. The hold is 15 further ticks of
+ * afterimage that the game has nothing to do with, and it rides in its OWN
+ * readout channel with its OWN ink for exactly that reason. ⇒ what is checked
+ * here is the SEPARATION, not the pretty picture:
+ *
+ *   · section 3 above is UNCHANGED and still passes — `drawn.attacks` is still
+ *     "the fired tick, and not otherwise", which is what it would stop being
+ *     if the hold had been implemented by widening that channel;
+ *   · the afterimage appears in `attacksHeld` at the SAME cursor where
+ *     `attacks` is empty — the two halves of the partition, on the page;
+ *   · `?attackhold=0` empties it and leaves everything else alone;
+ *   · the legend names it as a display choice, and the knob is NOT a layer.
+ */
+console.log('\n## r8-solve-18 — the HELD afterimage, and the raw channel it may not touch');
+{
+    const probe = await drawnAt('r8-solve-18', 0);
+    const fired = probe.presses.map((p) => p.fired).filter((t) => Number.isInteger(t));
+    const t = fired[0];
+
+    check(probe.attackSwing.hold === probe.attackSwing.holdDefault
+        && probe.attackSwing.holdDefault > 0,
+    '⛓ the page boots with the DEFAULT hold in force, and says what it is',
+    `hold ${probe.attackSwing.hold} (default ${probe.attackSwing.holdDefault}), `
+        + `sword window ${probe.attackSwing.swordHitTicks}`);
+    check(probe.holdInKnobs && !probe.holdInLayers
+        && probe.holdValue === String(probe.attackSwing.hold),
+    '⛔⛔ the knob is in `#viewknobs`, NOT in `#layers` — it is a display choice, '
+        + 'not a sixteenth layer',
+    `knobs=${probe.holdInKnobs} layers=${probe.holdInLayers} value=${probe.holdValue}`);
+
+    // The cursor: one past the LAST fired tick of the first swing, so the
+    // engine has stopped swinging and the hold has not expired. MEASURED off
+    // the page's own ledger, never a chosen number.
+    const swing = fired.filter((n) => n >= t && n < t + probe.attackSwing.swordHitTicks + 2);
+    const after = Math.max(...swing) + 1;
+    const held = await drawnAt('r8-solve-18', after);
+    check(held.drawn.attacks.length === 0 && held.drawn.attacksHeld.length > 0,
+        `⛔⛔ at tick ${after} the RAW channel is empty and the HELD one is not — `
+        + 'the partition, on the page',
+        `attacks ${held.drawn.attacks.length}, attacksHeld ${held.drawn.attacksHeld.length}`);
+    check(held.drawn.attacksHeld.every((a) => a.age > 0 && a.age <= a.hold),
+        '⛓ …and every held rect carries the ticks since it fired AND the hold it was '
+        + 'drawn under — a readout can name the knob that produced the picture',
+        held.drawn.attacksHeld.map((a) => `${a.weapon}@${a.fired}+${a.age}/${a.hold}`).join(' '));
+
+    // ⚠ THE KNOB REALLY IS AN OFF SWITCH. A display choice a reader cannot
+    // turn off is a claim wearing a knob's clothes.
+    const raw = await drawnAt('r8-solve-18', after, '&attackhold=0');
+    check(raw.attackSwing.hold === 0 && raw.drawn.attacksHeld.length === 0
+        && raw.drawn.attacks.length === 0,
+    '⚠ `?attackhold=0` restores the raw picture — nothing held, nothing else changed',
+    `hold ${raw.attackSwing.hold}, held ${raw.drawn.attacksHeld.length}, `
+        + `hitboxes ${raw.drawn.hitboxes.boxes.length}`);
+    check(raw.drawn.hitboxes.boxes.length === held.drawn.hitboxes.boxes.length,
+        '⛓ …and "nothing else changed" is asserted, not asserted-by-comment',
+        `${raw.drawn.hitboxes.boxes.length} vs ${held.drawn.hitboxes.boxes.length} body/ies`);
+
+    const heldRow = held.legend.find((l) => /HELD after the swing/.test(l));
+    check(Boolean(heldRow) && /DISPLAY CHOICE/.test(heldRow),
+        '⛔ the legend calls the afterimage a DISPLAY CHOICE in words — the `danger` row\'s '
+        + 'rule, applied to the only other stroke that is not something the run did',
+        heldRow ?? '(no such legend row)');
+    const firedRow = held.legend.find((l) => /attack rect \(fired\)/.test(l));
+    check(Boolean(firedRow) && new RegExp(`${probe.attackSwing.swordHitTicks}`).test(firedRow),
+        '⛓ …and the FIRED row states the engine\'s own swing length',
+        firedRow ?? '(no such legend row)');
+
+    check(unexpectedErrors([...held.errors, ...raw.errors]).length === 0,
+        'no page errors beyond the expected missing-sidecar 404',
+        unexpectedErrors([...held.errors, ...raw.errors]).join(' | ') || 'clean');
 }
 
 // ── 4. THE CHASER BOX, TICK FOR TICK ────────────────────────────────────
