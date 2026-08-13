@@ -300,8 +300,24 @@ let replayLoadedTape = () => {
  * keeps the retired ones, because "did the manual loop stop when I left it"
  * is a question about the past.
  */
-const armLifetimes = createLifetimeHolder({
-    publish: (state) => { window.__editorLifetime = state; },
+const armLifetimes = createLifetimeHolder();
+
+/**
+ * ⛔⛔ A **GETTER**, AND THE FIRST CUT WAS AN ASSIGNMENT — measured, by the
+ * browser row, which came back with an EMPTY `stopped` list for a loop it had
+ * just watched stop.
+ *
+ * The holder publishes on every change, so the assignment ran at the instant
+ * the switch happened. A retired loop's one blocked tick lands AFTER that
+ * instant — it is the frame that was already scheduled — so the published
+ * object was frozen one tick before the only evidence anybody reads it for.
+ * ⚖ The same readout-assigned-from-a-getter trap the holder's own history hit
+ * one level down, which is worth saying twice: a leak witness that is a
+ * SNAPSHOT cannot see the leak, because leaks are what happens next.
+ */
+Object.defineProperty(window, '__editorLifetime', {
+    get: () => armLifetimes.state(),
+    configurable: true,
 });
 
 function readParams() {
@@ -345,6 +361,108 @@ async function fetchJson(url, what) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${what}: ${url} — HTTP ${res.status}`);
     return res.json();
+}
+
+/**
+ * ── ⛔⛔ CLEAR THE READOUTS, KEEP THE INPUTS ───────────────────────────
+ *
+ * The reload used to do this too, and indiscriminately. Doing it by hand
+ * forces the distinction the reload never had to make, and the two halves
+ * answer to different laws:
+ *
+ * A READOUT is a statement about a run — the status bar, the detail line, the
+ * HUD, the legend, the trace panes, the progress bar, the canvas, and the
+ * `window.__editorX` objects the browser rows assert on. Left standing across
+ * a switch it becomes a statement about a run that is no longer on screen,
+ * which is the RAW TRUTH law's plainest violation: a refusal from the SOLVE
+ * arm sitting above a MANUAL session, describing nothing.
+ *
+ * AN INPUT is the user's own work — the boot boxes, the tape box, the goal
+ * list, the seed and bounds. Clearing those is the thing this whole arc
+ * exists to STOP doing. ⚠ So they are not listed here, and the omission is
+ * the feature.
+ */
+function resetPageChrome() {
+    $('status').className = '';
+    $('status').textContent = '';
+    $('detail').textContent = '';
+    $('title').textContent = '';
+    $('hud').innerHTML = '';
+    $('legend').innerHTML = '';
+    $('layers').innerHTML = '';
+    $('trace').innerHTML = '';
+    $('genTrace').innerHTML = '';
+    $('bar').style.width = '0%';
+    $('scrub').max = '0';
+    $('scrub').value = '0';
+    const canvas = $('canvas');
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    /**
+     * ⛔ THE PAGE'S OWN READOUTS GO WITH THEM. `check-seedling-editor-*.mjs`
+     * read these to decide whether the arm did what it claims, and a stale
+     * `__editorSolve` under a live GENERATE would let a row assert a PASS
+     * against the arm before last — a verifier reading the wrong run and
+     * agreeing with it.
+     */
+    delete window.__editorSolve;
+    delete window.__editorManual;
+    delete window.__editorGenerate;
+    delete window.__editorGenerated;
+    // ⛓ And "an arm has finished mounting" is a claim about the arm that just
+    // left. Cleared here, it becomes the honest thing to wait on: it reappears
+    // only when the ARRIVING arm is done (see `mountArm`).
+    delete window.__editorArm;
+}
+
+/**
+ * ── ⛓⛓⛓ THE BLOCK AN ARM MOUNTS FROM, AND WHY THE BOX WINS ───────────
+ *
+ * ⛔ A BOX THAT ALREADY HOLDS A BLOCK BEATS `?boot=`. This is the whole point
+ * of switching in place: you edit the starting conditions in SOLVE, look at
+ * them in MANUAL, come back — and find your own block, not the one the URL
+ * names. On a fresh document the box is empty and the URL wins, exactly as it
+ * always did, so every existing link still opens what it always opened.
+ *
+ * ⚠ AND IT IS SAID OUT LOUD. The URL stops being the page's whole state the
+ * moment this rule fires, so the note names where the block came from — a
+ * view showing edits the link does not carry must not look like a view of the
+ * link.
+ *
+ * ⛔⛔ UNPARSEABLE TEXT IS **KEPT AND REPORTED**, never replaced. Re-fetching
+ * over it would delete the user's work at precisely the moment they most want
+ * it back (they were mid-edit), and "the box was wrong so the page threw it
+ * away" is not a recovery. The arm refuses to mount instead, with the
+ * parser's own message — the same answer the boot form gives to the same
+ * text.
+ */
+async function stagingForMount(boxEl, params) {
+    const held = boxEl.value.trim();
+    if (held) {
+        let staging;
+        try {
+            staging = stagingFromJson(JSON.parse(held));
+        } catch (e) {
+            throw new Error('the block already in this tab\'s box will not parse, and it is '
+                + 'KEPT rather than overwritten with what ?boot= names — fix it, or pick a '
+                + `preset to load another one. The parser's own message: ${e.message}`);
+        }
+        return {
+            staging,
+            origin: 'THE BLOCK ALREADY IN THIS TAB\'S BOX — your own edits, kept across the '
+                + `SOURCE switch and NOT re-read from ${params.boot ? `?boot=${params.boot}` : 'the true game start'}`,
+            kept: true,
+        };
+    }
+    if (params.boot) {
+        const path = params.boot.replace(/^\/+/, '');
+        return { staging: stagingFromJson(await fetchJson(`/${path}`, 'boot')), origin: path, kept: false };
+    }
+    return {
+        staging: await trueStartStaging(),
+        origin: `THE TRUE GAME START — ${TRUE_START_SEGMENT}'s boot block `
+            + `(${TRUE_START_CHAIN} segment 1)`,
+        kept: false,
+    };
 }
 
 // ── side=js ──────────────────────────────────────────────────────────────
@@ -1788,6 +1906,20 @@ function mountBootPresets(sel, source, noteEl = null) {
  *   re-derive anything downstream (the SOLVE arm re-reads its census).
  */
 function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
+    /**
+     * ⛔ MOUNTED TWICE IS NOW NORMAL, so the previous mount's controls are
+     * REMOVED rather than appended beside. Every other `mount*` in this file
+     * already clears its box (`layerBox.innerHTML = ''` and friends); this one
+     * appended into a `<div>` that also holds a static label from `watch.html`,
+     * so it could not simply be emptied — and an in-place switch back to an
+     * arm would have given it a second row of sword checkboxes, each writing
+     * the same field, the older one holding a `boxEl` nobody reads any more.
+     */
+    formEl.querySelector('[data-boot-form]')?.remove();
+    const fields = document.createElement('span');
+    fields.dataset.bootForm = '1';
+    formEl.appendChild(fields);
+
     const boxes = ITEM_FORM_FIELDS.map((f) => {
         const label = document.createElement('label');
         const input = document.createElement('input');
@@ -1798,11 +1930,11 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
         // The GAME's own property path, so the control says which field it
         // writes rather than only what it is called.
         label.title = `${f.field}  (writes seam.${f.key})`;
-        formEl.appendChild(label);
+        fields.appendChild(label);
         return { f, input };
     });
     const why = document.createElement('span');
-    formEl.appendChild(why);
+    fields.appendChild(why);
 
     const sync = () => {
         let staging = null;
@@ -1873,17 +2005,11 @@ async function runSolve(params, lifetime) {
         .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
     // ── the staging block ────────────────────────────────────────────
-    let staging;
-    let origin;
-    if (params.boot) {
-        const path = params.boot.replace(/^\/+/, '');
-        staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
-        origin = path;
-    } else {
-        staging = await trueStartStaging();
-        origin = `THE TRUE GAME START — ${TRUE_START_SEGMENT}'s boot block `
-            + `(${TRUE_START_CHAIN} segment 1)`;
-    }
+    let { staging, origin, kept } = await stagingForMount($('solveBoot'), params);
+    // ⛔ EVERY AWAIT ABOVE IS A PLACE THE PAGE CAN HAVE CHANGED HANDS. A
+    // mount that kept writing after its arm was retired would paint this
+    // arm's title and block over the one the user actually switched to.
+    if (!lifetime.alive()) return;
     // ⚠ ?level= OVERRIDES the block's own level and SAYS SO. The boot x/y
     // belong to the block's level, so pointing it at another one usually
     // spawns the player somewhere meaningless — a fact worth a line in the
@@ -1896,6 +2022,11 @@ async function runSolve(params, lifetime) {
                 + `are still level ${staging.boot.level}'s`);
         }
         staging = { ...staging, boot: { ...staging.boot, level: params.level } };
+    }
+    if (kept) {
+        notes.push('⛓ the starting conditions below are THIS TAB\'S OWN, kept across a '
+            + 'SOURCE switch — they are not what this URL names, so a copy of the link '
+            + 'will not show them');
     }
     const name = params.name || `editor-L${staging.boot.level}`;
     $('title').textContent = `${name} — solving from ${origin}`;
@@ -2228,17 +2359,10 @@ async function runManual(params, lifetime) {
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
         .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
-    let staging;
-    let origin;
-    if (params.boot) {
-        const path = params.boot.replace(/^\/+/, '');
-        staging = stagingFromJson(await fetchJson(`/${path}`, 'boot'));
-        origin = path;
-    } else {
-        staging = await trueStartStaging();
-        origin = `THE TRUE GAME START — ${TRUE_START_SEGMENT}'s boot block `
-            + `(${TRUE_START_CHAIN} segment 1)`;
-    }
+    // ⛓ THE SAME RULE AS SOLVE'S, through the same function: a box already
+    // holding a block wins over `?boot=`, and the note says so.
+    let { staging, origin, kept } = await stagingForMount($('manualBoot'), params);
+    if (!lifetime.alive()) return;
     if (params.level !== null && Number.isFinite(params.level)) {
         staging = { ...staging, boot: { ...staging.boot, level: params.level } };
     }
@@ -2246,6 +2370,11 @@ async function runManual(params, lifetime) {
     $('title').textContent = `${name} — driving from ${origin}`;
     $('manualLevel').value = String(staging.boot.level);
     $('manualBoot').value = JSON.stringify(staging, null, 4);
+    $('manualNote').textContent = kept
+        ? '⛓ the starting conditions below are THIS TAB\'S OWN, kept across a SOURCE '
+            + 'switch — they are not what this URL names, so a copy of the link will not '
+            + 'show them'
+        : '';
     // ⛓ ONE ROSTER, ONE TABLE: the key legend is rendered FROM the binding
     // map, so a rebinding cannot leave the page describing the old keys.
     $('manualKeys').textContent = KEYBOARD_ROWS
@@ -3162,37 +3291,74 @@ async function populatePicker(params, index) {
     };
 }
 
-/**
- * The SOURCE selector. Changing it NAVIGATES, like the tape picker —
- * the URL stays the page's whole state, so every view is a link.
- */
-function wireSourceSelector(params) {
-    const sel = $('source');
-    sel.value = params.source;
-    $('replayPick').hidden = params.source !== 'replay';
-    $('solvePanel').hidden = params.source !== 'solve';
-    $('manualPanel').hidden = params.source !== 'manual';
-    $('generatePanel').hidden = params.source !== 'generate';
+/** Which panels belong to an arm. One table, read on mount and on switch. */
+function showPanelsFor(source) {
+    $('replayPick').hidden = source !== 'replay';
+    $('solvePanel').hidden = source !== 'solve';
+    $('manualPanel').hidden = source !== 'manual';
+    $('generatePanel').hidden = source !== 'generate';
     // ⛓ The generation pane only exists for the arm that produces one — a
     // permanently empty "GENERATION TRACE" heading on the REPLAY page would
     // be a channel with nothing in it and no way to tell why.
-    $('genTraceSection').hidden = params.source !== 'generate';
-    sel.onchange = () => {
-        const q = new URLSearchParams(window.location.search);
-        q.set('source', sel.value);
-        window.location.search = q.toString();
-    };
+    $('genTraceSection').hidden = source !== 'generate';
 }
+
+/**
+ * ── ⛓⛓⛓ THE SOURCE SELECTOR — AND IT NO LONGER NAVIGATES ─────────────
+ *
+ * ⚠ THE URL IS STILL WRITTEN, through `replaceState` instead of assignment.
+ * "Every view is a link" was the reason the selector navigated, and it is
+ * kept exactly: copy the address bar after a switch and it opens the arm you
+ * are looking at. What changed is that the DOCUMENT survives — so the boot
+ * box you edited, the tape you pasted and the goals you picked are all still
+ * there when you come back, which is the entire point (⛓ `stagingForMount`).
+ *
+ * ⛔ AND THE URL IS WRITTEN BEFORE THE ARM MOUNTS, because the arm reads its
+ * parameters back out of it (`readParams`). Mounting first would mount the
+ * arm you left.
+ *
+ * ⚠ `replaceState` AND NOT `pushState`: back would otherwise walk the arms
+ * you have visited without restoring what any of them held, since the state
+ * that makes them different lives in the document. A history entry that
+ * cannot be honoured is worse than none.
+ */
+function wireSourceSelector(params, onSwitch) {
+    const sel = $('source');
+    sel.value = params.source;
+    showPanelsFor(params.source);
+    sel.onchange = () => onSwitch(sel.value);
+}
+
+/** `replay-js` and `replay-wasm` are two machines with two teardowns. */
+const armNameFor = (params) =>
+    (params.source === 'replay' ? `replay-${params.side}` : params.source);
+
+/**
+ * ⛓ THE FOUR ARMS, AS ONE TABLE — the runner and the readout key an arm's
+ * REFUSAL is written to.
+ *
+ * ⚠ THE KEYS ARE THE BROWSER ROWS' VOCABULARY (`__editorSolve` and friends),
+ * so they are named here rather than constructed: a row that polls for one of
+ * these by name is asserting against the arm it thinks it is.
+ *
+ * ⚠ AND THE SELECTION RULES STAY IN THEIR PARAMETER READERS. Nothing here
+ * INFERS an arm — `readSolveParams` and `readGenerateParams` already decide
+ * that, and for stated reasons (MANUAL and GENERATE are asked for by name
+ * because a stale URL must not land in an arm that waits for a press or
+ * spends seconds per press).
+ */
+const ARMS = Object.freeze({
+    solve: { run: runSolve, readout: '__editorSolve' },
+    generate: { run: runGenerate, readout: '__editorGenerate' },
+    manual: { run: runManual, readout: '__editorManual' },
+});
 
 /**
  * ── ⛓⛓⛓ MOUNT THE ARM `params` NAMES, AGAINST A LIFETIME ──────────────
  *
- * ⚠ ONE ENTRY, and it is the seam the in-place SOURCE switch needs next: a
+ * ⚠ ONE ENTRY, and it is the seam the in-place SOURCE switch is built on: a
  * switch is `mountArm` again with a different `source`, and the lifetime
- * started here is what retires the arm being left. Today `main` is still its
- * only caller and the selector still navigates, so this is a rename with a
- * parameter — deliberately, because the teardown wants proving BEFORE it is
- * load-bearing.
+ * started here is what retires the arm being left.
  *
  * ⛔ THE ARM'S OWN REFUSAL GOES THROUGH `lifetime.report`. An arm can fail
  * AFTER it has been retired — every one of these paths awaits a fetch — and
@@ -3202,48 +3368,35 @@ function wireSourceSelector(params) {
  * where the readout still shows it.
  */
 async function mountArm(params, lifetime) {
-    if (params.source === 'solve') {
-        // ⚠ NO PICKER FETCH HERE. `runSolve` starts the roster load itself
-        // and does not await it — a solve with `?boot=` given should not
-        // wait on 150 tapes it is not going to read.
+    const arm = ARMS[params.source];
+    if (arm) {
+        // ⚠ NO PICKER FETCH FOR THESE THREE. `runSolve` starts the roster
+        // load itself and does not await it — a solve with `?boot=` given
+        // should not wait on 150 tapes it is not going to read.
         try {
-            await runSolve(params, lifetime);
+            await arm.run(params, lifetime);
         } catch (e) {
-            lifetime.report(`the solve arm failed: ${e.message}`, () => {
-                fatal('the solve arm failed', e.stack || e.message);
-                window.__editorSolve = { status: 'refused', message: e.message };
+            lifetime.report(`the ${params.source} arm failed: ${e.message}`, () => {
+                fatal(`the ${params.source} arm failed`, e.stack || e.message);
+                window[arm.readout] = { status: 'refused', message: e.message };
             });
         }
-        return;
-    }
-
-    if (params.source === 'generate') {
-        // ⚠ NEVER INFERRED FROM A BOUND. `?source=generate` or `?gen=` — the
-        // arm spends SECONDS of synchronous solve per press, so a stale URL
-        // must not land in it (MANUAL's own rule, for the same reason).
-        try {
-            await runGenerate(params, lifetime);
-        } catch (e) {
-            lifetime.report(`the generate arm failed: ${e.message}`, () => {
-                fatal('the generate arm failed', e.stack || e.message);
-                window.__editorGenerate = { status: 'refused', message: e.message };
-            });
-        }
-        return;
-    }
-
-    if (params.source === 'manual') {
-        // ⚠ MANUAL IS NEVER INFERRED, only asked for by `?source=manual`.
-        // `?level=`/`?boot=` are shared with SOLVE, so inferring it would
-        // make every existing SOLVE link ambiguous — and the arm that
-        // WAITS for a keypress must not be the one a stale URL lands in.
-        try {
-            await runManual(params, lifetime);
-        } catch (e) {
-            lifetime.report(`the manual arm failed: ${e.message}`, () => {
-                fatal('the manual arm failed', e.stack || e.message);
-                window.__editorManual = { status: 'refused', message: e.message };
-            });
+        /**
+         * ⛓⛓ "THE MOUNT FINISHED" IS A FACT NOTHING ELSE STATED, and it was
+         * the browser row that needed it: a row waiting for the arriving arm
+         * by watching its boot box waits for a box that is ALREADY FULL —
+         * `stagingForMount` keeps it across the switch — so the wait returns
+         * instantly and the row reads the OUTGOING arm's page. It went green
+         * on a note that had not been written yet.
+         *
+         * ⚠ Written only while this arm still owns the page, and carrying the
+         * lifetime's generation, so "which mount is this" has an answer that
+         * two mounts of the same arm cannot blur.
+         */
+        if (lifetime.alive()) {
+            window.__editorArm = {
+                source: params.source, arm: lifetime.name, generation: lifetime.generation,
+            };
         }
         return;
     }
@@ -3271,17 +3424,47 @@ async function mountArm(params, lifetime) {
         lifetime.report(`the ${params.side} side failed: ${e.message}`,
             () => fatal(`${params.side} side failed`, e.stack || e.message));
     }
+    if (lifetime.alive()) {
+        window.__editorArm = {
+            source: params.source, arm: lifetime.name, generation: lifetime.generation,
+        };
+    }
+}
+
+/**
+ * ⛓ SWITCH ARMS IN PLACE — the URL, then the teardown, then the mount.
+ *
+ * ⛔ THE ORDER IS THE CONTRACT. `armLifetimes.start` retires the outgoing arm
+ * BEFORE the incoming one exists (⚖ `watchLifetime`), so there is no instant
+ * at which two arms both believe they own the canvas — the state the reload
+ * used to make unreachable. The chrome is cleared between them, so nothing
+ * the old arm said survives to describe the new one's run.
+ *
+ * ⚠ IT IS `await`ed BUT NOTHING AWAITS IT: the selector's `onchange` cannot,
+ * and a mount can take seconds (GENERATE's first solve). A failure therefore
+ * has to land somewhere visible, which is what the arms' own
+ * `lifetime.report` paths do.
+ */
+async function switchArm(source) {
+    const q = new URLSearchParams(window.location.search);
+    q.set('source', source);
+    /**
+     * ⛔ THE ARM'S OWN BOUNDS DO NOT FOLLOW IT. `?tickbudget=` means one thing
+     * to GENERATE and `?tick=` means another to the scrub cursor; what makes
+     * them safe to leave in the URL is that each arm reads only its own
+     * vocabulary. The one parameter that must be rewritten is the one being
+     * switched, so that is the only one touched here.
+     */
+    window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
+    const params = readParams();
+    showPanelsFor(params.source);
+    resetPageChrome();
+    await mountArm(params, armLifetimes.start(armNameFor(params),
+        `the SOURCE selector switched to ${source}`));
 }
 
 export async function main() {
     const params = readParams();
-    wireSourceSelector(params);
-    /**
-     * ⛓ The arm's name carries the SIDE for a replay, because `js` and `wasm`
-     * are two different machines with two different teardowns — the wasm one
-     * owns an iframe — and a readout that called them both `replay` would
-     * describe the leak question in the one vocabulary that cannot answer it.
-     */
-    const armName = params.source === 'replay' ? `replay-${params.side}` : params.source;
-    await mountArm(params, armLifetimes.start(armName, 'the page loaded'));
+    wireSourceSelector(params, switchArm);
+    await mountArm(params, armLifetimes.start(armNameFor(params), 'the page loaded'));
 }
