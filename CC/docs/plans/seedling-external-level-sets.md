@@ -22,6 +22,7 @@ persistence data live?**
 | bundle contents | **level data AND metadata** — a set is self-describing |
 | persistence table | **extend it** — this is in scope, not deferred |
 | relationship to the original levels | **REPLACE, not append** |
+| the vanilla levels | **also a manifest** — there is no privileged built-in path |
 | tag allocator | whenever it fits; it is model-side and blocks nothing here |
 
 ⛔ These are settled. A later session may implement them differently only with
@@ -152,20 +153,28 @@ change, but it must follow the table or the bot rejects valid ids.
 
 ### 4.1 The level set is a manifest plus its rooms
 
-One bundle, self-describing, pushed over EI. Sketch — **the schema is frozen in
-Phase 2, after §3.4's measurement, not here**:
+One bundle, self-describing. A custom set is pushed over EI; the vanilla set is
+the same shape built in (§4.3). Sketch — **the schema is frozen in Phase 2,
+after §3.4's measurement, not here**:
 
 ```
 {
   set_id:      "seedling-vanilla" | "procgen-2026-08-13-abc123",   // IDENTITY
   schema_version: 1,
-  rooms: [ { id: 0, name: "OverWorld1", oel: "<xml …>", music: 0 }, … ],
+  rooms: [ { id: 0, name: "OverWorld1", source: <oel string | embedded ref>, music: 0 }, … ],
   start:        { level: 0, x: …, y: … },
   menu_rooms:   [12, 37, 44, 87, 88, 89],
   named_rooms:  { watcherText: 114, moonrockTarget: 2 },   // §3.5's last two
   effects:      { snowGradient: [45] }
 }
 ```
+
+⛓ `source` is two-valued precisely because of §4.3's shape (c): a page-supplied
+set carries XML text, the built-in vanilla set carries a reference to the
+`[Embed]`ed asset, and **both resolve to XML before `loadLevelXML`, which has
+one implementation.** The values above are the vanilla set's real ones — they
+are §3.5's constants, which is what makes vanilla a set rather than a special
+case.
 
 `named_rooms` is the cure for `Moonrock.as:135` and `FinalDoor.as:50`: the
 entity asks the manifest for *"the room the Watcher's text lives in"* instead of
@@ -193,17 +202,63 @@ resumes at an index that means a different room, with a persistence table whose
 rows describe different entities. Nothing errors; it quietly means something
 else. A mismatch must force a fresh save and SAY SO — never reinterpret.
 
-### 4.3 The three seams in the AS3
+### 4.3 The vanilla set is a manifest too (⚖ user, 2026-08-13)
+
+**There is no privileged built-in path.** The 116 original rooms are mounted as
+a set — `set_id: "seedling-vanilla"` — through the same loader every custom set
+uses, and the six constants in §3.5 become that manifest's fields rather than
+literals in `Game.as`.
+
+⛓ **THE POINT IS ANTI-ROT, and it is worth stating as the property being
+bought:** a path exercised only by custom sets is a path that breaks silently
+between the day it is written and the day someone uses it. Mounting vanilla
+through it means **every boot of the ordinary game is a test of the level-set
+loader**. That is why this is worth the extra indirection.
+
+#### ⚠ The sub-fork it opens: where the vanilla ROOM DATA lives
+
+Making vanilla a manifest does not by itself decide whether its OEL XML stays
+`[Embed]`ed in the artifact. Three shapes:
+
+| | vanilla room source | one loading path? | standalone artifact? | artifact size |
+|---|---|---|---|---|
+| (a) | the `[Embed]` Class, loaded as today | ✗ two arms, and the string arm is custom-only | ✓ | unchanged |
+| (b) | stripped; the page must supply everything | ✓ literally one | ✗ **the wasm cannot boot alone** | smaller |
+| (c) | the `[Embed]` Class, converted to XML through the SAME entry the page's strings use | ✓ one **loader**, two 3-line **resolvers** | ✓ | unchanged |
+
+⚖ **TAKING (c)**, as the default a careful reader would pick — flagged here
+because it is mine, not the user's, and it is cheap to overrule:
+
+- it keeps the wasm **playable with no page**, which (b) gives up — and a
+  standalone artifact is the thing every existing verify script and the public
+  demo depend on;
+- the rot risk it leaves is a **3-line resolver arm**, not the 366-line loader:
+  `loadLevelXML` has exactly one implementation and vanilla exercises it on
+  every boot;
+- lazily converting one embedded `ByteArray` to a string at room-load time is
+  **byte-for-byte the work `loadlevel` already does today** (`new _level` →
+  `readUTFBytes`), so the cost is nil rather than 116 conversions at startup.
+
+⛔ Honest residue: (c) is not literally "one path" — the embedded-asset arm
+exists and only vanilla exercises it, while only custom sets exercise the string
+arm. Each is three lines and both feed one consumer, so neither can drift far;
+but *"the external path is the only path"* is true of (b) and only nearly true
+of (c). Recorded so nobody later reads (c) as having bought (b)'s property.
+
+### 4.4 The seams in the AS3
 
 1. **Parse split** — `loadlevel(Class)` keeps its signature and becomes a
    3-line wrapper over a new `loadLevelXML(xml:XML)`. The 366-line body moves
    wholesale, unedited.
 2. **Table indirection** — `levels[…]` is dereferenced in exactly two places
-   (`Game.as:774`, `:798`); both go through a lookup that returns embedded
-   Class or external XML.
+   (`Game.as:774`, `:798`); both go through the MOUNTED SET, which under §4.3
+   is a manifest whether the rooms came from the page or from the embeds.
 3. **Transport** — `botLoadLevels` beside `botLoadTape`, same shape.
+4. **The vanilla manifest itself** — §3.5's six constants move out of `Game.as`
+   into it. ⛔ This is the one seam that DELETES literals rather than adding
+   beside them, so it lands last and alone.
 
-### 4.4 ⛔ The cleanup policy: ADDITIVE ONLY
+### 4.5 ⛔ The cleanup policy: ADDITIVE ONLY
 
 The model in this repo is a transcription of that AS3 source and cites it by
 line: **1,847 `File.as:NNN` citations across 122 files** (measured
@@ -234,8 +289,14 @@ citation-rewriting script. It does not ride along with this feature.
 - [ ] **Phase 2 — Freeze the manifest schema** (§4.1) against Phase 1's numbers.
       JSON Schema beside the other frontend schemas; a set that fails it is
       refused BY NAME at load.
-- [ ] **Phase 3 — The AS3 seams** (§4.3), each its own commit: parse split;
+- [ ] **Phase 3 — The AS3 seams** (§4.4), each its own commit: parse split;
       table indirection; `botLoadLevels`; `Bot.as`'s three bounds checks.
+- [ ] **Phase 3b — Mount vanilla as a manifest** (§4.3, shape (c)): the
+      embedded-asset resolver, the built-in `seedling-vanilla` manifest, and
+      §3.5's six constants moving into it. ⛔ Lands ALONE — it is the only seam
+      that deletes literals. **Its acceptance is that the ordinary game is
+      byte-for-byte unchanged**: the committed tapes replay identically, which
+      is the strongest available statement that the indirection changed nothing.
 - [ ] **Phase 4 — Persistence + the save stamp** (§4.2). The `Main.as:319`
       rule, the `set_id` field, and the mismatch path that rebuilds loudly.
 - [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
@@ -281,11 +342,10 @@ rather than invent.
 1. Does EI take a whole bundle in one call? (Phase 1; decides the schema.)
 2. Is there a third cross-level entity reference the pattern sweep missed?
    (Phase 1's audit.)
-3. Does the vanilla set ship AS a manifest — i.e. do the embedded rooms become
-   just another set, mounted by default? It is the cleaner shape and it makes
-   the external path the ONLY path (so it cannot rot), but it puts the 116
-   embedded assets behind the same indirection and is a bigger first cut.
-   **Undecided.**
+3. ~~Does the vanilla set ship AS a manifest?~~ ⚖ **DECIDED YES (user,
+   2026-08-13)** — §4.3, Phase 3b. The sub-fork it opened (where vanilla's room
+   DATA lives) is answered (c) on my recommendation, not the user's: embeds
+   stay, the artifact stays standalone, and the residue is named in §4.3.
 4. `TAGS_PER_LEVEL = 30` is defined twice in the model — `breakableRocks.js:60`
    and `tapeFormat.js:615`. Two constants that agree until one moves; worth
    collapsing while this area is open.
