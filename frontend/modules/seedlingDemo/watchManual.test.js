@@ -592,3 +592,117 @@ describe('⛓⛓⛓ ACCEPTANCE 3 — the clears layer, and the report that shran
         expect(markers.filter((m) => m.source === 'clear')).toHaveLength(7);
     }, 120000);
 });
+
+/**
+ * ⛓⛓⛓ GROUP B — DRIVING A CEREMONY BY HAND.
+ *
+ * ⚖ The item was "manual mode has no way to display or advance text", and the
+ * ADVANCE half is what these rows are about. A pickup ceremony freezes the
+ * player and pages on `Input.released(X)`, SPACED — a release that lands before
+ * the page has typed out fast-forwards it instead of turning it — so a driver
+ * with no rhythm can be stuck in one indefinitely while the page says nothing.
+ *
+ * ⛔ THE LOAD-BEARING ROW IS THE CONTROL ARM. "The ceremony finished" proves
+ * nothing on its own: a ceremony that would have finished anyway makes an
+ * auto-advance that does nothing look like one that works. So the same drive
+ * runs TWICE from the same staging, pressing NOTHING both times, and the two
+ * arms must disagree.
+ */
+describe('group B — the ceremony advances itself while driving', () => {
+    const levelSourceB = atlasLevelSource();
+    /** Drive to the first tick a ceremony is up, using the tape's own keys. */
+    const driveToCeremony = (name, opts) => {
+        const s = createManualSession({
+            levelSource: levelSourceB, staging: stagingOf(name), name: 'ceremony',
+        });
+        const held = collectRun(tape(name), levelSourceB).frames.map((f) => f.held);
+        let approach = 0;
+        // ⚠ The approach is the TAPE's, replayed through `heldFor` — which
+        // outside a ceremony must hand the keys straight back. That is asserted
+        // here rather than in a row of its own: if it did not, this drive would
+        // never reach the pickup at all.
+        while (!s.run.inCeremony && approach < held.length) {
+            const want = held[approach] ?? new Set();
+            const got = s.heldFor(want, opts);
+            expect(got.auto).toBe(false);
+            expect(got.held).toBe(want);
+            s.step(got.held);
+            approach += 1;
+        }
+        return { s, approach };
+    };
+
+    it('⛔ pressing NOTHING, the page pages the dialogue out — and the control arm does not',
+        () => {
+            const BUDGET = 400;
+            // ── the treatment: auto-advance ON, the driver's hands off ──
+            const on = driveToCeremony('r3-collect-sword', { autoAdvanceText: true });
+            expect(on.s.run.inCeremony).toBe(true);
+            let ticks = 0;
+            while (on.s.run.inCeremony && ticks < BUDGET) {
+                const { held } = on.s.heldFor(new Set(), { autoAdvanceText: true });
+                on.s.step(held);
+                ticks += 1;
+            }
+            expect(on.s.run.inCeremony).toBe(false);
+            expect(on.s.autoText.ceremonies).toBe(1);
+            expect(on.s.autoText.releases).toBeGreaterThan(0);
+            // ⚠ THE PRESS-AFTER-CEREMONY HAZARD, COUNTED RATHER THAN ASSUMED
+            // AWAY. A dialogue ends on a RELEASE, so the cadence should never
+            // be mid-press when the freeze lifts — a release landing on a live
+            // frame reaches `useItem(Main.primary)`, which is a swing at best
+            // and a DASH at worst. Zero is the claim.
+            expect(on.s.autoText.endedPressing).toBe(0);
+
+            // ── the control: identical drive, switch OFF ────────────────
+            const off = driveToCeremony('r3-collect-sword', { autoAdvanceText: false });
+            expect(off.s.run.inCeremony).toBe(true);
+            for (let i = 0; i < BUDGET; i += 1) {
+                const { held, auto } = off.s.heldFor(new Set(), { autoAdvanceText: false });
+                expect(auto).toBe(false);
+                off.s.step(held);
+            }
+            // ⛔ THE DIFFERENTIAL: same room, same staging, same empty hands,
+            // and the ceremony is STILL UP after the budget the other arm
+            // finished inside. Without this the row would pass on an
+            // auto-advance that did nothing at all.
+            expect(off.s.run.inCeremony).toBe(true);
+            expect(off.s.autoText.releases).toBe(0);
+            expect(off.s.autoText.ceremonies).toBe(0);
+        });
+
+    it('⛓ the driven releases are RECORDED — the fold round-trips them', () => {
+        const { s } = driveToCeremony('r3-collect-sword', { autoAdvanceText: true });
+        let ticks = 0;
+        while (s.run.inCeremony && ticks < 400) {
+            const { held } = s.heldFor(new Set(), { autoAdvanceText: true });
+            s.step(held);
+            ticks += 1;
+        }
+        // ⛔ The keys the PAGE dispatched are in the tape, not merely in the
+        // run: a producer that drove inputs it did not record would fold to a
+        // tape that cannot reproduce the walk it came from.
+        const primaries = s.perTick.filter((h) => h.has('primary')).length;
+        expect(primaries).toBe(s.autoText.releases);
+        const rt = foldRoundTrip(s, levelSourceB);
+        expect(rt.ok).toBe(true);
+    });
+
+    /**
+     * ⚠ THE FIRST CEREMONY TICK IS THE DRIVER'S, and it has to be.
+     * `run.inCeremony` is read BEFORE `advance`, and the contact that starts a
+     * ceremony happens INSIDE it — so the tick that walks onto the pickup
+     * carries the walk's own keys, exactly as `runCollect`'s approach loop
+     * leaves them. A `heldFor` that peeked forward would drop that step.
+     */
+    it('⚠ the tick that walks ONTO the pickup carries the driver\'s own keys', () => {
+        const { s, approach } = driveToCeremony('r3-collect-sword', { autoAdvanceText: true });
+        expect(approach).toBeGreaterThan(0);
+        expect(s.autoText.ticks).toBe(0);
+        expect(s.autoText.ceremonies).toBe(0);
+        // the very next decision is the first auto one
+        const first = s.heldFor(new Set(), { autoAdvanceText: true });
+        expect(first.auto).toBe(true);
+        expect(s.autoText.ceremonies).toBe(1);
+    });
+});

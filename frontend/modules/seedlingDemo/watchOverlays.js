@@ -705,6 +705,29 @@ export function sampleMovers(run) {
         pushables,
         arrows,
         bodies,
+        /**
+         * ⛓⛓⛓ GROUP B — THE CEREMONY, SAMPLED LIKE EVERY OTHER LIVE CHANNEL.
+         *
+         * ⛔ ONE DERIVATION, BOTH ARMS. The complaint was about MANUAL mode
+         * ("no way to display or advance text"), and a readout wired only into
+         * the manual arm would have been a second reading the moment somebody
+         * scrubbed a REPLAY through a pickup. `sampleMovers` is the seam both
+         * arms already share — the manual session calls it per driven tick and
+         * `collectRun` calls it per replayed one — so the text box works on
+         * every arm from one line.
+         *
+         * ⛔⛔ AND IT MUST BE SAMPLED, NOT READ AFTER. `ceremony.dialogue` is
+         * mutated in place every frame: a page that read `run.ceremonyNow`
+         * after the walk and drew it at every cursor would show the LAST
+         * ceremony's final page at every scrub position — the END-state
+         * mistake slice 1 refused for the geometry, arriving through the text
+         * box. `ceremonyNow` copies, so the sample is a snapshot.
+         *
+         * ⚠ `undefined` IS RESERVED FOR A RUN THAT PREDATES THE GETTER (a unit
+         * -test fake), and `dialogueAt` reports that differently from `null`,
+         * which is the ordinary "no ceremony is running right now".
+         */
+        ceremony: run.ceremonyNow,
         gameTime: run.gameTime ?? null,
         player: run.state ? { x: run.state.x, y: run.state.y } : null,
         lanes,
@@ -769,6 +792,12 @@ export function collectRun(tape, levelSource, { scratchPersistence = false } = {
                     census: null,
                     changes: [],
                     changeCounts: null,
+                    // ⛓ GROUP B: `undefined`, not `null`. The v1 engine has no
+                    // run and therefore no ceremony CHANNEL — a different fact
+                    // from "no ceremony is running", and `dialogueAt` says
+                    // which. Written out rather than omitted so the difference
+                    // is a decision on the page and not an absent key.
+                    ceremony: undefined,
                 });
         },
     });
@@ -1473,6 +1502,77 @@ export function attackHoldsAt(presses, cursor, level, holdTicks = ATTACK_HOLD_DE
         out.push({ ...p, age, hold });
     }
     return out;
+}
+
+// ── ⛓⛓⛓ GROUP B: THE CEREMONY TEXT ──────────────────────────────────────
+
+/**
+ * What the game has actually TYPED of the current page, right now.
+ *
+ * ⛔ THE CLIP IS THE GAME'S OWN AND IT IS THE WHOLE MECHANISM. `Game.talk()`
+ * runs on RENDER frames and advances `currentCharacter` one character every
+ * `framesPerCharacter`; the box on screen holds the prefix that has been typed
+ * so far. A readout that showed the whole page would be showing text the
+ * player cannot see yet — and, worse, would make the type-out invisible, which
+ * is exactly what decides how many X releases a ceremony costs (a release that
+ * lands mid-type-out fast-forwards the page instead of turning it).
+ *
+ * ⚠ AND `currentCharacter` OVERRUNS THE PAGE, LEGITIMATELY. The counter keeps
+ * incrementing after the last character until a release turns the page, and
+ * `NPC.talk` sets it to `length - 1` rather than `length`. So the clip is
+ * clamped and the RAW counter is reported beside it — a readout that only
+ * showed the clamped value would hide the state the page-turn depends on.
+ */
+export function visibleDialogueText(d) {
+    if (!d || typeof d.text !== 'string') return '';
+    return d.text.slice(0, Math.max(0, Math.min(d.currentCharacter, d.text.length)));
+}
+
+/**
+ * The ceremony at this tick, in this level, with its named absences.
+ *
+ * ⚠ FOUR ANSWERS AND THEY ARE NOT ONE ANSWER (trap 196, on a readout instead
+ * of a layer). "This walk cannot see ceremonies at all", "no ceremony is
+ * running", "a ceremony is running and it has NO TEXT", and "here is the text"
+ * are four different facts, and the middle two are the ones a reader would
+ * otherwise confuse: a totem part's ceremony freezes the screen for 150 frames
+ * and there is nothing to press, which looks identical to a hang.
+ *
+ * @returns {{ceremony: object|null, visible: string, why: string|null}}
+ */
+export function dialogueAt(samples, cursor, level) {
+    const s = samples[cursor];
+    if (!s || s.level !== level) return { ceremony: null, visible: '', why: null };
+    if (s.ceremony === undefined) {
+        return {
+            ceremony: null,
+            visible: '',
+            why: 'this walk has no ceremony channel — the v1 engine builds no run, so '
+                + 'whether a pickup ceremony is up is not a question it can answer. That '
+                + 'is NOT the same fact as "no ceremony is running"',
+        };
+    }
+    if (s.ceremony === null) {
+        return {
+            ceremony: null,
+            visible: '',
+            why: 'no pickup ceremony is running at this tick — a ceremony starts when the '
+                + 'player walks ONTO a pickup, and most ticks are not that tick',
+        };
+    }
+    const c = s.ceremony;
+    if (c.dialogue === null) {
+        return {
+            ceremony: c,
+            visible: '',
+            why: `${c.tag ?? 'this pickup'}'s ceremony has NO TEXT — \`Pickup.pick_up()\` `
+                + 'spawns an NPC only `if (text != "")`, so a boss key or a totem part runs '
+                + 'its 150 frozen frames and resolves itself with no dialogue at all. There '
+                + 'is nothing to advance and nothing to press: the screen is frozen because '
+                + 'the ceremony is running, not because it is waiting for you',
+        };
+    }
+    return { ceremony: c, visible: visibleDialogueText(c.dialogue), why: null };
 }
 
 /** How many DISTINCT bodies a channel ever showed — the emptiness readout. */

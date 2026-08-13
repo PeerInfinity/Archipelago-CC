@@ -292,6 +292,17 @@
   #layers { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0; }
   #viewknobs { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0;
     font-size: 11px; color: #8a8a98; }
+  /* ⛓⛓⛓ GROUP B — the ceremony text. Monospace and pre-wrap because the
+     game's own wrap is `endlineText`, which rebuilds the string with real
+     break characters: a proportional font that re-wrapped it would show a
+     different shape from the one the page count is computed against. */
+  #dialogue { border: 1px solid #3a3a42; background: #16161c; padding: 6px 8px;
+    margin: 4px 0; font-size: 12px; }
+  #dialogue .txt { font-family: ui-monospace, Menlo, Consolas, monospace;
+    white-space: pre-wrap; color: #e0e0e8; }
+  #dialogue .rest { color: #4a4a56; }
+  #dialogue .meta { color: #8a8a98; font-size: 11px; margin-top: 4px; }
+  #dialogue .why { color: #8a8a98; font-size: 11px; }
   #legend { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 11px;
     color: #8a8a98; margin-bottom: 6px; }
   .sw { display: flex; gap: 4px; align-items: center; }
@@ -446,6 +457,18 @@
       once. ⚠ The container is the contract — see `mountLayerControls`.
     -->
     <div id="viewknobs"></div>
+    <!--
+      ⛓⛓⛓ GROUP B — THE CEREMONY TEXT BOX.
+
+      A pickup ceremony freezes the player, spawns an NPC and types its text out
+      one character per `framesPerCharacter` render frames, paging on X
+      RELEASES. Every part of that has been modelled since R3 and NONE of it was
+      on screen: a driver who walked onto a pickup got a frozen picture and no
+      indication that a dialogue was running at all. This is where it goes, and
+      it is fed by `sampleMovers`' own per-tick channel, so it works while
+      DRIVING and while SCRUBBING a replay from one derivation.
+    -->
+    <div id="dialogue" hidden></div>
     <div id="legend"></div>
     <details id="tapeIO">
       <summary>save / load — the tape in your hands (this page NEVER writes fixtures/)</summary>

@@ -136,7 +136,7 @@ import {
     bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt, defaultLayerSet,
     hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
     parseAttackHold, parseLayersParam, pathPointsUpTo, SWING_WINDOW_NOTE, traceRowFields,
-    traceSidecarPath, worldChangesAt,
+    traceSidecarPath, worldChangesAt, dialogueAt,
 } from './watchOverlays.js';
 import {
     clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
@@ -1295,6 +1295,24 @@ let attackHold = ATTACK_HOLD_DEFAULT;
 const attackHoldNow = () => attackHold;
 
 /**
+ * ⛓⛓⛓ GROUP B — AUTO-ADVANCE THE CEREMONY TEXT WHILE DRIVING BY HAND.
+ *
+ * ⚖ The user's own suggestion, and ON by default because without it a manual
+ * drive that walks onto a pickup simply stops: the screen freezes, the page
+ * says nothing, and paging out needs SPACED X releases the driver has no way
+ * to know about (`PRESS_GAP` — a release that lands mid-type-out fast-forwards
+ * the page instead of turning it).
+ *
+ * ⛔ IT IS A SWITCH AND HAS TO BE. It makes the page dispatch keys the driver
+ * did not press, and those keys are RECORDED — they are in the folded tape,
+ * which is the honest outcome and also exactly why turning it off must be
+ * possible. Page state like `attackHold`, for the same reason: it is a
+ * question about how you want to drive, not about the walk you are looking at.
+ */
+let autoAdvanceText = true;
+const autoAdvanceTextNow = () => autoAdvanceText;
+
+/**
  * The per-layer toggles and the LEGEND, both generated from `OVERLAY_LAYERS`
  * and `MARKER_GLYPHS`.
  *
@@ -1365,6 +1383,29 @@ function mountLayerControls(on, redraw) {
     holdLabel.appendChild(holdInput);
     holdLabel.appendChild(document.createTextNode(' ticks (display choice)'));
     knobBox.appendChild(holdLabel);
+    /**
+     * ⛓⛓⛓ GROUP B — THE AUTO-ADVANCE SWITCH, in the knob box beside the hold.
+     *
+     * ⚠ IT ONLY BITES ON THE MANUAL ARM (nothing else dispatches keys), but it
+     * is mounted for every arm on purpose: an option that appeared and vanished
+     * with the SOURCE selector would be one a reader could not find in order
+     * to reason about a tape they had already driven.
+     */
+    const autoLabel = document.createElement('label');
+    autoLabel.title = 'A pickup ceremony freezes the player and pages on `Input.released(X)`, '
+        + 'spaced by `PRESS_GAP` — a release that lands mid-type-out fast-forwards the page '
+        + 'instead of turning it. With this on, the page drives those releases for you, on '
+        + 'the SAME cadence `botDriverV2.runCollect` uses. ⚠ They are RECORDED: the folded '
+        + 'tape contains every key dispatched, including these.';
+    const autoBox = document.createElement('input');
+    autoBox.type = 'checkbox';
+    autoBox.id = 'auto-advance-text';
+    autoBox.checked = autoAdvanceTextNow();
+    autoBox.onchange = () => { autoAdvanceText = autoBox.checked; };
+    autoLabel.appendChild(autoBox);
+    autoLabel.appendChild(document.createTextNode(
+        ' auto-advance ceremony text while driving (records the X releases)'));
+    knobBox.appendChild(autoLabel);
     const swatch = (colour, text) =>
         `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
     $('legend').innerHTML = [
@@ -1571,8 +1612,13 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
             live: { crushers: f.crushers, crusherScans: f.crusherScans },
             dangerQueries,
         });
+        // ⛓ GROUP B: scrubbing a REPLAY through a pickup shows its text too —
+        // the same call the manual arm makes, over the same sample channel.
+        dialogue = renderDialogue(samples, cursor, f.observation.level);
         pane.highlight(cursor);
     };
+    /** ⛓ GROUP B: the last ceremony readout, for `__editorOverlays`. */
+    let dialogue = { ceremony: null, visible: '', why: null };
 
     const itemProp = (name) => {
         // The property behind an item name, without importing the table's
@@ -1787,6 +1833,22 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
             holdDefault: ATTACK_HOLD_DEFAULT,
             swordHitTicks: SLASH_HIT_TICKS,
             note: SWING_WINDOW_NOTE,
+        },
+        /**
+         * ⛓⛓⛓ GROUP B — THE CEREMONY AT THE SCRUB TICK. A GETTER, not a value
+         * captured when the readout was built: the box is re-rendered on every
+         * `hud()` and a snapshot taken at mount would report tick 0's ceremony
+         * (i.e. none) for the whole session, which is the leak-witness shape —
+         * evidence that lands one tick late reads as evidence of nothing.
+         */
+        get dialogue() {
+            return {
+                ceremony: dialogue.ceremony,
+                visible: dialogue.visible,
+                why: dialogue.why,
+                shown: !$('dialogue').hidden,
+                text: $('dialogue').textContent,
+            };
         },
         markers,
         unplaced,
@@ -3224,7 +3286,19 @@ async function runManual(params, lifetime) {
             manualRow('hits', `${session.run.playerHits.length}`),
             manualRow('deaths', `${session.run.playerDeaths.length}`),
             manualRow('clears', `${session.run.earnedClears.length}`),
+            /**
+             * ⛓ GROUP B: what the auto-advance has DRIVEN, on the HUD beside
+             * what the driver did. Keys the page dispatched on your behalf and
+             * wrote into your tape are not a thing to leave to a tooltip.
+             */
+            manualRow('auto text', autoAdvanceTextNow()
+                ? `${session.autoText.releases} release(s) over `
+                    + `${session.autoText.ceremonies} ceremony(s)`
+                : 'OFF — you are pressing X yourself'),
         ].join('');
+        // ⛓ GROUP B: the live drive's own ceremony box, from the sample the
+        // session just took. The manual arm's cursor IS its tick.
+        renderDialogue(session.samples, session.tick, last.level);
         $('status').textContent = `${name} — DRIVING, ${session.tick} tick(s) recorded`;
     };
 
@@ -3248,7 +3322,18 @@ async function runManual(params, lifetime) {
                 while (acc >= 1 && steps < MAX_STEPS_PER_FRAME) {
                     acc -= 1;
                     steps += 1;
-                    const held = heldFromCodes(codes);
+                    /**
+                     * ⛓⛓⛓ GROUP B — THE CEREMONY DRIVES ITSELF, IF ASKED.
+                     *
+                     * ⛔ THE DECISION IS THE SESSION'S (`heldFor`), THE STEP IS
+                     * STILL THIS LOOP'S. One place dispatches a manual tick,
+                     * which is the no-second-loop law at its own scale; what
+                     * moved into `watchManual` is the RULE about which keys,
+                     * because that is the part that can be wrong and therefore
+                     * the part that has tests.
+                     */
+                    const { held } = session.heldFor(heldFromCodes(codes),
+                        { autoAdvanceText: autoAdvanceTextNow() });
                     session.step(held);
                     renderer.mark(session.run.state, session.run.level);
                 }
@@ -3412,6 +3497,62 @@ async function runManual(params, lifetime) {
 }
 
 const manualRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
+
+/** Text into HTML. The ceremony strings are the game's, not this page's. */
+const esc = (s) => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/**
+ * ⛓⛓⛓ GROUP B — RENDER THE CEREMONY TEXT, from the per-tick sample.
+ *
+ * ⛔ ONE RENDERER, BOTH ARMS, ONE CHANNEL. The complaint was about MANUAL
+ * mode, and a box wired only into the manual arm would have been a second
+ * reading the first time somebody scrubbed a REPLAY through a pickup. Both
+ * arms already sample through `sampleMovers`, so both get this from one call.
+ *
+ * ⛔⛔ THE TYPED PREFIX AND THE REST ARE BOTH SHOWN, and the difference is the
+ * whole content. `Game.talk()` types one character every `framesPerCharacter`
+ * RENDER frames, and a release that lands before the page has finished typing
+ * FAST-FORWARDS it instead of turning it — so "how far has this typed" is
+ * precisely the state that decides what the next X release does. Showing only
+ * the visible prefix would hide the page; showing only the whole page would
+ * hide the type-out. Both, in two inks.
+ *
+ * ⚠ AND AN ABSENCE IS PRINTED, NOT HIDDEN, WHEN IT HAS A REASON WORTH READING.
+ * A textless ceremony — a boss key, a totem part — freezes the screen for 150
+ * frames with nothing to press, which looks exactly like a hang; that one gets
+ * the box and the sentence. "No ceremony is running", the state of almost
+ * every tick, hides the box instead: a permanent banner saying nothing is
+ * happening is noise, and `dialogueAt`'s reason is still in the readout for
+ * anything that asks.
+ */
+function renderDialogue(samples, cursor, level) {
+    const box = $('dialogue');
+    const d = dialogueAt(samples, cursor, level);
+    if (!d.ceremony) {
+        box.hidden = true;
+        box.innerHTML = '';
+        return d;
+    }
+    const c = d.ceremony;
+    const who = `${c.tag ?? 'pickup'}${c.item ? ` → ${c.item}` : ''}`;
+    if (!c.dialogue) {
+        box.hidden = false;
+        box.innerHTML = `<div class="meta">CEREMONY — ${esc(who)}</div>`
+            + `<div class="why">${esc(d.why ?? '')}</div>`;
+        return d;
+    }
+    const dl = c.dialogue;
+    const rest = typeof dl.text === 'string' ? dl.text.slice(d.visible.length) : '';
+    box.hidden = false;
+    box.innerHTML = `<div class="meta">CEREMONY — ${esc(who)} — page ${dl.page + 1}`
+        + ` of ${dl.pages}${dl.done ? ' — DONE' : ''}</div>`
+        + `<div class="txt">${esc(d.visible)}<span class="rest">${esc(rest)}</span></div>`
+        + `<div class="meta">typed ${dl.currentCharacter}/${dl.pageLength} chars`
+        + ` (${dl.framesPerCharacter} frames each) — the page turns on an X RELEASE, and`
+        + ' one that lands before the type-out finishes fast-forwards it instead</div>';
+    return d;
+}
 
 // ── SOURCE = GENERATE (PROCGEN PoC slice 5) ──────────────────────────────
 

@@ -2301,6 +2301,60 @@ function runTouch(run, perTick, touch, maxTicks, what) {
 /** Ticks between the X releases that page a ceremony. See above. */
 export const PRESS_GAP = 8;
 
+/**
+ * ⛓⛓⛓ GROUP B — THE CEREMONY CADENCE, HOISTED OUT OF `runCollect`'S LOOP.
+ *
+ * ⛔ IT WAS ALREADY WRITTEN, ONCE, INSIDE A LOOP THAT ALSO ADVANCES THE RUN —
+ * which made it unreachable by anything that has its own loop. The editor
+ * page's MANUAL arm is exactly that: it is driven by a keyboard on an
+ * animation-frame pacer, one `run.advance` per frame, and it cannot call a
+ * function whose body is `while (…) { run.advance(…) }`. Its choices were to
+ * retype the press/release alternation — a second cadence agreeing with this
+ * one until somebody changed `PRESS_GAP` — or to hoist. This arc has refused
+ * the retype three times (§8.6, §9.3, and slice 8's `arrowLane`), so: hoist.
+ *
+ * ⛔⛔ AND IT IS THE RELEASE THAT PAGES, NOT THE PRESS. `NPC.talk()` reads
+ * `Input.released(p.keys[6])`, so the meaningful tick is the one where X goes
+ * UP — which is why a press must be followed by a NOT-held tick and why a
+ * held key does nothing at all. A cadence that only pressed would freeze the
+ * player in a dialogue forever.
+ *
+ * ⚠ AND THE GAP IS LOAD-BEARING, not politeness. `NPC.talk` sets
+ * `currentCharacter = page.length - 1` rather than `length`, so a release
+ * that lands mid-type-out FAST-FORWARDS the page instead of turning it — the
+ * releases have to be spaced far enough apart for a render to tick the
+ * counter over, and a ceremony therefore needs MORE releases than it has
+ * pages. `PRESS_GAP` is that spacing.
+ *
+ * @param {{pressing: boolean, sinceRelease: number, releases: number}} s
+ * @returns {{held: Set<string>, next: object, released: boolean}}
+ */
+export const CEREMONY_CADENCE_START = Object.freeze({
+    pressing: false, sinceRelease: PRESS_GAP, releases: 0,
+});
+
+export function ceremonyCadenceStep(s) {
+    if (s.pressing) {
+        return {
+            held: NO_HELD,
+            released: true,
+            next: { pressing: false, sinceRelease: 1, releases: s.releases + 1 },
+        };
+    }
+    if (s.sinceRelease >= PRESS_GAP) {
+        return {
+            held: TALK_HELD,
+            released: false,
+            next: { pressing: true, sinceRelease: s.sinceRelease + 1, releases: s.releases },
+        };
+    }
+    return {
+        held: NO_HELD,
+        released: false,
+        next: { pressing: false, sinceRelease: s.sinceRelease + 1, releases: s.releases },
+    };
+}
+
 /** Shape-check a `collect` before anything is planned or driven with it. */
 export function assertCollect(collect, what) {
     if (collect === null || typeof collect !== 'object' || Array.isArray(collect)) {
@@ -4596,9 +4650,11 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     // ⚠ THE MOVEMENT KEY IS ALREADY RELEASED: the approach loop pushed its
     // last held set on the tick BEFORE contact, and everything from here is
     // either a press or nothing. So no movement span overlaps the freeze.
-    let releases = 0;
-    let sinceRelease = PRESS_GAP;
-    let pressing = false;
+    // ⛓ GROUP B: the alternation is `ceremonyCadenceStep`'s now, so the page's
+    // manual arm drives a ceremony with THIS cadence rather than a second copy
+    // of it. The loop is unchanged in behaviour — the extraction is proved by
+    // the committed tapes, which are byte-identical across it.
+    let cadence = CEREMONY_CADENCE_START;
     let ticks = 0;
     // A textless ceremony has already recorded itself by the time the
     // approach loop exits, so this runs zero times — which is right: there
@@ -4606,17 +4662,15 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     while (run.collected.length === before) {
         if (ticks >= maxTicks) {
             fail(`${what}: ${pickup.tag}@${pickup.x},${pickup.y}'s ceremony has not `
-                + `finished after ${maxTicks} ticks and ${releases} release(s). A `
+                + `finished after ${maxTicks} ticks and ${cadence.releases} release(s). A `
                 + 'dialogue advances on `Input.released`, so a ceremony that never ends '
                 + 'means the releases are not reaching `NPC.talk()`.');
         }
-        let held = NO_HELD;
-        if (pressing) { pressing = false; sinceRelease = 0; releases++; } else if (
-            sinceRelease >= PRESS_GAP) { held = TALK_HELD; pressing = true; }
-        perTick.push(held);
-        const { transition } = run.advance(held);
+        const step = ceremonyCadenceStep(cadence);
+        cadence = step.next;
+        perTick.push(step.held);
+        const { transition } = run.advance(step.held);
         ticks++;
-        sinceRelease++;
         if (transition) {
             fail(`${what}: the run crossed from level ${transition.from_level} to `
                 + `${transition.to_level} DURING a ceremony. A frozen player cannot walk `
@@ -4629,7 +4683,7 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     // release that ended it — never a fresh press. Asserted rather than
     // reasoned, because the consequence is a sword swing at best and a dash
     // that moves the player at worst.
-    if (pressing) {
+    if (cadence.pressing) {
         fail(`${what}: the ceremony ended with a press still down, so its release would `
             + `land on a live frame and reach useItem(Main.primary).`);
     }
@@ -4649,7 +4703,7 @@ function runCollect(run, perTick, collect, maxTicks, what) {
         level,
         approach,
         ceremony: ticks,
-        releases,
+        releases: cadence.releases,
         from,
     };
 }

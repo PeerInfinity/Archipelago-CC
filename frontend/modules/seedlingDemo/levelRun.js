@@ -9949,6 +9949,71 @@ export function createLevelRun({
          * alternative to counting pages by hand seven times.
          */
         get inCeremony() { return ceremony !== null; },
+        /**
+         * ⛓⛓⛓ GROUP B — THE CEREMONY'S OWN STATE, AND WHY `inCeremony` WAS
+         * NOT ENOUGH.
+         *
+         * `inCeremony` is a BOOLEAN, and a boolean is everything a fixture
+         * author needed: how many X releases a text costs is answered by
+         * driving until it flips back. It is not enough for a WATCHER. The
+         * editor page's manual arm walks onto a pickup, the screen freezes,
+         * and the page could say nothing at all about what was happening —
+         * there is a dialogue running, with pages and a type-out, and no way
+         * to read a word of it. The model has had the whole thing since R3
+         * (`dialogue.beginDialogue` — pages, the current page, the character
+         * count, the frame cadence); nothing exposed it.
+         *
+         * ⛔ THE SHAPE IS `get watchers()`'s, DELIBERATELY. A Watcher's
+         * placed-NPC dialogue is the same `beginDialogue` state and has been
+         * reported field for field (`page`, `pages`, `currentCharacter`,
+         * `pageLength`, `done`) since R6 slice 6c. Two readouts of one model
+         * with different field names would be two vocabularies for one thing,
+         * and the consumer would have to know which kind of NPC it was
+         * looking at in order to read it.
+         *
+         * ⛔⛔ IT COPIES. `ceremony.dialogue` is MUTATED in place by
+         * `stepDialogue` every frame, so a getter that handed the object back
+         * would give a caller a live view that changes under it — and a page
+         * that stored one would render the LAST tick's page at every scrub
+         * position. Every getter on this run copies for this reason; this one
+         * says so because the object it is copying is one somebody would
+         * reasonably expect to be a snapshot already.
+         *
+         * ⚠ `dialogue: null` IS A REAL CEREMONY, NOT A MISSING ONE.
+         * `Pickup.pick_up()` spawns an NPC only `if (text != "")`, so a boss
+         * key or a totem part runs its 150 frozen frames and resolves with no
+         * dialogue at all. A consumer that read `null` as "no ceremony" would
+         * report the one kind of ceremony that CANNOT be advanced by pressing
+         * anything as a dialogue waiting for a press.
+         */
+        get ceremonyNow() {
+            if (ceremony === null) return null;
+            const d = ceremony.dialogue;
+            return {
+                tag: ceremony.pickup?.tag ?? null,
+                level: ceremony.level,
+                item: ceremony.item ?? null,
+                keyType: ceremony.keyType ?? null,
+                totemPart: ceremony.totemPart ?? null,
+                runtime: ceremony.pickup?.runtime ?? false,
+                dialogue: d === null || d === undefined ? null : {
+                    page: d.page,
+                    pages: d.pages.length,
+                    // The page's full text. What the game has TYPED so far is
+                    // this clipped to `currentCharacter`, and the clipping is
+                    // the consumer's — a getter that returned only the visible
+                    // prefix would make "the text" unreadable to anything that
+                    // wanted the whole page.
+                    text: d.pages[d.page] ?? null,
+                    currentCharacter: d.currentCharacter,
+                    pageLength: d.pages[d.page]?.length ?? null,
+                    framesThisCharacter: d.framesThisCharacter,
+                    framesPerCharacter: d.framesPerCharacter,
+                    done: d.done,
+                    frames: d.frames,
+                },
+            };
+        },
         /** `{t, level, items}` per grant that fired, in firing order. */
         get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
         /**

@@ -40,6 +40,14 @@
 import { KEY_NAMES, parseTape } from './tapeFormat.js';
 import { checkSolveDespawns, createRunForStaging, solveStaging } from './tapeRunner.js';
 import { buildStagedTape } from './botDriverV1.js';
+/**
+ * ⛓⛓⛓ GROUP B — THE ONE CEREMONY CADENCE, imported rather than retyped.
+ * It was inside `runCollect`'s own `while (…) run.advance(…)` loop, which a
+ * page driven by a keyboard pacer cannot call; slice B hoisted it out for this
+ * call site and `runCollect` now uses the same function. See its docblock for
+ * why the RELEASE is the meaningful tick and why `PRESS_GAP` is load-bearing.
+ */
+import { CEREMONY_CADENCE_START, ceremonyCadenceStep } from './botDriverV2.js';
 import { collectRun, extractMarkers, sampleMovers } from './watchOverlays.js';
 
 /**
@@ -141,6 +149,34 @@ export function createManualSession({
     const observations = [];
     const samples = [];
     let refusal = null;
+    /**
+     * ⛓⛓⛓ GROUP B — THE CEREMONY AUTO-ADVANCE, AND WHAT IT IS AND IS NOT.
+     *
+     * ⚖ The user's own suggestion, and it is a suggestion about a PRODUCER,
+     * which is why it is legal on a page whose first law is that it makes no
+     * claims. A manual drive stands beside `solveSegment` and `botDriverV1/V2`
+     * as a way of MAKING a tape; it reproduces nothing and gates nothing. What
+     * this does is drive the same X releases `runCollect` drives, on the same
+     * cadence, and RECORD them — so the folded tape contains every key that
+     * was dispatched and the round trip still holds byte for byte.
+     *
+     * ⛔ AND IT IS THE HOISTED CADENCE, NOT A SECOND ONE. `ceremonyCadenceStep`
+     * came out of `runCollect` for exactly this call site; a page-side
+     * press/release alternation would have been a second answer to "how do you
+     * page a dialogue", agreeing until somebody changed `PRESS_GAP`.
+     *
+     * ⚠ WHY A DRIVER NEEDS IT AT ALL. A ceremony freezes the player and pages
+     * on `Input.released(X)` — and the releases must be SPACED, because one
+     * that lands mid-type-out fast-forwards the page instead of turning it. A
+     * human mashing X therefore takes longer than one pressing it in rhythm,
+     * and until this landed there was nothing on screen saying a dialogue was
+     * even running. ⇒ default ON, and a switch, because a drive that records
+     * keys the driver did not press is something they must be able to see and
+     * turn off.
+     */
+    let cadence = CEREMONY_CADENCE_START;
+    const autoText = { ticks: 0, releases: 0, ceremonies: 0, endedPressing: 0 };
+    let wasInCeremony = false;
 
     /** The state right now, in the stepper's own observation shape. */
     const observe = () => {
@@ -176,6 +212,53 @@ export function createManualSession({
          * broken round trip.
          */
         get refusal() { return refusal; },
+        /** ⛓ GROUP B: what the auto-advance has driven, for the readout. */
+        get autoText() { return { ...autoText }; },
+        /**
+         * ⛓⛓⛓ GROUP B — THE HELD SET THIS TICK SHOULD CARRY.
+         *
+         * ⛔ IT DECIDES, IT DOES NOT STEP. The pacer still calls `step()`, so
+         * there is still exactly one place a manual tick is dispatched — this
+         * only answers WHICH KEYS, which is the part that has a rule in it and
+         * therefore the part that gets a test.
+         *
+         * ⛔⛔ IT REPLACES THE DRIVER'S KEYS RATHER THAN MERGING WITH THEM, and
+         * `runCollect` is the precedent: during a ceremony it emits the cadence
+         * and NOTHING else. A merge would let a held movement key ride through
+         * the freeze into the tape, and — worse — a driver still holding X
+         * would collide with the cadence's own press/release, producing an
+         * input pattern neither of them chose.
+         *
+         * ⚠ THE FIRST CEREMONY TICK IS THE DRIVER'S. `run.inCeremony` is read
+         * BEFORE `advance`, and the contact that starts a ceremony happens
+         * INSIDE it — so the tick that walks onto the pickup carries the walk's
+         * own keys, exactly as `runCollect`'s approach loop leaves them.
+         *
+         * ⚠ AND LEAVING WITH A PRESS DOWN IS COUNTED, NOT ASSUMED AWAY. A
+         * dialogue ends on a RELEASE, so the cadence should never be mid-press
+         * when the ceremony lifts — `runCollect` asserts exactly that, because
+         * a release landing on a live frame reaches `useItem(Main.primary)`,
+         * which is a sword swing at best and a DASH that moves the player at
+         * worst. A driving page cannot throw at its user, so it COUNTS the
+         * event and shows the count. Zero is the claim; a non-zero one is a
+         * finding about the reasoning and not about the driver.
+         */
+        heldFor(userHeld, { autoAdvanceText = true } = {}) {
+            const inCeremony = Boolean(run.inCeremony);
+            if (!autoAdvanceText || !inCeremony) {
+                if (wasInCeremony && cadence.pressing) autoText.endedPressing += 1;
+                wasInCeremony = inCeremony;
+                if (!inCeremony) cadence = CEREMONY_CADENCE_START;
+                return { held: userHeld, auto: false, released: false };
+            }
+            if (!wasInCeremony) autoText.ceremonies += 1;
+            wasInCeremony = true;
+            const step = ceremonyCadenceStep(cadence);
+            cadence = step.next;
+            autoText.ticks += 1;
+            if (step.released) autoText.releases += 1;
+            return { held: step.held, auto: true, released: step.released };
+        },
         /**
          * One frame: record what is held, dispatch it, observe the result.
          *

@@ -425,6 +425,117 @@ async function holdFor(page, codes, ms) {
     await p2.close();
 }
 
+// ── ROW 4 (GROUP B): DRIVING ONTO A PICKUP — the text, and who presses X ─
+/**
+ * ⚖ THE ITEM: "manual mode has no way to display or advance text". Both
+ * halves, driven by REAL KEY EVENTS in a browser, which is this file's whole
+ * reason to exist — the vitest rows already prove the derivation (including
+ * the CONTROL ARM: the same drive with the switch off does NOT finish).
+ *
+ * ⚠ THE ROOM AND THE SCRIPT ARE CHOSEN THE SAME WAY ROW 1's WERE. L10's
+ * `r3-collect-sword` staging boots at (56,88) and the sword's pickup is
+ * straight UP — 24 ticks of `up`, measured off the committed tape. The hold is
+ * 700 ms, which is ~42 ticks at speed 1: overshooting is FREE because once the
+ * ceremony starts the player is frozen and the auto-advance replaces the keys
+ * anyway, so wall-clock jitter cannot reach an edge in either direction.
+ */
+{
+    const url = `${PAGE}?source=manual&boot=${TAPES}/r3-collect-sword.json&speed=1`;
+    const { page, errors } = await open(url);
+    console.log(`\n## SOURCE=MANUAL — walking onto a pickup, and the ceremony text\n   ${url}`);
+    await page.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+
+    const knob = await page.evaluate(() => ({
+        exists: Boolean(document.getElementById('auto-advance-text')),
+        inKnobs: Boolean(document.querySelector('#viewknobs #auto-advance-text')),
+        inLayers: Boolean(document.querySelector('#layers #auto-advance-text')),
+        on: document.getElementById('auto-advance-text')?.checked ?? null,
+        hidden: document.getElementById('dialogue')?.hidden ?? null,
+    }));
+    check(knob.exists && knob.inKnobs && !knob.inLayers && knob.on === true,
+        '⚖ the auto-advance switch is mounted, ON by default, and is NOT a layer toggle',
+        `knobs=${knob.inKnobs} layers=${knob.inLayers} on=${knob.on}`);
+    check(knob.hidden === true,
+        '⚠ …and the text box is HIDDEN before anything is driven — a permanent banner '
+        + 'saying nothing is happening is noise',
+        `hidden=${knob.hidden}`);
+
+    await page.click('#manualStart');
+    /**
+     * ⛓⛓ THE KEY STAYS DOWN FOR THE WHOLE THING, and that is a stronger claim
+     * than taking the hands off would be. `heldFor` REPLACES the driver's keys
+     * during a ceremony rather than merging with them (`runCollect`'s
+     * precedent: it emits the cadence and nothing else), so a drive that keeps
+     * leaning on `up` must still page out. A row that released first would
+     * pass on an implementation that merged — and a merged `up` would ride
+     * through the freeze into the tape.
+     *
+     * ⚠ AND THE POLL RUNS WHILE IT IS DOWN. A first cut released after 700 ms
+     * and started polling afterwards: page ONE had already been and gone, so
+     * the row saw a paged ceremony and could not see it type. The observation
+     * has to overlap the event.
+     */
+    await page.keyboard.down('ArrowUp');
+    // ⛔ THE BOX APPEARS AND THE TEXT TYPES. Polled rather than sampled once:
+    // a ceremony pages over ~34 ticks and a single read would catch whichever
+    // instant the timing happened to land on. Stops as soon as it has both
+    // pages, so a fast machine does not keep walking after the sword.
+    const seen = await page.evaluate(async () => {
+        const box = document.getElementById('dialogue');
+        const texts = new Set();
+        const metas = new Set();
+        let shown = 0;
+        for (let i = 0; i < 160; i += 1) {
+            if (!box.hidden) {
+                shown += 1;
+                texts.add(box.querySelector('.txt')?.textContent ?? '');
+                metas.add(box.querySelector('.meta')?.textContent ?? '');
+            }
+            if (texts.size >= 2) break;
+            await new Promise((r) => setTimeout(r, 20));
+        }
+        return {
+            shown, texts: [...texts], metas: [...metas],
+            hud: document.getElementById('hud').textContent,
+        };
+    });
+    await page.keyboard.up('ArrowUp');
+    check(seen.shown > 0, '⛔ the ceremony text box APPEARED while driving',
+        `visible on ${seen.shown} poll(s)`);
+    // ⚠ THE FULL PAGE IS IN `.txt` (typed prefix + untyped remainder in a
+    // second ink), so what is asserted is the GAME's own string, verbatim.
+    check(seen.texts.some((t) => t.includes('You got the sword!')),
+        '⛔⛔ …carrying the GAME\'s own text, verbatim from `Pickups/Sword.as`',
+        JSON.stringify(seen.texts.filter((t) => t).slice(0, 3)));
+    check(seen.texts.some((t) => t.includes('Double tap to dash and swing.')),
+        '⛔⛔⛔ …and it PAGED — page 2 was reached with the driver holding a DIRECTION and '
+        + 'never once pressing X',
+        `${seen.texts.filter((t) => t).length} distinct text(s): `
+            + JSON.stringify(seen.metas.slice(0, 2)));
+    check(/auto text/.test(seen.hud) && /release\(s\)/.test(seen.hud),
+        '⛓ …and the HUD says how many X releases the PAGE dispatched on your behalf — '
+        + 'keys written into your tape are not a thing to leave to a tooltip',
+        (seen.hud.match(/auto text[^a-z]*[^A-Z]*/) ?? ['?'])[0].slice(0, 80));
+    if (SHOT) await page.screenshot({ path: `${SHOT}/manual-ceremony.png` });
+
+    await page.click('#manualStop');
+    await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined,
+        null, { timeout: 60000 });
+    const m = await page.evaluate(() => window.__editorManual);
+    // ⛔⛔ THE KEYS THE PAGE PRESSED ARE IN THE TAPE. A producer that drove
+    // inputs it did not record would fold to a tape that cannot reproduce the
+    // walk it came from — and the round trip is exactly that assertion.
+    check(m.roundTrip === true && m.faithful === true && m.mismatches.length === 0,
+        '⛔⛔ the fold STILL replays frame-for-frame — the driven X releases were RECORDED',
+        m.roundTrip ? `${m.observations} driven == ${m.frames} replayed`
+            : JSON.stringify(m.mismatches.slice(0, 4)));
+    check(m.refusal === null && m.error === null,
+        'and the drive completed — no refusal, and the replay threw nothing',
+        m.refusal ? `refused at t${m.refusal.tick}: ${m.refusal.message}` : 'clean');
+    check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
+    await page.close();
+}
+
 await browser.close();
 if (SHOT) console.log(`\nscreenshots (EVIDENCE, not gates) in ${SHOT}`);
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);

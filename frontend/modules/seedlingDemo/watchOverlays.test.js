@@ -21,10 +21,10 @@ import { fileURLToPath } from 'node:url';
 import {
     ACTION_KEYS, activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt,
     attackRectsAt, bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt,
-    defaultLayerSet, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
+    defaultLayerSet, dialogueAt, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
     markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseAttackHold, parseLayersParam,
     pathPointsUpTo, sampleMovers, SWING_WINDOW_NOTE, traceRowFields, traceSidecarPath,
-    worldChangesAt,
+    visibleDialogueText, worldChangesAt,
 } from './watchOverlays.js';
 import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
 import { PUSHABLE_SPEED, TICKS_PER_TILE } from './pushables.js';
@@ -1509,5 +1509,134 @@ describe('group B — a pushed block is marked where it REALLY is', () => {
         expect(last.atRect).toBe('pushableblockfire@208,80');
         // ⛔ …and NOTHING is at the box the base picture is still drawing.
         expect(last.atBase).toBe(null);
+    });
+});
+
+/**
+ * ⛓⛓⛓ GROUP B — THE CEREMONY TEXT, AND ITS FOUR ABSENCES.
+ *
+ * ⚖ The item was "manual mode has no way to display or advance text". The
+ * DISPLAY half needed an engine read surface that did not exist — the model
+ * has had the whole dialogue since R3 and `run` exposed only a boolean
+ * (`inCeremony`). `run.ceremonyNow` is that surface, in `get watchers()`'s
+ * own field names, and this is the page-side channel over it.
+ */
+describe('group B — the ceremony text channel', () => {
+    it('the visible text is the game\'s own CLIP, clamped', () => {
+        const d = { text: 'You got the sword', currentCharacter: 3 };
+        expect(visibleDialogueText(d)).toBe('You');
+        // ⚠ `currentCharacter` OVERRUNS legitimately — the counter keeps
+        // incrementing after the last character until a release turns the
+        // page — so the clip is clamped and never throws or wraps.
+        expect(visibleDialogueText({ ...d, currentCharacter: 999 }))
+            .toBe('You got the sword');
+        expect(visibleDialogueText({ ...d, currentCharacter: 0 })).toBe('');
+        expect(visibleDialogueText({ ...d, currentCharacter: -4 })).toBe('');
+        expect(visibleDialogueText(null)).toBe('');
+        expect(visibleDialogueText({ text: null, currentCharacter: 3 })).toBe('');
+    });
+
+    /** ⚠ FOUR ANSWERS, and the middle two are the ones a reader confuses. */
+    it('⚠ four named absences — and they are four different sentences', () => {
+        // (a) wrong level / no sample: reported, not explained
+        expect(dialogueAt([{ level: 2, ceremony: null }], 0, 1))
+            .toEqual({ ceremony: null, visible: '', why: null });
+        // (b) a run that cannot answer at all (the v1 engine)
+        const blind = dialogueAt([{ level: 1, ceremony: undefined }], 0, 1);
+        expect(blind.why).toMatch(/no ceremony channel/);
+        expect(blind.why).toMatch(/NOT the same fact/);
+        // (c) the ordinary tick
+        const none = dialogueAt([{ level: 1, ceremony: null }], 0, 1);
+        expect(none.why).toMatch(/^no pickup ceremony is running/);
+        // (d) ⛔ A CEREMONY WITH NO TEXT — 150 frozen frames and nothing to
+        // press, which looks exactly like a hang and is the one absence a
+        // driver most needs a sentence for.
+        const mute = dialogueAt(
+            [{ level: 1, ceremony: { tag: 'bosskey', dialogue: null } }], 0, 1);
+        expect(mute.ceremony).not.toBe(null);
+        expect(mute.why).toMatch(/NO TEXT/);
+        expect(mute.why).toMatch(/nothing to advance and nothing to press/);
+        expect(new Set([blind.why, none.why, mute.why]).size).toBe(3);
+    });
+
+    /**
+     * ⛔⛔ THE REAL THING, THROUGH THE ONE LOOP. `r3-collect-sword` walks onto
+     * the sword and pages its two-page ceremony out, so the channel can be
+     * asserted against text the GAME wrote rather than against a fixture this
+     * file invented.
+     */
+    it('⛔⛔ a real ceremony types out, page by page, in the game\'s own words', () => {
+        const { samples } = collectRun(tape('r3-collect-sword'), levelSourceForTests);
+        const live = [];
+        for (let t = 0; t < samples.length; t += 1) {
+            const d = dialogueAt(samples, t, samples[t].level);
+            if (d.ceremony) live.push({ t, d });
+        }
+        expect(live.length).toBeGreaterThan(0);
+        const first = live[0].d.ceremony;
+        expect(first.tag).toBe('sword');
+        expect(first.item).toBe('sword');
+        expect(first.dialogue.pages).toBe(2);
+
+        // ⛔ THE VISIBLE TEXT IS ALWAYS A PREFIX OF THE PAGE — the type-out,
+        // asserted as the invariant it is rather than at one chosen tick.
+        for (const { d } of live) {
+            expect(d.ceremony.dialogue.text.startsWith(d.visible)).toBe(true);
+        }
+        // ⛓ …and it really TYPES: the prefix grows, and the page turns.
+        const page1 = live.filter((r) => r.d.ceremony.dialogue.page === 0);
+        expect(page1[page1.length - 1].d.visible.length)
+            .toBeGreaterThan(page1[0].d.visible.length);
+        expect(new Set(live.map((r) => r.d.ceremony.dialogue.page)))
+            .toEqual(new Set([0, 1]));
+        // ⛓⛓ THE TEXT IS THE GAME'S, VERBATIM — the `Pickups/*.as` strings,
+        // punctuation and all. Pinned rather than pattern-matched, because a
+        // channel that quietly trimmed or re-cased would still match a regex.
+        expect([...new Set(live.map((r) => r.d.ceremony.dialogue.text))])
+            .toEqual(['You got the sword!', 'Double tap to dash and swing.']);
+    });
+
+    /**
+     * ⛓⛓⛓ AND `endlineText`'S OWN WRAP SURVIVES THE CHANNEL — measured on the
+     * spear, which is the ceremony that has one (the sword's two pages both
+     * fit a line).
+     *
+     * `endlineText` rebuilds a page by walking BACKWARDS over it looking for a
+     * break character, REPLACING a space but INSERTING before anything else —
+     * so a wrapped page carries real newlines and its `.length` is not the
+     * source string's. `.length` is precisely what the page-advance test
+     * compares against, so a readout that re-wrapped for display would be
+     * showing a page of a different size from the one being paged.
+     */
+    it('⛓⛓⛓ a WRAPPED page keeps the engine\'s own break, not the browser\'s', () => {
+        const { samples } = collectRun(tape('r3-collect-spear'), levelSourceForTests);
+        const texts = new Set();
+        for (let t = 0; t < samples.length; t += 1) {
+            const d = dialogueAt(samples, t, samples[t].level);
+            if (d.ceremony?.dialogue) texts.add(d.ceremony.dialogue.text);
+        }
+        expect([...texts]).toEqual([
+            'You got the Ghost Spear!',
+            'It hits harder and through\nwalls.',
+        ]);
+    });
+
+    /**
+     * ⛔⛔⛔ AND THE SAMPLE IS A SNAPSHOT. `ceremony.dialogue` is MUTATED in
+     * place by `stepDialogue` every frame, so a getter that handed the live
+     * object back would make every collected sample point at the SAME object —
+     * and the page would render the ceremony's final page at every scrub
+     * position. This is that failure, asserted as an inequality: two ticks of
+     * one ceremony must not report the same character count.
+     */
+    it('⛔⛔⛔ two ticks of ONE ceremony are two different snapshots', () => {
+        const { samples } = collectRun(tape('r3-collect-sword'), levelSourceForTests);
+        const live = samples
+            .map((s, t) => ({ t, d: dialogueAt(samples, t, s.level) }))
+            .filter((r) => r.d.ceremony?.dialogue);
+        const counts = live.map((r) => r.d.ceremony.dialogue.currentCharacter);
+        expect(new Set(counts).size).toBeGreaterThan(1);
+        // …and the objects are not the same object
+        expect(live[0].d.ceremony.dialogue).not.toBe(live[1].d.ceremony.dialogue);
     });
 });
