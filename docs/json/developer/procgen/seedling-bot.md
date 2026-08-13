@@ -8105,3 +8105,118 @@ New claims in the existing rows, never a relaxed one:
 Standing gates: **3674** `seedlingDemo` tests, all **11** browser rows green,
 and `solve-seedling-r8-battery.mjs --check` byte-identical
 (`1fedb0ab35b7cd74accecf0345bdc893`).
+
+### The start position comes from the level's ENTRANCES (2026-08-13)
+
+⚖ The user's item, immediately after Group B: *"instead of guessing the
+player's start position in each level, it read[s] the start position from
+entrances to that level, if possible. There should also be a way to select
+between entrances when there are more than one, and also a way to select
+specific coordinates."*
+
+**⛔ THE GAME ALREADY ANSWERED THIS AND NOBODY WAS ASKING.** `Teleporter`
+carries `to` (the destination LEVEL) and `playerx`/`playery`, and
+`Game.as:2040` builds `new Player(playerx, playery)` in the destination — the
+very ctor args `levelRun`'s transition arm passes and `playerPhysicsV2.arriveIn`
+replays. So:
+
+> **an ENTRANCE to level N is a teleporter, in any level, whose `to` is N**,
+> and its start position is that teleporter's own `playerx`/`playery`.
+
+`watchEntrances.js` indexes them. ⛔ **MEASURED BEFORE IT WAS BUILT**, over all
+116 levels:
+
+| fact | value |
+|---|---|
+| teleporters in the atlas | **280** (1 deactivated, 52 stairs) |
+| with an integer `to` inside 0..115 | **280** — the builder throws otherwise |
+| rooms with ≥1 entrance | **112 of 116** |
+| rooms with none | **58, 69, 81, 84** |
+| entrance-count distribution | 26 rooms with 1 · 51 with 2 · tail to L12's **14** |
+| whole-atlas scan, `roles: ['trigger']` | **93 ms** |
+
+That last number is why the index is built **eagerly, once per panel mount**:
+an entrance to L10 lives in L9 and L11, so a lazy per-level answer would walk
+the whole atlas anyway and then do it again on the next miss.
+
+**The ladder is now committed boot → ENTRANCE → the page's chooser → stale**,
+and the chooser is reached only by those four rooms. ⚠ **The committed boot
+still wins where it exists, and that is a decision.** MEASURED: of the 42
+committed boots, **21 sit exactly on an entrance and 21 do not** —
+`r3-collect-shield` boots at (112,72) in L20, mid-room, to isolate one
+mechanism. Both are positions the game used, they answer different questions,
+and the SELECTOR offers every entrance regardless, so the default hides
+nothing.
+
+The controls are two, because it is two questions. `#bootStart` says **where
+the number came from** (the degree of trust, one row per answer, each with its
+own sentence); `#bootX`/`#bootY` are **the coordinates themselves**, always
+editable. ⚠ `CUSTOM` is an ATTRIBUTION, not a place: typing in the fields
+switches to it, because a selector still reading *"ENTRANCE from L11"* over
+numbers somebody had since edited would be the page asserting a provenance
+that is no longer true.
+
+#### ⛔⛔ The half tile, and the defect it had already caused
+
+A staging block's `boot.x`/`boot.y` are the **`Game` CONSTRUCTOR'S ARGS**; the
+Player ctor re-centres onto the tile (`Player.as:357`), so the player is
+observed at `boot + 8`. MEASURED on `r3-collect-sword`: boot `(48,80)`, first
+observation `(56,88)`.
+
+⛓ **`chooseSpawn` — Group A's convenience — was on the wrong side of that
+offset.** It validates a tile CENTRE (`playerBoxAt(cx, cy)` clears the solids)
+and then wrote that centre into the field the engine offsets **again**, so the
+player landed half a tile down and to the right of the cell that had been
+checked. MEASURED over a twelve-level sample: **five of the twelve spawned
+INSIDE A SOLID** — L58, L84, L70, L90, L110 — which is the precise failure the
+function exists to prevent. It returns the tile CORNER now, and its distance
+metric no longer compares a centre against a ctor arg.
+
+⇒ **A validated coordinate written into a field somebody else offsets has not
+been validated.** The general form of trap 171's family: the instrument was
+sound and was pointed at the wrong quantity.
+
+#### ⛓ The second defect, found by the browser row
+
+A number input fires `change` on **BLUR** as well as on commit. So the
+sequence *"type a level, then click the entrance picker"* delivered a second
+`change`, re-ran `setLevel` for the level **already in force**, and silently
+reinstated the head of the ladder — the picked entrance reverted from `48,32`
+to `48,80` between one read and the next, with the selector flipping itself
+back to `committed`.
+
+⇒ **the level field changes ROOMS; the start controls change POSITION.**
+`setLevel` now returns early when the level has not actually changed. *A
+control that quietly does two jobs will do the wrong one on a spurious event.*
+
+#### The acceptance
+
+- `watchEntrances.test.js` — 9 rows, and the load-bearing one is the engine
+  differential: **for all 280 entrances, BOOTING at one lands the player at
+  exactly the position `arriveIn` gives for that teleporter.** If the half tile
+  were dropped, or the arrival used where the ctor args belong, all 280 would
+  be 8 px out. The pinned counts (112/116, the four rooms, 280, the 52 stairs,
+  the 1 deactivated) are what the page's own sentences claim, so a drift in the
+  atlas fails here rather than turning the UI into a confident lie.
+- `check-seedling-editor-boot.mjs` — a new section over L10 (two entrances,
+  one of them stairs, plus a committed boot on the L9 one): the picker
+  populates, picking rewrites the block, the fields follow, typing rewrites and
+  **re-attributes**, a fraction is refused by name and snaps back, a re-commit
+  of the same level leaves the choice alone, and L58 names its absence and
+  falls through to a chooser whose cell the player box **actually fits in at
+  the observed point**.
+- `check-seedling-editor-switch.mjs` — the provenance claim gained the fourth
+  outcome and the listener count went 6 → 9. ⛔ Both REPLACED, never relaxed
+  (trap 62): a bounded `>= 6` would pass on a listener that stopped being
+  registered as happily as on one that leaked.
+
+⛓ **TRAP: a claim written as `probe ? probe.ok : true` cannot fail where the
+probe is missing.** The spawn-fits row's first cut called an
+`window.__editorSpawnProbe` that did not exist and passed on the fallback arm —
+green on exactly the machine where the measurement did not happen. The probe is
+real now (`window.__editorSpawn`, published by `previewLevel` from the RUN's
+own state so it cannot re-derive the offset it is checking) and its **existence
+is asserted separately** from its verdict.
+
+Standing gates: **3683** `seedlingDemo` tests, all **11** browser rows green,
+battery hash `1fedb0ab35b7cd74accecf0345bdc893`.
