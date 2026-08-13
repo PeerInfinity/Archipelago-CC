@@ -7098,9 +7098,10 @@ survey, the two engine fixes and the arrow-lanes layer, the world-state /
 crusher / solver-danger layers, and finally the L6-return timeout diagnosis
 with the `solid:chest` obstacle rule.
 
-⚖ **What comes next is the procgen PROOF-OF-CONCEPT arc** (user, 2026-08-12)
+⚖ **What came next is the procgen PROOF-OF-CONCEPT arc** (user, 2026-08-12)
 — the Cloudberry Kingdom algorithm's first draft, built in this page, limited
-to pre-shield features across two biomes. **R9, the campaign, follows that**;
+to pre-shield features across two biomes. **It CLOSED 2026-08-12; its section
+is at the end of this page.** **R9, the campaign, follows it**;
 its route is ruled to be the SPHERE ORDER's (the survey's own finding, below)
 and its budget is the survey's mechanism-family table.
 
@@ -7118,7 +7119,8 @@ and its budget is the survey's mechanism-family table.
 ### What the page is now
 
 `frontend/modules/seedlingDemo/watch.html`, served from the repo root, with
-three SOURCES converging on one replay spine:
+FOUR SOURCES converging on one replay spine (the fourth arrived with the
+procgen PoC arc — see that arc's section below):
 
 - **REPLAY** — a committed tape (`?tape=`), as before.
 - **SOLVE** — a level, a tape v8 staging block and goals in the solver's own
@@ -7129,6 +7131,11 @@ three SOURCES converging on one replay spine:
   (`buildStagedTape`) and CHECKS that the fold replays frame-for-frame
   before showing it. A hand drive is a PRODUCER, beside `solveSegment` and
   the drivers — not a second replay loop.
+- **GENERATE** (`?source=generate&seed=N&biome=`) — the Cloudberry loop runs
+  IN THE PAGE: empty bordered room → add one template → re-solve → keep it
+  if the room still completes. STEP places one; RUN-ALL runs to target or
+  saturation. A generated level is a PRODUCER too, and its walk goes through
+  the same stepper everything else does.
 
 Over all three: **fifteen independently toggleable overlay layers**, every
 position SAMPLED per tick through `createTapeStepper`'s `onTick` hook and
@@ -7163,7 +7170,9 @@ producer's validator) with highlight-by-cursor and click-to-seek; and
 Upload, all through `parseTape`.
 
 Everything is reachable from URL parameters: `?tape= ?side= ?speed=
-?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`.
+?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`,
+plus the GENERATE arm's own `?seed= ?biome= ?count= ?tries= ?k= ?budgetms=
+?tickbudget= ?run= ?gen=`.
 
 ⛓⛓ **A LAYER THAT CAN DRAW NOTHING CARRIES A `why`** — six of the fifteen do
 (`hitboxes`, `hammer`, `lanes`, `worldstate`, `crushers`, `danger`), and slice
@@ -7272,6 +7281,8 @@ and in your hands.
         --tape=<repo-relative json> --tick=last --layers=player,enemies,arrows
     node scripts/procgen/export-seedling-view.mjs --out=solve.png --trace \
         --boot=<repo-relative json> --level=4 --goals=exit:64,16 --solve=1
+    node scripts/procgen/export-seedling-view.mjs --out=gen.png --trace \
+        --generated=<a generate-seedling-level payload> --tick=last
 
 Built FOR AGENT USE (⚖ user): an agent can Read a PNG. It starts its own
 static server on a free port, loads the page with the caller's parameters
@@ -7591,3 +7602,158 @@ and solver-danger layers, the `liveRectOf` join proven by an engine
 differential, and the two sibling browser rows that had been RED for a whole
 slice behind an exit-0 skip); §18 slice 10 (the timeout's named cause with its
 stack rows, the chest differential, and the V2 close).
+
+## The procgen PoC arc — the Cloudberry loop, in the editor (CLOSED 2026-08-12)
+
+⚖ Ruled by the user after the editor arc and BEFORE R9: a **proof of concept
+of the Cloudberry Kingdom algorithm** (source: the interview in
+`NewDocs/plans/procedural-platformer/`), built in `watch.html`, limited to the
+features from before collecting the shield, across **two biomes** (pre-sword
+and post-sword). Not the full generator — a first draft, honestly bounded.
+
+**The loop, and it is Cloudberry INVERTED.** Cloudberry's design AI CONSTRUCTS
+the path (blocks ARE the level, so DFS is essential). A Seedling room is the
+opposite topology: the empty bordered room is trivially solvable and obstacles
+CONSTRAIN an existing floor. So:
+
+1. Empty bordered single-screen room + start + goal pickup. **Solve once — it
+   must pass.** That is the loop's control, and its failure is a throw rather
+   than a verdict, because every later refusal is attributable to a placed
+   template precisely because this one passed.
+2. Draw a candidate TEMPLATE from the biome's palette (seeded PRNG).
+3. Place it **atomically with its clearer** (⚖ the templates ruling: a button
+   comes WITH its lock, a spinner WITH its kill-lock) and **re-solve from
+   scratch from the biome's boot**.
+4. SOLVED → keep. REFUSED / TIMEOUT / BUDGET-EXHAUSTED → revert, and record the
+   verdict CLASS with the refusal's VERBATIM text.
+5. Stop at the obstacle target, or after K consecutive rejects — **SATURATED,
+   reported as such, never silent**.
+
+⛔ **THE SOLVER BOT IS THE ORACLE FOR GENERATED LEVELS.** The game is the only
+oracle for the MODEL; a generated level has no wasm counterpart, so the JS
+engine plus the solver adjudicates it — bounded by the survey's proven
+envelope. Two different sentences, kept straight throughout.
+
+⛔ **AND DEPTH-1 KEEP-OR-REVERT IS NOT A SHORTCUT.** Atomic placement removes
+the need for cooperative multi-step placement, which is what removes the DFS
+Cloudberry needs. Real search becomes interesting with the full goal queue,
+which v1 does not have (collect-placement is its only goal).
+
+### The palette, and what it EXCLUDES by measurement
+
+Six families / nine templates in the **pre-sword** biome — wall · water · pit ·
+avoidable arrow lane · `shove` (a pushable in a wall gap) · `weigh` (a block
+shoved ONTO a button, which holds the lock the player walks through) — and the
+**post-sword** biome is that roster plus a **kill** family:
+`wall-gap-spinner-killlock-*`, a wall whose one gap holds a `tset:-1` kill lock
+and whose spinner stands beyond it. **That family is the arc's only
+sword-gated one**, and it is sword-gated by the game's own mechanism:
+`weaponForPress` returns null with no sword slot, so a swordless press is a
+silent no-op.
+
+⛓ **The palette's contract is what makes the loop honest**: nothing whose clear
+only the GAME can date. Breakable rocks, Bob press-kill, sandtrap arrow-kill
+rooms, free-roaming bobs and everything post-shield are EXCLUDED, each row
+carrying its own measured refusal text. ⚖ Chests are a SOLVER CAPABILITY and
+never a palette family (the user's ruling: the point was that the solver knows
+it can clear a chest by collecting it).
+
+### The three findings worth carrying off the arc
+
+- **⛔⛔ A CONSERVATIVE INGREDIENT ARRIVED THREE TIMES, and the count is the
+  lesson.** A "measured density ceiling of eight obstacles" that was a defect in
+  the stance derivation, not a property of the room. A `weigh` selection gate
+  right about the mechanism and wrong as a selection rule. And the largest: for
+  four slices **every generated solve priced a spinner as a 13 px union over 45
+  hammer phases**, because the generated boot declared no `save.time` and
+  `spinnerDanger` therefore never computed the exact hammer line. Declaring the
+  clock took a 32-cell sweep from 26 THREW / 2 SOLVED to 7 / 21. ⚠ The refusal
+  text had NAMED ITS OWN CAUSE (*"not countable on this tape"*) in twenty-six
+  rows across three slices. **A conservative ingredient that reports its own
+  condition is still only read by someone who asks.**
+- **⛓⛓ THE EVIDENCE STANDARD WAS RE-CUT TWICE, and the final one is
+  DISCHARGE-EXISTENCE.** A kept obstacle looks identical whether or not anybody
+  had to get past it, so keep-counts prove nothing; a NEAR/FAR label computed
+  from the template in isolation proves nothing either, because in a room
+  already holding five obstacles the route detours. The standard that survives:
+  **a `{strategy}` RECORD in the FINAL solve**, naming the template's own body.
+  An obstacle nobody walked into cannot produce one.
+- **⛔ A DECLARED BOUND CAN EXCLUDE A GENERATED ID**, twice in one arc.
+  `persistence[].level` is bounded to the real game's 0..115 while `boot.level`
+  is not — so a generated level (900) can be BOOTED by a tape and never
+  DECLARED ABOUT by one. And `seam.time` is `exclusiveMin` at 0 because the
+  game's own getter applies a stored 0 as `dayLength / 2`. Both are bounds
+  written for the real game's value space excluding the value a generator would
+  naturally pick.
+
+### What it produced
+
+Ten certified levels — five per biome, from recorded seeds — each regenerating
+byte-identically in two processes AND in the browser, each loadable in the
+editor and watchable through the whole spine, each exported as a PNG, and each
+shipping a **requirements report**.
+
+⚖ **THE REQUIREMENTS REPORT'S LAW is the user's own, from the bounce and runner
+substrates where impossibility-proving by exhaustive search was the failure
+mode.** Re-solve with items removed **at the SAME per-solve budget**; "solves
+with X, refuses without X" records X as required; the claim is **SOLVER-RELATIVE
+AND BOUNDED BY CONSTRUCTION** and every row says so; **"rule not established"
+is a first-class verdict**; and **no budget escalation exists anywhere in the
+design**. The three sword-gated levels report *requires Progressive Sword*; the
+two controls report *rule not established* — and, because both arms solve at
+the identical tick count, *INERT*: the sword changed nothing about the walk.
+
+⚠ **The three REQUIRED rows are GRADED, because their without-arms failed three
+different ways** — a solver refusal (STRONG), a budget exhaustion
+(BOUND-DEPENDENT), and an engine `PhysicsV2Error` (WEAK — that is the approach
+drive stepping where it must not, which is not a claim about the level at all).
+Printing one verdict over three facts would be a report agreeing with itself.
+
+### The page's fourth SOURCE, and the CLI that reads it
+
+    watch.html?source=generate&seed=3&biome=post-sword&count=6
+    node scripts/procgen/generate-seedling-level.mjs --seed=3 --biome=post-sword
+    node scripts/procgen/batch-seedling-acceptance.mjs --out-dir=… --census=24
+
+STEP places one template and re-solves; RUN-ALL runs to target or saturation,
+updating after EVERY placement. ⛔ **STEP is "obstacleTarget = k, re-run"**,
+which is sound because a run to k is a run to k+1 truncated — asserted over both
+biomes rather than argued — and costs O(N²) solves, which the page prints before
+you press. The payoff: the page's step-k level IS the CLI's `--count=k` output,
+byte for byte, with no page-side reconstruction in between.
+
+⛔ **ONE RENDERER SURVIVED IT.** `--generated=<payload>` serves a payload the
+CLI generated and hands the page `?gen=`; the page REGENERATES from the
+payload's own seed and COMPARES. So the picture is of what the browser
+generated, the payload says what node generated, and the export is a
+cross-runtime determinism check rather than a picture of a file.
+
+⛔ **AND THE PAGE STILL NEVER WRITES `fixtures/`.** A generated level lives in
+the save box, in the Download button and in your hands.
+
+### What it hands to R9
+
+The kill arms (bob and sandtrap) with a measured work order — and the finding
+that made it one: `derivePressKill` builds its live-body map from
+`run.spinnerBodies` alone, so **`KILL_ARM_POLICY.Spinner` is the only row the
+table can ever serve** and the other twenty-odd are dead data in every room.
+Widening that source is the first edit either arm needs, and **L40 is the first
+measurement they owe** (the only committed room where a dozen bobs and live
+spinners share a roster). Beside them: the approach-drive `PhysicsV2Error`
+question, now measured at four separate moments; two format bounds; and a
+structured-field residue worth taking the next time `solverBot` is open anyway.
+
+### Where the procgen arc's own findings live
+
+The full record is `NewDocs/plans/seedling-procgen-poc-kickoff.md` (⚠ `NewDocs/`
+is deliberately gitignored — working machine only): §1 the user's settled
+rulings, §3 the design, §7 the exit criteria; then one as-built per slice —
+§8 the level model and seam proof, §9 the generator core and pre-sword palette
+(and the two rulings that do not compose), §10 the collect-path solver fix
+(three defects in one function, only the first in scope), §11 block-on-button
+and the `weigh` verb, §12 the post-sword biome and the shove-FAR diagnosis,
+§13 the kill-lock scratch persistence layer, §14 the kill-arm recon that routed
+both arms to R9, §15 the countable clock and the first sword-gated promotion,
+§16 the GENERATE arm with the acceptance batch and the requirements report,
+**§17 the consolidated residue R9 inherits**, and **§18 the exit criteria
+answered one by one with their evidence**.
