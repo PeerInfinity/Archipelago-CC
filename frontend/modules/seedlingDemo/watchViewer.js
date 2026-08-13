@@ -141,6 +141,7 @@ import {
     generateStep, generationRows, ladderCost, readGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
+import { createLifetimeHolder } from './watchLifetime.js';
 import { parseDecisionTrace } from './decisionTrace.js';
 import { coerceTerrainState, HAZARD_STATES, ITEM_NAMES, parseTape } from './tapeFormat.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
@@ -281,6 +282,27 @@ let replayLoadedTape = () => {
         'the wasm side (`?side=wasm`) drives the recompiled game and does not build JS '
         + 'worlds. Load the tape with &side=js.');
 };
+
+/**
+ * ⛓⛓⛓ WHICH ARM OWNS THE PAGE — the second lifetime question, and NOT the
+ * one `replayGeneration` answers (see `watchLifetime`'s docblock for why the
+ * two must stay separate: a manual fold supersedes a REPLAY without ending
+ * the MANUAL arm that started it).
+ *
+ * ⚠ EVERY ARM MOUNTS AGAINST ONE OF THESE FROM THIS SLICE ON, while the
+ * SOURCE selector still navigates. That looks like machinery for nothing —
+ * a document teardown retires everything anyway — and it is the deliberate
+ * order: the mechanism lands and is proved on its own, and the switch that
+ * makes it load-bearing lands next. A teardown written in the same commit as
+ * its first user is a teardown tested only through that user.
+ *
+ * The readout is what the browser row asserts on. It names the live arm and
+ * keeps the retired ones, because "did the manual loop stop when I left it"
+ * is a question about the past.
+ */
+const armLifetimes = createLifetimeHolder({
+    publish: (state) => { window.__editorLifetime = state; },
+});
 
 function readParams() {
     const q = new URLSearchParams(window.location.search);
@@ -889,7 +911,7 @@ function makeRenderer(canvas) {
     };
 }
 
-async function runJs(params) {
+async function runJs(params, lifetime) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const levelSource = levelSourceFromAtlas(atlas);
     const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
@@ -1760,10 +1782,12 @@ function mountBootPresets(sel, source, noteEl = null) {
  * would say "declared false". Clicking one writes a real `false`, which is
  * a declaration — as it should be, because that is what the user just did.
  *
+ * @param {object} lifetime the mounting arm's lifetime — the box listener
+ *   below dies with it (see `watchLifetime`).
  * @param {Function} onChange fired after a box writes, so the arm can
  *   re-derive anything downstream (the SOLVE arm re-reads its census).
  */
-function mountBootForm(formEl, boxEl, noteEl, onChange = () => {}) {
+function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
     const boxes = ITEM_FORM_FIELDS.map((f) => {
         const label = document.createElement('label');
         const input = document.createElement('input');
@@ -1817,8 +1841,17 @@ function mountBootForm(formEl, boxEl, noteEl, onChange = () => {}) {
             onChange();
         };
     }
-    // A block edited by hand re-derives the boxes — the other direction.
-    boxEl.addEventListener('input', () => sync());
+    /**
+     * A block edited by hand re-derives the boxes — the other direction.
+     *
+     * ⛔ THROUGH THE ARM'S LIFETIME, and this one ACCUMULATES rather than
+     * leaking quietly: `input` listeners stack, so an arm mounted twice in
+     * one document would re-derive the checkboxes twice per keystroke, three
+     * times on the third mount. Nothing visibly breaks — it just does the
+     * work N times — which is why it would have survived a switch nobody
+     * profiled.
+     */
+    lifetime.on(boxEl, 'input', () => sync());
     sync();
     if (noteEl && !noteEl.textContent) noteEl.textContent = '';
     return { sync };
@@ -1833,7 +1866,7 @@ function mountBootForm(formEl, boxEl, noteEl, onChange = () => {}) {
  * the page measures it and shows it rather than hiding it behind a
  * spinner.
  */
-async function runSolve(params) {
+async function runSolve(params, lifetime) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const levelSource = levelSourceFromAtlas(atlas);
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
@@ -1960,8 +1993,8 @@ async function runSolve(params) {
      * staleness cosmetic rather than load-bearing.
      */
     const refreshFromBox = () => { try { refreshCensus(stagingNow()); } catch { /* shown */ } };
-    mountBootForm($('solveForm'), $('solveBoot'), $('solveNote'), refreshFromBox);
-    $('solveBoot').addEventListener('change', refreshFromBox);
+    mountBootForm($('solveForm'), $('solveBoot'), $('solveNote'), lifetime, refreshFromBox);
+    lifetime.on($('solveBoot'), 'change', refreshFromBox);
 
     $('solveGoalAdd').onclick = () => {
         const spec = $('solveGoalPick').value;
@@ -2189,7 +2222,7 @@ async function runSolve(params) {
  * observations — so what you see while driving and what you see scrubbing
  * the tape you just recorded are the same derivation, not two that agree.
  */
-async function runManual(params) {
+async function runManual(params, lifetime) {
     const atlas = await fetchJson(ATLAS_URL, 'atlas');
     const levelSource = levelSourceFromAtlas(atlas);
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null)
@@ -2220,7 +2253,7 @@ async function runManual(params) {
     mountBootPresets($('manualPreset'), 'manual', $('manualNote'));
     // ⛓ The SAME form, over this arm's own box — and MANUAL has re-read its
     // box at START since slice 3, so there is nothing downstream to refresh.
-    mountBootForm($('manualForm'), $('manualBoot'), $('manualNote'));
+    mountBootForm($('manualForm'), $('manualBoot'), $('manualNote'), lifetime);
 
     // ⚠ ONCE. The Set IS the live toggle state — the checkboxes mutate it in
     // place, so rebuilding it per draw would undo every toggle every frame.
@@ -2253,11 +2286,20 @@ async function runManual(params) {
         e.preventDefault();
         if (down) codes.add(e.code); else codes.delete(e.code);
     };
-    window.addEventListener('keydown', onKey(true));
-    window.addEventListener('keyup', onKey(false));
+    /**
+     * ⛔⛔ THESE THREE ARE THE ARM-SWITCH HAZARD IN ITS SHARPEST FORM. They
+     * are on WINDOW, not on a panel, and `onKey` refuses only when this arm
+     * is not `driving` — a flag in a closure that outlives the arm. Left
+     * registered, a retired MANUAL would go on swallowing arrow keys under
+     * SOLVE and GENERATE, and `preventDefault` means it would eat the page's
+     * scrolling with them. Nothing would throw and nothing would draw wrong:
+     * the keyboard would simply be haunted.
+     */
+    lifetime.on(window, 'keydown', onKey(true));
+    lifetime.on(window, 'keyup', onKey(false));
     // A window that loses focus mid-press would otherwise hold that key for
     // the rest of the session — the tape would record a hold nobody made.
-    window.addEventListener('blur', () => codes.clear());
+    lifetime.on(window, 'blur', () => codes.clear());
 
     const drawLive = () => {
         const world = worldFor(session.run.level);
@@ -2334,8 +2376,23 @@ async function runManual(params) {
                 `${e.message}\n${e.stack ?? ''}`);
             $('manualStop').disabled = false;
         }
-        requestAnimationFrame(manualFrame);
+        requestAnimationFrame(manualTick);
     }
+
+    /**
+     * ⛔⛔ THE LOOP THE RELOAD USED TO STOP. `manualFrame` re-arms from its own
+     * tail unconditionally and had NO supersession check of any kind —
+     * `replayGeneration` guards `replayTape`'s loop and never guarded this
+     * one, because until now the only way to leave MANUAL was to navigate.
+     * Retired, it would keep stepping `session` for the life of the tab,
+     * under whichever arm came next, recording ticks into a tape nobody is
+     * driving.
+     *
+     * ⚠ The guard wraps the BODY, so the tail above cannot re-arm — and the
+     * unconditional re-arm after a THROW inside it survives untouched, which
+     * is R4's lesson and a different question entirely.
+     */
+    const manualTick = lifetime.guard('manual-frame', manualFrame);
 
     $('manualStart').onclick = () => {
         let block;
@@ -2369,7 +2426,7 @@ async function runManual(params) {
         $('detail').textContent = '';
         mountLayerControls(layers.on, drawLive);
         drawLive();
-        requestAnimationFrame(manualFrame);
+        requestAnimationFrame(manualTick);
     };
 
     $('manualStop').onclick = async () => {
@@ -2540,7 +2597,7 @@ function mountGenerationPane(rows) {
  * see `watchGenerate`'s docblock for the prefix property that makes it sound
  * and for the O(N²) price it costs, which is stated before it is spent.
  */
-async function runGenerate(params) {
+async function runGenerate(params, lifetime) {
     const gp = params.gen;
     let seed = gp.seed;
     let biome = gp.biome;
@@ -2734,6 +2791,15 @@ async function runGenerate(params) {
                 return;
             }
             for (let k = step + 1; k <= target; k += 1) {
+                /**
+                 * ⛔ THE DRIVER IS A LOOP TOO, and it is the one that spends
+                 * SECONDS per iteration. It yields to the frame below, so a
+                 * switch can land in the middle of a RUN-ALL — and a retired
+                 * arm that kept going would generate levels nobody asked for
+                 * and paint them over whatever now owns the canvas. Checked
+                 * after every await, which is where ownership can have moved.
+                 */
+                if (!lifetime.alive()) return;
                 $('status').className = '';
                 $('status').textContent = `generating step ${k} of ${target} `
                     + `(seed ${seed}, ${biome})…`;
@@ -2741,6 +2807,7 @@ async function runGenerate(params) {
                 // loop takes the thread — without it the page looks frozen
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
+                if (!lifetime.alive()) return;
                 state = generateStep({ seed, biome, step: k, bounds, budget });
                 step = k;
                 const out = await show(why);
@@ -2827,7 +2894,7 @@ async function runGenerate(params) {
  * exactly this reason; a page that tried to autostart would hang with no
  * visible cause.
  */
-async function runWasm(params) {
+async function runWasm(params, lifetime) {
     const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
 
     // Say WHICH path is missing rather than showing a blank frame — the
@@ -2847,6 +2914,20 @@ async function runWasm(params) {
     frame.style.display = 'block';
     $('canvas').style.display = 'none';
     $('status').textContent = 'loading the runtime…';
+    /**
+     * ⛓⛓ THE ONE TEARDOWN THE RELOAD WAS ACTUALLY PROTECTING.
+     * `populatePicker`'s docblock states it: the wasm side cannot rewind the
+     * GAME — `botReset` forgets the tape, not the world — so every tape needs
+     * a fresh runtime. `about:blank` gives it one: the iframe's document is
+     * discarded, which takes the runtime, its own rAF chain and its audio
+     * with it. That is the whole of the wasm side's claim on a page reload,
+     * and it is satisfiable from here.
+     */
+    lifetime.onRetire(() => {
+        frame.src = 'about:blank';
+        frame.style.display = 'none';
+        $('canvas').style.display = '';
+    });
 
     const win = () => frame.contentWindow;
     const bot = (name, arg) => {
@@ -2858,15 +2939,25 @@ async function runWasm(params) {
         const raw = bot(name, arg);
         try { return raw ? JSON.parse(raw) : null; } catch { return null; }
     };
+    /**
+     * ⚠ A THREE-MINUTE POLL IS A LOOP WITH A LONG FUSE. Retired, it would go
+     * on asking a discarded iframe for `__runtimeReady` every 200 ms and then
+     * TIME OUT under some other arm, painting a wasm refusal over whatever
+     * that arm had drawn. So the chain stops with the lifetime, and the
+     * promise REJECTS rather than hanging: an `await` nobody will ever
+     * resolve is a leak that looks like a slow load.
+     */
     const until = (what, pred, ms = 180000) => new Promise((resolve, reject) => {
         const t0 = Date.now();
-        const tick = () => {
+        const tick = lifetime.guard('wasm-until', () => {
             let v = null;
             try { v = pred(); } catch { v = null; }
             if (v) return resolve(v);
             if (Date.now() - t0 > ms) return reject(new Error(`timed out waiting for ${what}`));
             return setTimeout(tick, 200);
-        };
+        });
+        lifetime.onRetire(() => reject(new Error(
+            `the wasm arm was retired while waiting for ${what}`)));
         tick();
     });
 
@@ -2920,7 +3011,14 @@ async function runWasm(params) {
     }
     $('status').className = 'ok';
     $('status').textContent = `${params.tape} — running in the real game`;
-    poll();
+    /**
+     * ⚠ THE WRAPPER CALLS `poll` THROUGH AN ARROW rather than wrapping it
+     * directly, for the same temporal-dead-zone reason the note below gives:
+     * `poll` is hoisted and readable here, but only from inside a body that
+     * runs later.
+     */
+    const pollTick = lifetime.guard('wasm-poll', () => poll());
+    pollTick();
 
     // A function DECLARATION, not a const arrow: `poll()` is called above
     // this line and a `const` would be in its temporal dead zone. Caught by
@@ -2957,7 +3055,7 @@ async function runWasm(params) {
                 return;
             }
         }
-        setTimeout(poll, 250);
+        setTimeout(pollTick, 250);
     }
 }
 
@@ -3086,19 +3184,35 @@ function wireSourceSelector(params) {
     };
 }
 
-export async function main() {
-    const params = readParams();
-    wireSourceSelector(params);
-
+/**
+ * ── ⛓⛓⛓ MOUNT THE ARM `params` NAMES, AGAINST A LIFETIME ──────────────
+ *
+ * ⚠ ONE ENTRY, and it is the seam the in-place SOURCE switch needs next: a
+ * switch is `mountArm` again with a different `source`, and the lifetime
+ * started here is what retires the arm being left. Today `main` is still its
+ * only caller and the selector still navigates, so this is a rename with a
+ * parameter — deliberately, because the teardown wants proving BEFORE it is
+ * load-bearing.
+ *
+ * ⛔ THE ARM'S OWN REFUSAL GOES THROUGH `lifetime.report`. An arm can fail
+ * AFTER it has been retired — every one of these paths awaits a fetch — and
+ * `fatal` paints the shared status bar, so a dead arm's refusal would
+ * overwrite the live arm's readout with a message that is true about nothing
+ * on screen. Reported this way it is kept on the retired lifetime instead,
+ * where the readout still shows it.
+ */
+async function mountArm(params, lifetime) {
     if (params.source === 'solve') {
         // ⚠ NO PICKER FETCH HERE. `runSolve` starts the roster load itself
         // and does not await it — a solve with `?boot=` given should not
         // wait on 150 tapes it is not going to read.
         try {
-            await runSolve(params);
+            await runSolve(params, lifetime);
         } catch (e) {
-            fatal('the solve arm failed', e.stack || e.message);
-            window.__editorSolve = { status: 'refused', message: e.message };
+            lifetime.report(`the solve arm failed: ${e.message}`, () => {
+                fatal('the solve arm failed', e.stack || e.message);
+                window.__editorSolve = { status: 'refused', message: e.message };
+            });
         }
         return;
     }
@@ -3108,10 +3222,12 @@ export async function main() {
         // arm spends SECONDS of synchronous solve per press, so a stale URL
         // must not land in it (MANUAL's own rule, for the same reason).
         try {
-            await runGenerate(params);
+            await runGenerate(params, lifetime);
         } catch (e) {
-            fatal('the generate arm failed', e.stack || e.message);
-            window.__editorGenerate = { status: 'refused', message: e.message };
+            lifetime.report(`the generate arm failed: ${e.message}`, () => {
+                fatal('the generate arm failed', e.stack || e.message);
+                window.__editorGenerate = { status: 'refused', message: e.message };
+            });
         }
         return;
     }
@@ -3122,10 +3238,12 @@ export async function main() {
         // make every existing SOLVE link ambiguous — and the arm that
         // WAITS for a keypress must not be the one a stale URL lands in.
         try {
-            await runManual(params);
+            await runManual(params, lifetime);
         } catch (e) {
-            fatal('the manual arm failed', e.stack || e.message);
-            window.__editorManual = { status: 'refused', message: e.message };
+            lifetime.report(`the manual arm failed: ${e.message}`, () => {
+                fatal('the manual arm failed', e.stack || e.message);
+                window.__editorManual = { status: 'refused', message: e.message };
+            });
         }
         return;
     }
@@ -3139,16 +3257,31 @@ export async function main() {
     const picking = loadTapeIndex(dir).then((index) => populatePicker(params, index));
     if (!params.tape) {
         await picking;
-        fatal('no ?tape= given — pick one above, or switch source to SOLVE',
+        lifetime.report('no ?tape= given', () => fatal(
+            'no ?tape= given — pick one above, or switch source to SOLVE',
             'watch.html?tape=frontend/modules/seedlingDemo/fixtures/tapes/'
-            + 'pit-fall-chain-85.json&side=js');
+            + 'pit-fall-chain-85.json&side=js'));
         return;
     }
     document.body.dataset.side = params.side;
     try {
-        if (params.side === 'wasm') await runWasm(params);
-        else await runJs(params);
+        if (params.side === 'wasm') await runWasm(params, lifetime);
+        else await runJs(params, lifetime);
     } catch (e) {
-        fatal(`${params.side} side failed`, e.stack || e.message);
+        lifetime.report(`the ${params.side} side failed: ${e.message}`,
+            () => fatal(`${params.side} side failed`, e.stack || e.message));
     }
+}
+
+export async function main() {
+    const params = readParams();
+    wireSourceSelector(params);
+    /**
+     * ⛓ The arm's name carries the SIDE for a replay, because `js` and `wasm`
+     * are two different machines with two different teardowns — the wasm one
+     * owns an iframe — and a readout that called them both `replay` would
+     * describe the leak question in the one vocabulary that cannot answer it.
+     */
+    const armName = params.source === 'replay' ? `replay-${params.side}` : params.source;
+    await mountArm(params, armLifetimes.start(armName, 'the page loaded'));
 }
