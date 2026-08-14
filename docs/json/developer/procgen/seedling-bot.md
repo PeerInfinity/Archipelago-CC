@@ -8511,3 +8511,34 @@ accepts; raising the ceiling only moves the straddle. ⚖ Recorded for the user.
 mutation-checked: resolving the tag slot to `'0'` fails the privacy test and the
 other 52 pass); all **11** `check-seedling-editor-*.mjs` PASS; the R8 battery
 `--check` still hashes to `1fedb0ab35b7cd74accecf0345bdc893`.
+
+#### ⚠ Two BOUNDS on the two allocators, from Phase 1's entity audit (2026-08-13)
+
+The external-level-sets Phase 1 audit (plan §8, `a11813f53`) read 151 entity
+classes by name and turned up two facts that bound the allocators shipped
+above. **Neither is a live defect** — the palette places only `arrowtrap`,
+`button`, `lock`, `pushableblock` and `spinner` (checked), so neither class can
+appear in a generated level today. Both are recorded because the allocator that
+meets them would be silently wrong.
+
+1. ⛔ **`tset` AND `tag` ARE ONE NAMESPACE ACROSS ROOMS.**
+   `Puzzlements/ButtonRoom.as:93` is `Game.setPersistence(t, persist, room)` —
+   it passes its **`tset`** as the **TAG** in the target room, with the author's
+   own comment on the line. ⇒ `placementGroupId`'s ids, which reach ~89 in a
+   10x10 room, are only safe while nothing carries them into a persistence
+   index, where the ceiling is 30 and overflow writes the next level's row. A
+   `buttonroom` in the palette would need the group allocator bounded by
+   `TAGS_PER_LEVEL`, not merely positive.
+2. ⛔ **`FinalBoss` CONSUMES `tag` AND `tag + 1`** (`Enemies/FinalBoss.as:222`,
+   `Game.setPersistence(tag+1, false)`). `placementTagId` hands out the lowest
+   FREE slot and reserves exactly one, so it would give a FinalBoss a tag whose
+   neighbour is already somebody's. A template placing one needs `tags: 2` —
+   which `assertTagSlot` currently REFUSES by name, so it would arrive as a
+   failing assertion rather than as a corrupted flag. That refusal is the
+   correct behaviour and is why the count is checked rather than assumed.
+
+⚠ And a denominator correction to §"Occupancy" above: the tag census was taken
+over **all 120 `.oel` files in the tree, but only 116 are `[Embed]`ed** into
+`Game.levels` — four are not part of the game. The busiest-room figure is
+unaffected (`Dungeon4/2.oel` is embedded; 23 distinct tags, max 24), but the
+"120" framing was four files wide.
