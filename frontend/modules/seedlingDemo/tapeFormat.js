@@ -92,6 +92,8 @@
  * is a named failure rather than something the derivation quietly masks.
  */
 
+import { TAGS_PER_LEVEL } from './breakableRocks.js';
+
 /**
  * ── Version 2: the subtractive ladder's relaxations ───────────────────
  * R0 of the SUBTRACTIVE ladder (`CC/docs/plans/seedling-bot-r0-opus-kickoff.md`)
@@ -612,7 +614,19 @@ function requireFiniteNumber(value, what) {
  * replay a different walk. A v9 tape's `at` must be an integer in
  * `[0, tick_count]`.
  */
-export const TAGS_PER_LEVEL = 30;   // Game.as:525
+// ⛓ ONE definition, imported rather than restated (plan
+// `seedling-external-level-sets.md` §7 Q4). This was declared here AND in
+// breakableRocks.js — two constants that agree until one moves. breakableRocks
+// is the canonical home (procgenSeedling and outOfBandLedger already import it
+// from there); this re-export keeps every existing `tapeFormat` importer
+// working.
+export { TAGS_PER_LEVEL };
+
+// ⚠ NOT collapsed with the level-set schema's set size, deliberately. This is
+// the REAL game's level space, and plan §6 names widening it as a tape-format
+// change guarding that space — "not one to make in passing". A set-aware bound
+// is the natural fix and the mounted set is now able to supply it, but it is
+// its own decision, not a side effect of Phase 2.
 export const LEVEL_COUNT = 116;     // Game.levels.length
 
 function parsePersistence(raw, version, tickCount) {
