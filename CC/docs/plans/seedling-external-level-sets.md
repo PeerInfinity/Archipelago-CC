@@ -1,15 +1,17 @@
 # Seedling External Level Sets — Plan
 
 **Date:** 2026-08-13 ·
-**Status: PLANNING for phases 2–5b (no code). ⛓ PHASE 6 DONE (2026-08-13) —
+**Status: PLANNING for phases 3–5b (no code). ⛓ PHASE 6 DONE (2026-08-13) —
 independent of the rest. ⛓ PHASE 1 DONE (2026-08-13) — all three measurements
-taken against the recompiled runtime; see §8. Design settled with the user
-(2026-08-13).**
+taken against the recompiled runtime; see §8. ⛓ PHASE 2 DONE (2026-08-13) —
+the schema is FROZEN at `schema_version: 1`; see §9. Design settled with the
+user (2026-08-13).**
 
-⚖ **THE SCHEMA CAN NOW BE FROZEN**, and Phase 1 changed what it has to say:
-it needs a **chunking protocol** (§8.1), it must carry **three** level-index
-attributes rather than one (§8.2b), and it must treat an out-of-range level as
-a hard error rather than trusting the runtime (§8.3).
+⛓ **THE SCHEMA IS FROZEN — §9.** Phase 1 changed what it had to say, and all
+three landed: a **chunking protocol** (§8.1), now split into a second document
+so no authored set carries a delivery number; **three** level-index attributes
+rather than one (§8.2b), all range-checked; and an out-of-range level as a
+**hard error** rather than trust in the runtime (§8.3).
 
 Direct consequence of the switch/door fix (`2a407a817`, as-built in
 `docs/json/developer/procgen/seedling-bot.md` §"Every generated switch opened
@@ -423,9 +425,11 @@ Checked before planning further, because Phase 3 is unverifiable without it —
   - [x] Confirm the out-of-range read (§3.2) against the recompiled runtime
         rather than the AS3 semantics alone, if a harness can reach it. →
         **§8.3: driven, confirmed, with controls.**
-- [ ] **Phase 2 — Freeze the manifest schema** (§4.1) against Phase 1's numbers.
-      JSON Schema beside the other frontend schemas; a set that fails it is
-      refused BY NAME at load.
+- [x] **Phase 2 — Freeze the manifest schema** (§4.1) against Phase 1's numbers.
+      **DONE 2026-08-13, §9** — `1421523f8` (+ `0426eff9b` for §7 Q4). TWO
+      schemas beside the other frontend schemas (the set, and a transport
+      chunk), the authoritative validator, and the vanilla 116 committed as a
+      fixture that validates clean. 53 tests, rejections first.
 - [ ] **Phase 3 — The AS3 seams** (§4.4), each its own commit: parse split;
       table indirection; `botLoadLevels`; `Bot.as`'s three bounds checks.
 - [ ] **Phase 3b — Mount vanilla as a manifest** (§4.3, shape (c)): the
@@ -511,9 +515,14 @@ rather than invent.
    2026-08-13)** — §4.3, Phase 3b. The sub-fork it opened (where vanilla's room
    DATA lives) is answered (c) on my recommendation, not the user's: embeds
    stay, the artifact stays standalone, and the residue is named in §4.3.
-4. `TAGS_PER_LEVEL = 30` is defined twice in the model — `breakableRocks.js:60`
-   and `tapeFormat.js:615`. Two constants that agree until one moves; worth
-   collapsing while this area is open.
+4. ~~`TAGS_PER_LEVEL = 30` is defined twice in the model.~~ ⚖ **DONE
+   2026-08-13, `0426eff9b`.** `breakableRocks.js` is the canonical home
+   (`procgenSeedling` and `outOfBandLedger` already imported from there);
+   `tapeFormat` now imports and re-exports it. ⚠ `LEVEL_COUNT = 116` was
+   deliberately NOT collapsed with the set size — §6 names that as a
+   tape-format change guarding the real game's level space, "not one to make in
+   passing". The mounted set can now supply a set-aware bound; taking it is its
+   own decision.
 
 ---
 
@@ -750,3 +759,178 @@ LABEL is the raw level and the DATA is the clamped one.** They disagree only
 for negative levels; positive out-of-range levels are unclamped and the rows
 above are genuine. A reader who trusted that line would have recorded a false
 negative.
+
+---
+
+## 9. PHASE 2 — THE FROZEN SCHEMA (2026-08-13)
+
+Landed in `1421523f8`; the §7 Q4 cleanup rode along in `0426eff9b`.
+
+| what | where |
+|---|---|
+| the set document | `frontend/schema/seedling-level-set.schema.json` |
+| one EI call | `frontend/schema/seedling-level-set-chunk.schema.json` |
+| **the authority** | `frontend/modules/seedlingDemo/levelSetValidator.js` |
+| 53 tests, rejections first | `frontend/modules/seedlingDemo/levelSetValidator.test.js` |
+| the vanilla set + its reduced OEL | `frontend/modules/seedlingDemo/fixtures/seedling-vanilla-{set,room-refs}.json` |
+| the extractor (independent parser) | `scripts/procgen/extract-seedling-vanilla-set.py` |
+
+The `region-atlas.schema.json` + `regionAtlasValidator.js` split is copied
+exactly, and the atlas's own description states the reason: **the schema is
+DOCUMENTATION, the cross-reference rules are enforced authoritatively by the
+module.** Almost every constraint §8 measured is the second kind. A set that
+fails is refused **by name** and never coerced.
+
+### 9.1 ⛔ TWO DOCUMENTS, because "bytes per call" is the wrong shape
+
+⚖ **User, 2026-08-13, over the measuring session's objection — and the
+objection was right.** §8.1 says the manifest needs a chunking protocol; it
+does not follow that the *set* should carry one. What actually failed at 32
+rooms was **repeated allocation in the arena** — the first call succeeded and a
+later one died — and no per-call size can express that. So:
+
+- the **set** document is transport-agnostic and carries no delivery number;
+- a **chunk envelope** describes one EI call;
+- `MAX_ROOMS_PER_CHUNK = 16` lives **beside the sender**, in the validator
+  module, where the decision is made. Re-chunking edits no set.
+
+Three additions from the measuring session, all taken:
+
+1. ⛔ **Room `id` is AUTHORITATIVE, not chunk position.** A positional
+   reassembly would absorb a delivery-order bug into a set shifted by one, and
+   every `@to`/`@room`/`@fallthrough` would then point one room off **with
+   nothing erroring**. `assembleLevelSetChunks` asserts the assembled ids are
+   exactly `0..N-1`; `chunk_index` is pure bookkeeping.
+2. ⛔ **A content hash, for the SAVE STAMP rather than for transport
+   integrity.** §4.2's rule keys on `set_id`, which cannot detect an **edited
+   set reusing its id** — the normal development case: regenerate a set, same
+   id, different rooms, keep a persistence table whose rows describe entities
+   that no longer exist at indices that now mean different rooms. `set_id` ends
+   with the FNV-1a of the canonical document, so an edited set is a different
+   set by construction, and a mismatch on either field forces a fresh save.
+3. ⛔ **Mount only AFTER assembly.** A chunk that exceeds the arena kills the
+   runtime mid-call, so an incremental mount leaves a **partial set mounted** —
+   on which the game runs happily, every index past the end reading as already
+   cleared (§8.3). Assemble → validate → mount, as one commit step.
+
+Three refusals, also taken: no total-bytes declaration (bytes are not the
+constraint, and putting them in the data re-imports the wrong model of the
+failure where it will outlive everyone who knows better); no per-chunk hash
+(the measured failure is an abort, not silent corruption, and a truncated chunk
+already fails `JSON.parse`); no explicit terminator (`chunk_count` serves).
+
+#### ⚠ 16 ROOMS ALONE IS NOT SAFE, AND IT BITES ON VANILLA
+
+Measured here, prompted by the measuring session's caution that 16 is a *proxy*
+for allocation volume on a corpus whose mean room is **11,946 B**:
+
+| | bytes |
+|---|---|
+| vanilla's largest single room (`Dungeon4/2.oel`) | **135,847** |
+| worst 16-room window **in set order** | **424,299** |
+| the chunk size proven over 15 consecutive calls | 239,967 |
+| the 32-room chunk that **ABORTED** | 404,224 |
+
+⇒ a rooms-only bound would hand the runtime a call **larger than the one that
+already aborted**, on the very corpus 16 was measured against. `planLevelSetChunks`
+bounds on **rooms AND bytes, whichever binds first**, and a room larger than the
+envelope is REPORTED rather than silently emitted. The test asserts that window
+against the real per-room sizes the extractor records — not against the reduced
+fixture XML, which would have been measuring the fixture instead of the game.
+(Caught by the test failing: the first version asserted it against the reduced
+form and got 7,813 B.)
+
+### 9.2 What the validator enforces that JSON Schema cannot
+
+Range-checked against the **mounted set** — every one of these is silent in the
+game (§8.3): `start.level`, `menu_rooms[]`, all six `named_rooms`, `@to` on
+`<teleporter>`/`<stairsup>`/`<stairsdown>`, `@fallthrough` on `<control>`, and
+`@room` on `<buttonroom>`.
+
+- **`sign` ∈ 0..7**, 0 = none, 1..7 indexing `Message.as`'s closed 7-entry
+  table. Recorded as a bound, not widened.
+- **tags ∈ 0..29**, and `<buttonroom>`'s **`tset` is checked against the TAG
+  ceiling** when it targets another room, because `ButtonRoom.as:93` passes it
+  as the tag THERE. A same-room `room="-1"` button is left alone — its tset is
+  not a tag.
+- **`named_rooms` is a CLOSED vocabulary, all six required** (⚖ user): the six
+  code-built references no bundle rewrite can reach. Warp-shaped entries must
+  carry `x`/`y`, so omitting them cannot silently fall back to the `Game`
+  constructor's `(80, 128)`.
+- **`music` ∈ -1..13.** `-1` is legal and means *the room's boss writes this at
+  runtime* — confirmed from the data side: the seven statically `-1` rooms are
+  exactly the seven boss rooms (19, 32, 43, 57, 69, 82, 112), which is §8.2c's
+  list of seven mutators arriving independently.
+- **Warnings, not refusals:** an unresolvable `embed` room is NAMED and counted
+  (a set whose rooms could not be read must not look like one that passed); a
+  one-way transition; a button that controls nothing; and (⚖ user) a set too
+  small for the nine live debug warps, which reach level 110.
+
+### 9.3 ⚠ THE RULE VANILLA CAUGHT — §4.3's anti-rot property, earning its keep
+
+§8.2c says `FinalBoss` consumes `tag` **and** `tag+1` while the allocator
+reserves one. The obvious validator rule is *"tag+1 must be free"*.
+
+⛔ **That rule refuses vanilla.** `End/Boss.oel` is
+`<finalboss tag="0"/>` beside `<rocklock tset="0" tag="1"/>` — the boss's second
+clear is **what opens the rock lock**. `tag+1` is deliberately somebody else's.
+
+⇒ the real constraint is only that **`tag+1` stays inside the room's own row**
+(an error), with an unclaimed `tag+1` a *warning* — the boss clearing nothing.
+The as-built in `procgen/seedling-bot.md` is right about the **generator**
+hazard (an allocator handing `tag+1` to an unrelated entity is wrong); it does
+not follow that the pairing is a defect in authored data.
+
+⛓ **This is the whole argument for §4.3 in one example.** Making vanilla a set
+like any other is not indirection for its own sake: a schema the real 116 cannot
+satisfy is wrong, and building them as a fixture caught a rule that would have
+broken the ordinary game on day one.
+
+### 9.4 The fixture is produced by an INDEPENDENT parser
+
+The extractor reads OEL with Python ElementTree; the validator reads it with a
+regex (it is in the bundled browser graph). The committed fixtures are produced
+by the first and consumed by the second, and the test asserts the regex parser
+recovers the counts ElementTree measured — **228 / 52 / 12 / 11**. A verifier
+sharing the generator's assumptions would have proved nothing about either.
+
+⚠ **WHAT THE FIXTURE BOUNDS.** `seedling-vanilla-room-refs.json` is a REDUCED
+OEL: every element bearing `@to`/`@fallthrough`/`@room`/`@tag`/`@tset`/`@sign`,
+with the tile grid and untagged decoration dropped (37 KB rather than 1.38 MB).
+It is a faithful projection of exactly the surface the validator reads **and of
+nothing else** — it proves the real cross-reference graph validates; it does not
+prove a room loads, and it is not a level. The real per-room byte sizes are
+recorded separately for the same reason.
+
+### 9.5 Mutation-checked, because a schema that accepts everything proves nothing
+
+Five rules were disabled one at a time against the committed tests, tree clean
+before and after:
+
+| rule disabled | tests killed |
+|---|---|
+| spawn level range | 1 |
+| `@to` range | 2 |
+| assembled-id gap | 1 |
+| `buttonroom` tset TAG ceiling | 1 |
+| `named_rooms` closed vocabulary | 1 |
+
+Control: 53/53. Every rejection asserts the reason it was refused **by name**,
+so a rule that starts failing for the wrong cause fails here.
+
+### 9.6 What Phase 2 did NOT do
+
+- ⛔ **No AS3.** Phase 3 is the seams and it lands in `~/CC/seedling`. Nothing
+  in this repo changed `Game.as`, and no build was run.
+- **The schema is not wired to a loader.** Nothing calls `validateLevelSet` in
+  production yet — Phase 3 (`botLoadLevels`) and Phase 4 (the save stamp) are
+  its first callers. `levelSetSaveStamp`/`saveStampMatches` exist for Phase 4
+  to use and are tested, but no save file carries a stamp today.
+- **`seedling.json` and the region atlas were NOT audited.** §6 says both are
+  keyed to the original rooms; whether the manifest must describe what *they*
+  reference is unmeasured, and is the likeliest place `named_rooms` grows. It
+  was named as unmeasured by the Phase 1 session and it still is.
+- **Phase 5b's exit rewrite is validated, not implemented.** The pairing and
+  range checks §4.6 asked for are in; rewriting `to`/`playerx`/`playery`/`sign`
+  in a bundle is Phase 5b's own work — and it must look on `<control>` for
+  fallthroughs, with the `@xOff`/`@yOff` offsets and their own `@sign`.

@@ -8542,3 +8542,43 @@ over **all 120 `.oel` files in the tree, but only 116 are `[Embed]`ed** into
 `Game.levels` — four are not part of the game. The busiest-room figure is
 unaffected (`Dungeon4/2.oel` is embedded; 23 distinct tags, max 24), but the
 "120" framing was four files wide.
+
+#### ⚠ `FinalBoss`'s `tag+1` is DELIBERATELY somebody else's (2026-08-13)
+
+The bound recorded just above says `placementTagId` "would give a FinalBoss a
+tag whose neighbour is already somebody's." That is right about the
+**generator** and it is worth keeping. It is easy to read as something stronger
+that is **wrong about authored data**, so: the pairing is a FEATURE, not a
+collision.
+
+Measured while freezing the external-level-set schema (plan
+`seedling-external-level-sets.md` §9.3). `End/Boss.oel` — the only room in the
+game with a `<finalboss>` — is:
+
+```xml
+<finalboss x="64" y="96" tag="0"/>
+<rocklock x="112" y="16" tset="0" tag="1"/>
+```
+
+`FinalBoss.endAnim()` clears `tag` **and** `tag+1` (`FinalBoss.as:222`), and
+`tag+1` is the rocklock. **Killing the boss is what opens the lock.** Room 112
+carries exactly tags `[0, 1]`.
+
+⇒ a validator rule of the obvious shape — *"`tag+1` must be free"* — **refuses
+vanilla**, which is the level-set loader's whole anti-rot property failing on
+its first day. The rule that survives is:
+
+- **error** if `tag + 1 >= TAGS_PER_LEVEL`, because that writes the NEXT room's
+  persistence row;
+- **warning** if nothing in the room carries `tag + 1`, because then the boss's
+  second clear controls nothing.
+
+The generator-side statement is untouched: an allocator that hands `tag+1` to an
+*unrelated* entity is still wrong, and `assertTagSlot` refusing `tags: 2` by
+name is still the correct arrival. What changed is only that a `tag`/`tag+1`
+pair in a hand-authored room is not evidence of a defect.
+
+⛓ **The general lesson, which is not about Seedling.** This was caught because
+the vanilla 116 are a committed fixture that the schema must satisfy. A rule
+written from the source citation alone would have shipped; building the real
+data as a test case is what falsified it. See also §9.3 of that plan.
