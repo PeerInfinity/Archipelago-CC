@@ -1,0 +1,981 @@
+{
+ "schema_version": 1,
+ "set_id": "seedling-vanilla-367e679f",
+ "name": "Seedling (vanilla)",
+ "description": "The original 116 rooms as a level set. Plan §4.3: there is no privileged built-in path — mounting vanilla through the level-set loader is what makes every boot of the ordinary game a test of it.",
+ "provenance": {
+  "generator": "scripts/procgen/extract-seedling-vanilla-set.py",
+  "content_hash": "367e679f"
+ },
+ "rooms": [
+  {
+   "id": 0,
+   "name": "OverWorld1",
+   "source": {
+    "embed": "levels/OverWorld.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 1,
+   "name": "Building1",
+   "source": {
+    "embed": "levels/Building1.oel"
+   },
+   "music": 3
+  },
+  {
+   "id": 2,
+   "name": "Dungeon1_Entrance",
+   "source": {
+    "embed": "levels/Dungeon1/Entrance.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 3,
+   "name": "Dungeon1_1",
+   "source": {
+    "embed": "levels/Dungeon1/1.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 4,
+   "name": "Dungeon1_2",
+   "source": {
+    "embed": "levels/Dungeon1/2.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 5,
+   "name": "Dungeon1_3",
+   "source": {
+    "embed": "levels/Dungeon1/3.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 6,
+   "name": "Dungeon1_4",
+   "source": {
+    "embed": "levels/Dungeon1/4.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 7,
+   "name": "Dungeon1_5",
+   "source": {
+    "embed": "levels/Dungeon1/5.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 8,
+   "name": "Dungeon1_6",
+   "source": {
+    "embed": "levels/Dungeon1/6.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 9,
+   "name": "Dungeon1_7",
+   "source": {
+    "embed": "levels/Dungeon1/7.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 10,
+   "name": "Dungeon1_8",
+   "source": {
+    "embed": "levels/Dungeon1/8.oel"
+   },
+   "music": 5,
+   "music_override_exempt": true
+  },
+  {
+   "id": 11,
+   "name": "Dungeon1_9",
+   "source": {
+    "embed": "levels/Dungeon1/9.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 12,
+   "name": "OverWorld1_1",
+   "source": {
+    "embed": "levels/OverWorld/region1.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 13,
+   "name": "Dungeon2_Entrance",
+   "source": {
+    "embed": "levels/Dungeon2/Entrance.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 14,
+   "name": "Dungeon2_1",
+   "source": {
+    "embed": "levels/Dungeon2/1.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 15,
+   "name": "Dungeon2_2",
+   "source": {
+    "embed": "levels/Dungeon2/2.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 16,
+   "name": "Dungeon2_3",
+   "source": {
+    "embed": "levels/Dungeon2/3.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 17,
+   "name": "Dungeon2_4",
+   "source": {
+    "embed": "levels/Dungeon2/4.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 18,
+   "name": "Dungeon2_5",
+   "source": {
+    "embed": "levels/Dungeon2/5.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 19,
+   "name": "Dungeon2_Boss",
+   "source": {
+    "embed": "levels/Dungeon2/6.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 20,
+   "name": "Dungeon2_7",
+   "source": {
+    "embed": "levels/Dungeon2/7.oel"
+   },
+   "music": 6
+  },
+  {
+   "id": 21,
+   "name": "Dungeon3_Entrance",
+   "source": {
+    "embed": "levels/Dungeon3/Entrance.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 22,
+   "name": "Dungeon3_1",
+   "source": {
+    "embed": "levels/Dungeon3/1.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 23,
+   "name": "Dungeon3_2",
+   "source": {
+    "embed": "levels/Dungeon3/2.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 24,
+   "name": "Dungeon3_3",
+   "source": {
+    "embed": "levels/Dungeon3/3.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 25,
+   "name": "Dungeon3_4",
+   "source": {
+    "embed": "levels/Dungeon3/4.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 26,
+   "name": "Dungeon3_5",
+   "source": {
+    "embed": "levels/Dungeon3/5.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 27,
+   "name": "Dungeon3_6",
+   "source": {
+    "embed": "levels/Dungeon3/6.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 28,
+   "name": "Dungeon3_7",
+   "source": {
+    "embed": "levels/Dungeon3/7.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 29,
+   "name": "Dungeon3_8",
+   "source": {
+    "embed": "levels/Dungeon3/8.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 30,
+   "name": "Dungeon3_9",
+   "source": {
+    "embed": "levels/Dungeon3/9.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 31,
+   "name": "Dungeon3_10",
+   "source": {
+    "embed": "levels/Dungeon3/10.oel"
+   },
+   "music": 7
+  },
+  {
+   "id": 32,
+   "name": "Dungeon3_Boss",
+   "source": {
+    "embed": "levels/Dungeon3/11.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 33,
+   "name": "OverWorld1_witchhut",
+   "source": {
+    "embed": "levels/OverWorld/witchhut.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 34,
+   "name": "OverWorld1_barhouse",
+   "source": {
+    "embed": "levels/OverWorld/barhouse.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 35,
+   "name": "OverWorld1_blandashurmin",
+   "source": {
+    "embed": "levels/OverWorld/blandashurmin.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 36,
+   "name": "OverWorld1_intree",
+   "source": {
+    "embed": "levels/OverWorld/intree.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 37,
+   "name": "OverWorld1_2",
+   "source": {
+    "embed": "levels/OverWorld/region2.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 38,
+   "name": "Dungeon4_Entrance",
+   "source": {
+    "embed": "levels/Dungeon4/Entrance.oel"
+   },
+   "music": 8
+  },
+  {
+   "id": 39,
+   "name": "Dungeon4_1",
+   "source": {
+    "embed": "levels/Dungeon4/1.oel"
+   },
+   "music": 8
+  },
+  {
+   "id": 40,
+   "name": "Dungeon4_2",
+   "source": {
+    "embed": "levels/Dungeon4/2.oel"
+   },
+   "music": 8
+  },
+  {
+   "id": 41,
+   "name": "Dungeon4_3",
+   "source": {
+    "embed": "levels/Dungeon4/3.oel"
+   },
+   "music": 8
+  },
+  {
+   "id": 42,
+   "name": "Dungeon4_4",
+   "source": {
+    "embed": "levels/Dungeon4/4.oel"
+   },
+   "music": 8
+  },
+  {
+   "id": 43,
+   "name": "Dungeon4_Boss",
+   "source": {
+    "embed": "levels/Dungeon4/Boss.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 44,
+   "name": "OverWorld1_3",
+   "source": {
+    "embed": "levels/OverWorld/region3.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 45,
+   "name": "Dungeon5_Entrance",
+   "source": {
+    "embed": "levels/Dungeon5/Entrance.oel"
+   },
+   "music": 0,
+   "snow_gradient": true
+  },
+  {
+   "id": 46,
+   "name": "Dungeon5_1",
+   "source": {
+    "embed": "levels/Dungeon5/1.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 47,
+   "name": "Dungeon5_2",
+   "source": {
+    "embed": "levels/Dungeon5/2.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 48,
+   "name": "Dungeon5_3",
+   "source": {
+    "embed": "levels/Dungeon5/3.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 49,
+   "name": "Dungeon5_4",
+   "source": {
+    "embed": "levels/Dungeon5/4.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 50,
+   "name": "Dungeon5_5",
+   "source": {
+    "embed": "levels/Dungeon5/5.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 51,
+   "name": "Dungeon5_6",
+   "source": {
+    "embed": "levels/Dungeon5/6.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 52,
+   "name": "Dungeon5_7",
+   "source": {
+    "embed": "levels/Dungeon5/7.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 53,
+   "name": "Dungeon5_8",
+   "source": {
+    "embed": "levels/Dungeon5/8.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 54,
+   "name": "Dungeon5_9",
+   "source": {
+    "embed": "levels/Dungeon5/9.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 55,
+   "name": "Dungeon5_10",
+   "source": {
+    "embed": "levels/Dungeon5/10.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 56,
+   "name": "Dungeon5_11",
+   "source": {
+    "embed": "levels/Dungeon5/11.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 57,
+   "name": "Dungeon5_Boss",
+   "source": {
+    "embed": "levels/Dungeon5/Boss.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 58,
+   "name": "Dungeon5_DeadBoss",
+   "source": {
+    "embed": "levels/Dungeon5/DeadBoss.oel"
+   },
+   "music": 9
+  },
+  {
+   "id": 59,
+   "name": "Dungeon6_Entrance",
+   "source": {
+    "embed": "levels/Dungeon6/Entrance.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 60,
+   "name": "Dungeon6_1",
+   "source": {
+    "embed": "levels/Dungeon6/1.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 61,
+   "name": "Dungeon6_2",
+   "source": {
+    "embed": "levels/Dungeon6/2.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 62,
+   "name": "Dungeon6_3",
+   "source": {
+    "embed": "levels/Dungeon6/3.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 63,
+   "name": "Dungeon6_4",
+   "source": {
+    "embed": "levels/Dungeon6/4.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 64,
+   "name": "Dungeon6_5",
+   "source": {
+    "embed": "levels/Dungeon6/5.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 65,
+   "name": "Dungeon6_6",
+   "source": {
+    "embed": "levels/Dungeon6/6.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 66,
+   "name": "Dungeon6_7",
+   "source": {
+    "embed": "levels/Dungeon6/7.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 67,
+   "name": "Dungeon6_8",
+   "source": {
+    "embed": "levels/Dungeon6/8.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 68,
+   "name": "Dungeon6_9",
+   "source": {
+    "embed": "levels/Dungeon6/9.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 69,
+   "name": "Dungeon6_Boss",
+   "source": {
+    "embed": "levels/Dungeon6/Boss.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 70,
+   "name": "Dungeon6_10",
+   "source": {
+    "embed": "levels/Dungeon6/10.oel"
+   },
+   "music": 10
+  },
+  {
+   "id": 71,
+   "name": "Dungeon7_Entrance",
+   "source": {
+    "embed": "levels/Dungeon7/Entrance.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 72,
+   "name": "Dungeon7_1",
+   "source": {
+    "embed": "levels/Dungeon7/1.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 73,
+   "name": "Dungeon7_2",
+   "source": {
+    "embed": "levels/Dungeon7/2.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 74,
+   "name": "Dungeon7_3",
+   "source": {
+    "embed": "levels/Dungeon7/3.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 75,
+   "name": "Dungeon7_4",
+   "source": {
+    "embed": "levels/Dungeon7/4.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 76,
+   "name": "Dungeon7_5",
+   "source": {
+    "embed": "levels/Dungeon7/5.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 77,
+   "name": "Dungeon7_6",
+   "source": {
+    "embed": "levels/Dungeon7/6.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 78,
+   "name": "Dungeon7_7",
+   "source": {
+    "embed": "levels/Dungeon7/7.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 79,
+   "name": "Dungeon7_8",
+   "source": {
+    "embed": "levels/Dungeon7/8.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 80,
+   "name": "Dungeon7_9",
+   "source": {
+    "embed": "levels/Dungeon7/9.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 81,
+   "name": "Dungeon7_10",
+   "source": {
+    "embed": "levels/Dungeon7/10.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 82,
+   "name": "Dungeon7_Boss",
+   "source": {
+    "embed": "levels/Dungeon7/Boss.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 83,
+   "name": "OverWorld_fallhole",
+   "source": {
+    "embed": "levels/OverWorld/fallhole.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 84,
+   "name": "OverWorld_fallhole1",
+   "source": {
+    "embed": "levels/OverWorld/fallhole1.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 85,
+   "name": "OverWorld_d7entrance",
+   "source": {
+    "embed": "levels/OverWorld/d7entrance.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 86,
+   "name": "OverWorld_house",
+   "source": {
+    "embed": "levels/OverWorld/house.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 87,
+   "name": "OverWorld1_4",
+   "source": {
+    "embed": "levels/OverWorld/region4.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 88,
+   "name": "OverWorld1_5",
+   "source": {
+    "embed": "levels/OverWorld/region5.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 89,
+   "name": "OverWorld1_6",
+   "source": {
+    "embed": "levels/OverWorld/region6.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 90,
+   "name": "OverWorld_waterfallcave",
+   "source": {
+    "embed": "levels/OverWorld/waterfallcave.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 91,
+   "name": "OverWorld_mountain",
+   "source": {
+    "embed": "levels/OverWorld/mountain.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 92,
+   "name": "OverWorld_mountain1",
+   "source": {
+    "embed": "levels/OverWorld/mountain1.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 93,
+   "name": "OverWorld_finalboss",
+   "source": {
+    "embed": "levels/OverWorld/finalboss.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 94,
+   "name": "OverWorld_treelarge",
+   "source": {
+    "embed": "levels/OverWorld/treelarge.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 95,
+   "name": "OverWorld_d6entrance",
+   "source": {
+    "embed": "levels/OverWorld/d6entrance.oel"
+   },
+   "music": 0
+  },
+  {
+   "id": 96,
+   "name": "Dungeon7_11",
+   "source": {
+    "embed": "levels/Dungeon7/11.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 97,
+   "name": "Dungeon7_12",
+   "source": {
+    "embed": "levels/Dungeon7/12.oel"
+   },
+   "music": 11
+  },
+  {
+   "id": 98,
+   "name": "Dungeon8_Entrance",
+   "source": {
+    "embed": "levels/Dungeon8/Entrance.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 99,
+   "name": "Dungeon8_1",
+   "source": {
+    "embed": "levels/Dungeon8/1.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 100,
+   "name": "Dungeon8_2",
+   "source": {
+    "embed": "levels/Dungeon8/2.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 101,
+   "name": "Dungeon8_3",
+   "source": {
+    "embed": "levels/Dungeon8/3.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 102,
+   "name": "Dungeon8_4",
+   "source": {
+    "embed": "levels/Dungeon8/4.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 103,
+   "name": "Dungeon8_5",
+   "source": {
+    "embed": "levels/Dungeon8/5.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 104,
+   "name": "Dungeon8_6",
+   "source": {
+    "embed": "levels/Dungeon8/6.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 105,
+   "name": "Dungeon8_7",
+   "source": {
+    "embed": "levels/Dungeon8/7.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 106,
+   "name": "Dungeon8_8",
+   "source": {
+    "embed": "levels/Dungeon8/8.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 107,
+   "name": "Dungeon8_9",
+   "source": {
+    "embed": "levels/Dungeon8/9.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 108,
+   "name": "Dungeon8_10",
+   "source": {
+    "embed": "levels/Dungeon8/10.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 109,
+   "name": "Dungeon8_11",
+   "source": {
+    "embed": "levels/Dungeon8/11.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 110,
+   "name": "Dungeon8_12",
+   "source": {
+    "embed": "levels/Dungeon8/12.oel"
+   },
+   "music": 12
+  },
+  {
+   "id": 111,
+   "name": "End_1",
+   "source": {
+    "embed": "levels/End/1.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 112,
+   "name": "End_Boss",
+   "source": {
+    "embed": "levels/End/Boss.oel"
+   },
+   "music": -1
+  },
+  {
+   "id": 113,
+   "name": "End_2",
+   "source": {
+    "embed": "levels/End/2.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 114,
+   "name": "End_3",
+   "source": {
+    "embed": "levels/End/3.oel"
+   },
+   "music": 5
+  },
+  {
+   "id": 115,
+   "name": "End_4",
+   "source": {
+    "embed": "levels/End/4.oel"
+   },
+   "music": 5
+  }
+ ],
+ "start": {
+  "level": 0
+ },
+ "menu_rooms": [
+  12,
+  37,
+  44,
+  87,
+  88,
+  89
+ ],
+ "named_rooms": {
+  "moonrock_target": {
+   "level": 2
+  },
+  "watcher_text": {
+   "level": 114
+  },
+  "dark_shrum_death": {
+   "level": 114,
+   "x": 72,
+   "y": 128
+  },
+  "bloody_seed_ending": {
+   "level": 1,
+   "x": 64,
+   "y": 96
+  },
+  "light_boss_exit": {
+   "level": 36,
+   "x": 112,
+   "y": 96
+  },
+  "tentacle_beast_mouth": {
+   "level": 58,
+   "x": 56,
+   "y": 96
+  }
+ }
+}

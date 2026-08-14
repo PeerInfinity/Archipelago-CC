@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "seedling-level-set-chunk.schema.json",
+  "title": "Seedling level set — transport chunk",
+  "description": "ONE ExternalInterface call carrying part of a seedling-level-set.schema.json document. A whole set cannot cross in one call: measured 2026-08-13 against the recompiled artifact, the vanilla set is 1,676,662 B of JSON and the runtime aborts between 1,264,992 B (80 rooms, survives) and 1,353,464 B (88 rooms, aborts). The cause is the 0.5 GB AVM2 GC arena, not EI marshalling and not the 8 MB shadow stack — 2 MB of JSON-legal WHITESPACE crosses and parses fine while 1.35 MB of real structure aborts, so the binding constraint is the parsed object graph (plan §8.1).\n\n⛔ THE LIMIT IS NOT A BYTE CEILING, WHICH IS WHY NO SET DOCUMENT CARRIES ONE. Cumulative total is not the limiter — 16 rooms survived 15 consecutive calls totalling 3,599,505 B — but 32 rooms/call SUCCEEDS ON THE FIRST CALL AND DIES ON A LATER ONE. What fails is repeated allocation in the arena, which a per-call size cannot express. The safe size therefore lives beside the sender as MAX_ROOMS_PER_CHUNK in frontend/modules/seedlingDemo/levelSetValidator.js, is 16, and must be validated BY REPETITION rather than by a single call. 116 rooms needs 8 chunks, so the proven margin is ~2x.\n\nRe-chunking is a delivery decision and edits no set. Chunks are reassembled by assembleLevelSetChunks() and the RESULT is validated as a whole by validateLevelSet() — the envelope itself only has to be well-formed, complete and self-consistent.",
+  "type": "object",
+  "required": ["schema_version", "set_id", "chunk_index", "chunk_count", "rooms"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "set_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The set these rooms belong to. Every chunk of one delivery must agree, or the receiver would splice two sets into one table."
+    },
+    "chunk_index": { "type": "integer", "minimum": 0, "description": "0-based position in the delivery." },
+    "chunk_count": { "type": "integer", "minimum": 1, "description": "Total chunks in the delivery. Every chunk must agree; the assembler refuses a delivery with a missing or duplicated index rather than mounting a short table." },
+    "set": {
+      "description": "The set's metadata (everything except `rooms`), REQUIRED on chunk_index 0 and forbidden on every other chunk. Sending it once keeps the delivery's identity in one place; sending it on chunk 0 means the receiver knows the set's shape before the rooms arrive.",
+      "type": "object"
+    },
+    "rooms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "description": "This chunk's rooms, in set order, each a seedling-level-set.schema.json room. maxItems mirrors MAX_ROOMS_PER_CHUNK, the measured safe size — it is a REPETITION-proven transport constant, not a guarantee about bytes. Room ids must be dense and ascending across the assembled delivery; the assembler checks that, not this file.",
+      "items": { "type": "object" }
+    }
+  }
+}

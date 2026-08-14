@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "seedling-level-set.schema.json",
+  "title": "Seedling level set",
+  "description": "A complete, self-describing set of Seedling rooms plus the per-set metadata the game used to hold as literals in Game.as (CC/docs/plans/seedling-external-level-sets.md §4.1). A set REPLACES the original levels rather than appending to them, so the mounted set is the one authority for the level table's length and for the size of the persistence table (§4.2). The vanilla 116 rooms are a set in this format too — there is no privileged built-in path (§4.3), which is what makes every boot of the ordinary game a test of the loader. Transport is a separate document: a set is delivered over ExternalInterface as a sequence of seedling-level-set-chunk.schema.json envelopes, because a whole set cannot cross in one call (§8.1). This schema is DOCUMENTATION: the cross-reference rules it cannot express (level-index range on the three OEL attributes, the closed sign table, the 30-tag ceiling and FinalBoss's tag+1, ButtonRoom's tset-as-tag across rooms, named_rooms completeness, content-hash identity) are enforced authoritatively by frontend/modules/seedlingDemo/levelSetValidator.js. A set that fails is refused BY NAME at load and never coerced.",
+  "type": "object",
+  "required": ["schema_version", "set_id", "rooms", "start", "menu_rooms", "named_rooms"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "set_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stamped content-hash id; ends with '-<content_hash>'. THE SAVE STAMPS THIS (§4.2): SAVE_FILE.data carries no level-set identity today, so a save from set A loaded under set B resumes at an index meaning a different room with a persistence table describing different entities, silently. A mismatch must force a fresh save and say so. Because the id is content-derived, an EDITED set is a different set — which is the point."
+    },
+    "name": { "type": "string", "description": "Human-readable label for pickers." },
+    "description": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "description": "Copied from the region atlas's identity precedent (plan §6).",
+      "properties": {
+        "generator": { "type": "string", "description": "e.g. 'extract-seedling-vanilla-set' or 'procgenSeedling'." },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}$",
+          "description": "FNV-1a over the canonical (sorted-key) document minus provenance and set_id; set_id must end with '-<content_hash>'."
+        }
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The level table, IN ORDER. Position is identity: the game indexes levels[level] positionally and the persistence table is levelPersistence[level * 30 + tag], so room ids must be dense and equal their array position.",
+      "items": { "$ref": "#/$defs/room" }
+    },
+    "start": {
+      "$ref": "#/$defs/spawn",
+      "description": "Where a new game begins. Vanilla is level 0 (Game.as:796); x/y default to the Game constructor's own defaults (80, 128) when omitted."
+    },
+    "menu_rooms": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "integer", "minimum": 0 },
+      "description": "Rooms the title screen cycles through, IN ORDER — Game.as:449 menuLevels, vanilla [12, 37, 44, 87, 88, 89]. Order is load-bearing: Game.as:1294 advances menuIndex = (menuIndex + 1) % menuLevels.length, so this must never be empty (a zero-length array makes that index NaN)."
+    },
+    "named_rooms": {
+      "type": "object",
+      "required": [
+        "moonrock_target",
+        "watcher_text",
+        "dark_shrum_death",
+        "bloody_seed_ending",
+        "light_boss_exit",
+        "tentacle_beast_mouth"
+      ],
+      "additionalProperties": false,
+      "description": "The room references that live in CODE rather than in level data, so NO bundle rewrite can reach them (§8.2a). A CLOSED vocabulary, every entry required: an omitted name is the silent-breakage case this arc keeps catching, and an invented one would do nothing. Two shapes — a persistence target needs only a level; a warp also needs the arrival position it is constructed with.",
+      "properties": {
+        "moonrock_target": {
+          "$ref": "#/$defs/roomRef",
+          "description": "Scenery/Moonrock.as:135 setPersistence(0, false, 2) — a cross-level WRITE of tag 0 into the room holding the moonrock pile. Its receiver Scenery/MoonrockPile.as:22 hardcodes tag = 0 with INVERTED polarity. Vanilla: 2 (Dungeon1_Entrance)."
+        },
+        "watcher_text": {
+          "$ref": "#/$defs/roomRef",
+          "description": "Scenery/FinalDoor.as:50 checkPersistence(0, 114) — a cross-level READ of tag 0 in the room the Watcher's text lives in. Vanilla: 114 (End_3)."
+        },
+        "dark_shrum_death": {
+          "$ref": "#/$defs/spawn",
+          "description": "Player.as:491 new Game(114, 72, 128, false, 2) — where the dark-shrum death returns the player. Vanilla: level 114 at (72, 128)."
+        },
+        "bloody_seed_ending": {
+          "$ref": "#/$defs/spawn",
+          "description": "Pickups/Seed.as:73 new Game(1, 64, 96, false) — the bloody-seed ending. Vanilla: level 1 at (64, 96)."
+        },
+        "light_boss_exit": {
+          "$ref": "#/$defs/spawn",
+          "description": "Enemies/LightBossController.as:104 new Teleporter(x, y, 36, 112, 96, true) — a teleporter BUILT AT RUNTIME, present in no .oel. Vanilla: level 36 at (112, 96)."
+        },
+        "tentacle_beast_mouth": {
+          "$ref": "#/$defs/spawn",
+          "description": "Enemies/TentacleBeast.as:213 new Teleporter(..., 58, 56, 96) — also built at runtime. Vanilla: level 58 at (56, 96), which is Dungeon5_DeadBoss — the room Enemies/Yeti.as's 'the portal in DeadBoss.oel must have tag 1' comment names."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "spawn": {
+      "type": "object",
+      "required": ["level"],
+      "additionalProperties": false,
+      "properties": {
+        "level": { "type": "integer", "minimum": 0, "description": "Room id. Range-checked against the mounted set by the validator — the game will NOT check (§8.3: an out-of-range level boots with no error and reads its whole persistence row as everything already cleared)." },
+        "x": { "type": "integer", "description": "Arrival x. Omitted means the Game constructor default, 80 (Game.as:629)." },
+        "y": { "type": "integer", "description": "Arrival y. Omitted means the Game constructor default, 128 (Game.as:629)." }
+      }
+    },
+    "roomRef": {
+      "type": "object",
+      "required": ["level"],
+      "additionalProperties": false,
+      "description": "A reference to a room by id alone — a persistence target, which carries no arrival position.",
+      "properties": {
+        "level": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "room": {
+      "type": "object",
+      "required": ["id", "name", "source", "music"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Dense, 0-based, equal to the array position. This IS the level index every teleporter @to, @fallthrough, @room, tape boot.level and persistence row refers to."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique within the set. For vanilla this is the [Embed] class name (e.g. 'OverWorld1'); for a generated set, whatever the generator calls the room. Never used as an index — position is identity."
+        },
+        "source": {
+          "type": "object",
+          "description": "Where this room's OEL XML comes from. EXACTLY ONE of xml/embed (§4.3 shape (c)): a page-supplied set carries XML text, the built-in vanilla set carries a reference to the [Embed]ed asset, and both resolve to XML before the one loadLevelXML implementation.",
+          "oneOf": [
+            {
+              "required": ["xml"],
+              "additionalProperties": false,
+              "properties": {
+                "xml": { "type": "string", "minLength": 1, "description": "The room's OEL XML as text." }
+              }
+            },
+            {
+              "required": ["embed"],
+              "additionalProperties": false,
+              "properties": {
+                "embed": { "type": "string", "minLength": 1, "description": "Asset path of the [Embed]ed .oel, e.g. 'levels/OverWorld.oel'. Only the built-in vanilla set uses this arm; the validator cannot read it, and says so rather than passing the room silently." }
+              }
+            }
+          ]
+        },
+        "music": {
+          "type": "integer",
+          "minimum": -1,
+          "maximum": 13,
+          "description": "Index into Music.songs, which has exactly 14 entries (0..13); Game.as:198 bossMusic = 13. -1 IS LEGAL and means the room's boss writes this slot at runtime — measured: the seven vanilla rooms whose static music is -1 are exactly the seven boss rooms (19, 32, 43, 57, 69, 82, 112). ⛔ levelMusics is MUTATED DURING PLAY by seven boss classes (§8.2c), so this seeds a writable array; it is not frozen data."
+        },
+        "snow_gradient": {
+          "type": "boolean",
+          "description": "Game.as:908 'if (level == 45)' — scales snow alpha by the player's height in this room. Vanilla: room 45 (Dungeon5_Entrance) alone. Absent means false."
+        },
+        "music_override_exempt": {
+          "type": "boolean",
+          "description": "Game.as:1175 and :1181 'level != 10' — this room is exempt from BOTH sword/shield music overrides. Vanilla: room 10 (Dungeon1_8) alone. Absent means false."
+        }
+      }
+    }
+  }
+}
