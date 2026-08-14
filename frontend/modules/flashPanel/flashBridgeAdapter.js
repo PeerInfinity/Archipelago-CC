@@ -228,6 +228,26 @@ export class FlashBridgeAdapter {
    * Queue a teleport based on the game config's `teleport` block
    * and the given parameter values.
    *
+   * ⛔ DE-SCOPED FOR STATIC EXIT LAYOUT (Seedling, plan §4.6, Phase 5b).
+   * A randomized set's exits are DATA in the set's own rooms; this call
+   * must not be used to redirect a transition after the fact. Two
+   * reasons, the second structural:
+   *
+   *   · Seedling's recipe is `new Game($level,$x,$y)` assigned to
+   *     `FP.world` — the same constructor and the same assignment
+   *     `Teleporter.update()` has already performed, so a corrected exit
+   *     builds two worlds;
+   *   · `Teleporter.update()` sets the STATIC `Game.sign` on the line
+   *     after its own `new Game`, and this recipe does not touch it. So
+   *     a replacement world announces the region of the room the player
+   *     did NOT go to, and there is nowhere in this capability to fix
+   *     that. Exits-as-data is not merely cheaper; it is the only
+   *     mechanism that can get the sign right.
+   *
+   * Still in scope: the debug region/location jump UI, the region
+   * atlas's arrival warp, and DYNAMIC re-linking mid-run (an AP item
+   * that re-wires exits), which no static bundle can express.
+   *
    * Two teleport invocation modes are supported:
    *
    *   - "new_instance" (Seedling): the config supplies `className`,

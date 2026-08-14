@@ -174,6 +174,7 @@
   },
 
   "teleport": {
+    "_note": "DE-SCOPED, plan §4.6 (Phase 5b, 2026-08-14): this is NOT the mechanism for a set's static exit layout. `new Game($level,$x,$y)` assigned to FP.world is the SAME constructor and the SAME assignment Teleporter.update() already performs, so using it to redirect an exit costs two world constructions and — structurally — cannot fix the sign: Teleporter writes the static Game.sign AFTER its own new Game, and this recipe does not touch it, so the destination announces the region of the room the player did not go to. A set's exits live in its room DATA (frontend/modules/seedlingDemo/levelSetExits.js). What remains in scope here: the debug region/location jump UI below, seedlingRegionGlue's arrival warp, and any DYNAMIC re-linking during a run (an AP item that re-wires exits), which no static bundle can express.",
     "params": ["level", "x", "y"],
     "preWrites": [
       { "class": "game", "property": "menu", "value": false }

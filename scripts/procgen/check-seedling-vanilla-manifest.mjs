@@ -63,7 +63,15 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_3b';
+// ⛔ THE DEFAULT PAGE IS THE CURRENT ARTIFACT, and it was not. It stayed at
+// `seedling_bot_ap_3b` — the build this gate was written against — while Phase
+// 4a widened `moonrock_target` to a spawn and MOVED the content hash
+// (-367e679f -> -02408e1d, plan §12). So a bare invocation reported two
+// failures, both of the form "the artifact says what the artifact said in
+// Phase 3b", with nothing wrong in the tree. A standing red that nobody owns is
+// a gate people learn to ignore. The older builds are still reachable through
+// SEEDLING_PAGE.
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
