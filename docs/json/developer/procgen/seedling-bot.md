@@ -7077,9 +7077,96 @@ omission — re-derived at close from the committed expectations' own
 | **`touch` / `wand`** | `touch` REGISTERED with L20's westward crossing as its driven witness; `solid:wandlock → wand` is the replacement selected-and-unregistered control, and L40's fourteen wandlocks are real obstacles with a real verb | **R9+** |
 | **the design AI / procedural generator** (the pivot's horizon) | untouched by design — it needs the solver first, and the solver now exists and has crossed every mechanic room the hand pipeline solved | **R9+**, the horizon |
 | **the L40 chain** (links 5–11, boss key 2) | untouched; still scheduled, still priced at 2,500–4,000 ticks | **R9+** |
+| **the TIME rung is attempted against danger it can never dodge** | ⛔ **NOT R8's finding — added 2026-08-14 from the procgen determinism slice.** `arrowDanger`'s ARMED-LANE arm takes `horizon` and never reads it, so `forbiddenByDanger` returns true at every tick a search can ask about. TIME then spends up to its whole 40,000-expansion budget looking for a timing window the model has already declared cannot exist (**measured: 12,267 ms on one dash; 73,851 ms at a 200,000 cap**). See §"The TIME rung's applicability" below | **R9**, when the ladder is open |
+| **the ladder has no rung for a SWITCH-ARMED trap** | ⚖ **User, 2026-08-14: *"we shouldn't be searching for a path through arrows. Arrows move too fast to dodge. The only way through is to deactivate the switch that activates the arrows, either by stepping off the switch or moving the block off the switch."*** `AVOID → TIME → BAIT → KILL` has no member for it: BAIT lures a LIVE BODY (the measured room's live roster was `[empty]`), KILL kills one. A trap armed by a switch is neither | **R9**, a new rung |
+| **`TIME_RUNG.reach` and `TIME_RUNG.maxExpansions` disagree, measured** | `reach: 48` is taken from `MOVER_RANGE`'s last row and the rung's refusal text cites it — but that table is ASSERTED at `maxExpansions: 60000` and production grants **40,000**. 48 px at dwell 4 costs **42,253** expansions on open ground. ⇒ **production cannot reach its own declared reach** | **R9**, with the ladder |
+| **`crusherDanger` may freeze the crusher** — UNVERIFIED | it takes no `horizon` and reads `run.crushers` LIVE positions, while the search asks about future ticks without advancing the run. If that reading is right, TIME cannot time a crusher either, and may plan through a cell the crusher moves into. ⚠ **Flagged as a question, not a finding** — nobody has checked whether something downstream compensates | **R9**, check before trusting TIME |
 | **`buildTape`'s v5 cap** | untouched — every v6–v10 tape is still assembled by a plan script | **R9+** |
 | **rules v1 + the sphere order** | untouched; the sphere order is what a campaign slice would walk | **R9's campaign** |
 | **LightBoss / TentacleBeast / LavaBoss** | still measured OUT | deferred |
+
+### The TIME rung's applicability — notes for R9, not acted on
+
+⚠ **Added 2026-08-14 from the procgen determinism slice; nothing here was
+changed in the code.** It surfaced while measuring `TIME_RUNG.maxExpansions`
+for a possible tuning, and it says the tuning is the wrong question.
+
+**1. The model already knows arrows are not dodgeable, and the rung does not
+ask.** `dangerMap.arrowDanger(run, box, horizon)` takes a horizon and its
+armed-trap arm never reads it — by design, and its docblock says so: *"an ARMED
+trap is a column that may fire at any moment, so its lane is dangerous for ANY
+horizon at all — including zero."* TIME's `forbiddenAt` is exactly
+`dangerAt(run, tick, box).danger`, so an armed lane is forbidden at **every tick
+the search can ask about**. There is no window to find.
+
+⚖ **The user confirmed this is the game's own truth (2026-08-14): arrows move
+too fast to dodge; the only way through is to deactivate the switch — step off
+it, or push the block off it.**
+
+**2. Sorting the arms by whether they take a horizon gives an exact, cheap
+predicate**, readable from the signatures with no new modelling:
+
+| arm | horizon | timing-dodgeable |
+|---|---|---|
+| live arrows (swept), chasers, spinners (`spinnerForecast`) | used | ✅ yes |
+| **armed arrow lanes** | **ignored** | ⛔ never |
+| `hazardDanger`, `staticEnemyDanger` | no parameter | ⛔ never |
+| `crusherDanger` | no parameter, live positions | ⛔ **unverified — see the table row** |
+
+⇒ if every source blocking a corridor is time-invariant, **no timing solution
+can exist** and the rung is searching for something ruled out in advance.
+
+⛔ **BUT DO NOT SIMPLY SKIP TIME ON THAT PREDICATE WITHOUT DECIDING THIS
+FIRST.** TIME is not only a timing tool: it searches at 0.25 px where AVOID
+works in whole tiles, and the measured AVOID refusal in that room was a
+GOAL-TILE technicality (*"the planner works in whole tiles, so both ends of a
+route must be tiles the player box fits"*), not a blocked corridor. So against
+time-invariant danger TIME degenerates from *"wait for the window"* to
+*"squeeze through sub-tile"* — which may occasionally be worth something. What
+is certain is that it should not cost 40,000 expansions to attempt.
+
+**3. What was measured, so R9 does not re-measure it.** Quiet box, 8 cores,
+node 18:
+
+- **The dash that motivated all of this is vacuous**, not merely expensive:
+  seed 13, an `arrowLane` obstacle, **40,000 expansions / 12,267 ms**. Raising
+  the cap to 200,000 as a probe: **still refused, 73,851 ms.** Confirming that
+  a hopeless search bills you in proportion to the cap — **the cap only ever
+  charges you on the negatives.**
+- `MOVER_RANGE`'s five capability rows cost **1,250 / 338 / 37,614 / 56,579 /
+  42,253** expansions (8, 16, 24, 35, 48 px). ⚠ Cost is **not monotone in
+  distance** — dwell dominates, so 24 px at dwell 2 costs more than 48 px at
+  dwell 4, and the 24 px row sits at **94 % of the production cap**: a latent
+  tripwire that any heuristic or tie-break change would flip.
+- ⚠ **The evidence base for the rung's real behaviour is two dashes.** Across
+  326 procgen solves the search ran **twice** — one success at **646**
+  expansions, one failure at the cap — and the failure is the vacuous class
+  above. **Do not size any constant off this.** Real examples want the R8
+  battery, where spinners live and spinners are what TIME exists for.
+
+**4. Constant triage, since three values look like one and are not.**
+`mover.DEFAULT_LIMITS.maxExpansions: 200000` is a **library fallback no
+production caller reaches** (`solverBot.js:5125` is the only production caller
+of `planDash` and always passes `limits`). `MOVER_RANGE`'s **60,000** is not a
+bound at all — it is the **experimental condition** a capability measurement was
+taken under. `TIME_RUNG.maxExpansions: 40000` is the only real production bound.
+
+⇒ **`reach` and `maxExpansions` are two guards on the same doomed-search
+problem** — the cheap a-priori one and the a-posteriori one — so they cannot be
+tuned independently. Today they disagree, which is the worst case: the rung
+admits a search its own budget then kills.
+
+**5. The budget question R9 should actually ask.** A TIME failure is not fatal;
+the ladder escalates. So the cap means *"how long may we look for a timing
+solution before trying a different strategy?"* — a **budget allocation across
+four rungs**, not a search parameter. Both errors are behavioural: too high and
+the bot spends seconds proving TIME cannot dodge when BAIT would answer in
+milliseconds; **too low and the bot kills a monster it could have walked past**,
+which changes the character of the certified solution. ⛓ That matters beyond
+the solver: this bot is the ORACLE for generated levels, so an under-budgeted
+TIME certifies levels against a more violent player than necessary — the
+Cloudberry lesson (*restricted player AI shapes level character*) arriving
+through the back door.
 
 ---
 

@@ -257,10 +257,46 @@ class sits nearest — including one nobody's handler catches.
 ## 8.4 ⚠ RESIDUE — owed, measured, deliberately not fixed here
 
 `planDash`'s `maxExpansions: 40000` permits a **12,267 ms single dash** (seed 13,
-quiet box). That cap is far too loose to be a useful cost bound. Lowering it is a
-**slowness** finding with its own measurement owed — it is not a determinism
-finding, and the two must not be traded for each other. It is deterministic
-today: it just takes a long time deterministically.
+quiet box). It is deterministic today — it just takes a long time
+deterministically — so it is not a determinism finding and the two must not be
+traded for each other.
+
+⛔ **CORRECTED 2026-08-14, AFTER THIS SECTION WAS FIRST WRITTEN: it is not a
+tuning finding either, and a reader who acts on the paragraph above will size a
+constant that should not be sized.** Following it up produced three results that
+move the whole item out of this plan:
+
+1. **That dash was VACUOUS, not expensive.** The obstacle was an `arrowLane`,
+   and `dangerMap.arrowDanger`'s armed-trap arm takes a `horizon` and **never
+   reads it** — by design, documented: *"dangerous for ANY horizon at all."* So
+   TIME's `forbiddenAt` forbids the lane at every tick the search can ask about,
+   and the rung was hunting a timing window the model had already ruled out.
+   Probe at a 200,000 cap: **still refused, 73,851 ms.** ⇒ a hopeless search
+   bills in proportion to the cap; **the cap only ever charges you on the
+   negatives.**
+2. ⚖ **The user confirmed the game's own truth (2026-08-14): arrows cannot be
+   dodged; the only way through is to deactivate the switch — step off it, or
+   push the block off it.** The ladder (`AVOID → TIME → BAIT → KILL`) has **no
+   rung for that**: BAIT lures a live body and the measured room's live roster
+   was `[empty]`; KILL kills one.
+3. **`TIME_RUNG.reach: 48` and `maxExpansions: 40000` disagree**, measured: the
+   reach is taken from `MOVER_RANGE`'s last row, that table is asserted at
+   **60,000**, and 48 px at dwell 4 costs **42,253** — so production cannot
+   reach its own declared reach. They are two guards on the same doomed-search
+   problem and cannot be tuned independently.
+
+⇒ ⚖ **PARKED FOR R9 by the user (2026-08-14), which is when this logic is opened
+anyway.** The notes, the measurements and the constant triage live where R9 will
+look: `docs/json/developer/procgen/seedling-bot.md` §"The TIME rung's
+applicability", plus four rows in that file's "What R8 hands on, and what R9
+inherits" table. ⛔ **Do not tune `maxExpansions` from this plan** — fixing the
+applicability removes the worst measured cost without touching any constant, and
+therefore without risking which levels certify.
+
+⚠ And the evidence base here is **two dashes** in 326 solves (one success at 646
+expansions, one failure at the cap — the vacuous one). That is not a population;
+real examples want the R8 battery, where spinners live and spinners are the
+hazard TIME actually exists for.
 
 ## 8.5 ⛔ THE STANDING md5 DID NOT MOVE — and §6's reading of that is wrong
 
