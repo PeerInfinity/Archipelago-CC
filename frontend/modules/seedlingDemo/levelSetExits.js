@@ -306,15 +306,30 @@ export function linkGeneratedRooms(rooms, options = {}) {
             // adjacent. Ties broken by (ty, tx) — a total order, so the choice
             // does not depend on Map iteration.
             .sort((p, q) => (q.dist - p.dist) || (p.ty - q.ty) || (p.tx - q.tx));
-        if (candidates.length < needs[id].length) {
+
+        // ⛔ TWO DOORS OF ONE ROOM ARE NEVER ADJACENT, and the first version of
+        // this got it wrong — measured on the six-seed export, room 1's doors
+        // came out at (8,1) and (8,2). Two consequences, one cosmetic and one
+        // not: a player arriving on one is standing next to the other, and the
+        // `approach` cell this function hands back as a WITNESS was itself a
+        // door, so a tape told to walk in from there would have warped before it
+        // took a step. Non-adjacency fixes both at once — every door's flood
+        // predecessor is then guaranteed not to be a door.
+        const chosen = [];
+        for (const c of candidates) {
+            if (chosen.length === needs[id].length) break;
+            const adjacent = chosen.some((d) => Math.abs(d.tx - c.tx) + Math.abs(d.ty - c.ty) <= 1);
+            if (!adjacent) chosen.push(c);
+        }
+        if (chosen.length < needs[id].length) {
             fail(`levelSetExits: room ${id} needs ${needs[id].length} door cell(s) and its `
-                + `walkable component offers ${candidates.length} free cell(s) (flood of `
-                + `${flood.size} from (${start.tx}, ${start.ty}), ${taken.size} occupied). `
-                + 'A door outside the component would be an exit the player cannot reach, '
-                + 'which is exactly what reachabilityOf cannot see.');
+                + `walkable component offers ${chosen.length} usable cell(s) (flood of `
+                + `${flood.size} from (${start.tx}, ${start.ty}), ${taken.size} occupied, `
+                + 'doors kept non-adjacent). A door outside the component would be an exit '
+                + 'the player cannot reach, which is exactly what reachabilityOf cannot see.');
         }
         needs[id].forEach((linkIndex, n) => {
-            doorOf.set(`${id}:${linkIndex}`, candidates[n]);
+            doorOf.set(`${id}:${linkIndex}`, chosen[n]);
         });
     });
 

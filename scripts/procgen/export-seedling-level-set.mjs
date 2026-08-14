@@ -92,6 +92,17 @@ const OBSTACLES = num('count', 6);
 const TRIES = num('tries', 8);
 const SATURATION_K = num('saturation', 3);
 const ALLOW_ABORTS = has('allow-aborts');
+// ⛓ PHASE 5b. `none` reproduces the Phase 5 set — N ISOLATED ROOMS — and is kept
+// so the before/after is one flag rather than an old commit.
+const EXITS = arg('exits', 'chain');
+// room -> region (1..7), e.g. `--regions=1,1,1,2,2,2`. Empty means no set announces
+// anything, which is reported rather than defaulted (see `linkGeneratedRooms`).
+const REGIONS = arg('regions', '').split(',').filter(Boolean).map(Number);
+
+if (!['chain', 'ring', 'none'].includes(EXITS)) {
+    note(`export-seedling-level-set: --exits=${EXITS} is not one of chain, ring, none`);
+    process.exit(2);
+}
 
 if (!GENERATE_BIOMES[BIOME]) {
     note(`export-seedling-level-set: biome "${BIOME}" is not available — this build ships [${Object.keys(GENERATE_BIOMES).join(', ')}].`);
@@ -160,6 +171,9 @@ const { set, report } = buildLevelSet(entries, {
         // would be indistinguishable from a smaller request.
         ...(aborted.length > 0 ? { aborted_seeds: aborted } : {}),
     },
+    ...(EXITS === 'none'
+        ? {}
+        : { link: { topology: EXITS, ...(REGIONS.length > 0 ? { regions: REGIONS } : {}) } }),
 });
 
 const verdict = validateLevelSet(set);
@@ -186,19 +200,38 @@ say('');
 say('## notes');
 report.notes.forEach((n) => say(`  ${n}`));
 say('');
-// ⛔ REPORTED EVERY TIME. No generated room has an exit, so a set of N rooms is
-// N isolated rooms until Phase 5b lands exits as data. A set that validated
-// clean while being disconnected is exactly the quiet plan §6 exists to name.
+// ⛔ REPORTED EVERY TIME, and it is the number Phase 5b was measured against:
+// with `--exits=none` a set of N generated rooms is N ISOLATED ROOMS (1/N), which
+// is what the palette alone produces — it places obstacles, not transitions.
 const reach = report.reachability;
 say('## reachability from start — following only what the ROOM DATA carries');
 say(`  ${reach.reachable}/${reach.total} reachable from room ${reach.start}`);
 if (reach.unreachable.length > 0) {
     say(`  unreachable: ${reach.unreachable.join(', ')}`);
-    say('  ⛔ no generated room carries a teleporter, stairs or @fallthrough — the palette');
-    say('     places obstacles, not transitions. Exits as data is plan Phase 5b.');
+    if (EXITS === 'none') {
+        say('  ⛔ --exits=none: no generated room carries a teleporter, stairs or @fallthrough.');
+    }
 }
 if (reach.rooms_not_walked > 0) say(`  ${reach.rooms_not_walked} room(s) could not be walked (embed source)`);
 say('');
+// ⛓ AND THE DATA WALK IS NOT THE WHOLE CLAIM. `reachability` says a `to` exists
+// and is in range; it cannot see whether the player can stand on the thing
+// carrying it. The doors below were chosen from a flood over each room's real
+// collision world, so each one is reachable from that room's own start with
+// nothing cleared and no puzzle solved.
+if (report.link) {
+    say('## exits (plan §4.6, Phase 5b)');
+    say(`  topology ${report.link.topology}: ${report.link.links} two-way link(s), ${
+        report.link.exits} exit(s)`);
+    say(`  ${report.link.announced} announce a region, ${report.link.silent} announce nothing (${
+        report.link.regions_declared} room region(s) declared)`);
+    report.doors.forEach((d) => say(`  room ${d.room} (${d.cell.tx}, ${d.cell.ty}) -> room ${
+        d.to} at (${d.arrival.x}, ${d.arrival.y}), sign ${d.sign}, approached from (${
+        d.approach.tx}, ${d.approach.ty}) heading ${d.key}`));
+    say('  walkable cells per room: '
+        + report.link.components.map((c) => `${c.room}:${c.walkable}`).join(' '));
+    say('');
+}
 say('## delivery');
 say(`  ${chunks.length} chunk(s), largest ${Math.max(...chunks.map((c) => JSON.stringify(c).length))} B`);
 chunks.forEach((c) => say(`  chunk ${c.chunk_index}: ${c.rooms.length} room(s), ${JSON.stringify(c).length} B`));

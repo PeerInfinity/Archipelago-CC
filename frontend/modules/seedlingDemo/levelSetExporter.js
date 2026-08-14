@@ -48,6 +48,7 @@
  */
 
 import { recordToOel } from './procgenLevelOel.js';
+import { linkGeneratedRooms } from './levelSetExits.js';
 import {
     LEVEL_SET_SCHEMA_VERSION,
     NAMED_ROOM_KEYS,
@@ -90,11 +91,46 @@ export const DEFAULT_MUSIC = 0;
  * @param {number[]} [options.menuRooms]  title-screen cycle; defaults to [0]
  * @param {object} [options.start]        `{level,x,y}`; derived from entry 0
  * @param {object} [options.namedRooms]   defaults to `{}` — see the header
+ * @param {object|boolean} [options.link] PHASE 5b: give the rooms EXITS before
+ *        they are rendered. `true`, or `{topology, regions, element}` passed
+ *        through to `linkGeneratedRooms`. ⛔ OPT-IN AND NOT A DEFAULT: this
+ *        function is an assembler, and a caller whose records ALREADY carry
+ *        exits (a hand-authored set, a retargeted one) must not have a second
+ *        set of doors added underneath it. The CLI and the round trip pass it,
+ *        so the PRODUCT is connected while the library stays honest.
  * @returns {{set: object, report: object}}
  */
 export function buildLevelSet(entries, options = {}) {
     if (!Array.isArray(entries) || entries.length === 0) {
         fail('levelSetExporter: buildLevelSet needs a non-empty array of generated rooms');
+    }
+
+    // --- PHASE 5b: exits, before anything is rendered to OEL ------------------
+    //
+    // ⛓ IT HAS TO HAPPEN HERE. `linkGeneratedRooms` adds ENTITIES to a record;
+    // `recordToOel` below turns a record into the text a set carries. Linking
+    // after the render would mean parsing the XML back out and editing it as
+    // text, which is what the RETARGET arm is for and is the wrong tool when the
+    // record is still in hand.
+    let linkReport = null;
+    let doors = [];
+    if (options.link) {
+        const opts = options.link === true ? {} : options.link;
+        const linked = linkGeneratedRooms(entries.map((raw) => {
+            const entry = (raw && typeof raw === 'object' && raw.record) ? raw : { record: raw };
+            return {
+                record: entry.record,
+                // The generator's own start cell, which is the origin every
+                // reachability claim about this room is made from.
+                start: entry.summary?.startCell ?? { tx: 1, ty: 1 },
+            };
+        }), opts);
+        linkReport = linked.report;
+        doors = linked.doors;
+        entries = entries.map((raw, i) => {
+            const entry = (raw && typeof raw === 'object' && raw.record) ? raw : { record: raw };
+            return { ...entry, record: linked.records[i] };
+        });
     }
 
     // ⚠ FIELD PATHS, NOT ONE ENTRY PER ROOM. A 116-room set would otherwise
@@ -193,7 +229,17 @@ export function buildLevelSet(entries, options = {}) {
 
     return {
         set,
-        report: { invented: [...inventedFields].sort(), notes, reachability: reachabilityOf(set) },
+        report: {
+            invented: [...inventedFields].sort(),
+            notes,
+            reachability: reachabilityOf(set),
+            // ⛓ THE DOORS TRAVEL IN THE REPORT, NOT IN THE SET. Each carries the
+            // free cell it is approached from and the direction key that walks
+            // into it, which is what lets the round trip DRIVE a transition in
+            // the artifact instead of asserting that a number crossed. The set
+            // document's schema is frozen at v1 and this is not part of it.
+            ...(linkReport === null ? {} : { link: linkReport, doors }),
+        },
     };
 }
 

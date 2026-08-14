@@ -10,6 +10,8 @@
 // side moves.
 import { describe, it, expect } from 'vitest';
 
+import { emptyLevel, withTerrain } from './procgenLevel.js';
+
 import {
     buildLevelSet,
     apMappingInvalidation,
@@ -279,5 +281,50 @@ describe('the export survives the whole delivery pipeline', () => {
         const { chunks } = planLevelSetChunks(set);
         expect(chunks.map((c) => c.rooms.length)).toEqual([16, 1]);
         expect(Math.max(...chunks.map((c) => JSON.stringify(c).length))).toBeLessThan(239967);
+    });
+});
+
+// ── PHASE 5b: the `link` option, which is the wiring rather than the rule ─────
+//
+// The rule itself lives in `levelSetExits.test.js`. What is asserted here is
+// that the exporter puts it in the right place — BEFORE the record becomes OEL —
+// and that the doors it produces travel in the REPORT rather than in the frozen
+// set document.
+describe('buildLevelSet({link}) — exits as data', () => {
+    const walled = (level) => emptyLevel({ level });
+
+    it('turns a disconnected export into a connected one, and it is opt-in', () => {
+        const rooms = [walled(0), walled(1), walled(2), walled(3)];
+        expect(reachabilityOf(buildLevelSet(rooms, { setId: 'a' }).set).reachable).toBe(1);
+        const linked = buildLevelSet(rooms, { setId: 'a', link: true });
+        expect(reachabilityOf(linked.set).reachable).toBe(4);
+        expect(validateLevelSet(linked.set).errors).toEqual([]);
+    });
+
+    it('reports the doors, and does NOT put them in the set document', () => {
+        const { set, report } = buildLevelSet([walled(0), walled(1)], { link: { topology: 'chain' } });
+        expect(report.link.links).toBe(1);
+        expect(report.doors).toHaveLength(2);
+        expect(report.doors[0]).toHaveProperty('approach');
+        expect(JSON.stringify(set)).not.toMatch(/approach/);
+    });
+
+    it('floods each room from ITS OWN generator start cell, not from a fixed one', () => {
+        // A room whose only walkable pocket is around (8, 8): flooding from the
+        // default (1, 1) would refuse it, so the entry's summary must be read.
+        const offset = withTerrain(emptyLevel({ level: 0 }),
+            Array.from({ length: 8 }, (_, i) => ({ tx: i + 1, ty: 7, terrain: 'wall' }))
+                .concat(Array.from({ length: 6 }, (_, i) => ({ tx: 7, ty: i + 1, terrain: 'wall' }))));
+        const entries = [
+            { record: offset, summary: { startCell: { tx: 8, ty: 8 } } },
+            { record: emptyLevel({ level: 1 }), summary: { startCell: { tx: 1, ty: 1 } } },
+        ];
+        const { report } = buildLevelSet(entries, { link: true });
+        expect(report.link.components[0].walkable).toBeLessThan(64);
+        expect(report.doors.filter((d) => d.room === 0)).toHaveLength(1);
+    });
+
+    it('carries the link report into the export report only when linking happened', () => {
+        expect(buildLevelSet([record(), record()], { setId: 'x' }).report.link).toBeUndefined();
     });
 });

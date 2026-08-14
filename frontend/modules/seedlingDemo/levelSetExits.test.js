@@ -283,6 +283,23 @@ describe('linkGeneratedRooms — the EMIT arm', () => {
         });
     });
 
+    // ⛔ REGRESSION, FOUND ON THE REAL SIX-SEED EXPORT. Room 1's two doors came
+    // out at (8,1) and (8,2) — so the `approach` cell handed back as a witness
+    // for one of them WAS the other door, and a tape told to walk in from there
+    // would have warped before taking a step.
+    it('keeps two doors of one room non-adjacent, so no approach cell is a door', () => {
+        const { doors } = linkGeneratedRooms(rooms(5), { topology: 'ring' });
+        for (const d of doors) {
+            const others = doors.filter((o) => o.room === d.room && o !== d);
+            for (const o of others) {
+                expect(Math.abs(o.cell.tx - d.cell.tx) + Math.abs(o.cell.ty - d.cell.ty))
+                    .toBeGreaterThan(1);
+            }
+            expect(others.some((o) => o.cell.tx === d.approach.tx && o.cell.ty === d.approach.ty))
+                .toBe(false);
+        }
+    });
+
     it('gives every door an APPROACH cell that is free, adjacent, and names one key', () => {
         const rs = rooms(4);
         const { records, doors } = linkGeneratedRooms(rs, { topology: 'chain' });
