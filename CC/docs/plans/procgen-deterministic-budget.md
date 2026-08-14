@@ -4,9 +4,13 @@
 (2026-08-14): "make it one of the next priorities to make procgen
 deterministic, by making it tick based, not wall clock based."**
 
-The finding is old and has been recorded three times inside other arcs' as-built
-docs (`procgen/seedling-bot.md`, `procgen/omsi.md`) and deferred each time as
-"a design decision, nobody's in passing". It is now somebody's.
+The finding is old and had been recorded inside another arc's as-built doc
+(`procgen/seedling-bot.md`) and deferred as "a design decision, nobody's in
+passing". It is now somebody's.
+
+⛔ **This paragraph first said "recorded three times… (`seedling-bot.md`,
+`omsi.md`)". That was wrong — see §7.** I inflated the corroboration by citing a
+file I had not opened.
 
 ---
 
@@ -140,7 +144,18 @@ behaviour change and the new baseline separately.
 
 - `docs/json/developer/procgen/seedling-bot.md` — recorded during the tag
   allocator work (Phase 6 of the level-sets arc), deferred as a design decision.
-- `docs/json/developer/procgen/omsi.md` — the same property, independently.
+- ⛔ ~~`docs/json/developer/procgen/omsi.md` — the same property, independently.~~
+  **FALSE, and it was mine.** `omsi.md` does not record this defect at all; its
+  only wall-clock line (`:169`) is a **~12 s loop round-trip** measurement about
+  the bridge stepping the fork at 50 ticks/s — a different subject that shares a
+  word. I cited it from a memory pointer that said "Omsi… `procgen/omsi.md`"
+  without opening the file, which turned a defect recorded **once** into one
+  "recorded three times… independently".
+  ⛓ **The lesson is one this arc had already written down and I then committed
+  anyway: a comment citing examples is a claim, not a measurement — check the
+  POPULATION, not the exhibits.** Corroboration is the easiest thing to inflate,
+  because nobody re-opens a supporting citation; they only ever check the one
+  that surprises them.
 - `docs/json/developer/procgen/gotchas.md` — the cross-cutting entry, added
   2026-08-14, which points here.
 - `CC/docs/plans/seedling-external-level-sets.md` — bit three separate phases of
