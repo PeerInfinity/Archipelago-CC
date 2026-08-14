@@ -32,6 +32,18 @@
  *   boot past the end    the §8.3 control: one past this set's last room, which
  *                        the game does NOT refuse — asserted so the gate cannot
  *                        be read as proof the runtime bounds anything
+ *   PHASE 5b, the walk   a tape that HOLDS ONE KEY and walks into a door, so the
+ *                        game TRANSITIONS from the room data alone — with a
+ *                        no-input control at the same spot, and a boot ON the
+ *                        portal that must NOT warp (the `check()` latch every
+ *                        two-way link depends on)
+ *
+ * ⛔ WHAT THIS FILE CANNOT SEE, SAID OUT LOUD: the SIGN. `Game.begin()` announces
+ * a region by adding a `Message`, `botMobiles` walks `Vector.<Mobile>`, and
+ * `Message extends Entity`. The first version of the sign arm asserted a Message
+ * count and its control printed PASS for "0 messages" — true of every arm ever
+ * run, including a correct one. It is deleted rather than green; see the note the
+ * run prints.
  *
  * ⛔ ONE ARM = ONE FRESH PAGE (see the driver's header): after a single abort
  * the wasm throws and every later reading in that page is fiction while still
@@ -96,10 +108,16 @@ for (const seed of SEEDS) {
         seed, record: out.record, summary: out.summary, name: `${BIOME}_seed${seed}`,
     });
 }
+// ⛓ PHASE 5b. The regions split the set in two, so exactly one link crosses a
+// boundary and the sign arm has something to announce — with every other link
+// as its control. `region` is an INPUT to the sign rule and is never inferred
+// (a generated set has no regions of its own); see `levelSetExits.js`.
+const REGIONS = entries.map((e, room) => (room < Math.ceil(entries.length / 2) ? 1 : 2));
 const { set, report } = buildLevelSet(entries, {
     setId: `procgen-roundtrip-${entries.length}`,
     generator: 'scripts/procgen/check-seedling-generated-set.mjs',
     provenance: { biome: BIOME, seeds: entries.map((e, room) => ({ room, seed: e.seed })), bounds },
+    link: { topology: 'chain', regions: REGIONS },
 });
 const sender = validateLevelSet(set);
 const { chunks, oversized } = planLevelSetChunks(set);
@@ -107,7 +125,7 @@ const invalidation = apMappingInvalidation(set);
 
 // ── the arms ────────────────────────────────────────────────────────────────
 
-const tapeAt = (level, x = 80, y = 128) => JSON.stringify(parseTape({
+const tapeAt = (level, x = 80, y = 128, inputs = []) => JSON.stringify(parseTape({
     tape_version: 8,
     game: 'seedling',
     boot: { level, x, y },
@@ -122,10 +140,50 @@ const tapeAt = (level, x = 80, y = 128) => JSON.stringify(parseTape({
     rng: { seed: 987286273, split: false, cosmetic: 0, fp: 0 },
     tick_count: 0,
     inputs: [],
+    // ⚠ LAST, so it overrides the two defaults above rather than being
+    // overridden by them — which is what the first version did, silently
+    // producing an input-less tape for every walking arm.
+    ...(inputs.length === 0 ? {} : { inputs, tick_count: WALK_TICKS + 20 }),
 }));
 
 const deliverSteps = (cs) => cs.map((c) => ({ call: 'botLoadLevels', arg: JSON.stringify(c) }));
 const SETTLE_MS = 3000;
+
+// ── PHASE 5b: the transition arms ────────────────────────────────────────────
+//
+// ⛓ THIS IS §5's ACCEPTANCE, DRIVEN. Everything else in this file asks the
+// artifact what it THINKS it has; these three make it MOVE, from the room data
+// alone, with nothing correcting it afterwards. A door's `approach` cell is the
+// flood's own predecessor of the door — free, adjacent, and provably not itself
+// a door — so holding one key for `WALK_TICKS` walks into the portal.
+//
+// 16 px at WALK_SPEED 0.8 with a friction ramp is ~25 ticks; 90 leaves room and
+// the wall stops the player. ⚠ The MESSAGE is the only wall-clock-sensitive
+// readout in this file: `Message.render` fades `alpha` from 2.5 by 0.01 per
+// FRAME and removes itself at zero, so it lives ~250 rendered frames. The walk
+// plus the settle below is a fraction of that, and the two sign arms share the
+// same timing so a scheduling difference cannot make one pass and the other
+// fail (§14.4's roster lesson, applied before it bit).
+const WALK_TICKS = 60;
+const WALK_SETTLE_MS = 2500;
+const doorsOf = report.doors ?? [];
+const crossing = doorsOf.find((d) => d.sign !== 0 && d.approach);
+const withinRegion = doorsOf.find((d) => d.sign === 0 && d.approach
+    && d.room !== crossing?.room);
+const walkSteps = (door, x, y, inputs) => [
+    ...deliverSteps(chunks),
+    { call: 'botLoadTape', arg: tapeAt(door.room, x, y, inputs) },
+    { call: 'botStart' },
+    { sleep_ms: WALK_SETTLE_MS },
+    // ⚠ MOBILES FIRST. The Message fades and removes itself; the level does not
+    // change back. Reading the perishable channel earlier costs nothing and the
+    // reader takes the LAST value of each call either way.
+    { call: 'botMobiles' },
+    { call: 'botStatus' },
+];
+const walkIn = (door) => walkSteps(door,
+    door.approach.tx * 16, door.approach.ty * 16,
+    [{ key: door.key, from: 0, to: WALK_TICKS }]);
 // Two DIFFERENT rooms; see the arm's comment. Falls back to whatever the set has
 // when it is smaller than that.
 const BOOT_ROOMS = [...new Set([1, 3].map((n) => Math.min(n, set.rooms.length - 1)))];
@@ -176,6 +234,38 @@ const arms = [
             { call: 'botLoadTape', arg: tapeAt(set.rooms.length - 1) },
         ],
     },
+    // ── PHASE 5b ────────────────────────────────────────────────────────────
+    ...(crossing === undefined ? [] : [
+        {
+            // THE TRANSITION. One key, one door, and the game's own
+            // `Teleporter.update()` does the rest.
+            name: 'a REGION-CROSSING exit transitions the game',
+            steps: walkIn(crossing),
+        },
+        {
+            // ⛔ THE CONTROL FOR IT. Same boot, no input: the level must NOT
+            // change. Without this, "the level is now N" is equally consistent
+            // with a boot that simply landed in N.
+            name: 'and standing still at the same spot does NOT transition',
+            steps: walkSteps(crossing, crossing.approach.tx * 16, crossing.approach.ty * 16, []),
+        },
+        {
+            // ⛓⛓ THE LATCH — the mechanism every two-way link in every
+            // generated set depends on. Booting ON a portal must not warp,
+            // because `Game.update()` runs each entity's `check()` behind a
+            // `!checked` latch BEFORE `super.update()`, so the portal is already
+            // `playerTouching`. Vanilla lands the player on a return portal four
+            // times and would break too if this were false.
+            name: 'booting ON a portal does not warp — the check() latch',
+            steps: walkSteps(crossing, crossing.oel.x, crossing.oel.y, []),
+        },
+    ]),
+    ...(withinRegion === undefined ? [] : [{
+        // A SECOND door, differently signed, so the transition claim rests on
+        // more than one door of one room.
+        name: 'a within-region exit transitions and announces NOTHING',
+        steps: walkIn(withinRegion),
+    }]),
 ];
 
 // ── drive ───────────────────────────────────────────────────────────────────
@@ -388,6 +478,84 @@ if (past.crashed || tapeReturns.length < 2) {
     check(`boot.level ${last} — the last real room — is ACCEPTED`,
         edge === 'ok', JSON.stringify(edge));
 }
+
+// ── PHASE 5b: the transition, driven ────────────────────────────────────────
+//
+// ⛔ THE SENDER SIDE FIRST, so a red arm below is attributable. `reachabilityOf`
+// walks the DATA; it is the number Phase 5 measured at 1/6 and the one this
+// slice exists to move.
+check('the exported set is REACHABLE from its start — the blocking item',
+    report.reachability.reachable === set.rooms.length,
+    `${report.reachability.reachable}/${report.reachability.total}, unreachable [${
+        report.reachability.unreachable.join(', ')}]`);
+check('exactly the region-crossing exits carry a sign',
+    doorsOf.filter((d) => d.sign !== 0).length === report.link.announced
+    && doorsOf.every((d) => (d.sign === 0) === (REGIONS[d.room] === REGIONS[d.to])),
+    `${report.link.announced} announced of ${doorsOf.length}`);
+
+const levelAfter = (a) => {
+    const st = lastOf(a, 'botStatus');
+    return st == null ? null : JSON.parse(st);
+};
+
+if (crossing === undefined) {
+    check('the set contains a region-crossing door to drive', false,
+        'no door carries a sign — the regions passed to buildLevelSet did not split the set');
+} else {
+    const walked = arm('a REGION-CROSSING exit transitions the game');
+    const still = arm('and standing still at the same spot does NOT transition');
+    const onPortal = arm('booting ON a portal does not warp — the check() latch');
+    const s = levelAfter(walked);
+    const c = levelAfter(still);
+    const p = levelAfter(onPortal);
+
+    // ⛓ THE WHOLE OF §5's FIRST ACCEPTANCE. Nothing in the page called
+    // `teleport`; the room data said where the door goes and the game went.
+    check(`walking into room ${crossing.room}'s door at (${crossing.cell.tx}, ${crossing.cell.ty}) reaches room ${crossing.to}`,
+        s != null && !s.error && s.level === crossing.to,
+        s == null ? 'no botStatus' : `level ${s.level}, tick ${s.tick}${s.error ? `, error ${s.error}` : ''}`);
+    check('CONTROL: the same boot with no input stays put',
+        c != null && c.level === crossing.room,
+        c == null ? 'no botStatus' : `level ${c.level}`);
+    check('LATCH: booting ON the portal does not warp (check() runs before update())',
+        p != null && p.level === crossing.room,
+        p == null ? 'no botStatus' : `level ${p.level} — if this is ${crossing.to}, every two-way link in every generated set is an infinite warp`);
+
+    if (withinRegion !== undefined) {
+        const inner = arm('a within-region exit transitions and announces NOTHING');
+        const i = levelAfter(inner);
+        // ⚠ NOT `=== withinRegion.to`. The tape holds one key for WALK_TICKS and
+        // the arrival lands ON the destination's return door, so a player who
+        // keeps walking in the same direction can cross a SECOND door before the
+        // input ends — measured: room 0 -> 1 -> 2 in one arm. That is the
+        // mechanism working twice, not a defect, and an assertion naming one
+        // room would have called it a failure.
+        check(`CONTROL: a within-region door (room ${withinRegion.room} -> ${withinRegion.to}) also transitions`,
+            i != null && !i.error && i.level !== withinRegion.room
+            && REGIONS[i.level] === REGIONS[withinRegion.room],
+            i == null ? 'no botStatus' : `level ${i.level} (region ${REGIONS[i?.level]})`);
+    }
+}
+
+// ⛔⛔ §5's SECOND ACCEPTANCE IS NOT DRIVEN HERE, AND SAYING SO IS THE POINT.
+// "the destination room's sign text is the new destination's" is observable in
+// the game as a `Message` entity that `Game.begin()` adds when `sign >= 0` — and
+// this artifact has NO READOUT THAT CAN CARRY IT: `botMobiles` walks
+// `Vector.<Mobile>` (plus `Pod`), `Message extends Entity`, and `botStatus` has
+// no sign field. The first version of this gate asserted a Message count anyway;
+// its CONTROL arm printed PASS for "0 messages" — which was true of every arm
+// ever run, including one that announced a region correctly. A gate that cannot
+// fail is not a gate (kickoff §4), so it is gone rather than green.
+//
+// ⇒ the sign rule is asserted on the JS side (`levelSetExits.test.js`, 43 tests)
+// against a transcription of `Teleporter`'s `sign = _sign - 1`, `Game.sign` and
+// `Message.as`'s closed 7-entry table. Driving it needs a new bot callback,
+// which is an AS3 change and out of this slice's scope by §5.
+console.log('');
+console.log('## NOT DRIVEN: the sign');
+console.log('  the announcement is a `Message` entity; botMobiles walks Vector.<Mobile> and');
+console.log('  Message extends Entity, so no readout in this artifact can see it. The rule is');
+console.log('  asserted in levelSetExits.test.js; driving it would need an AS3 change.');
 
 console.log('');
 console.log(`## the export, for the record`);
