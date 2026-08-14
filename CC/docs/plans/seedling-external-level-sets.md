@@ -256,8 +256,11 @@ Making vanilla a manifest does not by itself decide whether its OEL XML stays
 | (b) | stripped; the page must supply everything | ✓ literally one | ✗ **the wasm cannot boot alone** | smaller |
 | (c) | the `[Embed]` Class, converted to XML through the SAME entry the page's strings use | ✓ one **loader**, two 3-line **resolvers** | ✓ | unchanged |
 
-⚖ **TAKING (c)**, as the default a careful reader would pick — flagged here
-because it is mine, not the user's, and it is cheap to overrule:
+⚖ **TAKING (c) — RATIFIED BY THE USER 2026-08-13**, put to them explicitly at
+the Phase 3 → 3b boundary because 3b is where the choice stops being cheap to
+reverse. It began as a recommendation of mine rather than a ruling; it is now a
+ruling, and (b)'s standalone-boot cost was the deciding factor. The reasoning
+that earned it:
 
 - it keeps the wasm **playable with no page**, which (b) gives up — and a
   standalone artifact is the thing every existing verify script and the public
@@ -410,6 +413,10 @@ Checked before planning further, because Phase 3 is unverifiable without it —
 2. **The AS3 work lands in a DIFFERENT REPO.** Commits go to `~/CC/seedling`
    on `bot`; pushing that branch is its own decision and is not covered by this
    repo's push-by-default rule.
+   ⚖ **ASKED AND GRANTED 2026-08-13 for Phase 3's six commits** — `bot` pushed
+   `7514b96..99c539c` (`PeerInfinity/Seedling`). ⛔ The rule itself is
+   UNCHANGED and this grant does **not** generalise: it covered a named set of
+   commits that were already written. A later slice asks again.
 
 ---
 
@@ -509,14 +516,19 @@ rather than invent.
 1. ~~Does EI take a whole bundle in one call?~~ ⚖ **ANSWERED NO — §8.1.** The
    vanilla bundle is 1,676,662 B of JSON and the runtime aborts above
    ~1.27–1.35 MB in one call. Chunk at ≤16 rooms (~240 KB), proven over 15
-   consecutive calls (8 are needed for 116 rooms).
+   consecutive calls. ⛔ **NINE chunks, not eight** — the "8" here was
+   rooms-only arithmetic (116 ÷ 16). Measured against real data by Phase 3:
+   **3 of the 9 chunks are BYTE-bound, not room-bound**, which is §9.1's
+   rooms-AND-bytes rule showing up in the count.
 2. ~~Is there a third cross-level entity reference the pattern sweep missed?~~
    ⚖ **ANSWERED — §8.2. There are six, plus a whole category the question did
    not anticipate: level indices carried in the OEL DATA.**
 3. ~~Does the vanilla set ship AS a manifest?~~ ⚖ **DECIDED YES (user,
    2026-08-13)** — §4.3, Phase 3b. The sub-fork it opened (where vanilla's room
-   DATA lives) is answered (c) on my recommendation, not the user's: embeds
-   stay, the artifact stays standalone, and the residue is named in §4.3.
+   DATA lives) is **also ruled now: (c), RATIFIED BY THE USER 2026-08-13** at
+   the Phase 3 → 3b boundary, having started as a recommendation of mine.
+   Embeds stay, the artifact stays standalone, and the residue is named in
+   §4.3. ⇒ nothing in §4.3 is awaiting a ruling any more.
 4. ~~`TAGS_PER_LEVEL = 30` is defined twice in the model.~~ ⚖ **DONE
    2026-08-13, `0426eff9b`.** `breakableRocks.js` is the canonical home
    (`procgenSeedling` and `outOfBandLedger` already imported from there);
