@@ -441,7 +441,13 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       table indirection; `botLoadLevels`; `Bot.as`'s three bounds checks —
       **four**, see §10. **DONE 2026-08-13, §10**; five commits in
       `~/CC/seedling` on `bot`, ⛔ **not pushed** (§4.7 note 2).
-- [ ] **Phase 3b — Mount vanilla as a manifest** (§4.3, shape (c)): the
+- [x] **Phase 3b — Mount vanilla as a manifest** — **DONE 2026-08-13, §11.**
+      Five commits in `~/CC/seedling` on `bot` (⛔ not pushed) + `022ad6ea3`
+      here. Zero line shift (§11.1); the manifest gate found `new Array(45)`
+      (§11.3); a seventh code-built room reference, whose arrival the frozen
+      `roomRef` cannot carry (§11.4); both gates made to fail on purpose
+      (§11.6). Original text follows.
+      (§4.3, shape (c)): the
       embedded-asset resolver, the built-in `seedling-vanilla` manifest, and
       §3.5's six constants moving into it. ⛔ Lands ALONE — it is the only seam
       that deletes literals. **Its acceptance is that the ordinary game is
@@ -1383,7 +1389,17 @@ game's rendering, its audio, and the 43 unvisited rooms are outside that claim.
 - `probe-seedling-level-set-transport.mjs` (phase 3's, re-run on this build) —
   **ALL ARMS PASS**, 25 arms, one fresh page each. The receiver did not regress,
   and arm 5b still shows a delivered set's XML is what loads.
-- `verify-seedling-bot-differential.mjs --win --tier=full` — **SWEEP_RESULT**
+- `verify-seedling-bot-differential.mjs --win --tier=full` — **153/153 tapes,
+  3,541 checks, 0 failures, `ALL CHECKS PASSED`**, ~2h35m of serial replay on
+  the real-GPU rig (`intel / gen-9`, 26–28 fps). Every tape's `live game matches
+  the committed oracle stream`. The 43 `SKIP` lines are the roster's own
+  declared abstentions (staged-chain custody, the R8 goal ledger) and are
+  printed *because* an absence must be reported — none of them is this phase's.
+  ⛓ **The expectations were recorded from a PRE-PHASE-3 artifact**, so a green
+  sweep here clears phase 3's four seams and phase 3b's deletion together, which
+  is a stronger claim than the baseline-vs-treatment comparison that was
+  budgeted for. No baseline run was needed: attribution only costs anything when
+  something is red.
 - `npx vitest run frontend/modules/seedlingDemo/` — **3775**, unmoved from
   phase 3.
 - `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
