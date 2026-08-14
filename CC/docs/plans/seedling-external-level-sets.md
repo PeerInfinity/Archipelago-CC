@@ -509,6 +509,8 @@ carrying `set_id` everywhere:
 - **The AP mapping** (`frontend/modules/flashPanel/games/seedling.json`) — ~50
   locations, teleport coords, boss gating — is keyed to the original rooms.
   Under a replaced set it describes a game that is not loaded.
+  ⛓ **MEASURED 2026-08-14 — see §6.1. It does NOT force more `named_rooms`, and
+  the reason is a distinction worth keeping.**
 - **The model, the atlas and every committed tape** are about the original 116.
   A tape declares `boot.level` and `{level, tag}` clears; under a different set
   those are different rooms.
@@ -529,7 +531,59 @@ carrying `set_id` everywhere:
 The region atlas's `atlas_id` / `provenance` fields are the precedent to copy
 rather than invent.
 
----
+### 6.1 The AP-mapping residue — MEASURED 2026-08-14, and it is NOT `named_rooms`-shaped
+
+Carried unmeasured through Phases 1–4 and **declined by five slices**, because
+each correctly judged it outside its scope. Measured now, since Phase 5 is the
+exporter and would otherwise emit sets against an unenumerated obligation.
+
+**Denominator:** both artifacts read in full —
+`flashPanel/games/seedling.json` (9,870 B) and `flashPanel/atlases/seedling.json`
+(8,685 B). References found **by asking the consumer**, not by scanning key
+names — which mattered, see the trap below.
+
+| where | count | what it actually is |
+|---|---|---|
+| `region_coords` | **9** | a **debug teleport UI** (`flashPanelUI` dropdowns → `flashBridgeAdapter.teleportToRegion`) |
+| `location_coords` | **11** | the same UI's item jump-list |
+| atlas `map_ref` | **4** | region → level id (`0, 86, 2, 3`) |
+| **total** | **24** | |
+
+**Both tables are DERIVED, and both derivations were checked:**
+
+- ⛔ **8 of the 9 `region_coords` are transcribed from `Player.as`'s debug-warp
+  list — SEVEN of them from the block that is COMMENTED OUT in the game
+  source.** `Rostef (30,64,128)` is *"Lighting the Path"*, `Lacste (40,400,432)`
+  is *"Fall of the Totem"*, `Ghethis (113,64,80)` is *"Bloody"*, and so on; the
+  names are `Message.as`'s seven `sign` titles. ⚠ `seedlingOgmo.js:20-25` claims
+  these are copies of shipped exit data, citing two examples — **that
+  generalisation is false: only 2 of 9 match any `(to, playerx, playery)` in the
+  corpus** (`Owl's Nest`, `Gundernourd`). Two examples, one of each kind, and
+  the comment generalised from the wrong one.
+- **`location_coords` is exact and mechanical:** 11/11 name a level that really
+  contains the right entity, `x` matches the entity **every time**, and `y`
+  differs by **exactly one tile** — `+16` for ten, `−16` for `Conch` alone. It
+  is "stand one tile off the item", not a hand-entered coordinate.
+
+⇒ **NEITHER FORCES A `named_rooms` ENTRY.** `named_rooms` exists for references
+**the game's own AS3 makes** that a replaced set cannot otherwise express — a
+teleporter built at runtime, an ending destination. All 24 of these are the
+**frontend describing the vanilla game to itself**, for a convenience UI and a
+map. Under a replaced set they describe a game that is not loaded, but the cure
+is to **regenerate or explicitly invalidate them per set** — both are derivable
+from the set itself — not to widen a vocabulary the game reads.
+
+⚖ ⇒ **This is a PHASE 5 obligation, not a schema one.** Whatever emits a set
+must emit or invalidate these 24 alongside it; a set shipped with the vanilla
+mapping still attached is a silent mismatch of exactly the kind §6 exists to
+name. The `set_id` + content hash already built is the mechanism.
+
+⚠ **THE TRAP, and it is the same one §8.2b found in the OEL data.** A scan for
+keys named `level` finds **zero** in the atlas — its level ids are called
+`map_ref`. `regionAtlasValidator.js:196` says it plainly: *"`map_ref` — a level
+id"*. **A key-name scan answers "what is it called", never "what is it".** Ask
+the consumer. That is now three times in this arc: `@fallthrough`/`@room` in the
+OEL, and `map_ref` here.
 
 ## 7. Open questions
 
