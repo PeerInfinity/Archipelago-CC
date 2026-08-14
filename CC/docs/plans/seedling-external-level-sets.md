@@ -466,14 +466,14 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       commits here + `5129607` in `~/CC/seedling` (⛔ not pushed). It also
       found the extractor BROKEN since phase 3b (§12.3) and two persistence
       slots claimed by CODE (§12.4).
-- [ ] **Phase 4 — Persistence + the save stamp** (§4.2). The `Main.as:319`
-      rule, the `set_id` field, and the mismatch path that rebuilds loudly.
-      ⛓ **§4.2's "EXTEND it with `true` if it is short" branch is UNREACHABLE
-      as written** — measured §12.8. `saveStampMatches` compares `set_id` AND
-      `provenance.content_hash`, and the hash covers `rooms`, so a matching
-      stamp means an identical document and therefore an identical room count.
-      Decide what that branch should do (name the inconsistency, rather than
-      silently extending) before implementing it.
+- [x] **Phase 4 — Persistence + the save stamp** (§4.2) — **DONE 2026-08-14,
+      §13.** Two commits in `~/CC/seedling` (⛔ not pushed) + `8c15abbd1` here.
+      ⛔ The rule could NOT live at `Main.as:319` (§13.1): a delivery arrives
+      after boot, so it reconciles in `LevelSet`'s constructor instead. §4.2's
+      "extend it with `true`" branch was unreachable as written and is replaced
+      by the case that CAN happen (§13.2); a mismatch takes the whole save, not
+      just the table (§13.4); an unstamped save is ADOPTED (§13.3); the
+      receiver's capacity stopgap is gone (§13.6).
 - [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
       (`procgenSeedling` output → bundle), including the per-level metadata the
       manifest now owns.
@@ -1713,3 +1713,226 @@ the guard itself is fine and was left alone.
 - ⚠ **Still unmeasured, inherited from §9.6, §10.4 and §11.9:** whether
   `flashPanel/games/seedling.json` and the region atlas force more
   `named_rooms`. Four phases have now declined it.
+
+---
+
+## 13. PHASE 4 — PERSISTENCE + THE SAVE STAMP (2026-08-14)
+
+Two commits in `~/CC/seedling` on `bot` on top of `5129607` (⛔ **not pushed** —
+§4.7 note 2, ask again), plus `8c15abbd1` here.
+
+| commit | what |
+|---|---|
+| `23a0208` (seedling) | the save belongs to a SET; the table is that set's size |
+| `62f3988` (seedling) | no save at all is not a RESET — caught by writing the gate |
+| `8c15abbd1` | `check-seedling-save-stamp.mjs`, and phase 3's capacity arm flips |
+
+### 13.1 ⛔ THE RULE HAD TO RUN SOMEWHERE §4.2 DID NOT NAME
+
+§4.2 says `Main.as:319`'s `if (!SAVE_FILE.data.levelPersistence)` *becomes* the
+rule. Measured, that line cannot carry it:
+
+`Main.begin()` opens the SharedObject, calls `startSave()`, then `printItems()`,
+then `new Game(0, 80, 128)` (`Main.as:44-51`). **A delivery happens later — the
+page has to boot before it can push a set.** So a rule that lives only at :319
+sizes the table from whatever was active at BOOT, which is always the built-in
+vanilla manifest, and the case the whole phase exists for — a set arriving with
+a save already on disk — never reaches it.
+
+⇒ **reconciliation lives in `LevelSet`'s CONSTRUCTOR**, beside
+`seedRuntimeTables` and for its stated reason: a set becomes real exactly once,
+there, whether it arrived over EI or was built from the embeds. Two call sites
+could disagree about the rule; one cannot. `startSave()`'s first statement now
+asks for the active set — which is what builds the built-in one and reconciles
+against it — and `Main.as:319` is a docblock saying where the table went.
+
+⚠ **AND THE ORDER IS LOAD-BEARING IN A SECOND WAY.** `printItems()` reads the
+persistence table (`Main.as:135`) and runs immediately after `startSave()`, so
+the table must exist by the time `startSave()` returns — it cannot be deferred
+to the first room load. That is why the call is at the TOP of `startSave` and
+not at :319 where the old block was.
+
+### 13.2 The rule, in full — and what replaced the unreachable branch
+
+| the save says | the table | what happens |
+|---|---|---|
+| nothing, and there is no table | — | **build and stamp.** Not a reset: this is every first boot |
+| nothing, table FITS the set | `n * 30` | ⛓ **ADOPT** — stamp it, keep everything (§13.3) |
+| nothing, table does not fit | other | fresh save |
+| **the same `set_id`**, table fits | `n * 30` | ⛓ **KEEP IT ALL** — the ordinary path |
+| **the same `set_id`**, table does NOT fit | other | ⛔ **NAME IT and rebuild** (below) |
+| a different `set_id` | any | fresh save, naming both sets |
+
+⛓ **THE COMPARISON IS `set_id` ALONE, AND THAT IS THE CONTENT HASH.** The sender
+stamps every set `<base>-<FNV-1a of the canonical document>` and refuses one
+whose id does not end in its own hash (§9.1 rule 2), so an edited set reusing its
+name is already a different id by construction. The receiver does **not**
+recompute the hash: that would be two implementations of one identity, which is
+the one place a divergence is invisible, and §10.2's split says this side does
+not re-implement the sender's rules.
+
+⛔ **AND THAT IS WHY §4.2's "EXTEND IT WITH `true` IF IT IS SHORT" DOES NOT
+EXIST.** A matching stamp means an identical document, so the room count cannot
+have moved — the branch is unreachable as the plan wrote it (measured before
+implementing, §12.9). What sits there instead is the case that *can* happen: a
+stamp that matches over a table that cannot belong to that set, which means the
+delivery is not what its id claims (a hand-rolled envelope that never went
+through the sender) or the table was truncated. Extending it with `true` would
+paper over the only evidence of the disagreement. It NAMES it and rebuilds.
+**Driven — arm 6 of the new gate.**
+
+### 13.3 ⛓ AN UNSTAMPED SAVE IS ADOPTED, NOT DESTROYED
+
+Every save written before this phase was written under the compiled-in 116,
+because no earlier build could size the table any other way. So an unstamped
+save whose table FITS the set being mounted **is** that set's table, and it is
+adopted with its progress intact. The alternative — treat unstamped as
+mismatched — would wipe every existing player's game on the upgrade, which no
+part of §4.2 asks for and which is invisible until it happens to someone.
+
+⚠ **IT CANNOT ARISE BY ITSELF IN THIS ARTIFACT.** The runtime models
+SharedObject in process and never writes a `.sol` (`avm2_amf.c:1907`), so no
+save here can predate anything — the branch would have been shipped
+unexercised. `botForgeSaveStamp` exists for exactly that: a lever whose name
+says it forges a save state rather than reaching one by playing. Forging the
+stamp to `""` over a live table and re-delivering the same set drives the branch
+precisely.
+
+⇒ ⚠ **and the same fact bounds the whole phase**: in THIS build a save never
+outlives its page, so every mismatch this gate drives is one that happened
+*within* a session. The cross-session case — the one a player would meet — is
+the same code on a runtime that persists, and is not exercised here.
+
+### 13.4 A mismatch takes the WHOLE save
+
+§4.2's rule names `levelPersistence` and stops there. `SAVE_FILE.data` also
+carries `level` and `playerPositionX/Y`, which are **exactly as set-relative**:
+resuming at index 37 of a set that never had a room 37, or at (240, 256) in a
+room whose geometry is different, is the same silent reinterpretation with no
+rule attached to it. `freshSaveForLevelSet` clears the SharedObject, re-opens it
+(following `clearSave()`'s own precedent rather than trusting an emulated
+`SharedObject` to leave `data` usable), rebuilds the table at the mounted size,
+stamps it, and re-runs `startSave()` — unless it is already inside it, which is
+what the one boolean guard is for.
+
+### 13.5 Two outcomes, two channels
+
+`Main.levelSetReset` is its own field and **not** `Game.levelSetError`. That one
+means *a delivery was REFUSED*, and the transport probe reads it as exactly
+that; a reset is the opposite — the delivery was accepted and the save could not
+come with it. Borrowing the channel would make a healthy mount read as a
+refusal and would disarm the gate that checks refusals.
+
+⚠ **AND A FIELD THAT CRIES WOLF GETS SKIPPED.** The first cut treated "no table
+and no stamp" — the state of every first boot — as an unstamped save being
+discarded, which put a reason string in the readout on every single launch.
+Caught by writing the gate that reads it, before the build baked it in
+(`62f3988`). `levelSetReset` now means something WAS thrown away, and arm 1d
+asserts it is empty at boot.
+
+### 13.6 The stopgap is gone
+
+`LevelSet.acceptChunk`'s capacity refusal — `set has N rooms but the persistence
+table addresses M` — is deleted, as §10.4 said phase 4 would. The `maxRooms`
+parameter and `Bot.persistenceLevelCapacity` went with it rather than staying as
+an input nobody reads. ⇒ **§10.2's declared `receiver_only` divergences drop from
+two to one**: only an `embed`-sourced room is still servable-but-not-valid.
+
+The transport probe's **arm 6 is kept and inverted**, not deleted: a rule that
+stops applying deserves a witness that it stopped, and a deleted case leaves no
+record that the delivery was ever refused.
+
+### 13.7 The line-number cost: EMPTY, a third time
+
+`git diff -U0` hunk headers. `Main.as` is cited **88** times, the highest at
+**:319** — the block replaced in place, whose docblock now says where the table
+went. Its two new statements ride on EXISTING lines (`:232`, `:337`) and its new
+members are appended past the last citable line; the only hunks below are the
+closing braces. `Bot.as` is cited **54** times, all at or below `:1466` in
+original numbering (phase 3's table maps them), and every hunk here is at
+`:3196` or beyond except the callback registration, which rides on an existing
+line. `LevelSet.as` is cited **nowhere** — measured, not assumed — and is the
+one file that took real edits.
+
+⇒ **every `File.as:NNN` citation in the model still points at what it names.**
+
+### 13.8 ⛔ THE GATE WAS MADE TO FAIL, AND THE FIRST ATTEMPT WAS NOT GOOD ENOUGH
+
+Phase 3b's standard is one mutant build carrying two non-overlapping defects.
+The obvious pair here was:
+
+| mutation | breaks |
+|---|---|
+| **M1** the matching-stamp KEEP branch rebuilds instead of returning | "the same set keeps your progress" |
+| **M2** `buildLevelPersistence` sizes from the compiled-in room count again | "the table follows the mounted set" |
+
+Measured on that build: **8 of 20 save-stamp checks red, 1 of 26 transport arms
+red** (arm 6, the capacity claim), and the manifest gate **24/24 GREEN** — a
+clean negative control that phase 4's defects do not disturb phase 3b's.
+
+⛔ **BUT M2 MASKED M1, SO THE PAIR PROVED LESS THAN IT LOOKED.** With the table
+sized at 116 under a 5-room set, arm 3b failed through the *size* branch, not
+the branch M1 broke — its reason read `matches, but its table holds 116
+level(s)`. A defect whose failure is attributable to the other defect has not
+been independently observed, and "the same set keeps your progress" is the one
+claim here whose failure mode is silent data loss.
+
+⇒ **a second build, M1 alone.** It reddens **exactly arms 3b and 3c and nothing
+else** — 18 of 20 still pass, including 3a, the control that the tape really
+cleared the slot:
+
+```
+FAIL: 3b … cleared=[] reset="save stamp "stamp-a-93e40d64" matches, but its
+           table holds 5 level(s) and this set has 5 — the id is content-derived,
+           so it cannot describe both"
+```
+
+⛓ **AND THE REASON IS VISIBLY NONSENSE, WHICH IS THE POINT.** "holds 5 and this
+set has 5" is a disagreement between two equal numbers — exactly what a broken
+KEEP branch falling through to the mismatch path produces, and a verdict only
+that defect could write.
+
+⚠ **ONE THING THE PAIR SHOWS THAT DISJOINTNESS WOULD HAVE HIDDEN:** M2 reddens
+the save-stamp gate AND the transport probe, because arm 7 of the first and arm
+6 of the second are the same claim measured from two directions. That overlap is
+a property worth having, not a flaw in the mutation — the capacity claim has two
+independent witnesses.
+
+### 13.9 Gates
+
+- `check-seedling-save-stamp.mjs` — **20/20**, first run, in the built artifact
+  (`seedling_bot_ap_p4b`, `intel / gen-9`). Every branch of §4.2's rule driven,
+  including the two that no gameplay can reach in this build.
+- `probe-seedling-level-set-transport.mjs` — **ALL 26 ARMS PASS**, with arm 6
+  inverted (a 117-room set now mounts and its table addresses 117).
+- `check-seedling-vanilla-manifest.mjs` — **24/24**, unmoved.
+- `npx vitest run frontend/modules/seedlingDemo/` — **3790**, unmoved from phase
+  4a; nothing in the vitest graph changed (the phase's JS is two
+  `scripts/procgen` files). ⚠ **The first run of it reported `1 failed`, and it
+  was a MACHINE claim, not a code one** — it raced a 16-minute `emcc` build on
+  the same box. Re-run twice on a quiet one (`/proc/loadavg` 1.87): 3790/3790,
+  exit 0 both times. Recorded rather than quietly re-run, because "I ran it
+  again and it was fine" is how a real intermittent gets buried.
+- `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
+  `1fedb0ab35b7cd74accecf0345bdc893`.
+- The eleven `check-seedling-editor-*.mjs` were **not** run: no editor code, no
+  procgen module and no page changed.
+
+### 13.10 What phase 4 did NOT do
+
+- ⚠ **THE CROSS-SESSION CASE IS UNEXERCISED, AND IT IS THE ONE A PLAYER MEETS.**
+  This runtime models SharedObject in process and never writes a `.sol`
+  (`avm2_amf.c:1907`), so every save here dies with its page. Every mismatch the
+  gate drives happened *within* one session. The same code on a persisting
+  runtime is what a real upgrade would run, and nothing here has run it.
+- ⚠ **`botForgeSaveStamp` IS TEST SURFACE IN A SHIPPING BUILD.** It exists
+  because two branches — adoption, and the stamp-matches-but-size-differs case —
+  are otherwise unreachable here. It writes one field and nothing calls it.
+- ⚠ **A MOUNT MID-PLAY STILL DOES NOT RELOAD THE WORLD** (§10.4). It now also
+  throws the save away, so the player is standing in a room from the old set
+  with a fresh save behind them. `botStart` after delivery remains the rule.
+- ⚠ **Nothing in production delivers a set** — `botLoadLevels`' only callers are
+  the probes. Phase 5 is the producer.
+- ⚠ **Still unmeasured, inherited from §9.6, §10.4, §11.9 and §12.9:** whether
+  `flashPanel/games/seedling.json` and the region atlas force more
+  `named_rooms`. Five phases have now declined it.
