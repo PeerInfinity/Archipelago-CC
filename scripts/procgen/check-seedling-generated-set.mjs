@@ -157,14 +157,21 @@ const SETTLE_MS = 3000;
 // flood's own predecessor of the door — free, adjacent, and provably not itself
 // a door — so holding one key for `WALK_TICKS` walks into the portal.
 //
-// 16 px at WALK_SPEED 0.8 with a friction ramp is ~25 ticks; 90 leaves room and
-// the wall stops the player. ⚠ The MESSAGE is the only wall-clock-sensitive
-// readout in this file: `Message.render` fades `alpha` from 2.5 by 0.01 per
-// FRAME and removes itself at zero, so it lives ~250 rendered frames. The walk
-// plus the settle below is a fraction of that, and the two sign arms share the
-// same timing so a scheduling difference cannot make one pass and the other
-// fail (§14.4's roster lesson, applied before it bit).
-const WALK_TICKS = 60;
+// ⛔ THE HOLD IS BOUNDED SO ONE TRANSITION IS THE NORMAL CASE, and the first
+// version was not bounded at all. 16 px at WALK_SPEED 0.8 with a friction ramp
+// costs ~23-27 ticks (measured over four runs); the arrival lands ON the
+// destination's return door, so a player still holding the key can walk on
+// through the NEXT door. Measured at 60 ticks: room 0 -> 1 -> 2 in one arm.
+//
+// ⚠ 45 IS A MEASURED BOUND, NOT A PROOF. It holds the crossing arm to exactly
+// one hop in every run so far, and the within-region arm STILL reaches room 2
+// from room 0 — momentum after the input ends is real and this file does not
+// model it. That is why the crossing arm asserts the destination by name (the
+// sharp claim, and it passes) while the within-region arm asserts only that the
+// player LEFT and stayed inside its region. The mutation run is what exposed the
+// difference: under D1 a different door was sampled and the sharp assertion went
+// red for the hop rather than for the defect.
+const WALK_TICKS = 45;
 const WALK_SETTLE_MS = 2500;
 const doorsOf = report.doors ?? [];
 const crossing = doorsOf.find((d) => d.sign !== 0 && d.approach);
@@ -551,6 +558,17 @@ if (crossing === undefined) {
 // against a transcription of `Teleporter`'s `sign = _sign - 1`, `Game.sign` and
 // `Message.as`'s closed 7-entry table. Driving it needs a new bot callback,
 // which is an AS3 change and out of this slice's scope by §5.
+// ⛔ WHAT THIS SWEEP BOUNDED, NAMED. The walk arms drive TWO of this set's doors
+// — one crossing, one within-region — because each arm is a fresh page and a
+// full sweep would be one page per door. A door-PLACEMENT defect that misses
+// these two is invisible here: measured, a mutant drawing door cells from the
+// whole room interior instead of from the walkable component left this file
+// GREEN and reddened three tests in `levelSetExits.test.js`. Placement is the JS
+// suite's claim; that the game MOVES on the data is this one's.
+console.log('');
+console.log(`## the walk sampled ${[crossing, withinRegion].filter(Boolean).length} of ${
+    doorsOf.length} doors — one page per arm, so this is not a sweep`);
+
 console.log('');
 console.log('## NOT DRIVEN: the sign');
 console.log('  the announcement is a `Message` entity; botMobiles walks Vector.<Mobile> and');

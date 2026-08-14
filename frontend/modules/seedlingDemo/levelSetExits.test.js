@@ -217,8 +217,21 @@ describe('planTopology', () => {
 });
 
 describe('linkGeneratedRooms — the EMIT arm', () => {
+    // ⛔ EVERY TEST ROOM HAS AN UNREACHABLE POCKET, AND IT IS NOT DECORATION.
+    // The first version of this suite used fully open rooms, so "a door is in
+    // the room's walkable component" was true of every cell and the assertion
+    // below could not fail. A mutant that drew door candidates from the whole
+    // interior instead of from the flood passed it — the same shape as Phase
+    // 5's D2, and the same answer: close it rather than leave the pair tidy.
+    // The pocket (7,7)-(8,8) is sealed off, and it contains the cell farthest
+    // from the start by raw distance, which is exactly what such a mutant picks.
+    const POCKET_WALLS = [
+        { tx: 6, ty: 7, terrain: 'wall' }, { tx: 6, ty: 8, terrain: 'wall' },
+        { tx: 7, ty: 6, terrain: 'wall' }, { tx: 8, ty: 6, terrain: 'wall' },
+    ];
     const rooms = (n) => Array.from({ length: n }, (_, i) => ({
-        record: withEntities(room(i), [{ type: 'torchpickup', ...oelAtTile(4, 4), attrs: { tag: '0' } }]),
+        record: withEntities(withTerrain(room(i), POCKET_WALLS),
+            [{ type: 'torchpickup', ...oelAtTile(4, 4), attrs: { tag: '0' } }]),
         start: { tx: 1, ty: 1 },
     }));
 
