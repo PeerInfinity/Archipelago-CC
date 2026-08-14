@@ -459,8 +459,21 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       no matter what Phase 3b did to `Game.as`, so a model-side replay is an
       acceptance bar that CANNOT FAIL. (Caught 2026-08-13, in this document,
       before anyone ran it — the vacuity family, one more time.)
+- [x] **Phase 4a — The moonrock widening** — **DONE 2026-08-14, §12.** ⚖ User
+      ruling: widen `moonrock_target` to a `spawn` AND add the agreement rule.
+      Split out of Phase 4 because it changes the content hash the save stamp
+      keys on (`-367e679f` → `-02408e1d`), so it had to land first. Three
+      commits here + `5129607` in `~/CC/seedling` (⛔ not pushed). It also
+      found the extractor BROKEN since phase 3b (§12.3) and two persistence
+      slots claimed by CODE (§12.4).
 - [ ] **Phase 4 — Persistence + the save stamp** (§4.2). The `Main.as:319`
       rule, the `set_id` field, and the mismatch path that rebuilds loudly.
+      ⛓ **§4.2's "EXTEND it with `true` if it is short" branch is UNREACHABLE
+      as written** — measured §12.8. `saveStampMatches` compares `set_id` AND
+      `provenance.content_hash`, and the hash covers `rooms`, so a matching
+      stamp means an identical document and therefore an identical room count.
+      Decide what that branch should do (name the inconsistency, rather than
+      silently extending) before implementing it.
 - [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
       (`procgenSeedling` output → bundle), including the per-level metadata the
       manifest now owns.
@@ -1451,3 +1464,157 @@ game's rendering, its audio, and the 43 unvisited rooms are outside that claim.
   `flashPanel/games/seedling.json` and the region atlas force more
   `named_rooms`. Phases 2, 3 and 3b have all now declined it; it did not block
   the manifest work.
+
+---
+
+## 12. PHASE 4a — THE MOONROCK WIDENING (2026-08-14)
+
+⚠ **THIS IS NOT ALL OF PHASE 4.** The `Main.as:319` rule, the save stamp and the
+mismatch path are still open; this is the schema amendment they are built on,
+taken first because it changes the content hash the stamp keys on and doing it
+after would mean re-deriving every stamp that existed by then.
+
+⚖ **USER RULING 2026-08-14**, on a fork raised before implementing: widen the
+entry **and** add the agreement rule (below). Three commits here plus one in
+`~/CC/seedling` on `bot` (⛔ **not pushed** — §4.7 note 2, and the grants given
+for phases 3 and 3b covered those and do not generalise).
+
+| commit | what |
+|---|---|
+| `51ef1bec8` | the extractor could not regenerate the twin — §12.3 |
+| `1ca09fa73` | `moonrock_target` is a `spawn`, and the stairs must agree |
+| `48fbde35f` | the two persistence slots claimed by CODE, + probe arm 7 |
+| `5129607` (seedling) | `VanillaSet` + `Moonrock.as:134`, zero line shift |
+
+### 12.1 ⛓ §11.4's PREMISE WAS TRUE AND INCOMPLETE
+
+§11.4 recorded that `Moonrock.as:134`'s `(48, 32)` "cannot be expressed". It
+could not — by the manifest. It already **was** expressed, one line away, in the
+room data:
+
+```
+OverWorld.oel:  <moonrock x="240" y="256" tag="0"/>
+                <stairsdown x="256" y="272" to="2" playerx="48" playery="32" sign="0"/>
+```
+
+`Stairs extends Teleporter` and is built from the OEL as
+`Stairs(x, y, up, flip, @to, @playerx, @playery, @sign)` (`Game.as:2261-2262`).
+A landed moonrock **removes the stairs it collides with** and adds a plain
+`Teleporter` in its place — so the three code literals were a verbatim copy of
+the three attributes on the entity being destroyed, which the code already holds
+in a local.
+
+Measured across all 116 embedded rooms: **exactly one moonrock, overlapping
+exactly one stairs, agreeing.** (`OverWorldN.oel` carries a *different* arrival —
+`playery="16"` — for the same pair, and `OverWorldExtended/` exists too; neither
+is referenced by any source file, so both are dead assets.) ⇒ every option on
+the table was value-identical in vanilla, which is what made the tape sweep a
+pure regression check rather than a re-recording.
+
+⛔ **THE RULING MATTERED BECAUSE THE ALTERNATIVES WERE NOT COSMETIC.** Reading
+the values off the `Stairs` instead would need no schema change at all and would
+be automatically correct under phase 5b's exit rewrite — but it would leave
+`moonrock_target` a required, closed-vocabulary entry that **nothing reads**,
+which is precisely the silent-no-op the closed vocabulary exists to prevent. The
+user took the third option: keep one authority, and make the duplication
+*checked*.
+
+### 12.2 The rule is a COLLISION, not a room match
+
+`Moonrock.as:131` finds its victim with `collide("Teleporter", x, y)` — by
+overlap. So the validator reproduces the overlap: 48×48 (`Moonrock.as:46`)
+against 16×16 (`Teleporter.as:36`), both zero-origin, half-open on both sides.
+
+⛔ **A ROOM-WIDE RULE WOULD REFUSE VANILLA.** Level 0's *other* `<stairsdown>`
+goes to level 13 at (64, 128) and is nowhere near the rock. Confirmed by
+mutation: degrading the overlap test to `return true` reddens 5 tests including
+**`the VANILLA 116 validate clean`** — so the geometry is load-bearing on the
+real corpus, not only on fixtures.
+
+Warnings rather than refusals for the arrangements where the rock is simply not
+a puzzle: a rock on nothing, a rock on a plain `<teleporter>` (`stairs is Stairs`
+is false, so nothing is replaced), and a rock overlapping two candidates, where
+`collide()` returns one and which is arbitrary.
+
+### 12.3 ⛔ THE EXTRACTOR HAD BEEN BROKEN SINCE PHASE 3b — AND THE OBVIOUS REPAIR WAS A TRAP
+
+`extract-seedling-vanilla-set.py` parses `levelMusics`, `menuLevels`, the snow
+room, the exempt room and the start level **out of `Game.as`**. Phase 3b's
+`5aba06c` deleted every one of them (§11.2, "moved, not retyped"). ⇒ the
+extractor has exited with `EXTRACTION FAILED: could not find levelMusics` ever
+since, and nobody noticed, because **nobody needed to regenerate the twin until
+this phase did.** The retired-oracle family: a generator whose output is
+committed stops being exercised by anything.
+
+⛔ **AND POINTING IT AT `VanillaSet.as` — the obvious repair — WOULD HAVE MADE
+THE MANIFEST GATE VACUOUS.** `check-seedling-vanilla-manifest.mjs` compares the
+running wasm against a twin derived from somewhere else; feed the twin from
+`VanillaSet.as` and it asserts `VanillaSet.as == VanillaSet.as`. The defect that
+gate caught on its first run (§11.3, `new Array(45)`) would have sailed through,
+because the twin would carry the same mistake.
+
+⇒ **the constants are now read at `7514b96`** — the commit before this arc
+touched them — via `git show`. The original literals can never move again, so
+phase 3b's "moved, not retyped" becomes a **permanently enforced property**:
+any divergence between the original and `VanillaSet.as` reddens the manifest
+gate. Verified rather than asserted: regenerating at `7514b96` reproduces phase
+2's fixture **byte for byte** (228/52/12/11 references, 1,385,826 raw OEL bytes),
+the whole diff being the three intended lines.
+
+Two things the same regeneration forced:
+
+- **The reduced OEL now keeps `@x`/`@y`** on the elements it already selects.
+  Geometry never *selects* an element — adding x/y to `REF_ATTRS` would select
+  every tile and the "reduced" form would be the level.
+- **`stamp-seedling-vanilla-set.mjs` exists**, because the extractor emits the
+  set UNSTAMPED and **nothing in the repo stamped it** — phase 2 did it by hand,
+  so re-running the extractor silently unstamped the fixture. The hash has one
+  authority (`levelSetValidator.js`); a Python reimplementation would be two
+  implementations of an identity function, the one place a divergence is
+  invisible.
+
+### 12.4 TWO PERSISTENCE SLOTS ARE CLAIMED BY CODE, AND NO TAG AUDIT CAN SEE THEM
+
+Found by reading *around* the moonrock site — §4.5's "a finding shadows its
+neighbourhood", now the fourth measured case in this arc.
+
+Every tag rule in the validator reads `@tag` out of the room XML. These two are
+not there at all:
+
+| | slot | vanilla |
+|---|---|---|
+| `Moonrock.as:135` **writes** tag 0 in `moonrock_target`'s room; the consumer `MoonrockPile.as:22` hardcodes `tag = 0`, inverted polarity, **no `@tag` in any OEL** | room 2 | authors **nothing** at tag 0 — the pile holds it invisibly |
+| `FinalDoor.as:50` **reads** tag 0 in `watcher_text`'s room | room 114 | authors `<watcher tag="0">` — the read is aimed at a real entity |
+
+⇒ **the same slot is a hazard in one room and a requirement in the other**, which
+is why neither can be a rule about tag 0 in general, and why a set can satisfy
+every occupancy rule in the file and still collide. Both are warnings: both
+arrangements are legal, they are simply ones nobody can see.
+
+⚠ **The test for the first one raised it where the block did not expect it, and
+the warning was right:** a `<moonrock tag="0">` in the *target* room really does
+share the pile's slot. The fixture had put the rock and the pile in one room;
+vanilla has them in 0 and 2.
+
+### 12.5 The identity moved, and three places carry it
+
+`seedling-vanilla-367e679f` → **`seedling-vanilla-02408e1d`**. It lives in the
+fixture (`set_id` + `provenance.content_hash`) and in `VanillaSet.SET_ID`; the
+transport probe reads it from the fixture rather than hardcoding it, and §10.3's
+arm-4 row above records the OLD id as the measurement it was.
+
+⚠ **The delivery conformance fixture was NOT regenerated**, deliberately: its 16
+cases pin **assembly**, and `levelSetDelivery.test.js` never calls
+`validateLevelSet` on them (§10.2's split — the receiver does not check
+`named_rooms`). Their `moonrock_target: {level: 0}` entries are therefore
+documents the sender would now refuse, which is why probe **arm 7a** asserts the
+*new* arm's set is one the sender would actually emit before arm 7b believes
+what the receiver did with it.
+
+### 12.6 The line-number cost: EMPTY, again
+
+`git diff -U0` hunk headers on the AS3 side: `Moonrock.as @@ -134 +134 @@`,
+`VanillaSet.as @@ -63 +63 @@` and `@@ -131,2 +131,2 @@`. Every hunk is
+length-preserving; **the offset table this phase owes is empty**, and every
+`File.as:NNN` citation in the model still points at what it names.
+
