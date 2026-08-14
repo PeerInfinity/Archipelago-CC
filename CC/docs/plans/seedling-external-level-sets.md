@@ -167,8 +167,9 @@ until it exists this table is "what the patterns found", not "all there is".
 directions.** 151 classes read by name: the sweep missed **six more live
 cross-level references in code** (two of them teleporters built at runtime, so
 no data rewrite can reach them) and, more importantly, it missed that **level
-indices also live in the LEVEL DATA** — three OEL attributes, 283 instances.
-§4.6's rewrite list is a subset of what actually has to be rewritten.
+indices also live in the LEVEL DATA** — three OEL attributes, **303**
+instances. §4.6's rewrite list is a subset of what actually has to be
+rewritten.
 
 Also assuming the level count: **`Bot.as` bounds-checks ids against
 `Game.levels.length` in three places** (`:965`, `:1577`, `:1852`). Ours to
@@ -340,9 +341,12 @@ and — worth stating plainly — **this needs NO AS3 change at all.** It is the
 cheapest item in this plan and the only one that removes code.
 
 ⛔ **THE REWRITE LIST ABOVE IS A SUBSET — measured, §8.2b.** `to`/`playerx`/
-`playery` also ride on **`<stairsup>`/`<stairsdown>`** (50 instances, `Stairs
-extends Teleporter`); **`@fallthrough`** carries a level index on 12 rooms; and
-**`@room`** on `<buttonroom>` carries one on 4. ⛔ And **two teleporters are
+`playery` also ride on **`<stairsup>`/`<stairsdown>`** (52 instances, `Stairs
+extends Teleporter`); **`@fallthrough`** carries a level index on 12 rooms, on
+`<control>` elements that also carry **their own `@sign`** and an `@xOff`/
+`@yOff` OFFSET rather than an absolute player position (`Game.as:2126-2129`) —
+so the "rewrite `sign` with the destination" rule above applies to fallthroughs
+too; and **`@room`** on `<buttonroom>` carries one on 4. ⛔ And **two teleporters are
 built in CODE, not data** — `LightBossController` → level 36, `TentacleBeast` →
 level 58 — so **no data rewrite can reach them**; they need `named_rooms`
 entries. "This needs NO AS3 change at all" holds only for the data-borne
@@ -640,9 +644,29 @@ index**, and §4.6 names only the first:
 
 | attribute | read sites in `Game.as` | instances in the corpus | values |
 |---|---|---|---|
-| `@to` | **3** — `<teleporter>`, `<stairsup>`, `<stairsdown>` | **221** teleporters + **50** stairs | any level |
+| `@to` | **3** — `<teleporter>`, `<stairsup>`, `<stairsdown>` | **228** teleporters + **52** stairs (26 up + 26 down) | any level |
 | `@room` | 1 — `<buttonroom>` | 11 total, **4 cross-level** | 37, 39, 62, 63 |
-| `@fallthrough` | 1 — level root | **12 rooms** | 0, 17, 21, 30, 31, 43, 49, 57, 69, 82, 84, 85 |
+| `@fallthrough` | 1 — **`<control>`** (`Game.as:2125-2129`) | **12 rooms** | 0, 17, 21, 30, 31, 43, 49, 57, 69, 82, 84, 85 |
+
+**303 data-borne level references**, against 6 in code.
+
+⛔ **CORRECTED 2026-08-13 by the Phase 2 session (`4b1d1b1d8`+), and the cause
+is worth more than the numbers.** This table first read 221 teleporters / 50
+stairs / "`@fallthrough` on the level root". Two errors:
+
+1. **The counts were low because the glob was `*/*.oel`** — which silently skips
+   the five `.oel` at `assets/levels/` root, **two of which are embedded**
+   (`OverWorld.oel`, `Building1.oel`). ⚠ A sweep that names what it bounded can
+   still be wrong about what it *reached*: the bound I declared was "the entity
+   roster", and the miss was in the corpus glob, one directory level up.
+   Re-counted over exactly the 116 embedded files by two independent methods
+   (shell grep and a Python ElementTree walk) — both give 228/52.
+2. **`@fallthrough` is on `<control>`, not the level root.** It travels with
+   `@x`/`@y` **plus `@xOff`/`@yOff` (an OFFSET, summed at `:2126-2128` — not a
+   `playerx`/`playery` absolute)** and its own `@sign`, read as
+   `fallthroughSign = int(o.@sign) - 1`, the same `-1` convention `Teleporter`
+   uses. ⇒ **§4.6's "rewrite `sign` with the destination" applies to
+   fallthroughs too**, and the Phase 5b builder must look on `<control>`.
 
 ⛔ **§4.6 IS INCOMPLETE IN THREE WAYS**, all measured:
 1. it names `<teleporter>` but **`<stairsup>`/`<stairsdown>` carry the same
@@ -668,11 +692,17 @@ index**, and §4.6 names only the first:
   **writable**, so it cannot be frozen manifest data.
 - **`sign` is an index into a fixed 7-element table**, not free text:
   `Message.as` holds `titles`, `subtitles` and two colour arrays of exactly 7
-  entries, indexed by the teleporter's `sign` (`Teleporter` stores `_sign - 1`;
-  measured: 80 teleporters carry `sign="0"` = none, and 5 carry 3/4/5/5/7).
+  entries, indexed by `sign` (stored as `_sign - 1`, so `sign="0"` = none).
   ⇒ a custom set cannot name a new region without touching `Message.as`. §4.6
   is right that `sign` must be rewritten with `to`; it does not say the value
   space is closed at seven.
+  ⛔ **CORRECTED: `sign` rides on THREE element kinds, not one.** This bullet
+  first reported "5 non-zero, values 3/4/5/5/7" from a **teleporter-only**
+  census. Signs also ride `<stairsdown>` (one, `sign="1"`) and `<control>`
+  fallthroughs (`sign` 2 and 6). The union of used values is
+  **{1,2,3,4,5,6,7} — all seven entries of the closed table are exercised.**
+  "Closed at seven" stands; "only five are used" did not, and a validator built
+  on the smaller census would have refused legal vanilla data.
 - **`FinalBoss` consumes TWO consecutive tags** — `setPersistence(tag, false)`
   *and* `setPersistence(tag+1, false)` in `endAnim()`. The Phase 6 allocator
   hands out the lowest free slot per record; it does not know to reserve
