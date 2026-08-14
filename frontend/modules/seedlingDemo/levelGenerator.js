@@ -36,11 +36,15 @@
  * description of every template's effect, and the two would agree until
  * somebody added a template that wrote two things.
  *
- * ── ⚠⚠ THE WALL CLOCK IS POST-HOC, AND THE LOOP MUST SAY SO ───────────
+ * ── ⚠⚠ NOTHING BOUNDS THIS LOOP'S ELAPSED TIME, AND IT MUST SAY SO ────
  *
  * `procgenOracle`'s residue, inherited whole: a solve is synchronous and
  * uninterruptible, so the per-solve budget bounds what the loop ACCEPTS and
- * never what it SPENDS. ⇒ the honest statement of this loop's cost is
+ * never what it SPENDS. ⛓ Since 2026-08-14 that budget is not denominated in
+ * time at all — a wall clock stood here and was removed, because measuring
+ * elapsed time after the fact and RECLASSIFYING a finished solve on it let the
+ * machine decide which levels existed (`procgenOracle`'s DEFAULT_BUDGET
+ * docblock has the measurements). ⇒ the honest statement of this loop's cost is
  * ARITHMETIC — `steps x triesPerStep x worst-case solve` — and `costModel()`
  * computes it from the bounds so a caller can state it BEFORE running rather
  * than discover it after. The measured total goes in the summary; ⛔ it never
@@ -180,8 +184,8 @@ function assertBounds(bounds) {
 }
 
 /**
- * THE COST OF A RUN, BEFORE IT RUNS — the post-hoc budget's only honest
- * mitigation.
+ * THE COST OF A RUN, BEFORE IT RUNS — the only honest mitigation for a loop
+ * whose budget bounds what it ACCEPTS and never what it SPENDS.
  *
  * ⚠ It is an UPPER BOUND and it says so: the loop stops early on saturation
  * and a step usually keeps its first or second candidate. The number worth

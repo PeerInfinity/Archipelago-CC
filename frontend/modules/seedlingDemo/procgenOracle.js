@@ -27,20 +27,27 @@
  *
  * A BUDGET EXHAUSTION is a claim about the SEARCH: this level cost more than
  * the loop is willing to pay. It is a BOUND, never a proof of unsolvability
- * (trap 205: the TIME rung's 40,000-expansion cap is a free parameter no
- * measurement has set), so a template family that keeps drowning the search
- * must surface as a finding about the budget rather than as a silent palette
- * hole. Folding it into REFUSED would do exactly that folding.
+ * (trap 205: the TIME rung's 40,000-expansion cap is a free parameter — and
+ * 2026-08-14 finally measured it: it binds in 1 solve in 326, and that one hit
+ * cost 12,267 ms), so a template family that keeps drowning the search must
+ * surface as a finding about the budget rather than as a silent palette hole.
+ * Folding it into REFUSED would do exactly that folding.
  *
- * ⚠⚠ **THE WALL-CLOCK BUDGET IS MEASURED AFTER THE FACT, NOT ENFORCED
- * DURING.** `solveSegment` is synchronous and owns its own loop; nothing
- * outside it can interrupt a search mid-flight without an engine edit, and
- * this arc's target is zero engine edits. So a runaway solve still costs its
- * full wall clock before the verdict is known — the budget bounds what the
- * loop ACCEPTS, not what it SPENDS. Named here because a reader who assumed
+ * ⚠⚠ **NO BUDGET HERE IS ENFORCED MID-FLIGHT, AND SINCE 2026-08-14 NONE IS
+ * DENOMINATED IN TIME.** `solveSegment` is synchronous and owns its own loop;
+ * nothing outside it can interrupt a search mid-flight without an engine edit,
+ * and this arc's target is zero engine edits. So a runaway solve still costs
+ * its full run before the verdict is known — the budget bounds what the loop
+ * ACCEPTS, not what it SPENDS. Named here because a reader who assumed
  * otherwise would size the budget as a timeout and get a generator that runs
- * for hours. (Residue for a later slice: an in-search bound needs a hook in
- * `solverBot`, which is a byte-inert engine edit somebody must argue for.)
+ * for hours.
+ *
+ * ⛔ A WALL CLOCK USED TO SIT IN THAT SENTENCE AND IT WAS NOT A TIMEOUT
+ * EITHER — it was measured after the fact and used to RECLASSIFY a finished
+ * solve, which is how the box came to decide which levels existed. It is gone;
+ * `DEFAULT_BUDGET`'s docblock carries the measurements. (Residue, unchanged: an
+ * in-search bound needs a hook in `solverBot`, a byte-inert engine edit
+ * somebody must argue for. That is what would make a budget a real timeout.)
  *
  * ── THE ONE CLASSIFIER THAT READS TEXT, AND ITS BOUND ─────────────────
  *

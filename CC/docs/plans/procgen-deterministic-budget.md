@@ -247,7 +247,52 @@ quiet box). That cap is far too loose to be a useful cost bound. Lowering it is 
 finding, and the two must not be traded for each other. It is deterministic
 today: it just takes a long time deterministically.
 
-## 8.5 Gates
+## 8.5 ⛔ THE STANDING md5 DID NOT MOVE — and §6's reading of that is wrong
+
+§6 predicted the battery md5 `1fedb0ab35b7cd74accecf0345bdc893` would move, and
+the kickoff added that **a stationary md5 would be a finding** meaning "your
+change did not reach the keep/revert decision". It did not move. The second half
+of that reading is refuted, and the experiment that refutes it is cheap:
+
+**Re-run the battery with the defect REINSTATED (mutation M1 below), quiet box:
+still `1fedb0ab35b7cd74accecf0345bdc893`.**
+
+⇒ the battery cannot tell the defective build from the fixed one. The `:503`
+branch is **dormant at quiet-box speeds** — 0 firings in 326 solves, max SOLVED
+cost 1,539 ms against a 5,000 ms threshold — so nothing a quiet-box run can
+observe depends on it. The change reached the keep/revert decision exactly as
+designed; the decision is only *reachable under load*, which is the property
+being removed.
+
+⚠ **Generalisable: a fixture is only a gate for a change if the fixture can
+distinguish the two builds.** Before reading a stationary baseline as either a
+pass or a finding, run the baseline against the mutant. Two minutes of battery
+answers a question no amount of staring at the diff will.
+
+⇒ **do not cite the battery md5 as evidence about this work in either
+direction.** The gates that do discriminate are in §8.6.
+
+## 8.6 The mutation gate — one mutant build, two non-overlapping defects
+
+| mutation | what it does | gate that reddened | the gate's own reason |
+|---|---|---|---|
+| **M1** | reinstates the `:503` elapsed-time branch with a literal `5000` (the realistic regression: the field is gone, so a re-adder types a number) | `no amount of elapsed time can move a certified solve off SOLVED` | `expected 'BUDGET_EXHAUSTED' to be 'SOLVED'` |
+| **M2** | disarms `assertBudget`'s `wallClockMs` refusal so the field is silently dropped | `a budget still carrying wallClockMs is REFUSED by name` | `expected function to throw an error, but it didn't` |
+
+**2 failed | 16 passed.** Each failure's reason names the mutation that wrote
+it; neither masked the other (M1 lives in `solve()`'s certified-solve path, M2
+in `assertBudget`). ⛓ Attribution check that mattered: *"a slow REFUSAL stays
+REFUSED"* stayed GREEN under M1, which is correct — M1 only touches the success
+path — so the two elapsed-time gates are independent rather than one gate
+counted twice.
+
+⚠ **M1 had to hardcode `5000` to be a faithful mutation, and that is itself a
+finding about the gate.** Restoring the deleted line *verbatim* would read
+`b.wallClockMs`, which is now `undefined`, making `ms > undefined` false and the
+branch inert. A partial revert therefore cannot red anything — the gate catches
+a re-added *bound*, not a re-added *line*.
+
+## 8.7 Gates
 
 Recorded with the box state that produced each, because the acceptance requires
 load and every other gate is *less* trustworthy under it.

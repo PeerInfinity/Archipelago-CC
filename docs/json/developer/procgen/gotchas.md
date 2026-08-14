@@ -72,6 +72,15 @@ Three things worth carrying to the next budget question, because each one was as
 - **Nothing replaced the number, and that was a measurement, not laziness.** 326 solves over 40 seeds, quiet box: max *total* ticks was **800**, while the tick analogue of the old provenance (40× the empty room's 134 ticks, the same 40× reasoning `wallClockMs` used) is ~5,360 — a bound 6.7× above anything ever observed. `maxTicksPerTarget` already binds where the clock used to: it classified 4 of the sweep's 5 `BUDGET_EXHAUSTED` verdicts.
 - **The obvious replacement bound was refused twice.** Threading `planDash`'s `maxExpansions: 40000` up into the budget looks like the natural fix. The search ran at all in **2 of 326 solves** and hit the cap in **1**, so as a bound it is decoration; and when it does fire it appears as *one rung's sub-reason* inside a ladder refusal whose other rungs refused about the level, so classifying on it would turn a true `REFUSED` into a false `BUDGET_EXHAUSTED`. ⇒ **before promoting an internal cap to a budget field, check both how often it binds and what a caller would conclude when it does.**
 
+⛔ **And one gate you might reach for does not discriminate.** The standing
+`solve-seedling-r8-battery.mjs --check` md5 `1fedb0ab35b7cd74accecf0345bdc893`
+did **not** move across this fix — and re-running it with the defect
+deliberately reinstated produces the *same* md5. The branch is dormant at
+quiet-box speeds (0 firings in 326 solves), so the battery cannot tell the two
+builds apart. ⇒ **a fixture is only a gate for a change if it can distinguish
+the two builds; run the baseline against a mutant before reading a stationary
+digest as either a pass or a finding.**
+
 ⚠ **Two things this did NOT fix.** Any *test* that measures elapsed time still inherits the box (a full vitest suite has gone red with 3 failures at load 22.8 that were 515/515 solo) — so still **check `cat /proc/loadavg` before believing a red**, and prefer structural claims over timing-sensitive ones. And the expansion cap is still far too loose: one cap hit cost **12,267 ms** in a single dash. That is a *slowness* finding with its own measurement owed, not a determinism one. Background and the full measurement set: [`CC/docs/plans/procgen-deterministic-budget.md`](../../../../CC/docs/plans/procgen-deterministic-budget.md).
 
 ## Which substrates are live depends on the launch mode
