@@ -39,10 +39,12 @@
  *      the game must build room 0's entities. Two vanilla controls fingerprint
  *      rooms 0 and 5 first, and the arm is ABANDONED if they match, because a
  *      fingerprint that cannot tell two rooms apart cannot tell anything.
- *   6. OVER CAPACITY — 117 rooms against a persistence table that addresses
- *      116. §8.3: the rows past its end read as *every tag already cleared* and
- *      the game reports itself healthy, so this is refused at the boundary
- *      until plan phase 4 sizes the table from the mounted set.
+ *   6. OVER CAPACITY — 117 rooms against a table that addressed 116. ⛓ FLIPPED
+ *      BY PHASE 4: this was a REFUSAL, because rows past the table's end read as
+ *      *every tag already cleared* while the game reported itself healthy
+ *      (§8.3). The table is now built from the mounted set, so the set mounts
+ *      and the arm asserts the table grew with it. Kept rather than deleted — a
+ *      rule that stops applying deserves a witness that it stopped.
  *
  * Run (dev server on :8000, the phase-3 artifact staged, Windows Playwright
  * installed per SWFRecomp-CC tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md):
@@ -387,15 +389,27 @@ if (real == null) {
     }
 }
 
-// ── 6. over capacity ─────────────────────────────────────────────────────────
+// ── 6. over capacity — ⛓ FLIPPED BY PHASE 4 ─────────────────────────────────
+//
+// This arm asserted a REFUSAL until phase 4. The receiver used to reject a set
+// bigger than the persistence table because the table was sized from the
+// compiled-in `Game.levels.length`, and rows past its end read as *every tag
+// already cleared* while the game reported itself healthy (§8.3). Phase 3 called
+// that a stopgap phase 4 would lift, and phase 4 lifted it: the table is built
+// from the MOUNTED set, so there is nothing left to refuse.
+//
+// ⚠ THE ARM IS KEPT, NOT DELETED. A rule that stops applying is worth an
+// assertion that it stopped — deleting the case would leave no record that this
+// delivery was ever refused, and no witness if the refusal came back.
 const arm6 = arm('117 rooms against a 116-row table');
 const r6 = readout(arm6);
 const arm6Last = lastOf(arm6, 'botLoadLevels');
-check('6. a 117-room set is refused against a persistence table that addresses 116 '
-    + '— §8.3: the rows past its end read as every tag already cleared',
-!arm6.crashed && r6 !== null && r6.mounted === null
-    && typeof arm6Last === 'string' && arm6Last.indexOf('persistence table') > 0,
-String(arm6Last));
+check('6. ⛓ a 117-room set MOUNTS, and its table addresses all 117 — the capacity '
+    + 'refusal phase 3 declared a stopgap is gone, and the rows past 116 are real',
+!arm6.crashed && r6 !== null && r6.mounted !== null && r6.rooms === 117
+    && r6.capacity === 117 && arm6Last === 'ok',
+`mounted ${r6 && r6.mounted}, rooms ${r6 && r6.rooms}, table levels ${r6 && r6.capacity}, `
+    + `last ${String(arm6Last)}`);
 
 // ── 7. a delivered set's moonrock arrival (phase 4) ──────────────────────────
 //
