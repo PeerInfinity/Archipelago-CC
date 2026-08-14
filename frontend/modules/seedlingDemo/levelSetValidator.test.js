@@ -56,13 +56,44 @@ const vanillaXmlByRoomId = () => {
     return out;
 };
 
+// ⛓ ROOM 2 CARRIES ONE OF EVERY `named_rooms` TRIGGER, and that is what makes
+// the baseline a set that legitimately requires all six. Since the ⚖ 2026-08-14
+// ruling, requiredness is DERIVED from the room data: an entry may be omitted
+// exactly when nothing in the set dereferences it. A baseline with empty rooms
+// would therefore require NONE of the six, and every "refuses a set missing X"
+// test below would be asserting against a rule that was never armed.
+//
+// ⛔ `<watcher>`, NOT `<seed>`, IS `bloody_seed_ending`'s TRIGGER. The OEL
+// <seed> element always builds `new Seed(…, false, …)` (Game.as:2227); the only
+// bloody Seed in the game is born at NPCs/Watcher.as:102. Written out here
+// because the name-matching guess is wrong for exactly this one of the six.
+//
+// The rock sits on stairs that AGREE with `moonrock_target` (0, 48, 32), so the
+// baseline also satisfies the Phase 4a agreement rule rather than dodging it.
+const TRIGGER_ROOM_XML = ['<level><objects>',
+    '<moonrock x="240" y="256" tag="0"/>',
+    '<stairsdown x="256" y="272" to="0" playerx="48" playery="32"/>',
+    '<finaldoor x="0" y="0" tag="1"/>',
+    '<oracle x="16" y="0" tag="2"/>',
+    '<watcher x="32" y="0" tag="3"/>',
+    '<lightbosscontroller x="48" y="0" tag="4"/>',
+    '<tentaclebeast x="64" y="0" tag="5"/>',
+    '</objects></level>'].join('');
+
+/** The same room with the rock and its stairs removed — see `withRoom0`. */
+const TRIGGER_ROOM_XML_NO_ROCK = TRIGGER_ROOM_XML
+    .replace('<moonrock x="240" y="256" tag="0"/>', '')
+    .replace('<stairsdown x="256" y="272" to="0" playerx="48" playery="32"/>', '');
+
+const EMPTY_ROOM_XML = '<level><objects></objects></level>';
+
 // A minimal set that PASSES, so each rejection below differs from it in exactly
 // one way and the reason for the refusal is unambiguous.
 function minimalSet(overrides = {}) {
     const rooms = [0, 1, 2].map((id) => ({
         id,
         name: `room${id}`,
-        source: { xml: '<level><objects></objects></level>' },
+        source: { xml: id === 2 ? TRIGGER_ROOM_XML : EMPTY_ROOM_XML },
         music: 0,
     }));
     const set = {
@@ -229,13 +260,19 @@ describe('level-set validator — REJECTIONS, each for its own named reason', ()
         expect(soleError(r, /menu_rooms/)).toMatch(/NaN/);
     });
 
-    it.each(NAMED_ROOM_KEYS)('refuses a set missing named_rooms.%s', (key) => {
+    // ⛔ THE REFUSAL NOW HAS TO NAME THE ROOM THAT ARMED IT. Since the ⚖
+    // 2026-08-14 ruling an omission is legal when nothing dereferences the
+    // name, so "required" is a claim about THIS set's rooms and the error must
+    // carry the evidence — otherwise a reader cannot tell a real requirement
+    // from a rule that fires on everything.
+    it.each(NAMED_ROOM_KEYS)('refuses a set missing named_rooms.%s, naming the room that carries its trigger', (key) => {
         const set = minimalSet();
         delete set.named_rooms[key];
         const r = validateLevelSet(set);
         expect(r.ok).toBe(false);
-        expect(soleError(r, new RegExp(`named_rooms\\.${key} is required`)))
-            .toMatch(/lives in CODE/);
+        const e = soleError(r, new RegExp(`named_rooms\\.${key} is required`));
+        expect(e).toMatch(/lives in CODE/);
+        expect(e).toMatch(/rooms\[2\] "room2" carries </);
     });
 
     it('refuses an INVENTED named room — the vocabulary is closed', () => {
@@ -375,6 +412,128 @@ describe('the OEL parser reads what the loader reads', () => {
     });
 });
 
+// ⚖ USER, 2026-08-14 — REQUIREDNESS IS DERIVED FROM THE ROOM DATA (plan §14).
+//
+// Phase 2 required all six `named_rooms`, ruled when VANILLA WAS THE ONLY SET
+// THAT EXISTED. A generated set has no Watcher, no moonrock and no Owl, and
+// §4.1's "a set defining neither must SAY SO rather than defaulting silently"
+// had no way to be said in the frozen schema. Measured before the ruling: NONE
+// of the six is dereferenced unconditionally — each sits inside one entity's
+// own behaviour, and every one of those entities is built ONLY from an OEL
+// element. So omission is now the way to say it, and it is CHECKED, which is
+// what makes it a statement rather than a default.
+describe('named_rooms requiredness is DERIVED, not declared', () => {
+    const bare = (xmlByRoom = {}) => {
+        const set = minimalSet({ named_rooms: {} });
+        for (const id of [0, 1, 2]) {
+            set.rooms[id].source = { xml: xmlByRoom[id] ?? EMPTY_ROOM_XML };
+        }
+        return set;
+    };
+
+    // The generated-set shape, and the whole point of the ruling.
+    it('accepts a set that dereferences none of them, with named_rooms: {}', () => {
+        const r = validateLevelSet(bare());
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+        expect(r.stats.named_rooms_omitted.sort()).toEqual([...NAMED_ROOM_KEYS].sort());
+        expect(r.stats.named_rooms_unverifiable).toEqual([]);
+    });
+
+    // ⛓ EACH TRIGGER ARMS ITS OWN ENTRY AND NO OTHER. A rule that armed all six
+    // off any one trigger would pass every test above and be useless: it would
+    // make the six move together, which is exactly the Phase 2 behaviour the
+    // ruling replaced.
+    it.each(NAMED_ROOM_KEYS)('a lone trigger for %s arms that entry ALONE', (key) => {
+        const trigger = {
+            moonrock_target: '<moonrock x="240" y="256" tag="0"/>',
+            watcher_text: '<finaldoor x="0" y="0" tag="1"/>',
+            dark_shrum_death: '<oracle x="16" y="0" tag="2"/>',
+            bloody_seed_ending: '<watcher x="32" y="0" tag="3"/>',
+            light_boss_exit: '<lightbosscontroller x="48" y="0" tag="4"/>',
+            tentacle_beast_mouth: '<tentaclebeast x="64" y="0" tag="5"/>',
+        }[key];
+        const r = validateLevelSet(bare({ 1: `<level><objects>${trigger}</objects></level>` }));
+        expect(r.ok).toBe(false);
+        expect(r.stats.named_rooms_required_missing).toEqual([key]);
+        expect(soleError(r, /is required:/)).toMatch(
+            new RegExp(`named_rooms\\.${key} is required: rooms\\[1\\] "room1" carries <`),
+        );
+    });
+
+    // ⛔ THE ONE THE NAME-MATCHING GUESS GETS WRONG. `Game.as:2227` builds every
+    // OEL <seed> as `new Seed(o.@x, o.@y, false, …)` — bloody is hardcoded
+    // FALSE there — and `Pickups/Seed.as:73` only reads the manifest on the
+    // bloody arm. The one bloody Seed in the game is born at
+    // `NPCs/Watcher.as:102`. Four times now in this arc: @fallthrough, @room,
+    // map_ref, and this. ASK THE CONSUMER.
+    it('<seed> does NOT arm bloody_seed_ending — <watcher> does', () => {
+        const seeds = validateLevelSet(bare({ 1: '<level><objects><seed x="0" y="0"/></objects></level>' }));
+        expect(seeds.errors).toEqual([]);
+        expect(seeds.stats.named_rooms_omitted).toContain('bloody_seed_ending');
+
+        const watcher = validateLevelSet(bare({ 1: '<level><objects><watcher x="0" y="0" tag="3"/></objects></level>' }));
+        expect(watcher.ok).toBe(false);
+        expect(watcher.stats.named_rooms_required_missing).toEqual(['bloody_seed_ending']);
+    });
+
+    // The other direction: harmless, and still worth saying out loud, because
+    // the entry is a claim about a mechanism this set does not have.
+    it('WARNS that a supplied entry with no trigger anywhere is INERT', () => {
+        const set = bare();
+        set.named_rooms = { tentacle_beast_mouth: { level: 1, x: 56, y: 96 } };
+        const r = validateLevelSet(set);
+        expect(r.ok).toBe(true);
+        expect(r.warnings.some((w) => /tentacle_beast_mouth/.test(w) && /inert/.test(w))).toBe(true);
+    });
+
+    // ⛔ AND AN OMISSION IT COULD NOT CHECK MUST NOT LOOK LIKE ONE IT CLEARED.
+    // A set whose rooms the validator cannot read could be hiding any trigger;
+    // reporting that omission as verified would be the "graceful skip hides the
+    // surface" failure with a clean bill of health attached.
+    it('reports an omission as UNVERIFIABLE when a room could not be read', () => {
+        const set = bare();
+        set.rooms[1].source = { embed: 'levels/Somewhere.oel' };
+        const r = validateLevelSet(set);
+        expect(r.ok).toBe(true);
+        expect(r.stats.named_rooms_omitted).toEqual([]);
+        expect(r.stats.named_rooms_unverifiable.sort()).toEqual([...NAMED_ROOM_KEYS].sort());
+        expect(r.warnings.some((w) => /could NOT be verified/.test(w))).toBe(true);
+    });
+
+    // ⛓ THE RULE VANILLA FORCED, and the second time §4.3's anti-rot property
+    // has caught one in this arc (§9.3 was the first). Validated WITHOUT
+    // `xmlByRoomId`, all 116 vanilla rooms are embed-sourced and unreadable, so
+    // "no room carries <moonrock>" is true of what was PARSED and false of the
+    // set. An inert warning there would fire on the ordinary game.
+    it('does NOT call vanilla\'s six inert when its rooms went unread', () => {
+        const r = validateLevelSet(VANILLA);
+        expect(r.warnings.filter((w) => /inert/.test(w))).toEqual([]);
+    });
+
+    // The acceptance anchor: the real 116 arm all six from their own rooms, so
+    // vanilla is unchanged by the ruling and its content hash does not move.
+    it('the real 116 arm all six, measured from the rooms themselves', () => {
+        const r = validateLevelSet(VANILLA, { xmlByRoomId: vanillaXmlByRoomId() });
+        expect(r.errors).toEqual([]);
+        expect(r.stats.named_rooms_present.sort()).toEqual([...NAMED_ROOM_KEYS].sort());
+        expect(r.stats.named_rooms_omitted).toEqual([]);
+        expect(r.stats.named_rooms_unverifiable).toEqual([]);
+        expect(r.warnings.filter((w) => /inert/.test(w))).toEqual([]);
+
+        // And each trigger really is in the corpus — asserted against the
+        // fixture directly, so the stats above cannot be self-confirming.
+        const carriers = (el) => Object.entries(VANILLA_REFS.rooms)
+            .filter(([, xml]) => parseRoomXml(xml).triggers.has(el)).map(([id]) => Number(id));
+        expect(carriers('moonrock')).toEqual([0]);
+        expect(carriers('oracle')).toEqual([1]);
+        expect(carriers('tentaclebeast')).toEqual([57]);
+        expect(carriers('lightbosscontroller')).toEqual([69]);
+        expect(carriers('finaldoor')).toEqual([113]);
+        expect(carriers('watcher')).toContain(114);
+    });
+});
+
 // ⛔ TWO AUTHORITIES FOR ONE FACT. A landed moonrock REMOVES the stairs it
 // touches and adds a plain Teleporter built from `named_rooms.moonrock_target`
 // (Moonrock.as:131-136), then writes tag 0 into that same room. The stairs it
@@ -394,10 +553,16 @@ describe('the moonrock and the stairs it replaces must agree', () => {
     // Pointing moonrock_target at the rock's OWN room is legal but arranges a
     // second, unrelated finding — the rock's `tag="0"` then shares the slot
     // MoonrockPile claims — and this block is about the arrival, not that.
+    // ⚠ THE BASELINE'S OWN ROCK IS REMOVED FIRST. Room 2 carries one of every
+    // trigger, the rock among them, and this block re-points `moonrock_target`
+    // at room 2 — so leaving that rock in place would arrange a SECOND
+    // agreement pair and every assertion here would be reading two findings as
+    // one. The other five triggers stay, so the six entries remain required.
     const withRoom0 = (xml) => {
         const set = minimalSet();
         set.named_rooms.moonrock_target = { level: 2, x: 48, y: 32 };
         set.rooms[0].source = { xml };
+        set.rooms[2].source = { xml: TRIGGER_ROOM_XML_NO_ROCK };
         return validateLevelSet(set);
     };
 

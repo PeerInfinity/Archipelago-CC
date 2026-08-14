@@ -45,16 +45,8 @@
     },
     "named_rooms": {
       "type": "object",
-      "required": [
-        "moonrock_target",
-        "watcher_text",
-        "dark_shrum_death",
-        "bloody_seed_ending",
-        "light_boss_exit",
-        "tentacle_beast_mouth"
-      ],
       "additionalProperties": false,
-      "description": "The room references that live in CODE rather than in level data, so NO bundle rewrite can reach them (§8.2a). A CLOSED vocabulary, every entry required: an omitted name is the silent-breakage case this arc keeps catching, and an invented one would do nothing. Two shapes — a pure persistence target needs only a level; every reference that is CONSTRUCTED with an arrival position also carries x/y, and the validator requires them there so an omission cannot silently fall back to a default (the Game constructor's (80, 128), or Teleporter's own (0, 0)).",
+      "description": "The room references that live in CODE rather than in level data, so NO bundle rewrite can reach them (§8.2a). A CLOSED vocabulary; an invented name would do nothing. ⛔ REQUIREDNESS IS DERIVED FROM THE ROOM DATA AND JSON SCHEMA CANNOT EXPRESS IT — see levelSetValidator.js, which is the authority (⚖ user 2026-08-14, plan §14). All six were required in Phase 2, ruled when vanilla was the only set in existence; measured since, NONE of the six is dereferenced unconditionally — each sits inside one entity's own behaviour, and every one of those entities is built only from an OEL element. So an entry may be OMITTED exactly when the set carries no room with its trigger element (moonrock_target←<moonrock>, watcher_text←<finaldoor>, dark_shrum_death←<oracle>, bloody_seed_ending←<watcher> ⚠ NOT <seed>, light_boss_exit←<lightbosscontroller>, tentacle_beast_mouth←<tentaclebeast>), and the validator errors if the trigger is there, warns if a supplied entry is inert, and reports the omission as UNVERIFIABLE when rooms could not be read. A generated set with none of them carries `named_rooms: {}`. Two shapes — a pure persistence target needs only a level; every reference that is CONSTRUCTED with an arrival position also carries x/y, and the validator requires them there so an omission cannot silently fall back to a default (the Game constructor's (80, 128), or Teleporter's own (0, 0)).",
       "properties": {
         "moonrock_target": {
           "$ref": "#/$defs/spawn",

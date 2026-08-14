@@ -88,11 +88,31 @@ export const MAX_CHUNK_BYTES = 239967;
 // A set author cannot control them, so this is a WARNING, not a refusal.
 export const DEBUG_WARP_LEVELS = [2, 13, 12, 37, 45, 95, 12, 93, 110];
 
-// ⛔ CLOSED VOCABULARY, EVERY ENTRY REQUIRED. These are the room references that
-// live in CODE rather than in level data, so NO bundle rewrite can reach them
-// (plan §8.2a) — which is why the manifest is the only place they can be
-// expressed. An omitted name is the silent-breakage case this arc keeps
-// catching; an invented one would do nothing at all.
+// ⛔ CLOSED VOCABULARY, AND REQUIREDNESS IS DERIVED FROM THE ROOM DATA. These
+// are the room references that live in CODE rather than in level data, so NO
+// bundle rewrite can reach them (plan §8.2a) — which is why the manifest is the
+// only place they can be expressed. An invented name would do nothing at all.
+//
+// ⚖ USER, 2026-08-14 (plan §14): an entry may be OMITTED exactly when the set
+// contains nothing that dereferences it, and the validator decides that from the
+// rooms rather than taking the author's word. Phase 2 required all six, ruled
+// when VANILLA WAS THE ONLY SET IN EXISTENCE; a generated set has no Watcher, no
+// moonrock and no Owl, and §4.1's "must say so rather than defaulting silently"
+// had no way to be said. Omission is now the way to say it, and it is CHECKED —
+// which is what makes it a statement rather than a default.
+//
+// ⛓ AND NONE OF THE SIX IS DEREFERENCED UNCONDITIONALLY — measured 2026-08-14,
+// every call site, and it is what makes the rule possible. Each sits inside one
+// entity's own behaviour, and every one of those entities is built ONLY from an
+// OEL element (`Game.as:2166-2287`), so the validator can already see it.
+//
+// ⛔ `trigger` IS NOT THE SAME-NAMED ELEMENT, AND `bloody_seed_ending` IS THE
+// PROOF. The OEL `<seed>` element always constructs `new Seed(o.@x, o.@y, false,
+// …)` — `bloody` is hardcoded FALSE there — and the only bloody Seed in the game
+// is born at `NPCs/Watcher.as:102` when the Watcher is killed. So the element
+// whose presence makes `bloody_seed_ending` live is `<watcher>`, not `<seed>`.
+// A key-name match would have got exactly one of the six wrong, and it is the
+// same trap as `@fallthrough`, `@room` and `map_ref`: ASK THE CONSUMER.
 //
 // `warp` entries are constructed with an arrival position and carry x/y;
 // `persistence` entries are a cross-level tag index and carry only a level.
@@ -105,15 +125,42 @@ export const NAMED_ROOMS = Object.freeze({
     moonrock_target: {
         kind: 'persistence+warp', position: true,
         cite: 'Scenery/Moonrock.as:134 (teleporter) and :135 (persistence)', vanilla: 2,
+        trigger: 'moonrock',
+        via: 'Game.as:2244 builds every Moonrock from <moonrock>, and Moonrock.as:131-136 is the only reader',
     },
-    watcher_text: { kind: 'persistence', position: false, cite: 'Scenery/FinalDoor.as:50', vanilla: 114 },
-    dark_shrum_death: { kind: 'warp', position: true, cite: 'Player.as:491', vanilla: 114 },
-    bloody_seed_ending: { kind: 'warp', position: true, cite: 'Pickups/Seed.as:73', vanilla: 1 },
-    light_boss_exit: { kind: 'warp', position: true, cite: 'Enemies/LightBossController.as:104', vanilla: 36 },
-    tentacle_beast_mouth: { kind: 'warp', position: true, cite: 'Enemies/TentacleBeast.as:213', vanilla: 58 },
+    watcher_text: {
+        kind: 'persistence', position: false, cite: 'Scenery/FinalDoor.as:50', vanilla: 114,
+        trigger: 'finaldoor',
+        via: 'Game.as:2284 builds every FinalDoor from <finaldoor>',
+    },
+    dark_shrum_death: {
+        kind: 'warp', position: true, cite: 'Player.as:491', vanilla: 114,
+        trigger: 'oracle',
+        via: 'NPCs/Oracle.as:107 is the ONLY sprShrumDark.play("die"), and Game.as:2271 builds every Oracle from <oracle>',
+    },
+    bloody_seed_ending: {
+        kind: 'warp', position: true, cite: 'Pickups/Seed.as:73', vanilla: 1,
+        trigger: 'watcher',
+        via: 'NPCs/Watcher.as:102 is the ONLY `new Seed(…, true, …)`; the OEL <seed> at Game.as:2227 always passes bloody=false',
+    },
+    light_boss_exit: {
+        kind: 'warp', position: true, cite: 'Enemies/LightBossController.as:104', vanilla: 36,
+        trigger: 'lightbosscontroller',
+        via: 'Game.as:2166 builds every LightBossController from <lightbosscontroller>',
+    },
+    tentacle_beast_mouth: {
+        kind: 'warp', position: true, cite: 'Enemies/TentacleBeast.as:213', vanilla: 58,
+        trigger: 'tentaclebeast',
+        via: 'Game.as:2173 builds every TentacleBeast from <tentaclebeast>',
+    },
 });
 
 export const NAMED_ROOM_KEYS = Object.freeze(Object.keys(NAMED_ROOMS));
+
+/** The OEL elements whose presence makes a `named_rooms` entry mandatory. */
+export const NAMED_ROOM_TRIGGERS = Object.freeze(
+    NAMED_ROOM_KEYS.map((k) => NAMED_ROOMS[k].trigger),
+);
 
 // Hitboxes, for the one rule that needs GEOMETRY. `Moonrock.as:131` finds the
 // stairs it is about to replace with `collide("Teleporter", x, y)` — by overlap,
@@ -247,8 +294,12 @@ export function parseRoomXml(xml) {
     const tags = [];
     const tsets = [];
     const moonrocks = [];
+    // The `named_rooms` trigger elements present in this room. ⚠ NOT a count —
+    // one <tentaclebeast> makes `tentacle_beast_mouth` mandatory exactly as
+    // eleven do, so what is wanted is presence.
+    const triggers = new Set();
     if (typeof xml !== 'string') {
-        return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks };
+        return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
     }
 
     ELEMENT_RE.lastIndex = 0;
@@ -292,12 +343,13 @@ export function parseRoomXml(xml) {
         if (el === 'moonrock') {
             moonrocks.push({ x: intOr(a.x, NaN), y: intOr(a.y, NaN) });
         }
+        if (NAMED_ROOM_TRIGGERS.includes(el)) triggers.add(el);
         if (a.tag !== undefined && a.tag !== '') tags.push({ element: el, tag: intOr(a.tag, NaN) });
         if (a.tset !== undefined && a.tset !== '') tsets.push({ element: el, tset: intOr(a.tset, NaN) });
 
         m = ELEMENT_RE.exec(xml);
     }
-    return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks };
+    return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
 }
 
 // --- chunk planning -----------------------------------------------------------
@@ -612,20 +664,68 @@ export function validateLevelSet(set, options = {}) {
         });
     }
 
-    // --- named_rooms: closed vocabulary, all required ---
+    // --- named_rooms: closed vocabulary, requiredness DERIVED from the rooms ---
+    //
+    // ⚖ USER, 2026-08-14. Phase 2 required all six because vanilla was the only
+    // set that existed and vanilla has all six triggers. A generated set has
+    // none of them, and every one of the six dereferences is ENTITY-GATED
+    // (measured: `NAMED_ROOMS[*].via`), so requiring an entry a set can never
+    // reach would force the author to invent a destination — which is either
+    // out of range (§8.3's silent "everything already cleared") or an in-range
+    // room the reference would fly to if it ever did fire. Both are the failure
+    // this arc exists to prevent, wearing a default's clothing.
+    //
+    // ⛔ AND THE OMISSION IS CHECKED IN BOTH DIRECTIONS, which is what makes it
+    // a statement rather than a default:
+    //   trigger present + entry missing  → ERROR, naming the room that carries it
+    //   trigger absent  + entry supplied → warning, the entry is inert
+    //   trigger unverifiable (unread rooms) → NEITHER is claimed; say so instead
+    //
+    // ⛓ THE THIRD LINE IS THE ONE VANILLA FORCED. Validated without
+    // `xmlByRoomId`, all 116 vanilla rooms are `embed`-sourced and unreadable,
+    // so "no room carries <moonrock>" is true of what was PARSED and false of
+    // the set. A rule that warned there would fire on the real game — §4.3's
+    // anti-rot property catching a rule for the second time in this arc.
     const named = set.named_rooms;
+    const triggerRooms = new Map();     // element → [room index, …]
+    for (const [i, doc] of parsed) {
+        for (const el of doc.triggers) {
+            if (!triggerRooms.has(el)) triggerRooms.set(el, []);
+            triggerRooms.get(el).push(i);
+        }
+    }
+    const allRoomsRead = unresolved.length === 0;
+    const namedRequired = [];
+    const namedOmitted = [];
+    const namedUnverifiable = [];
+
     if (!isPlainObject(named)) {
-        err('named_rooms must be an object carrying all of: ' + NAMED_ROOM_KEYS.join(', '));
+        err(`named_rooms must be an object — it may be EMPTY (a set that dereferences none of ${NAMED_ROOM_KEYS.join(', ')}), but it must be present so the document always states the shape`);
     } else {
         for (const key of NAMED_ROOM_KEYS) {
             const spec = NAMED_ROOMS[key];
+            const carriers = triggerRooms.get(spec.trigger) ?? [];
+            const where = carriers.slice(0, 3)
+                .map((i) => `rooms[${i}] "${rooms[i]?.name}"`).join(', ');
+
             if (named[key] === undefined) {
-                err(`named_rooms.${key} is required (${spec.cite}) — it is a room reference that lives in CODE, so no bundle rewrite can reach it and this manifest is the only place it can be expressed`);
+                if (carriers.length > 0) {
+                    namedRequired.push(key);
+                    err(`named_rooms.${key} is required: ${where}${carriers.length > 3 ? ` (+${carriers.length - 3} more)` : ''} carries <${spec.trigger}>, and ${spec.cite} dereferences this entry from it. It is a room reference that lives in CODE, so no bundle rewrite can reach it and this manifest is the only place it can be expressed`);
+                } else if (!allRoomsRead) {
+                    namedUnverifiable.push(key);
+                    warn(`named_rooms.${key} is omitted, and ${unresolved.length} of ${roomCount} rooms carry an embed source this validator cannot read, so the omission could NOT be verified — <${spec.trigger}> may be in one of them, and ${spec.cite} would then read a name that is not there`);
+                } else {
+                    namedOmitted.push(key);
+                }
                 continue;
             }
             checkSpawn(named[key], `named_rooms.${key}`, roomCount, err, {
                 requirePosition: spec.position,
             });
+            if (carriers.length === 0 && allRoomsRead) {
+                warn(`named_rooms.${key} names room ${named[key]?.level}, but no room in this set carries <${spec.trigger}> — the only thing that dereferences it (${spec.via}). The entry is inert: harmless today, and a claim about a mechanism this set does not have`);
+            }
         }
         for (const key of Object.keys(named)) {
             if (!NAMED_ROOM_KEYS.includes(key)) {
@@ -827,6 +927,17 @@ export function validateLevelSet(set, options = {}) {
         fallthroughs: fallthroughCount,
         button_rooms: buttonRoomCount,
         menu_rooms: Array.isArray(menu) ? menu.length : 0,
+        // ⛓ WHY AN OMISSION WAS ALLOWED, RECORDED. An empty findings list and a
+        // clean pass look identical otherwise: a reader of `ok: true` cannot
+        // otherwise tell "this set legitimately has no Watcher" from "the rule
+        // never ran". `named_rooms_omitted` is the set of names this set was
+        // MEASURED not to need; `named_rooms_unverifiable` is the set whose
+        // absence could not be checked because rooms went unread.
+        named_rooms_present: isPlainObject(named)
+            ? NAMED_ROOM_KEYS.filter((k) => named[k] !== undefined) : [],
+        named_rooms_omitted: namedOmitted,
+        named_rooms_unverifiable: namedUnverifiable,
+        named_rooms_required_missing: namedRequired,
     };
     return { ok: errors.length === 0, errors, warnings, stats };
 }
