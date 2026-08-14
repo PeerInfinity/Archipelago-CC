@@ -12,13 +12,13 @@
  * artifact is a SWFRecomp AVM2 recompile, and every claim about it has to be
  * driven through the wasm.
  *
- * ⛔ REAL-GPU WINDOWS CHROME, NEVER WSL HEADLESS. Measured while writing this:
- * headless WSL Playwright runs the recompiled game at ~0.4 fps (two bot steps in
- * five seconds), against ~3.6 fps on the real-GPU rig, so every arm that waits
- * for a world to be built would be waiting on SwiftShader and every comparison
- * of what a room BUILT would be a race against machine load. The browser side is
- * `seedling-level-set-win.py`, a dumb driver; all the rules and every verdict
- * stay here.
+ * ⛔ REAL-GPU WINDOWS CHROME, NEVER WSL HEADLESS. WSL's Chromium is SwiftShader:
+ * `seedling-bot-replay-win.py`'s header and `probe-seedling-r5-mobiles.mjs:96`
+ * both record ~0.5 fps there against ~3.6 fps on the real-GPU rig. Every arm
+ * below waits for a world to be BUILT, so on software rendering each one would
+ * be a race against machine load rather than a fact about which room loaded.
+ * The browser side is `seedling-level-set-win.py`, a dumb driver; all the rules
+ * and every verdict stay here.
  *
  * The arms, each on its own FRESH PAGE:
  *

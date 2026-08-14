@@ -430,8 +430,10 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       schemas beside the other frontend schemas (the set, and a transport
       chunk), the authoritative validator, and the vanilla 116 committed as a
       fixture that validates clean. 53 tests, rejections first.
-- [ ] **Phase 3 — The AS3 seams** (§4.4), each its own commit: parse split;
-      table indirection; `botLoadLevels`; `Bot.as`'s three bounds checks.
+- [x] **Phase 3 — The AS3 seams** (§4.4), each its own commit: parse split;
+      table indirection; `botLoadLevels`; `Bot.as`'s three bounds checks —
+      **four**, see §10. **DONE 2026-08-13, §10**; five commits in
+      `~/CC/seedling` on `bot`, ⛔ **not pushed** (§4.7 note 2).
 - [ ] **Phase 3b — Mount vanilla as a manifest** (§4.3, shape (c)): the
       embedded-asset resolver, the built-in `seedling-vanilla` manifest, and
       §3.5's six constants moving into it. ⛔ Lands ALONE — it is the only seam
@@ -934,3 +936,246 @@ so a rule that starts failing for the wrong cause fails here.
   range checks §4.6 asked for are in; rewriting `to`/`playerx`/`playery`/`sign`
   in a bundle is Phase 5b's own work — and it must look on `<control>` for
   fallthroughs, with the `@xOff`/`@yOff` offsets and their own `@sign`.
+
+---
+
+## 10. PHASE 3 — THE AS3 SEAMS (2026-08-13)
+
+Six commits in `~/CC/seedling` on `bot`, on top of `7514b96`:
+
+| commit | seam |
+|---|---|
+| `bc0c408` | 1 — the parse split, **alone** |
+| `acba219` | 2 — the table behind the mounted set (+ new `src/LevelSet.as`) |
+| `ba3b37b` | 3 — `botLoadLevels` / `botLevelSet` |
+| `a6f6008` | 4 — all four level-id bounds |
+| `6cf0a47` | the clamp's coherence follow-up |
+| `99c539c` | a refusal names the value it conflicted with (found by §10.3) |
+
+⛔ **NOT PUSHED.** §4.7 note 2 makes pushing `bot` an explicit user decision and
+it has not been given.
+
+### 10.0 ⛔ THE BUILD IS A PREREQUISITE, AND IT FAILED FIRST — on an UNCHANGED tree
+
+Nothing here can be believed from the source, so the first thing built was the
+**untouched tree**, before a line of AS3 was edited. Timings, quiet box
+(`/proc/loadavg` 0.32, 8 cores):
+
+| step | time |
+|---|---|
+| `build_bot.sh` (AS3 → SWF, 7,743,333 B) | **11.7 s** |
+| `inject.py` (AP bridge → 9,730,706 B) | 0.2 s |
+| `run-SWFRecomp.sh` (SWF → C; 705 classes, 3,811 methods, **0 verify failures**) | **5.7 s** |
+| `build_wasm_avm2.sh` (C → wasm, 33,660,268 B) | **~19 min** |
+
+⛔ **AND THE RESULT CRASHED THE TAB.** Through the same harness that boots the
+shipped artifact, the rebuilt-unchanged-tree wasm reaches `__runtimeReady`,
+takes the `#btn-start` click, and then the renderer process **dies** —
+`page.evaluate: Target crashed` — before one `botStatus` callback registers. The
+Aug-9 artifact boots to callbacks on the same harness, same page wrappers
+(checked: the staged `game.html`/`swf_bridge_avm2.js` are byte-identical to the
+templates they are generated from).
+
+⚠ **THE CAUSE WAS MINE, AND IT IS THE ONE THE BUILD SCRIPT'S HEADER WARNS
+ABOUT.** To save a cold build I seeded the new output directory with the Aug-9
+`.o` cache (`cp -a`). `build_bot.sh` says it plainly: *"`FRESH=1` after any
+define/struct-layout change: the `.o` cache keys on MTIME, not on flags."*
+`SWFModernRuntime`'s sources moved between Aug 9 and today — `libswf/tag.h`,
+`curve_flatten.h` and ~20 `.c` files are all newer than the control artifact —
+so 62 of the 90 objects were compiled against headers that no longer describe
+the structs the other 28 saw. The link succeeds; the page dies.
+
+⇒ **the milestone earned its cost.** Found after the seams landed, the natural
+reading would have been *"the seams crash the game"*. The Phase 3 artifact was
+then built with **`FRESH=1`** and boots normally.
+
+⇒ **the reusable rule, stated so the next session does not re-derive it:** an
+`.o` cache is safe to reuse only when it was built against the CURRENT runtime
+headers. Same-session incremental rebuilds are fine (this phase did one, and it
+boots); a cache from an artifact days old is poison.
+
+### 10.1 The four seams, and the line-number cost of each
+
+**Seam 1 — the parse split** (`bc0c408`, alone). `loadlevel(_level:Class)` keeps
+its signature and is three lines over a new `loadLevelXML(xml:XML)`. The body —
+**364 lines**, `Game.as:1925-2288` — moved unedited, verified by comparing the
+moved region byte-for-byte against the pre-edit file (md5 `bf588baa…` both
+sides). §3.1's measurement held under the check the Phase 1 session asked for:
+`_level`, `file` and `str` appear **only** at `:1920`, `:1922`, `:1923`, so
+nothing below the signature depends on the caller having passed a `Class`, and
+"moves wholesale" is a fact rather than a hope.
+
+**Seam 2 — the table behind the mounted set** (`acba219`). `levels[…]` was
+dereferenced at `Game.as:774` and `:798`; both now call `loadLevelIndex(int)`.
+New file `src/LevelSet.as`; `Game.levelCount()` replaces `levels.length` as the
+table's length.
+
+**Seam 3 — the transport** (`ba3b37b`). `botLoadLevels` and `botLevelSet`, their
+own callbacks on the `botMobiles`/`botSeam` precedent, so every existing
+`botStatus` poller is byte-inert.
+
+**Seam 4 — the bounds** (`a6f6008`). The plan said three; **it is four.** The
+three that existed (`:965`, `:1577`, `:1852`) now ask `Game.levelCount()`; the
+fourth had no check at all and is the one §8.3 drove.
+
+#### ⚠ The line-number cost, declared — §4.5 is why this arc can be audited
+
+Citations in the model, measured 2026-08-13 (`grep -rao 'Bot\.as:[0-9]\+'`):
+**55** into `Bot.as`.
+
+| file | rule | citations |
+|---|---|---|
+| `Game.as` | `NNN >= 1925` → **NNN + 19** | the seam-1 commit, alone |
+| `Game.as` | seam 2 shifts **nothing** | — |
+| `Bot.as` | `NNN < 752` unchanged | 9 |
+| `Bot.as` | `752..1436` → **NNN + 9** | 17 |
+| `Bot.as` | `NNN >= 1437` → **NNN + 29** | 29 |
+
+⛓ **AND ONE READING OF §4.5 THAT TURNED OUT TO MATTER.** The policy says "new
+fields at the END of declaration blocks". Taken literally, `Game.levelSetError`
+belonged beside `tagsPerLevel` at `:524` — which would have shifted **every
+citation below :524**, exactly as silently as the re-flow the policy forbids.
+Appending at the end of the CLASS instead costs nothing and reads no worse.
+⇒ **the property to protect is ZERO SHIFT, not the letter of the sentence.**
+Seam 2's whole diff is three hunks, two of them same-length one-line
+substitutions.
+
+### 10.2 ⛔ THE OWNERSHIP SPLIT — the question this phase had to settle
+
+`levelSetValidator.js` is JavaScript and cannot run inside the wasm.
+
+⚖ **SETTLED: the two sides own DIFFERENT QUESTIONS, and the split is by
+question rather than by rule.**
+
+| | owns | examples |
+|---|---|---|
+| **sender** (`levelSetValidator.js`) | **is this set VALID** | level-index range on `@to`/`@fallthrough`/`@room`, the 30-tag ceiling, `ButtonRoom`'s tset-as-tag, the closed 7-entry sign table, `named_rooms` completeness, `music` range, the content hash |
+| **receiver** (`LevelSet.acceptChunk`) | **did a whole, self-consistent delivery ARRIVE, and can this build SERVE it** | envelope shape, `schema_version`, one `set_id` per delivery, every `chunk_index` exactly once, dense room ids, `source.xml` present, the set fits the persistence table |
+| **receiver** (`Game.loadLevelIndex` + `Bot`'s four bounds) | **is this INDEX in range where it is USED** | one comparison against `Game.levelCount()`, at four API boundaries and one choke point |
+
+**Not one rule of the first row is re-implemented in AS3.** That is the whole
+protection: two validators can only disagree about a rule they both hold, and
+these rows hold none in common. The third row is not a validator — it is
+strictly weaker than the first and implied by it, so a set the sender passed can
+never trip it.
+
+⛔ **THE ONE RULE BOTH SIDES DO HOLD IS ASSEMBLY, AND IT CANNOT BE AVOIDED:** the
+sender assembles a batch it already has (`assembleLevelSetChunks` takes an
+array); the receiver must assemble a **stream**, one EI call at a time, deciding
+on each call whether the delivery is complete. So assembly is pinned to a
+**shared fixture** — `fixtures/seedling-level-set-delivery-conformance.json`, 16
+cases, 3 that must mount and 13 that must not — and both sides run against it:
+
+- sender: `levelSetDelivery.test.js` (vitest, 21 tests);
+- receiver: `probe-seedling-level-set-transport.mjs`, the same cases through the
+  built artifact.
+
+⛓ **THE VERDICT COMPARED IS "DOES A SET GET MOUNTED", AND ONLY THAT.** Reasons
+are not compared — each side words its own, and a wording difference is harmless
+where a verdict difference is the failure. Every case records
+`would_mount_without_the_rule`: what a receiver lacking that one rule would do,
+so the battery says out loud what makes each case able to fail. Neither half
+proves parity alone.
+
+⚠ **ONE DECLARED DIVERGENCE**, marked `receiver_only`: a room whose `source` is
+an `embed` reference. The sender calls it valid and merely unchecked; this build
+has no embedded-asset resolver until phase 3b, so it refuses the delivery. That
+is *servable*, not *valid* — and the capacity refusal below is the same shape.
+
+### 10.3 The probe, and what each arm would have to do to go red
+
+⛔ **DRIVEN ON REAL-GPU WINDOWS CHROME, NOT WSL HEADLESS** (⚖ user). The arc
+already had the number: `seedling-bot-replay-win.py`'s header and
+`probe-seedling-r5-mobiles.mjs:96` both record **~0.5 fps headless against
+~3.6 fps on the real-GPU rig**, and WSL's Chromium is SwiftShader. What I saw
+before switching is consistent with it and is stated as what it is rather than
+as an fps: over five seconds of a running tape the bot's `tick` never left 0.
+⇒ every arm that waits for a world to be built would be waiting on a software
+rasteriser, and any comparison of what a room BUILT would be a race against
+machine load.
+`seedling-level-set-win.py` is the dumb driver on `seedling-bot-replay-win.py`'s
+precedent; every verdict stays in the `.mjs`. Adapter reported by the run:
+**`intel / gen-9`**. 25 arms, **one fresh page each** (no stack cookie: after one
+abort every later reading in a page is fiction), **all pass**.
+
+| arm | result | what would make it red |
+|---|---|---|
+| 1. control, nothing delivered | `mounted: null`, `rooms: 116 = built_in`, `capacity: 116`, `error: ""` | a mount that happens without a delivery |
+| 2a. `boot.level` 115 | `ok` | a bound that refuses valid levels |
+| **2b. `boot.level` 116** | **`error:boot.level 116 is not a level (0..115)`** | §8.3's measured `ok` — this is the regression closed |
+| **2c. 5-room set mounted** | `boot 4` → `ok`; **`boot 5` → `error:boot.level 5 is not a level (0..4)`** | a bound reading `Game.levels.length` instead of the mounted table — level 5 EXISTS in vanilla |
+| 3. the 16 conformance cases | **16/16 verdicts match the sender** | any rule missing on the receiver; each case names what it would mount without it |
+| **4. the real vanilla 116 as XML** | 1,385,826 B of OEL → **9 chunks**, 0 oversized, mounts as `seedling-vanilla-367e679f`, `rooms: 116` | the arena failing on RETENTION rather than on one call |
+| 5a. rooms 0 and 5 (controls) | distinct rosters, **3 vs 4 mobiles** | identical fingerprints ⇒ 5b is abandoned, not passed |
+| **5b. room 5 carrying room 0's XML** | booting level 5 builds **room 0's roster** | `loadLevelIndex` still reading the `[Embed]` array |
+| 6. 117 rooms | `error:set has 117 rooms but the persistence table addresses 116` | a set mounting past the table, whose rows read as *already cleared* |
+
+⛓ **ARM 4 IS NEW INFORMATION, not a re-run of §8.1.** §8.1 proved 15 chunks can
+CROSS while nothing kept the rooms; the receiver now RETAINS the whole set in the
+arena, and it survives. ⚠ Note the chunk count: **9, not the 8 §8.1 predicted** —
+the sender's planner binds on rooms **and bytes**, and the byte bound adds a
+chunk on real data. That is §9.1's "16 rooms alone is not safe" showing up in the
+count.
+
+⚠ **ONE DEFECT THIS PROBE FOUND IN MY OWN CODE.** The first build refused a
+spliced delivery with `chunk.set_id "other-bbbbbbbb" disagrees with "null"` —
+`resetStaging()` had already nulled the staged id, and AS3 evaluates the return
+expression after the call. Right verdict, useless reason. Fixed by reading the
+open delivery's values into locals first, and the fixture now carries
+`receiver_reason_must_contain` for the two cases, so a refusal that stops naming
+what conflicted fails the probe. Re-run on the rebuilt artifact: **27/27**, the
+reasons now reading `disagrees with "conformance-aaaaaaaa"` and
+`disagrees with 2`.
+
+⚠ **AND A BUILD DATUM WORTH KEEPING.** That rebuild was INCREMENTAL over the
+`.o` cache the FRESH build had just produced in the same session — an ABC-only
+change — and it boots and passes every arm. The `project_seedling_bot_r1` memory
+records the same shape failing once (`heap_alloc(711162896)` before the
+callbacks registered), so the rule is *verify an incremental build, never trust
+it*; what is reliably poison is a cache older than the current headers (§10.0).
+
+### 10.4 What Phase 3 did NOT do, and what a set therefore still cannot do
+
+- ⛔ **No phase 3b.** Vanilla's rooms are still `[Embed]`ed classes reached by
+  the `LevelSet.mounted == null` arm, and §3.5's six constants are still
+  literals in `Game.as`. Nothing here deleted a literal, deliberately.
+- ⛔ **No phase 4.** `Main.as:319` still sizes the persistence table from
+  `Game.levels.length` and the save carries no `set_id`. The receiver's capacity
+  refusal is a **stopgap phase 4 removes**, not a design.
+- ⚠ **A MOUNTED SET REPLACES ROOMS AND NOTHING ELSE.** `menuLevels`, `start`,
+  `named_rooms`, `levelMusics`, the snow-gradient room and the music-exempt room
+  are all still vanilla's literals ⇒ mount a set of fewer than 90 rooms and the
+  TITLE SCREEN references rooms that do not exist. The backstop clamps and names
+  each one; this build boots straight into play so it does not bite here, but a
+  custom set is not *playable* until phase 3b.
+- ⚠ **A mount does not reload the world the player is standing in.** Deliver
+  before `botStart`.
+- ⚠ **The JS half of the boot-level asymmetry is still open.**
+  `tapeFormat.parsePersistence` bounds `persistence[].level` to `0..115` while
+  `boot.level` carries no bound (§6). The AS3 half is closed; the JS half is a
+  tape-format change guarding the real game's level space and is not one to make
+  in passing.
+- ⚠ **Nothing in production delivers a set.** `botLoadLevels`' only caller is the
+  probe; the producer is phase 5.
+- ⚠ **Still unmeasured, inherited from §9.6:** whether
+  `flashPanel/games/seedling.json` and the region atlas force more `named_rooms`.
+
+⛓ **ONE HAZARD THIS PHASE DEFUSED WITHOUT BEING ASKED TO.** §8.2a item 6 — the
+nine live debug warps on keys 1–9, jumping to levels up to 110 after
+`clearSave()` — was recorded as composing badly with §8.3: under a small custom
+set those indices would read as *everything already cleared*, silently. They now
+go through `loadLevelIndex`, so they clamp, name the refusal and move `level`
+with the room that really loaded. ⚠ **UNTESTED, and not testable through a
+tape:** `Bot.keyCodeFor` is a closed eight-name vocabulary with no digits in it
+(`Bot.as:626`, by design). Driving it needs a real browser keypress, which no arm
+here makes.
+
+### 10.5 Gates
+
+- `npx vitest run frontend/modules/seedlingDemo/` — **3775** (3754 + the 21 new
+  sender-side conformance tests).
+- `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
+  `1fedb0ab35b7cd74accecf0345bdc893`.
+- The eleven `check-seedling-editor-*.mjs` were **not** run: this phase touched
+  no editor code, no procgen module and no page. What it was verified by instead
+  is §10.3, in the built artifact.

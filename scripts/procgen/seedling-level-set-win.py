@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Drive level-set deliveries into the Seedling wasm on real-GPU Windows Chrome.
 
-⛔ WSL'S OWN CHROMIUM IS SWIFTSHADER AND MUST NOT BE USED HERE. Measured on this
-box while writing this: the recompiled game takes TWO bot steps in five seconds
-under headless WSL Playwright (~0.4 fps), against the ~3.6 fps the real-GPU rig
-reports. Anything that waits for the world to be built — which every arm of the
-level-set probe does — is then waiting on a software rasteriser, and any
-comparison of what a room BUILT becomes a race against machine load rather than
-a fact. (`probe-seedling-r5-mobiles.mjs` recorded the same ~0.5 fps.)
+⛔ WSL'S OWN CHROMIUM IS SWIFTSHADER AND MUST NOT BE USED HERE. The number is
+already on record twice: `seedling-bot-replay-win.py`'s header measured ~0.5 fps
+headless against the ~3.6 fps the real-GPU rig reports, and
+`probe-seedling-r5-mobiles.mjs:96` says the same. Anything that waits for a
+world to be built — which every arm of the level-set probe does — is then
+waiting on a software rasteriser, and any comparison of what a room BUILT
+becomes a race against machine load rather than a fact.
 
 Same split, and the same recipe, as `seedling-bot-replay-win.py`: this script is
 deliberately DUMB. It knows nothing about level sets, chunk envelopes or
