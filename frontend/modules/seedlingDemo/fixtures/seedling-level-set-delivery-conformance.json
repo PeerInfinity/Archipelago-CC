@@ -1,0 +1,1541 @@
+{
+  "schema_version": 1,
+  "description": "Delivery conformance for external Seedling level sets \u2014 the shared fixture that keeps the two chunk assemblers from disagreeing. The sender assembles a batch it already holds (assembleLevelSetChunks in levelSetValidator.js); the receiver must assemble a STREAM, one ExternalInterface call at a time (LevelSet.acceptChunk in ~/CC/seedling/src/LevelSet.as), so there is no way to have only one implementation. This file is what they are both tested against.\n\nTHE VERDICT COMPARED IS `mounts`: does a set end up mounted? Reasons are NOT compared \u2014 each side words its own, and a wording difference is harmless where a verdict difference is the failure this arc keeps finding. `receiver_only` marks a case where the sender succeeds and the receiver refuses for a reason the sender cannot know; each one must say why in `would_mount_without_the_rule`.\n\n\u26a0 WHAT THIS BOUNDS: envelopes and arrival only. Room XML here is a one-element stub \u2014 it is never parsed by either assembler. Whether a SET is valid (level-index ranges, the 30-tag ceiling, the closed sign table, named_rooms) is validateLevelSet's question and is tested against the real vanilla 116 elsewhere.",
+  "cases": [
+    {
+      "name": "in-order delivery of a 5-room set",
+      "mounts": true,
+      "would_mount_without_the_rule": "nothing \u2014 this is the positive control, and every negative case below is this delivery with one thing wrong",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 1,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "out-of-order delivery: chunk 1 arrives first",
+      "mounts": true,
+      "would_mount_without_the_rule": "nothing \u2014 but a receiver that demanded chunk 0 first would refuse a delivery the sender calls valid, which is a verdict disagreement",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 1,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "one chunk carrying the whole set",
+      "mounts": true,
+      "would_mount_without_the_rule": "nothing \u2014 the degenerate delivery must still work",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "room ids shifted to 1..5",
+      "mounts": false,
+      "would_mount_without_the_rule": "a POSITIONAL reassembly: it would mount a set shifted by one, and every @to/@room/@fallthrough would point one room off with nothing erroring (plan \u00a79.1)",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 1,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 5,
+              "name": "R5",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duplicate chunk_index",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver counting arrivals instead of tracking WHICH arrived: it would mount a short table on the right number of calls",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "a missing chunk",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver that mounts on any chunk rather than on completion \u2014 the partial-mount case \u00a78.3 makes silent",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "two set_ids in one delivery",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver that ignores set_id: it would splice two sets into one table",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "other-bbbbbbbb",
+          "chunk_index": 1,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        }
+      ],
+      "receiver_reason_must_contain": [
+        "other-bbbbbbbb",
+        "conformance-aaaaaaaa"
+      ]
+    },
+    {
+      "name": "chunk_count disagreement",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver taking the last chunk_count it saw: completion would be decided by whichever envelope arrived last",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 1,
+          "chunk_count": 3,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        }
+      ],
+      "receiver_reason_must_contain": [
+        "3",
+        "2"
+      ]
+    },
+    {
+      "name": "schema_version 2",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver that does not check the version would parse a future format as if it were this one",
+      "chunks": [
+        {
+          "schema_version": 2,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "no metadata on chunk 0",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver that treats metadata as optional would mount a set with no identity and no named_rooms",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "metadata on a later chunk",
+      "mounts": false,
+      "would_mount_without_the_rule": "a delivery with two manifests has no defined identity",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        },
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 1,
+          "chunk_count": 2,
+          "rooms": [
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "an empty rooms array",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver that accepts an empty chunk would count it toward completion and mount a short table",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "a room with no id",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver falling back to chunk position when id is missing \u2014 the same absorbed-ordering-bug family as the shifted case",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "a duplicate room id",
+      "mounts": false,
+      "would_mount_without_the_rule": "a receiver writing by id without checking would silently keep the last writer and mount a table one room short",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 rooms in one chunk",
+      "mounts": false,
+      "would_mount_without_the_rule": "MAX_ROOMS_PER_CHUNK. \u26a0 This rule cannot protect the receiver \u2014 an oversized chunk dies inside JSON.parse before any AS3 runs (\u00a78.1). It is here so the two sides never disagree about a verdict",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 2,
+              "name": "R2",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 3,
+              "name": "R3",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 4,
+              "name": "R4",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 5,
+              "name": "R5",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 6,
+              "name": "R6",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 7,
+              "name": "R7",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 8,
+              "name": "R8",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 9,
+              "name": "R9",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 10,
+              "name": "R10",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 11,
+              "name": "R11",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 12,
+              "name": "R12",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 13,
+              "name": "R13",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 14,
+              "name": "R14",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 15,
+              "name": "R15",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 16,
+              "name": "R16",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "a room sourced from an [Embed] reference",
+      "mounts": false,
+      "would_mount_without_the_rule": "SERVABILITY, not validity: the sender's validator calls an embed room valid and merely unchecked, and this build has no embedded-asset resolver (plan \u00a74.3 shape (c), phase 3b). The divergence is declared here rather than discovered when a player walks into the room",
+      "chunks": [
+        {
+          "schema_version": 1,
+          "set_id": "conformance-aaaaaaaa",
+          "chunk_index": 0,
+          "chunk_count": 1,
+          "rooms": [
+            {
+              "id": 0,
+              "name": "R0",
+              "source": {
+                "xml": "<level width=\"160\" height=\"160\"><Ground/></level>"
+              },
+              "music": 0
+            },
+            {
+              "id": 1,
+              "name": "R1",
+              "source": {
+                "embed": "levels/OverWorld.oel"
+              },
+              "music": 0
+            }
+          ],
+          "set": {
+            "schema_version": 1,
+            "set_id": "conformance-aaaaaaaa",
+            "name": "delivery conformance",
+            "start": {
+              "level": 0
+            },
+            "menu_rooms": [
+              0
+            ],
+            "named_rooms": {
+              "moonrock_target": {
+                "level": 0
+              },
+              "watcher_text": {
+                "level": 0
+              },
+              "dark_shrum_death": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "bloody_seed_ending": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "light_boss_exit": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              },
+              "tentacle_beast_mouth": {
+                "level": 0,
+                "x": 80,
+                "y": 128
+              }
+            }
+          }
+        }
+      ],
+      "receiver_only": true,
+      "note": "assembleLevelSetChunks() SUCCEEDS on this case; the AS3 refuses it at mount. Expected, and the only such case in this file."
+    }
+  ]
+}
