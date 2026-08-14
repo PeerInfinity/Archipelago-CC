@@ -1,6 +1,6 @@
 # Procgen: a deterministic budget — tick-bounded, not wall-clock
 
-**Date:** 2026-08-14 · **Status: QUEUED, no code.** ⚖ **User priority
+**Date:** 2026-08-14 · **Status: DONE — see §8 AS-BUILT, which OVERRIDES §§1-7 where they disagree.** ⚖ **User priority
 (2026-08-14): "make it one of the next priorities to make procgen
 deterministic, by making it tick based, not wall clock based."**
 
@@ -145,3 +145,115 @@ behaviour change and the new baseline separately.
   2026-08-14, which points here.
 - `CC/docs/plans/seedling-external-level-sets.md` — bit three separate phases of
   that arc; §16.2 lists it as one of the four things a newcomer gets wrong.
+
+---
+
+# 8. AS-BUILT — landed 2026-08-14
+
+**Status: DONE.** `wallClockMs` is gone from `DEFAULT_BUDGET` entirely; nothing
+in the procgen pipeline is denominated in milliseconds any more.
+
+⚠ **§§1–7 above are the brief as written before any measurement, and three of
+its load-bearing claims did not survive.** They are kept because the reasoning
+is instructive, but **this section wins wherever they disagree.**
+
+## 8.1 What actually changed
+
+| site | change |
+|---|---|
+| `procgenOracle.js` `DEFAULT_BUDGET` | `wallClockMs: 5000` **removed**; only `maxTicksPerTarget` remains |
+| `procgenOracle.js` `assertBudget` | a budget still carrying `wallClockMs` is **refused by name**, not ignored |
+| `procgenOracle.js:503` (the defect) | **branch deleted** — a certified solve is `SOLVED`, full stop |
+| `procgenOracle.js:452` (thrown arm) | elapsed-time arm **removed**; a refusal is a budget verdict only if it NAMES a budget the call passed in |
+| `generate-seedling-level.mjs` | `--budget-ms` refused by name (exit 2) |
+| `watchGenerate.js` | `?budgetms` warns and is ignored (a stale bookmark must not hard-fail a page) |
+| `procgenScratchPersistence.test.js` | its frozen-clock **workaround removed** — it existed only to dodge this defect |
+
+`ms` survives in `solve()`'s return as **evidence only**. It never reaches the
+trace: `levelGenerator` reads `verdict`, `ticks`, `classifiedBy`, `reasonText`
+and `budgetKind`, and none of those now depends on elapsed time.
+
+## 8.2 ⛔ The three claims the measurements refuted
+
+**(a) §5.1's question has no answer in expansions, and needs none in ticks.**
+The empty room of `:99`'s own provenance measures **134 ticks and 0 expansions**
+(50–139 ms, reproducing `:99`'s stated range). So the 40× reasoning that
+produced 5,000 ms yields ~**5,360 ticks** — against an observed max *total* of
+**800 ticks** over 326 solves / 40 seeds. A bound 6.7× above anything ever
+observed is decoration. And 40 × 0 expansions is 0: the case that justified the
+number spends none, so there is no expansion equivalent to measure at all.
+⇒ **nothing replaced the clock, and that is the measured answer rather than an
+omission.** `maxTicksPerTarget` already binds where the clock used to — it
+classified 4 of the sweep's 5 `BUDGET_EXHAUSTED` verdicts.
+
+**(b) §4.1 / §3's "plumbing, not redesign" is the wrong fix, twice.** Threading
+`TIME_RUNG.maxExpansions` into the budget is real plumbing and it was verified
+to be as shallow as the brief says — but:
+
+- as a **bound** it is decoration: the search it caps ran at all in **2 of 326
+  solves** and hit the cap in **1**;
+- as a **classification** input it is actively wrong: the cap surfaces as *one
+  rung's sub-reason* inside a ladder refusal whose other rungs refused about the
+  LEVEL ("no admissible corridor", "no live body's removal admits a corridor").
+  Classifying on it would convert a true `REFUSED` into a false
+  `BUDGET_EXHAUSTED` — a budget excuse for a level that genuinely has no route.
+
+⇒ **before promoting an internal cap to a budget field, measure how often it
+binds AND read what a caller would conclude when it does.**
+
+**(b2) §7's citation list is one entry too long.** It says the defect is
+"recorded independently" in `docs/json/developer/procgen/omsi.md`. It is not —
+that file's only wall-clock reference is a 12 s loop round-trip measurement,
+unrelated. The real records were `seedling-bot.md`, `gotchas.md` and the
+level-sets plan. ⚠ Cheap to check, and worth checking: a citation list is a
+claim like any other.
+
+**(c) §1's seed-20 repro no longer reproduces — and did not pre-fix either.**
+Five pre-fix runs of `--seeds=20` were byte-identical at load 55; seed 20's
+slowest solve on a quiet box is **217 ms**, nowhere near 5,000. The finding was
+real when taken (2026-08-13) and the tree has moved since. ⇒ the "measured
+limitations EXPIRE" trap in its own habitat: **the repro inside a finding ages
+faster than the finding does.** Re-derive a repro before building an acceptance
+on it, or the acceptance is a claim that cannot fail.
+
+## 8.3 ⛓ The repro that does work, and what it revealed
+
+**`--seeds=9`, 5 runs, 192 CPU burners on 8 cores (load ~100–170): 5 failures
+out of 5, pre-fix.** And the failure is worse than the brief's "different
+candidates":
+
+```
+LevelGeneratorError: THE SKELETON DID NOT SOLVE — BUDGET_EXHAUSTED. The empty
+bordered room with its goal is the loop's control: it is solvable by
+construction, so this is a defect in the room builder, the boot or the goal...
+The oracle said: "the solve SUCCEEDED in 5810 ms, over the 5000 ms wall-clock budget"
+```
+
+The **skeleton** — the loop's own control arm, solvable by construction — took
+5,810–8,334 ms, was reclassified, and the skeleton guard then accused the room
+builder of a defect it did not have. It throws `LevelGeneratorError`, **not**
+`GenerationAborted`, so it also escaped the exporter's abort handling and
+crashed the process (exit 1, zero stdout) rather than being reported as an abort.
+
+⇒ generalisable: **a control arm that the machine can fail will eventually
+accuse your code of the machine's problem**, and it will do it in whatever error
+class sits nearest — including one nobody's handler catches.
+
+## 8.4 ⚠ RESIDUE — owed, measured, deliberately not fixed here
+
+`planDash`'s `maxExpansions: 40000` permits a **12,267 ms single dash** (seed 13,
+quiet box). That cap is far too loose to be a useful cost bound. Lowering it is a
+**slowness** finding with its own measurement owed — it is not a determinism
+finding, and the two must not be traded for each other. It is deterministic
+today: it just takes a long time deterministically.
+
+## 8.5 Gates
+
+Recorded with the box state that produced each, because the acceptance requires
+load and every other gate is *less* trustworthy under it.
+
+| gate | box | result |
+|---|---|---|
+| `npx vitest run frontend/modules/seedlingDemo/` (baseline, pre-change) | quiet, load 0.13 | 3880 / 109 files |
+| `solve-seedling-r8-battery.mjs --check` md5 (baseline, pre-change) | quiet | `1fedb0ab35b7cd74accecf0345bdc893`, exit 1 |
+| `npx vitest run frontend/modules/seedlingDemo/` (post-change) | quiet, load 2.4 | **3883 / 109 files**, 358 s |

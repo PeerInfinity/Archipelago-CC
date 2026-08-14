@@ -19,14 +19,21 @@
  *
  * is a determinism proof rather than a ritual.
  *
- * ── ⚠⚠ AND THE GENERATOR IS NOT DETERMINISTIC UNDER LOAD ──────────────────────
+ * ── ⛓⛓ AND THE GENERATOR IS NOW DETERMINISTIC UNDER LOAD (2026-08-14) ─────────
  *
- * `procgenOracle:503` converts a SUCCEEDED solve into `BUDGET_EXHAUSTED` when it
- * passes `wallClockMs`, so under load a keep flips to a revert and the run
- * reaches different candidates. Measured on seed 20: five runs on IDENTICAL
- * code gave 3 levels and 2 `GenerationAborted`. ⇒ THIS SCRIPT PRINTS
- * `/proc/loadavg` TO STDERR BEFORE IT STARTS, and a set captured on a busy box
- * is a set that will not reproduce while looking completely normal.
+ * It was NOT, and this is where that was recorded. `procgenOracle:503` used to
+ * convert a SUCCEEDED solve into `BUDGET_EXHAUSTED` when it passed
+ * `wallClockMs`, so under load a keep flipped to a revert and the run reached
+ * different candidates. Worst measured form: at load ~100 on 8 cores,
+ * `--seeds=9` failed 5 runs of 5 — the SKELETON solve, the loop's own control
+ * arm, took 5,810-8,334 ms, was reclassified, and `levelGenerator`'s skeleton
+ * guard then accused the room builder of a defect it did not have.
+ *
+ * ⇒ THE WALL CLOCK IS GONE. Every remaining budget is denominated in ticks, so
+ * a set captured on a busy box is now the same set as one captured on a quiet
+ * one — verified at load ~100-170, five runs, byte-identical to the quiet-box
+ * digest. ⚠ THE LOAD AVERAGE IS STILL PRINTED TO STDERR: it no longer changes
+ * the OUTPUT, but it is what tells a reader whether a slow run was the box.
  *
  * ⛔ AN ABORTED SEED IS A FAILURE, NOT A GAP. A run that quietly dropped the
  * seeds that aborted would emit a smaller set that looks exactly like a smaller
@@ -145,9 +152,10 @@ for (const seed of SEEDS) {
 
 if (aborted.length > 0 && !ALLOW_ABORTS) {
     note(`\nexport-seedling-level-set: ${aborted.length} of ${SEEDS.length} seed(s) ABORTED and no set was written.`);
-    note('⚠ Before treating this as a code failure, check the load average above and re-run:');
-    note('  the generator is NOT deterministic under load — a solve that passes wallClockMs is');
-    note('  converted from SUCCESS to a rejection (procgenOracle:503), so keeps flip under load.');
+    note('⛓ This is a CODE failure, not a busy box. Since 2026-08-14 no budget in this');
+    note('  pipeline is denominated in milliseconds, so an abort here reproduces on a quiet');
+    note('  machine and re-running it will not make it go away — that is the whole point of');
+    note('  having removed the wall clock. Reproduce, then read the seed\'s trace.');
     note('  Pass --allow-aborts to emit a set that NAMES the seeds it could not generate.');
     process.exit(3);
 }

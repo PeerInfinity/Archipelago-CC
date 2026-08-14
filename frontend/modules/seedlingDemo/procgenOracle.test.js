@@ -41,14 +41,32 @@ const goals = [collectGoal(goalAt.x, goalAt.y)];
 describe('the budget is named, and its default is the engine\'s own', () => {
     it('maxTicksPerTarget is DEFAULT_MAX_TICKS_PER_TARGET, imported not typed', () => {
         expect(DEFAULT_BUDGET.maxTicksPerTarget).toBe(DEFAULT_MAX_TICKS_PER_TARGET);
-        expect(DEFAULT_BUDGET.wallClockMs).toBe(5000);
+    });
+
+    /**
+     * ⛔ THE BUDGET IS ASSERTED BY ITS WHOLE KEY SET, not by "wallClockMs is
+     * absent". A test that only checked the one field it knew about would pass
+     * just as happily if somebody added `wallClockSeconds` next to it, and the
+     * property this arc bought is that NOTHING here is denominated in time.
+     */
+    it('the budget names ticks and NOTHING denominated in time', () => {
+        expect(Object.keys(DEFAULT_BUDGET)).toEqual(['maxTicksPerTarget']);
     });
 
     it('assertBudget completes from the defaults and refuses nonsense', () => {
-        expect(assertBudget({ wallClockMs: 10 }))
-            .toEqual({ wallClockMs: 10, maxTicksPerTarget: DEFAULT_MAX_TICKS_PER_TARGET });
-        expect(() => assertBudget({ wallClockMs: 0 })).toThrow(ProcgenOracleError);
+        expect(assertBudget({ maxTicksPerTarget: 40 }))
+            .toEqual({ maxTicksPerTarget: 40 });
         expect(() => assertBudget({ maxTicksPerTarget: 1.5 })).toThrow(ProcgenOracleError);
+    });
+
+    /**
+     * ⚠ A REMOVED KNOB THAT IS SILENTLY IGNORED IS WORSE THAN ONE THAT THROWS.
+     * A caller copying a budget out of an old branch would otherwise believe it
+     * had bounded a run it had not.
+     */
+    it('a budget still carrying wallClockMs is REFUSED by name', () => {
+        expect(() => assertBudget({ wallClockMs: 5000 })).toThrow(ProcgenOracleError);
+        expect(() => assertBudget({ wallClockMs: 5000 })).toThrow(/wallClockMs is GONE/);
     });
 
     it('solve refuses an empty goal list', () => {
@@ -65,7 +83,9 @@ describe('SOLVED — the empty room, certified by the solve\'s own collect recor
         expect(out.ticks).toBeGreaterThan(0);
         expect(out.tape.tick_count).toBe(out.ticks);
         expect(out.trace.rows.length).toBeGreaterThan(0);
-        expect(out.ms).toBeLessThanOrEqual(DEFAULT_BUDGET.wallClockMs);
+        // ⚠ `ms` is EVIDENCE and nothing decides on it — see the wall-clock
+        // regression gate below, which proves the verdict ignores it.
+        expect(out.ms).toBeGreaterThanOrEqual(0);
     });
 
     it('certification reads the COLLECT RECORD, not a persistence ledger', () => {
@@ -102,7 +122,7 @@ describe('REFUSED — a goal walled into its own cell', () => {
     it('the verdict is REFUSED, within budget', () => {
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.classifiedBy).toBe('the solver refused within budget');
-        expect(out.ms).toBeLessThanOrEqual(DEFAULT_BUDGET.wallClockMs);
+        expect(out.ms).toBeGreaterThanOrEqual(0);
     });
 
     it('the refusal text is the solver\'s own, VERBATIM', () => {
@@ -130,20 +150,56 @@ describe('BUDGET_EXHAUSTED — its own class, never a kind of refusal', () => {
         expect(out.reasonText).toContain('7 ticks');
     });
 
-    it('a solve that SUCCEEDS over the wall clock is exhausted, not solved', () => {
-        // An injected clock, so the row is a fact about the classifier rather
-        // than about how fast this machine happens to be.
+    /**
+     * ⛓⛓⛓ THE REGRESSION GATE FOR THE 2026-08-14 DETERMINISM FIX, and it is
+     * the INVERSE of the test that used to stand here.
+     *
+     * That test asserted a solve which SUCCEEDED became `BUDGET_EXHAUSTED` once
+     * it passed `wallClockMs`. It passed for the same reason the defect was
+     * real: elapsed time decided a verdict. The injected clock is kept exactly
+     * as it was — it makes every solve look like it took HOURS, which is a
+     * harsher load than any real box can produce — and the assertion is
+     * reversed. A machine cannot be slow enough to move this verdict.
+     *
+     * ⚠ It asserts SOLVED *and* that no budget field was invented to replace
+     * the clock: `budgetKind` must be absent, not merely different.
+     */
+    it('no amount of elapsed time can move a certified solve off SOLVED', () => {
         let t = 0;
-        const now = () => { t += 1000; return t; };
+        const now = () => { t += 3_600_000; return t; };
         const record = room();
         const out = solve(record, staging(record), goals,
-            { wallClockMs: 100 }, { now, name: 'test-budget-wall' });
-        expect(out.verdict).toBe(VERDICT.BUDGET_EXHAUSTED);
-        expect(out.budgetKind).toBe('wall-clock');
-        expect(out.classifiedBy).toContain('solvable and too expensive');
-        // ⚠ The evidence a caller needs to know it was NOT unsolvable.
+            DEFAULT_BUDGET, { now, name: 'test-budget-wall' });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.budgetKind).toBeUndefined();
         expect(out.certification.certified).toBe(true);
         expect(out.ticks).toBeGreaterThan(0);
+        // ⛔ The clock really did report an absurd elapsed time — without this
+        // the test would pass just as well against a stopped clock, and prove
+        // nothing about the branch it exists to keep deleted.
+        expect(out.ms).toBeGreaterThan(3_600_000);
+    });
+
+    /**
+     * ⛓ The THROWN arm's elapsed-time branch is gone too. A refusal that names
+     * no budget this call passed in is a claim about the LEVEL, however long it
+     * took to make — and `budgetKind` reaches the generator's TRACE, whose sha
+     * is the determinism payload, so a clock here would have left the level
+     * reproducible and its own evidence not.
+     */
+    it('a slow REFUSAL stays REFUSED — elapsed time never relabels it', () => {
+        const walls = [
+            { tx: 7, ty: 7 }, { tx: 8, ty: 7 }, { tx: 9, ty: 7 },
+            { tx: 7, ty: 8 }, { tx: 7, ty: 9 },
+        ];
+        let t = 0;
+        const now = () => { t += 3_600_000; return t; };
+        const record = room(walls);
+        const out = solve(record, staging(record), goals,
+            DEFAULT_BUDGET, { now, name: 'test-slow-refusal' });
+        expect(out.verdict).toBe(VERDICT.REFUSED);
+        expect(out.budgetKind).toBeUndefined();
+        expect(out.ms).toBeGreaterThan(3_600_000);
     });
 });
 

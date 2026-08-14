@@ -2604,6 +2604,12 @@ one such set.** Concretely:
   (`procgenOracle:503`), and Phase 5's first full-suite run was red at load 22.8
   on code that is clean at load 0.5. `cat /proc/loadavg` before believing a
   number.
+  - ⛓ **HALF OF THIS IS FIXED (2026-08-14).** `wallClockMs` is gone from
+    `DEFAULT_BUDGET` entirely, so the GENERATOR is now deterministic under load
+    — verified at load ~100–170, five runs, byte-identical to the quiet-box
+    digest (`CC/docs/plans/procgen-deterministic-budget.md` §8). ⚠ **The SUITE
+    half stands unchanged**: a test that measures elapsed time still inherits
+    the box, so `cat /proc/loadavg` before believing a red is still the rule.
 
 ### 16.3 Where the seams are
 

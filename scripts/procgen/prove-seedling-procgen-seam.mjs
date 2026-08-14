@@ -178,8 +178,7 @@ if (!has('json')) {
         'the danger channel is calm on a success — BY CONSTRUCTION, not by absence '
         + '(trap 202)',
         `${(first.out.dangerQueries ?? []).length} queries recorded, 0 dangerous`);
-    say(`budget: wallClockMs=${DEFAULT_BUDGET.wallClockMs}, `
-        + `maxTicksPerTarget=${DEFAULT_BUDGET.maxTicksPerTarget}`);
+    say(`budget: maxTicksPerTarget=${DEFAULT_BUDGET.maxTicksPerTarget}`);
     say('');
 }
 

@@ -8505,6 +8505,39 @@ this arc was taken:
 a tick-bounded budget would be deterministic and would change what the loop
 accepts; raising the ceiling only moves the straddle. ⚖ Recorded for the user.
 
+##### ⛓⛓ RESOLVED 2026-08-14 — and three of the paragraphs above are now WRONG
+
+The user took the design decision (*"make procgen deterministic, by making it
+tick based, not wall clock based"*) and **`wallClockMs` is gone from
+`DEFAULT_BUDGET` entirely.** `assertBudget` refuses a budget still carrying the
+field rather than ignoring it. The section above is kept as the record of how
+the defect was found; ⚠ **read the following before acting on any of it:**
+
+- **The seed-20 repro no longer reproduces**, and not only because of the fix —
+  it did not reproduce *before* the fix either. Five pre-fix runs of `--seeds=20`
+  were byte-identical at load 55; seed 20's slowest solve on a quiet box is
+  **217 ms**, nowhere near the 5,000 ms budget. Whatever made it straddle in
+  August is gone from the current tree. ⇒ this is the "measured limitations
+  EXPIRE" trap in its own habitat: **the repro in a finding ages faster than the
+  finding.** The seed that did reproduce, at load ~100 on 8 cores, is **9**.
+- **The failure was worse than "one of which throws".** Pre-fix, `--seeds=9`
+  failed 5 runs of 5 with the SKELETON solve — the loop's own control arm,
+  solvable by construction — taking 5,810–8,334 ms, being reclassified, and
+  `levelGenerator`'s skeleton guard then reporting *"a defect in the room
+  builder"*. That is `LevelGeneratorError`, not `GenerationAborted`, so it also
+  escaped the exporter's abort handling and crashed the process outright.
+- **"A tick-bounded budget would change what the loop accepts" was the natural
+  reading and it was wrong.** Measured over 326 solves / 40 seeds: nothing
+  replaced the clock, because nothing needed to. Max *total* ticks was **800**,
+  against a ~5,360 tick analogue of the old provenance; `maxTicksPerTarget` was
+  already binding (4 of the sweep's 5 `BUDGET_EXHAUSTED` verdicts). What changed
+  is only that a solve which SUCCEEDS is now kept.
+
+⚠ The bullets above about this arc's OWN numbers still stand as written: abort
+counts taken before 2026-08-14 remain machine-dependent and approximate, and the
+structural claims remain unaffected. Full measurement set:
+[`CC/docs/plans/procgen-deterministic-budget.md`](../../../../CC/docs/plans/procgen-deterministic-budget.md).
+
 #### Gates
 
 `npx vitest run frontend/modules/seedlingDemo/` **3701/3701** (3692 + 9 new,

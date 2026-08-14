@@ -56,7 +56,7 @@ const fakeModel = (over = {}) => ({
 const fakeOracle = (verdicts, extra = {}) => {
     let i = 0;
     return {
-        budget: { wallClockMs: 1, maxTicksPerTarget: 2 },
+        budget: { maxTicksPerTarget: 2 },
         calls: [],
         solve(record, ctx) {
             this.calls.push({ record, ctx });
@@ -173,7 +173,7 @@ describe('the bounds are real and every one of them is in the trace', () => {
             palette: palette(), bounds,
         });
         expect(out.summary.bounds).toEqual(bounds);
-        expect(out.summary.budget).toEqual({ wallClockMs: 1, maxTicksPerTarget: 2 });
+        expect(out.summary.budget).toEqual({ maxTicksPerTarget: 2 });
     });
 
     it('refuses a non-positive bound BY NAME — there is no "unbounded" default', () => {

@@ -255,7 +255,15 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
         const s = generateStep({ seed: 9, biome: 'pre-sword', step: 1 });
         const line = describeState(s, displaySolve(s));
         expect(line).toMatch(/bounds: target=1 tries=8 k=3/);
-        expect(line).toMatch(/POST-HOC/);
+        // ⛓ TICKS, not ms — the readout used to say POST-HOC because the budget
+        // was a stopwatch. It is not one any more (2026-08-14), and a pane that
+        // still advertised a wall clock would be describing a bound nobody runs.
+        expect(line).toMatch(/budget: \d+ ticks per target/);
+        // ⚠ The negative is on a QUANTITY in milliseconds, not on the letters
+        // "ms" — the row's own "(⛓ TICKS, not ms)" reassurance contains them,
+        // and a gate that fired on that would be testing its own wording.
+        expect(line).not.toMatch(/POST-HOC/);
+        expect(line).not.toMatch(/\d+\s*ms\b/);
         expect(line).toMatch(/solve: SOLVED/);
     });
 });

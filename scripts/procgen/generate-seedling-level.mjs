@@ -21,14 +21,16 @@
  * (one process proves the generator is a function; two prove it depends on
  * nothing the process carries).
  *
- * ── ⚠⚠ THE WALL CLOCK IS POST-HOC, SO THE COST IS STATED UP FRONT ─────
+ * ── ⚠⚠ NOTHING BOUNDS ELAPSED TIME, SO THE COST IS STATED UP FRONT ────
  *
- * `solveSegment` is synchronous and uninterruptible: the per-solve budget
- * bounds what the loop ACCEPTS, never what it SPENDS (procgenOracle §8.3's
- * residue). ⇒ `--cost` prints `levelGenerator.costModel`'s arithmetic —
- * `1 + target x tries` solves at the worst measured solve — BEFORE anything
- * runs, and the real total goes to stderr afterwards. A reader who expected
- * a timeout is the reader this exists for.
+ * `solveSegment` is synchronous and uninterruptible, and since 2026-08-14 no
+ * budget in this pipeline is denominated in milliseconds at all: the budget
+ * bounds TICKS, which is a property of the candidate rather than of the box
+ * (`procgenOracle`'s DEFAULT_BUDGET docblock carries the measurements). ⇒
+ * `--cost` prints `levelGenerator.costModel`'s arithmetic — `1 + target x
+ * tries` solves at the worst measured solve — BEFORE anything runs, and the
+ * real total goes to stderr afterwards. A reader who expected a timeout is the
+ * reader this exists for, and there is no timeout to expect.
  *
  * ── WHAT THIS SCRIPT DOES NOT DO ──────────────────────────────────────
  *
@@ -74,10 +76,21 @@ const BIOME = arg('biome', 'pre-sword');
 const COUNT = num('count', 6);
 const TRIES = num('tries', 8);
 const SATURATION_K = num('k', 3);
+/**
+ * ⛔ `--budget-ms` IS GONE and is refused by name below rather than ignored —
+ * the wall clock it set no longer exists (`procgenOracle`'s DEFAULT_BUDGET
+ * docblock has the measurements). A flag that silently did nothing would leave
+ * a caller believing they had bounded a run they had not.
+ */
 const BUDGET = {
-    wallClockMs: num('budget-ms', DEFAULT_BUDGET.wallClockMs),
     maxTicksPerTarget: num('ticks', DEFAULT_BUDGET.maxTicksPerTarget),
 };
+if (process.argv.some((a) => a.startsWith('--budget-ms'))) {
+    process.stderr.write('generate-seedling-level: --budget-ms is GONE. Elapsed time no '
+        + 'longer classifies a solve — it is not a property of the candidate, and it made '
+        + 'generation depend on how busy the box was. Bound `--ticks` instead.\n');
+    process.exit(2);
+}
 
 /**
  * ⚖ THE TWO BIOMES (kickoff §0), and slice 4 is where the second one arrives.
@@ -166,8 +179,9 @@ if (has('json')) {
     say(`items:  ${JSON.stringify(s.items)}   pins: [${s.pins.join(', ')}]`);
     say(`bounds: obstacleTarget=${bounds.obstacleTarget} triesPerStep=${bounds.triesPerStep} `
         + `saturationK=${bounds.saturationK}`);
-    say(`budget: wallClockMs=${s.budget.wallClockMs} maxTicksPerTarget=${s.budget.maxTicksPerTarget} `
-        + '(⚠ the wall clock is POST-HOC — it bounds what the loop ACCEPTS, not what it SPENDS)');
+    say(`budget: maxTicksPerTarget=${s.budget.maxTicksPerTarget} `
+        + '(⛓ TICKS, not milliseconds — the budget is a property of the candidate, so '
+        + 'this run reproduces on a loaded box)');
     say('');
     say(`stop:   ${s.stop}${s.stop === STOP.SATURATED
         ? ` — ${bounds.saturationK} consecutive steps kept nothing` : ''}`);

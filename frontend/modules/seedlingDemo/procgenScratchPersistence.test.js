@@ -124,21 +124,21 @@ function killLockRoom({ lockTag = KILL_LOCK_ROOM.lockTag } = {}) {
 const roomGoal = () => collectGoal(KILL_LOCK_ROOM.goal.tx * 16, KILL_LOCK_ROOM.goal.ty * 16);
 
 /**
- * ⛔⛔ THE CLOCK IS INJECTED, AND NOT AS A CONVENIENCE — MEASURED.
+ * ⛓ THE CLOCK USED TO BE FROZEN HERE, AND IT NO LONGER NEEDS TO BE.
  *
- * `DEFAULT_BUDGET.wallClockMs` is 5000 and this room solves in ~1.6 s alone;
- * inside the WHOLE `seedlingDemo` suite it crossed 5 s and four cases here
- * came back `BUDGET_EXHAUSTED` instead of `SOLVED`. That is §8.3's POST-HOC
- * wall clock behaving exactly as documented — the budget bounds what the loop
- * ACCEPTS, not what it spends — so the verdict of a solve run under load is a
- * statement about the machine.
+ * The workaround is kept in the record because it was a MEASUREMENT, and
+ * because it is the clearest evidence of what the removed wall clock cost:
+ * `DEFAULT_BUDGET.wallClockMs` was 5000, this room solves in ~1.6 s alone, and
+ * inside the WHOLE `seedlingDemo` suite it crossed 5 s — four cases in this
+ * file came back `BUDGET_EXHAUSTED` instead of `SOLVED` purely because the
+ * suite around them was busy. This file froze `now` so the arm could not fire.
  *
- * This file's subject is the persistence layer, so the clock is frozen and
- * the wall-clock arm cannot fire. ⚠ The TICK budget (`maxTicksPerTarget`, the
- * only mid-flight bound) is untouched and still the default: nothing here
- * widens what the solver may spend, only what the stopwatch may notice.
+ * ⇒ 2026-08-14: the arm is GONE, so `now` is the real clock again and these
+ * cases cannot be moved by their neighbours. ⚠ The TICK budget
+ * (`maxTicksPerTarget`) was untouched then and is untouched now — the fix
+ * removed a stopwatch, it did not widen what the solver may spend.
  */
-const oracleOpts = (name) => ({ name, now: () => 0 });
+const oracleOpts = (name) => ({ name });
 
 const stagingFor = (record, extra = {}) => ({
     ...bootStaging({ boot: bootAtTile(record, 1, 1), items: ITEMS, pins: ['dead_frames'] }),

@@ -96,35 +96,79 @@ export const VERDICT = Object.freeze({
 /**
  * THE NAMED BUDGET VALUES, and where each number comes from.
  *
- * ⚠ `wallClockMs: 5000` — a CHOSEN ceiling, not a measured limit, and the
- * measurement it is chosen against is slice 1's own: an empty bordered 10x10
- * room with one goal pickup solves in **47-139 ms** (six pickup classes, this
- * machine, node 18). Five seconds is ~40x the empty-room cost, which leaves
- * room for a room full of hazards to be EXPENSIVE without letting one be
- * unbounded. ⚖ Kickoff §6: tuning this is a finding, not a gate.
- *
  * ⚠ `maxTicksPerTarget: 400` — `botDriverV1.DEFAULT_MAX_TICKS_PER_TARGET`,
  * imported rather than typed, and equal to the engine default ON PURPOSE:
  * slice 1 must change no solver behaviour, so the number the loop names is
  * the number the solver was already using. The knob exists so a later slice
  * can lower it deliberately, with a measurement.
  *
- * ⛔ THERE IS NO EXPANSION BUDGET HERE. `planDash`'s 40,000-expansion cap is
- * internal to `solverBot` and takes no argument; naming a number this file
- * cannot pass would be a bound nobody enforces (trap: a comment naming an arm
- * nobody built). The wall clock is the only bound this side owns.
+ * ── ⛔ THERE IS NO WALL CLOCK HERE ANY MORE, AND THAT IS THE POINT ────────
+ *
+ * `wallClockMs: 5000` used to sit beside it and it is GONE (2026-08-14, ⚖ user
+ * priority: *"make procgen deterministic, by making it tick based, not wall
+ * clock based"*). It was the only bound in this file that was not a property
+ * of the candidate: a solve that SUCCEEDED was reclassified `BUDGET_EXHAUSTED`
+ * for taking too long, so a keep on a quiet box became a revert on a busy one
+ * and the run reached different candidates from there on.
+ *
+ * ⛔ THE FAILURE WAS WORSE THAN "DIFFERENT CANDIDATES", MEASURED. At load ~100
+ * on 8 cores, `--seeds=9` crashed 5 runs out of 5: the SKELETON solve — the
+ * empty bordered room, solvable by construction, the loop's own CONTROL arm —
+ * succeeded in 5,810-8,334 ms, was reclassified, and `levelGenerator`'s
+ * skeleton guard then accused the room builder of a defect it did not have.
+ * The same seed on a quiet box is a clean 1,756-byte set, exit 0.
+ *
+ * ── WHY NO NUMBER REPLACES IT, WHICH IS ALSO A MEASUREMENT ───────────────
+ *
+ * The question this file had to answer was *"what is the tick or expansion
+ * equivalent of 5,000 ms?"*, and the honest answer measured out to **none
+ * needed** — nothing became unbounded when the clock went. Quiet box, 8 cores,
+ * node 18, 326 solves over 40 seeds (pre-sword, obstacleTarget 6, tries 8):
+ *
+ *   - EVERY remaining bound is already deterministic. Ticks are bounded per
+ *     target by `maxTicksPerTarget` and expansions per dash by `planDash`'s
+ *     cap; observed max TOTAL ticks over all 326 solves was **800** (= 2x400).
+ *   - The tick analogue of the old provenance would be ~5,360 (40x the empty
+ *     room's **134 ticks**, the same 40x reasoning `wallClockMs` used against
+ *     the same room's 47-139 ms). That is **6.7x above anything ever
+ *     observed** — a bound that never binds is decoration, so it is not here.
+ *   - `maxTicksPerTarget` already binds where the clock used to: it classified
+ *     4 of the 5 `BUDGET_EXHAUSTED` verdicts in the sweep.
+ *
+ * ⛔ AND STILL NO EXPANSION BUDGET, FOR A NEW REASON. `planDash`'s
+ * 40,000-expansion cap remains internal to `solverBot`. Threading it here was
+ * the obvious next move and the measurement refused it twice: the search ran
+ * at all in **2 of 326 solves** and hit the cap in **1**, so as a bound it is
+ * decorative; and when it does fire it surfaces as ONE RUNG's sub-reason
+ * inside a ladder refusal whose other rungs refused about the LEVEL ("no
+ * admissible corridor", "no live body's removal admits a corridor"), so
+ * classifying on it would turn a true REFUSED into a false BUDGET_EXHAUSTED.
+ *
+ * ⚠ RESIDUE, measured and NOT fixed here: that one cap hit cost **12,267 ms**
+ * in a single dash. 40,000 is far too loose to be a useful cost bound. Lowering
+ * it is a separate slice with its own measurement — it is a SLOWNESS finding,
+ * not a determinism one, and the two must not be traded for each other.
  */
 export const DEFAULT_BUDGET = Object.freeze({
-    wallClockMs: 5000,
     maxTicksPerTarget: DEFAULT_MAX_TICKS_PER_TARGET,
 });
 
 /** A budget, checked and completed from the defaults. */
 export function assertBudget(budget = DEFAULT_BUDGET) {
     const b = { ...DEFAULT_BUDGET, ...(budget ?? {}) };
-    if (!Number.isFinite(b.wallClockMs) || b.wallClockMs <= 0) {
-        fail(`procgenOracle: budget.wallClockMs must be a positive number of `
-            + `milliseconds, got ${JSON.stringify(b.wallClockMs)}.`);
+    /**
+     * ⛔ A `wallClockMs` IS REFUSED BY NAME RATHER THAN IGNORED. Every caller
+     * in the tree was updated, but a budget object is the kind of thing that
+     * gets copied out of an old doc or an old branch, and silently dropping
+     * the field would hand that caller a budget it thinks bounds time and
+     * does not. The refusal names the replacement so the reader is not left
+     * guessing which knob they wanted.
+     */
+    if ('wallClockMs' in b) {
+        fail('procgenOracle: budget.wallClockMs is GONE — elapsed time is not a '
+            + 'property of the candidate, and classifying on it made a keep on a quiet '
+            + 'box a revert on a busy one. Use `maxTicksPerTarget`, which is '
+            + 'deterministic and already binds. See DEFAULT_BUDGET\'s docblock.');
     }
     if (!Number.isInteger(b.maxTicksPerTarget) || b.maxTicksPerTarget <= 0) {
         fail(`procgenOracle: budget.maxTicksPerTarget must be a positive integer of `
@@ -449,9 +493,22 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
     const ms = now() - t0;
 
     if (thrown) {
+        /**
+         * ⛔ THE ELAPSED-TIME ARM IS GONE FROM HERE TOO, AND IT WAS NOT THE
+         * OBVIOUS DEFECT. This site classifies a solve that THREW, where the
+         * old `ms > wallClockMs` arm could not change keep-vs-revert — REFUSED
+         * and BUDGET_EXHAUSTED both revert. What it changed was `budgetKind`,
+         * which `levelGenerator` writes into the TRACE, and the trace's sha is
+         * part of the determinism payload the CLIs compare with `cmp`. Left
+         * standing it would have made the LEVEL deterministic and its own
+         * evidence not, which is the harder bug to see.
+         *
+         * ⇒ a refusal is a budget verdict only when it NAMES a budget this
+         * call passed in. Everything else is a claim about the level.
+         */
         const budgetKind = namesTickBudget(thrown.message, b.maxTicksPerTarget)
             ? 'per-target-ticks'
-            : (ms > b.wallClockMs ? 'wall-clock' : null);
+            : null;
         if (budgetKind) {
             return {
                 ...base,
@@ -461,11 +518,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
                 // ⛔ VERBATIM. The refusal's own text is the evidence channel.
                 reasonText: thrown.message,
                 errorName: thrown.name,
-                classifiedBy: budgetKind === 'per-target-ticks'
-                    ? `the refusal names the ${b.maxTicksPerTarget}-tick per-target budget `
-                      + 'this call passed in'
-                    : `the solve threw after ${ms} ms, over the ${b.wallClockMs} ms `
-                      + 'wall-clock budget',
+                classifiedBy: `the refusal names the ${b.maxTicksPerTarget}-tick `
+                    + 'per-target budget this call passed in',
                 rows: thrown.rows ?? [],
                 ticksSpent: (thrown.perTick ?? []).length,
             };
@@ -500,19 +554,22 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             + 'supposed to refuse rather than return short, so this is a seam defect, '
             + 'not a rejected candidate.');
     }
-    if (ms > b.wallClockMs) {
-        return {
-            ...base,
-            verdict: VERDICT.BUDGET_EXHAUSTED,
-            ms,
-            budgetKind: 'wall-clock',
-            classifiedBy: `the solve SUCCEEDED in ${ms} ms, over the ${b.wallClockMs} ms `
-                + 'wall-clock budget — the level is solvable and too expensive, which is '
-                + 'a fact about the budget as much as about the level',
-            ticks: result.out.perTick.length,
-            certification: cert,
-        };
-    }
+    /**
+     * ⛓⛓⛓ NOTHING STANDS BETWEEN A CERTIFIED SOLVE AND `SOLVED` — THE FIX.
+     *
+     * A `ms > b.wallClockMs` branch used to live exactly here and turn a solve
+     * that reached every goal into `BUDGET_EXHAUSTED`. That was THE defect
+     * (⚖ user priority 2026-08-14): the level was solved, the certification
+     * held, and the verdict was decided by how busy the machine happened to
+     * be. `levelGenerator` keeps only `SOLVED`, so the box decided the level.
+     *
+     * ⚠ `ms` SURVIVES IN THE RETURN AND IS EVIDENCE ONLY. It is the one field
+     * here that may honestly differ between two runs, so nothing may decide on
+     * it — and nothing does: `levelGenerator` reads `verdict`, `ticks`,
+     * `classifiedBy`, `reasonText` and `budgetKind` into the trace, never `ms`.
+     * If a future caller wants to bound cost, bound `ticks`, which is the same
+     * quantity measured in a currency the candidate actually owns.
+     */
     return {
         ...base,
         verdict: VERDICT.SOLVED,

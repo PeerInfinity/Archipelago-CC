@@ -47,11 +47,12 @@
  * internally (`procgenSeedling.seedlingOracle`), never a second one.
  *
  * ⚠ AND THE TWO ARE COMPARED RATHER THAN ASSUMED EQUAL. Same record, same
- * staging, same goals, same budget ⇒ the same walk — except for the POST-HOC
- * wall clock, which is a statement about the machine (§13.8's measured
- * flake). `agreementWith` returns the disagreement so the page can SAY so; a
- * display that silently showed a different verdict from the trace's would be
- * the two-cost-models trap with pixels.
+ * staging, same goals, same budget ⇒ the same walk. That used to carry an
+ * exception — the POST-HOC wall clock, a statement about the machine (§13.8's
+ * measured flake) — and since 2026-08-14 it does not: no budget here is
+ * denominated in milliseconds. `agreementWith` returns the disagreement so the
+ * page can SAY so; a display that silently showed a different verdict from the
+ * trace's would be the two-cost-models trap with pixels.
  */
 
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
@@ -123,6 +124,12 @@ export function readGenerateParams(search) {
     };
     const source = (q.get('source') || '').toLowerCase();
     const gen = q.get('gen');
+    if (q.get('budgetms') !== null) {
+        // eslint-disable-next-line no-console
+        console.warn('watchGenerate: ?budgetms is GONE and was IGNORED. Elapsed time no '
+            + 'longer classifies a solve — it is not a property of the candidate. Use '
+            + '?tickbudget= instead.');
+    }
     return {
         isGenerate: source === 'generate' || (!source && gen !== null),
         seed: int('seed', 1),
@@ -138,8 +145,14 @@ export function readGenerateParams(search) {
          * "which frame to draw" and "how long the solver may walk" is a
          * collision waiting for somebody's typo to land it.
          */
+        /**
+         * ⛔ `?budgetms` IS GONE (2026-08-14) — the wall clock it set no longer
+         * exists. A stale bookmark must not hard-fail a page, so this warns in
+         * the console rather than throwing, but it does NOT pass silently:
+         * a knob a caller believes is bounding a run it is not bounding is the
+         * failure this repo keeps recording.
+         */
         budget: {
-            wallClockMs: int('budgetms', DEFAULT_BUDGET.wallClockMs),
             maxTicksPerTarget: int('tickbudget', DEFAULT_BUDGET.maxTicksPerTarget),
         },
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
@@ -323,12 +336,14 @@ export function displayStaging(state) {
  * RECORD? Same inputs ⇒ same walk, so the answer should always be yes — and
  * "should always" is the reason it is asked out loud.
  *
- * The one honest way to differ is the POST-HOC WALL CLOCK: `procgenOracle`
- * classifies a solve that took longer than `wallClockMs` as
- * `BUDGET_EXHAUSTED` even when it SOLVED, so a machine under load can move
- * the verdict without moving the walk (§13.8's measured flake). ⇒ the tick
- * count is the invariant and the verdict is the thing that may move; both are
- * reported, and the caller decides what to say.
+ * ⛓ THERE IS NO LONGER AN HONEST WAY TO DIFFER (2026-08-14). The one that
+ * existed was the POST-HOC WALL CLOCK: `procgenOracle` classified a solve that
+ * took longer than `wallClockMs` as `BUDGET_EXHAUSTED` even when it SOLVED, so
+ * a machine under load moved the verdict without moving the walk (§13.8's
+ * measured flake). That clock is GONE, and with it the flake — a disagreement
+ * reported here is now a REAL disagreement and worth chasing. Both the tick
+ * count and the verdict are still reported, because a check that stopped
+ * reporting the thing it used to excuse would be a check nobody could audit.
  */
 export function agreementWithTrace(state, solved) {
     const rows = (state.trace ?? []).filter((r) => r.outcome === 'KEPT');
@@ -436,8 +451,7 @@ export function describeState(state, solved = null) {
             : 'the SKELETON — the bordered room and its goal, before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK}`,
-        `budget: ${state.budget.wallClockMs} ms (POST-HOC) / `
-            + `${state.budget.maxTicksPerTarget} ticks per target`,
+        `budget: ${state.budget.maxTicksPerTarget} ticks per target (⛓ TICKS, not ms)`,
     ];
     if (state.stop) bits.push(`stop: ${state.stop}`);
     if (solved) {

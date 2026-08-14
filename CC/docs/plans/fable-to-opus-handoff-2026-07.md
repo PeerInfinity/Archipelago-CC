@@ -3013,7 +3013,25 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   at L38's cover, enemy-room openers, bridge-window semantics, a low span
   ceiling) go to the user BEFORE implementation.
 
-## 5d. Procgen determinism — tick-bounded, not wall-clock (⚖ USER PRIORITY 2026-08-14, post-dates this doc)
+## 5d. Procgen determinism — tick-bounded, not wall-clock ✅ **DONE 2026-08-14**
+
+⛓ **CLOSED.** `wallClockMs` is gone from `DEFAULT_BUDGET` entirely; `assertBudget`
+refuses a budget still carrying it. Acceptance: `--seeds=9`, five runs at load
+~100–170, byte-identical to the quiet-box digest (pre-fix the same command failed
+5 of 5). As-built + the full measurement set is in
+`CC/docs/plans/procgen-deterministic-budget.md` §8.
+
+⚠ **Three claims in the brief below were refuted by measurement — read §8 before
+reusing any of them.** In short: the seed-20 repro no longer reproduces (and did
+not pre-fix either — seed **9** is the one that does); no number replaced the
+clock, because measurement showed none was needed; and threading
+`TIME_RUNG.maxExpansions` into the budget — the "plumbing, not redesign" move
+below — is the wrong fix twice over. ⚠ One item is still **owed**: that expansion
+cap permits a **12,267 ms** single dash, which is a slowness finding with its own
+measurement outstanding.
+
+<details><summary>The original brief, kept for the record</summary>
+
 
 ⚖ **User, 2026-08-14: "make it one of the next priorities to make procgen
 deterministic, by making it tick based, not wall clock based."** Full brief,
@@ -3047,6 +3065,8 @@ changes which candidates are kept. The battery md5
 `1fedb0ab35b7cd74accecf0345bdc893` and any fixture captured from a solve will
 need re-baselining **on a quiet box, in a separate commit from the behaviour
 change**, or the next reader reads it as a regression.
+
+</details>
 
 ## 6. Everything else (unchanged queues)
 

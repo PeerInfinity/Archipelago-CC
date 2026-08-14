@@ -371,8 +371,7 @@ function requirementsFor(state, withOut) {
              * budget, did not solve it. No budget was escalated to find out.
              */
             label: required
-                ? `SOLVER-RELATIVE, BOUNDED: this solver, at wallClockMs=`
-                    + `${BUDGET.wallClockMs} / maxTicksPerTarget=`
+                ? `SOLVER-RELATIVE, BOUNDED: this solver, at maxTicksPerTarget=`
                     + `${BUDGET.maxTicksPerTarget}, solves this level WITH `
                     + `${ITEM_LABELS[flag] ?? flag} and does not solve it WITHOUT. It is `
                     + 'NOT a proof that the level is unsolvable without it — no exhaustive '
@@ -517,8 +516,8 @@ say('# Seedling PROCGEN PoC — THE ACCEPTANCE BATCH (kickoff §7) + THE REQUIRE
 say('');
 say(`bounds: obstacleTarget=${BOUNDS.obstacleTarget} triesPerStep=${BOUNDS.triesPerStep} `
     + `saturationK=${BOUNDS.saturationK}`);
-say(`budget: wallClockMs=${BUDGET.wallClockMs} (⚠ POST-HOC — it bounds what the loop `
-    + `ACCEPTS, never what it SPENDS) maxTicksPerTarget=${BUDGET.maxTicksPerTarget}`);
+say(`budget: maxTicksPerTarget=${BUDGET.maxTicksPerTarget} (⛓ TICKS — no budget here is `
+    + 'denominated in milliseconds, so this batch reproduces on a loaded box)');
 say(`⚖ THE SAME BUDGET OBJECT RUNS BOTH ARMS OF EVERY DIFFERENTIAL. No budget is `
     + 'escalated anywhere in this script (⚖ §1.10a).');
 say('');
