@@ -474,9 +474,15 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       by the case that CAN happen (§13.2); a mismatch takes the whole save, not
       just the table (§13.4); an unstamped save is ADOPTED (§13.3); the
       receiver's capacity stopgap is gone (§13.6).
-- [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
-      (`procgenSeedling` output → bundle), including the per-level metadata the
-      manifest now owns.
+- [x] **Phase 5 — The exporter** — **DONE 2026-08-14, §14.** Five commits here,
+      ⛓ **no AS3**. ⚖ User ruling: `named_rooms` requiredness is DERIVED from the
+      room data (§14.1) — and the premise it was asked on was wrong, none of the
+      six is dereferenced unconditionally, and `bloody_seed_ending`'s trigger is
+      `<watcher>` not `<seed>` (the fourth "ask the consumer" in this arc). §5's
+      own line was optimistic: the generator emits one room per call, all of them
+      `level: 900`, as an Ogmo RECORD rather than OEL, with no exits (§14.2) —
+      four findings about the GENERATOR. The round trip is 26/26 and its first
+      version was vacuous (§14.4).
 - [ ] **Phase 5b — Exit destinations as data** (§4.6). Rewrite `to`, `playerx`,
       `playery` **and `sign`** in the bundle builder; add the pairing/range
       validation to the Phase 2 schema; de-scope `seedling.json`'s `teleport`
@@ -517,6 +523,9 @@ carrying `set_id` everywhere:
 - **`tapeFormat.parsePersistence`** bounds `persistence[].level` to `0..115`
   while `boot.level` carries no bound — the measured residue that a generated
   level *can be booted by a tape and cannot be declared about by one*
+  ⚠ **STALE ON THE AS3 SIDE, as of Phase 3 — see §10.1's SEAM 4 and §14.4.**
+  `Bot.as:1461` now bounds `boot.level` against `Game.levelCount()`, i.e. the
+  MOUNTED set. The JS half below is still the vanilla 116 and still stands.
   (`botDriverV1.js:393-417`). A set-aware bound is the natural fix, and it is a
   tape-format change guarding the real game's level space — **not one to make
   in passing**. ⛓ **THE SAME ASYMMETRY EXISTS IN THE AS3, confirmed §8.3**:
@@ -1990,3 +1999,246 @@ independent witnesses.
 - ⚠ **Still unmeasured, inherited from §9.6, §10.4, §11.9 and §12.9:** whether
   `flashPanel/games/seedling.json` and the region atlas force more
   `named_rooms`. Five phases have now declined it.
+
+---
+
+## 14. PHASE 5 — THE EXPORTER (2026-08-14)
+
+**A generated set now exists end to end**, which is what the whole arc was built
+to enable. Five commits here, ⛓ **NO AS3** — every seam this needed was already
+in the artifact. `2bb96666c` (the `named_rooms` ruling), `7ed059d03` (the OEL
+writer), `aa527f8e6` (the exporter + CLI), `455447828` (the round trip),
+`4823992d8` (the flag test the mutation gate demanded).
+
+| what | where |
+|---|---|
+| record → OEL XML | `frontend/modules/seedlingDemo/procgenLevelOel.js` |
+| rooms → a stamped set | `frontend/modules/seedlingDemo/levelSetExporter.js` |
+| the CLI | `scripts/procgen/export-seedling-level-set.mjs` |
+| **the round trip** | `scripts/procgen/check-seedling-generated-set.mjs` |
+
+### 14.1 ⚖ THE RULING: `named_rooms` requiredness is DERIVED from the rooms
+
+Phase 2 froze `named_rooms` as a closed vocabulary with **all six required**.
+That was ruled when **vanilla was the only set in existence**. A generated set
+has no Watcher, no moonrock and no Owl — and §4.1's *"a set defining neither
+must **say so** rather than defaulting silently"* had no way to be said.
+
+⛓ **MEASURED FIRST, AND THE PREMISE THE QUESTION WAS ASKED ON WAS WRONG.** The
+brief said the AS3 dereferences the six unconditionally. **It does not.** Every
+one of the six sits inside a single entity's own behaviour, and every one of
+those entities is built **only** from an OEL element (`Game.as:2166-2287`) — so
+the validator can already see whether a set can reach the name at all:
+
+| entry | dereferenced at | trigger element |
+|---|---|---|
+| `moonrock_target` | `Scenery/Moonrock.as:134-135` | `<moonrock>` |
+| `watcher_text` | `Scenery/FinalDoor.as:50` | `<finaldoor>` |
+| `dark_shrum_death` | `Player.as:491` ← `NPCs/Oracle.as:107` | `<oracle>` |
+| `bloody_seed_ending` | `Pickups/Seed.as:73` | **`<watcher>`** |
+| `light_boss_exit` | `Enemies/LightBossController.as:104` | `<lightbosscontroller>` |
+| `tentacle_beast_mouth` | `Enemies/TentacleBeast.as:213` | `<tentaclebeast>` |
+
+⛔ **AND THE NAME-MATCHING GUESS IS WRONG FOR EXACTLY ONE OF THE SIX.**
+`Game.as:2227` builds every OEL `<seed>` as `new Seed(o.@x, o.@y, false, …)` —
+`bloody` is hardcoded **false** there — and `Seed.as:73` reads the manifest only
+on the bloody arm. The one bloody Seed in the game is born at
+`NPCs/Watcher.as:102` when the Watcher is killed. ⇒ `<watcher>`, not `<seed>`.
+**That is the fourth time in this arc**, after `@fallthrough`, `@room` and
+`map_ref`: a key-name scan answers what a thing is *called*, never what it *is*.
+**Ask the consumer.**
+
+⚖ **THE USER TOOK "derive requiredness from the room data"** over two
+alternatives, both put to them: pointing unused entries at the start room (zero
+code, but it writes six unverifiable claims into every generated set — §4.1's
+"defaulting silently" wearing an in-range default's clothing), and an explicit
+`{"unused": true}` marker (the most self-describing document, but `int(undefined)`
+is **0**, a real room, so it would need an AS3 change to be safe).
+
+The rule, in full — and it is checked in **both** directions, which is what makes
+an omission a statement rather than a default:
+
+> trigger present + entry missing → **ERROR**, naming the room that carries it
+> trigger absent + entry supplied → **warning**, the entry is inert
+> trigger **unverifiable** → neither claimed; reported as such
+
+⛓ **THE THIRD LINE IS THE ONE VANILLA FORCED — §4.3's anti-rot property catching
+a rule for the SECOND time in this arc** (§9.3 was the first). Validated without
+`xmlByRoomId`, all 116 vanilla rooms are `embed`-sourced and unreadable, so *"no
+room carries `<moonrock>`"* is true of what was **parsed** and false of the
+**set**. An inert warning there fires on the ordinary game.
+
+**Vanilla is unchanged and its content hash does not move**: all six triggers are
+in the 116 (`<moonrock>` room 0, `<oracle>` 1, `<tentaclebeast>` 57,
+`<lightbosscontroller>` 69, `<finaldoor>` 113, `<watcher>` in eleven rooms), so
+vanilla still requires all six. `stats` now carries
+`named_rooms_{present,omitted,unverifiable,required_missing}` — because an empty
+findings list and a clean pass look identical otherwise.
+
+### 14.2 ⛔ THE GENERATOR IS NOT MANIFEST-SHAPED, AND THAT IS FOUR FINDINGS
+
+§5's line — *"emit a manifest from generated levels (`procgenSeedling` output →
+bundle)"* — presumes the generator's output is already what a bundle wants.
+Measured, it is not, and the shortfall is structural rather than cosmetic:
+
+1. ⛔ **It emits ONE room per invocation and has no notion of a set.** `--count`
+   is the obstacle target, not a level count.
+2. ⛔ **Every record carries the same identity** — `level: 900`,
+   `class: "Procgen900"`, `path: "procgen/900.oel"` (`SEEDLING_DEFAULTS`). Two
+   records are indistinguishable; the manifest needs dense ids **and** names
+   unique within the set. Both are **assigned** by the exporter.
+3. ⛔ **It emits an Ogmo RECORD, not OEL XML** — geometry in **tiles**, because
+   everything downstream of it in the PoC arc was the JS model, which reads
+   records. A set's `rooms[].source.xml` is **OEL text in pixels**, because the
+   receiver's one resolver ends in `Game.loadLevelXML`. ⇒ **the generated levels
+   had never been expressible as a mountable room.** There is exactly one
+   delivery callback into the artifact and nothing converted a record into one.
+4. ⛔ **NO generated room has an exit.** No teleporter, no stairs, no
+   `@fallthrough` — the palette places obstacles, not transitions. **A set of N
+   generated rooms is N ISOLATED ROOMS.** Measured on the first real export:
+   **1/6 reachable**. That is Phase 5b's work.
+
+⇒ (1)–(4) are findings about the **generator**. What the exporter owes is
+reported rather than defaulted: **`provenance.invented` travels IN the set** — a
+list of every field no input determined, so a reader can tell a MEASURED value
+from a CHOSEN one. `start` is **derived** from `summary.startCell` (tiles →
+pixels) and is deliberately not on it. On the six-seed export the list is exactly
+`menu_rooms, rooms[].music`.
+
+`reachabilityOf` is a **report, not a validator rule**, and deliberately so: a
+validator rule applies to vanilla too, and the 116 are reached by mechanisms this
+walk cannot see (a boss that warps you, a debug key, `named_rooms`). §9.3 is this
+arc's recorded case of a hardening rule that refuses the real game.
+
+### 14.3 The OEL writer, and the round trip that is by VALUE
+
+Written as the exact inverse of `scripts/procgen/seedlingOgmo.js` — the repo's
+one OEL **reader**, in use since the atlas extract — so the pair is tested
+against each other rather than against two hand-maintained descriptions of the
+format.
+
+**MEASURED over the full shipped corpus: `parse → render → parse`, 120/120 files,
+1,722,138 B, value-identical. 0/120 byte-identical, which is the correct answer**
+— `treelarge.oel` carries a raw `>` inside an attribute value and this writer
+emits `&gt;`. Same value, different bytes; a byte comparison would have been
+measuring the encoder's taste. ⚠ The committed reduced fixture contains **not one
+`&`**, so the escaping surface is covered synthetically and by name rather than
+left to a corpus that cannot reach it.
+
+A tile outside the level rectangle is **refused, not dropped**: the game's loader
+discards those silently (51 shipped levels rely on it, 520 placements), which
+would leave a room without a tile the record says it contains.
+
+### 14.4 ⛓ THE ROUND TRIP — and its own first version was VACUOUS
+
+`check-seedling-generated-set.mjs`, **26/26** in `seedling_bot_ap_p4b` on
+real-GPU Windows Chrome (`intel / gen-9`). Generate → export → validate → chunk
+→ deliver → mount → **read the manifest back out of the artifact** and diff it
+against what was emitted. Identity, table size, persistence length, musics (the
+manifest **and** the live array the bosses write), menu rooms, start level, the
+room flags and `named_rooms` all read back equal.
+
+⚖ **The 2026-08-14 ruling, read back out of the game**: the artifact reports
+`named_rooms: {}` for a generated set, with no `named_rooms is missing` refusal.
+The empty manifest resolves to an empty readout rather than to six entries
+defaulted somewhere in between.
+
+⛔ **THE GATE'S FIRST VERSION PRINTED PASS FOR THE OPPOSITE OF WHAT HAPPENED.**
+It carried a "§8.3 control" asserting *the game does NOT refuse a level past the
+end*, read `botStatus.error` (empty) — and the refusal is the **tape load's**
+return value. `botLoadTape` had answered
+`error:boot.level 6 is not a level (0..5)` and `botStart` `error:no tape loaded`.
+**Phase 3's SEAM 4 (§10.1) gave `boot.level` the bound it never had**, so §8.3's
+silent-clear property is *no longer reachable through a tape at all*. ⚠ **§6's
+third bullet still reads as current on this and is not** — it describes the
+pre-Phase-3 state; §10.1 records the fix.
+⇒ the arm now asserts what actually governs: **the refusal names THIS SET's
+range** — `"0..5"` under a six-room set, not `"0..115"` — which is the only thing
+that distinguishes a set-aware bound from the vanilla table, with the last real
+room accepted as the control.
+
+⚠ **AND THE ENTITY ROSTER IS NOT A FINGERPRINT.** Two runs gave **18 then 15**
+mobiles: the arrow traps fire during the 3 s settle, so anything counted over
+wall-clock compares how the runs were *scheduled*. Two rooms are booted instead
+and the **goal pickup's position** is the witness — it does not move, and the
+generator puts it somewhere different in every seed. Room 1 `(72, 88)`, room 3
+`(104, 40)`, each its own record's goal under **one constant `+(8, 8)`** measured
+from the first and asserted on the second. A delivery shifted by one room would
+disagree there.
+
+### 14.5 ⛔ ONE MUTANT, TWO NON-OVERLAPPING DEFECTS — and the gap it exposed
+
+| defect | JS suite | round trip |
+|---|---|---|
+| **D1** `NAMED_ROOMS.bloody_seed_ending.trigger` `'watcher'` → `'seed'` | **4 red**, all four naming `bloody_seed_ending` | green |
+| **D2** the exporter always writes `snow_gradient: true` | green | **1 red**: `snow [0,1,2,3,4,5]` |
+
+Attribution read off each failure's **reason**, not off a count — Phase 4's first
+pair looked strong at 8/20 and one mutation had masked the other. ⛓ Here D2 also
+**moved the content hash** (`eb05baaf` → `791fc64d`, `snow_gradient` being inside
+the hashed document) and `IDENTITY` still passed, because both sides recomputed
+from the mutant; the flag readback caught it independently, so **the hash change
+masked nothing**.
+
+⛔ **BUT D2's ONE-GATE-NESS WAS A REAL GAP, NOT A PROPERTY.** The JS side was
+blind to a generated room claiming vanilla room 45's snow behaviour, because
+`validateLevelSet` accepts any boolean and the exporter's tests never looked.
+Leaving that open because it made the pair look tidy would be backwards, so it is
+closed (`4823992d8`) — and **post-fix D2 reds both gates**, which is the correct
+state. ⇒ recorded rather than re-engineered: **with no AS3 change in this slice
+there is no defect in code this phase owns that a complete JS suite cannot see.**
+The round trip's unique value here is not catching defects in the JS — it is
+proving the **artifact accepts** what the JS produces, and it was observed
+failing for a real reason.
+
+### 14.6 §6.1's obligation, discharged — ⚖ INVALIDATE, STAMPED
+
+⚖ **User, 2026-08-14**, over regenerating the tables. `apMappingInvalidation`
+emits a companion carrying the set's own `set_id` + `content_hash` and naming all
+**24** vanilla level references — `region_coords` 9, `location_coords` 11, atlas
+`map_ref` 4 — as not describing this set. It **refuses an unstamped set**,
+because an unstamped companion could be matched to any set, which is the case the
+content hash exists to close. Regeneration stays derivable later and does not
+change this contract.
+
+### 14.7 Gates
+
+- `npx vitest run frontend/modules/seedlingDemo/` — **3833/3833** (3790 + 43:
+  the validator 68→80, the OEL writer 12, the exporter 19), 393 s on a quiet
+  box. ⚠ **AND THE FIRST RUN OF IT WAS RED FOR A REASON THAT WAS MINE.** It
+  reported 3 failures — `r1Walk`, `r5Totem` L41 and the `r5-l42-part4` tape
+  differential — because the round trip was running against the same box and
+  load peaked at **22.8**. Solo on a quiet box those three files are 515/515,
+  and the whole suite is clean. Every one of the three is a bot-walk or tape
+  differential; none touches a level set. ⇒ the §5 warning about the generator
+  under load applies to the SUITE as well, and "check what else is running
+  before believing a red" earned its place again.
+- `node scripts/procgen/check-seedling-generated-set.mjs` — **26/26**.
+- `node scripts/procgen/check-seedling-vanilla-manifest.mjs` — **24/24**, run
+  against the new rule.
+- `node scripts/procgen/solve-seedling-r8-battery.mjs --check | md5sum` —
+  `1fedb0ab35b7cd74accecf0345bdc893`.
+- **Determinism**: three SEPARATE processes of the export CLI on seeds 1-6,
+  byte-identical stdout, same hash `6aa0047a`. ⚠ **Captured on a quiet box** —
+  `/proc/loadavg` between `0.16` and `0.52` for every measurement in this phase,
+  and the CLI now prints it to stderr before it starts, because a set captured
+  under load is a set that will not reproduce while looking completely normal.
+
+### 14.8 What phase 5 did NOT do
+
+- ⛔ **NO EXITS.** A generated set is N isolated rooms (§14.2 #4). Phase 5b.
+- ⛔ **Nothing regenerates the 24 AP references** — they are invalidated, per the
+  ruling. `location_coords` is exactly derivable; `region_coords` is transcribed
+  from a **commented-out** debug-warp block, so regenerating it means inventing a
+  convention vanilla never had.
+- ⚠ **`tapeFormat.parsePersistence` still bounds `persistence[].level` to
+  `0..115`**, the vanilla table, not the mounted set. §6's residue stands on the
+  JS side even though the AS3 side is now set-aware (§14.4).
+- ⚠ **No generated set has been PLAYED** — two rooms were booted and built, and
+  nothing walked one. The solver's own certification is the PoC arc's, against
+  the JS model, not against the artifact.
+- ⚠ **`music` is 0 for every generated room and `menu_rooms` is `[0]`** — both
+  listed in `provenance.invented` rather than chosen well. A generated set has no
+  boss, so `-1` never arises.
+- ⚠ **The exporter has no page arm.** `watchGenerate`'s GENERATE arm still cannot
+  hand a level to a set; the CLI is the only producer.
