@@ -108,11 +108,23 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 
-const PAGE_NAME = 'seedling_bot_ap';
+// ⛓ OVERRIDABLE SINCE PHASE 3b of the external-level-sets plan, on the
+// precedent `probe-seedling-level-set-transport.mjs` set: a slice that changes
+// the AS3 stages its build BESIDE the current one and needs to run the same
+// sweep against both, and swapping directories on disk to do that is how a
+// baseline gets lost. The artifact identity rides in the checkpoint
+// fingerprint below, so a resumed run can never reuse another build's verdict.
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
+// ⚠ THE DIRECTORY IS RENAMED, THE FILES INSIDE IT ARE NOT. `deploy_wasm_avm2.sh`
+// names the payload after the BUILD, not the folder, so every staged variant
+// holds `seedling_bot_ap.js/.wasm` and `game.html` loads it by that name. A
+// check for `${PAGE_NAME}.wasm` would SKIP silently on every variant build —
+// which reads exactly like a green run.
+const PAGE_BASE = 'seedling_bot_ap';
 
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, `${PAGE_NAME}.wasm`))) {
+    || !existsSync(join(ARTIFACT, `${PAGE_BASE}.wasm`))) {
     console.log(`SKIP: seedling bot wasm artifact not staged at ${ARTIFACT}`
         + ' — build it with ~/CC/seedling_bot_build/build_bot.sh and the'
         + ' pipeline documented in that script, then copy the deployed page here');
@@ -287,7 +299,8 @@ function modelFingerprint() {
     // a different game and must invalidate; hashing it every run is a cost
     // with no extra safety, because the pipeline never writes the same
     // bytes with a different mtime.
-    for (const f of ['game.html', `${PAGE_NAME}.wasm`]) {
+    h.update(`page:${PAGE_NAME}`);
+    for (const f of ['game.html', `${PAGE_BASE}.wasm`]) {
         const p = join(ARTIFACT, f);
         if (!existsSync(p)) continue;
         const s = statSync(p);
