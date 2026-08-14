@@ -351,8 +351,14 @@ cheapest item in this plan and the only one that removes code.
 extends Teleporter`); **`@fallthrough`** carries a level index on 12 rooms, on
 `<control>` elements that also carry **their own `@sign`** and an `@xOff`/
 `@yOff` OFFSET rather than an absolute player position (`Game.as:2126-2129`) —
-so the "rewrite `sign` with the destination" rule above applies to fallthroughs
-too; and **`@room`** on `<buttonroom>` carries one on 4. ⛔ And **two teleporters are
+so the `sign` rule above applies to fallthroughs too; and **`@room`** on
+`<buttonroom>` carries one on 4.
+⛔ **BUT THE `sign` RULE ITSELF IS REFUTED — see §15.1.** This sentence, and
+§8.2b's version of it, both said *"rewrite `sign` with the destination"*.
+**`sign` is not destination metadata**: it is an EDGE property,
+`sign(A→B) = region(B) if region(B) ≠ region(A) else 0`. Fallthroughs still
+carry one and it still has to be rewritten — but *as an edge*, not as a
+property of the room being entered. ⛔ And **two teleporters are
 built in CODE, not data** — `LightBossController` → level 36, `TentacleBeast` →
 level 58 — so **no data rewrite can reach them**; they need `named_rooms`
 entries. "This needs NO AS3 change at all" holds only for the data-borne
@@ -809,8 +815,21 @@ stairs / "`@fallthrough` on the level root". Two errors:
    `@x`/`@y` **plus `@xOff`/`@yOff` (an OFFSET, summed at `:2126-2128` — not a
    `playerx`/`playery` absolute)** and its own `@sign`, read as
    `fallthroughSign = int(o.@sign) - 1`, the same `-1` convention `Teleporter`
-   uses. ⇒ **§4.6's "rewrite `sign` with the destination" applies to
-   fallthroughs too**, and the Phase 5b builder must look on `<control>`.
+   uses. ⇒ §4.6's `sign` rule applies to fallthroughs too, and the Phase 5b
+   builder must look on `<control>`.
+   ⛔ **THE RULE I ENDORSED HERE IS REFUTED — §15.1.** I wrote "rewrite `sign`
+   with the destination", repeating §4.6's model and giving it a second home in
+   the record. **`sign` is an EDGE property, not destination metadata.**
+   Measured over all 280 exits + 12 fallthroughs: 8 signed transitions into 7
+   destinations, and **all 7 are ALSO entered by UNSIGNED exits** — if `sign`
+   named the room, every entrance to room 13 would carry sign 1; one of three
+   does. ⇒ `sign(A→B) = region(B) if region(B) ≠ region(A) else 0`, and `region`
+   is an INPUT (vanilla names 7 of its 116 rooms), never inferred.
+   ⛓ **The one-line diagnostic, worth stealing: group every edge by
+   DESTINATION; if two disagree, it is not a node property.** ⚠ Note it does not
+   fire here on disagreement — no destination carries two different non-zero
+   signs — it fires on the *mix* of signed and unsigned. A property that is
+   sometimes absent is the tell.
 
 ⛔ **§4.6 IS INCOMPLETE IN THREE WAYS**, all measured:
 1. it names `<teleporter>` but **`<stairsup>`/`<stairsdown>` carry the same
