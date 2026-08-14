@@ -292,7 +292,7 @@ finding about the gate.** Restoring the deleted line *verbatim* would read
 branch inert. A partial revert therefore cannot red anything — the gate catches
 a re-added *bound*, not a re-added *line*.
 
-## 8.7 Gates
+## 8.7 Gate results
 
 Recorded with the box state that produced each, because the acceptance requires
 load and every other gate is *less* trustworthy under it.
@@ -302,3 +302,27 @@ load and every other gate is *less* trustworthy under it.
 | `npx vitest run frontend/modules/seedlingDemo/` (baseline, pre-change) | quiet, load 0.13 | 3880 / 109 files |
 | `solve-seedling-r8-battery.mjs --check` md5 (baseline, pre-change) | quiet | `1fedb0ab35b7cd74accecf0345bdc893`, exit 1 |
 | `npx vitest run frontend/modules/seedlingDemo/` (post-change) | quiet, load 2.4 | **3883 / 109 files**, 358 s |
+| the mutation gate (§8.6) | quiet | 2 failed / 16 passed, one failure per mutation, attributed |
+| `solve-seedling-r8-battery.mjs --check` md5 (post-change) | quiet, load 1.4 | `1fedb0ab…` **unchanged — and unchanged under the mutant too (§8.5)** |
+| the eleven `scripts/procgen/check-seedling-editor-*.mjs` | quiet, load 2.4, dev server on :8000 | **11 / 11 PASS** |
+
+### ⛓ THE ACCEPTANCE
+
+`node scripts/procgen/export-seedling-level-set.mjs --seeds=9`, five runs, 192
+CPU burners on 8 cores. Burner PIDs captured at launch and killed by PID —
+`pkill -f` would SIGTERM the harness's own wrapper (CLAUDE.md's measured trap).
+
+| | pre-fix | post-fix |
+|---|---|---|
+| load across the five runs | 105 → 172 | **152 → 197** |
+| outcome | **5 of 5 CRASHED** (`LevelGeneratorError`, exit 1, 0 bytes) | **5 of 5 exit 0** |
+| distinct stdout digests | — (no stdout) | **1** |
+| digest | — | `c70481874d343c159cc3702eca0fccaa`, 1,756 bytes |
+
+⛓ **The claim is stronger than "the five agree with each other": the five agree
+with the QUIET-BOX digest**, which is the property the work exists to buy. And
+the post-fix runs were carried out at *higher* load than the runs that failed.
+
+⚠ Reported per the split the kickoff demanded: the acceptance number comes from
+a deliberately loaded box, every other number in this table from a quiet one,
+and no red from a loaded box was counted as evidence in either direction.
