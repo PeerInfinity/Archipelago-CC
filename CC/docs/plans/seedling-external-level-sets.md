@@ -166,8 +166,9 @@ room it does not own. **Phase 1 owes a by-name audit of the entity roster**, and
 until it exists this table is "what the patterns found", not "all there is".
 
 ⛓ **DONE 2026-08-13 — see §8.2. The table above was incomplete in both
-directions.** 151 classes read by name: the sweep missed **six more live
-cross-level references in code** (two of them teleporters built at runtime, so
+directions.** 151 classes read by name: the sweep missed **SEVEN more live
+cross-level references in code** (the seventh found later, by Phase 3b — see
+§8.2a) (two of them teleporters built at runtime, so
 no data rewrite can reach them) and, more importantly, it missed that **level
 indices also live in the LEVEL DATA** — three OEL attributes, **303**
 instances. §4.6's rewrite list is a subset of what actually has to be
@@ -645,7 +646,22 @@ and `levelMusics`; `Player.as` and `Splash.as` were the only hits and both were
 then read in context (rows 4 and 6 below). `Game.as`/`Main.as`/`Bot.as` are
 already itemised in §3.1–§3.5 and §8.3.
 
-#### (a) Six live cross-level references in CODE that the pattern sweep missed
+#### (a) SEVEN live cross-level references in CODE that the pattern sweep missed
+
+⛔ **THE SEVENTH WAS MISSED BY THIS AUDIT TOO, and the mechanism is worth more
+than the row.** Phase 3b found `Scenery/Moonrock.as:134` (at `7514b96`):
+
+```as3
+FP.world.add(new Teleporter(stairs.x, stairs.y, 2, 48, 32));   // ← the seventh
+Game.setPersistence(0, false, 2);                              // ← row 1's citation
+```
+
+A runtime-built teleporter with a hardcoded destination — **the identical shape
+as rows 2 and 3 below**, one line above a line this audit *did* read, quote and
+cite. It was not an unread file; the category was already defined and the text
+was on screen. ⇒ **a line already cited for one reason stops being scanned for
+others** — the finding shadows its own neighbourhood. When a hit lands, read the
+lines *around* it as if they were untouched.
 
 | # | where | what | why a grep could not see it |
 |---|---|---|---|
@@ -655,12 +671,23 @@ already itemised in §3.1–§3.5 and §8.3.
 | 4 | `Player.as:491` | `FP.world = new Game(**114**, 72, 128, false, 2)` — the dark-shrum death returns to the Watcher's room | constructor argument, not an assignment |
 | 5 | `Pickups/Seed.as` | `FP.world = new Game(**1**, 64, 96, false)` — the bloody-seed ending | constructor argument |
 | 6 | `Player.as:1827-1999` | **nine LIVE debug warps on keys 1–9**, each preceded by `Main.clearSave()`, to levels **2, 13, 12, 37, 45, 95, 12, 93, 110**. Only the `Key.E` block above them is commented out; these are not. The source's own comment reads *"For the love of god, please make sure you remove this."* | constructor arguments behind an input guard |
+| **7** | `Scenery/Moonrock.as:134` | `new Teleporter(stairs.x, stairs.y, **2**, 48, 32)` — the stairs the moonrock unblocks | ⛔ **the line ABOVE a line this audit already cited** (row 1's `setPersistence(0,false,2)`); found by Phase 3b, not here |
 
-⛔ **2 and 3 are the ones that break §4.6.** That section rewrites exit
-destinations **in the OEL data**; these two teleporters never appear in any
+⛔ **2, 3 and 7 are the ones that break §4.6.** That section rewrites exit
+destinations **in the OEL data**; these three teleporters never appear in any
 `.oel`, so no bundle rewrite can reach them. A replaced set must either keep
-levels 36 and 58 meaning what they mean, or these become `named_rooms` entries
-like `Moonrock`/`FinalDoor`.
+levels 36, 58 and 2 meaning what they mean, or these become `named_rooms`
+entries like `Moonrock`/`FinalDoor`.
+
+⛔ **7 CANNOT BE FULLY EXPRESSED BY THE FROZEN SCHEMA, and that is a real gap.**
+Its destination now reads `moonrock_target`, but its **arrival position (48, 32)
+stays a literal**: `named_rooms` entries are `roomRef` — `level` only, with
+`additionalProperties: false` (§9). ⇒ **a custom set can move that room and
+cannot say where in it the player lands.** The fix is to widen that ONE entry to
+a `spawn` (`{level, x, y}`): backward-compatible, and it does not touch the
+closed vocabulary the user ruled on — but it **changes the content hash**, so it
+belongs with whoever next touches the save stamp. Recorded by Phase 3b rather
+than taken, which was the right call on a frozen document.
 
 ⚠ **6 composes badly with §8.3.** A debug key wipes the save and jumps to level
 110; under a 10-room custom set that index is out of range, and §8.3 says an
@@ -677,7 +704,7 @@ index**, and §4.6 names only the first:
 | `@room` | 1 — `<buttonroom>` | 11 total, **4 cross-level** | 37, 39, 62, 63 |
 | `@fallthrough` | 1 — **`<control>`** (`Game.as:2125-2129`) | **12 rooms** | 0, 17, 21, 30, 31, 43, 49, 57, 69, 82, 84, 85 |
 
-**303 data-borne level references**, against 6 in code.
+**303 data-borne level references**, against **7** in code.
 
 ⛔ **CORRECTED 2026-08-13 by the Phase 2 session (`4b1d1b1d8`+), and the cause
 is worth more than the numbers.** This table first read 221 teleporters / 50
