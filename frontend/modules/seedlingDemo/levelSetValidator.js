@@ -50,6 +50,12 @@ export const SIGN_TABLE_SIZE = 7;
 export const DEFAULT_SPAWN_X = 80;
 export const DEFAULT_SPAWN_Y = 128;
 
+// `Scenery/Tile.as:22-23`. Declared here rather than imported because this
+// module is deliberately dependency-light for the bundled browser graph (see the
+// header); `levelSetValidator.test.js` asserts it equals `levelWorld.TILE_SIZE`,
+// so the two cannot drift apart in silence.
+export const TILE_PX = 16;
+
 // --- transport constants (plan §8.1) -----------------------------------------
 //
 // ⛔ THESE LIVE BESIDE THE SENDER, NOT IN THE DATA. No authored set carries a
@@ -289,6 +295,17 @@ const intOr = (v, fallback) => {
 export function parseRoomXml(xml) {
     const exits = [];
     const fallthroughs = [];
+    // ⛓ PHASE 5b: the room RECTANGLE, in pixels, because an arrival position is
+    // only checkable against the room it lands in. `<width>`/`<height>` are the
+    // level root's own children (`procgenLevelOel` writes them; `Game.as`'s
+    // loader reads them), and a room that carries neither leaves the check
+    // unmade rather than assumed — see `size` below.
+    const sizeMatch = typeof xml === 'string'
+        ? [/<width>\s*(-?\d+)\s*<\/width>/.exec(xml), /<height>\s*(-?\d+)\s*<\/height>/.exec(xml)]
+        : [null, null];
+    const size = (sizeMatch[0] && sizeMatch[1])
+        ? { w: Number(sizeMatch[0][1]), h: Number(sizeMatch[1][1]) }
+        : null;
     const buttonRooms = [];
     const finalBosses = [];
     const tags = [];
@@ -299,7 +316,7 @@ export function parseRoomXml(xml) {
     // eleven do, so what is wanted is presence.
     const triggers = new Set();
     if (typeof xml !== 'string') {
-        return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
+        return { size, exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
     }
 
     ELEMENT_RE.lastIndex = 0;
@@ -349,7 +366,7 @@ export function parseRoomXml(xml) {
 
         m = ELEMENT_RE.exec(xml);
     }
-    return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
+    return { size, exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
 }
 
 // --- chunk planning -----------------------------------------------------------
@@ -754,6 +771,33 @@ export function validateLevelSet(set, options = {}) {
                 inboundTeleports.get(ex.to).push(i);
             }
             checkSign(ex.sign, `${label}: <${ex.element}>`, err);
+
+            // ⛓ PHASE 5b: THE ARRIVAL MUST LAND INSIDE THE ROOM IT ARRIVES IN.
+            // §4.6 names `playerx`/`playery` as fields a bundle rewrites and
+            // nothing checked them: `Game.as:2040` builds `new Player(playerx,
+            // playery)` with no bounds test of any kind, so an arrival past the
+            // destination's rectangle puts the player outside the level —
+            // silent, like every other level-index defect in this format.
+            //
+            // ⛔ AN ERROR RATHER THAN A WARNING BECAUSE VANILLA WAS ASKED FIRST
+            // (§9.3's standing test): all 280 vanilla exits were measured
+            // against their destination's real `<width>`/`<height>` and 0 land
+            // outside. A rule the real game fails is a wrong rule; this one it
+            // passes.
+            //
+            // ⚠ AND IT IS SKIPPED WHERE THE DESTINATION CANNOT BE READ — an
+            // `embed`-sourced room has no rectangle here, which is every room of
+            // the committed vanilla set. That silence is already counted by the
+            // unresolved-source warning above rather than left to look like a
+            // pass.
+            const dest = Number.isInteger(ex.to) ? parsed.get(ex.to) : undefined;
+            if (dest?.size && ex.playerx !== null && ex.playery !== null) {
+                const { w, h } = dest.size;
+                if (ex.playerx < 0 || ex.playery < 0
+                    || ex.playerx + TILE_PX > w || ex.playery + TILE_PX > h) {
+                    err(`${label}: <${ex.element}> @to ${ex.to} arrives at (${ex.playerx}, ${ex.playery}), outside room ${ex.to} "${rooms[ex.to].name}" which is ${w}x${h} px — Game.as:2040 passes the arrival to new Player() unchecked, so the player lands outside the level`);
+                }
+            }
         }
 
         // ⛔ THE MOONROCK'S TELEPORTER DUPLICATES THE STAIRS IT REPLACES, AND
