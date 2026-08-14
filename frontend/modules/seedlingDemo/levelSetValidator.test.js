@@ -388,10 +388,15 @@ describe('the moonrock and the stairs it replaces must agree', () => {
         moonrock}${exits.join('')}</objects></level>`;
     const ROCK = '<moonrock x="240" y="256" tag="0"/>';
     const STAIRS = (a = {}) => `<stairsdown x="${a.x ?? 256}" y="${a.y ?? 272}" to="${
-        a.to ?? 0}" playerx="${a.playerx ?? 48}" playery="${a.playery ?? 32}"/>`;
+        a.to ?? 2}" playerx="${a.playerx ?? 48}" playery="${a.playery ?? 32}"/>`;
 
+    // ⚠ THE ROCK AND THE PILE ARE IN DIFFERENT ROOMS, as in vanilla (0 and 2).
+    // Pointing moonrock_target at the rock's OWN room is legal but arranges a
+    // second, unrelated finding — the rock's `tag="0"` then shares the slot
+    // MoonrockPile claims — and this block is about the arrival, not that.
     const withRoom0 = (xml) => {
         const set = minimalSet();
+        set.named_rooms.moonrock_target = { level: 2, x: 48, y: 32 };
         set.rooms[0].source = { xml };
         return validateLevelSet(set);
     };
@@ -404,7 +409,7 @@ describe('the moonrock and the stairs it replaces must agree', () => {
 
     // One at a time, so each refusal names the field that disagreed.
     it.each([
-        ['to', { to: 1 }, /@to 1 vs moonrock_target\.level 0/],
+        ['to', { to: 1 }, /@to 1 vs moonrock_target\.level 2/],
         ['playerx', { playerx: 96 }, /@playerx 96 vs moonrock_target\.x 48/],
         ['playery', { playery: 64 }, /@playery 64 vs moonrock_target\.y 32/],
     ])('refuses a set whose stairs disagrees on @%s', (_field, override, re) => {
@@ -468,6 +473,50 @@ describe('the moonrock and the stairs it replaces must agree', () => {
             .toEqual([VANILLA.named_rooms.moonrock_target.level,
                 VANILLA.named_rooms.moonrock_target.x,
                 VANILLA.named_rooms.moonrock_target.y]);
+    });
+});
+
+// ⛔ THE TWO SLOTS THE DATA CANNOT SHOW YOU. Every other tag rule in the
+// validator reads @tag out of the room XML; these two live in AS3 and appear in
+// no OEL, so a set can satisfy every occupancy rule and still collide.
+describe('the persistence slots claimed by CODE', () => {
+    const withTagZeroIn = (level, element) => {
+        const set = minimalSet();
+        set.rooms[level].source = { xml: `<level><objects><${element} x="0" y="0" tag="0"/></objects></level>` };
+        return validateLevelSet(set);
+    };
+
+    // minimalSet: moonrock_target -> room 0, watcher_text -> room 1.
+    it('WARNS when something shares the slot MoonrockPile claims in code', () => {
+        const r = withTagZeroIn(0, 'breakablerock');
+        expect(r.ok).toBe(true);
+        expect(r.warnings.some((w) => /moonrock_target/.test(w) && /MoonrockPile\.as:22/.test(w)))
+            .toBe(true);
+    });
+
+    // The opposite direction, in the same slot — which is why neither can be a
+    // rule about tag 0 in general.
+    it('WARNS when the watcher room authors NOTHING for FinalDoor to read', () => {
+        const r = validateLevelSet(minimalSet());
+        expect(r.ok).toBe(true);
+        expect(r.warnings.some((w) => /watcher_text/.test(w) && /nothing carries tag 0/.test(w)))
+            .toBe(true);
+    });
+
+    it('is quiet once the watcher room authors it', () => {
+        const r = withTagZeroIn(1, 'watcher');
+        expect(r.warnings.filter((w) => /watcher_text/.test(w))).toEqual([]);
+    });
+
+    // ⛔ AND VANILLA SATISFIES BOTH, in opposite directions: room 2 authors
+    // nothing at tag 0 (the pile holds it), room 114 authors <watcher tag="0">.
+    it('the real 116 raise neither warning', () => {
+        const r = validateLevelSet(VANILLA, { xmlByRoomId: vanillaXmlByRoomId() });
+        expect(r.warnings.filter((w) => /moonrock_target|watcher_text/.test(w))).toEqual([]);
+        const room2 = parseRoomXml(VANILLA_REFS.rooms['2']).tags.filter((t) => t.tag === 0);
+        const room114 = parseRoomXml(VANILLA_REFS.rooms['114']).tags.filter((t) => t.tag === 0);
+        expect(room2).toEqual([]);
+        expect(room114.map((t) => t.element)).toEqual(['watcher']);
     });
 });
 

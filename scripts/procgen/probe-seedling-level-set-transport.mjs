@@ -76,7 +76,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
 }
 
 const { parseTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
-const { planLevelSetChunks, MAX_ROOMS_PER_CHUNK } = await import(
+const { planLevelSetChunks, MAX_ROOMS_PER_CHUNK, stampLevelSetIdentity, validateLevelSet } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/levelSetValidator.js'));
 
 const fixture = (name) => JSON.parse(readFileSync(
@@ -161,6 +161,30 @@ const overCapacity = { ...VANILLA, rooms: Array.from({ length: 117 }, (_, i) => 
 
 const smallSet = CONFORMANCE.cases[0];
 
+// ⛓ PHASE 4's WIDENING, on the DELIVERED path. `moonrock_target` used to be a
+// level-only roomRef, so a set could move the room the moonrock's stairs lead to
+// and could not say where in it the player lands (plan §11.4). The built-in
+// manifest's copy is checked by check-seedling-vanilla-manifest.mjs; this proves
+// the same field survives EI, assembly and mounting — and the values are
+// deliberately NOT vanilla's (2, 48, 32), so a receiver that quietly fell back
+// to the built-in manifest would report the wrong numbers rather than none.
+const DELIVERED_MOONROCK = { level: 3, x: 96, y: 64 };
+const arrivalSet = stampLevelSetIdentity({
+    schema_version: 1,
+    set_id: 'phase4-arrival',
+    rooms: Array.from({ length: 5 }, (_, i) => tiny(i)),
+    start: { level: 0 },
+    menu_rooms: [0],
+    named_rooms: {
+        moonrock_target: DELIVERED_MOONROCK,
+        watcher_text: { level: 4 },
+        dark_shrum_death: { level: 1, x: 72, y: 128 },
+        bloody_seed_ending: { level: 2, x: 64, y: 96 },
+        light_boss_exit: { level: 2, x: 112, y: 96 },
+        tentacle_beast_mouth: { level: 1, x: 56, y: 96 },
+    },
+}, 'phase4-arrival');
+
 const arms = [
     { name: 'control: nothing delivered', steps: [{ call: 'botLevelSet' }] },
     { name: 'boot.level 115 (control)', steps: [{ call: 'botLoadTape', arg: tapeAt(115) }] },
@@ -188,6 +212,10 @@ const arms = [
         },
     ] : []),
     { name: '117 rooms against a 116-row table', steps: [...deliverSteps(planLevelSetChunks(overCapacity).chunks), { call: 'botLevelSet' }] },
+    {
+        name: 'a delivered set\'s moonrock arrival',
+        steps: [...deliverSteps(planLevelSetChunks(arrivalSet).chunks), { call: 'botLevelSet' }],
+    },
 ];
 
 // ── run them on Windows ──────────────────────────────────────────────────────
@@ -368,6 +396,31 @@ check('6. a 117-room set is refused against a persistence table that addresses 1
 !arm6.crashed && r6 !== null && r6.mounted === null
     && typeof arm6Last === 'string' && arm6Last.indexOf('persistence table') > 0,
 String(arm6Last));
+
+// ── 7. a delivered set's moonrock arrival (phase 4) ──────────────────────────
+//
+// ⛔ THE SENDER MUST AGREE THIS SET IS VALID, or the arm is testing a document
+// no producer would ever emit. Asserted here rather than assumed, because the
+// receiver does NOT check named_rooms (§10.2's split) and would mount a set the
+// sender refuses.
+const arrivalVerdict = validateLevelSet(arrivalSet);
+check('7a. the delivered set is one the SENDER would emit', arrivalVerdict.ok,
+    arrivalVerdict.ok ? arrivalSet.set_id : arrivalVerdict.errors.join('; '));
+
+const arm7 = arm('a delivered set\'s moonrock arrival');
+const r7 = readout(arm7);
+const got7 = r7 && r7.named_rooms ? r7.named_rooms.moonrock_target : null;
+const right = got7 !== null && got7 !== undefined
+    && got7.level === DELIVERED_MOONROCK.level
+    && got7.x === DELIVERED_MOONROCK.x
+    && got7.y === DELIVERED_MOONROCK.y;
+check('7b. ⛓ a DELIVERED set says where the moonrock\'s teleporter lands, and '
+    + 'the game reports what was delivered — not the built-in manifest\'s (48, 32)',
+!arm7.crashed && r7 !== null && r7.mounted === arrivalSet.set_id && right,
+arm7.crashed
+    ? `⛔ the page died: ${arm7.error}`
+    : `mounted ${r7?.mounted}, moonrock_target ${JSON.stringify(got7)} `
+        + `(want ${JSON.stringify(DELIVERED_MOONROCK)})`);
 
 console.log(`\n${failures === 0 ? 'ALL ARMS PASS' : `${failures} ARM(S) FAILED`}`);
 process.exit(failures === 0 ? 0 : 1);

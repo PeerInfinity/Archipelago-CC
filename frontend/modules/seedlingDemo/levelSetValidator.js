@@ -780,6 +780,39 @@ export function validateLevelSet(set, options = {}) {
         }
     }
 
+    // ⛔ TWO PERSISTENCE SLOTS ARE CLAIMED BY CODE, AND NO TAG AUDIT CAN SEE
+    // THEM. Every tag rule above reads @tag out of the room data; these two do
+    // not appear there, so a set can satisfy every occupancy rule in this file
+    // and still collide.
+    //
+    //   · moonrock_target's room: Moonrock.as:135 WRITES tag 0, and its consumer
+    //     MoonrockPile.as:22 hardcodes tag = 0 with inverted polarity and
+    //     carries no @tag. Vanilla's room 2 authors NOTHING at tag 0 — the pile
+    //     holds that slot invisibly. An authored tag-0 entity there shares it.
+    //   · watcher_text's room: FinalDoor.as:50 READS tag 0, and vanilla's room
+    //     114 DOES author it (<watcher tag="0">) — the read is aimed at a real
+    //     entity. A set that omits it makes the door ask a slot nothing sets.
+    //
+    // ⇒ the SAME slot is a hazard in one room and a requirement in the other,
+    // which is why neither can be a rule about tag 0 in general.
+    const authoredTagZero = (level) => {
+        const doc = parsed.get(level);
+        if (!doc) return null;              // unresolved room — already named as unchecked
+        return doc.tags.filter((t) => t.tag === 0).map((t) => t.element);
+    };
+    if (isPlainObject(named)) {
+        const mrLevel = named.moonrock_target?.level;
+        const sharers = Number.isInteger(mrLevel) ? authoredTagZero(mrLevel) : null;
+        if (sharers && sharers.length > 0) {
+            warn(`named_rooms.moonrock_target names room ${mrLevel} "${rooms[mrLevel]?.name}", where <${sharers.join('>, <')}> carries tag 0 — the same slot MoonrockPile.as:22 claims in CODE (hardcoded, inverted polarity, no @tag in the data). Moonrock.as:135's cross-level write clears it for both.`);
+        }
+        const wtLevel = named.watcher_text?.level;
+        const readers = Number.isInteger(wtLevel) ? authoredTagZero(wtLevel) : null;
+        if (readers && readers.length === 0) {
+            warn(`named_rooms.watcher_text names room ${wtLevel} "${rooms[wtLevel]?.name}", where nothing carries tag 0 — FinalDoor.as:50 reads that slot to decide whether the Watcher is dealt with, and in vanilla room 114 authors it as <watcher tag="0">. Here the door asks a slot nothing in that room sets.`);
+        }
+    }
+
     // --- the debug warps (§8.2a #6 composed with §8.3) ---
     const outOfRangeWarps = [...new Set(DEBUG_WARP_LEVELS)].filter((l) => l >= roomCount);
     if (outOfRangeWarps.length > 0) {
