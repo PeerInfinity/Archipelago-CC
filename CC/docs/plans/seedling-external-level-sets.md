@@ -277,6 +277,29 @@ citation-rewriting script. It does not ride along with this feature.
 
 ---
 
+### 4.6 The toolchain, verified present 2026-08-13
+
+Checked before planning further, because Phase 3 is unverifiable without it —
+**every AS3 edit has to become a wasm before anything can be said about it.**
+
+| step | where |
+|---|---|
+| the AS3 source | `~/CC/seedling`, branch **`bot`** @ `7514b96`, **clean** |
+| AS3 → SWF | `~/CC/flex-sdk/bin/mxmlc` (playerglobal 11.1) |
+| a working recipe | `~/CC/seedling_teleport_build/build_teleport.sh` — documents the flags, the NewgroundsAPI SWC, and the one-time `fix_embed_case.py` Windows→Linux `[Embed]` prep |
+| SWF → wasm | `~/CC/SWFRecomp-CC/` (built artifact: `docs2/examples/avm2/seedling_teleport_ap/`, 31 MB, 2026-07-21) |
+
+⚠ Two things that recipe implies and this plan has not settled:
+
+1. It builds the **teleport variant** (patched `Main.as`, no preloader/splash).
+   Whether Phase 3's verification uses that variant or a stock build is a
+   choice, and the two boot differently.
+2. **The AS3 work lands in a DIFFERENT REPO.** Commits go to `~/CC/seedling`
+   on `bot`; pushing that branch is its own decision and is not covered by this
+   repo's push-by-default rule.
+
+---
+
 ## 5. Phases
 
 - [ ] **Phase 1 — MEASURE, before any schema is frozen.**
@@ -295,8 +318,13 @@ citation-rewriting script. It does not ride along with this feature.
       embedded-asset resolver, the built-in `seedling-vanilla` manifest, and
       §3.5's six constants moving into it. ⛔ Lands ALONE — it is the only seam
       that deletes literals. **Its acceptance is that the ordinary game is
-      byte-for-byte unchanged**: the committed tapes replay identically, which
-      is the strongest available statement that the indirection changed nothing.
+      byte-for-byte unchanged**: the committed tapes replay identically.
+      ⛔⛔ **AND THE REPLAY MUST RUN IN THE BUILT ARTIFACT, THROUGH
+      `botLoadTape` — NOT through the JS model.** The model in this repo does
+      not execute one line of the AS3; it would replay every tape identically
+      no matter what Phase 3b did to `Game.as`, so a model-side replay is an
+      acceptance bar that CANNOT FAIL. (Caught 2026-08-13, in this document,
+      before anyone ran it — the vacuity family, one more time.)
 - [ ] **Phase 4 — Persistence + the save stamp** (§4.2). The `Main.as:319`
       rule, the `set_id` field, and the mismatch path that rebuilds loudly.
 - [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
