@@ -3013,6 +3013,41 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   at L38's cover, enemy-room openers, bridge-window semantics, a low span
   ceiling) go to the user BEFORE implementation.
 
+## 5d. Procgen determinism — tick-bounded, not wall-clock (⚖ USER PRIORITY 2026-08-14, post-dates this doc)
+
+⚖ **User, 2026-08-14: "make it one of the next priorities to make procgen
+deterministic, by making it tick based, not wall clock based."** Full brief,
+citations and open questions in **`CC/docs/plans/procgen-deterministic-budget.md`
+(read it FIRST)**; the cross-cutting warning now also lives in
+`docs/json/developer/procgen/gotchas.md`.
+
+One-line summary: `procgenOracle.js:503` reclassifies a solve that **SUCCEEDED**
+as `BUDGET_EXHAUSTED` when it exceeded `budget.wallClockMs` (5000), so elapsed
+time — not a property of the candidate — decides keep-vs-revert, and the run
+diverges from there. Measured: seed 20, five runs, identical code → 3 levels
+twice-over vs 2 × `GenerationAborted(PhysicsV2Error)`.
+
+**Why it is smaller than it sounds:** `DEFAULT_BUDGET` already carries a tick
+bound (`maxTicksPerTarget`), and of the two `BUDGET_EXHAUSTED` sites only the
+post-hoc one at `:503` is nondeterministic — the thrown path at `:452` already
+classifies `per-target-ticks` correctly. The named obstacle (`:112`, "there is
+no expansion budget here") is **plumbing, not redesign**: `solverBot.js:4346`'s
+`TIME_RUNG.maxExpansions` is already threaded as a `limits` object at `:5135`;
+it is a module const where a parameter could go.
+
+**Dependencies:** none — it is self-contained and gates nothing. But it *taxes*
+everything: it has bitten three phases of the Seedling level-sets arc and any
+suite that runs the solver (a full vitest run went red with 3 failures at load
+22.8 that were 515/515 solo). ⇒ every procgen arc pays a re-run per ambiguous
+red until this lands, which is the argument for doing it early rather than when
+convenient.
+
+⛔ **Expect committed artefacts to move** — changing what counts as a rejection
+changes which candidates are kept. The battery md5
+`1fedb0ab35b7cd74accecf0345bdc893` and any fixture captured from a solve will
+need re-baselining **on a quiet box, in a separate commit from the behaviour
+change**, or the next reader reads it as a regression.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
