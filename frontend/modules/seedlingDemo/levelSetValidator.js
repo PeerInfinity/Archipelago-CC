@@ -96,16 +96,36 @@ export const DEBUG_WARP_LEVELS = [2, 13, 12, 37, 45, 95, 12, 93, 110];
 //
 // `warp` entries are constructed with an arrival position and carry x/y;
 // `persistence` entries are a cross-level tag index and carry only a level.
+//
+// ⛔ `position` IS ITS OWN FIELD, not inferred from `kind`. `moonrock_target` is
+// BOTH — a cross-level persistence write (Moonrock.as:135) and a teleporter
+// built with an arrival (Moonrock.as:134) — so a `kind === 'warp'` test would
+// have quietly excused the one entry that needed the requirement most.
 export const NAMED_ROOMS = Object.freeze({
-    moonrock_target: { kind: 'persistence', cite: 'Scenery/Moonrock.as:135', vanilla: 2 },
-    watcher_text: { kind: 'persistence', cite: 'Scenery/FinalDoor.as:50', vanilla: 114 },
-    dark_shrum_death: { kind: 'warp', cite: 'Player.as:491', vanilla: 114 },
-    bloody_seed_ending: { kind: 'warp', cite: 'Pickups/Seed.as:73', vanilla: 1 },
-    light_boss_exit: { kind: 'warp', cite: 'Enemies/LightBossController.as:104', vanilla: 36 },
-    tentacle_beast_mouth: { kind: 'warp', cite: 'Enemies/TentacleBeast.as:213', vanilla: 58 },
+    moonrock_target: {
+        kind: 'persistence+warp', position: true,
+        cite: 'Scenery/Moonrock.as:134 (teleporter) and :135 (persistence)', vanilla: 2,
+    },
+    watcher_text: { kind: 'persistence', position: false, cite: 'Scenery/FinalDoor.as:50', vanilla: 114 },
+    dark_shrum_death: { kind: 'warp', position: true, cite: 'Player.as:491', vanilla: 114 },
+    bloody_seed_ending: { kind: 'warp', position: true, cite: 'Pickups/Seed.as:73', vanilla: 1 },
+    light_boss_exit: { kind: 'warp', position: true, cite: 'Enemies/LightBossController.as:104', vanilla: 36 },
+    tentacle_beast_mouth: { kind: 'warp', position: true, cite: 'Enemies/TentacleBeast.as:213', vanilla: 58 },
 });
 
 export const NAMED_ROOM_KEYS = Object.freeze(Object.keys(NAMED_ROOMS));
+
+// Hitboxes, for the one rule that needs GEOMETRY. `Moonrock.as:131` finds the
+// stairs it is about to replace with `collide("Teleporter", x, y)` — by overlap,
+// not by name — so the only way to know WHICH stairs a manifest entry must agree
+// with is to reproduce the overlap.
+export const MOONROCK_HITBOX = 48;      // Scenery/Moonrock.as:46  setHitbox(48, 48)
+export const TELEPORTER_HITBOX = 16;    // Teleporter.as:36        setHitbox(16, 16, 0, 0)
+
+/** FlashPunk hitboxes, both with a zero origin: [x, x+w) x [y, y+h). */
+function hitboxesOverlap(ax, ay, aSize, bx, by, bSize) {
+    return ax < bx + bSize && bx < ax + aSize && ay < by + bSize && by < ay + aSize;
+}
 
 // --- helpers -----------------------------------------------------------------
 
@@ -226,7 +246,10 @@ export function parseRoomXml(xml) {
     const finalBosses = [];
     const tags = [];
     const tsets = [];
-    if (typeof xml !== 'string') return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets };
+    const moonrocks = [];
+    if (typeof xml !== 'string') {
+        return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks };
+    }
 
     ELEMENT_RE.lastIndex = 0;
     let m = ELEMENT_RE.exec(xml);
@@ -242,6 +265,10 @@ export function parseRoomXml(xml) {
                     playerx: intOr(a.playerx, null),
                     playery: intOr(a.playery, null),
                     sign: intOr(a.sign, SIGN_NONE),
+                    // ⚠ GEOMETRY, carried because Moonrock.as:131 finds the
+                    // stairs it replaces by COLLISION, not by name.
+                    x: intOr(a.x, NaN),
+                    y: intOr(a.y, NaN),
                 });
             }
         }
@@ -262,12 +289,15 @@ export function parseRoomXml(xml) {
         if (el === 'finalboss') {
             finalBosses.push({ tag: intOr(a.tag, -1) });
         }
+        if (el === 'moonrock') {
+            moonrocks.push({ x: intOr(a.x, NaN), y: intOr(a.y, NaN) });
+        }
         if (a.tag !== undefined && a.tag !== '') tags.push({ element: el, tag: intOr(a.tag, NaN) });
         if (a.tset !== undefined && a.tset !== '') tsets.push({ element: el, tset: intOr(a.tset, NaN) });
 
         m = ELEMENT_RE.exec(xml);
     }
-    return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets };
+    return { exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks };
 }
 
 // --- chunk planning -----------------------------------------------------------
@@ -446,7 +476,7 @@ function checkSpawn(spawn, label, roomCount, err, { requirePosition = false } = 
     if (requirePosition) {
         for (const axis of ['x', 'y']) {
             if (spawn[axis] === undefined) {
-                err(`${label}.${axis} is required — this reference is constructed with an arrival position, and omitting it would silently use the Game constructor default (${axis === 'x' ? DEFAULT_SPAWN_X : DEFAULT_SPAWN_Y})`);
+                err(`${label}.${axis} is required — this reference is CONSTRUCTED with an arrival position, and omitting it would silently use whatever default the constructing code has (the Game constructor's ${axis === 'x' ? DEFAULT_SPAWN_X : DEFAULT_SPAWN_Y}, or Teleporter.as:31's own 0)`);
             }
         }
     }
@@ -594,7 +624,7 @@ export function validateLevelSet(set, options = {}) {
                 continue;
             }
             checkSpawn(named[key], `named_rooms.${key}`, roomCount, err, {
-                requirePosition: spec.kind === 'warp',
+                requirePosition: spec.position,
             });
         }
         for (const key of Object.keys(named)) {
@@ -624,6 +654,48 @@ export function validateLevelSet(set, options = {}) {
                 inboundTeleports.get(ex.to).push(i);
             }
             checkSign(ex.sign, `${label}: <${ex.element}>`, err);
+        }
+
+        // ⛔ THE MOONROCK'S TELEPORTER DUPLICATES THE STAIRS IT REPLACES, AND
+        // THE TWO CAN DISAGREE SILENTLY. `Moonrock.as:131-136`: a landed
+        // moonrock collides with a Teleporter and, if it is a Stairs, REMOVES it
+        // and adds a plain Teleporter at the same position carrying
+        // `named_rooms.moonrock_target` — then writes tag 0 into that same room.
+        // The stairs it destroyed already carried @to/@playerx/@playery; in
+        // vanilla they are the identical (2, 48, 32). Two authorities for one
+        // fact: let them differ and the puzzle sends the player somewhere the
+        // stairs did not, and banks the pile's persistence in a third room, with
+        // nothing erroring anywhere. So the sender makes them agree.
+        const mt = isPlainObject(named) ? named.moonrock_target : undefined;
+        for (const rock of doc.moonrocks) {
+            if (!Number.isInteger(rock.x) || !Number.isInteger(rock.y)) {
+                err(`${label}: <moonrock> has no integer @x/@y, so the stairs it replaces cannot be identified`);
+                continue;
+            }
+            const touched = doc.exits.filter((ex) => Number.isInteger(ex.x) && Number.isInteger(ex.y)
+                && hitboxesOverlap(rock.x, rock.y, MOONROCK_HITBOX, ex.x, ex.y, TELEPORTER_HITBOX));
+            const stairs = touched.filter((ex) => ex.element !== 'teleporter');
+            if (touched.length === 0) {
+                warn(`${label}: <moonrock> at (${rock.x}, ${rock.y}) lands on no teleporter or stairs, so Moonrock.as:131's replacement never fires — this rock is scenery`);
+                continue;
+            }
+            if (touched.length > 1) {
+                warn(`${label}: <moonrock> at (${rock.x}, ${rock.y}) overlaps ${touched.length} teleporters/stairs — collide() returns ONE of them and which is arbitrary (Moonrock.as:131)`);
+            }
+            if (stairs.length === 0) {
+                warn(`${label}: <moonrock> at (${rock.x}, ${rock.y}) lands on a plain <teleporter>, not stairs — Moonrock.as:132's \`stairs is Stairs\` is false, so nothing is replaced`);
+                continue;
+            }
+            if (!isPlainObject(mt)) continue;   // already refused above, by name
+            for (const s of stairs) {
+                const disagree = [];
+                if (s.to !== mt.level) disagree.push(`@to ${s.to} vs moonrock_target.level ${mt.level}`);
+                if (s.playerx !== mt.x) disagree.push(`@playerx ${s.playerx} vs moonrock_target.x ${mt.x}`);
+                if (s.playery !== mt.y) disagree.push(`@playery ${s.playery} vs moonrock_target.y ${mt.y}`);
+                if (disagree.length > 0) {
+                    err(`${label}: the <${s.element}> at (${s.x}, ${s.y}) under a moonrock disagrees with named_rooms.moonrock_target — ${disagree.join('; ')}. Moonrock.as:134 REPLACES this stairs with a teleporter built from the manifest, so a disagreement silently sends the player somewhere the stairs did not`);
+                }
+            }
         }
 
         for (const f of doc.fallthroughs) {

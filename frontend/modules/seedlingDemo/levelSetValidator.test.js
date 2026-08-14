@@ -72,7 +72,7 @@ function minimalSet(overrides = {}) {
         start: { level: 0 },
         menu_rooms: [0],
         named_rooms: {
-            moonrock_target: { level: 0 },
+            moonrock_target: { level: 0, x: 48, y: 32 },
             watcher_text: { level: 1 },
             dark_shrum_death: { level: 1, x: 72, y: 128 },
             bloody_seed_ending: { level: 2, x: 64, y: 96 },
@@ -255,6 +255,19 @@ describe('level-set validator — REJECTIONS, each for its own named reason', ()
             .toHaveLength(2);
     });
 
+    // ⛔ moonrock_target IS BOTH SHAPES — a cross-level persistence write
+    // (Moonrock.as:135) and a teleporter built with an arrival (:134). Phase 3b
+    // left it a level-only roomRef, so a set could move that room and not say
+    // where in it the player lands; §11.4 recorded it and phase 4 took it.
+    it('refuses moonrock_target without its arrival position', () => {
+        const set = minimalSet();
+        set.named_rooms.moonrock_target = { level: 0 };
+        const r = validateLevelSet(set);
+        expect(r.ok).toBe(false);
+        expect(r.errors.filter((e) => /named_rooms\.moonrock_target\.[xy] is required/.test(e)))
+            .toHaveLength(2);
+    });
+
     it('refuses a source carrying both xml and embed, or neither', () => {
         for (const [source, word] of [
             [{ xml: '<level/>', embed: 'levels/x.oel' }, 'both'],
@@ -359,6 +372,102 @@ describe('the OEL parser reads what the loader reads', () => {
     it('treats a missing sign as "none" rather than as index 0 of the table', () => {
         const doc = parseRoomXml('<level><objects><teleporter to="1"/></objects></level>');
         expect(doc.exits[0].sign).toBe(0);
+    });
+});
+
+// ⛔ TWO AUTHORITIES FOR ONE FACT. A landed moonrock REMOVES the stairs it
+// touches and adds a plain Teleporter built from `named_rooms.moonrock_target`
+// (Moonrock.as:131-136), then writes tag 0 into that same room. The stairs it
+// destroyed already carried @to/@playerx/@playery — in vanilla the identical
+// (2, 48, 32). Let the two differ and the puzzle sends the player somewhere the
+// stairs did not, and banks the pile's persistence in a third room, with
+// nothing erroring. The sender is where they are made to agree.
+describe('the moonrock and the stairs it replaces must agree', () => {
+    // Geometry that overlaps: rock 48x48 at (240, 256), stairs 16x16 at (256, 272).
+    const room = (moonrock, ...exits) => `<level><objects>${
+        moonrock}${exits.join('')}</objects></level>`;
+    const ROCK = '<moonrock x="240" y="256" tag="0"/>';
+    const STAIRS = (a = {}) => `<stairsdown x="${a.x ?? 256}" y="${a.y ?? 272}" to="${
+        a.to ?? 0}" playerx="${a.playerx ?? 48}" playery="${a.playery ?? 32}"/>`;
+
+    const withRoom0 = (xml) => {
+        const set = minimalSet();
+        set.rooms[0].source = { xml };
+        return validateLevelSet(set);
+    };
+
+    it('passes when the stairs under the rock says what the manifest says', () => {
+        const r = withRoom0(room(ROCK, STAIRS()));
+        expect(r.errors).toEqual([]);
+        expect(r.warnings.filter((w) => /moonrock/.test(w))).toEqual([]);
+    });
+
+    // One at a time, so each refusal names the field that disagreed.
+    it.each([
+        ['to', { to: 1 }, /@to 1 vs moonrock_target\.level 0/],
+        ['playerx', { playerx: 96 }, /@playerx 96 vs moonrock_target\.x 48/],
+        ['playery', { playery: 64 }, /@playery 64 vs moonrock_target\.y 32/],
+    ])('refuses a set whose stairs disagrees on @%s', (_field, override, re) => {
+        const r = withRoom0(room(ROCK, STAIRS(override)));
+        expect(r.ok).toBe(false);
+        expect(soleError(r, re)).toMatch(/silently sends the player somewhere the stairs did not/);
+    });
+
+    // ⚠ THE RULE IS AN OVERLAP, NOT "ANY STAIRS IN THE ROOM". A rule that
+    // matched by room would refuse the second staircase in vanilla's level 0,
+    // which goes somewhere else entirely and is nowhere near the rock.
+    it('ignores stairs the rock does not touch', () => {
+        const far = STAIRS({ x: 32, y: 192, to: 1, playerx: 64, playery: 128 });
+        const r = withRoom0(room(ROCK, STAIRS(), far));
+        expect(r.errors).toEqual([]);
+    });
+
+    // The hitboxes are half-open on both sides, so a stairs whose RIGHT edge
+    // lands exactly on the rock's LEFT edge does not collide. One pixel over,
+    // it does. Asserted because an off-by-one here is a rule that silently
+    // stops applying to the pair it was written for.
+    it('is exact at the hitbox boundary — edges touching is not overlapping', () => {
+        const flush = withRoom0(room(ROCK, STAIRS({ x: 224, to: 1 })));   // 224 + 16 === 240
+        expect(flush.errors).toEqual([]);
+        const overlapping = withRoom0(room(ROCK, STAIRS({ x: 225, to: 1 })));
+        expect(overlapping.ok).toBe(false);
+    });
+
+    // Both of these are legal sets; the rock is simply not a puzzle in them.
+    it('WARNS about a rock that lands on nothing, rather than refusing it', () => {
+        const r = withRoom0(room(ROCK, STAIRS({ x: 0, y: 0, to: 1 })));
+        expect(r.ok).toBe(true);
+        expect(r.warnings.some((w) => /lands on no teleporter or stairs/.test(w))).toBe(true);
+    });
+
+    it('WARNS about a rock landing on a plain teleporter — `stairs is Stairs` is false', () => {
+        const tp = '<teleporter x="256" y="272" to="1" playerx="8" playery="8"/>';
+        const r = withRoom0(room(ROCK, tp));
+        expect(r.ok).toBe(true);
+        expect(r.warnings.some((w) => /not stairs/.test(w))).toBe(true);
+    });
+
+    it('WARNS when collide() would have to choose between two candidates', () => {
+        const r = withRoom0(room(ROCK, STAIRS(), STAIRS({ x: 258 })));
+        expect(r.warnings.some((w) => /overlaps 2 teleporters\/stairs/.test(w)
+            && /arbitrary/.test(w))).toBe(true);
+    });
+
+    // ⛔ THE RULE MUST SATISFY THE ORIGINAL CORPUS. A hardening rule that
+    // refuses the real game is this arc's recorded failure (§9.3), so vanilla's
+    // own moonrock is asserted here and not only in the pass-everything test.
+    it('the real 116 carry exactly one rock, on the stairs the manifest names', () => {
+        const rocks = Object.entries(VANILLA_REFS.rooms)
+            .filter(([, xml]) => parseRoomXml(xml).moonrocks.length > 0);
+        expect(rocks.map(([id]) => id)).toEqual(['0']);
+        const doc = parseRoomXml(VANILLA_REFS.rooms['0']);
+        expect(doc.moonrocks).toEqual([{ x: 240, y: 256 }]);
+        const under = doc.exits.filter((e) => e.x === 256 && e.y === 272);
+        expect(under).toHaveLength(1);
+        expect([under[0].to, under[0].playerx, under[0].playery])
+            .toEqual([VANILLA.named_rooms.moonrock_target.level,
+                VANILLA.named_rooms.moonrock_target.x,
+                VANILLA.named_rooms.moonrock_target.y]);
     });
 });
 

@@ -125,8 +125,10 @@ const twinSnow = VANILLA.rooms.filter((r) => r.snow_gradient).map((r) => r.id);
 const twinExempt = VANILLA.rooms.filter((r) => r.music_override_exempt).map((r) => r.id);
 // ⛔ THE DEFAULTS ARE THE GAME'S, NOT ZERO. The schema says an omitted x/y on a
 // named room means the `Game` constructor's own (80, 128) — `Game.as:629`. A
-// checker that expected 0 here would fail the two roomRef-shaped entries for
-// being right.
+// checker that expected 0 here would fail the roomRef-shaped entry for being
+// right. ⚠ Phase 4 widened `moonrock_target` to carry a real arrival, so
+// `watcher_text` is now the ONLY entry this default applies to; the moonrock's
+// (48, 32) is asserted as data, not as a fallback.
 const twinNamed = Object.fromEntries(Object.entries(VANILLA.named_rooms).map(
     ([name, ref]) => [name, { level: ref.level, x: ref.x ?? 80, y: ref.y ?? 128 }]));
 

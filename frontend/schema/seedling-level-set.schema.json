@@ -54,11 +54,11 @@
         "tentacle_beast_mouth"
       ],
       "additionalProperties": false,
-      "description": "The room references that live in CODE rather than in level data, so NO bundle rewrite can reach them (§8.2a). A CLOSED vocabulary, every entry required: an omitted name is the silent-breakage case this arc keeps catching, and an invented one would do nothing. Two shapes — a persistence target needs only a level; a warp also needs the arrival position it is constructed with.",
+      "description": "The room references that live in CODE rather than in level data, so NO bundle rewrite can reach them (§8.2a). A CLOSED vocabulary, every entry required: an omitted name is the silent-breakage case this arc keeps catching, and an invented one would do nothing. Two shapes — a pure persistence target needs only a level; every reference that is CONSTRUCTED with an arrival position also carries x/y, and the validator requires them there so an omission cannot silently fall back to a default (the Game constructor's (80, 128), or Teleporter's own (0, 0)).",
       "properties": {
         "moonrock_target": {
-          "$ref": "#/$defs/roomRef",
-          "description": "Scenery/Moonrock.as:135 setPersistence(0, false, 2) — a cross-level WRITE of tag 0 into the room holding the moonrock pile. Its receiver Scenery/MoonrockPile.as:22 hardcodes tag = 0 with INVERTED polarity. Vanilla: 2 (Dungeon1_Entrance)."
+          "$ref": "#/$defs/spawn",
+          "description": "TWO code sites, one room. Scenery/Moonrock.as:135 setPersistence(0, false, 2) — a cross-level WRITE of tag 0 into the room holding the moonrock pile, whose receiver Scenery/MoonrockPile.as:22 hardcodes tag = 0 with INVERTED polarity. AND Scenery/Moonrock.as:134 new Teleporter(stairs.x, stairs.y, 2, 48, 32) — the landed moonrock REPLACES the stairs it fell on with a plain teleporter, so this reference carries an arrival position as well as a level. Vanilla: 2 (Dungeon1_Entrance) at (48, 32). ⛔ Those literals duplicate the @to/@playerx/@playery of the very <stairsdown> being replaced, and the validator REFUSES a set where the two disagree — a manifest that says one thing and room data that says another would teleport the player somewhere the stairs did not, with nothing erroring."
         },
         "watcher_text": {
           "$ref": "#/$defs/roomRef",

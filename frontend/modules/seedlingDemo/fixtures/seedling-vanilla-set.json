@@ -1,11 +1,11 @@
 {
  "schema_version": 1,
- "set_id": "seedling-vanilla-367e679f",
+ "set_id": "seedling-vanilla-02408e1d",
  "name": "Seedling (vanilla)",
  "description": "The original 116 rooms as a level set. Plan §4.3: there is no privileged built-in path — mounting vanilla through the level-set loader is what makes every boot of the ordinary game a test of it.",
  "provenance": {
   "generator": "scripts/procgen/extract-seedling-vanilla-set.py",
-  "content_hash": "367e679f"
+  "content_hash": "02408e1d"
  },
  "rooms": [
   {
@@ -952,7 +952,9 @@
  ],
  "named_rooms": {
   "moonrock_target": {
-   "level": 2
+   "level": 2,
+   "x": 48,
+   "y": 32
   },
   "watcher_text": {
    "level": 114
