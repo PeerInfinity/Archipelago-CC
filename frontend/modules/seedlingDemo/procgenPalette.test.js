@@ -16,16 +16,18 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { ROLES, TILE_SIZE, buildLevelWorld } from './levelWorld.js';
+import { ROLES, TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
 import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
 import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
-    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES,
-    ProcgenPaletteError, assertPalette,
+    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_TEMPLATES,
+    PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError, assertPalette,
 } from './procgenPalette.js';
 import {
-    generateSeedlingLevel, placementGroupId, seedlingModel, seedlingOracle,
+    SEEDLING_DEFAULTS, generateSeedlingLevel, placementGroupId, placementTagId,
+    seedlingModel, seedlingOracle,
 } from './procgenSeedling.js';
+import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { rngFor } from './procgenRng.js';
 
 const model = () => seedlingModel({ seed: 1 });
@@ -130,6 +132,88 @@ describe('the palette itself is well formed', () => {
                 expect(t.entities.filter(
                     (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
                 )).toHaveLength(2);
+            }
+        });
+    });
+
+    /**
+     * ⛔⛔ THE TAG SLOT — the group's invariants with ONE deliberate difference,
+     * and the difference is the point: a group of one is meaningless, a TAG of
+     * one is the normal case (a lock's private flag is its own).
+     */
+    describe('the placement-tag slot is declared, not assumed', () => {
+        const row = (entities, extra = {}) => ({
+            name: 't',
+            family: 't',
+            footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }],
+            terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
+            entities,
+            ...extra,
+        });
+        const tagSlot = (dx) => ({ dx, dy: 0, type: 'lock', attrs: { tag: PLACEMENT_TAG } });
+
+        it('refuses the slot with NO `tags` — it would be read as the goal\'s flag', () => {
+            expect(() => assertPalette({ name: 'u', templates: [row([tagSlot(0)])] }))
+                .toThrow(/declares no `tags`/);
+        });
+
+        it('refuses `tags` with nothing on the slot — a claim with nothing behind it', () => {
+            expect(() => assertPalette({
+                name: 'empty', templates: [row([{ dx: 0, dy: 0, type: 'lock' }], { tags: 1 })],
+            })).toThrow(/no entity carries PLACEMENT_TAG/);
+        });
+
+        it('refuses a LITERAL tag >= 0 beside the slot — two rows of the table', () => {
+            expect(() => assertPalette({
+                name: 'lit',
+                templates: [row([
+                    tagSlot(0), { dx: 1, dy: 0, type: 'lock', attrs: { tag: '4' } },
+                ], { tags: 1 })],
+            })).toThrow(/still carries the LITERAL tag/);
+        });
+
+        /**
+         * ⛓ AND `-1` IS ALLOWED, which a copy of the group's rule would have
+         * broken: it is the game's own spelling of UNTAGGED (`tagOf` returns it
+         * for a missing attribute) and `KILL_LOCK_TEMPLATES`'s spinner carries
+         * it deliberately.
+         */
+        it('ALLOWS a literal -1 beside the slot — that is "untagged", not a slot', () => {
+            expect(assertPalette({
+                name: 'ok',
+                templates: [row([
+                    tagSlot(0), { dx: 1, dy: 0, type: 'spinner', attrs: { tag: '-1' } },
+                ], { tags: 1 })],
+            })).toBe(true);
+        });
+
+        it('the shipped rows that carry the tag slot are exactly the weigh pair', () => {
+            const carriers = PRE_SWORD_TEMPLATES.filter((t) => t.tags !== undefined);
+            expect(carriers.map((t) => t.name))
+                .toEqual(['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']);
+            for (const t of carriers) expect(t.tags).toBe(1);
+        });
+
+        /**
+         * ⚠ THE KILL-LOCK FAMILY IS **NOT** ON THE SLOT, AND THAT IS MEASURED
+         * RATHER THAN OVERLOOKED. Its `tag: '1'` is READ (`Lock.check()`
+         * despawns only when `tSet < 0`), so two placements sharing it would be
+         * the same defect — but the post-sword sweep (seeds 1..24, target 6)
+         * keeps a kill template in ONE seed and never two, so the collision is
+         * LATENT. Fixing it would move the discharge-existence records for no
+         * measured gain. This asserts the state of affairs so the day a second
+         * one can be kept, someone has to come back here.
+         */
+        it('⚠ the kill-lock pair keeps its LITERAL tag 1 — latent, and pinned', () => {
+            const killLocks = POST_SWORD_TEMPLATES.filter((t) => t.family === 'kill');
+            expect(killLocks).toHaveLength(2);
+            for (const t of killLocks) {
+                expect(t.tags).toBeUndefined();
+                const lock = t.entities.find((e) => e.type === 'lock');
+                expect(lock.attrs.tag).toBe('1');
+                // ⛔ and it still differs from the goal's, which is the law the
+                // family discharged by construction.
+                expect(lock.attrs.tag).not.toBe(SEEDLING_DEFAULTS.goalTag);
             }
         });
     });
@@ -396,6 +480,75 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
         const cells = m.interiorCells(m.skeleton());
         const ids = cells.map((c) => placementGroupId(c, m.defaults.height));
         expect(new Set(ids).size).toBe(cells.length);
+    });
+
+    /**
+     * ⛔⛔⛔ THE PERSISTENCE TAG, and the defect here was WITH THE GOAL rather
+     * than between two placements.
+     *
+     * `Lock.turnOff()` writes `setPersistence(tag, false)` with no `tag >= 0`
+     * guard and `returnToNormal()` writes it back TRUE, so a weigh lock on
+     * `tag: '0'` toggled `SEEDLING_DEFAULTS.goalTag` — the flag
+     * `TorchPickup.check()` reads to decide whether the goal still exists.
+     *
+     * ⛓ MEASURED before the fix, post-sword seeds 1..24 at target 6: 12 of 24
+     * levels shared a tag, every one of them the goal's; seed 10 had
+     * `torchpickup@32,112` sharing tag 0 with THREE locks.
+     */
+    it('⛔ every placement gets a PRIVATE tag, and none of them is the goal\'s', () => {
+        const m = model();
+        let record = m.skeleton();
+        for (const at of [{ tx: 1, ty: 3 }, { tx: 1, ty: 6 }, { tx: 1, ty: 9 }]) {
+            record = m.place(record, byName('wall-gap-lock-weigh-h'), at);
+        }
+        const tags = record.entities
+            .map((e) => tagOf(e.type, e.attrs))
+            .filter((t) => t >= 0);
+        // goal + three locks, all distinct
+        expect(tags).toHaveLength(4);
+        expect(new Set(tags).size).toBe(4);
+
+        const goalTag = Number.parseInt(m.defaults.goalTag, 10);
+        const lockTags = record.entities
+            .filter((e) => e.type === 'lock')
+            .map((e) => tagOf(e.type, e.attrs));
+        expect(lockTags).toHaveLength(3);
+        for (const t of lockTags) {
+            expect(t).not.toBe(goalTag);
+            // ⛔ IN RANGE. The game indexes one flat array as `level * 30 + tag`
+            // with no bounds check, so an out-of-range tag writes the NEXT
+            // level's row rather than erroring.
+            expect(t).toBeGreaterThanOrEqual(0);
+            expect(t).toBeLessThan(TAGS_PER_LEVEL);
+        }
+    });
+
+    it('the tag is a function of the RECORD — not of what the loop tried first', () => {
+        const m = model();
+        const t = byName('wall-gap-lock-weigh-h');
+        const at = { tx: 1, ty: 6 };
+        const lockTagOf = (record) => record.entities
+            .filter((e) => e.type === 'lock').map((e) => tagOf(e.type, e.attrs)).pop();
+
+        const straight = lockTagOf(m.place(m.skeleton(), t, at));
+        // A candidate the loop would REVERT does not enter the record, so it
+        // cannot shift a later tag. Placing and discarding proves it: the
+        // discarded record is simply not threaded on.
+        const skeleton = m.skeleton();
+        m.place(skeleton, t, { tx: 1, ty: 3 });          // built, then dropped
+        expect(lockTagOf(m.place(skeleton, t, at))).toBe(straight);
+        // ...and the reserved list holds even against a record with no goal.
+        expect(placementTagId({ entities: [] }, [0])).toBe(1);
+        expect(placementTagId({ entities: [] })).toBe(0);
+    });
+
+    it('⛔ REFUSES BY NAME when all 30 tags are gone, rather than writing tag 30', () => {
+        const full = {
+            entities: Array.from({ length: TAGS_PER_LEVEL }, (_, i) => ({
+                type: 'lock', attrs: { tag: String(i) },
+            })),
+        };
+        expect(() => placementTagId(full)).toThrow(/already uses all 30 persistence tags/);
     });
 
     it('⛔ NO SENTINEL SURVIVES INTO A LEVEL — an unresolved slot parses as group 0', () => {

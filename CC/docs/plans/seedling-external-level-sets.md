@@ -1,8 +1,9 @@
 # Seedling External Level Sets — Plan
 
 **Date:** 2026-08-13 ·
-**Status: PLANNING — no code written. Design settled with the user
-(2026-08-13); every phase below is unstarted.**
+**Status: PLANNING for phases 1–5b (no code). ⛓ PHASE 6 IS DONE
+(2026-08-13) — it was independent of the rest. Design settled with the user
+(2026-08-13).**
 
 Direct consequence of the switch/door fix (`2a407a817`, as-built in
 `docs/json/developer/procgen/seedling-bot.md` §"Every generated switch opened
@@ -406,12 +407,17 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       Acceptance: a randomized set transitions with **one** `new Game` per exit
       (today it is two), and the destination room's sign text is the new
       destination's.
-- [ ] **Phase 6 — The tag allocator** (model-side, independent): a counter over
-      `0..29`, a reserved list starting with `goalTag = 0`, hard refusal on
-      exhaustion, and an assertion that no template's tag equals the goal's.
-      Closes the collision `2a407a817` left open.
+- [x] **Phase 6 — The tag allocator** — **DONE 2026-08-13**, see
+      `procgen/seedling-bot.md` §"Every generated lock wrote the GOAL's
+      persistence flag". Allocator is the RECORD (lowest free slot), not a
+      counter and not the anchor; 12 of 24 post-sword levels shared a tag
+      before, 0 after. ⚠ It also turned up a finding that is NOT this plan's:
+      **the generator is not deterministic under load** — a solve over
+      `wallClockMs` is converted from SUCCESS to a rejection
+      (`procgenOracle:503`), so keeps flip under load. Recorded there; a fix is
+      a design decision (tick-bounded budget) and is nobody's in passing.
 
-Phases 1–2 gate 3–5b. Phase 6 is independent and may land at any time.
+Phases 1–2 gate 3–5b. Phase 6 was independent and is DONE.
 ⛓ **5b needs only the bundle builder** (Phase 5), not the AS3 seams, so it can
 overtake Phase 3 if the manifest lands first.
 

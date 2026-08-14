@@ -8405,3 +8405,109 @@ all **11** `check-seedling-editor-*.mjs` PASS, `generate` included; the R8
 battery `--check` still hashes to `1fedb0ab35b7cd74accecf0345bdc893` (28 PASS,
 exit 1, the two standing `r8-solve-4` drift rows) — a palette change has no
 reach into committed tapes, which is what that row was there to say.
+
+### Every generated lock wrote the GOAL's persistence flag (2026-08-13)
+
+⚖ The residue the switch/door fix named and did not take (`2a407a817`), closed
+here as the external-level-sets plan's **Phase 6**
+(`CC/docs/plans/seedling-external-level-sets.md`).
+
+`tag` is the SAVE-FILE flag, not the broadcast group, and the weigh templates
+carried `tag: '0'` — which is `SEEDLING_DEFAULTS.goalTag`. At source:
+
+- `Lock.turnOff()` (`Puzzlements/Lock.as:90-96`) is
+  `if (type == normType) { … Game.setPersistence(tag, false); }` with **no
+  `tag >= 0` guard**, and `returnToNormal()` writes the same slot back **TRUE**.
+  ⇒ a lock writes its tag on every open AND every close.
+- `TorchPickup.check()` is
+  `if (tag >= 0 && !checkPersistence(tag)) { doActions = false; remove(this) }`.
+
+⇒ **every parked and unparked block was toggling the goal's own existence
+flag**, and a cleared tag 0 removes the goal *and* makes collecting it grant
+nothing. This is the collision `KILL_LOCK_TEMPLATES` discharges by construction
+with its `tag: '1'`, under its own stated law — *a clear is a FLAG, so a lock on
+the goal's own tag removes the GOAL* — and the weigh rows were breaking it.
+
+⛓ MEASURED, post-sword palette, seeds 1–24 at target 6: **12 of 24 levels had a
+shared tag, every one of them the goal's.** Seed 10 was the worst —
+`torchpickup@32,112` sharing tag 0 with locks at (96,80), (64,80) and (128,80).
+After: `t0 torchpickup · t1 · t2 · t3`, and **0 of 24 share**.
+
+⚠ WHY IT WAS LATENT: `check()` runs at BUILD and a generated level is solved in
+ONE visit, so the goal is built before any lock opens. `pendingEarnedClears` is
+banked and cashed *in the transition path* — a one-screen level never
+transitions. It bites on a rebuild or a re-entry.
+
+⛔ **`tag: '-1'` IS NOT THE FIX — it is a different bug.** With no guard on the
+write, `setPersistence(-1, …)` resolves through `i * 30 + j` to
+`(level - 1) * 30 + 29`, **the previous level's last slot** — the out-of-band
+family `outOfBandLedger` exists to model.
+
+#### The allocator is the RECORD, because the anchor cannot serve a tag
+
+`placementGroupId` is `tx * height + ty + 1` and reaches ~89 in a 10x10 room; a
+tag is bounded by `Game.tagsPerLevel = 30`. ⚠ And overflow does not error — the
+game indexes one flat array as `level * 30 + tag` with no bounds check, so a tag
+of 30 writes the NEXT LEVEL'S first slot. **A modulo would have been worse than
+useless**: it would collide two placements silently, which is the defect.
+
+⇒ `placementTagId(record, reserved)` = the lowest non-negative integer below
+`TAGS_PER_LEVEL` that no entity in the record already uses. Same three
+properties as the group's allocator, by a different route: `place` stays
+**PURE**; a rejected candidate never enters the record so **no rejection history
+leaks**; and the ids come out **contiguous and small**, which is what a 30-slot
+budget needs. The used set is read with the engine's own `tagOf` (a missing
+attribute is −1; `FORCED_TAG` decides four classes outright) rather than by
+re-reading `attrs.tag`.
+
+Exhaustion **refuses by name**. The ceiling is real, not theoretical: the
+vanilla game's busiest room (`Dungeon4/2.oel`) uses 23 distinct tags of 30.
+
+⚠ The kill-lock pair KEEPS its literal `tag: '1'`, measured rather than
+overlooked: its tag IS read (`Lock.check()` despawns only when `tSet < 0`), so
+two placements would collide — but the post-sword sweep keeps a kill template in
+ONE seed of 24 and **never two**, so it is LATENT. Changing it would move the
+discharge-existence records for no measured gain. A test pins the state of
+affairs so the day a second one can be kept, someone must come back.
+
+#### ⛔⛔ A FINDING THAT IS NOT THIS SLICE'S: THE GENERATOR IS NOT DETERMINISTIC UNDER LOAD
+
+Chasing an abort that appeared in one sweep and not another, **seed 20 was run
+five times on IDENTICAL code: 3 produced a six-obstacle level, 2 threw
+`GenerationAborted(PhysicsV2Error)`** — as machine load climbed past 10.
+
+The mechanism is `procgenOracle`'s own budget, and it is not the abort itself:
+
+```js
+if (ms > b.wallClockMs) { return { verdict: BUDGET_EXHAUSTED, budgetKind: 'wall-clock', … } }
+```
+
+**A solve that SUCCEEDED is converted to a rejection when it takes more than
+5000 ms of wall clock** (`procgenOracle:503`; the same test at :454 for the
+thrown arm). So under load a keep flips to a revert, a different template lands
+at the next step, and the run reaches a different candidate — one of which
+throws. The abort is downstream of a wall-clock-dependent trajectory.
+
+⇒ ⚖ **"same seed, same level" holds only while no solve straddles the 5000 ms
+budget.** `wallClockMs: 5000` is flagged in its own docblock as *"a CHOSEN
+ceiling, not a measured limit"*, and this is the cost of that choice. It is
+PRE-EXISTING and nothing here caused it, but it bears on how every number in
+this arc was taken:
+
+- abort COUNTS ("1 of 72", "6 of 72", and this slice's own before/after) are
+  machine-dependent and should be re-read as approximate;
+- the byte-equality gates (`watchGenerate.test.js`, `check-seedling-editor-generate`)
+  compare two runs that could each straddle the budget;
+- ⛓ the structural claims are NOT affected: *12 of 24 levels shared a tag → 0*
+  is a property of the palette, not of the timing.
+
+⛔ NOT FIXED, because the cure is a design decision rather than a defect repair:
+a tick-bounded budget would be deterministic and would change what the loop
+accepts; raising the ceiling only moves the straddle. ⚖ Recorded for the user.
+
+#### Gates
+
+`npx vitest run frontend/modules/seedlingDemo/` **3701/3701** (3692 + 9 new,
+mutation-checked: resolving the tag slot to `'0'` fails the privacy test and the
+other 52 pass); all **11** `check-seedling-editor-*.mjs` PASS; the R8 battery
+`--check` still hashes to `1fedb0ab35b7cd74accecf0345bdc893`.

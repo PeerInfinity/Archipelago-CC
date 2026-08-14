@@ -35,7 +35,7 @@
  */
 
 import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
     ProcgenLevelError, SINGLE_SCREEN_TILES, bootAtTile, emptyLevel, oelAtTile,
     terrainAt, withEntities, withTerrain,
@@ -43,7 +43,8 @@ import {
 import {
     DEFAULT_BUDGET, VERDICT, assertBudget, bootStaging, collectGoal, solve,
 } from './procgenOracle.js';
-import { PLACEMENT_GROUP, PRE_SWORD_PALETTE } from './procgenPalette.js';
+import { PLACEMENT_GROUP, PLACEMENT_TAG, PRE_SWORD_PALETTE } from './procgenPalette.js';
+import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { generateLevel } from './levelGenerator.js';
 import { rngFor } from './procgenRng.js';
 
@@ -134,6 +135,68 @@ export const SEEDLING_DEFAULTS = Object.freeze({
  */
 export function placementGroupId(at, height) {
     return at.tx * height + at.ty + 1;
+}
+
+/**
+ * ⛓⛓⛓ THE PLACEMENT'S OWN PERSISTENCE TAG — the LOWEST FREE SLOT IN THE
+ * RECORD, and the allocator is a different shape from the group's on purpose.
+ *
+ * See `procgenPalette.PLACEMENT_TAG` for the defect (every weigh lock was
+ * writing the GOAL's flag) and for why `-1` is not the fix.
+ *
+ * ⛔ THE GROUP'S ANCHOR ARITHMETIC CANNOT SERVE THIS. `placementGroupId` is
+ * `tx * height + ty + 1`, which reaches ~89 in a 10x10 room, and a tag is
+ * bounded by `TAGS_PER_LEVEL` — `Game.tagsPerLevel = 30` (`Game.as:525`),
+ * imported rather than retyped. ⚠ AND OVERFLOW DOES NOT ERROR: the game's
+ * table is one flat array indexed `level * 30 + tag` with no bounds check, so
+ * a tag of 30 writes the NEXT LEVEL'S first slot. A modulo would have been
+ * worse than useless — it would collide two placements silently, which is the
+ * exact defect being fixed.
+ *
+ * ── ⚖ WHAT THIS IS A FUNCTION OF, DECLARED
+ *
+ * **The RECORD, and nothing else.** The tag is the lowest non-negative integer
+ * below `TAGS_PER_LEVEL` that no entity in the record already uses and that is
+ * not reserved. That buys the same three properties the group has, by a
+ * different route:
+ *
+ *  · **PURE** — `place` stays a function of `(record, template, at)`. Two calls
+ *    with the same arguments return the same record.
+ *  · **NO REJECTION HISTORY** — `levelGenerator` calls `place` on candidates it
+ *    then throws away, but a rejected candidate never enters the record, so
+ *    nothing it did can shift a later tag. A COUNTER would have failed exactly
+ *    here.
+ *  · **CONTIGUOUS AND SMALL** — tags come out 1, 2, 3… which is what a
+ *    30-slot budget wants, and what an anchor-derived id could never give.
+ *
+ * ⛓ THE USED SET IS READ WITH THE ENGINE'S OWN `tagOf`, never by re-reading
+ * `attrs.tag`: a missing attribute is -1 (untagged) and `FORCED_TAG` decides
+ * the value for four classes outright. A second reading of that rule here
+ * would be a second cost model.
+ *
+ * @param {object} record    the level so far — the goal pickup is already in it
+ * @param {number[]} reserved tags no placement may take, whatever the record says
+ */
+export function placementTagId(record, reserved = []) {
+    const used = new Set(reserved.filter((t) => Number.isInteger(t) && t >= 0));
+    for (const e of record.entities ?? []) {
+        const t = tagOf(e.type, e.attrs);
+        if (t >= 0) used.add(t);
+    }
+    for (let t = 0; t < TAGS_PER_LEVEL; t += 1) if (!used.has(t)) return t;
+    /**
+     * ⛔ REFUSED BY NAME, never wrapped. ⚠ The vanilla game's own busiest room
+     * (`Dungeon4/2.oel`) uses 23 distinct tags of the 30, so this ceiling is
+     * real rather than theoretical — and the failure it prevents is silent
+     * corruption of the NEXT level's row.
+     */
+    fail(`procgenSeedling: this level already uses all ${TAGS_PER_LEVEL} persistence `
+        + `tags (${[...used].sort((a, b) => a - b).join(', ')}), so there is no private `
+        + 'slot left for another one. `Game.tagsPerLevel` is 30 and the game indexes '
+        + 'one flat array as `level * 30 + tag` with NO bounds check, so allocating a '
+        + '31st would write the NEXT level\'s first slot. Refusing is the only honest '
+        + 'answer; a level this dense needs fewer tagged templates.');
+    return -1;
 }
 
 /** The interior cells of a room — everything the wall ring does not hold. */
@@ -333,18 +396,44 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
                  * the same claim at the one place that writes the value.
                  */
                 const group = template.groups ? placementGroupId(at, d.height) : null;
+                /**
+                 * ⛓ THE TAG IS ALLOCATED FROM THE RECORD AS IT STANDS — which
+                 * already holds the goal pickup, so the goal's own tag is
+                 * taken before any template can ask. `d.goalTag` is passed as
+                 * `reserved` anyway: the record is the live answer and the
+                 * reserved list is the DECLARED one, and a day when the goal
+                 * is not in the record at this moment should not silently
+                 * hand a lock the goal's flag.
+                 */
+                const tag = template.tags
+                    ? placementTagId(next, [Number.parseInt(d.goalTag, 10)])
+                    : null;
                 const resolveAttrs = (attrs) => Object.fromEntries(
                     Object.entries(attrs).map(([k, v]) => {
-                        if (v !== PLACEMENT_GROUP) return [k, v];
-                        if (group === null) {
-                            fail(`procgenSeedling: template "${template.name}" carries `
-                                + `the placement-group slot on "${k}" but declares no `
-                                + '`groups`, so there is no id to resolve it to. An '
-                                + 'unresolved slot parses as group 0 — every unmarked '
-                                + 'activator in the room — which is exactly the '
-                                + 'collision the slot exists to end.');
+                        if (v === PLACEMENT_GROUP) {
+                            if (group === null) {
+                                fail(`procgenSeedling: template "${template.name}" `
+                                    + `carries the placement-group slot on "${k}" but `
+                                    + 'declares no `groups`, so there is no id to '
+                                    + 'resolve it to. An unresolved slot parses as '
+                                    + 'group 0 — every unmarked activator in the room '
+                                    + '— which is exactly the collision the slot '
+                                    + 'exists to end.');
+                            }
+                            return [k, String(group)];
                         }
-                        return [k, String(group)];
+                        if (v === PLACEMENT_TAG) {
+                            if (tag === null) {
+                                fail(`procgenSeedling: template "${template.name}" `
+                                    + `carries the placement-tag slot on "${k}" but `
+                                    + 'declares no `tags`, so there is no slot to '
+                                    + 'resolve it to. An unresolved tag parses as 0 — '
+                                    + 'the GOAL\'s own flag — and a lock writes its tag '
+                                    + 'on every open AND every close.');
+                            }
+                            return [k, String(tag)];
+                        }
+                        return [k, v];
                     }),
                 );
                 next = withEntities(next, template.entities.map((e) => ({

@@ -179,6 +179,52 @@ const SLIDE_PATH = Object.freeze(
 export const PLACEMENT_GROUP = '@placement-group';
 
 /**
+ * ⛓⛓⛓ THE PER-PLACEMENT PERSISTENCE TAG — the group slot's sibling, and a
+ * SEPARATE defect that the group fix measured but deliberately did not touch.
+ *
+ * ⛔ `tag` IS NOT `tset`. The group is the live broadcast; the tag is the
+ * SAVE-FILE FLAG. `Lock.turnOff()` (`Puzzlements/Lock.as:90-96`) is
+ *
+ *     if (type == normType) { type = ""; alpha = 0; Game.setPersistence(tag, false); }
+ *
+ * with **no `tag >= 0` guard**, and `returnToNormal()` writes the same slot
+ * back TRUE. So a lock writes its tag every time it opens AND every time it
+ * closes.
+ *
+ * ⚖ AND `SEEDLING_DEFAULTS.goalTag` IS `'0'` — the tag the weigh templates
+ * carried. ⇒ every parked and unparked block was toggling the GOAL's own
+ * persistence flag. `TorchPickup.check()` is
+ * `if (tag >= 0 && !checkPersistence(tag)) { doActions = false; remove(this) }`,
+ * so a cleared tag 0 removes the goal AND makes collecting it grant nothing.
+ * This is the collision `KILL_LOCK_TEMPLATES` discharges by construction under
+ * its own stated law — *a clear is a FLAG, so a lock on the goal's own tag
+ * removes the GOAL* — and the weigh rows were breaking it.
+ *
+ * ⛓ MEASURED, post-sword palette, seeds 1..24 at target 6: **12 of 24 levels
+ * had a shared tag, and every one of them was the goal sharing tag 0 with one
+ * to three weigh locks** (seed 10: `torchpickup@32,112` with locks at 96,80 /
+ * 64,80 / 128,80).
+ *
+ * ⚠ WHY IT WAS LATENT rather than a reported bug: `check()` runs at BUILD, and
+ * a generated level is solved in ONE visit — the goal is built before any lock
+ * opens. It bites on a rebuild or a re-entry, which is what `applyClearNow`
+ * does (`levelRun` drops the memoised world so the level is rebuilt with the
+ * clear applied).
+ *
+ * ⛔⛔ AND `tag: '-1'` IS NOT THE FIX — it is a different bug. With no guard on
+ * the write, `setPersistence(-1, …)` resolves through `i * 30 + j` to
+ * `(level - 1) * 30 + 29`, **the PREVIOUS level's last slot** — the out-of-band
+ * family `outOfBandLedger` exists to model. A lock needs a real, private,
+ * in-range tag.
+ *
+ * ⇒ the same slot mechanism as `PLACEMENT_GROUP`, with a DIFFERENT allocator:
+ * `tag` is bounded by `TAGS_PER_LEVEL` (30), so the group's anchor arithmetic
+ * — which reaches ~89 in a 10x10 room — cannot serve it. See
+ * `procgenSeedling.placementTagId`.
+ */
+export const PLACEMENT_TAG = '@placement-tag';
+
+/**
  * ⛓ THE FOUR TEMPLATES THE ORACLE CERTIFIES, each measured in an otherwise
  * empty bordered 10x10 room with a `torchpickup` collect goal (slice 2's
  * probe; the module test re-drives every one against a BUILT WORLD).
@@ -462,6 +508,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         name: 'wall-gap-lock-weigh-h',
         family: 'weigh',
         groups: 1,
+        tags: 1,
         footprint: Object.freeze([
             ...rectCells(INTERIOR_SPAN, 1),
             cell(BLOCK_OFFSET, -1),
@@ -477,7 +524,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
                 dx: GAP_OFFSET,
                 dy: 0,
                 type: 'lock',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: '0' }),
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
             }),
             Object.freeze({
                 dx: BUTTON_OFFSET,
@@ -498,6 +545,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
         name: 'wall-gap-lock-weigh-v',
         family: 'weigh',
         groups: 1,
+        tags: 1,
         footprint: Object.freeze([
             ...rectCells(1, INTERIOR_SPAN),
             cell(-1, BLOCK_OFFSET),
@@ -513,7 +561,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
                 dx: 0,
                 dy: GAP_OFFSET,
                 type: 'lock',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: '0' }),
+                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
             }),
             Object.freeze({
                 dx: -1,
@@ -1114,6 +1162,55 @@ function assertGroupSlot(t, footprintKeys) {
 }
 
 /**
+ * ⛔⛔ THE TAG SLOT'S INVARIANTS — the group's, with ONE deliberate difference.
+ *
+ * A group of one is meaningless, so `assertGroupSlot` demands two entities on
+ * the slot. **A TAG OF ONE IS THE NORMAL CASE** — a lock's private flag is its
+ * own and nothing else's — so this demands at least one and never two.
+ *
+ * ⚠ AND A LITERAL `-1` IS ALLOWED BESIDE THE SLOT, unlike a literal `tset`.
+ * `-1` is the game's own spelling of *untagged* (`tagOf` returns it for a
+ * missing attribute) and `KILL_LOCK_TEMPLATES`'s spinner carries it
+ * deliberately. A literal `>= 0` is refused: that is a REAL slot, and a
+ * template holding one beside an allocated one would span two rows of the
+ * persistence table for no reason anybody designed.
+ */
+function assertTagSlot(t) {
+    const onSlot = (t.entities ?? []).filter(
+        (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_TAG),
+    );
+    if (t.tags === undefined) {
+        if (onSlot.length > 0) {
+            fail(`procgenPalette: template "${t.name}" puts an entity on the `
+                + 'placement-tag slot but declares no `tags`. `place` resolves the slot '
+                + 'only for a template that declares it, so the sentinel would reach the '
+                + 'level and be read as tag 0 — the GOAL\'s own flag.');
+        }
+        return;
+    }
+    if (t.tags !== 1) {
+        fail(`procgenPalette: template "${t.name}" declares tags=${t.tags}; the only `
+            + 'supported count is 1. `placementTagId` allocates ONE free slot per '
+            + 'placement, and a second would need its own allocation nobody has written.');
+    }
+    if (onSlot.length < 1) {
+        fail(`procgenPalette: template "${t.name}" declares tags=1 and no entity carries `
+            + 'PLACEMENT_TAG. A declared slot nobody uses is a claim with nothing '
+            + 'behind it.');
+    }
+    for (const e of t.entities ?? []) {
+        const v = e.attrs?.tag;
+        if (v === undefined || v === PLACEMENT_TAG) continue;
+        if (Number.parseInt(v, 10) >= 0) {
+            fail(`procgenPalette: template "${t.name}" declares tags=1 and its `
+                + `"${e.type}" still carries the LITERAL tag "${v}". One placement would `
+                + 'then write two rows of the persistence table. (A literal `-1` is '
+                + 'allowed — that is the game\'s spelling of UNTAGGED, not a slot.)');
+        }
+    }
+}
+
+/**
  * EVERY TEMPLATE, CHECKED — shapes, names, terrains and the roster's own
  * uniqueness. Called at module load, for `procgenLevel.assertTerrainColumns`'s
  * own reason: a malformed template is a defect in THIS file and there is no
@@ -1177,6 +1274,7 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
             }
         }
         assertGroupSlot(t, seen);
+        assertTagSlot(t);
     }
     return true;
 }
