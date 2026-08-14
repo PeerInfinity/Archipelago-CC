@@ -1618,3 +1618,98 @@ what the receiver did with it.
 length-preserving; **the offset table this phase owes is empty**, and every
 `File.as:NNN` citation in the model still points at what it names.
 
+### 12.7 ⛔ BOTH GATES WERE MADE TO FAIL ON PURPOSE, again
+
+One mutant build, two defects, no overlap — phase 3b's standard (§11.6), and
+this time each defect targets one of the two properties this phase adds.
+
+| mutation | breaks | which gate must go red |
+|---|---|---|
+| **M1** `VanillaSet` `moonrock_target.x` 48 → 47 | the BUILT-IN manifest's arrival | the manifest gate, only |
+| **M2** `LevelSet.active()` ignores `mounted` | a DELIVERED set being used at all | the transport probe, only |
+
+Measured on the mutant artifact (`seedling_bot_ap_p4mut`):
+
+```
+FAIL: NAMED ROOMS: moonrock_target resolves to the twin's room and arrival — x 47 vs 48
+   (the other 23 manifest assertions PASS — M2 disturbs nothing with no delivery)
+
+FAIL: 2c. with a 5-room set mounted … — rooms=116 in=ok past=ok
+FAIL: 5b. room 5's XML replaced by room 0's … — room 5's own roster
+FAIL: 7b. a DELIVERED set says where the moonrock's teleporter lands
+      — moonrock_target {"y":32,"x":47,"level":2} (want {"level":3,"x":96,"y":64})
+   (M1 reddens no probe arm; 23 of 26 still pass)
+```
+
+⛓ **AND ARM 7b's FAILURE NAMES THE MECHANISM BY ITSELF.** It reports `x: 47` —
+the built-in manifest's value **carrying M1's mutation** — which is direct
+evidence the readout fell back to the built-in set rather than reading the
+delivered one. A verdict that can only be produced by the defect it is looking
+for is worth more than one that merely differs.
+
+Diffing the clean and mutant assertion lists showed **exactly one line changed**
+on the manifest gate, which is what "non-overlapping" has to mean to be a claim.
+
+### 12.8 Gates
+
+- `check-seedling-vanilla-manifest.mjs` — **24/24** in the built artifact
+  (`seedling_bot_ap_p4`, `intel / gen-9`). `moonrock_target` now reads
+  **level 2 at (48, 32)** as manifest data rather than as the (80, 128) default,
+  which is the assertion this phase added.
+- `probe-seedling-level-set-transport.mjs` — **ALL 26 ARMS PASS**, one fresh
+  page each; 25 inherited from phase 3, plus arm 7 (a delivered set's arrival,
+  `phase4-arrival-28a3c5c9` → `(3, 96, 64)`).
+- `npx vitest run frontend/modules/seedlingDemo/` — **3790** (3775 + 15 new in
+  `levelSetValidator.test.js`, which goes 53 → 68).
+- `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
+  `1fedb0ab35b7cd74accecf0345bdc893`.
+- `verify-seedling-bot-differential.mjs --win --tier=full --only=` six tapes
+  (`cross-level-leg`, `diagonal-run`, `friction-stop`, `pit-fall-83`,
+  `pit-fall-chain-85`, `grant-sword-room`) — **ALL CHECKS PASSED**.
+  ⚠ **A SMOKE TEST, NOT PHASE 3b's SWEEP, AND DELIBERATELY SO.** The AS3 delta
+  is three lines and **value-identical in vanilla** — `namedX/namedY` return the
+  48 and 32 the literals held — so a 153-tape run could not distinguish this
+  build from its parent, and a 2h35m gate that cannot fail is the shape this arc
+  keeps refusing. What the six do cover is that the REBUILD did not regress room
+  transitions, pit-fall destinations and the physics controls.
+- The eleven `check-seedling-editor-*.mjs` were **not** run: no editor code, no
+  procgen module and no page changed (`levelSetValidator.js` still has no
+  production caller — §9.6 — its callers are the gates above).
+
+⚠ **THE DIFFERENTIAL REFUSED THE BUILD AT FIRST, AND IT WAS RIGHT TO.** Its
+staging check asserts the payload inside a variant directory is always named
+`seedling_bot_ap.js/.wasm` — true of phases 3/3b, false here, because
+`build_wasm_avm2.sh <name>` names the payload after the BUILD. It printed a
+named SKIP rather than sweeping nothing quietly, which is exactly the behaviour
+its comment says it was written for. Worked around by staging a renamed copy;
+the guard itself is fine and was left alone.
+
+### 12.9 What phase 4a did NOT do
+
+- ⛔ **PHASE 4 PROPER IS STILL OPEN.** `Main.as:319` still sizes the persistence
+  table from `Game.levels.length`, the save still carries no `set_id`, and the
+  receiver's capacity refusal is still the stopgap §10.4 named. This phase only
+  moved the schema the stamp will key on.
+- ⛓ **AND §4.2's RULE HAS AN UNREACHABLE BRANCH, measured here.** "Keep the
+  table, and EXTEND it with `true` if it is short" can only run when the stamp
+  MATCHES and the size CHANGED — but `saveStampMatches` compares `set_id` **and**
+  `provenance.content_hash`, and `computeLevelSetContentHash` hashes the whole
+  document minus `provenance`/`set_id`, `rooms` included. A matching stamp is an
+  identical document, so the size cannot have moved. ⇒ either that branch is
+  dead, or the hash does not cover what §4.2 assumed. It is the first: the next
+  slice should make a short table under a matching stamp **name the
+  inconsistency** (a truncated SharedObject, a table sized before a mount)
+  rather than silently extending, or it is untriggerable code in the middle of
+  the one rule that prevents silent corruption.
+- ⚠ **`Moonrock.as:134` IS STILL EXERCISED BY NOTHING.** No tape triggers the
+  moonrock puzzle — the three tapes whose text mentions "moonrock" only
+  *describe* it — so what is verified is that the manifest carries (48, 32) and
+  that a delivered manifest's arrival reaches the readout. The one-line call
+  site that consumes them is visible in the diff and nowhere else. Same shape as
+  §11.5, stated for the same reason.
+- ⚠ **The delivery conformance fixture still carries level-only
+  `moonrock_target` entries** (§12.5). Regenerating it would change what the
+  receiver probe delivers for no gain, since those cases pin assembly.
+- ⚠ **Still unmeasured, inherited from §9.6, §10.4 and §11.9:** whether
+  `flashPanel/games/seedling.json` and the region atlas force more
+  `named_rooms`. Four phases have now declined it.
