@@ -1191,3 +1191,220 @@ here makes.
 - The eleven `check-seedling-editor-*.mjs` were **not** run: this phase touched
   no editor code, no procgen module and no page. What it was verified by instead
   is §10.3, in the built artifact.
+
+---
+
+## 11. PHASE 3b — VANILLA AS A MANIFEST (2026-08-13)
+
+Five commits in `~/CC/seedling` on `bot`, on top of `99c539c`, plus one in
+Archipelago-CC. ⛔ **NOT PUSHED** — §4.7 note 2 makes pushing `bot` an explicit
+user decision, and the grant given for phase 3's six commits covered those and
+does not generalise.
+
+| commit | what |
+|---|---|
+| `3129d08` | `VanillaSet` + `LevelSet.active()`/accessors — **additive**, nothing deleted |
+| `5aba06c` | **the deletion**: §3.5's eight sites in `Game.as` |
+| `35aee24` | the six code-built room references — and a **seventh** nobody had found |
+| `76c9b7d` | `botLevelSet` reports the manifest, so the deletion has a witness |
+| `08a6ff0` | `new Array(45)` is forty-five empty slots — **found by the gate** |
+| `022ad6ea3` (AP-CC) | `check-seedling-vanilla-manifest.mjs`; `SEEDLING_PAGE` on the differential |
+
+### 11.1 ⛓ THE DELETION COST NOTHING — zero line shift, verified
+
+§4.5 forbids reflowing `Game.as` because the model cites it by line (1,847
+`File.as:NNN` citations across 122 files) and a shift invalidates them
+**silently**. Phase 3 corrected the policy's reading to *zero shift* (§10.1).
+This phase is the one that DELETES, and a deletion cannot append its way out —
+so each site was replaced **in place at the same line count**: the 15-line music
+literal by a 15-line docblock saying where the data went, seven one-line sites
+by one line each, and the six entity-class cures likewise.
+
+Verified rather than intended, from `git diff -U0` hunk headers:
+
+```
+@@ -199,15 +199,15 @@   @@ -449 +449 @@   @@ -774 +774 @@   @@ -796 +796 @@
+@@ -908 +908 @@   @@ -1175 +1175 @@   @@ -1181 +1181 @@   @@ -1294 +1294 @@
+Moonrock.as @@ -134,2 +134,2 @@   FinalDoor @@ -50 +50 @@   Player @@ -491 +491 @@
+Seed @@ -73 +73 @@   LightBossController @@ -104 +104 @@   TentacleBeast @@ -213 +213 @@
+```
+
+The first size-changing hunk in `Game.as` is at `:2338`, inside the block phase
+3 appended today; `Bot.as`'s are at `:3263+`, likewise. ⇒ **the offset table
+this phase owes is EMPTY.** Every citation into the original source still points
+at what it names. That is a better outcome than §4.5 anticipated, and it is
+available to any future deletion that is willing to spend the removed lines on
+saying where the data went.
+
+### 11.2 What the manifest is, and what shape (c) actually looks like
+
+`VanillaSet.as` holds §3.5's table as data: `MUSICS` (the `Game.as:199` literal,
+**moved, not retyped**), `MENU_ROOMS`, `START_LEVEL`, `SNOW_GRADIENT_ROOMS`,
+`MUSIC_EXEMPT_ROOMS`, `NAMED_ROOMS`. `LevelSet.active()` answers with the
+delivered set or, when nothing was delivered, with `VanillaSet.build()` — so
+`LevelSet.mounted == null` no longer means *no set*, it means *nothing was
+delivered*, and the ordinary game walks the level-set loader on every boot.
+
+⛔ **THE TWO RESOLVERS ARE THREE LINES APART AND `loadlevel` IS UNCHANGED.**
+`LevelSet.embedFor(index)` says WHICH compiled-in `Class`; `Game.loadlevel(Class)`
+— the original's own three lines, untouched since phase 3 — converts it; a
+delivered room's `source.xml` reaches `loadLevelXML` directly. One loader, two
+resolvers, exactly as §4.3 (c) describes.
+
+⚠ **The built-in manifest's `source.embed` is a `Class`, not the schema's
+asset-path string.** A path is what a Class is *before* mxmlc runs; this build
+cannot resolve a path at all, which is why a DELIVERED set carrying `embed`
+is still refused (the `receiver_only` divergence §10.2 declared is unchanged).
+And the AS3 manifest carries **no room names** — the twin does; nothing in the
+game reads them, position being identity.
+
+⚖ **`levelMusics` was the predicted argument and it resolves as
+seed-and-copy.** It cannot be frozen manifest data (seven boss classes assign it
+at runtime, 14 sites) and it cannot stay a literal. So `LevelSet`'s CONSTRUCTOR
+copies the manifest's per-room `music` into `Game.levelMusics` — exactly once
+per set becoming real, for both arms, so a mount that forgot to seed cannot
+exist; and a COPY, never an alias, or a boss fight would rewrite the set itself.
+It is state initialised from data, and the readout reports both halves.
+
+### 11.3 ⛔ THE GATE FOUND A DEFECT NO TAPE OR TEST COULD HAVE
+
+First run of `check-seedling-vanilla-manifest.mjs` against the first 3b build:
+
+```
+FAIL: SNOW: hasSnowGradient picks out the twin's rooms — [] vs [45]
+FAIL: MUSIC EXEMPT: isMusicExempt picks out the twin's rooms — [] vs [10]
+```
+
+**`new Array(45)` in AS3 is forty-five empty slots**, not `[45]`. `indexOf(45)`
+was -1, every room's flag came out false, and Dungeon5's entrance had silently
+lost its snow gradient while Dungeon1_8 had lost its music exemption. The
+sibling literals are safe **by accident**: `new Array(12, 37, …)` and the
+116-entry `MUSICS` have more than one argument.
+
+⛓ **NEITHER A TAPE NOR A VITEST COULD HAVE SEEN IT.** A snow gradient is an
+alpha multiplier and a music exemption picks a song; neither is a position, a
+level or an entity, so neither appears in an observation stream. It was caught
+only because the manifest is read back OUT of the wasm and compared with a
+document produced independently from the OELs by a different parser. That is
+§4.3's anti-rot argument paying for itself on the day it was written — the
+second time in this arc, after §9.3.
+
+⚠ **AND THE CHECKER'S FIRST VERSION FAILED SIX MORE, ALL OF THEM WRONG.** It
+compared `named_rooms` with `JSON.stringify`; AS3 serialises keys in its own
+order (`{y, x, level}`), so six correct values read as failures. **A checker bug
+reads exactly like a defect in the thing under test**, and the only reason it
+cost minutes rather than a rebuild is that each failure printed the values it
+disagreed about. Now compared field by field.
+
+### 11.4 A SEVENTH code-built room reference, and one the schema cannot express
+
+`Scenery/Moonrock.as:134` — `new Teleporter(stairs.x, stairs.y, 2, 48, 32)`,
+one line above the persistence write §3.5 already listed. A teleporter **built
+at runtime with a hardcoded destination**, which is exactly the shape of §8.2a
+rows 2 and 3, and it is in neither §3.5's pattern sweep nor §8.2's by-name audit
+of 151 classes. Its level now reads `moonrock_target`.
+
+⛔ **ITS ARRIVAL POSITION CANNOT BE EXPRESSED.** `moonrock_target` is a
+`roomRef` in the frozen schema — `level` alone, `additionalProperties: false` —
+so `(48, 32)` stays a literal in `Moonrock.as`. A custom set can move that room
+and cannot say where in it the player lands. ⇒ **the fix is to widen that one
+entry to a `spawn`**, which is backward-compatible and does not touch the closed
+vocabulary the user ruled on. Not taken here: it is Phase 2's document and it
+changes the content hash, so it belongs to phase 4 or a deliberate amendment.
+
+### 11.5 ⚠ THREE OF THE EIGHT DELETED SITES CANNOT EXECUTE IN THIS ARTIFACT
+
+`Main.as:50` sets `Game.menu = false` and `:51` boots `new Game(0, 80, 128)`.
+So the title-screen path (`menuRoom`, `menuRoomCount`) and the new-game path
+(`applyStart`, reached only when `level < 0`) are **dead in the bot build**, and
+no tape can reach them either — `Bot` always boots an explicit level.
+
+⇒ the readout was rebuilt to call the ACCESSORS rather than report `meta`, which
+converts "the data survived the move" into "the code that reads it returns the
+right answer". What remains unexercised is the one-line call-site substitution
+in `Game.as` for those two paths, which is visible in the diff and nowhere else.
+`applyStart` cannot be called from a readout at all — it mutates a `Game` — so
+`start_level` exercises the getter it is built on. **Stated because a gate that
+runs 153 tapes and 24 assertions looks like it covered everything.**
+
+### 11.6 ⛔ BOTH GATES WERE MADE TO FAIL ON PURPOSE
+
+§5's acceptance was written knowing this family: a model-side replay would pass
+no matter what phase 3b did. So neither gate was trusted until it had been
+observed going red. **One mutant build, two independent defects, no overlap:**
+
+| mutation | what it breaks | which gate must go red |
+|---|---|---|
+| **M1** `MUSICS[100]` 12 → 7 | manifest data for a room **no tape enters** | the manifest gate, only |
+| **M2** `embedFor(3)` → room 0's Class | the resolver for a room **14 tapes enter** | the tape sweep, only |
+
+Measured, on the mutant artifact:
+
+```
+FAIL: MUSICS: the manifest equals the twin — index 100: 7 vs 12
+FAIL: MUSICS: Game.levelMusics was SEEDED from it — index 100: 7 vs 12
+   (the other 22 manifest assertions PASS — M2 does not disturb them)
+
+FAIL: r7-act2-3: live game matches the committed oracle stream
+      — tick 1 differs: expected (x=72, y=24.8, level=3), got (x=72, y=24)
+PASS: diagonal-run, friction-stop  (level 0 only — the controls)
+   (M1 reddens no tape at all)
+```
+
+⛓ **AND ONE DATUM THE DESIGN DID NOT ASK FOR.** `r7-act2-2` enters level 3 at
+its FINAL tick and **passes** on the mutant: the wrong room's geometry had not
+yet moved the player. Touching a broken room is not the same as playing in it,
+which is worth knowing before reading any tape's level list as coverage.
+
+### 11.7 The denominator, and what it does NOT cover
+
+⚠ **153 tapes, `--tier=full`, every one of them** — the whole committed roster,
+not a subset. Cost measured from the checkpoint history before choosing:
+~150 minutes of serial browser replay, which is affordable in the background
+and therefore not worth bounding.
+
+⛔ **BUT THE ROSTER ENTERS ONLY 73 OF THE 116 ROOMS.** Measured over the
+committed expectation streams: 43 rooms are entered by no tape at all (14, 15,
+17, 25–28, 33–36, 52, 54–58, 66, 69, 70, 72, 73, 81, 86, 88, 90, 93, 96–111).
+So a green sweep says *the resolver served 73 rooms correctly*, not *116*. The
+manifest gate covers all 116 rooms' music and flags, and phase 3's arm 4 mounts
+all 116 as XML — but nothing in this phase PLAYS the other 43. Stated because
+"all 153 tapes pass" reads like total coverage and is not.
+
+⛓ **AND "BYTE-FOR-BYTE UNCHANGED" IS NOT WHAT WAS VERIFIED.** §5's phrase is
+stronger than what any gate here measures. What was measured is: **every
+committed tape's observation stream is identical to its oracle recording**, tick
+by tick, position by position, plus the manifest readout matching its twin. The
+game's rendering, its audio, and the 43 unvisited rooms are outside that claim.
+
+### 11.8 Gates
+
+- `check-seedling-vanilla-manifest.mjs` — **24/24**, in the built artifact.
+- `probe-seedling-level-set-transport.mjs` (phase 3's, re-run on this build) —
+  **ALL ARMS PASS**, 25 arms, one fresh page each. The receiver did not regress,
+  and arm 5b still shows a delivered set's XML is what loads.
+- `verify-seedling-bot-differential.mjs --win --tier=full` — **SWEEP_RESULT**
+- `npx vitest run frontend/modules/seedlingDemo/` — **3775**, unmoved from
+  phase 3.
+- `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
+  `1fedb0ab35b7cd74accecf0345bdc893`.
+- The eleven `check-seedling-editor-*.mjs` were **not** run: no editor code, no
+  procgen module and no page changed. ⚠ Neither the vitest count nor the md5
+  can move for an AS3-only change — they are here to show nothing ELSE moved,
+  and they prove nothing about this phase.
+
+### 11.9 What phase 3b did NOT do
+
+- ⛔ **No phase 4.** `Main.as:319` still sizes the persistence table from
+  `Game.levels.length`, the save still carries no `set_id`, and the receiver's
+  capacity refusal is still the stopgap §10.4 named.
+- ⛔ **A delivered set still cannot carry `embed`.** The resolver added here
+  serves the built-in manifest's `Class` values; a wire `embed` is an asset path
+  this build cannot resolve, and the sender/receiver divergence stays declared.
+- ⚠ **`moonrock_target` cannot carry an arrival position** (§11.4) — the one
+  schema change this phase found and did not make.
+- ⚠ **The title screen and the new-game path are unexercised** (§11.5).
+- ⚠ **Still unmeasured, inherited from §9.6 and §10.4:** whether
+  `flashPanel/games/seedling.json` and the region atlas force more
+  `named_rooms`. Phases 2, 3 and 3b have all now declined it; it did not block
+  the manifest work.
