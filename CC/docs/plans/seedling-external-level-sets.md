@@ -367,6 +367,17 @@ and leave `sign` and the new room announces the old room's name. It is a second
 field carrying the same fact, and a rewrite that misses it is wrong in a way
 only a human reading the screen would notice.
 
+⛔ **CORRECTED 2026-08-14 BY PHASE 5b — §15.1. The diagnosis above is right and
+the rule it implies is not implementable, because `sign` is NOT a function of the
+destination.** Measured over all 280 vanilla exits and all 12 fallthroughs: 8
+signed transitions into 7 destination rooms, and **all 7 of those destinations
+are ALSO entered by UNSIGNED exits**. If `sign` were a property of the room,
+every entrance to room 13 would carry sign 1; one of three does. It is a property
+of the TRANSITION — crossing INTO a region — so the implementable rule is
+`sign(A→B) = region(B) when region(B) ≠ region(A), else 0`, with `region` an
+INPUT. Vanilla names the region of 7 of its 116 rooms and says nothing about the
+other 109, so there is no honest way to derive the map from the data.
+
 ⚠ NOT affected, checked: `tag`/`invert` drive `checkDeactivated()` off
 persistence and say nothing about the destination.
 
@@ -483,14 +494,15 @@ Checked before planning further, because Phase 3 is unverifiable without it —
       `level: 900`, as an Ogmo RECORD rather than OEL, with no exits (§14.2) —
       four findings about the GENERATOR. The round trip is 26/26 and its first
       version was vacuous (§14.4).
-- [ ] **Phase 5b — Exit destinations as data** (§4.6). Rewrite `to`, `playerx`,
-      `playery` **and `sign`** in the bundle builder; add the pairing/range
-      validation to the Phase 2 schema; de-scope `seedling.json`'s `teleport`
-      capability to dynamic changes only. ⛓ **NO AS3 CHANGE** — pure data, and
-      the only phase that removes a runtime dependency instead of adding one.
-      Acceptance: a randomized set transitions with **one** `new Game` per exit
-      (today it is two), and the destination room's sign text is the new
-      destination's.
+- [x] **Phase 5b — Exit destinations as data** (§4.6) — **DONE 2026-08-14,
+      §15.** Six commits here, ⛓ **no AS3**. ⛔ The slice is EMIT as much as
+      rewrite: §4.6 was written when vanilla was the only set, and a generated
+      set has no exits to rewrite (§15.2). ⛔ §4.6's `sign` rule is WRONG as
+      stated and is corrected above from the corpus (§15.1). The blocking number
+      moved: **1/6 → 6/6 reachable**, and the round trip now WALKS the game
+      through a door from the room data alone (§15.5). The sign half of the
+      acceptance is asserted on the JS side and NOT driven, because no readout in
+      this artifact can carry it — said out loud rather than faked (§15.5).
 - [x] **Phase 6 — The tag allocator** — **DONE 2026-08-13**, see
       `procgen/seedling-bot.md` §"Every generated lock wrote the GOAL's
       persistence flag". Allocator is the RECORD (lowest free slot), not a
@@ -2242,3 +2254,368 @@ change this contract.
   boss, so `-1` never arises.
 - ⚠ **The exporter has no page arm.** `watchGenerate`'s GENERATE arm still cannot
   hand a level to a set; the CLI is the only producer.
+
+---
+
+## 15. PHASE 5b — EXIT DESTINATIONS AS DATA (2026-08-14)
+
+**The arc's last slice, and the one that makes a generated set a game rather
+than a pile of rooms.** Six commits here, ⛓ **NO AS3** — §5 said the phase needed
+none and it needed none.
+
+| what | where |
+|---|---|
+| the linker (emit + retarget + the sign rule) | `frontend/modules/seedlingDemo/levelSetExits.js` |
+| 43 tests, three of them measurements of the GAME | `frontend/modules/seedlingDemo/levelSetExits.test.js` |
+| the exporter's `link` option + `--exits`/`--regions` | `levelSetExporter.js`, `scripts/procgen/export-seedling-level-set.mjs` |
+| the arrival-bounds rule | `levelSetValidator.js` |
+| the walk, driven in the artifact | `scripts/procgen/check-seedling-generated-set.mjs` |
+| the de-scope | `flashPanel/games/seedling.json`, `flashBridgeAdapter.js` |
+
+**The blocking number moved: `reachabilityOf` 1/6 → 6/6.**
+
+### 15.1 ⛔ §4.6's `sign` RULE IS WRONG, AND THE CORPUS IS WHAT SAYS SO
+
+§4.6: *"`sign` is destination metadata and lives on the SOURCE teleporter…
+Rewrite `to` and leave `sign` and the new room announces the old room's name."*
+The diagnosis is right — a stale `sign` names the wrong room — and the rule it
+implies, *rewrite `sign` with the destination*, cannot be implemented, because
+`sign` is not a function of the destination. Measured over all 280 exits and all
+12 fallthroughs of the vanilla 116:
+
+- **8** transitions carry a non-zero sign, into **7** distinct destination rooms
+- those 8 use **all seven** entries of `Message.as`'s closed table
+- **no destination is entered with two different non-zero signs** — so a room's
+  region, where it is stated at all, is unambiguous
+- ⛔ **all 7 of those destinations are ALSO entered by UNSIGNED exits (7/7)**
+
+If `sign` were a property of the destination, every entrance to room 13 would
+carry sign 1. One of three does. It is a property of the **transition**: room 0
+is outside Gundernourd and room 13 is inside, so that doorway announces; the
+other two entrances come from rooms already inside the region and say nothing.
+
+⇒ the rule that IS implementable, and the one built:
+
+> `sign(A → B) = region(B)` when `region(B) ≠ region(A)` and `region(B) ≠ 0`,
+> else `0` — and **`region` is an INPUT, never inferred.**
+
+⛓ **THE REFUSAL TO INFER IS THE POINT.** Vanilla names the region of 7 of its 116
+rooms and says nothing about the other 109, so any derivation would be invention.
+With no region declared, every emitted or retargeted exit announces **nothing**,
+and the count is REPORTED — because announcing the wrong region is worse than
+announcing none, and carrying the source's old sign (what §4.6's rule does) is
+worst of all: it names the room the player did not go to.
+
+⚠ The storage convention is the off-by-one the launching session predicted:
+`Teleporter`'s ctor stores `_sign - 1` and `Game.as:2148` does
+`int(o.@sign) - 1`, so `0` means *absent* and 1..7 index the table. The bugs were
+not there; they were in the model of what `sign` means.
+
+### 15.2 ⛔ THE SLICE IS **EMIT** AS MUCH AS REWRITE — §4.6's framing, settled
+
+§4.6 says "rewrite" throughout, and it was written when vanilla was the only set
+in existence. Phase 5 then measured that **no generated room has an exit at all**
+(§14.2 #4). Rewriting nothing produces nothing, so the blocking case needs
+emission.
+
+⇒ **Both, and they are one write seen twice.** The primitive is *"give this exit
+a destination"* — `(to, playerx, playery, sign)` onto one exit in one room's
+data. A vanilla-derived set has exits to point elsewhere (`retargetRoomXml` /
+`retargetLevelSet`); a generated set has none, so it must be given them first
+(`linkGeneratedRooms`). Neither is a superset of the other and neither alone
+closes §5's acceptance.
+
+The retarget arm is gated on the real cross-reference graph: **280/280 vanilla
+exits retargeted under a permutation, every destination right, every sign right
+under a declared region map, and 0 rooms whose non-exit bytes changed.** ⚠ A
+retargeted set is **re-stamped**: it is a different set, and keeping the old
+`set_id`/`content_hash` would let a save from the old layout be adopted under the
+new one — the silent reinterpretation §9.1 put the hash inside the id to close.
+The test also asserts the re-stamp does **not** alias the input set's
+`provenance` object.
+
+### 15.3 ⛓ ARRIVING ON THE RETURN PORTAL IS LEGAL, AND VANILLA DEPENDS ON IT
+
+The obvious hazard of a two-way link is the warp loop: land on the portal that
+sends you back and bounce forever. It does not happen, and the reason is a latch:
+
+- `Teleporter.update()` warps only `if (collide(Player) && !playerTouching)`
+- `Teleporter.check()` sets `playerTouching = true` on overlap
+- `Game.update()` runs **every** entity's `check()` behind a `!checked` latch
+  **before** `super.update()`
+
+**MEASURED, not reasoned: vanilla lands the player on a return portal FOUR
+times** — 11↔3, 88↔87, 97↔37 (`stairsup` onto `stairsdown`) and 107↔102 — and in
+every case the portal landed on points straight back. **A validator rule refusing
+it would have refused the real game**, which is §9.3's lesson for the third time
+in this arc, and it was caught by asking vanilla before writing the rule rather
+than after.
+
+⇒ each arrival lands **ON** the destination's return door: it is what the game
+itself does, it needs no second free cell, and it makes a two-way link symmetric
+by construction. ⚠ It is also a DEPENDENCY on that latch — a change to the order
+of `check()` and `update()` turns every two-way link in every generated set into
+an infinite warp — so the round trip asserts it in the artifact (§15.5).
+
+### 15.4 WHAT THE FLOOD PROVES, AND WHAT IT DOES NOT
+
+`reachabilityOf` walks the **DATA**: a `to` exists and is in range. It cannot see
+whether the player can stand on the thing carrying it, so on its own it would
+report 6/6 for six rooms whose exits are sealed inside walls. Door cells are
+chosen from a flood over each room's **real collision world** (`buildLevelWorld` +
+`playerBoxAt`), from that room's own start, with every solid live — locks closed,
+blocks unpushed, nothing cleared.
+
+⛓ **The property that makes the SET traversable rather than merely connected:**
+every door of a room comes out of one flood, so a player arriving at any door is
+in the same component as all the others and can always leave again.
+
+Three bounds, named because each is a real limit:
+
+1. ⚠ **CONSERVATIVE, and that is a design consequence.** An exit reachable with
+   no puzzle solved means a room's own obstacle does **not gate** its exit.
+   Gating exits behind the room's puzzle is a level-design decision this slice
+   does not make, and making it would need a solver run per candidate — which
+   `procgenOracle:503` makes non-deterministic under load, trading a stated bound
+   for a set that does not reproduce.
+2. ⚠ **The flood is cell-centre, 4-connected.** Exact for this corpus (every
+   generated solid is a tile-aligned 16x16 and the player's box is 4x5) and NOT
+   exact for a room with off-grid geometry. A later palette that places a
+   half-tile solid breaks the argument silently.
+3. ⚠ **Two doors of one room are kept NON-ADJACENT**, and the first version was
+   not — measured on the six-seed export, room 1's came out at (8,1) and (8,2).
+   Cosmetically a two-portal corridor; substantively the `approach` cell handed
+   back as the round trip's witness **was itself a door**, so a tape told to walk
+   in from there would have warped before taking a step.
+
+**The validator gained the rule §4.6 asked for and Phase 2 could not make**: an
+arrival must land inside the destination room's rectangle (`Game.as:2040` passes
+it to `new Player()` unchecked). ⛓ An ERROR rather than a warning **because
+vanilla was asked first**: all 280 arrivals were measured against their
+destination's real `<width>`/`<height>` and **0 land outside**.
+
+### 15.5 THE TRANSITION, DRIVEN — AND THE HALF THE ARTIFACT CANNOT SEE
+
+§5's first acceptance is now a driven fact rather than an assertion. A tape boots
+at a door's `approach` cell, holds **one key**, and the game transitions from the
+room data alone with nothing correcting it afterwards:
+
+```
+PASS: walking into room 2's door at (5, 3) reaches room 3 — level 3, tick 27
+PASS: CONTROL: the same boot with no input stays put — level 2
+PASS: LATCH: booting ON the portal does not warp — level 2
+```
+
+The control matters: without it, "the level is now 3" is equally consistent with
+a boot that simply landed in 3. The latch arm is §15.3's mechanism, asserted in
+the artifact rather than inferred from the source.
+
+⛔ **AND THE SIGN IS NOT DRIVEN. THE FIRST VERSION OF THAT GATE READ A CHANNEL
+THAT STRUCTURALLY CANNOT CARRY IT.** The announcement is a `Message` entity added
+by `Game.begin()` when `sign >= 0`; `botMobiles` walks `Vector.<Mobile>` (plus
+`Pod`) and **`Message extends Entity`**, and `botStatus` has no sign field. The
+arm asserted a Message count and its CONTROL printed **PASS for "0 messages"** —
+true of every arm ever run, including one that announced a region correctly. It
+is deleted rather than green, the run prints what is not driven and why, and the
+rule is asserted on the JS side against a transcription of `Teleporter`'s
+`sign = _sign - 1`, `Game.sign` and `Message.as`'s closed table. Driving it needs
+a new bot callback, which is an AS3 change and out of this slice's scope by §5.
+**This is kickoff §4's "a gate can print PASS for the opposite of what happened",
+and it is the second time in two phases.**
+
+⚠ **The walk sampled 2 of 10 doors** — one fresh page per arm, so a full sweep is
+one page per door. The run prints that, because a bounded sweep must name what it
+bounded.
+
+### 15.6 ⛔ ONE MUTANT, TWO DEFECTS — AND BOTH FOUND GAPS IN THE GATES
+
+| defect | JS suite | round trip |
+|---|---|---|
+| **D1** `signForTransition` drops the same-region case | **3 red**, all naming the sign rule | **red**: `10 announced of 10` |
+| **D2** door candidates drawn from the whole room interior instead of the walkable component | **1 red** → *(after the fix)* **3 red** | **GREEN** |
+
+Attribution read off each failure's reason, not off a count. Both results were
+findings about the gates rather than about the defects:
+
+- ⛔ **D2 first reddened ONE test, and not the one it violates.** Every linked
+  test room was fully **open**, so *"a door is in the room's walkable component"*
+  was true of every cell and could not fail. Same shape as Phase 5's D2 and the
+  same answer: closed rather than left tidy — each test room now carries a sealed
+  pocket holding the cell farthest from the start by raw distance, which is
+  exactly what such a mutant picks. **Post-fix D2 reds three**, including the
+  component and approach-cell assertions.
+- ⛔ **D2 leaving the round trip GREEN is the honest bound**, and it is why §15.5
+  prints what it sampled. Placement is the JS suite's claim; that the game MOVES
+  on the data is the round trip's.
+- ⚠ **D1 exposed brittleness in the arm itself.** Under D1 a different door is
+  "crossing", and that door's walk hops **twice** — the arrival lands on the
+  return door and the key is still held — so the sharp assertion went red for the
+  hop rather than for the defect. `WALK_TICKS` 60 → 45 holds the crossing arm to
+  one hop in every run; **measured, not proven**, and the within-region arm still
+  double-hops (0 → 1 → 2), which is why that one asserts only that the player
+  left and stayed inside its region.
+
+### 15.7 THE `teleport` CAPABILITY, DE-SCOPED — AND ITS PREMISE WAS HISTORICAL
+
+⛔ **§4.6's opening premise does not describe the running system.** It says the
+frontend uses the teleport API *"to simulate different exit destinations"*.
+Measured: `teleport`'s live consumers are the **debug region/location jump UI**
+and **`seedlingRegionGlue`'s arrival warp**. Nothing in this repo simulates exit
+randomization with it, so *"a randomized exit costs two world constructions"* was
+a property of a design that was never built. The slice's value is not that it
+deletes that cost; it is that a generated set is **N isolated rooms** without it.
+
+⛓ **AND THE STRUCTURAL ARGUMENT IS BETTER THAN THE COST ONE.**
+`Teleporter.update()` writes the static `Game.sign` on the line **after** its own
+`new Game`, and the `teleport` recipe does not touch `Game.sign` at all. So a
+frontend-corrected exit announces the region of the room the player did **not** go
+to, and there is nowhere in the capability to fix it. **Exits-as-data is not
+merely cheaper; it is the only mechanism that can get the sign right.**
+
+⚠ §4.6's stated harm is also not how it would fail. It says the wasted `new Game`
+runs *"every entity's `check()`"* in the vanilla destination. It would not:
+`check()` runs inside `Game.update()` behind the `!checked` latch, entities are
+built in `begin()`, and `FP.world = …` defers the swap — so a world replaced
+before the frame boundary is never begun and nothing in it is ever constructed.
+The constructor's own side effects are `Main.printItems()` and `end()` (which
+resets `fallthroughLevel`/`Sign`/`Offset`).
+
+The de-scope is recorded where a future caller will read it — the adapter's own
+docblock and a `_note` in the game config — rather than only in a plan.
+
+### 15.8 Gates
+
+- `npx vitest run frontend/modules/seedlingDemo/` — **3880/3880**, 109 files,
+  **382.85 s** (3833 + 47: the linker 43, the exporter's `link` option 4).
+  Load **1.97 at the start**, peaking ~12 during the run — the suite's own
+  workers on 8 cores, with nothing else on the box. ⚠ Recorded because §14.7's
+  three false reds happened at 22.8, and "which box ran this" is part of the
+  number.
+- `node scripts/procgen/check-seedling-generated-set.mjs --seeds=1-6` —
+  **32/32** (26 + 5 new arms + the sender-side reachability check) in
+  `seedling_bot_ap_p4b` on real-GPU Windows Chrome (`intel / gen-9`), load 0.46.
+- `node scripts/procgen/check-seedling-vanilla-manifest.mjs` — **24/24**.
+  ⚠ **AND IT WAS RED BEFORE THIS SLICE TOUCHED IT, FOR A REASON NOBODY OWNED**:
+  the default page was still `seedling_bot_ap_3b` while Phase 4a moved the
+  content hash (`-367e679f` → `-02408e1d`, §12), so a bare invocation reported
+  two failures with nothing wrong in the tree. Default is now the current
+  artifact; the older builds stay reachable through `SEEDLING_PAGE`.
+- `node scripts/procgen/solve-seedling-r8-battery.mjs --check | md5sum` —
+  `1fedb0ab35b7cd74accecf0345bdc893`, unchanged.
+- The eleven `check-seedling-editor-*.mjs` — all OK.
+
+### 15.9 What Phase 5b did NOT do
+
+- ⛔ **The sign is not driven in the artifact** (§15.5). No readout can carry it;
+  a `botSign` callback is an AS3 change.
+- ⛔ **Exits are not GATED behind a room's own puzzle** (§15.4 bound 1). A
+  generated set is now traversable and its rooms' obstacles are optional.
+- ⛔ **Nothing randomizes vanilla.** The retarget arm is built and gated on the
+  real 280-exit graph, and no caller in this repo asks it for a seed. That is the
+  consumer §4.6 imagined and it still does not exist.
+- ⚠ **`<control>` fallthroughs and `<buttonroom>` are RETARGETABLE but never
+  EMITTED.** The linker places teleporters (or stairs, by option); a generated
+  room still has no pit and no cross-room button. ⛔ And a `<control>` with no
+  `@fallthrough` would set `fallthroughLevel` to **0** — a real room, not the
+  `-1` that `Player.as:758`'s `> -1` guard treats as "no pit destination" —
+  because `Game.as:2144` assigns an E4X attribute list straight into an `int`.
+  ⚠ **INFERRED FROM THE COERCION, NOT DRIVEN**: it cannot arise in vanilla, where
+  all 12 `<control>` elements carry `@fallthrough` (measured). An emitter that
+  ever writes `<control>` must always write `@fallthrough`.
+- ⚠ **`tapeFormat.parsePersistence` still bounds `persistence[].level` to
+  `0..115`** — §6's residue, unchanged from §14.8.
+- ⚠ **The save-stamp UPGRADE case is still unexercised** (§13): this runtime
+  never writes a `.sol`, and the cross-session case is the one a player meets.
+- ⚠ **No generated set has been PLAYED end to end.** Three transitions have been
+  driven; nobody has walked a set from room 0 to room 5.
+- ⚠ **The exporter still has no page arm** (§14.8): `watchGenerate`'s GENERATE
+  arm cannot hand a level to a set, and the CLI is the only producer.
+
+---
+
+## 16. THE ARC, END TO END — for a reader picking this up cold
+
+Every section above records one slice. This one records what the whole thing
+does, because no single phase document says it and the next person to touch this
+will need it before they need any of the rest.
+
+### 16.1 What exists now that did not before
+
+**Seedling's 116 levels were compiled into the artifact as `[Embed]` assets, and
+its level table, persistence table and every room reference were literals in
+`Game.as`. Now a level set is DATA, delivered at runtime, and the vanilla game is
+one such set.** Concretely:
+
+1. **A level set is a manifest plus its rooms** (§4.1), frozen at schema v1 (§9):
+   `rooms[]` each carrying `source.xml` (OEL text) or `source.embed`, plus
+   `start`, `menu_rooms`, `named_rooms`, `music`, room flags, and a `set_id`
+   ending in the FNV-1a **content hash** of the document.
+2. **The vanilla 116 are a manifest like any other** (§11) — built-in, not
+   special-cased. That is what makes the format testable: a schema the real game
+   cannot satisfy is wrong, and building vanilla as a fixture caught two rules
+   that would have broken it (§9.3, §14.1) and one this slice nearly wrote
+   (§15.3).
+3. **A set crosses into the artifact in chunks** (§8.1, §9.1) — bounded on rooms
+   AND bytes, assembled by room **id** rather than by arrival order, validated,
+   and mounted only after assembly.
+4. **The save carries the set's stamp** (§13). A mismatch on `set_id` or
+   `content_hash` takes the whole save; an unstamped save is adopted.
+5. **A set can be GENERATED** (§14): `procgenSeedling` → `procgenLevelOel` →
+   `levelSetExporter` → validate → chunk → deliver → mount.
+6. **Its rooms are CONNECTED** (§15): exits are data the game reads itself.
+
+### 16.2 The four things a newcomer will get wrong
+
+- ⛔ **The game does not check anything.** An out-of-range level boots with a live
+  VM and reads its whole persistence row as *every tag already cleared* (§8.3).
+  `levelSetValidator` is the only line of defence and it refuses **by name**.
+- ⛔ **A key-name scan answers what a thing is CALLED, never what it IS.** Five
+  times in this arc: `@fallthrough` rides `<control>` and not the level root;
+  `<buttonroom>`'s `@room` is a cross-level persistence WRITE; the atlas's level
+  ids are called `map_ref`; `bloody_seed_ending`'s trigger is `<watcher>`, not
+  `<seed>`; and `sign` is not a property of the room it names. **Ask the
+  consumer.**
+- ⛔ **Ask vanilla before writing a rule.** Three rules in this arc would have
+  refused the real game: `tag+1 must be free` (§9.3), *"no room carries
+  `<moonrock>`"* on an embed-sourced set (§14.1), and *"an arrival must not land
+  on a portal"* (§15.3). The 116 are committed as a fixture precisely so this
+  costs one test rather than one release.
+- ⛔ **Procgen is not deterministic under load, and neither is the suite.** A
+  succeeded solve past `wallClockMs` becomes `BUDGET_EXHAUSTED`
+  (`procgenOracle:503`), and Phase 5's first full-suite run was red at load 22.8
+  on code that is clean at load 0.5. `cat /proc/loadavg` before believing a
+  number.
+
+### 16.3 Where the seams are
+
+| you want to… | go to |
+|---|---|
+| change what a set may contain | `levelSetValidator.js` — the JSON Schemas are documentation, this is the authority |
+| change how a set crosses | `planLevelSetChunks` / `assembleLevelSetChunks`, and §9.1 for why the bound is rooms AND bytes |
+| change what the artifact does with a set | `~/CC/seedling` on `bot` — `LevelSet.as`, `Game.as`'s four seams (§10.1). **Every AS3 edit needs a rebuild to a wasm before anything can be said about it** (§4.7), and each push is asked separately |
+| produce a set | `levelSetExporter.js` + `scripts/procgen/export-seedling-level-set.mjs` |
+| change exits | `levelSetExits.js` (§15) |
+| know whether it still works | the five gates in §15.8 |
+
+### 16.4 What the arc deliberately did not do
+
+- **Nothing regenerates the 24 vanilla AP references** — they are INVALIDATED per
+  set, with a stamped companion (§14.6). `location_coords` is exactly derivable;
+  `region_coords` is transcribed from a **commented-out** debug-warp block, so
+  regenerating it means inventing a convention vanilla never had.
+- **`named_rooms` is a closed vocabulary of six**, and a seventh code-built room
+  reference already exists that the frozen `roomRef` cannot carry (§11.4).
+- **`Message.as`'s sign table is closed at seven.** A set cannot name an eighth
+  region without an AS3 change (§8.2c, §15.1).
+- **Room GEOMETRY is hardcoded in five boss classes** (§8.2c). A generated room of
+  a different size silently breaks them; the PoC's rooms are one screen.
+- **Nine LIVE debug warps reach level 110** (`Player.as:1827-1999`). Under a small
+  set they are out of range and boot as *everything already cleared*. A set author
+  cannot control them, so it is a warning.
+
+### 16.5 The one-line summary
+
+**A Seedling level set is now a validated, stamped, chunked document that the
+game mounts at runtime; vanilla is one of them; the repo can generate one; and as
+of Phase 5b its rooms are connected by exits the game reads itself — proven by
+walking the artifact through a door with one key press.**
