@@ -277,7 +277,75 @@ citation-rewriting script. It does not ride along with this feature.
 
 ---
 
-### 4.6 The toolchain, verified present 2026-08-13
+### 4.6 Exit destinations become DATA, and the teleport API stops being needed
+
+⚖ User, 2026-08-13: *"instead of the frontend using the teleport API to simulate
+different exit destinations, we can change the data for the exit destinations
+and skip the extra teleport."*
+
+⛓ **THE TWO MECHANISMS ARE THE SAME LINE OF CODE**, which is what makes this a
+deletion rather than a rewrite. `Teleporter.update()` (`Teleporter.as:88-95`):
+
+```as3
+FP.world = new Game(to, playerPos.x, playerPos.y);
+Game.sign = sign;
+```
+
+and `flashPanel/games/seedling.json`'s `teleport` capability is
+`new Game($level, $x, $y)` assigned to `net.flashpunk.FP.world` — **the same
+constructor, the same assignment.** The frontend is re-doing, one beat late,
+exactly what the teleporter already did.
+
+So today a randomized exit costs **two world constructions**, and the wasted one
+is not merely wasted:
+
+- the player transiently exists in the vanilla destination, and `new Game` runs
+  **every entity's `check()`** in that room. Those are not all pure —
+  `TorchPickup.check` sets `doActions = false` and removes; `Teleporter` reads
+  and `removeSelf` writes persistence; `Moonrock.as:135` writes ANOTHER level's
+  slot. A room the player was never supposed to enter can leave state behind;
+- it needs the frontend live and correct at every transition, which is a runtime
+  dependency for what is really a static fact about the seed.
+
+⇒ **Rewrite `to`, `playerx`, `playery` in the OEL data when the bundle is
+built.** The game's own transition is then correct, the correction disappears,
+and — worth stating plainly — **this needs NO AS3 change at all.** It is the
+cheapest item in this plan and the only one that removes code.
+
+#### ⚠ What must be rewritten WITH the destination
+
+⛔ **`sign` is destination metadata and lives on the SOURCE teleporter.**
+`Game.sign = sign` on the line below the transition, and the ctor comment says
+it *"displays text in the room that this teleporter teleports to"*. Rewrite `to`
+and leave `sign` and the new room announces the old room's name. It is a second
+field carrying the same fact, and a rewrite that misses it is wrong in a way
+only a human reading the screen would notice.
+
+⚠ NOT affected, checked: `tag`/`invert` drive `checkDeactivated()` off
+persistence and say nothing about the destination.
+
+⛓ A side benefit worth not rediscovering: `watchEntrances.js` indexes entrances
+by teleporter `to`, so a rewritten set's entrance index — and the "start
+position comes from the level's ENTRANCES" feature built in Group B — follows
+the randomization for free, with no special case.
+
+#### The bound: this is STATIC, per set
+
+The mapping has to be known when the bundle is built. That covers seeded
+entrance randomization, which is what the teleport API is being used to simulate.
+It does **not** cover anything that changes mid-run — an AP item that re-links
+exits, or a server-side change after boot. ⇒ **the teleport capability is not
+deleted, it is de-scoped**: it stops being the mechanism for static exit layout
+and remains the mechanism for dynamic changes, if any are ever wanted. The
+frontend still needs to KNOW the mapping for tracking and logic; it stops
+needing to ACT on it.
+
+⚠ Pairing and validity are the BUNDLE BUILDER's job, and their check belongs in
+the Phase 2 schema: a set whose teleporter points past its own end, or whose
+two-way pairing is inconsistent, must be refused at load. The game will not
+check — `to` is passed to `new Game` unvalidated.
+
+### 4.7 The toolchain, verified present 2026-08-13
 
 Checked before planning further, because Phase 3 is unverifiable without it —
 **every AS3 edit has to become a wasm before anything can be said about it.**
@@ -330,12 +398,22 @@ Checked before planning further, because Phase 3 is unverifiable without it —
 - [ ] **Phase 5 — The exporter**: emit a manifest from generated levels
       (`procgenSeedling` output → bundle), including the per-level metadata the
       manifest now owns.
+- [ ] **Phase 5b — Exit destinations as data** (§4.6). Rewrite `to`, `playerx`,
+      `playery` **and `sign`** in the bundle builder; add the pairing/range
+      validation to the Phase 2 schema; de-scope `seedling.json`'s `teleport`
+      capability to dynamic changes only. ⛓ **NO AS3 CHANGE** — pure data, and
+      the only phase that removes a runtime dependency instead of adding one.
+      Acceptance: a randomized set transitions with **one** `new Game` per exit
+      (today it is two), and the destination room's sign text is the new
+      destination's.
 - [ ] **Phase 6 — The tag allocator** (model-side, independent): a counter over
       `0..29`, a reserved list starting with `goalTag = 0`, hard refusal on
       exhaustion, and an assertion that no template's tag equals the goal's.
       Closes the collision `2a407a817` left open.
 
-Phases 1–2 gate 3–5. Phase 6 is independent and may land at any time.
+Phases 1–2 gate 3–5b. Phase 6 is independent and may land at any time.
+⛓ **5b needs only the bundle builder** (Phase 5), not the AS3 seams, so it can
+overtake Phase 3 if the manifest lands first.
 
 ---
 
