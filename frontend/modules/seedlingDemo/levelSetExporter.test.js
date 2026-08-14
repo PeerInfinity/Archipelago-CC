@@ -151,6 +151,25 @@ describe('provenance.invented separates measured values from chosen ones', () =>
         expect(set.rooms[0].music).toBe(DEFAULT_MUSIC);
         expect(report.invented).toContain('rooms[].music');
     });
+
+    // ⛔ THIS TEST EXISTS BECAUSE THE MUTATION GATE FOUND ITS ABSENCE. One of
+    // Phase 5's two planted defects made `buildLevelSet` write
+    // `snow_gradient: true` on every room, and this file did not notice —
+    // `validateLevelSet` accepts any boolean, so the whole JS side was blind to
+    // a generated room claiming vanilla room 45's behaviour. Only the artifact
+    // readback caught it (`snow [0,1,2,3,4,5]`). ⚠ The flags are ABSENT-means-
+    // false, so "the set says nothing" and "the set says false" are the same to
+    // the game and must both stay distinguishable from "the set says true".
+    it('writes NEITHER room flag unless the entry asked for it', () => {
+        const { set } = buildLevelSet([record(), record()]);
+        for (const room of set.rooms) {
+            expect(room.snow_gradient).toBeUndefined();
+            expect(room.music_override_exempt).toBeUndefined();
+        }
+        const asked = buildLevelSet([{ record: record(), snow_gradient: true }]).set;
+        expect(asked.rooms[0].snow_gradient).toBe(true);
+        expect(asked.rooms[0].music_override_exempt).toBeUndefined();
+    });
 });
 
 // ⛔ THE FINDING THAT WOULD OTHERWISE BE INVISIBLE. A generated set validates
