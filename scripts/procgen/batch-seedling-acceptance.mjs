@@ -100,6 +100,12 @@ const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 const { DEFAULT_BOUNDS, STOP } = await M('levelGenerator.js');
 const { DEFAULT_BUDGET, bootStaging, solve } = await M('procgenOracle.js');
 const { GENERATE_BIOMES, generateStep, keptTemplatesOf } = await M('watchGenerate.js');
+// ⛓ SLICE 5: ⚖ §12.1's discharge test lives in the palette now — this file
+// held one of THREE identical copies of the family→strategy table, and verb 2
+// needed the same test in a browser module. The convergence was checked
+// per-site BEFORE the merge (kickoff §12): the three declarations were
+// character-identical and both use shapes agreed on every driven subject.
+const { dischargesVerb, verbOf } = await M('procgenPalette.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -192,14 +198,6 @@ const ITEM_LABELS = Object.freeze({
     hasShield: 'Progressive Shield',
 });
 
-/**
- * Which template families own a CLEARER, and which solver strategy discharges
- * it. ⚖ §12.1's standard: a kept clearer is certified by a `{strategy}`
- * RECORD in the FINAL solve, never by a keep-count — an obstacle nobody
- * walked into cannot produce one.
- */
-const CLEARER_STRATEGY = Object.freeze({ shove: 'shove', weigh: 'weigh', kill: 'kill' });
-
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
 const say = (line = '') => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
@@ -278,10 +276,12 @@ function candidate(seed, biome) {
 function certify(state, out) {
     const strategies = (out.records ?? []).map((r) => r.strategy);
     const clearers = state.summary.kept
-        .filter((k) => CLEARER_STRATEGY[k.family])
-        .map((k) => ({ template: k.template, family: k.family,
-            strategy: CLEARER_STRATEGY[k.family] }));
-    const discharged = clearers.filter((c) => strategies.includes(c.strategy));
+        .filter((k) => verbOf(k.family))
+        .map((k) => ({ template: k.template, family: k.family, strategy: verbOf(k.family) }));
+    // ⛓ SLICE 5: the ONE discharge test. It answers `null` for a family with no
+    // verb, which cannot reach here — `clearers` is already filtered to the
+    // families that HAVE one, and that filter is now the same function.
+    const discharged = clearers.filter((c) => dischargesVerb(c.family, out.records));
     return {
         collectCertified: out.certification.certified,
         collected: out.certification.collected ?? [],

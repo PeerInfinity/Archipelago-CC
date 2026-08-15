@@ -22,8 +22,8 @@ import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
     EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_PALETTE,
     POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError,
-    assertPalette, catalogueRows, defineTemplate, enumerateInstantiations, enumerateValues,
-    instantiateKept, restrictPalette,
+    assertPalette, catalogueRows, defineTemplate, dischargesVerb, enumerateInstantiations,
+    enumerateValues, instantiateKept, restrictPalette, verbOf,
 } from './procgenPalette.js';
 import {
     SEEDLING_DEFAULTS, generateSeedlingLevel, placementGroupId, placementTagId,
@@ -1692,4 +1692,60 @@ describe('⛓ a RESTRICTED run through the whole certification path', () => {
         });
         expect(run(byName_).record).toEqual(run(restricted()).record);
     });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE DISCHARGE TEST — ONE SPELLING (GENERATE-mode UI slice 5)
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('⛓ `verbOf` / `dischargesVerb` — ⚖ §12.1\'s evidence standard, once', () => {
+    it('⛔ answers `null`, not `false`, for a family with NO verb to discharge', () => {
+        /**
+         * ⛔ THE DISTINCTION IS THE WHOLE POINT. `false` would let a readout
+         * print "solved-only" — "we looked for the good outcome and did not get
+         * it" — about a wall, for which there was never anything to look for.
+         * `toBe(null)` and not `toBeFalsy()`: the latter passes on `false` and
+         * would be a check that cannot see the defect it exists for.
+         */
+        for (const family of ['wall', 'water', 'pit', 'arrow-lane']) {
+            expect(verbOf(family)).toBeNull();
+            expect(dischargesVerb(family, [{ strategy: 'shove' }])).toBeNull();
+        }
+    });
+
+    it('names the verb of every CLEARER family', () => {
+        expect(verbOf('shove')).toBe('shove');
+        expect(verbOf('weigh')).toBe('weigh');
+        expect(verbOf('kill')).toBe('kill');
+    });
+
+    it('is true only when a `{strategy}` RECORD names that family\'s own verb', () => {
+        expect(dischargesVerb('shove', [{ strategy: 'shove' }])).toBe(true);
+        // ⛔ ANOTHER family's verb is NOT this family's discharge — the check
+        // that would have passed on any clearer at all.
+        expect(dischargesVerb('shove', [{ strategy: 'weigh' }])).toBe(false);
+        expect(dischargesVerb('weigh', [])).toBe(false);
+        expect(dischargesVerb('kill', null)).toBe(false);
+        expect(dischargesVerb('kill', undefined)).toBe(false);
+    });
+
+    it('⛓ EVERY family in both rosters gets an answer, and it is built FROM the roster',
+        () => {
+            /**
+             * ⛓ Trap 199: the families come from the palettes themselves, so a
+             * family added to the table is answered here without an edit — and a
+             * family that got NEITHER a verb nor a null (i.e. `undefined`) would
+             * red, which is the case a `?? null` dropped from `verbOf` produces.
+             */
+            const families = [...new Set([...PRE_SWORD_PALETTE.templates,
+                ...POST_SWORD_PALETTE.templates].map((t) => t.family))];
+            expect(families.length).toBeGreaterThan(0);
+            for (const f of families) {
+                const v = verbOf(f);
+                expect(v === null || typeof v === 'string').toBe(true);
+            }
+            // ⛔ AND THE ROSTER REALLY HOLDS BOTH KINDS, or this case would be
+            // asserting about an empty half of its own claim.
+            expect(families.filter((f) => verbOf(f) !== null).length).toBeGreaterThan(0);
+            expect(families.filter((f) => verbOf(f) === null).length).toBeGreaterThan(0);
+        });
 });

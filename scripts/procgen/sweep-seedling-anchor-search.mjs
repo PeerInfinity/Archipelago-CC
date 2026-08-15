@@ -57,7 +57,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 
-const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE, enumerateValues } = await M('procgenPalette.js');
+const {
+    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, enumerateValues, verbOf,
+} = await M('procgenPalette.js');
 const { seedlingModel, seedlingOracle } = await M('procgenSeedling.js');
 const { rngFor } = await M('procgenRng.js');
 
@@ -68,8 +70,10 @@ const SEEDS = Number(arg('seeds', 12));
 const ONLY = arg('only', 'wall-gap-block');
 const TRIES = arg('tries', '1,2,3,4,6,8,12,64').split(',').map(Number);
 
-/** ⚖ §12.1: which solver strategy DISCHARGES each clearer family. */
-const CLEARER_STRATEGY = Object.freeze({ shove: 'shove', weigh: 'weigh', kill: 'kill' });
+// ⛓ SLICE 5: ⚖ §12.1's discharge test is `procgenPalette`'s now — this file
+// carried one of THREE identical copies, and verb 2 needed the same test in a
+// browser module, where a script cannot be imported. `verbOf` answers `null`
+// for a family with no verb, which is why the `?? null` below is gone.
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
@@ -95,7 +99,7 @@ say('⛔ N=1 IS THE CONTROL: it is what the generator did before this slice, so 
 say('');
 
 for (const { template, palette } of subjects) {
-    const verb = CLEARER_STRATEGY[template.family] ?? null;
+    const verb = verbOf(template.family);
     say(`## \`${template.name}\` — family \`${template.family}\`, biome \`${palette.name}\``);
     say('');
     const keys = template.params.map((p) => p.key);
@@ -128,7 +132,9 @@ for (const { template, palette } of subjects) {
                     }
                     if (out.verdict !== 'SOLVED') continue;
                     counts.kept += 1;
-                    if (verb && (out.records ?? []).some((r) => r.strategy === verb)) {
+                    // ⛓ ONE discharge test (`procgenPalette.dischargesVerb`),
+                    // which answers `null` — not `false` — for a verbless family.
+                    if (dischargesVerb(template.family, out.records)) {
                         counts.discharged += 1;
                     }
                     break;

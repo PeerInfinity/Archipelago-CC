@@ -67,7 +67,7 @@ const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 
 const {
-    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, enumerateValues,
+    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, enumerateValues, verbOf,
 } = await M('procgenPalette.js');
 const { seedlingModel, seedlingOracle } = await M('procgenSeedling.js');
 const { rngFor } = await M('procgenRng.js');
@@ -83,8 +83,9 @@ if (ANCHORS !== 'first' && ANCHORS !== 'all') {
     process.exit(2);
 }
 
-/** ⚖ §12.1: which solver strategy DISCHARGES each clearer family. */
-const CLEARER_STRATEGY = Object.freeze({ shove: 'shove', weigh: 'weigh', kill: 'kill' });
+// ⛓ SLICE 5: ⚖ §12.1's discharge test is `procgenPalette`'s now — this file
+// carried one of THREE identical copies, and verb 2 needed the same test in a
+// browser module, where a script cannot be imported.
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
@@ -114,7 +115,7 @@ say('');
 
 for (const { template, palette } of subjects) {
     const combos = enumerateValues(template);
-    const verb = CLEARER_STRATEGY[template.family] ?? null;
+    const verb = verbOf(template.family);
     say(`## \`${template.name}\` — family \`${template.family}\`, biome \`${palette.name}\``
         + `, ${combos.length} declared value combination(s)`);
     say('');
@@ -151,7 +152,9 @@ for (const { template, palette } of subjects) {
                         { templates: [instance] });
                     if (out.verdict === 'SOLVED') {
                         counts.solved += 1;
-                        if (verb && (out.records ?? []).some((r) => r.strategy === verb)) {
+                        // ⛓ ONE discharge test — `null`, not `false`, for a
+                        // family that has no verb to discharge.
+                        if (dischargesVerb(template.family, out.records)) {
                             counts.discharged += 1;
                         }
                     } else counts.refused += 1;

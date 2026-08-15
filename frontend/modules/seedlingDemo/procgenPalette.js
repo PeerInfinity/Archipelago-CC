@@ -332,6 +332,74 @@ export function instantiateKept(palette, kept) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE DISCHARGE TEST — ONE SPELLING (GENERATE-mode UI arc, slice 5)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §12.1's evidence standard, in one place: **a kept clearer is certified by
+ * a `{strategy}` RECORD in the solve, never by a keep-count** — an obstacle
+ * nobody walked into cannot produce one.
+ *
+ * ⛔ IT WAS WRITTEN THREE TIMES BEFORE THIS SLICE and the copies were
+ * identical, which is the good case and still the wrong number of copies:
+ * `batch-seedling-acceptance.mjs`, `sweep-seedling-anchor-search.mjs` and
+ * `sweep-seedling-wave1-domains.mjs` each carried the same frozen literal.
+ * Verb 2 needs the same test on the PAGE (a browser module cannot import a
+ * script), so the choice was a fourth copy or a hoist. ⛓ The convergence was
+ * checked BEFORE the merge rather than after: the three declarations were read
+ * off disk and compared character for character (identical), and the two USE
+ * shapes — the batch's `strategies.includes(verb)` against the sweeps'
+ * `records.some(r => r.strategy === verb)` — were DRIVEN over the batch's own
+ * subjects and agreed on all of them. The as-built carries the table.
+ *
+ * ── ⛔⛔ `null` IS NOT `false`, AND THE DIFFERENCE IS THE WHOLE POINT ──
+ *
+ * A wall, a water pool, a pit patch and an arrow lane have NO verb to
+ * discharge. Returning `false` for them would let a readout print
+ * *"solved-only"* — *"we looked for the good outcome and did not get it"* —
+ * about a template for which there was never anything to look for. That is
+ * the shape trap 249 names one level up: a line that cannot distinguish two
+ * cases, worn as if it could. So `verbOf` answers `null` and every caller
+ * has to say which of the three cases it is in.
+ */
+
+/**
+ * Which template families own a CLEARER, and which solver strategy discharges
+ * it. ⛓ Taken from the solver's own strategy vocabulary, and keyed on
+ * `family` because that is the roster's stable axis — an instance label is a
+ * geometry (trap 199, and slice 2 §9.10's residue).
+ */
+export const CLEARER_STRATEGY = Object.freeze({
+    shove: 'shove',
+    weigh: 'weigh',
+    kill: 'kill',
+});
+
+/**
+ * The verb a family's own clearer discharges, or `null` when the family has
+ * none. ⛔ `null` means *"there is nothing here to discharge"* and is NEVER
+ * the same answer as "it did not discharge" — see the section docblock.
+ */
+export function verbOf(family) {
+    return CLEARER_STRATEGY[family] ?? null;
+}
+
+/**
+ * Did this solve DISCHARGE the family's own verb?
+ *
+ * @returns {boolean|null} `true`/`false` for a family that HAS a verb;
+ *   `null` for one that has none, which is a third answer and not a `false`.
+ *
+ * ⚠ It takes the RECORDS rather than the whole verdict object so that the one
+ * caller who has only a strategy list (the batch, which precomputes one) and
+ * the callers who hold a solve can ask the same function the same way.
+ */
+export function dischargesVerb(family, records) {
+    const verb = verbOf(family);
+    if (!verb) return null;
+    return (records ?? []).some((r) => r?.strategy === verb);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI arc, slice 4, ⚖ ruling 1)
  * ══════════════════════════════════════════════════════════════════════
  *
