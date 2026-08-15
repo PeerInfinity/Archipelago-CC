@@ -77,6 +77,13 @@ const COUNT = num('count', 6);
 const TRIES = num('tries', 8);
 const SATURATION_K = num('k', 3);
 /**
+ * ⛓ THE ANCHOR SEARCH (GENERATE-mode UI slice 3, track B). 1 is the
+ * pre-search behaviour and the level it produces is byte-identical to what
+ * this CLI produced before the bound existed; above 1 the loop walks further
+ * down the SAME seeded anchor order before giving a candidate up.
+ */
+const ANCHOR_TRIES = num('anchor-tries', 1);
+/**
  * ⛔ `--budget-ms` IS GONE and is refused by name below rather than ignored —
  * the wall clock it set no longer exists (`procgenOracle`'s DEFAULT_BUDGET
  * docblock has the measurements). A flag that silently did nothing would leave
@@ -116,7 +123,12 @@ const say = (line) => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
 
-const bounds = { obstacleTarget: COUNT, triesPerStep: TRIES, saturationK: SATURATION_K };
+const bounds = {
+    obstacleTarget: COUNT,
+    triesPerStep: TRIES,
+    saturationK: SATURATION_K,
+    anchorTriesPerCandidate: ANCHOR_TRIES,
+};
 
 if (has('cost')) {
     /** ⚠ 139 ms is slice 1's own worst measured empty-room solve. */
@@ -178,7 +190,8 @@ if (has('json')) {
         + `(${s.goalCell.tx},${s.goalCell.ty}) = OEL (${s.goalOel.x},${s.goalOel.y})`);
     say(`items:  ${JSON.stringify(s.items)}   pins: [${s.pins.join(', ')}]`);
     say(`bounds: obstacleTarget=${bounds.obstacleTarget} triesPerStep=${bounds.triesPerStep} `
-        + `saturationK=${bounds.saturationK}`);
+        + `saturationK=${bounds.saturationK} `
+        + `anchorTriesPerCandidate=${bounds.anchorTriesPerCandidate}`);
     say(`budget: maxTicksPerTarget=${s.budget.maxTicksPerTarget} `
         + '(⛓ TICKS, not milliseconds — the budget is a property of the candidate, so '
         + 'this run reproduces on a loaded box)');

@@ -430,7 +430,16 @@ function twoProcessIdentity(seed, biome) {
     const run = () => execFileSync('node', [
         join(HERE, 'generate-seedling-level.mjs'),
         `--seed=${seed}`, `--biome=${biome}`, `--count=${BOUNDS.obstacleTarget}`,
-        `--tries=${BOUNDS.triesPerStep}`, `--k=${BOUNDS.saturationK}`, '--json',
+        `--tries=${BOUNDS.triesPerStep}`, `--k=${BOUNDS.saturationK}`,
+        /**
+         * ⛔ EVERY BOUND THE IN-PROCESS ARM RUNS UNDER IS PASSED, INCLUDING
+         * SLICE 3's. `BOUNDS` is `DEFAULT_BOUNDS`, so today this is `=1` either
+         * way — but a bound the subprocess DEFAULTED while the in-process arm
+         * raised it would report `⛔ DRIFT`, and a determinism red whose cause
+         * is a missing flag is the worst kind of false alarm this batch can
+         * raise (see §9.9's self-inflicted one).
+         */
+        `--anchor-tries=${BOUNDS.anchorTriesPerCandidate}`, '--json',
     ], { cwd: REPO, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
     const a = run();
     const b = run();

@@ -138,6 +138,16 @@ export function readGenerateParams(search) {
             obstacleTarget: int('count', DEFAULT_BOUNDS.obstacleTarget),
             triesPerStep: int('tries', DEFAULT_BOUNDS.triesPerStep),
             saturationK: int('k', DEFAULT_BOUNDS.saturationK),
+            /**
+             * ⚠ `?anchortries=` AND NOT `?anchors=`. The domain sweep's CLI
+             * already spells `--anchors=first|all`, which is an ENUMERATION
+             * MODE and not a count; one letter of overlap between "how many
+             * anchors may the solver try" and "which anchors does the table
+             * cover" is the collision this page's `?tick=`/`?tickbudget=`
+             * split already avoided once.
+             */
+            anchorTriesPerCandidate:
+                int('anchortries', DEFAULT_BOUNDS.anchorTriesPerCandidate),
         },
         /**
          * ⚠ `?tickbudget=` AND NOT `?ticks=`. The page already spells `?tick=`
@@ -239,6 +249,11 @@ export function writeGenerateParams(search, {
     q.set('count', int('count', bounds.obstacleTarget));
     q.set('tries', int('tries', bounds.triesPerStep));
     q.set('k', int('k', bounds.saturationK));
+    // ⛓ SLICE 3: the anchor-search bound is a BOUND like the other three, so it
+    // lands HERE with its control (§8.6's standing law: every new control
+    // arrives WITH its parameter in the one writer). The integer refusal above
+    // already covers it.
+    q.set('anchortries', int('anchortries', bounds.anchorTriesPerCandidate));
     if (int('step', step) >= 1) q.set('run', '1');
     else q.delete('run');
     return q.toString();
@@ -255,7 +270,11 @@ export function writeGenerateParams(search, {
 export function ladderCost(bounds, worstCaseSolveMs) {
     const b = { ...DEFAULT_BOUNDS, ...(bounds ?? {}) };
     let solves = 0;
-    for (let k = 1; k <= b.obstacleTarget; k += 1) solves += 1 + k * b.triesPerStep;
+    // ⛓ SLICE 3: × anchorTriesPerCandidate, the same factor `costModel` gained
+    // — one candidate may now be solved at that many anchors.
+    for (let k = 1; k <= b.obstacleTarget; k += 1) {
+        solves += 1 + k * b.triesPerStep * b.anchorTriesPerCandidate;
+    }
     const display = b.obstacleTarget + 1;
     return Object.freeze({
         steps: b.obstacleTarget,
@@ -266,7 +285,8 @@ export function ladderCost(bounds, worstCaseSolveMs) {
         worstCaseTotalMs: Number.isFinite(worstCaseSolveMs)
             ? (solves + display) * worstCaseSolveMs : null,
         why: `STEP is "obstacleTarget = k, re-run" (see the docblock), so a RUN-ALL to `
-            + `${b.obstacleTarget} spends sum(1 + k x triesPerStep(${b.triesPerStep})) `
+            + `${b.obstacleTarget} spends sum(1 + k x triesPerStep(${b.triesPerStep}) x `
+            + `anchorTriesPerCandidate(${b.anchorTriesPerCandidate})) `
             + `= ${solves} loop solves plus ${display} display solves. A single `
             + 'generateSeedlingLevel call would spend the last row alone; the ladder buys '
             + 'the per-step display ⚖ §1.3 asks for, and every step is the CLI\'s own '
@@ -505,7 +525,21 @@ export function generationRows(trace) {
     return (trace ?? []).map((r) => ({
         step: r.step,
         try: r.try,
-        label: r.step === 0 ? '(skeleton)' : `${r.step}.${r.try}`,
+        /**
+         * ⛓⛓ SLICE 3: THE LABEL CARRIES THE ANCHOR ORDINAL, because rows of one
+         * candidate now SHARE `step.try`. `1.2` three times over would be a
+         * pane that shows a search as one attempt repeated; `1.2a1 / 1.2a2 /
+         * 1.2a3` is the search. ⛔ The suffix is written whenever the row has an
+         * ordinal — including at the default bound, where every row is `a1` —
+         * rather than only when the walk was long: a label whose FORMAT depends
+         * on the outcome is two spellings, and a reader could not tell "no
+         * search ran" from "the search stopped at one".
+         */
+        label: r.step === 0 ? '(skeleton)'
+            : `${r.step}.${r.try}${r.anchorTry ? `a${r.anchorTry}` : ''}`,
+        /** Which anchor of the walk this row is, and how many were offered. */
+        anchorTry: r.anchorTry ?? null,
+        anchorsOffered: r.anchorsOffered ?? null,
         template: r.template ?? '(skeleton)',
         /**
          * ⛓ SLICE 2: THE PANE PRINTS THE INSTANCE, the pane's own consumers
@@ -539,7 +573,8 @@ export function describeState(state, solved = null) {
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
             : 'the SKELETON — the bordered room and its goal, before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
-            + `k=${state.bounds.saturationK}`,
+            + `k=${state.bounds.saturationK} `
+            + `anchortries=${state.bounds.anchorTriesPerCandidate}`,
         `budget: ${state.budget.maxTicksPerTarget} ticks per target (⛓ TICKS, not ms)`,
     ];
     if (state.stop) bits.push(`stop: ${state.stop}`);

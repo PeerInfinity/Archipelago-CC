@@ -13,10 +13,13 @@
  *
  *   `skeleton()`      the bordered room + the goal pickup — the control that
  *                     must solve before any template is drawn
- *   `anchorFor(...)`  a LEGAL anchor for a template, drawn from the seeded
- *                     stream, or `null` when the room has no room for that
- *                     shape. ⛔ The legality test lives HERE and not in the
- *                     loop, because "legal" is a fact about Seedling's floor.
+ *   `anchorsFor(...)` up to `limit` LEGAL anchors for a template, in one
+ *                     seeded shuffle's order, or `[]` when the room has no
+ *                     room for that shape. ⛔ The legality test lives HERE and
+ *                     not in the loop, because "legal" is a fact about
+ *                     Seedling's floor. ⛓ It returns a LIST since slice 3 of
+ *                     the GENERATE-mode UI arc — the loop walks it until one
+ *                     anchor SOLVES, bounded by `anchorTriesPerCandidate`.
  *   `place(...)`      tiles and entities written TOGETHER (⚖ §1.2's atomic
  *                     placement), returning a NEW frozen record
  *
@@ -26,9 +29,12 @@
  * unbounded number of draws on a full room and makes the number of draws
  * depend on how full the room is — so two runs of one seed would agree only
  * as long as they agreed about everything before. The anchor is instead ONE
- * shuffle of the room's own cell list and the first legal cell in it: exactly
- * one shuffle per attempt, whatever the room looks like, and `null` when the
- * whole list is illegal. Determinism by construction rather than by luck.
+ * shuffle of the room's own cell list and the first legal cells in it:
+ * exactly ONE shuffle per attempt, whatever the room looks like and whatever
+ * `anchorTriesPerCandidate` is, and an EMPTY list when the whole interior is
+ * illegal. Determinism by construction rather than by luck — and the bound
+ * only decides how far down an order the stream has already fixed the loop is
+ * allowed to walk, which is why raising it moves no earlier draw.
  *
  * ⛔ NO NODE IMPORTS (see `atlasSource.js`) — this module is on the GENERATE
  * arm's path in the browser.
@@ -361,23 +367,52 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
          * were already on this surface for the same reason; `legalAt` is the
          * conjunction of all three plus the footprint walk, and a sweep that
          * re-derived it would be the seventh copy of a retype this arc has
-         * refused. ⛔ It is the SAME function `anchorFor` calls — not an
+         * refused. ⛔ It is the SAME function `anchorsFor` calls — not an
          * agreeing one.
          */
         legalAt,
         skeleton,
         /**
-         * One shuffle, then the first legal cell — see the docblock. The
-         * shuffle is over the room's interior in a FIXED order (the empty
-         * room's own scan order), so the draw depends on the seed and the
-         * template and nothing else.
+         * ⛓⛓⛓ ONE SHUFFLE, THEN THE FIRST `limit` LEGAL CELLS — the whole of
+         * GENERATE-mode UI slice 3's TRACK B on this side of the seam.
+         *
+         * ⛔ THERE IS NO `anchorFor` ANY MORE, and its deletion is the point.
+         * The loop used to take ONE anchor per candidate and revert on the
+         * oracle's answer about it, so a template that would have solved three
+         * cells further down the shuffle was reported unviable — measured, and
+         * the measurement is in `wall-gap-block`'s own docblock (⚖ slice 2
+         * §9.3: at one anchor the vertical door discharges 1–2 of 12; at every
+         * legal anchor, 18–21. *The vertical door is not worse — the FIRST
+         * anchor the shuffle hands it is.*) Keeping a one-anchor spelling
+         * beside the bounded one would be two ways to ask the same question.
+         *
+         * ⛔⛔ THE DRAW COUNT DOES NOT DEPEND ON `limit`, AND THAT IS WHAT MAKES
+         * DEFAULT 1 BYTE-INERT. The rng is touched exactly once — the single
+         * `shuffle` of the room's interior, whose cost is the interior's size
+         * and nothing else. `limit` only decides how far down THAT ALREADY-DRAWN
+         * ORDER the caller is allowed to walk. So `anchorsFor(…, 1)[0]` is the
+         * cell the old `anchorFor` returned, from the same stream position, and
+         * the ladder's levels do not move when the bound is left at its default.
+         * (The shuffle-then-first shape was chosen for this same reason in
+         * slice 2 of the PoC arc — see the file docblock: a rejection sampler
+         * would have made the draw count depend on how full the room is.)
+         *
+         * @returns {Array<{tx,ty}>} up to `limit` legal anchors IN SHUFFLE
+         *   ORDER; `[]` when the whole interior refuses.
          */
-        anchorFor(record, template, rng) {
-            const cells = rng.shuffle(interiorCells(record));
-            for (const c of cells) {
-                if (legalAt(record, template, c.tx, c.ty)) return { tx: c.tx, ty: c.ty };
+        anchorsFor(record, template, rng, limit = 1) {
+            if (!Number.isInteger(limit) || limit <= 0) {
+                fail(`procgenSeedling: anchorsFor needs a positive integer limit, got `
+                    + `${JSON.stringify(limit)}. The bound is what the trace names `
+                    + '(`anchorTriesPerCandidate`), so there is no value meaning "all".');
             }
-            return null;
+            const out = [];
+            for (const c of rng.shuffle(interiorCells(record))) {
+                if (!legalAt(record, template, c.tx, c.ty)) continue;
+                out.push({ tx: c.tx, ty: c.ty });
+                if (out.length >= limit) break;
+            }
+            return out;
         },
         /**
          * ⚖ §1.2's ATOMIC PLACEMENT — tiles and entities in ONE step, so a

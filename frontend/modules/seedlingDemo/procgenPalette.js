@@ -88,7 +88,7 @@
  *   `instance`    the derived label — `wall-segment(ori=v,len=4)` — which is
  *                 what the pane prints and what a reader identifies a row by.
  *
- * ⛔ **THE CONCRETE ROW IS THE OUTPUT CONTRACT.** `anchorFor`, `legalAt`,
+ * ⛔ **THE CONCRETE ROW IS THE OUTPUT CONTRACT.** `anchorsFor`, `legalAt`,
  * `place`, the oracle, the pin union and the sentinel slots consume concrete
  * rows and never learn the migration happened. A zero-parameter template
  * (`arrow-lane`) is the degenerate case: one instantiation, byte-identical to
@@ -514,7 +514,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * ⛓⛓ ⚖ RULING 4's LIGHT SWEEP — `node
      * scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=12`, the
      * dedicated geometry (this instance ALONE in the bordered room with that
-     * seed's goal), ONE anchor per (value, seed) — the cell `anchorFor` itself
+     * seed's goal), ONE anchor per (value, seed) — the cell `anchorsFor` itself
      * draws, which is the anchor the loop would use.
      *
      *   ori=h  len   2    3    4    5      ori=v  len   2    3    4    5
@@ -798,7 +798,7 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * LOOP actually spends) the same sweep reads `ori=h` discharging 3–4 of 12
      * and `ori=v` discharging 1–2 of 12 — a gap that vanishes when every anchor
      * is tried. ⇒ the vertical door is not worse; the FIRST anchor the shuffle
-     * hands it is. That is a fact about `anchorFor`'s one-shot draw and it is
+     * hands it is. That is a fact about the ONE-ANCHOR bound and it is
      * exactly what slice 3's `anchorTriesPerCandidate` is for
      * (`feedback_bounded_sweep_must_name_what_it_bounded` — the bound was
      * producing the finding).

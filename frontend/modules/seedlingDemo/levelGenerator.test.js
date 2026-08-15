@@ -79,7 +79,14 @@ const T = (name, family = 'fake', params = []) => ({
  */
 const fakeModel = (over = {}) => ({
     skeleton: () => ({ placed: [] }),
-    anchorFor: () => ({ tx: 1, ty: 1 }),
+    /**
+     * ⛓ SLICE 3: THE SEAM'S ANCHOR MEMBER RETURNS A LIST. The fake honours the
+     * `limit` argument the way the real model does — one shuffle's worth of
+     * legal cells, truncated — so a case that raises the bound really gets more
+     * anchors here rather than being told a story about them.
+     */
+    anchorsFor: (record, template, rng, limit = 1) => Array
+        .from({ length: limit }, (_, i) => ({ tx: 1 + i, ty: 1 })),
     place: (record, template) => ({ placed: [...record.placed, template.name] }),
     ...over,
 });
@@ -277,12 +284,20 @@ describe('the bounds are real and every one of them is in the trace', () => {
     });
 
     it('the summary carries the bounds THAT RAN, not the defaults', () => {
-        const bounds = { obstacleTarget: 2, triesPerStep: 4, saturationK: 5 };
+        // ⛓ EVERY bound, spelled out — including slice 3's, and NONE of them at
+        // its default, so a bound the merge dropped lands on a DIFFERENT number
+        // rather than coinciding with the right one (trap 235).
+        const bounds = {
+            obstacleTarget: 2, triesPerStep: 4, saturationK: 5, anchorTriesPerCandidate: 2,
+        };
         const out = generateLevel({
             rng: fakeRng(), model: fakeModel(), oracle: fakeOracle(['SOLVED']),
             palette: palette(), bounds,
         });
         expect(out.summary.bounds).toEqual(bounds);
+        // and the roster of bounds is read FROM the defaults, so a bound added
+        // without a line here is a MISSING assertion rather than an unnoticed one
+        expect(Object.keys(out.summary.bounds).sort()).toEqual(Object.keys(DEFAULT_BOUNDS).sort());
         expect(out.summary.budget).toEqual({ maxTicksPerTarget: 2 });
     });
 
@@ -302,6 +317,151 @@ describe('the bounds are real and every one of them is in the trace', () => {
 
     it('the default target is inside slice 2\'s own measured ceiling of eight', () => {
         expect(DEFAULT_BOUNDS.obstacleTarget).toBeLessThanOrEqual(8);
+    });
+});
+
+/**
+ * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK B — THE ANCHOR SEARCH, without Seedling.
+ *
+ * ⚖ Ruling 7: *"look for a viable place to put the template, and put it there
+ * if possible."* These cases are about the LOOP's half of it — how far it
+ * walks, what it records, and what it refuses to swallow. The model's half
+ * (one shuffle whatever the limit is) is `procgenSeedling`'s and is asserted
+ * there; the byte-inertness of the whole thing is measured in the as-built.
+ */
+describe('⛓ the anchor search walks until one anchor SOLVES', () => {
+    it('at the DEFAULT bound it tests exactly one anchor per candidate', () => {
+        const oracle = fakeOracle(['SOLVED', 'REFUSED', 'SOLVED']);
+        const out = generateLevel({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle,
+            palette: palette(),
+            bounds: { obstacleTarget: 1, triesPerStep: 3, saturationK: 3 },
+        });
+        // one REVERTED row then one KEPT row — a SECOND anchor for the first
+        // candidate would have put a third row between them.
+        expect(out.trace.slice(1).map((r) => [r.try, r.anchorTry, r.outcome]))
+            .toEqual([[1, 1, ATTEMPT.REVERTED], [2, 1, ATTEMPT.KEPT]]);
+        for (const r of out.trace.slice(1)) expect(r.anchorsOffered).toBe(1);
+    });
+
+    /**
+     * ⛔ THE CLAIM THE BOUND EXISTS FOR. The same scripted oracle — refuse,
+     * refuse, solve — now keeps the candidate at its THIRD anchor instead of
+     * spending three separate TRIES on three separate draws. The three rows
+     * share `step`/`try` and differ in `anchorTry` and in `at`.
+     */
+    it('at a bound of 3 it advances to the next ANCHOR and keeps the first that solves', () => {
+        const out = generateLevel({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED', 'REFUSED', 'REFUSED', 'SOLVED']),
+            palette: palette(),
+            bounds: {
+                obstacleTarget: 1, triesPerStep: 3, saturationK: 3, anchorTriesPerCandidate: 3,
+            },
+        });
+        const rows = out.trace.slice(1);
+        expect(rows.map((r) => [r.step, r.try, r.anchorTry, r.outcome])).toEqual([
+            [1, 1, 1, ATTEMPT.REVERTED],
+            [1, 1, 2, ATTEMPT.REVERTED],
+            [1, 1, 3, ATTEMPT.KEPT],
+        ]);
+        // ⛔ THE ANCHORS REALLY ADVANCE — a walk that re-tested the FIRST cell
+        // would produce the same three rows and the same verdicts.
+        expect(rows.map((r) => `${r.at.tx},${r.at.ty}`)).toEqual(['1,1', '2,1', '3,1']);
+        for (const r of rows) expect(r.anchorsOffered).toBe(3);
+        // and the candidate cost ONE draw of the palette, not three
+        expect(out.summary.kept).toHaveLength(1);
+        expect(out.summary.attempts).toBe(3);
+    });
+
+    it('a candidate whose anchors all refuse costs the step ONE try, not `anchorTries`', () => {
+        const out = generateLevel({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED', 'REFUSED']),
+            palette: palette(),
+            bounds: {
+                obstacleTarget: 1, triesPerStep: 2, saturationK: 1, anchorTriesPerCandidate: 2,
+            },
+        });
+        // 2 tries x 2 anchors = 4 rejected rows, then the step gives up
+        expect(out.trace.slice(1).map((r) => [r.try, r.anchorTry]))
+            .toEqual([[1, 1], [1, 2], [2, 1], [2, 2]]);
+        expect(out.summary.stop).toBe(STOP.SATURATED);
+    });
+
+    it('NO_ANCHOR carries a null ordinal and ZERO offered — the room refused every cell', () => {
+        const out = generateLevel({
+            rng: fakeRng(),
+            model: fakeModel({ anchorsFor: () => [] }),
+            oracle: fakeOracle(['SOLVED']),
+            palette: palette(),
+            bounds: {
+                obstacleTarget: 4, triesPerStep: 2, saturationK: 1, anchorTriesPerCandidate: 5,
+            },
+        });
+        for (const r of out.trace.filter((x) => x.outcome === ATTEMPT.NO_ANCHOR)) {
+            expect(r.anchorTry).toBeNull();
+            expect(r.anchorsOffered).toBe(0);
+        }
+    });
+
+    /**
+     * ⛔⛔ TRAPS 171/173, ASKED OUT LOUD. A search is a loop with more places to
+     * hide an engine error in, so the case that matters most is the one where
+     * it must NOT keep going: the abort fires on the FIRST anchor and the
+     * second is never solved.
+     */
+    it('⛔ an engine throw at anchor 1 ABORTS — the walk does not try anchor 2', () => {
+        class EngineError extends Error { constructor(m) { super(m); this.name = 'PhysicsV2Error'; } }
+        const oracle = {
+            budget: null,
+            calls: 0,
+            solve() {
+                this.calls += 1;
+                if (this.calls === 1) return { verdict: 'SOLVED', ticks: 10 };
+                throw new EngineError('the player fell into a pit in level 900');
+            },
+        };
+        let thrown = null;
+        try {
+            generateLevel({
+                rng: fakeRng(),
+                model: fakeModel(),
+                oracle,
+                palette: palette(),
+                bounds: {
+                    obstacleTarget: 3, triesPerStep: 3, saturationK: 3,
+                    anchorTriesPerCandidate: 4,
+                },
+            });
+        } catch (e) { thrown = e; }
+        expect(thrown).toBeInstanceOf(GenerationAborted);
+        // ⛓ the count is the claim: skeleton + ONE candidate solve. A catch
+        // that moved to the next anchor would read 5.
+        expect(oracle.calls).toBe(2);
+        expect(thrown.message).toMatch(/anchor 1\/4/);
+        expect(thrown.trace.at(-1).anchorTry).toBe(1);
+    });
+
+    it('refuses a non-positive anchor bound BY NAME, like every other bound', () => {
+        expect(() => generateLevel({
+            rng: fakeRng(), model: fakeModel(), oracle: fakeOracle(['SOLVED']),
+            palette: palette(), bounds: { anchorTriesPerCandidate: 0 },
+        })).toThrow(/bounds.anchorTriesPerCandidate must be a positive integer/);
+    });
+
+    it('the cost model multiplies by it, and says so in its own `why`', () => {
+        const one = costModel({ obstacleTarget: 6, triesPerStep: 8 }, 139);
+        const four = costModel(
+            { obstacleTarget: 6, triesPerStep: 8, anchorTriesPerCandidate: 4 }, 139,
+        );
+        expect(one.solves).toBe(1 + 6 * 8);
+        expect(four.solves).toBe(1 + 6 * 8 * 4);
+        expect(four.why).toMatch(/anchorTriesPerCandidate\(4\)/);
     });
 });
 
@@ -359,7 +519,7 @@ describe('the outcomes that are NOT oracle verdicts', () => {
     it('NO_ANCHOR is recorded when the model has nowhere to put the template', () => {
         const out = generateLevel({
             rng: fakeRng(),
-            model: fakeModel({ anchorFor: () => null }),
+            model: fakeModel({ anchorsFor: () => [] }),
             oracle: fakeOracle(['SOLVED']),
             palette: palette(),
             bounds: { obstacleTarget: 4, triesPerStep: 2, saturationK: 1 },
@@ -403,7 +563,7 @@ describe('the loop is substrate-agnostic by construction', () => {
         expect(() => generateLevel({
             rng: fakeRng(), model: { skeleton: () => ({}) },
             oracle: fakeOracle(['SOLVED']), palette: palette(),
-        })).toThrow(/needs a `anchorFor` function/);
+        })).toThrow(/needs a `anchorsFor` function/);
         expect(() => generateLevel({
             rng: fakeRng(), model: fakeModel(), oracle: {}, palette: palette(),
         })).toThrow(/needs a `solve` function/);

@@ -75,6 +75,26 @@
  * before it spends anything on that row's parameters, so the sequence is a
  * function of the seed and of nothing else.
  *
+ * ── ⛓⛓⛓ THE ANCHOR SEARCH (GENERATE-mode UI slice 3, track B) ────────
+ *
+ * ⚖ The user's ruling 7: *"look for a viable place to put the template, and
+ * put it there if possible."* One candidate is now solved at up to
+ * `anchorTriesPerCandidate` of the model's legal anchors and kept at the FIRST
+ * that solves — where the loop used to test exactly one cell and give the
+ * candidate up on it.
+ *
+ * ⛔ DEFAULT 1 IS TODAY'S BEHAVIOUR, and the byte-inertness is by
+ * construction rather than by measurement-and-hope: the model spends ONE
+ * shuffle per candidate whatever the limit is, so the bound only decides how
+ * far down an order the stream already fixed the loop is allowed to walk.
+ * (It is measured anyway — the as-built carries the comparison.)
+ *
+ * ⛔⛔ THE SEARCH DOES NOT WIDEN WHAT IS ACCEPTED, AND IT DOES NOT CATCH.
+ * Every anchor is adjudicated by the same oracle, every one is a trace row,
+ * and an engine THROW still aborts the whole run with its evidence: a walk
+ * that swallowed one and moved to the next cell would be traps 171/173 with
+ * more places to hide.
+ *
  * ── WHAT A TRACE ROW OWES ─────────────────────────────────────────────
  *
  * ⚖ Kickoff §7.4 demands *"every placement, every veto with its verdict class
@@ -187,16 +207,39 @@ export const STOP = Object.freeze({
  *                    not searching, it is spinning.
  * `saturationK`    — consecutive reject STEPS that end the run. ⚖ §3.1's
  *                    "saturation — reported as such, never silent".
+ *
+ * ⛓⛓⛓ `anchorTriesPerCandidate` — GENERATE-mode UI slice 3, TRACK B, and ⚖ the
+ * user's ruling 7: *"look for a viable place to put the template, and put it
+ * there if possible."* How many of the model's legal anchors one candidate may
+ * be SOLVED at before the candidate is given up on.
+ *
+ * ⛔ **THE DEFAULT IS 1, WHICH IS EXACTLY TODAY'S BEHAVIOUR**, and that is a
+ * requirement rather than a preference: the free-running ladder's cost profile
+ * must not multiply the day the knob arrives. The cost model below carries the
+ * factor so a caller raising it states the ceiling before pressing.
+ *
+ * ⛓ WHY THE BOUND EXISTS AT ALL, MEASURED (slice 2 §9.3, quoted in
+ * `procgenPalette`'s `wall-gap-block` docblock): the plain door's `ori=v`
+ * discharges its verb at 1–2 of 12 seeds when ONE anchor is tried, and at 18–21
+ * when every legal anchor is. *The vertical door is not worse — the FIRST
+ * anchor the shuffle hands it is.* A generator that reports a template
+ * unviable on one unlucky cell is measuring the shuffle, not the palette.
+ *
+ * ⛔ IT DOES NOT WIDEN WHAT IS ACCEPTED. Every anchor is still adjudicated by
+ * the oracle and every one is a TRACE ROW; the search chooses WHERE to ask, and
+ * never what counts as a yes.
  */
 export const DEFAULT_BOUNDS = Object.freeze({
     obstacleTarget: 6,
     triesPerStep: 8,
     saturationK: 3,
+    anchorTriesPerCandidate: 1,
 });
 
 function assertBounds(bounds) {
     const b = { ...DEFAULT_BOUNDS, ...(bounds ?? {}) };
-    for (const key of ['obstacleTarget', 'triesPerStep', 'saturationK']) {
+    for (const key of ['obstacleTarget', 'triesPerStep', 'saturationK',
+        'anchorTriesPerCandidate']) {
         if (!Number.isInteger(b[key]) || b[key] <= 0) {
             fail(`levelGenerator: bounds.${key} must be a positive integer, got `
                 + `${JSON.stringify(b[key])}. Every bound this loop runs under is named `
@@ -218,16 +261,23 @@ function assertBounds(bounds) {
  */
 export function costModel(bounds, worstCaseSolveMs) {
     const b = assertBounds(bounds);
-    const solves = 1 + b.obstacleTarget * b.triesPerStep;
+    /**
+     * ⛓ SLICE 3 TRACK B ADDED THE THIRD FACTOR. One candidate is now solved at
+     * up to `anchorTriesPerCandidate` anchors, so the ceiling multiplies —
+     * which is precisely why the bound defaults to 1 and why this number is
+     * printed before the press rather than discovered after it.
+     */
+    const solves = 1 + b.obstacleTarget * b.triesPerStep * b.anchorTriesPerCandidate;
     return Object.freeze({
         solves,
         worstCaseSolveMs,
         worstCaseTotalMs: Number.isFinite(worstCaseSolveMs)
             ? solves * worstCaseSolveMs : null,
         why: `1 skeleton solve + obstacleTarget(${b.obstacleTarget}) x `
-            + `triesPerStep(${b.triesPerStep}) candidate solves, every one of which is `
-            + 'SYNCHRONOUS and uninterruptible — the per-solve budget bounds what the '
-            + 'loop ACCEPTS, never what it SPENDS (procgenOracle\'s residue).',
+            + `triesPerStep(${b.triesPerStep}) x `
+            + `anchorTriesPerCandidate(${b.anchorTriesPerCandidate}) candidate solves, every `
+            + 'one of which is SYNCHRONOUS and uninterruptible — the per-solve budget bounds '
+            + 'what the loop ACCEPTS, never what it SPENDS (procgenOracle\'s residue).',
     });
 }
 
@@ -249,10 +299,12 @@ const assertHas = (obj, names, what) => {
  *                            `draws`, `seed`). ⛔ No `Math.random`, no
  *                            `Date.now`, no ambient anything: the seed is the
  *                            level's identity (⚖ kickoff §5).
- * @param {object} o.model    `{ skeleton(), anchorFor(record, template, rng),
- *                            place(record, template, at) }` — pure; `place`
- *                            returns a NEW record and throws BY NAME on an
- *                            illegal placement.
+ * @param {object} o.model    `{ skeleton(), anchorsFor(record, template, rng,
+ *                            limit), place(record, template, at) }` — pure;
+ *                            `anchorsFor` returns up to `limit` legal anchors
+ *                            in one seeded order (`[]` when none fit) and
+ *                            `place` returns a NEW record and throws BY NAME
+ *                            on an illegal placement.
  * @param {object} o.oracle   `{ solve(record, {templates}) }` → a verdict
  *                            object carrying at least `{verdict}`; SOLVED is
  *                            the only keep.
@@ -262,7 +314,7 @@ const assertHas = (obj, names, what) => {
  */
 export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
     const b = assertBounds(bounds);
-    assertHas(model, ['skeleton', 'anchorFor', 'place'], 'model');
+    assertHas(model, ['skeleton', 'anchorsFor', 'place'], 'model');
     assertHas(oracle, ['solve'], 'oracle');
     if (!palette || !Array.isArray(palette.templates) || palette.templates.length === 0) {
         fail('levelGenerator: the palette must be `{name, templates: [...]}` with at '
@@ -414,16 +466,29 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
                 drawsBefore,
             };
             /**
+             * ⛓⛓⛓ THE ANCHOR **SEARCH** (slice 3 track B) — ⚖ ruling 7's *"look
+             * for a viable place to put the template, and put it there if
+             * possible"*.
+             *
              * ⛓ AN ANCHOR IS THE MODEL'S ANSWER, AND "NONE" IS ONE OF ITS
              * ANSWERS. A template whose footprint no longer fits anywhere in
              * a room that has filled up is not an error and not a refusal —
              * it is the room being full of that shape, which is a fact the
              * saturation counter should hear about.
+             *
+             * ⛔ ONE CALL, ONE SHUFFLE, WHATEVER THE BOUND IS. `anchorsFor`
+             * spends the same single draw at limit 1 and at limit 12 (its own
+             * docblock has the argument), so raising the bound moves no earlier
+             * draw and default 1 reproduces the pre-search ladder byte for
+             * byte.
              */
-            const at = model.anchorFor(record, template, rng);
-            if (!at) {
+            const anchors = model.anchorsFor(record, template, rng,
+                b.anchorTriesPerCandidate);
+            if (!anchors.length) {
                 trace.push(Object.freeze({
                     ...row,
+                    anchorTry: null,
+                    anchorsOffered: 0,
                     outcome: ATTEMPT.NO_ANCHOR,
                     at: null,
                     verdict: null,
@@ -434,97 +499,124 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
                 }));
                 continue;
             }
-            let candidate = null;
-            try {
-                candidate = model.place(record, template, at);
-            } catch (e) {
-                /**
-                 * ⛔ ONLY THE MODEL'S OWN REFUSAL IS AN OUTCOME. `withTerrain`
-                 * refuses an out-of-rectangle cell and a cell named twice BY
-                 * NAME, and those are legitimate answers about a candidate.
-                 * Anything else — a TypeError, an engine error — is a defect
-                 * in the generator, and a loop that reverted it would hide
-                 * its own bugs behind "that candidate didn't work out"
-                 * (traps 171/173, the same reasoning `procgenOracle` applies
-                 * to what it catches). The caller decides which name is
-                 * theirs; `model.placementError` is that declaration.
-                 */
-                if (!model.placementError || !(e instanceof model.placementError)) throw e;
+            /**
+             * ⚠ EVERY ANCHOR TESTED IS ITS OWN TRACE ROW, sharing this
+             * candidate's `step`/`try` and numbered by `anchorTry`. A search
+             * that reported one collapsed verdict per candidate would hide the
+             * thing it exists to do, and `anchorsOffered` is beside it because
+             * a walk that stopped at 3 of 3 and a walk that stopped at 3 of 12
+             * are different facts — the first was bounded by LEGALITY, the
+             * second by the BOUND.
+             */
+            for (let ai = 0; ai < anchors.length && !keptThisStep; ai += 1) {
+                const at = anchors[ai];
+                const anchorRow = { ...row, anchorTry: ai + 1, anchorsOffered: anchors.length };
+                let candidate = null;
+                try {
+                    candidate = model.place(record, template, at);
+                } catch (e) {
+                    /**
+                     * ⛔ ONLY THE MODEL'S OWN REFUSAL IS AN OUTCOME. `withTerrain`
+                     * refuses an out-of-rectangle cell and a cell named twice BY
+                     * NAME, and those are legitimate answers about a candidate.
+                     * Anything else — a TypeError, an engine error — is a defect
+                     * in the generator, and a loop that reverted it would hide
+                     * its own bugs behind "that candidate didn't work out"
+                     * (traps 171/173, the same reasoning `procgenOracle` applies
+                     * to what it catches). The caller decides which name is
+                     * theirs; `model.placementError` is that declaration.
+                     *
+                     * ⚠ AND IT ADVANCES TO THE NEXT ANCHOR RATHER THAN THE NEXT
+                     * CANDIDATE: "this CELL was never a room" is a fact about
+                     * the cell. At the default bound there is no next anchor, so
+                     * this is byte-identical to the pre-search `continue`.
+                     */
+                    if (!model.placementError || !(e instanceof model.placementError)) throw e;
+                    trace.push(Object.freeze({
+                        ...anchorRow,
+                        outcome: ATTEMPT.ILLEGAL_PLACEMENT,
+                        at,
+                        verdict: null,
+                        ticks: null,
+                        classifiedBy: 'the level model refused the placement before any solve',
+                        reasonText: e.message,
+                    }));
+                    continue;
+                }
+                let out;
+                try {
+                    // ⛔ `keptRows`, NOT `kept` — see that array's docblock. A
+                    // `kept` RECORD carries no `pins`, so this solve used to take
+                    // the pin union over the candidate alone.
+                    out = oracle.solve(candidate, { templates: [...keptRows, template] });
+                } catch (e) {
+                    /**
+                     * ⛔⛔ THE ABORT IS UNCHANGED, AND THE SEARCH MUST NOT SOFTEN
+                     * IT. An engine throw ends the RUN with its evidence
+                     * attached; catching it here and walking on to the next
+                     * anchor would be exactly the loop-survives-its-own-defects
+                     * shape traps 171/173 name — and it would be worse than
+                     * before, because a wider walk would hide MORE of them.
+                     */
+                    trace.push(Object.freeze({
+                        ...anchorRow,
+                        outcome: ATTEMPT.ABORTED,
+                        at,
+                        verdict: null,
+                        ticks: null,
+                        classifiedBy: `the oracle let a ${e.name} escape — it classifies only `
+                            + 'the two throws that are claims about a LEVEL, and anything '
+                            + 'else is a defect somewhere in the engine, the model or this '
+                            + 'loop (traps 171/173)',
+                        reasonText: e.message,
+                    }));
+                    throw new GenerationAborted(
+                        `levelGenerator: ABORTED at step ${step} try ${attempt} anchor `
+                        + `${ai + 1}/${anchors.length} placing "${row.instance}" at `
+                        + `(${at.tx},${at.ty}) — the oracle threw a ${e.name}, which is NOT `
+                        + 'one of the three verdict classes and is therefore not a rejected '
+                        + 'candidate. The trace up to here is attached; the engine said: '
+                        + e.message,
+                        { trace, record, summary: { kept: [...kept], bounds: b }, cause: e },
+                    );
+                }
+                const keep = out.verdict === 'SOLVED';
                 trace.push(Object.freeze({
-                    ...row,
-                    outcome: ATTEMPT.ILLEGAL_PLACEMENT,
+                    ...anchorRow,
+                    outcome: keep ? ATTEMPT.KEPT : ATTEMPT.REVERTED,
                     at,
-                    verdict: null,
-                    ticks: null,
-                    classifiedBy: 'the level model refused the placement before any solve',
-                    reasonText: e.message,
+                    verdict: out.verdict,
+                    ticks: out.ticks ?? null,
+                    classifiedBy: out.classifiedBy ?? null,
+                    // ⛔ VERBATIM, always — the refusal's own text is the evidence
+                    // channel and this loop is not allowed to summarise it.
+                    reasonText: out.reasonText ?? null,
+                    budgetKind: out.budgetKind ?? null,
                 }));
-                continue;
+                if (keep) {
+                    record = candidate;
+                    /**
+                     * ⛓ `params` IS PART OF THE KEPT RECORD because it is the
+                     * only thing that lets anybody rebuild WHICH instance was
+                     * placed. `procgenPalette.instantiateKept` is the one
+                     * reconstruction, and it refuses rather than defaulting when
+                     * a parameter is missing from this object.
+                     */
+                    kept.push({
+                        template: base.name,
+                        instance: template.instance ?? base.name,
+                        params: template.params ?? null,
+                        family: base.family,
+                        at,
+                    });
+                    // ⛓ THE CONCRETE ROW, RETAINED IN THE SAME ORDER — the object
+                    // every LATER solve unions its pins over (track A).
+                    keptRows.push(template);
+                    lastSolve = out;
+                    keptThisStep = true;
+                }
             }
-            let out;
-            try {
-                // ⛔ `keptRows`, NOT `kept` — see that array's docblock. A
-                // `kept` RECORD carries no `pins`, so this solve used to take
-                // the pin union over the candidate alone.
-                out = oracle.solve(candidate, { templates: [...keptRows, template] });
-            } catch (e) {
-                trace.push(Object.freeze({
-                    ...row,
-                    outcome: ATTEMPT.ABORTED,
-                    at,
-                    verdict: null,
-                    ticks: null,
-                    classifiedBy: `the oracle let a ${e.name} escape — it classifies only `
-                        + 'the two throws that are claims about a LEVEL, and anything '
-                        + 'else is a defect somewhere in the engine, the model or this '
-                        + 'loop (traps 171/173)',
-                    reasonText: e.message,
-                }));
-                throw new GenerationAborted(
-                    `levelGenerator: ABORTED at step ${step} try ${attempt} placing `
-                    + `"${row.instance}" at (${at.tx},${at.ty}) — the oracle threw a `
-                    + `${e.name}, which is NOT one of the three verdict classes and is `
-                    + 'therefore not a rejected candidate. The trace up to here is '
-                    + 'attached; the engine said: ' + e.message,
-                    { trace, record, summary: { kept: [...kept], bounds: b }, cause: e },
-                );
-            }
-            const keep = out.verdict === 'SOLVED';
-            trace.push(Object.freeze({
-                ...row,
-                outcome: keep ? ATTEMPT.KEPT : ATTEMPT.REVERTED,
-                at,
-                verdict: out.verdict,
-                ticks: out.ticks ?? null,
-                classifiedBy: out.classifiedBy ?? null,
-                // ⛔ VERBATIM, always — the refusal's own text is the evidence
-                // channel and this loop is not allowed to summarise it.
-                reasonText: out.reasonText ?? null,
-                budgetKind: out.budgetKind ?? null,
-            }));
-            if (keep) {
-                record = candidate;
-                /**
-                 * ⛓ `params` IS PART OF THE KEPT RECORD because it is the only
-                 * thing that lets anybody rebuild WHICH instance was placed.
-                 * `procgenPalette.instantiateKept` is the one reconstruction,
-                 * and it refuses rather than defaulting when a parameter is
-                 * missing from this object.
-                 */
-                kept.push({
-                    template: base.name,
-                    instance: template.instance ?? base.name,
-                    params: template.params ?? null,
-                    family: base.family,
-                    at,
-                });
-                // ⛓ THE CONCRETE ROW, RETAINED IN THE SAME ORDER — the object
-                // every LATER solve unions its pins over (track A).
-                keptRows.push(template);
-                lastSolve = out;
-                keptThisStep = true;
-                break;
-            }
+            if (keptThisStep) break;
         }
         consecutiveRejectSteps = keptThisStep ? 0 : consecutiveRejectSteps + 1;
         if (!keptThisStep && consecutiveRejectSteps >= b.saturationK) {

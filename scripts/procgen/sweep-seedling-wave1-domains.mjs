@@ -42,7 +42,7 @@
  * domain). So this script offers both and the tables say which they are:
  *
  *   `--anchors=first` (default) — ONE anchor per (value, seed): the cell
- *      `anchorFor` itself draws from a stream seeded with that seed, which is
+ *      `anchorsFor(…, 1)` itself draws from a stream seeded with that seed, which is
  *      the anchor the LOOP would really use. Cheap, and it is what the
  *      non-clearer families are swept at.
  *   `--anchors=all` — every legal anchor in the room, which is
@@ -106,7 +106,7 @@ say(`command: \`node scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=${
     + `--anchors=${ANCHORS}${ONLY ? ` --only=${ONLY}` : ''}\``);
 say(`bound: seeds 1..${SEEDS}, ${ANCHORS === 'all'
     ? 'EVERY LEGAL ANCHOR in the room (`SPINNER_OFFSET`\'s own bound)'
-    : 'ONE anchor per (value, seed) — the cell `anchorFor` itself draws from a stream '
+    : 'ONE anchor per (value, seed) — the cell `anchorsFor(…, 1)` itself draws from a stream '
         + 'seeded with that seed, which is the anchor the loop would use'}. `
     + 'The dedicated geometry is the bare skeleton (bordered room + that seed\'s goal) with '
     + 'the instance placed ALONE.');
@@ -139,7 +139,10 @@ for (const { template, palette } of subjects) {
                 // ⛔ THE MODEL'S OWN `legalAt`, never a second copy of the rule.
                 ? model.interiorCells(skeleton)
                     .filter((c) => model.legalAt(skeleton, instance, c.tx, c.ty))
-                : [model.anchorFor(skeleton, instance, rngFor(seed))].filter(Boolean);
+                // ⛓ SLICE 3: `anchorsFor(…, 1)` IS the old `anchorFor` — one
+                // shuffle, the first legal cell — so this table's `first` bound
+                // is unchanged in meaning and in value.
+                : model.anchorsFor(skeleton, instance, rngFor(seed), 1);
             if (!anchors.length) { counts.noAnchor += 1; continue; }
             const oracle = seedlingOracle({ model, items: palette.items ?? null });
             for (const at of anchors) {

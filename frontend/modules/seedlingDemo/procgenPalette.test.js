@@ -1100,7 +1100,7 @@ describe('the arrow lane\'s clearance rule is the ENGINE\'s geometry', () => {
         const m = model();
         const rng = rngFor(3);
         for (let i = 0; i < 20; i += 1) {
-            const at = m.anchorFor(m.skeleton(), instanceOf('arrow-lane'), rng);
+            const [at] = m.anchorsFor(m.skeleton(), instanceOf('arrow-lane'), rng, 1);
             expect(at).not.toBeNull();
             expect(m.laneClear(m.skeleton(), at.tx, at.ty).ok).toBe(true);
         }
@@ -1155,7 +1155,7 @@ describe('the bindings place atomically and refuse illegally', () => {
         expect(m.placementError).toBe(ProcgenLevelError);
     });
 
-    it('`anchorFor` returns null rather than looping when nothing fits', () => {
+    it('`anchorsFor` returns an EMPTY LIST rather than looping when nothing fits', () => {
         const m = model();
         // a template whose footprint is the whole interior cannot be placed
         const huge = {
@@ -1163,7 +1163,119 @@ describe('the bindings place atomically and refuse illegally', () => {
             footprint: Array.from({ length: 64 }, (_, i) => ({ dx: i % 8, dy: Math.floor(i / 8) })),
             terrain: [], entities: [],
         };
-        expect(m.anchorFor(m.skeleton(), huge, rngFor(5))).toBeNull();
+        expect(m.anchorsFor(m.skeleton(), huge, rngFor(5), 1)).toEqual([]);
+        // ⛓ and raising the bound does not conjure one — the whole interior refuses
+        expect(m.anchorsFor(m.skeleton(), huge, rngFor(5), 12)).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK B — **THE MECHANISM THAT MAKES
+     * DEFAULT 1 BYTE-INERT**, asserted rather than argued.
+     *
+     * The anchor search would move every recorded seed→level pair if raising
+     * the bound cost extra draws, because the loop's very next `rng.pick` would
+     * come off a different stream position. It does not: `anchorsFor` spends
+     * ONE shuffle whatever the limit is, and the limit only truncates the
+     * already-drawn order.
+     */
+    it('⛓ the anchor list costs the SAME draws at every limit, and is a PREFIX chain', () => {
+        const m = model();
+        const t = instanceOf('wall-segment', { ori: 'h', len: 3 });
+        const spend = (limit) => {
+            const rng = rngFor(5);
+            const anchors = m.anchorsFor(m.skeleton(), t, rng, limit);
+            return { anchors, draws: rng.draws, state: rng.state };
+        };
+        const one = spend(1);
+        const three = spend(3);
+        const twelve = spend(12);
+        // ⛔ the stream is left in the SAME place — this is the whole claim
+        expect(three.draws).toBe(one.draws);
+        expect(twelve.draws).toBe(one.draws);
+        expect(three.state).toBe(one.state);
+        expect(twelve.state).toBe(one.state);
+        // and the longer list EXTENDS the shorter one rather than reordering it
+        expect(three.anchors.slice(0, 1)).toEqual(one.anchors);
+        expect(twelve.anchors.slice(0, 3)).toEqual(three.anchors);
+        expect(three.anchors).toHaveLength(3);
+        // every cell is legal, and no cell is offered twice
+        for (const c of twelve.anchors) {
+            expect(m.legalAt(m.skeleton(), t, c.tx, c.ty)).toBe(true);
+        }
+        expect(new Set(twelve.anchors.map((c) => `${c.tx},${c.ty}`)).size)
+            .toBe(twelve.anchors.length);
+    });
+
+    it('refuses a limit that is not a positive integer — the bound is named in the trace',
+        () => {
+            const m = model();
+            const t = instanceOf('wall-segment', { ori: 'h', len: 3 });
+            expect(() => m.anchorsFor(m.skeleton(), t, rngFor(5), 0))
+                .toThrow(/positive integer limit/);
+        });
+
+    /**
+     * ⛓⛓⛓ THE DEDICATED CASE THE SEARCH EXISTS FOR — a template the FIRST
+     * anchor refuses and the SECOND accepts.
+     *
+     * ⚠ THE SUBJECT IS MEASURED, NOT CHOSEN FOR CONVENIENCE. Walking every
+     * legal anchor of `wall-gap-block(ori=v,gap=0)` over seeds 1..12, the first
+     * anchor SOLVES at eleven of them; seed 7 is the one where it does not
+     * (`firstSolve` = 2 of 6 legal). A subject whose first anchor already
+     * solved could not distinguish the two bounds at all.
+     */
+    it('⛓ seed 7: the plain door REFUSES at anchor 1 and SOLVES at anchor 2', () => {
+        const m = seedlingModel({ seed: 7 });
+        const door = PRE_SWORD_PALETTE.templates.find((t) => t.name === 'wall-gap-block')
+            .instantiate(null, { ori: 'v', gap: 0 });
+        const oracle = seedlingOracle({ model: m, items: PRE_SWORD_PALETTE.items ?? null });
+        const sk = m.skeleton();
+        const two = m.anchorsFor(sk, door, rngFor(7), 2);
+        expect(two).toHaveLength(2);
+        // the one-anchor bound sees ONLY the first, and it refuses
+        expect(m.anchorsFor(sk, door, rngFor(7), 1)).toEqual([two[0]]);
+        expect(oracle.solve(m.place(sk, door, two[0]), { templates: [door] }).verdict)
+            .not.toBe('SOLVED');
+        expect(oracle.solve(m.place(sk, door, two[1]), { templates: [door] }).verdict)
+            .toBe('SOLVED');
+    });
+
+    /**
+     * ⛓⛓⛓ …AND THE SAME THING THROUGH THE WHOLE LOOP. Pre-sword seed 5 at
+     * target 6 with `anchorTriesPerCandidate: 3` KEEPS a candidate at its
+     * SECOND anchor that the default bound REVERTS — measured over seeds 1..12
+     * (seeds 2, 4, 5 and 12 produce such a rescue; 5 produces two).
+     *
+     * ⛔ THE ROW PAIR IS THE CLAIM. The rescued row shares `step`/`try` with the
+     * refusal before it and differs in `anchorTry` AND in `at`: a search that
+     * re-tested the FIRST anchor would produce the same two rows with the same
+     * ordinals and the same verdicts, and only the CELL separates them.
+     */
+    it('⛓ DRIVEN: seed 5 keeps at anchor 2 a candidate the default bound reverts', () => {
+        const bounds = { obstacleTarget: 6, anchorTriesPerCandidate: 3 };
+        const wide = generateSeedlingLevel({ seed: 5, palette: PRE_SWORD_PALETTE, bounds });
+        const rescued = wide.trace.filter((r) => r.outcome === 'KEPT' && r.anchorTry > 1);
+        expect(rescued.length).toBeGreaterThan(0);
+        for (const r of rescued) {
+            const i = wide.trace.indexOf(r);
+            const before = wide.trace[i - 1];
+            expect(before.step).toBe(r.step);
+            expect(before.try).toBe(r.try);
+            expect(before.anchorTry).toBe(r.anchorTry - 1);
+            expect(before.outcome).toBe('REVERTED');
+            // ⛔ the walk really ADVANCED
+            expect(`${before.at.tx},${before.at.ty}`).not.toBe(`${r.at.tx},${r.at.ty}`);
+            expect(r.anchorsOffered).toBeGreaterThanOrEqual(r.anchorTry);
+        }
+        // and the default bound really does lose it: same (step,try), REVERTED
+        const narrow = generateSeedlingLevel({
+            seed: 5, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+        });
+        const first = rescued[0];
+        const same = narrow.trace.find((r) => r.step === first.step && r.try === first.try);
+        expect(same.outcome).toBe('REVERTED');
+        expect(same.anchorTry).toBe(1);
+        expect(JSON.stringify(narrow.record)).not.toBe(JSON.stringify(wide.record));
     });
 });
 

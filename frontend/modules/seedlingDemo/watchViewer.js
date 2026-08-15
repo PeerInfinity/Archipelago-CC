@@ -3963,8 +3963,16 @@ function mountGenerationPane(rows) {
         el.className = `tr past${r.outcome === 'KEPT' ? ' kept' : ''}`;
         // ⛓ THE INSTANCE LABEL, not the roster key — `wall-segment(ori=v,len=4)`
         // and `wall-segment(ori=h,len=2)` are two different obstacles.
+        /**
+         * ⛓ SLICE 3: THE ANCHOR WALK IS VISIBLE, ROW BY ROW. `r.label` already
+         * carries the ordinal (`1.2a3`); this adds the DENOMINATOR beside the
+         * cell, so a reader can tell a walk the BOUND stopped from a walk
+         * LEGALITY stopped without counting rows.
+         */
         el.innerHTML = `<b>${r.label}</b> <span class="s">${r.instance}</span>`
             + (r.at ? ` <span class="g">${r.at}</span>` : '')
+            + (r.anchorsOffered > 1
+                ? ` <span class="rj">anchor ${r.anchorTry}/${r.anchorsOffered}</span>` : '')
             + ` → <span class="${r.outcome === 'KEPT' ? 'g' : 'o'}">${r.outcome}</span>`
             + (r.verdict ? ` <span class="rj">${r.verdict}</span>` : '')
             + (r.ticks !== null ? ` <span class="rj">${r.ticks}t</span>` : '')
@@ -4041,6 +4049,7 @@ async function runGenerate(params, lifetime) {
     $('genCount').value = String(bounds.obstacleTarget);
     $('genTries').value = String(bounds.triesPerStep);
     $('genK').value = String(bounds.saturationK);
+    $('genAnchorTries').value = String(bounds.anchorTriesPerCandidate);
     const biomeSel = $('genBiome');
     biomeSel.innerHTML = BIOME_NAMES
         .map((b) => `<option value="${b}">${b}</option>`).join('');
@@ -4306,6 +4315,7 @@ async function runGenerate(params, lifetime) {
             obstacleTarget: Number($('genCount').value),
             triesPerStep: Number($('genTries').value),
             saturationK: Number($('genK').value),
+            anchorTriesPerCandidate: Number($('genAnchorTries').value),
         };
         return reset;
     }

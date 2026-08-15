@@ -79,7 +79,14 @@ describe('the URL parameters — every bound named, nothing guessed', () => {
         expect(p.gen).toBe('/x.json');
         expect(p.seed).toBe(13);
         expect(p.biome).toBe('post-sword');
-        expect(p.bounds).toEqual({ obstacleTarget: 3, triesPerStep: 4, saturationK: 2 });
+        expect(p.bounds).toEqual({
+            obstacleTarget: 3, triesPerStep: 4, saturationK: 2, anchorTriesPerCandidate: 1,
+        });
+        // ⛓ SLICE 3: and the anchor bound reads back too, when the URL names it
+        expect(readGenerateParams('?source=generate&anchortries=5').bounds
+            .anchorTriesPerCandidate).toBe(5);
+        expect(() => readGenerateParams('?source=generate&anchortries=1.5'))
+            .toThrow(/\?anchortries="1.5" is not an integer/);
     });
 
     /**
@@ -112,7 +119,15 @@ describe('the URL parameters — every bound named, nothing guessed', () => {
  * of them moves; only a round trip catches the move.
  */
 describe('writeGenerateParams — the write back, and the reader is its inverse', () => {
-    const bounds = { obstacleTarget: 3, triesPerStep: 5, saturationK: 2 };
+    /**
+     * ⚠ NOT ONE OF THESE IS ITS DEFAULT (trap 235). `DEFAULT_BOUNDS` is
+     * target 6 / tries 8 / k 3 / anchorTries 1, so a writeback this test
+     * DROPPED would read back as a DIFFERENT number rather than coinciding
+     * with the right one — which is the only way the round trip can fail.
+     */
+    const bounds = {
+        obstacleTarget: 3, triesPerStep: 5, saturationK: 2, anchorTriesPerCandidate: 4,
+    };
 
     it('writes every control the form holds, and the reader reads them back', () => {
         const search = writeGenerateParams('?source=generate', {
@@ -240,6 +255,25 @@ describe('the ladder cost — stated BEFORE it is spent', () => {
         expect(cost.displaySolves).toBe(4);
         expect(cost.worstCaseTotalMs).toBe(5500);
         expect(cost.why).toMatch(/RUN-ALL to 3/);
+    });
+
+    /**
+     * ⛓ SLICE 3: THE ANCHOR SEARCH MULTIPLIES THE CEILING, and the whole point
+     * of printing it before the press is that a caller who raises the bound
+     * sees the price first. ⛔ The `1 +` per rung is the DISPLAY-free skeleton
+     * solve and does NOT multiply — a factor applied to the wrong term would
+     * still grow and would still look right.
+     */
+    it('multiplies by anchorTriesPerCandidate — and only the CANDIDATE solves', () => {
+        const one = ladderCost({ obstacleTarget: 3, triesPerStep: 8 }, 100);
+        const four = ladderCost(
+            { obstacleTarget: 3, triesPerStep: 8, anchorTriesPerCandidate: 4 }, 100,
+        );
+        // (1+8x4) + (1+16x4) + (1+24x4) = 195
+        expect(four.loopSolves).toBe(195);
+        expect(four.loopSolves - 3).toBe((one.loopSolves - 3) * 4);
+        expect(four.displaySolves).toBe(one.displaySolves);
+        expect(four.why).toMatch(/anchorTriesPerCandidate\(4\)/);
     });
 
     it('names the ladder as the reason it is more than one run', () => {
@@ -433,10 +467,42 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
         }
     });
 
+    /**
+     * ⛓⛓⛓ SLICE 3: THE PANE SHOWS THE SEARCH, NOT ONE COLLAPSED VERDICT.
+     *
+     * Rows of one candidate now share `step.try`, so the label carries the
+     * anchor ordinal — `6.1a1`, `6.1a2` — and `anchorsOffered` rides beside it.
+     * ⛔ A pane that printed `6.1` twice would be showing a search as an
+     * attempt repeated, which is the one reading a viewer cannot act on.
+     *
+     * ⚠ THE SUBJECT IS THE MEASURED RESCUE (seed 5 at `anchorTriesPerCandidate:
+     * 3` keeps a candidate at its second anchor). At the DEFAULT bound every
+     * row is `aN=1` and the case would be about a search nobody ran.
+     */
+    it('the label carries the ANCHOR ordinal, so one candidate\'s rows are distinguishable',
+        () => {
+            const s = generateStep({
+                seed: 5,
+                biome: 'pre-sword',
+                step: 6,
+                bounds: { anchorTriesPerCandidate: 3 },
+            });
+            const rows = generationRows(s.trace);
+            const walked = rows.filter((r) => r.anchorsOffered > 1 && r.anchorTry > 1);
+            expect(walked.length, 'seed 5 must WALK for this case to mean anything')
+                .toBeGreaterThan(0);
+            for (const r of walked) {
+                expect(r.label).toBe(`${r.step}.${r.try}a${r.anchorTry}`);
+                const siblings = rows.filter((x) => x.step === r.step && x.try === r.try);
+                expect(new Set(siblings.map((x) => x.label)).size).toBe(siblings.length);
+            }
+            expect(rows[0].label).toBe('(skeleton)');
+        });
+
     it('describeState names every bound that ran', () => {
         const s = generateStep({ seed: 9, biome: 'pre-sword', step: 1 });
         const line = describeState(s, displaySolve(s));
-        expect(line).toMatch(/bounds: target=1 tries=8 k=3/);
+        expect(line).toMatch(/bounds: target=1 tries=8 k=3 anchortries=1/);
         // ⛓ TICKS, not ms — the readout used to say POST-HOC because the budget
         // was a stopwatch. It is not one any more (2026-08-14), and a pane that
         // still advertised a wall clock would be describing a bound nobody runs.

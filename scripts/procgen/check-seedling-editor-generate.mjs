@@ -117,6 +117,13 @@ const CARRIER = { seed: 41, biome: 'post-sword', count: 1 };
  * copy it — and it is set away from the default 400 so it is a budget the run
  * is really certified under and not just a string in a query.
  *
+ * ⛓ SLICE 3 ADDS `anchortries` TO THE SET THAT HAS TO TRAVEL — six controls
+ * now, and it is set to 2 (the default is 1) so a dropped writeback lands on a
+ * DIFFERENT bound. ⚠ At 2 the ladder may KEEP a candidate the one-anchor bound
+ * would have reverted, so the level this subject names is genuinely a
+ * search's; the node side is computed under the same bound, which is what
+ * makes the byte comparison a claim about the URL and not about the search.
+ *
  * The seed is a MEASUREMENT: at these bounds it must REACH its target, or the
  * step the URL names is not the target the form asked for and the claim gets
  * softer than it reads. ⛓ RE-MEASURED at slice 2: **all of seeds 1..12 reach
@@ -125,9 +132,20 @@ const CARRIER = { seed: 41, biome: 'post-sword', count: 1 };
  * (`PRE.seed + 1`), 7 is claim 5d's (`PRE.seed + 3`) and 41 is the carrier's.
  * (Was seed 5, back when `PRE` was seed 1.)
  */
-const ROUND = { seed: 6, biome: 'pre-sword', count: 2, tries: 3, k: 2, tickbudget: 600 };
+const ROUND = {
+    seed: 6, biome: 'pre-sword', count: 2, tries: 3, k: 2, anchortries: 2, tickbudget: 600,
+};
 const ROUND_BOUNDS = {
-    obstacleTarget: ROUND.count, triesPerStep: ROUND.tries, saturationK: ROUND.k,
+    obstacleTarget: ROUND.count,
+    triesPerStep: ROUND.tries,
+    saturationK: ROUND.k,
+    /**
+     * ⛓ SLICE 3's BOUND, AND IT IS 2 RATHER THAN 1 FOR THE SAME REASON
+     * `tries`/`k` are not their defaults: `DEFAULT_BOUNDS.anchorTriesPerCandidate`
+     * IS 1, so a subject at 1 would read back correctly from a writer that never
+     * wrote it (trap 235).
+     */
+    anchorTriesPerCandidate: ROUND.anchortries,
 };
 const ROUND_BUDGET = { maxTicksPerTarget: ROUND.tickbudget };
 
@@ -221,6 +239,7 @@ const panelOf = () => page.evaluate(() => ({
     count: document.getElementById('genCount').value,
     tries: document.getElementById('genTries').value,
     k: document.getElementById('genK').value,
+    anchortries: document.getElementById('genAnchorTries').value,
 }));
 
 /**
@@ -376,6 +395,7 @@ const settled = (step, seed = null) => page.waitForFunction(
     await page.fill('#genCount', String(ROUND.count));
     await page.fill('#genTries', String(ROUND.tries));
     await page.fill('#genK', String(ROUND.k));
+    await page.fill('#genAnchorTries', String(ROUND.anchortries));
     await page.click('#genRunAll');
     await settled(ROUND.count);
     const pressed = await panelOf();
@@ -394,9 +414,13 @@ const settled = (step, seed = null) => page.waitForFunction(
         'and the level it generated is node\'s own under those bounds, byte for byte');
     check(u.get('seed') === String(ROUND.seed) && u.get('biome') === ROUND.biome
         && u.get('count') === String(web.gen.step) && u.get('tries') === String(ROUND.tries)
-        && u.get('k') === String(ROUND.k) && u.get('run') === '1',
+        && u.get('k') === String(ROUND.k)
+        && u.get('anchortries') === String(ROUND.anchortries) && u.get('run') === '1',
         '⛓ EVERY generate control is written back — the address bar NAMES the run '
         + '(the defect: it named the level BEFORE the edits)', pressed.url);
+    check(web.gen.bounds.anchorTriesPerCandidate === ROUND.anchortries,
+        '…and the anchor bound the URL names is the one the RUN used, not just a string',
+        json(web.gen.bounds));
     /**
      * ⛔ `?tickbudget=` HAS NO CONTROL ON THE FORM. A rewrite that rebuilt the
      * query instead of copying it would drop the budget the level on screen
@@ -421,8 +445,8 @@ const settled = (step, seed = null) => page.waitForFunction(
     }));
     check(reloaded.seed === pressed.seed && reloaded.biome === pressed.biome
         && reloaded.count === pressed.count && reloaded.tries === pressed.tries
-        && reloaded.k === pressed.k,
-        '⛓⛓ the copied URL brings the PANEL back identical — all five controls',
+        && reloaded.k === pressed.k && reloaded.anchortries === pressed.anchortries,
+        '⛓⛓ the copied URL brings the PANEL back identical — all SIX controls',
         `${json(pressed)} → ${json(reloaded)}`);
     check(json(back.level) === json(web.level) && json(back.trace) === json(web.trace),
         '⛓⛓ …and the LEVEL back byte-identical, trace included — the link reproduces '
