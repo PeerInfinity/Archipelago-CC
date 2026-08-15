@@ -1,0 +1,786 @@
+/**
+ * mazeRoom/mazeLabView — **THE MAZE LAB PAGE'S DOM ARM.** `lab.html` calls
+ * `main()` and this file is everything between a URL and a canvas.
+ *
+ * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
+ * kickoff.md` §3.5). The counterpart of `seedlingDemo/watchViewer.js`, and it
+ * is deliberately much smaller: every claim-making thing it touches lives
+ * elsewhere — the loop in `procgenCore/`, the bindings in `procgenMaze.js`, the
+ * headless page logic in `mazeLab.js`, the DRAW in `mazeRoomRender.js`.
+ *
+ * ⚠ TOOLING ONLY: it makes no claims and gates nothing.
+ *
+ * ── ⛔ THE LAWS IT IS BUILT AGAINST, EACH ONE PAID FOR ELSEWHERE ───────
+ *
+ * 1. **ONE READER, ONE WRITER.** `mazeLab.readLabParams` /
+ *    `mazeLab.writeLabParams` are the only two functions in the page that know
+ *    what a parameter is called. ⛔ Every control writes its value back through
+ *    the writer AT PRESS TIME, so a copied address bar reproduces the run — the
+ *    GENERATE-UI arc's slice-1 defect was a form that edited local variables
+ *    and left the bar naming a level the page was not showing.
+ * 2. **THE SOURCE SELECTOR DOES NOT RELOAD** (the SWITCH arc's law). The three
+ *    arms share one state and one canvas; switching shows a different panel and
+ *    starts a new LIFETIME.
+ * 3. **EVERY `addEventListener` GOES THROUGH THE LIFETIME** (`procgenCore/
+ *    pageLifetime.js`, trap 259). Not a style rule: a listener registered
+ *    directly is invisible to the readout, so a leak would sit next to a report
+ *    of a clean teardown.
+ * 4. **THE PAGE NEVER WRITES `fixtures/`** or any repo path. Download and the
+ *    save box are the only ways a level leaves.
+ * 5. **RAW TRUTH.** A refusal is printed with the oracle's or the editor's own
+ *    sentence, verbatim. A paraphrase would be a lossy copy of the only
+ *    evidence channel a generator has.
+ *
+ * ── THE READOUTS ──────────────────────────────────────────────────────
+ *
+ * `window.__mazeLab` is what `scripts/procgen/check-maze-lab.mjs` asserts on;
+ * `window.__mazeLabLifetime` is the teardown account. ⛔ Both are set on EVERY
+ * render, not only under a parameter — a readout that existed only when asked
+ * for would make the thing it reports untestable from the other side.
+ */
+
+import { createLifetimeHolder } from '../procgenCore/pageLifetime.js';
+import { describeKeptKind, generationRows, ladderCost, tileAtPoint } from '../procgenCore/labView.js';
+import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
+import {
+    DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor, PALETTE_ENTRIES,
+    SOURCES, agreementWithPayload, applyDirective, applyEdit, certify, describeState,
+    generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells,
+    readLabParams, serializeMazeLevel, solveState, stepFromParams, undoEdit, writeLabParams,
+} from './mazeLab.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+};
+
+/** ⚠ A generous ceiling for ONE maze solve. The whole BFS state space of the
+ *  default room is 242 states, so a run of 49 solves measures in tens of ms —
+ *  the number is stated so a caller raising the target can price it BEFORE
+ *  pressing, which is the same discipline `costModel` applies to one run. */
+const WORST_CASE_SOLVE_MS = 3;
+
+export function main() {
+    const lifetimes = createLifetimeHolder({
+        publish: (snap) => { window.__mazeLabLifetime = snap; },
+    });
+
+    /* ── THE PAGE'S OWN STATE. `state` is the LEVEL; everything else here is
+     *    about the page (which arm, which palette entry, what was hovered). ── */
+    let params = null;
+    let state = null;
+    let lastSolve = null;
+    let payloadCheck = null;
+    let hover = null;
+    let editor = null;
+    let message = '';
+    let messageBad = false;
+
+    const say = (text, bad = false) => { message = text; messageBad = bad; };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * THE URL — written at every press, read only at boot
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔ `history.replaceState` AND NOT AN ASSIGNMENT TO `location.search`. The
+     * latter NAVIGATES, which is the reload the SWITCH arc removed; this
+     * rewrites the bar in place and the page keeps its state.
+     *
+     * ⚠ IT REWRITES THE PARAMETERS IT OWNS AND COPIES THE REST, from the bar as
+     * it stands — so a parameter this page does not know about survives a press
+     * instead of being silently dropped.
+     */
+    const writeUrl = () => {
+        if (!state) return;
+        const search = writeLabParams(window.location.search, {
+            source: params.source,
+            seed: state.seed,
+            biome: state.biome,
+            width: state.width,
+            height: state.height,
+            bounds: state.bounds,
+            budget: state.budget,
+            step: state.step,
+            roster: state.roster,
+            directives: state.directives,
+        });
+        window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * THE CANVAS
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛓⛓ ONE DRAW, THREE PASSES: the world through `mazeRoomRender.drawWorld`
+     * — the SAME function `mazeRoomUI` calls, pixel-gated — then the PLAN and
+     * then the hovered cell, both on top.
+     *
+     * ⛔ THE OVERLAYS ARE NOT INSIDE `drawWorld`. A plan is a fact about a
+     * SOLVE and a hover is a fact about a MOUSE; neither is a property of the
+     * world, and putting them in the renderer would mean the panel had to pass
+     * `plan: null` forever to say it has no solver.
+     */
+    const draw = () => {
+        const canvas = $('canvas');
+        if (!state) return;
+        const w = state.record;
+        canvas.width = w.width * TILE_PX;
+        canvas.height = w.height * TILE_PX;
+        const ctx = canvas.getContext('2d');
+        drawWorld(ctx, w, plainView({ tilePx: TILE_PX }));
+
+        const cells = lastSolve ? planCells(state, lastSolve) : null;
+        if (cells && cells.length > 1) {
+            ctx.save();
+            ctx.strokeStyle = COLORS.player;
+            ctx.lineWidth = 2.5;
+            ctx.globalAlpha = 0.85;
+            ctx.beginPath();
+            cells.forEach((c, i) => {
+                const x = c.x * TILE_PX + TILE_PX / 2;
+                const y = c.y * TILE_PX + TILE_PX / 2;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            ctx.restore();
+        }
+        if (hover) {
+            ctx.save();
+            ctx.strokeStyle = '#ffd75f';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(hover.tx * TILE_PX + 1, hover.ty * TILE_PX + 1,
+                TILE_PX - 2, TILE_PX - 2);
+            ctx.restore();
+        }
+    };
+
+    /**
+     * ⛔ THE CELL A POINT NAMES IS `labView.tileAtPoint`'s ANSWER, derived from
+     * the ROOM's dimensions and the ELEMENT's on-screen size — never from
+     * `TILE_PX`, which is the canvas's INTRINSIC scale and says nothing about
+     * how the browser is presenting it. ⚠ An out-of-range point REFUSES rather
+     * than clamping, so this catches and reports instead of silently naming the
+     * last cell.
+     */
+    const cellAt = (event) => {
+        const canvas = $('canvas');
+        const rect = canvas.getBoundingClientRect();
+        try {
+            return tileAtPoint({
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
+                width: rect.width,
+                height: rect.height,
+                cols: state.record.width,
+                rows: state.record.height,
+            });
+        } catch {
+            return null;
+        }
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * THE PANES
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const renderTrace = () => {
+        const box = $('labTrace');
+        box.textContent = '';
+        const rows = generationRows(state?.trace ?? []);
+        if (rows.length === 0) {
+            box.appendChild(el('div', 'traceNone',
+                'no attempts yet — the SKELETON is the open room and its goal, before any '
+                + 'template is drawn.'));
+            return;
+        }
+        for (const r of rows) {
+            const row = el('div', `tr ${r.outcome === 'KEPT' ? 'kept' : ''}`);
+            const head = el('div');
+            head.appendChild(el('b', null, r.label));
+            head.appendChild(document.createTextNode(' '));
+            head.appendChild(el('span', null, r.instance));
+            if (r.at) head.appendChild(el('span', null, ` ${r.at}`));
+            head.appendChild(document.createTextNode(' '));
+            head.appendChild(el('span', r.outcome === 'KEPT' ? 'g' : 'o', r.outcome));
+            if (r.verdict) head.appendChild(el('span', 's', ` ${r.verdict}`));
+            if (r.ticks !== null) head.appendChild(el('span', null, ` ${r.ticks} step(s)`));
+            row.appendChild(head);
+            // ⛔ VERBATIM, both of them, and as two lines because they are two
+            // claims: HOW the oracle decided, and WHAT the solver said.
+            if (r.classifiedBy) row.appendChild(el('div', 'rj', `classified by: ${r.classifiedBy}`));
+            if (r.reasonText) row.appendChild(el('div', 'rj', r.reasonText));
+            box.appendChild(row);
+        }
+    };
+
+    /**
+     * ⛓⛓⛓ THE CATALOGUE + RESTRICT. ⚖ Ruling 1: *"a list of things that can be
+     * generated"* + *"choose the sub-roster a run may draw from"*.
+     *
+     * ⛔ THE EXCLUDED ROWS ARE IN IT (the v1 maze palette declares none, and the
+     * branch is written anyway — a list that could not show what a palette
+     * CANNOT generate would be the graceful-skip shape wearing a roster's
+     * clothes, and slice 6's yield table is expected to produce exclusions).
+     */
+    const renderRoster = () => {
+        const box = $('labRoster');
+        box.textContent = '';
+        const cat = labCatalogue(state.biome);
+        const picked = new Set(state.roster?.axis === 'families' ? state.roster.names : []);
+        for (const g of cat.groups) {
+            const fam = el('div', 'catFamily');
+            const head = el('div', 'catHead');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'famBox';
+            cb.dataset.family = g.family;
+            cb.checked = !state.roster || picked.has(g.family);
+            lifetimes.current().on(cb, 'change', () => {
+                const on = [...document.querySelectorAll('#labRoster .famBox')]
+                    .filter((b) => b.checked).map((b) => b.dataset.family);
+                /**
+                 * ⛔ ALL-TICKED IS **NO RESTRICTION**, not a restriction naming
+                 * everything. The two are different questions and
+                 * `restrictPalette` names the palette differently for each, so a
+                 * page that wrote one when a person meant the other would put a
+                 * roster in the payload nobody asked for.
+                 */
+                const all = on.length === cat.groups.length;
+                try {
+                    state = Object.freeze({
+                        ...state,
+                        roster: all ? null : { axis: 'families', names: on },
+                    });
+                    say(all ? 'the WHOLE roster — no restriction'
+                        : `restricted to families [${on.join(', ')}]`);
+                } catch (e) {
+                    say(e.message, true);
+                }
+                render();
+            });
+            head.appendChild(cb);
+            head.appendChild(document.createTextNode(` ${g.family}`));
+            fam.appendChild(head);
+            for (const t of g.templates) {
+                const row = el('div', 'catRow');
+                row.appendChild(el('b', null, t.name));
+                if (t.why) row.appendChild(el('div', 'rj', t.why));
+                fam.appendChild(row);
+                fam.appendChild(directedForm(t));
+            }
+            for (const x of g.excluded) {
+                const row = el('div', 'catRow excluded');
+                row.appendChild(el('b', null, x.name));
+                if (x.cause) row.appendChild(el('div', 'rj', x.cause));
+                fam.appendChild(row);
+            }
+            box.appendChild(fam);
+        }
+        $('labRosterNote').textContent = `${cat.counts.templates} template(s) in `
+            + `${cat.counts.families} family(ies)${cat.counts.excluded
+                ? `, ${cat.counts.excluded} excluded` : ''}`;
+    };
+
+    /**
+     * ⛓⛓⛓ VERB 2 — the per-row parameter form and its ATTEMPT button. ⚖ Ruling
+     * 1: *"a button to make the generator attempt to generate that specific
+     * thing."*
+     *
+     * ⛔ THE COST IS PRINTED BESIDE THE BUTTON, before it is pressed. A solve is
+     * synchronous and uninterruptible, so a budget bounds what is ACCEPTED and
+     * never what is SPENT — the number a presser is agreeing to has to be
+     * visible at press time.
+     */
+    const directedForm = (t) => {
+        const form = el('div', 'catForm');
+        const selects = new Map();
+        for (const p of t.params ?? []) {
+            const s = document.createElement('select');
+            s.dataset.key = p.key;
+            /**
+             * ⛓ "any" IS A REAL OPTION AND IT IS THE DEFAULT: a directive may
+             * leave a parameter to be DRAWN, and what it then RECORDS is the
+             * drawn value (`mazeLab.applyDirective`'s two salted streams).
+             */
+            s.appendChild(new Option('any', ''));
+            for (const v of p.domain) s.appendChild(new Option(`${p.key}=${v}`, String(v)));
+            form.appendChild(el('span', null, ` ${p.key} `));
+            form.appendChild(s);
+            selects.set(p.key, { select: s, domain: p.domain });
+        }
+        const btn = el('button', null, 'ATTEMPT');
+        btn.dataset.template = t.name;
+        lifetimes.current().on(btn, 'click', () => {
+            const values = {};
+            for (const [key, { select, domain }] of selects) {
+                if (select.value === '') continue;
+                values[key] = domain.find((v) => String(v) === select.value);
+            }
+            try {
+                state = applyDirective(state, {
+                    template: t.name,
+                    params: values,
+                    anchor: null,
+                    bound: DIRECTED_ANCHOR_TRIES,
+                }, (state.directives ?? []).length);
+                const d = state.directives[state.directives.length - 1];
+                say(`${d.instance}: ${d.outcome}`
+                    + (d.at ? ` at (${d.at.tx},${d.at.ty})` : '')
+                    + (d.outcome === 'KEPT' ? ` — ${describeKeptKind(d)}` : ''),
+                d.outcome !== 'KEPT');
+                lastSolve = null;
+                writeUrl();
+            } catch (e) {
+                say(e.message, true);
+            }
+            render();
+        });
+        form.appendChild(document.createTextNode(' '));
+        form.appendChild(btn);
+        form.appendChild(el('span', 'cost',
+            ` ≤ ${DIRECTED_ANCHOR_TRIES + 1} solves`));
+        return form;
+    };
+
+    const renderDirectives = () => {
+        const box = $('labDirectives');
+        box.textContent = '';
+        for (const d of state.directives ?? []) {
+            const row = el('div', 'dRow');
+            row.appendChild(el('b', null, d.instance));
+            row.appendChild(document.createTextNode(' '));
+            row.appendChild(el('span', d.outcome === 'KEPT' ? 'g' : 'o', d.outcome));
+            if (d.at) row.appendChild(el('span', null, ` at (${d.at.tx},${d.at.ty})`));
+            row.appendChild(el('div', 'rj',
+                d.outcome === 'KEPT'
+                    ? describeKeptKind(d)
+                    : `${d.anchorsWalked ?? 0} of ${d.anchorsOffered ?? 0} offered anchor(s) `
+                        + 'were walked and none was accepted'));
+            box.appendChild(row);
+        }
+        $('labDirectivesNote').textContent = (state.directives ?? []).length
+            ? `${state.directives.length} directive(s), in order`
+            : 'none — press ATTEMPT on a catalogue row';
+    };
+
+    const renderEditPanel = () => {
+        const box = $('labPalette');
+        box.textContent = '';
+        for (const e of PALETTE_ENTRIES) {
+            const b = el('button', 'paletteBtn', `${e.glyph} ${e.label}`);
+            b.dataset.type = e.type;
+            if (editor?.selectedType === e.type) b.classList.add('armed');
+            lifetimes.current().on(b, 'click', () => {
+                editor.selectType(e.type);
+                say(`palette: ${e.label} — click a tile`);
+                render();
+            });
+            box.appendChild(b);
+        }
+        $('editNote').textContent = (state.edits ?? []).length
+            ? `${state.edits.length} manual edit(s): `
+                + state.edits.map((e) => `#${e.n} ${e.description}`).join(' · ')
+            : 'no manual edits yet.';
+    };
+
+    const renderSolvePanel = () => {
+        const note = $('solveNote');
+        note.textContent = '';
+        if (!lastSolve) {
+            note.appendChild(el('div', 'rj',
+                'press SOLVE — the ORACLE runs on the world now on screen (the same '
+                + '`mazeOracle` the loop uses, certified by REPLAY through the engine\'s own '
+                + '`step`).'));
+            return;
+        }
+        note.appendChild(el('div', lastSolve.verdict === 'SOLVED' ? 'g' : 'o',
+            `${lastSolve.verdict}${lastSolve.ticks ? ` in ${lastSolve.ticks} step(s)` : ''}`));
+        // ⛔ VERBATIM — the oracle's own sentence, never a paraphrase.
+        note.appendChild(el('div', 'rj', `classified by: ${lastSolve.classifiedBy}`));
+        if (lastSolve.reasonText) note.appendChild(el('div', 'rj', lastSolve.reasonText));
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * THE FORM
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const FIELDS = [
+        ['labSeed', (s) => s.seed],
+        ['labWidth', (s) => s.width],
+        ['labHeight', (s) => s.height],
+        ['labCount', (s) => s.bounds.obstacleTarget],
+        ['labTries', (s) => s.bounds.triesPerStep],
+        ['labK', (s) => s.bounds.saturationK],
+        ['labAnchorTries', (s) => s.bounds.anchorTriesPerCandidate],
+        ['labExpansions', (s) => s.budget.maxExpansions],
+    ];
+
+    const fillForm = () => {
+        for (const [id, get] of FIELDS) $(id).value = String(get(state));
+        $('labBiome').value = state.biome;
+    };
+
+    /** The form's numbers, as the next run's arguments. ⛔ The FORM is read at
+     *  press time and never cached — a control that edited a local variable is
+     *  the defect law 1 exists to end. */
+    const formArgs = () => ({
+        seed: Number($('labSeed').value),
+        biome: $('labBiome').value,
+        width: Number($('labWidth').value),
+        height: Number($('labHeight').value),
+        bounds: {
+            obstacleTarget: Number($('labCount').value),
+            triesPerStep: Number($('labTries').value),
+            saturationK: Number($('labK').value),
+            anchorTriesPerCandidate: Number($('labAnchorTries').value),
+        },
+        budget: { maxExpansions: Number($('labExpansions').value) },
+        roster: state.roster,
+    });
+
+    const goTo = (step) => {
+        const a = formArgs();
+        try {
+            state = generateStep({ ...a, step });
+            lastSolve = null;
+            payloadCheck = null;
+            say(`step ${step}: ${state.summary
+                ? `kept ${state.summary.keptCount}/${step}` : 'the skeleton'}`);
+        } catch (e) {
+            say(e.message, true);
+        }
+        writeUrl();
+        render();
+    };
+
+    /**
+     * ⛓ RUN-ALL climbs the ladder one rung at a time so the display updates
+     * after EVERY placement — and stops at SATURATION, which is the loop's own
+     * answer and not a count this page keeps.
+     */
+    const runAll = () => {
+        const a = formArgs();
+        const target = a.bounds.obstacleTarget;
+        say(`RUN-ALL to ${target}: ≤ ${ladderCost(a.bounds, WORST_CASE_SOLVE_MS).solves} solves`);
+        try {
+            for (let k = 1; k <= target; k += 1) {
+                state = generateStep({ ...a, step: k });
+                if (state.saturated) {
+                    say(`SATURATED at step ${k} — ${a.bounds.saturationK} consecutive steps `
+                        + 'kept nothing', true);
+                    break;
+                }
+            }
+            lastSolve = null;
+            payloadCheck = null;
+        } catch (e) {
+            say(e.message, true);
+        }
+        writeUrl();
+        render();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * SAVE / LOAD — ⛔ THE PAGE NEVER WRITES fixtures/
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const refreshSaveBox = () => {
+        $('labText').value = JSON.stringify(labPayload(state), null, 2);
+    };
+
+    const download = () => {
+        const blob = new Blob([`${JSON.stringify(labPayload(state), null, 2)}\n`],
+            { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `maze-seed${state.seed}-step${state.step}`
+            + `${(state.edits ?? []).length ? `-e${state.edits.length}` : ''}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        say(`downloaded ${a.download}`);
+    };
+
+    const loadFromBox = () => {
+        try {
+            const payload = JSON.parse($('labText').value);
+            state = loadPayload(payload);
+            editor = null;
+            lastSolve = null;
+            payloadCheck = null;
+            say(`loaded a ${state.width}x${state.height} level with `
+                + `${(state.edits ?? []).length} recorded edit(s) — UNCERTIFIED until SOLVE`);
+        } catch (e) {
+            say(e.message, true);
+        }
+        render();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * RENDER
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const render = () => {
+        const src = params.source;
+        $('generatePanel').hidden = src !== SOURCES.GENERATE;
+        $('editPanel').hidden = src !== SOURCES.EDIT;
+        $('solvePanel').hidden = src !== SOURCES.SOLVE;
+        $('source').value = src;
+        fillForm();
+        draw();
+        renderTrace();
+        if (src === SOURCES.GENERATE) {
+            renderRoster();
+            renderDirectives();
+            $('labNote').textContent = 'RUN-ALL to '
+                + `${Number($('labCount').value)} authorises ≤ `
+                + `${ladderCost(formArgs().bounds, WORST_CASE_SOLVE_MS).solves} solves `
+                + '(⚠ a CEILING — the loop keeps its first candidate most of the time).';
+        }
+        if (src === SOURCES.EDIT) {
+            if (!editor) {
+                editor = new MazeRoomEditor({
+                    itemLib: state.record.itemLib ?? DEFAULT_ITEMS,
+                    obstacleLib: state.record.obstacleLib ?? DEFAULT_OBSTACLES,
+                });
+            }
+            renderEditPanel();
+        }
+        if (src === SOURCES.SOLVE) renderSolvePanel();
+        refreshSaveBox();
+
+        $('identity').textContent = describeState(state, lastSolve);
+        $('status').textContent = message || '—';
+        $('status').className = messageBad ? 'bad' : 'ok';
+        $('detail').textContent = payloadCheck
+            ? (payloadCheck.why ?? '?gen= — the page REPRODUCED the payload byte-identically')
+            : '';
+
+        window.__mazeLab = {
+            source: src,
+            url: window.location.search,
+            seed: state.seed,
+            biome: state.biome,
+            width: state.width,
+            height: state.height,
+            step: state.step,
+            bounds: state.bounds,
+            budget: state.budget,
+            roster: state.roster ?? null,
+            stop: state.stop,
+            saturated: state.saturated,
+            identity: $('identity').textContent,
+            certified: Boolean(state.certification),
+            edits: (state.edits ?? []).length,
+            editLog: (state.edits ?? []).map((e) => e.description),
+            directives: (state.directives ?? []).map((d) => ({
+                instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
+            })),
+            rows: generationRows(state.trace ?? []),
+            catalogue: labCatalogue(state.biome),
+            level: serializeMazeLevel(state.record),
+            trace: state.trace ?? [],
+            payload: labPayload(state),
+            payloadCheck,
+            solve: lastSolve && {
+                verdict: lastSolve.verdict,
+                ticks: lastSolve.ticks,
+                classifiedBy: lastSolve.classifiedBy,
+                reasonText: lastSolve.reasonText,
+            },
+            message,
+            busy: false,
+        };
+        lifetimes.announce();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * MOUNT ONE ARM
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔ RETIRE-THEN-CREATE, and the ordering is the whole point: the other
+     * order leaves a window in which two arms are both alive and both believe
+     * they own the canvas. `createLifetimeHolder.start` enforces it.
+     */
+    const mount = (source, why) => {
+        params = { ...params, source };
+        const lt = lifetimes.start(source, why);
+
+        lt.on($('source'), 'change', () => {
+            mount($('source').value, `the SOURCE selector chose ${$('source').value}`);
+            writeUrl();
+        });
+        for (const [id] of FIELDS) {
+            lt.on($(id), 'change', () => { writeUrl(); });
+        }
+        lt.on($('labBiome'), 'change', () => { writeUrl(); });
+        lt.on($('labStep'), 'click', () => goTo(state.step + 1));
+        lt.on($('labRunAll'), 'click', runAll);
+        lt.on($('labReset'), 'click', () => goTo(0));
+        lt.on($('labRosterAll'), 'click', () => {
+            state = Object.freeze({ ...state, roster: null });
+            say('the WHOLE roster — no restriction');
+            writeUrl();
+            render();
+        });
+        lt.on($('labDirectivesClear'), 'click', () => {
+            state = Object.freeze({ ...state, directives: Object.freeze([]) });
+            say('directives cleared — press STEP or RUN-ALL to rebuild the level without them');
+            writeUrl();
+            render();
+        });
+        lt.on($('labSolve'), 'click', () => {
+            try {
+                lastSolve = solveState(state);
+                state = certify(state);
+                say(`SOLVE: ${lastSolve.verdict}`, lastSolve.verdict !== 'SOLVED');
+            } catch (e) {
+                say(e.message, true);
+            }
+            render();
+        });
+        lt.on($('labUndo'), 'click', () => {
+            state = undoEdit(state);
+            lastSolve = null;
+            say('undid one edit — still UNCERTIFIED (nothing has solved the world on screen)');
+            render();
+        });
+        lt.on($('labDownload'), 'click', download);
+        lt.on($('labLoad'), 'click', loadFromBox);
+        lt.on($('labUpload'), 'change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const r = new FileReader();
+            r.onload = () => lt.report('an upload finished after the arm was retired', () => {
+                $('labText').value = String(r.result);
+                loadFromBox();
+            });
+            r.readAsText(file);
+        });
+
+        const canvas = $('canvas');
+        canvas.classList.toggle('editing', source === SOURCES.EDIT);
+        lt.on(canvas, 'mousemove', (e) => {
+            const c = cellAt(e);
+            if (c?.tx === hover?.tx && c?.ty === hover?.ty) return;
+            hover = c;
+            draw();
+        });
+        lt.on(canvas, 'mouseleave', () => { hover = null; draw(); });
+        lt.on(canvas, 'click', (e) => {
+            if (source !== SOURCES.EDIT) return;
+            const c = cellAt(e);
+            if (!c) {
+                say('that point is outside the room — the cell you name is the cell that gets '
+                    + 'edited, so a click past the edge REFUSES rather than clamping to the '
+                    + 'last one', true);
+                render();
+                return;
+            }
+            const out = applyEdit(state, editor, c.tx, c.ty);
+            state = out.state;
+            // ⛔ VERBATIM — the editor's own refusal sentence.
+            say(out.result.description, !out.result.ok);
+            if (out.result.ok && out.result.type !== 'noop') lastSolve = null;
+            render();
+        });
+
+        render();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * BOOT
+     * ══════════════════════════════════════════════════════════════════ */
+
+    for (const name of MAZE_BIOME_NAMES) {
+        $('labBiome').appendChild(new Option(name, name));
+    }
+    stamp();
+
+    try {
+        params = readLabParams(window.location.search);
+    } catch (e) {
+        $('status').textContent = e.message;
+        $('status').className = 'bad';
+        window.__mazeLab = { fatal: e.message };
+        return;
+    }
+
+    const boot = async () => {
+        if (params.gen) {
+            /**
+             * ⛓⛓⛓ `?gen=` REPRODUCES A PAYLOAD AND CHECKS IT, which is a
+             * stronger contract than loading one: the page GENERATES from the
+             * payload's own seed/bounds/room and compares. ⛔ One path into the
+             * page — every level it draws came out of the loop, in the page —
+             * and the export becomes a determinism check across node and the
+             * browser rather than a picture of a file.
+             */
+            const res = await fetch(params.gen);
+            if (!res.ok) throw new Error(`?gen=${params.gen} — HTTP ${res.status}`);
+            const payload = await res.json();
+            state = generateWithDirectives({
+                seed: payload.seed,
+                biome: payload.biome ?? DEFAULT_MAZE_BIOME,
+                step: payload.bounds?.obstacleTarget ?? 0,
+                bounds: payload.bounds,
+                budget: payload.budget,
+                width: payload.width,
+                height: payload.height,
+                roster: payload.roster ?? null,
+                directed: null,
+            });
+            payloadCheck = agreementWithPayload(payload, state);
+            say(payloadCheck.agrees
+                ? 'the browser REPRODUCED the payload byte-identically — level AND trace'
+                : `the payload and this page's generation DIFFER: ${payloadCheck.why}`,
+            !payloadCheck.agrees);
+            return;
+        }
+        state = generateWithDirectives({
+            seed: params.seed,
+            biome: params.biome,
+            step: stepFromParams(params),
+            bounds: params.bounds,
+            budget: params.budget,
+            width: params.width,
+            height: params.height,
+            roster: params.roster,
+            directed: params.directed,
+        });
+        say(`seed ${params.seed} at step ${stepFromParams(params)}`);
+    };
+
+    boot().then(() => mount(params.source, 'the URL')).catch((e) => {
+        // ⛔ RAW TRUTH: a boot that failed says so with its own message and the
+        // page does NOT fall back to a level nobody asked for.
+        $('status').textContent = e.message;
+        $('status').className = 'bad';
+        window.__mazeLab = { fatal: e.message };
+    });
+}
+
+/**
+ * ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? The dev server is a plain
+ * `python -m http.server`, which sends `Last-Modified` and NO `Cache-Control`,
+ * so a browser may serve a module from cache without asking. ⛔ A DIAGNOSTIC,
+ * not a fix — a hard reload is what changes the answer; this only says which
+ * copy is running. (`watch.html`'s `#sourceStamp`, and it cost a round trip
+ * there before it existed.)
+ */
+function stamp() {
+    const box = document.getElementById('sourceStamp');
+    fetch(new URL('./mazeLabView.js', import.meta.url), { method: 'HEAD' })
+        .then((r) => {
+            box.textContent = `mazeLabView.js Last-Modified: ${r.headers.get('last-modified')
+                ?? '(none sent)'} — if this is older than your edit, hard-reload `
+                + '(Ctrl+Shift+R).';
+        })
+        .catch(() => { box.textContent = 'source stamp unavailable (no HEAD).'; });
+}

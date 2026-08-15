@@ -182,6 +182,82 @@ export function serializeMazeLevel(world) {
     };
 }
 
+/**
+ * ⛓⛓⛓ THE INVERSE OF `serializeMazeLevel` — CONSTRUCTIVE-MODE slice 3.
+ *
+ * ⚖ Kickoff §3.8 / ruling 9: an EDITED level's identity is the PAYLOAD, not the
+ * URL. That makes a reader mandatory rather than a convenience — a page that
+ * could only WRITE payloads would be telling people to keep an artifact it
+ * cannot itself take back.
+ *
+ * ⛔ IT REFUSES A MALFORMED PAYLOAD BY NAME AND DOES NOT REPAIR ONE. A missing
+ * tile, a tile value outside the grid vocabulary, a wrong-length array, an exit
+ * off the grid: each is a different mistake and a reader who hand-edited a
+ * payload has no other channel to learn which. ⚠ Especially the LENGTH check —
+ * `new Int8Array(shortArray)` pads with zeros, and `TILE_FLOOR` is 0, so a
+ * truncated payload would load as a room with a silently carved corridor.
+ *
+ * ⛓ ROUND-TRIP AND INDEPENDENT VALUE ARE BOTH DRIVEN
+ * (`mazeLab.test.js`): `deserialize(serialize(w))` reproduces the world, AND a
+ * HAND-WRITTEN payload loads to the world a reader would predict from it. The
+ * first alone is a fixed point and tests self-consistency only (⚖ kickoff §5).
+ */
+export function deserializeMazeLevel(payload) {
+    const need = (cond, what) => {
+        if (!cond) fail(`procgenMaze: this is not a maze level payload — ${what}.`);
+    };
+    need(payload && typeof payload === 'object' && !Array.isArray(payload),
+        `expected an object, got ${JSON.stringify(payload)}`);
+    for (const k of ['width', 'height']) {
+        need(Number.isInteger(payload[k]) && payload[k] >= 2,
+            `"${k}" must be an integer >= 2, got ${JSON.stringify(payload[k])}`);
+    }
+    const { width, height } = payload;
+    need(Array.isArray(payload.tiles), `"tiles" must be an array, got `
+        + `${JSON.stringify(payload.tiles)}`);
+    need(payload.tiles.length === width * height,
+        `"tiles" has ${payload.tiles.length} entries and a ${width}x${height} room needs `
+        + `${width * height}. ⚠ A short array would be PADDED WITH ZEROS by Int8Array, and `
+        + 'TILE_FLOOR is 0 — the room would load with a corridor nobody carved');
+    for (const [i, t] of payload.tiles.entries()) {
+        need(t === TILE_FLOOR || t === TILE_WALL,
+            `"tiles[${i}]" is ${JSON.stringify(t)} and the grid vocabulary is TILE_FLOOR `
+            + `(${TILE_FLOOR}) / TILE_WALL (${TILE_WALL})`);
+    }
+    const onGrid = (p, what) => {
+        need(p && Number.isInteger(p.x) && Number.isInteger(p.y)
+            && p.x >= 0 && p.y >= 0 && p.x < width && p.y < height,
+        `${what} is at ${JSON.stringify(p)}, which is not a cell of the ${width}x${height} `
+            + 'grid');
+    };
+    onGrid(payload.entrance, '"entrance"');
+    need(Array.isArray(payload.exits) && payload.exits.length >= 1,
+        '"exits" must be a non-empty array — a room with no exit has no goal to reach');
+    for (const e of payload.exits) {
+        need(typeof e?.exit_id === 'string' && e.exit_id,
+            `an exit has no "exit_id" (${JSON.stringify(e)})`);
+        onGrid(e, `exit "${e?.exit_id}"`);
+    }
+    const world = createWorld(width, height, {
+        entrance: { x: payload.entrance.x, y: payload.entrance.y },
+        exits: payload.exits.map((e) => ({ exit_id: e.exit_id, x: e.x, y: e.y })),
+    });
+    payload.tiles.forEach((t, i) => setTile(world, i % width, Math.floor(i / width), t));
+    for (const [what, list, set] of [
+        ['obstacle', payload.obstacles ?? [], setObstacle],
+        ['item', payload.items ?? [], setItem],
+    ]) {
+        need(Array.isArray(list), `"${what}s" must be an array`);
+        for (const o of list) {
+            onGrid(o, `${what} "${o?.id}"`);
+            need(typeof o.id === 'string' && o.id,
+                `an ${what} at (${o?.x},${o?.y}) has no "id"`);
+            set(world, o.x, o.y, o.id);
+        }
+    }
+    return world;
+}
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE LEVEL MODEL — kickoff §3.2's first injection
  * ══════════════════════════════════════════════════════════════════════ */

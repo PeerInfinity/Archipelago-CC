@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!--
+  mazeRoom/lab.html — the MAZE substrate's standalone lab page: GENERATE the
+  Cloudberry loop over the maze bindings, EDIT tiles and entities by hand, and
+  SOLVE with the exact BFS oracle.
+
+  CONSTRUCTIVE-MODE arc, slice 3 (NewDocs/plans/seedling-constructive-mode-
+  kickoff.md §3.5, ⚖ rulings 6/7/8/9). TOOLING ONLY: this page makes no claims
+  and gates nothing. Its sibling is seedlingDemo/watch.html, whose GENERATE arm
+  it mirrors; what the two SHARE is in frontend/modules/procgenCore/.
+
+  Serve from the REPO ROOT (paths resolve against the dev server's cwd):
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4
+
+  ── THE THREE MODES ─────────────────────────────────────────────────────
+
+  GENERATE  seed + palette + room + bounds run the loop IN THIS PAGE: start
+            from an open room that solves, add one template at a time, re-solve
+            after each, keep it if the goal is still reachable and throw the
+            candidate away if it is not. STEP places one; RUN-ALL runs to the
+            target or to SATURATION. The generation pane shows every attempt
+            with its outcome word (KEPT / REVERTED / NO_ANCHOR /
+            ILLEGAL_PLACEMENT) and the oracle's VERBATIM refusal.
+
+            ⛓ A step-k level IS `generate-maze-level.mjs --seed=S --count=k`,
+            byte for byte, because it is the same call. That is what
+            `scripts/procgen/check-maze-lab.mjs` asserts across the two
+            runtimes.
+
+            The CATALOGUE lists what this palette can generate, by family;
+            unticking a family RESTRICTS the roster the run may draw from, and
+            ATTEMPT on a row runs ONE directed attempt for that template.
+
+  EDIT      `mazeRoomEditor.js`'s palette — floor / wall / entrance / item /
+            obstacle / erase — applied to the clicked tile. ⚖ Ruling 8. Each
+            edit lands on a CLONE, so UNDO is a pop and the level the page says
+            it generated is never rewritten under it.
+
+  SOLVE     the ORACLE on the world now on screen: the same `mazeOracle` the
+            loop uses, certified by REPLAY through the engine's own `step`. The
+            plan is drawn over the room. SOLVED / REFUSED / BUDGET_EXHAUSTED,
+            with the reason verbatim.
+
+  ── ⚖ RULING 9 — WHAT THE URL IS FOR, AND WHAT IT IS NOT ────────────────
+
+  A URL is a RUN somebody could type. It is not a reproduction of an arbitrary
+  construction — that is the PAYLOAD's job, and it does it byte-exactly. So
+  MANUAL EDITS ARE NOT IN THE URL, and the identity line says so out loud the
+  moment there are any:
+
+      "seed 3 · maze-v1 · 11x11 · step 4, then 2 manual edit(s) · … ·
+       UNCERTIFIED · ⚠ the URL is NOT a reproduction after edits — the PAYLOAD is"
+
+  ⚖ §3.8's other half: EDITING NEVER BYPASSES THE ORACLE. Any edit that
+  changes the world drops the certification, and the readout says UNCERTIFIED
+  until SOLVE puts a verdict back.
+
+  ── URL PARAMETERS, THE WHOLE SET ───────────────────────────────────────
+
+  Shared with watch.html (procgenCore/urlParams.js — one grammar, two pages):
+
+  ?source=   generate | edit | solve. ⚠ Defaults to GENERATE, where watch.html
+             refuses to infer it: a Seedling solve costs SECONDS and an arm that
+             waits for a press must not be the one a stale URL lands in; a maze
+             solve is milliseconds.
+  ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
+  ?biome=    the PALETTE — `maze-v1` today. ⚠ The same KEY watch.html uses for
+             its boot inventory, because one grammar across two pages is worth
+             more than a second word for "which set of templates". ⛔ The maze's
+             own biome vocabulary (the wall backends) arrives as `?skeleton=` in
+             slice 5, NOT here.
+  ?count=N   obstacle target   ?tries=N per step   ?k=N saturation
+  ?anchortries=N  how many of the model's LEGAL anchors one candidate may be
+             SOLVED at before it is given up on. ⚠ Not `?anchors=`.
+  ?families= / ?templates=   the sub-roster a run may draw from, a comma list
+             either way; ABSENT is the whole roster and an empty value refuses.
+             ⛔ BOTH present REFUSES — two spellings of one setting.
+  ?directed= the DIRECTED ATTEMPTS, in order:
+             `template(k=v,…)@<bound><d|s>[!tx,ty]`, `;`-separated, e.g.
+             `wall-segment(ori=v,len=3)@12d`. ⛔ Only the INPUTS are encoded — a
+             URL is an INSTRUCTION, a payload is a REPORT.
+  ?run=1     RUN-ALL on load
+  ?gen=PATH  a payload `generate-maze-level.mjs --json` emitted: its seed,
+             bounds and room REPLACE the ones above, the page GENERATES from
+             them, and the result is COMPARED against the payload's own level
+             and trace. A difference is REPORTED and the page keeps showing what
+             IT generated — the export is then a determinism check across node
+             and the browser, not a picture of a file.
+
+  MAZE-ONLY, each with the line that forced it:
+
+  ?width=N / ?height=N   the ROOM. ⛓ Slice 2 §9.6 measured that the v1 palette
+             on the default 11x11 room reverts NOTHING over seeds 1..12 (240
+             kept, 0 reverted, 0 saturated). Reverts appear at 5x5/target 12 and
+             saturation at 4x4 — so without this parameter the REVERTED and
+             SATURATED panes would be unreachable and a reader would conclude
+             the palette never refuses anything. Try:
+             `?width=5&height=5&count=12&run=1`.
+  ?expansions=N  the BFS NODE CAP. ⚠ Seedling's budget is `?tickbudget=` and is
+             denominated in solver TICKS; these are different quantities and one
+             word for both would be the two-spellings failure at its most
+             expensive. The default (20000) never binds on a v1 level — the
+             whole state space is `cells x 2^items` = 242 — so it is a guard
+             against a later palette with many items, and
+             `?expansions=1` is how BUDGET_EXHAUSTED is reached on purpose.
+
+  ⛔ THERE IS NO `?skeleton=` YET. Slice 5 lands it in BOTH pages together.
+
+  ── SAVE / LOAD ─────────────────────────────────────────────────────────
+
+  The payload is in the textarea below the canvas: the level, the trace, the
+  bounds, the directives, the edits and whether it is certified. Download it,
+  paste one in and press Load, or Upload a file. ⛔ THE PAGE NEVER WRITES
+  fixtures/ OR ANY REPO PATH — a saved experiment would silently join a
+  committed differential.
+
+  ⚠ `?gen=` REPRODUCES and LOAD TAKES AS IT STANDS, and the difference matters:
+  a payload carrying manual EDITS cannot be reproduced from its seed (that is
+  ruling 9), so the reproduction check says so BY NAME and points at LOAD.
+
+  ── WHAT IS NOT HERE YET ────────────────────────────────────────────────
+
+  · IFRAME HOSTING — slice 4 registers this page as an `iframePanel` instance
+    with an eventBus contract. ⛔ Nothing here assumes a host: no
+    `window.parent`, no global the embedder must set. It is a document.
+  · `?skeleton=` and the carved skeleton kinds — slice 5.
+  · the yield table and the connectivity pre-check — slice 6.
+  · the cut-vertex rule (a door the walk walks around is a KEPT candidate that
+    happens to be decoration today) — slice 10.
+
+  Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
+  registration. `mazeRoomUI.js` is the panel; this is a static page that shares
+  ONE renderer with it (`mazeRoomRender.drawWorld`, pixel-gated).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Maze — lab</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 8px 12px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 13px; margin: 0 0 4px; font-weight: 600; }
+  h1 span { color: #7fe0ff; font-weight: 400; }
+  #sourceStamp { font-size: 11px; color: #6a6a78; }
+  #identity { font-size: 12px; color: #7fe0ff; margin-top: 2px; }
+  #status { font-size: 12px; }
+  #status.ok { color: #7fd88f; }
+  #status.bad { color: #ff8080; }
+  #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
+  main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
+  #stage { flex: 1 1 auto; min-width: 0; }
+  #panel { flex: 0 0 340px; }
+  canvas { display: block; image-rendering: pixelated; background: #101014; }
+  canvas.editing { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
+  button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 4px 12px; cursor: pointer; font: inherit; }
+  button:disabled { opacity: .4; cursor: default; }
+  button.armed { background: #ffd75f; color: #101014; font-weight: 600; }
+  select, textarea, input { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 2px 6px; font: inherit; }
+  label { color: #8a8a98; display: inline-flex; gap: 4px; align-items: center; }
+  .armPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  .armPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  .note { color: #8a8a98; font-size: 11px; }
+  .box { width: 100%; box-sizing: border-box; }
+  .g { color: #7fd88f; } .o { color: #ff9a6a; } .s { color: #ffd75f; }
+  .rj { color: #8a8a98; font-size: 11px; }
+  #panel h2 { font-size: 11px; color: #8a8a98; font-weight: 600; margin: 10px 0 2px;
+    text-transform: uppercase; letter-spacing: .06em; }
+  #labTrace { max-height: 46vh; overflow-y: auto; border: 1px solid #1a1a20; }
+  #labTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
+  #labTrace .tr.kept { border-left: 2px solid #7fd88f; }
+  #labTrace .tr b { color: #7fe0ff; font-weight: 600; }
+  #labTrace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
+  /* ⛓ THE CATALOGUE'S OWN BOX. `#labPalette` is ENUMERATED by the browser
+     row (one button per PALETTE_ENTRIES row), and the group-B lesson — a knob
+     dropped into an enumerated container counts as a member and reds three
+     claims at once — applies to every one of them. A catalogue checkbox is not
+     a palette button and lives in neither's box. */
+  #labRoster { max-height: 30vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #labRoster .catFamily { border-bottom: 1px solid #1a1a20; padding: 3px 6px; }
+  #labRoster .catHead { color: #ffd75f; font-size: 11px; }
+  #labRoster .catRow b { color: #7fe0ff; font-weight: 600; }
+  #labRoster .catRow.excluded { opacity: .55; }
+  #labRoster .catRow.excluded b { color: #ff9a6a; }
+  #labRoster .catForm { margin: 2px 0 2px 18px; }
+  #labRoster .catForm select { background: #0d0d12; border: 1px solid #2a2a35;
+    font-size: 11px; margin-right: 4px; }
+  #labRoster .catForm button { font-size: 11px; padding: 1px 6px; }
+  #labRoster .catForm .cost { color: #8a8a98; font-size: 11px; }
+  #labDirectives { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+    padding: 2px 0; }
+  #labDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #labDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
+  #labPalette { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+  #labIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Maze — lab <span>generate · edit · solve</span></h1>
+  <div>
+    <label for="source">source</label>
+    <select id="source">
+      <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
+      <option value="edit">EDIT — tiles and entities by hand</option>
+      <option value="solve">SOLVE — the exact BFS oracle</option>
+    </select>
+  </div>
+  <!-- ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? See mazeLabView.stamp. -->
+  <div id="sourceStamp" class="note"></div>
+  <div id="identity"></div>
+  <div id="status">loading…</div>
+  <div id="detail"></div>
+</header>
+<main>
+  <div id="stage">
+    <canvas id="canvas" width="220" height="220"></canvas>
+
+    <!-- ⛓ EVERY CONTROL HERE IS A BOUND THE LOOP RUNS UNDER, and every one of
+         them is echoed into the trace and the readout — a knob whose value
+         nobody could reproduce would be a bound nobody named (⚖ kickoff §5). -->
+    <div id="generatePanel" class="armPanel">
+      <div class="line">
+        <label>seed <input id="labSeed" type="number" step="1" style="width:6em"></label>
+        <label for="labBiome">biome</label>
+        <select id="labBiome"></select>
+        <label>w <input id="labWidth" type="number" min="2" step="1" style="width:4em"></label>
+        <label>h <input id="labHeight" type="number" min="2" step="1" style="width:4em"></label>
+      </div>
+      <div class="line">
+        <label>obstacles <input id="labCount" type="number" min="0" step="1" style="width:4em"></label>
+        <label>tries/step <input id="labTries" type="number" min="1" step="1" style="width:4em"></label>
+        <label>saturation K <input id="labK" type="number" min="1" step="1" style="width:4em"></label>
+        <label>anchor tries <input id="labAnchorTries" type="number" min="1" step="1" style="width:4em"></label>
+        <label>expansions <input id="labExpansions" type="number" min="1" step="1" style="width:7em"></label>
+      </div>
+      <div class="line">
+        <button id="labStep">STEP — one template</button>
+        <button id="labRunAll">RUN-ALL</button>
+        <button id="labReset">RESET to the skeleton</button>
+      </div>
+      <div class="line">
+        <b>catalogue</b> <span class="note">— what this palette can generate, by family;
+          untick to RESTRICT the roster this run may draw from</span>
+        <button id="labRosterAll">select ALL — the whole roster</button>
+        <span id="labRosterNote" class="note"></span>
+      </div>
+      <div id="labRoster"></div>
+      <div class="line">
+        <b>directed attempts</b> <span class="note">— press ATTEMPT on a catalogue row to
+          place THAT template on the level below</span>
+        <button id="labDirectivesClear">CLEAR the directives</button>
+        <span id="labDirectivesNote" class="note"></span>
+      </div>
+      <div id="labDirectives"></div>
+      <div id="labNote" class="note"></div>
+    </div>
+
+    <!-- ⚖ RULING 8: free tile / object editing. ⛔ Every edit lands on a CLONE
+         and drops the certification — §3.8: editing never bypasses the oracle. -->
+    <div id="editPanel" class="armPanel" hidden>
+      <div class="line">
+        <b>palette</b> <span class="note">— pick one, then click a tile</span>
+        <button id="labUndo">UNDO one edit</button>
+      </div>
+      <div id="labPalette"></div>
+      <div id="editNote" class="note"></div>
+    </div>
+
+    <div id="solvePanel" class="armPanel" hidden>
+      <div class="line">
+        <button id="labSolve">SOLVE the world on screen</button>
+        <span class="note">— the plan is drawn over the room</span>
+      </div>
+      <div id="solveNote"></div>
+    </div>
+
+    <!-- ⛔ THE PAGE NEVER WRITES fixtures/ OR ANY REPO PATH. -->
+    <details id="labIO" open>
+      <summary>save / load — the payload in your hands (this page NEVER writes fixtures/)</summary>
+      <div class="line">
+        <button id="labDownload">Download</button>
+        <button id="labLoad">Load from box</button>
+        <label>Upload <input id="labUpload" type="file" accept=".json,application/json"></label>
+      </div>
+      <textarea id="labText" class="box" rows="10" spellcheck="false"></textarea>
+    </details>
+  </div>
+  <div id="panel">
+    <h2>generation trace</h2>
+    <div id="labTrace"></div>
+  </div>
+</main>
+<script type="module">
+  import { main } from './mazeLabView.js';
+  main();
+</script>
+</body>
+</html>

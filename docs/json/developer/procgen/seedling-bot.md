@@ -8902,3 +8902,19 @@ import `seedlingDemo/procgenOracle.js`, so the three classes are declared in
 re-exported from `procgenOracle.js` under the name every Seedling reader
 already uses. The maze half is in `maze.md`, "The maze as the second substrate
 on the procgen loop".
+
+**Slice 3 gave the maze a lab page**, and in doing so moved out of
+`seedlingDemo/` everything about `watch.html` that was never Seedling: the URL
+grammar (`procgenCore/urlParams.js` — the bounds, the roster's both-present /
+empty refusals and its scoped delete, the `run`+`count` step encoding, the whole
+`?directed=` grammar and its two salted streams), the pane vocabulary
+(`procgenCore/labView.js` — `generationRows`, `describeKeptKind`, the two cost
+models, `tileAtPoint`), the roster machinery (`procgenCore/paletteRoster.js` —
+`normalizeRoster` / `restrictPalette` / `catalogueRows`, which slice 2 had
+recorded as staying on a line that stopped being true the moment a second page
+existed) and the page lifetime (`procgenCore/pageLifetime.js`). Every one is
+re-exported under the path Seedling callers already use, and every Seedling
+artifact was byte-identical across the lift. What stayed and why is in each
+moved file's docblock. The maze half — the page, its three modes, the
+`drawWorld` extraction and its `view` contract — is in `maze.md`, "The maze lab
+page".
