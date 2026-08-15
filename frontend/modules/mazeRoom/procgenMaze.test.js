@@ -478,6 +478,22 @@ describe('generateMazeLevel — the whole seam, wired', () => {
             expect(r.anchorsOffered).toBe(0);
             expect(r.verdict).toBeNull();
         }
+        /**
+         * ⛔⛔ AND NOTHING A REVERT THREW AWAY IS STILL IN THE WORLD. ⛓ This
+         * assertion lives HERE and not on the 11x11 default run, and the
+         * placement is the point: at the default the v1 palette reverts
+         * NOTHING, so the same check there passes whether `place` clones or
+         * not — a fixture that cannot distinguish the two builds. (Measured:
+         * the clone-forgetting mutant leaves this run's world holding more
+         * than it kept, and leaves the 11x11 run's world exactly right.)
+         */
+        const keptWalls = out.summary.kept
+            .map((k) => MAZE_PALETTE.templates.find((t) => t.name === k.template)
+                .instantiate(null, k.params))
+            .reduce((n, row) => n + (row.tiles ?? []).length, 0);
+        let walls = 0;
+        for (const t of out.record.tiles) if (t === TILE_WALL) walls += 1;
+        expect(walls).toBe(keptWalls);
     });
 
     it('SATURATION is reachable and is reported BY NAME, never as a quiet short run', () => {
