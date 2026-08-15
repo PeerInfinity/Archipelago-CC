@@ -171,6 +171,84 @@ describe('the loop keeps on SOLVED and reverts on anything else', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK A — WHAT THE ORACLE IS HANDED.
+ *
+ * ⛔ THE DEFECT THIS DESCRIBE BLOCK EXISTS FOR, measured at slice 2 and fixed
+ * here: the loop passed `[...kept, template]`, and a `kept` element is a
+ * RECORD (`{template, instance, params, family, at}`) rather than the concrete
+ * row. Everything the oracle derives from a template — in Seedling, the PIN
+ * UNION — therefore saw the candidate ALONE from the second placement onward,
+ * so the loop's later solves ran under fewer pins than the level's own
+ * certification.
+ *
+ * ⚠ IT IS ASSERTED HERE, WITHOUT SEEDLING, because the defect is the LOOP's:
+ * the fake oracle records what it was handed and the case reads it back. The
+ * Seedling half (`procgenPalette.test.js`, seed 9) measures the consequence
+ * that made it worth fixing.
+ */
+describe('⛓ the oracle is handed the KEPT CONCRETE ROWS, not the kept records', () => {
+    /** A concrete row is the thing `instantiate` returns — and it has `pins`. */
+    const P = (name) => ({
+        name,
+        family: 'fake',
+        params: [],
+        instantiate: () => ({
+            name,
+            family: 'fake',
+            params: {},
+            instance: name,
+            footprint: [{ dx: 0, dy: 0 }],
+            pins: [`pin-${name}`],
+        }),
+    });
+
+    it('every solve sees a row carrying `pins` for each template already kept', () => {
+        const oracle = fakeOracle(['SOLVED']);
+        generateLevel({
+            rng: fakeRng([0, 1, 0]),
+            model: fakeModel(),
+            oracle,
+            palette: palette([P('a'), P('b')]),
+            bounds: { obstacleTarget: 3, triesPerStep: 2, saturationK: 2 },
+        });
+        // call 0 is the skeleton (no templates); calls 1..3 are the candidates.
+        const handed = oracle.calls.map((c) => c.ctx?.templates ?? []);
+        expect(handed[0]).toEqual([]);
+        expect(handed.slice(1).map((t) => t.length)).toEqual([1, 2, 3]);
+        for (const templates of handed.slice(1)) {
+            for (const t of templates) {
+                /**
+                 * ⛔ THE WHOLE CLAIM. A kept RECORD has `template`/`at` and no
+                 * `pins`; a concrete ROW has `pins` and a `footprint`. A
+                 * threading that passed names or records would give the second
+                 * shape here and this loop would fail on the FIRST kept row of
+                 * the second solve.
+                 */
+                expect(t.pins, JSON.stringify(t)).toEqual([`pin-${t.name}`]);
+                expect(t.footprint).toBeDefined();
+                expect(t.at).toBeUndefined();
+            }
+        }
+    });
+
+    it('a REVERTED candidate leaves nothing behind in what later solves are handed', () => {
+        const oracle = fakeOracle(['SOLVED', 'SOLVED', 'REFUSED', 'SOLVED']);
+        generateLevel({
+            rng: fakeRng([0, 1, 0]),
+            model: fakeModel(),
+            oracle,
+            palette: palette([P('a'), P('b')]),
+            bounds: { obstacleTarget: 2, triesPerStep: 3, saturationK: 3 },
+        });
+        // skeleton, kept, reverted, kept — the last solve holds TWO rows, not
+        // three: the rejected candidate is discarded by dropping the reference,
+        // and the retained-rows array must behave the same way the record does.
+        expect(oracle.calls.map((c) => (c.ctx?.templates ?? []).length))
+            .toEqual([0, 1, 2, 2]);
+    });
+});
+
 describe('the bounds are real and every one of them is in the trace', () => {
     it('a step gives up after `triesPerStep` candidates', () => {
         const oracle = fakeOracle(['SOLVED', 'REFUSED']);

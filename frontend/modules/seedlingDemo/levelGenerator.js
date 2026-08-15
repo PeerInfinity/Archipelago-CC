@@ -293,6 +293,49 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
 
     const trace = [];
     const kept = [];
+    /**
+     * ⛓⛓⛓ THE KEPT CONCRETE ROWS — GENERATE-mode UI slice 3, TRACK A, and the
+     * whole of the pin-union fix is this array and the two lines that use it.
+     *
+     * ⛔ THE DEFECT, MEASURED (slice 2 §9.5(a), seed 9 target 4, pre-sword):
+     * this loop used to pass `{templates: [...kept, template]}` to the oracle,
+     * and a `kept` element is a RECORD — `{template, instance, params, family,
+     * at}` — which carries no `pins`. So `seedlingOracle.pinsFor` added nothing
+     * for the templates already in the room and every solve after the first
+     * took the pin union over the CANDIDATE ALONE:
+     *
+     *     solve 2: 2 template(s) -> ["dead_frames","sound"]   the water CANDIDATE
+     *     solve 3: 3 template(s) -> ["dead_frames"]           the pool is KEPT; the pin is GONE
+     *
+     * while `summary.pins` — the level's own CERTIFICATION — carried `sound`.
+     * The loop's later solves ran under FEWER pins than the level it certified:
+     * the two-cost-models law, inside the seam.
+     *
+     * ⚖ THE FIX IS TO **RETAIN**, NOT TO RECONSTRUCT, and the reason is at the
+     * top of this file: ⛔ THIS FILE IMPORTS NOTHING. A reconstruction would
+     * mean `procgenPalette.instantiateKept` — which is correctly the ONE
+     * reconstruction for the two pin unions OUTSIDE this loop — and reaching it
+     * from here would need either an import (forbidden) or a new member on the
+     * injected seam (a whole seam widening to rebuild an object this loop is
+     * holding in its hand). Retaining is cheaper, it spends no reconstruction
+     * per solve, and it has NO drift risk: the row the oracle sees IS the row
+     * `place` wrote, not a rebuild that agrees with it.
+     *
+     * ⛔ IT IS A SEPARATE ARRAY AND NOT A FIELD ON `kept`. `summary.kept` is
+     * SERIALIZED — into the payload, the download, the batch report — and it
+     * carries `{template, params}` precisely so a reader can rebuild the
+     * instance. Stapling the whole concrete row beside them would put the
+     * geometry in the payload twice and give a later reader two spellings to
+     * choose between.
+     *
+     * ⛓ THE INVARIANT THIS BUYS, and it is asserted rather than described: the
+     * pin union of the LAST accepting solve now equals `pinsFor` over every
+     * kept row — which is what `procgenSeedling` computes for `summary.pins`
+     * through `instantiateKept`. Before this line the two disagreed by
+     * construction; after it they agree by construction, and the test drives
+     * both.
+     */
+    const keptRows = [];
     let record = model.skeleton();
 
     /**
@@ -420,7 +463,10 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
             }
             let out;
             try {
-                out = oracle.solve(candidate, { templates: [...kept, template] });
+                // ⛔ `keptRows`, NOT `kept` — see that array's docblock. A
+                // `kept` RECORD carries no `pins`, so this solve used to take
+                // the pin union over the candidate alone.
+                out = oracle.solve(candidate, { templates: [...keptRows, template] });
             } catch (e) {
                 trace.push(Object.freeze({
                     ...row,
@@ -472,6 +518,9 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
                     family: base.family,
                     at,
                 });
+                // ⛓ THE CONCRETE ROW, RETAINED IN THE SAME ORDER — the object
+                // every LATER solve unions its pins over (track A).
+                keptRows.push(template);
                 lastSolve = out;
                 keptThisStep = true;
                 break;

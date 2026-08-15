@@ -29,6 +29,7 @@ import {
     seedlingModel, seedlingOracle,
 } from './procgenSeedling.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
+import { generateLevel } from './levelGenerator.js';
 import { rngFor } from './procgenRng.js';
 
 const model = () => seedlingModel({ seed: 1 });
@@ -1151,6 +1152,78 @@ describe('the water template obliges the `sound` pin, by argument', () => {
             expect(t.pins, t.instance).toEqual(t.family === 'water' ? ['sound'] : []);
         }
     });
+
+    /**
+     * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK A — **THE LOOP'S OWN SOLVES TAKE THE
+     * UNION OVER KEPT + CANDIDATE**, and this is the Seedling half of the claim
+     * (`levelGenerator.test.js` asserts the loop's side without Seedling).
+     *
+     * ⛔ WHAT WAS MEASURED AT SLICE 2 (§9.5(a)) — this exact subject, before the
+     * fix:
+     *
+     *     solve 2: 2 template(s) -> ["dead_frames","sound"]   the water CANDIDATE
+     *     solve 3: 3 template(s) -> ["dead_frames"]           the pool is KEPT; the pin is GONE
+     *     solve 4: 4 template(s) -> ["dead_frames"]
+     *
+     * while `summary.pins` — the level's CERTIFICATION — read
+     * `["dead_frames","sound"]`. Two cost models, inside the seam.
+     *
+     * ⚠ THE INSTRUMENT HAS TO BE A WRAPPED ORACLE, because
+     * `generateSeedlingLevel` builds its own and the pin set is not in the
+     * trace. ⛔ So the case wires the three injections itself — and then
+     * asserts the wiring is the SAME one by comparing the record and the trace
+     * to `generateSeedlingLevel`'s BYTE FOR BYTE. A hand-wired instrument that
+     * had drifted would be measuring a run nobody else does, and that
+     * comparison is what makes this a measurement of the shipped path.
+     *
+     * ⚠ AND THE SUBJECT'S OWN PROPERTY IS ASSERTED BEFORE THE CLAIM: a seed
+     * whose water pool is kept LAST would have no later solve to be wrong
+     * about, and the case would pass over a loop that still dropped the union.
+     */
+    it('⛓ seed 9: every solve AFTER the pool is kept still carries `sound`', () => {
+        const seed = 9;
+        const bounds = { obstacleTarget: 4 };
+        const m = seedlingModel({ seed });
+        const base = seedlingOracle({ model: m, items: PRE_SWORD_PALETTE.items ?? null });
+        const perSolve = [];
+        const spy = {
+            ...base,
+            solve(record, ctx) {
+                perSolve.push(this.pinsFor(ctx?.templates ?? []).sort());
+                return base.solve.call(this, record, ctx);
+            },
+        };
+        const out = generateLevel({
+            rng: rngFor(seed), model: m, oracle: spy, palette: PRE_SWORD_PALETTE, bounds,
+        });
+        const shipped = generateSeedlingLevel({ seed, palette: PRE_SWORD_PALETTE, bounds });
+        // the instrument is the shipped path, not an agreeing copy of it
+        expect(JSON.stringify(out.record)).toBe(JSON.stringify(shipped.record));
+        expect(JSON.stringify(out.trace)).toBe(JSON.stringify(shipped.trace));
+
+        // the subject's own property, first
+        const waterAt = out.summary.kept.findIndex((k) => k.family === 'water');
+        expect(waterAt, 'seed 9 must KEEP a water pool for this case to mean anything')
+            .toBeGreaterThanOrEqual(0);
+        expect(waterAt, 'and it must be kept before the LAST one, or no later solve exists')
+            .toBeLessThan(out.summary.kept.length - 1);
+
+        /**
+         * Solve 0 is the skeleton and solve k is the candidate for kept row
+         * k-1 (every step here keeps its first candidate). Every solve from the
+         * pool's own onward must carry `sound`.
+         */
+        for (let i = waterAt + 1; i < perSolve.length; i += 1) {
+            expect(perSolve[i], `solve ${i} lost the pool's pin`)
+                .toEqual(['dead_frames', 'sound']);
+        }
+        // ⛓ AND THE INVARIANT THE FIX BUYS: the LAST accepting solve's union is
+        // the level's own certification. Before track A these disagreed by
+        // construction; `summary.pins` is computed by a different route
+        // (`instantiateKept` over the kept RECORDS), so this compares the
+        // retained rows against the one reconstruction.
+        expect(perSolve[perSolve.length - 1]).toEqual([...shipped.summary.pins].sort());
+        });
 });
 
 describe('the exclusions are a list with measurements in it', () => {
