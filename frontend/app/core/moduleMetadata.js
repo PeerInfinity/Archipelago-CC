@@ -176,6 +176,15 @@ export const moduleMetadata = {
     name: 'iframe',
     column: 3
   },
+  // Constructive-mode arc slice 4: the host for the substrate lab pages.
+  // The module exports its own moduleInfo (priority 4 above), so this entry
+  // is the mobile / fallback copy the file's header asks for.
+  procgenLabPanel: {
+    title: 'Procgen Lab',
+    icon: '🧪',
+    name: 'procgenLabPanel',
+    column: 3
+  },
   windowPanel: {
     title: 'Window Panel',
     icon: '🪟',

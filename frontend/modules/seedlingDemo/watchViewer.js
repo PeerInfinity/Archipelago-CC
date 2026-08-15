@@ -157,6 +157,10 @@ import { catalogueRows, restrictPalette } from './procgenPalette.js';
 import { KEEP_POLICY } from '../procgenCore/levelGenerator.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
+// ⛓ SLICE 4 (constructive-mode arc): ONE summary of this page's state, in the
+// shape `procgenCore/labProtocol.js` asks for. ⛔ A PROJECTION of the readouts
+// below, never a second derivation — see that file's docblock.
+import { watchSummary } from './watchSummary.js';
 /**
  * ⛓⛓⛓ THE ENTRANCES — ⚖ the user's item, and the module docblock is where the
  * measurements live (280 teleporters, 112 of 116 levels with an entrance, the
@@ -508,6 +512,63 @@ function resetPageChrome() {
     // left. Cleared here, it becomes the honest thing to wait on: it reappears
     // only when the ARRIVING arm is done (see `mountArm`).
     delete window.__editorArm;
+    // ⛓ SLICE 4: `__watch` is a PROJECTION of the four above, so it goes with
+    // them — a summary that outlived its sources would be the one readout on
+    // this page describing a run nobody can see.
+    delete window.__watch;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ SLICE 4 (constructive-mode arc) — THE HOST SEAM
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Three module-level names, and every one of them is inert standalone.
+ * `NewDocs/plans/seedling-constructive-mode-kickoff.md` §3.5.
+ */
+
+/**
+ * ⛓ The optional host bridge (`watchBridge.js`), `null` standalone. ⛔ NEVER
+ * FETCHED without `?iframeId=` — the editor arc's ruling that this page is a
+ * standalone document is unchanged, and a network probe in
+ * `check-seedling-editor-boot.mjs` gates it.
+ */
+let hostBridge = null;
+
+/**
+ * ⛓⛓ THE PAYLOAD A HOST HANDED OVER, WAITING FOR THE ARM THAT READS IT.
+ *
+ * ⛔ THIS IS THE `?gen=` PATH'S OWN INPUT, DELIVERED BY HAND. `runGenerate`
+ * fetches a payload when `?gen=` names one and then REGENERATES from its
+ * identity and COMPARES; a `procgenLab:load` supplies the same object where
+ * the fetch would have produced it, and every line after that is unchanged.
+ * The alternative — a second "display this level" path — would be a level on
+ * screen that the page never generated, on a page whose entire claim is that
+ * everything it draws came out of the loop in the page.
+ *
+ * ⚠ CONSUMED ONCE, by the next generate mount. A payload left standing would
+ * silently own the arm after the reader pressed something.
+ */
+let pendingHostPayload = null;
+export const takePendingHostPayload = () => {
+    const p = pendingHostPayload;
+    pendingHostPayload = null;
+    return p;
+};
+
+/**
+ * ⛓ PUBLISH `window.__watch` AND TELL THE HOST. One call, from the places the
+ * page's own readouts are written — so the summary, the readouts and the
+ * host's status line are one statement made once.
+ */
+function publishWatch(source) {
+    window.__watch = watchSummary({
+        source,
+        href: window.location.href,
+        generate: window.__editorGenerate ?? null,
+        generated: window.__editorGenerated ?? null,
+    });
+    hostBridge?.announce();
+    return window.__watch;
 }
 
 /**
@@ -4311,8 +4372,16 @@ async function runGenerate(params, lifetime) {
      * hand-pressed sequence cannot diverge.
      */
     let pendingDirected = gp.directed ?? null;
-    if (gp.gen) {
-        payload = await fetchJson(gp.gen.startsWith('/') ? gp.gen : `/${gp.gen}`,
+    /**
+     * ⛓⛓ SLICE 4 — A HOST'S `procgenLab:load`, WHERE THE FETCH WOULD HAVE BEEN.
+     * ⛔ ONE RECONSTRUCTION: the object replaces the fetch's RESULT and nothing
+     * downstream knows the difference, so a SEND from the panel re-derives the
+     * level and reports agreement exactly as `?gen=` does. See
+     * `watchBridge.js`'s docblock — this page has never had a second path.
+     */
+    const handed = takePendingHostPayload();
+    if (handed || gp.gen) {
+        payload = handed ?? await fetchJson(gp.gen.startsWith('/') ? gp.gen : `/${gp.gen}`,
             'the generated payload');
         seed = payload.seed;
         biome = payload.biome;
@@ -4602,6 +4671,11 @@ async function runGenerate(params, lifetime) {
                 status: 'refused', step, seed, biome,
                 verdict: solved.verdict, message: solved.reasonText ?? null,
             };
+            // ⛓ SLICE 4: a REFUSAL is a state change too, and a host left on
+            // the last good identity line would be reading a level the page
+            // has stopped showing (`watchSummary` maps `status !== 'ok'` to
+            // "this arm holds no generated level", by name).
+            publishWatch('generate');
             return { solved, agreement, drew: false };
         }
 
@@ -4615,7 +4689,14 @@ async function runGenerate(params, lifetime) {
         $('status').className = 'ok';
         $('status').textContent = `${label} — ${frames.length} observations, `
             + `${solved.ticks} ticks${why ? ` · ${why}` : ''}`;
-        $('detail').textContent = `${describeState(state, solved)}  ·  display solve `
+        /**
+         * ⛓ SLICE 4: computed ONCE and carried into the readout below, so the
+         * host's mirrored identity line and the page's own detail line cannot
+         * be two different sentences about one level. `describeState` stays
+         * the ONE identity function.
+         */
+        const identityLine = describeState(state, solved);
+        $('detail').textContent = `${identityLine}  ·  display solve `
             + `${solveMs} ms`
             + (agreement.compared
                 ? `  ·  trace/display agreement: ${agreement.agrees ? 'YES' : 'NO'}`
@@ -4644,6 +4725,14 @@ async function runGenerate(params, lifetime) {
             seed,
             biome,
             step,
+            /**
+             * ⛓ SLICE 4 (constructive-mode arc): the IDENTITY LINE, the same
+             * string the detail line prints. ⛔ Carried rather than rebuilt —
+             * `watchSummary` projects this readout for the host, and a summary
+             * that called `describeState` itself would be a second answer to
+             * "what is this level" one refactor away from disagreeing.
+             */
+            identity: identityLine,
             /**
              * ⛓ SLICE 4: the DERIVED palette name and the restriction that
              * produced it. ⛔ The name is `summary.palette`'s own string, so a
@@ -4771,6 +4860,11 @@ async function runGenerate(params, lifetime) {
             + 'current level: the shared starting-conditions block now holds it, so SOLVE and '
             + 'MANUAL take it however you reach them — these buttons or the SOURCE selector. '
             + '⚠ A block you had typed by hand was replaced.';
+        // ⛓ SLICE 4: LAST, after the URL has been rewritten — `__watch.url` is
+        // the frame's address and the host's "open standalone" is built from
+        // it, so publishing before `replaceState` would hand out a link to the
+        // run before this one.
+        publishWatch('generate');
         return { solved, agreement, drew: true };
     }
 
@@ -5009,9 +5103,10 @@ async function runGenerate(params, lifetime) {
         $('status').textContent = 'AT… cancelled — nothing was placed';
     });
     $('canvas').onclick = async (ev) => {
-        if (!lifetime.alive() || !armed || busyNow || !state?.record) return;
+        if (!lifetime.alive() || !state?.record) return;
         const rect = $('canvas').getBoundingClientRect();
-        let at;
+        let at = null;
+        let refusal = null;
         try {
             at = tileAtPoint({
                 x: ev.clientX - rect.left,
@@ -5022,10 +5117,23 @@ async function runGenerate(params, lifetime) {
                 rows: state.record.height,
             });
         } catch (e) {
+            refusal = e.message;
+        }
+        /**
+         * ⛓⛓ SLICE 4 — `procgenLab:selectTile`, AND IT DOES NOT NEED AN ARM.
+         * ⛔ The event says *"the reader pointed at this cell"*, which is the
+         * only thing a host can act on; firing it only while ARMED would make
+         * it mean "a directive was placed" under a name that says otherwise.
+         * ⚠ The page's own behaviour is unchanged — the armed guard below is
+         * exactly where it was, one statement further down.
+         */
+        if (at) hostBridge?.selectTile(at.tx, at.ty);
+        if (!armed || busyNow) return;
+        if (refusal !== null) {
             // ⚠ SAID, not swallowed — a click the page ignored silently is the
             // one outcome the reader cannot act on.
             $('status').className = '';
-            $('status').textContent = e.message;
+            $('status').textContent = refusal;
             return;
         }
         const { template, readParams } = armed;
@@ -5539,6 +5647,26 @@ const ARMS = Object.freeze({
  * where the readout still shows it.
  */
 async function mountArm(params, lifetime) {
+    try {
+        await mountArmBody(params, lifetime);
+    } finally {
+        /**
+         * ⛓ SLICE 4: `__watch` exists for EVERY arm, not just GENERATE.
+         *
+         * ⛔ IN A `finally`, AND GUARDED ON THE LIFETIME. The generate arm
+         * publishes from `show()` (where the level is), but SOLVE, MANUAL and
+         * REPLAY have no such point — and a host whose panel showed nothing
+         * for three of the four arms would be reporting "not connected" for a
+         * page that is working. ⚠ A RETIRED lifetime publishes nothing: an arm
+         * that finished after the reader switched away must not overwrite the
+         * live arm's summary, which is `lifetime.report`'s own rule one level
+         * up.
+         */
+        if (lifetime.alive()) publishWatch(params.source);
+    }
+}
+
+async function mountArmBody(params, lifetime) {
     const arm = ARMS[params.source];
     if (arm) {
         // ⚠ NO PICKER FETCH FOR THESE THREE. `runSolve` starts the roster
@@ -5684,12 +5812,38 @@ async function switchArm(source, side = null) {
      * vocabulary. The one parameter that must be rewritten is the one being
      * switched, so that is the only one touched here.
      */
-    window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
+    await navigateTo(q.toString(), `the SOURCE selector switched to ${source}`);
+}
+
+/**
+ * ⛓⛓ SLICE 4 — THE THREE STEPS AFTER THE URL, AS ONE FUNCTION.
+ *
+ * ⛔ EXTRACTED, NOT ADDED. `switchArm` is its one pre-existing caller and its
+ * body is unchanged; the second caller is `procgenLab:navigate`, and a host
+ * that re-implemented "write the bar, re-read it, retire, mount" would be a
+ * SECOND way into an arm — with its own opinion about whether the chrome is
+ * cleared and in which order the lifetimes turn over. ⚖ §5's ONE OF EVERYTHING,
+ * and here the "everything" is the SWITCH arc's whole result.
+ *
+ * ⛔ `replaceState` AND NOT AN ASSIGNMENT TO `location.search`: the latter
+ * NAVIGATES, which is the reload the SWITCH arc removed — and inside an iframe
+ * it would drop the adapter connection with it.
+ *
+ * ⚠ `?iframeId=`/`?hostOrigin=` ARE PRESERVED. They are this frame's address,
+ * the host did not send them in a `navigate`, and a page that dropped them
+ * would still run and never be reachable again.
+ */
+async function navigateTo(search, why) {
+    const asked = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+    const here = new URLSearchParams(window.location.search);
+    for (const key of ['iframeId', 'hostOrigin']) {
+        if (here.has(key) && !asked.has(key)) asked.set(key, here.get(key));
+    }
+    window.history.replaceState(null, '', `${window.location.pathname}?${asked.toString()}`);
     const params = readParams();
     showPanelsFor(params.source);
     resetPageChrome();
-    await mountArm(params, armLifetimes.start(armNameFor(params),
-        `the SOURCE selector switched to ${source}`));
+    await mountArm(params, armLifetimes.start(armNameFor(params), why));
 }
 
 /**
@@ -5830,4 +5984,57 @@ export async function main() {
     if (holdParam.why) $('detail').textContent = `⚠ ${holdParam.why}`;
     wireSourceSelector(params, switchArm);
     await mountArm(params, armLifetimes.start(armNameFor(params), 'the page loaded'));
+    // ⚠ AFTER the first mount, so the `procgenLab:ready` the bridge publishes
+    // carries a page that has already drawn (⚖ §3.5: *"after connect + first
+    // render"*). A host mirroring a pre-mount state would print an identity
+    // line for a level nobody could see.
+    await installHostBridge();
+}
+
+/**
+ * ⛓⛓⛓ SLICE 4 — THE BRIDGE IS FETCHED ONLY UNDER `?iframeId=`.
+ *
+ * ⛔ Not "loaded and inert" — NOT FETCHED. A static import would put
+ * `AdapterClient` into the standalone page's graph, where it installs a
+ * `message` listener on a page that has no host; the editor arc's ruling that
+ * `watch.html` is a standalone document would then be true only by politeness.
+ * `check-seedling-editor-boot.mjs` measures the request list.
+ *
+ * ⚠ A FAILURE HERE DOES NOT TAKE THE PAGE DOWN. The arm has already mounted;
+ * a host that cannot be reached leaves a working standalone page inside an
+ * iframe, which is strictly better than a blank one, and the reason is
+ * reported to the console rather than swallowed.
+ */
+async function installHostBridge() {
+    const iframeId = new URLSearchParams(window.location.search).get('iframeId');
+    if (!iframeId) return;
+    try {
+        const mod = await import('./watchBridge.js');
+        hostBridge = await mod.installWatchBridge({
+            iframeId,
+            readout: () => window.__watch,
+            load: hostLoad,
+            navigate: (search) => navigateTo(search, 'the HOST navigated'),
+        });
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('watchViewer: the host bridge would not install —', e.message);
+    }
+}
+
+/**
+ * HOST → PAGE `procgenLab:load`. ⛔ THE `?gen=` RECONSTRUCTION, with the object
+ * handed over instead of fetched — see `watchBridge.js`'s docblock for why
+ * that is the page's ONE path and not a new one.
+ *
+ * ⛔ `?gen=` IS DELETED FROM THE BAR. A stale one would make `runGenerate`
+ * fetch a FILE the host did not send; the payload in hand is the identity now,
+ * and the URL must not name a different one.
+ */
+async function hostLoad(payload) {
+    pendingHostPayload = payload;
+    const q = new URLSearchParams(window.location.search);
+    q.set('source', 'generate');
+    q.delete('gen');
+    await navigateTo(q.toString(), 'the HOST sent a level payload');
 }

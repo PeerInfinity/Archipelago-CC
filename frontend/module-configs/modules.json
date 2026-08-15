@@ -244,6 +244,10 @@
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
     },
+    "procgenLabPanel": {
+      "path": "./modules/procgenLabPanel/index.js",
+      "enabled": true
+    },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
@@ -351,6 +355,7 @@
     "apcalc",
     "apworldEditor",
     "mazeRoom",
+    "procgenLabPanel",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
     "omsiSubstrateWrapper",

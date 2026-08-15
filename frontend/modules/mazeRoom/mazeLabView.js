@@ -79,6 +79,18 @@ export function main() {
     let editor = null;
     let message = '';
     let messageBad = false;
+    /**
+     * ⛓⛓ SLICE 4 — THE OPTIONAL HOST BRIDGE. `null` STANDALONE, and that is
+     * not a fallback: `mazeLabBridge.js` is never even FETCHED without
+     * `?iframeId=` (see `installBridge`), so the page a person opens at
+     * :8000 has the module graph slice 3 measured, unchanged.
+     *
+     * ⛔ EVERY USE IS `bridge?.`, so the hosted and standalone pages run the
+     * SAME code down to one optional call — the layout-consistency payoff
+     * ⚖ ruling 6 bought the iframe for is only real if the document is
+     * genuinely the same document.
+     */
+    let bridge = null;
 
     const say = (text, bad = false) => { message = text; messageBad = bad; };
 
@@ -597,6 +609,10 @@ export function main() {
             busy: false,
         };
         lifetimes.announce();
+        // ⛓ SLICE 4: the host hears what the readout says, at the same moment
+        // and from the same object — a second derivation for the host would be
+        // a second answer to "what is this page showing".
+        bridge?.announce();
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -674,8 +690,19 @@ export function main() {
         });
         lt.on(canvas, 'mouseleave', () => { hover = null; draw(); });
         lt.on(canvas, 'click', (e) => {
+            /**
+             * ⛓⛓ SLICE 4 — `procgenLab:selectTile` FIRES IN EVERY ARM, and
+             * BEFORE the EDIT guard. It is not an edit; it is *"the reader
+             * pointed at this cell"*, which is the only thing a host can do
+             * anything with (⚖ §3.5's third page→host event). Publishing it
+             * only in EDIT would make the event mean "an edit happened" under
+             * a name that says otherwise, and the host would have no way to
+             * learn that a click in SOLVE was a click at all.
+             */
+            const clicked = cellAt(e);
+            if (clicked) bridge?.selectTile(clicked.tx, clicked.ty);
             if (source !== SOURCES.EDIT) return;
-            const c = cellAt(e);
+            const c = clicked;
             if (!c) {
                 say('that point is outside the room — the cell you name is the cell that gets '
                     + 'edited, so a click past the edge REFUSES rather than clamping to the '
@@ -757,7 +784,83 @@ export function main() {
         say(`seed ${params.seed} at step ${stepFromParams(params)}`);
     };
 
-    boot().then(() => mount(params.source, 'the URL')).catch((e) => {
+    /* ══════════════════════════════════════════════════════════════════
+     * SLICE 4 — WHAT A HOST MAY DO TO THIS PAGE
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ TWO VERBS, AND EACH GOES THROUGH THE PAGE'S EXISTING ONE-OF. There is
+     * no host-only path into this page: `load` is the LOAD box's own function
+     * (so the box shows what was loaded, which is what a reader looking at the
+     * panel would expect to find), and `navigate` is `readLabParams` + `boot`
+     * + `mount` — the SWITCH arc's law, in place, with no reload.
+     */
+
+    /** HOST → PAGE `procgenLab:load`. ⛔ The LOAD box's own function, verbatim. */
+    const loadFromHost = (payload) => {
+        $('labText').value = JSON.stringify(payload, null, 2);
+        loadFromBox();
+    };
+
+    /**
+     * HOST → PAGE `procgenLab:navigate`. ⛔ `history.replaceState` and NOT an
+     * assignment to `location.search`: the latter NAVIGATES, and a hosted page
+     * that reloaded itself would drop the iframe's adapter connection with it
+     * — the standalone page's law (law 2) with a second reason behind it.
+     *
+     * ⚠ `?iframeId=`/`?hostOrigin=` are PRESERVED, because they are this
+     * frame's address and the host did not send them. A navigate that dropped
+     * them would leave a page that still runs but can no longer be reached.
+     */
+    const navigate = async (search) => {
+        const asked = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+        const here = new URLSearchParams(window.location.search);
+        for (const key of ['iframeId', 'hostOrigin']) {
+            if (here.has(key) && !asked.has(key)) asked.set(key, here.get(key));
+        }
+        window.history.replaceState(null, '', `${window.location.pathname}?${asked}`);
+        try {
+            params = readLabParams(window.location.search);
+            await boot();
+        } catch (e) {
+            // ⛔ RAW TRUTH, on the page: a refused navigate says so where every
+            // other refusal on this page says it, and does NOT fall through to
+            // a level nobody asked for.
+            say(e.message, true);
+            render();
+            return;
+        }
+        mount(params.source, 'the HOST navigated');
+    };
+
+    /**
+     * ⛓⛓⛓ THE BRIDGE IS FETCHED ONLY UNDER `?iframeId=`.
+     *
+     * ⛔ Not "loaded and inert" — NOT FETCHED. A static import would put
+     * `AdapterClient` (and `shared/communicationProtocol.js` with it) into the
+     * standalone page's module graph, where it would install a `message`
+     * listener on a page that has no host — and slice 3's §10.10(6) promised
+     * the opposite in writing. `check-maze-lab.mjs` asserts the graph.
+     */
+    const installBridge = async () => {
+        const iframeId = new URLSearchParams(window.location.search).get('iframeId');
+        if (!iframeId) return;
+        const mod = await import('./mazeLabBridge.js');
+        bridge = await mod.installMazeLabBridge({
+            iframeId,
+            readout: () => window.__mazeLab,
+            load: loadFromHost,
+            navigate,
+        });
+    };
+
+    boot().then(() => {
+        mount(params.source, 'the URL');
+        // ⚠ AFTER the first mount, so the `ready` the bridge publishes carries
+        // a page that has already drawn — §3.5 says `ready` is *"after connect
+        // + first render"*, and a host that mirrored a pre-render state would
+        // print an identity line for a level nobody could see.
+        return installBridge();
+    }).catch((e) => {
         // ⛔ RAW TRUTH: a boot that failed says so with its own message and the
         // page does NOT fall back to a level nobody asked for.
         $('status').textContent = e.message;

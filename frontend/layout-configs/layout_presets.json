@@ -238,6 +238,18 @@
             },
             {
               "type": "component",
+              "componentType": "procgenLabPanel",
+              "componentState": { "substrate": "maze" },
+              "title": "Procgen Lab \u2014 maze"
+            },
+            {
+              "type": "component",
+              "componentType": "procgenLabPanel",
+              "componentState": { "substrate": "seedling" },
+              "title": "Procgen Lab \u2014 Seedling"
+            },
+            {
+              "type": "component",
               "componentType": "textAdventureSubstrateWrapperPanel",
               "title": "Text Adventure (wrapper)"
             },
