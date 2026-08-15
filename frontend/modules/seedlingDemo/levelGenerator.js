@@ -170,6 +170,49 @@ export const ATTEMPT = Object.freeze({
     ABORTED: 'ABORTED',
 });
 
+/**
+ * ⛓⛓⛓ WHAT AN ANCHOR WALK ACCEPTS — GENERATE-mode UI slice 5, and ⚖ THE
+ * USER'S RULING: *verb 2 PREFERS DISCHARGE; the free loop keeps FIRST-SOLVED.*
+ *
+ * ⛔ **`FIRST_SOLVED` IS THE DEFAULT AND THAT IS A REQUIREMENT, NOT A TASTE.**
+ * The free-running ladder's semantics are unchanged by this slice; the
+ * preference is a property of the DIRECTED entry, where the user has asked
+ * about THIS template and is paying for a wider, choosier walk. A default that
+ * had to be passed in to get today's behaviour would put the old semantics one
+ * forgotten argument away from vanishing.
+ *
+ * `PREFER_DISCHARGE` — walk the offered anchors and keep the FIRST whose solve
+ * discharges the template's own verb; if none does, keep the first that merely
+ * SOLVED. ⛔ It never accepts something `FIRST_SOLVED` would have rejected: the
+ * two policies choose WHERE among solving anchors, and neither one widens what
+ * counts as a yes.
+ */
+export const KEEP_POLICY = Object.freeze({
+    FIRST_SOLVED: 'first-solved',
+    PREFER_DISCHARGE: 'prefer-discharge',
+});
+
+/**
+ * ⛓⛓ WHICH KIND OF KEEP IT WAS — three answers, and the third is why this is
+ * an enum rather than a boolean.
+ *
+ * `DISCHARGED`  — the solve carries a `{strategy}` record naming this
+ *                 template's own verb (⚖ §12.1's evidence standard).
+ * `SOLVED_ONLY` — it has a verb and this solve did not discharge it. The walk
+ *                 looked for the good outcome and settled.
+ * `NO_VERB`     — ⛔ THE TEMPLATE HAS NO VERB TO DISCHARGE (a wall, a pool, a
+ *                 pit, an arrow lane). First-SOLVED is its WHOLE criterion and
+ *                 nothing was missed. Reporting this as `SOLVED_ONLY` would be
+ *                 a readout claiming a shortfall that could not exist — the
+ *                 shape trap 249 names, so the three cases are never blurred
+ *                 into two.
+ */
+export const KEPT_KIND = Object.freeze({
+    DISCHARGED: 'discharged',
+    SOLVED_ONLY: 'solved-only',
+    NO_VERB: 'solved-no-verb',
+});
+
 /** Why the loop stopped — always one of these, never an empty exit. */
 export const STOP = Object.freeze({
     TARGET_REACHED: 'TARGET_REACHED',
@@ -279,6 +322,191 @@ export function costModel(bounds, worstCaseSolveMs) {
             + 'one of which is SYNCHRONOUS and uninterruptible — the per-solve budget bounds '
             + 'what the loop ACCEPTS, never what it SPENDS (procgenOracle\'s residue).',
     });
+}
+
+/**
+ * ── ⛓⛓⛓ THE ANCHOR WALK — **ONE** OF THEM, TWO POLICIES (slice 5) ─────
+ *
+ * The free loop and the directed attempt ask the same question of the same
+ * seam in the same order — place, solve, decide, next anchor — and differ in
+ * exactly one thing: WHICH of the solving anchors they take. So there is one
+ * walk with a `keepPolicy`, rather than two walks that would agree until
+ * somebody fixed a refusal in one of them.
+ *
+ * ⛔⛔ **AT `FIRST_SOLVED` THIS FUNCTION IS THE PRE-SLICE LOOP, INSTRUCTION FOR
+ * INSTRUCTION.** `take` is true at the first SOLVED anchor, so the loop breaks
+ * there, `fallback` is never written and the fix-up below never runs. That is
+ * what makes the free ladder byte-inert BY CONSTRUCTION and not by
+ * measurement-and-hope — and it is measured anyway (the as-built carries the
+ * comparison, the same method slice 3 used for the bound).
+ *
+ * ── ⚠ ONE COMBINATION THIS SLICE MAKES POSSIBLE, AND IT IS NOT A BLUR ──
+ *
+ * Under `PREFER_DISCHARGE` an anchor can be `outcome: REVERTED` with
+ * `verdict: SOLVED` — the oracle solved that room and the walk passed it over
+ * looking for one that discharges. ⛔ That reads correctly in the existing
+ * vocabulary and needed no fifth outcome: `verdict` is the ORACLE's answer and
+ * `outcome` is the LOOP's decision, and `procgenOracle` writes them separately
+ * for exactly this reason. It cannot occur under `FIRST_SOLVED`, where the
+ * first SOLVED anchor is always taken.
+ *
+ * ⛔ **NO NEW ROW KEY.** The rows this emits carry exactly the keys they
+ * carried before this slice, because a `keptKind: null` stapled to every row
+ * would move the free ladder's trace bytes — the thing slice 3 measured and
+ * this slice must not spend. The walk's own story rides in what it RETURNS
+ * (`kind`, `anchorsWalked`), which the directive record and the readout carry.
+ *
+ * @param {object} o
+ * @param {Array}  o.anchors   the anchors to walk, in the model's order
+ * @param {string} o.keepPolicy see `KEEP_POLICY`
+ * @param {Function} [o.discharges] `(family, records) => boolean|null` —
+ *   REQUIRED by `PREFER_DISCHARGE` and refused if missing (a policy that
+ *   silently degraded to first-SOLVED because its predicate was absent is the
+ *   graceful fallback that reports a vacuous success).
+ * @param {Function} o.onAbort called with the engine error before it
+ *   propagates; expected to throw. If it returns, the error is rethrown bare —
+ *   ⛔ this walk never survives an engine throw (traps 171/173).
+ * @returns {{rows: Array, hit: object|null, walked: number}}
+ */
+function walkAnchors({
+    anchors, record, template, model, oracle, solveTemplates, rowBase,
+    keepPolicy = KEEP_POLICY.FIRST_SOLVED, discharges = null, onAbort,
+}) {
+    if (keepPolicy !== KEEP_POLICY.FIRST_SOLVED
+        && keepPolicy !== KEEP_POLICY.PREFER_DISCHARGE) {
+        fail(`levelGenerator: keepPolicy must be one of [${Object.values(KEEP_POLICY)
+            .join(', ')}], got ${JSON.stringify(keepPolicy)}. The policy decides which of `
+            + 'the SOLVING anchors is kept, so there is no value meaning "whichever".');
+    }
+    if (keepPolicy === KEEP_POLICY.PREFER_DISCHARGE && typeof discharges !== 'function') {
+        fail('levelGenerator: keepPolicy "prefer-discharge" needs a `discharges(family, '
+            + 'records)` predicate, and none was given. ⛔ It REFUSES rather than falling '
+            + 'back to first-SOLVED: a preference that silently stopped preferring would '
+            + 'report exactly the outcome it was asked to improve on, and nothing on the '
+            + 'page could tell the two runs apart.');
+    }
+    const rows = [];
+    let hit = null;
+    let fallback = null;
+    let walked = 0;
+    for (let ai = 0; ai < anchors.length; ai += 1) {
+        const at = anchors[ai];
+        const anchorRow = { ...rowBase, anchorTry: ai + 1, anchorsOffered: anchors.length };
+        walked = ai + 1;
+        let candidate = null;
+        try {
+            candidate = model.place(record, template, at);
+        } catch (e) {
+            /**
+             * ⛔ ONLY THE MODEL'S OWN REFUSAL IS AN OUTCOME. `withTerrain`
+             * refuses an out-of-rectangle cell and a cell named twice BY
+             * NAME, and those are legitimate answers about a candidate.
+             * Anything else — a TypeError, an engine error — is a defect
+             * in the generator, and a loop that reverted it would hide
+             * its own bugs behind "that candidate didn't work out"
+             * (traps 171/173, the same reasoning `procgenOracle` applies
+             * to what it catches). The caller decides which name is
+             * theirs; `model.placementError` is that declaration.
+             *
+             * ⚠ AND IT ADVANCES TO THE NEXT ANCHOR RATHER THAN THE NEXT
+             * CANDIDATE: "this CELL was never a room" is a fact about
+             * the cell. At the default bound there is no next anchor, so
+             * this is byte-identical to the pre-search `continue`.
+             */
+            if (!model.placementError || !(e instanceof model.placementError)) throw e;
+            rows.push(Object.freeze({
+                ...anchorRow,
+                outcome: ATTEMPT.ILLEGAL_PLACEMENT,
+                at,
+                verdict: null,
+                ticks: null,
+                classifiedBy: 'the level model refused the placement before any solve',
+                reasonText: e.message,
+            }));
+            continue;
+        }
+        let out;
+        try {
+            out = oracle.solve(candidate, { templates: solveTemplates });
+        } catch (e) {
+            /**
+             * ⛔⛔ THE ABORT IS UNCHANGED, AND NEITHER THE SEARCH NOR THE
+             * POLICY MAY SOFTEN IT. An engine throw ends the RUN with its
+             * evidence attached; catching it here and walking on to the next
+             * anchor would be exactly the loop-survives-its-own-defects
+             * shape traps 171/173 name — and it would be worse than
+             * before, because a wider walk would hide MORE of them.
+             */
+            rows.push(Object.freeze({
+                ...anchorRow,
+                outcome: ATTEMPT.ABORTED,
+                at,
+                verdict: null,
+                ticks: null,
+                classifiedBy: `the oracle let a ${e.name} escape — it classifies only `
+                    + 'the two throws that are claims about a LEVEL, and anything '
+                    + 'else is a defect somewhere in the engine, the model or this '
+                    + 'loop (traps 171/173)',
+                reasonText: e.message,
+            }));
+            onAbort({ error: e, at, anchorTry: ai + 1, anchorsOffered: anchors.length, rows });
+            throw e;
+        }
+        const solved = out.verdict === 'SOLVED';
+        /**
+         * ⛓ THE THREE KINDS, and the `null` from `discharges` is the third of
+         * them rather than a falsy second. See `KEPT_KIND`.
+         */
+        let kind = null;
+        if (solved) {
+            if (keepPolicy === KEEP_POLICY.FIRST_SOLVED) kind = null;
+            else {
+                const d = discharges(rowBase.family, out.records);
+                if (d === null || d === undefined) kind = KEPT_KIND.NO_VERB;
+                else kind = d ? KEPT_KIND.DISCHARGED : KEPT_KIND.SOLVED_ONLY;
+            }
+        }
+        // ⛔ A NO_VERB template is taken IMMEDIATELY: first-SOLVED is its whole
+        // criterion, so walking past it would spend solves looking for an
+        // outcome that does not exist for this family.
+        const take = solved && (keepPolicy === KEEP_POLICY.FIRST_SOLVED
+            || kind !== KEPT_KIND.SOLVED_ONLY);
+        rows.push(Object.freeze({
+            ...anchorRow,
+            outcome: take ? ATTEMPT.KEPT : ATTEMPT.REVERTED,
+            at,
+            verdict: out.verdict,
+            ticks: out.ticks ?? null,
+            classifiedBy: out.classifiedBy ?? null,
+            // ⛔ VERBATIM, always — the refusal's own text is the evidence
+            // channel and this loop is not allowed to summarise it.
+            reasonText: out.reasonText ?? null,
+            budgetKind: out.budgetKind ?? null,
+        }));
+        if (take) {
+            hit = { at, candidate, solve: out, kind, anchorTry: ai + 1, rowIndex: rows.length - 1 };
+            break;
+        }
+        if (solved && !fallback) {
+            fallback = { at, candidate, solve: out, kind, anchorTry: ai + 1,
+                rowIndex: rows.length - 1 };
+        }
+    }
+    /**
+     * ⛓ THE SETTLE. No anchor discharged, so the walk takes the FIRST that
+     * merely solved — ⚖ the ruling's own second clause — and the row it already
+     * emitted is corrected from REVERTED to KEPT in place. ⛔ Unreachable under
+     * `FIRST_SOLVED` (`fallback` is only written when a SOLVED anchor was NOT
+     * taken, which that policy never does), which is why the free ladder cannot
+     * reach this branch at all.
+     */
+    if (!hit && fallback) {
+        hit = fallback;
+        rows[fallback.rowIndex] = Object.freeze({
+            ...rows[fallback.rowIndex], outcome: ATTEMPT.KEPT,
+        });
+    }
+    return { rows, hit, walked };
 }
 
 const assertHas = (obj, names, what) => {
@@ -508,115 +736,63 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
              * are different facts — the first was bounded by LEGALITY, the
              * second by the BOUND.
              */
-            for (let ai = 0; ai < anchors.length && !keptThisStep; ai += 1) {
-                const at = anchors[ai];
-                const anchorRow = { ...row, anchorTry: ai + 1, anchorsOffered: anchors.length };
-                let candidate = null;
-                try {
-                    candidate = model.place(record, template, at);
-                } catch (e) {
-                    /**
-                     * ⛔ ONLY THE MODEL'S OWN REFUSAL IS AN OUTCOME. `withTerrain`
-                     * refuses an out-of-rectangle cell and a cell named twice BY
-                     * NAME, and those are legitimate answers about a candidate.
-                     * Anything else — a TypeError, an engine error — is a defect
-                     * in the generator, and a loop that reverted it would hide
-                     * its own bugs behind "that candidate didn't work out"
-                     * (traps 171/173, the same reasoning `procgenOracle` applies
-                     * to what it catches). The caller decides which name is
-                     * theirs; `model.placementError` is that declaration.
-                     *
-                     * ⚠ AND IT ADVANCES TO THE NEXT ANCHOR RATHER THAN THE NEXT
-                     * CANDIDATE: "this CELL was never a room" is a fact about
-                     * the cell. At the default bound there is no next anchor, so
-                     * this is byte-identical to the pre-search `continue`.
-                     */
-                    if (!model.placementError || !(e instanceof model.placementError)) throw e;
-                    trace.push(Object.freeze({
-                        ...anchorRow,
-                        outcome: ATTEMPT.ILLEGAL_PLACEMENT,
-                        at,
-                        verdict: null,
-                        ticks: null,
-                        classifiedBy: 'the level model refused the placement before any solve',
-                        reasonText: e.message,
-                    }));
-                    continue;
-                }
-                let out;
-                try {
-                    // ⛔ `keptRows`, NOT `kept` — see that array's docblock. A
-                    // `kept` RECORD carries no `pins`, so this solve used to take
-                    // the pin union over the candidate alone.
-                    out = oracle.solve(candidate, { templates: [...keptRows, template] });
-                } catch (e) {
-                    /**
-                     * ⛔⛔ THE ABORT IS UNCHANGED, AND THE SEARCH MUST NOT SOFTEN
-                     * IT. An engine throw ends the RUN with its evidence
-                     * attached; catching it here and walking on to the next
-                     * anchor would be exactly the loop-survives-its-own-defects
-                     * shape traps 171/173 name — and it would be worse than
-                     * before, because a wider walk would hide MORE of them.
-                     */
-                    trace.push(Object.freeze({
-                        ...anchorRow,
-                        outcome: ATTEMPT.ABORTED,
-                        at,
-                        verdict: null,
-                        ticks: null,
-                        classifiedBy: `the oracle let a ${e.name} escape — it classifies only `
-                            + 'the two throws that are claims about a LEVEL, and anything '
-                            + 'else is a defect somewhere in the engine, the model or this '
-                            + 'loop (traps 171/173)',
-                        reasonText: e.message,
-                    }));
+            /**
+             * ⛓⛓ SLICE 5: THE WALK IS `walkAnchors`, AND THIS CALL SITE PASSES
+             * NO POLICY — so it takes `KEEP_POLICY.FIRST_SOLVED`, which is the
+             * pre-slice behaviour instruction for instruction. ⛔ ⚖ The user's
+             * ruling: *the free loop keeps FIRST-SOLVED.* The directed entry
+             * below is where the preference lives, and the default here is what
+             * keeps that a property of the entry rather than of the loop.
+             *
+             * ⛔ `keptRows`, NOT `kept` — see that array's docblock. A `kept`
+             * RECORD carries no `pins`, so this solve used to take the pin
+             * union over the candidate alone.
+             */
+            const walk = walkAnchors({
+                anchors,
+                record,
+                template,
+                model,
+                oracle,
+                solveTemplates: [...keptRows, template],
+                rowBase: row,
+                onAbort: ({ error, at, anchorTry, anchorsOffered, rows }) => {
+                    for (const r of rows) trace.push(r);
                     throw new GenerationAborted(
                         `levelGenerator: ABORTED at step ${step} try ${attempt} anchor `
-                        + `${ai + 1}/${anchors.length} placing "${row.instance}" at `
-                        + `(${at.tx},${at.ty}) — the oracle threw a ${e.name}, which is NOT `
+                        + `${anchorTry}/${anchorsOffered} placing "${row.instance}" at `
+                        + `(${at.tx},${at.ty}) — the oracle threw a ${error.name}, which is NOT `
                         + 'one of the three verdict classes and is therefore not a rejected '
                         + 'candidate. The trace up to here is attached; the engine said: '
-                        + e.message,
-                        { trace, record, summary: { kept: [...kept], bounds: b }, cause: e },
+                        + error.message,
+                        { trace, record, summary: { kept: [...kept], bounds: b }, cause: error },
                     );
-                }
-                const keep = out.verdict === 'SOLVED';
-                trace.push(Object.freeze({
-                    ...anchorRow,
-                    outcome: keep ? ATTEMPT.KEPT : ATTEMPT.REVERTED,
-                    at,
-                    verdict: out.verdict,
-                    ticks: out.ticks ?? null,
-                    classifiedBy: out.classifiedBy ?? null,
-                    // ⛔ VERBATIM, always — the refusal's own text is the evidence
-                    // channel and this loop is not allowed to summarise it.
-                    reasonText: out.reasonText ?? null,
-                    budgetKind: out.budgetKind ?? null,
-                }));
-                if (keep) {
-                    record = candidate;
-                    /**
-                     * ⛓ `params` IS PART OF THE KEPT RECORD because it is the
-                     * only thing that lets anybody rebuild WHICH instance was
-                     * placed. `procgenPalette.instantiateKept` is the one
-                     * reconstruction, and it refuses rather than defaulting when
-                     * a parameter is missing from this object.
-                     */
-                    kept.push({
-                        template: base.name,
-                        instance: template.instance ?? base.name,
-                        params: template.params ?? null,
-                        family: base.family,
-                        at,
-                    });
-                    // ⛓ THE CONCRETE ROW, RETAINED IN THE SAME ORDER — the object
-                    // every LATER solve unions its pins over (track A).
-                    keptRows.push(template);
-                    lastSolve = out;
-                    keptThisStep = true;
-                }
+                },
+            });
+            for (const r of walk.rows) trace.push(r);
+            if (walk.hit) {
+                record = walk.hit.candidate;
+                /**
+                 * ⛓ `params` IS PART OF THE KEPT RECORD because it is the
+                 * only thing that lets anybody rebuild WHICH instance was
+                 * placed. `procgenPalette.instantiateKept` is the one
+                 * reconstruction, and it refuses rather than defaulting when
+                 * a parameter is missing from this object.
+                 */
+                kept.push({
+                    template: base.name,
+                    instance: template.instance ?? base.name,
+                    params: template.params ?? null,
+                    family: base.family,
+                    at: walk.hit.at,
+                });
+                // ⛓ THE CONCRETE ROW, RETAINED IN THE SAME ORDER — the object
+                // every LATER solve unions its pins over (track A).
+                keptRows.push(template);
+                lastSolve = walk.hit.solve;
+                keptThisStep = true;
+                break;
             }
-            if (keptThisStep) break;
         }
         consecutiveRejectSteps = keptThisStep ? 0 : consecutiveRejectSteps + 1;
         if (!keptThisStep && consecutiveRejectSteps >= b.saturationK) {
@@ -662,4 +838,164 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
             rngState: rng.state,
         }),
     };
+}
+
+/**
+ * ── ⛓⛓⛓ VERB 2 — **THE DIRECTED ATTEMPT** (GENERATE-mode UI slice 5) ──
+ *
+ * ⚖ Ruling 1, verbatim: *"a button to make the generator attempt to generate
+ * that specific thing."* So: ONE template, ALREADY INSTANTIATED by the caller
+ * from the form's values, placed on the CURRENT record, with the anchor search
+ * at a stated higher bound and ⚖ the user's own acceptance criterion.
+ *
+ * ⛔ **IT IS NOT A ONE-STEP `generateLevel`.** The loop DRAWS its template and
+ * its parameters and owns the saturation counter; a directive draws nothing —
+ * the user has already said what they want — and it has no notion of a step,
+ * a target or saturation. Reusing the loop with a palette of one would have
+ * meant a run whose trace claimed a step it did not take, whose bounds named
+ * a target nobody set, and whose rng position moved for draws that were never
+ * spent. The two share the thing they actually share: `walkAnchors`.
+ *
+ * ── THE FOUR OUTCOMES, AS A TOTAL FUNCTION ────────────────────────────
+ *
+ * `KEPT`               — some anchor was accepted; `record` is the NEW one.
+ * `NO_ANCHOR`          — the model offered no legal cell at all.
+ * `ILLEGAL_PLACEMENT`  — every anchor offered was refused BY THE MODEL, before
+ *                        any solve. ⛔ Distinct from REVERTED because the two
+ *                        answer different questions — *"this was never a
+ *                        room"* against *"this room is unsolvable"*.
+ * `REVERTED`           — at least one anchor reached the oracle and none was
+ *                        kept. The record is UNCHANGED (revert is "keep the
+ *                        old record", the file's own law).
+ *
+ * ⛔ `ABORTED` still ABORTS: the engine throw propagates with the rows
+ * attached, exactly as it does in the loop, because a directed walk is a walk
+ * with MORE places to hide an engine error in, not fewer (traps 171/173).
+ *
+ * ⚠ `keptKind` is `null` for every non-KEPT outcome and one of `KEPT_KIND`'s
+ * three for a keep — never `false`, never blank. See `KEPT_KIND`.
+ *
+ * @param {object} o
+ * @param {object} o.rng       the anchor stream — ⛔ ITS OWN, derived
+ *   deterministically from the seed and the directive's INDEX by the caller.
+ *   This walk spends exactly one shuffle from it (`anchorsFor`'s own law).
+ * @param {object} o.record    the record to place onto — the level ON SCREEN.
+ * @param {object} o.template  a CONCRETE ROW (already instantiated).
+ * @param {Array}  [o.keptRows] the concrete rows already in `record`, for the
+ *   pin union — the same argument the loop's `keptRows` is (track A).
+ * @param {number} o.bound     how many legal anchors this attempt may be
+ *   solved at. Named in the result, because ⚖ kickoff §5 says a bounded walk
+ *   names its bound.
+ * @param {string} [o.keepPolicy] `KEEP_POLICY.PREFER_DISCHARGE` for verb 2.
+ * @param {Function} [o.discharges] required by that policy — see `walkAnchors`.
+ * @param {object} [o.rowBase] extra fields every emitted row carries (the page
+ *   passes `{directive: n, step}` so the pane can label them).
+ */
+export function directedAttempt({
+    rng, model, oracle, record, template, keptRows = [], bound,
+    keepPolicy = KEEP_POLICY.FIRST_SOLVED, discharges = null, rowBase = {},
+} = {}) {
+    assertHas(model, ['anchorsFor', 'place'], 'model');
+    assertHas(oracle, ['solve'], 'oracle');
+    if (!Number.isInteger(bound) || bound <= 0) {
+        fail(`levelGenerator: a directed attempt needs a positive integer bound, got `
+            + `${JSON.stringify(bound)}. The bound is what the result NAMES (⚖ kickoff §5), `
+            + 'so there is no value meaning "as many as it takes".');
+    }
+    if (!template || typeof template !== 'object' || !template.name) {
+        fail('levelGenerator: a directed attempt takes a CONCRETE ROW (the output of a '
+            + 'template\'s `instantiate`), not a base template and not a name. ⛔ It does '
+            + 'not instantiate: the caller owns the parameter values, because those values '
+            + 'are what the directive RECORDS and what a reproduction replays.');
+    }
+    if (!rng || typeof rng.shuffle !== 'function') {
+        fail('levelGenerator: a directed attempt needs a seeded stream for the anchor '
+            + 'order. ⛔ Its own, derived from the seed and the directive\'s index — a '
+            + 'directive that reused the ladder\'s stream position would move the level '
+            + 'the ladder produced.');
+    }
+    const base = {
+        ...rowBase,
+        template: template.name,
+        instance: template.instance ?? template.name,
+        params: template.params ?? null,
+        family: template.family,
+        rngStateBefore: rng.state,
+        drawsBefore: rng.draws,
+    };
+    const anchors = model.anchorsFor(record, template, rng, bound);
+    if (!anchors.length) {
+        return Object.freeze({
+            outcome: ATTEMPT.NO_ANCHOR,
+            record,
+            at: null,
+            keptKind: null,
+            bound,
+            keepPolicy,
+            anchorsOffered: 0,
+            anchorsWalked: 0,
+            solve: null,
+            rows: Object.freeze([Object.freeze({
+                ...base,
+                anchorTry: null,
+                anchorsOffered: 0,
+                outcome: ATTEMPT.NO_ANCHOR,
+                at: null,
+                verdict: null,
+                ticks: null,
+                classifiedBy: 'the model found no legal anchor for this template in this room',
+                reasonText: null,
+            })]),
+        });
+    }
+    const walk = walkAnchors({
+        anchors,
+        record,
+        template,
+        model,
+        oracle,
+        solveTemplates: [...keptRows, template],
+        rowBase: base,
+        keepPolicy,
+        discharges,
+        onAbort: ({ error, at, anchorTry, anchorsOffered, rows }) => {
+            throw new GenerationAborted(
+                `levelGenerator: the DIRECTED attempt ABORTED at anchor `
+                + `${anchorTry}/${anchorsOffered} placing "${base.instance}" at `
+                + `(${at.tx},${at.ty}) — the oracle threw a ${error.name}, which is NOT one of `
+                + 'the three verdict classes and is therefore not a rejected candidate. The '
+                + 'rows up to here are attached; the engine said: ' + error.message,
+                { trace: rows, record, summary: { bound, keepPolicy }, cause: error },
+            );
+        },
+    });
+    /**
+     * ⛔ THE REFUSAL CLASS IS READ OFF THE ROWS, not guessed. "Every anchor the
+     * model refused" and "some anchor the oracle refused" are different
+     * findings about a template, and a directed attempt that reported one as
+     * the other would send a reader to the wrong half of the system.
+     */
+    const outcome = walk.hit
+        ? ATTEMPT.KEPT
+        : (walk.rows.every((r) => r.outcome === ATTEMPT.ILLEGAL_PLACEMENT)
+            ? ATTEMPT.ILLEGAL_PLACEMENT : ATTEMPT.REVERTED);
+    return Object.freeze({
+        outcome,
+        record: walk.hit ? walk.hit.candidate : record,
+        at: walk.hit ? walk.hit.at : null,
+        keptKind: walk.hit ? (walk.hit.kind ?? KEPT_KIND.NO_VERB) : null,
+        bound,
+        keepPolicy,
+        anchorsOffered: anchors.length,
+        /**
+         * ⚠ WALKED, AND OFFERED, BECAUSE THEY ARE DIFFERENT FACTS — slice 3's
+         * own lesson one level up. *Stopped at 3 of 3* was bounded by
+         * LEGALITY; *stopped at 3 of 12* was bounded by the BOUND; and
+         * *walked 12 of 12* is a walk that found nothing better than its
+         * fallback. The readout prints both.
+         */
+        anchorsWalked: walk.walked,
+        solve: walk.hit ? walk.hit.solve : null,
+        rows: Object.freeze(walk.rows),
+    });
 }

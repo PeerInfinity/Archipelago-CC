@@ -17,8 +17,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    ATTEMPT, DEFAULT_BOUNDS, GenerationAborted, LevelGeneratorError, STOP, costModel,
-    generateLevel,
+    ATTEMPT, DEFAULT_BOUNDS, GenerationAborted, KEEP_POLICY, KEPT_KIND, LevelGeneratorError,
+    STOP, costModel, directedAttempt, generateLevel,
 } from './levelGenerator.js';
 
 /** A stream with `procgenRng`'s surface and a scripted sequence of picks. */
@@ -693,3 +693,357 @@ describe('the loop is substrate-agnostic by construction', () => {
         expect(Object.keys(out.summary.byFamily).sort()).toEqual(['walls', 'water']);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPT (GENERATE-mode UI slice 5)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user's ruling: *verb 2 PREFERS DISCHARGE; the free loop keeps
+ * FIRST-SOLVED.* These cases drive both halves of that sentence against the
+ * same fake seam the loop's own cases use — so the claims are about the walk
+ * and its policy, not about Seedling.
+ */
+describe('⛓⛓ the DIRECTED attempt — one template, one record, a choosier walk', () => {
+    /** A concrete row, which is what a directive places (never a base). */
+    const row = (name, family = 'fake') => ({
+        name, family, params: {}, instance: name, footprint: [{ dx: 0, dy: 0 }],
+    });
+    /**
+     * The discharge predicate the page injects, faked: `verbFamilies` have a
+     * verb, everything else answers `null`. ⛔ `null`, NOT `false` — the whole
+     * reason `KEPT_KIND` has three members.
+     */
+    const discharger = (verbFamilies, dischargingRecords) => (family, records) => {
+        if (!verbFamilies.includes(family)) return null;
+        return (records ?? []).some((r) => dischargingRecords.includes(r.strategy));
+    };
+
+    it('KEEPS the first anchor that solves when the policy is FIRST_SOLVED', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED']),
+            record: { placed: [] },
+            template: row('a'),
+            bound: 4,
+        });
+        expect(out.outcome).toBe(ATTEMPT.KEPT);
+        expect(out.at).toEqual({ tx: 1, ty: 1 });
+        expect(out.anchorsWalked).toBe(1);
+        expect(out.anchorsOffered).toBe(4);
+        expect(out.record.placed).toEqual(['a']);
+    });
+
+    it('⛓⛓ PREFERS a DISCHARGING anchor over an earlier one that merely SOLVED', () => {
+        /**
+         * ⚠ THE SUBJECT'S OWN PROPERTY IS ASSERTED BY CONSTRUCTION (trap 235):
+         * anchor 1 solves WITHOUT the verb and anchor 3 solves WITH it. A
+         * scripted oracle whose first anchor already discharged could not tell
+         * the two policies apart at all.
+         */
+        const verdicts = [
+            { verdict: 'SOLVED', ticks: 10, records: [{ strategy: 'walk' }] },
+            { verdict: 'REFUSED', ticks: 11, reasonText: 'nope' },
+            { verdict: 'SOLVED', ticks: 12, records: [{ strategy: 'shove' }] },
+            { verdict: 'SOLVED', ticks: 13, records: [{ strategy: 'shove' }] },
+        ];
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(verdicts),
+            record: { placed: [] },
+            template: row('a', 'shove'),
+            bound: 4,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            discharges: discharger(['shove'], ['shove']),
+        });
+        expect(out.outcome).toBe(ATTEMPT.KEPT);
+        expect(out.keptKind).toBe(KEPT_KIND.DISCHARGED);
+        expect(out.at).toEqual({ tx: 3, ty: 1 });
+        expect(out.anchorsWalked).toBe(3);
+        // ⛔ THE SAME SUBJECT UNDER THE FREE LOOP'S POLICY KEEPS ANCHOR 1 — which
+        // is what makes this a claim about the POLICY and not about the fake.
+        const first = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(verdicts),
+            record: { placed: [] },
+            template: row('a', 'shove'),
+            bound: 4,
+        });
+        expect(first.at).toEqual({ tx: 1, ty: 1 });
+        expect(first.anchorsWalked).toBe(1);
+    });
+
+    it('SETTLES for the first merely-SOLVED anchor when nothing discharges', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle([
+                { verdict: 'SOLVED', ticks: 10, records: [{ strategy: 'walk' }] },
+                { verdict: 'SOLVED', ticks: 11, records: [{ strategy: 'walk' }] },
+                { verdict: 'SOLVED', ticks: 12, records: [{ strategy: 'walk' }] },
+            ]),
+            record: { placed: [] },
+            template: row('a', 'shove'),
+            bound: 3,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            discharges: discharger(['shove'], ['shove']),
+        });
+        expect(out.outcome).toBe(ATTEMPT.KEPT);
+        expect(out.keptKind).toBe(KEPT_KIND.SOLVED_ONLY);
+        // ⛓ THE FALLBACK IS THE **FIRST** SOLVED ANCHOR, not the last walked.
+        expect(out.at).toEqual({ tx: 1, ty: 1 });
+        // …and the walk really did spend the whole bound looking for better.
+        expect(out.anchorsWalked).toBe(3);
+        // ⛓ THE ROW IS CORRECTED IN PLACE: exactly ONE row says KEPT, and it is
+        // the one whose anchor was taken. A walk that left the passed-over rows
+        // saying KEPT would be a trace naming three placements for one keep.
+        const keptRows = out.rows.filter((r) => r.outcome === ATTEMPT.KEPT);
+        expect(keptRows).toHaveLength(1);
+        expect(keptRows[0].anchorTry).toBe(1);
+    });
+
+    it('⛔ a template with NO VERB says so by name — it is not "solved-only"', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle([{ verdict: 'SOLVED', ticks: 10, records: [] }]),
+            record: { placed: [] },
+            template: row('w', 'wall'),
+            bound: 8,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            discharges: discharger(['shove'], ['shove']),
+        });
+        expect(out.keptKind).toBe(KEPT_KIND.NO_VERB);
+        // ⛔ AND IT STOPS AT THE FIRST SOLVE. First-SOLVED is this family's whole
+        // criterion, so walking on would spend solves hunting an outcome that
+        // does not exist for it.
+        expect(out.anchorsWalked).toBe(1);
+    });
+
+    it('⛔ PREFER_DISCHARGE without a predicate REFUSES rather than degrading', () => {
+        expect(() => directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED']),
+            record: { placed: [] },
+            template: row('a', 'shove'),
+            bound: 2,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+        })).toThrow(/needs a `discharges\(family, records\)` predicate/);
+    });
+
+    describe('the four outcomes, each reachable and each distinct', () => {
+        it('NO_ANCHOR when the model offers no legal cell', () => {
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: fakeModel({ anchorsFor: () => [] }),
+                oracle: fakeOracle(['SOLVED']),
+                record: { placed: [] },
+                template: row('a'),
+                bound: 12,
+            });
+            expect(out.outcome).toBe(ATTEMPT.NO_ANCHOR);
+            expect(out.anchorsOffered).toBe(0);
+            expect(out.rows).toHaveLength(1);
+            expect(out.rows[0].classifiedBy).toMatch(/no legal anchor/);
+        });
+
+        it('ILLEGAL_PLACEMENT when EVERY offered anchor is refused by the model', () => {
+            class ModelError extends Error {}
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: fakeModel({
+                    placementError: ModelError,
+                    place: () => { throw new ModelError('the footprint leaves the room'); },
+                }),
+                oracle: fakeOracle(['SOLVED']),
+                record: { placed: [] },
+                template: row('a'),
+                bound: 3,
+            });
+            expect(out.outcome).toBe(ATTEMPT.ILLEGAL_PLACEMENT);
+            // ⛔ VERBATIM, and one row per anchor the model refused.
+            expect(out.rows).toHaveLength(3);
+            expect(out.rows[0].reasonText).toBe('the footprint leaves the room');
+            // ⛔ NOT ONE SOLVE WAS SPENT — the model answered before the oracle.
+            expect(out.solve).toBeNull();
+        });
+
+        it('REVERTED when an anchor reached the oracle and none was kept', () => {
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: fakeModel(),
+                oracle: fakeOracle([{ verdict: 'REFUSED', ticks: 4, reasonText: 'unreachable' }]),
+                record: { placed: [] },
+                template: row('a'),
+                bound: 2,
+            });
+            expect(out.outcome).toBe(ATTEMPT.REVERTED);
+            expect(out.keptKind).toBeNull();
+            // ⛔ REVERT IS "KEEP THE OLD RECORD" — the same law the loop obeys.
+            expect(out.record.placed).toEqual([]);
+            expect(out.rows.map((r) => r.reasonText)).toEqual(['unreachable', 'unreachable']);
+        });
+
+        it('⛔ a mixture of ILLEGAL and REFUSED reports REVERTED, not ILLEGAL', () => {
+            class ModelError extends Error {}
+            let n = 0;
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: fakeModel({
+                    placementError: ModelError,
+                    place: (record, template) => {
+                        n += 1;
+                        if (n === 1) throw new ModelError('cell taken');
+                        return { placed: [...record.placed, template.name] };
+                    },
+                }),
+                oracle: fakeOracle([{ verdict: 'REFUSED', ticks: 4, reasonText: 'no' }]),
+                record: { placed: [] },
+                template: row('a'),
+                bound: 2,
+            });
+            // "this was never a room" is only the answer when it is the WHOLE
+            // answer; one anchor did reach the oracle, so the oracle's is.
+            expect(out.outcome).toBe(ATTEMPT.REVERTED);
+        });
+    });
+
+    it('⛔⛔ an engine throw still ABORTS, with its rows attached', () => {
+        const boom = new Error('the player fell into a pit');
+        boom.name = 'PhysicsV2Error';
+        let calls = 0;
+        expect(() => directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: {
+                budget: null,
+                solve() { calls += 1; throw boom; },
+            },
+            record: { placed: [] },
+            template: row('a'),
+            bound: 6,
+        })).toThrow(GenerationAborted);
+        // ⛔ THE NEGATIVE HALF IS THE ONE THAT MATTERS: the oracle is called
+        // ONCE, where a walk that caught and moved on would call it six times.
+        expect(calls).toBe(1);
+    });
+
+    it('names its BOUND and its POLICY in the result (⚖ kickoff §5)', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED']),
+            record: { placed: [] },
+            template: row('a'),
+            bound: 9,
+        });
+        expect(out.bound).toBe(9);
+        expect(out.keepPolicy).toBe(KEEP_POLICY.FIRST_SOLVED);
+    });
+
+    it('⛔ takes a CONCRETE ROW and refuses a base template by name', () => {
+        expect(() => directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED']),
+            record: { placed: [] },
+            template: null,
+            bound: 2,
+        })).toThrow(/takes a CONCRETE ROW/);
+    });
+
+    it('refuses a bound that is not a positive integer', () => {
+        expect(() => directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['SOLVED']),
+            record: { placed: [] },
+            template: row('a'),
+            bound: 0,
+        })).toThrow(/positive integer bound/);
+    });
+
+    it('⛓ hands the oracle the KEPT CONCRETE ROWS plus this one, for the pin union', () => {
+        const oracle = fakeOracle(['SOLVED']);
+        const kept = [row('already', 'water')];
+        directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle,
+            record: { placed: ['already'] },
+            template: row('a'),
+            keptRows: kept,
+            bound: 1,
+        });
+        expect(oracle.calls[0].ctx.templates.map((t) => t.name)).toEqual(['already', 'a']);
+    });
+
+    it('carries the caller\'s row fields onto every emitted row', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle(['REFUSED']),
+            record: { placed: [] },
+            template: row('a'),
+            bound: 2,
+            rowBase: { directive: 3, step: 4 },
+        });
+        expect(out.rows.every((r) => r.directive === 3 && r.step === 4)).toBe(true);
+    });
+});
+
+describe('⛔ the KEEP POLICY defaults to FIRST_SOLVED, and the free loop never passes one',
+    () => {
+        it('the exported default is first-solved', () => {
+            expect(KEEP_POLICY.FIRST_SOLVED).toBe('first-solved');
+        });
+
+        it('⛓ the loop keeps anchor 1 even when a later anchor would discharge', () => {
+            /**
+             * ⛔ THE INERTNESS CLAIM, AS A UNIT TEST. The oracle scripts a
+             * non-discharging solve at anchor 1 and a discharging one at anchor
+             * 2; the free loop must take anchor 1, because ⚖ the ruling leaves
+             * its semantics alone. This is the case a mutant that threaded the
+             * preference into `generateLevel` would redden.
+             */
+            const out = generateLevel({
+                rng: fakeRng(),
+                model: fakeModel(),
+                oracle: fakeOracle([
+                    { verdict: 'SOLVED', ticks: 1, classifiedBy: 'skeleton' },
+                    { verdict: 'SOLVED', ticks: 2, records: [{ strategy: 'walk' }] },
+                    { verdict: 'SOLVED', ticks: 3, records: [{ strategy: 'shove' }] },
+                ]),
+                palette: palette([T('a', 'shove')]),
+                bounds: { obstacleTarget: 1, triesPerStep: 1, saturationK: 2,
+                    anchorTriesPerCandidate: 4 },
+            });
+            const kept = out.trace.filter((r) => r.outcome === ATTEMPT.KEPT && r.step === 1);
+            expect(kept).toHaveLength(1);
+            expect(kept[0].anchorTry).toBe(1);
+        });
+
+        it('⛔ and its trace rows carry NO `keptKind` key at all', () => {
+            /**
+             * ⛓ The bytes are the claim. Slice 3 measured the free ladder's
+             * trace rows field by field; a `keptKind: null` stapled to every row
+             * by this slice would have moved every one of them, and the
+             * measurement that proved the anchor search inert would have to be
+             * re-taken for a field the free loop cannot even use.
+             */
+            const out = generateLevel({
+                rng: fakeRng(),
+                model: fakeModel(),
+                oracle: fakeOracle(['SOLVED']),
+                palette: palette(),
+                bounds: { obstacleTarget: 2, triesPerStep: 1, saturationK: 2 },
+            });
+            for (const r of out.trace) {
+                expect(Object.prototype.hasOwnProperty.call(r, 'keptKind')).toBe(false);
+                expect(Object.prototype.hasOwnProperty.call(r, 'directive')).toBe(false);
+            }
+        });
+    });
