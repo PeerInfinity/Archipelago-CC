@@ -4392,17 +4392,16 @@ async function runGenerate(params, lifetime) {
      * same: a page that LOOKS unarmed while a click is still pending turns the
      * reader's next click into something they did not intend.
      *
-     * ⛓ THE ESCAPE LISTENER IS REGISTERED ONLY WHILE ARMED and removed on
-     * disarm, so it cannot outlive this arm. `addEventListener` with the same
-     * function reference is idempotent, so this is safe to call repeatedly.
+     * ⛓ THE ESCAPE LISTENER GOES THROUGH `lifetime.on`, LIKE EVERY OTHER
+     * LISTENER ON THIS PAGE, and it is registered ONCE with the armed check in
+     * the HANDLER rather than in the registration. ⛔ The first draft added and
+     * removed a bare `window.addEventListener` on each arm/disarm — which
+     * `watchLifetime.test.js`'s structural row caught by name: a listener the
+     * holder never saw is invisible to the teardown readout, so a leak would
+     * sit beside a report of a clean teardown. The lifetime owns the
+     * unregistration (an AbortSignal), which is a stronger guarantee than the
+     * hand-written removal it replaced.
      */
-    const onEscape = (ev) => {
-        if (ev.key !== 'Escape' || !armed) return;
-        armed = null;
-        renderArmed();
-        $('status').className = '';
-        $('status').textContent = 'AT… cancelled — nothing was placed';
-    };
     function renderArmed() {
         const canvas = $('canvas');
         canvas.classList.toggle('armed', Boolean(armed));
@@ -4418,8 +4417,6 @@ async function runGenerate(params, lifetime) {
                 + 'spending a solve. Press Escape, or AT… again, to cancel.'
             : 'click-to-anchor: press AT… on a catalogue row, then click a tile on the level '
                 + 'below. ⛔ The unit is the TEMPLATE — nothing here paints a bare tile.';
-        if (armed) window.addEventListener('keydown', onEscape);
-        else window.removeEventListener('keydown', onEscape);
         // ⛓ The readout carries it too, so an acceptance row can assert the
         // armed state without reading a string out of the note.
         if (window.__editorGenerate) window.__editorGenerate.armed = armed?.template ?? null;
@@ -5004,6 +5001,13 @@ async function runGenerate(params, lifetime) {
      * dimensions, so the answer is right at whatever integer scale the
      * renderer chose and whatever size CSS is presenting it at.
      */
+    lifetime.on(window, 'keydown', (ev) => {
+        if (ev.key !== 'Escape' || !armed) return;
+        armed = null;
+        renderArmed();
+        $('status').className = '';
+        $('status').textContent = 'AT… cancelled — nothing was placed';
+    });
     $('canvas').onclick = async (ev) => {
         if (!lifetime.alive() || !armed || busyNow || !state?.record) return;
         const rect = $('canvas').getBoundingClientRect();
