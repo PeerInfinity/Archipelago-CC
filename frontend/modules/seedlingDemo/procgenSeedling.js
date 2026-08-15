@@ -20,6 +20,10 @@
  *                     Seedling's floor. ⛓ It returns a LIST since slice 3 of
  *                     the GENERATE-mode UI arc — the loop walks it until one
  *                     anchor SOLVES, bounded by `anchorTriesPerCandidate`.
+ *   `refusalAt(...)`  ⛓ slice 6 of the GENERATE-mode UI arc: WHY one named
+ *                     cell is refused, in the model's own words, or `null`.
+ *                     `legalAt` is DERIVED from it, so the loop's silent
+ *                     boolean and the page's sentence are one adjudication.
  *   `place(...)`      tiles and entities written TOGETHER (⚖ §1.2's atomic
  *                     placement), returning a NEW frozen record
  *
@@ -253,23 +257,57 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
     }]);
 
     /**
-     * ⚠ "FREE" IS THREE CLAIMS AND THEY ARE ASKED SEPARATELY: the cell is
+     * ⚠ "FREE" IS FOUR CLAIMS AND THEY ARE ASKED SEPARATELY: the cell is
      * inside the interior rectangle, it still holds untouched `ground`
      * (`terrainAt` reads the record, so a cell an earlier template painted is
-     * no longer free), and it is neither the start nor the goal. The last one
-     * is not derivable from the first two — a pickup does not change the
-     * terrain under it, and a wall dropped on the goal builds a room whose
-     * refusal would be about geometry rather than about the template.
+     * no longer free), it holds no entity, and it is neither the start nor the
+     * goal. The last one is not derivable from the others — a pickup does not
+     * change the terrain under it, and a wall dropped on the goal builds a room
+     * whose refusal would be about geometry rather than about the template.
+     *
+     * ⛓⛓⛓ **SLICE 6: IT NAMES THE CLAIM THAT FAILED, AND `isFree` IS DERIVED
+     * FROM IT.** Until a cell could be CLICKED, "why not?" had no reader: every
+     * anchor the loop ever saw came out of `anchorsFor`, which only ever offers
+     * cells this already accepted. A clicked cell is the first one a person
+     * chose, and *"nothing happened"* is the one answer they cannot act on.
+     *
+     * ⛔ ONE ADJUDICATION, TWO READERS — the boolean is `freeRefusal(…) ===
+     * null` rather than a second conjunction beside it. Two spellings of one
+     * legality rule is this repo's recorded failure mode, and it would be a
+     * particularly bad one here: the pair would agree for as long as nobody
+     * edited either, and the day they disagreed the loop would place a template
+     * the page said was illegal (or refuse a click the loop would have taken).
+     *
+     * ⚠ THE STRING IS BUILT ONLY ON THE BRANCH THAT RETURNS IT, so the hot path
+     * (`anchorsFor` walking the interior) allocates one string per REFUSED cell
+     * and none per accepted one — and a large footprint fails on its first cell.
+     * Measured on six ladders to step 6: 7.2 s before, 7.1 s after.
      */
-    const isFree = (record, tx, ty) => tx > 0 && ty > 0
-        && tx < record.width - 1 && ty < record.height - 1
-        && !reserved.has(`${tx},${ty}`)
-        && terrainAt(record, tx, ty) === 'ground'
-        && !record.entities.some((e) => {
-            const cx = Math.floor(e.x / TILE_SIZE);
-            const cy = Math.floor(e.y / TILE_SIZE);
-            return cx === tx && cy === ty;
-        });
+    const freeRefusal = (record, tx, ty) => {
+        if (!(tx > 0 && ty > 0 && tx < record.width - 1 && ty < record.height - 1)) {
+            return `(${tx},${ty}) is not in the room's INTERIOR — the border ring is wall, so `
+                + `the placeable cells are (1,1) to (${record.width - 2},${record.height - 2}).`;
+        }
+        if (reserved.has(`${tx},${ty}`)) {
+            const which = tx === d.start.tx && ty === d.start.ty ? 'START' : 'GOAL';
+            return `(${tx},${ty}) is the ${which} cell. A pickup does not change the terrain `
+                + 'under it, so this is not the terrain check saying no — a template dropped '
+                + 'here would build a room whose refusal is about GEOMETRY rather than about '
+                + 'the template.';
+        }
+        const terrain = terrainAt(record, tx, ty);
+        if (terrain !== 'ground') {
+            return `(${tx},${ty}) already holds ${JSON.stringify(terrain)} and not untouched `
+                + '`ground` — an earlier template painted it.';
+        }
+        const held = record.entities.find((e) => Math.floor(e.x / TILE_SIZE) === tx
+            && Math.floor(e.y / TILE_SIZE) === ty);
+        if (held) {
+            return `(${tx},${ty}) already holds the entity ${held.type} at (${held.x},${held.y}).`;
+        }
+        return null;
+    };
+    const isFree = (record, tx, ty) => freeRefusal(record, tx, ty) === null;
 
     /**
      * ⛓⛓ THE LANE RULE — the ENGINE's geometry, asked before the level exists.
@@ -341,14 +379,58 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
         return template.door === 'h' ? goalCell.ty > ty : goalCell.tx > tx;
     };
 
-    const legalAt = (record, template, tx, ty) => {
-        for (const c of [...template.footprint, ...(template.clearance ?? [])]) {
-            if (!isFree(record, tx + c.dx, ty + c.dy)) return false;
+    /**
+     * ⛓⛓⛓ **WHY THIS ANCHOR IS REFUSED — `null` when it is not** (slice 6).
+     *
+     * The three rules in the order `legalAt` has always asked them, each
+     * answering in the MODEL'S OWN WORDS. ⛔ THE ORDER IS PART OF THE ANSWER
+     * and is deliberately unchanged: `doorClear` REFUSES BY THROWING for an
+     * anchor north-west of the start, so the footprint walk — which rejects
+     * every cell outside the interior — has to run first or a click on the
+     * border ring would meet an assertion instead of a sentence.
+     *
+     * ⚠ IT NAMES THE OFFENDING CELL AND WHICH PART OF THE TEMPLATE WANTED IT.
+     * A footprint cell and a `clearance` cell are refused for the same reason
+     * and mean different things: the first is the obstacle, the second is the
+     * room its clearer needs (the S1 guard), and a reader who moved the anchor
+     * one cell has to know which they were fighting.
+     */
+    const refusalAt = (record, template, tx, ty) => {
+        for (const [part, cells] of [['FOOTPRINT', template.footprint],
+            ['CLEARANCE', template.clearance ?? []]]) {
+            for (const c of cells) {
+                const why = freeRefusal(record, tx + c.dx, ty + c.dy);
+                if (why) {
+                    return `"${template.instance ?? template.name}" anchored at (${tx},${ty}) `
+                        + `needs ${part} cell ${why}`;
+                }
+            }
         }
-        if (template.lane === 'avoidable' && !laneClear(record, tx, ty).ok) return false;
-        if (template.door && !doorClear(template, tx, ty)) return false;
-        return true;
+        if (template.lane === 'avoidable') {
+            const lane = laneClear(record, tx, ty);
+            if (!lane.ok) {
+                return `"${template.instance ?? template.name}" at (${tx},${ty}): its ARROW `
+                    + `LANE covers ${lane.over}. A lane that covers the start or the goal is `
+                    + 'not an AVOIDABLE obstacle — it is a hazard the walk cannot route '
+                    + 'around — so the anchor is refused before any solve.';
+            }
+        }
+        if (template.door && !doorClear(template, tx, ty)) {
+            return `"${template.instance ?? template.name}" at (${tx},${ty}) declares `
+                + `door '${template.door}', and the GOAL (${goalCell.tx},${goalCell.ty}) is on `
+                + 'the START\'s side of that wall — so the wall would be DECORATION rather '
+                + 'than a door, and for the kill-lock family it is a RUN ABORT (the walk '
+                + 'collects the torch with the spinner still alive). The rule is the '
+                + 'mechanism\'s own, not a heuristic.';
+        }
+        return null;
     };
+    /**
+     * ⛔ DERIVED, NOT RE-DERIVED — see `freeRefusal`. The conjunction and its
+     * short-circuit order are `refusalAt`'s, so `anchorsFor` offers exactly the
+     * cells it offered before slice 6 and the free ladder's levels cannot move.
+     */
+    const legalAt = (record, template, tx, ty) => refusalAt(record, template, tx, ty) === null;
 
     return {
         placementError: ProcgenLevelError,
@@ -371,6 +453,14 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
          * agreeing one.
          */
         legalAt,
+        /**
+         * ⛓⛓⛓ SLICE 6's OWN MEMBER — the one a CLICKED cell is adjudicated by.
+         * `legalAt` answers the loop's question (*may I put it here?*); this
+         * answers the person's (*why not?*), and they are the same function
+         * asked two ways. `directedAttempt` requires it whenever a directive
+         * names an explicit anchor.
+         */
+        refusalAt,
         skeleton,
         /**
          * ⛓⛓⛓ ONE SHUFFLE, THEN THE FIRST `limit` LEGAL CELLS — the whole of

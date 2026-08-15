@@ -1280,6 +1280,149 @@ describe('the bindings place atomically and refuse illegally', () => {
     });
 });
 
+/**
+ * ── ⛓⛓⛓ `refusalAt` — WHY ONE NAMED CELL IS REFUSED (slice 6) ─────────
+ *
+ * ⛔ EVERY CLASS IS DRIVEN AGAINST THE REAL MODEL AND THE REAL PALETTE, with
+ * its subject MEASURED rather than picked: a class asserted against a
+ * hand-built template would be a claim about the test's own literal.
+ *
+ * ⛔ AND THE DERIVATION IS THE CLAIM. `legalAt` is `refusalAt(…) === null`, so
+ * the pair cannot drift — which is asserted over the WHOLE interior below,
+ * because two spellings of one legality rule agree right up until the day they
+ * do not, and that day the loop would place a template the page called illegal.
+ */
+describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived from it', () => {
+    const instance = (biome, name, overrides) => (biome === 'post-sword'
+        ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).templates
+        .find((t) => t.name === name).instantiate(null, overrides);
+
+    it('⛔ answers `null` for a LEGAL anchor and a SENTENCE for an illegal one', () => {
+        const m = seedlingModel({ seed: 6 });
+        const sk = m.skeleton();
+        const door = instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 });
+        // measured (see the slice-6 as-built): seed 6's plain vertical door is
+        // legal at (7,1) and its footprint runs down to (7,8).
+        expect(m.refusalAt(sk, door, 7, 1)).toBeNull();
+        expect(typeof m.refusalAt(sk, door, 1, 1)).toBe('string');
+    });
+
+    it('⛔⛔ `legalAt` AGREES WITH IT ON EVERY INTERIOR CELL — one adjudication', () => {
+        for (const [biome, name, overrides] of [
+            ['pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }],
+            ['pre-sword', 'arrow-lane', {}],
+            ['pre-sword', 'water-pool', { w: 3, h: 3 }],
+            ['post-sword', 'wall-gap-spinner-killlock', { ori: 'h' }],
+        ]) {
+            const m = seedlingModel({ seed: 6 });
+            const t = instance(biome, name, overrides);
+            const record = m.skeleton();
+            let disagreed = 0;
+            for (const c of m.interiorCells(record)) {
+                const legal = m.legalAt(record, t, c.tx, c.ty);
+                if (legal !== (m.refusalAt(record, t, c.tx, c.ty) === null)) disagreed += 1;
+            }
+            expect(disagreed).toBe(0);
+        }
+    });
+
+    /**
+     * ⚠ EACH SUBJECT IS MEASURED AND QUOTED, because a refusal class asserted
+     * on a cell that also fails an EARLIER rule would be a test about the
+     * ordering rather than about the class. The four `freeRefusal` claims are
+     * asked in order, then the lane, then the door.
+     */
+    describe('the classes, each driven and each named by its own rule', () => {
+        it('the START cell, and it says the terrain check is NOT what refused it', () => {
+            const m = seedlingModel({ seed: 6 });
+            const why = m.refusalAt(m.skeleton(),
+                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 1, 1);
+            expect(why).toMatch(/\(1,1\) is the START cell/);
+            expect(why).toMatch(/about GEOMETRY rather than about the template/);
+        });
+
+        it('the GOAL cell — seed 6 puts it at (3,1)', () => {
+            const m = seedlingModel({ seed: 6 });
+            expect(m.goalCell).toEqual({ tx: 3, ty: 1 });
+            expect(m.refusalAt(m.skeleton(),
+                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 3, 1))
+                .toMatch(/\(3,1\) is the GOAL cell/);
+        });
+
+        it('a footprint cell OUTSIDE the interior names the cell, not the anchor', () => {
+            const m = seedlingModel({ seed: 6 });
+            // the anchor (5,5) is itself free; the vertical door's 8th cell is
+            // (5,12), which is not a cell of this room at all.
+            expect(m.isFree(m.skeleton(), 5, 5)).toBe(true);
+            const why = m.refusalAt(m.skeleton(),
+                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 5, 5);
+            expect(why).toMatch(/anchored at \(5,5\) needs FOOTPRINT cell \(5,9\)/);
+            expect(why).toMatch(/not in the room's INTERIOR/);
+            expect(why).toMatch(/\(1,1\) to \(8,8\)/);
+        });
+
+        it('a cell an EARLIER template painted says so, with the terrain it holds', () => {
+            const st = generateSeedlingLevel({
+                seed: 6, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 2 },
+            });
+            const m = seedlingModel({ seed: 6 });
+            const wall = instance('pre-sword', 'wall-segment', { ori: 'h', len: 2 });
+            const hits = m.interiorCells(st.record)
+                .map((c) => m.refusalAt(st.record, wall, c.tx, c.ty))
+                .filter((w) => w && /already holds/.test(w));
+            expect(hits.length).toBeGreaterThan(0);
+            expect(hits[0]).toMatch(/already holds "wall" and not untouched `ground`/);
+            expect(hits[0]).toMatch(/an earlier template painted it/);
+        });
+
+        /**
+         * ⛓ MEASURED SUBJECT: seed 1 puts the goal at (5,7), so an arrow lane
+         * anchored at (5,1) fires DOWN the goal's own column. ⛔ (5,1) is
+         * otherwise FREE — asserted first, or this would be the start/goal
+         * class wearing the lane class's name.
+         */
+        it('the LANE rule — seed 1, an arrow at (5,1) fires down the goal\'s column', () => {
+            const m = seedlingModel({ seed: 1 });
+            expect(m.goalCell).toEqual({ tx: 5, ty: 7 });
+            expect(m.isFree(m.skeleton(), 5, 1)).toBe(true);
+            const why = m.refusalAt(m.skeleton(), instance('pre-sword', 'arrow-lane', {}), 5, 1);
+            expect(why).toMatch(/its ARROW LANE covers the goal cell/);
+            expect(why).toMatch(/not an AVOIDABLE obstacle/);
+        });
+
+        /**
+         * ⛓ MEASURED SUBJECT: post-sword seed 6's goal is at (3,1), so EVERY
+         * anchor whose footprint fits is refused by the door rule — (1,4) is
+         * one, and its footprint cells are all free (asserted).
+         */
+        it('the DOOR rule — the goal is on the START\'s side, so the wall is decoration', () => {
+            const m = seedlingModel({ seed: 6 });
+            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
+            const sk = m.skeleton();
+            for (const c of kill.footprint) expect(m.isFree(sk, 1 + c.dx, 4 + c.dy)).toBe(true);
+            const why = m.refusalAt(sk, kill, 1, 4);
+            expect(why).toMatch(/declares door 'h'/);
+            expect(why).toMatch(/GOAL \(3,1\) is on the START's side of that wall/);
+            expect(why).toMatch(/RUN ABORT/);
+        });
+
+        /**
+         * ⛔⛔ THE ORDER IS PART OF THE ANSWER, AND THIS IS THE CASE THAT SHOWS
+         * WHY. `doorClear` REFUSES BY THROWING for an anchor north-west of the
+         * start; the footprint walk runs first and rejects every cell outside
+         * the interior, so a click on the border ring meets a SENTENCE and not
+         * an assertion. Reordering the two rules turns this into a page crash.
+         */
+        it('⛔ a cell on the BORDER RING is a sentence, never the door rule\'s throw', () => {
+            const m = seedlingModel({ seed: 6 });
+            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
+            expect(m.refusalAt(m.skeleton(), kill, 0, 0))
+                .toMatch(/\(0,0\) is not in the room's INTERIOR/);
+            expect(() => m.doorClear(kill, 0, 0)).toThrow(/north-west of every anchor/);
+        });
+    });
+});
+
 describe('the water template obliges the `sound` pin, by argument', () => {
     it('the oracle takes the pin union over the templates a candidate holds', () => {
         const m = model();
