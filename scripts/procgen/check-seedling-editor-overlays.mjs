@@ -249,7 +249,20 @@ async function load(name, extra = '', shotAt = null) {
         + `?level=4&boot=${TAPES}/r7-act2-4.json&goals=exit%3A64%2C16&solve=1&name=r8-solve-4`;
     console.log(`\n## SOURCE=SOLVE — the pane from the solve's own trace\n   ${url}`);
     await page.goto(url, { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => window.__editorOverlays, null, { timeout: 180000 });
+    /**
+     * ⛓⛓ **SLICE 6's CHARTERED SWEEP FIXED THIS (trap 246).** It waited on
+     * `window.__editorOverlays` and then asserted on `window.__editorSolve
+     * .traceRows` — a DIFFERENT object, published LATER. In the SOLVE arm
+     * `replayTape` sets `__editorOverlays` at its end (`watchViewer.js`) and
+     * `__editorSolve` is written after that await resolves, so a poll landing
+     * in the gap reads `traceRows` as `null` through the `?.` and reds the
+     * count comparison on a page that solved perfectly.
+     *
+     * ⇒ wait on the FIELD the assertion reads. The overlays object is
+     * republished before it, so this is strictly the later of the two.
+     */
+    await page.waitForFunction(() => window.__editorSolve?.traceRows !== undefined
+        && window.__editorOverlays, null, { timeout: 180000 });
     const solved = await page.evaluate(() => ({
         rows: document.querySelectorAll('#trace .tr').length,
         none: document.querySelector('#trace .traceNone')?.textContent ?? null,

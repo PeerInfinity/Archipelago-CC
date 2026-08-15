@@ -431,13 +431,44 @@ const finish = async (code) => {
     process.exit(code);
 };
 
-/** Load a GENERATE view and wait for the arm's own readout. */
-async function load(query, { timeout = 300000 } = {}) {
+/**
+ * ⛔ WAIT FOR THE LADDER TO STOP, NOT FOR IT TO START.
+ *
+ * `window.__editorGenerate` appears at the SKELETON, before RUN-ALL has run a
+ * single rung, and the driver yields a frame per step — so a wait on the
+ * readout alone can read a mid-ladder page and assert about a URL that is
+ * about to be rewritten. The buttons are disabled for exactly the span of the
+ * run (`busy()`), which is the honest "it finished" marker.
+ */
+const settled = (step, seed = null) => page.waitForFunction(
+    ([s, sd]) => window.__editorGenerate?.step === s
+        && (sd === null || window.__editorGenerate.seed === sd)
+        && !document.getElementById('genRunAll').disabled,
+    [step, seed], { timeout: 300000 });
+
+/**
+ * Load a GENERATE view and wait for the arm's own readout.
+ *
+ * ⛓⛓ **SLICE 6's SWEEP FIXED THIS ONE (trap 246).** It waited only for
+ * `window.__editorGenerate` to EXIST — which the arm publishes at the
+ * SKELETON, before `?run=1`'s ladder and before `?gen=`'s comparison — and
+ * then RETURNED that reading to the caller. Four claims (2, 3, 3b and 6e)
+ * asserted on the returned object, so on a box slow enough to schedule the
+ * poll between the skeleton and the run they read step 0 and reddened a page
+ * that was about to be perfectly correct. Claim 4 hit exactly this and was
+ * repaired in slice 4; the same hole was still open here four call sites over.
+ *
+ * ⇒ pass `step` (and `seed` when the load changes it) whenever the URL names a
+ * RUN, and the read happens after `settled()` — the CLAIM's own field plus a
+ * not-busy signal, which is the closing pattern.
+ */
+async function load(query, { timeout = 300000, step = null, seed = null } = {}) {
     errors.length = 0;
     const url = `${origin}${PAGE_PATH}?${query}`;
     console.log(`page: ${url}`);
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.__editorGenerate, null, { timeout });
+    if (step !== null) await settled(step, seed);
     return page.evaluate(() => ({
         gen: window.__editorGenerate,
         level: window.__editorGenerated?.level ?? null,
@@ -492,21 +523,6 @@ const catalogueOf = () => page.evaluate(() => ({
     layersInputs: document.querySelectorAll('#layers input').length,
 }));
 
-/**
- * ⛔ WAIT FOR THE LADDER TO STOP, NOT FOR IT TO START.
- *
- * `window.__editorGenerate` appears at the SKELETON, before RUN-ALL has run a
- * single rung, and the driver yields a frame per step — so a wait on the
- * readout alone can read a mid-ladder page and assert about a URL that is
- * about to be rewritten. The buttons are disabled for exactly the span of the
- * run (`busy()`), which is the honest "it finished" marker.
- */
-const settled = (step, seed = null) => page.waitForFunction(
-    ([s, sd]) => window.__editorGenerate?.step === s
-        && (sd === null || window.__editorGenerate.seed === sd)
-        && !document.getElementById('genRunAll').disabled,
-    [step, seed], { timeout: 300000 });
-
 // ── CLAIM 0: the arm mounts, and the SKELETON is what step 0 shows ────
 {
     const q = `source=generate&seed=${PRE.seed}&biome=${PRE.biome}&count=${PRE.count}`;
@@ -544,7 +560,9 @@ const settled = (step, seed = null) => page.waitForFunction(
 // ── CLAIM 2: RUN-ALL, and the refusals VERBATIM ──────────────────────
 {
     const q = `source=generate&seed=${PRE.seed}&biome=${PRE.biome}&count=${PRE.count}&run=1`;
-    const web = await load(q);
+    // ⛓ SLICE 6's SWEEP: the URL names a RUN, so the read waits for the LADDER
+    // to settle — not for the readout to exist at the skeleton (trap 246).
+    const web = await load(q, { step: PRE.count });
     check(web.gen.step === PRE.count, `RUN-ALL reached step ${PRE.count}`,
         `step ${web.gen.step}, stop ${web.gen.stop}`);
     check(json(web.level) === json(nodeFull.record),
@@ -581,7 +599,7 @@ const settled = (step, seed = null) => page.waitForFunction(
 {
     const q = `source=generate&seed=${CARRIER.seed}&biome=${CARRIER.biome}`
         + `&count=${CARRIER.count}&run=1`;
-    const web = await load(q);
+    const web = await load(q, { step: CARRIER.count, seed: CARRIER.seed });
     check(web.gen.status === 'ok' && web.gen.verdict === 'SOLVED',
         'the CARRIER level solves in the page', `${web.gen.verdict} in ${web.gen.ticks} ticks`);
     check((web.gen.scratchClears ?? []).length > 0,
@@ -613,7 +631,9 @@ const settled = (step, seed = null) => page.waitForFunction(
      * editor arc's slice 5 found in the SOLVE button.
      */
     const q = `source=generate&seed=${PRE.seed}&biome=${PRE.biome}&count=${PRE.count}&run=1`;
-    await load(q);
+    // ⛓ SLICE 6's SWEEP: settle the FIRST ladder before editing the form —
+    // a fill landing mid-run would be racing the driver, not testing the reset.
+    await load(q, { step: PRE.count, seed: PRE.seed });
     await page.fill('#genSeed', String(PRE.seed + 1));
     await page.click('#genStep');
     await page.waitForFunction((s) => window.__editorGenerate?.seed === s,
@@ -855,8 +875,10 @@ const settled = (step, seed = null) => page.waitForFunction(
     // ── 6e: the COARSE spelling — same sub-roster, and it SURVIVES ───
     const fq = `source=generate&seed=${RESTRICT.seed}&biome=${RESTRICT.biome}`
         + `&count=${RESTRICT.count}&families=${RESTRICT.families.join(',')}&run=1`;
-    const byFamily = await load(fq);
-    await settled(RESTRICT.count);
+    // ⛓⛓ SLICE 6's SWEEP, AND THIS ONE WAS A LIVE HOLE: the `settled()` below
+    // was already here, but `byFamily` was READ BEFORE it — so the level the
+    // check below compares was whatever the page held at the skeleton.
+    const byFamily = await load(fq, { step: RESTRICT.count });
     const famPanel = await panelOf();
     const fu = new URLSearchParams(famPanel.url);
     check(json(byFamily.level) === json(nodeRestricted.record),
