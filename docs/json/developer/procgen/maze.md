@@ -29,6 +29,42 @@ Adding a biome that uses an existing backend is a one-line change to the biome t
 
 **Where the backends live, and the grid contract.** The backends are split across two directories by what they need. `recursive_backtracker`, `kruskals` and `recursive_division` sit in `shared/procgen/mazeAlgorithms/` beside the registry, `cellGrid.js`, `postProcessors.js` and `gridTiles.js`, because they touch a world only through the **grid contract** written down in `gridTiles.js` — `{width, height, tiles: Int8Array (row-major, index = y*width + x), entrance: {x,y}, exits: iterable of {x,y} via values()}` plus `TILE_FLOOR`/`TILE_WALL`/`getTile`/`setTile` and an `rng.next()` in [0,1). No inventory, no obstacles, no simulator. That makes them usable as carvers by any grid substrate, which is what the registry's "room for a future grid-based substrate" note always promised. `corridor_only` and `random_walls` stay in `mazeRoom/mazeAlgorithms/` because they run the maze simulator (`createState`/`apply`/`bfsSolver`/`reach`) to check feasibility, and `empty` stays with them. `mazeRoomEngine.js` imports the five `gridTiles.js` definitions and re-exports them under the same names, so maze-side callers import them from wherever they always did. `mazeAlgorithms/index.js` still performs all six registrations, and its import order is the order `listBackends()` returns.
 
+## The maze as the second substrate on the procgen loop
+
+`procgenMaze.js` binds the maze to the substrate-agnostic generator loop in
+`frontend/modules/procgenCore/` — the same loop that generates Seedling levels,
+not a maze-local copy of it. It supplies the loop's three injections. The
+**model** builds the skeleton (the plain open room `createWorld` already gives:
+all floor, entrance at (0,0), one exit at a goal cell drawn from the room stream
+*before* anything else, so a carver dropped in later as a `skeleton()` kind
+cannot move the goal), offers anchors by one seeded shuffle of the *whole* grid
+and taking the first legal cells, adjudicates a named cell once in `refusalAt`
+(with `legalAt` derived from it), and `place`s a template's tiles, obstacles and
+items together into a **clone** — the maze world is mutable and the loop's
+revert is "keep the old record", so a `place` that wrote in place would leave
+rejected candidates standing. The **oracle** is `reach` + the maze `bfsSolver`
+against "the player stands on the goal tile", and it certifies by **replaying
+the returned plan through `step`** rather than trusting the solver's own `ok`;
+`BUDGET_EXHAUSTED` is a real class because `makeBfsSolver` has a real node cap
+(`options.budget`), though the default 20,000 never binds on a room whose whole
+state space is 242 states. The **palette v1** is two parameterized templates:
+`wall-segment` (ori × len, paints `TILE_WALL`) and `door-key` (a `door_red` at
+the anchor and its `key_red` at a parameterized offset, placed atomically, so
+no world ever holds a door whose key was never placed).
+
+⛔ What palette v1 is **not** yet: it does not check that a door is a **cut
+vertex** — `placeGateAndKey` does that, and generalising it is a later slice. A
+door the walk can simply walk around is a kept candidate that happens to be
+decoration, which the arc's yield table will measure rather than assume. There
+are no carved skeleton kinds yet (the room is always open), no hazards, no
+pushable blocks, and no lab page — those are later slices of the same arc.
+
+`scripts/procgen/generate-maze-level.mjs` is the CLI twin of
+`generate-seedling-level.mjs`: a seed and the bounds in, the level, the full
+generation trace and the summary out as JSON, with stdout as the determinism
+channel and `--verify` spawning two fresh child processes to prove the payload
+is byte-identical across them.
+
 ## The action queue (`mazeRoomQueue.js`)
 
 A tile-level action queue with a Cavernous-2-style icon-row UI in the panel. Three verbs: `move` (N/E/S/W — block pushes ride the same verb via a content module's `onMove` hook), `wait` (one tick, spacebar), and `locationCheck` (explicit check at the current tile — used by saved/replayed queues and loops-delegation expansion; direct keypresses rarely emit it because checks fire as a side effect of stepping onto a location tile). Execution is synchronous, and the queue is what backs the maze's `customQueues: true` loop-mode capability.

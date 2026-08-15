@@ -8867,3 +8867,38 @@ union / the anchor search / the kill-lock tag blast radius, §11 the catalogue
 and verb 1, §12 verb 2 the directed attempt, and **§13 slice 6 (click-to-anchor)
 together with the ARC CLOSE — §13.2 the exit criteria answered one by one, and
 §13.3 the consolidated residue the next arcs inherit.**
+
+---
+
+## The constructive-mode arc — the loop core moves out, and the maze becomes its second substrate (OPEN, 2026-08-15)
+
+The generator gains its **second mode** (a true two-pass Cloudberry: start from a
+room of WALL, carve a path to the goal, then run the existing keep-or-revert loop
+over the carved skeleton) and its **second substrate** (the maze,
+`frontend/modules/mazeRoom/`, whose exact BFS oracle makes it the place every
+mode-level decision is designed and tested first). Design record:
+`NewDocs/plans/seedling-constructive-mode-kickoff.md` (⚠ `NewDocs/` is
+gitignored — working machine only); queue entry
+`CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5f.
+
+**Slice 1** moved the pure wall backends and the tile vocabulary into the shared
+submodule — see `maze.md`, "Where the backends live, and the grid contract".
+
+**Slice 2 moved the loop core.** `levelGenerator.js` no longer lives under
+`seedlingDemo/`: the loop, its bounds, its cost model and its verdict vocabulary
+are now `frontend/modules/procgenCore/`, beside the template contract
+(`defineTemplate` and the parameter draw) and `ProcgenRng` (whose bit-mixing
+source is injected — Seedling passes the game's own `SeedlingRng`, the maze
+passes `shared/rng.js`'s mulberry32). This spends the PoC arc's §1.7 provision
+verbatim: *when a second substrate exists and can argue about the interface, the
+core moves and the bindings stay.* **The Seedling bindings did not move and
+neither did any Seedling level** — the move was gated on the R8 battery
+(`1fedb0ab…`, exit 1), the acceptance batch's ten per-level payload md5s, the
+generated-set round trip, the 126-check browser row and the whole `seedlingDemo`
+vitest, all byte-identical across it. The one thing the maze forced was a
+shared `VERDICT`: two oracles must return the same word, and the maze may not
+import `seedlingDemo/procgenOracle.js`, so the three classes are declared in
+`procgenCore/levelGenerator.js` (the file that compares against them) and
+re-exported from `procgenOracle.js` under the name every Seedling reader
+already uses. The maze half is in `maze.md`, "The maze as the second substrate
+on the procgen loop".
