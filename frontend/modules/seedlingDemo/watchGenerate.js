@@ -57,7 +57,9 @@
 
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
 import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
-import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept } from './procgenPalette.js';
+import {
+    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster, restrictPalette,
+} from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
 
 export class WatchGenerateError extends Error {
@@ -100,6 +102,54 @@ export function paletteFor(biome) {
 }
 
 /**
+ * ⛓ THE RESTRICTION, AS THE URL SPELLS IT — `?families=` (coarse) or
+ * `?templates=` (fine), a comma list either way; ABSENT means the whole
+ * roster.
+ *
+ * ⛔ **BOTH PRESENT REFUSES.** They are two spellings of one setting, and this
+ * page has already paid for that failure mode once (slice 1). The refusal
+ * names both values so the fix is obvious — *say it one way*.
+ *
+ * ⛔ AND `?families=` WITH AN EMPTY VALUE REFUSES rather than reading as
+ * absent. The integers above treat `''` as "not given" because there is no
+ * empty integer; an empty LIST is a different thing — it is a restriction
+ * somebody emptied, and the whole roster is spelled by leaving the parameter
+ * out. (The page never writes one: `writeGenerateParams` DELETES both
+ * parameters when there is no restriction.)
+ *
+ * ⚠ THE MEMBER NAMES ARE VALIDATED AGAINST THE BIOME'S OWN ROSTER, here, by
+ * `normalizeRoster` — which is why this reads the biome first. An unknown
+ * family or template refuses BY NAME and lists what the palette offers; a
+ * silently dropped member would WIDEN the roster the run draws from.
+ */
+export function readRosterParams(q, biome) {
+    const raw = (name) => {
+        const v = q.get(name);
+        return v === null ? null : v;
+    };
+    const families = raw('families');
+    const templates = raw('templates');
+    if (families !== null && templates !== null) {
+        fail(`watchGenerate: ?families=${JSON.stringify(families)} AND `
+            + `?templates=${JSON.stringify(templates)} are BOTH present, and they are two `
+            + 'spellings of one setting — a sub-roster. They do not compose: say it one '
+            + 'way. (?families= is the coarse, stable spelling; ?templates= names the '
+            + 'roster keys exactly.)');
+    }
+    if (families === null && templates === null) return null;
+    const axis = families !== null ? 'families' : 'templates';
+    const value = families !== null ? families : templates;
+    const names = value.split(',').map((s) => s.trim()).filter((s) => s !== '');
+    if (names.length === 0) {
+        fail(`watchGenerate: ?${axis}=${JSON.stringify(value)} names nothing. The WHOLE `
+            + 'roster is spelled by leaving the parameter out; an empty list is a '
+            + 'restriction somebody emptied, and the loop refuses an empty palette as a '
+            + 'finding ABOUT THE PALETTE.');
+    }
+    return normalizeRoster(paletteFor(biome), { axis, names });
+}
+
+/**
  * The arm's own URL parameters — the loop's bounds and budget, plus the two
  * that are about the PAGE rather than the loop (`?gen=`, `?run=`).
  *
@@ -124,6 +174,7 @@ export function readGenerateParams(search) {
     };
     const source = (q.get('source') || '').toLowerCase();
     const gen = q.get('gen');
+    const biome = (q.get('biome') || 'pre-sword').toLowerCase();
     if (q.get('budgetms') !== null) {
         // eslint-disable-next-line no-console
         console.warn('watchGenerate: ?budgetms is GONE and was IGNORED. Elapsed time no '
@@ -133,7 +184,16 @@ export function readGenerateParams(search) {
     return {
         isGenerate: source === 'generate' || (!source && gen !== null),
         seed: int('seed', 1),
-        biome: (q.get('biome') || 'pre-sword').toLowerCase(),
+        biome,
+        /**
+         * ⛓ SLICE 4 — VERB 1. `null` is the whole roster; otherwise the
+         * normalized `{axis, names}` this biome's palette validated. ⚠ It is
+         * NOT a bound: a bound narrows how hard the loop tries, a roster
+         * changes WHAT it may draw, so it rides beside `bounds` rather than
+         * in it (and `summary.bounds` stays the four numbers a reader can
+         * compare across runs).
+         */
+        roster: readRosterParams(q, biome),
         bounds: {
             obstacleTarget: int('count', DEFAULT_BOUNDS.obstacleTarget),
             triesPerStep: int('tries', DEFAULT_BOUNDS.triesPerStep),
@@ -230,7 +290,7 @@ export function readGenerateParams(search) {
  * the budget the run on screen was certified under.
  */
 export function writeGenerateParams(search, {
-    seed, biome, bounds, step, payloadOwned = false,
+    seed, biome, bounds, step, roster = null, payloadOwned = false,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -254,6 +314,43 @@ export function writeGenerateParams(search, {
     // arrives WITH its parameter in the one writer). The integer refusal above
     // already covers it.
     q.set('anchortries', int('anchortries', bounds.anchorTriesPerCandidate));
+    /**
+     * ── ⛓⛓ SLICE 4: THE SUB-ROSTER, AND IT IS THE FIRST NON-INTEGER PARAM ──
+     *
+     * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing
+     * law), and for a comma list that means its OWN validation: the integer
+     * guard above cannot see an unknown family name. `normalizeRoster` is the
+     * same check `readRosterParams` runs, against the same palette, so a URL
+     * this page cannot reload cannot be written in the first place.
+     *
+     * ⛔ AND THE OTHER AXIS IS DELETED WITH IT. Writing `?templates=` beside a
+     * standing `?families=` from a previous load would hand back a link the
+     * reader REFUSES (both spellings at once) — the writer must leave exactly
+     * one of the two in the bar, or none.
+     *
+     * ⚠ The names are written SORTED because `normalizeRoster` sorts them: an
+     * order-preserving writer would round-trip once and then rewrite the bar
+     * on the next load, breaking the fixed point slice 1 asserts.
+     *
+     * ⛓ AND THE DELETE IS SCOPED TO THE OTHER AXIS, WHICH THE FIXED POINT
+     * FORCED. A `delete` followed by a `set` of the SAME key APPENDS it —
+     * `URLSearchParams.set` preserves an existing key's position but a deleted
+     * key has none — so blanket-deleting both spellings first rewrote
+     * `…&families=…&run=1` into `…&run=1&families=…` on the second load. The
+     * string differed while the run did not, which is exactly the drift slice
+     * 1's fixed-point check exists to catch, and it caught this one.
+     */
+    // ⚠ The palette is only consulted when there IS a restriction: a writer
+    // that resolved the biome unconditionally would start refusing calls that
+    // name no roster at all, which is a different claim than this one.
+    const r = roster ? normalizeRoster(paletteFor(biome), roster) : null;
+    if (!r) {
+        q.delete('families');
+        q.delete('templates');
+    } else {
+        q.delete(r.axis === 'families' ? 'templates' : 'families');
+        q.set(r.axis, r.names.join(','));
+    }
     if (int('step', step) >= 1) q.set('run', '1');
     else q.delete('run');
     return q.toString();
@@ -307,8 +404,16 @@ export function ladderCost(bounds, worstCaseSolveMs) {
  * step 0 is the goal cell at every later step BY CONSTRUCTION rather than by
  * agreement. The test drives that equality.
  */
-export function generateStep({ seed, biome, step, bounds, budget } = {}) {
-    const palette = paletteFor(biome);
+export function generateStep({ seed, biome, step, bounds, budget, roster = null } = {}) {
+    /**
+     * ⛓ SLICE 4: THE SUB-ROSTER IS APPLIED HERE AND NOWHERE ELSE. `paletteFor`
+     * chooses the biome, `restrictPalette` narrows it, and the SAME loop takes
+     * the result — so every downstream reader (the pin union, the sentinel
+     * slots, `summary.palette`, the payload) sees one palette object and never
+     * learns whether it was restricted. ⛔ A second place that filtered the
+     * roster would be a second answer to "what could this run draw from".
+     */
+    const palette = restrictPalette(paletteFor(biome), roster);
     const b = assertBudget(budget ?? DEFAULT_BUDGET);
     if (!Number.isInteger(step) || step < 0) {
         fail(`watchGenerate: step must be a non-negative integer, got ${JSON.stringify(step)}. `
@@ -320,6 +425,9 @@ export function generateStep({ seed, biome, step, bounds, budget } = {}) {
             seed,
             biome,
             palette,
+            // ⛓ The restriction the palette above CARRIES — one derivation, so
+            // the URL writer and the payload cannot disagree with the loop.
+            roster: palette.roster ?? null,
             step,
             model,
             record: model.skeleton(),
@@ -342,6 +450,7 @@ export function generateStep({ seed, biome, step, bounds, budget } = {}) {
         seed,
         biome,
         palette,
+        roster: palette.roster ?? null,
         step,
         model: out.model,
         record: out.record,
@@ -492,6 +601,16 @@ export function agreementWithPayload(payload, state) {
     }
     cmp('seed', payload.seed, state.seed);
     cmp('biome', payload.biome, state.biome);
+    /**
+     * ⛓ SLICE 4: THE ROSTER IS AN IDENTITY FIELD LIKE THE OTHERS. A payload
+     * generated under a RESTRICTION and reproduced under the whole roster
+     * would report a DIVERGENCE about the level while the actual difference is
+     * the question that was asked — a false finding, fired by the check that
+     * exists to catch real ones. ⚠ `?? null` on both sides: a payload written
+     * before this field existed names no roster, and "no roster" is what an
+     * unrestricted run has, so an OLD payload does not diverge here.
+     */
+    cmp('roster', payload.roster ?? null, state.roster ?? null);
     cmp('level', payload.level, state.record);
     cmp('trace', payload.trace, state.trace);
     return {
@@ -570,6 +689,14 @@ export function describeState(state, solved = null) {
     const s = state.summary;
     const bits = [
         `seed ${state.seed} · ${state.biome} · step ${state.step}`,
+        /**
+         * ⛓ SLICE 4: THE ROSTER THE RUN DREW FROM, by the palette's own name —
+         * `pre-sword` unrestricted, `pre-sword[families:pit,water]` under verb
+         * 1. ⛔ It is the SAME string `summary.palette` carries, so the
+         * readout and the payload cannot disagree about what was on offer.
+         */
+        `palette: ${state.palette?.name ?? '(none)'}`
+            + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
             : 'the SKELETON — the bordered room and its goal, before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `

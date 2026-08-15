@@ -624,3 +624,214 @@ describe('displayStaging — the block the bridge hands to SOLVE and MANUAL', ()
         expect(displayStaging(post).seam.items.hasSword).toBe(true);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ VERB 1 — RESTRICT: the URL half, and the arm's own state (slice 4)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('?families= / ?templates= — the sub-roster, in the ONE reader', () => {
+    it('absent means THE WHOLE ROSTER, spelled by absence', () => {
+        expect(readGenerateParams('?source=generate&seed=1').roster).toBe(null);
+    });
+
+    it('reads either spelling and NORMALIZES it — sorted, deduped', () => {
+        expect(readGenerateParams('?biome=pre-sword&families=weigh,water,weigh').roster)
+            .toEqual({ axis: 'families', names: ['water', 'weigh'] });
+        expect(readGenerateParams('?biome=pre-sword&templates= water-pool , pit-patch ').roster)
+            .toEqual({ axis: 'templates', names: ['pit-patch', 'water-pool'] });
+    });
+
+    /**
+     * ⛔ THE COMPOSITION RULE, AND IT IS "REFUSE". Two parameters that each
+     * name a sub-roster are two spellings of one setting, which is this
+     * repo's recorded failure mode — the whole reason slice 1 exists. A
+     * defined intersection would still have to be printed somewhere for a
+     * reader to know what ran, so the cheaper contract is: say it one way.
+     */
+    it('⛔ REFUSES both spellings at once, naming both values', () => {
+        expect(() => readGenerateParams('?biome=pre-sword&families=water&templates=pit-patch'))
+            .toThrow(/BOTH present.*two spellings of one setting/s);
+    });
+
+    it('⛔ REFUSES an unknown name BY NAME, listing the roster', () => {
+        expect(() => readGenerateParams('?biome=pre-sword&families=kill'))
+            .toThrow(/names "kill".*does not offer/s);
+        expect(() => readGenerateParams('?biome=pre-sword&templates=wall-segement'))
+            .toThrow(/names "wall-segement"/);
+        // ⚠ …and the SAME name is legal in the other biome, which is why this
+        // is validated against the BIOME'S palette and not a global list.
+        expect(readGenerateParams('?biome=post-sword&families=kill').roster)
+            .toEqual({ axis: 'families', names: ['kill'] });
+    });
+
+    it('⛔ REFUSES an EMPTY value rather than reading it as absent', () => {
+        expect(() => readGenerateParams('?biome=pre-sword&families=')).toThrow(/names nothing/);
+        expect(() => readGenerateParams('?biome=pre-sword&templates=,,')).toThrow(/names nothing/);
+    });
+});
+
+describe('writeGenerateParams — the sub-roster travels, and refuses what the reader would', () => {
+    const bounds = {
+        obstacleTarget: 2, triesPerStep: 5, saturationK: 2, anchorTriesPerCandidate: 4,
+    };
+    const roster = { axis: 'families', names: ['water', 'weigh'] };
+
+    it('writes the axis it was given and the reader reads it back', () => {
+        const search = writeGenerateParams('?source=generate', {
+            seed: 3, biome: 'pre-sword', bounds, step: 2, roster,
+        });
+        expect(readGenerateParams(`?${search}`).roster).toEqual(roster);
+    });
+
+    it('⛓ is a FIXED POINT — writing what it wrote changes nothing', () => {
+        const once = writeGenerateParams('?source=generate&layers=path', {
+            seed: 3, biome: 'pre-sword', bounds, step: 2, roster,
+        });
+        const back = readGenerateParams(`?${once}`);
+        const twice = writeGenerateParams(`?${once}`, {
+            seed: back.seed, biome: back.biome, bounds: back.bounds, step: 2, roster: back.roster,
+        });
+        // ⛔ MEASURED, and it caught a defect: a `delete` followed by a `set`
+        // of the same key APPENDS it, so blanket-deleting both spellings first
+        // moved `families=` behind `run=` on the second load. The string
+        // differed while the run did not.
+        expect(twice).toBe(once);
+    });
+
+    it('DELETES both spellings when there is no restriction — absence is the spelling', () => {
+        const search = writeGenerateParams('?source=generate&families=water&templates=pit-patch', {
+            seed: 3, biome: 'pre-sword', bounds, step: 2, roster: null,
+        });
+        expect(search).not.toMatch(/families=/);
+        expect(search).not.toMatch(/templates=/);
+        expect(readGenerateParams(`?${search}`).roster).toBe(null);
+    });
+
+    it('⛔ DELETES THE OTHER AXIS — the reader refuses a bar holding both', () => {
+        const search = writeGenerateParams('?source=generate&families=water', {
+            seed: 3, biome: 'pre-sword', bounds, step: 2,
+            roster: { axis: 'templates', names: ['pit-patch'] },
+        });
+        expect(search).not.toMatch(/families=/);
+        expect(readGenerateParams(`?${search}`).roster)
+            .toEqual({ axis: 'templates', names: ['pit-patch'] });
+    });
+
+    /**
+     * ⛔ §8.6's STANDING LAW, and this is the arc's first NON-INTEGER
+     * parameter: the integer guard cannot see an unknown family name, so the
+     * roster needs its own refusal here. A URL this page cannot reload is not
+     * a link to the run it is showing.
+     */
+    it('⛔ REFUSES a roster the reader would refuse', () => {
+        expect(() => writeGenerateParams('', {
+            seed: 1, biome: 'pre-sword', bounds, step: 1,
+            roster: { axis: 'families', names: ['kill'] },
+        })).toThrow(/names "kill"/);
+        expect(() => writeGenerateParams('', {
+            seed: 1, biome: 'pre-sword', bounds, step: 1, roster: { axis: 'families', names: [] },
+        })).toThrow(/EMPTY restriction/);
+    });
+});
+
+describe('generateStep under a restriction — the SAME loop, a smaller roster', () => {
+    /**
+     * ⛓ THE SUBJECT, MEASURED (the same one `procgenPalette.test.js` drives
+     * end to end): pre-sword seed 3 at target 2 keeps `pit-patch` and
+     * `arrow-lane` unrestricted, and `water-pool` + `wall-gap-lock-weigh`
+     * under `families:water,weigh`. ⛔ The two kept lists are DISJOINT, which
+     * is what makes a restriction the loop ignored visible here rather than
+     * only in a hash.
+     */
+    const ROSTER = { axis: 'families', names: ['water', 'weigh'] };
+    const at = (roster) => generateStep({
+        seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster,
+    });
+
+    it('the state carries the roster and the DERIVED palette name', () => {
+        const s = at(ROSTER);
+        expect(s.roster).toEqual(ROSTER);
+        expect(s.palette.name).toBe('pre-sword[families:water,weigh]');
+        expect(s.summary.palette).toBe(s.palette.name);
+        expect(at(null).roster).toBe(null);
+        expect(at(null).palette.name).toBe('pre-sword');
+    });
+
+    it('⛔ the LEVEL is the restricted one — kept ⊆ the restriction, and it differs', () => {
+        const restricted = at(ROSTER);
+        const whole = at(null);
+        const allowed = restricted.palette.templates.map((t) => t.name);
+        for (const k of restricted.summary.kept) expect(allowed).toContain(k.template);
+        expect(whole.summary.kept.some((k) => !allowed.includes(k.template))).toBe(true);
+        expect(json(restricted.record)).not.toBe(json(whole.record));
+    });
+
+    it('the kept templates RECONSTRUCT against the restricted palette', () => {
+        const s = at(ROSTER);
+        const rows = keptTemplatesOf(s.summary, s.palette);
+        expect(rows).toHaveLength(s.summary.keptCount);
+        expect(rows.map((r) => r.instance)).toEqual(s.summary.kept.map((k) => k.instance));
+    });
+
+    it('`describeState` NAMES the roster the run drew from', () => {
+        expect(describeState(at(ROSTER))).toMatch(/palette: pre-sword\[families:water,weigh\]/);
+        expect(describeState(at(null))).toMatch(/palette: pre-sword \(the WHOLE roster/);
+    });
+
+    it('⛔ REFUSES an empty restriction before the loop ever sees it', () => {
+        expect(() => at({ axis: 'families', names: [] })).toThrow(/EMPTY restriction/);
+    });
+
+    it('the SKELETON is the same room under a restriction — it holds no template', () => {
+        const a = generateStep({ seed: 3, biome: 'pre-sword', step: 0, roster: ROSTER });
+        const b = generateStep({ seed: 3, biome: 'pre-sword', step: 0 });
+        expect(json(a.record)).toBe(json(b.record));
+        // ⚠ …and it still SAYS which roster it would draw from, because the
+        // next press is the one that spends it.
+        expect(a.palette.name).toBe('pre-sword[families:water,weigh]');
+    });
+});
+
+describe('agreementWithPayload — the roster is an IDENTITY field', () => {
+    const ROSTER = { axis: 'families', names: ['water', 'weigh'] };
+    const state = generateStep({
+        seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster: ROSTER,
+    });
+    const payloadOf = (s) => ({
+        seed: s.seed, biome: s.biome, roster: s.roster, level: s.record, trace: s.trace,
+    });
+
+    it('agrees with a payload made under the SAME restriction', () => {
+        expect(agreementWithPayload(payloadOf(state), state).agrees).toBe(true);
+    });
+
+    /**
+     * ⛔ THE FALSE DIVERGENCE THIS PREVENTS: a payload generated under a
+     * restriction and reproduced under the WHOLE roster differs in the level,
+     * and the honest report names the roster as a difference too — otherwise
+     * a reader chases a determinism finding whose cause is the question.
+     */
+    it('names `roster` when the page regenerated under a different one', () => {
+        const whole = generateStep({
+            seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
+        });
+        const out = agreementWithPayload(payloadOf(state), whole);
+        expect(out.agrees).toBe(false);
+        expect(out.differences).toContain('roster');
+        expect(out.differences).toContain('level');
+    });
+
+    /**
+     * ⚠ AN OLD PAYLOAD DOES NOT FALSELY DIVERGE. Payloads written before this
+     * field existed name no roster, and "no roster" is exactly what an
+     * unrestricted run has.
+     */
+    it('an OLD payload with no `roster` field agrees with an unrestricted run', () => {
+        const whole = generateStep({
+            seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
+        });
+        const old = payloadOf(whole);
+        delete old.roster;
+        expect(agreementWithPayload(old, whole).agrees).toBe(true);
+    });
+});

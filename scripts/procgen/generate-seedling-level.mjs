@@ -51,6 +51,8 @@
  *   node scripts/procgen/generate-seedling-level.mjs --seed=1 --count=8 --json
  *   node scripts/procgen/generate-seedling-level.mjs --seed=1 --out=/tmp/level.json
  *   node scripts/procgen/generate-seedling-level.mjs --cost --count=8
+ *   node scripts/procgen/generate-seedling-level.mjs --seed=3 --families=water,weigh
+ *   node scripts/procgen/generate-seedling-level.mjs --seed=3 --templates=pit-patch
  */
 
 import { createHash } from 'node:crypto';
@@ -65,6 +67,7 @@ const { ATTEMPT, STOP, costModel } = await M('levelGenerator.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const { GENERATE_BIOMES } = await M('watchGenerate.js');
+const { restrictPalette } = await M('procgenPalette.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -83,6 +86,45 @@ const SATURATION_K = num('k', 3);
  * down the SAME seeded anchor order before giving a candidate up.
  */
 const ANCHOR_TRIES = num('anchor-tries', 1);
+/**
+ * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
+ * `--templates=x,y` narrows the sub-roster this run may draw from; ABSENT is
+ * the whole roster.
+ *
+ * ⛔ BOTH AT ONCE REFUSES, exactly as `?families=`/`?templates=` do in the
+ * page: they are two spellings of one setting, so there is nothing to
+ * compose. ⛔ AND THE MEMBER NAMES ARE VALIDATED — `restrictPalette` refuses
+ * an unknown family or template BY NAME and lists what the palette offers,
+ * because a silently dropped member would WIDEN the roster and certify the
+ * level under a question nobody asked.
+ *
+ * ⚠ THE CLI HAS THE FLAGS SO THE TWO RUNTIMES STAY ONE SPELLING. The page can
+ * emit a restricted payload; without these flags this script could not
+ * reproduce one, and `?gen=` compares the roster like every other identity
+ * field.
+ */
+const list = (name) => {
+    const raw = process.argv.find((a) => a.startsWith(`--${name}=`));
+    if (raw === undefined) return null;
+    const names = raw.slice(`--${name}=`.length).split(',').map((x) => x.trim())
+        .filter((x) => x !== '');
+    if (names.length === 0) {
+        process.stderr.write(`generate-seedling-level: --${name}= names nothing. The whole `
+            + 'roster is spelled by leaving the flag out; an empty list is a restriction '
+            + 'somebody emptied.\n');
+        process.exit(2);
+    }
+    return names;
+};
+const FAMILIES = list('families');
+const TEMPLATES = list('templates');
+if (FAMILIES && TEMPLATES) {
+    process.stderr.write('generate-seedling-level: --families= and --templates= are two '
+        + 'spellings of ONE setting (the sub-roster) and do not compose. Say it one way.\n');
+    process.exit(2);
+}
+const ROSTER = FAMILIES ? { axis: 'families', names: FAMILIES }
+    : (TEMPLATES ? { axis: 'templates', names: TEMPLATES } : null);
 /**
  * ⛔ `--budget-ms` IS GONE and is refused by name below rather than ignored —
  * the wall clock it set no longer exists (`procgenOracle`'s DEFAULT_BUDGET
@@ -119,6 +161,19 @@ if (!BIOMES[BIOME]) {
     process.exit(2);
 }
 
+/**
+ * ⛔ THE RESTRICTION IS APPLIED THROUGH THE SAME FUNCTION THE PAGE USES, so a
+ * `--families=` run and a `?families=` run draw from the same sub-roster in
+ * the same ORDER (which `rng.pick` indexes, so the order IS identity).
+ */
+let PALETTE;
+try {
+    PALETTE = restrictPalette(BIOMES[BIOME], ROSTER);
+} catch (e) {
+    process.stderr.write(`generate-seedling-level: ${e.message}\n`);
+    process.exit(2);
+}
+
 const say = (line) => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
@@ -140,7 +195,7 @@ if (has('cost')) {
 const t0 = Date.now();
 let out;
 try {
-    out = generateSeedlingLevel({ seed: SEED, palette: BIOMES[BIOME], bounds, budget: BUDGET });
+    out = generateSeedlingLevel({ seed: SEED, palette: PALETTE, bounds, budget: BUDGET });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — a distinct code, because
@@ -153,7 +208,7 @@ try {
     if (e.name !== 'GenerationAborted') throw e;
     note(`ABORTED: ${e.message}`);
     say(JSON.stringify({
-        seed: SEED, biome: BIOME, bounds, aborted: true,
+        seed: SEED, biome: BIOME, bounds, roster: PALETTE.roster ?? null, aborted: true,
         cause: { name: e.cause?.name ?? null, message: e.cause?.message ?? null },
         trace: e.trace,
     }, null, 2));
@@ -173,6 +228,14 @@ const payload = {
     seed: SEED,
     biome: BIOME,
     bounds,
+    /**
+     * ⛓ SLICE 4: THE SUB-ROSTER THIS RUN DREW FROM — `null` for the whole
+     * roster. It is an IDENTITY field: `agreementWithPayload` compares it
+     * beside seed and biome, because a payload made under a restriction and
+     * reproduced under the whole roster would report a level DIVERGENCE whose
+     * real cause is the question, not the generator.
+     */
+    roster: PALETTE.roster ?? null,
     budget: out.summary.budget,
     summary: out.summary,
     level: out.record,
@@ -189,6 +252,8 @@ if (has('json')) {
     say(`start:  (${s.startCell.tx},${s.startCell.ty})   goal: ${s.goalClass} at cell `
         + `(${s.goalCell.tx},${s.goalCell.ty}) = OEL (${s.goalOel.x},${s.goalOel.y})`);
     say(`items:  ${JSON.stringify(s.items)}   pins: [${s.pins.join(', ')}]`);
+    say(`palette: ${PALETTE.name}`
+        + (PALETTE.roster ? '' : ' (the WHOLE roster — no restriction)'));
     say(`bounds: obstacleTarget=${bounds.obstacleTarget} triesPerStep=${bounds.triesPerStep} `
         + `saturationK=${bounds.saturationK} `
         + `anchorTriesPerCandidate=${bounds.anchorTriesPerCandidate}`);
