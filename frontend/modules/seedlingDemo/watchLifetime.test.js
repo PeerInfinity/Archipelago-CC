@@ -266,10 +266,34 @@ describe('⛔ every listener in the page goes through a lifetime', () => {
         expect(offenders).toEqual([]);
     });
 
-    it('watchLifetime.js is the ONE place that calls it', () => {
+    it('the lifetime module is the ONE place that calls it', () => {
         // Belt and braces on the rule above: if the wrapper ever stopped
         // calling it, every `lifetime.on` in the page would be a silent no-op
         // and the tests above would still pass on stubs.
-        expect(source('watchLifetime.js')).toMatch(/target\.addEventListener\(/);
+        //
+        // ⛓ CONSTRUCTIVE-MODE slice 3: the implementation moved to
+        // `procgenCore/pageLifetime.js` (the maze lab page needs the same
+        // teardown and may not import `seedlingDemo/`). ⛔ The row is REPOINTED,
+        // never relaxed — it still asserts the real call site, at its real path.
+        expect(source('../procgenCore/pageLifetime.js')).toMatch(/target\.addEventListener\(/);
+    });
+
+    it('the seedlingDemo spelling is a RE-EXPORT, not a second copy', () => {
+        /**
+         * ⛓ The other half of the move. A shim that exported only
+         * `createLifetimeHolder` would leave `watchViewer.js`'s `createLifetime`
+         * import undefined at load — a page that dies on boot, which no unit
+         * test above would see because they all import the names directly.
+         * ⛔ And a shim that RE-IMPLEMENTED anything would be the second copy
+         * the move exists to prevent, so the file is asserted to hold no
+         * `addEventListener` of its own.
+         */
+        const shim = source('watchLifetime.js');
+        expect(shim).toMatch(/from '\.\.\/procgenCore\/pageLifetime\.js'/);
+        expect(shim).not.toMatch(/addEventListener\s*\(/);
+        for (const name of ['createLifetime', 'createLifetimeHolder', 'WatchLifetimeError',
+            'PageLifetimeError']) {
+            expect(shim, name).toContain(name);
+        }
     });
 });

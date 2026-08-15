@@ -21,7 +21,8 @@ import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './ar
 import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
     EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_PALETTE,
-    POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError,
+    POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, PaletteRosterError,
+    ProcgenPaletteError,
     assertPalette, catalogueRows, defineTemplate, dischargesVerb, enumerateInstantiations,
     enumerateValues, instantiateKept, restrictPalette, verbOf,
 } from './procgenPalette.js';
@@ -1643,9 +1644,18 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
         })).toThrow(/names "kill".*does not offer.*wall, water, pit/s);
         // ⚠ THE POINT OF THE REFUSAL: a dropped member would WIDEN the roster.
         // `kill` is a real post-sword family, so this is the typo that costs.
+        // ⛓ CONSTRUCTIVE-MODE slice 3: the roster machinery moved to
+        // `procgenCore/paletteRoster.js` (the maze lab page has the same
+        // `?families=` spelling and may not import `seedlingDemo/`), so its
+        // refusals carry ITS class — the same shape `templateContract` took in
+        // slice 2. ⛔ The row is REPOINTED, not relaxed: it still asserts a
+        // typed refusal, and the message is asserted unchanged beside it.
         expect(() => restrictPalette(PRE_SWORD_PALETTE, {
             axis: 'templates', names: ['wall-gap-spinner-killlock'],
-        })).toThrow(ProcgenPaletteError);
+        })).toThrow(PaletteRosterError);
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'templates', names: ['wall-gap-spinner-killlock'],
+        })).toThrow(/names "wall-gap-spinner-killlock", which palette "pre-sword" does not offer/);
         expect(restrictPalette(POST_SWORD_PALETTE, {
             axis: 'templates', names: ['wall-gap-spinner-killlock'],
         }).templates).toHaveLength(1);
