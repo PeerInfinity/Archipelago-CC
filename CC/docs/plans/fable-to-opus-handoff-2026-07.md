@@ -3071,8 +3071,8 @@ change**, or the next reader reads it as a regression.
 ## 5e. Seedling GENERATE-mode UI — the catalogue + parameterized templates (arc opened 2026-08-14, post-dates this doc)
 
 **Status: ⛓ CLOSED 2026-08-15 — all six slices SHIPPED, all seven §7 exit
-criteria discharged. Closing commit `870cbad8f` (slice 6 = `06b45e602`,
-`e8806aa94`, `b27059538`, `531b5fc21`, `870cbad8f`; slices 1–5 = `32f9783c6`, `9ac4dfe24`,
+criteria discharged. Closing commit `29808e39e` (slice 6 = `06b45e602`,
+`e8806aa94`, `b27059538`, `531b5fc21`, `870cbad8f`, `29808e39e`; slices 1–5 = `32f9783c6`, `9ac4dfe24`,
 `b9f1042d3`, `449d6e7d1`, `bf78cc0b7`, `7b305acc2`, `8b0eb1c1e`, `662a708d7`,
 `060e402c6`, `51a0019ab`, `0e957bcaa`, `42cab6b96`, `befb0ce49`, `afaadafa2`).**
 Plan doc *(NewDocs)*: `seedling-generate-ui-kickoff.md` — §1 the user's
