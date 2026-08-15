@@ -56,11 +56,15 @@
  */
 
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
-import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
 import {
-    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster, restrictPalette,
+    DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP, directedAttempt,
+} from './levelGenerator.js';
+import {
+    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, instantiateKept, normalizeRoster,
+    restrictPalette,
 } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
+import { SEED_MAX, rngFor } from './procgenRng.js';
 
 export class WatchGenerateError extends Error {
     constructor(message) {
@@ -149,6 +153,263 @@ export function readRosterParams(q, biome) {
     return normalizeRoster(paletteFor(biome), { axis, names });
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPT'S IDENTITY (slice 5, ⚖ ruling 1 + 9)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ Kickoff §3.5: *the level becomes LADDER + DIRECTIVES.* A level is no
+ * longer named by seed + biome + bounds + roster alone; it is that ladder, to
+ * step k, followed by an ordered list of directed attempts. So the payload
+ * gains `directives` and the URL gains `?directed=`, and a copied link names
+ * the WHOLE construction.
+ *
+ * ── THE GRAMMAR, AND WHY IT IS THE INSTANCE LABEL ─────────────────────
+ *
+ *   ?directed=<d>;<d>;…
+ *   <d> := <template>[ '(' <k>=<v>,… ')' ] '@' <bound> <policy> [ '!' tx ',' ty ]
+ *
+ * e.g. `wall-gap-block(ori=v,gap=1)@12d;water-pool(w=2,h=3)@12d`
+ *
+ * ⛓ The parenthesised clause IS `instanceLabel`'s spelling — the same string
+ * the pane prints, the trace carries and a reader already knows how to read.
+ * A second spelling of "which instance" would be the two-spellings failure
+ * mode inside the thing that exists to name a construction. A zero-parameter
+ * template has no clause at all, exactly as its label is its bare name.
+ *
+ * `<policy>` is `d` (prefer-discharge) or `s` (first-solved) and `<bound>` is
+ * the anchor bound — ⚖ kickoff §5: a bounded walk NAMES its bound, and a
+ * directive is a bounded walk somebody may re-run years later. ⛔ They are
+ * per-directive rather than global because slice 6's click-to-anchor is a
+ * directive at bound 1 under `s`, and a construction mixing the two must
+ * still be nameable in one string.
+ *
+ * ⛔ **ONLY THE INPUTS ARE ENCODED.** `outcome` and `keptKind` are RESULTS —
+ * they are what re-running produces, not what it takes — and a link that
+ * carried them could be edited into a claim the reproduction contradicts.
+ * The payload records them because a payload is a REPORT; the URL is an
+ * INSTRUCTION.
+ *
+ * ⚠ THE ANCHOR SUFFIX IS RESERVED AND ALREADY PARSED (slice 6). The directive
+ * record carries an explicit `anchor` field today, always `null`; slice 6 only
+ * adds the click that fills it.
+ */
+
+/** ⚖ Ruling 9(b): the payload RESERVES a skeleton block, so the constructive
+ *  mode arrives ADDITIVELY. Today there is exactly one kind and it is named
+ *  rather than assumed — a payload with no `skeleton` block is this one. */
+export const DEFAULT_SKELETON = Object.freeze({ kind: 'empty-bordered' });
+
+/**
+ * ⛓⛓⛓ THE DIRECTED BOUND — **12**, and the number is a measurement.
+ *
+ * ⚖ The ruling asks for *"a higher default than the loop's"* with the cost
+ * stated. `scripts/procgen/sweep-seedling-directed-bound.mjs` walked EVERY
+ * legal anchor of all three clearer templates over seeds 1..12, in both the
+ * skeleton geometry and on a step-3 ladder record:
+ *
+ *   · the most legal anchors any subject was ever offered:   **7** (skeleton)
+ *     — and only **4** on a step-3 ladder record, where 12 of 36 rows were
+ *       offered ZERO.
+ *   · the deepest first-DISCHARGING anchor:                  **5**
+ *   · every yield column is FLAT from N=5 (skeleton) and N=2 (ladder) upward.
+ *
+ * ⇒ 12 sits ABOVE the largest anchor list either arm produced, so on the
+ * measured corpus the walk is bounded by THE ROOM and the bound never
+ * truncates a search that would have found something. ⛔ And the real cost is
+ * the room's too: `anchorsFor` returns at most the legal cells, so a directed
+ * attempt on these rooms spends ≤7 solves where the press line authorises 12.
+ * The line states 12 because that is what a presser is agreeing to.
+ *
+ * ⛓⛓ **THE BRIEF'S OWN ESTIMATE WAS AN ORDER OF MAGNITUDE HIGH** ("~12–90
+ * solves"), and the reason is the S1 guard: a door template declares its whole
+ * slide path as `clearance`, so `legalAt` refuses nearly every cell. That is a
+ * fact about this palette, not a law — a template with a one-cell footprint
+ * would be offered dozens — which is exactly why the bound is stated here with
+ * its measurement instead of derived from the room's size.
+ */
+export const DIRECTED_ANCHOR_TRIES = 12;
+
+const POLICY_LETTER = Object.freeze({
+    d: KEEP_POLICY.PREFER_DISCHARGE,
+    s: KEEP_POLICY.FIRST_SOLVED,
+});
+const LETTER_FOR_POLICY = Object.freeze({
+    [KEEP_POLICY.PREFER_DISCHARGE]: 'd',
+    [KEEP_POLICY.FIRST_SOLVED]: 's',
+});
+
+/**
+ * ⛓⛓ **TWO DERIVED STREAMS PER DIRECTIVE, AND THE SPLIT IS LOAD-BEARING.**
+ *
+ * A directive may leave a parameter to be DRAWN ("any"), and what it then
+ * RECORDS is the drawn VALUE. So a replay passes that value as an override and
+ * spends NO draw where the original spent one. ⛔ With a single stream the
+ * anchor shuffle would then start from a different position and the replay
+ * would walk a DIFFERENT anchor list — a copied link that reproduces a
+ * different level, byte for byte, with nothing on the page able to say why.
+ *
+ * Two streams, salted apart, make the anchor walk INDEPENDENT of how many
+ * parameters were drawn rather than typed. ⛓ This is the same "two streams,
+ * two seeds from one" shape `procgenSeedling` already uses to keep the room
+ * stream and the template stream from shifting each other.
+ *
+ * ⚠ AND THE INDEX IS IN THE MIX, so two identical directives are two different
+ * questions: without it the second would walk the first's anchor order and
+ * meet its own placement.
+ */
+const PARAM_SALT = 1;
+const ANCHOR_SALT = 2;
+function directiveSeed(seed, index, salt) {
+    let h = 2166136261;
+    for (const n of [seed >>> 0, (index + 1) >>> 0, salt]) {
+        h = Math.imul(h ^ n, 16777619);
+    }
+    // ⛔ Into `ProcgenRng`'s own orbit: [1, SEED_MAX]. Seed 0 is refused there
+    // (it means "inherit the build's boot seed"), so the +1 is not cosmetic.
+    return (Math.abs(h) % (SEED_MAX - 1)) + 1;
+}
+
+/**
+ * A directive SPEC — the INPUTS — validated against the palette it will run
+ * on, or a refusal BY NAME.
+ *
+ * ⛔ EVERY REFUSAL NAMES THE THING IT REFUSED AND WHAT WAS ON OFFER. An
+ * unknown template, an unknown parameter, a value outside the declared domain
+ * and a malformed clause are four different mistakes, and a reader who typed
+ * one of them into an address bar has no other channel to learn which.
+ *
+ * ⚠ THE VALUE'S TYPE COMES FROM THE SCHEMA, NOT FROM THE TEXT. `len=4` must
+ * become the NUMBER 4 because `wall-segment`'s domain holds numbers, while
+ * `ori=v` stays a string — so a value is matched by STRINGIFYING each declared
+ * domain member. ⛓ That also gives the domain check for free and in the right
+ * place: a value outside the domain refuses HERE, before any solve, which is
+ * what the brief asks of the form as well.
+ */
+export function parseDirective(text, palette) {
+    const raw = String(text).trim();
+    const m = /^([A-Za-z0-9_-]+)(?:\(([^)]*)\))?@(\d+)([ds])(?:!(\d+),(\d+))?$/.exec(raw);
+    if (!m) {
+        fail(`watchGenerate: ${JSON.stringify(raw)} is not a directive. The spelling is `
+            + '`template(key=value,…)@<bound><d|s>` — the parenthesised clause is the '
+            + 'INSTANCE LABEL the pane already prints, `<bound>` is how many legal anchors '
+            + 'the attempt may be solved at, and the letter is the keep policy (`d` = prefer '
+            + 'discharge, `s` = first solved). A zero-parameter template omits the clause '
+            + 'entirely, e.g. `arrow-lane@12d`.');
+    }
+    const [, name, paramText, boundText, letter, tx, ty] = m;
+    const base = (palette?.templates ?? []).find((t) => t.name === name);
+    if (!base) {
+        fail(`watchGenerate: ?directed= names template ${JSON.stringify(name)}, which palette `
+            + `"${palette?.name}" does not hold — it offers `
+            + `[${(palette?.templates ?? []).map((t) => t.name).join(', ')}]. ⛔ An unknown `
+            + 'template is REFUSED rather than skipped: a dropped directive would reproduce '
+            + 'a DIFFERENT level under the same link and report no reason at all.');
+    }
+    const params = {};
+    if (paramText !== undefined && paramText.trim() !== '') {
+        for (const clause of paramText.split(',')) {
+            const eq = clause.indexOf('=');
+            if (eq <= 0) {
+                fail(`watchGenerate: ${JSON.stringify(clause)} in the directive for `
+                    + `"${name}" is not a \`key=value\` pair.`);
+            }
+            const key = clause.slice(0, eq).trim();
+            const valueText = clause.slice(eq + 1).trim();
+            const p = base.params.find((q) => q.key === key);
+            if (!p) {
+                fail(`watchGenerate: template "${name}" has no parameter ${JSON.stringify(key)} `
+                    + `— it declares [${base.params.map((q) => q.key).join(', ') || 'none'}]. `
+                    + 'A silently ignored parameter is a link that names one instance and '
+                    + 'builds another.');
+            }
+            const hit = p.domain.find((v) => String(v) === valueText);
+            if (hit === undefined) {
+                fail(`watchGenerate: template "${name}" parameter "${key}" was given `
+                    + `${JSON.stringify(valueText)}, which is not in its declared domain `
+                    + `[${p.domain.join(', ')}]. Every value in a domain is one a sweep `
+                    + 'measured; a value outside it is one nobody has adjudicated.');
+            }
+            if (Object.prototype.hasOwnProperty.call(params, key)) {
+                fail(`watchGenerate: the directive for "${name}" names parameter `
+                    + `${JSON.stringify(key)} twice. Two values for one parameter is two `
+                    + 'spellings of one setting, in the smallest place it can happen.');
+            }
+            params[key] = hit;
+        }
+    }
+    const bound = Number(boundText);
+    if (!Number.isInteger(bound) || bound <= 0) {
+        fail(`watchGenerate: the directive for "${name}" names bound `
+            + `${JSON.stringify(boundText)}, which is not a positive integer.`);
+    }
+    return Object.freeze({
+        template: name,
+        params: Object.freeze(params),
+        /** ⛓ Slice 6's field, present and always `null` today — the click only
+         *  fills it. Building the record without it would make slice 6 a change
+         *  to the identity schema rather than an addition to a form. */
+        anchor: tx === undefined ? null : Object.freeze({ tx: Number(tx), ty: Number(ty) }),
+        keepPolicy: POLICY_LETTER[letter],
+        bound,
+    });
+}
+
+/** Every directive in a `?directed=` value, in order. */
+export function parseDirectives(value, palette) {
+    const text = String(value ?? '').trim();
+    if (text === '') {
+        fail('watchGenerate: ?directed= names nothing. A level with no directives is '
+            + 'spelled by leaving the parameter out — an empty value is a construction '
+            + 'somebody emptied, which is the same rule ?families= follows.');
+    }
+    return Object.freeze(text.split(';').map((d) => parseDirective(d, palette)));
+}
+
+/**
+ * The inverse — ⛔ THE ONE WRITER'S half, and it round-trips through
+ * `parseDirective` by construction: the params clause is built in SCHEMA
+ * ORDER, not in insertion order, so two runs that reached the same values by
+ * different routes (one drawn, one typed) spell them identically and the URL
+ * fixed point holds.
+ */
+export function formatDirectives(directives, palette) {
+    return (directives ?? []).map((d) => {
+        const base = (palette?.templates ?? []).find((t) => t.name === d.template);
+        if (!base) {
+            fail(`watchGenerate: cannot write a directive for ${JSON.stringify(d.template)} — `
+                + `palette "${palette?.name}" does not hold it, so \`readGenerateParams\` `
+                + 'would refuse to read it back. A URL this page cannot reload is not a link '
+                + 'to the construction it is showing.');
+        }
+        const letter = LETTER_FOR_POLICY[d.keepPolicy];
+        if (!letter) {
+            fail(`watchGenerate: cannot write a directive whose keep policy is `
+                + `${JSON.stringify(d.keepPolicy)} — the URL spells only `
+                + `[${Object.keys(POLICY_LETTER).join(', ')}].`);
+        }
+        // ⚠ SCHEMA ORDER, and the values are checked on the way OUT as well —
+        // the writer refuses what the reader would refuse (§8.6's law).
+        const clause = base.params.map((p) => {
+            const v = d.params?.[p.key];
+            if (v === undefined) {
+                fail(`watchGenerate: the directive for "${d.template}" carries no value for `
+                    + `"${p.key}". ⛔ It REFUSES rather than writing the default: a link that `
+                    + 'silently filled a parameter would reproduce a different instance under '
+                    + 'the same address, and the pin union cannot tell two instances of one '
+                    + 'template apart (slice 2 §9.5).');
+            }
+            if (!p.domain.includes(v)) {
+                fail(`watchGenerate: the directive for "${d.template}" gives "${p.key}" the `
+                    + `value ${JSON.stringify(v)}, which is outside its declared domain `
+                    + `[${p.domain.join(', ')}].`);
+            }
+            return `${p.key}=${v}`;
+        }).join(',');
+        return `${d.template}${clause ? `(${clause})` : ''}@${d.bound}${letter}`
+            + (d.anchor ? `!${d.anchor.tx},${d.anchor.ty}` : '');
+    }).join(';');
+}
+
 /**
  * The arm's own URL parameters — the loop's bounds and budget, plus the two
  * that are about the PAGE rather than the loop (`?gen=`, `?run=`).
@@ -194,6 +455,16 @@ export function readGenerateParams(search) {
          * compare across runs).
          */
         roster: readRosterParams(q, biome),
+        /**
+         * ⛓ SLICE 5 — VERB 2. `null` is "no directives"; otherwise the ordered
+         * list of SPECS, each validated against this biome's own palette. ⚠ It
+         * is read AFTER the roster on purpose: a directive names a template,
+         * and the palette a directive is checked against is the biome's WHOLE
+         * roster rather than the restricted one — verb 1 says what a RUN may
+         * draw from, and verb 2 is the user naming a template by hand.
+         */
+        directed: q.get('directed') === null
+            ? null : parseDirectives(q.get('directed'), paletteFor(biome)),
         bounds: {
             obstacleTarget: int('count', DEFAULT_BOUNDS.obstacleTarget),
             triesPerStep: int('tries', DEFAULT_BOUNDS.triesPerStep),
@@ -290,7 +561,7 @@ export function readGenerateParams(search) {
  * the budget the run on screen was certified under.
  */
 export function writeGenerateParams(search, {
-    seed, biome, bounds, step, roster = null, payloadOwned = false,
+    seed, biome, bounds, step, roster = null, directives = null, payloadOwned = false,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -351,6 +622,27 @@ export function writeGenerateParams(search, {
         q.delete(r.axis === 'families' ? 'templates' : 'families');
         q.set(r.axis, r.names.join(','));
     }
+    /**
+     * ── ⛓⛓ SLICE 5: THE DIRECTIVES, THE ARC'S SECOND NON-INTEGER PARAM ──
+     *
+     * ⛔ Written from the STATE's directive list like every other parameter
+     * here, and through `formatDirectives`, which REFUSES what
+     * `parseDirectives` would refuse — an unknown template, a missing
+     * parameter value, a value outside its domain, an unspellable policy.
+     * §8.6's standing law: a URL this page cannot reload must not be
+     * writable in the first place.
+     *
+     * ⛓ AND THE PARAMETERS ARE WRITTEN IN **SCHEMA ORDER** rather than in the
+     * order the values object happens to hold them, so the fixed point holds
+     * whether a value was typed by the form or DRAWN by an "any" choice.
+     *
+     * ⚠ `?directed=` IS DELETED WHEN THERE ARE NO DIRECTIVES, never written
+     * empty — the same rule `?families=` follows, and the reader refuses an
+     * empty value for the same reason.
+     */
+    const ds = directives ?? [];
+    if (ds.length === 0) q.delete('directed');
+    else q.set('directed', formatDirectives(ds, paletteFor(biome)));
     if (int('step', step) >= 1) q.set('run', '1');
     else q.delete('run');
     return q.toString();
@@ -373,6 +665,7 @@ export function ladderCost(bounds, worstCaseSolveMs) {
         solves += 1 + k * b.triesPerStep * b.anchorTriesPerCandidate;
     }
     const display = b.obstacleTarget + 1;
+    // (see `directedCost` for the DIRECTED sibling of this arithmetic)
     return Object.freeze({
         steps: b.obstacleTarget,
         loopSolves: solves,
@@ -388,6 +681,39 @@ export function ladderCost(bounds, worstCaseSolveMs) {
             + 'generateSeedlingLevel call would spend the last row alone; the ladder buys '
             + 'the per-step display ⚖ §1.3 asks for, and every step is the CLI\'s own '
             + `--count=k output byte for byte.`,
+    });
+}
+
+/**
+ * THE COST OF **ONE DIRECTED ATTEMPT**, before it runs — `ladderCost`'s
+ * sibling, and the same arithmetic discipline for the same reason (a solve is
+ * synchronous and uninterruptible, so a budget bounds what is ACCEPTED and
+ * never what is SPENT).
+ *
+ * ⚠ IT IS A CEILING AND IT SAYS SO, twice over: the walk stops at the first
+ * acceptable anchor, AND the model usually offers far fewer legal anchors than
+ * the bound (measured — see `DIRECTED_ANCHOR_TRIES`: at most 7 in the skeleton
+ * and at most 4 on a step-3 ladder record). The number printed is what the
+ * press AUTHORISES, which is the one a reader who expected a pause should see.
+ */
+export function directedCost(bound, worstCaseSolveMs) {
+    if (!Number.isInteger(bound) || bound <= 0) {
+        fail(`watchGenerate: directedCost needs a positive integer bound, got `
+            + `${JSON.stringify(bound)}.`);
+    }
+    const solves = bound + 1;
+    return Object.freeze({
+        bound,
+        loopSolves: bound,
+        displaySolves: 1,
+        solves,
+        worstCaseSolveMs,
+        worstCaseTotalMs: Number.isFinite(worstCaseSolveMs) ? solves * worstCaseSolveMs : null,
+        why: `one DIRECTED attempt solves at up to anchorTries(${bound}) legal anchors, plus `
+            + '1 display solve. ⚠ A CEILING: the walk stops at the first anchor it accepts, '
+            + 'and the model offers only as many legal anchors as the room has room for '
+            + '(measured: at most 7 in an empty room, at most 4 once the ladder has placed '
+            + 'three obstacles). Every solve is SYNCHRONOUS and uninterruptible.',
     });
 }
 
@@ -434,6 +760,15 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
             trace: [],
             summary: null,
             keptTemplates: [],
+            /**
+             * ⛓ SLICE 5: a LADDER state carries an EMPTY directive list rather
+             * than none, so every reader downstream (the payload, the URL
+             * writer, `describeState`, `agreementWithPayload`) meets one shape
+             * and never has to ask whether a directive has happened yet.
+             */
+            directives: Object.freeze([]),
+            /** ⚖ Ruling 9(b)'s reserved block — see `DEFAULT_SKELETON`. */
+            skeleton: DEFAULT_SKELETON,
             stop: null,
             saturated: false,
             budget: b,
@@ -457,6 +792,8 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
         trace: out.trace,
         summary: out.summary,
         keptTemplates: keptTemplatesOf(out.summary, palette),
+        directives: Object.freeze([]),
+        skeleton: DEFAULT_SKELETON,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.
@@ -469,6 +806,152 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
         budget: b,
         bounds: { ...DEFAULT_BOUNDS, ...(bounds ?? {}), obstacleTarget: step },
     });
+}
+
+/**
+ * ── ⛓⛓⛓ VERB 2, APPLIED — one directive onto the state on screen ──────
+ *
+ * ⚖ Ruling 1: *"a button to make the generator attempt to generate that
+ * specific thing."* This is that button without the DOM: a SPEC in, a NEW
+ * state out, with the directive RECORDED on it.
+ *
+ * ⛔ **THE STATE IT RETURNS IS THE SAME SHAPE `generateStep` RETURNS**, so
+ * every consumer — `displaySolve`, `displayStaging`, `generationRows`,
+ * `describeState`, the payload, the URL writer — meets one object and none of
+ * them learns that a directive happened. That is what keeps this a second
+ * ENTRY rather than a second kind of level.
+ *
+ * ⛔ **`summary` STAYS THE LADDER'S.** It describes the RUN that produced the
+ * prefix, and a directive is not part of that run: rewriting `keptCount` into
+ * it would make the payload claim a loop kept something no loop drew. The
+ * directives ride BESIDE it, in order, which is exactly what ⚖ §3.5 asks for.
+ *
+ * ⛓ `keptTemplates` DOES grow on a keep, and that is load-bearing rather than
+ * bookkeeping: it is what the pin union is taken over, so a water pool placed
+ * by a directive obliges `'sound'` in every later solve and in the staging
+ * block the bridge hands to the other arms. A directive that placed geometry
+ * without joining that list would certify the room under fewer pins than it
+ * contains — slice 3 track A's defect, re-introduced one entry over.
+ *
+ * @param {object} state the state a directive is applied TO (any step).
+ * @param {object} spec  `{template, params, anchor, keepPolicy, bound}` — a
+ *   `parseDirective` output, or the same shape from the page's form.
+ * @param {number} index the directive's 0-based position, which is part of its
+ *   stream derivation — see `directiveSeed`.
+ */
+export function applyDirective(state, spec, index) {
+    if (!Number.isInteger(index) || index < 0) {
+        fail(`watchGenerate: a directive needs its 0-based index, got ${JSON.stringify(index)}. `
+            + 'The index is part of the anchor stream\'s derivation, so two identical '
+            + 'directives ask two different questions rather than walking one order twice.');
+    }
+    const palette = paletteFor(state.biome);
+    const base = palette.templates.find((t) => t.name === spec?.template);
+    if (!base) {
+        fail(`watchGenerate: a directive names template ${JSON.stringify(spec?.template)}, `
+            + `which the ${state.biome} palette does not hold — it offers `
+            + `[${palette.templates.map((t) => t.name).join(', ')}].`);
+    }
+    const keepPolicy = spec.keepPolicy ?? KEEP_POLICY.PREFER_DISCHARGE;
+    const bound = spec.bound ?? DIRECTED_ANCHOR_TRIES;
+    /**
+     * ⛓ THE PARAMETER STREAM — its own, so an "any" choice that DRAWS a value
+     * cannot move the anchor walk. See `directiveSeed`. A spec that names every
+     * parameter spends no draw here at all, which is precisely why the two
+     * streams must be separate for a replay to be byte-identical.
+     */
+    const template = base.instantiate(
+        rngFor(directiveSeed(state.seed, index, PARAM_SALT)), spec.params ?? {},
+    );
+    const out = directedAttempt({
+        rng: rngFor(directiveSeed(state.seed, index, ANCHOR_SALT)),
+        model: state.model,
+        oracle: oracleFor(state),
+        record: state.record,
+        template,
+        keptRows: state.keptTemplates,
+        bound,
+        keepPolicy,
+        // ⛓ THE ONE DISCHARGE TEST (`procgenPalette`), injected — `levelGenerator`
+        // imports nothing, so the predicate reaches it as an argument. It is the
+        // same function the batch and both sweeps ask.
+        discharges: dischargesVerb,
+        rowBase: { directive: index + 1, step: state.step, try: null },
+    });
+    /**
+     * ⛔ THE RECORDED DIRECTIVE CARRIES ITS INPUTS **AND** ITS RESULTS, and the
+     * two are distinguishable: `anchor` is the anchor that was ASKED for (slice
+     * 6's field, `null` today) while `at` is where it LANDED. Collapsing them
+     * would make a slice-6 directive unable to say whether its cell was honoured.
+     *
+     * ⚠ `params` is the RESOLVED values object, never the spec's partial one —
+     * so a directive that left a parameter to be drawn records the DRAWN value
+     * and a replay rebuilds that exact instance rather than re-drawing.
+     */
+    const recorded = Object.freeze({
+        template: base.name,
+        instance: template.instance,
+        params: template.params,
+        family: base.family,
+        anchor: spec.anchor ?? null,
+        keepPolicy,
+        bound,
+        outcome: out.outcome,
+        keptKind: out.keptKind,
+        at: out.at,
+        anchorsOffered: out.anchorsOffered,
+        anchorsWalked: out.anchorsWalked,
+    });
+    return Object.freeze({
+        ...state,
+        record: out.record,
+        trace: Object.freeze([...(state.trace ?? []), ...out.rows]),
+        keptTemplates: out.outcome === 'KEPT'
+            ? Object.freeze([...state.keptTemplates, template])
+            : state.keptTemplates,
+        directives: Object.freeze([...(state.directives ?? []), recorded]),
+    });
+}
+
+/**
+ * ⛓⛓ WHICH LADDER STEP A SET OF URL PARAMETERS NAMES — ONE reader of the
+ * `run` + `count` encoding.
+ *
+ * ⛔ THE ENCODING IS SPLIT ACROSS TWO PARAMETERS AND THAT IS DELIBERATE (slice
+ * 1 §8.2(a)): `count` is `state.bounds.obstacleTarget` — which at step k IS k,
+ * because `generateStep` overrides it — and `run=1` says a RUN is what is on
+ * screen at all, with the parameter DELETED at step 0 rather than spelt
+ * `run=0`. ⚠ But at STEP 0 nothing overrides `count`, so a skeleton's URL
+ * carries the FORM's target beside no `run`, and "which step is this?" is
+ * `run ? count : 0` rather than `count`.
+ *
+ * ⛓ THIS FUNCTION EXISTS BECAUSE SLICE 5 WAS ABOUT TO BECOME ITS SECOND
+ * READER. The page has always known the rule (`if (gp.run) goTo(target)`), and
+ * the reproduction path needs the same answer; two private derivations of
+ * "which step does this link name" is the two-spellings failure mode inside
+ * the one thing this arc keeps single. Found by a red in the round-trip case,
+ * which reproduced a step-6 ladder from a skeleton's own link.
+ */
+export function stepFromParams(params) {
+    return params?.run ? params.bounds.obstacleTarget : 0;
+}
+
+/**
+ * ⛓⛓⛓ THE WHOLE CONSTRUCTION, FROM ITS IDENTITY — the ladder to step k, then
+ * the directives in order.
+ *
+ * ⛔ **ONE PATH.** The page presses one directive at a time and this replays
+ * them in a batch, and they must agree byte for byte — so the page calls
+ * `applyDirective` with the same index this does, and this is what a `?directed=`
+ * load, the payload check and the tests all go through. A second replay path
+ * would be a second answer to *"what does this link mean"*.
+ */
+export function generateWithDirectives({
+    seed, biome, step, bounds, budget, roster = null, directed = null,
+} = {}) {
+    let state = generateStep({ seed, biome, step, bounds, budget, roster });
+    (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
+    return state;
 }
 
 /**
@@ -611,6 +1094,24 @@ export function agreementWithPayload(payload, state) {
      * unrestricted run has, so an OLD payload does not diverge here.
      */
     cmp('roster', payload.roster ?? null, state.roster ?? null);
+    /**
+     * ⛓ SLICE 5: THE DIRECTIVES ARE AN IDENTITY FIELD LIKE THE ROSTER. ⚖ §3.5:
+     * the level IS the ladder plus these, so a payload built with two directives
+     * and reproduced with none would report a LEVEL divergence whose real cause
+     * is that a different construction was asked for. ⚠ `?? []` on both sides:
+     * a payload written before this field existed names no directives, and "no
+     * directives" is exactly what a plain ladder run has — so an OLD payload
+     * does not falsely diverge here.
+     */
+    cmp('directives', payload.directives ?? [], state.directives ?? []);
+    /**
+     * ⚖ Ruling 9(b)'s reserved block. It is compared for the same reason and
+     * with the same both-sides default: today there is one kind of skeleton, so
+     * every payload agrees — and on the day the constructive mode adds a second,
+     * a reproduction under the wrong one says WHICH field differed instead of
+     * reporting an unexplained level divergence.
+     */
+    cmp('skeleton', payload.skeleton ?? DEFAULT_SKELETON, state.skeleton ?? DEFAULT_SKELETON);
     cmp('level', payload.level, state.record);
     cmp('trace', payload.trace, state.trace);
     return {
@@ -654,8 +1155,17 @@ export function generationRows(trace) {
          * on the outcome is two spellings, and a reader could not tell "no
          * search ran" from "the search stopped at one".
          */
-        label: r.step === 0 ? '(skeleton)'
-            : `${r.step}.${r.try}${r.anchorTry ? `a${r.anchorTry}` : ''}`,
+        /**
+         * ⛓⛓ SLICE 5: A DIRECTIVE'S ROWS ARE LABELLED `d<n>a<k>`, because they
+         * are not a step of any ladder — the row's `step` says which rung the
+         * directive was applied ON TOP OF, and a label reading `3.null` would
+         * be a pane inventing a try nobody made.
+         */
+        label: r.directive ? `d${r.directive}${r.anchorTry ? `a${r.anchorTry}` : ''}`
+            : (r.step === 0 ? '(skeleton)'
+                : `${r.step}.${r.try}${r.anchorTry ? `a${r.anchorTry}` : ''}`),
+        /** Which directive this row belongs to, or `null` for a ladder row. */
+        directive: r.directive ?? null,
         /** Which anchor of the walk this row is, and how many were offered. */
         anchorTry: r.anchorTry ?? null,
         anchorsOffered: r.anchorsOffered ?? null,
@@ -681,6 +1191,35 @@ export function generationRows(trace) {
 }
 
 /**
+ * ⛓⛓⛓ **WHICH KIND OF KEEP IT WAS** — ⚖ the user's ruling: *"the readout says
+ * WHICH KIND OF KEEP it was … two facts, never blurred."*
+ *
+ * ⛔ **THE THIRD CASE IS PRINTED BY NAME.** A wall, a pool, a pit and an arrow
+ * lane have no verb to discharge, so first-SOLVED is their WHOLE criterion and
+ * nothing was missed. Printing `solved-only` for them would be a readout
+ * claiming a shortfall that cannot exist — trap 249's shape, in the one place
+ * a reader looks to find out what the generator did. ⛓ ONE spelling, here: the
+ * page's directive list and the CLI's `## the directives` table both call
+ * this, so the two cannot describe one outcome two ways.
+ */
+export function describeKeptKind(directive) {
+    if (directive?.outcome !== 'KEPT') return '';
+    switch (directive.keptKind) {
+        case KEPT_KIND.DISCHARGED:
+            return `kept:discharged — the solve carries a {strategy} record naming this `
+                + 'template\'s own verb';
+        case KEPT_KIND.SOLVED_ONLY:
+            return 'kept:solved-only — the room completes, but no anchor within the bound '
+                + 'made the walk USE this template\'s verb';
+        case KEPT_KIND.NO_VERB:
+            return 'kept — this family has NO verb to discharge, so first-SOLVED is its '
+                + 'whole criterion and nothing was missed';
+        default:
+            return 'kept';
+    }
+}
+
+/**
  * The one-line summary of a state, for the status bar and the CLI readout.
  * ⛔ Every bound that ran is in it — ⚖ kickoff §5's "bounded sweeps name
  * their bounds", where a reader can actually see them.
@@ -688,7 +1227,15 @@ export function generationRows(trace) {
 export function describeState(state, solved = null) {
     const s = state.summary;
     const bits = [
-        `seed ${state.seed} · ${state.biome} · step ${state.step}`,
+        /**
+         * ⛓⛓ SLICE 5: THE IDENTITY LINE SAYS WHAT THE LEVEL IS — ⚖ §3.5's own
+         * sentence, *"seed S's ladder to step k, then N directed attempt(s)"*.
+         * A page that showed a directed level under a ladder-only identity would
+         * be naming a run nobody can reproduce from what it printed.
+         */
+        `seed ${state.seed} · ${state.biome} · step ${state.step}`
+            + ((state.directives ?? []).length
+                ? `, then ${state.directives.length} directed attempt(s)` : ''),
         /**
          * ⛓ SLICE 4: THE ROSTER THE RUN DREW FROM, by the palette's own name —
          * `pre-sword` unrestricted, `pre-sword[families:pit,water]` under verb

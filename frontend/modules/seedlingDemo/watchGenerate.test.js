@@ -28,14 +28,16 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    BIOME_NAMES, GENERATE_BIOMES, agreementWithPayload, agreementWithTrace, describeState,
-    displaySolve, displayStaging, generateStep, generationRows, keptTemplatesOf, ladderCost,
-    paletteFor, readGenerateParams, writeGenerateParams,
+    BIOME_NAMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, GENERATE_BIOMES, agreementWithPayload,
+    agreementWithTrace, applyDirective, describeState, directedCost, displaySolve,
+    displayStaging, formatDirectives, generateStep, generateWithDirectives, generationRows,
+    keptTemplatesOf, ladderCost, paletteFor, parseDirective, parseDirectives,
+    readGenerateParams, stepFromParams, writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf, terrainAt } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
-import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
+import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from './levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel } from './procgenSeedling.js';
 
@@ -833,5 +835,436 @@ describe('agreementWithPayload — the roster is an IDENTITY field', () => {
         const old = payloadOf(whole);
         delete old.roster;
         expect(agreementWithPayload(old, whole).agrees).toBe(true);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPT'S IDENTITY (slice 5)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛓ THE SUBJECT IS CHOSEN BY MEASUREMENT, not by taste
+ * (`sweep-seedling-directed-bound.mjs`, and the probe recorded in kickoff
+ * §12): `wall-gap-block(ori=v,gap=1)` on the pre-sword SKELETON at seed 6
+ * SOLVES at anchor 1 and DISCHARGES only at anchor 6 of 6.
+ *
+ * ⚠ IT DISCRIMINATES ON BOTH CLAIMS AT ONCE, which is why it is this one:
+ *   · the POLICY claim — first-SOLVED keeps anchor 1, prefer-discharge keeps
+ *     anchor 6, so a build that ignored discharge lands somewhere else;
+ *   · the PARAMS claim — `ori=v,gap=1` differs from the base's DEFAULT
+ *     instance (`ori=h,gap=4`) in BOTH parameters, so a URL that dropped its
+ *     params rebuilds a visibly different instance. ⛔ Trap 235's shape: a
+ *     subject that agreed with its own fallback could not fail.
+ */
+const SUBJECT = Object.freeze({ seed: 6, biome: 'pre-sword', step: 0 });
+const DIRECTIVE = Object.freeze({
+    template: 'wall-gap-block',
+    params: Object.freeze({ ori: 'v', gap: 1 }),
+    anchor: null,
+    keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+    bound: DIRECTED_ANCHOR_TRIES,
+});
+
+describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', () => {
+    const palette = paletteFor('pre-sword');
+
+    it('round-trips a directive through parse and format', () => {
+        const text = 'wall-gap-block(ori=v,gap=1)@12d';
+        const [d] = parseDirectives(text, palette);
+        expect(d.template).toBe('wall-gap-block');
+        expect(d.params).toEqual({ ori: 'v', gap: 1 });
+        expect(d.keepPolicy).toBe(KEEP_POLICY.PREFER_DISCHARGE);
+        expect(d.bound).toBe(12);
+        expect(d.anchor).toBeNull();
+        expect(formatDirectives([d], palette)).toBe(text);
+    });
+
+    it('⚠ TYPES COME FROM THE SCHEMA: `gap=1` is the NUMBER 1, `ori=v` a string', () => {
+        const [d] = parseDirectives('wall-gap-block(ori=v,gap=1)@12d', palette);
+        expect(d.params.gap).toBe(1);
+        expect(d.params.gap).not.toBe('1');
+        expect(d.params.ori).toBe('v');
+    });
+
+    it('a ZERO-parameter template has no clause at all — its label IS its name', () => {
+        const [d] = parseDirectives('arrow-lane@12d', palette);
+        expect(d.template).toBe('arrow-lane');
+        expect(d.params).toEqual({});
+        expect(formatDirectives([d], palette)).toBe('arrow-lane@12d');
+    });
+
+    it('carries several directives in ORDER', () => {
+        const text = 'water-pool(w=1,h=3)@12d;arrow-lane@4s;wall-segment(ori=v,len=5)@12d';
+        const ds = parseDirectives(text, palette);
+        expect(ds.map((d) => d.template))
+            .toEqual(['water-pool', 'arrow-lane', 'wall-segment']);
+        expect(ds[1].keepPolicy).toBe(KEEP_POLICY.FIRST_SOLVED);
+        expect(ds[1].bound).toBe(4);
+        expect(formatDirectives(ds, palette)).toBe(text);
+    });
+
+    it('⛓ SLICE 6\'s ANCHOR SUFFIX already parses and round-trips', () => {
+        const text = 'wall-segment(ori=h,len=2)@1s!4,6';
+        const [d] = parseDirectives(text, palette);
+        expect(d.anchor).toEqual({ tx: 4, ty: 6 });
+        expect(formatDirectives([d], palette)).toBe(text);
+    });
+
+    it('⛓ THE CLAUSE IS WRITTEN IN SCHEMA ORDER, whatever order the values came in',
+        () => {
+            // ⛔ The fixed point depends on this: a value DRAWN by an "any"
+            // choice and one typed into the form must spell identically, or the
+            // second load of a copied link would rewrite the bar.
+            const backwards = { ...DIRECTIVE, params: { gap: 1, ori: 'v' } };
+            expect(formatDirectives([backwards], palette))
+                .toBe('wall-gap-block(ori=v,gap=1)@12d');
+        });
+
+    describe('every refusal is BY NAME, and they are four different mistakes', () => {
+        it('an unknown TEMPLATE names it and lists the roster', () => {
+            expect(() => parseDirectives('wall-gap-blork(ori=v)@12d', palette))
+                .toThrow(/names template "wall-gap-blork", which palette/);
+        });
+        it('an unknown PARAMETER names it and lists what the template declares', () => {
+            expect(() => parseDirectives('wall-gap-block(orientation=v)@12d', palette))
+                .toThrow(/has no parameter "orientation"/);
+        });
+        it('a value OUTSIDE the declared domain refuses BEFORE any solve', () => {
+            expect(() => parseDirectives('wall-gap-block(ori=diagonal,gap=1)@12d', palette))
+                .toThrow(/not in its declared domain \[h, v\]/);
+            expect(() => parseDirectives('wall-gap-block(ori=v,gap=99)@12d', palette))
+                .toThrow(/not in its declared domain \[0, 1, 2, 3, 4, 5, 6, 7\]/);
+        });
+        it('a MALFORMED directive quotes it and states the spelling', () => {
+            for (const bad of ['wall-gap-block', 'wall-gap-block@12', 'wall-gap-block@12x',
+                'wall-gap-block(ori=v@12d', '@12d']) {
+                expect(() => parseDirectives(bad, palette)).toThrow(/is not a directive/);
+            }
+        });
+        it('an EMPTY ?directed= refuses — absence is how "no directives" is spelled', () => {
+            expect(() => parseDirectives('', palette)).toThrow(/names nothing/);
+        });
+        it('a duplicated parameter refuses — two values for one setting', () => {
+            expect(() => parseDirectives('wall-gap-block(ori=v,ori=h)@12d', palette))
+                .toThrow(/names parameter "ori" twice/);
+        });
+    });
+
+    describe('⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6\'s law)', () => {
+        it('a directive MISSING a parameter value REFUSES, never writes the default', () => {
+            expect(() => formatDirectives([{ ...DIRECTIVE, params: { ori: 'v' } }], palette))
+                .toThrow(/carries no value for "gap"/);
+        });
+        it('a value outside the domain refuses on the way OUT too', () => {
+            expect(() => formatDirectives(
+                [{ ...DIRECTIVE, params: { ori: 'v', gap: 42 } }], palette,
+            )).toThrow(/outside its declared domain/);
+        });
+        it('an unknown template refuses on the way OUT too', () => {
+            expect(() => formatDirectives([{ ...DIRECTIVE, template: 'nope' }], palette))
+                .toThrow(/palette "pre-sword" does not hold it/);
+        });
+    });
+});
+
+describe('⛓⛓ `?directed=` in the ONE reader and the ONE writer', () => {
+    it('the reader parses it against the BIOME\'s own palette', () => {
+        const p = readGenerateParams(
+            '?source=generate&seed=6&biome=pre-sword&directed=wall-gap-block(ori=v,gap=1)@12d',
+        );
+        expect(p.directed).toHaveLength(1);
+        expect(p.directed[0].params).toEqual({ ori: 'v', gap: 1 });
+    });
+
+    it('⛔ a post-sword-only template REFUSES under pre-sword, by name', () => {
+        expect(() => readGenerateParams(
+            '?source=generate&biome=pre-sword&directed=wall-gap-spinner-killlock(ori=h)@12d',
+        )).toThrow(/which palette "pre-sword" does not hold/);
+        // …and is accepted under the biome that HAS it.
+        expect(readGenerateParams(
+            '?source=generate&biome=post-sword&directed=wall-gap-spinner-killlock(ori=h)@12d',
+        ).directed).toHaveLength(1);
+    });
+
+    it('absent means NO directives, and the writer DELETES rather than writing empty', () => {
+        expect(readGenerateParams('?source=generate&seed=1').directed).toBeNull();
+        const q = writeGenerateParams('directed=wall-gap-block(ori=v,gap=1)@12d', {
+            seed: 1, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0, directives: [],
+        });
+        expect(new URLSearchParams(q).get('directed')).toBeNull();
+    });
+
+    it('⛓ THE FIXED POINT: loading what it wrote rewrites it to itself, character for character',
+        () => {
+            const first = writeGenerateParams('tickbudget=600', {
+                seed: 6,
+                biome: 'pre-sword',
+                bounds: DEFAULT_BOUNDS,
+                step: 2,
+                directives: [DIRECTIVE, { ...DIRECTIVE, template: 'arrow-lane', params: {} }],
+            });
+            const read = readGenerateParams(`?${first}`);
+            const second = writeGenerateParams(first, {
+                seed: read.seed,
+                biome: read.biome,
+                bounds: read.bounds,
+                step: 2,
+                directives: read.directed,
+            });
+            expect(second).toBe(first);
+            // …and the parameters it does not own still survive.
+            expect(new URLSearchParams(second).get('tickbudget')).toBe('600');
+        });
+});
+
+describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () => {
+    it('⛓⛓ PREFERS a DISCHARGING anchor over the first that merely SOLVES', () => {
+        const base = generateStep(SUBJECT);
+        const preferred = applyDirective(base, DIRECTIVE, 0);
+        const [d] = preferred.directives;
+        expect(d.outcome).toBe(ATTEMPT.KEPT);
+        expect(d.keptKind).toBe(KEPT_KIND.DISCHARGED);
+
+        /**
+         * ⛔ THE CONTROL, AND IT IS WHAT MAKES THIS A CLAIM ABOUT THE POLICY:
+         * the SAME directive under the free loop's own rule keeps a DIFFERENT
+         * anchor and reports a different kind of keep. Without this line the
+         * case would pass on a build that always discharged by luck.
+         */
+        const firstSolved = applyDirective(
+            base, { ...DIRECTIVE, keepPolicy: KEEP_POLICY.FIRST_SOLVED }, 0,
+        );
+        expect(firstSolved.directives[0].outcome).toBe(ATTEMPT.KEPT);
+        expect(firstSolved.directives[0].at).not.toEqual(d.at);
+        expect(firstSolved.directives[0].anchorsWalked)
+            .toBeLessThan(d.anchorsWalked);
+        // ⛓ …and the two really produce DIFFERENT LEVELS.
+        expect(preferred.record).not.toEqual(firstSolved.record);
+    });
+
+    it('⛔ a template with NO VERB reports `solved-no-verb`, not `solved-only`', () => {
+        const base = generateStep(SUBJECT);
+        const out = applyDirective(base, {
+            template: 'wall-segment',
+            params: { ori: 'h', len: 2 },
+            anchor: null,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            bound: DIRECTED_ANCHOR_TRIES,
+        }, 0);
+        expect(out.directives[0].outcome).toBe(ATTEMPT.KEPT);
+        expect(out.directives[0].keptKind).toBe(KEPT_KIND.NO_VERB);
+    });
+
+    it('⛓ the KEPT instance joins `keptTemplates`, so the PIN UNION sees it', () => {
+        /**
+         * ⛔ LOAD-BEARING, not bookkeeping: a water pool obliges `'sound'` BY
+         * ARGUMENT. A directive that placed geometry without joining this list
+         * would certify the room under fewer pins than it contains — slice 3
+         * track A's own defect, one entry over.
+         */
+        const base = generateStep(SUBJECT);
+        const out = applyDirective(base, {
+            template: 'water-pool',
+            params: { w: 1, h: 1 },
+            anchor: null,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            bound: DIRECTED_ANCHOR_TRIES,
+        }, 0);
+        expect(out.directives[0].outcome).toBe(ATTEMPT.KEPT);
+        expect(out.keptTemplates).toHaveLength(base.keptTemplates.length + 1);
+        expect(displayStaging(out).pins).toContain('sound');
+        // ⛔ and the pins were NOT there before the directive.
+        expect(displayStaging(base).pins).not.toContain('sound');
+    });
+
+    it('⛔ `summary` STAYS THE LADDER\'S — a directive is not a rung', () => {
+        const base = generateStep({ ...SUBJECT, step: 2 });
+        const out = applyDirective(base, DIRECTIVE, 0);
+        expect(out.summary).toBe(base.summary);
+        expect(out.summary.keptCount).toBe(2);
+        expect(out.directives).toHaveLength(1);
+    });
+
+    it('the directive\'s rows are labelled d<n>a<k> and carry the pane\'s row shape', () => {
+        const base = generateStep(SUBJECT);
+        const out = applyDirective(base, DIRECTIVE, 0);
+        const rows = generationRows(out.trace).filter((r) => r.directive === 1);
+        expect(rows.length).toBeGreaterThan(1);
+        expect(rows[0].label).toBe('d1a1');
+        expect(rows.map((r) => r.anchorTry)).toEqual(rows.map((_, i) => i + 1));
+        // ⛔ exactly ONE of them says KEPT.
+        expect(rows.filter((r) => r.outcome === 'KEPT')).toHaveLength(1);
+        /**
+         * ⛓ AND A LADDER ROW IS UNTOUCHED BY THE NEW LABEL BRANCH. ⚠ Read off a
+         * state that HAS ladder rows: a step-0 state's trace is empty, so
+         * asserting about `[0]` there would have been a claim about nothing.
+         */
+        const ladder = generationRows(generateStep({ ...SUBJECT, step: 1 }).trace);
+        expect(ladder[0].label).toBe('(skeleton)');
+        expect(ladder[0].directive).toBeNull();
+        expect(ladder.some((r) => /^\d+\.\d+a\d+$/.test(r.label))).toBe(true);
+    });
+
+    it('⛓ the IDENTITY LINE says ladder-to-step-k plus N directed attempts', () => {
+        const base = generateStep({ ...SUBJECT, step: 1 });
+        expect(describeState(base)).not.toMatch(/directed attempt/);
+        const out = applyDirective(base, DIRECTIVE, 0);
+        expect(describeState(out)).toMatch(/step 1, then 1 directed attempt\(s\)/);
+    });
+
+    it('states its COST before the press, and the ceiling is the bound plus the display solve',
+        () => {
+            const cost = directedCost(DIRECTED_ANCHOR_TRIES, 139);
+            expect(cost.solves).toBe(DIRECTED_ANCHOR_TRIES + 1);
+            expect(cost.worstCaseTotalMs).toBe((DIRECTED_ANCHOR_TRIES + 1) * 139);
+            expect(cost.why).toMatch(/CEILING/);
+        });
+});
+
+describe('⛓⛓⛓ REPRODUCTION — a copied link rebuilds the whole construction', () => {
+    it('the ladder plus its directives reproduces byte for byte, in one path', () => {
+        const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
+        const replayed = generateWithDirectives({ ...SUBJECT, directed: [DIRECTIVE] });
+        expect(replayed.record).toEqual(pressed.record);
+        expect(replayed.trace).toEqual(pressed.trace);
+        expect(replayed.directives).toEqual(pressed.directives);
+    });
+
+    it('⛓⛓ THROUGH THE URL: write it, read it back, regenerate — the same level', () => {
+        const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
+        const search = writeGenerateParams('', {
+            seed: pressed.seed,
+            biome: pressed.biome,
+            bounds: pressed.bounds,
+            step: pressed.step,
+            directives: pressed.directives,
+        });
+        const read = readGenerateParams(`?${search}`);
+        const rebuilt = generateWithDirectives({
+            seed: read.seed,
+            biome: read.biome,
+            // ⛓ THE ONE READER of the `run` + `count` encoding — see
+            // `stepFromParams`. Re-deriving it here is what reddened this case
+            // the first time, by reproducing a step-6 ladder from a skeleton.
+            step: stepFromParams(read),
+            bounds: read.bounds,
+            budget: read.budget,
+            roster: read.roster,
+            directed: read.directed,
+        });
+        expect(rebuilt.record).toEqual(pressed.record);
+        expect(rebuilt.directives.map((d) => d.at)).toEqual(pressed.directives.map((d) => d.at));
+    });
+
+    it('⛔ A URL THAT DROPPED THE PARAMS BUILDS A DIFFERENT LEVEL — which is why '
+        + 'the reconstruction REFUSES instead of defaulting', () => {
+        /**
+         * ⛓ The structural-refusal law carried from slice 2 §9.5, now at the
+         * directive: `formatDirectives` refuses a directive missing a value,
+         * and the level the DEFAULT instance would have produced is measurably
+         * different — so this case proves the refusal is worth having rather
+         * than merely present.
+         */
+        const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
+        const defaulted = applyDirective(generateStep(SUBJECT), {
+            ...DIRECTIVE, params: { ori: 'h', gap: 4 },
+        }, 0);
+        expect(defaulted.record).not.toEqual(pressed.record);
+    });
+
+    it('⛓⛓ TWO STREAMS: a DRAWN parameter replays identically from its recorded value', () => {
+        /**
+         * ⛔ THE DEFECT THIS PREVENTS, and it is the reason the parameter draw
+         * and the anchor walk are separate streams. A directive may leave a
+         * parameter to be DRAWN and then RECORDS the drawn value; the replay
+         * passes that value as an override and spends NO draw where the
+         * original spent one. With ONE stream the anchor shuffle would start
+         * from a different position and the replay would walk a DIFFERENT
+         * anchor list — a copied link reproducing a different level with
+         * nothing on the page able to say why.
+         */
+        const base = generateStep(SUBJECT);
+        // `gap` is left to be DRAWN; `ori` is named.
+        const drawn = applyDirective(base, { ...DIRECTIVE, params: { ori: 'v' } }, 0);
+        const rec = drawn.directives[0];
+        expect(Object.keys(rec.params).sort()).toEqual(['gap', 'ori']);
+        // …and replaying the RECORDED values reproduces it byte for byte.
+        const replayed = applyDirective(base, { ...DIRECTIVE, params: rec.params }, 0);
+        expect(replayed.record).toEqual(drawn.record);
+        expect(replayed.directives[0].at).toEqual(rec.at);
+        expect(replayed.trace).toEqual(drawn.trace);
+    });
+
+    it('⚠ two IDENTICAL directives are two different questions (the index is in the mix)',
+        () => {
+            const base = generateStep(SUBJECT);
+            const one = applyDirective(base, DIRECTIVE, 0);
+            const two = applyDirective(one, DIRECTIVE, 1);
+            expect(two.directives).toHaveLength(2);
+            // ⛔ The second walks its OWN anchor order, so it does not simply
+            // meet the first's placement and give up.
+            expect(two.directives[1].at).not.toEqual(two.directives[0].at);
+        });
+});
+
+describe('⛓ the payload carries the construction, and an OLD one does not falsely diverge',
+    () => {
+        const stateFor = () => applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
+
+        it('`directives` is compared like the other identity fields', () => {
+            const s = stateFor();
+            const payload = {
+                seed: s.seed, biome: s.biome, roster: s.roster, directives: s.directives,
+                skeleton: s.skeleton, level: s.record, trace: s.trace,
+            };
+            expect(agreementWithPayload(payload, s).agrees).toBe(true);
+            const without = { ...payload, directives: [] };
+            const check = agreementWithPayload(without, s);
+            expect(check.agrees).toBe(false);
+            expect(check.differences).toContain('directives');
+        });
+
+        it('⚠ an OLD payload — no `directives`, no `skeleton` — still agrees on a ladder run',
+            () => {
+                const ladder = generateStep({ ...SUBJECT, step: 1 });
+                const old = {
+                    seed: ladder.seed, biome: ladder.biome, roster: ladder.roster,
+                    level: ladder.record, trace: ladder.trace,
+                };
+                const check = agreementWithPayload(old, ladder);
+                expect(check.differences).not.toContain('directives');
+                expect(check.differences).not.toContain('skeleton');
+                expect(check.agrees).toBe(true);
+            });
+
+        it('⚖ ruling 9(b): the SKELETON block is reserved, named, and compared', () => {
+            const s = stateFor();
+            expect(s.skeleton).toEqual(DEFAULT_SKELETON);
+            expect(DEFAULT_SKELETON.kind).toBe('empty-bordered');
+            const other = {
+                seed: s.seed, biome: s.biome, roster: s.roster, directives: s.directives,
+                skeleton: { kind: 'all-wall-carved' }, level: s.record, trace: s.trace,
+            };
+            expect(agreementWithPayload(other, s).differences).toContain('skeleton');
+        });
+    });
+
+describe('⛓ `stepFromParams` — ONE reader of the `run` + `count` encoding', () => {
+    it('a skeleton link names step 0 even though `count` carries the form\'s target', () => {
+        const search = writeGenerateParams('', {
+            seed: 6, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+        });
+        const read = readGenerateParams(`?${search}`);
+        expect(read.bounds.obstacleTarget).toBe(DEFAULT_BOUNDS.obstacleTarget);
+        expect(read.run).toBe(false);
+        // ⛔ …and the step it names is 0, NOT the target.
+        expect(stepFromParams(read)).toBe(0);
+    });
+
+    it('a run link names the step it reached', () => {
+        const search = writeGenerateParams('', {
+            seed: 6, biome: 'pre-sword',
+            bounds: { ...DEFAULT_BOUNDS, obstacleTarget: 2 }, step: 2,
+        });
+        expect(stepFromParams(readGenerateParams(`?${search}`))).toBe(2);
     });
 });

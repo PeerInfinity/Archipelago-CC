@@ -53,6 +53,8 @@
  *   node scripts/procgen/generate-seedling-level.mjs --cost --count=8
  *   node scripts/procgen/generate-seedling-level.mjs --seed=3 --families=water,weigh
  *   node scripts/procgen/generate-seedling-level.mjs --seed=3 --templates=pit-patch
+ *   node scripts/procgen/generate-seedling-level.mjs --seed=6 --count=0 \
+ *       --directed='wall-gap-block(ori=v,gap=1)@12d'
  */
 
 import { createHash } from 'node:crypto';
@@ -66,7 +68,10 @@ const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', 
 const { ATTEMPT, STOP, costModel } = await M('levelGenerator.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
-const { GENERATE_BIOMES } = await M('watchGenerate.js');
+const {
+    DEFAULT_SKELETON, GENERATE_BIOMES, describeKeptKind, directedCost, generateWithDirectives,
+    paletteFor, parseDirectives,
+} = await M('watchGenerate.js');
 const { restrictPalette } = await M('procgenPalette.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -125,6 +130,17 @@ if (FAMILIES && TEMPLATES) {
 }
 const ROSTER = FAMILIES ? { axis: 'families', names: FAMILIES }
     : (TEMPLATES ? { axis: 'templates', names: TEMPLATES } : null);
+/**
+ * ⛓⛓ VERB 2 — **THE DIRECTED ATTEMPT** (GENERATE-mode UI slice 5). The same
+ * grammar `?directed=` uses, parsed by the SAME function, so the CLI and the
+ * page cannot disagree about what a construction is.
+ *
+ * ⛔ IT IS HERE FOR THE SAME REASON `--families=` IS: the payload is compared
+ * across the two runtimes (`?gen=`), and a field only ONE producer can emit is
+ * a field that check can never exercise. ⚠ A run with no `--directed=` takes
+ * the pre-slice code path untouched, so no existing invocation moves.
+ */
+const DIRECTED_ARG = arg('directed', '');
 /**
  * ⛔ `--budget-ms` IS GONE and is refused by name below rather than ignored —
  * the wall clock it set no longer exists (`procgenOracle`'s DEFAULT_BUDGET
@@ -192,10 +208,20 @@ if (has('cost')) {
     process.exit(0);
 }
 
+const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, paletteFor(BIOME));
+
 const t0 = Date.now();
 let out;
 try {
-    out = generateSeedlingLevel({ seed: SEED, palette: PALETTE, bounds, budget: BUDGET });
+    out = DIRECTED
+        // ⛓ ONE construction path, shared with the page — `generateWithDirectives`
+        // runs the ladder to the target and then applies the directives in order,
+        // with the same per-directive stream derivation the page uses.
+        ? generateWithDirectives({
+            seed: SEED, biome: BIOME, step: bounds.obstacleTarget, bounds, budget: BUDGET,
+            roster: ROSTER, directed: DIRECTED,
+        })
+        : generateSeedlingLevel({ seed: SEED, palette: PALETTE, bounds, budget: BUDGET });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — a distinct code, because
@@ -236,7 +262,23 @@ const payload = {
      * real cause is the question, not the generator.
      */
     roster: PALETTE.roster ?? null,
-    budget: out.summary.budget,
+    /**
+     * ⛓ SLICE 5: THE DIRECTIVES, in order — ⚖ §3.5's *"the level becomes ladder
+     * + directives"*. An identity field like the roster, compared by
+     * `agreementWithPayload` with `?? []` on both sides so a payload written
+     * before this field existed does not falsely diverge.
+     */
+    directives: out.directives ?? [],
+    /** ⚖ Ruling 9(b)'s reserved block, so the constructive mode arrives additively. */
+    skeleton: out.skeleton ?? DEFAULT_SKELETON,
+    /**
+     * ⚠ THE BUDGET COMES FROM WHICHEVER OBJECT RAN. A `--count=0 --directed=…`
+     * construction has NO ladder summary — nothing was drawn — but the
+     * directives still ran under a budget, and that budget is on the state.
+     * Printing `null` there would be a payload that could not say what its own
+     * solves were bounded by.
+     */
+    budget: out.summary?.budget ?? out.budget,
     summary: out.summary,
     level: out.record,
     trace: out.trace,
@@ -249,6 +291,17 @@ if (has('json')) {
     say(`# generated Seedling level — seed ${SEED}, biome ${BIOME}`);
     say('');
     say(`room:   ${out.record.width}x${out.record.height} tiles, level ${out.record.level}`);
+    /**
+     * ⛓ SLICE 5: A CONSTRUCTION MAY HAVE NO LADDER AT ALL (`--count=0
+     * --directed=…` places onto the bare skeleton), and then there is no
+     * summary to print. ⛔ It says so BY NAME rather than printing an empty
+     * section: "no ladder" and "a ladder that kept nothing" are different
+     * facts, and the directive table below is where this run's content is.
+     */
+    if (!s) {
+        say('ladder: NONE — obstacleTarget=0, so nothing was drawn. This level is the '
+            + 'SKELETON plus its directives (below).');
+    } else {
     say(`start:  (${s.startCell.tx},${s.startCell.ty})   goal: ${s.goalClass} at cell `
         + `(${s.goalCell.tx},${s.goalCell.ty}) = OEL (${s.goalOel.x},${s.goalOel.y})`);
     say(`items:  ${JSON.stringify(s.items)}   pins: [${s.pins.join(', ')}]`);
@@ -291,6 +344,26 @@ if (has('json')) {
     }
     say('');
     say(`certification: ${JSON.stringify(s.finalCertification)}`);
+    }
+    /**
+     * ⛓⛓ THE DIRECTIVES, EACH WITH **WHICH KIND OF KEEP IT WAS** — ⚖ the
+     * user's ruling: the readout says whether the walk DISCHARGED the
+     * template's own verb or settled for a solve, and a template with no verb
+     * to discharge says THAT rather than reporting a shortfall that could not
+     * exist.
+     */
+    if (payload.directives.length) {
+        say('');
+        say('## the directives, in order');
+        for (const [i, d] of payload.directives.entries()) {
+            say(`  d${i + 1} ${d.instance.padEnd(30)} `
+                + `${d.at ? `@(${d.at.tx},${d.at.ty})`.padEnd(9) : ''.padEnd(9)} `
+                + `${d.outcome.padEnd(18)} ${describeKeptKind(d)}`);
+            say(`      walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s), `
+                + `bound ${d.bound}, policy ${d.keepPolicy}`);
+        }
+        say('');
+    }
     say(`level sha: ${sha(out.record)}   trace sha: ${sha(out.trace)}`);
     say('');
     // ⛔ THE BIOME'S OWN exclusions, not the pre-sword list under another
@@ -316,5 +389,17 @@ if (has('out') || arg('out', '') !== '') {
     note(`[stderr] wrote ${path}`);
 }
 
+/**
+ * ⛓ SLICE 5: THE CEILING IS THE LADDER'S **PLUS** ONE PER DIRECTIVE, and it is
+ * summed from the two cost models rather than re-derived — `costModel` prices
+ * the loop and `directedCost` prices one directed attempt, and a third
+ * arithmetic here would be a third answer to "what did this cost".
+ *
+ * ⚠ `obstacleTarget: 0` is a real construction (a directive on the bare
+ * skeleton) and the LOOP refuses that bound by name, so the ladder term is
+ * simply absent — it is not "zero cost measured", it is no ladder.
+ */
+const ceilingMs = (bounds.obstacleTarget > 0 ? costModel(bounds, 139).worstCaseTotalMs : 0)
+    + (DIRECTED ?? []).reduce((n, d) => n + directedCost(d.bound, 139).worstCaseTotalMs, 0);
 note(`[timing, stderr only] ${elapsedMs} ms for ${out.trace.length} solve(s); `
-    + `cost model said <= ${costModel(bounds, 139).worstCaseTotalMs} ms`);
+    + `cost model said <= ${ceilingMs} ms`);
