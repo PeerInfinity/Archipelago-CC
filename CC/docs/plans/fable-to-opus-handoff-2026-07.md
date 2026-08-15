@@ -3068,6 +3068,42 @@ change**, or the next reader reads it as a regression.
 
 </details>
 
+## 5e. Seedling GENERATE-mode UI — the catalogue + parameterized templates (arc opened 2026-08-14, post-dates this doc)
+
+**Status: DESIGN SETTLED (Fable session 2026-08-14); kickoff ready for Opus.**
+Plan doc *(NewDocs)*: `seedling-generate-ui-kickoff.md` — §1 the user's
+rulings, §3 the design, §4 the six slices. Memory:
+`project_seedling_generate_ui`.
+
+One paragraph: watch.html's GENERATE arm grows a **catalogue of templates by
+family** with two verbs — RESTRICT (sub-roster runs) and the **directed
+attempt** ("make the generator attempt that specific thing") — and the palette
+migrates from frozen rows to **parameterized templates**
+(`instantiate(rng, overrides) → concrete row`; frozen-row shape is the output
+contract; declared scalar schemas are the UI-facing subset). Plus a
+solvability-directed **anchor search** (bounded per-candidate anchor walk; the
+legality half already exists as shuffle-then-first), the **URL round-trip
+repair** (the generate form edits never write back — a live two-spellings
+defect), and **click-to-anchor** template placement. ⚖ Rulings: seed→level
+pairs may expire (early draft; batch re-records, gate subjects re-measured);
+manual editing split at the TILE boundary (free tile/object editing = its own
+later arc); light domain sweeps (the SPINNER_OFFSET table pattern); features
+any-size-and-shape WITHIN the single-screen room.
+
+Slices (all Opus): 1 URL round trip · 2 the template seam + wave-1 params
+(orientation, wall length, pool/pit size, plain-door gap; weigh/kill lane
+offsets = wave 2 with re-sweep) · 3 anchor search · 4 catalogue + RESTRICT ·
+5 the directed attempt (directive-list identity in payload + URL) · 6
+click-to-anchor.
+
+**Sequenced BEFORE the constructive-mode arc** (PoC kickoff §1.15/§17.6:
+all-WALL carve + `reach-tile` goal + rule-directed pairing — everything this
+arc builds is pass-2 machinery and survives that mode switch unchanged; this
+arc keeps the skeleton a replaceable input and reserves a `skeleton` block in
+the payload/URL identity). ⛔ Not in scope: the CHAIN (bent push paths —
+solver-gated, PoC §17.7 "ask before building"), tile editing, multi-screen
+rooms, `TIME_RUNG.maxExpansions` (parked for R9).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
@@ -3095,6 +3131,7 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
+seedling generate-UI slices 1–6 (§5e, kickoff ready) ──► constructive-mode arc (PoC §1.15 + rule-directed §1.10b) ; R9 independent of both
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)
