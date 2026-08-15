@@ -380,41 +380,82 @@ describe('the palette itself is well formed', () => {
             });
 
         /**
-         * ⚠ THE KILL-LOCK FAMILY IS **NOT** ON THE SLOT, AND THAT IS MEASURED
-         * RATHER THAN OVERLOOKED. Its `tag: '1'` is READ (`Lock.check()`
-         * despawns only when `tSet < 0`), so two placements sharing it would be
-         * the same defect the weigh family's slot exists to end.
-         *
-         * ⛔⛔⛔ **AND THE REASON IT WAS LEFT LATENT HAS EXPIRED — MEASURED AT
-         * SLICE 2, THE DAY THIS COMMENT PREDICTED.** It used to read: *"the
-         * post-sword sweep (seeds 1..24, target 6) keeps a kill template in ONE
-         * seed and never two, so the collision is LATENT… the day a second one
-         * can be kept, someone has to come back here."* Re-scanned under the
-         * parameterized roster (post-sword, seeds 1..40, target 6 — the pool is
-         * 12/13/14/15/25): **seed 12 keeps TWO**, and both locks carry the same
-         * literal tag 1, so one spinner's death now writes the persistence flag
-         * both locks read.
-         *
-         * ⚖ NOT FIXED HERE, AND DELIBERATELY SO: the right value is not another
-         * literal (`'0'` is the goal's), so it wants this same per-placement
-         * slot on a field whose blast radius — the goal, the scratch layer,
-         * `botDriverV1`'s v9 `at` declarations — was reported to the user with
-         * evidence on 2026-08-13 and has still not been measured. What slice 2
-         * owed was to notice that the LATENCY argument died, and this is that
-         * notice. The assertions below are unchanged: they still pin the state
-         * of affairs, and now the comment says the collision is REACHABLE.
+         * ⛓ …AND POST-SWORD IT IS THE WEIGH FAMILY **PLUS THE KILL FAMILY**
+         * (slice 3 track C). Built FROM the roster so a third tag-bearing
+         * family arriving without a case here is a MISSING test rather than an
+         * uncounted one (trap 199).
          */
-        it('⚠ the kill-lock family keeps its LITERAL tag 1 — now REACHABLE, and pinned', () => {
+        it('post-sword, the kill family is on the slot too — the literal is GONE', () => {
+            const carriers = enumerateInstantiations(POST_SWORD_PALETTE)
+                .filter((t) => t.tags !== undefined);
+            expect(carriers.map((t) => t.instance)).toEqual([
+                'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
+                'wall-gap-spinner-killlock(ori=h)', 'wall-gap-spinner-killlock(ori=v)',
+            ]);
+            for (const t of carriers) expect(t.tags).toBe(1);
+        });
+
+        /**
+         * ⛓⛓⛓ **THE COLLISION THAT WAS PINNED HERE IS FIXED** — GENERATE-mode
+         * UI slice 3, track C, and this case is its replacement rather than its
+         * relaxation.
+         *
+         * THE HISTORY IN THREE LINES. Slice 4e shipped the kill lock on a
+         * LITERAL `tag: '1'` with the argument that only one could ever be
+         * kept, so the collision was LATENT. Slice 2 measured that the argument
+         * had died — post-sword **seed 12 at target 6 keeps TWO**, both on the
+         * literal — and escalated rather than converting, because the field had
+         * been ⚖ deferred by the user. Slice 3 took the blast-radius
+         * measurement (`scripts/procgen/measure-seedling-killlock-tag.mjs`),
+         * the user's ⚖ conditional approval applied, and the literal is gone.
+         *
+         * ⛓ WHAT THE MEASUREMENT FOUND, because it is not what the escalation
+         * assumed: lock 2 does NOT open on spinner 1's death — a `tset == -1`
+         * lock opens on `totalEnemies()` reaching ZERO, a GLOBAL condition, so
+         * both open on the LAST death in one event. The collision's real
+         * product was a DUPLICATE persistence write (two `scratchClears` rows
+         * naming one slot), which the v9 parser would refuse by name. The
+         * driven case below is the one that would have caught it.
+         */
+        it('⛓ the kill lock is on the PER-PLACEMENT slot — no literal, no shared flag', () => {
             const killLocks = enumerateInstantiations(POST_SWORD_PALETTE)
                 .filter((t) => t.family === 'kill');
             expect(killLocks).toHaveLength(2);
             for (const t of killLocks) {
-                expect(t.tags).toBeUndefined();
+                expect(t.tags).toBe(1);
                 const lock = t.entities.find((e) => e.type === 'lock');
-                expect(lock.attrs.tag).toBe('1');
-                // ⛔ and it still differs from the goal's, which is the law the
-                // family discharged by construction.
-                expect(lock.attrs.tag).not.toBe(SEEDLING_DEFAULTS.goalTag);
+                expect(lock.attrs.tag).toBe(PLACEMENT_TAG);
+                // ⛓ the spinner keeps its literal `-1` — the game's own
+                // spelling of UNTAGGED, which `assertTagSlot` allows on purpose.
+                expect(t.entities.find((e) => e.type === 'spinner').attrs.tag).toBe('-1');
+            }
+        });
+
+        /**
+         * ⛓⛓ THE DRIVEN HALF, and it is the half that can FAIL. The structural
+         * case above only says the sentinel is in the table; this one places
+         * TWO kill locks in ONE room and reads the tags off the RECORD.
+         *
+         * ⚠ THE SUBJECT IS THE MEASURED COLLISION ITSELF — post-sword seed 12
+         * at target 6, the level slice 2 found keeping two. A seed that keeps
+         * ONE cannot distinguish the two builds at all: `placementTagId`
+         * allocates the LOWEST free slot and the goal always holds 0, so a
+         * single kill lock is allocated **1** — exactly the value the literal
+         * had (trap 235's shape, one field over).
+         */
+        it('⛓ DRIVEN: seed 12 keeps TWO kill locks and they take DISTINCT tags', () => {
+            const out = generateSeedlingLevel({
+                seed: 12, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            });
+            // the subject's own property, asserted BEFORE the claim about it
+            expect(out.summary.kept.filter((k) => k.family === 'kill')).toHaveLength(2);
+            const locks = out.record.entities.filter((e) => e.type === 'lock');
+            expect(locks).toHaveLength(2);
+            const tags = locks.map((l) => l.attrs.tag);
+            expect(new Set(tags).size).toBe(2);
+            for (const t of tags) {
+                expect(t).not.toBe(SEEDLING_DEFAULTS.goalTag);
+                expect(Number.parseInt(t, 10)).toBeGreaterThanOrEqual(0);
             }
         });
     });
@@ -1223,7 +1264,7 @@ describe('the water template obliges the `sound` pin, by argument', () => {
         // (`instantiateKept` over the kept RECORDS), so this compares the
         // retained rows against the one reconstruction.
         expect(perSolve[perSolve.length - 1]).toEqual([...shipped.summary.pins].sort());
-        });
+    });
 });
 
 describe('the exclusions are a list with measurements in it', () => {

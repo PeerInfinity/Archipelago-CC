@@ -1210,10 +1210,9 @@ const SPINNER_OFFSET = 6;
  *     declaration a generated level has none of. Discharged by 4b's scratch
  *     persistence layer: the model is the one writer of a slot no tape owns.
  *  2. **THE TAG COLLISION** (4b §13.7.2) — *a clear is a FLAG*, so a lock on
- *     the goal's own tag removes the GOAL. Discharged BY CONSTRUCTION here: the
- *     lock's tag is `'1'` and `SEEDLING_DEFAULTS.goalTag` is `'0'`, and
- *     `procgenPostSword.test.js` asserts the two are different rather than
- *     trusting the literals.
+ *     the goal's own tag removes the GOAL. Discharged first by a LITERAL
+ *     (`tag: '1'` against `SEEDLING_DEFAULTS.goalTag` `'0'`), and since
+ *     GENERATE-mode UI slice 3 by the PER-PLACEMENT SLOT — see the block below.
  *  3. **THE THROW** (4b §13.7.iv) — the hammer-transit refusal ABORTED the run,
  *     and *a family the loop cannot REJECT is not one the palette can OFFER*.
  *     Discharged TWICE OVER at slice 4e: the countable clock retired 19 of the
@@ -1299,6 +1298,65 @@ const SPINNER_OFFSET = 6;
  * vertical wall in a room whose start is the NW corner puts the spinner's lane
  * across the approach far more often.
  */
+/**
+ * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — **THE LITERAL TAG BECAME THE
+ * PER-PLACEMENT SLOT**, and every sentence below is a measurement rather than
+ * an argument (`scripts/procgen/measure-seedling-killlock-tag.mjs`).
+ *
+ * ⚖ THE HISTORY, because the field was ruled on twice. The literal `tag: '1'`
+ * was defensible while only one kill lock could ever be kept: it is not the
+ * goal's `'0'`, which is the one law this family had to satisfy. Slice 2
+ * measured that the LATENCY argument had died — under the parameterized roster
+ * **post-sword seed 12 at target 6 keeps TWO**, both on the literal — and the
+ * conversion was ⚖ DEFERRED by the user (2026-08-13) pending a blast-radius
+ * measurement, then ⚖ APPROVED CONDITIONALLY (2026-08-14): convert if the
+ * measurement is clean, escalate if it is not. It was clean; this is it.
+ *
+ * ── WHAT THE COLLISION ACTUALLY DID, DRIVEN (seed 12, target 6) ───────
+ *
+ *  · **The second lock does NOT open on the first spinner's death.** A
+ *    `tset == -1` lock opens on `totalEnemies()` reaching ZERO, which is a
+ *    GLOBAL condition — so with two spinners in the room the first death opens
+ *    nothing (measured as an ABSENCE: no scratch row names that body) and BOTH
+ *    locks open on the last, in ONE event *(`why: "2 kill lock(s) OPEN:
+ *    totalEnemies() went 2 -> 0"`)*. ⇒ neither spinner is an obstacle that
+ *    obstructs nothing, and the walk really kills both.
+ *  · **What it DID produce is a duplicate persistence write**: two
+ *    `scratchClears` rows, same `level`, same `tag`, same `at`, same opener.
+ *    Idempotent, so the RUN is unaffected — but `levelRun`'s own
+ *    `assertScratchSlotIsFree` docblock says *"two writers of one persistence
+ *    slot is the exact thing it must not become"*, and that guard is scoped to
+ *    DECLARED-vs-scratch and cannot see scratch-vs-scratch. ⛓ And the v9 parser
+ *    WOULD have refused the pair by name (*"persistence[1] duplicates level 3
+ *    tag 1"*) — the model was emitting a ledger the tape format calls a
+ *    bookkeeping error.
+ *  · **No v9 `at` row can carry it anyway**: `tapeFormat` bounds
+ *    `persistence[].level` to 0..115 and a generated level is 900, so the fold
+ *    emits nothing (driven, both refusals quoted in the script).
+ *  · **The goal's flag was never touched** — tag 0 is held by the
+ *    `torchpickup` alone and no scratch clear wrote it.
+ *
+ * ── ⛔ AND THE FAMILY IS BROADER THAN THE TWO-KILL CASE ───────────────
+ *
+ * A weigh lock takes its tag from `placementTagId`, which reads the RECORD —
+ * so a weigh lock placed BEFORE a kill lock would be allocated tag **1** and
+ * the kill lock's literal would land on top of it. Measured over post-sword
+ * seeds 1..40 at target 6: 5 levels hold a kill lock, 13 hold a weigh lock,
+ * **2 hold both (seeds 15 and 25) — and in both the KILL landed first**, so
+ * the allocator dodged the literal and the cross-family collision never
+ * appeared in the sample. It was draw order, not a law. That is the strongest
+ * argument for the slot: the literal's safety depended on which template the
+ * stream happened to pick first.
+ *
+ * ── WHAT MOVED WHEN IT LANDED, MEASURED ───────────────────────────────
+ *
+ * `placementTagId` allocates the LOWEST FREE slot and the goal's 0 is always
+ * taken, so a level with ONE tag-bearing template gets **1** — the same value
+ * the literal had. ⇒ only levels holding TWO of them move, and only in the
+ * `tag` attribute. ⛔ No rng draw changes: the allocator reads the record, not
+ * the stream, and the trace's `drawsBefore`/`rngStateBefore` columns are
+ * unchanged (compared run-to-run rather than argued).
+ */
 const KILL_LOCK_TEMPLATES = Object.freeze([
     defineTemplate({
         name: 'wall-gap-spinner-killlock',
@@ -1326,6 +1384,12 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
             const along = alongOf(ori);
             return {
                 door: ori,
+                /**
+                 * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — THE LITERAL TAG IS
+                 * GONE. See the `tags: 1` line below and this template's
+                 * docblock for the measurement that bought it.
+                 */
+                tags: 1,
                 footprint: Object.freeze([...cells, at(ori, SPINNER_OFFSET, -1)]),
                 clearance: Object.freeze([]),
                 terrain: paint(cells.filter((c) => along(c) !== GAP_OFFSET), 'wall'),
@@ -1334,9 +1398,10 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
                         ...at(ori, GAP_OFFSET, 0),
                         type: 'lock',
                         // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own
-                        // spelling), and `tag: '1'` is the tag law: never the
-                        // goal's.
-                        attrs: Object.freeze({ tset: '-1', tag: '1' }),
+                        // spelling). ⛓ The tag was the LITERAL `'1'` until
+                        // slice 3 track C; it is now the per-placement slot,
+                        // for the same reason the weigh lock's is.
+                        attrs: Object.freeze({ tset: '-1', tag: PLACEMENT_TAG }),
                     }),
                     Object.freeze({
                         ...at(ori, SPINNER_OFFSET, -1),
