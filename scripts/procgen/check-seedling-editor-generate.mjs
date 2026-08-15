@@ -86,10 +86,13 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
+// ⛓ The loop core left `seedlingDemo/` in CONSTRUCTIVE-MODE slice 2 (the maze
+// binds to the same file); the Seedling bindings did not.
+const CORE = (p) => import(join(REPO, 'frontend/modules/procgenCore', p));
 const {
     DIRECTED_ANCHOR_TRIES, generateStep, generateWithDirectives, paletteFor,
 } = await M('watchGenerate.js');
-const { KEEP_POLICY } = await M('levelGenerator.js');
+const { KEEP_POLICY } = await CORE('levelGenerator.js');
 // ⛓ SLICE 6: a pure READER of a record, used to say WHERE the clicked
 // template's footprint actually landed. Both records it is asked about came out
 // of the BROWSER, so this is an independent read of the browser's own answer.

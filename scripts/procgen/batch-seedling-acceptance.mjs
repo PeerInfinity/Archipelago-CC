@@ -96,8 +96,11 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(join(HERE, '..', '..'));
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
+// ⛓ The loop core left `seedlingDemo/` in CONSTRUCTIVE-MODE slice 2 (the maze
+// binds to the same file); the Seedling bindings did not.
+const CORE = (p) => import(join(REPO, 'frontend/modules/procgenCore', p));
 
-const { DEFAULT_BOUNDS, STOP } = await M('levelGenerator.js');
+const { DEFAULT_BOUNDS, STOP } = await CORE('levelGenerator.js');
 const { DEFAULT_BUDGET, bootStaging, solve } = await M('procgenOracle.js');
 const { GENERATE_BIOMES, generateStep, keptTemplatesOf } = await M('watchGenerate.js');
 // ⛓ SLICE 5: ⚖ §12.1's discharge test lives in the palette now — this file

@@ -30,7 +30,7 @@ import {
     seedlingModel, seedlingOracle,
 } from './procgenSeedling.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
-import { generateLevel } from './levelGenerator.js';
+import { generateLevel } from '../procgenCore/levelGenerator.js';
 import { rngFor } from './procgenRng.js';
 
 const model = () => seedlingModel({ seed: 1 });

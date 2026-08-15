@@ -77,6 +77,7 @@
  * ⛔ NO NODE IMPORTS (see `atlasSource.js`).
  */
 
+import { VERDICT } from '../procgenCore/levelGenerator.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
@@ -93,12 +94,17 @@ export class ProcgenOracleError extends Error {
 
 const fail = (message) => { throw new ProcgenOracleError(message); };
 
-/** The three classes, and there are exactly three (⚖ kickoff §3.1). */
-export const VERDICT = Object.freeze({
-    SOLVED: 'SOLVED',
-    REFUSED: 'REFUSED',
-    BUDGET_EXHAUSTED: 'BUDGET_EXHAUSTED',
-});
+/**
+ * The three classes, and there are exactly three (⚖ kickoff §3.1).
+ *
+ * ⛓ DECLARED IN `procgenCore/levelGenerator.js` SINCE 2026-08-15 and
+ * re-exported here under the name every Seedling reader already uses
+ * (CONSTRUCTIVE-MODE slice 2). The loop compares against it and a second
+ * oracle — the maze's — has to return the same word without importing this
+ * file; one declaration is the only shape in which those two facts hold at
+ * once. ⛔ The strings did not change, so nothing downstream moved.
+ */
+export { VERDICT };
 
 /**
  * THE NAMED BUDGET VALUES, and where each number comes from.

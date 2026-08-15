@@ -1,5 +1,5 @@
 /**
- * seedlingDemo/levelGenerator — THE GENERATOR CORE: Cloudberry's loop,
+ * procgenCore/levelGenerator — THE GENERATOR CORE: Cloudberry's loop,
  * inverted, with the solver as its oracle.
  *
  * Seedling PROCGEN PoC arc, slice 2 (kickoff §3.1 the loop, §3.2 the seam,
@@ -7,17 +7,32 @@
  * from a room that solves, add one template at a time, re-solve, keep it if
  * the room still completes and throw the candidate away if it does not.**
  *
+ * ── ⛓⛓⛓ IT LIVES OUTSIDE `seedlingDemo/` SINCE 2026-08-15 ────────────
+ *
+ * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
+ * kickoff.md` §3.2), and the move is the PoC arc's own §1.7 provision being
+ * spent: *"when a second substrate exists and can argue about the interface,
+ * the core moves and the bindings stay."* The second substrate is the maze
+ * (`mazeRoom/procgenMaze.js`), so the loop now sits in a neutral directory
+ * that neither substrate owns — ⚖ ruling 4: the outer repo for now, promoted
+ * to `shared/` when it settles. The Seedling bindings did not move and the
+ * levels this loop produces did not move: the move was gated on the battery,
+ * the acceptance batch, the generated-set round trip, the browser row and the
+ * full `seedlingDemo` suite all coming back byte-identical.
+ *
  * ── ⛔ THIS FILE IMPORTS NOTHING ──────────────────────────────────────
  *
- * Not from `seedlingDemo/`, not from anywhere. ⚖ Kickoff §3.2: the level
- * model, the oracle and the palette are INJECTED, and the Seedling bindings
- * (`procgenSeedling.js`) are where the imports live. ⚖ §1.7 is the reason and
- * it is a bounded one: the user's forward plan is a generator for a different
- * tile-based platformer, so this loop is written against a named seam with
- * ONE implementation — no framework on a sample of one, and no second
- * implementation invented here to prove the seam is real. The proof that the
- * seam is real is that `levelGenerator.test.js` drives this loop with a fake
- * model, a fake oracle and a fake palette that know nothing about Seedling.
+ * Not from `seedlingDemo/`, not from `mazeRoom/`, not from anywhere. ⚖ Kickoff
+ * §3.2: the level model, the oracle and the palette are INJECTED, and the
+ * bindings (`seedlingDemo/procgenSeedling.js`, `mazeRoom/procgenMaze.js`) are
+ * where the imports live. ⚖ §1.7 is the reason and it was a bounded one: the
+ * loop was written against a named seam with ONE implementation — no framework
+ * on a sample of one — and the second implementation was not invented here to
+ * prove the seam is real. It arrived when a substrate needed it. The proof that
+ * the seam is real is now doubled: `levelGenerator.test.js` drives this loop
+ * with a fake model, a fake oracle and a fake palette, and
+ * `mazeRoom/procgenMaze.test.js` drives it with a REAL second substrate whose
+ * world model, oracle and palette share nothing with Seedling's.
  *
  * ── WHY IT IS DEPTH-1 KEEP-OR-REVERT AND NOT A SEARCH ─────────────────
  *
@@ -161,6 +176,38 @@ const fail = (message) => { throw new LevelGeneratorError(message); };
  * geometry bug. The oracle's own three classes ride through verbatim in
  * `verdict`; this one is the loop's.
  */
+/**
+ * ⛓⛓⛓ THE ORACLE'S THREE VERDICT CLASSES — **THE ONE CONTRACT CHANGE THE MAZE
+ * FORCED** (CONSTRUCTIVE-MODE slice 2), and the line that forced it is `:464`
+ * below: `out.verdict === 'SOLVED'`.
+ *
+ * Until there were two substrates this vocabulary was declared in
+ * `seedlingDemo/procgenOracle.js` and spelled as a bare string HERE, and the
+ * pair was harmless because only one oracle existed. `mazeRoom/procgenMaze.js`
+ * is a second oracle that must return the same word, and it may not import
+ * Seedling's file — so the choice was a third spelling in the maze or ONE
+ * declaration in the file both oracles are written against. ⚖ Kickoff §3.2's
+ * rule ("a change is made only when the maze bindings cannot be written
+ * without it, and the as-built names which line forced it") is satisfied by
+ * exactly this.
+ *
+ * ⛔ THE STRINGS DID NOT MOVE. `procgenOracle.js` imports and re-exports this
+ * object under its own name, so every Seedling reader — the page, the CLI, the
+ * batch, `procgenSeedling`'s own `export { VERDICT }` — sees the identical
+ * frozen object with the identical three values, and the payloads are
+ * byte-identical across the move.
+ *
+ * A REFUSAL is a claim about the LEVEL; a BUDGET EXHAUSTION is a claim about
+ * the SEARCH and never a proof of unsolvability. `procgenOracle`'s docblock
+ * carries the argument in full; it is not repeated here, because this is the
+ * VOCABULARY and that file is the one that classifies.
+ */
+export const VERDICT = Object.freeze({
+    SOLVED: 'SOLVED',
+    REFUSED: 'REFUSED',
+    BUDGET_EXHAUSTED: 'BUDGET_EXHAUSTED',
+});
+
 export const ATTEMPT = Object.freeze({
     KEPT: 'KEPT',
     REVERTED: 'REVERTED',
@@ -461,7 +508,10 @@ function walkAnchors({
             onAbort({ error: e, at, anchorTry: ai + 1, anchorsOffered: anchors.length, rows });
             throw e;
         }
-        const solved = out.verdict === 'SOLVED';
+        // ⛓ `VERDICT.SOLVED` since CONSTRUCTIVE-MODE slice 2 — the same string
+        // this line always compared, now read from the ONE declaration both
+        // oracles are written against (see `VERDICT` above).
+        const solved = out.verdict === VERDICT.SOLVED;
         /**
          * ⛓ THE THREE KINDS, and the `null` from `discharges` is the third of
          * them rather than a falsy second. See `KEPT_KIND`.
@@ -636,7 +686,7 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
      * reverted" would go on to blame the palette for a broken room.
      */
     const skeleton = oracle.solve(record, { templates: [] });
-    if (skeleton.verdict !== 'SOLVED') {
+    if (skeleton.verdict !== VERDICT.SOLVED) {
         fail(`levelGenerator: THE SKELETON DID NOT SOLVE — ${skeleton.verdict}. The `
             + 'empty bordered room with its goal is the loop\'s control: it is solvable '
             + 'by construction, so this is a defect in the room builder, the boot or '

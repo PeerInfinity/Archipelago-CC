@@ -64,8 +64,11 @@ import { writeFileSync } from 'node:fs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', p));
+// ⛓ The loop core left `seedlingDemo/` in CONSTRUCTIVE-MODE slice 2 (the maze
+// binds to the same file); the Seedling bindings did not.
+const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore', p));
 
-const { ATTEMPT, STOP, costModel } = await M('levelGenerator.js');
+const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const {

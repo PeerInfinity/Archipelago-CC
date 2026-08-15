@@ -154,7 +154,7 @@ import {
 import { catalogueRows, restrictPalette } from './procgenPalette.js';
 // ⛓ SLICE 5: the keep policy verb 2 presses under — ⚖ the user's ruling
 // (*verb 2 PREFERS DISCHARGE*). The free ladder never names one.
-import { KEEP_POLICY } from './levelGenerator.js';
+import { KEEP_POLICY } from '../procgenCore/levelGenerator.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
 /**

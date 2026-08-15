@@ -119,6 +119,13 @@
  */
 
 import { SINGLE_SCREEN_TILES, TERRAIN } from './procgenLevel.js';
+/**
+ * ⛓ THE TEMPLATE CONTRACT — `procgenCore/`, since CONSTRUCTIVE-MODE slice 2.
+ * Imported for this file's OWN use (the roster below is built with
+ * `defineTemplate`, and `assertPalette` walks `enumerateValues`) and
+ * re-exported below for every caller that has always taken it from here.
+ */
+import { defineTemplate, enumerateValues } from '../procgenCore/templateContract.js';
 
 export class ProcgenPaletteError extends Error {
     constructor(message) {
@@ -154,182 +161,28 @@ const lineCells = (ori, n) => Object.freeze(
 /** The along-axis offset of a cell, in the same coordinates. */
 const alongOf = (ori) => (c) => (ori === 'h' ? c.dx : c.dy);
 
-/** `wall-segment(ori=v,len=4)` — the label a pane row and a reader identify an
- *  instance by. A zero-parameter template's label IS its name. */
-const instanceLabel = (name, values) => {
-    const keys = Object.keys(values);
-    return keys.length === 0
-        ? name
-        : `${name}(${keys.map((k) => `${k}=${values[k]}`).join(',')})`;
-};
-
 /**
- * ⛓⛓⛓ THE ONE CONSTRUCTOR EVERY ROW IN THIS FILE GOES THROUGH — ⚖ ruling 2's
- * *"collection of functions"*, with its schema checked where it is declared.
+ * ⛓⛓⛓ THE TEMPLATE CONTRACT ITSELF LIVES IN `procgenCore/` SINCE 2026-08-15.
  *
- * ⛔ `build(values)` returns the GEOMETRY HALF of a concrete row and nothing
- * else: `name`, `family`, `params` and `instance` are stamped here, AFTER the
- * spread, so a `build` cannot rename its own template or forge its own
- * parameter record.
+ * CONSTRUCTIVE-MODE arc, slice 2 (kickoff §3.2). `defineTemplate`,
+ * `enumerateValues`, `enumerateInstantiations` and `instantiateKept` moved to
+ * `procgenCore/templateContract.js` VERBATIM (only the refusals' own prefix
+ * changed, from `procgenPalette:` to `templateContract:`, so a maze template's
+ * refusal does not name a Seedling file). They are re-exported here because
+ * every existing caller — this file's own roster, `procgenSeedling`'s pin
+ * union, `watchGenerate.keptTemplatesOf`, the sweeps, the tests — imports them
+ * from `procgenPalette.js`, and the move must not be visible to any of them.
  *
- * ⚠ THE SCHEMA IS CHECKED AT DEFINITION TIME rather than at first draw. A
- * domain nobody can enumerate is a domain nobody swept (⚖ ruling 4), and a
- * `default` outside its own domain is a form control that offers an illegal
- * value — both would otherwise surface on the day a user pressed something.
+ * ⛔ WHAT STAYED IS EVERYTHING THAT KNOWS WHAT A ROW *MEANS*: `assertPalette`
+ * (TERRAIN, the `door: 'h'|'v'` rule, the group/tag slots), the geometry
+ * helpers above (`paint` writes `terrain`; `at`'s transpose exists for the
+ * wave-1 door geometry), the verb/discharge vocabulary and the roster
+ * machinery. See `templateContract.js`'s docblock for the line-by-line reason.
  */
-export function defineTemplate({ name, family, params = [], why, build }) {
-    if (typeof name !== 'string' || !name) {
-        fail('procgenPalette: a template needs a name — it is the roster key, the trace\'s '
-            + '`template` field and what the pin union looks up.');
-    }
-    if (typeof family !== 'string' || !family) {
-        fail(`procgenPalette: template "${name}" has no family. The report counts by family `
-            + 'and an unnamed one would be counted as "undefined".');
-    }
-    if (typeof build !== 'function') {
-        fail(`procgenPalette: template "${name}" has no \`build\`. A parameterized template `
-            + 'IS a function from its values to a concrete row (⚖ ruling 2); a table row '
-            + 'with no constructor is exactly the shape this seam replaced.');
-    }
-    if (!Array.isArray(params)) {
-        fail(`procgenPalette: template "${name}"'s \`params\` must be the SCHEMA ARRAY `
-            + '[{key, domain, default, why}]. The VALUES OBJECT is what an INSTANCE '
-            + 'carries — two shapes under one word, so the shapes are asserted rather '
-            + 'than assumed.');
-    }
-    const keys = new Set();
-    for (const p of params) {
-        if (typeof p?.key !== 'string' || !p.key || keys.has(p.key)) {
-            fail(`procgenPalette: template "${name}" declares a parameter with a missing or `
-                + `duplicated key (${JSON.stringify(p?.key)}). The key is the draw's own `
-                + 'position in the order AND what the instance label reads.');
-        }
-        keys.add(p.key);
-        if (!Array.isArray(p.domain) || p.domain.length === 0) {
-            fail(`procgenPalette: template "${name}" parameter "${p.key}" has no finite `
-                + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
-                + 'nobody can enumerate is a domain nobody swept.');
-        }
-        if (!p.domain.includes(p.default)) {
-            fail(`procgenPalette: template "${name}" parameter "${p.key}" defaults to `
-                + `${JSON.stringify(p.default)}, which is not in its own domain `
-                + `[${p.domain.join(', ')}]. The default is what verb 2's form pre-fills, `
-                + 'so a default outside the domain is a control offering an illegal value.');
-        }
-        if (typeof p.why !== 'string' || !p.why) {
-            fail(`procgenPalette: template "${name}" parameter "${p.key}" carries no `
-                + '`why`. Every other measured choice in this file says why it is what it '
-                + 'is; a knob that does not is one the next slice re-derives.');
-        }
-    }
-    const schema = Object.freeze(params.map((p) => Object.freeze({
-        ...p, domain: Object.freeze([...p.domain]),
-    })));
-    return Object.freeze({
-        name,
-        family,
-        params: schema,
-        why,
-        /**
-         * ⛔ DRAWS IN SCHEMA ORDER, ONE `pick` PER PARAMETER, AND AN OVERRIDE
-         * SPENDS NO DRAW. The file docblock declares that order; this is where
-         * it is spent.
-         */
-        instantiate(rng, overrides = {}) {
-            for (const k of Object.keys(overrides ?? {})) {
-                if (!keys.has(k)) {
-                    fail(`procgenPalette: template "${name}" has no parameter "${k}" to `
-                        + `override (it declares [${[...keys].join(', ') || 'none'}]). A `
-                        + 'silently ignored override is a control that writes state '
-                        + 'nobody reads.');
-                }
-            }
-            const values = {};
-            for (const p of schema) {
-                if (Object.prototype.hasOwnProperty.call(overrides ?? {}, p.key)) {
-                    const v = overrides[p.key];
-                    if (!p.domain.includes(v)) {
-                        fail(`procgenPalette: template "${name}" parameter "${p.key}" was `
-                            + `overridden with ${JSON.stringify(v)}, which is not in its `
-                            + `declared domain [${p.domain.join(', ')}]. Every value in a `
-                            + 'domain is one a sweep measured; a value outside it is one '
-                            + 'nobody has adjudicated.');
-                    }
-                    values[p.key] = v;
-                    continue;
-                }
-                if (!rng || typeof rng.pick !== 'function') {
-                    fail(`procgenPalette: template "${name}" needs a DRAW for "${p.key}" `
-                        + 'and no rng was given. ⛔ This REFUSES rather than falling back '
-                        + 'to the default: a reconstruction that dropped a recorded '
-                        + 'parameter would otherwise rebuild the DEFAULT instance — a '
-                        + 'different geometry wearing the same name — and the pin union, '
-                        + 'whose pins are static per template in v1, could not tell the '
-                        + 'two apart.');
-                }
-                values[p.key] = rng.pick(p.domain);
-            }
-            return Object.freeze({
-                why,
-                ...build(values),
-                name,
-                family,
-                params: Object.freeze({ ...values }),
-                instance: instanceLabel(name, values),
-            });
-        },
-    });
-}
-
-/**
- * EVERY DECLARED VALUE COMBINATION of one base template, in schema order —
- * what `assertPalette` walks and what the domain sweep enumerates. ⛔ The
- * cartesian product is taken over the DECLARED domains, so a domain that grew
- * grows the load-time check with it rather than leaving new values unchecked.
- */
-export function enumerateValues(template) {
-    let combos = [{}];
-    for (const p of template.params ?? []) {
-        const next = [];
-        for (const c of combos) for (const v of p.domain) next.push({ ...c, [p.key]: v });
-        combos = next;
-    }
-    return combos;
-}
-
-/** Every concrete row a palette can produce — built FROM the roster (trap 199). */
-export function enumerateInstantiations(palette) {
-    return palette.templates.flatMap(
-        (t) => enumerateValues(t).map((v) => t.instantiate(null, v)),
-    );
-}
-
-/**
- * ⛓⛓⛓ THE **ONE** RECONSTRUCTION — `{template, params}` back to the concrete
- * row the loop placed.
- *
- * ⛔ TWO CALLERS, ONE CONSTRUCTION (`watchGenerate.keptTemplatesOf` and
- * `procgenSeedling.generateSeedlingLevel`'s pin union). Before the migration
- * both did their own `palette.templates.find(t => t.name === k.template)`;
- * under parameterization that lookup returns a BASE, which has no footprint,
- * no pins and no geometry at all. Two private reconstructions of a
- * parameterized instance is the second-cost-model shape, so there is one.
- *
- * ⚠ IT PASSES NO RNG ON PURPOSE. Every parameter the record names is an
- * override and spends no draw; a parameter the record does NOT name has no
- * value to rebuild from, and `instantiate` refuses BY NAME rather than
- * quietly returning the default instance.
- */
-export function instantiateKept(palette, kept) {
-    const base = palette?.templates?.find((t) => t.name === kept?.template);
-    if (!base) {
-        fail(`procgenPalette: the summary keeps "${kept?.template}", which palette `
-            + `"${palette?.name}" does not hold. The pin union is taken over these `
-            + 'objects, so a dropped one would solve the room under fewer pins than the '
-            + 'loop did.');
-    }
-    return base.instantiate(null, kept.params ?? {});
-}
+export {
+    TemplateContractError, defineTemplate, enumerateInstantiations, enumerateValues,
+    instantiateKept,
+} from '../procgenCore/templateContract.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ THE DISCHARGE TEST — ONE SPELLING (GENERATE-mode UI arc, slice 5)

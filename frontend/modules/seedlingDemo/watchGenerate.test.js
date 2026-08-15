@@ -37,7 +37,7 @@ import {
 import { atlasOf, terrainAt } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
-import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from './levelGenerator.js';
+import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel } from './procgenSeedling.js';
 

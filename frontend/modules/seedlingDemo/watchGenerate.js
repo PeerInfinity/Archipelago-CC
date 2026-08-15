@@ -58,7 +58,7 @@
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
 import {
     DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP, directedAttempt,
-} from './levelGenerator.js';
+} from '../procgenCore/levelGenerator.js';
 import {
     POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, instantiateKept, normalizeRoster,
     restrictPalette,

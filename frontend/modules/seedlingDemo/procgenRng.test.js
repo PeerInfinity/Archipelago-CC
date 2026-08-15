@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 
 import { SeedlingRng } from './rng.js';
 import {
-    ProcgenRng, ProcgenRngError, SEED_MAX, SEED_MIN, assertSeed, rngFor,
+    ProcgenRngError, SEED_MAX, SEED_MIN, assertSeed, rngFor,
 } from './procgenRng.js';
 
 describe('a seed is a level\'s identity', () => {
@@ -91,7 +91,10 @@ describe('the vocabulary', () => {
     });
 
     it('`state` is a readout and does not advance the stream', () => {
-        const r = new ProcgenRng(555);
+        // ⛓ CONSTRUCTIVE-MODE slice 2: `ProcgenRng` needs its SOURCE named,
+        // and `rngFor` is the one place a Seedling stream is constructed. The
+        // bare `new ProcgenRng(555)` this used to be is now a refusal by name.
+        const r = rngFor(555);
         const before = r.state;
         expect(r.state).toBe(before);
         expect(r.draws).toBe(0);
