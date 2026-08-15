@@ -46,6 +46,13 @@
  *     only thing that shows it.
  *  4. **`?gen=`** — a payload emitted by the CLI is reproduced in the browser
  *     byte-identically, which is a determinism statement across two runtimes.
+ *  6. **⛓⛓⛓ THE CATALOGUE + VERB 1 (RESTRICT)** (slice 4) — the page lists
+ *     what this biome can generate INCLUDING what it cannot and why; unticking
+ *     restricts the roster a run may draw from, the URL names the restriction,
+ *     a copied link reproduces the restricted level byte for byte, an EMPTY
+ *     restriction refuses BEFORE the press, and an unknown name refuses BY
+ *     NAME. ⛔ Its subject's two kept lists are DISJOINT, so a restriction the
+ *     page echoes without PASSING to the loop reds this row.
  *  5. **⛓⛓⛓ THE URL ROUND TRIP** (GENERATE-mode UI arc, slice 1) — edit the
  *     form, press, and the address bar NAMES the run; copy it, load it fresh,
  *     and the panel AND the level come back identical. Before slice 1 the
@@ -70,7 +77,7 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
-const { generateStep } = await M('watchGenerate.js');
+const { generateStep, paletteFor } = await M('watchGenerate.js');
 
 /**
  * ⛓ THE SUBJECTS ARE MEASURED, NOT PICKED.
@@ -149,6 +156,41 @@ const ROUND_BOUNDS = {
 };
 const ROUND_BUDGET = { maxTicksPerTarget: ROUND.tickbudget };
 
+/**
+ * ⛓⛓⛓ CLAIM 6's SUBJECT — THE CATALOGUE AND VERB 1 (slice 4).
+ *
+ * `pre-sword seed 3 at target 2` under `templates=wall-gap-lock-weigh,water-pool`.
+ * ⛓ MEASURED, and the property that matters is asserted below before the claim
+ * uses it: the unrestricted run of the SAME seed keeps `pit-patch` and
+ * `arrow-lane`, and the restricted one keeps `water-pool` and
+ * `wall-gap-lock-weigh` — **two DISJOINT kept lists**. A restriction the page
+ * read, echoed and did not PASS to the loop is therefore visible in the kept
+ * list itself and not only in a hash (trap 235: a subject that agrees with its
+ * fallback cannot fail).
+ *
+ * ⚠ The two members were chosen for what they exercise, not for size: the
+ * water pool is the only pin-declaring family (`sound`), and the weigh lock is
+ * the pre-sword template that uses BOTH sentinel slots. So the restricted run
+ * goes through the whole certification path rather than a quiet corner of it.
+ * It is also cheap — 68 ms in node — which a browser row has to care about.
+ */
+const RESTRICT = {
+    seed: 3,
+    biome: 'pre-sword',
+    count: 2,
+    templates: ['wall-gap-lock-weigh', 'water-pool'],
+    /**
+     * ⛓ THE COARSE SPELLING OF THE SAME SUB-ROSTER. `water` + `weigh` are
+     * exactly the families of those two templates, so `?families=` must
+     * produce the SAME level — and must SURVIVE a press rather than being
+     * rewritten as `?templates=`, which would freeze a membership whose whole
+     * point is that it is by family.
+     */
+    families: ['water', 'weigh'],
+};
+const RESTRICT_ROSTER = { axis: 'templates', names: [...RESTRICT.templates].sort() };
+const RESTRICT_BOUNDS = { obstacleTarget: RESTRICT.count };
+
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const GEN_ROUTE = '/__generated-payload.json';
 
@@ -190,6 +232,27 @@ console.log(`node: carrier seed ${CARRIER.seed} keeps `
 check(nodeCarrier.summary.kept.some((k) => k.family === 'kill'),
     'the carrier subject really holds a KILL template — otherwise claim 3 is vacuous',
     nodeCarrier.summary.kept.map((k) => `${k.template}(${k.family})`).join(', '));
+const nodeRestricted = generateStep({
+    seed: RESTRICT.seed, biome: RESTRICT.biome, step: RESTRICT.count,
+    bounds: RESTRICT_BOUNDS, roster: RESTRICT_ROSTER,
+});
+const nodeUnrestricted = generateStep({
+    seed: RESTRICT.seed, biome: RESTRICT.biome, step: RESTRICT.count, bounds: RESTRICT_BOUNDS,
+});
+const PRE_ROSTER = paletteFor(RESTRICT.biome).templates.map((t) => t.name);
+const PRE_EXCLUDED = paletteFor(RESTRICT.biome).excluded;
+{
+    const restrictedKept = nodeRestricted.summary.kept.map((k) => k.template);
+    const wholeKept = nodeUnrestricted.summary.kept.map((k) => k.template);
+    check(nodeRestricted.summary.keptCount === RESTRICT.count && !nodeRestricted.saturated,
+        'the RESTRICT subject really REACHES its target under the restriction',
+        `kept ${nodeRestricted.summary.keptCount}/${RESTRICT.count}, stop ${nodeRestricted.stop}`);
+    check(restrictedKept.every((t) => RESTRICT.templates.includes(t))
+        && wholeKept.every((t) => !RESTRICT.templates.includes(t)),
+        '⛔ AND THE TWO KEPT LISTS ARE DISJOINT — a restriction the page echoed but did not '
+        + 'PASS to the loop shows up in the kept list, not only in a hash',
+        `restricted [${restrictedKept.join(', ')}] vs whole [${wholeKept.join(', ')}]`);
+}
 check(nodeRound.summary.keptCount === ROUND.count && !nodeRound.saturated,
     'the ROUND-TRIP subject really REACHES its target — a saturated one would let claim 5 '
     + 'assert about a step nobody asked for',
@@ -240,6 +303,39 @@ const panelOf = () => page.evaluate(() => ({
     tries: document.getElementById('genTries').value,
     k: document.getElementById('genK').value,
     anchortries: document.getElementById('genAnchorTries').value,
+    // ⛓ SLICE 4: the catalogue's ticks are a CONTROL like the six above, so
+    // they travel with them through the round trip.
+    checked: [...document.querySelectorAll('#genRoster input[data-template]')]
+        .filter((b) => b.checked).map((b) => b.dataset.template),
+}));
+
+/**
+ * ⛓ THE CATALOGUE AS THE BROWSER HOLDS IT — every assertion about it is built
+ * from THIS against node's own palette, never against a literal count.
+ */
+const catalogueOf = () => page.evaluate(() => ({
+    boxes: [...document.querySelectorAll('#genRoster input[data-template]')]
+        .map((b) => b.dataset.template),
+    families: [...document.querySelectorAll('#genRoster .catFamily .catHead')]
+        .map((e) => e.textContent),
+    excluded: [...document.querySelectorAll('#genRoster .catRow.excluded')]
+        .map((e) => e.textContent),
+    excludedInputs: document.querySelectorAll('#genRoster .catRow.excluded input').length,
+    note: document.getElementById('genRosterNote').textContent,
+    disabled: ['genStep', 'genRunAll', 'genReset']
+        .map((id) => document.getElementById(id).disabled),
+    /**
+     * ⛔ THE CONTAINER CHECK. `#layers` holds one input per overlay layer and
+     * three acceptance rows ENUMERATE it; `#bootForm`'s checkboxes are counted
+     * by the switch row. A catalogue checkbox in either box would red a row
+     * that has nothing to do with this slice (the group-B lesson).
+     */
+    inLayers: document.getElementById('layers')
+        .querySelectorAll('input[data-template]').length,
+    inBootForm: document.getElementById('bootForm')
+        ? document.getElementById('bootForm').querySelectorAll('input[data-template]').length
+        : 0,
+    layersInputs: document.querySelectorAll('#layers input').length,
 }));
 
 /**
@@ -476,9 +572,209 @@ const settled = (step, seed = null) => page.waitForFunction(
         errors.join(' | ') || 'none');
 }
 
+// ── CLAIM 6: ⛓⛓⛓ THE CATALOGUE + VERB 1 (RESTRICT) ──────────────────
+{
+    /**
+     * ⛓ SIX HALVES, AND EACH IS A DIFFERENT CLAIM:
+     *  a. the catalogue ENUMERATES the roster AND the exclusions, from the
+     *     palette, with the measured causes verbatim and no checkbox on a row
+     *     nothing can draw;
+     *  b. a restriction pressed → the URL NAMES it → the level is node's own
+     *     restricted level and NOT the unrestricted one;
+     *  c. the copied URL reproduces it, ticks included, and is a fixed point;
+     *  d. an EMPTY restriction refuses BEFORE the press;
+     *  e. the COARSE `?families=` spelling denotes the same sub-roster and
+     *     SURVIVES a press;
+     *  f. an unknown name, and both spellings at once, refuse BY NAME.
+     */
+    const q = `source=generate&seed=${RESTRICT.seed}&biome=${RESTRICT.biome}`
+        + `&count=${RESTRICT.count}`;
+    const opened = await load(q);
+    const cat = await catalogueOf();
+
+    // ── 6a: the catalogue is the ROSTER, and the exclusions are in it ──
+    check(json(cat.boxes) === json(PRE_ROSTER),
+        '⛓ the catalogue offers ONE checkbox per ROSTER template, in the palette\'s own '
+        + `order (${PRE_ROSTER.length} from the palette, not a literal)`,
+        `${json(cat.boxes)}`);
+    check(cat.excluded.length === PRE_EXCLUDED.length && cat.excludedInputs === 0,
+        '⛔ every EXCLUDED row is in the catalogue too, and NOT ONE of them is selectable',
+        `${cat.excluded.length} excluded row(s) of ${PRE_EXCLUDED.length}, `
+        + `${cat.excludedInputs} input(s) on them`);
+    /**
+     * ⛔ VERBATIM — the same law the veto texts ride under (trap 202). An
+     * exclusion's `measured` IS its content; a catalogue that paraphrased it
+     * would show a lossy copy of the only evidence the row carries.
+     */
+    const missing = PRE_EXCLUDED.filter((e) => !cat.excluded.some(
+        (text) => text.includes(e.cause) && text.includes(e.measured)
+            && text.includes(e.wouldNeed)));
+    check(missing.length === 0,
+        'and each carries its `cause` + `measured` + `wouldNeed` VERBATIM from the palette',
+        missing.length ? `missing: ${missing.map((e) => e.name).join(', ')}`
+            : PRE_EXCLUDED.map((e) => e.name).join(', '));
+    /**
+     * ⛔ THE CONTAINER IS THE CONTRACT (the group-B lesson): a knob dropped
+     * into `#layers` counts as a LAYER and reds three unrelated rows at once.
+     */
+    check(cat.inLayers === 0 && cat.inBootForm === 0,
+        '⛔ and the checkboxes are in NEITHER enumerated container — not #layers '
+        + '(one input per overlay layer, enumerated by three rows) and not #bootForm',
+        `#layers has ${cat.layersInputs} input(s), none of them a catalogue box`);
+    check(cat.note.includes(`${PRE_ROSTER.length} template(s), no restriction`),
+        'the note says the WHOLE roster is on offer before anything is unticked', cat.note);
+    /**
+     * ⚠ THE READOUT'S OWN COUNTS ARE ASSERTED TOO, so the field is READ rather
+     * than merely written — a readout nobody checks is state nobody reads.
+     */
+    check(opened.gen.catalogue?.templates === PRE_ROSTER.length
+        && opened.gen.catalogue?.boxes === PRE_ROSTER.length
+        && opened.gen.catalogue?.excluded === PRE_EXCLUDED.length
+        && opened.gen.palette === RESTRICT.biome && opened.gen.roster === null,
+        'and the readout agrees with the DOM about what the catalogue holds, and says the '
+        + 'palette is unrestricted before anything is unticked', json(opened.gen.catalogue));
+
+    // ── 6b: RESTRICT, pressed ────────────────────────────────────────
+    await page.evaluate((keep) => {
+        for (const b of document.querySelectorAll('#genRoster input[data-template]')) {
+            if (b.checked !== keep.includes(b.dataset.template)) b.click();
+        }
+    }, RESTRICT.templates);
+    const restricted = await catalogueOf();
+    check(restricted.note.includes(`RESTRICTED to ${RESTRICT.templates.length} of `
+        + `${PRE_ROSTER.length}`),
+        'unticking says so BEFORE the press — the note names the sub-roster', restricted.note);
+    await page.click('#genRunAll');
+    await settled(RESTRICT.count);
+    const pressed = await panelOf();
+    const web = await page.evaluate(() => ({
+        gen: window.__editorGenerate,
+        level: window.__editorGenerated.level,
+        trace: window.__editorGenerated.trace,
+    }));
+    const pu = new URLSearchParams(pressed.url);
+    check(pu.get('templates') === RESTRICT_ROSTER.names.join(',') && !pu.has('families'),
+        '⛓ the press writes the sub-roster to the URL — sorted, one axis only', pressed.url);
+    check(json(web.level) === json(nodeRestricted.record)
+        && json(web.trace) === json(nodeRestricted.trace),
+        '⛓⛓ and the level is node\'s own RESTRICTED level, byte for byte — trace included');
+    check(json(web.level) !== json(nodeUnrestricted.record),
+        '⛔ …and NOT the unrestricted one: the restriction reached the LOOP, not just the URL',
+        `kept ${json(web.gen.keptCount)} — ${json(nodeRestricted.summary.kept.map(
+            (k) => k.template))}`);
+    check(web.gen.palette === nodeRestricted.palette.name
+        && json(web.gen.roster) === json(RESTRICT_ROSTER),
+        'the readout NAMES the derived palette, which is `summary.palette`\'s own string',
+        `${web.gen.palette} / ${json(web.gen.roster)}`);
+
+    // ── 6c: the copied URL ───────────────────────────────────────────
+    await load(pressed.url.replace(/^\?/, ''));
+    await settled(RESTRICT.count);
+    const reloaded = await panelOf();
+    const back = await page.evaluate(() => ({
+        level: window.__editorGenerated.level, trace: window.__editorGenerated.trace,
+    }));
+    check(json(reloaded.checked) === json(pressed.checked),
+        '⛓⛓ the copied URL brings the CATALOGUE back — the same templates ticked',
+        `${json(pressed.checked)} → ${json(reloaded.checked)}`);
+    check(json(back.level) === json(web.level) && json(back.trace) === json(web.trace),
+        '⛓⛓ …and the RESTRICTED level back byte-identical, trace included');
+    check(reloaded.url === pressed.url,
+        'and the restricted link is a FIXED POINT — loading it rewrites it to itself',
+        `${pressed.url}\n        → ${reloaded.url}`);
+
+    // ── 6d: the EMPTY restriction, refused BEFORE the press ──────────
+    await page.evaluate(() => {
+        for (const b of document.querySelectorAll('#genRoster input[data-template]')) {
+            if (b.checked) b.click();
+        }
+    });
+    const empty = await catalogueOf();
+    check(json(empty.disabled) === json([true, true, true]),
+        '⛔ an EMPTY restriction disables the three ladder buttons BEFORE a press — the loop\'s '
+        + 'own refusal stays as the backstop, but the page knew already', json(empty.disabled));
+    check(empty.note.includes('NOTHING is ticked') && empty.note.includes('EMPTY roster'),
+        'and it SAYS why, where the ticks are', empty.note);
+    check(errors.length === 0, 'no page errors through the catalogue round trip',
+        errors.join(' | ') || 'none');
+
+    // ── 6e: the COARSE spelling — same sub-roster, and it SURVIVES ───
+    const fq = `source=generate&seed=${RESTRICT.seed}&biome=${RESTRICT.biome}`
+        + `&count=${RESTRICT.count}&families=${RESTRICT.families.join(',')}&run=1`;
+    const byFamily = await load(fq);
+    await settled(RESTRICT.count);
+    const famPanel = await panelOf();
+    const fu = new URLSearchParams(famPanel.url);
+    check(json(byFamily.level) === json(nodeRestricted.record),
+        '⛓ ?families= denotes the SAME sub-roster as ?templates= and produces the SAME level '
+        + '— the subset and its ORDER are what the rng indexes, not the spelling');
+    check(json(famPanel.checked.sort()) === json([...RESTRICT.templates].sort()),
+        'and the catalogue shows that family\'s members ticked', json(famPanel.checked));
+    await page.click('#genRunAll');
+    await settled(RESTRICT.count);
+    const afterPress = new URLSearchParams((await panelOf()).url);
+    check(afterPress.get('families') === RESTRICT.families.join(',')
+        && !afterPress.has('templates'),
+        '⛔ and a press that did not change the ticks KEEPS the coarse spelling — rewriting it '
+        + 'as ?templates= would freeze the membership of a by-family restriction',
+        `${fu.get('families')} → ${afterPress.get('families')}`);
+
+    // ── 6f: the refusals, BY NAME, on the page ───────────────────────
+    const refusalOf = async (query) => {
+        errors.length = 0;
+        await page.goto(`${origin}${PAGE_PATH}?${query}`, { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(() => window.__editorParams?.status === 'refused',
+            null, { timeout: 60000 });
+        return page.evaluate(() => ({
+            message: window.__editorParams.message,
+            status: document.getElementById('status').textContent,
+            mounted: Boolean(window.__editorGenerate),
+        }));
+    };
+    const unknown = await refusalOf(`source=generate&biome=${RESTRICT.biome}&templates=nope`);
+    check(unknown.message.includes('"nope"') && unknown.message.includes(PRE_ROSTER[0])
+        && !unknown.mounted,
+        '⛔ an unknown template REFUSES BY NAME and lists the roster — and the arm does NOT '
+        + 'mount, so nothing was generated under a roster nobody asked for',
+        unknown.message.slice(0, 120));
+    const both = await refusalOf(`source=generate&biome=${RESTRICT.biome}`
+        + '&families=water&templates=water-pool');
+    check(both.message.includes('BOTH present') && both.message.includes('two spellings'),
+        '⛔ and both spellings at once REFUSE — they do not compose, and the page says so',
+        both.message.slice(0, 120));
+    check(/REFUSED/.test(both.status),
+        'the refusal is ON THE PAGE, not only in the console — a refusal nobody can see is '
+        + 'a page that just stopped', both.status);
+}
+
 // ── CLAIM 4: ?gen= reproduces node's payload in the browser ──────────
 if (!host) {
-    const web = await load(`gen=${GEN_ROUTE}`);
+    /**
+     * ⛔ WAIT FOR THE REPRODUCTION TO HAVE BEEN CHECKED, NOT FOR THE ARM TO
+     * HAVE A READOUT — the same law `settled` states one claim up, which this
+     * claim did not follow until slice 4 caught it.
+     *
+     * ⛓ MEASURED, on a box under load (~10 on 8 cores) while another project
+     * built in parallel: `load()` resolves when `window.__editorGenerate`
+     * first EXISTS, and the `?gen=` path sets it at the **SKELETON** — the
+     * ladder and the payload comparison come after. So the read could land on
+     * step 0, where `payloadCheck` is null and the level is the empty room,
+     * and all three of this claim's lines went red on a page that then went on
+     * to reproduce the payload byte-identically (probed separately: `{checked:
+     * true, agrees: true}`). A pre-existing hole in the row, not in the page —
+     * and one that only fires when the box is slow enough to schedule the poll
+     * between the skeleton and the run.
+     */
+    const reproduced = () => page.waitForFunction(
+        () => window.__editorGenerate?.payloadCheck
+            && !document.getElementById('genRunAll').disabled,
+        null, { timeout: 300000 });
+    await load(`gen=${GEN_ROUTE}`);
+    await reproduced();
+    const web = await page.evaluate(() => ({
+        gen: window.__editorGenerate,
+        level: window.__editorGenerated?.level ?? null,
+    }));
     check(web.gen.payloadCheck?.checked === true,
         'the ?gen= payload was checked rather than merely displayed');
     check(web.gen.payloadCheck?.agrees === true,

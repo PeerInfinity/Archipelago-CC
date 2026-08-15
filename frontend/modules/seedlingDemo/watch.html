@@ -286,6 +286,19 @@
   #genTrace .s { color: #ffd75f; }
   #genTrace .rj { color: #8a8a98; font-size: 11px; }
   #genTrace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
+  /* ── ⛓ THE CATALOGUE (GENERATE-mode UI slice 4). Greyed rows are the
+     palette's EXCLUSIONS: they are in the list on purpose and carry their
+     measured cause verbatim, so `opacity` is the only thing that separates
+     them — a list of what can be generated that hid what cannot would be the
+     graceful-skip shape. ── */
+  #genRoster { max-height: 30vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #genRoster .catFamily { border-bottom: 1px solid #1a1a20; padding: 3px 6px; }
+  #genRoster .catHead { color: #ffd75f; font-size: 11px; }
+  #genRoster .catRow b { color: #7fe0ff; font-weight: 600; }
+  #genRoster .catRow.excluded { opacity: .55; }
+  #genRoster .catRow.excluded b { color: #ff9a6a; }
+  #genRoster .rj { color: #8a8a98; font-size: 11px; }
   #manualKeys { color: #7fe0ff; font-size: 11px; }
   #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
   #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -463,6 +476,25 @@
       <button id="genToManual" disabled>DRIVE it by hand</button>
       <span id="genBridgeNote" class="note"></span>
     </div>
+    <!--
+      ⛓⛓⛓ THE CATALOGUE + VERB 1 (slice 4, ⚖ ruling 1: *"a list of things
+      that can be generated"* + *"choose the sub-roster a run may draw from"*).
+
+      ⛔ THE CHECKBOXES LIVE IN THEIR OWN BOX, AND THAT IS THE POINT OF THE
+      CONTAINER. `#layers` holds exactly one input per `OVERLAY_LAYERS` row and
+      three acceptance rows ENUMERATE it; the group-B lesson (a knob dropped
+      into that box counted as a layer and reddened `world`/`lanes`/`shapes` at
+      once) applies to every enumerated container, and `#bootForm` is another.
+      A catalogue checkbox is not a layer, not a boot flag, and not a trace
+      row, so it is in none of their boxes.
+    -->
+    <div class="line">
+      <b>catalogue</b> <span class="note">— what this biome can generate, by family;
+        untick to RESTRICT the roster this run may draw from</span>
+      <button id="genRosterAll">select ALL — the whole roster</button>
+      <span id="genRosterNote" class="note"></span>
+    </div>
+    <div id="genRoster"></div>
     <div id="genNote" class="note"></div>
   </div>
   <!--

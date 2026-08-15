@@ -7258,8 +7258,19 @@ Upload, all through `parseTape`.
 
 Everything is reachable from URL parameters: `?tape= ?side= ?speed=
 ?source= ?level= ?boot= ?goals= ?solve= ?name= ?layers= ?tick= ?shot=`,
-plus the GENERATE arm's own `?seed= ?biome= ?count= ?tries= ?k= ?budgetms=
-?tickbudget= ?run= ?gen=`.
+plus the GENERATE arm's own `?seed= ?biome= ?count= ?tries= ?k= ?anchortries=
+?tickbudget= ?run= ?gen= ?families= ?templates=`.
+
+⚠ Two corrections to that list, both recorded where they happened rather than
+silently applied: `?budgetms=` is **GONE** (2026-08-14 — no budget in this
+pipeline is denominated in milliseconds any more; a stale bookmark warns in the
+console and is ignored), and `?anchortries=` arrived with the anchor search.
+⛓ `?families=` and `?templates=` are **verb 1 (RESTRICT)**: either one names
+the sub-roster a run may draw from, ABSENT means the whole roster, and having
+BOTH refuses by name — they are two spellings of one setting and do not
+compose. The page's catalogue (the biome's templates grouped by family, with
+the biome's EXCLUSIONS greyed beside them carrying their measured causes) is
+where those ticks live.
 
 ⛓⛓ **A LAYER THAT CAN DRAW NOTHING CARRIES A `why`** — six of the fifteen do
 (`hitboxes`, `hammer`, `lanes`, `worldstate`, `crushers`, `danger`), and slice

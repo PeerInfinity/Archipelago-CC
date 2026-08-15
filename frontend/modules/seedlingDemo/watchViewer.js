@@ -144,9 +144,13 @@ import {
 } from './watchManual.js';
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
-    displayStaging, generateStep, generationRows, ladderCost, readGenerateParams,
+    displayStaging, generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
     writeGenerateParams,
 } from './watchGenerate.js';
+// ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
+// palette operation (`restrictPalette`) — both live where palettes live, and
+// this file only renders and wires them.
+import { catalogueRows, restrictPalette } from './procgenPalette.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
 /**
@@ -3984,6 +3988,104 @@ function mountGenerationPane(rows) {
 }
 
 /**
+ * ── ⛓⛓⛓ THE CATALOGUE — ⚖ ruling 1's *"a list of things that can be
+ * ── generated"*, on the page (slice 4) ────────────────────────────────
+ *
+ * One row per template, grouped by family, carrying the DECLARED parameter
+ * schema (keys, domains, defaults and each parameter's own `why`) and the
+ * template's `why` — and a checkbox, which is verb 1: the sub-roster this run
+ * may draw from.
+ *
+ * ⛔ **THE EXCLUDED ROWS ARE IN IT, GREYED, WITH `cause` + `measured` +
+ * `wouldNeed` VERBATIM.** They are not selectable and carry no input, because
+ * there is nothing to draw — but a catalogue of "what can be generated" that
+ * hid what CANNOT, and why, is the graceful-skip shape: the reader would read
+ * a short list as the whole answer. The text is the palette's own, character
+ * for character (trap 202's channel: the measurement IS the content).
+ *
+ * ⛔ **BUILT FROM THE ROSTER** (trap 199): `catalogueRows` derives the groups,
+ * the order and the totals from `palette.templates` / `palette.excluded`, so
+ * nothing here counts anything, and a template added to the table appears
+ * without an edit on this side.
+ *
+ * ⚠ THE CHECKBOX CARRIES `data-template` = THE BASE NAME, which is the roster
+ * key the restriction is spelled in and the key the pin union looks up — never
+ * the instance label, which is a geometry and not a roster entry.
+ */
+function mountCatalogue(catalogue, selected) {
+    const box = $('genRoster');
+    box.innerHTML = '';
+    const dom = (p) => `${p.key} ∈ {${p.domain.join(',')}} (default ${p.default})`;
+    for (const g of catalogue.groups) {
+        const fam = document.createElement('div');
+        fam.className = 'catFamily';
+        const head = document.createElement('div');
+        head.className = 'catHead';
+        head.textContent = `family ${g.family} — ${g.templates.length} template(s)`
+            + (g.excluded.length ? `, ${g.excluded.length} EXCLUDED` : '');
+        fam.appendChild(head);
+        for (const t of g.templates) {
+            const row = document.createElement('div');
+            row.className = 'catRow';
+            const label = document.createElement('label');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.dataset.template = t.name;
+            cb.checked = selected.has(t.name);
+            label.appendChild(cb);
+            const name = document.createElement('b');
+            name.textContent = ` ${t.name}`;
+            label.appendChild(name);
+            row.appendChild(label);
+            const schema = document.createElement('div');
+            schema.className = 'rj';
+            schema.textContent = t.params.length
+                ? `params: ${t.params.map(dom).join(' · ')}`
+                : 'params: none — one instantiation, the degenerate case';
+            row.appendChild(schema);
+            for (const p of t.params) {
+                const w = document.createElement('div');
+                w.className = 'rj';
+                w.textContent = `${p.key}: ${p.why}`;
+                row.appendChild(w);
+            }
+            if (t.why) {
+                const w = document.createElement('div');
+                w.className = 'rj';
+                w.textContent = t.why;
+                row.appendChild(w);
+            }
+            fam.appendChild(row);
+        }
+        for (const e of g.excluded) {
+            const row = document.createElement('div');
+            row.className = 'catRow excluded';
+            const name = document.createElement('b');
+            name.textContent = `⛔ ${e.name}`;
+            row.appendChild(name);
+            // ⛔ VERBATIM, all three fields, and `textContent` so the palette's
+            // own text cannot be reinterpreted as markup on the way through.
+            for (const [what, text] of [['cause', e.cause], ['measured', e.measured],
+                ['would need', e.wouldNeed]]) {
+                if (!text) continue;
+                const d = document.createElement('div');
+                d.className = 'rj';
+                d.textContent = `${what}: ${text}`;
+                row.appendChild(d);
+            }
+            fam.appendChild(row);
+        }
+        box.appendChild(fam);
+    }
+    return {
+        groups: catalogue.groups.length,
+        templates: catalogue.counts.templates,
+        excluded: catalogue.counts.excluded,
+        boxes: box.querySelectorAll('input[type=checkbox]').length,
+    };
+}
+
+/**
  * ── ⛓⛓⛓ THE FOURTH SOURCE: GENERATE ONE, LOOK AT IT, KEEP STEPPING ─────
  *
  * ⚖ Kickoff §3.5 and ruling §1.3: seed + biome + obstacle-count target (+
@@ -4032,6 +4134,13 @@ async function runGenerate(params, lifetime) {
      */
     let payload = null;
     /**
+     * ⛓ SLICE 4 — VERB 1. `null` is the whole roster; otherwise the normalized
+     * `{axis, names}`. ⚠ It is read at PRESS from the catalogue's checkboxes
+     * (`readForm`'s law) and written back by the ONE writer, like every other
+     * control on this panel.
+     */
+    let roster = gp.roster;
+    /**
      * ⛓ Set once, when a press takes the URL back off `?gen=` — so the detail
      * line can say the reproduction claim GONE rather than just stop printing
      * it. See `writeGenerateParams`' docblock for why the two cannot coexist.
@@ -4043,6 +4152,17 @@ async function runGenerate(params, lifetime) {
         seed = payload.seed;
         biome = payload.biome;
         bounds = { ...bounds, ...(payload.bounds ?? {}) };
+        /**
+         * ⛔ AND THE PAYLOAD'S OWN ROSTER WITH THEM. The `?gen=` path
+         * REGENERATES from the payload's identity and compares; a payload made
+         * under a RESTRICTION but reproduced under the whole roster would
+         * report a level DIVERGENCE whose real cause is that the page asked a
+         * different question — a false finding fired by the check that exists
+         * to catch real ones. ⚠ `?? null` because a payload written before
+         * this field existed names no roster, which IS what an unrestricted
+         * run has.
+         */
+        roster = payload.roster ?? null;
     }
 
     $('genSeed').value = String(seed);
@@ -4054,6 +4174,81 @@ async function runGenerate(params, lifetime) {
     biomeSel.innerHTML = BIOME_NAMES
         .map((b) => `<option value="${b}">${b}</option>`).join('');
     biomeSel.value = biome;
+
+    /**
+     * ── ⛓⛓⛓ THE CATALOGUE, AND VERB 1's ONE CONTROL ───────────────────
+     *
+     * The view is the WHOLE biome roster (plus its exclusions); the CHECKBOXES
+     * are the restriction. ⛔ The two are separate on purpose: a catalogue that
+     * showed only the selected sub-roster could not be used to widen it again,
+     * and the exclusions would vanish exactly when a reader is asking "why
+     * can't I pick that?".
+     */
+    let catalogueReadout = null;
+    const rosterBoxes = () => [...$('genRoster').querySelectorAll('input[data-template]')];
+    const checkedNames = () => rosterBoxes().filter((b) => b.checked)
+        .map((b) => b.dataset.template);
+    /**
+     * ⚠ IT READS THE **SELECT**, NOT THE ARM'S `biome` VARIABLE. The variable
+     * is only updated at the press (`readForm`'s read-at-press law, which is
+     * also what makes a biome change RESET the ladder — a handler that moved
+     * the variable early would leave `readForm` comparing a value to itself
+     * and the ladder would silently continue under the new biome).
+     */
+    const renderCatalogue = () => {
+        const full = paletteFor(biomeSel.value);
+        const selected = new Set(roster
+            ? restrictPalette(full, roster).templates.map((t) => t.name)
+            : full.templates.map((t) => t.name));
+        catalogueReadout = mountCatalogue(catalogueRows(full), selected);
+        for (const b of rosterBoxes()) b.onchange = () => updateRunButtons();
+    };
+    /**
+     * ⛔ AN EMPTY RESTRICTION REFUSES **BEFORE** THE PRESS. `levelGenerator`
+     * already refuses an empty palette as *"a finding ABOUT THE PALETTE"* and
+     * that refusal STAYS as the backstop — but discovering it after a press
+     * means the page spent a click to tell you something it knew before it. So
+     * the three ladder buttons go dead with the reason beside them, and the
+     * catalogue stays live because ticking a box is the fix.
+     */
+    let busyNow = false;
+    function updateRunButtons() {
+        const checked = checkedNames();
+        const all = rosterBoxes().length;
+        const empty = checked.length === 0;
+        for (const id of ['genStep', 'genRunAll', 'genReset']) {
+            $(id).disabled = busyNow || empty;
+        }
+        $('genRosterNote').textContent = empty
+            ? '⛔ NOTHING is ticked — an EMPTY roster is a finding ABOUT THE PALETTE, not a '
+                + 'run that quietly places nothing. The ladder buttons are disabled until '
+                + 'at least one template is ticked.'
+            : (checked.length === all
+                ? `the WHOLE roster: ${all} template(s), no restriction`
+                : `RESTRICTED to ${checked.length} of ${all}: ${checked.join(', ')}`);
+    }
+    $('genRosterAll').onclick = () => {
+        // ⚠ The whole roster is spelled by ABSENCE, so this clears the
+        // restriction rather than writing one that names every member.
+        roster = null;
+        renderCatalogue();
+        updateRunButtons();
+    };
+    /**
+     * ⛔ A BIOME CHANGE RESETS THE RESTRICTION AND RE-RENDERS. The two rosters
+     * are different lists — `wall-gap-spinner-killlock` exists only post-sword
+     * — so carrying a restriction across would either refuse by name or, worse,
+     * mean something different under the same words. The ladder already RESETS
+     * on a biome change for the same reason (the seed IS the level's identity);
+     * this is that law applied to the roster.
+     */
+    biomeSel.onchange = () => {
+        roster = null;
+        renderCatalogue();
+        updateRunButtons();
+    };
+    renderCatalogue();
+    updateRunButtons();
 
     const atlas = await loadAtlas();
     /**
@@ -4076,8 +4271,15 @@ async function runGenerate(params, lifetime) {
     const cost = ladderCost(bounds, 139);
     $('genNote').textContent = cost.why;
 
+    /**
+     * ⚠ ONE PLACE DECIDES WHETHER THE LADDER BUTTONS ARE LIVE, because there
+     * are now TWO reasons they may not be: a run in flight, and an empty
+     * roster. Two writers of one `disabled` flag would let a finished run
+     * re-enable a button the catalogue had just disabled.
+     */
     const busy = (on) => {
-        for (const id of ['genStep', 'genRunAll', 'genReset']) $(id).disabled = on;
+        busyNow = on;
+        updateRunButtons();
     };
 
     /**
@@ -4097,6 +4299,9 @@ async function runGenerate(params, lifetime) {
             generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
             seed,
             biome,
+            // ⛓ SLICE 4: an IDENTITY field beside seed and biome — see
+            // `agreementWithPayload`. The CLI's payload carries the same one.
+            roster: state.roster,
             bounds: state.bounds,
             budget: state.budget,
             summary: state.summary,
@@ -4162,6 +4367,15 @@ async function runGenerate(params, lifetime) {
             seed,
             biome,
             step,
+            /**
+             * ⛓ SLICE 4: the DERIVED palette name and the restriction that
+             * produced it. ⛔ The name is `summary.palette`'s own string, so a
+             * row asserting about the roster and a payload quoting it cannot
+             * be reading two different things.
+             */
+            palette: state.palette.name,
+            roster: state.roster,
+            catalogue: catalogueReadout,
             bounds: state.bounds,
             budget: state.budget,
             stop: state.stop,
@@ -4245,6 +4459,10 @@ async function runGenerate(params, lifetime) {
             seed: state.seed,
             biome: state.biome,
             bounds: state.bounds,
+            // ⛓ SLICE 4: from the STATE, like every other parameter here — the
+            // palette the record on screen was really drawn from carries it,
+            // so the link cannot name a roster the run did not have.
+            roster: state.roster,
             step,
             payloadOwned: Boolean(payload),
         });
@@ -4317,6 +4535,33 @@ async function runGenerate(params, lifetime) {
             saturationK: Number($('genK').value),
             anchorTriesPerCandidate: Number($('genAnchorTries').value),
         };
+        /**
+         * ── ⛓⛓ THE SUB-ROSTER, READ AT THE PRESS LIKE EVERY OTHER CONTROL ──
+         *
+         * ⛔ THE WHOLE ROSTER IS SPELLED BY ABSENCE, never by a restriction
+         * that names every member: `?templates=<all six>` and no parameter at
+         * all would be two spellings of one setting, and they would give the
+         * run two different NAMES (`summary.palette` carries the derived one).
+         *
+         * ⛓ AND THE COARSE SPELLING SURVIVES A PRESS THAT DID NOT CHANGE THE
+         * SELECTION. A page loaded with `?families=water,weigh` whose boxes
+         * still tick exactly that family's members keeps saying `?families=` —
+         * rewriting it as `?templates=…` would silently FREEZE the membership
+         * of a restriction whose whole point is that it is by family. The
+         * moment the ticks say something else, the checkbox is what expressed
+         * it, so the fine spelling is what names it.
+         */
+        const checked = checkedNames();
+        if (checked.length === rosterBoxes().length) {
+            roster = null;
+        } else {
+            const coarse = roster?.axis === 'families'
+                ? restrictPalette(paletteFor(biome), roster).templates.map((t) => t.name)
+                : null;
+            const same = coarse !== null && coarse.length === checked.length
+                && coarse.every((n) => checked.includes(n));
+            if (!same) roster = { axis: 'templates', names: checked };
+        }
         return reset;
     }
 
@@ -4349,7 +4594,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -4367,7 +4612,7 @@ async function runGenerate(params, lifetime) {
 
     const resetToSkeleton = async (why) => {
         step = 0;
-        state = generateStep({ seed, biome, step: 0, bounds, budget });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster });
         await show(why);
     };
     $('genStep').onclick = async () => {
@@ -4401,7 +4646,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster });
     await show('the SKELETON');
 
     if (gp.run || payload) {
@@ -5058,7 +5303,28 @@ async function stampSource() {
 }
 
 export async function main() {
-    const params = readParams();
+    /**
+     * ── ⛓⛓ A REFUSED URL SAYS SO, ON THE PAGE ─────────────────────────
+     *
+     * The parameter readers refuse by name — a non-integer `?seed=`, a
+     * `?families=` naming a template this biome does not hold, both roster
+     * spellings at once. ⛔ Until slice 4 that refusal went nowhere: `main()`
+     * was the top of the stack, so the throw became an unhandled rejection and
+     * the page sat on "loading…" with the reason only in the console. A
+     * refusal nobody can see is the graceful-skip shape with the grace removed
+     * — the page did not fall back to anything, it simply stopped.
+     *
+     * ⚠ This does NOT soften the refusal: the arm still does not mount, and
+     * the message is the reader's own, verbatim.
+     */
+    let params;
+    try {
+        params = readParams();
+    } catch (e) {
+        fatal('the URL parameters were REFUSED — nothing was generated', e.message);
+        window.__editorParams = { status: 'refused', message: e.message };
+        return;
+    }
     // ⛓ FIRST, AND NOT AWAITED: the stamp is a diagnostic ABOUT the page and
     // must not delay the page. A failure in it may not stop an arm mounting.
     stampSource().catch(() => {});
