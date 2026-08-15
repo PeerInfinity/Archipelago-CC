@@ -22,7 +22,8 @@ import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
     EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_PALETTE,
     POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError,
-    assertPalette, defineTemplate, enumerateInstantiations, enumerateValues, instantiateKept,
+    assertPalette, catalogueRows, defineTemplate, enumerateInstantiations, enumerateValues,
+    instantiateKept, restrictPalette,
 } from './procgenPalette.js';
 import {
     SEEDLING_DEFAULTS, generateSeedlingLevel, placementGroupId, placementTagId,
@@ -1426,5 +1427,269 @@ describe('the exclusions are a list with measurements in it', () => {
             expect(paletteFamilies.has(family)).toBe(false);
         }
         expect(paletteFamilies.has('shove')).toBe(true);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ VERB 1 — RESTRICT, AND THE CATALOGUE (GENERATE-mode UI slice 4)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('restrictPalette — the sub-roster a run may draw from', () => {
+    it('narrows by FAMILY and keeps ROSTER ORDER and the SAME frozen objects', () => {
+        const r = restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'families', names: ['weigh', 'water'],
+        });
+        // ⛔ FROM THE ROSTER, never a literal (trap 199): the expected list is
+        // the palette's own order filtered, so a template added to the `water`
+        // family arrives here without an edit.
+        const expected = PRE_SWORD_TEMPLATES.filter(
+            (t) => ['water', 'weigh'].includes(t.family));
+        expect(r.templates.map((t) => t.name)).toEqual(expected.map((t) => t.name));
+        // ⛓ IDENTITY, not equality. `rng.pick` indexes this list and
+        // `instantiateKept` looks a base up in it, so a COPY of a template
+        // would be a second object that could drift; a subset of the same
+        // frozen objects cannot.
+        for (const [i, t] of r.templates.entries()) expect(t).toBe(expected[i]);
+        expect(r.items).toBe(PRE_SWORD_PALETTE.items);
+    });
+
+    it('narrows by TEMPLATE, and the two axes can name the SAME sub-roster', () => {
+        const byFamily = restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'families', names: ['water', 'weigh'],
+        });
+        const byName_ = restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'templates', names: ['water-pool', 'wall-gap-lock-weigh'],
+        });
+        expect(byName_.templates).toEqual(byFamily.templates);
+        // ⚠ …and they are still DIFFERENT restrictions, because the NAME says
+        // which question was asked. A run's palette name rides in
+        // `summary.palette`, the payload and the readout.
+        expect(byFamily.name).toBe('pre-sword[families:water,weigh]');
+        expect(byName_.name).toBe('pre-sword[templates:wall-gap-lock-weigh,water-pool]');
+    });
+
+    it('⛔ SPELLS ITS AXIS, because a bare name is ambiguous on THIS roster', () => {
+        // ⛓ MEASURED, not argued: `arrow-lane` is BOTH a family and a template
+        // in the shipped palette, so kickoff §3.4's `pre-sword[arrow-lane]`
+        // would name two different sub-rosters.
+        expect(PRE_SWORD_TEMPLATES.some((t) => t.family === 'arrow-lane')).toBe(true);
+        expect(PRE_SWORD_TEMPLATES.some((t) => t.name === 'arrow-lane')).toBe(true);
+        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['arrow-lane'] })
+            .name).toBe('pre-sword[families:arrow-lane]');
+        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'templates', names: ['arrow-lane'] })
+            .name).toBe('pre-sword[templates:arrow-lane]');
+    });
+
+    it('SORTS and DEDUPES, so one sub-roster has exactly one name', () => {
+        const a = restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'families', names: ['weigh', 'water', 'weigh'],
+        });
+        const b = restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['water', 'weigh'] });
+        expect(a.name).toBe(b.name);
+        expect(a.roster.names).toEqual(['water', 'weigh']);
+    });
+
+    it('null means THE WHOLE ROSTER and hands back the palette itself', () => {
+        expect(restrictPalette(PRE_SWORD_PALETTE, null)).toBe(PRE_SWORD_PALETTE);
+        expect(restrictPalette(PRE_SWORD_PALETTE, undefined)).toBe(PRE_SWORD_PALETTE);
+    });
+
+    it('⛔ REFUSES an unknown member BY NAME and lists the roster', () => {
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'families', names: ['water', 'kill'],
+        })).toThrow(/names "kill".*does not offer.*wall, water, pit/s);
+        // ⚠ THE POINT OF THE REFUSAL: a dropped member would WIDEN the roster.
+        // `kill` is a real post-sword family, so this is the typo that costs.
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'templates', names: ['wall-gap-spinner-killlock'],
+        })).toThrow(ProcgenPaletteError);
+        expect(restrictPalette(POST_SWORD_PALETTE, {
+            axis: 'templates', names: ['wall-gap-spinner-killlock'],
+        }).templates).toHaveLength(1);
+    });
+
+    it('⛔ REFUSES an EMPTY restriction, which is not the same as absent', () => {
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: [] }))
+            .toThrow(/EMPTY restriction on "families" names nothing/);
+    });
+
+    it('⛔ REFUSES an axis it does not know', () => {
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, { axis: 'family', names: ['water'] }))
+            .toThrow(/axis must be "families" or "templates"/);
+    });
+
+    it('carries the EXCLUSIONS whole — a restriction is not an exclusion', () => {
+        const r = restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['water'] });
+        expect(r.excluded).toBe(PRE_SWORD_PALETTE.excluded);
+        expect(r.excluded.length).toBe(EXCLUDED_TEMPLATES.length);
+    });
+
+    it('the restricted palette still passes `assertPalette` — every instantiation', () => {
+        const r = restrictPalette(POST_SWORD_PALETTE, { axis: 'families', names: ['kill', 'water'] });
+        expect(() => assertPalette(r)).not.toThrow();
+        // ⛓ AND the sentinel slots survive the subset: the kill lock's tag and
+        // the group slot are properties of the TEMPLATE OBJECT, which is the
+        // same object, so a restricted run cannot lose them.
+        const kill = r.templates.find((t) => t.family === 'kill');
+        const rows = enumerateValues(kill).map((v) => kill.instantiate(null, v));
+        expect(rows.some((row) => row.entities.some((e) => e.attrs?.tag === PLACEMENT_TAG)))
+            .toBe(true);
+    });
+});
+
+describe('catalogueRows — ⚖ ruling 1\'s "a list of things that can be generated"', () => {
+    it('groups the WHOLE roster by family, built FROM the roster (trap 199)', () => {
+        const cat = catalogueRows(PRE_SWORD_PALETTE);
+        expect(cat.counts.templates).toBe(PRE_SWORD_TEMPLATES.length);
+        expect(cat.counts.excluded).toBe(EXCLUDED_TEMPLATES.length);
+        const listed = cat.groups.flatMap((g) => g.templates.map((t) => t.name));
+        expect(listed).toEqual(PRE_SWORD_TEMPLATES.map((t) => t.name));
+        // every family in the roster has a group, and no group is invented
+        for (const t of PRE_SWORD_TEMPLATES) {
+            expect(cat.groups.some((g) => g.family === t.family)).toBe(true);
+        }
+    });
+
+    it('carries each template\'s DECLARED param schema and its `why`', () => {
+        const cat = catalogueRows(PRE_SWORD_PALETTE);
+        for (const t of PRE_SWORD_TEMPLATES) {
+            const row = cat.groups.flatMap((g) => g.templates).find((r) => r.name === t.name);
+            expect(row.params).toBe(t.params);
+            expect(row.why).toBe(t.why);
+            for (const p of row.params) {
+                expect(p.domain.length).toBeGreaterThan(0);
+                expect(p.domain).toContain(p.default);
+                expect(typeof p.why).toBe('string');
+            }
+        }
+    });
+
+    it('⛔ THE EXCLUDED ROWS ARE IN IT, with cause + measured + wouldNeed VERBATIM', () => {
+        for (const palette of [PRE_SWORD_PALETTE, POST_SWORD_PALETTE]) {
+            const cat = catalogueRows(palette);
+            const listed = cat.groups.flatMap((g) => g.excluded);
+            /**
+             * ⚠ EVERY ROW, EXACTLY ONCE — as a SET, because grouping by family
+             * legitimately reorders the list: pre-sword excludes TWO `kill`
+             * rows (`arrow-ceiling-killlock`, `sandtrap-room`) with two other
+             * families between them, and they join one group. The order this
+             * claim cares about is WITHIN a family, asserted below.
+             */
+            expect([...listed.map((e) => e.name)].sort())
+                .toEqual([...palette.excluded.map((e) => e.name)].sort());
+            expect(listed).toHaveLength(palette.excluded.length);
+            for (const g of cat.groups) {
+                expect(g.excluded.map((e) => e.name)).toEqual(
+                    palette.excluded.filter((e) => e.family === g.family).map((e) => e.name));
+            }
+            for (const e of palette.excluded) {
+                const row = listed.find((r) => r.name === e.name);
+                // VERBATIM — the measurement IS the content of these rows, and
+                // a catalogue that summarised it would show a lossy copy.
+                expect(row.cause).toBe(e.cause);
+                expect(row.measured).toBe(e.measured);
+                expect(row.wouldNeed).toBe(e.wouldNeed);
+                expect(row.refusalText).toBe(e.refusalText ?? null);
+            }
+        }
+    });
+
+    it('⛔ an excluded row is NOT selectable and a roster row IS', () => {
+        const cat = catalogueRows(POST_SWORD_PALETTE);
+        const rows = cat.groups.flatMap((g) => [...g.templates, ...g.excluded]);
+        expect(rows.length).toBe(POST_SWORD_PALETTE.templates.length
+            + POST_SWORD_PALETTE.excluded.length);
+        for (const r of rows) {
+            const isRoster = POST_SWORD_PALETTE.templates.some((t) => t.name === r.name);
+            expect(r.selectable).toBe(isRoster);
+        }
+        // ⚠ …and the number of SELECTABLE rows is the number of checkboxes the
+        // page mounts, which is the roster's own length and not a literal.
+        expect(rows.filter((r) => r.selectable)).toHaveLength(
+            POST_SWORD_PALETTE.templates.length);
+    });
+
+    it('a RESTRICTED palette still catalogues its exclusions, and names its roster', () => {
+        const r = restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['water'] });
+        const cat = catalogueRows(r);
+        expect(cat.palette).toBe('pre-sword[families:water]');
+        expect(cat.roster).toEqual({ axis: 'families', names: ['water'] });
+        expect(cat.counts.excluded).toBe(EXCLUDED_TEMPLATES.length);
+        expect(cat.counts.templates).toBe(1);
+    });
+});
+
+describe('⛓ a RESTRICTED run through the whole certification path', () => {
+    /**
+     * ⛓ THE SUBJECT IS MEASURED, NOT PICKED. `families:water,weigh` at
+     * pre-sword seed 3, target 2 is the cheapest scanned case (68 ms, 2
+     * attempts) that keeps BOTH a water pool — the only pin-declaring family,
+     * so `summary.pins` has something to be wrong about — and a weigh lock,
+     * which is the pre-sword template that uses BOTH sentinel slots
+     * (`PLACEMENT_GROUP` and `PLACEMENT_TAG`). Scanned over seeds 1..6: 1, 2,
+     * 3 and 6 keep both; 4 and 5 keep two pools.
+     *
+     * ⛔ AND THE UNRESTRICTED RUN OF THE SAME SEED KEEPS NEITHER — it keeps
+     * `pit-patch` and `arrow-lane`. That is what makes this a DISCRIMINATOR
+     * (trap 235): a restriction the loop ignored would show up as kept
+     * templates that are not in the restriction at all.
+     */
+    const ROSTER = Object.freeze({ axis: 'families', names: ['water', 'weigh'] });
+    const restricted = () => restrictPalette(PRE_SWORD_PALETTE, ROSTER);
+    const run = (palette) => generateSeedlingLevel({
+        seed: 3, palette, bounds: { obstacleTarget: 2 },
+    });
+
+    it('draws ONLY from the restriction, and the unrestricted run proves it is a subset', () => {
+        const r = run(restricted());
+        const full = run(PRE_SWORD_PALETTE);
+        const allowed = restricted().templates.map((t) => t.name);
+        expect(r.summary.keptCount).toBe(2);
+        for (const k of r.summary.kept) expect(allowed).toContain(k.template);
+        // the control: the same seed, unrestricted, keeps templates the
+        // restriction forbids — so "kept ⊆ restriction" is not vacuous here.
+        expect(full.summary.kept.some((k) => !allowed.includes(k.template))).toBe(true);
+        expect(r.record).not.toEqual(full.record);
+    });
+
+    it('the derived palette name rides in `summary.palette`', () => {
+        expect(run(restricted()).summary.palette).toBe('pre-sword[families:water,weigh]');
+        expect(run(PRE_SWORD_PALETTE).summary.palette).toBe('pre-sword');
+    });
+
+    it('the PIN UNION and the reconstruction behave identically on the subset', () => {
+        const r = run(restricted());
+        // the water pool is kept, so `sound` is obliged — the pin machinery is
+        // exercised rather than passed over.
+        expect(r.summary.kept.some((k) => k.family === 'water')).toBe(true);
+        expect(r.summary.pins).toContain('sound');
+        // ⛔ ONE RECONSTRUCTION, and it works against the RESTRICTED palette
+        // because the subset holds the same base objects.
+        for (const k of r.summary.kept) {
+            const row = instantiateKept(restricted(), k);
+            expect(row.name).toBe(k.template);
+            expect(row.params).toEqual(k.params);
+        }
+    });
+
+    it('the SENTINEL SLOTS are resolved per placement, restricted or not', () => {
+        const r = run(restricted());
+        const weigh = r.summary.kept.find((k) => k.family === 'weigh');
+        expect(weigh).toBeTruthy();
+        const world = worldFor(r.record);
+        // the lock and its button share ONE allocated group, and the goal's
+        // own tag 0 is not what the lock was given.
+        const tags = world.magicalLocks.map((l) => tagOf(l));
+        expect(tags.every((t) => t !== PLACEMENT_TAG)).toBe(true);
+    });
+
+    it('is DETERMINISTIC under the restriction — same roster, same level', () => {
+        expect(run(restricted()).record).toEqual(run(restricted()).record);
+        // ⚠ and the two SPELLINGS of one sub-roster produce one level, because
+        // the subset and its ORDER are what the rng indexes.
+        const byName_ = restrictPalette(PRE_SWORD_PALETTE, {
+            axis: 'templates', names: ['wall-gap-lock-weigh', 'water-pool'],
+        });
+        expect(run(byName_).record).toEqual(run(restricted()).record);
     });
 });
