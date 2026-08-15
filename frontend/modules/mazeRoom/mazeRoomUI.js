@@ -6,10 +6,8 @@
 
 import { setPanelInstance, getModuleApis, consumePendingLoadRegion } from './index.js';
 import {
-    TILE_WALL,
     INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     createState,
-    getTile,
     getObstacle, getItem,
     step,
     detectStepEvents,
@@ -18,8 +16,7 @@ import {
     isExit,
 } from './mazeRoomEngine.js';
 import {
-    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
-    isObstacleCleared, getItemRenderHints,
+    DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared,
 } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
@@ -56,7 +53,11 @@ import {
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
 } from './mazeRoomQueue.js';
-import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
+// ⛓ CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5): the canvas draw, the tile
+// size and the palette left this file so `mazeRoom/lab.html` can draw the
+// same worlds with the same pixels. `_drawWorld` is now an adapter that
+// builds `drawWorld`'s `view` out of this panel's own state.
+import { TILE_PX, drawWorld } from './mazeRoomRender.js';
 import {
     tickHazards,
     resetHazards,
@@ -109,40 +110,6 @@ const DEFAULT_PARAMS = {
     biomeId: DEFAULT_BIOME_ID,
 };
 
-const TILE_PX = 20;
-const COLORS = {
-    floor: '#2a2a2a',
-    wall: '#000000',
-    // §5 tile-rendering rules:
-    // - Entrance: 2px solid green border
-    // - Exit (no gate / open gate): solid green fill
-    // - Exit (closed gate): solid red fill
-    // - Location (closed gate): item sprite + 2px solid red border
-    // - Both entrance and exit: follow the exit row
-    entrance: '#3aa85a',
-    exit: '#3aa85a',
-    exitBlocked: '#d04040',
-    locationBlocked: '#d04040',
-    player: '#4aa8ff',
-    grid: '#1a1a1a',
-    // X1: mana-refill tiles get a fixed blue; cross-game consumable
-    // tiles get a per-substrate hue from consumableTileColor below.
-    manaTile: '#5ac8e8',
-};
-
-/**
- * Stable hue per owning substrate for X1 consumable tiles, so every
- * omsi tile looks like every other omsi tile without needing a
- * registry-wide color declaration. Same hash-to-HSL trick
- * getItemRenderHints uses for items with no library entry.
- */
-function consumableTileColor(substrateId) {
-    let hash = 0;
-    for (let i = 0; i < (substrateId?.length ?? 0); i++) {
-        hash = ((hash << 5) - hash + substrateId.charCodeAt(i)) | 0;
-    }
-    return `hsl(${Math.abs(hash) % 360}, 70%, 60%)`;
-}
 
 // Maps DOM key strings to queue action specs. Queue verbs are the
 // substrate-neutral representation; the move executor translates
@@ -3266,277 +3233,42 @@ export class MazeRoomUI {
         this._ensureVisualizerPlaying();
     }
 
+    /**
+     * ⛓⛓⛓ THE ADAPTER — CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5).
+     *
+     * The ~270 lines that used to live here are now `mazeRoomRender.drawWorld`,
+     * because the maze lab page draws the same worlds and two renderers would
+     * be two pictures of one level. ⛔ Everything this method does is BUILD THE
+     * VIEW: each `this.*` the body read is now a named field, and the whole
+     * point of that list is that a page which has no panel can still supply it.
+     *
+     * ⚠ `isConsumableCollected` CLOSES OVER `currentRegionId` here rather than
+     * taking it as a field. The visualizer's probe is keyed by region and a
+     * standalone page has no regions at all, so the region id is a PANEL fact
+     * and belongs on the panel's side of the seam — the renderer only ever
+     * needs the answer for a cell.
+     *
+     * The pixel gate is `mazeRoomRender.test.js`: an ordered draw-op log,
+     * captured from THIS method before the extraction, compared against both
+     * this adapter and a direct `drawWorld` call.
+     */
     _drawWorld(canvas) {
         const ctx = canvas.getContext('2d');
-        const w = this.world;
-        const itemLib = w.itemLib ?? DEFAULT_ITEMS;
-        const obstacleLib = w.obstacleLib ?? DEFAULT_OBSTACLES;
-        const currentInv = this._currentInventory();
-        // Build a clearance options bag once. When stateManager has
-        // a snapshot ready, isObstacleCleared dispatches rule-typed
-        // obstacles through the shared rule engine (full Rule Builder
-        // schema). When it doesn't (dev/standalone), the local subset
-        // evaluator handles Has/And/Or/True_/False_ as before.
-        const ruleEvaluator = this._currentRuleEvaluator();
-        const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-
-        // Tile base layer: floor / wall.
-        for (let y = 0; y < w.height; y++) {
-            for (let x = 0; x < w.width; x++) {
-                const tile = getTile(w, x, y);
-                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-                ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-            }
-        }
-
-        // Build a quick lookup from tile coords to the exit at that
-        // position (if any), so the per-tile rendering decisions
-        // below don't have to walk world.exits each time.
-        const exitAt = new Map();
-        for (const e of w.exits.values()) {
-            exitAt.set(`${e.x},${e.y}`, e);
-        }
-
-        // Per-location pickup truth in playback mode — see
-        // _currentCheckedLocations for why inventory-keyed checks
-        // can't stand in for this (multi-instance items, e.g.
-        // Adventure's 12 Freeincarnates).
-        const isPlayback = this.externalInventory !== null;
-        const checkedLocations = this._currentCheckedLocations();
-
-        // §5 rendering pass — exits, entrance border, combo-list
-        // obstacles, items, and gate borders, in an order that gets
-        // each tile's stack of overlays right.
-        for (let y = 0; y < w.height; y++) {
-            for (let x = 0; x < w.width; x++) {
-                const key = `${x},${y}`;
-                // Fog of war: tiles outside the seen-set get blacked
-                // out at the end of this method. Skip overlay work
-                // here so undiscovered items / exits / gate borders
-                // don't even render before the blackout.
-                if (this.fogEnabled && !this._isTileVisibleForRender(x, y)) continue;
-                const obstacleId = w.obstacles.get(key);
-                const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
-                const exit = exitAt.get(key);
-                const isExit = !!exit;
-                const isEntrance = (x === w.entrance.x && y === w.entrance.y);
-                const itemId = w.items.get(key);
-                // Playback mode tracks pickups per-location (locationName
-                // baked into the sidecar) so multi-instance items only
-                // disappear at the specific tile that was checked.
-                // Generate dev flow has no locationNames — falls back
-                // to the inventory-keyed check.
-                const locationName = isPlayback ? w.itemLocationNames?.get(key) : null;
-                const itemCollected = isPlayback
-                    ? (locationName ? checkedLocations.has(locationName) : false)
-                    : currentInv.has(itemId);
-                const itemHere = itemId && !itemCollected;
-
-                // Discovery filter — only applies in playback mode.
-                // Exits hide their fill and items hide their sprite
-                // when discovery mode is active and the entry hasn't
-                // been discovered yet. Underlying tile (floor / wall /
-                // entrance) still renders; only the AP-overlays gate.
-                const exitVisible = !isPlayback || !exit
-                    || this._isExitVisibleToUI(exit);
-                const locationVisible = !isPlayback || !locationName
-                    || this._isLocationVisibleToUI(locationName);
-
-                // Exit fill: green by default, red when a logic gate
-                // sits on the tile and isn't cleared. (Both-row of
-                // §5 table is "follows the exit row" — this branch
-                // covers it because we don't paint the entrance
-                // border when isExit is true.)
-                if (isExit && exitVisible) {
-                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
-                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-                }
-
-                // Combo-list obstacles (colored doors) keep their
-                // existing rendering. Logic gates are NOT painted as
-                // tile-fill obstacles — their visual is handled
-                // through the exit-fill / location-border paths.
-                if (obstacle && !isLogicGate) {
-                    const color = obstacle.color ?? '#b84040';
-                    // combo_list obstacles (colored doors) don't use
-                    // the rule engine — clearOpts is harmless here
-                    // but unnecessary; pass it for symmetry.
-                    const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
-                    if (cleared) {
-                        ctx.save();
-                        ctx.globalAlpha = 0.4;
-                        ctx.strokeStyle = color;
-                        ctx.lineWidth = 1.5;
-                        ctx.setLineDash([3, 3]);
-                        ctx.strokeRect(x * TILE_PX + 3, y * TILE_PX + 3, TILE_PX - 6, TILE_PX - 6);
-                        ctx.restore();
-                    } else {
-                        ctx.fillStyle = color;
-                        ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                        ctx.strokeStyle = '#000';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                    }
-                }
-
-                // Items: a circle in the library's color. Skipped
-                // when the player already collected the item, or when
-                // discovery mode hides this location. Foreign items
-                // (no library entry) get a hash-derived color and a
-                // first-letter label so they're visually distinguishable
-                // from each other and from known items.
-                if (itemHere && locationVisible) {
-                    const hints = getItemRenderHints(itemId, itemLib);
-                    ctx.fillStyle = hints.color;
-                    const cx = x * TILE_PX + TILE_PX / 2;
-                    const cy = y * TILE_PX + TILE_PX / 2;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    if (hints.label) {
-                        ctx.save();
-                        ctx.fillStyle = '#000';
-                        ctx.font = `bold ${Math.floor(TILE_PX * 0.45)}px sans-serif`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(hints.label, cx, cy);
-                        ctx.restore();
-                    }
-                }
-
-                // X1 consumable tiles. Drawn as a DIAMOND rather than a
-                // circle so they read as categorically different from
-                // AP item pickups at a glance — which they are: not
-                // locations, not tracked, no bearing on winnability.
-                // Not gated on locationVisible: discovery mode filters
-                // AP locations, and these aren't any.
-                const consumableHere = this.world.consumableTiles?.get(key);
-                const manaHere = this.world.manaTiles?.get(key);
-                if (consumableHere || manaHere) {
-                    const collected = this._visualizer
-                        ?.isConsumableCollected?.(this.currentRegionId, x, y);
-                    const cx = x * TILE_PX + TILE_PX / 2;
-                    const cy = y * TILE_PX + TILE_PX / 2;
-                    const r = TILE_PX * 0.32;
-                    ctx.save();
-                    // Collected tiles stay faintly visible rather than
-                    // vanishing: under loop mode they come back on the
-                    // next reset (X1-R1), so showing where they are is
-                    // useful information, not clutter.
-                    if (collected) ctx.globalAlpha = 0.25;
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy - r);
-                    ctx.lineTo(cx + r, cy);
-                    ctx.lineTo(cx, cy + r);
-                    ctx.lineTo(cx - r, cy);
-                    ctx.closePath();
-                    if (manaHere) {
-                        ctx.fillStyle = COLORS.manaTile;
-                    } else {
-                        // Hash the owning substrate id to a stable hue so
-                        // each foreign game's tiles read as a family,
-                        // mirroring getItemRenderHints' fallback.
-                        ctx.fillStyle = consumableTileColor(consumableHere.substrate);
-                    }
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    const label = manaHere
-                        ? 'M'
-                        : (consumableHere.type?.[0] ?? '?').toUpperCase();
-                    ctx.fillStyle = '#000';
-                    ctx.font = `bold ${Math.floor(TILE_PX * 0.4)}px sans-serif`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(label, cx, cy);
-                    ctx.restore();
-                }
-
-                // Closed logic gate marker: 2px red border. Drawn
-                // independently of the item sprite so the gate stays
-                // visible even after its underlying location's item
-                // has been "collected" — which can happen for any
-                // tile sharing an item id with an already-checked
-                // location, since `currentInv` is keyed by item name
-                // not location name. (See §5 — the spec's "Location
-                // closed" row anticipated only the item-present case;
-                // this fallback covers the no-item case too.) Skipped
-                // on exit tiles, which already render their closed
-                // state via the full red fill above. Also hidden when
-                // discovery mode filters this location — otherwise
-                // the border would leak "something's here" before the
-                // location was supposed to be visible.
-                if (isLogicGate && gateClosed && !isExit && locationVisible) {
-                    ctx.strokeStyle = COLORS.locationBlocked;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-
-                // Entrance border: 2px solid green, only when the
-                // tile isn't also an exit (per the §5 "both = exit
-                // row" rule).
-                if (isEntrance && !isExit) {
-                    ctx.strokeStyle = COLORS.entrance;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-            }
-        }
-
-        ctx.strokeStyle = COLORS.grid;
-        ctx.lineWidth = 1;
-        for (let x = 0; x <= w.width; x++) {
-            ctx.beginPath();
-            ctx.moveTo(x * TILE_PX + 0.5, 0);
-            ctx.lineTo(x * TILE_PX + 0.5, w.height * TILE_PX);
-            ctx.stroke();
-        }
-        for (let y = 0; y <= w.height; y++) {
-            ctx.beginPath();
-            ctx.moveTo(0, y * TILE_PX + 0.5);
-            ctx.lineTo(w.width * TILE_PX, y * TILE_PX + 0.5);
-            ctx.stroke();
-        }
-
-        // Hazard overlays — red paths + facing triangles. Drawn after
-        // grid lines (so the path is visually on top of the grid
-        // texture) and before the fog overlay (so unseen hazards
-        // properly hide behind fog). Hazards live on world.hazards
-        // when a content-module-aware procgen pipeline produced this
-        // region; legacy worlds without the field render normally.
-        drawHazards(ctx, w.hazards, TILE_PX);
-
-        // Fog overlay — paint solid black over every unseen tile. Runs
-        // after grid lines so the grid doesn't leak the unexplored
-        // shape, and before the player render so the player always
-        // shows on top. Player's own tile is always in the seen-set
-        // (any movement onto it expanded visibility), so this never
-        // covers the player.
-        if (this.fogEnabled) {
-            const seen = this.seenTilesByRegion.get(this._seenSetKey());
-            ctx.fillStyle = '#000';
-            for (let y = 0; y < w.height; y++) {
-                for (let x = 0; x < w.width; x++) {
-                    if (seen && seen.has(`${x},${y}`)) continue;
-                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-                }
-            }
-        }
-
-        if (this.state) {
-            const { x, y } = this.state.player_pos;
-            ctx.fillStyle = COLORS.player;
-            ctx.beginPath();
-            ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.35, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        drawWorld(ctx, this.world, {
+            tilePx: TILE_PX,
+            playerPos: this.state ? this.state.player_pos : null,
+            inventory: this._currentInventory(),
+            isPlayback: this.externalInventory !== null,
+            checkedLocations: this._currentCheckedLocations(),
+            ruleEvaluator: this._currentRuleEvaluator(),
+            fogEnabled: this.fogEnabled,
+            isTileVisible: (x, y) => this._isTileVisibleForRender(x, y),
+            seenTiles: this.seenTilesByRegion.get(this._seenSetKey()) ?? null,
+            isExitVisible: (exit) => this._isExitVisibleToUI(exit),
+            isLocationVisible: (name) => this._isLocationVisibleToUI(name),
+            isConsumableCollected: (x, y) => this._visualizer
+                ?.isConsumableCollected?.(this.currentRegionId, x, y),
+        });
     }
 
     // --- Generation ---
