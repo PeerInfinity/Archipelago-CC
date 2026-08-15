@@ -25,21 +25,44 @@
  * **The non-vacuous instrument is the FINAL level's own solve**: a
  * `{strategy: 'shove'}` record naming the template's own block is the
  * obstacle being DISCHARGED, and it cannot be produced by an obstacle nobody
- * walked into. Asked that way over seeds 1..40, `shove` is discharged in
- * seeds 10, 21, 27 and 38 — and 27 and 38 keep no `weigh` template at all, so
- * the block is unambiguously `wall-gap-block`'s own.
+ * walked into.
  * ⇒ §11.7's vacuity conclusion is SUPERSEDED. (`feedback_ledger_shape_limits_the_question`
  * one layer up: the shape of the LABEL decided which question could be asked.)
  *
- * ── AND THE FOUR FAR REFUSALS WERE CORRECT ────────────────────────────
+ * ── ⛓⛓⛓ EVERY SUBJECT HERE WAS RE-MEASURED AT THE GENERATE-mode UI ARC's
+ * ── SLICE 2, AND THE FAMILY CAME OUT STRONGER ────────────────────────
  *
- * Each FAR candidate re-placed ALONE at the same anchor into the bare
- * skeleton SOLVES (216/216/207/211 ticks), so neither the template's legality
- * nor the solver's `shove` apply is at fault — the cause is INTERACTION with
- * the obstacles already placed. The ablation below is what attributes it, and
- * it uses the SAME oracle rather than a second geometry: the first cut of
- * this proof hand-rolled a flood fill over the built world's tile
- * collections, got seed 15 backwards, and was thrown away. A retype of the
+ * Parameterizing the palette changed the draw sequence, so ⚖ ruling 5's
+ * licensed expiry took every seed→anchor pair in this file. Re-scanned over
+ * the same bound (pre-sword, seeds 1..40, target 6): `shove` is discharged in
+ * the FINAL certified level of **thirteen seeds that keep no `weigh` template
+ * at all** — 1, 4, 5, 6, 10, 15, 17, 23, 27, 28, 31, 32 and 38 — where slice
+ * 4 measured four (10, 21, 27, 38). ⛔ REPLACED, NEVER RELAXED: not one
+ * assertion below was loosened; the seeds moved because the draw did, and 27
+ * and 38 SURVIVE their own re-measurement and are still the existence pair.
+ *
+ * ── AND THE FAR REFUSALS ARE STILL CORRECT — WITH ONE NEW CLASS ───────
+ *
+ * A FAR candidate re-placed ALONE at the same anchor into the bare skeleton
+ * SOLVES and discharges its own `shove` in **24 of the 27 far rows the loop
+ * produced**, so for those neither the template's legality nor the solver's
+ * `shove` apply is at fault — the cause is INTERACTION with the obstacles
+ * already placed.
+ *
+ * ⚠⚠ THE OTHER THREE ARE A CLASS SLICE 4's FOUR-ROW SAMPLE HAD NO EXAMPLE OF,
+ * AND THEY ARE RECORDED RATHER THAN SMOOTHED: seed 26's `(ori=v,gap=1)@(7,1)`,
+ * seed 36's `(ori=h,gap=6)@(1,5)` and seed 38's `(ori=h,gap=6)@(1,3)` REFUSE
+ * **even alone in the empty room**. Slice 4's docblock said *"each FAR
+ * candidate re-placed ALONE at the same anchor SOLVES"*, and at 27 rows that
+ * is no longer true of all of them — a statement made about four rows,
+ * re-asked of twenty-seven. None of the three is a subject below: the cases
+ * pick rows whose ALONE arm solves, because that is the premise the ablation
+ * rests on. Saying which rows were passed over, and why, is the difference
+ * between a chosen subject and a filtered one.
+ *
+ * The ablation uses the SAME oracle rather than a second geometry: the first
+ * cut of this proof hand-rolled a flood fill over the built world's tile
+ * collections, got its seed backwards, and was thrown away. A retype of the
  * engine's own connectivity is exactly what this arc has refused six times.
  *
  * ⚠ THESE TESTS ARE GREEN AT THE PARENT, ON PURPOSE. Slice 4 changes no
@@ -51,24 +74,30 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { PRE_SWORD_PALETTE } from './procgenPalette.js';
+import { PRE_SWORD_PALETTE, instantiateKept } from './procgenPalette.js';
 import {
     SEEDLING_DEFAULTS, generateSeedlingLevel, seedlingModel, seedlingOracle,
 } from './procgenSeedling.js';
 
-const templateNamed = (name) => {
-    const t = PRE_SWORD_PALETTE.templates.find((x) => x.name === name);
-    if (!t) throw new Error(`procgenShoveEvidence: no template "${name}" in the palette`);
-    return t;
-};
+/**
+ * ⛓⛓ SLICE 2: EVERY TEMPLATE HERE IS AN INSTANCE, and it is rebuilt through
+ * the arc's ONE reconstruction. A `{template, params}` row is what a kept list
+ * and a trace row carry; the base it names has no geometry to ablate.
+ */
+const instanceFor = (row) => instantiateKept(PRE_SWORD_PALETTE, row);
 
 /**
- * The door's own geometry, DERIVED from the template rather than typed: which
+ * The door's own geometry, DERIVED from the instance rather than typed: which
  * axis the wall runs on, which offset its single gap sits at, and the block
  * standing in it.
+ *
+ * ⛓ `horizontal` READS `params.ori`. It used to read `name.endsWith('-h')` —
+ * which after the collapse is FALSE for every row, so the whole file would
+ * have gone on measuring the vertical axis of horizontal doors. A name-shaped
+ * predicate outlives the name it was about.
  */
 function doorOf(template) {
-    const horizontal = template.name.endsWith('-h');
+    const horizontal = template.params.ori === 'h';
     const block = template.entities.find((e) => e.type === 'pushableblock');
     const along = (c) => (horizontal ? c.dx : c.dy);
     const painted = new Set(template.terrain.map(along));
@@ -89,32 +118,41 @@ const blockOnly = (t) => ({ ...t, terrain: [] });
 function roomBefore(seed, keptRows) {
     const model = seedlingModel({ seed });
     let record = model.skeleton();
-    for (const k of keptRows) record = model.place(record, templateNamed(k.template), k.at);
+    for (const k of keptRows) record = model.place(record, instanceFor(k), k.at);
     return { model, record };
 }
 
 const shoveRecords = (out) => (out.records ?? []).filter((r) => r.strategy === 'shove');
 
 /**
- * ⛔ THE THREE FAR GEOMETRIES, and they are the generator's OWN — seed, anchor
- * and goal all come from `seedlingModel`, so these are not probe rooms of this
- * slice's making. §11.7 measured four rows; seed 9 supplies two of them at the
- * same anchor (the anchor scan is shuffle-then-first, so a re-try of one
- * template in an unchanged room draws the same cell), which makes three
- * distinct geometries.
+ * ⛔ THE THREE FAR GEOMETRIES, and they are the generator's OWN — seed, anchor,
+ * PARAMETERS and goal all come from the loop's own trace, so these are not
+ * probe rooms of this slice's making.
+ *
+ * ⛓ RE-MEASURED AT THE GENERATE-mode UI ARC's SLICE 2. The three are picked
+ * from the 27 far rows over seeds 1..40 under two stated conditions: the ALONE
+ * arm SOLVES and discharges (the premise the second case asserts), and the
+ * three between them cover BOTH orientations and both loop outcomes — seed 2 is
+ * a REVERTED vertical door, seed 10 a KEPT horizontal one, seed 15 a REVERTED
+ * horizontal one. ⛓ `params` is part of the subject now: the same base template
+ * at the same anchor with a different `gap` is a different door.
  */
 const FAR_CASES = Object.freeze([
-    Object.freeze({ seed: 9, template: 'wall-gap-block-h', at: { tx: 1, ty: 3 } }),
-    Object.freeze({ seed: 13, template: 'wall-gap-block-v', at: { tx: 4, ty: 1 } }),
-    Object.freeze({ seed: 15, template: 'wall-gap-block-v', at: { tx: 4, ty: 1 } }),
+    Object.freeze({ seed: 2, params: { ori: 'v', gap: 3 }, at: { tx: 2, ty: 1 } }),
+    Object.freeze({ seed: 10, params: { ori: 'h', gap: 2 }, at: { tx: 1, ty: 5 } }),
+    Object.freeze({ seed: 15, params: { ori: 'h', gap: 4 }, at: { tx: 1, ty: 2 } }),
 ]);
+
+/** The concrete row a FAR case names — the ONE reconstruction, again. */
+const doorFor = (c) => instanceFor({ template: 'wall-gap-block', params: c.params });
 
 describe('⛓ THE TEMPLATE IS THE DOOR — the geometric half of non-vacuity', () => {
     for (const c of FAR_CASES) {
-        it(`seed ${c.seed}: ${c.template}@(${c.at.tx},${c.at.ty}) spans the interior, `
-            + 'and the goal is STRICTLY BEYOND it', () => {
+        it(`seed ${c.seed}: wall-gap-block(ori=${c.params.ori},gap=${c.params.gap})`
+            + `@(${c.at.tx},${c.at.ty}) spans the interior, and the goal is STRICTLY `
+            + 'BEYOND it', () => {
             const model = seedlingModel({ seed: c.seed });
-            const template = templateNamed(c.template);
+            const template = doorFor(c);
             const door = doorOf(template);
             const record = model.skeleton();
 
@@ -139,7 +177,7 @@ describe('⛓ THE TEMPLATE IS THE DOOR — the geometric half of non-vacuity', (
 
         it(`seed ${c.seed}: and the shove is DISCHARGED there — a record, not a keep`, () => {
             const model = seedlingModel({ seed: c.seed });
-            const template = templateNamed(c.template);
+            const template = doorFor(c);
             const oracle = seedlingOracle({ model, items: PRE_SWORD_PALETTE.items });
             const out = oracle.solve(model.place(model.skeleton(), template, c.at),
                 { templates: [template] });
@@ -164,18 +202,24 @@ describe('⛔ THE FAR REVERTS WERE CORRECT — attributed by ABLATION, not by a 
     /**
      * ⛓ TWO DISTINCT CLASSES, and the ablation is what separates them:
      *
-     *   seed 9  — `noBlock` STILL REFUSES ⇒ the block was never the thing in
-     *             the way; the candidate's WALL seals the room (the kept pit
-     *             patch sits directly under the wall's only gap). A correct
+     *   seed 2  — `noBlock` STILL REFUSES ⇒ the block was never the thing in
+     *             the way; the candidate's WALL seals the room. A correct
      *             revert of a candidate that makes the room unsolvable.
      *   seed 15 — `noBlock` SOLVES ⇒ the block IS the door, and no resting
-     *             cell leaves a corridor: k=1 walls the player into the gap
-     *             and k=2 is a kept `wall-segment-v3`, which is Solid to the
-     *             block, so the scan breaks. A correct refusal of the VERB.
+     *             cell leaves a corridor. A correct refusal of the VERB.
+     */
+    /**
+     * ⛓ RE-MEASURED AT SLICE 2, and the two CLASSES survive the migration
+     * unchanged — only the seeds moved. Both subjects are rows the loop itself
+     * REVERTED, both SOLVE alone at the same anchor, and both have
+     * `noWall === SOLVED` (the block alone is walked around), which is the
+     * third arm's premise. ⚠ Two far rows in the same scan have
+     * `noWall === REFUSED` (seed 23's and one of seed 38's) — a class this
+     * pair deliberately does not cover, named rather than filtered out.
      */
     const cases = [
-        { seed: 9, template: 'wall-gap-block-h', at: { tx: 1, ty: 3 }, noBlockSolves: false },
-        { seed: 15, template: 'wall-gap-block-v', at: { tx: 4, ty: 1 }, noBlockSolves: true },
+        { seed: 2, params: { ori: 'v', gap: 3 }, at: { tx: 2, ty: 1 }, noBlockSolves: false },
+        { seed: 15, params: { ori: 'h', gap: 4 }, at: { tx: 1, ty: 2 }, noBlockSolves: true },
     ];
     for (const c of cases) {
         it(`seed ${c.seed}: the candidate refuses in its own room, and the ablation says `
@@ -184,9 +228,9 @@ describe('⛔ THE FAR REVERTS WERE CORRECT — attributed by ABLATION, not by a 
                 seed: c.seed, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
             });
             const { model, record } = roomBefore(c.seed, gen.summary.kept);
-            const template = templateNamed(c.template);
+            const template = doorFor(c);
             const oracle = seedlingOracle({ model, items: PRE_SWORD_PALETTE.items });
-            const kept = gen.summary.kept.map((k) => templateNamed(k.template));
+            const kept = gen.summary.kept.map((k) => instanceFor(k));
             const solve = (rec) => oracle.solve(rec, { templates: [...kept, template] }).verdict;
 
             const full = solve(model.place(record, template, c.at));
@@ -226,7 +270,7 @@ describe('⛔⛔ THE GENERATED-ROOM EXISTENCE CLAIM — §11.7\'s missing half',
             const model = seedlingModel({ seed });
             const oracle = seedlingOracle({ model, items: PRE_SWORD_PALETTE.items });
             const out = oracle.solve(gen.record, {
-                templates: gen.summary.kept.map((k) => templateNamed(k.template)),
+                templates: gen.summary.kept.map((k) => instanceFor(k)),
             });
             expect(out.verdict).toBe('SOLVED');
             expect(out.certification.certified).toBe(true);
@@ -241,7 +285,7 @@ describe('⛔⛔ THE GENERATED-ROOM EXISTENCE CLAIM — §11.7\'s missing half',
             // And the block it moved is the one a kept `shove` template placed.
             const doors = gen.summary.kept.filter((k) => k.family === 'shove');
             const gapCells = doors.map((k) => {
-                const door = doorOf(templateNamed(k.template));
+                const door = doorOf(instanceFor(k));
                 return `${k.at.tx + (door.horizontal ? door.gaps[0] : door.block.dx)},`
                     + `${k.at.ty + (door.horizontal ? door.block.dy : door.gaps[0])}`;
             });

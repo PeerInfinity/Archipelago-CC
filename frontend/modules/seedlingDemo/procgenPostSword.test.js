@@ -35,7 +35,7 @@ import { describe, expect, it } from 'vitest';
 import {
     POST_SWORD_EXCLUDED_TEMPLATES, POST_SWORD_ITEMS, POST_SWORD_PALETTE,
     POST_SWORD_TEMPLATES, PRE_SWORD_ITEMS, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES,
-    assertPalette,
+    assertPalette, enumerateInstantiations, enumerateValues, instantiateKept,
 } from './procgenPalette.js';
 import {
     bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain,
@@ -140,15 +140,24 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      */
     it('is a strict SUPERSET of the pre-sword roster, and the extra is sword-gated', () => {
         expect(POST_SWORD_TEMPLATES).not.toBe(PRE_SWORD_TEMPLATES);
+        // ⛓ SLICE 2: the containment is still BY CONSTRUCTION — the post-sword
+        // array spreads the same frozen BASE objects — so identity holds and
+        // this is the assertion that keeps it holding.
         for (const t of PRE_SWORD_TEMPLATES) expect(POST_SWORD_TEMPLATES).toContain(t);
         const extra = POST_SWORD_TEMPLATES.filter((t) => !PRE_SWORD_TEMPLATES.includes(t));
-        expect(extra.map((t) => t.name)).toEqual([
-            'wall-gap-spinner-killlock-h', 'wall-gap-spinner-killlock-v',
-        ]);
-        // ⛔ Every added row is the KILL family and every one is a DOOR — the
-        // two properties the promotion rests on, asserted rather than assumed.
-        for (const t of extra) {
+        // ⛓ The `-h`/`-v` PAIR became ONE parameterized row at slice 2; what
+        // was two names is one name with an `ori` domain of two.
+        expect(extra.map((t) => t.name)).toEqual(['wall-gap-spinner-killlock']);
+        // ⛔ Every added INSTANTIATION is the KILL family and every one is a
+        // DOOR — the two properties the promotion rests on, now asserted over
+        // the domain rather than over two literals, because `door` is DERIVED
+        // from `ori` and a `build` that dropped it would silently disable the
+        // legality rule that keeps this family from aborting runs.
+        const rows = extra.flatMap((t) => enumerateValues(t).map((v) => t.instantiate(null, v)));
+        expect(rows).toHaveLength(2);
+        for (const t of rows) {
             expect(t.family).toBe('kill');
+            expect(t.door, t.instance).toBe(t.params.ori);
             expect(['h', 'v']).toContain(t.door);
         }
         expect(assertPalette(POST_SWORD_PALETTE)).toBe(true);
@@ -160,7 +169,9 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * that changed the goal tag would otherwise leave this passing.
      */
     it('every kill lock takes a tag the GOAL does not own', () => {
-        const locks = POST_SWORD_TEMPLATES
+        // ⛓ SLICE 2: over every INSTANTIATION — the law has to hold for each
+        // value of the family's domain, not for the row the default builds.
+        const locks = enumerateInstantiations(POST_SWORD_PALETTE)
             .filter((t) => t.family === 'kill')
             .flatMap((t) => t.entities.filter((e) => e.type === 'lock'));
         expect(locks.length).toBeGreaterThan(0);
@@ -235,8 +246,8 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
             seed: 1, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         const model = seedlingModel({ seed: 1 });
-        const templates = gen.summary.kept
-            .map((k) => POST_SWORD_TEMPLATES.find((t) => t.name === k.template));
+        // ⛓ SLICE 2: the ONE reconstruction, not a private lookup.
+        const templates = gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k));
         const under = (items) => seedlingOracle({ model, items })
             .solve(gen.record, { templates });
         const pre = under(PRE_SWORD_ITEMS);
@@ -413,10 +424,22 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
      *
      * ⚠ The standard is unchanged and is the arc's own (§12.1): a RECORD in the
      * FINAL level's solve, never a keep-count.
+     *
+     * ⛓⛓⛓ RE-PINNED AGAIN AT THE GENERATE-mode UI ARC's SLICE 2, for the same
+     * reason and by the same rule. The parameterized palette is part of the
+     * draw stream, so seed 3 no longer keeps a kill template at all — which is
+     * exactly what a roster change should do to a seed-pinned demonstration
+     * (⚖ ruling 5 licensed the expiry). **Seed 13 replaces it**, chosen by
+     * re-running the same scan: over post-sword seeds 1..40 at target 6 the
+     * carriers are 12, 13, 14, 15 and 25; of those, 12 keeps TWO kill templates
+     * (see `procgenPalette.test.js`'s tag-slot case — that is a FINDING, not a
+     * subject), and 15 and 25 keep one whose verb the final walk does not
+     * discharge. **13 and 14 both keep exactly one and DISCHARGE it**; 13 has
+     * five families to 14's four, so it is the richer demonstration.
      */
-    it('seed 3: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
+    it('seed 13: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 3, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 13, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
@@ -427,10 +450,9 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         const killKept = gen.summary.kept.filter((k) => k.family === 'kill');
         expect(killKept).toHaveLength(1);
 
-        const model = seedlingModel({ seed: 3 });
+        const model = seedlingModel({ seed: 13 });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
-            templates: gen.summary.kept
-                .map((k) => POST_SWORD_TEMPLATES.find((t) => t.name === k.template)),
+            templates: gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k)),
         });
         expect(out.verdict).toBe('SOLVED');
         expect(out.certification.certified).toBe(true);

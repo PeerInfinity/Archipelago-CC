@@ -75,21 +75,33 @@ const { generateStep } = await M('watchGenerate.js');
 /**
  * ⛓ THE SUBJECTS ARE MEASURED, NOT PICKED.
  *
- * `PRE` is **seed 1 at target 2**, because that is the cheapest pre-sword case
- * that VETOES something: claim 2 asserts the veto text is verbatim, and the
- * first draft used seed 9, which keeps both its candidates — the check passed
- * over an EMPTY list and said so. A row that reports PASS on nothing is the
- * bounded-sweep trap in acceptance clothes, so the subject moved to one where
- * the assertion has a subject (seeds 1..12 scanned at targets 2 and 3; seed 1
- * is the first with a REVERTED row carrying refusal text).
+ * ⛓⛓⛓ **RE-MEASURED AT THE GENERATE-mode UI ARC's SLICE 2** (the
+ * parameterized-template migration). Drawing a template's parameters spends
+ * rng draws, so EVERY recorded seed→level pair expired — ⚖ ruling 5 licensed
+ * exactly that (*"it's not a problem if the seed level pairs expire"*). Both
+ * subjects below were re-derived by re-running THIS FILE's own documented
+ * scans; the old values are quoted so a reader can see the properties are the
+ * same and only the seeds moved. ⛔ REPLACED, NEVER RELAXED (trap 62): not one
+ * assertion was loosened to make an old seed fit.
  *
- * `CARRIER` is seed 36 post-sword — one of §15.4's thirteen carrier seeds, and
- * it keeps its kill template at step **1** (measured over the pool 3/27/31/36:
- * 3 keeps one at step 2, 27 at step 3), which is what makes the scrub-fork
- * claim affordable in a browser.
+ * `PRE` is **seed 4 at target 2** — the cheapest pre-sword case that VETOES
+ * something, which claim 2 needs because it asserts the veto text is VERBATIM.
+ * A first draft of this file used a seed that keeps both its candidates and the
+ * check passed over an EMPTY list; a row that reports PASS on nothing is the
+ * bounded-sweep trap in acceptance clothes. Re-scanned (seeds 1..12 at targets
+ * 2 and 3): **only seeds 4 and 12 veto at target 2**, and 4 vetoes twice where
+ * 12 vetoes once, so 4 is the subject. (Was seed 1, which now keeps both.)
+ *
+ * `CARRIER` is **seed 41 post-sword**, which keeps its kill template at step
+ * **1** — what makes the scrub-fork claim affordable in a browser. Re-scanned
+ * (post-sword, step 1, seeds 1..72): the pool is 10/12/13/14/15/25/41/54/69,
+ * and all nine SOLVE with a `kill` record and a scratch clear. 41 is the
+ * cheapest walk of the nine (379 ticks against 386–452), which is the only
+ * property that decides between them. (Was seed 36, which no longer keeps one
+ * at step 1.)
  */
-const PRE = { seed: 1, biome: 'pre-sword', count: 2 };
-const CARRIER = { seed: 36, biome: 'post-sword', count: 1 };
+const PRE = { seed: 4, biome: 'pre-sword', count: 2 };
+const CARRIER = { seed: 41, biome: 'post-sword', count: 1 };
 
 /**
  * ⛓ THE ROUND-TRIP SUBJECT, AND EVERY FIELD OF IT MOVES.
@@ -107,10 +119,13 @@ const CARRIER = { seed: 36, biome: 'post-sword', count: 1 };
  *
  * The seed is a MEASUREMENT: at these bounds it must REACH its target, or the
  * step the URL names is not the target the form asked for and the claim gets
- * softer than it reads. Seeds 2/4/5/6/7/8 all reach 2 at tries=3; 5 is used
- * because 1 and 2 are already claim 1–3b's and 36 is the carrier's.
+ * softer than it reads. ⛓ RE-MEASURED at slice 2: **all of seeds 1..12 reach
+ * target 2 at tries=3**, so the choice is only about not colliding with the
+ * other claims' subjects — 6 is used because 4 is `PRE`, 5 is claim 3b's
+ * (`PRE.seed + 1`), 7 is claim 5d's (`PRE.seed + 3`) and 41 is the carrier's.
+ * (Was seed 5, back when `PRE` was seed 1.)
  */
-const ROUND = { seed: 5, biome: 'pre-sword', count: 2, tries: 3, k: 2, tickbudget: 600 };
+const ROUND = { seed: 6, biome: 'pre-sword', count: 2, tries: 3, k: 2, tickbudget: 600 };
 const ROUND_BOUNDS = {
     obstacleTarget: ROUND.count, triesPerStep: ROUND.tries, saturationK: ROUND.k,
 };

@@ -127,16 +127,32 @@ const BUDGET = Object.freeze({ ...DEFAULT_BUDGET });
  * ⛓ THE SCAN ORDERS, FIXED AND PRINTED — this is what makes the selection
  * reproducible rather than curated.
  *
- * Pre-sword walks the naturals. Post-sword walks §15.4's THIRTEEN CARRIER
- * seeds first (the ones measured to keep a `wall-gap-spinner-killlock-*` at
- * target 6), because the batch OWES at least three sword-gated carriers — a
- * post-sword five with no carrier in it would demonstrate the biome's boot
- * and none of its point. ⚠ Seed 66 is a carrier AND a hazard: §15.5 measured
- * it aborting on the COMMITTED nine-template roster. It is left in the scan
- * order on purpose, so that if it aborts the report SAYS so rather than the
- * list quietly not containing it.
+ * Pre-sword walks the naturals. Post-sword walks the CARRIER seeds first (the
+ * ones measured to keep a `wall-gap-spinner-killlock` at target 6), because the
+ * batch OWES at least three sword-gated carriers — a post-sword five with no
+ * carrier in it would demonstrate the biome's boot and none of its point.
+ *
+ * ⛓⛓⛓ **RE-MEASURED AT THE GENERATE-mode UI ARC's SLICE 2.** The
+ * parameterized-template migration changed the draw sequence, so ⚖ ruling 5's
+ * licensed expiry took the whole of §15.4's thirteen with it. Re-scanned over
+ * the same range the batch itself walks (`NATURALS`, seeds 1..40, post-sword,
+ * target 6): **the carriers are 12, 13, 14, 15 and 25**, and seeds 10 and 22
+ * ABORT with a `PhysicsV2Error`.
+ *
+ * ⚠ THE POOL IS NOW FIVE, WHICH IS EXACTLY THE THREE THE BATCH NEEDS PLUS TWO.
+ * §15.4's thirteen came from a 1..72 sweep; this one is bounded at 40 because
+ * that is the range the scan order actually reaches, and a carrier the batch
+ * can never take is not a carrier the batch has
+ * (`feedback_bounded_sweep_must_name_what_it_bounded`). If a future roster
+ * change drops the pool below three, the CARRIER OBLIGATION line below reports
+ * it by name rather than the list quietly being short.
+ *
+ * ⚠ Seeds 10 and 22 are the hazard §15.5 named, at their new numbers: they are
+ * NOT carriers (they abort before finishing), so they are not in this list —
+ * but they ARE in `NATURALS`, so the control arm walks into them and the
+ * skipped-seed table says so.
  */
-const CARRIER_SEEDS = Object.freeze([3, 27, 31, 36, 44, 45, 49, 60, 61, 66, 69, 70, 71]);
+const CARRIER_SEEDS = Object.freeze([12, 13, 14, 15, 25]);
 const NATURALS = Object.freeze(Array.from({ length: 40 }, (_, i) => i + 1));
 
 /**
@@ -560,7 +576,8 @@ for (const [biome, b] of Object.entries(report.biomes)) {
         say('');
         say(`(none — the first ${b.touched.length} seed(s) of the scan order all `
             + 'produced a certified level. That is a fact about this scan, not about the '
-            + 'generator: §15.5 measured 6 of 72 runs aborting on this roster.)');
+            + 'generator: the census below is the denominator, and it is re-measured on '
+            + 'every run rather than cited.)');
     } else {
         say('');
         say('| seed | scan phase | why | detail |');
@@ -612,9 +629,12 @@ if (CENSUS > 0) {
     say('');
     say('⛔ The skipped tables above name what THIS SCAN dropped, which is the obligation. '
         + 'This is the denominator behind it: a scan that takes the first five clean seeds '
-        + 'reports zero skips whatever the underlying rate is, and §15.5 measured 6 of 72 '
-        + 'runs aborting on the eleven-template roster (1 of 72 on the committed nine). '
-        + 'Re-measured here rather than cited.');
+        + 'reports zero skips whatever the underlying rate is. ⛓ THE HISTORICAL NUMBERS ARE '
+        + 'CITED AS HISTORY: §15.5 measured 6 of 72 runs aborting on the ELEVEN-ROW roster '
+        + 'and 1 of 72 on the committed nine — both of which were pre-parameterization '
+        + 'rosters that no longer exist (the GENERATE-mode UI arc\'s slice 2 collapsed them '
+        + 'to 7 parameterized bases). The table below is this run\'s own measurement, and it '
+        + 'is the only one that describes the roster in the tree.');
     say('');
     say('| biome | seeds | ABORTED | saturated short of target | clean |');
     say('|---|---|---|---|---|');
