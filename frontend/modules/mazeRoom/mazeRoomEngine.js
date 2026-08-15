@@ -17,6 +17,10 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
 import { getPostProcessor } from '../shared/procgen/mazeAlgorithms/postProcessors.js';
+import {
+    TILE_FLOOR, TILE_WALL,
+    tileIndex, getTile, setTile,
+} from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
 // Side-effect: ensure all maze backends are registered before
 // generateMaze runs.
@@ -28,9 +32,12 @@ import './mazeAlgorithms/index.js';
 export { clockwisePerimeterTiles };
 
 // --- Tile types ---
+//
+// Defined in shared/procgen/mazeAlgorithms/gridTiles.js (with the grid
+// contract the algorithms depend on) and re-exported here so every caller
+// that imported them from mazeRoomEngine keeps working.
 
-export const TILE_FLOOR = 0;
-export const TILE_WALL = 1;
+export { TILE_FLOOR, TILE_WALL, tileIndex, getTile, setTile };
 
 // --- Inputs ---
 
@@ -366,17 +373,9 @@ function assertInBounds(width, height, pt, label) {
     }
 }
 
-export function tileIndex(world, x, y) {
-    return y * world.width + x;
-}
-
-export function getTile(world, x, y) {
-    return world.tiles[tileIndex(world, x, y)];
-}
-
-export function setTile(world, x, y, tile) {
-    world.tiles[tileIndex(world, x, y)] = tile;
-}
+// tileIndex / getTile / setTile live in
+// shared/procgen/mazeAlgorithms/gridTiles.js and are re-exported at the top
+// of this file.
 
 export function isFloor(world, x, y) {
     if (x < 0 || x >= world.width || y < 0 || y >= world.height) return false;
