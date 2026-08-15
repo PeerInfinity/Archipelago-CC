@@ -3070,10 +3070,24 @@ change**, or the next reader reads it as a regression.
 
 ## 5e. Seedling GENERATE-mode UI — the catalogue + parameterized templates (arc opened 2026-08-14, post-dates this doc)
 
-**Status: DESIGN SETTLED (Fable session 2026-08-14); kickoff ready for Opus.**
+**Status: ⛓ CLOSED 2026-08-15 — all six slices SHIPPED, all seven §7 exit
+criteria discharged. Closing commit `870cbad8f` (slice 6 = `06b45e602`,
+`e8806aa94`, `b27059538`, `531b5fc21`, `870cbad8f`; slices 1–5 = `32f9783c6`, `9ac4dfe24`,
+`b9f1042d3`, `449d6e7d1`, `bf78cc0b7`, `7b305acc2`, `8b0eb1c1e`, `662a708d7`,
+`060e402c6`, `51a0019ab`, `0e957bcaa`, `42cab6b96`, `befb0ce49`, `afaadafa2`).**
 Plan doc *(NewDocs)*: `seedling-generate-ui-kickoff.md` — §1 the user's
-rulings, §3 the design, §4 the six slices. Memory:
-`project_seedling_generate_ui`.
+rulings, §3 the design, §4 the six slices, and **§13 the ARC CLOSE (§13.2 the
+exit criteria answered one by one, §13.3 the consolidated residue)**. Tracked
+summary: `docs/json/developer/procgen/seedling-bot.md` § *The GENERATE-mode UI
+arc*. Memory: `project_seedling_generate_ui`.
+
+⇒ **NEXT in this line: the constructive-mode arc** (PoC §1.15 + §17.6 —
+all-WALL start, carve, `reach-tile` goal, paired with rule-directed §1.10b).
+Its first job is named in §13.3(3): the payload's `skeleton` block is reserved
+and compared, but the URL has NO `?skeleton=` yet, and it lands in the ONE
+reader and the ONE writer together. Also inherited: **wave 2** (weigh/kill lane
+offsets + re-sweep), **free tile/object editing** (its own arc), the ⚖ PARKED
+S1-`clearance` palette question, and ⛔ the CHAIN, still solver-gated.
 
 One paragraph: watch.html's GENERATE arm grows a **catalogue of templates by
 family** with two verbs — RESTRICT (sub-roster runs) and the **directed
@@ -3131,7 +3145,7 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
-seedling generate-UI slices 1–6 (§5e, kickoff ready) ──► constructive-mode arc (PoC §1.15 + rule-directed §1.10b) ; R9 independent of both
+seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc (PoC §1.15 + rule-directed §1.10b) ; R9 independent of both
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)

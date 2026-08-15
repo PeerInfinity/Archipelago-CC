@@ -8713,3 +8713,157 @@ pair in a hand-authored room is not evidence of a defect.
 the vanilla 116 are a committed fixture that the schema must satisfy. A rule
 written from the source citation alone would have shipped; building the real
 data as a test case is what falsified it. See also §9.3 of that plan.
+
+---
+
+## The GENERATE-mode UI arc — the catalogue, parameterized templates, and the directed attempt (TOOLING; CLOSED 2026-08-15)
+
+⚖ Ruled by the user on 2026-08-14, after the procgen PoC arc and BEFORE the
+constructive mode: `watch.html`'s GENERATE arm grows from *"run the loop over
+the whole palette"* into **a catalogue of generatable things** — *"a list of
+things that can be generated, and have a way to set any relevant parameters, and
+have a button to make the generator attempt to generate that specific thing"* —
+and the palette migrates from frozen tile arrangements to **parameterized
+templates**: *"a collection of functions that each generate a coherent set of
+features for the map, instead of a collection of predefined arrangements of
+tiles."* Six slices, one mechanism family each.
+
+### What the arm is now
+
+- **A palette template is a FUNCTION.**
+  `{name, family, params: [{key, domain, default, why}], instantiate(rng, overrides)}`,
+  built by ONE constructor (`procgenPalette.defineTemplate`). `instantiate`
+  returns a **CONCRETE ROW** — exactly the old frozen-row shape — stamped with
+  `params` (the VALUES) and `instance` (the derived label,
+  `wall-segment(ori=v,len=4)`). ⛔ The concrete row is the OUTPUT contract:
+  `anchorsFor`, `legalAt`, `place`, the oracle, the pin union and both sentinel
+  slots consume one and never learn the migration happened. Wave 1 =
+  orientation, wall length, pool/pit w×h, plain-door gap; **86 instantiations
+  are walked through `assertPalette` at module load.** ⚠ `params` means the
+  SCHEMA ARRAY on a base and the VALUES OBJECT on an instance, and both shapes
+  are asserted.
+- **The loop searches for an anchor.** `model.anchorsFor(record, template, rng,
+  limit)` replaced `anchorFor`: ONE shuffle whatever the limit is, so the
+  default of 1 is byte-inert BY CONSTRUCTION. Every anchor tested is a trace row
+  (`anchorTry` / `anchorsOffered`), and the pane labels them `6.1a2`.
+- **VERB 1 — RESTRICT.** `procgenPalette.restrictPalette(palette, {axis,
+  names})` returns a palette of the SAME SHAPE, so verb 1 is an ARGUMENT and the
+  loop core is untouched. The catalogue view is DATA (`catalogueRows`), grouped
+  by family, and the EXCLUDED rows are IN it — greyed, with `cause` + `measured`
+  + `wouldNeed` VERBATIM and no input on them.
+- **VERB 2 — THE DIRECTED ATTEMPT.** `levelGenerator.directedAttempt` places ONE
+  named template on the record ON SCREEN. ⚖ The user's ruling: *verb 2 PREFERS
+  DISCHARGE; the free loop keeps FIRST-SOLVED.* ⛔ ONE walk (`walkAnchors`) with
+  a `keepPolicy`; `generateLevel` passes NONE, so the free ladder is byte-inert
+  by construction and measured 48/48. The readout says WHICH KIND of keep it
+  was, and `KEPT_KIND` has THREE members — `discharged` / `solved-only` /
+  `solved-no-verb` — because a wall has no verb to fall short of.
+- **CLICK-TO-ANCHOR.** ⚖ Ruling 6: *manual editing splits at the TILE boundary.*
+  AT… on a catalogue row arms a canvas click, and the clicked TILE becomes the
+  explicit anchor of ONE directed attempt at that cell. ⛔ NOT tile editing — the
+  unit is still the template. `seedlingModel.refusalAt` adjudicates the cell
+  BEFORE any solve, and `legalAt` is DERIVED from it so the loop's boolean and
+  the page's sentence are one adjudication.
+- **The level is LADDER + DIRECTIVES**, and the URL says so.
+
+### The URL parameters, whole and current
+
+⛔ Checked field by field against `readGenerateParams` at the arc's close; the
+same list is in `watch.html`'s own header docblock. `?budgetms=` is **GONE** (it
+warns and is ignored — the wall clock it set no longer exists).
+
+| parameter | what it names |
+|---|---|
+| `?source=generate` | the arm. ⚠ Also selected by a bare `?gen=`, which is why a press that drops `?gen=` writes `source=generate` in its place |
+| `?seed=` `?biome=` | the level's identity and the BOOT INVENTORY |
+| `?count=` `?tries=` `?k=` | obstacle target · tries per step · saturation K |
+| `?anchortries=` | how many LEGAL anchors one candidate may be SOLVED at (1 = the pre-search behaviour). ⚠ Not `?anchors=` — that is the domain sweep's ENUMERATION MODE |
+| `?families=` / `?templates=` | the sub-roster (comma list). ABSENT is the whole roster; an EMPTY value refuses; ⛔ BOTH present REFUSES |
+| `?directed=` | the directed attempts in order: `template(k=v,…)@<bound><d\|s>[!tx,ty]`, `;`-separated. The clause IS the instance label; `d`/`s` is the keep policy; `!tx,ty` is a CLICKED cell and forces bound `1`. ⛔ Only INPUTS — a URL is an INSTRUCTION, a payload is a REPORT |
+| `?tickbudget=` | the per-solve budget. No control on the form, and PRESERVED across every rewrite |
+| `?run=1` | RUN-ALL on load. DELETED at step 0 rather than spelt `run=0` |
+| `?gen=PATH` | a CLI payload to REPRODUCE and COMPARE — a determinism check across node and the browser, not a picture of a file |
+
+`generate-seedling-level.mjs` carries the same set as flags
+(`--anchor-tries=`, `--families=`, `--templates=`, `--directed=`), parsed by the
+SAME functions, so the two runtimes cannot disagree about what a construction is.
+
+### The standing laws
+
+- ⛔ **ONE WRITER.** `watchGenerate.writeGenerateParams` is the only thing that
+  writes a generate parameter, called from `show()` alone, and it is the inverse
+  of `readGenerateParams`. **Every new control lands WITH its parameter in it.**
+- ⛔ **THE WRITER REFUSES WHAT THE READER WOULD REFUSE.** A non-integer, an
+  unknown family, a directive missing a parameter value, an explicit anchor
+  beside a bound above 1 — each refuses on the way OUT as well as IN. A URL this
+  page cannot reload must not be writable.
+- ⛔ **ONE RECONSTRUCTION.** `procgenPalette.instantiateKept` rebuilds an
+  instance from `{template, params}` for BOTH pin unions and passes NO rng, so a
+  dropped parameter REFUSES instead of silently becoming the default. Inside the
+  loop the concrete rows are RETAINED at keep time (`keptRows`) rather than
+  rebuilt — `levelGenerator.js` imports nothing.
+- ⛔ **ONE DISCHARGE TEST.** `procgenPalette`'s `CLEARER_STRATEGY` / `verbOf` /
+  `dischargesVerb`, which the batch, both sweeps and the page all ask.
+- ⛔ **ONE ADJUDICATION OF LEGALITY.** `seedlingModel.refusalAt`; `legalAt` and
+  `isFree` are derived from it. The rule ORDER (footprint ∪ clearance → lane →
+  door) is load-bearing: `doorClear` refuses by THROWING north-west of the
+  start, so the footprint walk must reject the border ring first.
+- ⛔ **THE PAGE NEVER WRITES `fixtures/`.** A generated or directed level lives
+  in the tab, the save box and the Download button.
+- ⛔ **RAW TRUTH.** Refusals ride VERBATIM; the four attempt outcomes are never
+  blurred; SATURATED says so; a `?gen=` divergence is reported, never smoothed.
+- ⚠ **A ladder RESETS when its identity changes** — a new seed, a new biome, or
+  any directive (the prefix property does not cross one) — and the page says so
+  BEFORE the press.
+
+### The three findings worth carrying off the arc
+
+1. **A ROUND-TRIP FIXED POINT TESTS SELF-CONSISTENCY, NEVER CORRECTNESS.** A
+   writer mutated to emit each parameter's declared DEFAULT round-tripped
+   perfectly: write → read → write agrees with itself for ever when the error is
+   CONSTANT. The same check caught a writer defect one slice earlier only
+   because THAT one was POSITIONAL (a `delete`-then-`set` moved the parameter in
+   the string). ⇒ keep the fixed point for DRIFT, but never let it be the only
+   gate on a VALUE — pair it with an INDEPENDENTLY produced answer.
+2. **A SEARCH BUYS WHAT ITS STOPPING RULE ASKS FOR, WHICH MAY NOT BE WHAT YOU
+   WANTED.** The anchor search recovers KEEPS (`ori=v` 11→12 of 12 seeds at
+   N=2) and leaves DISCHARGES flat (1→2, unchanged out to every legal anchor),
+   because **the first legal anchor SOLVES at 23 of 24 (value, seed) rows** —
+   a first-SOLVE stop never walks to the discharging one. Placeability, not
+   informativeness.
+3. **MEASURE WHAT THE SUBJECT ADMITS BEFORE SIZING A KNOB.** The directed walk's
+   bound was estimated at *"~12–90 solves"*; measured, the room offers a door
+   template **at most 7** legal anchors when empty and **at most 4** once three
+   obstacles are placed (a third of rows: ZERO), because the template declares
+   its slide path as `clearance`. ⇒ the ROOM bounded the walk, not the bound.
+   And the sharper half: on a mid-ladder record NOT ONE of 36 rows had
+   `firstSolved < firstDischarged`, so the shipped prefer-discharge preference
+   is observably **vacuous on a filled room** — recorded with its measurement,
+   ⚖ left as shipped by the user's ruling.
+
+### What it hands on
+
+- **The constructive mode** (all-WALL start, carve, a new `reach-tile` goal) is
+  the next arc, paired with rule-directed generation. This arc's two
+  don't-preclude obligations are discharged for the payload — `DEFAULT_SKELETON
+  = {kind:'empty-bordered'}` rides on every state and `agreementWithPayload`
+  compares it with a both-sides default — and **open for the URL**: there is no
+  `?skeleton=` yet, and when it lands it goes into the ONE reader and the ONE
+  writer together.
+- **Wave 2** — the weigh/kill door LANE offsets, each owing its own re-sweep.
+- **Free tile / object editing** — its own arc; this one stopped at the TEMPLATE
+  boundary on purpose.
+- ⛔ **The CHAIN** (a bent block-push path) stays SOLVER-GATED and unbuilt: the
+  seam can EXPRESS it, the oracle cannot CERTIFY it.
+- **Multi-screen rooms** stay a named horizon item.
+
+### Where the arc's own findings live
+
+The full record is `NewDocs/plans/seedling-generate-ui-kickoff.md` (⚠ `NewDocs/`
+is deliberately gitignored — working machine only): §1 the user's settled
+rulings, §3 the design, §7 the exit criteria; then one as-built per slice — §8
+the URL round trip, §9 the parameterized-template seam and wave 1, §10 the pin
+union / the anchor search / the kill-lock tag blast radius, §11 the catalogue
+and verb 1, §12 verb 2 the directed attempt, and **§13 slice 6 (click-to-anchor)
+together with the ARC CLOSE — §13.2 the exit criteria answered one by one, and
+§13.3 the consolidated residue the next arcs inherit.**
