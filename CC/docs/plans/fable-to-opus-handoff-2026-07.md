@@ -3118,6 +3118,55 @@ the payload/URL identity). ⛔ Not in scope: the CHAIN (bent push paths —
 solver-gated, PoC §17.7 "ask before building"), tile editing, multi-screen
 rooms, `TIME_RUNG.maxExpansions` (parked for R9).
 
+## 5f. The CONSTRUCTIVE-MODE arc — carve-then-obstacle, two substrates on one loop, lab pages in the frontend (arc opened 2026-08-15, post-dates this doc)
+
+**Status: OPEN — designed 2026-08-15 (Fable design session), no slice
+started.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
+the user's rulings, §2 recon incl. the two probes the design rests on, §3 the
+design, §4 the twelve slices with mechanism families (⚑ = Fable-shaped parts),
+§6 open questions with defaults, §7 exit criteria. Memory:
+`project_seedling_constructive_mode`. Tracked summaries land in
+`docs/json/developer/procgen/seedling-bot.md` (new §) and `maze.md`.
+
+One paragraph: the generator's SECOND MODE — start all-WALL, **carve** with the
+maze substrate's algorithms (recursive backtracker / Kruskal's / recursive
+division + `pruneDeadEnds`/`braid`, lifted from `mazeRoom/` into
+`shared/procgen/mazeAlgorithms/` where their registry already meant them to
+be), skeleton kinds = **the maze biome names** (one vocabulary), pass 2 = the
+existing keep-or-revert loop — and its SECOND SUBSTRATE: the maze binds to
+`levelGenerator.js` (loop core moves to a neutral outer-repo dir,
+`procgenCore/`; Seedling byte-identical across the move) with an exact BFS
+oracle, so every mode-level decision (corridor pass 2, the connectivity
+pre-check, chambers, corridor-native doors, branch certification,
+rule-directed's cut-vertex build + graded-differential confirm) is designed and
+tested there first. Each substrate's generator/editor is a **standalone lab
+page hosted in the frontend by `iframePanel`** (maze: NEW page from the
+headless modules + a `drawWorld` extraction; Seedling: watch.html), and **free
+tile/object editing** joins for both (maze already has it; Seedling's edits
+live in the PAYLOAD, not the URL — ⚖ the URL may shrink, §3.9). One Seedling
+engine change: the `reach-cell` goal (spelling already reserved in
+`decisionTrace.KNOWN_GOAL_KINDS`), additive, battery-gated.
+
+⛓ Measured before design (kickoff §2.4): the Seedling solver walks 1-wide
+20-turn corridors 20/20 — but the EXISTING loop over a bare corridor
+saturates with zero kept on 6 of 8 seeds (interior-spanning door families
+NO_ANCHOR 21/21; everything else seals the corridor and reverts) and a
+saturated run cost 106 s (sealing candidates run the planner to its cap
+before refusing). Pass 2 over corridors is the arc's substance.
+
+Slices: 1 shared refactor (⛔ ask before the gitlink bump) · 2 loop move +
+maze bindings · 3 maze lab page · 4 iframe hosting both pages (⚑ message
+vocabulary) · 5 skeleton kinds + `?skeleton=` · 6 yield table + pre-check ·
+7 chambers · 8 corridor-native doors (⚖ BLOCKING ruling §6.1 first; ⚑
+template shapes) · 9 `reach-cell` + branch certification · 10 rule-directed
+(maze first; Seedling gated on 8) · 11 Seedling free editing · 12 URL diet.
+
+⛔ Not in scope: the CHAIN in Seedling (ask first — the maze is where it will
+be designed later), multi-screen, `TIME_RUNG`, widening the oracle's catch,
+hazards rework, block pushing/combat in the maze (bindings shaped for them),
+wiring the maze generator into `generateRegionCore` (lab arm first), promoting
+`procgenCore/` to `shared/`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
@@ -3145,7 +3194,7 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
-seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc (PoC §1.15 + rule-directed §1.10b) ; R9 independent of both
+seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc §5f (OPENED 2026-08-15: shared refactor ──► loop move + maze bindings ──► maze lab page ──► iframe hosting ──► skeleton kinds ──► yield table/pre-check ──► chambers ──► corridor doors [⚖ ruling] ──► reach-cell ──► rule-directed; free editing + URL diet after slice 4) ; R9 independent of both
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)
