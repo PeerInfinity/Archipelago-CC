@@ -359,8 +359,19 @@ if (has('json')) {
             say(`  d${i + 1} ${d.instance.padEnd(30)} `
                 + `${d.at ? `@(${d.at.tx},${d.at.ty})`.padEnd(9) : ''.padEnd(9)} `
                 + `${d.outcome.padEnd(18)} ${describeKeptKind(d)}`);
-            say(`      walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s), `
-                + `bound ${d.bound}, policy ${d.keepPolicy}`);
+            /**
+             * ⛓ SLICE 6: an EXPLICIT anchor is not a search, and the report
+             * says which it was — `at` alone cannot distinguish *the search
+             * found this cell* from *somebody named it*. ⛔ And it does NOT say
+             * "walked 1 of 1 LEGAL anchor(s)" about a clicked cell: the cell
+             * may be exactly the one the model refused.
+             */
+            say(d.anchor
+                ? `      the EXPLICIT anchor (${d.anchor.tx},${d.anchor.ty}) — a CLICK, not a `
+                    + `search: ONE named cell, adjudicated by the model before any solve `
+                    + `(bound ${d.bound}, policy ${d.keepPolicy})`
+                : `      walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s), `
+                    + `bound ${d.bound}, policy ${d.keepPolicy}`);
         }
         say('');
     }

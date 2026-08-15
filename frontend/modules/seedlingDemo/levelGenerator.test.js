@@ -911,6 +911,157 @@ describe('⛓⛓ the DIRECTED attempt — one template, one record, a choosier w
         });
     });
 
+    /**
+     * ── ⛓⛓⛓ SLICE 6 — AN **EXPLICIT** ANCHOR IS NOT A SEARCH ──────────
+     *
+     * ⚖ Ruling 6's manual half, at the seam. The claims are: the model is not
+     * asked for a list, the rng is not touched, `refusalAt` adjudicates BEFORE
+     * the oracle, and the bound is 1 or the attempt refuses by name.
+     */
+    describe('⛓⛓⛓ the EXPLICIT anchor (slice 6)', () => {
+        /** A model whose `refusalAt` refuses one named cell and nothing else. */
+        const clickModel = (refused = null) => fakeModel({
+            refusalAt: (record, template, tx, ty) => (refused
+                && refused.tx === tx && refused.ty === ty
+                ? `"${template.instance}" at (${tx},${ty}) is on the GOAL cell.` : null),
+        });
+
+        it('places at the CLICKED cell and never asks the model for a list', () => {
+            let listed = 0;
+            const rng = fakeRng();
+            const out = directedAttempt({
+                rng,
+                model: fakeModel({
+                    refusalAt: () => null,
+                    anchorsFor: (...a) => { listed += 1; return fakeModel().anchorsFor(...a); },
+                }),
+                oracle: fakeOracle(['SOLVED']),
+                record: { placed: [] },
+                template: row('a'),
+                anchor: { tx: 7, ty: 1 },
+                bound: 1,
+            });
+            expect(out.outcome).toBe(ATTEMPT.KEPT);
+            // ⛔ THE CELL, and it is NOT the (1,1) the fake's search would give —
+            // trap 235: a subject that agreed with the searched answer could not
+            // tell a build that ignored the anchor from one that honoured it.
+            expect(out.at).toEqual({ tx: 7, ty: 1 });
+            expect(out.anchorsOffered).toBe(1);
+            expect(out.anchorsWalked).toBe(1);
+            expect(listed).toBe(0);
+            // ⛓ AND THE STREAM IS UNTOUCHED — `anchorsFor`'s single shuffle is
+            // the only draw a directive ever spends, and this spends none.
+            expect(rng.draws).toBe(0);
+        });
+
+        it('⛔ an ILLEGAL cell is ILLEGAL_PLACEMENT with the model\'s VERBATIM text, and '
+            + 'the oracle is NEVER called', () => {
+            const oracle = fakeOracle(['SOLVED']);
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: clickModel({ tx: 3, ty: 1 }),
+                oracle,
+                record: { placed: [] },
+                template: row('a'),
+                anchor: { tx: 3, ty: 1 },
+                bound: 1,
+            });
+            expect(out.outcome).toBe(ATTEMPT.ILLEGAL_PLACEMENT);
+            // ⛔ THE NEGATIVE HALF IS THE CLAIM: no solve was spent on a cell
+            // the model had already answered about.
+            expect(oracle.calls).toHaveLength(0);
+            expect(out.record).toEqual({ placed: [] });
+            expect(out.at).toBeNull();
+            expect(out.keptKind).toBeNull();
+            expect(out.rows).toHaveLength(1);
+            expect(out.rows[0].reasonText).toBe('"a" at (3,1) is on the GOAL cell.');
+            expect(out.rows[0].classifiedBy).toMatch(/before any solve/);
+            // ⛓ ONE ROW CONTRACT, not two: the pane labels this exactly as it
+            // labels every other anchor row.
+            expect(out.rows[0].anchorTry).toBe(1);
+            expect(out.rows[0].anchorsOffered).toBe(1);
+            expect(out.rows[0].at).toEqual({ tx: 3, ty: 1 });
+        });
+
+        it('⛔ a bound other than 1 beside an explicit anchor REFUSES by name', () => {
+            expect(() => directedAttempt({
+                rng: fakeRng(),
+                model: clickModel(),
+                oracle: fakeOracle(['SOLVED']),
+                record: { placed: [] },
+                template: row('a'),
+                anchor: { tx: 2, ty: 2 },
+                bound: 12,
+            })).toThrow(/explicit cell is a walk of ONE cell/);
+        });
+
+        it('⛔ an anchor that is not two integer TILES refuses — it is a cell, not a pixel',
+            () => {
+                for (const bad of [{ tx: 1.5, ty: 2 }, { tx: '3', ty: 4 }, { tx: 1 }]) {
+                    expect(() => directedAttempt({
+                        rng: fakeRng(),
+                        model: clickModel(),
+                        oracle: fakeOracle(['SOLVED']),
+                        record: { placed: [] },
+                        template: row('a'),
+                        anchor: bad,
+                        bound: 1,
+                    })).toThrow(/integer tiles/);
+                }
+            });
+
+        it('⛔ a model with no `refusalAt` refuses the CLICK rather than skipping the check',
+            () => {
+                expect(() => directedAttempt({
+                    rng: fakeRng(),
+                    model: fakeModel(),
+                    oracle: fakeOracle(['SOLVED']),
+                    record: { placed: [] },
+                    template: row('a'),
+                    anchor: { tx: 2, ty: 2 },
+                    bound: 1,
+                })).toThrow(/needs a `refusalAt` function/);
+            });
+
+        it('⛓ the SEARCH path is untouched — no `anchor` means the model is asked', () => {
+            let listed = 0;
+            const out = directedAttempt({
+                rng: fakeRng(),
+                model: fakeModel({
+                    anchorsFor: (...a) => { listed += 1; return fakeModel().anchorsFor(...a); },
+                }),
+                oracle: fakeOracle(['SOLVED']),
+                record: { placed: [] },
+                template: row('a'),
+                bound: 4,
+            });
+            expect(listed).toBe(1);
+            expect(out.at).toEqual({ tx: 1, ty: 1 });
+            expect(out.anchorsOffered).toBe(4);
+        });
+    });
+
+    /**
+     * ⛔ `keptKind` IS `null` UNDER `FIRST_SOLVED`, NOT `solved-no-verb`.
+     * ⛓ THE DEFECT THIS PINS: `directedAttempt` used to write
+     * `walk.hit.kind ?? KEPT_KIND.NO_VERB`, so a `@…s` directive on a template
+     * that DOES have a verb reported "this family has NO verb to discharge".
+     * The policy did not ask; the absence is the answer.
+     */
+    it('⛔ FIRST_SOLVED leaves `keptKind` NULL — it asked nothing, so it claims nothing', () => {
+        const out = directedAttempt({
+            rng: fakeRng(),
+            model: fakeModel(),
+            oracle: fakeOracle([{ verdict: 'SOLVED', ticks: 10, records: [] }]),
+            record: { placed: [] },
+            template: row('a', 'shove'),
+            bound: 4,
+        });
+        expect(out.outcome).toBe(ATTEMPT.KEPT);
+        expect(out.keptKind).toBeNull();
+        expect(out.keptKind).not.toBe(KEPT_KIND.NO_VERB);
+    });
+
     it('⛔⛔ an engine throw still ABORTS, with its rows attached', () => {
         const boom = new Error('the player fell into a pit');
         boom.name = 'PhysicsV2Error';

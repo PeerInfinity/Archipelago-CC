@@ -180,8 +180,17 @@ export function readRosterParams(q, biome) {
  * the anchor bound — ⚖ kickoff §5: a bounded walk NAMES its bound, and a
  * directive is a bounded walk somebody may re-run years later. ⛔ They are
  * per-directive rather than global because slice 6's click-to-anchor is a
- * directive at bound 1 under `s`, and a construction mixing the two must
- * still be nameable in one string.
+ * directive at bound 1, and a construction mixing the two must still be
+ * nameable in one string.
+ *
+ * ⚖ **A CLICK IS WRITTEN `@1d`, NOT `@1s`** — the reading slice 5's docblock
+ * guessed. The bound-1 walk has nothing to prefer between, so the POLICY is
+ * moot either way; what is not moot is the ANSWER it produces. Under `s` the
+ * walk never asks whether the solve discharges, so the readout can say nothing
+ * about a hand-placed door's usefulness — which is the whole question a person
+ * clicking a cell is asking. Under `d` the predicate still runs and the keep
+ * kind is honest, and `describeKeptKind` says the preference was moot BY NAME
+ * rather than printing *"no anchor within the bound"* about a walk of one.
  *
  * ⛔ **ONLY THE INPUTS ARE ENCODED.** `outcome` and `keptKind` are RESULTS —
  * they are what re-running produces, not what it takes — and a link that
@@ -189,9 +198,10 @@ export function readRosterParams(q, biome) {
  * The payload records them because a payload is a REPORT; the URL is an
  * INSTRUCTION.
  *
- * ⚠ THE ANCHOR SUFFIX IS RESERVED AND ALREADY PARSED (slice 6). The directive
- * record carries an explicit `anchor` field today, always `null`; slice 6 only
- * adds the click that fills it.
+ * ⛓⛓⛓ **THE ANCHOR SUFFIX IS SLICE 6's, AND IT IS NOW FILLED** — `!tx,ty` is
+ * the CLICKED cell, and a directive that carries one is a walk of ONE cell, so
+ * its bound is `1` and the reader, the writer and `directedAttempt` all refuse
+ * any other. ⚖ Ruling 6: template-at-clicked-anchor, never a bare tile.
  */
 
 /** ⚖ Ruling 9(b): the payload RESERVES a skeleton block, so the constructive
@@ -342,6 +352,20 @@ export function parseDirective(text, palette) {
         fail(`watchGenerate: the directive for "${name}" names bound `
             + `${JSON.stringify(boundText)}, which is not a positive integer.`);
     }
+    /**
+     * ⛓ SLICE 6: AN EXPLICIT ANCHOR IS A WALK OF ONE CELL, SO IT IS SPELLED
+     * `@1`. ⛔ `levelGenerator.directedAttempt` refuses any other bound beside
+     * an explicit cell, and the reader refuses it HERE — before any solve —
+     * because `@12d!3,4` names a twelve-anchor search this attempt does not
+     * perform, and a link that means something different from what it says is
+     * the failure this whole grammar exists to avoid.
+     */
+    if (tx !== undefined && bound !== 1) {
+        fail(`watchGenerate: the directive for "${name}" names the EXPLICIT anchor `
+            + `!${tx},${ty} and bound ${bound}. An explicit cell is a walk of ONE cell — `
+            + `spell it \`@1${letter}!${tx},${ty}\`. Any other bound names a search this `
+            + 'attempt does not perform.');
+    }
     return Object.freeze({
         template: name,
         params: Object.freeze(params),
@@ -386,6 +410,15 @@ export function formatDirectives(directives, palette) {
             fail(`watchGenerate: cannot write a directive whose keep policy is `
                 + `${JSON.stringify(d.keepPolicy)} — the URL spells only `
                 + `[${Object.keys(POLICY_LETTER).join(', ')}].`);
+        }
+        // ⛓ SLICE 6, and it is §8.6's law again: the writer refuses what the
+        // reader would refuse. An explicit anchor beside a bound above 1 is a
+        // URL `parseDirective` rejects, so it must not be writable.
+        if (d.anchor && d.bound !== 1) {
+            fail(`watchGenerate: cannot write a directive for "${d.template}" that names both `
+                + `the EXPLICIT anchor (${d.anchor.tx},${d.anchor.ty}) and bound ${d.bound}. `
+                + 'An explicit cell is a walk of ONE cell; `readGenerateParams` would refuse '
+                + 'to read this back.');
         }
         // ⚠ SCHEMA ORDER, and the values are checked on the way OUT as well —
         // the writer refuses what the reader would refuse (§8.6's law).
@@ -870,6 +903,14 @@ export function applyDirective(state, spec, index) {
         record: state.record,
         template,
         keptRows: state.keptTemplates,
+        /**
+         * ⛓⛓⛓ SLICE 6 — THE CLICKED CELL. `null` is a SEARCH, which is every
+         * directive before this slice; a cell makes the walk one anchor long
+         * and puts `model.refusalAt` in front of the oracle. ⛔ The spec's
+         * anchor goes in UNCHANGED, so what the record reports as ASKED FOR is
+         * the same object the URL spelled.
+         */
+        anchor: spec.anchor ?? null,
         bound,
         keepPolicy,
         // ⛓ THE ONE DISCHARGE TEST (`procgenPalette`), injected — `levelGenerator`
@@ -911,6 +952,67 @@ export function applyDirective(state, spec, index) {
             : state.keptTemplates,
         directives: Object.freeze([...(state.directives ?? []), recorded]),
     });
+}
+
+/**
+ * ── ⛓⛓⛓ SLICE 6 — WHICH **TILE** A CLICK LANDED ON ────────────────────
+ *
+ * ⚖ Ruling 6's manual half needs exactly one conversion, and this is it: the
+ * page has never mapped a canvas pixel to a cell (grepped — the only other
+ * pixel arithmetic is the RENDERER's own `fit`/`rect`, which goes the other
+ * way), so there is one helper rather than a second convention.
+ *
+ * ⛔ **IT IS DERIVED FROM THE RECORD'S OWN DIMENSIONS, NOT FROM THE RENDERER'S
+ * `scale`.** The canvas is `world dimensions x ONE uniform integer scale` and
+ * the browser may then present it at any CSS size; asking the ROOM how many
+ * columns it has and the ELEMENT how wide it is on screen is correct under
+ * both, and it does not reach into a closure the renderer owns.
+ *
+ * ⛔ **THE INTEGER NUMERATOR IS DELIBERATE.** `Math.floor(x * cols / width)`
+ * and not `Math.floor((x / width) * cols)`: the second divides first and can
+ * land a pixel that is EXACTLY on a tile boundary at 1.9999999, which is the
+ * previous tile. The boundaries are what the tests drive — the last pixel of
+ * tile k is tile k and the first pixel of tile k+1 is tile k+1 — because an
+ * off-by-one here is invisible to every check that clicks a tile's middle.
+ *
+ * ⚠ AN OUT-OF-RANGE POINT REFUSES rather than clamping. A clamp would silently
+ * turn a click past the room's edge into a click on its last cell, and the
+ * whole point of this slice is that the cell a person named is the cell that
+ * is adjudicated.
+ *
+ * @param {object} o
+ * @param {number} o.x,y          the point RELATIVE to the canvas's top-left,
+ *   in CSS pixels (`clientX - rect.left`).
+ * @param {number} o.width,height the canvas's own on-screen size (`rect.*`).
+ * @param {number} o.cols,rows    the ROOM's dimensions in tiles.
+ * @returns {{tx: number, ty: number}}
+ */
+export function tileAtPoint({ x, y, width, height, cols, rows } = {}) {
+    for (const [what, v] of [['width', width], ['height', height]]) {
+        if (!Number.isFinite(v) || v <= 0) {
+            fail(`watchGenerate: tileAtPoint needs a positive canvas ${what}, got `
+                + `${JSON.stringify(v)}. A zero-sized canvas is a canvas nobody can click, `
+                + 'and dividing by it would name every cell at once.');
+        }
+    }
+    for (const [what, v] of [['cols', cols], ['rows', rows]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`watchGenerate: tileAtPoint needs a positive integer ${what}, got `
+                + `${JSON.stringify(v)} — the room's own dimension in TILES.`);
+        }
+    }
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        fail(`watchGenerate: tileAtPoint needs a finite point, got (${x},${y}).`);
+    }
+    const tx = Math.floor((x * cols) / width);
+    const ty = Math.floor((y * rows) / height);
+    if (tx < 0 || ty < 0 || tx >= cols || ty >= rows) {
+        fail(`watchGenerate: the point (${x},${y}) on a ${width}x${height} canvas is tile `
+            + `(${tx},${ty}), which is outside a ${cols}x${rows} room. ⛔ It REFUSES rather `
+            + 'than clamping: a clamp would turn a click past the edge into a click on the '
+            + 'last cell, and the cell somebody named is the cell that gets adjudicated.');
+    }
+    return { tx, ty };
 }
 
 /**
@@ -1204,18 +1306,38 @@ export function generationRows(trace) {
  */
 export function describeKeptKind(directive) {
     if (directive?.outcome !== 'KEPT') return '';
+    /**
+     * ⛓⛓ SLICE 6: AN EXPLICIT ANCHOR IS A WALK OF ONE CELL, SO THE PREFERENCE
+     * HAD NOTHING TO PREFER BETWEEN — and `solved-only`'s searched wording
+     * (*"no anchor within the bound"*) would read as if a walk had happened and
+     * come up short. It is the same KIND; it is a different sentence, and it is
+     * said HERE because this is the ONE spelling the page and the CLI share.
+     */
+    const clicked = Boolean(directive.anchor);
     switch (directive.keptKind) {
         case KEPT_KIND.DISCHARGED:
             return `kept:discharged — the solve carries a {strategy} record naming this `
                 + 'template\'s own verb';
         case KEPT_KIND.SOLVED_ONLY:
-            return 'kept:solved-only — the room completes, but no anchor within the bound '
-                + 'made the walk USE this template\'s verb';
+            return clicked
+                ? 'kept:solved-only — the room completes, and the solve at THIS cell does not '
+                    + 'USE the template\'s verb. ⚠ The discharge preference is MOOT here: an '
+                    + 'explicit anchor is a walk of ONE cell, so nothing was passed over'
+                : 'kept:solved-only — the room completes, but no anchor within the bound '
+                    + 'made the walk USE this template\'s verb';
         case KEPT_KIND.NO_VERB:
             return 'kept — this family has NO verb to discharge, so first-SOLVED is its '
                 + 'whole criterion and nothing was missed';
         default:
-            return 'kept';
+            /**
+             * ⛔ `keptKind` IS `null` UNDER `FIRST_SOLVED` AND THAT IS THE
+             * ANSWER — the walk never asked. Saying `solved-no-verb` here (the
+             * default `directedAttempt` used to write) claimed a DOOR has no
+             * verb; saying `solved-only` would claim a shortfall nobody looked
+             * for. Both are statements about a question that was never put.
+             */
+            return 'kept — the keep policy was first-SOLVED, so nothing asked whether this '
+                + 'solve DISCHARGES the template\'s verb';
     }
 }
 

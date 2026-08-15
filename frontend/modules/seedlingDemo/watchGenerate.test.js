@@ -29,10 +29,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
     BIOME_NAMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, GENERATE_BIOMES, agreementWithPayload,
-    agreementWithTrace, applyDirective, describeState, directedCost, displaySolve,
-    displayStaging, formatDirectives, generateStep, generateWithDirectives, generationRows,
-    keptTemplatesOf, ladderCost, paletteFor, parseDirective, parseDirectives,
-    readGenerateParams, stepFromParams, writeGenerateParams,
+    agreementWithTrace, applyDirective, describeKeptKind, describeState, directedCost,
+    displaySolve, displayStaging, formatDirectives, generateStep, generateWithDirectives,
+    generationRows, keptTemplatesOf, ladderCost, paletteFor, parseDirective, parseDirectives,
+    readGenerateParams, stepFromParams, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf, terrainAt } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -1247,6 +1247,228 @@ describe('⛓ the payload carries the construction, and an OLD one does not fals
             expect(agreementWithPayload(other, s).differences).toContain('skeleton');
         });
     });
+
+/**
+ * ── ⛓⛓⛓ SLICE 6 — CLICK-TO-ANCHOR ────────────────────────────────────
+ *
+ * ⚖ Ruling 6's manual half: the unit is still the TEMPLATE, the anchor is a
+ * CLICKED cell, and `legalAt` adjudicates it before any solve.
+ */
+describe('⛓⛓⛓ `tileAtPoint` — the ONE pixel-to-tile conversion, at its BOUNDARIES', () => {
+    /**
+     * ⛔ THE EXPECTATIONS ARE LITERALS, not the formula re-run. A check that
+     * recomputed `floor(x * cols / width)` would agree with any implementation
+     * of that expression, including a wrong one — trap 249's shape, in the
+     * smallest place it can happen. A 320 px canvas over a 10-tile room is 32
+     * px a tile, and every number below is that arithmetic done by hand.
+     */
+    const box = { width: 320, height: 320, cols: 10, rows: 10 };
+
+    it('⛔ THE LAST PIXEL OF A TILE IS THAT TILE, and the FIRST of the next is the next', () => {
+        // tile 3 spans x 96..127; tile 4 begins at 128.
+        expect(tileAtPoint({ ...box, x: 96, y: 0 }).tx).toBe(3);
+        expect(tileAtPoint({ ...box, x: 127, y: 0 }).tx).toBe(3);
+        expect(tileAtPoint({ ...box, x: 128, y: 0 }).tx).toBe(4);
+        // and the same on the other axis, because two axes is two chances
+        expect(tileAtPoint({ ...box, x: 0, y: 127 }).ty).toBe(3);
+        expect(tileAtPoint({ ...box, x: 0, y: 128 }).ty).toBe(4);
+    });
+
+    it('the first and last cells of the room are reachable', () => {
+        expect(tileAtPoint({ ...box, x: 0, y: 0 })).toEqual({ tx: 0, ty: 0 });
+        expect(tileAtPoint({ ...box, x: 319, y: 319 })).toEqual({ tx: 9, ty: 9 });
+    });
+
+    it('⛓ it uses the ROOM\'s dimensions and the ELEMENT\'s size, so any CSS scale works', () => {
+        // the same click on a canvas presented at HALF size names the same tile
+        expect(tileAtPoint({ width: 160, height: 160, cols: 10, rows: 10, x: 63, y: 63 }))
+            .toEqual({ tx: 3, ty: 3 });
+        expect(tileAtPoint({ width: 160, height: 160, cols: 10, rows: 10, x: 64, y: 64 }))
+            .toEqual({ tx: 4, ty: 4 });
+    });
+
+    it('⛔ a point past the edge REFUSES rather than clamping to the last cell', () => {
+        expect(() => tileAtPoint({ ...box, x: 320, y: 0 })).toThrow(/outside a 10x10 room/);
+        expect(() => tileAtPoint({ ...box, x: -1, y: 0 })).toThrow(/outside a 10x10 room/);
+        expect(() => tileAtPoint({ ...box, x: 0, y: 999 })).toThrow(/outside a 10x10 room/);
+    });
+
+    it('refuses a zero-sized canvas and a non-integer room by name', () => {
+        expect(() => tileAtPoint({ ...box, width: 0, x: 1, y: 1 }))
+            .toThrow(/positive canvas width/);
+        expect(() => tileAtPoint({ ...box, cols: 0, x: 1, y: 1 }))
+            .toThrow(/positive integer cols/);
+        expect(() => tileAtPoint({ ...box, x: NaN, y: 1 })).toThrow(/finite point/);
+    });
+});
+
+describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound is 1', () => {
+    const palette = paletteFor('pre-sword');
+
+    it('round-trips the anchor at bound 1 under BOTH policies', () => {
+        for (const text of ['wall-segment(ori=h,len=2)@1s!4,6',
+            'wall-gap-block(ori=v,gap=1)@1d!7,1']) {
+            const [d] = parseDirectives(text, palette);
+            expect(d.anchor).toEqual({ tx: Number(text.split('!')[1].split(',')[0]),
+                ty: Number(text.split('!')[1].split(',')[1]) });
+            expect(d.bound).toBe(1);
+            expect(formatDirectives([d], palette)).toBe(text);
+        }
+    });
+
+    it('⛔ an explicit anchor beside a bound above 1 REFUSES — in the reader AND the writer',
+        () => {
+            expect(() => parseDirectives('wall-gap-block(ori=v,gap=1)@12d!7,1', palette))
+                .toThrow(/explicit cell is a walk of ONE cell/);
+            expect(() => formatDirectives(
+                [{ ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 12 }], palette,
+            )).toThrow(/EXPLICIT anchor \(7,1\) and bound 12/);
+        });
+
+    it('⛓ the URL fixed point holds over a clicked directive too', () => {
+        const clicked = { ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 1 };
+        const first = writeGenerateParams('tickbudget=600', {
+            seed: 6, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0, directives: [clicked],
+        });
+        const read = readGenerateParams(`?${first}`);
+        expect(read.directed[0].anchor).toEqual({ tx: 7, ty: 1 });
+        const second = writeGenerateParams(first, {
+            seed: read.seed, biome: read.biome, bounds: read.bounds, step: 0,
+            directives: read.directed,
+        });
+        expect(second).toBe(first);
+        /**
+         * ⛔⛔ AND THE FIXED POINT IS NOT THE GATE ON THE VALUE — slice 5's own
+         * amendment to §8.6/§11.10 (trap 250). A writer that emitted a
+         * CONSTANT wrong anchor would round-trip to itself perfectly, so the
+         * VALUE is checked against a literal spelled out here.
+         */
+        expect(new URLSearchParams(first).get('directed'))
+            .toBe('wall-gap-block(ori=v,gap=1)@1d!7,1');
+    });
+});
+
+describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or refuses by name', () => {
+    /**
+     * ⛓ THE SUBJECT IS MEASURED (see the slice-6 as-built): on pre-sword seed
+     * 6's skeleton the plain vertical door is legal at exactly six cells —
+     * (2,1) (4,1) (5,1) (6,1) (7,1) (8,1) — and a SEARCHED directive lands on
+     * (2,1) after walking 5 of 6. ⛔ (7,1) is therefore neither the searched
+     * answer, nor the start (1,1), nor the goal (3,1), nor the first interior
+     * cell a naive implementation would produce: trap 235, at the anchor.
+     */
+    const CLICK = Object.freeze({ tx: 7, ty: 1 });
+    const clicked = Object.freeze({ ...DIRECTIVE, anchor: CLICK, bound: 1 });
+
+    it('⛓ the SUBJECT\'s own properties first — (7,1) is legal and is NOT where a search goes',
+        () => {
+            const base = generateStep(SUBJECT);
+            const template = paletteFor(SUBJECT.biome).templates
+                .find((t) => t.name === DIRECTIVE.template)
+                .instantiate(null, DIRECTIVE.params);
+            expect(base.model.refusalAt(base.record, template, CLICK.tx, CLICK.ty)).toBeNull();
+            expect(base.model.goalCell).not.toEqual(CLICK);
+            const searched = applyDirective(base, DIRECTIVE, 0).directives[0];
+            expect(searched.at).not.toEqual(CLICK);
+        });
+
+    it('⛓⛓ lands at the CLICKED cell — the record, the directive and the FOOTPRINT agree',
+        () => {
+            const out = applyDirective(generateStep(SUBJECT), clicked, 0);
+            const [d] = out.directives;
+            expect(d.outcome).toBe(ATTEMPT.KEPT);
+            // `anchor` is what was ASKED FOR, `at` is where it LANDED — two
+            // fields because a slice-6 directive has to be able to say whether
+            // its cell was honoured.
+            expect(d.anchor).toEqual(CLICK);
+            expect(d.at).toEqual(CLICK);
+            expect(d.anchorsOffered).toBe(1);
+            expect(d.anchorsWalked).toBe(1);
+            /**
+             * ⛔ AND THE GEOMETRY REALLY MOVED. The vertical door's footprint
+             * starts AT the anchor, so the terrain the record now holds at
+             * (7,1) is the template's own — a directive that recorded the cell
+             * and placed elsewhere passes every field check above.
+             */
+            expect(terrainAt(out.record, CLICK.tx, CLICK.ty))
+                .not.toBe(terrainAt(generateStep(SUBJECT).record, CLICK.tx, CLICK.ty));
+        });
+
+    it('⛔ an ILLEGAL cell refuses BY NAME, the record does NOT move, and no solve is spent',
+        () => {
+            const base = generateStep(SUBJECT);
+            // (3,1) is seed 6's GOAL cell — measured, and asserted here so this
+            // is the goal class rather than whatever else that cell might be.
+            expect(base.model.goalCell).toEqual({ tx: 3, ty: 1 });
+            const out = applyDirective(base, { ...clicked, anchor: { tx: 3, ty: 1 } }, 0);
+            const [d] = out.directives;
+            expect(d.outcome).toBe(ATTEMPT.ILLEGAL_PLACEMENT);
+            expect(d.at).toBeNull();
+            expect(out.record).toEqual(base.record);
+            /**
+             * ⛔ VERBATIM — the MODEL's own sentence, character for character,
+             * not the page's paraphrase of it. Asked of the model directly here
+             * so a row that summarised the refusal would red rather than pass a
+             * substring match.
+             */
+            const template = paletteFor(SUBJECT.biome).templates
+                .find((t) => t.name === DIRECTIVE.template)
+                .instantiate(null, DIRECTIVE.params);
+            const rows = out.trace.filter((r) => r.directive === 1);
+            expect(rows).toHaveLength(1);
+            expect(rows[0].reasonText)
+                .toBe(base.model.refusalAt(base.record, template, 3, 1));
+            expect(rows[0].reasonText).toMatch(/\(3,1\) is the GOAL cell/);
+            expect(rows[0].verdict).toBeNull();
+        });
+
+    it('⛓⛓ a clicked construction REPRODUCES byte for byte through the URL', () => {
+        const pressed = applyDirective(generateStep(SUBJECT), clicked, 0);
+        const search = writeGenerateParams('', {
+            seed: pressed.seed, biome: pressed.biome, bounds: pressed.bounds,
+            step: pressed.step, directives: pressed.directives,
+        });
+        const read = readGenerateParams(`?${search}`);
+        const rebuilt = generateWithDirectives({
+            seed: read.seed, biome: read.biome, step: stepFromParams(read),
+            bounds: read.bounds, budget: read.budget, roster: read.roster,
+            directed: read.directed,
+        });
+        expect(rebuilt.record).toEqual(pressed.record);
+        expect(rebuilt.trace).toEqual(pressed.trace);
+        expect(rebuilt.directives).toEqual(pressed.directives);
+        /**
+         * ⛔ …AND IT IS A DIFFERENT LEVEL FROM THE SEARCHED ONE. Without this
+         * the reproduction claim would hold over a build that ignored the
+         * clicked cell entirely and searched — both sides would ignore it.
+         */
+        expect(rebuilt.record).not.toEqual(applyDirective(generateStep(SUBJECT), DIRECTIVE, 0)
+            .record);
+    });
+
+    /**
+     * ⚖ THE PREFERENCE IS MOOT AT ONE ANCHOR, AND THE READOUT SAYS SO BY NAME
+     * rather than printing "no anchor within the bound" about a walk of one.
+     */
+    it('⛓ `describeKeptKind` names the MOOT preference on a clicked solved-only keep', () => {
+        const searched = { outcome: 'KEPT', keptKind: KEPT_KIND.SOLVED_ONLY, anchor: null };
+        const click = { outcome: 'KEPT', keptKind: KEPT_KIND.SOLVED_ONLY, anchor: CLICK };
+        expect(describeKeptKind(searched)).toMatch(/no anchor within the bound/);
+        expect(describeKeptKind(click)).toMatch(/discharge preference is MOOT/);
+        expect(describeKeptKind(click)).not.toMatch(/no anchor within the bound/);
+        // ⛔ the other two kinds read correctly at either bound and are unchanged
+        expect(describeKeptKind({ outcome: 'KEPT', keptKind: KEPT_KIND.DISCHARGED, anchor: CLICK }))
+            .toMatch(/kept:discharged/);
+        expect(describeKeptKind({ outcome: 'KEPT', keptKind: KEPT_KIND.NO_VERB, anchor: CLICK }))
+            .toMatch(/NO verb to discharge/);
+    });
+
+    it('⛔ a FIRST_SOLVED keep says nothing was ASKED — not that the family has no verb', () => {
+        const out = describeKeptKind({ outcome: 'KEPT', keptKind: null, anchor: null });
+        expect(out).toMatch(/nothing asked whether this solve DISCHARGES/);
+        expect(out).not.toMatch(/NO verb to discharge/);
+    });
+});
 
 describe('⛓ `stepFromParams` — ONE reader of the `run` + `count` encoding', () => {
     it('a skeleton link names step 0 even though `count` carries the form\'s target', () => {

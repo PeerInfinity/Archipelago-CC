@@ -206,6 +206,15 @@ export const KEEP_POLICY = Object.freeze({
  *                 a readout claiming a shortfall that could not exist — the
  *                 shape trap 249 names, so the three cases are never blurred
  *                 into two.
+ *
+ * ⛔⛔ AND `null` IS A FOURTH ANSWER THAT IS NOT A MEMBER: under
+ * `FIRST_SOLVED` **nothing asked**, so there is no kind to report. ⛓ SLICE 6
+ * FIXED A REAL MISLABEL HERE: `directedAttempt` used to write
+ * `walk.hit.kind ?? NO_VERB`, so `?directed=wall-gap-block(…)@12s` — a
+ * spelling the URL has accepted since slice 5 — reported *"this family has NO
+ * verb to discharge"* about a DOOR. A default is not an answer; the honest
+ * value for "the policy did not ask" is the absence, and `describeKeptKind`
+ * prints that case by name.
  */
 export const KEPT_KIND = Object.freeze({
     DISCHARGED: 'discharged',
@@ -879,24 +888,56 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
  * @param {object} o.rng       the anchor stream — ⛔ ITS OWN, derived
  *   deterministically from the seed and the directive's INDEX by the caller.
  *   This walk spends exactly one shuffle from it (`anchorsFor`'s own law).
+ * ── ⛓⛓⛓ SLICE 6: AN **EXPLICIT** ANCHOR IS NOT A SEARCH ───────────────
+ *
+ * ⚖ Ruling 6 — click-to-anchor. When `anchor` is given the walk does not ask
+ * the model for a list: the list IS that one cell, `bound` must be 1, and the
+ * rng is never touched (⛔ `anchorsFor`'s single shuffle is the only draw a
+ * directive ever spends, so an explicit cell spends none — which is why a
+ * clicked directive replays byte-identically without a stream of its own).
+ *
+ * ⛔ AND `model.refusalAt` ADJUDICATES **FIRST**, BEFORE ANY SOLVE. `anchorsFor`
+ * only ever offered cells `legalAt` had accepted, so `ILLEGAL_PLACEMENT` was
+ * unreachable from a searched directive (slice 5 §12.9 named that absence);
+ * a clicked cell is the first anchor nothing vetted, and *"nothing happened"*
+ * is the one answer a person cannot act on. The refusal rides VERBATIM, in the
+ * model's own words, and the oracle is not called at all.
+ *
  * @param {object} o.record    the record to place onto — the level ON SCREEN.
  * @param {object} o.template  a CONCRETE ROW (already instantiated).
  * @param {Array}  [o.keptRows] the concrete rows already in `record`, for the
  *   pin union — the same argument the loop's `keptRows` is (track A).
+ * @param {object} [o.anchor]  `{tx, ty}` — the EXPLICIT cell (slice 6). Absent
+ *   means SEARCH, which is every caller before slice 6.
  * @param {number} o.bound     how many legal anchors this attempt may be
  *   solved at. Named in the result, because ⚖ kickoff §5 says a bounded walk
- *   names its bound.
+ *   names its bound. ⛔ Must be 1 when `anchor` is given.
  * @param {string} [o.keepPolicy] `KEEP_POLICY.PREFER_DISCHARGE` for verb 2.
  * @param {Function} [o.discharges] required by that policy — see `walkAnchors`.
  * @param {object} [o.rowBase] extra fields every emitted row carries (the page
  *   passes `{directive: n, step}` so the pane can label them).
  */
 export function directedAttempt({
-    rng, model, oracle, record, template, keptRows = [], bound,
+    rng, model, oracle, record, template, keptRows = [], bound, anchor = null,
     keepPolicy = KEEP_POLICY.FIRST_SOLVED, discharges = null, rowBase = {},
 } = {}) {
     assertHas(model, ['anchorsFor', 'place'], 'model');
     assertHas(oracle, ['solve'], 'oracle');
+    if (anchor !== null) {
+        assertHas(model, ['refusalAt'], 'model');
+        if (!Number.isInteger(anchor?.tx) || !Number.isInteger(anchor?.ty)) {
+            fail('levelGenerator: an EXPLICIT anchor is `{tx, ty}` with integer tiles, got '
+                + `${JSON.stringify(anchor)}. It is a CELL, not a pixel — the caller owns the `
+                + 'conversion, because the tile is what the directive RECORDS and what a '
+                + 'reproduction replays.');
+        }
+        if (bound !== 1) {
+            fail(`levelGenerator: a directed attempt at the EXPLICIT anchor `
+                + `(${anchor.tx},${anchor.ty}) was given bound ${JSON.stringify(bound)}. ⛔ An `
+                + 'explicit cell is a walk of ONE cell, so 1 is the only bound that describes '
+                + 'it; any other number would name a search this attempt does not perform.');
+        }
+    }
     if (!Number.isInteger(bound) || bound <= 0) {
         fail(`levelGenerator: a directed attempt needs a positive integer bound, got `
             + `${JSON.stringify(bound)}. The bound is what the result NAMES (⚖ kickoff §5), `
@@ -923,7 +964,43 @@ export function directedAttempt({
         rngStateBefore: rng.state,
         drawsBefore: rng.draws,
     };
-    const anchors = model.anchorsFor(record, template, rng, bound);
+    /**
+     * ⛓⛓⛓ SLICE 6 — THE EXPLICIT CELL, ADJUDICATED BY THE MODEL BEFORE ANY
+     * SOLVE, and the FIRST caller that can produce `ILLEGAL_PLACEMENT`.
+     *
+     * ⛔ The row it emits carries the model's VERBATIM sentence, the same shape
+     * `walkAnchors` writes when `place` throws — one row contract, not two —
+     * with `anchorTry: 1` of `anchorsOffered: 1` so the pane labels it exactly
+     * as every other anchor row.
+     */
+    if (anchor && model.refusalAt(record, template, anchor.tx, anchor.ty) !== null) {
+        const why = model.refusalAt(record, template, anchor.tx, anchor.ty);
+        return Object.freeze({
+            outcome: ATTEMPT.ILLEGAL_PLACEMENT,
+            record,
+            at: null,
+            keptKind: null,
+            bound,
+            keepPolicy,
+            anchorsOffered: 1,
+            anchorsWalked: 1,
+            solve: null,
+            rows: Object.freeze([Object.freeze({
+                ...base,
+                anchorTry: 1,
+                anchorsOffered: 1,
+                outcome: ATTEMPT.ILLEGAL_PLACEMENT,
+                at: { tx: anchor.tx, ty: anchor.ty },
+                verdict: null,
+                ticks: null,
+                classifiedBy: 'the level model refused the placement before any solve',
+                reasonText: why,
+            })]),
+        });
+    }
+    const anchors = anchor
+        ? [{ tx: anchor.tx, ty: anchor.ty }]
+        : model.anchorsFor(record, template, rng, bound);
     if (!anchors.length) {
         return Object.freeze({
             outcome: ATTEMPT.NO_ANCHOR,
@@ -983,7 +1060,13 @@ export function directedAttempt({
         outcome,
         record: walk.hit ? walk.hit.candidate : record,
         at: walk.hit ? walk.hit.at : null,
-        keptKind: walk.hit ? (walk.hit.kind ?? KEPT_KIND.NO_VERB) : null,
+        /**
+         * ⛔ NO DEFAULT. Under `FIRST_SOLVED` the walk never asked whether the
+         * solve discharges, so `walk.hit.kind` is `null` and that IS the
+         * answer — see `KEPT_KIND`. The `?? NO_VERB` this used to carry made a
+         * `@…s` directive claim a DOOR has no verb.
+         */
+        keptKind: walk.hit ? walk.hit.kind : null,
         bound,
         keepPolicy,
         anchorsOffered: anchors.length,
