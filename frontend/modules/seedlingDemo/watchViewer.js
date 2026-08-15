@@ -145,6 +145,7 @@ import {
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
     displayStaging, generateStep, generationRows, ladderCost, readGenerateParams,
+    writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
@@ -4020,6 +4021,12 @@ async function runGenerate(params, lifetime) {
      * of a file.
      */
     let payload = null;
+    /**
+     * ⛓ Set once, when a press takes the URL back off `?gen=` — so the detail
+     * line can say the reproduction claim GONE rather than just stop printing
+     * it. See `writeGenerateParams`' docblock for why the two cannot coexist.
+     */
+    let payloadDropped = false;
     if (gp.gen) {
         payload = await fetchJson(gp.gen.startsWith('/') ? gp.gen : `/${gp.gen}`,
             'the generated payload');
@@ -4125,7 +4132,13 @@ async function runGenerate(params, lifetime) {
                 ? `  ·  ?gen= reproduction: ${payload.__check?.agrees === false
                     ? `⛔ DIFFERS in [${payload.__check.differences.join(', ')}]`
                     : (payload.__check ? 'byte-identical' : '(checked at the target)')}`
-                : '');
+                : (payloadDropped
+                    // ⚠ SAID, not silently done. The reproduction line above was a
+                    // statement about the payload's run; this is no longer that run,
+                    // so the claim goes and its absence is explained where it stood.
+                    ? '  ·  ?gen= was DROPPED at the press — this level is the page\'s own '
+                        + 'run and the URL now names it explicitly'
+                    : ''));
 
         /**
          * The page's own readout, for `check-seedling-editor-generate.mjs`.
@@ -4201,7 +4214,30 @@ async function runGenerate(params, lifetime) {
         q.set('goals', formatGoalsParam(state.model.goals));
         q.delete('boot');
         q.delete('level');
-        window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`);
+        /**
+         * ── ⛓⛓⛓ AND THE FORM'S OWN VALUES WITH THEM (slice 1) ─────────
+         *
+         * ⛔ THE PANEL USED TO EDIT LOCAL VARIABLES AND NOTHING ELSE. Seed
+         * 3 → 9, press RUN-ALL, and the address bar still said `?seed=3`:
+         * the link named a level the page was not showing, on a page whose
+         * ONLY persistence is the URL. `writeGenerateParams` is the single
+         * writer and `readGenerateParams` the single reader — see that
+         * docblock for why `count` is `state.bounds.obstacleTarget`, why
+         * `run` is deleted rather than zeroed, and what `?gen=` does here.
+         *
+         * ⚠ WRITTEN FROM `state`, NOT FROM THE FORM. `show()` runs after the
+         * generation, so the state holds the arguments the record on screen
+         * was ACTUALLY made with — the form is where they came from, but it
+         * is the run that the link has to name.
+         */
+        const search = writeGenerateParams(q.toString(), {
+            seed: state.seed,
+            biome: state.biome,
+            bounds: state.bounds,
+            step,
+            payloadOwned: Boolean(payload),
+        });
+        window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
 
         $('genToSolve').disabled = false;
         $('genToManual').disabled = false;
@@ -4242,6 +4278,23 @@ async function runGenerate(params, lifetime) {
      * whole finding was a control that edited a value nobody read).
      */
     function readForm() {
+        /**
+         * ⛔ AND THE PAYLOAD STOPS OWNING THE URL HERE, AT THE FIRST PRESS.
+         *
+         * `?gen=` is an IDENTITY: it names a file whose seed/biome/bounds
+         * REPLACE the URL's, so a URL carrying both it and the form's values
+         * would hold two spellings of one run — exactly what this slice
+         * exists to end. A press means the state on screen is the page's own
+         * from now on (the step it reaches, under the bounds the form now
+         * holds), so `gen` goes and the explicit parameters take over.
+         *
+         * ⚠ THE PRESS, NOT THE EDIT. "Did the form move away from the
+         * payload's values" would be a THIRD place that knows what the
+         * payload's identity is, and it would still have to answer for a
+         * press that changes the STEP without changing a field.
+         */
+        payloadDropped = payloadDropped || Boolean(payload);
+        payload = null;
         const nextSeed = Number($('genSeed').value);
         const nextBiome = $('genBiome').value;
         const reset = nextSeed !== seed || nextBiome !== biome;

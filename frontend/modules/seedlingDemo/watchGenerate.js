@@ -163,6 +163,88 @@ export function readGenerateParams(search) {
 }
 
 /**
+ * ── ⛓⛓⛓ THE OTHER HALF OF `readGenerateParams` — THE WRITE BACK ───────
+ *
+ * ⛔ THE DEFECT THIS ENDS, MEASURED: the generate form's controls edited LOCAL
+ * VARIABLES and nothing else. Type seed 3 → 9, press RUN-ALL, and the address
+ * bar still said `?seed=3` — the link named a level the page was not showing.
+ * That is this repo's recorded TWO-SPELLINGS failure mode with the second
+ * spelling being the address bar itself, and on a page whose ONLY persistence
+ * is the URL it means the run cannot be handed to anybody.
+ *
+ * ⚠ ONE SPELLING PER SETTING: the parameter IS the control's value, this is
+ * the only writer, `readGenerateParams` is still the only reader, and the two
+ * are asserted to be INVERSES rather than assumed to be (`watchGenerate.test`
+ * reads back what this writes and regenerates from it, byte for byte).
+ *
+ * ── WHAT THE URL NAMES IS WHAT IS SHOWN ───────────────────────────────
+ *
+ * ⛓ `count` IS `state.bounds.obstacleTarget` — the target of the
+ * `generateSeedlingLevel` call that produced the record on screen, which at
+ * step k is exactly k because `generateStep` overrides it. So a copied link is
+ * byte-exact BY CONSTRUCTION and not by argument: reloading it re-issues the
+ * SAME call with the SAME arguments (and `count=k` is the CLI's own
+ * `--count=k`, which is the prefix property this arm already rests on).
+ *
+ * ⚠ THE PRICE IS STATED: the form's UNFINISHED target does not survive a copy.
+ * STEP once toward a target of 5 writes `count=1`, so the reloaded page shows
+ * step 1 with the target reading 1 — because after the reload the page's state
+ * IS step 1, and a target nobody has run yet is not state a link has to carry.
+ * (A ladder that wants to go further raises the target again, which is what
+ * the status line already tells it to do.)
+ *
+ * `run=1` iff a RUN is what is on screen. Step 0 is the SKELETON — what a load
+ * with no `?run=` already shows — so `run` is DELETED there rather than spelt
+ * `run=0`, which would be a second way to say the same absence.
+ *
+ * ── ⛔ `?gen=` IS AN IDENTITY, NOT A BOUND ────────────────────────────
+ *
+ * A payload run's identity IS `?gen=`: it names a file that carries
+ * seed/biome/bounds and REPLACES the URL's, so writing those beside it would
+ * put two spellings of one run in one address bar and let them drift the
+ * moment the file on disk changes. So while the payload owns the page, nothing
+ * else is written. At the first PRESS the payload stops owning it — the state
+ * on screen is the page's own from then on — `gen` is DROPPED and the explicit
+ * parameters take over.
+ *
+ * ⚠ `source=generate` GOES IN WITH THEM. `?gen=` is also what SELECTED this
+ * arm (`readGenerateParams`: no `?source=` plus a `?gen=` means GENERATE), so
+ * dropping it without saying `source` would hand back a link that opens a
+ * different arm and shows a level nobody generated.
+ *
+ * ⚠ EVERY OTHER PARAMETER SURVIVES — `?tickbudget=`, `?layers=`, `?side=`,
+ * `?tape=`, `?goals=`. This rewrites the ones it owns and COPIES the rest,
+ * which is the switch arc's law (the URL is rewritten, never rebuilt, never
+ * reloaded). ⛔ `?tickbudget=` matters most and has no control on the form: it
+ * stays URL-only on purpose, and a rewrite that dropped it would silently move
+ * the budget the run on screen was certified under.
+ */
+export function writeGenerateParams(search, {
+    seed, biome, bounds, step, payloadOwned = false,
+} = {}) {
+    const q = new URLSearchParams(search);
+    if (payloadOwned) return q.toString();
+    const int = (name, value) => {
+        if (!Number.isInteger(value)) {
+            fail(`watchGenerate: cannot write ?${name}=${JSON.stringify(value)} — it is not an `
+                + 'integer, and `readGenerateParams` would refuse to read it back. A URL this '
+                + 'page cannot reload is not a link to the run it is showing.');
+        }
+        return String(value);
+    };
+    q.delete('gen');
+    q.set('source', 'generate');
+    q.set('seed', int('seed', seed));
+    q.set('biome', String(biome));
+    q.set('count', int('count', bounds.obstacleTarget));
+    q.set('tries', int('tries', bounds.triesPerStep));
+    q.set('k', int('k', bounds.saturationK));
+    if (int('step', step) >= 1) q.set('run', '1');
+    else q.delete('run');
+    return q.toString();
+}
+
+/**
  * THE COST OF A LADDER, BEFORE IT RUNS.
  *
  * `levelGenerator.costModel` states one run's ceiling; this states the

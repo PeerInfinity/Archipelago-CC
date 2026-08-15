@@ -30,7 +30,7 @@ import { describe, expect, it } from 'vitest';
 import {
     BIOME_NAMES, GENERATE_BIOMES, agreementWithPayload, agreementWithTrace, describeState,
     displaySolve, displayStaging, generateStep, generationRows, keptTemplatesOf, ladderCost,
-    paletteFor, readGenerateParams,
+    paletteFor, readGenerateParams, writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -95,6 +95,140 @@ describe('the URL parameters — every bound named, nothing guessed', () => {
     it('refuses a non-integer bound rather than rounding it', () => {
         expect(() => readGenerateParams('?source=generate&count=2.5'))
             .toThrow(/\?count="2.5" is not an integer/);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE URL ROUND TRIP (GENERATE-mode UI arc, slice 1) ────────────
+ *
+ * The defect these drive: the generate form edited LOCAL VARIABLES and
+ * nothing else, so seed 3 → 9 + RUN-ALL left `?seed=3` in the address bar —
+ * the link named a level the page was not showing, on a page whose only
+ * persistence IS the URL.
+ *
+ * ⛓ THE CLAIM WORTH ASSERTING IS NOT "IT WRITES THE PARAMS" — it is that the
+ * WRITER AND THE READER ARE INVERSES, and that what comes back out generates
+ * the same level byte for byte. Two spellings of one setting agree until one
+ * of them moves; only a round trip catches the move.
+ */
+describe('writeGenerateParams — the write back, and the reader is its inverse', () => {
+    const bounds = { obstacleTarget: 3, triesPerStep: 5, saturationK: 2 };
+
+    it('writes every control the form holds, and the reader reads them back', () => {
+        const search = writeGenerateParams('?source=generate', {
+            seed: 9, biome: 'post-sword', bounds, step: 3,
+        });
+        const p = readGenerateParams(`?${search}`);
+        expect(p.isGenerate).toBe(true);
+        expect(p.seed).toBe(9);
+        expect(p.biome).toBe('post-sword');
+        expect(p.bounds).toEqual(bounds);
+        expect(p.run).toBe(true);
+    });
+
+    /**
+     * ⛓ `count` IS the target of the call that made the record: at step k it
+     * is k, so a copied link re-issues the SAME `generateSeedlingLevel` call.
+     * The form's unfinished target does not survive, and that is the design —
+     * after the reload the page's state IS step k.
+     */
+    it('names the STEP SHOWN as ?count=, not the target the form was aiming at', () => {
+        const search = writeGenerateParams('?source=generate&count=9', {
+            seed: 1, biome: 'pre-sword', bounds: { ...bounds, obstacleTarget: 1 }, step: 1,
+        });
+        expect(readGenerateParams(`?${search}`).bounds.obstacleTarget).toBe(1);
+    });
+
+    /**
+     * ⚠ DELETED, not spelt `run=0`. Step 0 is the SKELETON, which is what a
+     * load with no `?run=` already shows — a second way to say the same
+     * absence is a second spelling.
+     */
+    it('deletes ?run= at the skeleton and sets it for a run', () => {
+        const skeleton = writeGenerateParams('?source=generate&run=1', {
+            seed: 1, biome: 'pre-sword', bounds, step: 0,
+        });
+        expect(skeleton).not.toMatch(/run=/);
+        expect(readGenerateParams(`?${skeleton}`).run).toBe(false);
+        expect(readGenerateParams(`?${writeGenerateParams('?source=generate', {
+            seed: 1, biome: 'pre-sword', bounds, step: 1,
+        })}`).run).toBe(true);
+    });
+
+    /**
+     * ⛔ THE PARAMETERS THIS DOES NOT OWN ARE COPIED, NOT REBUILT.
+     * `?tickbudget=` is the one that bites: it has NO control on the form, so
+     * a rewrite that dropped it would silently move the budget the level on
+     * screen was certified under.
+     */
+    it('preserves every parameter it does not own — ?tickbudget= above all', () => {
+        const search = writeGenerateParams(
+            '?source=generate&tickbudget=1200&layers=path&side=js&tape=x.json&goals=place:3',
+            { seed: 2, biome: 'pre-sword', bounds, step: 2 },
+        );
+        const q = new URLSearchParams(search);
+        expect(q.get('tickbudget')).toBe('1200');
+        expect(q.get('layers')).toBe('path');
+        expect(q.get('side')).toBe('js');
+        expect(q.get('tape')).toBe('x.json');
+        expect(q.get('goals')).toBe('place:3');
+        expect(readGenerateParams(`?${search}`).budget.maxTicksPerTarget).toBe(1200);
+    });
+
+    /**
+     * ⛔ `?gen=` IS AN IDENTITY. While the payload owns the page nothing else
+     * is written beside it — two spellings of one run in one address bar is
+     * the whole defect — and it is left exactly as it was found.
+     */
+    it('writes NOTHING while the payload owns the URL', () => {
+        const before = '?gen=/x.json&layers=path';
+        expect(writeGenerateParams(before, {
+            seed: 99, biome: 'post-sword', bounds, step: 4, payloadOwned: true,
+        })).toBe(new URLSearchParams(before).toString());
+    });
+
+    /**
+     * ⚠ AND `source=generate` GOES IN WITH THE DROP. `?gen=` was also what
+     * SELECTED this arm, so dropping it silently would hand back a link that
+     * opens a different arm.
+     */
+    it('drops ?gen= once the page owns the run, and says ?source= so the link still lands here',
+        () => {
+            const search = writeGenerateParams('?gen=/x.json', {
+                seed: 7, biome: 'pre-sword', bounds, step: 2,
+            });
+            expect(search).not.toMatch(/gen=/);
+            const p = readGenerateParams(`?${search}`);
+            expect(p.gen).toBe(null);
+            expect(p.isGenerate).toBe(true);
+            expect(p.seed).toBe(7);
+        });
+
+    it('refuses to write a value the reader would refuse to read back', () => {
+        expect(() => writeGenerateParams('', {
+            seed: 1.5, biome: 'pre-sword', bounds, step: 1,
+        })).toThrow(/cannot write \?seed=1.5/);
+        expect(() => writeGenerateParams('', {
+            seed: 1, biome: 'pre-sword', bounds: { ...bounds, triesPerStep: NaN }, step: 1,
+        })).toThrow(/cannot write \?tries=/);
+    });
+
+    /**
+     * ⛓⛓ THE ROUND TRIP THAT MATTERS: the URL a step writes, read back and
+     * REGENERATED, is that step's own level byte for byte. Everything above
+     * is about strings; this is about the level the link actually opens.
+     */
+    it('⛓ a step\'s own URL regenerates that step\'s level, byte for byte', () => {
+        const s = generateStep({ seed: 9, biome: 'pre-sword', step: 2 });
+        const search = writeGenerateParams('?source=generate&seed=3&count=99', {
+            seed: s.seed, biome: s.biome, bounds: s.bounds, step: s.step,
+        });
+        const p = readGenerateParams(`?${search}`);
+        const again = generateStep({
+            seed: p.seed, biome: p.biome, step: p.bounds.obstacleTarget, bounds: p.bounds,
+        });
+        expect(json(again.record)).toBe(json(s.record));
+        expect(json(again.trace)).toBe(json(s.trace));
     });
 });
 
