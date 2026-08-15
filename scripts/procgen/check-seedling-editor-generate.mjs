@@ -60,6 +60,15 @@
  *     standing, so the link named a level the page was not showing. ⛔ Both
  *     halves are asserted because a writer nobody reads back is the two-
  *     spellings defect wearing a green tick.
+ *  7. **⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPT** (GENERATE-mode UI arc, slice 5).
+ *  8. **⛓⛓⛓ CLICK-TO-ANCHOR** (slice 6) — AT… arms a canvas click, the
+ *     clicked TILE becomes the explicit anchor of ONE directed attempt at
+ *     exactly that cell, and an ILLEGAL cell refuses BY NAME with the model's
+ *     own text WITHOUT spending a solve. ⛔ The tile is checked against an
+ *     answer THIS FILE computes from the canvas geometry — the URL fixed point
+ *     cannot gate a VALUE (trap 250), and the click lands on the LAST PIXEL of
+ *     the target tile because an off-by-one is invisible to a middle-of-tile
+ *     click.
  *
  * Run: node scripts/procgen/check-seedling-editor-generate.mjs
  *      node scripts/procgen/check-seedling-editor-generate.mjs --host=http://localhost:8000
@@ -81,6 +90,10 @@ const {
     DIRECTED_ANCHOR_TRIES, generateStep, generateWithDirectives, paletteFor,
 } = await M('watchGenerate.js');
 const { KEEP_POLICY } = await M('levelGenerator.js');
+// ⛓ SLICE 6: a pure READER of a record, used to say WHERE the clicked
+// template's footprint actually landed. Both records it is asked about came out
+// of the BROWSER, so this is an independent read of the browser's own answer.
+const { terrainAt } = await M('procgenLevel.js');
 
 /**
  * ⛓ THE SUBJECTS ARE MEASURED, NOT PICKED.
@@ -238,6 +251,26 @@ const DIRECT_SPEC = {
  * ⛔ ILLEGAL_PLACEMENT is NOT among them and its absence is NAMED rather than
  * left looking untested — see claim 7d.
  */
+/**
+ * ⛓⛓⛓ CLAIM 8's SUBJECTS — CLICK-TO-ANCHOR (slice 6).
+ *
+ * ⛔ THE CLICKED CELL IS CHOSEN BY MEASUREMENT AND EVERY PROPERTY IS ASSERTED
+ * BELOW BEFORE THE CLAIM USES IT (trap 235, at the anchor). On pre-sword seed
+ * 6's skeleton the plain vertical door is legal at exactly six cells — (2,1)
+ * (4,1) (5,1) (6,1) (7,1) (8,1) — and a SEARCHED directive lands on (2,1)
+ * after walking 5 of 6. So (7,1) is:
+ *   · LEGAL (or the claim would be the illegal case wearing the wrong name);
+ *   · NOT the searched answer — a build that ignored the clicked cell and
+ *     searched would land somewhere else and red the value check;
+ *   · not the START (1,1), not the GOAL (3,1), and not (1,1)-the-first-
+ *     interior-cell that a naive implementation would produce by accident.
+ *
+ * `ILLEGAL_CLICK` is seed 6's GOAL cell, so the refusal is a class the model
+ * names rather than a footprint that happens not to fit.
+ */
+const CLICK = { tx: 7, ty: 1 };
+const ILLEGAL_CLICK = { tx: 3, ty: 1 };
+
 const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
     template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
 const REVERTED_CASE = { seed: 2, biome: 'pre-sword', step: 6,
@@ -341,6 +374,42 @@ const nodeDirect = generateWithDirectives({
         + 'them would rebuild a different instance rather than coincide with this one',
         `${json(DIRECT.params)} vs defaults `
         + `${json(Object.fromEntries(base.params.map((pp) => [pp.key, pp.default])))}`);
+}
+
+// ── node's answers for CLAIM 8, and the clicked cell's own properties ──
+const CLICK_SPEC = { ...DIRECT_SPEC, anchor: CLICK, bound: 1 };
+const ILLEGAL_SPEC = { ...DIRECT_SPEC, anchor: ILLEGAL_CLICK, bound: 1 };
+const nodeClicked = generateWithDirectives({
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [CLICK_SPEC],
+});
+const nodeIllegal = generateWithDirectives({
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [ILLEGAL_SPEC],
+});
+{
+    const skel = generateStep({ seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step });
+    const instance = paletteFor(DIRECT.biome).templates
+        .find((t) => t.name === DIRECT.template).instantiate(null, DIRECT.params);
+    check(skel.model.refusalAt(skel.record, instance, CLICK.tx, CLICK.ty) === null
+        && nodeClicked.directives[0].outcome === 'KEPT',
+        `⛓ the CLICKED cell (${CLICK.tx},${CLICK.ty}) is LEGAL for this instance and the `
+        + 'attempt at it is KEPT — otherwise claim 8c is the illegal case under another name',
+        `${nodeClicked.directives[0].outcome}/${nodeClicked.directives[0].keptKind}`);
+    check(json(nodeDirect.directives[0].at) !== json(CLICK)
+        && json(skel.model.goalCell) !== json(CLICK)
+        && !(CLICK.tx === 1 && CLICK.ty === 1),
+        '⛔ AND IT IS NOT WHERE A SEARCH GOES, not the goal, and not (1,1) — a build that '
+        + 'ignored the clicked cell would land elsewhere rather than coincide with it',
+        `search lands ${json(nodeDirect.directives[0].at)}, goal ${json(skel.model.goalCell)}, `
+        + `click ${json(CLICK)}`);
+    check(json(nodeClicked.record) !== json(nodeDirect.record),
+        '⛔ …so the clicked level and the SEARCHED level are different levels',
+        `clicked kept at ${json(nodeClicked.directives[0].at)}`);
+    check(json(skel.model.goalCell) === json(ILLEGAL_CLICK)
+        && nodeIllegal.directives[0].outcome === 'ILLEGAL_PLACEMENT'
+        && json(nodeIllegal.record) === json(skel.record),
+        `⛓ and the ILLEGAL cell (${ILLEGAL_CLICK.tx},${ILLEGAL_CLICK.ty}) is this seed's GOAL `
+        + 'cell — ILLEGAL_PLACEMENT, and the record does not move',
+        `${nodeIllegal.directives[0].outcome}`);
 }
 
 // ── the browser ───────────────────────────────────────────────────────
@@ -1063,22 +1132,24 @@ const settled = (step, seed = null) => page.waitForFunction(
         }
     }
     /**
-     * ⛔⛔ THE CLASS THAT IS NOT REACHABLE, NAMED WITH ITS REASON RATHER THAN
-     * LEFT LOOKING UNTESTED.
+     * ⛔⛔ THE FOURTH CLASS IS NO LONGER AN ABSENCE — IT IS DRIVEN, IN CLAIM 8e.
      *
-     * `ILLEGAL_PLACEMENT` cannot occur in a SEARCHED directive: `anchorsFor`
-     * returns only cells `legalAt` already accepted, so `place` has nothing
-     * left to refuse. It becomes reachable in SLICE 6, where the anchor is a
-     * CLICKED cell that `legalAt` never vetted — which is exactly why slice
-     * 6's own charter says an illegal cell must refuse BY NAME without a solve.
-     * ⛓ The path is built and unit-tested (`levelGenerator.test.js`); what is
-     * absent here is a way to REACH it from this page today.
+     * Slice 5 recorded here that `ILLEGAL_PLACEMENT` was UNREACHABLE from a
+     * SEARCHED directive (`anchorsFor` only offers cells `legalAt` accepted, so
+     * `place` has nothing left to refuse) and named that absence with its
+     * reason rather than leaving the class looking untested. ⛓ Slice 6's
+     * CLICKED cell is the first caller that can produce it, so the stated
+     * absence is REPLACED by a driven case — trap 62: replace, never relax.
+     * What survives here is the half that is still true, and it is asserted
+     * rather than narrated: a SEARCHED directive cannot reach the class.
      */
-    check(true,
-        '⛔ ILLEGAL_PLACEMENT is UNREACHABLE from a searched directive and its absence is '
-        + 'NAMED: `anchorsFor` only offers cells `legalAt` accepted, so `place` has nothing '
-        + 'to refuse. Slice 6\'s clicked anchor is the first caller that can produce it; '
-        + 'the path itself is driven in levelGenerator.test.js', 'stated, not skipped');
+    check(!nodeDirect.trace.some((r) => r.outcome === 'ILLEGAL_PLACEMENT')
+        && nodeIllegal.trace.some((r) => r.outcome === 'ILLEGAL_PLACEMENT'),
+        '⛔ ILLEGAL_PLACEMENT is unreachable from a SEARCHED directive and REACHABLE from a '
+        + 'CLICKED one — the same template, the same seed, the two anchor paths',
+        `searched: ${nodeDirect.trace.filter((r) => r.directive).map((r) => r.outcome)
+            .join('/')} · clicked-illegal: ${nodeIllegal.trace.filter((r) => r.directive)
+            .map((r) => r.outcome).join('/')}`);
 
     // ── 7e: STEP after a directive RESETS, and said so BEFORE the press ──
     {
@@ -1161,6 +1232,280 @@ const settled = (step, seed = null) => page.waitForFunction(
             + `${json(cleared.level) === json(skel.record)}`);
         check(new URLSearchParams(cleared.url).get('directed') === null,
             'and the URL says so too', cleared.url);
+    }
+}
+
+// ── CLAIM 8: ⛓⛓⛓ CLICK-TO-ANCHOR (slice 6, ⚖ ruling 6) ──────────────
+{
+    /**
+     * ⛓ FIVE HALVES:
+     *  a. every SELECTABLE catalogue row carries an AT… control and no
+     *     EXCLUDED row does — built FROM the roster, like ATTEMPT;
+     *  b. arming is VISIBLE (the button, the canvas and the note all say so)
+     *     and ESCAPE disarms;
+     *  c. a click on a MEASURED legal cell places the template THERE — and the
+     *     tile is checked against an INDEPENDENTLY produced answer;
+     *  d. the copied link reproduces the whole construction byte for byte;
+     *  e. a click on an ILLEGAL cell refuses BY NAME with the model's own
+     *     text, leaves the record alone, and spends NO solve.
+     *
+     * ⛔⛔ WHY (c) IS NOT A FIXED-POINT CHECK. Slice 5 measured that the URL
+     * fixed point stays GREEN under a writer that is CONSISTENTLY wrong (trap
+     * 250) — it compares the writer to ITSELF. So `!tx,ty` gets a VALUE check
+     * against an answer this file computes on its own, from the canvas's
+     * bounding box and the room's own dimensions, WITHOUT calling the page's
+     * `tileAtPoint`. Four things then have to agree: that arithmetic, the
+     * readout's `anchor`, the URL's `!tx,ty`, and the directive's `at` — plus
+     * the placed FOOTPRINT really starting at that cell.
+     *
+     * ⛔ AND THE CLICK LANDS ON THE **LAST PIXEL** OF THE TARGET TILE, not on
+     * its middle. A pixel-to-tile off-by-one is invisible to a middle-of-tile
+     * click and is exactly what a boundary click catches.
+     */
+    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`;
+    await load(q);
+
+    // ── 8a: the AT… control, from the roster ─────────────────────────
+    const arms = await page.evaluate(() => ({
+        buttons: [...document.querySelectorAll('#genRoster button[data-arm]')]
+            .map((b) => b.dataset.arm),
+        onExcluded: document.querySelectorAll('#genRoster .catRow.excluded button[data-arm]')
+            .length,
+        note: document.getElementById('genArmNote').textContent,
+        readout: window.__editorGenerate.armed,
+        canvasArmed: document.getElementById('canvas').classList.contains('armed'),
+    }));
+    check(json(arms.buttons) === json(PRE_ROSTER),
+        '⛓ ONE AT… control per ROSTER template, in the palette\'s own order', json(arms.buttons));
+    check(arms.onExcluded === 0,
+        '⛔ and NOT ONE on an EXCLUDED row — there is nothing there to place',
+        `${arms.onExcluded} on excluded rows`);
+    check(arms.readout === null && arms.canvasArmed === false
+        && arms.note.includes('press AT…'),
+        'nothing is armed before a press, and the page says how to arm it',
+        arms.note.slice(0, 80));
+
+    // ── 8b: arming is VISIBLE, and Escape disarms ────────────────────
+    const armRow = async () => page.evaluate(({ template, params }) => {
+        const row = [...document.querySelectorAll('#genRoster .catRow')]
+            .find((r) => r.querySelector(`button[data-arm="${template}"]`));
+        for (const [k, v] of Object.entries(params)) {
+            row.querySelector(`select[data-param="${k}"]`).value = String(v);
+        }
+        row.querySelector(`button[data-arm="${template}"]`).click();
+    }, { template: DIRECT.template, params: DIRECT.params });
+    await armRow();
+    const armedNow = await page.evaluate((t) => ({
+        readout: window.__editorGenerate.armed,
+        canvasArmed: document.getElementById('canvas').classList.contains('armed'),
+        button: document.querySelector(`button[data-arm="${t}"]`).textContent,
+        lit: document.querySelector(`button[data-arm="${t}"]`).classList.contains('armed'),
+        note: document.getElementById('genArmNote').textContent,
+    }), DIRECT.template);
+    check(armedNow.readout === DIRECT.template && armedNow.canvasArmed && armedNow.lit
+        && /ARMED/.test(armedNow.button) && /ARMED/.test(armedNow.note),
+        '⛓⛓ AT… ARMS, and the state is VISIBLE in all three places — the button, the canvas '
+        + 'and the note — not only in a readout',
+        `${armedNow.button} · canvas.armed=${armedNow.canvasArmed}`);
+    await page.keyboard.press('Escape');
+    const escaped = await page.evaluate(() => ({
+        readout: window.__editorGenerate.armed,
+        canvasArmed: document.getElementById('canvas').classList.contains('armed'),
+        status: document.getElementById('status').textContent,
+        directives: (window.__editorGenerate.directives ?? []).length,
+    }));
+    check(escaped.readout === null && !escaped.canvasArmed && escaped.directives === 0
+        && /cancelled/.test(escaped.status),
+        '⛔ ESCAPE disarms and SAYS so, and nothing was placed', escaped.status);
+    await armRow();
+    await armRow();
+    check(await page.evaluate(() => window.__editorGenerate.armed) === null,
+        'and a SECOND press of AT… disarms too — two armed rows would make the next click '
+        + 'mean two things');
+
+    // ── 8c: the click, and the tile checked FOUR ways ────────────────
+    await armRow();
+    /**
+     * ⛓ THE TEST'S OWN ARITHMETIC. `rect` is the canvas as the browser is
+     * PRESENTING it and `level.width/height` is the room; the target pixel is
+     * the LAST one of tile `CLICK.tx`, computed here rather than asked of the
+     * page. ⛔ Nothing in this block calls `tileAtPoint`.
+     */
+    const geo = await page.evaluate(() => {
+        document.getElementById('canvas').scrollIntoView({ block: 'center' });
+        const r = document.getElementById('canvas').getBoundingClientRect();
+        return {
+            left: r.left, top: r.top, width: r.width, height: r.height,
+            cols: window.__editorGenerated.level.width,
+            rows: window.__editorGenerated.level.height,
+        };
+    });
+    const lastPixelOf = (tx, ty) => ({
+        x: geo.left + ((tx + 1) * geo.width) / geo.cols - 1,
+        y: geo.top + ((ty + 1) * geo.height) / geo.rows - 1,
+        // the tile that pixel is IN, by this file's own arithmetic
+        expect: {
+            tx: Math.floor(((((tx + 1) * geo.width) / geo.cols - 1) * geo.cols) / geo.width),
+            ty: Math.floor(((((ty + 1) * geo.height) / geo.rows - 1) * geo.rows) / geo.height),
+        },
+    });
+    const target = lastPixelOf(CLICK.tx, CLICK.ty);
+    check(json(target.expect) === json(CLICK),
+        '⛓ the LAST PIXEL of the target tile is that tile, by this file\'s own arithmetic — '
+        + 'the independent answer everything below is compared against',
+        `pixel (${Math.round(target.x)},${Math.round(target.y)}) on a `
+        + `${geo.width}x${geo.height} canvas over ${geo.cols}x${geo.rows} tiles `
+        + `⇒ ${json(target.expect)}`);
+    const beforeClick = await page.evaluate(() => window.__editorGenerated.level);
+    await page.mouse.click(target.x, target.y);
+    await page.waitForFunction(
+        () => window.__editorGenerate?.directives?.length === 1
+            && !document.getElementById('genRunAll').disabled,
+        null, { timeout: 300000 },
+    );
+    const clicked = await page.evaluate(() => ({
+        gen: window.__editorGenerate,
+        level: window.__editorGenerated.level,
+        trace: window.__editorGenerated.trace,
+        url: window.location.search,
+        dRow: document.querySelector('#genDirectives .dRow')?.textContent ?? '',
+        status: document.getElementById('status').textContent,
+    }));
+    const cd = clicked.gen.directives[0];
+    const cu = new URLSearchParams(clicked.url).get('directed');
+    check(json(cd.anchor) === json(target.expect)
+        && json(cd.at) === json(target.expect)
+        && cu === `${DIRECT.template}(ori=${DIRECT.params.ori},gap=${DIRECT.params.gap})@1d`
+            + `!${target.expect.tx},${target.expect.ty}`,
+        '⛓⛓⛓ THE TILE AGREES FOUR WAYS — this file\'s own arithmetic, the readout\'s '
+        + '`anchor`, the directive\'s `at`, and the URL\'s `!tx,ty`',
+        `expected ${json(target.expect)} · anchor ${json(cd.anchor)} · at ${json(cd.at)} · `
+        + `?directed=${cu}`);
+    /**
+     * ⛔ AND THE FOOTPRINT REALLY STARTS THERE. A build that recorded the cell
+     * and placed the template elsewhere passes every field check above; the
+     * terrain the record now holds at the clicked cell is what separates them.
+     */
+    {
+        const clickedInstance = paletteFor(DIRECT.biome).templates
+            .find((t) => t.name === DIRECT.template).instantiate(null, DIRECT.params);
+        const moved = [];
+        for (let ty = 0; ty < geo.rows; ty += 1) {
+            for (let tx = 0; tx < geo.cols; tx += 1) {
+                if (terrainAt(beforeClick, tx, ty) !== terrainAt(clicked.level, tx, ty)) {
+                    moved.push(`${tx},${ty}`);
+                }
+            }
+        }
+        const expected = (clickedInstance.terrain ?? [])
+            .map((w) => `${target.expect.tx + w.dx},${target.expect.ty + w.dy}`);
+        check(expected.length > 0
+            && json([...moved].sort()) === json([...expected].sort()),
+            '⛔ …and the PLACED FOOTPRINT really STARTS at that cell — the cells whose terrain '
+            + 'moved between the two BROWSER records are exactly the instance\'s own writes '
+            + 'offset by the clicked anchor. A directive that recorded the cell and placed '
+            + 'elsewhere passes every field check above and fails this one',
+            `moved [${moved.join(' ')}] vs the instance at ${json(target.expect)} `
+            + `[${expected.join(' ')}]`);
+    }
+    check(json(clicked.level) === json(nodeClicked.record)
+        && json(clicked.trace) === json(nodeClicked.trace),
+        '⛓⛓ the level the browser built IS node\'s own CLICKED level, byte for byte '
+        + '(level AND trace)');
+    check(json(clicked.level) !== json(nodeDirect.record),
+        '⛔ …and NOT the SEARCHED level: the clicked cell reached the MODEL, not just the URL',
+        `search keeps at ${json(nodeDirect.directives[0].at)}, this at ${json(cd.at)}`);
+    check(cd.bound === 1 && cd.anchorsOffered === 1 && cd.anchorsWalked === 1,
+        'a clicked attempt is a walk of ONE cell, and the record says so',
+        `bound ${cd.bound}, ${cd.anchorsWalked} of ${cd.anchorsOffered}`);
+    check(clicked.dRow.includes('EXPLICIT anchor') && clicked.dRow.includes('a CLICK, not a '
+        + 'search') && !clicked.dRow.includes('legal anchor(s)'),
+        '⛓ the directives list says it was a CLICK — and does NOT claim "1 of 1 LEGAL '
+        + 'anchor(s)", which a refused cell would make false', clicked.dRow.slice(-120));
+    check(clicked.gen.armed === null,
+        'and the click DISARMED — a second click cannot queue a second directive');
+
+    // ── 8d: the copied link ──────────────────────────────────────────
+    {
+        await load(clicked.url.replace(/^\?/, ''));
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const back = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            level: window.__editorGenerated.level,
+            trace: window.__editorGenerated.trace,
+            url: window.location.search,
+        }));
+        check(json(back.level) === json(clicked.level)
+            && json(back.trace) === json(clicked.trace),
+            '⛓⛓⛓ A COPIED `!tx,ty` LINK REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR BYTE');
+        check(json(back.gen.directives[0].anchor) === json(target.expect),
+            'and the anchor it replayed is the cell that was clicked', json(target.expect));
+        check(back.url === clicked.url,
+            '⛓ and the clicked link is a FIXED POINT — loading it rewrites it to itself. '
+            + '⚠ NOT the gate on the VALUE (trap 250): the four-way check above is',
+            `${clicked.url}\n        vs ${back.url}`);
+    }
+
+    // ── 8e: the ILLEGAL cell, refused BY NAME with NO solve ──────────
+    {
+        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`);
+        const skeletonLevel = await page.evaluate(() => window.__editorGenerated.level);
+        await armRow();
+        const bad = lastPixelOf(ILLEGAL_CLICK.tx, ILLEGAL_CLICK.ty);
+        check(json(bad.expect) === json(ILLEGAL_CLICK),
+            `the illegal target pixel is tile ${json(ILLEGAL_CLICK)}, this seed's GOAL cell`,
+            json(bad.expect));
+        await page.evaluate(() => document.getElementById('canvas')
+            .scrollIntoView({ block: 'center' }));
+        await page.mouse.click(bad.x, bad.y);
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const refused = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            level: window.__editorGenerated.level,
+            status: document.getElementById('status').textContent,
+            paneRows: [...document.querySelectorAll('#genTrace .tr')]
+                .map((e) => e.textContent).filter((t) => /^d1/.test(t.trim())),
+        }));
+        const rd = refused.gen.directives[0];
+        check(rd.outcome === 'ILLEGAL_PLACEMENT' && rd.at === null,
+            '⛓⛓⛓ AN ILLEGAL CLICKED CELL IS `ILLEGAL_PLACEMENT` — the class slice 5 recorded '
+            + 'as UNREACHABLE, now DRIVEN from the page', `${rd.outcome}, at ${json(rd.at)}`);
+        /**
+         * ⛔ VERBATIM, and it is the MODEL's own sentence — node's `refusalAt`
+         * for the same cell, character for character. A page that paraphrased
+         * the rule would pass a substring match and fail this.
+         */
+        const nodeWhy = nodeIllegal.trace.find((r) => r.directive === 1).reasonText;
+        check(refused.paneRows.length === 1 && refused.paneRows[0].includes(nodeWhy),
+            '⛔ …with the MODEL\'s own text VERBATIM in the pane, character for character',
+            `${nodeWhy.slice(0, 110)}…`);
+        check(nodeWhy.includes('is the GOAL cell'),
+            '  …and it names the RULE that refused, not a generic "illegal"',
+            nodeWhy.slice(0, 90));
+        check(json(refused.level) === json(skeletonLevel),
+            '⛔ and the level on screen did NOT move');
+        check(refused.status.includes('the level on screen is UNCHANGED'),
+            '  …and the page SAYS so', refused.status.slice(-90));
+        /**
+         * ⛔⛔ NO SOLVE WAS SPENT. `ticks` is the oracle's own count and the row
+         * carries `null` because the oracle was never called — the half of this
+         * claim that a "the outcome was ILLEGAL_PLACEMENT" check cannot see.
+         */
+        const row = nodeIllegal.trace.find((r) => r.directive === 1);
+        check(row.verdict === null && row.ticks === null
+            && row.classifiedBy.includes('before any solve'),
+            '⛔⛔ …and NO SOLVE WAS SPENT — no verdict, no ticks, and the row says the model '
+            + 'answered BEFORE the oracle', row.classifiedBy);
+        check(errors.length === 0, 'no page errors through the whole click path',
+            errors.join(' | ') || 'none');
     }
 }
 

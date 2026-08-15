@@ -146,7 +146,7 @@ import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
     generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
-    writeGenerateParams,
+    tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
@@ -4016,7 +4016,7 @@ function mountGenerationPane(rows) {
  * key the restriction is spelled in and the key the pin union looks up — never
  * the instance label, which is a geometry and not a roster entry.
  */
-function mountCatalogue(catalogue, selected, onAttempt = null) {
+function mountCatalogue(catalogue, selected, onAttempt = null, onArm = null) {
     const box = $('genRoster');
     box.innerHTML = '';
     const dom = (p) => `${p.key} ∈ {${p.domain.join(',')}} (default ${p.default})`;
@@ -4059,30 +4059,55 @@ function mountCatalogue(catalogue, selected, onAttempt = null) {
             selects.set(p.key, sel);
             form.appendChild(sel);
         }
-        const go = document.createElement('button');
-        go.textContent = 'ATTEMPT this';
-        go.dataset.attempt = t.name;
-        go.onclick = () => {
-            /**
-             * ⚠ READ AT THE PRESS, like every other control on this panel
-             * (`readForm`'s law). An empty value means "any" and is simply
-             * left out of the overrides, so `instantiate` draws it.
-             */
+        /**
+         * ⚠ READ AT THE PRESS, like every other control on this panel
+         * (`readForm`'s law). An empty value means "any" and is simply left out
+         * of the overrides, so `instantiate` draws it.
+         *
+         * ⛓ SLICE 6 MADE IT A THUNK, and the reason is which press. ATTEMPT
+         * commits immediately, so its press IS the moment; AT… only ARMS, and
+         * the moment the attempt happens is the CLICK — so the click calls
+         * this, and a select moved between arming and clicking is honoured.
+         * One reading rule, applied at the instant each control actually acts.
+         */
+        const readParams = () => {
             const params = {};
             for (const [key, sel] of selects) {
                 if (sel.value === '') continue;
                 const p = t.params.find((q) => q.key === key);
                 params[key] = p.domain.find((v) => String(v) === sel.value);
             }
-            onAttempt(t.name, params);
+            return params;
         };
+        const go = document.createElement('button');
+        go.textContent = 'ATTEMPT this';
+        go.dataset.attempt = t.name;
+        go.onclick = () => onAttempt(t.name, readParams());
         form.appendChild(go);
+        /**
+         * ⛓⛓⛓ SLICE 6 — AT…, ⚖ ruling 6's manual half. It ARMS a canvas
+         * click; the clicked TILE becomes the explicit anchor of ONE directed
+         * attempt at exactly that cell. ⛔ It exists on SELECTABLE rows only,
+         * for the same reason ATTEMPT and the checkbox do: there is nothing on
+         * an excluded row to place.
+         */
+        if (onArm) {
+            const at = document.createElement('button');
+            at.dataset.arm = t.name;
+            at.textContent = 'AT… a clicked tile';
+            at.onclick = () => onArm(t.name, readParams);
+            form.appendChild(at);
+        }
         const cost = document.createElement('span');
         cost.className = 'cost';
         // ⛔ THE CEILING, BEFORE THE PRESS — the same discipline `#genNote`
         // applies to the ladder, from the same arithmetic (`directedCost`).
+        // ⛓ BOTH CEILINGS, because AT… is a walk of ONE cell and costs a
+        // different number: a row that printed only the search's would be
+        // quoting a bound the clicked attempt never runs under.
         cost.textContent = ` ≤ ${directedCost(DIRECTED_ANCHOR_TRIES, 139).solves} solve(s) `
-            + `(bound ${DIRECTED_ANCHOR_TRIES} + 1 display)`;
+            + `(bound ${DIRECTED_ANCHOR_TRIES} + 1 display) · AT… costs `
+            + `${directedCost(1, 139).solves} (one cell + 1 display)`;
         form.appendChild(cost);
         row.appendChild(form);
     };
@@ -4157,6 +4182,8 @@ function mountCatalogue(catalogue, selected, onAttempt = null) {
         // carry no form for the same reason they carry no checkbox (there is
         // nothing to draw), and the row asserts that from the roster.
         attemptButtons: box.querySelectorAll('button[data-attempt]').length,
+        // ⛓ SLICE 6: one AT… per SELECTABLE row, on the same terms.
+        armButtons: box.querySelectorAll('button[data-arm]').length,
         paramSelects: box.querySelectorAll('select[data-param]').length,
     };
 }
@@ -4187,11 +4214,23 @@ function mountDirectives(directives) {
             + ` → <span class="${kept ? 'g' : 'o'}">${d.outcome}</span>`;
         const why = document.createElement('div');
         why.className = 'rj';
-        // ⛔ `textContent`, so the palette's and the solver's own text cannot be
-        // reinterpreted as markup on the way through.
+        /**
+         * ⛔ `textContent`, so the palette's and the solver's own text cannot be
+         * reinterpreted as markup on the way through.
+         *
+         * ⛓⛓ SLICE 6: a CLICKED directive says so, and it does NOT say
+         * *"walked 1 of 1 legal anchor(s)"* — the named cell may be exactly the
+         * one the model refused, and `at` alone cannot tell *the search found
+         * this* from *somebody named it*.
+         */
         why.textContent = (kept ? describeKeptKind(d) : '')
-            + `${kept ? ' · ' : ''}walked ${d.anchorsWalked} of ${d.anchorsOffered} `
-            + `legal anchor(s), bound ${d.bound}, policy ${d.keepPolicy}`;
+            + (kept ? ' · ' : '')
+            + (d.anchor
+                ? `the EXPLICIT anchor (${d.anchor.tx},${d.anchor.ty}) — a CLICK, not a `
+                    + 'search: ONE named cell, adjudicated by the model before any solve, '
+                    + `policy ${d.keepPolicy}`
+                : `walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s), `
+                    + `bound ${d.bound}, policy ${d.keepPolicy}`);
         el.appendChild(why);
         box.appendChild(el);
     }
@@ -4323,6 +4362,15 @@ async function runGenerate(params, lifetime) {
     let step = 0;
     let state = null;
     let lastPayload = null;
+    /**
+     * ⛓⛓⛓ SLICE 6 — THE ARMED CLICK. `null`, or `{template, readParams}`: the
+     * template AT… was pressed on, and the thunk that reads its form. ⛔ It is
+     * declared HERE with `state` for the same measured reason (trap 252):
+     * `renderArmed` runs from `renderCatalogue`, which runs at MOUNT, and a
+     * reference to a `let` declared below would throw in the temporal dead
+     * zone and take the whole arm down before it drew anything.
+     */
+    let armed = null;
 
     let catalogueReadout = null;
     const rosterBoxes = () => [...$('genRoster').querySelectorAll('input[data-template]')];
@@ -4335,14 +4383,68 @@ async function runGenerate(params, lifetime) {
      * the variable early would leave `readForm` comparing a value to itself
      * and the ladder would silently continue under the new biome).
      */
+    /**
+     * ── ⛓⛓⛓ SLICE 6 — THE ARMED STATE, WRITTEN IN ONE PLACE ───────────
+     *
+     * ⛔ ONE WRITER, THREE OUTPUTS: the AT… button, the canvas, and the note.
+     * They are three views of one variable rather than three flags, which is
+     * `updateRunButtons`' own shape one control over — and the reason is the
+     * same: a page that LOOKS unarmed while a click is still pending turns the
+     * reader's next click into something they did not intend.
+     *
+     * ⛓ THE ESCAPE LISTENER IS REGISTERED ONLY WHILE ARMED and removed on
+     * disarm, so it cannot outlive this arm. `addEventListener` with the same
+     * function reference is idempotent, so this is safe to call repeatedly.
+     */
+    const onEscape = (ev) => {
+        if (ev.key !== 'Escape' || !armed) return;
+        armed = null;
+        renderArmed();
+        $('status').className = '';
+        $('status').textContent = 'AT… cancelled — nothing was placed';
+    };
+    function renderArmed() {
+        const canvas = $('canvas');
+        canvas.classList.toggle('armed', Boolean(armed));
+        for (const b of $('genRoster').querySelectorAll('button[data-arm]')) {
+            const on = Boolean(armed) && b.dataset.arm === armed.template;
+            b.classList.toggle('armed', on);
+            b.textContent = on ? 'AT… ARMED — click a tile (Esc cancels)' : 'AT… a clicked tile';
+        }
+        $('genArmNote').textContent = armed
+            ? `⛓ ARMED: "${armed.template}" will be placed at the TILE you click on the level `
+                + 'below, as ONE directed attempt at exactly that cell. ⛔ The model '
+                + 'adjudicates the cell FIRST, so an illegal one refuses BY NAME without '
+                + 'spending a solve. Press Escape, or AT… again, to cancel.'
+            : 'click-to-anchor: press AT… on a catalogue row, then click a tile on the level '
+                + 'below. ⛔ The unit is the TEMPLATE — nothing here paints a bare tile.';
+        if (armed) window.addEventListener('keydown', onEscape);
+        else window.removeEventListener('keydown', onEscape);
+        // ⛓ The readout carries it too, so an acceptance row can assert the
+        // armed state without reading a string out of the note.
+        if (window.__editorGenerate) window.__editorGenerate.armed = armed?.template ?? null;
+    }
     const renderCatalogue = () => {
         const full = paletteFor(biomeSel.value);
         const selected = new Set(roster
             ? restrictPalette(full, roster).templates.map((t) => t.name)
             : full.templates.map((t) => t.name));
         catalogueReadout = mountCatalogue(catalogueRows(full), selected,
-            (template, params) => attempt(template, params));
+            (template, params) => attempt(template, params),
+            /**
+             * ⛔ A SECOND PRESS DISARMS, and so does AT… on a DIFFERENT row —
+             * two rows armed at once would make the next click mean two things.
+             */
+            (template, readParams) => {
+                armed = armed?.template === template ? null : { template, readParams };
+                renderArmed();
+            });
         for (const b of rosterBoxes()) b.onchange = () => updateRunButtons();
+        // ⛔ The buttons were just rebuilt, so the armed VIEW has to be redrawn
+        // — and `armed` itself is dropped, because the row object it named is
+        // gone and its form is a new one.
+        armed = null;
+        renderArmed();
     };
     /**
      * ⛔ AN EMPTY RESTRICTION REFUSES **BEFORE** THE PRESS. `levelGenerator`
@@ -4562,6 +4664,13 @@ async function runGenerate(params, lifetime) {
              */
             directives: state.directives,
             directiveRows: directiveReadout?.rows ?? 0,
+            /**
+             * ⛓ SLICE 6: is a canvas click PENDING, and for which template?
+             * `renderArmed` is the one writer of it, and this is the initial
+             * value on every redraw — so a readout can never claim an arm that
+             * a re-render dropped.
+             */
+            armed: armed?.template ?? null,
             skeleton: state.skeleton,
             bounds: state.bounds,
             budget: state.budget,
@@ -4823,21 +4932,26 @@ async function runGenerate(params, lifetime) {
      * `GenerationAborted` propagate, and this handler shows it as the fatal it
      * is rather than as "the attempt didn't work" (traps 171/173).
      */
-    async function attempt(template, params) {
+    async function attempt(template, params, anchor = null) {
         busy(true);
         try {
             if (!lifetime.alive()) return;
             const spec = {
                 template,
                 params,
-                /** ⛓ Slice 6 fills this; today a directed attempt SEARCHES. */
-                anchor: null,
+                /**
+                 * ⛓⛓⛓ SLICE 6: `null` is a SEARCH (the ATTEMPT button); a cell
+                 * is a CLICK, and then the walk is ONE anchor long — which is
+                 * why the bound goes with it rather than staying global.
+                 */
+                anchor,
                 keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
-                bound: DIRECTED_ANCHOR_TRIES,
+                bound: anchor ? 1 : DIRECTED_ANCHOR_TRIES,
             };
             $('status').className = '';
             $('status').textContent = `directed attempt: ${template} on step ${step} `
-                + `(seed ${seed}, ${biome})…`;
+                + `(seed ${seed}, ${biome})`
+                + (anchor ? ` at the CLICKED cell (${anchor.tx},${anchor.ty})` : '') + '…';
             await new Promise((r) => requestAnimationFrame(r));
             if (!lifetime.alive()) return;
             let next;
@@ -4862,11 +4976,61 @@ async function runGenerate(params, lifetime) {
             $('status').textContent += `  ·  ${d.outcome === 'KEPT'
                 ? describeKeptKind(d)
                 : `⛔ ${d.outcome} — the level on screen is UNCHANGED`}`
-                + `  ·  walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s)`;
+                // ⛓ SLICE 6: the same distinction `mountDirectives` draws — a
+                // clicked cell is ONE named cell, not "1 of 1 LEGAL anchor(s)",
+                // because the model may be exactly what refused it.
+                + (d.anchor
+                    ? `  ·  the EXPLICIT anchor (${d.anchor.tx},${d.anchor.ty}) — a CLICK, `
+                        + 'not a search'
+                    : `  ·  walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s)`);
         } finally {
             busy(false);
         }
     }
+
+    /**
+     * ── ⛓⛓⛓ SLICE 6 — THE CLICK ITSELF (⚖ ruling 6's manual half) ─────
+     *
+     * ⛔ IT IS `.onclick =`, NOT `addEventListener`, so a later arm's own
+     * assignment REPLACES this one rather than stacking beside it — the
+     * convention every other control on this page follows. `lifetime.alive()`
+     * is the second guard, for the case where no later arm claims the canvas.
+     *
+     * ⛔ AND IT DOES NOTHING WHEN NOTHING IS ARMED. A canvas that acted on
+     * every click would make scrubbing a level into an edit of it.
+     *
+     * ⛓ THE CONVERSION IS `watchGenerate.tileAtPoint` — the ONE pixel-to-tile
+     * mapping, given the ELEMENT's on-screen size and the ROOM's own
+     * dimensions, so the answer is right at whatever integer scale the
+     * renderer chose and whatever size CSS is presenting it at.
+     */
+    $('canvas').onclick = async (ev) => {
+        if (!lifetime.alive() || !armed || busyNow || !state?.record) return;
+        const rect = $('canvas').getBoundingClientRect();
+        let at;
+        try {
+            at = tileAtPoint({
+                x: ev.clientX - rect.left,
+                y: ev.clientY - rect.top,
+                width: rect.width,
+                height: rect.height,
+                cols: state.record.width,
+                rows: state.record.height,
+            });
+        } catch (e) {
+            // ⚠ SAID, not swallowed — a click the page ignored silently is the
+            // one outcome the reader cannot act on.
+            $('status').className = '';
+            $('status').textContent = e.message;
+            return;
+        }
+        const { template, readParams } = armed;
+        // ⛔ DISARMED BEFORE THE ATTEMPT, so a second click while the solve is
+        // running cannot queue a second directive behind it.
+        armed = null;
+        renderArmed();
+        await attempt(template, readParams(), at);
+    };
     /**
      * ⚠ CLEARING IS A RESET TO THE LADDER, not an undo of one directive. There
      * is no undo in this arm and there must not be one: a directive's effect is

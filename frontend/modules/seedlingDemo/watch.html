@@ -94,19 +94,47 @@
   right. The finished level flows into the existing spine unchanged — it is
   solvable, scrubable, manual-drivable, and its tape is in the save box.
 
+  ⛔ THE WHOLE LIST, AND IT IS `readGenerateParams`' OWN. Checked field by
+  field against that function at the arc's close; `?budgetms=` is GONE (it
+  warns and is ignored — the wall clock it set no longer exists) and the four
+  parameters slices 3–6 added are here. A map of a page that has grown past it
+  is worse than no map.
+
   ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
   ?biome=    pre-sword | post-sword — the BOOT INVENTORY, and the whole
              difference between the two palettes
   ?count=N   obstacle target   ?tries=N per step   ?k=N saturation
-  ?budgetms=  ?tickbudget=     the per-solve budget, both named in the trace
-             (⚠ `?tickbudget=`, not `?ticks=` — `?tick=` is the scrub cursor)
+  ?anchortries=N  how many of the model's LEGAL anchors one candidate may be
+             SOLVED at before it is given up on (slice 3; 1 is the pre-search
+             behaviour). ⚠ Not `?anchors=` — that spelling is the domain
+             sweep's ENUMERATION MODE, not a count.
+  ?families= / ?templates=   the sub-roster a run may draw from (slice 4), a
+             comma list either way; ABSENT is the whole roster and an empty
+             value refuses. ⛔ BOTH present REFUSES — they are two spellings of
+             one setting and they do not compose.
+  ?directed= the DIRECTED ATTEMPTS, in order (slices 5–6):
+             `template(k=v,…)@<bound><d|s>[!tx,ty]`, `;`-separated, e.g.
+             `wall-gap-block(ori=v,gap=1)@12d;arrow-lane@4s`. The parenthesised
+             clause IS the instance label the pane prints; `d`/`s` is the keep
+             policy (prefer-discharge / first-solved); `!tx,ty` is a CLICKED
+             cell, and a directive that names one is a walk of ONE cell, so its
+             bound must be `1`. ⛔ Only the INPUTS are encoded — a URL is an
+             INSTRUCTION, a payload is a REPORT.
+  ?tickbudget=  the per-solve budget, named in the trace (⚠ `?tickbudget=`,
+             not `?ticks=` — `?tick=` is the scrub cursor). It has no control
+             on the form and is PRESERVED across every rewrite.
   ?run=1     RUN-ALL on load (what the CLI uses to reach a finished level)
   ?gen=PATH  a payload `generate-seedling-level.mjs` emitted: its seed,
-             biome and bounds REPLACE the ones above, the page generates
-             from them, and the result is COMPARED against the payload's own
-             level and trace. A difference is REPORTED and the page keeps
-             showing what IT generated — the export is then a determinism
-             check across node and the browser, not a picture of a file.
+             biome, bounds, roster and directives REPLACE the ones above, the
+             page generates from them, and the result is COMPARED against the
+             payload's own level and trace. A difference is REPORTED and the
+             page keeps showing what IT generated — the export is then a
+             determinism check across node and the browser, not a picture of a
+             file.
+
+  ⛓ AND THE PANEL ROUND-TRIPS (slice 1): every control writes its value back
+  through the ONE writer at press time, so a copied address bar reproduces the
+  run — including the catalogue's ticks and the directives.
 
   ⚠ STEP IS "obstacleTarget = k, RE-RUN", which costs O(N²) solves for a
   RUN-ALL to N. The loop is synchronous and cannot be paused; the prefix
@@ -305,6 +333,12 @@
     border: 1px solid #2a2a35; font-size: 11px; margin-right: 4px; }
   #genRoster .catForm button { font-size: 11px; padding: 1px 6px; }
   #genRoster .catForm .cost { color: #8a8a98; font-size: 11px; }
+  /* ⛓⛓⛓ SLICE 6 — THE ARMED STATE IS VISIBLE, on the button AND on the
+     canvas. A page waiting for a click it never asked for out loud is a page
+     whose next click means something the reader did not intend. */
+  #genRoster .catForm button.armed { background: #ffd75f; color: #101014; font-weight: 600; }
+  canvas.armed { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
+  #genArmNote { color: #ffd75f; }
   #genDirectives { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
     padding: 2px 0; }
   #genDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
@@ -524,9 +558,23 @@
     -->
     <div class="line">
       <b>directed attempts</b> <span class="note">— press ATTEMPT on a catalogue row
-        to place THAT template on the level below</span>
+        to place THAT template on the level below, or AT… and then click a tile</span>
       <button id="genDirectivesClear">CLEAR the directives</button>
       <span id="genDirectivesNote" class="note"></span>
+    </div>
+    <!--
+      ⛓⛓⛓ CLICK-TO-ANCHOR (slice 6, ⚖ ruling 6: *manual editing splits at the
+      TILE boundary* — template-at-clicked-anchor is IN this arc, free tile and
+      object editing is its own later one).
+
+      ⛔ THE UNIT IS STILL THE TEMPLATE. Nothing here writes a bare tile or
+      edits an entity attribute; AT… arms a canvas click, and the clicked TILE
+      becomes the explicit anchor of ONE directed attempt at exactly that cell.
+      `legalAt` adjudicates it FIRST, so an illegal cell refuses BY NAME with
+      the model's own sentence and spends no solve.
+    -->
+    <div class="line">
+      <span id="genArmNote" class="note"></span>
     </div>
     <div id="genDirectives"></div>
     <div id="genNote" class="note"></div>
