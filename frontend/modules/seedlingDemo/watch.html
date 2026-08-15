@@ -299,6 +299,19 @@
   #genRoster .catRow.excluded { opacity: .55; }
   #genRoster .catRow.excluded b { color: #ff9a6a; }
   #genRoster .rj { color: #8a8a98; font-size: 11px; }
+  /* ⛓ VERB 2 (slice 5): the per-row parameter form and its ATTEMPT button. */
+  #genRoster .catForm { margin: 2px 0 2px 18px; }
+  #genRoster .catForm select { background: #0d0d12; color: #d8d8e0;
+    border: 1px solid #2a2a35; font-size: 11px; margin-right: 4px; }
+  #genRoster .catForm button { font-size: 11px; padding: 1px 6px; }
+  #genRoster .catForm .cost { color: #8a8a98; font-size: 11px; }
+  #genDirectives { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+    padding: 2px 0; }
+  #genDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #genDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
+  #genDirectives .dRow .g { color: #7fdc8f; }
+  #genDirectives .dRow .o { color: #ffb066; }
+  #genDirectives .dRow .rj { color: #8a8a98; font-size: 11px; }
   #manualKeys { color: #7fe0ff; font-size: 11px; }
   #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
   #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -495,6 +508,27 @@
       <span id="genRosterNote" class="note"></span>
     </div>
     <div id="genRoster"></div>
+    <!--
+      ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPTS (slice 5, ⚖ ruling 1: *"a button to
+      make the generator attempt to generate that specific thing"*).
+
+      The list of directives applied to the level on screen, in order, each
+      with WHICH KIND OF KEEP it was — ⚖ the user's ruling: *discharged* and
+      *solved-only* are two facts and are never blurred, and a template with
+      no verb to discharge says so BY NAME instead of reporting a shortfall
+      that could not exist.
+
+      ⛔ ITS OWN CONTAINER, for the same reason `#genRoster` has one: `#layers`
+      and `#bootForm` are ENUMERATED by acceptance rows, and a directive's
+      controls are neither a layer nor a boot flag.
+    -->
+    <div class="line">
+      <b>directed attempts</b> <span class="note">— press ATTEMPT on a catalogue row
+        to place THAT template on the level below</span>
+      <button id="genDirectivesClear">CLEAR the directives</button>
+      <span id="genDirectivesNote" class="note"></span>
+    </div>
+    <div id="genDirectives"></div>
     <div id="genNote" class="note"></div>
   </div>
   <!--

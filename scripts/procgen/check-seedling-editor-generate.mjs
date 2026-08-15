@@ -77,7 +77,10 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
-const { generateStep, paletteFor } = await M('watchGenerate.js');
+const {
+    DIRECTED_ANCHOR_TRIES, generateStep, generateWithDirectives, paletteFor,
+} = await M('watchGenerate.js');
+const { KEEP_POLICY } = await M('levelGenerator.js');
 
 /**
  * ⛓ THE SUBJECTS ARE MEASURED, NOT PICKED.
@@ -191,6 +194,57 @@ const RESTRICT = {
 const RESTRICT_ROSTER = { axis: 'templates', names: [...RESTRICT.templates].sort() };
 const RESTRICT_BOUNDS = { obstacleTarget: RESTRICT.count };
 
+/**
+ * ⛓⛓⛓ CLAIM 7's SUBJECTS — VERB 2, THE DIRECTED ATTEMPT (slice 5).
+ *
+ * ⚖ THE USER'S RULING: *verb 2 PREFERS DISCHARGE; the free loop keeps
+ * FIRST-SOLVED.* So the subject has to be one where the two DISAGREE, or the
+ * claim is about nothing.
+ *
+ * ⛓ CHOSEN BY MEASUREMENT (`sweep-seedling-directed-bound.mjs` plus the
+ * per-outcome probe recorded in kickoff §12), and the property is asserted
+ * below before any claim uses it: on the pre-sword SKELETON at seed 6,
+ * `wall-gap-block(ori=v,gap=1)` SOLVES at four successive anchors — 65 ticks
+ * each, the walk never touching the door — and DISCHARGES only at the fifth
+ * (232 ticks). ⇒ a build that kept the first SOLVED anchor lands at a
+ * different cell, and the pane carries FOUR rows reading `REVERTED · SOLVED`
+ * that only a discharge-preferring walk can produce.
+ *
+ * ⚠ AND THE PARAMETERS ARE NON-DEFAULT IN BOTH POSITIONS (`ori=h,gap=4` is the
+ * declared default), so a URL that dropped its parameters rebuilds a visibly
+ * different instance rather than coinciding with the right one — trap 235, at
+ * the directive.
+ */
+const DIRECT = {
+    seed: 6,
+    biome: 'pre-sword',
+    step: 0,
+    template: 'wall-gap-block',
+    params: { ori: 'v', gap: 1 },
+};
+const DIRECT_SPEC = {
+    template: DIRECT.template,
+    params: DIRECT.params,
+    anchor: null,
+    keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+    bound: DIRECTED_ANCHOR_TRIES,
+};
+/**
+ * ⛓ THE OTHER THREE OUTCOMES, each measured to be REACHABLE at these
+ * coordinates (the probe swept seeds 1..12 x steps 0/2/4/6 x six templates):
+ *   · NO_ANCHOR   — a filled room offers a door no legal cell at all;
+ *   · REVERTED    — anchors exist, the oracle refuses every one;
+ *   · solved-only — it has a verb and no anchor within the bound discharged it.
+ * ⛔ ILLEGAL_PLACEMENT is NOT among them and its absence is NAMED rather than
+ * left looking untested — see claim 7d.
+ */
+const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
+    template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
+const REVERTED_CASE = { seed: 2, biome: 'pre-sword', step: 6,
+    template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
+const SOLVED_ONLY_CASE = { seed: 2, biome: 'pre-sword', step: 0,
+    template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
+
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const GEN_ROUTE = '/__generated-payload.json';
 
@@ -257,6 +311,37 @@ check(nodeRound.summary.keptCount === ROUND.count && !nodeRound.saturated,
     'the ROUND-TRIP subject really REACHES its target — a saturated one would let claim 5 '
     + 'assert about a step nobody asked for',
     `kept ${nodeRound.summary.keptCount}/${ROUND.count}, stop ${nodeRound.stop}`);
+
+/**
+ * ⛓⛓ NODE'S OWN ANSWER FOR THE DIRECTED SUBJECTS — every browser assertion is
+ * measured against these, never against a literal.
+ *
+ * ⛔ AND THE SUBJECT'S OWN PROPERTIES ARE ASSERTED FIRST (trap 235): if seed 6
+ * did not pass over a SOLVING anchor on its way to a discharging one, claim 7
+ * would pass on a build that ignored the ruling entirely.
+ */
+const nodeDirect = generateWithDirectives({
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [DIRECT_SPEC],
+});
+{
+    const d = nodeDirect.directives[0];
+    check(d.outcome === 'KEPT' && d.keptKind === 'discharged',
+        '⛓ the DIRECTED subject really DISCHARGES its verb — otherwise claim 7 is a claim '
+        + 'about a keep, not about the ruling', `${d.outcome}/${d.keptKind}`);
+    const passedOver = nodeDirect.trace.filter(
+        (r) => r.directive === 1 && r.outcome === 'REVERTED' && r.verdict === 'SOLVED');
+    check(passedOver.length > 0,
+        '⛔ AND IT PASSED OVER AT LEAST ONE ANCHOR THAT SOLVED — the signature ONLY a '
+        + 'discharge-preferring walk can produce, and what a first-SOLVED build could not',
+        `${passedOver.length} anchor(s) solved and were passed over, then anchor `
+        + `${d.anchorsWalked} of ${d.anchorsOffered} discharged`);
+    const base = paletteFor(DIRECT.biome).templates.find((t) => t.name === DIRECT.template);
+    check(base.params.some((pp) => DIRECT.params[pp.key] !== pp.default),
+        '⚠ and its parameters DIFFER from the declared defaults, so a URL that dropped '
+        + 'them would rebuild a different instance rather than coincide with this one',
+        `${json(DIRECT.params)} vs defaults `
+        + `${json(Object.fromEntries(base.params.map((pp) => [pp.key, pp.default])))}`);
+}
 
 // ── the browser ───────────────────────────────────────────────────────
 
@@ -745,6 +830,338 @@ const settled = (step, seed = null) => page.waitForFunction(
     check(/REFUSED/.test(both.status),
         'the refusal is ON THE PAGE, not only in the console — a refusal nobody can see is '
         + 'a page that just stopped', both.status);
+}
+
+// ── CLAIM 7: ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPT ─────────────────────
+{
+    /**
+     * ⛓ SIX HALVES, each a different claim:
+     *  a. every SELECTABLE catalogue row carries a param form and an ATTEMPT
+     *     button built from its own declared schema; no EXCLUDED row does;
+     *  b. a press → a pane row PER ANCHOR → the readout says WHICH KIND of
+     *     keep, and the level is node's own directed level;
+     *  c. the URL names the whole construction and a copied one reproduces it
+     *     byte for byte, and is a fixed point;
+     *  d. the refusal classes, each with VERBATIM text — and the one that is
+     *     UNREACHABLE is named with its reason rather than left looking untested;
+     *  e. STEP after a directive RESETS and SAYS so, and the page said what
+     *     would happen BEFORE the press;
+     *  f. CLEAR returns to the ladder.
+     */
+    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`;
+    await load(q);
+
+    // ── 7a: the form is built FROM the row's declared schema ─────────
+    const forms = await page.evaluate(() => ({
+        attemptButtons: [...document.querySelectorAll('#genRoster button[data-attempt]')]
+            .map((b) => b.dataset.attempt),
+        onExcluded: document.querySelectorAll('#genRoster .catRow.excluded button[data-attempt]')
+            .length,
+        selectsFor: Object.fromEntries([...document.querySelectorAll('#genRoster .catRow')]
+            .filter((r) => r.querySelector('button[data-attempt]'))
+            .map((r) => [r.querySelector('button[data-attempt]').dataset.attempt,
+                [...r.querySelectorAll('select[data-param]')].map((sel) => ({
+                    key: sel.dataset.param,
+                    options: [...sel.options].map((o) => o.value),
+                    selected: sel.value,
+                }))])),
+    }));
+    check(json(forms.attemptButtons) === json(PRE_ROSTER),
+        '⛓ ONE ATTEMPT button per ROSTER template, in the palette\'s own order',
+        json(forms.attemptButtons));
+    check(forms.onExcluded === 0,
+        '⛔ and NOT ONE on an EXCLUDED row — there is nothing there to attempt',
+        `${forms.onExcluded} button(s) on excluded rows`);
+    {
+        // ⛔ BUILT FROM THE PALETTE'S OWN SCHEMA, compared against it here
+        // rather than against a literal (trap 199).
+        const bad = [];
+        for (const t of paletteFor(DIRECT.biome).templates) {
+            const got = forms.selectsFor[t.name] ?? [];
+            if (json(got.map((g) => g.key)) !== json(t.params.map((pp) => pp.key))) {
+                bad.push(`${t.name}: keys ${json(got.map((g) => g.key))}`);
+                continue;
+            }
+            for (const pp of t.params) {
+                const g = got.find((x) => x.key === pp.key);
+                // ⛓ the domain PLUS the empty "any (draw it)" option, and the
+                // DECLARED DEFAULT pre-selected.
+                if (json(g.options) !== json(['', ...pp.domain.map(String)])
+                    || g.selected !== String(pp.default)) {
+                    bad.push(`${t.name}.${pp.key}: ${json(g.options)} sel=${g.selected}`);
+                }
+            }
+        }
+        check(bad.length === 0,
+            'and each form offers exactly its DECLARED domain plus an "any (draw it)" '
+            + 'choice, with the declared DEFAULT pre-selected',
+            bad.length ? bad.join(' | ') : `${PRE_ROSTER.length} form(s) match the schema`);
+    }
+
+    // ── 7b: the press ────────────────────────────────────────────────
+    await page.evaluate(({ template, params }) => {
+        const row = [...document.querySelectorAll('#genRoster .catRow')]
+            .find((r) => r.querySelector(`button[data-attempt="${template}"]`));
+        for (const [k, v] of Object.entries(params)) {
+            row.querySelector(`select[data-param="${k}"]`).value = String(v);
+        }
+        row.querySelector(`button[data-attempt="${template}"]`).click();
+    }, { template: DIRECT.template, params: DIRECT.params });
+    /**
+     * ⛔ WAIT ON THE CLAIM'S OWN FIELD PLUS A NOT-BUSY SIGNAL (trap 246, the
+     * hole slice 4 found in claim 4): the readout exists from the skeleton
+     * onward, so waiting for it to EXIST would read the page before the
+     * directive ran.
+     */
+    await page.waitForFunction(
+        () => window.__editorGenerate?.directives?.length === 1
+            && !document.getElementById('genRunAll').disabled,
+        null, { timeout: 300000 },
+    );
+    const after = await page.evaluate(() => ({
+        gen: window.__editorGenerate,
+        level: window.__editorGenerated?.level ?? null,
+        trace: window.__editorGenerated?.trace ?? null,
+        paneRows: [...document.querySelectorAll('#genTrace .tr')].map((e) => e.textContent),
+        dRows: [...document.querySelectorAll('#genDirectives .dRow')].map((e) => e.textContent),
+        status: document.getElementById('status').textContent,
+        detail: document.getElementById('detail').textContent,
+        url: window.location.search,
+    }));
+    const nd = nodeDirect.directives[0];
+    check(after.gen.directives?.length === 1
+        && after.gen.directives[0].outcome === 'KEPT'
+        && after.gen.directives[0].keptKind === 'discharged',
+        '⛓⛓ the readout says WHICH KIND OF KEEP it was — `discharged`, not a bare KEPT',
+        json(after.gen.directives?.[0] && {
+            outcome: after.gen.directives[0].outcome,
+            keptKind: after.gen.directives[0].keptKind,
+            walked: after.gen.directives[0].anchorsWalked,
+            of: after.gen.directives[0].anchorsOffered,
+        }));
+    check(after.gen.directives[0].anchorsWalked === nd.anchorsWalked
+        && after.gen.directives[0].anchorsOffered === nd.anchorsOffered
+        && json(after.gen.directives[0].at) === json(nd.at),
+        'and it walked the SAME anchors node did, to the same cell',
+        `browser walked ${after.gen.directives[0].anchorsWalked} of `
+        + `${after.gen.directives[0].anchorsOffered} to ${json(after.gen.directives[0].at)}; `
+        + `node ${nd.anchorsWalked}/${nd.anchorsOffered} to ${json(nd.at)}`);
+    {
+        // ⛔ EVERY ANCHOR WALKED IS A PANE ROW, in slice 3's row shape.
+        const dPane = after.paneRows.filter((t) => /^d1a\d/.test(t.trim()));
+        check(dPane.length === nd.anchorsWalked,
+            '⛓ EVERY anchor walked is a PANE ROW, labelled d1a<k>',
+            `${dPane.length} pane row(s) for ${nd.anchorsWalked} anchor(s) walked`);
+        /**
+         * ⛓⛓ THE DISCRIMINATOR. A first-SOLVED build stops at anchor 1, so it
+         * can never emit a row that says REVERTED next to a SOLVED verdict.
+         * These rows ARE the ruling, visible on the page.
+         */
+        const passedOver = dPane.filter((t) => t.includes('REVERTED') && t.includes('SOLVED'));
+        check(passedOver.length > 0,
+            '⛔ and the pane SHOWS the anchors that SOLVED and were passed over — '
+            + '`REVERTED · SOLVED`, which only a discharge-preferring walk can produce',
+            `${passedOver.length} of ${dPane.length} rows`);
+    }
+    check(after.dRows.length === 1
+        && after.dRows[0].includes('kept:discharged')
+        && after.dRows[0].includes(`walked ${nd.anchorsWalked} of ${nd.anchorsOffered}`),
+        'the directives list names the keep KIND and how many anchors were walked',
+        after.dRows[0]?.slice(0, 140));
+    check(json(after.level) === json(nodeDirect.record)
+        && json(after.trace) === json(nodeDirect.trace),
+        '⛓⛓ and the level the browser built IS node\'s directed level, byte for byte '
+        + '(level AND trace)',
+        `level ${json(after.level) === json(nodeDirect.record)}, `
+        + `trace ${json(after.trace) === json(nodeDirect.trace)}`);
+    check(after.detail.includes('then 1 directed attempt(s)'),
+        '⛓ the identity line says ladder-to-step-k PLUS the directives',
+        after.detail.slice(0, 160));
+
+    // ── 7c: the URL names the construction, and reproduces it ────────
+    const expectedDirected = `${DIRECT.template}(ori=${DIRECT.params.ori},`
+        + `gap=${DIRECT.params.gap})@${DIRECTED_ANCHOR_TRIES}d`;
+    check(new URLSearchParams(after.url).get('directed') === expectedDirected,
+        '⛓⛓ the URL NAMES the whole construction, in the instance label\'s own spelling',
+        `?directed=${new URLSearchParams(after.url).get('directed')}`);
+    {
+        const copied = await load(after.url.replace(/^\?/, ''));
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const back = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            level: window.__editorGenerated?.level ?? null,
+            trace: window.__editorGenerated?.trace ?? null,
+            url: window.location.search,
+        }));
+        check(json(back.level) === json(after.level) && json(back.trace) === json(after.trace),
+            '⛓⛓⛓ A COPIED URL REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR BYTE',
+            `level ${json(back.level) === json(after.level)}, `
+            + `trace ${json(back.trace) === json(after.trace)}`);
+        check(json(back.gen.directives) === json(after.gen.directives),
+            'and the directive it replayed is the one the press produced, field for field',
+            json(back.gen.directives?.[0]?.keptKind));
+        // ⛓ THE FIXED POINT (slice 1's own claim, now over `?directed=`).
+        check(back.url === after.url,
+            '⛓ and the rewrite is a FIXED POINT — loading it rewrites it to itself',
+            `${after.url}\n        vs ${back.url}`);
+        void copied;
+    }
+
+    // ── 7d: the refusal classes ──────────────────────────────────────
+    for (const [label, subject, expect] of [
+        ['NO_ANCHOR', NO_ANCHOR_CASE, 'NO_ANCHOR'],
+        ['REVERTED', REVERTED_CASE, 'REVERTED'],
+        ['solved-only', SOLVED_ONLY_CASE, 'KEPT'],
+    ]) {
+        await load(`source=generate&seed=${subject.seed}&biome=${subject.biome}`
+            + `&count=${subject.step}${subject.step ? '&run=1' : ''}`);
+        await settled(subject.step, subject.seed);
+        await page.evaluate(({ template, params }) => {
+            const row = [...document.querySelectorAll('#genRoster .catRow')]
+                .find((r) => r.querySelector(`button[data-attempt="${template}"]`));
+            for (const [k, v] of Object.entries(params)) {
+                row.querySelector(`select[data-param="${k}"]`).value = String(v);
+            }
+            row.querySelector(`button[data-attempt="${template}"]`).click();
+        }, subject);
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const got = await page.evaluate(() => ({
+            d: window.__editorGenerate.directives[0],
+            dRow: document.querySelector('#genDirectives .dRow')?.textContent ?? '',
+            status: document.getElementById('status').textContent,
+            paneRows: [...document.querySelectorAll('#genTrace .tr')]
+                .map((e) => e.textContent).filter((t) => /^d1/.test(t.trim())),
+        }));
+        check(got.d.outcome === expect
+            && (label !== 'solved-only' || got.d.keptKind === 'solved-only'),
+            `⛓ the ${label} class is REACHED and reported distinctly`,
+            `${got.d.outcome}${got.d.keptKind ? `/${got.d.keptKind}` : ''}, `
+            + `walked ${got.d.anchorsWalked} of ${got.d.anchorsOffered}`);
+        if (label === 'NO_ANCHOR') {
+            check(got.paneRows.some((t) => t.includes('no legal anchor')),
+                '  …with the model\'s own VERBATIM reason in the pane', got.paneRows[0]);
+        }
+        if (label === 'REVERTED') {
+            check(got.paneRows.some((t) => t.length > 40),
+                '  …with the oracle\'s own VERBATIM refusal in the pane',
+                got.paneRows[0]?.slice(0, 120));
+            check(got.status.includes('the level on screen is UNCHANGED'),
+                '  …and the page SAYS the record did not move', got.status.slice(-90));
+        }
+        if (label === 'solved-only') {
+            check(got.dRow.includes('kept:solved-only'),
+                '  …and it is NOT blurred with `discharged` in the readout',
+                got.dRow.slice(0, 120));
+        }
+    }
+    /**
+     * ⛔⛔ THE CLASS THAT IS NOT REACHABLE, NAMED WITH ITS REASON RATHER THAN
+     * LEFT LOOKING UNTESTED.
+     *
+     * `ILLEGAL_PLACEMENT` cannot occur in a SEARCHED directive: `anchorsFor`
+     * returns only cells `legalAt` already accepted, so `place` has nothing
+     * left to refuse. It becomes reachable in SLICE 6, where the anchor is a
+     * CLICKED cell that `legalAt` never vetted — which is exactly why slice
+     * 6's own charter says an illegal cell must refuse BY NAME without a solve.
+     * ⛓ The path is built and unit-tested (`levelGenerator.test.js`); what is
+     * absent here is a way to REACH it from this page today.
+     */
+    check(true,
+        '⛔ ILLEGAL_PLACEMENT is UNREACHABLE from a searched directive and its absence is '
+        + 'NAMED: `anchorsFor` only offers cells `legalAt` accepted, so `place` has nothing '
+        + 'to refuse. Slice 6\'s clicked anchor is the first caller that can produce it; '
+        + 'the path itself is driven in levelGenerator.test.js', 'stated, not skipped');
+
+    // ── 7e: STEP after a directive RESETS, and said so BEFORE the press ──
+    {
+        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=2`);
+        const noteBefore = await page.evaluate(
+            () => document.getElementById('genDirectivesNote').textContent);
+        check(noteBefore.includes('none yet'),
+            'with no directives the page says the level is the ladder alone', noteBefore);
+        await page.evaluate(({ template, params }) => {
+            const row = [...document.querySelectorAll('#genRoster .catRow')]
+                .find((r) => r.querySelector(`button[data-attempt="${template}"]`));
+            for (const [k, v] of Object.entries(params)) {
+                row.querySelector(`select[data-param="${k}"]`).value = String(v);
+            }
+            row.querySelector(`button[data-attempt="${template}"]`).click();
+        }, { template: DIRECT.template, params: DIRECT.params });
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const warned = await page.evaluate(
+            () => document.getElementById('genDirectivesNote').textContent);
+        /**
+         * ⛔ THE LAW IS STATED **BEFORE** THE PRESS. The brief allowed either
+         * disabling the ladder buttons or resetting-with-a-note; this arm
+         * resets, so what it owes is that the page says what will happen while
+         * the button is still unpressed.
+         */
+        check(warned.includes('RESET') && warned.includes('prefix property'),
+            '⛓⛓ the page says BEFORE the press that STEP will RESET and why — the prefix '
+            + 'property does not cross a directive', warned.slice(0, 150));
+        await page.click('#genStep');
+        await settled(1, DIRECT.seed);
+        const stepped = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            status: document.getElementById('status').textContent,
+            url: window.location.search,
+        }));
+        check((stepped.gen.directives ?? []).length === 0 && stepped.gen.step === 1,
+            'and STEP really DID reset — the directives are gone and the ladder is at step 1',
+            `step ${stepped.gen.step}, ${(stepped.gen.directives ?? []).length} directive(s)`);
+        check(new URLSearchParams(stepped.url).get('directed') === null,
+            '⛓ and the URL stopped naming a construction the page is no longer showing',
+            stepped.url);
+    }
+
+    // ── 7f: CLEAR returns to the ladder ──────────────────────────────
+    {
+        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`);
+        await page.evaluate(({ template, params }) => {
+            const row = [...document.querySelectorAll('#genRoster .catRow')]
+                .find((r) => r.querySelector(`button[data-attempt="${template}"]`));
+            for (const [k, v] of Object.entries(params)) {
+                row.querySelector(`select[data-param="${k}"]`).value = String(v);
+            }
+            row.querySelector(`button[data-attempt="${template}"]`).click();
+        }, { template: DIRECT.template, params: DIRECT.params });
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        await page.click('#genDirectivesClear');
+        await page.waitForFunction(
+            () => (window.__editorGenerate?.directives ?? []).length === 0
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
+        const cleared = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            level: window.__editorGenerated?.level ?? null,
+            url: window.location.search,
+        }));
+        const skel = generateStep({ seed: DIRECT.seed, biome: DIRECT.biome, step: 0 });
+        check((cleared.gen.directives ?? []).length === 0
+            && json(cleared.level) === json(skel.record),
+            'CLEAR returns the page to the ladder — here the SKELETON, byte for byte',
+            `${(cleared.gen.directives ?? []).length} directive(s), level matches: `
+            + `${json(cleared.level) === json(skel.record)}`);
+        check(new URLSearchParams(cleared.url).get('directed') === null,
+            'and the URL says so too', cleared.url);
+    }
 }
 
 // ── CLAIM 4: ?gen= reproduces node's payload in the browser ──────────

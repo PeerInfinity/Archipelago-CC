@@ -144,13 +144,17 @@ import {
 } from './watchManual.js';
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
-    displayStaging, generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
+    DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
+    generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
     writeGenerateParams,
 } from './watchGenerate.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
 import { catalogueRows, restrictPalette } from './procgenPalette.js';
+// ⛓ SLICE 5: the keep policy verb 2 presses under — ⚖ the user's ruling
+// (*verb 2 PREFERS DISCHARGE*). The free ladder never names one.
+import { KEEP_POLICY } from './levelGenerator.js';
 import { atlasOf } from './procgenLevel.js';
 import { createLifetimeHolder } from './watchLifetime.js';
 /**
@@ -4012,10 +4016,76 @@ function mountGenerationPane(rows) {
  * key the restriction is spelled in and the key the pin union looks up — never
  * the instance label, which is a geometry and not a roster entry.
  */
-function mountCatalogue(catalogue, selected) {
+function mountCatalogue(catalogue, selected, onAttempt = null) {
     const box = $('genRoster');
     box.innerHTML = '';
     const dom = (p) => `${p.key} ∈ {${p.domain.join(',')}} (default ${p.default})`;
+    /**
+     * ⛓⛓⛓ VERB 2's PER-ROW FORM (slice 5) — built FROM the row's own declared
+     * schema, which the catalogue row already carries (slice 4's residue: the
+     * `params` array rides on each row with its domains, defaults and `why`).
+     * ⛔ NO SECOND LOOKUP: a form that re-fetched the template to learn its
+     * parameters would be a second answer to "what can this template be asked".
+     *
+     * ⛓ **THE `any` OPTION IS THE FREE LOOP'S OWN BEHAVIOUR**, offered by hand:
+     * leave the value to the seeded stream. What the directive then RECORDS is
+     * the DRAWN value, never the word "any" — so a copied link names a concrete
+     * instance and reproduces it without re-drawing. (That is only safe because
+     * a directive's parameter draw and its anchor walk are SEPARATE streams —
+     * see `watchGenerate.directiveSeed`.)
+     */
+    const mountForm = (row, t) => {
+        if (!onAttempt) return;
+        const form = document.createElement('div');
+        form.className = 'catForm';
+        const selects = new Map();
+        for (const p of t.params) {
+            const sel = document.createElement('select');
+            sel.dataset.param = p.key;
+            const anyOpt = document.createElement('option');
+            anyOpt.value = '';
+            anyOpt.textContent = `${p.key}: any (draw it)`;
+            sel.appendChild(anyOpt);
+            for (const v of p.domain) {
+                const o = document.createElement('option');
+                o.value = String(v);
+                o.textContent = `${p.key}=${v}`;
+                // ⛔ PRE-FILLED FROM THE DECLARED DEFAULT, which `defineTemplate`
+                // already checks is IN the domain — so the form cannot offer an
+                // illegal value, and the check lives where the schema is.
+                if (v === p.default) o.selected = true;
+                sel.appendChild(o);
+            }
+            selects.set(p.key, sel);
+            form.appendChild(sel);
+        }
+        const go = document.createElement('button');
+        go.textContent = 'ATTEMPT this';
+        go.dataset.attempt = t.name;
+        go.onclick = () => {
+            /**
+             * ⚠ READ AT THE PRESS, like every other control on this panel
+             * (`readForm`'s law). An empty value means "any" and is simply
+             * left out of the overrides, so `instantiate` draws it.
+             */
+            const params = {};
+            for (const [key, sel] of selects) {
+                if (sel.value === '') continue;
+                const p = t.params.find((q) => q.key === key);
+                params[key] = p.domain.find((v) => String(v) === sel.value);
+            }
+            onAttempt(t.name, params);
+        };
+        form.appendChild(go);
+        const cost = document.createElement('span');
+        cost.className = 'cost';
+        // ⛔ THE CEILING, BEFORE THE PRESS — the same discipline `#genNote`
+        // applies to the ladder, from the same arithmetic (`directedCost`).
+        cost.textContent = ` ≤ ${directedCost(DIRECTED_ANCHOR_TRIES, 139).solves} solve(s) `
+            + `(bound ${DIRECTED_ANCHOR_TRIES} + 1 display)`;
+        form.appendChild(cost);
+        row.appendChild(form);
+    };
     for (const g of catalogue.groups) {
         const fam = document.createElement('div');
         fam.className = 'catFamily';
@@ -4055,6 +4125,7 @@ function mountCatalogue(catalogue, selected) {
                 w.textContent = t.why;
                 row.appendChild(w);
             }
+            mountForm(row, t);
             fam.appendChild(row);
         }
         for (const e of g.excluded) {
@@ -4082,7 +4153,49 @@ function mountCatalogue(catalogue, selected) {
         templates: catalogue.counts.templates,
         excluded: catalogue.counts.excluded,
         boxes: box.querySelectorAll('input[type=checkbox]').length,
+        // ⛓ SLICE 5: one ATTEMPT button per SELECTABLE row — the excluded rows
+        // carry no form for the same reason they carry no checkbox (there is
+        // nothing to draw), and the row asserts that from the roster.
+        attemptButtons: box.querySelectorAll('button[data-attempt]').length,
+        paramSelects: box.querySelectorAll('select[data-param]').length,
     };
+}
+
+/**
+ * ── ⛓⛓⛓ THE DIRECTIVES APPLIED TO THE LEVEL ON SCREEN (slice 5) ───────
+ *
+ * ⚖ The user's ruling, on the page: the readout says **which kind of keep it
+ * was** — `kept:discharged` against `kept:solved-only` — and how many anchors
+ * were walked. ⛔ The wording is `watchGenerate.describeKeptKind`'s, ONE
+ * spelling shared with the CLI, so the two cannot describe one outcome two
+ * ways; and a template with NO verb to discharge says that BY NAME rather than
+ * appearing to have fallen short of something.
+ *
+ * ⛔ A REFUSED directive is a row too, with its VERBATIM text — the four
+ * outcomes are never blurred into "it didn't work" (RAW TRUTH), and a
+ * directive that refused is exactly the row a reader is looking for.
+ */
+function mountDirectives(directives) {
+    const box = $('genDirectives');
+    box.innerHTML = '';
+    for (const [i, d] of (directives ?? []).entries()) {
+        const el = document.createElement('div');
+        el.className = 'dRow';
+        const kept = d.outcome === 'KEPT';
+        el.innerHTML = `<b>d${i + 1}</b> <span class="s">${d.instance}</span>`
+            + (d.at ? ` <span class="g">(${d.at.tx},${d.at.ty})</span>` : '')
+            + ` → <span class="${kept ? 'g' : 'o'}">${d.outcome}</span>`;
+        const why = document.createElement('div');
+        why.className = 'rj';
+        // ⛔ `textContent`, so the palette's and the solver's own text cannot be
+        // reinterpreted as markup on the way through.
+        why.textContent = (kept ? describeKeptKind(d) : '')
+            + `${kept ? ' · ' : ''}walked ${d.anchorsWalked} of ${d.anchorsOffered} `
+            + `legal anchor(s), bound ${d.bound}, policy ${d.keepPolicy}`;
+        el.appendChild(why);
+        box.appendChild(el);
+    }
+    return { rows: (directives ?? []).length };
 }
 
 /**
@@ -4146,6 +4259,19 @@ async function runGenerate(params, lifetime) {
      * it. See `writeGenerateParams`' docblock for why the two cannot coexist.
      */
     let payloadDropped = false;
+    /**
+     * ⛓⛓⛓ SLICE 5 — VERB 2. ⛔ THERE IS NO LOCAL COPY OF THE DIRECTIVE LIST:
+     * `state.directives` is the one source of truth, because it is what
+     * `applyDirective` RETURNED and therefore what the record on screen was
+     * really built from. A mirror beside it would be the two-spellings failure
+     * mode with the page's own identity in it.
+     *
+     * ⛓ These are the SPECS a `?directed=` load must replay after the ladder
+     * reaches its target. ⛔ Applied through the SAME `applyDirective` a press
+     * uses, at the same indices — one construction path, so a copied link and a
+     * hand-pressed sequence cannot diverge.
+     */
+    let pendingDirected = gp.directed ?? null;
     if (gp.gen) {
         payload = await fetchJson(gp.gen.startsWith('/') ? gp.gen : `/${gp.gen}`,
             'the generated payload');
@@ -4184,6 +4310,20 @@ async function runGenerate(params, lifetime) {
      * and the exclusions would vanish exactly when a reader is asking "why
      * can't I pick that?".
      */
+    /**
+     * ⛔ DECLARED **BEFORE** THE CATALOGUE BLOCK, and the reason is measured:
+     * `updateRunButtons` runs at mount — before any generation — and slice 5
+     * made it read `state.directives` (the ladder-reset law lives in the ONE
+     * writer of the buttons' state). With these declared below, that mount-time
+     * call hit the temporal dead zone and threw *"Cannot access 'state' before
+     * initialization"*, taking the whole arm down before it drew anything. ⛓ The
+     * acceptance row caught it; `state?.` does NOT help, because the TDZ throws
+     * on the REFERENCE, not on the property access.
+     */
+    let step = 0;
+    let state = null;
+    let lastPayload = null;
+
     let catalogueReadout = null;
     const rosterBoxes = () => [...$('genRoster').querySelectorAll('input[data-template]')];
     const checkedNames = () => rosterBoxes().filter((b) => b.checked)
@@ -4200,7 +4340,8 @@ async function runGenerate(params, lifetime) {
         const selected = new Set(roster
             ? restrictPalette(full, roster).templates.map((t) => t.name)
             : full.templates.map((t) => t.name));
-        catalogueReadout = mountCatalogue(catalogueRows(full), selected);
+        catalogueReadout = mountCatalogue(catalogueRows(full), selected,
+            (template, params) => attempt(template, params));
         for (const b of rosterBoxes()) b.onchange = () => updateRunButtons();
     };
     /**
@@ -4226,6 +4367,38 @@ async function runGenerate(params, lifetime) {
             : (checked.length === all
                 ? `the WHOLE roster: ${all} template(s), no restriction`
                 : `RESTRICTED to ${checked.length} of ${all}: ${checked.join(', ')}`);
+        /**
+         * ── ⛓⛓⛓ THE LADDER-RESET-ON-DIRECTIVES LAW (slice 5) ──────────────
+         *
+         * ⛔ **THE PREFIX PROPERTY DOES NOT CROSS A DIRECTIVE.** STEP is
+         * "obstacleTarget = k, re-run" and it is sound because a run to k is a
+         * strict PREFIX of a run to k+1 — but a directed attempt is not part of
+         * any run, so "re-run to k+1" cannot reproduce *ladder-to-k + directive*
+         * and then add one. A ladder button pressed after a directive would
+         * either discard the directive silently or display a level no single
+         * construction produces.
+         *
+         * ⚖ **THE CHOICE, AND IT IS THE ONE THE BRIEF LEFT OPEN: ENABLED, AND
+         * RESET WITH THE REASON SAID BEFORE THE PRESS.** Disabling them would
+         * strand the page — RESET is itself a ladder button, so a directed level
+         * would have no way back to a ladder at all — and this arm already has
+         * exactly this shape built and tested for a changed seed
+         * (`readForm`'s reset). ⛔ What matters is that the page says what will
+         * happen BEFORE the press, which is what this note is.
+         *
+         * ⛓ IT LIVES HERE because this is the ONE writer of the ladder buttons'
+         * state (slice 4 §11.10), and a third reason they may behave
+         * differently belongs with the other two rather than beside them.
+         */
+        const nDirectives = (state?.directives ?? []).length;
+        $('genDirectivesNote').textContent = nDirectives === 0
+            ? 'none yet — the level on screen is the ladder alone'
+            : `⚠ ${nDirectives} directive(s) applied. The prefix property does NOT cross a `
+                + 'directive, so STEP and RUN-ALL will RESET to the skeleton and DROP them — '
+                + 'the same reset a changed seed causes, and for the same reason (this level '
+                + 'is not one any single ladder run produces). Download or copy the URL first '
+                + 'if you want to keep it.';
+        $('genDirectivesClear').disabled = busyNow || nDirectives === 0;
     }
     $('genRosterAll').onclick = () => {
         // ⚠ The whole roster is spelled by ABSENCE, so this clears the
@@ -4264,10 +4437,6 @@ async function runGenerate(params, lifetime) {
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, atlasSource, null)
         .catch((e) => fatal('the loaded tape would not replay', e.stack || e.message));
 
-    let step = 0;
-    let state = null;
-    let lastPayload = null;
-
     const cost = ladderCost(bounds, 139);
     $('genNote').textContent = cost.why;
 
@@ -4295,6 +4464,7 @@ async function runGenerate(params, lifetime) {
         const agreement = agreementWithTrace(state, solved);
         const genRows = generationRows(state.trace);
         const paneReadout = mountGenerationPane(genRows);
+        const directiveReadout = mountDirectives(state.directives);
         lastPayload = {
             generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
             seed,
@@ -4302,6 +4472,14 @@ async function runGenerate(params, lifetime) {
             // ⛓ SLICE 4: an IDENTITY field beside seed and biome — see
             // `agreementWithPayload`. The CLI's payload carries the same one.
             roster: state.roster,
+            /**
+             * ⛓ SLICE 5: the construction beside the ladder — ⚖ §3.5, and an
+             * IDENTITY field `agreementWithPayload` compares. The CLI's payload
+             * carries the same two.
+             */
+            directives: state.directives,
+            /** ⚖ Ruling 9(b)'s reserved block, so the constructive mode is additive. */
+            skeleton: state.skeleton,
             bounds: state.bounds,
             budget: state.budget,
             summary: state.summary,
@@ -4376,6 +4554,15 @@ async function runGenerate(params, lifetime) {
             palette: state.palette.name,
             roster: state.roster,
             catalogue: catalogueReadout,
+            /**
+             * ⛓ SLICE 5: the construction, and WHICH KIND OF KEEP each
+             * directive was. ⛔ `keptKind` is reported RAW — the row asserts on
+             * it, and a readout that collapsed `solved-no-verb` into
+             * `solved-only` would hide the very distinction the ruling asks for.
+             */
+            directives: state.directives,
+            directiveRows: directiveReadout?.rows ?? 0,
+            skeleton: state.skeleton,
             bounds: state.bounds,
             budget: state.budget,
             stop: state.stop,
@@ -4463,6 +4650,10 @@ async function runGenerate(params, lifetime) {
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
             roster: state.roster,
+            // ⛓ SLICE 5: from the STATE, like every other parameter here — the
+            // directives the record on screen really carries, so a link cannot
+            // name a construction the page did not perform.
+            directives: state.directives,
             step,
             payloadOwned: Boolean(payload),
         });
@@ -4612,17 +4803,114 @@ async function runGenerate(params, lifetime) {
 
     const resetToSkeleton = async (why) => {
         step = 0;
+        // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
+        // the reset drops them BY CONSTRUCTION rather than by a second line
+        // somebody could forget to write.
         state = generateStep({ seed, biome, step: 0, bounds, budget, roster });
         await show(why);
     };
+    /**
+     * ── ⛓⛓⛓ VERB 2's PRESS — ⚖ ruling 1's *"attempt to generate that
+     * ── specific thing"* ─────────────────────────────────────────────────
+     *
+     * ⛔ IT DOES NOT TOUCH THE LADDER. A directive is applied to the record ON
+     * SCREEN, at whatever step that is (including the skeleton), and it never
+     * re-runs the loop — so the ladder's own identity is untouched and the
+     * only thing that grows is the directive list.
+     *
+     * ⚠ THE FOUR OUTCOMES ARE REPORTED DISTINCTLY, with the refusal's VERBATIM
+     * text in the pane. ⛔ And `ABORTED` still ABORTS: `applyDirective` lets a
+     * `GenerationAborted` propagate, and this handler shows it as the fatal it
+     * is rather than as "the attempt didn't work" (traps 171/173).
+     */
+    async function attempt(template, params) {
+        busy(true);
+        try {
+            if (!lifetime.alive()) return;
+            const spec = {
+                template,
+                params,
+                /** ⛓ Slice 6 fills this; today a directed attempt SEARCHES. */
+                anchor: null,
+                keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+                bound: DIRECTED_ANCHOR_TRIES,
+            };
+            $('status').className = '';
+            $('status').textContent = `directed attempt: ${template} on step ${step} `
+                + `(seed ${seed}, ${biome})…`;
+            await new Promise((r) => requestAnimationFrame(r));
+            if (!lifetime.alive()) return;
+            let next;
+            try {
+                next = applyDirective(state, spec, state.directives.length);
+            } catch (e) {
+                /**
+                 * ⛔ AN ENGINE THROW IS A FINDING, NOT A REFUSAL. It arrives
+                 * here only because `directedAttempt` refused to swallow it,
+                 * and the page must not swallow it either — it is shown with
+                 * the engine's own text and the level on screen is left alone.
+                 */
+                fatal(`the DIRECTED attempt for "${template}" ABORTED — the engine threw `
+                    + 'something the oracle does not classify, which is a defect and not a '
+                    + 'rejected candidate', e.message);
+                return;
+            }
+            state = next;
+            const d = state.directives[state.directives.length - 1];
+            const out = await show(`ATTEMPT ${d.instance} → ${d.outcome}`);
+            if (!out.drew) return;
+            $('status').textContent += `  ·  ${d.outcome === 'KEPT'
+                ? describeKeptKind(d)
+                : `⛔ ${d.outcome} — the level on screen is UNCHANGED`}`
+                + `  ·  walked ${d.anchorsWalked} of ${d.anchorsOffered} legal anchor(s)`;
+        } finally {
+            busy(false);
+        }
+    }
+    /**
+     * ⚠ CLEARING IS A RESET TO THE LADDER, not an undo of one directive. There
+     * is no undo in this arm and there must not be one: a directive's effect is
+     * a NEW record, and the way back to the record before it is to rebuild the
+     * construction without it — which is what re-running the ladder is.
+     */
+    $('genDirectivesClear').onclick = async () => {
+        busy(true);
+        try {
+            const n = state.directives.length;
+            if (step === 0) {
+                await resetToSkeleton(`CLEARED ${n} directive(s) — back to the skeleton`);
+            } else {
+                state = generateStep({ seed, biome, step, bounds, budget, roster });
+                await show(`CLEARED ${n} directive(s) — back to seed ${seed}'s ladder at `
+                    + `step ${step}`);
+            }
+        } finally {
+            busy(false);
+        }
+    };
     $('genStep').onclick = async () => {
-        if (readForm()) await resetToSkeleton('the seed or biome changed — RESET to the '
-            + 'skeleton, because the seed IS the level\'s identity');
+        if (readForm() || state.directives.length) {
+            await resetToSkeleton(state.directives.length
+                // ⛓ THE LAW, SAID AGAIN AT THE MOMENT IT BITES. `updateRunButtons`
+                // says it BEFORE the press; this says it in the status line after,
+                // so the reset is never something the page just did quietly.
+                ? `${state.directives.length} directive(s) were applied — RESET to the `
+                    + 'skeleton, because a run to step k is a prefix of a run to k+1 and '
+                    + 'that property does NOT cross a directive'
+                : 'the seed or biome changed — RESET to the skeleton, because the seed IS '
+                    + 'the level\'s identity');
+        }
         return goTo(Math.min(step + 1, bounds.obstacleTarget), 'STEP');
     };
     $('genRunAll').onclick = async () => {
-        if (readForm()) await resetToSkeleton('the seed or biome changed — RESET to the '
-            + 'skeleton, because the seed IS the level\'s identity');
+        if (readForm() || state.directives.length) {
+            await resetToSkeleton(state.directives.length
+                ? `${state.directives.length} directive(s) were applied — RESET to the `
+                    + 'skeleton, because a run to step k is a prefix of a run to k+1 and '
+                    + 'that property does NOT cross a directive'
+                : 'the seed or biome changed — RESET to the skeleton, because the seed IS '
+                    + 'the level\'s identity');
+        }
         return goTo(bounds.obstacleTarget, 'RUN-ALL');
     };
     $('genReset').onclick = async () => {
@@ -4651,6 +4939,35 @@ async function runGenerate(params, lifetime) {
 
     if (gp.run || payload) {
         await goTo(bounds.obstacleTarget, payload ? '?gen= reproduction' : 'RUN-ALL (?run=1)');
+    }
+    /**
+     * ── ⛓⛓⛓ `?directed=` — THE CONSTRUCTION A LINK NAMES (slice 5) ────────
+     *
+     * ⛔ AFTER the ladder and BEFORE the payload check, because that is the
+     * order the identity is defined in: *seed S's ladder to step k, THEN N
+     * directed attempts*. A payload comparison taken before the directives
+     * were applied would be comparing a prefix to a whole.
+     *
+     * ⛔ THE SAME `applyDirective` A PRESS USES, AT THE SAME INDICES. One
+     * construction path (`watchGenerate.generateWithDirectives` is the CLI's
+     * and the tests' entry into it), so a copied link and a hand-pressed
+     * sequence cannot produce different levels.
+     */
+    if (pendingDirected?.length && lifetime.alive()) {
+        for (const [i, spec] of pendingDirected.entries()) {
+            if (!lifetime.alive()) return;
+            $('status').className = '';
+            $('status').textContent = `?directed= replaying directive ${i + 1} of `
+                + `${pendingDirected.length}: ${spec.template}…`;
+            await new Promise((r) => requestAnimationFrame(r));
+            if (!lifetime.alive()) return;
+            state = applyDirective(state, spec, i);
+        }
+        pendingDirected = null;
+        const out = await show(`?directed= — ${state.directives.length} directive(s) replayed`);
+        if (!out.drew) return;
+    }
+    if (gp.run || payload) {
         if (payload) {
             /**
              * ⛔ CHECKED AT THE TARGET AND REPORTED EITHER WAY. A payload that
