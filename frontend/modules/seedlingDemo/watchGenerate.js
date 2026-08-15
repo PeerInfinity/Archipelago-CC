@@ -57,7 +57,7 @@
 
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
 import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
-import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } from './procgenPalette.js';
+import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
 
 export class WatchGenerateError extends Error {
@@ -343,22 +343,20 @@ export function generateStep({ seed, biome, step, bounds, budget } = {}) {
 }
 
 /**
- * The template OBJECTS a summary's kept list names — what the oracle needs to
+ * The concrete ROWS a summary's kept list names — what the oracle needs to
  * take the pin union over (⚖ §9.4: the water template obliges `'sound'` BY
  * ARGUMENT). A name the palette does not hold is a defect, not a missing pin,
  * so it refuses rather than dropping the row.
+ *
+ * ⛓⛓ SLICE 2: THIS IS NOT A LOOKUP ANY MORE, IT IS A RECONSTRUCTION — and it
+ * is the SAME one `procgenSeedling.generateSeedlingLevel` uses for its own pin
+ * union. `k.template` names a BASE (no footprint, no pins, no geometry); the
+ * instance is rebuilt from `{template, params}` by `instantiateKept`, which
+ * REFUSES rather than defaulting when a parameter is missing. ⛔ Two private
+ * reconstructions of one instance would be two cost models, so there is one.
  */
 export function keptTemplatesOf(summary, palette) {
-    return (summary?.kept ?? []).map((k) => {
-        const t = palette.templates.find((x) => x.name === k.template);
-        if (!t) {
-            fail(`watchGenerate: the summary keeps "${k.template}", which palette `
-                + `"${palette.name}" does not hold. The pin union is taken over these `
-                + 'objects, so a dropped one would solve the room under fewer pins than '
-                + 'the loop did.');
-        }
-        return t;
-    });
+    return (summary?.kept ?? []).map((k) => instantiateKept(palette, k));
 }
 
 /**
@@ -509,6 +507,15 @@ export function generationRows(trace) {
         try: r.try,
         label: r.step === 0 ? '(skeleton)' : `${r.step}.${r.try}`,
         template: r.template ?? '(skeleton)',
+        /**
+         * ⛓ SLICE 2: THE PANE PRINTS THE INSTANCE, the pane's own consumers
+         * still get the base `template`. `wall-segment(ori=v,len=4)` and
+         * `wall-segment(ori=h,len=2)` are two different obstacles and a pane
+         * that called both "wall-segment" would be showing a roster key where
+         * a reader needs a geometry.
+         */
+        instance: r.instance ?? r.template ?? '(skeleton)',
+        params: r.params ?? null,
         family: r.family,
         at: r.at ? `(${r.at.tx},${r.at.ty})` : null,
         outcome: r.outcome,

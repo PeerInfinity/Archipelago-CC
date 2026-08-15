@@ -197,8 +197,12 @@ if (has('json')) {
     say('');
     say('## the generation trace');
     for (const r of out.trace) {
+        // ⛓ THE INSTANCE LABEL, not the roster key (GENERATE-mode UI slice 2)
+        // — `wall-segment(ori=v,len=4)` and `wall-segment(ori=h,len=2)` are two
+        // different obstacles, and a trace that called both `wall-segment`
+        // would print a key where a reader needs a geometry.
         say(`  step ${String(r.step).padStart(2)}.${r.try} `
-            + `${String(r.template ?? '(skeleton)').padEnd(17)} `
+            + `${String(r.instance ?? r.template ?? '(skeleton)').padEnd(30)} `
             + `${r.at ? `@(${r.at.tx},${r.at.ty})`.padEnd(9) : ''.padEnd(9)} `
             + `${r.outcome.padEnd(18)} ${r.verdict ?? '-'}`
             + `${r.ticks !== null ? ` ${r.ticks} ticks` : ''}`);

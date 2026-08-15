@@ -3961,7 +3961,9 @@ function mountGenerationPane(rows) {
     for (const r of rows) {
         const el = document.createElement('div');
         el.className = `tr past${r.outcome === 'KEPT' ? ' kept' : ''}`;
-        el.innerHTML = `<b>${r.label}</b> <span class="s">${r.template}</span>`
+        // ⛓ THE INSTANCE LABEL, not the roster key — `wall-segment(ori=v,len=4)`
+        // and `wall-segment(ori=h,len=2)` are two different obstacles.
+        el.innerHTML = `<b>${r.label}</b> <span class="s">${r.instance}</span>`
             + (r.at ? ` <span class="g">${r.at}</span>` : '')
             + ` → <span class="${r.outcome === 'KEPT' ? 'g' : 'o'}">${r.outcome}</span>`
             + (r.verdict ? ` <span class="rj">${r.verdict}</span>` : '')

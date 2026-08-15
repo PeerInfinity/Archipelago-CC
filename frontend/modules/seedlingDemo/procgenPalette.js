@@ -41,23 +41,78 @@
  * other half: a row whose cause has been FIXED is a stale claim, so the row
  * either moves into the palette or gets re-measured text.
  *
- * ── WHAT A TEMPLATE IS, FIELD BY FIELD ────────────────────────────────
+ * ── ⛓⛓⛓ A TEMPLATE IS NOW A **FUNCTION**, AND A CONCRETE ROW IS ITS OUTPUT
  *
- *   `name`       unique; the trace's own key
- *   `family`     the roster the report counts by (⚖ §5, trap 199: build
- *                assertions FROM the roster, never from a count)
- *   `footprint`  the cells it OCCUPIES, as {dx,dy} from its anchor. Every one
- *                must be free interior ground or the placement is refused BY
- *                NAME before any solve.
- *   `clearance`  cells that must ALSO be free but are not written — the
- *                template's own "and this stays walkable" rule.
- *   `terrain`    tiles written, `{dx, dy, terrain}` in `procgenLevel.TERRAIN`
- *   `entities`   entities added, `{dx, dy, type, attrs}` — attrs TRANSCRIBED
- *                from real atlas rooms, cited per template
- *   `pins`       staging pins this template obliges (`bootStaging`'s argument)
- *   `lane`       `'avoidable'` on the arrow trap — the model computes the
- *                lane with the ENGINE's own geometry and refuses an anchor
- *                whose lane covers the start or the goal
+ * ⚖ GENERATE-mode UI arc, SLICE 2 (kickoff §3.1), the user's own ruling:
+ * *"migrating away from fixed templates towards parameterized templates. A
+ * collection of functions that each generate a coherent set of features for
+ * the map, instead of a collection of predefined arrangements of tiles."*
+ *
+ * So `palette.templates` holds **BASE templates**:
+ *
+ *   `name`        unique; the roster key and the trace's `template` field.
+ *                 ⛔ IT DOES NOT MOVE WITH THE PARAMETERS — the instance label
+ *                 is a separate field, because the family tallies and the pin
+ *                 union both key on the base name (trap 199).
+ *   `family`      the roster the report counts by (⚖ §5, trap 199)
+ *   `params`      the DECLARED, UI-facing schema: an ARRAY of
+ *                 `{key, domain, default, why}`. `domain` is a small finite
+ *                 list; `default` must be in it and is what verb 2's form
+ *                 pre-fills. ⛔ Nothing in the free-running loop reads
+ *                 `default` — the loop DRAWS. It is the UI's value and the
+ *                 record of what the frozen row used to be.
+ *   `instantiate(rng, overrides)` → a CONCRETE ROW
+ *
+ * and a **CONCRETE ROW** is exactly the shape this table held before the
+ * migration, plus two stamps:
+ *
+ *   `footprint`   the cells it OCCUPIES, as {dx,dy} from its anchor. Every one
+ *                 must be free interior ground or the placement is refused BY
+ *                 NAME before any solve.
+ *   `clearance`   cells that must ALSO be free but are not written — the
+ *                 template's own "and this stays walkable" rule.
+ *   `terrain`     tiles written, `{dx, dy, terrain}` in `procgenLevel.TERRAIN`
+ *   `entities`    entities added, `{dx, dy, type, attrs}` — attrs TRANSCRIBED
+ *                 from real atlas rooms, cited per template
+ *   `pins`        staging pins this template obliges (`bootStaging`'s argument)
+ *   `lane`        `'avoidable'` on the arrow trap — the model computes the
+ *                 lane with the ENGINE's own geometry and refuses an anchor
+ *                 whose lane covers the start or the goal
+ *   `door`        `'h'|'v'` — `procgenSeedling.legalAt`'s own rule
+ *   `params`      ⛓ THE STAMP: the VALUES this instance was built from, as a
+ *                 plain object. ⚠ The base's `params` is the SCHEMA (an
+ *                 ARRAY); a concrete row's is the VALUES (an OBJECT). Two
+ *                 shapes, one word, and `assertPalette` asserts the shapes so
+ *                 a reader who mixes them meets a refusal rather than a
+ *                 silently empty loop.
+ *   `instance`    the derived label — `wall-segment(ori=v,len=4)` — which is
+ *                 what the pane prints and what a reader identifies a row by.
+ *
+ * ⛔ **THE CONCRETE ROW IS THE OUTPUT CONTRACT.** `anchorFor`, `legalAt`,
+ * `place`, the oracle, the pin union and the sentinel slots consume concrete
+ * rows and never learn the migration happened. A zero-parameter template
+ * (`arrow-lane`) is the degenerate case: one instantiation, byte-identical to
+ * the frozen row it replaced.
+ *
+ * ── ⛔⛔ THE DRAW ORDER **IS** PART OF DETERMINISM, SO IT IS DECLARED ───
+ *
+ * `instantiate` draws each declared parameter from the SAME injected stream,
+ * **in `params` array order** (schema order), one `rng.pick(domain)` per
+ * parameter — and a parameter supplied through `overrides` consumes NO draw.
+ * The loop's order within one attempt is therefore: pick the base template,
+ * draw its parameters in schema order, then ask the model for an anchor. ⚠ The
+ * number of draws an attempt spends is TEMPLATE-DEPENDENT (two for a wall
+ * segment, none for an arrow lane), which is harmless precisely because the
+ * template is drawn first — the stream decides the count before it spends it.
+ *
+ * ⛓ **AND THE OLD DOCBLOCK'S REJECTION OF A FACTORY IS SUPERSEDED** — see the
+ * `PLACEMENT_GROUP` block below, which is edited rather than left standing
+ * (trap 223: a section that was true when written reads as current forever).
+ * Its three reasons were: `assertPalette` walks static footprints (it now
+ * walks every ENUMERATED instantiation, which is strictly more), the
+ * post-sword roster is a superset BY CONSTRUCTION (it still is — a spread of
+ * the same base objects), and the measurements are attached to a row a reader
+ * can see (they still are, beside the domain each one certifies).
  *
  * ⛔ NO NODE IMPORTS (see `atlasSource.js`): this file is on the GENERATE
  * arm's path in the browser.
@@ -81,6 +136,200 @@ const rectCells = (w, h) => {
     return Object.freeze(out);
 };
 const paint = (cells, terrain) => Object.freeze(cells.map((c) => Object.freeze({ ...c, terrain })));
+
+/**
+ * ⛓ THE TRANSPOSE — what makes ONE orientation parameter replace a hand-
+ * unrolled `-h`/`-v` pair.
+ *
+ * `along` runs down the template's own axis and `across` is perpendicular to
+ * it: for `ori:'h'` that is `(dx, dy)`, for `'v'` it is `(dy, dx)`. Every
+ * wave-1 door geometry below is written ONCE in these coordinates, so the two
+ * orientations cannot drift apart the way two literal rows can.
+ */
+const at = (ori, along, across) => (ori === 'h' ? cell(along, across) : cell(across, along));
+/** `n` cells in a line down the template's own axis, from its anchor. */
+const lineCells = (ori, n) => Object.freeze(
+    Array.from({ length: n }, (_, i) => at(ori, i, 0)),
+);
+/** The along-axis offset of a cell, in the same coordinates. */
+const alongOf = (ori) => (c) => (ori === 'h' ? c.dx : c.dy);
+
+/** `wall-segment(ori=v,len=4)` — the label a pane row and a reader identify an
+ *  instance by. A zero-parameter template's label IS its name. */
+const instanceLabel = (name, values) => {
+    const keys = Object.keys(values);
+    return keys.length === 0
+        ? name
+        : `${name}(${keys.map((k) => `${k}=${values[k]}`).join(',')})`;
+};
+
+/**
+ * ⛓⛓⛓ THE ONE CONSTRUCTOR EVERY ROW IN THIS FILE GOES THROUGH — ⚖ ruling 2's
+ * *"collection of functions"*, with its schema checked where it is declared.
+ *
+ * ⛔ `build(values)` returns the GEOMETRY HALF of a concrete row and nothing
+ * else: `name`, `family`, `params` and `instance` are stamped here, AFTER the
+ * spread, so a `build` cannot rename its own template or forge its own
+ * parameter record.
+ *
+ * ⚠ THE SCHEMA IS CHECKED AT DEFINITION TIME rather than at first draw. A
+ * domain nobody can enumerate is a domain nobody swept (⚖ ruling 4), and a
+ * `default` outside its own domain is a form control that offers an illegal
+ * value — both would otherwise surface on the day a user pressed something.
+ */
+export function defineTemplate({ name, family, params = [], why, build }) {
+    if (typeof name !== 'string' || !name) {
+        fail('procgenPalette: a template needs a name — it is the roster key, the trace\'s '
+            + '`template` field and what the pin union looks up.');
+    }
+    if (typeof family !== 'string' || !family) {
+        fail(`procgenPalette: template "${name}" has no family. The report counts by family `
+            + 'and an unnamed one would be counted as "undefined".');
+    }
+    if (typeof build !== 'function') {
+        fail(`procgenPalette: template "${name}" has no \`build\`. A parameterized template `
+            + 'IS a function from its values to a concrete row (⚖ ruling 2); a table row '
+            + 'with no constructor is exactly the shape this seam replaced.');
+    }
+    if (!Array.isArray(params)) {
+        fail(`procgenPalette: template "${name}"'s \`params\` must be the SCHEMA ARRAY `
+            + '[{key, domain, default, why}]. The VALUES OBJECT is what an INSTANCE '
+            + 'carries — two shapes under one word, so the shapes are asserted rather '
+            + 'than assumed.');
+    }
+    const keys = new Set();
+    for (const p of params) {
+        if (typeof p?.key !== 'string' || !p.key || keys.has(p.key)) {
+            fail(`procgenPalette: template "${name}" declares a parameter with a missing or `
+                + `duplicated key (${JSON.stringify(p?.key)}). The key is the draw's own `
+                + 'position in the order AND what the instance label reads.');
+        }
+        keys.add(p.key);
+        if (!Array.isArray(p.domain) || p.domain.length === 0) {
+            fail(`procgenPalette: template "${name}" parameter "${p.key}" has no finite `
+                + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
+                + 'nobody can enumerate is a domain nobody swept.');
+        }
+        if (!p.domain.includes(p.default)) {
+            fail(`procgenPalette: template "${name}" parameter "${p.key}" defaults to `
+                + `${JSON.stringify(p.default)}, which is not in its own domain `
+                + `[${p.domain.join(', ')}]. The default is what verb 2's form pre-fills, `
+                + 'so a default outside the domain is a control offering an illegal value.');
+        }
+        if (typeof p.why !== 'string' || !p.why) {
+            fail(`procgenPalette: template "${name}" parameter "${p.key}" carries no `
+                + '`why`. Every other measured choice in this file says why it is what it '
+                + 'is; a knob that does not is one the next slice re-derives.');
+        }
+    }
+    const schema = Object.freeze(params.map((p) => Object.freeze({
+        ...p, domain: Object.freeze([...p.domain]),
+    })));
+    return Object.freeze({
+        name,
+        family,
+        params: schema,
+        why,
+        /**
+         * ⛔ DRAWS IN SCHEMA ORDER, ONE `pick` PER PARAMETER, AND AN OVERRIDE
+         * SPENDS NO DRAW. The file docblock declares that order; this is where
+         * it is spent.
+         */
+        instantiate(rng, overrides = {}) {
+            for (const k of Object.keys(overrides ?? {})) {
+                if (!keys.has(k)) {
+                    fail(`procgenPalette: template "${name}" has no parameter "${k}" to `
+                        + `override (it declares [${[...keys].join(', ') || 'none'}]). A `
+                        + 'silently ignored override is a control that writes state '
+                        + 'nobody reads.');
+                }
+            }
+            const values = {};
+            for (const p of schema) {
+                if (Object.prototype.hasOwnProperty.call(overrides ?? {}, p.key)) {
+                    const v = overrides[p.key];
+                    if (!p.domain.includes(v)) {
+                        fail(`procgenPalette: template "${name}" parameter "${p.key}" was `
+                            + `overridden with ${JSON.stringify(v)}, which is not in its `
+                            + `declared domain [${p.domain.join(', ')}]. Every value in a `
+                            + 'domain is one a sweep measured; a value outside it is one '
+                            + 'nobody has adjudicated.');
+                    }
+                    values[p.key] = v;
+                    continue;
+                }
+                if (!rng || typeof rng.pick !== 'function') {
+                    fail(`procgenPalette: template "${name}" needs a DRAW for "${p.key}" `
+                        + 'and no rng was given. ⛔ This REFUSES rather than falling back '
+                        + 'to the default: a reconstruction that dropped a recorded '
+                        + 'parameter would otherwise rebuild the DEFAULT instance — a '
+                        + 'different geometry wearing the same name — and the pin union, '
+                        + 'whose pins are static per template in v1, could not tell the '
+                        + 'two apart.');
+                }
+                values[p.key] = rng.pick(p.domain);
+            }
+            return Object.freeze({
+                why,
+                ...build(values),
+                name,
+                family,
+                params: Object.freeze({ ...values }),
+                instance: instanceLabel(name, values),
+            });
+        },
+    });
+}
+
+/**
+ * EVERY DECLARED VALUE COMBINATION of one base template, in schema order —
+ * what `assertPalette` walks and what the domain sweep enumerates. ⛔ The
+ * cartesian product is taken over the DECLARED domains, so a domain that grew
+ * grows the load-time check with it rather than leaving new values unchecked.
+ */
+export function enumerateValues(template) {
+    let combos = [{}];
+    for (const p of template.params ?? []) {
+        const next = [];
+        for (const c of combos) for (const v of p.domain) next.push({ ...c, [p.key]: v });
+        combos = next;
+    }
+    return combos;
+}
+
+/** Every concrete row a palette can produce — built FROM the roster (trap 199). */
+export function enumerateInstantiations(palette) {
+    return palette.templates.flatMap(
+        (t) => enumerateValues(t).map((v) => t.instantiate(null, v)),
+    );
+}
+
+/**
+ * ⛓⛓⛓ THE **ONE** RECONSTRUCTION — `{template, params}` back to the concrete
+ * row the loop placed.
+ *
+ * ⛔ TWO CALLERS, ONE CONSTRUCTION (`watchGenerate.keptTemplatesOf` and
+ * `procgenSeedling.generateSeedlingLevel`'s pin union). Before the migration
+ * both did their own `palette.templates.find(t => t.name === k.template)`;
+ * under parameterization that lookup returns a BASE, which has no footprint,
+ * no pins and no geometry at all. Two private reconstructions of a
+ * parameterized instance is the second-cost-model shape, so there is one.
+ *
+ * ⚠ IT PASSES NO RNG ON PURPOSE. Every parameter the record names is an
+ * override and spends no draw; a parameter the record does NOT name has no
+ * value to rebuild from, and `instantiate` refuses BY NAME rather than
+ * quietly returning the default instance.
+ */
+export function instantiateKept(palette, kept) {
+    const base = palette?.templates?.find((t) => t.name === kept?.template);
+    if (!base) {
+        fail(`procgenPalette: the summary keeps "${kept?.template}", which palette `
+            + `"${palette?.name}" does not hold. The pin union is taken over these `
+            + 'objects, so a dropped one would solve the room under fewer pins than the '
+            + 'loop did.');
+    }
+    return base.instantiate(null, kept.params ?? {});
+}
 
 /**
  * THE PRE-SWORD BIOME'S BOOT: no sword, no shield, nothing granted.
@@ -168,6 +417,26 @@ const SLIDE_PATH = Object.freeze(
  * template declares `groups: 1`; and `procgenSeedling.place` — the ONE writer
  * that turns template entities into level entities — resolves it.
  *
+ * ⛓⛓⛓ **AND THE PARAGRAPH ABOVE IS NOW HISTORY, NOT THE STATE OF AFFAIRS**
+ * (GENERATE-mode UI arc slice 2; trap 223 — a section that was true when
+ * written reads as current forever, so it is EDITED where it stands rather
+ * than contradicted somewhere else). ⚖ The user ruled parameterized templates
+ * in, and every row in this file is now a `build(values)` function. Each of
+ * the three reasons above was DISCHARGED rather than overruled:
+ *
+ *  · `assertPalette` no longer walks static footprints — it ENUMERATES every
+ *    declared domain and runs every instantiation through the same per-row
+ *    checks, which is strictly more than it used to do (count in its docblock).
+ *  · `POST_SWORD_TEMPLATES` is still a superset BY CONSTRUCTION: it spreads the
+ *    same frozen BASE objects, and `procgenPostSword.test.js` still drives it.
+ *  · The measurements are still attached where a reader finds them — beside the
+ *    domain each one certifies, in the `SPINNER_OFFSET` table's own shape.
+ *
+ * ⛔ WHAT DOES **NOT** CHANGE is this slot. A `build` may vary geometry; it
+ * may not invent a group. The sentinel is still a per-PLACEMENT value that
+ * only `place` can resolve, and `assertGroupSlot` runs against every
+ * instantiation rather than against one frozen row.
+ *
  * ⚠ THE SENTINEL'S OWN FAILURE MODE IS THE DANGEROUS ONE, so it is guarded
  * rather than hoped about: an UNRESOLVED sentinel would reach `intAttr`, which
  * parses any non-numeric string as **0** — i.e. silently back into the exact
@@ -241,26 +510,54 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * be the conservative-ingredient trap (171/173) — the loop would look
      * infallible because its instrument had removed the only failures.
      */
-    Object.freeze({
-        name: 'wall-segment-h3',
+    /**
+     * ⛓⛓ ⚖ RULING 4's LIGHT SWEEP — `node
+     * scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=12`, the
+     * dedicated geometry (this instance ALONE in the bordered room with that
+     * seed's goal), ONE anchor per (value, seed) — the cell `anchorFor` itself
+     * draws, which is the anchor the loop would use.
+     *
+     *   ori=h  len   2    3    4    5      ori=v  len   2    3    4    5
+     *   solved      12   12   12   12             solved 12   12   12   12
+     *   refused      0    0    0    0             refused 0    0    0    0
+     *   threw        0    0    0    0             threw   0    0    0    0
+     *
+     * ⇒ every declared length places and certifies alone, at every seed, in
+     * both orientations. ⚠ THAT IS NOT A CLAIM THAT THE VALUES ARE
+     * INTERCHANGEABLE — a wall segment is not a clearer, so it has no
+     * `discharged` column and nothing here says which length constrains a room
+     * more. What the table certifies is what ⚖ ruling 4 asks of a domain: every
+     * value is one the generator can actually place and the oracle can
+     * adjudicate, with ZERO throws (the only class that would abort a RUN).
+     */
+    defineTemplate({
+        name: 'wall-segment',
         family: 'wall',
-        footprint: rectCells(3, 1),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(3, 1), 'wall'),
-        entities: Object.freeze([]),
-        pins: Object.freeze([]),
-        why: 'three Stone cells in a row; `world.solids` gains them with tag `tile:Stone`',
-    }),
-    Object.freeze({
-        name: 'wall-segment-v3',
-        family: 'wall',
-        footprint: rectCells(1, 3),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(1, 3), 'wall'),
-        entities: Object.freeze([]),
-        pins: Object.freeze([]),
-        why: 'the same segment stood on end — the two orientations are two draws, so a '
-            + 'room can be constrained on both axes from one palette',
+        params: [
+            { key: 'ori', domain: ['h', 'v'], default: 'h',
+                why: 'the two orientations were `wall-segment-h3` and `-v3`, one parameter '
+                    + 'hand-unrolled into two rows. Collapsing them is ⚖ ruling 3\'s wave-1 '
+                    + 'item and it is what stops the pair drifting apart' },
+            { key: 'len', domain: [2, 3, 4, 5], default: 3,
+                why: 'the frozen row was THREE and the number was never measured — three '
+                    + 'is the default because it is what shipped. The domain stops at 5 '
+                    + 'because 6 would be within two cells of spanning an 8-wide interior, '
+                    + 'and a near-spanning wall is a door with no clearer in it (the '
+                    + '`wall-gap-block` family is where a door belongs)' },
+        ],
+        why: 'Stone cells in a line; `world.solids` gains them with tag `tile:Stone`. The '
+            + 'two orientations are two values of one draw, so a room can be constrained '
+            + 'on both axes from one template',
+        build: ({ ori, len }) => {
+            const cells = lineCells(ori, len);
+            return {
+                footprint: cells,
+                clearance: Object.freeze([]),
+                terrain: paint(cells, 'wall'),
+                entities: Object.freeze([]),
+                pins: Object.freeze([]),
+            };
+        },
     }),
     /**
      * ⛓⛓ THE WATER POOL — and it is the reason `bootStaging` takes `pins` as
@@ -276,16 +573,39 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * template that is only safe while the solver keeps choosing to stay dry
      * is a template whose safety is somebody else's decision.
      */
-    Object.freeze({
-        name: 'water-pool-2x2',
+    /**
+     * ⛓⛓ ⚖ RULING 4's SWEEP, same command and same bound as `wall-segment`'s:
+     * ALL NINE `w x h` combinations read **12 solved / 0 refused / 0 threw**
+     * over seeds 1..12. A pool routes a walk around itself and never seals a
+     * room on its own, so a flat table is the expected shape here and the
+     * number worth reading is the zero in the `threw` column.
+     */
+    defineTemplate({
+        name: 'water-pool',
         family: 'water',
-        footprint: rectCells(2, 2),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(2, 2), 'water'),
-        entities: Object.freeze([]),
-        pins: Object.freeze(['sound']),
-        why: 'four Water cells; `world.lethalTerrainTiles` gains them, and the block '
-            + 'must pin `sound` for any wet tick (R5 §13)',
+        params: [
+            { key: 'w', domain: [1, 2, 3], default: 2,
+                why: 'the frozen row was 2x2 and its own docblock called the size a '
+                    + 'declared choice; the measurement was that the cells build as water. '
+                    + 'The domain stops at 3 because a 4-wide pool in an 8-wide interior '
+                    + 'is half the room' },
+            { key: 'h', domain: [1, 2, 3], default: 2,
+                why: 'the same, on the other axis. ⛔ NOT collapsed into an `ori` — a pool '
+                    + 'is a RECTANGLE and w x h says more than a length and a flip does' },
+        ],
+        why: 'Water cells; `world.lethalTerrainTiles` gains them, and the block must pin '
+            + '`sound` for any wet tick (R5 §13) — at every size, which is why the pin is '
+            + 'static and not a function of the parameters',
+        build: ({ w, h }) => {
+            const cells = rectCells(w, h);
+            return {
+                footprint: cells,
+                clearance: Object.freeze([]),
+                terrain: paint(cells, 'water'),
+                entities: Object.freeze([]),
+                pins: Object.freeze(['sound']),
+            };
+        },
     }),
     /**
      * ⛓ THE PIT PATCH — `TERRAIN.pit` (column 7 → type 6), landing in
@@ -295,16 +615,44 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * own pits (L4's two cells) are small. The size is a declared choice, not
      * a measurement — the measurement is that the cells build as pits.
      */
-    Object.freeze({
-        name: 'pit-patch-2x1',
+    /**
+     * ⛓⛓ ⚖ RULING 4's SWEEP: ALL SIX `w x h` combinations read **12 solved /
+     * 0 refused / 0 threw** over seeds 1..12.
+     *
+     * ⚠⚠ AND THE ZERO IN THE `threw` COLUMN IS THE ONE TO READ ON THIS ROW.
+     * §15.5's `PhysicsV2Error` — *the approach drive clips lethal terrain the
+     * corridor planner routed around* — is a PIT-shaped abort in dense rooms,
+     * and it is the class that kills a RUN rather than a candidate. It did not
+     * fire once here, at any size. ⛔ That is NOT a claim that the class is
+     * gone: this sweep places ONE template in an otherwise empty room, and
+     * §15.5 measured the aborts in six-obstacle rooms. The domain is clean; the
+     * density question is the loop's and is still open (R9).
+     */
+    defineTemplate({
+        name: 'pit-patch',
         family: 'pit',
-        footprint: rectCells(2, 1),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(2, 1), 'pit'),
-        entities: Object.freeze([]),
-        pins: Object.freeze([]),
-        why: 'two Pit cells; `world.pitTiles` gains them and the corridor planner prices '
-            + 'them as a fall',
+        params: [
+            { key: 'w', domain: [1, 2, 3], default: 2,
+                why: 'the frozen row was 2x1 — "the atlas\'s own pits (L4\'s two cells) are '
+                    + 'small", a declared choice. The domain keeps that end and offers two '
+                    + 'more; 4 would be half the interior' },
+            { key: 'h', domain: [1, 2], default: 1,
+                why: 'the frozen row was ONE cell tall. A pit is a hole in the floor and '
+                    + 'the atlas\'s are thin, so the domain is deliberately shorter on this '
+                    + 'axis than the pool\'s — the asymmetry is the atlas\'s, not a typo' },
+        ],
+        why: 'Pit cells; `world.pitTiles` gains them and the corridor planner prices them '
+            + 'as a fall',
+        build: ({ w, h }) => {
+            const cells = rectCells(w, h);
+            return {
+                footprint: cells,
+                clearance: Object.freeze([]),
+                terrain: paint(cells, 'pit'),
+                entities: Object.freeze([]),
+                pins: Object.freeze([]),
+            };
+        },
     }),
     /**
      * ⛓⛓⛓ THE AVOIDABLE ARROW LANE — the one template whose geometry is not
@@ -339,22 +687,34 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * Attrs transcribed from `Dungeon2/3.oel` (L16) and `Dungeon6/8.oel`
      * (L67): `{shoot: "1", tset: "0"}`.
      */
-    Object.freeze({
+    /**
+     * ⛔ THE ZERO-PARAMETER CASE, AND IT IS DELIBERATE RATHER THAN UNFINISHED.
+     * `shoot` is a LAW (above) and not a choice; the lane geometry is the
+     * ENGINE's; and a one-cell footprint has no size to vary. So this row goes
+     * through `defineTemplate` with an EMPTY schema — one instantiation,
+     * byte-identical to the frozen row it replaced, and its label is its own
+     * name. ⚖ Kickoff §3.1: *"zero-parameter templates are the degenerate
+     * case, so migration is row-by-row"*.
+     */
+    defineTemplate({
         name: 'arrow-lane',
         family: 'arrow-lane',
-        footprint: rectCells(1, 1),
-        clearance: Object.freeze([]),
-        terrain: Object.freeze([]),
-        entities: Object.freeze([Object.freeze({
-            dx: 0,
-            dy: 0,
-            type: 'arrowtrap',
-            attrs: Object.freeze({ shoot: '1', tset: '0' }),
-        })]),
-        pins: Object.freeze([]),
-        lane: 'avoidable',
+        params: [],
         why: 'one always-firing trap; its lane is a live column the corridor must avoid, '
             + 'and the lane rect comes from `arrowTrap.arrowLaneForPlacement`',
+        build: () => ({
+            footprint: rectCells(1, 1),
+            clearance: Object.freeze([]),
+            terrain: Object.freeze([]),
+            entities: Object.freeze([Object.freeze({
+                dx: 0,
+                dy: 0,
+                type: 'arrowtrap',
+                attrs: Object.freeze({ shoot: '1', tset: '0' }),
+            })]),
+            pins: Object.freeze([]),
+            lane: 'avoidable',
+        }),
     }),
     /**
      * ⛓⛓⛓ THE DOOR — PoC slice 3's promotion, and the palette's first CLEARER.
@@ -411,32 +771,79 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * fix here, and `procgenShoveEvidence.test.js` is where all of it is
      * driven.
      */
-    Object.freeze({
-        name: 'wall-gap-block-h',
+    /**
+     * ⛓⛓⛓ ⚖ RULING 4's SWEEP, AT `SPINNER_OFFSET`'s OWN BOUND — a CLEARER
+     * family, so the column that matters is `discharged` (§12.1: a
+     * `{strategy:'shove'}` RECORD naming this template's own block, which an
+     * obstacle nobody walked into cannot produce). `node
+     * scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=12
+     * --anchors=all --only=wall-gap-block`, every legal anchor of seeds 1..12:
+     *
+     *   ori=h  gap     0    1    2    3    4    5    6    7
+     *          solved 72   68   70   70   70   72   73   70
+     *          refused 2    6    4    4    4    2    1    4
+     *          discharged 23 19  21   21   21   23   24   21
+     *
+     *   ori=v  gap     0    1    2    3    4    5    6    7
+     *          solved 69   69   72   70   69   72   70   72
+     *          refused 5    5    2    4    5    2    4    2
+     *          discharged 18 18  21   19   18   21   19   21
+     *
+     * **ZERO THROWS at all sixteen values**, and every value discharges the
+     * verb in roughly a quarter of its legal anchors. ⇒ the whole span is a
+     * usable domain and no value is a special case.
+     *
+     * ⚠⚠ THE THIN-BOUND TABLE IS KEPT TOO, BECAUSE IT SAYS SOMETHING THE WIDE
+     * ONE HIDES. At `--anchors=first` (one anchor per seed, which is what the
+     * LOOP actually spends) the same sweep reads `ori=h` discharging 3–4 of 12
+     * and `ori=v` discharging 1–2 of 12 — a gap that vanishes when every anchor
+     * is tried. ⇒ the vertical door is not worse; the FIRST anchor the shuffle
+     * hands it is. That is a fact about `anchorFor`'s one-shot draw and it is
+     * exactly what slice 3's `anchorTriesPerCandidate` is for
+     * (`feedback_bounded_sweep_must_name_what_it_bounded` — the bound was
+     * producing the finding).
+     */
+    defineTemplate({
+        name: 'wall-gap-block',
         family: 'shove',
-        footprint: rectCells(INTERIOR_SPAN, 1),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([Object.freeze({
-            dx: GAP_OFFSET, dy: 0, type: 'pushableblock',
-        })]),
-        pins: Object.freeze([]),
+        params: [
+            { key: 'ori', domain: ['h', 'v'], default: 'h',
+                why: '`wall-gap-block-h` and `-v`, collapsed — ⚖ ruling 3\'s wave-1 item. '
+                    + 'The two are the same door transposed, and writing them once is what '
+                    + 'keeps them the same door' },
+            { key: 'gap',
+                domain: Object.freeze(Array.from({ length: INTERIOR_SPAN }, (_, i) => i)),
+                default: GAP_OFFSET,
+                why: 'WHERE the single gap sits along the wall. The frozen row used '
+                    + '`GAP_OFFSET = 4`, which its own docblock called "a declared choice '
+                    + '(the middle-ish column), not a measurement" — so the choice becomes '
+                    + 'a domain, and the domain is the WHOLE SPAN, derived from '
+                    + '`INTERIOR_SPAN` rather than typed. ⛓⛓ THE ENDS WERE GOING TO BE '
+                    + 'EXCLUDED AND THE SWEEP REFUSED THAT: the first draft of this line '
+                    + 'argued that 0 and 7 sit against the room\'s border ring and would '
+                    + 'lose anchors. Measured (every legal anchor, seeds 1..12): gap 0 '
+                    + 'gives 72 solved / 2 refused / 23 discharged and gap 7 gives '
+                    + '70 / 4 / 21, against a mid-domain 70 / 4 / 21 — the ends are '
+                    + 'INDISTINGUISHABLE from the middle, and gap 6 is the best value in '
+                    + 'the table. The argument was wrong, so the domain follows the '
+                    + 'measurement rather than the argument' },
+        ],
         why: 'a Stone wall across the whole interior with ONE gap, and a `pushableblock` '
             + 'standing in it — the corridor exists only after the block is shoved, so '
             + '`walkTo`\'s ladder selects `shove` and the collect follows',
-    }),
-    Object.freeze({
-        name: 'wall-gap-block-v',
-        family: 'shove',
-        footprint: rectCells(1, INTERIOR_SPAN),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([Object.freeze({
-            dx: 0, dy: GAP_OFFSET, type: 'pushableblock',
-        })]),
-        pins: Object.freeze([]),
-        why: 'the same door stood on end; the two orientations are two draws, exactly as '
-            + 'the two wall segments are',
+        build: ({ ori, gap }) => {
+            const cells = lineCells(ori, INTERIOR_SPAN);
+            const along = alongOf(ori);
+            return {
+                footprint: cells,
+                clearance: Object.freeze([]),
+                terrain: paint(cells.filter((c) => along(c) !== gap), 'wall'),
+                entities: Object.freeze([Object.freeze({
+                    ...at(ori, gap, 0), type: 'pushableblock',
+                })]),
+                pins: Object.freeze([]),
+            };
+        },
     }),
     /**
      * ⛓⛓⛓ THE LOCKED DOOR — PoC slice 3b's promotion, and L15's mechanism in
@@ -504,77 +911,76 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
      * evidence, 2026-08-13; the slot mechanism above is field-agnostic and
      * will serve `tag` unchanged when that measurement exists.
      */
-    Object.freeze({
-        name: 'wall-gap-lock-weigh-h',
+    /**
+     * ⛓⛓ ⚖ RULING 4's SWEEP for this family — `--anchors=all --seeds=12`,
+     * every legal anchor:
+     *
+     *   ori          h     v
+     *   solved      44    50
+     *   refused     14    10
+     *   threw        0     0
+     *   discharged   4     6
+     *
+     * ⇒ both orientations place, certify and DISCHARGE `weigh`, and the
+     * vertical one does so slightly more often. ⚠ The discharge rate is much
+     * lower than `wall-gap-block`'s (4–6 of ~58 against ~20 of ~74), and that
+     * is the family's own geometry rather than a defect: this template
+     * declares its whole slide path as `clearance`, so `legalAt` refuses every
+     * anchor where the block's destination would matter — the S1 guard,
+     * working. ⛔ THE OFFSETS THAT SET THAT RATE (`BLOCK_OFFSET`,
+     * `BUTTON_OFFSET`, `GAP_OFFSET`) ARE ⚖ WAVE 2, each owing this same table.
+     */
+    defineTemplate({
+        name: 'wall-gap-lock-weigh',
         family: 'weigh',
-        groups: 1,
-        tags: 1,
-        footprint: Object.freeze([
-            ...rectCells(INTERIOR_SPAN, 1),
-            cell(BLOCK_OFFSET, -1),
-            cell(BUTTON_OFFSET, -1),
-        ]),
-        clearance: Object.freeze([
-            cell(BLOCK_OFFSET - 1, -1),
-            ...SLIDE_PATH.map((dx) => cell(dx, -1)),
-        ]),
-        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([
-            Object.freeze({
-                dx: GAP_OFFSET,
-                dy: 0,
-                type: 'lock',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
-            }),
-            Object.freeze({
-                dx: BUTTON_OFFSET,
-                dy: -1,
-                type: 'button',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
-            }),
-            Object.freeze({ dx: BLOCK_OFFSET, dy: -1, type: 'pushableblock' }),
-        ]),
-        pins: Object.freeze([]),
+        params: [
+            { key: 'ori', domain: ['h', 'v'], default: 'h',
+                why: '`wall-gap-lock-weigh-h` and `-v`, collapsed. ⛓ THE OLD `-v` ROW\'s '
+                    + 'own `why` is the argument for keeping this a real parameter rather '
+                    + 'than a mirror nobody draws: the vertical lane is "a SOUTH lean '
+                    + 'rather than an EAST one, which is a different `SHOVE_STEP` row". '
+                    + '⛔ THE LANE OFFSETS THEMSELVES (`BLOCK_OFFSET`, `BUTTON_OFFSET`) '
+                    + 'AND `GAP_OFFSET` STAY CONSTANTS — ⚖ ruling 3 puts them in WAVE 2, '
+                    + 'each with its own re-sweep, and they are the three numbers this '
+                    + 'template\'s docblock calls CONSTRAINTS rather than preferences' },
+        ],
         why: 'a Stone wall across the whole interior with a `lock` in its ONE gap, plus '
             + 'the `button` that opens the lock\'s group and a `pushableblock` sharing '
             + 'the button\'s lane — the corridor exists only after the block is parked on '
             + 'the button, so `refineStrategy` selects `weigh` and the player walks '
             + 'through a lock nobody is holding',
-    }),
-    Object.freeze({
-        name: 'wall-gap-lock-weigh-v',
-        family: 'weigh',
-        groups: 1,
-        tags: 1,
-        footprint: Object.freeze([
-            ...rectCells(1, INTERIOR_SPAN),
-            cell(-1, BLOCK_OFFSET),
-            cell(-1, BUTTON_OFFSET),
-        ]),
-        clearance: Object.freeze([
-            cell(-1, BLOCK_OFFSET - 1),
-            ...SLIDE_PATH.map((dy) => cell(-1, dy)),
-        ]),
-        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([
-            Object.freeze({
-                dx: 0,
-                dy: GAP_OFFSET,
-                type: 'lock',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
-            }),
-            Object.freeze({
-                dx: -1,
-                dy: BUTTON_OFFSET,
-                type: 'button',
-                attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
-            }),
-            Object.freeze({ dx: -1, dy: BLOCK_OFFSET, type: 'pushableblock' }),
-        ]),
-        pins: Object.freeze([]),
-        why: 'the same locked door stood on end, with the lane running down the column '
-            + 'beside it — a SOUTH lean rather than an EAST one, which is a different '
-            + '`SHOVE_STEP` row and therefore a real second draw',
+        build: ({ ori }) => {
+            const cells = lineCells(ori, INTERIOR_SPAN);
+            const along = alongOf(ori);
+            return {
+                groups: 1,
+                tags: 1,
+                footprint: Object.freeze([
+                    ...cells,
+                    at(ori, BLOCK_OFFSET, -1),
+                    at(ori, BUTTON_OFFSET, -1),
+                ]),
+                clearance: Object.freeze([
+                    at(ori, BLOCK_OFFSET - 1, -1),
+                    ...SLIDE_PATH.map((o) => at(ori, o, -1)),
+                ]),
+                terrain: paint(cells.filter((c) => along(c) !== GAP_OFFSET), 'wall'),
+                entities: Object.freeze([
+                    Object.freeze({
+                        ...at(ori, GAP_OFFSET, 0),
+                        type: 'lock',
+                        attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
+                    }),
+                    Object.freeze({
+                        ...at(ori, BUTTON_OFFSET, -1),
+                        type: 'button',
+                        attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
+                    }),
+                    Object.freeze({ ...at(ori, BLOCK_OFFSET, -1), type: 'pushableblock' }),
+                ]),
+                pins: Object.freeze([]),
+            };
+        },
     }),
 ]);
 
@@ -867,28 +1273,47 @@ const SPINNER_OFFSET = 6;
  * clean levels out of thirteen carriers reads as "generation is abort-free"
  * when it is not (`feedback_bounded_sweep_must_name_what_it_bounded`).
  */
+/**
+ * ⛓⛓ ⚖ RULING 4's SWEEP for the ORIENTATION parameter — the same command and
+ * the same bound `SPINNER_OFFSET`'s own table used, so the two are readable
+ * side by side (`--anchors=all --seeds=12`, every legal anchor, post-sword
+ * boot):
+ *
+ *   ori          h     v
+ *   noAnchor     5     5     (seeds where the `door` rule refuses EVERY anchor)
+ *   solved      23     7
+ *   refused      2    16
+ *   threw        0     0
+ *   discharged  23     7
+ *
+ * ⇒ ZERO THROWS at both values — which is the number this family exists to
+ * keep at zero (4b §13.7.iv: *a family the loop cannot REJECT is not one the
+ * palette can OFFER*) — and **every SOLVE is a DISCHARGE**, at both
+ * orientations: this door is never crossed without killing the spinner.
+ *
+ * ⚠ THE VERTICAL VALUE IS THE LOW-YIELD ONE (7 discharges against 23) AND IT
+ * IS A FINDING, NOT A DEFECT — ⚖ ruling 4 says so explicitly, so it is
+ * recorded rather than pruned. The mechanism is visible in the same row: `v`
+ * refuses 16 of its 23 legal anchors where `h` refuses 2. The `door` rule
+ * already removed the anchors that would ABORT; what remains is that a
+ * vertical wall in a room whose start is the NW corner puts the spinner's lane
+ * across the approach far more often.
+ */
 const KILL_LOCK_TEMPLATES = Object.freeze([
-    Object.freeze({
-        name: 'wall-gap-spinner-killlock-h',
+    defineTemplate({
+        name: 'wall-gap-spinner-killlock',
         family: 'kill',
-        door: 'h',
-        footprint: Object.freeze([...rectCells(INTERIOR_SPAN, 1), cell(SPINNER_OFFSET, -1)]),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(INTERIOR_SPAN, 1).filter((c) => c.dx !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([
-            Object.freeze({
-                dx: GAP_OFFSET,
-                dy: 0,
-                type: 'lock',
-                // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own spelling), and
-                // `tag: '1'` is the tag law: never the goal's.
-                attrs: Object.freeze({ tset: '-1', tag: '1' }),
-            }),
-            Object.freeze({
-                dx: SPINNER_OFFSET, dy: -1, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
-            }),
-        ]),
-        pins: Object.freeze([]),
+        params: [
+            { key: 'ori', domain: ['h', 'v'], default: 'h',
+                why: '`wall-gap-spinner-killlock-h` and `-v`, collapsed. ⛔ `door` IS THIS '
+                    + 'PARAMETER — the legality rule in `procgenSeedling.legalAt` reads '
+                    + '\'h\' or \'v\' and the wall it is about is the one this value '
+                    + 'orients, so deriving it here is what makes a mismatch impossible '
+                    + 'rather than merely unlikely (the field\'s own docblock calls a typo '
+                    + 'there "a legality gate that does not gate"). ⛔ `SPINNER_OFFSET` '
+                    + 'stays a constant on its own measured sweep — ⚖ ruling 3 puts the '
+                    + 'lane offsets in WAVE 2' },
+        ],
         why: 'a Stone wall across the whole interior with a KILL LOCK in its ONE gap and '
             + 'the spinner whose death opens it standing behind the wall — `refineStrategy` '
             + 'takes the `tset == -1` lock to `kill`, the press schedule strikes on '
@@ -896,26 +1321,32 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
             + 'layer on the tick the lock\'s own fade names. ⛓ THE ONLY TEMPLATE IN THE '
             + 'ARC A PRE-SWORD BOOT CANNOT CLEAR: `weaponForPress` returns null with no '
             + 'sword slot, so the press is a silent no-op and the lock never opens',
-    }),
-    Object.freeze({
-        name: 'wall-gap-spinner-killlock-v',
-        family: 'kill',
-        door: 'v',
-        footprint: Object.freeze([...rectCells(1, INTERIOR_SPAN), cell(-1, SPINNER_OFFSET)]),
-        clearance: Object.freeze([]),
-        terrain: paint(rectCells(1, INTERIOR_SPAN).filter((c) => c.dy !== GAP_OFFSET), 'wall'),
-        entities: Object.freeze([
-            Object.freeze({
-                dx: 0, dy: GAP_OFFSET, type: 'lock', attrs: Object.freeze({ tset: '-1', tag: '1' }),
-            }),
-            Object.freeze({
-                dx: -1, dy: SPINNER_OFFSET, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
-            }),
-        ]),
-        pins: Object.freeze([]),
-        why: 'the same killed door stood on end — the wall runs down a column and the '
-            + 'spinner stands in the column beside it, which is a different approach '
-            + 'geometry for `deriveStrike` and therefore a real second draw',
+        build: ({ ori }) => {
+            const cells = lineCells(ori, INTERIOR_SPAN);
+            const along = alongOf(ori);
+            return {
+                door: ori,
+                footprint: Object.freeze([...cells, at(ori, SPINNER_OFFSET, -1)]),
+                clearance: Object.freeze([]),
+                terrain: paint(cells.filter((c) => along(c) !== GAP_OFFSET), 'wall'),
+                entities: Object.freeze([
+                    Object.freeze({
+                        ...at(ori, GAP_OFFSET, 0),
+                        type: 'lock',
+                        // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own
+                        // spelling), and `tag: '1'` is the tag law: never the
+                        // goal's.
+                        attrs: Object.freeze({ tset: '-1', tag: '1' }),
+                    }),
+                    Object.freeze({
+                        ...at(ori, SPINNER_OFFSET, -1),
+                        type: 'spinner',
+                        attrs: Object.freeze({ tag: '-1' }),
+                    }),
+                ]),
+                pins: Object.freeze([]),
+            };
+        },
     }),
 ]);
 
@@ -1121,7 +1552,7 @@ function assertGroupSlot(t, footprintKeys) {
     );
     if (t.groups === undefined) {
         if (onSlot.length > 0) {
-            fail(`procgenPalette: template "${t.name}" puts ${onSlot.length} entit`
+            fail(`procgenPalette: template "${t.instance ?? t.name}" puts ${onSlot.length} entit`
                 + `${onSlot.length === 1 ? 'y' : 'ies'} on the placement-group slot but `
                 + 'declares no `groups`. `place` resolves the slot only for a template '
                 + 'that declares it, so the sentinel would reach the level as a literal '
@@ -1131,13 +1562,13 @@ function assertGroupSlot(t, footprintKeys) {
         return;
     }
     if (t.groups !== 1) {
-        fail(`procgenPalette: template "${t.name}" declares groups=${t.groups}; the only `
+        fail(`procgenPalette: template "${t.instance ?? t.name}" declares groups=${t.groups}; the only `
             + 'supported count is 1. `procgenSeedling` derives ONE id from the anchor '
             + 'cell, and a second group would need a spacing rule that keeps the ids '
             + 'injective — which nobody has written.');
     }
     if (onSlot.length < 2) {
-        fail(`procgenPalette: template "${t.name}" declares groups=1 but only `
+        fail(`procgenPalette: template "${t.instance ?? t.name}" declares groups=1 but only `
             + `${onSlot.length} of its entities carry PLACEMENT_GROUP. A group of one `
             + 'publishes to nothing and hears from nothing — this is the half-converted '
             + 'row (the lock moved to a private group, the button left on a literal), '
@@ -1145,7 +1576,7 @@ function assertGroupSlot(t, footprintKeys) {
     }
     for (const e of t.entities ?? []) {
         if (e.attrs?.tset !== undefined && e.attrs.tset !== PLACEMENT_GROUP) {
-            fail(`procgenPalette: template "${t.name}" declares groups=1 and its `
+            fail(`procgenPalette: template "${t.instance ?? t.name}" declares groups=1 and its `
                 + `"${e.type}" still carries the LITERAL tset "${e.attrs.tset}". One `
                 + 'placement would then span two groups, which is not a mechanism '
                 + 'anybody designed.');
@@ -1154,7 +1585,7 @@ function assertGroupSlot(t, footprintKeys) {
     const writesAnchor = (t.terrain ?? []).some((w) => w.dx === 0 && w.dy === 0)
         || (t.entities ?? []).some((e) => e.dx === 0 && e.dy === 0);
     if (!footprintKeys.has('0,0') || !writesAnchor) {
-        fail(`procgenPalette: template "${t.name}" declares groups=1 but does not `
+        fail(`procgenPalette: template "${t.instance ?? t.name}" declares groups=1 but does not `
             + 'occupy AND write its own anchor (0,0). The group id is derived from the '
             + 'anchor cell, so an unconsumed anchor lets a later placement anchor in the '
             + 'same cell and land in the SAME group — the defect, restored.');
@@ -1181,7 +1612,7 @@ function assertTagSlot(t) {
     );
     if (t.tags === undefined) {
         if (onSlot.length > 0) {
-            fail(`procgenPalette: template "${t.name}" puts an entity on the `
+            fail(`procgenPalette: template "${t.instance ?? t.name}" puts an entity on the `
                 + 'placement-tag slot but declares no `tags`. `place` resolves the slot '
                 + 'only for a template that declares it, so the sentinel would reach the '
                 + 'level and be read as tag 0 — the GOAL\'s own flag.');
@@ -1189,12 +1620,12 @@ function assertTagSlot(t) {
         return;
     }
     if (t.tags !== 1) {
-        fail(`procgenPalette: template "${t.name}" declares tags=${t.tags}; the only `
+        fail(`procgenPalette: template "${t.instance ?? t.name}" declares tags=${t.tags}; the only `
             + 'supported count is 1. `placementTagId` allocates ONE free slot per '
             + 'placement, and a second would need its own allocation nobody has written.');
     }
     if (onSlot.length < 1) {
-        fail(`procgenPalette: template "${t.name}" declares tags=1 and no entity carries `
+        fail(`procgenPalette: template "${t.instance ?? t.name}" declares tags=1 and no entity carries `
             + 'PLACEMENT_TAG. A declared slot nobody uses is a claim with nothing '
             + 'behind it.');
     }
@@ -1202,7 +1633,7 @@ function assertTagSlot(t) {
         const v = e.attrs?.tag;
         if (v === undefined || v === PLACEMENT_TAG) continue;
         if (Number.parseInt(v, 10) >= 0) {
-            fail(`procgenPalette: template "${t.name}" declares tags=1 and its `
+            fail(`procgenPalette: template "${t.instance ?? t.name}" declares tags=1 and its `
                 + `"${e.type}" still carries the LITERAL tag "${v}". One placement would `
                 + 'then write two rows of the persistence table. (A literal `-1` is '
                 + 'allowed — that is the game\'s spelling of UNTAGGED, not a slot.)');
@@ -1211,75 +1642,135 @@ function assertTagSlot(t) {
 }
 
 /**
- * EVERY TEMPLATE, CHECKED — shapes, names, terrains and the roster's own
- * uniqueness. Called at module load, for `procgenLevel.assertTerrainColumns`'s
- * own reason: a malformed template is a defect in THIS file and there is no
- * run in which it should reach a level record.
+ * EVERY **INSTANTIATION**, CHECKED — shapes, terrains, the sentinel slots and
+ * the roster's own name uniqueness. Called at module load, for
+ * `procgenLevel.assertTerrainColumns`'s own reason: a malformed template is a
+ * defect in THIS file and there is no run in which it should reach a level
+ * record.
+ *
+ * ── ⛓⛓⛓ WHAT SLICE 2 CHANGED, AND WHY IT IS STRICTLY MORE ────────────
+ *
+ * It used to walk one frozen row per template. It now walks the CARTESIAN
+ * PRODUCT of each template's declared domains and runs every one of the same
+ * per-row checks against the concrete row `instantiate` returns — footprint
+ * non-empty and duplicate-free, terrain in `TERRAIN` and inside the footprint,
+ * entities inside the footprint, `door` valid, and both sentinel-slot
+ * invariants. ⛔ A domain value that produced a malformed row would otherwise
+ * be a defect nobody meets until a seed happens to draw it.
+ *
+ * ── THE LOAD-TIME COST, STATED WITH ITS COUNT ─────────────────────────
+ *
+ * **42 instantiations for `pre-sword` and 44 for `post-sword`** — 86 at module
+ * load, both palettes:
+ *
+ *   `wall-segment`               ori(2) x len(4)   =  8
+ *   `water-pool`                 w(3)   x h(3)     =  9
+ *   `pit-patch`                  w(3)   x h(2)     =  6
+ *   `arrow-lane`                 (no parameters)   =  1
+ *   `wall-gap-block`             ori(2) x gap(8)   = 16
+ *   `wall-gap-lock-weigh`        ori(2)            =  2
+ *   `wall-gap-spinner-killlock`  ori(2)            =  2   (post-sword only)
+ *
+ * Every one is pure object construction — no solve, no world build — so the
+ * whole check is arithmetic on frozen literals. ⚠ THE NUMBERS ARE ALSO A BOUND:
+ * a template whose domains multiplied into thousands would make this a cost
+ * rather than a check, and the day one does, the enumeration needs a stated
+ * SAMPLE instead (⚖ kickoff §3.1 already names that as the escape and requires
+ * it be stated). `procgenPalette.test.js` asserts these counts FROM the roster
+ * so the table above cannot go stale silently.
  */
 export function assertPalette(palette = PRE_SWORD_PALETTE) {
     const names = new Set();
     if (!palette?.templates?.length) {
         fail('procgenPalette: a palette with no templates is not a palette.');
     }
-    for (const t of palette.templates) {
-        if (typeof t.name !== 'string' || names.has(t.name)) {
+    for (const base of palette.templates) {
+        if (typeof base.name !== 'string' || names.has(base.name)) {
             fail(`procgenPalette: template names must be unique and non-empty — `
-                + `"${t.name}" is not. The trace keys on the name and two rows with one `
+                + `"${base.name}" is not. The trace keys on the name and two rows with one `
                 + 'name would count as one family member twice (trap 199).');
         }
-        names.add(t.name);
-        if (typeof t.family !== 'string' || !t.family) {
-            fail(`procgenPalette: template "${t.name}" has no family. The report counts `
+        names.add(base.name);
+        if (typeof base.family !== 'string' || !base.family) {
+            fail(`procgenPalette: template "${base.name}" has no family. The report counts `
                 + 'by family and an unnamed one would be counted as "undefined".');
         }
-        if (!Array.isArray(t.footprint) || t.footprint.length === 0) {
-            fail(`procgenPalette: template "${t.name}" has an empty footprint — a `
-                + 'template that occupies no cell cannot be placed legally or illegally.');
+        if (typeof base.instantiate !== 'function' || !Array.isArray(base.params)) {
+            fail(`procgenPalette: template "${base.name}" is not a PARAMETERIZED template `
+                + '— it needs an `instantiate(rng, overrides)` and a `params` SCHEMA ARRAY '
+                + '(⚖ ruling 2). A frozen row reaching the roster would place fine and '
+                + 'never appear in a domain sweep, which is a template nobody certified.');
         }
-        const seen = new Set();
-        for (const c of t.footprint) {
-            const key = `${c.dx},${c.dy}`;
-            if (seen.has(key)) {
-                fail(`procgenPalette: template "${t.name}" names cell (${key}) twice in `
-                    + 'its footprint. `withTerrain` refuses a doubled cell BY NAME, so '
-                    + 'this would be an illegal placement at every anchor in the room.');
+        for (const values of enumerateValues(base)) {
+            const t = base.instantiate(null, values);
+            const where = `template "${t.instance}"`;
+            if (t.name !== base.name || t.family !== base.family) {
+                fail(`procgenPalette: ${where} came back naming "${t.name}"/"${t.family}" `
+                    + `rather than its base "${base.name}"/"${base.family}". The base name `
+                    + 'is the roster key and the family is what the report counts, so a '
+                    + '`build` that renamed either would split one family into instances.');
             }
-            seen.add(key);
-        }
-        for (const w of t.terrain ?? []) {
-            if (!TERRAIN[w.terrain]) {
-                fail(`procgenPalette: template "${t.name}" writes terrain `
-                    + `"${w.terrain}", which is not one of the PoC's four `
-                    + `(${Object.keys(TERRAIN).join(', ')}).`);
+            if (!t.params || Array.isArray(t.params) || typeof t.params !== 'object') {
+                fail(`procgenPalette: ${where} carries \`params\` that is not a VALUES `
+                    + 'OBJECT. The base\'s `params` is the SCHEMA ARRAY and an instance\'s '
+                    + 'is the values it was built from; the trace and the pin union both '
+                    + 'read the second one.');
             }
-            if (!seen.has(`${w.dx},${w.dy}`)) {
-                fail(`procgenPalette: template "${t.name}" writes (${w.dx},${w.dy}), `
-                    + 'which is not in its own footprint. The footprint is what the '
-                    + 'legality check reserves, so a write outside it would paint a cell '
-                    + 'nobody checked was free.');
+            if (typeof t.instance !== 'string' || !t.instance) {
+                fail(`procgenPalette: template "${base.name}" produced an instance with no `
+                    + 'label. The pane prints it and a reader identifies a row by it.');
             }
-        }
-        // ⛔ SLICE 4e: a `door` typo would SILENTLY DISABLE the legality rule
-        // that keeps the kill-lock family from aborting runs, and the template
-        // would still place — the named-arm-nobody-built shape, one field over.
-        if (t.door !== undefined && t.door !== 'h' && t.door !== 'v') {
-            fail(`procgenPalette: template "${t.name}" has door "${t.door}"; the rule in `
-                + '`procgenSeedling.legalAt` reads \'h\' or \'v\' and anything else would '
-                + 'be silently ignored — a legality gate that does not gate.');
-        }
-        for (const e of t.entities ?? []) {
-            if (typeof e.type !== 'string' || !seen.has(`${e.dx},${e.dy}`)) {
-                fail(`procgenPalette: template "${t.name}" places entity `
-                    + `"${e.type}" at (${e.dx},${e.dy}), which is not in its footprint.`);
+            if (!Array.isArray(t.footprint) || t.footprint.length === 0) {
+                fail(`procgenPalette: ${where} has an empty footprint — a template that `
+                    + 'occupies no cell cannot be placed legally or illegally.');
             }
+            const seen = new Set();
+            for (const c of t.footprint) {
+                const key = `${c.dx},${c.dy}`;
+                if (seen.has(key)) {
+                    fail(`procgenPalette: ${where} names cell (${key}) twice in its `
+                        + 'footprint. `withTerrain` refuses a doubled cell BY NAME, so this '
+                        + 'would be an illegal placement at every anchor in the room.');
+                }
+                seen.add(key);
+            }
+            for (const w of t.terrain ?? []) {
+                if (!TERRAIN[w.terrain]) {
+                    fail(`procgenPalette: ${where} writes terrain "${w.terrain}", which is `
+                        + `not one of the PoC's four (${Object.keys(TERRAIN).join(', ')}).`);
+                }
+                if (!seen.has(`${w.dx},${w.dy}`)) {
+                    fail(`procgenPalette: ${where} writes (${w.dx},${w.dy}), which is not `
+                        + 'in its own footprint. The footprint is what the legality check '
+                        + 'reserves, so a write outside it would paint a cell nobody '
+                        + 'checked was free.');
+                }
+            }
+            // ⛔ SLICE 4e: a `door` typo would SILENTLY DISABLE the legality
+            // rule that keeps the kill-lock family from aborting runs, and the
+            // template would still place — the named-arm-nobody-built shape,
+            // one field over. ⛓ Slice 2: `door` is DERIVED from a parameter
+            // now, so this runs against every value of it.
+            if (t.door !== undefined && t.door !== 'h' && t.door !== 'v') {
+                fail(`procgenPalette: ${where} has door "${t.door}"; the rule in `
+                    + '`procgenSeedling.legalAt` reads \'h\' or \'v\' and anything else '
+                    + 'would be silently ignored — a legality gate that does not gate.');
+            }
+            for (const e of t.entities ?? []) {
+                if (typeof e.type !== 'string' || !seen.has(`${e.dx},${e.dy}`)) {
+                    fail(`procgenPalette: ${where} places entity "${e.type}" at `
+                        + `(${e.dx},${e.dy}), which is not in its footprint.`);
+                }
+            }
+            assertGroupSlot(t, seen);
+            assertTagSlot(t);
         }
-        assertGroupSlot(t, seen);
-        assertTagSlot(t);
     }
     return true;
 }
 
 assertPalette();
-// ⛔ BOTH biomes, at load. They share a roster today, so this is cheap — and it
-// is the check that would fire on the day they stop sharing one.
+// ⛔ BOTH biomes, at load. The post-sword roster is the pre-sword one plus a
+// sword-gated family, so this is the check that fires on the day a template
+// reaches one biome and not the other.
 assertPalette(POST_SWORD_PALETTE);

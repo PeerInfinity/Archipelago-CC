@@ -32,7 +32,7 @@ import {
     displaySolve, displayStaging, generateStep, generationRows, keptTemplatesOf, ladderCost,
     paletteFor, readGenerateParams, writeGenerateParams,
 } from './watchGenerate.js';
-import { atlasOf } from './procgenLevel.js';
+import { atlasOf, terrainAt } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
 import { DEFAULT_BOUNDS, STOP } from './levelGenerator.js';
@@ -354,16 +354,64 @@ describe('the display solve — the loop\'s own oracle, and it agrees', () => {
     });
 });
 
-describe('the pin union — the kept templates, by object', () => {
-    it('resolves every kept name to its palette object', () => {
+describe('the pin union — the kept templates, RECONSTRUCTED', () => {
+    /**
+     * ⛓⛓ SLICE 2 CHANGED WHAT THIS IS. It used to be a name→object LOOKUP and
+     * the assertion was set membership; under parameterization a kept row names
+     * a BASE (no footprint, no pins) plus the VALUES it was drawn with, so this
+     * is a reconstruction and the assertion is that it rebuilds the RIGHT
+     * INSTANCE — the one whose geometry is in the record.
+     *
+     * ⛔ THE SET-MEMBERSHIP CHECK WOULD HAVE BEEN THE EASY REPLACEMENT AND IT
+     * IS THE WRONG ONE: a reconstruction that dropped `params` and rebuilt the
+     * DEFAULT instance would still return an object of the right family with
+     * the right pins, and pins are static per template in v1 — so nothing about
+     * the PIN UNION can see that defect. Comparing the rebuilt geometry against
+     * the record is the only instrument that can.
+     */
+    it('rebuilds the exact instance each kept row names, geometry included', () => {
         const s = generateStep({ seed: 9, biome: 'pre-sword', step: 2 });
         expect(s.keptTemplates).toHaveLength(2);
-        for (const t of s.keptTemplates) expect(PRE_SWORD_PALETTE.templates).toContain(t);
+        for (const [i, t] of s.keptTemplates.entries()) {
+            const k = s.summary.kept[i];
+            expect(t.name).toBe(k.template);
+            expect(t.params).toEqual(k.params);
+            expect(t.instance).toBe(k.instance);
+            /**
+             * ⛔ THE GEOMETRY IS IN THE RECORD: every cell this instance claims
+             * to paint really is painted, at this row's own anchor.
+             *
+             * ⚠ AND THIS WALK IS A **SUBSET** TEST, WHICH IS THE HALF IT CAN
+             * SEE — measured in this slice's own mutant run. A reconstruction
+             * that returned a SMALLER default instance (a 2x2 pool where the
+             * record holds 3x2) paints only cells that really are painted, so
+             * this loop stays green on it; the `params`/`instance` equality
+             * above is what caught that mutant. The walk catches an OVERSHOOT
+             * (a bigger instance claiming a cell nobody painted); the equality
+             * catches an UNDERSHOOT. Both lines are here because neither is the
+             * whole claim.
+             */
+            for (const w of t.terrain ?? []) {
+                expect(terrainAt(s.record, k.at.tx + w.dx, k.at.ty + w.dy),
+                    `${t.instance} at (${k.at.tx + w.dx},${k.at.ty + w.dy})`).toBe(w.terrain);
+            }
+        }
     });
 
     it('refuses a kept name the palette does not hold', () => {
         expect(() => keptTemplatesOf({ kept: [{ template: 'nope' }] }, PRE_SWORD_PALETTE))
             .toThrow(/which palette .* does not hold/);
+    });
+
+    /**
+     * ⛔ AND IT REFUSES A ROW WITH NO `params` RATHER THAN DEFAULTING — the
+     * mutant this arc names by hand (a reconstruction that drops `params` and
+     * rebuilds the default instance) cannot be silent.
+     */
+    it('⛔ refuses a kept row whose params are missing — never the default instance', () => {
+        expect(() => keptTemplatesOf(
+            { kept: [{ template: 'wall-segment', at: { tx: 1, ty: 1 } }] }, PRE_SWORD_PALETTE,
+        )).toThrow(/needs a DRAW for "ori"/);
     });
 });
 
@@ -439,11 +487,16 @@ describe('saturation — ⚖ §7.5\'s other case, reported and never silent', ()
      * ⛓ THE BOUND IS THE SUBJECT, NOT THE ROOM. `triesPerStep: 1` with
      * `saturationK: 1` makes ONE rejected draw end the run, which is the
      * cheapest honest way to reach the SATURATED branch. ⚠ The seed is a
-     * MEASUREMENT, not a taste: at these bounds seeds 4 and 7 of 1..10 reach
-     * the target and the other eight saturate, so the seed is named rather
-     * than assumed (seed 4 was the first draft's choice and it is one of the
-     * two that does NOT saturate — caught by this case going green the wrong
-     * way round).
+     * MEASUREMENT, not a taste, and it was named rather than assumed because
+     * the first draft picked one that does NOT saturate — caught by this case
+     * going green the wrong way round.
+     *
+     * ⛓⛓ RE-MEASURED AT SLICE 2 (the parameterized-template migration expired
+     * every seed→level pair, ⚖ ruling 5). At these bounds over seeds 1..10 the
+     * split is now **3, 6 and 9 REACH the target and the other seven
+     * SATURATE** — it used to be 4 and 7 that reached. Seed 1 is still on the
+     * saturating side (kept 3 of 6), so the subject SURVIVES its own
+     * re-measurement rather than being kept on the old measurement's word.
      */
     it('a rung that keeps fewer than it asked for is SATURATED, and says which', () => {
         const s = generateStep({

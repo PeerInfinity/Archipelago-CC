@@ -51,6 +51,30 @@
  * goes in the trace, because the trace is a determinism artifact and a
  * millisecond is the one thing two runs of one seed may honestly differ on.
  *
+ * ── ⛓⛓⛓ THE PALETTE'S ROWS ARE **FUNCTIONS** (GENERATE-mode UI slice 2) ─
+ *
+ * ⚖ The user's ruling: *"a collection of functions that each generate a
+ * coherent set of features for the map, instead of a collection of predefined
+ * arrangements of tiles."* So a palette template is
+ * `{name, family, params, instantiate(rng, overrides)}`, and this loop's ONE
+ * change is that after `rng.pick(palette.templates)` it calls `instantiate`
+ * and proceeds with the CONCRETE ROW — which is exactly the shape the model
+ * and the oracle already consumed. Nothing downstream of that call learns the
+ * migration happened.
+ *
+ * ⛔ `instantiate` IS REQUIRED, NOT PROBED FOR. A `typeof t.instantiate ===
+ * 'function' ? … : t` here would be a graceful fallback that let an
+ * un-migrated frozen row through the loop for ever, drawing no parameters and
+ * appearing in no domain sweep — the family this repo files under "a graceful
+ * fallback reports a vacuous success". The palette check below refuses by name
+ * instead.
+ *
+ * ⚠ THE DRAW COUNT PER ATTEMPT IS THEREFORE TEMPLATE-DEPENDENT (two for a
+ * two-parameter row, none for a zero-parameter one). That is harmless because
+ * the template is drawn FIRST: the stream decides which row it is buying
+ * before it spends anything on that row's parameters, so the sequence is a
+ * function of the seed and of nothing else.
+ *
  * ── WHAT A TRACE ROW OWES ─────────────────────────────────────────────
  *
  * ⚖ Kickoff §7.4 demands *"every placement, every veto with its verdict class
@@ -245,6 +269,22 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
             + 'least one template. An empty palette is a finding ABOUT THE PALETTE '
             + '(what the oracle can adjudicate), not a run that quietly places nothing.');
     }
+    /**
+     * ⛔ THE SEAM'S OWN CONTRACT, ASKED ONCE AND BY NAME. A template that
+     * cannot instantiate is not a template this loop can draw parameters from,
+     * and the alternative — falling back to the row itself — is the graceful
+     * fallback that would let an un-migrated frozen row run for ever without
+     * ever appearing in a domain sweep.
+     */
+    for (const t of palette.templates) {
+        if (typeof t?.instantiate !== 'function') {
+            fail(`levelGenerator: palette template "${t?.name}" carries no `
+                + '`instantiate(rng, overrides)`. A template is a FUNCTION from its '
+                + 'declared parameters to a concrete row (⚖ the GENERATE-mode UI arc\'s '
+                + 'ruling 2); a frozen row would draw nothing, appear in no sweep, and '
+                + 'be indistinguishable from a migrated one in the trace.');
+        }
+    }
     if (!rng || typeof rng.pick !== 'function' || typeof rng.nextInt !== 'function') {
         fail('levelGenerator: the rng must carry `pick` and `nextInt` (procgenRng). '
             + 'A generator without a seeded stream cannot be reproduced, and ⚖ kickoff '
@@ -299,12 +339,34 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
         for (let attempt = 1; attempt <= b.triesPerStep; attempt += 1) {
             const rngStateBefore = rng.state;
             const drawsBefore = rng.draws;
-            const template = rng.pick(palette.templates);
+            /**
+             * ⛓ THE ONE LOOP-CORE CHANGE OF SLICE 2, AND IT IS THIS PAIR OF
+             * LINES. The base row is drawn, then its declared parameters are
+             * drawn FROM THE SAME STREAM in schema order (`instantiate` owns
+             * that order — see the palette's docblock), and everything after
+             * this point handles a CONCRETE ROW of exactly the shape the
+             * frozen table used to hold.
+             *
+             * ⛔ NO `overrides` HERE. The free-running loop always draws; the
+             * argument exists for verb 2's directed attempt, which is a later
+             * slice and a different call site.
+             */
+            const base = rng.pick(palette.templates);
+            const template = base.instantiate(rng);
             const row = {
                 step,
                 try: attempt,
-                template: template.name,
-                family: template.family,
+                template: base.name,
+                /**
+                 * ⚠ THE INSTANCE LABEL AND THE PARAMETERS RIDE BESIDE THE BASE
+                 * NAME, NEVER INSTEAD OF IT. `byFamily` counts on `family` and
+                 * the pin union looks up on `template`; a row that carried
+                 * only `wall-segment(ori=v,len=4)` would split one roster entry
+                 * into eight (trap 199) and break every lookup.
+                 */
+                instance: template.instance ?? base.name,
+                params: template.params ?? null,
+                family: base.family,
                 rngStateBefore,
                 drawsBefore,
             };
@@ -374,7 +436,7 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
                 }));
                 throw new GenerationAborted(
                     `levelGenerator: ABORTED at step ${step} try ${attempt} placing `
-                    + `"${template.name}" at (${at.tx},${at.ty}) — the oracle threw a `
+                    + `"${row.instance}" at (${at.tx},${at.ty}) — the oracle threw a `
                     + `${e.name}, which is NOT one of the three verdict classes and is `
                     + 'therefore not a rejected candidate. The trace up to here is '
                     + 'attached; the engine said: ' + e.message,
@@ -396,7 +458,20 @@ export function generateLevel({ rng, model, oracle, palette, bounds } = {}) {
             }));
             if (keep) {
                 record = candidate;
-                kept.push({ template: template.name, family: template.family, at });
+                /**
+                 * ⛓ `params` IS PART OF THE KEPT RECORD because it is the only
+                 * thing that lets anybody rebuild WHICH instance was placed.
+                 * `procgenPalette.instantiateKept` is the one reconstruction,
+                 * and it refuses rather than defaulting when a parameter is
+                 * missing from this object.
+                 */
+                kept.push({
+                    template: base.name,
+                    instance: template.instance ?? base.name,
+                    params: template.params ?? null,
+                    family: base.family,
+                    at,
+                });
                 lastSolve = out;
                 keptThisStep = true;
                 break;

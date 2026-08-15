@@ -20,8 +20,9 @@ import { ROLES, TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
 import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
 import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
-    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_TEMPLATES,
-    PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError, assertPalette,
+    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_PALETTE,
+    POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, ProcgenPaletteError,
+    assertPalette, defineTemplate, enumerateInstantiations, enumerateValues, instantiateKept,
 } from './procgenPalette.js';
 import {
     SEEDLING_DEFAULTS, generateSeedlingLevel, placementGroupId, placementTagId,
@@ -34,8 +35,30 @@ const model = () => seedlingModel({ seed: 1 });
 const worldFor = (record) => buildLevelWorld(record, { roles: ROLES });
 const byName = (name) => PRE_SWORD_TEMPLATES.find((t) => t.name === name);
 
-/** Place a template at a chosen anchor, ignoring the draw. */
-const placedAt = (m, name, at) => m.place(m.skeleton(), byName(name), at);
+/**
+ * ⛓ SLICE 2: `byName` returns a BASE, which has no geometry at all — every
+ * assertion below is about a CONCRETE ROW, so it names the values it is about.
+ * `at()` with no overrides is only legal for a zero-parameter template, by
+ * `instantiate`'s own refusal.
+ */
+const instanceOf = (name, values = {}) => byName(name).instantiate(null, values);
+
+/** Place a concrete instance at a chosen anchor, ignoring the draw. */
+const placedAt = (m, name, at, values = {}) => m.place(m.skeleton(), instanceOf(name, values), at);
+
+/** A minimal well-formed base, for the negative cases below. */
+const fakeTemplate = (over = {}) => defineTemplate({
+    name: 'g',
+    family: 'g',
+    params: [],
+    why: 'a fixture',
+    build: () => ({
+        footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+        terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
+        entities: [],
+    }),
+    ...over,
+});
 
 describe('the palette itself is well formed', () => {
     it('passes its own structural assertion at load and on demand', () => {
@@ -45,20 +68,154 @@ describe('the palette itself is well formed', () => {
     it('refuses a template that writes outside its own footprint', () => {
         expect(() => assertPalette({
             name: 'bad',
-            templates: [{
-                name: 'x', family: 'x', footprint: [{ dx: 0, dy: 0 }],
-                terrain: [{ dx: 5, dy: 5, terrain: 'wall' }],
-            }],
+            templates: [fakeTemplate({
+                name: 'x',
+                build: () => ({
+                    footprint: [{ dx: 0, dy: 0 }],
+                    terrain: [{ dx: 5, dy: 5, terrain: 'wall' }],
+                }),
+            })],
         })).toThrow(ProcgenPaletteError);
     });
 
     it('refuses a duplicate name — the trace keys on it (trap 199)', () => {
         expect(() => assertPalette({
-            name: 'dup', templates: [
-                { name: 'x', family: 'a', footprint: [{ dx: 0, dy: 0 }] },
-                { name: 'x', family: 'b', footprint: [{ dx: 0, dy: 0 }] },
-            ],
+            name: 'dup', templates: [fakeTemplate({ name: 'x' }), fakeTemplate({ name: 'x' })],
         })).toThrow(/must be unique/);
+    });
+
+    /**
+     * ── ⛓⛓⛓ THE PARAMETERIZED-TEMPLATE SEAM (GENERATE-mode UI arc, slice 2)
+     *
+     * ⚖ Ruling 2: a template is *"a function that generates a coherent set of
+     * features"*. These are the seam's own claims — the ones that hold whatever
+     * the wave-1 domains happen to be.
+     */
+    describe('a template is a FUNCTION, and its schema is checked where it is declared', () => {
+        it('⛔ REFUSES a frozen row in the roster — it would appear in no sweep', () => {
+            expect(() => assertPalette({
+                name: 'frozen',
+                templates: [{ name: 'x', family: 'x', footprint: [{ dx: 0, dy: 0 }] }],
+            })).toThrow(/not a PARAMETERIZED template/);
+        });
+
+        it('refuses a default that is not in its own domain — a control offering an '
+            + 'illegal value', () => {
+            expect(() => defineTemplate({
+                name: 'x', family: 'x', why: 'w', build: () => ({}),
+                params: [{ key: 'k', domain: [1, 2], default: 9, why: 'w' }],
+            })).toThrow(/is not in its own domain/);
+        });
+
+        it('refuses an empty domain — ⚖ ruling 4 certifies a domain by ENUMERATING it', () => {
+            expect(() => defineTemplate({
+                name: 'x', family: 'x', why: 'w', build: () => ({}),
+                params: [{ key: 'k', domain: [], default: undefined, why: 'w' }],
+            })).toThrow(/no finite\s+domain/);
+        });
+
+        it('refuses a parameter with no `why`, and a duplicated key', () => {
+            expect(() => defineTemplate({
+                name: 'x', family: 'x', why: 'w', build: () => ({}),
+                params: [{ key: 'k', domain: [1], default: 1 }],
+            })).toThrow(/carries no\s+`why`/);
+            expect(() => defineTemplate({
+                name: 'x', family: 'x', why: 'w', build: () => ({}),
+                params: [
+                    { key: 'k', domain: [1], default: 1, why: 'w' },
+                    { key: 'k', domain: [2], default: 2, why: 'w' },
+                ],
+            })).toThrow(/missing or\s+duplicated key/);
+        });
+
+        /**
+         * ⛔ A `build` MAY VARY GEOMETRY AND MAY NOT RENAME ITS OWN TEMPLATE.
+         * The base name is the roster key the pin union looks up and the family
+         * is what the report counts (trap 199), so both are stamped AFTER the
+         * spread — this drives that the stamp actually wins.
+         */
+        it('stamps name, family, params and the instance label OVER whatever build returns',
+            () => {
+                const t = defineTemplate({
+                    name: 'real', family: 'realfam', why: 'w',
+                    params: [{ key: 'k', domain: [1, 2], default: 1, why: 'w' }],
+                    build: () => ({ name: 'forged', family: 'forged', params: ['nonsense'] }),
+                });
+                const row = t.instantiate(null, { k: 2 });
+                expect(row.name).toBe('real');
+                expect(row.family).toBe('realfam');
+                expect(row.params).toEqual({ k: 2 });
+                expect(row.instance).toBe('real(k=2)');
+            });
+
+        it('refuses an override outside the domain, and an override of a parameter it '
+            + 'does not declare', () => {
+            const t = byName('wall-segment');
+            expect(() => t.instantiate(null, { ori: 'h', len: 99 }))
+                .toThrow(/not in its\s+declared domain/);
+            expect(() => t.instantiate(null, { nope: 1 })).toThrow(/has no parameter "nope"/);
+        });
+
+        /**
+         * ⛔⛔ THE REFUSAL THAT MAKES THE RECONSTRUCTION SAFE. A caller with no
+         * rng and an incomplete `overrides` would otherwise get the DEFAULT
+         * instance — a different geometry wearing the same name — and the pin
+         * union could not tell the two apart, because pins are static per
+         * template in v1. So the absence refuses instead of defaulting.
+         */
+        it('⛔ REFUSES to draw with no rng rather than falling back to the default', () => {
+            expect(() => byName('wall-segment').instantiate(null, { ori: 'h' }))
+                .toThrow(/needs a DRAW for "len"/);
+            expect(() => byName('wall-segment').instantiate(null, {}))
+                .toThrow(/needs a DRAW for "ori"/);
+            // …and a zero-parameter template needs no rng at all.
+            expect(byName('arrow-lane').instantiate(null).instance).toBe('arrow-lane');
+        });
+
+        /**
+         * ⛓ THE ENUMERATION COUNTS `assertPalette`'s DOCBLOCK STATES, asserted
+         * FROM the roster so the table cannot go stale silently (trap 199).
+         */
+        it('enumerates 42 pre-sword and 44 post-sword instantiations at module load', () => {
+            expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(42);
+            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(44);
+            const perTemplate = Object.fromEntries(
+                PRE_SWORD_TEMPLATES.map((t) => [t.name, enumerateValues(t).length]),
+            );
+            expect(perTemplate).toEqual({
+                'wall-segment': 8,
+                'water-pool': 9,
+                'pit-patch': 6,
+                'arrow-lane': 1,
+                'wall-gap-block': 16,
+                'wall-gap-lock-weigh': 2,
+            });
+            // ⛔ every instance label is unique across the whole palette, which
+            // is what lets a pane row identify a geometry rather than a key.
+            const labels = enumerateInstantiations(POST_SWORD_PALETTE).map((t) => t.instance);
+            expect(new Set(labels).size).toBe(labels.length);
+        });
+
+        /**
+         * ⛓⛓ THE ONE RECONSTRUCTION, both callers' — `watchGenerate` and
+         * `procgenSeedling` reach the same function.
+         */
+        it('instantiateKept rebuilds the exact instance a kept row names', () => {
+            const kept = { template: 'wall-segment', params: { ori: 'v', len: 5 } };
+            const back = instantiateKept(PRE_SWORD_PALETTE, kept);
+            expect(back.instance).toBe('wall-segment(ori=v,len=5)');
+            expect(back.footprint).toHaveLength(5);
+            expect(JSON.stringify(back))
+                .toBe(JSON.stringify(instanceOf('wall-segment', { ori: 'v', len: 5 })));
+        });
+
+        it('⛔ instantiateKept REFUSES a row whose params are missing — never the default',
+            () => {
+                expect(() => instantiateKept(PRE_SWORD_PALETTE, { template: 'wall-segment' }))
+                    .toThrow(/needs a DRAW for "ori"/);
+                expect(() => instantiateKept(PRE_SWORD_PALETTE, { template: 'nope' }))
+                    .toThrow(/which palette .* does not hold/);
+            });
     });
 
     /**
@@ -67,13 +224,19 @@ describe('the palette itself is well formed', () => {
      * at module load rather than reviewed.
      */
     describe('the placement-group slot is declared, not assumed', () => {
-        const withEntities = (entities, extra = {}) => ({
-            name: 'g',
-            family: 'g',
-            footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
-            terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
-            entities,
-            ...extra,
+        /**
+         * ⛓ SLICE 2: THESE RUN AGAINST AN INSTANTIATION NOW, which is strictly
+         * more than they used to — a `build` that produced a half-converted row
+         * for ONE domain value would be caught where a frozen row could only
+         * ever be right or wrong once.
+         */
+        const withEntities = (entities, extra = {}) => fakeTemplate({
+            build: () => ({
+                footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+                terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
+                entities,
+                ...extra,
+            }),
         });
         const slot = (dx) => ({ dx, dy: 0, type: 'lock', attrs: { tset: PLACEMENT_GROUP } });
 
@@ -110,29 +273,45 @@ describe('the palette itself is well formed', () => {
         it('refuses a group-bearing template that does not consume its own anchor', () => {
             expect(() => assertPalette({
                 name: 'loose',
-                templates: [{
-                    name: 'g', family: 'g',
-                    // (0,0) is OCCUPIED but never written — no terrain, no
-                    // entity — so a later placement could anchor in it.
-                    footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
-                    terrain: [{ dx: 1, dy: 0, terrain: 'wall' }],
-                    entities: [slot(1), slot(2)], groups: 1,
-                }],
+                templates: [fakeTemplate({
+                    build: () => ({
+                        // (0,0) is OCCUPIED but never written — no terrain, no
+                        // entity — so a later placement could anchor in it.
+                        footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+                        terrain: [{ dx: 1, dy: 0, terrain: 'wall' }],
+                        entities: [slot(1), slot(2)],
+                        groups: 1,
+                    }),
+                })],
             })).toThrow(/occupy AND write its own anchor/);
         });
 
-        it('the shipped rows that carry the slot are exactly the weigh pair', () => {
-            const carriers = PRE_SWORD_TEMPLATES.filter((t) => t.groups !== undefined);
-            expect(carriers.map((t) => t.name))
-                .toEqual(['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']);
+        /**
+         * ⛓ SLICE 2 COLLAPSED THE WEIGH PAIR INTO ONE PARAMETERIZED ROW, so
+         * the carriers are counted over INSTANTIATIONS rather than over table
+         * rows — and every instantiation must carry the slot, not just the one
+         * the default happens to build.
+         */
+        it('the shipped instantiations that carry the slot are exactly the weigh family', () => {
+            const carriers = enumerateInstantiations(PRE_SWORD_PALETTE)
+                .filter((t) => t.groups !== undefined);
+            expect([...new Set(carriers.map((t) => t.name))]).toEqual(['wall-gap-lock-weigh']);
+            expect(carriers.map((t) => t.instance)).toEqual([
+                'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
+            ]);
             // ⚠ BY NAME rather than by count: a new switch/door template that
-            // forgot the slot would keep the count at 2 and arrive silently.
+            // forgot the slot would keep the count where it is and arrive
+            // silently.
             for (const t of carriers) {
                 expect(t.groups).toBe(1);
                 expect(t.entities.filter(
                     (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
                 )).toHaveLength(2);
             }
+            // ⛔ AND EVERY value of the family's own domain is a carrier — a
+            // `build` that dropped the slot for ONE orientation would place a
+            // lock in a private group and a button in group 0.
+            expect(carriers).toHaveLength(enumerateValues(byName('wall-gap-lock-weigh')).length);
         });
     });
 
@@ -142,13 +321,15 @@ describe('the palette itself is well formed', () => {
      * one is the normal case (a lock's private flag is its own).
      */
     describe('the placement-tag slot is declared, not assumed', () => {
-        const row = (entities, extra = {}) => ({
+        const row = (entities, extra = {}) => fakeTemplate({
             name: 't',
             family: 't',
-            footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }],
-            terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
-            entities,
-            ...extra,
+            build: () => ({
+                footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }],
+                terrain: [{ dx: 0, dy: 0, terrain: 'wall' }],
+                entities,
+                ...extra,
+            }),
         });
         const tagSlot = (dx) => ({ dx, dy: 0, type: 'lock', attrs: { tag: PLACEMENT_TAG } });
 
@@ -187,25 +368,44 @@ describe('the palette itself is well formed', () => {
             })).toBe(true);
         });
 
-        it('the shipped rows that carry the tag slot are exactly the weigh pair', () => {
-            const carriers = PRE_SWORD_TEMPLATES.filter((t) => t.tags !== undefined);
-            expect(carriers.map((t) => t.name))
-                .toEqual(['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']);
-            for (const t of carriers) expect(t.tags).toBe(1);
-        });
+        it('the shipped instantiations that carry the tag slot are exactly the weigh family',
+            () => {
+                const carriers = enumerateInstantiations(PRE_SWORD_PALETTE)
+                    .filter((t) => t.tags !== undefined);
+                expect(carriers.map((t) => t.instance)).toEqual([
+                    'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
+                ]);
+                for (const t of carriers) expect(t.tags).toBe(1);
+            });
 
         /**
          * ⚠ THE KILL-LOCK FAMILY IS **NOT** ON THE SLOT, AND THAT IS MEASURED
          * RATHER THAN OVERLOOKED. Its `tag: '1'` is READ (`Lock.check()`
          * despawns only when `tSet < 0`), so two placements sharing it would be
-         * the same defect — but the post-sword sweep (seeds 1..24, target 6)
-         * keeps a kill template in ONE seed and never two, so the collision is
-         * LATENT. Fixing it would move the discharge-existence records for no
-         * measured gain. This asserts the state of affairs so the day a second
-         * one can be kept, someone has to come back here.
+         * the same defect the weigh family's slot exists to end.
+         *
+         * ⛔⛔⛔ **AND THE REASON IT WAS LEFT LATENT HAS EXPIRED — MEASURED AT
+         * SLICE 2, THE DAY THIS COMMENT PREDICTED.** It used to read: *"the
+         * post-sword sweep (seeds 1..24, target 6) keeps a kill template in ONE
+         * seed and never two, so the collision is LATENT… the day a second one
+         * can be kept, someone has to come back here."* Re-scanned under the
+         * parameterized roster (post-sword, seeds 1..40, target 6 — the pool is
+         * 12/13/14/15/25): **seed 12 keeps TWO**, and both locks carry the same
+         * literal tag 1, so one spinner's death now writes the persistence flag
+         * both locks read.
+         *
+         * ⚖ NOT FIXED HERE, AND DELIBERATELY SO: the right value is not another
+         * literal (`'0'` is the goal's), so it wants this same per-placement
+         * slot on a field whose blast radius — the goal, the scratch layer,
+         * `botDriverV1`'s v9 `at` declarations — was reported to the user with
+         * evidence on 2026-08-13 and has still not been measured. What slice 2
+         * owed was to notice that the LATENCY argument died, and this is that
+         * notice. The assertions below are unchanged: they still pin the state
+         * of affairs, and now the comment says the collision is REACHABLE.
          */
-        it('⚠ the kill-lock pair keeps its LITERAL tag 1 — latent, and pinned', () => {
-            const killLocks = POST_SWORD_TEMPLATES.filter((t) => t.family === 'kill');
+        it('⚠ the kill-lock family keeps its LITERAL tag 1 — now REACHABLE, and pinned', () => {
+            const killLocks = enumerateInstantiations(POST_SWORD_PALETTE)
+                .filter((t) => t.family === 'kill');
             expect(killLocks).toHaveLength(2);
             for (const t of killLocks) {
                 expect(t.tags).toBeUndefined();
@@ -230,45 +430,83 @@ describe('the palette itself is well formed', () => {
 });
 
 describe('every template builds what it claims — asked of the BUILT WORLD', () => {
-    it('wall-segment-h3 joins `solids` with the Stone tag, three cells of it', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'wall-segment-h3', { tx: 3, ty: 3 }));
-        // ⚠ a solid's `x`/`y` are its CENTRE; `rect` is the cell.
-        const placed = world.solids.filter((s) => s.tag === 'tile:Stone'
-            && s.rect.y === 3 * TILE_SIZE
-            && s.rect.x >= 3 * TILE_SIZE && s.rect.x <= 5 * TILE_SIZE);
-        expect(placed).toHaveLength(3);
+    /**
+     * ⛓⛓ SLICE 2: THE SIZE FAMILIES ARE DRIVEN ACROSS THEIR WHOLE DOMAIN, not
+     * at the one size the frozen row happened to hold. The claim each makes is
+     * the same claim it always made — the cells reach the right ENGINE ROSTER —
+     * and the count comes from the INSTANCE rather than from a number typed
+     * here, so a `build` that ignored its own `len` would fail rather than
+     * quietly ship a 3-cell wall labelled `len=5`.
+     *
+     * ⛔ THIS IS THE CASE THAT CATCHES AN `instantiate` THAT IGNORES ITS DRAW.
+     * `assertPalette` walks every instantiation for SHAPE; only a built world
+     * says the shape is the one the label claims.
+     */
+    for (const len of enumerateValues(byName('wall-segment'))
+        .filter((v) => v.ori === 'h').map((v) => v.len)) {
+        it(`wall-segment(ori=h,len=${len}) joins \`solids\` with the Stone tag, `
+            + `${len} cells of it`, () => {
+            const m = model();
+            const world = worldFor(placedAt(m, 'wall-segment', { tx: 1, ty: 3 }, { ori: 'h', len }));
+            /**
+             * ⚠ a solid's `x`/`y` are its CENTRE; `rect` is the cell.
+             *
+             * ⛔ THE RANGE IS THE WHOLE INTERIOR, NOT `len` — and that is a
+             * defect caught in this slice's own mutant run. The first cut
+             * bounded the filter at `len * TILE_SIZE`, so a `build` that
+             * ignored its `len` and always emitted THREE cells passed at
+             * `len=2` (the filter only counted the two it was looking for) and
+             * failed at 4 and 5. A window sized by the number under test cannot
+             * see an OVERSHOOT. Scoped to the interior, an over-long wall is
+             * counted and the case reds at every value.
+             */
+            const placed = world.solids.filter((s) => s.tag === 'tile:Stone'
+                && s.rect.y === 3 * TILE_SIZE
+                && s.rect.x >= 1 * TILE_SIZE && s.rect.x <= 8 * TILE_SIZE);
+            expect(placed).toHaveLength(len);
+        });
+    }
+
+    it('wall-segment(ori=v) is the same segment on end, at every declared length', () => {
+        for (const { len } of enumerateValues(byName('wall-segment')).filter((v) => v.ori === 'v')) {
+            const m = model();
+            const world = worldFor(placedAt(m, 'wall-segment', { tx: 3, ty: 1 }, { ori: 'v', len }));
+            // ⛔ the whole interior, not `len` — see the horizontal case above.
+            const placed = world.solids.filter((s) => s.tag === 'tile:Stone'
+                && s.rect.x === 3 * TILE_SIZE
+                && s.rect.y >= 1 * TILE_SIZE && s.rect.y <= 8 * TILE_SIZE);
+            expect(placed, `len=${len}`).toHaveLength(len);
+        }
     });
 
-    it('wall-segment-v3 is the same segment on end', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'wall-segment-v3', { tx: 3, ty: 3 }));
-        const placed = world.solids.filter((s) => s.tag === 'tile:Stone'
-            && s.rect.x === 3 * TILE_SIZE
-            && s.rect.y >= 3 * TILE_SIZE && s.rect.y <= 5 * TILE_SIZE);
-        expect(placed).toHaveLength(3);
+    it('water-pool lands w x h cells in `lethalTerrainTiles` as tile type 1, every size', () => {
+        for (const { w, h } of enumerateValues(byName('water-pool'))) {
+            const m = model();
+            const world = worldFor(placedAt(m, 'water-pool', { tx: 3, ty: 3 }, { w, h }));
+            const pool = world.lethalTerrainTiles.filter((t) => t.tx >= 3 && t.tx < 3 + w
+                && t.ty >= 3 && t.ty < 3 + h);
+            expect(pool, `${w}x${h}`).toHaveLength(w * h);
+            expect(pool.every((t) => t.t === 1)).toBe(true);
+        }
     });
 
-    it('water-pool-2x2 lands four cells in `lethalTerrainTiles` as tile type 1', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'water-pool-2x2', { tx: 3, ty: 3 }));
-        const pool = world.lethalTerrainTiles.filter((t) => t.tx >= 3 && t.tx <= 4
-            && t.ty >= 3 && t.ty <= 4);
-        expect(pool).toHaveLength(4);
-        expect(pool.every((t) => t.t === 1)).toBe(true);
-    });
-
-    it('pit-patch-2x1 lands two cells in `pitTiles` as tile type 6', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'pit-patch-2x1', { tx: 3, ty: 3 }));
-        const pit = world.pitTiles.filter((t) => t.ty === 3 && t.tx >= 3 && t.tx <= 4);
-        expect(pit).toHaveLength(2);
-        expect(pit.every((t) => t.t === 6)).toBe(true);
+    it('pit-patch lands w x h cells in `pitTiles` as tile type 6, every size', () => {
+        for (const { w, h } of enumerateValues(byName('pit-patch'))) {
+            const m = model();
+            const world = worldFor(placedAt(m, 'pit-patch', { tx: 3, ty: 3 }, { w, h }));
+            const pit = world.pitTiles.filter((t) => t.tx >= 3 && t.tx < 3 + w
+                && t.ty >= 3 && t.ty < 3 + h);
+            expect(pit, `${w}x${h}`).toHaveLength(w * h);
+            expect(pit.every((t) => t.t === 6)).toBe(true);
+        }
     });
 
     it('arrow-lane joins `arrowTraps` with shootDefault TRUE — it fires from tick 0', () => {
         const m = model();
         const world = worldFor(placedAt(m, 'arrow-lane', { tx: 3, ty: 3 }));
+        // ⛓ THE ZERO-PARAMETER CASE: no draw, no override, label == name.
+        expect(instanceOf('arrow-lane').instance).toBe('arrow-lane');
+        expect(instanceOf('arrow-lane').params).toEqual({});
         expect(world.arrowTraps).toHaveLength(1);
         const trap = world.arrowTraps[0];
         expect(trap.shootDefault).toBe(true);
@@ -294,11 +532,12 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * holds a `pushableblock` in `world.pushables` — at the gap's own cell, so
      * the block really is standing in the one hole the wall leaves.
      */
-    it('wall-gap-block-h walls the whole interior but one cell, and stands a block in it', () => {
+    it('wall-gap-block(ori=h) walls the whole interior but one cell, and stands a block in it',
+        () => {
         const m = model();
-        const t = byName('wall-gap-block-h');
+        const t = instanceOf('wall-gap-block', { ori: 'h', gap: 4 });
         const at = { tx: 1, ty: 4 };
-        const world = worldFor(placedAt(m, 'wall-gap-block-h', at));
+        const world = worldFor(m.place(m.skeleton(), t, at));
         const gapDx = t.entities[0].dx;
 
         // ⚠ SCOPED TO THE TEMPLATE'S OWN CELLS. The room's BORDER RING is
@@ -325,17 +564,31 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
         expect(block.id).toBe(`pushableblock@${block.x},${block.y}`);
     });
 
-    it('wall-gap-block-v is the same door on end', () => {
-        const m = model();
-        const t = byName('wall-gap-block-v');
-        const at = { tx: 4, ty: 1 };
-        const world = worldFor(placedAt(m, 'wall-gap-block-v', at));
-        const gapDy = t.entities[0].dy;
-        const rows = new Set(t.terrain.map((c) => (at.ty + c.dy) * TILE_SIZE));
-        const column = world.solids.filter((s) => s.tag === 'tile:Stone'
-            && s.rect.x === at.tx * TILE_SIZE && rows.has(s.rect.y));
-        expect(column).toHaveLength(t.terrain.length);
-        expect(column.some((s) => s.rect.y === (at.ty + gapDy) * TILE_SIZE)).toBe(false);
+    /**
+     * ⛓ THE SAME DOOR ON END, AT EVERY DECLARED GAP — because `gap` is what
+     * decides WHICH cell is the hole, and a `build` that painted the wall from
+     * one value and placed the block from another would still produce a wall
+     * and a block. The two are compared to each other rather than to a
+     * literal.
+     */
+    it('wall-gap-block(ori=v) is the same door on end, at every declared gap', () => {
+        for (const { gap } of enumerateValues(byName('wall-gap-block'))
+            .filter((v) => v.ori === 'v')) {
+            const m = model();
+            const t = instanceOf('wall-gap-block', { ori: 'v', gap });
+            const at = { tx: 4, ty: 1 };
+            const world = worldFor(m.place(m.skeleton(), t, at));
+            const gapDy = t.entities[0].dy;
+            expect(gapDy, `gap=${gap}`).toBe(gap);
+            const rows = new Set(t.terrain.map((c) => (at.ty + c.dy) * TILE_SIZE));
+            const column = world.solids.filter((s) => s.tag === 'tile:Stone'
+                && s.rect.x === at.tx * TILE_SIZE && rows.has(s.rect.y));
+            expect(column, `gap=${gap}`).toHaveLength(t.terrain.length);
+            expect(column.some((s) => s.rect.y === (at.ty + gapDy) * TILE_SIZE)).toBe(false);
+            // ⛔ and the block really stands IN the hole the wall left.
+            expect(world.pushables).toHaveLength(1);
+            expect(world.pushables[0].y).toBe((at.ty + gap) * TILE_SIZE);
+        }
     });
 
     /**
@@ -351,14 +604,15 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * trusted, because a template whose block and button shared neither
      * coordinate would be L16's shape, which needs a chain nobody has ruled on.
      */
-    for (const [name, at, axis] of [
-        ['wall-gap-lock-weigh-h', { tx: 1, ty: 4 }, 'row'],
-        ['wall-gap-lock-weigh-v', { tx: 4, ty: 1 }, 'column'],
+    for (const [ori, at, axis] of [
+        ['h', { tx: 1, ty: 4 }, 'row'],
+        ['v', { tx: 4, ty: 1 }, 'column'],
     ]) {
-        it(`${name} stands a lock in the gap and a block that can reach its button`, () => {
+        it(`wall-gap-lock-weigh(ori=${ori}) stands a lock in the gap and a block that can `
+            + 'reach its button', () => {
             const m = model();
-            const t = byName(name);
-            const world = worldFor(placedAt(m, name, at));
+            const t = instanceOf('wall-gap-lock-weigh', { ori });
+            const world = worldFor(m.place(m.skeleton(), t, at));
             const entityAt = (type) => {
                 const e = t.entities.find((x) => x.type === type);
                 return { tx: at.tx + e.dx, ty: at.ty + e.dy };
@@ -420,8 +674,8 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
     it('⛔ TWO placements are TWO groups — the user-reported defect, as a test', () => {
         const m = model();
         const two = m.place(
-            m.place(m.skeleton(), byName('wall-gap-lock-weigh-h'), { tx: 1, ty: 3 }),
-            byName('wall-gap-lock-weigh-h'), { tx: 1, ty: 6 },
+            m.place(m.skeleton(), instanceOf('wall-gap-lock-weigh', { ori: 'h' }), { tx: 1, ty: 3 }),
+            instanceOf('wall-gap-lock-weigh', { ori: 'h' }), { tx: 1, ty: 6 },
         );
         const world = worldFor(two);
         expect(world.activators).toHaveLength(2);
@@ -461,7 +715,7 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
     it('the group is a function of the ANCHOR — not of what the loop tried first', () => {
         const m = model();
         const at = { tx: 2, ty: 5 };
-        const t = byName('wall-gap-lock-weigh-h');
+        const t = instanceOf('wall-gap-lock-weigh', { ori: 'h' });
         const lockOf = (record) => worldFor(record).activators[0].t;
 
         const straight = lockOf(m.place(m.skeleton(), t, at));
@@ -469,8 +723,8 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
         // have reverted — placed here on a record that keeps them, which is
         // strictly harder than the reverting case.
         const after = lockOf(m.place(
-            m.place(m.place(m.skeleton(), byName('wall-segment-h3'), { tx: 5, ty: 1 }),
-                byName('wall-segment-v3'), { tx: 7, ty: 4 }),
+            m.place(m.place(m.skeleton(), instanceOf('wall-segment', { ori: 'h', len: 3 }), { tx: 5, ty: 1 }),
+                instanceOf('wall-segment', { ori: 'v', len: 3 }), { tx: 7, ty: 4 }),
             t, at,
         ));
         expect(after).toBe(straight);
@@ -499,7 +753,7 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
         const m = model();
         let record = m.skeleton();
         for (const at of [{ tx: 1, ty: 3 }, { tx: 1, ty: 6 }, { tx: 1, ty: 9 }]) {
-            record = m.place(record, byName('wall-gap-lock-weigh-h'), at);
+            record = m.place(record, instanceOf('wall-gap-lock-weigh', { ori: 'h' }), at);
         }
         const tags = record.entities
             .map((e) => tagOf(e.type, e.attrs))
@@ -525,7 +779,7 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('the tag is a function of the RECORD — not of what the loop tried first', () => {
         const m = model();
-        const t = byName('wall-gap-lock-weigh-h');
+        const t = instanceOf('wall-gap-lock-weigh', { ori: 'h' });
         const at = { tx: 1, ty: 6 };
         const lockTagOf = (record) => record.entities
             .filter((e) => e.type === 'lock').map((e) => tagOf(e.type, e.attrs)).pop();
@@ -553,14 +807,14 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('⛔ NO SENTINEL SURVIVES INTO A LEVEL — an unresolved slot parses as group 0', () => {
         const m = model();
-        const record = m.place(m.skeleton(), byName('wall-gap-lock-weigh-v'), { tx: 4, ty: 1 });
+        const record = m.place(m.skeleton(), instanceOf('wall-gap-lock-weigh', { ori: 'v' }), { tx: 4, ty: 1 });
         for (const e of record.entities) {
             for (const v of Object.values(e.attrs ?? {})) expect(v).not.toBe(PLACEMENT_GROUP);
         }
         // And the guard is real: a template carrying the slot with no `groups`
         // declaration is refused BY NAME rather than written as a literal.
         const undeclared = {
-            ...byName('wall-gap-lock-weigh-v'), name: 'undeclared', groups: undefined,
+            ...instanceOf('wall-gap-lock-weigh', { ori: 'v' }), name: 'undeclared', groups: undefined,
         };
         expect(() => m.place(m.skeleton(), undeclared, { tx: 4, ty: 1 }))
             .toThrow(/declares no `groups`/);
@@ -582,8 +836,12 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      */
     it('the weigh templates declare the whole slide path, so no anchor can '
         + 'land the block on the goal', () => {
-        for (const name of ['wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v']) {
-            const t = byName(name);
+        // ⛓ SLICE 2: over every INSTANTIATION of the family, so the guard has to
+        // hold for each value of `ori` rather than for the two rows somebody
+        // happened to write.
+        for (const t of enumerateInstantiations(PRE_SWORD_PALETTE)
+            .filter((x) => x.family === 'weigh')) {
+            const name = t.instance;
             const block = t.entities.find((e) => e.type === 'pushableblock');
             const button = t.entities.find((e) => e.type === 'button');
             const declared = new Set([...t.footprint, ...t.clearance]
@@ -611,16 +869,40 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * failure `shoot="0"` would have been for the arrow lane). Asserted
      * against the ROOM's own size rather than against 8.
      */
-    it('the door spans the whole interior — anything less obstructs nothing', () => {
-        const m = model();
-        const room = m.skeleton();
-        for (const [name, axis] of [['wall-gap-block-h', 'dx'], ['wall-gap-block-v', 'dy']]) {
-            const t = byName(name);
-            const span = Math.max(...t.footprint.map((c) => c[axis])) + 1;
-            const interior = (axis === 'dx' ? room.width : room.height) - 2;
-            expect(span).toBe(interior);
-        }
-    });
+    /**
+     * ⛓⛓ SLICE 2 MAKES THIS THE LAW'S REAL GUARD. The span was a literal in two
+     * frozen rows; it is now a consequence of a `build` that reads
+     * `INTERIOR_SPAN`, and `gap` is a PARAMETER right beside it. So the claim is
+     * asserted over EVERY DOOR INSTANTIATION IN BOTH BIOMES — a domain value
+     * that shortened the wall, or a `build` that let `gap` shrink it, would be
+     * a decoration the loop happily keeps.
+     */
+    it('every door instantiation spans the whole interior — anything less obstructs nothing',
+        () => {
+            const m = model();
+            const room = m.skeleton();
+            const doors = enumerateInstantiations(POST_SWORD_PALETTE)
+                .filter((t) => ['shove', 'weigh', 'kill'].includes(t.family));
+            // Built FROM the roster: a fourth door family arrives here as a
+            // count that moved rather than as an unchecked row (trap 199).
+            expect(doors.length).toBeGreaterThanOrEqual(16);
+            for (const t of doors) {
+                // The wall runs down the template's own axis; `ori` says which,
+                // and for the plain door the gap is a hole IN that same line.
+                const axis = t.params.ori === 'h' ? 'dx' : 'dy';
+                const cross = t.params.ori === 'h' ? 'dy' : 'dx';
+                const wall = t.footprint.filter((c) => c[cross] === 0);
+                const span = Math.max(...wall.map((c) => c[axis])) + 1;
+                const interior = (axis === 'dx' ? room.width : room.height) - 2;
+                expect(span, t.instance).toBe(interior);
+                expect(wall, t.instance).toHaveLength(interior);
+                // ⛔ EXACTLY ONE HOLE, and the clearer stands in it. A door with
+                // two gaps is a wall with a corridor round the obstacle.
+                const painted = new Set(t.terrain.map((c) => c[axis]));
+                const gaps = wall.map((c) => c[axis]).filter((o) => !painted.has(o));
+                expect(gaps, t.instance).toHaveLength(1);
+            }
+        });
 
     /**
      * ⛓⛓⛓ AND IT CERTIFIES IN A ROOM THE LOOP ACTUALLY BUILT — the standard
@@ -712,7 +994,17 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
             let prev = out.trace.find((r) => r.family === 'skeleton').ticks;
             for (const r of out.trace) {
                 if (r.outcome !== 'KEPT' || r.family === 'skeleton') continue;
-                const isFar = r.template.endsWith('-h')
+                /**
+                 * ⛓⛓ SLICE 2: THE ORIENTATION COMES FROM `r.params.ori`, and
+                 * the old spelling was `r.template.endsWith('-h')`. ⚠ THAT
+                 * WOULD HAVE PASSED VACUOUSLY: with the pair collapsed, no
+                 * template name ends in `-h` any more, so every row would have
+                 * been read as VERTICAL and the "goal beyond the wall" test
+                 * would have been asking about the wrong axis. A check that
+                 * still goes green after the thing it inspects changed shape is
+                 * the migration's own trap, and this is where it bit.
+                 */
+                const isFar = r.params.ori === 'h'
                     ? goal.ty > r.at.ty : goal.tx > r.at.tx;
                 if (r.family === 'weigh' && isFar && r.ticks > prev) {
                     crossing = { seed, template: r.template, before: prev, after: r.ticks };
@@ -730,9 +1022,8 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('EVERY template in the roster is verified above — by name, not by count', () => {
         // The list this test compares against is the one the cases assert on.
-        const verified = ['wall-segment-h3', 'wall-segment-v3', 'water-pool-2x2',
-            'pit-patch-2x1', 'arrow-lane', 'wall-gap-block-h', 'wall-gap-block-v',
-            'wall-gap-lock-weigh-h', 'wall-gap-lock-weigh-v'];
+        const verified = ['wall-segment', 'water-pool', 'pit-patch', 'arrow-lane',
+            'wall-gap-block', 'wall-gap-lock-weigh'];
         expect(PRE_SWORD_TEMPLATES.map((t) => t.name).sort()).toEqual([...verified].sort());
     });
 });
@@ -767,7 +1058,7 @@ describe('the arrow lane\'s clearance rule is the ENGINE\'s geometry', () => {
         const m = model();
         const rng = rngFor(3);
         for (let i = 0; i < 20; i += 1) {
-            const at = m.anchorFor(m.skeleton(), byName('arrow-lane'), rng);
+            const at = m.anchorFor(m.skeleton(), instanceOf('arrow-lane'), rng);
             expect(at).not.toBeNull();
             expect(m.laneClear(m.skeleton(), at.tx, at.ty).ok).toBe(true);
         }
@@ -792,7 +1083,7 @@ describe('the bindings place atomically and refuse illegally', () => {
 
     it('never anchors on a cell an earlier template already painted', () => {
         const m = model();
-        const once = placedAt(m, 'wall-segment-h3', { tx: 3, ty: 3 });
+        const once = placedAt(m, 'wall-segment', { tx: 3, ty: 3 }, { ori: 'h', len: 3 });
         expect(m.isFree(once, 3, 3)).toBe(false);
         expect(m.isFree(once, 4, 3)).toBe(false);
         expect(m.isFree(once, 6, 3)).toBe(true);
@@ -808,7 +1099,7 @@ describe('the bindings place atomically and refuse illegally', () => {
         const m = model();
         const before = m.skeleton();
         const json = JSON.stringify(before);
-        const after = m.place(before, byName('water-pool-2x2'), { tx: 3, ty: 3 });
+        const after = m.place(before, instanceOf('water-pool', { w: 2, h: 2 }), { tx: 3, ty: 3 });
         expect(JSON.stringify(before)).toBe(json);
         expect(after).not.toBe(before);
         expect(Object.isFrozen(after)).toBe(true);
@@ -816,7 +1107,7 @@ describe('the bindings place atomically and refuse illegally', () => {
 
     it('an out-of-rectangle footprint is refused by the LEVEL MODEL, by name', () => {
         const m = model();
-        expect(() => m.place(m.skeleton(), byName('wall-segment-h3'), { tx: 9, ty: 5 }))
+        expect(() => m.place(m.skeleton(), instanceOf('wall-segment', { ori: 'h', len: 3 }), { tx: 9, ty: 5 }))
             .toThrow(ProcgenLevelError);
         // and the loop is told which error class is the model's own
         expect(m.placementError).toBe(ProcgenLevelError);
@@ -839,16 +1130,25 @@ describe('the water template obliges the `sound` pin, by argument', () => {
         const m = model();
         const oracle = seedlingOracle({ model: m });
         expect(oracle.pinsFor([])).toEqual(['dead_frames']);
-        expect(oracle.pinsFor([byName('wall-segment-h3')])).toEqual(['dead_frames']);
-        expect(oracle.pinsFor([byName('water-pool-2x2')]).sort())
+        expect(oracle.pinsFor([instanceOf('wall-segment', { ori: 'h', len: 3 })])).toEqual(['dead_frames']);
+        expect(oracle.pinsFor([instanceOf('water-pool', { w: 2, h: 2 })]).sort())
             .toEqual(['dead_frames', 'sound']);
-        expect(oracle.pinsFor([byName('water-pool-2x2'), byName('water-pool-2x2')]))
+        expect(oracle.pinsFor([instanceOf('water-pool', { w: 2, h: 2 }), instanceOf('water-pool', { w: 2, h: 2 })]))
             .toHaveLength(2);
     });
 
-    it('only the water template declares it — the others carry no pins', () => {
-        for (const t of PRE_SWORD_TEMPLATES) {
-            expect(t.pins).toEqual(t.family === 'water' ? ['sound'] : []);
+    /**
+     * ⛓ SLICE 2: OVER EVERY INSTANTIATION. Pins are static per template in v1
+     * (⚖ kickoff §3.1) and this is what says so out loud — a pool obliges
+     * `sound` at 1x1 and at 3x3 alike. The day a pin depends on a parameter,
+     * this case is the one that goes red, which is the design's own
+     * requirement that such a pin arrive with its own test.
+     */
+    it('only the water family declares it, at EVERY size — the pin is static in v1', () => {
+        const rows = enumerateInstantiations(PRE_SWORD_PALETTE);
+        expect(rows.filter((t) => t.family === 'water')).toHaveLength(9);
+        for (const t of rows) {
+            expect(t.pins, t.instance).toEqual(t.family === 'water' ? ['sound'] : []);
         }
     });
 });

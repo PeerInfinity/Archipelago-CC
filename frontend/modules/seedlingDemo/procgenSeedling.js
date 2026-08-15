@@ -43,7 +43,9 @@ import {
 import {
     DEFAULT_BUDGET, VERDICT, assertBudget, bootStaging, collectGoal, solve,
 } from './procgenOracle.js';
-import { PLACEMENT_GROUP, PLACEMENT_TAG, PRE_SWORD_PALETTE } from './procgenPalette.js';
+import {
+    PLACEMENT_GROUP, PLACEMENT_TAG, PRE_SWORD_PALETTE, instantiateKept,
+} from './procgenPalette.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { generateLevel } from './levelGenerator.js';
 import { rngFor } from './procgenRng.js';
@@ -353,6 +355,16 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
         isFree,
         laneClear,
         doorClear,
+        /**
+         * ⛓ EXPOSED SO THE DOMAIN SWEEP CAN ENUMERATE LEGAL ANCHORS WITHOUT
+         * RETYPING THE RULE (slice 2). `isFree`, `laneClear` and `doorClear`
+         * were already on this surface for the same reason; `legalAt` is the
+         * conjunction of all three plus the footprint walk, and a sweep that
+         * re-derived it would be the seventh copy of a retype this arc has
+         * refused. ⛔ It is the SAME function `anchorFor` calls — not an
+         * agreeing one.
+         */
+        legalAt,
         skeleton,
         /**
          * One shuffle, then the first legal cell — see the docblock. The
@@ -511,8 +523,18 @@ export function generateSeedlingLevel({
             goalClass: model.defaults.goalClass,
             startCell: model.defaults.start,
             items: palette.items ?? null,
-            pins: oracle.pinsFor(out.summary.kept.map((k) => palette.templates
-                .find((t) => t.name === k.template))),
+            /**
+             * ⛓⛓ ONE OF THE TWO PIN-UNION LOOKUPS (the other is
+             * `watchGenerate.keptTemplatesOf`), and since slice 2 both go
+             * through `procgenPalette.instantiateKept`. A name lookup used to
+             * be enough because a row WAS its geometry; under parameterization
+             * the name resolves to a BASE with no `pins` at all, and two
+             * private reconstructions of one instance is the second-cost-model
+             * shape this arc keeps meeting.
+             */
+            pins: oracle.pinsFor(
+                out.summary.kept.map((k) => instantiateKept(palette, k)),
+            ),
         }),
     };
 }

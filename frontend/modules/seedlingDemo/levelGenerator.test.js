@@ -39,7 +39,39 @@ const fakeRng = (picks) => {
     };
 };
 
-const T = (name, family = 'fake') => ({ name, family, footprint: [{ dx: 0, dy: 0 }] });
+/**
+ * A FAKE BASE TEMPLATE — ⛓ slice 2's seam, in the substrate-agnostic tests.
+ *
+ * ⛔ It carries a REAL `instantiate` rather than a stub, because the loop's
+ * contract is that a template is a function: `params` in schema order, one
+ * `rng.pick` per parameter, a concrete row out. `T('a')` is the zero-parameter
+ * case (what every frozen row was); `T('a', 'fam', [{key,domain,…}])` is the
+ * parameterized one, and the cases below use it to assert the DRAW and the
+ * STAMP without going anywhere near Seedling.
+ */
+const T = (name, family = 'fake', params = []) => ({
+    name,
+    family,
+    params,
+    instantiate(rng, overrides = {}) {
+        const values = {};
+        for (const p of params) {
+            values[p.key] = Object.prototype.hasOwnProperty.call(overrides, p.key)
+                ? overrides[p.key] : rng.pick(p.domain);
+        }
+        const label = Object.keys(values).length
+            ? `${name}(${Object.entries(values).map(([k, v]) => `${k}=${v}`).join(',')})`
+            : name;
+        return {
+            name,
+            family,
+            params: values,
+            instance: label,
+            footprint: [{ dx: 0, dy: 0 }],
+            size: values.size ?? 1,
+        };
+    },
+});
 
 /**
  * A record is `{ placed: [...] }` and `place` appends — pure, so REVERT is
@@ -322,6 +354,92 @@ describe('the loop is substrate-agnostic by construction', () => {
         expect(oracle.calls[0].ctx.templates).toEqual([]);
         expect(oracle.calls[1].ctx.templates).toHaveLength(1);
         expect(oracle.calls[2].ctx.templates).toHaveLength(2);
+    });
+
+    /**
+     * ⛓⛓⛓ THE PARAMETERIZED-TEMPLATE SEAM (GENERATE-mode UI arc, slice 2).
+     *
+     * ⚖ Ruling 2 makes a template a FUNCTION, and this loop's whole share of
+     * that is: draw the base, call `instantiate(rng)`, proceed with the
+     * concrete row. The three cases below are the three halves of it that can
+     * break independently — the refusal, the stamp, and the draw.
+     */
+    describe('a template is a FUNCTION, and the loop draws its parameters', () => {
+        it('⛔ refuses a palette row with no `instantiate` — never falls back to the row', () => {
+            expect(() => generateLevel({
+                rng: fakeRng(), model: fakeModel(), oracle: fakeOracle(['SOLVED']),
+                palette: { name: 'frozen', templates: [{ name: 'a', family: 'fake' }] },
+            })).toThrow(/carries no `instantiate/);
+        });
+
+        /**
+         * ⛔ THE STAMP IS WHAT MAKES A RUN RECONSTRUCTABLE. `template` stays
+         * the BASE name (the roster key the pin union looks up and `byFamily`
+         * counts on); `instance` and `params` ride BESIDE it. A row that
+         * carried only the label would split one roster entry into one per
+         * value combination (trap 199).
+         */
+        it('stamps every trace row and every kept entry with `params` and the instance label',
+            () => {
+                const out = generateLevel({
+                    rng: fakeRng(),
+                    model: fakeModel(),
+                    oracle: fakeOracle(['SOLVED']),
+                    palette: palette([T('a', 'fam', [
+                        { key: 'size', domain: [7], default: 7, why: 'one value, so the '
+                            + 'draw is observable without the pick sequence deciding it' },
+                    ])]),
+                    bounds: { obstacleTarget: 1, triesPerStep: 1, saturationK: 1 },
+                });
+                const row = out.trace.find((r) => r.step === 1);
+                expect(row.template).toBe('a');
+                expect(row.family).toBe('fam');
+                expect(row.instance).toBe('a(size=7)');
+                expect(row.params).toEqual({ size: 7 });
+                expect(out.summary.kept[0]).toMatchObject({
+                    template: 'a', instance: 'a(size=7)', params: { size: 7 },
+                });
+                // ⛓ AND THE CONCRETE ROW IS WHAT REACHED THE MODEL — the level
+                // holds the instance, not the base. Anything less would let an
+                // `instantiate` that ignored its own draw pass this case.
+                expect(out.record.placed).toEqual(['a']);
+                expect(out.summary.byFamily.fam.kept).toBe(1);
+            });
+
+        /**
+         * ⛓ THE DRAW ORDER IS PART OF DETERMINISM, so it is asserted rather
+         * than argued: parameters come out of the SAME stream, in SCHEMA
+         * ORDER, one draw each — which is why a domain that grew would move
+         * every seed's level and why the palette declares the order out loud.
+         */
+        it('draws each declared parameter from the SAME stream, in schema order', () => {
+            const seen = [];
+            const rng = {
+                seed: 1,
+                draws: 0,
+                state: 5,
+                nextInt: () => 0,
+                pick(items) { this.draws += 1; seen.push(items); return items[0]; },
+                shuffle: (items) => [...items],
+            };
+            const out = generateLevel({
+                rng,
+                model: fakeModel(),
+                oracle: fakeOracle(['SOLVED']),
+                palette: palette([T('a', 'fam', [
+                    { key: 'first', domain: ['x', 'y'], default: 'x', why: 'order' },
+                    { key: 'second', domain: [1, 2, 3], default: 1, why: 'order' },
+                ])]),
+                bounds: { obstacleTarget: 1, triesPerStep: 1, saturationK: 1 },
+            });
+            // the roster, then `first`'s domain, then `second`'s — three picks
+            // off ONE stream, and the template is bought before its parameters.
+            expect(seen).toHaveLength(3);
+            expect(seen[0].map((t) => t.name)).toEqual(['a']);
+            expect(seen[1]).toEqual(['x', 'y']);
+            expect(seen[2]).toEqual([1, 2, 3]);
+            expect(out.trace.find((r) => r.step === 1).instance).toBe('a(first=x,second=1)');
+        });
     });
 
     it('counts by FAMILY from the roster, never from a total', () => {
