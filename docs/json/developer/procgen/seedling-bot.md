@@ -8918,3 +8918,18 @@ artifact was byte-identical across the lift. What stayed and why is in each
 moved file's docblock. The maze half — the page, its three modes, the
 `drawWorld` extraction and its `view` contract — is in `maze.md`, "The maze lab
 page".
+
+**Slice 4 put both lab pages inside the frontend.** A new `procgenLabPanel`
+Golden Layout panel mounts each substrate's page in an iframe and talks to it
+over the existing `iframeAdapter` bridge in the `procgenLab:` vocabulary, which
+lives **once** in `procgenCore/labProtocol.js`; the in-page halves
+(`mazeRoom/mazeLabBridge.js`, `seedlingDemo/watchBridge.js`) are dynamically
+imported and only under `?iframeId=`, so a standalone load fetches neither.
+watch.html gained ONE readout for it — `window.__watch`, a projection of the
+four `__editorX` objects the page already writes, plus an `identity` field on
+`__editorGenerate` carrying `describeState`'s own string. ⚠ **watch.html has no
+level-payload upload box**: `?gen=` is the only reconstruction path a generated
+payload has ever had (the textareas are for TAPES and for boot BLOCKS), so a
+host `load` hands the payload object to `runGenerate` where the fetch would have
+produced it and the whole `?gen=` comparison runs unchanged. Panel README:
+`frontend/modules/procgenLabPanel/README.md`.

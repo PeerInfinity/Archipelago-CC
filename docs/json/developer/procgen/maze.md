@@ -192,11 +192,35 @@ the save box, and the URL is a fixed point *whose literal values are asserted
 against numbers the row states* (a fixed point tests self-consistency, never
 correctness).
 
+### Hosted in the frontend
+
+The page also opens **inside the frontend**, in a `procgenLabPanel` Golden
+Layout panel, and is byte-for-byte the same document either way. The panel
+mounts
+
+```
+./modules/mazeRoom/lab.html?iframeId=procgenLab-maze-1&hostOrigin=<host origin>
+```
+
+and talks to it over the existing `iframeAdapter` bridge in the `procgenLab:`
+vocabulary — `load` / `navigate` / `requestState` in, `ready` /
+`stateChanged` / `levelChanged` / `selectTile` out. **The vocabulary lives once**,
+in `frontend/modules/procgenCore/labProtocol.js` (event names, payload shapes
+as frozen field lists, one `assert*` per event); the panel and its README are
+`frontend/modules/procgenLabPanel/`.
+
+The in-page half is `mazeLabBridge.js`, **dynamically imported and only when
+`?iframeId=` is present** — a standalone load never fetches it, which
+`check-procgen-lab-hosting.mjs` measures on the network. `window.__mazeLab`
+gained one field for it: `loaded`, true when the state came from a payload
+rather than out of the loop.
+
+⚠ A canvas click publishes `procgenLab:selectTile` in **every** arm, not only
+in EDIT: the event means *"the reader pointed at this cell"*, and the page's
+own edit behaviour is unchanged.
+
 ### What is not here yet
 
-- **iframe hosting** — a later slice registers this page as an `iframePanel`
-  instance with an eventBus contract. Nothing on the page assumes a host: no
-  `window.parent`, no global an embedder must set.
 - **`?skeleton=` and the carved skeleton kinds** — a later slice, in both pages
   together.
 - **the yield table and the connectivity pre-check**, and the **cut-vertex

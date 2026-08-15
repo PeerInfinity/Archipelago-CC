@@ -586,6 +586,20 @@ export function main() {
             roster: state.roster ?? null,
             stop: state.stop,
             saturated: state.saturated,
+            /**
+             * ⛓⛓ SLICE 4: DID THIS STATE COME OUT OF THE LOOP, OR OUT OF A
+             * PAYLOAD? `loadPayload` sets it and nothing else does.
+             *
+             * ⛔ Added because a MUTANT found the hole: `check-procgen-lab-
+             * hosting.mjs` waited for "step 0, uncertified, zero edits" to
+             * decide the host's SEND had landed — and the page's OWN BOOT state
+             * satisfies all three (no `?run=`, nothing solved yet). With the
+             * resend removed the row still went red, but on the byte
+             * comparison rather than on the wait, which is trap 246's shape:
+             * a wait a PRE-state can satisfy is not a wait for the claim. This
+             * field is the one fact that separates the two.
+             */
+            loaded: Boolean(state.loaded),
             identity: $('identity').textContent,
             certified: Boolean(state.certification),
             edits: (state.edits ?? []).length,
