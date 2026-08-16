@@ -32,6 +32,10 @@
  * contract would be a suite nobody runs.
  */
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import { ATTEMPT, DEFAULT_BOUNDS, VERDICT, directedAttempt, generateLevel } from './levelGenerator.js';
@@ -280,5 +284,86 @@ describe('the two bindings share the contract and nothing else', () => {
         // …and neither record is the other's shape.
         expect(s.model.skeleton().entities).toBeInstanceOf(Array);
         expect(m.model.skeleton().tiles).toBeInstanceOf(Int8Array);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE DIRECTION THE SEAM MAY **NOT** POINT — asserted on the SOURCE, not
+ * on behaviour.
+ *
+ * PROCGEN ELEMENTS arc 2, slice 2. Every claim above is about what the two
+ * bindings have in common; this one is about what `procgenCore/` is allowed to
+ * KNOW. The rule has been stated in docblocks since the constructive arc's
+ * slice 2 (`levelGenerator.js`, `templateContract.js`, `procgenRng.js` all say
+ * it) and until now nothing checked it — a comment is not a gate, and the day
+ * somebody reaches for `mazeRoomEngine`'s `TILE_WALL` from a shared file the
+ * import resolves and every test stays green.
+ *
+ * ⛓ THE RULE HAS TWO STRENGTHS, AND THE SCAN FOUND OUT WHY BY REFUSING A
+ * LEGITIMATE IMPORT ON ITS FIRST RUN.
+ *
+ *   EVERY shipping module of `procgenCore/`: no `mazeRoom/`, no
+ *   `seedlingDemo/`. That is what "substrate-side" means — a BINDING.
+ *   `shared/procgen/mazeAlgorithms/` is NOT a substrate: it is the carver
+ *   library both bindings run, and `skeletonKinds.js` reads its
+ *   `listPostProcessors()` precisely because a skeleton kind is a statement
+ *   about those algorithms. Forbidding `shared/` outright reddened that, and
+ *   the honest fix is the narrower rule, not a fudge.
+ *
+ *   THE ELEMENTS (slice 2) additionally take nothing from `shared/` except
+ *   **`gridTiles.js`** — the ONE grid vocabulary. An element writes tiles and
+ *   nothing else from over there; duplicating `TILE_FLOOR = 0` locally would
+ *   be a second spelling of the contract this directory exists to keep single.
+ *
+ * ⚠ THIS FILE ITSELF IMPORTS `../seedlingDemo/` AND `../mazeRoom/` — it is a
+ * TEST of both bindings and has to. The scan is over the SHIPPING modules,
+ * which is the subject the rule is about.
+ */
+describe('⛔ procgenCore imports nothing substrate-side', () => {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const ELEMENTS = ['elements.js', 'elements/reversePullBlock.js'];
+    const SHIPPING = [
+        'levelGenerator.js', 'templateContract.js', 'procgenRng.js', 'areaGraph.js',
+        'areaSpec.js', 'gridFlood.js', 'skeletonKinds.js', 'urlParams.js', 'paletteRoster.js',
+        'pageLifetime.js', 'labProtocol.js', 'labBridge.js', 'labView.js',
+        ...ELEMENTS,
+    ];
+    const BINDING = /(^|\/)(mazeRoom|seedlingDemo)\//;
+    const SHARED = /(^|\/)shared\//;
+    const GRID_TILES = 'shared/procgen/mazeAlgorithms/gridTiles.js';
+
+    const importsOf = (rel) => [...readFileSync(join(here, rel), 'utf8')
+        .matchAll(/^\s*(?:import|export)[^'"]*from\s*['"]([^'"]+)['"]/gm)].map((m) => m[1]);
+
+    it.each(SHIPPING)('%s reaches for no BINDING', (rel) => {
+        for (const spec of importsOf(rel)) {
+            expect(BINDING.test(spec),
+                `${rel} imports "${spec}" — procgenCore may not know which substrate it is on`)
+                .toBe(false);
+        }
+    });
+
+    it.each(ELEMENTS)('%s takes nothing from shared/ but the ONE grid vocabulary', (rel) => {
+        for (const spec of importsOf(rel)) {
+            if (!SHARED.test(spec)) continue;
+            expect(spec.endsWith(GRID_TILES),
+                `${rel} imports "${spec}"; an element's only business under shared/ is tiles`)
+                .toBe(true);
+        }
+    });
+
+    /**
+     * ⛔ NON-VACUITY. A regex sweep that matched nothing would pass over an
+     * empty list for ever; this row proves the scanner reads real specifiers,
+     * that the elements really do reach for `gridTiles.js`, and that the
+     * patterns bite on the specifiers they name.
+     */
+    it('the scan is not vacuous — it reads real specifiers and both patterns bite', () => {
+        expect(importsOf('elements.js')).toContain(`../${GRID_TILES}`);
+        expect(importsOf('elements/reversePullBlock.js')).toContain(`../../${GRID_TILES}`);
+        expect(importsOf('skeletonKinds.js').some((s) => SHARED.test(s))).toBe(true);
+        expect(BINDING.test('../mazeRoom/mazeRoomEngine.js')).toBe(true);
+        expect(BINDING.test('../seedlingDemo/procgenPalette.js')).toBe(true);
+        expect(SHARED.test(`../${GRID_TILES}`)).toBe(true);
     });
 });
