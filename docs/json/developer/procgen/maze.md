@@ -349,6 +349,49 @@ level's seed: advance a fresh stream by `drawsAtConstruct`, instantiate with eve
 parameter as an override, construct on the recorded site. `{params}` alone is not
 a record — the site pick draws between `instantiate` and `construct`.
 
+### On the lab page
+
+`?elements=` reaches the model like every other spec (see *The URL grammar*), and
+the page draws the gadget with a **second sibling overlay**,
+`mazeElementOverlay.drawElementOverlay(ctx, model.elements, {tilePx, layer,
+blocks})` — called after `drawWorld` and after the area overlay, for the same
+reason that one is a sibling and one more that is this layer's own: **the block
+moves.** `world.blocks` is the level's initial layout and `state.blocks` is where
+the blocks are mid-solve, and a renderer whose contract is *"draw this world"*
+has nowhere honest to put the second. `drawWorld`'s seven captured op-log
+fixtures are untouched and the element overlay brings its own.
+
+What it draws, per placed gadget: the **site** outlined; the **tunnel** — the
+cells the connector dug to reach the entry port — filled and dashed in its own
+hue, because it can be 28 cells long and a reader would otherwise take a straight
+corridor for an artefact of the maze backend; the **block** as a square, the
+**button** as a ring that FILLS while something stands on it, the guard **door**
+bordered and the **flag** as a pennant; and a stub per **port**, green in and
+orange out. Nothing is labelled per cell — the ids are named once each in the
+legend under the canvas, with what the gadget guards and what it cost. A REFUSED
+element prints the binding's own reason where the gadget would be and still shows
+the carved level. ⚠ Most 11×11 seeds refuse and that is the honest state;
+`guard;len=2;turns=1` at 15×15 is the friendliest demo (≈57% placed).
+
+**SOLVE steps through the plan.** `mazeLab.planFrames(state, solved)` replays the
+oracle's plan through the engine's own `step` and returns one frame per position,
+each carrying the player's cell and `state.blocks` verbatim; `⏮ / ◀ STEP /
+STEP ▶ / ▶ PLAY` walk them and the overlay is handed the frame's block layout, so
+the block visibly moves onto its button and the button fills. The readout
+publishes the same array the overlay was handed (one function answers *"which
+layout is on screen"*), and the page names how many DISTINCT layouts the whole
+plan visits — one means the walk pushes nothing.
+
+The **edit palette** gains **block / button / flag**. Each writes the library
+entry without which the mechanism is inert — a button with no `buttonLib` entry
+holds nothing, a door with no `obstacleLib` entry opens for everybody — and the
+ids come from the binding's own allocator (`procgenCore/elements.guardIdsFor` /
+`flagIdFor`), never a private scheme, so a hand-built gadget and a generated one
+are the same thing. Placing a button also REGISTERS its `door_A{n}` entry so the
+obstacle brush can put that door where the builder wants it; ⚠ put it at least
+**two** cells from the button, or the player presses it themselves and walks
+straight through.
+
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
@@ -376,7 +419,7 @@ being left drops its listeners.
 | mode | what it does |
 |---|---|
 | `generate` (default) | the loop, in the page. STEP places one template and re-solves; RUN-ALL runs to the target or to SATURATION. The generation pane shows every attempt with its outcome word (`KEPT` / `REVERTED` / `NO_ANCHOR` / `ILLEGAL_PLACEMENT`) and the oracle's **verbatim** refusal. A catalogue lists what the palette can generate, by family; unticking a family RESTRICTS the roster the run may draw from, and ATTEMPT on a row runs one directed attempt for that template. |
-| `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / erase — applied to the clicked tile. Every edit lands on a **clone**, so UNDO is a pop of a world stack and the level the page says it generated is never rewritten underneath it. |
+| `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / **block / button / flag** / erase — applied to the clicked tile. Every edit lands on a **clone**, so UNDO is a pop of a world stack and the level the page says it generated is never rewritten underneath it. |
 | `solve` | `mazeOracle` on the world now on screen, with the plan drawn over the room: SOLVED / REFUSED / BUDGET_EXHAUSTED, reason verbatim. |
 
 A step-*k* level **is** `generate-maze-level.mjs --seed=S --count=k`, byte for
@@ -417,13 +460,23 @@ is a CONSTRUCTION, and the PAYLOAD carries it — `?gen=` and the host's
 `directiveSeed`'s index-as-salt is untouched) and then `payload.edits`. The
 GRAMMAR is unchanged and still spoken by `generate-seedling-level.mjs
 --directed=` and by every payload's `instance` labels; only the address bar
-dropped out. ⚠ This page still REFUSES to reproduce an **edited** payload, and
-the reason is no longer the channel: a maze edit is recorded as a DESCRIPTION
-(cell + palette type) while `MazeRoomEditor` reads
-`selectedItemId`/`selectedObstacleId`, which the record does not carry — its LOAD
-box takes the level as it stands. ⛓ `certified` is now the TRI-STATE Seedling
-uses: `null` = *nobody has asked*, `true`/`false` = the oracle's own answer, with
-`false` reachable only from a REFUSED SOLVE.
+dropped out. ⛓ `certified` is the TRI-STATE Seedling uses: `null` = *nobody has
+asked*, `true`/`false` = the oracle's own answer, with `false` reachable only
+from a REFUSED SOLVE.
+
+⛓⛓ **AN EDIT IS AN OP (elements arc 2, slice 4), so an EDITED payload REPRODUCES
+too.** Slice 12 had to refuse one: an edit was recorded as a DESCRIPTION (cell +
+palette type) while `MazeRoomEditor` read `selectedItemId`/`selectedObstacleId`,
+which the record did not carry, so a fold would have placed *a different body at
+the right cell*. The record is now a closed op —
+`{op:'setTile'|'setEntrance'|'setItem'|'setObstacle'|'setBlock'|'setButton'|
+'setFlag'|'clearEntity', x, y, id?, index?, tile?}` — with every allocated index
+RESOLVED into it, exactly as a recorded directive carries its drawn parameters.
+`?gen=` and `procgenLab:load` now replay **ladder → directives → edits**, all
+three through the same functions a press uses (`applyDirective`,
+`mazeRoomEditor.applyEditOp`). ⚠ A payload whose edits predate the op shape
+still refuses, by name, and points at the LOAD box — which takes any level as it
+stands.
 
 Maze-only, each with the line that forced it:
 
@@ -462,6 +515,18 @@ it constrains the AREA GRAPH — built once with the model, before pass 2 exists
 and is a property of the whole run, not of an attempt. Try
 `?seed=1&width=15&height=15&skeleton=rooms&areas=1&require=K0&count=2&run=1`,
 and `?areas=1&require=K1` for the refusal.
+
+**`?elements=<name>[;k=v]`** — the element, one reader and one writer in
+`urlParams.js`, parsed by the one `elementSpec` codec both CLIs and the sweep
+already speak. Absent means `none`: no site is drawn, nothing is constructed and
+no draw is spent, so a link without it produces byte-for-byte the level this
+page produced before elements existed. The writer DELETES at `none` and rewrites
+in place. ⚠ **Unlike every other spec on this page it KEEPS a parameter the
+caller named even at its default value**, and that absence is load-bearing: a
+NAMED parameter is an override that spends no draw and an OMITTED one is DRAWN,
+so `guard` and `guard;len=3` are different runs even when `len` resolves to 3.
+The form therefore offers *any (draw it)* beside each declared value. Try
+`?seed=2&width=15&height=15&skeleton=rooms&areas=1&elements=guard;len=2;turns=1&count=2&run=1`.
 
 ### `drawWorld`'s `view` contract
 
@@ -611,7 +676,7 @@ The panel (`mazeRoomUI.js`, component `mazeRoomPanel`) subscribes to `maze:loadR
 Around the core panel:
 
 - The **playthrough visualizer** (`mazeRoomVisualizer.js`) auto-walks the region with its own simulated state — see [Playback and Debugging Tools](./playback-and-debugging.md#per-substrate-visualizers).
-- The **editor** (`mazeRoomEditor.js`) edits a loaded region in place with a tile palette: floor/wall, the entrance, items (with AP-canonical location names), and obstacles. Exit placement and logic-gate editing are not part of its palette.
+- The **editor** (`mazeRoomEditor.js`) edits a loaded region in place with a tile palette: floor/wall, the entrance, items (with AP-canonical location names), obstacles, and — since elements arc 2 — a pushable **block**, a **button** (with its `buttonLib` entry and its matching `door_A{n}` registration) and a **flag** (an item declared `kind:'flag'`). Every brush produces a closed **op** (`applyEditOp`), which is what makes an edit list replayable. Exit placement and logic-gate editing are not part of its palette.
 - The **game-data inspector** is a separate read-only module/panel (`frontend/modules/mazeGameDataPanel/`).
 
 ## A real game's map as maze regions
