@@ -188,11 +188,18 @@ describe('the palette itself is well formed', () => {
          * ⛓ THE ENUMERATION COUNTS `assertPalette`'s DOCBLOCK STATES, asserted
          * FROM the roster so the table cannot go stale silently (trap 199).
          */
-        it('enumerates 41 pre-sword and 43 post-sword instantiations at module load', () => {
+        it('enumerates 41 pre-sword and 45 post-sword instantiations at module load', () => {
             // ⛓ ARC 3 SLICE 1: 42/44 before `arrow-lane`'s ONE zero-parameter
             // instantiation left with the row (⚖ design ruling 9).
+            // ⛓⛓ ARC 3 SLICE 2: post-sword 43 -> 45. `wall-gap-spinner-killlock`
+            // gained a MEASURED `span` domain of TWO values, so its ori(2) row
+            // became ori(2) x span(2) = 4. ⛔ The PRE-SWORD count does NOT move:
+            // the kill family is post-sword only, and `wall-gap-block` /
+            // `wall-gap-lock-weigh` keep `INTERIOR_SPAN` as a CONSTANT because
+            // their measured domain is ONE value and a one-value `rng.pick`
+            // still spends a draw.
             expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(41);
-            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(43);
+            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(45);
             const perTemplate = Object.fromEntries(
                 PRE_SWORD_TEMPLATES.map((t) => [t.name, enumerateValues(t).length]),
             );
@@ -402,7 +409,11 @@ describe('the palette itself is well formed', () => {
                 .filter((t) => t.tags !== undefined);
             expect(carriers.map((t) => t.instance)).toEqual([
                 'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
-                'wall-gap-spinner-killlock(ori=h)', 'wall-gap-spinner-killlock(ori=v)',
+                // ⛓ ARC 3 SLICE 2 — the kill row's label carries its `span` now.
+                'wall-gap-spinner-killlock(ori=h,span=1)',
+                'wall-gap-spinner-killlock(ori=h,span=8)',
+                'wall-gap-spinner-killlock(ori=v,span=1)',
+                'wall-gap-spinner-killlock(ori=v,span=8)',
             ]);
             for (const t of carriers) expect(t.tags).toBe(1);
         });
@@ -432,7 +443,8 @@ describe('the palette itself is well formed', () => {
         it('⛓ the kill lock is on the PER-PLACEMENT slot — no literal, no shared flag', () => {
             const killLocks = enumerateInstantiations(POST_SWORD_PALETTE)
                 .filter((t) => t.family === 'kill');
-            expect(killLocks).toHaveLength(2);
+            // ⛓ ARC 3 SLICE 2: 2 -> 4, ori(2) x the measured `span` domain {1,8}.
+            expect(killLocks).toHaveLength(4);
             for (const t of killLocks) {
                 expect(t.tags).toBe(1);
                 const lock = t.entities.find((e) => e.type === 'lock');
@@ -455,7 +467,7 @@ describe('the palette itself is well formed', () => {
          * single kill lock is allocated **1** — exactly the value the literal
          * had (trap 235's shape, one field over).
          */
-        it('⛓ DRIVEN: seed 15 keeps TWO tag-bearing locks and they take DISTINCT tags', () => {
+        it('⛓ DRIVEN: seed 31 keeps THREE tag-bearing locks and they take DISTINCT tags', () => {
             /**
              * ⛓⛓ RE-PICKED, AND THE SUBJECT'S SHAPE CHANGED (arc 3 slice 1,
              * trap 285 — the target and the count are named). `arrow-lane`
@@ -468,20 +480,37 @@ describe('the palette itself is well formed', () => {
              * `placementTagId` actually claims is *"only levels holding TWO
              * TAG-BEARING TEMPLATES move, and their tags differ"* — and a KILL
              * lock plus a WEIGH lock is exactly two tag-bearing placements.
-             * THREE seeds have that (15, 19, 32); **15 is taken**. The claim
-             * below is unchanged; only the pair of templates producing it is.
+             * THREE seeds had that (15, 19, 32) and **15 was taken**.
+             *
+             * ⛓⛓⛓ **RE-SCANNED AT ARC 3 SLICE 2, AND THE ORIGINAL SUBJECT SHAPE
+             * CAME BACK.** The door law and the `span` domain moved every
+             * post-sword level again, so the scan was re-run over seeds 1..60 at
+             * the same bounds: **seed 31 now keeps TWO KILL LOCKS** — the exact
+             * property slice 1 recorded as extinct (*"NOT ONE seed keeps two
+             * KILL locks"*) — and is the only seed in 1..60 holding two
+             * tag-bearing placements at all — and it holds a WEIGH lock as
+             * well, so the row grades THREE distinct tags where it has never
+             * graded more than two. ⇒ the subject is seed 31 and the assertion
+             * goes back to the STRONGER form: two locks of the SAME family,
+             * which is the collision `tag: '1'` used to cause.
+             * ⚠ Named rather than left as a coincidence: the reason it returned
+             * is that span 1 gives the kill family anchors on kinds and cells it
+             * never had, so two of them now fit where one did.
              */
             const out = generateSeedlingLevel({
-                seed: 15, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+                seed: 31, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
             });
             // the subject's own property, asserted BEFORE the claim about it
             const families = out.summary.kept.map((k) => k.family);
-            expect(families.filter((f) => f === 'kill')).toHaveLength(1);
+            expect(families.filter((f) => f === 'kill')).toHaveLength(2);
             expect(families.filter((f) => f === 'weigh')).toHaveLength(1);
             const locks = out.record.entities.filter((e) => e.type === 'lock');
-            expect(locks).toHaveLength(2);
+            // ⛓ THREE tag-bearing placements, which is a STRONGER subject than
+            // the two this row has ever had: two kill locks (the collision the
+            // literal `tag: '1'` caused) AND a weigh lock beside them.
+            expect(locks).toHaveLength(3);
             const tags = locks.map((l) => l.attrs.tag);
-            expect(new Set(tags).size).toBe(2);
+            expect(new Set(tags).size).toBe(3);
             for (const t of tags) {
                 expect(t).not.toBe(SEEDLING_DEFAULTS.goalTag);
                 expect(Number.parseInt(t, 10)).toBeGreaterThanOrEqual(0);
@@ -929,17 +958,29 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * against the ROOM's own size rather than against 8.
      */
     /**
-     * ⛓⛓ SLICE 2 MAKES THIS THE LAW'S REAL GUARD. The span was a literal in two
-     * frozen rows; it is now a consequence of a `build` that reads
-     * `INTERIOR_SPAN`, and `gap` is a PARAMETER right beside it. So the claim is
-     * asserted over EVERY DOOR INSTANTIATION IN BOTH BIOMES — a domain value
-     * that shortened the wall, or a `build` that let `gap` shrink it, would be
-     * a decoration the loop happily keeps.
+     * ⛓⛓⛓ **ARC 3 SLICE 2 RETIRED THIS ROW'S OLD CLAIM AND REPLACED IT** — trap
+     * 312, and the replacement is the sentence that still has content.
+     *
+     * The row asserted *"every door instantiation spans the WHOLE INTERIOR —
+     * anything less obstructs nothing"*, which was GENERATE-UI ruling 3's span
+     * law written as a test. ⚖ Design ruling 17 replaced that law with **a door
+     * is a CUT**, and `wall-gap-spinner-killlock(span=1)` is a door that spans
+     * ONE cell and obstructs everything — on a corridor the lock cell IS the
+     * door. Keeping the old assertion would have been keeping a law the arc
+     * deliberately overturned.
+     *
+     * ⛔ WHAT SURVIVES IS THE STRUCTURAL HALF, and it is the half that was doing
+     * the work: **a door's wall is a CONTIGUOUS LINE down its own axis with
+     * EXACTLY ONE GAP, and the DOOR CELL is that gap.** A row with two gaps is a
+     * wall with a corridor round the obstacle; a row whose declared `doorCells`
+     * is not the gap would have the flood walling a cell the wall already holds.
+     * ⛓ AND THE SPAN CLAIM IS NOT LOST — it moved to where it is now true: the
+     * span law holds on the OPEN ROOM, which `procgenSeedlingDoorCut.test.js`
+     * asserts by flooding (a span-4 wall cuts nothing at any anchor of `empty`),
+     * and the `span` domain rows there assert the two shipped values.
      */
-    it('every door instantiation spans the whole interior — anything less obstructs nothing',
+    it('every door instantiation is a LINE with exactly ONE gap, and the gap is the DOOR CELL',
         () => {
-            const m = model();
-            const room = m.skeleton();
             const doors = enumerateInstantiations(POST_SWORD_PALETTE)
                 .filter((t) => ['shove', 'weigh', 'kill'].includes(t.family));
             // Built FROM the roster: a fourth door family arrives here as a
@@ -947,19 +988,26 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
             expect(doors.length).toBeGreaterThanOrEqual(16);
             for (const t of doors) {
                 // The wall runs down the template's own axis; `ori` says which,
-                // and for the plain door the gap is a hole IN that same line.
+                // and the gap is a hole IN that same line.
                 const axis = t.params.ori === 'h' ? 'dx' : 'dy';
                 const cross = t.params.ori === 'h' ? 'dy' : 'dx';
                 const wall = t.footprint.filter((c) => c[cross] === 0);
-                const span = Math.max(...wall.map((c) => c[axis])) + 1;
-                const interior = (axis === 'dx' ? room.width : room.height) - 2;
-                expect(span, t.instance).toBe(interior);
-                expect(wall, t.instance).toHaveLength(interior);
-                // ⛔ EXACTLY ONE HOLE, and the clearer stands in it. A door with
-                // two gaps is a wall with a corridor round the obstacle.
-                const painted = new Set(t.terrain.map((c) => c[axis]));
+                const offsets = wall.map((c) => c[axis]).sort((a, b) => a - b);
+                // ⛔ CONTIGUOUS FROM THE ANCHOR — a line with a hole in its
+                // FOOTPRINT is two walls, and the flood would read the space
+                // between them as a route nobody reserved.
+                expect(offsets, t.instance)
+                    .toEqual(offsets.map((_, i) => i));
+                // ⛔ EXACTLY ONE HOLE, and it is what the row DECLARES as its
+                // door. A row whose `doorCells` named some other cell would have
+                // the law wall a cell the wall already holds.
+                const painted = new Set(t.terrain
+                    .filter((c) => c.terrain !== 'ground').map((c) => c[axis]));
                 const gaps = wall.map((c) => c[axis]).filter((o) => !painted.has(o));
                 expect(gaps, t.instance).toHaveLength(1);
+                expect(t.doorCells, t.instance).toHaveLength(1);
+                expect(t.doorCells[0][axis], t.instance).toBe(gaps[0]);
+                expect(t.doorCells[0][cross], t.instance).toBe(0);
             }
         });
 
@@ -1332,7 +1380,7 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
         for (const [biome, name, overrides] of [
             ['pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }],
             ['pre-sword', 'water-pool', { w: 3, h: 3 }],
-            ['post-sword', 'wall-gap-spinner-killlock', { ori: 'h' }],
+            ['post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 }],
         ]) {
             const m = seedlingModel({ seed: 6 });
             const t = instance(biome, name, overrides);
@@ -1414,7 +1462,7 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          */
         it('the DOOR LAW — walling the gap leaves the goal reachable, so it is NOT A CUT', () => {
             const m = seedlingModel({ seed: 6 });
-            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
+            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 });
             const sk = m.skeleton();
             for (const c of kill.footprint) expect(m.isFree(sk, 1 + c.dx, 4 + c.dy)).toBe(true);
             const why = m.refusalAt(sk, kill, 1, 4);
@@ -1444,7 +1492,7 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          */
         it('⛔ a cell on the BORDER RING is a sentence, and the FOOTPRINT walk is why', () => {
             const m = seedlingModel({ seed: 6 });
-            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
+            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 });
             expect(m.refusalAt(m.skeleton(), kill, 0, 0))
                 .toMatch(/\(0,0\) is not in the room's INTERIOR/);
             /**

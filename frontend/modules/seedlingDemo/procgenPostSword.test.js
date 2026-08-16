@@ -154,7 +154,11 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
         // from `ori` and a `build` that dropped it would silently disable the
         // legality rule that keeps this family from aborting runs.
         const rows = extra.flatMap((t) => enumerateValues(t).map((v) => t.instantiate(null, v)));
-        expect(rows).toHaveLength(2);
+        // ⛓ ARC 3 SLICE 2: 2 -> 4. The row gained a MEASURED `span` domain of
+        // two values ({1, 8} — the corridor's and the open room's), so ori(2)
+        // became ori(2) x span(2). ⛔ The properties below hold over ALL of them,
+        // which is the point of asserting over the domain rather than the row.
+        expect(rows).toHaveLength(4);
         for (const t of rows) {
             expect(t.family).toBe('kill');
             expect(t.door, t.instance).toBe(t.params.ori);
@@ -436,10 +440,22 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
      * subject), and 15 and 25 keep one whose verb the final walk does not
      * discharge. **13 and 14 both keep exactly one and DISCHARGE it**; 13 has
      * five families to 14's four, so it is the richer demonstration.
+     *
+     * ⛓⛓⛓ **RE-PINNED AGAIN AT ARC 3 SLICE 2, THIRD TIME, SAME RULE.** The DOOR
+     * LAW and the kill family's new `span` domain are both in the draw stream,
+     * so seed 13 no longer keeps a kill template. Same scan, same bounds, seeds
+     * 1..40: **exactly ONE seed now satisfies the whole demonstration — seed
+     * 35** (6 kept over 3 families, one kill template, one `kill` record, one
+     * scratch clear, SOLVED and CERTIFIED). ⚠ Said out loud because a class with
+     * one member is one draw from being a class with none — the SAME warning
+     * `procgenShoveEvidence`'s pair carries, and the honest reading of a
+     * three-time-re-pinned seed subject is that it is expensive to maintain.
+     * ⇒ ⚖ residue: this demonstration wants a scan-and-pick helper rather than a
+     * literal, or a wider seed range, the next time it expires.
      */
-    it('seed 13: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
+    it('seed 35: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 13, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 35, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
@@ -450,7 +466,7 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         const killKept = gen.summary.kept.filter((k) => k.family === 'kill');
         expect(killKept).toHaveLength(1);
 
-        const model = seedlingModel({ seed: 13 });
+        const model = seedlingModel({ seed: 35 });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
             templates: gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k)),
         });

@@ -9467,3 +9467,66 @@ where the tracked record starts.
   the tiles layer, and it slowed the whole vitest suite. `deriveSites` now
   reads the caller's predicate exactly once per cell (asserted by a test) and
   `model.sites` is a memoized getter, so a model nobody asks pays nothing.
+
+### Arc 3, slice 2 — A DOOR IS A CUT, and a template may CARVE (2026-08-16)
+
+- ⛓⛓⛓ **`doorClear` IS GONE; ONE FLOOD-BASED LAW ADJUDICATES EVERY DOOR** (⚖
+  design ruling 17: *a non-cut is decoration*). A row that declares `door` also
+  declares `doorCells` (the gap cell(s) holding the clearer, which write no
+  wall) and `clearer` (the cells that must be reachable from the start; EMPTY
+  for `wall-gap-block`, whose block stands IN the door cell). It is legal iff
+  **(1) CUT** — with its terrain painted AND the door cells treated as wall the
+  goal is unreachable from the start — and **(2) START-SIDE** — with the door
+  cells walled, every clearer cell IS reachable from the start.
+  ⛔ The law runs ONE flood: clause 1's other half (*with the door cells
+  walkable the goal is reachable*) IS the seal pre-check's own answer, and the
+  seal check is the rule asked immediately before.
+- **All three door families declare `door` now.** `wall-gap-block` and
+  `wall-gap-lock-weigh` gain it, and the cost of that is measured rather than
+  asserted: on `empty` at target 3, **34 of 80 seed→level pairs moved, and all
+  34 are explained** — the control build's own trace holds a decoration door
+  (a wall with the goal on the START's side) in every one, **33 of them KEPT**.
+  The generator was shipping walls the walk simply went round.
+- ⛓ **THE SPAN LAW IS RE-DERIVED, NOT OVERTURNED.** GENERATE-UI ruling 3 said
+  *a shorter wall is decoration*; this says *a non-cut is decoration*, and on
+  the open room they select the same anchors — measured over 40 seeds × 20 door
+  instantiations with **zero disagreements** against the retired predicate, so
+  the law is UNIFIED across kinds rather than kinds-scoped.
+- ⛓ **TEMPLATES MAY CARVE.** A footprint cell a row writes as `ground` is
+  adjudicated by *untouched SKELETON terrain* — `terrainAt(record) ===
+  terrainAt(base)`, compared against the model's own frozen skeleton rather
+  than a second `skeletonMask` — and the carved cells must form ONE 4-connected
+  blob with EXACTLY ONE walkable neighbour (a DEAD END), with the start→goal
+  path no shorter after than before. ⛔ The dead-end clause is the load-bearing
+  one: a tunnel joining two arms of a corridor can leave the path length
+  unchanged, so the no-shortcut clause cannot see it.
+- ⛓⛓ **THE KILL LOCK REACHES A CORRIDOR — the first door family that ever
+  has.** Its wall is a measured `span` domain of **{1, 8}**: 8 is today's
+  full-interior geometry byte for byte, and at **1** there is no wall at all —
+  the lock cell IS the door, the player fights from the corridor cell before
+  it, and the spinner stands in a ONE-CELL NUB the template CARVES. Sized by
+  two measurements, not chosen: the new permanent
+  `scripts/procgen/census-seedling-doors.mjs` says **`empty` cuts at span 8 and
+  at no shorter span (384 anchors vs 0) while every bare tree kind cuts at span
+  1 and not at span 8**; the per-value sweep then says span 1 DISCHARGES `kill`
+  on eight carved kinds (39 discharges) and span 8 on `empty` (31), with spans
+  2..7 producing six between them. **`winding` now keeps a door.**
+- ⛔ **A ONE-VALUE DOMAIN IS A CONSTANT.** `wall-gap-block` and
+  `wall-gap-lock-weigh` keep `INTERIOR_SPAN` as a constant and declare no
+  `span`: their measured domain is one value, and a one-value `rng.pick` still
+  spends a draw and would move every level for nothing.
+- ⚠ **THE PRICE, PUBLISHED**: half the kill family's `empty` draws now pick
+  span 1, which never cuts an open room, so they are NO_ANCHOR by construction.
+  A room-aware span is an ELEMENT question (slice 3), not a template one.
+- ⚠ **AND A SOLVER DEFECT MEASURED A FOURTH TIME.** Span 1 exposes the
+  `levelRun: the swing … collideLine("Solid")` throw at far more anchors, but
+  the run-abort rate does NOT rise (post-sword seeds 1..72 at target 6:
+  **10 aborts before, 9 after**) and the class is present in both builds. The
+  oracle's catch is deliberately not widened.
+- New instruments, all permanent: `census-seedling-doors.mjs`,
+  `attribute-seedling-door-cut.mjs` (names the movers, and `--accumulate=`
+  finds the clause-2 refusals a bare-skeleton scan cannot see),
+  `--kinds=` on `sweep-seedling-wave1-domains.mjs`, and `--palette=` on
+  `sweep-yield-table.mjs` — without that last one the acceptance gate *"the
+  door families on carved kinds"* was unprintable for the post-sword-only
+  kill family.

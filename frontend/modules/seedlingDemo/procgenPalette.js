@@ -1404,6 +1404,61 @@ export const POST_SWORD_ITEMS = Object.freeze({ hasSword: true, hasShield: false
 const SPINNER_OFFSET = 6;
 
 /**
+ * ⛓⛓⛓ **THE `span` DOMAIN — MEASURED, NOT CHOSEN, AND THE TWO VALUES ARE FOR
+ * TWO DIFFERENT ROOMS** (PROCGEN ELEMENTS arc 3, slice 2; ⚖ ruling 4 certifies a
+ * domain by SWEEPING it; trap 254 measures the subject before sizing a knob).
+ *
+ * ── THE CENSUS FIRST (`scripts/procgen/census-seedling-doors.mjs`) ────
+ *
+ * A bare wall-and-gap at every span, ten kinds x twelve seeds x both
+ * orientations x every gap, counting the anchors where walling the gap
+ * DISCONNECTS the goal:
+ *
+ *   `empty`   span 8: **384** cut anchors.  spans 1..7: **0**. Every one.
+ *   winding   span 1: **170**.              span 8: **0**.
+ *   branchy   span 1: 170 · bushy 182 · loopy 74 · open 44 — and 0 at span 8.
+ *
+ * ⇒ THE OPEN ROOM AND A CORRIDOR WANT DISJOINT SPANS. That is GENERATE-UI
+ * ruling 3's span law (*a shorter wall is decoration*) and ⚖ design ruling 17's
+ * cut law (*a non-cut is decoration*) turning out to be the same statement on
+ * the room the first was ruled for, and different everywhere else.
+ *
+ * ── THEN THE PER-VALUE SWEEP, on THIS template with its spinner and its lock
+ *    (`sweep-seedling-wave1-domains.mjs --anchors=all --kinds=…`), every legal
+ *    anchor SOLVED, counting DISCHARGES of `kill`:
+ *
+ *   span 1  17 discharges, spread over branchy/bushy/loopy/open/rooms/
+ *           rooms;minRoom=4 / WINDING / winding;chambers=2 — and 0 on `empty`
+ *   spans 2..7  **ONE** discharge in the whole table (winding;chambers=2 at 2)
+ *   span 8  24 discharges, 23 of them on `empty`
+ *
+ * ⇒ **`{1, 8}`**. ⛔ Spans 2..7 are EXCLUDED on the measurement rather than on
+ * the argument that made them plausible: a wall of 3 or 4 cells is long enough
+ * to want a room and short enough not to cut one, so it is legal in the middle
+ * ground and useful in neither. Under D2's letter span 2 qualifies on its single
+ * discharge; it is not shipped because every value that is not 8 costs `empty` a
+ * burned draw (below) and one discharge on one knobbed kind does not buy that.
+ *
+ * ⚠ **THE PRICE, STATED**: a killlock draw on `empty` picks span 1 half the
+ * time, and a span-1 door NEVER cuts an open room — so half this family's
+ * `empty` attempts are now NO_ANCHOR by construction. The yield table before and
+ * after is where that is paid, and it is published in the arc-3 kickoff §9.8.
+ * A room-aware span (draw from the values this SKELETON supports) is an ELEMENT
+ * question, not a template one — ⚖ residue for slice 3.
+ */
+const KILL_LOCK_SPANS = Object.freeze([1, INTERIOR_SPAN]);
+const KILL_LOCK_SPAN_WHY = 'HOW MANY CELLS the wall spans, and the two values are for two '
+    + 'different rooms. MEASURED (⚖ ruling 4): the door census says `empty` cuts at span 8 '
+    + 'and at NO shorter span (384 anchors vs 0), and every bare tree kind cuts at span 1 '
+    + 'and NOT at span 8; the per-value sweep then says span 1 DISCHARGES `kill` on eight '
+    + 'carved kinds (17 discharges) and span 8 on `empty` (23), while spans 2..7 produce '
+    + 'ONE discharge in the whole table. ⛔ 8 is the OPEN room\'s value and 1 is the '
+    + 'CORRIDOR\'s: at span 1 there is no wall at all, the lock cell IS the door, and the '
+    + 'spinner stands in a one-cell nub the template CARVES. ⚠ The price is that half this '
+    + 'family\'s `empty` draws are now NO_ANCHOR by construction — a room-aware span is an '
+    + 'ELEMENT question (arc 3 slice 3), not a template one';
+
+/**
  * ⛓⛓⛓ SLICE 4e — THE POST-SWORD-EXCLUSIVE FAMILY, AND THE ARC'S FIRST ONE.
  *
  * A wall across the whole interior, a `tset:-1` KILL LOCK in its one gap, and a
@@ -1581,6 +1636,8 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
                     + 'there "a legality gate that does not gate"). ⛔ `SPINNER_OFFSET` '
                     + 'stays a constant on its own measured sweep — ⚖ ruling 3 puts the '
                     + 'lane offsets in WAVE 2' },
+            { key: 'span', domain: KILL_LOCK_SPANS, default: INTERIOR_SPAN,
+                why: KILL_LOCK_SPAN_WHY },
         ],
         why: 'a Stone wall across the whole interior with a KILL LOCK in its ONE gap and '
             + 'the spinner whose death opens it standing behind the wall — `refineStrategy` '
@@ -1589,8 +1646,79 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
             + 'layer on the tick the lock\'s own fade names. ⛓ THE ONLY TEMPLATE IN THE '
             + 'ARC A PRE-SWORD BOOT CANNOT CLEAR: `weaponForPress` returns null with no '
             + 'sword slot, so the press is a silent no-op and the lock never opens',
-        build: ({ ori }) => {
-            const g = doorGeometry(ori, INTERIOR_SPAN, GAP_OFFSET);
+        build: ({ ori, span }) => {
+            /**
+             * ⛓⛓⛓ **THE CORRIDOR FORM — span 1, AND IT IS THE ARC'S FIRST
+             * CARVE** (⚖ design ruling 17, *templates may CARVE*).
+             *
+             * With no wall there is no "behind the wall" for the spinner to
+             * stand in, so the geometry is different in kind rather than in
+             * degree, and it is written out rather than clamped out of the
+             * wall form:
+             *
+             *     (0,-1)  the CORRIDOR CELL the player fights from — declared
+             *             `clearance`, so it must be untouched walkable ground
+             *             (this is what makes the row NO_ANCHOR wherever the
+             *             corridor runs the other way)
+             *     (1,-1)  the NUB — one cell written `ground`. Where the
+             *             skeleton left WALL that write is a CARVE and
+             *             `carveRefusal` demands it be a DEAD END with exactly
+             *             one mouth; where the skeleton left GROUND it is a
+             *             no-op and the cell is simply a side corridor the
+             *             oracle adjudicates.
+             *     (0,0)   the DOOR — the lock cell itself. On a corridor the
+             *             lock IS the door; there is nothing else to be one.
+             *
+             * ⛔ CLAUSE 2 OF THE DOOR LAW IS WHAT PUTS THE NUB ON THE RIGHT
+             * SIDE. Nothing in this geometry says which side of the lock the
+             * player approaches from — the flood does, by demanding the spinner
+             * be reachable from the START with the lock cell walled. A nub
+             * carved on the GOAL side is a body nobody can reach until the door
+             * it guards is already open, and the law refuses it by name.
+             *
+             * ⚠ Both cells are transposed by `at`, so `ori:'v'` is the same
+             * gadget rotated: `h` fits a corridor running NORTH-SOUTH through
+             * the lock (the lane is the row above), `v` one running EAST-WEST
+             * (the lane is the column to the left). Between them the two
+             * orientations cover both corridor directions, which is why `ori`
+             * is not redundant here even though the wall is gone.
+             */
+            if (span === 1) {
+                const door = at(ori, 0, 0);
+                const lane = at(ori, 0, -1);
+                const nub = at(ori, 1, -1);
+                return {
+                    door: ori,
+                    doorCells: Object.freeze([door]),
+                    clearer: Object.freeze([nub]),
+                    tags: 1,
+                    footprint: Object.freeze([door, nub]),
+                    clearance: Object.freeze([lane]),
+                    terrain: paint([nub], 'ground'),
+                    entities: Object.freeze([
+                        Object.freeze({
+                            ...door,
+                            type: 'lock',
+                            attrs: Object.freeze({ tset: '-1', tag: PLACEMENT_TAG }),
+                        }),
+                        Object.freeze({
+                            ...nub, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
+                        }),
+                    ]),
+                    pins: Object.freeze([]),
+                };
+            }
+            /**
+             * ⛓ THE WALL FORM — span 2..8, and at `span = INTERIOR_SPAN` it is
+             * TODAY'S GEOMETRY BYTE FOR BYTE. Both offsets are CLAMPED into the
+             * span rather than re-swept: `GAP_OFFSET` and `SPINNER_OFFSET` are
+             * ⚖ ruling 3's WAVE-2 constants measured against the full span, and
+             * a shorter wall cannot hold an offset past its own end. At span 8
+             * neither clamp binds (4 and 6 are both < 7), which is what makes
+             * the default instance identical.
+             */
+            const g = doorGeometry(ori, span, Math.min(GAP_OFFSET, span - 1));
+            const spin = at(ori, Math.min(SPINNER_OFFSET, span - 1), -1);
             return {
                 door: ori,
                 /**
@@ -1603,14 +1731,14 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
                  * at across `-1` is on the start's side by construction.
                  */
                 doorCells: Object.freeze([g.doorCell]),
-                clearer: Object.freeze([at(ori, SPINNER_OFFSET, -1)]),
+                clearer: Object.freeze([spin]),
                 /**
                  * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — THE LITERAL TAG IS
                  * GONE. See the `tags: 1` line below and this template's
                  * docblock for the measurement that bought it.
                  */
                 tags: 1,
-                footprint: Object.freeze([...g.cells, at(ori, SPINNER_OFFSET, -1)]),
+                footprint: Object.freeze([...g.cells, spin]),
                 clearance: Object.freeze([]),
                 terrain: g.wall,
                 entities: Object.freeze([
@@ -1624,7 +1752,7 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
                         attrs: Object.freeze({ tset: '-1', tag: PLACEMENT_TAG }),
                     }),
                     Object.freeze({
-                        ...at(ori, SPINNER_OFFSET, -1),
+                        ...spin,
                         type: 'spinner',
                         attrs: Object.freeze({ tag: '-1' }),
                     }),
