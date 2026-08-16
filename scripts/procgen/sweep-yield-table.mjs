@@ -210,6 +210,29 @@ if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
     process.exit(2);
 }
 
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 2 — **THE BIOME IS AN AXIS NOW**, and it had
+ * to become one for an honest door table.
+ *
+ * The Seedling arm hard-coded `PRE_SWORD_PALETTE`, which was the right default
+ * while every door family lived in both biomes. `wall-gap-spinner-killlock` does
+ * not: it is POST-SWORD ONLY, so *"the door families on carved kinds"* was a
+ * claim the table could not print about a third of them. ⛔ It is a flag rather
+ * than a second axis crossed with the kinds: the two arms are separate runs with
+ * separate wall-clock columns, because a mixed table's timings would compare a
+ * pre-sword solve against a post-sword one and call the difference a kind.
+ */
+const PALETTE_NAME = arg('palette', 'pre-sword');
+if (SUBSTRATE === 'seedling' && PALETTE_NAME !== 'pre-sword' && PALETTE_NAME !== 'post-sword') {
+    note(`sweep-yield-table: --palette=${PALETTE_NAME} is not a Seedling biome. The two are `
+        + '`pre-sword` (the default, and this arm\'s original) and `post-sword`.');
+    process.exit(2);
+}
+if (SUBSTRATE === 'maze' && process.argv.some((a) => a.startsWith('--palette='))) {
+    note('sweep-yield-table: --palette= is the SEEDLING binding\'s — the maze has one palette.');
+    process.exit(2);
+}
+
 const CELL = arg('cell', '');
 if (CELL !== '') {
     const [kind, sizeSpec, seedSpec] = CELL.split('|');
@@ -256,13 +279,15 @@ if (CELL !== '') {
         const {
             interiorCells, seedlingModel, seedlingOracle,
         } = await M('seedlingDemo/procgenSeedling.js');
-        const { PRE_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
+        const {
+            POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
+        } = await M('seedlingDemo/procgenPalette.js');
         const { terrainAt } = await M('seedlingDemo/procgenLevel.js');
         model = seedlingModel({
             seed,
             skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
         });
-        palette = PRE_SWORD_PALETTE;
+        palette = PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE;
         oracle = seedlingOracle({ model, items: palette.items ?? null });
         const sk = model.skeleton();
         const cells = interiorCells(sk);
@@ -511,12 +536,14 @@ const worstCellMs = solvesPerCell * WORST_SOLVE_MS;
 const cappedCellMs = Math.min(worstCellMs, CELL_BUDGET_S * 1000);
 
 const header = [
-    `# THE YIELD TABLE — \`${SUBSTRATE}\` (CONSTRUCTIVE-MODE arc, slice 6, §3.6 item 1)`,
+    `# THE YIELD TABLE — \`${SUBSTRATE}\`${SUBSTRATE === 'seedling'
+        ? ` biome \`${PALETTE_NAME}\`` : ''} (CONSTRUCTIVE-MODE arc, slice 6, §3.6 item 1)`,
     '',
     `command: \`node scripts/procgen/sweep-yield-table.mjs --substrate=${SUBSTRATE} `
         + `--kinds=${KINDS.join(',')} ${SUBSTRATE === 'maze'
             ? `--sizes=${SIZES.map((s) => s.label).join(',')} ` : ''}`
         + `${AREAS.keys > 0 ? `--areas='${formatAreaSpec(AREAS)}' ` : ''}`
+        + `${SUBSTRATE === 'seedling' ? `--palette=${PALETTE_NAME} ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
         + `--tries=${BOUNDS.triesPerStep} --k=${BOUNDS.saturationK} `
         + `--anchortries=${BOUNDS.anchorTriesPerCandidate} --cellbudget=${CELL_BUDGET_S}\``,
@@ -558,6 +585,9 @@ for (const c of cells) {
         + `(${denom.attempted}/${cells.length})…`);
     const childArgs = [SELF, `--substrate=${SUBSTRATE}`, `--areas=${formatAreaSpec(AREAS)}`,
         `--elements=${formatElementSpec(ELEMENTS)}`,
+        // ⛓ arc 3 slice 2 — the biome travels to the worker, or every cell of a
+        // `--palette=post-sword` run would silently be a pre-sword one.
+        ...(SUBSTRATE === 'seedling' ? [`--palette=${PALETTE_NAME}`] : []),
         ...(REQUIRE ? [`--require=${formatRequireList(REQUIRE)}`] : []),
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,

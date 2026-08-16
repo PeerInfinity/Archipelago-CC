@@ -71,6 +71,7 @@ const {
 } = await M('procgenPalette.js');
 const { seedlingModel, seedlingOracle } = await M('procgenSeedling.js');
 const { rngFor } = await M('procgenRng.js');
+const { parseSkeleton } = await import(join(REPO, 'frontend/modules/procgenCore/skeletonKinds.js'));
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -78,6 +79,22 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const SEEDS = Number(arg('seeds', 12));
 const ONLY = arg('only', '');
 const ANCHORS = arg('anchors', 'first');
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 2 — **THE SKELETON KIND IS AN AXIS NOW.**
+ *
+ * This sweep certified a domain in the DEDICATED geometry, which was the open
+ * bordered room and nothing else, and that was the whole world when it was
+ * written. It is not any more: slice 2 gives the door families a `span` whose
+ * whole point is the values a CORRIDOR can use, and a domain swept only on
+ * `empty` would certify span 8 and refuse to see span 1 — the `empty` room's own
+ * geometry deciding a knob that exists for the other kinds.
+ *
+ * ⛔ THE KINDS ARE A LIST AND THE TABLE IS PER (VALUE, KIND), never summed
+ * across them: `feedback_bounded_sweep_must_name_what_it_bounded`. A value that
+ * discharges on `winding` and NO_ANCHORs on `empty` is two facts, and one column
+ * would print their sum as if it were one.
+ */
+const KINDS = arg('kinds', 'empty').split(',').map((k) => k.trim()).filter(Boolean);
 if (ANCHORS !== 'first' && ANCHORS !== 'all') {
     process.stderr.write('sweep-seedling-wave1-domains: --anchors= must be `first` or `all`.\n');
     process.exit(2);
@@ -104,7 +121,9 @@ const subjects = POST_SWORD_PALETTE.templates.map((t) => ({
 say('# ⚖ RULING 4 — THE WAVE-1 DOMAIN SWEEPS (Seedling GENERATE-mode UI arc, slice 2)');
 say('');
 say(`command: \`node scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=${SEEDS} `
-    + `--anchors=${ANCHORS}${ONLY ? ` --only=${ONLY}` : ''}\``);
+    + `--anchors=${ANCHORS} --kinds=${KINDS.join(',')}`
+    + `${ONLY ? ` --only=${ONLY}` : ''}\``);
+say(`kinds: ${KINDS.join(', ')}`);
 say(`bound: seeds 1..${SEEDS}, ${ANCHORS === 'all'
     ? 'EVERY LEGAL ANCHOR in the room (`SPINNER_OFFSET`\'s own bound)'
     : 'ONE anchor per (value, seed) — the cell `anchorsFor(…, 1)` itself draws from a stream '
@@ -125,16 +144,19 @@ for (const { template, palette } of subjects) {
             + 'the families somebody remembered.)');
         say('');
     }
-    const head = `| ${template.params.map((p) => p.key).join(' | ') || '(none)'} | noAnchor | `
-        + `solved | refused | threw${verb ? ` | discharged (${verb})` : ''} |`;
+    const head = `| kind | ${template.params.map((p) => p.key).join(' | ') || '(none)'} `
+        + `| noAnchor | solved | refused | threw${verb ? ` | discharged (${verb})` : ''} |`;
     say(head);
-    say(`|${'---|'.repeat(template.params.length || 1)}---|---|---|---|${verb ? '---|' : ''}`);
+    say(`|---|${'---|'.repeat(template.params.length || 1)}---|---|---|---|${verb ? '---|' : ''}`);
     for (const values of combos) {
+    for (const kindSpec of KINDS) {
+        const skeletonSpec = parseSkeleton(kindSpec,
+            { simulator: false, substrate: 'this sweep' });
         const instance = template.instantiate(null, values);
         const counts = { noAnchor: 0, solved: 0, refused: 0, threw: 0, discharged: 0 };
         for (let seed = 1; seed <= SEEDS; seed += 1) {
-            note(`[stderr] ${instance.instance} seed ${seed}…`);
-            const model = seedlingModel({ seed });
+            note(`[stderr] ${kindSpec} ${instance.instance} seed ${seed}…`);
+            const model = seedlingModel({ seed, skeleton: skeletonSpec });
             const skeleton = model.skeleton();
             const anchors = ANCHORS === 'all'
                 // ⛔ THE MODEL'S OWN `legalAt`, never a second copy of the rule.
@@ -167,8 +189,9 @@ for (const { template, palette } of subjects) {
         const cells = template.params.length
             ? template.params.map((p) => String(values[p.key])).join(' | ')
             : '(none)';
-        say(`| ${cells} | ${counts.noAnchor} | ${counts.solved} | ${counts.refused} `
+        say(`| ${kindSpec} | ${cells} | ${counts.noAnchor} | ${counts.solved} | ${counts.refused} `
             + `| ${counts.threw}${verb ? ` | ${counts.discharged}` : ''} |`);
+    }
     }
     say('');
 }

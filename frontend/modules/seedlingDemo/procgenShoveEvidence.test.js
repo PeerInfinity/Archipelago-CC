@@ -232,10 +232,30 @@ describe('⛔ THE FAR REVERTS WERE CORRECT — attributed by ABLATION, not by a 
      * ⚠ AND THE UNCOVERED CLASS IS STILL THERE, re-named: seed 28's row
      * (`ori=v,gap=0`@(3,1)) has `noWall === REFUSED`, and seed 31's two rows
      * have both ablations REFUSED.
+     *
+     * ⛓⛓⛓ **RE-MEASURED AGAIN AT ARC 3 SLICE 2 (the DOOR LAW), AND THE BLOCK
+     * HALF MOVED — 27 → 21.** The law refuses every `wall-gap-block` anchor
+     * whose wall is not a CUT, which changes which candidates the loop ever
+     * tries and therefore which of them REVERT. Re-run of THIS FILE's own
+     * documented scan (pre-sword `obstacleTarget: 6`, seeds 1..40, every
+     * REVERTED `wall-gap-block` row whose goal is STRICTLY BEYOND its wall):
+     * **12 such rows now survive, up from 7** — of which **six** meet the pair's
+     * premise in the WALL class (seeds 9, 14, 31 twice, 32, 38) and **three** in
+     * the BLOCK class (seeds 10, 14, 21).
+     *
+     * ⛓ **SEED 9 DID NOT HAVE TO MOVE** — same params, same anchor, same
+     * ablation answer — so only the block half is re-picked, to **seed 21**
+     * (`ori=v,gap=7`@(3,1)). ⛓ AND THE SCARCITY THE OLD DOCBLOCK WARNED ABOUT IS
+     * GONE: *"a class with one member is one bad draw from being a class with
+     * none"* was true at 1 member and is not at 3. ⚠ Worth naming for whoever
+     * re-picks next: **seed 14 carries BOTH classes at ONE anchor** — (1,7),
+     * `gap=0` is the block class and `gap=1` the wall class — which isolates the
+     * ablation's answer to the gap alone and is the better pair the day this
+     * needs re-measuring again.
      */
     const cases = [
         { seed: 9, params: { ori: 'v', gap: 3 }, at: { tx: 6, ty: 1 }, noBlockSolves: false },
-        { seed: 27, params: { ori: 'h', gap: 4 }, at: { tx: 1, ty: 2 }, noBlockSolves: true },
+        { seed: 21, params: { ori: 'v', gap: 7 }, at: { tx: 3, ty: 1 }, noBlockSolves: true },
     ];
     for (const c of cases) {
         it(`seed ${c.seed}: the candidate refuses in its own room, and the ablation says `

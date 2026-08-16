@@ -1086,29 +1086,62 @@ describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
 });
 
 describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () => {
-    it('⛓⛓ PREFERS a DISCHARGING anchor over the first that merely SOLVES', () => {
-        const base = generateStep(SUBJECT);
-        const preferred = applyDirective(base, DIRECTIVE, 0);
-        const [d] = preferred.directives;
-        expect(d.outcome).toBe(ATTEMPT.KEPT);
-        expect(d.keptKind).toBe(KEPT_KIND.DISCHARGED);
+    /**
+     * ⛓⛓⛓ **ARC 3 SLICE 2 EMPTIED THIS ROW'S SUBJECT CLASS, AND THE MEASUREMENT
+     * IS THE NEW CLAIM** (trap 312 — replace a vacated claim with the sentence
+     * that still has content).
+     *
+     * This row used to assert that `PREFER_DISCHARGE` walks PAST an anchor that
+     * merely SOLVES to reach one that DISCHARGES, with `FIRST_SOLVED` as the
+     * control that stops at the first. Under the DOOR LAW there is no such
+     * anchor to walk past, and the reason is the law itself: **an anchor where
+     * the door SOLVED without discharging was a door the walk went ROUND** — a
+     * wall that cuts nothing, kept because the room still solves. That is
+     * exactly the class ⚖ ruling 17 calls DECORATION, and the cut law removes
+     * it from the LEGAL set before any solve.
+     *
+     * ⛓ MEASURED rather than argued, over seeds 1..12 × every instantiation of
+     * `wall-gap-block` and `wall-gap-lock-weigh` × EVERY legal anchor, each
+     * placed alone and solved: **338 SOLVED-and-DISCHARGED, 0 SOLVED-without-
+     * discharging, 80 refused, 0 threw.** The solved-only class is EMPTY for a
+     * door family. So the two policies cannot disagree here, and a row that
+     * asserted they do would be asserting a build defect.
+     *
+     * ⛔ THE POLICY IS NOT RETIRED and this row does not pretend it is dead
+     * code: `PREFER_DISCHARGE` still decides the walk, `NO_VERB` still has its
+     * own row below, and a family whose clearer is NOT its door (arc 3's
+     * element binding, slices 3+) can re-open the class. What the row asserts
+     * now is the pair of facts that remain TRUE and are worth a gate: the
+     * directive discharges, and the control AGREES — which is a claim about the
+     * law, checked against the same subject.
+     */
+    it('⛓⛓ every KEPT door DISCHARGES — the merely-SOLVES class is empty under the cut law',
+        () => {
+            const base = generateStep(SUBJECT);
+            const preferred = applyDirective(base, DIRECTIVE, 0);
+            const [d] = preferred.directives;
+            expect(d.outcome).toBe(ATTEMPT.KEPT);
+            expect(d.keptKind).toBe(KEPT_KIND.DISCHARGED);
 
-        /**
-         * ⛔ THE CONTROL, AND IT IS WHAT MAKES THIS A CLAIM ABOUT THE POLICY:
-         * the SAME directive under the free loop's own rule keeps a DIFFERENT
-         * anchor and reports a different kind of keep. Without this line the
-         * case would pass on a build that always discharged by luck.
-         */
-        const firstSolved = applyDirective(
-            base, { ...DIRECTIVE, keepPolicy: KEEP_POLICY.FIRST_SOLVED }, 0,
-        );
-        expect(firstSolved.directives[0].outcome).toBe(ATTEMPT.KEPT);
-        expect(firstSolved.directives[0].at).not.toEqual(d.at);
-        expect(firstSolved.directives[0].anchorsWalked)
-            .toBeLessThan(d.anchorsWalked);
-        // ⛓ …and the two really produce DIFFERENT LEVELS.
-        expect(preferred.record).not.toEqual(firstSolved.record);
-    });
+            const firstSolved = applyDirective(
+                base, { ...DIRECTIVE, keepPolicy: KEEP_POLICY.FIRST_SOLVED }, 0,
+            );
+            expect(firstSolved.directives[0].outcome).toBe(ATTEMPT.KEPT);
+            // ⛓ THE CONTROL AGREES, and that IS the finding: with no
+            // solved-only anchor to prefer away from, the first solved anchor
+            // is already the discharging one.
+            expect(firstSolved.directives[0].at).toEqual(d.at);
+            expect(firstSolved.directives[0].anchorsWalked).toBe(d.anchorsWalked);
+            expect(preferred.record).toEqual(firstSolved.record);
+
+            /**
+             * ⛔ AND THE NON-VACUITY GUARD THE ROW NOW NEEDS: "the two agree"
+             * would also be true of a build where the directive kept NOTHING.
+             * It kept, it discharged, and it really placed geometry.
+             */
+            expect(d.at).not.toBeNull();
+            expect(preferred.record).not.toEqual(base.record);
+        });
 
     it('⛔ a template with NO VERB reports `solved-no-verb`, not `solved-only`', () => {
         const base = generateStep(SUBJECT);
@@ -1154,7 +1187,21 @@ describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () =
     });
 
     it('the directive\'s rows are labelled d<n>a<k> and carry the pane\'s row shape', () => {
-        const base = generateStep(SUBJECT);
+        /**
+         * ⛓⛓ ARC 3 SLICE 2 — THIS ROW NEEDS A SUBJECT THAT WALKS MORE THAN ONE
+         * ANCHOR, and seed 6 stopped being one. The DOOR LAW leaves seed 6 with
+         * exactly ONE legal anchor for this directive ((2,1); its goal at (3,1)
+         * makes every column east of 2 a wall the walk goes round), so the walk
+         * is one row and `d1a2` never exists — the label branch under test would
+         * go undriven while the row still passed everything else.
+         *
+         * ⛓ RE-SCANNED (pre-sword, `wall-gap-block(ori=v,gap=1)`, seeds 1..40):
+         * **seed 9** keeps six legal anchors and its directed search WALKS 2
+         * before it keeps. ⛔ Its own subject, not the file's `SUBJECT`, for the
+         * click block's reason: seed 6 is what a dozen unrelated rows here are
+         * measured against.
+         */
+        const base = generateStep({ seed: 9, biome: 'pre-sword', step: 0 });
         const out = applyDirective(base, DIRECTIVE, 0);
         const rows = generationRows(out.trace).filter((r) => r.directive === 1);
         expect(rows.length).toBeGreaterThan(1);
@@ -1447,31 +1494,61 @@ describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound
 
 describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or refuses by name', () => {
     /**
-     * ⛓ THE SUBJECT IS MEASURED (see the slice-6 as-built): on pre-sword seed
-     * 6's skeleton the plain vertical door is legal at exactly six cells —
-     * (2,1) (4,1) (5,1) (6,1) (7,1) (8,1) — and a SEARCHED directive lands on
-     * (2,1) after walking 5 of 6. ⛔ (7,1) is therefore neither the searched
-     * answer, nor the start (1,1), nor the goal (3,1), nor the first interior
-     * cell a naive implementation would produce: trap 235, at the anchor.
+     * ⛓⛓ THE SUBJECT IS MEASURED, AND IT MOVED AT ARC 3 SLICE 2 — BY THE SAME
+     * SCAN THAT PICKED IT (trap 285: the target is named).
+     *
+     * Slice 6 measured pre-sword **seed 6**: the plain vertical door legal at
+     * six cells — (2,1) (4,1) (5,1) (6,1) (7,1) (8,1) — with (7,1) neither the
+     * searched answer nor the start nor the goal. The DOOR LAW leaves seed 6
+     * with exactly **ONE** legal anchor, (2,1): its goal is at (3,1), so every
+     * column east of 2 is a wall the walk goes ROUND (⚖ ruling 17). A one-anchor
+     * subject cannot carry this block at all — the clicked cell would BE the
+     * searched cell, and trap 235's whole point is that it must not be.
+     *
+     * ⛓ RE-SCANNED (pre-sword, `wall-gap-block(ori=v,gap=1)`, seeds 1..40,
+     * every interior cell through `legalAt`): seeds **7 and 9** carry six legal
+     * anchors each — the same count seed 6 used to have. **Seed 9** is the
+     * subject: goal (8,5), legal at (2,1) (3,1) (4,1) (5,1) (6,1) (7,1), and a
+     * SEARCHED directive lands on **(4,1)**.
+     *
+     * ⛓ THE CLICK MOVES (7,1) → **(6,1)**, and the reason is a SECOND property
+     * this block needs that a legality scan alone cannot see: the clicked cell
+     * must also KEEP. Driven, all six anchors clicked: (2,1) (3,1) (4,1) (5,1)
+     * (6,1) all KEEP and DISCHARGE, and **(7,1) REVERTS** — the oracle refuses
+     * the room, which is a working loop and not a bad cell, but it is not the
+     * subject a row asserting `KEPT` can use. (6,1) is the last of the five that
+     * keep, so it is the furthest from the searched answer: still not (4,1), not
+     * the start (1,1), not the goal (8,5).
+     *
+     * ⚠ THE BLOCK KEEPS ITS OWN SUBJECT rather than moving the file's `SUBJECT`:
+     * seed 6 is what a dozen unrelated rows in this file are measured against,
+     * and moving it would re-pick every one of them to fix two.
      */
-    const CLICK = Object.freeze({ tx: 7, ty: 1 });
+    const CLICK_SUBJECT = Object.freeze({ seed: 9, biome: 'pre-sword', step: 0 });
+    const CLICK = Object.freeze({ tx: 6, ty: 1 });
     const clicked = Object.freeze({ ...DIRECTIVE, anchor: CLICK, bound: 1 });
 
-    it('⛓ the SUBJECT\'s own properties first — (7,1) is legal and is NOT where a search goes',
+    it('⛓ the SUBJECT\'s own properties first — (6,1) is legal and is NOT where a search goes',
         () => {
-            const base = generateStep(SUBJECT);
-            const template = paletteFor(SUBJECT.biome).templates
+            const base = generateStep(CLICK_SUBJECT);
+            const template = paletteFor(CLICK_SUBJECT.biome).templates
                 .find((t) => t.name === DIRECTIVE.template)
                 .instantiate(null, DIRECTIVE.params);
             expect(base.model.refusalAt(base.record, template, CLICK.tx, CLICK.ty)).toBeNull();
             expect(base.model.goalCell).not.toEqual(CLICK);
+            // ⛓ ARC 3 SLICE 2 — the property the re-pick was FOR, asserted so a
+            // future law that narrows the legal set again reds HERE rather than
+            // three rows down: the clicked cell is one of SEVERAL, not the only.
+            expect(base.model.interiorCells(base.record)
+                .filter((c) => base.model.legalAt(base.record, template, c.tx, c.ty)))
+                .toHaveLength(6);
             const searched = applyDirective(base, DIRECTIVE, 0).directives[0];
             expect(searched.at).not.toEqual(CLICK);
         });
 
     it('⛓⛓ lands at the CLICKED cell — the record, the directive and the FOOTPRINT agree',
         () => {
-            const out = applyDirective(generateStep(SUBJECT), clicked, 0);
+            const out = applyDirective(generateStep(CLICK_SUBJECT), clicked, 0);
             const [d] = out.directives;
             expect(d.outcome).toBe(ATTEMPT.KEPT);
             // `anchor` is what was ASKED FOR, `at` is where it LANDED — two
@@ -1488,16 +1565,18 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
              * and placed elsewhere passes every field check above.
              */
             expect(terrainAt(out.record, CLICK.tx, CLICK.ty))
-                .not.toBe(terrainAt(generateStep(SUBJECT).record, CLICK.tx, CLICK.ty));
+                .not.toBe(terrainAt(generateStep(CLICK_SUBJECT).record, CLICK.tx, CLICK.ty));
         });
 
     it('⛔ an ILLEGAL cell refuses BY NAME, the record does NOT move, and no solve is spent',
         () => {
-            const base = generateStep(SUBJECT);
-            // (3,1) is seed 6's GOAL cell — measured, and asserted here so this
-            // is the goal class rather than whatever else that cell might be.
-            expect(base.model.goalCell).toEqual({ tx: 3, ty: 1 });
-            const out = applyDirective(base, { ...clicked, anchor: { tx: 3, ty: 1 } }, 0);
+            const base = generateStep(CLICK_SUBJECT);
+            // ⛓ (8,5) is seed 9's GOAL cell — measured, and asserted here so
+            // this is the goal class rather than whatever else that cell might
+            // be. (Was (3,1) on seed 6, before the door law re-picked the
+            // subject; the CLASS the row grades is unchanged.)
+            expect(base.model.goalCell).toEqual({ tx: 8, ty: 5 });
+            const out = applyDirective(base, { ...clicked, anchor: { tx: 8, ty: 5 } }, 0);
             const [d] = out.directives;
             expect(d.outcome).toBe(ATTEMPT.ILLEGAL_PLACEMENT);
             expect(d.at).toBeNull();
@@ -1508,19 +1587,19 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
              * so a row that summarised the refusal would red rather than pass a
              * substring match.
              */
-            const template = paletteFor(SUBJECT.biome).templates
+            const template = paletteFor(CLICK_SUBJECT.biome).templates
                 .find((t) => t.name === DIRECTIVE.template)
                 .instantiate(null, DIRECTIVE.params);
             const rows = out.trace.filter((r) => r.directive === 1);
             expect(rows).toHaveLength(1);
             expect(rows[0].reasonText)
-                .toBe(base.model.refusalAt(base.record, template, 3, 1));
-            expect(rows[0].reasonText).toMatch(/\(3,1\) is the GOAL cell/);
+                .toBe(base.model.refusalAt(base.record, template, 8, 5));
+            expect(rows[0].reasonText).toMatch(/\(8,5\) is the GOAL cell/);
             expect(rows[0].verdict).toBeNull();
         });
 
     it('⛓⛓ a clicked construction REPRODUCES byte for byte through the PAYLOAD', () => {
-        const pressed = applyDirective(generateStep(SUBJECT), clicked, 0);
+        const pressed = applyDirective(generateStep(CLICK_SUBJECT), clicked, 0);
         const search = writeGenerateParams('', {
             seed: pressed.seed, biome: pressed.biome, bounds: pressed.bounds,
             step: pressed.step,

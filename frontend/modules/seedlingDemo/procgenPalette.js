@@ -350,13 +350,72 @@ export const PRE_SWORD_ITEMS = Object.freeze({ hasSword: false, hasShield: false
 
 /**
  * ⛓ THE INTERIOR'S OWN SPAN, DERIVED — the width of a single-screen room minus
- * its border ring. The `wall-gap-block` pair below must cross the whole
- * interior to be a door rather than a decoration, so the number is read from
- * `procgenLevel`'s room size rather than typed. `GAP_OFFSET` is a declared
- * choice (the middle-ish column), not a measurement.
+ * its border ring, read from `procgenLevel`'s room size rather than typed.
+ * `GAP_OFFSET` is a declared choice (the middle-ish column), not a measurement.
+ *
+ * ⛓⛓⛓ **ARC 3 SLICE 2 RE-EXPRESSED WHAT THIS CONSTANT IS FOR.** It used to
+ * carry the LAW: *"the `wall-gap-block` pair must cross the whole interior to be
+ * a door rather than a decoration"* — GENERATE-UI ruling 3's span law, ruled for
+ * the OPEN room, where a wall that crosses the interior is the only wall that
+ * cuts it. ⚖ Design ruling 17 replaced it with the fact it was a proxy for:
+ * **a door must be a CUT** (`procgenSeedling`'s door law, one flood, every
+ * kind). The span law is not overturned, it is re-derived — *a shorter wall is
+ * decoration* is *a non-cut is decoration* — and on a CORRIDOR the lock cell
+ * alone is the door.
+ *
+ * ⇒ what stays here is a GEOMETRY default, not a legality claim: 8 is the span
+ * at which a wall crosses THIS room, and it is the value every door family's
+ * `span` measured back as the one the open room can use.
  */
 const INTERIOR_SPAN = SINGLE_SCREEN_TILES.width - 2;
 const GAP_OFFSET = 4;
+
+/**
+ * ⛓⛓⛓ **THE DOOR GEOMETRY — ONE FUNCTION, THREE FAMILIES AND THE CENSUS**
+ * (PROCGEN ELEMENTS arc 3, slice 2).
+ *
+ * *`span` cells in a line down the template's own axis, all of them written
+ * `wall` except the one at `gap`, which is the DOOR CELL.* All three door
+ * families were spelling that out separately — three `lineCells` + three
+ * `filter(along !== gap)` — which was harmless while the length was the frozen
+ * `INTERIOR_SPAN`, and stops being harmless the moment the length is a
+ * PARAMETER whose domain a sweep certifies.
+ *
+ * ⛔ AND THE CENSUS IS THE REAL REASON IT IS EXPORTED. `census-seedling-doors
+ * .mjs` sizes the `span` domain by counting anchors where a bare wall-and-gap
+ * CUTS the room; a census that built its own door shape could measure a door no
+ * template can produce, and the domain it certified would be a claim about the
+ * census's geometry (`feedback_code_sweep_misses_the_data`, from the instrument
+ * side).
+ *
+ * ⚠ `span = 1` IS THE DEGENERATE CASE AND IT IS THE POINT: one cell, `gap = 0`,
+ * NO wall written at all. On a corridor the lock cell IS the door — ⚖ design
+ * ruling 17 — and the geometry says so by producing an empty `wall` list rather
+ * than by a special case somewhere else.
+ *
+ * @param {'h'|'v'} ori
+ * @param {number} span how many cells the wall spans, `1..INTERIOR_SPAN`
+ * @param {number} gap  which cell along it is the door, `0..span-1`
+ */
+export function doorGeometry(ori, span, gap) {
+    if (!Number.isInteger(span) || span < 1) {
+        fail(`procgenPalette: doorGeometry needs an integer span >= 1, got `
+            + `${JSON.stringify(span)}. A door of no cells is not a door.`);
+    }
+    if (!Number.isInteger(gap) || gap < 0 || gap >= span) {
+        fail(`procgenPalette: doorGeometry got gap ${JSON.stringify(gap)} for span ${span}; `
+            + `the gap is a cell OF the wall, so it is 0..${span - 1}. A gap outside the span `
+            + 'would produce a solid wall with a door cell nothing writes — a row whose door '
+            + 'law would wall a cell the wall already holds.');
+    }
+    const cells = lineCells(ori, span);
+    const along = alongOf(ori);
+    return Object.freeze({
+        cells,
+        doorCell: at(ori, gap, 0),
+        wall: paint(cells.filter((c) => along(c) !== gap), 'wall'),
+    });
+}
 
 /**
  * ⛓⛓⛓ PoC SLICE 3b — THE WEIGH TEMPLATE'S THREE OFFSETS, and every one of
@@ -894,14 +953,34 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
             + 'standing in it — the corridor exists only after the block is shoved, so '
             + '`walkTo`\'s ladder selects `shove` and the collect follows',
         build: ({ ori, gap }) => {
-            const cells = lineCells(ori, INTERIOR_SPAN);
-            const along = alongOf(ori);
+            const g = doorGeometry(ori, INTERIOR_SPAN, gap);
             return {
-                footprint: cells,
+                /**
+                 * ⛓⛓⛓ ARC 3 SLICE 2 — **THIS ROW DECLARES `door` FOR THE FIRST
+                 * TIME**, and ⚖ ruling 17 is the whole argument: *a non-cut is
+                 * decoration*. Until this slice only the kill-lock family
+                 * carried `door`, because only IT aborted a run when the goal
+                 * sat on the start's side of the wall. The other two merely
+                 * placed a wall the walk went round — an obstacle that
+                 * obstructs nothing, kept by the loop and reported as a placed
+                 * obstacle. ⛓ THE COST OF SAYING SO IS MEASURED, not asserted:
+                 * the isolated differential in the arc-3 kickoff §9.4 names
+                 * every `empty` pair this declaration moved and re-runs the old
+                 * `doorClear` predicate on each moved anchor.
+                 *
+                 * ⛔ THE BLOCK STANDS IN THE DOOR CELL, so `clearer` is EMPTY —
+                 * there is no separate thing to reach. That is not an omission:
+                 * clause 2 of the law asks whether the CLEARER is on the start's
+                 * side, and this family's clearer is the door.
+                 */
+                door: ori,
+                doorCells: Object.freeze([g.doorCell]),
+                clearer: Object.freeze([]),
+                footprint: g.cells,
                 clearance: Object.freeze([]),
-                terrain: paint(cells.filter((c) => along(c) !== gap), 'wall'),
+                terrain: g.wall,
                 entities: Object.freeze([Object.freeze({
-                    ...at(ori, gap, 0), type: 'pushableblock',
+                    ...g.doorCell, type: 'pushableblock',
                 })]),
                 pins: Object.freeze([]),
             };
@@ -1012,13 +1091,31 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
             + 'the button, so `refineStrategy` selects `weigh` and the player walks '
             + 'through a lock nobody is holding',
         build: ({ ori }) => {
-            const cells = lineCells(ori, INTERIOR_SPAN);
-            const along = alongOf(ori);
+            const g = doorGeometry(ori, INTERIOR_SPAN, GAP_OFFSET);
             return {
+                /**
+                 * ⛓⛓⛓ ARC 3 SLICE 2 — `door` DECLARED, and this family is where
+                 * clause 2 of the law has something to bite on. Its clearer is
+                 * not one cell but a LANE: the block, the button it is shoved
+                 * onto, the stance cell behind the block and the slide path
+                 * between them. Every one of them must be reachable from the
+                 * START with the lock cell walled — on the open room that is
+                 * implied (the lane runs one cell back on the start's side of a
+                 * full-span wall), and it is exactly the thing that stops being
+                 * implied the moment the wall is shorter than the room.
+                 */
+                door: ori,
+                doorCells: Object.freeze([g.doorCell]),
+                clearer: Object.freeze([
+                    at(ori, BLOCK_OFFSET, -1),
+                    at(ori, BUTTON_OFFSET, -1),
+                    at(ori, BLOCK_OFFSET - 1, -1),
+                    ...SLIDE_PATH.map((o) => at(ori, o, -1)),
+                ]),
                 groups: 1,
                 tags: 1,
                 footprint: Object.freeze([
-                    ...cells,
+                    ...g.cells,
                     at(ori, BLOCK_OFFSET, -1),
                     at(ori, BUTTON_OFFSET, -1),
                 ]),
@@ -1026,10 +1123,10 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
                     at(ori, BLOCK_OFFSET - 1, -1),
                     ...SLIDE_PATH.map((o) => at(ori, o, -1)),
                 ]),
-                terrain: paint(cells.filter((c) => along(c) !== GAP_OFFSET), 'wall'),
+                terrain: g.wall,
                 entities: Object.freeze([
                     Object.freeze({
-                        ...at(ori, GAP_OFFSET, 0),
+                        ...g.doorCell,
                         type: 'lock',
                         attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
                     }),
@@ -1493,22 +1590,32 @@ const KILL_LOCK_TEMPLATES = Object.freeze([
             + 'ARC A PRE-SWORD BOOT CANNOT CLEAR: `weaponForPress` returns null with no '
             + 'sword slot, so the press is a silent no-op and the lock never opens',
         build: ({ ori }) => {
-            const cells = lineCells(ori, INTERIOR_SPAN);
-            const along = alongOf(ori);
+            const g = doorGeometry(ori, INTERIOR_SPAN, GAP_OFFSET);
             return {
                 door: ori,
+                /**
+                 * ⛓⛓⛓ ARC 3 SLICE 2 — the row now NAMES what `doorClear` used
+                 * to infer from the compass: the lock's own cell is the DOOR,
+                 * and the spinner is the CLEARER. ⛓ The two are what make this
+                 * family's `empty` rows BYTE-IDENTICAL under the new law (the
+                 * isolated differential, kickoff §9.4): a full-span wall's gap
+                 * is a cut exactly when the goal is beyond it, and the spinner
+                 * at across `-1` is on the start's side by construction.
+                 */
+                doorCells: Object.freeze([g.doorCell]),
+                clearer: Object.freeze([at(ori, SPINNER_OFFSET, -1)]),
                 /**
                  * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — THE LITERAL TAG IS
                  * GONE. See the `tags: 1` line below and this template's
                  * docblock for the measurement that bought it.
                  */
                 tags: 1,
-                footprint: Object.freeze([...cells, at(ori, SPINNER_OFFSET, -1)]),
+                footprint: Object.freeze([...g.cells, at(ori, SPINNER_OFFSET, -1)]),
                 clearance: Object.freeze([]),
-                terrain: paint(cells.filter((c) => along(c) !== GAP_OFFSET), 'wall'),
+                terrain: g.wall,
                 entities: Object.freeze([
                     Object.freeze({
-                        ...at(ori, GAP_OFFSET, 0),
+                        ...g.doorCell,
                         type: 'lock',
                         // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own
                         // spelling). ⛓ The tag was the LITERAL `'1'` until
@@ -1771,6 +1878,83 @@ function assertGroupSlot(t, footprintKeys) {
 }
 
 /**
+ * ⛓⛓⛓ **THE DOOR LAW'S OWN DECLARATION, CHECKED WHERE A ROW'S MEANING IS
+ * CHECKED** — PROCGEN ELEMENTS arc 3, slice 2.
+ *
+ * `procgenSeedling`'s door law (*a door is a CUT*) reads two lists off the row:
+ * `doorCells` — the gap cell(s) the clearer stands in or behind — and `clearer`
+ * — the cells that must be reachable from the START once the door is walled.
+ * Neither is derivable from the geometry, so both are DECLARED, and every way
+ * of declaring them wrongly would be SILENT:
+ *
+ *  · **`door` with no `doorCells`** — the law would wall the empty set, find the
+ *    goal reachable, and refuse EVERY anchor as "not a cut". A family that never
+ *    places reads as a family the room has no room for.
+ *  · **`doorCells` with no `door`** — the law never runs; the row places
+ *    decoration doors and nothing says so.
+ *  · **A DOOR CELL THAT WRITES WALL.** The law's open half is `sealRefusal`'s
+ *    answer — *with the door cells walkable the goal is reachable* — and a door
+ *    cell the row itself walls is never walkable. The two clauses would then be
+ *    the same flood asked twice, and every such row would refuse everywhere.
+ *  · **A cell outside the footprint** (or, for `clearer`, outside footprint ∪
+ *    clearance) — a cell no legality rule reserved, so the law would be reading
+ *    terrain another template is free to take.
+ */
+function assertDoorCells(t, footprintKeys) {
+    const where = `template "${t.instance ?? t.name}"`;
+    const clearanceKeys = new Set((t.clearance ?? []).map((c) => `${c.dx},${c.dy}`));
+    if (t.door === undefined) {
+        for (const [field, v] of [['doorCells', t.doorCells], ['clearer', t.clearer]]) {
+            if (v !== undefined) {
+                fail(`procgenPalette: ${where} declares \`${field}\` but no \`door\`. The door `
+                    + 'law runs only for a row that declares `door`, so these cells would be '
+                    + 'a description nobody reads — and the row would place DECORATION doors '
+                    + 'with nothing saying so.');
+            }
+        }
+        return;
+    }
+    if (!Array.isArray(t.doorCells) || t.doorCells.length === 0) {
+        fail(`procgenPalette: ${where} declares door "${t.door}" and no \`doorCells\`. The law `
+            + 'walls those cells and asks whether the goal is still reachable; with none to '
+            + 'wall the goal always is, so the row would be refused at EVERY anchor and read '
+            + 'as a family this room has no place for.');
+    }
+    if (!Array.isArray(t.clearer)) {
+        fail(`procgenPalette: ${where} declares door "${t.door}" and no \`clearer\` ARRAY. An `
+            + 'EMPTY array is the right answer for a family whose clearer stands IN the door '
+            + 'cell (`wall-gap-block`), and it has to be said rather than omitted — the law '
+            + 'cannot tell "nothing to reach" from "nobody wrote the list".');
+    }
+    const walled = new Set((t.terrain ?? []).filter((w) => w.terrain !== 'ground')
+        .map((w) => `${w.dx},${w.dy}`));
+    for (const c of t.doorCells) {
+        const key = `${c.dx},${c.dy}`;
+        if (!footprintKeys.has(key)) {
+            fail(`procgenPalette: ${where} names DOOR cell (${key}), which is not in its own `
+                + 'footprint. The footprint is what the legality check reserves, so a door '
+                + 'cell outside it is terrain another template is free to take.');
+        }
+        if (walled.has(key)) {
+            fail(`procgenPalette: ${where} names DOOR cell (${key}) and also WRITES it as `
+                + 'blocking terrain. A door cell is the GAP — the law\'s open half is the '
+                + 'seal pre-check\'s own answer (*with the door cells walkable the goal is '
+                + 'reachable*), and a cell the row walls itself is never walkable, so the '
+                + 'row would refuse at every anchor.');
+        }
+    }
+    for (const c of t.clearer) {
+        const key = `${c.dx},${c.dy}`;
+        if (!footprintKeys.has(key) && !clearanceKeys.has(key)) {
+            fail(`procgenPalette: ${where} names CLEARER cell (${key}), which is in neither `
+                + 'its footprint nor its `clearance`. The law demands that cell be reachable '
+                + 'from the start; a cell no legality rule reserved is one another template '
+                + 'may take the moment after.');
+        }
+    }
+}
+
+/**
  * ⛔⛔ THE TAG SLOT'S INVARIANTS — the group's, with ONE deliberate difference.
  *
  * A group of one is meaningless, so `assertGroupSlot` demands two entities on
@@ -1959,6 +2143,7 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
                     + '`procgenSeedling.legalAt` reads \'h\' or \'v\' and anything else '
                     + 'would be silently ignored — a legality gate that does not gate.');
             }
+            assertDoorCells(t, seen);
             for (const e of t.entities ?? []) {
                 if (typeof e.type !== 'string' || !seen.has(`${e.dx},${e.dy}`)) {
                     fail(`procgenPalette: ${where} places entity "${e.type}" at `

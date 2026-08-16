@@ -1313,10 +1313,19 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
         const m = seedlingModel({ seed: 6 });
         const sk = m.skeleton();
         const door = instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 });
-        // measured (see the slice-6 as-built): seed 6's plain vertical door is
-        // legal at (7,1) and its footprint runs down to (7,8).
-        expect(m.refusalAt(sk, door, 7, 1)).toBeNull();
+        /**
+         * ⛓⛓ RE-MEASURED AT ARC 3 SLICE 2, and the move is the slice's own
+         * point. Seed 6's goal is at (3,1), so the old subject (7,1) is a wall
+         * with the goal on the START's side of it — a DECORATION door, which
+         * the CUT law now refuses (⚖ design ruling 17). Re-scanned: of the
+         * eight interior columns exactly ONE anchor survives, **(2,1)**, the
+         * only column with the goal beyond it whose footprint is also free.
+         * ⛔ REPLACED, NEVER RELAXED: the assertion is still `toBeNull()`.
+         */
+        expect(m.refusalAt(sk, door, 2, 1)).toBeNull();
         expect(typeof m.refusalAt(sk, door, 1, 1)).toBe('string');
+        // ⛓ and the OLD subject is now a sentence — the same cell, the new law.
+        expect(m.refusalAt(sk, door, 7, 1)).toMatch(/it is NOT A CUT/);
     });
 
     it('⛔⛔ `legalAt` AGREES WITH IT ON EVERY INTERIOR CELL — one adjudication', () => {
@@ -1382,7 +1391,12 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
                 .map((c) => m.refusalAt(st.record, wall, c.tx, c.ty))
                 .filter((w) => w && /already holds/.test(w));
             expect(hits.length).toBeGreaterThan(0);
-            expect(hits[0]).toMatch(/already holds "wall" and not untouched `ground`/);
+            // ⛓ RE-MEASURED at arc 3 slice 2: the levels moved (the door law), so
+        // seed 6 at target 2 now keeps `wall-segment(h,5)` + `water-pool(2,1)`
+        // and the first painted cell this walk meets holds WATER, not wall.
+        // ⛔ The claim is unchanged — "it names the terrain it holds" — and the
+        // quoted terrain follows the measurement rather than the other way.
+        expect(hits[0]).toMatch(/already holds "water" and not untouched `ground`/);
             expect(hits[0]).toMatch(/an earlier template painted it/);
         });
 
@@ -1398,14 +1412,26 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          * anchor whose footprint fits is refused by the door rule — (1,4) is
          * one, and its footprint cells are all free (asserted).
          */
-        it('the DOOR rule — the goal is on the START\'s side, so the wall is decoration', () => {
+        it('the DOOR LAW — walling the gap leaves the goal reachable, so it is NOT A CUT', () => {
             const m = seedlingModel({ seed: 6 });
             const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
             const sk = m.skeleton();
             for (const c of kill.footprint) expect(m.isFree(sk, 1 + c.dx, 4 + c.dy)).toBe(true);
             const why = m.refusalAt(sk, kill, 1, 4);
-            expect(why).toMatch(/declares door 'h'/);
-            expect(why).toMatch(/GOAL \(3,1\) is on the START's side of that wall/);
+            /**
+             * ⛓⛓⛓ ARC 3 SLICE 2 — THE SAME SUBJECT, THE NEW SENTENCE. This
+             * anchor was refused by `doorClear`'s compass ("the goal (3,1) is on
+             * the START's side of that wall") and is refused by the FLOOD now,
+             * which is the equivalence ⚖ ruling 3 asked to be measured rather
+             * than assumed. ⛔ The refusal NAMES THE DOOR CELL, which the old
+             * sentence could not: the reader who moved the anchor needs to know
+             * WHICH cell the law walled to reach its answer.
+             */
+            expect(why).toMatch(/declares a door, and it is NOT A CUT/);
+            expect(why).toMatch(/with its door cell\(s\) \(5,4\) walled/);
+            expect(why).toMatch(/the GOAL \(3,1\) is STILL reachable from the START \(1,1\)/);
+            expect(why).toMatch(/DECORATION rather than a door/);
+            // ⛓ the kill family's own consequence survives the rewrite whole.
             expect(why).toMatch(/RUN ABORT/);
         });
 
@@ -1416,12 +1442,27 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          * the interior, so a click on the border ring meets a SENTENCE and not
          * an assertion. Reordering the two rules turns this into a page crash.
          */
-        it('⛔ a cell on the BORDER RING is a sentence, never the door rule\'s throw', () => {
+        it('⛔ a cell on the BORDER RING is a sentence, and the FOOTPRINT walk is why', () => {
             const m = seedlingModel({ seed: 6 });
             const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h' });
             expect(m.refusalAt(m.skeleton(), kill, 0, 0))
                 .toMatch(/\(0,0\) is not in the room's INTERIOR/);
-            expect(() => m.doorClear(kill, 0, 0)).toThrow(/north-west of every anchor/);
+            /**
+             * ⛓⛓ ARC 3 SLICE 2 — **THIS ROW'S OLD SECOND HALF IS GONE AND IS
+             * REPLACED RATHER THAN DELETED** (trap 312). It used to assert that
+             * `doorClear` THREW off-domain, which was the reason the footprint
+             * walk had to run first. `doorClear` is retired: the door law reads
+             * the flood and has no compass domain to be outside of, so there is
+             * no throw left to order the rules against.
+             *
+             * ⛔ THE ORDERING CLAIM SURVIVES ON ITS REAL CAUSE, which is the one
+             * that was always the stronger of the two: a FLOOD handed writes
+             * outside the rectangle would read `terrainAt` past the room. So the
+             * row asserts the surface is gone (a caller of `doorClear` must meet
+             * a failure rather than a silently different answer) and
+             * `procgenSeedlingPrecheck.test.js` drives the ordering itself.
+             */
+            expect(m.doorClear).toBeUndefined();
         });
     });
 });
@@ -1864,7 +1905,19 @@ describe('⛓ a RESTRICTED run through the whole certification path', () => {
     });
 
     it('the SENTINEL SLOTS are resolved per placement, restricted or not', () => {
-        const r = run(restricted());
+        /**
+         * ⛓⛓ RE-MEASURED AT ARC 3 SLICE 2 — and the `expect(weigh).toBeTruthy()`
+         * guard below is what caught it, which is the whole reason it is there.
+         * The weigh lock is a DOOR now (⚖ ruling 17), so seed 3's restricted run
+         * keeps two water pools and no lock at all, and the tag assertion would
+         * have passed VACUOUSLY over an empty list. Re-scanned seeds 1..14 under
+         * this same restriction: **1, 2, 9 and 13 keep a weigh**, and 1 is the
+         * first — its lock comes out `{tset:'16', tag:'1'}`. ⛔ The seed moves,
+         * the assertion does not.
+         */
+        const r = generateSeedlingLevel({
+            seed: 1, palette: restricted(), bounds: { obstacleTarget: 2 },
+        });
         const weigh = r.summary.kept.find((k) => k.family === 'weigh');
         expect(weigh).toBeTruthy();
         const world = worldFor(r.record);
