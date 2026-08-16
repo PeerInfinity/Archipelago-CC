@@ -9212,6 +9212,103 @@ every chamber count (18.3 s at k=1, 16.8 s at k=2). Chambers buys yield, not
 time. ⚖ `arrow-lane` is leaving the generator by the ELEMENTS design's ruling,
 so those rows are recorded as *template leaving* rather than acted on.
 
+### Slice 11 — FREE TILE / OBJECT EDITING on watch.html
+
+⚖ Ruling 8 (*"a tool for the user to edit individual tiles and other features of
+the levels"*) reaches the Seedling page. The maze lab page has had it since
+slice 3; this is the same two LAWS with a different mechanism, and the mechanism
+is a **closed set of four recorded ops** in `seedlingDemo/watchEdit.js`:
+
+| op | what it writes | addressed by |
+|---|---|---|
+| `paint {tx, ty, terrain}` | any of the four `TERRAIN`s, **the border ring included** | the cell |
+| `place {tx, ty, type, attrs}` | an entity at the cell's OEL corner, attrs **literal** | the cell |
+| `attrs {tx, ty, attrs}` | REPLACES the cell's last entity's attribute set | the cell |
+| `remove {tx, ty}` | deletes the cell's last entity | the cell |
+
+⛔ **Nothing here adjudicates legality.** Paint a wall ring to ground, wall the
+only corridor, place a body no template ever places — they all apply. *Free
+means free; certification is the guard.* `model.refusalAt` (slice 6/6b's
+connectivity pre-check) is a rule about TEMPLATE ANCHORS and a hand paint
+bypasses it by design; the ORACLE is what refuses, in its own words.
+
+⛓ **Ops address CELLS, never list indices** (the brief offered `entityIndex`).
+The edit list is IDENTITY and it travels in a payload a person reads; an index
+is a coordinate into a list nobody can see, whose value depends on how many
+bodies the templates before it happened to place. When a cell holds more than
+one body the rule is **the last one** — the one drawn on top, and the one a
+click means.
+
+⛓ **A click that CHANGED NOTHING is not an edit** (trap 263, which the maze page
+paid for once). Painting ground onto ground is a legal op that moves no bytes,
+so `editState` compares the RECORD and returns the same state object; the count,
+the certification and the identity line are all unmoved, and the page says so.
+
+**LAW (a) — IDENTITY.** An edited level is *the ladder to step k, then the
+directed attempts, then the manual edits*. The payload gains `edits: [...]`
+(empty on every state, like `directives`) and `certified`; ⛔ **the URL writer
+never learns about edits** (⚖ ruling 9) — the bar after an edit is CHARACTER FOR
+CHARACTER the bar before it — and `describeState` says so out loud: *"…, then 3
+manual edit(s) · ⚠ the URL is NOT a reproduction after edits — the PAYLOAD is."*
+There is ONE reconstruction, `watchEdit.applyEdits`, and the page's UNDO, the
+`?gen=`/`procgenLab:load` replay, `generateWithDirectives({edits})` and the tests
+all go through it — so an edited level round-trips **byte-identically across node
+and the browser**, which is the cross-runtime determinism claim surviving
+editing. ⛓ UNDO is that fold over a shorter list, not an inverse and not a stack.
+
+⚠ **The maze does the opposite here and the difference is forced.**
+`mazeLab.agreementWithPayload` REFUSES to reproduce an edited payload and sends
+the reader to its LOAD box (`deserializeMazeLevel` takes a level as it stands).
+`watch.html` has no such box and never had one — `?gen=` has always meant
+REGENERATE-AND-COMPARE — so reconstruction is the only way an edited Seedling
+level can come back at all, and it buys the stronger claim in exchange.
+
+⚠ **And the `?gen=` path replays the payload's EDITS but not its DIRECTIVES.**
+Not an oversight: a directive IS expressible in a URL (`?directed=`), so the bar
+owns it; an edit is expressible in NO URL, by ruling, so the payload is its only
+channel.
+
+**LAW (b) — CERTIFICATION.** Editing never bypasses the oracle. Any edit sets
+the page UNCERTIFIED and **no draw solves an edited record** — the room is drawn
+as a still frame through `previewLevel` (the page's one draw-without-a-run), so
+there is something for SOLVE to mean. SOLVE runs `displaySolve` — the loop's own
+`seedlingOracle` over the current record, with the KEPT TEMPLATES' pin union (a
+hand-placed body has no template and therefore no pin, said out loud) — and
+reports SOLVED / REFUSED / BUDGET_EXHAUSTED verbatim. `certified` is a real
+tri-state for the first time: `true`, `false` (the oracle said no), `null`
+(nobody has asked). ⛓ An ENGINE THROW — a hand-placed entity `buildLevelWorld`
+has never transcribed — is caught **at the page**, bounded twice (the class
+`LevelWorldError`, and only when the record carries edits), and shown as
+UNCERTIFIED with the engine's own name and message. ⛔ The oracle's catch is
+untouched (traps 171/173): an unedited record that throws still takes the arm
+down, loudly.
+
+**The ordering rule, v1.** `directives` and `edits` are two flat lists, which
+mean exactly one construction only because **edits come AFTER all directives**.
+A directed ATTEMPT on an edited level is refused by name (on the page before the
+press, and structurally in `applyDirective`); STEP / RUN-ALL / CLEAR reset to the
+skeleton and say that the edits are gone. ⛔ The alternative — ONE ordered
+`history` list replacing both arrays — was NOT taken: a directive's index is its
+anchor stream's salt (`directiveSeed`), so re-indexing inside a mixed history is
+a determinism change and not a rename.
+
+**The tool UI** is one section beside the catalogue: tool (off / PAINT / PLACE /
+ATTRS / REMOVE) + a terrain picker + a free type field with the offered roster as
+a `<datalist>` + a literal attrs box + UNDO + SOLVE. ⛔ **Still ONE canvas click
+listener**: the template arm and the edit tool are two KINDS of one `armed`
+variable with one writer, Escape clears either, and the tool `<select>` is a VIEW
+of it. The one asymmetry: an edit tool STAYS armed across clicks (it is a brush)
+where AT… does not (it spends a solve). The offered entity roster is the five
+types `procgenPalette` actually places — `pushableblock`, `button`, `lock`,
+`spinner`, `arrowtrap` — every one a body the generator already builds, solves
+and certifies in this room; the goal class is deliberately absent.
+
+Gates: `scripts/procgen/check-seedling-editor-edit.mjs` (59 checks, own server,
+no skip condition) plus one new claim on `check-procgen-lab-hosting.mjs` — a
+paint in the Seedling frame arriving on the host bus as
+`procgenLab:stateChanged.edits === 1`, which is the whole chain the hard-wired
+`edits: 0` in `watchSummary.js` was standing in for since slice 4.
+
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs not yet started)
 
 The Fable planning session that constructive-mode ruling 11 called for
