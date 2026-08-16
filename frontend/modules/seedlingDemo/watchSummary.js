@@ -26,15 +26,17 @@
  * protocol's names, and does it say the right thing when the arm has no
  * generated level at all?
  *
- * ── ⚠ WHAT SEEDLING DOES NOT HAVE, SAID OUT LOUD ──────────────────────
+ * ── ⛓⛓ `edits` IS REAL AS OF SLICE 11 — AND IT WAS ONE LINE ───────────
  *
- * `edits` is ALWAYS 0. Free tile/object editing on the Seedling page is
- * ⚖ ruling 8's other half and lands in slice 11 (family K); the maze has it
- * today and the protocol carries the field for both. ⛔ Reported as 0 rather
- * than omitted, because a host reading `edits` off a Seedling frame is asking
- * a real question and *"this substrate cannot be edited yet"* and *"nobody has
- * edited it"* happen to have the same answer TODAY — the day slice 11 lands,
- * this line is what has to change, and it is one line.
+ * It was hard-wired to `0` through slices 4–7 with the note *"the day slice 11
+ * lands, this line is what has to change, and it is one line"*. It landed and
+ * it was: `edits: ok ? (generate.edits ?? 0) : 0`. The projection law is what
+ * made that true — the count is `__editorGenerate.edits`, which is
+ * `state.edits.length`, which is the list `watchEdit.applyEdits` folds; there
+ * was never a second place holding an opinion about how many edits there are.
+ *
+ * ⚠ `?? 0` IS FOR THE ARMS AND THE OLD SHAPES, not for a missing count on a
+ * live GENERATE readout: `status: 'ok'` always carries one now.
  *
  * ⛔ NO DOM AND NO NODE: unit-tested in node, loaded in a browser.
  */
@@ -82,8 +84,8 @@ export function watchSummary({ source, href, generate = null, generated = null }
          * `null`: "nobody has asked" is not "the oracle said no".
          */
         certified: ok ? (generate.certified ?? null) : null,
-        // ⚠ ALWAYS 0 — see the docblock. Slice 11 is where this line changes.
-        edits: 0,
+        // ⛓ SLICE 11 — the REAL count. See the docblock for the one line it was.
+        edits: ok ? (generate.edits ?? 0) : 0,
         directives: ok ? (generate.directives ?? []) : [],
         /** The `?gen=`-shaped payload the page would DOWNLOAD, or null. */
         payload: ok ? (generated ?? null) : null,

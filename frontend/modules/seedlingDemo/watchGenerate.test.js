@@ -35,6 +35,8 @@ import {
     readGenerateParams, skeletonCatalogue, stepFromParams, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf, terrainAt } from './procgenLevel.js';
+// ⛓ CONSTRUCTIVE SLICE 11 — the ONE edit fold, driven from this file too.
+import { editStates } from './watchEdit.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
 import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
@@ -1684,5 +1686,139 @@ describe('watchGenerate — the skeleton kind', () => {
         expect(rows.find((r) => r.kind === 'bushy').params.map((p) => p.key))
             .toEqual(['prune', 'chambers']);
         expect(rows.find((r) => r.kind === 'empty').params).toEqual([]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 11 — FREE EDITING'S HALF OF THIS FILE
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓ the EDIT LIST is on every state, like the directives', () => {
+    it('the skeleton and a ladder rung both carry an EMPTY list, never absent', () => {
+        for (const step of [0, 1]) {
+            const st = generateStep({ seed: 3, biome: 'pre-sword', step });
+            expect(st.edits).toEqual([]);
+            expect(Object.isFrozen(st.edits)).toBe(true);
+        }
+    });
+
+    /**
+     * ⛔ ⚖ RULING 9, AS A BYTE COMPARISON. The URL writer must not learn about
+     * edits — so the bar a page writes for an edited level is CHARACTER FOR
+     * CHARACTER the bar it writes for the recipe. A writer that quietly gained
+     * an `?edits=` would redden here rather than in a prose review.
+     */
+    it('⛔⛔ the URL writer produces the SAME STRING with edits and without', () => {
+        const st = generateStep({ seed: 3, biome: 'pre-sword', step: 1 });
+        const edited = editStates(st, [{ op: 'paint', tx: 5, ty: 5, terrain: 'wall' }]);
+        const args = (s) => ({
+            seed: s.seed, biome: s.biome, bounds: s.bounds, skeleton: s.skeleton,
+            roster: s.roster, directives: s.directives, step: s.step,
+        });
+        expect(writeGenerateParams('', args(edited))).toBe(writeGenerateParams('', args(st)));
+        expect(writeGenerateParams('', args(edited))).not.toMatch(/edit/i);
+    });
+});
+
+describe('⛓⛓⛓ describeState — the identity\'s THIRD LEG, and the URL clause', () => {
+    const st = () => generateStep({ seed: 3, biome: 'pre-sword', step: 1 });
+
+    it('says nothing about edits when there are none', () => {
+        const line = describeState(st());
+        expect(line).not.toMatch(/manual edit/);
+        expect(line).not.toMatch(/NOT a reproduction/);
+    });
+
+    it('⛓ names the count, in order, AFTER the directed attempts', () => {
+        const line = describeState(editStates(st(), [
+            { op: 'paint', tx: 5, ty: 5, terrain: 'wall' },
+            { op: 'paint', tx: 6, ty: 5, terrain: 'wall' },
+        ]));
+        expect(line).toMatch(/step 1, then 2 manual edit\(s\)/);
+    });
+
+    it('⛔ …and SAYS the URL has stopped being a reproduction', () => {
+        const line = describeState(editStates(st(),
+            [{ op: 'paint', tx: 5, ty: 5, terrain: 'wall' }]));
+        expect(line).toMatch(/the URL is NOT a reproduction after edits — the PAYLOAD is/);
+    });
+});
+
+describe('⛓⛓⛓ agreementWithPayload — the EDITS are an identity field', () => {
+    const OPS = [
+        { op: 'paint', tx: 5, ty: 5, terrain: 'wall' },
+        { op: 'place', tx: 4, ty: 6, type: 'pushableblock', attrs: {} },
+    ];
+    const edited = () => generateWithDirectives(
+        { seed: 3, biome: 'pre-sword', step: 1, edits: OPS });
+    const payloadOf = (s) => ({
+        seed: s.seed, biome: s.biome, bounds: s.bounds, budget: s.budget,
+        roster: s.roster ?? null, directives: s.directives ?? [], edits: s.edits ?? [],
+        skeleton: s.skeleton, level: s.record, trace: s.trace,
+    });
+
+    it('an EDITED payload reproduced WITH its edits agrees byte for byte', () => {
+        const st = edited();
+        const check = agreementWithPayload(payloadOf(st), st);
+        expect(check.agrees).toBe(true);
+        expect(check.differences).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ THE MUTANT-VISIBLE ROW. A page that fetched an edited payload and
+     * did NOT replay its edits reproduces the RECIPE, so the check must report
+     * BOTH `edits` (which list) and `level` (which room) — a level divergence
+     * alone would leave a reader hunting a 100-tile grid for a difference the
+     * page already knew the cause of.
+     */
+    it('⛔ …and one reproduced WITHOUT them reports `edits` AND `level`, by name', () => {
+        const st = edited();
+        const unedited = generateStep({ seed: 3, biome: 'pre-sword', step: 1 });
+        const check = agreementWithPayload(payloadOf(st), unedited);
+        expect(check.agrees).toBe(false);
+        expect(check.differences).toContain('edits');
+        expect(check.differences).toContain('level');
+    });
+
+    it('⚠ an OLD payload naming no edits does not falsely diverge', () => {
+        const st = generateStep({ seed: 3, biome: 'pre-sword', step: 1 });
+        const old = payloadOf(st);
+        delete old.edits;
+        expect(agreementWithPayload(old, st).differences).not.toContain('edits');
+    });
+
+    /**
+     * ⚠ CERTIFICATION IS NOT IDENTITY. A payload's own `certified: true` is
+     * somebody else's assertion about a room this page has not solved, so the
+     * comparison must not read it — the maze row's claim 7, one substrate over.
+     */
+    it('⛔ `certified` is NOT compared — a loaded level is uncertified either way', () => {
+        const st = edited();
+        const check = agreementWithPayload({ ...payloadOf(st), certified: true }, st);
+        expect(check.agrees).toBe(true);
+    });
+});
+
+describe('⛓⛓⛓ THE ORDERING RULE — edits come AFTER all directives', () => {
+    /**
+     * ⛔ THE STRUCTURAL BACKSTOP, not the page's friendlier note. The payload
+     * carries `directives` and `edits` as two flat lists, which mean exactly
+     * one construction only because the order is fixed — so a directive onto an
+     * edited state has to refuse HERE, where the CLI, the tests and the page
+     * all pass through.
+     */
+    it('applyDirective REFUSES on an edited state, and names the way out', () => {
+        const st = editStates(generateStep({ seed: 6, biome: 'pre-sword', step: 0 }),
+            [{ op: 'paint', tx: 5, ty: 5, terrain: 'wall' }]);
+        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+            .toThrow(/UNDO the edits, or download the payload first/);
+        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+            .toThrow(/ladder → directives → edits/);
+    });
+
+    it('…and the same directive on the UNEDITED state is fine', () => {
+        const st = generateStep({ seed: 6, biome: 'pre-sword', step: 0 });
+        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+            .not.toThrow();
     });
 });

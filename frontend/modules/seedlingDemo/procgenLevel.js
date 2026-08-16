@@ -312,6 +312,46 @@ export function withTerrain(record, cells) {
  * which would be a second roster to drift from the first.
  */
 export function withEntities(record, entities) {
+    assertEntities(entities);
+    return freezeRecord({
+        ...record,
+        layers: record.layers.map((l) => ({ ...l, tiles: [...l.tiles] })),
+        entities: [...record.entities, ...entities.map((e) => ({ ...e }))],
+    });
+}
+
+/**
+ * The same record with its entity list REPLACED wholesale — PURE, a new
+ * record out.
+ *
+ * ⛓⛓ CONSTRUCTIVE-MODE SLICE 11 (free editing). `withEntities` APPENDS, which
+ * is everything a generator ever needs: a template adds bodies and a reverted
+ * candidate is discarded by throwing the result away. A hand EDIT can also
+ * REMOVE one and can rewrite one's attributes, and neither is expressible as
+ * an append.
+ *
+ * ⛔ ONE PRIMITIVE FOR BOTH, rather than a `withoutEntity` and a
+ * `withEntityAttrs` that would each have to re-state the freeze and the
+ * validation. `watchEdit.js` composes them as a filter and a map over
+ * `record.entities` — which is the shape the ops already have — and this file
+ * keeps the ONE place a record is rebuilt and frozen.
+ *
+ * ⚠ SAME VALIDATION AS `withEntities`, and same deliberate GAP: the TYPE is
+ * not checked here. `buildLevelWorld` refuses a tag it has not transcribed, BY
+ * NAME, with the construction site it wants — a second roster in this file
+ * would drift from the first.
+ */
+export function withEntitiesReplaced(record, entities) {
+    assertEntities(entities);
+    return freezeRecord({
+        ...record,
+        layers: record.layers.map((l) => ({ ...l, tiles: [...l.tiles] })),
+        entities: entities.map((e) => ({ ...e })),
+    });
+}
+
+/** The shared shape check — see `withEntities`' docblock for the gap it leaves. */
+function assertEntities(entities) {
     for (const e of entities) {
         if (!e || typeof e.type !== 'string' || !Number.isFinite(e.x) || !Number.isFinite(e.y)) {
             fail(`procgenLevel: an entity must be {type, x, y, attrs?} — got `
@@ -319,11 +359,6 @@ export function withEntities(record, entities) {
                 + 'corner; the class adds its own +8), which is what `oelAtTile` returns.');
         }
     }
-    return freezeRecord({
-        ...record,
-        layers: record.layers.map((l) => ({ ...l, tiles: [...l.tiles] })),
-        entities: [...record.entities, ...entities.map((e) => ({ ...e }))],
-    });
 }
 
 /**

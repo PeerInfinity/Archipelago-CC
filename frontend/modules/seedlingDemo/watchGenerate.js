@@ -100,6 +100,12 @@ import {
     SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingModel, seedlingOracle,
 } from './procgenSeedling.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
+/**
+ * ⛓⛓ CONSTRUCTIVE SLICE 11 — THE ONE EDIT FOLD. ⛔ `watchEdit.js` imports
+ * nothing from here, so the dependency is one-way: the ops know about records,
+ * and the construction knows about the ops.
+ */
+import { editStates } from './watchEdit.js';
 
 export class WatchGenerateError extends Error {
     constructor(message) {
@@ -310,6 +316,16 @@ export function readGenerateParams(search) {
  * with no `?run=` already shows — so `run` is DELETED there rather than spelt
  * `run=0`, which would be a second way to say the same absence.
  *
+ * ── ⛔⛔ AND IT DOES NOT LEARN ABOUT MANUAL EDITS (slice 11, ⚖ ruling 9) ──
+ *
+ * There is no `edits` parameter in this signature and there must not be one.
+ * ⚖ *"It's okay to not include the manual edits"* — a URL is an INSTRUCTION
+ * (a run somebody could type) and an edit list is a CONSTRUCTION, which is the
+ * payload's job and which it does byte-exactly (`agreementWithPayload`). ⛔ The
+ * consequence is stated ON THE PAGE rather than left to be discovered:
+ * `describeState` prints *"the URL is NOT a reproduction after edits"* the
+ * moment there is one.
+ *
  * ── ⛔ `?gen=` IS AN IDENTITY, NOT A BOUND ────────────────────────────
  *
  * A payload run's identity IS `?gen=`: it names a file that carries
@@ -476,6 +492,16 @@ export function generateStep({
              * and never has to ask whether a directive has happened yet.
              */
             directives: Object.freeze([]),
+            /**
+             * ⛓⛓ CONSTRUCTIVE SLICE 11: the MANUAL EDITS, on the same terms as
+             * the directives — an EMPTY list on every state rather than none,
+             * so every reader downstream (the payload, `describeState`,
+             * `agreementWithPayload`, the URL writer, the bridge summary) meets
+             * ONE shape and never has to ask whether an edit has happened yet.
+             * ⛔ The URL writer is the one reader that must NOT learn about
+             * them (⚖ ruling 9) — see `writeGenerateParams`.
+             */
+            edits: Object.freeze([]),
             /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from. */
             skeleton: skel,
             stop: null,
@@ -503,6 +529,8 @@ export function generateStep({
         summary: out.summary,
         keptTemplates: keptTemplatesOf(out.summary, palette),
         directives: Object.freeze([]),
+        /** ⛓⛓ SLICE 11 — see the step-0 branch for why it is a list and not absent. */
+        edits: Object.freeze([]),
         skeleton: skel,
         stop: out.summary.stop,
         /**
@@ -554,6 +582,37 @@ export function applyDirective(state, spec, index) {
         fail(`watchGenerate: a directive needs its 0-based index, got ${JSON.stringify(index)}. `
             + 'The index is part of the anchor stream\'s derivation, so two identical '
             + 'directives ask two different questions rather than walking one order twice.');
+    }
+    /**
+     * ── ⛓⛓⛓ SLICE 11 — **EDITS COME AFTER ALL DIRECTIVES**, and this is the
+     * ── backstop that makes it a law rather than a UI convention ──────────
+     *
+     * ⚖ The ordering question the slice had to answer: *edits then directives*
+     * and *directives then edits* are DIFFERENT levels, so a payload carrying
+     * two flat lists cannot say which happened. The honest shapes were (1) ONE
+     * ordered `history: [{kind:'directive'|'edit', …}]` replacing both arrays,
+     * and (2) a rule that fixes the order so two lists are enough.
+     *
+     * ⛔ (1) WAS NOT TAKEN, and the reason is scope: it changes slice 5's
+     * payload shape and `?directed=`'s semantics (a directive's index IS its
+     * anchor stream's salt — `directiveSeed` — so re-indexing them inside a
+     * mixed history is a determinism change, not a rename). ⇒ **v1 RULE: the
+     * reconstruction is ladder → directives → edits, always.** The two lists
+     * stay separate and mean exactly one construction. A directed attempt on
+     * an edited level refuses BY NAME, here and — before the press, with the
+     * friendlier sentence — in `watchViewer`'s `attempt()`.
+     *
+     * ⚠ THE PRICE IS STATED: you cannot direct a template onto a hand-edited
+     * room without undoing the edits first. That is a real loss and it is
+     * recorded as residue; slice 12 or the elements arc may revisit it with
+     * the ONE-history shape.
+     */
+    if ((state.edits ?? []).length > 0) {
+        fail(`watchGenerate: this level carries ${state.edits.length} manual edit(s), and a `
+            + 'directed attempt onto it would make the construction ORDER unrecoverable — '
+            + 'the payload carries `directives` and `edits` as two lists, which means '
+            + 'exactly one thing only because the rule is ladder → directives → edits. '
+            + 'UNDO the edits, or download the payload first.');
     }
     const palette = paletteFor(state.biome);
     const base = palette.templates.find((t) => t.name === spec?.template);
@@ -643,11 +702,18 @@ export function applyDirective(state, spec, index) {
  */
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, roster = null, directed = null,
-    skeleton = DEFAULT_SKELETON,
+    skeleton = DEFAULT_SKELETON, edits = null,
 } = {}) {
     let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
-    return state;
+    /**
+     * ⛓⛓⛓ SLICE 11 — THE THIRD LEG, AND ITS ORDER IS THE RULE (see
+     * `applyDirective`'s backstop): ladder → directives → edits. ⛔ Through
+     * `watchEdit.editStates`, which is the SAME fold the page's UNDO and the
+     * `?gen=` replay use — one reconstruction, so a payload emitted by node and
+     * a level hand-edited in the browser are the same bytes or a finding.
+     */
+    return editStates(state, edits);
 }
 
 /**
@@ -825,6 +891,33 @@ export function agreementWithPayload(payload, state) {
      */
     cmp('skeleton', normalizeSkeleton(payload.skeleton ?? DEFAULT_SKELETON, { validate: false }),
         normalizeSkeleton(state.skeleton ?? DEFAULT_SKELETON));
+    /**
+     * ── ⛓⛓⛓ SLICE 11: THE EDIT LIST IS AN IDENTITY FIELD, AND THE STRONGEST
+     * ── ONE — because it is the only part of a level NO SEED WILL REPRODUCE ──
+     *
+     * ⚖ Ruling 9 puts the edits in the PAYLOAD and keeps them out of the URL.
+     * That makes this comparison the whole cross-runtime claim for an edited
+     * level: `state.record` here has already had `payload.edits` folded onto
+     * it (the `?gen=`/host-load path replays them through `watchEdit.editStates`
+     * — the ONE reconstruction), so `level` below is a byte comparison of *the
+     * recipe plus these ops in this order*, computed twice on two runtimes.
+     *
+     * ⛔ AND THE LIST ITSELF IS COMPARED SEPARATELY, not left to be inferred
+     * from a level divergence: a payload whose edits the page did NOT replay
+     * must say WHICH FIELD disagreed rather than reporting an unexplained
+     * difference in a 100-tile grid. ⚠ `?? []` on both sides — a payload
+     * written before this field existed names no edits, which is exactly what
+     * an unedited run has, so an OLD payload does not falsely diverge.
+     *
+     * ⛔⛔ THE MAZE DOES THE OPPOSITE AND THE DIFFERENCE IS FORCED, not a
+     * taste: `mazeLab.agreementWithPayload` REFUSES to reproduce an edited
+     * payload and sends the reader to its LOAD box (`deserializeMazeLevel`
+     * takes a level as it stands). watch.html has no such box and never had one
+     * — `?gen=` has always meant REGENERATE-AND-COMPARE — so reconstruction is
+     * the only way an edited Seedling level can round-trip at all, and it buys
+     * the stronger claim in exchange.
+     */
+    cmp('edits', payload.edits ?? [], state.edits ?? []);
     cmp('level', payload.level, state.record);
     cmp('trace', payload.trace, state.trace);
     return {
@@ -875,7 +968,17 @@ export function describeState(state, solved = null) {
                 ? ` · skeleton: ${formatSkeleton(state.skeleton)} (CARVED, not the open room)`
                 : '')
             + ((state.directives ?? []).length
-                ? `, then ${state.directives.length} directed attempt(s)` : ''),
+                ? `, then ${state.directives.length} directed attempt(s)` : '')
+            /**
+             * ⛓⛓⛓ SLICE 11 — THE THIRD LEG OF THE IDENTITY, IN ITS ORDER.
+             * ⚖ §3.8(a): an edited level is *"ladder + directives + N manual
+             * edits"*, and the order is the rule (`applyDirective`'s backstop).
+             * ⛔ Named only when there ARE edits, for the same reason `empty` is
+             * not named: a clause on every line is a clause a reader stops
+             * reading.
+             */
+            + ((state.edits ?? []).length
+                ? `, then ${state.edits.length} manual edit(s)` : ''),
         /**
          * ⛓ SLICE 4: THE ROSTER THE RUN DREW FROM, by the palette's own name —
          * `pre-sword` unrestricted, `pre-sword[families:pit,water]` under verb
@@ -893,6 +996,17 @@ export function describeState(state, solved = null) {
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,
         `budget: ${state.budget.maxTicksPerTarget} ticks per target (⛓ TICKS, not ms)`,
     ];
+    /**
+     * ⛓⛓⛓ SLICE 11 — ⚖ RULING 9, SAID ON THE PAGE. The URL writer never learns
+     * about edits, so once there are any the address bar names the RECIPE and
+     * not the level on screen. ⛔ The page says so where the identity is stated,
+     * in the maze page's own words (one wording across the two substrates), and
+     * only when it is true.
+     */
+    if ((state.edits ?? []).length) {
+        bits.push('⚠ the URL is NOT a reproduction after edits — the PAYLOAD is '
+            + '(Download level JSON + trace)');
+    }
     if (state.stop) bits.push(`stop: ${state.stop}`);
     if (solved) {
         bits.push(`solve: ${solved.verdict}`
