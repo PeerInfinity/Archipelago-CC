@@ -3120,18 +3120,16 @@ rooms, `TIME_RUNG.maxExpansions` (parked for R9).
 
 ## 5f. The CONSTRUCTIVE-MODE arc — carve-then-obstacle, two substrates on one loop, lab pages in the frontend (arc opened 2026-08-15, post-dates this doc)
 
-**Status: OPEN — designed 2026-08-15 (Fable design session); slices 1–5
-SHIPPED 2026-08-15 (`067746b9a` shared refactor · `a37c0953e`/`81953354a`/
-`868c39266` loop move + maze bindings · `61f918180`..`8ee37b981` maze lab
-page · `3dbc324c0`/`feb763186` iframe hosting · `8a0820ea0`/`242ee9240`
-skeleton kinds + `?skeleton=`); slice 6 in flight. ⚖ 2026-08-15 (user):
-Seedling's pass 2 under the two-pass system is NOT ruled in this arc — it
-gets its OWN FABLE PLANNING SESSION (kickoff ruling 11); slices 8, 9 and
-the Seedling half of 10 are handed to it; slice 6 SHIPPED (`be53a4dd4`/
-`ce647d4e7`); that session's design is now **§5g (PROCGEN ELEMENTS)**, which
-ABSORBS 10-maze; this arc continues with 7 (running), 6b (widen the
-pre-check to every kind — §5g ruling, measured by slice 6), 11, 12, then
-CLOSES.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
+**Status: ⛓ CLOSED 2026-08-16 — nine slices SHIPPED (`067746b9a`..`244e6df0a`;
+shared submodule `ed596ff` → `917e4de`): 1 shared refactor · 2 loop core →
+`procgenCore/` + maze bindings · 3 maze lab page · 4 iframe hosting
+(`procgenLabPanel`) · 5 skeleton kinds + `?skeleton=` · 6 yield table +
+pre-check · 7 chambers + kind params · 6b pre-check at every kind · 11 Seedling
+free editing · 12 the URL diet (`?directed=` gone). §7 exit criteria answered
+one by one in kickoff §18.1 (7 = `reach-cell` NOT built and 8-Seedling NOT
+built — ⚖ ruling 11 handed them, with corridor doors, to §5g); consolidated
+residue §18.2. Verified against disk by the orchestrator at every slice
+boundary.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
 the user's rulings, §2 recon incl. the two probes the design rests on, §3 the
 design, §4 the twelve slices with mechanism families (⚑ = Fable-shaped parts),
 §6 open questions with defaults, §7 exit criteria. Memory:

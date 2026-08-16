@@ -8898,7 +8898,19 @@ together with the ARC CLOSE — §13.2 the exit criteria answered one by one, an
 
 ---
 
-## The constructive-mode arc — the loop core moves out, and the maze becomes its second substrate (OPEN, 2026-08-15)
+## The constructive-mode arc — the loop core moves out, and the maze becomes its second substrate (⛓ CLOSED 2026-08-16 @ `244e6df0a`; opened 2026-08-15)
+
+**⛓ CLOSED 2026-08-16.** Nine slices shipped (`067746b9a`..`244e6df0a`, shared
+submodule @ `917e4de`): the shared maze algorithms · the loop core in
+`procgenCore/` with the maze as its second binding · the maze lab page ·
+both lab pages hosted in the frontend (`procgenLabPanel`) · the carved
+skeleton kinds (`?skeleton=<kind>[;k=v]`, the maze biome names) · the yield
+table + the connectivity pre-check at every kind · chambers + kind params ·
+Seedling free editing · the URL diet (`?directed=` gone; the payload is the
+construction). ⚖ Seedling's pass 2 under the two-pass system (corridor
+doors, `reach-cell`, Seedling rule-directed) is the PROCGEN ELEMENTS
+programme's (queue §5g) by ruling. Residue and the exit criteria answered:
+kickoff §18 (working machine).
 
 The generator gains its **second mode** (a true two-pass Cloudberry: start from a
 room of WALL, carve a path to the goal, then run the existing keep-or-revert loop
