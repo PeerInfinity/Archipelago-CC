@@ -258,6 +258,31 @@ export function formatElementSpec(spec) {
 }
 
 /**
+ * ⛓⛓ **THE SPEC, OUT OF EITHER SHAPE THE KEY `elements` CARRIES** — arc 2
+ * slice 4.
+ *
+ * Two writers put something under that key and they are deliberately different
+ * things: the LAB PAGE's payload carries the SPEC (a reproduction recipe), and
+ * `generate-maze-level.mjs --json` carries `elementSummaryOf`'s block —
+ * `{spec, ran, placed, refused}`, a REPORT of what was built. A page that
+ * accepted only its own shape would die on the very payload it was handed to
+ * explain, and a page that accepted only the CLI's could not read its own
+ * download back.
+ *
+ * ⛔ ONE function knows both, and it knows them by the presence of `spec` — a
+ * key no element spec has, because `name` is the head. Everything downstream
+ * (the URL writer, the identity line, `agreementWithPayload`, `mazeModel`) then
+ * meets exactly one shape.
+ */
+export function elementSpecOf(block) {
+    if (block && typeof block === 'object' && !Array.isArray(block)
+        && Object.prototype.hasOwnProperty.call(block, 'spec')) {
+        return block.spec;
+    }
+    return block;
+}
+
+/**
  * ⛓⛓⛓ THE ONE PARSER — `<name>[;key=value]…` → `{name[, params]}`.
  *
  * ⛔ SIX DISTINGUISHED REFUSALS, the same six `parseAreaSpec` makes, because a

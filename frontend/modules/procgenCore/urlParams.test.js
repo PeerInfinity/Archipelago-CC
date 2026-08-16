@@ -19,9 +19,10 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
     ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, dropDirectedParam, formatDirectives,
-    intParam, parseDirective, parseDirectives, readAreas, readBounds, readRequire, readRosterSpec,
-    readSkeleton, refuseDirectedParam, stepFromParams, writeAreasParam, writeBounds, writeInt,
-    writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
+    intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readRequire,
+    readRosterSpec, readSkeleton, refuseDirectedParam, stepFromParams, writeAreasParam,
+    writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
+    writeSkeletonParam,
 } from './urlParams.js';
 import {
     LabViewError, describeKeptKind, directedCost, generationRows, ladderCost, tileAtPoint,
@@ -618,5 +619,120 @@ describe('urlParams — ?areas= and ?require=', () => {
         writeRunFlag(bar, 0);
         expect(bar.get('areas')).toBe('2;graphify=0.5');
         expect(bar.get('require')).toBe('K0,K1');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?elements=` — PROCGEN ELEMENTS ARC 2, SLICE 4
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('urlParams — ?elements=', () => {
+    /**
+     * ⛔ **LITERAL EXPECTED VALUES, STATED HERE** (trap 250). The round trip
+     * below is a FIXED POINT and tests self-consistency only; a reader/writer
+     * pair that both said `elements=guard;len=9` would satisfy it perfectly. So
+     * every string is typed out and only THEN composed.
+     */
+    it('reads ?elements= through the ONE codec — absent and empty are `none`', () => {
+        expect(readElements(q(''))).toEqual({ name: 'none' });
+        expect(readElements(q('elements='))).toEqual({ name: 'none' });
+        expect(readElements(q('elements=none'))).toEqual({ name: 'none' });
+        expect(readElements(q('elements=guard'))).toEqual({ name: 'guard' });
+        expect(readElements(q('elements=guard%3Blen%3D4')))
+            .toEqual({ name: 'guard', params: { len: 4 } });
+        expect(readElements(q('elements=guard%3Blen%3D2%3Bturns%3D1%3Bbinds%3Dany')))
+            .toEqual({ name: 'guard', params: { len: 2, turns: 1, binds: 'any' } });
+        // ⛓ TYPED FROM THE DOMAIN — the number 4, never the string "4".
+        expect(typeof readElements(q('elements=guard%3Blen%3D4')).params.len).toBe('number');
+    });
+
+    /**
+     * ⛓⛓⛓ **A PARAMETER AT ITS DEFAULT IS KEPT, AND THAT IS THE ONE PLACE THIS
+     * PARAMETER DIFFERS FROM `?areas=` AND `?skeleton=`.** For an element a
+     * NAMED parameter is an override that spends NO draw and an omitted one is
+     * DRAWN, so `guard;binds=item` and `guard` are DIFFERENT RUNS even though
+     * `binds` resolves to `item` in both. A writer that "tidied" the default
+     * away would silently turn the first into the second.
+     */
+    it('KEEPS a named parameter even at its default value — the absence is load-bearing', () => {
+        expect(writeElementsParam(q(''), { name: 'guard', params: { binds: 'item' } })
+            .get('elements')).toBe('guard;binds=item');
+        expect(writeElementsParam(q(''), { name: 'guard' }).get('elements')).toBe('guard');
+        expect(readElements(q('elements=guard%3Bbinds%3Ditem')))
+            .toEqual({ name: 'guard', params: { binds: 'item' } });
+    });
+
+    it('writes the spec through the ONE formatter, in SCHEMA order, and DELETES at `none`', () => {
+        // ⛓ schema order (len, turns, binds), not the caller's typing order.
+        expect(writeElementsParam(q('seed=3'), { name: 'guard', params: { binds: 'any', len: 4 } })
+            .toString()).toBe('seed=3&elements=guard%3Blen%3D4%3Bbinds%3Dany');
+        expect(writeElementsParam(q(''), { name: 'guard' }).get('elements')).toBe('guard');
+        // ⛔ …and the DEFAULT deletes rather than writing `elements=none`.
+        expect(writeElementsParam(q('elements=guard&run=1'), { name: 'none' }).toString())
+            .toBe('run=1');
+        expect(writeElementsParam(q('elements=guard&run=1'), null).toString()).toBe('run=1');
+    });
+
+    /**
+     * ⛔ TRAP 245 — REWRITTEN **IN PLACE**. `delete` then `set` APPENDS the key
+     * and moves it to the end of the bar, which the fixed point below sees and
+     * a round trip never would.
+     */
+    it('REWRITES IN PLACE — a changed spec does not move the key to the end of the bar', () => {
+        expect(writeElementsParam(q('elements=guard&run=1'), { name: 'guard', params: { len: 3 } })
+            .toString()).toBe('elements=guard%3Blen%3D3&run=1');
+        expect(writeElementsParam(q('seed=1&elements=guard&run=1'), { name: 'guard' })
+            .toString()).toBe('seed=1&elements=guard&run=1');
+    });
+
+    it('reader ∘ writer is a FIXED POINT over every spelling above', () => {
+        for (const value of ['guard', 'guard;len=4', 'guard;len=2;turns=1',
+            'guard;len=6;turns=3;binds=any', 'guard;binds=item']) {
+            expect(writeElementsParam(q(''), readElements(q(`elements=${encodeURIComponent(value)}`)))
+                .get('elements')).toBe(value);
+        }
+    });
+
+    it('REFUSES BY NAME, with the parameter in front and the codec\'s sentence behind', () => {
+        expect(() => readElements(q('elements=hammer')))
+            .toThrow(/\?elements="hammer".*head of an element spec is the ELEMENT.*\[none, guard\]/s);
+        expect(() => readElements(q('elements=none%3Blen%3D3')))
+            .toThrow(/There is no element to give them to/);
+        expect(() => readElements(q('elements=guard%3Blen%3D9')))
+            .toThrow(/not in its declared domain/);
+        expect(() => readElements(q('elements=guard%3Bnope%3D1')))
+            .toThrow(/has no parameter "nope"/);
+        expect(() => readElements(q('elements=guard%3Blen%3D2%3Blen%3D3')))
+            .toThrow(/names "len" TWICE/);
+    });
+
+    it('REFUSES on the way OUT what it would refuse on the way in', () => {
+        expect(() => writeElementsParam(q(''), { name: 'hammer' }))
+            .toThrow(/declared elements are \[none, guard\]/);
+        expect(() => writeElementsParam(q(''), { name: 'guard', params: { len: 9 } }))
+            .toThrow(/not in its declared domain/);
+        expect(() => writeElementsParam(q(''), { name: 'none', params: { len: 2 } }))
+            .toThrow(/There is no element to give them to/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE SEEDLING PAGE MUST IGNORE-AND-PRESERVE AN UNKNOWN
+     * `?elements=`** — arc 1's claim for `?areas=`, one parameter later.
+     * Seedling has no elements (arc 3 gives it some), and a hosted navigate
+     * that STRIPPED the parameter would hand back a link that no longer names
+     * the run it came from. ⛔ Nothing under `seedlingDemo/` was touched, so
+     * what is driven is the composition of the SHARED writers its own
+     * copy-the-rest writer is built from.
+     */
+    it('the SHARED writers PRESERVE an ?elements= they do not own', () => {
+        const bar = q('source=generate&seed=3&elements=guard%3Blen%3D2%3Bturns%3D1&biome=x');
+        writeBounds(bar, DEFAULT_BOUNDS);
+        writeSkeletonParam(bar, { kind: 'winding' });
+        writeAreasParam(bar, { keys: 1 });
+        writeRosterParam(bar, null);
+        dropDirectedParam(bar);
+        writeRunFlag(bar, 0);
+        expect(bar.get('elements')).toBe('guard;len=2;turns=1');
+        expect(bar.get('areas')).toBe('1');
     });
 });

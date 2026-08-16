@@ -77,10 +77,24 @@
   ?families= / ?templates=   the sub-roster a run may draw from, a comma list
              either way; ABSENT is the whole roster and an empty value refuses.
              ⛔ BOTH present REFUSES — two spellings of one setting.
-  ?directed= the DIRECTED ATTEMPTS, in order:
-             `template(k=v,…)@<bound><d|s>[!tx,ty]`, `;`-separated, e.g.
-             `wall-segment(ori=v,len=3)@12d`. ⛔ Only the INPUTS are encoded — a
-             URL is an INSTRUCTION, a payload is a REPORT.
+  ?directed= ⛔ RETIRED by constructive-mode slice 12 (⚖ its §3.9) and REFUSED
+             BY NAME: a URL names the LAUNCH parameters a person types, and a
+             directive list is a CONSTRUCTION. Press ATTEMPT, or hand the page a
+             payload (`?gen=` / the host's SEND) — its `directives` are replayed
+             in order. The CLI keeps `--directed=`.
+  ?areas=N[;k=v]…  the AREA GRAPH — lock-and-key over the partition (PROCGEN
+             ELEMENTS arc 1). ABSENT is `0`, at which the binding does not
+             partition, does not call the module and spends no draw.
+  ?require=K0,K1   the RULE DIRECTIVE: the run is REFUSED unless the graph
+             placed those symbols and each is a CUT. ⛔ No bound is widened.
+  ?elements=<name>[;k=v]…  the ELEMENT (PROCGEN ELEMENTS arc 2), e.g.
+             `guard;len=2;turns=1`. ABSENT is `none`, at which no site is drawn,
+             nothing is constructed and no draw is spent — so a link without it
+             produces byte-for-byte the level this page produced before elements
+             existed. ⚠ A parameter NAMED is an override spending no draw; one
+             omitted is DRAWN, so `guard` and `guard;len=3` are different runs.
+             ⚠ MOST SEEDS REFUSE at 11x11 and the page says why; 15x15 with
+             `guard;len=2;turns=1` places on about 57% of them.
   ?run=1     RUN-ALL on load
   ?gen=PATH  a payload `generate-maze-level.mjs --json` emitted: its seed,
              bounds and room REPLACE the ones above, the page GENERATES from
@@ -213,6 +227,20 @@
     border: 1px solid #24242c; border-radius: 3px; }
   #labAreaLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
   #labAreaLegend b { color: #ffd75f; }
+  /* ⛓ THE ELEMENT'S BOX — the same two shapes as the area pane's, because they
+     answer the same two questions (what ran / what it produced) and a reader
+     should not have to learn a second layout for the second layer. */
+  #labElementNote { margin: 4px 0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
+    line-height: 1.45; display: none; }
+  #labElementNote.refused { display: block; background: #2a1414; border: 1px solid #6d2a2a;
+    color: #ffb0b0; }
+  #labElementNote.ran { display: block; background: #1a1424; border: 1px solid #4a3a6d;
+    color: #d0bcf0; }
+  #labElementLegend { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; font-size: 12px; }
+  #labElementLegend .lg { display: flex; align-items: center; gap: 5px; padding: 2px 7px;
+    border: 1px solid #24242c; border-radius: 3px; }
+  #labElementLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  #labElementLegend b { color: #ff8fd0; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -244,6 +272,11 @@
     <!-- ⚠ ONE ROW PER **SYMBOL**, never a label per cell: door counts are not
          small (up to 50 over eight 15x15 cells — the yield table). -->
     <div id="labAreaLegend"></div>
+    <!-- ⛓⛓ THE GADGET'S OWN BOX — what it PLACED, or the binding's VERBATIM
+         REFUSAL. ⚠ Most seeds refuse (§10.11.5) and the refusal is what this
+         page has to say on them; ⛔ no bound is widened to make it prettier. -->
+    <div id="labElementNote"></div>
+    <div id="labElementLegend"></div>
 
     <!-- ⛓ EVERY CONTROL HERE IS A BOUND THE LOOP RUNS UNDER, and every one of
          them is echoed into the trace and the readout — a knob whose value
@@ -283,6 +316,21 @@
         <label for="labAreaLayer">layer</label>
         <select id="labAreaLayer"></select>
         <button id="labAreaLayerNext">LAYER ▶</button>
+      </div>
+      <!-- ⛓⛓⛓ THE ELEMENT (PROCGEN ELEMENTS arc 2). `guard` is the reverse-pull
+           block gadget: a block pulled backwards off its button, whose door is
+           held open only while the block sits there, and the area graph's key
+           lives BEHIND that door. ⛔ A change RESETS the ladder — an element is
+           stamped into the room BEFORE the carve, so it moves the whole room
+           stream. ⚠ A parameter left at "any (draw it)" is DRAWN and one that
+           is named is an OVERRIDE that spends no draw: the two are different
+           runs even when the value comes out the same. ⚠ MOST SEEDS REFUSE at
+           11x11 — that is the honest state, and 15x15 with `guard;len=2;turns=1`
+           is the friendliest demo (57% placed). -->
+      <div class="line">
+        <label for="labElements">element</label>
+        <select id="labElements"></select>
+        <span id="labElementParams"></span>
       </div>
       <div class="line">
         <label>obstacles <input id="labCount" type="number" min="0" step="1" style="width:4em"></label>
@@ -328,6 +376,21 @@
       <div class="line">
         <button id="labSolve">SOLVE the world on screen</button>
         <span class="note">— the plan is drawn over the room</span>
+      </div>
+      <!-- ⛓⛓⛓ THE STEP-THROUGH (⚖ design ruling 6 fn. 3: "step-through
+           visualisation is non-negotiable"). The plan LINE says where the
+           player walked; only the replay says that the walk PUSHED something,
+           and a pushed block is what this whole arc is about. The frames come
+           from `mazeLab.planFrames`, which replays through the ENGINE's own
+           `step` — a page-side movement model would get the vacated cell wrong
+           on the first push. ⚠ PLAY is a wall clock and is allowed to be one:
+           it paces an animation and decides nothing. -->
+      <div class="line">
+        <button id="labPlayReset">⏮ frame 0</button>
+        <button id="labPlayPrev">◀ STEP</button>
+        <button id="labPlayNext">STEP ▶</button>
+        <button id="labPlay">▶ PLAY the plan</button>
+        <span id="playNote" class="note"></span>
       </div>
       <div id="solveNote"></div>
     </div>

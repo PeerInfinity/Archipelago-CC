@@ -62,17 +62,29 @@ import {
 import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/paletteRoster.js';
 import {
     ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam, readAreas, readBounds,
-    readRequire, readRosterSpec, readSkeleton, refuseDirectedParam, writeAreasParam,
-    writeBounds, writeInt, writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
+    readElements, readRequire, readRosterSpec, readSkeleton, refuseDirectedParam, writeAreasParam,
+    writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
+    writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec,
 } from '../procgenCore/areaSpec.js';
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 2, slice 4 — the ONE element codec. ⛔ The page does
+ * not parse `?elements=` itself and does not restate a domain: `urlParams`
+ * reads the parameter, `elementSpec` adjudicates the string, and the form's
+ * options come from the codec's own schema.
+ */
+import {
+    DEFAULT_ELEMENTS, elementSpecOf, formatElementSpec, normalizeElementSpec,
+} from '../procgenCore/elementSpec.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, SKELETON_KINDS, formatSkeleton,
     normalizeSkeleton,
 } from '../procgenCore/skeletonKinds.js';
-import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
+import {
+    MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES, applyEditOp,
+} from './mazeRoomEditor.js';
 import { createState, step } from './mazeRoomEngine.js';
 import {
     DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
@@ -236,6 +248,14 @@ export function readLabParams(search) {
          */
         areas: readAreas(q),
         require: readRequire(q),
+        /**
+         * ⛓⛓ PROCGEN ELEMENTS arc 2 slice 3/4 — THE ELEMENT. Absent
+         * `?elements=` is `{name: 'none'}`, at which the binding draws no site,
+         * instantiates nothing, never calls `construct` and spends no draw — so
+         * a link without it is byte-for-byte the level this page produced
+         * before elements existed (⚖ arc-2 ruling 5).
+         */
+        elements: readElements(q),
         budget: { maxExpansions: intParam(q, 'expansions', DEFAULT_MAZE_BUDGET.maxExpansions) },
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
         gen: q.get('gen'),
@@ -262,7 +282,7 @@ export function readLabParams(search) {
 export function writeLabParams(search, {
     source = SOURCES.GENERATE, seed, biome, width, height, bounds, budget, step,
     roster = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
-    areas = DEFAULT_AREAS, require = null,
+    areas = DEFAULT_AREAS, require = null, elements = DEFAULT_ELEMENTS,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -287,6 +307,13 @@ export function writeLabParams(search, {
      */
     writeAreasParam(q, areas);
     writeRequireParam(q, require);
+    /**
+     * ⛓ ARC 2 SLICE 4 — DELETED at `none`, rewritten IN PLACE otherwise, for
+     * exactly the reasons `?areas=` is: the default is spelled by absence, and a
+     * `delete` followed by a `set` would move the key to the END of the bar and
+     * break the round-trip fixed point (trap 245).
+     */
+    writeElementsParam(q, elements);
     writeInt(q, 'expansions', budget.maxExpansions);
     writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
     /**
@@ -329,6 +356,7 @@ export { stepFromParams } from '../procgenCore/urlParams.js';
 export function generateStep({
     seed, biome = DEFAULT_MAZE_BIOME, step, bounds, budget, width, height, roster = null,
     skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
+    elements = DEFAULT_ELEMENTS,
 } = {}) {
     const palette = restrictPalette(paletteFor(biome), roster);
     const b = assertMazeBudget(budget ?? DEFAULT_MAZE_BUDGET);
@@ -368,9 +396,19 @@ export function generateStep({
          */
         areas: normalizeAreaSpec(areas ?? DEFAULT_AREAS),
         require: require ? Object.freeze([...require]) : null,
+        /**
+         * ⛓⛓ ARC 2 SLICE 4 — THE ELEMENT SPEC, on every state, in the one
+         * normalized spelling. ⚠ `normalizeElementSpec` KEEPS a parameter the
+         * caller named EVEN AT ITS DEFAULT VALUE, unlike the area and skeleton
+         * normalizers, and that asymmetry is load-bearing rather than
+         * cosmetic: a NAMED parameter is an override that spends no draw and an
+         * OMITTED one is drawn, so `guard;len=3` and `guard` are different runs
+         * (`elementSpec.namedParams`).
+         */
+        elements: normalizeElementSpec(elements ?? DEFAULT_ELEMENTS),
     };
     if (step === 0) {
-        const model = mazeModel({ seed, width, height, skeleton, areas });
+        const model = mazeModel({ seed, width, height, skeleton, areas, elements });
         return Object.freeze({
             ...common,
             model,
@@ -428,6 +466,7 @@ export function generateStep({
         height,
         skeleton,
         areas,
+        elements,
         require,
     });
     return Object.freeze({
@@ -597,9 +636,11 @@ export function applyDirective(state, spec, index) {
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, width, height, roster = null, directed = null,
     skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
+    elements = DEFAULT_ELEMENTS,
 } = {}) {
     let state = generateStep({
         seed, biome, step, bounds, budget, width, height, roster, skeleton, areas, require,
+        elements,
     });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     return state;
@@ -679,11 +720,24 @@ export function applyEdit(state, editor, tx, ty) {
     if (!changed) {
         return { state, result };
     }
+    /**
+     * ⛓⛓⛓ **THE RECORD IS AN OP** — arc 2 slice 4, closing constructive
+     * §18.2's residue. It was `{n, type, at, palette, description}`: a
+     * DESCRIPTION of a press, which named the cell and the PALETTE but not the
+     * item id the editor had selected, so a fold placed a different body at the
+     * right cell and `agreementWithPayload` had to refuse an edited payload by
+     * name. `result.op` is CLOSED — every argument is in it, and the two
+     * allocating ops carry the index that was actually used, exactly as a
+     * recorded DIRECTIVE carries its resolved parameters.
+     *
+     * ⛔ `at` and `palette` are GONE rather than kept beside it: `op.x`/`op.y`
+     * IS the cell and `op.op` IS what was done, and two spellings of one fact
+     * are how a replay and a readout come to disagree.
+     */
     const edit = Object.freeze({
         n: (state.edits?.length ?? 0) + 1,
         type: result.type,
-        at: Object.freeze({ tx, ty }),
-        palette: editor.selectedType,
+        op: result.op,
         description: result.description,
     });
     return {
@@ -701,6 +755,60 @@ export function applyEdit(state, editor, tx, ty) {
         }),
         result,
     };
+}
+
+/**
+ * ⛓⛓⛓ **REPLAY A PAYLOAD'S EDITS** — arc 2 slice 4, and the reason it can exist
+ * at all is that an edit is now an OP (`mazeRoomEditor.applyEditOp`'s docblock).
+ *
+ * ⛔ THE FOLD USES THE SAME APPLICATION PATH A PRESS USES, in order, on a CLONE
+ * per step — so `?gen=` of an EDITED payload reproduces it byte for byte and
+ * the page's own `agreementWithPayload` can say so. That is the second half of
+ * ⚖ ruling 9: the payload IS the identity of an edited level, and a channel
+ * that could only carry it one way was half a promise.
+ *
+ * ⚠ **AN EDIT RECORDED BEFORE THIS SHAPE EXISTED REFUSES BY NAME.** A payload
+ * from constructive slice 12 carries `{n, type, at, palette, description}` —
+ * there is no op in it, and guessing one from `palette` is exactly the
+ * different-body-at-the-right-cell defect the op shape exists to end. The
+ * refusal names LOAD, which takes such a level as it stands.
+ *
+ * ⚠ AND A REFUSED OP IS A THROW, not a skip: a fold that silently dropped an
+ * edit would report a level difference whose real cause is three lines further
+ * up.
+ */
+export function applyEdits(state, edits) {
+    let out = state;
+    (edits ?? []).forEach((edit, i) => {
+        if (!edit?.op) {
+            fail(`mazeLab: edit #${i + 1} of this payload carries no \`op\` — it is a `
+                + 'DESCRIPTION recorded before maze edits had an op shape (constructive slice '
+                + '12), and a fold that guessed one from its `palette` would place a DIFFERENT '
+                + 'BODY at the right cell. Use LOAD, which takes the payload\'s `level` as it '
+                + 'stands.');
+        }
+        const next = cloneWorld(out.record);
+        const result = applyEditOp(next, edit.op);
+        if (!result.ok) {
+            fail(`mazeLab: edit #${i + 1} (${edit.op.op} at (${edit.op.x},${edit.op.y})) was `
+                + `REFUSED on replay: ${result.description} ⛔ A fold that skipped it would `
+                + 'report a level difference whose cause is here.');
+        }
+        out = Object.freeze({
+            ...out,
+            record: next,
+            edits: Object.freeze([...(out.edits ?? []), Object.freeze({
+                n: (out.edits?.length ?? 0) + 1,
+                type: result.type,
+                op: result.op,
+                description: result.description,
+            })]),
+            certification: null,
+            certified: null,
+            undoStack: Object.freeze([...(out.undoStack ?? []), out.record]),
+        });
+    });
+    return out;
 }
 
 /** ⛓ UNDO is a POP of the world stack. Uncertified stays uncertified — the
@@ -775,6 +883,48 @@ export function certify(state) {
  * throws a SEAM DEFECT in that case, and an overlay is not the place to
  * discover one.
  */
+/**
+ * ⛓⛓⛓ **THE SOLVE, FRAME BY FRAME** — arc-2 §10.11.4 / ⚖ design ruling 6 fn. 3
+ * (*"step-through visualisation is non-negotiable"*), and the mechanism this
+ * arc exists for is only visible in it: **A BLOCK MOVES.** A static plan line
+ * over the room shows where the player walked; it cannot show that the walk
+ * PUSHED something, and the whole reverse-pull gadget is a claim about pushing.
+ *
+ * ⛔ **IT REPLAYS THROUGH THE ENGINE'S OWN `step`, from `createState`** — the
+ * same construction the oracle used, and for `planCells`' reason one order of
+ * magnitude louder now that there are blocks: a page-side "apply the direction
+ * letters to a coordinate" would be a SECOND movement model, and the first
+ * thing it would get wrong is which cell a push vacates.
+ *
+ * ⚠ It returns `null` for a plan that does not replay, exactly as `planCells`
+ * does: the oracle's own replay throws a SEAM DEFECT in that case and an
+ * animation is not the place to discover one.
+ *
+ * @returns {Array<{player:{x,y}, blocks:string[]|null, inventory:string[]}>|null}
+ *   one frame per position ALONG the plan, `plan.length + 1` of them (frame 0
+ *   is the start). `blocks` is `state.blocks` VERBATIM — the engine's sorted
+ *   posKey array — or `null` on a world that has none (⚖ ruling 5: absence, not
+ *   emptiness, is the switch, and this projection keeps it).
+ */
+export function planFrames(state, solved) {
+    if (!solved?.plan?.length) return null;
+    let s = createState(state.record);
+    for (const id of state.palette?.items ?? []) s.inventory.add(id);
+    const frameOf = (t) => Object.freeze({
+        player: Object.freeze({ x: t.player_pos.x, y: t.player_pos.y }),
+        blocks: t.blocks === undefined ? null : Object.freeze([...t.blocks]),
+        inventory: Object.freeze([...t.inventory].sort()),
+    });
+    const frames = [frameOf(s)];
+    for (const input of solved.plan) {
+        const next = step(state.record, s, input);
+        if (!next) return null;
+        s = next;
+        frames.push(frameOf(s));
+    }
+    return Object.freeze(frames);
+}
+
 export function planCells(state, solved) {
     if (!solved?.plan?.length) return null;
     let s = createState(state.record);
@@ -827,6 +977,17 @@ export function labPayload(state) {
          * payload written before this slice still AGREES).
          */
         areas: state.areas ?? DEFAULT_AREAS,
+        /**
+         * ⛓ ARC 2 SLICE 4 — THE ELEMENT SPEC, on the same terms as `areas`.
+         * ⚠ AND IT IS THE **SPEC**, NOT `elementSummaryOf`'s block: this payload
+         * is a REPRODUCTION RECIPE (what the page will re-run from), and what
+         * the run PRODUCED is on the level itself — the block, the button and
+         * the door are entities in `level`, so a summary here would be a second
+         * copy of facts the grid already states. ⛓ `elementSpecOf` is what lets
+         * a CLI payload — whose `elements` IS the summary — be read back all the
+         * same.
+         */
+        elements: state.elements ?? DEFAULT_ELEMENTS,
         require: state.require ?? null,
         edits: state.edits ?? [],
         /**
@@ -850,6 +1011,27 @@ export function labPayload(state) {
 function safeAreaSpec(spec) {
     try {
         return normalizeAreaSpec(spec);
+    } catch {
+        return spec;
+    }
+}
+
+/**
+ * ⛓ THE SAME LESSON FOR THE ELEMENT SPEC, and it has one extra job. `?gen=`
+ * accepts payloads from BOTH writers, and the two carry different shapes under
+ * the key `elements`: this page writes the SPEC (`{name, params}`) and
+ * `generate-maze-level.mjs --json` writes `elementSummaryOf`'s block
+ * (`{spec, ran, placed, refused}`). `elementSpecOf` reads the spec out of
+ * either, so a CLI payload REPRODUCES here instead of dying on its own report.
+ *
+ * ⚠ ARC 1's `areas` BLOCK HAS THE SAME ASYMMETRY AND IS **NOT** FIXED HERE: its
+ * payloads are byte-gated by this arc, and `normalizeAreaSpec` happens to
+ * swallow the CLI shape as `{keys: 0}` rather than throwing, so the divergence
+ * is REPORTED rather than fatal. Named as residue, not smoothed over.
+ */
+function safeElementSpec(spec) {
+    try {
+        return normalizeElementSpec(elementSpecOf(spec));
     } catch {
         return spec;
     }
@@ -882,36 +1064,32 @@ export function agreementWithPayload(payload, state) {
         return { checked: false, agrees: false, differences: ['the payload is not an object'] };
     }
     /**
-     * ⛓⛓⛓ SLICE 12 ASKED THIS AGAIN AND THE ANSWER SPLIT IN TWO.
+     * ⛓⛓⛓ SLICE 12 ASKED THIS AND HAD TO REFUSE AN EDITED PAYLOAD; **ARC 2
+     * SLICE 4 STOPS REFUSING**, because the reason has been removed rather than
+     * argued away.
      *
-     * DIRECTIVES are now REPRODUCED here (the caller replays `payload.directives`
-     * through `generateWithDirectives` before comparing), because `?directed=`
-     * is gone and the payload is their only channel — Seedling's forcing line,
-     * which applies identically to this page.
+     * DIRECTIVES were already reproduced here (the caller replays
+     * `payload.directives` through `generateWithDirectives` before comparing).
+     * EDITS were refused because *"a maze edit is recorded as a DESCRIPTION, not
+     * as an op carrying the item/obstacle id the editor had selected, so a fold
+     * would place a different body at the right cell"* — ⇒ the edit record
+     * became an OP (`mazeRoomEditor`'s § THE OPS), and the caller now folds
+     * `payload.edits` through `applyEdits` before comparing.
      *
-     * ⛔ EDITS ARE STILL REFUSED, and NOT because of the channel: **the maze's
-     * edit record is a DESCRIPTION, not a replayable OP.** It is
-     * `{n, type, at, palette, description}` — the editor's SELECTED TYPE and the
-     * cell — while `MazeRoomEditor._setItem`/`_setObstacle` read
-     * `selectedItemId`/`selectedObstacleId`, which no payload carries. Folding
-     * this list would place SOME OTHER item at the right cell and call it a
-     * reproduction. (Seedling's four ops are closed and carry their whole
-     * argument, which is why its fold is honest.) ⚠ And this page HAS a way in
-     * that watch.html never had: LOAD takes `level` as it stands. ⇒ the residue
-     * is named — making maze edits replayable means giving them an OP shape.
+     * ⚠ A PAYLOAD WHOSE EDITS PREDATE THE OP SHAPE still cannot be reproduced,
+     * and `applyEdits` says so BY NAME rather than this function guessing. LOAD
+     * remains the way in for one, and it always was.
      */
-    if ((payload.edits ?? []).length > 0) {
+    if ((payload.edits ?? []).some((e) => !e?.op)) {
         return {
             checked: false,
             agrees: false,
             differences: [],
-            why: `this payload carries ${payload.edits.length} MANUAL EDIT(S), and ⚖ ruling 9 `
-                + 'says an edited level\'s identity is the payload rather than the seed. ⛔ This '
-                + 'page cannot REPLAY them either: a maze edit is recorded as a DESCRIPTION '
-                + '(cell + palette type), not as an op carrying the item/obstacle id the '
-                + 'editor had selected, so a fold would place a different body at the right '
-                + 'cell. Use LOAD, which takes `level` as it stands. (Its DIRECTIVES are '
-                + 'replayed — those are specs.)',
+            why: `this payload carries ${payload.edits.length} MANUAL EDIT(S) recorded BEFORE `
+                + 'maze edits had an op shape (constructive slice 12): they name a cell and a '
+                + 'palette TYPE but not the item or obstacle id the editor had selected, so a '
+                + 'fold would place a different body at the right cell. ⛓ Edits recorded by '
+                + 'this build ARE replayed. Use LOAD, which takes `level` as it stands.',
         };
     }
     cmp('seed', payload.seed, state.seed);
@@ -947,7 +1125,17 @@ export function agreementWithPayload(payload, state) {
      */
     cmp('areas', safeAreaSpec(payload.areas ?? DEFAULT_AREAS),
         normalizeAreaSpec(state.areas ?? DEFAULT_AREAS));
+    /** ⛓ ARC 2 SLICE 4 — normalized on BOTH sides with the both-sides default,
+     *  the payload side UNVALIDATED, so a payload written before elements
+     *  existed AGREES rather than diverging on a field it could not have had. */
+    cmp('elements', safeElementSpec(payload.elements ?? DEFAULT_ELEMENTS),
+        normalizeElementSpec(state.elements ?? DEFAULT_ELEMENTS));
     cmp('require', payload.require ?? null, state.require ?? null);
+    /** ⛓ ARC 2 SLICE 4 — the EDIT LIST is compared now that it is replayable.
+     *  ⛔ On the OPS, not on the descriptions: a description is prose the editor
+     *  chose and comparing it would report a wording change as a divergence. */
+    cmp('edits', (payload.edits ?? []).map((e) => e.op),
+        (state.edits ?? []).map((e) => e.op));
     cmp('level', payload.level, serializeMazeLevel(state.record));
     cmp('trace', payload.trace, state.trace);
     return {
@@ -1023,6 +1211,13 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
          * are the payload's own report and the overlay has nothing to draw.
          */
         areas: payload?.areas ?? DEFAULT_AREAS,
+        /** ⛓ ARC 2 SLICE 4 — a LOADED level SAYS which element spec produced
+         *  it, and ⛔ nothing is re-derived: the model above is built at the
+         *  open room with no elements, so the overlay has no gadget to draw and
+         *  the level's own blocks/buttons (which `deserializeMazeLevel` DID
+         *  restore) are all a reader gets. That is the honest state of a loaded
+         *  file, and it is why LOAD is not a reproduction. */
+        elements: safeElementSpec(payload?.elements ?? DEFAULT_ELEMENTS),
         require: payload?.require ?? null,
         requireResult: null,
         stop: null,
@@ -1084,11 +1279,15 @@ export function describeState(state, solved = null) {
      */
     const areaText = formatAreaSpec(state.areas ?? DEFAULT_AREAS);
     const requireText = formatRequireList(state.require);
+    /** ⛓ ARC 2 SLICE 4 — the element, in the URL's own spelling and through the
+     *  SAME formatter, named only when one was asked for. */
+    const elementText = formatElementSpec(state.elements ?? DEFAULT_ELEMENTS);
     const bits = [
         `seed ${state.seed} · ${state.biome} · ${state.width}x${state.height} · step ${state.step}`
             + (skelText === DEFAULT_SKELETON_KIND
                 ? '' : ` · skeleton: ${skelText} (CARVED, not the open room)`)
             + (areaText === '0' ? '' : ` · areas: ${areaText}`)
+            + (elementText === DEFAULT_ELEMENTS.name ? '' : ` · elements: ${elementText}`)
             + (requireText === '' ? '' : ` · requires: ${requireText}`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
             + (edits ? `, then ${edits} manual edit(s)` : ''),
@@ -1117,6 +1316,24 @@ export function describeState(state, solved = null) {
                 + `${info.graph.symbols.length} symbol(s) [${info.graph.symbols.join(', ')}], `
                 + `${info.doors.length} door(s), ${info.keys.length} key(s)`
             : `⛔ the area graph REFUSED: ${info.refused.reason}`);
+    }
+    /**
+     * ⛓⛓⛓ THE GADGET'S OWN SENTENCE — what it PLACED, or the binding's own
+     * REFUSAL, VERBATIM. ⛔ §10.11.5: `guard;len=3;turns=1` at 15x15 places on
+     * about 38% of seeds and GUARDS on about 7%, so a page that only spoke when
+     * it succeeded would be silent exactly when a reader most needs to know
+     * why. The refusal is the evidence channel and this line may print it,
+     * never rewrite it.
+     */
+    const eInfo = state.model?.elements ?? null;
+    if (eInfo && eInfo.spec?.name !== DEFAULT_ELEMENTS.name) {
+        const p = eInfo.placed?.[0] ?? null;
+        bits.push(eInfo.ran
+            ? `elements: ${p.instance} at (${p.site.x},${p.site.y}) ${p.site.w}x${p.site.h}, `
+                + `${p.tunnel.length} tunnel cell(s), ${p.cost.cells} carved, `
+                + (p.guards ? `GUARDS ${p.guards}` : 'guards NOTHING (⚠ ⚖ ruling 1 vacuous '
+                    + 'on this seed — the graph gave its symbol to another area)')
+            : `⛔ the element REFUSED: ${eInfo.refused.reason}`);
     }
     if (state.requireResult) {
         const r = state.requireResult;

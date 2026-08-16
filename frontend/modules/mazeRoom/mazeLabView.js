@@ -50,11 +50,18 @@ import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
  * captured hashes stay byte-identical (⚖ arc-1 slice 3).
  */
 import { AREA_LAYERS, areaLegend, drawAreaOverlay } from './mazeAreaOverlay.js';
+/**
+ * ⛓⛓⛓ ARC 2 SLICE 4 — THE GADGET IS A **SECOND SIBLING** OVERLAY, for the
+ * reason the area one is (see its docblock, ⚖ Q5): a gadget's site, ports and
+ * tunnel are facts about the MODEL, and the BLOCK MOVES — `state.blocks` is
+ * state, not world, and `drawWorld`'s contract is "draw this world".
+ */
+import { drawElementOverlay, elementLegend } from './mazeElementOverlay.js';
 import {
     DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor, PALETTE_ENTRIES,
-    SOURCES, agreementWithPayload, applyDirective, applyEdit, certify, describeState,
+    SOURCES, agreementWithPayload, applyDirective, applyEdit, applyEdits, certify, describeState,
     generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells,
-    readLabParams, serializeMazeLevel, skeletonCatalogue, solveState,
+    planFrames, readLabParams, serializeMazeLevel, skeletonCatalogue, solveState,
     stepFromParams, undoEdit, writeLabParams,
 } from './mazeLab.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -66,6 +73,12 @@ import { normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
 import {
     AREA_PARAM_SCHEMA, KEYS_DOMAIN, formatRequireList, normalizeAreaSpec, parseRequireList,
 } from '../procgenCore/areaSpec.js';
+// ⛓ ELEMENTS ARC 2 SLICE 4: the ONE element codec — the form's options ARE its
+// declared domains, and the identity line, the URL bar and both CLIs spell a
+// gadget the same way.
+import {
+    DEFAULT_ELEMENTS, ELEMENT_NAMES, elementSpecOf, normalizeElementSpec, paramSchemaFor,
+} from '../procgenCore/elementSpec.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -80,6 +93,15 @@ const el = (tag, cls, text) => {
  *  the number is stated so a caller raising the target can price it BEFORE
  *  pressing, which is the same discipline `costModel` applies to one run. */
 const WORST_CASE_SOLVE_MS = 3;
+
+/**
+ * ⛓ HOW FAST THE SOLVE REPLAY AUTOPLAYS. ⚠ THIS IS A WALL CLOCK AND IT IS
+ * ALLOWED TO BE ONE: it paces an ANIMATION and decides nothing. ⛔ No budget,
+ * no bound and no generated artifact reads it — the generator's budgets are
+ * NODES (`?expansions=`) and the browser row drives the replay with the STEP
+ * button, so nothing that makes a claim depends on this number.
+ */
+const PLAY_FRAME_MS = 110;
 
 export function main() {
     const lifetimes = createLifetimeHolder({
@@ -104,6 +126,32 @@ export function main() {
      */
     let areaLayer = 'all';
     /**
+     * ⛓⛓⛓ ARC 2 SLICE 4 — **THE SOLVE REPLAY.** `null` until SOLVE produces a
+     * plan; then `{frames, index, playing}` where `frames` is
+     * `mazeLab.planFrames`' output — one frame per position along the plan,
+     * each carrying the player's cell and `state.blocks` VERBATIM.
+     *
+     * ⛔ It is CLEARED by anything that changes the world (a new rung, an edit,
+     * an undo, a load): a replay of a plan through a level that has moved under
+     * it would be an animation of a walk nobody can take.
+     */
+    let play = null;
+    let playTimer = null;
+    /**
+     * ⛓⛓⛓ **THE ONE ANSWER TO "WHICH BLOCK LAYOUT IS ON SCREEN"**, and it is
+     * deliberately ONE function rather than two agreeing ones.
+     *
+     * The element overlay is HANDED this, and the readout PUBLISHES this — so
+     * `window.__mazeLab.play.blocks` is not a claim ABOUT the picture, it is
+     * the picture's own argument. A build that drew the level's INITIAL layout
+     * during a replay (`world.blocks` rather than `state.blocks`) therefore
+     * moves the readout too, and the browser row's "the block moved between
+     * frames" claim can see it. Two functions would have let the picture be
+     * wrong while the readout stayed right, which is the echo/value split
+     * (trap 269) reappearing inside one page.
+     */
+    const overlayBlocks = () => (play ? play.frames[play.index].blocks : null);
+    /**
      * ⛓⛓ SLICE 4 — THE OPTIONAL HOST BRIDGE. `null` STANDALONE, and that is
      * not a fallback: `mazeLabBridge.js` is never even FETCHED without
      * `?iframeId=` (see `installBridge`), so the page a person opens at
@@ -117,6 +165,21 @@ export function main() {
     let bridge = null;
 
     const say = (text, bad = false) => { message = text; messageBad = bad; };
+
+    /**
+     * ⛓⛓ THE REPLAY DIES WITH THE WORLD IT IS A REPLAY OF. ⛔ Called from every
+     * place that already sets `lastSolve = null` — a new rung, a directed
+     * attempt, an edit, an undo, a load — because a plan animated over a level
+     * that has moved under it is a picture of a walk nobody can take. The timer
+     * is cleared first: an interval that outlived its frames would index past
+     * the end of an array that no longer exists.
+     */
+    const stopPlaying = () => {
+        if (playTimer !== null) clearInterval(playTimer);
+        playTimer = null;
+        if (play) play = { ...play, playing: false };
+    };
+    const clearPlay = () => { stopPlaying(); play = null; };
 
     /* ══════════════════════════════════════════════════════════════════
      * THE URL — written at every press, read only at boot
@@ -147,6 +210,12 @@ export function main() {
             skeleton: state.skeleton,
             areas: state.areas,
             require: state.require,
+            /** ⛓ ARC 2 SLICE 4 — and the ELEMENT. ⛔ A defect this slice's own
+             *  browser row found: the reader, the form, the identity line and
+             *  the model all had it while THIS line did not, so the SELECTOR
+             *  built the gadget and handed back a bar that names no element —
+             *  a link to a level it does not describe. */
+            elements: state.elements,
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -188,9 +257,26 @@ export function main() {
             return;
         }
         canvas.hidden = false;
-        drawWorld(ctx, w, plainView({ tilePx: TILE_PX }));
+        /**
+         * ⛓ DURING A REPLAY THE PLAYER IS DRAWN AT THE FRAME'S CELL — through
+         * `plainView`'s own `playerPos` field, which the renderer has always
+         * had and this page has never used (it had no play). `null` outside a
+         * replay, which is the pre-play view `drawWorld` already documents.
+         */
+        drawWorld(ctx, w, plainView({
+            tilePx: TILE_PX,
+            playerPos: play ? play.frames[play.index].player : null,
+        }));
         // ⛓ THE GRAPH, over the grid — the sibling draw, layer by layer.
         drawAreaOverlay(ctx, state.model?.areas ?? null, { tilePx: TILE_PX, layer: areaLayer });
+        /**
+         * ⛓⛓ THE GADGET, over both — the second sibling. `blocks` is the ONE
+         * answer (`overlayBlocks`), so the picture and the readout cannot
+         * disagree about where the block is.
+         */
+        drawElementOverlay(ctx, state.model?.elements ?? null, {
+            tilePx: TILE_PX, layer: areaLayer, blocks: overlayBlocks(),
+        });
 
         const cells = lastSolve ? planCells(state, lastSolve) : null;
         if (cells && cells.length > 1) {
@@ -392,6 +478,7 @@ export function main() {
                     + (d.outcome === 'KEPT' ? ` — ${describeKeptKind(d)}` : ''),
                 d.outcome !== 'KEPT');
                 lastSolve = null;
+                clearPlay();
                 writeUrl();
             } catch (e) {
                 say(e.message, true);
@@ -449,6 +536,32 @@ export function main() {
     const renderSolvePanel = () => {
         const note = $('solveNote');
         note.textContent = '';
+        /**
+         * ⛓⛓⛓ THE REPLAY'S OWN LINE — ⚖ design ruling 6 fn. 3. It names the
+         * FRAME, the BLOCK LAYOUT at that frame and how many DISTINCT layouts
+         * the whole plan visits, because the last number is the one that says
+         * whether this level's solve pushes anything at all: a plan that never
+         * moves a block visits exactly one.
+         */
+        const pn = $('playNote');
+        for (const id of ['labPlayPrev', 'labPlayNext', 'labPlay', 'labPlayReset']) {
+            $(id).disabled = !play;
+        }
+        if (!play) {
+            pn.textContent = lastSolve
+                ? 'no plan to replay — the solve produced none, or it did not replay through '
+                    + 'the engine\'s own `step` (which is a SEAM DEFECT, not an animation '
+                    + 'problem).'
+                : '';
+        } else {
+            const f = play.frames[play.index];
+            const layouts = new Set(play.frames.map((g) => JSON.stringify(g.blocks))).size;
+            pn.textContent = `frame ${play.index}/${play.frames.length - 1}`
+                + ` · player (${f.player.x},${f.player.y})`
+                + ` · blocks ${f.blocks === null ? '(this level has none)' : `[${f.blocks.join(' ')}]`}`
+                + ` · ${layouts} DISTINCT block layout(s) over the whole plan`
+                + `${layouts > 1 ? ' — the walk PUSHES' : ''}`;
+        }
         if (!lastSolve) {
             note.appendChild(el('div', 'rj',
                 'press SOLVE — the ORACLE runs on the world now on screen (the same '
@@ -573,6 +686,98 @@ export function main() {
     };
 
     /**
+     * ⛓⛓⛓ THE ELEMENT PANE — the binding's own sentence, and a LEGEND with one
+     * row per PLACED GADGET. ⚠ §10.11.5 is why the REFUSAL row exists and is
+     * not a fallback: `guard;len=3;turns=1` at 15x15 places on ~38% of seeds
+     * and GUARDS on ~7%, so on most seeds THE REFUSAL IS WHAT THIS PAGE HAS TO
+     * SAY, and it says it where the gadget would be. ⛔ No bound is widened to
+     * make the page look better.
+     */
+    const renderElementPane = () => {
+        const note = $('labElementNote');
+        const box = $('labElementLegend');
+        box.innerHTML = '';
+        note.textContent = '';
+        note.className = '';
+        const info = state.model?.elements ?? null;
+        if (!info || info.spec?.name === DEFAULT_ELEMENTS.name) return;
+        if (!info.ran) {
+            note.className = 'refused';
+            // ⛔ VERBATIM — the binding's own reason and its own detail.
+            note.textContent = `⛔ the element REFUSED: ${info.refused.reason}. `
+                + `${info.refused.detail}`;
+            return;
+        }
+        note.className = 'ran';
+        note.textContent = `elements: ${info.placed.length} gadget(s) placed. ⛓ THE SITE is `
+            + 'outlined in pink and the TUNNEL — the cells the CONNECTOR dug to reach the '
+            + 'entry port — is shaded violet and dashed, because a 28-cell straight corridor '
+            + 'is otherwise read as an artefact of the maze backend. The BLOCK is the square, '
+            + 'the BUTTON the ring (FILLED while it is pressed), the guard DOOR the brown '
+            + 'border and the FLAG the pennant; the two stubs on the site edge are its PORTS '
+            + '(green in, orange out — the exit mouth is SEALED, so the gadget is a '
+            + 'one-mouth pocket and its door is a CUT of the level).';
+        for (const row of elementLegend(info)) {
+            const lg = el('div', 'lg');
+            const sw = el('span', 'sw');
+            sw.style.background = row.color;
+            lg.appendChild(sw);
+            lg.appendChild(el('b', null, row.instance));
+            lg.appendChild(el('span', null,
+                `${row.button} holds ${row.hold} → ${row.door}; `
+                + `${row.guards ? `GUARDS ${row.guards}` : 'guards NOTHING on this seed'}; `
+                + `len=${row.cost.len} turns=${row.cost.turns} ${row.cost.cells} carved cell(s), `
+                + `${row.tunnelCells} tunnel cell(s)`));
+            box.appendChild(lg);
+        }
+    };
+
+    /**
+     * ⛓ THE ELEMENT'S PARAMETERS, AS A FORM — mounted from the codec's own
+     * schema for the SELECTED HEAD (`paramSchemaFor`, which is the element's
+     * own `params` plus the binding's `binds`; there is no third source and
+     * nothing is copied), and RE-MOUNTED on a head change rather than merged.
+     *
+     * ⛓⛓ IT HAS AN "any (draw it)" OPTION AND THE AREA FORM DOES NOT, and that
+     * is the one place this form differs from its two siblings: for an element,
+     * a parameter the caller NAMES is an override that spends NO draw and one
+     * they omit is DRAWN, so `guard` and `guard;len=3` are different runs even
+     * when `len` resolves to 3 (`elementSpec.namedParams`). A form with no way
+     * to say "draw it" could only ever produce the first kind.
+     */
+    const mountElementParams = (name, values = {}) => {
+        const box = $('labElementParams');
+        box.innerHTML = '';
+        for (const p of paramSchemaFor(name)) {
+            const label = document.createElement('label');
+            label.textContent = `${p.key} `;
+            label.title = p.why;
+            const sel = document.createElement('select');
+            sel.dataset.elemParam = p.key;
+            sel.appendChild(new Option('any (draw it)', ''));
+            for (const v of p.domain) {
+                const o = new Option(String(v), String(v));
+                if (String(v) === String(values[p.key])) o.selected = true;
+                sel.appendChild(o);
+            }
+            label.appendChild(sel);
+            box.appendChild(label);
+        }
+    };
+    /** ⛔ TYPED FROM THE DOMAIN, and an UNSET select contributes NOTHING —
+     *  which is exactly how "draw this one" is spelled in the spec. */
+    const readElementParams = (name) => {
+        const out = {};
+        for (const p of paramSchemaFor(name)) {
+            const sel = $('labElementParams').querySelector(`select[data-elem-param="${p.key}"]`);
+            if (!sel || sel.value === '') continue;
+            const v = p.domain.find((d) => String(d) === sel.value);
+            if (v !== undefined) out[p.key] = v;
+        }
+        return out;
+    };
+
+    /**
      * ⛓ THE AREA SPEC'S PARAMETERS, AS A FORM — mounted from the codec's own
      * schema (the options ARE the declared domain, the pre-selection IS the
      * declared default), exactly as the skeleton's params form is.
@@ -623,6 +828,9 @@ export function main() {
         mountSkeletonParams(state.skeleton?.kind ?? 'empty', state.skeleton?.params ?? {});
         $('labAreas').value = String(state.areas?.keys ?? 0);
         mountAreaParams(state.areas?.params ?? {});
+        $('labElements').value = state.elements?.name ?? DEFAULT_ELEMENTS.name;
+        mountElementParams(state.elements?.name ?? DEFAULT_ELEMENTS.name,
+            state.elements?.params ?? {});
         $('labRequire').value = formatRequireList(state.require);
         $('labAreaLayer').value = areaLayer;
     };
@@ -658,6 +866,10 @@ export function main() {
         areas: normalizeAreaSpec({
             keys: Number($('labAreas').value), params: readAreaParams(),
         }),
+        /** ⛓ ELEMENTS ARC 2 SLICE 4 — the gadget, read at the press. */
+        elements: normalizeElementSpec({
+            name: $('labElements').value, params: readElementParams($('labElements').value),
+        }),
         require: readRequireBox(),
     });
 
@@ -666,6 +878,7 @@ export function main() {
         try {
             state = generateStep({ ...a, step });
             lastSolve = null;
+            clearPlay();
             payloadCheck = null;
             say(`step ${step}: ${state.summary
                 ? `kept ${state.summary.keptCount}/${step}` : 'the skeleton'}`);
@@ -695,6 +908,7 @@ export function main() {
                 }
             }
             lastSolve = null;
+            clearPlay();
             payloadCheck = null;
         } catch (e) {
             say(e.message, true);
@@ -729,6 +943,7 @@ export function main() {
             state = loadPayload(payload);
             editor = null;
             lastSolve = null;
+            clearPlay();
             payloadCheck = null;
             say(`loaded a ${state.width}x${state.height} level with `
                 + `${(state.edits ?? []).length} recorded edit(s) — UNCERTIFIED until SOLVE`);
@@ -752,6 +967,7 @@ export function main() {
         draw();
         renderTrace();
         renderAreaPane();
+        renderElementPane();
         if (src === SOURCES.GENERATE) {
             renderRoster();
             renderDirectives();
@@ -867,6 +1083,59 @@ export function main() {
             areaLegend: areaLegend(state.model?.areas ?? null),
             areaLayer,
             areaNote: $('labAreaNote').textContent,
+            /**
+             * ⛓⛓⛓ ARC 2 SLICE 4 — THE GADGET THE PAGE IS SHOWING. ⛔ `elements`
+             * is the SPEC the run was asked for and `elementInfo` is what the
+             * BINDING did with it — two fields because they are two facts, and
+             * a page that published only the first would let a build that read
+             * `?elements=` into the bar and never passed it to the model look
+             * exactly like one that did (trap 269, and mutant (a) of this
+             * slice is precisely that build).
+             */
+            elements: state.elements ?? null,
+            elementInfo: state.model?.elements
+                ? {
+                    ran: state.model.elements.ran,
+                    spec: state.model.elements.spec,
+                    placed: state.model.elements.placed.map((p) => ({
+                        instance: p.instance,
+                        index: p.index,
+                        params: p.params,
+                        site: p.site,
+                        block: p.block,
+                        button: p.button,
+                        door: p.door,
+                        flagCell: p.flagCell,
+                        ports: p.ports,
+                        tunnel: p.tunnel,
+                        guards: p.guards ?? null,
+                        cost: p.cost,
+                    })),
+                    refused: state.model.elements.refused,
+                }
+                : null,
+            elementLegend: elementLegend(state.model?.elements ?? null),
+            elementNote: $('labElementNote').textContent,
+            /**
+             * ⛓⛓⛓ **THE REPLAY, AND `blocks` IS THE OVERLAY'S OWN ARGUMENT.**
+             * `overlayBlocks()` is called once here and once in `draw()` — the
+             * SAME function — so this readout is not a claim about the picture,
+             * it IS what the picture was drawn from. That is what lets a
+             * browser row assert "the block MOVED between two frames" as a
+             * VALUE and have it mean something about the canvas.
+             */
+            play: play
+                ? {
+                    index: play.index,
+                    frames: play.frames.length,
+                    playing: play.playing,
+                    player: play.frames[play.index].player,
+                    blocks: overlayBlocks(),
+                    /** ⛓ How many DISTINCT block layouts the whole plan visits.
+                     *  1 means the walk pushes nothing. */
+                    layouts: new Set(play.frames.map((f) => JSON.stringify(f.blocks))).size,
+                }
+                : null,
             level: requireRefusal() ? null : serializeMazeLevel(state.record),
             trace: state.trace ?? [],
             payload: requireRefusal() ? null : labPayload(state),
@@ -970,6 +1239,34 @@ export function main() {
                 + 'skeleton: a graph knob builds a DIFFERENT level');
             render();
         });
+        /**
+         * ⛓⛓⛓ AN ELEMENT CHANGE **RESETS THE LADDER**, on exactly the terms an
+         * area or a kind change does — and the reason is stronger here: the
+         * gadget is stamped into the room BEFORE the carve and its draws move
+         * the whole room stream, so `elements=none` at step 3 followed by
+         * `elements=guard` at step 4 would be a display no single run produces.
+         */
+        lt.on($('labElements'), 'change', () => {
+            // ⛓ the params form is re-mounted BEFORE the press, because the
+            // press reads it (the skeleton form's own lesson): a `binds` select
+            // left standing from `guard` would be handed to a head that does
+            // not declare it, and the press would refuse.
+            mountElementParams($('labElements').value);
+            goTo(0);
+            say(`elements: ${$('labElements').value} — RESET to the skeleton, because an `
+                + 'element is stamped into the room BEFORE the carve and its draws move the '
+                + 'whole room stream');
+            render();
+        });
+        lt.on($('labElementParams'), 'change', (e) => {
+            if (!e.target?.dataset?.elemParam) return;
+            goTo(0);
+            say(`element parameter ${e.target.dataset.elemParam}=`
+                + `${e.target.value === '' ? '(drawn)' : e.target.value} — RESET to the `
+                + 'skeleton: a named parameter is an OVERRIDE that spends no draw, so naming '
+                + 'one builds a DIFFERENT level from leaving it drawn');
+            render();
+        });
         lt.on($('labRequire'), 'change', () => {
             goTo(0);
             const asked = $('labRequire').value.trim();
@@ -1012,15 +1309,77 @@ export function main() {
             try {
                 lastSolve = solveState(state);
                 state = certify(state);
-                say(`SOLVE: ${lastSolve.verdict}`, lastSolve.verdict !== 'SOLVED');
+                /**
+                 * ⛓⛓⛓ AND THE PLAN BECOMES FRAMES — ⚖ design ruling 6 fn. 3.
+                 * ⛔ `planFrames` replays through the ENGINE's own `step`, so
+                 * the block positions in them are the ones the SOLVER produced
+                 * and not a page-side movement model.
+                 */
+                clearPlay();
+                const frames = planFrames(state, lastSolve);
+                play = frames ? { frames, index: 0, playing: false } : null;
+                say(`SOLVE: ${lastSolve.verdict}`
+                    + (frames ? ` — ${frames.length - 1} frame(s) to replay` : ''),
+                lastSolve.verdict !== 'SOLVED');
             } catch (e) {
                 say(e.message, true);
             }
             render();
         });
+        /**
+         * ⛓⛓ THE REPLAY CONTROLS — a STEP-THROUGH first and an autoplay second,
+         * in that order on purpose: ⚖ design ruling 6 fn. 3 asks for a
+         * step-through, and it is also the only form a browser row can drive
+         * without a wall clock. PLAY is an interval over the same index, and it
+         * is registered on the LIFETIME's retire hook so an arm switch cannot
+         * leave a second one running over the first (trap 259's shape for
+         * timers rather than listeners).
+         */
+        const seek = (to) => {
+            if (!play) return;
+            const n = play.frames.length;
+            play = { ...play, index: Math.max(0, Math.min(n - 1, to)) };
+            render();
+        };
+        lt.onRetire(() => stopPlaying());
+        lt.on($('labPlayPrev'), 'click', () => { stopPlaying(); seek(play.index - 1); });
+        lt.on($('labPlayNext'), 'click', () => { stopPlaying(); seek(play.index + 1); });
+        lt.on($('labPlayReset'), 'click', () => { stopPlaying(); seek(0); });
+        lt.on($('labPlay'), 'click', () => {
+            if (!play) return;
+            if (play.playing) {
+                stopPlaying();
+                say('replay paused');
+                render();
+                return;
+            }
+            if (play.index >= play.frames.length - 1) play = { ...play, index: 0 };
+            play = { ...play, playing: true };
+            /**
+             * ⛔ THE TICK THAT LANDS ON THE LAST FRAME STOPS THERE — it does
+             * not advance and then discover on the NEXT tick that it is done.
+             * The difference is observable: a reader (and a browser row) that
+             * sees `index` at the last frame would otherwise still find
+             * `playing: true` for one interval, which is a readout describing
+             * an animation that has nothing left to do.
+             */
+            playTimer = setInterval(lt.guard('the SOLVE replay', () => {
+                if (!play) return;
+                const next = play.index + 1;
+                play = { ...play, index: Math.min(next, play.frames.length - 1) };
+                if (next >= play.frames.length - 1) {
+                    stopPlaying();
+                    say('replay finished — the block is where the plan left it');
+                }
+                render();
+            }), PLAY_FRAME_MS);
+            say('replaying the plan — the BLOCK moves with `state.blocks`');
+            render();
+        });
         lt.on($('labUndo'), 'click', () => {
             state = undoEdit(state);
             lastSolve = null;
+            clearPlay();
             say('undid one edit — still UNCERTIFIED (nothing has solved the world on screen)');
             render();
         });
@@ -1071,7 +1430,7 @@ export function main() {
             state = out.state;
             // ⛔ VERBATIM — the editor's own refusal sentence.
             say(out.result.description, !out.result.ok);
-            if (out.result.ok && out.result.type !== 'noop') lastSolve = null;
+            if (out.result.ok && out.result.type !== 'noop') { lastSolve = null; clearPlay(); }
             render();
         });
 
@@ -1109,6 +1468,18 @@ export function main() {
     }
     for (const l of AREA_LAYERS) $('labAreaLayer').appendChild(new Option(l, l));
     mountAreaParams();
+    /**
+     * ⛓ THE ELEMENT SELECTOR'S OPTIONS ARE THE CODEC'S OWN `ELEMENT_NAMES` —
+     * `none` first, because it IS the default and the whole point of ⚖ ruling 5
+     * is that it is a head somebody can type rather than a missing value.
+     */
+    for (const name of ELEMENT_NAMES) {
+        $('labElements').appendChild(new Option(
+            `${name}${name === DEFAULT_ELEMENTS.name ? ' (off — no element is constructed)' : ''}`,
+            name,
+        ));
+    }
+    mountElementParams(DEFAULT_ELEMENTS.name);
     stamp();
 
     try {
@@ -1164,8 +1535,27 @@ export function main() {
                 skeleton: payload.skeleton ?? undefined,
                 /** ⛓ SLICE 3 — a payload names the GRAPH it was built with. */
                 areas: payload.areas ?? undefined,
+                /**
+                 * ⛓⛓ ARC 2 SLICE 4 — and the GADGET. ⛔ Through
+                 * `elementSpecOf` (inside `generateStep`'s normalizer via
+                 * `safeElementSpec`? no — here, explicitly), because the two
+                 * writers put different shapes under this key: this page's
+                 * payload carries the SPEC and `generate-maze-level.mjs --json`
+                 * carries `elementSummaryOf`'s block. One reader knows both.
+                 */
+                elements: elementSpecOf(payload.elements) ?? undefined,
                 require: payload.require ?? null,
             });
+            /**
+             * ⛓⛓⛓ ARC 2 SLICE 4 — **AND THEN THE EDITS**, in order, through the
+             * SAME `applyEditOp` a press uses (constructive §18.2's residue,
+             * closed). The order is LADDER → DIRECTIVES → EDITS, which is
+             * Seedling's own rule (§16.3) with the maze's third leg finally on
+             * it. ⚠ A payload whose edits predate the op shape throws BY NAME
+             * from `applyEdits` and the boot's catch prints it — LOAD is the
+             * way in for one, and the message says so.
+             */
+            if ((payload.edits ?? []).length) state = applyEdits(state, payload.edits);
             payloadCheck = agreementWithPayload(payload, state);
             say(payloadCheck.agrees
                 ? 'the browser REPRODUCED the payload byte-identically — level AND trace'
@@ -1206,6 +1596,18 @@ export function main() {
              * own level rather than an echo of the parameter.
              */
             areas: params.areas,
+            /**
+             * ⛓⛓⛓ ARC 2 SLICE 4 — **AND THE ELEMENT SPEC REACHES THE
+             * GENERATOR HERE.** ⛔ This is the exact line slice 5's defect and
+             * arc-1's mutant (b) both sat on: the parameter reaches
+             * `readLabParams`, the writer echoes it into the bar and the
+             * identity line prints it, so the ECHO claims go green while THIS
+             * call is missing the argument and the page builds a level with no
+             * gadget in it. ⇒ the browser row's `?elements=` claim is a BYTE
+             * COMPARISON against node's own level, plus a COUNT of the blocks
+             * and buttons ON that level, never an echo of the parameter.
+             */
+            elements: params.elements,
             require: params.require,
         });
         say(`seed ${params.seed} at step ${stepFromParams(params)}`

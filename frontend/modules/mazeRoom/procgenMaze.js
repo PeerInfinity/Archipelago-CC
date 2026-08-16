@@ -61,7 +61,7 @@ import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
     parseRequireList, resolveAreaSpec, symbolIndex, symbolsForKeys,
 } from '../procgenCore/areaSpec.js';
-import { DIR_DELTA } from '../procgenCore/elements.js';
+import { DIR_DELTA, flagIdFor, guardIdsFor } from '../procgenCore/elements.js';
 import {
     DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, formatElementSpec, namedParams,
     normalizeElementSpec, parseElementSpec, resolveElementSpec,
@@ -663,7 +663,7 @@ export const keyIdFor = (symbol) => `key_${symbol}`;
  * symbol, where the guard is what makes it a flag; the general switch is arc 3's
  * with its own spec knob. Recorded as a delta, not as a preference.
  */
-export const flagIdFor = (symbol) => `flag_${symbol}`;
+export { flagIdFor };
 
 /** ⛓ Which id a symbol's ITEM carries — `flag_K0` when a gadget guards it,
  *  `key_K0` otherwise. ONE function, so the library entry, the realisation, the
@@ -1034,12 +1034,15 @@ export const SITE_MARGIN = 4;
  * (`button_A0`, not `button_A`): a special case for index 0 would be two
  * spellings of one id, and every one-gadget fixture would then read like the
  * shared name a second gadget does not have.
+ *
+ * ⛓⛓ SLICE 4 MOVED THE DEFINITION to `procgenCore/elements.js` and left this
+ * RE-EXPORT, so nothing that imported it from here changed. The forcing line is
+ * the lab page's EDIT PALETTE: it allocates the same three ids for a
+ * hand-placed button, and `mazeRoomEditor.js` is the PANEL's editor too — an
+ * import of this file would put the whole generator (the loop, the area graph,
+ * the elements) into the panel's module graph for three template strings.
  */
-export const guardIdsFor = (index) => Object.freeze({
-    button: `button_A${index}`,
-    door: `door_A${index}`,
-    hold: `sw_A${index}`,
-});
+export { guardIdsFor };
 
 /** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
 export const reservedRect = (site) => Object.freeze({

@@ -115,6 +115,36 @@ export const DIR_DELTA = Object.freeze({
 
 export const PORT_ROLES = Object.freeze(['entry', 'exit']);
 
+/**
+ * ⛓⛓⛓ **THE ID ALLOCATOR — ONE OF IT, AND SLICE 4 IS WHY IT MOVED HERE.**
+ *
+ * A guard gadget's three ids are indexed from the FIRST one (`button_A0` /
+ * `door_A0` / `sw_A0`, arc-2 §10.4: a special case for index 0 would be two
+ * spellings of one id), and a flag symbol's item is `flag_<symbol>`.
+ *
+ * ⛔ These were `procgenMaze.js`'s until the maze lab page's EDIT PALETTE grew
+ * BLOCK / BUTTON / FLAG brushes (arc-2 slice 4). A hand-placed button whose id
+ * the editor invented privately would be a SECOND spelling of the binding's own
+ * — the page could then build a gadget the generator cannot read back and the
+ * two would drift silently. ⇒ the definition lives in `procgenCore/` (which
+ * imports nothing substrate-side) and `procgenMaze.js` RE-EXPORTS both names,
+ * so every existing importer and every test is unchanged.
+ *
+ * ⚠ They are STRING FUNCTIONS, not a registry: nothing here remembers which
+ * indices are taken. Choosing the next free index is the caller's, because only
+ * the caller knows which world it is looking at (`allocateGuardIndex` in the
+ * editor scans `world.buttonLib`; the binding counts its own placements).
+ */
+export const guardIdsFor = (index) => Object.freeze({
+    button: `button_A${index}`,
+    door: `door_A${index}`,
+    hold: `sw_A${index}`,
+});
+
+/** `flag_K0` ← 'K0' — the item id a symbol realised as a step-on LATCH carries
+ *  (⚖ design rulings 21-22). */
+export const flagIdFor = (symbol) => `flag_${symbol}`;
+
 const posKey = (x, y) => `${x},${y}`;
 
 /** A site is a rectangle the BINDING offers — inside the room, off its ring. */

@@ -14,9 +14,10 @@ import { describe, expect, it } from 'vitest';
 import {
     DEFAULT_MAZE_BIOME, MazeLabError, MazeRoomEditor, PALETTE_TYPES, SOURCES,
     agreementWithPayload, applyDirective, applyEdit, certify, describeState, generateStep,
-    generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells, readLabParams,
-    SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel, skeletonCatalogue, solveState,
-    stepFromParams, undoEdit, writeLabParams,
+    applyEdits, generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells,
+    planFrames,
+    readLabParams, SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel,
+    skeletonCatalogue, solveState, stepFromParams, undoEdit, writeLabParams,
 } from './mazeLab.js';
 import { deserializeMazeLevel } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
@@ -704,29 +705,103 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         expect(miss.differences).toContain('level');
     });
 
-    it('⚖ ruling 9: an EDITED payload is NOT reproduced — the check says so by name', () => {
+    /**
+     * ⛓⛓⛓ **REPLACED, NEVER RELAXED** (arc 2 slice 4). Slice 12's row asserted
+     * that an EDITED payload is NOT reproduced and that the sentence named its
+     * forcing line — *"a maze edit is a DESCRIPTION, not an op"*. This slice
+     * REMOVED that forcing line rather than arguing it away (constructive
+     * §18.2's residue), so the claim is now the opposite one AND the old
+     * refusal is kept for the payloads it is still true of.
+     */
+    it('⛓⛓⛓ an EDITED payload IS reproduced now that an edit is an OP — folded in '
+        + 'order, and byte-identical', () => {
         const st = generateStep({ seed: 3, step: 2, ...ROOM });
         const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
         e.selectType(PALETTE_TYPES.WALL);
         const c = st.model.allCells(st.record)
             .find((p) => st.model.isFree(st.record, p.tx, p.ty));
         const edited = applyEdit(st, e, c.tx, c.ty).state;
-        const a = agreementWithPayload(labPayload(edited), st);
-        expect(a.checked).toBe(false);
-        expect(a.why).toMatch(/1 MANUAL EDIT\(S\)/);
-        expect(a.why).toMatch(/Use LOAD/);
+        expect(edited.edits[0].op).toEqual({ op: 'setTile', x: c.tx, y: c.ty, tile: 'wall' });
+        const payload = labPayload(edited);
+        // ⛔ THE REPLAY GOES THROUGH THE PAGE'S OWN FOLD, from the LADDER state
+        // the payload's seed/bounds name — which is what `?gen=` does.
+        const replayed = applyEdits(generateStep({ seed: 3, step: 2, ...ROOM }), payload.edits);
+        expect(JSON.stringify(serializeMazeLevel(replayed.record)))
+            .toBe(JSON.stringify(payload.level));
+        const a = agreementWithPayload(payload, replayed);
+        expect(a.checked).toBe(true);
+        expect(a.agrees).toBe(true);
+        // ⛓ …and the UNFOLDED state still DIFFERS, so the row above is not
+        // passing because the edit did nothing.
+        const miss = agreementWithPayload(payload, st);
+        expect(miss.agrees).toBe(false);
+        expect(miss.differences).toContain('edits');
+        expect(miss.differences).toContain('level');
+    });
+
+    it('⛓⛓ …and the ID-BEARING ops replay their id, which is the defect the op '
+        + 'shape exists to end', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        const cells = st.model.allCells(st.record)
+            .filter((p) => st.model.isFree(st.record, p.tx, p.ty));
+        const e = new MazeRoomEditor({
+            itemLib: { key_red: { id: 'key_red' }, key_blue: { id: 'key_blue' } },
+            obstacleLib: {},
+        });
+        e.selectType(PALETTE_TYPES.ITEM);
+        e.selectItemId('key_blue');            // ⛔ NOT the first key in the lib
+        const edited = applyEdit(st, e, cells[0].tx, cells[0].ty).state;
+        expect(edited.edits[0].op).toEqual({
+            op: 'setItem', x: cells[0].tx, y: cells[0].ty, id: 'key_blue',
+        });
         /**
-         * ⛓⛓ SLICE 12 — AND THE SENTENCE NAMES THE REAL FORCING LINE. It is no
-         * longer only ⚖ ruling 9's channel argument (the directives moved to
-         * the payload and ARE replayed): a maze edit is recorded as a
-         * DESCRIPTION — cell + palette TYPE — while
-         * `MazeRoomEditor._setItem`/`_setObstacle` read `selectedItemId` /
-         * `selectedObstacleId`, which the record does not carry. A fold would
-         * place a different body at the right cell.
+         * ⛔ THE REPLAY USES A FRESH EDITOR WITH NO SELECTION — which is the
+         * whole point. Under the DESCRIPTION record the fold would have used
+         * whatever `selectedItemId` happened to be (`key_red`, the first key in
+         * the library) and produced a different level with the same edit count.
          */
-        expect(a.why).toMatch(/DESCRIPTION/);
-        expect(a.why).toMatch(/item\/obstacle id/);
-        expect(a.why).toMatch(/DIRECTIVES are.*replayed/);
+        const replayed = applyEdits(generateStep({ seed: 3, step: 2, ...ROOM }),
+            labPayload(edited).edits);
+        expect(serializeMazeLevel(replayed.record).items)
+            .toContainEqual({ x: cells[0].tx, y: cells[0].ty, id: 'key_blue' });
+    });
+
+    it('⛓⛓ a BUTTON op replays the index that was ALLOCATED, not "the next free one"', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        const free = st.model.allCells(st.record)
+            .filter((p) => st.model.isFree(st.record, p.tx, p.ty));
+        const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
+        e.selectType(PALETTE_TYPES.BUTTON);
+        let edited = applyEdit(st, e, free[0].tx, free[0].ty).state;
+        edited = applyEdit(edited, e, free[1].tx, free[1].ty).state;
+        expect(edited.edits.map((x) => x.op.index)).toEqual([0, 1]);
+        const replayed = applyEdits(generateStep({ seed: 3, step: 2, ...ROOM }),
+            labPayload(edited).edits);
+        expect([...replayed.record.buttons.values()]).toEqual(['button_A0', 'button_A1']);
+    });
+
+    it('⛔ a payload whose edits PREDATE the op shape refuses BY NAME, and the fold '
+        + 'throws rather than guessing', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        const stale = {
+            ...labPayload(st),
+            // constructive slice 12's record, verbatim: a DESCRIPTION.
+            edits: [{ n: 1, type: 'item', at: { tx: 1, ty: 1 }, palette: 'item',
+                description: 'Placed item key_red at (1,1).' }],
+        };
+        const a = agreementWithPayload(stale, st);
+        expect(a.checked).toBe(false);
+        expect(a.why).toMatch(/recorded BEFORE/);
+        expect(a.why).toMatch(/different body at the right cell/);
+        expect(a.why).toMatch(/Use LOAD/);
+        expect(() => applyEdits(st, stale.edits)).toThrow(MazeLabError);
+        expect(() => applyEdits(st, stale.edits)).toThrow(/carries no `op`/);
+    });
+
+    it('⛔ a fold whose op is REFUSED throws rather than skipping it', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        expect(() => applyEdits(st, [{ n: 1, op: { op: 'setTile', x: 99, y: 99, tile: 'wall' } }]))
+            .toThrow(/REFUSED on replay/);
     });
 });
 
@@ -1116,5 +1191,192 @@ describe('mazeLab — ?areas= and ?require=', () => {
         expect(() => readLabParams('?areas=9')).toThrow(/\?areas="9"/);
         expect(() => readLabParams('?require=key_red')).toThrow(/\?require="key_red"/);
         expect(() => readLabParams('?require=')).toThrow(/an EMPTY `require` list/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?elements=` AND THE SOLVE REPLAY — PROCGEN ELEMENTS ARC 2, SLICE 4
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE SUBJECT IS MEASURED, NOT PICKED. `guard;len=2;turns=1` on `rooms` at
+ * 15x15 places on about 57% of seeds (§10.1's census) — seed 6 places AND
+ * guards K0; seed 1 REFUSES at the same size, which is the honest majority
+ * state. Both are asserted as such below before anything rests on them.
+ */
+
+const GUARD_SPEC = { name: 'guard', params: { len: 2, turns: 1 } };
+const GUARD_ROOM = {
+    width: 15, height: 15, skeleton: { kind: 'rooms' }, areas: { keys: 1 },
+};
+const guarded = (over = {}) => generateStep({
+    seed: 6, step: 2, ...GUARD_ROOM, elements: GUARD_SPEC, ...over,
+});
+
+describe('mazeLab — the element spec reaches the MODEL', () => {
+    it('⛔ THE NON-VACUITY GUARD: the subject really places and guards, and the '
+        + 'refusal subject really refuses', () => {
+        const st = guarded();
+        expect(st.model.elements.ran).toBe(true);
+        expect(st.model.elements.placed[0].guards).toBe('K0');
+        const no = generateStep({ seed: 1, step: 0, ...GUARD_ROOM, elements: GUARD_SPEC });
+        expect(no.model.elements.ran).toBe(false);
+        expect(no.model.elements.refused.reason).toBe('the-entry-port-cannot-be-joined');
+    });
+
+    it('⛓⛓ a VALUE claim, not an echo — the LEVEL carries the gadget\'s entities, '
+        + 'and at `none` it carries none of them', () => {
+        const withGadget = serializeMazeLevel(guarded().record);
+        expect(withGadget.blocks).toHaveLength(1);
+        expect(withGadget.buttons).toEqual([expect.objectContaining({ id: 'button_A0' })]);
+        expect(withGadget.buttonLib.button_A0.holds).toBe('sw_A0');
+        expect(withGadget.obstacles.some((o) => o.id === 'door_A0')).toBe(true);
+        expect(withGadget.items.some((i) => i.id === 'flag_K0')).toBe(true);
+        const without = serializeMazeLevel(guarded({ elements: undefined }).record);
+        expect(without.blocks).toBeUndefined();
+        expect(without.buttons).toBeUndefined();
+        expect(without.obstacles.some((o) => o.id === 'door_A0')).toBe(false);
+        // ⛓ …and the key is a KEY again, not a flag: `flag_K0` is scoped to the
+        // symbol a GADGET guards (§10.4), which is the whole delta.
+        expect(without.items.some((i) => i.id === 'key_K0')).toBe(true);
+    });
+
+    it('reads ?elements= into the params and REFUSES a bad one BY NAME', () => {
+        expect(readLabParams('').elements).toEqual({ name: 'none' });
+        expect(readLabParams('?elements=guard%3Blen%3D2%3Bturns%3D1').elements)
+            .toEqual(GUARD_SPEC);
+        expect(() => readLabParams('?elements=hammer')).toThrow(UrlParamsError);
+        expect(() => readLabParams('?elements=hammer')).toThrow(/\?elements="hammer"/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE WHOLE-GRAMMAR ROUND TRIP, WITH THE LEVEL AS THE ANCHOR.** A
+     * fixed point tests self-consistency only, so the row does not stop at
+     * "the bar says the same thing" — it REGENERATES from the re-read bar and
+     * compares the SERIALIZED LEVEL byte for byte, which is what a writer that
+     * dropped `?elements=` would move.
+     */
+    it('writer → reader is an INVERSE, and the level it names is the same bytes', () => {
+        const search = 'source=generate&seed=6&biome=maze-v1&width=15&height=15&count=2'
+            + '&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1'
+            + '&elements=guard%3Blen%3D2%3Bturns%3D1&expansions=20000';
+        const p = readLabParams(`?${search}`);
+        const st = generateWithDirectives({ ...p, step: stepFromParams(p) });
+        const written = writeLabParams(`?${search}`, {
+            source: p.source, seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: st.step, roster: st.roster,
+            skeleton: st.skeleton, areas: st.areas, require: st.require, elements: st.elements,
+        });
+        const again = readLabParams(`?${written}`);
+        expect(again.elements).toEqual(GUARD_SPEC);
+        expect(JSON.stringify(serializeMazeLevel(
+            generateWithDirectives({ ...again, step: stepFromParams(again) }).record,
+        ))).toBe(JSON.stringify(serializeMazeLevel(st.record)));
+        // ⛔ AND THE PARAMETER IS ABSENT AT THE DEFAULT — not `elements=none`.
+        expect(new URLSearchParams(writeLabParams('', {
+            seed: 1, biome: 'maze-v1', width: 11, height: 11, bounds: st.bounds,
+            budget: st.budget, step: 0,
+        })).get('elements')).toBe(null);
+    });
+
+    it('⛓ the IDENTITY LINE names the spec and what the binding DID, or its REFUSAL', () => {
+        const st = guarded();
+        expect(describeState(st)).toContain('elements: guard;len=2;turns=1');
+        expect(describeState(st)).toMatch(/elements: reverse-pull-block\(len=2,turns=1\) at /);
+        expect(describeState(st)).toContain('GUARDS K0');
+        const no = generateStep({ seed: 1, step: 0, ...GUARD_ROOM, elements: GUARD_SPEC });
+        expect(describeState(no)).toContain('⛔ the element REFUSED: '
+            + 'the-entry-port-cannot-be-joined');
+        // ⛔ AND NOT A WORD AT `none` — a clause on every level trains a reader
+        // to skip it, which is the one time it matters.
+        expect(describeState(guarded({ elements: undefined }))).not.toContain('elements:');
+    });
+
+    it('⛓ the PAYLOAD carries the spec and `agreementWithPayload` compares it', () => {
+        const st = guarded();
+        const payload = labPayload(st);
+        expect(payload.elements).toEqual(GUARD_SPEC);
+        expect(agreementWithPayload(payload, st).agrees).toBe(true);
+        // ⛓ a payload written BEFORE elements existed carries none, and the
+        // both-sides default makes it AGREE with a page at `none`.
+        const plain = guarded({ elements: undefined });
+        const old = { ...labPayload(plain) };
+        delete old.elements;
+        expect(agreementWithPayload(old, plain).agrees).toBe(true);
+        // ⛔ …and a payload naming a DIFFERENT gadget is REPORTED by name.
+        const wrong = { ...payload, elements: { name: 'guard', params: { len: 4 } } };
+        expect(agreementWithPayload(wrong, st).differences).toContain('elements');
+    });
+
+    /**
+     * ⛓⛓ **THE TWO SHAPES UNDER ONE KEY.** This page's payload carries the
+     * SPEC; `generate-maze-level.mjs --json` carries `elementSummaryOf`'s block
+     * (`{spec, ran, placed, refused}`). ⛔ `elementSpecOf` is the ONE reader
+     * that knows both, so a CLI payload is read back rather than throwing on
+     * its own report.
+     */
+    it('⛓⛓ a CLI-shaped `elements` block is read back through the ONE accessor', () => {
+        const st = guarded();
+        const cliShaped = {
+            ...labPayload(st),
+            elements: { spec: GUARD_SPEC, ran: true, placed: [], refused: null },
+        };
+        expect(agreementWithPayload(cliShaped, st).differences).not.toContain('elements');
+        expect(loadPayload(cliShaped).elements).toEqual(GUARD_SPEC);
+    });
+
+    it('a LOADED level says which spec produced it and re-derives NOTHING', () => {
+        const st = guarded();
+        const back = loadPayload(labPayload(st));
+        expect(back.elements).toEqual(GUARD_SPEC);
+        expect(back.model.elements.ran).toBe(false);
+        // ⛓ …but the level's own blocks and buttons DID come back, because
+        // `deserializeMazeLevel` restores them: a loaded gadget is playable
+        // even though the MODEL that built it is gone.
+        expect(back.record.blocks.size).toBe(1);
+        expect([...back.record.buttons.values()]).toEqual(['button_A0']);
+        expect(back.certified).toBe(null);
+    });
+});
+
+describe('mazeLab — planFrames, the SOLVE replay (⚖ design ruling 6 fn. 3)', () => {
+    it('⛓⛓⛓ THE BLOCK MOVES — the frames are the engine\'s own `state.blocks`, '
+        + 'and the plan visits more than one layout', () => {
+        const st = guarded();
+        const solved = solveState(st);
+        expect(solved.verdict).toBe('SOLVED');
+        const frames = planFrames(st, solved);
+        expect(frames).toHaveLength(solved.plan.length + 1);
+        expect(frames[0].player).toEqual({ x: st.record.entrance.x, y: st.record.entrance.y });
+        const layouts = new Set(frames.map((f) => JSON.stringify(f.blocks)));
+        expect(layouts.size).toBeGreaterThan(1);
+        // ⛔ AND THE BLOCK ENDS ON ITS BUTTON — the mechanism, stated as the
+        // mechanism (§9.4): the door is held because something is standing on
+        // the button, not because a push happened somewhere.
+        const btn = st.model.elements.placed[0].button;
+        expect(frames[frames.length - 1].blocks).toContain(`${btn.x},${btn.y}`);
+        expect(frames[0].blocks).not.toContain(`${btn.x},${btn.y}`);
+    });
+
+    it('⛓ every frame\'s inventory GROWS and never shrinks — a flag is a LATCH', () => {
+        const st = guarded();
+        const frames = planFrames(st, solveState(st));
+        for (let i = 1; i < frames.length; i += 1) {
+            for (const id of frames[i - 1].inventory) {
+                expect(frames[i].inventory).toContain(id);
+            }
+        }
+        expect(frames[frames.length - 1].inventory).toContain('flag_K0');
+    });
+
+    it('⛓ `blocks` is `null` on a world that has none — ⚖ ruling 5\'s ABSENCE, kept', () => {
+        const st = generateStep({ seed: 3, step: 1, ...ROOM });
+        const frames = planFrames(st, solveState(st));
+        expect(frames[0].blocks).toBe(null);
+    });
+
+    it('⛔ and `null` for a plan there is none of', () => {
+        const st = guarded();
+        expect(planFrames(st, null)).toBe(null);
+        expect(planFrames(st, { plan: [] })).toBe(null);
     });
 });

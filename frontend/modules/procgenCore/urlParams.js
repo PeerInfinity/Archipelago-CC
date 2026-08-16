@@ -72,6 +72,9 @@ import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
     parseRequireList,
 } from './areaSpec.js';
+import {
+    DEFAULT_ELEMENTS, formatElementSpec, normalizeElementSpec, parseElementSpec,
+} from './elementSpec.js';
 import { DEFAULT_BOUNDS, KEEP_POLICY } from './levelGenerator.js';
 import {
     DEFAULT_SKELETON_KIND, formatSkeleton, normalizeSkeleton, parseSkeleton,
@@ -331,6 +334,68 @@ export function readRequire(q) {
         fail(`urlParams: ?require=${JSON.stringify(raw)} — ${e.message}`);
         return null;
     }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ELEMENT — `?elements=<name>[;k=v]…`
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * PROCGEN ELEMENTS arc 2, slice 4 (arc kickoff §3.4). ONE reader, ONE writer,
+ * and ⛔ **NO NEW GRAMMAR**: the string is `elementSpec.parseElementSpec` /
+ * `formatElementSpec`, the very codec `generate-maze-level.mjs --elements=` and
+ * `sweep-yield-table.mjs --elements=` already speak (slice 3 wrote it for
+ * exactly this). What lives HERE is the parameter — absence, the default, the
+ * delete-in-place — which is what §8.6's one-reader/one-writer law is about.
+ *
+ * ── ABSENT IS THE DEFAULT, AND THE DEFAULT IS NOT WRITTEN ─────────────
+ *
+ * `?elements=` absent ≡ `{name: 'none'}` ≡ *the element machinery does not run
+ * at all* (⚖ arc-2 ruling 5: no site drawn, nothing instantiated, `construct`
+ * never called, no draw spent, every maze md5 byte-identical). The writer
+ * DELETES at that value rather than writing `?elements=none` — trap 245's
+ * in-place rewrite, the same rule `?skeleton=` and `?areas=` follow and for the
+ * same measured reason: a `delete` followed by a `set` APPENDS the key and moves
+ * it to the end of the bar, which breaks the round-trip fixed point.
+ *
+ * ⛔ AND IT IS **NOT** ADJUDICATED AGAINST `?areas=` HERE. `?elements=guard;
+ * binds=item&areas=2` refuses at every seed (there is only one item-bearing
+ * area, `elementSpec.BINDS_PARAM`), and that refusal belongs to the RUN, which
+ * knows both values and can name the key level it could not fill. A reader that
+ * refused the pair would have to be given the other parameter, which is how one
+ * reader becomes two.
+ */
+
+/**
+ * ⛓ `?elements=` → `{name[, params]}`, NORMALIZED. ⚠ Unlike `readAreas`, the
+ * normalizer KEEPS a parameter the caller named even at its default value:
+ * `?elements=guard;len=3` and `?elements=guard` are DIFFERENT RUNS, because a
+ * named parameter is an override that spends no draw and an omitted one is
+ * drawn. That absence is load-bearing (`elementSpec.namedParams`), so this
+ * reader must not "tidy" it.
+ */
+export function readElements(q) {
+    const raw = q.get('elements');
+    if (raw === null || raw === '') return DEFAULT_ELEMENTS;
+    /** ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL — `readSkeleton`'s rule. */
+    try {
+        return parseElementSpec(raw);
+    } catch (e) {
+        fail(`urlParams: ?elements=${JSON.stringify(raw)} — ${e.message}`);
+        return null;
+    }
+}
+
+/**
+ * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing law): it
+ * formats through the one formatter and hands the string back to the SAME
+ * parser, so a spec the reader could not read back cannot be written.
+ */
+export function writeElementsParam(q, elements) {
+    const value = formatElementSpec(normalizeElementSpec(elements ?? DEFAULT_ELEMENTS));
+    parseElementSpec(value);
+    if (value === DEFAULT_ELEMENTS.name) q.delete('elements');
+    else q.set('elements', value);
+    return q;
 }
 
 /** ⛔ DELETED when there is no directive; re-parsed on the way out. */
