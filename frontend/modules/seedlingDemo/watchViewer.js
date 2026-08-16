@@ -123,7 +123,13 @@
  * REPLAY without ending the MANUAL arm that started it.
  */
 
-import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
+/**
+ * ⛓⛓ SLICE 11: `LevelWorldError` IS IMPORTED FOR ITS CLASS, not for a message
+ * match — the GENERATE arm's edit-solve catches THAT class and only on a
+ * record that carries manual edits (see `show`'s `certifying` pass). Traps
+ * 171/173: the ORACLE's catch is untouched.
+ */
+import { buildLevelWorld, LevelWorldError, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
 import {
@@ -158,7 +164,18 @@ import { catalogueRows, restrictPalette } from './procgenPalette.js';
 // ⛓ SLICE 5: the keep policy verb 2 presses under — ⚖ the user's ruling
 // (*verb 2 PREFERS DISCHARGE*). The free ladder never names one.
 import { KEEP_POLICY } from '../procgenCore/levelGenerator.js';
-import { atlasOf } from './procgenLevel.js';
+// ⛓ SLICE 11 adds `TERRAIN_NAMES` — the edit tool's terrain picker is mounted
+// from the four-terrain vocabulary itself, so this file keeps no second list.
+import { atlasOf, TERRAIN_NAMES } from './procgenLevel.js';
+/**
+ * ⛓⛓⛓ SLICE 11 (constructive-mode arc) — FREE TILE / OBJECT EDITING. ⚖ Ruling
+ * 8 + §3.8. The ops are PURE and live there; this file is the tool UI, the one
+ * canvas click, and the two laws made visible (the identity line's third leg,
+ * and UNCERTIFIED-until-SOLVE).
+ */
+import {
+    EDIT_OPS, ENTITY_ROSTER, describeEdit, editState, editStates, undoEdit,
+} from './watchEdit.js';
 import { createLifetimeHolder } from './watchLifetime.js';
 // ⛓ SLICE 4 (constructive-mode arc): ONE summary of this page's state, in the
 // shape `procgenCore/labProtocol.js` asks for. ⛔ A PROJECTION of the readouts
@@ -4302,6 +4319,36 @@ function mountDirectives(directives) {
 }
 
 /**
+ * ⛓⛓ SLICE 11 — THE EDIT LOG, one row per recorded op.
+ *
+ * ⛔ ITS OWN CONTAINER (`#genEdits`), for the reason `#genRoster` and
+ * `#genDirectives` have theirs: `#layers` and `#bootForm` are ENUMERATED by
+ * acceptance rows, and an edit row is neither a layer nor a boot flag. The
+ * generation trace keeps the generation rows — an edit is not an attempt and
+ * has no verdict.
+ *
+ * ⛔ `textContent` on the row, so an entity type somebody typed cannot be
+ * reinterpreted as markup on the way through.
+ */
+function mountEdits(edits) {
+    const box = $('genEdits');
+    box.innerHTML = '';
+    for (const [i, op] of (edits ?? []).entries()) {
+        const el = document.createElement('div');
+        el.className = 'eRow';
+        const n = document.createElement('b');
+        n.textContent = `e${i + 1}`;
+        el.appendChild(n);
+        const text = document.createElement('span');
+        text.className = 'et';
+        text.textContent = ` ${describeEdit(op)}`;
+        el.appendChild(text);
+        box.appendChild(el);
+    }
+    return { rows: (edits ?? []).length };
+}
+
+/**
  * ── ⛓⛓⛓ THE FOURTH SOURCE: GENERATE ONE, LOOK AT IT, KEEP STEPPING ─────
  *
  * ⚖ Kickoff §3.5 and ruling §1.3: seed + biome + obstacle-count target (+
@@ -4533,14 +4580,45 @@ async function runGenerate(params, lifetime) {
     let state = null;
     let lastPayload = null;
     /**
-     * ⛓⛓⛓ SLICE 6 — THE ARMED CLICK. `null`, or `{template, readParams}`: the
-     * template AT… was pressed on, and the thunk that reads its form. ⛔ It is
-     * declared HERE with `state` for the same measured reason (trap 252):
-     * `renderArmed` runs from `renderCatalogue`, which runs at MOUNT, and a
-     * reference to a `let` declared below would throw in the temporal dead
+     * ⛓⛓⛓ SLICE 6 — THE ARMED CLICK. ⛓⛓ SLICE 11 GAVE IT A SECOND KIND rather
+     * than a second variable:
+     *
+     *   `null`                                nothing is pending
+     *   `{kind:'template', template, readParams}`  AT… on a catalogue row
+     *   `{kind:'edit', tool}`                 an edit tool is selected
+     *
+     * ⛔ **ONE VARIABLE, ONE WRITER (`setArmed`), ONE LISTENER.** The two are
+     * mutually exclusive by construction — a click means exactly one thing —
+     * and arming either DISARMS the other, including the tool `<select>`, which
+     * `renderArmed` drives back to `off`. A second `editTool` variable beside
+     * this one would let a page look unarmed for templates while a paint was
+     * still pending, which is the state the reader's next click gets wrong.
+     *
+     * ⛔ It is declared HERE with `state` for the same measured reason (trap
+     * 252): `renderArmed` runs from `renderCatalogue`, which runs at MOUNT, and
+     * a reference to a `let` declared below would throw in the temporal dead
      * zone and take the whole arm down before it drew anything.
      */
     let armed = null;
+    /**
+     * ⛓⛓⛓ SLICE 11 — **THE CERTIFICATION, AS PAGE STATE** (⚖ §3.8(b)).
+     *
+     *   `null`               NOBODY HAS ASKED about the record now on screen
+     *   `{solved:true, …}`   the oracle certified it
+     *   `{solved:false, …}`  the oracle was asked and did NOT certify it
+     *
+     * ⚠ TRAP 262, kept: `null` and `false` are different facts and the readout
+     * carries the difference. Before this slice `certified` on this arm was
+     * always `true` — a non-SOLVED display solve is FATAL on the ladder path
+     * (the loop kept the record, so a refusal means the room answered twice) —
+     * and free editing is what makes the other two reachable.
+     *
+     * ⛔ TWO WRITERS AND NO MORE: a SOLVE sets it (`show`'s solving pass) and
+     * an EDIT clears it (`runEdit`/`undo`). It is deliberately NOT on the
+     * frozen generator state: `generateStep` is the CLI's entry too and a
+     * certification is a fact about a page's last press, not about a recipe.
+     */
+    let certified = null;
 
     let catalogueReadout = null;
     const rosterBoxes = () => [...$('genRoster').querySelectorAll('input[data-template]')];
@@ -4574,23 +4652,63 @@ async function runGenerate(params, lifetime) {
      */
     function renderArmed() {
         const canvas = $('canvas');
+        const template = armed?.kind === 'template' ? armed : null;
+        const tool = armed?.kind === 'edit' ? armed.tool : 'off';
         canvas.classList.toggle('armed', Boolean(armed));
         for (const b of $('genRoster').querySelectorAll('button[data-arm]')) {
-            const on = Boolean(armed) && b.dataset.arm === armed.template;
+            const on = Boolean(template) && b.dataset.arm === template.template;
             b.classList.toggle('armed', on);
             b.textContent = on ? 'AT… ARMED — click a tile (Esc cancels)' : 'AT… a clicked tile';
         }
-        $('genArmNote').textContent = armed
-            ? `⛓ ARMED: "${armed.template}" will be placed at the TILE you click on the level `
-                + 'below, as ONE directed attempt at exactly that cell. ⛔ The model '
+        $('genArmNote').textContent = template
+            ? `⛓ ARMED: "${template.template}" will be placed at the TILE you click on the `
+                + 'level below, as ONE directed attempt at exactly that cell. ⛔ The model '
                 + 'adjudicates the cell FIRST, so an illegal one refuses BY NAME without '
                 + 'spending a solve. Press Escape, or AT… again, to cancel.'
             : 'click-to-anchor: press AT… on a catalogue row, then click a tile on the level '
-                + 'below. ⛔ The unit is the TEMPLATE — nothing here paints a bare tile.';
-        // ⛓ The readout carries it too, so an acceptance row can assert the
-        // armed state without reading a string out of the note.
-        if (window.__editorGenerate) window.__editorGenerate.armed = armed?.template ?? null;
+                + 'below. ⛔ The unit is the TEMPLATE — the EDIT tools below are what paint a '
+                + 'bare tile, and only one of the two can be armed at a time.';
+        /**
+         * ⛓⛓ THE TOOL SELECT IS A VIEW OF `armed`, NOT A SECOND STORE. Arming
+         * a template drives it back to `off` here, so the two controls cannot
+         * both look live — which is the whole reason there is one variable.
+         */
+        $('genEditTool').value = tool;
+        $('genEditNote').textContent = editNoteText(tool);
+        // ⛓ The readout carries both, so an acceptance row can assert the
+        // armed state without reading a string out of a note.
+        if (window.__editorGenerate) {
+            window.__editorGenerate.armed = template?.template ?? null;
+            window.__editorGenerate.editTool = tool;
+        }
     }
+    /**
+     * ⛔ THE ONE WRITER OF `armed`. Every arm, disarm and re-arm on this panel
+     * goes through here — the AT… callback, the tool `<select>`, Escape, the
+     * catalogue rebuild and the click handler's own disarm — so there is one
+     * place that decides what the page LOOKS like when something is pending.
+     */
+    const setArmed = (next) => { armed = next; renderArmed(); };
+    /**
+     * ⚠ THE SENTENCE THE EDIT SECTION SHOWS, and it says what a click will DO
+     * before it is clicked — the same law the ARMED note follows. ⛔ The
+     * certification half is deliberately NOT here: it is a statement about the
+     * level, so it lives in `#genEditCert`, which every draw rewrites.
+     */
+    const editNoteText = (tool) => ({
+        off: 'no edit tool — clicks on the level do nothing (AT… still arms a template).',
+        paint: '⛓ PAINT ARMED: the clicked tile becomes the selected terrain. ⛔ The border '
+            + 'ring is editable too, and NOTHING here checks legality — free means free, and '
+            + 'the ORACLE is the guard (press SOLVE). Escape cancels.',
+        place: '⛓ PLACE ARMED: the entity type below is placed at the clicked tile\'s OEL '
+            + 'corner with the attributes in the box, LITERALLY (no activator-group '
+            + 'derivation — a hand placement has no anchor to derive from). Escape cancels.',
+        attrs: '⛓ ATTRS ARMED: the clicked tile\'s LAST entity has its attributes REPLACED by '
+            + 'the box (not merged — clearing a field is spelled by leaving it out). '
+            + 'Escape cancels.',
+        remove: '⛓ REMOVE ARMED: the clicked tile\'s LAST entity is deleted. A tile holding '
+            + 'none refuses BY NAME rather than doing nothing. Escape cancels.',
+    }[tool] ?? '');
     const renderCatalogue = () => {
         const full = paletteFor(biomeSel.value);
         const selected = new Set(roster
@@ -4603,15 +4721,17 @@ async function runGenerate(params, lifetime) {
              * two rows armed at once would make the next click mean two things.
              */
             (template, readParams) => {
-                armed = armed?.template === template ? null : { template, readParams };
-                renderArmed();
+                setArmed(armed?.kind === 'template' && armed.template === template
+                    ? null : { kind: 'template', template, readParams });
             });
         for (const b of rosterBoxes()) b.onchange = () => updateRunButtons();
         // ⛔ The buttons were just rebuilt, so the armed VIEW has to be redrawn
         // — and `armed` itself is dropped, because the row object it named is
-        // gone and its form is a new one.
-        armed = null;
-        renderArmed();
+        // gone and its form is a new one. ⛓ SLICE 11: that drops a selected
+        // EDIT TOOL too, which is right for the same reason — the catalogue is
+        // rebuilt on a biome/roster change, and a brush left live across one
+        // would paint under a page the reader has just re-described.
+        setArmed(null);
     };
     /**
      * ⛔ AN EMPTY RESTRICTION REFUSES **BEFORE** THE PRESS. `levelGenerator`
@@ -4660,14 +4780,30 @@ async function runGenerate(params, lifetime) {
          * differently belongs with the other two rather than beside them.
          */
         const nDirectives = (state?.directives ?? []).length;
-        $('genDirectivesNote').textContent = nDirectives === 0
+        /**
+         * ⛓⛓ SLICE 11: THE EDITS JOIN THE SAME SENTENCE, in the same one
+         * writer, for the third time this note has grown a reason. ⛔ An edit
+         * ALSO blocks a directed attempt (the ordering rule — see
+         * `applyDirective`'s backstop), which is a fact about the CATALOGUE's
+         * buttons and is therefore said here, where the reader is looking
+         * before pressing one.
+         */
+        const nEdits = (state?.edits ?? []).length;
+        $('genDirectivesNote').textContent = (nDirectives === 0 && nEdits === 0)
             ? 'none yet — the level on screen is the ladder alone'
-            : `⚠ ${nDirectives} directive(s) applied. The prefix property does NOT cross a `
-                + 'directive, so STEP and RUN-ALL will RESET to the skeleton and DROP them — '
-                + 'the same reset a changed seed causes, and for the same reason (this level '
-                + 'is not one any single ladder run produces). Download or copy the URL first '
-                + 'if you want to keep it.';
-        $('genDirectivesClear').disabled = busyNow || nDirectives === 0;
+            : `⚠ ${nDirectives} directive(s)`
+                + (nEdits ? ` and ${nEdits} manual edit(s)` : '')
+                + ' applied. The prefix property does NOT cross either, so STEP and RUN-ALL '
+                + 'will RESET to the skeleton and DROP them — the same reset a changed seed '
+                + 'causes, and for the same reason (this level is not one any single ladder '
+                + 'run produces). Download or copy the URL first if you want to keep it.'
+                + (nEdits
+                    ? ' ⛔ And ATTEMPT / AT… are REFUSED while edits stand: the payload '
+                        + 'carries `directives` and `edits` as two lists, which means exactly '
+                        + 'one construction only because the order is ladder → directives → '
+                        + 'edits.'
+                    : '');
+        $('genDirectivesClear').disabled = busyNow || (nDirectives === 0 && nEdits === 0);
     }
     $('genRosterAll').onclick = () => {
         // ⚠ The whole roster is spelled by ABSENCE, so this clears the
@@ -4691,6 +4827,9 @@ async function runGenerate(params, lifetime) {
     };
     renderCatalogue();
     updateRunButtons();
+    // ⛓ SLICE 11: the edit buttons start dead (nothing to undo, no record yet)
+    // and turn over with the run buttons from then on.
+    updateEditButtons();
 
     const atlas = await loadAtlas();
     /**
@@ -4718,6 +4857,10 @@ async function runGenerate(params, lifetime) {
     const busy = (on) => {
         busyNow = on;
         updateRunButtons();
+        // ⛓ SLICE 11: the edit buttons have the same two reasons to be dead
+        // (a run in flight, nothing to act on), so they turn over here too
+        // rather than in a second place that could disagree about `busyNow`.
+        updateEditButtons();
     };
 
     /**
@@ -4726,14 +4869,104 @@ async function runGenerate(params, lifetime) {
      * ⚠ IT RETURNS THE READOUT RATHER THAN SETTING IT, so RUN-ALL can decide
      * what to do next from the same object the acceptance row reads.
      */
-    async function show(why) {
-        const t0 = performance.now();
-        const solved = displaySolve(state);
-        const solveMs = Math.round(performance.now() - t0);
-        const agreement = agreementWithTrace(state, solved);
+    /**
+     * ── ⛓⛓⛓ SLICE 11 — THE THREE PASSES THROUGH THIS ONE FUNCTION ─────────
+     *
+     * `show()` used to have exactly one mode: SOLVE the record, and treat a
+     * non-SOLVED verdict as FATAL — sound on the ladder path, where the loop
+     * already kept the record and a refusal means one room answered twice.
+     * Free editing adds two states that path cannot express, so the mode is now
+     * ONE argument and the function is still one function:
+     *
+     *  · **UNEDITED** (`edits.length === 0`, the ladder and the directives) —
+     *    unchanged in every respect: solve, replay the tape, fatal on a
+     *    disagreement.
+     *  · **EDITED, NOT CERTIFYING** (after a paint) — ⛔ **NO SOLVE AT ALL**,
+     *    which is ⚖ §3.8(b) as a mechanism rather than a label: a page that
+     *    quietly re-solved on every edit would show a certified level and there
+     *    would be nothing for the SOLVE button to mean. The room is drawn as a
+     *    STILL FRAME through `previewLevel` — the page's ONE
+     *    draw-without-a-run — and `certified` stays whatever the edit left it
+     *    (`null`).
+     *  · **EDITED, CERTIFYING** (the SOLVE press) — solve, and REPORT the
+     *    verdict whatever it is. A REFUSED edited level is the mode working.
+     *
+     * ⚠ IT RETURNS THE READOUT RATHER THAN SETTING IT, so RUN-ALL can decide
+     * what to do next from the same object the acceptance row reads.
+     */
+    async function show(why, { certifying = false } = {}) {
+        const edited = (state.edits ?? []).length > 0;
+        const solving = !edited || certifying;
+        let solved = null;
+        let engineError = null;
+        let solveMs = 0;
+        if (solving) {
+            const t0 = performance.now();
+            try {
+                solved = displaySolve(state);
+            } catch (e) {
+                /**
+                 * ── ⛔⛔⛔ THE PAGE'S OWN CATCH — NARROW BY **CLASS** AND BY
+                 * ── **SCOPE**, and the oracle's is untouched (traps 171/173) ──
+                 *
+                 * A hand-placed entity the engine has never transcribed makes
+                 * `buildLevelWorld` throw a `LevelWorldError` — which is NOT a
+                 * refusal and which `procgenOracle` deliberately propagates,
+                 * because on a GENERATED record it is a defect in the generator
+                 * and a loop that swallowed it would hide its own bugs.
+                 *
+                 * On a HAND-EDITED record it is neither: it is the honest
+                 * answer to *"can the engine build what you just typed"*, and
+                 * the page owes the reader that answer rather than a blank tab.
+                 * ⛔ So the catch is bounded twice — the class is named, and it
+                 * only applies when `edits.length > 0`. An unedited record that
+                 * throws still takes the arm down, loudly, exactly as before;
+                 * any OTHER class still propagates even on an edited one,
+                 * because a `TypeError` in the solver is a defect wherever it
+                 * happens.
+                 */
+                if (!edited || !(e instanceof LevelWorldError)) throw e;
+                engineError = e;
+            }
+            solveMs = Math.round(performance.now() - t0);
+            /**
+             * ⛔ ONE OF THE TWO WRITERS OF `certified` (the other is an edit,
+             * which clears it). A solve that reached every goal certifies; a
+             * refusal, a budget exhaustion and an engine throw are all
+             * `{solved:false}` WITH THE REASON, because "the oracle said no"
+             * and "the oracle said no BECAUSE the world would not build" are
+             * different findings a reader has to be able to tell apart.
+             */
+            certified = engineError
+                ? {
+                    solved: false,
+                    at: why ?? null,
+                    verdict: null,
+                    errorName: engineError.name,
+                    reasonText: engineError.message,
+                }
+                : {
+                    solved: (solved.certification?.certified ?? false) === true,
+                    at: why ?? null,
+                    verdict: solved.verdict,
+                    ticks: solved.ticks ?? null,
+                    errorName: solved.errorName ?? null,
+                    reasonText: solved.reasonText ?? null,
+                };
+        }
+        const agreement = solved
+            ? agreementWithTrace(state, solved)
+            : {
+                compared: false,
+                agrees: true,
+                why: 'the record on screen carries manual edits and NOTHING has solved it — '
+                    + 'there is no display solve to compare against the trace',
+            };
         const genRows = generationRows(state.trace);
         const paneReadout = mountGenerationPane(genRows);
         const directiveReadout = mountDirectives(state.directives);
+        const editReadout = mountEdits(state.edits);
+        renderCertification();
         lastPayload = {
             generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
             seed,
@@ -4747,6 +4980,21 @@ async function runGenerate(params, lifetime) {
              * carries the same two.
              */
             directives: state.directives,
+            /**
+             * ⛓⛓⛓ SLICE 11: THE MANUAL EDITS — the part of this level NO SEED
+             * WILL REPRODUCE, which is precisely why it is in the payload and
+             * not in the URL (⚖ ruling 9). `agreementWithPayload` compares it,
+             * and the `?gen=` path replays it, so this file IS the reproduction.
+             */
+            edits: state.edits,
+            /**
+             * ⛓ SLICE 11: the CERTIFICATION rides with the record — `true`,
+             * `false`, or `null` for *nobody has asked*. ⚠ It is NOT an
+             * identity field and `agreementWithPayload` does not compare it: a
+             * loaded level is uncertified whatever the file claimed, which is
+             * the maze page's own law (§10.5 claim 7).
+             */
+            certified: certified === null ? null : certified.solved,
             /** ⚖ Ruling 9(b)'s reserved block, so the constructive mode is additive. */
             skeleton: state.skeleton,
             bounds: state.bounds,
@@ -4758,7 +5006,7 @@ async function runGenerate(params, lifetime) {
         const label = `generated-s${seed}-${biome}-step${step}`;
         $('title').textContent = `${label} — the Cloudberry loop, in this page`;
 
-        if (solved.verdict !== 'SOLVED') {
+        if (!edited && solved.verdict !== 'SOLVED') {
             /**
              * ⛔ A REFUSED DISPLAY SOLVE IS A DISAGREEMENT, NOT A VIEW. Every
              * record on the ladder is one the LOOP accepted, so a refusal here
@@ -4781,15 +5029,54 @@ async function runGenerate(params, lifetime) {
         }
 
         const levelSource = levelSourceFromAtlas(atlasOf(state.record));
-        const { frames } = await replayTape(solved.tape, label, params, levelSource,
-            { trace: solved.trace, why: null }, solved.dangerQueries,
-            // ⛓ THE SCRUB FORK — see `replayTape`'s own note. This arm is the
-            // one caller: the tape it is scrubbing came from a scratch solve.
-            { scratchPersistence: true });
+        /**
+         * ⛓⛓ MOVED UP BY SLICE 11, and only past the refusal check above: the
+         * STILL-FRAME path below asks `isHeldLevel(staging.boot.level)` for its
+         * scratch-persistence flag, which reads this. ⛔ It stays BELOW the
+         * refusal return, so the "the bridge is armed only by a drawn level"
+         * law is unchanged — a room the page could not show is still never
+         * handed to another arm.
+         */
+        heldGeneratedLevel = {
+            record: state.record, seed, biome, step, bounds: state.bounds, budget: state.budget,
+        };
+        /**
+         * ── ⛓⛓⛓ SLICE 11 — THE TWO DRAWS, AND WHY THE SECOND ONE EXISTS ────
+         *
+         * The replay is a scrub of the SOLVE'S OWN TAPE, so it needs a solve. An
+         * edited level that nobody has solved has no tape and MUST NOT get one
+         * (§3.8(b)); an edited level the oracle REFUSED has none either. Both
+         * are drawn as a still frame by `previewLevel` — ⛔ the page's ONE
+         * draw-without-a-run, already used by SOLVE and MANUAL before their
+         * first press, so this adds no third renderer.
+         *
+         * ⚠ AND ITS REFUSAL IS THE ENGINE-THROW DISPLAY'S OTHER HALF: a record
+         * the world cannot build cannot be drawn either, and `previewLevel`
+         * reports the builder's own message and leaves the last good frame
+         * standing rather than blanking the canvas.
+         */
+        let frames = [];
+        let stillWhy = null;
+        if (solved && solved.verdict === 'SOLVED') {
+            ({ frames } = await replayTape(solved.tape, label, params, levelSource,
+                { trace: solved.trace, why: null }, solved.dangerQueries,
+                // ⛓ THE SCRUB FORK — see `replayTape`'s own note. This arm is the
+                // one caller: the tape it is scrubbing came from a scratch solve.
+                { scratchPersistence: true }));
+        } else {
+            stillWhy = previewLevel(levelSource, displayStaging(state),
+                layerSetFor(params), lifetime).why;
+        }
 
-        $('status').className = 'ok';
-        $('status').textContent = `${label} — ${frames.length} observations, `
-            + `${solved.ticks} ticks${why ? ` · ${why}` : ''}`;
+        $('status').className = stillWhy ? 'bad' : 'ok';
+        $('status').textContent = solved && solved.verdict === 'SOLVED'
+            ? `${label} — ${frames.length} observations, `
+                + `${solved.ticks} ticks${why ? ` · ${why}` : ''}`
+            : `${label} — ${state.edits.length} manual edit(s), a STILL FRAME (no solve `
+                + `behind it)${why ? ` · ${why}` : ''}`
+                + (solved ? `  ·  SOLVE said ${solved.verdict}` : '')
+                + (engineError ? `  ·  ⛔ ${engineError.name}` : '')
+                + (stillWhy ? `  ·  ⛔ the room would not even BUILD: ${stillWhy}` : '');
         /**
          * ⛓ SLICE 4: computed ONCE and carried into the readout below, so the
          * host's mirrored identity line and the page's own detail line cannot
@@ -4797,8 +5084,14 @@ async function runGenerate(params, lifetime) {
          * the ONE identity function.
          */
         const identityLine = describeState(state, solved);
-        $('detail').textContent = `${identityLine}  ·  display solve `
-            + `${solveMs} ms`
+        $('detail').textContent = `${identityLine}`
+            + (solving ? `  ·  display solve ${solveMs} ms` : '')
+            + (engineError
+                // ⚠ THE ENGINE'S OWN NAME AND TEXT, VERBATIM — a paraphrase of
+                // a builder refusal is a page inventing a reason.
+                ? `  ·  ⛔ the world REFUSED to build this record: ${engineError.name}: `
+                    + `${engineError.message}`
+                : '')
             + (agreement.compared
                 ? `  ·  trace/display agreement: ${agreement.agrees ? 'YES' : 'NO'}`
                 : '')
@@ -4865,7 +5158,19 @@ async function runGenerate(params, lifetime) {
              * value on every redraw — so a readout can never claim an arm that
              * a re-render dropped.
              */
-            armed: armed?.template ?? null,
+            armed: armed?.kind === 'template' ? armed.template : null,
+            /**
+             * ⛓⛓ SLICE 11: THE EDITS, AND THEY ARE THE READOUT'S OWN THREE
+             * FIELDS rather than one. `edits` is the COUNT a host mirrors
+             * (`stateChanged.edits`), `editList` is the ordered ops a row
+             * asserts literals against, and `editTool` is which brush is armed
+             * — three different questions, and a count alone cannot answer the
+             * second (trap 269: an echoed number is not a value).
+             */
+            edits: state.edits.length,
+            editList: state.edits,
+            editRows: editReadout?.rows ?? 0,
+            editTool: armed?.kind === 'edit' ? armed.tool : 'off',
             skeleton: state.skeleton,
             bounds: state.bounds,
             budget: state.budget,
@@ -4878,20 +5183,29 @@ async function runGenerate(params, lifetime) {
             vetoes: genRows.filter((r) => r.outcome !== 'KEPT')
                 .map((r) => ({ label: r.label, template: r.template, outcome: r.outcome,
                     verdict: r.verdict, reasonText: r.reasonText })),
-            verdict: solved.verdict,
-            ticks: solved.ticks,
-            certified: solved.certification?.certified ?? null,
-            strategies: (solved.records ?? []).map((r) => r.strategy),
-            scratchClears: solved.scratchClears ?? [],
+            verdict: solved?.verdict ?? null,
+            ticks: solved?.ticks ?? null,
+            /**
+             * ⛓⛓⛓ SLICE 11 — THE CERTIFICATION, AND IT IS NOW A REAL
+             * TRI-STATE. ⚠ Trap 262: `null` is *nobody has asked about the
+             * record now on screen* (what an edit leaves behind) and `false` is
+             * *the oracle was asked and said no*. Before this slice only `true`
+             * was reachable here.
+             */
+            certified: certified === null ? null : certified.solved,
+            certification: certified,
+            strategies: (solved?.records ?? []).map((r) => r.strategy),
+            scratchClears: solved?.scratchClears ?? [],
             frames: frames.length,
+            /** ⚠ The builder's refusal, when the record would not even BUILD. */
+            engineError: engineError
+                ? { name: engineError.name, message: engineError.message } : null,
+            drewStill: solved && solved.verdict === 'SOLVED' ? false : true,
+            stillWhy,
             agreement,
             payloadCheck: payload?.__check ?? null,
         };
         window.__editorGenerated = lastPayload;
-        // ⛓ THE BRIDGE IS ARMED ONLY BY A DRAWN LEVEL. A refused display
-        // solve returns above this line, so the buttons can never hand over a
-        // room the page could not show — the one state in which "solve this
-        // level" would mean two different rooms.
         /**
          * ── ⛓⛓⛓ THE DRAWN LEVEL **IS** THE PAGE'S LEVEL (group A, item 1) ──
          *
@@ -4909,10 +5223,14 @@ async function runGenerate(params, lifetime) {
          * is the honest reading of "this is the page's current level", and the
          * note below says so where it happens rather than leaving you to
          * discover it two switches later.
+         *
+         * ⛓ SLICE 11 MOVED `heldGeneratedLevel` ITSELF ABOVE THE DRAW (the
+         * still frame's scratch-persistence flag reads it). What stays here is
+         * everything else the hand-over needs, and the refusal path still
+         * returns before ALL of it: the bridge is armed only by a drawn level.
+         * ⚠ AN EDITED LEVEL IS HANDED OVER TOO, certified or not — SOLVE and
+         * MANUAL are exactly where you go to look at a room the oracle refused.
          */
-        heldGeneratedLevel = {
-            record: state.record, seed, biome, step, bounds: state.bounds, budget: state.budget,
-        };
         // ⛔ THE GENERATOR'S OWN BLOCK, through `displayStaging` — pins
         // included. Building one here would be a second staging for the same
         // room, differing exactly where it matters least visibly.
@@ -4998,6 +5316,146 @@ async function runGenerate(params, lifetime) {
     const handOver = (source) => (state?.record ? switchArm(source) : undefined);
     $('genToSolve').onclick = () => handOver('solve');
     $('genToManual').onclick = () => handOver('manual');
+
+    /* ── ⛓⛓⛓ SLICE 11 — FREE TILE / OBJECT EDITING (⚖ ruling 8, §3.8) ──── */
+
+    /**
+     * ⛓⛓⛓ **THE CERTIFICATION, MADE VISIBLE** — §3.8(b)'s whole visible half.
+     *
+     * ⛔ ONE WRITER OF THE SENTENCE, called from `show()` on every draw, so the
+     * pane cannot describe a level the page has stopped showing. The three
+     * states are three sentences and never two: `null` is *nobody has asked*
+     * (what an edit leaves behind), `false` names the verdict or the engine's
+     * refusal VERBATIM, `true` names the walk.
+     */
+    function renderCertification() {
+        const n = (state?.edits ?? []).length;
+        const box = $('genEditCert');
+        if (certified === null) {
+            box.className = 'note bad';
+            box.textContent = n
+                ? `⛔ UNCERTIFIED — ${n} edit(s) since the last solve; press SOLVE. `
+                    + 'Nothing has solved the room now on screen, and an edit never certifies '
+                    + 'itself: free editing is exactly the mode in which the oracle is the '
+                    + 'only thing that can say the level is still beatable.'
+                : '⛔ UNCERTIFIED — nothing has solved the room now on screen.';
+            return;
+        }
+        if (certified.solved) {
+            box.className = 'note';
+            box.textContent = `✔ CERTIFIED — the oracle SOLVED this exact record`
+                + (certified.ticks ? ` in ${certified.ticks} tick(s)` : '')
+                + (n ? `, manual edits and all` : '')
+                + (certified.at ? ` (${certified.at})` : '');
+            return;
+        }
+        box.className = 'note bad';
+        box.textContent = certified.errorName && certified.verdict === null
+            // ⚠ VERBATIM, name first. "The world would not build it" and "the
+            // solver could not beat it" are different findings.
+            ? `⛔ UNCERTIFIED — the world REFUSED to BUILD this record. `
+                + `${certified.errorName}: ${certified.reasonText}`
+            : `⛔ UNCERTIFIED — the oracle answered ${certified.verdict}. `
+                + `${certified.reasonText ?? '(no text)'}`;
+    }
+
+    /**
+     * ⛔ ONE PLACE DECIDES WHETHER THE EDIT BUTTONS ARE LIVE, the same law
+     * `updateRunButtons` follows one control over: UNDO needs an edit to undo,
+     * SOLVE needs a record, and both are dead while a run holds the thread.
+     */
+    function updateEditButtons() {
+        const n = (state?.edits ?? []).length;
+        $('genEditUndo').disabled = busyNow || n === 0;
+        $('genEditSolve').disabled = busyNow || !state?.record;
+    }
+
+    /**
+     * ⛓⛓⛓ ONE MANUAL EDIT — the op is built HERE from the tool and the form,
+     * and applied by `watchEdit.editState`, which is the ONE place an edit
+     * touches a record.
+     *
+     * ⛔ **AND IT CLEARS THE CERTIFICATION FIRST**, before the op is even
+     * applied. ⚖ §3.8(b): the moment the record moves, the last solve is about
+     * a room that is no longer on screen — so the clear cannot be conditional
+     * on the op succeeding, and it cannot come after a draw that would have
+     * printed the stale verdict for one frame.
+     *
+     * ⚠ A REFUSED OP LEAVES THE LEVEL ALONE and says why, with the ops
+     * module's own sentence. `editState` refuses an out-of-room cell
+     * (`withTerrain`'s message), a REMOVE on an empty cell and a malformed
+     * attrs object — none of them is a modification, so none of them counts as
+     * an edit. ⛓ Trap 263 the maze paid for: the count, the certification and
+     * the "this URL is no longer a reproduction" clause must move only for a
+     * click that CHANGED something.
+     */
+    async function runEdit(tool, at) {
+        busy(true);
+        try {
+            if (!lifetime.alive() || !state?.record) return;
+            let op;
+            try {
+                op = editOpFor(tool, at);
+            } catch (e) {
+                $('status').className = 'bad';
+                $('status').textContent = `the ${tool} edit was REFUSED — ${e.message}`;
+                return;
+            }
+            let next;
+            try {
+                next = editState(state, op);
+            } catch (e) {
+                $('status').className = 'bad';
+                $('status').textContent = `the ${tool} edit at (${at.tx},${at.ty}) was `
+                    + `REFUSED — ${e.message}`;
+                return;
+            }
+            /**
+             * ⛓⛓⛓ TRAP 263, WHICH THE MAZE PAGE PAID FOR ONCE (§10.6 defect 2):
+             * a click that CHANGED NOTHING is not an edit. `editState` returns
+             * the SAME state object when the record did not move, so this is an
+             * identity check and not a flag a caller could forget — and the
+             * count, the certification and the "this URL is no longer a
+             * reproduction" clause all stay put. ⚠ SAID, not silently nothing.
+             */
+            if (next === state) {
+                $('status').className = '';
+                $('status').textContent = `the ${tool} click at (${at.tx},${at.ty}) changed `
+                    + 'NOTHING, so it is not an edit — the count, the certification and the '
+                    + 'identity line are unmoved. ⚖ §3.8 is a law about CHANGES.';
+                return;
+            }
+            state = next;
+            certified = null;
+            await show(describeEdit(op));
+        } finally {
+            busy(false);
+            updateEditButtons();
+        }
+    }
+
+    /**
+     * The tool + the form → ONE op. ⛔ The JSON box is parsed HERE and its
+     * refusal is the reader's own text, because a page that silently treated
+     * unparseable attributes as `{}` would place an entity nobody asked for.
+     */
+    function editOpFor(tool, at) {
+        if (tool === 'paint') {
+            return { op: 'paint', tx: at.tx, ty: at.ty, terrain: $('genEditTerrain').value };
+        }
+        if (tool === 'remove') return { op: 'remove', tx: at.tx, ty: at.ty };
+        const raw = $('genEditAttrs').value.trim();
+        let attrs;
+        try {
+            attrs = raw === '' ? {} : JSON.parse(raw);
+        } catch (e) {
+            throw new Error(`the attributes box does not parse as JSON (${e.message}). `
+                + 'It is a literal OEL attribute set — e.g. {"tset":"0","tag":"-1"} — and '
+                + 'nothing here derives an activator group for you.');
+        }
+        if (tool === 'attrs') return { op: 'attrs', tx: at.tx, ty: at.ty, attrs };
+        return { op: 'place', tx: at.tx, ty: at.ty, type: $('genEditType').value.trim(), attrs };
+    }
 
     /**
      * ⛔ READ THE FORM, AND RESET THE LADDER IF ITS IDENTITY CHANGED.
@@ -5163,6 +5621,29 @@ async function runGenerate(params, lifetime) {
         busy(true);
         try {
             if (!lifetime.alive()) return;
+            /**
+             * ── ⛓⛓⛓ SLICE 11 — REFUSED BY NAME **BEFORE** THE PRESS SPENDS
+             * ── ANYTHING (the ordering rule) ───────────────────────────────
+             *
+             * ⚖ v1's rule is *edits come AFTER all directives*, so a directed
+             * attempt onto an edited level would make the construction order
+             * unrecoverable from the payload's two lists.
+             * `watchGenerate.applyDirective` refuses it as the STRUCTURAL
+             * backstop; this is the page saying so first, with the sentence
+             * that names the way out — the same shape as the empty-roster rule,
+             * where the loop's own refusal stays and the page still tells you
+             * before you spend a click.
+             */
+            if (state.edits.length) {
+                $('status').className = 'bad';
+                $('status').textContent = `⛔ REFUSED: the level on screen carries `
+                    + `${state.edits.length} manual edit(s), and a directed attempt onto it `
+                    + 'would make the construction ORDER unrecoverable — the payload carries '
+                    + '`directives` and `edits` as two lists, which mean one construction '
+                    + 'only because the order is ladder → directives → edits. UNDO the edits, '
+                    + 'or download the payload first.';
+                return;
+            }
             const spec = {
                 template,
                 params,
@@ -5233,10 +5714,15 @@ async function runGenerate(params, lifetime) {
      */
     lifetime.on(window, 'keydown', (ev) => {
         if (ev.key !== 'Escape' || !armed) return;
-        armed = null;
-        renderArmed();
+        // ⛓ SLICE 11: ONE key clears BOTH kinds, because there is one variable
+        // — a page with a second Escape for the brush would be a page where
+        // "cancel" meant different things depending on what was pending.
+        const what = armed.kind === 'template'
+            ? 'AT… cancelled — nothing was placed'
+            : `the ${armed.tool} tool was DISARMED — nothing was edited`;
+        setArmed(null);
         $('status').className = '';
-        $('status').textContent = 'AT… cancelled — nothing was placed';
+        $('status').textContent = what;
     });
     $('canvas').onclick = async (ev) => {
         if (!lifetime.alive() || !state?.record) return;
@@ -5272,11 +5758,26 @@ async function runGenerate(params, lifetime) {
             $('status').textContent = refusal;
             return;
         }
+        /**
+         * ── ⛓⛓⛓ SLICE 11 — THE SECOND KIND, AND THE ONE ASYMMETRY BETWEEN
+         * ── THEM: **AN EDIT TOOL STAYS ARMED, A TEMPLATE ARM DOES NOT** ─────
+         *
+         * ⛔ A template arm spends a SOLVE and is a one-shot: it disarms before
+         * the attempt so a second click cannot queue a second directive behind
+         * a running solve. An edit tool is a BRUSH — painting a corridor is
+         * five clicks and re-arming between each would be a control that
+         * fights its own purpose — so it survives the click and Escape (or the
+         * `off` option) is how it ends. ⚠ `busyNow` still gates it, so a click
+         * during the redraw cannot land a second op on a stale record.
+         */
+        if (armed.kind === 'edit') {
+            await runEdit(armed.tool, at);
+            return;
+        }
         const { template, readParams } = armed;
         // ⛔ DISARMED BEFORE THE ATTEMPT, so a second click while the solve is
         // running cannot queue a second directive behind it.
-        armed = null;
-        renderArmed();
+        setArmed(null);
         await attempt(template, readParams(), at);
     };
     /**
@@ -5289,39 +5790,69 @@ async function runGenerate(params, lifetime) {
         busy(true);
         try {
             const n = state.directives.length;
+            // ⛓ SLICE 11: a fresh `generateStep` state carries an EMPTY EDIT
+            // list too, so this drops the edits BY CONSTRUCTION exactly as it
+            // has always dropped the directives — and SAYS so, because they are
+            // the half no URL and no seed will bring back.
+            const e = state.edits.length;
+            const cleared = `CLEARED ${n} directive(s)`
+                + (e ? ` and ${e} manual edit(s) — the edits are GONE (⚖ ruling 9: no URL `
+                    + 'ever carried them)' : '');
             if (step === 0) {
-                await resetToSkeleton(`CLEARED ${n} directive(s) — back to the skeleton`);
+                await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
                 state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
-                await show(`CLEARED ${n} directive(s) — back to seed ${seed}'s ladder at `
-                    + `step ${step}`);
+                await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
             busy(false);
         }
     };
+    /**
+     * ⛓⛓ THE ONE SENTENCE THE LADDER BUTTONS SAY WHEN THEY RESET, and there
+     * are now THREE reasons — a changed identity, a directive, and (slice 11) a
+     * manual EDIT. ⛔ Written once: `genStep` and `genRunAll` had the same
+     * two-branch literal, and a third branch added to one of them would have
+     * been a page that explained itself differently depending on which button
+     * you pressed.
+     *
+     * ⛓ WHY AN EDIT RESETS AT ALL: STEP is *"obstacleTarget = k, re-run"*, and
+     * it is sound because a run to k is a strict PREFIX of a run to k+1. A hand
+     * edit is not part of any run, so "re-run to k+1" cannot reproduce
+     * *ladder-to-k + a painted wall* and then add one — the directives law,
+     * one mechanism over, and for exactly the same reason.
+     */
+    const resetReason = (identityChanged) => {
+        if (state.edits.length) {
+            return `${state.edits.length} manual edit(s) were applied — RESET to the `
+                + 'skeleton, because a run to step k is a prefix of a run to k+1 and that '
+                + 'property does NOT cross a hand edit. ⚠ The edits are GONE: the URL never '
+                + 'carried them (⚖ ruling 9), so download the payload first if you want them';
+        }
+        if (state.directives.length) {
+            return `${state.directives.length} directive(s) were applied — RESET to the `
+                + 'skeleton, because a run to step k is a prefix of a run to k+1 and '
+                + 'that property does NOT cross a directive';
+        }
+        return identityChanged
+            ? 'the seed or biome changed — RESET to the skeleton, because the seed IS '
+                + 'the level\'s identity'
+            : 'RESET to the skeleton';
+    };
     $('genStep').onclick = async () => {
-        if (readForm() || state.directives.length) {
-            await resetToSkeleton(state.directives.length
-                // ⛓ THE LAW, SAID AGAIN AT THE MOMENT IT BITES. `updateRunButtons`
-                // says it BEFORE the press; this says it in the status line after,
-                // so the reset is never something the page just did quietly.
-                ? `${state.directives.length} directive(s) were applied — RESET to the `
-                    + 'skeleton, because a run to step k is a prefix of a run to k+1 and '
-                    + 'that property does NOT cross a directive'
-                : 'the seed or biome changed — RESET to the skeleton, because the seed IS '
-                    + 'the level\'s identity');
+        // ⛓ THE LAW, SAID AGAIN AT THE MOMENT IT BITES. `updateRunButtons`
+        // says it BEFORE the press; this says it in the status line after,
+        // so the reset is never something the page just did quietly.
+        const changed = readForm();
+        if (changed || state.directives.length || state.edits.length) {
+            await resetToSkeleton(resetReason(changed));
         }
         return goTo(Math.min(step + 1, bounds.obstacleTarget), 'STEP');
     };
     $('genRunAll').onclick = async () => {
-        if (readForm() || state.directives.length) {
-            await resetToSkeleton(state.directives.length
-                ? `${state.directives.length} directive(s) were applied — RESET to the `
-                    + 'skeleton, because a run to step k is a prefix of a run to k+1 and '
-                    + 'that property does NOT cross a directive'
-                : 'the seed or biome changed — RESET to the skeleton, because the seed IS '
-                    + 'the level\'s identity');
+        const changed = readForm();
+        if (changed || state.directives.length || state.edits.length) {
+            await resetToSkeleton(resetReason(changed));
         }
         return goTo(bounds.obstacleTarget, 'RUN-ALL');
     };
@@ -5334,6 +5865,87 @@ async function runGenerate(params, lifetime) {
      * the page can be handed straight back to `--gen=` (and to the batch's
      * report). A second shape here would be a second thing to keep in step.
      */
+    /* ── ⛓⛓⛓ SLICE 11 — THE EDIT SECTION'S CONTROLS ────────────────────── */
+
+    /**
+     * ⛔ MOUNTED FROM THE MODULES' OWN VOCABULARIES, so this file keeps no
+     * second list of what a terrain or an entity is: `procgenLevel.TERRAIN_NAMES`
+     * is the four-terrain vocabulary and `watchEdit.ENTITY_ROSTER` is the
+     * offered types with their reasons in the tooltips. ⚠ The type field is a
+     * free `<input>` with the roster as a `<datalist>` and NOT a `<select>`,
+     * which is §3.8(b) as a control: the world is the adjudicator, so a type
+     * nobody offered must be typeable and must refuse from the ENGINE with its
+     * own construction site rather than from a dropdown that never let you ask.
+     */
+    $('genEditTerrain').innerHTML = TERRAIN_NAMES
+        .map((t) => `<option value="${t}">${t}</option>`).join('');
+    const typeList = $('genEditTypes');
+    typeList.innerHTML = '';
+    for (const e of ENTITY_ROSTER) {
+        const o = document.createElement('option');
+        o.value = e.type;
+        o.label = e.why;
+        typeList.appendChild(o);
+    }
+    $('genEditType').value = ENTITY_ROSTER[0].type;
+    $('genEditAttrs').value = JSON.stringify(ENTITY_ROSTER[0].attrs);
+    /**
+     * ⚠ THE ATTRS BOX FOLLOWS THE TYPE ONLY WHEN THE TYPE IS ONE THE ROSTER
+     * KNOWS — a suggestion, not a rewrite: a free type leaves whatever you had
+     * typed standing, because the page has nothing to suggest for it.
+     */
+    lifetime.on($('genEditType'), 'change', () => {
+        const row = ENTITY_ROSTER.find((e) => e.type === $('genEditType').value.trim());
+        if (row) $('genEditAttrs').value = JSON.stringify(row.attrs);
+    });
+    // ⛔ THROUGH THE ONE WRITER. The select is a VIEW of `armed` (see
+    // `renderArmed`), so this hands it the value and reads nothing back.
+    lifetime.on($('genEditTool'), 'change', () => {
+        const tool = $('genEditTool').value;
+        setArmed(EDIT_OPS.includes(tool) ? { kind: 'edit', tool } : null);
+    });
+    $('genEditUndo').onclick = async () => {
+        busy(true);
+        try {
+            const n = state.edits.length;
+            if (n === 0) return;
+            state = undoEdit(state);
+            /**
+             * ⛔ UNDO DOES **NOT** RESTORE A CERTIFICATION. The oracle has still
+             * not been asked about the record now on screen — it happens to be a
+             * record it once certified, but "once solved a record equal to this"
+             * and "solved this" are the same fact only if nothing else moved,
+             * and a page is not entitled to that inference. The maze page's own
+             * rule (`undoEdit`: *uncertified stays uncertified*).
+             */
+            certified = null;
+            await show(`UNDO — ${n - 1} manual edit(s) remain`);
+        } finally {
+            busy(false);
+        }
+    };
+    /**
+     * ⛓⛓⛓ THE SOLVE PRESS — §3.8(b)'s other half, and the ONLY thing that can
+     * certify an edited level. ⛔ It runs `displaySolve`, which is
+     * `procgenSeedling.seedlingOracle` over the CURRENT record with the KEPT
+     * TEMPLATES' pin union — the same oracle the loop used, not a second one.
+     *
+     * ⚠ THE PINS ARE THE KEPT TEMPLATES', AND THAT IS SAID OUT LOUD: a
+     * hand-placed entity has no template, so it contributes no pin. A water
+     * pool painted by hand does NOT oblige `'sound'` the way the water TEMPLATE
+     * does — the pin union is a fact about what the loop drew, and inventing a
+     * pin for a hand edit would certify the room under an inventory nobody
+     * asked for.
+     */
+    $('genEditSolve').onclick = async () => {
+        busy(true);
+        try {
+            if (!state?.record) return;
+            await show('SOLVE — certifying the record on screen', { certifying: true });
+        } finally {
+            busy(false);
+        }
+    };
     $('genDownload').onclick = () => {
         if (!lastPayload) return;
         const blob = new Blob([`${JSON.stringify(lastPayload, null, 2)}\n`],
@@ -5377,6 +5989,40 @@ async function runGenerate(params, lifetime) {
         }
         pendingDirected = null;
         const out = await show(`?directed= — ${state.directives.length} directive(s) replayed`);
+        if (!out.drew) return;
+    }
+    /**
+     * ── ⛓⛓⛓ SLICE 11 — THE PAYLOAD'S OWN EDITS, REPLAYED ──────────────────
+     *
+     * ⛔ AFTER the ladder and the directives, because that is the order the
+     * identity is defined in (`applyDirective`'s backstop): *seed S's ladder to
+     * step k, THEN N directed attempts, THEN E manual edits.*
+     *
+     * ⛓⛓ **AND WHY THE EDITS COME FROM THE PAYLOAD WHERE THE DIRECTIVES COME
+     * FROM THE URL** — the asymmetry is ⚖ ruling 9 and not an oversight. A
+     * directive IS expressible in a URL (`?directed=`), so `?gen=` leaves it to
+     * the bar and a payload carrying directives still needs them spelled there.
+     * An edit is expressible in NO URL, by ruling, so the payload is the only
+     * channel it has and this path is the only way an edited level can come
+     * back at all. ⇒ `?gen=` and `procgenLab:load` REPRODUCE an edited level
+     * byte for byte, and the cross-runtime determinism claim survives editing.
+     *
+     * ⛔ THROUGH `watchEdit.editStates` — the SAME fold the click handler, UNDO
+     * and `generateWithDirectives({edits})` use. One reconstruction.
+     *
+     * ⚠ AND THE RESULT IS **UNCERTIFIED**, whatever the file claimed: `show()`
+     * runs its no-solve pass on an edited state, so a payload with
+     * `certified: true` in it does not certify anything here. A file's own
+     * certification is somebody else's assertion (the maze row's claim 7).
+     */
+    if (payload?.edits?.length && lifetime.alive()) {
+        $('status').className = '';
+        $('status').textContent = `?gen= replaying ${payload.edits.length} manual edit(s)…`;
+        await new Promise((r) => requestAnimationFrame(r));
+        if (!lifetime.alive()) return;
+        state = editStates(state, payload.edits);
+        certified = null;
+        const out = await show(`?gen= — ${state.edits.length} manual edit(s) replayed`);
         if (!out.drew) return;
     }
     if (gp.run || payload) {

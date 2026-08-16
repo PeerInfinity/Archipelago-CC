@@ -554,6 +554,89 @@ try {
         && seedLoaded.identity.includes(String(seedlingPayload.seed)),
     '…and its identity line says which level it is showing', seedLoaded.identity);
 
+    /**
+     * ── ⛓⛓⛓ CLAIM 6c (CONSTRUCTIVE-MODE SLICE 11) — A **MANUAL EDIT** IN THE
+     * ── SEEDLING FRAME REACHES THE HOST AS `stateChanged.edits` ────────────
+     *
+     * `edits` was hard-wired to 0 in `watchSummary.js` through slices 4–7 with
+     * the note *"the day slice 11 lands, this line is what has to change"*. It
+     * landed. ⛔ This is the ONE claim that proves the whole chain — the page's
+     * edit list → `__editorGenerate.edits` → `__watch.edits` →
+     * `watchBridgeSummary` → `procgenLab:stateChanged` on the HOST bus — and a
+     * build that fixed only the readout would still redden here.
+     */
+    /**
+     * ⛔⛔ TRAP 264 AGAIN, AND IT COST THIS CLAIM A RUN: the two lab panels are
+     * TABS OF ONE STACK, and CLAIM 5 above left the MAZE one active — so the
+     * Seedling canvas was `display:none` with a ZERO rect, `tileAtPoint`
+     * refused the click by name, and the wait below timed out with no edit.
+     * ⛓ `ui:activatePanel` cannot fix it: it takes a `panelId` and BOTH
+     * instances are `procgenLabPanel`, so it can only ever raise the first.
+     * The tab is therefore picked by which stack item CONTAINS this frame's own
+     * root, and — the row's standing law — **the wait is on the GEOMETRY, not
+     * on the activation call**.
+     */
+    const raised = await page.evaluate((iframeId) => {
+        /**
+         * ⛔ THROUGH GOLDEN LAYOUT'S OWN API (`window.goldenLayoutInstance`,
+         * published by `app/initialization`), and the two DOM routes that were
+         * tried first are recorded because each failed for its own reason:
+         *   · a synthetic `mousedown` on the tab — GL v2 listens on POINTER
+         *     events, so nothing happened;
+         *   · a REAL Playwright click on the tab element — 23 tabs share this
+         *     header, the Seedling one is past the overflow, and the click
+         *     timed out on visibility.
+         * The API path has neither problem, and it is also what `panelManager`
+         * itself does — `activatePanel` merely cannot be used here, because it
+         * matches on `componentType` and BOTH lab panels are `procgenLabPanel`.
+         */
+        const gl = window.goldenLayoutInstance;
+        const item = (gl?.getAllContentItems() ?? []).find(
+            (it) => it.isComponent && it.element?.querySelector?.(
+                `.procgen-lab-root[data-iframe-id="${iframeId}"]`));
+        if (!item?.parent?.isStack) return false;
+        item.parent.setActiveComponentItem(item);
+        return true;
+    }, seed.iframeId);
+    check(raised === true,
+        '⛓ the SEEDLING lab tab was raised through Golden Layout\'s own API — '
+        + '`ui:activatePanel` cannot reach it, because it matches on componentType and BOTH '
+        + 'lab panels are `procgenLabPanel`');
+    await settledFrame(seedFrame, () => {
+        const rect = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(rect) && rect.width > 0 && rect.height > 0;
+    }, 'the SEEDLING panel to become the active tab and its canvas to have a real size');
+
+    await seedFrame.evaluate(() => {
+        const sel = document.getElementById('genEditTool');
+        sel.value = 'paint';
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        document.getElementById('genEditTerrain').value = 'wall';
+        const canvas = document.getElementById('canvas');
+        const r = canvas.getBoundingClientRect();
+        const { width: cols, height: rows } = window.__editorGenerated.level;
+        canvas.dispatchEvent(new MouseEvent('click', {
+            clientX: r.left + ((8 + 0.5) * r.width) / cols,
+            clientY: r.top + ((8 + 0.5) * r.height) / rows,
+            bubbles: true,
+        }));
+    });
+    await settledFrame(seedFrame, () => window.__watch?.edits === 1,
+        'the Seedling frame to record ONE manual edit');
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.substrate === 'seedling' && e.data?.edits === 1),
+    'a Seedling stateChanged carrying edits: 1');
+    const edited = [...events].reverse().find((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.substrate === 'seedling');
+    check(edited.data.edits === 1 && edited.data.iframeId === seed.iframeId,
+        '⛓⛓⛓ CLAIM 6c — a PAINT in the Seedling frame arrives on the HOST bus as '
+        + '`stateChanged.edits === 1`, addressed by that frame',
+        `edits ${edited.data.edits} · ${edited.data.iframeId}`);
+    check(edited.data.certified === null
+        && /then 1 manual edit\(s\)/.test(edited.data.identity),
+    '⛔ …and the host is told the level is UNCERTIFIED (⚠ trap 262: `null` = nobody has '
+        + 'asked) with the identity line naming the third leg', edited.data.identity);
+
     /* ── CLAIM 7b: routing the other way ───────────────────────────── */
     const mazeBefore = await mazeFrame.evaluate(() => window.__mazeLab.identity);
     const seedLoads = (await tap()).filter(

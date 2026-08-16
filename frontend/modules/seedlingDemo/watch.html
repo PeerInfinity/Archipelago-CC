@@ -147,6 +147,28 @@
   ⛔ AND THE PAGE STILL NEVER WRITES fixtures/. A generated level lives in
   the box, in the Download button and in your hands.
 
+  ── FREE TILE / OBJECT EDITING (constructive slice 11, ⚖ ruling 8) ──────
+
+  The EDIT section under the catalogue paints a tile, places, re-attributes or
+  deletes one entity, and undoes. FOUR recorded ops (`paint`/`place`/`attrs`/
+  `remove`, each addressing a CELL), ONE reconstruction
+  (`watchEdit.applyEdits`), TWO laws:
+
+  (a) IDENTITY — an edited level is *the ladder to step k, then the directed
+      attempts, then the manual edits*. ⛔ THE URL CARRIES NO EDITS (⚖ ruling
+      9) and the identity line SAYS so; the PAYLOAD is the reproduction, and
+      `?gen=` replays a payload's `edits` so an edited level round-trips
+      byte-identically across node and the browser. ⚠ Edits come AFTER all
+      directives — a directed ATTEMPT on an edited level is refused by name,
+      and STEP / RUN-ALL / CLEAR reset to the skeleton and say the edits go.
+
+  (b) CERTIFICATION — editing never bypasses the oracle. Any edit makes the
+      page visibly UNCERTIFIED and NO draw solves an edited record (it is
+      shown as a still frame); SOLVE runs the loop's own oracle over the
+      record on screen and reports its verdict — or, for a body the engine
+      cannot build, the `LevelWorldError` verbatim. ⛔ NOTHING in the tool
+      checks legality: free means free, and certification is the guard.
+
   ── SWITCHING MODES (the switch arc) ────────────────────────────────────
 
   The SOURCE selector does NOT reload the page. It rewrites the URL with
@@ -346,6 +368,15 @@
   #genDirectives .dRow .g { color: #7fdc8f; }
   #genDirectives .dRow .o { color: #ffb066; }
   #genDirectives .dRow .rj { color: #8a8a98; font-size: 11px; }
+  /* ⛓ SLICE 11: the EDIT LOG has its own container for the reason
+     #genRoster and #genDirectives have theirs — acceptance rows ENUMERATE
+     #layers and #bootForm, and an edit row is neither a layer nor a boot flag. */
+  #genEdits { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+              border-radius: 4px; margin: 4px 0; }
+  #genEdits .eRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #genEdits .eRow b { color: #7fe0ff; font-weight: 600; }
+  #genEdits .eRow .et { color: #ffd75f; }
+  #genEditCert.bad { color: #ff8f6a; }
   #manualKeys { color: #7fe0ff; font-size: 11px; }
   #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
   #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -594,6 +625,55 @@
       <span id="genArmNote" class="note"></span>
     </div>
     <div id="genDirectives"></div>
+    <!--
+      ⛓⛓⛓ FREE TILE / OBJECT EDITING (constructive-mode slice 11, ⚖ ruling 8
+      + §3.8). The other side of ruling 6's tile boundary: click-to-anchor
+      places a TEMPLATE, and this paints a bare tile and places, edits or
+      deletes a single entity.
+
+      ⛔ TWO LAWS, BOTH VISIBLE ON THIS PANEL:
+        (a) IDENTITY — the URL does NOT carry the edits (⚖ ruling 9), so once
+            there is one the identity line says the URL has stopped being a
+            reproduction and the PAYLOAD (Download level JSON + trace) is.
+        (b) CERTIFICATION — editing never bypasses the oracle. Any edit drops
+            the certification to UNCERTIFIED and only SOLVE below can put it
+            back. NOTHING here checks legality: paint a wall across the only
+            corridor and the ORACLE says so, in its own words.
+
+      ⛔ ONE CANVAS CLICK LISTENER, TWO STATES. The tool selector and the
+      catalogue's AT… buttons are two views of ONE `armed` variable, so arming
+      either disarms the other and Escape clears whichever is live. A tool
+      STAYS armed across clicks (a brush); AT… does not (it spends a solve).
+    -->
+    <div class="line">
+      <b>free editing</b>
+      <label for="genEditTool">tool</label>
+      <select id="genEditTool">
+        <option value="off">off — clicks do nothing</option>
+        <option value="paint">PAINT terrain</option>
+        <option value="place">PLACE entity</option>
+        <option value="attrs">EDIT attrs</option>
+        <option value="remove">REMOVE entity</option>
+      </select>
+      <label for="genEditTerrain">terrain</label>
+      <select id="genEditTerrain"></select>
+      <!-- ⛔ A free INPUT with a datalist and NOT a select: the WORLD is the
+           adjudicator (`buildLevelWorld` refuses an untranscribed tag by name
+           with its construction site), so a type nobody offered must be
+           typeable. The list is what `procgenPalette` actually places. -->
+      <label>type <input id="genEditType" list="genEditTypes" style="width:11em"></label>
+      <datalist id="genEditTypes"></datalist>
+      <label>attrs <input id="genEditAttrs" style="width:15em"></label>
+      <button id="genEditUndo" disabled>UNDO the last edit</button>
+      <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
+    </div>
+    <div class="line">
+      <span id="genEditNote" class="note"></span>
+    </div>
+    <div class="line">
+      <span id="genEditCert" class="note"></span>
+    </div>
+    <div id="genEdits"></div>
     <div id="genNote" class="note"></div>
   </div>
   <!--
