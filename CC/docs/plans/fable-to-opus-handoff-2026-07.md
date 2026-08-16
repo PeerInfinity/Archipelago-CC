@@ -3120,8 +3120,15 @@ rooms, `TIME_RUNG.maxExpansions` (parked for R9).
 
 ## 5f. The CONSTRUCTIVE-MODE arc — carve-then-obstacle, two substrates on one loop, lab pages in the frontend (arc opened 2026-08-15, post-dates this doc)
 
-**Status: OPEN — designed 2026-08-15 (Fable design session), no slice
-started.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
+**Status: OPEN — designed 2026-08-15 (Fable design session); slices 1–5
+SHIPPED 2026-08-15 (`067746b9a` shared refactor · `a37c0953e`/`81953354a`/
+`868c39266` loop move + maze bindings · `61f918180`..`8ee37b981` maze lab
+page · `3dbc324c0`/`feb763186` iframe hosting · `8a0820ea0`/`242ee9240`
+skeleton kinds + `?skeleton=`); slice 6 in flight. ⚖ 2026-08-15 (user):
+Seedling's pass 2 under the two-pass system is NOT ruled in this arc — it
+gets its OWN FABLE PLANNING SESSION (kickoff ruling 11); slices 8, 9 and
+the Seedling half of 10 are handed to it; this arc continues with 6, 7,
+10-maze, 11, 12.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
 the user's rulings, §2 recon incl. the two probes the design rests on, §3 the
 design, §4 the twelve slices with mechanism families (⚑ = Fable-shaped parts),
 §6 open questions with defaults, §7 exit criteria. Memory:
