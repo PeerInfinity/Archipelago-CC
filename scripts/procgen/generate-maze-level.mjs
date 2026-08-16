@@ -64,8 +64,10 @@ const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
 const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
     await CORE('areaSpec.js');
+const { NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec } =
+    await CORE('elementSpec.js');
 const {
-    DEFAULT_MAZE_BUDGET, MAZE_PALETTE, generateMazeLevel, serializeMazeLevel,
+    DEFAULT_MAZE_BUDGET, MAZE_PALETTE, elementSummaryOf, generateMazeLevel, serializeMazeLevel,
 } = await MAZE('procgenMaze.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -107,6 +109,19 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  * is byte-identical to the one it printed before areas existed.
  */
 const AREAS = parseAreaSpec(arg('areas', '0'));
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 2 slice 3 — THE ELEMENT, through the ONE codec
+ * (`procgenCore/elementSpec.js`): `--elements=guard`,
+ * `--elements='guard;len=4;turns=2;binds=any'` (quote it — `;` is the shell's).
+ * ⛔ The default is `none` and at `none` the binding draws no site, constructs
+ * nothing and spends no draw, so this CLI's payload is byte-identical to the one
+ * it printed before elements existed.
+ *
+ * ⚠ THE HONEST DEFAULT ROOM FOR ELEMENTS IS **15x15**. The ELEMENTS CENSUS
+ * measured 11x11 refusing every `len=4` run for want of a site; the CLI's own
+ * default is still 11x11 because moving it would expire every published pair.
+ */
+const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
 /**
  * ⛓⛓⛓ SLICE 3 — THE RULE-DIRECTED DIRECTIVE, through the same codec:
  * `--require=K0,K1`. ⛔ ABSENT is no directive at all (and the payload then
@@ -181,7 +196,8 @@ const t0 = Date.now();
 let out;
 try {
     out = generateMazeLevel({ seed: SEED, palette: MAZE_PALETTE, bounds, budget: BUDGET,
-        width: WIDTH, height: HEIGHT, skeleton: SKELETON, areas: AREAS, require: REQUIRE });
+        width: WIDTH, height: HEIGHT, skeleton: SKELETON, areas: AREAS, elements: ELEMENTS,
+        require: REQUIRE });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — the Seedling CLI's own
@@ -230,6 +246,12 @@ const payload = {
      * the bytes here).
      */
     ...(AREAS.keys === 0 ? {} : { areas: { spec: AREAS, graph: out.model.areas.graph } }),
+    /**
+     * ⛓ THE ELEMENT BLOCK — written CONDITIONALLY for the same reason the area
+     * block is: omitted at `--elements=none`, which is what keeps every per-kind
+     * md5 byte-identical (⚖ arc-2 ruling 5).
+     */
+    ...(ELEMENTS.name === ELEMENTS_NONE ? {} : { elements: elementSummaryOf(out.model) }),
     /** ⛓ SLICE 3's block — omitted entirely when nothing was required. */
     ...(REQUIRE ? { require: out.summary.require } : {}),
     budget: out.summary.budget,
@@ -257,6 +279,23 @@ if (has('json')) {
                     + `${a.graph.edges.filter((e) => e.kind === 'graphify').length} graphify `
                     + `edge(s); ${a.graph.draws} draw(s) over ${a.graph.attempts} attempt(s)`
                 : `⛔ REFUSED: ${a.refused.reason} — ${a.refused.detail}`));
+    }
+    if (ELEMENTS.name !== ELEMENTS_NONE) {
+        const e = out.model.elements;
+        say(`element: ${formatElementSpec(ELEMENTS)} — `
+            + (e.ran
+                ? e.placed.map((p) => `${p.instance} at site (${p.site.x},${p.site.y}) `
+                    + `${p.site.w}x${p.site.h}; block (${p.block.x},${p.block.y}) -> button `
+                    + `(${p.button.x},${p.button.y}); ${p.door.id} at (${p.door.x},${p.door.y}); `
+                    + `${p.guards ? `GUARDS ${p.guards}`
+                        : `⚠ guards NOTHING (${AREAS.keys === 0 ? 'no area graph was asked for'
+                            : (out.model.areas.ran
+                                ? 'binds=any and the graph put every symbol elsewhere'
+                                : `the area graph REFUSED: ${out.model.areas.refused.reason}`)})`}`
+                    + `; tunnel ${p.tunnel.length} cell(s); `
+                    + `the carve had written ${p.carveOverwrote} of its cells differently`)
+                    .join(' | ')
+                : `⛔ REFUSED: ${e.refused.reason} — ${e.refused.detail}`));
     }
     if (REQUIRE) {
         const r = s.require;
@@ -306,6 +345,19 @@ if (has('json')) {
         say('');
         say('## the elements — ⚖ ruling 20\'s SOLVER-WORK RECORDS (record only; nothing decides)');
         for (const e of s.elements) {
+            /** ⛓ arc 2 slice 3 — a PLACED GADGET's row, keyed by `element`
+             *  rather than by `symbol`. ⛔ The claim printed is WHAT HELD THE
+             *  DOOR, not how many pushes the plan spent (§9.4: `pushes >= len`
+             *  is false on real data and `pushes > 0` is inert). */
+            if (e.element) {
+                say(`  ${e.instance}  len=${e.cost.len} turns=${e.cost.turns} `
+                    + `cells=${e.cost.cells}  guards ${e.guards ?? '(nothing)'}`);
+                say(`       the winning plan: ${e.cost.planLength} step(s), `
+                    + `${e.cost.pushes} push(es), ${e.cost.nodes} node(s)`);
+                say(`       ⛓ A BLOCK WAS ON THE BUTTON WHEN THE DOOR WAS FIRST CROSSED: `
+                    + `${e.heldAtDoor === null ? 'the plan never crossed it' : e.heldAtDoor}`);
+                continue;
+            }
             say(`  ${e.symbol.padEnd(4)} ${e.doorCount} door(s) @ `
                 + `${e.doors.map((dd) => `(${dd.x},${dd.y})`).join(' ')}  key @ `
                 + `(${e.key?.x},${e.key?.y}) in ${e.key?.area}`);
@@ -326,10 +378,17 @@ if (has('json')) {
             const key = `${x},${y}`;
             if (x === out.record.entrance.x && y === out.record.entrance.y) row += '@';
             else if (x === s.goalCell.tx && y === s.goalCell.ty) row += 'X';
+            /** ⛓ arc 2 slice 3 — the gadget's own glyphs, ABOVE the obstacle
+             *  and item ones so a block on a button reads as the block. */
+            else if (out.record.blocks?.has(key)) row += 'B';
             else if (out.record.obstacles.has(key)) {
-                row += out.record.obstacles.get(key).startsWith('door_K') ? 'A' : 'D';
+                const id = out.record.obstacles.get(key);
+                row += id.startsWith('door_K') ? 'A' : (id.startsWith('door_A') ? 'G' : 'D');
             }
-            else if (out.record.items.has(key)) row += 'k';
+            else if (out.record.buttons?.has(key)) row += 'b';
+            else if (out.record.items.has(key)) {
+                row += out.record.items.get(key).startsWith('flag_') ? 'F' : 'k';
+            }
             else row += out.record.tiles[y * out.record.width + x] === 1 ? '#' : '.';
         }
         say(row);

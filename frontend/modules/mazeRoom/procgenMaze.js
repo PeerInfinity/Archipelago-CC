@@ -61,6 +61,11 @@ import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
     parseRequireList, resolveAreaSpec, symbolIndex, symbolsForKeys,
 } from '../procgenCore/areaSpec.js';
+import { DIR_DELTA } from '../procgenCore/elements.js';
+import {
+    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, formatElementSpec, namedParams,
+    normalizeElementSpec, parseElementSpec, resolveElementSpec,
+} from '../procgenCore/elementSpec.js';
 import { connected, reachableFrom } from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
 import {
@@ -72,7 +77,8 @@ import { reach } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     TILE_FLOOR, TILE_WALL, bfsSolver, clearItem, clearObstacle, createState, createWorld,
-    detectStepEvents, getItem, getObstacle, getTile, setItem, setObstacle, setTile, step,
+    detectStepEvents, getItem, getObstacle, getTile, serializeMazeEntities, setBlock, setButton,
+    setItem, setObstacle, setTile, step,
 } from './mazeRoomEngine.js';
 import { rngFor } from './procgenRng.js';
 
@@ -156,6 +162,18 @@ export function cloneWorld(world) {
         items: new Map(world.items),
         consumableTiles: new Map(world.consumableTiles ?? []),
         manaTiles: new Map(world.manaTiles ?? []),
+        /**
+         * ⛓⛓ PROCGEN ELEMENTS arc 2, slice 3 — **AND THESE TWO WERE MISSING,
+         * WHICH WAS A LIVE DEFECT THE MOMENT THE ELEMENT BINDING EXISTED.**
+         * The spread above copies `blocks` and `buttons` BY REFERENCE, so a
+         * "clone" shared its block layout with the world it was cloned from —
+         * and this function is exactly what the loop's REVERT and the area
+         * realisation's commit-on-success both rely on. Slice 1 added the Maps
+         * to `createWorld`; nothing on this path had any until now, so the bug
+         * was latent rather than harmless.
+         */
+        blocks: new Map(world.blocks ?? []),
+        buttons: new Map(world.buttons ?? []),
     };
     delete next._exitsByPos;
     return next;
@@ -215,6 +233,15 @@ export function serializeMazeLevel(world) {
     const itemLib = extra(world.itemLib, DEFAULT_ITEMS);
     if (obstacleLib) out.obstacleLib = obstacleLib;
     if (itemLib) out.itemLib = itemLib;
+    /**
+     * ⛓⛓ PROCGEN ELEMENTS arc 2, slice 3 — **BLOCKS, BUTTONS AND THE BUTTON
+     * LIBRARY**, through slice 1's own emitter. `serializeMazeEntities` sorts
+     * row-major and OMITS EVERY FIELD THAT IS EMPTY, so a world with no gadget
+     * spreads `{}` here and this payload is byte-identical to the one it was
+     * before elements existed (⚖ arc-2 ruling 5). Slice 1 fixed the shape and
+     * said "nothing calls it yet"; this is the caller.
+     */
+    Object.assign(out, serializeMazeEntities(world));
     return out;
 }
 
@@ -295,6 +322,13 @@ export function deserializeMazeLevel(payload) {
     for (const [what, list, set] of [
         ['obstacle', payload.obstacles ?? [], setObstacle],
         ['item', payload.items ?? [], setItem],
+        /**
+         * ⛓ arc 2 slice 3 — the gadget's own entities. ⛔ `buttons` carry an
+         * `id` (the `buttonLib` key that says what they HOLD) and `blocks` do
+         * not: a block is a block. Absent on every payload written before this
+         * slice, which is what makes an old one load unchanged.
+         */
+        ['button', payload.buttons ?? [], setButton],
     ]) {
         need(Array.isArray(list), `"${what}s" must be an array`);
         for (const o of list) {
@@ -304,6 +338,24 @@ export function deserializeMazeLevel(payload) {
             set(world, o.x, o.y, o.id);
         }
     }
+    need(Array.isArray(payload.blocks ?? []), '"blocks" must be an array');
+    for (const b of payload.blocks ?? []) {
+        onGrid(b, 'a block');
+        setBlock(world, b.x, b.y);
+    }
+    /**
+     * ⛔ MANDATORY WHEN THERE ARE BUTTONS, for `areaLibraries`' own reason:
+     * `heldTokens` reads `world.buttonLib[id].holds`, so a button with no entry
+     * is a button that holds nothing and the gadget's door would never open.
+     * ⛓ There is NO base button library (slice 1 ⚖ Q1) — every id is
+     * per-instance — so this is an assignment, not a merge onto a base.
+     */
+    need(payload.buttonLib === undefined
+        || (payload.buttonLib && typeof payload.buttonLib === 'object'
+            && !Array.isArray(payload.buttonLib)),
+    `"buttonLib" must be an object of per-instance entries when present, got `
+        + `${JSON.stringify(payload.buttonLib)}`);
+    if (payload.buttonLib) world.buttonLib = { ...world.buttonLib, ...payload.buttonLib };
     return world;
 }
 
@@ -371,7 +423,7 @@ export function deserializeMazeLevel(payload) {
  * @param {{x,y}} goal
  * @returns {{areas, adjacency, labelAt, corridorComponents, cellCount}}
  */
-export function partitionMazeAreas(world, { entrance, goal } = {}) {
+export function partitionMazeAreas(world, { entrance, goal, declared = [] } = {}) {
     const { width, height } = world;
     const start = entrance ?? { x: world.entrance.x, y: world.entrance.y };
     const end = goal ?? null;
@@ -405,12 +457,27 @@ export function partitionMazeAreas(world, { entrance, goal } = {}) {
     const live = reachableFrom(width, height,
         (x, y) => getTile(world, x, y) === TILE_FLOOR, start);
     const floor = (x, y) => onGrid(x, y) && live.has(key(x, y));
+    /**
+     * ⛓⛓⛓ **arc 2 slice 3 — A DECLARED AREA IS NOT DISCOVERED, IT IS TOLD**
+     * (§9.9.5). An element's push lane is 1 wide, so it contains no all-floor
+     * 2x2 square and the blob rule below would never find it — it would be
+     * shredded into corridor cells and the graph would have nothing to lock.
+     *
+     * ⛔ ITS CELLS BELONG TO IT AND TO NOTHING ELSE, so they are excluded from
+     * the blob rule ENTIRELY — not merely skipped when the loop reaches them.
+     * A gadget cell left inside `blobFloor` could complete some neighbouring
+     * chamber's 2x2 square and pull a corridor cell into an area for a reason
+     * that is about the gadget's geometry rather than about the room's.
+     */
+    const declaredKeys = new Set();
+    for (const dArea of declared) for (const c of dArea.cells) declaredKeys.add(key(c.x, c.y));
+    const blobFloor = (x, y) => floor(x, y) && !declaredKeys.has(key(x, y));
     /** ⛓ THE WIDE RULE, in one line: some all-floor 2x2 square contains (x,y). */
     const wide = (x, y) => {
-        if (!floor(x, y)) return false;
+        if (!blobFloor(x, y)) return false;
         for (const [ox, oy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]]) {
-            if (floor(x + ox, y + oy) && floor(x + ox + 1, y + oy)
-                && floor(x + ox, y + oy + 1) && floor(x + ox + 1, y + oy + 1)) return true;
+            if (blobFloor(x + ox, y + oy) && blobFloor(x + ox + 1, y + oy)
+                && blobFloor(x + ox, y + oy + 1) && blobFloor(x + ox + 1, y + oy + 1)) return true;
         }
         return false;
     };
@@ -424,7 +491,7 @@ export function partitionMazeAreas(world, { entrance, goal } = {}) {
      * expects, and it is the order the payload and every drift fixture then
      * carry. (The test that asserted the literal cell list is what asked.)
      */
-    const claim = (id, cells, synthetic) => {
+    const claim = (id, cells, synthetic, kind = 'chamber') => {
         for (const k of cells) label.set(k, id);
         areas.push({
             id,
@@ -435,18 +502,37 @@ export function partitionMazeAreas(world, { entrance, goal } = {}) {
                 })
                 .sort((a, bb) => (a.y - bb.y) || (a.x - bb.x)),
             synthetic,
+            kind,
         });
     };
+    /**
+     * ⛓ THE DECLARED AREAS FIRST — they exist before the partition runs, which
+     * is the whole point of an element. ⛔ Only their LIVE cells are claimed: a
+     * declared cell the entrance cannot reach is dead floor by the same rule
+     * every other cell obeys, and `buildAreaGraph` refuses a stranded area.
+     *
+     * ⛓ THE `A` COUNTER IS ITS OWN, NOT `areas.length`. Claiming a declared area
+     * first would otherwise renumber every chamber on the level, and the ids are
+     * what the payload, the census and the drift fixtures carry.
+     */
+    let nextA = 0;
+    for (const dArea of declared) {
+        const cells = new Set(dArea.cells.map((c) => key(c.x, c.y)).filter((k) => live.has(k)));
+        if (cells.size === 0) continue;
+        claim(dArea.id, cells, false, 'element');
+    }
     for (let y = 0; y < height; y += 1) {
         for (let x = 0; x < width; x += 1) {
             if (!wide(x, y) || label.has(key(x, y))) continue;
-            claim(`A${areas.length}`, reachableFrom(width, height, wide, { x, y }), false);
+            nextA += 1;
+            claim(`A${nextA - 1}`, reachableFrom(width, height, wide, { x, y }), false);
         }
     }
     /** ⛓ The synthetic ones, in a FIXED order (entrance then goal) so two runs agree. */
     for (const p of [start, end]) {
         if (!floor(p.x, p.y) || label.has(key(p.x, p.y))) continue;
-        claim(`A${areas.length}`, new Set([key(p.x, p.y)]), true);
+        nextA += 1;
+        claim(`A${nextA - 1}`, new Set([key(p.x, p.y)]), true);
     }
 
     const corridor = (x, y) => floor(x, y) && !label.has(key(x, y));
@@ -563,6 +649,27 @@ export function partitionMazeAreas(world, { entrance, goal } = {}) {
 /** `door_K0` ← 'K0'. The per-instance ids ⚖ §3.5 calls "the symbols". */
 export const doorIdFor = (symbol) => `door_${symbol}`;
 export const keyIdFor = (symbol) => `key_${symbol}`;
+/**
+ * ⛓⛓ arc 2 ⚖ rulings 21-22 — a symbol realised as a STEP-ON FLAG rather than as
+ * a carried key. In the engine the two are the same thing (`kind: 'flag'` is
+ * INERT — every item pickup is already permanent, slice 1 §8.6); what differs is
+ * what it MEANS, and this slice spends that meaning in exactly one place: the
+ * symbol a GUARD gadget protects.
+ *
+ * ⛔ IT IS **NOT** THE GENERAL DEFAULT, AND THAT IS A FORCED CHOICE. §3.3 asks
+ * for `flag` as the default realisation of every area item; making it so would
+ * rename `key_K0` in every `--areas=` payload arc 1 shipped, and this slice's
+ * gates require those payloads to be byte-identical. ⇒ scoped to the guarded
+ * symbol, where the guard is what makes it a flag; the general switch is arc 3's
+ * with its own spec knob. Recorded as a delta, not as a preference.
+ */
+export const flagIdFor = (symbol) => `flag_${symbol}`;
+
+/** ⛓ Which id a symbol's ITEM carries — `flag_K0` when a gadget guards it,
+ *  `key_K0` otherwise. ONE function, so the library entry, the realisation, the
+ *  cost record's ablation and the payload cannot disagree about the id. */
+export const itemIdFor = (symbol, flagSymbols = null) => (flagSymbols?.has(symbol)
+    ? flagIdFor(symbol) : keyIdFor(symbol));
 
 /**
  * ⛓ THE KEY LEVEL A DOOR GUARDS. An area at key level `L` is entered with
@@ -595,17 +702,39 @@ export const doorLevelOf = (obstacleId) => {
  * same way). The colour ids keep working beside them — `door-key` (palette v1)
  * still places `door_red`.
  */
-export function areaLibraries(symbols) {
-    const obstacleLib = { ...DEFAULT_OBSTACLES };
-    const itemLib = { ...DEFAULT_ITEMS };
+export function areaLibraries(symbols, {
+    flagSymbols = null, obstacleBase = DEFAULT_OBSTACLES, itemBase = DEFAULT_ITEMS,
+} = {}) {
+    /**
+     * ⛓ arc 2 slice 3 — THE BASE IS AN ARGUMENT, because the ELEMENT got there
+     * first. A gadget puts `door_A0` in the world's `obstacleLib` before the
+     * area graph runs, and an area realisation that rebuilt the library from
+     * `DEFAULT_OBSTACLES` would DROP it — `isObstacleCleared` is permissive for
+     * an unknown id, so the gadget's door would silently open for everybody and
+     * the guard would guard nothing. Defaults to the base libraries, so every
+     * pre-existing caller is unchanged.
+     */
+    const obstacleLib = { ...obstacleBase };
+    const itemLib = { ...itemBase };
     const addedObstacles = {};
     const addedItems = {};
     for (const symbol of symbols) {
         const doorId = doorIdFor(symbol);
-        const keyId = keyIdFor(symbol);
-        addedItems[keyId] = {
+        const isFlag = flagSymbols?.has(symbol) === true;
+        const itemId = itemIdFor(symbol, flagSymbols);
+        addedItems[itemId] = isFlag ? {
+            name: `Area Flag ${symbol}`,
+            id: itemId,
+            classification: 'progression',
+            /** ⛓ THE DECLARATION ⚖ ruling 21 asks for. It is INERT in `step`
+             *  (slice 1 §8.6) and it is what layer 1 and the renderer read. */
+            kind: 'flag',
+            color: '#e0c07f',
+            symbol: 'flag',
+            feature: 'area_graph',
+        } : {
             name: `Area Key ${symbol}`,
-            id: keyId,
+            id: itemId,
             classification: 'progression',
             color: '#7fb8e0',
             symbol: 'key',
@@ -615,7 +744,7 @@ export function areaLibraries(symbols) {
             name: `Area Door ${symbol}`,
             id: doorId,
             clear_set_type: 'combo_list',
-            clear_set: [[keyId]],
+            clear_set: [[itemId]],
             color: '#3f6f9f',
             feature: 'area_graph',
         };
@@ -648,8 +777,25 @@ export function areaLibraries(symbols) {
  *   offending cell, or `null`. ⛔ Never a throw: a mismatch is something the
  *   CLI and the lab page must be able to PRINT.
  */
-export function verifyAreaLevels(world, { partition, graph }) {
+export function verifyAreaLevels(world, { partition, graph, doorLevels = null }) {
     const { width, height } = world;
+    /**
+     * ⛓⛓⛓ **arc 2 slice 3 — THE GUARD'S DOOR IS NOT A KEY DOOR, AND IT NEEDS
+     * ITS OWN LEVEL.** `doorLevelOf` reads the level out of the id `door_K{n}`,
+     * which is the whole arithmetic for a key door. A gadget's `door_A0` has no
+     * `n` in its name: it is HELD by a block, and the block lives inside the
+     * area, so a player who can stand in that area can always open it.
+     *
+     * ⇒ its level is **the level of the symbol it guards** (⚖ §3.3), passed in
+     * by the binding. For the guarded symbol `K{n}` that is `n` — the level the
+     * flag itself sits at — so at every level `>= n` the terrain flood walks
+     * straight through it and at every level below, the whole area is out of
+     * reach anyway. ⛔ THE GUARD'S CUT IS THEREFORE **NOT** THIS FLOOD'S CLAIM:
+     * this one is about terrain and KEYS. The cut is proved separately, with the
+     * door treated as wall, and finally by the skeleton solve over block state.
+     */
+    const levelOfDoor = (id) => (doorLevels?.has(id) === true
+        ? doorLevels.get(id) : doorLevelOf(id));
     const levelOf = new Map();
     let maxLevel = 0;
     for (const area of partition.areas) {
@@ -670,7 +816,7 @@ export function verifyAreaLevels(world, { partition, graph }) {
         }
         const walkable = (x, y) => {
             if (getTile(world, x, y) !== TILE_FLOOR) return false;
-            const level = doorLevelOf(getObstacle(world, x, y));
+            const level = levelOfDoor(getObstacle(world, x, y));
             /**
              * ⛔ `> n`, AND THE COMPARISON IS THE WHOLE CLAIM. A door of level
              * exactly `n` is one the player at level `n` has the key for
@@ -747,7 +893,9 @@ export function verifyAreaLevels(world, { partition, graph }) {
  *
  * @returns {{doors, keys, refused}} `refused` is a graded failure, never a throw.
  */
-function realiseAreaGraph(world, { partition, graph, rng, entrance, goal }) {
+function realiseAreaGraph(world, {
+    partition, graph, rng, entrance, goal, flagSymbols = null, forcedCells = null,
+}) {
     const isEnd = (c) => (c.x === entrance.x && c.y === entrance.y)
         || (c.x === goal.x && c.y === goal.y);
     const doors = [];
@@ -767,6 +915,28 @@ function realiseAreaGraph(world, { partition, graph, rng, entrance, goal }) {
             return { doors, keys, refused: { reason: 'no-area-holds-this-symbol',
                 detail: `the graph declares ${symbol} but no area carries it as its item.` } };
         }
+        /**
+         * ⛓⛓⛓ arc 2 slice 3 — **A GUARDED SYMBOL'S CELL IS GIVEN, NOT DRAWN,
+         * AND THE DIFFERENCE IS THE WHOLE GUARD.** The gadget's area runs from
+         * its entry port, through the push lane, past `door_A{i}` to the exit
+         * lane. A DRAWN cell of that area is as likely to land BEFORE the door
+         * as after it, and a flag in front of its own guard is a flag nobody
+         * has to push a block for. So the binding names the cell one step
+         * beyond the door.
+         *
+         * ⛔ AND IT SPENDS NO DRAW — deliberately. `rng.pick(free)` is not
+         * called for a forced symbol, so the stream is one draw shorter than
+         * the unforced run at the same seed. That is a DECLARED consequence of
+         * `binds=item`, not an accident: the two settings produce different
+         * levels and the payload records which one ran.
+         */
+        const forced = forcedCells?.get(symbol) ?? null;
+        if (forced) {
+            setItem(world, forced.x, forced.y, itemIdFor(symbol, flagSymbols));
+            keys.push(Object.freeze({ symbol, area: areaId, x: forced.x, y: forced.y,
+                guarded: true }));
+            continue;
+        }
         const area = partition.areas.find((a) => a.id === areaId);
         const boundary = new Set(area.boundary.map((c) => `${c.x},${c.y}`));
         const free = area.cells.filter((c) => !boundary.has(`${c.x},${c.y}`) && !isEnd(c));
@@ -777,10 +947,317 @@ function realiseAreaGraph(world, { partition, graph, rng, entrance, goal }) {
                     + 'goal. A key under its own door is a key nobody can reach.' } };
         }
         const at = rng.pick(free);
-        setItem(world, at.x, at.y, keyIdFor(symbol));
+        setItem(world, at.x, at.y, itemIdFor(symbol, flagSymbols));
+        /**
+         * ⛔ NO `guarded: false` FIELD — ABSENCE IS THE DEFAULT, and this is not
+         * a style choice. Writing it unconditionally moved every arc-1
+         * `--areas=` payload by exactly 28 bytes per symbol (measured: 12905 →
+         * 12933 at one key, 25861 → 25917 at two), which ⚖ ruling 5 forbids.
+         * The same rule `serializeMazeLevel` follows for an empty `obstacleLib`.
+         */
         keys.push(Object.freeze({ symbol, area: areaId, x: at.x, y: at.y }));
     }
     return { doors, keys, refused: null };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ELEMENT BINDING — PROCGEN ELEMENTS arc 2, slice 3 (§3.3)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ design ruling 2 / arc-2 ruling 4: **ELEMENTS FIRST, CONNECTORS AROUND
+ * THEM.** The gadget is instantiated and CONSTRUCTED before the carve runs, its
+ * rectangle is registered as FIXED — floor AND wall — and the connector is then
+ * responsible for joining its port.
+ *
+ * ── ⛔⛔ HOW "FIXED" IS ENFORCED, AND WHY IT IS NOT A `shared/` CHANGE ─
+ *
+ * ⚖ The arc-2 kickoff §2 / §9.9.3 recon, ANSWERED BY MEASUREMENT (the ELEMENTS
+ * CENSUS, as-built §10.1). Today's "fixed tiles" are the entrance and the exits
+ * ONLY, and they are not enough: `carveCellTiles` floors every odd/odd tile
+ * whatever the fixed set says, and the tree backends knock walls down between
+ * cells without consulting it. So registering the rectangle's cells as
+ * pseudo-exits would NOT protect them — and `world.exits` is the GOAL set, which
+ * `extractPathsAndObstacles` enumerates as Archipelago locations, so parking
+ * nine fake exits there would invent nine phantom AP checks.
+ *
+ * ⇒ **THE CARVE RUNS EXACTLY AS IT DOES TODAY, ON THE WHOLE GRID, AND THE
+ * ELEMENT'S RECTANGLE IS COMPOSITED OVER IT AFTERWARDS.** The backend receives
+ * the same world, the same parameters and the same stream position it would
+ * have received, so "the connector is unchanged" is literally true; what changes
+ * is that its answer inside the reserved rectangle is DISCARDED. That is the
+ * same outcome a `world.fixed` set would produce, without a submodule change and
+ * without any backend learning a new concept.
+ *
+ * ⛔ THE PRICE, SAID PLAINLY: the "the carve did not enter the rectangle" check
+ * ⚖ §3.3 asks for is then TRUE BY CONSTRUCTION rather than by luck, so it is not
+ * the gate. The gates that ARE real are (i) `demand` — every ring cell the
+ * element demanded as wall IS wall when everything is done, (ii) the entrance
+ * can still reach the goal, and (iii) **the guard is a CUT of the whole level**,
+ * flooded with `door_A{i}` treated as wall. The non-vacuity witness is
+ * `carveOverwrote`, recorded per placement: how many cells the carve HAD written
+ * differently from what the element wants. The census measured it at 32-69 of 96
+ * runs per kind — the registration is load-bearing on two runs in three.
+ *
+ * ── ⛓⛓ THE RING IS THE BINDING'S, AND `demand` IS WHY ─────────────────
+ *
+ * The element demands its whole outer ring be WALL (slice 2 §9.2.5), minus the
+ * two cells its ports face. On a carved room that is never true — `rooms` is 73%
+ * floor. Measured: with the ring left as the carve made it, `demand` is violated
+ * on **every one of 1728 census runs**. ⇒ the binding WRITES the ring rather
+ * than hoping for it, and `demand` is then a check that the writing was right.
+ *
+ * ── ⛓⛓⛓ AND THE EXIT MOUTH IS **SEALED** ─────────────────────────────
+ *
+ * §3.3 reads as though a connector attaches at both ports and the flag lives in
+ * the area beyond the exit. Measured, that is how the guard stops being a guard:
+ * with both mouths open the player walks AROUND the outside of the site from one
+ * mouth to the other, and the door is not a cut in **~30%** of the runs that got
+ * that far (census arm `bothjoin`: 34-40 cuts of 51-66 respected at 15x15).
+ *
+ * ⇒ the gadget is a ONE-MOUTH POCKET: the connector joins the ENTRY port, the
+ * exit mouth is walled, and the flag sits on the element's own exit lane one
+ * cell BEYOND `door_A{i}` — which is "beyond the exit port" in the only sense
+ * that survives contact with a grid. The door is then a cut BY CONSTRUCTION
+ * (census: 100% of respected runs), which is stated here rather than presented
+ * as a finding — and it means the `is-not-a-cut` refusal is UNFALSIFIABLE on
+ * real data and is driven by a unit row instead (trap 296).
+ */
+
+/** ⛓ §9.9.1's SNUG SITE: `w, h = len + SITE_MARGIN`. The element writes its
+ *  WHOLE site and runs both lanes to the edge, so a generous site is a large
+ *  wall blob with two long corridors. 4 is the margin the slice-2 fixtures
+ *  show (`MIN_SITE` is 4, and a len-5 turns-3 gadget fits 9x9 with room). */
+export const SITE_MARGIN = 4;
+
+/**
+ * ⛓ PER-INSTANCE IDS (§9.9.8). ⛔ The index is on the FIRST gadget too
+ * (`button_A0`, not `button_A`): a special case for index 0 would be two
+ * spellings of one id, and every one-gadget fixture would then read like the
+ * shared name a second gadget does not have.
+ */
+export const guardIdsFor = (index) => Object.freeze({
+    button: `button_A${index}`,
+    door: `door_A${index}`,
+    hold: `sw_A${index}`,
+});
+
+/** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
+export const reservedRect = (site) => Object.freeze({
+    x: site.x - 1, y: site.y - 1, w: site.w + 2, h: site.h + 2,
+});
+
+const inRect = (r, x, y) => x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h;
+
+/**
+ * ⛓⛓ EVERY LEGAL SITE, ROW-MAJOR — the list one `pick` draws from, and it is a
+ * function of the ROOM and the SIZE alone (never of the carve), so the site is
+ * decided before a single wall exists.
+ *
+ * Three conditions, each with its forcing line:
+ *  1. **the RING is on the grid.** A port facing off-grid is a mouth no
+ *     connector can ever reach, and the ring is what `demand` is about.
+ *  2. **the RESERVED rectangle holds neither the entrance nor the goal.** Both
+ *     are floor cells the level needs; the ring walls everything it covers.
+ *  3. (implied by 1) the site is off the room's own border.
+ */
+export function elementSiteCandidates({ width, height, entrance, goal, w, h }) {
+    const out = [];
+    for (let y = 1; y + h <= height - 1; y += 1) {
+        for (let x = 1; x + w <= width - 1; x += 1) {
+            const r = reservedRect({ x, y, w, h });
+            if (inRect(r, entrance.x, entrance.y) || inRect(r, goal.x, goal.y)) continue;
+            out.push(Object.freeze({ x, y, w, h }));
+        }
+    }
+    return out;
+}
+
+const NEIGHBOURS4 = Object.freeze([[0, -1], [0, 1], [-1, 0], [1, 0]]);
+
+/**
+ * ⛓⛓⛓ **THE CONNECTOR JOINS THE PORT** (⚖ ruling 4; design §4.3: *"
+ * `connectFixedTiles` already L-carves to fixed tiles — that is the seam"*).
+ *
+ * `connectFixedTiles` does this for the entrance and each exit and cannot be
+ * asked to do it for a mouth, because a mouth is not an exit (see the section
+ * docblock). So the binding runs the same idea: the SHORTEST tunnel from the
+ * mouth to floor the entrance already reaches, breadth-first in the one
+ * neighbour order, **never entering the reserved rectangle**.
+ *
+ * ⛔ IT CANNOT OPEN A SECOND WAY IN, and that is why a second carve is safe
+ * here where arc 1 refused one: every cell it writes is outside the reserved
+ * rectangle, and the site is walled on every side but the entry port. The
+ * `demand` check afterwards is what says so rather than this sentence.
+ *
+ * @returns {{cells}|{refused}} the carved tunnel (possibly empty when the carve
+ *   already reached the mouth), or a refusal BY NAME.
+ */
+function joinPortToCarve(world, { mouth, reserved, entrance }) {
+    const { width, height } = world;
+    const live = reachableFrom(width, height,
+        (x, y) => getTile(world, x, y) === TILE_FLOOR, entrance);
+    if (live.has(`${mouth.x},${mouth.y}`)) return { cells: Object.freeze([]) };
+    const parent = new Map([[`${mouth.x},${mouth.y}`, null]]);
+    const queue = [mouth];
+    let hit = null;
+    while (queue.length && hit === null) {
+        const p = queue.shift();
+        for (const [dx, dy] of NEIGHBOURS4) {
+            const nx = p.x + dx;
+            const ny = p.y + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            if (inRect(reserved, nx, ny)) continue;
+            const k = `${nx},${ny}`;
+            if (parent.has(k)) continue;
+            parent.set(k, `${p.x},${p.y}`);
+            if (live.has(k)) { hit = k; break; }
+            queue.push({ x: nx, y: ny });
+        }
+    }
+    if (hit === null) {
+        return { refused: { reason: 'the-entry-port-cannot-be-joined',
+            detail: `the gadget's entry mouth (${mouth.x},${mouth.y}) has no route to any `
+                + 'floor the entrance reaches that stays outside the reserved rectangle. ⛓ The '
+                + 'common cause is a mouth ON THE ROOM\'S BORDER facing outward: the only cell '
+                + 'a tunnel could start from is off the grid. The site is drawn before the '
+                + 'element picks its port directions, so this is decided after the fact and '
+                + 'REFUSED rather than redrawn.' } };
+    }
+    const cells = [];
+    for (let k = parent.get(hit); k !== null; k = parent.get(k)) {
+        const [cx, cy] = k.split(',').map(Number);
+        setTile(world, cx, cy, TILE_FLOOR);
+        cells.push(Object.freeze({ x: cx, y: cy }));
+    }
+    return { cells: Object.freeze(cells.reverse()) };
+}
+
+/**
+ * ⛓⛓⛓ **THE COMPOSITE + EVERY CHECK ON THE WAY OUT** (trap 272's shape).
+ *
+ * Writes the element's rectangle over the carve, walls the ring, joins the entry
+ * port, stamps the gadget's entities and its two library entries — then asks the
+ * three questions that can actually fail. ⛔ Every failure is a GRADED REFUSAL
+ * with a name the census counts and the CLI prints; the caller runs this on a
+ * CLONE and commits only on success, so a refusal leaves the carved room exactly
+ * as the carve left it (arc 1's rule, one layer out).
+ *
+ * @returns {{placed}|{refused}}
+ */
+function compositeElement(world, { site, placement, ids, entrance, goal }) {
+    const { width, height } = world;
+    const reserved = reservedRect(site);
+    const port = (role) => placement.ports.find((p) => p.role === role);
+    const entryPort = port('entry');
+    const exitPort = port('exit');
+    const mouthOf = (p) => ({ x: p.x + DIR_DELTA[p.dir].dx, y: p.y + DIR_DELTA[p.dir].dy });
+    const entryMouth = mouthOf(entryPort);
+
+    /** ⛓ THE NON-VACUITY WITNESS: how many cells the carve had made different
+     *  from what the element wants. `0` would mean the registration decided
+     *  nothing on this seed and the check below proves nothing about it. */
+    let carveOverwrote = 0;
+    for (const t of placement.tiles) {
+        if (getTile(world, t.x, t.y) !== t.tile) carveOverwrote += 1;
+        setTile(world, t.x, t.y, t.tile);
+    }
+    /**
+     * ⛔ THE RING IS WALL EXCEPT THE ENTRY MOUTH — the exit mouth is SEALED
+     * (see the section docblock: with it open the player walks round the site
+     * and the door stops being a cut on ~30% of runs).
+     */
+    const entryKey = `${entryMouth.x},${entryMouth.y}`;
+    for (let y = reserved.y; y < reserved.y + reserved.h; y += 1) {
+        for (let x = reserved.x; x < reserved.x + reserved.w; x += 1) {
+            if (x < 0 || y < 0 || x >= width || y >= height) continue;
+            if (inRect(site, x, y)) continue;
+            setTile(world, x, y, `${x},${y}` === entryKey ? TILE_FLOOR : TILE_WALL);
+        }
+    }
+
+    const joined = joinPortToCarve(world, { mouth: entryMouth, reserved, entrance });
+    if (joined.refused) return joined;
+
+    // ── (i) `demand` — the element's own claim about what it does not write ──
+    for (const d of placement.demand) {
+        if (d.x < 0 || d.y < 0 || d.x >= width || d.y >= height) continue;
+        if (`${d.x},${d.y}` === entryKey) continue;
+        const want = d.must === 'floor' ? TILE_FLOOR : TILE_WALL;
+        if (getTile(world, d.x, d.y) !== want) {
+            return { refused: { reason: 'the-elements-demand-is-not-met',
+                detail: `the gadget demands ${d.must} at (${d.x},${d.y}) and the finished room `
+                    + 'has the other. ⛓ The binding WRITES the ring, so this is a check that '
+                    + 'the writing was right — the element\'s demand and the binding\'s '
+                    + 'reserved rectangle are two statements of one fact and this is where '
+                    + 'they are made to agree (trap 272).' } };
+        }
+    }
+
+    const floorAt = (x, y) => getTile(world, x, y) === TILE_FLOOR;
+    // ── (ii) the room still works ───────────────────────────────────
+    if (!connected(width, height, floorAt, entrance, goal)) {
+        return { refused: { reason: 'the-reserved-rectangle-seals-the-room',
+            detail: `walling the gadget's ring cut every floor route from the entrance `
+                + `(${entrance.x},${entrance.y}) to the goal (${goal.x},${goal.y}). ⛔ The `
+                + 'answer is a bigger room or a smaller gadget, never a hole punched through '
+                + 'the ring — that hole would be the second way in the door is supposed to be '
+                + 'the only alternative to.' } };
+    }
+
+    // ── (iii) THE GUARD IS A CUT OF THE LEVEL ───────────────────────
+    const doorCell = placement.entities.obstacles[0];
+    const d = DIR_DELTA[exitPort.dir];
+    const flagCell = Object.freeze({ x: doorCell.x + d.dx, y: doorCell.y + d.dy });
+    if (!floorAt(flagCell.x, flagCell.y)) {
+        return { refused: { reason: 'the-cell-beyond-the-guard-door-is-not-floor',
+            detail: `(${flagCell.x},${flagCell.y}) is one step beyond ${ids.door} along the `
+                + 'exit lane and is not floor. The element carves that lane, so this is a '
+                + 'defect in the placement rather than a fact about the room.' } };
+    }
+    const doorless = (x, y) => floorAt(x, y) && !(x === doorCell.x && y === doorCell.y);
+    if (connected(width, height, doorless, entrance, flagCell)) {
+        return { refused: { reason: 'the-guard-is-not-a-cut-of-the-level',
+            detail: `with ${ids.door} treated as WALL the entrance still reaches `
+                + `(${flagCell.x},${flagCell.y}), where the guarded item goes. ⛓ THE DOOR IS `
+                + 'THE POINT (⚖ design ruling 17): a guard the player can walk around is a '
+                + 'decoration, and the block would never have to be pushed.' } };
+    }
+
+    // ── the ENTITIES and the two library entries ────────────────────
+    for (const b of placement.entities.blocks) setBlock(world, b.x, b.y);
+    for (const b of placement.entities.buttons) setButton(world, b.x, b.y, ids.button);
+    for (const o of placement.entities.obstacles) setObstacle(world, o.x, o.y, ids.door);
+    /**
+     * ⛓ §8.12.5, spent: `symbols.holds = ['sw_A']` becomes a `buttonLib` entry
+     * and an `obstacleLib` `combo_list`. ⛔ No new clearance type, and ⛔ no
+     * base button library — every button id is per-instance (slice 1 ⚖ Q1).
+     */
+    world.buttonLib = { ...(world.buttonLib ?? {}),
+        [ids.button]: { id: ids.button, kind: 'button', holds: ids.hold } };
+    world.obstacleLib = { ...world.obstacleLib,
+        [ids.door]: {
+            name: `Guard Door ${ids.door}`,
+            id: ids.door,
+            clear_set_type: 'combo_list',
+            clear_set: [[ids.hold]],
+            color: '#b07f3f',
+            feature: 'element_guard',
+        } };
+
+    return { placed: Object.freeze({
+        site: Object.freeze({ ...site }),
+        ports: Object.freeze(placement.ports.map((p) => Object.freeze({ ...p }))),
+        entryMouth: Object.freeze(entryMouth),
+        block: Object.freeze({ ...placement.entities.blocks[0] }),
+        button: Object.freeze({ ...placement.entities.buttons[0], id: ids.button }),
+        door: Object.freeze({ x: doorCell.x, y: doorCell.y, id: ids.door }),
+        flagCell,
+        ids,
+        areaCells: placement.area.cells,
+        tunnel: joined.cells,
+        carveOverwrote,
+        cost: Object.freeze({ ...placement.cost }),
+    }) };
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -808,10 +1285,13 @@ export const MAZE_SKELETON_KINDS = Object.freeze(kindsOffered({ simulator: true 
  * @param {object} [o.areas]  `{keys[, params]}` — ⛓ PROCGEN ELEMENTS arc 1
  *   slice 2. ⛔ The default is `{keys: 0}` and at `keys: 0` NOTHING below runs:
  *   no partition, no `buildAreaGraph` call, no draw. See `areaSpec.js`.
+ * @param {object} [o.elements]  `{name[, params]}` — ⛓ PROCGEN ELEMENTS arc 2
+ *   slice 3. ⛔ The default is `{name: 'none'}` and at `none` NOTHING runs: no
+ *   site is drawn, no gadget is constructed, no draw. See `elementSpec.js`.
  */
 export function mazeModel({
     seed, width, height, defaults = MAZE_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
-    areas: areaSpec = DEFAULT_AREAS,
+    areas: areaSpec = DEFAULT_AREAS, elements: elementSpec = DEFAULT_ELEMENTS,
 } = {}) {
     const d = Object.freeze({
         ...MAZE_DEFAULTS,
@@ -894,10 +1374,133 @@ export function mazeModel({
      * and a stamping post-processor may write there. Seedling passes 1 for the
      * opposite reason; neither number is a default.
      */
+    /**
+     * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 2, SLICE 3: **THE ELEMENT, CONSTRUCTED
+     *    BEFORE THE CARVE** (⚖ design ruling 2, arc-2 ruling 4) ──────────
+     *
+     * ⛓ **THE DRAW ORDER, DECLARED** (design §4.8; the order IS the identity):
+     *   1 the goal cell     — the room stream's FIRST draw, ⛔ UNCHANGED
+     *   2 `instantiate`     — the element's own parameters, in SCHEMA order.
+     *                         A parameter the spec NAMED is an override and
+     *                         spends no draw; one it omitted is drawn.
+     *   3 the SITE          — ONE `pick` over the legal snug rectangles
+     *   4 `construct(site)` — the gadget's geometry, from the SAME stream
+     *   5 the carve         — the backend + its post-processors, ⛔ UNCHANGED
+     *                         code, at a stream position 2-4 have moved
+     *   6 the composite     — spends NO draw (it writes tiles)
+     *   7-9 the area block  — partition / graph / realisation, as arc 1 left it
+     *
+     * ⛔ **AND `len` IS DRAWN BEFORE THE SITE, WHICH IS A DELTA AGAINST §3.3.**
+     * §3.3 puts the site first ("ELEMENT sites drawn + `construct`"). It cannot
+     * be: the site must be SNUG (§9.9.1) and snug means `len + SITE_MARGIN`, so
+     * the size is not known until the parameter is. The two draws are therefore
+     * in the only order that can work, and it is written down here rather than
+     * discovered from a stack trace.
+     *
+     * ⛔ AT `name: 'none'` NONE OF 2-4 OR 6 HAPPENS. Not "runs and returns
+     * early" — the branch is not entered, no element is instantiated,
+     * `construct` is never called and the rng is not touched, so every per-kind
+     * CLI md5 and `dump-maze-byteidentity` are unchanged by a code path that
+     * does not execute (⚖ arc-2 ruling 5). `procgenMazeElements.test.js` drives
+     * that with a COUNTING SPY rather than by comparing tiles.
+     */
+    const elementSpecNorm = normalizeElementSpec(elementSpec ?? DEFAULT_ELEMENTS);
+    const elementValues = resolveElementSpec(elementSpecNorm);
+    const entrancePos = { x: d.entrance.x, y: d.entrance.y };
+    const goalPos = { x: goalCell.tx, y: goalCell.ty };
+    let elementPlan = null;
+    let elementRefusal = null;
+    if (elementValues.name !== ELEMENTS_NONE) {
+        const entry = ELEMENT_TABLE[elementValues.name];
+        const drawsBefore = roomRng.draws;
+        const concrete = entry.element.instantiate(roomRng,
+            namedParams(elementSpecNorm, { elementOnly: true }));
+        const size = concrete.params.len + SITE_MARGIN;
+        const sites = elementSiteCandidates({
+            width: d.width, height: d.height, entrance: entrancePos, goal: goalPos,
+            w: size, h: size,
+        });
+        if (sites.length === 0) {
+            elementRefusal = { reason: 'no-site-fits-this-room',
+                detail: `a len=${concrete.params.len} gadget needs a ${size}x${size} site with a `
+                    + `one-cell ring around it, and no such rectangle fits inside the `
+                    + `${d.width}x${d.height} room while leaving the entrance `
+                    + `(${entrancePos.x},${entrancePos.y}) and the goal (${goalPos.x},`
+                    + `${goalPos.y}) outside it. ⛔ The answer is a bigger room or a shorter `
+                    + 'gadget — the ELEMENTS CENSUS says 15x15 is the honest default for '
+                    + 'elements and 11x11 refuses every len=4 run.' };
+        } else {
+            const site = roomRng.pick(sites);
+            const placement = concrete.construct(site);
+            if (placement.refused) {
+                elementRefusal = { reason: placement.refused.reason,
+                    detail: `${placement.refused.detail} (site ${site.w}x${site.h} at `
+                        + `(${site.x},${site.y}))` };
+            } else {
+                elementPlan = { concrete, site, placement, drawsBefore,
+                    ids: guardIdsFor(0), params: concrete.params };
+            }
+        }
+    }
+
     const carve = skeletonKind === DEFAULT_SKELETON_KIND
         ? null : carveSkeleton(skeletonKind, template, roomRng, {
             params: skeletonSpecNorm.params ?? {}, margin: 0,
         });
+
+    /**
+     * ⛔ THE COMPOSITE RUNS ON A **CLONE** AND IS COMMITTED ONLY ON SUCCESS —
+     * arc 1's rule, one layer out. A refusal here leaves the CARVED room exactly
+     * as the carve left it, so a seed whose gadget cannot be joined produces a
+     * perfectly ordinary maze level with `elements.refused` set, rather than
+     * `levelGenerator`'s step-0 throw about a broken room builder.
+     *
+     * ⚠ THE DRAWS ARE SPENT EITHER WAY. A refused element still moved the
+     * stream, so `--elements=guard` at a refusing seed is a DIFFERENT level from
+     * `--elements=none` at the same seed. That is declared, not accidental: the
+     * level's identity is (seed, skeleton, areas, elements) and always was.
+     */
+    let elementInfo = Object.freeze({
+        spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+        refused: elementRefusal ? Object.freeze(elementRefusal) : null,
+    });
+    if (elementPlan) {
+        const candidate = cloneWorld(template);
+        const out = compositeElement(candidate, {
+            site: elementPlan.site, placement: elementPlan.placement, ids: elementPlan.ids,
+            entrance: entrancePos, goal: goalPos,
+        });
+        if (out.refused) {
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+                refused: Object.freeze(out.refused),
+            });
+        } else {
+            template = candidate;
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm,
+                ran: true,
+                placed: Object.freeze([Object.freeze({
+                    element: elementPlan.concrete.name,
+                    family: elementPlan.concrete.family,
+                    instance: elementPlan.concrete.instance,
+                    index: 0,
+                    /** ⛓ §9.9.6 — A RECORD OF AN ELEMENT IS `{params, seed}`.
+                     *  The seed is the LEVEL's, and `drawsBefore` is where in
+                     *  its room stream this gadget started drawing: advance a
+                     *  fresh `rngFor(seed)` that many draws and the same
+                     *  `instantiate` + `construct` rebuild it exactly. That is
+                     *  what makes `{params, drawsBefore}` a full record and
+                     *  `{params}` alone not one. */
+                    params: Object.freeze({ ...elementPlan.params }),
+                    drawsBefore: elementPlan.drawsBefore,
+                    binds: elementValues.binds,
+                    ...out.placed,
+                })]),
+                refused: null,
+            });
+        }
+    }
 
     /**
      * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 1, SLICE 2: **THE AREA BINDING**, HERE AND
@@ -939,11 +1542,18 @@ export function mazeModel({
         keys: Object.freeze([]),
         refused: null,
     });
+    /**
+     * ⛓⛓ arc 2 slice 3 — THE ELEMENT'S AREA IS **DECLARED** INTO THE PARTITION
+     * (§9.9.5), with the id `E{index}`. Its mouths are its ports: the entry port
+     * is its one boundary cell (the exit mouth is sealed), so the adjacency it
+     * joins is whatever the entry tunnel reaches.
+     */
+    const declaredAreas = elementInfo.ran
+        ? elementInfo.placed.map((p) => ({ id: `E${p.index}`, cells: p.areaCells }))
+        : [];
     if (areaValues.keys > 0) {
-        const entrancePos = { x: d.entrance.x, y: d.entrance.y };
-        const goalPos = { x: goalCell.tx, y: goalCell.ty };
         const partition = partitionMazeAreas(template, {
-            entrance: entrancePos, goal: goalPos,
+            entrance: entrancePos, goal: goalPos, declared: declaredAreas,
         });
         const summary = Object.freeze({
             areaCount: partition.areas.length,
@@ -993,9 +1603,25 @@ export function mazeModel({
                          * the boundary is a fact about the PARTITION and not
                          * about the graph.
                          */
-                        item: a.cells.some((c) => !a.boundary.includes(c)
-                            && !(c.x === entrancePos.x && c.y === entrancePos.y)
-                            && !(c.x === goalPos.x && c.y === goalPos.y)),
+                        /**
+                         * ⛓⛓⛓ arc 2 slice 3 — AND AT `binds=item` THE GADGET'S
+                         * AREA IS THE **ONLY** ONE THAT MAY HOLD A SYMBOL.
+                         * ⚖ ruling 1 says the gadget GUARDS the flag switch;
+                         * whether it does is decided by `placeKeys`, and the
+                         * census measured that when it competes freely it wins
+                         * about one accepted run in seven — six place a gadget
+                         * that guards NOTHING. `capacity` is the module's own
+                         * lever for exactly this (⚖ arc-1 §3.1), so the run
+                         * declares it. ⛔ The acceptance it costs (35 of 96 →
+                         * 10 of 96 on `rooms` at 15x15) is PUBLISHED, not
+                         * bought back by widening a bound; `binds=any` is the
+                         * other arm and is swept.
+                         */
+                        item: (elementInfo.ran && elementValues.binds === 'item'
+                            ? a.kind === 'element' : true)
+                            && a.cells.some((c) => !a.boundary.includes(c)
+                                && !(c.x === entrancePos.x && c.y === entrancePos.y)
+                                && !(c.x === goalPos.x && c.y === goalPos.y)),
                         switch: false,
                     },
                 })),
@@ -1033,15 +1659,51 @@ export function mazeModel({
                  * broken" rather than "this seed cannot host two keys". Same
                  * argument as `place`'s clone, one layer up.
                  */
+                /**
+                 * ⛓⛓⛓ arc 2 slice 3 — **WHICH SYMBOL THE GADGET GUARDS**, and
+                 * everything downstream hangs off this one lookup: the item's
+                 * id (`flag_K{n}`, not `key_K{n}`), the cell it goes on (given,
+                 * beyond the door, never drawn), and the KEY LEVEL the guard's
+                 * own `door_A{i}` belongs to.
+                 *
+                 * ⚠ At `binds=any` this can legitimately be `null` — the graph
+                 * gave every symbol to some other area and the gadget guards
+                 * nothing. That is a MEASURED outcome (about six accepted runs
+                 * in seven), it is recorded on the placement as `guards: null`,
+                 * and it is NOT a refusal: the level is fine, the gadget is
+                 * scenery, and the census is where that is counted.
+                 */
+                const guardedBy = new Map();       // symbol -> the placement index
+                const flagSymbols = new Set();
+                const forcedCells = new Map();
+                const doorLevels = new Map();
+                for (const p of elementInfo.placed) {
+                    const sym = graph.areas[`E${p.index}`]?.item ?? null;
+                    if (sym === null || !graph.symbols.includes(sym)) continue;
+                    guardedBy.set(sym, p.index);
+                    flagSymbols.add(sym);
+                    forcedCells.set(sym, p.flagCell);
+                    /**
+                     * ⛔ `door_A{i}`'s LEVEL IS THE GUARDED SYMBOL'S OWN, not
+                     * the level of the area it sits in and not 0. `K{n}` lives
+                     * in an area at key level `n`, so at every level `>= n` the
+                     * terrain flood walks through the guard door — the block is
+                     * inside the area and is always available — and below `n`
+                     * the area is out of reach anyway. See `verifyAreaLevels`.
+                     */
+                    doorLevels.set(p.door.id, symbolIndex(sym) ?? 0);
+                }
                 const candidate = cloneWorld(template);
                 const realised = realiseAreaGraph(candidate, {
                     partition, graph, rng: roomRng, entrance: entrancePos, goal: goalPos,
+                    flagSymbols, forcedCells,
                 });
-                const libs = areaLibraries(graph.symbols);
+                const libs = areaLibraries(graph.symbols, { flagSymbols,
+                    obstacleBase: candidate.obstacleLib, itemBase: candidate.itemLib });
                 candidate.obstacleLib = libs.obstacleLib;
                 candidate.itemLib = libs.itemLib;
                 const mismatch = realised.refused
-                    ? null : verifyAreaLevels(candidate, { partition, graph });
+                    ? null : verifyAreaLevels(candidate, { partition, graph, doorLevels });
                 if (!realised.refused && mismatch === null) template = candidate;
                 areaInfo = Object.freeze({
                     spec: areaSpecNorm,
@@ -1066,6 +1728,26 @@ export function mazeModel({
                 });
             }
         }
+    }
+
+    /**
+     * ⛓ THE GADGET LEARNS WHAT IT GUARDS — a fact that does not exist until the
+     * graph has run and the realisation has been committed, so it is written
+     * here rather than at placement time. ⛔ `null` is a real answer (`binds=any`
+     * with the symbol elsewhere, or no area graph at all): a gadget that guards
+     * nothing is still a placed gadget, and the cost record prices it either way.
+     */
+    if (elementInfo.ran) {
+        const symbolOf = (index) => {
+            const item = areaInfo.ran ? areaInfo.graph?.areas[`E${index}`]?.item ?? null : null;
+            return item !== null && areaInfo.graph.symbols.includes(item) ? item : null;
+        };
+        elementInfo = Object.freeze({
+            ...elementInfo,
+            placed: Object.freeze(elementInfo.placed.map((p) => Object.freeze({
+                ...p, guards: symbolOf(p.index),
+            }))),
+        });
     }
 
     /**
@@ -1254,6 +1936,12 @@ export function mazeModel({
          * draws from exactly this object.
          */
         areas: areaInfo,
+        /**
+         * ⛓ THE ELEMENT BINDING'S WHOLE ANSWER — the spec that ran, whether a
+         * gadget was placed, its site / ports / entities / cost, and the REFUSAL
+         * when there is one. Slice 4's lab page draws from exactly this object.
+         */
+        elements: elementInfo,
         goalCell,
         /** The goal in the WORLD's own spelling, for `mazeOracle`'s predicate. */
         goalPos: Object.freeze({ x: goalCell.tx, y: goalCell.ty }),
@@ -1732,6 +2420,45 @@ export function areaSummaryOf(model) {
 }
 
 /**
+ * ⛓ THE ELEMENT BLOCK A PAYLOAD CARRIES — the SPEC, what was PLACED and the
+ * REFUSAL. ⛔ `areaCells` and `tiles` are NOT in it: they are derivable from the
+ * level's own grid (the site rectangle plus the one partition function), and a
+ * payload that carried them would be a second copy of a fact the room states.
+ *
+ * ⛓ `params` + `drawsBefore` is the RECORD (§9.9.6): with the level's seed they
+ * rebuild this exact gadget, which `{params}` alone cannot do because the walk
+ * draws from the room stream after the parameters do.
+ */
+export function elementSummaryOf(model) {
+    const info = model.elements;
+    return Object.freeze({
+        spec: info.spec,
+        ran: info.ran,
+        placed: Object.freeze(info.placed.map((p) => Object.freeze({
+            element: p.element,
+            family: p.family,
+            instance: p.instance,
+            index: p.index,
+            params: p.params,
+            drawsBefore: p.drawsBefore,
+            binds: p.binds,
+            guards: p.guards ?? null,
+            site: p.site,
+            ports: p.ports,
+            entryMouth: p.entryMouth,
+            block: p.block,
+            button: p.button,
+            door: p.door,
+            flagCell: p.flagCell,
+            tunnel: p.tunnel,
+            carveOverwrote: p.carveOverwrote,
+            cost: p.cost,
+        }))),
+        refused: info.refused,
+    });
+}
+
+/**
  * ⛓⛓⛓ **THE SOLVER-WORK RECORDS** — ⚖ design ruling 20 / arc-1 kickoff §3.4.
  *
  * *"Per placed lock/key and per kept template: BFS plan length to the goal
@@ -1775,6 +2502,10 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
 
     const elements = [];
     const info = model.areas;
+    /** ⛓ arc 2 slice 3 — which symbols were realised as FLAGS (the guarded
+     *  ones), so the ablation asks for the id the world actually holds. */
+    const flagSymbols = new Set((model.elements?.placed ?? [])
+        .map((p) => p.guards).filter((s) => s !== null && s !== undefined));
     if (info?.ran) {
         const after = solveTo(record, atGoal);
         for (const symbol of info.graph.symbols) {
@@ -1805,7 +2536,7 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
             const doorSet = new Set(doors.map((dd) => `${dd.x},${dd.y}`));
             const keyToDoor = key && doors.length
                 ? solveTo(record, (s) => doorSet.has(`${s.player_pos.x},${s.player_pos.y}`),
-                    [keyIdFor(symbol)])
+                    [itemIdFor(symbol, flagSymbols)])
                 : null;
             elements.push(Object.freeze({
                 symbol,
@@ -1826,6 +2557,75 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
                 expandedKeyToDoor: keyToDoor ? keyToDoor.expanded : null,
             }));
         }
+    }
+
+    /**
+     * ⛓⛓⛓ **THE GADGET'S COST COMES FROM THE PLAN, NOT FROM ITS GEOMETRY**
+     * (⚖ design ruling 20; §9.9.9). `cost.len` is how many pulls the walk spent
+     * — an argument about construction. What a SOLVER actually does with the
+     * finished level is a different number, and slice 2 measured that the two
+     * differ: 18 of 408 gadgets finish in FEWER pushes than `len`, all at
+     * `turns = 3`, because a triple fold-back carves corners that shortcut the
+     * block home.
+     *
+     * ⛔ AND THE CERTIFICATION CLAIM IS **WHAT HELD THE DOOR**, lifted verbatim
+     * from `reversePullBlock.certify.test.js` (§9.4): `pushes >= len` is FALSE
+     * on real data and `pushes > 0` is INERT — the violating adjacent-door world
+     * still spends a push. So the number that matters here is `heldAtDoor`: was
+     * a block on the button at the instant the player FIRST entered the door
+     * cell.
+     *
+     * ⚠ `heldAtDoor` is `null` when the winning plan never enters the door cell
+     * at all — which is what an UNGUARDED gadget (`binds=any`, the symbol
+     * elsewhere) looks like from the plan's side. Recorded as `null` rather than
+     * as `false`, because "the route did not go through it" and "the route went
+     * through it without the block" are different facts and only the second is a
+     * defect.
+     */
+    for (const p of model.elements?.placed ?? []) {
+        const r = reach(record, bfsSolver, createState(record), atGoal,
+            { budget: b.maxExpansions });
+        let pushes = 0;
+        let heldAtDoor = null;
+        const bkey = `${p.button.x},${p.button.y}`;
+        let s = createState(record);
+        for (const input of (r.ok ? r.plan : [])) {
+            const before = (s.blocks ?? []).join(';');
+            const onButton = (s.blocks ?? []).includes(bkey);
+            const next = step(record, s, input);
+            if (next === null) break;
+            if (heldAtDoor === null
+                && next.player_pos.x === p.door.x && next.player_pos.y === p.door.y) {
+                heldAtDoor = onButton;
+            }
+            if ((next.blocks ?? []).join(';') !== before) pushes += 1;
+            s = next;
+        }
+        elements.push(Object.freeze({
+            element: p.element,
+            instance: p.instance,
+            family: p.family,
+            index: p.index,
+            params: p.params,
+            drawsBefore: p.drawsBefore,
+            guards: p.guards ?? null,
+            site: p.site,
+            /** ⛓ ⚖ ruling 20's numbers, from the PLAN. */
+            cost: Object.freeze({
+                pushes,
+                planLength: r.ok ? r.plan.length : null,
+                nodes: r.expanded ?? null,
+                len: p.cost.len,
+                turns: p.cost.turns,
+                cells: p.cost.cells,
+                /** The tunnel the connector had to dig to reach the entry port
+                 *  — 0 when the carve already came to the mouth. */
+                tunnel: p.tunnel.length,
+                /** ⛓ THE NON-VACUITY WITNESS of the fixed registration. */
+                carveOverwrote: p.carveOverwrote,
+            }),
+            heldAtDoor,
+        }));
     }
 
     const byName = new Map(MAZE_TEMPLATES.map((t) => [t.name, t]));
@@ -1934,7 +2734,12 @@ export function requireOutcome({ require = null, areas, elements = [] } = {}) {
             + 'rather than retried: a run that cannot host the graph is not a run that needs '
             + 'another seed drawn for it behind the caller\'s back.');
     }
-    const byName = new Map(elements.map((e) => [e.symbol, e]));
+    /** ⛓ arc 2 slice 3 — `summary.elements` now holds TWO kinds of row: an area
+     *  SYMBOL's record (keyed by `symbol`) and a placed GADGET's (keyed by
+     *  `element`). The directive is about symbols, so it reads only the first
+     *  kind — ⛔ a `new Map(...)` over both would map `undefined` to the gadget
+     *  and answer a question nobody asked. */
+    const byName = new Map(elements.filter((e) => e.symbol).map((e) => [e.symbol, e]));
     const met = [];
     for (const symbol of asked) {
         const e = byName.get(symbol);
@@ -1985,9 +2790,10 @@ export function requireOutcome({ require = null, areas, elements = [] } = {}) {
  */
 export function generateMazeLevel({
     seed, palette = MAZE_PALETTE, bounds, budget = DEFAULT_MAZE_BUDGET, defaults,
-    width, height, skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
+    width, height, skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS,
+    elements = DEFAULT_ELEMENTS, require = null,
 } = {}) {
-    const model = mazeModel({ seed, width, height, defaults, skeleton, areas });
+    const model = mazeModel({ seed, width, height, defaults, skeleton, areas, elements });
     const oracle = mazeOracle({ model, items: palette.items ?? null, budget });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     /**
@@ -1998,7 +2804,7 @@ export function generateMazeLevel({
      * asks for the per-kept-template numbers unconditionally; they arrive with
      * the elements, which is the arc that asked for them.
      */
-    const cost = model.areas?.ran
+    const cost = (model.areas?.ran || model.elements?.ran)
         ? mazeCostRecords({ model, budget, record: out.record, kept: out.summary.kept })
         : null;
     /**
@@ -2023,6 +2829,16 @@ export function generateMazeLevel({
              * the summary's bytes are unchanged there.
              */
             ...(model.areas.spec.keys === 0 ? {} : { areas: areaSummaryOf(model) }),
+            /**
+             * ⛔ **`summary.elements` IS ARC 1's COST-RECORD ARRAY AND STAYS
+             * THAT**, and the arc-2 binding does NOT get a second field of the
+             * same name — the two would have collided silently, with whichever
+             * spread came last winning. ⚖ design ruling 20 calls both of them
+             * "elements", so the COST rows are what live here (area SYMBOL rows
+             * keyed by `symbol`, placed GADGET rows keyed by `element`), and the
+             * binding's own block is `model.elements` / `elementSummaryOf`,
+             * which the CLI payload carries at its top level beside `areas`.
+             */
             /** ⛓ SLICE 3's block — OMITTED when nothing was required. */
             ...(required ? { require: required } : {}),
             width: model.defaults.width,
@@ -2044,6 +2860,7 @@ export function generateMazeLevel({
 }
 
 export {
-    DEFAULT_AREAS, DEFAULT_SKELETON, VERDICT,
-    formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec, parseRequireList,
+    DEFAULT_AREAS, DEFAULT_ELEMENTS, DEFAULT_SKELETON, VERDICT,
+    formatAreaSpec, formatElementSpec, formatRequireList, normalizeAreaSpec,
+    normalizeElementSpec, parseAreaSpec, parseElementSpec, parseRequireList,
 };
