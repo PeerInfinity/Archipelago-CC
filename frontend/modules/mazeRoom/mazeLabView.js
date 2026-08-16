@@ -556,9 +556,20 @@ export function main() {
         } else {
             const f = play.frames[play.index];
             const layouts = new Set(play.frames.map((g) => JSON.stringify(g.blocks))).size;
+            /**
+             * ⛓⛓ THE LINE PRINTS `overlayBlocks()`, NOT `f.blocks` — a defect
+             * MUTANT (b) found in this file. Reading the frame directly made
+             * the sentence a SECOND answer to "which layout is on screen": under
+             * a build that handed the overlay the level's initial layout the
+             * picture showed one thing and this line said another, and it was
+             * the LINE that was right. ⛔ One function answers that question.
+             * ⚠ `layouts` is deliberately still off the FRAMES: it is a
+             * statement about the PLAN, not about the picture.
+             */
+            const shown = overlayBlocks();
             pn.textContent = `frame ${play.index}/${play.frames.length - 1}`
                 + ` · player (${f.player.x},${f.player.y})`
-                + ` · blocks ${f.blocks === null ? '(this level has none)' : `[${f.blocks.join(' ')}]`}`
+                + ` · blocks ${shown === null ? '(this level has none)' : `[${shown.join(' ')}]`}`
                 + ` · ${layouts} DISTINCT block layout(s) over the whole plan`
                 + `${layouts > 1 ? ' — the walk PUSHES' : ''}`;
         }

@@ -1313,6 +1313,17 @@ try {
     const playText = await page.textContent('#playNote');
     check(playText.includes('DISTINCT block layout') && playText.includes('the walk PUSHES'),
         '⛓ …and the page SAYS so, where a reader can see it', playText.trim().slice(0, 120));
+    /**
+     * ⛓⛓ THE SENTENCE ON THE PAGE NAMES THE **SAME** LAYOUT THE READOUT DOES —
+     * a claim mutant (b) demanded: the line read the FRAME directly, so under a
+     * build that handed the overlay the level's initial layout the picture
+     * showed one thing and the page's own line said another. Now both come
+     * from `overlayBlocks()`, and this row is what holds them together.
+     */
+    check(playText.includes(`[${frameN.play.blocks.join(' ')}]`),
+        '⛓⛓ …naming the SAME block layout the readout publishes — the page and the picture '
+        + 'have ONE answer to "which layout is on screen"',
+        `${playText.trim().slice(0, 90)} vs ${json(frameN.play.blocks)}`);
     // ⛓ AUTOPLAY: asserted on a CONDITION (it reaches the last frame), never on
     // a sleep — the frame interval is a wall clock and nothing may gate on it.
     await page.click('#labPlayReset');
