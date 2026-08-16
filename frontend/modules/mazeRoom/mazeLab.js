@@ -62,13 +62,18 @@ import {
 import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/paletteRoster.js';
 import {
     ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readBounds,
-    readRosterSpec, writeBounds, writeDirectedParam, writeInt, writeRosterParam, writeRunFlag,
+    readRosterSpec, readSkeleton, writeBounds, writeDirectedParam, writeInt, writeRosterParam,
+    writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
+import {
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, SKELETON_KINDS,
+} from '../procgenCore/skeletonKinds.js';
 import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
 import { createState, step } from './mazeRoomEngine.js';
 import {
-    DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, assertMazeBudget, cloneWorld,
-    deserializeMazeLevel, generateMazeLevel, mazeModel, mazeOracle, serializeMazeLevel,
+    DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
+    cloneWorld, deserializeMazeLevel, generateMazeLevel, mazeModel, mazeOracle,
+    serializeMazeLevel,
 } from './procgenMaze.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
@@ -117,8 +122,22 @@ export const SOURCES = Object.freeze({
     SOLVE: 'solve',
 });
 
-/** ⚖ Ruling 9(b)'s reserved block — slice 5 fills it. Today there is one kind. */
-export const DEFAULT_SKELETON = Object.freeze({ kind: 'open-room' });
+/**
+ * ⚖ Ruling 9(b)'s reserved block, FILLED by slice 5.
+ *
+ * ⛓⛓ ITS SPELLING MOVED FROM `open-room` TO `empty`, and it is now RE-EXPORTED
+ * from `procgenCore/skeletonKinds.js` rather than declared here. ⚖ Ruling 2 —
+ * one vocabulary across substrates — and the maze biome table has always called
+ * the open room `empty`, so this page's private name for it was the odd one
+ * out. (Seedling's `empty-bordered` moved in the same commit and for the same
+ * reason.) ⛔ An old payload carrying `open-room` now diverges BY NAME in
+ * `agreementWithPayload`, which is that check working rather than a shim to
+ * write. No committed artifact carried either spelling.
+ */
+export { DEFAULT_SKELETON };
+
+/** ⛓ The kinds this page offers — the maze can run every one (§ the simulator). */
+export const SKELETON_KIND_NAMES = MAZE_SKELETON_KINDS;
 
 /**
  * ⛓ THE DIRECTED BOUND. Seedling measured 12 against its own room; the maze's
@@ -152,9 +171,14 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  *                        different quantities and one word for both would be
  *                        the two-spellings failure at its most expensive.
  *
- * ⛔ THERE IS NO `?skeleton=` YET. Slice 5 lands it in BOTH pages together
- * (⚖ §3.4: the parameter arrives in the reader AND the writer AND the payload
- * block, once, for both substrates).
+ * ⛓ `?skeleton=`         SLICE 5, and SHARED with watch.html through
+ *                        `urlParams.readSkeleton`/`writeSkeletonParam`. The
+ *                        maze offers EVERY kind (it owns the two
+ *                        simulator-bound backends); Seedling refuses two of
+ *                        them by name. ⛔ It is NEVER spelled `?biome=` —
+ *                        that selects the PALETTE on both pages, and the
+ *                        collision is the one slice 3 wrote this warning
+ *                        about.
  *
  * ⚠ `?source=` DEFAULTS TO GENERATE, unlike watch.html — and the reason is a
  * measured difference between the substrates, not a taste. watch.html refuses
@@ -190,6 +214,8 @@ export function readLabParams(search) {
         directed: q.get('directed') === null
             ? null : parseDirectives(q.get('directed'), paletteFor(biome)),
         bounds: readBounds(q),
+        /** ⛓ SLICE 5 — the room the loop starts from. Absent is the open room. */
+        skeleton: readSkeleton(q, { simulator: true, substrate: 'the maze lab page' }),
         budget: { maxExpansions: intParam(q, 'expansions', DEFAULT_MAZE_BUDGET.maxExpansions) },
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
         gen: q.get('gen'),
@@ -215,7 +241,7 @@ export function readLabParams(search) {
  */
 export function writeLabParams(search, {
     source = SOURCES.GENERATE, seed, biome, width, height, bounds, budget, step,
-    roster = null, directives = null, payloadOwned = false,
+    roster = null, directives = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -226,6 +252,12 @@ export function writeLabParams(search, {
     writeInt(q, 'width', width);
     writeInt(q, 'height', height);
     writeBounds(q, bounds);
+    /**
+     * ⛓ SLICE 5 — DELETED at the open room rather than written
+     * `?skeleton=empty`: the default is spelled by absence, and the one writer
+     * refuses on the way out whatever the one reader would refuse.
+     */
+    writeSkeletonParam(q, skeleton, { simulator: true, substrate: 'the maze lab page' });
     writeInt(q, 'expansions', budget.maxExpansions);
     writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
     writeDirectedParam(q, directives, paletteFor(biome));
@@ -261,6 +293,7 @@ export { stepFromParams } from '../procgenCore/urlParams.js';
  */
 export function generateStep({
     seed, biome = DEFAULT_MAZE_BIOME, step, bounds, budget, width, height, roster = null,
+    skeleton = DEFAULT_SKELETON,
 } = {}) {
     const palette = restrictPalette(paletteFor(biome), roster);
     const b = assertMazeBudget(budget ?? DEFAULT_MAZE_BUDGET);
@@ -286,10 +319,11 @@ export function generateStep({
          */
         directives: Object.freeze([]),
         edits: Object.freeze([]),
-        skeleton: DEFAULT_SKELETON,
+        /** ⛓ SLICE 5: the kind this room WAS built from, on every state. */
+        skeleton: skeleton ?? DEFAULT_SKELETON,
     };
     if (step === 0) {
-        const model = mazeModel({ seed, width, height });
+        const model = mazeModel({ seed, width, height, skeleton });
         return Object.freeze({
             ...common,
             model,
@@ -317,6 +351,7 @@ export function generateStep({
         budget: b,
         width,
         height,
+        skeleton,
     });
     return Object.freeze({
         ...common,
@@ -480,8 +515,11 @@ export function applyDirective(state, spec, index) {
  */
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, width, height, roster = null, directed = null,
+    skeleton = DEFAULT_SKELETON,
 } = {}) {
-    let state = generateStep({ seed, biome, step, bounds, budget, width, height, roster });
+    let state = generateStep({
+        seed, biome, step, bounds, budget, width, height, roster, skeleton,
+    });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     return state;
 }
@@ -490,6 +528,12 @@ export function generateWithDirectives({
 export function labCatalogue(biome) {
     return catalogueRows(paletteFor(biome));
 }
+
+/**
+ * ⛓ THE SKELETONS SECTION OF THE CATALOGUE, from `procgenCore/skeletonKinds.js`
+ * — one spelling, two pages, for the same reason `labCatalogue` is shared.
+ */
+export { skeletonCatalogue } from '../procgenCore/skeletonKinds.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * EDIT (⚖ ruling 8 + §3.8)
@@ -767,6 +811,14 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
      * whose `goalPos` came from the seed would solve for a cell the world does
      * not have an exit on. The seed is kept for the identity line and for
      * anchor streams; it is not the authority on this world's geometry.
+     *
+     * ⛓ SLICE 5: AND IT IS BUILT AT THE **OPEN ROOM**, WHATEVER KIND THE
+     * PAYLOAD NAMES. The model here exists for `goalPos`, legality and the
+     * anchor streams; its `skeleton()` is never called, because the record
+     * comes from the payload. Carving one would spend the room stream's draws
+     * to build a world that is immediately thrown away. ⚠ The payload's own
+     * `skeleton` block still rides onto the state below — the loaded level
+     * SAYS which kind produced it.
      */
     const goal = [...world.exits.values()][0];
     const model = mazeModel({
@@ -830,14 +882,24 @@ export function describeState(state, solved = null) {
     const s = state.summary;
     const edits = (state.edits ?? []).length;
     const directives = (state.directives ?? []).length;
+    /**
+     * ⛓ SLICE 5 — THE SKELETON KIND, NAMED ONLY WHEN IT IS NOT THE OPEN ROOM.
+     * ⛔ A clause printed on every level would train a reader to skip it, and
+     * the one time it matters is the one time it is there — the same rule the
+     * "URL is not a reproduction after edits" clause below already follows.
+     */
+    const kind = state.skeleton?.kind ?? DEFAULT_SKELETON_KIND;
     const bits = [
         `seed ${state.seed} · ${state.biome} · ${state.width}x${state.height} · step ${state.step}`
+            + (kind === DEFAULT_SKELETON_KIND
+                ? '' : ` · skeleton: ${kind} (CARVED, not the open room)`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
             + (edits ? `, then ${edits} manual edit(s)` : ''),
         `palette: ${state.palette?.name ?? '(none)'}`
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
-            : 'the SKELETON — the open room and its goal, before any template',
+            : `the SKELETON — ${kind === DEFAULT_SKELETON_KIND
+                ? 'the open room' : `a ${kind} CARVE`} and its goal, before any template`,
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK} `
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,

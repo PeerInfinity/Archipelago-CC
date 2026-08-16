@@ -12,7 +12,9 @@ Region generation composes: resolve the biome → run its wall backend → apply
 
 ## Biomes and wall backends
 
-A **biome** is a named bundle of (backend, params, post-processors) in `mazeRoomBiomeLibrary.js`; a **backend** is one wall-generation strategy, registered by id in the shared `mazeAlgorithms/registry.js` (kept in `shared/procgen/` so a future grid-based substrate could reuse it). Per-region biome selection lives in `preset_sidecars[player][region].biome`; unspecified regions fall back to `classic`.
+A **biome** is a named bundle of (backend, params, post-processors); a **backend** is one wall-generation strategy, registered by id in the shared `mazeAlgorithms/registry.js` (kept in `shared/procgen/` so a future grid-based substrate could reuse it). Per-region biome selection lives in `preset_sidecars[player][region].biome`; unspecified regions fall back to `classic`.
+
+**The table now lives in `procgenCore/skeletonKinds.js`, and `mazeRoomBiomeLibrary.js` re-exports it.** The constructive-mode arc's slice 5 made these names one vocabulary across **both** substrates — the biome names ARE the constructive **skeleton kinds**, the room a generated level starts from (see below, and `seedling-bot.md` § *The constructive-mode arc*). `seedlingDemo/` may not import `mazeRoom/`, so the shared half had to move to a neutral file; every maze caller keeps its import path and `resolveBiome` is the same function. ⛔ Two defaults live there and must not be collapsed: `DEFAULT_BIOME_ID` (`classic`) is what an unconfigured AP **region** generates; `DEFAULT_SKELETON_KIND` (`empty`) is what the constructive **loop** starts from.
 
 | Biome | Backend | Character |
 |---|---|---|
@@ -24,8 +26,13 @@ A **biome** is a named bundle of (backend, params, post-processors) in `mazeRoom
 | `loopy` | `kruskals` + `braid(p: 0.5)` | Perfect maze with some loops braided in |
 | `open` | `kruskals` + `braid(p: 1.0)` | Every dead end removed |
 | `rooms` | `recursive_division` (minRoom 3) | Chambers connected by single-tile gaps |
+| `winding` | `recursive_backtracker` (newest) + `pruneDeadEnds` | **One winding corridor** entrance→goal, wall everywhere else |
 
-Adding a biome that uses an existing backend is a one-line change to the biome table; adding a backend is a new file under `mazeAlgorithms/` plus a registry entry. Post-processors (`braid`, `pruneDeadEnds`) are looked up the same way.
+`winding` was added by the constructive arc and is Cloudberry's pass 1: a perfect maze with every dead end filled back in, so what survives is exactly the unique entrance→exit path (asserted against an independently computed BFS in `skeletonKinds.test.js`). ⛔ It is **not** a rename of `corridor` — that is the BFS *shortest* path and needs the simulator; this is the spanning tree's own route, which wanders. ⚠ Its `threshold: 9999` is not a tuned depth: `pruneDeadEnds` re-lists its dead ends inside a `while (changed)` loop, so it runs to a fixed point and 1, 2 and 9999 give the same residue (measured). The number states the intent.
+
+Adding a biome that uses an existing backend is a one-line change to the table in `skeletonKinds.js`; adding a backend is a new file under `shared/procgen/mazeAlgorithms/` (portable) or `mazeRoom/mazeAlgorithms/` (simulator-bound) plus an entry there. Post-processors (`braid`, `pruneDeadEnds`) are looked up the same way.
+
+**Which kinds a binding offers is declared, not derived.** `classic` and `corridor` name simulator-bound backends, so the table marks them `needs:` and a grid-only binding (Seedling) refuses them **by name** with its own offer list. Deriving the answer from the registry — *"is the backend registered?"* — would have made it depend on who imported what.
 
 **Where the backends live, and the grid contract.** The backends are split across two directories by what they need. `recursive_backtracker`, `kruskals` and `recursive_division` sit in `shared/procgen/mazeAlgorithms/` beside the registry, `cellGrid.js`, `postProcessors.js` and `gridTiles.js`, because they touch a world only through the **grid contract** written down in `gridTiles.js` — `{width, height, tiles: Int8Array (row-major, index = y*width + x), entrance: {x,y}, exits: iterable of {x,y} via values()}` plus `TILE_FLOOR`/`TILE_WALL`/`getTile`/`setTile` and an `rng.next()` in [0,1). No inventory, no obstacles, no simulator. That makes them usable as carvers by any grid substrate, which is what the registry's "room for a future grid-based substrate" note always promised. `corridor_only` and `random_walls` stay in `mazeRoom/mazeAlgorithms/` because they run the maze simulator (`createState`/`apply`/`bfsSolver`/`reach`) to check feasibility, and `empty` stays with them. `mazeRoomEngine.js` imports the five `gridTiles.js` definitions and re-exports them under the same names, so maze-side callers import them from wherever they always did. `mazeAlgorithms/index.js` still performs all six registrations, and its import order is the order `listBackends()` returns.
 
@@ -133,10 +140,20 @@ Maze-only, each with the line that forced it:
 | `?expansions=` | the BFS **node cap**. Seedling's budget is `?tickbudget=`, denominated in solver *ticks*; one word for both would be two spellings of "the budget". The default (20000) never binds on a v1 level — the state space is `cells × 2^items` = 242 — so `?expansions=1` is how `BUDGET_EXHAUSTED` is reached on purpose. |
 
 `?biome=` selects the **palette** (`maze-v1` today), not a wall backend. The
-maze's own biome vocabulary arrives as `?skeleton=` in a later slice; spelling
-those `?biome=` would have been the real collision.
+maze's own biome vocabulary is `?skeleton=`; spelling it `?biome=` would have
+been the real collision.
 
-There is **no `?skeleton=` yet** — it lands in both pages together.
+**`?skeleton=<kind>`** — the room the loop starts from, shared with `watch.html`
+through `urlParams.readSkeleton`/`writeSkeletonParam`. The maze offers every
+kind (it owns the simulator-bound backends); Seedling refuses `classic` and
+`corridor` by name. Absent means `empty` — the open room — and the writer
+**deletes** the parameter at the default rather than writing it, the same rule
+the whole roster follows. An unknown kind refuses with the whole vocabulary; a
+`;`-separated parameter clause refuses too (that spelling is reserved for the
+slice that gives a kind parameters). The generate form carries a **skeleton
+selector**, and changing it RESETS the ladder to the skeleton and says so — the
+room a ladder is built in is part of the level's identity, exactly as the seed
+is. Try `?seed=3&count=3&skeleton=winding&run=1`.
 
 ### `drawWorld`'s `view` contract
 
@@ -221,11 +238,11 @@ own edit behaviour is unchanged.
 
 ### What is not here yet
 
-- **`?skeleton=` and the carved skeleton kinds** — a later slice, in both pages
-  together.
 - **the yield table and the connectivity pre-check**, and the **cut-vertex
   rule** — a door the walk can walk around is a KEPT candidate that happens to
   be decoration today.
+- **kind parameters** — every kind is pre-parameterized in the table, and the
+  reader refuses a `?skeleton=rooms;minRoom=5` clause rather than truncating it.
 
 ## The action queue (`mazeRoomQueue.js`)
 

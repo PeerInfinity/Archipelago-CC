@@ -430,6 +430,29 @@ try {
     check(new URLSearchParams(navigated.state.url).get('seed') === '5',
         '…and the frame\'s own URL names the run it is showing', navigated.state.url);
 
+    /**
+     * ⛓ CONSTRUCTIVE-MODE SLICE 5 — THE URL GRAMMAR RIDES THROUGH `navigate`
+     * UNCHANGED, and `?skeleton=` is the proof: the panel learned nothing new
+     * (the protocol carries a SEARCH STRING, not a field per parameter), so a
+     * parameter added to the grammar reaches a hosted frame for free. ⛔ The
+     * value is checked against the kind this file typed, not against a round
+     * trip.
+     */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId, search: 'seed=5&count=1&skeleton=rooms&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.skeleton?.kind === 'rooms' && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to a CARVED skeleton');
+    const carvedNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    check(carvedNav.skeleton?.kind === 'rooms'
+        && new URLSearchParams(carvedNav.url).get('skeleton') === 'rooms',
+        '⛓ …and a `?skeleton=rooms` navigate reaches the hosted frame — the grammar rides '
+        + 'through the protocol without the panel learning a field',
+        `${JSON.stringify(carvedNav.skeleton)} / ${carvedNav.url}`);
+
     /* ── CLAIM 5: selectTile, with the rectangle re-read ───────────── */
 
     /**

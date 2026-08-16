@@ -497,6 +497,16 @@
       <label>seed <input id="genSeed" type="number" step="1" style="width:6em"></label>
       <label for="genBiome">biome</label>
       <select id="genBiome"></select>
+      <!-- ⛓⛓ THE SKELETON KIND (constructive-mode slice 5). ⚖ Ruling 2: the
+           kinds ARE the maze biome names, one vocabulary across both
+           substrates. The two that need the maze SIMULATOR are listed
+           DISABLED with their reason rather than hidden. ⛔ Changing it RESETS
+           the ladder to the skeleton and says so — the room a ladder is built
+           in is part of the level's identity, exactly as the seed is. It is
+           `?skeleton=` and NEVER `?biome=`: that one selects the BOOT
+           INVENTORY here and the PALETTE on the maze page. -->
+      <label for="genSkeleton">skeleton</label>
+      <select id="genSkeleton"></select>
       <label>obstacles <input id="genCount" type="number" min="1" step="1" style="width:4em"></label>
       <label>tries/step <input id="genTries" type="number" min="1" step="1" style="width:4em"></label>
       <label>saturation K <input id="genK" type="number" min="1" step="1" style="width:4em"></label>

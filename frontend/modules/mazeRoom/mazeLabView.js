@@ -46,7 +46,8 @@ import {
     DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor, PALETTE_ENTRIES,
     SOURCES, agreementWithPayload, applyDirective, applyEdit, certify, describeState,
     generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells,
-    readLabParams, serializeMazeLevel, solveState, stepFromParams, undoEdit, writeLabParams,
+    readLabParams, serializeMazeLevel, skeletonCatalogue, solveState,
+    stepFromParams, undoEdit, writeLabParams,
 } from './mazeLab.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 
@@ -120,6 +121,7 @@ export function main() {
             step: state.step,
             roster: state.roster,
             directives: state.directives,
+            skeleton: state.skeleton,
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -436,6 +438,7 @@ export function main() {
     const fillForm = () => {
         for (const [id, get] of FIELDS) $(id).value = String(get(state));
         $('labBiome').value = state.biome;
+        $('labSkeleton').value = state.skeleton?.kind ?? 'empty';
     };
 
     /** The form's numbers, as the next run's arguments. ⛔ The FORM is read at
@@ -454,6 +457,13 @@ export function main() {
         },
         budget: { maxExpansions: Number($('labExpansions').value) },
         roster: state.roster,
+        /**
+         * ⛓ SLICE 5 — READ AT THE PRESS like every other control (law 1). ⛔
+         * The SELECT is read, not a variable: a handler that cached the kind
+         * early would leave the form comparing a value to itself, which is the
+         * defect the read-at-press law exists to end.
+         */
+        skeleton: { kind: $('labSkeleton').value },
     });
 
     const goTo = (step) => {
@@ -609,6 +619,9 @@ export function main() {
             })),
             rows: generationRows(state.trace ?? []),
             catalogue: labCatalogue(state.biome),
+            /** ⛓ SLICE 5 — the SKELETONS section, beside the template catalogue. */
+            skeletons: skeletonCatalogue({ simulator: true }),
+            skeleton: state.skeleton ?? null,
             level: serializeMazeLevel(state.record),
             trace: state.trace ?? [],
             payload: labPayload(state),
@@ -650,6 +663,22 @@ export function main() {
             lt.on($(id), 'change', () => { writeUrl(); });
         }
         lt.on($('labBiome'), 'change', () => { writeUrl(); });
+        /**
+         * ⛓⛓ SLICE 5 — A KIND CHANGE **RESETS THE LADDER TO THE SKELETON**,
+         * and says so. The room is the level's identity every bit as much as
+         * the seed: step 3 of a `winding` room followed by step 4 of an `open`
+         * one is a display that has never shown a level any single run
+         * produces. ⛓ It is the same reset a changed seed causes on the
+         * Seedling page, applied to the other half of the identity — and it is
+         * spelled as a press (`goTo(0)`) rather than as a flag, so the URL, the
+         * form and the level all move together through the one path.
+         */
+        lt.on($('labSkeleton'), 'change', () => {
+            goTo(0);
+            say(`skeleton kind: ${$('labSkeleton').value} — RESET to the skeleton, because the `
+                + 'room a ladder is built in is part of the level\'s identity');
+            render();
+        });
         lt.on($('labStep'), 'click', () => goTo(state.step + 1));
         lt.on($('labRunAll'), 'click', runAll);
         lt.on($('labReset'), 'click', () => goTo(0));
@@ -742,6 +771,20 @@ export function main() {
     for (const name of MAZE_BIOME_NAMES) {
         $('labBiome').appendChild(new Option(name, name));
     }
+    /**
+     * ⛓⛓ THE SKELETON SELECTOR — the kinds this page OFFERS, plus the ones it
+     * does not, greyed WITH THEIR REASON as the catalogue's exclusion rows are.
+     * ⚠ The maze offers every kind, so nothing is greyed HERE today; the
+     * disabled branch is written and driven anyway, because it is the branch
+     * the Seedling page's copy of this list needs and a list that silently
+     * dropped what it cannot offer could not answer *"why not that one?"*.
+     */
+    for (const row of skeletonCatalogue({ simulator: true })) {
+        const opt = new Option(`${row.kind}${row.isDefault ? ' (the open room)' : ''}`, row.kind);
+        opt.disabled = !row.offered;
+        opt.title = row.offered ? row.description : `unavailable here — needs ${row.why}`;
+        $('labSkeleton').appendChild(opt);
+    }
     stamp();
 
     try {
@@ -776,6 +819,14 @@ export function main() {
                 height: payload.height,
                 roster: payload.roster ?? null,
                 directed: null,
+                /**
+                 * ⛓ SLICE 5: a payload names the ROOM it was built in, and
+                 * reproducing it under a different skeleton would report a
+                 * level divergence whose real cause is the question. ⚠ `??` and
+                 * not a constant: a payload written before the block existed
+                 * names no kind, and that IS the open room.
+                 */
+                skeleton: payload.skeleton ?? undefined,
             });
             payloadCheck = agreementWithPayload(payload, state);
             say(payloadCheck.agrees
@@ -794,8 +845,19 @@ export function main() {
             height: params.height,
             roster: params.roster,
             directed: params.directed,
+            /**
+             * ⛓⛓ SLICE 5 — AND A DEFECT MY OWN ROW FOUND HERE. `?skeleton=`
+             * reached `readLabParams`, the writer echoed it back into the bar
+             * and the readout printed it, so three of the five browser claims
+             * were green — while THIS call was still missing the argument and
+             * the page generated the open room. The one claim that could see it
+             * was the byte comparison against node's carved level.
+             */
+            skeleton: params.skeleton,
         });
-        say(`seed ${params.seed} at step ${stepFromParams(params)}`);
+        say(`seed ${params.seed} at step ${stepFromParams(params)}`
+            + (params.skeleton?.kind && params.skeleton.kind !== 'empty'
+                ? `, skeleton ${params.skeleton.kind}` : ''));
     };
 
     /* ══════════════════════════════════════════════════════════════════

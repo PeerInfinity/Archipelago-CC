@@ -82,6 +82,14 @@ const ANCHOR_TRIES = num('anchortries', 1);
 const WIDTH = num('width', 11);
 const HEIGHT = num('height', 11);
 const BUDGET = { maxExpansions: num('expansions', DEFAULT_MAZE_BUDGET.maxExpansions) };
+/**
+ * ⛓ CONSTRUCTIVE-MODE SLICE 5 — the room the loop starts from. The default is
+ * the OPEN room this CLI has always generated, so `--skeleton` absent produces
+ * exactly the level it produced before the kinds existed. ⛔ An unknown or
+ * unofferable kind refuses BY NAME through `assertKind` inside the binding —
+ * this file does not keep a second list.
+ */
+const SKELETON = { kind: arg('skeleton', 'empty') };
 
 const bounds = {
     obstacleTarget: COUNT,
@@ -128,7 +136,7 @@ const t0 = Date.now();
 let out;
 try {
     out = generateMazeLevel({ seed: SEED, palette: MAZE_PALETTE, bounds, budget: BUDGET,
-        width: WIDTH, height: HEIGHT });
+        width: WIDTH, height: HEIGHT, skeleton: SKELETON });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — the Seedling CLI's own
@@ -157,6 +165,15 @@ const payload = {
     seed: SEED,
     palette: MAZE_PALETTE.name,
     bounds,
+    /**
+     * ⛓ SLICE 5's block. ⚠ It is written UNCONDITIONALLY, so this CLI's `--json`
+     * bytes moved by exactly this field at every kind INCLUDING the default —
+     * the `level` and the `trace` did not, and the as-built records both md5s.
+     * The alternative (omit it at the default) would have kept the old bytes
+     * and made a payload's identity depend on which fields happened to be
+     * default, which is the thing `agreementWithPayload` compares against.
+     */
+    skeleton: SKELETON,
     budget: out.summary.budget,
     summary: out.summary,
     level: serializeMazeLevel(out.record),
@@ -169,7 +186,8 @@ if (has('json')) {
     const s = out.summary;
     say(`# generated maze level — seed ${SEED}, palette ${MAZE_PALETTE.name}`);
     say('');
-    say(`room:   ${s.width}x${s.height} tiles, all floor before the loop (no wall ring)`);
+    say(`room:   ${s.width}x${s.height} tiles, skeleton ${SKELETON.kind}`
+        + `${SKELETON.kind === 'empty' ? ' (all floor before the loop, no wall ring)' : ' (CARVED)'}`);
     say(`start:  (${s.entranceCell.tx},${s.entranceCell.ty})   goal: exit tile `
         + `(${s.goalCell.tx},${s.goalCell.ty})`);
     say(`items:  ${JSON.stringify(s.items)} (the player starts empty-handed)`);

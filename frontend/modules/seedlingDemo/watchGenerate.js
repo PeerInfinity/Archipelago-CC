@@ -85,13 +85,19 @@ import {
  */
 import {
     ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readBounds,
-    readRosterSpec, writeBounds, writeDirectedParam, writeInt, writeRosterParam, writeRunFlag,
+    readRosterSpec, readSkeleton, writeBounds, writeDirectedParam, writeInt, writeRosterParam,
+    writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
     POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, instantiateKept, normalizeRoster,
     restrictPalette,
 } from './procgenPalette.js';
-import { generateSeedlingLevel, seedlingModel, seedlingOracle } from './procgenSeedling.js';
+import {
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, skeletonCatalogue,
+} from '../procgenCore/skeletonKinds.js';
+import {
+    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingModel, seedlingOracle,
+} from './procgenSeedling.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
 export class WatchGenerateError extends Error {
@@ -133,10 +139,32 @@ export function paletteFor(biome) {
     return palette;
 }
 
-/** ⚖ Ruling 9(b): the payload RESERVES a skeleton block, so the constructive
- *  mode arrives ADDITIVELY. Today there is exactly one kind and it is named
- *  rather than assumed — a payload with no `skeleton` block is this one. */
-export const DEFAULT_SKELETON = Object.freeze({ kind: 'empty-bordered' });
+/**
+ * ⚖ Ruling 9(b): the payload RESERVES a skeleton block, so the constructive
+ * mode arrives ADDITIVELY. A payload with no `skeleton` block is this one.
+ *
+ * ⛓⛓ SLICE 5 RENAMED IT FROM `empty-bordered` TO `empty`, and the rename is
+ * ⚖ ruling 2 (*one vocabulary across substrates*) applied to the one name that
+ * disagreed: the kinds ARE the maze biome names, and the maze has always called
+ * the open room `empty`. The Seedling room keeps its wall ring — the ring is a
+ * fact about `emptyLevel`, not about the kind.
+ *
+ * ⛔ AN OLD PAYLOAD SPELLING `empty-bordered` NOW DIVERGES **BY NAME**, and
+ * that is `agreementWithPayload` working rather than a shim to write (GENERATE-
+ * UI §13.3 item 12): the payload names a skeleton this page does not build, and
+ * a reader is told which field disagreed. ⛓ MEASURED COST of the rename, whole:
+ * this constant, its test, the maze page's own (`open-room`, renamed with it),
+ * one docs line — and NOTHING else. No committed payload in the repo carries
+ * either old spelling, the acceptance batch never prints the block, and
+ * `check-seedling-editor-generate.mjs`'s `?gen=` payload omits it entirely (so
+ * both sides default and it agrees either way). ⇒ no artifact was re-recorded.
+ *
+ * ⛔ IT IS RE-EXPORTED, NOT RE-DECLARED. `procgenCore/skeletonKinds.js` owns the
+ * vocabulary and its default; a literal here would be the second spelling that
+ * the rename exists to remove, and the two would agree until the day somebody
+ * edited one.
+ */
+export { DEFAULT_SKELETON };
 
 /**
  * ⛓⛓⛓ THE DIRECTED BOUND — **12**, and the number is a measurement.
@@ -213,6 +241,14 @@ export function readGenerateParams(search) {
          */
         directed: q.get('directed') === null
             ? null : parseDirectives(q.get('directed'), paletteFor(biome)),
+        /**
+         * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — THE ROOM THE LOOP STARTS FROM.
+         * Absent is `empty` (the open bordered room). ⛔ A kind this binding
+         * cannot run (`classic`/`corridor` need the maze simulator) refuses
+         * HERE, at read time, with the list Seedling offers — before any solve
+         * and before the page draws anything.
+         */
+        skeleton: readSkeleton(q, { simulator: false, substrate: 'the Seedling page' }),
         /** ⛓ The four the loop runs under — `urlParams.readBounds`, shared. */
         bounds: readBounds(q),
         /**
@@ -297,6 +333,7 @@ export function readGenerateParams(search) {
  */
 export function writeGenerateParams(search, {
     seed, biome, bounds, step, roster = null, directives = null, payloadOwned = false,
+    skeleton = DEFAULT_SKELETON,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -304,6 +341,13 @@ export function writeGenerateParams(search, {
     q.set('source', 'generate');
     writeInt(q, 'seed', seed);
     q.set('biome', String(biome));
+    /**
+     * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — the skeleton kind, DELETED at the
+     * default rather than written as `?skeleton=empty` (the open room is
+     * spelled by absence, the same rule the whole roster follows), and refused
+     * on the way OUT by the same `assertKind` the reader runs.
+     */
+    writeSkeletonParam(q, skeleton, { simulator: false, substrate: 'the Seedling page' });
     // ⛓ SLICE 3: the anchor-search bound is a BOUND like the other three, so it
     // rides with them in `urlParams.writeBounds` (§8.6's standing law: every new
     // control arrives WITH its parameter in the one writer). The integer refusal
@@ -375,7 +419,18 @@ export function writeGenerateParams(search, {
  * step 0 is the goal cell at every later step BY CONSTRUCTION rather than by
  * agreement. The test drives that equality.
  */
-export function generateStep({ seed, biome, step, bounds, budget, roster = null } = {}) {
+export function generateStep({
+    seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
+} = {}) {
+    /**
+     * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — the room this ladder starts from,
+     * validated ONCE here so step 0 and step k cannot disagree about it, and
+     * refused by name for a kind Seedling cannot build.
+     */
+    const skel = Object.freeze({
+        kind: assertKind(skeleton?.kind ?? DEFAULT_SKELETON_KIND,
+            { simulator: false, substrate: 'the Seedling binding' }),
+    });
     /**
      * ⛓ SLICE 4: THE SUB-ROSTER IS APPLIED HERE AND NOWHERE ELSE. `paletteFor`
      * chooses the biome, `restrictPalette` narrows it, and the SAME loop takes
@@ -391,7 +446,7 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
             + 'Step 0 is the SKELETON and step k is a run to obstacleTarget=k.');
     }
     if (step === 0) {
-        const model = seedlingModel({ seed });
+        const model = seedlingModel({ seed, skeleton: skel });
         return Object.freeze({
             seed,
             biome,
@@ -412,8 +467,8 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
              * and never has to ask whether a directive has happened yet.
              */
             directives: Object.freeze([]),
-            /** ⚖ Ruling 9(b)'s reserved block — see `DEFAULT_SKELETON`. */
-            skeleton: DEFAULT_SKELETON,
+            /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from. */
+            skeleton: skel,
             stop: null,
             saturated: false,
             budget: b,
@@ -425,6 +480,7 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
         palette,
         bounds: { ...DEFAULT_BOUNDS, ...(bounds ?? {}), obstacleTarget: step },
         budget: b,
+        skeleton: skel,
     });
     return Object.freeze({
         seed,
@@ -438,7 +494,7 @@ export function generateStep({ seed, biome, step, bounds, budget, roster = null 
         summary: out.summary,
         keptTemplates: keptTemplatesOf(out.summary, palette),
         directives: Object.freeze([]),
-        skeleton: DEFAULT_SKELETON,
+        skeleton: skel,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.
@@ -578,8 +634,9 @@ export function applyDirective(state, spec, index) {
  */
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, roster = null, directed = null,
+    skeleton = DEFAULT_SKELETON,
 } = {}) {
-    let state = generateStep({ seed, biome, step, bounds, budget, roster });
+    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     return state;
 }
@@ -771,7 +828,17 @@ export function describeState(state, solved = null) {
          * A page that showed a directed level under a ladder-only identity would
          * be naming a run nobody can reproduce from what it printed.
          */
+        /**
+         * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — THE SKELETON KIND, NAMED ONLY
+         * WHEN IT IS NOT THE OPEN ROOM. ⛔ A line that said `· empty` on every
+         * level would train a reader to stop reading the clause, and the one
+         * time it matters is the one time it is there. (The same rule the
+         * "URL is not a reproduction after edits" clause follows on the maze
+         * page.)
+         */
         `seed ${state.seed} · ${state.biome} · step ${state.step}`
+            + (state.skeleton && state.skeleton.kind !== DEFAULT_SKELETON_KIND
+                ? ` · skeleton: ${state.skeleton.kind} (CARVED, not the open room)` : '')
             + ((state.directives ?? []).length
                 ? `, then ${state.directives.length} directed attempt(s)` : ''),
         /**
@@ -783,7 +850,9 @@ export function describeState(state, solved = null) {
         `palette: ${state.palette?.name ?? '(none)'}`
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
-            : 'the SKELETON — the bordered room and its goal, before any template',
+            : `the SKELETON — ${state.skeleton?.kind === DEFAULT_SKELETON_KIND
+                ? 'the bordered room' : `a ${state.skeleton?.kind} CARVE`} and its goal, `
+                + 'before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK} `
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,
@@ -823,4 +892,11 @@ export {
     describeKeptKind, directedCost, generationRows, ladderCost, tileAtPoint,
 } from '../procgenCore/labView.js';
 
+/**
+ * ⛓ THE SKELETONS SECTION OF THE CATALOGUE + the kinds this binding offers —
+ * re-exported from `procgenCore/skeletonKinds.js` under the path every Seedling
+ * caller already uses, exactly as the URL grammar and the pane vocabulary are.
+ */
+export { skeletonCatalogue };
+export { SEEDLING_SKELETON_KINDS };
 export { STOP };

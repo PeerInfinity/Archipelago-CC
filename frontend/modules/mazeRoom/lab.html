@@ -236,6 +236,14 @@
         <select id="labBiome"></select>
         <label>w <input id="labWidth" type="number" min="2" step="1" style="width:4em"></label>
         <label>h <input id="labHeight" type="number" min="2" step="1" style="width:4em"></label>
+        <!-- ⛓⛓ THE SKELETON KIND (constructive-mode slice 5). ⚖ Ruling 2: the
+             kinds ARE the maze biome names, one vocabulary across both
+             substrates. ⛔ Changing it RESETS the ladder to the skeleton and
+             says so — the room a ladder is built in is part of the level's
+             identity, exactly as the seed is. It is `?skeleton=` and NEVER
+             `?biome=`: that one selects the PALETTE on both pages. -->
+        <label for="labSkeleton">skeleton</label>
+        <select id="labSkeleton"></select>
       </div>
       <div class="line">
         <label>obstacles <input id="labCount" type="number" min="0" step="1" style="width:4em"></label>

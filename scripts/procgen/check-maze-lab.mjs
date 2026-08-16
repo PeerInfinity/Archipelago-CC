@@ -54,6 +54,11 @@
  *     run; reload it and the level comes back identical (the fixed point) — AND
  *     the bar's literal values are asserted against numbers this file states,
  *     because a fixed point tests self-consistency and never correctness.
+ *  9. **`?skeleton=`** (constructive-mode slice 5) — a carved kind reaches the
+ *     MODEL and produces node's own carved level byte for byte; the identity
+ *     line names it; the DEFAULT is spelled by absence; the SELECTOR writes it
+ *     and RESETS the ladder; the catalogue lists the kinds; an unknown kind
+ *     refuses BY NAME.
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
  * 246/258): `window.__mazeLab` is set on the FIRST render, so a poll for its
@@ -457,6 +462,92 @@ try {
     check(json(reOpened.level) === json(serializeMazeLevel(nodeSame.record)),
         '⛓⛓ …and NODE agrees about that level too — the form\'s numbers reached the loop',
     );
+
+    /* ── CLAIM 9: ?skeleton= — CONSTRUCTIVE-MODE SLICE 5 ─────────── */
+    /**
+     * ⛓⛓⛓ THE CONSTRUCTIVE SKELETON, IN THE BROWSER. Five claims, and the
+     * first four are about the PAGE'S OWN PATH to the kind — the URL reaches
+     * the model, the selector reaches the URL, the identity line says which
+     * room this is, and a kind the page cannot build refuses BY NAME.
+     *
+     * ⛔ THE VALUE IS ASSERTED AGAINST THE LITERAL THIS FILE TYPED, never
+     * against a round trip (⚖ kickoff §5).
+     */
+    const carved = await load(`seed=${SUBJECT.seed}&count=3&skeleton=winding&run=1`,
+        () => window.__mazeLab?.step === 3, 'the winding ladder to step 3');
+    check(carved.skeleton?.kind === 'winding',
+        '⛓ ?skeleton=winding reached the MODEL — the state names the kind',
+        json(carved.skeleton));
+    check(new URLSearchParams(carved.url).get('skeleton') === 'winding',
+        '⛓ …and the bar still names it after the page rewrote the URL', carved.url);
+    check(/skeleton: winding \(CARVED, not the open room\)/.test(carved.identity),
+        'the identity line NAMES the carved kind', carved.identity);
+    /**
+     * ⛓⛓ AND THE ROOM IS ACTUALLY DIFFERENT. A page that read the parameter,
+     * echoed it into its readout and generated the open room anyway would pass
+     * all three claims above — this is the one that cannot.
+     */
+    const nodeCarved = generateStep({
+        seed: SUBJECT.seed, step: 3, skeleton: { kind: 'winding' },
+        bounds: { obstacleTarget: 3, triesPerStep: 8, saturationK: 3,
+            anchorTriesPerCandidate: 1 },
+    });
+    check(json(carved.level) === json(serializeMazeLevel(nodeCarved.record)),
+        '⛓⛓ the BROWSER\'s carved level IS node\'s, byte for byte',
+        `${json(carved.level).length} vs ${json(serializeMazeLevel(nodeCarved.record)).length} bytes`);
+    /**
+     * ⛔ AND A CHECK THAT PASSED FOR THE WRONG REASON, FIXED. "the room holds
+     * wall tiles" was green even while the page was generating the OPEN room,
+     * because `wall-segment` places wall tiles too. The claim that separates a
+     * CARVE from a ladder is the wall COUNT against the same seed's open room
+     * at the same step — a carve puts down dozens, six templates put down a
+     * handful.
+     */
+    const openSame = generateStep({
+        seed: SUBJECT.seed,
+        step: 3,
+        bounds: { obstacleTarget: 3, triesPerStep: 8, saturationK: 3,
+            anchorTriesPerCandidate: 1 },
+    });
+    const wallsIn = (level) => level.tiles.filter((t) => t === 1).length;
+    check(wallsIn(carved.level) > wallsIn(serializeMazeLevel(openSame.record)) + 20,
+        '⛔ …and it is genuinely CARVED — far more wall than the SAME seed\'s open room at '
+        + 'the same step, which is what a ladder alone can never produce',
+        `${wallsIn(carved.level)} wall tiles vs ${wallsIn(serializeMazeLevel(openSame.record))}`);
+
+    /** ⛓ The DEFAULT is spelled by ABSENCE, never as `?skeleton=empty`. */
+    const openRoom = await load(`seed=${SUBJECT.seed}&count=1&run=1`,
+        () => window.__mazeLab?.step === 1, 'the open-room ladder');
+    check(new URLSearchParams(openRoom.url).get('skeleton') === null,
+        '⛔ the writer DELETES ?skeleton= at the open room rather than writing the default',
+        openRoom.url);
+    check(!/skeleton: /.test(openRoom.identity),
+        '…and the identity line stays silent about the kind when it is the open room',
+        openRoom.identity);
+
+    /** ⛓ THE SELECTOR — the kind reaches the URL through the form, and RESETS. */
+    await page.selectOption('#labSkeleton', 'rooms');
+    await settled(() => window.__mazeLab?.skeleton?.kind === 'rooms'
+        && window.__mazeLab?.step === 0, 'the selector to reset to the skeleton');
+    const selected = await read();
+    check(new URLSearchParams(selected.url).get('skeleton') === 'rooms',
+        '⛓ the SELECTOR writes ?skeleton=rooms into the bar', selected.url);
+    check(selected.step === 0 && new URLSearchParams(selected.url).get('run') === null,
+        '⛔ …and a kind change RESETS the ladder to the skeleton, as a seed change does',
+        `step ${selected.step}, url ${selected.url}`);
+
+    /** ⛓ The catalogue's SKELETONS section, and it is not the roster. */
+    check(selected.skeletons?.length === 9 && selected.skeletons.every((r) => r.offered),
+        'the catalogue lists all 9 kinds, every one offered by the MAZE (it owns the '
+        + 'simulator-bound backends)', json((selected.skeletons ?? []).map((r) => r.kind)));
+
+    /** ⛔ A REFUSAL BY NAME, not a silent fallback. */
+    await page.goto(`${PAGE}?skeleton=spiral`, { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of an unknown kind');
+    const refusedKind = await read();
+    check(/\?skeleton="spiral"/.test(refusedKind.fatal ?? '')
+        && /is not a skeleton kind/.test(refusedKind.fatal ?? ''),
+        '⛔ ?skeleton=spiral REFUSES BY NAME with the whole vocabulary', refusedKind.fatal);
 
     check(errors.length === 0, 'STILL zero console errors after every arm was driven',
         errors.join(' | '));

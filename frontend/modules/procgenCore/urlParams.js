@@ -51,6 +51,7 @@
  */
 
 import { DEFAULT_BOUNDS, KEEP_POLICY } from './levelGenerator.js';
+import { DEFAULT_SKELETON_KIND, assertKind } from './skeletonKinds.js';
 
 export class UrlParamsError extends Error {
     constructor(message) {
@@ -125,6 +126,87 @@ export function writeBounds(q, bounds) {
     writeInt(q, 'tries', bounds.triesPerStep);
     writeInt(q, 'k', bounds.saturationK);
     writeInt(q, 'anchortries', bounds.anchorTriesPerCandidate);
+    return q;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SKELETON KIND — `?skeleton=<kind>`
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * CONSTRUCTIVE-MODE slice 5 (⚖ kickoff §3.3–3.4). The room the loop STARTS
+ * from, named by the one vocabulary both substrates share
+ * (`procgenCore/skeletonKinds.js`).
+ *
+ * ── ⛔ IT IS NEVER SPELLED `?biome=`, AND THE COLLISION WAS REAL ──────
+ *
+ * ⚖ §3.4's measured note, carried whole: `?biome=` on BOTH pages selects the
+ * PALETTE — Seedling's boot inventory, the maze's template set — while
+ * `mazeRoomBiomeLibrary` ALSO says "biome" for the wall backends whose names
+ * this parameter carries. Two settings, one word, on one page, was the failure
+ * this grammar is full of refusals about; slice 3 wrote the warning down and
+ * this is the slice that had to obey it.
+ *
+ * ── ⛔ ABSENT IS THE DEFAULT, AND THE DEFAULT IS NOT WRITTEN ──────────
+ *
+ * `empty` — the open room — is spelled by LEAVING THE PARAMETER OUT, the same
+ * rule the whole roster follows. ⚠ And the writer DELETES it rather than
+ * setting it, because a `delete` followed by a `set` of one key APPENDS it: a
+ * writer that always wrote `?skeleton=empty` would move nothing, but one that
+ * deleted-then-set on the way back to the default would reorder the bar and
+ * break the fixed point (GENERATE-UI slice 4 measured exactly that on
+ * `?families=`).
+ *
+ * ── KIND PARAMETERS: NONE, TODAY, AND THE REFUSAL SAYS SO ────────────
+ *
+ * ⚖ Open question 5 picked ONE param with a `;`-separated clause for the day
+ * kinds gain parameters. Today every kind is PRE-PARAMETERIZED in the table, so
+ * the value is a bare id — and a value carrying a `;` refuses BY NAME rather
+ * than being silently truncated to its head, which would build a room the link
+ * does not describe.
+ */
+
+/**
+ * @param {object} o
+ * @param {boolean} o.simulator  does the READING binding have the maze
+ *   simulator? An unoffered kind refuses HERE, before any generation, with the
+ *   list this page can actually build.
+ * @param {string} o.substrate   what the refusal calls this page.
+ */
+export function readSkeleton(q, { simulator = false, substrate = 'this page' } = {}) {
+    const raw = q.get('skeleton');
+    if (raw === null || raw === '') return { kind: DEFAULT_SKELETON_KIND };
+    const value = raw.trim().toLowerCase();
+    if (value.includes(';') || value.includes('=')) {
+        fail(`urlParams: ?skeleton=${JSON.stringify(raw)} carries a PARAMETER CLAUSE, and no `
+            + 'skeleton kind takes parameters yet — every kind is pre-parameterized in the '
+            + 'table. The spelling `kind;key=value` is reserved for the slice that adds one; '
+            + 'until then a clause is refused rather than truncated to its head, which would '
+            + 'build a room this link does not describe.');
+    }
+    /**
+     * ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL. The offer list and the
+     * unknown-kind sentence are `assertKind`'s — a second copy here would be
+     * two answers to "which kinds may I ask for" — but a reader who typed this
+     * into an ADDRESS BAR has to be told which PARAMETER they typed, so the
+     * refusal is re-thrown with it in front and the original text verbatim.
+     */
+    try {
+        return { kind: assertKind(value, { simulator, substrate }) };
+    } catch (e) {
+        fail(`urlParams: ?skeleton=${JSON.stringify(raw)} — ${e.message}`);
+        return null;
+    }
+}
+
+/**
+ * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing law) —
+ * so it runs the same `assertKind`, against the same offer list.
+ */
+export function writeSkeletonParam(q, skeleton, { simulator = false, substrate = 'this page' } = {}) {
+    const kind = skeleton?.kind ?? DEFAULT_SKELETON_KIND;
+    assertKind(kind, { simulator, substrate });
+    if (kind === DEFAULT_SKELETON_KIND) q.delete('skeleton');
+    else q.set('skeleton', kind);
     return q;
 }
 

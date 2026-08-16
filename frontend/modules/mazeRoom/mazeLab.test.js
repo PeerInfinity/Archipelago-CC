@@ -15,7 +15,8 @@ import {
     DEFAULT_MAZE_BIOME, MazeLabError, MazeRoomEditor, PALETTE_TYPES, SOURCES,
     agreementWithPayload, applyDirective, applyEdit, certify, describeState, generateStep,
     generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells, readLabParams,
-    serializeMazeLevel, solveState, stepFromParams, undoEdit, writeLabParams,
+    SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel, skeletonCatalogue, solveState,
+    stepFromParams, undoEdit, writeLabParams,
 } from './mazeLab.js';
 import { deserializeMazeLevel } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
@@ -590,5 +591,104 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         expect(a.checked).toBe(false);
         expect(a.why).toMatch(/1 MANUAL EDIT\(S\)/);
         expect(a.why).toMatch(/Use LOAD/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?skeleton=` ON THE MAZE LAB PAGE — CONSTRUCTIVE-MODE SLICE 5
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLab — the skeleton kind', () => {
+    const base = { seed: 3, biome: DEFAULT_MAZE_BIOME, step: 0 };
+
+    it('renamed the open room to `empty` — one vocabulary, both substrates', () => {
+        // ⛔ A LITERAL, not the constant it came from: a half-done rename would
+        // still satisfy a comparison against the constant.
+        expect(DEFAULT_SKELETON.kind).toBe('empty');
+        expect(SKELETON_KIND_NAMES).toContain('winding');
+        expect(SKELETON_KIND_NAMES).toContain('corridor');
+    });
+
+    it('carries the kind onto every state and defaults to the open room', () => {
+        expect(generateStep(base).skeleton).toEqual({ kind: 'empty' });
+        expect(generateStep({ ...base, skeleton: { kind: 'winding' } }).skeleton)
+            .toEqual({ kind: 'winding' });
+        expect(generateStep({ ...base, step: 2, skeleton: { kind: 'rooms' } }).skeleton)
+            .toEqual({ kind: 'rooms' });
+    });
+
+    /**
+     * ⛔ THE VALUE IS CHECKED AGAINST A LITERAL THIS FILE STATES, never against
+     * a round trip — a fixed point tests self-consistency and never
+     * correctness (⚖ kickoff §5).
+     */
+    it('reads and writes ?skeleton= — the literal value, and ABSENCE at the default', () => {
+        expect(readLabParams('?seed=3').skeleton).toEqual({ kind: 'empty' });
+        expect(readLabParams('?seed=3&skeleton=rooms').skeleton).toEqual({ kind: 'rooms' });
+        const st = generateStep({ ...base, skeleton: { kind: 'winding' } });
+        const url = writeLabParams('', {
+            seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: 0, skeleton: st.skeleton,
+        });
+        expect(url).toContain('skeleton=winding');
+        expect(writeLabParams('', {
+            seed: 3, biome: DEFAULT_MAZE_BIOME, width: 11, height: 11,
+            bounds: st.bounds, budget: st.budget, step: 0,
+        })).not.toContain('skeleton');
+    });
+
+    it('REFUSES an unknown kind at READ time, with the whole vocabulary', () => {
+        expect(() => readLabParams('?skeleton=spiral'))
+            .toThrow(/\?skeleton="spiral".*is not a skeleton kind/s);
+    });
+
+    /** ⛓ The maze can run every kind, INCLUDING the two Seedling refuses. */
+    it('accepts the simulator-bound kinds the Seedling page refuses', () => {
+        expect(readLabParams('?skeleton=corridor').skeleton).toEqual({ kind: 'corridor' });
+        expect(generateStep({ ...base, skeleton: { kind: 'classic' } }).skeleton)
+            .toEqual({ kind: 'classic' });
+    });
+
+    /** ⛓ The fixed point, AFTER the independent value check above. */
+    it('round-trips: what the writer wrote, the reader reads back', () => {
+        const st = generateStep({ ...base, skeleton: { kind: 'bushy' } });
+        const url = writeLabParams('', {
+            seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: 0, skeleton: st.skeleton,
+        });
+        expect(readLabParams(`?${url}`).skeleton).toEqual({ kind: 'bushy' });
+    });
+
+    it('the payload carries the block, and an old `open-room` payload DIVERGES BY NAME', () => {
+        const st = generateStep({ ...base, step: 2, skeleton: { kind: 'winding' } });
+        expect(labPayload(st).skeleton).toEqual({ kind: 'winding' });
+        const old = { ...labPayload(st), skeleton: { kind: 'open-room' } };
+        const check = agreementWithPayload(old, st);
+        expect(check.differences).toContain('skeleton');
+        expect(check.agrees).toBe(false);
+        // …and the same payload with its own block agrees.
+        expect(agreementWithPayload(labPayload(st), st).agrees).toBe(true);
+    });
+
+    it('names the kind in the identity line — and only when it is carved', () => {
+        expect(describeState(generateStep(base))).not.toMatch(/skeleton: /);
+        const line = describeState(generateStep({ ...base, skeleton: { kind: 'rooms' } }));
+        expect(line).toMatch(/skeleton: rooms \(CARVED, not the open room\)/);
+        expect(line).toMatch(/the SKELETON — a rooms CARVE and its goal/);
+    });
+
+    it('lists the kinds as their OWN catalogue section, not as roster rows', () => {
+        const rows = skeletonCatalogue({ simulator: true });
+        expect(rows).toHaveLength(SKELETON_KIND_NAMES.length);
+        expect(rows.every((r) => r.offered)).toBe(true);
+        expect(rows.find((r) => r.kind === 'winding').description).toMatch(/dead end/);
+        // ⛔ …and NOT in the template catalogue, which is what a RUN draws from.
+        expect(labCatalogue(DEFAULT_MAZE_BIOME).groups
+            .flatMap((g) => g.templates.map((t) => t.name))).not.toContain('winding');
+    });
+
+    it('a LOADED payload keeps the kind that produced it', () => {
+        const st = generateStep({ ...base, step: 1, skeleton: { kind: 'loopy' } });
+        expect(loadPayload(labPayload(st)).skeleton).toEqual({ kind: 'loopy' });
     });
 });

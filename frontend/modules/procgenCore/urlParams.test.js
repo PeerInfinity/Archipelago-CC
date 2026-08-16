@@ -19,8 +19,9 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
     ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, formatDirectives, intParam,
-    parseDirective, parseDirectives, readBounds, readRosterSpec, stepFromParams, writeBounds,
-    writeDirectedParam, writeInt, writeRosterParam, writeRunFlag,
+    parseDirective, parseDirectives, readBounds, readRosterSpec, readSkeleton, stepFromParams,
+    writeBounds, writeDirectedParam, writeInt, writeRosterParam, writeRunFlag,
+    writeSkeletonParam,
 } from './urlParams.js';
 import {
     LabViewError, describeKeptKind, directedCost, generationRows, ladderCost, tileAtPoint,
@@ -289,5 +290,86 @@ describe('labView — the pane vocabulary', () => {
         expect(() => tileAtPoint({ ...box, x: 0, y: NaN })).toThrow(/finite point/);
         expect(() => tileAtPoint({ ...box, width: 0, x: 0, y: 0 })).toThrow(/positive canvas width/);
         expect(() => tileAtPoint({ ...box, cols: 0, x: 0, y: 0 })).toThrow(/positive integer cols/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?skeleton=` — CONSTRUCTIVE-MODE SLICE 5
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('urlParams — ?skeleton=', () => {
+    const q = (search) => new URLSearchParams(search);
+
+    /**
+     * ⛔ EVERY VALUE IS CHECKED AGAINST A LITERAL THIS FILE STATES, never
+     * against a round trip: a fixed point tests SELF-CONSISTENCY and never
+     * correctness (⚖ kickoff §5, GENERATE-UI's first carried finding). A
+     * reader/writer pair that both said `windy` would round-trip perfectly.
+     */
+    it('reads the DEFAULT from an absent parameter, and a named kind literally', () => {
+        expect(readSkeleton(q(''))).toEqual({ kind: 'empty' });
+        expect(readSkeleton(q('seed=3'))).toEqual({ kind: 'empty' });
+        expect(readSkeleton(q('skeleton='))).toEqual({ kind: 'empty' });
+        expect(readSkeleton(q('skeleton=winding'))).toEqual({ kind: 'winding' });
+        expect(readSkeleton(q('skeleton=ROOMS'))).toEqual({ kind: 'rooms' });
+        expect(readSkeleton(q('skeleton= branchy '))).toEqual({ kind: 'branchy' });
+    });
+
+    it('REFUSES an unknown kind, naming the parameter AND the vocabulary', () => {
+        expect(() => readSkeleton(q('skeleton=spiral')))
+            .toThrow(/\?skeleton="spiral".*is not a skeleton kind.*empty, classic, corridor/s);
+    });
+
+    /**
+     * ⛓ THE OFFER IS THE READER'S BUSINESS, so a Seedling link naming a
+     * maze-only kind dies at READ time — before any generation and before the
+     * page draws anything — with the list this page can actually build.
+     */
+    it('REFUSES a kind this binding cannot run, and accepts it for one that can', () => {
+        expect(() => readSkeleton(q('skeleton=corridor'),
+            { simulator: false, substrate: 'the Seedling page' }))
+            .toThrow(/\?skeleton="corridor".*needs the maze simulator.*the Seedling page offers/s);
+        expect(readSkeleton(q('skeleton=corridor'), { simulator: true }))
+            .toEqual({ kind: 'corridor' });
+    });
+
+    /**
+     * ⚖ Open question 5: ONE parameter with a `;`-separated clause is the
+     * reserved spelling for kind parameters. ⛔ Until one exists, a clause
+     * REFUSES rather than being truncated to its head — a link that silently
+     * dropped `;minRoom=5` would build a room it does not describe.
+     */
+    it('REFUSES a parameter clause by name, rather than reading its head', () => {
+        expect(() => readSkeleton(q('skeleton=rooms;minRoom=5')))
+            .toThrow(/carries a PARAMETER CLAUSE.*reserved for the slice that adds one/s);
+    });
+
+    it('writes the LITERAL value, and DELETES the parameter at the default', () => {
+        expect(writeSkeletonParam(q('seed=3'), { kind: 'winding' }).toString())
+            .toBe('seed=3&skeleton=winding');
+        expect(writeSkeletonParam(q('seed=3&skeleton=winding'), { kind: 'empty' }).toString())
+            .toBe('seed=3');
+        expect(writeSkeletonParam(q('seed=3'), undefined).toString()).toBe('seed=3');
+    });
+
+    /**
+     * ⛓⛓ THE DELETE-THEN-SET ORDERING TRAP, one parameter over. `set` keeps an
+     * existing key's POSITION and a deleted key has none, so a writer that
+     * deleted first would move `?skeleton=` to the end of the bar on every
+     * rewrite — the string drifting while the run does not, which is exactly
+     * what the pages' fixed points exist to catch (GENERATE-UI slice 4 paid for
+     * this once on `?families=`).
+     */
+    it('REWRITES in place — a kind change does not move the parameter to the end', () => {
+        expect(writeSkeletonParam(q('skeleton=rooms&run=1'), { kind: 'winding' }).toString())
+            .toBe('skeleton=winding&run=1');
+    });
+
+    /** ⛔ §8.6's standing law: the writer refuses what the reader would refuse. */
+    it('REFUSES on the way OUT what it would refuse on the way in', () => {
+        expect(() => writeSkeletonParam(q(''), { kind: 'spiral' }))
+            .toThrow(/is not a skeleton kind/);
+        expect(() => writeSkeletonParam(q(''), { kind: 'corridor' }, { simulator: false }))
+            .toThrow(/needs the maze simulator/);
     });
 });

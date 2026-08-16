@@ -95,6 +95,14 @@ const SATURATION_K = num('k', 3);
  */
 const ANCHOR_TRIES = num('anchor-tries', 1);
 /**
+ * ⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — **THE ROOM THE LOOP STARTS FROM.** The
+ * default is the OPEN bordered room this CLI has always generated, so
+ * `--skeleton` absent produces exactly the level it produced before the kinds
+ * existed. ⛔ `classic` and `corridor` need the maze simulator and refuse BY
+ * NAME inside the binding — this file keeps no second list.
+ */
+const SKELETON = { kind: arg('skeleton', 'empty') };
+/**
  * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
  * `--templates=x,y` narrows the sub-roster this run may draw from; ABSENT is
  * the whole roster.
@@ -222,9 +230,11 @@ try {
         // with the same per-directive stream derivation the page uses.
         ? generateWithDirectives({
             seed: SEED, biome: BIOME, step: bounds.obstacleTarget, bounds, budget: BUDGET,
-            roster: ROSTER, directed: DIRECTED,
+            roster: ROSTER, directed: DIRECTED, skeleton: SKELETON,
         })
-        : generateSeedlingLevel({ seed: SEED, palette: PALETTE, bounds, budget: BUDGET });
+        : generateSeedlingLevel({
+            seed: SEED, palette: PALETTE, bounds, budget: BUDGET, skeleton: SKELETON,
+        });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — a distinct code, because
@@ -272,8 +282,15 @@ const payload = {
      * before this field existed does not falsely diverge.
      */
     directives: out.directives ?? [],
-    /** ⚖ Ruling 9(b)'s reserved block, so the constructive mode arrives additively. */
-    skeleton: out.skeleton ?? DEFAULT_SKELETON,
+    /**
+     * ⚖ Ruling 9(b)'s block, FILLED by slice 5. ⚠ `out.skeleton` exists only on
+     * a `generateWithDirectives` state (the page's shape); a plain
+     * `generateSeedlingLevel` returns the loop's own three fields, so the CLI's
+     * own `SKELETON` is the fallback rather than the constant — a payload that
+     * said `empty` about a `winding` run would be a report contradicting its
+     * own level.
+     */
+    skeleton: out.skeleton ?? SKELETON,
     /**
      * ⚠ THE BUDGET COMES FROM WHICHEVER OBJECT RAN. A `--count=0 --directed=…`
      * construction has NO ladder summary — nothing was drawn — but the

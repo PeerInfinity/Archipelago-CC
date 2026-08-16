@@ -146,7 +146,7 @@ import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
     generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
-    tileAtPoint, writeGenerateParams,
+    skeletonCatalogue, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
@@ -4337,6 +4337,13 @@ async function runGenerate(params, lifetime) {
     let biome = gp.biome;
     let bounds = { ...gp.bounds };
     const budget = { ...gp.budget };
+    /**
+     * ⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE ROOM THE LADDER IS BUILT IN. Read at
+     * the press like the seed and the biome (`readForm`), and a change RESETS
+     * the ladder for the same reason a changed seed does: step 3 of a
+     * `winding` room and step 4 of an `open` one are not two rungs of one run.
+     */
+    let skeleton = { ...gp.skeleton };
 
     /**
      * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
@@ -4408,6 +4415,33 @@ async function runGenerate(params, lifetime) {
     biomeSel.innerHTML = BIOME_NAMES
         .map((b) => `<option value="${b}">${b}</option>`).join('');
     biomeSel.value = biome;
+
+    /**
+     * ── ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON SELECTOR ──────────
+     *
+     * ⚖ Ruling 2's vocabulary, as a control. The kinds this binding OFFERS are
+     * selectable; the ones it cannot run (`classic`, `corridor` — they need the
+     * maze simulator) are listed DISABLED with the reason in their tooltip
+     * rather than hidden, because a list that silently dropped them could not
+     * answer *"why can't I pick that?"* — the same argument the catalogue's
+     * greyed exclusion rows already make.
+     *
+     * ⛔ IT IS NOT IN THE ROSTER BOX. The roster is what a RUN MAY DRAW FROM
+     * (a set, sampled, one checkbox per member); the kind is the room the run
+     * starts IN (exactly one, chosen, its own parameter). A kind with a
+     * checkbox would mean something the loop never asks.
+     */
+    const skeletonSel = $('genSkeleton');
+    skeletonSel.innerHTML = '';
+    for (const row of skeletonCatalogue({ simulator: false })) {
+        const opt = document.createElement('option');
+        opt.value = row.kind;
+        opt.textContent = `${row.kind}${row.isDefault ? ' (the open room)' : ''}`;
+        opt.disabled = !row.offered;
+        opt.title = row.offered ? row.description : `unavailable here — needs ${row.why}`;
+        skeletonSel.appendChild(opt);
+    }
+    skeletonSel.value = skeleton.kind;
 
     /**
      * ── ⛓⛓⛓ THE CATALOGUE, AND VERB 1's ONE CONTROL ───────────────────
@@ -4743,6 +4777,14 @@ async function runGenerate(params, lifetime) {
             roster: state.roster,
             catalogue: catalogueReadout,
             /**
+             * ⛓ CONSTRUCTIVE SLICE 5: the ROOM this level was built in, and
+             * the kinds this binding offers. ⛔ Read off the STATE, so a row
+             * asserting about the kind and the level it asserts against cannot
+             * be two different rooms.
+             */
+            skeleton: state.skeleton ?? null,
+            skeletons: skeletonCatalogue({ simulator: false }),
+            /**
              * ⛓ SLICE 5: the construction, and WHICH KIND OF KEEP each
              * directive was. ⛔ `keptKind` is reported RAW — the row asserts on
              * it, and a readout that collapsed `solved-no-verb` into
@@ -4841,6 +4883,10 @@ async function runGenerate(params, lifetime) {
             seed: state.seed,
             biome: state.biome,
             bounds: state.bounds,
+            // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
+            // screen was really CARVED from, so a link cannot name a skeleton
+            // the page did not build. DELETED at the open room by the writer.
+            skeleton: state.skeleton,
             // ⛓ SLICE 4: from the STATE, like every other parameter here — the
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
@@ -4917,9 +4963,19 @@ async function runGenerate(params, lifetime) {
         payload = null;
         const nextSeed = Number($('genSeed').value);
         const nextBiome = $('genBiome').value;
-        const reset = nextSeed !== seed || nextBiome !== biome;
+        /**
+         * ⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON KIND JOINS THE
+         * IDENTITY, so a change to it RESETS the ladder exactly as a changed
+         * seed or biome does. ⛔ The reason is the same and it is not a
+         * convenience: step 3 of a `winding` room followed by step 4 of an
+         * `open` one is a display that has never shown a level any single run
+         * produces. ⚠ Read from the SELECT at the press, never cached.
+         */
+        const nextKind = $('genSkeleton').value;
+        const reset = nextSeed !== seed || nextBiome !== biome || nextKind !== skeleton.kind;
         seed = nextSeed;
         biome = nextBiome;
+        skeleton = { kind: nextKind };
         bounds = {
             obstacleTarget: Number($('genCount').value),
             triesPerStep: Number($('genTries').value),
@@ -4985,7 +5041,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -5006,7 +5062,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton });
         await show(why);
     };
     /**
@@ -5156,7 +5212,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`CLEARED ${n} directive(s) — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
                 await show(`CLEARED ${n} directive(s) — back to seed ${seed}'s ladder at `
                     + `step ${step}`);
             }
@@ -5210,7 +5266,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton });
     await show('the SKELETON');
 
     if (gp.run || payload) {

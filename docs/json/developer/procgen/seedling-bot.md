@@ -8845,11 +8845,12 @@ SAME functions, so the two runtimes cannot disagree about what a construction is
 
 - **The constructive mode** (all-WALL start, carve, a new `reach-tile` goal) is
   the next arc, paired with rule-directed generation. This arc's two
-  don't-preclude obligations are discharged for the payload — `DEFAULT_SKELETON
-  = {kind:'empty-bordered'}` rides on every state and `agreementWithPayload`
-  compares it with a both-sides default — and **open for the URL**: there is no
-  `?skeleton=` yet, and when it lands it goes into the ONE reader and the ONE
-  writer together.
+  don't-preclude obligations are discharged for the payload — a
+  `DEFAULT_SKELETON` block rides on every state and `agreementWithPayload`
+  compares it with a both-sides default — and were open for the URL. ⛓ Both are
+  now closed by the constructive arc's slice 5 (below): `?skeleton=` landed in
+  the ONE reader and the ONE writer together, and the block's spelling moved
+  from `empty-bordered` to `empty`.
 - **Wave 2** — the weigh/kill door LANE offsets, each owing its own re-sweep.
 - **Free tile / object editing** — its own arc; this one stopped at the TEMPLATE
   boundary on purpose.
@@ -8933,3 +8934,86 @@ payload has ever had (the textareas are for TAPES and for boot BLOCKS), so a
 host `load` hands the payload object to `runGenerate` where the fetch would have
 produced it and the whole `?gen=` comparison runs unchanged. Panel README:
 `frontend/modules/procgenLabPanel/README.md`.
+
+### Slice 5 — the CARVED SKELETON KINDS, and `?skeleton=`
+
+**The second mode's first half is live in both substrates.** ⚖ Ruling 2 —
+*"reuse the maze algorithms, and keep the naming consistent"* — is now literal:
+the constructive skeleton kinds ARE the maze biome names, from ONE table in
+`procgenCore/skeletonKinds.js` that `mazeRoomBiomeLibrary.js` re-exports. (The
+table had to MOVE rather than be re-exported from a neutral file, because
+`seedlingDemo/` may not import `mazeRoom/` and a re-export still imports what it
+re-exports.) The kinds, what each carves, and the new `winding` are in
+`maze.md`, "Biomes and wall backends".
+
+**What the Seedling binding does with a kind.** `seedlingModel({seed, skeleton:
+{kind}})` builds a plain `gridTiles.js` grid the size of the room, hands it to
+the kind's backend and post-processors under the model's own `roomRng`, and
+paints the resulting floor cells back as `ground` over an
+`emptyLevel({floor:'wall'})` — ⚖ ruling 1's *"a map filled with walls"* as a
+starting state rather than a paint order. Three facts about that grid are
+load-bearing:
+
+- **The ring is handed in already walled.** The tree backends would wall it
+  themselves, but `recursive_division` starts from the all-floor grid and only
+  ADDS walls — on a bare grid it would return a room whose border is floor, and
+  `emptyLevel`'s own docblock says why that is not a room. Checked on the way
+  out, not assumed.
+- **The lattice is 4×4 cells at odd coordinates on a 10×10 room**, so the tree
+  kinds never use column 8 or row 8 — 7×7 effective. A goal drawn into that
+  strip is not stranded: `connectFixedTiles` L-carves it to the nearest cell.
+- **`repairConnectivity` is not called from the binding** for any kind: the tree
+  backends are connected by construction and `recursive_division` calls it
+  inside its own `run`. The honest net for a skeleton that does not solve is the
+  LOOP's — `generateLevel` refuses to start, by name, with the oracle's text.
+
+**⛓ THE DRAW ORDER IS THE IDENTITY.** The goal cell is the room stream's FIRST
+draw and the carve's draws come after it, in both bindings — so *the goal of
+seed s under kind K is the goal of seed s under `empty`*, and the constructive
+kinds do not expire the empty-room seed→level pairs. The carve itself runs ONCE,
+at model construction, so `skeleton()` is a pure accessor: a carve per call
+would hand out a different room each time from one seed.
+
+**⛔ At the default kind nothing carves.** `empty` is not "the `empty` backend";
+it is the open bordered room this binding has always built, and both bindings
+short-circuit it. So the byte-identity promise is a code path that never
+executes rather than a comparison that happens to pass — measured anyway: seeds
+1..40 × both palettes at the default bounds are byte-identical, the R8 battery
+is `1fedb0ab…` unchanged, and the generated-set round trip is unchanged.
+
+**The rename, and what it cost.** `DEFAULT_SKELETON.kind` was `empty-bordered`
+here and `open-room` on the maze lab page; both are now `empty` — the maze
+biome table's own name for the open room, and ⚖ ruling 2 says there is one
+vocabulary. The Seedling room keeps its wall ring; the ring is a fact about
+`emptyLevel`, not about the kind. ⚠ An OLD payload spelling `empty-bordered`
+now DIVERGES BY NAME in `agreementWithPayload` — that is the check working, not
+a shim to write. Measured cost, whole: two constants, two test assertions, one
+docs line, and the ten per-level payload md5s the acceptance batch prints (the
+`skeleton` field is in the payload; the LEVELS, the kept lists, the tick counts
+and every requirements verdict are unchanged — proved by diffing a payload with
+the kind string normalised away). Nothing else in the repo carried either
+spelling.
+
+**The URL.** `?skeleton=<kind>` lives in the ONE reader and the ONE writer
+(`procgenCore/urlParams.js`), for both pages. Absent means `empty`; the writer
+DELETES the parameter at the default rather than writing it (and rewrites in
+place, so a kind change does not move the parameter to the end of the bar — the
+delete-then-set trap `?families=` paid for once). A kind this binding cannot run
+refuses at READ time with the list it does offer; an unknown kind refuses with
+the whole vocabulary; a `;`-separated parameter clause refuses too, because no
+kind takes parameters yet and truncating one to its head would build a room the
+link does not describe. Both generate forms carry a **skeleton selector** —
+`classic` and `corridor` are listed DISABLED with their reason rather than
+hidden — and changing it RESETS the ladder to the skeleton and says so, because
+the room a ladder is built in is part of the level's identity exactly as the
+seed is. Both CLIs take `--skeleton=`.
+
+**What it measures.** `scripts/procgen/census-skeleton-kinds.mjs` (seeds 1..24,
+both bindings): **every kind solves at every seed — 0 refused at step 0.** The
+number worth carrying is the FLOOR fraction, which is what pass 2 has to work
+with: 100% at `empty`, ~70% at `rooms`, ~50% at the tree kinds, **25% at
+`winding`** on Seedling. ⛔ That is NOT the yield table — pass 2 never runs
+there. Pass 2 over a carved corridor is Probe 2's measurement and it is now
+reproducible end to end: `generate-seedling-level.mjs --seed=3 --count=1
+--skeleton=winding` SATURATES with 0 kept over 24 attempts, while the same call
+on the maze keeps doors and reverts walls. That asymmetry is slice 6's subject.

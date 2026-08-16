@@ -32,7 +32,7 @@ import {
     agreementWithTrace, applyDirective, describeKeptKind, describeState, directedCost,
     displaySolve, displayStaging, formatDirectives, generateStep, generateWithDirectives,
     generationRows, keptTemplatesOf, ladderCost, paletteFor, parseDirective, parseDirectives,
-    readGenerateParams, stepFromParams, tileAtPoint, writeGenerateParams,
+    readGenerateParams, skeletonCatalogue, stepFromParams, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 import { atlasOf, terrainAt } from './procgenLevel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -1239,7 +1239,13 @@ describe('⛓ the payload carries the construction, and an OLD one does not fals
         it('⚖ ruling 9(b): the SKELETON block is reserved, named, and compared', () => {
             const s = stateFor();
             expect(s.skeleton).toEqual(DEFAULT_SKELETON);
-            expect(DEFAULT_SKELETON.kind).toBe('empty-bordered');
+            /**
+             * ⛓⛓ SLICE 5 RENAMED IT: `empty-bordered` -> `empty`, ⚖ ruling 2's
+             * one vocabulary. ⛔ The value is asserted as a LITERAL rather than
+             * against the constant it came from — a rename that missed one of
+             * its two spellings would still satisfy `toEqual(DEFAULT_SKELETON)`.
+             */
+            expect(DEFAULT_SKELETON.kind).toBe('empty');
             const other = {
                 seed: s.seed, biome: s.biome, roster: s.roster, directives: s.directives,
                 skeleton: { kind: 'all-wall-carved' }, level: s.record, trace: s.trace,
@@ -1488,5 +1494,111 @@ describe('⛓ `stepFromParams` — ONE reader of the `run` + `count` encoding', 
             bounds: { ...DEFAULT_BOUNDS, obstacleTarget: 2 }, step: 2,
         });
         expect(stepFromParams(readGenerateParams(`?${search}`))).toBe(2);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?skeleton=` ON THE SEEDLING PAGE — CONSTRUCTIVE-MODE SLICE 5
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('watchGenerate — the skeleton kind', () => {
+    const args = (over = {}) => ({
+        seed: 3, biome: 'pre-sword', step: 0, bounds: DEFAULT_BOUNDS, ...over,
+    });
+
+    it('carries the kind onto every state, and defaults to the open room', () => {
+        expect(generateStep(args()).skeleton).toEqual({ kind: 'empty' });
+        expect(generateStep(args({ skeleton: { kind: 'winding' } })).skeleton)
+            .toEqual({ kind: 'winding' });
+        /**
+         * ⚠ AT THE SMALLEST BOUNDS THE LOOP TAKES, and the reason is Probe 2's
+         * measurement: a candidate that SEALS a corridor makes the planner run
+         * to its cap before refusing, so a default-bounds rung on a `winding`
+         * room costs ~10 s. The claim here is that the kind REACHES the loop,
+         * which one try answers as well as eight; the yield table (slice 6) is
+         * where the cost itself gets measured.
+         */
+        expect(generateStep(args({
+            step: 1,
+            skeleton: { kind: 'winding' },
+            bounds: { ...DEFAULT_BOUNDS, triesPerStep: 1, saturationK: 1 },
+        })).skeleton).toEqual({ kind: 'winding' });
+    });
+
+    it('REFUSES a kind Seedling cannot build, by name, before any solve', () => {
+        expect(() => generateStep(args({ skeleton: { kind: 'corridor' } })))
+            .toThrow(/needs the maze simulator.*the Seedling binding offers/s);
+    });
+
+    /**
+     * ⛔ THE VALUE IS CHECKED AGAINST A LITERAL THIS FILE STATES. A round trip
+     * tests self-consistency and never correctness — a reader and a writer that
+     * both said `windy` would agree forever.
+     */
+    it('reads and writes ?skeleton= — the literal value, and ABSENCE at the default', () => {
+        expect(readGenerateParams('?source=generate&seed=3').skeleton).toEqual({ kind: 'empty' });
+        expect(readGenerateParams('?source=generate&skeleton=winding').skeleton)
+            .toEqual({ kind: 'winding' });
+        const written = writeGenerateParams('', {
+            seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            skeleton: { kind: 'winding' },
+        });
+        expect(written).toContain('skeleton=winding');
+        expect(writeGenerateParams('', {
+            seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+        })).not.toContain('skeleton');
+    });
+
+    it('a ?skeleton= the page cannot build REFUSES at READ time, with the offer list', () => {
+        expect(() => readGenerateParams('?source=generate&skeleton=classic'))
+            .toThrow(/\?skeleton="classic".*the Seedling page offers/s);
+        expect(() => readGenerateParams('?source=generate&skeleton=spiral'))
+            .toThrow(/is not a skeleton kind/);
+    });
+
+    /** ⛓ The fixed point, AFTER the independent value check above. */
+    it('round-trips: what the writer wrote, the reader reads back', () => {
+        const url = writeGenerateParams('', {
+            seed: 7, biome: 'post-sword', bounds: DEFAULT_BOUNDS, step: 2,
+            skeleton: { kind: 'rooms' },
+        });
+        expect(readGenerateParams(`?${url}`).skeleton).toEqual({ kind: 'rooms' });
+    });
+
+    /**
+     * ⚖ GENERATE-UI §13.3 item 12's expected behaviour, arriving: an OLD
+     * payload spelling `empty-bordered` names a skeleton this page does not
+     * build, and the check says WHICH FIELD disagreed rather than reporting an
+     * unexplained level difference.
+     */
+    it('an old `empty-bordered` payload DIVERGES BY NAME rather than silently', () => {
+        const s = generateStep(args({ step: 1 }));
+        const old = {
+            seed: s.seed, biome: s.biome, roster: s.roster, directives: s.directives,
+            skeleton: { kind: 'empty-bordered' }, level: s.record, trace: s.trace,
+        };
+        const check = agreementWithPayload(old, s);
+        expect(check.differences).toContain('skeleton');
+        expect(check.agrees).toBe(false);
+    });
+
+    /**
+     * ⛔ THE IDENTITY LINE NAMES THE KIND ONLY WHEN IT IS NOT THE OPEN ROOM. A
+     * clause on every level trains a reader to skip it.
+     */
+    it('names the kind in the identity line — and only when it is carved', () => {
+        expect(describeState(generateStep(args()))).not.toMatch(/skeleton: /);
+        const line = describeState(generateStep(args({ skeleton: { kind: 'winding' } })));
+        expect(line).toMatch(/skeleton: winding \(CARVED, not the open room\)/);
+        expect(line).toMatch(/the SKELETON — a winding CARVE and its goal/);
+    });
+
+    it('offers the catalogue with the two simulator-bound kinds GREYED and reasoned', () => {
+        const rows = skeletonCatalogue({ simulator: false });
+        expect(rows.find((r) => r.kind === 'corridor').offered).toBe(false);
+        expect(rows.find((r) => r.kind === 'corridor').why).toMatch(/maze simulator/);
+        expect(rows.find((r) => r.kind === 'empty').isDefault).toBe(true);
+        expect(rows.filter((r) => r.offered).map((r) => r.kind))
+            .toEqual(['empty', 'branchy', 'bushy', 'loopy', 'open', 'rooms', 'winding']);
     });
 });

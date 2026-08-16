@@ -1609,5 +1609,118 @@ if (!host) {
         + 'route, so it is not available under --host=. Run without --host= for it.');
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 8 — `?skeleton=` (CONSTRUCTIVE-MODE SLICE 5)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The Seedling half of the constructive mode, in the browser. ⛔ THE VALUES ARE
+ * ASSERTED AGAINST LITERALS THIS FILE STATES, never against a round trip: a
+ * fixed point tests self-consistency and never correctness.
+ *
+ * ⚠ THE BOUNDS ARE DELIBERATELY TINY. Probe 2 measured it and the CLI confirms
+ * it: pass 2 over a carved corridor saturates, and a candidate that SEALS the
+ * corridor makes the planner run to its cap before refusing (a default-bounds
+ * saturated run took 106 s). The claim here is that the KIND reaches the loop
+ * and produces a ROW — the yield table (slice 6) is where the cost is measured.
+ */
+{
+    const KIND = 'winding';
+    const CARVED = { seed: 3, biome: 'pre-sword', count: 1, tries: 1, k: 1 };
+    const nodeCarvedSkeleton = generateStep({
+        seed: CARVED.seed, biome: CARVED.biome, step: 0, skeleton: { kind: KIND },
+    });
+    const nodeOpenSkeleton = generateStep({ seed: CARVED.seed, biome: CARVED.biome, step: 0 });
+
+    const q = `source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}`
+        + `&count=${CARVED.count}&tries=${CARVED.tries}&k=${CARVED.k}&skeleton=${KIND}`;
+    const web = await load(q);
+    check(web.gen.status === 'ok', 'the arm mounted under ?skeleton=' + KIND,
+        web.gen.message ?? web.gen.status);
+    check(json(web.gen.skeleton) === json({ kind: KIND }),
+        `⛓ ?skeleton=${KIND} reached the MODEL — the state names the kind`,
+        json(web.gen.skeleton));
+    /**
+     * ⛔ THE CLAIM THAT CANNOT BE SATISFIED BY ECHOING THE PARAMETER: the room
+     * the page drew is node's own CARVED skeleton, byte for byte, and it is NOT
+     * the open room the same seed produces.
+     */
+    check(json(web.level) === json(nodeCarvedSkeleton.record),
+        '⛓⛓ …and the room on screen IS node\'s carved skeleton, byte for byte');
+    check(json(web.level) !== json(nodeOpenSkeleton.record),
+        '⛔ …and it is NOT the open room the same seed builds — the parameter did work, '
+        + 'not just get echoed');
+    check(/skeleton: winding \(CARVED, not the open room\)/.test(web.gen.identity ?? ''),
+        'the identity line NAMES the carved kind', web.gen.identity);
+    // ⚠ `load()`'s object has no address bar in it — `panelOf()` is where this
+    // page reads one, and it is the same helper every other URL claim uses.
+    const carvedPanel = await panelOf();
+    check(new URLSearchParams(carvedPanel.url).get('skeleton') === KIND,
+        '⛓ the bar still names it — ?skeleton=winding', carvedPanel.url);
+
+    /** ⛓ THE SELECTOR shows the kind the URL asked for, and greys what Seedling cannot run. */
+    const selector = await page.evaluate(() => {
+        const sel = document.getElementById('genSkeleton');
+        return {
+            value: sel?.value ?? null,
+            options: [...(sel?.options ?? [])].map((o) => ({
+                v: o.value, disabled: o.disabled, title: o.title,
+            })),
+        };
+    });
+    check(selector.value === KIND, 'the SKELETON selector shows the kind the URL named',
+        json(selector.value));
+    check(selector.options.map((o) => o.v).join(',')
+        === 'empty,classic,corridor,branchy,bushy,loopy,open,rooms,winding',
+        'the selector lists the WHOLE vocabulary — one set of names, both substrates',
+        json(selector.options.map((o) => o.v)));
+    const greyed = selector.options.filter((o) => o.disabled).map((o) => o.v);
+    check(json(greyed) === json(['classic', 'corridor']),
+        '⛔ …with exactly the two simulator-bound kinds GREYED rather than hidden',
+        json(greyed));
+    check(/maze simulator/.test(selector.options.find((o) => o.v === 'corridor')?.title ?? ''),
+        '…and the greyed row carries its REASON, so "why can\'t I pick that?" has an answer',
+        selector.options.find((o) => o.v === 'corridor')?.title);
+
+    /** ⛓ STEP produces a ROW on a carved room — Probe 2's outcome, whatever it is. */
+    await page.click('#genStep');
+    await settled(1, CARVED.seed);
+    const stepped = await page.evaluate(() => ({
+        step: window.__editorGenerate.step,
+        rows: window.__editorGenerate.genRows,
+        vetoes: window.__editorGenerate.vetoes,
+        skeleton: window.__editorGenerate.skeleton,
+    }));
+    check(stepped.step === 1 && stepped.rows > 0,
+        '⛓ STEP on a CARVED room produces attempt row(s) — a saturating pass 2 is still a '
+        + 'pass 2, and the page shows what happened',
+        `step ${stepped.step}, ${stepped.rows} row(s), ${json(stepped.vetoes)}`);
+    check(json(stepped.skeleton) === json({ kind: KIND }),
+        '…and the kind survived the press', json(stepped.skeleton));
+
+    /** ⛔ THE DEFAULT IS SPELLED BY ABSENCE. */
+    const open = await load(`source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=1`);
+    const openPanel = await panelOf();
+    check(new URLSearchParams(openPanel.url).get('skeleton') === null,
+        '⛔ the writer DELETES ?skeleton= at the open room rather than writing the default',
+        openPanel.url);
+    check(!/skeleton: /.test(open.gen.identity ?? ''),
+        '…and the identity line stays silent about the kind when it is the open room',
+        open.gen.identity);
+    check(json(open.level) === json(nodeOpenSkeleton.record),
+        '…and the open room is still node\'s own open room, byte for byte');
+
+    /** ⛔ A KIND SEEDLING CANNOT BUILD REFUSES BY NAME, at READ time. */
+    await page.goto(`${origin}${PAGE_PATH}?source=generate&skeleton=corridor`,
+        { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorParams?.status === 'refused',
+        null, { timeout: 60000 });
+    const refusedKind = await page.evaluate(() => window.__editorParams);
+    check(/\?skeleton="corridor"/.test(refusedKind.message ?? '')
+        && /needs the maze simulator/.test(refusedKind.message ?? '')
+        && /the Seedling page offers/.test(refusedKind.message ?? ''),
+        '⛔ ?skeleton=corridor REFUSES BY NAME, with what it needs AND what IS offered',
+        refusedKind.message);
+}
+
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
 await finish(failed ? 1 : 0);
