@@ -298,8 +298,28 @@ const ILLEGAL_CLICK = { tx: 3, ty: 1 };
 
 const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
     template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
-const REVERTED_CASE = { seed: 4, biome: 'pre-sword', step: 4,
-    template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
+/**
+ * ⛓⛓ RE-PICKED at PROCGEN ELEMENTS arc 3 slice 1 (trap 285 — the scan, the
+ * target and the count are named). `arrow-lane` leaving the roster moved every
+ * draw, and seed 4's `wall-gap-block(ori=v,gap=1)` at step 4 now reports
+ * NO_ANCHOR rather than REVERTED — a subject that no longer reaches the class
+ * this claim is about.
+ *
+ * SCANNED: pre-sword, seeds 1..8 × steps {0, 2, 4} × six door instantiations
+ * (`wall-gap-block` ori×gap ∈ {v1, h2, v3, h5}, `wall-gap-lock-weigh` ori×2),
+ * for a DIRECTED attempt whose outcome is REVERTED — **exactly THREE remain**:
+ * `wall-gap-lock-weigh(ori=h)` seed 1 step 2 (walked 1 of 1),
+ * `(ori=v)` seed 4 step 2 (1 of 1), and `(ori=v)` seed 7 step 0 (**5 of 5**).
+ *
+ * ⛔ SEED 7 IS TAKEN because it WALKS ITS WHOLE OFFERED LIST — 5 anchors
+ * offered, 5 walked, then REVERTED — so the claim below grades a walk that
+ * really exhausted the room rather than one anchor that happened to fail.
+ * ⚠ AND `wall-gap-block` NO LONGER PRODUCES ONE AT ALL in that space: the
+ * REVERTED class is now reached only through the weigh lock. Named rather than
+ * left for the next slice to rediscover.
+ */
+const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 0,
+    template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
 const SOLVED_ONLY_CASE = { seed: 2, biome: 'pre-sword', step: 0,
     template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
 
