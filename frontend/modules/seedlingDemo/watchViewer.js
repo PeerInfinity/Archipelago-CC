@@ -4423,12 +4423,19 @@ async function runGenerate(params, lifetime) {
      * really built from. A mirror beside it would be the two-spellings failure
      * mode with the page's own identity in it.
      *
-     * ⛓ These are the SPECS a `?directed=` load must replay after the ladder
-     * reaches its target. ⛔ Applied through the SAME `applyDirective` a press
-     * uses, at the same indices — one construction path, so a copied link and a
-     * hand-pressed sequence cannot diverge.
+     * ⛓⛓ SLICE 12 — AND THEY COME FROM THE **PAYLOAD** NOW, not from the bar
+     * (⚖ §3.9). These are the directives a `?gen=` / `procgenLab:load` must
+     * replay after the ladder reaches its target. ⛔ Applied through the SAME
+     * `applyDirective` a press uses, AT THE SAME INDICES — a payload's
+     * `directives` array order IS the index, so nothing is re-indexed and
+     * `directiveSeed`'s index-as-salt keeps meaning what it meant.
+     *
+     * ⚠ A RECORDED directive is a superset of a spec, and the part that matters
+     * is that its `params` are the RESOLVED values: a replay therefore spends
+     * NO draw where the original spent one, which is what the two salted
+     * streams exist for and what makes the reproduction byte-exact.
      */
-    let pendingDirected = gp.directed ?? null;
+    let pendingDirected = null;
     /**
      * ⛓⛓ SLICE 4 — A HOST'S `procgenLab:load`, WHERE THE FETCH WOULD HAVE BEEN.
      * ⛔ ONE RECONSTRUCTION: the object replaces the fetch's RESULT and nothing
@@ -4454,6 +4461,12 @@ async function runGenerate(params, lifetime) {
          * run has.
          */
         roster = payload.roster ?? null;
+        /**
+         * ⛓⛓⛓ SLICE 12 — THE PAYLOAD IS THE DIRECTIVE CHANNEL. ⚠ `?? null`
+         * because a payload written before slice 5 names none, and "no
+         * directives" is exactly what a plain ladder run has.
+         */
+        pendingDirected = payload.directives ?? null;
     }
 
     $('genSeed').value = String(seed);
@@ -4796,7 +4809,9 @@ async function runGenerate(params, lifetime) {
                 + ' applied. The prefix property does NOT cross either, so STEP and RUN-ALL '
                 + 'will RESET to the skeleton and DROP them — the same reset a changed seed '
                 + 'causes, and for the same reason (this level is not one any single ladder '
-                + 'run produces). Download or copy the URL first if you want to keep it.'
+                + 'run produces). ⛔ Download the PAYLOAD first if you want to keep it — '
+                + 'since slice 12 the URL names the LADDER alone, and `?gen=` of that file '
+                + 'replays the directives and the edits in order.'
                 + (nEdits
                     ? ' ⛔ And ATTEMPT / AT… are REFUSED while edits stand: the payload '
                         + 'carries `directives` and `edits` as two lists, which means exactly '
@@ -5276,10 +5291,9 @@ async function runGenerate(params, lifetime) {
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
             roster: state.roster,
-            // ⛓ SLICE 5: from the STATE, like every other parameter here — the
-            // directives the record on screen really carries, so a link cannot
-            // name a construction the page did not perform.
-            directives: state.directives,
+            // ⛔ SLICE 12: NO `directives` ARGUMENT — ⚖ §3.9 took the list off
+            // the bar, so the writer has no such parameter and a link names the
+            // LADDER alone. `describeState` says so as soon as there is one.
             step,
             payloadOwned: Boolean(payload),
         });
@@ -5965,7 +5979,7 @@ async function runGenerate(params, lifetime) {
         await goTo(bounds.obstacleTarget, payload ? '?gen= reproduction' : 'RUN-ALL (?run=1)');
     }
     /**
-     * ── ⛓⛓⛓ `?directed=` — THE CONSTRUCTION A LINK NAMES (slice 5) ────────
+     * ── ⛓⛓⛓ THE PAYLOAD'S DIRECTIVES, REPLAYED (slice 5, re-channelled 12) ─
      *
      * ⛔ AFTER the ladder and BEFORE the payload check, because that is the
      * order the identity is defined in: *seed S's ladder to step k, THEN N
@@ -5974,21 +5988,25 @@ async function runGenerate(params, lifetime) {
      *
      * ⛔ THE SAME `applyDirective` A PRESS USES, AT THE SAME INDICES. One
      * construction path (`watchGenerate.generateWithDirectives` is the CLI's
-     * and the tests' entry into it), so a copied link and a hand-pressed
+     * and the tests' entry into it), so a loaded payload and a hand-pressed
      * sequence cannot produce different levels.
+     *
+     * ⛓ SLICE 12: the source is `payload.directives` — `?directed=` is gone
+     * from the bar, so this is the ONLY channel a directive list travels on
+     * into a fresh page, and the edits below ride the same one.
      */
     if (pendingDirected?.length && lifetime.alive()) {
         for (const [i, spec] of pendingDirected.entries()) {
             if (!lifetime.alive()) return;
             $('status').className = '';
-            $('status').textContent = `?directed= replaying directive ${i + 1} of `
+            $('status').textContent = `?gen= replaying directive ${i + 1} of `
                 + `${pendingDirected.length}: ${spec.template}…`;
             await new Promise((r) => requestAnimationFrame(r));
             if (!lifetime.alive()) return;
             state = applyDirective(state, spec, i);
         }
         pendingDirected = null;
-        const out = await show(`?directed= — ${state.directives.length} directive(s) replayed`);
+        const out = await show(`?gen= — ${state.directives.length} directive(s) replayed`);
         if (!out.drew) return;
     }
     /**
@@ -5998,14 +6016,14 @@ async function runGenerate(params, lifetime) {
      * identity is defined in (`applyDirective`'s backstop): *seed S's ladder to
      * step k, THEN N directed attempts, THEN E manual edits.*
      *
-     * ⛓⛓ **AND WHY THE EDITS COME FROM THE PAYLOAD WHERE THE DIRECTIVES COME
-     * FROM THE URL** — the asymmetry is ⚖ ruling 9 and not an oversight. A
-     * directive IS expressible in a URL (`?directed=`), so `?gen=` leaves it to
-     * the bar and a payload carrying directives still needs them spelled there.
-     * An edit is expressible in NO URL, by ruling, so the payload is the only
-     * channel it has and this path is the only way an edited level can come
-     * back at all. ⇒ `?gen=` and `procgenLab:load` REPRODUCE an edited level
-     * byte for byte, and the cross-runtime determinism claim survives editing.
+     * ⛓⛓ **AND THE ASYMMETRY SLICE 11 RECORDED IS GONE** (slice 12, ⚖ §3.9).
+     * It used to be that a directive was expressible in a URL (`?directed=`)
+     * and an edit was not, so `?gen=` replayed the edits and left the
+     * directives to the bar. The user's ruling removed the parameter, so BOTH
+     * legs now travel on the payload and are replayed here in the identity's
+     * own order. ⇒ `?gen=` and `procgenLab:load` REPRODUCE a directed AND
+     * edited level byte for byte, and the cross-runtime determinism claim
+     * covers the whole construction rather than two thirds of it.
      *
      * ⛔ THROUGH `watchEdit.editStates` — the SAME fold the click handler, UNDO
      * and `generateWithDirectives({edits})` use. One reconstruction.

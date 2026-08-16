@@ -65,7 +65,7 @@ import {
  *
  * ⚖ Kickoff §3.4 made the lift CONDITIONAL and the condition was measured (see
  * `urlParams.js`'s docblock): the bounds grammar, the roster grammar with its
- * scoped delete, the `run`+`count` step encoding, the WHOLE `?directed=`
+ * scoped delete, the `run`+`count` step encoding, the WHOLE DIRECTIVE
  * grammar, the two salted directive streams, `generationRows`,
  * `describeKeptKind`, `tileAtPoint` and the two cost models are >70% of the two
  * functions and the maze lab page needs every one of them spelled identically.
@@ -84,9 +84,9 @@ import {
  * ladder step + roster; the maze's is room size + expansions + manual edits).
  */
 import {
-    ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readBounds,
-    readRosterSpec, readSkeleton, writeBounds, writeDirectedParam, writeInt, writeRosterParam,
-    writeRunFlag, writeSkeletonParam,
+    ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
+    readBounds, readRosterSpec, readSkeleton, refuseDirectedParam, writeBounds, writeInt,
+    writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
     POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, instantiateKept, normalizeRoster,
@@ -219,6 +219,16 @@ export function readGenerateParams(search) {
     const source = (q.get('source') || '').toLowerCase();
     const gen = q.get('gen');
     const biome = (q.get('biome') || 'pre-sword').toLowerCase();
+    /**
+     * ⛓⛓⛓ CONSTRUCTIVE SLICE 12 — `?directed=` IS REFUSED BY NAME, FIRST.
+     *
+     * ⚖ §3.9's ruling: a URL names what a person LAUNCHES; a directive list is
+     * a CONSTRUCTION and rides the payload. ⛔ Refused BEFORE any other
+     * parameter is read so an old link's FIRST answer is the one that explains
+     * where its directives went, rather than a refusal about some other key it
+     * also carries.
+     */
+    refuseDirectedParam(q, { substrate: 'the Seedling page' });
     if (q.get('budgetms') !== null) {
         // eslint-disable-next-line no-console
         console.warn('watchGenerate: ?budgetms is GONE and was IGNORED. Elapsed time no '
@@ -239,15 +249,14 @@ export function readGenerateParams(search) {
          */
         roster: normalizeRoster(paletteFor(biome), readRosterSpec(q)),
         /**
-         * ⛓ SLICE 5 — VERB 2. `null` is "no directives"; otherwise the ordered
-         * list of SPECS, each validated against this biome's own palette. ⚠ It
-         * is read AFTER the roster on purpose: a directive names a template,
-         * and the palette a directive is checked against is the biome's WHOLE
-         * roster rather than the restricted one — verb 1 says what a RUN may
-         * draw from, and verb 2 is the user naming a template by hand.
+         * ⛔⛔ SLICE 12 — **THERE IS NO `directed` FIELD HERE ANY MORE.** Slice
+         * 5's verb 2 is alive (the ATTEMPT button, the CLI's `--directed=`, the
+         * payload's `directives`, all one grammar), but the URL is not one of
+         * its channels: `?directed=` is REFUSED above, and `?gen=` /
+         * `procgenLab:load` carry the list. A field that could only ever be
+         * `null` would be one every caller keeps checking for a value it can
+         * never hold.
          */
-        directed: q.get('directed') === null
-            ? null : parseDirectives(q.get('directed'), paletteFor(biome)),
         /**
          * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — THE ROOM THE LOOP STARTS FROM.
          * Absent is `empty` (the open bordered room). ⛔ A kind this binding
@@ -316,15 +325,19 @@ export function readGenerateParams(search) {
  * with no `?run=` already shows — so `run` is DELETED there rather than spelt
  * `run=0`, which would be a second way to say the same absence.
  *
- * ── ⛔⛔ AND IT DOES NOT LEARN ABOUT MANUAL EDITS (slice 11, ⚖ ruling 9) ──
+ * ── ⛔⛔ AND IT LEARNS ABOUT NEITHER EDITS NOR DIRECTIVES (slices 11+12) ──
  *
  * There is no `edits` parameter in this signature and there must not be one.
  * ⚖ *"It's okay to not include the manual edits"* — a URL is an INSTRUCTION
  * (a run somebody could type) and an edit list is a CONSTRUCTION, which is the
- * payload's job and which it does byte-exactly (`agreementWithPayload`). ⛔ The
- * consequence is stated ON THE PAGE rather than left to be discovered:
- * `describeState` prints *"the URL is NOT a reproduction after edits"* the
- * moment there is one.
+ * payload's job and which it does byte-exactly (`agreementWithPayload`).
+ *
+ * ⛓⛓ SLICE 12 APPLIED THE SAME SENTENCE TO THE **DIRECTIVES** (⚖ §3.9), so
+ * there is no `directives` parameter either: what this writes is the LAUNCH of
+ * the ladder the construction started from. ⛔ The consequence is stated ON THE
+ * PAGE rather than left to be discovered: `describeState` prints *"the URL is
+ * NOT a reproduction of this construction — it names the LADDER alone"* the
+ * moment there is a directive or an edit.
  *
  * ── ⛔ `?gen=` IS AN IDENTITY, NOT A BOUND ────────────────────────────
  *
@@ -349,7 +362,7 @@ export function readGenerateParams(search) {
  * the budget the run on screen was certified under.
  */
 export function writeGenerateParams(search, {
-    seed, biome, bounds, step, roster = null, directives = null, payloadOwned = false,
+    seed, biome, bounds, step, roster = null, payloadOwned = false,
     skeleton = DEFAULT_SKELETON,
 } = {}) {
     const q = new URLSearchParams(search);
@@ -401,24 +414,27 @@ export function writeGenerateParams(search, {
     // name no roster at all, which is a different claim than this one.
     writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
     /**
-     * ── ⛓⛓ SLICE 5: THE DIRECTIVES, THE ARC'S SECOND NON-INTEGER PARAM ──
+     * ── ⛓⛓⛓ SLICE 12: THE DIRECTIVES ARE **NOT** WRITTEN, EVER ──────────
      *
-     * ⛔ Written from the STATE's directive list like every other parameter
-     * here, and through `formatDirectives`, which REFUSES what
-     * `parseDirectives` would refuse — an unknown template, a missing
-     * parameter value, a value outside its domain, an unspellable policy.
-     * §8.6's standing law: a URL this page cannot reload must not be
-     * writable in the first place.
+     * ⚖ §3.9's ruling. Slice 5 wrote the whole construction into the bar;
+     * slice 12 took it out and gave it to the payload, so this writer has no
+     * `directives` argument at all — a parameter it accepted and ignored would
+     * be a signature that lies about what the URL carries.
      *
-     * ⛓ AND THE PARAMETERS ARE WRITTEN IN **SCHEMA ORDER** rather than in the
-     * order the values object happens to hold them, so the fixed point holds
-     * whether a value was typed by the form or DRAWN by an "any" choice.
+     * ⛔ AND IT DELETES A KEY IT FINDS, for the reason `?skeleton=` is deleted
+     * at its default and with §8.6's law pointing the other way: the READER
+     * refuses `?directed=`, so a bar still carrying one is a bar this page
+     * cannot reload, and a writer that copied it forward would hand back a
+     * dead link. ⚠ Unreachable on a booted page by construction (the reader
+     * refuses before the page mounts, so no state exists to rewrite from a bar
+     * that has one) — kept because "this writer owns this key" is the property.
      *
-     * ⚠ `?directed=` IS DELETED WHEN THERE ARE NO DIRECTIVES, never written
-     * empty — the same rule `?families=` follows, and the reader refuses an
-     * empty value for the same reason.
+     * ⛓ WHAT A DIRECTED LEVEL'S URL THEN IS: the LAUNCH URL of its ladder
+     * alone — seed, biome, skeleton, bounds, `run` — and `describeState` says
+     * so in words the moment there is a directive or an edit, so the reader is
+     * never left to infer it from an address that looks complete.
      */
-    writeDirectedParam(q, directives, paletteFor(biome));
+    dropDirectedParam(q);
     writeRunFlag(q, step);
     return q.toString();
 }
@@ -1002,10 +1018,16 @@ export function describeState(state, solved = null) {
      * not the level on screen. ⛔ The page says so where the identity is stated,
      * in the maze page's own words (one wording across the two substrates), and
      * only when it is true.
+     *
+     * ⛓⛓ SLICE 12 WIDENED THE CONDITION AND KEPT THE SENTENCE. The URL writer
+     * no longer learns about DIRECTIVES either (⚖ §3.9), so the bar names the
+     * ladder alone from the first directed attempt onward — which is exactly
+     * the same claim, one clause earlier. ⚠ The wording dropped "after edits":
+     * it named the one leg that used to be missing, and now either leg can be.
      */
-    if ((state.edits ?? []).length) {
-        bits.push('⚠ the URL is NOT a reproduction after edits — the PAYLOAD is '
-            + '(Download level JSON + trace)');
+    if ((state.directives ?? []).length || (state.edits ?? []).length) {
+        bits.push('⚠ the URL is NOT a reproduction of this construction — it names the '
+            + 'LADDER alone; the PAYLOAD is (Download level JSON + trace)');
     }
     if (state.stop) bits.push(`stop: ${state.stop}`);
     if (solved) {

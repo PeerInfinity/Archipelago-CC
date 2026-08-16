@@ -34,11 +34,11 @@
  *
  * ── ⚖ RULING 9 — AN EDITED LEVEL'S IDENTITY IS THE PAYLOAD ────────────
  *
- * The URL carries seed + palette + bounds + room + roster + directives, which
- * is a RUN somebody could type. It does NOT carry the edits, and the identity
- * line says so out loud once `edits` is non-empty. `?gen=` / download / upload
- * is the reproduction channel, and `deserializeMazeLevel` is why that is a
- * promise rather than an intention.
+ * The URL carries seed + palette + bounds + room + roster, which is a RUN
+ * somebody could type. It does NOT carry the edits — nor, since slice 12, the
+ * DIRECTIVES — and the identity line says so out loud once either is
+ * non-empty. `?gen=` / download / upload is the reproduction channel, and
+ * `deserializeMazeLevel` is why that is a promise rather than an intention.
  *
  * ── ⛓ THE ROOM SIZE IS A PARAMETER, AND THAT IS A MEASUREMENT ─────────
  *
@@ -61,9 +61,9 @@ import {
 } from '../procgenCore/levelGenerator.js';
 import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/paletteRoster.js';
 import {
-    ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readAreas, readBounds,
-    readRequire, readRosterSpec, readSkeleton, writeAreasParam, writeBounds, writeDirectedParam,
-    writeInt, writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
+    ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam, readAreas, readBounds,
+    readRequire, readRosterSpec, readSkeleton, refuseDirectedParam, writeAreasParam,
+    writeBounds, writeInt, writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec,
@@ -164,7 +164,11 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  *
  * SHARED with `watch.html` through `procgenCore/urlParams.js`:
  *   ?source=  ?seed=  ?biome=  ?count=  ?tries=  ?k=  ?anchortries=
- *   ?families= / ?templates=   ?directed=   ?run=1   ?gen=
+ *   ?families= / ?templates=   ?run=1   ?gen=
+ *
+ * ⛔ AND **NOT** `?directed=` — constructive-mode slice 12 retired it (⚖ §3.9).
+ * `refuseDirectedParam` names the way in; the payload carries a directive list
+ * and `?gen=` replays it.
  *
  * MAZE-ONLY, each with the line that forced it:
  *   ?width= / ?height=   the ROOM. §9.6: the default 11x11 never reverts, so a
@@ -199,6 +203,12 @@ export function readLabParams(search) {
             + 'to GENERATE: a typo that silently opened a different arm would show a level '
             + 'nobody asked for under a link that names one.');
     }
+    /**
+     * ⛓⛓⛓ SLICE 12 — `?directed=` IS REFUSED BY NAME, BEFORE ANYTHING ELSE IS
+     * READ, so an old link's first answer is the one that explains where its
+     * directives went. ⚖ §3.9, in the one spelling both pages speak.
+     */
+    refuseDirectedParam(q, { substrate: 'the maze lab page' });
     const biome = (q.get('biome') || DEFAULT_MAZE_BIOME).toLowerCase();
     const roster = normalizeRoster(paletteFor(biome), readRosterSpec(q));
     return {
@@ -210,13 +220,11 @@ export function readLabParams(search) {
         height: intParam(q, 'height', MAZE_DEFAULTS.height),
         roster,
         /**
-         * ⚠ READ AFTER THE ROSTER on purpose: a directive names a template, and
-         * the palette it is checked against is the biome's WHOLE roster rather
-         * than the restricted one — a restriction says what a RUN may draw
-         * from, a directive is the user naming a template by hand.
+         * ⛔⛔ SLICE 12 — **NO `directed` FIELD.** Slice 3's verb 2 is alive on
+         * the ATTEMPT button, on `generate-maze-level.mjs --directed=` and in
+         * the payload's `directives`; the URL is simply not one of its channels
+         * any more, and `?directed=` refuses above rather than being ignored.
          */
-        directed: q.get('directed') === null
-            ? null : parseDirectives(q.get('directed'), paletteFor(biome)),
         bounds: readBounds(q),
         /** ⛓ SLICE 5 — the room the loop starts from. Absent is the open room. */
         skeleton: readSkeleton(q, { simulator: true, substrate: 'the maze lab page' }),
@@ -241,8 +249,8 @@ export function readLabParams(search) {
  *
  * GENERATE-UI §8.6's standing law: a URL this page cannot reload must not be
  * writable in the first place, because it is not a link to the run it is
- * showing. Every integer goes through `urlParams.writeInt`, the roster through
- * `normalizeRoster`, the directives through `formatDirectives`.
+ * showing. Every integer goes through `urlParams.writeInt` and the roster
+ * through `normalizeRoster`.
  *
  * ⚠ EVERY OTHER PARAMETER SURVIVES. This rewrites the ones it owns and COPIES
  * the rest — the switch arc's law (the URL is rewritten, never rebuilt, never
@@ -253,7 +261,7 @@ export function readLabParams(search) {
  */
 export function writeLabParams(search, {
     source = SOURCES.GENERATE, seed, biome, width, height, bounds, budget, step,
-    roster = null, directives = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
+    roster = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
     areas = DEFAULT_AREAS, require = null,
 } = {}) {
     const q = new URLSearchParams(search);
@@ -281,7 +289,13 @@ export function writeLabParams(search, {
     writeRequireParam(q, require);
     writeInt(q, 'expansions', budget.maxExpansions);
     writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
-    writeDirectedParam(q, directives, paletteFor(biome));
+    /**
+     * ⛔ SLICE 12 — THE DIRECTIVES ARE NOT WRITTEN AND THERE IS NO ARGUMENT FOR
+     * THEM (⚖ §3.9). A stale key is DELETED rather than copied forward: the
+     * reader refuses `?directed=`, so carrying one through a rewrite would hand
+     * back a bar this page cannot reload.
+     */
+    dropDirectedParam(q);
     writeRunFlag(q, step);
     return q.toString();
 }
@@ -392,6 +406,17 @@ export function generateStep({
              * edit follows.
              */
             certification: null,
+            /**
+             * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, IN SEEDLING'S SPELLING (⚖ §3.9's
+             * second item; slice 11 §16.2 flagged the divergence and named this
+             * page as the side to move). `null` = NOBODY HAS ASKED about the
+             * record now on screen, `true`/`false` = the ORACLE's own answer.
+             * ⛔ It is a FIELD and not `Boolean(certification)`, because
+             * `certification` is `null` for both "not asked" and "asked, said
+             * no" and a derivation could not tell them apart — which is trap
+             * 262 exactly, at the boundary this page publishes across.
+             */
+            certified: null,
         });
     }
     const out = generateMazeLevel({
@@ -426,6 +451,8 @@ export function generateStep({
         bounds: { ...bnds, obstacleTarget: step },
         /** ⛓ The loop's own last accepting solve — a generated level IS certified. */
         certification: out.summary.finalCertification ?? null,
+        /** ⛓ SLICE 12 — and the tri-state says the oracle ANSWERED, and said yes. */
+        certified: out.summary.finalCertification ? true : null,
     });
 }
 
@@ -666,6 +693,9 @@ export function applyEdit(state, editor, tx, ty) {
             edits: Object.freeze([...(state.edits ?? []), edit]),
             /** ⚖ §3.8: UNCERTIFIED until re-solved. `null`, never `false`. */
             certification: null,
+            /** ⛓ SLICE 12 — and `null` on the tri-state too: an edit does not
+             *  make the oracle say no, it makes nobody have asked. */
+            certified: null,
             /** ⛓ The world before this edit, so UNDO is a pop and not a replay. */
             undoStack: Object.freeze([...(state.undoStack ?? []), state.record]),
         }),
@@ -684,6 +714,7 @@ export function undoEdit(state) {
         undoStack: Object.freeze(stack.slice(0, -1)),
         edits: Object.freeze((state.edits ?? []).slice(0, -1)),
         certification: null,
+        certified: null,
     });
 }
 
@@ -722,6 +753,13 @@ export function certify(state) {
         ...state,
         lastSolve: solved,
         certification: solved.verdict === 'SOLVED' ? solved.certification : null,
+        /**
+         * ⛓⛓ SLICE 12 — **THE ONLY PLACE `false` IS REACHABLE ON THIS PAGE.**
+         * The oracle was ASKED about the record on screen and answered; a
+         * REFUSED verdict is a NO, which is a different fact from the `null`
+         * an edit leaves and is what the tri-state exists to keep apart.
+         */
+        certified: solved.verdict === 'SOLVED',
     });
 }
 
@@ -791,7 +829,13 @@ export function labPayload(state) {
         areas: state.areas ?? DEFAULT_AREAS,
         require: state.require ?? null,
         edits: state.edits ?? [],
-        certified: Boolean(state.certification),
+        /**
+         * ⛓ SLICE 12 — THE TRI-STATE TRAVELS, in Seedling's spelling. ⚠ It is
+         * NOT compared by `agreementWithPayload` (a file's certification is
+         * somebody else's assertion), so an old payload carrying `false` where
+         * this build writes `null` still AGREES.
+         */
+        certified: state.certified ?? null,
         summary: state.summary,
         level: serializeMazeLevel(state.record),
         trace: state.trace ?? [],
@@ -837,16 +881,37 @@ export function agreementWithPayload(payload, state) {
     if (!payload || typeof payload !== 'object') {
         return { checked: false, agrees: false, differences: ['the payload is not an object'] };
     }
+    /**
+     * ⛓⛓⛓ SLICE 12 ASKED THIS AGAIN AND THE ANSWER SPLIT IN TWO.
+     *
+     * DIRECTIVES are now REPRODUCED here (the caller replays `payload.directives`
+     * through `generateWithDirectives` before comparing), because `?directed=`
+     * is gone and the payload is their only channel — Seedling's forcing line,
+     * which applies identically to this page.
+     *
+     * ⛔ EDITS ARE STILL REFUSED, and NOT because of the channel: **the maze's
+     * edit record is a DESCRIPTION, not a replayable OP.** It is
+     * `{n, type, at, palette, description}` — the editor's SELECTED TYPE and the
+     * cell — while `MazeRoomEditor._setItem`/`_setObstacle` read
+     * `selectedItemId`/`selectedObstacleId`, which no payload carries. Folding
+     * this list would place SOME OTHER item at the right cell and call it a
+     * reproduction. (Seedling's four ops are closed and carry their whole
+     * argument, which is why its fold is honest.) ⚠ And this page HAS a way in
+     * that watch.html never had: LOAD takes `level` as it stands. ⇒ the residue
+     * is named — making maze edits replayable means giving them an OP shape.
+     */
     if ((payload.edits ?? []).length > 0) {
         return {
             checked: false,
             agrees: false,
             differences: [],
             why: `this payload carries ${payload.edits.length} MANUAL EDIT(S), and ⚖ ruling 9 `
-                + 'says an edited level\'s identity is the payload rather than the seed. '
-                + 'Regenerating from its seed would reproduce the level BEFORE the edits and '
-                + 'report a difference whose real cause is that the edits are not in the '
-                + 'seed. Use LOAD, which takes `level` as it stands.',
+                + 'says an edited level\'s identity is the payload rather than the seed. ⛔ This '
+                + 'page cannot REPLAY them either: a maze edit is recorded as a DESCRIPTION '
+                + '(cell + palette type), not as an op carrying the item/obstacle id the '
+                + 'editor had selected, so a fold would place a different body at the right '
+                + 'cell. Use LOAD, which takes `level` as it stands. (Its DIRECTIVES are '
+                + 'replayed — those are specs.)',
         };
     }
     cmp('seed', payload.seed, state.seed);
@@ -965,6 +1030,10 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
         bounds: { ...DEFAULT_BOUNDS, ...(payload?.bounds ?? {}) },
         budget: assertMazeBudget(payload?.budget ?? DEFAULT_MAZE_BUDGET),
         certification: null,
+        /** ⛓ SLICE 12 — a LOADED level is UNCERTIFIED because NOBODY HAS ASKED:
+         *  the file's own `certified` is somebody else's assertion, and this
+         *  page's answer is its own oracle's or none. */
+        certified: null,
         loaded: true,
     });
 }
@@ -998,7 +1067,7 @@ export function describeState(state, solved = null) {
      * ⛓ SLICE 5 — THE SKELETON KIND, NAMED ONLY WHEN IT IS NOT THE OPEN ROOM.
      * ⛔ A clause printed on every level would train a reader to skip it, and
      * the one time it matters is the one time it is there — the same rule the
-     * "URL is not a reproduction after edits" clause below already follows.
+     * "the URL is NOT a reproduction" clause below already follows.
      */
     const kind = state.skeleton?.kind ?? DEFAULT_SKELETON_KIND;
     /**
@@ -1057,9 +1126,18 @@ export function describeState(state, solved = null) {
                 + r.met.map((m) => `${m.symbol} ${m.grade} (the goal is ${m.planWith} step(s) `
                     + 'away WITH the key and UNREACHABLE without it)').join('; '));
     }
-    if (edits) {
-        bits.push('⚠ the URL is NOT a reproduction after edits — the PAYLOAD is '
-            + '(download / the save box)');
+    /**
+     * ⛓⛓ SLICE 12 WIDENED THE CONDITION AND KEPT THE SENTENCE (⚖ §3.9). The bar
+     * stopped carrying `?directed=` too, so from the first directed attempt
+     * onward it names the LADDER alone — the same claim, one clause earlier —
+     * and the wording dropped "after edits" because either leg can now be the
+     * missing one. ⛔ One wording across the two substrates — `watchGenerate`'s
+     * `describeState` prints the same sentence, each page naming its own
+     * download affordance in the parenthesis.
+     */
+    if (directives || edits) {
+        bits.push('⚠ the URL is NOT a reproduction of this construction — it names the '
+            + 'LADDER alone; the PAYLOAD is (download / the save box)');
     }
     if (state.stop) bits.push(`stop: ${state.stop}`);
     if (solved) {

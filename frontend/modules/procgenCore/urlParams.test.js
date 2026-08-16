@@ -18,9 +18,9 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
-    ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, formatDirectives, intParam,
-    parseDirective, parseDirectives, readAreas, readBounds, readRequire, readRosterSpec,
-    readSkeleton, stepFromParams, writeAreasParam, writeBounds, writeDirectedParam, writeInt,
+    ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, dropDirectedParam, formatDirectives,
+    intParam, parseDirective, parseDirectives, readAreas, readBounds, readRequire, readRosterSpec,
+    readSkeleton, refuseDirectedParam, stepFromParams, writeAreasParam, writeBounds, writeInt,
     writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from './urlParams.js';
 import {
@@ -195,9 +195,49 @@ describe('urlParams — the directive grammar', () => {
             keepPolicy: KEEP_POLICY.FIRST_SOLVED }], PALETTE)).toThrow(/does not hold it/);
     });
 
-    it('⚠ ?directed= is DELETED when there are none, never written empty', () => {
-        expect(writeDirectedParam(q('?directed=bare@1d'), [], PALETTE).toString()).toBe('');
-        expect(writeDirectedParam(q(''), null, PALETTE).toString()).toBe('');
+    /**
+     * ⛓⛓⛓ CONSTRUCTIVE SLICE 12 — THE ROUND-TRIP ROWS BECAME REFUSAL ROWS.
+     *
+     * ⚖ §3.9 retired `?directed=` as a URL parameter. What was *"the writer
+     * deletes it when there are none"* is now *"the reader refuses it and the
+     * writer never emits it"* — the claim REPLACED, not relaxed (trap 62/199).
+     * The GRAMMAR rows above stay exactly as they were: they test the parser
+     * the two CLIs and the payload labels still speak.
+     */
+    it('⛔ ?directed= REFUSES BY NAME, and the refusal names the way in', () => {
+        expect(() => refuseDirectedParam(q('?directed=block(ori=v,len=2)@12d')))
+            .toThrow(UrlParamsError);
+        expect(() => refuseDirectedParam(q('?directed=block(ori=v,len=2)@12d')))
+            .toThrow(/no longer a URL parameter/);
+        // ⛔ the way IN is in the sentence — an old link has no other channel.
+        expect(() => refuseDirectedParam(q('?directed=x@1d')))
+            .toThrow(/directives ride the PAYLOAD/);
+        expect(() => refuseDirectedParam(q('?directed=x@1d'), { substrate: 'the maze lab page' }))
+            .toThrow(/the maze lab page/);
+        // ⚠ PRESENCE is the whole test — there is no value of a retired key.
+        expect(() => refuseDirectedParam(q('?directed='))).toThrow(/no longer a URL parameter/);
+        // …and a bar without it passes through untouched.
+        expect(refuseDirectedParam(q('?seed=3')).toString()).toBe('seed=3');
+    });
+
+    it('⛔ the WRITER never emits ?directed=, and DELETES one it inherited', () => {
+        expect(dropDirectedParam(q('?directed=bare@1d')).toString()).toBe('');
+        expect(dropDirectedParam(q('?seed=3&directed=bare@1d&run=1')).toString())
+            .toBe('seed=3&run=1');
+        expect(dropDirectedParam(q('?seed=3')).toString()).toBe('seed=3');
+    });
+
+    /**
+     * ⛔⛔ THE PAIR IS THE POINT: what the writer can produce, the reader can
+     * read. A build whose writer emitted the key again would write a bar its
+     * own reader REFUSES — the one case where a fixed point is the right gate,
+     * because it reddens ITSELF rather than agreeing with itself (trap 250's
+     * inverse).
+     */
+    it('⛓ writer-then-reader is total over a bar carrying a stale directive', () => {
+        const bar = dropDirectedParam(q('?source=generate&seed=3&directed=bare@1d&run=1'));
+        expect(() => refuseDirectedParam(bar)).not.toThrow();
+        expect(bar.toString()).toBe('source=generate&seed=3&run=1');
     });
 });
 
@@ -574,7 +614,7 @@ describe('urlParams — ?areas= and ?require=', () => {
         writeBounds(bar, DEFAULT_BOUNDS);
         writeSkeletonParam(bar, { kind: 'winding' });
         writeRosterParam(bar, null);
-        writeDirectedParam(bar, null, PALETTE);
+        dropDirectedParam(bar);
         writeRunFlag(bar, 0);
         expect(bar.get('areas')).toBe('2;graphify=0.5');
         expect(bar.get('require')).toBe('K0,K1');

@@ -968,54 +968,84 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     });
 });
 
-describe('⛓⛓ `?directed=` in the ONE reader and the ONE writer', () => {
-    it('the reader parses it against the BIOME\'s own palette', () => {
-        const p = readGenerateParams(
-            '?source=generate&seed=6&biome=pre-sword&directed=wall-gap-block(ori=v,gap=1)@12d',
-        );
-        expect(p.directed).toHaveLength(1);
-        expect(p.directed[0].params).toEqual({ ori: 'v', gap: 1 });
-    });
-
-    it('⛔ a post-sword-only template REFUSES under pre-sword, by name', () => {
+describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
+    /**
+     * ⛔ REPLACE, NEVER RELAX (trap 62/199). Slice 5's three rows here drove the
+     * reader parsing `?directed=` against the biome's palette, the post-sword
+     * refusal, and the writer's delete-when-empty. The GRAMMAR half of each
+     * still runs — one describe up, over `parseDirectives`/`formatDirectives`,
+     * which the CLI's `--directed=` and the payload's labels still speak. What
+     * these rows assert now is that the ADDRESS BAR is not one of the channels.
+     */
+    it('⛔ the reader REFUSES ?directed= by name, and names the way in', () => {
         expect(() => readGenerateParams(
-            '?source=generate&biome=pre-sword&directed=wall-gap-spinner-killlock(ori=h)@12d',
-        )).toThrow(/which palette "pre-sword" does not hold/);
-        // …and is accepted under the biome that HAS it.
-        expect(readGenerateParams(
-            '?source=generate&biome=post-sword&directed=wall-gap-spinner-killlock(ori=h)@12d',
-        ).directed).toHaveLength(1);
+            '?source=generate&seed=6&biome=pre-sword&directed=wall-gap-block(ori=v,gap=1)@12d',
+        )).toThrow(/no longer a URL parameter/);
+        expect(() => readGenerateParams('?source=generate&directed=x@1d'))
+            .toThrow(/directives ride the PAYLOAD/);
+        expect(() => readGenerateParams('?source=generate&directed=x@1d'))
+            .toThrow(/the Seedling page/);
     });
 
-    it('absent means NO directives, and the writer DELETES rather than writing empty', () => {
-        expect(readGenerateParams('?source=generate&seed=1').directed).toBeNull();
+    it('⚠ …however malformed, and however empty — PRESENCE is the whole test', () => {
+        // ⛓ A value slice 5's parser would have REFUSED for its own reason now
+        // refuses for THIS one, so an old link never gets a grammar lecture
+        // about a parameter that no longer exists.
+        expect(() => readGenerateParams('?source=generate&directed=nope@nope'))
+            .toThrow(/no longer a URL parameter/);
+        expect(() => readGenerateParams('?source=generate&directed='))
+            .toThrow(/no longer a URL parameter/);
+        // ⛔ and it refuses BEFORE any other parameter is adjudicated: a link
+        // carrying both a stale directive and a bad skeleton says THIS first.
+        expect(() => readGenerateParams('?source=generate&directed=x@1d&skeleton=corridor'))
+            .toThrow(/no longer a URL parameter/);
+    });
+
+    it('⛔ the WRITER never emits it, and DROPS one it inherited', () => {
         const q = writeGenerateParams('directed=wall-gap-block(ori=v,gap=1)@12d', {
-            seed: 1, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0, directives: [],
+            seed: 1, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
         });
         expect(new URLSearchParams(q).get('directed')).toBeNull();
+        /**
+         * ⛔⛔ AND A CALLER THAT STILL PASSES `directives` GETS NOTHING FOR IT.
+         * ⛓ This row exists because the mutant table needed it: a build whose
+         * writer took the option back would leave every other row here green
+         * (none of them passes one), and the defect would only be visible from
+         * a browser. A fixture that cannot DISTINGUISH two builds does not gate
+         * the change.
+         */
+        const withOption = writeGenerateParams('', {
+            seed: 6, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            directives: [DIRECTIVE],
+        });
+        expect(new URLSearchParams(withOption).get('directed')).toBeNull();
+        expect(withOption).not.toMatch(/directed/);
+        // ⛓⛓ AND WHAT IT WROTE IS READABLE — the pair, which is the one case
+        // where a fixed point is the right gate: a writer that emitted the key
+        // again would produce a bar its OWN reader refuses.
+        expect(() => readGenerateParams(`?${q}`)).not.toThrow();
     });
 
-    it('⛓ THE FIXED POINT: loading what it wrote rewrites it to itself, character for character',
-        () => {
-            const first = writeGenerateParams('tickbudget=600', {
-                seed: 6,
-                biome: 'pre-sword',
-                bounds: DEFAULT_BOUNDS,
-                step: 2,
-                directives: [DIRECTIVE, { ...DIRECTIVE, template: 'arrow-lane', params: {} }],
-            });
-            const read = readGenerateParams(`?${first}`);
-            const second = writeGenerateParams(first, {
-                seed: read.seed,
-                biome: read.biome,
-                bounds: read.bounds,
-                step: 2,
-                directives: read.directed,
-            });
-            expect(second).toBe(first);
-            // …and the parameters it does not own still survive.
-            expect(new URLSearchParams(second).get('tickbudget')).toBe('600');
+    it('⛓ a DIRECTED state writes the LADDER\'s URL, byte for byte the plain one\'s', () => {
+        const base = generateStep(SUBJECT);
+        const directed = applyDirective(base, DIRECTIVE, 0);
+        const args = (st) => ({
+            seed: st.seed, biome: st.biome, bounds: st.bounds, step: st.step,
+            roster: st.roster, skeleton: st.skeleton,
         });
+        expect(directed.directives).toHaveLength(1);
+        expect(writeGenerateParams('', args(directed))).toBe(writeGenerateParams('', args(base)));
+        expect(writeGenerateParams('', args(directed))).not.toMatch(/directed/);
+    });
+
+    it('⛓⛓ …and the IDENTITY LINE says so, so the bar is never read as complete', () => {
+        const base = generateStep(SUBJECT);
+        const directed = applyDirective(base, DIRECTIVE, 0);
+        expect(describeState(base)).not.toMatch(/NOT a reproduction/);
+        expect(describeState(directed))
+            .toMatch(/the URL is NOT a reproduction of this construction/);
+        expect(describeState(directed)).toMatch(/names the LADDER alone/);
+    });
 });
 
 describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () => {
@@ -1122,7 +1152,15 @@ describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () =
         });
 });
 
-describe('⛓⛓⛓ REPRODUCTION — a copied link rebuilds the whole construction', () => {
+describe('⛓⛓⛓ REPRODUCTION — a copied identity rebuilds the whole construction', () => {
+    /**
+     * ⛓ THE PAYLOAD'S DIRECTIVE LIST, THROUGH JSON — a payload is a FILE, so
+     * the list the page replays has been serialised and parsed. Doing that here
+     * is not ceremony: it is what proves a RECORDED directive (frozen, with its
+     * resolved `params`) survives the trip the channel actually makes.
+     */
+    const payloadDirectivesOf = (st) => JSON.parse(JSON.stringify(st.directives));
+
     it('the ladder plus its directives reproduces byte for byte, in one path', () => {
         const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
         const replayed = generateWithDirectives({ ...SUBJECT, directed: [DIRECTIVE] });
@@ -1131,16 +1169,29 @@ describe('⛓⛓⛓ REPRODUCTION — a copied link rebuilds the whole constructi
         expect(replayed.directives).toEqual(pressed.directives);
     });
 
-    it('⛓⛓ THROUGH THE URL: write it, read it back, regenerate — the same level', () => {
+    /**
+     * ⛓⛓⛓ SLICE 12 RE-CUT THIS ROW FROM THE URL TO THE **PAYLOAD** (⚖ §3.9),
+     * which is the channel `?gen=` and `procgenLab:load` now use. ⛔ Replaced,
+     * not relaxed: the claim is still *"a copied identity rebuilds the whole
+     * construction byte for byte"*, and both halves of the identity — the
+     * LAUNCH parameters through the bar, the DIRECTIVES through the payload —
+     * are driven, because splitting them is exactly what this slice did.
+     */
+    it('⛓⛓ THROUGH THE PAYLOAD: the bar launches the ladder, the payload replays '
+        + 'the directives — the same level', () => {
         const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
         const search = writeGenerateParams('', {
             seed: pressed.seed,
             biome: pressed.biome,
             bounds: pressed.bounds,
             step: pressed.step,
-            directives: pressed.directives,
         });
+        // ⛔ THE BAR NAMES NO DIRECTIVE, and the reader would refuse one.
+        expect(new URLSearchParams(search).get('directed')).toBeNull();
         const read = readGenerateParams(`?${search}`);
+        // ⛓ The payload's OWN list, at its OWN indices — `payload.directives`
+        // is what the page hands the replay, so it is what is handed here.
+        const payloadDirectives = payloadDirectivesOf(pressed);
         const rebuilt = generateWithDirectives({
             seed: read.seed,
             biome: read.biome,
@@ -1151,7 +1202,7 @@ describe('⛓⛓⛓ REPRODUCTION — a copied link rebuilds the whole constructi
             bounds: read.bounds,
             budget: read.budget,
             roster: read.roster,
-            directed: read.directed,
+            directed: payloadDirectives,
         });
         expect(rebuilt.record).toEqual(pressed.record);
         expect(rebuilt.directives.map((d) => d.at)).toEqual(pressed.directives.map((d) => d.at));
@@ -1333,27 +1384,28 @@ describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound
             )).toThrow(/EXPLICIT anchor \(7,1\) and bound 12/);
         });
 
-    it('⛓ the URL fixed point holds over a clicked directive too', () => {
-        const clicked = { ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 1 };
-        const first = writeGenerateParams('tickbudget=600', {
-            seed: 6, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0, directives: [clicked],
+    /**
+     * ⛓⛓⛓ SLICE 12 RE-CUT THIS FROM A URL FIXED POINT TO A **GRAMMAR** ROUND
+     * TRIP. `!tx,ty` still exists — it is a DIRECTIVE OBJECT's field and the
+     * CLI's `--directed=` still spells it — so what was tested through the bar
+     * is tested through the codec that bar used to call, and the VALUE claim
+     * (trap 250: a fixed point never gates a value) is the same literal.
+     */
+    it('⛓ the clicked spelling round-trips through the GRAMMAR, and the BAR carries none',
+        () => {
+            const clicked = { ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 1 };
+            const text = formatDirectives([clicked], palette);
+            expect(text).toBe('wall-gap-block(ori=v,gap=1)@1d!7,1');
+            expect(parseDirectives(text, palette)[0].anchor).toEqual({ tx: 7, ty: 1 });
+            // ⛔ AND THE URL IS NOT A CHANNEL FOR IT — the writer emits nothing
+            // and the reader refuses the key.
+            const bar = writeGenerateParams('tickbudget=600', {
+                seed: 6, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            });
+            expect(new URLSearchParams(bar).get('directed')).toBeNull();
+            expect(() => readGenerateParams(`?${bar}&directed=${text}`))
+                .toThrow(/no longer a URL parameter/);
         });
-        const read = readGenerateParams(`?${first}`);
-        expect(read.directed[0].anchor).toEqual({ tx: 7, ty: 1 });
-        const second = writeGenerateParams(first, {
-            seed: read.seed, biome: read.biome, bounds: read.bounds, step: 0,
-            directives: read.directed,
-        });
-        expect(second).toBe(first);
-        /**
-         * ⛔⛔ AND THE FIXED POINT IS NOT THE GATE ON THE VALUE — slice 5's own
-         * amendment to §8.6/§11.10 (trap 250). A writer that emitted a
-         * CONSTANT wrong anchor would round-trip to itself perfectly, so the
-         * VALUE is checked against a literal spelled out here.
-         */
-        expect(new URLSearchParams(first).get('directed'))
-            .toBe('wall-gap-block(ori=v,gap=1)@1d!7,1');
-    });
 });
 
 describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or refuses by name', () => {
@@ -1430,17 +1482,19 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
             expect(rows[0].verdict).toBeNull();
         });
 
-    it('⛓⛓ a clicked construction REPRODUCES byte for byte through the URL', () => {
+    it('⛓⛓ a clicked construction REPRODUCES byte for byte through the PAYLOAD', () => {
         const pressed = applyDirective(generateStep(SUBJECT), clicked, 0);
         const search = writeGenerateParams('', {
             seed: pressed.seed, biome: pressed.biome, bounds: pressed.bounds,
-            step: pressed.step, directives: pressed.directives,
+            step: pressed.step,
         });
         const read = readGenerateParams(`?${search}`);
         const rebuilt = generateWithDirectives({
             seed: read.seed, biome: read.biome, step: stepFromParams(read),
             bounds: read.bounds, budget: read.budget, roster: read.roster,
-            directed: read.directed,
+            // ⛓ SLICE 12: the payload's list, not the bar's — and its `anchor`
+            // is what carries the clicked cell across.
+            directed: JSON.parse(JSON.stringify(pressed.directives)),
         });
         expect(rebuilt.record).toEqual(pressed.record);
         expect(rebuilt.trace).toEqual(pressed.trace);
@@ -1740,7 +1794,11 @@ describe('⛓⛓⛓ describeState — the identity\'s THIRD LEG, and the URL cla
     it('⛔ …and SAYS the URL has stopped being a reproduction', () => {
         const line = describeState(editStates(st(),
             [{ op: 'paint', tx: 5, ty: 5, terrain: 'wall' }]));
-        expect(line).toMatch(/the URL is NOT a reproduction after edits — the PAYLOAD is/);
+        // ⛓ SLICE 12 widened the CONDITION (a directive triggers it too) and
+        // dropped "after edits" from the wording, because either leg can now be
+        // the one the bar is missing.
+        expect(line).toMatch(
+            /the URL is NOT a reproduction of this construction — it names the LADDER alone/);
     });
 });
 

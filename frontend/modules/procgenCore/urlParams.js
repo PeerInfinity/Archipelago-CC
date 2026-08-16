@@ -23,13 +23,13 @@
  *     slice 4 measured that)
  *   · `run=1` iff a run is on screen, DELETED at step 0 rather than `run=0`;
  *     and `run ? count : 0` as the ONE reader of which step a link names
- *   · the whole `?directed=` grammar — `template(k=v,…)@<bound><d|s>[!tx,ty]`,
+ *   · the whole DIRECTIVE grammar — `template(k=v,…)@<bound><d|s>[!tx,ty]`,
  *     its four distinguished refusals, `formatDirectives`' schema-order write,
  *     and the two salted streams a directive derives (`directiveSeed`)
  *   · `?source=` / `?gen=` as the arm selector
  *
- * That is well past 70%, and `?directed=` alone is ~150 executable lines the
- * maze needs character for character. What is NOT grammar and stayed in
+ * That is well past 70%, and the directive grammar alone is ~150 executable
+ * lines the maze needs character for character. What is NOT grammar and stayed in
  * `watchGenerate.js`: `paletteFor` (the biome map IS the Seedling boot
  * inventory), the `?budgetms=` deprecation warning (a Seedling knob that
  * existed and was removed), and `?tickbudget=` -> `maxTicksPerTarget` (a
@@ -46,6 +46,24 @@
  * because a directive's value types come from the template's own declared
  * domain and there is no way to read one without it — but it is a PARAMETER,
  * so this file imports no substrate.
+ *
+ * ── ⛓⛓⛓ THE URL DIET (CONSTRUCTIVE-MODE SLICE 12, ⚖ §3.9) ────────────
+ *
+ * ⚖ **`?directed=` IS NO LONGER A URL PARAMETER.** The user's ruling
+ * (2026-08-15): a URL is *the launch parameters a person types* — source, seed,
+ * biome, count/tries/k/anchortries, families|templates, skeleton;params,
+ * tickbudget/expansions, areas, require, gen — and a DIRECTIVE LIST is a
+ * CONSTRUCTION, which is the PAYLOAD's job and which it does byte-exactly.
+ *
+ * ⛔ So the reader REFUSES the key by name (`refuseDirectedParam`) and the
+ * writer DROPS it (`dropDirectedParam`). ⛓ Nothing about the GRAMMAR moved:
+ * `parseDirective`/`parseDirectives`/`formatDirectives`/`POLICY_LETTER`/
+ * `directiveSeed` are exactly what they were, because the same text still
+ * arrives on the two CLIs' `--directed=` (a launch surface for scripts and
+ * tests) and still labels a payload's recorded instances. What changed is
+ * WHICH CHANNEL carries a directive LIST — `?gen=` / `procgenLab:load` replay
+ * `payload.directives` in order, at the same indices, so `directiveSeed`'s
+ * index-as-salt is untouched and no recorded construction is re-indexed.
  *
  * ⛔ NO DOM AND NO NODE IMPORTS: both pages load this in a browser.
  */
@@ -426,13 +444,16 @@ export function writeRunFlag(q, step) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
- * ⛓⛓⛓ THE DIRECTED ATTEMPTS — `?directed=`
+ * ⛓⛓⛓ THE DIRECTED ATTEMPTS — THE GRAMMAR, AND ⛔ IT IS NOT A URL PARAMETER
  * ══════════════════════════════════════════════════════════════════════
  *
- * ⚖ The level is LADDER + DIRECTIVES, so a copied link names the WHOLE
- * construction.
+ * ⚖ The level is LADDER + DIRECTIVES + EDITS, and ⛔ **SLICE 12 TOOK THE LIST
+ * OFF THE ADDRESS BAR**: the PAYLOAD names the whole construction, and this
+ * text is what the two CLIs' `--directed=` speaks and what a payload's
+ * `instance` labels are spelled in. The three channels are one grammar, which
+ * is the law this file exists for; only the address bar dropped out.
  *
- *   ?directed=<d>;<d>;…
+ *   --directed=<d>;<d>;…            (⛔ and NOT ?directed=)
  *   <d> := <template>[ '(' <k>=<v>,… ')' ] '@' <bound> <policy> [ '!' tx ',' ty ]
  *
  * e.g. `wall-gap-block(ori=v,gap=1)@12d;water-pool(w=2,h=3)@12d`
@@ -451,9 +472,12 @@ export function writeRunFlag(q, step) {
  * construction mixing the two must still be nameable in one string.
  *
  * ⛔ **ONLY THE INPUTS ARE ENCODED.** `outcome` and `keptKind` are RESULTS —
- * what re-running produces, not what it takes — and a link that carried them
+ * what re-running produces, not what it takes — and a text that carried them
  * could be edited into a claim the reproduction contradicts. The payload
- * records them because a payload is a REPORT; the URL is an INSTRUCTION.
+ * records them because a payload is a REPORT; `--directed=` is an INSTRUCTION.
+ * ⚠ A payload's RECORDED directive is a superset of a spec (its `params` are
+ * the RESOLVED values), which is exactly what makes a payload replay spend no
+ * draw and come back byte-identical.
  */
 
 const POLICY_LETTER = Object.freeze({
@@ -537,7 +561,7 @@ export function parseDirective(text, palette) {
     const [, name, paramText, boundText, letter, tx, ty] = m;
     const base = (palette?.templates ?? []).find((t) => t.name === name);
     if (!base) {
-        fail(`urlParams: ?directed= names template ${JSON.stringify(name)}, which palette `
+        fail(`urlParams: the directive names template ${JSON.stringify(name)}, which palette `
             + `"${palette?.name}" does not hold — it offers `
             + `[${(palette?.templates ?? []).map((t) => t.name).join(', ')}]. ⛔ An unknown `
             + 'template is REFUSED rather than skipped: a dropped directive would reproduce '
@@ -604,12 +628,12 @@ export function parseDirective(text, palette) {
     });
 }
 
-/** Every directive in a `?directed=` value, in order. */
+/** Every directive in a `--directed=` value, in order. */
 export function parseDirectives(value, palette) {
     const text = String(value ?? '').trim();
     if (text === '') {
-        fail('urlParams: ?directed= names nothing. A level with no directives is '
-            + 'spelled by leaving the parameter out — an empty value is a construction '
+        fail('urlParams: --directed= names nothing. A level with no directives is '
+            + 'spelled by leaving the flag out — an empty value is a construction '
             + 'somebody emptied, which is the same rule ?families= follows.');
     }
     return Object.freeze(text.split(';').map((d) => parseDirective(d, palette)));
@@ -669,10 +693,50 @@ export function formatDirectives(directives, palette) {
     }).join(';');
 }
 
-/** ⚠ `?directed=` is DELETED when there are none, never written empty. */
-export function writeDirectedParam(q, directives, palette) {
-    const ds = directives ?? [];
-    if (ds.length === 0) q.delete('directed');
-    else q.set('directed', formatDirectives(ds, palette));
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE RETIRED PARAMETER — `?directed=` (CONSTRUCTIVE-MODE SLICE 12)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** The one sentence, so the reader's refusal and the docs cannot drift apart. */
+export const DIRECTED_RETIRED = 'directives ride the PAYLOAD — load it via ?gen= or the '
+    + 'host\'s SEND, or press ATTEMPT on the page; the CLI keeps --directed=';
+
+/**
+ * ⛔⛔ **`?directed=` IS REFUSED BY NAME** (⚖ kickoff §3.9, ruling 9's licence).
+ *
+ * A URL names the LAUNCH parameters a person types; a directive list is a
+ * CONSTRUCTION, and the payload carries it. ⛔ It REFUSES rather than being
+ * ignored: a link somebody saved before slice 12 names a level with templates
+ * in it, and a page that silently dropped the parameter would show the plain
+ * ladder under an address that promises otherwise — the exact "a link that
+ * means something different from what it says" failure this grammar is full of
+ * refusals about. The refusal NAMES THE WAY IN, because a reader holding an old
+ * link has no other channel to learn where directives went.
+ *
+ * ⚠ AN EMPTY `?directed=` REFUSES TOO. The key being PRESENT is the whole test:
+ * there is no value of a retired parameter that means anything.
+ */
+export function refuseDirectedParam(q, { substrate = 'this page' } = {}) {
+    if (q.get('directed') === null) return q;
+    fail(`urlParams: ?directed= is no longer a URL parameter (⚖ constructive-mode slice 12). `
+        + `A URL names the LAUNCH parameters a person types; a directive list is a `
+        + `CONSTRUCTION, and ${substrate} takes one from the PAYLOAD — ${DIRECTED_RETIRED}.`);
+    return q;
+}
+
+/**
+ * ⛔ THE WRITER NEVER EMITS `?directed=` — it DELETES it.
+ *
+ * ⛓ §8.6's standing law, in the direction slice 12 created: a URL this page
+ * cannot READ must not be WRITTEN, and `refuseDirectedParam` is now what the
+ * reader would do with this key. ⚠ It is unreachable by construction on a
+ * booted page (the reader refuses before anything mounts, so the bar the writer
+ * copies from can never hold one) — kept anyway, and asserted, because "the one
+ * writer owns this key" is the property, not "no caller has managed to break it
+ * yet". The delete is also what makes a `procgenLab:navigate` that inherited a
+ * stale key end up with a bar the page can reload.
+ */
+export function dropDirectedParam(q) {
+    q.delete('directed');
     return q;
 }

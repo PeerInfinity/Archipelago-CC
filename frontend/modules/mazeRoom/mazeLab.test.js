@@ -38,7 +38,6 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
         });
         expect(p.budget).toEqual({ maxExpansions: 20000 });
         expect(p.roster).toBe(null);
-        expect(p.directed).toBe(null);
         expect(p.run).toBe(false);
     });
 
@@ -82,16 +81,56 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
         expect(() => readLabParams('?families=kill')).toThrow(/does not offer/);
     });
 
-    it('reads ?directed= against the palette, and refuses an unknown template', () => {
-        const p = readLabParams('?directed=wall-segment(ori=v,len=3)@12d');
-        expect(p.directed).toHaveLength(1);
-        expect(p.directed[0]).toMatchObject({
-            template: 'wall-segment', params: { ori: 'v', len: 3 }, bound: 12, anchor: null,
-        });
-        expect(() => readLabParams('?directed=water-pool@12d')).toThrow(/does not hold/);
-        expect(() => readLabParams('?directed=wall-segment(ori=q)@12d'))
-            .toThrow(/not in its declared domain \[h, v\]/);
+    /**
+     * ⛓⛓⛓ SLICE 12 — THE READER ROW BECAME A REFUSAL ROW (⚖ §3.9, trap 62/199:
+     * replace, never relax). Slice 3's version parsed `?directed=` against the
+     * palette; the GRAMMAR it called still runs, in `urlParams.test.js` and in
+     * this file's own directive rows. What this asserts is that the address bar
+     * is not a channel for it on the maze page either.
+     */
+    it('⛔ ?directed= REFUSES BY NAME, whatever it says, and names the way in', () => {
+        expect(() => readLabParams('?directed=wall-segment(ori=v,len=3)@12d'))
+            .toThrow(/no longer a URL parameter/);
+        // ⛓ A value the OLD parser would have refused for its own reason now
+        // refuses for THIS one — an old link gets the sentence that helps.
+        expect(() => readLabParams('?directed=water-pool@12d'))
+            .toThrow(/no longer a URL parameter/);
+        expect(() => readLabParams('?directed=')).toThrow(/no longer a URL parameter/);
+        expect(() => readLabParams('?directed=x@1d')).toThrow(/directives ride the PAYLOAD/);
+        expect(() => readLabParams('?directed=x@1d')).toThrow(/the maze lab page/);
     });
+
+    it('⛔ the WRITER never emits ?directed=, and a DIRECTED state writes the ladder\'s bar',
+        () => {
+            const base = generateStep({ seed: 6, step: 0, ...ROOM });
+            const directed = applyDirective(base, {
+                template: 'wall-segment', params: { ori: 'v', len: 2 }, anchor: null,
+                bound: 4,
+            }, 0);
+            expect(directed.directives).toHaveLength(1);
+            const args = (st) => ({
+                seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+                bounds: st.bounds, budget: st.budget, step: st.step, roster: st.roster,
+                skeleton: st.skeleton, areas: st.areas, require: st.require,
+            });
+            expect(writeLabParams('', args(directed))).toBe(writeLabParams('', args(base)));
+            expect(writeLabParams('', args(directed))).not.toMatch(/directed/);
+            /**
+             * ⛔⛔ AND A CALLER THAT STILL PASSES `directives` GETS NOTHING FOR
+             * IT — the row the mutant table needed: without it a build that
+             * took the option back is invisible to every headless gate.
+             */
+            const withOption = writeLabParams('', {
+                ...args(base), directives: directed.directives,
+            });
+            expect(new URLSearchParams(withOption).get('directed')).toBeNull();
+            expect(withOption).not.toMatch(/directed/);
+            // ⛓ a stale key is DROPPED, so what the writer produces the reader reads.
+            const cleaned = writeLabParams('?directed=wall-segment(ori=v,len=2)@4s',
+                args(directed));
+            expect(new URLSearchParams(cleaned).get('directed')).toBeNull();
+            expect(() => readLabParams(cleaned)).not.toThrow();
+        });
 
     it('⛓ writer -> reader is an INVERSE, and the written string names the literals', () => {
         const st = generateStep({
@@ -336,10 +375,47 @@ describe('mazeLab — EDIT (⚖ ruling 8 + §3.8)', () => {
         const c = freeCell(st);
         const { state } = applyEdit(st, editorFor(st, PALETTE_TYPES.WALL), c.tx, c.ty);
         expect(state.certification).toBe(null);
+        /**
+         * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, IN SEEDLING'S SPELLING. An edit leaves
+         * `null` (*nobody has asked*), NEVER `false` (*the oracle said no*).
+         * ⚠ This page used to publish `Boolean(certification)` across the
+         * bridge and therefore said `false` here, which is the merge trap 262
+         * is about; §16.2 named this page as the side to move.
+         */
+        expect(state.certified).toBe(null);
         expect(state.edits).toHaveLength(1);
         expect(describeState(state)).toMatch(/1 manual edit\(s\)/);
         expect(describeState(state)).toMatch(/UNCERTIFIED/);
-        expect(describeState(state)).toMatch(/the URL is NOT a reproduction after edits/);
+        expect(describeState(state))
+            .toMatch(/the URL is NOT a reproduction of this construction/);
+    });
+
+    /**
+     * ⛓⛓ AND `false` IS REACHABLE IN EXACTLY ONE PLACE — `certify` on a REFUSED
+     * verdict. ⛔ The pair is the claim: without the second half a build that
+     * returned `null` everywhere would pass the first.
+     */
+    it('⛓ the tri-state: null after an edit, false only when the ORACLE said no', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        expect(st.certified).toBe(true);
+        const ed = editorFor(st, PALETTE_TYPES.WALL);
+        // ⛓ SEAL the entrance — its two orthogonal neighbours — so the oracle
+        // has something to REFUSE. The cells are asserted free first, so this
+        // is the sealing case rather than two refused clicks.
+        let cur = st;
+        for (const [dx, dy] of [[1, 0], [0, 1]]) {
+            const x = cur.record.entrance.x + dx;
+            const y = cur.record.entrance.y + dy;
+            cur = applyEdit(cur, ed, x, y).state;
+        }
+        expect(cur.edits.length).toBeGreaterThan(0);
+        expect(cur.certified).toBe(null);
+        const answered = certify(cur);
+        expect(answered.lastSolve.verdict).toBe('REFUSED');
+        expect(answered.certified).toBe(false);
+        expect(answered.certification).toBe(null);
+        // …and a SOLVED answer puts `true` back.
+        expect(certify(generateStep({ seed: 3, step: 2, ...ROOM })).certified).toBe(true);
     });
 
     it('⛔ a REFUSED edit changes NOTHING — not the world, not the certification', () => {
@@ -522,7 +598,9 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         const edited = applyEdit(st, e, c.tx, c.ty).state;
         const pay = labPayload(edited);
         expect(pay.edits).toHaveLength(1);
-        expect(pay.certified).toBe(false);
+        // ⛓ SLICE 12 — the payload carries the TRI-STATE, so an edited level
+        // reports `null` (*nobody has asked*) where it used to report `false`.
+        expect(pay.certified).toBe(null);
         const search = writeLabParams('', {
             seed: edited.seed,
             biome: edited.biome,
@@ -540,6 +618,8 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         const pay = { ...labPayload(st), certified: true };
         const back = loadPayload(pay);
         expect(back.certification).toBe(null);
+        // ⛓ SLICE 12 — and `null` on the tri-state: nobody has asked THIS page.
+        expect(back.certified).toBe(null);
         expect(serializeMazeLevel(back.record)).toEqual(pay.level);
         // …and it solves, because it is the same world.
         expect(certify(back).lastSolve.verdict).toBe('SOLVED');
@@ -580,6 +660,50 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         expect(a.differences).toContain('level');
     });
 
+    /**
+     * ⛓⛓⛓ SLICE 12 — **A DIRECTED PAYLOAD IS REPRODUCED**, which is the whole
+     * point of taking `?directed=` off the bar: with the URL gone, the payload
+     * is the only channel a directive list has into this page, so `?gen=` must
+     * replay it. ⛔ This is the unit twin of `mazeLabView`'s `?gen=` path —
+     * same `generateWithDirectives`, same list, same indices.
+     */
+    it('⛓⛓ a DIRECTED payload is REPRODUCED from its own `directives`', () => {
+        const spec = {
+            template: 'wall-segment', params: { ori: 'v', len: 2 }, anchor: null, bound: 6,
+        };
+        const built = applyDirective(generateStep({ seed: 6, step: 1, ...ROOM }), spec, 0);
+        const pay = JSON.parse(JSON.stringify(labPayload(built)));
+        expect(pay.directives).toHaveLength(1);
+        const replayed = generateWithDirectives({
+            seed: pay.seed,
+            biome: pay.biome,
+            step: pay.bounds.obstacleTarget,
+            bounds: pay.bounds,
+            budget: pay.budget,
+            width: pay.width,
+            height: pay.height,
+            roster: pay.roster ?? null,
+            directed: pay.directives,
+            skeleton: pay.skeleton,
+            areas: pay.areas,
+            require: pay.require ?? null,
+        });
+        expect(agreementWithPayload(pay, replayed))
+            .toMatchObject({ checked: true, agrees: true, differences: [] });
+        /**
+         * ⛔ AND THE LADDER ALONE IS **NOT** THE PAYLOAD — without this the
+         * claim above would hold over a build that dropped the directives on
+         * both sides. `directives` and `level` are the two fields that move.
+         */
+        const ladderOnly = generateStep({
+            seed: 6, step: 1, ...ROOM, bounds: pay.bounds, budget: pay.budget,
+        });
+        const miss = agreementWithPayload(pay, ladderOnly);
+        expect(miss.agrees).toBe(false);
+        expect(miss.differences).toContain('directives');
+        expect(miss.differences).toContain('level');
+    });
+
     it('⚖ ruling 9: an EDITED payload is NOT reproduced — the check says so by name', () => {
         const st = generateStep({ seed: 3, step: 2, ...ROOM });
         const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
@@ -591,6 +715,18 @@ describe('mazeLab — the payload (⚖ ruling 9)', () => {
         expect(a.checked).toBe(false);
         expect(a.why).toMatch(/1 MANUAL EDIT\(S\)/);
         expect(a.why).toMatch(/Use LOAD/);
+        /**
+         * ⛓⛓ SLICE 12 — AND THE SENTENCE NAMES THE REAL FORCING LINE. It is no
+         * longer only ⚖ ruling 9's channel argument (the directives moved to
+         * the payload and ARE replayed): a maze edit is recorded as a
+         * DESCRIPTION — cell + palette TYPE — while
+         * `MazeRoomEditor._setItem`/`_setObstacle` read `selectedItemId` /
+         * `selectedObstacleId`, which the record does not carry. A fold would
+         * place a different body at the right cell.
+         */
+        expect(a.why).toMatch(/DESCRIPTION/);
+        expect(a.why).toMatch(/item\/obstacle id/);
+        expect(a.why).toMatch(/DIRECTIVES are.*replayed/);
     });
 });
 

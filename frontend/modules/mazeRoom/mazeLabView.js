@@ -143,7 +143,7 @@ export function main() {
             budget: state.budget,
             step: state.step,
             roster: state.roster,
-            directives: state.directives,
+            // ⛔ SLICE 12: NO `directives` — ⚖ §3.9 took the list off the bar.
             skeleton: state.skeleton,
             areas: state.areas,
             require: state.require,
@@ -820,7 +820,17 @@ export function main() {
              */
             loaded: Boolean(state.loaded),
             identity: $('identity').textContent,
-            certified: Boolean(state.certification),
+            /**
+             * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, PUBLISHED AS IT STANDS. ⚠ It was
+             * `Boolean(state.certification)`, which reported `false` after an
+             * EDIT where Seedling reported `null` — both protocol-legal
+             * (`labProtocol.assertStateChanged` documents the distinction) and
+             * slice 11 §16.2 named this page as the side to move. `null` =
+             * nobody has asked; `false` = the ORACLE said no, which on this
+             * page happens in exactly one place (`certify` on a REFUSED
+             * verdict).
+             */
+            certified: state.certified ?? null,
             edits: (state.edits ?? []).length,
             editLog: (state.edits ?? []).map((e) => e.description),
             directives: (state.directives ?? []).map((d) => ({
@@ -1132,7 +1142,18 @@ export function main() {
                 width: payload.width,
                 height: payload.height,
                 roster: payload.roster ?? null,
-                directed: null,
+                /**
+                 * ⛓⛓⛓ SLICE 12 — **THE PAYLOAD IS THE DIRECTIVE CHANNEL.** It
+                 * was `null` here while `?directed=` carried the list; ⚖ §3.9
+                 * retired the parameter, so a payload's own `directives` are
+                 * replayed, IN ORDER AND AT THE SAME INDICES (the array's order
+                 * IS the index, so `directiveSeed`'s index-as-salt is
+                 * untouched), through the SAME `applyDirective` the ATTEMPT
+                 * button presses. ⚠ A RECORDED directive's `params` are the
+                 * RESOLVED values, so the replay spends no draw and the
+                 * comparison below can be byte-exact.
+                 */
+                directed: payload.directives ?? null,
                 /**
                  * ⛓ SLICE 5: a payload names the ROOM it was built in, and
                  * reproducing it under a different skeleton would report a
@@ -1161,7 +1182,11 @@ export function main() {
             width: params.width,
             height: params.height,
             roster: params.roster,
-            directed: params.directed,
+            /**
+             * ⛔ SLICE 12 — NO `directed` HERE EITHER: a URL boot is a LADDER,
+             * always. A directive reaches this page from the ATTEMPT button or
+             * from a payload, and `?directed=` refuses in `readLabParams`.
+             */
             /**
              * ⛓⛓ SLICE 5 — AND A DEFECT MY OWN ROW FOUND HERE. `?skeleton=`
              * reached `readLabParams`, the writer echoed it back into the bar
