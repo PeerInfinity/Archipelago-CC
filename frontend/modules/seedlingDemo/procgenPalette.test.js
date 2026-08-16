@@ -171,17 +171,28 @@ describe('the palette itself is well formed', () => {
                 .toThrow(/needs a DRAW for "len"/);
             expect(() => byName('wall-segment').instantiate(null, {}))
                 .toThrow(/needs a DRAW for "ori"/);
-            // …and a zero-parameter template needs no rng at all.
-            expect(byName('arrow-lane').instantiate(null).instance).toBe('arrow-lane');
+            /**
+             * …and a zero-parameter template needs no rng at all. ⛓ ARC 3
+             * SLICE 1: the SHIPPED ROSTER no longer holds one (`arrow-lane`
+             * was it, and ⚖ design ruling 9 took it out), so the degenerate
+             * case is exercised by a synthetic row rather than dropped — trap
+             * 312: a retired row makes a claim VACUOUS, and the answer is the
+             * sentence that still has content, not silence.
+             */
+            const zeroParam = fakeTemplate({ name: 'z', params: [] });
+            expect(zeroParam.instantiate(null).instance).toBe('z');
+            expect(PRE_SWORD_TEMPLATES.some((t) => t.params.length === 0)).toBe(false);
         });
 
         /**
          * ⛓ THE ENUMERATION COUNTS `assertPalette`'s DOCBLOCK STATES, asserted
          * FROM the roster so the table cannot go stale silently (trap 199).
          */
-        it('enumerates 42 pre-sword and 44 post-sword instantiations at module load', () => {
-            expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(42);
-            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(44);
+        it('enumerates 41 pre-sword and 43 post-sword instantiations at module load', () => {
+            // ⛓ ARC 3 SLICE 1: 42/44 before `arrow-lane`'s ONE zero-parameter
+            // instantiation left with the row (⚖ design ruling 9).
+            expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(41);
+            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(43);
             const perTemplate = Object.fromEntries(
                 PRE_SWORD_TEMPLATES.map((t) => [t.name, enumerateValues(t).length]),
             );
@@ -189,7 +200,6 @@ describe('the palette itself is well formed', () => {
                 'wall-segment': 8,
                 'water-pool': 9,
                 'pit-patch': 6,
-                'arrow-lane': 1,
                 'wall-gap-block': 16,
                 'wall-gap-lock-weigh': 2,
             });
@@ -445,12 +455,29 @@ describe('the palette itself is well formed', () => {
          * single kill lock is allocated **1** — exactly the value the literal
          * had (trap 235's shape, one field over).
          */
-        it('⛓ DRIVEN: seed 12 keeps TWO kill locks and they take DISTINCT tags', () => {
+        it('⛓ DRIVEN: seed 15 keeps TWO tag-bearing locks and they take DISTINCT tags', () => {
+            /**
+             * ⛓⛓ RE-PICKED, AND THE SUBJECT'S SHAPE CHANGED (arc 3 slice 1,
+             * trap 285 — the target and the count are named). `arrow-lane`
+             * leaving the roster moved every draw, and the property seed 12 had
+             * is now RARE: SCANNED post-sword at `obstacleTarget: 6` over seeds
+             * 1..60, **NOT ONE seed keeps two KILL locks** (eight keep exactly
+             * one: 13, 14, 15, 19, 32, 41, 49, 54).
+             *
+             * ⛔ SO THE SUBJECT IS RE-STATED RATHER THAN RELAXED. What
+             * `placementTagId` actually claims is *"only levels holding TWO
+             * TAG-BEARING TEMPLATES move, and their tags differ"* — and a KILL
+             * lock plus a WEIGH lock is exactly two tag-bearing placements.
+             * THREE seeds have that (15, 19, 32); **15 is taken**. The claim
+             * below is unchanged; only the pair of templates producing it is.
+             */
             const out = generateSeedlingLevel({
-                seed: 12, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+                seed: 15, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
             });
             // the subject's own property, asserted BEFORE the claim about it
-            expect(out.summary.kept.filter((k) => k.family === 'kill')).toHaveLength(2);
+            const families = out.summary.kept.map((k) => k.family);
+            expect(families.filter((f) => f === 'kill')).toHaveLength(1);
+            expect(families.filter((f) => f === 'weigh')).toHaveLength(1);
             const locks = out.record.entities.filter((e) => e.type === 'lock');
             expect(locks).toHaveLength(2);
             const tags = locks.map((l) => l.attrs.tag);
@@ -466,8 +493,9 @@ describe('the palette itself is well formed', () => {
         const families = new Set(PRE_SWORD_TEMPLATES.map((t) => t.family));
         // ⛓ PoC slice 3b added `weigh` — the palette's SECOND clearer family
         // and the first whose template places three cooperating entities.
+        // ⛓ ARC 3 SLICE 1: `arrow-lane` (a family AND a template) is gone.
         expect([...families].sort())
-            .toEqual(['arrow-lane', 'pit', 'shove', 'wall', 'water', 'weigh']);
+            .toEqual(['pit', 'shove', 'wall', 'water', 'weigh']);
         expect(PRE_SWORD_PALETTE.templates).toBe(PRE_SWORD_TEMPLATES);
         expect(PRE_SWORD_PALETTE.items).toEqual({ hasSword: false, hasShield: false });
     });
@@ -545,28 +573,15 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
         }
     });
 
-    it('arrow-lane joins `arrowTraps` with shootDefault TRUE — it fires from tick 0', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'arrow-lane', { tx: 3, ty: 3 }));
-        // ⛓ THE ZERO-PARAMETER CASE: no draw, no override, label == name.
-        expect(instanceOf('arrow-lane').instance).toBe('arrow-lane');
-        expect(instanceOf('arrow-lane').params).toEqual({});
-        expect(world.arrowTraps).toHaveLength(1);
-        const trap = world.arrowTraps[0];
-        expect(trap.shootDefault).toBe(true);
-        expect(trap.t).toBe(0);
-        // ⛓ the ENTITY POINT is the ctor's own (+8,+2) — never retyped here
-        expect({ x: trap.ex, y: trap.ey })
-            .toEqual(arrowTrapEntityPoint(3 * TILE_SIZE, 3 * TILE_SIZE));
-    });
-
-    it('the arrow lane has NO presser in this palette, so nothing can turn it off', () => {
-        const m = model();
-        const world = worldFor(placedAt(m, 'arrow-lane', { tx: 3, ty: 3 }));
-        expect(world.pressers).toEqual([]);
-        expect(world.activators).toEqual([]);
-    });
-
+    /**
+     * ⛓ TWO ROWS STOOD HERE — *"arrow-lane joins `arrowTraps` with shootDefault
+     * TRUE"* and *"the arrow lane has NO presser in this palette"*. ⛔ THEY ARE
+     * DELETED, NOT SKIPPED: ⚖ design ruling 9 took `arrow-lane` out of the
+     * generator, and a test of a template no palette holds is a test of
+     * nothing. The ENGINE's arrow trap is untouched and is still driven by
+     * `arrowTrap.test.js` and `levelWorld.test.js` — what left is the
+     * GENERATOR's use of it, which is what the ruling was about.
+     */
     /**
      * ⛓⛓ THE DOOR — slice 3's promotion, verified the same way as the other
      * five: what the template CLAIMS, asked of the built world.
@@ -1066,48 +1081,21 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('EVERY template in the roster is verified above — by name, not by count', () => {
         // The list this test compares against is the one the cases assert on.
-        const verified = ['wall-segment', 'water-pool', 'pit-patch', 'arrow-lane',
+        const verified = ['wall-segment', 'water-pool', 'pit-patch',
             'wall-gap-block', 'wall-gap-lock-weigh'];
         expect(PRE_SWORD_TEMPLATES.map((t) => t.name).sort()).toEqual([...verified].sort());
     });
 });
 
-describe('the arrow lane\'s clearance rule is the ENGINE\'s geometry', () => {
-    it('the lane rect comes from `arrowLaneForPlacement` + `arrowLaneRect`', () => {
-        const m = model();
-        const record = m.skeleton();
-        const { lane, laneRect } = m.laneClear(record, 4, 2);
-        const point = arrowTrapEntityPoint(4 * TILE_SIZE, 2 * TILE_SIZE);
-        const expected = arrowLaneForPlacement({ id: lane.id, t: 0, ex: point.x, ey: point.y });
-        expect(lane).toEqual(expected);
-        expect(laneRect).toEqual(arrowLaneRect(expected, record.height * TILE_SIZE));
-    });
-
-    it('refuses an anchor whose lane covers the goal cell, and says which', () => {
-        const m = model();
-        // the model's goal cell for seed 1 — the lane straight above it
-        const { tx, ty } = m.goalCell;
-        const verdict = m.laneClear(m.skeleton(), tx, ty - 1);
-        expect(verdict.ok).toBe(false);
-        expect(verdict.over).toBe('the goal cell');
-    });
-
-    it('a lane that reaches neither the start nor the goal is legal', () => {
-        const m = model();
-        const far = m.goalCell.tx === 8 ? 2 : 8;
-        expect(m.laneClear(m.skeleton(), far, 1).ok).toBe(true);
-    });
-
-    it('the anchor scan honours the rule — every drawn anchor is lane-clear', () => {
-        const m = model();
-        const rng = rngFor(3);
-        for (let i = 0; i < 20; i += 1) {
-            const [at] = m.anchorsFor(m.skeleton(), instanceOf('arrow-lane'), rng, 1);
-            expect(at).not.toBeNull();
-            expect(m.laneClear(m.skeleton(), at.tx, at.ty).ok).toBe(true);
-        }
-    });
-});
+/**
+ * ⛓ A `describe` BLOCK STOOD HERE — *"the arrow lane's clearance rule is the
+ * ENGINE's geometry"*, four rows driving `model.laneClear`. ⛔ DELETED WITH THE
+ * RULE: `laneClear` was `arrow-lane`'s own contract and its only caller, so it
+ * left with the row (⚖ arc-3 kickoff §6 Q3's named default). Keeping the rule
+ * to keep its tests green would have been dead code wearing a legality rule's
+ * name; the measurement it carried now lives on the `arrow-lane` row in
+ * `EXCLUDED_TEMPLATES`.
+ */
 
 describe('the bindings place atomically and refuse illegally', () => {
     it('the skeleton is a bordered room with exactly the goal pickup in it', () => {
@@ -1135,8 +1123,21 @@ describe('the bindings place atomically and refuse illegally', () => {
 
     it('never anchors on a cell an earlier ENTITY template occupies', () => {
         const m = model();
-        const once = placedAt(m, 'arrow-lane', { tx: 3, ty: 1 });
-        expect(m.isFree(once, 3, 1)).toBe(false);
+        /**
+         * ⛓ RE-PICKED (arc 3 slice 1): the subject was `arrow-lane`, the only
+         * one-cell entity template, and it left the roster. `wall-gap-lock-weigh`
+         * is the pre-sword row that places entities, so the cell is FOUND from
+         * the record rather than hard-coded — the claim is "an entity's cell is
+         * not free", and reading the offset off the template would make it a
+         * claim about this row's geometry instead.
+         */
+        const once = placedAt(m, 'wall-gap-lock-weigh', { tx: 1, ty: 3 }, { ori: 'h' });
+        const block = once.entities.find((e) => e.type === 'pushableblock');
+        expect(block).toBeTruthy();
+        const tx = Math.floor(block.x / TILE_SIZE);
+        const ty = Math.floor(block.y / TILE_SIZE);
+        expect(m.isFree(m.skeleton(), tx, ty)).toBe(true);
+        expect(m.isFree(once, tx, ty)).toBe(false);
     });
 
     it('PLACEMENT IS PURE — the old record is untouched, which is what revert is', () => {
@@ -1253,11 +1254,21 @@ describe('the bindings place atomically and refuse illegally', () => {
      * re-tested the FIRST anchor would produce the same two rows with the same
      * ordinals and the same verdicts, and only the CELL separates them.
      */
-    it('⛓ DRIVEN: seed 5 keeps at anchor 2 a candidate the default bound reverts', () => {
+    it('⛓ DRIVEN: seed 9 keeps at anchor 2+ a candidate the default bound reverts', () => {
+        /**
+         * ⛓ RE-PICKED (arc 3 slice 1, trap 285 — the target and the count are
+         * named). `arrow-lane` leaving the roster moved every draw, so seed 5's
+         * rescue is gone. SCANNED: pre-sword, `obstacleTarget: 6`,
+         * `anchorTriesPerCandidate: 3`, seeds 1..30 — EIGHT seeds still produce
+         * a rescue (4, 9, 10, 13, 15, 22, 23, 25) and all eight discriminate
+         * against the default bound. **Seed 9 is taken because it produces
+         * THREE**, the most of any, so the loop below is not a claim about one
+         * lucky row.
+         */
         const bounds = { obstacleTarget: 6, anchorTriesPerCandidate: 3 };
-        const wide = generateSeedlingLevel({ seed: 5, palette: PRE_SWORD_PALETTE, bounds });
+        const wide = generateSeedlingLevel({ seed: 9, palette: PRE_SWORD_PALETTE, bounds });
         const rescued = wide.trace.filter((r) => r.outcome === 'KEPT' && r.anchorTry > 1);
-        expect(rescued.length).toBeGreaterThan(0);
+        expect(rescued.length).toBe(3);
         for (const r of rescued) {
             const i = wide.trace.indexOf(r);
             const before = wide.trace[i - 1];
@@ -1271,7 +1282,7 @@ describe('the bindings place atomically and refuse illegally', () => {
         }
         // and the default bound really does lose it: same (step,try), REVERTED
         const narrow = generateSeedlingLevel({
-            seed: 5, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 9, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         const first = rescued[0];
         const same = narrow.trace.find((r) => r.step === first.step && r.try === first.try);
@@ -1311,7 +1322,6 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
     it('⛔⛔ `legalAt` AGREES WITH IT ON EVERY INTERIOR CELL — one adjudication', () => {
         for (const [biome, name, overrides] of [
             ['pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }],
-            ['pre-sword', 'arrow-lane', {}],
             ['pre-sword', 'water-pool', { w: 3, h: 3 }],
             ['post-sword', 'wall-gap-spinner-killlock', { ori: 'h' }],
         ]) {
@@ -1377,20 +1387,12 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
         });
 
         /**
-         * ⛓ MEASURED SUBJECT: seed 1 puts the goal at (5,7), so an arrow lane
-         * anchored at (5,1) fires DOWN the goal's own column. ⛔ (5,1) is
-         * otherwise FREE — asserted first, or this would be the start/goal
-         * class wearing the lane class's name.
+         * ⛓ A ROW STOOD HERE — the LANE rule, seed 1, an arrow at (5,1) firing
+         * down the goal's column. ⛔ DELETED with `laneClear` and `arrow-lane`
+         * (⚖ design ruling 9). The refusal vocabulary this block grades is now
+         * three sentences, not four: the free/painted/occupied walk, the SEAL
+         * pre-check, and the DOOR rule below.
          */
-        it('the LANE rule — seed 1, an arrow at (5,1) fires down the goal\'s column', () => {
-            const m = seedlingModel({ seed: 1 });
-            expect(m.goalCell).toEqual({ tx: 5, ty: 7 });
-            expect(m.isFree(m.skeleton(), 5, 1)).toBe(true);
-            const why = m.refusalAt(m.skeleton(), instance('pre-sword', 'arrow-lane', {}), 5, 1);
-            expect(why).toMatch(/its ARROW LANE covers the goal cell/);
-            expect(why).toMatch(/not an AVOIDABLE obstacle/);
-        });
-
         /**
          * ⛓ MEASURED SUBJECT: post-sword seed 6's goal is at (3,1), so EVERY
          * anchor whose footprint fits is refused by the door rule — (1,4) is
@@ -1478,8 +1480,18 @@ describe('the water template obliges the `sound` pin, by argument', () => {
      * whose water pool is kept LAST would have no later solve to be wrong
      * about, and the case would pass over a loop that still dropped the union.
      */
-    it('⛓ seed 9: every solve AFTER the pool is kept still carries `sound`', () => {
-        const seed = 9;
+    it('⛓ seed 24: every solve AFTER the pool is kept still carries `sound`', () => {
+        /**
+         * ⛓ RE-PICKED (arc 3 slice 1, trap 285). `arrow-lane` leaving moved
+         * seed 9's kept list, and with it the solve↔kept-row mapping this case
+         * depends on. SCANNED: pre-sword, `obstacleTarget: 4`, seeds 1..30, for
+         * a seed that KEEPS a water pool BEFORE its last row **and** keeps its
+         * FIRST candidate at every step (so solve k really is kept row k-1) —
+         * SEVEN qualify (5, 18, 24, 26, 27, 29, 30). **Seed 24 is taken because
+         * its pool is kept at index 1**: one pin-FREE solve before it and three
+         * pinned solves after, so the case has both arms rather than one.
+         */
+        const seed = 24;
         const bounds = { obstacleTarget: 4 };
         const m = seedlingModel({ seed });
         const base = seedlingOracle({ model: m, items: PRE_SWORD_PALETTE.items ?? null });
@@ -1501,7 +1513,7 @@ describe('the water template obliges the `sound` pin, by argument', () => {
 
         // the subject's own property, first
         const waterAt = out.summary.kept.findIndex((k) => k.family === 'water');
-        expect(waterAt, 'seed 9 must KEEP a water pool for this case to mean anything')
+        expect(waterAt, 'the subject must KEEP a water pool for this case to mean anything')
             .toBeGreaterThanOrEqual(0);
         expect(waterAt, 'and it must be kept before the LAST one, or no later solve exists')
             .toBeLessThan(out.summary.kept.length - 1);
@@ -1544,8 +1556,15 @@ describe('the exclusions are a list with measurements in it', () => {
 
     it('the MEASURED ones carry the refusal text verbatim, and it is THIS slice\'s', () => {
         const measured = EXCLUDED_TEMPLATES.filter((x) => x.refusalText !== null);
-        expect(measured).toHaveLength(2);
-        // ⛔ Both texts are re-measured on the CORRIDOR after the collect-path
+        // ⛓ ARC 3 SLICE 1: THREE now — `arrow-lane` joined them, and it is the
+        // first row here excluded by a RULING rather than by a mechanism the
+        // oracle could not adjudicate. Its text was captured at `58fa04225`
+        // BEFORE the row was removed, because afterwards there is no way to
+        // produce another; the row itself publishes the command that made it.
+        expect(measured).toHaveLength(3);
+        expect(measured.find((x) => x.name === 'arrow-lane').refusalText)
+            .toMatch(/the combat ladder is EXHAUSTED/);
+        // ⛔ The other two texts are re-measured on the CORRIDOR after the collect-path
         // fix. Slice 2's texts were about a path that no longer exists, and a
         // refusal text is this arc's evidence channel (kickoff §3.1) — a stale
         // one is a claim about a run nobody can reproduce.
@@ -1612,16 +1631,32 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
         expect(byName_.name).toBe('pre-sword[templates:wall-gap-lock-weigh,water-pool]');
     });
 
-    it('⛔ SPELLS ITS AXIS, because a bare name is ambiguous on THIS roster', () => {
-        // ⛓ MEASURED, not argued: `arrow-lane` is BOTH a family and a template
-        // in the shipped palette, so kickoff §3.4's `pre-sword[arrow-lane]`
-        // would name two different sub-rosters.
-        expect(PRE_SWORD_TEMPLATES.some((t) => t.family === 'arrow-lane')).toBe(true);
-        expect(PRE_SWORD_TEMPLATES.some((t) => t.name === 'arrow-lane')).toBe(true);
-        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['arrow-lane'] })
-            .name).toBe('pre-sword[families:arrow-lane]');
-        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'templates', names: ['arrow-lane'] })
-            .name).toBe('pre-sword[templates:arrow-lane]');
+    it('⛔ SPELLS ITS AXIS — and the collision that FORCED that is now GONE', () => {
+        /**
+         * ⛓ RE-MEASURED (arc 3 slice 1), and the honest answer changed shape.
+         * The rule was bought by a MEASUREMENT: `arrow-lane` was BOTH a family
+         * and a template, so kickoff §3.4's `pre-sword[arrow-lane]` named two
+         * different sub-rosters. ⚖ Design ruling 9 removed that row, so TODAY
+         * no shipped name equals a shipped family — asserted here rather than
+         * assumed, because it is the fact that changed.
+         *
+         * ⛔ THE RULE STAYS ANYWAY, and this is the sentence that still has
+         * content (trap 312): a roster is a thing slices ADD to, and a spelling
+         * that is unambiguous only until the next row lands is a spelling
+         * nobody can rely on. So the axis still rides in the name, and the
+         * refusal for a bare name is still the refusal.
+         */
+        const families = new Set(PRE_SWORD_TEMPLATES.map((t) => t.family));
+        const names = new Set(PRE_SWORD_TEMPLATES.map((t) => t.name));
+        expect([...names].filter((n) => families.has(n))).toEqual([]);
+        // …and both axes still spell themselves, on a name that exists in one.
+        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['wall'] })
+            .name).toBe('pre-sword[families:wall]');
+        expect(restrictPalette(PRE_SWORD_PALETTE, { axis: 'templates', names: ['wall-segment'] })
+            .name).toBe('pre-sword[templates:wall-segment]');
+        // ⛔ and an axis-less restriction is still REFUSED BY NAME.
+        expect(() => restrictPalette(PRE_SWORD_PALETTE, { names: ['wall'] }))
+            .toThrow(/axis must be "families" or "templates"/);
     });
 
     it('SORTS and DEDUPES, so one sub-roster has exactly one name', () => {
@@ -1783,7 +1818,10 @@ describe('⛓ a RESTRICTED run through the whole certification path', () => {
      * 3 and 6 keep both; 4 and 5 keep two pools.
      *
      * ⛔ AND THE UNRESTRICTED RUN OF THE SAME SEED KEEPS NEITHER — it keeps
-     * `pit-patch` and `arrow-lane`. That is what makes this a DISCRIMINATOR
+     * `pit-patch` and `wall-gap-block` (⛓ RE-MEASURED at arc 3 slice 1; it was
+     * `pit-patch` and `arrow-lane` until ⚖ design ruling 9 took that row out,
+     * and seed 3 is still one of six disjoint seeds in 1..14). That is what
+     * makes this a DISCRIMINATOR
      * (trap 235): a restriction the loop ignored would show up as kept
      * templates that are not in the restriction at all.
      */
@@ -1859,7 +1897,7 @@ describe('⛓ `verbOf` / `dischargesVerb` — ⚖ §12.1\'s evidence standard, o
          * `toBe(null)` and not `toBeFalsy()`: the latter passes on `false` and
          * would be a check that cannot see the defect it exists for.
          */
-        for (const family of ['wall', 'water', 'pit', 'arrow-lane']) {
+        for (const family of ['wall', 'water', 'pit']) {
             expect(verbOf(family)).toBeNull();
             expect(dischargesVerb(family, [{ strategy: 'shove' }])).toBeNull();
         }

@@ -42,6 +42,7 @@ import { solveForPage } from './watchSolve.js';
 import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, interiorCells, seedlingModel } from './procgenSeedling.js';
+import { defineTemplate } from '../procgenCore/templateContract.js';
 
 const json = (v) => JSON.stringify(v);
 
@@ -485,16 +486,24 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
      */
     it('the label carries the ANCHOR ordinal, so one candidate\'s rows are distinguishable',
         () => {
+            /**
+             * ⛓ RE-PICKED (arc 3 slice 1, trap 285). `arrow-lane` leaving the
+             * roster moved every draw. SCANNED: pre-sword, step 6,
+             * `anchorTriesPerCandidate: 3`, seeds 1..20 — SEVEN still walk
+             * (4, 9, 10, 12, 13, 14, 15); **seed 9 is taken because it walks
+             * THREE rows**, the most of any, so the loop below grades more than
+             * one label.
+             */
             const s = generateStep({
-                seed: 5,
+                seed: 9,
                 biome: 'pre-sword',
                 step: 6,
                 bounds: { anchorTriesPerCandidate: 3 },
             });
             const rows = generationRows(s.trace);
             const walked = rows.filter((r) => r.anchorsOffered > 1 && r.anchorTry > 1);
-            expect(walked.length, 'seed 5 must WALK for this case to mean anything')
-                .toBeGreaterThan(0);
+            expect(walked.length, 'the subject must WALK for this case to mean anything')
+                .toBe(3);
             for (const r of walked) {
                 expect(r.label).toBe(`${r.step}.${r.try}a${r.anchorTry}`);
                 const siblings = rows.filter((x) => x.step === r.step && x.try === r.try);
@@ -742,8 +751,10 @@ describe('generateStep under a restriction — the SAME loop, a smaller roster',
     /**
      * ⛓ THE SUBJECT, MEASURED (the same one `procgenPalette.test.js` drives
      * end to end): pre-sword seed 3 at target 2 keeps `pit-patch` and
-     * `arrow-lane` unrestricted, and `water-pool` + `wall-gap-lock-weigh`
-     * under `families:water,weigh`. ⛔ The two kept lists are DISJOINT, which
+     * `wall-gap-block` unrestricted, and `water-pool` + `wall-gap-lock-weigh`
+     * under `families:water,weigh`. ⛓ RE-MEASURED at arc 3 slice 1 — the
+     * unrestricted half moved when `arrow-lane` left the roster; seed 3 stays
+     * disjoint, so the subject did not. ⛔ The two kept lists are DISJOINT, which
      * is what makes a restriction the loop ignored visible here rather than
      * only in a hash.
      */
@@ -888,17 +899,43 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     });
 
     it('a ZERO-parameter template has no clause at all — its label IS its name', () => {
-        const [d] = parseDirectives('arrow-lane@12d', palette);
-        expect(d.template).toBe('arrow-lane');
+        /**
+         * ⛓ ARC 3 SLICE 1: this row used to be driven on `arrow-lane`, the
+         * palette's one zero-parameter template, and ⚖ design ruling 9 took it
+         * out of the generator. The GRAMMAR still has the case, so the subject
+         * is a SYNTHETIC palette rather than a deleted row (trap 312: retiring
+         * a row makes a claim vacuous, and the answer is the sentence that
+         * still has content). ⛔ `parseDirectives` takes the palette it is
+         * given, which is exactly what makes this substitution honest.
+         */
+        const soloPalette = {
+            name: 'grammar-fixture',
+            templates: [defineTemplate({
+                name: 'bare',
+                family: 'bare',
+                params: [],
+                why: 'a fixture: no parameters, so the label IS the name',
+                build: () => ({ footprint: [{ dx: 0, dy: 0 }], terrain: [], entities: [] }),
+            })],
+        };
+        const [d] = parseDirectives('bare@12d', soloPalette);
+        expect(d.template).toBe('bare');
         expect(d.params).toEqual({});
-        expect(formatDirectives([d], palette)).toBe('arrow-lane@12d');
+        expect(formatDirectives([d], soloPalette)).toBe('bare@12d');
+        // ⛔ and the SHIPPED roster no longer holds one, which is why the
+        // fixture is here rather than a palette row.
+        expect(palette.templates.some((t) => t.params.length === 0)).toBe(false);
     });
 
     it('carries several directives in ORDER', () => {
-        const text = 'water-pool(w=1,h=3)@12d;arrow-lane@4s;wall-segment(ori=v,len=5)@12d';
+        // ⛓ ARC 3 SLICE 1: the middle member was `arrow-lane@4s`; it left with
+        // ⚖ design ruling 9, so a shipped template with a parameter clause
+        // takes its place. The claim — ORDER survives a round trip — is
+        // unchanged, and `@4s` still rides on the middle one.
+        const text = 'water-pool(w=1,h=3)@12d;pit-patch(w=2,h=1)@4s;wall-segment(ori=v,len=5)@12d';
         const ds = parseDirectives(text, palette);
         expect(ds.map((d) => d.template))
-            .toEqual(['water-pool', 'arrow-lane', 'wall-segment']);
+            .toEqual(['water-pool', 'pit-patch', 'wall-segment']);
         expect(ds[1].keepPolicy).toBe(KEEP_POLICY.FIRST_SOLVED);
         expect(ds[1].bound).toBe(4);
         expect(formatDirectives(ds, palette)).toBe(text);

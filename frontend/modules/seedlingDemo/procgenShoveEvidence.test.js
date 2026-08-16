@@ -213,13 +213,29 @@ describe('⛔ THE FAR REVERTS WERE CORRECT — attributed by ABLATION, not by a 
      * unchanged — only the seeds moved. Both subjects are rows the loop itself
      * REVERTED, both SOLVE alone at the same anchor, and both have
      * `noWall === SOLVED` (the block alone is walked around), which is the
-     * third arm's premise. ⚠ Two far rows in the same scan have
-     * `noWall === REFUSED` (seed 23's and one of seed 38's) — a class this
-     * pair deliberately does not cover, named rather than filtered out.
+     * third arm's premise. ⚠ Some far rows in the same scan have
+     * `noWall === REFUSED` — a class this pair deliberately does not cover,
+     * named rather than filtered out.
+     *
+     * ⛓⛓ RE-MEASURED AGAIN AT PROCGEN ELEMENTS ARC 3 SLICE 1 (trap 285 — the
+     * target and the counts are named). `arrow-lane` left the roster (⚖ design
+     * ruling 9), which moved every draw and therefore every trace. SCANNED:
+     * pre-sword `obstacleTarget: 6`, seeds 1..40, every REVERTED
+     * `wall-gap-block` row whose goal is STRICTLY BEYOND its wall — **seven
+     * such rows survive**, of which **three** meet the pair's premise
+     * (`full != SOLVED` AND `noWall == SOLVED`) in the WALL class (seeds 9, 32,
+     * 38) and **exactly one** in the BLOCK class (seed 27). ⛔ THE PAIR IS
+     * THEREFORE 9 AND 27, and the BLOCK half is the only subject there is —
+     * said out loud, because a class with one member is one bad draw from being
+     * a class with none.
+     *
+     * ⚠ AND THE UNCOVERED CLASS IS STILL THERE, re-named: seed 28's row
+     * (`ori=v,gap=0`@(3,1)) has `noWall === REFUSED`, and seed 31's two rows
+     * have both ablations REFUSED.
      */
     const cases = [
-        { seed: 2, params: { ori: 'v', gap: 3 }, at: { tx: 2, ty: 1 }, noBlockSolves: false },
-        { seed: 15, params: { ori: 'h', gap: 4 }, at: { tx: 1, ty: 2 }, noBlockSolves: true },
+        { seed: 9, params: { ori: 'v', gap: 3 }, at: { tx: 6, ty: 1 }, noBlockSolves: false },
+        { seed: 27, params: { ori: 'h', gap: 4 }, at: { tx: 1, ty: 2 }, noBlockSolves: true },
     ];
     for (const c of cases) {
         it(`seed ${c.seed}: the candidate refuses in its own room, and the ablation says `
@@ -258,7 +274,16 @@ describe('⛔⛔ THE GENERATED-ROOM EXISTENCE CLAIM — §11.7\'s missing half',
      * one of each could in principle be argued about. In these two it cannot:
      * the only pushable in the room is `wall-gap-block`'s own.
      */
-    for (const seed of [27, 38]) {
+    /**
+     * ⛓ RE-PICKED at arc 3 slice 1 (trap 285). SCANNED: seeds 1..40 at
+     * `obstacleTarget: 6` for a level that keeps `shove`, keeps NO `weigh`,
+     * SOLVES, certifies AND produces at least one `shove` record — **ten
+     * qualify** (5, 9, 10, 15, 17, 22, 28, 31, 32, 38). Seed 38 is KEPT from
+     * the original pair; seed 27 moved out because its final level now solves
+     * with ZERO shove records (it is the ABLATION subject above instead), and
+     * seed 5 takes its place.
+     */
+    for (const seed of [5, 38]) {
         it(`seed ${seed}: the FINAL certified level's own solve DISCHARGES \`shove\``, () => {
             const gen = generateSeedlingLevel({
                 seed, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },

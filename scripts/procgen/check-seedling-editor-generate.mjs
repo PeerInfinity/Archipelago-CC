@@ -187,8 +187,12 @@ const ROUND_BUDGET = { maxTicksPerTarget: ROUND.tickbudget };
  * `pre-sword seed 3 at target 2` under `templates=wall-gap-lock-weigh,water-pool`.
  * ⛓ MEASURED, and the property that matters is asserted below before the claim
  * uses it: the unrestricted run of the SAME seed keeps `pit-patch` and
- * `arrow-lane`, and the restricted one keeps `water-pool` and
- * `wall-gap-lock-weigh` — **two DISJOINT kept lists**. A restriction the page
+ * `wall-gap-block`, and the restricted one keeps `water-pool` and
+ * `wall-gap-lock-weigh` — **two DISJOINT kept lists**. ⛓ RE-MEASURED at arc 3
+ * slice 1: `arrow-lane` left the roster (⚖ design ruling 9), which moved every
+ * draw and therefore the unrestricted list (it was `pit-patch` + `arrow-lane`).
+ * SCANNED seeds 1..14 at these bounds — SIX are still disjoint (3, 4, 6, 8, 9,
+ * 10) and **seed 3 is KEPT**, so the subject did not have to move at all. A restriction the page
  * read, echoed and did not PASS to the loop is therefore visible in the kept
  * list itself and not only in a hash (trap 235: a subject that agrees with its
  * fallback cannot fail).

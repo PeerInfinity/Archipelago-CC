@@ -214,3 +214,91 @@ export function connected(width, height, isWalkable, from, to) {
     }
     return false;
 }
+/**
+ * ⛓⛓⛓ **ONE SHORTEST PATH, NOT JUST ITS EXISTENCE** — PROCGEN ELEMENTS arc 3,
+ * slice 1 (kickoff §3.1).
+ *
+ * `connected` answers *is there a way?* and `reachableFrom` answers *where can
+ * I get to?*. The SITE vocabulary asks a third question neither can answer:
+ * *which cells are ON the way?* — the MAIN PATH is what a bend, a branch stub
+ * and (arc 3 slice 2) a door's cut are all defined against.
+ *
+ * ⛔ SO IT LIVES HERE, WITH THE OTHER TWO. ⚖ The one-of-everything law: a
+ * private BFS in a binding would be a third spelling of 4-connectivity, and the
+ * day one of them grew a diagonal or a bounds fix the main path and the
+ * connectivity pre-check would disagree while both claimed to be "the flood".
+ * The traversal shape below is `connected`'s, with a parent array added.
+ *
+ * ── ⚠ "ONE SHORTEST PATH" IS A CHOICE, AND IT IS A CANONICAL ONE ──────
+ *
+ * A grid usually has many shortest paths. This returns the one BFS finds under
+ * `connected`'s own neighbour order (N, S, W, E) — deterministic for a given
+ * grid, which is all the site vocabulary needs, and it is NOT a claim that the
+ * cells returned are the only cells at that distance. ⛔ A caller who needs
+ * "every cell on some shortest path" is asking a different question and must
+ * say so rather than reading this list as if it answered it.
+ *
+ * ⚠ AND THE LENGTH IS WHAT SLICE 2's NO-SHORTCUT RULE COMPARES, so the path is
+ * returned INCLUSIVE of both endpoints: `path.length - 1` is the step count.
+ *
+ * @param {number} width
+ * @param {number} height
+ * @param {(x:number, y:number) => boolean} isWalkable ⛔ called at most once
+ *   per cell, `connected`'s own property.
+ * @param {{x:number, y:number}} from
+ * @param {{x:number, y:number}} to
+ * @returns {Array<{x:number, y:number}>|null} the path from `from` to `to`
+ *   inclusive, or `null` when there is none — ⛔ `null` and not `[]`, because
+ *   an empty array is what a caller would get for "the path from a cell to
+ *   itself" if this ever grew that case, and the two must not read alike.
+ */
+export function shortestPath(width, height, isWalkable, from, to) {
+    for (const [n, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`gridFlood: ${n} must be a positive integer, got ${JSON.stringify(v)}.`);
+        }
+    }
+    if (typeof isWalkable !== 'function') {
+        fail('gridFlood: `isWalkable(x, y)` must be a function — the PREDICATE is the '
+            + 'caller\'s and the flood is shared.');
+    }
+    assertCell(from, '`from`', width, height);
+    assertCell(to, '`to`', width, height);
+    if (!isWalkable(from.x, from.y) || !isWalkable(to.x, to.y)) return null;
+    const start = from.x + from.y * width;
+    const target = to.x + to.y * width;
+    if (start === target) return [Object.freeze({ x: from.x, y: from.y })];
+
+    const seen = new Uint8Array(width * height);
+    const prev = new Int32Array(width * height).fill(-1);
+    const queue = [start];
+    seen[start] = 1;
+    let found = false;
+    for (let head = 0; head < queue.length && !found; head += 1) {
+        const i = queue[head];
+        const x = i % width;
+        const y = (i - x) / width;
+        for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const ni = nx + ny * width;
+            if (seen[ni]) continue;
+            // ⛓ `connected`'s ordering, carried whole: the arrival test comes
+            // BEFORE the predicate call, so `to` — whose walkability the
+            // endpoint check already settled — is never probed twice.
+            if (ni === target) { prev[ni] = i; seen[ni] = 1; found = true; break; }
+            if (!isWalkable(nx, ny)) { seen[ni] = 1; continue; }
+            seen[ni] = 1;
+            prev[ni] = i;
+            queue.push(ni);
+        }
+    }
+    if (!found) return null;
+    const out = [];
+    for (let i = target; i !== -1; i = prev[i]) {
+        const x = i % width;
+        out.push(Object.freeze({ x, y: (i - x) / width }));
+    }
+    return out.reverse();
+}

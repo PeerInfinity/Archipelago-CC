@@ -63,7 +63,12 @@ export function normalizeRoster(palette, roster) {
     if (axis !== 'families' && axis !== 'templates') {
         fail(`paletteRoster: a restriction's axis must be "families" or "templates", got `
             + `${JSON.stringify(axis)}. The axis is part of the restriction because a `
-            + 'name alone is ambiguous — "arrow-lane" is both a family and a template.');
+            + 'name alone is ambiguous. ⛓ THE MEASUREMENT THAT BOUGHT THIS RULE: Seedling '
+            + '"arrow-lane" was BOTH a family and a template, so a bare name picked two '
+            + 'different sub-rosters. ⚠ That row left the roster (PROCGEN ELEMENTS design '
+            + 'ruling 9) and no shipped name collides with a shipped family today — the rule '
+            + 'stays anyway, because a roster is a thing slices ADD to and a spelling that is '
+            + 'unambiguous only until the next row lands is one nobody can rely on.');
     }
     if (!Array.isArray(names) || names.some((n) => typeof n !== 'string' || !n)) {
         fail(`paletteRoster: a restriction's names must be a list of non-empty strings, `

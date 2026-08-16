@@ -9373,7 +9373,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs not yet started)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9413,3 +9413,57 @@ machine); the queue entry is `CC/docs/plans/fable-to-opus-handoff-2026-07.md`
 - Arcs: 1 area graph (maze; absorbs the held constructive slice 10-maze) →
   2 reverse-pull gadget (maze) → 3 Seedling → 4 CHAIN → 5 shortcuts / density
   / arenas.
+
+### Arc 3, slice 1 — `arrow-lane` OUT, and pass 2 learns SITES (2026-08-16)
+
+The first slice that changes Seedling generation output, so this section is
+where the tracked record starts.
+
+- ⚖ **`arrow-lane` IS GONE FROM THE GENERATOR** (design ruling 9). The base row
+  left `PRE_SWORD_TEMPLATES` (and post-sword with it), `procgenSeedling`'s
+  `laneClear` rule left with its only caller, and the `lane: 'avoidable'` word
+  left the concrete-row vocabulary. The row is RECORDED in
+  `procgenPalette.EXCLUDED_TEMPLATES` with its cause, its measurement and a
+  refusal text captured before the removal — the first row there excluded by a
+  RULING rather than by a mechanism the oracle could not adjudicate.
+  ⛓ **AND IT WAS THE WHOLE COST STORY**: on the Seedling yield table (7 kinds ×
+  seeds 1-8, target 3) the worst single solve fell **70,784 ms → 850 ms (83x)**
+  and total generation wall time **116.4 s → 32.8 s**, because every expensive
+  solve on a carved room was an arrow-lane REVERT walking the combat ladder
+  against a live volley. Every Seedling seed→level pair moved; the acceptance
+  batch, the carved-kind pairs and the generated set were re-recorded.
+- ⛓ **PASS 2 IS SITE-TYPED.** `procgenCore/sites.js` derives, once per model
+  and from the SKELETON, six classes over the ground the start can reach:
+  `main` (one shortest start→goal path, from `gridFlood.shortestPath` — new,
+  same flood family), `bend` (a main cell whose in/out directions differ),
+  `branch` (a straight dead-end stub off the main path: mouth, direction,
+  length, cells), `tip` (any dead end), `chamber` (the maximal 4-connected
+  blobs of cells belonging to an all-ground 2x2 square — arc 1's maze rule,
+  one rule over two terrains) and `corridor` (the rest).
+- A template row declares ONE `site:` class. Default `'any'` = the whole
+  interior, which is the list `anchorsFor` has always shuffled, so every row
+  that declares nothing is byte-inert. ⛔ **A site is a PROPOSAL DISTRIBUTION,
+  never a legality rule**: `refusalAt` is unchanged, so a DIRECTED placement
+  outside a template's class stays legal.
+- The three AREA templates (`wall-segment`, `water-pool`, `pit-patch`) declare
+  `'chamber'`, with **no fallback** — ⚖ the user's ruling. ⛓ **The census is
+  what the ruling was taken on**: a Seedling 10x10 room carved by a bare tree
+  kind has **no all-ground 2x2 square at all on 10 of 12 seeds**, so on
+  `branchy`/`bushy`/`loopy`/`open`/`winding` those rows are honestly NO_ANCHOR
+  and the yield there goes to ≈0. ⚖ **THINGS THAT NEED AREA ARE PLACED FIRST**:
+  a fallback to "anywhere" would re-create the open-room assumption this arc
+  exists to remove. **A bare tree kind is a CORRIDOR-ONLY skeleton, and area is
+  pass 1's to provide** — `chambers=k`, `rooms`, and later the elements
+  themselves; the yield table publishes that arm beside the bare one. The open
+  room is unaffected: its one chamber IS its interior, in the same order.
+- `scripts/procgen/census-seedling-sites.mjs` is the permanent site census
+  (kinds × knobs × seeds; counts only, no solve). Headline numbers later
+  slices size against: main-path length 2..22 (mean 7-10), corridor cells
+  7..35, branch stubs rare and short (0-5 per seed, lengths 1..7; `winding`,
+  `open` and `empty` have none at any of 12 seeds).
+- ⚠ **A derivation that spends no DRAW can still spend TIME.** Deriving the
+  sites eagerly at model construction made `seedlingModel` 72x more expensive
+  (0.039 ms → 2.819 ms) because `procgenLevel.terrainAt` is a linear scan of
+  the tiles layer, and it slowed the whole vitest suite. `deriveSites` now
+  reads the caller's predicate exactly once per cell (asserted by a test) and
+  `model.sites` is a memoized getter, so a model nobody asks pays nothing.

@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { GridFloodError, connected, reachableFrom } from './gridFlood.js';
+import { GridFloodError, connected, reachableFrom, shortestPath } from './gridFlood.js';
 
 /**
  * `#` is wall, anything else is walkable. Rows are given top-to-bottom, so the
@@ -207,5 +207,108 @@ describe('procgenCore/gridFlood — reachableFrom()', () => {
         };
         reachableFrom(g.width, g.height, counting, { x: 0, y: 0 });
         for (const [cell, n] of asked) expect(`${cell} asked ${n}x`).toBe(`${cell} asked 1x`);
+    });
+});
+
+describe('shortestPath — ONE path, not just its existence (arc 3 slice 1)', () => {
+    /**
+     * ⛔ AN INDEPENDENT INSTRUMENT, not the function under test. A separate
+     * breadth-first DISTANCE map, written here and nowhere else, is what grades
+     * the returned path's LENGTH — asserting `path.length` against
+     * `shortestPath`'s own arithmetic would grade it against itself
+     * (`feedback_fixed_point_is_not_correctness`).
+     */
+    const distanceTo = (width, height, walk, from) => {
+        const dist = new Map([[`${from.x},${from.y}`, 0]]);
+        let frontier = [from];
+        while (frontier.length) {
+            const next = [];
+            for (const c of frontier) {
+                for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                    const nx = c.x + dx;
+                    const ny = c.y + dy;
+                    if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                    if (!walk(nx, ny) || dist.has(`${nx},${ny}`)) continue;
+                    dist.set(`${nx},${ny}`, dist.get(`${c.x},${c.y}`) + 1);
+                    next.push({ x: nx, y: ny });
+                }
+            }
+            frontier = next;
+        }
+        return dist;
+    };
+
+    /**
+     *        0 1 2 3 4
+     *    0   . . . . .
+     *    1   . # # # .
+     *    2   . . . . .
+     */
+    const WALL = new Set(['1,1', '2,1', '3,1']);
+    const walk = (x, y) => !WALL.has(`${x},${y}`);
+
+    it('returns a CONTIGUOUS, walkable path whose length the independent BFS agrees with',
+        () => {
+            const path = shortestPath(5, 3, walk, { x: 0, y: 0 }, { x: 4, y: 2 });
+            expect(path[0]).toEqual({ x: 0, y: 0 });
+            expect(path[path.length - 1]).toEqual({ x: 4, y: 2 });
+            for (const c of path) expect(walk(c.x, c.y), `${c.x},${c.y}`).toBe(true);
+            for (let i = 1; i < path.length; i += 1) {
+                expect(Math.abs(path[i].x - path[i - 1].x)
+                    + Math.abs(path[i].y - path[i - 1].y)).toBe(1);
+            }
+            const dist = distanceTo(5, 3, walk, { x: 0, y: 0 });
+            expect(path.length - 1).toBe(dist.get('4,2'));
+        });
+
+    it('⛓ the path is CANONICAL — the same grid gives the same cells every time', () => {
+        const a = shortestPath(5, 3, walk, { x: 0, y: 0 }, { x: 4, y: 2 });
+        const b = shortestPath(5, 3, walk, { x: 0, y: 0 }, { x: 4, y: 2 });
+        expect(a).toEqual(b);
+        // ⛔ and it is the list the site vocabulary's `main` is defined as, so
+        // the literal is stated rather than left to the reader.
+        expect(a).toEqual([{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 2 },
+            { x: 2, y: 2 }, { x: 3, y: 2 }, { x: 4, y: 2 }]);
+    });
+
+    it('agrees with `connected` about EXISTENCE, in both directions', () => {
+        const sealed = (x, y) => x !== 2;
+        for (const [w, from, to] of [
+            [walk, { x: 0, y: 0 }, { x: 4, y: 2 }],
+            [sealed, { x: 0, y: 0 }, { x: 4, y: 2 }],
+            [walk, { x: 1, y: 1 }, { x: 0, y: 0 }],
+        ]) {
+            expect(shortestPath(5, 3, w, from, to) !== null)
+                .toBe(connected(5, 3, w, from, to));
+        }
+    });
+
+    it('⛔ `null`, never `[]`, when there is no path — and a single cell when from === to',
+        () => {
+            expect(shortestPath(5, 3, (x) => x !== 2, { x: 0, y: 0 }, { x: 4, y: 2 })).toBeNull();
+            expect(shortestPath(5, 3, walk, { x: 2, y: 2 }, { x: 2, y: 2 }))
+                .toEqual([{ x: 2, y: 2 }]);
+        });
+
+    it('a non-walkable endpoint answers `null` rather than throwing', () => {
+        expect(shortestPath(5, 3, walk, { x: 0, y: 0 }, { x: 2, y: 1 })).toBeNull();
+        expect(shortestPath(5, 3, walk, { x: 2, y: 1 }, { x: 0, y: 0 })).toBeNull();
+    });
+
+    it('refuses an off-grid endpoint and a `{tx,ty}` cell BY NAME', () => {
+        expect(() => shortestPath(5, 3, walk, { x: 0, y: 0 }, { x: 9, y: 0 }))
+            .toThrow(/off the 5x3 grid/);
+        expect(() => shortestPath(5, 3, walk, { tx: 0, ty: 0 }, { x: 1, y: 0 }))
+            .toThrow(/must be `\{x, y\}`/);
+    });
+
+    it('⛔ calls the predicate at most ONCE per cell — `connected`\'s own property', () => {
+        const calls = new Map();
+        const counted = (x, y) => {
+            calls.set(`${x},${y}`, (calls.get(`${x},${y}`) ?? 0) + 1);
+            return walk(x, y);
+        };
+        shortestPath(5, 3, counted, { x: 0, y: 0 }, { x: 4, y: 2 });
+        for (const [k, n] of calls) expect(n, k).toBe(1);
     });
 });

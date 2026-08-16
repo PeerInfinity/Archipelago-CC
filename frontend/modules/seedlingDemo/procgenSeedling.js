@@ -44,7 +44,6 @@
  * arm's path in the browser.
  */
 
-import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
 import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
     ProcgenLevelError, SINGLE_SCREEN_TILES, bootAtTile, emptyLevel, oelAtTile,
@@ -59,6 +58,12 @@ import {
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { connected } from '../procgenCore/gridFlood.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
+/**
+ * ⛓ PROCGEN ELEMENTS arc 3, slice 1 — the SITE vocabulary, in `procgenCore/`
+ * because it is stated in grid vocabulary and the maze will bind it next. ⛔ A
+ * site is a fact about the SEARCH, never about legality; see that file's law.
+ */
+import { deriveSites, siteCells, siteSummaryOf } from '../procgenCore/sites.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
     normalizeSkeleton,
@@ -472,41 +477,69 @@ export function seedlingModel({
     const isFree = (record, tx, ty) => freeRefusal(record, tx, ty) === null;
 
     /**
-     * ⛓⛓ THE LANE RULE — the ENGINE's geometry, asked before the level exists.
+     * ⛓⛓⛓ **THE SITES — PROCGEN ELEMENTS arc 3, slice 1, DERIVED ONCE, BESIDE
+     * THE CARVE.**
      *
-     * `arrowLaneForPlacement` takes a world PLACEMENT and there is no world
-     * yet, so the placement is built the way `levelWorld` builds one: the
-     * entity point is `arrowTrapEntityPoint(oelX, oelY)` — the ctor's own
-     * `(+8, +2)`, truncated by `Activators(_x:int, _y:int)` — and the lane
-     * follows from that. ⛔ Not one number of this is retyped here; if the
-     * ctor offset changes, this rule changes with it.
+     * ⛔ HERE AND NOT IN `skeleton()`, for the carve's own reason one line up:
+     * `skeleton()` is called more than once and this is a property of the room
+     * the carve built, not of each call. ⛓ AND IT SPENDS NO DRAW — every class
+     * is read off the tiles — so adding it moves no level from any seed. The
+     * gate for that claim is the `empty` pairs md5, not this sentence.
      *
-     * The rule itself: a lane that covers the START or the GOAL cell is not
-     * an avoidable obstacle, so the anchor is refused. `arrowLaneRect` needs
-     * the level's height IN PIXELS (its five call sites each supply their own
-     * — the function owns the shape, not the lookup).
+     * ⛔ IT IS DERIVED FROM THE **SKELETON**, NOT FROM THE RECORD PASS 2 IS
+     * BUILDING. A template placed at step 4 has painted walls the skeleton did
+     * not have, and re-deriving per step would make the class a function of the
+     * rejection history — the shape `placementGroupId`'s docblock rejects three
+     * times over. Legality is what accounts for a cell an earlier template
+     * took; the site says what kind of place the ROOM offers.
+     *
+     * ⛓ THE CONVERSION HAPPENS HERE AND NOWHERE ELSE (§9.2's rule, carried
+     * whole): `procgenCore/` speaks `{x,y}` because a grid is the vocabulary
+     * both substrates share, and Seedling anchors are `{tx,ty}`.
+     *
+     * ── ⛔⛔ DERIVED ON FIRST USE, MEMOIZED — **AND THAT IS A COST FIX, NOT A
+     *    SEMANTIC ONE** ────────────────────────────────────────────────
+     *
+     * ⛓ MEASURED, and the first draft was wrong: deriving eagerly here made
+     * `seedlingModel` construction **0.039 ms → 2.819 ms on `empty`, 72x**,
+     * because `procgenLevel.terrainAt` is a linear scan of the tiles layer
+     * (5.8 µs a call) and this model is constructed by nearly every test in the
+     * suite. `deriveSites` now reads the predicate exactly once per cell, and
+     * this closure defers the whole thing until somebody ASKS.
+     *
+     * ⛔ LAZINESS CANNOT CHANGE THE ANSWER, and that is why it is safe: the
+     * closure captures `base` — the SKELETON, which is finished before this
+     * line runs and is never mutated (`withTerrain`/`withEntities` are pure) —
+     * so the derivation reads the same tiles whenever it happens, and it still
+     * spends NO DRAW. ⚠ It is emphatically NOT derived from the record pass 2
+     * is building; see `anchorsFor`.
      */
-    const laneClear = (record, tx, ty) => {
-        const oel = oelAtTile(tx, ty);
-        const point = arrowTrapEntityPoint(oel.x, oel.y);
-        const lane = arrowLaneForPlacement({ id: `arrowtrap@${oel.x},${oel.y}`, t: 0, ex: point.x, ey: point.y });
-        const laneRect = arrowLaneRect(lane, record.height * TILE_SIZE);
-        for (const c of [d.start, goalCell]) {
-            const box = {
-                x: c.tx * TILE_SIZE,
-                y: c.ty * TILE_SIZE,
-                right: (c.tx + 1) * TILE_SIZE,
-                bottom: (c.ty + 1) * TILE_SIZE,
-            };
-            // `rectsOverlap`'s own half-open test, on the two rects this rule
-            // is about. (The engine's helper takes its own rect shape; the
-            // comparison is the same four inequalities.)
-            if (box.x < laneRect.x + laneRect.w && box.right > laneRect.x
-                && box.y < laneRect.y + laneRect.h && box.bottom > laneRect.y) {
-                return { ok: false, over: c === d.start ? 'the start cell' : 'the goal cell' };
-            }
-        }
-        return { ok: true, lane, laneRect };
+    const toTiles = (cells) => Object.freeze(cells.map((c) => Object.freeze({
+        tx: c.x, ty: c.y,
+    })));
+    let sitesMemo = null;
+    const sitesOf = () => {
+        if (sitesMemo) return sitesMemo;
+        const g = deriveSites(d.width, d.height,
+            (x, y) => terrainAt(base, x, y) === 'ground',
+            { from: { x: d.start.tx, y: d.start.ty }, to: { x: goalCell.tx, y: goalCell.ty } });
+        sitesMemo = Object.freeze({
+            main: toTiles(g.main),
+            bend: toTiles(g.bend),
+            branch: Object.freeze(g.branch.map((b) => Object.freeze({
+                mouth: Object.freeze({ tx: b.mouth.x, ty: b.mouth.y }),
+                dir: b.dir,
+                length: b.length,
+                cells: toTiles(b.cells),
+            }))),
+            tip: toTiles(g.tip),
+            chamber: toTiles(g.chamber),
+            chambers: Object.freeze(g.chambers.map((c) => Object.freeze({
+                cells: toTiles(c.cells),
+            }))),
+            corridor: toTiles(g.corridor),
+        });
+        return sitesMemo;
     };
 
     /**
@@ -577,11 +610,20 @@ export function seedlingModel({
      * and the sweep's total solve count fell 297 → 235.
      *
      * ⚠⚠ AND IT DID **NOT** BUY THE HEADLINE COST BACK, WHICH IS THE FINDING
-     * SLICE 6 CARRIES FORWARD. The worst single solve in the sweep — 77.8 s on
-     * `bushy` seed 5 — is an **`arrow-lane`** refusal (*"the combat ladder is
+     * SLICE 6 CARRIED FORWARD. The worst single solve in that sweep — 77.8 s on
+     * `bushy` seed 5 — was an **`arrow-lane`** refusal (*"the combat ladder is
      * E…"*), and an arrow lane writes NO TERRAIN AT ALL. Probe 2 (§2.4)
-     * attributed the corridor's cost to sealing candidates; at these bounds the
-     * dominant cost is an ENTITY template this rule cannot touch and must not.
+     * attributed the corridor's cost to sealing candidates; at those bounds the
+     * dominant cost was an ENTITY template this rule cannot touch and must not.
+     *
+     * ⛓⛓ **DISCHARGED BY REMOVAL, NOT BY A FIX** (PROCGEN ELEMENTS arc 3, slice
+     * 1; ⚖ design ruling 9). `arrow-lane` LEFT THE PALETTE — it was a
+     * pre-sword-puzzle element and the generator has no use for one — and the
+     * tail went with it: the same sweep in the same tree measured **MAX single
+     * solve 70,784 ms before and 850 ms after — 83x** (and total generation
+     * wall time 116.4 s → 32.8 s). ⛔ Nothing about this rule changed; the
+     * cost was never connectivity's to buy, which is what slice 6 said and what
+     * the removal confirms from the other side.
      *
      * ── ⛔ WHAT BLOCKS, AND WHY IT IS `ground` AND NOTHING ELSE ────────
      *
@@ -668,23 +710,19 @@ export function seedlingModel({
          * AFTER the footprint/clearance walk — trap 255's law, restated: the
          * walk is what rejects an off-interior cell, and a flood handed writes
          * outside the room would read `terrainAt` past the rectangle. BEFORE
-         * `laneClear` and `doorClear` — those two are about a SPECIFIC
-         * template's mechanism (a lane over the goal, a door with the goal on
-         * the near side), and "the room no longer connects" is the more general
-         * fact: a reader who moved the anchor wants to hear the structural
-         * refusal first.
+         * `doorClear` — that one is about a SPECIFIC template's mechanism (a
+         * door with the goal on the near side), and "the room no longer
+         * connects" is the more general fact: a reader who moved the anchor
+         * wants to hear the structural refusal first.
+         *
+         * ⛓ THERE USED TO BE A THIRD RULE HERE — `laneClear`, the arrow lane's
+         * own — and it LEFT WITH ITS ONLY TEMPLATE (⚖ design ruling 9; the
+         * measurement is on `procgenPalette.EXCLUDED_TEMPLATES`' `arrow-lane`
+         * row). ⛔ A legality rule kept alive for no row is dead code wearing a
+         * legality rule's name.
          */
         const sealed = sealRefusal(record, template, tx, ty);
         if (sealed) return sealed;
-        if (template.lane === 'avoidable') {
-            const lane = laneClear(record, tx, ty);
-            if (!lane.ok) {
-                return `"${template.instance ?? template.name}" at (${tx},${ty}): its ARROW `
-                    + `LANE covers ${lane.over}. A lane that covers the start or the goal is `
-                    + 'not an AVOIDABLE obstacle — it is a hazard the walk cannot route '
-                    + 'around — so the anchor is refused before any solve.';
-            }
-        }
         if (template.door && !doorClear(template, tx, ty)) {
             return `"${template.instance ?? template.name}" at (${tx},${ty}) declares `
                 + `door '${template.door}', and the GOAL (${goalCell.tx},${goalCell.ty}) is on `
@@ -716,13 +754,30 @@ export function seedlingModel({
         boot: () => bootAtTile(blank, d.start.tx, d.start.ty),
         interiorCells,
         isFree,
-        laneClear,
         doorClear,
         /**
+         * ⛓⛓ THE SITE CLASSES THIS ROOM OFFERS (arc 3 slice 1) — CELL LISTS in
+         * `{tx,ty}`, row-major, derived from the SKELETON once at construction.
+         * `sites.branch` is a list of `{mouth, dir, length, cells}` stubs; every
+         * other key is a flat cell list, and `sites.chambers` is the blob
+         * decomposition `sites.chamber` flattens.
+         */
+        get sites() { return sitesOf(); },
+        /**
+         * ⛓ COUNTS ONLY — what a census, a report or (later) a payload may
+         * carry. ⛔ Never the cell lists: a shipped cell list is a second copy
+         * of the terrain that can go stale against it, and a reader who wants
+         * the cells re-derives them from the level (arc 1's rule).
+         *
+         * ⛔ A GETTER for the same reason `sites` is: a model nobody asks pays
+         * nothing.
+         */
+        get siteSummary() { return siteSummaryOf(sitesOf()); },
+        /**
          * ⛓ EXPOSED SO THE DOMAIN SWEEP CAN ENUMERATE LEGAL ANCHORS WITHOUT
-         * RETYPING THE RULE (slice 2). `isFree`, `laneClear` and `doorClear`
-         * were already on this surface for the same reason; `legalAt` is the
-         * conjunction of all three plus the footprint walk, and a sweep that
+         * RETYPING THE RULE (slice 2). `isFree` and `doorClear` were already on
+         * this surface for the same reason; `legalAt` is the conjunction of
+         * both plus the footprint walk and the seal pre-check, and a sweep that
          * re-derived it would be the seventh copy of a retype this arc has
          * refused. ⛔ It is the SAME function `anchorsFor` calls — not an
          * agreeing one.
@@ -762,8 +817,30 @@ export function seedlingModel({
          * slice 2 of the PoC arc — see the file docblock: a rejection sampler
          * would have made the draw count depend on how full the room is.)
          *
+         * ── ⛓⛓⛓ ARC 3 SLICE 1: **THE SHUFFLED LIST IS THE TEMPLATE'S SITE
+         *    CLASS**, and at the default `'any'` it is the SAME CALL ────────
+         *
+         * A row that declares `site: 'chamber'` is offered the chamber cells;
+         * a row that declares nothing (or `'any'`) is offered
+         * `interiorCells(record)` — literally the expression this line has
+         * always held, so the default is byte-inert by a code path that does
+         * not change rather than by a comparison that happens to pass.
+         *
+         * ⛔ THIS IS NOT A LEGALITY RULE (`procgenCore/sites.js`'s law): the
+         * cells offered are still walked through `legalAt`, and a DIRECTED
+         * placement outside the class stays legal because `refusalAt` never
+         * learns a template has a site at all.
+         *
+         * ⚠ THE LIST'S **LENGTH AND ORDER** ARE BOTH PART OF THE LEVEL.
+         * `rng.shuffle` is Fisher-Yates and spends `n - 1` draws, so a shorter
+         * class shifts every draw after it and a same-length class in a
+         * different order produces a different level. That is exactly why the
+         * open room's ONE chamber is emitted in `interiorCells`' own row-major
+         * order: it makes an area template's `chamber` declaration byte-inert
+         * at `empty` and load-bearing everywhere else (⚖ arc-3 Q1).
+         *
          * @returns {Array<{tx,ty}>} up to `limit` legal anchors IN SHUFFLE
-         *   ORDER; `[]` when the whole interior refuses.
+         *   ORDER; `[]` when the class is empty or the whole of it refuses.
          */
         anchorsFor(record, template, rng, limit = 1) {
             if (!Number.isInteger(limit) || limit <= 0) {
@@ -771,8 +848,11 @@ export function seedlingModel({
                     + `${JSON.stringify(limit)}. The bound is what the trace names `
                     + '(`anchorTriesPerCandidate`), so there is no value meaning "all".');
             }
+            const offered = (template.site === undefined || template.site === 'any')
+                ? interiorCells(record)
+                : siteCells(sitesOf(), template.site);
             const out = [];
-            for (const c of rng.shuffle(interiorCells(record))) {
+            for (const c of rng.shuffle(offered)) {
                 if (!legalAt(record, template, c.tx, c.ty)) continue;
                 out.push({ tx: c.tx, ty: c.ty });
                 if (out.length >= limit) break;

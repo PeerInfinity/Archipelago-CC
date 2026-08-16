@@ -149,7 +149,7 @@ export function assertParamSchema(params, owner) {
     return keys;
 }
 
-export function defineTemplate({ name, family, params = [], why, build }) {
+export function defineTemplate({ name, family, site = 'any', params = [], why, build }) {
     if (typeof name !== 'string' || !name) {
         fail('templateContract: a template needs a name — it is the roster key, the trace\'s '
             + '`template` field and what the pin union looks up.');
@@ -163,6 +163,35 @@ export function defineTemplate({ name, family, params = [], why, build }) {
             + 'IS a function from its values to a concrete row (⚖ ruling 2); a table row '
             + 'with no constructor is exactly the shape this seam replaced.');
     }
+    /**
+     * ⛓⛓⛓ THE SITE CLASS — PROCGEN ELEMENTS arc 3, slice 1 (kickoff §3.1).
+     *
+     * ⛔ IT IS A BASE-LEVEL FIELD, STATIC PER TEMPLATE, AND NOT A PARAMETER.
+     * A `params` entry is DRAWN from its domain, which would make the site a
+     * per-instance dice roll and put a draw between the template pick and the
+     * anchor — moving every level from every seed for a field that is a
+     * statement about what the template IS. `wall-segment` wants a chamber
+     * whatever its length; that is a property of the row, so it is declared on
+     * the row.
+     *
+     * ⛔ THE MEMBERSHIP CHECK IS THE SUBSTRATE'S, NOT THIS FILE'S. `procgenCore/
+     * sites.js` owns `SITE_CLASSES`, and this file imports NOTHING (its own
+     * docblock's standing property — it is on both substrates' browser path
+     * beside `levelGenerator.js`). So the TYPE is checked here, where the row is
+     * declared, and the VOCABULARY by each palette's own `assertPalette`, which
+     * is where every other "what does this row MEAN" question is already asked.
+     *
+     * ⚠ DEFAULT `'any'`, and that default is what makes this field byte-inert
+     * for every row that predates it: `'any'` is the binding's whole-interior
+     * list, which is the list `anchorsFor` has always shuffled.
+     */
+    if (typeof site !== 'string' || !site) {
+        fail(`templateContract: template "${name}" declares site ${JSON.stringify(site)}; a `
+            + 'site class is a non-empty STRING naming one of `procgenCore/sites.SITE_CLASSES` '
+            + '(the palette\'s own `assertPalette` checks WHICH one). ⛔ It is not a parameter '
+            + '— a drawn site would put a draw between the template pick and the anchor and '
+            + 'make "which kind of place does this template want" a dice roll.');
+    }
     const keys = assertParamSchema(params, `template "${name}"`);
     const schema = Object.freeze(params.map((p) => Object.freeze({
         ...p, domain: Object.freeze([...p.domain]),
@@ -170,6 +199,7 @@ export function defineTemplate({ name, family, params = [], why, build }) {
     return Object.freeze({
         name,
         family,
+        site,
         params: schema,
         why,
         /**
@@ -216,6 +246,10 @@ export function defineTemplate({ name, family, params = [], why, build }) {
                 ...build(values),
                 name,
                 family,
+                // ⛓ STAMPED AFTER THE SPREAD, like `name`/`family`: a `build`
+                // cannot choose its own site any more than it can rename its
+                // own template.
+                site,
                 params: Object.freeze({ ...values }),
                 instance: instanceLabel(name, values),
             });

@@ -75,10 +75,19 @@
  *   `entities`    entities added, `{dx, dy, type, attrs}` — attrs TRANSCRIBED
  *                 from real atlas rooms, cited per template
  *   `pins`        staging pins this template obliges (`bootStaging`'s argument)
- *   `lane`        `'avoidable'` on the arrow trap — the model computes the
- *                 lane with the ENGINE's own geometry and refuses an anchor
- *                 whose lane covers the start or the goal
  *   `door`        `'h'|'v'` — `procgenSeedling.legalAt`'s own rule
+ *   `site`        ⛓ ARC 3 SLICE 1: which SITE CLASS the free loop should
+ *                 propose anchors from (`procgenCore/sites.SITE_CLASSES`).
+ *                 Default `'any'` = the whole interior, which is what
+ *                 `anchorsFor` has always shuffled. ⛔ It is a fact about the
+ *                 SEARCH and never about legality — see that file's law.
+ *
+ * ⛓ **A `lane` FIELD USED TO LIVE HERE** (`'avoidable'` on the arrow trap: the
+ * model computed the lane with the ENGINE's own geometry and refused an anchor
+ * whose lane covered the start or the goal). ⛔ THE WORD IS RETIRED, not
+ * reserved — it went with `arrow-lane` when ⚖ design ruling 9 took that row out
+ * of the generator, and `procgenSeedling.laneClear` went with both. See the
+ * `arrow-lane` row in `EXCLUDED_TEMPLATES` for the measurement.
  *   `params`      ⛓ THE STAMP: the VALUES this instance was built from, as a
  *                 plain object. ⚠ The base's `params` is the SCHEMA (an
  *                 ARRAY); a concrete row's is the VALUES (an OBJECT). Two
@@ -90,9 +99,13 @@
  *
  * ⛔ **THE CONCRETE ROW IS THE OUTPUT CONTRACT.** `anchorsFor`, `legalAt`,
  * `place`, the oracle, the pin union and the sentinel slots consume concrete
- * rows and never learn the migration happened. A zero-parameter template
- * (`arrow-lane`) is the degenerate case: one instantiation, byte-identical to
- * the frozen row it replaced.
+ * rows and never learn the migration happened. A zero-parameter template is the
+ * degenerate case: one instantiation, byte-identical to the frozen row it
+ * replaced. ⚠ THE SHIPPED ROSTER NO LONGER HOLDS ONE — `arrow-lane` was it, and
+ * it left with ⚖ design ruling 9 — so the case is now exercised by a synthetic
+ * template in `watchGenerate.test.js`'s directive-grammar rows rather than by a
+ * palette row (trap 312: retiring a row makes some claims VACUOUS rather than
+ * false; the honest move is to say which sentence still has content).
  *
  * ── ⛔⛔ THE DRAW ORDER **IS** PART OF DETERMINISM, SO IT IS DECLARED ───
  *
@@ -102,7 +115,7 @@
  * The loop's order within one attempt is therefore: pick the base template,
  * draw its parameters in schema order, then ask the model for an anchor. ⚠ The
  * number of draws an attempt spends is TEMPLATE-DEPENDENT (two for a wall
- * segment, none for an arrow lane), which is harmless precisely because the
+ * segment, one for a weigh lock), which is harmless precisely because the
  * template is drawn first — the stream decides the count before it spends it.
  *
  * ⛓ **AND THE OLD DOCBLOCK'S REJECTION OF A FACTORY IS SUPERSEDED** — see the
@@ -126,6 +139,13 @@ import { SINGLE_SCREEN_TILES, TERRAIN } from './procgenLevel.js';
  * re-exported below for every caller that has always taken it from here.
  */
 import { defineTemplate, enumerateValues } from '../procgenCore/templateContract.js';
+/**
+ * ⛓ THE SITE VOCABULARY — `procgenCore/sites.js`, since PROCGEN ELEMENTS arc 3
+ * slice 1. Imported for `assertPalette`'s membership check alone: the CLASSES
+ * are a shared fact about grids, and what a class MEANS for a Seedling anchor
+ * is `procgenSeedling.anchorsFor`'s.
+ */
+import { SITE_CLASSES } from '../procgenCore/sites.js';
 
 export class ProcgenPaletteError extends Error {
     constructor(message) {
@@ -224,7 +244,7 @@ export {
  *
  * ── ⛔⛔ `null` IS NOT `false`, AND THE DIFFERENCE IS THE WHOLE POINT ──
  *
- * A wall, a water pool, a pit patch and an arrow lane have NO verb to
+ * A wall, a water pool and a pit patch have NO verb to
  * discharge. Returning `false` for them would let a readout print
  * *"solved-only"* — *"we looked for the good outcome and did not get it"* —
  * about a template for which there was never anything to look for. That is
@@ -300,10 +320,14 @@ export function dischargesVerb(family, records) {
  *
  * ── ⚠ WHY THE DERIVED NAME SPELLS ITS AXIS ────────────────────────────
  *
- * Kickoff §3.4 suggests `pre-sword[wall,weigh]`. ⛓ MEASURED AGAINST THE ACTUAL
- * ROSTER, that spelling is ambiguous TODAY: `arrow-lane` is both a FAMILY name
- * and a TEMPLATE name, so `pre-sword[arrow-lane]` names two different
- * sub-rosters and a reader cannot tell which ran. The axis therefore rides in
+ * Kickoff §3.4 suggests `pre-sword[wall,weigh]`. ⛓ MEASURED AGAINST THE ROSTER
+ * OF THE DAY, that spelling was ambiguous: `arrow-lane` was both a FAMILY name
+ * and a TEMPLATE name, so `pre-sword[arrow-lane]` named two different
+ * sub-rosters and a reader could not tell which ran. ⚠ THAT COLLISION IS GONE
+ * — `arrow-lane` left the roster with ⚖ design ruling 9 and no shipped name
+ * equals a shipped family today — and the rule STAYS, because a roster is a
+ * thing slices add to and a spelling that is unambiguous only until the next
+ * row lands is a spelling nobody can rely on. The axis therefore rides in
  * the name — `pre-sword[families:pit,water]`, `pre-sword[templates:pit-patch]`
  * — and that name is `summary.palette`, so it is what the payload, the batch
  * report and the page's readout all carry.
@@ -516,6 +540,45 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     defineTemplate({
         name: 'wall-segment',
         family: 'wall',
+        /**
+         * ⛓⛓ ARC 3 SLICE 1 — AN AREA TEMPLATE IS OFFERED **CHAMBER** CELLS.
+         *
+         * ⚖ Design §4.3: *"area templates (pool / pit / segment) are offered
+         * the chamber site class only; on a bare corridor they are what the
+         * yield table says — sealers."* This row paints a BLOCK of terrain, and
+         * on a 1-wide corridor the only blocks it can paint are the ones the
+         * connectivity pre-check then refuses BY NAME (slice 6's 64 sealing
+         * REVERTs were exactly these three families). A chamber is where a
+         * patch of terrain is decoration rather than a wall across the way.
+         *
+         * ── ⛓⛓⛓ AND THERE IS **NO FALLBACK** — ⚖ THE USER RULED, 2026-08-16
+         *
+         * The site census (as-built §8.3) measured that a Seedling 10x10 room
+         * carved by a BARE TREE KIND has **no all-ground 2x2 square at all on
+         * 10 of 12 seeds**, so this declaration makes these three rows
+         * NO_ANCHOR on most `branchy`/`bushy`/`loopy`/`open`/`winding` seeds
+         * (yield table: kept 156 → 55, saturated cells 4 → 40 of 56). A
+         * `'chamber, else anywhere'` fallback was proposed and **OVERRULED**:
+         *
+         * ⚖ **THINGS THAT NEED AREA ARE PLACED FIRST** (the design's own law —
+         * pass 1 constructs elements and the connector leaves the space they
+         * demand; pass 2 decorates what pass 1 built). A fallback to "anywhere"
+         * would RE-CREATE THE OPEN-ROOM ASSUMPTION THIS ARC EXISTS TO REMOVE:
+         * it would put a patch of terrain in a 1-wide corridor precisely
+         * because there was nowhere proper for it.
+         *
+         * ⇒ **A BARE TREE KIND IS A CORRIDOR-ONLY SKELETON, and ≈0 kept there
+         * is the TRUTH about it, not a defect.** Area is pass 1's to provide —
+         * `chambers=k`, `rooms`, and (later) elements — and the yield table's
+         * `chambers=1` / `chambers=2` / `rooms` arm is where this declaration
+         * pays (as-built §8.4).
+         *
+         * ⛔ THE PRICE IS DECLARED: on the OPEN room this changes NOTHING —
+         * `empty`'s one chamber IS its interior, in the same order — and on a
+         * CARVED room it MOVES seed→level pairs, which ⚖ GENERATE-UI ruling 5
+         * licenses and the arc-3 slice-1 as-built re-records with its command.
+         */
+        site: 'chamber',
         params: [
             { key: 'ori', domain: ['h', 'v'], default: 'h',
                 why: 'the two orientations were `wall-segment-h3` and `-v3`, one parameter '
@@ -566,6 +629,45 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     defineTemplate({
         name: 'water-pool',
         family: 'water',
+        /**
+         * ⛓⛓ ARC 3 SLICE 1 — AN AREA TEMPLATE IS OFFERED **CHAMBER** CELLS.
+         *
+         * ⚖ Design §4.3: *"area templates (pool / pit / segment) are offered
+         * the chamber site class only; on a bare corridor they are what the
+         * yield table says — sealers."* This row paints a BLOCK of terrain, and
+         * on a 1-wide corridor the only blocks it can paint are the ones the
+         * connectivity pre-check then refuses BY NAME (slice 6's 64 sealing
+         * REVERTs were exactly these three families). A chamber is where a
+         * patch of terrain is decoration rather than a wall across the way.
+         *
+         * ── ⛓⛓⛓ AND THERE IS **NO FALLBACK** — ⚖ THE USER RULED, 2026-08-16
+         *
+         * The site census (as-built §8.3) measured that a Seedling 10x10 room
+         * carved by a BARE TREE KIND has **no all-ground 2x2 square at all on
+         * 10 of 12 seeds**, so this declaration makes these three rows
+         * NO_ANCHOR on most `branchy`/`bushy`/`loopy`/`open`/`winding` seeds
+         * (yield table: kept 156 → 55, saturated cells 4 → 40 of 56). A
+         * `'chamber, else anywhere'` fallback was proposed and **OVERRULED**:
+         *
+         * ⚖ **THINGS THAT NEED AREA ARE PLACED FIRST** (the design's own law —
+         * pass 1 constructs elements and the connector leaves the space they
+         * demand; pass 2 decorates what pass 1 built). A fallback to "anywhere"
+         * would RE-CREATE THE OPEN-ROOM ASSUMPTION THIS ARC EXISTS TO REMOVE:
+         * it would put a patch of terrain in a 1-wide corridor precisely
+         * because there was nowhere proper for it.
+         *
+         * ⇒ **A BARE TREE KIND IS A CORRIDOR-ONLY SKELETON, and ≈0 kept there
+         * is the TRUTH about it, not a defect.** Area is pass 1's to provide —
+         * `chambers=k`, `rooms`, and (later) elements — and the yield table's
+         * `chambers=1` / `chambers=2` / `rooms` arm is where this declaration
+         * pays (as-built §8.4).
+         *
+         * ⛔ THE PRICE IS DECLARED: on the OPEN room this changes NOTHING —
+         * `empty`'s one chamber IS its interior, in the same order — and on a
+         * CARVED room it MOVES seed→level pairs, which ⚖ GENERATE-UI ruling 5
+         * licenses and the arc-3 slice-1 as-built re-records with its command.
+         */
+        site: 'chamber',
         params: [
             { key: 'w', domain: [1, 2, 3], default: 2,
                 why: 'the frozen row was 2x2 and its own docblock called the size a '
@@ -614,6 +716,45 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     defineTemplate({
         name: 'pit-patch',
         family: 'pit',
+        /**
+         * ⛓⛓ ARC 3 SLICE 1 — AN AREA TEMPLATE IS OFFERED **CHAMBER** CELLS.
+         *
+         * ⚖ Design §4.3: *"area templates (pool / pit / segment) are offered
+         * the chamber site class only; on a bare corridor they are what the
+         * yield table says — sealers."* This row paints a BLOCK of terrain, and
+         * on a 1-wide corridor the only blocks it can paint are the ones the
+         * connectivity pre-check then refuses BY NAME (slice 6's 64 sealing
+         * REVERTs were exactly these three families). A chamber is where a
+         * patch of terrain is decoration rather than a wall across the way.
+         *
+         * ── ⛓⛓⛓ AND THERE IS **NO FALLBACK** — ⚖ THE USER RULED, 2026-08-16
+         *
+         * The site census (as-built §8.3) measured that a Seedling 10x10 room
+         * carved by a BARE TREE KIND has **no all-ground 2x2 square at all on
+         * 10 of 12 seeds**, so this declaration makes these three rows
+         * NO_ANCHOR on most `branchy`/`bushy`/`loopy`/`open`/`winding` seeds
+         * (yield table: kept 156 → 55, saturated cells 4 → 40 of 56). A
+         * `'chamber, else anywhere'` fallback was proposed and **OVERRULED**:
+         *
+         * ⚖ **THINGS THAT NEED AREA ARE PLACED FIRST** (the design's own law —
+         * pass 1 constructs elements and the connector leaves the space they
+         * demand; pass 2 decorates what pass 1 built). A fallback to "anywhere"
+         * would RE-CREATE THE OPEN-ROOM ASSUMPTION THIS ARC EXISTS TO REMOVE:
+         * it would put a patch of terrain in a 1-wide corridor precisely
+         * because there was nowhere proper for it.
+         *
+         * ⇒ **A BARE TREE KIND IS A CORRIDOR-ONLY SKELETON, and ≈0 kept there
+         * is the TRUTH about it, not a defect.** Area is pass 1's to provide —
+         * `chambers=k`, `rooms`, and (later) elements — and the yield table's
+         * `chambers=1` / `chambers=2` / `rooms` arm is where this declaration
+         * pays (as-built §8.4).
+         *
+         * ⛔ THE PRICE IS DECLARED: on the OPEN room this changes NOTHING —
+         * `empty`'s one chamber IS its interior, in the same order — and on a
+         * CARVED room it MOVES seed→level pairs, which ⚖ GENERATE-UI ruling 5
+         * licenses and the arc-3 slice-1 as-built re-records with its command.
+         */
+        site: 'chamber',
         params: [
             { key: 'w', domain: [1, 2, 3], default: 2,
                 why: 'the frozen row was 2x1 — "the atlas\'s own pits (L4\'s two cells) are '
@@ -636,68 +777,6 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
                 pins: Object.freeze([]),
             };
         },
-    }),
-    /**
-     * ⛓⛓⛓ THE AVOIDABLE ARROW LANE — the one template whose geometry is not
-     * its footprint.
-     *
-     * ⛔ `shoot: '1'` IS THE WHOLE DESIGN. `ArrowTrap.update` is
-     * `(activate && !shootDefault) || (!activate && shootDefault)` — an XOR
-     * (`arrowTrap.arrowTrapFires`) — so a `shoot="1"` trap fires from the
-     * level's FIRST TICK and stops only when its group is pressed. This
-     * palette places no button, so the lane is on for the whole run and the
-     * walk has to route around a live column. A `shoot="0"` trap in a
-     * button-less room is the opposite: it never fires at all, and placing one
-     * would be an obstacle that obstructs nothing — an ingredient that
-     * manufactures the appearance of difficulty (traps 171/173). ⚠ The atlas
-     * has both senses: L4/L5/L8 are `shoot="0"`, L16/L67 are `shoot="1"`
-     * (`arrowTrap.js`'s own census).
-     *
-     * ⛔ THE LANE GEOMETRY IS THE ENGINE'S, NEVER RETYPED — the model builds a
-     * placement with `arrowTrapEntityPoint` and asks
-     * `arrowLaneForPlacement` + `arrowLaneRect`. The editor arc refused an
-     * arrow-lane overlay on exactly this ground (kickoff §14.4a: a seventh
-     * copy of a retype), and a palette that wrote `x0 = x - 6` here would be
-     * the eighth.
-     *
-     * `lane: 'avoidable'` is the CLEARANCE RULE, and it is the template's own
-     * contract rather than a safety net: the anchor is refused if the lane
-     * rect covers the start cell or the goal cell, because a lane over either
-     * is not an avoidable obstacle — it is a room the walk must stand in a
-     * volley to finish. The refusal is a placement refusal with its reason,
-     * so the trace says which anchor was rejected and why.
-     *
-     * Attrs transcribed from `Dungeon2/3.oel` (L16) and `Dungeon6/8.oel`
-     * (L67): `{shoot: "1", tset: "0"}`.
-     */
-    /**
-     * ⛔ THE ZERO-PARAMETER CASE, AND IT IS DELIBERATE RATHER THAN UNFINISHED.
-     * `shoot` is a LAW (above) and not a choice; the lane geometry is the
-     * ENGINE's; and a one-cell footprint has no size to vary. So this row goes
-     * through `defineTemplate` with an EMPTY schema — one instantiation,
-     * byte-identical to the frozen row it replaced, and its label is its own
-     * name. ⚖ Kickoff §3.1: *"zero-parameter templates are the degenerate
-     * case, so migration is row-by-row"*.
-     */
-    defineTemplate({
-        name: 'arrow-lane',
-        family: 'arrow-lane',
-        params: [],
-        why: 'one always-firing trap; its lane is a live column the corridor must avoid, '
-            + 'and the lane rect comes from `arrowTrap.arrowLaneForPlacement`',
-        build: () => ({
-            footprint: rectCells(1, 1),
-            clearance: Object.freeze([]),
-            terrain: Object.freeze([]),
-            entities: Object.freeze([Object.freeze({
-                dx: 0,
-                dy: 0,
-                type: 'arrowtrap',
-                attrs: Object.freeze({ shoot: '1', tset: '0' }),
-            })]),
-            pins: Object.freeze([]),
-            lane: 'avoidable',
-        }),
     }),
     /**
      * ⛓⛓⛓ THE DOOR — PoC slice 3's promotion, and the palette's first CLEARER.
@@ -981,6 +1060,57 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
  * a later slice can re-ask the question instead of re-discovering the answer.
  */
 export const EXCLUDED_TEMPLATES = Object.freeze([
+    /**
+     * ⛓⛓⛓ ⚖ **RULED OUT OF THE GENERATOR ENTIRELY** (user, 2026-08-15, the
+     * PROCGEN ELEMENTS design session; design ruling 9), and it is the FIRST
+     * row here whose cause is a RULING rather than a mechanism the oracle
+     * could not adjudicate. The template WORKED — 22 KEPT over the slice-6
+     * sweep — and left anyway, because vanilla uses arrow lanes only as part
+     * of a PRE-SWORD PUZZLE and that puzzle is not what the generator is for.
+     *
+     * ⛔ `laneClear` LEFT WITH IT (⚖ arc-3 kickoff §6 Q3's named default). The
+     * lane rule was this template's own contract, its only caller, and its
+     * measurement now lives on this row; a rule kept alive for no row is dead
+     * code wearing a legality rule's name. `lane: 'avoidable'` therefore also
+     * leaves the CONCRETE-ROW vocabulary (see this file's header and
+     * `procgenCore/templateContract`): the word is retired, not reserved.
+     */
+    Object.freeze({
+        name: 'arrow-lane',
+        family: 'arrow-lane',
+        cause: '⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the '
+            + 'generator does not use arrow lanes',
+        measured: '⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the '
+            + 'ruling is recorded with a number rather than as a preference. The '
+            + 'constructive-mode arc\'s yield table (§13.5) found every expensive solve in '
+            + 'the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** '
+            + '(`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes '
+            + 'NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not '
+            + 'touch it and must not have. §14.13 re-measured it at every chamber count: '
+            + '**`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one '
+            + 'expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat '
+            + 'ladder against a live volley before refusing; nothing about it is a defect, '
+            + 'which is exactly why no slice could fix it and the row had to be ruled on.',
+        refusalText: 'solverBot(procgen-l900) collect (96,32) stance: the combat ladder is '
+            + 'EXHAUSTED. The corridor passes through danger at (80.4,24.0) — '
+            + 'arrowLane:arrowtrap@80,16 (an ARMED trap\'s lane — a STATE question, and still '
+            + 'danger at every horizon: the volley that has not fired yet is the one a walk '
+            + 'needs warning about) — and every rung of ⚖ §11.8a\'s order refused:\n'
+            + '  avoid: no admissible corridor with the danger map\'s 1 volume(s) forbidden — '
+            + 'no walkable tile path in level 900 from tile (1,1) to (6,1). …\n'
+            + '  (the `time`, `bait` and `kill` rungs follow, each refusing BY NAME.) '
+            + '⛓ CAPTURED AT `58fa04225` BEFORE THE ROW WAS REMOVED, from `branchy` seed 4 at '
+            + 'count 3 / tries 4 / k 3 / anchortries 1 — the cheapest cell in the sweep that '
+            + 'produces one (668 ms), because after this commit there is no way to produce '
+            + 'another.',
+        wouldNeed: 'the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a '
+            + 'constructor that builds the trap, the cover the player waits behind and the '
+            + 'button that disarms it TOGETHER (`procgenCore/elements.js`\'s contract), so '
+            + 'the lane is a thing the level was built around rather than a hazard dropped '
+            + 'into an existing room for the walk to route past. ⛔ Until then the honest '
+            + 'answer is that the generator has no use for one: ⚖ design ruling 8 designs '
+            + 'for POST-SWORD by default, and a post-sword player walks through the volley.',
+    }),
     Object.freeze({
         name: 'button-lock-pair',
         family: 'hold',
@@ -1708,13 +1838,13 @@ function assertTagSlot(t) {
  *
  * ── THE LOAD-TIME COST, STATED WITH ITS COUNT ─────────────────────────
  *
- * **42 instantiations for `pre-sword` and 44 for `post-sword`** — 86 at module
- * load, both palettes:
+ * **41 instantiations for `pre-sword` and 43 for `post-sword`** — 84 at module
+ * load, both palettes (⛓ ARC 3 SLICE 1: 42/44 before `arrow-lane`'s single
+ * zero-parameter instantiation left with the row):
  *
  *   `wall-segment`               ori(2) x len(4)   =  8
  *   `water-pool`                 w(3)   x h(3)     =  9
  *   `pit-patch`                  w(3)   x h(2)     =  6
- *   `arrow-lane`                 (no parameters)   =  1
  *   `wall-gap-block`             ori(2) x gap(8)   = 16
  *   `wall-gap-lock-weigh`        ori(2)            =  2
  *   `wall-gap-spinner-killlock`  ori(2)            =  2   (post-sword only)
@@ -1748,6 +1878,31 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
                 + '— it needs an `instantiate(rng, overrides)` and a `params` SCHEMA ARRAY '
                 + '(⚖ ruling 2). A frozen row reaching the roster would place fine and '
                 + 'never appear in a domain sweep, which is a template nobody certified.');
+        }
+        /**
+         * ⛓⛓ ARC 3 SLICE 1 — THE SITE CLASS, CHECKED WHERE THE ROW'S MEANING
+         * IS CHECKED — and AFTER the parameterized-row refusal, because a frozen
+         * row has no `site` either and would otherwise meet a sentence about site
+         * classes when its real problem is that it is not a template at all (⛓ the
+         * ORDER was found by this file's own frozen-row test, not by reasoning). `templateContract.defineTemplate` asserts the TYPE (a
+         * non-empty string) because it imports nothing; the VOCABULARY is
+         * asked here, beside every other "what does this row mean" question,
+         * against `procgenCore/sites.SITE_CLASSES`.
+         *
+         * ⛔ AN UNKNOWN CLASS WOULD BE SILENT OTHERWISE: `anchorsFor` would ask
+         * the model for a class it does not derive, get a refusal deep inside
+         * `siteCells`, and the template would read as one nobody can place —
+         * the named-arm-nobody-built shape, one field over (the same argument
+         * the `door: 'h'|'v'` check below is here for).
+         */
+        if (!SITE_CLASSES.includes(base.site)) {
+            fail(`procgenPalette: template "${base.name}" declares site `
+                + `${JSON.stringify(base.site)}, which is not one of `
+                + `[${SITE_CLASSES.join(', ')}]. A site class names WHERE the free loop `
+                + 'proposes anchors from (`procgenCore/sites.js`); an unrecognised one '
+                + 'would leave the row unplaceable with no reader ever told why. ⛔ It is '
+                + 'not a legality rule — a DIRECTED placement outside the class stays '
+                + 'legal, and a class this skeleton has none of is an honest NO_ANCHOR.');
         }
         for (const values of enumerateValues(base)) {
             const t = base.instantiate(null, values);

@@ -234,6 +234,8 @@ if (CELL !== '') {
     let oracle;
     let palette;
     let floorPct;
+    /** ⛓ arc 3 slice 1 — Seedling only; the maze binds sites in a later slice. */
+    let siteCensus = null;
     if (SUBSTRATE === 'maze') {
         const {
             MAZE_PALETTE, mazeModel, mazeOracle,
@@ -266,6 +268,15 @@ if (CELL !== '') {
         const cells = interiorCells(sk);
         floorPct = Math.round((100 * cells.filter((c) => terrainAt(sk, c.tx, c.ty) === 'ground')
             .length) / cells.length);
+        /**
+         * ⛓ PROCGEN ELEMENTS arc 3, slice 1 — THE SITE CENSUS, BESIDE THE
+         * YIELD. A row that declares `site: 'chamber'` is NO_ANCHOR wherever
+         * the skeleton has no chamber, and a NO_ANCHOR column with no site
+         * column beside it reads as a template that does not work rather than
+         * as a room that has nowhere to put it. ⛔ COUNTS only — the cell lists
+         * are re-derivable from the level (`siteSummaryOf`'s own rule).
+         */
+        siteCensus = model.siteSummary;
     }
 
     const t0 = process.hrtime.bigint();
@@ -403,6 +414,7 @@ if (CELL !== '') {
         size: size.label,
         seed,
         floorPct,
+        siteCensus,
         areaCensus,
         elements: elementRow,
         require: requireRow,
@@ -609,10 +621,10 @@ for (const r of results) {
 
 say('## Per kind x size — the outcome roll-up');
 say('');
-say(`| kind | size | floor % | cells | saturated | kept | ${SUBSTRATE === 'maze'
+say(`| kind | size | floor % | SITES (mean/cell) | cells | saturated | kept | ${SUBSTRATE === 'maze'
     ? 'wall / door' : 'per template'} outcomes: KEPT / REVERTED / NO_ANCHOR / ILLEGAL `
     + '| solves | mean genMs | MAX genMs | MAX solveMs |');
-say('|---|---|---|---|---|---|---|---|---|---|---|');
+say('|---|---|---|---|---|---|---|---|---|---|---|---|');
 for (const [key, rows] of groups) {
     const [kind, size] = key.split('|');
     const ok = rows.filter((r) => !r.aborted && !r.error);
@@ -627,7 +639,21 @@ for (const [key, rows] of groups) {
         .map(([t, c]) => `${t} ${c.KEPT}/${c.REVERTED}/${c.NO_ANCHOR}/${c.ILLEGAL_PLACEMENT}`)
         .join('<br>') || '(no attempt)';
     const sat = ok.filter((r) => r.stop === 'SATURATED').length;
+    /**
+     * ⛓ arc 3 slice 1 — WHAT THE SKELETON OFFERED, beside what the palette
+     * kept. `chambers` is the one a `site: 'chamber'` row's NO_ANCHOR column
+     * has to be read against: 0 chambers is a room with nowhere to put an area
+     * template, which is a fact about the CARVE and not about the template.
+     */
+    const siteCol = ok.some((r) => r.siteCensus)
+        ? `main ${mean(ok.map((r) => r.siteCensus?.main ?? 0))} · chambers `
+          + `${mean(ok.map((r) => r.siteCensus?.chambers ?? 0))} · chamber cells `
+          + `${mean(ok.map((r) => r.siteCensus?.chamber ?? 0))} · corridor `
+          + `${mean(ok.map((r) => r.siteCensus?.corridor ?? 0))} · branches `
+          + `${mean(ok.map((r) => r.siteCensus?.branch ?? 0))}`
+        : '-';
     say(`| ${kind} | ${size} | ${ok.length ? `${mean(ok.map((r) => r.floorPct))}%` : '-'} `
+        + `| ${siteCol} `
         + `| ${ok.length}/${rows.length} | ${sat} (${pct(sat, ok.length)}) `
         + `| ${ok.reduce((a, r) => a + r.keptCount, 0)} | ${perTemplate} `
         + `| ${ok.reduce((a, r) => a + r.solves, 0)} | ${mean(ok.map((r) => r.genMs))} `

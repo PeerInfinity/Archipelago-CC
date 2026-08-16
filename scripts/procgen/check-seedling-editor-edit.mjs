@@ -100,7 +100,7 @@ const json = (v) => JSON.stringify(v);
  * ⛓⛓⛓ THE SUBJECT, AND ALL FOUR OF ITS CELLS ARE **MEASURED** BELOW.
  *
  * `pre-sword seed 3 at target 2` — a two-template ladder (`pit-patch`,
- * `arrow-lane`) whose open interior leaves room for every op. ⛔ Each cell's
+ * `pit-patch`) whose open interior leaves room for every op. ⛔ Each cell's
  * defining property is ASSERTED before any claim uses it (trap 235: a subject
  * that agrees with its fallback cannot fail):
  *
