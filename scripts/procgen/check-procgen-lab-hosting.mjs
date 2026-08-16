@@ -101,6 +101,24 @@ console.log(`node: the maze payload is seed ${mazePayload.seed}, `
  */
 const SEEDLING_ARGS = ['--seed=3', '--count=1'];
 const seedlingPayload = cli('generate-seedling-level.mjs', SEEDLING_ARGS);
+
+/**
+ * ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 12 — A **DIRECTED** PAYLOAD FOR THE HOST TO SEND.
+ *
+ * ⚖ §3.9 took `?directed=` off the address bar, so `procgenLab:load` is now one
+ * of the two channels a directive list has into a page. ⛔ Built by the CLI's
+ * `--directed=` — the flag the ruling deliberately KEPT — so this row's anchor
+ * is the other runtime's bytes, exactly as every other payload claim here is.
+ * ⚠ TWO directives, because one would not distinguish "the list was replayed"
+ * from "the first entry was".
+ */
+const DIRECTED_SPEC = 'wall-gap-block(ori=v,gap=1)@12d;wall-segment(ori=h,len=2)@12d';
+const directedSeedlingPayload = cli('generate-seedling-level.mjs',
+    [...SEEDLING_ARGS, `--directed=${DIRECTED_SPEC}`]);
+// eslint-disable-next-line no-console
+console.log(`node: the DIRECTED Seedling payload carries `
+    + `${directedSeedlingPayload.directives.length} directive(s): `
+    + `${directedSeedlingPayload.directives.map((d) => `${d.instance} ${d.outcome}`).join(' · ')}`);
 // eslint-disable-next-line no-console
 console.log(`node: the Seedling payload is seed ${seedlingPayload.seed} `
     + `(${seedlingPayload.biome}) at count ${seedlingPayload.bounds?.obstacleTarget}`);
@@ -361,7 +379,7 @@ try {
      * "the host's payload arrived" from "the page booted".
      */
     await settledFrame(mazeFrame, () => window.__mazeLab?.loaded === true
-        && window.__mazeLab?.certified === false
+        && window.__mazeLab?.certified === null
         && window.__mazeLab?.identity?.includes('UNCERTIFIED'),
     'the maze frame to show a LOADED, uncertified level');
     const mazeState = await mazeFrame.evaluate(() => window.__mazeLab);
@@ -372,9 +390,11 @@ try {
         `${json(mazeState.payload.level).length} vs ${json(mazePayload.level).length} bytes`);
     check(json(mazeState.payload.trace) === json(mazePayload.trace),
         '…and the payload\'s whole TRACE with it');
-    check(mazeState.certified === false,
+    check(mazeState.certified === null,
         '⛔ …and the loaded level is UNCERTIFIED — a file\'s own `certified: true` is '
-        + 'somebody else\'s assertion, not this page\'s oracle',
+        + 'somebody else\'s assertion, not this page\'s oracle. ⛓ SLICE 12: `null`, not '
+        + '`false` — NOBODY HAS ASKED this page, and `false` would claim an answer the '
+        + 'oracle never gave. Both substrates now spell it Seedling\'s way',
         json(mazeState.certified));
 
     events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
@@ -386,9 +406,10 @@ try {
         '⛓ …and the stateChanged the HOST saw carries the frame\'s OWN identity line, '
         + 'character for character',
         loadedState.data.identity);
-    check(loadedState.data.substrate === 'maze' && loadedState.data.certified === false
+    check(loadedState.data.substrate === 'maze' && loadedState.data.certified === null
         && loadedState.data.edits === 0,
-        '…with the substrate, the certification and the edit count on it');
+        '…with the substrate, the TRI-STATE certification (`null` = nobody has asked) and the '
+        + 'edit count on it', json(loadedState.data.certified));
     const levelEvent = [...events].reverse().find(
         (e) => e.name === 'procgenLab:levelChanged' && e.data?.iframeId === maze.iframeId);
     check(json(levelEvent?.data?.payload?.level) === json(mazePayload.level),
@@ -730,6 +751,64 @@ try {
         `${mazePanel.href} vs ${expectedHref}`);
     check(mazePanel.status.includes('connected') && mazePanel.status.includes('seed 5'),
         '…and the status line mirrors the frame\'s identity', mazePanel.status);
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 9 — `load` OF A **DIRECTED** PAYLOAD (SLICE 12)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⚖ §3.9: the payload is the directive channel, and the HOST's SEND is one
+     * of the two ways it arrives. ⛔ The claim is a REPRODUCTION claim, not an
+     * echo: the frame must REPLAY both directives through its own
+     * `applyDirective` and `agreementWithPayload` must agree against node's
+     * bytes — a build that ignored `payload.directives` (slice 11's state)
+     * reproduces the plain ladder and reddens here on `differences: ["level",
+     * "directives"]`.
+     *
+     * ⚠ IT RUNS LAST, ON PURPOSE (trap 299): it is a second `load` addressed to
+     * the Seedling frame, and claim 7b counts those.
+     */
+    await page.evaluate(({ iframeId, payload }) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="payload"]').value = JSON.stringify(payload);
+        node.querySelector('[data-role="send"]').onclick();
+    }, { iframeId: seed.iframeId, payload: directedSeedlingPayload });
+    /**
+     * ⛔ THE WAIT NAMES THE CLAIM'S OWN FIELD — TWO directives on the frame.
+     * The frame already holds a `payloadCheck` from claim 6 and one manual edit
+     * from 6c, so a wait on either would be satisfied by the state before this
+     * send (trap 246).
+     */
+    await settledFrame(seedFrame, () => window.__watch?.directives?.length === 2,
+        'the Seedling frame to REPLAY both directives from the sent payload');
+    const directedLoaded = await seedFrame.evaluate(() => window.__watch);
+    check(directedLoaded.payloadCheck?.agrees === true,
+        '⛓⛓⛓ CLAIM 9 — a DIRECTED payload SENT by the host is REPRODUCED byte-identically: '
+        + 'the frame replayed `payload.directives` and `agreementWithPayload` AGREES against '
+        + 'node\'s own bytes',
+        json(directedLoaded.payloadCheck?.differences ?? directedLoaded.payloadCheck));
+    check(directedLoaded.directives?.length === 2
+        && json(directedLoaded.directives.map((d) => d.instance))
+            === json(directedSeedlingPayload.directives.map((d) => d.instance)),
+    '⛓⛓ …and it replayed BOTH, in the payload\'s own order — one entry would not tell a '
+        + 'replayed LIST from a replayed FIRST',
+    json(directedLoaded.directives?.map((d) => d.instance)));
+    check(directedLoaded.edits === 0,
+        '⛔ …and the frame\'s earlier manual EDIT is gone: a load REPLACES the construction '
+        + 'rather than folding onto it', `${directedLoaded.edits} edit(s)`);
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.iframeId === seed.iframeId && e.data?.directives?.length === 2),
+    'a Seedling stateChanged naming TWO directives');
+    const directedState = [...events].reverse().find(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === seed.iframeId);
+    check(directedState.data.directives?.length === 2
+        && /then 2 directed attempt\(s\)/.test(directedState.data.identity),
+    '⛓⛓ …and the HOST is told so — `stateChanged.directives` names both and the identity '
+        + 'line counts them', directedState.data.identity);
+    check(/the URL is NOT a reproduction of this construction/.test(directedState.data.identity),
+        '⛔ …and the frame SAYS its URL is not a reproduction — since slice 12 a DIRECTIVE '
+        + 'raises that clause, because the bar carries no directive list',
+        directedState.data.identity.slice(-140));
 
     /* ── CLAIM 10: zero console errors ─────────────────────────────── */
     const benign = notFound.filter((u) => BENIGN_404.some((b) => new URL(u).pathname === b));

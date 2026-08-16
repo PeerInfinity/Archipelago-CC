@@ -214,15 +214,35 @@ const editedPayload = {
 
 let server = null;
 const host = arg('host', '');
-if (!host) {
-    server = await serveRepoRoot({
-        routes: { [EDITED_ROUTE]: Buffer.from(`${json(editedPayload)}\n`) },
-    });
-}
+if (!host) server = await serveRepoRoot();
 const origin = host || `http://127.0.0.1:${server.address().port}`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 12 — THE PAYLOAD ROUTE IS FULFILLED BY **PLAYWRIGHT**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE DEFECT THIS ENDS, MEASURED BY THE ORCHESTRATOR: the edited payload was
+ * a `serveRepoRoot({routes})` entry, so under `--host=` — where this row reuses
+ * a server it did not start — `/__edited-payload.json` did not exist, the page
+ * fetched a 404, and claim 6 sat in a `waitForFunction` until its **300 s**
+ * timeout. A row that loses claims under one of its own modes is a row whose
+ * green means two different things.
+ *
+ * ⇒ the route is intercepted at the BROWSER instead, which needs no server at
+ * all and is therefore identical in both modes. ⚠ The predicate matches on the
+ * PATHNAME rather than as a glob: the page is loaded at
+ * `?gen=/__edited-payload.json`, so a `**\/…` glob matches the DOCUMENT's own
+ * URL and serves the JSON as the page (measured on the maze row — it reads as a
+ * STUCK wait with no console error to attribute it).
+ */
+await page.route(
+    (u) => u.pathname === EDITED_ROUTE,
+    (r) => r.fulfill({
+        status: 200, contentType: 'application/json', body: `${json(editedPayload)}\n`,
+    }),
+);
 const errors = [];
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
@@ -332,8 +352,11 @@ try {
     check(/, then 1 manual edit\(s\)/.test(painted.detail),
         '⛓⛓ THE IDENTITY LINE names the third leg, in its order',
         painted.detail.slice(0, 90));
-    check(/the URL is NOT a reproduction after edits — the PAYLOAD is/.test(painted.detail),
-        '⛓⛓⛓ ⚖ RULING 9, SAID ON THE PAGE: the URL has stopped being a reproduction');
+    check(/the URL is NOT a reproduction of this construction — it names the LADDER alone/
+        .test(painted.detail),
+    '⛓⛓⛓ ⚖ RULING 9, SAID ON THE PAGE: the URL has stopped being a reproduction. ⛓ SLICE 12 '
+        + 'dropped "after edits" from the wording and widened the trigger — a DIRECTIVE now '
+        + 'raises the same clause, because the bar carries neither leg');
     check(painted.url === before.url,
         '⛔⛔ AND THE URL IS CHARACTER FOR CHARACTER WHAT IT WAS — the writer never learned '
         + 'about edits', painted.url);

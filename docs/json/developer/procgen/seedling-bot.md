@@ -8779,7 +8779,7 @@ warns and is ignored — the wall clock it set no longer exists).
 | `?count=` `?tries=` `?k=` | obstacle target · tries per step · saturation K |
 | `?anchortries=` | how many LEGAL anchors one candidate may be SOLVED at (1 = the pre-search behaviour). ⚠ Not `?anchors=` — that is the domain sweep's ENUMERATION MODE |
 | `?families=` / `?templates=` | the sub-roster (comma list). ABSENT is the whole roster; an EMPTY value refuses; ⛔ BOTH present REFUSES |
-| `?directed=` | the directed attempts in order: `template(k=v,…)@<bound><d\|s>[!tx,ty]`, `;`-separated. The clause IS the instance label; `d`/`s` is the keep policy; `!tx,ty` is a CLICKED cell and forces bound `1`. ⛔ Only INPUTS — a URL is an INSTRUCTION, a payload is a REPORT |
+| ~~`?directed=`~~ | ⛔ **RETIRED by constructive-mode slice 12** (⚖ §3.9). It REFUSES BY NAME and names the way in. The GRAMMAR is unchanged and still spoken by `--directed=` and by the payload's `instance` labels — see *What a URL is FOR* below |
 | `?tickbudget=` | the per-solve budget. No control on the form, and PRESERVED across every rewrite |
 | `?run=1` | RUN-ALL on load. DELETED at step 0 rather than spelt `run=0` |
 | `?gen=PATH` | a CLI payload to REPRODUCE and COMPARE — a determinism check across node and the browser, not a picture of a file |
@@ -8787,6 +8787,33 @@ warns and is ignored — the wall clock it set no longer exists).
 `generate-seedling-level.mjs` carries the same set as flags
 (`--anchor-tries=`, `--families=`, `--templates=`, `--directed=`), parsed by the
 SAME functions, so the two runtimes cannot disagree about what a construction is.
+
+### ⚖ What a URL is FOR (the URL diet — constructive-mode slice 12, 2026-08-15)
+
+⚖ **RULED by the user**: a URL names **the launch parameters a person types**,
+and nothing else. That list is `source · seed · biome · count/tries/k/anchortries
+· families|templates · skeleton;params · tickbudget` (the maze adds
+`width/height/expansions/areas/require`) `· gen`.
+
+The **PAYLOAD is the construction**: `directives` + `edits`, in that order,
+replayed by `?gen=` and by the host's `procgenLab:load` on **both** lab pages.
+So the identity of a level that was directed or edited is a FILE, and the page
+says so where it states the identity — *"⚠ the URL is NOT a reproduction of this
+construction — it names the LADDER alone; the PAYLOAD is"*.
+
+- ⛔ `?directed=` **REFUSES BY NAME** on both pages (it does not silently open
+  the ladder — that would be a link that means something other than it says),
+  and the refusal carries the way in.
+- ⛔ The one writer **never emits it** and DELETES a stale one, so what a page
+  writes is always what it can read.
+- ⛓ **`--directed=` STAYS on the CLI.** A flag is a different surface: it is how
+  a script or a browser row LAUNCHES a directed run in node, and it is what
+  produces the payloads `?gen=` replays. One grammar, three channels — the CLI
+  flag, the ATTEMPT/AT… buttons, and `payload.directives` — with the address bar
+  simply no longer among them.
+- ⛓ Nothing about the directive GRAMMAR, the directive OBJECT, `directiveSeed`'s
+  index-as-salt, or the payload shape changed. A payload's `directives` array
+  order IS the index, so no recorded construction was re-indexed.
 
 ### The standing laws
 
@@ -9308,6 +9335,31 @@ no skip condition) plus one new claim on `check-procgen-lab-hosting.mjs` — a
 paint in the Seedling frame arriving on the host bus as
 `procgenLab:stateChanged.edits === 1`, which is the whole chain the hard-wired
 `edits: 0` in `watchSummary.js` was standing in for since slice 4.
+
+### Slice 12 — THE URL DIET (`?directed=` leaves the URL)
+
+⚖ The user's ruling and its consequences are written up under *What a URL is FOR*
+above. What CHANGED in code: `procgenCore/urlParams.js` gained
+`refuseDirectedParam` / `dropDirectedParam` and lost `writeDirectedParam`; both
+readers refuse the key FIRST (before any other parameter is adjudicated, so an
+old link's first answer is the one that helps); both writers dropped their
+`directives` argument; and the `?gen=` / `procgenLab:load` path on BOTH pages now
+replays `payload.directives` (in order, at the same indices) before the edits.
+⇒ slice 11's recorded asymmetry — *"`?gen=` replays a payload's EDITS but not its
+DIRECTIVES"* — is closed.
+
+⚠ **The maze still refuses to reproduce an EDITED payload**, and the reason is no
+longer the channel: a maze edit is recorded as a DESCRIPTION (cell + palette
+TYPE) while `MazeRoomEditor` reads `selectedItemId`/`selectedObstacleId`, which
+the record does not carry — a fold would place a different body at the right
+cell. Its LOAD box takes the level as it stands. Making maze edits replayable
+means giving them an OP shape like Seedling's four.
+
+⛓ The maze's `certified` became the TRI-STATE Seedling landed in slice 11 —
+`null` = *nobody has asked* (a fresh skeleton, an edit, an undo, a load),
+`true`/`false` = the ORACLE's own answer, with `false` reachable in exactly one
+place (`certify` on a REFUSED verdict). One spelling across the substrates, which
+is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs not yet started)
 

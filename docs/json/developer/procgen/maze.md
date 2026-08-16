@@ -91,7 +91,7 @@ the entrance from the goal is refused BY NAME, before any solve.** It runs after
 the footprint/clearance walk (which is what rejects an off-grid cell) and, since
 `legalAt` is derived from `refusalAt`, `anchorsFor` simply stops offering sealing
 cells — so the loop reports NO_ANCHOR where it used to spend a solve and REVERT.
-A `?directed=` cell named explicitly gets `ILLEGAL_PLACEMENT` with the sentence,
+A directive naming a cell explicitly gets `ILLEGAL_PLACEMENT` with the sentence,
 which the lab page's trace pane prints.
 
 ⛔ **It reads TILES only, and a `door-key` can therefore never be sealed by it.**
@@ -277,7 +277,23 @@ oracle's answer or nothing.
 
 Shared with `watch.html` through `procgenCore/urlParams.js`:
 `?source=` `?seed=` `?biome=` `?count=` `?tries=` `?k=` `?anchortries=`
-`?families=` / `?templates=` `?directed=` `?run=1` `?gen=`.
+`?families=` / `?templates=` `?run=1` `?gen=`.
+
+⚖ **THE URL DIET (constructive-mode slice 12, 2026-08-15).** `?directed=` is no
+longer a URL parameter on either page and **refuses by name**, with the way in in
+the sentence. A URL names the LAUNCH parameters a person types; a directive list
+is a CONSTRUCTION, and the PAYLOAD carries it — `?gen=` and the host's
+`procgenLab:load` replay `payload.directives` (in order, at the same indices, so
+`directiveSeed`'s index-as-salt is untouched) and then `payload.edits`. The
+GRAMMAR is unchanged and still spoken by `generate-seedling-level.mjs
+--directed=` and by every payload's `instance` labels; only the address bar
+dropped out. ⚠ This page still REFUSES to reproduce an **edited** payload, and
+the reason is no longer the channel: a maze edit is recorded as a DESCRIPTION
+(cell + palette type) while `MazeRoomEditor` reads
+`selectedItemId`/`selectedObstacleId`, which the record does not carry — its LOAD
+box takes the level as it stands. ⛓ `certified` is now the TRI-STATE Seedling
+uses: `null` = *nobody has asked*, `true`/`false` = the oracle's own answer, with
+`false` reachable only from a REFUSED SOLVE.
 
 Maze-only, each with the line that forced it:
 

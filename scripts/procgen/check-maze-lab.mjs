@@ -102,7 +102,9 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const MAZE = (p) => import(join(REPO, 'frontend/modules/mazeRoom', p));
-const { generateStep, serializeMazeLevel } = await MAZE('mazeLab.js');
+const {
+    generateStep, generateWithDirectives, labPayload, serializeMazeLevel,
+} = await MAZE('mazeLab.js');
 
 const json = (v) => JSON.stringify(v);
 let failed = 0;
@@ -381,6 +383,67 @@ const finish = async (code) => {
     process.exit(code);
 };
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 12 — THE PAYLOAD ROUTES, AND WHY THEY ARE `page.route`
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §3.9 took `?directed=` off the address bar, so the two SEALING claims
+ * below — which need an EXPLICIT-anchor directive, and which this page cannot
+ * arm by clicking (there is no click-to-anchor on the maze, ⚖ §3.4) — reach the
+ * page through the ONE channel a directive list now has: a PAYLOAD, loaded with
+ * `?gen=`. ⛔ Replaced, never relaxed (trap 62/199): the CLAIM is the same
+ * `ILLEGAL_PLACEMENT` sentence, driven through the new channel.
+ *
+ * ⛓⛓ AND THE ROUTE IS FULFILLED BY **PLAYWRIGHT**, not by `serveRepoRoot`'s
+ * `routes` map — because a row whose payload lives on its OWN server loses that
+ * claim under `--host=`, which is exactly the defect the orchestrator measured
+ * in `check-seedling-editor-edit.mjs` (a 300 s `waitForFunction` timeout on a
+ * route the reused server does not have). Intercepting the fetch keeps the page
+ * unchanged, keeps the claim, and works in BOTH modes.
+ */
+const SEAL_ROUTE = '/__maze-seal-payload.json';
+const OPEN_SEAL_ROUTE = '/__maze-open-seal-payload.json';
+const directedPayload = (args, spec) => labPayload(
+    generateWithDirectives({ ...args, directed: [spec] }),
+);
+const SEAL_SPEC = {
+    template: 'wall-segment',
+    params: { ori: PRECHECK.ori, len: PRECHECK.len },
+    anchor: { tx: PRECHECK.tx, ty: PRECHECK.ty },
+    bound: 1,
+    keepPolicy: 'first-solved',
+};
+const OPEN_SEAL_SPEC = {
+    template: 'wall-segment',
+    params: { ori: OPEN_PRECHECK.ori, len: OPEN_PRECHECK.len },
+    anchor: { tx: OPEN_PRECHECK.tx, ty: OPEN_PRECHECK.ty },
+    bound: 1,
+    keepPolicy: 'first-solved',
+};
+const SEAL_PAYLOAD = directedPayload(
+    { seed: PRECHECK.seed, step: 0, skeleton: { kind: 'winding' } }, SEAL_SPEC,
+);
+const OPEN_SEAL_PAYLOAD = directedPayload(
+    { seed: OPEN_PRECHECK.seed, step: 0, ...OPEN_ROOM }, OPEN_SEAL_SPEC,
+);
+/**
+ * ⛔⛔ THE MATCH IS ON THE **PATHNAME**, AND A GLOB IS WRONG HERE — measured.
+ * `page.route('**\/__maze-seal-payload.json')` matches the whole URL, and the
+ * page is loaded at `lab.html?gen=/__maze-seal-payload.json`, so the glob
+ * intercepted the NAVIGATION and served the payload JSON as the document:
+ * `window.__mazeLab` was simply undefined and the wait read as a 60 s STUCK
+ * with no console error to attribute it (trap 298's shape, one layer down).
+ */
+const PAYLOAD_ROUTES = new Map([[SEAL_ROUTE, SEAL_PAYLOAD], [OPEN_SEAL_ROUTE, OPEN_SEAL_PAYLOAD]]);
+await page.route(
+    (u) => PAYLOAD_ROUTES.has(u.pathname),
+    (r) => r.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: `${json(PAYLOAD_ROUTES.get(new URL(r.request().url()).pathname))}\n`,
+    }),
+);
+
 /**
  * ⛔ THE WAIT IS ON A CONDITION, NEVER ON EXISTENCE. `window.__mazeLab` is set
  * on the FIRST render — which for a `?run=1` load is the SKELETON, before the
@@ -490,6 +553,17 @@ try {
     }
     check(directed.identity.includes('1 directed attempt(s)'),
         'and the identity line counts the directed attempt', directed.identity);
+    /**
+     * ⛓⛓⛓ SLICE 12 — AND THE PRESS DID NOT PUT IT IN THE BAR. ⛔ This is the
+     * ONE place on this page where a writer that still emitted `?directed=`
+     * becomes visible: the `?gen=` boot never rewrites the bar (the payload owns
+     * it), so without this row the maze row is BLIND to that mutant — which is
+     * exactly how it measured the first time this table was run.
+     */
+    check(new URLSearchParams(directed.url).get('directed') === null
+        && directed.identity.includes('the URL is NOT a reproduction of this construction'),
+    '⛔⛔ SLICE 12: the ATTEMPT press leaves NO directive in the bar, and the identity line '
+        + 'SAYS the URL names the ladder alone', directed.url);
 
     /* ── CLAIM 5: EDIT paints the cell THIS FILE names ────────────── */
     const edited = await load(`seed=${SEAL.seed}&width=${SEAL_ROOM.width}`
@@ -540,8 +614,12 @@ try {
         `tiles[${idx}] = ${one.level.tiles[idx]}`);
     check(one.identity.includes('1 manual edit(s)') && one.identity.includes('UNCERTIFIED'),
         '⚖ §3.8: the identity line says "1 manual edit(s)" AND UNCERTIFIED', one.identity);
-    check(one.identity.includes('the URL is NOT a reproduction after edits'),
-        '⚖ ruling 9: the page SAYS the URL stopped being a reproduction');
+    check(one.identity.includes('the URL is NOT a reproduction of this construction')
+        && one.identity.includes('names the LADDER alone'),
+        '⚖ ruling 9 + ⛓ SLICE 12: the page SAYS the URL stopped being a reproduction — and '
+        + 'the wording no longer says "after edits", because since slice 12 a DIRECTIVE '
+        + 'triggers the same clause',
+        one.identity.slice(-140));
     check(!new URLSearchParams(one.url).has('edits')
         && json(new URLSearchParams(one.url).get('count')) === json('0'),
         '⛔ and the URL carries NO edit — an edited level\'s identity is the PAYLOAD',
@@ -572,9 +650,11 @@ try {
     await clickCell(0, 1);
     await settled(() => window.__mazeLab?.edits === 3, 'the two sealing edits');
     const sealed = await read();
-    check(sealed.certified === false && sealed.identity.includes('UNCERTIFIED'),
-        '⚖ §3.8: an edit DROPS the certification — editing never bypasses the oracle',
-        sealed.identity);
+    check(sealed.certified === null && sealed.identity.includes('UNCERTIFIED'),
+        '⚖ §3.8 + ⛓ SLICE 12: an edit DROPS the certification to `null` — NOBODY HAS ASKED. '
+        + 'This page published `false` here until slice 12 (§16.2 flagged the divergence from '
+        + 'Seedling and named this side to move); `false` now means the ORACLE said no',
+        `${json(sealed.certified)} · ${sealed.identity.slice(0, 90)}`);
     await page.selectOption('#source', 'solve');
     await settled(() => window.__mazeLab?.source === 'solve', 'the SOLVE arm');
     await page.click('#labSolve');
@@ -590,7 +670,10 @@ try {
         'and the refusal is ON THE PAGE, not only in the readout — a refusal nobody can see '
         + 'is a refusal that did not happen', solveText.trim());
     check(refused.certified === false,
-        'a REFUSED solve leaves the level UNCERTIFIED — a refusal is a NO, not a record');
+        '⛓⛓ SLICE 12: a REFUSED solve reports `false` — THE ORACLE WAS ASKED AND SAID NO, '
+        + 'which is the one place on this page `false` is reachable, and a different fact '
+        + 'from the `null` the edit above left',
+        json(refused.certified));
 
     /* ── CLAIM 7: the payload round-trips through the page ────────── */
     const beforeLoad = await read();
@@ -600,9 +683,11 @@ try {
     check(json(reloaded.level) === json(beforeLoad.level),
         '⛓ the payload the save box holds LOADS BACK to the same world, tile for tile',
         `${json(reloaded.level).length} bytes`);
-    check(reloaded.certified === false,
-        '⛔ and a LOADED level is UNCERTIFIED whatever the file claimed — this page\'s '
-        + 'certification is its own oracle\'s answer or nothing');
+    check(reloaded.certified === null,
+        '⛔ and a LOADED level is UNCERTIFIED whatever the file claimed — `null`, because '
+        + 'NOBODY HAS ASKED this page about the world it just took in (slice 12: it was '
+        + '`false`, which claimed an answer nobody gave)',
+        json(reloaded.certified));
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
     await load('seed=1&count=1&run=1', () => window.__mazeLab?.step === 1, 'the form subject');
@@ -800,12 +885,22 @@ try {
      * renderings and a pane that stopped printing the refusal would leave the
      * readout perfectly correct.
      */
-    const sealDirective = `wall-segment(ori=${PRECHECK.ori},len=${PRECHECK.len})`
-        + `@1s!${PRECHECK.tx},${PRECHECK.ty}`;
-    const sealedRun = await load(`seed=${PRECHECK.seed}&skeleton=winding&count=0`
-        + `&directed=${encodeURIComponent(sealDirective)}`,
-    () => window.__mazeLab?.directives?.length === 1, 'the sealing directive to be applied');
+    /**
+     * ⛓⛓⛓ SLICE 12 — DRIVEN THROUGH THE **PAYLOAD**, not through `?directed=`.
+     * ⛔ The cell is still THIS FILE's own flood's (trap 269) and the sentence
+     * is still the model's own; what moved is the channel the directive rides.
+     */
+    const sealedRun = await load(`gen=${SEAL_ROUTE}`,
+        () => window.__mazeLab?.directives?.length === 1, 'the sealing directive to be applied');
     const sd = sealedRun.directives[0];
+    check(new URLSearchParams(sealedRun.url).get('directed') === null,
+        '⛔ SLICE 12: the bar names NO directive — the construction rode the payload',
+        sealedRun.url);
+    check(sealedRun.payloadCheck?.checked === true && sealedRun.payloadCheck?.agrees === true,
+        '⛓⛓⛓ …and the page REPRODUCED a DIRECTED payload byte-identically: the directives '
+        + 'were REPLAYED (this was `directed: null` until slice 12, and the level would have '
+        + 'been the plain skeleton)',
+        json(sealedRun.payloadCheck?.differences ?? sealedRun.payloadCheck?.why ?? []));
     check(sd.outcome === 'ILLEGAL_PLACEMENT' && sd.at === null,
         '⛓⛓⛓ SLICE 6: an EXPLICIT-anchor directive that would SEAL a `winding` corridor is '
         + 'ILLEGAL_PLACEMENT — the MODEL refused it before any solve, and the record did '
@@ -836,11 +931,7 @@ try {
      * `procgenMaze.sealRefusal` reddens exactly here and nowhere else in this
      * row (claim 10 above runs on `winding` and cannot see it).
      */
-    const openDirective = `wall-segment(ori=${OPEN_PRECHECK.ori},len=${OPEN_PRECHECK.len})`
-        + `@1s!${OPEN_PRECHECK.tx},${OPEN_PRECHECK.ty}`;
-    const openSealed = await load(`seed=${OPEN_PRECHECK.seed}&width=${OPEN_ROOM.width}`
-        + `&height=${OPEN_ROOM.height}&count=0`
-        + `&directed=${encodeURIComponent(openDirective)}`,
+    const openSealed = await load(`gen=${OPEN_SEAL_ROUTE}`,
     () => window.__mazeLab?.directives?.length === 1,
     'the OPEN-room sealing directive to be applied');
     const od = openSealed.directives[0];
@@ -1001,6 +1092,29 @@ try {
         && selectedAreas.step === 0 && selectedAreas.areaGraph.ran === true,
     '⛓⛓ the SELECTOR writes ?areas=1 into the bar and RESETS the ladder — the graph is built '
         + 'with the MODEL, so a ladder cannot span two of them', selectedAreas.url);
+
+    /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
+    /**
+     * ⛓⛓⛓ ⚖ §3.9 — THE RETIRED PARAMETER, ON THE PAGE. ⛔ A saved link naming a
+     * construction must FAIL LOUDLY rather than quietly open the plain ladder:
+     * the page would otherwise show a level the address promises is something
+     * else. The refusal has to NAME THE WAY IN, because a reader holding an old
+     * link has no other channel to learn where directives went.
+     */
+    await page.goto(`${PAGE}?seed=3&count=0&directed=`
+        + `${encodeURIComponent('wall-segment(ori=v,len=2)@12d')}`,
+    { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of ?directed=');
+    const retired = await read();
+    check(/no longer a URL parameter/.test(retired.fatal ?? ''),
+        '⛔⛔ SLICE 12: ?directed= REFUSES BY NAME on the maze page', retired.fatal);
+    check(/directives ride the PAYLOAD/.test(retired.fatal ?? '')
+        && /\?gen=/.test(retired.fatal ?? '') && /--directed=/.test(retired.fatal ?? ''),
+    '⛔ …and the refusal NAMES THE WAY IN — the payload via ?gen= or the host\'s SEND, and '
+        + 'the CLI flag that stayed', retired.fatal);
+    check(!retired.level && !retired.payload,
+        '⛔ …and a refused page offers NO level and NO payload — it does not fall through to '
+        + 'the ladder the link is not naming');
 
     check(errors.length === 0, 'STILL zero console errors after every arm was driven',
         errors.join(' | '));

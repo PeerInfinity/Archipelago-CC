@@ -150,14 +150,24 @@ if (FAMILIES && TEMPLATES) {
 const ROSTER = FAMILIES ? { axis: 'families', names: FAMILIES }
     : (TEMPLATES ? { axis: 'templates', names: TEMPLATES } : null);
 /**
- * ⛓⛓ VERB 2 — **THE DIRECTED ATTEMPT** (GENERATE-mode UI slice 5). The same
- * grammar `?directed=` uses, parsed by the SAME function, so the CLI and the
- * page cannot disagree about what a construction is.
+ * ⛓⛓ VERB 2 — **THE DIRECTED ATTEMPT** (GENERATE-mode UI slice 5), parsed by
+ * `urlParams.parseDirectives`, the SAME function the page and the payload's
+ * instance labels use, so the CLI and the page cannot disagree about what a
+ * construction is.
  *
  * ⛔ IT IS HERE FOR THE SAME REASON `--families=` IS: the payload is compared
  * across the two runtimes (`?gen=`), and a field only ONE producer can emit is
  * a field that check can never exercise. ⚠ A run with no `--directed=` takes
  * the pre-slice code path untouched, so no existing invocation moves.
+ *
+ * ⛓⛓⛓ **AND IT STAYS, WHERE `?directed=` WENT** (constructive-mode slice 12,
+ * ⚖ kickoff §3.9). The user's ruling took the directive list off the ADDRESS
+ * BAR — a URL names the launch parameters a person types, and a construction is
+ * the payload's job. ⛔ A CLI FLAG IS A DIFFERENT SURFACE and the ruling does
+ * not touch it: it is how a script or a browser row LAUNCHES a directed run in
+ * node, and it is what produces the payloads `?gen=` then replays. One grammar,
+ * three channels (this flag, the ATTEMPT button, `payload.directives`); the
+ * bar is simply no longer one of them.
  */
 const DIRECTED_ARG = arg('directed', '');
 /**

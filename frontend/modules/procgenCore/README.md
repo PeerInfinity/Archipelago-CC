@@ -14,6 +14,12 @@ vocabulary. Nothing here knows what a level looks like.
   `state` over an **injected source**. There is no default source; a default
   would make this directory import from a substrate.
 
+⛔ **THE URL DIET (slice 12):** `urlParams.js` REFUSES `?directed=` by name and
+never writes it — a URL names the launch parameters a person types, and a
+directive list is a construction the PAYLOAD carries (`?gen=`/`procgenLab:load`
+replay it). The grammar itself (`parseDirective`/`formatDirectives`/
+`directiveSeed`) is unchanged and still spoken by the CLI's `--directed=`.
+
 ⛔ **THE LAW: these files import nothing.** The level model, the oracle and the
 palette are injected; the bindings are where the imports live. Two of them
 exist — `seedlingDemo/procgenSeedling.js` and `mazeRoom/procgenMaze.js` — and

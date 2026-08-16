@@ -452,6 +452,32 @@ const finish = async (code) => {
     process.exit(code);
 };
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 12 — THE PAYLOAD CHANNEL, AS A ROUTE THIS ROW FULFILS
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §3.9 took `?directed=` off the address bar and gave the directive list to
+ * the PAYLOAD, so every claim below that used to copy a URL now copies a
+ * payload: the page's OWN `window.__editorGenerated` (what `#genDownload`
+ * writes) is served back to it at `?gen=`.
+ *
+ * ⛔ FULFILLED BY PLAYWRIGHT rather than added to `serveRepoRoot`'s `routes`,
+ * because the payload is built IN THE BROWSER, mid-run — a static route map is
+ * fixed when the server starts and could not carry it. ⚠ The predicate matches
+ * on the PATHNAME, never as a glob: `?gen=/__constructed-payload.json` puts the
+ * route's own name in the DOCUMENT's query string, and a `**\/…` glob
+ * intercepts the NAVIGATION and serves JSON as the page (measured on the maze
+ * row; it reads as a STUCK wait with no console error).
+ */
+const PAYLOAD_ROUTE = '/__constructed-payload.json';
+let servedPayload = null;
+await page.route(
+    (u) => u.pathname === PAYLOAD_ROUTE,
+    (r) => r.fulfill({
+        status: 200, contentType: 'application/json', body: `${json(servedPayload)}\n`,
+    }),
+);
+
 /**
  * ⛔ WAIT FOR THE LADDER TO STOP, NOT FOR IT TO START.
  *
@@ -499,6 +525,51 @@ async function load(query, { timeout = 300000, step = null, seed = null } = {}) 
         panelVisible: !document.getElementById('generatePanel').hidden,
     }));
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 12 — ARM-AND-CLICK, THE PAGE'S OWN EXPLICIT-ANCHOR AFFORDANCE
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §3.9 retired `?directed=`, and the claims that used it to place a template
+ * at a NAMED CELL (the two sealing subjects) are re-cut onto GENERATE-UI slice
+ * 6's own control: press AT…, then click the tile. ⛔ Replaced, not relaxed —
+ * the CLAIM is the same `ILLEGAL_PLACEMENT` sentence at the same measured cell.
+ *
+ * ⚠ THE CLICK BUILDS `{bound: 1, keepPolicy: PREFER_DISCHARGE}` (`watchViewer`'s
+ * `spec`), where the retired URL spelled `@1s`. Both are moot for a placement
+ * the MODEL refuses before any solve — but the node side below is built with
+ * the policy the PAGE uses, so the two are the same directive rather than two
+ * that happen to agree.
+ *
+ * ⛔ AND THE RECTANGLE IS RE-READ BEFORE EVERY CLICK: the identity line above
+ * the canvas grows as clauses appear, the header re-wraps and the canvas moves
+ * DOWN (the maze row's §10.5 measurement, one substrate over).
+ */
+const armTemplate = (template, params) => page.evaluate(({ t, p }) => {
+    const row = [...document.querySelectorAll('#genRoster .catRow')]
+        .find((r) => r.querySelector(`button[data-arm="${t}"]`));
+    for (const [k, v] of Object.entries(p)) {
+        row.querySelector(`select[data-param="${k}"]`).value = String(v);
+    }
+    row.querySelector(`button[data-arm="${t}"]`).click();
+}, { t: template, p: params });
+
+/** ⛓ The LAST PIXEL of a tile — an off-by-one is invisible to a middle click. */
+const clickTile = async (tx, ty) => {
+    const geo = await page.evaluate(() => {
+        document.getElementById('canvas').scrollIntoView({ block: 'center' });
+        const r = document.getElementById('canvas').getBoundingClientRect();
+        return {
+            left: r.left, top: r.top, width: r.width, height: r.height,
+            cols: window.__editorGenerated.level.width,
+            rows: window.__editorGenerated.level.height,
+        };
+    });
+    await page.mouse.click(
+        geo.left + ((tx + 1) * geo.width) / geo.cols - 1,
+        geo.top + ((ty + 1) * geo.height) / geo.rows - 1,
+    );
+};
 
 /** The five generate controls and the address bar, as the browser holds them. */
 const panelOf = () => page.evaluate(() => ({
@@ -1090,16 +1161,34 @@ const catalogueOf = () => page.evaluate(() => ({
         '⛓ the identity line says ladder-to-step-k PLUS the directives',
         after.detail.slice(0, 160));
 
-    // ── 7c: the URL names the construction, and reproduces it ────────
-    const expectedDirected = `${DIRECT.template}(ori=${DIRECT.params.ori},`
-        + `gap=${DIRECT.params.gap})@${DIRECTED_ANCHOR_TRIES}d`;
-    check(new URLSearchParams(after.url).get('directed') === expectedDirected,
-        '⛓⛓ the URL NAMES the whole construction, in the instance label\'s own spelling',
-        `?directed=${new URLSearchParams(after.url).get('directed')}`);
+    // ── 7c: ⛓⛓⛓ SLICE 12 — THE **PAYLOAD** NAMES THE CONSTRUCTION ─────
+    /**
+     * ⚖ §3.9 RE-CUT THIS HALF WHOLE. It used to assert `?directed=` carried the
+     * instance label and that a copied URL rebuilt the construction. ⛔ Replaced
+     * rather than relaxed (trap 62/199): the same three claims — *the identity
+     * is copyable*, *the replayed directive is the one the press produced*, and
+     * *the rewrite is a fixed point* — are driven through the channel the
+     * construction now travels on, plus the new claim that the BAR carries
+     * none. The URL-SPELLING claim itself is RETIRED: it was about a parameter
+     * that no longer exists.
+     */
+    check(new URLSearchParams(after.url).get('directed') === null,
+        '⛔⛔ SLICE 12: the BAR NAMES NO DIRECTIVE — a URL is what a person LAUNCHES',
+        after.url);
+    check(after.detail.includes('the URL is NOT a reproduction of this construction')
+        && after.detail.includes('names the LADDER alone'),
+        '⛓⛓ …and the page SAYS SO where it states the identity, so the bar is never read '
+        + 'as complete', after.detail.slice(-150));
     {
-        const copied = await load(after.url.replace(/^\?/, ''));
+        // ⛓ THE PAGE'S OWN PAYLOAD — the object `#genDownload` writes — served
+        // straight back to it. Nothing is re-assembled by this file.
+        servedPayload = await page.evaluate(() => window.__editorGenerated);
+        check((servedPayload.directives ?? []).length === 1,
+            '⛓ the payload the page would DOWNLOAD carries the directive',
+            json(servedPayload.directives?.[0]?.instance));
+        await load(`gen=${PAYLOAD_ROUTE}`);
         await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
+            () => window.__editorGenerate?.payloadCheck
                 && !document.getElementById('genRunAll').disabled,
             null, { timeout: 300000 },
         );
@@ -1109,18 +1198,50 @@ const catalogueOf = () => page.evaluate(() => ({
             trace: window.__editorGenerated?.trace ?? null,
             url: window.location.search,
         }));
-        check(json(back.level) === json(after.level) && json(back.trace) === json(after.trace),
-            '⛓⛓⛓ A COPIED URL REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR BYTE',
-            `level ${json(back.level) === json(after.level)}, `
+        check(back.gen.directives?.length === 1
+            && json(back.level) === json(after.level)
+            && json(back.trace) === json(after.trace),
+        '⛓⛓⛓ `?gen=` OF A DIRECTED PAYLOAD REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR '
+            + 'BYTE — the directives were REPLAYED (before slice 12 this path applied the '
+            + 'edits and left the directives to the bar, and the level would be the ladder)',
+        `${back.gen.directives?.length ?? 0} directive(s), `
+            + `level ${json(back.level) === json(after.level)}, `
             + `trace ${json(back.trace) === json(after.trace)}`);
+        check(back.gen.payloadCheck?.checked === true && back.gen.payloadCheck?.agrees === true,
+            '⛓⛓ …and the page CHECKED it rather than displaying it — the reproduction claim, '
+            + 'made by the page about its own bytes',
+            json(back.gen.payloadCheck?.differences ?? []));
         check(json(back.gen.directives) === json(after.gen.directives),
             'and the directive it replayed is the one the press produced, field for field',
             json(back.gen.directives?.[0]?.keptKind));
-        // ⛓ THE FIXED POINT (slice 1's own claim, now over `?directed=`).
-        check(back.url === after.url,
+    }
+    {
+        /**
+         * ⛓⛓⛓ AND THE URL STILL DOES ITS JOB — IT LAUNCHES THE LADDER. ⛔ This
+         * is the VALUE claim about the diet, and it is what a fixed point alone
+         * could never say: the copied bar comes back with ZERO directives on a
+         * level that is the ladder's own, NOT the directed one. A build whose
+         * writer still emitted the parameter would reproduce the construction
+         * here and redden this line.
+         */
+        const back = await load(after.url.replace(/^\?/, ''));
+        const backPanel = await panelOf();
+        const ladderOnly = generateStep({
+            seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step,
+        });
+        check((back.gen.directives ?? []).length === 0
+            && json(back.level) === json(ladderOnly.record),
+        '⛓⛓ a COPIED URL reproduces the LADDER ALONE, byte for byte — the launch it names, '
+            + 'and not the construction the payload carries',
+        `${(back.gen.directives ?? []).length} directive(s), `
+            + `level matches the ladder: ${json(back.level) === json(ladderOnly.record)}`);
+        check(!back.gen.identity.includes('NOT a reproduction'),
+            '⛔ …and the identity line drops the warning, because on THIS level the URL is a '
+            + 'reproduction again', back.gen.identity.slice(0, 120));
+        // ⛓ THE FIXED POINT (slice 1's own claim), over the ladder's own bar.
+        check(backPanel.url === after.url,
             '⛓ and the rewrite is a FIXED POINT — loading it rewrites it to itself',
-            `${after.url}\n        vs ${back.url}`);
-        void copied;
+            `${after.url}\n        vs ${backPanel.url}`);
     }
 
     // ── 7d: the refusal classes ──────────────────────────────────────
@@ -1235,9 +1356,18 @@ const catalogueOf = () => page.evaluate(() => ({
         check((stepped.gen.directives ?? []).length === 0 && stepped.gen.step === 1,
             'and STEP really DID reset — the directives are gone and the ladder is at step 1',
             `step ${stepped.gen.step}, ${(stepped.gen.directives ?? []).length} directive(s)`);
-        check(new URLSearchParams(stepped.url).get('directed') === null,
-            '⛓ and the URL stopped naming a construction the page is no longer showing',
-            stepped.url);
+        /**
+         * ⛓⛓ SLICE 12 RE-CUT THIS. It asserted `?directed=` was gone from the
+         * bar — a claim the diet makes VACUOUS, since the writer never emits
+         * one. What still has content is the SENTENCE: the identity line
+         * carried "the URL is NOT a reproduction" while the directive stood,
+         * and STEP has to take it back.
+         */
+        check(new URLSearchParams(stepped.url).get('directed') === null
+            && !stepped.gen.identity.includes('NOT a reproduction'),
+        '⛓ and the page stops SAYING the URL is not a reproduction — the level on screen is '
+            + 'the ladder again, and the bar names it',
+        `${stepped.url} · ${stepped.gen.identity.slice(0, 80)}`);
     }
 
     // ── 7f: CLEAR returns to the ladder ──────────────────────────────
@@ -1273,8 +1403,10 @@ const catalogueOf = () => page.evaluate(() => ({
             'CLEAR returns the page to the ladder — here the SKELETON, byte for byte',
             `${(cleared.gen.directives ?? []).length} directive(s), level matches: `
             + `${json(cleared.level) === json(skel.record)}`);
-        check(new URLSearchParams(cleared.url).get('directed') === null,
-            'and the URL says so too', cleared.url);
+        check(new URLSearchParams(cleared.url).get('directed') === null
+            && !cleared.gen.identity.includes('NOT a reproduction'),
+        'and the page says so too — no directive on the bar (there never is one since slice '
+            + '12) and no "not a reproduction" clause', cleared.url);
     }
 }
 
@@ -1415,15 +1547,21 @@ const catalogueOf = () => page.evaluate(() => ({
         status: document.getElementById('status').textContent,
     }));
     const cd = clicked.gen.directives[0];
-    const cu = new URLSearchParams(clicked.url).get('directed');
+    /**
+     * ⛓⛓ SLICE 12 — THE FOURTH WAY IS THE **PAYLOAD**, not the bar. `!tx,ty` is
+     * still a directive OBJECT's `anchor` and the CLI still spells it; what
+     * left is its URL spelling, so the fourth independent reading is taken from
+     * the file the page would DOWNLOAD. ⛔ Four readings, replaced not reduced.
+     */
+    const cp = await page.evaluate(() => window.__editorGenerated?.directives?.[0]?.anchor);
     check(json(cd.anchor) === json(target.expect)
         && json(cd.at) === json(target.expect)
-        && cu === `${DIRECT.template}(ori=${DIRECT.params.ori},gap=${DIRECT.params.gap})@1d`
-            + `!${target.expect.tx},${target.expect.ty}`,
-        '⛓⛓⛓ THE TILE AGREES FOUR WAYS — this file\'s own arithmetic, the readout\'s '
-        + '`anchor`, the directive\'s `at`, and the URL\'s `!tx,ty`',
-        `expected ${json(target.expect)} · anchor ${json(cd.anchor)} · at ${json(cd.at)} · `
-        + `?directed=${cu}`);
+        && json(cp) === json(target.expect)
+        && new URLSearchParams(clicked.url).get('directed') === null,
+    '⛓⛓⛓ THE TILE AGREES FOUR WAYS — this file\'s own arithmetic, the readout\'s `anchor`, '
+        + 'the directive\'s `at`, and the PAYLOAD\'s `anchor` — while the BAR names none',
+    `expected ${json(target.expect)} · anchor ${json(cd.anchor)} · at ${json(cd.at)} · `
+        + `payload ${json(cp)} · ?directed=${new URLSearchParams(clicked.url).get('directed')}`);
     /**
      * ⛔ AND THE FOOTPRINT REALLY STARTS THERE. A build that recorded the cell
      * and placed the template elsewhere passes every field check above; the
@@ -1468,11 +1606,12 @@ const catalogueOf = () => page.evaluate(() => ({
     check(clicked.gen.armed === null,
         'and the click DISARMED — a second click cannot queue a second directive');
 
-    // ── 8d: the copied link ──────────────────────────────────────────
+    // ── 8d: the copied PAYLOAD (slice 12 — it was the copied link) ────
     {
-        await load(clicked.url.replace(/^\?/, ''));
+        servedPayload = await page.evaluate(() => window.__editorGenerated);
+        await load(`gen=${PAYLOAD_ROUTE}`);
         await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
+            () => window.__editorGenerate?.payloadCheck
                 && !document.getElementById('genRunAll').disabled,
             null, { timeout: 300000 },
         );
@@ -1484,13 +1623,14 @@ const catalogueOf = () => page.evaluate(() => ({
         }));
         check(json(back.level) === json(clicked.level)
             && json(back.trace) === json(clicked.trace),
-            '⛓⛓⛓ A COPIED `!tx,ty` LINK REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR BYTE');
+        '⛓⛓⛓ A COPIED `!tx,ty` **PAYLOAD** REPRODUCES THE WHOLE CONSTRUCTION, BYTE FOR BYTE '
+            + '— the clicked CELL survives the channel change');
         check(json(back.gen.directives[0].anchor) === json(target.expect),
             'and the anchor it replayed is the cell that was clicked', json(target.expect));
-        check(back.url === clicked.url,
-            '⛓ and the clicked link is a FIXED POINT — loading it rewrites it to itself. '
-            + '⚠ NOT the gate on the VALUE (trap 250): the four-way check above is',
-            `${clicked.url}\n        vs ${back.url}`);
+        check(back.gen.payloadCheck?.agrees === true,
+            '⛓ …and the page checked it against its own regeneration and agreed. ⚠ NOT the '
+            + 'gate on the VALUE (trap 250): the four-way check above is',
+            json(back.gen.payloadCheck?.differences ?? []));
     }
 
     // ── 8e: the ILLEGAL cell, refused BY NAME with NO solve ──────────
@@ -1858,19 +1998,29 @@ if (!host) {
             SEALER ? `wall-segment(ori=${SEALER.ori},len=${SEALER.len})@(${SEALER.tx},`
                 + `${SEALER.ty})` : 'NONE — the claim below has no subject');
         if (SEALER) {
+            /**
+             * ⛓ SLICE 12 — the spec is the one THE CLICK BUILDS (bound 1,
+             * prefer-discharge), so node and the page ask the same question.
+             */
             const spec = { template: 'wall-segment', params: { ori: SEALER.ori, len: SEALER.len },
                 anchor: { tx: SEALER.tx, ty: SEALER.ty }, bound: 1,
-                keepPolicy: KEEP_POLICY.FIRST_SOLVED };
+                keepPolicy: KEEP_POLICY.PREFER_DISCHARGE };
             const nodeSealed = generateWithDirectives({
                 seed: CARVED.seed, biome: CARVED.biome, step: 0,
                 skeleton: { kind: KIND }, directed: [spec],
             });
             const nodeWhy = nodeSealed.trace.find((r) => r.directive === 1).reasonText;
-            const directedParam = `wall-segment(ori=${SEALER.ori},len=${SEALER.len})`
-                + `@1s!${SEALER.tx},${SEALER.ty}`;
+            // ⛓⛓ DRIVEN THROUGH THE PAGE'S AT… CONTROL AND A CLICK — the
+            // affordance §3.9 leaves for naming a cell (it was `?directed=…!x,y`).
             const sealedWeb = await load(`source=generate&seed=${CARVED.seed}`
-                + `&biome=${CARVED.biome}&count=0&skeleton=${KIND}`
-                + `&directed=${encodeURIComponent(directedParam)}`);
+                + `&biome=${CARVED.biome}&count=0&skeleton=${KIND}`);
+            await armTemplate('wall-segment', { ori: SEALER.ori, len: SEALER.len });
+            await clickTile(SEALER.tx, SEALER.ty);
+            await page.waitForFunction(
+                () => window.__editorGenerate?.directives?.length === 1
+                    && !document.getElementById('genRunAll').disabled,
+                null, { timeout: 300000 },
+            );
             const sealedPane = await page.evaluate(() => ({
                 directives: window.__editorGenerate?.directives ?? [],
                 rows: [...document.querySelectorAll('#genTrace .tr')].map((e) => e.textContent),
@@ -1999,16 +2149,21 @@ if (!host) {
     if (OPEN) {
         const spec = { template: 'wall-segment', params: { ori: OPEN.ori, len: OPEN.len },
             anchor: { tx: OPEN.tx, ty: OPEN.ty }, bound: 1,
-            keepPolicy: KEEP_POLICY.FIRST_SOLVED };
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE };
         const nodeOpenSealed = generateWithDirectives({
             seed: OPEN.seed, biome: OPEN_BIOME, step: OPEN.step, directed: [spec],
         });
         const nodeWhy = nodeOpenSealed.trace.find((r) => r.directive === 1).reasonText;
-        const directedParam = `wall-segment(ori=${OPEN.ori},len=${OPEN.len})`
-            + `@1s!${OPEN.tx},${OPEN.ty}`;
+        // ⛓⛓ SLICE 12 — AT… + a click, on the ladder this subject was measured on.
         const web = await load(`source=generate&seed=${OPEN.seed}&biome=${OPEN_BIOME}`
-            + `&count=${OPEN.step}&run=1&directed=${encodeURIComponent(directedParam)}`,
-        { step: OPEN.step, seed: OPEN.seed });
+            + `&count=${OPEN.step}&run=1`, { step: OPEN.step, seed: OPEN.seed });
+        await armTemplate('wall-segment', { ori: OPEN.ori, len: OPEN.len });
+        await clickTile(OPEN.tx, OPEN.ty);
+        await page.waitForFunction(
+            () => window.__editorGenerate?.directives?.length === 1
+                && !document.getElementById('genRunAll').disabled,
+            null, { timeout: 300000 },
+        );
         const pane = await page.evaluate(() => ({
             directives: window.__editorGenerate?.directives ?? [],
             rows: [...document.querySelectorAll('#genTrace .tr')].map((e) => e.textContent),
@@ -2037,6 +2192,41 @@ if (!host) {
         '⛔ …and the level on screen is the k-step ladder UNMOVED — a refusal keeps the old '
         + 'record');
     }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 9 — `?directed=` IS REFUSED BY NAME (CONSTRUCTIVE SLICE 12)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ §3.9. ⛔ A saved link naming a construction must FAIL LOUDLY rather than
+ * quietly open the plain ladder — a page that dropped the parameter would show
+ * a level the address promises is something else, which is the failure the
+ * whole URL grammar is full of refusals about. The refusal has to NAME THE WAY
+ * IN: a reader holding an old link has no other channel to learn where
+ * directives went.
+ */
+{
+    const stale = `${DIRECT.template}(ori=${DIRECT.params.ori},gap=${DIRECT.params.gap})`
+        + `@${DIRECTED_ANCHOR_TRIES}d`;
+    await page.goto(`${origin}${PAGE_PATH}?source=generate&seed=${DIRECT.seed}`
+        + `&biome=${DIRECT.biome}&count=0&directed=${encodeURIComponent(stale)}`,
+    { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorParams?.status === 'refused',
+        null, { timeout: 60000 });
+    const refusedDirected = await page.evaluate(() => window.__editorParams);
+    check(/no longer a URL parameter/.test(refusedDirected.message ?? ''),
+        '⛔⛔ SLICE 12: ?directed= REFUSES BY NAME on watch.html — a link from before the diet '
+        + 'does not silently open the ladder', refusedDirected.message);
+    check(/directives ride the PAYLOAD/.test(refusedDirected.message ?? '')
+        && /\?gen=/.test(refusedDirected.message ?? '')
+        && /SEND/.test(refusedDirected.message ?? '')
+        && /--directed=/.test(refusedDirected.message ?? ''),
+    '⛔ …and the refusal NAMES ALL THREE WAYS IN — `?gen=`, the host\'s SEND, and the CLI '
+        + 'flag that stayed', refusedDirected.message);
+    check(await page.evaluate(() => window.__editorGenerate === undefined
+        || window.__editorGenerate === null),
+    '⛔ …and NO run happened: a refused parameter does not fall through to a level nobody '
+        + 'asked for');
 }
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
