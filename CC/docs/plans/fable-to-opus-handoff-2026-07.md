@@ -3187,13 +3187,29 @@ its key level; graphify edges RECORDED, not carved; one flood verifies every
 level; `--areas=` via one `areaSpec.js` codec) · `6c4516c43`..`cbd4327b5`
 (rule-directed `require:[K]` proved by the BFS differential — 148/148 cuts,
 measured; the lab page's SIBLING area overlay; `?areas=`/`?require=` in the ONE
-reader/writer with VALUE claims; arc-1 kickoff §10.12 answers §7). NEXT: arc 2
-(the reverse-pull block→switch gadget on the maze; the element contract; BFS
-over block state) — kickoff to be written by the design session.** Plan docs *(NewDocs)*:
+reader/writer with VALUE claims; arc-1 kickoff §10.12 answers §7).
+**ARC 2 CLOSED 2026-08-16 @ `4e0ac0690`** — four slices, eleven commits
+(`880028195` the ENGINE: blocks push, a button HOLDS while pressed, a flag is a
+LATCH; ONE block per open room is the whole node budget · `a054b500e` the
+ELEMENT CONTRACT + the reverse-pull gadget, 408/408 solvable, and the claim that
+discriminates is *a block was on the button at the instant the player entered
+the door cell* · `db982f0fd` the MAZE BINDING: elements FIRST, the carve's answer
+inside the reserved rectangle DISCARDED so ⛔ no `shared/` change was needed, the
+exit mouth SEALED so the guard door is a CUT 100% of the time, `--elements=` +
+the census · `4e0ac0690` THE PAGE: the gadget drawn by a second SIBLING overlay,
+the palette gains block/button/flag, `?elements=` in the ONE reader/writer with
+a byte comparison against the CLI, the SOLVE steps through its plan and the
+block visibly moves onto its button — and a maze EDIT became an OP, closing
+constructive §18.2's residue). Arc-2 kickoff §11.10 answers §7 gate by gate and
+§11.11 is what arc 3 starts from. NEXT: **arc 3 (Seedling)** — sites, door=cut,
+carve legality, the straight-lane gadget, kill gate + spinner, the area binding —
+kickoff to be written by the design session; its named later item is §7b,
+BLOCK-SEARCH REDUCTIONS.** Plan docs *(NewDocs)*:
 `procgen-elements-design.md` (the DESIGN — §1 rulings 1–20, §3 the Cloudberry
 re-read + the MetaZelda read, §4 the three layers, §5 the element catalogue
 from the ActionScript source, §6 the roadmap of arcs, §7 open questions) and
-`procgen-elements-arc1-kickoff.md` (arc 1). Memory: `project_procgen_elements`.
+`procgen-elements-arc1-kickoff.md` (arc 1) and `procgen-elements-arc2-kickoff.md`
+(arc 2, as-builts §8–§11). Memory: `project_procgen_elements`.
 Tracked summary: `docs/json/developer/procgen/seedling-bot.md` § *The procgen
 elements design*.
 
@@ -3257,7 +3273,7 @@ world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
 seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc §5f (OPENED 2026-08-15: shared refactor ──► loop move + maze bindings ──► maze lab page ──► iframe hosting ──► skeleton kinds ──► yield table/pre-check ──► chambers ──► corridor doors [⚖ ruling] ──► reach-cell ──► rule-directed; free editing + URL diet after slice 4)  ──► ⚖ ruling 11 hands Seedling pass 2 to §5g
-procgen ELEMENTS §5g (DESIGNED 2026-08-15): arc 1 area graph (maze) ──► arc 2 reverse-pull block gadget (maze) ──► arc 3 Seedling sites/door=cut/gadget/arrow-lane out ──► arc 4 CHAIN (ask) ──► arc 5 shortcuts/density/arenas ; R9 independent of all three
+procgen ELEMENTS §5g (DESIGNED 2026-08-15): arc 1 area graph (maze, CLOSED) ──► arc 2 reverse-pull block gadget (maze, CLOSED 2026-08-16) ──► arc 3 Seedling sites/door=cut/gadget/arrow-lane out (NEXT) ──► arc 4 CHAIN (ask) ──► arc 5 shortcuts/density/arenas ; R9 independent of all three
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)
