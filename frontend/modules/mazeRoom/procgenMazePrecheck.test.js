@@ -7,7 +7,8 @@
  * `seedlingDemo/procgenSeedlingPrecheck.test.js`; what is here is what only the
  * maze can be asked — that a `door-key` is NEVER sealed by it (obstacles are the
  * ORACLE's question) while a `wall-segment` across the same corridor is, that
- * the rule is KIND-SCOPED, and that the ORACLE agrees with every refusal the
+ * the rule runs at EVERY kind including `empty` (slice 6b — ⚖ the user widened
+ * the scope on 2026-08-15), and that the ORACLE agrees with every refusal the
  * rule makes.
  *
  * ⛓⛓ THE MAZE IS WHERE THE PRE-CHECK CAN BE CHECKED AGAINST A **COMPLETE**
@@ -73,7 +74,7 @@ const footprintFree = (model, world, template, tx, ty) => [
 ].every((c) => model.isFree(world, tx + c.dx, ty + c.dy));
 
 describe('procgenMaze — the connectivity pre-check refuses a sealing candidate BY NAME', () => {
-    it('names the rule, the entrance, the goal, the tile count and the KIND SCOPE', () => {
+    it('names the rule, the entrance, the goal, the tile count and THIS ROOM\'S KIND', () => {
         const model = mazeModel({ seed: 3, skeleton: { kind: 'winding' } });
         const world = model.skeleton();
         const wall = INSTANCES.find((t) => t.name === 'wall-segment');
@@ -84,7 +85,7 @@ describe('procgenMaze — the connectivity pre-check refuses a sealing candidate
         expect(hit.why).toMatch(/^"[^"]+" at \(\d+,\d+\): its TERRAIN would SEAL the room/);
         expect(hit.why).toMatch(/no floor path from the ENTRANCE \(0,0\) to the GOAL \(\d+,\d+\)/);
         expect(hit.why).toMatch(/once the \d+ wall tile\(s\) it writes are painted/);
-        expect(hit.why).toMatch(/skeleton "winding".*at "empty" this rule is off/);
+        expect(hit.why).toMatch(/at EVERY skeleton kind — this room is "winding"/);
     });
 
     it('⛔⛔ a `door-key` is NEVER sealed by it — obstacles and items are the ORACLE\'s', () => {
@@ -189,16 +190,20 @@ describe('procgenMaze — ⛓⛓ THE DIFFERENTIAL, and the ORACLE as the second 
     });
 });
 
-describe('procgenMaze — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', () => {
-    it('⛓⛓ THE DISCRIMINATING SUBJECT: ONE world, ONE template, ONE cell, TWO models', () => {
+describe('procgenMaze — ⛔ THE RULE RUNS AT EVERY KIND, `empty` INCLUDED (⚖ slice 6b)', () => {
+    it('⛓⛓ THE DISCRIMINATING SUBJECT: ONE world, ONE template, ONE cell, TWO models — and '
+        + 'now BOTH refuse', () => {
         /**
-         * ⛔ A fixture has to distinguish two builds. "The open room never
-         * seals" is NOT that fixture on the maze — §9.6's 5x5 and 4x4 rooms are
-         * small enough that a `wall-segment` CAN seal an open room, which is
-         * exactly why the scope exists. The subject that isolates the scope
-         * variable is the carved world handed to BOTH models: ⚖ §3.4's draw
-         * order makes the goal of seed s identical under every kind, so the two
-         * differ in nothing else.
+         * ⛓ SLICE 6's SCOPE ROW, INVERTED. A fixture has to distinguish two
+         * builds; this is the one that does, so it is kept and flipped rather
+         * than deleted. ⚖ The user widened the rule to every kind on
+         * 2026-08-15, so the `empty` model — handed the identical carved world,
+         * template and cell — now refuses it too. Restoring `if (skeletonKind
+         * === DEFAULT_SKELETON_KIND) return null;` in this binding reddens here.
+         *
+         * ⛔ The isolation is unchanged: ⚖ §3.4's draw order makes the goal of
+         * seed s identical under every kind, so the two models differ in
+         * nothing but the variable under test.
          */
         const carved = mazeModel({ seed: 3, skeleton: { kind: 'winding' } });
         const open = mazeModel({ seed: 3 });
@@ -211,11 +216,14 @@ describe('procgenMaze — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', () =
             .map((c) => ({ c, why: carved.refusalAt(world, wall, c.tx, c.ty) }))
             .find((r) => r.why !== null && SEAL.test(r.why));
         expect(hit).toBeDefined();
-        expect(open.refusalAt(world, wall, hit.c.tx, hit.c.ty)).toBeNull();
+        expect(hit.why).toMatch(/this room is "winding"/);
+        const openWhy = open.refusalAt(world, wall, hit.c.tx, hit.c.ty);
+        expect(openWhy).toMatch(SEAL);
+        expect(openWhy).toMatch(/this room is "empty"/);
     });
 
-    it('⛓ a 3x3 OPEN ROOM can be sealed by ONE template and is NOT refused — the scope, at '
-        + 'the only size where it can be seen', () => {
+    it('⛓⛓⛓ THE OPEN-ROOM SUBJECT: a 3x3 `empty` room sealed by ONE template IS refused, by '
+        + 'name — at the only size where it can be seen', () => {
         /**
          * ⛓⛓ **THE SIZE IS A MEASUREMENT, NOT A GUESS**, and the measurement
          * overturned the brief's own suggestion. Slice 6 scanned every open
@@ -230,6 +238,14 @@ describe('procgenMaze — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', () =
          * only width at which one `wall-segment(len=3)` spans the room, and it
          * is therefore the only open-room subject that can tell the two builds
          * apart.
+         *
+         * ⛓ SLICE 6b INVERTED IT. The rule is now global, so a sealed 3x3
+         * `empty` room is REFUSED rather than legal — and this row is the maze
+         * half of the mutant standard: restoring the kind scope in
+         * `procgenMaze.sealRefusal` reddens exactly here. ⛔ It is also the
+         * reason the maze paid NOTHING for the widening: the DEFAULT room is
+         * 11x11, where the same scan found zero single-template seals, so no
+         * committed maze pair moved (§15's nine roll-ups, `empty` included).
          */
         let sealableOpenCells = 0;
         // ⚠ EVERY `wall-segment` INSTANCE, not the first: only `len=3` spans a
@@ -247,8 +263,18 @@ describe('procgenMaze — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', () =
                         { x: model.goalCell.tx, y: model.goalCell.ty });
                     if (open) continue;
                     sealableOpenCells += 1;
-                    // ⛔ SEALED, AND STILL LEGAL — because the room is `empty`.
-                    expect(model.refusalAt(world, wall, c.tx, c.ty)).toBeNull();
+                    // ⛔ SEALED, AND NOW REFUSED — the room being `empty` is no
+                    // longer an exemption. ⛓ A VALUE claim on the sentence: it
+                    // names THIS room's kind and the two cells this file's own
+                    // flood used.
+                    const why = model.refusalAt(world, wall, c.tx, c.ty);
+                    expect(`seed ${seed} ${wall.instance}@${c.tx},${c.ty}: ${why}`)
+                        .toMatch(SEAL);
+                    expect(why).toMatch(/at EVERY skeleton kind — this room is "empty"/);
+                    expect(why).toMatch(new RegExp('no floor path from the ENTRANCE '
+                        + `\\(${world.entrance.x},${world.entrance.y}\\) to the GOAL `
+                        + `\\(${model.goalCell.tx},${model.goalCell.ty}\\)`));
+                    expect(model.legalAt(world, wall, c.tx, c.ty)).toBe(false);
                 }
             }
         }

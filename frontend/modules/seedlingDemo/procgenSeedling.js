@@ -606,16 +606,30 @@ export function seedlingModel({
      * ⇒ NECESSARY, never sufficient: sealed ⇒ certainly unsolvable ⇒ refuse;
      * not sealed ⇒ nothing is claimed and the oracle still decides.
      *
-     * ── ⚖ KIND-SCOPED (§6.2's named default) ──────────────────────────
+     * ── ⚖ EVERY KIND, `empty` INCLUDED — THE SCOPE IS GONE (slice 6b) ─
      *
-     * ⛔ OFF at `empty`, where every committed seed→level pair lives. ⚖ The user
-     * may widen it (GENERATE-UI ruling 5 licenses the expiry); until then the
-     * scope is ASSERTED — `procgenSeedlingPrecheck.test.js` hands the identical
-     * carved record to an `empty` model and a `winding` model and shows only
-     * the second one refuses.
+     * Slice 6 shipped this rule KIND-SCOPED (§6.2's named default: OFF at
+     * `empty`, where every committed seed→level pair lives) and MEASURED what
+     * widening would cost — **22 of the 80 `empty` seed→level pairs** (seeds
+     * 1..40 × both palettes at count 3). ⚖ **THE USER RULED, 2026-08-15**, in
+     * the PROCGEN ELEMENTS design session: widen it to EVERY kind. GENERATE-UI
+     * ruling 5 licenses exactly that expiry (*"it's not a problem if the seed
+     * level pairs expire"*). Slice 6b dropped the scope and re-recorded the 22
+     * rows; ⛔ the soundness argument above is UNCHANGED and now global — it
+     * never mentioned the skeleton, because a sealed room is unsolvable however
+     * its walls got there.
+     *
+     * ⛔ WHY AN OPEN ROOM CAN SEAL AT ALL — the thing slice 6's own fixture got
+     * wrong. **Never from a FRESH skeleton**: no single wave-1 row spans the
+     * 8×8 interior of this 10×10 room, which is why *"the `empty` room never
+     * seals"* stayed green against the very mutant that drops this scope (§13.6
+     * B — `feedback_fixture_must_discriminate_two_builds` in one measurement).
+     * The seal appears once pass 2 has **ACCUMULATED** terrain: a pool and a
+     * segment later, one more segment closes the last route. That is the whole
+     * reason 22 pairs move and 58 do not, and it is why the fixture for this
+     * rule at `empty` is an ACCUMULATED record and not a skeleton.
      */
     const sealRefusal = (record, template, tx, ty) => {
-        if (skeletonKind === DEFAULT_SKELETON_KIND) return null;
         const painted = new Map((template.terrain ?? [])
             .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.terrain]));
         const blocking = [...painted.values()].filter((t) => t !== 'ground').length;
@@ -632,8 +646,9 @@ export function seedlingModel({
             + `the GOAL (${goalCell.tx},${goalCell.ty}) once the ${blocking} `
             + 'wall/water/pit cell(s) it writes are painted. ⛔ The flood reads TERRAIN only; '
             + 'entities are the ORACLE\'s question, so a block or a lock is never a wall '
-            + 'here. Refused before any solve, and only because the room is CARVED '
-            + `(skeleton "${skeletonKind}") — at "${DEFAULT_SKELETON_KIND}" this rule is off.`;
+            + 'here. Refused before any solve, at EVERY skeleton kind — this room is '
+            + `"${skeletonKind}", and ⚖ slice 6b dropped the carved-only scope slice 6 `
+            + 'shipped (22 of the 80 committed `empty` pairs re-recorded).';
     };
 
     const refusalAt = (record, template, tx, ty) => {

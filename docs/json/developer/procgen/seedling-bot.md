@@ -9053,10 +9053,23 @@ key, a pushable block, an arrow trap are the ORACLE's question, because whether
 a door is passable depends on the key and that is a fact about the SEARCH. So the
 rule is NECESSARY and never sufficient: sealed ⇒ certainly unsolvable ⇒ refuse;
 not sealed ⇒ nothing claimed. On the maze this is measured against a COMPLETE
-oracle — every candidate the rule refuses, the exact BFS also refuses. ⚖ It is
-**KIND-SCOPED** (off at `empty`, §6.2's named default), and that scope is what
-keeps the committed open-room seed→level pairs alive: with the scope dropped, 22
-of the 80 Seedling `empty` pairs move.
+oracle — every candidate the rule refuses, the exact BFS also refuses.
+
+⚖ **SLICE 6 SHIPPED IT KIND-SCOPED; SLICE 6b DROPPED THE SCOPE.** Slice 6 kept
+it off at `empty` (§6.2's named default) because that is the kind every committed
+seed→level pair is generated at, and measured the price of widening: **22 of the
+80 `empty` pairs** (seeds 1..40 × both palettes, at the DEFAULT bounds — target
+6). The user ruled on 2026-08-15, in the PROCGEN ELEMENTS design session, that it
+should be widened to every kind; GENERATE-UI ruling 5 licenses exactly that
+expiry. Slice 6b executed it, re-recorded the pairs and re-measured every gate
+subject that moved.
+
+⛔ **An open room seals only from ACCUMULATED terrain, never from a skeleton** —
+the longest wave-1 row is `wall-segment(len=5)` against an 8×8 interior, so no
+single candidate spans it. That is why slice 6's *"the `empty` room never
+seals"* fixture stayed green against its own scope mutant, why the pair cost is
+**count-dependent** (8 of 80 at count 3, 22 of 80 at target 6), and why the
+fixture for the rule at `empty` is an accumulated record rather than a skeleton.
 
 **BEFORE → AFTER, seeds 1..8 at count 3 / tries 4 / k 3 / anchortries 1:**
 
@@ -9095,6 +9108,42 @@ on a corridor is an ENTITY-template problem.
   still does not make Seedling corridors yield doors: `wall-gap-block` and
   `wall-gap-lock-weigh` remain NO_ANCHOR at every carved kind (they span the
   interior), which is slices 7/8's subject.
+
+### Slice 6b — the pre-check WIDENED to every kind, and what the pairs cost
+
+⚖ The user's 2026-08-15 ruling, executed. The kind scope is gone from BOTH
+bindings; the soundness argument is unchanged and now global (it never mentioned
+the skeleton — a sealed room is unsolvable however its walls got there).
+
+**Predicted, then measured** (`dump-seedling-kind-pairs.mjs`, `empty`, seeds
+1..40 × both palettes):
+
+| artifact | before | after |
+|---|---|---|
+| `empty` pairs at **count 3** (the instrument's default) | `2bfa6626…` | **8 of 80 rows move** — pre-sword 5/17/36, post-sword 3/5/14/15/31 |
+| `empty` pairs at **target 6** (the DEFAULT bounds — what slice 6 measured) | `c79d05f0…` | **22 of 80 rows move**, exactly as predicted |
+| CARVED pairs (6 kinds × 12 seeds × 2 palettes) | `ab77943c…` | **byte-identical** — those kinds already ran the rule |
+| all NINE maze per-kind CLI roll-ups | §13.7's nine | **all nine unchanged**, `empty` included |
+| `dump-maze-byteidentity` cell rows | `63779705…` | **byte-identical** (that instrument runs the maze BIOMES, not the procgen loop) |
+| R8 battery `--check` | `1fedb0ab…`, exit 1 | **unchanged**, exit 1 |
+| `batch-seedling-acceptance` | `fdb500f4…` | **`aaab86d2…`** — 8 of its 10 levels moved, all still accepted, all three CARRIERS still keep a `kill` template and still report *requires Progressive Sword* (STRONG) |
+
+⛓ **THE PAIR COST IS COUNT-DEPENDENT, and that reconciles two numbers.** Slice 6
+measured 22 of 80 at the default bounds; slice 7's permanent instrument defaults
+to `--count=3`, where only 8 move. Both were re-measured here from a pristine
+worktree at `01b5a1efc`. More steps ⇒ more accumulated terrain ⇒ more cells at
+which one more candidate closes the last route.
+
+⚠⚠ **THE ONE COST NOBODY PREDICTED: TWO RUNS THAT USED TO FINISH NOW ABORT.**
+Slice 6 recorded the opposite on the carved kinds (a sealing `water-pool` refused
+before the walk drowned in it, so a run that aborted now completed). At `empty`
+the arrow points the other way: `post-sword` seed **31** (count 3 and 6) and seed
+**20** (count 6 only) now die with `GenerationAborted` — the §15.5 approach-drive
+family — because a different anchor is drawn once the sealing ones stop being
+offered. Aborts over the 80 `empty` pairs: **2 → 3** at count 3, **2 → 4** at
+target 6, and none was removed. ⛔ Recorded, not acted on: the acceptance batch's
+skipped-seed table already treats an aborting seed as visible-and-not-chosen, and
+neither seed is a batch member.
 
 ### Slice 7 — CHAMBERS, and the KIND PARAMETERS
 

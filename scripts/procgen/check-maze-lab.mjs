@@ -65,6 +65,11 @@
  *     the trace pane prints the flood's own sentence naming the entrance, the
  *     goal and the rule's soundness bound. ⛔ A VALUE claim, not an echo: the
  *     cell is chosen without asking `refusalAt` anything (trap 269).
+ *     ⛓ **10b (slice 6b)** — the same directive on an `empty` **3x3** room is
+ *     `ILLEGAL_PLACEMENT` too, and the pane's sentence names that room's own
+ *     kind. ⚖ The user dropped the rule's kind scope on 2026-08-15; 3x3 is the
+ *     only width at which one template can seal an open maze room (measured
+ *     2x2..11x11 over seeds 1..40), so it is the only subject that can show it.
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
  * 246/258): `window.__mazeLab` is set on the FIRST render, so a poll for its
@@ -257,6 +262,56 @@ console.log(`node: pre-check subject = seed ${PRECHECK.seed} winding, `
     + `wall-segment(ori=${PRECHECK.ori},len=${PRECHECK.len}) at `
     + `(${PRECHECK.tx},${PRECHECK.ty}) seals (${PRECHECK.entrance.x},${PRECHECK.entrance.y})`
     + `->(${PRECHECK.goal.x},${PRECHECK.goal.y})`);
+
+/**
+ * ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 6b — THE SAME RULE'S **OPEN-ROOM** SUBJECT.
+ *
+ * ⚖ The user widened the pre-check to EVERY kind on 2026-08-15, so `empty` is
+ * no longer exempt and the page owes the claim there too. ⛔ THE SIZE IS A
+ * MEASUREMENT, NOT A GUESS: slice 6 scanned every open room from 2x2 to 11x11
+ * over seeds 1..40 for a SINGLE palette row that seals it and found
+ * `2x2 0 · **3x3 29** · 4x4 0 · 5x5 0 · 6x6 0 · 7x7 0 · 11x11 0`. 3x3 is the
+ * only width where one `wall-segment` spans the room, so it is the only
+ * open-room subject this page can be asked about — and the reason no committed
+ * maze pair moved when the scope was dropped (the default room is 11x11).
+ *
+ * ⛔ Same law as above: the cell comes from THIS FILE's flood, never from
+ * `refusalAt` (trap 269).
+ */
+const OPEN_ROOM = { width: 3, height: 3 };
+let OPEN_PRECHECK = null;
+for (let seed = 1; seed <= 12 && !OPEN_PRECHECK; seed += 1) {
+    const st = generateStep({ seed, step: 0, ...OPEN_ROOM });
+    const level = serializeMazeLevel(st.record);
+    const goal = { x: st.model.goalCell.tx, y: st.model.goalCell.ty };
+    for (const [ori, len] of [['h', 3], ['v', 3], ['h', 2], ['v', 2]]) {
+        for (let ty = 0; ty < level.height && !OPEN_PRECHECK; ty += 1) {
+            for (let tx = 0; tx < level.width && !OPEN_PRECHECK; tx += 1) {
+                const cells = Array.from({ length: len }, (_, i) => (ori === 'h'
+                    ? { x: tx + i, y: ty } : { x: tx, y: ty + i }));
+                const onGrid = cells.every((c) => c.x < level.width && c.y < level.height);
+                const free = cells.every((c) => level.tiles[c.x + c.y * level.width] === 0
+                    && !(c.x === level.entrance.x && c.y === level.entrance.y)
+                    && !(c.x === goal.x && c.y === goal.y));
+                if (!onGrid || !free) continue;
+                if (floodOpen(level, cells, level.entrance, goal)) continue;
+                OPEN_PRECHECK = { seed, ori, len, tx, ty, goal, entrance: level.entrance };
+            }
+        }
+        if (OPEN_PRECHECK) break;
+    }
+}
+if (!OPEN_PRECHECK) {
+    throw new Error('check-maze-lab: no 3x3 `empty` room in seeds 1..12 has a cell where one '
+        + 'wall-segment SEALS it — slice 6b\'s open-room claim has no subject, and the '
+        + 'measurement it rests on has to be re-run before this row is relaxed.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: OPEN-room pre-check subject = seed ${OPEN_PRECHECK.seed} empty `
+    + `${OPEN_ROOM.width}x${OPEN_ROOM.height}, wall-segment(ori=${OPEN_PRECHECK.ori},`
+    + `len=${OPEN_PRECHECK.len}) at (${OPEN_PRECHECK.tx},${OPEN_PRECHECK.ty}) seals `
+    + `(${OPEN_PRECHECK.entrance.x},${OPEN_PRECHECK.entrance.y})->`
+    + `(${OPEN_PRECHECK.goal.x},${OPEN_PRECHECK.goal.y})`);
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE BROWSER
@@ -720,6 +775,43 @@ try {
     check(/obstacles and items are the ORACLE/.test(sealPane),
         '⛔ …and the sentence states the rule\'s SOUNDNESS BOUND — tiles only, so a door is '
         + 'never a wall here');
+
+    /* ── CLAIM 10b: THE SAME RULE ON AN **OPEN** ROOM (slice 6b) ───── */
+    /**
+     * ⛓⛓⛓ THE SCOPE IS GONE, AND THE PAGE IS WHERE THAT IS VISIBLE. ⚖ Slice 6
+     * shipped this rule off at `empty`; the user widened it on 2026-08-15. The
+     * subject is the 3x3 room scanned above by THIS FILE's own flood — the only
+     * width at which one template can seal an open maze room — and the claim is
+     * a VALUE claim: `ILLEGAL_PLACEMENT`, the record unmoved, and the pane
+     * printing a sentence that names THIS room's kind as `empty`.
+     *
+     * ⛔ Restoring `if (skeletonKind === DEFAULT_SKELETON_KIND) return null;` in
+     * `procgenMaze.sealRefusal` reddens exactly here and nowhere else in this
+     * row (claim 10 above runs on `winding` and cannot see it).
+     */
+    const openDirective = `wall-segment(ori=${OPEN_PRECHECK.ori},len=${OPEN_PRECHECK.len})`
+        + `@1s!${OPEN_PRECHECK.tx},${OPEN_PRECHECK.ty}`;
+    const openSealed = await load(`seed=${OPEN_PRECHECK.seed}&width=${OPEN_ROOM.width}`
+        + `&height=${OPEN_ROOM.height}&count=0`
+        + `&directed=${encodeURIComponent(openDirective)}`,
+    () => window.__mazeLab?.directives?.length === 1,
+    'the OPEN-room sealing directive to be applied');
+    const od = openSealed.directives[0];
+    check(od.outcome === 'ILLEGAL_PLACEMENT' && od.at === null,
+        '⛓⛓⛓ SLICE 6b: the SAME directive on an `empty` 3x3 room is ILLEGAL_PLACEMENT too — '
+        + 'the pre-check is no longer kind-scoped, and the open room is not exempt',
+        `${od.instance} @!${OPEN_PRECHECK.tx},${OPEN_PRECHECK.ty} -> ${od.outcome}, `
+        + `at=${json(od.at)}`);
+    const openPane = await page.textContent('#labTrace');
+    check(/would SEAL the room/.test(openPane)
+        && /at EVERY skeleton kind — this room is "empty"/.test(openPane)
+        && new RegExp(`no floor path from the ENTRANCE \\(${OPEN_PRECHECK.entrance.x},`
+            + `${OPEN_PRECHECK.entrance.y}\\) to the GOAL \\(${OPEN_PRECHECK.goal.x},`
+            + `${OPEN_PRECHECK.goal.y}\\)`).test(openPane),
+    '⛓⛓ …and the PANE\'s sentence names the ENTRANCE, the GOAL and THIS ROOM\'S OWN KIND '
+        + '(`empty`) — a VALUE claim: a page still running the kind-scoped build could not '
+        + 'print this line at all',
+    (openPane.match(/[^\n]*would SEAL the room[^\n]*/) ?? ['(absent)'])[0].slice(0, 240));
 
     check(errors.length === 0, 'STILL zero console errors after every arm was driven',
         errors.join(' | '));

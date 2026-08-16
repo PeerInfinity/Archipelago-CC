@@ -5,8 +5,10 @@
  * CONSTRUCTIVE-MODE arc, slice 6 (kickoff §3.6 item 2). The FLOOD itself is
  * gated substrate-free in `procgenCore/gridFlood.test.js`; what is here is what
  * only Seedling can be asked — which terrains block, where the rule sits in the
- * order, that it is KIND-SCOPED, and that `legalAt`/`anchorsFor` inherit it
- * because they are DERIVED from `refusalAt` rather than beside it.
+ * order, that it runs at EVERY skeleton kind (slice 6b — ⚖ the user widened the
+ * scope on 2026-08-15 and 22 of the 80 committed `empty` pairs were re-recorded
+ * for it), and that `legalAt`/`anchorsFor` inherit it because they are DERIVED
+ * from `refusalAt` rather than beside it.
  *
  * ⛓⛓ THE MAIN ROW IS A **DIFFERENTIAL**, NOT A SPOT CHECK. A test that pointed
  * at one cell and said *"this one is refused"* would pass for a build that
@@ -183,33 +185,118 @@ describe('procgenSeedling — ⛓⛓ THE DIFFERENTIAL: the rule fires exactly wh
     });
 });
 
-describe('procgenSeedling — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', () => {
-    it('the `empty` room never produces a seal refusal, over the whole palette', () => {
-        for (let seed = 1; seed <= 8; seed += 1) {
-            const model = seedlingModel({ seed });
-            const record = model.skeleton();
-            for (const t of INSTANCES) {
-                for (const c of interiorCells(record)) {
-                    const why = model.refusalAt(record, t, c.tx, c.ty);
-                    if (why) expect(`seed ${seed} ${t.instance}: ${why}`).not.toMatch(SEAL);
-                }
-            }
+/**
+ * ⛓⛓⛓ **THE SCOPE IS GONE — slice 6b.** Slice 6 shipped the rule kind-scoped
+ * (§6.2's named default: off at `empty`) and MEASURED the price of widening it:
+ * 22 of the 80 committed `empty` seed→level pairs. ⚖ The user ruled on
+ * 2026-08-15 (the PROCGEN ELEMENTS design session) that it should be widened,
+ * with GENERATE-UI ruling 5's licence for the expiry. These rows are slice 6's
+ * scope rows INVERTED, plus the open-room subject slice 6 could not have had.
+ */
+const wallSeg = (ori, len) => {
+    const t = INSTANCES.find((i) => i.instance === `wall-segment(ori=${ori},len=${len})`);
+    if (!t) throw new Error(`the wave-1 palette no longer offers wall-segment(ori=${ori},`
+        + `len=${len}) — this file's open-room subject has to be re-derived`);
+    return t;
+};
+
+/**
+ * ⛓⛓⛓ **THE ONLY WAY AN `empty` ROOM SEALS: ACCUMULATED TERRAIN.**
+ *
+ * ⛔ NOT a skeleton. The 10x10 room's interior is 8x8 and the longest wave-1
+ * row is `len=5`, so no SINGLE candidate spans it — which is exactly why slice
+ * 6's *"the `empty` room never produces a seal refusal"* row stayed GREEN
+ * against the mutant that dropped the kind scope (§13.6 B), and why 58 of the
+ * 80 pairs did not move. The seal is a PASS-2 fact: it appears after the loop
+ * has already painted terrain.
+ *
+ * So the subject is built here, explicitly, from the model's own `place`:
+ * **seed 3's `empty` room, one `wall-segment(ori=v,len=5)` at (2,1)** — legal,
+ * and it leaves (2,6)..(2,8) open so the room still connects. Column x=2 is the
+ * column that isolates the START (1,1) from the GOAL (3,4), which this file
+ * asserts rather than assumes.
+ */
+const accumulatedOpenRoom = (seed) => {
+    const model = seedlingModel({ seed });
+    const record = model.place(model.skeleton(), wallSeg('v', 5), { tx: 2, ty: 1 });
+    return { model, record };
+};
+
+describe('procgenSeedling — ⛔ THE RULE RUNS AT EVERY KIND, `empty` INCLUDED (⚖ slice 6b)', () => {
+    it('⛓⛓⛓ THE OPEN-ROOM SUBJECT: an ACCUMULATED `empty` record SEALS, and is refused BY '
+        + 'NAME', () => {
+        const { model, record } = accumulatedOpenRoom(3);
+        expect(model.skeletonKind).toBe(DEFAULT_SKELETON_KIND);
+        // ⛔ the PRECONDITION, asserted: the first segment did NOT seal, so the
+        // row below is about the SECOND one and not about a room that was
+        // already shut. A fixture whose setup already broke the room would pass
+        // for a rule that refuses everything.
+        const closer = wallSeg('v', 3);
+        expect(independentlyConnected(record, [], model.defaults.start, model.goalCell))
+            .toBe(true);
+        expect(independentlyConnected(record, writesOf(closer, 2, 6),
+            model.defaults.start, model.goalCell)).toBe(false);
+
+        const why = model.refusalAt(record, closer, 2, 6);
+        expect(why).toMatch(SEAL);
+        // ⛓ A VALUE claim on the SENTENCE (trap 269): it names this room's own
+        // kind, the start and the goal THIS FILE computed, and the cell count.
+        expect(why).toMatch(/no ground path from the START \(1,1\) to the GOAL \(3,4\)/);
+        expect(why).toMatch(/once the 3 wall\/water\/pit cell\(s\) it writes are painted/);
+        expect(why).toMatch(/at EVERY skeleton kind — this room is "empty"/);
+        // …and `legalAt`/`anchorsFor` inherit it at `empty` too.
+        expect(model.legalAt(record, closer, 2, 6)).toBe(false);
+        for (const at of model.anchorsFor(record, closer, rngFor(3), 64)) {
+            expect(`${at.tx},${at.ty}`).not.toBe('2,6');
         }
     });
 
-    it('⛓⛓ THE DISCRIMINATING SUBJECT: ONE record, ONE template, ONE cell, TWO models', () => {
+    it('⛓⛓ THE DIFFERENTIAL, ON ACCUMULATED `empty` RECORDS: the rule fires exactly when the '
+        + 'OPEN room seals', () => {
+        let compared = 0;
+        let sealedCases = 0;
+        for (let seed = 1; seed <= 6; seed += 1) {
+            const { model, record } = accumulatedOpenRoom(seed);
+            // ⛔ Some seeds put the GOAL at x<=2, where column 2 cannot separate
+            // anything; those records simply contribute no sealed cases, and the
+            // denominator assertion below is what stops that from passing
+            // silently.
+            for (const t of INSTANCES) {
+                for (const c of interiorCells(record)) {
+                    if (!footprintFree(model, record, t, c.tx, c.ty)) continue;
+                    const writes = writesOf(t, c.tx, c.ty);
+                    const blocking = writes.filter((w) => w.terrain !== 'ground').length;
+                    const stillOpen = blocking === 0 || independentlyConnected(
+                        record, writes, model.defaults.start, model.goalCell,
+                    );
+                    const why = model.refusalAt(record, t, c.tx, c.ty) ?? '';
+                    compared += 1;
+                    const label = `empty/${seed}/${t.instance}@${c.tx},${c.ty}: ${why}`;
+                    if (stillOpen) expect(label).not.toMatch(SEAL);
+                    else { sealedCases += 1; expect(label).toMatch(SEAL); }
+                }
+            }
+        }
+        expect(compared).toBeGreaterThan(1000);
+        expect(sealedCases).toBeGreaterThan(20);
+    });
+
+    it('⛓⛓ THE DISCRIMINATING SUBJECT: ONE record, ONE template, ONE cell, TWO models — and '
+        + 'now BOTH refuse', () => {
         /**
-         * ⛔ THE FIXTURE HAS TO DISTINGUISH TWO BUILDS
-         * (`feedback_fixture_must_discriminate_two_builds`). "The empty room
-         * never seals" is true of a build with NO kind scope too, because a
-         * three-cell wall cannot seal an open 8x8 interior — so that row alone
-         * would be inert against the mutant that drops the scope.
+         * ⛓ SLICE 6's SCOPE ROW, INVERTED — kept rather than deleted, because
+         * it is the fixture that DISTINGUISHES the two builds
+         * (`feedback_fixture_must_discriminate_two_builds`). Slice 6 asserted
+         * the `empty` model returned `null` for the identical carved record,
+         * template and cell; ⚖ the 2026-08-15 ruling makes the rule global, so
+         * the assertion flips. Restoring `if (skeletonKind ===
+         * DEFAULT_SKELETON_KIND) return null;` in this binding reddens here.
          *
-         * ⛓ The subject that CAN tell them apart is the CARVED record handed to
-         * BOTH models. `refusalAt` is a pure function of `(record, template,
-         * cell)` plus the model's own kind, start and goal — and ⚖ §3.4's draw
-         * order makes the start and the goal of seed s identical under every
-         * kind, so the two models differ in EXACTLY the variable under test.
+         * ⛔ The isolation is unchanged: `refusalAt` is a pure function of
+         * `(record, template, cell)` plus the model's own kind, start and goal,
+         * and ⚖ §3.4's draw order makes the start and the goal of seed s
+         * identical under every kind — so the two models differ in EXACTLY the
+         * variable under test.
          */
         const carved = seedlingModel({ seed: 3, skeleton: { kind: 'winding' } });
         const open = seedlingModel({ seed: 3 });
@@ -226,11 +313,36 @@ describe('procgenSeedling — ⛔ THE RULE IS KIND-SCOPED (⚖ §6.2 default)', 
             if (subject) break;
         }
         expect(subject).not.toBeNull();
-        // the CARVED model refuses it by name…
-        expect(subject.why).toMatch(SEAL);
+        expect(subject.why).toMatch(/this room is "winding"/);
         // …and the OPEN model, given the identical record, template and cell,
-        // does not — because the rule is off at `empty`.
-        expect(open.refusalAt(record, subject.t, subject.c.tx, subject.c.ty)).toBeNull();
+        // refuses it TOO now — the rule is a fact about the RECORD, not about
+        // how the record was carved.
+        const openWhy = open.refusalAt(record, subject.t, subject.c.tx, subject.c.ty);
+        expect(openWhy).toMatch(SEAL);
+        expect(openWhy).toMatch(/this room is "empty"/);
+    });
+
+    it('⛔ a FRESH `empty` SKELETON still has no single-row seal — the 58 pairs that did NOT '
+        + 'move, explained (⚠ INERT against the scope mutant, and labelled so)', () => {
+        /**
+         * ⚠⚠ THIS ROW GATES NOTHING ABOUT THE SCOPE. It is true of the build
+         * WITH the kind scope and of the build without it, which is precisely
+         * what slice 6 measured (§13.6 mutant B: this row stayed green while
+         * 22 committed pairs moved underneath it). It is kept because it is the
+         * MEASUREMENT that explains the arithmetic — the longest wave-1 row is
+         * `len=5` against an 8x8 interior — and a reader who deleted it would
+         * have to re-derive why widening the scope cost 22 pairs and not 80.
+         */
+        for (let seed = 1; seed <= 8; seed += 1) {
+            const model = seedlingModel({ seed });
+            const record = model.skeleton();
+            for (const t of INSTANCES) {
+                for (const c of interiorCells(record)) {
+                    const why = model.refusalAt(record, t, c.tx, c.ty);
+                    if (why) expect(`seed ${seed} ${t.instance}: ${why}`).not.toMatch(SEAL);
+                }
+            }
+        }
     });
 });
 

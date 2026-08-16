@@ -97,11 +97,29 @@ which the lab page's trace pane prints.
 ⛔ **It reads TILES only, and a `door-key` can therefore never be sealed by it.**
 Whether a door is passable depends on the key, which is a fact about the SEARCH
 and not about the grid — and §12.10's asymmetry is exactly what that protects: on
-a corridor the maze KEEPS every door and REVERTS every wall. ⚖ The rule is
-**kind-scoped** — off at `empty` — so the open-room seed→level pairs cannot move.
-(A single `wall-segment` can seal an open room only at 3×3: scanned 2×2 through
-11×11 over seeds 1..40, that is the sole width where one template spans the room,
-which is why the unit fixture for the scope uses a 3×3 room.)
+a corridor the maze KEEPS every door and REVERTS every wall.
+
+⚖ **IT RUNS AT EVERY KIND, `empty` INCLUDED (slice 6b, 2026-08-15).** Slice 6
+shipped it kind-scoped — off at `empty`, so the committed open-room pairs could
+not move — and measured what widening would cost. The user ruled in the PROCGEN
+ELEMENTS design session that it should be widened; GENERATE-UI ruling 5 licenses
+the pair expiry. ⛓ **No committed maze pair moved, and that was predicted**: a
+single `wall-segment` can seal an open room only at **3×3** (scanned 2×2 through
+11×11 over seeds 1..40 — the sole width where one template spans the room), the
+default room is 11×11, and all nine per-kind CLI roll-ups came back
+byte-identical across the change, `empty`'s `86cc744e…` included. 3×3 is
+therefore the unit fixture's subject and the lab row's (`check-maze-lab` claim
+10b) — the only size at which the rule is observable on an open room at all.
+
+⚠ **It did cost the SMALL-ROOM revert fixture its subject, and that is the one
+place the widening bit.** `procgenMaze.test.js`'s *"a small room at a high target
+REVERTS"* ran at 5×5 seed 4, where every revert was a SEALING one — now refused
+before any solve, so the row's `reverted.length > 0` fell to 0. Re-picked by a
+documented scan (sizes 4×4..7×7 × seeds 1..12 × targets 8/12/16 for a cell with
+both a REVERT and a NO_ANCHOR; 21 qualify) to **seed 8 at 5×5, target 12** —
+replaced, never relaxed. The reverts that survive anywhere are the soundness
+bound doing its job: the oracle refusing through an ITEM, which a terrain flood
+cannot see.
 
 Measured over 9 kinds × 4 sizes × 8 seeds (`sweep-yield-table.mjs`, count 3 /
 tries 4): `wall-segment` REVERTs **438 → 8**, total oracle solves **1519 →

@@ -481,16 +481,25 @@ export function mazeModel({
      * ⇒ the rule is a NECESSARY condition only: sealed ⇒ certainly unsolvable ⇒
      * refuse; not sealed ⇒ nothing claimed, and the oracle still decides.
      *
-     * ── ⚖ KIND-SCOPED (§6.2's named default) ──────────────────────────
+     * ── ⚖ EVERY KIND, `empty` INCLUDED — THE SCOPE IS GONE (slice 6b) ─
      *
-     * ⛔ OFF at `empty`. The open room is where every committed seed→level pair
-     * lives, and at a small enough room (§9.6's 5x5/4x4 ladder) a `wall-segment`
-     * CAN seal an open room — so a global rule would move those pairs. ⚖ The
-     * user may widen it later (GENERATE-UI ruling 5 licenses the expiry); until
-     * then the scope is asserted, not assumed.
+     * Slice 6 shipped this rule KIND-SCOPED (§6.2's named default: OFF at
+     * `empty`) and measured the price of widening it. ⚖ **THE USER RULED,
+     * 2026-08-15** (the PROCGEN ELEMENTS design session): widen it to EVERY
+     * kind; GENERATE-UI ruling 5 licenses the pair expiry. Slice 6b dropped the
+     * scope on BOTH bindings. ⛔ The soundness argument above is unchanged and
+     * now global — it never mentioned the skeleton, because a sealed room is
+     * unsolvable however its walls got there.
+     *
+     * ⛓ **THE MAZE PAID NOTHING FOR IT, AND THAT WAS PREDICTED.** Slice 6
+     * scanned every open room 2x2 → 11x11 over seeds 1..40 for a SINGLE palette
+     * row that seals it: `2x2 0 · **3x3 29** · 4x4 0 · 5x5 0 · 6x6 0 · 7x7 0 ·
+     * 11x11 0`. The default room is 11x11, so no `empty` CLI pair moves — the
+     * nine per-kind roll-ups were byte-identical across this slice, `empty`
+     * included (§15). 3x3 is the ONLY width where the rule can be seen at
+     * `empty` at all, which is why the fixture uses one.
      */
     const sealRefusal = (world, template, tx, ty) => {
-        if (skeletonKind === DEFAULT_SKELETON_KIND) return null;
         const written = new Map((template.tiles ?? [])
             .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.tile]));
         const blocking = [...written.values()].filter((t) => t !== TILE_FLOOR).length;
@@ -509,8 +518,9 @@ export function mazeModel({
             + `${world.entrance.y}) to the GOAL (${goalCell.tx},${goalCell.ty}) once the `
             + `${blocking} wall tile(s) it writes are painted. ⛔ The flood reads TILES only; `
             + 'obstacles and items are the ORACLE\'s question, so a door is never a wall '
-            + 'here. Refused before any solve, and only because the room is CARVED '
-            + `(skeleton "${skeletonKind}") — at "${DEFAULT_SKELETON_KIND}" this rule is off.`;
+            + 'here. Refused before any solve, at EVERY skeleton kind — this room is '
+            + `"${skeletonKind}", and ⚖ slice 6b dropped the carved-only scope slice 6 `
+            + 'shipped.';
     };
 
     const refusalAt = (world, template, tx, ty) => {

@@ -461,10 +461,26 @@ describe('generateMazeLevel — the whole seam, wired', () => {
      * high target is where the loop's own no is exercised; the yield table
      * (slice 6) is where that observation becomes a measurement rather than a
      * fixture choice.
+     *
+     * ⛓⛓ **THE SUBJECT MOVED IN SLICE 6b, AND THE MOVE IS THE FINDING.** ⚖ The
+     * user widened the connectivity pre-check to every kind, `empty` included,
+     * so a candidate whose walls SEAL this room is refused before any solve —
+     * and seed 4's reverts here were ALL of that shape, so this row's
+     * `reverted.length > 0` fell to 0. ⛔ REPLACED, NEVER RELAXED (trap 62): not
+     * one assertion was loosened; the subject was re-picked by a scan over
+     * sizes 4x4/5x5/6x6/7x7 x seeds 1..12 x targets 8/12/16 for a cell that
+     * still produces BOTH a REVERT and a NO_ANCHOR. 21 cells qualify; **seed 8
+     * at 5x5, target 12** is the one that keeps this row's shape (same size,
+     * same target, 3 reverts / 3 no-anchors).
+     *
+     * ⛓ And the row is STRONGER for it: every revert that survives the
+     * pre-check is one the terrain flood could not see — the oracle refusing
+     * through an ITEM (a key walled off from the player), which is exactly the
+     * soundness bound the rule declares.
      */
     it('a small room at a high target REVERTS, and every reverted row carries the ORACLE\'s '
         + 'own text', () => {
-        const out = generateMazeLevel({ seed: 4, width: 5, height: 5,
+        const out = generateMazeLevel({ seed: 8, width: 5, height: 5,
             bounds: { obstacleTarget: 12, triesPerStep: 8, saturationK: 3 } });
         const reverted = out.trace.filter((r) => r.outcome === ATTEMPT.REVERTED);
         expect(reverted.length).toBeGreaterThan(0);

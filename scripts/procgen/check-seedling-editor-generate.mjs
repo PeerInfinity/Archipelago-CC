@@ -53,6 +53,12 @@
  *     restriction refuses BEFORE the press, and an unknown name refuses BY
  *     NAME. ⛔ Its subject's two kept lists are DISJOINT, so a restriction the
  *     page echoes without PASSING to the loop reds this row.
+ *  8g. **⛓⛓⛓ THE PRE-CHECK ON THE OPEN ROOM** (constructive-mode slice 6b) —
+ *     ⚖ the user dropped the rule's kind scope, so a directive that would SEAL
+ *     an `empty` room — one whose terrain a REAL LADDER accumulated, since no
+ *     single row seals a fresh one — is `ILLEGAL_PLACEMENT` with a sentence
+ *     naming that room's own kind. The cell comes from an independent flood
+ *     here (trap 269).
  *  5. **⛓⛓⛓ THE URL ROUND TRIP** (GENERATE-mode UI arc, slice 1) — edit the
  *     form, press, and the address bar NAMES the run; copy it, load it fresh,
  *     and the panel AND the level come back identical. Before slice 1 the
@@ -253,6 +259,18 @@ const DIRECT_SPEC = {
  *   · solved-only — it has a verb and no anchor within the bound discharged it.
  * ⛔ ILLEGAL_PLACEMENT is NOT among them and its absence is NAMED rather than
  * left looking untested — see claim 7d.
+ *
+ * ⛓⛓ **THE `REVERTED` SUBJECT MOVED IN SLICE 6b, AND MY OWN ROW CAUGHT IT.** ⚖
+ * The user widened the connectivity pre-check to every kind, so `empty` runs it
+ * too and pre-sword seed 2's step-6 ladder is one of the 22 seed→level pairs
+ * that expired (GENERATE-UI ruling 5). At the new step-6 record the same door
+ * has no legal cell at all, so the row reported `NO_ANCHOR` where it asserts
+ * `REVERTED` — an outcome class silently going untested is exactly what this
+ * arm exists to prevent. ⛔ REPLACED, NEVER RELAXED (trap 62): the same probe
+ * was re-run (seeds 1..12 x steps 0/2/4/6 x the six templates) and **seed 4 at
+ * step 4** keeps the SAME template and parameters, walking 2 of 2 anchors to a
+ * revert. (Was seed 2 step 6.) ⚠ Seed 4 pre-sword is not among the pairs that
+ * moved at either count, so the subject is not one this slice destabilised.
  */
 /**
  * ⛓⛓⛓ CLAIM 8's SUBJECTS — CLICK-TO-ANCHOR (slice 6).
@@ -276,7 +294,7 @@ const ILLEGAL_CLICK = { tx: 3, ty: 1 };
 
 const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
     template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
-const REVERTED_CASE = { seed: 2, biome: 'pre-sword', step: 6,
+const REVERTED_CASE = { seed: 4, biome: 'pre-sword', step: 4,
     template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
 const SOLVED_ONLY_CASE = { seed: 2, biome: 'pre-sword', step: 0,
     template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
@@ -1888,6 +1906,137 @@ if (!host) {
         && /the Seedling page offers/.test(refusedKind.message ?? ''),
         '⛔ ?skeleton=corridor REFUSES BY NAME, with what it needs AND what IS offered',
         refusedKind.message);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 8g — THE PRE-CHECK ON THE **OPEN** ROOM (SLICE 6b)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ THE USER DROPPED THE RULE'S KIND SCOPE on 2026-08-15 (the PROCGEN ELEMENTS
+ * design session; GENERATE-UI ruling 5 licensed the pair expiry), so `empty` —
+ * the kind every committed seed→level pair is generated at — is no longer
+ * exempt. This is that claim on the page.
+ *
+ * ⛔ **THE SUBJECT CANNOT BE A SKELETON, AND THAT IS THE WHOLE POINT.** The
+ * longest wave-1 row is `wall-segment(len=5)` against an 8x8 interior, so no
+ * single candidate seals a FRESH open room — which is exactly why slice 6's
+ * *"the `empty` room never seals"* fixture stayed green while 8 committed pairs
+ * moved underneath it (§13.6 B). An open room seals only once pass 2 has
+ * ACCUMULATED terrain, so the subject below is the record after a REAL LADDER of
+ * `k` steps, scanned by an INDEPENDENT flood written here (trap 269: the cell is
+ * never chosen by asking `refusalAt` which cell it dislikes).
+ */
+{
+    const OPEN_BIOME = 'pre-sword';
+    let OPEN = null;
+    for (let seed = 1; seed <= 12 && !OPEN; seed += 1) {
+        for (let step = 1; step <= 4 && !OPEN; step += 1) {
+            let st = null;
+            try {
+                st = generateStep({ seed, biome: OPEN_BIOME, step });
+            } catch { continue; } // ⚠ an ABORTING ladder is not a subject; skipped BY NAME below
+            const rec = st.record;
+            const start = st.model.defaults.start;
+            const goal = st.model.goalCell;
+            const opens = (writes) => {
+                const painted = new Map(writes.map((w) => [`${w.tx},${w.ty}`, w.terrain]));
+                const ok = (x, y) => x >= 0 && y >= 0 && x < rec.width && y < rec.height
+                    && (painted.get(`${x},${y}`) ?? terrainAt(rec, x, y)) === 'ground';
+                if (!ok(start.tx, start.ty) || !ok(goal.tx, goal.ty)) return false;
+                const seen = new Set([`${start.tx},${start.ty}`]);
+                let ring = [{ x: start.tx, y: start.ty }];
+                while (ring.length) {
+                    const nextRing = [];
+                    for (const p of ring) {
+                        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                            const c = { x: p.x + dx, y: p.y + dy };
+                            const key = `${c.x},${c.y}`;
+                            if (seen.has(key) || !ok(c.x, c.y)) continue;
+                            if (c.x === goal.tx && c.y === goal.ty) return true;
+                            seen.add(key);
+                            nextRing.push(c);
+                        }
+                    }
+                    ring = nextRing;
+                }
+                return false;
+            };
+            for (const [ori, len] of [['v', 5], ['h', 5], ['v', 4], ['h', 4], ['v', 3],
+                ['h', 3], ['v', 2], ['h', 2]]) {
+                for (let ty = 1; ty < rec.height - 1 && !OPEN; ty += 1) {
+                    for (let tx = 1; tx < rec.width - 1 && !OPEN; tx += 1) {
+                        const cells = Array.from({ length: len }, (_, i) => (ori === 'h'
+                            ? { tx: tx + i, ty } : { tx, ty: ty + i }));
+                        const inside = cells.every((c) => c.tx < rec.width - 1
+                            && c.ty < rec.height - 1);
+                        // ⛔ THE FOOTPRINT WALK RUNS FIRST, so a cell it would
+                        // reject is not a subject for the FLOOD — my own row
+                        // caught that: the first draft picked a cell holding a
+                        // pushable block and got `ILLEGAL_PLACEMENT` for the
+                        // wrong rule, with the right outcome word. `isFree` is
+                        // a DIFFERENT rule from the one under test, so using it
+                        // as a precondition is not trap 269's echo.
+                        const free = cells.every((c) => terrainAt(rec, c.tx, c.ty) === 'ground'
+                            && st.model.isFree(rec, c.tx, c.ty)
+                            && !(c.tx === start.tx && c.ty === start.ty)
+                            && !(c.tx === goal.tx && c.ty === goal.ty));
+                        if (!inside || !free) continue;
+                        if (opens(cells.map((c) => ({ ...c, terrain: 'wall' })))) continue;
+                        OPEN = { seed, step, ori, len, tx, ty, start, goal };
+                    }
+                }
+                if (OPEN) break;
+            }
+        }
+    }
+    check(OPEN !== null,
+        '⛓ an OPEN-room sealing subject EXISTS — a `empty` ladder of k steps whose ACCUMULATED '
+        + 'terrain one more wall-segment would seal, found by an INDEPENDENT flood in this '
+        + 'file and never by asking the rule',
+        OPEN ? `seed ${OPEN.seed} ${OPEN_BIOME} at step ${OPEN.step}: `
+            + `wall-segment(ori=${OPEN.ori},len=${OPEN.len})@(${OPEN.tx},${OPEN.ty})`
+            : 'NONE — the claim below has no subject, and the scan has to be widened');
+    if (OPEN) {
+        const spec = { template: 'wall-segment', params: { ori: OPEN.ori, len: OPEN.len },
+            anchor: { tx: OPEN.tx, ty: OPEN.ty }, bound: 1,
+            keepPolicy: KEEP_POLICY.FIRST_SOLVED };
+        const nodeOpenSealed = generateWithDirectives({
+            seed: OPEN.seed, biome: OPEN_BIOME, step: OPEN.step, directed: [spec],
+        });
+        const nodeWhy = nodeOpenSealed.trace.find((r) => r.directive === 1).reasonText;
+        const directedParam = `wall-segment(ori=${OPEN.ori},len=${OPEN.len})`
+            + `@1s!${OPEN.tx},${OPEN.ty}`;
+        const web = await load(`source=generate&seed=${OPEN.seed}&biome=${OPEN_BIOME}`
+            + `&count=${OPEN.step}&run=1&directed=${encodeURIComponent(directedParam)}`,
+        { step: OPEN.step, seed: OPEN.seed });
+        const pane = await page.evaluate(() => ({
+            directives: window.__editorGenerate?.directives ?? [],
+            rows: [...document.querySelectorAll('#genTrace .tr')].map((e) => e.textContent),
+        }));
+        const od = pane.directives[0];
+        check(od?.outcome === 'ILLEGAL_PLACEMENT' && od?.at === null,
+            '⛓⛓⛓ SLICE 6b: an EXPLICIT-anchor directive that would SEAL the **OPEN** room is '
+            + 'ILLEGAL_PLACEMENT — `empty` is no longer exempt from the pre-check',
+            `${od?.outcome}, at ${json(od?.at)}`);
+        check(/would SEAL the room/.test(nodeWhy ?? '')
+            && /at EVERY skeleton kind — this room is "empty"/.test(nodeWhy ?? '')
+            && new RegExp(`no ground path from the START \\(${OPEN.start.tx},`
+                + `${OPEN.start.ty}\\) to the GOAL \\(${OPEN.goal.tx},${OPEN.goal.ty}\\)`)
+                .test(nodeWhy ?? ''),
+        '⛓⛓ …and the sentence names THIS ROOM\'S OWN KIND (`empty`) plus the two cells THIS '
+            + 'FILE computed — a VALUE claim: the kind-scoped build could not produce this '
+            + 'line at all',
+        (nodeWhy ?? '(none)').slice(0, 170));
+        check(pane.rows.some((t) => t.includes(nodeWhy)),
+            '⛓ …and the PANE prints it VERBATIM — node\'s `refusalAt` for the same cell, '
+            + 'character for character',
+            `${(nodeWhy ?? '(none)').slice(0, 110)}…`);
+        check(json(web.level) === json(generateStep({
+            seed: OPEN.seed, biome: OPEN_BIOME, step: OPEN.step,
+        }).record),
+        '⛔ …and the level on screen is the k-step ladder UNMOVED — a refusal keeps the old '
+        + 'record');
+    }
 }
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
