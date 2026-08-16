@@ -568,6 +568,35 @@ describe('the full-level plan HELD THE DOOR', () => {
      * — a second mouth into the site, which is exactly what an unsealed exit
      * mouth would be.
      */
+    /**
+     * ⛓⛓⛓ **THE GUARD DOOR'S KEY LEVEL IS THE GUARDED SYMBOL'S, NOT ZERO.**
+     * `doorLevelOf` reads a level out of `door_K{n}`; `door_A0` has none, so the
+     * binding tells `verifyAreaLevels` which level it belongs to — the level of
+     * the flag behind it. Get that wrong and the level-n flood reaches cells the
+     * partition says are locked, and the whole area binding REFUSES.
+     *
+     * ⚠ AT `binds=item` WITH ONE KEY THIS IS UNTESTABLE: the guarded symbol is
+     * always `K0`, whose level is 0, so "the guarded symbol's level" and "zero"
+     * are the same number and any mutant between them is INERT. The row needs a
+     * gadget guarding `K1`, which is `binds=any` with two keys — measured to
+     * happen on 7 of the 120 (size × seed) combinations swept on `rooms`, and these are six
+     * of them.
+     */
+    it.each([[6, 15], [14, 15], [19, 15], [36, 15], [30, 19], [48, 19]])(
+        'seed %i at %ix%i — the gadget guards K1, and its door belongs to key level 1',
+        (seed, size) => {
+            const m = mazeModel({ seed, width: size, height: size, skeleton: { kind: 'rooms' },
+                areas: { keys: 2 },
+                elements: { name: 'guard', params: { len: 3, turns: 1, binds: 'any' } } });
+            expect(m.elements.ran).toBe(true);
+            expect(m.elements.placed[0].guards).toBe('K1');
+            // ⛔ the level-n flood AGREED — a door_A0 filed at level 0 would let
+            // the entrance reach the flag cell at key level 0 and the binding
+            // would refuse `the-level-flood-disagrees-with-the-partition`
+            expect(m.areas.refused).toBe(null);
+            expect(m.areas.ran).toBe(true);
+        });
+
     it('a SECOND way to the flag makes `guardIsCut` FALSE — the rule\'s only real gate', () => {
         /**
          * ⛓ A HAND-DRAWN ROOM, read as it looks. `G` is the guard door, `F` the
