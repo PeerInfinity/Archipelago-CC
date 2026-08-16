@@ -219,6 +219,136 @@ measured; and a symbol whose key ablation still solves. The CLI exits **6** and
 `summary.require` carries `{asked, met: [{symbol, grade, planWith,
 planWithoutKey}], refused}`; a run without a directive carries no field at all.
 
+## Blocks, buttons and the flag switch
+
+The engine's state is `(player, blocks, inventory)`. A move into a cell holding
+a **block** pushes it one cell along the same delta; the cell beyond must be
+floor, block-free and free of an **un-cleared** obstacle, asked with the same
+effective inventory the player's own move is asked with. A block does not open
+doors.
+
+`world.blocks` is a `Map(posKey → true)` of **initial** positions — the live
+ones are `state.blocks`, a sorted array of posKeys that is **absent** when the
+world has no blocks, so `mazeVisitedKey` is byte-identical on every world that
+predates the mechanism.
+
+A **button** (`world.buttons`, with `world.buttonLib` naming what each one
+`holds`) is a walkable cell. It is pressed when a block sits on it **or when the
+player stands on it** — the game's own rule — and pressing derives a token
+(`sw_A0`) that is added to the effective inventory for that step and **never
+stored**. That is what makes it a HOLD: step off and the door shuts.
+
+> ⚠ Clearance reads the stance **before** the move, so a player standing on a
+> button can step into an orthogonally **adjacent** door on their own press.
+> A guard's door is therefore kept at least two cells from its button.
+
+A **flag** (`flag_K0`) is an ordinary item whose library entry carries
+`kind: 'flag'`. It is a LATCH: picked up on arrival and permanent, because every
+item pickup already is. Nothing in `step` branches on `kind` — the declaration
+is for layer 1 and the renderer.
+
+⚠ In region play a flag is an Archipelago **location**, like a key. Buttons are
+deliberately *not* in `world.items` for exactly that reason: they would invent a
+phantom AP check on every level that has one.
+
+`serializeMazeLevel` emits `blocks`, `buttons` and `buttonLib` — and **omits
+each when empty**, so a level with no gadget serializes exactly as it did before
+any of this existed.
+
+## The first element
+
+An **element** (`procgenCore/elements.js`) is a template that exists **before**
+the carve: it is constructed in absolute coordinates inside a rectangle the
+binding offers, writes its own floor *and* wall, declares the **ports** a
+connector may attach to, the cells outside itself it needs kept (`demand`), and
+the **area** it is. The first one is the **reverse-pull block gadget**
+(`procgenCore/elements/reversePullBlock.js`): a block put on its button and
+pulled backwards `len` steps with `turns` direction changes, carving the block's
+cells, every stance cell, a corner cell at each turn and a bypass cell round the
+button. Reversed, that walk is a legal push sequence, so it is solvable by
+construction — and the BFS certifies it anyway.
+
+### The spec
+
+```
+--elements=<name>[;key=value]…      none · guard · guard;len=4;turns=2;binds=any
+```
+
+One codec (`procgenCore/elementSpec.js`), the same trio as `areaSpec` and the
+skeleton kinds. `none` is the default and means the machinery **does not run**:
+no site is drawn, nothing is constructed, no draw is spent, and every maze md5 is
+unchanged by a code path that never executes.
+
+`len` and `turns` are the element's own domains, read off the element rather than
+restated. A parameter the spec **names** is an override that spends no draw; one
+it omits is drawn. That is why a value at its default is still spelled out here,
+unlike in `areaSpec`: the absence is the difference between a drawn parameter and
+a given one.
+
+`binds` is the binding's own knob. At `item` (default) the gadget's area is the
+**only** one that may hold a key symbol, so the gadget guards whatever the graph
+places; at `any` it competes with every other area and guards a symbol in about
+one accepted run in seven.
+
+### How it goes in
+
+The draw order, which is the level's identity:
+
+1. the goal cell — unchanged, the room stream's first draw
+2. `instantiate` — the element's parameters, in schema order
+3. the **site** — one `pick` over the snug rectangles (`w, h = len + 4`) whose
+   one-cell ring is on the grid and holds neither the entrance nor the goal
+4. `construct(site)` — the gadget's geometry, from the same stream
+5. the carve — the same backend with the same parameters, at a moved position
+6. the composite — no draws
+7. the area block — partition, graph, realisation, as before
+
+The carve runs over the whole grid exactly as it always has; its answer **inside
+the reserved rectangle is discarded** and the element's tiles are written over
+it. The ring is written as wall except the one cell the entry port faces, and the
+connector then joins that mouth with the shortest tunnel to floor the entrance
+already reaches — never entering the reserved rectangle. The **exit mouth is
+sealed**: with it open the player walks round the outside of the site and the
+door stops being a cut on about 30% of levels.
+
+Everything is then checked on the way out, and every failure is a **graded
+refusal** that leaves the carved room intact: `no-site-fits-this-room` ·
+`the-entry-port-cannot-be-joined` · `the-elements-demand-is-not-met` ·
+`the-reserved-rectangle-seals-the-room` · `the-guard-is-not-a-cut-of-the-level`
+· the element's own `TURNS_EXCEED_LEN` / `SITE_TOO_SMALL` / `WALK_NOT_FOUND`.
+
+### The guard
+
+The gadget's area is fed to the partition as a **declared** area (`E0`,
+`kind: 'element'`) — a one-wide push lane contains no all-floor 2×2 square, so
+the blob rule would never find it. The symbol the graph gives that area is
+realised as `flag_K{n}` (`kind: 'flag'`) on the cell one step **beyond**
+`door_A0`, given rather than drawn: a drawn cell of the gadget's own area is as
+likely to land in front of its guard as behind it. The doors of that symbol are
+then cleared by the flag rather than by a key.
+
+> `flag` realisation is scoped to the **guarded** symbol. Making it the general
+> default would rename `key_K0` in every `--areas=` payload the area arc shipped.
+
+For the level-n terrain flood, `door_A0` belongs to the key level of the flag it
+guards. The guard's own cut is not that flood's claim: it is checked separately
+with the door treated as wall, and finally by the skeleton solve over block
+state, whose claim is **a block was on the button at the instant the player first
+entered the door cell** — not how many pushes the plan spent.
+
+### What it costs
+
+Per placed gadget, on `summary.elements[]` beside the area symbols' rows:
+`pushes`, `planLength` and `nodes` from the **plan**, `len`/`turns`/`cells` from
+the geometry, plus `tunnel` (how far the connector had to dig) and
+`carveOverwrote` (how many of the element's cells the carve had written
+differently — the witness that the registration decided anything).
+
+A record of a placed element is `{params, site, drawsAtConstruct}` plus the
+level's seed: advance a fresh stream by `drawsAtConstruct`, instantiate with every
+parameter as an override, construct on the recorded site. `{params}` alone is not
+a record — the site pick draws between `instantiate` and `construct`.
+
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
