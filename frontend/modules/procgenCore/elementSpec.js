@@ -279,6 +279,16 @@ export function parseElementSpec(value) {
             + `⛓ "${NONE}" is the default and means the element machinery does not run.`);
     }
     const schema = paramSchemaFor(name);
+    /**
+     * ⛔ ASKED HERE, BEFORE THE CLAUSE WALK, so `none;len=3` meets THE SAME
+     * SENTENCE from the string path and the object path. Left to the walk it
+     * would come back as *"element none has no parameter len"* — technically
+     * true, unhelpful, and a second spelling of one mistake, which is
+     * `areaSpec`'s own §9.6 defect 3 repeating itself one file later.
+     */
+    if (name === NONE && clauses.some((c) => c.trim() !== '')) resolveElementSpec({
+        name, params: Object.fromEntries(clauses.map((c) => [c.split('=')[0].trim(), null])),
+    });
     const params = {};
     for (const clause of clauses) {
         const text = clause.trim();

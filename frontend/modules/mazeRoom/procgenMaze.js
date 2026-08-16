@@ -1075,6 +1075,29 @@ export function elementSiteCandidates({ width, height, entrance, goal, w, h }) {
 const NEIGHBOURS4 = Object.freeze([[0, -1], [0, 1], [-1, 0], [1, 0]]);
 
 /**
+ * ⛓⛓⛓ **IS THE GUARD A CUT OF THE LEVEL?** — the one question that decides
+ * whether a placed gadget is a puzzle or a decoration (⚖ design ruling 17).
+ *
+ * With the guard door treated as WALL, the cell the guarded item goes on must be
+ * UNREACHABLE from the entrance; with it walkable, reachable. It reads TILES
+ * only, exactly like the pre-check: whether the block can actually be pushed
+ * onto the button is the ORACLE's question and the skeleton solve asks it.
+ *
+ * ⛔ EXPORTED, AND THAT IS DELIBERATE. The binding seals the exit mouth, so on
+ * generated levels this is TRUE BY CONSTRUCTION — measured at 100% of the 1728
+ * census runs that got this far — and a refusal nobody can reach on real data is
+ * a guard with no gate (trap 296). The unit row that grades the RULE builds a
+ * room with a second way in and asks this function directly.
+ */
+export function guardIsCut(world, { door, flag, entrance }) {
+    const { width, height } = world;
+    const floorAt = (x, y) => getTile(world, x, y) === TILE_FLOOR;
+    if (!connected(width, height, floorAt, entrance, flag)) return false;
+    const doorless = (x, y) => floorAt(x, y) && !(x === door.x && y === door.y);
+    return !connected(width, height, doorless, entrance, flag);
+}
+
+/**
  * ⛓⛓⛓ **THE CONNECTOR JOINS THE PORT** (⚖ ruling 4; design §4.3: *"
  * `connectFixedTiles` already L-carves to fixed tiles — that is the seam"*).
  *
@@ -1124,7 +1147,14 @@ function joinPortToCarve(world, { mouth, reserved, entrance }) {
                 + 'REFUSED rather than redrawn.' } };
     }
     const cells = [];
-    for (let k = parent.get(hit); k !== null; k = parent.get(k)) {
+    /**
+     * ⛔ THE WALK STOPS **BEFORE** THE MOUTH. The chain ends at the mouth (its
+     * parent is `null`), and the mouth is a RING cell — inside the reserved
+     * rectangle, and already written as floor by the ring pass. Including it
+     * would make "the tunnel never enters the reserved rectangle" false for
+     * every joined gadget, which is how the test found this line.
+     */
+    for (let k = parent.get(hit); parent.get(k) !== null; k = parent.get(k)) {
         const [cx, cy] = k.split(',').map(Number);
         setTile(world, cx, cy, TILE_FLOOR);
         cells.push(Object.freeze({ x: cx, y: cy }));
@@ -1214,8 +1244,7 @@ function compositeElement(world, { site, placement, ids, entrance, goal }) {
                 + 'exit lane and is not floor. The element carves that lane, so this is a '
                 + 'defect in the placement rather than a fact about the room.' } };
     }
-    const doorless = (x, y) => floorAt(x, y) && !(x === doorCell.x && y === doorCell.y);
-    if (connected(width, height, doorless, entrance, flagCell)) {
+    if (!guardIsCut(world, { door: doorCell, flag: flagCell, entrance })) {
         return { refused: { reason: 'the-guard-is-not-a-cut-of-the-level',
             detail: `with ${ids.door} treated as WALL the entrance still reaches `
                 + `(${flagCell.x},${flagCell.y}), where the guarded item goes. ⛓ THE DOOR IS `
@@ -1431,13 +1460,31 @@ export function mazeModel({
                     + 'elements and 11x11 refuses every len=4 run.' };
         } else {
             const site = roomRng.pick(sites);
+            /**
+             * ⛓⛓⛓ **THE STREAM POSITION AT `construct`, AND IT IS NOT
+             * `drawsBefore` — WHICH IS A CORRECTION TO §9.9.6.** The residue
+             * says a record of an element is `{params, seed}`. It is not quite:
+             * the SITE PICK sits BETWEEN `instantiate` and `construct`, both of
+             * which draw from the same stream, so a rebuild that replays
+             * `instantiate` then `construct` lands one draw early and produces
+             * a DIFFERENT gadget. Measured, not reasoned: the first rebuild test
+             * put the block at (9,5) where the level has it at (7,3).
+             *
+             * ⇒ the record is `{params, site, drawsAtConstruct}` plus the
+             * level's seed: advance a fresh `rngFor(seed)` by
+             * `drawsAtConstruct`, instantiate with every parameter as an
+             * OVERRIDE (which spends no draw), and construct on the recorded
+             * site. `drawsBefore` is kept beside it because it is what says
+             * where the element's whole draw span began.
+             */
+            const drawsAtConstruct = roomRng.draws;
             const placement = concrete.construct(site);
             if (placement.refused) {
                 elementRefusal = { reason: placement.refused.reason,
                     detail: `${placement.refused.detail} (site ${site.w}x${site.h} at `
                         + `(${site.x},${site.y}))` };
             } else {
-                elementPlan = { concrete, site, placement, drawsBefore,
+                elementPlan = { concrete, site, placement, drawsBefore, drawsAtConstruct,
                     ids: guardIdsFor(0), params: concrete.params };
             }
         }
@@ -1494,6 +1541,7 @@ export function mazeModel({
                      *  `{params}` alone not one. */
                     params: Object.freeze({ ...elementPlan.params }),
                     drawsBefore: elementPlan.drawsBefore,
+                    drawsAtConstruct: elementPlan.drawsAtConstruct,
                     binds: elementValues.binds,
                     ...out.placed,
                 })]),
@@ -2441,6 +2489,7 @@ export function elementSummaryOf(model) {
             index: p.index,
             params: p.params,
             drawsBefore: p.drawsBefore,
+            drawsAtConstruct: p.drawsAtConstruct,
             binds: p.binds,
             guards: p.guards ?? null,
             site: p.site,
@@ -2608,6 +2657,7 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
             index: p.index,
             params: p.params,
             drawsBefore: p.drawsBefore,
+            drawsAtConstruct: p.drawsAtConstruct,
             guards: p.guards ?? null,
             site: p.site,
             /** ⛓ ⚖ ruling 20's numbers, from the PLAN. */
