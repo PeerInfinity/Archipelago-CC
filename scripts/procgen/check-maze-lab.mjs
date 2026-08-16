@@ -103,7 +103,8 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 
 const MAZE = (p) => import(join(REPO, 'frontend/modules/mazeRoom', p));
 const {
-    generateStep, generateWithDirectives, labPayload, serializeMazeLevel,
+    MazeRoomEditor, PALETTE_TYPES, applyEdit, generateStep, generateWithDirectives, labPayload,
+    serializeMazeLevel,
 } = await MAZE('mazeLab.js');
 
 const json = (v) => JSON.stringify(v);
@@ -362,6 +363,49 @@ console.log(`node: AREA subject = seed ${AREA_SUBJECT.seed} rooms 15x15 keys=1 -
     + `symbols [${AREA_SUBJECT.areas.graph.symbols.join(', ')}]; REFUSAL subject = seed `
     + `${AREA_REFUSAL.seed} rooms 11x11 keys=2 -> ${AREA_REFUSAL.reason}`);
 
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — **THE ELEMENT SUBJECTS ARE SCANNED, NOT
+ * PICKED**, and BOTH of them are: one seed that PLACES a gadget and guards a
+ * symbol with it, and one that REFUSES.
+ *
+ * ⚠ §10.11.5 is why the second subject is as important as the first:
+ * `guard;len=2;turns=1` on `rooms` at 15x15 places on about 57% of seeds, so a
+ * page that only ever showed a success would be silent on nearly half of them.
+ * ⛔ A hard-coded seed would quietly become a claim about the other outcome the
+ * day the site draw moved; the scan THROWS instead.
+ */
+const ELEMENT_ROOM = { width: 15, height: 15, skeleton: { kind: 'rooms' }, areas: { keys: 1 } };
+const ELEMENT_SPEC = { name: 'guard', params: { len: 2, turns: 1 } };
+const ELEMENT_QUERY = 'width=15&height=15&skeleton=rooms&areas=1'
+    + '&elements=guard%3Blen%3D2%3Bturns%3D1';
+let ELEMENT_SUBJECT = null;
+let ELEMENT_REFUSAL = null;
+for (let seed = 1; seed <= 24 && !(ELEMENT_SUBJECT && ELEMENT_REFUSAL); seed += 1) {
+    const info = generateStep({ seed, step: 0, ...ELEMENT_ROOM, elements: ELEMENT_SPEC })
+        .model.elements;
+    if (!ELEMENT_SUBJECT && info.ran && info.placed[0].guards) {
+        ELEMENT_SUBJECT = { seed, placed: info.placed[0] };
+    }
+    if (!ELEMENT_REFUSAL && !info.ran) ELEMENT_REFUSAL = { seed, reason: info.refused.reason };
+}
+if (!ELEMENT_SUBJECT) {
+    throw new Error('check-maze-lab: no `rooms` 15x15 seed in 1..24 places a '
+        + '`guard;len=2;turns=1` gadget that GUARDS a symbol — the ELEMENTS CENSUS (§10.1) has '
+        + 'moved and every claim below would be about nothing.');
+}
+if (!ELEMENT_REFUSAL) {
+    throw new Error('check-maze-lab: no `rooms` 15x15 seed in 1..24 REFUSES a '
+        + '`guard;len=2;turns=1` gadget — the honest-refusal claim has no subject, and §10.11.5 '
+        + 'says most seeds should have one.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: ELEMENT subject = seed ${ELEMENT_SUBJECT.seed} -> `
+    + `${ELEMENT_SUBJECT.placed.instance}, block at (${ELEMENT_SUBJECT.placed.block.x},`
+    + `${ELEMENT_SUBJECT.placed.block.y}), button (${ELEMENT_SUBJECT.placed.button.x},`
+    + `${ELEMENT_SUBJECT.placed.button.y}), guards ${ELEMENT_SUBJECT.placed.guards}, `
+    + `${ELEMENT_SUBJECT.placed.tunnel.length} tunnel cell(s); REFUSAL subject = seed `
+    + `${ELEMENT_REFUSAL.seed} -> ${ELEMENT_REFUSAL.reason}`);
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE BROWSER
  * ══════════════════════════════════════════════════════════════════════ */
@@ -434,7 +478,44 @@ const OPEN_SEAL_PAYLOAD = directedPayload(
  * `window.__mazeLab` was simply undefined and the wait read as a 60 s STUCK
  * with no console error to attribute it (trap 298's shape, one layer down).
  */
-const PAYLOAD_ROUTES = new Map([[SEAL_ROUTE, SEAL_PAYLOAD], [OPEN_SEAL_ROUTE, OPEN_SEAL_PAYLOAD]]);
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — **AN EDITED PAYLOAD, FOR THE CLAIM THAT
+ * CLOSES CONSTRUCTIVE §18.2.** Until this slice the maze REFUSED to reproduce
+ * one: an edit was recorded as a DESCRIPTION (cell + palette TYPE) and a fold
+ * would have placed a different body at the right cell, so `?gen=` could only
+ * ever report the refusal. The edit record is an OP now, and this payload is
+ * how the page is asked to prove it.
+ *
+ * ⛔ THE ITEM ID IS DELIBERATELY **NOT** THE EDITOR'S DEFAULT. `MazeRoomEditor`
+ * starts on `firstKey(itemLib)`, and the page constructs its editor from the
+ * world's own library — so a fold that used the SELECTION rather than the op
+ * would place `key_red` at the right cell and every count would still agree.
+ * `key_blue` is the one value that separates the two.
+ */
+const EDITED_ROUTE = '/__maze-edited-payload.json';
+const EDITED_PAYLOAD = (() => {
+    const base = generateStep({ seed: 3, step: 2 });
+    const editor = new MazeRoomEditor({
+        itemLib: base.record.itemLib, obstacleLib: base.record.obstacleLib,
+    });
+    const free = base.model.allCells(base.record)
+        .filter((p) => base.model.isFree(base.record, p.tx, p.ty));
+    editor.selectType(PALETTE_TYPES.ITEM);
+    editor.selectItemId('key_blue');
+    let st = applyEdit(base, editor, free[0].tx, free[0].ty).state;
+    editor.selectType(PALETTE_TYPES.BLOCK);
+    st = applyEdit(st, editor, free[1].tx, free[1].ty).state;
+    return labPayload(st);
+})();
+// eslint-disable-next-line no-console
+console.log(`node: the EDITED payload carries ${EDITED_PAYLOAD.edits.length} op(s): `
+    + `${EDITED_PAYLOAD.edits.map((e) => `${e.op.op}${e.op.id ? `(${e.op.id})` : ''}`).join(', ')}`);
+
+const PAYLOAD_ROUTES = new Map([
+    [SEAL_ROUTE, SEAL_PAYLOAD],
+    [OPEN_SEAL_ROUTE, OPEN_SEAL_PAYLOAD],
+    [EDITED_ROUTE, EDITED_PAYLOAD],
+]);
 await page.route(
     (u) => PAYLOAD_ROUTES.has(u.pathname),
     (r) => r.fulfill({
@@ -1092,6 +1173,259 @@ try {
         && selectedAreas.step === 0 && selectedAreas.areaGraph.ran === true,
     '⛓⛓ the SELECTOR writes ?areas=1 into the bar and RESETS the ladder — the graph is built '
         + 'with the MODEL, so a ladder cannot span two of them', selectedAreas.url);
+
+    /* ── CLAIM 14: `?elements=` — THE GADGET ON THE PAGE (ELEMENTS 2.4) ── */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM, AND THE ANCHOR IS THE OTHER RUNTIME'S BYTES
+     * (trap 269, and mutant (a) of this slice is exactly the build it is aimed
+     * at): the page must PASS `?elements=` to `generateWithDirectives`, not
+     * merely echo it into the bar and the identity line. What separates the two
+     * is the LEVEL — its blocks, its buttons, its button library and its guard
+     * door — compared byte for byte against
+     * `generate-maze-level.mjs --elements=guard;len=2;turns=1` for the same
+     * seed, and then COUNTED here off the serialized level.
+     */
+    const elemCli = cli([`--seed=${ELEMENT_SUBJECT.seed}`, '--count=2', '--width=15',
+        '--height=15', '--skeleton=rooms', '--areas=1', '--elements=guard;len=2;turns=1']);
+    const elemWeb = await load(`seed=${ELEMENT_SUBJECT.seed}&${ELEMENT_QUERY}&count=2&run=1`,
+        () => window.__mazeLab?.step === 2 && window.__mazeLab?.elementInfo?.ran,
+        'the elements ladder to reach step 2 with a placed gadget');
+    check(json(elemWeb.level) === json(elemCli.level),
+        '⛓⛓ ?elements= reached the MODEL — the BROWSER\'s level (grid, obstacles, items, '
+        + 'BLOCKS, BUTTONS and the button library) IS node\'s, byte for byte',
+        `${json(elemWeb.level).length} vs ${json(elemCli.level).length} bytes`);
+    /**
+     * ⛓ COUNTED OFF THE SERIALIZED LEVEL'S OWN ARRAYS, which is the shape the
+     * CLI writes and the page's LOAD box reads — and the ids are the BINDING's
+     * allocator's, asserted literally so a second spelling would show up here.
+     */
+    const P = ELEMENT_SUBJECT.placed;
+    check((elemWeb.level.blocks ?? []).length === 1
+        && json(elemWeb.level.blocks[0]) === json({ x: P.block.x, y: P.block.y })
+        && (elemWeb.level.buttons ?? []).length === 1
+        && elemWeb.level.buttons[0].id === 'button_A0'
+        && elemWeb.level.buttonLib.button_A0.holds === 'sw_A0',
+    '⛓⛓ …and the gadget\'s ENTITIES are on it — ONE block at the cell the binding recorded, '
+        + 'ONE button_A0 holding sw_A0 — counted here, not read off the page\'s summary',
+    `${json(elemWeb.level.blocks)} / ${json(elemWeb.level.buttons)}`);
+    const guardDoors = (elemWeb.level.obstacles ?? []).filter((o) => o.id === 'door_A0');
+    const flags = (elemWeb.level.items ?? []).filter((i) => String(i.id).startsWith('flag_'));
+    check(guardDoors.length === 1
+        && elemWeb.level.obstacleLib.door_A0.clear_set[0][0] === 'sw_A0'
+        && flags.length === 1,
+    '⛓⛓ …the GUARD DOOR is on the grid with its combo_list [[sw_A0]], and the symbol it '
+        + `guards is realised as a FLAG (${json(flags.map((f) => f.id))}) rather than a key — `
+        + '⚖ rulings 21-22, scoped to the guarded symbol', json(guardDoors));
+    check(elemWeb.elementInfo.placed[0].guards === ELEMENT_SUBJECT.placed.guards
+        && elemWeb.elementInfo.placed[0].tunnel.length === P.tunnel.length
+        && elemWeb.elementInfo.placed[0].tunnel.length > 0,
+    '⛓ the page\'s own element readout agrees with node about WHAT IT GUARDS and how many '
+        + 'cells the CONNECTOR had to dig (the TUNNEL, drawn distinctly from the carve)',
+    `guards ${elemWeb.elementInfo.placed[0].guards}, `
+        + `${elemWeb.elementInfo.placed[0].tunnel.length} tunnel cell(s)`);
+    check(elemWeb.elementLegend.length === 1
+        && elemWeb.elementLegend[0].button === 'button_A0'
+        && elemWeb.elementLegend[0].door === 'door_A0'
+        && elemWeb.elementLegend[0].hold === 'sw_A0',
+    '⛓ the LEGEND names the gadget ONCE, with its three per-instance ids — arc 1\'s rule '
+        + '(label per SYMBOL, never per cell) applied to the element layer',
+    json(elemWeb.elementLegend.map((r) => `${r.instance}:${r.button}`)));
+    check(new URLSearchParams(elemWeb.url).get('elements') === 'guard;len=2;turns=1'
+        && /elements: guard;len=2;turns=1/.test(elemWeb.identity)
+        && /GUARDS K0/.test(elemWeb.identity),
+    '⛓ the bar and the identity line name the spec AND what the binding did (the ECHO half, '
+        + 'kept and labelled as such — a link that does not name its gadget is not a link to '
+        + 'this level)', elemWeb.url);
+    /** ⛓ THE HONEST REFUSAL — §10.11.5: most seeds refuse and the page says why. */
+    const elemRefused = await load(`seed=${ELEMENT_REFUSAL.seed}&${ELEMENT_QUERY}&count=0&run=1`,
+        () => window.__mazeLab?.elementInfo?.ran === false
+            && window.__mazeLab?.elements?.name === 'guard', 'the refused element');
+    check(elemRefused.elementInfo.refused?.reason === ELEMENT_REFUSAL.reason
+        && elemRefused.elementNote.includes(ELEMENT_REFUSAL.reason)
+        && elemRefused.identity.includes(`⛔ the element REFUSED: ${ELEMENT_REFUSAL.reason}`),
+    '⛓⛓ a REFUSED element prints the binding\'s OWN reason where the gadget would be — the '
+        + 'honest state on most seeds, and ⛔ no bound is widened to hide it',
+    `${ELEMENT_REFUSAL.reason} | ${elemRefused.elementNote.slice(0, 110)}`);
+    check(elemRefused.level !== null && (elemRefused.level.blocks ?? []).length === 0
+        && (elemRefused.level.buttons ?? []).length === 0,
+    '⛓ …and the CARVED level is still shown and carries NO gadget at all — the run produced '
+        + 'that room, it simply has no element in it');
+    /** ⛓ THE SELECTOR — the spec reaches the URL through the form, and RESETS. */
+    await page.goto(`${PAGE}?seed=${ELEMENT_SUBJECT.seed}&width=15&height=15&skeleton=rooms`
+        + '&areas=1&count=2&run=1', { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.step === 2, 'the ladder before the element selector');
+    await page.selectOption('#labElements', 'guard');
+    await settled(() => window.__mazeLab?.elements?.name === 'guard'
+        && window.__mazeLab?.step === 0, 'the element selector to reset to the skeleton');
+    const selectedElem = await read();
+    check(new URLSearchParams(selectedElem.url).get('elements') === 'guard'
+        && selectedElem.step === 0,
+    '⛓⛓ the SELECTOR writes ?elements=guard into the bar and RESETS the ladder — an element '
+        + 'is stamped into the room BEFORE the carve, so it moves the whole room stream',
+    selectedElem.url);
+
+    /* ── CLAIM 15: THE SOLVE REPLAY — the BLOCK MOVES ─────────────── */
+    /**
+     * ⛓⛓⛓ ⚖ DESIGN RULING 6 fn. 3 (*"step-through visualisation is
+     * non-negotiable"*), and a **VALUE** claim rather than a pixel one: what is
+     * asserted is `window.__mazeLab.play.blocks`, which is the OVERLAY'S OWN
+     * ARGUMENT (`mazeLabView.overlayBlocks` is called once for the draw and
+     * once for the readout), so a build that drew the level's INITIAL layout
+     * during the replay moves this readout too. That is mutant (b).
+     */
+    const solveWeb = await load(`seed=${ELEMENT_SUBJECT.seed}&${ELEMENT_QUERY}`
+        + '&count=2&run=1&source=solve',
+    () => window.__mazeLab?.source === 'solve' && window.__mazeLab?.elementInfo?.ran,
+    'the SOLVE arm on a level with a gadget in it');
+    check(solveWeb.play === null,
+        '⛓ before SOLVE there is NO replay — the frames come from a plan, and there is none');
+    await page.click('#labSolve');
+    await settled(() => window.__mazeLab?.play?.frames > 1,
+        'the SOLVE to produce a replay');
+    const frame0 = await read();
+    check(frame0.solve.verdict === 'SOLVED' && frame0.play.index === 0,
+        '⛓ SOLVE produces a plan and the replay starts at frame 0',
+        `${frame0.solve.verdict}, ${frame0.play.frames} frame(s)`);
+    check(json(frame0.play.blocks) === json([`${P.block.x},${P.block.y}`]),
+        '⛓ …and frame 0\'s block layout is the LEVEL\'s own — the cell the binding recorded',
+        json(frame0.play.blocks));
+    // ⛓ STEP to the LAST frame. ⛔ Driven by presses, not by a wall clock: the
+    // autoplay below is asserted separately and on a CONDITION.
+    for (let i = 0; i < frame0.play.frames - 1; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await page.click('#labPlayNext');
+    }
+    await settled(`window.__mazeLab?.play?.index === ${frame0.play.frames - 1}`,
+        'the replay to be stepped to its last frame');
+    const frameN = await read();
+    check(json(frameN.play.blocks) !== json(frame0.play.blocks),
+        '⛓⛓⛓ **THE BLOCK MOVED BETWEEN TWO FRAMES OF THE REPLAY** — a VALUE, not a pixel: '
+        + 'this is the array the element overlay was HANDED, so a build drawing `world.blocks` '
+        + 'instead of `state.blocks` moves it too',
+        `${json(frame0.play.blocks)} → ${json(frameN.play.blocks)}`);
+    check(json(frameN.play.blocks) === json([`${P.button.x},${P.button.y}`]),
+        '⛓⛓ …and it ended ON ITS BUTTON, which is the MECHANISM stated as the mechanism '
+        + '(§9.4): the guard door is open because something is standing on the button',
+        json(frameN.play.blocks));
+    check(frameN.play.layouts > 1 && frameN.play.player.x >= 0,
+        '⛓ the whole plan visits MORE THAN ONE block layout — a walk that pushed nothing '
+        + 'would visit exactly one', `${frameN.play.layouts} distinct layout(s)`);
+    const playText = await page.textContent('#playNote');
+    check(playText.includes('DISTINCT block layout') && playText.includes('the walk PUSHES'),
+        '⛓ …and the page SAYS so, where a reader can see it', playText.trim().slice(0, 120));
+    // ⛓ AUTOPLAY: asserted on a CONDITION (it reaches the last frame), never on
+    // a sleep — the frame interval is a wall clock and nothing may gate on it.
+    await page.click('#labPlayReset');
+    await settled(() => window.__mazeLab?.play?.index === 0, 'the replay to rewind');
+    await page.click('#labPlay');
+    await settled(`window.__mazeLab?.play?.index === ${frame0.play.frames - 1}`,
+        'the AUTOPLAY to reach the last frame on its own');
+    check((await read()).play.playing === false,
+        '⛓ PLAY runs to the last frame and STOPS there — an animation that wrapped would '
+        + 'replay a solve nobody pressed again');
+
+    /* ── CLAIM 16: THE EDIT PALETTE, AND EDITS AS REPLAYABLE OPS ───── */
+    /**
+     * ⛓⛓⛓ THE PALETTE GAINED BLOCK / BUTTON / FLAG, and the claim is the one
+     * ⚖ §3.8 makes: an edit that CHANGES the world drops the certification to
+     * `null` and the level carries what was placed.
+     */
+    const editWeb = await load(`seed=${ELEMENT_SUBJECT.seed}&${ELEMENT_QUERY}`
+        + '&count=2&run=1&source=edit',
+    () => window.__mazeLab?.source === 'edit' && window.__mazeLab?.elementInfo?.ran,
+    'the EDIT arm on a level with a gadget in it');
+    check(editWeb.edits === 0 && editWeb.certified === true,
+        '⛓ the level opens with NO manual edits and CERTIFIED — the loop\'s own last '
+        + 'accepting solve did it, which is what the edit below is about to drop',
+        `${editWeb.edits} edit(s), certified=${json(editWeb.certified)}`);
+    const paletteTypes = await page.$$eval('#labPalette button',
+        (bs) => bs.map((b) => b.dataset.type));
+    check(['block', 'button', 'flag'].every((t) => paletteTypes.includes(t)),
+        '⛓ the palette OFFERS block / button / flag — the gadget\'s three parts, on the page',
+        json(paletteTypes));
+    await page.click('#labPalette button[data-type="block"]');
+    /**
+     * ⛓ THE TARGET CELL IS COMPUTED HERE from the level's own tiles — a FLOOR
+     * cell that is not the entrance, not an exit and carries no entity, so the
+     * edit cannot be refused for a reason that has nothing to do with blocks.
+     */
+    const W = editWeb.width;
+    const busy = new Set([
+        `${editWeb.level.entrance.x},${editWeb.level.entrance.y}`,
+        ...editWeb.level.exits.map((e) => `${e.x},${e.y}`),
+        ...(editWeb.level.items ?? []).map((i) => `${i.x},${i.y}`),
+        ...(editWeb.level.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+        ...(editWeb.level.blocks ?? []).map((b) => `${b.x},${b.y}`),
+        ...(editWeb.level.buttons ?? []).map((b) => `${b.x},${b.y}`),
+    ]);
+    let SPOT = null;
+    for (let i = 0; i < editWeb.level.tiles.length && !SPOT; i += 1) {
+        const c = { tx: i % W, ty: Math.floor(i / W) };
+        if (editWeb.level.tiles[i] === 0 && !busy.has(`${c.tx},${c.ty}`)) SPOT = c;
+    }
+    if (!SPOT) throw new Error('check-maze-lab: the element subject has no free floor cell to '
+        + 'drop a block on — the palette claim has no subject.');
+    /**
+     * ⛓⛓⛓ **THE CANVAS IS SCROLLED BACK INTO VIEW BEFORE THE RECTANGLE IS
+     * READ, AND THAT IS A MEASUREMENT.** Clicking a palette button below the
+     * canvas makes the browser scroll it into view, which on this 15x15 page
+     * (long identity line, two overlay panes, the catalogue) pushed the canvas
+     * to `y = -179`. `page.mouse.click` takes VIEWPORT coordinates, so the
+     * click landed above the document and nothing happened — reported as a
+     * STUCK wait for an edit, not as a click that missed.
+     *
+     * ⛓ This is the sibling of claim 5's lesson (*"re-read the rectangle before
+     * EVERY click"*): there the readout GREW under the canvas, here an
+     * unrelated control SCROLLED it away. Both are "a cached geometry is a
+     * click somewhere else", and claim 5 never saw this one because its 5x5
+     * room fits on screen whole.
+     */
+    await page.$eval('#canvas', (c) => c.scrollIntoView({ block: 'center' }));
+    const eRect = await page.$eval('#canvas', (c) => {
+        const r = c.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+    });
+    if (eRect.y < 0 || eRect.w <= 0) {
+        throw new Error(`check-maze-lab: the canvas is at y=${eRect.y} after scrolling it into `
+            + 'view — a click computed from this rectangle lands outside the document.');
+    }
+    await page.mouse.click(eRect.x + Math.floor(((SPOT.tx + 0.5) * eRect.w) / W),
+        eRect.y + Math.floor(((SPOT.ty + 0.5) * eRect.h) / editWeb.height));
+    await settled(() => window.__mazeLab?.edits === 1, 'the block edit to land');
+    const blocked = await read();
+    check((blocked.level.blocks ?? []).some((b) => b.x === SPOT.tx && b.y === SPOT.ty),
+        `⛓⛓ a BLOCK brush click paints a block at (${SPOT.tx},${SPOT.ty}) — the cell this file `
+        + 'computed, read back off the serialized level', json(blocked.level.blocks));
+    check(blocked.certified === null && blocked.identity.includes('UNCERTIFIED')
+        && blocked.identity.includes('1 manual edit(s)'),
+    '⚖ §3.8: placing a block DROPS the certification to `null` and the identity line says '
+        + 'UNCERTIFIED — editing never bypasses the oracle', blocked.identity.slice(0, 120));
+    check(json(blocked.payload.edits[0].op)
+        === json({ op: 'setBlock', x: SPOT.tx, y: SPOT.ty }),
+    '⛓⛓⛓ …and the payload records it as an **OP**, not a description — constructive '
+        + '§18.2\'s residue, closed: the record carries its whole argument',
+    json(blocked.payload.edits[0]));
+    /**
+     * ⛓⛓⛓ AND THE OTHER HALF OF THAT RESIDUE: a payload whose edits are OPS is
+     * REPRODUCED at `?gen=`. ⛔ The subject's item op names `key_blue`, which is
+     * NOT the editor's default — a fold that used the selection would place
+     * `key_red` at the right cell and the byte comparison is what sees it.
+     */
+    const genEdited = await load(`gen=${EDITED_ROUTE}`,
+        () => window.__mazeLab?.payloadCheck, 'the EDITED payload to be reproduced');
+    check(genEdited.payloadCheck.checked === true && genEdited.payloadCheck.agrees === true,
+        '⛓⛓⛓ **AN EDITED PAYLOAD IS REPRODUCED BYTE FOR BYTE** — the maze refused this until '
+        + 'this slice, because an edit was a DESCRIPTION and a fold would have placed a '
+        + 'different body at the right cell (constructive §17.2/§18.2)',
+        json(genEdited.payloadCheck.differences ?? genEdited.payloadCheck.why));
+    check(json(genEdited.level) === json(EDITED_PAYLOAD.level)
+        && genEdited.edits === EDITED_PAYLOAD.edits.length,
+    '⛓ …and the LEVEL it rebuilt is the payload\'s own, edits included',
+    `${genEdited.edits} edit(s), ${json(genEdited.level).length} bytes`);
+    check((genEdited.level.items ?? []).some((i) => i.id === 'key_blue'),
+        '⛓⛓ …carrying `key_blue`, which is NOT the editor\'s default id — the one value that '
+        + 'separates "replayed the OP" from "replayed the palette selection"',
+        json((genEdited.level.items ?? []).map((i) => i.id)));
 
     /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
     /**

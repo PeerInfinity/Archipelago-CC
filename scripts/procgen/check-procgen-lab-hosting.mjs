@@ -94,6 +94,31 @@ console.log(`node: the maze payload is seed ${mazePayload.seed}, `
     + `${json(mazePayload.level).length} bytes of level`);
 
 /**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — **THE ELEMENT SUBJECT IS SCANNED, NOT
+ * PICKED.** §10.1's census says `guard;len=2;turns=1` on `rooms` at 15x15
+ * places on about 57% of seeds and the rest REFUSE by name; a hard-coded seed
+ * would silently become a claim about a refusal the day the site draw moved.
+ * ⛔ The scan runs the CLI, which is the same generator the frame will run, and
+ * it THROWS when no seed in the window places — the acceptance table this claim
+ * rests on cannot move without saying so.
+ */
+const ELEMENT_SUBJECT = (() => {
+    for (let seed = 1; seed <= 24; seed += 1) {
+        const p = cli('generate-maze-level.mjs', [`--seed=${seed}`, '--count=1', '--width=15',
+            '--height=15', '--skeleton=rooms', '--areas=1', '--elements=guard;len=2;turns=1']);
+        if (p.elements?.ran) return { seed, placed: p.elements.placed[0] };
+    }
+    throw new Error('check-procgen-lab-hosting: no `rooms` 15x15 seed in 1..24 places a '
+        + '`guard;len=2;turns=1` gadget — the ELEMENTS CENSUS this claim rests on has moved '
+        + 'and the claim would be about nothing.');
+})();
+// eslint-disable-next-line no-console
+console.log(`node: ELEMENT subject = seed ${ELEMENT_SUBJECT.seed} rooms 15x15 -> `
+    + `${ELEMENT_SUBJECT.placed.instance}, block at `
+    + `(${ELEMENT_SUBJECT.placed.block.x},${ELEMENT_SUBJECT.placed.block.y}), guards `
+    + `${ELEMENT_SUBJECT.placed.guards ?? '(nothing)'}`);
+
+/**
  * ⚠ THE SEEDLING PAYLOAD COSTS SECONDS IN THE PAGE, so its bounds are the
  * smallest the loop will accept: `obstacleTarget` must be a POSITIVE integer
  * (`levelGenerator` refuses 0 by name), so the subject is one rung. The claim
@@ -515,6 +540,48 @@ try {
     '⛓⛓ …and the `stateChanged` the HOST received carries the area spec back in its url — '
         + 'no new protocol message, because a search string already crosses the frame',
     areaStates.length ? areaStates[areaStates.length - 1].data.url : '(no stateChanged)');
+
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — AND SO DOES `?elements=`, ON THE
+     * SAME TERMS AND WITH THE SAME SPLIT.
+     *
+     * ⛔ THE VALUE HALF IS THE GADGET'S OWN ENTITIES ON THE FRAME'S LEVEL — a
+     * BLOCK and a BUTTON, which no maze level has ever carried before this arc,
+     * counted HERE off the serialized level rather than read out of the frame's
+     * summary. A page that copied `elements=guard;len=2;turns=1` into its bar
+     * and generated the plain carve satisfies the URL half and fails this one.
+     *
+     * ⛓ THE SUBJECT IS THE ROW'S OWN SCAN (§10.1's census: `guard;len=2;turns=1`
+     * on `rooms` 15x15 places on about 57% of seeds), so a change to the
+     * acceptance table cannot silently turn this into a claim about nothing.
+     */
+    const elemTapBefore = (await tap()).length;
+    await page.evaluate(({ iframeId, search }) => {
+        window.eventBus.publish('procgenLab:navigate',
+            { substrate: 'maze', iframeId, search }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId, search: `seed=${ELEMENT_SUBJECT.seed}&width=15&height=15`
+        + '&skeleton=rooms&areas=1&elements=guard%3Blen%3D2%3Bturns%3D1&count=1&run=1' });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.elementInfo?.ran === true && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to a level with an ELEMENT in it');
+    const elemNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    const blocks = (elemNav.level?.blocks ?? []).length;
+    const buttons = (elemNav.level?.buttons ?? []).length;
+    const guardDoors = (elemNav.level?.obstacles ?? [])
+        .filter((o) => String(o.id).startsWith('door_A')).length;
+    check(blocks === 1 && buttons === 1 && guardDoors === 1
+        && elemNav.level?.buttonLib?.button_A0?.holds === 'sw_A0',
+    '⛓⛓ an `?elements=` navigate reaches the hosted frame and the frame BUILT the gadget — '
+        + `${blocks} block, ${buttons} button and ${guardDoors} guard door on its own level, `
+        + 'counted here off the serialized level',
+    `blocks=${blocks} buttons=${buttons} doors=${guardDoors}`);
+    const elemStates = (await tap()).slice(elemTapBefore).filter(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === maze.iframeId);
+    check(elemStates.some((e) => new URLSearchParams(new URL(e.data.url).search)
+        .get('elements') === 'guard;len=2;turns=1'),
+    '⛓⛓ …and the `stateChanged` the HOST received carries the element spec back in its url — '
+        + 'again with NO new protocol message, because a search string already crosses',
+    elemStates.length ? elemStates[elemStates.length - 1].data.url : '(no stateChanged)');
 
     /**
      * ⛓⛓ AND THE FRAME IS PUT BACK WHERE THE ROW'S LATER CLAIMS EXPECT IT —
