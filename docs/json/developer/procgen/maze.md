@@ -133,6 +133,71 @@ generation trace and the summary out as JSON, with stdout as the determinism
 channel and `--verify` spawning two fresh child processes to prove the payload
 is byte-identical across them.
 
+## The area graph
+
+Above the carve sits an optional **lock-and-key layer**: the carved room is
+partitioned into AREAS, `procgenCore/areaGraph.js` (the JS re-implementation of
+MetaZelda's logic) grows a tree over them in KEY LEVELS, and the binding
+realises each level as `door_K` obstacles and `key_K` items on the grid. It is
+off by default and it is the MAZE's only — Seedling gets it in a later arc.
+
+**The knob** is one string through one codec (`procgenCore/areaSpec.js`,
+`parseAreaSpec` / `formatAreaSpec` / `normalizeAreaSpec`), spoken by the CLI
+(`--areas=`) and the sweep alike:
+
+```
+<keys>[;key=value]…        0 · 1 · 2;graphify=0.5;goalShortcut=0
+```
+
+`keys` is the key-count TARGET (domain 0–3); `graphify` is MetaZelda's
+extra-edge probability (default 0.2); `goalShortcut` admits the post-solve
+entrance↔exit shortcut (default on). **At `keys: 0` — the default — nothing
+here runs at all**: no partition is computed, the module is not called, no draw
+is spent, and every seed→level pair the maze had before is byte-identical.
+
+**What an area is.** A cell is WIDE iff it belongs to at least one all-floor
+2×2 square; an AREA is a maximal 4-connected blob of wide cells; every other
+floor cell is a CORRIDOR cell, i.e. an EDGE. A one-cell area is grown on the
+entrance and on the goal when they do not fall inside a chamber, and floor the
+entrance cannot reach is not partitioned at all (`recursive_division` repairs
+target reachability, not every cell, so a carved room can hold pockets nothing
+can walk to).
+
+Measured over every kind and knob at 11×11: `empty` is exactly **one** area at
+every seed (so the module is never called on the open room); an un-chambered
+corridor carve has **zero** real chambers — a 1-wide maze has no 2×2 square
+anywhere — and `rooms` yields **3–8**. So the area graph is a `rooms`/`chambers`
+feature in practice, and it refuses by name elsewhere.
+
+**How a lock reaches the grid.** *The lock is a property of the AREA, not of the
+edge*: for every area at key level L ≥ 1, `door_K{L-1}` is placed on **every
+boundary cell** of that area (a cell of the area touching a floor cell outside
+it). On a tree edge that is exactly the edge's own symbol at the child's mouth;
+it additionally covers junction corridors that touch three areas and the cycles
+the tree did not take, which a per-edge door would simply be walked around.
+Nothing is carved and nothing is walled to make this true. `key_K{n}` is drawn
+into a non-boundary cell of the area the module assigned the symbol to, and
+per-instance `obstacleLib`/`itemLib` entries (`door_K0 → key_K0`) are added to
+the world and carried in the payload — without them `isObstacleCleared` treats
+the id as unknown and the door opens for everybody.
+
+**It is verified, not assumed.** For each key level `n`, with every door above
+level `n` treated as wall, `gridFlood.reachableFrom` from the entrance must
+equal exactly the areas of level ≤ `n` plus the corridor components touching
+them. A mismatch, an unplaceable key, a graph the bounds refuse, a partition
+with one area, or an entrance and goal in the same area are all **graded
+refusals** naming the reason — never a throw — and the carved room is left
+exactly as the carve left it. When the layer does run, the loop's own skeleton
+solve then certifies the room *with* its doors and keys before any pass-2
+template is drawn.
+
+**Solver-work records.** When the layer runs, `summary.elements` carries per
+symbol the BFS plan length and nodes expanded with and without the element, the
+key→door plan length, and the differential that proves the cut (remove the key,
+keep the doors, and the goal is unreachable); `summary.kept[].cost` carries the
+before/after plan length of each kept pass-2 template. These are records only —
+nothing decides on them, and none of them is a wall-clock number.
+
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
