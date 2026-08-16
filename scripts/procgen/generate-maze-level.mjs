@@ -144,9 +144,26 @@ if (has('cost')) {
  */
 if (has('verify')) {
     const childArgs = process.argv.slice(2).filter((a) => a !== '--verify' && a !== '--json');
-    const run = () => execFileSync(process.execPath, [SELF, ...childArgs, '--json'], {
-        encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'inherit'],
-    });
+    /**
+     * ⛓⛓ A CHILD THAT EXITS **6** IS A REFUSED DIRECTIVE, NOT A FAILED RUN —
+     * a defect my own gate found: `--verify --require=K1` crashed the parent,
+     * because `execFileSync` throws on any non-zero exit and the payload was
+     * never compared. ⛔ The determinism question is asked of the BYTES, and a
+     * refused run has bytes (the refusal is IN them), so the stdout is taken
+     * from the error and compared exactly as a zero-exit child's is. Any OTHER
+     * non-zero exit is re-thrown — an abort is not a verdict about determinism.
+     */
+    const run = () => {
+        try {
+            return execFileSync(process.execPath, [SELF, ...childArgs, '--json'], {
+                encoding: 'utf8', maxBuffer: 256 * 1024 * 1024,
+                stdio: ['ignore', 'pipe', 'inherit'],
+            });
+        } catch (e) {
+            if (e.status === 6 && typeof e.stdout === 'string') return e.stdout;
+            throw e;
+        }
+    };
     const a = run();
     const b = run();
     const md5 = createHash('md5').update(a).digest('hex');
