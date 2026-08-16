@@ -131,9 +131,16 @@ const { terrainAt } = await M('procgenLevel.js');
  * cheapest walk of the nine (379 ticks against 386–452), which is the only
  * property that decides between them. (Was seed 36, which no longer keeps one
  * at step 1.)
+ *
+ * ⛓⛓ RE-SCANNED AT ARC 3 SLICE 2 — the door law and the kill family's `span`
+ * domain both moved every post-sword level, so seed 41 keeps a `pit-patch` now.
+ * SAME SCAN, same bounds, seeds 1..72: the pool is **14/25/31/36/54/60/61**, all
+ * seven SOLVE with a `kill` record and a scratch clear, and **61 is the cheapest
+ * walk (388 ticks against 412–452)** — the same tie-break, so the subject moves
+ * and the rule does not.
  */
 const PRE = { seed: 4, biome: 'pre-sword', count: 2 };
-const CARRIER = { seed: 41, biome: 'post-sword', count: 1 };
+const CARRIER = { seed: 61, biome: 'post-sword', count: 1 };
 
 /**
  * ⛓ THE ROUND-TRIP SUBJECT, AND EVERY FIELD OF IT MOVES.
@@ -236,13 +243,32 @@ const RESTRICT_BOUNDS = { obstacleTarget: RESTRICT.count };
  * different cell, and the pane carries FOUR rows reading `REVERTED · SOLVED`
  * that only a discharge-preferring walk can produce.
  *
+ * ⛓⛓⛓ **ARC 3 SLICE 2 KILLED THAT PREMISE, AND THE MEASUREMENT IS THE NEW
+ * CLAIM** (trap 312). ⚖ Design ruling 17's door law refuses any anchor whose
+ * wall is not a CUT — and an anchor where the door SOLVED WITHOUT DISCHARGING
+ * *is* a wall the walk went round. So the `solved-only` class is not merely rare
+ * now; it is **EMPTY**. MEASURED over both biomes × every template × every
+ * declared instantiation × seeds 1..12 × steps {0,2} — **2056 directed attempts,
+ * ZERO `KEPT/solved-only`** (1093 `solved-no-verb`, 599 NO_ANCHOR, 286
+ * `discharged`, 78 REVERTED). ⇒ no subject in the space can make the two keep
+ * policies disagree, and claim 7's discriminator is retired to a MEASURED
+ * ABSENCE rather than re-pointed at a seed that does not exist.
+ *
+ * ⛓ THE SUBJECT MOVES ANYWAY, because seed 6 now has exactly ONE legal anchor
+ * for this instance (its goal (3,1) makes every column east of 2 a decoration
+ * door) and the click block needs several. Re-scanned (pre-sword step 0, seeds
+ * 1..12, six door instantiations, ≥3 legal anchors and a KEEPING anchor that is
+ * not the searched one): **seed 9** carries six legal anchors — (2,1) (3,1)
+ * (4,1) (5,1) (6,1) (7,1) — the SEARCH lands on (4,1), and (2,1) (3,1) (5,1)
+ * (6,1) all KEEP while (7,1) REVERTS.
+ *
  * ⚠ AND THE PARAMETERS ARE NON-DEFAULT IN BOTH POSITIONS (`ori=h,gap=4` is the
  * declared default), so a URL that dropped its parameters rebuilds a visibly
  * different instance rather than coinciding with the right one — trap 235, at
  * the directive.
  */
 const DIRECT = {
-    seed: 6,
+    seed: 9,
     biome: 'pre-sword',
     step: 0,
     template: 'wall-gap-block',
@@ -280,21 +306,23 @@ const DIRECT_SPEC = {
  * ⛓⛓⛓ CLAIM 8's SUBJECTS — CLICK-TO-ANCHOR (slice 6).
  *
  * ⛔ THE CLICKED CELL IS CHOSEN BY MEASUREMENT AND EVERY PROPERTY IS ASSERTED
- * BELOW BEFORE THE CLAIM USES IT (trap 235, at the anchor). On pre-sword seed
- * 6's skeleton the plain vertical door is legal at exactly six cells — (2,1)
- * (4,1) (5,1) (6,1) (7,1) (8,1) — and a SEARCHED directive lands on (2,1)
- * after walking 5 of 6. So (7,1) is:
- *   · LEGAL (or the claim would be the illegal case wearing the wrong name);
+ * BELOW BEFORE THE CLAIM USES IT (trap 235, at the anchor). ⛓ RE-MEASURED AT
+ * ARC 3 SLICE 2 with `DIRECT`: on pre-sword **seed 9**'s skeleton the plain
+ * vertical door is legal at exactly six cells — (2,1) (3,1) (4,1) (5,1) (6,1)
+ * (7,1) — and a SEARCHED directive lands on **(4,1)**. So **(6,1)** is:
+ *   · LEGAL, and its attempt KEEPS (or the claim would be the illegal case
+ *     wearing the wrong name — and (7,1), the old cell, is the one anchor of
+ *     the six that REVERTS, so it would have been exactly that);
  *   · NOT the searched answer — a build that ignored the clicked cell and
- *     searched would land somewhere else and red the value check;
- *   · not the START (1,1), not the GOAL (3,1), and not (1,1)-the-first-
- *     interior-cell that a naive implementation would produce by accident.
+ *     searched would land on (4,1) and red the value check;
+ *   · not the START (1,1), not the GOAL (8,5), and not the first interior cell
+ *     that a naive implementation would produce by accident.
  *
- * `ILLEGAL_CLICK` is seed 6's GOAL cell, so the refusal is a class the model
+ * `ILLEGAL_CLICK` is seed 9's GOAL cell, so the refusal is a class the model
  * names rather than a footprint that happens not to fit.
  */
-const CLICK = { tx: 7, ty: 1 };
-const ILLEGAL_CLICK = { tx: 3, ty: 1 };
+const CLICK = { tx: 6, ty: 1 };
+const ILLEGAL_CLICK = { tx: 8, ty: 5 };
 
 const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
     template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
@@ -320,8 +348,37 @@ const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
  */
 const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 0,
     template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
-const SOLVED_ONLY_CASE = { seed: 2, biome: 'pre-sword', step: 0,
-    template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
+/**
+ * ⛓⛓⛓ **RETIRED AT ARC 3 SLICE 2 — THE CLASS IS EMPTY, AND THAT IS THE
+ * MEASUREMENT** (trap 312: replace a vacated claim with the sentence that still
+ * has content).
+ *
+ * This was `pre-sword seed 2 step 0 wall-gap-lock-weigh(ori=v)`, kept with
+ * `keptKind: 'solved-only'` — a door the room tolerated without anyone clearing
+ * it. ⚖ Design ruling 17's door law refuses exactly that: a wall the walk goes
+ * ROUND is not a CUT. Seed 2's subject now REVERTS, and no seed replaces it —
+ * measured over **2056 directed attempts** (both biomes × every template ×
+ * every declared instantiation × seeds 1..12 × steps {0,2}): 1093
+ * `KEPT/solved-no-verb`, 599 `NO_ANCHOR`, 286 `KEPT/discharged`, 78 `REVERTED`,
+ * and **ZERO `KEPT/solved-only`**.
+ *
+ * ⛔ SO THE ROW BELOW GRADES THE ABSENCE, which is a claim with content and a
+ * claim that can FAIL: if a later slice re-opens the class (arc 3's element
+ * binding brings a clearer that is NOT its own door — the obvious candidate),
+ * this row reds and the reader is sent back here. The page's `solved-only`
+ * READOUT is deliberately NOT deleted; `watchGenerate.test.js` drives it on a
+ * synthetic state, which is the only place it can be driven now.
+ * ⚖ RESIDUE for the design session: is `PREFER_DISCHARGE` still earning its
+ * complexity on Seedling?
+ */
+const SOLVED_ONLY_PROBE = Object.freeze({
+    biome: 'pre-sword', seeds: [1, 2, 3, 4, 5, 6], steps: [0, 2],
+    instances: Object.freeze([
+        ['wall-gap-block', { ori: 'v', gap: 1 }], ['wall-gap-block', { ori: 'h', gap: 2 }],
+        ['wall-gap-block', { ori: 'v', gap: 3 }], ['wall-gap-block', { ori: 'h', gap: 5 }],
+        ['wall-gap-lock-weigh', { ori: 'h' }], ['wall-gap-lock-weigh', { ori: 'v' }],
+    ]),
+});
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const GEN_ROUTE = '/__generated-payload.json';
@@ -406,19 +463,77 @@ const nodeDirect = generateWithDirectives({
     check(d.outcome === 'KEPT' && d.keptKind === 'discharged',
         '⛓ the DIRECTED subject really DISCHARGES its verb — otherwise claim 7 is a claim '
         + 'about a keep, not about the ruling', `${d.outcome}/${d.keptKind}`);
-    const passedOver = nodeDirect.trace.filter(
-        (r) => r.directive === 1 && r.outcome === 'REVERTED' && r.verdict === 'SOLVED');
-    check(passedOver.length > 0,
-        '⛔ AND IT PASSED OVER AT LEAST ONE ANCHOR THAT SOLVED — the signature ONLY a '
-        + 'discharge-preferring walk can produce, and what a first-SOLVED build could not',
-        `${passedOver.length} anchor(s) solved and were passed over, then anchor `
-        + `${d.anchorsWalked} of ${d.anchorsOffered} discharged`);
+    /**
+     * ⛓⛓⛓ **THIS ROW USED TO BE THE DISCRIMINATOR AND ITS CLASS IS NOW EMPTY.**
+     * It asserted that the walk PASSED OVER an anchor that SOLVED on its way to
+     * one that DISCHARGED — the signature only a discharge-preferring walk can
+     * produce. ⚖ Design ruling 17 removed that class from the generator: an
+     * anchor where a door SOLVES without discharging is a wall the walk went
+     * ROUND, and the cut law refuses it before any solve. Measured over 2056
+     * directed attempts (both biomes × every instantiation × seeds 1..12 ×
+     * steps {0,2}): **ZERO `KEPT/solved-only`**.
+     *
+     * ⛔ SO IT IS REPLACED BY THE CLAIM THAT STILL HAS CONTENT (trap 312): the
+     * walk really WALKED — more than one anchor was offered and adjudicated —
+     * and every anchor it passed over was REVERTED BY THE ORACLE rather than
+     * silently skipped. A build that stopped at anchor 1 still reds here.
+     */
+    const walkedRows = nodeDirect.trace.filter((r) => r.directive === 1);
+    const passedOver = walkedRows.filter((r) => r.outcome === 'REVERTED');
+    check(d.anchorsOffered > 1 && d.anchorsWalked >= 1
+        && walkedRows.length === d.anchorsWalked
+        && passedOver.every((r) => r.verdict !== null),
+        '⛔ AND THE WALK REALLY WALKED — more than one anchor was OFFERED, every anchor '
+        + 'walked is a trace row, and every passed-over anchor carries the ORACLE\'s own '
+        + 'verdict rather than being skipped silently. ⛓ The old form of this row asserted '
+        + 'a passed-over anchor that SOLVED; the door law made that class EMPTY (0 of 2056 '
+        + 'directed attempts), so it is replaced rather than re-pointed',
+        `${d.anchorsWalked} of ${d.anchorsOffered} walked, ${passedOver.length} reverted, `
+        + `then discharged`);
     const base = paletteFor(DIRECT.biome).templates.find((t) => t.name === DIRECT.template);
     check(base.params.some((pp) => DIRECT.params[pp.key] !== pp.default),
         '⚠ and its parameters DIFFER from the declared defaults, so a URL that dropped '
         + 'them would rebuild a different instance rather than coincide with this one',
         `${json(DIRECT.params)} vs defaults `
         + `${json(Object.fromEntries(base.params.map((pp) => [pp.key, pp.default])))}`);
+}
+
+/**
+ * ⛓⛓⛓ THE `solved-only` ABSENCE, MEASURED HERE RATHER THAN ASSERTED IN A
+ * DOCBLOCK — and BOUNDED OUT LOUD (`feedback_bounded_sweep_must_name_what_it_
+ * bounded`). The full scan behind `SOLVED_ONLY_PROBE`'s docblock was 2056
+ * directed attempts over both biomes and seeds 1..12; this row re-drives a
+ * stated SLICE of it — pre-sword, 6 seeds × 2 steps × 6 door instantiations =
+ * **72 attempts** — because a browser row may not spend the full sweep, and a
+ * row that claimed the whole space while checking part of it would be worse
+ * than one that says which part.
+ */
+{
+    let solvedOnly = 0;
+    let attempts = 0;
+    for (const seed of SOLVED_ONLY_PROBE.seeds) {
+        for (const step of SOLVED_ONLY_PROBE.steps) {
+            for (const [template, params] of SOLVED_ONLY_PROBE.instances) {
+                let out;
+                try {
+                    out = generateWithDirectives({
+                        seed, biome: SOLVED_ONLY_PROBE.biome, step,
+                        directed: [{ ...DIRECT_SPEC, template, params }],
+                    });
+                } catch { continue; }
+                attempts += 1;
+                if (out.directives[0]?.keptKind === 'solved-only') solvedOnly += 1;
+            }
+        }
+    }
+    check(attempts >= 60 && solvedOnly === 0,
+        '⛓⛓⛓ THE `solved-only` OUTCOME CLASS IS EMPTY — ⚖ ruling 17\'s door law refuses '
+        + 'every anchor where a door SOLVES without being cleared, because that is a wall '
+        + 'the walk goes ROUND. ⛔ Graded as an ABSENCE on purpose: the page still KNOWS '
+        + 'the class, and this row is what reds if a later slice re-opens it',
+        `${solvedOnly} solved-only of ${attempts} directed attempts (pre-sword, seeds `
+        + `${SOLVED_ONLY_PROBE.seeds.join(',')}, steps ${SOLVED_ONLY_PROBE.steps.join(',')}, `
+        + `${SOLVED_ONLY_PROBE.instances.length} door instantiations)`);
 }
 
 // ── node's answers for CLAIM 8, and the clicked cell's own properties ──
@@ -1160,15 +1275,17 @@ const catalogueOf = () => page.evaluate(() => ({
             '⛓ EVERY anchor walked is a PANE ROW, labelled d1a<k>',
             `${dPane.length} pane row(s) for ${nd.anchorsWalked} anchor(s) walked`);
         /**
-         * ⛓⛓ THE DISCRIMINATOR. A first-SOLVED build stops at anchor 1, so it
-         * can never emit a row that says REVERTED next to a SOLVED verdict.
-         * These rows ARE the ruling, visible on the page.
+         * ⛓⛓ THE DISCRIMINATOR, RESTATED FOR ARC 3 SLICE 2. It used to look for
+         * a pane row reading `REVERTED · SOLVED` — an anchor that solved and was
+         * passed over — which is the class ⚖ ruling 17's door law emptied (0 of
+         * 2056 directed attempts; see `DIRECT`'s docblock). What the pane can
+         * still show, and what a first-SOLVED build still could not, is MORE
+         * THAN ONE anchor row for one directive, each carrying its own outcome.
          */
-        const passedOver = dPane.filter((t) => t.includes('REVERTED') && t.includes('SOLVED'));
-        check(passedOver.length > 0,
-            '⛔ and the pane SHOWS the anchors that SOLVED and were passed over — '
-            + '`REVERTED · SOLVED`, which only a discharge-preferring walk can produce',
-            `${passedOver.length} of ${dPane.length} rows`);
+        check(dPane.length > 1 && dPane.every((t) => /REVERTED|KEPT/.test(t)),
+            '⛔ and the pane SHOWS EVERY anchor the walk touched, each with its own outcome '
+            + '— a build that stopped at the first solved anchor emits ONE row',
+            `${dPane.length} rows: ${dPane.map((t) => t.trim().slice(0, 24)).join(' | ')}`);
     }
     check(after.dRows.length === 1
         && after.dRows[0].includes('kept:discharged')
@@ -1272,7 +1389,6 @@ const catalogueOf = () => page.evaluate(() => ({
     for (const [label, subject, expect] of [
         ['NO_ANCHOR', NO_ANCHOR_CASE, 'NO_ANCHOR'],
         ['REVERTED', REVERTED_CASE, 'REVERTED'],
-        ['solved-only', SOLVED_ONLY_CASE, 'KEPT'],
     ]) {
         await load(`source=generate&seed=${subject.seed}&biome=${subject.biome}`
             + `&count=${subject.step}${subject.step ? '&run=1' : ''}`);
@@ -1313,11 +1429,7 @@ const catalogueOf = () => page.evaluate(() => ({
             check(got.status.includes('the level on screen is UNCHANGED'),
                 '  …and the page SAYS the record did not move', got.status.slice(-90));
         }
-        if (label === 'solved-only') {
-            check(got.dRow.includes('kept:solved-only'),
-                '  …and it is NOT blurred with `discharged` in the readout',
-                got.dRow.slice(0, 120));
-        }
+
     }
     /**
      * ⛔⛔ THE FOURTH CLASS IS NO LONGER AN ABSENCE — IT IS DRIVEN, IN CLAIM 8e.

@@ -114,7 +114,29 @@ const json = (v) => JSON.stringify(v);
  *                throws `LevelWorldError` (asserted in node before the browser
  *                is asked to display it).
  */
-const SUBJECT = { seed: 3, biome: 'pre-sword', count: 2 };
+/**
+ * ⛓⛓⛓ **RE-PICKED AT PROCGEN ELEMENTS ARC 3 SLICE 2 — 3 → 4, AND THE FAILURE
+ * MODE IS WORTH RECORDING.** The door law moved every pre-sword level, and seed
+ * 3 at target 2 now keeps a `wall-gap-block` whose wall runs through **(2,1)** —
+ * which is `SEAL[0]`. ⛔ In NODE every assertion above still passed: an explicit
+ * `paint wall` op is applied whether or not the cell was already wall, so
+ * `nodeSeal` still REFUSED and every node check was green. In the BROWSER the
+ * click is a NO-OP by trap 263's own rule (*painting the terrain a cell already
+ * holds is not an edit*), the edit count never reached 1, and the row **hung on
+ * `settledEdits(1)` for the full 300 s timeout** — a STUCK wait, not a failed
+ * assertion.
+ *
+ * ⛓ SO THE SUBJECT'S REAL PRECONDITION WAS NEVER WRITTEN DOWN: the SEAL cells
+ * must be GROUND *in the browser's starting record*, or the claim cannot even be
+ * driven. Re-scanned (pre-sword, target 2, seeds 3..8) for a seed where (2,1)
+ * AND (1,2) AND (8,8) AND (6,6) are all ground and entity-free, the (8,8) paint
+ * still SOLVES, the SEAL pair is REFUSED and the (6,6) place SOLVES: **4, 6 and
+ * 8 all qualify; 4 is taken** (8's goal IS (2,1), which would make the seal
+ * subject the goal cell wearing another name). It keeps `wall-segment(ori=v,
+ * len=5)` + `wall-segment(ori=v,len=4)`, goal (6,2). The precondition is now
+ * ASSERTED below rather than assumed.
+ */
+const SUBJECT = { seed: 4, biome: 'pre-sword', count: 2 };
 const PAINT_OK = { tx: 8, ty: 8 };
 const FREE = { tx: 6, ty: 6 };
 const BAD_TYPE = 'notathing';
@@ -122,6 +144,19 @@ const BAD_TYPE = 'notathing';
 const nodeBase = generateStep({ ...SUBJECT, step: SUBJECT.count });
 const START = { tx: 1, ty: 1 };
 const SEAL = [{ tx: START.tx + 1, ty: START.ty }, { tx: START.tx, ty: START.ty + 1 }];
+/**
+ * ⛔ THE PRECONDITION THE HANG TAUGHT (arc 3 slice 2): both SEAL cells must hold
+ * GROUND in the state the browser starts from. A cell that is already wall makes
+ * the paint click a NO-OP, the edit count never advances, and the row STALLS on
+ * a `waitForFunction` instead of failing a claim — the least readable failure a
+ * browser row can have.
+ */
+for (const c of SEAL) {
+    check(terrainAt(nodeBase.record, c.tx, c.ty) === 'ground',
+        `⛔ the SEAL cell (${c.tx},${c.ty}) is GROUND before the paint — a cell already `
+        + 'holding wall would make the click a NO-OP and hang the row rather than fail it',
+        terrainAt(nodeBase.record, c.tx, c.ty));
+}
 
 const op = (o) => normalizeEdit(o);
 const PAINT_OP = op({ op: 'paint', ...PAINT_OK, terrain: 'wall' });
