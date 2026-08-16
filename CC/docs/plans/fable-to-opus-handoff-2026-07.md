@@ -3127,8 +3127,11 @@ page · `3dbc324c0`/`feb763186` iframe hosting · `8a0820ea0`/`242ee9240`
 skeleton kinds + `?skeleton=`); slice 6 in flight. ⚖ 2026-08-15 (user):
 Seedling's pass 2 under the two-pass system is NOT ruled in this arc — it
 gets its OWN FABLE PLANNING SESSION (kickoff ruling 11); slices 8, 9 and
-the Seedling half of 10 are handed to it; this arc continues with 6, 7,
-10-maze, 11, 12.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
+the Seedling half of 10 are handed to it; slice 6 SHIPPED (`be53a4dd4`/
+`ce647d4e7`); that session's design is now **§5g (PROCGEN ELEMENTS)**, which
+ABSORBS 10-maze; this arc continues with 7 (running), 6b (widen the
+pre-check to every kind — §5g ruling, measured by slice 6), 11, 12, then
+CLOSES.** Plan doc *(NewDocs)*: `seedling-constructive-mode-kickoff.md` — §1
 the user's rulings, §2 recon incl. the two probes the design rests on, §3 the
 design, §4 the twelve slices with mechanism families (⚑ = Fable-shaped parts),
 §6 open questions with defaults, §7 exit criteria. Memory:
