@@ -132,6 +132,32 @@ export function createWorld(width, height, opts = {}) {
         // them, so worlds built without the knobs are byte-identical.
         consumableTiles: new Map(),
         manaTiles: new Map(),
+        // PROCGEN ELEMENTS arc 2 slice 1 — mechanism family A.
+        //
+        //   blocks:  Map<posKey, true>   — the INITIAL positions of pushable
+        //     blocks. The world stays the STATIC description: where the blocks
+        //     are RIGHT NOW is `state.blocks` (see createState), because a push
+        //     is a move the player makes and the BFS must be able to branch on
+        //     it. Anything that mutates this Map is redefining the level.
+        //   buttons: Map<posKey, buttonId> — a button is WALKABLE and is never
+        //     picked up, so it is neither an obstacle nor an item.
+        //     ⚖ Q1 answered: a NEW Map rather than an item with a lib `kind`.
+        //     Decisive reason, beyond "a button is not picked up":
+        //     `extractPathsAndObstacles` enumerates `world.items` as the
+        //     region's Archipelago LOCATIONS — a button parked there would
+        //     invent a phantom AP check on every level that has one.
+        //   buttonLib: {[buttonId]: {kind:'button', holds:<tokenId>, …}} — the
+        //     BEHAVIOUR of each button id. Defaults to `{}` and has no shared
+        //     base library on purpose: ⚖ design ruling 21 retires the fixed
+        //     colour list, so every button is a per-instance id (like
+        //     `logic_gate_<N>`) created by whoever places it. `holds` names the
+        //     token the button DERIVES while pressed — see heldTokens.
+        //
+        // All three stay empty on every world nobody put a block in, so the
+        // whole mechanism is reached by a code path that does not run.
+        blocks: new Map(),
+        buttons: new Map(),
+        buttonLib: opts.buttonLib ?? {},
         itemLib: opts.itemLib ?? DEFAULT_ITEMS,
         obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
     };
@@ -210,6 +236,9 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     const itemLib = { ...baseItemLib, ...(sidecar.itemLib ?? {}) };
     const baseObstacleLib = opts.baseObstacleLib ?? DEFAULT_OBSTACLES;
     const obstacleLib = { ...baseObstacleLib, ...(sidecar.obstacleLib ?? {}) };
+    // Buttons have no shared base library (every id is per-instance), so the
+    // sidecar's entries ARE the library unless a caller supplies a base.
+    const buttonLib = { ...(opts.baseButtonLib ?? {}), ...(sidecar.buttonLib ?? {}) };
 
     // Multi-exit-aware load with legacy single-exit shorthand.
     let exitsInput;
@@ -241,6 +270,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         exits: exitsInput,
         itemLib,
         obstacleLib,
+        buttonLib,
     });
 
     world.tiles.set(tiles);
@@ -257,6 +287,17 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         }
     }
     world.itemLocationNames = itemLocationNames;
+
+    // Blocks and buttons (arc 2 slice 1). ADDITIVE: absent on every sidecar
+    // written before this slice, and createWorld already seeded empty Maps, so
+    // an old sidecar loads exactly as it did. Emitted by
+    // serializeMazeEntities, which omits both when empty.
+    for (const b of sidecar.blocks ?? []) {
+        world.blocks.set(posKey(b.x, b.y), true);
+    }
+    for (const b of sidecar.buttons ?? []) {
+        world.buttons.set(posKey(b.x, b.y), b.id);
+    }
 
     // Cross-game consumable tiles (X1). Absent on every pre-X1 sidecar
     // and on any world generated with the knobs at their byte-inert
@@ -334,6 +375,88 @@ export function clearItem(world, x, y) {
     world.items.delete(posKey(x, y));
 }
 
+// --- Blocks and buttons (arc 2 slice 1) ---
+//
+// Same posKey overlay scheme as items/obstacles, and the same tolerance for a
+// world that predates them (hand-authored, library-instantiated, or built by a
+// caller that never ran createWorld).
+//
+// ⛔ `world.blocks` is the level's INITIAL block layout, not the live one.
+// During play / BFS the live positions are `state.blocks`; setBlock on a world
+// mid-solve would be editing the level under the solver.
+
+export function getBlock(world, x, y) {
+    return world.blocks?.get(posKey(x, y)) ?? false;
+}
+
+export function setBlock(world, x, y) {
+    if (!world.blocks) world.blocks = new Map();
+    world.blocks.set(posKey(x, y), true);
+}
+
+export function clearBlock(world, x, y) {
+    world.blocks?.delete(posKey(x, y));
+}
+
+export function getButton(world, x, y) {
+    return world.buttons?.get(posKey(x, y));
+}
+
+export function setButton(world, x, y, buttonId) {
+    if (!world.buttons) world.buttons = new Map();
+    world.buttons.set(posKey(x, y), buttonId);
+}
+
+export function clearButton(world, x, y) {
+    world.buttons?.delete(posKey(x, y));
+}
+
+/**
+ * The sidecar fields for blocks / buttons / the button library — the WRITE
+ * side of what deserializeMazeWorld reads back.
+ *
+ * ⛔ EVERY FIELD IS OMITTED WHEN EMPTY. A `"blocks": []` written
+ * unconditionally would move every maze payload in the project for a fact no
+ * level currently has; the same rule `serializeMazeLevel` already applies to
+ * its per-instance `obstacleLib` / `itemLib` (arc 1 slice 2). A world with no
+ * blocks and no buttons therefore serializes to `{}` and spreads into a
+ * sidecar without changing a byte.
+ *
+ * Rows are sorted row-major so the emission is a function of the SET, not of
+ * Map insertion order.
+ *
+ * Nothing calls this yet: the pipeline's serializeMazeWorld
+ * (procgenPipeline/procgenPipelineEngine.js) and procgenMaze's
+ * serializeMazeLevel are both outside this slice's file scope. It exists so
+ * the shape is FIXED here — the round-trip through deserializeMazeWorld is
+ * proved against this emitter rather than against a hand-built literal that
+ * a later slice would be free to contradict.
+ */
+export function serializeMazeEntities(world) {
+    const out = {};
+    const rowMajor = (a, b) => (a.y - b.y) || (a.x - b.x);
+    if (world.blocks?.size) {
+        out.blocks = [...world.blocks.keys()]
+            .map((key) => {
+                const [x, y] = key.split(',').map(Number);
+                return { x, y };
+            })
+            .sort(rowMajor);
+    }
+    if (world.buttons?.size) {
+        out.buttons = [...world.buttons.entries()]
+            .map(([key, id]) => {
+                const [x, y] = key.split(',').map(Number);
+                return { x, y, id };
+            })
+            .sort(rowMajor);
+    }
+    if (Object.keys(world.buttonLib ?? {}).length) {
+        out.buttonLib = { ...world.buttonLib };
+    }
+    return out;
+}
+
 // --- Consumable tiles (X1) ---
 //
 // Accessors mirror the item overlay. `world.consumableTiles` /
@@ -396,20 +519,99 @@ export function isExit(world, x, y) {
 
 // --- State ---
 
+/**
+ * ⛓⛓ `state.blocks` IS PRESENT ONLY WHEN THE WORLD HAS BLOCKS (⚖ arc 2 ruling
+ * 5). It is a SORTED array of posKeys — sorted so that two states holding the
+ * same block SET produce the same visited key regardless of the order the
+ * pushes happened in, and an array (rather than a Set) so cloning is a slice
+ * and the key is a join.
+ *
+ * Absence, not emptiness, is the switch: `mazeVisitedKey` appends nothing when
+ * the field is undefined, which is what keeps every existing key string
+ * byte-identical. A world with blocks whose state was hand-built without the
+ * field walks THROUGH its blocks — createState is the one constructor and
+ * every internal caller uses it.
+ */
 export function createState(world) {
-    return {
+    const state = {
         player_pos: { x: world.entrance.x, y: world.entrance.y },
         turn: 0,
         inventory: new Set(),
     };
+    if (world.blocks?.size) {
+        state.blocks = [...world.blocks.keys()].sort();
+    }
+    return state;
 }
 
 function cloneState(state) {
-    return {
+    const next = {
         player_pos: { x: state.player_pos.x, y: state.player_pos.y },
         turn: state.turn,
         inventory: new Set(state.inventory),
     };
+    if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    return next;
+}
+
+/**
+ * ⛓⛓⛓ THE DERIVED-TOKEN RULE — the ONE place a HOLD is computed.
+ *
+ * A button that is pressed DERIVES the token its library entry names
+ * (`holds`). Pressed means: a block sits on it, OR the player stands on it.
+ * ⚖ Q2 answered YES, the player presses too — that is the game's own truth
+ * (`Button.hitables = ["Player","Enemy","Solid"]` in the ActionScript source;
+ * a pushable block is a `Solid`), and modelling only the block would be a
+ * quiet divergence nobody could see from the outside.
+ *
+ * ⛔ THE TOKEN IS NEVER STORED. It is recomputed from the current stance on
+ * every single step, which is exactly what makes it a HOLD and not a LATCH
+ * (⚖ design ruling 22): step off the button, or push the block off it, and the
+ * door it was holding is shut again on the very next move. The LATCH is a
+ * different mechanism entirely — a `flag` ITEM, picked up on arrival into
+ * `state.inventory`, which nothing ever removes.
+ *
+ * Returns `null` — not an empty array — when the world has no buttons at all,
+ * so `effectiveInventory` can hand the caller's own Set straight back and the
+ * no-button case allocates nothing and behaves identically to the code that
+ * shipped before this slice.
+ */
+function heldTokens(world, playerPos, blocks) {
+    const buttons = world.buttons;
+    if (!buttons || buttons.size === 0) return null;
+    let held = null;
+    const press = (key) => {
+        const buttonId = buttons.get(key);
+        if (buttonId === undefined) return;
+        const token = world.buttonLib?.[buttonId]?.holds;
+        if (!token) return;
+        if (held === null) held = [];
+        held.push(token);
+    };
+    press(posKey(playerPos.x, playerPos.y));
+    if (blocks !== undefined) {
+        for (const key of blocks) press(key);
+    }
+    return held;
+}
+
+/**
+ * The inventory a clearance check actually sees: whatever inventory is TRUTH
+ * for this step (state.inventory, or the caller's inventoryOverride) PLUS the
+ * tokens currently held. The override's semantics are unchanged — it is still
+ * the sole source of carried items, and pickups still do not write to
+ * state.inventory when it is supplied; the derived tokens are ADDED on top of
+ * whichever inventory was chosen, because a held button is a fact about the
+ * WORLD's current configuration and not about what the player is carrying.
+ *
+ * The caller's Set is never mutated.
+ */
+function effectiveInventory(world, inventory, playerPos, blocks) {
+    const held = heldTokens(world, playerPos, blocks);
+    if (held === null) return inventory;
+    const out = new Set(inventory);
+    for (const token of held) out.add(token);
+    return out;
 }
 
 // --- step ---
@@ -433,21 +635,71 @@ function cloneState(state) {
 // obstacles. See library.js's isObstacleCleared and top-down-driver.md
 // §8.
 
+// ⛓⛓ PUSHING (arc 2 slice 1). A move into a cell holding a block PUSHES it one
+// cell further along the SAME delta, and both move together. The cell beyond
+// must be
+//   - floor,
+//   - free of another block,
+//   - free of an UN-cleared obstacle.
+// A block does not carry a key: whether the obstacle beyond is cleared is asked
+// with the same effective inventory the player's own move is asked with, so a
+// block can be pushed THROUGH a door that is already open (held or unlocked)
+// and never INTO one that is shut. ⛔ A block CANNOT open a door.
+//
+// A block may be pushed onto a BUTTON (that is the whole gadget) and onto an
+// ITEM cell: the item STAYS on the floor and is not collected — the block is
+// standing on it and the player cannot stand there. Push the block off again
+// and the item is picked up normally.
+//
+// ⛓ THE CLEARANCE CHECK READS THE STANCE BEFORE THE MOVE, not after. That is
+// the game's tick order (`Button.update` re-collides where things are NOW), and
+// it has one consequence worth stating out loud: a player standing on
+// `button_A` CAN step into an adjacent `door_A`, because at the instant the
+// move is attempted the button is still pressed — and step() only ever gates
+// the TARGET tile, so they can then step off the far side (the gate-of-arrival
+// exception documented at placeFromRules). A door held open by the PLAYER is
+// therefore a one-way ticket for exactly one cell; a door held open by a BLOCK
+// stays open for as long as the block sits there. This is why the gadget uses
+// a block, and it is a fact about the model rather than a defect in it.
 export function step(world, state, input, inventoryOverride, clearanceOpts) {
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
-    const inv = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
     const obstacleId = getObstacle(world, nx, ny);
     if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
         return null;
+    }
+    let pushedFrom = null;
+    let pushedTo = null;
+    if (state.blocks !== undefined) {
+        const targetKey = posKey(nx, ny);
+        if (state.blocks.includes(targetKey)) {
+            const bx = nx + delta.dx;
+            const by = ny + delta.dy;
+            if (!isFloor(world, bx, by)) return null;
+            const beyondKey = posKey(bx, by);
+            if (state.blocks.includes(beyondKey)) return null;
+            const beyondObstacle = getObstacle(world, bx, by);
+            if (beyondObstacle
+                && !isObstacleCleared(beyondObstacle, inv, world.obstacleLib, clearanceOpts)) {
+                return null;
+            }
+            pushedFrom = targetKey;
+            pushedTo = beyondKey;
+        }
     }
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
     next.turn += 1;
+    if (pushedFrom !== null) {
+        next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
+        next.blocks.sort();
+    }
     if (inventoryOverride === undefined) {
         const itemId = getItem(world, nx, ny);
         if (itemId) next.inventory.add(itemId);
@@ -570,12 +822,18 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
 // tiles exist — two states at the same tile with different inventories
 // can reach different parts of the world, so BFS must treat them as
 // distinct nodes.
-function mazeVisitedKey(state) {
-    if (state.inventory.size === 0) {
-        return `${state.player_pos.x},${state.player_pos.y}|`;
-    }
-    const inv = [...state.inventory].sort().join(',');
-    return `${state.player_pos.x},${state.player_pos.y}|${inv}`;
+//
+// ⛓ AND OF THE BLOCK LAYOUT once blocks exist — the same argument one level up:
+// two states at the same tile with the same inventory but different block
+// positions can reach different parts of the world. The blocks segment is
+// appended as `|k1;k2` ONLY when `state.blocks` is present, so on every world
+// that has no blocks the returned string is byte-identical to the one this
+// function returned before arc 2 (asserted literally in the tests, both ways).
+export function mazeVisitedKey(state) {
+    const base = state.inventory.size === 0
+        ? `${state.player_pos.x},${state.player_pos.y}|`
+        : `${state.player_pos.x},${state.player_pos.y}|${[...state.inventory].sort().join(',')}`;
+    return state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
 }
 
 export const bfsSolver = makeBfsSolver({
@@ -588,6 +846,13 @@ export const bfsSolver = makeBfsSolver({
 // still block, but obstacles are passable (we want to reconstruct the
 // geometric route and then annotate it with the obstacles it crossed,
 // independently of whether the player could clear them at run time).
+//
+// ⛓ IT IGNORES BLOCKS TOO, and deliberately: it is asking a GEOMETRIC question
+// ("which route would the tiles allow") whose answer must not depend on what
+// the player has done or moved. A block is exactly as passable here as a locked
+// door is — it annotates nothing and blocks nothing. The FEASIBILITY question
+// ("can the player actually get there") is `step` + `bfsSolver`, over the full
+// (player, blocks, inventory) state.
 function ghostStep(world, state, input) {
     const delta = DELTAS[input];
     if (!delta) return null;
@@ -731,6 +996,11 @@ export function floorTilesExcluding(world, exclude) {
     return out;
 }
 
+// Replay a plan through `step` and collect the player positions it visits.
+// ⛓ Because it threads the STATE (not just the position) it replays pushes
+// correctly on a block world — but it reports only where the PLAYER went; the
+// block layout along the way is `step`'s to know. A plan that no longer
+// applies (the world changed under it) returns null rather than a short path.
 function tracePath(world, startState, plan) {
     const positions = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
     let s = startState;
@@ -745,6 +1015,20 @@ function tracePath(world, startState, plan) {
 // Enumerate tiles the player can reach from startState with the
 // current world and inventory. Stand-alone from bfsSolver because we
 // want the full set, not a single goal-directed plan.
+//
+// ⛓ ON A WORLD WITH BLOCKS this is a full-state BFS whose output is the
+// PROJECTION onto player positions: a tile is listed once per distinct
+// (inventory, block layout) it was first reached under, so the list can repeat
+// a tile — as it already could for two different inventories before arc 2. The
+// callers that pick a random element from it (pickReachableFloorTile,
+// placeGateAndKey's key candidates) therefore weight repeated tiles more
+// heavily; that is pre-existing behaviour and deduplicating it would move
+// generated levels, so it is left exactly as it was.
+//
+// ⛔ NO NODE CAP. `bfsSolver` refuses by name at `budget` expansions; this
+// function runs to exhaustion, and the block state space is what makes that
+// dangerous (see the node-count table in the arc-2 kickoff §8). Nothing that
+// places blocks may call it without bounding the block count first.
 function reachableTiles(world, startState) {
     const visited = new Set([mazeVisitedKey(startState)]);
     const queue = [startState];

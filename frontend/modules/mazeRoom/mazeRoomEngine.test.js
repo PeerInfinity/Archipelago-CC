@@ -24,6 +24,9 @@ import {
     deriveSingleKeyGatePairs,
     getConsumableTile, setConsumableTile, clearConsumableTile,
     getManaTile, setManaTile, clearManaTile,
+    getBlock, setBlock, clearBlock,
+    getButton, setButton, clearButton,
+    serializeMazeEntities, mazeVisitedKey,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -1410,5 +1413,699 @@ describe('consumable tile accessors (X1)', () => {
         setManaTile(w, 1, 2, 5);
         expect(getConsumableTile(w, 1, 1).type).toBe('Food');
         expect(getManaTile(w, 1, 2)).toBe(5);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// PROCGEN ELEMENTS · ARC 2 · SLICE 1 — BLOCKS, BUTTONS AND FLAGS (family A)
+//
+// The three mechanisms and the one line that separates them:
+//   a BLOCK moves when you walk into it,
+//   a BUTTON derives a token WHILE something stands on it (a HOLD),
+//   a FLAG is an item picked up on arrival and never lost (a LATCH).
+// ⚖ design ruling 22 — Seedling's `Button` vs `ButtonRoom`.
+// ─────────────────────────────────────────────────────────────────────────
+
+// Build a world from an ASCII picture, so a fixture is READ rather than
+// assembled. One character per tile:
+//   '#' wall · '.' floor · 'P' entrance · 'X' exit · 'B' block ·
+//   'b' button_A · 'D' door_A · 'F' flag_B · 'K' key_red · 'R' door_red
+// The libs the pictures need are per-instance entries merged onto the world's
+// own copies — ⛔ `shared/procgen/library.js` is not touched by this arc.
+const DOOR_A_ENTRY = {
+    name: 'Door A', id: 'door_A', clear_set_type: 'combo_list',
+    clear_set: [['sw_A']], color: '#4aa3c7',
+};
+const BUTTON_A_ENTRY = {
+    name: 'Button A', id: 'button_A', kind: 'button', holds: 'sw_A',
+    color: '#4aa3c7', symbol: 'button',
+};
+const FLAG_B_ENTRY = {
+    name: 'Flag B', id: 'flag_B', kind: 'flag', classification: 'progression',
+    color: '#c77a4a', symbol: 'flag',
+};
+
+function picture(rows, opts = {}) {
+    const height = rows.length;
+    const width = rows[0].length;
+    let entrance = { x: 0, y: 0 };
+    let exit = null;
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (rows[y][x] === 'P') entrance = { x, y };
+            if (rows[y][x] === 'X') exit = { x, y };
+        }
+    }
+    const w = createWorld(width, height, {
+        entrance,
+        exits: [{ exit_id: 'exit', ...(exit ?? entrance) }],
+    });
+    w.obstacleLib = { ...w.obstacleLib, door_A: DOOR_A_ENTRY };
+    w.itemLib = { ...w.itemLib, flag_B: FLAG_B_ENTRY };
+    w.buttonLib = opts.buttonLib === undefined ? { button_A: BUTTON_A_ENTRY } : opts.buttonLib;
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const c = rows[y][x];
+            if (c === '#') setTile(w, x, y, TILE_WALL);
+            if (c === 'B') setBlock(w, x, y);
+            if (c === 'b') setButton(w, x, y, 'button_A');
+            if (c === 'D') setObstacle(w, x, y, 'door_A');
+            if (c === 'R') setObstacle(w, x, y, 'door_red');
+            if (c === 'F') setItem(w, x, y, 'flag_B');
+            if (c === 'K') setItem(w, x, y, 'key_red');
+        }
+    }
+    return w;
+}
+
+describe('blocks / buttons — the overlays', () => {
+    it('createWorld seeds both Maps empty and buttonLib empty', () => {
+        const w = createWorld(4, 4);
+        expect(w.blocks.size).toBe(0);
+        expect(w.buttons.size).toBe(0);
+        expect(w.buttonLib).toEqual({});
+    });
+
+    it('get/set/clear mirror the item overlay', () => {
+        const w = createWorld(4, 4);
+        expect(getBlock(w, 1, 1)).toBe(false);
+        setBlock(w, 1, 1);
+        expect(getBlock(w, 1, 1)).toBe(true);
+        clearBlock(w, 1, 1);
+        expect(getBlock(w, 1, 1)).toBe(false);
+
+        expect(getButton(w, 2, 2)).toBeUndefined();
+        setButton(w, 2, 2, 'button_A');
+        expect(getButton(w, 2, 2)).toBe('button_A');
+        clearButton(w, 2, 2);
+        expect(getButton(w, 2, 2)).toBeUndefined();
+    });
+
+    it('tolerates a world that lacks the Maps entirely (pre-arc-2 / hand-authored)', () => {
+        const w = createWorld(4, 4);
+        delete w.blocks;
+        delete w.buttons;
+        expect(getBlock(w, 1, 1)).toBe(false);
+        expect(getButton(w, 1, 1)).toBeUndefined();
+        expect(() => clearBlock(w, 1, 1)).not.toThrow();
+        expect(() => clearButton(w, 1, 1)).not.toThrow();
+        setBlock(w, 1, 1);
+        setButton(w, 2, 2, 'button_A');
+        expect(getBlock(w, 1, 1)).toBe(true);
+        expect(getButton(w, 2, 2)).toBe('button_A');
+    });
+});
+
+describe('createState / cloneState with blocks', () => {
+    it('omits state.blocks entirely when the world has none (⚖ ruling 5)', () => {
+        const w = createWorld(4, 4);
+        const s = createState(w);
+        expect('blocks' in s).toBe(false);
+    });
+
+    it('carries a SORTED array of posKeys when the world has blocks', () => {
+        const w = createWorld(5, 5);
+        setBlock(w, 3, 1);
+        setBlock(w, 1, 2);
+        setBlock(w, 2, 1);
+        expect(createState(w).blocks).toEqual(['1,2', '2,1', '3,1']);
+    });
+
+    it('a push does not mutate the state it was given', () => {
+        const w = picture([
+            '#####',
+            '#P B#',
+            '#####',
+        ]);
+        const s = createState(w);
+        const before = s.blocks.slice();
+        step(w, step(w, s, INPUT_E), INPUT_E);
+        expect(s.blocks).toEqual(before);
+        expect(s.player_pos).toEqual({ x: 1, y: 1 });
+    });
+});
+
+describe('step — pushing a block', () => {
+    it('pushes the block one cell along the same delta and both move', () => {
+        const w = picture([
+            '#####',
+            '#PB.#',
+            '#####',
+        ]);
+        const s = step(w, createState(w), INPUT_E);
+        expect(s.player_pos).toEqual({ x: 2, y: 1 });
+        expect(s.blocks).toEqual(['3,1']);
+    });
+
+    it('refuses a push when the cell beyond is a wall', () => {
+        const w = picture([
+            '####',
+            '#PB#',
+            '####',
+        ]);
+        expect(step(w, createState(w), INPUT_E)).toBeNull();
+    });
+
+    it('refuses a push when the cell beyond is out of bounds', () => {
+        const w = picture([
+            '...',
+            'PB.',
+            '...',
+        ]);
+        // (1,1) → push east lands the block at (2,1); a second push would send
+        // it to (3,1), off the grid.
+        const s = step(w, createState(w), INPUT_E);
+        expect(s.blocks).toEqual(['2,1']);
+        expect(step(w, s, INPUT_E)).toBeNull();
+    });
+
+    it('refuses a push when the cell beyond holds another block', () => {
+        const w = picture([
+            '######',
+            '#PBB.#',
+            '######',
+        ]);
+        expect(step(w, createState(w), INPUT_E)).toBeNull();
+    });
+
+    it('refuses a push into an UN-cleared obstacle — ⛔ a block does not open a door', () => {
+        const w = picture([
+            '#####',
+            '#PBR#',
+            '#####',
+        ]);
+        expect(step(w, createState(w), INPUT_E)).toBeNull();
+    });
+
+    it('allows a push THROUGH a door the PLAYER can already clear', () => {
+        const w = picture([
+            '######',
+            '#PBR.#',
+            '######',
+        ]);
+        const s = createState(w);
+        s.inventory.add('key_red');
+        const next = step(w, s, INPUT_E);
+        expect(next).not.toBeNull();
+        expect(next.blocks).toEqual(['3,1']); // the block now sits on the door tile
+        expect(next.player_pos).toEqual({ x: 2, y: 1 });
+    });
+
+    it('an item under a block is NOT collected, and is collected once the block moves off', () => {
+        const w = picture([
+            '######',
+            '#PBK.#',
+            '######',
+        ]);
+        // Push east: the block lands on the key tile. The player is at (2,1).
+        const s1 = step(w, createState(w), INPUT_E);
+        expect(s1.blocks).toEqual(['3,1']);
+        expect([...s1.inventory]).toEqual([]);
+        // Push again: the block leaves the key tile, the player arrives on it.
+        const s2 = step(w, s1, INPUT_E);
+        expect(s2.blocks).toEqual(['4,1']);
+        expect(s2.player_pos).toEqual({ x: 3, y: 1 });
+        expect([...s2.inventory]).toEqual(['key_red']);
+        // The world's item overlay never moved — the block stood on it.
+        expect(getItem(w, 3, 1)).toBe('key_red');
+    });
+
+    it('the block state is a function of the SET, not of the order the pushes happened in', () => {
+        const w = picture([
+            '#####',
+            '#P.B#',
+            '#..B#',
+            '#####',
+        ]);
+        // Two blocks at (3,1) and (3,2); neither can be pushed (wall beyond),
+        // so any route keeps the same set — and the sorted array proves it.
+        expect(createState(w).blocks).toEqual(['3,1', '3,2']);
+        const viaSouth = step(w, step(w, createState(w), INPUT_S), INPUT_E);
+        expect(viaSouth.blocks).toEqual(['3,1', '3,2']);
+    });
+});
+
+describe('step — a block on the exit tile', () => {
+    // ⚖ Decided here: the exit is a cell the player must STAND on, so a block
+    // parked on it is a blocked exit UNLESS the player can push it off.
+    it('a block pushed ONTO the exit can seal it — the level becomes unsolvable', () => {
+        const w = picture([
+            '######',
+            '#P.BX#',
+            '######',
+        ]);
+        // Approaching the exit at (4,1) means pushing the block at (3,1) onto
+        // it, and the cell beyond is wall, so the block can never come off
+        // again. ⛓ A finding for slice 3's binding, not a defect here: a block
+        // in line with the exit is a way to make an unsolvable level, and the
+        // oracle is what catches it — which it does, by name.
+        const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 5000 });
+        expect(r.ok).toBe(false);
+        expect(r.reason).toBe('unreachable');
+    });
+
+    it('is unreachable when the block sits on the exit with a wall beyond', () => {
+        const w = picture([
+            '#####',
+            '#P.B#',
+            '#####',
+        ]);
+        setBlock(w, 3, 1);
+        w.exits.set('exit', { exit_id: 'exit', x: 3, y: 1, side: null });
+        w._exitsByPos = null;
+        const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 5000 });
+        expect(r.ok).toBe(false);
+    });
+
+    it('is reachable when the block on the exit has floor beyond it', () => {
+        const w = picture([
+            '######',
+            '#P.B.#',
+            '######',
+        ]);
+        w.exits.set('exit', { exit_id: 'exit', x: 3, y: 1, side: null });
+        w._exitsByPos = null;
+        const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 5000 });
+        expect(r.ok).toBe(true);
+        expect(r.plan).toEqual([INPUT_E, INPUT_E]);
+    });
+});
+
+describe('buttons — the HOLD (⚖ Q2: the player presses too)', () => {
+    it('a block pushed onto button_A derives sw_A and door_A becomes passable', () => {
+        const w = picture([
+            '#####',
+            '#PBb#',
+            '#..D#',
+            '#..##',
+            '#####',
+        ]);
+        // Push east: the block lands on the button at (3,1).
+        const held = step(w, createState(w), INPUT_E);
+        expect(held.blocks).toEqual(['3,1']);
+        // The player walks around to (2,2) and steps east onto door_A (3,2).
+        const s = step(w, step(w, held, INPUT_S), INPUT_E);
+        expect(s).not.toBeNull();
+        expect(s.player_pos).toEqual({ x: 3, y: 2 });
+        // ⛔ And the token was never stored — a HOLD, not a LATCH.
+        expect([...s.inventory]).toEqual([]);
+    });
+
+    it('door_A is shut when nothing stands on button_A', () => {
+        const w = picture([
+            '#####',
+            '#PBb#',
+            '#..D#',
+            '#..##',
+            '#####',
+        ]);
+        const s = step(w, createState(w), INPUT_S);
+        expect(step(w, step(w, s, INPUT_E), INPUT_E)).toBeNull();
+    });
+
+    it('pushing the block OFF the button shuts door_A again', () => {
+        const w = picture([
+            '######',
+            '#PBb.#',
+            '#..D.#',
+            '#....#',
+            '######',
+        ]);
+        const onButton = step(w, createState(w), INPUT_E);
+        expect(onButton.blocks).toEqual(['3,1']);          // the button cell
+        expect(onButton.player_pos).toEqual({ x: 2, y: 1 });
+        // HELD: from (2,2) — a cell that is NOT the button — door_A at (3,2)
+        // opens, because the block is standing on button_A.
+        expect(runPlan(w, onButton, [INPUT_S, INPUT_E])).not.toBeNull();
+        // Push the block off the button to (4,1). Now nothing holds sw_A.
+        const off = step(w, onButton, INPUT_E);
+        expect(off.blocks).toEqual(['4,1']);
+        expect(off.player_pos).toEqual({ x: 3, y: 1 });
+        // ⛓ THE PLAYER IS NOW STANDING ON THE BUTTON, so they must step OFF it
+        // before the claim means anything — a test that approached the door
+        // from the button cell would pass under a mutant that stores the token
+        // permanently, because the player's own press would open it.
+        expect(runPlan(w, off, [INPUT_W, INPUT_S, INPUT_E])).toBeNull();
+    });
+
+    it('the PLAYER standing on button_A presses it too, for exactly the step that leaves it', () => {
+        const w = picture([
+            '#####',
+            '#PbD#',
+            '#####',
+        ]);
+        // (1,1) → (2,1) is the button; the next step east is door_A. At the
+        // instant that move is attempted the player is still on the button, so
+        // it clears — and step() only ever gates the TARGET tile.
+        const onButton = step(w, createState(w), INPUT_E);
+        expect(onButton.player_pos).toEqual({ x: 2, y: 1 });
+        const throughDoor = step(w, onButton, INPUT_E);
+        expect(throughDoor).not.toBeNull();
+        expect(throughDoor.player_pos).toEqual({ x: 3, y: 1 });
+        // But a door TWO cells from the button is out of reach: the player has
+        // left the button by the time the door is the target.
+        const w2 = picture([
+            '######',
+            '#Pb.D#',
+            '######',
+        ]);
+        const s = step(w2, step(w2, createState(w2), INPUT_E), INPUT_E);
+        expect(s.player_pos).toEqual({ x: 3, y: 1 });
+        expect(step(w2, s, INPUT_E)).toBeNull();
+    });
+
+    it('a button whose library entry names no `holds` derives nothing', () => {
+        const w = picture([
+            '#####',
+            '#PBb#',
+            '#..D#',
+            '#..##',
+            '#####',
+        ], { buttonLib: { button_A: { kind: 'button' } } });
+        const held = step(w, createState(w), INPUT_E);
+        expect(step(w, step(w, held, INPUT_S), INPUT_E)).toBeNull();
+    });
+
+    it('a button id with no library entry at all derives nothing', () => {
+        const w = picture([
+            '#####',
+            '#PBb#',
+            '#..D#',
+            '#..##',
+            '#####',
+        ], { buttonLib: {} });
+        const held = step(w, createState(w), INPUT_E);
+        expect(step(w, step(w, held, INPUT_S), INPUT_E)).toBeNull();
+    });
+
+    it('the derived token is ADDED to an inventoryOverride, which keeps its own semantics', () => {
+        const w = picture([
+            '######',
+            '#PBbR#',
+            '######',
+        ]);
+        // Push the block onto the button; sw_A is held. The override says the
+        // player carries key_red — door_red at (4,1) needs it, and the
+        // override is still the only source of CARRIED items.
+        const held = step(w, createState(w), INPUT_E, new Set());
+        expect(held.blocks).toEqual(['3,1']);
+        expect(step(w, held, INPUT_E, new Set())).toBeNull();
+        const through = step(w, held, INPUT_E, new Set(['key_red']));
+        expect(through).not.toBeNull();
+        expect([...through.inventory]).toEqual([]); // override ⇒ no pickup writes
+    });
+});
+
+describe('flags — the LATCH, contrasted with the hold', () => {
+    it('a flag survives walking away; the held token does not', () => {
+        const w = picture([
+            '######',
+            '#PFb.#',
+            '######',
+        ]);
+        let s = createState(w);
+        s = step(w, s, INPUT_E);                 // onto flag_B at (2,1)
+        expect([...s.inventory]).toEqual(['flag_B']);
+        s = step(w, s, INPUT_E);                 // onto button_A at (3,1)
+        expect([...s.inventory]).toEqual(['flag_B']);
+        s = step(w, s, INPUT_E);                 // off the button, onto (4,1)
+        // The LATCH is still held...
+        expect([...s.inventory]).toEqual(['flag_B']);
+        // ...and the HOLD is not: sw_A was never in the inventory at any point,
+        // and nothing on the board is pressing a button now.
+        expect(s.inventory.has('sw_A')).toBe(false);
+        const w2 = picture(['####', '#Pb#', '####']);
+        const onButton = step(w2, createState(w2), INPUT_E);
+        expect(onButton.inventory.has('sw_A')).toBe(false);
+    });
+
+    it('⚠ NOTHING IN `step` BRANCHES ON `kind: flag` — a flag is permanent because '
+        + 'every item pickup is. The kind is a DECLARATION for layer 1 and the renderer', () => {
+        const w = picture([
+            '#####',
+            '#PFK#',
+            '#####',
+        ]);
+        let s = step(w, createState(w), INPUT_E);
+        s = step(w, s, INPUT_E);
+        // key_red, with no `kind` at all, is exactly as permanent as flag_B.
+        expect([...s.inventory].sort()).toEqual(['flag_B', 'key_red']);
+        expect(w.itemLib.flag_B.kind).toBe('flag');
+        expect(w.itemLib.key_red.kind).toBeUndefined();
+    });
+});
+
+describe('mazeVisitedKey', () => {
+    it('is BYTE-IDENTICAL to the pre-arc-2 string when the world has no blocks', () => {
+        const w = createWorld(4, 4);
+        const s = createState(w);
+        expect(mazeVisitedKey(s)).toBe('0,0|');
+        s.inventory.add('key_red');
+        s.inventory.add('flag_B');
+        s.player_pos = { x: 2, y: 3 };
+        expect(mazeVisitedKey(s)).toBe('2,3|flag_B,key_red');
+    });
+
+    it('appends the block layout — and only then', () => {
+        const w = createWorld(5, 5);
+        setBlock(w, 3, 1);
+        setBlock(w, 1, 2);
+        const s = createState(w);
+        expect(mazeVisitedKey(s)).toBe('0,0||1,2;3,1');
+        s.inventory.add('key_red');
+        expect(mazeVisitedKey(s)).toBe('0,0|key_red|1,2;3,1');
+    });
+
+    it('two states reached by DIFFERENT push orders share one key', () => {
+        // Two blocks, each pushable east once. The player can do them in
+        // either order and finish on the same cell (2,3).
+        const w = picture([
+            '######',
+            '#.B..#',
+            '#P...#',
+            '#.B..#',
+            '######',
+        ]);
+        const north = [INPUT_N, INPUT_E, INPUT_S, INPUT_W, INPUT_S, INPUT_E];
+        const south = [INPUT_S, INPUT_E, INPUT_N, INPUT_W, INPUT_N, INPUT_E,
+            INPUT_S, INPUT_S];
+        const a = runPlan(w, createState(w), north);
+        const b = runPlan(w, createState(w), south);
+        expect(a).not.toBeNull();
+        expect(b).not.toBeNull();
+        expect(a.player_pos).toEqual({ x: 2, y: 3 });
+        expect(b.player_pos).toEqual({ x: 2, y: 3 });
+        expect(a.blocks).toEqual(['3,1', '3,3']);
+        expect(mazeVisitedKey(b)).toBe(mazeVisitedKey(a));
+        expect(mazeVisitedKey(a)).toBe('2,3||3,1;3,3');
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// THE 7×7 HAND-DRAWN FIXTURE — a 2-turn push lane, a held door, a flag beyond.
+//
+//        0 1 2 3 4 5 6
+//    0   # # # # # # #
+//    1   # P . . . . #     the player starts at (1,1)
+//    2   # # . B # . #     the block starts at (3,2)
+//    3   # # . . . . #
+//    4   # # b # . # #     button_A at (2,4)
+//    5   # # # # D F #     door_A at (4,5), flag_B at (5,5)
+//    6   # # # # # # #
+//
+// The walls are the point: the block can only leave (3,2) southward, can only
+// leave (3,3) westward, and can only leave (2,3) southward — so the ONLY route
+// onto the button is S, W, S, which is 2 direction changes. And the button is
+// three cells from the door, so the player cannot press it themselves and step
+// through: the block has to do the work.
+// ─────────────────────────────────────────────────────────────────────────
+const PUSH_LANE_7x7 = [
+    '#######',
+    '#P....#',
+    '##.B#.#',
+    '##....#',
+    '##b#.##',
+    '####DF#',
+    '#######',
+];
+
+function pushDirections(world, plan) {
+    let s = createState(world);
+    const dirs = [];
+    for (const input of plan) {
+        const before = s.blocks.join(';');
+        s = step(world, s, input);
+        if (s === null) return null;
+        if (s.blocks.join(';') !== before) dirs.push(input);
+    }
+    return { dirs, final: s };
+}
+
+describe('the 7×7 push lane — block → button holds door_A → flag_B beyond', () => {
+    const hasFlag = (s) => s.inventory.has('flag_B');
+
+    it('BFS solves it, and the plan is this exact plan', () => {
+        const w = picture(PUSH_LANE_7x7);
+        const r = reach(w, bfsSolver, createState(w), hasFlag, { budget: 20000 });
+        expect(r.ok).toBe(true);
+        expect(r.plan).toEqual([
+            'E', 'E', 'S', 'N', 'E', 'E', 'S', 'S', 'W',
+            'W', 'N', 'W', 'S', 'E', 'E', 'S', 'S', 'E',
+        ]);
+        expect(r.steps).toBe(18);
+        expect(r.expanded).toBe(137);
+    });
+
+    it('the plan pushes the block S, W, S — 2 direction changes — onto the button', () => {
+        const w = picture(PUSH_LANE_7x7);
+        const r = reach(w, bfsSolver, createState(w), hasFlag, { budget: 20000 });
+        const { dirs, final } = pushDirections(w, r.plan);
+        expect(dirs).toEqual(['S', 'W', 'S']);
+        expect(dirs.filter((d, i) => i > 0 && d !== dirs[i - 1]).length).toBe(2);
+        expect(final.blocks).toEqual(['2,4']);      // the button cell
+        expect(getButton(w, 2, 4)).toBe('button_A');
+        expect([...final.inventory]).toEqual(['flag_B']);
+    });
+
+    it('is DETERMINISTIC — two runs of the same world return the identical plan', () => {
+        const a = reach(picture(PUSH_LANE_7x7), bfsSolver,
+            createState(picture(PUSH_LANE_7x7)), hasFlag, { budget: 20000 });
+        const w = picture(PUSH_LANE_7x7);
+        const b = reach(w, bfsSolver, createState(w), hasFlag, { budget: 20000 });
+        expect(b.plan).toEqual(a.plan);
+        expect(b.expanded).toBe(a.expanded);
+    });
+
+    // ⚖ THE ABLATION REMOVES THE KEY, NOT THE DOOR (trap 291 — taking a door
+    // away only makes a level easier, so it can never falsify anything).
+    it('ABLATION — remove the BLOCK and the flag is unreachable', () => {
+        const w = picture(PUSH_LANE_7x7.map((r) => r.replace('B', '.')));
+        expect(w.blocks.size).toBe(0);
+        const r = reach(w, bfsSolver, createState(w), hasFlag, { budget: 20000 });
+        expect(r.ok).toBe(false);
+        expect(r.reason).toBe('unreachable');
+    });
+
+    it('ABLATION — leave the block but take away what the button HOLDS, and the flag is unreachable', () => {
+        const w = picture(PUSH_LANE_7x7, { buttonLib: { button_A: { kind: 'button' } } });
+        expect(w.blocks.size).toBe(1);
+        const r = reach(w, bfsSolver, createState(w), hasFlag, { budget: 20000 });
+        expect(r.ok).toBe(false);
+        expect(r.reason).toBe('unreachable');
+    });
+
+    it('the door is genuinely the cut: without sw_A the flag cell is the only thing lost', () => {
+        const w = picture(PUSH_LANE_7x7, { buttonLib: {} });
+        // (4,4), just outside the door, is still reachable.
+        const r = reach(w, bfsSolver, createState(w),
+            (s) => s.player_pos.x === 4 && s.player_pos.y === 4, { budget: 20000 });
+        expect(r.ok).toBe(true);
+    });
+});
+
+describe('serializeMazeEntities / deserializeMazeWorld round trip', () => {
+    const oldSidecar = () => ({
+        width: 4,
+        height: 3,
+        tiles: [
+            1, 1, 1, 1,
+            1, 0, 0, 1,
+            1, 1, 1, 1,
+        ],
+        entrance: { x: 1, y: 1 },
+        exits: [{ exit_id: 'exit', x: 2, y: 1 }],
+        obstacles: [],
+        items: [],
+    });
+
+    it('emits NOTHING for a world with no blocks, no buttons and no buttonLib', () => {
+        expect(serializeMazeEntities(createWorld(4, 4))).toEqual({});
+    });
+
+    it('a sidecar written before this slice loads exactly as it did (literal fixture)', () => {
+        const w = deserializeMazeWorld(oldSidecar());
+        expect(w.blocks.size).toBe(0);
+        expect(w.buttons.size).toBe(0);
+        expect(w.buttonLib).toEqual({});
+        expect('blocks' in createState(w)).toBe(false);
+        expect(mazeVisitedKey(createState(w))).toBe('1,1|');
+    });
+
+    it('round-trips blocks, buttons and the button library', () => {
+        const w = picture(PUSH_LANE_7x7);
+        const entities = serializeMazeEntities(w);
+        expect(entities).toEqual({
+            blocks: [{ x: 3, y: 2 }],
+            buttons: [{ x: 2, y: 4, id: 'button_A' }],
+            buttonLib: { button_A: BUTTON_A_ENTRY },
+        });
+        const sidecar = {
+            width: w.width,
+            height: w.height,
+            tiles: Array.from(w.tiles),
+            entrance: { x: w.entrance.x, y: w.entrance.y },
+            exits: [...w.exits.values()].map((e) => ({ exit_id: e.exit_id, x: e.x, y: e.y })),
+            obstacles: [...w.obstacles].map(([k, id]) => {
+                const [x, y] = k.split(',').map(Number);
+                return { x, y, id };
+            }),
+            items: [...w.items].map(([k, id]) => {
+                const [x, y] = k.split(',').map(Number);
+                return { x, y, id };
+            }),
+            obstacleLib: { door_A: DOOR_A_ENTRY },
+            itemLib: { flag_B: FLAG_B_ENTRY },
+            ...entities,
+        };
+        const restored = deserializeMazeWorld(sidecar);
+        expect(serializeMazeEntities(restored)).toEqual(entities);
+        expect(createState(restored).blocks).toEqual(['3,2']);
+        // ⛓ AND IT STILL SOLVES — the fixed point alone would only prove the
+        // reader and the writer agree with each other (a consistently-wrong
+        // pair round-trips perfectly), so the restored world is re-certified
+        // against the SAME literal plan the original produced.
+        const r = reach(restored, bfsSolver, createState(restored),
+            (s) => s.inventory.has('flag_B'), { budget: 20000 });
+        expect(r.steps).toBe(18);
+        expect(r.expanded).toBe(137);
+    });
+
+    it('sorts its rows row-major, so the emission is a function of the SET', () => {
+        const w = createWorld(6, 6);
+        setBlock(w, 4, 3);
+        setBlock(w, 1, 1);
+        setBlock(w, 2, 3);
+        setButton(w, 5, 5, 'button_z');
+        setButton(w, 1, 0, 'button_a');
+        expect(serializeMazeEntities(w).blocks)
+            .toEqual([{ x: 1, y: 1 }, { x: 2, y: 3 }, { x: 4, y: 3 }]);
+        expect(serializeMazeEntities(w).buttons)
+            .toEqual([{ x: 1, y: 0, id: 'button_a' }, { x: 5, y: 5, id: 'button_z' }]);
+    });
+});
+
+describe('the node cap is the budget (⚖ ruling 6)', () => {
+    it('refuses BY NAME rather than running longer', () => {
+        // An 11×11 open room with three free blocks: 121 × C(120,3) ≈ 34M
+        // states. The cap stops it at 20000 expansions and says why.
+        const w = createWorld(11, 11, {
+            entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'exit', x: 10, y: 10 }],
+        });
+        for (const p of [{ x: 3, y: 3 }, { x: 7, y: 3 }, { x: 3, y: 7 }]) setBlock(w, p.x, p.y);
+        const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 20000 });
+        expect(r.ok).toBe(false);
+        expect(r.reason).toBe('budget_exceeded');
+        expect(r.expanded).toBe(20000);
+    });
+
+    it('the SAME room with no blocks is 119 expansions', () => {
+        const w = createWorld(11, 11, {
+            entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'exit', x: 10, y: 10 }],
+        });
+        const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 20000 });
+        expect(r.ok).toBe(true);
+        expect(r.expanded).toBe(119);
     });
 });
