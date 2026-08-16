@@ -3180,8 +3180,18 @@ wiring the maze generator into `generateRegionCore` (lab arm first), promoting
 ## 5g. The PROCGEN ELEMENTS design — pass 1 = elements + connectors, the intra-level AREA GRAPH (JS MetaZelda), pass 2 site-typed on carved rooms; both substrates (design opened 2026-08-15, post-dates this doc)
 
 **Status: DESIGNED 2026-08-15 (Fable planning session — the one constructive-
-mode ruling 11 called for; conversation first, then records). Arc 1 kickoff
-READY; nothing implemented yet.** Plan docs *(NewDocs)*:
+mode ruling 11 called for; conversation first, then records). ARC 1 CLOSED
+2026-08-15 — three slices in a worktree, ff-merged: `193bb48a0` (the
+`procgenCore/areaGraph.js` module, JS MetaZelda) · `3dbe78449`/`76c0d53db` (the
+maze area binding: AREA = a blob with a 2×2 floor square, so lattice mazes have
+no areas and `rooms`/`chambers=k` do; a lock on EVERY boundary cell of an area at
+its key level; graphify edges RECORDED, not carved; one flood verifies every
+level; `--areas=` via one `areaSpec.js` codec) · `6c4516c43`..`cbd4327b5`
+(rule-directed `require:[K]` proved by the BFS differential — 148/148 cuts,
+measured; the lab page's SIBLING area overlay; `?areas=`/`?require=` in the ONE
+reader/writer with VALUE claims; arc-1 kickoff §10.12 answers §7). NEXT: arc 2
+(the reverse-pull block→switch gadget on the maze; the element contract; BFS
+over block state) — kickoff to be written by the design session.** Plan docs *(NewDocs)*:
 `procgen-elements-design.md` (the DESIGN — §1 rulings 1–20, §3 the Cloudberry
 re-read + the MetaZelda read, §4 the three layers, §5 the element catalogue
 from the ActionScript source, §6 the roadmap of arcs, §7 open questions) and
