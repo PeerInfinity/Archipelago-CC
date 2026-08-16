@@ -453,6 +453,70 @@ try {
         + 'through the protocol without the panel learning a field',
         `${JSON.stringify(carvedNav.skeleton)} / ${carvedNav.url}`);
 
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS ARC 1 SLICE 3 — AND SO DOES `?areas=`, WITH A
+     * **VALUE** CLAIM AT THE END OF IT (trap 269).
+     *
+     * ⛔ The echo half (the frame's own URL names the spec) is NOT the claim:
+     * what is asserted is that the hosted frame BUILT the graph — door
+     * obstacles on its level and a symbol in its readout — and that the
+     * `stateChanged` the HOST received carries the spec back in its `url`. A
+     * page that copied `areas=1` into its bar and generated the plain carve
+     * would satisfy the URL half and fail the level half.
+     *
+     * ⛔ NO NEW `labProtocol` MESSAGE was needed and none was added: `navigate`
+     * already carries a SEARCH STRING and `stateChanged` already carries the
+     * frame's full `url`, so a parameter added to the grammar reaches a host
+     * for free — which is the property this claim is really about.
+     */
+    const areaTapBefore = (await tap()).length;
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId,
+            search: 'seed=1&width=15&height=15&skeleton=rooms&areas=1&count=1&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.areas?.keys === 1 && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to an AREA GRAPH');
+    const areaNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    const areaDoors = (areaNav.level?.obstacles ?? [])
+        .filter((o) => String(o.id).startsWith('door_K')).length;
+    check(areaNav.areaGraph?.ran === true && areaDoors > 0
+        && areaNav.areaGraph.symbols.length === 1,
+    '⛓⛓ a `?areas=1` navigate reaches the hosted frame and the frame BUILT the graph — '
+        + `${areaDoors} door obstacle(s) on its own level`,
+    `${json(areaNav.areaGraph?.symbols)} / ${areaDoors} doors`);
+    const areaStates = (await tap()).slice(areaTapBefore).filter(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === maze.iframeId);
+    check(areaStates.some((e) => new URLSearchParams(new URL(e.data.url).search)
+        .get('areas') === '1'),
+    '⛓⛓ …and the `stateChanged` the HOST received carries the area spec back in its url — '
+        + 'no new protocol message, because a search string already crosses the frame',
+    areaStates.length ? areaStates[areaStates.length - 1].data.url : '(no stateChanged)');
+
+    /**
+     * ⛓⛓ AND THE FRAME IS PUT BACK WHERE THE ROW'S LATER CLAIMS EXPECT IT —
+     * a defect this insertion CAUSED and its own run reported. Claim 8 asserts
+     * that the panel's status line names `seed 5`, which is the state the LAST
+     * navigate left; a new navigate in the middle of the row silently moved it,
+     * and the row went red on a claim that has nothing to do with areas.
+     * ⇒ **a browser row whose later claim reads "the state now" is coupled to
+     * the ORDER of everything before it**, and an inserted block owes it a
+     * restore. ⛔ Not seed 5 for the area claim itself: 15x15 `rooms` seed 5
+     * REFUSES the graph (`goal-area-is-not-at-the-highest-key-level`), which is
+     * exactly the acceptance table this arc measured and not a subject to force.
+     */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId, search: 'seed=5&count=2&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.seed === 5 && window.__mazeLab?.step === 2
+            && window.__mazeLab?.areas?.keys === 0,
+        'the maze frame to return to the seed-5 state the later claims read');
+
     /* ── CLAIM 5: selectTile, with the rectangle re-read ───────────── */
 
     /**

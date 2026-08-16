@@ -65,6 +65,15 @@
  *     the trace pane prints the flood's own sentence naming the entrance, the
  *     goal and the rule's soundness bound. ⛔ A VALUE claim, not an echo: the
  *     cell is chosen without asking `refusalAt` anything (trap 269).
+ * 11. **`?areas=`** (PROCGEN ELEMENTS arc 1) — the spec reaches the MODEL and
+ *     the page's level IS node's `--areas=1` level byte for byte; the DOORS and
+ *     the KEY are counted on it here; the LEGEND names each symbol once; LAYER
+ *     ▶ steps the overlay without touching the ladder or the URL; a REFUSED
+ *     graph prints the module's own reason and still shows its carved level.
+ * 12. **`?require=`** — the directive is MET with the BFS differential as its
+ *     proof and changes nothing about the level; `?require=K1` at `?areas=1`
+ *     REFUSES BY NAME and the page then offers NO level and NO payload; a
+ *     non-symbol refuses at the parameter.
  *     ⛓ **10b (slice 6b)** — the same directive on an `empty` **3x3** room is
  *     `ILLEGAL_PLACEMENT` too, and the pane's sentence names that room's own
  *     kind. ⚖ The user dropped the rule's kind scope on 2026-08-15; 3x3 is the
@@ -312,6 +321,44 @@ console.log(`node: OPEN-room pre-check subject = seed ${OPEN_PRECHECK.seed} empt
     + `len=${OPEN_PRECHECK.len}) at (${OPEN_PRECHECK.tx},${OPEN_PRECHECK.ty}) seals `
     + `(${OPEN_PRECHECK.entrance.x},${OPEN_PRECHECK.entrance.y})->`
     + `(${OPEN_PRECHECK.goal.x},${OPEN_PRECHECK.goal.y})`);
+
+/**
+ * ⛓⛓⛓ THE AREA SUBJECT IS **MEASURED**, NOT PICKED (⚖ arc-1 §9.5's acceptance
+ * table, re-measured here): `rooms` at 15x15 with one key accepts 20 of 24
+ * seeds, and 11x11 with two accepts 4 — so a page defaulting to 11x11 shows a
+ * REFUSAL most of the time and that is the honest state. This row needs one
+ * seed of each, and it SCANS for them rather than hard-coding a number that a
+ * later change to the partition would silently turn into the wrong subject.
+ */
+const AREA_ROOM = { width: 15, height: 15 };
+let AREA_SUBJECT = null;
+let AREA_REFUSAL = null;
+for (let seed = 1; seed <= 24 && !(AREA_SUBJECT && AREA_REFUSAL); seed += 1) {
+    if (!AREA_SUBJECT) {
+        const st = generateStep({ seed, step: 0, ...AREA_ROOM, skeleton: { kind: 'rooms' },
+            areas: { keys: 1 } });
+        if (st.model.areas.ran) AREA_SUBJECT = { seed, areas: st.model.areas };
+    }
+    if (!AREA_REFUSAL) {
+        const st = generateStep({ seed, step: 0, width: 11, height: 11,
+            skeleton: { kind: 'rooms' }, areas: { keys: 2 } });
+        if (!st.model.areas.ran) AREA_REFUSAL = { seed, reason: st.model.areas.refused.reason };
+    }
+}
+if (!AREA_SUBJECT) {
+    throw new Error('check-maze-lab: no `rooms` 15x15 seed in 1..24 runs the area graph at one '
+        + 'key — the acceptance table this row rests on (20/24) has moved and the claims '
+        + 'below would be about nothing.');
+}
+if (!AREA_REFUSAL) {
+    throw new Error('check-maze-lab: no `rooms` 11x11 seed in 1..24 REFUSES two keys — the '
+        + 'honest-refusal claim has no subject.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: AREA subject = seed ${AREA_SUBJECT.seed} rooms 15x15 keys=1 -> `
+    + `${AREA_SUBJECT.areas.doors.length} door(s), ${AREA_SUBJECT.areas.keys.length} key(s), `
+    + `symbols [${AREA_SUBJECT.areas.graph.symbols.join(', ')}]; REFUSAL subject = seed `
+    + `${AREA_REFUSAL.seed} rooms 11x11 keys=2 -> ${AREA_REFUSAL.reason}`);
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE BROWSER
@@ -812,6 +859,148 @@ try {
         + '(`empty`) — a VALUE claim: a page still running the kind-scoped build could not '
         + 'print this line at all',
     (openPane.match(/[^\n]*would SEAL the room[^\n]*/) ?? ['(absent)'])[0].slice(0, 240));
+
+    /* ── CLAIM 11: `?areas=` — THE AREA GRAPH ON THE PAGE (ELEMENTS 1.3) ── */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM, AND THE ANCHOR IS THE OTHER RUNTIME'S BYTES
+     * (trap 269 / slice 5's §12.8 defect, which this arc's own mutant (b)
+     * re-ran): the page must pass `?areas=` to `generateWithDirectives`, not
+     * merely echo it into the bar and the identity line. What separates the two
+     * is the LEVEL — its doors, its key and its grid — compared byte for byte
+     * against `generate-maze-level.mjs --areas=1` for the same seed.
+     */
+    const areaCli = cli([`--seed=${AREA_SUBJECT.seed}`, '--count=2', '--width=15', '--height=15',
+        '--skeleton=rooms', '--areas=1']);
+    const areaWeb = await load(`seed=${AREA_SUBJECT.seed}&width=15&height=15&skeleton=rooms`
+        + '&areas=1&count=2&run=1',
+    () => window.__mazeLab?.step === 2 && window.__mazeLab?.areaGraph?.ran,
+    'the areas ladder to reach step 2 with a graph');
+    check(json(areaWeb.level) === json(areaCli.level),
+        '⛓⛓ ?areas=1 reached the MODEL — the BROWSER\'s level (grid, obstacles AND items) IS '
+        + 'node\'s, byte for byte',
+        `${json(areaWeb.level).length} vs ${json(areaCli.level).length} bytes`);
+    // ⛓ COUNTED OFF THE SERIALIZED LEVEL'S OWN ARRAYS (`[{x,y,id}]`), which is
+    // the shape the CLI writes and the page's LOAD box reads.
+    const doorsIn = (level) => (level.obstacles ?? [])
+        .filter((o) => String(o.id).startsWith('door_K')).length;
+    const keysIn = (level) => (level.items ?? [])
+        .filter((o) => String(o.id).startsWith('key_K')).length;
+    check(doorsIn(areaWeb.level) === AREA_SUBJECT.areas.doors.length
+        && doorsIn(areaWeb.level) > 0,
+    '⛓⛓ …and the DOOR obstacles on the page\'s level are the doors the binding placed, '
+        + 'counted here rather than read off the page\'s own summary',
+    `${doorsIn(areaWeb.level)} doors on the page vs ${AREA_SUBJECT.areas.doors.length} in the `
+        + 'model');
+    check(keysIn(areaWeb.level) === 1 && areaWeb.areaGraph.symbols.length === 1,
+        '⛓ …one KEY item per symbol, on the grid',
+        `${keysIn(areaWeb.level)} key(s), symbols ${json(areaWeb.areaGraph.symbols)}`);
+    /** ⚠ §9.11(6): the LEGEND names each symbol ONCE — never a label per cell. */
+    check(json(areaWeb.areaLegend.map((r) => r.symbol)) === json(areaWeb.areaGraph.symbols)
+        && areaWeb.areaLegend.every((r) => r.doorCount > 0),
+    '⛓ the LEGEND lists exactly the symbols the LEVEL carries, one row each, with the door '
+        + 'COUNT rather than a label per door',
+    json(areaWeb.areaLegend.map((r) => `${r.symbol}:${r.doorCount}`)));
+    check(new URLSearchParams(areaWeb.url).get('areas') === '1'
+        && /areas: 1/.test(areaWeb.identity),
+    '⛓ the bar and the identity line name the spec (the ECHO half — kept because a link that '
+        + 'does not name its graph is not a link to this level)', areaWeb.url);
+    /** ⛓ THE LAYER STEPPER — a VIEW control: it re-draws and does NOT reset. */
+    const layersSeen = [areaWeb.areaLayer];
+    for (const want of ['off', 'partition', 'locks', 'keys', 'all']) {
+        // eslint-disable-next-line no-await-in-loop
+        await page.click('#labAreaLayerNext');
+        /**
+         * ⛔ THE PREDICATE IS A **STRING**, because it runs in the PAGE: a
+         * closure over this file's `layersSeen` is not defined there, which is
+         * a ReferenceError the row reported as a STUCK wait until it was fixed.
+         */
+        // eslint-disable-next-line no-await-in-loop
+        await settled(`window.__mazeLab?.areaLayer === ${json(want)}`,
+            `the layer to advance to ${want}`);
+        // eslint-disable-next-line no-await-in-loop
+        layersSeen.push((await read()).areaLayer);
+    }
+    check(json(layersSeen) === json(['all', 'off', 'partition', 'locks', 'keys', 'all']),
+        '⛓⛓ LAYER ▶ steps through the declared layers and wraps — skeleton → partition → '
+        + 'graph → keys', json(layersSeen));
+    const afterLayers = await read();
+    check(afterLayers.step === 2 && json(afterLayers.level) === json(areaCli.level),
+        '⛔ …and stepping the LAYERS re-draws only: the ladder, the level and the bar are '
+        + 'unmoved, and the layer is NOT in the URL (a view setting is not what was built)',
+        `step ${afterLayers.step}, ?layer=${new URLSearchParams(afterLayers.url).get('layer')}`);
+    /** ⛓ THE HONEST REFUSAL — the page prints the module's own reason. */
+    const refusedAreas = await load(`seed=${AREA_REFUSAL.seed}&skeleton=rooms&areas=2&count=0`
+        + '&run=1', () => window.__mazeLab?.areaGraph?.ran === false
+        && window.__mazeLab?.areas?.keys === 2, 'the refused area graph');
+    check(refusedAreas.areaGraph.refused?.reason === AREA_REFUSAL.reason
+        && refusedAreas.areaNote.includes(AREA_REFUSAL.reason)
+        && refusedAreas.identity.includes(`⛔ the area graph REFUSED: ${AREA_REFUSAL.reason}`),
+    '⛓⛓ a REFUSED graph prints the module\'s OWN reason where the level would be — the '
+        + 'honest 11x11-at-two-keys state, not a widened bound',
+    `${AREA_REFUSAL.reason} | ${refusedAreas.areaNote.slice(0, 120)}`);
+    check(refusedAreas.level !== null,
+        '⛓ …and the CARVED level is still shown, because it IS the level this run produced '
+        + '(it simply has no locks) — which is what separates it from a refused DIRECTIVE');
+
+    /* ── CLAIM 12: `?require=` — RULE-DIRECTED ON THE PAGE ────────────── */
+    /**
+     * ⛓⛓⛓ THE DIFFERENTIAL, ON THE PAGE. A met directive carries the PROOF
+     * (`planWithoutKey === null`), and a directive the key count cannot admit
+     * is a REFUSED RUN: the reason is printed where the level would be, and
+     * ⛔ **NO LEVEL AND NO PAYLOAD ARE OFFERED** — a run that did not produce
+     * what was asked for must not be shown as if it had.
+     */
+    const met = await load(`seed=${AREA_SUBJECT.seed}&width=15&height=15&skeleton=rooms`
+        + '&areas=1&require=K0&count=2&run=1',
+    () => window.__mazeLab?.requireResult, 'the directive to be answered');
+    check(met.requireResult.refused === null
+        && met.requireResult.met[0].symbol === 'K0'
+        && met.requireResult.met[0].grade === 'STRONG'
+        && met.requireResult.met[0].planWithoutKey === null,
+    '⛓⛓ ?require=K0 is MET and its PROOF is the BFS differential — the goal is '
+        + `${met.requireResult.met[0]?.planWith} step(s) away WITH the key and UNREACHABLE `
+        + 'without it', json(met.requireResult.met[0]));
+    check(json(met.level) === json(areaCli.level),
+        '⛔ …and the directive changed NOTHING about the level: it is a QUESTION asked of the '
+        + 'run, not a search that re-rolls it (the same bytes as the run without it)');
+    check(/require K0 MET — K0 STRONG/.test(met.identity),
+        '⛓ the identity line states the grade', met.identity);
+    const refusedReq = await load(`seed=${AREA_SUBJECT.seed}&width=15&height=15&skeleton=rooms`
+        + '&areas=1&require=K1&count=2&run=1',
+    () => window.__mazeLab?.requireResult?.refused, 'the refused directive');
+    check(refusedReq.requireResult.refused.reason
+        === 'no-key-level-admits-this-symbol-within-maxkeys'
+        && refusedReq.areaNote.includes('no-key-level-admits-this-symbol-within-maxkeys')
+        && /No bound is widened/.test(refusedReq.areaNote),
+    '⛓⛓ ?require=K1 with ?areas=1 REFUSES BY NAME, and the page prints the sentence where '
+        + 'the level would be — ⛔ no bound is widened to meet a directive',
+    refusedReq.areaNote.slice(0, 160));
+    check(refusedReq.level === null && refusedReq.payload === null,
+        '⛔ …and there is NO LEVEL and NO PAYLOAD to hand out: the run did not produce what '
+        + 'was asked for', `level=${refusedReq.level}, payload=${refusedReq.payload}`);
+    const canvasHidden = await page.$eval('#canvas', (n) => n.hidden);
+    check(canvasHidden === true,
+        '⛓ …read off the DOM as well as off the readout: the canvas itself is not shown');
+    /** ⛔ A refusal by name on the PARAMETER, before any generation. */
+    await page.goto(`${PAGE}?require=key_red`, { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of a non-symbol');
+    const badRequire = await read();
+    check(/\?require="key_red"/.test(badRequire.fatal ?? '')
+        && /is not an area-graph symbol/.test(badRequire.fatal ?? ''),
+    '⛔ ?require=key_red REFUSES BY NAME, naming the parameter and the vocabulary',
+    badRequire.fatal);
+    /** ⛓ THE SELECTOR — the spec reaches the URL through the form, and RESETS. */
+    await page.goto(`${PAGE}?seed=${AREA_SUBJECT.seed}&width=15&height=15&skeleton=rooms`
+        + '&count=2&run=1', { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.step === 2, 'the ladder before the area selector');
+    await page.selectOption('#labAreas', '1');
+    await settled(() => window.__mazeLab?.areas?.keys === 1 && window.__mazeLab?.step === 0,
+        'the area selector to reset to the skeleton');
+    const selectedAreas = await read();
+    check(new URLSearchParams(selectedAreas.url).get('areas') === '1'
+        && selectedAreas.step === 0 && selectedAreas.areaGraph.ran === true,
+    '⛓⛓ the SELECTOR writes ?areas=1 into the bar and RESETS the ladder — the graph is built '
+        + 'with the MODEL, so a ladder cannot span two of them', selectedAreas.url);
 
     check(errors.length === 0, 'STILL zero console errors after every arm was driven',
         errors.join(' | '));

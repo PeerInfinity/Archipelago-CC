@@ -799,3 +799,186 @@ describe('mazeLab — the skeleton kind', () => {
         expect(rows.find((r) => r.kind === 'classic').params).toEqual([]);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE AREA GRAPH AND THE DIRECTIVE — ELEMENTS ARC 1, SLICE 3
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLab — ?areas= and ?require=', () => {
+    /** ⛓ 15x15 `rooms` at one key: where the acceptance table says a graph runs. */
+    const BIG = { width: 15, height: 15, skeleton: { kind: 'rooms' } };
+    const BOUNDS = {
+        obstacleTarget: 2, triesPerStep: 4, saturationK: 3, anchorTriesPerCandidate: 1,
+    };
+
+    it('READS both parameters, and their ABSENCE is the default', () => {
+        const bare = readLabParams('?seed=3');
+        expect(bare.areas).toEqual({ keys: 0 });
+        expect(bare.require).toBe(null);
+        const p = readLabParams('?seed=3&areas=2%3Bgraphify%3D0.5&require=K0,K1');
+        expect(p.areas).toEqual({ keys: 2, params: { graphify: 0.5 } });
+        expect(p.require).toEqual(['K0', 'K1']);
+    });
+
+    it('WRITES the LITERAL values, and DELETES both at their defaults', () => {
+        const args = {
+            source: SOURCES.GENERATE, seed: 3, biome: DEFAULT_MAZE_BIOME, width: 11, height: 11,
+            bounds: { obstacleTarget: 2, triesPerStep: 8, saturationK: 3,
+                anchorTriesPerCandidate: 1 },
+            budget: { maxExpansions: 20000 }, step: 0,
+        };
+        const q = new URLSearchParams(writeLabParams('', {
+            ...args, areas: { keys: 2, params: { graphify: 0.5 } }, require: ['K0', 'K1'],
+        }));
+        expect(q.get('areas')).toBe('2;graphify=0.5');
+        expect(q.get('require')).toBe('K0,K1');
+        const bare = new URLSearchParams(writeLabParams('?areas=2&require=K0', args));
+        expect(bare.get('areas')).toBe(null);
+        expect(bare.get('require')).toBe(null);
+    });
+
+    /**
+     * ⛓⛓⛓ THE VALUE CLAIM, NOT THE ECHO (trap 269 / §12.8's defect): the spec
+     * has to reach the MODEL, and what says so is DOORS ON THE GRID — a page
+     * that read the parameter and generated the same room would pass every
+     * readout claim and fail this one.
+     */
+    it('⛓⛓ the spec reaches the MODEL — the level gains DOORS and a KEY', () => {
+        const off = generateStep({ seed: 1, step: 0, ...BIG, bounds: BOUNDS });
+        const on = generateStep({ seed: 1, step: 0, ...BIG, areas: { keys: 1 }, bounds: BOUNDS });
+        expect(off.model.areas.ran).toBe(false);
+        expect(on.model.areas.ran).toBe(true);
+        const doors = [...on.record.obstacles.values()].filter((id) => id.startsWith('door_K'));
+        const keys = [...on.record.items.values()].filter((id) => id.startsWith('key_K'));
+        expect(doors.length).toBe(on.model.areas.doors.length);
+        expect(doors.length).toBeGreaterThan(0);
+        expect(keys).toEqual(['key_K0']);
+        // ⛔ …and the room WITHOUT areas carries none of them, so the row above
+        // is about the spec rather than about the carve.
+        expect([...off.record.obstacles.values()].some((id) => id.startsWith('door_K')))
+            .toBe(false);
+        expect(JSON.stringify(serializeMazeLevel(on.record)))
+            .not.toBe(JSON.stringify(serializeMazeLevel(off.record)));
+    });
+
+    it('⛓ the DIRECTIVE is answered at step 0 AND at a ladder rung, with the same proof', () => {
+        const zero = generateStep({
+            seed: 1, step: 0, ...BIG, areas: { keys: 1 }, require: ['K0'], bounds: BOUNDS,
+        });
+        const three = generateStep({
+            seed: 1, step: 3, ...BIG, areas: { keys: 1 }, require: ['K0'], bounds: BOUNDS,
+        });
+        for (const st of [zero, three]) {
+            expect(st.requireResult.refused).toBe(null);
+            expect(st.requireResult.met[0].grade).toBe('STRONG');
+            expect(st.requireResult.met[0].planWithoutKey).toBe(null);
+        }
+        // ⛔ and NO directive means NO result object at all
+        expect(generateStep({ seed: 1, step: 0, ...BIG, areas: { keys: 1 }, bounds: BOUNDS })
+            .requireResult).toBe(null);
+    });
+
+    it('⛔ a REFUSED directive is reported BY NAME on the state, at both rungs', () => {
+        for (const step of [0, 2]) {
+            const st = generateStep({
+                seed: 1, step, ...BIG, areas: { keys: 1 }, require: ['K1'], bounds: BOUNDS,
+            });
+            expect(st.requireResult.refused.reason)
+                .toBe('no-key-level-admits-this-symbol-within-maxkeys');
+            expect(st.requireResult.met).toEqual([]);
+        }
+    });
+
+    it('the IDENTITY LINE names the spec and the directive, and stays SILENT at the default', () => {
+        const st = generateStep({
+            seed: 1, step: 0, ...BIG, areas: { keys: 1 }, require: ['K0'], bounds: BOUNDS,
+        });
+        const line = describeState(st);
+        expect(line).toMatch(/areas: 1/);
+        expect(line).toMatch(/requires: K0/);
+        expect(line).toMatch(/require K0 MET — K0 STRONG/);
+        expect(line).toMatch(/areas: \d+ area\(s\), 1 symbol\(s\) \[K0\]/);
+        const plain = describeState(generateStep({ seed: 1, step: 0, ...ROOM }));
+        expect(plain).not.toMatch(/areas:/);
+        expect(plain).not.toMatch(/requires:/);
+    });
+
+    it('⛔ the identity line prints the module\'s OWN refusal, verbatim', () => {
+        /** ⛓ 11x11 at two keys — the honest refusal the acceptance table found. */
+        const st = generateStep({
+            seed: 2, step: 0, width: 11, height: 11, skeleton: { kind: 'rooms' },
+            areas: { keys: 2 }, bounds: BOUNDS,
+        });
+        expect(st.model.areas.ran).toBe(false);
+        expect(describeState(st)).toContain(`⛔ the area graph REFUSED: `
+            + `${st.model.areas.refused.reason}`);
+    });
+
+    it('the PAYLOAD carries both, and `agreementWithPayload` REPORTS a mismatch by name', () => {
+        const st = generateStep({
+            seed: 1, step: 2, ...BIG, areas: { keys: 1 }, require: ['K0'], bounds: BOUNDS,
+        });
+        const payload = labPayload(st);
+        expect(payload.areas).toEqual({ keys: 1 });
+        expect(payload.require).toEqual(['K0']);
+        expect(agreementWithPayload(payload, st).agrees).toBe(true);
+        // ⛓ a payload built with a DIFFERENT graph is a reported difference,
+        // named — not a silent agreement and not a throw.
+        const other = agreementWithPayload({ ...payload, areas: { keys: 2 } }, st);
+        expect(other.agrees).toBe(false);
+        expect(other.differences).toContain('areas');
+        // ⛔ …and a payload naming a value THIS BUILD does not declare is
+        // REPORTED rather than thrown at (§14.7's lesson, on the second spec).
+        const retired = agreementWithPayload(
+            { ...payload, areas: { keys: 1, params: { partition: 'grid' } } }, st);
+        expect(retired.agrees).toBe(false);
+        expect(retired.differences).toContain('areas');
+        // ⛓ a payload written BEFORE this slice carries neither field and still
+        // AGREES with a page at the defaults (the both-sides default).
+        const old = labPayload(generateStep({ seed: 1, step: 2, ...BIG, bounds: BOUNDS }));
+        delete old.areas;
+        delete old.require;
+        expect(agreementWithPayload(old, generateStep({
+            seed: 1, step: 2, ...BIG, bounds: BOUNDS,
+        })).agrees).toBe(true);
+    });
+
+    it('a LOADED payload reports the graph it names, and derives nothing', () => {
+        const st = generateStep({
+            seed: 1, step: 1, ...BIG, areas: { keys: 1 }, require: ['K0'], bounds: BOUNDS,
+        });
+        const back = loadPayload(labPayload(st));
+        expect(back.areas).toEqual({ keys: 1 });
+        expect(back.require).toEqual(['K0']);
+        // ⛔ nothing is re-derived: the loaded model is built at the OPEN room
+        // without areas, so there is no graph to draw and no proof to claim.
+        expect(back.requireResult).toBe(null);
+        expect(back.model.areas.ran).toBe(false);
+    });
+
+    it('the URL round trip is a FIXED POINT — asserted only after the literals above', () => {
+        const search = 'source=generate&seed=1&biome=maze-v1&width=15&height=15&count=2'
+            + '&tries=4&k=3&anchortries=1&skeleton=rooms&areas=1&require=K0&expansions=20000';
+        const p = readLabParams(`?${search}`);
+        const st = generateWithDirectives({ ...p, step: stepFromParams(p) });
+        const written = writeLabParams(`?${search}`, {
+            source: p.source, seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: st.step, roster: st.roster,
+            directives: st.directives, skeleton: st.skeleton, areas: st.areas,
+            require: st.require,
+        });
+        const again = readLabParams(`?${written}`);
+        expect(again.areas).toEqual(p.areas);
+        expect(again.require).toEqual(p.require);
+        expect(JSON.stringify(serializeMazeLevel(
+            generateWithDirectives({ ...again, step: stepFromParams(again) }).record,
+        ))).toBe(JSON.stringify(serializeMazeLevel(st.record)));
+    });
+
+    it('⛔ REFUSES a malformed value BY NAME, naming the parameter', () => {
+        expect(() => readLabParams('?areas=9')).toThrow(UrlParamsError);
+        expect(() => readLabParams('?areas=9')).toThrow(/\?areas="9"/);
+        expect(() => readLabParams('?require=key_red')).toThrow(/\?require="key_red"/);
+        expect(() => readLabParams('?require=')).toThrow(/an EMPTY `require` list/);
+    });
+});

@@ -61,10 +61,13 @@ import {
 } from '../procgenCore/levelGenerator.js';
 import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/paletteRoster.js';
 import {
-    ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readBounds,
-    readRosterSpec, readSkeleton, writeBounds, writeDirectedParam, writeInt, writeRosterParam,
-    writeRunFlag, writeSkeletonParam,
+    ANCHOR_SALT, PARAM_SALT, directiveSeed, intParam, parseDirectives, readAreas, readBounds,
+    readRequire, readRosterSpec, readSkeleton, writeAreasParam, writeBounds, writeDirectedParam,
+    writeInt, writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
+import {
+    DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec,
+} from '../procgenCore/areaSpec.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, SKELETON_KINDS, formatSkeleton,
     normalizeSkeleton,
@@ -73,8 +76,8 @@ import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor
 import { createState, step } from './mazeRoomEngine.js';
 import {
     DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
-    cloneWorld, deserializeMazeLevel, generateMazeLevel, mazeModel, mazeOracle,
-    serializeMazeLevel,
+    cloneWorld, deserializeMazeLevel, generateMazeLevel, mazeCostRecords, mazeModel, mazeOracle,
+    requireOutcome, serializeMazeLevel,
 } from './procgenMaze.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
@@ -217,6 +220,14 @@ export function readLabParams(search) {
         bounds: readBounds(q),
         /** ⛓ SLICE 5 — the room the loop starts from. Absent is the open room. */
         skeleton: readSkeleton(q, { simulator: true, substrate: 'the maze lab page' }),
+        /**
+         * ⛓⛓ PROCGEN ELEMENTS arc 1 slice 3 — the AREA GRAPH and the RULE
+         * DIRECTIVE. Absent `?areas=` is `{keys: 0}`, at which the binding does
+         * not partition, does not call the module and spends no draw — so a
+         * link without it is the page this arc found (⚖ arc ruling 3).
+         */
+        areas: readAreas(q),
+        require: readRequire(q),
         budget: { maxExpansions: intParam(q, 'expansions', DEFAULT_MAZE_BUDGET.maxExpansions) },
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
         gen: q.get('gen'),
@@ -243,6 +254,7 @@ export function readLabParams(search) {
 export function writeLabParams(search, {
     source = SOURCES.GENERATE, seed, biome, width, height, bounds, budget, step,
     roster = null, directives = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
+    areas = DEFAULT_AREAS, require = null,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -259,6 +271,14 @@ export function writeLabParams(search, {
      * refuses on the way out whatever the one reader would refuse.
      */
     writeSkeletonParam(q, skeleton, { simulator: true, substrate: 'the maze lab page' });
+    /**
+     * ⛓ SLICE 3 — DELETED at `{keys: 0}` and at no directive, for the reason
+     * `?skeleton=` is deleted at the open room: the default is spelled by
+     * absence, and the writer rewrites IN PLACE so a spec change does not move
+     * the parameter to the end of the bar (trap 245).
+     */
+    writeAreasParam(q, areas);
+    writeRequireParam(q, require);
     writeInt(q, 'expansions', budget.maxExpansions);
     writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
     writeDirectedParam(q, directives, paletteFor(biome));
@@ -294,7 +314,7 @@ export { stepFromParams } from '../procgenCore/urlParams.js';
  */
 export function generateStep({
     seed, biome = DEFAULT_MAZE_BIOME, step, bounds, budget, width, height, roster = null,
-    skeleton = DEFAULT_SKELETON,
+    skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
 } = {}) {
     const palette = restrictPalette(paletteFor(biome), roster);
     const b = assertMazeBudget(budget ?? DEFAULT_MAZE_BUDGET);
@@ -327,15 +347,39 @@ export function generateStep({
          * a both-sides default.
          */
         skeleton: normalizeSkeleton(skeleton ?? DEFAULT_SKELETON),
+        /**
+         * ⛓⛓ SLICE 3 — THE AREA SPEC AND THE DIRECTIVE, on every state, in the
+         * one normalized spelling, so the URL writer, the payload comparison
+         * and the identity line all read the same object.
+         */
+        areas: normalizeAreaSpec(areas ?? DEFAULT_AREAS),
+        require: require ? Object.freeze([...require]) : null,
     };
     if (step === 0) {
-        const model = mazeModel({ seed, width, height, skeleton });
+        const model = mazeModel({ seed, width, height, skeleton, areas });
         return Object.freeze({
             ...common,
             model,
             record: model.skeleton(),
             trace: [],
             summary: null,
+            /**
+             * ⛓⛓⛓ THE DIRECTIVE IS ASKED AT **STEP 0 TOO**, and it has to be:
+             * the area graph is built when the MODEL is, before pass 2 exists,
+             * so the skeleton rung is already the level the directive is about.
+             * ⛔ Its proof is the same ablation the cost records make, so the
+             * page runs `mazeCostRecords` here — a handful of BFS solves on the
+             * room, and ONLY when the area binding ran AND something was asked.
+             */
+            requireResult: require && require.length
+                ? requireOutcome({
+                    require,
+                    areas: model.areas,
+                    elements: model.areas.ran
+                        ? mazeCostRecords({ model, budget: b, record: model.skeleton() }).elements
+                        : [],
+                })
+                : null,
             keptTemplates: [],
             stop: null,
             saturated: false,
@@ -358,6 +402,8 @@ export function generateStep({
         width,
         height,
         skeleton,
+        areas,
+        require,
     });
     return Object.freeze({
         ...common,
@@ -366,6 +412,8 @@ export function generateStep({
         trace: out.trace,
         summary: out.summary,
         keptTemplates: keptTemplatesOf(out.summary, palette),
+        /** ⛓ SLICE 3 — the loop's own answer about the directive, at this rung. */
+        requireResult: out.summary.require ?? null,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.
@@ -521,10 +569,10 @@ export function applyDirective(state, spec, index) {
  */
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, width, height, roster = null, directed = null,
-    skeleton = DEFAULT_SKELETON,
+    skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
 } = {}) {
     let state = generateStep({
-        seed, biome, step, bounds, budget, width, height, roster, skeleton,
+        seed, biome, step, bounds, budget, width, height, roster, skeleton, areas, require,
     });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     return state;
@@ -733,12 +781,34 @@ export function labPayload(state) {
         roster: state.roster ?? null,
         directives: state.directives ?? [],
         skeleton: state.skeleton ?? DEFAULT_SKELETON,
+        /**
+         * ⛓ SLICE 3 — the AREA SPEC and the DIRECTIVE, beside the skeleton's
+         * block and on the same terms: written UNCONDITIONALLY, because a
+         * payload's identity must not depend on which fields happened to be at
+         * their default (`agreementWithPayload` normalizes both sides, so a
+         * payload written before this slice still AGREES).
+         */
+        areas: state.areas ?? DEFAULT_AREAS,
+        require: state.require ?? null,
         edits: state.edits ?? [],
         certified: Boolean(state.certification),
         summary: state.summary,
         level: serializeMazeLevel(state.record),
         trace: state.trace ?? [],
     };
+}
+
+/**
+ * ⛓ NORMALIZE A PAYLOAD'S AREA SPEC WITHOUT VALIDATING IT — §14.7's lesson,
+ * applied to the second spec this page compares. A file naming a value this
+ * build no longer declares must be REPORTED as a difference, not thrown at.
+ */
+function safeAreaSpec(spec) {
+    try {
+        return normalizeAreaSpec(spec);
+    } catch {
+        return spec;
+    }
 }
 
 /**
@@ -803,6 +873,16 @@ export function agreementWithPayload(payload, state) {
      */
     cmp('skeleton', normalizeSkeleton(payload.skeleton ?? DEFAULT_SKELETON, { validate: false }),
         normalizeSkeleton(state.skeleton ?? DEFAULT_SKELETON));
+    /**
+     * ⛓ SLICE 3 — NORMALIZED ON BOTH SIDES with the both-sides default, and
+     * ⛔ the PAYLOAD side WITHOUT VALIDATION, for §14.7's measured reason: a
+     * payload naming a value this build no longer declares is exactly what this
+     * comparison exists to REPORT BY NAME, and a normalizer that refused it
+     * would turn the report into a throw on the file it was asked to explain.
+     */
+    cmp('areas', safeAreaSpec(payload.areas ?? DEFAULT_AREAS),
+        normalizeAreaSpec(state.areas ?? DEFAULT_AREAS));
+    cmp('require', payload.require ?? null, state.require ?? null);
     cmp('level', payload.level, serializeMazeLevel(state.record));
     cmp('trace', payload.trace, state.trace);
     return {
@@ -871,6 +951,15 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
         directives: payload?.directives ?? [],
         edits: payload?.edits ?? [],
         skeleton: payload?.skeleton ?? DEFAULT_SKELETON,
+        /**
+         * ⛓ SLICE 3 — a LOADED level says which graph produced it, and ⛔
+         * nothing is re-derived: the model above is built at the OPEN room and
+         * without areas (its `skeleton()` is never called), so these two fields
+         * are the payload's own report and the overlay has nothing to draw.
+         */
+        areas: payload?.areas ?? DEFAULT_AREAS,
+        require: payload?.require ?? null,
+        requireResult: null,
         stop: null,
         saturated: false,
         bounds: { ...DEFAULT_BOUNDS, ...(payload?.bounds ?? {}) },
@@ -919,10 +1008,19 @@ export function describeState(state, solved = null) {
      * `empty` is not.
      */
     const skelText = formatSkeleton(state.skeleton ?? DEFAULT_SKELETON);
+    /**
+     * ⛓⛓ SLICE 3 — THE AREA SPEC AND THE DIRECTIVE, named only when they are
+     * not the default, in the URL's own spelling and through the SAME
+     * formatters. ⛔ A clause on every level trains a reader to skip it.
+     */
+    const areaText = formatAreaSpec(state.areas ?? DEFAULT_AREAS);
+    const requireText = formatRequireList(state.require);
     const bits = [
         `seed ${state.seed} · ${state.biome} · ${state.width}x${state.height} · step ${state.step}`
             + (skelText === DEFAULT_SKELETON_KIND
                 ? '' : ` · skeleton: ${skelText} (CARVED, not the open room)`)
+            + (areaText === '0' ? '' : ` · areas: ${areaText}`)
+            + (requireText === '' ? '' : ` · requires: ${requireText}`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
             + (edits ? `, then ${edits} manual edit(s)` : ''),
         `palette: ${state.palette?.name ?? '(none)'}`
@@ -938,6 +1036,27 @@ export function describeState(state, solved = null) {
             ? `CERTIFIED — the oracle walked ${state.certification.steps} step(s) to the goal`
             : 'UNCERTIFIED — nothing has solved the world now on screen',
     ];
+    /**
+     * ⛓⛓⛓ THE AREA GRAPH'S OWN SENTENCE — what it DID, or the module's own
+     * REFUSAL. ⛔ Verbatim: the binding's reason is the evidence channel and
+     * this line may print it, never rewrite it.
+     */
+    const info = state.model?.areas ?? null;
+    if (info && info.spec.keys > 0) {
+        bits.push(info.ran
+            ? `areas: ${info.partitionSummary.areaCount} area(s), `
+                + `${info.graph.symbols.length} symbol(s) [${info.graph.symbols.join(', ')}], `
+                + `${info.doors.length} door(s), ${info.keys.length} key(s)`
+            : `⛔ the area graph REFUSED: ${info.refused.reason}`);
+    }
+    if (state.requireResult) {
+        const r = state.requireResult;
+        bits.push(r.refused
+            ? `⛔ require ${formatRequireList(r.asked)} REFUSED: ${r.refused.reason}`
+            : `require ${formatRequireList(r.asked)} MET — `
+                + r.met.map((m) => `${m.symbol} ${m.grade} (the goal is ${m.planWith} step(s) `
+                    + 'away WITH the key and UNREACHABLE without it)').join('; '));
+    }
     if (edits) {
         bits.push('⚠ the URL is NOT a reproduction after edits — the PAYLOAD is '
             + '(download / the save box)');

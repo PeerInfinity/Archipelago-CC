@@ -202,6 +202,17 @@
   #labDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
   #labPalette { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
   #labIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
+  #labAreaNote { margin: 4px 0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
+    line-height: 1.45; display: none; }
+  #labAreaNote.refused { display: block; background: #2a1414; border: 1px solid #6d2a2a;
+    color: #ffb0b0; }
+  #labAreaNote.ran { display: block; background: #14201a; border: 1px solid #2a5d43;
+    color: #a8e6c4; }
+  #labAreaLegend { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; font-size: 12px; }
+  #labAreaLegend .lg { display: flex; align-items: center; gap: 5px; padding: 2px 7px;
+    border: 1px solid #24242c; border-radius: 3px; }
+  #labAreaLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  #labAreaLegend b { color: #ffd75f; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -225,6 +236,14 @@
 <main>
   <div id="stage">
     <canvas id="canvas" width="220" height="220"></canvas>
+    <!-- ⛓⛓⛓ WHERE THE LEVEL WOULD BE. A refused area graph — or a refused
+         `requires` directive — prints the module's OWN reason here, VERBATIM,
+         and a refused DIRECTIVE draws no level at all: a run that did not
+         produce what was asked for must not be shown as if it had. -->
+    <div id="labAreaNote"></div>
+    <!-- ⚠ ONE ROW PER **SYMBOL**, never a label per cell: door counts are not
+         small (up to 50 over eight 15x15 cells — the yield table). -->
+    <div id="labAreaLegend"></div>
 
     <!-- ⛓ EVERY CONTROL HERE IS A BOUND THE LOOP RUNS UNDER, and every one of
          them is echoed into the trace and the readout — a knob whose value
@@ -247,6 +266,23 @@
         <!-- ⛓⛓ ITS PARAMETERS (slice 7) — mounted from the catalogue's schema,
              re-mounted at their defaults on a kind change, read at the press. -->
         <span id="labSkeletonParams"></span>
+      </div>
+      <!-- ⛓⛓⛓ THE AREA GRAPH (PROCGEN ELEMENTS arc 1). `keys` is the HEAD of
+           the one area spec; `requires` is the RULE-DIRECTED directive, whose
+           proof is the BFS differential (remove the key, keep the doors). ⛔ A
+           change to either RESETS the ladder, because a different graph is a
+           different level — the same law a kind change follows. ⚠ THE LAYER is
+           a VIEW setting and is NOT in the URL (⚖ constructive ruling 9): it
+           says which layer of the graph is drawn, not what was built. -->
+      <div class="line">
+        <label for="labAreas">areas (keys)</label>
+        <select id="labAreas"></select>
+        <span id="labAreaParams"></span>
+        <label>requires <input id="labRequire" type="text" placeholder="K0,K1"
+          style="width:7em" spellcheck="false"></label>
+        <label for="labAreaLayer">layer</label>
+        <select id="labAreaLayer"></select>
+        <button id="labAreaLayerNext">LAYER ▶</button>
       </div>
       <div class="line">
         <label>obstacles <input id="labCount" type="number" min="0" step="1" style="width:4em"></label>

@@ -42,6 +42,14 @@
 import { createLifetimeHolder } from '../procgenCore/pageLifetime.js';
 import { describeKeptKind, generationRows, ladderCost, tileAtPoint } from '../procgenCore/labView.js';
 import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
+/**
+ * ⛓⛓⛓ THE AREA OVERLAY IS A **SIBLING** DRAW, called after `drawWorld` exactly
+ * as the plan and the hover overlays are — a graph is a fact about the MODEL,
+ * not a property of the world, and the panel (the renderer's other caller) has
+ * no model at all. It brings its own op-log fixture, so `drawWorld`'s seven
+ * captured hashes stay byte-identical (⚖ arc-1 slice 3).
+ */
+import { AREA_LAYERS, areaLegend, drawAreaOverlay } from './mazeAreaOverlay.js';
 import {
     DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor, PALETTE_ENTRIES,
     SOURCES, agreementWithPayload, applyDirective, applyEdit, certify, describeState,
@@ -53,6 +61,11 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 // ⛓ SLICE 7: the ONE normalizer for a skeleton spec — this form, the identity
 // line and the URL bar all spell a room the same way.
 import { normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
+// ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
+// the URL bar and both CLIs spell a graph the same way.
+import {
+    AREA_PARAM_SCHEMA, KEYS_DOMAIN, formatRequireList, normalizeAreaSpec, parseRequireList,
+} from '../procgenCore/areaSpec.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -83,6 +96,13 @@ export function main() {
     let editor = null;
     let message = '';
     let messageBad = false;
+    /**
+     * ⛓⛓ THE AREA LAYER — a VIEW setting and nothing else. ⛔ It is NOT in the
+     * URL (⚖ constructive ruling 9: the bar describes what was BUILT, and which
+     * layer a reader is looking at is not part of that), and it never resets
+     * the ladder: stepping the layers re-DRAWS, it does not re-generate.
+     */
+    let areaLayer = 'all';
     /**
      * ⛓⛓ SLICE 4 — THE OPTIONAL HOST BRIDGE. `null` STANDALONE, and that is
      * not a fallback: `mazeLabBridge.js` is never even FETCHED without
@@ -125,6 +145,8 @@ export function main() {
             roster: state.roster,
             directives: state.directives,
             skeleton: state.skeleton,
+            areas: state.areas,
+            require: state.require,
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -143,6 +165,17 @@ export function main() {
      * world, and putting them in the renderer would mean the panel had to pass
      * `plan: null` forever to say it has no solver.
      */
+    /**
+     * ⛓⛓⛓ A REFUSED **DIRECTIVE** MEANS THERE IS NO LEVEL TO SHOW. The run did
+     * not produce what was asked for, so the page draws nothing and prints the
+     * reason where the level would be. ⛔ An area graph that refused is a
+     * different case: the room the carve built IS the level this run produced
+     * (it simply has no locks), so it is drawn, with the module's reason beside
+     * it — ⚖ the honest 11x11-at-two-keys state, which the acceptance table
+     * says is most seeds.
+     */
+    const requireRefusal = () => state?.requireResult?.refused ?? null;
+
     const draw = () => {
         const canvas = $('canvas');
         if (!state) return;
@@ -150,7 +183,14 @@ export function main() {
         canvas.width = w.width * TILE_PX;
         canvas.height = w.height * TILE_PX;
         const ctx = canvas.getContext('2d');
+        if (requireRefusal()) {
+            canvas.hidden = true;
+            return;
+        }
+        canvas.hidden = false;
         drawWorld(ctx, w, plainView({ tilePx: TILE_PX }));
+        // ⛓ THE GRAPH, over the grid — the sibling draw, layer by layer.
+        drawAreaOverlay(ctx, state.model?.areas ?? null, { tilePx: TILE_PX, layer: areaLayer });
 
         const cells = lastSolve ? planCells(state, lastSolve) : null;
         if (cells && cells.length > 1) {
@@ -482,11 +522,109 @@ export function main() {
         return out;
     };
 
+    /**
+     * ⛓⛓ THE AREA PANE — the module's own sentence, and a LEGEND with one row
+     * per SYMBOL. ⚠ §9.11(6): door counts are not small, so the canvas carries
+     * colour only and the symbols are named exactly once, here.
+     */
+    const renderAreaPane = () => {
+        const note = $('labAreaNote');
+        const legendBox = $('labAreaLegend');
+        legendBox.innerHTML = '';
+        note.textContent = '';
+        note.className = '';
+        const info = state.model?.areas ?? null;
+        const req = state.requireResult ?? null;
+        // ⛔ VERBATIM — the binding's / the directive's own reason.
+        if (req?.refused) {
+            note.className = 'refused';
+            note.textContent = `⛔ requires ${formatRequireList(req.asked)} — REFUSED: `
+                + `${req.refused.reason}. ${req.refused.detail} ⛓ No level is shown, because `
+                + 'this run did not produce the one that was asked for.';
+            return;
+        }
+        if (info && info.spec.keys > 0 && !info.ran) {
+            note.className = 'refused';
+            note.textContent = `⛔ the area graph REFUSED: ${info.refused.reason}. `
+                + `${info.refused.detail}`;
+            return;
+        }
+        if (!info?.ran) return;
+        note.className = 'ran';
+        note.textContent = `areas: ${info.partitionSummary.areaCount} `
+            + `(${info.partitionSummary.syntheticCount} synthetic — the 1-cell areas grown on `
+            + `the entrance and the goal), ${info.partitionSummary.adjacencyCount} adjacency `
+            + `pair(s), ${info.graph.edges.filter((e) => e.kind === 'graphify').length} graphify `
+            + `edge(s) (dashed); layer: ${areaLayer}`
+            + (req ? ` · requires ${formatRequireList(req.asked)} MET, every symbol STRONG `
+                + '(remove the key, keep the doors → the goal is unreachable)' : '');
+        for (const row of areaLegend(info)) {
+            const box = el('div', 'lg');
+            const sw = el('span', 'sw');
+            sw.style.background = row.color;
+            box.appendChild(sw);
+            box.appendChild(el('b', null, row.symbol));
+            box.appendChild(el('span', null,
+                `${row.doorCount} door(s) on ${row.areas.length} area(s) at key level `
+                + `${row.level}; key in ${row.key ? `${row.key.area} (${row.key.x},${row.key.y})`
+                    : '(nowhere)'}`));
+            legendBox.appendChild(box);
+        }
+    };
+
+    /**
+     * ⛓ THE AREA SPEC'S PARAMETERS, AS A FORM — mounted from the codec's own
+     * schema (the options ARE the declared domain, the pre-selection IS the
+     * declared default), exactly as the skeleton's params form is.
+     */
+    const mountAreaParams = (values = {}) => {
+        const box = $('labAreaParams');
+        box.innerHTML = '';
+        for (const p of AREA_PARAM_SCHEMA) {
+            const label = document.createElement('label');
+            label.textContent = `${p.key} `;
+            label.title = p.why;
+            const sel = document.createElement('select');
+            sel.dataset.areaParam = p.key;
+            for (const v of p.domain) {
+                const o = new Option(String(v), String(v));
+                if (v === (values[p.key] ?? p.default)) o.selected = true;
+                sel.appendChild(o);
+            }
+            label.appendChild(sel);
+            box.appendChild(label);
+        }
+    };
+    /** ⛔ TYPED FROM THE DOMAIN — a `<select>` hands back a string. */
+    const readAreaParams = () => {
+        const out = {};
+        for (const p of AREA_PARAM_SCHEMA) {
+            const sel = $('labAreaParams').querySelector(`select[data-area-param="${p.key}"]`);
+            if (!sel) continue;
+            const v = p.domain.find((d) => String(d) === sel.value);
+            if (v !== undefined) out[p.key] = v;
+        }
+        return out;
+    };
+    /**
+     * ⛔ THE DIRECTIVE IS PARSED THROUGH THE ONE CODEC, at the press — an empty
+     * box is NO directive (which is what absence means in the URL too), and a
+     * misspelled symbol REFUSES by name rather than being dropped.
+     */
+    const readRequireBox = () => {
+        const raw = $('labRequire').value.trim();
+        return raw === '' ? null : parseRequireList(raw);
+    };
+
     const fillForm = () => {
         for (const [id, get] of FIELDS) $(id).value = String(get(state));
         $('labBiome').value = state.biome;
         $('labSkeleton').value = state.skeleton?.kind ?? 'empty';
         mountSkeletonParams(state.skeleton?.kind ?? 'empty', state.skeleton?.params ?? {});
+        $('labAreas').value = String(state.areas?.keys ?? 0);
+        mountAreaParams(state.areas?.params ?? {});
+        $('labRequire').value = formatRequireList(state.require);
+        $('labAreaLayer').value = areaLayer;
     };
 
     /** The form's numbers, as the next run's arguments. ⛔ The FORM is read at
@@ -516,6 +654,11 @@ export function main() {
             /** ⛓ SLICE 7 — the parameters, read at the press on the same terms. */
             params: readSkeletonParams($('labSkeleton').value),
         }),
+        /** ⛓ ELEMENTS SLICE 3 — the graph and the directive, read at the press. */
+        areas: normalizeAreaSpec({
+            keys: Number($('labAreas').value), params: readAreaParams(),
+        }),
+        require: readRequireBox(),
     });
 
     const goTo = (step) => {
@@ -608,12 +751,26 @@ export function main() {
         fillForm();
         draw();
         renderTrace();
+        renderAreaPane();
         if (src === SOURCES.GENERATE) {
             renderRoster();
             renderDirectives();
+            /**
+             * ⚠ THE BOUNDS ARE READ STRAIGHT OFF THE FIELDS HERE, not through
+             * `formArgs()`: that one now also parses the `requires` box, and a
+             * REFUSAL while somebody is still typing must not take the whole
+             * render down with it. The press is where a malformed directive is
+             * reported (and it is, by name).
+             */
+            const target = {
+                obstacleTarget: Number($('labCount').value),
+                triesPerStep: Number($('labTries').value),
+                saturationK: Number($('labK').value),
+                anchorTriesPerCandidate: Number($('labAnchorTries').value),
+            };
             $('labNote').textContent = 'RUN-ALL to '
                 + `${Number($('labCount').value)} authorises ≤ `
-                + `${ladderCost(formArgs().bounds, WORST_CASE_SOLVE_MS).solves} solves `
+                + `${ladderCost(target, WORST_CASE_SOLVE_MS).solves} solves `
                 + '(⚠ a CEILING — the loop keeps its first candidate most of the time).';
         }
         if (src === SOURCES.EDIT) {
@@ -674,9 +831,35 @@ export function main() {
             /** ⛓ SLICE 5 — the SKELETONS section, beside the template catalogue. */
             skeletons: skeletonCatalogue({ simulator: true }),
             skeleton: state.skeleton ?? null,
-            level: serializeMazeLevel(state.record),
+            /**
+             * ⛓⛓⛓ SLICE 3 — THE GRAPH THE PAGE IS SHOWING, and ⛔ **NO LEVEL
+             * AND NO PAYLOAD WHEN THE DIRECTIVE WAS REFUSED**: a run that did
+             * not produce what was asked for has no artifact to hand out, and a
+             * readout that offered one anyway would be the page disagreeing
+             * with its own refusal box.
+             */
+            areas: state.areas ?? null,
+            require: state.require ?? null,
+            requireResult: state.requireResult ?? null,
+            areaGraph: state.model?.areas?.ran
+                ? {
+                    ran: true,
+                    areaCount: state.model.areas.partitionSummary.areaCount,
+                    syntheticCount: state.model.areas.partitionSummary.syntheticCount,
+                    symbols: state.model.areas.graph.symbols,
+                    doors: state.model.areas.doors.length,
+                    keys: state.model.areas.keys.length,
+                    graphifyEdges: state.model.areas.graph.edges
+                        .filter((e) => e.kind === 'graphify').length,
+                    solutionPath: state.model.areas.graph.solutionPath,
+                }
+                : { ran: false, refused: state.model?.areas?.refused ?? null },
+            areaLegend: areaLegend(state.model?.areas ?? null),
+            areaLayer,
+            areaNote: $('labAreaNote').textContent,
+            level: requireRefusal() ? null : serializeMazeLevel(state.record),
             trace: state.trace ?? [],
-            payload: labPayload(state),
+            payload: requireRefusal() ? null : labPayload(state),
             payloadCheck,
             solve: lastSolve && {
                 verdict: lastSolve.verdict,
@@ -752,6 +935,52 @@ export function main() {
             say(`skeleton parameter ${e.target.dataset.skelParam}=${e.target.value} — RESET to `
                 + 'the skeleton: a kind parameter builds a DIFFERENT room, exactly as the '
                 + 'kind does');
+            render();
+        });
+        /**
+         * ⛓⛓⛓ AN AREA-SPEC OR DIRECTIVE CHANGE **RESETS THE LADDER**, on
+         * exactly the terms a kind change does: the area graph is built with
+         * the MODEL, before pass 2 runs, so `keys=1` at step 3 followed by
+         * `keys=2` at step 4 would be a display no single run produces. ⛔ And
+         * the directive is a property of the RUN, not of a rung.
+         */
+        lt.on($('labAreas'), 'change', () => {
+            // ⛓ the params form is re-mounted BEFORE the press, because the
+            // press reads it (the skeleton form's own lesson).
+            mountAreaParams();
+            goTo(0);
+            say(`areas: ${$('labAreas').value} key(s) — RESET to the skeleton, because the `
+                + 'area graph is built with the model, before the loop runs');
+            render();
+        });
+        lt.on($('labAreaParams'), 'change', (e) => {
+            if (!e.target?.dataset?.areaParam) return;
+            goTo(0);
+            say(`area parameter ${e.target.dataset.areaParam}=${e.target.value} — RESET to the `
+                + 'skeleton: a graph knob builds a DIFFERENT level');
+            render();
+        });
+        lt.on($('labRequire'), 'change', () => {
+            goTo(0);
+            const asked = $('labRequire').value.trim();
+            say(asked === ''
+                ? 'no directive — the run is not required to place any symbol'
+                : `requires ${asked} — RESET to the skeleton; the directive is MET or the run `
+                    + 'is REFUSED (⛔ no bound is widened to meet it, and there is no retry)');
+            render();
+        });
+        /**
+         * ⛓ THE LAYER STEPPER — a VIEW control. ⛔ It re-DRAWS and does not
+         * regenerate, is not written to the URL, and does not touch the ladder:
+         * *"step through the layers"* is a reader building up one picture.
+         */
+        lt.on($('labAreaLayer'), 'change', () => {
+            areaLayer = $('labAreaLayer').value;
+            render();
+        });
+        lt.on($('labAreaLayerNext'), 'click', () => {
+            areaLayer = AREA_LAYERS[(AREA_LAYERS.indexOf(areaLayer) + 1) % AREA_LAYERS.length];
+            say(`layer: ${areaLayer}`);
             render();
         });
         lt.on($('labStep'), 'click', () => goTo(state.step + 1));
@@ -860,6 +1089,16 @@ export function main() {
         opt.title = row.offered ? row.description : `unavailable here — needs ${row.why}`;
         $('labSkeleton').appendChild(opt);
     }
+    /**
+     * ⛓ THE AREA CONTROLS' OPTIONS ARE THE CODEC'S OWN DOMAINS — `KEYS_DOMAIN`
+     * and `AREA_LAYERS`. ⛔ A hand-typed list here would be a second
+     * vocabulary, and the reader would meet whichever one drifted.
+     */
+    for (const k of KEYS_DOMAIN) {
+        $('labAreas').appendChild(new Option(`${k}${k === 0 ? ' (off)' : ''}`, String(k)));
+    }
+    for (const l of AREA_LAYERS) $('labAreaLayer').appendChild(new Option(l, l));
+    mountAreaParams();
     stamp();
 
     try {
@@ -902,6 +1141,9 @@ export function main() {
                  * names no kind, and that IS the open room.
                  */
                 skeleton: payload.skeleton ?? undefined,
+                /** ⛓ SLICE 3 — a payload names the GRAPH it was built with. */
+                areas: payload.areas ?? undefined,
+                require: payload.require ?? null,
             });
             payloadCheck = agreementWithPayload(payload, state);
             say(payloadCheck.agrees
@@ -929,6 +1171,17 @@ export function main() {
              * was the byte comparison against node's carved level.
              */
             skeleton: params.skeleton,
+            /**
+             * ⛓⛓ SLICE 3 — AND THE AREA SPEC AND THE DIRECTIVE REACH THE
+             * GENERATOR HERE. ⛔ This is the exact line slice 5's defect was on
+             * (`?skeleton=` reached the reader, the bar and the identity line
+             * while THIS call was missing the argument, and three of five
+             * claims were green on a page generating the open room), so the
+             * browser row's `?areas=` claim is a BYTE COMPARISON against node's
+             * own level rather than an echo of the parameter.
+             */
+            areas: params.areas,
+            require: params.require,
         });
         say(`seed ${params.seed} at step ${stepFromParams(params)}`
             + (params.skeleton?.kind && params.skeleton.kind !== 'empty'

@@ -37,53 +37,22 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { createHash } from 'node:crypto';
 
+import { hashOf, recordingContext } from './drawOpRecorder.js';
 import { MazeRoomUI } from './mazeRoomUI.js';
 import {
     COLORS, TILE_PX, VIEW_FIELDS, assertView, consumableTileColor, drawWorld, plainView,
 } from './mazeRoomRender.js';
 
 /* ══════════════════════════════════════════════════════════════════════
- * THE RECORDING CONTEXT
- * ══════════════════════════════════════════════════════════════════════ */
-
-const PROPS = ['fillStyle', 'strokeStyle', 'lineWidth', 'globalAlpha', 'font',
-    'textAlign', 'textBaseline', 'lineCap', 'lineJoin'];
-const METHODS = ['fillRect', 'strokeRect', 'save', 'restore', 'setLineDash', 'beginPath',
-    'arc', 'fill', 'stroke', 'moveTo', 'lineTo', 'closePath', 'fillText', 'clearRect', 'rect'];
-
-export function recordingContext() {
-    const log = [];
-    const target = { __log: log };
-    for (const m of METHODS) {
-        target[m] = (...args) => {
-            log.push(`${m}(${args.map((a) => JSON.stringify(a)).join(',')})`);
-        };
-    }
-    const store = {};
-    return new Proxy(target, {
-        get(t, key) {
-            if (key === '__log') return log;
-            if (typeof key === 'symbol') return undefined;
-            if (key in t) return t[key];
-            if (PROPS.includes(key)) return store[key];
-            throw new Error(`recordingContext: unknown ctx member GET "${String(key)}" — an `
-                + 'operation this recorder does not model would drop out of the log, which '
-                + 'is a hole in the gate rather than a passing run.');
-        },
-        set(t, key, value) {
-            if (!PROPS.includes(key)) {
-                throw new Error(`recordingContext: unknown ctx member SET "${String(key)}".`);
-            }
-            store[key] = value;
-            log.push(`${key}=${JSON.stringify(value)}`);
-            return true;
-        },
-    });
-}
-
-const hashOf = (log) => createHash('sha256').update(log.join('\n')).digest('hex').slice(0, 32);
+ * ⛓ THE RECORDER LIVES IN `drawOpRecorder.js` (ELEMENTS arc 1, slice 3)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ MOVED, NOT COPIED, when `mazeAreaOverlay.test.js` needed the same
+ * instrument: a second recorder would be a second answer to "what counts as a
+ * draw operation". ⛓ The seven captured hashes below are UNCHANGED across the
+ * move, which is the check that it was a move.
+ */
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE FIXTURES — chosen to reach every branch of the draw
