@@ -56,7 +56,11 @@
  * slice 3, on the lab page's).
  */
 
-import { connected } from '../procgenCore/gridFlood.js';
+import { buildAreaGraph } from '../procgenCore/areaGraph.js';
+import {
+    DEFAULT_AREAS, formatAreaSpec, normalizeAreaSpec, parseAreaSpec, resolveAreaSpec,
+} from '../procgenCore/areaSpec.js';
+import { connected, reachableFrom } from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
@@ -66,8 +70,8 @@ import { defineTemplate, enumerateValues } from '../procgenCore/templateContract
 import { reach } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
-    TILE_FLOOR, TILE_WALL, bfsSolver, createState, createWorld, detectStepEvents,
-    getItem, getObstacle, getTile, setItem, setObstacle, setTile, step,
+    TILE_FLOOR, TILE_WALL, bfsSolver, clearItem, clearObstacle, createState, createWorld,
+    detectStepEvents, getItem, getObstacle, getTile, setItem, setObstacle, setTile, step,
 } from './mazeRoomEngine.js';
 import { rngFor } from './procgenRng.js';
 
@@ -176,7 +180,7 @@ export function serializeMazeLevel(world) {
             return { x, y, id: value };
         })
         .sort((a, b) => (a.y - b.y) || (a.x - b.x));
-    return {
+    const out = {
         width: world.width,
         height: world.height,
         tiles: Array.from(world.tiles),
@@ -185,6 +189,32 @@ export function serializeMazeLevel(world) {
         obstacles: sortedEntries(world.obstacles),
         items: sortedEntries(world.items),
     };
+    /**
+     * ⛓⛓ PROCGEN ELEMENTS arc 1 slice 2 — **THE PER-INSTANCE LIBRARY ENTRIES,
+     * AND ONLY WHEN THERE ARE ANY.**
+     *
+     * ⛔ MANDATORY, NOT DECORATIVE: `isObstacleCleared` returns TRUE for an id
+     * the lib does not hold, so a payload that carried a `door_K0` and not its
+     * entry would RELOAD as a level whose doors open for everybody — a gate that
+     * does not gate, and every replay would "solve". `deserializeMazeWorld`
+     * already merges a sidecar's per-instance entries onto the base library for
+     * exactly this reason (`logic_gate_<N>`); this is the same field.
+     *
+     * ⛔ AND IT IS OMITTED WHEN EMPTY, which is what keeps the maze's per-kind
+     * CLI md5s byte-identical at `areas: 0` — a `"obstacleLib": {}` written
+     * unconditionally would have moved every payload in the arc for a fact no
+     * level has (⚖ arc ruling 3).
+     */
+    const extra = (lib, base) => {
+        const o = {};
+        for (const [id, entry] of Object.entries(lib ?? {})) if (!base[id]) o[id] = entry;
+        return Object.keys(o).length ? o : null;
+    };
+    const obstacleLib = extra(world.obstacleLib, DEFAULT_OBSTACLES);
+    const itemLib = extra(world.itemLib, DEFAULT_ITEMS);
+    if (obstacleLib) out.obstacleLib = obstacleLib;
+    if (itemLib) out.itemLib = itemLib;
+    return out;
 }
 
 /**
@@ -243,9 +273,22 @@ export function deserializeMazeLevel(payload) {
             `an exit has no "exit_id" (${JSON.stringify(e)})`);
         onGrid(e, `exit "${e?.exit_id}"`);
     }
+    /**
+     * ⛓ THE PER-INSTANCE LIBRARIES MERGE ONTO THE BASE (arc 1 slice 2) — the
+     * shape `deserializeMazeWorld` already uses. An absent field is an old
+     * payload with no area doors, which loads exactly as it did before.
+     */
+    for (const [what, lib] of [['obstacleLib', payload.obstacleLib],
+        ['itemLib', payload.itemLib]]) {
+        need(lib === undefined || (lib && typeof lib === 'object' && !Array.isArray(lib)),
+            `"${what}" must be an object of per-instance entries when present, got `
+            + `${JSON.stringify(lib)}`);
+    }
     const world = createWorld(width, height, {
         entrance: { x: payload.entrance.x, y: payload.entrance.y },
         exits: payload.exits.map((e) => ({ exit_id: e.exit_id, x: e.x, y: e.y })),
+        obstacleLib: { ...DEFAULT_OBSTACLES, ...(payload.obstacleLib ?? {}) },
+        itemLib: { ...DEFAULT_ITEMS, ...(payload.itemLib ?? {}) },
     });
     payload.tiles.forEach((t, i) => setTile(world, i % width, Math.floor(i / width), t));
     for (const [what, list, set] of [
@@ -261,6 +304,482 @@ export function deserializeMazeLevel(payload) {
         }
     }
     return world;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE AREA PARTITION — PROCGEN ELEMENTS arc 1, slice 2 (§3.2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **WHAT AN AREA IS, DEFINED RATHER THAN GESTURED AT** — ⚖ arc-1 kickoff
+ * §3.2 / design ⚖ open question 2, whose default ("chambers") this function
+ * spells out and whose census (§9.1 of the arc kickoff) measured.
+ *
+ *   **A cell is WIDE iff it belongs to at least one all-floor 2x2 square.**
+ *   **An AREA is a maximal 4-connected blob of WIDE cells.**
+ *   **Every other floor cell is a CORRIDOR cell — it is an EDGE, never an area.**
+ *
+ * ⛔ THE BRIEF'S FIRST WORDING WAS TRIED AND REJECTED BY ARITHMETIC. "a floor
+ * cell with >= 2 floor neighbours in BOTH axes" keeps only the CENTRE of a 3x3
+ * chamber (its top-middle cell has two floor neighbours in x and one in y), so
+ * `chambers`' own 3x3 stamp would have reduced to a ONE-cell area and its other
+ * eight cells to corridor. The 2x2 rule keeps the whole stamp, keeps every
+ * `recursive_division` room (they are at least `minRoom` on a side), and refuses
+ * every 1-wide corridor cell, every corner and every T-junction — which is
+ * exactly the "prefer the definition under which `rooms`' division rooms and
+ * `chambers`' stamps are areas and 1-wide corridors are edges" the brief asked
+ * for. ⛓ `minArea` is therefore not a separate bound: the smallest possible
+ * blob IS a 2x2, so `minArea = 4` is implied by the rule rather than chosen
+ * beside it.
+ *
+ * ── ⛓ THE ENTRANCE AND THE GOAL GET A 1-CELL AREA WHEN THEY NEED ONE ──
+ *
+ * §3.2: *"the entrance's cell and the goal's cell must each lie IN an area (else
+ * the model grows a 1-cell area around them — stated)."* On the maze they
+ * usually do NOT: the entrance is the corner (0,0), the goal is drawn from the
+ * whole grid, and both are attached to a carved skeleton by
+ * `connectFixedTiles`' L-carve — a 1-wide stub. So a SYNTHETIC one-cell area is
+ * grown on each, and it is marked `synthetic: true` in the output so no reader
+ * mistakes it for a chamber. ⛔ It is grown BEFORE the corridor components are
+ * found, because it removes its cell from the corridor set and would otherwise
+ * split one component into two.
+ *
+ * ── ADJACENCY ─────────────────────────────────────────────────────────
+ *
+ * Two areas are adjacent iff some CORRIDOR COMPONENT touches both (⇒ a walk
+ * from one to the other crosses no third area), or iff two of their cells are
+ * 4-adjacent (a zero-corridor edge, reachable only through a synthetic area,
+ * since two touching WIDE cells are by construction one blob). A corridor
+ * component touching three areas makes all three pairs adjacent: it is a
+ * junction, and from any of them the other two are reachable without entering
+ * the third.
+ *
+ * ⛔ ONE FLOOD (⚖ arc ruling 5): every blob and every component here is
+ * `procgenCore/gridFlood.reachableFrom`, the same function the level-n
+ * verification runs.
+ *
+ * ⚠ ARC 3 WILL WANT THIS FOR SEEDLING and will have to LIFT it into
+ * `procgenCore/`. It is written here because slice 2 binds ONE substrate and a
+ * module in `procgenCore/` with a single maze caller would be a shared home
+ * nobody shares; the rule above is stated in grid vocabulary (`isFloor` + a
+ * width and a height) precisely so the lift is a move rather than a rewrite.
+ *
+ * @param {object} world a maze world (only `width`, `height` and its tiles are
+ *   read — obstacles and items are the ORACLE's, exactly as in `gridFlood`).
+ * @param {{x,y}} entrance
+ * @param {{x,y}} goal
+ * @returns {{areas, adjacency, labelAt, corridorComponents, cellCount}}
+ */
+export function partitionMazeAreas(world, { entrance, goal } = {}) {
+    const { width, height } = world;
+    const start = entrance ?? { x: world.entrance.x, y: world.entrance.y };
+    const end = goal ?? null;
+    if (!end) fail('procgenMaze: partitionMazeAreas needs the GOAL cell — it is what decides '
+        + 'whether a synthetic area has to be grown, and guessing it from the exits map would '
+        + 'be a second reading of a fact the model already owns.');
+    const key = (x, y) => `${x},${y}`;
+    const onGrid = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
+    /**
+     * ⛓⛓⛓ **ONLY THE FLOOR THE ENTRANCE CAN REACH IS PARTITIONED — AND A
+     * MEASUREMENT IS WHAT PUT THIS LINE HERE.**
+     *
+     * ⛔ A carved room can hold floor cells NOTHING CAN WALK TO.
+     * `recursive_division` calls `repairConnectivity`, whose own comment says it
+     * repairs *"the rare disconnect after the fact"* — and what it repairs is
+     * `allTargetsReachable`, i.e. the EXITS and the ITEMS, not every floor cell.
+     * Measured on `rooms` seed 6 at 11x11: rows 7-10 are an eight-cell-wide
+     * pocket behind a solid wall row, four floor blobs' worth, and the level is
+     * perfectly solvable because the goal is not in them.
+     *
+     * ⛓ The first draft of this function partitioned them anyway, and
+     * `buildAreaGraph` THREW: *"2 area(s) are not reachable from the entrance"*
+     * — its `assertSpace` refuses a stranded area by name, because a tree grown
+     * outward from the entrance would drop it silently. That throw is the
+     * module doing its job; the DEFECT was here, and it is the kind that a
+     * binding which only ever ran `rooms` seeds 1-5 would have shipped.
+     *
+     * ⇒ dead floor is not wall and it is not an area: it is NOT PART OF THE
+     * LEVEL, and `deadFloorCells` says how much of it there was.
+     */
+    const live = reachableFrom(width, height,
+        (x, y) => getTile(world, x, y) === TILE_FLOOR, start);
+    const floor = (x, y) => onGrid(x, y) && live.has(key(x, y));
+    /** ⛓ THE WIDE RULE, in one line: some all-floor 2x2 square contains (x,y). */
+    const wide = (x, y) => {
+        if (!floor(x, y)) return false;
+        for (const [ox, oy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]]) {
+            if (floor(x + ox, y + oy) && floor(x + ox + 1, y + oy)
+                && floor(x + ox, y + oy + 1) && floor(x + ox + 1, y + oy + 1)) return true;
+        }
+        return false;
+    };
+
+    const label = new Map();          // "x,y" -> area id
+    const areas = [];
+    /**
+     * ⛔ CELLS ARE SORTED **ROW-MAJOR**, not left in the flood's BFS order. The
+     * flood's order is deterministic but it is an artefact of where the blob
+     * was entered; row-major is the order a reader checking a fixture by eye
+     * expects, and it is the order the payload and every drift fixture then
+     * carry. (The test that asserted the literal cell list is what asked.)
+     */
+    const claim = (id, cells, synthetic) => {
+        for (const k of cells) label.set(k, id);
+        areas.push({
+            id,
+            cells: [...cells]
+                .map((k) => {
+                    const [x, y] = k.split(',').map(Number);
+                    return Object.freeze({ x, y });
+                })
+                .sort((a, bb) => (a.y - bb.y) || (a.x - bb.x)),
+            synthetic,
+        });
+    };
+    for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+            if (!wide(x, y) || label.has(key(x, y))) continue;
+            claim(`A${areas.length}`, reachableFrom(width, height, wide, { x, y }), false);
+        }
+    }
+    /** ⛓ The synthetic ones, in a FIXED order (entrance then goal) so two runs agree. */
+    for (const p of [start, end]) {
+        if (!floor(p.x, p.y) || label.has(key(p.x, p.y))) continue;
+        claim(`A${areas.length}`, new Set([key(p.x, p.y)]), true);
+    }
+
+    const corridor = (x, y) => floor(x, y) && !label.has(key(x, y));
+    const corridorComponents = [];
+    const seenCorridor = new Set();
+    const NEIGHBOURS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+    for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+            if (!corridor(x, y) || seenCorridor.has(key(x, y))) continue;
+            const cells = reachableFrom(width, height, corridor, { x, y });
+            for (const k of cells) seenCorridor.add(k);
+            const touches = new Set();
+            for (const k of cells) {
+                const [cx, cy] = k.split(',').map(Number);
+                for (const [dx, dy] of NEIGHBOURS) {
+                    const id = label.get(key(cx + dx, cy + dy));
+                    if (id !== undefined) touches.add(id);
+                }
+            }
+            corridorComponents.push(Object.freeze({
+                cells: Object.freeze([...cells]),
+                size: cells.size,
+                touches: Object.freeze([...touches].sort()),
+            }));
+        }
+    }
+
+    const pairs = new Map();
+    const addPair = (a, b, via) => {
+        if (a === b) return;
+        const k = a < b ? `${a}|${b}` : `${b}|${a}`;
+        const prev = pairs.get(k);
+        if (prev) { prev.via.push(via); return; }
+        pairs.set(k, { a: a < b ? a : b, b: a < b ? b : a, via: [via] });
+    };
+    for (const [i, comp] of corridorComponents.entries()) {
+        for (let a = 0; a < comp.touches.length; a += 1) {
+            for (let b = a + 1; b < comp.touches.length; b += 1) {
+                addPair(comp.touches[a], comp.touches[b], { kind: 'corridor', component: i,
+                    corridorCells: comp.size });
+            }
+        }
+    }
+    /** ⛓ ZERO-CORRIDOR adjacency — only a synthetic area can produce one. */
+    for (const area of areas) {
+        for (const c of area.cells) {
+            for (const [dx, dy] of NEIGHBOURS) {
+                const other = label.get(key(c.x + dx, c.y + dy));
+                if (other !== undefined && other !== area.id) {
+                    addPair(area.id, other, { kind: 'touch', corridorCells: 0 });
+                }
+            }
+        }
+    }
+
+    /**
+     * ⛓⛓⛓ EVERY AREA'S **BOUNDARY** CELLS — its own cells that touch a floor
+     * cell NOT its own. ⛔ NOT "cells that touch a CORRIDOR cell", and the
+     * difference is load-bearing: a SYNTHETIC area can sit directly against a
+     * chamber (a zero-corridor adjacency), and a boundary defined by corridors
+     * alone would miss that side and leave the realisation's door with an
+     * unguarded way in. Measured in the census as the `0` bucket of the
+     * corridor-cell histogram.
+     *
+     * ⛓ THE BOUNDARY IS WHERE THE DOOR GOES, and it is an AREA-side cell rather
+     * than a corridor-side one, which is what makes the door cell UNAMBIGUOUS: a
+     * corridor mouth cell can be adjacent to TWO areas at once (a
+     * `recursive_division` gap cell is exactly that — it touches both rooms),
+     * and one cell can hold one obstacle. An area cell belongs to exactly one
+     * area by construction.
+     */
+    for (const area of areas) {
+        const boundary = [];
+        for (const c of area.cells) {
+            for (const [dx, dy] of NEIGHBOURS) {
+                const other = label.get(key(c.x + dx, c.y + dy));
+                if (floor(c.x + dx, c.y + dy) && other !== area.id) { boundary.push(c); break; }
+            }
+        }
+        area.boundary = Object.freeze(boundary);
+        area.size = area.cells.length;
+        Object.freeze(area.cells);
+        Object.freeze(area);
+    }
+
+    return Object.freeze({
+        areas: Object.freeze(areas),
+        adjacency: Object.freeze([...pairs.values()].map((p) => Object.freeze({
+            a: p.a, b: p.b, via: Object.freeze(p.via),
+        }))),
+        corridorComponents: Object.freeze(corridorComponents),
+        labelAt: (x, y) => label.get(key(x, y)) ?? null,
+        entranceArea: label.get(key(start.x, start.y)) ?? null,
+        goalArea: label.get(key(end.x, end.y)) ?? null,
+        cellCount: label.size,
+        liveFloorCells: live.size,
+        /** ⛓ Floor the entrance cannot reach — see `live` above. */
+        deadFloorCells: (() => {
+            let n = 0;
+            for (let y = 0; y < height; y += 1) {
+                for (let x = 0; x < width; x += 1) {
+                    if (getTile(world, x, y) === TILE_FLOOR && !live.has(key(x, y))) n += 1;
+                }
+            }
+            return n;
+        })(),
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE REALISATION — a key level becomes doors and keys on the grid (§3.2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** `door_K0` ← 'K0'. The per-instance ids ⚖ §3.5 calls "the symbols". */
+export const doorIdFor = (symbol) => `door_${symbol}`;
+export const keyIdFor = (symbol) => `key_${symbol}`;
+
+/**
+ * ⛓ THE KEY LEVEL A DOOR GUARDS. An area at key level `L` is entered with
+ * `K_{L-1}` in hand, so its doors are `door_K{L-1}` and the LEVEL of that door
+ * is `L` — one past the index in its own name. Written once, because the
+ * verification's "> n" and the realisation's "L-1" are the same arithmetic seen
+ * from two sides and a second spelling is how an off-by-one gets in.
+ */
+export const doorLevelOf = (obstacleId) => {
+    const m = /^door_K(\d+)$/.exec(obstacleId ?? '');
+    return m === null ? null : Number(m[1]) + 1;
+};
+
+/**
+ * ⛓⛓⛓ **THE PER-INSTANCE LIBRARY ENTRIES** — ⚖ arc-1 kickoff §3.3 / recon.
+ *
+ * ⛔ RECONNED BEFORE IT WAS WRITTEN, as the kickoff asked. `DEFAULT_OBSTACLES`
+ * is keyed by COLOUR (`door_red` … `door_orange`, six of them) plus a
+ * `logic_gate` TEMPLATE row whose docblock says per-instance gates are *"created
+ * by cloning this entry into the region's obstacleLib with a unique id"* — so
+ * per-instance entries are the library's own idiom and not a new one. ⚠ AND THE
+ * ENTRY IS MANDATORY RATHER THAN COSMETIC: `isObstacleCleared` returns TRUE for
+ * an id the lib does not hold ("unknown obstacle id ≡ no gate; permissive for
+ * robustness"), so a `door_K0` with no entry would be a gate that does not gate
+ * and EVERY solve would walk through it.
+ *
+ * ⛓ ADDITIVE, PER WORLD: the base library is untouched and the merged object is
+ * put on the world (`createWorld` already takes `obstacleLib`/`itemLib` opts and
+ * `deserializeMazeWorld` already merges a sidecar's per-instance entries the
+ * same way). The colour ids keep working beside them — `door-key` (palette v1)
+ * still places `door_red`.
+ */
+export function areaLibraries(symbols) {
+    const obstacleLib = { ...DEFAULT_OBSTACLES };
+    const itemLib = { ...DEFAULT_ITEMS };
+    const addedObstacles = {};
+    const addedItems = {};
+    for (const symbol of symbols) {
+        const doorId = doorIdFor(symbol);
+        const keyId = keyIdFor(symbol);
+        addedItems[keyId] = {
+            name: `Area Key ${symbol}`,
+            id: keyId,
+            classification: 'progression',
+            color: '#7fb8e0',
+            symbol: 'key',
+            feature: 'area_graph',
+        };
+        addedObstacles[doorId] = {
+            name: `Area Door ${symbol}`,
+            id: doorId,
+            clear_set_type: 'combo_list',
+            clear_set: [[keyId]],
+            color: '#3f6f9f',
+            feature: 'area_graph',
+        };
+    }
+    Object.assign(obstacleLib, addedObstacles);
+    Object.assign(itemLib, addedItems);
+    return { obstacleLib, itemLib, addedObstacles, addedItems };
+}
+
+/**
+ * ⛓⛓⛓ **THE VERIFICATION, ONCE, BY THE ONE FLOOD** — ⚖ arc-1 kickoff §3.2,
+ * trap 272's shape: *the partition claim is CHECKED, not believed.*
+ *
+ * For each key level `n`, with every door of level > `n` treated as WALL, the
+ * set of floor cells the entrance reaches must be EXACTLY
+ *
+ *   { every cell of every area whose keyLevel <= n }
+ *   ∪ { every cell of every corridor component that touches such an area }
+ *
+ * ⛓ §3.2 said *"the union of areas of level <= n plus their internal
+ * corridors"*; this is that sentence made checkable. A corridor component is
+ * freely walkable (no door ever sits on one — the doors are on AREA-side
+ * boundary cells), so the ones the player reaches are exactly the ones adjacent
+ * to an area they can enter, and a component touching only high-level areas is
+ * unreachable until those open. ⚠ It is a claim about TERRAIN AND DOORS with an
+ * assumed inventory, NOT about whether the keys can actually be collected in
+ * order — that is the ORACLE's question and the skeleton solve is what asks it.
+ *
+ * @returns {null | {level, missing, extra, detail}} a REFUSAL naming the first
+ *   offending cell, or `null`. ⛔ Never a throw: a mismatch is something the
+ *   CLI and the lab page must be able to PRINT.
+ */
+export function verifyAreaLevels(world, { partition, graph }) {
+    const { width, height } = world;
+    const levelOf = new Map();
+    let maxLevel = 0;
+    for (const area of partition.areas) {
+        const l = graph.areas[area.id]?.keyLevel ?? 0;
+        levelOf.set(area.id, l);
+        if (l > maxLevel) maxLevel = l;
+    }
+    const from = { x: world.entrance.x, y: world.entrance.y };
+    for (let n = 0; n <= maxLevel; n += 1) {
+        const expected = new Set();
+        for (const area of partition.areas) {
+            if (levelOf.get(area.id) > n) continue;
+            for (const c of area.cells) expected.add(`${c.x},${c.y}`);
+        }
+        for (const comp of partition.corridorComponents) {
+            if (!comp.touches.some((id) => levelOf.get(id) <= n)) continue;
+            for (const k of comp.cells) expected.add(k);
+        }
+        const walkable = (x, y) => {
+            if (getTile(world, x, y) !== TILE_FLOOR) return false;
+            const level = doorLevelOf(getObstacle(world, x, y));
+            /**
+             * ⛔ `> n`, AND THE COMPARISON IS THE WHOLE CLAIM. A door of level
+             * exactly `n` is one the player at level `n` has the key for
+             * (`door_K{n-1}`); walling it too would be an off-by-one that reads
+             * as "the lock is one level too strong" — the mutant the slice ran.
+             */
+            return level === null || level <= n;
+        };
+        const actual = reachableFrom(width, height, walkable, from);
+        const missing = [...expected].filter((k) => !actual.has(k)).sort();
+        const extra = [...actual].filter((k) => !expected.has(k)).sort();
+        if (missing.length || extra.length) {
+            return {
+                level: n,
+                missing: Object.freeze(missing),
+                extra: Object.freeze(extra),
+                detail: `at key level ${n} the entrance reaches ${actual.size} floor cell(s) `
+                    + `and the partition says it should reach ${expected.size}. `
+                    + (missing.length
+                        ? `UNREACHABLE but claimed: (${missing[0]})${missing.length > 1
+                            ? ` and ${missing.length - 1} more` : ''}. ` : '')
+                    + (extra.length
+                        ? `REACHED but not claimed: (${extra[0]})${extra.length > 1
+                            ? ` and ${extra.length - 1} more` : ''}. ` : '')
+                    + '⛓ A locked edge is a CUT by construction of the tree; this is the check '
+                    + 'that the GRID agrees, which is the one thing construction cannot '
+                    + 'promise (trap 272).',
+            };
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ **THE REALISATION RULE, AND IT IS A PROPERTY OF THE AREA RATHER THAN OF
+ * THE EDGE** — the one real deviation from §3.2, forced by two grid facts the
+ * AREA CENSUS measured:
+ *
+ *  1. **a corridor component can touch THREE or more areas** (measured: up to 15
+ *     such junctions per 12 seeds on `rooms` at 15x15, 9 on `open;chambers=2` at
+ *     11x11). "Put the door on the corridor cell adjacent to the child" does not
+ *     say WHICH of a junction's three ways in is the child's, and doors on all
+ *     of them would lock the other two areas out as well.
+ *  2. **the adjacency graph has CYCLES the tree did not take.** A grid corridor
+ *     is a physical passage whether or not `graphify` declared an edge on it, so
+ *     a door realised per TREE EDGE would be bypassed by any undeclared
+ *     adjacency and the flood would report the bypass — correctly, as a refusal
+ *     on nearly every seed.
+ *
+ * ⇒ **for every area X at key level L >= 1, `door_K{L-1}` goes on EVERY BOUNDARY
+ * CELL of X.** On a tree edge this IS §3.2's rule (the child's own mouth carries
+ * the edge's lock: `child.keyLevel - 1` is exactly the tree edge's symbol); it
+ * simply also covers every OTHER way into the same area. The cut is then true
+ * by construction for ANY adjacency, and the verification above is what checks
+ * the partition told the truth about where the ways in are.
+ *
+ * ⚖ **THIS ANSWERS OPEN QUESTION 2** ("a second carve vs pre-carving and walling
+ * the undeclared corridors"): NEITHER. Nothing is carved and nothing is walled —
+ * ⛓ so trap 272's "a second carve must be checked on the way out" is discharged
+ * by there being no second carve at all, and the check that replaces it is the
+ * level-n flood. A `graphify` edge is therefore RECORDED rather than
+ * CONSTRUCTED: the corridor it names already exists, and it is already
+ * `K`-locked at the higher area's boundary, which is exactly ⚖ design ruling
+ * 16's *"a more direct path … the player can freely travel in either
+ * direction"* — bidirectional because an obstacle blocks ENTRY and the key is
+ * permanent.
+ *
+ * ── THE KEYS ──────────────────────────────────────────────────────────
+ *
+ * `key_K{n}` goes at a DRAWN cell of the area the module gave the symbol to —
+ * never the entrance, never the goal, never a boundary cell (a key under its own
+ * door would be a key you need the key to reach). One `pick` per symbol, in
+ * symbol order.
+ *
+ * @returns {{doors, keys, refused}} `refused` is a graded failure, never a throw.
+ */
+function realiseAreaGraph(world, { partition, graph, rng, entrance, goal }) {
+    const isEnd = (c) => (c.x === entrance.x && c.y === entrance.y)
+        || (c.x === goal.x && c.y === goal.y);
+    const doors = [];
+    for (const area of partition.areas) {
+        const level = graph.areas[area.id]?.keyLevel ?? 0;
+        if (level < 1) continue;
+        const symbol = `K${level - 1}`;
+        for (const c of area.boundary) {
+            setObstacle(world, c.x, c.y, doorIdFor(symbol));
+            doors.push(Object.freeze({ symbol, area: area.id, x: c.x, y: c.y, level }));
+        }
+    }
+    const keys = [];
+    for (const symbol of graph.symbols) {
+        const areaId = Object.keys(graph.areas).find((id) => graph.areas[id].item === symbol);
+        if (areaId === undefined) {
+            return { doors, keys, refused: { reason: 'no-area-holds-this-symbol',
+                detail: `the graph declares ${symbol} but no area carries it as its item.` } };
+        }
+        const area = partition.areas.find((a) => a.id === areaId);
+        const boundary = new Set(area.boundary.map((c) => `${c.x},${c.y}`));
+        const free = area.cells.filter((c) => !boundary.has(`${c.x},${c.y}`) && !isEnd(c));
+        if (free.length === 0) {
+            return { doors, keys, refused: { reason: 'the-key-area-has-no-cell-that-can-hold-it',
+                detail: `${symbol} belongs in area ${areaId}, whose ${area.cells.length} cell(s) `
+                    + `are all boundary cells (where its own doors go), the entrance or the `
+                    + 'goal. A key under its own door is a key nobody can reach.' } };
+        }
+        const at = rng.pick(free);
+        setItem(world, at.x, at.y, keyIdFor(symbol));
+        keys.push(Object.freeze({ symbol, area: areaId, x: at.x, y: at.y }));
+    }
+    return { doors, keys, refused: null };
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -285,9 +804,13 @@ export const MAZE_SKELETON_KINDS = Object.freeze(kindsOffered({ simulator: true 
  * @param {object} [o.skeleton]  `{kind}` — ⛓ CONSTRUCTIVE-MODE slice 5. The
  *   default is the OPEN ROOM this binding has always built; any other kind
  *   carves with the maze backend the kind names. See `skeletonKinds.js`.
+ * @param {object} [o.areas]  `{keys[, params]}` — ⛓ PROCGEN ELEMENTS arc 1
+ *   slice 2. ⛔ The default is `{keys: 0}` and at `keys: 0` NOTHING below runs:
+ *   no partition, no `buildAreaGraph` call, no draw. See `areaSpec.js`.
  */
 export function mazeModel({
     seed, width, height, defaults = MAZE_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
+    areas: areaSpec = DEFAULT_AREAS,
 } = {}) {
     const d = Object.freeze({
         ...MAZE_DEFAULTS,
@@ -360,7 +883,7 @@ export function mazeModel({
     const skeletonSpecNorm = normalizeSkeleton({
         kind: skeletonKind, params: skeletonSpec?.params ?? {},
     });
-    const template = createWorld(d.width, d.height, {
+    let template = createWorld(d.width, d.height, {
         entrance: { x: d.entrance.x, y: d.entrance.y },
         exits: [{ exit_id: d.goalExitId, x: goalCell.tx, y: goalCell.ty }],
     });
@@ -374,6 +897,175 @@ export function mazeModel({
         ? null : carveSkeleton(skeletonKind, template, roomRng, {
             params: skeletonSpecNorm.params ?? {}, margin: 0,
         });
+
+    /**
+     * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 1, SLICE 2: **THE AREA BINDING**, HERE AND
+     *    IN THIS ORDER ─────────────────────────────────────────────────
+     *
+     * ⛓ **THE DRAW ORDER, DECLARED** (design §4.8; the order IS the identity):
+     *   1 the goal cell        — the room stream's FIRST draw, UNCHANGED
+     *   2 the carve            — the backend + its post-processors, UNCHANGED
+     *   3 the partition        — spends NO draw (it reads tiles)
+     *   4 `buildAreaGraph`     — its own declared five phases (slice 1 §8.2)
+     *   5 the realisation      — one `pick` per SYMBOL, in symbol order, for
+     *                            the key cell. The doors draw NOTHING (every
+     *                            boundary cell of a locked area takes one) and
+     *                            there is no second carve, so `graphify` spends
+     *                            no realisation draw either.
+     *
+     * ⛔ AND AT `keys: 0` NONE OF 3-5 HAPPENS. Not "runs and returns early" —
+     * the branch is not entered, the partition is not computed, the module is
+     * not called and the rng is not touched, so the per-kind CLI md5s and
+     * `dump-maze-byteidentity` are unchanged by a code path that does not
+     * execute (⚖ arc ruling 3, widened by slice 1 to "at <= 1 area the binding
+     * does not call the module"). `procgenMazeAreas.test.js` drives that with a
+     * COUNTING SPY rather than by comparing tiles.
+     *
+     * ⛔ EVERY FAILURE HERE IS A **GRADED REFUSAL**, never a throw: the room
+     * keeps its carved skeleton, `areas.refused` names the reason, and the CLI
+     * and the lab page can print it. A throw would turn "this seed's partition
+     * cannot host two keys" into a crash in the room builder.
+     */
+    const areaSpecNorm = normalizeAreaSpec(areaSpec ?? DEFAULT_AREAS);
+    const areaValues = resolveAreaSpec(areaSpecNorm);
+    let areaInfo = Object.freeze({
+        spec: areaSpecNorm,
+        ran: false,
+        calledModule: false,
+        partition: null,
+        graph: null,
+        doors: Object.freeze([]),
+        keys: Object.freeze([]),
+        refused: null,
+    });
+    if (areaValues.keys > 0) {
+        const entrancePos = { x: d.entrance.x, y: d.entrance.y };
+        const goalPos = { x: goalCell.tx, y: goalCell.ty };
+        const partition = partitionMazeAreas(template, {
+            entrance: entrancePos, goal: goalPos,
+        });
+        const summary = Object.freeze({
+            areaCount: partition.areas.length,
+            syntheticCount: partition.areas.filter((a) => a.synthetic).length,
+            adjacencyCount: partition.adjacency.length,
+            corridorComponents: partition.corridorComponents.length,
+            entranceArea: partition.entranceArea,
+            goalArea: partition.goalArea,
+        });
+        const refuse2 = (reason, detail) => Object.freeze({
+            spec: areaSpecNorm, ran: false, calledModule: false, partitionSummary: summary,
+            partition, graph: null, doors: Object.freeze([]), keys: Object.freeze([]),
+            refused: Object.freeze({ reason, detail }),
+        });
+        if (partition.areas.length <= 1) {
+            /**
+             * ⛓ SLICE 1's §8.8 RESIDUE 1, EXECUTED: the degenerate one-area
+             * level is first-class AT THE BINDING. The module refuses
+             * `entrance === goal`, and with one area they cannot differ — so a
+             * partition this thin must not reach it at all.
+             */
+            areaInfo = refuse2('the-partition-yields-one-area-or-fewer',
+                `the ${skeletonKind} room partitions into ${partition.areas.length} area(s), and `
+                + 'a lock-and-key graph needs at least two. ⛓ The AREA CENSUS measured this: '
+                + '`empty` is ONE area at every seed (the whole open room is a single wide '
+                + 'blob), so the degenerate one-area level is what this branch protects and '
+                + 'the module is NOT called.');
+        } else if (partition.entranceArea === partition.goalArea) {
+            areaInfo = refuse2('the-entrance-and-the-goal-share-one-area',
+                `both the entrance (${entrancePos.x},${entrancePos.y}) and the goal `
+                + `(${goalPos.x},${goalPos.y}) fall in area ${partition.entranceArea}. `
+                + '⛔ `buildAreaGraph` refuses `entrance === goal` by name, so the binding does '
+                + 'not call it — the goal is GIVEN (⚖ arc ruling 2) and moving it to a second '
+                + 'area is exactly what ruling 2 forbids.');
+        } else {
+            const graph = buildAreaGraph({
+                rng: roomRng,
+                areas: partition.areas.map((a) => ({
+                    id: a.id,
+                    capacity: {
+                        /**
+                         * ⛓ A CAPACITY THE GRID CAN HONOUR. An area whose every
+                         * cell is a boundary cell (where its own doors go), the
+                         * entrance or the goal cannot hold a key, and telling
+                         * the module BEFORE it places one is cheaper than
+                         * refusing after — and it is computable now, because
+                         * the boundary is a fact about the PARTITION and not
+                         * about the graph.
+                         */
+                        item: a.cells.some((c) => !a.boundary.includes(c)
+                            && !(c.x === entrancePos.x && c.y === entrancePos.y)
+                            && !(c.x === goalPos.x && c.y === goalPos.y)),
+                        switch: false,
+                    },
+                })),
+                adjacency: partition.adjacency.map((e) => [e.a, e.b]),
+                entrance: partition.entranceArea,
+                goal: partition.goalArea,
+                bounds: {
+                    maxKeys: areaValues.keys,
+                    graphifyProbability: areaValues.graphify,
+                    allowGoalShortcut: areaValues.goalShortcut === 1,
+                    maxSwitches: 0,
+                },
+            });
+            if (graph.refused) {
+                areaInfo = Object.freeze({
+                    spec: areaSpecNorm, ran: false, calledModule: true, partitionSummary: summary,
+                    partition, graph, doors: Object.freeze([]), keys: Object.freeze([]),
+                    refused: Object.freeze({
+                        reason: graph.refused.reason,
+                        detail: `${graph.refused.detail} (${graph.refused.attempts} attempt(s) `
+                            + `over ${partition.areas.length} area(s) at maxKeys `
+                            + `${areaValues.keys}) — ⛓ \`maxKeys\` is a TARGET, not a ceiling: a `
+                            + 'space that grows fewer key levels REFUSES rather than settling '
+                            + 'for fewer keys (slice 1 deviation 10).',
+                    }),
+                });
+            } else {
+                /**
+                 * ⛔ REALISED ONTO A **CLONE**, AND COMMITTED ONLY ON SUCCESS.
+                 * A refusal at this point (a key with nowhere to go, a flood
+                 * that disagrees) must leave the CARVED room exactly as it was
+                 * — a half-realised room with doors and no keys would be an
+                 * unsolvable skeleton, i.e. `levelGenerator`'s step-0 THROW,
+                 * and the reason a reader would read is "the room builder is
+                 * broken" rather than "this seed cannot host two keys". Same
+                 * argument as `place`'s clone, one layer up.
+                 */
+                const candidate = cloneWorld(template);
+                const realised = realiseAreaGraph(candidate, {
+                    partition, graph, rng: roomRng, entrance: entrancePos, goal: goalPos,
+                });
+                const libs = areaLibraries(graph.symbols);
+                candidate.obstacleLib = libs.obstacleLib;
+                candidate.itemLib = libs.itemLib;
+                const mismatch = realised.refused
+                    ? null : verifyAreaLevels(candidate, { partition, graph });
+                if (!realised.refused && mismatch === null) template = candidate;
+                areaInfo = Object.freeze({
+                    spec: areaSpecNorm,
+                    ran: !realised.refused && mismatch === null,
+                    calledModule: true,
+                    partitionSummary: summary,
+                    partition,
+                    graph,
+                    doors: Object.freeze(realised.doors),
+                    keys: Object.freeze(realised.keys),
+                    addedObstacles: Object.freeze(Object.keys(libs.addedObstacles)),
+                    addedItems: Object.freeze(Object.keys(libs.addedItems)),
+                    refused: realised.refused
+                        ? Object.freeze(realised.refused)
+                        : (mismatch && Object.freeze({
+                            reason: 'the-level-flood-disagrees-with-the-partition',
+                            detail: mismatch.detail,
+                            level: mismatch.level,
+                            missing: mismatch.missing,
+                            extra: mismatch.extra,
+                        })),
+                });
+            }
+        }
+    }
 
     /**
      * ⛔ A **CLONE** PER CALL, because a maze world is mutable and the loop
@@ -554,6 +1246,13 @@ export function mazeModel({
         skeletonSpec: skeletonSpecNorm,
         /** What the carve actually ran — `null` at the open room. */
         carve: carve && Object.freeze({ ...carve }),
+        /**
+         * ⛓ THE AREA BINDING'S WHOLE ANSWER — the spec that ran, whether the
+         * module was called at all, the partition, the graph, the realised
+         * doors and keys, and the REFUSAL when there is one. Slice 3's lab page
+         * draws from exactly this object.
+         */
+        areas: areaInfo,
         goalCell,
         /** The goal in the WORLD's own spelling, for `mazeOracle`'s predicate. */
         goalPos: Object.freeze({ x: goalCell.tx, y: goalCell.ty }),
@@ -1001,6 +1700,161 @@ assertMazePalette();
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
+ * ⛓ THE AREA BLOCK A PAYLOAD CARRIES — the SPEC and the GRAPH, exactly what the
+ * kickoff's §3.6/§6 asks slice 3's page to draw from. ⛔ The partition's cell
+ * lists are NOT in it: they are derivable from the level's own tiles by the one
+ * partition function, and a payload that carried them would be a second copy of
+ * a fact the room already states (and a big one).
+ */
+export function areaSummaryOf(model) {
+    const info = model.areas;
+    return Object.freeze({
+        spec: info.spec,
+        ran: info.ran,
+        calledModule: info.calledModule,
+        partition: info.partitionSummary ?? null,
+        refused: info.refused,
+        doors: info.doors,
+        keys: info.keys,
+        graph: info.graph && Object.freeze({
+            areas: info.graph.areas,
+            edges: info.graph.edges,
+            symbols: info.graph.symbols,
+            solutionPath: info.graph.solutionPath,
+            bounds: info.graph.bounds,
+            draws: info.graph.draws,
+            drawsByPhase: info.graph.drawsByPhase,
+            attempts: info.graph.attempts,
+            refused: info.graph.refused,
+        }),
+    });
+}
+
+/**
+ * ⛓⛓⛓ **THE SOLVER-WORK RECORDS** — ⚖ design ruling 20 / arc-1 kickoff §3.4.
+ *
+ * *"Per placed lock/key and per kept template: BFS plan length to the goal
+ * BEFORE and AFTER, nodes expanded, and (for a lock) the plan length from the
+ * key to the door."*
+ *
+ * ⛔ **RECORD ONLY.** Nothing in this arc DECIDES on these numbers; they exist
+ * so a table can exist before a dial does (§4.6: *"dials that DECIDE come after
+ * a table exists"*). ⛔ AND NO WALL CLOCK — every number here is a BFS PLAN
+ * LENGTH or a NODE COUNT, which are properties of the candidate and reproduce on
+ * a loaded box (`feedback_wallclock_budget_breaks_determinism`).
+ *
+ * ── ⛓ TWO DIFFERENT "BEFORE"s, BECAUSE THEY ARE TWO DIFFERENT QUESTIONS ─
+ *
+ *  · an ELEMENT (a lock and its key) is measured by **ABLATION** on the FINISHED
+ *    level: the same room with that symbol's doors and key removed. That is the
+ *    §3.5 differential in the same breath — a `plan: null` in the WITHOUT arm is
+ *    the proof that the lock is a cut, not a decoration.
+ *  · a KEPT TEMPLATE is measured by **INCREMENTAL REPLAY** from the skeleton, so
+ *    its BEFORE is the room the loop actually saw when it proposed the
+ *    candidate. Ablating it from the finished level instead would price it
+ *    against a room that did not exist when it was chosen.
+ *
+ * ⛔ IT SPENDS NO DRAW (`instantiate(null, params)` replays the recorded values)
+ * and it runs ONLY when the area binding ran — see `generateMazeLevel`.
+ */
+export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, kept = [] }) {
+    const b = assertMazeBudget(budget);
+    const goal = model.goalPos;
+    const solveTo = (world, pred, items = null) => {
+        const start = createState(world);
+        for (const id of items ?? []) start.inventory.add(id);
+        const res = reach(world, bfsSolver, start, pred, { budget: b.maxExpansions });
+        return Object.freeze({
+            plan: res.ok ? res.plan.length : null,
+            expanded: res.expanded ?? null,
+            reason: res.ok ? null : (res.reason ?? 'exhausted'),
+        });
+    };
+    const atGoal = (s) => s.player_pos.x === goal.x && s.player_pos.y === goal.y;
+
+    const elements = [];
+    const info = model.areas;
+    if (info?.ran) {
+        const after = solveTo(record, atGoal);
+        for (const symbol of info.graph.symbols) {
+            const doors = info.doors.filter((dd) => dd.symbol === symbol);
+            const key = info.keys.find((k) => k.symbol === symbol) ?? null;
+            const without = cloneWorld(record);
+            for (const dd of doors) clearObstacle(without, dd.x, dd.y);
+            if (key) clearItem(without, key.x, key.y);
+            const before = solveTo(without, atGoal);
+            /**
+             * ⛓⛓⛓ **THE DIFFERENTIAL — ⚖ §3.5's PROOF, AND MY FIRST DRAFT HAD
+             * IT BACKWARDS.** The draft asserted that `planWithout === null`
+             * *"is the cut"*. It is not, and the first run said so: removing a
+             * DOOR can only ever make a level EASIER, so that arm solves at
+             * every seed and would have been a claim nothing can falsify.
+             *
+             * ⇒ the arm that proves the lock is a cut removes **the KEY and
+             * keeps the DOORS**: `planWithoutKey === null` means no route to the
+             * goal survives without `key_K`, which is exactly §3.5's *"remove
+             * key K from the world → the goal is unreachable"* and is a STRONG
+             * grade by the PoC's own scale (§16.6). ⚠ It is `null` for every
+             * symbol on the SOLUTION PATH; a symbol whose areas all sit in a
+             * side branch is legitimately non-null, and the fixture says which.
+             */
+            const withoutKey = cloneWorld(record);
+            if (key) clearItem(withoutKey, key.x, key.y);
+            const cut = key ? solveTo(withoutKey, atGoal) : null;
+            const doorSet = new Set(doors.map((dd) => `${dd.x},${dd.y}`));
+            const keyToDoor = key && doors.length
+                ? solveTo(record, (s) => doorSet.has(`${s.player_pos.x},${s.player_pos.y}`),
+                    [keyIdFor(symbol)])
+                : null;
+            elements.push(Object.freeze({
+                symbol,
+                doorCount: doors.length,
+                doors: Object.freeze(doors.map((dd) => Object.freeze({ x: dd.x, y: dd.y }))),
+                key: key && Object.freeze({ x: key.x, y: key.y, area: key.area }),
+                /** BEFORE = the same room with this symbol's doors AND key gone. */
+                planWithout: before.plan,
+                expandedWithout: before.expanded,
+                /** AFTER = the finished level. */
+                planWith: after.plan,
+                expandedWith: after.expanded,
+                /** ⛓ THE CUT PROOF — see above. `null` = the goal needs this key. */
+                planWithoutKey: cut ? cut.plan : null,
+                expandedWithoutKey: cut ? cut.expanded : null,
+                isCut: cut !== null && cut.plan === null,
+                planKeyToDoor: keyToDoor ? keyToDoor.plan : null,
+                expandedKeyToDoor: keyToDoor ? keyToDoor.expanded : null,
+            }));
+        }
+    }
+
+    const byName = new Map(MAZE_TEMPLATES.map((t) => [t.name, t]));
+    let world = model.skeleton();
+    let prev = solveTo(world, atGoal);
+    const keptCost = [];
+    for (const row of kept) {
+        const base = byName.get(row.template);
+        if (!base) {
+            fail(`procgenMaze: the kept record names template "${row.template}", which the v1 `
+                + 'palette does not hold. A cost record replays the loop\'s own choices, so a '
+                + 'name it cannot rebuild is a defect rather than a missing number.');
+        }
+        world = model.place(world, base.instantiate(null, row.params ?? {}), row.at);
+        const next = solveTo(world, atGoal);
+        keptCost.push(Object.freeze({
+            ...row,
+            cost: Object.freeze({
+                planBefore: prev.plan,
+                expandedBefore: prev.expanded,
+                planAfter: next.plan,
+                expandedAfter: next.expanded,
+            }),
+        }));
+        prev = next;
+    }
+    return { elements: Object.freeze(elements), kept: Object.freeze(keptCost) };
+}
+
+/**
  * GENERATE ONE MAZE LEVEL.
  *
  * ⛔ TWO STREAMS, TWO SEEDS FROM ONE — `procgenSeedling.generateSeedlingLevel`'s
@@ -1012,16 +1866,35 @@ assertMazePalette();
  */
 export function generateMazeLevel({
     seed, palette = MAZE_PALETTE, bounds, budget = DEFAULT_MAZE_BUDGET, defaults,
-    width, height, skeleton = DEFAULT_SKELETON,
+    width, height, skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS,
 } = {}) {
-    const model = mazeModel({ seed, width, height, defaults, skeleton });
+    const model = mazeModel({ seed, width, height, defaults, skeleton, areas });
     const oracle = mazeOracle({ model, items: palette.items ?? null, budget });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
+    /**
+     * ⛓⛓ THE COST PASS RUNS **ONLY WHEN THE AREA BINDING RAN**, and that is a
+     * forced choice rather than a preference: `summary.kept` gaining a `cost`
+     * field at `areas: 0` would move the maze's per-kind CLI md5s, which ⚖ arc
+     * ruling 3 requires to be byte-identical. ⇒ a delta against §3.4, which
+     * asks for the per-kept-template numbers unconditionally; they arrive with
+     * the elements, which is the arc that asked for them.
+     */
+    const cost = model.areas?.ran
+        ? mazeCostRecords({ model, budget, record: out.record, kept: out.summary.kept })
+        : null;
     return {
         ...out,
         model,
         summary: Object.freeze({
             ...out.summary,
+            ...(cost ? { kept: cost.kept, elements: cost.elements } : {}),
+            /**
+             * ⛓ THE AREA BLOCK, beside `skeleton`'s — the spec that ran, what
+             * the partition found, the graph's own bounds and draws, and the
+             * REFUSAL when there is one. ⛔ OMITTED ENTIRELY at `areas: 0`, so
+             * the summary's bytes are unchanged there.
+             */
+            ...(model.areas.spec.keys === 0 ? {} : { areas: areaSummaryOf(model) }),
             width: model.defaults.width,
             height: model.defaults.height,
             entranceCell: model.entranceCell,
@@ -1040,4 +1913,7 @@ export function generateMazeLevel({
     };
 }
 
-export { DEFAULT_SKELETON, VERDICT };
+export {
+    DEFAULT_AREAS, DEFAULT_SKELETON, VERDICT,
+    formatAreaSpec, normalizeAreaSpec, parseAreaSpec,
+};

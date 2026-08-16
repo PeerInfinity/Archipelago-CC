@@ -92,6 +92,14 @@ const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules', p));
 /** ⛓ SLICE 7 — the ONE skeleton-spec parser, shared with the URL and both CLIs. */
 const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 1 slice 2 — the ONE area-spec codec, shared with the
+ * maze CLI (and, from slice 3, the lab page's `?areas=`). ⛔ ONE `--areas=` for
+ * the WHOLE sweep rather than a per-`--kinds=` clause: the area spec is not a
+ * property of the skeleton kind, and folding it into the kind string would have
+ * made `rooms;keys=1` look like a skeleton parameter the kind does not declare.
+ */
+const { formatAreaSpec, parseAreaSpec } = await M('procgenCore/areaSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -155,6 +163,19 @@ const parseSize = (spec) => {
  * therefore `pinsFor`) is untouched.
  * ══════════════════════════════════════════════════════════════════════ */
 
+/**
+ * ⛓ THE AREA SPEC FOR EVERY CELL OF THIS SWEEP. ⛔ Seedling REFUSES it by name:
+ * the area binding is the MAZE's in this arc (§3.2), and a flag that silently
+ * did nothing on one substrate would be a column that means two things.
+ */
+const AREAS = parseAreaSpec(arg('areas', '0'));
+if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
+    note('sweep-yield-table: --areas= is the MAZE binding\'s (PROCGEN ELEMENTS arc 1, slice 2). '
+        + 'Seedling gets the area graph in arc 3; running it here would print an area column '
+        + 'that is zero for a reason nobody stated.');
+    process.exit(2);
+}
+
 const CELL = arg('cell', '');
 if (CELL !== '') {
     const [kind, sizeSpec, seedSpec] = CELL.split('|');
@@ -187,6 +208,7 @@ if (CELL !== '') {
         model = mazeModel({
             seed, width: size.width, height: size.height, skeleton: parseSkeleton(kind,
                 { simulator: true, substrate: 'the maze binding' }),
+            areas: AREAS,
         });
         palette = MAZE_PALETTE;
         oracle = mazeOracle({ model, items: palette.items ?? null });
@@ -253,12 +275,50 @@ if (CELL !== '') {
             }
         }
     }
+    /**
+     * ⛓ THE AREA CENSUS COLUMNS — measured on THIS cell's own skeleton, so the
+     * census and the yield are the same room. ⛔ They are reported even at
+     * `--areas=0`, because the census is a fact about the CARVE and the whole
+     * point of measuring it was to know what the partition admits BEFORE a lock
+     * exists.
+     */
+    let areaCensus = null;
+    if (SUBSTRATE === 'maze') {
+        const { partitionMazeAreas } = await M('mazeRoom/procgenMaze.js');
+        const sk = model.skeleton();
+        const part = partitionMazeAreas(sk, {
+            entrance: { x: sk.entrance.x, y: sk.entrance.y },
+            goal: { x: model.goalCell.tx, y: model.goalCell.ty },
+        });
+        const deg = new Map(part.areas.map((a) => [a.id, 0]));
+        for (const e of part.adjacency) {
+            deg.set(e.a, deg.get(e.a) + 1);
+            deg.set(e.b, deg.get(e.b) + 1);
+        }
+        areaCensus = {
+            areas: part.areas.length,
+            real: part.areas.filter((a) => !a.synthetic).length,
+            adjacency: part.adjacency.length,
+            maxDegree: Math.max(0, ...deg.values()),
+            junctions3: part.corridorComponents.filter((c) => c.touches.length >= 3).length,
+            deadFloor: part.deadFloorCells,
+            entranceInArea: part.areas.some((a) => a.id === part.entranceArea && !a.synthetic),
+            goalInArea: part.areas.some((a) => a.id === part.goalArea && !a.synthetic),
+            ran: model.areas.ran,
+            refused: model.areas.refused?.reason ?? null,
+            doors: model.areas.doors.length,
+            symbols: model.areas.graph?.symbols.length ?? 0,
+            graphifyEdges: model.areas.graph
+                ? model.areas.graph.edges.filter((e) => e.kind === 'graphify').length : 0,
+        };
+    }
     say(JSON.stringify({
         substrate: SUBSTRATE,
         kind,
         size: size.label,
         seed,
         floorPct,
+        areaCensus,
         error,
         stop: out?.summary.stop ?? null,
         keptCount: out?.summary.keptCount ?? null,
@@ -357,6 +417,7 @@ const header = [
     `command: \`node scripts/procgen/sweep-yield-table.mjs --substrate=${SUBSTRATE} `
         + `--kinds=${KINDS.join(',')} ${SUBSTRATE === 'maze'
             ? `--sizes=${SIZES.map((s) => s.label).join(',')} ` : ''}`
+        + `${AREAS.keys > 0 ? `--areas='${formatAreaSpec(AREAS)}' ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
         + `--tries=${BOUNDS.triesPerStep} --k=${BOUNDS.saturationK} `
         + `--anchortries=${BOUNDS.anchorTriesPerCandidate} --cellbudget=${CELL_BUDGET_S}\``,
@@ -396,7 +457,7 @@ for (const c of cells) {
     denom.attempted += 1;
     note(`[stderr] ${SUBSTRATE} ${c.kind} ${c.size.label} seed ${c.seed} `
         + `(${denom.attempted}/${cells.length})…`);
-    const childArgs = [SELF, `--substrate=${SUBSTRATE}`,
+    const childArgs = [SELF, `--substrate=${SUBSTRATE}`, `--areas=${formatAreaSpec(AREAS)}`,
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,
         `--k=${BOUNDS.saturationK}`, `--anchortries=${BOUNDS.anchorTriesPerCandidate}`];
@@ -485,6 +546,49 @@ for (const [key, rows] of groups) {
         + `| ${Math.max(0, ...ok.map((r) => r.maxSolveMs))} |`);
 }
 say('');
+
+if (SUBSTRATE === 'maze') {
+    say('## THE AREA CENSUS — per kind x size (⛓ measured on the SKELETON, before any lock)');
+    say('');
+    say('| kind | size | areas (min/mean/max) | REAL (non-synthetic) | <=1 area | adjacency '
+        + '| max degree | 3+ junctions | dead floor | ent IN | goal IN | area graph RAN '
+        + '| doors | graphify |');
+    say('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+    for (const [key, rows] of groups) {
+        const [kind, size] = key.split('|');
+        const ok = rows.filter((r) => r.areaCensus && !r.aborted);
+        if (!ok.length) continue;
+        const c = ok.map((r) => r.areaCensus);
+        const n = (f) => c.map(f);
+        say(`| ${kind} | ${size} | ${Math.min(...n((x) => x.areas))}/`
+            + `${mean(n((x) => x.areas))}/${Math.max(...n((x) => x.areas))} `
+            + `| ${mean(n((x) => x.real))} | ${c.filter((x) => x.areas <= 1).length}/${c.length} `
+            + `| ${mean(n((x) => x.adjacency))} | ${Math.max(...n((x) => x.maxDegree))} `
+            + `| ${c.reduce((a, x) => a + x.junctions3, 0)} `
+            + `| ${c.reduce((a, x) => a + x.deadFloor, 0)} `
+            + `| ${c.filter((x) => x.entranceInArea).length}/${c.length} `
+            + `| ${c.filter((x) => x.goalInArea).length}/${c.length} `
+            + `| ${c.filter((x) => x.ran).length}/${c.length} `
+            + `| ${c.reduce((a, x) => a + x.doors, 0)} `
+            + `| ${c.reduce((a, x) => a + x.graphifyEdges, 0)} |`);
+    }
+    say('');
+    say('## THE AREA REFUSALS, by reason');
+    say('');
+    const refusals = {};
+    for (const r of results) {
+        const why = r.areaCensus?.refused;
+        if (why) refusals[why] = (refusals[why] ?? 0) + 1;
+    }
+    const refusalRows = Object.entries(refusals).sort((a, b) => b[1] - a[1]);
+    if (!refusalRows.length) say('(no cell refused an area graph in this sweep.)');
+    else {
+        say('| n | reason |');
+        say('|---|---|');
+        for (const [k, n] of refusalRows) say(`| ${n} | \`${k}\` |`);
+    }
+    say('');
+}
 
 say('## Per cell');
 say('');

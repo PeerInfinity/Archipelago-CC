@@ -62,6 +62,7 @@ const MAZE = (p) => import(join(HERE, '..', '..', 'frontend/modules/mazeRoom', p
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
+const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
 const {
     DEFAULT_MAZE_BUDGET, MAZE_PALETTE, generateMazeLevel, serializeMazeLevel,
 } = await MAZE('procgenMaze.js');
@@ -96,6 +97,15 @@ const BUDGET = { maxExpansions: num('expansions', DEFAULT_MAZE_BUDGET.maxExpansi
  */
 const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
     { simulator: true, substrate: 'the maze CLI' });
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 1 slice 2 — THE AREA GRAPH, through the ONE codec
+ * (`procgenCore/areaSpec.js`), which is the same string slice 3's `?areas=` will
+ * read: `--areas=1`, `--areas='2;graphify=0.5;goalShortcut=0'` (quote it — `;`
+ * is the shell's). ⛔ The default is `0` and at `0` the binding does not
+ * partition, does not call the module and spends no draw, so this CLI's payload
+ * is byte-identical to the one it printed before areas existed.
+ */
+const AREAS = parseAreaSpec(arg('areas', '0'));
 
 const bounds = {
     obstacleTarget: COUNT,
@@ -142,7 +152,7 @@ const t0 = Date.now();
 let out;
 try {
     out = generateMazeLevel({ seed: SEED, palette: MAZE_PALETTE, bounds, budget: BUDGET,
-        width: WIDTH, height: HEIGHT, skeleton: SKELETON });
+        width: WIDTH, height: HEIGHT, skeleton: SKELETON, areas: AREAS });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — the Seedling CLI's own
@@ -180,6 +190,17 @@ const payload = {
      * default, which is the thing `agreementWithPayload` compares against.
      */
     skeleton: SKELETON,
+    /**
+     * ⛓ THE AREA BLOCK, beside `skeleton`'s — and, unlike that one, written
+     * **CONDITIONALLY**: it is omitted at `--areas=0`, which is what keeps this
+     * CLI's per-kind md5s byte-identical (⚖ arc ruling 3). The BOTH-SIDES
+     * DEFAULT is `{keys: 0}`, so a payload written before this slice normalizes
+     * to the same object a caller at the default produces and AGREES rather
+     * than diverging on a field it could not have had (the `DEFAULT_SKELETON`
+     * precedent, applied the other way round because ruling 3 forbids moving
+     * the bytes here).
+     */
+    ...(AREAS.keys === 0 ? {} : { areas: { spec: AREAS, graph: out.model.areas.graph } }),
     budget: out.summary.budget,
     summary: out.summary,
     level: serializeMazeLevel(out.record),
@@ -194,6 +215,18 @@ if (has('json')) {
     say('');
     say(`room:   ${s.width}x${s.height} tiles, skeleton ${formatSkeleton(SKELETON)}`
         + `${SKELETON.kind === 'empty' ? ' (all floor before the loop, no wall ring)' : ' (CARVED)'}`);
+    if (AREAS.keys > 0) {
+        const a = out.model.areas;
+        say(`areas:  ${formatAreaSpec(AREAS)} — ${a.partitionSummary?.areaCount ?? 0} area(s) `
+            + `(${a.partitionSummary?.syntheticCount ?? 0} synthetic), `
+            + `${a.partitionSummary?.adjacencyCount ?? 0} adjacency pair(s); `
+            + (a.ran
+                ? `${a.graph.symbols.length} symbol(s) [${a.graph.symbols.join(', ')}], `
+                    + `${a.doors.length} door(s), ${a.keys.length} key(s), `
+                    + `${a.graph.edges.filter((e) => e.kind === 'graphify').length} graphify `
+                    + `edge(s); ${a.graph.draws} draw(s) over ${a.graph.attempts} attempt(s)`
+                : `⛔ REFUSED: ${a.refused.reason} — ${a.refused.detail}`));
+    }
     say(`start:  (${s.entranceCell.tx},${s.entranceCell.ty})   goal: exit tile `
         + `(${s.goalCell.tx},${s.goalCell.ty})`);
     say(`items:  ${JSON.stringify(s.items)} (the player starts empty-handed)`);
@@ -229,6 +262,22 @@ if (has('json')) {
     }
     say('');
     say(`certification: ${JSON.stringify(s.finalCertification)}`);
+    if (s.elements?.length) {
+        say('');
+        say('## the elements — ⚖ ruling 20\'s SOLVER-WORK RECORDS (record only; nothing decides)');
+        for (const e of s.elements) {
+            say(`  ${e.symbol.padEnd(4)} ${e.doorCount} door(s) @ `
+                + `${e.doors.map((dd) => `(${dd.x},${dd.y})`).join(' ')}  key @ `
+                + `(${e.key?.x},${e.key?.y}) in ${e.key?.area}`);
+            say(`       goal plan WITHOUT its doors+key: ${e.planWithout} `
+                + `(${e.expandedWithout} node(s))    WITH: ${e.planWith} `
+                + `(${e.expandedWith} node(s))`);
+            say(`       ⛓ DIFFERENTIAL — key removed, doors kept: `
+                + `${e.planWithoutKey === null ? 'UNREACHABLE — THE LOCK IS A CUT'
+                    : `still ${e.planWithoutKey} step(s) (this symbol is NOT on the only route)`}`
+                + `;  key->door plan: ${e.planKeyToDoor}`);
+        }
+    }
     say('');
     say('## the room');
     for (let y = 0; y < out.record.height; y += 1) {
@@ -237,7 +286,9 @@ if (has('json')) {
             const key = `${x},${y}`;
             if (x === out.record.entrance.x && y === out.record.entrance.y) row += '@';
             else if (x === s.goalCell.tx && y === s.goalCell.ty) row += 'X';
-            else if (out.record.obstacles.has(key)) row += 'D';
+            else if (out.record.obstacles.has(key)) {
+                row += out.record.obstacles.get(key).startsWith('door_K') ? 'A' : 'D';
+            }
             else if (out.record.items.has(key)) row += 'k';
             else row += out.record.tiles[y * out.record.width + x] === 1 ? '#' : '.';
         }

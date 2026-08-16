@@ -96,6 +96,79 @@ const assertCell = (p, what, width, height) => {
  * @param {{x:number, y:number}} to
  * @returns {boolean}
  */
+/**
+ * ⛓⛓⛓ THE REACHABLE **SET** FROM ONE CELL — PROCGEN ELEMENTS arc 1, slice 2.
+ *
+ * `connected` answers a yes/no about a PAIR. The area binding asks three
+ * questions that a pair predicate cannot answer, and all three are the same
+ * flood:
+ *
+ *  1. **the area partition** — the maximal blob of "wide" cells a chamber is;
+ *  2. **the corridor components** — the maximal blob of non-area floor cells an
+ *     EDGE is (the areas it touches are what makes them adjacent);
+ *  3. **the level-n verification** (⚖ arc kickoff §3.2) — with every door above
+ *     level n treated as WALL, the set the entrance reaches must be EXACTLY the
+ *     areas of level ≤ n plus their corridors. That is a SET EQUALITY, and a
+ *     pair predicate can only ever sample it.
+ *
+ * ⛔ SO IT LIVES HERE RATHER THAN IN THE BINDING. ⚖ Arc ruling 5 / the
+ * one-of-everything law: a second BFS in `procgenMaze.js` would be a second
+ * spelling of reachability, and the day one of them grew a diagonal or a bounds
+ * fix the partition and the pre-check would disagree while both claimed to be
+ * "the flood". `connected` is NOT re-implemented on top of this (it can stop
+ * early at the target and this one cannot), but they share the traversal shape
+ * and this file's test drives the two against each other.
+ *
+ * ⚠ THE START CELL IS INCLUDED WHEN IT IS WALKABLE, AND THE SET IS EMPTY WHEN IT
+ * IS NOT. "Which cells can I reach from a cell I cannot stand on?" has one
+ * honest answer, and it is not a throw (`connected`'s own rule for a
+ * non-walkable endpoint, carried whole).
+ *
+ * @param {number} width
+ * @param {number} height
+ * @param {(x:number, y:number) => boolean} isWalkable the CALLER's predicate.
+ *   ⛔ Called at most once per cell.
+ * @param {{x:number, y:number}} from
+ * @returns {Set<string>} `"x,y"` keys — the spelling both substrates' overlays
+ *   already use, so a caller can test membership against a `Map` key without a
+ *   second conversion.
+ */
+export function reachableFrom(width, height, isWalkable, from) {
+    for (const [n, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`gridFlood: ${n} must be a positive integer, got ${JSON.stringify(v)}.`);
+        }
+    }
+    if (typeof isWalkable !== 'function') {
+        fail('gridFlood: `isWalkable(x, y)` must be a function — the PREDICATE is the '
+            + 'caller\'s and the flood is shared.');
+    }
+    assertCell(from, '`from`', width, height);
+    const out = new Set();
+    if (!isWalkable(from.x, from.y)) return out;
+    const seen = new Uint8Array(width * height);
+    const queue = [from.x + from.y * width];
+    seen[queue[0]] = 1;
+    out.add(`${from.x},${from.y}`);
+    for (let head = 0; head < queue.length; head += 1) {
+        const i = queue[head];
+        const x = i % width;
+        const y = (i - x) / width;
+        for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const ni = nx + ny * width;
+            if (seen[ni]) continue;
+            seen[ni] = 1;
+            if (!isWalkable(nx, ny)) continue;
+            out.add(`${nx},${ny}`);
+            queue.push(ni);
+        }
+    }
+    return out;
+}
+
 export function connected(width, height, isWalkable, from, to) {
     for (const [n, v] of [['width', width], ['height', height]]) {
         if (!Number.isInteger(v) || v <= 0) {
