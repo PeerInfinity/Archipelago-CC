@@ -198,6 +198,27 @@ keep the doors, and the goal is unreachable); `summary.kept[].cost` carries the
 before/after plan length of each kept pass-2 template. These are records only —
 nothing decides on them, and none of them is a wall-clock number.
 
+**Requiring a symbol (`require: [K…]`).** A run can be DIRECTED: `--require=K0`
+on the CLI, `?require=K0,K1` on the lab page, `--require=` on the sweep. The
+directive says *the run must place these symbols as locks the goal is beyond*,
+and its proof is the differential above — for every asked symbol, removing
+`key_K` from the finished level must leave the goal unreachable (`isCut`). A met
+symbol is graded **STRONG**; on this substrate that is the only grade reachable,
+because the BFS differential is a proof rather than an estimate, so the graded
+half of the certification scale is exercised here in its trivial case. Measured:
+over `rooms`/`rooms;minRoom=2` at 11×11 and 15×15, keys 1–2, seeds 1..24, **all
+148 placed symbols are cuts** — the goal sits at the highest key level and a
+door guards every boundary cell of every area at its level, so removing any key
+seals the goal by construction.
+
+An unmet directive is a **REFUSED RUN**, never a retry and never a widened
+bound. Five reasons, each named: the run is at `areas=0`; the symbol is beyond
+the key count the spec declares (`?require=K1` with `?areas=1`); the area graph
+itself refused (its reason is carried verbatim); a declared symbol nobody
+measured; and a symbol whose key ablation still solves. The CLI exits **6** and
+`summary.require` carries `{asked, met: [{symbol, grade, planWith,
+planWithoutKey}], refused}`; a run without a directive carries no field at all.
+
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
@@ -286,6 +307,16 @@ room a ladder is built in is part of the level's identity, exactly as the seed
 is. Try `?seed=3&count=3&skeleton=winding&run=1` and
 `?seed=3&count=0&skeleton=winding;chambers=2`.
 
+**`?areas=<keys>[;k=v]` and `?require=K0,K1`** — the area graph and the
+rule-directed directive, one reader and one writer each in `urlParams.js`,
+parsed by the one `areaSpec` codec the CLIs already speak. Absent means
+`{keys: 0}` / no directive, and both writers DELETE at that value and rewrite in
+place. `?require=` is its own parameter rather than a `?directed=` verb because
+it constrains the AREA GRAPH — built once with the model, before pass 2 exists —
+and is a property of the whole run, not of an attempt. Try
+`?seed=1&width=15&height=15&skeleton=rooms&areas=1&require=K0&count=2&run=1`,
+and `?areas=1&require=K1` for the refusal.
+
 ### `drawWorld`'s `view` contract
 
 The panel's canvas draw was extracted to `mazeRoomRender.js` so the panel and
@@ -366,6 +397,36 @@ rather than out of the loop.
 ⚠ A canvas click publishes `procgenLab:selectTile` in **every** arm, not only
 in EDIT: the event means *"the reader pointed at this cell"*, and the page's
 own edit behaviour is unchanged.
+
+### The area-graph overlay
+
+`?areas=` and `?require=` ride the page's one reader/writer like every other
+parameter (absent is the default, the writer deletes at it and rewrites in
+place), and the page draws the graph **over** the grid with
+`mazeAreaOverlay.drawAreaOverlay(ctx, model.areas, {tilePx, layer})` — a
+SIBLING of `drawWorld`, called after it exactly as the plan and hover overlays
+are, because a graph is a fact about the MODEL and the panel (the renderer's
+other caller) has no model at all. `drawWorld`'s captured op-log fixtures are
+therefore untouched, and the overlay brings its own.
+
+The **layers** are cumulative and the `LAYER ▶` button steps through them:
+`off` → `partition` (each area shaded by its own hue; the synthetic
+entrance/goal areas outlined dashed rather than filled, because they are not
+chambers) → `locks` (the shading switches to the key-level ramp, every door cell
+gets a border, graphify edges are dashed between area centroids) → `keys` (key
+cells ringed, the solution path drawn through the centroids) → `all`. The layer
+is a VIEW setting: it re-draws, it never resets the ladder, and it is not in the
+URL. Changing the spec or the directive DOES reset the ladder, on the same terms
+a skeleton change does — the graph is built with the model.
+
+Nothing is labelled per cell (door counts reach 50 on a 15×15 sweep cell); the
+symbols are named once each in the **legend** below the canvas, with the door
+count, the areas they lock and where the key is. A refused GRAPH prints the
+module's own reason where the level would be and still shows its carved level —
+that level is what the run produced, it simply has no locks. A refused
+DIRECTIVE shows **no level and no payload**: the run did not produce what was
+asked for. ⚠ At 11×11 with two keys most seeds refuse, and that is the honest
+state rather than something to tune away.
 
 ### What is not here yet
 
