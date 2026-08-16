@@ -57,6 +57,9 @@
  */
 
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
+import {
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
+} from '../procgenCore/skeletonKinds.js';
 import { defineTemplate, enumerateValues } from '../procgenCore/templateContract.js';
 import { reach } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -263,14 +266,27 @@ export function deserializeMazeLevel(payload) {
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
+ * ⛓ THE MAZE OFFERS **EVERY** KIND, and it is the only binding that can: the
+ * two simulator-bound backends (`random_walls`, `corridor_only`) are its own.
+ * Stated as a derivation rather than a list so a kind added to the table
+ * arrives here without a second edit.
+ */
+export const MAZE_SKELETON_KINDS = Object.freeze(kindsOffered({ simulator: true }));
+
+/**
  * @param {object} o
  * @param {number} o.seed        the level's identity; the goal cell is its
  *                               first consequence
  * @param {number} [o.width]     overrides `MAZE_DEFAULTS.width`
  * @param {number} [o.height]    overrides `MAZE_DEFAULTS.height`
  * @param {object} [o.defaults]  see `MAZE_DEFAULTS`
+ * @param {object} [o.skeleton]  `{kind}` — ⛓ CONSTRUCTIVE-MODE slice 5. The
+ *   default is the OPEN ROOM this binding has always built; any other kind
+ *   carves with the maze backend the kind names. See `skeletonKinds.js`.
  */
-export function mazeModel({ seed, width, height, defaults = MAZE_DEFAULTS } = {}) {
+export function mazeModel({
+    seed, width, height, defaults = MAZE_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
+} = {}) {
     const d = Object.freeze({
         ...MAZE_DEFAULTS,
         ...defaults,
@@ -302,10 +318,53 @@ export function mazeModel({ seed, width, height, defaults = MAZE_DEFAULTS } = {}
         .filter((c) => !(c.tx === d.entrance.x && c.ty === d.entrance.y));
     const goalCell = Object.freeze(roomRng.pick(goalCandidates));
 
-    const skeleton = () => createWorld(d.width, d.height, {
+    /**
+     * ── ⛓⛓⛓ SLICE 5: THE CARVE, AND WHY IT HAPPENS **HERE** RATHER THAN IN
+     *    `skeleton()` ────────────────────────────────────────────────────
+     *
+     * ⛔ THE CARVE SPENDS DRAWS, AND `skeleton()` IS CALLED MORE THAN ONCE.
+     * `generateLevel` calls it once, but `mazeLab.generateStep(0)` calls it for
+     * the page and `loadPayload` builds a second model — so a `skeleton()` that
+     * carved on each call would hand out a DIFFERENT room every time from the
+     * same seed, because `roomRng` would have advanced. Carving once, at model
+     * construction, makes `skeleton()` a pure accessor: it clones the template
+     * and spends nothing.
+     *
+     * ⛓ THE DRAW ORDER **IS** THE IDENTITY (⚖ kickoff §3.4): the goal cell is
+     * drawn ABOVE, from the room stream's first draw, and the backend's draws
+     * come after it. So the goal of seed s under kind K is the goal of seed s
+     * under `empty`, and the constructive kinds do not expire slice 2's
+     * seed→level pairs. `procgenMaze.test.js` drives exactly that.
+     *
+     * ⛔ AT THE DEFAULT KIND NOTHING RUNS. `empty` is not "the `empty` backend"
+     * — it is the open room `createWorld` already returns — so the byte-identity
+     * gate is not a comparison, it is a code path that never executes.
+     *
+     * ⚠ THE ENTRANCE (0,0) AND THE GOAL ARE **OFF-LATTICE** on an odd room:
+     * `cellGrid` puts its cells at odd coordinates, and (0,0) is neither. Every
+     * tree backend ends its `run` with `connectFixedTiles`, which L-carves each
+     * fixed tile to its nearest cell (x first, then y) — so the entrance and
+     * the goal are attached to the spanning tree rather than stranded, and no
+     * code here does that work a second time. ⛔ `repairConnectivity` is NOT
+     * called from here for any kind: the two tree backends are connected by
+     * construction and `recursive_division` calls it inside its own `run`.
+     */
+    const skeletonKind = assertKind(skeletonSpec?.kind ?? DEFAULT_SKELETON_KIND,
+        { simulator: true, substrate: 'the maze binding' });
+    const template = createWorld(d.width, d.height, {
         entrance: { x: d.entrance.x, y: d.entrance.y },
         exits: [{ exit_id: d.goalExitId, x: goalCell.tx, y: goalCell.ty }],
     });
+    const carve = skeletonKind === DEFAULT_SKELETON_KIND
+        ? null : carveSkeleton(skeletonKind, template, roomRng);
+
+    /**
+     * ⛔ A **CLONE** PER CALL, because a maze world is mutable and the loop
+     * hands the record straight to `place`. Two callers holding one Int8Array
+     * would be the frozen-vs-mutable trap in the one object the whole run is
+     * about.
+     */
+    const skeleton = () => cloneWorld(template);
 
     /**
      * ⚠ "FREE" IS FOUR CLAIMS AND THEY ARE ASKED SEPARATELY, in the order a
@@ -390,6 +449,11 @@ export function mazeModel({ seed, width, height, defaults = MAZE_DEFAULTS } = {}
     return {
         placementError: MazePlacementError,
         defaults: d,
+        /** ⛓ The kind that BUILT this room, and the block a payload carries. */
+        skeletonKind,
+        skeletonSpec: Object.freeze({ kind: skeletonKind }),
+        /** What the carve actually ran — `null` at the open room. */
+        carve: carve && Object.freeze({ ...carve }),
         goalCell,
         /** The goal in the WORLD's own spelling, for `mazeOracle`'s predicate. */
         goalPos: Object.freeze({ x: goalCell.tx, y: goalCell.ty }),
@@ -848,9 +912,9 @@ assertMazePalette();
  */
 export function generateMazeLevel({
     seed, palette = MAZE_PALETTE, bounds, budget = DEFAULT_MAZE_BUDGET, defaults,
-    width, height,
+    width, height, skeleton = DEFAULT_SKELETON,
 } = {}) {
-    const model = mazeModel({ seed, width, height, defaults });
+    const model = mazeModel({ seed, width, height, defaults, skeleton });
     const oracle = mazeOracle({ model, items: palette.items ?? null, budget });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     return {
@@ -862,9 +926,18 @@ export function generateMazeLevel({
             height: model.defaults.height,
             entranceCell: model.entranceCell,
             goalCell: model.goalCell,
+            /**
+             * ⛔ THE SKELETON KIND IS **NOT** IN THE SUMMARY, and leaving it
+             * out is a decision. Every state and every payload already carries
+             * a `skeleton` block beside the summary (⚖ ruling 9(b) reserved it
+             * there), and `agreementWithPayload` compares THAT one. A second
+             * copy inside the summary would be two spellings of one fact — and
+             * it would move the CLI payload's bytes at the DEFAULT kind, which
+             * is the one thing this slice promised not to do.
+             */
             items: palette.items ?? null,
         }),
     };
 }
 
-export { VERDICT };
+export { DEFAULT_SKELETON, VERDICT };

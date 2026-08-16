@@ -20,9 +20,9 @@ import {
     TILE_FLOOR, TILE_WALL, getItem, getObstacle, getTile, setTile,
 } from './mazeRoomEngine.js';
 import {
-    DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MazePlacementError, ProcgenMazeError,
-    allCells, assertMazePalette, cloneWorld, generateMazeLevel, mazeModel, mazeOracle,
-    serializeMazeLevel,
+    DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, MazePlacementError,
+    ProcgenMazeError, allCells, assertMazePalette, cloneWorld, generateMazeLevel, mazeModel,
+    mazeOracle, serializeMazeLevel,
 } from './procgenMaze.js';
 import { rngFor } from './procgenRng.js';
 
@@ -554,4 +554,124 @@ describe('the CLI is byte-identical across two processes', () => {
         expect(runCli(['--seed=7', '--count=4', '--verify']))
             .toMatch(/^two-process identity at seed 7: IDENTICAL, \d+ bytes, md5 [0-9a-f]{32}$/m);
     }, 30000);
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE CONSTRUCTIVE SKELETON KINDS — CONSTRUCTIVE-MODE SLICE 5
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The vocabulary and the carvers are gated substrate-free in
+ * `procgenCore/skeletonKinds.test.js`; what is here is what only the MAZE
+ * binding can be asked.
+ */
+
+describe('procgenMaze — the skeleton kinds', () => {
+    const wallsOf = (world) => [...world.tiles].filter((t) => t === TILE_WALL).length;
+
+    it('offers EVERY kind — it owns the two simulator-bound backends', () => {
+        expect(MAZE_SKELETON_KINDS).toEqual([
+            'empty', 'classic', 'corridor', 'branchy', 'bushy', 'loopy', 'open', 'rooms',
+            'winding',
+        ]);
+        for (const kind of MAZE_SKELETON_KINDS) {
+            expect(mazeModel({ seed: 1, skeleton: { kind } }).skeletonKind).toBe(kind);
+        }
+        expect(() => mazeModel({ seed: 1, skeleton: { kind: 'spiral' } }))
+            .toThrow(/is not a skeleton kind/);
+    });
+
+    /**
+     * ⛓⛓ THE OPEN ROOM DID NOT MOVE. At the default kind nothing carves — the
+     * skeleton is the plain all-floor room `createWorld` returns — so this
+     * slice cannot expire slice 2's seed→level pairs.
+     */
+    it('leaves the DEFAULT skeleton an open room with ZERO walls, seeds 1..12', () => {
+        for (let seed = 1; seed <= 12; seed += 1) {
+            expect(wallsOf(mazeModel({ seed }).skeleton()), `seed ${seed}`).toBe(0);
+            expect(mazeModel({ seed }).carve).toBeNull();
+            expect(wallsOf(mazeModel({ seed, skeleton: { kind: 'empty' } }).skeleton())).toBe(0);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ THE DRAW ORDER **IS** THE IDENTITY (⚖ kickoff §3.4). The goal is the
+     * room stream's FIRST draw and the carve comes after it, so the goal of
+     * seed s under kind K is the goal of seed s under the open room. ⛔ A carve
+     * that drew first reddens exactly this row.
+     */
+    it('the goal of seed s under ANY kind is the goal of seed s under `empty`', () => {
+        for (let seed = 1; seed <= 24; seed += 1) {
+            const open = mazeModel({ seed }).goalCell;
+            for (const kind of MAZE_SKELETON_KINDS) {
+                expect(mazeModel({ seed, skeleton: { kind } }).goalCell, `${kind} @ ${seed}`)
+                    .toEqual(open);
+            }
+        }
+    });
+
+    /**
+     * ⛔ `skeleton()` IS A PURE ACCESSOR OVER A CARVE THAT RAN ONCE — and it
+     * still returns a CLONE, because a maze world is mutable and the loop
+     * writes into what it is handed.
+     */
+    it('returns an EQUAL room every call, and never the same mutable object', () => {
+        for (const kind of ['winding', 'rooms', 'loopy']) {
+            const model = mazeModel({ seed: 5, skeleton: { kind } });
+            const a = model.skeleton();
+            const b = model.skeleton();
+            expect(serializeMazeLevel(a)).toEqual(serializeMazeLevel(b));
+            expect(a).not.toBe(b);
+            expect(a.tiles).not.toBe(b.tiles);
+            // ⛔ Writing into a handed-out world must not reach the template.
+            // ⚠ Compared against the cell's OWN prior value, not against
+            // TILE_FLOOR: in a carved room (5,5) may legitimately be wall
+            // already, and a check that assumed floor would pass for the
+            // wrong reason on exactly the kinds this row is about.
+            const before = getTile(model.skeleton(), 5, 5);
+            setTile(a, 5, 5, before === TILE_WALL ? TILE_FLOOR : TILE_WALL);
+            expect(getTile(model.skeleton(), 5, 5)).toBe(before);
+        }
+    });
+
+    /**
+     * ⚠ THE ENTRANCE (0,0) IS OFF-LATTICE and `connectFixedTiles` L-carves it
+     * — so a carved skeleton still has an entrance and a goal on FLOOR, which
+     * is the precondition the loop's own skeleton solve rests on.
+     */
+    it('leaves the entrance and the goal on FLOOR under every carving kind', () => {
+        for (const kind of MAZE_SKELETON_KINDS.filter((k) => k !== 'empty')) {
+            for (let seed = 1; seed <= 12; seed += 1) {
+                const model = mazeModel({ seed, skeleton: { kind } });
+                const w = model.skeleton();
+                expect(getTile(w, w.entrance.x, w.entrance.y), `${kind} seed ${seed} entrance`)
+                    .toBe(TILE_FLOOR);
+                expect(getTile(w, model.goalPos.x, model.goalPos.y), `${kind} seed ${seed} goal`)
+                    .toBe(TILE_FLOOR);
+            }
+        }
+    });
+
+    it('a carved skeleton SOLVES — the loop\'s own control, asked directly', () => {
+        for (const kind of MAZE_SKELETON_KINDS.filter((k) => k !== 'empty')) {
+            for (let seed = 1; seed <= 12; seed += 1) {
+                const model = mazeModel({ seed, skeleton: { kind } });
+                const oracle = mazeOracle({ model });
+                expect(oracle.solve(model.skeleton()).verdict, `${kind} seed ${seed}`)
+                    .toBe(VERDICT.SOLVED);
+            }
+        }
+    });
+
+    it('generateMazeLevel carves, and its level DIFFERS from the open room\'s', () => {
+        const open = generateMazeLevel({ seed: 3, bounds: { obstacleTarget: 3 } });
+        const carved = generateMazeLevel({
+            seed: 3, bounds: { obstacleTarget: 3 }, skeleton: { kind: 'winding' },
+        });
+        expect(serializeMazeLevel(carved.record)).not.toEqual(serializeMazeLevel(open.record));
+        expect(carved.model.skeletonKind).toBe('winding');
+        // ⛓ …and it is deterministic: the same call twice is the same level.
+        expect(serializeMazeLevel(generateMazeLevel({
+            seed: 3, bounds: { obstacleTarget: 3 }, skeleton: { kind: 'winding' },
+        }).record)).toEqual(serializeMazeLevel(carved.record));
+    });
 });

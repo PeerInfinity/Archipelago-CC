@@ -58,6 +58,31 @@ import {
 } from './procgenPalette.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
+import {
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
+} from '../procgenCore/skeletonKinds.js';
+import {
+    TILE_FLOOR, TILE_WALL, getTile, setTile,
+} from '../shared/procgen/mazeAlgorithms/gridTiles.js';
+/**
+ * ⚠ REGISTER-ON-IMPORT (⚖ kickoff §5), and the BINDING owns it. Backends
+ * register themselves into the shared registry when their files are imported;
+ * the maze gets its six through `mazeRoomEngine`, and this is where Seedling
+ * gets the three PORTABLE ones. ⛔ They are NOT imported from
+ * `skeletonKinds.js` itself, even though that is the file that dispatches to
+ * them: doing so made them register before `mazeRoom/mazeAlgorithms/index.js`'s
+ * own three and moved `listBackends()`' order, which
+ * `dump-maze-byteidentity.mjs` prints as a canary and `mazeAlgorithms/index.js`
+ * says must not change. Measured, then moved here.
+ *
+ * ⛔ The maze-only three (`random_walls`, `corridor_only`, `empty`) are NOT
+ * imported: they need the maze simulator, this binding refuses those kinds BY
+ * NAME (`assertKind`), and importing them would drag the maze engine onto the
+ * Seedling page's graph for kinds it will never run.
+ */
+import '../shared/procgen/mazeAlgorithms/kruskals.js';
+import '../shared/procgen/mazeAlgorithms/recursiveBacktracker.js';
+import '../shared/procgen/mazeAlgorithms/recursiveDivision.js';
 import { rngFor } from './procgenRng.js';
 
 export class ProcgenSeedlingError extends Error {
@@ -211,6 +236,14 @@ export function placementTagId(record, reserved = []) {
     return -1;
 }
 
+/**
+ * ⛓ THE KINDS THIS BINDING OFFERS — every PORTABLE one. `classic` and
+ * `corridor` need the maze simulator and are refused by name (`assertKind`).
+ * Derived rather than listed so a kind added to the table arrives here without
+ * a second edit.
+ */
+export const SEEDLING_SKELETON_KINDS = Object.freeze(kindsOffered({ simulator: false }));
+
 /** The interior cells of a room — everything the wall ring does not hold. */
 export function interiorCells(record) {
     const out = [];
@@ -227,8 +260,15 @@ export function interiorCells(record) {
  * @param {number} o.seed        the level's identity; the goal cell is its
  *                               first consequence
  * @param {object} [o.defaults]  see `SEEDLING_DEFAULTS`
+ * @param {object} [o.skeleton]  `{kind}` — ⛓ CONSTRUCTIVE-MODE slice 5. The
+ *   default is the OPEN bordered room this binding has always built; any other
+ *   kind CARVES the interior with the grid backend the kind names. ⛔ Seedling
+ *   offers the PORTABLE kinds only — `classic` and `corridor` need the maze
+ *   simulator and are refused by name. See `procgenCore/skeletonKinds.js`.
  */
-export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
+export function seedlingModel({
+    seed, defaults = SEEDLING_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
+} = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
     /**
      * ⛔ THE GOAL CELL IS DRAWN FROM ITS OWN STREAM, not from the loop's.
@@ -252,7 +292,107 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
         `${goalCell.tx},${goalCell.ty}`,
     ]);
 
-    const skeleton = () => withEntities(blank, [{
+    /**
+     * ── ⛓⛓⛓ SLICE 5: THE CARVE. ONE PASS, AT MODEL CONSTRUCTION ────────
+     *
+     * ⛔ IT HAPPENS HERE AND NOT INSIDE `skeleton()` BECAUSE IT SPENDS DRAWS,
+     * and `skeleton()` is called more than once (the loop calls it, and
+     * `watchGenerate.generateStep(0)` calls it for the page). A carve per call
+     * would hand out a different room each time from one seed.
+     *
+     * ⛓ THE DRAW ORDER **IS** THE IDENTITY (⚖ kickoff §3.4): `goalCell` is
+     * `roomRng`'s FIRST draw, above; the backend's draws come next; the
+     * post-processors' last. So the goal of seed s under kind K is the goal of
+     * seed s under `empty`, and the constructive kinds do not expire the
+     * empty-room seed→level pairs (`procgenSeedling.test.js` drives it).
+     *
+     * ⛔ AT THE DEFAULT KIND NOTHING BELOW RUNS. `empty` is not "the `empty`
+     * backend" — it is the open bordered room this file has always built — so
+     * the byte-identity gate is a code path that never executes rather than a
+     * comparison that happens to pass.
+     *
+     * ── THE GRID, AND THE THREE FACTS ABOUT IT WORTH STATING ──────────
+     *
+     * The carvers speak the `gridTiles.js` contract: `{width, height, tiles:
+     * Int8Array, entrance:{x,y}, exits: Map of {x,y}}`. Seedling anchors are
+     * `{tx,ty}` and grid points are `{x,y}` — converted at this boundary and
+     * nowhere else (§9.2's rule).
+     *
+     *  1. ⚠ **THE RING IS HANDED IN ALREADY WALLED, AND THAT IS LOAD-BEARING.**
+     *     The two tree backends would wall it themselves (`fillBackgroundWalls`
+     *     walls every non-fixed tile), but `recursive_division` starts from the
+     *     ALL-FLOOR grid `createWorld` gives it and only ADDS walls — so on a
+     *     bare grid it would return a room whose border is floor, and
+     *     `emptyLevel`'s own docblock says why that is not a room (*"nothing
+     *     stops a player from walking off a floor that ends"*). Pre-walling
+     *     costs nothing for the tree kinds (they overwrite it) and is invisible
+     *     to `braid` (a ring wall has no floor beyond it) and to
+     *     `pruneDeadEnds` (which only fills). ⛓ And it is CHECKED below, not
+     *     assumed.
+     *  2. ⚠ **THE LATTICE IS 4x4 CELLS AND THE ROOM IS 10x10**, so the
+     *     tree backends use columns/rows 1,3,5,7 and leave row 8 and column 8
+     *     as a strip no cell occupies — 7x7 effective. A goal drawn into that
+     *     strip is not stranded: `connectFixedTiles` L-carves every off-lattice
+     *     fixed tile to its nearest cell. The start (1,1) is exactly ON a cell,
+     *     so it is part of the spanning tree by construction.
+     *  3. ⛔ **`repairConnectivity` IS NOT CALLED FROM HERE** for any kind: the
+     *     tree backends are connected by construction, and `recursive_division`
+     *     calls it inside its own `run`. The honest net for a skeleton that
+     *     does not solve is the LOOP's — `generateLevel` refuses to start and
+     *     says so with the oracle's own text.
+     */
+    const skeletonKind = assertKind(skeletonSpec?.kind ?? DEFAULT_SKELETON_KIND,
+        { simulator: false, substrate: 'the Seedling binding' });
+
+    const carveRoom = () => {
+        const gw = { width: d.width, height: d.height };
+        const grid = {
+            width: gw.width,
+            height: gw.height,
+            tiles: new Int8Array(gw.width * gw.height),
+            entrance: { x: d.start.tx, y: d.start.ty },
+            exits: new Map([['goal', { exit_id: 'goal', x: goalCell.tx, y: goalCell.ty }]]),
+        };
+        // (1) the ring, walled before the backend sees the grid.
+        for (let y = 0; y < gw.height; y += 1) {
+            for (let x = 0; x < gw.width; x += 1) {
+                const ring = x === 0 || y === 0 || x === gw.width - 1 || y === gw.height - 1;
+                if (ring) setTile(grid, x, y, TILE_WALL);
+            }
+        }
+        const carve = carveSkeleton(skeletonKind, grid, roomRng);
+        const ground = [];
+        for (let ty = 0; ty < gw.height; ty += 1) {
+            for (let tx = 0; tx < gw.width; tx += 1) {
+                if (getTile(grid, tx, ty) !== TILE_FLOOR) continue;
+                if (tx === 0 || ty === 0 || tx === gw.width - 1 || ty === gw.height - 1) {
+                    fail(`procgenSeedling: the ${JSON.stringify(skeletonKind)} carve left the `
+                        + `BORDER cell (${tx},${ty}) as floor. The ring is what makes the room `
+                        + 'a room — `loadlevel` drops out-of-rectangle tiles and nothing stops '
+                        + 'a player walking off a floor that ends — so a carve that opens it '
+                        + 'is refused rather than painted over.');
+                }
+                ground.push({ tx, ty, terrain: 'ground' });
+            }
+        }
+        /**
+         * ⛔ THE CARVE BASE IS `emptyLevel({floor:'wall'})` — a room that is
+         * wall everywhere — and only the carved cells are painted back to
+         * `ground`. The alternative (paint all 100 cells, floor AND wall)
+         * writes the same record and hides the fact that the un-carved room IS
+         * the wall; ⚖ ruling 1's *"a map filled with walls"* is a starting
+         * state, not a paint order.
+         */
+        const walled = emptyLevel({
+            level: d.level, width: d.width, height: d.height, floor: 'wall',
+        });
+        return { record: withTerrain(walled, ground), carve };
+    };
+
+    const carved = skeletonKind === DEFAULT_SKELETON_KIND ? null : carveRoom();
+    const base = carved ? carved.record : blank;
+
+    const skeleton = () => withEntities(base, [{
         type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
     }]);
 
@@ -435,6 +575,11 @@ export function seedlingModel({ seed, defaults = SEEDLING_DEFAULTS } = {}) {
     return {
         placementError: ProcgenLevelError,
         defaults: Object.freeze(d),
+        /** ⛓ The kind that BUILT this room, and the block a payload carries. */
+        skeletonKind,
+        skeletonSpec: Object.freeze({ kind: skeletonKind }),
+        /** What the carve actually ran — `null` at the open room. */
+        carve: carved ? Object.freeze({ ...carved.carve }) : null,
         goalCell: Object.freeze({ ...goalCell }),
         goalOel: Object.freeze({ ...goalOel }),
         goals: Object.freeze([Object.freeze(collectGoal(goalOel.x, goalOel.y))]),
@@ -634,8 +779,9 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } 
  */
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
+    skeleton = DEFAULT_SKELETON,
 } = {}) {
-    const model = seedlingModel({ seed, defaults });
+    const model = seedlingModel({ seed, defaults, skeleton });
     const oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     return {
