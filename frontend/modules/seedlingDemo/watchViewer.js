@@ -148,6 +148,9 @@ import {
     generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
     skeletonCatalogue, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
+// ⛓ SLICE 7: the ONE formatter/normalizer for a skeleton spec — the identity
+// line, the URL bar and this form all spell a room the same way.
+import { formatSkeleton, normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
@@ -4444,6 +4447,70 @@ async function runGenerate(params, lifetime) {
     skeletonSel.value = skeleton.kind;
 
     /**
+     * ── ⛓⛓⛓ SLICE 7 — THE KIND'S PARAMETERS, AS A FORM ─────────────────
+     *
+     * ⛔ MOUNTED FROM THE CATALOGUE'S OWN SCHEMA, so this page keeps no second
+     * list of what a kind takes: the options ARE the declared domain and the
+     * pre-selection IS the declared default, which is why a control here cannot
+     * offer a value `parseSkeleton` would refuse.
+     *
+     * ⛔ AND IT IS RE-MOUNTED AT DEFAULTS ON EVERY KIND CHANGE, not merged.
+     * `minRoom` is `rooms`' knob and `prune` is `bushy`'s; carrying a value
+     * across a kind change would either refuse at the next press or silently
+     * drop — and a form holding a setting the selected kind does not have is a
+     * control that writes state nobody reads.
+     *
+     * ⚠ There is no "any (draw it)" option, unlike the template form: a
+     * template parameter may be DRAWN, a room parameter is CHOSEN. The room is
+     * one thing, in force, named by the link.
+     */
+    const skeletonParamBox = $('genSkeletonParams');
+    const mountSkeletonParams = (kind, values = {}) => {
+        skeletonParamBox.innerHTML = '';
+        const row = skeletonCatalogue({ simulator: false }).find((r) => r.kind === kind);
+        for (const p of row?.params ?? []) {
+            const label = document.createElement('label');
+            label.textContent = `${p.key} `;
+            label.title = p.why;
+            const sel = document.createElement('select');
+            sel.dataset.skelParam = p.key;
+            for (const v of p.domain) {
+                const o = document.createElement('option');
+                o.value = String(v);
+                o.textContent = String(v);
+                if (v === (values[p.key] ?? p.default)) o.selected = true;
+                sel.appendChild(o);
+            }
+            label.appendChild(sel);
+            skeletonParamBox.appendChild(label);
+        }
+    };
+    /**
+     * ⛔ THE READ IS TYPED FROM THE DOMAIN, never from the string. A `<select>`
+     * hands back `"2"`; the state, the payload and the URL all carry the number
+     * 2, and a page that put the string on the state would diverge from its own
+     * payload on a field that says the same thing.
+     */
+    const readSkeletonParams = (kind) => {
+        const out = {};
+        const row = skeletonCatalogue({ simulator: false }).find((r) => r.kind === kind);
+        for (const p of row?.params ?? []) {
+            const sel = skeletonParamBox.querySelector(`select[data-skel-param="${p.key}"]`);
+            if (!sel) continue;
+            const v = p.domain.find((d) => String(d) === sel.value);
+            if (v !== undefined) out[p.key] = v;
+        }
+        return out;
+    };
+    mountSkeletonParams(skeleton.kind, skeleton.params ?? {});
+    /**
+     * ⛔ THROUGH `lifetime.on`, LIKE EVERY OTHER CONTROL ON THIS PANEL — a bare
+     * `addEventListener` survives a panel retire and the next mount adds a
+     * second one (the leak this page's SubscriptionTracker exists for).
+     */
+    lifetime.on(skeletonSel, 'change', () => mountSkeletonParams(skeletonSel.value));
+
+    /**
      * ── ⛓⛓⛓ THE CATALOGUE, AND VERB 1's ONE CONTROL ───────────────────
      *
      * The view is the WHOLE biome roster (plus its exclusions); the CHECKBOXES
@@ -4972,10 +5039,23 @@ async function runGenerate(params, lifetime) {
          * produces. ⚠ Read from the SELECT at the press, never cached.
          */
         const nextKind = $('genSkeleton').value;
-        const reset = nextSeed !== seed || nextBiome !== biome || nextKind !== skeleton.kind;
+        /**
+         * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, on exactly the same terms. A
+         * `minRoom` change builds a DIFFERENT ROOM, so step 3 of `minRoom=2`
+         * followed by step 4 of `minRoom=4` is a display no single run ever
+         * produced — the same argument the kind itself makes.
+         *
+         * ⛔ The comparison is against the NORMALIZED spelling, so a form left
+         * at its defaults does not read as a change on the first press.
+         */
+        const nextSkeleton = normalizeSkeleton({
+            kind: nextKind, params: readSkeletonParams(nextKind),
+        });
+        const reset = nextSeed !== seed || nextBiome !== biome
+            || formatSkeleton(nextSkeleton) !== formatSkeleton(skeleton);
         seed = nextSeed;
         biome = nextBiome;
-        skeleton = { kind: nextKind };
+        skeleton = nextSkeleton;
         bounds = {
             obstacleTarget: Number($('genCount').value),
             triesPerStep: Number($('genTries').value),

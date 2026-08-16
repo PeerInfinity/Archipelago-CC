@@ -50,6 +50,9 @@ import {
     stepFromParams, undoEdit, writeLabParams,
 } from './mazeLab.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+// ⛓ SLICE 7: the ONE normalizer for a skeleton spec — this form, the identity
+// line and the URL bar all spell a room the same way.
+import { normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -435,10 +438,55 @@ export function main() {
         ['labExpansions', (s) => s.budget.maxExpansions],
     ];
 
+    /**
+     * ── ⛓⛓⛓ SLICE 7 — THE KIND'S PARAMETERS, AS A FORM ─────────────────
+     *
+     * ⛔ MOUNTED FROM THE CATALOGUE'S OWN SCHEMA (the options ARE the declared
+     * domain, the pre-selection IS the declared default), and RE-MOUNTED AT
+     * DEFAULTS on every kind change rather than merged — `minRoom` is `rooms`'
+     * knob and carrying it onto `winding` would be a control writing state
+     * nobody reads. ⚠ No "any (draw it)" option: a template parameter may be
+     * drawn, a room parameter is chosen.
+     */
+    const mountSkeletonParams = (kind, values = {}) => {
+        const box = $('labSkeletonParams');
+        box.innerHTML = '';
+        const row = skeletonCatalogue({ simulator: true }).find((r) => r.kind === kind);
+        for (const p of row?.params ?? []) {
+            const label = document.createElement('label');
+            label.textContent = `${p.key} `;
+            label.title = p.why;
+            const sel = document.createElement('select');
+            sel.dataset.skelParam = p.key;
+            for (const v of p.domain) {
+                const o = new Option(String(v), String(v));
+                if (v === (values[p.key] ?? p.default)) o.selected = true;
+                sel.appendChild(o);
+            }
+            label.appendChild(sel);
+            box.appendChild(label);
+        }
+    };
+    /** ⛔ TYPED FROM THE DOMAIN — a `<select>` hands back a string and the
+     *  state, the payload and the URL all carry the domain's own number. */
+    const readSkeletonParams = (kind) => {
+        const out = {};
+        const row = skeletonCatalogue({ simulator: true }).find((r) => r.kind === kind);
+        for (const p of row?.params ?? []) {
+            const sel = $('labSkeletonParams')
+                .querySelector(`select[data-skel-param="${p.key}"]`);
+            if (!sel) continue;
+            const v = p.domain.find((d) => String(d) === sel.value);
+            if (v !== undefined) out[p.key] = v;
+        }
+        return out;
+    };
+
     const fillForm = () => {
         for (const [id, get] of FIELDS) $(id).value = String(get(state));
         $('labBiome').value = state.biome;
         $('labSkeleton').value = state.skeleton?.kind ?? 'empty';
+        mountSkeletonParams(state.skeleton?.kind ?? 'empty', state.skeleton?.params ?? {});
     };
 
     /** The form's numbers, as the next run's arguments. ⛔ The FORM is read at
@@ -463,7 +511,11 @@ export function main() {
          * early would leave the form comparing a value to itself, which is the
          * defect the read-at-press law exists to end.
          */
-        skeleton: { kind: $('labSkeleton').value },
+        skeleton: normalizeSkeleton({
+            kind: $('labSkeleton').value,
+            /** ⛓ SLICE 7 — the parameters, read at the press on the same terms. */
+            params: readSkeletonParams($('labSkeleton').value),
+        }),
     });
 
     const goTo = (step) => {
@@ -674,9 +726,32 @@ export function main() {
          * form and the level all move together through the one path.
          */
         lt.on($('labSkeleton'), 'change', () => {
+            /**
+             * ⛓ SLICE 7 — THE PARAMS FORM IS RE-MOUNTED AT DEFAULTS **BEFORE**
+             * the press, because `goTo(0)` reads it: a kind change that left
+             * `rooms`' `minRoom` select standing would hand `winding` a
+             * parameter it does not declare, and the press would refuse.
+             */
+            mountSkeletonParams($('labSkeleton').value);
             goTo(0);
             say(`skeleton kind: ${$('labSkeleton').value} — RESET to the skeleton, because the `
                 + 'room a ladder is built in is part of the level\'s identity');
+            render();
+        });
+        /**
+         * ⛓⛓ SLICE 7 — AND A PARAMETER CHANGE RESETS ON EXACTLY THE SAME
+         * TERMS. `rooms;minRoom=2` and `rooms;minRoom=4` are two different
+         * rooms, so a ladder cannot span them. ⛔ Delegated from the CONTAINER
+         * rather than bound per select, because the selects are re-created on
+         * every kind change and a per-element listener would be re-bound (or
+         * leaked) each time.
+         */
+        lt.on($('labSkeletonParams'), 'change', (e) => {
+            if (!e.target?.dataset?.skelParam) return;
+            goTo(0);
+            say(`skeleton parameter ${e.target.dataset.skelParam}=${e.target.value} — RESET to `
+                + 'the skeleton: a kind parameter builds a DIFFERENT room, exactly as the '
+                + 'kind does');
             render();
         });
         lt.on($('labStep'), 'click', () => goTo(state.step + 1));

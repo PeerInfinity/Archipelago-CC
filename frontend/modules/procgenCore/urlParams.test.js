@@ -333,15 +333,83 @@ describe('urlParams — ?skeleton=', () => {
             .toEqual({ kind: 'corridor' });
     });
 
-    /**
-     * ⚖ Open question 5: ONE parameter with a `;`-separated clause is the
-     * reserved spelling for kind parameters. ⛔ Until one exists, a clause
-     * REFUSES rather than being truncated to its head — a link that silently
-     * dropped `;minRoom=5` would build a room it does not describe.
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ SLICE 7 — THE `;` CLAUSE, THE SPELLING ⚖ OPEN QUESTION 5 RESERVED
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ EVERY ONE OF THESE IS AN INDEPENDENT LITERAL — the expected OBJECT is
+     * written out on the read side and the expected STRING on the write side,
+     * and the round trip is asserted only after both. A reader/writer pair that
+     * agreed on `minRoom` meaning "chambers" would satisfy a fixed point
+     * perfectly.
      */
-    it('REFUSES a parameter clause by name, rather than reading its head', () => {
+    it('READS a parameter clause to the expected OBJECT, typed from the domain', () => {
+        expect(readSkeleton(q('skeleton=rooms;minRoom=2')))
+            .toEqual({ kind: 'rooms', params: { minRoom: 2 } });
+        expect(readSkeleton(q('skeleton=rooms;minRoom=2;chambers=1')))
+            .toEqual({ kind: 'rooms', params: { minRoom: 2, chambers: 1 } });
+        expect(readSkeleton(q('skeleton=winding;chambers=3')))
+            .toEqual({ kind: 'winding', params: { chambers: 3 } });
+        expect(readSkeleton(q('skeleton=bushy;prune=1')))
+            .toEqual({ kind: 'bushy', params: { prune: 1 } });
+        // ⛔ THE VALUE IS THE DOMAIN'S OWN TYPED MEMBER, never the string.
+        expect(typeof readSkeleton(q('skeleton=rooms;minRoom=2')).params.minRoom)
+            .toBe('number');
+        // ⛔ A value AT its default is not carried — the default is absence, so
+        // one room has exactly one spelling on both sides.
+        expect(readSkeleton(q('skeleton=rooms;minRoom=3'))).toEqual({ kind: 'rooms' });
+        expect(readSkeleton(q('skeleton=winding;chambers=0'))).toEqual({ kind: 'winding' });
+    });
+
+    it('WRITES the expected LITERAL string, keys in DECLARATION order', () => {
+        expect(writeSkeletonParam(q('seed=3'),
+            { kind: 'rooms', params: { minRoom: 2, chambers: 1 } }).toString())
+            .toBe('seed=3&skeleton=rooms%3BminRoom%3D2%3Bchambers%3D1');
+        // ⛓ DECLARATION order, not the caller's: `chambers` is declared LAST.
+        expect(writeSkeletonParam(q(''),
+            { kind: 'rooms', params: { chambers: 1, minRoom: 2 } }).get('skeleton'))
+            .toBe('rooms;minRoom=2;chambers=1');
+        // ⛔ A default value is DROPPED from the string, not written.
+        expect(writeSkeletonParam(q(''),
+            { kind: 'rooms', params: { minRoom: 3, chambers: 2 } }).get('skeleton'))
+            .toBe('rooms;chambers=2');
+        expect(writeSkeletonParam(q(''), { kind: 'rooms', params: { minRoom: 3 } })
+            .get('skeleton')).toBe('rooms');
+        // ⛔ …and an all-default set on the DEFAULT KIND still DELETES.
+        expect(writeSkeletonParam(q('skeleton=rooms&run=1'), { kind: 'empty' }).toString())
+            .toBe('run=1');
+    });
+
+    it('the round trip is a FIXED POINT — asserted only after the two literals', () => {
+        for (const value of ['rooms;minRoom=2;chambers=1', 'winding;chambers=3',
+            'bushy;prune=1', 'branchy', 'rooms;chambers=2']) {
+            const read = readSkeleton(q(`skeleton=${encodeURIComponent(value)}`),
+                { simulator: true });
+            expect(writeSkeletonParam(q(''), read, { simulator: true }).get('skeleton'))
+                .toBe(value);
+        }
+    });
+
+    /**
+     * ⛔ FIVE DISTINGUISHED REFUSALS — a reader can act on each one, and each
+     * names what WAS declared rather than saying the clause is wrong.
+     */
+    it('REFUSES an undeclared key, an out-of-domain value, and a malformed clause', () => {
         expect(() => readSkeleton(q('skeleton=rooms;minRoom=5')))
-            .toThrow(/carries a PARAMETER CLAUSE.*reserved for the slice that adds one/s);
+            .toThrow(/parameter "minRoom" was given "5".*declared domain \[2, 3, 4\]/s);
+        expect(() => readSkeleton(q('skeleton=branchy;minRoom=2')))
+            .toThrow(/"branchy" has no parameter "minRoom".*It declares \[chambers\]/s);
+        expect(() => readSkeleton(q('skeleton=empty;chambers=1')))
+            .toThrow(/"empty" has no parameter "chambers".*declares NO parameters/s);
+        expect(() => readSkeleton(q('skeleton=rooms;minRoom')))
+            .toThrow(/is not `key=value`/);
+        expect(() => readSkeleton(q('skeleton=rooms;;chambers=1')))
+            .toThrow(/EMPTY parameter clause/);
+        expect(() => readSkeleton(q('skeleton=rooms;chambers=1;chambers=2')))
+            .toThrow(/names "chambers" TWICE/);
+        // ⛔ …and every one of them still names the PARAMETER it arrived on.
+        expect(() => readSkeleton(q('skeleton=rooms;minRoom=5')))
+            .toThrow(/\?skeleton="rooms;minRoom=5"/);
     });
 
     it('writes the LITERAL value, and DELETES the parameter at the default', () => {
@@ -371,5 +439,10 @@ describe('urlParams — ?skeleton=', () => {
             .toThrow(/is not a skeleton kind/);
         expect(() => writeSkeletonParam(q(''), { kind: 'corridor' }, { simulator: false }))
             .toThrow(/needs the maze simulator/);
+        // ⛓ SLICE 7 — and the PARAMETERS too, on the same terms.
+        expect(() => writeSkeletonParam(q(''), { kind: 'rooms', params: { minRoom: 9 } }))
+            .toThrow(/not in its declared domain \[2, 3, 4\]/);
+        expect(() => writeSkeletonParam(q(''), { kind: 'branchy', params: { prune: 1 } }))
+            .toThrow(/"branchy" has no parameter "prune"/);
     });
 });

@@ -625,6 +625,69 @@ try {
         && /is not a skeleton kind/.test(refusedKind.fatal ?? ''),
         '⛔ ?skeleton=spiral REFUSES BY NAME with the whole vocabulary', refusedKind.fatal);
 
+    /* ── CLAIM 9b: THE KIND PARAMETERS (constructive-mode slice 7) ─── */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM, NOT AN ECHO (trap 269). Slice 5 shipped a page
+     * that read `?skeleton=`, echoed it into the bar AND printed it in the
+     * identity line while generating the open room; three of five claims were
+     * green. So the subject here is the FLOOR COUNT of the level the page
+     * produced, read off `window.__mazeLab.level` — a page that copied
+     * `;chambers=2` into its readout and its URL and carved without it fails
+     * this and nothing else.
+     */
+    const plain = await load(`seed=3&count=0&skeleton=winding&run=1`,
+        () => window.__mazeLab?.step === 0 && window.__mazeLab?.level,
+        'the bare winding skeleton');
+    const roomy = await load(`seed=3&count=0&skeleton=${encodeURIComponent('winding;chambers=2')}`
+        + '&run=1', () => window.__mazeLab?.step === 0 && window.__mazeLab?.level,
+        'the winding skeleton with chambers');
+    const floorIn = (level) => level.tiles.filter((t) => t === 0).length;
+    check(floorIn(roomy.level) > floorIn(plain.level),
+        '⛓⛓ ?skeleton=winding;chambers=2 produces MORE FLOOR than ?skeleton=winding at the '
+        + 'same seed — counted from the LEVEL the page built, not from the URL it echoed',
+        `${floorIn(roomy.level)} floor tiles vs ${floorIn(plain.level)}`);
+    /**
+     * ⛔ AND IT IS THE SAME LEVEL NODE BUILDS. The count above proves the
+     * parameter did SOMETHING; this proves it did the RIGHT thing, against the
+     * other runtime's bytes.
+     */
+    const nodeRoomy = generateStep({
+        seed: 3, step: 0, skeleton: { kind: 'winding', params: { chambers: 2 } },
+    });
+    check(json(roomy.level) === json(serializeMazeLevel(nodeRoomy.record)),
+        '⛓⛓ …and the browser\'s parameterized room IS node\'s, byte for byte',
+        `${json(roomy.level).length} bytes`);
+    check(/skeleton: winding;chambers=2 \(CARVED/.test(roomy.identity),
+        '⛓ the identity line NAMES the non-default parameter, in the URL\'s own spelling',
+        roomy.identity);
+    check(new URLSearchParams(roomy.url).get('skeleton') === 'winding;chambers=2',
+        '⛓ …and the bar still spells it that way after the page rewrote the URL', roomy.url);
+    /** ⛓ THE FORM — the params selects are mounted from the catalogue's schema. */
+    await page.goto(`${PAGE}?seed=3&skeleton=rooms`, { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.skeleton?.kind === 'rooms', 'the rooms skeleton');
+    const paramKeys = await page.evaluate(() => [...document.querySelectorAll(
+        '#labSkeletonParams select[data-skel-param]')].map((s2) => s2.dataset.skelParam));
+    check(json(paramKeys) === json(['minRoom', 'chambers']),
+        '⛓ the SKELETON PARAMS form mounts one control per declared knob, in declaration '
+        + 'order', json(paramKeys));
+    await page.selectOption('#labSkeletonParams select[data-skel-param="minRoom"]', '2');
+    await settled(() => window.__mazeLab?.skeleton?.params?.minRoom === 2
+        && window.__mazeLab?.step === 0, 'the param change to reach the state');
+    const paramed = await read();
+    check(new URLSearchParams(paramed.url).get('skeleton') === 'rooms;minRoom=2',
+        '⛓ a PARAMETER change reaches the bar, in the one spelling', paramed.url);
+    check(paramed.step === 0,
+        '⛔ …and RESETS the ladder, because a kind parameter builds a DIFFERENT room',
+        `step ${paramed.step}`);
+    /** ⛔ A refusal by name, on the parameter rather than the kind. */
+    await page.goto(`${PAGE}?skeleton=${encodeURIComponent('rooms;minRoom=9')}`,
+        { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of an out-of-domain value');
+    const refusedParam = await read();
+    check(/declared domain \[2, 3, 4\]/.test(refusedParam.fatal ?? ''),
+        '⛔ ?skeleton=rooms;minRoom=9 REFUSES BY NAME with the declared domain',
+        refusedParam.fatal);
+
     /* ── CLAIM 10: THE CONNECTIVITY PRE-CHECK, ON THE PAGE (slice 6) ─ */
     /**
      * ⛓⛓⛓ A **VALUE** CLAIM ABOUT WHAT THE RULE DID (trap 269), not an echo:

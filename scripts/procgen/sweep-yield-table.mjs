@@ -90,6 +90,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const SELF = fileURLToPath(import.meta.url);
 const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules', p));
+/** ⛓ SLICE 7 — the ONE skeleton-spec parser, shared with the URL and both CLIs. */
+const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -182,7 +184,10 @@ if (CELL !== '') {
             MAZE_PALETTE, mazeModel, mazeOracle,
         } = await M('mazeRoom/procgenMaze.js');
         const { TILE_FLOOR } = await M('mazeRoom/mazeRoomEngine.js');
-        model = mazeModel({ seed, width: size.width, height: size.height, skeleton: { kind } });
+        model = mazeModel({
+            seed, width: size.width, height: size.height, skeleton: parseSkeleton(kind,
+                { simulator: true, substrate: 'the maze binding' }),
+        });
         palette = MAZE_PALETTE;
         oracle = mazeOracle({ model, items: palette.items ?? null });
         const sk = model.skeleton();
@@ -194,7 +199,10 @@ if (CELL !== '') {
         } = await M('seedlingDemo/procgenSeedling.js');
         const { PRE_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
         const { terrainAt } = await M('seedlingDemo/procgenLevel.js');
-        model = seedlingModel({ seed, skeleton: { kind } });
+        model = seedlingModel({
+            seed,
+            skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
+        });
         palette = PRE_SWORD_PALETTE;
         oracle = seedlingOracle({ model, items: palette.items ?? null });
         const sk = model.skeleton();
@@ -279,12 +287,26 @@ const {
 
 /** ⛓ DERIVED FROM THE BINDING, never a second list here. */
 const OFFERED = SUBSTRATE === 'maze' ? MAZE_SKELETON_KINDS : SEEDLING_SKELETON_KINDS;
+/**
+ * ⛓⛓ SLICE 7 — A `--kinds=` MEMBER IS A FULL SKELETON SPEC, `;` clauses and
+ * all: `--kinds=winding,winding;chambers=2,rooms;minRoom=4`. ⛔ Comma separates
+ * the CELLS and `;` separates a kind's PARAMETERS, so the two never collide —
+ * and the spec STRING is the row label, so `winding` and `winding;chambers=2`
+ * are two rows of one table rather than one row that quietly averaged them.
+ *
+ * ⛔ VALIDATED HERE, BEFORE THE ESTIMATE PRINTS, through the ONE parser — a
+ * sweep that discovered a typo in cell 41 of 56 would have spent the wall clock
+ * to find it.
+ */
 const KINDS = arg('kinds', '') === '' ? [...OFFERED]
     : arg('kinds', '').split(',').map((s) => s.trim()).filter(Boolean);
 for (const k of KINDS) {
-    if (!OFFERED.includes(k)) {
-        note(`sweep-yield-table: the ${SUBSTRATE} binding does not offer the kind "${k}" `
-            + `[${OFFERED.join(', ')}].`);
+    try {
+        parseSkeleton(k, {
+            simulator: SUBSTRATE === 'maze', substrate: `the ${SUBSTRATE} binding`,
+        });
+    } catch (e) {
+        note(`sweep-yield-table: --kinds= member "${k}" — ${e.message}`);
         process.exit(2);
     }
 }

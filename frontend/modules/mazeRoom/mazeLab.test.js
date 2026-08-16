@@ -691,4 +691,111 @@ describe('mazeLab — the skeleton kind', () => {
         const st = generateStep({ ...base, step: 1, skeleton: { kind: 'loopy' } });
         expect(loadPayload(labPayload(st)).skeleton).toEqual({ kind: 'loopy' });
     });
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ SLICE 7 — THE KIND PARAMETERS ON THIS PAGE
+     * ══════════════════════════════════════════════════════════════════ */
+
+    it('READS a `;` clause to the expected OBJECT and WRITES the expected STRING', () => {
+        expect(readLabParams('?seed=3&skeleton=rooms;minRoom=2').skeleton)
+            .toEqual({ kind: 'rooms', params: { minRoom: 2 } });
+        expect(readLabParams('?skeleton=winding;chambers=2').skeleton)
+            .toEqual({ kind: 'winding', params: { chambers: 2 } });
+        const st = generateStep({
+            ...base, skeleton: { kind: 'rooms', params: { minRoom: 2, chambers: 1 } },
+        });
+        const url = writeLabParams('', {
+            seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: 0, skeleton: st.skeleton,
+        });
+        expect(new URLSearchParams(url).get('skeleton')).toBe('rooms;minRoom=2;chambers=1');
+        // ⛔ …and a value AT its default is not written at all.
+        expect(new URLSearchParams(writeLabParams('', {
+            seed: 3, biome: DEFAULT_MAZE_BIOME, width: 11, height: 11,
+            bounds: st.bounds, budget: st.budget, step: 0,
+            skeleton: { kind: 'rooms', params: { minRoom: 3 } },
+        })).get('skeleton')).toBe('rooms');
+    });
+
+    it('the state carries the NORMALIZED block; the fixed point holds after', () => {
+        expect(generateStep({ ...base, skeleton: { kind: 'rooms', params: { minRoom: 3 } } })
+            .skeleton).toEqual({ kind: 'rooms' });
+        const st = generateStep({
+            ...base, skeleton: { kind: 'winding', params: { chambers: 3 } },
+        });
+        const url = writeLabParams('', {
+            seed: st.seed, biome: st.biome, width: st.width, height: st.height,
+            bounds: st.bounds, budget: st.budget, step: 0, skeleton: st.skeleton,
+        });
+        expect(readLabParams(`?${url}`).skeleton)
+            .toEqual({ kind: 'winding', params: { chambers: 3 } });
+    });
+
+    /**
+     * ⛓⛓ A VALUE CLAIM, NOT AN ECHO (trap 269): the parameter must change the
+     * ROOM, and the subject is the tile count of step 0 — computed here, from
+     * the record the page produced.
+     */
+    it('`chambers=2` really opens more FLOOR than the same seed without it', () => {
+        const floor = (st) => [...st.record.tiles].filter((t) => t === 0).length;
+        const bare = generateStep({ ...base, skeleton: { kind: 'winding' } });
+        const wide = generateStep({
+            ...base, skeleton: { kind: 'winding', params: { chambers: 2 } },
+        });
+        expect(floor(wide)).toBeGreaterThan(floor(bare));
+        // ⛔ and the DEFAULT value is byte-inert — the same room, tile for tile.
+        const zero = generateStep({
+            ...base, skeleton: { kind: 'winding', params: { chambers: 0 } },
+        });
+        expect([...zero.record.tiles]).toEqual([...bare.record.tiles]);
+    });
+
+    it('names the non-default PARAMETERS in the identity line, and only those', () => {
+        expect(describeState(generateStep({ ...base, skeleton: { kind: 'rooms' } })))
+            .toMatch(/skeleton: rooms \(CARVED/);
+        expect(describeState(generateStep({
+            ...base, skeleton: { kind: 'rooms', params: { minRoom: 2, chambers: 1 } },
+        }))).toMatch(/skeleton: rooms;minRoom=2;chambers=1 \(CARVED/);
+        // ⛔ a value at its default is NOT named — the clause stays readable.
+        expect(describeState(generateStep({
+            ...base, skeleton: { kind: 'rooms', params: { minRoom: 3 } },
+        }))).toMatch(/skeleton: rooms \(CARVED/);
+    });
+
+    /**
+     * ⛔ THE DISCRIMINATING SUBJECT IS A PAYLOAD THAT SPELLS ITS DEFAULTS OUT.
+     * "An old payload with no `params` agrees" is INERT — the state has no
+     * `params` either, so that comparison passes whether or not either side is
+     * normalized. What only the normalization can carry is the payload that
+     * says `{minRoom:3, chambers:0}` where the state says nothing: the same
+     * room, two spellings.
+     */
+    it('a payload spelling its DEFAULTS still AGREES; one naming a value DIVERGES', () => {
+        const st = generateStep({ ...base, step: 2, skeleton: { kind: 'rooms' } });
+        expect(st.skeleton).toEqual({ kind: 'rooms' });
+        const spelled = {
+            ...labPayload(st), skeleton: { kind: 'rooms', params: { minRoom: 3, chambers: 0 } },
+        };
+        expect(agreementWithPayload(spelled, st).agrees).toBe(true);
+        const bare = { ...labPayload(st), skeleton: { kind: 'rooms' } };
+        expect(agreementWithPayload(bare, st).agrees).toBe(true);
+        const other = generateStep({
+            ...base, step: 2, skeleton: { kind: 'rooms', params: { minRoom: 2 } },
+        });
+        expect(agreementWithPayload(labPayload(st), other).differences).toContain('skeleton');
+    });
+
+    it('REFUSES an undeclared key and an out-of-domain value at READ time', () => {
+        expect(() => readLabParams('?skeleton=winding;minRoom=2'))
+            .toThrow(/"winding" has no parameter "minRoom"/);
+        expect(() => readLabParams('?skeleton=rooms;minRoom=9'))
+            .toThrow(/declared domain \[2, 3, 4\]/);
+    });
+
+    it('the CATALOGUE carries each kind\'s schema, for the page\'s form', () => {
+        const rows = skeletonCatalogue({ simulator: true });
+        expect(rows.find((r) => r.kind === 'rooms').params.map((p) => p.key))
+            .toEqual(['minRoom', 'chambers']);
+        expect(rows.find((r) => r.kind === 'classic').params).toEqual([]);
+    });
 });

@@ -39,7 +39,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
 import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
-import { generateSeedlingLevel, seedlingModel } from './procgenSeedling.js';
+import { generateSeedlingLevel, interiorCells, seedlingModel } from './procgenSeedling.js';
 
 const json = (v) => JSON.stringify(v);
 
@@ -1600,5 +1600,89 @@ describe('watchGenerate — the skeleton kind', () => {
         expect(rows.find((r) => r.kind === 'empty').isDefault).toBe(true);
         expect(rows.filter((r) => r.offered).map((r) => r.kind))
             .toEqual(['empty', 'branchy', 'bushy', 'loopy', 'open', 'rooms', 'winding']);
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ SLICE 7 — THE KIND PARAMETERS ON THIS PAGE
+     * ══════════════════════════════════════════════════════════════════ */
+
+    it('READS a `;` clause to the expected OBJECT and WRITES the expected STRING', () => {
+        expect(readGenerateParams('?source=generate&skeleton=rooms;minRoom=2').skeleton)
+            .toEqual({ kind: 'rooms', params: { minRoom: 2 } });
+        expect(readGenerateParams('?source=generate&skeleton=winding;chambers=2').skeleton)
+            .toEqual({ kind: 'winding', params: { chambers: 2 } });
+        const written = writeGenerateParams('', {
+            seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            skeleton: { kind: 'rooms', params: { minRoom: 2, chambers: 1 } },
+        });
+        expect(new URLSearchParams(written).get('skeleton'))
+            .toBe('rooms;minRoom=2;chambers=1');
+        // ⛔ a value AT its default is not written
+        expect(new URLSearchParams(writeGenerateParams('', {
+            seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            skeleton: { kind: 'rooms', params: { minRoom: 3 } },
+        })).get('skeleton')).toBe('rooms');
+        // ⛓ the fixed point, AFTER the two literals
+        expect(readGenerateParams(`?source=generate&${written}`).skeleton)
+            .toEqual({ kind: 'rooms', params: { minRoom: 2, chambers: 1 } });
+    });
+
+    /**
+     * ⛓⛓ A VALUE CLAIM, NOT AN ECHO (trap 269) — the parameter must change the
+     * ROOM. The subject is the count of `ground` cells in step 0's record,
+     * counted here.
+     */
+    it('`chambers=2` opens more GROUND; `chambers=0` is byte-identical to absence', () => {
+        const ground = (st) => interiorCells(st.record)
+            .filter((c) => terrainAt(st.record, c.tx, c.ty) === 'ground').length;
+        const bare = generateStep(args({ skeleton: { kind: 'winding' } }));
+        const wide = generateStep(args({
+            skeleton: { kind: 'winding', params: { chambers: 2 } },
+        }));
+        expect(ground(wide)).toBeGreaterThan(ground(bare));
+        const zero = generateStep(args({
+            skeleton: { kind: 'winding', params: { chambers: 0 } },
+        }));
+        expect(JSON.stringify(zero.record)).toBe(JSON.stringify(bare.record));
+    });
+
+    it('names the non-default PARAMETERS in the identity line, and only those', () => {
+        const line = describeState(generateStep(args({
+            skeleton: { kind: 'rooms', params: { minRoom: 2, chambers: 1 } },
+        })));
+        expect(line).toMatch(/skeleton: rooms;minRoom=2;chambers=1 \(CARVED/);
+        expect(describeState(generateStep(args({
+            skeleton: { kind: 'rooms', params: { minRoom: 3 } },
+        })))).toMatch(/skeleton: rooms \(CARVED/);
+    });
+
+    it('the state carries the NORMALIZED block, so a defaults-spelling payload agrees', () => {
+        const st = generateStep(args({
+            step: 1, skeleton: { kind: 'rooms', params: { minRoom: 3 } },
+        }));
+        expect(st.skeleton).toEqual({ kind: 'rooms' });
+        const check = agreementWithPayload({
+            seed: st.seed, biome: st.biome, bounds: st.bounds, budget: st.budget,
+            roster: st.roster ?? null, directives: st.directives ?? [],
+            skeleton: { kind: 'rooms', params: { minRoom: 3, chambers: 0 } },
+            level: st.record, trace: st.trace,
+        }, st);
+        expect(check.differences).not.toContain('skeleton');
+    });
+
+    it('REFUSES an undeclared key and an out-of-domain value at READ time', () => {
+        expect(() => readGenerateParams('?source=generate&skeleton=winding;minRoom=2'))
+            .toThrow(/"winding" has no parameter "minRoom"/);
+        expect(() => readGenerateParams('?source=generate&skeleton=rooms;minRoom=9'))
+            .toThrow(/declared domain \[2, 3, 4\]/);
+    });
+
+    it('the CATALOGUE carries each kind\'s schema, for this page\'s form', () => {
+        const rows = skeletonCatalogue({ simulator: false });
+        expect(rows.find((r) => r.kind === 'rooms').params.map((p) => p.key))
+            .toEqual(['minRoom', 'chambers']);
+        expect(rows.find((r) => r.kind === 'bushy').params.map((p) => p.key))
+            .toEqual(['prune', 'chambers']);
+        expect(rows.find((r) => r.kind === 'empty').params).toEqual([]);
     });
 });

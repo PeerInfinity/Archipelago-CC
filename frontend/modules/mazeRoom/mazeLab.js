@@ -66,7 +66,8 @@ import {
     writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, SKELETON_KINDS,
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, SKELETON_KINDS, formatSkeleton,
+    normalizeSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import { MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES } from './mazeRoomEditor.js';
 import { createState, step } from './mazeRoomEngine.js';
@@ -319,8 +320,13 @@ export function generateStep({
          */
         directives: Object.freeze([]),
         edits: Object.freeze([]),
-        /** ⛓ SLICE 5: the kind this room WAS built from, on every state. */
-        skeleton: skeleton ?? DEFAULT_SKELETON,
+        /**
+         * ⛓ SLICE 5: the kind this room WAS built from, on every state.
+         * ⛓ SLICE 7: NORMALIZED with its parameters, so one room has exactly
+         * one spelling on the state and `agreementWithPayload` can compare with
+         * a both-sides default.
+         */
+        skeleton: normalizeSkeleton(skeleton ?? DEFAULT_SKELETON),
     };
     if (step === 0) {
         const model = mazeModel({ seed, width, height, skeleton });
@@ -779,7 +785,24 @@ export function agreementWithPayload(payload, state) {
     cmp('height', payload.height ?? MAZE_DEFAULTS.height, state.height);
     cmp('roster', payload.roster ?? null, state.roster ?? null);
     cmp('directives', payload.directives ?? [], state.directives ?? []);
-    cmp('skeleton', payload.skeleton ?? DEFAULT_SKELETON, state.skeleton ?? DEFAULT_SKELETON);
+    /**
+     * ⛓⛓ SLICE 7 — NORMALIZED ON BOTH SIDES, and that is what makes the
+     * both-sides default REAL rather than nominal. A payload written before the
+     * kind parameters existed carries `{kind}`; a page at all-defaults produces
+     * `{kind}` too, because `normalizeSkeleton` OMITS a value at its default.
+     * ⛔ Without the normalization a page that had merely TOUCHED the form
+     * would carry `{kind, params:{chambers:0}}` and report a divergence in a
+     * field that says the same thing.
+     *
+     * ⛔⛔ AND THE PAYLOAD SIDE IS NORMALIZED **WITHOUT VALIDATION** — a defect
+     * my own suite caught the first time this line was written. A payload
+     * naming a RETIRED kind (`open-room`, `empty-bordered`) is precisely what
+     * this comparison exists to REPORT BY NAME; a normalizer that refused it
+     * turned the report into a throw, and the page would have died on the file
+     * it was asked to explain.
+     */
+    cmp('skeleton', normalizeSkeleton(payload.skeleton ?? DEFAULT_SKELETON, { validate: false }),
+        normalizeSkeleton(state.skeleton ?? DEFAULT_SKELETON));
     cmp('level', payload.level, serializeMazeLevel(state.record));
     cmp('trace', payload.trace, state.trace);
     return {
@@ -889,17 +912,24 @@ export function describeState(state, solved = null) {
      * "URL is not a reproduction after edits" clause below already follows.
      */
     const kind = state.skeleton?.kind ?? DEFAULT_SKELETON_KIND;
+    /**
+     * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, in the URL's own spelling
+     * (`rooms;minRoom=2;chambers=1`). ONE formatter for the line, the bar and
+     * the CLI; a value at its default is not named, for the same reason
+     * `empty` is not.
+     */
+    const skelText = formatSkeleton(state.skeleton ?? DEFAULT_SKELETON);
     const bits = [
         `seed ${state.seed} · ${state.biome} · ${state.width}x${state.height} · step ${state.step}`
-            + (kind === DEFAULT_SKELETON_KIND
-                ? '' : ` · skeleton: ${kind} (CARVED, not the open room)`)
+            + (skelText === DEFAULT_SKELETON_KIND
+                ? '' : ` · skeleton: ${skelText} (CARVED, not the open room)`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
             + (edits ? `, then ${edits} manual edit(s)` : ''),
         `palette: ${state.palette?.name ?? '(none)'}`
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
             : `the SKELETON — ${kind === DEFAULT_SKELETON_KIND
-                ? 'the open room' : `a ${kind} CARVE`} and its goal, before any template`,
+                ? 'the open room' : `a ${skelText} CARVE`} and its goal, before any template`,
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK} `
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,

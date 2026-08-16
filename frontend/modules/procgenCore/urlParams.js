@@ -51,7 +51,9 @@
  */
 
 import { DEFAULT_BOUNDS, KEEP_POLICY } from './levelGenerator.js';
-import { DEFAULT_SKELETON_KIND, assertKind } from './skeletonKinds.js';
+import {
+    DEFAULT_SKELETON_KIND, formatSkeleton, normalizeSkeleton, parseSkeleton,
+} from './skeletonKinds.js';
 
 export class UrlParamsError extends Error {
     constructor(message) {
@@ -156,13 +158,23 @@ export function writeBounds(q, bounds) {
  * break the fixed point (GENERATE-UI slice 4 measured exactly that on
  * `?families=`).
  *
- * ── KIND PARAMETERS: NONE, TODAY, AND THE REFUSAL SAYS SO ────────────
+ * ── ⛓⛓⛓ KIND PARAMETERS — `?skeleton=<kind>;<key>=<value>;…` (SLICE 7)
  *
- * ⚖ Open question 5 picked ONE param with a `;`-separated clause for the day
- * kinds gain parameters. Today every kind is PRE-PARAMETERIZED in the table, so
- * the value is a bare id — and a value carrying a `;` refuses BY NAME rather
- * than being silently truncated to its head, which would build a room the link
- * does not describe.
+ * ⚖ Open question 5's default spelling, landed. Slice 5 REFUSED a `;` clause by
+ * name and reserved it for exactly this; slice 7 turned the reservation into a
+ * grammar (`rooms;minRoom=2;chambers=1`).
+ *
+ * ⛔ THE PARSER IS **NOT HERE** — it is `skeletonKinds.parseSkeleton`, beside
+ * the table it validates against, because the same string arrives on three
+ * channels: this parameter, both CLIs' `--skeleton=`, and the sweep's
+ * `--kinds=`. A parser in this file would have made a CLI import the URL
+ * grammar or grow a second one. What IS here is the ONE READER and the ONE
+ * WRITER of the PARAMETER, which is what §8.6's law is about.
+ *
+ * ⛔ AND THE WRITER EMITS A VALUE ONLY WHEN IT IS OFF ITS DEFAULT, keys in
+ * DECLARATION order — the same rule the kind itself follows. `?skeleton=rooms`
+ * and `?skeleton=rooms;minRoom=3` would otherwise be two spellings of one room,
+ * and the round trip would pick whichever the writer felt like.
  */
 
 /**
@@ -175,23 +187,16 @@ export function writeBounds(q, bounds) {
 export function readSkeleton(q, { simulator = false, substrate = 'this page' } = {}) {
     const raw = q.get('skeleton');
     if (raw === null || raw === '') return { kind: DEFAULT_SKELETON_KIND };
-    const value = raw.trim().toLowerCase();
-    if (value.includes(';') || value.includes('=')) {
-        fail(`urlParams: ?skeleton=${JSON.stringify(raw)} carries a PARAMETER CLAUSE, and no `
-            + 'skeleton kind takes parameters yet — every kind is pre-parameterized in the '
-            + 'table. The spelling `kind;key=value` is reserved for the slice that adds one; '
-            + 'until then a clause is refused rather than truncated to its head, which would '
-            + 'build a room this link does not describe.');
-    }
     /**
-     * ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL. The offer list and the
-     * unknown-kind sentence are `assertKind`'s — a second copy here would be
-     * two answers to "which kinds may I ask for" — but a reader who typed this
-     * into an ADDRESS BAR has to be told which PARAMETER they typed, so the
-     * refusal is re-thrown with it in front and the original text verbatim.
+     * ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL. The offer list, the
+     * unknown-kind sentence and every parameter refusal are
+     * `skeletonKinds`' — a second copy here would be two answers to "which
+     * rooms may I ask for" — but a reader who typed this into an ADDRESS BAR
+     * has to be told which PARAMETER they typed, so the refusal is re-thrown
+     * with it in front and the original text verbatim.
      */
     try {
-        return { kind: assertKind(value, { simulator, substrate }) };
+        return parseSkeleton(raw, { simulator, substrate });
     } catch (e) {
         fail(`urlParams: ?skeleton=${JSON.stringify(raw)} — ${e.message}`);
         return null;
@@ -203,10 +208,19 @@ export function readSkeleton(q, { simulator = false, substrate = 'this page' } =
  * so it runs the same `assertKind`, against the same offer list.
  */
 export function writeSkeletonParam(q, skeleton, { simulator = false, substrate = 'this page' } = {}) {
-    const kind = skeleton?.kind ?? DEFAULT_SKELETON_KIND;
-    assertKind(kind, { simulator, substrate });
-    if (kind === DEFAULT_SKELETON_KIND) q.delete('skeleton');
-    else q.set('skeleton', kind);
+    const norm = normalizeSkeleton(skeleton ?? { kind: DEFAULT_SKELETON_KIND });
+    /**
+     * ⛔ IT REFUSES WHAT THE READER WOULD REFUSE — so it re-parses its own
+     * output. ⛓ SLICE 7 made that literal rather than a claim: the writer
+     * formats `{kind, params}` to the string and hands the string to the SAME
+     * parser the reader uses, so a value the reader could not read back cannot
+     * be written in the first place. (A kind this binding cannot run is caught
+     * here too, by the same `assertKind` inside it.)
+     */
+    const value = formatSkeleton(norm);
+    parseSkeleton(value, { simulator, substrate });
+    if (value === DEFAULT_SKELETON_KIND) q.delete('skeleton');
+    else q.set('skeleton', value);
     return q;
 }
 

@@ -93,7 +93,8 @@ import {
     restrictPalette,
 } from './procgenPalette.js';
 import {
-    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, skeletonCatalogue,
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
+    skeletonCatalogue,
 } from '../procgenCore/skeletonKinds.js';
 import {
     SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingModel, seedlingOracle,
@@ -427,9 +428,17 @@ export function generateStep({
      * validated ONCE here so step 0 and step k cannot disagree about it, and
      * refused by name for a kind Seedling cannot build.
      */
-    const skel = Object.freeze({
+    const skel = normalizeSkeleton({
         kind: assertKind(skeleton?.kind ?? DEFAULT_SKELETON_KIND,
             { simulator: false, substrate: 'the Seedling binding' }),
+        /**
+         * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, normalized with it. ⛔ Normalizing
+         * (rather than passing through) is what makes the state carry ONE
+         * spelling per room: a caller who wrote `{minRoom: 3}` and one who
+         * wrote nothing produce the identical block, so `agreementWithPayload`
+         * compares with a both-sides default and an old payload agrees.
+         */
+        params: skeleton?.params ?? {},
     });
     /**
      * ⛓ SLICE 4: THE SUB-ROSTER IS APPLIED HERE AND NOWHERE ELSE. `paletteFor`
@@ -798,7 +807,24 @@ export function agreementWithPayload(payload, state) {
      * a reproduction under the wrong one says WHICH field differed instead of
      * reporting an unexplained level divergence.
      */
-    cmp('skeleton', payload.skeleton ?? DEFAULT_SKELETON, state.skeleton ?? DEFAULT_SKELETON);
+    /**
+     * ⛓⛓ SLICE 7 — NORMALIZED ON BOTH SIDES, and that is what makes the
+     * both-sides default REAL rather than nominal. A payload written before the
+     * kind parameters existed carries `{kind}`; a page at all-defaults produces
+     * `{kind}` too, because `normalizeSkeleton` OMITS a value at its default.
+     * ⛔ Without the normalization a page that had merely TOUCHED the form
+     * would carry `{kind, params:{chambers:0}}` and report a divergence in a
+     * field that says the same thing.
+     *
+     * ⛔⛔ AND THE PAYLOAD SIDE IS NORMALIZED **WITHOUT VALIDATION** — a defect
+     * my own suite caught the first time this line was written. A payload
+     * naming a RETIRED kind (`open-room`, `empty-bordered`) is precisely what
+     * this comparison exists to REPORT BY NAME; a normalizer that refused it
+     * turned the report into a throw, and the page would have died on the file
+     * it was asked to explain.
+     */
+    cmp('skeleton', normalizeSkeleton(payload.skeleton ?? DEFAULT_SKELETON, { validate: false }),
+        normalizeSkeleton(state.skeleton ?? DEFAULT_SKELETON));
     cmp('level', payload.level, state.record);
     cmp('trace', payload.trace, state.trace);
     return {
@@ -836,9 +862,18 @@ export function describeState(state, solved = null) {
          * "URL is not a reproduction after edits" clause follows on the maze
          * page.)
          */
+        /**
+         * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, in the URL's own spelling
+         * (`rooms;minRoom=2;chambers=1`). ⛔ ONE formatter, shared with the bar
+         * and both CLIs: an identity line that spelled the room differently
+         * from the link beside it would be two answers to "which room is this".
+         * A parameter AT its default is not named, for the same reason `empty`
+         * is not.
+         */
         `seed ${state.seed} · ${state.biome} · step ${state.step}`
-            + (state.skeleton && state.skeleton.kind !== DEFAULT_SKELETON_KIND
-                ? ` · skeleton: ${state.skeleton.kind} (CARVED, not the open room)` : '')
+            + (state.skeleton && formatSkeleton(state.skeleton) !== DEFAULT_SKELETON_KIND
+                ? ` · skeleton: ${formatSkeleton(state.skeleton)} (CARVED, not the open room)`
+                : '')
             + ((state.directives ?? []).length
                 ? `, then ${state.directives.length} directed attempt(s)` : ''),
         /**
@@ -851,8 +886,8 @@ export function describeState(state, solved = null) {
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
             : `the SKELETON — ${state.skeleton?.kind === DEFAULT_SKELETON_KIND
-                ? 'the bordered room' : `a ${state.skeleton?.kind} CARVE`} and its goal, `
-                + 'before any template',
+                ? 'the bordered room' : `a ${formatSkeleton(state.skeleton)} CARVE`} and its `
+                + 'goal, before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK} `
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,

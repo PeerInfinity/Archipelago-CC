@@ -1709,6 +1709,72 @@ if (!host) {
     check(json(open.level) === json(nodeOpenSkeleton.record),
         '…and the open room is still node\'s own open room, byte for byte');
 
+    /* ── 8f2: THE KIND PARAMETERS (constructive-mode slice 7) ─────── */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM, NOT AN ECHO (trap 269, which this arc paid for on
+     * the maze page in slice 5). The subject is the count of `ground` cells in
+     * the room the PAGE built, read off `window.__editorGenerated.level` — a
+     * page that copied `;chambers=2` into its readout and its bar while carving
+     * without it fails this claim and no other.
+     */
+    const roomyQ = `source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=0`
+        + `&skeleton=${encodeURIComponent(`${KIND};chambers=2`)}`;
+    const plainQ = `source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=0`
+        + `&skeleton=${KIND}`;
+    const plainRoom = await load(plainQ);
+    const roomyRoom = await load(roomyQ);
+    /**
+     * ⛔ COUNTED THROUGH THE RECORD'S OWN READER (`terrainAt`), never off a
+     * raw field: the record's terrain list is sparse and a cell nobody painted
+     * reads as the level's floor default, so `terrain.length` would answer a
+     * different question than "how much of this room can be stood on".
+     */
+    const groundIn = (level) => {
+        if (!level) return 0;
+        let n = 0;
+        for (let ty = 1; ty < level.height - 1; ty += 1) {
+            for (let tx = 1; tx < level.width - 1; tx += 1) {
+                if (terrainAt(level, tx, ty) === 'ground') n += 1;
+            }
+        }
+        return n;
+    };
+    check(groundIn(roomyRoom.level) > groundIn(plainRoom.level),
+        `⛓⛓ ?skeleton=${KIND};chambers=2 produces MORE GROUND than ?skeleton=${KIND} at the `
+        + 'same seed — counted from the LEVEL the page built, not from the URL it echoed',
+        `${groundIn(roomyRoom.level)} ground cells vs ${groundIn(plainRoom.level)}`);
+    const nodeRoomy = generateStep({
+        seed: CARVED.seed, biome: CARVED.biome, step: 0,
+        skeleton: { kind: KIND, params: { chambers: 2 } },
+    });
+    check(json(roomyRoom.level) === json(nodeRoomy.record),
+        '⛓⛓ …and the browser\'s parameterized room IS node\'s, byte for byte');
+    check(new RegExp(`skeleton: ${KIND};chambers=2 \\(CARVED`).test(roomyRoom.gen.identity ?? ''),
+        '⛓ the identity line NAMES the non-default parameter, in the URL\'s own spelling',
+        roomyRoom.gen.identity);
+    const roomyPanel = await panelOf();
+    check(new URLSearchParams(roomyPanel.url).get('skeleton') === `${KIND};chambers=2`,
+        '⛓ …and the bar still spells it that way after the page rewrote the URL',
+        roomyPanel.url);
+    /** ⛓ THE FORM — one control per declared knob, mounted from the catalogue. */
+    await load(`source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=0`
+        + '&skeleton=rooms');
+    const skelParams = await page.evaluate(() => [...document.querySelectorAll(
+        '#genSkeletonParams select[data-skel-param]')].map((s2) => s2.dataset.skelParam));
+    check(json(skelParams) === json(['minRoom', 'chambers']),
+        '⛓ the SKELETON PARAMS form mounts one control per declared knob, in declaration '
+        + 'order', json(skelParams));
+    /** ⛔ …and a REFUSAL BY NAME on the parameter rather than on the kind. */
+    await page.goto(`${origin}${PAGE_PATH}?source=generate`
+        + `&skeleton=${encodeURIComponent('rooms;minRoom=9')}`,
+        { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorParams?.status === 'refused',
+        null, { timeout: 60000 });
+    const refusedParam = await page.evaluate(() => window.__editorParams);
+    check(/declared domain \[2, 3, 4\]/.test(refusedParam.message ?? ''),
+        '⛔ ?skeleton=rooms;minRoom=9 REFUSES BY NAME with the declared domain',
+        refusedParam.message);
+
     /* ── 8g: THE CONNECTIVITY PRE-CHECK, ON THE PAGE (slice 6) ─────── */
     /**
      * ⛓⛓⛓ A **VALUE** CLAIM ABOUT WHAT THE RULE DID (trap 269), not an echo of

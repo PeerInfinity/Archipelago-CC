@@ -507,6 +507,13 @@
            INVENTORY here and the PALETTE on the maze page. -->
       <label for="genSkeleton">skeleton</label>
       <select id="genSkeleton"></select>
+      <!-- ⛓⛓ ITS PARAMETERS (slice 7), mounted from the CATALOGUE's own schema
+           so this page keeps no second list of what a kind takes. Empty for a
+           kind with no knobs; re-mounted at their DEFAULTS whenever the kind
+           changes, because `rooms;minRoom=2` is not a setting `winding` has.
+           Read at the PRESS like every other control, and a change RESETS the
+           ladder exactly as a kind change does. -->
+      <span id="genSkeletonParams"></span>
       <label>obstacles <input id="genCount" type="number" min="1" step="1" style="width:4em"></label>
       <label>tries/step <input id="genTries" type="number" min="1" step="1" style="width:4em"></label>
       <label>saturation K <input id="genK" type="number" min="1" step="1" style="width:4em"></label>

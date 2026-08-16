@@ -196,3 +196,100 @@ describe('procgenSeedling — what a carved room looks like', () => {
         }
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 7 — THE KIND PARAMETERS, ON THIS BINDING
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('procgenSeedling — the kind parameters', () => {
+    const room = (kind, seed, params) => seedlingModel({
+        seed, skeleton: { kind, params },
+    }).skeleton();
+
+    /**
+     * ⛓⛓⛓ THE BYTE-INERT CLAIM, AT THE BINDING. ⛔ It is asserted against the
+     * room built with NO `params` argument at all — not against a second run
+     * with the defaults spelled out — because the question is whether the room
+     * a link WITHOUT parameters builds is the room that shipped.
+     */
+    it('every kind at its DEFAULTS is the room the kind built before the knobs existed', () => {
+        for (const kind of CARVING) {
+            for (const seed of [1, 2, 3, 4, 5, 6]) {
+                const bare = render(room(kind, seed, undefined));
+                expect(render(room(kind, seed, {}))).toBe(bare);
+                expect(render(room(kind, seed, { chambers: 0 }))).toBe(bare);
+            }
+        }
+    });
+
+    /**
+     * ⛓ THE DRAW ORDER, RE-DRIVEN UNDER PARAMETERS. `chambers` runs LAST, so
+     * turning it on must not move the goal — which is `roomRng`'s FIRST draw
+     * and therefore the thing every earlier slice's pairs rest on.
+     */
+    it('the goal is unmoved by any parameter value — it is drawn FIRST', () => {
+        for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+            const base = seedlingModel({ seed }).goalCell;
+            for (const kind of CARVING) {
+                for (const chambers of [0, 1, 2, 3]) {
+                    expect(seedlingModel({ seed, skeleton: { kind, params: { chambers } } })
+                        .goalCell).toEqual(base);
+                }
+            }
+            expect(seedlingModel({ seed, skeleton: { kind: 'rooms', params: { minRoom: 2 } } })
+                .goalCell).toEqual(base);
+        }
+    });
+
+    it('`chambers` opens MORE ground, MONOTONELY, on every carving kind', () => {
+        for (const kind of CARVING) {
+            const none = groundCells(room(kind, 3, { chambers: 0 }));
+            const some = groundCells(room(kind, 3, { chambers: 3 }));
+            expect(some.length).toBeGreaterThan(none.length);
+            for (const c of none) {
+                expect(some.some((d) => d.tx === c.tx && d.ty === c.ty)).toBe(true);
+            }
+        }
+    });
+
+    /**
+     * ⛓⛓ THE MARGIN, PROVED BY THE BINDING'S OWN REFUSAL. `procgenSeedling`
+     * REFUSES a carve that leaves a border cell as ground (trap 272), so a
+     * `chambers` that ignored `margin: 1` would not merely look wrong here — it
+     * would THROW. The claim is therefore "it built a room at all", over every
+     * kind × every k × 12 seeds, plus the ring, cell by cell.
+     */
+    it('keeps the border ring WALL at every chambers value, seeds 1..12', () => {
+        for (const kind of CARVING) {
+            for (const chambers of [1, 2, 3]) {
+                for (let seed = 1; seed <= 12; seed += 1) {
+                    const rec = room(kind, seed, { chambers });
+                    for (let tx = 0; tx < rec.width; tx += 1) {
+                        expect(terrainAt(rec, tx, 0)).not.toBe('ground');
+                        expect(terrainAt(rec, tx, rec.height - 1)).not.toBe('ground');
+                    }
+                    for (let ty = 0; ty < rec.height; ty += 1) {
+                        expect(terrainAt(rec, 0, ty)).not.toBe('ground');
+                        expect(terrainAt(rec, rec.width - 1, ty)).not.toBe('ground');
+                    }
+                }
+            }
+        }
+    });
+
+    it('`minRoom` reaches the backend, and the model carries the NORMALIZED spec', () => {
+        expect(render(room('rooms', 5, { minRoom: 2 })))
+            .not.toBe(render(room('rooms', 5, { minRoom: 4 })));
+        expect(seedlingModel({ seed: 5, skeleton: { kind: 'rooms', params: { minRoom: 3 } } })
+            .skeletonSpec).toEqual({ kind: 'rooms' });
+        expect(seedlingModel({ seed: 5, skeleton: { kind: 'rooms', params: { minRoom: 2 } } })
+            .skeletonSpec).toEqual({ kind: 'rooms', params: { minRoom: 2 } });
+    });
+
+    it('REFUSES a parameter this kind does not declare, and an out-of-domain value', () => {
+        expect(() => seedlingModel({ seed: 1, skeleton: { kind: 'branchy', params: { prune: 1 } } }))
+            .toThrow(/"branchy" has no parameter "prune"/);
+        expect(() => seedlingModel({ seed: 1, skeleton: { kind: 'rooms', params: { minRoom: 9 } } }))
+            .toThrow(/declared domain \[2, 3, 4\]/);
+    });
+});

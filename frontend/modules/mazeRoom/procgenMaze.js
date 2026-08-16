@@ -60,6 +60,7 @@ import { connected } from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
+    normalizeSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import { defineTemplate, enumerateValues } from '../procgenCore/templateContract.js';
 import { reach } from '../shared/simulatorCore.js';
@@ -352,12 +353,27 @@ export function mazeModel({
      */
     const skeletonKind = assertKind(skeletonSpec?.kind ?? DEFAULT_SKELETON_KIND,
         { simulator: true, substrate: 'the maze binding' });
+    /**
+     * ⛓⛓ SLICE 7 — the kind's declared parameters, normalized ONCE. Refuses an
+     * undeclared key or an out-of-domain value BY NAME before any grid exists.
+     */
+    const skeletonSpecNorm = normalizeSkeleton({
+        kind: skeletonKind, params: skeletonSpec?.params ?? {},
+    });
     const template = createWorld(d.width, d.height, {
         entrance: { x: d.entrance.x, y: d.entrance.y },
         exits: [{ exit_id: d.goalExitId, x: goalCell.tx, y: goalCell.ty }],
     });
+    /**
+     * ⛓ SLICE 7 — `margin: 0`. The maze room has NO wall ring (its entrance is
+     * the corner tile (0,0)), so every cell including the border is carvable,
+     * and a stamping post-processor may write there. Seedling passes 1 for the
+     * opposite reason; neither number is a default.
+     */
     const carve = skeletonKind === DEFAULT_SKELETON_KIND
-        ? null : carveSkeleton(skeletonKind, template, roomRng);
+        ? null : carveSkeleton(skeletonKind, template, roomRng, {
+            params: skeletonSpecNorm.params ?? {}, margin: 0,
+        });
 
     /**
      * ⛔ A **CLONE** PER CALL, because a maze world is mutable and the loop
@@ -525,7 +541,7 @@ export function mazeModel({
         defaults: d,
         /** ⛓ The kind that BUILT this room, and the block a payload carries. */
         skeletonKind,
-        skeletonSpec: Object.freeze({ kind: skeletonKind }),
+        skeletonSpec: skeletonSpecNorm,
         /** What the carve actually ran — `null` at the open room. */
         carve: carve && Object.freeze({ ...carve }),
         goalCell,

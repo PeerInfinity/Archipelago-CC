@@ -95,6 +95,60 @@ const instanceLabel = (name, values) => {
  * `default` outside its own domain is a form control that offers an illegal
  * value — both would otherwise surface on the day a user pressed something.
  */
+/**
+ * ⛓⛓⛓ THE PARAMETER SCHEMA CHECK — **ONE SCHEMA LANGUAGE, TWO SUBJECTS.**
+ *
+ * A template declares `[{key, domain, default, why}]`; ⛓ CONSTRUCTIVE-MODE
+ * slice 7 gave a SKELETON KIND the same shape (`procgenCore/skeletonKinds.js`
+ * — `minRoom`, `prune`, `chambers`). ⛔ The alternative was a second validator
+ * beside this one, which is the "two spellings of one setting" failure this
+ * seam refuses everywhere else — and it would have been the worse kind, since
+ * the two would agree until the day somebody tightened one.
+ *
+ * ⚠ THE MESSAGES NAME THEIR OWNER rather than assuming "template": a reader
+ * who typed `?skeleton=rooms;minRoom=9` must not meet a sentence about
+ * templates.
+ *
+ * @param {Array} params  the schema array
+ * @param {string} owner  how the refusal names the declaring thing, e.g.
+ *   `template "wall-segment"` or `skeleton kind "rooms"`
+ * @returns {Set<string>} the declared keys, in declaration order
+ */
+export function assertParamSchema(params, owner) {
+    if (!Array.isArray(params)) {
+        fail(`templateContract: ${owner}'s \`params\` must be the SCHEMA ARRAY `
+            + '[{key, domain, default, why}]. The VALUES OBJECT is what an INSTANCE '
+            + 'carries — two shapes under one word, so the shapes are asserted rather '
+            + 'than assumed.');
+    }
+    const keys = new Set();
+    for (const p of params) {
+        if (typeof p?.key !== 'string' || !p.key || keys.has(p.key)) {
+            fail(`templateContract: ${owner} declares a parameter with a missing or `
+                + `duplicated key (${JSON.stringify(p?.key)}). The key is the draw's own `
+                + 'position in the order AND what the instance label reads.');
+        }
+        keys.add(p.key);
+        if (!Array.isArray(p.domain) || p.domain.length === 0) {
+            fail(`templateContract: ${owner} parameter "${p.key}" has no finite `
+                + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
+                + 'nobody can enumerate is a domain nobody swept.');
+        }
+        if (!p.domain.includes(p.default)) {
+            fail(`templateContract: ${owner} parameter "${p.key}" defaults to `
+                + `${JSON.stringify(p.default)}, which is not in its own domain `
+                + `[${p.domain.join(', ')}]. The default is what verb 2's form pre-fills, `
+                + 'so a default outside the domain is a control offering an illegal value.');
+        }
+        if (typeof p.why !== 'string' || !p.why) {
+            fail(`templateContract: ${owner} parameter "${p.key}" carries no `
+                + '`why`. Every other measured choice in this arc says why it is what it '
+                + 'is; a knob that does not is one the next slice re-derives.');
+        }
+    }
+    return keys;
+}
+
 export function defineTemplate({ name, family, params = [], why, build }) {
     if (typeof name !== 'string' || !name) {
         fail('templateContract: a template needs a name — it is the roster key, the trace\'s '
@@ -109,37 +163,7 @@ export function defineTemplate({ name, family, params = [], why, build }) {
             + 'IS a function from its values to a concrete row (⚖ ruling 2); a table row '
             + 'with no constructor is exactly the shape this seam replaced.');
     }
-    if (!Array.isArray(params)) {
-        fail(`templateContract: template "${name}"'s \`params\` must be the SCHEMA ARRAY `
-            + '[{key, domain, default, why}]. The VALUES OBJECT is what an INSTANCE '
-            + 'carries — two shapes under one word, so the shapes are asserted rather '
-            + 'than assumed.');
-    }
-    const keys = new Set();
-    for (const p of params) {
-        if (typeof p?.key !== 'string' || !p.key || keys.has(p.key)) {
-            fail(`templateContract: template "${name}" declares a parameter with a missing or `
-                + `duplicated key (${JSON.stringify(p?.key)}). The key is the draw's own `
-                + 'position in the order AND what the instance label reads.');
-        }
-        keys.add(p.key);
-        if (!Array.isArray(p.domain) || p.domain.length === 0) {
-            fail(`templateContract: template "${name}" parameter "${p.key}" has no finite `
-                + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
-                + 'nobody can enumerate is a domain nobody swept.');
-        }
-        if (!p.domain.includes(p.default)) {
-            fail(`templateContract: template "${name}" parameter "${p.key}" defaults to `
-                + `${JSON.stringify(p.default)}, which is not in its own domain `
-                + `[${p.domain.join(', ')}]. The default is what verb 2's form pre-fills, `
-                + 'so a default outside the domain is a control offering an illegal value.');
-        }
-        if (typeof p.why !== 'string' || !p.why) {
-            fail(`templateContract: template "${name}" parameter "${p.key}" carries no `
-                + '`why`. Every other measured choice in this arc says why it is what it '
-                + 'is; a knob that does not is one the next slice re-derives.');
-        }
-    }
+    const keys = assertParamSchema(params, `template "${name}"`);
     const schema = Object.freeze(params.map((p) => Object.freeze({
         ...p, domain: Object.freeze([...p.domain]),
     })));

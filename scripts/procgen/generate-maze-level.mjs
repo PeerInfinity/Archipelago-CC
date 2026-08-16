@@ -61,6 +61,7 @@ const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore'
 const MAZE = (p) => import(join(HERE, '..', '..', 'frontend/modules/mazeRoom', p));
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
+const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
 const {
     DEFAULT_MAZE_BUDGET, MAZE_PALETTE, generateMazeLevel, serializeMazeLevel,
 } = await MAZE('procgenMaze.js');
@@ -89,7 +90,12 @@ const BUDGET = { maxExpansions: num('expansions', DEFAULT_MAZE_BUDGET.maxExpansi
  * unofferable kind refuses BY NAME through `assertKind` inside the binding —
  * this file does not keep a second list.
  */
-const SKELETON = { kind: arg('skeleton', 'empty') };
+/**
+ * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, in the SAME `;` grammar the URL speaks:
+ * `--skeleton='rooms;minRoom=2;chambers=1'` (quote it — `;` is the shell's).
+ */
+const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
+    { simulator: true, substrate: 'the maze CLI' });
 
 const bounds = {
     obstacleTarget: COUNT,
@@ -186,7 +192,7 @@ if (has('json')) {
     const s = out.summary;
     say(`# generated maze level — seed ${SEED}, palette ${MAZE_PALETTE.name}`);
     say('');
-    say(`room:   ${s.width}x${s.height} tiles, skeleton ${SKELETON.kind}`
+    say(`room:   ${s.width}x${s.height} tiles, skeleton ${formatSkeleton(SKELETON)}`
         + `${SKELETON.kind === 'empty' ? ' (all floor before the loop, no wall ring)' : ' (CARVED)'}`);
     say(`start:  (${s.entranceCell.tx},${s.entranceCell.ty})   goal: exit tile `
         + `(${s.goalCell.tx},${s.goalCell.ty})`);

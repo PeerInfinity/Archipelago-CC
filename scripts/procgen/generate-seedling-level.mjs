@@ -69,6 +69,7 @@ const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', 
 const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore', p));
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
+const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const {
@@ -101,7 +102,14 @@ const ANCHOR_TRIES = num('anchor-tries', 1);
  * existed. ⛔ `classic` and `corridor` need the maze simulator and refuse BY
  * NAME inside the binding — this file keeps no second list.
  */
-const SKELETON = { kind: arg('skeleton', 'empty') };
+/**
+ * ⛓⛓ SLICE 7 — AND ITS PARAMETERS, in the SAME `;` grammar the URL speaks:
+ * `--skeleton='rooms;minRoom=2;chambers=1'` (quote it — `;` is the shell's).
+ * ⛔ ONE PARSER (`skeletonKinds.parseSkeleton`), so a CLI and a link cannot
+ * disagree about what a value means.
+ */
+const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
+    { simulator: false, substrate: 'the Seedling CLI' });
 /**
  * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
  * `--templates=x,y` narrows the sub-roster this run may draw from; ABSENT is
@@ -310,7 +318,9 @@ if (has('json')) {
     const s = out.summary;
     say(`# generated Seedling level — seed ${SEED}, biome ${BIOME}`);
     say('');
-    say(`room:   ${out.record.width}x${out.record.height} tiles, level ${out.record.level}`);
+    say(`room:   ${out.record.width}x${out.record.height} tiles, level ${out.record.level}`
+        + `, skeleton ${formatSkeleton(SKELETON)}`
+        + (SKELETON.kind === 'empty' ? ' (the bordered open room)' : ' (CARVED)'));
     /**
      * ⛓ SLICE 5: A CONSTRUCTION MAY HAVE NO LADDER AT ALL (`--count=0
      * --directed=…` places onto the bare skeleton), and then there is no

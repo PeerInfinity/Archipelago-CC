@@ -9096,6 +9096,73 @@ on a corridor is an ENTITY-template problem.
   `wall-gap-lock-weigh` remain NO_ANCHOR at every carved kind (they span the
   interior), which is slices 7/8's subject.
 
+### Slice 7 — CHAMBERS, and the KIND PARAMETERS
+
+The carve side gains its first **knobs**, declared per kind on the table in
+`procgenCore/skeletonKinds.js` in the SAME `[{key, domain, default, why}]` schema
+a parameterized template uses, checked by the SAME
+`templateContract.assertParamSchema`, and enumerated by the SAME
+`enumerateValues`. Full table and spelling in `maze.md` § *Kind parameters*.
+
+**`chambers`** is the new one and the reason for the slice: a carved room is
+CORRIDOR, and every AREA template in either palette (a pool, a pit patch, a
+lane) has nowhere to anchor until something widens it. It is a post-processor in
+the SUBMODULE (`shared/procgen/mazeAlgorithms/postProcessors.js`) that draws `k`
+centres from the floor cells and stamps a 3×3 open square on each, CLAMPED to a
+`margin` the caller passes. ⛔ It is **monotone** — it only turns wall into floor
+— so connectivity is preserved by construction and it needs no repair; and
+`margin` is the CALLER's fact, not a default: Seedling passes 1 because its
+border ring must stay wall (its binding *refuses* a carve that opens one — so a
+`chambers` that ignored the margin would throw, not merely look wrong), the maze
+passes 0 because it has no ring.
+
+⛔ **A knob at its default is BYTE-INERT, not merely equivalent.** A
+post-processor knob is appended to the run only when its value is off the
+default, so at `chambers=0` nothing is called, no draw is spent, and every
+committed seed→level pair of every kind survives the day the knob was declared.
+The draw order stays the identity: goal → backend → the table's own
+post-processors → the value-added ones in DECLARATION order, `chambers` last
+everywhere (asserted at load).
+
+⚠ **`prune` is a boolean because that is what the subject admits** (⚖ trap 254:
+measure what the subject admits before sizing a knob). The brief sized it
+{0, 1..4}; measured over 5 kinds × 5 seeds × both substrate geometries,
+`pruneDeadEnds` runs to a fixed point and thresholds 1, 2, 3, 4, 5 and 9999 give
+the byte-identical residue in all 50 cells. It is declared on `bushy` and `loopy`
+only — `branchy;prune=1` is byte-identical to `winding` on seeds 1..8 (a second
+spelling of a kind that already has a name), and on `open` full braid leaves
+nothing to prune (a measured no-op).
+
+**What it measures.** The slice-6 yield table re-run at the same frozen bounds
+says what area does for the EXISTING palette, which is what the pass-2 planning
+session asked for. Headline, per ITEM rather than per run (seeds 1..8, count 3 /
+tries 4 / k 3 / anchortries 1 — the same frozen bounds as slice 6):
+
+- **Seedling `winding` → `;chambers=2`**: floor 23% → 32%, saturated cells
+  **4 of 8 → 1 of 8**, kept **12 → 22**; `water-pool` 5 KEPT / 16 NO_ANCHOR →
+  **9 / 5**, `wall-segment` 3 / 20 → **6 / 10**, `pit-patch` 2 / 10 → 2 / 3.
+- **Seedling `branchy` → `;chambers=2`**: floor 50% → 63%, `wall-segment`
+  11 KEPT / 1 REVERTED / 3 NO_ANCHOR → **12 / 0 / 0**, and the two `arrow-lane`
+  REVERTs disappear.
+- **Maze `winding` 11×11 → `;chambers=1`**: `wall-segment` 1 KEPT / 35 NO_ANCHOR
+  → **13 / 3**, saturated 1 of 8 → **0**. At 7×7, 2 / 36 → 10 / 6 at `chambers=2`
+  and saturation 4 of 8 → 1 of 8.
+- **`rooms;minRoom`** moves floor the way the knob says (68% → 59% at 2, → 76% at
+  4 on Seedling) and nothing else of consequence.
+
+⛔ **Doors do NOT arrive with it.** `wall-gap-block` and `wall-gap-lock-weigh`
+stay **0 KEPT** on every carved Seedling kind at every chamber count — they span
+the interior — so a wider room does not make a corridor door legal. That is
+slice 8's subject and ⚖ ruling 11's, not this arc's.
+
+⚠ **And the COST headline still did not move** (⚖ trap 275 — attribute per ITEM,
+not per run): the whole Seedling sweep produced **23 REVERTs, 21 of them
+`arrow-lane`** and the other 2 the same combat-stance refusal, and the one
+expensive cell (`winding` seed 6: 15.3 s / 7.7 s max solve) is the SAME cell at
+every chamber count (18.3 s at k=1, 16.8 s at k=2). Chambers buys yield, not
+time. ⚖ `arrow-lane` is leaving the generator by the ELEMENTS design's ruling,
+so those rows are recorded as *template leaving* rather than acted on.
+
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs not yet started)
 
 The Fable planning session that constructive-mode ruling 11 called for

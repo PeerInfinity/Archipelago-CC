@@ -25,12 +25,30 @@ A **biome** is a named bundle of (backend, params, post-processors); a **backend
 | `bushy` | `recursive_backtracker` (random picker) | Prim's-like, shorter branches |
 | `loopy` | `kruskals` + `braid(p: 0.5)` | Perfect maze with some loops braided in |
 | `open` | `kruskals` + `braid(p: 1.0)` | Every dead end removed |
-| `rooms` | `recursive_division` (minRoom 3) | Chambers connected by single-tile gaps |
+| `rooms` | `recursive_division` (minRoom 3 — a **knob**, see below) | Chambers connected by single-tile gaps |
 | `winding` | `recursive_backtracker` (newest) + `pruneDeadEnds` | **One winding corridor** entrance→goal, wall everywhere else |
 
 `winding` was added by the constructive arc and is Cloudberry's pass 1: a perfect maze with every dead end filled back in, so what survives is exactly the unique entrance→exit path (asserted against an independently computed BFS in `skeletonKinds.test.js`). ⛔ It is **not** a rename of `corridor` — that is the BFS *shortest* path and needs the simulator; this is the spanning tree's own route, which wanders. ⚠ Its `threshold: 9999` is not a tuned depth: `pruneDeadEnds` re-lists its dead ends inside a `while (changed)` loop, so it runs to a fixed point and 1, 2 and 9999 give the same residue (measured). The number states the intent.
 
-Adding a biome that uses an existing backend is a one-line change to the table in `skeletonKinds.js`; adding a backend is a new file under `shared/procgen/mazeAlgorithms/` (portable) or `mazeRoom/mazeAlgorithms/` (simulator-bound) plus an entry there. Post-processors (`braid`, `pruneDeadEnds`) are looked up the same way.
+Adding a biome that uses an existing backend is a one-line change to the table in `skeletonKinds.js`; adding a backend is a new file under `shared/procgen/mazeAlgorithms/` (portable) or `mazeRoom/mazeAlgorithms/` (simulator-bound) plus an entry there. Post-processors (`braid`, `pruneDeadEnds`, `chambers`) are looked up the same way.
+
+### Kind parameters (constructive-mode slice 7)
+
+A kind may declare **knobs**, in the same `[{key, domain, default, why}]` schema a parameterized template uses and checked by the same `templateContract.assertParamSchema`. They are spelled on the URL as `?skeleton=<kind>;<key>=<value>;…`, on both CLIs as `--skeleton='rooms;minRoom=2'` (quote it — `;` is the shell's), and in the sweep's `--kinds=`; one parser, `skeletonKinds.parseSkeleton`.
+
+| knob | kinds | domain | default | what it does |
+|---|---|---|---|---|
+| `minRoom` | `rooms` | 2, 3, 4 | 3 | the smallest chamber `recursive_division` will cut — reaches the **backend** |
+| `prune` | `bushy`, `loopy` | 0, 1 | 0 | fill every dead end back in |
+| `chambers` | every carved kind (`branchy` `bushy` `loopy` `open` `rooms` `winding`) | 0..3 | 0 | stamp *k* open 3×3 squares onto the finished carve |
+
+⛔ **A knob at its default is byte-inert, not merely equivalent.** A post-processor knob is *appended only when its value is off the default*, so at `chambers=0` nothing runs, no draw is spent, and every committed seed→level pair survives the day the knob was declared. `minRoom`'s default is the literal the table always passed.
+
+⛓ **The draw order is the identity**: goal cell → backend → the table's own post-processors → the value-added ones in **declaration** order, with `chambers` declared last everywhere (asserted at load). A chamber stamped before a prune would be pruned back out.
+
+⚠ **`prune` is a boolean because that is what the subject admits.** `pruneDeadEnds` runs to a fixed point, so thresholds 1, 2, 3, 4, 5 and 9999 give the byte-identical residue — measured over 5 kinds × 5 seeds × both substrate geometries. It is declared on `bushy` and `loopy` only: `branchy;prune=1` is byte-identical to `winding` on seeds 1..8 (a second spelling of an existing kind), and on `open` full braid leaves nothing to prune (a measured no-op).
+
+⛔ **`chambers` is monotone** — it only turns wall into floor — so connectivity is preserved by construction and it needs no repair. Its `margin` is the **caller's**: Seedling passes 1 (its border ring must stay wall and its binding refuses a carve that opens it), the maze passes 0.
 
 **Which kinds a binding offers is declared, not derived.** `classic` and `corridor` name simulator-bound backends, so the table marks them `needs:` and a grid-only binding (Seedling) refuses them **by name** with its own offer list. Deriving the answer from the registry — *"is the backend registered?"* — would have made it depend on who imported what.
 
@@ -174,11 +192,16 @@ kind (it owns the simulator-bound backends); Seedling refuses `classic` and
 `corridor` by name. Absent means `empty` — the open room — and the writer
 **deletes** the parameter at the default rather than writing it, the same rule
 the whole roster follows. An unknown kind refuses with the whole vocabulary; a
-`;`-separated parameter clause refuses too (that spelling is reserved for the
-slice that gives a kind parameters). The generate form carries a **skeleton
-selector**, and changing it RESETS the ladder to the skeleton and says so — the
+`;`-separated clause carries the kind's **parameters** (slice 7 — see *Kind
+parameters* above): `?skeleton=rooms;minRoom=2;chambers=1`, keys in declaration
+order, and a value **at** its default is not written at all. An undeclared key
+and an out-of-domain value each refuse by name, with what the kind declares. The
+generate form carries a **skeleton selector** plus one control per declared knob
+(mounted from the catalogue's own schema, re-mounted at defaults on a kind
+change), and changing either RESETS the ladder to the skeleton and says so — the
 room a ladder is built in is part of the level's identity, exactly as the seed
-is. Try `?seed=3&count=3&skeleton=winding&run=1`.
+is. Try `?seed=3&count=3&skeleton=winding&run=1` and
+`?seed=3&count=0&skeleton=winding;chambers=2`.
 
 ### `drawWorld`'s `view` contract
 
@@ -266,8 +289,7 @@ own edit behaviour is unchanged.
 - **the yield table and the connectivity pre-check**, and the **cut-vertex
   rule** — a door the walk can walk around is a KEPT candidate that happens to
   be decoration today.
-- **kind parameters** — every kind is pre-parameterized in the table, and the
-  reader refuses a `?skeleton=rooms;minRoom=5` clause rather than truncating it.
+- ~~**kind parameters**~~ — landed in slice 7; see *Kind parameters* above.
 
 ## The action queue (`mazeRoomQueue.js`)
 

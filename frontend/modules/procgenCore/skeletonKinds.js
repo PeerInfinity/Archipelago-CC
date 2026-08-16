@@ -47,6 +47,7 @@
 
 import { getPostProcessor } from '../shared/procgen/mazeAlgorithms/postProcessors.js';
 import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
+import { assertParamSchema, enumerateValues } from './templateContract.js';
 
 /**
  * ── ⛓⛓ REGISTER-ON-IMPORT: **THE BINDING IMPORTS THE BACKENDS, NOT THIS
@@ -83,6 +84,99 @@ const fail = (message) => { throw new SkeletonKindError(message); };
 /** ⛓ What a binding without the maze simulator cannot run, said once. */
 const NEEDS_SIMULATOR = 'the maze simulator — it solves the room as it builds it, so it '
     + 'runs only in the maze substrate';
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE 7 — THE KIND PARAMETERS
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * CONSTRUCTIVE-MODE arc, slice 7 (⚖ kickoff §3.6 item 3, ⚖ open question 5's
+ * reserved `;` spelling). A kind used to be a FIXED bundle; it is now a bundle
+ * with declared knobs, spelled `?skeleton=rooms;minRoom=2;chambers=1`.
+ *
+ * ── ⛔ ONE SCHEMA LANGUAGE — `templateContract.assertParamSchema` ─────
+ *
+ * `[{key, domain, default, why}]`, the SAME array a parameterized template
+ * declares, checked by the SAME function, enumerated by the SAME
+ * `enumerateValues`. A second schema language for kinds would be two answers
+ * to "what is a declared knob", and this arc's first law is one of everything.
+ *
+ * ── ⛔⛔ A PARAMETER AT ITS DEFAULT IS **BYTE-INERT**, NOT MERELY EQUIVALENT
+ *
+ * The `target` of a post-processor knob is APPENDED ONLY WHEN THE VALUE IS OFF
+ * ITS DEFAULT. So at `chambers=0` no `chambers` post-processor runs, no draw is
+ * spent, and every committed seed→level pair of every kind survives the day the
+ * knob was declared. ⛔ It is not enough that `chambers(k=0)` returns early —
+ * that would already be true — the point is that the RUNNER does not call it,
+ * so nothing about the run's shape depends on the knob existing.
+ *
+ * ── ⛓ THE DRAW ORDER, DECLARED (⚖ kickoff §3.4: the order IS the identity)
+ *
+ *   goal cell (the binding's, first draw)
+ *     → the backend, under `params` merged with the BACKEND-targeted values
+ *     → the table's own post-processors, in table order
+ *     → the value-added post-processors, in SCHEMA DECLARATION order
+ *
+ * `chambers` is declared LAST in every kind that has it, so it stamps onto a
+ * finished layout rather than onto something a later pass will fill back in —
+ * and `chambers=0` therefore moves nothing that comes before it, which is what
+ * the draw-order test drives.
+ */
+
+/**
+ * ⛓⛓ CHAMBERS — the knob ⚖ §3.6(3) exists for. A carved room is CORRIDOR, and
+ * every AREA template in either palette (a pool, a pit patch, a lane) needs
+ * somewhere wider than one tile to anchor. `k` open 3×3 squares is the smallest
+ * thing that gives it one.
+ *
+ * ⛔ SHARED BY REFERENCE ACROSS SIX KINDS, deliberately: `chambers=2` must mean
+ * the same domain and the same default on `bushy` as on `rooms`, and six copies
+ * of a literal is six places for them to drift.
+ *
+ * ⚠ `size` is NOT on the URL in v1 — the table fixes it at 3 (`target.fixed`).
+ * A knob nobody has swept is a knob nobody has adjudicated (⚖ ruling 4), and
+ * the yield table this slice re-runs sweeps `k`, not `size`.
+ */
+const CHAMBERS_PARAM = Object.freeze({
+    key: 'chambers',
+    domain: Object.freeze([0, 1, 2, 3]),
+    default: 0,
+    why: 'how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off '
+        + 'is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. '
+        + 'A carved room is corridor; an area template has nowhere to be until this runs.',
+    target: Object.freeze({ post: 'chambers', param: 'k', fixed: Object.freeze({ size: 3 }), marginAware: true }),
+});
+
+/**
+ * ⛓⛓⛓ PRUNE — **A BOOLEAN, AND THE MEASUREMENT IS WHY.**
+ *
+ * The brief sized this {0, 1..4}. Measured first (⚖ trap 254: measure what the
+ * subject admits before sizing a knob), on `branchy`/`bushy`/`loopy`/`open`/
+ * `rooms` × seeds 1..5 × BOTH substrate geometries: `pruneDeadEnds` re-lists its
+ * dead ends inside `while (changed)`, so it runs to a FIXED POINT and thresholds
+ * 1, 2, 3, 4, 5 and 9999 give the byte-identical residue in every one of the 50
+ * cells. ⇒ **the domain the subject admits is {0, 1}**, and a {0..4} knob would
+ * have offered four spellings of one room.
+ *
+ * ⛔ AND IT IS DECLARED ON TWO KINDS, NOT FOUR — each exclusion measured:
+ *   · `branchy` — `branchy;prune=1` is BYTE-IDENTICAL to `winding` on seeds
+ *     1..8 (same backend, same picker, same fixed point). A second spelling of
+ *     an existing kind is exactly what this vocabulary refuses; say `winding`.
+ *   · `open`    — full braid already removes every removable dead end, so
+ *     `prune=1` was a NO-OP on 5 seeds × both substrates. A knob that does
+ *     nothing is a control that writes state nobody reads.
+ * `bushy;prune=1` (a random-picker tree, pruned) and `loopy;prune=1` (a half-
+ * braided maze with its stuck dead ends filled) are rooms NO kind name reaches,
+ * which is the whole case for the knob.
+ */
+const PRUNE_PARAM = Object.freeze({
+    key: 'prune',
+    domain: Object.freeze([0, 1]),
+    default: 0,
+    why: 'fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: '
+        + 'pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = '
+        + 'today, and byte-inert.',
+    target: Object.freeze({ post: 'pruneDeadEnds', param: 'threshold' }),
+});
 
 /**
  * THE TABLE. Named bundles of (backend, params, post-processors), looked up by
@@ -129,12 +223,14 @@ export const BIOMES = Object.freeze({
         description: 'Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.',
         backend: 'recursive_backtracker',
         params: Object.freeze({ picker: 'newest' }),
+        paramSchema: Object.freeze([CHAMBERS_PARAM]),
     }),
     bushy: Object.freeze({
         name: 'Bushy',
         description: 'Recursive backtracker with random picker — bushier, Prim\'s-like with shorter branches.',
         backend: 'recursive_backtracker',
         params: Object.freeze({ picker: 'random' }),
+        paramSchema: Object.freeze([PRUNE_PARAM, CHAMBERS_PARAM]),
     }),
     loopy: Object.freeze({
         name: 'Loopy',
@@ -143,6 +239,7 @@ export const BIOMES = Object.freeze({
         postProcessors: Object.freeze([
             Object.freeze({ id: 'braid', params: Object.freeze({ p: 0.5 }) }),
         ]),
+        paramSchema: Object.freeze([PRUNE_PARAM, CHAMBERS_PARAM]),
     }),
     open: Object.freeze({
         name: 'Open',
@@ -151,12 +248,33 @@ export const BIOMES = Object.freeze({
         postProcessors: Object.freeze([
             Object.freeze({ id: 'braid', params: Object.freeze({ p: 1.0 }) }),
         ]),
+        paramSchema: Object.freeze([CHAMBERS_PARAM]),
     }),
     rooms: Object.freeze({
         name: 'Rooms',
         description: 'Recursive division — partitions the region into chambers connected by single-tile gaps.',
         backend: 'recursive_division',
         params: Object.freeze({ minRoom: 3 }),
+        /**
+         * ⛓ `minRoom` — the ONE backend-targeted knob, and the only one whose
+         * value reaches `backend.run` rather than a post-processor. ⛔ Its
+         * default is TODAY'S LITERAL (3), so the table's `params` and the
+         * resolved value agree at the default and the `rooms` pairs cannot
+         * move. The domain is {2,3,4}: 2 is the smallest partition
+         * `recursive_division` will make, and above 4 the 10x10 Seedling room
+         * stops dividing at all.
+         */
+        paramSchema: Object.freeze([
+            Object.freeze({
+                key: 'minRoom',
+                domain: Object.freeze([2, 3, 4]),
+                default: 3,
+                why: 'the smallest chamber recursive_division will cut. Smaller = more, '
+                    + 'tighter rooms; larger = fewer, bigger ones. 3 is today\'s value.',
+                target: Object.freeze({ backend: 'minRoom' }),
+            }),
+            CHAMBERS_PARAM,
+        ]),
     }),
     /**
      * ⛓⛓⛓ SLICE 5's ONE NEW KIND — **CLOUDBERRY'S PASS 1**, and the only
@@ -194,8 +312,42 @@ export const BIOMES = Object.freeze({
         postProcessors: Object.freeze([
             Object.freeze({ id: 'pruneDeadEnds', params: Object.freeze({ threshold: 9999 }) }),
         ]),
+        /**
+         * ⛔ NO `prune` KNOB HERE — this kind IS the pruned one, and a knob that
+         * could turn it off would spell `branchy` under the name `winding`.
+         */
+        paramSchema: Object.freeze([CHAMBERS_PARAM]),
     }),
 });
+
+/**
+ * ⛓⛓ THE SCHEMA IS CHECKED AT **DEFINITION TIME**, by the SAME function
+ * `defineTemplate` uses — a domain nobody can enumerate is a domain nobody
+ * swept, and a default outside its own domain is a form control that offers an
+ * illegal value. Both would otherwise surface on the day somebody pressed
+ * something.
+ *
+ * ⛔ AND `chambers` MUST BE THE LAST DECLARED PARAMETER wherever it appears.
+ * The value-added post-processors run in DECLARATION order, so declaring
+ * `chambers` before `prune` would prune the stamped chamber's own edges back
+ * into wall — the draw order IS the identity (⚖ §3.4), and this is the one
+ * place it can be asserted rather than remembered.
+ */
+for (const [kind, entry] of Object.entries(BIOMES)) {
+    const schema = entry.paramSchema ?? [];
+    assertParamSchema(schema, `skeleton kind ${JSON.stringify(kind)}`);
+    const at = schema.findIndex((p) => p.key === 'chambers');
+    if (at >= 0 && at !== schema.length - 1) {
+        fail(`skeletonKinds: the kind ${JSON.stringify(kind)} declares "chambers" at `
+            + `position ${at} of ${schema.length}. It must be LAST: value-added `
+            + 'post-processors run in declaration order, and a chamber stamped before a '
+            + 'prune would be pruned back out.');
+    }
+    if (entry.carves === false && schema.length > 0) {
+        fail(`skeletonKinds: the kind ${JSON.stringify(kind)} carves nothing and cannot `
+            + 'declare parameters — there is no carve for them to change.');
+    }
+}
 
 /** ⛓ The same table under the name the constructive mode reads it by. */
 export const SKELETON_KINDS = BIOMES;
@@ -210,6 +362,178 @@ export const DEFAULT_SKELETON_KIND = 'empty';
 export const DEFAULT_SKELETON = Object.freeze({ kind: DEFAULT_SKELETON_KIND });
 
 export const KIND_IDS = Object.freeze(Object.keys(BIOMES));
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE KIND PARAMETERS — ONE CODEC, ONE VALIDATOR, ONE FORMATTER
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE STRING↔OBJECT CODEC LIVES **HERE**, BESIDE THE TABLE IT VALIDATES
+ * AGAINST — not in `urlParams.js`. The URL is one channel; the two CLIs'
+ * `--skeleton=` is another, and the pages' forms are a third. A parser in the
+ * URL file would have made the CLIs either import the URL grammar (which knows
+ * about `URLSearchParams`) or grow a second one. `urlParams` keeps the ONE
+ * reader and the ONE writer of the PARAMETER; what a VALUE means is the
+ * table's own question.
+ */
+
+/** The declared schema of a kind — `[]` for a kind with no knobs. */
+export function paramSchemaFor(kind) {
+    return BIOMES[kind]?.paramSchema ?? [];
+}
+
+/** Every declared value combination of a kind — `templateContract`'s enumerator. */
+export function enumerateKindValues(kind) {
+    return enumerateValues({ params: paramSchemaFor(kind) });
+}
+
+/**
+ * ⛓⛓ THE ONE VALIDATOR. Unknown keys and out-of-domain values refuse **BY
+ * NAME**, with what WAS declared — a reader who typed `minRoom` at `branchy`
+ * has no other channel to learn that the knob is `rooms`'.
+ *
+ * @returns {object} the FULL value set (every declared key, defaults filled) —
+ *   what `carveSkeleton` runs under.
+ */
+export function resolveSkeletonParams(kind, values = {}) {
+    const schema = paramSchemaFor(kind);
+    const declared = schema.map((p) => p.key);
+    for (const key of Object.keys(values ?? {})) {
+        const p = schema.find((q) => q.key === key);
+        if (!p) {
+            fail(`skeletonKinds: the skeleton kind ${JSON.stringify(kind)} has no parameter `
+                + `${JSON.stringify(key)}. It declares `
+                + `${declared.length ? `[${declared.join(', ')}]` : 'NO parameters'}. `
+                + '⛔ A silently ignored parameter is a link that names a room it did not '
+                + 'build.');
+        }
+        if (!p.domain.includes(values[key])) {
+            fail(`skeletonKinds: ${JSON.stringify(kind)} parameter "${key}" was given `
+                + `${JSON.stringify(values[key])}, which is not in its declared domain `
+                + `[${p.domain.join(', ')}]. Every value in a domain is one a sweep `
+                + 'measured; a value outside it is one nobody has adjudicated.');
+        }
+    }
+    const out = {};
+    for (const p of schema) {
+        out[p.key] = Object.prototype.hasOwnProperty.call(values ?? {}, p.key)
+            ? values[p.key] : p.default;
+    }
+    return out;
+}
+
+/**
+ * The values that are NOT at their default, in DECLARATION order — what the URL
+ * writes and what the payload carries. ⛔ The default is spelled by ABSENCE, the
+ * same rule the kind itself and the whole roster follow, so one room has exactly
+ * one spelling.
+ */
+export function nonDefaultParams(kind, values = {}) {
+    const full = resolveSkeletonParams(kind, values);
+    const out = {};
+    for (const p of paramSchemaFor(kind)) {
+        if (full[p.key] !== p.default) out[p.key] = full[p.key];
+    }
+    return out;
+}
+
+/**
+ * ⛓ THE CANONICAL `{kind, params}` — `params` OMITTED when every value is at
+ * its default. ⛔ That omission is what makes `agreementWithPayload` compare
+ * with a BOTH-SIDES DEFAULT: a payload written before this slice carries
+ * `{kind}` and normalizes to the same object a page at all-defaults produces,
+ * so an old payload agrees rather than diverging on a field it could not have
+ * had. (A payload naming a NON-default value and a page at the default still
+ * diverge BY NAME, which is correct.)
+ */
+export function normalizeSkeleton(spec, { validate = true } = {}) {
+    const kind = spec?.kind ?? DEFAULT_SKELETON_KIND;
+    /**
+     * ⛔ THE UNKNOWN-KIND SENTENCE IS `assertKind`'s, NOT A SECOND ONE — one
+     * answer to "which kinds may I ask for", wherever the question is asked.
+     * ⚠ `simulator: true` on purpose: this normalizer is substrate-agnostic, so
+     * "your binding cannot run that" is the CALLER's refusal (the URL reader
+     * and both bindings each make it with their own offer list) and must not be
+     * pre-empted here.
+     */
+    if (validate) assertKind(kind, { simulator: true });
+    const params = BIOMES[kind] ? nonDefaultParams(kind, spec?.params ?? {}) : {};
+    return Object.keys(params).length === 0
+        ? Object.freeze({ kind })
+        : Object.freeze({ kind, params: Object.freeze(params) });
+}
+
+/**
+ * `rooms;minRoom=2;chambers=1` — the ONE spelling, used by the URL writer, both
+ * CLIs, the identity line and the sweep's row labels. A kind at all defaults
+ * formats as its bare id.
+ */
+export function formatSkeleton(spec) {
+    const norm = normalizeSkeleton(spec);
+    const parts = Object.entries(norm.params ?? {}).map(([k, v]) => `${k}=${v}`);
+    return parts.length === 0 ? norm.kind : `${norm.kind};${parts.join(';')}`;
+}
+
+/**
+ * ⛓⛓⛓ THE ONE PARSER — `<kind>[;key=value]…` → `{kind[, params]}`.
+ *
+ * ⚖ Open question 5's default spelling, landed by slice 7. Slice 5 REFUSED a
+ * `;` clause by name and reserved it for exactly this; the refusal is now a
+ * grammar.
+ *
+ * ⛔ FIVE DISTINGUISHED REFUSALS, because a reader can act on each: a clause
+ * with no `=`, an empty clause, a duplicated key, a key the kind does not
+ * declare (with the ones it does), and a value outside a declared domain (with
+ * the domain). ⚠ Values are matched against the domain BY STRING, so the
+ * object carries the domain's own typed member (the number 2, never "2") —
+ * which is what makes `agreementWithPayload` and the fixed point comparable at
+ * all.
+ */
+export function parseSkeleton(value, { simulator = false, substrate = 'this substrate' } = {}) {
+    const raw = String(value ?? '').trim();
+    const [head, ...clauses] = raw.split(';');
+    const kind = assertKind(head.trim().toLowerCase(), { simulator, substrate });
+    const schema = paramSchemaFor(kind);
+    const declared = schema.map((p) => p.key);
+    const params = {};
+    for (const clause of clauses) {
+        const text = clause.trim();
+        if (text === '') {
+            fail(`skeletonKinds: ${JSON.stringify(raw)} carries an EMPTY parameter clause. `
+                + 'Each clause is `key=value`, separated by `;` — an empty one is a typo '
+                + 'the reader can fix, not a value.');
+        }
+        const eq = text.indexOf('=');
+        if (eq <= 0) {
+            fail(`skeletonKinds: the clause ${JSON.stringify(text)} in `
+                + `${JSON.stringify(raw)} is not \`key=value\`. The kind `
+                + `${JSON.stringify(kind)} declares `
+                + `${declared.length ? `[${declared.join(', ')}]` : 'NO parameters'}.`);
+        }
+        const key = text.slice(0, eq).trim();
+        const rawValue = text.slice(eq + 1).trim();
+        if (Object.prototype.hasOwnProperty.call(params, key)) {
+            fail(`skeletonKinds: ${JSON.stringify(raw)} names "${key}" TWICE. One knob, one `
+                + 'value — a link that sets a parameter twice does not say which room it '
+                + 'means.');
+        }
+        const p = schema.find((q) => q.key === key);
+        if (!p) {
+            fail(`skeletonKinds: the skeleton kind ${JSON.stringify(kind)} has no parameter `
+                + `${JSON.stringify(key)}. It declares `
+                + `${declared.length ? `[${declared.join(', ')}]` : 'NO parameters'}. `
+                + '⛔ A silently ignored parameter is a link that names a room it did not '
+                + 'build.');
+        }
+        const typed = p.domain.find((v) => String(v) === rawValue);
+        if (typed === undefined) {
+            fail(`skeletonKinds: ${JSON.stringify(kind)} parameter "${key}" was given `
+                + `${JSON.stringify(rawValue)}, which is not in its declared domain `
+                + `[${p.domain.join(', ')}].`);
+        }
+        params[key] = typed;
+    }
+    return normalizeSkeleton({ kind, params });
+}
 
 /**
  * Resolve a biome reference to its definition + merged params.
@@ -277,6 +601,14 @@ export function skeletonCatalogue({ simulator = false } = {}) {
         description: entry.description,
         backend: entry.backend,
         postProcessors: (entry.postProcessors ?? []).map((pp) => pp.id),
+        /**
+         * ⛓ SLICE 7 — THE KIND'S DECLARED KNOBS, so a page can MOUNT A FORM
+         * from the catalogue instead of keeping a second list of what a kind
+         * takes. ⛔ The schema objects themselves, frozen at declaration: the
+         * form's options ARE the domain and its pre-fill IS the default, so a
+         * control cannot offer a value the parser would refuse.
+         */
+        params: entry.paramSchema ?? [],
         isDefault: kind === DEFAULT_SKELETON_KIND,
         offered: Boolean(simulator || !entry.needs),
         why: entry.needs ?? null,
@@ -340,9 +672,16 @@ export function assertKind(kind, { simulator = false, substrate = 'this substrat
  *   Int8Array, entrance:{x,y}, exits: Map of {x,y}}`. MUTATED in place, which
  *   is the grid contract the backends were written against.
  * @param {object} rng    `{next(): [0,1)}` — the model's room stream
- * @returns {{kind, backend, backendStats, postProcessors: string[]}}
+ * @param {object} [o]
+ * @param {object} [o.params]  the kind's declared values (⛓ slice 7); missing
+ *   keys take their declared default, and a key the kind does not declare
+ *   refuses BY NAME.
+ * @param {number} [o.margin]  cells in from the grid edge that may never be
+ *   carved — the BINDING's fact (Seedling 1, the maze 0). Reaches only the
+ *   post-processors that declare `marginAware`.
+ * @returns {{kind, backend, backendStats, postProcessors: string[], params: object}}
  */
-export function carveSkeleton(kind, world, rng) {
+export function carveSkeleton(kind, world, rng, { params = {}, margin = 0 } = {}) {
     const entry = BIOMES[kind];
     if (!entry) fail(`skeletonKinds: carveSkeleton was given unknown kind ${JSON.stringify(kind)}.`);
     if (entry.carves === false) {
@@ -358,9 +697,45 @@ export function carveSkeleton(kind, world, rng) {
             + 'ON IMPORT, so this is a missing import in the caller\'s graph and not a bad '
             + 'kind — the three portable ones are imported by this file.');
     }
-    const backendStats = backend.run(world, { ...(entry.params ?? {}) }, rng);
+    /**
+     * ⛓⛓⛓ SLICE 7 — THE DECLARED VALUES, RESOLVED AND ROUTED. Two kinds of
+     * target and they are NOT symmetric:
+     *
+     *  · `{backend: 'minRoom'}` MERGES over the table's own `params`. It is
+     *    always applied, because the default IS the table's literal — merging
+     *    3 over 3 writes the same argument the backend has always received.
+     *  · `{post: 'chambers', param: 'k'}` APPENDS a post-processor, and ⛔ ONLY
+     *    WHEN THE VALUE IS OFF ITS DEFAULT. That is the byte-inert law: at the
+     *    default the runner does not call it, so it spends no draw and the
+     *    layout it would have received is the layout that ships.
+     *
+     * ⚠ `margin` reaches only a target that declares `marginAware`. It is the
+     * CALLER's fact (the Seedling room has a wall ring to protect; the maze has
+     * none), so it is threaded rather than defaulted — and handing it to a
+     * post-processor that does not read it would be a parameter nobody obeys.
+     */
+    const values = resolveSkeletonParams(kind, params);
+    const backendParams = { ...(entry.params ?? {}) };
+    const added = [];
+    for (const p of entry.paramSchema ?? []) {
+        const v = values[p.key];
+        if (p.target.backend) {
+            backendParams[p.target.backend] = v;
+            continue;
+        }
+        if (v === p.default) continue;
+        added.push({
+            id: p.target.post,
+            params: {
+                ...(p.target.fixed ?? {}),
+                [p.target.param]: v,
+                ...(p.target.marginAware ? { margin } : {}),
+            },
+        });
+    }
+    const backendStats = backend.run(world, backendParams, rng);
     const ran = [];
-    for (const pp of entry.postProcessors ?? []) {
+    for (const pp of [...(entry.postProcessors ?? []), ...added]) {
         const fn = getPostProcessor(pp.id);
         if (!fn) {
             fail(`skeletonKinds: the kind ${JSON.stringify(kind)} names post-processor `
@@ -369,5 +744,7 @@ export function carveSkeleton(kind, world, rng) {
         fn(world, pp.params ?? {}, rng);
         ran.push(pp.id);
     }
-    return { kind, backend: entry.backend, backendStats, postProcessors: ran };
+    return {
+        kind, backend: entry.backend, backendStats, postProcessors: ran, params: values,
+    };
 }

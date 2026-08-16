@@ -61,6 +61,7 @@ import { connected } from '../procgenCore/gridFlood.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
+    normalizeSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import {
     TILE_FLOOR, TILE_WALL, getTile, setTile,
@@ -344,6 +345,16 @@ export function seedlingModel({
      */
     const skeletonKind = assertKind(skeletonSpec?.kind ?? DEFAULT_SKELETON_KIND,
         { simulator: false, substrate: 'the Seedling binding' });
+    /**
+     * ⛓⛓ SLICE 7 — THE KIND'S DECLARED PARAMETERS, normalized ONCE here. A key
+     * this kind does not declare, or a value outside its domain, refuses BY
+     * NAME (`resolveSkeletonParams` inside `normalizeSkeleton`) — before any
+     * grid exists, because a link that names a room nobody can build should not
+     * reach the carver at all.
+     */
+    const skeletonSpecNorm = normalizeSkeleton({
+        kind: skeletonKind, params: skeletonSpec?.params ?? {},
+    });
 
     const carveRoom = () => {
         const gw = { width: d.width, height: d.height };
@@ -361,7 +372,17 @@ export function seedlingModel({
                 if (ring) setTile(grid, x, y, TILE_WALL);
             }
         }
-        const carve = carveSkeleton(skeletonKind, grid, roomRng);
+        /**
+         * ⛓⛓ SLICE 7 — `margin: 1`, AND IT IS THE RING'S OWN NUMBER. The
+         * Seedling room's border must stay wall (fact 1 above), so a carver
+         * that STAMPS — `chambers` is the first — may never write into the
+         * outermost cell. ⛔ Passed rather than defaulted: the maze has no ring
+         * and passes 0, and a post-processor that guessed would be wrong in one
+         * of the two substrates. The border check below is what proves it.
+         */
+        const carve = carveSkeleton(skeletonKind, grid, roomRng, {
+            params: skeletonSpecNorm.params ?? {}, margin: 1,
+        });
         const ground = [];
         for (let ty = 0; ty < gw.height; ty += 1) {
             for (let tx = 0; tx < gw.width; tx += 1) {
@@ -671,7 +692,7 @@ export function seedlingModel({
         defaults: Object.freeze(d),
         /** ⛓ The kind that BUILT this room, and the block a payload carries. */
         skeletonKind,
-        skeletonSpec: Object.freeze({ kind: skeletonKind }),
+        skeletonSpec: skeletonSpecNorm,
         /** What the carve actually ran — `null` at the open room. */
         carve: carved ? Object.freeze({ ...carved.carve }) : null,
         goalCell: Object.freeze({ ...goalCell }),
