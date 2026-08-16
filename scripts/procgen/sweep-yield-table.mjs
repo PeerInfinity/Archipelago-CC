@@ -101,6 +101,10 @@ const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
  */
 const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
     await M('procgenCore/areaSpec.js');
+/** ⛓ arc 2 slice 3 — and the same argument: ONE `--elements=` for the whole
+ *  sweep, because an element is not a property of the skeleton kind. */
+const { NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec } =
+    await M('procgenCore/elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -178,6 +182,21 @@ const AREAS = parseAreaSpec(arg('areas', '0'));
  */
 const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
     ? parseRequireList(arg('require', '')) : null;
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 2 slice 3 — THE ELEMENT FOR EVERY CELL, through the
+ * ONE codec (`procgenCore/elementSpec.js`): `--elements='guard;len=3;turns=1'`.
+ * ⛔ The default is `none` and at `none` the binding constructs nothing and
+ * spends no draw, so every column below is unchanged from the run before
+ * elements existed. ⛔ Seedling REFUSES it by name for the same reason it
+ * refuses `--areas=`: the element binding is the MAZE's in this arc.
+ */
+const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
+if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
+    note('sweep-yield-table: --elements= is the MAZE binding\'s (PROCGEN ELEMENTS arc 2, '
+        + 'slice 3). Seedling gets elements in arc 3; running it here would print an element '
+        + 'column that is zero for a reason nobody stated.');
+    process.exit(2);
+}
 if (REQUIRE && AREAS.keys === 0) {
     note('sweep-yield-table: --require= without --areas= — every cell would refuse with '
         + '`the-directive-needs-the-area-graph`, which is a column that means one thing at '
@@ -224,6 +243,7 @@ if (CELL !== '') {
             seed, width: size.width, height: size.height, skeleton: parseSkeleton(kind,
                 { simulator: true, substrate: 'the maze binding' }),
             areas: AREAS,
+            elements: ELEMENTS,
         });
         palette = MAZE_PALETTE;
         oracle = mazeOracle({ model, items: palette.items ?? null });
@@ -304,6 +324,9 @@ if (CELL !== '') {
         const part = partitionMazeAreas(sk, {
             entrance: { x: sk.entrance.x, y: sk.entrance.y },
             goal: { x: model.goalCell.tx, y: model.goalCell.ty },
+            declared: model.elements.ran
+                ? model.elements.placed.map((p) => ({ id: `E${p.index}`, cells: p.areaCells }))
+                : [],
         });
         const deg = new Map(part.areas.map((a) => [a.id, 0]));
         for (const e of part.adjacency) {
@@ -333,6 +356,32 @@ if (CELL !== '') {
      * so the column is a report of the binding's own differential and not a
      * second answer to "is this lock a cut".
      */
+    /**
+     * ⛓⛓ THE ELEMENTS CENSUS COLUMNS — site FOUND / CONSTRUCTED / carve
+     * RESPECTED / GUARDED, and the cost the PLAN spent. ⛔ Reported only when an
+     * element was asked for, so a `--elements=none` sweep's rows are unchanged.
+     */
+    let elementRow = null;
+    if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
+        const { mazeCostRecords } = await M('mazeRoom/procgenMaze.js');
+        const info = model.elements;
+        const rows = (out && info.ran)
+            ? mazeCostRecords({ model, record: out.record, kept: out.summary.kept }).elements
+                .filter((e) => e.element)
+            : [];
+        elementRow = {
+            ran: info.ran,
+            refused: info.refused?.reason ?? null,
+            guarded: info.placed.filter((p) => p.guards !== null).length,
+            params: info.placed.map((p) => p.params),
+            tunnel: info.placed.map((p) => p.tunnel.length),
+            carveOverwrote: info.placed.map((p) => p.carveOverwrote),
+            pushes: rows.map((r) => r.cost.pushes),
+            planLength: rows.map((r) => r.cost.planLength),
+            nodes: rows.map((r) => r.cost.nodes),
+            heldAtDoor: rows.map((r) => r.heldAtDoor),
+        };
+    }
     let requireRow = null;
     if (REQUIRE && SUBSTRATE === 'maze') {
         const { mazeCostRecords, requireOutcome } = await M('mazeRoom/procgenMaze.js');
@@ -355,6 +404,7 @@ if (CELL !== '') {
         seed,
         floorPct,
         areaCensus,
+        elements: elementRow,
         require: requireRow,
         error,
         stop: out?.summary.stop ?? null,
@@ -495,6 +545,7 @@ for (const c of cells) {
     note(`[stderr] ${SUBSTRATE} ${c.kind} ${c.size.label} seed ${c.seed} `
         + `(${denom.attempted}/${cells.length})…`);
     const childArgs = [SELF, `--substrate=${SUBSTRATE}`, `--areas=${formatAreaSpec(AREAS)}`,
+        `--elements=${formatElementSpec(ELEMENTS)}`,
         ...(REQUIRE ? [`--require=${formatRequireList(REQUIRE)}`] : []),
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,
@@ -653,6 +704,67 @@ if (SUBSTRATE === 'maze') {
         say('| n | reason |');
         say('|---|---|');
         for (const [k, n] of refusalRows) say(`| ${n} | \`${k}\` |`);
+    }
+    say('');
+}
+
+/**
+ * ⛓⛓⛓ THE ELEMENTS CENSUS — PROCGEN ELEMENTS arc 2 slice 3's deliverable 1,
+ * printed by the sweep so it is re-runnable rather than a table in a document.
+ *
+ * ⛔ `site` is CONSTRUCTED-or-refused-at-the-site-stage, `carve OK` is the
+ * composite plus every check on the way out, and `guarded` is the one that
+ * matters: a gadget guarding nothing is ⚖ ruling 1 not happening. `overwrote`
+ * is the NON-VACUITY witness of the fixed registration — cells the carve had
+ * written differently from what the element wants.
+ */
+if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
+    say(`## THE ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS)}\``);
+    say('');
+    say('| kind | size | N | placed | guarded | worst nodes | max pushes | max tunnel '
+        + '| mean overwrote | heldAtDoor true/null |');
+    say('|---|---|---|---|---|---|---|---|---|---|');
+    const seen = new Map();
+    for (const r of results) {
+        const k = `${r.kind}|${r.size}`;
+        if (!seen.has(k)) {
+            seen.set(k, { kind: r.kind, size: r.size, n: 0, placed: 0, guarded: 0, nodes: 0,
+                pushes: 0, tunnel: 0, over: [], held: 0, never: 0, why: {} });
+        }
+        const c = seen.get(k);
+        c.n += 1;
+        const e = r.elements;
+        if (!e) continue;
+        if (!e.ran) { c.why[e.refused ?? 'unknown'] = (c.why[e.refused ?? 'unknown'] ?? 0) + 1;
+            continue; }
+        c.placed += 1;
+        c.guarded += e.guarded;
+        c.nodes = Math.max(c.nodes, ...e.nodes.map((v) => v ?? 0));
+        c.pushes = Math.max(c.pushes, ...e.pushes);
+        c.tunnel = Math.max(c.tunnel, ...e.tunnel);
+        c.over.push(...e.carveOverwrote);
+        for (const h of e.heldAtDoor) { if (h === true) c.held += 1; else if (h === null) c.never += 1; }
+    }
+    for (const c of seen.values()) {
+        const mean = c.over.length
+            ? (c.over.reduce((a, b) => a + b, 0) / c.over.length).toFixed(1) : '—';
+        say(`| ${c.kind} | ${c.size} | ${c.n} | ${c.placed} | ${c.guarded} | `
+            + `${c.nodes || '—'} | ${c.pushes || '—'} | ${c.tunnel} | ${mean} | `
+            + `${c.held}/${c.never} |`);
+    }
+    say('');
+    say('### the element REFUSALS, by name');
+    say('');
+    const all = {};
+    for (const c of seen.values()) {
+        for (const [k, n] of Object.entries(c.why)) all[k] = (all[k] ?? 0) + n;
+    }
+    const rows2 = Object.entries(all).sort((a, b) => b[1] - a[1]);
+    if (!rows2.length) say('(every cell placed its element.)');
+    else {
+        say('| n | reason |');
+        say('|---|---|');
+        for (const [k, n] of rows2) say(`| ${n} | \`${k}\` |`);
     }
     say('');
 }
