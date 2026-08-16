@@ -3174,6 +3174,50 @@ hazards rework, block pushing/combat in the maze (bindings shaped for them),
 wiring the maze generator into `generateRegionCore` (lab arm first), promoting
 `procgenCore/` to `shared/`.
 
+## 5g. The PROCGEN ELEMENTS design — pass 1 = elements + connectors, the intra-level AREA GRAPH (JS MetaZelda), pass 2 site-typed on carved rooms; both substrates (design opened 2026-08-15, post-dates this doc)
+
+**Status: DESIGNED 2026-08-15 (Fable planning session — the one constructive-
+mode ruling 11 called for; conversation first, then records). Arc 1 kickoff
+READY; nothing implemented yet.** Plan docs *(NewDocs)*:
+`procgen-elements-design.md` (the DESIGN — §1 rulings 1–20, §3 the Cloudberry
+re-read + the MetaZelda read, §4 the three layers, §5 the element catalogue
+from the ActionScript source, §6 the roadmap of arcs, §7 open questions) and
+`procgen-elements-arc1-kickoff.md` (arc 1). Memory: `project_procgen_elements`.
+Tracked summary: `docs/json/developer/procgen/seedling-bot.md` § *The procgen
+elements design*.
+
+⚖ The user's rulings, in one breath: the maze algorithms are a ROUGH FIRST
+DRAFT of pass 1 (connectors, not the whole); block-push puzzles are
+CONSTRUCTED FIRST (block + switch + push path + turning space in ONE step) and
+the level is built around them — an ELEMENT, maze first, reverse-pull
+constructor (solvable by construction), NOT Sokoban-proper, NOT WFC; enemies
+are obstacles ± kill gate; design for POST-SWORD; **arrow lanes OUT of the
+generator entirely**; later obstacles (hammers, chain traps, turrets) need
+geometry that is MADE not found; item-gated shortcuts wanted (water/swim,
+waterfall); density is a DIAL, not a goal; MetaZelda cloned to `~/CC/metazelda`
+and RE-IMPLEMENTED in JS (BSD-3) as an INTRA-level lock/key area graph (AP +
+the pipeline connect levels); in-level loops = solving the exit puzzle unlocks
+a direct bidirectional entrance↔exit path (a `graphify` K_goal edge); the full
+list of things comes from the AS source and a "plain obstacle" is anything the
+solver has a RELIABLE strategy for (measured); solver work (ticks, strategies,
+expansions — never wall clock) is a set of DIALS; the connectivity pre-check
+WIDENS to every kind (22/80 `empty` pairs re-record). Agreed recommendations:
+door = CUT (one law, kinds-scoped then unified); templates may CARVE (bounded,
+dead-end, no-shortcut); doors on the main path, branches host clearers,
+`reach-cell` deferred; the maze oracle = BFS over block state, NO strategy
+ladder; Seedling bent pushes = the CHAIN, a NAMED solver dependency (still
+ask-first).
+
+Arcs: **1** area graph on the maze (absorbs constructive slice 10-maze — HELD by
+§5f) · **2** the reverse-pull block→switch gadget on the maze (BFS with block
+state; the element contract) · **3** Seedling: sites + door=cut + carve legality
++ pre-check widened + `arrow-lane` removed + the straight-lane gadget + kill
+gate + area binding + rule-directed `hasSword` · **4** the CHAIN (⛔ ask-first)
+· **5** shortcuts / density / arenas · later: hammers, chain traps, turrets,
+Sokoban-proper, keylock once diagnosed (R9+). Depends on §5f slice 6 (LANDED —
+the flood + yield table are the instrument) and uses slice 7 as a knob;
+independent of 11/12.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
@@ -3201,7 +3245,8 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
-seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc §5f (OPENED 2026-08-15: shared refactor ──► loop move + maze bindings ──► maze lab page ──► iframe hosting ──► skeleton kinds ──► yield table/pre-check ──► chambers ──► corridor doors [⚖ ruling] ──► reach-cell ──► rule-directed; free editing + URL diet after slice 4) ; R9 independent of both
+seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc §5f (OPENED 2026-08-15: shared refactor ──► loop move + maze bindings ──► maze lab page ──► iframe hosting ──► skeleton kinds ──► yield table/pre-check ──► chambers ──► corridor doors [⚖ ruling] ──► reach-cell ──► rule-directed; free editing + URL diet after slice 4)  ──► ⚖ ruling 11 hands Seedling pass 2 to §5g
+procgen ELEMENTS §5g (DESIGNED 2026-08-15): arc 1 area graph (maze) ──► arc 2 reverse-pull block gadget (maze) ──► arc 3 Seedling sites/door=cut/gadget/arrow-lane out ──► arc 4 CHAIN (ask) ──► arc 5 shortcuts/density/arenas ; R9 independent of all three
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)

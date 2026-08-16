@@ -9095,3 +9095,44 @@ on a corridor is an ENTITY-template problem.
   still does not make Seedling corridors yield doors: `wall-gap-block` and
   `wall-gap-lock-weigh` remain NO_ANCHOR at every carved kind (they span the
   interior), which is slices 7/8's subject.
+
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs not yet started)
+
+The Fable planning session that constructive-mode ruling 11 called for
+("updating the level generation to make proper use of the new two pass
+system might require some big changes"). It re-read the Cloudberry Kingdom
+interview and MetaZelda (`~/CC/metazelda`, BSD-3) with the user and settled a
+DESIGN spanning several arcs — the design doc and the arc-1 kickoff live in
+`NewDocs/plans/procgen-elements-design.md` and `…-arc1-kickoff.md` (working
+machine); the queue entry is `CC/docs/plans/fable-to-opus-handoff-2026-07.md`
+§5g. What it settled, so a reader of this file is not surprised later:
+
+- **Pass 1 is ELEMENTS + CONNECTORS**, the interview's own algorithm: a
+  constructor builds a feature WITH the geometry it needs (a block, the switch
+  it is pushed onto, the push path, the turning space — in ONE step; the
+  first is a REVERSE-PULL single-block gadget, solvable by construction), each
+  add checked for feasibility; the maze algorithms are the CONNECTORS between
+  elements, not the whole of pass 1. Above it a small **area graph** — a JS
+  re-implementation of MetaZelda's lock-and-key logic in `procgenCore/` (key
+  levels, locked edges that are CUTS, keys by intensity, `graphify`'s
+  one-symbol rule for loops incl. the post-solve entrance↔exit shortcut).
+  **Pass 2 stays the keep-or-revert loop**, SITE-TYPED (main path / bend /
+  branch / chamber), with **door = cut** as the one legality law and templates
+  allowed to CARVE (bounded, dead-end, no-shortcut).
+- **Maze first at every step**; its oracle grows to BFS over block state (no
+  strategy ladder). Seedling follows within its proven envelope: straight
+  pushes today, **bent pushes = the CHAIN (named, still ask-first)**, trap
+  families as R9+ implements them.
+- ⚖ **`arrow-lane` is OUT of the generator entirely** (a pre-sword-puzzle
+  element only) — it was also the whole cost story on carved rooms (§13 of
+  the constructive kickoff: every expensive solve was an `arrow-lane` REVERT).
+  Its removal, the pre-check widened to every kind, and the Seedling retrofit
+  are arc 3.
+- Design for POST-SWORD; enemies are obstacles ± kill gate; a "plain obstacle"
+  is anything the solver has a RELIABLE strategy for (measured, not listed);
+  solver work (ticks, strategies, expansions — never wall clock) becomes a set
+  of DIALS beside density; item-gated shortcuts (water/swim, waterfall) are a
+  `graphify` edge whose lock is an item-passable tile.
+- Arcs: 1 area graph (maze; absorbs the held constructive slice 10-maze) →
+  2 reverse-pull gadget (maze) → 3 Seedling → 4 CHAIN → 5 shortcuts / density
+  / arenas.
