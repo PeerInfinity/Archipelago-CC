@@ -58,7 +58,8 @@
 
 import { buildAreaGraph } from '../procgenCore/areaGraph.js';
 import {
-    DEFAULT_AREAS, formatAreaSpec, normalizeAreaSpec, parseAreaSpec, resolveAreaSpec,
+    DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
+    parseRequireList, resolveAreaSpec, symbolIndex, symbolsForKeys,
 } from '../procgenCore/areaSpec.js';
 import { connected, reachableFrom } from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
@@ -1855,6 +1856,124 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
 }
 
 /**
+ * ⛓⛓⛓ **RULE-DIRECTED ON THE MAZE — `require: [K…]`** (⚖ arc kickoff §3.5,
+ * design §4.5, constructive §3.10's absorbed 10-maze).
+ *
+ * *"The run must place every named symbol as a key level whose lock lies on the
+ * solution path"* — and on the maze that is not a search: it is a QUESTION
+ * asked of the level the binding already built, answered by the BFS
+ * differential `mazeCostRecords` already computes.
+ *
+ * ── ⛓ THE PROOF, AND WHY ITS GRADE IS TRIVIALLY **STRONG** ────────────
+ *
+ * The confirmation is the ABLATION arm of the cost record: remove `key_K` from
+ * the finished world, keep every door, re-solve. `planWithoutKey === null`
+ * (i.e. `isCut`) means no route to the goal survives without that key, which is
+ * §3.5's own words and a STRONG grade on the PoC's scale (§16.6).
+ *
+ * ⛓⛓ **AND IT IS STRONG BY CONSTRUCTION, WHICH IS SAID RATHER THAN HIDDEN.**
+ * `checkAcceptable` puts the goal at the HIGHEST key level; a door
+ * `door_K{L-1}` sits on EVERY boundary cell of every area at level `L`; so
+ * removing `key_K{n}` seals every area of level > n, and the goal is one of
+ * them. ⇒ every placed symbol is a cut, and the graded half of the differential
+ * is exercised in its trivial case on this substrate. **MEASURED, not assumed**:
+ * over `rooms`/`rooms;minRoom=2` at 11x11 and 15x15, keys 1 and 2, seeds 1..24,
+ * **148 placed symbols, 148 cuts, 0 non-cuts** — so the
+ * `the-required-symbol-is-not-a-cut` arm below did not fire once on the
+ * measured corpus and is driven by a unit row instead of by luck. It is kept
+ * because the property it checks is the one the directive is ABOUT, and a
+ * refusal nobody can trigger today is still the honest answer if a later arc's
+ * graphify (or a `goalShortcut` a future partition makes reachable at full
+ * inventory) ever breaks it.
+ *
+ * ⛔ **NO BOUND IS WIDENED TO MEET A DIRECTIVE, AND THERE IS NO RETRY LOOP.**
+ * `?require=K1` with `?areas=1` is a REFUSED run naming the key count it was
+ * given; a graph that refused is a refused run carrying the graph's own reason
+ * VERBATIM.
+ *
+ * @param {object} o
+ * @param {string[]|null} o.require   the asked symbols, in the caller's order
+ * @param {object} o.areas            `model.areas`
+ * @param {object[]} o.elements       `mazeCostRecords(...).elements` (empty when
+ *   the area binding did not run — the refusal then names that, not the cut)
+ * @returns {null | {asked, met, refused}} `null` when nothing was asked, so a
+ *   run without a directive carries no field and its bytes do not move.
+ */
+export function requireOutcome({ require = null, areas, elements = [] } = {}) {
+    const asked = Object.freeze([...(require ?? [])]);
+    if (asked.length === 0) return null;
+    const spec = areas?.spec ?? DEFAULT_AREAS;
+    const keys = spec.keys ?? 0;
+    const refuse = (reason, detail) => Object.freeze({
+        asked, met: Object.freeze([]), refused: Object.freeze({ reason, detail }),
+    });
+    if (keys === 0) {
+        return refuse('the-directive-needs-the-area-graph',
+            `require=${formatRequireList(asked)} asks for area-graph symbol(s), and this run is `
+            + 'at `areas=0`, where the binding does not partition the room, does not call '
+            + '`buildAreaGraph` and spends no draw (⚖ arc ruling 3). ⛔ The key count is NOT '
+            + 'raised to meet the directive — say `areas=<n>` and the two parameters will '
+            + 'agree.');
+    }
+    const declared = symbolsForKeys(keys);
+    const beyond = asked.filter((s) => symbolIndex(s) >= keys);
+    if (beyond.length) {
+        return refuse('no-key-level-admits-this-symbol-within-maxkeys',
+            `require=${formatRequireList(asked)} names ${beyond.join(', ')}, and the area spec `
+            + `\`${formatAreaSpec(spec)}\` declares maxKeys=${keys}, whose symbols are `
+            + `[${declared.join(', ')}]. ⛔ No bound is widened to meet a directive — and `
+            + '⛓ `maxKeys` is a TARGET rather than a ceiling anyway, so raising it makes the '
+            + 'run REFUSE at every seed the space cannot grow that far (slice 1 deviation 10).');
+    }
+    if (!areas?.ran) {
+        const r = areas?.refused;
+        return refuse('the-area-graph-refused',
+            `require=${formatRequireList(asked)} cannot be met because the area binding did not `
+            + `run: ${r ? `${r.reason} — ${r.detail}` : 'no graph was built and no reason was '
+                + 'recorded, which is itself a defect'} ⛓ The directive is REPORTED as refused `
+            + 'rather than retried: a run that cannot host the graph is not a run that needs '
+            + 'another seed drawn for it behind the caller\'s back.');
+    }
+    const byName = new Map(elements.map((e) => [e.symbol, e]));
+    const met = [];
+    for (const symbol of asked) {
+        const e = byName.get(symbol);
+        if (!e) {
+            return refuse('the-required-symbol-was-not-placed',
+                `the graph ran and declares [${areas.graph.symbols.join(', ')}], but no element `
+                + `record carries ${symbol}, so nothing can be proved about it. ⛔ A directive `
+                + 'met by a symbol nobody measured would be the vacuous half of every claim '
+                + 'this arc makes.');
+        }
+        if (!e.isCut) {
+            return refuse('the-required-symbol-is-not-a-cut',
+                `${symbol} was placed (${e.doorCount} door(s), key at `
+                + `(${e.key?.x},${e.key?.y})), but removing its KEY from the finished level `
+                + `still leaves the goal reachable in ${e.planWithoutKey} step(s). ⛓ THE `
+                + 'DIFFERENTIAL IS THE PROOF and it came back negative: the lock is a '
+                + 'decoration on this level, not a requirement, so the directive is REFUSED '
+                + 'rather than reported met on a weaker fact.');
+        }
+        met.push(Object.freeze({
+            symbol,
+            /**
+             * ⛓ THE GRADE. STRONG whenever `isCut` — the PoC's own scale, and on
+             * this substrate the BFS differential is a proof rather than an
+             * estimate, so no other grade is reachable here. ⛔ Said in the
+             * as-built rather than dressed up as a general result.
+             */
+            grade: 'STRONG',
+            planWith: e.planWith,
+            planWithoutKey: e.planWithoutKey,
+            expandedWithoutKey: e.expandedWithoutKey,
+            doorCount: e.doorCount,
+            key: e.key,
+        }));
+    }
+    return Object.freeze({ asked, met: Object.freeze(met), refused: null });
+}
+
+/**
  * GENERATE ONE MAZE LEVEL.
  *
  * ⛔ TWO STREAMS, TWO SEEDS FROM ONE — `procgenSeedling.generateSeedlingLevel`'s
@@ -1866,7 +1985,7 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
  */
 export function generateMazeLevel({
     seed, palette = MAZE_PALETTE, bounds, budget = DEFAULT_MAZE_BUDGET, defaults,
-    width, height, skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS,
+    width, height, skeleton = DEFAULT_SKELETON, areas = DEFAULT_AREAS, require = null,
 } = {}) {
     const model = mazeModel({ seed, width, height, defaults, skeleton, areas });
     const oracle = mazeOracle({ model, items: palette.items ?? null, budget });
@@ -1882,6 +2001,15 @@ export function generateMazeLevel({
     const cost = model.areas?.ran
         ? mazeCostRecords({ model, budget, record: out.record, kept: out.summary.kept })
         : null;
+    /**
+     * ⛓ THE DIRECTIVE IS ASKED OF THE FINISHED LEVEL, and it spends NO extra
+     * solve: its proof is the ablation arm the cost pass above already ran.
+     * ⛔ `null` when nothing was required, so a run without a directive carries
+     * no `require` field and the per-kind CLI md5s do not move.
+     */
+    const required = requireOutcome({
+        require, areas: model.areas, elements: cost?.elements ?? [],
+    });
     return {
         ...out,
         model,
@@ -1895,6 +2023,8 @@ export function generateMazeLevel({
              * the summary's bytes are unchanged there.
              */
             ...(model.areas.spec.keys === 0 ? {} : { areas: areaSummaryOf(model) }),
+            /** ⛓ SLICE 3's block — OMITTED when nothing was required. */
+            ...(required ? { require: required } : {}),
             width: model.defaults.width,
             height: model.defaults.height,
             entranceCell: model.entranceCell,
@@ -1915,5 +2045,5 @@ export function generateMazeLevel({
 
 export {
     DEFAULT_AREAS, DEFAULT_SKELETON, VERDICT,
-    formatAreaSpec, normalizeAreaSpec, parseAreaSpec,
+    formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec, parseRequireList,
 };

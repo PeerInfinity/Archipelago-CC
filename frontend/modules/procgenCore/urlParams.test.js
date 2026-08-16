@@ -19,9 +19,9 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
     ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, formatDirectives, intParam,
-    parseDirective, parseDirectives, readBounds, readRosterSpec, readSkeleton, stepFromParams,
-    writeBounds, writeDirectedParam, writeInt, writeRosterParam, writeRunFlag,
-    writeSkeletonParam,
+    parseDirective, parseDirectives, readAreas, readBounds, readRequire, readRosterSpec,
+    readSkeleton, stepFromParams, writeAreasParam, writeBounds, writeDirectedParam, writeInt,
+    writeRequireParam, writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from './urlParams.js';
 import {
     LabViewError, describeKeptKind, directedCost, generationRows, ladderCost, tileAtPoint,
@@ -444,5 +444,139 @@ describe('urlParams — ?skeleton=', () => {
             .toThrow(/not in its declared domain \[2, 3, 4\]/);
         expect(() => writeSkeletonParam(q(''), { kind: 'branchy', params: { prune: 1 } }))
             .toThrow(/"branchy" has no parameter "prune"/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `?areas=` AND `?require=` — PROCGEN ELEMENTS ARC 1, SLICE 3
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('urlParams — ?areas= and ?require=', () => {
+    const q = (search) => new URLSearchParams(search);
+
+    /**
+     * ⛔ EVERY VALUE AGAINST A LITERAL THIS FILE STATES, and the fixed point
+     * only AFTER them (trap 250): a reader/writer pair that both said `areas=9`
+     * would round-trip perfectly and mean nothing.
+     */
+    it('reads the DEFAULT from an absent parameter, and a spec literally', () => {
+        expect(readAreas(q(''))).toEqual({ keys: 0 });
+        expect(readAreas(q('seed=3'))).toEqual({ keys: 0 });
+        expect(readAreas(q('areas='))).toEqual({ keys: 0 });
+        expect(readAreas(q('areas=1'))).toEqual({ keys: 1 });
+        expect(readAreas(q('areas=2;graphify=0.5'))).toEqual({ keys: 2, params: { graphify: 0.5 } });
+        expect(readAreas(q('areas=1;goalShortcut=0')))
+            .toEqual({ keys: 1, params: { goalShortcut: 0 } });
+        // ⛓ A value at its DEFAULT normalizes AWAY, so one graph has one spelling.
+        expect(readAreas(q('areas=2;graphify=0.2'))).toEqual({ keys: 2 });
+        // ⛔ TYPED FROM THE DOMAIN — the number 0.5, never the string.
+        expect(typeof readAreas(q('areas=2;graphify=0.5')).params.graphify).toBe('number');
+    });
+
+    it('WRITES the expected LITERAL string and DELETES at the default', () => {
+        expect(writeAreasParam(q('seed=3'), { keys: 2, params: { graphify: 0.5 } }).toString())
+            .toBe('seed=3&areas=2%3Bgraphify%3D0.5');
+        expect(writeAreasParam(q(''), { keys: 1 }).get('areas')).toBe('1');
+        // ⛔ a parameter at its default is DROPPED from the string, not written
+        expect(writeAreasParam(q(''), { keys: 1, params: { graphify: 0.2 } }).get('areas'))
+            .toBe('1');
+        // ⛔ …and the DEFAULT SPEC deletes the parameter rather than writing `areas=0`
+        expect(writeAreasParam(q('areas=2&run=1'), { keys: 0 }).toString()).toBe('run=1');
+        expect(writeAreasParam(q('areas=2&run=1'), null).toString()).toBe('run=1');
+    });
+
+    /**
+     * ⛔ TRAP 245, DRIVEN DIRECTLY: a `delete` followed by a `set` APPENDS the
+     * key. A writer that did that would move `?areas=` to the end of the bar on
+     * every press and the fixed point below would break on the SECOND load.
+     */
+    it('REWRITES in place — a spec change does not move the parameter to the end', () => {
+        expect(writeAreasParam(q('areas=1&run=1'), { keys: 2 }).toString())
+            .toBe('areas=2&run=1');
+        expect(writeRequireParam(q('require=K0&run=1'), ['K1']).toString())
+            .toBe('require=K1&run=1');
+    });
+
+    it('the round trip is a FIXED POINT — asserted only after the two literals', () => {
+        for (const value of ['1', '2', '3', '2;graphify=0.5', '1;goalShortcut=0',
+            '2;graphify=1;goalShortcut=0']) {
+            expect(writeAreasParam(q(''), readAreas(q(`areas=${encodeURIComponent(value)}`)))
+                .get('areas')).toBe(value);
+        }
+        for (const value of ['K0', 'K0,K1', 'K1,K0']) {
+            expect(writeRequireParam(q(''), readRequire(q(`require=${value}`))).get('require'))
+                .toBe(value);
+        }
+    });
+
+    it('REFUSES a bad spec BY NAME, with the parameter in front of the codec\'s words', () => {
+        expect(() => readAreas(q('areas=9')))
+            .toThrow(/\?areas="9".*the head of an area spec is the KEY COUNT.*\[0, 1, 2, 3\]/s);
+        expect(() => readAreas(q('areas=1;partition=grid')))
+            .toThrow(/\?areas=.*parameter "partition".*AREA CENSUS did not trigger/s);
+        expect(() => readAreas(q('areas=1;graphify=0.7')))
+            .toThrow(/declared domain \[0, 0.2, 0.5, 1\]/);
+        expect(() => readAreas(q('areas=1;nope=2'))).toThrow(/has no parameter "nope"/);
+    });
+
+    /** ⛓ THE DIRECTIVE — absence is `null`, and an EMPTY value is a REFUSAL. */
+    it('reads ?require= as a LIST in the caller\'s own order, absent as null', () => {
+        expect(readRequire(q(''))).toBe(null);
+        expect(readRequire(q('seed=3'))).toBe(null);
+        expect(readRequire(q('require=K0'))).toEqual(['K0']);
+        expect(readRequire(q('require=K0,K1'))).toEqual(['K0', 'K1']);
+        // ⛔ ORDER IS THE CALLER'S — a directive is a list of things that must
+        // hold, not a set to normalize (the `?families=` sort is the other
+        // choice, made there because a roster really is a set).
+        expect(readRequire(q('require=K1,K0'))).toEqual(['K1', 'K0']);
+        expect(readRequire(q('require= K0 , K1 '))).toEqual(['K0', 'K1']);
+    });
+
+    it('REFUSES an empty list, an empty entry, a duplicate and a non-symbol', () => {
+        expect(() => readRequire(q('require='))).toThrow(/an EMPTY `require` list/);
+        expect(() => readRequire(q('require=K0,'))).toThrow(/carries an EMPTY entry/);
+        expect(() => readRequire(q('require=K0,K0'))).toThrow(/names "K0" TWICE/);
+        expect(() => readRequire(q('require=key_red')))
+            .toThrow(/"key_red" is not an area-graph symbol/);
+        expect(() => readRequire(q('require=K'))).toThrow(/is not an area-graph symbol/);
+    });
+
+    /** ⛔ §8.6's standing law: the writer refuses what the reader would refuse. */
+    it('REFUSES on the way OUT what it would refuse on the way in', () => {
+        expect(() => writeAreasParam(q(''), { keys: 9 })).toThrow(/declared domain \[0, 1, 2, 3\]/);
+        expect(() => writeAreasParam(q(''), { keys: 1, params: { partition: 'grid' } }))
+            .toThrow(/AREA CENSUS did not trigger/);
+        expect(() => writeRequireParam(q(''), ['K0', 'K0'])).toThrow(/names "K0" TWICE/);
+        expect(() => writeRequireParam(q(''), ['hasSword']))
+            .toThrow(/is not an area-graph symbol/);
+        // ⛓ …and NO directive deletes rather than writing an empty value.
+        expect(writeRequireParam(q('require=K0&run=1'), null).toString()).toBe('run=1');
+        expect(writeRequireParam(q('require=K0&run=1'), []).toString()).toBe('run=1');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE SEEDLING PAGE MUST IGNORE-AND-PRESERVE AN UNKNOWN `?areas=`.**
+     *
+     * Seedling does not read the area graph (arc 3 does), and a hosted navigate
+     * that STRIPPED the parameter would hand back a link that no longer names
+     * the run it came from. `writeGenerateParams` is a COPY-THE-REST writer —
+     * `const q = new URLSearchParams(search)` followed by sets and deletes of
+     * the keys it owns — so preservation is structural; what is driven here is
+     * the composition of the SHARED writers it is built from, over a bar
+     * carrying both new parameters.
+     *
+     * ⛔ Nothing under `seedlingDemo/` was touched by this slice, so this is
+     * where the claim can live without one arc's test file landing in another
+     * arc's diff.
+     */
+    it('the SHARED writers PRESERVE an ?areas=/?require= they do not own', () => {
+        const bar = q('source=generate&seed=3&areas=2%3Bgraphify%3D0.5&require=K0,K1&biome=x');
+        writeBounds(bar, DEFAULT_BOUNDS);
+        writeSkeletonParam(bar, { kind: 'winding' });
+        writeRosterParam(bar, null);
+        writeDirectedParam(bar, null, PALETTE);
+        writeRunFlag(bar, 0);
+        expect(bar.get('areas')).toBe('2;graphify=0.5');
+        expect(bar.get('require')).toBe('K0,K1');
     });
 });

@@ -28,7 +28,7 @@ const { reachableFrom } = await import('../procgenCore/gridFlood.js');
 const { DEFAULT_ITEMS, DEFAULT_OBSTACLES } = await import('../shared/procgen/library.js');
 const {
     areaLibraries, deserializeMazeLevel, doorLevelOf, generateMazeLevel, mazeModel,
-    partitionMazeAreas, serializeMazeLevel, verifyAreaLevels,
+    partitionMazeAreas, requireOutcome, serializeMazeLevel, verifyAreaLevels,
 } = await import('./procgenMaze.js');
 
 beforeEach(() => { calls.buildAreaGraph = 0; });
@@ -490,5 +490,154 @@ describe('procgenMaze — the level, the payload and the SOLVE', () => {
             }
         }
         expect(found).toBeGreaterThan(0);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ RULE-DIRECTED — `require: [K…]` (slice 3, §3.5)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('procgenMaze — the `require` directive', () => {
+    const BOUNDS = {
+        obstacleTarget: 3, triesPerStep: 4, saturationK: 3, anchorTriesPerCandidate: 1,
+    };
+    /** ⛓ 15x15 `rooms` is where two keys fit (the acceptance table, §9.5). */
+    const run = (o) => generateMazeLevel({
+        bounds: BOUNDS, width: 15, height: 15, skeleton: { kind: 'rooms' }, ...o,
+    });
+
+    it('⛓⛓ a MET directive carries the differential as its proof, graded STRONG', () => {
+        const out = run({ seed: 1, areas: { keys: 1 }, require: ['K0'] });
+        const req = out.summary.require;
+        expect(req.refused).toBe(null);
+        expect(req.asked).toEqual(['K0']);
+        expect(req.met).toHaveLength(1);
+        const [m] = req.met;
+        expect(m.symbol).toBe('K0');
+        expect(m.grade).toBe('STRONG');
+        // ⛔ THE PROOF: the goal is REACHABLE with the key and UNREACHABLE without it.
+        expect(m.planWith).toBeGreaterThan(0);
+        expect(m.planWithoutKey).toBe(null);
+        expect(m.doorCount).toBeGreaterThan(0);
+        // …and the element it was read off says the same thing, so the summary
+        // is a projection of the cost record rather than a second answer.
+        const e = out.summary.elements.find((x) => x.symbol === 'K0');
+        expect(e.isCut).toBe(true);
+        expect(m.planWith).toBe(e.planWith);
+    });
+
+    it('⛔ NO run without a directive grows a `require` field (the bytes do not move)', () => {
+        const out = run({ seed: 1, areas: { keys: 1 } });
+        expect('require' in out.summary).toBe(false);
+        expect(requireOutcome({ require: null, areas: out.model.areas })).toBe(null);
+        expect(requireOutcome({ require: [], areas: out.model.areas })).toBe(null);
+    });
+
+    it('⛔ REFUSES a symbol beyond `maxKeys` BY NAME — no bound is widened', () => {
+        const out = run({ seed: 1, areas: { keys: 1 }, require: ['K1'] });
+        const r = out.summary.require;
+        expect(r.met).toEqual([]);
+        expect(r.refused.reason).toBe('no-key-level-admits-this-symbol-within-maxkeys');
+        expect(r.refused.detail).toMatch(/declares maxKeys=1, whose symbols are \[K0\]/);
+        expect(r.refused.detail).toMatch(/No bound is widened/);
+        // ⛓ …and the LEVEL is still the level the spec asked for: a refused
+        // directive does not rebuild the room behind the caller's back.
+        expect(out.model.areas.ran).toBe(true);
+        expect(out.model.areas.graph.symbols).toEqual(['K0']);
+    });
+
+    it('⛔ REFUSES at `areas=0`, where the module never runs', () => {
+        const out = run({ seed: 1, areas: { keys: 0 }, require: ['K0'] });
+        expect(out.summary.require.refused.reason).toBe('the-directive-needs-the-area-graph');
+        expect(out.summary.require.refused.detail).toMatch(/at `areas=0`/);
+        expect('areas' in out.summary).toBe(false);
+    });
+
+    it('⛔ carries the GRAPH\'s own refusal VERBATIM when the binding did not run', () => {
+        /** ⛓ 11x11 at two keys is the honest refusal case (§9.5: 4/24 run). */
+        const out = generateMazeLevel({
+            bounds: BOUNDS, seed: 2, skeleton: { kind: 'rooms' },
+            areas: { keys: 2 }, require: ['K0', 'K1'],
+        });
+        const r = out.summary.require;
+        expect(r.refused.reason).toBe('the-area-graph-refused');
+        expect(out.model.areas.ran).toBe(false);
+        // the binding's own reason, inside the directive's sentence
+        expect(r.refused.detail).toContain(out.model.areas.refused.reason);
+        expect(r.refused.detail).toMatch(/rather than retried/);
+    });
+
+    /**
+     * ⛓⛓⛓ THE ARM THE REAL CORPUS NEVER FIRES — DRIVEN ANYWAY.
+     *
+     * Measured over `rooms`/`rooms;minRoom=2` × 11x11/15x15 × keys 1..2 ×
+     * seeds 1..24: **148 placed symbols, 148 cuts, ZERO non-cuts**, because the
+     * goal sits at the HIGHEST key level and a door guards every boundary cell
+     * of every area at its level — so removing any key seals the goal. ⇒ the
+     * `is not a cut` refusal cannot be reached with a real seed today, and a
+     * test that waited for one would be a claim nothing can falsify. It is
+     * driven here with an element record whose `isCut` is false.
+     */
+    it('⛔ REFUSES a symbol whose KEY ablation still solves — the differential is the proof', () => {
+        const areas = { spec: { keys: 1 }, ran: true, graph: { symbols: ['K0'] } };
+        const r = requireOutcome({
+            require: ['K0'],
+            areas,
+            elements: [{ symbol: 'K0', isCut: false, planWith: 12, planWithoutKey: 17,
+                doorCount: 3, key: { x: 4, y: 4 } }],
+        });
+        expect(r.refused.reason).toBe('the-required-symbol-is-not-a-cut');
+        expect(r.refused.detail).toMatch(/still leaves the goal reachable in 17 step\(s\)/);
+        // …and the SAME element with `isCut` true is MET, so the row above is
+        // about the cut and not about the shape of the record.
+        expect(requireOutcome({
+            require: ['K0'],
+            areas,
+            elements: [{ symbol: 'K0', isCut: true, planWith: 12, planWithoutKey: null,
+                doorCount: 3, key: { x: 4, y: 4 } }],
+        }).refused).toBe(null);
+    });
+
+    it('⛔ REFUSES a symbol the graph declares but no element measured', () => {
+        const r = requireOutcome({
+            require: ['K1'],
+            areas: { spec: { keys: 2 }, ran: true, graph: { symbols: ['K0', 'K1'] } },
+            elements: [{ symbol: 'K0', isCut: true }],
+        });
+        expect(r.refused.reason).toBe('the-required-symbol-was-not-placed');
+        expect(r.refused.detail).toMatch(/vacuous half/);
+    });
+
+    it('⛓ TWO symbols are met TOGETHER, each with its own differential', () => {
+        /** ⛓ seed picked by the ACCEPTANCE table, not by luck: 15x15 keys=2. */
+        let found = null;
+        for (let seed = 1; seed <= 24 && !found; seed += 1) {
+            const out = run({ seed, areas: { keys: 2 }, require: ['K0', 'K1'] });
+            if (out.summary.require.refused === null) found = out;
+        }
+        expect(found, 'no 15x15 rooms seed in 1..24 hosts two keys').not.toBe(null);
+        expect(found.summary.require.met.map((m) => m.symbol)).toEqual(['K0', 'K1']);
+        expect(found.summary.require.met.every((m) => m.grade === 'STRONG'
+            && m.planWithoutKey === null)).toBe(true);
+    });
+
+    /**
+     * ⛓⛓ THE NON-VACUITY GUARD FOR THE WHOLE FAMILY (trap 292): the corpus the
+     * rows above stand on must actually contain met runs AND refused runs, or
+     * every "over the seeds where it ran" claim is about the empty set.
+     */
+    it('⛓ over seeds 1..24 the directive is BOTH met and refused, and every met run is a cut', () => {
+        let met = 0;
+        let refused = 0;
+        for (let seed = 1; seed <= 24; seed += 1) {
+            const out = run({ seed, areas: { keys: 2 }, require: ['K0', 'K1'] });
+            const r = out.summary.require;
+            if (r.refused) { refused += 1; continue; }
+            met += 1;
+            expect(r.met.every((m) => m.planWithoutKey === null && m.grade === 'STRONG')).toBe(true);
+        }
+        expect(met).toBeGreaterThan(0);
+        expect(refused).toBeGreaterThan(0);
+        expect(met + refused).toBe(24);
     });
 });

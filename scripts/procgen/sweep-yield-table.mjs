@@ -99,7 +99,8 @@ const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
  * property of the skeleton kind, and folding it into the kind string would have
  * made `rooms;keys=1` look like a skeleton parameter the kind does not declare.
  */
-const { formatAreaSpec, parseAreaSpec } = await M('procgenCore/areaSpec.js');
+const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
+    await M('procgenCore/areaSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -169,6 +170,20 @@ const parseSize = (spec) => {
  * did nothing on one substrate would be a column that means two things.
  */
 const AREAS = parseAreaSpec(arg('areas', '0'));
+/**
+ * ⛓⛓ SLICE 3 — THE RULE-DIRECTED DIRECTIVE FOR EVERY CELL, in the same one
+ * codec (`--require=K0,K1`). ⛔ It costs NOTHING extra: its proof is the
+ * ablation arm of the cost record the area binding already computes, so the
+ * column below is a REPORT of a differential rather than a second measurement.
+ */
+const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
+    ? parseRequireList(arg('require', '')) : null;
+if (REQUIRE && AREAS.keys === 0) {
+    note('sweep-yield-table: --require= without --areas= — every cell would refuse with '
+        + '`the-directive-needs-the-area-graph`, which is a column that means one thing at '
+        + 'every row. Say --areas=<n> too.');
+    process.exit(2);
+}
 if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
     note('sweep-yield-table: --areas= is the MAZE binding\'s (PROCGEN ELEMENTS arc 1, slice 2). '
         + 'Seedling gets the area graph in arc 3; running it here would print an area column '
@@ -312,6 +327,27 @@ if (CELL !== '') {
                 ? model.areas.graph.edges.filter((e) => e.kind === 'graphify').length : 0,
         };
     }
+    /**
+     * ⛓⛓⛓ SLICE 3 — THE DIRECTIVE, ASKED OF THIS CELL'S FINISHED LEVEL. ⛔ The
+     * proof is the SAME ablation `mazeCostRecords` computes for the elements,
+     * so the column is a report of the binding's own differential and not a
+     * second answer to "is this lock a cut".
+     */
+    let requireRow = null;
+    if (REQUIRE && SUBSTRATE === 'maze') {
+        const { mazeCostRecords, requireOutcome } = await M('mazeRoom/procgenMaze.js');
+        const elements = (out && model.areas?.ran)
+            ? mazeCostRecords({ model, record: out.record, kept: out.summary.kept }).elements
+            : [];
+        const r = requireOutcome({ require: REQUIRE, areas: model.areas, elements });
+        requireRow = {
+            asked: r.asked,
+            met: r.met.map((m) => m.symbol),
+            grades: r.met.map((m) => m.grade),
+            planWith: r.met.map((m) => m.planWith),
+            refused: r.refused?.reason ?? null,
+        };
+    }
     say(JSON.stringify({
         substrate: SUBSTRATE,
         kind,
@@ -319,6 +355,7 @@ if (CELL !== '') {
         seed,
         floorPct,
         areaCensus,
+        require: requireRow,
         error,
         stop: out?.summary.stop ?? null,
         keptCount: out?.summary.keptCount ?? null,
@@ -458,6 +495,7 @@ for (const c of cells) {
     note(`[stderr] ${SUBSTRATE} ${c.kind} ${c.size.label} seed ${c.seed} `
         + `(${denom.attempted}/${cells.length})…`);
     const childArgs = [SELF, `--substrate=${SUBSTRATE}`, `--areas=${formatAreaSpec(AREAS)}`,
+        ...(REQUIRE ? [`--require=${formatRequireList(REQUIRE)}`] : []),
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,
         `--k=${BOUNDS.saturationK}`, `--anchortries=${BOUNDS.anchorTriesPerCandidate}`];
@@ -573,6 +611,35 @@ if (SUBSTRATE === 'maze') {
             + `| ${c.reduce((a, x) => a + x.graphifyEdges, 0)} |`);
     }
     say('');
+    if (REQUIRE) {
+        say(`## THE DIRECTIVE — \`--require=${formatRequireList(REQUIRE)}\` (slice 3)`);
+        say('');
+        say('⛓ MET = every asked symbol placed AND proved a cut by the KEY ablation (remove '
+            + '`key_K`, keep the doors, re-solve → the goal is unreachable). The grade is '
+            + 'STRONG whenever the ablation refuses, which on this substrate is the only '
+            + 'grade reachable — the BFS differential is a PROOF here, and the graded half is '
+            + 'exercised in its trivial case (⚖ design §4.5 / PoC §16.6).');
+        say('');
+        say('| kind | size | MET | REFUSED | by reason | grades |');
+        say('|---|---|---|---|---|---|');
+        for (const [key, rows] of groups) {
+            const [kind, size] = key.split('|');
+            const ok = rows.filter((r) => r.require && !r.aborted);
+            if (!ok.length) continue;
+            const met = ok.filter((r) => r.require.refused === null);
+            const why = {};
+            for (const r of ok) {
+                if (r.require.refused) why[r.require.refused] = (why[r.require.refused] ?? 0) + 1;
+            }
+            const grades = {};
+            for (const r of met) for (const g of r.require.grades) grades[g] = (grades[g] ?? 0) + 1;
+            say(`| ${kind} | ${size} | ${met.length}/${ok.length} `
+                + `| ${ok.length - met.length}/${ok.length} `
+                + `| ${Object.entries(why).map(([k, n]) => `\`${k}\` ${n}`).join('<br>') || '-'} `
+                + `| ${Object.entries(grades).map(([g, n]) => `${g} ${n}`).join(', ') || '-'} |`);
+        }
+        say('');
+    }
     say('## THE AREA REFUSALS, by reason');
     say('');
     const refusals = {};

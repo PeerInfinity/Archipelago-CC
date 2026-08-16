@@ -12,7 +12,8 @@
 import { describe, expect, it } from 'vitest';
 import {
     AREA_PARAM_SCHEMA, AreaSpecError, DEFAULT_AREAS, KEYS_DOMAIN, enumerateAreaValues,
-    formatAreaSpec, normalizeAreaSpec, parseAreaSpec, resolveAreaSpec,
+    formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec, parseRequireList,
+    resolveAreaSpec, symbolIndex, symbolsForKeys,
 } from './areaSpec.js';
 
 describe('procgenCore/areaSpec — the defaults', () => {
@@ -124,5 +125,40 @@ describe('procgenCore/areaSpec — SIX distinguished refusals, each actionable',
         expect(() => resolveAreaSpec({ keys: 7 })).toThrow(/declared domain \[0, 1, 2, 3\]/);
         expect(() => resolveAreaSpec({ keys: 1, params: { nope: 1 } }))
             .toThrow(/has no parameter "nope"/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE REQUIRE DIRECTIVE'S CODEC — slice 3
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('procgenCore/areaSpec — `require`', () => {
+    it('⛓ a key count DECLARES exactly K0..K{N-1} — one place, so the refusal agrees', () => {
+        expect(symbolsForKeys(0)).toEqual([]);
+        expect(symbolsForKeys(1)).toEqual(['K0']);
+        expect(symbolsForKeys(3)).toEqual(['K0', 'K1', 'K2']);
+        expect(symbolIndex('K0')).toBe(0);
+        expect(symbolIndex('K12')).toBe(12);
+        expect(symbolIndex('key_red')).toBe(null);
+        expect(symbolIndex(null)).toBe(null);
+    });
+
+    it('parses a LIST in the caller\'s order and formats the LITERAL string back', () => {
+        expect(parseRequireList('K0')).toEqual(['K0']);
+        expect(parseRequireList('K0,K1')).toEqual(['K0', 'K1']);
+        expect(parseRequireList('K1,K0')).toEqual(['K1', 'K0']);
+        expect(parseRequireList(' K0 , K1 ')).toEqual(['K0', 'K1']);
+        expect(formatRequireList(['K0', 'K1'])).toBe('K0,K1');
+        expect(formatRequireList(null)).toBe('');
+        expect(formatRequireList([])).toBe('');
+    });
+
+    it('REFUSES an empty list, an empty entry, a duplicate and a non-symbol', () => {
+        expect(() => parseRequireList('')).toThrow(AreaSpecError);
+        expect(() => parseRequireList('')).toThrow(/an EMPTY `require` list/);
+        expect(() => parseRequireList(',K0')).toThrow(/carries an EMPTY entry/);
+        expect(() => parseRequireList('K0,K0')).toThrow(/names "K0" TWICE/);
+        expect(() => parseRequireList('door_K0')).toThrow(/is not an area-graph symbol/);
+        expect(() => parseRequireList('K0,hasSword')).toThrow(/"hasSword" is not an area-graph/);
     });
 });

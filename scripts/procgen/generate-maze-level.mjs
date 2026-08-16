@@ -62,7 +62,8 @@ const MAZE = (p) => import(join(HERE, '..', '..', 'frontend/modules/mazeRoom', p
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
-const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
+const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
+    await CORE('areaSpec.js');
 const {
     DEFAULT_MAZE_BUDGET, MAZE_PALETTE, generateMazeLevel, serializeMazeLevel,
 } = await MAZE('procgenMaze.js');
@@ -106,6 +107,17 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  * is byte-identical to the one it printed before areas existed.
  */
 const AREAS = parseAreaSpec(arg('areas', '0'));
+/**
+ * ⛓⛓⛓ SLICE 3 — THE RULE-DIRECTED DIRECTIVE, through the same codec:
+ * `--require=K0,K1`. ⛔ ABSENT is no directive at all (and the payload then
+ * carries no `require` field, so these bytes are unchanged); an EMPTY
+ * `--require=` REFUSES, because a directive somebody emptied is not the same as
+ * no directive. ⛔ EXIT 6 when it is refused — a REFUSED RUN is not a run that
+ * produced what was asked for, and a caller scripting this must be able to tell
+ * without parsing prose.
+ */
+const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
+    ? parseRequireList(arg('require', '')) : null;
 
 const bounds = {
     obstacleTarget: COUNT,
@@ -152,7 +164,7 @@ const t0 = Date.now();
 let out;
 try {
     out = generateMazeLevel({ seed: SEED, palette: MAZE_PALETTE, bounds, budget: BUDGET,
-        width: WIDTH, height: HEIGHT, skeleton: SKELETON, areas: AREAS });
+        width: WIDTH, height: HEIGHT, skeleton: SKELETON, areas: AREAS, require: REQUIRE });
 } catch (e) {
     /**
      * ⛔ AN ABORT PRINTS ITS EVIDENCE AND EXITS 3 — the Seedling CLI's own
@@ -201,6 +213,8 @@ const payload = {
      * the bytes here).
      */
     ...(AREAS.keys === 0 ? {} : { areas: { spec: AREAS, graph: out.model.areas.graph } }),
+    /** ⛓ SLICE 3's block — omitted entirely when nothing was required. */
+    ...(REQUIRE ? { require: out.summary.require } : {}),
     budget: out.summary.budget,
     summary: out.summary,
     level: serializeMazeLevel(out.record),
@@ -226,6 +240,15 @@ if (has('json')) {
                     + `${a.graph.edges.filter((e) => e.kind === 'graphify').length} graphify `
                     + `edge(s); ${a.graph.draws} draw(s) over ${a.graph.attempts} attempt(s)`
                 : `⛔ REFUSED: ${a.refused.reason} — ${a.refused.detail}`));
+    }
+    if (REQUIRE) {
+        const r = s.require;
+        say(`requires: ${formatRequireList(REQUIRE)} — `
+            + (r.refused
+                ? `⛔ REFUSED: ${r.refused.reason} — ${r.refused.detail}`
+                : r.met.map((m) => `${m.symbol} MET (${m.grade}): the goal is ${m.planWith} `
+                    + `step(s) away WITH key_${m.symbol} and UNREACHABLE without it, over `
+                    + `${m.doorCount} door(s)`).join('; ')));
     }
     say(`start:  (${s.entranceCell.tx},${s.entranceCell.ty})   goal: exit tile `
         + `(${s.goalCell.tx},${s.goalCell.ty})`);
@@ -312,3 +335,17 @@ if (arg('out', '') !== '') {
 
 note(`[timing, stderr only] ${elapsedMs} ms for ${out.trace.length} solve(s); `
     + `cost model said <= ${costModel(bounds, 3).worstCaseTotalMs} ms`);
+
+/**
+ * ⛓⛓ SLICE 3 — A REFUSED DIRECTIVE IS A REFUSED RUN, AND IT SAYS SO IN THE
+ * EXIT CODE. The payload (and the level) are still printed, because the
+ * evidence for the refusal is IN them; what the exit code carries is that the
+ * run did not produce what was asked for. ⛔ Distinct from 3 (an abort inside
+ * the generator) and 4 (a two-process drift): those are defects, this is the
+ * honest answer to a directive the room could not meet.
+ */
+if (REQUIRE && out.summary.require?.refused) {
+    note(`generate-maze-level: ⛔ REQUIRE REFUSED — ${out.summary.require.refused.reason}: `
+        + `${out.summary.require.refused.detail}`);
+    process.exit(6);
+}

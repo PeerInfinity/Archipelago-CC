@@ -50,6 +50,10 @@
  * ⛔ NO DOM AND NO NODE IMPORTS: both pages load this in a browser.
  */
 
+import {
+    DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
+    parseRequireList,
+} from './areaSpec.js';
 import { DEFAULT_BOUNDS, KEEP_POLICY } from './levelGenerator.js';
 import {
     DEFAULT_SKELETON_KIND, formatSkeleton, normalizeSkeleton, parseSkeleton,
@@ -221,6 +225,102 @@ export function writeSkeletonParam(q, skeleton, { simulator = false, substrate =
     parseSkeleton(value, { simulator, substrate });
     if (value === DEFAULT_SKELETON_KIND) q.delete('skeleton');
     else q.set('skeleton', value);
+    return q;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE AREA GRAPH — `?areas=<keys>[;k=v]…` AND `?require=K0,K1`
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * PROCGEN ELEMENTS arc 1, slice 3 (arc kickoff §3.5/§3.6, design §4.8). TWO
+ * parameters, ONE reader and ONE writer each, and ⛔ **NO NEW GRAMMAR**: the
+ * strings are `areaSpec.parseAreaSpec`/`formatAreaSpec` and
+ * `parseRequireList`/`formatRequireList`, the same codec the two CLIs and the
+ * sweep already speak (slice 2 wrote it for exactly this). What lives HERE is
+ * the parameter — absence, the default, the delete-in-place — which is what
+ * §8.6's one-reader/one-writer law is about.
+ *
+ * ── ⛔ WHY `?require=` IS ITS OWN PARAMETER AND DOES NOT RIDE `?directed=`
+ *
+ * ⚖ Decided by what the two directives CONSTRAIN. `?directed=` names a
+ * TEMPLATE, its parameters and (optionally) an anchor cell — a PASS-2 attempt
+ * on the record as it stands, one entry per press, replayed in order.
+ * `require:[K…]` constrains the AREA GRAPH, which is built ONCE at model
+ * construction before pass 2 exists, and it is a property of the WHOLE RUN
+ * rather than of an attempt: it is met or the run is REFUSED. Spelling it as a
+ * `?directed=` verb would have put a run-level predicate into a per-attempt
+ * list whose entries each carry an outcome, and the page would have had to
+ * explain what "attempt 2 of 3 required K0" means. ⛓ It is also the parameter
+ * pair the sweep and both CLIs already spell separately (`--areas=`,
+ * `--require=`), and one grammar across the channels is the law.
+ *
+ * ── ABSENT IS THE DEFAULT, AND THE DEFAULT IS NOT WRITTEN ─────────────
+ *
+ * `?areas=` absent ≡ `{keys: 0}` ≡ *the binding does not run the module at all*
+ * (⚖ arc ruling 3), and the writer DELETES at that value rather than writing
+ * `?areas=0` — trap 245's in-place rewrite, the same rule `?skeleton=` follows
+ * and for the same measured reason (a `delete` followed by a `set` APPENDS the
+ * key and moves it to the end of the bar, which breaks the fixed point).
+ * `?require=` absent ≡ NO DIRECTIVE; an EMPTY `?require=` REFUSES rather than
+ * reading as absent (a directive somebody emptied is not the same as no
+ * directive — `?families=`' own rule).
+ *
+ * ⛔ AND THE COMBINATION IS **NOT** ADJUDICATED HERE. `?require=K1&areas=1`
+ * asks for a symbol the key count does not declare, and that refusal belongs to
+ * the RUN, which knows both values and can say *"no key level admits K1 within
+ * maxKeys=1"* with the graph's own bounds in the sentence. A reader that
+ * refused the pair would have to be given the other parameter, which is how one
+ * reader becomes two.
+ */
+
+/**
+ * ⛓ `?areas=` → `{keys[, params]}`, NORMALIZED (params omitted at their
+ * defaults) so one graph has exactly one spelling on the state and
+ * `agreementWithPayload` can compare with a both-sides default.
+ */
+export function readAreas(q) {
+    const raw = q.get('areas');
+    if (raw === null || raw === '') return DEFAULT_AREAS;
+    /** ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL — `readSkeleton`'s rule. */
+    try {
+        return parseAreaSpec(raw);
+    } catch (e) {
+        fail(`urlParams: ?areas=${JSON.stringify(raw)} — ${e.message}`);
+        return null;
+    }
+}
+
+/**
+ * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing law): it
+ * formats through the one formatter and hands the string back to the SAME
+ * parser, so a spec the reader could not read back cannot be written.
+ */
+export function writeAreasParam(q, areas) {
+    const value = formatAreaSpec(normalizeAreaSpec(areas ?? DEFAULT_AREAS));
+    parseAreaSpec(value);
+    if (value === String(DEFAULT_AREAS.keys)) q.delete('areas');
+    else q.set('areas', value);
+    return q;
+}
+
+/** ⛓ `?require=K0,K1` → a frozen list, or `null` when the parameter is absent. */
+export function readRequire(q) {
+    const raw = q.get('require');
+    if (raw === null) return null;
+    try {
+        return parseRequireList(raw);
+    } catch (e) {
+        fail(`urlParams: ?require=${JSON.stringify(raw)} — ${e.message}`);
+        return null;
+    }
+}
+
+/** ⛔ DELETED when there is no directive; re-parsed on the way out. */
+export function writeRequireParam(q, require) {
+    const value = formatRequireList(require);
+    if (value === '') { q.delete('require'); return q; }
+    parseRequireList(value);
+    q.set('require', value);
     return q;
 }
 

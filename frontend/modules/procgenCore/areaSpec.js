@@ -242,3 +242,85 @@ export function parseAreaSpec(value) {
     }
     return normalizeAreaSpec({ keys, params });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE REQUIRE DIRECTIVE — `K0,K1` (PROCGEN ELEMENTS arc 1, slice 3)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ Arc kickoff §3.5 / design §4.5: *"`require: [K…]` = the run must place a
+ * K-locked edge on the solution path"*. It is a RUN-LEVEL directive about the
+ * AREA GRAPH (pass 1), not a per-attempt one about pass 2 — which is why it is
+ * **its own** `?require=`/`--require=` and does not ride `?directed=` (whose
+ * grammar names a TEMPLATE, its params and an anchor).
+ *
+ * ⛔ THE PARSER LIVES HERE, BESIDE THE VOCABULARY IT VALIDATES AGAINST, for the
+ * same reason `parseAreaSpec` does: the string arrives on THREE channels (the
+ * URL parameter, the maze CLI's `--require=`, the sweep's `--require=`), and a
+ * parser in `urlParams.js` would make a CLI import the URL grammar. What
+ * `urlParams` keeps is the ONE READER and the ONE WRITER of the PARAMETER.
+ *
+ * ⛓ THE SYMBOLS ARE THE AREA GRAPH'S OWN (`K0`, `K1`, … in creation order —
+ * `buildAreaGraph`'s `symbols`), so a key count of N declares exactly
+ * `K0..K{N-1}`. ⛔ `?require=K1` with `?areas=1` REFUSES BY NAME rather than
+ * widening `maxKeys` to meet the directive (⚖ *no bound is widened to hide a
+ * refusal*) — but that refusal belongs to the RUN, where both parameters are
+ * known, not to this parser, which adjudicates one string.
+ */
+
+/** ⛓ The symbols a key count DECLARES. One place, so the refusal and the
+ *  check cannot disagree about what `keys: 2` offers. */
+export function symbolsForKeys(keys) {
+    return Object.freeze(Array.from({ length: keys }, (_, i) => `K${i}`));
+}
+
+const SYMBOL_RE = /^K(\d+)$/;
+
+/** `K3` → 3; anything else → `null`. The one place the spelling is decoded. */
+export function symbolIndex(symbol) {
+    const m = SYMBOL_RE.exec(String(symbol ?? ''));
+    return m === null ? null : Number(m[1]);
+}
+
+/**
+ * ⛓⛓ `K0,K1` → `['K0','K1']`. ⛔ FOUR DISTINGUISHED REFUSALS, each actionable:
+ * an EMPTY value (the whole-directive absence is spelled by leaving the
+ * parameter out, exactly as `?families=` refuses an empty list), an empty
+ * clause, a duplicate, and a name that is not a symbol.
+ *
+ * ⚠ ORDER IS PRESERVED and is the CALLER's: the directive is a list of things
+ * that must hold, not a set to be normalized — and a writer that sorted would
+ * rewrite a bar the reader had just read (the `?families=` sort is the other
+ * choice, made there because a ROSTER really is a set).
+ */
+export function parseRequireList(value) {
+    const raw = String(value ?? '').trim();
+    if (raw === '') {
+        fail('areaSpec: an EMPTY `require` list. A run with no directive is spelled by '
+            + 'leaving the parameter out — an empty one is a directive somebody emptied, '
+            + 'which is a different thing and cannot be met or refused.');
+    }
+    const out = [];
+    for (const part of raw.split(',')) {
+        const text = part.trim();
+        if (text === '') {
+            fail(`areaSpec: the require list ${JSON.stringify(raw)} carries an EMPTY entry. `
+                + 'Entries are area-graph symbols separated by `,` — `K0,K1`.');
+        }
+        if (symbolIndex(text) === null) {
+            fail(`areaSpec: ${JSON.stringify(text)} is not an area-graph symbol. The symbols `
+                + 'are `K0`, `K1`, … in the graph\'s own creation order, and a key count of N '
+                + `declares exactly [${symbolsForKeys(3).join(', ')}, …] up to K{N-1}.`);
+        }
+        if (out.includes(text)) {
+            fail(`areaSpec: the require list ${JSON.stringify(raw)} names "${text}" TWICE. `
+                + 'A symbol is required or it is not; asking twice does not ask harder.');
+        }
+        out.push(text);
+    }
+    return Object.freeze(out);
+}
+
+/** `['K0','K1']` → `K0,K1`; `null`/`[]` → `''` (the parameter is DELETED). */
+export function formatRequireList(list) {
+    return (list ?? []).join(',');
+}
