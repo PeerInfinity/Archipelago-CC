@@ -59,6 +59,12 @@
  *     line names it; the DEFAULT is spelled by absence; the SELECTOR writes it
  *     and RESETS the ladder; the catalogue lists the kinds; an unknown kind
  *     refuses BY NAME.
+ * 10. **THE CONNECTIVITY PRE-CHECK** (constructive-mode slice 6) — an
+ *     EXPLICIT-anchor directive at a cell an INDEPENDENT flood in this file
+ *     says would seal a `winding` corridor comes back `ILLEGAL_PLACEMENT`, and
+ *     the trace pane prints the flood's own sentence naming the entrance, the
+ *     goal and the rule's soundness bound. ⛔ A VALUE claim, not an echo: the
+ *     cell is chosen without asking `refusalAt` anything (trap 269).
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
  * 246/258): `window.__mazeLab` is set on the FIRST render, so a poll for its
@@ -181,6 +187,76 @@ if (!SEAL) throw new Error('check-maze-lab: no seed in 1..12 puts the 5x5 goal o
 // eslint-disable-next-line no-console
 console.log(`node: sealing subject = seed ${SEAL.seed} on ${SEAL_ROOM.width}x`
     + `${SEAL_ROOM.height}, goal (${SEAL.goal.tx},${SEAL.goal.ty})`);
+
+/**
+ * ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 6 — THE **CONNECTIVITY PRE-CHECK'S** SUBJECT, and
+ * it is found by an INDEPENDENT FLOOD written here rather than by asking
+ * `refusalAt` which cell it dislikes.
+ *
+ * ⛔ Trap 269's law: an ECHO claim and a VALUE claim are different claims. If
+ * this file located the cell by calling the very rule it then asserts fired,
+ * the row would be *"the model agrees with itself"* — green for a build whose
+ * flood is inverted, because the search and the assertion would move together.
+ * So the cell comes from a flood written from the RULE'S ENGLISH (4-neighbour,
+ * `TILE_FLOOR` only, tiles ignored above), and what the browser is then asked is
+ * whether the PAGE refuses it, by name, with the sentence.
+ */
+const floodOpen = (level, writes, from, to) => {
+    const painted = new Map(writes.map((w) => [`${w.x},${w.y}`, 1]));
+    const at = (x, y) => level.tiles[x + y * level.width];
+    const ok = (x, y) => x >= 0 && y >= 0 && x < level.width && y < level.height
+        && !painted.has(`${x},${y}`) && at(x, y) === 0;
+    if (!ok(from.x, from.y) || !ok(to.x, to.y)) return false;
+    const seen = new Set([`${from.x},${from.y}`]);
+    let frontier = [{ ...from }];
+    while (frontier.length) {
+        const nextRing = [];
+        for (const p of frontier) {
+            for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                const q = { x: p.x + dx, y: p.y + dy };
+                const key = `${q.x},${q.y}`;
+                if (seen.has(key) || !ok(q.x, q.y)) continue;
+                if (q.x === to.x && q.y === to.y) return true;
+                seen.add(key);
+                nextRing.push(q);
+            }
+        }
+        frontier = nextRing;
+    }
+    return false;
+};
+
+let PRECHECK = null;
+for (let seed = 1; seed <= 12 && !PRECHECK; seed += 1) {
+    const st = generateStep({ seed, step: 0, skeleton: { kind: 'winding' } });
+    const level = serializeMazeLevel(st.record);
+    const goal = { x: st.model.goalCell.tx, y: st.model.goalCell.ty };
+    for (const [ori, len] of [['h', 3], ['v', 3], ['h', 2], ['v', 2], ['h', 1], ['v', 1]]) {
+        for (let ty = 0; ty < level.height && !PRECHECK; ty += 1) {
+            for (let tx = 0; tx < level.width && !PRECHECK; tx += 1) {
+                const cells = Array.from({ length: len }, (_, i) => (ori === 'h'
+                    ? { x: tx + i, y: ty } : { x: tx, y: ty + i }));
+                const onGrid = cells.every((c) => c.x < level.width && c.y < level.height);
+                const free = cells.every((c) => level.tiles[c.x + c.y * level.width] === 0
+                    && !(c.x === level.entrance.x && c.y === level.entrance.y)
+                    && !(c.x === goal.x && c.y === goal.y));
+                if (!onGrid || !free) continue;
+                if (floodOpen(level, cells, level.entrance, goal)) continue;
+                PRECHECK = { seed, ori, len, tx, ty, goal, entrance: level.entrance };
+            }
+        }
+        if (PRECHECK) break;
+    }
+}
+if (!PRECHECK) {
+    throw new Error('check-maze-lab: no `winding` skeleton in seeds 1..12 has a cell where '
+        + 'one wall-segment SEALS the room — the pre-check claim has no subject.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: pre-check subject = seed ${PRECHECK.seed} winding, `
+    + `wall-segment(ori=${PRECHECK.ori},len=${PRECHECK.len}) at `
+    + `(${PRECHECK.tx},${PRECHECK.ty}) seals (${PRECHECK.entrance.x},${PRECHECK.entrance.y})`
+    + `->(${PRECHECK.goal.x},${PRECHECK.goal.y})`);
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE BROWSER
@@ -548,6 +624,39 @@ try {
     check(/\?skeleton="spiral"/.test(refusedKind.fatal ?? '')
         && /is not a skeleton kind/.test(refusedKind.fatal ?? ''),
         '⛔ ?skeleton=spiral REFUSES BY NAME with the whole vocabulary', refusedKind.fatal);
+
+    /* ── CLAIM 10: THE CONNECTIVITY PRE-CHECK, ON THE PAGE (slice 6) ─ */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM ABOUT WHAT THE RULE DID (trap 269), not an echo:
+     * the cell was chosen above by an independent flood, and what is asserted
+     * here is that the page's own directed attempt at that cell comes back
+     * `ILLEGAL_PLACEMENT` **with the flood's sentence printed in the trace
+     * pane** — read off the DOM, because the readout and the pane are two
+     * renderings and a pane that stopped printing the refusal would leave the
+     * readout perfectly correct.
+     */
+    const sealDirective = `wall-segment(ori=${PRECHECK.ori},len=${PRECHECK.len})`
+        + `@1s!${PRECHECK.tx},${PRECHECK.ty}`;
+    const sealedRun = await load(`seed=${PRECHECK.seed}&skeleton=winding&count=0`
+        + `&directed=${encodeURIComponent(sealDirective)}`,
+    () => window.__mazeLab?.directives?.length === 1, 'the sealing directive to be applied');
+    const sd = sealedRun.directives[0];
+    check(sd.outcome === 'ILLEGAL_PLACEMENT' && sd.at === null,
+        '⛓⛓⛓ SLICE 6: an EXPLICIT-anchor directive that would SEAL a `winding` corridor is '
+        + 'ILLEGAL_PLACEMENT — the MODEL refused it before any solve, and the record did '
+        + 'not move',
+        `${sd.instance} @!${PRECHECK.tx},${PRECHECK.ty} -> ${sd.outcome}, at=${json(sd.at)}`);
+    const sealPane = await page.textContent('#labTrace');
+    check(/would SEAL the room/.test(sealPane)
+        && new RegExp(`no floor path from the ENTRANCE \\(${PRECHECK.entrance.x},`
+            + `${PRECHECK.entrance.y}\\) to the GOAL \\(${PRECHECK.goal.x},`
+            + `${PRECHECK.goal.y}\\)`).test(sealPane),
+    '⛓⛓ …and the PANE prints the flood\'s own sentence, naming the entrance and the goal '
+        + 'THIS FILE computed independently — a VALUE claim, not an echo of the outcome word',
+    (sealPane.match(/[^\n]*would SEAL the room[^\n]*/) ?? ['(absent)'])[0].slice(0, 220));
+    check(/obstacles and items are the ORACLE/.test(sealPane),
+        '⛔ …and the sentence states the rule\'s SOUNDNESS BOUND — tiles only, so a door is '
+        + 'never a wall here');
 
     check(errors.length === 0, 'STILL zero console errors after every arm was driven',
         errors.join(' | '));

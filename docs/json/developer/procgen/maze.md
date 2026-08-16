@@ -62,9 +62,34 @@ no world ever holds a door whose key was never placed).
 ⛔ What palette v1 is **not** yet: it does not check that a door is a **cut
 vertex** — `placeGateAndKey` does that, and generalising it is a later slice. A
 door the walk can simply walk around is a kept candidate that happens to be
-decoration, which the arc's yield table will measure rather than assume. There
-are no carved skeleton kinds yet (the room is always open), no hazards, no
-pushable blocks — those are later slices of the same arc.
+decoration, which the arc's yield table measures rather than assumes. There are
+no hazards and no pushable blocks yet — those are later slices of the same arc.
+
+### The connectivity pre-check (constructive-mode slice 6)
+
+`refusalAt` carries one more rule, shared with the Seedling binding through ONE
+flood in `procgenCore/gridFlood.js`: **a candidate whose TILE writes disconnect
+the entrance from the goal is refused BY NAME, before any solve.** It runs after
+the footprint/clearance walk (which is what rejects an off-grid cell) and, since
+`legalAt` is derived from `refusalAt`, `anchorsFor` simply stops offering sealing
+cells — so the loop reports NO_ANCHOR where it used to spend a solve and REVERT.
+A `?directed=` cell named explicitly gets `ILLEGAL_PLACEMENT` with the sentence,
+which the lab page's trace pane prints.
+
+⛔ **It reads TILES only, and a `door-key` can therefore never be sealed by it.**
+Whether a door is passable depends on the key, which is a fact about the SEARCH
+and not about the grid — and §12.10's asymmetry is exactly what that protects: on
+a corridor the maze KEEPS every door and REVERTS every wall. ⚖ The rule is
+**kind-scoped** — off at `empty` — so the open-room seed→level pairs cannot move.
+(A single `wall-segment` can seal an open room only at 3×3: scanned 2×2 through
+11×11 over seeds 1..40, that is the sole width where one template spans the room,
+which is why the unit fixture for the scope uses a 3×3 room.)
+
+Measured over 9 kinds × 4 sizes × 8 seeds (`sweep-yield-table.mjs`, count 3 /
+tries 4): `wall-segment` REVERTs **438 → 8**, total oracle solves **1519 →
+1079**, KEPT 669 → **672**, saturated cells 99 → 97. The 8 surviving reverts are
+the soundness bound doing its job — a wall that cuts a KEY off from the player
+makes the room unsolvable through an ITEM, which a terrain flood cannot see.
 
 `scripts/procgen/generate-maze-level.mjs` is the CLI twin of
 `generate-seedling-level.mjs`: a seed and the bounds in, the level, the full

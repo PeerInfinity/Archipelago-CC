@@ -56,6 +56,7 @@
  * slice 3, on the lab page's).
  */
 
+import { connected } from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
@@ -431,6 +432,71 @@ export function mazeModel({
      * branch is here because the ROW CONTRACT has the field and a rule that
      * silently ignored it would be a gate that does not gate.)
      */
+    /**
+     * ⛓⛓⛓ **THE CONNECTIVITY PRE-CHECK** — CONSTRUCTIVE-MODE slice 6, §3.6
+     * item 2, and the maze half of a rule both bindings run over ONE flood
+     * (`procgenCore/gridFlood.js`).
+     *
+     * *A candidate whose TILE writes disconnect the entrance from the goal is
+     * refused BY NAME, before any solve.*
+     *
+     * ── ⛔ WHY IT IS A **LEGALITY** RULE AND NOT AN ORACLE VERDICT ─────
+     *
+     * The oracle already answers it — a sealed room comes back REFUSED with
+     * *"no route from the entrance…"*, which is a complete answer over this
+     * state space. What it does not do is answer CHEAPLY: the BEFORE yield
+     * table measured 67 of Seedling's reverts as exactly this shape, one of
+     * them costing a **74-second single solve**, because the corridor planner
+     * runs to its dash cap before it gives up. The maze's own BFS is
+     * milliseconds, so on this substrate the win is not the clock — it is that
+     * `anchorsFor` stops OFFERING sealing cells at all, which is what makes the
+     * two bindings run one rule rather than two policies.
+     *
+     * ── ⛔ WHAT IT IS SOUND FOR: **FULL-TILE TERRAIN ONLY** ────────────
+     *
+     * Tiles are what it reads. ⚠ OBSTACLES AND ITEMS ARE IGNORED — a `door-key`
+     * writes an obstacle onto a cell whose TILE it never touches, and a flood
+     * that treated a door as a wall would refuse every door the maze happily
+     * keeps (§12.10: on a corridor every `door-key` is KEPT and every
+     * `wall-segment` REVERTED). Whether a door is passable is the ORACLE's
+     * question, because the answer depends on the key, and the key is a fact
+     * about the SEARCH rather than about the grid.
+     *
+     * ⇒ the rule is a NECESSARY condition only: sealed ⇒ certainly unsolvable ⇒
+     * refuse; not sealed ⇒ nothing claimed, and the oracle still decides.
+     *
+     * ── ⚖ KIND-SCOPED (§6.2's named default) ──────────────────────────
+     *
+     * ⛔ OFF at `empty`. The open room is where every committed seed→level pair
+     * lives, and at a small enough room (§9.6's 5x5/4x4 ladder) a `wall-segment`
+     * CAN seal an open room — so a global rule would move those pairs. ⚖ The
+     * user may widen it later (GENERATE-UI ruling 5 licenses the expiry); until
+     * then the scope is asserted, not assumed.
+     */
+    const sealRefusal = (world, template, tx, ty) => {
+        if (skeletonKind === DEFAULT_SKELETON_KIND) return null;
+        const written = new Map((template.tiles ?? [])
+            .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.tile]));
+        const blocking = [...written.values()].filter((t) => t !== TILE_FLOOR).length;
+        // ⛔ A candidate that paints no blocking tile cannot seal anything:
+        // painting FLOOR can only ADD walkable cells, so connectivity is
+        // monotone in that direction and the flood would be arithmetic nobody
+        // reads.
+        if (blocking === 0) return null;
+        const walkable = (x, y) => (written.get(`${x},${y}`) ?? getTile(world, x, y))
+            === TILE_FLOOR;
+        if (connected(world.width, world.height, walkable,
+            { x: world.entrance.x, y: world.entrance.y },
+            { x: goalCell.tx, y: goalCell.ty })) return null;
+        return `"${template.instance ?? template.name}" at (${tx},${ty}): its TERRAIN would `
+            + `SEAL the room — no floor path from the ENTRANCE (${world.entrance.x},`
+            + `${world.entrance.y}) to the GOAL (${goalCell.tx},${goalCell.ty}) once the `
+            + `${blocking} wall tile(s) it writes are painted. ⛔ The flood reads TILES only; `
+            + 'obstacles and items are the ORACLE\'s question, so a door is never a wall '
+            + 'here. Refused before any solve, and only because the room is CARVED '
+            + `(skeleton "${skeletonKind}") — at "${DEFAULT_SKELETON_KIND}" this rule is off.`;
+    };
+
     const refusalAt = (world, template, tx, ty) => {
         for (const [part, cells] of [['FOOTPRINT', template.footprint ?? []],
             ['CLEARANCE', template.clearance ?? []]]) {
@@ -442,7 +508,15 @@ export function mazeModel({
                 }
             }
         }
-        return null;
+        /**
+         * ⛔ **AFTER THE FOOTPRINT WALK**, and the order is part of the answer:
+         * the walk is what refuses an off-grid cell, and a flood handed writes
+         * outside the room would read `getTile` past the array (Seedling's
+         * trap-255 shape, which the maze inherits by writing the rule in the
+         * same place). ⛓ It is also the CHEAP check first — one bounds test per
+         * footprint cell before a whole-room flood.
+         */
+        return sealRefusal(world, template, tx, ty);
     };
     const legalAt = (world, template, tx, ty) => refusalAt(world, template, tx, ty) === null;
 

@@ -1,0 +1,143 @@
+/**
+ * procgenCore/gridFlood — **ONE 4-NEIGHBOUR FLOOD, FOR BOTH SUBSTRATES.**
+ *
+ * CONSTRUCTIVE-MODE arc, slice 6 (`NewDocs/plans/seedling-constructive-mode-
+ * kickoff.md` §3.6 item 2). The connectivity pre-check is a MODEL-side legality
+ * rule in each binding's `refusalAt`, and the two bindings disagree about
+ * everything except the question: *is there still a walkable path from the
+ * start to the goal once this candidate's terrain writes are painted?* Seedling
+ * asks it of four TERRAIN names on a bordered 10x10 room; the maze asks it of an
+ * `Int8Array` of `TILE_FLOOR`/`TILE_WALL` on a ring-less grid.
+ *
+ * ⛔ SO THE FLOOD IS ONE FUNCTION AND THE PREDICATE IS THE BINDING'S. ⚖ Kickoff
+ * §5's one-of-everything law: two floods would agree until somebody fixed a
+ * diagonal, a bounds check or an endpoint case in one of them, and the day they
+ * disagreed one substrate would refuse a candidate the other kept while both
+ * claimed to run "the connectivity pre-check".
+ *
+ * ── ⛔⛔ 4-NEIGHBOUR, AND THAT IS A CLAIM ABOUT BOTH GAMES ─────────────
+ *
+ * Neither substrate lets a mover cross a corner diagonally: the maze's `step`
+ * takes `up/down/left/right` and Seedling's walk is a corridor planner over
+ * orthogonal legs. An 8-neighbour flood would report a room CONNECTED that
+ * neither engine can cross — a pre-check that under-refuses, which is the
+ * failure direction that matters here (it would let a sealing candidate through
+ * to the oracle, i.e. change nothing, rather than reject a good one).
+ *
+ * ── ⛓ WHAT THIS IS SOUND FOR, AND WHAT IT IS DELIBERATELY BLIND TO ────
+ *
+ * **FULL-TILE TERRAIN ONLY.** The caller's `isWalkable` sees the grid, and the
+ * grid is what the flood knows:
+ *
+ *  · ⚠ ENTITIES ARE NOT TERRAIN and this cannot see them. A maze door, a
+ *    Seedling pushable block, a lock — those are the ORACLE's business, and a
+ *    flood that treated a door as a wall would refuse every door-key the maze
+ *    happily keeps (measured: the maze keeps every `door-key` on a corridor,
+ *    §12.10).
+ *  · ⚠ AND IT IS A TILE FLOOD, so trap 136's law binds it: *a tile flood
+ *    UNDER-approximates a player smaller than a tile*, and trap 139's: *the
+ *    grid rounds a sub-tile obstacle*. Both are about things narrower than a
+ *    cell; a terrain WRITE fills its cell exactly, so neither applies to what
+ *    this is asked. A caller who ever hands it a sub-tile obstacle is outside
+ *    the envelope and the docblock of the rule that calls it must say so.
+ *
+ * ⇒ the pre-check built on this is a NECESSARY condition, never a sufficient
+ * one: `connected` false ⇒ certainly unsolvable ⇒ refuse; `connected` true ⇒
+ * nothing is claimed, and the oracle still decides. That asymmetry is what makes
+ * it safe to run BEFORE a solve.
+ *
+ * ⛔ NO DOM AND NO NODE IMPORTS: both lab pages load this in a browser.
+ */
+
+export class GridFloodError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'GridFloodError';
+    }
+}
+
+const fail = (message) => { throw new GridFloodError(message); };
+
+const assertCell = (p, what, width, height) => {
+    if (!p || !Number.isInteger(p.x) || !Number.isInteger(p.y)) {
+        fail(`gridFlood: ${what} must be \`{x, y}\` with integer cells, got `
+            + `${JSON.stringify(p)}. ⛔ It is a CELL, not a pixel and not a \`{tx, ty}\` — the `
+            + 'BINDING converts at its own boundary, because a grid is the one vocabulary the '
+            + 'two substrates already share.');
+    }
+    if (!(p.x >= 0 && p.y >= 0 && p.x < width && p.y < height)) {
+        fail(`gridFlood: ${what} is (${p.x},${p.y}), which is off the ${width}x${height} grid. `
+            + '⛔ An off-grid endpoint is a CALLER defect and not a connectivity fact, so it '
+            + 'refuses by name rather than answering "not connected" — a flood that returned '
+            + 'false here would report a coordinate bug as a sealed room.');
+    }
+};
+
+/**
+ * ⛓ IS THERE A 4-NEIGHBOUR WALKABLE PATH FROM `from` TO `to`?
+ *
+ * ⚠ **A NON-WALKABLE ENDPOINT ANSWERS `false`, AND THAT IS THE ANSWER RATHER
+ * THAN A SWALLOWED ERROR.** "Is there a walkable path to a cell nothing can
+ * stand on?" has one honest answer, and a caller whose candidate paints the goal
+ * wants a REFUSAL, not a throw. (Neither binding can reach that case today —
+ * both refuse a footprint cell on the start or the goal before this runs — but
+ * the function is written for the question, not for its current callers.)
+ *
+ * ⛔ BREADTH-FIRST WITH AN EXPLICIT QUEUE, NOT RECURSION: a 121-cell grid is
+ * nothing, but the same function is what a chambers-sized room (slice 7) will
+ * call, and a recursive flood's bound is the JS stack — a bound nobody chose.
+ *
+ * @param {number} width
+ * @param {number} height
+ * @param {(x:number, y:number) => boolean} isWalkable the BINDING's own
+ *   predicate over the CANDIDATE grid (its writes already applied). ⛔ It is
+ *   called at most once per cell.
+ * @param {{x:number, y:number}} from
+ * @param {{x:number, y:number}} to
+ * @returns {boolean}
+ */
+export function connected(width, height, isWalkable, from, to) {
+    for (const [n, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`gridFlood: ${n} must be a positive integer, got ${JSON.stringify(v)}.`);
+        }
+    }
+    if (typeof isWalkable !== 'function') {
+        fail('gridFlood: `isWalkable(x, y)` must be a function — the PREDICATE is the '
+            + 'binding\'s and the flood is shared. A default ("floor is walkable") would be '
+            + 'one substrate\'s vocabulary imported into the other.');
+    }
+    assertCell(from, '`from`', width, height);
+    assertCell(to, '`to`', width, height);
+    if (!isWalkable(from.x, from.y) || !isWalkable(to.x, to.y)) return false;
+    if (from.x === to.x && from.y === to.y) return true;
+
+    const seen = new Uint8Array(width * height);
+    const queue = [from.x + from.y * width];
+    seen[queue[0]] = 1;
+    for (let head = 0; head < queue.length; head += 1) {
+        const i = queue[head];
+        const x = i % width;
+        const y = (i - x) / width;
+        for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const ni = nx + ny * width;
+            if (seen[ni]) continue;
+            /**
+             * ⛓ THE ARRIVAL TEST COMES **BEFORE** THE PREDICATE CALL, and that
+             * ordering is what makes "at most one call per cell" true rather
+             * than nearly true: `to`'s walkability was settled by the endpoint
+             * check above, so asking again here would be the one cell the flood
+             * probed twice. (Found by this file's own test, which asserted the
+             * property the docblock claimed.)
+             */
+            if (nx === to.x && ny === to.y) return true;
+            if (!isWalkable(nx, ny)) { seen[ni] = 1; continue; }
+            seen[ni] = 1;
+            queue.push(ni);
+        }
+    }
+    return false;
+}

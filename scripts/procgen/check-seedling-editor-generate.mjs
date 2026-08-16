@@ -1709,6 +1709,108 @@ if (!host) {
     check(json(open.level) === json(nodeOpenSkeleton.record),
         '…and the open room is still node\'s own open room, byte for byte');
 
+    /* ── 8g: THE CONNECTIVITY PRE-CHECK, ON THE PAGE (slice 6) ─────── */
+    /**
+     * ⛓⛓⛓ A **VALUE** CLAIM ABOUT WHAT THE RULE DID (trap 269), not an echo of
+     * the outcome word.
+     *
+     * ⛔ THE CELL IS FOUND BY AN INDEPENDENT FLOOD WRITTEN HERE, never by asking
+     * `refusalAt` which cell it dislikes: a row that located its subject with
+     * the rule it then asserts would be *"the model agrees with itself"* —
+     * green for a build whose flood is inverted, because the search and the
+     * assertion would move together. The flood below is written from the rule's
+     * ENGLISH: 4-neighbour, `ground` only, terrain writes applied, entities
+     * ignored.
+     */
+    {
+        const skelRecord = nodeCarvedSkeleton.record;
+        const start = nodeCarvedSkeleton.model.defaults.start;
+        const goal = nodeCarvedSkeleton.model.goalCell;
+        const opens = (writes) => {
+            const painted = new Map(writes.map((w) => [`${w.tx},${w.ty}`, w.terrain]));
+            const ok = (x, y) => x >= 0 && y >= 0 && x < skelRecord.width
+                && y < skelRecord.height
+                && (painted.get(`${x},${y}`) ?? terrainAt(skelRecord, x, y)) === 'ground';
+            if (!ok(start.tx, start.ty) || !ok(goal.tx, goal.ty)) return false;
+            const seen = new Set([`${start.tx},${start.ty}`]);
+            let ring = [{ x: start.tx, y: start.ty }];
+            while (ring.length) {
+                const nextRing = [];
+                for (const p of ring) {
+                    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                        const c = { x: p.x + dx, y: p.y + dy };
+                        const key = `${c.x},${c.y}`;
+                        if (seen.has(key) || !ok(c.x, c.y)) continue;
+                        if (c.x === goal.tx && c.y === goal.ty) return true;
+                        seen.add(key);
+                        nextRing.push(c);
+                    }
+                }
+                ring = nextRing;
+            }
+            return false;
+        };
+        let SEALER = null;
+        for (const [ori, len] of [['h', 2], ['v', 2], ['h', 3], ['v', 3]]) {
+            for (let ty = 1; ty < skelRecord.height - 1 && !SEALER; ty += 1) {
+                for (let tx = 1; tx < skelRecord.width - 1 && !SEALER; tx += 1) {
+                    const cells = Array.from({ length: len }, (_, i) => (ori === 'h'
+                        ? { tx: tx + i, ty } : { tx, ty: ty + i }));
+                    const inside = cells.every((c) => c.tx < skelRecord.width - 1
+                        && c.ty < skelRecord.height - 1);
+                    const free = cells.every((c) => terrainAt(skelRecord, c.tx, c.ty) === 'ground'
+                        && !(c.tx === start.tx && c.ty === start.ty)
+                        && !(c.tx === goal.tx && c.ty === goal.ty));
+                    if (!inside || !free) continue;
+                    if (opens(cells.map((c) => ({ ...c, terrain: 'wall' })))) continue;
+                    SEALER = { ori, len, tx, ty };
+                }
+            }
+            if (SEALER) break;
+        }
+        check(SEALER !== null,
+            `⛓ a sealing subject EXISTS on seed ${CARVED.seed}'s \`${KIND}\` skeleton — found `
+            + 'by an INDEPENDENT flood in this file, never by asking the rule',
+            SEALER ? `wall-segment(ori=${SEALER.ori},len=${SEALER.len})@(${SEALER.tx},`
+                + `${SEALER.ty})` : 'NONE — the claim below has no subject');
+        if (SEALER) {
+            const spec = { template: 'wall-segment', params: { ori: SEALER.ori, len: SEALER.len },
+                anchor: { tx: SEALER.tx, ty: SEALER.ty }, bound: 1,
+                keepPolicy: KEEP_POLICY.FIRST_SOLVED };
+            const nodeSealed = generateWithDirectives({
+                seed: CARVED.seed, biome: CARVED.biome, step: 0,
+                skeleton: { kind: KIND }, directed: [spec],
+            });
+            const nodeWhy = nodeSealed.trace.find((r) => r.directive === 1).reasonText;
+            const directedParam = `wall-segment(ori=${SEALER.ori},len=${SEALER.len})`
+                + `@1s!${SEALER.tx},${SEALER.ty}`;
+            const sealedWeb = await load(`source=generate&seed=${CARVED.seed}`
+                + `&biome=${CARVED.biome}&count=0&skeleton=${KIND}`
+                + `&directed=${encodeURIComponent(directedParam)}`);
+            const sealedPane = await page.evaluate(() => ({
+                directives: window.__editorGenerate?.directives ?? [],
+                rows: [...document.querySelectorAll('#genTrace .tr')].map((e) => e.textContent),
+            }));
+            const sdir = sealedPane.directives[0];
+            check(sdir?.outcome === 'ILLEGAL_PLACEMENT' && sdir?.at === null,
+                '⛓⛓⛓ SLICE 6: an EXPLICIT-anchor directive that would SEAL a `winding` '
+                + 'corridor is ILLEGAL_PLACEMENT — the MODEL refused it before any solve',
+                `${sdir?.outcome}, at ${json(sdir?.at)}`);
+            check(sealedPane.rows.some((t) => t.includes(nodeWhy)),
+                '⛓⛓ …and the PANE prints the flood\'s own sentence VERBATIM — node\'s '
+                + '`refusalAt` for the same cell, character for character',
+                `${(nodeWhy ?? '(none)').slice(0, 120)}…`);
+            check(/would SEAL the room/.test(nodeWhy ?? '')
+                && new RegExp(`no ground path from the START \\(${start.tx},${start.ty}\\) to `
+                    + `the GOAL \\(${goal.tx},${goal.ty}\\)`).test(nodeWhy ?? ''),
+            '⛓ …and the sentence names THIS RULE and the two cells THIS FILE computed '
+                + 'independently — a VALUE claim, not an echo of the outcome word',
+            (nodeWhy ?? '').slice(0, 150));
+            check(json(sealedWeb.level) === json(nodeCarvedSkeleton.record),
+                '⛔ …and the level on screen did NOT move — a refusal keeps the old record');
+        }
+    }
+
     /** ⛔ A KIND SEEDLING CANNOT BUILD REFUSES BY NAME, at READ time. */
     await page.goto(`${origin}${PAGE_PATH}?source=generate&skeleton=corridor`,
         { waitUntil: 'domcontentloaded' });

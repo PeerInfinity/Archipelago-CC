@@ -57,6 +57,7 @@ import {
     PLACEMENT_GROUP, PLACEMENT_TAG, PRE_SWORD_PALETTE, instantiateKept,
 } from './procgenPalette.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
+import { connected } from '../procgenCore/gridFlood.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
@@ -535,6 +536,85 @@ export function seedlingModel({
      * room its clearer needs (the S1 guard), and a reader who moved the anchor
      * one cell has to know which they were fighting.
      */
+    /**
+     * ⛓⛓⛓ **THE CONNECTIVITY PRE-CHECK** — CONSTRUCTIVE-MODE slice 6, §3.6
+     * item 2, and the Seedling half of a rule both bindings run over ONE flood
+     * (`procgenCore/gridFlood.js`; the maze's half is `procgenMaze.sealRefusal`).
+     *
+     * *A candidate whose TERRAIN writes disconnect the start from the goal is
+     * refused BY NAME, before any solve.*
+     *
+     * ── ⛓⛓ THE MEASUREMENT THAT BOUGHT IT (the BEFORE yield table) ────
+     *
+     * ⚖ Kickoff §5: *measure before you build.* `sweep-yield-table.mjs` over
+     * the seven kinds this binding offers, seeds 1..8 at count 3 / tries 4,
+     * counted **64 REVERTED candidates on the CARVED kinds whose refusal was
+     * one sentence** — `solverBot(procgen-l900): no corridor for goal
+     * collect-placement…`, i.e. the walk could not reach the torch at all. The
+     * pre-check turns exactly those into an instant, named refusal; the anchor
+     * is never offered, so no solve is spent on it. Measured AFTER: **64 → 0**,
+     * and the sweep's total solve count fell 297 → 235.
+     *
+     * ⚠⚠ AND IT DID **NOT** BUY THE HEADLINE COST BACK, WHICH IS THE FINDING
+     * SLICE 6 CARRIES FORWARD. The worst single solve in the sweep — 77.8 s on
+     * `bushy` seed 5 — is an **`arrow-lane`** refusal (*"the combat ladder is
+     * E…"*), and an arrow lane writes NO TERRAIN AT ALL. Probe 2 (§2.4)
+     * attributed the corridor's cost to sealing candidates; at these bounds the
+     * dominant cost is an ENTITY template this rule cannot touch and must not.
+     *
+     * ── ⛔ WHAT BLOCKS, AND WHY IT IS `ground` AND NOTHING ELSE ────────
+     *
+     * `wall`, `water` and `pit` ALL block. Wall is `world.solids`; water lands
+     * in `world.lethalTerrainTiles` and pit in `world.pitTiles`
+     * (`procgenLevel.TERRAIN`'s own docblock names both tables) — lethal
+     * terrain the corridor planner prices as impassable, so a ROUTE cannot
+     * cross either. ⛔ `ground` is therefore the whole walkable vocabulary, and
+     * a flood that let a pit through would report a sealed room as open (the
+     * mutant this rule is gated against).
+     *
+     * ── ⛔ WHAT IT IS SOUND FOR: **FULL-TILE TERRAIN ONLY** ────────────
+     *
+     * ⚠ ENTITIES ARE IGNORED — a block, a lock, a spinner, an arrow trap. Those
+     * are the ORACLE's business: whether a pushable block can be moved out of a
+     * corridor is a fact about the SEARCH, not about the grid. ⚠ And traps
+     * 136/139 bound it from the other side: *a tile flood under-approximates a
+     * player smaller than a tile* and *the grid rounds a sub-tile obstacle*.
+     * Neither applies to a TERRAIN write, which fills its cell exactly — which
+     * is precisely why the rule is scoped to terrain and refuses to grow.
+     *
+     * ⇒ NECESSARY, never sufficient: sealed ⇒ certainly unsolvable ⇒ refuse;
+     * not sealed ⇒ nothing is claimed and the oracle still decides.
+     *
+     * ── ⚖ KIND-SCOPED (§6.2's named default) ──────────────────────────
+     *
+     * ⛔ OFF at `empty`, where every committed seed→level pair lives. ⚖ The user
+     * may widen it (GENERATE-UI ruling 5 licenses the expiry); until then the
+     * scope is ASSERTED — `procgenSeedlingPrecheck.test.js` hands the identical
+     * carved record to an `empty` model and a `winding` model and shows only
+     * the second one refuses.
+     */
+    const sealRefusal = (record, template, tx, ty) => {
+        if (skeletonKind === DEFAULT_SKELETON_KIND) return null;
+        const painted = new Map((template.terrain ?? [])
+            .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.terrain]));
+        const blocking = [...painted.values()].filter((t) => t !== 'ground').length;
+        // ⛔ A candidate that paints no blocking terrain cannot seal anything —
+        // painting `ground` only ever ADDS walkable cells.
+        if (blocking === 0) return null;
+        const walkable = (x, y) => (painted.get(`${x},${y}`) ?? terrainAt(record, x, y))
+            === 'ground';
+        if (connected(record.width, record.height, walkable,
+            { x: d.start.tx, y: d.start.ty },
+            { x: goalCell.tx, y: goalCell.ty })) return null;
+        return `"${template.instance ?? template.name}" at (${tx},${ty}): its TERRAIN would `
+            + `SEAL the room — no ground path from the START (${d.start.tx},${d.start.ty}) to `
+            + `the GOAL (${goalCell.tx},${goalCell.ty}) once the ${blocking} `
+            + 'wall/water/pit cell(s) it writes are painted. ⛔ The flood reads TERRAIN only; '
+            + 'entities are the ORACLE\'s question, so a block or a lock is never a wall '
+            + 'here. Refused before any solve, and only because the room is CARVED '
+            + `(skeleton "${skeletonKind}") — at "${DEFAULT_SKELETON_KIND}" this rule is off.`;
+    };
+
     const refusalAt = (record, template, tx, ty) => {
         for (const [part, cells] of [['FOOTPRINT', template.footprint],
             ['CLEARANCE', template.clearance ?? []]]) {
@@ -546,6 +626,20 @@ export function seedlingModel({
                 }
             }
         }
+        /**
+         * ⛓⛓ **THE PRE-CHECK SITS HERE**, and both neighbours decide the spot.
+         *
+         * AFTER the footprint/clearance walk — trap 255's law, restated: the
+         * walk is what rejects an off-interior cell, and a flood handed writes
+         * outside the room would read `terrainAt` past the rectangle. BEFORE
+         * `laneClear` and `doorClear` — those two are about a SPECIFIC
+         * template's mechanism (a lane over the goal, a door with the goal on
+         * the near side), and "the room no longer connects" is the more general
+         * fact: a reader who moved the anchor wants to hear the structural
+         * refusal first.
+         */
+        const sealed = sealRefusal(record, template, tx, ty);
+        if (sealed) return sealed;
         if (template.lane === 'avoidable') {
             const lane = laneClear(record, tx, ty);
             if (!lane.ok) {

@@ -9017,3 +9017,81 @@ there. Pass 2 over a carved corridor is Probe 2's measurement and it is now
 reproducible end to end: `generate-seedling-level.mjs --seed=3 --count=1
 --skeleton=winding` SATURATES with 0 kept over 24 attempts, while the same call
 on the maze keeps doors and reverts walls. That asymmetry is slice 6's subject.
+
+### Slice 6 — the YIELD TABLE, and the CONNECTIVITY PRE-CHECK
+
+**The instrument first.** `scripts/procgen/sweep-yield-table.mjs` is the arc's
+one yield instrument, for both substrates
+(`--substrate=maze|seedling`), driving the BINDINGS in process. Axes: every kind
+the binding offers × room size (maze `11x11,7x7,5x5,4x4` — §9.6's ladder, because
+the 11×11 default reverts nothing and a table on it alone would call the palette
+fine about a room too big to test it; Seedling's room is fixed at one screen, so
+its second axis is the kind's FLOOR FRACTION, printed as a column) × seeds. Per
+cell it records the stop reason, the per-TEMPLATE outcome tally, the REVERT
+reasons verbatim, the solve count, and wall time. ⛔ **The wall-clock columns are
+EVIDENCE and decide nothing**; the one clock that acts is the sweep's own
+per-cell budget, which is enforced by running **each cell in its own child
+process** (a Seedling solve is synchronous and uninterruptible, so an in-process
+budget would report a cell's cost only after paying it in full) and is printed in
+the header and in the denominator line. A cell that throws is classified by NAME
+at the harness level — never by widening the oracle's catch.
+
+**The lever.** A model-side legality rule in `refusalAt` on BOTH bindings, over
+ONE flood (`procgenCore/gridFlood.js`): *a candidate whose TERRAIN writes
+disconnect the start from the goal is refused BY NAME, before any solve.*
+Seedling floods over `ground` only — `wall`, `water` and `pit` all block, because
+water lands in `world.lethalTerrainTiles` and pit in `world.pitTiles` and a route
+crosses neither; the maze floods over `TILE_FLOOR`. It sits AFTER the
+footprint/clearance walk (which is what rejects an off-room cell; a flood handed
+writes outside the room would read past the rectangle — trap 255's shape) and
+BEFORE `laneClear`/`doorClear`. `legalAt` stays DERIVED, so `anchorsFor` simply
+stops offering sealing cells and the loop reports NO_ANCHOR; a clicked or
+`?directed=`-named cell gets `ILLEGAL_PLACEMENT` with the sentence, on the page.
+
+⛔ **SOUNDNESS BOUND: FULL-TILE TERRAIN ONLY.** Entities are ignored — a door, a
+key, a pushable block, an arrow trap are the ORACLE's question, because whether
+a door is passable depends on the key and that is a fact about the SEARCH. So the
+rule is NECESSARY and never sufficient: sealed ⇒ certainly unsolvable ⇒ refuse;
+not sealed ⇒ nothing claimed. On the maze this is measured against a COMPLETE
+oracle — every candidate the rule refuses, the exact BFS also refuses. ⚖ It is
+**KIND-SCOPED** (off at `empty`, §6.2's named default), and that scope is what
+keeps the committed open-room seed→level pairs alive: with the scope dropped, 22
+of the 80 Seedling `empty` pairs move.
+
+**BEFORE → AFTER, seeds 1..8 at count 3 / tries 4 / k 3 / anchortries 1:**
+
+| | maze (9 kinds × 4 sizes × 8 seeds = 288 cells) | Seedling (7 kinds × 8 seeds = 56 cells) |
+|---|---|---|
+| sealing REVERTs on carved kinds | `wall-segment` **438 → 8** | **64 → 0** |
+| total oracle solves | **1519 → 1079** (−29%) | **297 → 235** (−21%) |
+| KEPT | 669 → **672** | 154 → **156** |
+| cells completed | 288 → 288 | **55 → 56** |
+
+The residue is the soundness bound doing its job: the maze's 8 surviving
+`wall-segment` reverts are rooms a wall made unsolvable through an ITEM (a key
+cut off from the player behind a door), which a terrain flood cannot see and must
+not guess at.
+
+**⚠⚠ THE COST HEADLINE DID NOT MOVE, AND THAT IS THE SLICE'S REAL FINDING.**
+Probe 2 attributed the carved room's cost to sealing candidates. It is not: at
+these bounds every expensive Seedling solve is an **`arrow-lane`** REVERT — 77.8 s
+on `bushy` seed 5, 9.5 s and 8.9 s on `winding` seed 6 — refused with *"the
+combat ladder is E…"*, and an arrow lane writes **no terrain at all**. The
+pre-check removed 64 sealing solves and a fifth of all solves, and the mean
+per-cell generation time fell 15–25% per kind, but the MAX single solve is
+unchanged because it was never a sealing candidate. The expensive-refusal problem
+on a corridor is an ENTITY-template problem.
+
+**Two things the design did not predict, both improvements:**
+
+- **A run that used to ABORT now completes.** `winding` seed 5's `water-pool` at
+  (1,2) drowned the walk (`PhysicsV2Error`, the §15.5 approach-drive family) and
+  killed the whole run. That candidate was a sealing one, so it is now refused
+  before any solve and the cell finishes.
+- **A saturated run now reaches its target.** `bushy` seed 7 went SATURATED with
+  1 kept over 23 attempts → TARGET_REACHED with 3 kept over 11. Removing sealing
+  anchors from the offered list leaves room inside the same `triesPerStep` budget
+  for anchors that keep. Maze saturation fell 99 → 97 cells the same way. ⚠ It
+  still does not make Seedling corridors yield doors: `wall-gap-block` and
+  `wall-gap-lock-weigh` remain NO_ANCHOR at every carved kind (they span the
+  interior), which is slices 7/8's subject.
