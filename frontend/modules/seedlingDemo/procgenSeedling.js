@@ -1533,20 +1533,27 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } 
 }
 
 /**
- * GENERATE ONE SEEDLING LEVEL — the whole seam, wired.
+ * ⛓⛓⛓ **THE MODEL + ORACLE + THE ELEMENT'S CERTIFICATION, IN ONE PLACE** —
+ * PROCGEN ELEMENTS arc 3, slice 3.
  *
- * ⛔ TWO STREAMS, TWO SEEDS FROM ONE. The model's room stream and the loop's
- * template stream are separate `ProcgenRng`s built from the SAME seed, so the
- * level's identity is one number and neither stream can shift the other by
- * spending a draw. (They therefore produce the same sequence — which is
- * harmless, because they are consumed for different things.)
+ * ⛔ IT EXISTS BECAUSE THERE ARE **TWO** CALLERS AND THE SECOND ONE FOUND OUT
+ * THE HARD WAY. `generateSeedlingLevel` is one; the yield table's Seedling cell
+ * builds its own model and oracle so it can WRAP the oracle for timing, and a
+ * private copy of the certify-then-drop dance there would be a second answer to
+ * *"is this gadget certified"* — which is exactly the class of duplication this
+ * arc keeps paying for. So the dance lives here once and the sweep passes
+ * `wrapOracle`.
+ *
+ * @param {Function} [o.wrapOracle] applied to EVERY oracle this makes, including
+ *   the one the certification solve runs on, so a caller counting solves counts
+ *   that one too — it is a real solve of a real room.
  */
-export function generateSeedlingLevel({
-    seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
-    skeleton = DEFAULT_SKELETON, elements = DEFAULT_ELEMENTS,
+export function seedlingSeam({
+    seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
+    elements = DEFAULT_ELEMENTS, wrapOracle = (o) => o,
 } = {}) {
     let model = seedlingModel({ seed, defaults, skeleton, elements });
-    let oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
+    let oracle = wrapOracle(seedlingOracle({ model, items, budget }));
     /**
      * ⛓⛓⛓ **THE CERTIFICATION SOLVE — PROCGEN ELEMENTS arc 3, slice 3 (D4), AND
      * IT IS WHERE THE ARC'S DEPENDENCY IS PUBLISHED RATHER THAN HIDDEN.**
@@ -1598,9 +1605,27 @@ export function generateSeedlingLevel({
         });
         if (!certification.certified) {
             model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });
-            oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
+            oracle = wrapOracle(seedlingOracle({ model, items, budget }));
         }
     }
+    return { model, oracle, certification };
+}
+
+/**
+ * GENERATE ONE SEEDLING LEVEL — the whole seam, wired.
+ *
+ * ⛔ TWO STREAMS, TWO SEEDS FROM ONE. The model's room stream and the loop's
+ * template stream are separate `ProcgenRng`s built from the SAME seed, so the
+ * level's identity is one number and neither stream can shift the other by
+ * spending a draw.
+ */
+export function generateSeedlingLevel({
+    seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
+    skeleton = DEFAULT_SKELETON, elements = DEFAULT_ELEMENTS,
+} = {}) {
+    const { model, oracle, certification } = seedlingSeam({
+        seed, items: palette.items ?? null, budget, defaults, skeleton, elements,
+    });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     return {
         ...out,

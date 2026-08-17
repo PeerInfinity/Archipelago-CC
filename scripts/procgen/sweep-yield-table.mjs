@@ -187,16 +187,19 @@ const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
  * ONE codec (`procgenCore/elementSpec.js`): `--elements='guard;len=3;turns=1'`.
  * ⛔ The default is `none` and at `none` the binding constructs nothing and
  * spends no draw, so every column below is unchanged from the run before
- * elements existed. ⛔ Seedling REFUSES it by name for the same reason it
- * refuses `--areas=`: the element binding is the MAZE's in this arc.
+ * elements existed.
+ *
+ * ⛓⛓ **BOTH SUBSTRATES TAKE IT SINCE ARC 3 SLICE 3.** Seedling used to refuse it
+ * by name ("the element binding is the MAZE's in this arc"); its own binding is
+ * `seedlingDemo/procgenSeedlingElements.js`, and the columns below say what the
+ * two arms measure. ⛔⛔ AND THE SEEDLING ARM'S `guarded` COLUMN IS **0 BY
+ * CONSTRUCTION TODAY**: the solver cannot drive ⚖ ruling 22's opener chain, so
+ * every placed gadget is `certified: false` with the solve's own refusal text
+ * (arc-3 as-built §10, the S1 work order). That zero is THE MEASUREMENT of the
+ * arc's dependency, published rather than hidden — a `guarded` column that read
+ * anything else would be the one thing slice 3 must not ship.
  */
 const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
-if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
-    note('sweep-yield-table: --elements= is the MAZE binding\'s (PROCGEN ELEMENTS arc 2, '
-        + 'slice 3). Seedling gets elements in arc 3; running it here would print an element '
-        + 'column that is zero for a reason nobody stated.');
-    process.exit(2);
-}
 if (REQUIRE && AREAS.keys === 0) {
     note('sweep-yield-table: --require= without --areas= — every cell would refuse with '
         + '`the-directive-needs-the-area-graph`, which is a column that means one thing at '
@@ -259,6 +262,8 @@ if (CELL !== '') {
     let floorPct;
     /** ⛓ arc 3 slice 1 — Seedling only; the maze binds sites in a later slice. */
     let siteCensus = null;
+    /** ⛓ arc 3 slice 3 — the element's certification, from the shared seam. */
+    let seedlingCertification = null;
     if (SUBSTRATE === 'maze') {
         const {
             MAZE_PALETTE, mazeModel, mazeOracle,
@@ -271,24 +276,42 @@ if (CELL !== '') {
             elements: ELEMENTS,
         });
         palette = MAZE_PALETTE;
-        oracle = mazeOracle({ model, items: palette.items ?? null });
+        /** ⛓ WRAPPED HERE, ONCE. The Seedling arm's `seedlingSeam` wraps its
+         *  own (it makes two oracles when the element's certification refuses),
+         *  so the shared call below must NOT wrap again — a double wrap would
+         *  count every solve twice and double the `maxSolveMs` column's subject. */
+        oracle = wrap(mazeOracle({ model, items: palette.items ?? null }));
         const sk = model.skeleton();
         floorPct = Math.round((100 * [...sk.tiles].filter((t) => t === TILE_FLOOR).length)
             / sk.tiles.length);
     } else {
         const {
-            interiorCells, seedlingModel, seedlingOracle,
+            interiorCells, seedlingSeam,
         } = await M('seedlingDemo/procgenSeedling.js');
         const {
             POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
         } = await M('seedlingDemo/procgenPalette.js');
         const { terrainAt } = await M('seedlingDemo/procgenLevel.js');
-        model = seedlingModel({
+        palette = PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE;
+        /**
+         * ⛓⛓ ONE SEAM, TWO CALLERS (arc 3 slice 3). `seedlingSeam` is what
+         * `generateSeedlingLevel` uses: it builds the model, runs the element's
+         * CERTIFICATION solve and — when that refuses, which is every placed
+         * gadget today — regenerates with the element DROPPED, its draws still
+         * spent. ⛔ A private copy of that dance here would be a second answer to
+         * *"is this gadget certified"*. The timing wrapper goes in through
+         * `wrapOracle`, so the certification solve is COUNTED like any other.
+         */
+        const seam = seedlingSeam({
             seed,
             skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
+            elements: ELEMENTS,
+            items: palette.items ?? null,
+            wrapOracle: wrap,
         });
-        palette = PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE;
-        oracle = seedlingOracle({ model, items: palette.items ?? null });
+        model = seam.model;
+        oracle = seam.oracle;
+        seedlingCertification = seam.certification;
         const sk = model.skeleton();
         const cells = interiorCells(sk);
         floorPct = Math.round((100 * cells.filter((c) => terrainAt(sk, c.tx, c.ty) === 'ground')
@@ -312,7 +335,7 @@ if (CELL !== '') {
             rng: (await M(`${SUBSTRATE === 'maze' ? 'mazeRoom' : 'seedlingDemo'}/procgenRng.js`))
                 .rngFor(seed),
             model,
-            oracle: wrap(oracle),
+            oracle,
             palette,
             bounds: BOUNDS,
         });
@@ -398,6 +421,39 @@ if (CELL !== '') {
      * element was asked for, so a `--elements=none` sweep's rows are unchanged.
      */
     let elementRow = null;
+    /**
+     * ⛓⛓⛓ THE SEEDLING ELEMENT ROW (arc 3 slice 3) — and the two numbers it
+     * keeps APART are the slice's whole finding: **PLACED** is the geometry (the
+     * site fitted, the composite held, the guard is a cut, the flag's lock found
+     * a main-path cut) and **CERTIFIED** is the solver's answer. Today the first
+     * is sometimes true and the second never is, so a single "kept" column would
+     * have averaged a fact with its own refutation.
+     */
+    if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
+        const geometry = seedlingCertification?.geometry ?? model.elements.placed;
+        const p = geometry[0] ?? null;
+        elementRow = {
+            /** the GEOMETRY held (whether or not the level shipped with it) */
+            placed: geometry.length,
+            /** what the model says about the room that was actually generated */
+            ran: model.elements.ran,
+            refused: model.elements.refused?.reason ?? null,
+            certified: seedlingCertification ? seedlingCertification.certified : null,
+            certVerdict: seedlingCertification?.verdict ?? null,
+            certReason: (seedlingCertification?.reasonText ?? '').slice(0, 200) || null,
+            gap: seedlingCertification?.gap ?? null,
+            /** ⛔ 0 BY CONSTRUCTION TODAY — see this file's `--elements=` docblock. */
+            guarded: seedlingCertification?.certified ? 1 : 0,
+            heldAtDoor: seedlingCertification?.heldAtDoor ?? null,
+            params: p ? p.params : null,
+            site: p ? `${p.site.w}x${p.site.h}@${p.site.x},${p.site.y}` : null,
+            tunnel: p ? p.tunnel.length : null,
+            carveOverwrote: p ? p.carveOverwrote : null,
+            tags: p ? p.tags : null,
+            groups: p ? p.groups : null,
+            flagLockCell: p ? p.flagLockCell : null,
+        };
+    }
     if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
         const { mazeCostRecords } = await M('mazeRoom/procgenMaze.js');
         const info = model.elements;
@@ -821,6 +877,86 @@ if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
         say('| n | reason |');
         say('|---|---|');
         for (const [k, n] of rows2) say(`| ${n} | \`${k}\` |`);
+    }
+    say('');
+}
+
+/**
+ * ⛓⛓⛓ **THE SEEDLING ELEMENTS CENSUS — arc 3 slice 3**, and it prints THREE
+ * columns where the maze prints two, because on Seedling *the geometry held* and
+ * *the solver certified it* are different facts today:
+ *
+ *   PLACED     — the site fitted, the composite held, the guard is a CUT of the
+ *                level and the flag's lock found a main-path cut cell.
+ *   CERTIFIED  — the skeleton solved WITH the gadget in it. ⛔ **0, always**:
+ *                ⚖ ruling 22's opener chain needs a solver capability that does
+ *                not exist (arc-3 §10's S1 work order). The refusal SENTENCE is
+ *                printed so the column cannot be read as "it did not work out".
+ *   GUARDED    — certified AND the flag behind the door. 0 by the same line.
+ */
+if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
+    say(`## THE SEEDLING ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS)}\``);
+    say('');
+    say('| kind | N | PLACED | CERTIFIED | guarded | max tunnel | mean overwrote '
+        + '| heldAtDoor true/null |');
+    say('|---|---|---|---|---|---|---|---|');
+    const seen = new Map();
+    for (const r of results) {
+        if (!seen.has(r.kind)) {
+            seen.set(r.kind, { kind: r.kind, n: 0, placed: 0, certified: 0, guarded: 0,
+                tunnel: 0, over: [], held: 0, never: 0, why: {}, certWhy: {} });
+        }
+        const c = seen.get(r.kind);
+        c.n += 1;
+        const e = r.elements;
+        if (!e) continue;
+        if (!e.placed) {
+            const k = e.refused ?? 'unknown';
+            c.why[k] = (c.why[k] ?? 0) + 1;
+            continue;
+        }
+        c.placed += 1;
+        if (e.certified) c.certified += 1;
+        else if (e.certReason) {
+            const k = `${e.certVerdict}: ${e.certReason.slice(0, 110)}`;
+            c.certWhy[k] = (c.certWhy[k] ?? 0) + 1;
+        }
+        c.guarded += e.guarded;
+        c.tunnel = Math.max(c.tunnel, e.tunnel ?? 0);
+        if (e.carveOverwrote !== null) c.over.push(e.carveOverwrote);
+        if (e.heldAtDoor === true) c.held += 1; else if (e.heldAtDoor === null) c.never += 1;
+    }
+    for (const c of seen.values()) {
+        const meanOver = c.over.length
+            ? (c.over.reduce((a, b) => a + b, 0) / c.over.length).toFixed(1) : '—';
+        say(`| ${c.kind} | ${c.n} | **${c.placed}** | **${c.certified}** | ${c.guarded} | `
+            + `${c.tunnel} | ${meanOver} | ${c.held}/${c.never} |`);
+    }
+    say('');
+    say('### the element REFUSALS, by name (the GEOMETRY half)');
+    say('');
+    const all = {};
+    const certAll = {};
+    for (const c of seen.values()) {
+        for (const [k, n] of Object.entries(c.why)) all[k] = (all[k] ?? 0) + n;
+        for (const [k, n] of Object.entries(c.certWhy)) certAll[k] = (certAll[k] ?? 0) + n;
+    }
+    const rows2 = Object.entries(all).sort((a, b) => b[1] - a[1]);
+    if (!rows2.length) say('(every cell placed its element.)');
+    else {
+        say('| n | reason |');
+        say('|---|---|');
+        for (const [k, n] of rows2) say(`| ${n} | \`${k}\` |`);
+    }
+    say('');
+    say('### ⛔⛔ the CERTIFICATION refusals — the SOLVE\'s own words');
+    say('');
+    const rows3 = Object.entries(certAll).sort((a, b) => b[1] - a[1]);
+    if (!rows3.length) say('(no placed gadget reached a certification solve in this sweep.)');
+    else {
+        say('| n | the solve said |');
+        say('|---|---|');
+        for (const [k, n] of rows3) say(`| ${n} | ${k} |`);
     }
     say('');
 }

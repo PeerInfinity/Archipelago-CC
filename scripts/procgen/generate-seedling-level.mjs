@@ -77,6 +77,9 @@ const {
     paletteFor, parseDirectives,
 } = await M('watchGenerate.js');
 const { restrictPalette } = await M('procgenPalette.js');
+const {
+    NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec,
+} = await CORE('elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -110,6 +113,27 @@ const ANCHOR_TRIES = num('anchor-tries', 1);
  */
 const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
     { simulator: false, substrate: 'the Seedling CLI' });
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 3 — **THE ELEMENT**, through the ONE codec
+ * (`procgenCore/elementSpec.js`), the same string the maze CLI takes and the
+ * same one slice 5's `?elements=` will read: `--elements=guard`,
+ * `--elements='guard;len=2'` (quote it — `;` is the shell's).
+ *
+ * ⛔ The default is `none`, and at `none` the binding draws no site, constructs
+ * nothing and spends no draw, so this CLI's payload is byte-identical to the one
+ * it printed before elements existed.
+ *
+ * ⚠ `turns` IS NOT A KNOB HERE even though the codec carries it: ⚖ arc-3 ruling
+ * 1 gives Seedling the STRAIGHT LANE only, so the binding forces `turns = 0` and
+ * REFUSES BY NAME when a spec names anything else (`the-chain-is-arc-4`). ⚠ And
+ * `binds` is the MAZE's knob (which area may hold a key symbol) — Seedling's
+ * area binding is slice 4, so it resolves and is not yet consulted.
+ *
+ * ⛔⛔ **NO PLACED GADGET IS CERTIFIED TODAY.** The readout and the payload say
+ * so with the SOLVE'S OWN refusal text; see `procgenSeedlingElements.js`'s
+ * docblock and the arc-3 as-built §10 (the S1 "nested openers" work order).
+ */
+const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
 /**
  * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
  * `--templates=x,y` narrows the sub-roster this run may draw from; ABSENT is
@@ -238,6 +262,19 @@ if (has('cost')) {
 }
 
 const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, paletteFor(BIOME));
+/**
+ * ⛔ `--elements=` AND `--directed=` DO NOT COMPOSE THIS SLICE, and it refuses
+ * BY NAME rather than silently dropping one. `generateWithDirectives` is the
+ * PAGE's construction path and builds its own model; threading the element
+ * through it is family K (slice 5, `?elements=`), and a flag that was accepted
+ * and ignored would produce a payload naming a gadget the level does not hold.
+ */
+if (DIRECTED && ELEMENTS.name !== ELEMENTS_NONE) {
+    process.stderr.write('generate-seedling-level: --elements= and --directed= do not compose '
+        + 'yet. The directed path is `watchGenerate.generateWithDirectives` (the page\'s), and '
+        + 'the element binding reaches it in slice 5 with `?elements=`. Say one or the other.\n');
+    process.exit(2);
+}
 
 const t0 = Date.now();
 let out;
@@ -252,6 +289,7 @@ try {
         })
         : generateSeedlingLevel({
             seed: SEED, palette: PALETTE, bounds, budget: BUDGET, skeleton: SKELETON,
+            elements: ELEMENTS,
         });
 } catch (e) {
     /**
@@ -331,6 +369,39 @@ if (has('json')) {
     say(`room:   ${out.record.width}x${out.record.height} tiles, level ${out.record.level}`
         + `, skeleton ${formatSkeleton(SKELETON)}`
         + (SKELETON.kind === 'empty' ? ' (the bordered open room)' : ' (CARVED)'));
+    /**
+     * ⛓⛓ THE ELEMENT LINE — and it prints the CERTIFICATION VERDICT, not a
+     * placement, because the two differ today and hiding the difference is the
+     * one thing this slice must not do.
+     */
+    if (ELEMENTS.name !== ELEMENTS_NONE) {
+        const e = s?.elements ?? null;
+        const p = e?.placed?.[0] ?? null;
+        say(`element: ${formatElementSpec(ELEMENTS)} — `
+            + (p
+                ? `${p.instance} at site (${p.site.x},${p.site.y}) ${p.site.w}x${p.site.h}; `
+                    + `block (${p.block.x},${p.block.y}) -> button (${p.button.x},${p.button.y}) `
+                    + `[group A=${p.groups.A}]; guard door (${p.door.x},${p.door.y}) `
+                    + `[tag ${p.tags.lockA}]; FLAG buttonroom (${p.flagCell.x},${p.flagCell.y}) `
+                    + `[group B=${p.groups.B}, tag ${p.tags.flag}]; its LOCK on the main-path cut `
+                    + `(${p.flagLockCell.x},${p.flagLockCell.y}) [tag ${p.tags.lockB}]; tunnel `
+                    + `${p.tunnel} cell(s); the carve had written ${p.carveOverwrote} of its `
+                    + 'cells differently'
+                : `⛔ REFUSED: ${out.model.elements.refused?.reason} — `
+                    + `${out.model.elements.refused?.detail}`));
+        if (p) {
+            const c = e.certification;
+            say(`         ⛔⛔ CERTIFIED: ${e.certified} — ${c.verdict}`
+                + `${c.gap ? ` (${c.gap})` : ''}`);
+            if (c.reasonText) say(`         the solve's own words: ${c.reasonText}`);
+            say('         ⛓ A BLOCK WAS ON THE BUTTON WHEN THE DOOR WAS FIRST CROSSED: '
+                + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
+            if (!e.certified) {
+                say('         ⇒ the level below was generated WITHOUT the gadget (the draws '
+                    + 'were spent either way). ⛔ Nothing solved around it.');
+            }
+        }
+    }
     /**
      * ⛓ SLICE 5: A CONSTRUCTION MAY HAVE NO LADDER AT ALL (`--count=0
      * --directed=…` places onto the bare skeleton), and then there is no
