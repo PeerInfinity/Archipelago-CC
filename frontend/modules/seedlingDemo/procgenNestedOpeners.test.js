@@ -315,3 +315,75 @@ describe('⛓⛓ S1 — THE OPENER CHAIN IS BOUNDED, NAMED, AND REFUSES BY NAME'
         expect(verbsSeen).toContain('hold');
     });
 });
+
+describe('⛓⛓⛓ S1 GAP 2 — no optimism without a discharge that OUTLIVES the walker', () => {
+    /**
+     * ⛓ THE SUBJECT. The flag's stance is behind `lock`(1,5), whose group only
+     * publishes while a Solid sits on `button`(2,5) — and the room has NO block.
+     * The only order that could open it is a `hold` the walker shuts again by
+     * leaving, so guard (iii) refuses to hypothesise it and the stance derivation
+     * says so, at ZERO driven ticks.
+     *
+     * ⛔ BEFORE S1 this shape was `BUDGET_EXHAUSTED`: the stance was derived on
+     * the strength of the hypothesis, the walk was driven, and it grazed the shut
+     * lock for the whole per-target budget (arc-3 §10.2 ARM 4, 797 ticks).
+     */
+    const NO_BLOCK_ROOM = {
+        ground: [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1],
+            [2, 2], [2, 3], [2, 4], [2, 5], [1, 4], [1, 5], [1, 6]],
+        goal: { tx: 6, ty: 1 },
+        entities: [
+            LOCK_B, FLAG_AT(1, 6, '2', '2'),
+            { type: 'lock', tx: 1, ty: 5, attrs: { tset: '1', tag: '3' } },
+            { type: 'button', tx: 2, ty: 5, attrs: { tset: '1' } },
+        ],
+    };
+
+    it('a lock nothing can weigh is a WALL for the hypothesis, not an optimistic '
+        + 'gap — 0 driven ticks and a sentence naming it', () => {
+        const out = solveRoom('s1-no-durable-opener', NO_BLOCK_ROOM);
+        expect(out.verdict).toBe(VERDICT.REFUSED);
+        expect(out.ticksSpent).toBe(0);
+        expect(out.reasonText).toMatch(/lock@16,80 — its group t=1 publishes only while/);
+        expect(out.reasonText).toMatch(/NO block in this room can reach it/);
+        expect(out.reasonText).toMatch(/a `hold` the walker shuts again by leaving/);
+        // ⛔ the budget-burn signature is GONE, not merely unasserted.
+        expect(out.reasonText).not.toMatch(/grazing \d+ solid\(s\)/);
+    });
+
+    /**
+     * ⛓⛓⛓ THE CONTROL FOR THE GUARD'S OWN SCOPE (⚖ ruled with the orchestrating
+     * session, 2026-08-17) — **THE GUARD FIRES INSIDE A HYPOTHESIS AND MUST NOT
+     * REACH THE TOP-LEVEL FALLBACK.**
+     *
+     * `procgenWeigh.test.js`'s three "THE FALLBACK — where no block can arrive,
+     * the PARENT's `hold` stands" rows are L16's shape: a lock on the GOAL WALK's
+     * own frontier, whose `weigh` has no block and whose `hold` is therefore a
+     * walk against a closing door. ⚖ L16 ruled that fallback KEPT, because gating
+     * it off made a committed room's refusal strictly less informative. Guard
+     * (iii) does not touch it: there is no stance hypothesis at the top level, so
+     * the same room still drives the ladder and still ends in `BUDGET_EXHAUSTED`.
+     *
+     * ⛔ THIS ROW IS HERE SO THAT A FUTURE CHANGE THAT MOVED THE LINE WOULD HAVE
+     * TO SAY WHY. The two rooms differ in exactly one thing — whether the lock is
+     * on the goal's own lane or behind a stance derivation — and they get
+     * opposite answers on purpose.
+     */
+    it('CONTROL — the SAME lock on the GOAL WALK\'s own frontier keeps L16\'s '
+        + 'fallback: the ladder runs and the budget is spent', () => {
+        const out = solveRoom('s1-toplevel-fallback', {
+            ground: [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [2, 2], [2, 3]],
+            goal: { tx: 6, ty: 1 },
+            entities: [
+                // the lock is IN THE LANE — the goal walk's own frontier names it
+                { type: 'lock', tx: 4, ty: 1, attrs: { tset: '1', tag: '1' } },
+                { type: 'button', tx: 2, ty: 3, attrs: { tset: '1' } },
+            ],
+        });
+        expect(out.verdict).toBe(VERDICT.BUDGET_EXHAUSTED);
+        expect(out.budgetKind).toBe('per-target-ticks');
+        // ⛓ …and it really did DRIVE — the fallback's whole value is that the
+        // room reports the ladder rather than "strategy failed to apply".
+        expect(out.ticksSpent).toBeGreaterThan(0);
+    });
+});

@@ -2186,7 +2186,9 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked);
+    /** ⛓ guard (iii)'s rejects, kept so the refusal below can NAME them. */
+    const walls = [];
+    const hypothesis = stanceHypothesis(run, blocked, contacts, walls);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
         if (reached) {
@@ -2239,7 +2241,7 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
         + 'the button and none of them plans a corridor from '
         + `(${run.state.x},${run.state.y}). A hold that cannot be stood on is not a `
         + 'strategy for this obstacle.'
-        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis, blocked) : ''),
+        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis, walls, blocked) : ''),
         { obstacle: { kind: 'proximity-hazard', id: `${presser.tag}@${presser.x},${presser.y}` } });
 }
 
@@ -2339,8 +2341,15 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
  * cannot tell "there was nothing to try" from "the one thing to try failed",
  * which are the two answers this whole slice exists to separate.
  */
-function prerequisiteRefusalClause(run, hypothesis, blocked) {
+function prerequisiteRefusalClause(run, hypothesis, walls, blocked) {
     const parts = [];
+    /**
+     * ⛓ GUARD (iii)'S OWN REJECTS FIRST, because they are the sharpest answer
+     * this sentence can carry: an obstacle that was NOT EVEN HYPOTHESISED, and
+     * the mechanical reason nothing could redeem it durably. Without them the
+     * refusal would name the blocks and never the lock (measured on ARM 4).
+     */
+    for (const w of walls) parts.push(`${w.id} — ${w.why}`);
     for (const h of hypothesis) {
         if (h.kind !== 'activator') continue;
         if (!openerPresserFor(run, { id: h.id, tag: h.tag })) {
@@ -2400,7 +2409,10 @@ function rectsOverlapLocal(a, b) {
  * copied), which is the property `deriveShove`'s hypothetical bag already
  * relies on, so no fourteen-family literal is typed here (trap 86).
  */
-function stanceHypothesis(run, blocked = []) {
+/** The empty contact set guard (iii)'s probe falls back to — never mutated. */
+const NO_CONTACTS = Object.freeze(new Set());
+
+function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = []) {
     const wall = new Set(blocked);
     const out = [];
     for (const a of (run.world.activators ?? [])) {
@@ -2408,6 +2420,71 @@ function stanceHypothesis(run, blocked = []) {
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
         if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        /**
+         * ⛓⛓⛓ **GUARD (iii) — NO OPTIMISM WITHOUT A DISCHARGE THAT OUTLIVES THE
+         * WALKER.** PROCGEN ELEMENTS arc 3, slice S1, gap 2.
+         *
+         * ⛔ WHAT THE ARC-3 KICKOFF SAID, AND WHAT THE TRACE SAYS. §10.3 read
+         * ARM 4's budget burn as *"no caller raises `lock`(A) as an order"*. A
+         * caller does: the trace is four rows and the second is
+         * `t0 obs=lock@64,48 verb=hold`. The order is raised by the nested stance
+         * walk's own frontier, exactly as L20's is — and it is a **`hold` on a
+         * plain republishing `Button`**, reached through `resolveWeighStrategy`'s
+         * deliberate L16 fallback when no block can weigh the presser. So the
+         * player stands on the button, the lock opens, the player WALKS OFF to go
+         * through it, `Button.update` re-collides on the same tick and shuts it,
+         * and the walk grazes it for the whole 400-tick budget.
+         *
+         * ⇒ THE GAP IS NOT A MISSING ORDER; IT IS **A HYPOTHESIS REDEEMED BY AN
+         * ORDER THAT DOES NOT OUTLIVE THE WALKER.** A hypothesis is only sound
+         * where something is OBLIGED to redeem it durably: the whole point of
+         * discharging an obstacle for a stance elsewhere is that it STAYS
+         * discharged while the walker goes there.
+         *
+         * ⛔ SO THE UNSOUND ONE IS A WALL, guard (i)'s own language extended —
+         * and the honest answer is then the refusal it replaced, which costs 0
+         * driven ticks instead of 400. The alternative (execute `discharged` as
+         * orders before driving the walk) was REJECTED for a measured reason, not
+         * a stylistic one: it would move the redemption of EVERY existing
+         * hypothesis off the ordinary frontier, and both L20 (`r8-solve-20`) and
+         * D1(a)'s ARM 5 redeem theirs there — a committed tape moving.
+         *
+         * ⚠ ONLY `weigh` IS ASKED, and that is the whole cost. `refineStrategy`
+         * has ALREADY decided durability for every other verb: a `hold` survives
+         * here precisely because its group has a LATCHING presser (`localPublish`
+         * non-null — otherwise the refinement would have said `weigh`), and
+         * `touch`/`kill`/`chest`/`keylock`/`fight` all leave the world changed.
+         * `weigh` is the one answer that can turn back into a non-latching `hold`
+         * underneath the caller, so it is the one that has to be checked by
+         * DERIVING it.
+         *
+         * ⛔ AND IT IS ASKED OF `deriveWeigh`, NOT OF `resolveWeighStrategy`,
+         * because the latter falls back to `resolveHoldStrategy`, which derives a
+         * stance, which calls THIS FUNCTION. One question, no recursion.
+         */
+        if (strategy === 'weigh') {
+            const opener = openerPresserFor(run, { id: a.id, tag: a.tag });
+            const onto = opener ? {
+                tx: Math.floor(opener.presser.x / TILE_SIZE),
+                ty: Math.floor(opener.presser.y / TILE_SIZE),
+            } : null;
+            const derived = onto ? deriveWeigh(run, onto, contacts, blocked) : null;
+            if (!derived || (!derived.plan && !derived.parked)) {
+                walls.push({
+                    id: a.id,
+                    tag: a.tag,
+                    why: opener
+                        ? `its group t=${opener.group} publishes only while a Solid sits on `
+                            + `${opener.presser.tag}@${opener.presser.x},${opener.presser.y}, `
+                            + 'and NO block in this room can reach it — so the only order '
+                            + 'that could open it is a `hold` the walker shuts again by '
+                            + 'leaving. ⚖ Guard (iii): a hypothesis nothing can redeem '
+                            + 'DURABLY is a wall, not an optimistic gap'
+                        : 'no presser publishes its tSet group at all',
+                });
+                continue;
+            }
+        }
         /**
          * ⛓ arc 3 slice S1 — THE TAG RIDES ALONG. A hypothesis entry used to be
          * read for its id alone; a PREREQUISITE has to be turned back into an
@@ -4223,7 +4300,7 @@ function deriveFightStance(run, boss, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked);
+    const hypothesis = stanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) {
@@ -4500,7 +4577,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked);
+    const hypothesis = stanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
@@ -4684,7 +4761,7 @@ function deriveTouchStance(run, row, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked);
+    const hypothesis = stanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };

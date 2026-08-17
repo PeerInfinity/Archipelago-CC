@@ -197,16 +197,42 @@ describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own
     });
 
     /**
-     * ⛓⛓⛓ ARM 4 — THE OPTIMISM, AND IT IS WORSE THAN A REFUSAL. With the block
-     * gone but `lock`(A) in place, the stance IS derived (the hypothesis says
-     * `lock`(A) is discharged) and the walk then GRINDS on the shut lock for the
-     * whole per-target budget, because nothing raises the opener as a sub-order.
+     * ⛓⛓⛓ ARM 4 — THE OPTIMISM, **AND S1 REPLACED IT WITH THE REFUSAL IT WAS
+     * STANDING IN FOR.**
+     *
+     * With the block gone but `lock`(A) in place, slice 3 measured
+     * `BUDGET_EXHAUSTED` after 797 ticks: the stance IS derived (the hypothesis
+     * says `lock`(A) is discharged), the walk is driven, and it grazes a shut
+     * lock for the whole per-target budget.
+     *
+     * ⛔ AND §10.3's READING OF WHY WAS WRONG, WHICH THIS ROW NOW RECORDS. It
+     * said *"no caller raises `lock`(A) as an order"*. One does — the nested
+     * stance walk's own frontier — and the order is a `hold` on a plain
+     * republishing `Button`, taken through `resolveWeighStrategy`'s L16 fallback
+     * because no block can weigh the presser. The player stands on the button,
+     * the lock opens, the player leaves to walk through it, and `Button.update`
+     * shuts it on the same tick. ⇒ the gap is a hypothesis redeemed by an order
+     * that does not OUTLIVE THE WALKER, and guard (iii) makes such an activator a
+     * WALL rather than an optimistic gap.
+     *
+     * ⛓ THE MEASURABLE OUTCOME IS THE POINT: 797 ticks -> **0**, and the sentence
+     * names the lock, its group, its presser and why nothing can redeem it.
      */
-    it('ARM 4 — block gone, lock A kept ⇒ BUDGET_EXHAUSTED grinding on the shut lock', () => {
+    it('ARM 4 — block gone, lock A kept ⇒ a FAST NAMED REFUSAL, 0 driven ticks', () => {
         const out = solveArm('slice3-noblock', { block: null });
-        expect(out.verdict).toBe(VERDICT.BUDGET_EXHAUSTED);
-        expect(out.reasonText).toMatch(/hold stance \(lock@80,128\)/);
-        expect(out.reasonText).toMatch(/grazing \d+ solid\(s\): lock at \(64,48\)/);
+        expect(out.verdict).toBe(VERDICT.REFUSED);
+        // ⛔ THE BUDGET BURN IS GONE, and this is the assertion that says so: the
+        // old row spent 797 ticks reaching a verdict about a budget.
+        expect(out.ticksSpent).toBe(0);
+        expect(out.reasonText).toMatch(/no REACHABLE stance inside buttonroom@48,48/);
+        expect(out.reasonText).toMatch(/THE PREREQUISITES WERE TRIED AND REFUSED/);
+        expect(out.reasonText).toMatch(/lock@64,48 — its group t=1 publishes only while/);
+        expect(out.reasonText).toMatch(/a Solid sits on button@96,48/);
+        expect(out.reasonText).toMatch(/NO block in this room can reach it/);
+        expect(out.reasonText).toMatch(/a `hold` the walker shuts again by leaving/);
+        // ⛔ and NOT the old sentence — a row that matched both would be a row
+        // that had stopped discriminating.
+        expect(out.reasonText).not.toMatch(/grazing \d+ solid\(s\)/);
     });
 
     /**
