@@ -67,12 +67,25 @@
  *
  * ── WHAT IS *NOT* CAUGHT ──────────────────────────────────────────────
  *
- * ⛔ Only `SolverRefusal` and `BotDriverV2Error` become verdicts. A
- * `LevelWorldError` (a record the engine will not build), a `SolverBotError`
- * (this file calling the solver wrongly), a `TypeError` — those are defects
- * in the GENERATOR, and a loop that quietly reverted them would hide its own
- * bugs behind "that candidate didn't work out" (traps 171/173: a conservative
- * ingredient manufactures problems and hides bound defects). They propagate.
+ * ⛔ `SolverRefusal` and `BotDriverV2Error` become verdicts, plus **exactly
+ * two NAMED `SolverBotError` codes** and nothing else. A `LevelWorldError` (a
+ * record the engine will not build), an UNCODED `SolverBotError` (this file
+ * calling the solver wrongly, or an undiagnosed family like `bosslock`), a
+ * `TypeError` — those are defects in the GENERATOR, and a loop that quietly
+ * reverted them would hide its own bugs behind "that candidate didn't work
+ * out" (traps 171/173: a conservative ingredient manufactures problems and
+ * hides bound defects). They propagate.
+ *
+ * ⛓ THE TWO CODES, each bought by its own measurement and each reaching a
+ * DIFFERENT verdict (see `isHammerSafetyRefusal` and
+ * `isStrikeBoundExhaustion` for the arguments):
+ *
+ *   `HAMMER_SAFETY`  (slice 4e, re-keyed 2c)  ⇒ `REFUSED`
+ *   `STRIKE_BOUND_EXHAUSTED` (slice 2d)       ⇒ `BUDGET_EXHAUSTED`
+ *
+ * ⛔ `e.code` is `null` on every other throw in `solverBot`, so the catch is
+ * narrow BY CONSTRUCTION rather than by vocabulary — it cannot drift wider
+ * because a sentence was reworded.
  *
  * ⛔ NO NODE IMPORTS (see `atlasSource.js`).
  */
@@ -81,7 +94,9 @@ import { VERDICT } from '../procgenCore/levelGenerator.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
-import { HAMMER_SAFETY, SolverBotError, SolverRefusal } from './solverBot.js';
+import {
+    HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal,
+} from './solverBot.js';
 import { atlasOf } from './procgenLevel.js';
 import { solveForPage } from './watchSolve.js';
 
@@ -446,6 +461,65 @@ const isHammerSafetyRefusal = (e) => e instanceof SolverBotError
     && e.code === HAMMER_SAFETY;
 
 /**
+ * ⛓⛓⛓ ARC 3 SLICE 2d — THE **SECOND** NAMED CLASS, AND IT IS A BUDGET.
+ *
+ * ⛔ THE MEASUREMENT THAT BOUGHT IT, NOT A HUNCH. Probe 2b (§9b.5) ran the
+ * carved-pairs attribution and found ONE item at **1,307,169 ms — 21 m 47 s —
+ * that ended in `THREW SolverBotError` and killed its whole generation run**:
+ * `execKillByPress`'s bound-exhaustion `fail()`, *"ran the strike schedule
+ * against spinner@64,80 for the whole 2010-tick bound (10 strike(s) planned,
+ * 3 landing(s)) and the body is still in the world"*. It carried no code, so
+ * this file propagated it and `levelGenerator` turned it into
+ * `GenerationAborted`. That is 4b §13.7.iv's own condition — *a family the
+ * loop cannot REJECT is not one the palette can OFFER* — met by a SECOND
+ * class, where §9.5c and §9.8 had only ever seen the `swing … collideLine`
+ * one. ⚖ Escalated by the probe and ruled on: widen, by name.
+ *
+ * ── WHY THIS ONE IS `BUDGET_EXHAUSTED` AND THE HAMMER ONES ARE `REFUSED` ──
+ *
+ * The two coded classes make DIFFERENT claims and get different verdicts, and
+ * conflating them would have been the easy version of this change:
+ *
+ *   `HAMMER_SAFETY`          a claim about the LEVEL — "there is nowhere in
+ *                            this room to stand, step or strike from" ⇒ REFUSED
+ *   `STRIKE_BOUND_EXHAUSTED` a claim about a BOUND THIS PROCESS SET — the
+ *                            schedule ran `SPINNER.hitsMax * (strikeHorizon +
+ *                            HOLD_SLACK)` driven ticks and the body outlived
+ *                            it ⇒ BUDGET_EXHAUSTED, the same class as the
+ *                            400-tick per-target budget below
+ *
+ * Both REVERT the candidate, so the split changes no keep/revert decision —
+ * but `budgetKind` reaches `levelGenerator`'s TRACE, whose sha is part of the
+ * determinism payload, and a trace that called a tick budget a level claim
+ * would be evidence pointing at the room.
+ *
+ * ⛔⛔ AND NOTHING ELSE WIDENS, still. `e.code` is `null` on every other
+ * `SolverBotError` in the tree, so an unkeyed `bosslock`'s throw, a
+ * `LevelWorldError` and a `TypeError` all propagate exactly as before — the
+ * catch is narrow BY CONSTRUCTION and not by vocabulary (traps 171/173).
+ */
+const isStrikeBoundExhaustion = (e) => e instanceof SolverBotError
+    && e.code === STRIKE_BOUND_EXHAUSTED;
+
+/**
+ * The budget a THROWN solve exhausted, or `null` if it exhausted none.
+ *
+ * ⛓ EXPORTED FOR ITS OWN UNIT ROW. The end-to-end subject for the strike
+ * bound is a **21-minute** solve (§9b.5), which is not a gate anything can
+ * run; so the classification is a pure function of (throw, budget) and is
+ * graded as one. ⛔ The ORDER is load-bearing: the strike bound is asked
+ * FIRST because its own message contains no "N ticks" phrase that
+ * `namesTickBudget` could match, and asking the text test first would make
+ * the answer depend on a sentence rather than on a field.
+ */
+export function budgetKindFor(thrown, maxTicksPerTarget) {
+    if (isStrikeBoundExhaustion(thrown)) {
+        return `strike-schedule bound (${thrown.boundTicks} driven ticks)`;
+    }
+    return namesTickBudget(thrown?.message, maxTicksPerTarget) ? 'per-target-ticks' : null;
+}
+
+/**
  * SOLVE ONE LEVEL — the §3.2 seam's oracle half.
  *
  * @param {object} levelRecord   an atlas level record (`procgenLevel`)
@@ -512,7 +586,7 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
         });
     } catch (e) {
         if (!(e instanceof SolverRefusal) && !(e instanceof BotDriverV2Error)
-            && !isHammerSafetyRefusal(e)) throw e;
+            && !isHammerSafetyRefusal(e) && !isStrikeBoundExhaustion(e)) throw e;
         thrown = e;
     }
     const ms = now() - t0;
@@ -531,9 +605,7 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
          * ⇒ a refusal is a budget verdict only when it NAMES a budget this
          * call passed in. Everything else is a claim about the level.
          */
-        const budgetKind = namesTickBudget(thrown.message, b.maxTicksPerTarget)
-            ? 'per-target-ticks'
-            : null;
+        const budgetKind = budgetKindFor(thrown, b.maxTicksPerTarget);
         if (budgetKind) {
             return {
                 ...base,
@@ -543,8 +615,24 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
                 // ⛔ VERBATIM. The refusal's own text is the evidence channel.
                 reasonText: thrown.message,
                 errorName: thrown.name,
-                classifiedBy: `the refusal names the ${b.maxTicksPerTarget}-tick `
-                    + 'per-target budget this call passed in',
+                /**
+                 * ⛓ SLICE 2d — THE SENTENCE NAMES WHICH BOUND, because there
+                 * are now two and they are set in different places: one is a
+                 * number THIS CALL passed in, the other is `solverBot`'s own
+                 * `SPINNER.hitsMax * (strikeHorizon + HOLD_SLACK)` arithmetic
+                 * and no caller can move it. A reader who cannot tell them
+                 * apart cannot tell "lower the budget" from "the kill arm ran
+                 * out of schedule" (trap 335 — a verdict's own words must name
+                 * the arm that reached it).
+                 */
+                classifiedBy: isStrikeBoundExhaustion(thrown)
+                    ? `the kill schedule ran its whole ${thrown.boundTicks}-tick STRIKE `
+                      + 'bound (`SPINNER.hitsMax * (strikeHorizon + HOLD_SLACK)`, '
+                      + '`solverBot`\'s own arithmetic — not a number this call passed '
+                      + 'in) and the body outlived it: a tick budget exhausted, which '
+                      + 'is a claim about the BOUND and not about the room'
+                    : `the refusal names the ${b.maxTicksPerTarget}-tick `
+                      + 'per-target budget this call passed in',
                 rows: thrown.rows ?? [],
                 ticksSpent: (thrown.perTick ?? []).length,
             };
@@ -592,8 +680,18 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
      * here that may honestly differ between two runs, so nothing may decide on
      * it — and nothing does: `levelGenerator` reads `verdict`, `ticks`,
      * `classifiedBy`, `reasonText` and `budgetKind` into the trace, never `ms`.
-     * If a future caller wants to bound cost, bound `ticks`, which is the same
-     * quantity measured in a currency the candidate actually owns.
+     * ⛔ THIS LINE USED TO SAY *"if a future caller wants to bound cost, bound
+     * `ticks`, which is the same quantity measured in a currency the candidate
+     * actually owns"*, AND PROBE 2b MEASURED IT FALSE (kickoff §9b.1, trap
+     * 331). `ticksSpent` is `(thrown.perTick ?? []).length`, and a
+     * `SolverBotError` carries no `perTick` at all — so a 24,231 ms revert
+     * prints `ticks: 0`. Where the column IS honest it does not track ms
+     * either: over 34 solves the median is 1.9 ms per driven tick and the max
+     * 125.2, with the 1282-tick solves among the CHEAPEST. ⇒ `ticks` is a
+     * currency two of its own outcome classes cannot pay in, which is not a
+     * bound. The bounds that DO exist are named where they are enforced
+     * (`maxTicksPerTarget` here, the strike schedule's own in
+     * `execKillByPress`), and both surface through `budgetKind`.
      */
     return {
         ...base,

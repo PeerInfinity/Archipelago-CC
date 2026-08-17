@@ -167,15 +167,46 @@ export function assertTransitSamplesCarryEtas(samples, startTick,
  * no code rather than because it happens to say nothing about a hammer.
  */
 export class SolverBotError extends Error {
-    constructor(message, { code = null } = {}) {
+    constructor(message, { code = null, boundTicks = null } = {}) {
         super(message);
         this.name = 'SolverBotError';
         this.code = code;
+        /**
+         * ⛓ SLICE 2d — THE BOUND THE THROW EXHAUSTED, as a NUMBER.
+         *
+         * `null` on every throw but `STRIKE_BOUND_EXHAUSTED`'s. It exists so
+         * `procgenOracle` can print `budgetKind` from the field instead of
+         * parsing it back out of the English it just wrote — the same
+         * argument as `code` itself, one field on.
+         */
+        this.boundTicks = boundTicks;
     }
 }
 
-/** The one `code` this file stamps: `procgenOracle`'s four-site catch. */
+/** ⛓ SLICE 2c's `code`: `procgenOracle`'s three hammer-safety sites. */
 export const HAMMER_SAFETY = 'HAMMER_SAFETY';
+
+/**
+ * ⛓⛓⛓ ARC 3 SLICE 2d — THE SECOND `code`, AND IT IS A **BUDGET**, NOT A
+ * SAFETY CLAIM.
+ *
+ * `execKillByPress` drives a strike schedule for at most `SPINNER.hitsMax *
+ * (strikeHorizon + HOLD_SLACK)` ticks and `fail()`s when the body is still in
+ * the world at the end of it. Probe 2b (kickoff §9b.5) measured what that
+ * costs when it fires: **one solve ran 21 m 47 s and then aborted its whole
+ * generation run**, because the throw is a `SolverBotError` carrying no code,
+ * so `procgenOracle` propagated it and `levelGenerator` turned it into
+ * `GenerationAborted` — 88.3% of a 24-run bound in a single item.
+ *
+ * ⛔ THE CLAIM THIS CODE MAKES IS NARROW AND IT IS THE REASON THE WIDENING IS
+ * ALLOWED: exhausting a tick budget is not evidence of a defect in the
+ * generator, it is the candidate failing to be solved INSIDE A BOUND THIS
+ * PROCESS SET — exactly what `VERDICT.BUDGET_EXHAUSTED` already means for the
+ * 400-tick per-target budget. So the candidate REVERTS and the run lives.
+ * ⛔⛔ It is a NAMED widening and never a catch-all (traps 171/173): every
+ * other `SolverBotError` still carries `code: null` and still aborts.
+ */
+export const STRIKE_BOUND_EXHAUSTED = 'STRIKE_BOUND_EXHAUSTED';
 
 /**
  * ⛔ THE NAMED REFUSAL. "No path and no strategy" never stalls silently —
@@ -3714,9 +3745,27 @@ function execKillByPress(run, perTick, resolved, ctx) {
             }
         }
         if ((run.spinnerBodies ?? []).some((b) => b.id === plan.id)) {
+            /**
+             * ⛓⛓⛓ ARC 3 SLICE 2d — STAMPED, AND THE STAMP IS WHAT MAKES THIS
+             * A REVERT INSTEAD OF A DEAD RUN.
+             *
+             * ⛔ THE MESSAGE IS UNCHANGED. Probe 2b found this exact sentence
+             * in the most expensive item of the arc (§9b.5) and read the cause
+             * off it; re-wording it here would cost that reading nothing and
+             * buy nothing. What changes is that the throw now SAYS what class
+             * it is, in a field: `STRIKE_BOUND_EXHAUSTED` plus the bound it
+             * exhausted, so `procgenOracle` classifies it as a budget verdict
+             * rather than propagating it as a generator defect.
+             *
+             * ⚠ THIS IS THE ONLY CODED THROW IN THE FILE THAT IS NOT ABOUT
+             * HAMMER SAFETY, and the two are kept apart on purpose: the hammer
+             * sites claim the LEVEL has nowhere to stand, this one claims only
+             * that a bound ran out. They reach different verdicts.
+             */
             fail(`${ctx.what}: ran the strike schedule against ${plan.id} for the whole `
                 + `${bound}-tick bound (${cycles.length} strike(s) planned, `
-                + `${landings.length} landing(s)) and the body is still in the world.`);
+                + `${landings.length} landing(s)) and the body is still in the world.`,
+            { code: STRIKE_BOUND_EXHAUSTED, boundTicks: bound });
         }
     }
     /**

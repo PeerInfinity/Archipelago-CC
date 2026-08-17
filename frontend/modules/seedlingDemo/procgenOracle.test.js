@@ -15,8 +15,9 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
 import {
     DEFAULT_BUDGET, ProcgenOracleError, VERDICT, assertBudget, bootStaging,
-    certifyCollects, collectGoal, solve,
+    budgetKindFor, certifyCollects, collectGoal, solve,
 } from './procgenOracle.js';
+import { HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED, SolverBotError } from './solverBot.js';
 import { bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain } from './procgenLevel.js';
 
 const LEVEL = 900;
@@ -200,6 +201,71 @@ describe('BUDGET_EXHAUSTED — its own class, never a kind of refusal', () => {
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.budgetKind).toBeUndefined();
         expect(out.ms).toBeGreaterThan(3_600_000);
+    });
+});
+
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 2d — THE STRIKE BOUND IS A **BUDGET**,
+ * AND IT IS CLASSIFIED BY NAME.
+ *
+ * ⛔ THE SUBJECT CANNOT BE DRIVEN END TO END AND THAT IS WHY THESE ROWS
+ * EXIST. Probe 2b's own instance of this class (`winding` post-sword seed 1,
+ * kickoff §9b.5) is a **21 m 47 s** solve; a gate nobody can run is not a
+ * gate. So the decision is a pure function of (throw, budget) and is graded as
+ * one, and the end-to-end evidence is the measured re-run recorded in §9d.
+ */
+describe('⛓⛓ arc 3 slice 2d: `budgetKindFor` — two budgets, told apart by FIELD', () => {
+    const strike = (bound = 2010, message = 'ran the strike schedule against '
+        + `spinner@64,80 for the whole ${bound}-tick bound (10 strike(s) planned, `
+        + '3 landing(s)) and the body is still in the world.') =>
+        new SolverBotError(message, { code: STRIKE_BOUND_EXHAUSTED, boundTicks: bound });
+
+    it('⛔ a STRIKE-bound exhaustion names the schedule\'s own bound, from the field', () => {
+        expect(budgetKindFor(strike(), DEFAULT_MAX_TICKS_PER_TARGET))
+            .toBe('strike-schedule bound (2010 driven ticks)');
+        // ⚠ The number is READ, never assumed: a different bound prints itself.
+        expect(budgetKindFor(strike(120), DEFAULT_MAX_TICKS_PER_TARGET))
+            .toBe('strike-schedule bound (120 driven ticks)');
+    });
+
+    /**
+     * ⛔⛔ THE HALF THAT KEEPS THE WIDENING NAMED (traps 171/173), and it is
+     * the mutant gate: widening `isStrikeBoundExhaustion` to "any
+     * `SolverBotError`" turns BOTH of these into budget verdicts.
+     */
+    it('⛔ an UN-CODED `SolverBotError` is no budget at all — it is a defect that aborts', () => {
+        expect(budgetKindFor(new SolverBotError('a bosslock with no key'), 400)).toBe(null);
+        expect(new SolverBotError('a bosslock with no key').code).toBe(null);
+        expect(new SolverBotError('a bosslock with no key').boundTicks).toBe(null);
+    });
+
+    /**
+     * ⛓ THE OTHER CODED CLASS IS NOT A BUDGET EITHER. Slice 2c's
+     * `HAMMER_SAFETY` is a claim about the LEVEL and stays `VERDICT.REFUSED`;
+     * a `budgetKindFor` that answered the same thing to every coded throw
+     * would pass the row above and fail here.
+     */
+    it('⛔ a HAMMER_SAFETY refusal is NOT a budget — the two coded classes diverge', () => {
+        expect(budgetKindFor(new SolverBotError('nowhere to be',
+            { code: HAMMER_SAFETY }), 400)).toBe(null);
+    });
+
+    /**
+     * ⛓⛓ THE ORDER IS LOAD-BEARING, and this row is what pins it. The
+     * strike bound happens to be 2010 and the per-target budget 400; a strike
+     * throw whose text ALSO contains the per-target number must still be
+     * classified by its FIELD, because a message is evidence about the arm
+     * that spoke and never about which bound ran out (trap 335).
+     */
+    it('⛔ the FIELD wins over the TEXT when a strike throw also names the tick budget', () => {
+        const both = strike(2010, 'ran the strike schedule for the whole 2010-tick bound '
+            + 'after 400 ticks of walking, and the body is still in the world.');
+        expect(budgetKindFor(both, 400)).toBe('strike-schedule bound (2010 driven ticks)');
+        // ⚠ NON-VACUITY: that same text, on an UNCODED throw, really does
+        // reach the per-target arm — so the row above is the field winning a
+        // contest and not a text test that never fired.
+        expect(budgetKindFor(new Error('after 400 ticks of walking'), 400))
+            .toBe('per-target-ticks');
     });
 });
 
