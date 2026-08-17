@@ -304,6 +304,159 @@ describe('assertElement — the load-time sweep, and its non-vacuity', () => {
     });
 });
 
+/* ── ⛓⛓⛓ THE SECOND PHASE (arc 3, slice 4a, D1) ──────────────────────── */
+
+/**
+ * ⛔ THE ROOM PROBE THE BINDING BUILDS, drawn as a toy: a 10x10 room whose
+ * interior is a one-wide corridor along row 1 with a spur, the START at (1,1)
+ * and the GOAL at (8,1). Every clause below breaks exactly one rule.
+ */
+const ROOM_FLOOR = new Set(['1,1', '2,1', '3,1', '4,1', '5,1', '6,1', '7,1', '8,1', '3,2']);
+const ROOM_SITE = Object.freeze({ x: 1, y: 1, w: 8, h: 8 });
+const roomProbe = (over = {}) => ({
+    width: 10,
+    height: 10,
+    start: { x: 1, y: 1 },
+    goal: { x: 8, y: 1 },
+    floorAt: (x, y) => ROOM_FLOOR.has(`${x},${y}`),
+    mainPath: [1, 2, 3, 4, 5, 6, 7, 8].map((x) => ({ x, y: 1 })),
+    isCut: () => true,
+    doorLaw: () => null,
+    ...over,
+});
+const onConnectorSite = (over = {}) => ({ ...ROOM_SITE, room: roomProbe(over) });
+
+/** A minimal LEGAL `on-connector` placement: a lock on (5,1), its opener on the
+ *  spur (3,2), and NOT ONE TILE WRITTEN — which is the ordinary corridor case. */
+const doorPlacement = (bad = {}) => ({
+    tiles: [],
+    entities: { blocks: [], buttons: [],
+        obstacles: [{ x: 5, y: 1, id: 'door_K' }, { x: 3, y: 2, id: 'body_K' }], items: [] },
+    doorCells: [{ x: 5, y: 1 }],
+    clearer: [{ x: 3, y: 2 }],
+    demand: [],
+    area: null,
+    symbols: { holds: [], grants: [] },
+    cost: { wall: 0, carved: 0 },
+    ...bad,
+});
+
+const door = (opts = {}) => defineElement({
+    name: 'toy-door',
+    family: 'test',
+    phase: 'on-connector',
+    why: 'a legal on-connector element, so the illegal ones differ in exactly one clause',
+    params: [],
+    construct: opts.construct ?? (() => doorPlacement(opts.bad)),
+});
+
+const constructDoor = (opts, site = onConnectorSite()) => () => door(opts)
+    .instantiate(rngFor(1), {}).construct(site);
+
+describe('⛓⛓⛓ D1 — the `on-connector` phase, one contract and two shapes', () => {
+    it('a phase outside the declared two refuses BY NAME', () => {
+        expect(() => defineElement({ name: 'n', family: 'f', construct: () => ({}),
+            phase: 'after-pass-2' })).toThrow(/the phases are \[pre-carve, on-connector\]/);
+    });
+
+    /** ⛔ THE DEFAULT IS THE OLD LAW — asserted on the element every earlier
+     *  slice shipped, so "pre-carve is unchanged" is a row and not a claim. */
+    it('`pre-carve` is the DEFAULT, and the shipped gadget is one', () => {
+        expect(toy().phase).toBe('pre-carve');
+        expect(REVERSE_PULL_BLOCK.phase).toBe('pre-carve');
+        expect(REVERSE_PULL_BLOCK.instantiate(rngFor(3), {}).phase).toBe('pre-carve');
+    });
+
+    it('an `on-connector` element declares its phase on the concrete instance too', () => {
+        expect(door().phase).toBe('on-connector');
+        expect(door().instantiate(rngFor(1), {}).phase).toBe('on-connector');
+    });
+
+    /** ⛓ THE ORDINARY CORRIDOR CASE WRITES NO TILE AT ALL, and the contract
+     *  accepts it — which is the one thing `pre-carve` may never do. */
+    it('accepts a placement whose `tiles` are EMPTY and whose entities are the whole of it',
+        () => { expect(constructDoor({})().doorCells).toEqual([{ x: 5, y: 1 }]); });
+
+    it('refuses an `on-connector` placement with no entity at all', () => {
+        expect(constructDoor({ bad: { entities: { blocks: [], buttons: [],
+            obstacles: [], items: [] } } })).toThrow(/with NO entity/);
+    });
+
+    it('refuses a write OUTSIDE the site', () => {
+        expect(constructDoor({ bad: { tiles: [{ x: 0, y: 0, tile: TILE_WALL }] } }))
+            .toThrow(/which is OUTSIDE its site/);
+    });
+
+    it('refuses a placement with no `doorCells`, and one with an EMPTY `doorCells`', () => {
+        expect(constructDoor({ bad: { doorCells: undefined } }))
+            .toThrow(/no `doorCells` array/);
+        expect(constructDoor({ bad: { doorCells: [] } }))
+            .toThrow(/EMPTY `doorCells`/);
+    });
+
+    /**
+     * ⚠ THE ENTITY WALK RUNS BEFORE THE DOOR-CELL WALK, so an element that
+     * WALLS its own door cell meets the entity clause first — the lock standing
+     * there is the same cell. The row asserts the sentence the reader ACTUALLY
+     * gets rather than the one the rule order suggests; the door-cell clause's
+     * own gate is the clearer half, which has no entity on it.
+     */
+    it('refuses a door cell the element WALLS, and a clearer on wall', () => {
+        expect(constructDoor({ bad: { tiles: [{ x: 5, y: 1, tile: TILE_WALL }] } }))
+            .toThrow(/put a obstacles entry at \(5,1\), which this element did not write/);
+        expect(constructDoor({ bad: { clearer: [{ x: 7, y: 5 }] } }))
+            .toThrow(/named \(7,5\) in `clearer` and it is not FLOOR after this element/);
+    });
+
+    it('refuses a door cell OUTSIDE the site', () => {
+        expect(constructDoor({ bad: { doorCells: [{ x: 0, y: 1 }] } }))
+            .toThrow(/in `doorCells`, which is OUTSIDE its site/);
+    });
+
+    /** ⛔ AN ENTITY ON THE SKELETON'S OWN FLOOR IS LEGAL HERE AND ONLY HERE. */
+    it('an entity on a cell the SKELETON floored is legal; one on skeleton wall is not', () => {
+        expect(constructDoor({ bad: { entities: { blocks: [], buttons: [],
+            obstacles: [{ x: 7, y: 1, id: 'door_K' }], items: [] },
+        doorCells: [{ x: 7, y: 1 }], clearer: [] } })().doorCells).toEqual([{ x: 7, y: 1 }]);
+        expect(constructDoor({ bad: { entities: { blocks: [], buttons: [],
+            obstacles: [{ x: 7, y: 5, id: 'door_K' }], items: [] },
+        doorCells: [{ x: 7, y: 5 }], clearer: [] } })).toThrow(/did not write as FLOOR/);
+    });
+
+    it('refuses a PORT (it stands in the connector) and a declared AREA (it CUTS one)', () => {
+        expect(constructDoor({ bad: { ports: [{ x: 1, y: 1, dir: 'W', role: 'entry' }] } }))
+            .toThrow(/declared 1 port\(s\)/);
+        expect(constructDoor({ bad: { area: { cells: [{ x: 5, y: 1 }], kind: 'element' } } }))
+            .toThrow(/A door does not MAKE an area, it CUTS one/);
+    });
+
+    /** ⛔ AND THE TRAFFIC RUNS BOTH WAYS: a `pre-carve` element that declared
+     *  the door phase's fields is refused too, so the two shapes cannot blur. */
+    it('refuses `doorCells` on a `pre-carve` element', () => {
+        expect(() => toy({ bad: { doorCells: [{ x: 2, y: 3 }] } })
+            .instantiate(rngFor(1), {}).construct(SITE))
+            .toThrow(/is a `pre-carve` element and declared/);
+    });
+
+    it('refuses an `on-connector` site with no `room` probe, and one missing a member', () => {
+        expect(() => door().instantiate(rngFor(1), {}).construct(ROOM_SITE))
+            .toThrow(/`room` probe has no `floorAt\(\)`/);
+        const { doorLaw, ...rest } = roomProbe();
+        expect(() => door().instantiate(rngFor(1), {})
+            .construct({ ...ROOM_SITE, room: rest })).toThrow(/`room` probe has no `doorLaw\(\)`/);
+        expect(() => door().instantiate(rngFor(1), {})
+            .construct({ ...ROOM_SITE, room: roomProbe({ mainPath: undefined }) }))
+            .toThrow(/missing width\/height\/start\/goal\/mainPath/);
+    });
+
+    /** ⛓ A REFUSAL IS STILL A VALUE, in this phase as in the other. */
+    it('an on-connector element may refuse a room BY NAME', () => {
+        const refuser = { construct: () => ({
+            refused: { reason: 'no-cut-cell', detail: 'the toy says so' } }) };
+        expect(constructDoor(refuser)().refused.reason).toBe('no-cut-cell');
+    });
+});
+
 describe('the direction vocabulary is ONE vocabulary', () => {
     it('PORT_DIRS and DIR_DELTA agree, in the maze engine\'s INPUTS order', () => {
         expect(PORT_DIRS).toEqual(['N', 'S', 'E', 'W']);

@@ -16,6 +16,37 @@
  * stay as they are (`demand`) — the three things a template never needs because
  * a template is placed onto geometry somebody else already fixed.
  *
+ * ── ⛓⛓⛓ **TWO PHASES, ONE CONTRACT** (arc 3, slice 4a, D1) ───────────
+ *
+ * The paragraph above is the `pre-carve` phase and it is still the DEFAULT: the
+ * element writes its WHOLE rectangle, the rectangle is reserved before the
+ * connector runs, and the carve is told to keep off. That is exactly right for a
+ * gadget that brings its own room (the reverse-pull block) and exactly wrong for
+ * a DOOR, whose geometry is a function of the corridor it stands in — a corridor
+ * that does not exist until the connector has carved it.
+ *
+ * So an element declares `phase`:
+ *
+ *   `pre-carve`    (default) — today's law, unchanged byte for byte.
+ *   `on-connector` — CONSTRUCTED AFTER THE CARVE. The binding hands it the
+ *                    room's interior as its site plus a READ-ONLY `room` probe
+ *                    (below), and it writes a SPARSE tile set — only the cells
+ *                    it CHANGES (wall cells grown, floor cells carved) — plus
+ *                    its entities, its DOOR CELLS and its CLEARER cells.
+ *
+ * ⛔ AN `on-connector` ELEMENT DRAWS NOTHING ITS ROOM DECIDES. Its geometry is a
+ * function of the skeleton; the only draw it is licensed to spend is a CHOICE
+ * among cells the room offers equally (the kill gate draws ONE index over its
+ * qualifying door cells, declared in its own docblock and nowhere else). Trap
+ * 321's *"absence is a draw"* does not apply, because there is no absent
+ * parameter — there is no parameter.
+ *
+ * ⛔ AND THE DOOR LAW IS THE BINDING'S, NOT THIS FILE'S. `doorCells`/`clearer`
+ * are DECLARED here and adjudicated by the binding with the very function it
+ * adjudicates a door TEMPLATE with (`procgenSeedling`'s `doorLawRefusal`) — one
+ * law, two callers. This file only checks that the declaration is WELL FORMED,
+ * which is the same division of labour `assertDoorCells` has on the palette side.
+ *
  * ⛔ EVERYTHING ELSE IS THE TEMPLATE CONTRACT, REUSED AND NOT RE-SPELLED.
  * `params` is the SAME schema array `[{key, domain, default, why}]`, checked by
  * the SAME `assertParamSchema`; the parameters are drawn by the SAME
@@ -116,6 +147,57 @@ export const DIR_DELTA = Object.freeze({
 export const PORT_ROLES = Object.freeze(['entry', 'exit']);
 
 /**
+ * ⛓⛓⛓ **THE TWO PHASES** — see the file docblock. `pre-carve` is the default
+ * and is what every element written before arc-3 slice 4a is.
+ */
+export const ELEMENT_PHASES = Object.freeze(['pre-carve', 'on-connector']);
+export const PHASE_PRE_CARVE = 'pre-carve';
+export const PHASE_ON_CONNECTOR = 'on-connector';
+
+/**
+ * ⛓⛓ **THE ROOM PROBE — WHAT AN `on-connector` ELEMENT IS ALLOWED TO KNOW**,
+ * and the list is closed on purpose.
+ *
+ * The binding builds it ONCE, over the finished SKELETON (`base`), and it is
+ * READ-ONLY: an element that could write through it would be editing the room it
+ * is being asked about. The seven members are exactly what a door needs and
+ * nothing more —
+ *
+ *   `width`,`height`  the room, so a cell can be tested for the border ring
+ *   `start`,`goal`    `{x,y}`, the two cells the level is about
+ *   `floorAt(x,y)`    the SKELETON's terrain, one reading (the binding's cached
+ *                     ground mask, never a second scan)
+ *   `mainPath`        slice 1's ONE canonical shortest start->goal path, the
+ *                     cells a door may stand on
+ *   `isCut(cell)`     slice 2's clause 1 as a FUNCTION — walling this one cell
+ *                     disconnects the goal from the start
+ *   `doorLaw({paint, doorCells, clearer})` the BINDING'S OWN door law, handed in
+ *                     so a proposal is filtered by the very rule that will
+ *                     adjudicate it. ⛔ This is what "ONE door law, both callers"
+ *                     means at the element end: the element does not re-derive
+ *                     the law, it ASKS it.
+ */
+export function assertRoomProbe(room, owner) {
+    const needFns = ['floorAt', 'isCut', 'doorLaw'];
+    for (const fn of needFns) {
+        if (typeof room?.[fn] !== 'function') {
+            fail(`elements: ${owner} was offered a site whose \`room\` probe has no `
+                + `\`${fn}()\`. An \`on-connector\` element's geometry is a FUNCTION of the `
+                + `room, so the probe is not optional — the members are [${needFns.join(', ')}] `
+                + 'plus width/height/start/goal/mainPath.');
+        }
+    }
+    const okCell = (c) => c && Number.isInteger(c.x) && Number.isInteger(c.y);
+    if (!Number.isInteger(room.width) || !Number.isInteger(room.height)
+        || !okCell(room.start) || !okCell(room.goal) || !Array.isArray(room.mainPath)) {
+        fail(`elements: ${owner}'s \`room\` probe is missing width/height/start/goal/mainPath `
+            + `(got ${JSON.stringify({ width: room.width, height: room.height,
+                start: room.start, goal: room.goal, mainPath: room.mainPath?.length })}).`);
+    }
+    return room;
+}
+
+/**
  * ⛓⛓⛓ **THE ID ALLOCATOR — ONE OF IT, AND SLICE 4 IS WHY IT MOVED HERE.**
  *
  * A guard gadget's three ids are indexed from the FIRST one (`button_A0` /
@@ -174,11 +256,24 @@ const onSiteEdge = (site, x, y) => inSite(site, x, y)
  * then carves around — a defect that would surface as a broken level three
  * layers away from its cause.
  */
-function assertPlacementShape(placement, { name, site, values, assertPlacement }) {
+function assertPlacementShape(placement, { name, site, values, assertPlacement, phase }) {
     const where = `element "${name}"${values ? ` ${JSON.stringify(values)}` : ''}`;
+    const onConnector = phase === PHASE_ON_CONNECTOR;
 
     // ── tiles ────────────────────────────────────────────────────────
-    if (!Array.isArray(placement?.tiles) || placement.tiles.length === 0) {
+    if (!Array.isArray(placement?.tiles)) {
+        fail(`elements: ${where} produced no \`tiles\` array.`);
+    }
+    /**
+     * ⛔ THE NON-EMPTY DEMAND IS `pre-carve`'s ALONE, and the asymmetry is the
+     * whole point of the phase. A pre-carve element with an empty footprint is
+     * one the binding would stamp as FIXED and then carve straight through. An
+     * `on-connector` element writing NOTHING is the ORDINARY case: a kill gate
+     * on a one-wide corridor grows zero wall cells and finds its spinner pocket
+     * already ground, so its entire geometry is two entities on cells the carve
+     * made. It is `entities` that may not be empty there (below).
+     */
+    if (!onConnector && placement.tiles.length === 0) {
         fail(`elements: ${where} produced no \`tiles\`. An element with an empty footprint `
             + 'is one the binding would stamp as FIXED and then carve straight through.');
     }
@@ -206,9 +301,24 @@ function assertPlacementShape(placement, { name, site, values, assertPlacement }
         written.set(k, t.tile);
     }
     const isFloorCell = (x, y) => written.get(posKey(x, y)) === TILE_FLOOR;
+    /**
+     * ⛓ **STANDABLE ≠ WRITTEN AS FLOOR, AND ONLY IN THE `on-connector` PHASE.**
+     * A pre-carve element writes its WHOLE rectangle, so "floor" and "a cell I
+     * wrote TILE_FLOOR" are the same set and `isFloorCell` is the whole test. An
+     * `on-connector` element writes SPARSELY: its lock stands on a corridor cell
+     * the CARVE made, which it did not write and must not (writing it would
+     * claim a cell it does not own). ⇒ the test is *floor AFTER me*: what I
+     * wrote if I wrote it, and the room's own skeleton if I did not.
+     */
+    const standable = (x, y) => {
+        const w = written.get(posKey(x, y));
+        if (w !== undefined) return w === TILE_FLOOR;
+        return onConnector ? Boolean(site.room.floorAt(x, y)) : false;
+    };
 
     // ── entities ─────────────────────────────────────────────────────
     const ents = placement.entities;
+    let entityCount = 0;
     for (const kind of ['blocks', 'buttons', 'obstacles', 'items']) {
         if (!Array.isArray(ents?.[kind])) {
             fail(`elements: ${where} has no \`entities.${kind}\` array. All four are `
@@ -216,14 +326,21 @@ function assertPlacementShape(placement, { name, site, values, assertPlacement }
                 + 'absent key means "none" or "this element does not do that".');
         }
         for (const en of ents[kind]) {
+            entityCount += 1;
             if (!Number.isInteger(en?.x) || !Number.isInteger(en?.y)) {
                 fail(`elements: ${where} put a ${kind} entry at ${JSON.stringify(en)} — an `
                     + 'entity is an integer cell.');
             }
-            if (!isFloorCell(en.x, en.y)) {
+            if (!standable(en.x, en.y)) {
+                /** ⛔ THE `pre-carve` SENTENCE IS UNCHANGED WORD FOR WORD. It is
+                 *  asserted by `elements.test.js`, and a wording fix that
+                 *  reddened a row would be trap 337 arriving through the door
+                 *  this phase opened. */
                 fail(`elements: ${where} put a ${kind} entry at (${en.x},${en.y}), which this `
-                    + 'element did not write as FLOOR. Blocks, buttons, obstacles and items '
-                    + 'all sit ON floor; one on wall is an entity nothing can ever reach.');
+                    + `element did not write as FLOOR${onConnector
+                        ? ' and which the skeleton did not leave as floor either' : ''}. `
+                    + 'Blocks, buttons, obstacles and items all sit ON floor; one on wall is '
+                    + 'an entity nothing can ever reach.');
             }
             if (kind !== 'blocks' && (typeof en.id !== 'string' || !en.id)) {
                 fail(`elements: ${where} put a ${kind} entry at (${en.x},${en.y}) with no \`id\`. `
@@ -231,13 +348,90 @@ function assertPlacementShape(placement, { name, site, values, assertPlacement }
             }
         }
     }
+    if (onConnector && entityCount === 0) {
+        fail(`elements: ${where} is an \`on-connector\` element with NO entity. Its tiles may `
+            + 'be empty — a door on a one-wide corridor changes no terrain at all — so the '
+            + 'entities are the whole of what it puts in the room, and a placement with '
+            + 'neither is a placement that placed nothing.');
+    }
+
+    // ── doorCells / clearer — the `on-connector` phase's own two lists ──
+    /**
+     * ⛓⛓⛓ **A DOOR DECLARES ITS DOOR CELLS AND ITS CLEARER, exactly as a door
+     * TEMPLATE does** (`procgenPalette.assertDoorCells`, arc-3 slice 2 §9.3).
+     * Same two words, same meaning, one law adjudicating both — the element's
+     * are ABSOLUTE cells where the template's are offsets from an anchor, and
+     * that is the only difference.
+     *
+     * ⛔ FOUR SILENT MIS-DECLARATIONS ARE REFUSED HERE, and they are the palette
+     * check's four with the phase's own wording: no door cells at all (the law
+     * would wall the empty set and pass every candidate — a door that gates
+     * nothing); a door cell OUTSIDE the site; a door cell the element itself
+     * writes as WALL (the law's open half is the seal check's answer, and a cell
+     * the element walls is never walkable); and a clearer cell that is not floor
+     * after the element (the thing that OPENS the door has to be somewhere the
+     * player can stand).
+     */
+    if (onConnector) {
+        for (const [field, cells] of [['doorCells', placement.doorCells],
+            ['clearer', placement.clearer]]) {
+            if (!Array.isArray(cells)) {
+                fail(`elements: ${where} is an \`on-connector\` element with no \`${field}\` `
+                    + 'array. Both are DECLARED even when empty — `clearer` is empty for a '
+                    + 'family whose opener IS its door cell (a block standing in the gap) — '
+                    + 'and an absent one reads as "unknown" where "none" was meant.');
+            }
+            for (const c of cells) {
+                if (!Number.isInteger(c?.x) || !Number.isInteger(c?.y)) {
+                    fail(`elements: ${where} named ${JSON.stringify(c)} in \`${field}\`; a `
+                        + 'door cell is an integer cell.');
+                }
+                if (!inSite(site, c.x, c.y)) {
+                    fail(`elements: ${where} named (${c.x},${c.y}) in \`${field}\`, which is `
+                        + `OUTSIDE its site ${JSON.stringify({ x: site.x, y: site.y,
+                            w: site.w, h: site.h })}.`);
+                }
+                if (!standable(c.x, c.y)) {
+                    fail(`elements: ${where} named (${c.x},${c.y}) in \`${field}\` and it is `
+                        + 'not FLOOR after this element. A door cell the element WALLS is one '
+                        + 'the law would wall twice and the player could never stand in; a '
+                        + 'clearer on wall is an opener nobody can reach.');
+                }
+            }
+        }
+        if (placement.doorCells.length === 0) {
+            fail(`elements: ${where} declared an EMPTY \`doorCells\`. The door law walls the `
+                + 'door cells and asks whether the goal is still reachable — over the empty '
+                + 'set it asks nothing and every placement passes, which is a legality gate '
+                + 'that does not gate.');
+        }
+    } else if (placement.doorCells !== undefined || placement.clearer !== undefined) {
+        fail(`elements: ${where} is a \`${PHASE_PRE_CARVE}\` element and declared `
+            + '`doorCells`/`clearer`. Those are the `on-connector` phase\'s fields: a '
+            + 'pre-carve element\'s door is INSIDE the rectangle it wrote, and the binding '
+            + 'checks it is a cut of the finished room (the guard\'s own '
+            + '`the-guard-is-not-a-cut-of-the-level`) rather than running the door law on it.');
+    }
 
     // ── ports ────────────────────────────────────────────────────────
-    if (!Array.isArray(placement.ports) || placement.ports.length === 0) {
+    /**
+     * ⛔ AN `on-connector` ELEMENT HAS NO PORTS, AND SAYING SO IS A RULE RATHER
+     * THAN AN OMISSION. A port is where a CONNECTOR attaches to a rectangle the
+     * carve was told to keep off; this element is standing IN the connector
+     * already. A port declared here would name a mouth into a site that is the
+     * whole room.
+     */
+    if (onConnector) {
+        if (Array.isArray(placement.ports) && placement.ports.length > 0) {
+            fail(`elements: ${where} is an \`on-connector\` element and declared `
+                + `${placement.ports.length} port(s). It stands IN the connector — there is `
+                + 'nothing for a connector to attach to.');
+        }
+    } else if (!Array.isArray(placement.ports) || placement.ports.length === 0) {
         fail(`elements: ${where} declared no \`ports\`. An element with no port is one no `
             + 'connector can reach — the carve may not enter its rectangle (⚖ ruling 4).');
     }
-    for (const p of placement.ports) {
+    for (const p of (placement.ports ?? [])) {
         if (!PORT_ROLES.includes(p?.role)) {
             fail(`elements: ${where} declared a port with role ${JSON.stringify(p?.role)}; `
                 + `the roles are [${PORT_ROLES.join(', ')}].`);
@@ -287,18 +481,36 @@ function assertPlacementShape(placement, { name, site, values, assertPlacement }
     }
 
     // ── area ─────────────────────────────────────────────────────────
-    if (placement.area?.kind !== 'element') {
+    /**
+     * ⛔⛔ **AN `on-connector` ELEMENT DECLARES `area: null`, AND THAT IS A
+     * CLAIM RATHER THAN A GAP.** A pre-carve element declares itself an area
+     * because the partition's blob rule (an all-floor 2×2 square) would never
+     * find its 1-wide push lane. A DOOR is the opposite thing: it does not MAKE
+     * an area, it CUTS one, and the two sides it cuts are the room's own — which
+     * is exactly what slice 4b's area binding will partition. An element that
+     * declared its door cell an area would be offering the partition a
+     * one-cell region that is not a place at all.
+     */
+    if (onConnector) {
+        if (placement.area !== null) {
+            fail(`elements: ${where} is an \`on-connector\` element and declared an \`area\` `
+                + `(${JSON.stringify(placement.area)}). A door does not MAKE an area, it CUTS `
+                + 'one; `area: null` is how this phase says so, and the two sides belong to '
+                + 'the room\'s own partition.');
+        }
+    } else if (placement.area?.kind !== 'element') {
         fail(`elements: ${where} declared an area of kind ${JSON.stringify(placement.area?.kind)}. `
             + 'An element DECLARES itself an area so the partition never has to find it — '
             + 'and the maze\'s blob rule (an all-floor 2×2 square) would never find a '
             + '1-wide push lane at all.');
     }
-    if (!Array.isArray(placement.area.cells) || placement.area.cells.length === 0) {
+    if (!onConnector && (!Array.isArray(placement.area.cells)
+        || placement.area.cells.length === 0)) {
         fail(`elements: ${where} declared an EMPTY area. An area with no cells holds no item `
             + 'and joins no edge.');
     }
     const seenArea = new Set();
-    for (const c of placement.area.cells) {
+    for (const c of (placement.area?.cells ?? [])) {
         if (!isFloorCell(c?.x, c?.y)) {
             fail(`elements: ${where} put (${c?.x},${c?.y}) in its area, which it did not write `
                 + 'as FLOOR. An area is somewhere the player can BE.');
@@ -364,8 +576,12 @@ function assertConstructOutput(out, ctx) {
  * @param {Function} [o.assertPlacement]  `(placement, {values, site, fail})` —
  *   the invariants only THIS element can state. Run on every construct, beside
  *   the contract's own.
+ * @param {'pre-carve'|'on-connector'} [o.phase]  WHEN the binding constructs it
+ *   — see the file docblock. Defaults to `pre-carve`, which is every element
+ *   written before arc-3 slice 4a and is unchanged byte for byte.
  */
-export function defineElement({ name, family, params = [], why, construct, assertPlacement = null }) {
+export function defineElement({ name, family, params = [], why, construct,
+    assertPlacement = null, phase = PHASE_PRE_CARVE }) {
     if (typeof name !== 'string' || !name) {
         fail('elements: an element needs a name — it is the catalogue key, the cost record\'s '
             + '`element` field and what a spec string asks for.');
@@ -378,6 +594,12 @@ export function defineElement({ name, family, params = [], why, construct, asser
     if (assertPlacement !== null && typeof assertPlacement !== 'function') {
         fail(`elements: element "${name}"'s \`assertPlacement\` must be a function.`);
     }
+    if (!ELEMENT_PHASES.includes(phase)) {
+        fail(`elements: element "${name}" declared phase ${JSON.stringify(phase)}; the phases `
+            + `are [${ELEMENT_PHASES.join(', ')}]. "${PHASE_PRE_CARVE}" is the default and is `
+            + `today's law (the whole rectangle written, reserved before the connector); `
+            + `"${PHASE_ON_CONNECTOR}" is constructed AFTER the carve and writes sparsely.`);
+    }
     // ⛔ ASKED HERE FIRST so the refusal names an ELEMENT. `defineTemplate` asks
     // the same question of the same array a line later and would answer it in
     // the word "template" — one schema language, but the reader who typed the
@@ -388,6 +610,7 @@ export function defineElement({ name, family, params = [], why, construct, asser
     return Object.freeze({
         name,
         family,
+        phase,
         params: base.params,
         why,
         /**
@@ -401,13 +624,21 @@ export function defineElement({ name, family, params = [], why, construct, asser
             const concrete = {
                 name: row.name,
                 family: row.family,
+                phase,
                 params: row.params,
                 instance: row.instance,
                 why: row.why,
                 construct(site) {
                     assertSite(site, `element "${name}"`);
+                    /** ⛔ THE PROBE IS PART OF THE SITE for this phase, and it
+                     *  is asked for HERE rather than trusted: an element whose
+                     *  geometry is a function of the room cannot be handed a
+                     *  site with no room and answer anything honest. */
+                    if (phase === PHASE_ON_CONNECTOR) {
+                        assertRoomProbe(site.room, `element "${name}"`);
+                    }
                     return assertConstructOutput(construct(row.params, site, rng), {
-                        name, site, values: row.params, assertPlacement,
+                        name, site, values: row.params, assertPlacement, phase,
                     });
                 },
             };
