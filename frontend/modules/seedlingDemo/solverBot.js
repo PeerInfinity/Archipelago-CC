@@ -862,6 +862,82 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
         tx: Math.floor(presser.x / TILE_SIZE), ty: Math.floor(presser.y / TILE_SIZE),
     };
     const derived = deriveWeigh(run, onto, contacts, blocked);
+    /**
+     * ⛓⛓⛓ **THE DWELL ARM — PROCGEN ELEMENTS arc 3, slice S1, gap 3.**
+     *
+     * A gadget can arrive ALREADY SOLVED: the block is on the button before the
+     * first tick, so the group publishes on tick 1 and the lock's fade runs from
+     * there. `deriveWeigh` finds no lean to order — there is no distance — and
+     * before S1 that fell through to the parent's `hold`, whose stance is the
+     * button's own cell, WHICH THE BLOCK OCCUPIES. So the one room whose puzzle
+     * was already done refused at a stance nobody needed to stand in
+     * (slice 3 D1(a) ARM 5, arc-3 §10.3 gap 3).
+     *
+     * ⇒ resolve to the weigh MINUS its shove: `runDwell` alone, waiting out the
+     * SAME fade `deriveHold` computes, with **no stance at all** — the presser is
+     * held by the block and the player need not stand anywhere. The consumer
+     * already treats `stance` as optional (`if (plan.resolved.stance)`), so
+     * "nowhere to stand" is expressible without a second walk shape.
+     *
+     * ⛔ `runDwell`'s SHUT-BEFORE REFUSAL IS LEFT ARMED, exactly as `execWeigh`'s
+     * docblock argues for the shove arm: it fails by name if the group is ALREADY
+     * open when the dwell starts. Here that is a sharper control than there — it
+     * is precisely the claim "the block's press has not yet been redeemed" — and
+     * a branch that swallowed it would report a vacuous success on a lock that
+     * was never shut. [[feedback_graceful_fallback_vacuous_replay]]
+     *
+     * ⚠ AND IT DOES NOT PREEMPT A REAL LEAN. The arm is reached only when
+     * `deriveWeigh` found NO plan, so a room where some other block can still be
+     * shoved onto the presser takes the shove; only a room where the sole answer
+     * is the block already sitting there dwells.
+     */
+    if (!derived.plan && derived.parked) {
+        const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+            `solverBot weigh/dwell (${obstacle.id})`);
+        const hold = deriveHold(run, resolvedPresser, opener);
+        return {
+            strategy: 'weigh',
+            postCondition: 'press',
+            dwellOnly: true,
+            target: { x: presser.x, y: presser.y },
+            /**
+             * ⛓ THE RECORD STILL NAMES THE BLOCK AND THE BUTTON, because the
+             * lifted claim is read from the record and "which block is on which
+             * button" is the whole of what it asks. `sinceTick` is 0 and it is
+             * not a guess: the block is where the LEVEL RECORD put it and no
+             * tick of this run has moved it.
+             */
+            parked: {
+                block: derived.parked.blockId,
+                tile: { ...onto },
+                from: { ...derived.parked.from },
+                sinceTick: 0,
+            },
+            dwell: {
+                ticks: hold.ticks,
+                until: hold.until,
+                why: `${derived.parked.blockId} was parked on `
+                    + `${presser.tag}@${presser.x},${presser.y} before the first tick and is `
+                    + 'not going to walk off it — `Button.update` re-collides '
+                    + '`["Player","Enemy","Solid"]` EVERY tick (`Button.as:27-39`) and a '
+                    + '`PushableBlock` is a `"Solid"` (`PushableBlock.as:27`). There is no '
+                    + 'lean to order, so this is the weigh MINUS its shove: the player '
+                    + 'waits out the fade wherever the walk left them.',
+            },
+            rejected: [{
+                option: 'shove the block onto the presser',
+                why: `${derived.parked.blockId} is ALREADY on (${onto.tx},${onto.ty}) — `
+                    + '`runShove` refuses a lean that moves nothing by name, and a verb '
+                    + 'whose check cannot fail is not a verb',
+            }, {
+                option: 'hold',
+                why: `the parent's fallback would put the stance on `
+                    + `${presser.tag}@${presser.x},${presser.y}'s own cell, which the BLOCK `
+                    + 'occupies — the pre-solved gadget is exactly the room where the hold '
+                    + 'has nowhere to stand (arc-3 §10.3 gap 3)',
+            }, ...derived.rejected, ...opener.rejected],
+        };
+    }
     if (!derived.plan) {
         /**
          * ⛔⛔⛔ `weigh` PREEMPTS `hold`; IT DOES NOT REPLACE IT — and L16 is
@@ -975,6 +1051,8 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
     const planOpts = solverPlanOpts(run, contacts);
     const found = [];
     const rejected = [];
+    /** ⛓ arc 3 slice S1 gap 3 — the block that is ALREADY on `onto`, if any. */
+    let parked = null;
     const dirs = Object.keys(SHOVE_STEP);
     for (const row of (run.world.pushables ?? [])) {
         if (blocked.includes(row.id)) continue;
@@ -999,17 +1077,39 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
         };
         if (from.tx === onto.tx && from.ty === onto.ty) {
             /**
-             * ⛔ ALREADY THERE — and that is a DEFECT REPORT, not a success.
+             * ⛓⛓⛓ **ALREADY HOME — arc 3 slice S1 (gap 3), AND IT IS AN
+             * OUTCOME, NOT A DEFECT REPORT.**
+             *
+             * This branch used to be a pure rejection on the reading that
              * `refineStrategy` only sends a lock here when its group is
-             * unpublished, so a block already on the presser means the two
-             * halves disagree about what is pressing what. `runShove` refuses
-             * this case by name too ("a shove that moves nothing is a check
-             * that cannot fail"); saying so here keeps the reason readable.
+             * UNPUBLISHED, so a block already on the presser meant the two
+             * halves disagreed. They do not: `openActivators` is what
+             * `refineStrategy` reads, and a lock whose block has been parked
+             * since the room was BUILT is still shut at tick 0 — the fade
+             * (`opensOnTick`, 101 ticks) has not run because no tick has. So
+             * "the group is unpublished AND a block is on the button" is the
+             * ordinary state of a pre-solved gadget on its first tick, and the
+             * honest verb for it is the weigh MINUS its shove.
+             *
+             * ⛔ IT IS REPORTED SEPARATELY FROM `plan`, because "no block can
+             * reach the presser" and "a block is already on it" are opposite
+             * facts that both make `plan` null, and the caller's answers to
+             * them are opposite too (`resolveWeighStrategy`: the parent's
+             * `hold` fallback vs a dwell-only resolution).
+             *
+             * ⚠ THE REJECTION STAYS as well, so the trace still says why this
+             * block was not SHOVED — `runShove` refuses a zero-distance lean by
+             * name ("a shove that moves nothing is a check that cannot fail")
+             * and a reader of the weigh's own reasons should still find that.
              */
+            parked = parked ?? { blockId: row.id, from };
             rejected.push({
                 option: `weigh with ${row.id}`,
-                why: `it is ALREADY on (${onto.tx},${onto.ty}) and the group is still `
-                    + 'unpublished — nothing this verb does would change that',
+                why: `it is ALREADY on (${onto.tx},${onto.ty}), so there is no lean to `
+                    + 'order — `runShove` refuses a shove that moves nothing by name. The '
+                    + 'press it is already making is what a DWELL waits out (arc 3 slice '
+                    + 'S1 gap 3), and this derivation reports it as `parked` rather than '
+                    + 'as a failure to reach',
             });
             continue;
         }
@@ -1078,7 +1178,7 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
                     + 'considered and has no material to work with',
             });
         }
-        return { plan: null, rejected };
+        return { plan: null, parked, rejected };
     }
     /**
      * ⛔ SMALLEST `k`, THEN THE TABLE'S OWN DIRECTION ORDER, THEN THE BLOCK'S
@@ -1092,6 +1192,7 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
     const [plan, ...alternatives] = found;
     return {
         plan,
+        parked,
         rejected: [
             ...alternatives.map((a) => ({
                 option: `weigh ${a.dir} k=${a.k} with ${a.blockId}`,
@@ -2254,6 +2355,26 @@ function execShove(run, perTick, resolved, ctx) {
  * fallback that reports a vacuous success. [[feedback_graceful_fallback_vacuous_replay]]
  */
 function execWeigh(run, perTick, resolved, ctx) {
+    /**
+     * ⛓⛓ THE DWELL ARM (arc 3 slice S1, gap 3) — the same executor minus the
+     * half there is no work for. ⛔ It is a BRANCH here rather than a second
+     * executor row because the two arms end at the same postCondition, the same
+     * `runDwell` and the same record shape: a `weigh` is "a Solid is on the
+     * presser and the player waited out the fade", and whether the Solid had to
+     * be pushed there is a fact about the ROOM, not about the verb.
+     */
+    if (resolved.dwellOnly) {
+        const only = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade, block already home)`);
+        return {
+            kind: 'weigh',
+            postCondition: 'press',
+            dwellOnly: true,
+            presser: { ...resolved.target },
+            parked: { ...resolved.parked },
+            dwell: only,
+            ticks: only.ticks ?? 0,
+        };
+    }
     const shove = runShove(run, perTick, resolved.shove, `${ctx.what} (park the block)`);
     const dwell = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade)`);
     return {

@@ -536,6 +536,16 @@ export function seedlingElementEntities({ placed, groupIdFor, tagFor, ids }) {
  *    plan park the block, cross, and then be given credit for a block it had
  *    since shoved away.
  *
+ * ⛓⛓ **AND A GADGET CAN ARRIVE ALREADY PARKED** (arc 3 slice S1, gap 3). Where
+ * the block was on the button before the first tick, the solve's `weigh` record
+ * is DWELL-ONLY: it has no `shove`, because there was no lean to order, and it
+ * carries `parked: {block, tile, sinceTick: 0}` instead. The park tick is then
+ * `0` — not a guess, and not a softening of the claim: the block is where the
+ * LEVEL RECORD put it and no tick of this run moved it, which is the strongest
+ * form of "it was there when the player crossed" the claim can take. ⛔ The
+ * ROUTE half is unchanged, so a dwell-only weigh whose route never crossed the
+ * door still answers `null`.
+ *
  * @returns {true|false|null} `null` = the route never crossed the door (which
  *   is what an UNGUARDED gadget looks like from the plan's side, and a fact
  *   about the ROUTE rather than a defect); `false` = it crossed WITHOUT the
@@ -550,9 +560,16 @@ export function liftedClaimFrom({ records = [], trace = null }, { block, button,
     let parkIndex = -1;
     records.forEach((r, i) => {
         if (park !== null) return;
-        if (r.strategy !== 'weigh' || !r.shove) return;
-        if (!sameTile(r.shove.to, buttonTile)) return;
-        park = (r.shove.startTick ?? 0) + (r.shove.ticks ?? 0);
+        if (r.strategy !== 'weigh') return;
+        if (r.shove) {
+            if (!sameTile(r.shove.to, buttonTile)) return;
+            park = (r.shove.startTick ?? 0) + (r.shove.ticks ?? 0);
+            parkIndex = i;
+            return;
+        }
+        // ⛓ the DWELL-ONLY arm — a gadget that arrived already parked.
+        if (!r.parked || !sameTile(r.parked.tile, buttonTile)) return;
+        park = r.parked.sinceTick ?? 0;
         parkIndex = i;
     });
     if (park === null) return null;

@@ -474,6 +474,32 @@ describe('⛓⛓⛓ THE LIFTED CLAIM\'S READER, on a SYNTHETIC record set', () =
             geom)).toBe(null);
     });
 
+    /**
+     * ⛓⛓ THE DWELL-ONLY ARM (arc 3 slice S1, gap 3) — a gadget that arrived
+     * ALREADY PARKED. The `weigh` record has NO `shove`, because there was no
+     * lean to order; it names the block and the button through `parked`, and the
+     * park tick is 0 because the LEVEL RECORD put the block there.
+     */
+    const dwellRecord = () => ({ goal: 'collect-placement', strategy: 'weigh',
+        dwellOnly: true, parked: { block: geom.block.id, tile: { tx: 6, ty: 3 },
+            from: { tx: 6, ty: 3 }, sinceTick: 0 } });
+
+    it('⛓ a DWELL-ONLY weigh (the block arrived parked) ⇒ TRUE, at park tick 0', () => {
+        expect(liftedClaimFrom({ records: [dwellRecord()], trace: traceCrossingAt(120) },
+            geom)).toBe(true);
+    });
+
+    it('⛔ …and the ROUTE half is UNCHANGED: a dwell-only weigh whose walk never '
+        + 'crossed the door is still `null`, not a free `true`', () => {
+        expect(liftedClaimFrom({ records: [dwellRecord()], trace: { rows: [] } },
+            geom)).toBe(null);
+        // and a dwell on SOME OTHER button is not evidence about this one
+        const elsewhere = { ...dwellRecord(),
+            parked: { ...dwellRecord().parked, tile: { tx: 2, ty: 2 } } };
+        expect(liftedClaimFrom({ records: [elsewhere], trace: traceCrossingAt(120) },
+            geom)).toBe(null);
+    });
+
     it('⛔ a LATER shove that moves the block OFF the button ⇒ false — the first two '
         + 'facts alone would credit a plan for a block it had since shoved away', () => {
         const later = { goal: 'collect-placement', strategy: 'shove',

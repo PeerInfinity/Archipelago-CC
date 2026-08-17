@@ -174,17 +174,44 @@ describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own
     });
 
     /**
-     * ⛓⛓ ARM 5 — THE THIRD GAP, INDEPENDENT OF THE OTHER TWO. The gadget
-     * PRE-SOLVED (the block already parked on its button) still does not
-     * certify: `resolveWeighStrategy` has no "the block is already home, just
-     * dwell" arm, so it falls back to a `hold` on a button the BLOCK occupies and
-     * `deriveHoldStance` refuses.
+     * ⛓⛓ ARM 5 — THE THIRD GAP, INDEPENDENT OF THE OTHER TWO, **AND S1 CLOSED
+     * IT WITH THE DWELL ARM.**
+     *
+     * Before S1 the PRE-SOLVED gadget (the block already parked on its button)
+     * refused: `resolveWeighStrategy` had no "already home" answer, so it fell
+     * back to a `hold` on a button the BLOCK occupies and `deriveHoldStance`
+     * refused at a stance nobody needed to stand in.
+     *
+     * ⛓ Now it resolves to the weigh MINUS its shove — `runDwell` alone, no
+     * stance at all, because the presser is held by the block and the player need
+     * not stand anywhere. ⛔ THE RECORD STILL NAMES THIS ELEMENT'S BLOCK AND
+     * BUTTON (`parked`), which is what keeps the lifted-claim reader able to
+     * answer about a gadget that arrived solved.
+     *
+     * ⚠ THIS ARM RAISES NO PREREQUISITE, and that is the fact that makes the
+     * `NESTED_OPENER_DEPTH` mutant discriminating: `lock`(A) is redeemed by the
+     * ORDINARY frontier of the nested stance walk, exactly as it was before S1.
      */
-    it('ARM 5 — the block ALREADY on button A still refuses, at the BUTTON\'s stance', () => {
+    it('ARM 5 — the block ALREADY on button A now SOLVES, by a DWELL-ONLY weigh', () => {
         const out = solveArm('slice3-preweighed', { block: BUTTON_A });
-        expect(out.verdict).toBe(VERDICT.REFUSED);
-        expect(out.reasonText).toMatch(/no REACHABLE stance inside button@/);
-        expect(out.obstacle).toEqual({ kind: 'proximity-hazard', id: 'button@96,48' });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['weigh', 'hold', 'collect']);
+        const weigh = out.records.find((r) => r.strategy === 'weigh');
+        expect(weigh.dwellOnly).toBe(true);
+        // ⛔ NO SHOVE — a lean that moves nothing is a check that cannot fail.
+        expect(weigh.shove).toBeUndefined();
+        expect(weigh.parked).toMatchObject({
+            block: 'pushableblock@96,48',
+            tile: { tx: BUTTON_A.tx, ty: BUTTON_A.ty },
+            sinceTick: 0,
+        });
+        expect(weigh.presser).toEqual({ x: BUTTON_A.tx * 16, y: BUTTON_A.ty * 16 });
+        // and the FLAG is still what opens `lock`(B): the dwell only bought
+        // `lock`(A), and the hold on the buttonroom is the second order.
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({
+            x: FLAG.tx * 16, y: FLAG.ty * 16, tag: 'buttonroom', t: B,
+        });
     });
 
     /**
