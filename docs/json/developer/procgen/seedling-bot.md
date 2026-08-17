@@ -9730,6 +9730,9 @@ with records `['weigh','hold','collect']` and the lifted claim **true**. As-buil
   fields.
 - **NOTHING COMMITTED MOVED.** R8 `--win --only=<the 20 tapes>`: **534 PASS /
   0 FAIL / 67 SKIP, ALL CHECKS PASSED**. battery / maze / batch / `empty` pairs
-  md5s byte-identical, and the yield table's `none` arms reproduce §10.9 cell for
-  cell — the capability fires only where a stance was UNREACHABLE and a
-  prerequisite exists.
+  md5s byte-identical; the arc's 2.8-hour carved-pairs bound is
+  `ab227401a875fdb3d9555b423e039aa6`, the same value as before the slice, with no
+  movers to name; and the yield table's `none` arms reproduce the previous
+  slice's cell for cell — the capability fires only where a stance was
+  UNREACHABLE and a prerequisite exists, which nothing that already worked ever
+  needed.
