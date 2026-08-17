@@ -9373,7 +9373,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED and the solver slice S1 follows**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9581,3 +9581,109 @@ in 2c's own mechanism and never a catch-all: `e.code` is `null` on every other
 `SolverBotError`, which still aborts. Measured on probe 2b's own worst item
 (`winding` post-sword seed 1): `THREW GenerationAborted` → **`SATURATED`**, the
 candidate reverting instead of killing the run.
+
+### Arc 3, slice 3 — the Seedling ELEMENT binding, and it is UNCERTIFIED BY NAME (2026-08-17)
+
+⛓⛓⛓ **THE GADGET IS BUILT, PLACED AND MEASURED — AND THE SOLVER CANNOT CERTIFY
+IT, WHICH IS THE SLICE'S FINDING RATHER THAN A GAP IN THE WORK.** ⚖ Design
+ruling 22's shape is *block on `Button`(A) HOLDS `Lock`(A) open → the player
+reaches the `ButtonRoom`(B) FLAG → pressing it PERMANENTLY opens the level's
+`Lock`(B)s → collect*. Measured on a hand-drawn 10x10 room BEFORE the binding was
+written, and the chain does not run:
+
+- the frontier names `lock`(B) correctly, `refineStrategy` correctly KEEPS `hold`
+  (the presser is a LATCHING `buttonroom` — `activators.localPublish`), and
+  `deriveHoldStance` then refuses BY NAME: *"no REACHABLE stance inside
+  buttonroom@… A hold that cannot be stood on is not a strategy for this
+  obstacle."*
+- **the gate is the gadget's OWN BLOCK, not `lock`(A)** — ablation, one entity at
+  a time: with `lock`(A) removed the refusal is the IDENTICAL sentence; with the
+  BLOCK removed the room SOLVES. `solverBot.stanceHypothesis` hypothesises every
+  unopened ACTIVATOR discharged, but a `pushableblock` is a Solid no hypothesis
+  removes and no SUB-ORDER shoves — and the reverse-pull geometry puts the block
+  in the entry lane BY CONSTRUCTION, so no draw of the element avoids it.
+- where the hypothesis DOES apply the optimism is worse than a refusal: the walk
+  sets off for a stance behind a lock nothing opens and grinds on it for the whole
+  400-tick per-target budget.
+- ⛓ **AND THE FLAG'S VERB IS `hold`, NOT `touch`** (a correction to the design's
+  own realisation table): `resolveTouchStrategy` keys on
+  `activators.TOUCH_RESPONDERS`, which is `shieldlock`/`shieldlocknorm`.
+
+⇒ ⚖ **THE USER RULED: build it UNCERTIFIED.** `generateSeedlingLevel` runs the
+certification solve itself (so the loop's step-0 THROW becomes a graded refusal
+with the solve's own words), records `certified: false` + `gap:
+'the-solver-does-not-chain (S1: nested openers)'`, and regenerates with the
+element DROPPED — the same draws spent, the composite not committed — so
+`--elements=guard` yields a real level and the geometry the census measured is
+carried across the drop. The yield table publishes **PLACED, CERTIFIED and
+guarded as three columns**, with `CERTIFIED = 0` and the refusal sentence beside
+it. ⛔ Nothing solves around it: no template trick, no solver line, no widened
+catch. The solver slice **S1 "nested openers"** is AUTHORISED and follows; its
+work order (three gaps, the arm that shows each, the function each stops in, and
+the record its certification must produce) is arc-3 kickoff §10.3, and
+`seedlingDemo/procgenSeedlingElementsCertify.test.js` holds the six-arm fixture
+LIVE so S1 FLIPS it green rather than rediscovering the problem.
+
+**What landed, for a reader of this file:**
+
+- `seedlingDemo/procgenSeedlingElements.js` — the binding: the snug site list, the
+  composite (the carve's answer inside the reserved rectangle DISCARDED, the ring
+  written WALL except the entry mouth, the exit mouth SEALED, the mouth joined by
+  the shortest tunnel that never enters the rectangle or the border ring), the
+  `demand` check, the guard-is-a-cut flood, the FLAG-LOCK rule, the mapping, and
+  the lifted claim's reader. ⛔ It imports the SAME element the maze binds
+  (`procgenCore/elements/reversePullBlock.js`); there is no Seedling-private
+  gadget.
+- **THE MAPPING**: `tiles` floor/wall → `ground`/`wall` over the whole site ·
+  blocks → `pushableblock` · buttons → `button {tset: A}` · `door_A` → `lock
+  {tset: A, tag}` · the FLAG → `buttonroom {tset: B, tag, flip:'0', room:'-1'}` ·
+  the FLAG'S LOCK → `lock {tset: B, tag}` on a main-path CUT. **Two groups from
+  one placement**: A is the BUTTON cell's `placementGroupId`, B is the BUTTONROOM
+  cell's — asserted distinct, and a collision THROWS (it would let the guard's
+  button open the flag's locks). **Three tags of the 30** per element.
+- **THE FLAG-LOCK RULE**, exactly: the last cell of one canonical shortest
+  start→goal path, walking back from the GOAL, that is not the start/goal, not
+  inside the element, **not 4-adjacent to the goal**, DISCONNECTS the goal when
+  walled, and leaves the ENTRY MOUTH start-side. Otherwise the element is REFUSED
+  `no-cut-for-the-flag-lock` and never placed as decoration. ⛔ The 4-adjacency
+  clause is a MEASUREMENT: a lock on the goal's doorstep breaks the COLLECT
+  ceremony's approach sweep (*"A pickup is not solid, so the planner and the
+  geometry disagree about the approach"*), which is a refusal with nothing to do
+  with the gadget. ⚖ Slice 4's area binding takes over WHICH cell.
+- **THE SITE MARGIN IS MEASURED AND IT IS NOT THE MAZE'S.**
+  `procgenMaze.SITE_MARGIN = 4` offers **ZERO candidate sites in 20 of 30 (kind,
+  len) cells** on a 10x10 room — every `len` 3 and 4, every kind, all 12 seeds —
+  because the reserved rectangle cannot then avoid both the start and the goal.
+  `SITE_MARGIN_STRAIGHT = 2` is the gadget's own extent at `turns = 0` and puts a
+  len-2 gadget on `MIN_SITE` (4x4) exactly. ⛔ No bound widened, the room did not
+  grow (⚖ arc-3 ruling 7).
+- **THE CENSUS** (`scripts/procgen/census-seedling-elements.mjs`, NEW, permanent;
+  10 kinds × 12 seeds × `len ∈ {2,3,4}`, geometry only, no solve): **29 of 360
+  cells PLACE**, at `len` 2 and 3 and **never at `len` 4**. Refusals by name:
+  `no-cut-for-the-flag-lock` 85 · `no-site-fits-this-room` 80 ·
+  `the-entry-mouth-is-the-rooms-border-ring` 70 ·
+  `the-reserved-rectangle-seals-the-room` 42 · `the-entry-port-cannot-be-joined`
+  40 · `WALK_NOT_FOUND` 10 · `the-tunnel-shortens-the-way-to-the-goal` 4. ⇒ ⚖
+  ruling 7 is answered *"something fits, thinly"*, so the multi-screen horizon
+  item is NOT raised; the levers are upstream and already named (`chambers=k` as
+  a non-zero default; a `chamber`-shaped element placed first).
+- ⛓ **`no-cut-for-the-flag-lock` IS THE BIGGEST REFUSAL, AND IT IS SLICE 2's DOOR
+  CENSUS FROM THE OTHER SIDE**: on `empty` a span-1 door cuts NOTHING (0 CUT
+  anchors at spans 1..7 against 384 at span 8), so a one-cell lock is a CORRIDOR
+  mechanism. ⛓ And yet the open room still places 2 of 12 at `len` 2 — the
+  element's own reserved rectangle turns it into a corridor room, so the gadget
+  MANUFACTURES the cut its flag's lock needs.
+- **THE ELEMENT'S CELLS ARE FENCED OFF FROM PASS 2 BY NAME**, in BOTH legality
+  rules: `freeRefusal` alone would let a wall segment land in the push lane (it is
+  untouched `ground`), and `carveCellRefusal` alone would let a pocket be CARVED
+  out of the ring (in `base` the ring IS wall). At `--elements=none` the set is
+  empty and the check returns on its first line.
+- ⛔ **`turns > 0` REFUSES BY NAME** (`the-chain-is-arc-4`, ⚖ arc-3 ruling 1) and
+  the refusal spends NO draw, because `turns` is forced to `0` as an OVERRIDE
+  rather than drawn and then rejected. One element, two bindings, two admissible
+  domains.
+- ⛔ **BYTE-INERT AT THE DEFAULT `--elements=none`**, and the gate is a COUNTING
+  SPY rather than a tile comparison: `model.roomDraws` is unchanged there and
+  strictly greater whenever a gadget is asked for, placed or refused. The battery,
+  the acceptance batch, the maze dump, the `empty` pairs and the generated set are
+  all byte-identical.
