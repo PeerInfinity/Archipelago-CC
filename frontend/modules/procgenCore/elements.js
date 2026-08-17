@@ -171,6 +171,12 @@ export const PHASE_ON_CONNECTOR = 'on-connector';
  *                     cells a door may stand on
  *   `isCut(cell)`     slice 2's clause 1 as a FUNCTION — walling this one cell
  *                     disconnects the goal from the start
+ *   `connectedWith({paint, walled})` the same flood, asked generally: does the
+ *                     START still reach the GOAL with these tiles painted and
+ *                     these cells solid? ⛓ The block pocket's whole promise —
+ *                     *a shove EXISTS which clears the way* — is this question
+ *                     asked of the cell the block comes to rest in, and `isCut`
+ *                     is its one-cell special case rather than a second flood.
  *   `doorLaw({paint, doorCells, clearer})` the BINDING'S OWN door law, handed in
  *                     so a proposal is filtered by the very rule that will
  *                     adjudicate it. ⛔ This is what "ONE door law, both callers"
@@ -178,7 +184,7 @@ export const PHASE_ON_CONNECTOR = 'on-connector';
  *                     the law, it ASKS it.
  */
 export function assertRoomProbe(room, owner) {
-    const needFns = ['floorAt', 'isCut', 'doorLaw'];
+    const needFns = ['floorAt', 'isCut', 'connectedWith', 'doorLaw'];
     for (const fn of needFns) {
         if (typeof room?.[fn] !== 'function') {
             fail(`elements: ${owner} was offered a site whose \`room\` probe has no `

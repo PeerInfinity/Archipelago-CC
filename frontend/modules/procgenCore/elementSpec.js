@@ -40,6 +40,8 @@
  * ⛔ NO DOM AND NO NODE IMPORTS: the lab page loads this in a browser.
  */
 
+import { BLOCK_POCKET } from './elements/blockPocket.js';
+import { KILL_GATE } from './elements/killGate.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { assertParamSchema, enumerateValues } from './templateContract.js';
 
@@ -108,6 +110,53 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'block sits there — and the area graph\'s key lives behind that door.',
         extra: Object.freeze([BINDS_PARAM]),
     }),
+    /**
+     * ⛓⛓⛓ THE TWO ROOM-AWARE DOOR ELEMENTS (arc 3, slice 4a). ⛔ NEITHER TAKES
+     * A PARAMETER, and that is the finding rather than an omission: the door
+     * templates they supersede had to carry `span`/`ori`/`gap` because a
+     * pass-2 template writes a RELATIVE footprint and cannot know the room, and
+     * slice 2 measured what that cost (`span`'s domain is `{1,8}` — two values
+     * for two rooms — and half the kill family's `empty` draws became NO_ANCHOR
+     * by construction). An `on-connector` element GROWS its wall to the room it
+     * is standing in, so the parameter has nothing left to say. ⚠ `binds` is
+     * absent too: neither element holds or grants a symbol, so there is nothing
+     * for the area graph to bind (§7c's `bodies = n` is the first knob either
+     * will want, and it is NOT this slice).
+     */
+    killgate: Object.freeze({
+        element: KILL_GATE,
+        why: 'The room-aware KILL GATE (design catalogue #4): a `tset:-1` lock on a main-path '
+            + 'cut with its wall GROWN to seal the room, and the body whose death opens it in '
+            + 'a start-side pocket. Certified by the existing `kill`.',
+        extra: Object.freeze([]),
+        /**
+         * ⛓⛓⛓ **THE ONLY ELEMENT IN THE ARC A PRE-SWORD BOOT CANNOT CLEAR**, and
+         * it is the same fact `KILL_LOCK_TEMPLATES` encodes by living only in
+         * `POST_SWORD_TEMPLATES`: `weaponForPress` returns null with no sword
+         * slot, so the press is a silent no-op and the lock never opens.
+         *
+         * ⛔ A BINDING FACT, LIKE `binds` — not a parameter of the geometry. The
+         * gate FITS a pre-sword room perfectly well; what it cannot do there is
+         * be SOLVED, and discovering that from a certification solve would spend
+         * a full solver budget to learn something the boot flags already say.
+         * ⇒ the seam refuses BY NAME and for free.
+         *
+         * ⚠ This is the shape ⚖ §3.5's `require:['hasSword']` (slice 4b) will
+         * generalise: a directive that cannot be met is a REFUSED run with the
+         * reason. It is spelled here now because the element would otherwise
+         * ship a biome in which it never certifies, and a yield table that
+         * measured that would be measuring the boot rather than the gate.
+         */
+        needs: Object.freeze(['hasSword']),
+    }),
+    blockpocket: Object.freeze({
+        element: BLOCK_POCKET,
+        why: 'The room-aware BLOCK POCKET (design catalogue #2): a `pushableblock` on a '
+            + 'main-path cut with a REST POCKET carved beyond it in the push direction, so '
+            + 'the shove that clears the corridor has somewhere to put the block. Certified '
+            + 'by the existing `shove`.',
+        extra: Object.freeze([]),
+    }),
 });
 
 /** ⛓ `none` is a HEAD, not a missing value: it is what "the machinery does not
@@ -119,6 +168,81 @@ export const ELEMENT_NAMES = Object.freeze([NONE, ...Object.keys(ELEMENT_TABLE)]
 
 /** ⛓ The default: the element machinery does not run. `{name: 'none'}`. */
 export const DEFAULT_ELEMENTS = Object.freeze({ name: NONE });
+
+/**
+ * ⛓⛓⛓ **THE `+` LIST — "ONE OF THESE, DRAWN" — arc 3, slice 4a.**
+ *
+ *     `guard+killgate+blockpocket`   ·   `none+killgate`
+ *
+ * ⛔ IT IS A CHOICE, NOT A CONJUNCTION, and the reason is a standing law rather
+ * than a preference: arc-2 §3.1-AS-BUILT is **ONE BLOCK PER LEVEL**, and two of
+ * the three heads put a `pushableblock` in the room. A `+` that meant *"both"*
+ * would spell a level the solver's own bound forbids, and the codec would be
+ * offering a run nothing can build.
+ *
+ * ⛓ WHAT IT IS FOR is D5's default spec: *one element per level, drawn from the
+ * certified set*. Without it a DEFAULT can only ever name one element, and the
+ * room that element refuses gets nothing — which is the whole reason the door
+ * TEMPLATES cannot simply be deleted (a default generator with no doors at all).
+ * ⛔ `none` is a legal member, so *"and sometimes nothing"* is sayable too.
+ *
+ * ── THE SHAPE ─────────────────────────────────────────────────────────
+ *
+ * `{any: [spec, spec, …]}` — each member is an ordinary `{name[, params]}`,
+ * normalized by the SAME single-head path, so a member cannot mean anything a
+ * bare head could not. ⛔ A one-member list is REFUSED: `guard` already spells
+ * it, and two spellings of one run is what this file exists to prevent. So is a
+ * repeated head — `guard+guard` names no distribution a reader can act on.
+ *
+ * ⛔ AND THE DRAW IS THE BINDING'S, SPENT ONCE, BEFORE `instantiate`
+ * (`drawElementHead`). A list is one `pick` over the members in the order the
+ * caller wrote them; a bare head spends none. That difference is the same one
+ * `namedParams` exists for, one level up.
+ */
+export const isElementList = (spec) => Boolean(spec && typeof spec === 'object'
+    && Array.isArray(spec.any));
+
+const LIST_SEP = '+';
+
+function assertList(members, raw) {
+    if (members.length < 2) {
+        fail(`elementSpec: ${JSON.stringify(raw)} is a "${LIST_SEP}" list with `
+            + `${members.length} member(s). A list is a CHOICE among two or more heads; one `
+            + 'member is the head itself, and two spellings of one run is exactly what this '
+            + 'codec exists to prevent.');
+    }
+    const seen = new Set();
+    for (const m of members) {
+        if (seen.has(m.name)) {
+            fail(`elementSpec: ${JSON.stringify(raw)} names "${m.name}" TWICE. A list is a `
+                + 'distribution over DISTINCT heads; a repeated one names no run a reader can '
+                + 'act on, and weighting is not a thing this codec offers.');
+        }
+        seen.add(m.name);
+    }
+    return members;
+}
+
+/** The members of a list spec, normalized — `[]` for a bare head. */
+export function elementListMembers(spec) {
+    return isElementList(spec) ? spec.any.map((m) => normalizeElementSpec(m)) : [];
+}
+
+/**
+ * ⛓⛓ **THE HEAD THIS RUN USES** — a bare spec unchanged and spending NOTHING,
+ * a list resolved by ONE `pick` over its members.
+ *
+ * ⛔ The pick is `rng.pick`, the same draw every other choice in this pipeline
+ * spends, and it happens BEFORE the element's own parameters are instantiated —
+ * so the stream position of every geometry draw after it is a declared function
+ * of the list's length.
+ */
+export function drawElementHead(spec, rng) {
+    if (!isElementList(spec)) return normalizeElementSpec(spec ?? DEFAULT_ELEMENTS);
+    const members = elementListMembers(spec);
+    assertList(members, formatElementSpec(spec));
+    return rng.pick(members);
+}
 
 /**
  * ⛔ THE SCHEMA OF ONE HEAD — the ELEMENT's own params, then the binding's.
@@ -152,6 +276,17 @@ const outOfDomain = (name, p, value) => `elementSpec: parameter "${p.key}" of el
  *   parameter with its default filled in — what the binding runs under.
  */
 export function resolveElementSpec(spec = {}) {
+    /**
+     * ⛔ A LIST HAS NO RESOLVED PARAMETERS AND SAYS SO. Its members do, and the
+     * caller gets them by DRAWING one (`drawElementHead`) — an answer that
+     * merged the members' parameters would be a fourth thing the string could
+     * mean, and a caller that took it would run a gadget nobody named.
+     */
+    if (isElementList(spec)) {
+        fail(`elementSpec: ${JSON.stringify(formatElementSpec(spec))} is a "${LIST_SEP}" list `
+            + '— a CHOICE among heads — so it has no resolved parameters of its own. Draw a '
+            + 'head first (`drawElementHead(spec, rng)`) and resolve that.');
+    }
     const name = spec?.name ?? DEFAULT_ELEMENTS.name;
     if (!ELEMENT_NAMES.includes(name)) {
         fail(`elementSpec: \`name\` was given ${JSON.stringify(name)}, and the declared `
@@ -231,6 +366,11 @@ export function namedParams(spec, { elementOnly = false } = {}) {
  * what the caller SAID", not "keep what differs from the default".
  */
 export function normalizeElementSpec(spec) {
+    if (isElementList(spec)) {
+        const members = spec.any.map((m) => normalizeElementSpec(m));
+        assertList(members, members.map((m) => formatElementSpec(m)).join(LIST_SEP));
+        return Object.freeze({ any: Object.freeze(members) });
+    }
     const full = resolveElementSpec(spec);
     const named = namedParams(spec);
     return Object.keys(named).length === 0
@@ -249,6 +389,9 @@ export function normalizeElementSpec(spec) {
  * keystrokes.
  */
 export function formatElementSpec(spec) {
+    if (isElementList(spec)) {
+        return spec.any.map((m) => formatElementSpec(m)).join(LIST_SEP);
+    }
     const norm = normalizeElementSpec(spec);
     const params = norm.params ?? {};
     const parts = paramSchemaFor(norm.name)
@@ -296,6 +439,22 @@ export function elementSpecOf(block) {
  */
 export function parseElementSpec(value) {
     const raw = String(value ?? '').trim();
+    /**
+     * ⛔ THE LIST IS SPLIT FIRST, because `+` binds LOOSER than `;` — each
+     * member carries its own parameter clauses (`guard;len=2+killgate`), and
+     * every member then goes through the SAME single-head parser below.
+     */
+    if (raw.includes(LIST_SEP)) {
+        const members = raw.split(LIST_SEP).map((part) => {
+            if (part.trim() === '') {
+                fail(`elementSpec: ${JSON.stringify(raw)} carries an EMPTY list member. Each `
+                    + `member is a head with its own clauses, separated by "${LIST_SEP}".`);
+            }
+            return parseElementSpec(part);
+        });
+        assertList(members, raw);
+        return Object.freeze({ any: Object.freeze(members) });
+    }
     const [head, ...clauses] = raw.split(';');
     const name = head.trim();
     if (!ELEMENT_NAMES.includes(name)) {

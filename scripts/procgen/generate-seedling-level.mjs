@@ -78,7 +78,7 @@ const {
 } = await M('watchGenerate.js');
 const { restrictPalette } = await M('procgenPalette.js');
 const {
-    NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec,
+    NONE: ELEMENTS_NONE, formatElementSpec, isElementList, parseElementSpec,
 } = await CORE('elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -134,6 +134,17 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  * docblock and the arc-3 as-built §10 (the S1 "nested openers" work order).
  */
 const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
+
+/**
+ * ⛓ WHAT EACH ELEMENT'S LIFTED CLAIM ACTUALLY CLAIMS — the discriminating
+ * question is per MECHANISM (arc-3 §12), so the readout names it rather than
+ * printing one element's sentence over another's number.
+ */
+const LIFTED_CLAIM_TEXT = Object.freeze({
+    'reverse-pull-block': 'A BLOCK WAS ON THE BUTTON WHEN THE DOOR WAS FIRST CROSSED',
+    'kill-gate': 'THIS GATE\'S OWN BODY CLEARED THIS GATE\'S OWN LOCK, BEFORE THE CROSSING',
+    'block-pocket': 'THIS BLOCK WAS SHOVED AS FAR AS THE ELEMENT GUARANTEED',
+});
 /**
  * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
  * `--templates=x,y` narrows the sub-roster this run may draw from; ABSENT is
@@ -269,7 +280,7 @@ const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, pale
  * through it is family K (slice 5, `?elements=`), and a flag that was accepted
  * and ignored would produce a payload naming a gadget the level does not hold.
  */
-if (DIRECTED && ELEMENTS.name !== ELEMENTS_NONE) {
+if (DIRECTED && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
     process.stderr.write('generate-seedling-level: --elements= and --directed= do not compose '
         + 'yet. The directed path is `watchGenerate.generateWithDirectives` (the page\'s), and '
         + 'the element binding reaches it in slice 5 with `?elements=`. Say one or the other.\n');
@@ -374,19 +385,41 @@ if (has('json')) {
      * placement, because the two differ today and hiding the difference is the
      * one thing this slice must not do.
      */
-    if (ELEMENTS.name !== ELEMENTS_NONE) {
+    if (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE) {
         const e = s?.elements ?? null;
         const p = e?.placed?.[0] ?? null;
-        say(`element: ${formatElementSpec(ELEMENTS)} — `
+        /**
+         * ⛓ A `+` LIST NAMES SEVERAL HEADS AND THE STREAM DREW ONE, so the line
+         * prints both: what was asked for, and what this seed got.
+         */
+        const asked = formatElementSpec(ELEMENTS);
+        const drew = formatElementSpec(out.model.elementHead);
+        const head = asked === drew ? asked : `${asked} -> drew \`${drew}\``;
+        /**
+         * ⛓⛓ TWO PHASES, TWO GEOMETRIES, TWO SENTENCES. A `pre-carve` gadget
+         * has a SITE and a tunnel; an `on-connector` door has neither — it has
+         * a door cell, a clearer, the wall it GREW and the cell it CARVED. One
+         * printer that said `site: undefined` for a door would be the summary's
+         * own flattening defect wearing a readout.
+         */
+        const shape = () => (p.phase === 'on-connector'
+            ? `${p.instance} door (${p.doorCell.x},${p.doorCell.y})`
+                + `${p.tags?.lock !== undefined ? ` [tag ${p.tags.lock}]` : ''}; `
+                + `clearer ${p.clearer.map((c) => `(${c.x},${c.y})`).join(' ') || '(none)'}; `
+                + `wall GREW ${p.wall} cell(s), CARVED ${p.carved}; `
+                + `${p.cost.candidates} door cell(s) were offered`
+                + `${p.cost.push !== undefined ? `; the block owes ${p.cost.push} push(es)` : ''}`
+            : `${p.instance} at site (${p.site.x},${p.site.y}) ${p.site.w}x${p.site.h}; `
+                + `block (${p.block.x},${p.block.y}) -> button (${p.button.x},${p.button.y}) `
+                + `[group A=${p.groups.A}]; guard door (${p.door.x},${p.door.y}) `
+                + `[tag ${p.tags.lockA}]; FLAG buttonroom (${p.flagCell.x},${p.flagCell.y}) `
+                + `[group B=${p.groups.B}, tag ${p.tags.flag}]; its LOCK on the main-path cut `
+                + `(${p.flagLockCell.x},${p.flagLockCell.y}) [tag ${p.tags.lockB}]; tunnel `
+                + `${p.tunnel} cell(s); the carve had written ${p.carveOverwrote} of its `
+                + 'cells differently');
+        say(`element: ${head} — `
             + (p
-                ? `${p.instance} at site (${p.site.x},${p.site.y}) ${p.site.w}x${p.site.h}; `
-                    + `block (${p.block.x},${p.block.y}) -> button (${p.button.x},${p.button.y}) `
-                    + `[group A=${p.groups.A}]; guard door (${p.door.x},${p.door.y}) `
-                    + `[tag ${p.tags.lockA}]; FLAG buttonroom (${p.flagCell.x},${p.flagCell.y}) `
-                    + `[group B=${p.groups.B}, tag ${p.tags.flag}]; its LOCK on the main-path cut `
-                    + `(${p.flagLockCell.x},${p.flagLockCell.y}) [tag ${p.tags.lockB}]; tunnel `
-                    + `${p.tunnel} cell(s); the carve had written ${p.carveOverwrote} of its `
-                    + 'cells differently'
+                ? shape()
                 : `⛔ REFUSED: ${out.model.elements.refused?.reason} — `
                     + `${out.model.elements.refused?.detail}`));
         if (p) {
@@ -394,7 +427,7 @@ if (has('json')) {
             say(`         ⛔⛔ CERTIFIED: ${e.certified} — ${c.verdict}`
                 + `${c.gap ? ` (${c.gap})` : ''}`);
             if (c.reasonText) say(`         the solve's own words: ${c.reasonText}`);
-            say('         ⛓ A BLOCK WAS ON THE BUTTON WHEN THE DOOR WAS FIRST CROSSED: '
+            say(`         ⛓ ${LIFTED_CLAIM_TEXT[p.element] ?? 'THE LIFTED CLAIM'}: `
                 + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
             if (!e.certified) {
                 say('         ⇒ the level below was generated WITHOUT the gadget (the draws '

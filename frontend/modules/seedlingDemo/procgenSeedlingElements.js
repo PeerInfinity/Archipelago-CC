@@ -75,6 +75,7 @@
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { DIR_DELTA, guardIdsFor } from '../procgenCore/elements.js';
+import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -107,6 +108,13 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-guard-is-not-a-cut-of-the-level',
     'no-cut-for-the-flag-lock',
     'the-skeleton-does-not-solve-with-the-element',
+    /** ⛓ arc 3 slice 4a — the `on-connector` composite's own three. Each is
+     *  TRUE BY CONSTRUCTION for the two elements shipped here (they filter with
+     *  the very law this re-asks), so each is trap 296's shape on real data and
+     *  each has a unit row that hands the composite a placement it must refuse. */
+    'the-elements-carve-is-not-legal',
+    'the-elements-door-is-not-a-cut',
+    'the-elements-write-lands-on-the-start-or-the-goal',
 ]);
 
 /** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
@@ -444,6 +452,159 @@ export function compositeSeedlingElement({
 }
 
 /**
+ * ⛓⛓⛓ **THE `on-connector` COMPOSITE — EVERY CHECK THE BINDING OWES A ROOM-
+ * AWARE DOOR**, PROCGEN ELEMENTS arc 3, slice 4a (D1).
+ *
+ * The pre-carve composite above builds a room AROUND a rectangle. This one does
+ * the opposite: the room already exists, the element wrote a SPARSE handful of
+ * cells into it, and the binding's job is to ask the two laws the room's own
+ * templates are asked — the CARVE rule and the DOOR law — of exactly those
+ * cells. ⛔ Both laws are `procgenSeedling`'s, passed in: this file does not
+ * own a second copy of either, and that is what "one law, both callers" means
+ * at the composite end.
+ *
+ * ⚠⚠ **ALL THREE REFUSALS ARE TRUE BY CONSTRUCTION FOR THE TWO ELEMENTS
+ * SHIPPED HERE** (trap 296, said out loud rather than discovered later): both
+ * filter their candidates with `room.doorLaw` — the same function — and both
+ * pre-check the dead-end clause, so a placement that reaches this function has
+ * already passed. That does not make the checks decoration: they are the
+ * CONTRACT an element that did NOT ask would meet, and their gate is the unit
+ * rows that hand this function a hand-built placement of each shape.
+ *
+ * ⛔ IT WRITES A MASK, NOT A RECORD, and it spends NO draw — the pre-carve
+ * composite's two rules, unchanged.
+ *
+ * @returns {{placed}|{refused:{reason, detail}}}
+ */
+export function compositeSeedlingOnConnector({
+    width, height, groundAt, skeletonWallAt, placement, start, goal, doorLaw, carveLaw,
+}) {
+    const painted = new Map();
+    for (const t of placement.tiles) {
+        painted.set(`${t.x},${t.y}`, t.tile === TILE_FLOOR ? 'ground' : 'wall');
+    }
+    const at = (x, y) => {
+        const p = painted.get(`${x},${y}`);
+        return p === undefined ? groundAt(x, y) : p === 'ground';
+    };
+    const before = (x, y) => groundAt(x, y);
+
+    // ── (i) NOTHING LANDS ON THE START OR THE GOAL ──────────────────────
+    for (const t of placement.tiles) {
+        const isStart = t.x === start.tx && t.y === start.ty;
+        const isGoal = t.x === goal.tx && t.y === goal.ty;
+        if (isStart || isGoal) {
+            return { refused: { reason: 'the-elements-write-lands-on-the-start-or-the-goal',
+                detail: `the element writes (${t.x},${t.y}), which is the `
+                    + `${isStart ? 'START' : 'GOAL'} cell. Neither endpoint's terrain is an `
+                    + 'element\'s to re-decide — `freeRefusal` says the same thing to a '
+                    + 'template, and a room whose start is wall is a room whose refusal is '
+                    + 'about geometry rather than about the element.' } };
+        }
+    }
+
+    // ── (ii) THE CARVE — slice 2's rule, asked of the cells it carved ───
+    const carved = placement.tiles
+        .filter((t) => t.tile === TILE_FLOOR && skeletonWallAt(t.x, t.y))
+        .map((t) => ({ x: t.x, y: t.y }));
+    const carveWhy = carveLaw({ carved, walkableAfter: at, walkableBefore: before });
+    if (carveWhy) {
+        return { refused: { reason: 'the-elements-carve-is-not-legal', detail: carveWhy } };
+    }
+
+    // ── (iii) THE DOOR LAW — both clauses, plus the open half ───────────
+    const doorWhy = doorLaw({
+        paintedFor: (walled) => (x, y) => {
+            if (walled && walled.has(`${x},${y}`)) return false;
+            return at(x, y);
+        },
+        doorKeys: new Set(placement.doorCells.map((c) => `${c.x},${c.y}`)),
+        clearerKeys: placement.clearer.map((c) => `${c.x},${c.y}`),
+    });
+    if (doorWhy) {
+        return { refused: { reason: 'the-elements-door-is-not-a-cut', detail: doorWhy } };
+    }
+
+    return { placed: Object.freeze({
+        doorCell: Object.freeze({ ...placement.doorCells[0] }),
+        doorCells: Object.freeze(placement.doorCells.map((c) => Object.freeze({ ...c }))),
+        clearer: Object.freeze(placement.clearer.map((c) => Object.freeze({ ...c }))),
+        wall: Object.freeze(placement.tiles.filter((t) => t.tile !== TILE_FLOOR)
+            .map((t) => Object.freeze({ x: t.x, y: t.y }))),
+        carved: Object.freeze(carved.map((c) => Object.freeze({ ...c }))),
+        entities: Object.freeze([
+            ...placement.entities.blocks.map((b) => Object.freeze({ role: 'block', ...b })),
+            ...placement.entities.obstacles.map((o) => Object.freeze({ role: 'obstacle', ...o })),
+        ]),
+        /** ⛓ THE CELLS PASS 2 MAY NOT TOUCH — the door, its clearer, the wall
+         *  and the carve. ⛔ NOT a rectangle: this element has none, and
+         *  reserving one would take a corridor's worth of room away from the
+         *  ladder for a door that occupies two cells. */
+        owned: Object.freeze([
+            ...placement.doorCells, ...placement.clearer,
+            ...placement.tiles.map((t) => ({ x: t.x, y: t.y })),
+        ].map((c) => Object.freeze({ ...c }))),
+        painted: Object.freeze([...painted].map(([k, terrain]) => {
+            const [tx, ty] = k.split(',').map(Number);
+            return Object.freeze({ tx, ty, terrain });
+        })),
+        cost: Object.freeze({ ...placement.cost }),
+    }) };
+}
+
+/**
+ * ⛓⛓⛓ **THE `on-connector` MAPPING** — the element's ids become Seedling
+ * entities here and nowhere else, exactly as `seedlingElementEntities` does it
+ * for the guard.
+ *
+ *   `killgate_door`      -> `lock {tset:'-1', tag:<own>}`   the KILL lock: `tset
+ *                           == -1` is L5/L18's own spelling and is what
+ *                           `refineStrategy` takes to `kill`
+ *   `killgate_body`      -> `spinner {tag:'-1'}`            the body whose death
+ *                           opens it; `tag:'-1'` is the palette row's own
+ *   the block            -> `pushableblock`                 `PushableBlock.as:27`
+ *                           is `type = "Solid"`, which is why a block in a
+ *                           corridor is a door at all
+ *
+ * ⛔ ONE TAG, NOT THREE. The guard needs three persistence slots (lock A, the
+ * flag, lock B); a kill gate needs ONE (its lock's own durable clear, 4b's
+ * scratch layer) and the block pocket needs NONE AT ALL — a `pushableblock`
+ * carries no tag, so the block pocket is the first element in the arc that
+ * costs nothing out of `TAGS_PER_LEVEL`'s 30.
+ */
+export function seedlingOnConnectorEntities({ placed, tagFor }) {
+    const tags = {};
+    const entities = [];
+    for (const e of placed.entities) {
+        if (e.role === 'block') {
+            entities.push({ type: 'pushableblock', tx: e.x, ty: e.y });
+            continue;
+        }
+        if (e.id === KILL_DOOR_ID) {
+            const tag = tagFor();
+            tags.lock = tag;
+            entities.push({ type: 'lock', tx: e.x, ty: e.y,
+                attrs: { tset: '-1', tag: String(tag) } });
+            continue;
+        }
+        if (e.id === KILL_BODY_ID) {
+            entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
+            continue;
+        }
+        fail(`procgenSeedlingElements: the on-connector element named the id `
+            + `${JSON.stringify(e.id)} and this binding has no Seedling part for it. ⛔ The `
+            + 'mapping is a TABLE and an id it does not carry is an element the binding '
+            + 'cannot realise — never a silently dropped entity.');
+    }
+    return {
+        tags: Object.freeze(tags),
+        entities: Object.freeze(entities.map((e) => Object.freeze({
+            ...e, ...(e.attrs ? { attrs: Object.freeze(e.attrs) } : {}),
+        }))),
+    };
+}
+
+/**
  * ⛓⛓⛓ **THE MAPPING (§3.4 / D2), IN ONE PLACE.** The element's symbols become
  * Seedling entities here and nowhere else.
  *
@@ -644,6 +805,130 @@ function rowCrosses(row, door) {
 }
 
 /**
+ * ⛓⛓⛓ **THE LIFTED CLAIM PER ELEMENT — ONE TABLE, THREE READERS.**
+ *
+ * PROCGEN ELEMENTS arc 3, slice 4a. Certification is the SOLVE's own verdict
+ * for every element; the LIFTED CLAIM is the extra, discriminating question
+ * *"did the gadget actually do its job on the route the solve took?"* (arc-2
+ * §9.4's discharge-existence instrument). It is necessarily per-element, because
+ * the three mechanisms leave three different records:
+ *
+ *   `reverse-pull-block`  a BLOCK WAS ON THE BUTTON when the player first
+ *                         crossed the door (`liftedClaimFrom`, unchanged)
+ *   `kill-gate`           THE LOCK OPENED BECAUSE THIS ELEMENT'S BODY DIED, and
+ *                         it opened BEFORE the route crossed the door
+ *   `block-pocket`        THIS ELEMENT'S BLOCK WAS SHOVED OFF THE DOOR CELL,
+ *                         and the route crossed the door AFTER that
+ *
+ * ⛔ EACH READS STRUCTURED FIELDS, NEVER PROSE (trap 337/354), and each answers
+ * `null` for *"the route never crossed the door"* — a fact about the ROUTE
+ * rather than a defect, which is what an unguarded placement looks like from
+ * the plan's side.
+ */
+const seedlingId = (type, cell) => `${type}@${cell.x * 16},${cell.y * 16}`;
+
+/**
+ * ⛓⛓⛓ **THE KILL GATE'S CLAIM, AND THE FIELD IT READS IS NOT ON THE RECORD.**
+ *
+ * ⛔ MEASURED BEFORE IT WAS WRITTEN (trap 353: a reader shipped for a route that
+ * does not exist yet is untested exactly where it will be used). The `kill`
+ * record carries the WORK — `arm: 'press'`, its landings, its cycles and
+ * `bodies: ['spinner@32,96']` — and carries NO lock and NO open tick at all.
+ * What says the lock opened is `run.scratchClears`, 4b's durable-persistence
+ * ledger, which `procgenOracle.solve` returns beside the records:
+ *
+ *   `{level:900, tag:1, at:608, declaredAt:607, removedAt:507,
+ *     by:'spinner@32,96', lock:'lock@48,112', cause:'sword',
+ *     why:'1 kill lock(s) OPEN: totalEnemies() went 1 -> 0'}`
+ *
+ * ⇒ the claim is **THIS element's lock was cleared BY this element's body, and
+ * the clear landed no later than the tick the route crossed the door**. Both
+ * halves are needed: the tick alone would credit this gate for a clear some
+ * other spinner earned, and the ids alone would not say the player waited.
+ *
+ * ⚠ `at <= cross` is the same SUFFICIENT comparison the guard's claim makes, and
+ * for the same reason: a row's `tick` is when the corridor was PLANNED and the
+ * walk follows after it, so an estimate EARLIER than the true crossing only
+ * makes the claim harder to satisfy.
+ */
+function killGateClaim({ records = [], trace = null, scratchClears = [] }, placed) {
+    const lockId = seedlingId('lock', placed.doorCell);
+    const bodyId = seedlingId('spinner', placed.clearer[0]);
+    if (!records.some((r) => r.strategy === 'kill')) return null;
+    const clear = (scratchClears ?? []).find((c) => c.lock === lockId);
+    if (!clear) return null;
+    /**
+     * ⛔ THE BODY MUST BE THIS ELEMENT'S. A clear credited to some other room's
+     * spinner is a lock that opened for a reason this gate cannot claim — which
+     * is exactly what an ABLATED fixture produces, and the only thing that
+     * makes the claim discriminating rather than a restatement of SOLVED.
+     */
+    if (clear.by !== bodyId) return false;
+    const cross = (trace?.rows ?? []).find((row) => rowCrosses(row, placed.doorCell));
+    if (!cross) return null;
+    const opened = clear.at ?? clear.declaredAt ?? null;
+    return opened === null ? null : opened <= cross.tick;
+}
+
+/**
+ * ⛓⛓⛓ **THE BLOCK POCKET'S CLAIM — AND ITS ROUTE HALF HAD TO GO, MEASURED.**
+ *
+ * D3 asks for *"the record `{strategy:'shove'}` naming this block, `to` the
+ * pocket cell or beyond"*, and the first cut of this reader added the guard's
+ * own second half — *and the route crossed the door after it*. ⛔ THAT HALF IS
+ * WRONG HERE AND THE TRACE SAYS SO. `winding` seed 3: the block goes
+ * (2,1)→(6,1) east, the player follows it east under the lean, and the three
+ * trace rows are `(24,24)` · `(80,24)` with a path to `(56,56)` · `(55,67)` —
+ * the player is ALREADY past the door cell when the first row with a corridor
+ * is written, because **the crossing happens DURING the shove**, which is one
+ * executor and not a decision row. The reader answered `null` on 4 of 16
+ * certified placements whose route had plainly crossed. ⇒ the route test is the
+ * GUARD's instrument (its player walks to the door long after parking the
+ * block) and not this element's. [[feedback_leak_witness_snapshot_cannot_see_leak]]
+ *
+ * ⇒ **THE CLAIM IS THE SHOVE ITSELF, AND IT IS STILL DISCRIMINATING**: the
+ * block that stood IN the door cell was shoved, and it travelled AT LEAST as
+ * far as the element guaranteed (`cost.push` — the first `k` at which the walk
+ * found the room reconnected). ⛔ A decorative block nobody has to move earns
+ * no `shove` record from that cell at all and the claim is `null`; a block the
+ * solver shoved one cell out of the way and left in the corridor travels less
+ * than `cost.push` and the claim is `false`.
+ *
+ * ⚠ THE DISTANCE IS THE READING, NOT THE DESTINATION CELL, because the element
+ * does not own a seventh placement field to put the rest cell in (arc-2's
+ * contract: *"`tiles`, `ports`, `demand`, `area`, `symbols` and `cost` are the
+ * contract's fields and an element does not get to add a seventh"*) — and
+ * `cost` is exactly where a number about the placement belongs.
+ */
+function blockPocketClaim({ records = [] }, placed) {
+    const door = placed.doorCell;
+    const from = (r) => r.from && r.from.tx === door.x && r.from.ty === door.y;
+    const shove = records.find((r) => r.strategy === 'shove' && from(r));
+    if (!shove) return null;
+    /**
+     * ⛔ AND NOTHING PUT IT BACK. A later shove whose destination is the door
+     * cell again leaves the room exactly as it started, and the first fact
+     * alone would still read as a success.
+     */
+    if (records.some((r) => r.strategy === 'shove'
+        && r.to && r.to.tx === door.x && r.to.ty === door.y)) return false;
+    const travelled = Math.abs(shove.to.tx - door.x) + Math.abs(shove.to.ty - door.y);
+    return travelled >= (placed.cost?.push ?? 1);
+}
+
+/** ⛔ ONE TABLE, and an element with no reader answers `null` rather than a
+ *  green `true` nobody measured. */
+const LIFTED_CLAIMS = Object.freeze({
+    'reverse-pull-block': (cert, placed) => liftedClaimFrom(cert, placed),
+    'kill-gate': killGateClaim,
+    'block-pocket': blockPocketClaim,
+});
+
+export function liftedClaimFor(elementName) {
+    return LIFTED_CLAIMS[elementName] ?? (() => null);
+}
+
+/**
  * ⛓ THE ELEMENT BLOCK A PAYLOAD CARRIES — the SPEC, what was PLACED and the
  * REFUSAL, in the maze's own shape (`procgenMaze.elementSummaryOf`) so a reader
  * who knows one substrate's payload knows the other's.
@@ -665,6 +950,36 @@ export function elementSummaryOf(model, { certification = null } = {}) {
      * are different facts and this slice's whole finding is that they differ.
      */
     const placed = e.placed.length ? e.placed : (certification?.geometry ?? []);
+    /**
+     * ⛓ **THE COMMON HALF AND THE PHASE'S OWN HALF** (arc 3, slice 4a). Every
+     * placement carries the same identity and draw span; what it carries BESIDE
+     * that is the phase's geometry, and a summary that flattened the two shapes
+     * into one would report `site: undefined` for a door that has no site.
+     */
+    const shapeOf = (p) => (p.phase === 'on-connector' ? {
+        phase: p.phase,
+        doorCell: p.doorCell,
+        clearer: p.clearer,
+        wall: p.wall.length,
+        carved: p.carved.length,
+        entities: p.entities,
+        tags: p.tags,
+    } : {
+        phase: 'pre-carve',
+        site: p.site,
+        ports: p.ports,
+        entryMouth: p.entryMouth,
+        block: p.block,
+        button: p.button,
+        door: p.door,
+        flagCell: p.flagCell,
+        flagLockCell: p.flagLockCell,
+        groups: p.groups,
+        tags: p.tags,
+        ids: p.ids,
+        tunnel: p.tunnel.length,
+        carveOverwrote: p.carveOverwrote,
+    });
     return {
         spec: e.spec,
         ran: e.ran,
@@ -676,19 +991,7 @@ export function elementSummaryOf(model, { certification = null } = {}) {
             params: p.params,
             drawsBefore: p.drawsBefore,
             drawsAtConstruct: p.drawsAtConstruct,
-            site: p.site,
-            ports: p.ports,
-            entryMouth: p.entryMouth,
-            block: p.block,
-            button: p.button,
-            door: p.door,
-            flagCell: p.flagCell,
-            flagLockCell: p.flagLockCell,
-            groups: p.groups,
-            tags: p.tags,
-            ids: p.ids,
-            tunnel: p.tunnel.length,
-            carveOverwrote: p.carveOverwrote,
+            ...shapeOf(p),
             cost: p.cost,
         })),
         refused: e.refused,

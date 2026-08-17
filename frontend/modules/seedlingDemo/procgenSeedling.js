@@ -72,14 +72,17 @@ import { deriveSites, siteCells, siteSummaryOf } from '../procgenCore/sites.js';
  * binding maps its tiles and symbols onto Seedling's parts and nothing more.
  */
 import {
-    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, namedParams,
-    normalizeElementSpec, resolveElementSpec,
+    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, isElementList,
+    namedParams, normalizeElementSpec, resolveElementSpec,
 } from '../procgenCore/elementSpec.js';
 import {
-    SITE_MARGIN_STRAIGHT, compositeSeedlingElement, elementSummaryOf, liftedClaimFrom,
-    reservedRect, seedlingElementEntities, seedlingElementSiteCandidates,
+    SITE_MARGIN_STRAIGHT, compositeSeedlingElement, compositeSeedlingOnConnector,
+    elementSummaryOf, liftedClaimFor, reservedRect, seedlingElementEntities,
+    seedlingElementSiteCandidates, seedlingOnConnectorEntities,
 } from './procgenSeedlingElements.js';
-import { guardIdsFor } from '../procgenCore/elements.js';
+import {
+    PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
+} from '../procgenCore/elements.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
     normalizeSkeleton,
@@ -116,6 +119,195 @@ export class ProcgenSeedlingError extends Error {
 }
 
 const fail = (message) => { throw new ProcgenSeedlingError(message); };
+
+/**
+ * ⛓⛓⛓ **THE DOOR LAW — A DOOR IS A CUT** (PROCGEN ELEMENTS arc 3, slice 2;
+ * ⚖ design ruling 17, taken whole). ONE flood-based law, every kind, every door
+ * family — it REPLACES `doorClear` and re-expresses `INTERIOR_SPAN`'s *"must
+ * cross the whole interior to be a door"* as *"must be a CUT"*.
+ *
+ * A row that declares `door` names its DOOR CELLS (`doorCells` — the gap
+ * cell(s) that hold the clearer, and which write no wall) and its CLEARER
+ * CELLS (`clearer` — the spinner; the weigh lane's block/button/stance/slide;
+ * EMPTY for `wall-gap-block`, whose block stands IN the door cell).
+ *
+ *  1. **CUT** — with this candidate's terrain painted AND the door cells
+ *     treated as WALL, the GOAL is unreachable from the START; with them
+ *     walkable, it is reachable.
+ *  2. **START-SIDE** — with the door cells walled, every clearer cell is
+ *     reachable from the START.
+ *
+ * ── ⛓⛓⛓ **TWO CALLERS, ONE LAW** (arc 3, slice 4a) ────────────────────
+ *
+ * It moved out of `seedlingModel`'s closure when the `on-connector` element
+ * phase arrived: a room-aware DOOR ELEMENT is adjudicated by the law a door
+ * TEMPLATE is adjudicated by, or the two would drift and one door family would
+ * place where the other refused. The callers differ in exactly two ways, both
+ * arguments rather than branches: a template's cells are OFFSETS resolved
+ * against an anchor and an element's are ABSOLUTE, and —
+ *
+ * ⛔ **`askOpenHalf` — WHO HAS ALREADY ASKED CLAUSE 1's OTHER HALF.** *With the
+ * door cells WALKABLE the goal is reachable* is `sealRefusal`'s own answer, and
+ * for a TEMPLATE `sealRefusal` is the rule asked immediately before, so a
+ * candidate that reaches this line has passed it — one flood, not two. ⚖ The
+ * one-of-everything law read the right way round: the second flood would not be
+ * a second SPELLING, it would be a second ASKING. An ELEMENT has no `sealRefusal`
+ * ahead of it (it is not an anchor the loop offered — it is constructed), so it
+ * passes `askOpenHalf: true` and the law asks. ⇒ the parameter names WHICH
+ * CALLER HAS ALREADY PAID, and is not a second policy.
+ *
+ * ── ⛓⛓ WHY CLAUSE 2 EXISTS, and why `doorClear` could not see it ──────
+ *
+ * Clause 2 is `doorClear`'s mechanism GENERALISED. On the open room the clearer
+ * sits at across `-1` — north or west of a full-span wall, i.e. the start's
+ * side by the room's fixed NW corner — so "the goal is strictly beyond" IMPLIED
+ * it and the old rule needed one comparison. On a CORRIDOR it implies nothing: a
+ * span-1 door's nub can be carved on the GOAL side, where the spinner is a body
+ * nobody can reach until the lock it guards opens. That room is not merely
+ * low-yield, it is unsolvable, and the flood is what says so at anchor time.
+ *
+ * ⛔ AND THE OFF-DOMAIN **THROW** WENT WITH `doorClear`. That assertion ("the
+ * start must be north-west of every anchor") existed because the old rule read
+ * the COMPASS; this one reads the flood, so a start anywhere in the room is a
+ * room this law simply answers. ⚠ Trap 255's ordering claim survives it
+ * unchanged for a different reason: the footprint walk still runs first, because
+ * a flood handed writes outside the rectangle would read `terrainAt` past the
+ * room.
+ *
+ * @param {Function} o.walkableFor `(walledKeys|null) => (x,y) => boolean` — the
+ *   caller's own painted-terrain predicate with a key set forced solid. ⛔ ONE
+ *   builder per caller, so "what blocks" is still stated once.
+ */
+export function doorLawRefusal({
+    width, height, walkableFor, start, goal, doorKeys, clearerKeys, name, askOpenHalf = false,
+}) {
+    const doorList = [...doorKeys].map((k) => `(${k})`).join(' ');
+    if (askOpenHalf && !connected(width, height, walkableFor(null), start, goal)) {
+        return `${name} declares a door at ${doorList}, and its own TERRAIN SEALS the room: `
+            + `with the door cell(s) WALKABLE the GOAL (${goal.x},${goal.y}) is already `
+            + `unreachable from the START (${start.x},${start.y}). ⛔ A door whose open state `
+            + 'is a sealed room is not a door — clause 1 has two halves and this is the one a '
+            + 'template gets for free from `sealRefusal`.';
+    }
+    const walled = walkableFor(doorKeys);
+    if (connected(width, height, walled, start, goal)) {
+        return `${name} declares a door, and it is NOT A CUT: with its door cell(s) `
+            + `${doorList} walled, the GOAL (${goal.x},${goal.y}) is STILL `
+            + `reachable from the START (${start.x},${start.y}) — so the wall is `
+            + 'DECORATION rather than a door. ⛔ Nothing is gated by the clearer: the '
+            + 'walk goes round, and for the kill-lock family that is a RUN ABORT (the '
+            + 'walk collects the torch with the spinner still alive). ⚖ Ruling 17\'s own '
+            + 'words — a non-cut is decoration. The law reads the FLOOD, not the compass.';
+    }
+    const reach = reachableFrom(width, height, walled, start);
+    for (const key of clearerKeys) {
+        if (!reach.has(key)) {
+            return `${name} declares a door at ${doorList}, and its CLEARER cell (${key}) `
+                + `is on the GOAL side of it — unreachable from the START `
+                + `(${start.x},${start.y}) once the door cell(s) are walled. The `
+                + 'thing that OPENS the door would be a body nobody can reach until the '
+                + 'door it guards is already open, so the room has no answer. ⛓ On the '
+                + 'open room this could not happen (the lane sits one cell back on the '
+                + 'start\'s side of a full-span wall); on a corridor it is the ordinary '
+                + 'case, which is why the law asks rather than assumes.';
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ **THE CARVE RULE — ONE RULE, TWO CLAUSES** (arc 3, slice 2, D3), at
+ * module scope for the same reason the door law is: arc-3 slice 4a's
+ * `on-connector` elements CARVE (the kill gate's pocket, the block pocket's
+ * bend) and a second spelling of "is this carve legal" is the defect this arc
+ * keeps paying for.
+ *
+ * The cells a placement writes `ground` ONTO SKELETON WALL are its CARVE. (A
+ * `ground` write onto skeleton ground is a no-op: the cell was already floor,
+ * so the placement is putting itself in a side corridor the carve made and the
+ * ORACLE decides whether that room works.) A carve is legal iff:
+ *
+ *  (a) **DEAD END** — the carved cells form ONE 4-connected blob, and the blob
+ *      has EXACTLY ONE 4-neighbour outside itself that is walkable once the
+ *      placement's terrain is painted. One mouth, one edge: a leaf hanging off
+ *      the room.
+ *  (b) **NO SHORTCUT** — `shortestPath(start, goal)` is no shorter after the
+ *      placement than before.
+ *
+ * ⛓ (b) IS IMPLIED BY (a) AND IS ASSERTED ANYWAY, because the two are different
+ * claims and the design names both: a one-mouth blob is off every path by
+ * construction (a route entering it must leave by the cell it came in), so (b)
+ * can only fire if (a) ever stopped holding. ⚠ And (a) is the clause that
+ * carries the weight: a tunnel joining two corridors does not shorten
+ * start→goal at all when it joins a side corridor, so a build with (a) dropped
+ * passes (b) and carves shortcuts nobody asked for. That asymmetry is the
+ * mutant table's row (b).
+ *
+ * ⚠ WHEN THE PLACEMENT SEALS THE ROOM the "after" path is `null`, and this rule
+ * says NOTHING: sealing is `sealRefusal`'s sentence and it is the next rule
+ * asked. A rule that answered here would give the reader the wrong fact about
+ * the wrong cell.
+ */
+export function carveLawRefusal({
+    width, height, carved, walkableAfter, walkableBefore, start, goal, name,
+}) {
+    if (carved.length === 0) return null;
+    const inBlob = new Set(carved.map((c) => `${c.x},${c.y}`));
+    // (a1) ONE blob — a flood over the carved set alone.
+    const seen = new Set([`${carved[0].x},${carved[0].y}`]);
+    const queue = [carved[0]];
+    for (let head = 0; head < queue.length; head += 1) {
+        const { x, y } = queue[head];
+        for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+            const k = `${x + dx},${y + dy}`;
+            if (inBlob.has(k) && !seen.has(k)) {
+                seen.add(k);
+                queue.push({ x: x + dx, y: y + dy });
+            }
+        }
+    }
+    const list = carved.map((c) => `(${c.x},${c.y})`).join(' ');
+    if (seen.size !== carved.length) {
+        return `${name}: its CARVE writes ${carved.length} cell(s) of skeleton wall as `
+            + `ground (${list}) in `
+            + `${carved.length - seen.size + 1} separate blobs. A pocket is ONE `
+            + '4-connected blob with ONE mouth; two disconnected pockets are two '
+            + 'carves, and only one of them can be adjudicated by one rule.';
+    }
+    // (a2) EXACTLY ONE MOUTH.
+    const mouths = new Set();
+    for (const c of carved) {
+        for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+            const nx = c.x + dx;
+            const ny = c.y + dy;
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const k = `${nx},${ny}`;
+            if (inBlob.has(k)) continue;
+            if (walkableAfter(nx, ny)) mouths.add(k);
+        }
+    }
+    if (mouths.size !== 1) {
+        return `${name}: its CARVE (${list}) has `
+            + `${mouths.size} MOUTH(S)${mouths.size ? ` — ${[...mouths]
+                .map((k) => `(${k})`).join(' ')}` : ''}, and a template may carve only a `
+            + 'DEAD END: exactly ONE 4-neighbour of the whole blob is walkable ground '
+            + `once this placement is painted. ${mouths.size === 0
+                ? 'A pocket with no mouth is floor nothing can walk to.'
+                : 'A pocket with two mouths is a TUNNEL — it joins two parts of the room '
+                    + 'that the skeleton kept apart, which is a change to the room\'s '
+                    + 'connectivity rather than a place to stand.'}`;
+    }
+    // (b) NO SHORTCUT.
+    const before = shortestPath(width, height, walkableBefore, start, goal);
+    const after = shortestPath(width, height, walkableAfter, start, goal);
+    if (before && after && after.length < before.length) {
+        return `${name}: its CARVE would SHORTEN the start→goal path from `
+            + `${before.length - 1} steps to ${after.length - 1}. A pocket is somewhere `
+            + 'to stand, never a route: a carve that shortens the way to the goal has '
+            + 'rebuilt the skeleton pass 1 committed to.';
+    }
+    return null;
+}
 
 /**
  * ⚖ SLICE 1's CHOICES, INHERITED RATHER THAN RE-DECIDED.
@@ -447,6 +639,65 @@ export function seedlingModel({
     };
 
     /**
+     * ⛓⛓⛓ **THE RECORD'S GROUND MASK, CACHED ON THE RECORD OBJECT** — PROCGEN
+     * ELEMENTS arc 3, slice 2, and it is a COST fix with no semantic content.
+     *
+     * ⛔ `procgenLevel.terrainAt` is a LINEAR SCAN of the tiles layer (`tiles
+     * .find` plus an `Object.values(TERRAIN).find`) and costs **5.8 µs a call** —
+     * slice 1 measured it and paid 72× for asking it per cell (§8.6). This slice
+     * adds THREE more floods to `refusalAt` (the cut, the start-side reach, the
+     * two shortest paths a carve compares), and `anchorsFor` runs `refusalAt`
+     * once per interior cell, so asking `terrainAt` inside each flood's
+     * predicate would be ~64 × 100 scans per anchor walk.
+     *
+     * ⛓ THE CACHE KEY IS THE RECORD OBJECT ITSELF, which is sound because
+     * `procgenLevel`'s writers are PURE — `withTerrain`/`withEntities` return a
+     * NEW frozen record — so a record that is `===` the cached one has the same
+     * tiles by construction. One 100-cell scan per `anchorsFor` call rather
+     * than per candidate cell.
+     *
+     * ⛔ AND IT IS THE **ONE** READING OF "WHICH CELLS ARE GROUND": `sealRefusal`
+     * and the door law below both take their predicate from here, so the
+     * pre-check and the cut can never disagree about what a wall is.
+     */
+    let maskRecord = null;
+    let maskBits = null;
+    const groundMask = (record) => {
+        if (maskRecord === record) return maskBits;
+        const bits = new Uint8Array(record.width * record.height);
+        for (let ty = 0; ty < record.height; ty += 1) {
+            for (let tx = 0; tx < record.width; tx += 1) {
+                if (terrainAt(record, tx, ty) === 'ground') bits[tx + ty * record.width] = 1;
+            }
+        }
+        maskRecord = record;
+        maskBits = bits;
+        return bits;
+    };
+
+    /** The cells one candidate placement would PAINT, keyed `"x,y"`. */
+    const paintedOf = (template, tx, ty) => new Map((template.terrain ?? [])
+        .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.terrain]));
+
+    /**
+     * The walkability the room would have with this candidate's TERRAIN painted,
+     * and with `walled` (a key set) forced solid. ⛔ ONE builder for every flood
+     * this file runs, so "what blocks" is stated once (`sealRefusal`'s own
+     * docblock: `wall`, `water` and `pit` all block; `ground` is the whole
+     * walkable vocabulary).
+     */
+    const walkableWith = (record, painted, walled = null) => {
+        const bits = groundMask(record);
+        const w = record.width;
+        return (x, y) => {
+            const key = `${x},${y}`;
+            if (walled && walled.has(key)) return false;
+            const p = painted.get(key);
+            return p === undefined ? bits[x + y * w] === 1 : p === 'ground';
+        };
+    };
+
+    /**
      * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 3: **THE ELEMENT, CONSTRUCTED
      *    BEFORE THE CARVE** (⚖ design ruling 2; the maze's arc-2 §10.3 order,
      *    one substrate over) ─────────────────────────────────────────────
@@ -481,13 +732,44 @@ export function seedlingModel({
      * non-zero `turns` refuses; a spec that omits it gets `turns: 0` as an
      * OVERRIDE rather than a draw — so the domain a Seedling sweep certifies is
      * `len` alone, and the element's own `turns` domain stays the maze's.
+     *
+     * ── ⛓⛓⛓ SLICE 4a — **THE SECOND PHASE, AND WHERE IT SITS IN THE ORDER** ──
+     *
+     *   0 the LIST draw       — ONE `pick` over a `+` spec's members, and ONLY
+     *                           when the spec IS a list. A bare head spends
+     *                           nothing, so every existing run is unmoved.
+     *   1 the goal cell       ⛔ UNCHANGED, still `roomRng`'s first draw at
+     *                           `--elements=none` and at every bare head.
+     *   2 `instantiate`       — the head's parameters. ⛓ The two room-aware
+     *                           doors declare NONE, so this spends nothing for
+     *                           them.
+     *   3-4 site + construct  — `pre-carve` ONLY.
+     *   5 the CARVE           ⛔ UNCHANGED code.
+     *   6 `construct(interior + the room probe)` — `on-connector` ONLY, and its
+     *                           whole geometry is a function of the room: the
+     *                           single draw it spends is ONE `pick` among door
+     *                           cells the room offers equally.
+     *   7 the composite       — spends NO draw.
+     *
+     * ⛔ THE TWO PHASES NEVER BOTH RUN: one spec names one head, and the head
+     * names one element with one phase. What moved for `pre-carve` is nothing at
+     * all — its branch is the same code at the same stream position, which is
+     * why `--elements=guard;len=2`'s determinism gate reproduces S1's.
      */
     const elementSpecNorm = normalizeElementSpec(elementSpec ?? DEFAULT_ELEMENTS);
-    const elementValues = resolveElementSpec(elementSpecNorm);
+    /**
+     * ⛓ THE LIST DRAW IS FIRST AND IT IS THE ONLY THING BEFORE `instantiate`.
+     * `drawElementHead` returns a bare spec UNCHANGED and spends no draw, so
+     * this line is inert for every spec written before slice 4a.
+     */
+    const elementHead = drawElementHead(elementSpecNorm, roomRng);
+    const elementValues = resolveElementSpec(elementHead);
+    const elementPhase = elementValues.name === ELEMENTS_NONE ? null
+        : ELEMENT_TABLE[elementValues.name].element.phase;
     let elementPlan = null;
     let elementRefusal = null;
-    if (elementValues.name !== ELEMENTS_NONE) {
-        const named = namedParams(elementSpecNorm, { elementOnly: true });
+    if (elementPhase === PHASE_PRE_CARVE) {
+        const named = namedParams(elementHead, { elementOnly: true });
         if (named.turns !== undefined && named.turns !== 0) {
             elementRefusal = { reason: 'the-chain-is-arc-4',
                 detail: `the spec names turns=${named.turns}. ⚖ Arc-3 ruling 1: Seedling gets `
@@ -538,6 +820,94 @@ export function seedlingModel({
 
     const carved = skeletonKind === DEFAULT_SKELETON_KIND ? null : carveRoom();
     let base = carved ? carved.record : blank;
+    /** ⛓ THE SKELETON, FROZEN BEFORE ANY ELEMENT WRITE — what "untouched
+     *  skeleton terrain" means for the `on-connector` carve rule, and what the
+     *  `room` probe reads. `base` itself is reassigned by both composites. */
+    const skeletonBase = base;
+
+    /**
+     * ⛓⛓⛓ **THE ROOM PROBE (D1)** — the READ-ONLY view an `on-connector`
+     * element gets of the room it is standing in, built ONCE over the finished
+     * skeleton.
+     *
+     * ⛔ IT IS BUILT LAZILY AND ONLY WHEN AN `on-connector` ELEMENT ASKS. At
+     * `--elements=none` and at `--elements=guard` nothing here executes: the
+     * probe costs a ground-mask read and two floods, which is nothing beside a
+     * solve and everything beside the byte-identity gate's requirement that the
+     * default path not change.
+     *
+     * ⛔ AND THE THREE FLOOD MEMBERS ARE THE MODEL'S OWN. `connectedWith` and
+     * `isCut` build their predicate from `walkableWith`, the ONE reading of
+     * "which cells are ground" that `sealRefusal` and the door law already
+     * share; `doorLaw` IS `doorLawRefusal`, the function a door TEMPLATE is
+     * adjudicated by. An element does not re-derive a law — it asks it.
+     */
+    let probeMemo = null;
+    const roomProbeFor = () => {
+        const mainPath = shortestPath(d.width, d.height,
+            (x, y) => terrainAt(skeletonBase, x, y) === 'ground',
+            { x: d.start.tx, y: d.start.ty }, { x: goalCell.tx, y: goalCell.ty }) ?? [];
+        const paintMap = (paint) => new Map((paint ?? []).map((t) => [`${t.x},${t.y}`,
+            t.tile === TILE_FLOOR ? 'ground' : 'wall']));
+        const connectedWith = ({ paint = [], walled = [] } = {}) => connected(
+            d.width, d.height,
+            walkableWith(skeletonBase, paintMap(paint), new Set(walled.map((c) => `${c.x},${c.y}`))),
+            { x: d.start.tx, y: d.start.ty }, { x: goalCell.tx, y: goalCell.ty },
+        );
+        return Object.freeze({
+            width: d.width,
+            height: d.height,
+            start: Object.freeze({ x: d.start.tx, y: d.start.ty }),
+            goal: Object.freeze({ x: goalCell.tx, y: goalCell.ty }),
+            mainPath: Object.freeze(mainPath.map((c) => Object.freeze({ x: c.x, y: c.y }))),
+            floorAt: (x, y) => x >= 0 && y >= 0 && x < d.width && y < d.height
+                && terrainAt(skeletonBase, x, y) === 'ground',
+            connectedWith,
+            /** ⛓ SLICE 2's CLAUSE 1 AS A FUNCTION — the one-cell special case of
+             *  the flood above, spelled once. */
+            isCut: (cell) => !connectedWith({ walled: [cell] }),
+            doorLaw: ({ paint = [], doorCells = [], clearer = [] } = {}) => {
+                const painted = paintMap(paint);
+                return doorLawRefusal({
+                    width: d.width,
+                    height: d.height,
+                    walkableFor: (walled) => walkableWith(skeletonBase, painted, walled),
+                    start: { x: d.start.tx, y: d.start.ty },
+                    goal: { x: goalCell.tx, y: goalCell.ty },
+                    doorKeys: new Set(doorCells.map((c) => `${c.x},${c.y}`)),
+                    clearerKeys: clearer.map((c) => `${c.x},${c.y}`),
+                    name: 'the element\'s door',
+                    /** ⛔ AN ELEMENT HAS NO `sealRefusal` AHEAD OF IT — it is
+                     *  constructed, not offered as an anchor — so it pays for
+                     *  clause 1's other half itself. */
+                    askOpenHalf: true,
+                });
+            },
+        });
+    };
+
+    /**
+     * ⛓ THE `on-connector` CONSTRUCT — after the carve, on the room's INTERIOR,
+     * with the probe. It spends the element's ONE declared draw and nothing
+     * else; the composite below spends none.
+     */
+    let onConnectorPlan = null;
+    if (elementPhase === PHASE_ON_CONNECTOR) {
+        const entry = ELEMENT_TABLE[elementValues.name];
+        const drawsBefore = roomRng.draws;
+        const concrete = entry.element.instantiate(roomRng,
+            namedParams(elementHead, { elementOnly: true }));
+        const drawsAtConstruct = roomRng.draws;
+        const site = { x: 1, y: 1, w: d.width - 2, h: d.height - 2, room: roomProbeFor() };
+        const placement = concrete.construct(site);
+        if (placement.refused) {
+            elementRefusal = { reason: placement.refused.reason,
+                detail: placement.refused.detail };
+        } else {
+            onConnectorPlan = { concrete, placement, drawsBefore, drawsAtConstruct,
+                params: concrete.params };
+        }
+    }
 
     /**
      * ⛓⛓⛓ **THE COMPOSITE** — the carve ran over the WHOLE grid exactly as it
@@ -646,6 +1016,100 @@ export function seedlingModel({
         }
     }
 
+    /**
+     * ⛓⛓⛓ **THE `on-connector` COMMIT** — the same three steps the pre-carve
+     * composite takes (adjudicate, paint, realise), against a room that already
+     * exists. ⛔ `dropElement` behaves identically here: the draws are spent,
+     * the geometry is measured, and the level ships WITHOUT the element — which
+     * is what makes a refused certification a graded refusal rather than a
+     * throw.
+     */
+    if (onConnectorPlan) {
+        const out = compositeSeedlingOnConnector({
+            width: d.width,
+            height: d.height,
+            groundAt: (x, y) => terrainAt(skeletonBase, x, y) === 'ground',
+            skeletonWallAt: (x, y) => terrainAt(skeletonBase, x, y) === 'wall',
+            placement: onConnectorPlan.placement,
+            start: d.start,
+            goal: goalCell,
+            doorLaw: ({ paintedFor, doorKeys, clearerKeys }) => doorLawRefusal({
+                width: d.width,
+                height: d.height,
+                walkableFor: paintedFor,
+                start: { x: d.start.tx, y: d.start.ty },
+                goal: { x: goalCell.tx, y: goalCell.ty },
+                doorKeys,
+                clearerKeys,
+                name: `the element "${onConnectorPlan.concrete.instance}"`,
+                askOpenHalf: true,
+            }),
+            carveLaw: ({ carved: cells, walkableAfter, walkableBefore }) => carveLawRefusal({
+                width: d.width,
+                height: d.height,
+                carved: cells,
+                walkableAfter,
+                walkableBefore,
+                start: { x: d.start.tx, y: d.start.ty },
+                goal: { x: goalCell.tx, y: goalCell.ty },
+                name: `the element "${onConnectorPlan.concrete.instance}"`,
+            }),
+        });
+        if (out.refused) {
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+                refused: Object.freeze(out.refused),
+            });
+        } else if (dropElement) {
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+                refused: Object.freeze({
+                    reason: 'the-skeleton-does-not-solve-with-the-element',
+                    detail: 'the door FITS this room and the solver cannot certify it, so the '
+                        + 'level was generated WITHOUT it. ⛓ The refusal carries the solve\'s '
+                        + 'own words on `summary.elements.certification`.',
+                }),
+            });
+        } else {
+            const p = out.placed;
+            base = withTerrain(base, p.painted);
+            const withGoal = withEntities(base, [{
+                type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+            }]);
+            const taken = [Number.parseInt(d.goalTag, 10)];
+            const realised = seedlingOnConnectorEntities({
+                placed: p,
+                tagFor: (...more) => placementTagId(withGoal, [...taken, ...more]),
+            });
+            elementEntities = Object.freeze(realised.entities.map((e) => Object.freeze({
+                type: e.type, ...oelAtTile(e.tx, e.ty),
+                ...(e.attrs ? { attrs: Object.freeze({ ...e.attrs }) } : {}),
+            })));
+            /** ⛔ THE OWNED CELLS ARE THE DOOR, ITS CLEARER, THE WALL AND THE
+             *  CARVE — not a rectangle. This element has none, and reserving one
+             *  would take a corridor's worth of room away from pass 2 for a door
+             *  that occupies two cells. */
+            for (const c of p.owned) elementCells.add(`${c.x},${c.y}`);
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm,
+                ran: true,
+                placed: Object.freeze([Object.freeze({
+                    element: onConnectorPlan.concrete.name,
+                    family: onConnectorPlan.concrete.family,
+                    phase: PHASE_ON_CONNECTOR,
+                    instance: onConnectorPlan.concrete.instance,
+                    index: 0,
+                    params: Object.freeze({ ...onConnectorPlan.params }),
+                    drawsBefore: onConnectorPlan.drawsBefore,
+                    drawsAtConstruct: onConnectorPlan.drawsAtConstruct,
+                    tags: realised.tags,
+                    ...p,
+                })]),
+                refused: null,
+            });
+        }
+    }
+
     const skeleton = () => withEntities(base, [{
         type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
     }, ...elementEntities]);
@@ -696,6 +1160,20 @@ export function seedlingModel({
     const elementRefusalAt = (tx, ty) => {
         if (elementCells.size === 0 || !elementCells.has(`${tx},${ty}`)) return null;
         const p = elementInfo.placed[0];
+        /**
+         * ⛓ AN `on-connector` ELEMENT OWNS CELLS, NOT A RECTANGLE — the door,
+         * its clearer, the wall it grew and the cell it carved. The sentence
+         * names those rather than a site it does not have.
+         */
+        if (p.phase === PHASE_ON_CONNECTOR) {
+            return `(${tx},${ty}) belongs to the ELEMENT ${p.instance} — its door cell `
+                + `(${p.doorCell.x},${p.doorCell.y}), its ${p.clearer.length} clearer cell(s), `
+                + `the ${p.wall.length} cell(s) of wall it GREW and the ${p.carved.length} it `
+                + 'CARVED. ⛔ An element is placed FIRST and the level is built AROUND it '
+                + '(⚖ design ruling 2), so pass 2 may not paint, carve or occupy any of it: '
+                + 'the door is a CUT of this room, and a template that walled the clearer or '
+                + 'opened a way round the door would break the puzzle the level exists to pose.';
+        }
         return `(${tx},${ty}) belongs to the ELEMENT ${p.instance} — its reserved rectangle `
             + `(${p.site.w + 2}x${p.site.h + 2} at (${p.site.x - 1},${p.site.y - 1})) or the `
             + `${p.tunnel.length}-cell tunnel that joins its entry mouth. ⛔ An element is `
@@ -797,65 +1275,6 @@ export function seedlingModel({
             corridor: toTiles(g.corridor),
         });
         return sitesMemo;
-    };
-
-    /**
-     * ⛓⛓⛓ **THE RECORD'S GROUND MASK, CACHED ON THE RECORD OBJECT** — PROCGEN
-     * ELEMENTS arc 3, slice 2, and it is a COST fix with no semantic content.
-     *
-     * ⛔ `procgenLevel.terrainAt` is a LINEAR SCAN of the tiles layer (`tiles
-     * .find` plus an `Object.values(TERRAIN).find`) and costs **5.8 µs a call** —
-     * slice 1 measured it and paid 72× for asking it per cell (§8.6). This slice
-     * adds THREE more floods to `refusalAt` (the cut, the start-side reach, the
-     * two shortest paths a carve compares), and `anchorsFor` runs `refusalAt`
-     * once per interior cell, so asking `terrainAt` inside each flood's
-     * predicate would be ~64 × 100 scans per anchor walk.
-     *
-     * ⛓ THE CACHE KEY IS THE RECORD OBJECT ITSELF, which is sound because
-     * `procgenLevel`'s writers are PURE — `withTerrain`/`withEntities` return a
-     * NEW frozen record — so a record that is `===` the cached one has the same
-     * tiles by construction. One 100-cell scan per `anchorsFor` call rather
-     * than per candidate cell.
-     *
-     * ⛔ AND IT IS THE **ONE** READING OF "WHICH CELLS ARE GROUND": `sealRefusal`
-     * and the door law below both take their predicate from here, so the
-     * pre-check and the cut can never disagree about what a wall is.
-     */
-    let maskRecord = null;
-    let maskBits = null;
-    const groundMask = (record) => {
-        if (maskRecord === record) return maskBits;
-        const bits = new Uint8Array(record.width * record.height);
-        for (let ty = 0; ty < record.height; ty += 1) {
-            for (let tx = 0; tx < record.width; tx += 1) {
-                if (terrainAt(record, tx, ty) === 'ground') bits[tx + ty * record.width] = 1;
-            }
-        }
-        maskRecord = record;
-        maskBits = bits;
-        return bits;
-    };
-
-    /** The cells one candidate placement would PAINT, keyed `"x,y"`. */
-    const paintedOf = (template, tx, ty) => new Map((template.terrain ?? [])
-        .map((w) => [`${tx + w.dx},${ty + w.dy}`, w.terrain]));
-
-    /**
-     * The walkability the room would have with this candidate's TERRAIN painted,
-     * and with `walled` (a key set) forced solid. ⛔ ONE builder for every flood
-     * this file runs, so "what blocks" is stated once (`sealRefusal`'s own
-     * docblock: `wall`, `water` and `pit` all block; `ground` is the whole
-     * walkable vocabulary).
-     */
-    const walkableWith = (record, painted, walled = null) => {
-        const bits = groundMask(record);
-        const w = record.width;
-        return (x, y) => {
-            const key = `${x},${y}`;
-            if (walled && walled.has(key)) return false;
-            const p = painted.get(key);
-            return p === undefined ? bits[x + y * w] === 1 : p === 'ground';
-        };
     };
 
     /**
@@ -1048,33 +1467,11 @@ export function seedlingModel({
     };
 
     /**
-     * ⛓⛓⛓ **THE CARVE RULE — ONE RULE, TWO CLAUSES** (D3).
-     *
-     * The cells a placement writes `ground` ONTO SKELETON WALL are its CARVE.
-     * (A `ground` write onto skeleton ground is a no-op: the cell was already
-     * floor, so the template is placing itself in a side corridor the carve made
-     * and the ORACLE decides whether that room works.) A carve is legal iff:
-     *
-     *  (a) **DEAD END** — the carved cells form ONE 4-connected blob, and the
-     *      blob has EXACTLY ONE 4-neighbour outside itself that is walkable once
-     *      the placement's terrain is painted. One mouth, one edge: a leaf
-     *      hanging off the room.
-     *  (b) **NO SHORTCUT** — `shortestPath(start, goal)` is no shorter after the
-     *      placement than before.
-     *
-     * ⛓ (b) IS IMPLIED BY (a) AND IS ASSERTED ANYWAY, because the two are
-     * different claims and the design names both: a one-mouth blob is off every
-     * path by construction (a route entering it must leave by the cell it came
-     * in), so (b) can only fire if (a) ever stopped holding. ⚠ And (a) is the
-     * clause that carries the weight: a tunnel joining two corridors does not
-     * shorten start→goal at all when it joins a side corridor, so a build with
-     * (a) dropped passes (b) and carves shortcuts nobody asked for. That
-     * asymmetry is the mutant table's row (b).
-     *
-     * ⚠ WHEN THE PLACEMENT SEALS THE ROOM the "after" path is `null`, and this
-     * rule says NOTHING: sealing is `sealRefusal`'s sentence and it is the next
-     * rule asked. A rule that answered here would give the reader the wrong
-     * fact about the wrong cell.
+     * ⛓ THE TEMPLATE HALF OF THE CARVE RULE — which of this candidate's writes
+     * are a CARVE (a `ground` write onto SKELETON WALL), resolved against an
+     * anchor and handed to `carveLawRefusal`, which is the rule itself and lives
+     * at module scope because arc-3 slice 4a gave it a SECOND caller: the
+     * `on-connector` elements carve too.
      */
     const carveRefusal = (record, template, tx, ty) => {
         const carved = [];
@@ -1082,145 +1479,47 @@ export function seedlingModel({
             if (w.terrain !== 'ground') continue;
             const x = tx + w.dx;
             const y = ty + w.dy;
-            if (terrainAt(base, x, y) === 'wall') carved.push({ x, y, key: `${x},${y}` });
+            if (terrainAt(base, x, y) === 'wall') carved.push({ x, y });
         }
-        if (carved.length === 0) return null;
-        const name = `"${template.instance ?? template.name}" at (${tx},${ty})`;
-        const inBlob = new Set(carved.map((c) => c.key));
-        // (a1) ONE blob — a flood over the carved set alone.
-        const seen = new Set([carved[0].key]);
-        const queue = [carved[0]];
-        for (let head = 0; head < queue.length; head += 1) {
-            const { x, y } = queue[head];
-            for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
-                const k = `${x + dx},${y + dy}`;
-                if (inBlob.has(k) && !seen.has(k)) {
-                    seen.add(k);
-                    queue.push({ x: x + dx, y: y + dy });
-                }
-            }
-        }
-        if (seen.size !== carved.length) {
-            return `${name}: its CARVE writes ${carved.length} cell(s) of skeleton wall as `
-                + `ground (${carved.map((c) => `(${c.key})`).join(' ')}) in `
-                + `${carved.length - seen.size + 1} separate blobs. A pocket is ONE `
-                + '4-connected blob with ONE mouth; two disconnected pockets are two '
-                + 'carves, and only one of them can be adjudicated by one rule.';
-        }
-        // (a2) EXACTLY ONE MOUTH.
         const painted = paintedOf(template, tx, ty);
-        const walkable = walkableWith(record, painted);
-        const mouths = new Set();
-        for (const c of carved) {
-            for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
-                const nx = c.x + dx;
-                const ny = c.y + dy;
-                if (nx < 0 || ny < 0 || nx >= record.width || ny >= record.height) continue;
-                const k = `${nx},${ny}`;
-                if (inBlob.has(k)) continue;
-                if (walkable(nx, ny)) mouths.add(k);
-            }
-        }
-        if (mouths.size !== 1) {
-            return `${name}: its CARVE (${carved.map((c) => `(${c.key})`).join(' ')}) has `
-                + `${mouths.size} MOUTH(S)${mouths.size ? ` — ${[...mouths]
-                    .map((k) => `(${k})`).join(' ')}` : ''}, and a template may carve only a `
-                + 'DEAD END: exactly ONE 4-neighbour of the whole blob is walkable ground '
-                + `once this placement is painted. ${mouths.size === 0
-                    ? 'A pocket with no mouth is floor nothing can walk to.'
-                    : 'A pocket with two mouths is a TUNNEL — it joins two parts of the room '
-                        + 'that the skeleton kept apart, which is a change to the room\'s '
-                        + 'connectivity rather than a place to stand.'}`;
-        }
-        // (b) NO SHORTCUT.
-        const before = shortestPath(record.width, record.height,
-            walkableWith(record, new Map()),
-            { x: d.start.tx, y: d.start.ty }, { x: goalCell.tx, y: goalCell.ty });
-        const after = shortestPath(record.width, record.height, walkable,
-            { x: d.start.tx, y: d.start.ty }, { x: goalCell.tx, y: goalCell.ty });
-        if (before && after && after.length < before.length) {
-            return `${name}: its CARVE would SHORTEN the start→goal path from `
-                + `${before.length - 1} steps to ${after.length - 1}. A pocket is somewhere `
-                + 'to stand, never a route: a carve that shortens the way to the goal has '
-                + 'rebuilt the skeleton pass 1 committed to.';
-        }
-        return null;
+        return carveLawRefusal({
+            width: record.width,
+            height: record.height,
+            carved,
+            walkableAfter: walkableWith(record, painted),
+            walkableBefore: walkableWith(record, new Map()),
+            start: { x: d.start.tx, y: d.start.ty },
+            goal: { x: goalCell.tx, y: goalCell.ty },
+            name: `"${template.instance ?? template.name}" at (${tx},${ty})`,
+        });
     };
 
     /**
-     * ⛓⛓⛓ **THE DOOR LAW — A DOOR IS A CUT** (PROCGEN ELEMENTS arc 3, slice 2;
-     * ⚖ design ruling 17, taken whole). ONE flood-based law, every kind, every
-     * door family — it REPLACES `doorClear` and re-expresses `INTERIOR_SPAN`'s
-     * *"must cross the whole interior to be a door"* as *"must be a CUT"*.
-     *
-     * A row that declares `door` names its DOOR CELLS (`doorCells` — the gap
-     * cell(s) that hold the clearer, and which write no wall) and its CLEARER
-     * CELLS (`clearer` — the spinner; the weigh lane's block/button/stance/slide;
-     * EMPTY for `wall-gap-block`, whose block stands IN the door cell).
-     *
-     *  1. **CUT** — with this candidate's terrain painted AND the door cells
-     *     treated as WALL, the GOAL is unreachable from the START; with them
-     *     walkable, it is reachable. ⛓ THE SECOND HALF IS `sealRefusal`, WHICH
-     *     IS ALREADY ASKED ONE RULE ABOVE — a candidate that reaches this line
-     *     has passed it — so this function runs ONE flood and not two. ⚖ The
-     *     one-of-everything law read the right way round: the second flood would
-     *     not be a second SPELLING, it would be a second ASKING.
-     *  2. **START-SIDE** — with the door cells walled, every clearer cell is
-     *     reachable from the START.
-     *
-     * ── ⛓⛓ WHY CLAUSE 2 EXISTS, and why `doorClear` could not see it ──────
-     *
-     * Clause 2 is `doorClear`'s mechanism GENERALISED. On the open room the
-     * clearer sits at across `-1` — north or west of a full-span wall, i.e. the
-     * start's side by the room's fixed NW corner — so "the goal is strictly
-     * beyond" IMPLIED it and the old rule needed one comparison. On a CORRIDOR
-     * it implies nothing: a span-1 door's nub can be carved on the GOAL side,
-     * where the spinner is a body nobody can reach until the lock it guards
-     * opens. That room is not merely low-yield, it is unsolvable, and the flood
-     * is what says so at anchor time.
-     *
-     * ⛔ AND THE OFF-DOMAIN **THROW** WENT WITH `doorClear`. That assertion
-     * ("the start must be north-west of every anchor") existed because the old
-     * rule read the COMPASS; this one reads the flood, so a start anywhere in
-     * the room is a room this law simply answers. ⚠ Trap 255's ordering claim
-     * survives it unchanged for a different reason: the footprint walk still
-     * runs first, because a flood handed writes outside the rectangle would read
-     * `terrainAt` past the room.
+     * ⛓ THE TEMPLATE HALF OF THE DOOR LAW — the offsets resolved against an
+     * anchor and handed to `doorLawRefusal`, which is the law itself and lives
+     * at module scope because arc-3 slice 4a gave it a SECOND caller (the
+     * `on-connector` element composite, whose cells are absolute). ⛔ Read the
+     * law's own docblock for what it claims; this closure only says WHERE the
+     * cells came from.
      */
     const doorRefusal = (record, template, tx, ty) => {
         if (!template.door) return null;
-        const name = `"${template.instance ?? template.name}" at (${tx},${ty})`;
-        const doorKeys = new Set((template.doorCells ?? [])
-            .map((c) => `${tx + c.dx},${ty + c.dy}`));
         const painted = paintedOf(template, tx, ty);
-        const walled = walkableWith(record, painted, doorKeys);
-        const doorList = [...doorKeys].map((k) => `(${k})`).join(' ');
-        if (connected(record.width, record.height, walled,
-            { x: d.start.tx, y: d.start.ty }, { x: goalCell.tx, y: goalCell.ty })) {
-            return `${name} declares a door, and it is NOT A CUT: with its door cell(s) `
-                + `${doorList} walled, the GOAL (${goalCell.tx},${goalCell.ty}) is STILL `
-                + `reachable from the START (${d.start.tx},${d.start.ty}) — so the wall is `
-                + 'DECORATION rather than a door. ⛔ Nothing is gated by the clearer: the '
-                + 'walk goes round, and for the kill-lock family that is a RUN ABORT (the '
-                + 'walk collects the torch with the spinner still alive). ⚖ Ruling 17\'s own '
-                + 'words — a non-cut is decoration. The law reads the FLOOD, not the compass.';
-        }
-        const reach = reachableFrom(record.width, record.height, walled,
-            { x: d.start.tx, y: d.start.ty });
-        for (const c of template.clearer ?? []) {
-            const key = `${tx + c.dx},${ty + c.dy}`;
-            if (!reach.has(key)) {
-                return `${name} declares a door at ${doorList}, and its CLEARER cell (${key}) `
-                    + `is on the GOAL side of it — unreachable from the START `
-                    + `(${d.start.tx},${d.start.ty}) once the door cell(s) are walled. The `
-                    + 'thing that OPENS the door would be a body nobody can reach until the '
-                    + 'door it guards is already open, so the room has no answer. ⛓ On the '
-                    + 'open room this could not happen (the lane sits one cell back on the '
-                    + 'start\'s side of a full-span wall); on a corridor it is the ordinary '
-                    + 'case, which is why the law asks rather than assumes.';
-            }
-        }
-        return null;
+        return doorLawRefusal({
+            width: record.width,
+            height: record.height,
+            walkableFor: (walled) => walkableWith(record, painted, walled),
+            start: { x: d.start.tx, y: d.start.ty },
+            goal: { x: goalCell.tx, y: goalCell.ty },
+            doorKeys: new Set((template.doorCells ?? [])
+                .map((c) => `${tx + c.dx},${ty + c.dy}`)),
+            clearerKeys: (template.clearer ?? []).map((c) => `${tx + c.dx},${ty + c.dy}`),
+            name: `"${template.instance ?? template.name}" at (${tx},${ty})`,
+            /** ⛔ `sealRefusal` IS THE RULE ASKED IMMEDIATELY ABOVE, so the open
+             *  half is already answered for a template and this caller does not
+             *  ask it twice. See the law's own docblock. */
+            askOpenHalf: false,
+        });
     };
 
     const refusalAt = (record, template, tx, ty) => {
@@ -1296,7 +1595,30 @@ export function seedlingModel({
          * `summary.elements[]` where `generateSeedlingLevel` puts it.
          */
         elements: elementInfo,
+        /**
+         * ⛓⛓ **THE ROOM PROBE, ON THE SURFACE** (arc 3, slice 4a) — the same
+         * READ-ONLY view an `on-connector` element is handed, memoised so a
+         * caller that asks twice reads one answer.
+         *
+         * ⛔ It is exported because the CENSUS needs to ask the elements'
+         * builders directly (the pocket-preference control arm runs
+         * `buildKillGate` twice on ONE room) and because slice 5's page will
+         * draw the main path and the cut cells as overlays. A census that built
+         * its own probe would be measuring a room the generator does not
+         * generate — `feedback_code_sweep_misses_the_data`, from the instrument
+         * side.
+         */
+        roomProbe: () => { probeMemo ??= roomProbeFor(); return probeMemo; },
         elementSpec: elementSpecNorm,
+        /**
+         * ⛓ **WHICH HEAD THIS RUN ACTUALLY DREW** — the same object as
+         * `elementSpec` for a bare head, and the drawn member for a `+` LIST.
+         * ⛔ Its own field rather than an overwrite of `elementSpec`, because
+         * "what the caller asked for" and "what the stream chose" are different
+         * facts and a payload that carried only the second could not be
+         * reproduced from the first.
+         */
+        elementHead,
         /**
          * ⛓⛓ **HOW MANY DRAWS THE ROOM STREAM SPENT** — the COUNTING instrument
          * the byte-inertness claim is really about (arc-1 §9's rule: count the
@@ -1630,7 +1952,40 @@ export function seedlingSeam({
      * of refusal it was from the solve's own structured fields.
      */
     let certification = null;
-    if (model.elements.ran) {
+    /**
+     * ⛓⛓⛓ **THE ITEM GATE — REFUSED FOR FREE, BEFORE A SOLVE IS SPENT** (arc 3,
+     * slice 4a). The kill gate is the only element in the arc a PRE-SWORD boot
+     * cannot clear: `weaponForPress` returns null with no sword slot, so the
+     * press is a silent no-op and the lock never opens. That is the same fact
+     * `KILL_LOCK_TEMPLATES` encodes by living only in `POST_SWORD_TEMPLATES`,
+     * and the element table states it as `needs` (a BINDING fact, like `binds`).
+     *
+     * ⛔ IT IS ASKED HERE AND NOT IN THE MODEL, because the model has no items —
+     * the boot is the SEAM's argument. And it is asked BEFORE the solve because
+     * spending a full solver budget to discover what the boot flags already say
+     * is the cost this arc keeps refusing to pay. ⚠ The draws are still spent
+     * and the element is still DROPPED by the ordinary path, so a refused
+     * biome is a real level and not an error.
+     */
+    const needed = (ELEMENT_TABLE[model.elementHead?.name]?.needs ?? [])
+        .filter((k) => items?.[k] !== true);
+    if (model.elements.ran && needed.length > 0) {
+        certification = Object.freeze({
+            certified: false,
+            verdict: null,
+            classifiedBy: null,
+            reasonText: null,
+            ticks: null,
+            strategies: Object.freeze([]),
+            heldAtDoor: null,
+            geometry: model.elements.placed,
+            obstacle: null,
+            gap: 'the-element-needs-an-item-this-biome-does-not-grant',
+            needs: Object.freeze(needed),
+        });
+        model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });
+        oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+    } else if (model.elements.ran) {
         const cert = oracle.solve(model.skeleton(), { templates: [] });
         certification = Object.freeze({
             certified: cert.verdict === VERDICT.SOLVED,
@@ -1644,7 +1999,8 @@ export function seedlingSeam({
              *  `null` = the route never crossed the door, which is what an
              *  uncertified gadget looks like from the plan's side. */
             heldAtDoor: cert.verdict === VERDICT.SOLVED
-                ? liftedClaimFrom(cert, model.elements.placed[0]) : null,
+                ? liftedClaimFor(model.elements.placed[0].element)(
+                    cert, model.elements.placed[0]) : null,
             /** ⛓ THE GEOMETRY, carried across the drop so the census survives it. */
             geometry: model.elements.placed,
             /** ⛓ THE OBSTACLE THE SOLVE NAMED — structured, beside the prose. */
@@ -1686,8 +2042,8 @@ export function generateSeedlingLevel({
              * key the design gives them. ⛔ Omitted entirely at `--elements=none`,
              * which is what keeps the payload byte-identical there.
              */
-            ...(model.elementSpec.name === ELEMENTS_NONE ? {}
-                : { elements: elementSummaryOf(model, { certification }) }),
+            ...(!isElementList(model.elementSpec) && model.elementSpec.name === ELEMENTS_NONE
+                ? {} : { elements: elementSummaryOf(model, { certification }) }),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.defaults.goalClass,

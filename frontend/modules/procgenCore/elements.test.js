@@ -321,6 +321,7 @@ const roomProbe = (over = {}) => ({
     floorAt: (x, y) => ROOM_FLOOR.has(`${x},${y}`),
     mainPath: [1, 2, 3, 4, 5, 6, 7, 8].map((x) => ({ x, y: 1 })),
     isCut: () => true,
+    connectedWith: () => true,
     doorLaw: () => null,
     ...over,
 });
