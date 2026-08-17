@@ -3114,6 +3114,27 @@ export function createLevelRun({
     // the same reason. It is per WORLD, not per run.
     let firstTickInWorld = true;
     /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 2d — THE FORECAST'S MEMO, and it is
+     * a PURE PERFORMANCE change whose only claim is that nothing moves.
+     *
+     * Probe 2b profiled the corridor kill lock (kickoff §9b.2): `solverBot
+     * .deriveStrike` asks `dangerMap.dangerDuringTransit` once per candidate
+     * strike, `dangerAt` → `spinnerDanger` asks `run.spinnerForecast(horizon)`
+     * once per query and reads ONE element of it, and every such query
+     * re-simulated the bodies from this tick's state all over again —
+     * `spinnerForecast` 68.1% of a 39 s solve, `stepSpinner` 66.5%,
+     * `reflectAxis` 44.2%. The derivation had already computed a LONGER
+     * forecast three frames up the stack.
+     *
+     * ⇒ ONE forecast per tick, extended on demand and sliced for every
+     * shorter request. See `spinnerForecast` for the key, the invalidation
+     * and why extending is byte-identical to recomputing.
+     *
+     * ⚠ `null` MEANS "ASK AGAIN", never "no spinners" — the empty-roster arm
+     * returns before the memo is consulted, exactly as it did before.
+     */
+    let spinnerForecastMemo = null;
+    /**
      * ⛔⛔⛔ R5 SLICE 22: THE CAMERA IS LIVE NOW, AND SLICE 20'S NAMED
      * SIMPLIFICATION IS WHAT THE RECORDING REFUTED.
      *
@@ -9472,10 +9493,77 @@ export function createLevelRun({
          * spinner; `stepSpinner` returns new objects, so copying the Map's
          * values is enough.
          */
+        /**
+         * ⛓⛓⛓ ARC 3 SLICE 2d — MEMOISED PER TICK, AND THE KEY IS THE WHOLE
+         * ARGUMENT.
+         *
+         * ⛔ WHAT THE FORECAST READS, ENUMERATED — this list IS the key:
+         *   1. `spinnerStateFor(level)` — the live roster. Compared by
+         *      IDENTITY (`state === live`), which also catches the two
+         *      `spinnerStates.delete(n)` sites (a re-entered room rebuilds
+         *      its bodies per visit) without having to know where they are.
+         *   2. `level` — a transition swaps the room.
+         *   3. `world` — `applyClearNow` drops the world memo and REBUILDS,
+         *      so the object's identity is what says "different Solid".
+         *   4. `firstTickInWorld` — the ONE-TICK TRANSIENT below, which picks
+         *      `objectSolids` over `solids` for step 1 only. Frozen into a
+         *      memo that outlived its tick, the room would have NO WALLS —
+         *      the exact defect R8 slice 7 measured from the other side.
+         *   5. `ticksCompleted` — everything else `spinnerCtx()` reads (the
+         *      pushables, the open activators, the bridges, the ceremony
+         *      freeze, and the whole `liveSolidOpts` bag underneath them)
+         *      moves ONLY inside `advance`. ⛓ THAT IS A CLAIM ABOUT THIS
+         *      OBJECT'S SURFACE AND IT WAS CHECKED: `advance` is its only
+         *      mutating member. Every other one is a getter returning copies,
+         *      there are NO setters, and the two function members that are
+         *      not `advance` are pure — `previewStepper` hands out `stepV2`
+         *      bound to a snapshot and the CALLER owns the state it steps, so
+         *      a preview cannot move a pushable here.
+         *
+         * ⛔ AND THE KEY IS THE BELT, NOT THE BRACES: `advance` NULLS this
+         * memo as its FIRST statement, before `applyTimedClears` or anything
+         * else can touch the world, so a tick that throws half-way cannot
+         * leave a survivor for a caller that catches. The key is what would
+         * catch a mutator added later that forgets to.
+         *
+         * ⛓ EXTENDING IS IDENTICAL TO RECOMPUTING, not merely close. The
+         * stepper is deterministic and `st` is this memo's OWN deep copy, so
+         * continuing it from row k walks exactly the states a fresh call
+         * would have walked to reach row k — and the ctx split is preserved
+         * verbatim, `ctxNow` for row 0 and `ctxAfter` for every row after it,
+         * because the INDEX decides it and not the call.
+         *
+         * ⚠ THE ROWS AND THE RECTS ARE SHARED; the outer array is not
+         * (`slice`). Checked rather than assumed: every consumer —
+         * `clearOfHammersAt`, `discClearanceAt`, `deriveStrike`,
+         * `deriveRefuge`, `trainIsSafeHere`, `stepToward`, `safeStep`,
+         * `dangerMap.spinnerDanger` and `botDriverV2`'s glide-corridor scan —
+         * only READS `x`/`right`/`y`/`bottom`. A caller that mutated one
+         * would be a defect to NAME, not a reason to deep-copy per query,
+         * which is the cost this memo exists to remove.
+         *
+         * ⚠ `need` REPRODUCES THE OLD LOOP'S LENGTH EXACTLY, including for
+         * the arguments no caller passes: `for (i = 0; i < n; …)` yields
+         * `ceil(n)` rows, and none at all for `n <= 0` or `NaN`.
+         *
+         * ⛔ AND IT DOES NOT CHANGE WHAT THIS FUNCTION IS. The docblock above
+         * says a forecast is a SEARCH HEURISTIC nothing believes; caching one
+         * makes it a heuristic computed once. The gate for this change is
+         * that every tape, every md5 and every per-anchor outcome is
+         * BYTE-IDENTICAL and only the ms columns fall (kickoff §9d).
+         */
         spinnerForecast(n) {
             const live = spinnerStateFor(level);
             if (live.byId.size === 0) return [];
-            const st = { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level };
+            const need = Number.isFinite(n) ? Math.max(0, Math.ceil(n)) : 0;
+            const memo = spinnerForecastMemo;
+            const usable = memo !== null
+                && memo.state === live
+                && memo.level === level
+                && memo.world === world
+                && memo.firstTick === firstTickInWorld
+                && memo.ticks === ticksCompleted;
+            if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
             /**
              * ⛔⛔⛔ R8 SLICE 7 — A CTX SNAPSHOT MAY FREEZE **STATE**, BUT
              * NEVER A **ONE-TICK TRANSIENT**.
@@ -9505,15 +9593,28 @@ export function createLevelRun({
              * set, the freeze — is untouched, because that approximation is
              * the one `runFire`'s exact effect check is allowed to lean on.
              */
-            const ctxNow = spinnerCtx();
-            const ctxAfter = firstTickInWorld
-                ? spinnerCtx({ beforeTypeFlip: false }) : ctxNow;
-            const out = [];
-            for (let i = 0; i < n; i += 1) {
-                stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
-                out.push(spinnerRects(st).map((s) => s.rect));
+            const cur = usable ? memo : {
+                state: live,
+                level,
+                world,
+                firstTick: firstTickInWorld,
+                ticks: ticksCompleted,
+                st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
+                ctxNow: null,
+                ctxAfter: null,
+                rows: [],
+            };
+            if (!usable) {
+                cur.ctxNow = spinnerCtx();
+                cur.ctxAfter = firstTickInWorld
+                    ? spinnerCtx({ beforeTypeFlip: false }) : cur.ctxNow;
             }
-            return out;
+            for (let i = cur.rows.length; i < need; i += 1) {
+                stepSpinners(cur.st, i === 0 ? cur.ctxNow : cur.ctxAfter);
+                cur.rows.push(spinnerRects(cur.st).map((s) => s.rect));
+            }
+            spinnerForecastMemo = cur;
+            return cur.rows.slice(0, need);
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
@@ -10942,6 +11043,13 @@ export function createLevelRun({
          * can, and one that wants them cannot get them back.
          */
         advance(held) {
+            // ⛓⛓ ARC 3 SLICE 2d: THE FORECAST MEMO DIES FIRST, above every
+            // line that can move a body, a block or a world. Its key would
+            // catch this tick anyway (`ticksCompleted` moves below); this is
+            // here so a tick that THROWS half-way — `firePendingKillLockThrows`
+            // is three lines down — cannot leave a survivor behind for a
+            // caller that catches. See `spinnerForecast`.
+            spinnerForecastMemo = null;
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
             // tick numbered `at` begins, which is what "the game cleared it

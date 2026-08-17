@@ -2143,3 +2143,105 @@ describe('run.owlPods — the level gate the boss half always had', () => {
         expect(run.owlPods).toEqual([]);
     });
 });
+
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 2d — THE FORECAST MEMO'S ONLY CLAIM.
+ *
+ * `spinnerForecast` now keeps ONE forecast per tick and slices or EXTENDS it
+ * for every later request, because probe 2b profiled `deriveStrike` →
+ * `dangerDuringTransit` → `spinnerForecast` → `stepSpinner` at 65% of a 39 s
+ * solve (kickoff §9b.2). A cache is only allowed here if it is invisible, so
+ * the claim is EQUALITY WITH A COLD ONE and nothing else.
+ *
+ * ⛔ THE REFERENCE ARM IS A RUN PER QUERY. A second call on the SAME run would
+ * be the memo grading itself; a fresh run driven to the same tick and asked
+ * ONCE has a cold memo, which is byte-for-byte the function that shipped
+ * before this slice.
+ */
+describe('⛓⛓⛓ arc 3 slice 2d: the memoised spinner forecast', () => {
+    const src = atlasLevelSource();
+    const boot = { level: 18, x: 16, y: 112 };
+    const mk = () => createLevelRun({
+        levelSource: src, boot, noclip: false, noHazards: [], noDamage: true,
+        grants: [], persistence: [], despawn: [], equips: [], pins: [],
+        save: null, rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    const NONE = new Set();
+    /** A run driven to tick `t` and asked ONCE — the pre-memo behaviour. */
+    const coldAt = (t, h) => {
+        const r = mk();
+        for (let i = 0; i < t; i += 1) r.advance(NONE);
+        return r.spinnerForecast(h);
+    };
+
+    it('⛔ MEMOISED === COLD, over 3 ticks × 6 horizons, in a hostile query order', () => {
+        // ⛓ NON-VACUITY FIRST: L18 is the two-body room the claim is about.
+        expect(mk().spinnerBodies.map((b) => b.id))
+            .toEqual(['spinner@48,96', 'spinner@112,48']);
+
+        const HORIZONS = [1, 2, 3, 5, 12, 40];
+        const subject = mk();
+        let compared = 0;
+        for (let t = 0; t < 3; t += 1) {
+            /**
+             * ⛔ BOTH MEMO PATHS AT EVERY TICK. Longest-first makes every
+             * later query a SLICE of a longer row set; shortest-first makes
+             * every later query EXTEND a shorter one from where it stopped.
+             * Testing one order would leave half the mechanism unmeasured.
+             */
+            const order = t % 2 === 0 ? [...HORIZONS].reverse() : [...HORIZONS];
+            for (const h of order) {
+                expect(subject.spinnerForecast(h)).toEqual(coldAt(t, h));
+                compared += 1;
+            }
+            // ...and the same horizon twice: the plain cache hit.
+            expect(subject.spinnerForecast(order[0])).toEqual(coldAt(t, order[0]));
+            subject.advance(NONE);
+        }
+        expect(compared).toBe(18);
+    });
+
+    /**
+     * ⛔⛔ THE ROW THAT MAKES THE ONE ABOVE MEAN SOMETHING. A memo served
+     * across `advance` would be caught only if the forecast actually MOVES
+     * between ticks — otherwise "memoised === cold" is satisfied by a
+     * function that returns the same thing for ever.
+     */
+    it('⛔ NON-VACUITY: the forecast MOVES with the tick, so a stale memo is visible', () => {
+        /**
+         * ⛔⛔ THE FIRST TICK IS THE WRONG ONE TO ASK ON, and the mutant is
+         * what said so (trap 306). Written as `spinnerForecast → advance →
+         * spinnerForecast` from tick 0 this row PASSED under the memo-without-
+         * the-tick-key mutant — not because the key worked, but because
+         * `firstTickInWorld` flips `true -> false` across exactly that
+         * `advance` and a DIFFERENT clause of the key caught it. A property
+         * guarded twice needs the measurement taken where only ONE guard is
+         * live: from tick 1 onward `firstTickInWorld` is false on both sides
+         * and the tick is the only thing that has moved.
+         */
+        const run = mk();
+        run.advance(NONE);
+        const before = run.spinnerForecast(4);
+        run.advance(NONE);
+        const after = run.spinnerForecast(4);
+        expect(after).not.toEqual(before);
+        expect(after).toEqual(coldAt(2, 4));
+        expect(before).toEqual(coldAt(1, 4));
+    });
+
+    /**
+     * ⚠ THE LENGTH LAW THE OLD LOOP HAD, KEPT. `for (i = 0; i < n; …)` yields
+     * `ceil(n)` rows and none at all for `n <= 0` or `NaN` — no caller passes
+     * those, and a `slice(0, n)` that quietly re-derived the length would be
+     * a behaviour change hiding inside a cache.
+     */
+    it('⚠ the row COUNT is the old loop\'s, including for arguments nobody passes', () => {
+        const run = mk();
+        expect(run.spinnerForecast(0)).toEqual([]);
+        expect(run.spinnerForecast(-2)).toEqual([]);
+        expect(run.spinnerForecast(Number.NaN)).toEqual([]);
+        expect(run.spinnerForecast(4).length).toBe(4);
+        expect(run.spinnerForecast(2.5).length).toBe(3);
+        expect(run.spinnerForecast(7).length).toBe(7);
+    });
+});
