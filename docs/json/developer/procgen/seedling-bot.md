@@ -9374,7 +9374,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED and slice S1 CERTIFIED it**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, and slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9736,3 +9736,71 @@ with records `['weigh','hold','collect']` and the lifted claim **true**. As-buil
   slice's cell for cell — the capability fires only where a stance was
   UNREACHABLE and a prerequisite exists, which nothing that already worked ever
   needed.
+
+### Arc 3, slice 4a — the room-aware DOOR ELEMENTS: a KILL GATE and a BLOCK POCKET (2026-08-17)
+
+Two new elements, both through the ELEMENT contract's **second phase**, both
+certified by the existing solver (⛔ no solver line changed). The as-built with
+every table is arc-3 kickoff §12.
+
+- ⛓⛓⛓ **A DOOR'S GEOMETRY IS THE ROOM'S, AND `span` WAS A PROXY FOR IT.**
+  Neither new element declares a single parameter. The three door TEMPLATES they
+  supersede carried `span`/`ori`/`gap` because a pass-2 template writes a
+  RELATIVE footprint at an anchor somebody else offers and cannot know the room
+  — and slice 2 measured what that cost (`span`'s domain is `{1, 8}`, two values
+  for two rooms, and half the kill family's `empty` draws became NO_ANCHOR by
+  construction). An element constructed AFTER the carve **GROWS** its wall until
+  the wall meets the room: 0 cells on a corridor, 7 on the open 10×10 room, a
+  chamber's walls in a chamber.
+- **ONE CONTRACT, TWO PHASES.** `defineElement` gains `phase`, default
+  `pre-carve` — today's law, unchanged byte for byte. An `on-connector` element
+  is constructed after the carve, is handed the room's interior plus a READ-ONLY
+  `room` probe (`floorAt`, `mainPath`, `isCut`, `connectedWith`, and the
+  BINDING's own `doorLaw`), and writes SPARSELY: its tiles may be EMPTY, its
+  entities may not; an entity may stand on a cell the SKELETON floored; it has
+  NO ports and `area: null` — *a door does not MAKE an area, it CUTS one*.
+- **ONE DOOR LAW, TWO CALLERS.** `doorLawRefusal` and `carveLawRefusal` moved to
+  module scope in `procgenSeedling.js`; a template resolves offsets against an
+  anchor and an element hands absolute cells, and `askOpenHalf` names which
+  caller has already paid for clause 1's other half (a template gets it from
+  `sealRefusal`; an element is constructed, not offered, so it asks).
+- **THE CENSUS** (10 kinds × 12 seeds, geometry only, seconds): kill gate
+  **61/120**, block pocket **62/120**, both on ALL TEN kinds. ⛓ The real
+  denominator is **8 of 12** — seeds 8 and 11 put the goal ADJACENT to the start
+  and 5 and 6 within 2 of it on EVERY kind, because the goal is the room
+  stream's FIRST draw and precedes the carve.
+- **THE YIELD TABLE** (eight arms, both palettes; the four `none`/`guard`
+  controls reproduce slice S1's cell for cell): the **block pocket certifies on
+  every placement it gets — 36 of 36, in both biomes, lifted claim TRUE on every
+  one**, and it is the first element in the arc that never fails a certification
+  solve. The **kill gate certifies 6 of 28 post-sword**, and all 22 refusals are
+  the one PRE-EXISTING class (`kill:` finding no strike stance beside the
+  spinner — the corridor kill lock's own cost story, R9's).
+- ⚠ **AND THE KILL GATE'S THROW CLASS NOW REACHES THE HARNESS.** As a TEMPLATE
+  the spinner is a pass-2 candidate and the pre-existing `swing … collideLine`
+  abort takes one generation; as an ELEMENT it is in the SKELETON, so the throw
+  takes the CERTIFICATION solve and the cell dies. Same class, one layer in.
+- ⛓ **A DROPPED `on-connector` ELEMENT LEAVES THE LEVEL BYTE-IDENTICAL TO
+  `--elements=none`** — its single draw is the LAST of the room stream and pass
+  2 runs on a separate one. That is the OPPOSITE of the pre-carve rule (*a
+  refused element spends its draws and moves the room*), and both are true of
+  their own phase.
+- **THE `+` LIST** (`guard;len=2+killgate+blockpocket`) is a CHOICE, not a
+  conjunction — ONE BLOCK PER LEVEL forbids the other reading — and one
+  `rng.pick` over its members is the only draw it spends. `none` is a legal
+  member.
+- **THE ITEM GATE**: `ELEMENT_TABLE.killgate.needs = ['hasSword']`, refused at
+  the seam for FREE. A pre-sword kill gate can never certify, and spending 32
+  certification solves to learn what the boot flags already say would make the
+  yield table measure the boot rather than the gate. It is `require:`-shaped and
+  slice 4b generalises it.
+- ⛔⛔ **THE DOOR-TEMPLATE RETIREMENT IS PREPARED AND MEASURED AND NOT
+  EXECUTED.** ⚖ The user ruled all three retire together; the coupling — that
+  retiring them while elements are OPT-IN leaves the DEFAULT generator with no
+  doors at all — is with the user. Measured on a temporary build that was
+  restored: the retired roster is THREE templates (`wall-segment`,
+  `water-pool`, `pit-patch`), both biomes become the same roster, and `none`
+  keeps MORE obstacles (107) that are ALL decoration — zero `shove`, `weigh` or
+  `kill` in the whole table. With a default spec on, **27 certified doors in 72
+  cells pre-sword and 21 post-sword**, at a MAX single solve of 5.6 s against
+  the shipped 29.8 s. Nothing was removed from the palette.
