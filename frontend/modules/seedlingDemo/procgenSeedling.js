@@ -64,6 +64,22 @@ import { generateLevel } from '../procgenCore/levelGenerator.js';
  * site is a fact about the SEARCH, never about legality; see that file's law.
  */
 import { deriveSites, siteCells, siteSummaryOf } from '../procgenCore/sites.js';
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 3 — THE ELEMENT SPEC's ONE CODEC (shared
+ * with the maze CLI, the sweep and slice 5's `?elements=`) and the Seedling
+ * BINDING of the reverse-pull gadget. ⛔ The element itself is
+ * `procgenCore/elements/reversePullBlock.js` — the SAME one the maze binds; the
+ * binding maps its tiles and symbols onto Seedling's parts and nothing more.
+ */
+import {
+    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, namedParams,
+    normalizeElementSpec, resolveElementSpec,
+} from '../procgenCore/elementSpec.js';
+import {
+    SITE_MARGIN_STRAIGHT, compositeSeedlingElement, elementSummaryOf, liftedClaimFrom,
+    reservedRect, seedlingElementEntities, seedlingElementSiteCandidates,
+} from './procgenSeedlingElements.js';
+import { guardIdsFor } from '../procgenCore/elements.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
     normalizeSkeleton,
@@ -272,9 +288,23 @@ export function interiorCells(record) {
  *   kind CARVES the interior with the grid backend the kind names. ⛔ Seedling
  *   offers the PORTABLE kinds only — `classic` and `corridor` need the maze
  *   simulator and are refused by name. See `procgenCore/skeletonKinds.js`.
+ * @param {object} [o.elements]  `{name[, params]}` — ⛓ PROCGEN ELEMENTS arc 3,
+ *   slice 3, through the ONE codec (`procgenCore/elementSpec.js`). ⛔ The
+ *   default is `'none'` and at `none` **the element stream is not consulted at
+ *   all**: no site is drawn, nothing is constructed, no draw is spent, and every
+ *   Seedling md5 is byte-identical by a code path that never executes (⚖ arc-2
+ *   ruling 5, applied one substrate over). ⚠ `turns > 0` REFUSES BY NAME — that
+ *   is the CHAIN (arc 4, ask-first; ⚖ arc-3 ruling 1).
+ * @param {boolean} [o.dropElement]  ⛓ THE CERTIFICATION'S OWN ARM. Spends every
+ *   element draw exactly as usual and then does NOT commit the composite, so a
+ *   gadget the solver cannot certify leaves a room that is the plain carve plus
+ *   the draws the element spent (arc-2 §10.3: *a refused element moves the
+ *   stream by exactly the draws it spent*). ⛔ Used by `generateSeedlingLevel`
+ *   and by nothing else; it is not a caller-facing knob.
  */
 export function seedlingModel({
     seed, defaults = SEEDLING_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
+    elements: elementSpec = DEFAULT_ELEMENTS, dropElement = false,
 } = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
     /**
@@ -416,12 +446,209 @@ export function seedlingModel({
         return { record: withTerrain(walled, ground), carve };
     };
 
+    /**
+     * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 3: **THE ELEMENT, CONSTRUCTED
+     *    BEFORE THE CARVE** (⚖ design ruling 2; the maze's arc-2 §10.3 order,
+     *    one substrate over) ─────────────────────────────────────────────
+     *
+     * ⛓ **THE DRAW ORDER, DECLARED** (the order IS the identity):
+     *   1 the goal cell     — `roomRng`'s FIRST draw, ⛔ UNCHANGED
+     *   2 `instantiate`     — the element's own parameters in SCHEMA order. A
+     *                         parameter the spec NAMED is an override and spends
+     *                         no draw; one it omitted is drawn. ⚠ `turns` is
+     *                         ALWAYS an override here (see below), so on
+     *                         Seedling the only drawable element parameter is
+     *                         `len`.
+     *   3 the SITE          — ONE `pick` over the legal snug rectangles
+     *   4 `construct(site)` — the gadget's geometry, from the SAME stream
+     *   5 the carve         — the backend + its post-processors, ⛔ UNCHANGED
+     *                         code at a stream position 2-4 have moved
+     *   6 the composite     — spends NO draw (it writes tiles)
+     *
+     * ⛔ **`len` IS DRAWN BEFORE THE SITE**, because the site must be SNUG and
+     * snug means `len + SITE_MARGIN_STRAIGHT`: the size is not known until the
+     * parameter is. Same delta the maze recorded against its own §3.3.
+     *
+     * ⛔ **AT `none` NONE OF 2-4 OR 6 HAPPENS.** Not "runs and returns early" —
+     * the branch is not entered, no element is instantiated, `construct` is
+     * never called and the rng is not touched, so every Seedling pair, the
+     * acceptance batch, the battery and the generated set are unchanged by a
+     * code path that does not execute. `procgenSeedlingElements.test.js` drives
+     * that with a COUNTING SPY rather than by comparing tiles (arc-1 §9's rule).
+     *
+     * ⛔ **`turns > 0` IS REFUSED BY NAME** (⚖ arc-3 ruling 1: the straight lane
+     * only; a bent push is the CHAIN, arc 4, ask-first). A spec that NAMES a
+     * non-zero `turns` refuses; a spec that omits it gets `turns: 0` as an
+     * OVERRIDE rather than a draw — so the domain a Seedling sweep certifies is
+     * `len` alone, and the element's own `turns` domain stays the maze's.
+     */
+    const elementSpecNorm = normalizeElementSpec(elementSpec ?? DEFAULT_ELEMENTS);
+    const elementValues = resolveElementSpec(elementSpecNorm);
+    let elementPlan = null;
+    let elementRefusal = null;
+    if (elementValues.name !== ELEMENTS_NONE) {
+        const named = namedParams(elementSpecNorm, { elementOnly: true });
+        if (named.turns !== undefined && named.turns !== 0) {
+            elementRefusal = { reason: 'the-chain-is-arc-4',
+                detail: `the spec names turns=${named.turns}. ⚖ Arc-3 ruling 1: Seedling gets `
+                    + 'the STRAIGHT LANE only — `turns = 0`, which `weigh` certifies today. A '
+                    + 'bent push path is the CHAIN, which is arc 4 and ASK-FIRST (design '
+                    + 'ruling 17): it needs a solver that can plan a push around a corner, '
+                    + 'and no template-side trick substitutes for one.' };
+        } else {
+            const entry = ELEMENT_TABLE[elementValues.name];
+            const drawsBefore = roomRng.draws;
+            const concrete = entry.element.instantiate(roomRng, { ...named, turns: 0 });
+            const size = concrete.params.len + SITE_MARGIN_STRAIGHT;
+            const sites = seedlingElementSiteCandidates({
+                width: d.width, height: d.height, start: d.start, goal: goalCell, size,
+            });
+            if (sites.length === 0) {
+                elementRefusal = { reason: 'no-site-fits-this-room',
+                    detail: `a len=${concrete.params.len} straight gadget needs a ${size}x${size} `
+                        + 'site with a one-cell ring around it, and no such rectangle fits '
+                        + `inside the ${d.width}x${d.height} room's interior while leaving the `
+                        + `START (${d.start.tx},${d.start.ty}) and the GOAL (${goalCell.tx},`
+                        + `${goalCell.ty}) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does `
+                        + 'NOT grow — the honest answer is a shorter gadget or a different '
+                        + 'goal, and D1(b)\'s census publishes how often each `len` fits.' };
+            } else {
+                const site = roomRng.pick(sites);
+                /**
+                 * ⛓ THE STREAM POSITION AT `construct` IS ITS OWN FIELD (arc-2
+                 * §10.5.1, measured there rather than reasoned): the SITE PICK
+                 * sits BETWEEN `instantiate` and `construct`, both of which draw
+                 * from this stream, so a rebuild that replays the two back to
+                 * back lands ONE DRAW EARLY and builds a different gadget. ⇒ a
+                 * record is `{params, site, drawsAtConstruct}` plus the seed.
+                 */
+                const drawsAtConstruct = roomRng.draws;
+                const placement = concrete.construct(site);
+                if (placement.refused) {
+                    elementRefusal = { reason: placement.refused.reason,
+                        detail: `${placement.refused.detail} (site ${site.w}x${site.h} at `
+                            + `(${site.x},${site.y}))` };
+                } else {
+                    elementPlan = { concrete, site, placement, drawsBefore, drawsAtConstruct,
+                        params: concrete.params, ids: guardIdsFor(0) };
+                }
+            }
+        }
+    }
+
     const carved = skeletonKind === DEFAULT_SKELETON_KIND ? null : carveRoom();
-    const base = carved ? carved.record : blank;
+    let base = carved ? carved.record : blank;
+
+    /**
+     * ⛓⛓⛓ **THE COMPOSITE** — the carve ran over the WHOLE grid exactly as it
+     * does today and its answer inside the reserved rectangle is now DISCARDED;
+     * the element's tiles are written over it, the ring is walled except the
+     * entry mouth, the mouth is joined by the shortest tunnel and every check is
+     * asked on the way out. ⛔ It spends NO draw, and on a refusal the room is
+     * left exactly as the carve left it (arc 1's commit-on-success rule, one
+     * layer out) — so a seed whose gadget cannot be joined produces a perfectly
+     * ordinary Seedling level with `elements.refused` set.
+     *
+     * ⛓ THE ELEMENT'S ENTITIES ARE THE **SKELETON'S**, not a template's: the
+     * gadget is part of the room the loop is handed, so `skeleton()` carries the
+     * block, the two buttons and the two locks beside the goal pickup, and the
+     * loop's own step-0 solve is the certification (D4).
+     */
+    let elementInfo = Object.freeze({
+        spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+        refused: elementRefusal ? Object.freeze(elementRefusal) : null,
+    });
+    let elementEntities = Object.freeze([]);
+    let elementCells = new Set();
+    if (elementPlan) {
+        const out = compositeSeedlingElement({
+            width: d.width, height: d.height,
+            groundAt: (x, y) => terrainAt(base, x, y) === 'ground',
+            site: elementPlan.site, placement: elementPlan.placement,
+            start: d.start, goal: goalCell,
+        });
+        if (out.refused) {
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+                refused: Object.freeze(out.refused),
+            });
+        } else if (dropElement) {
+            /**
+             * ⛔ THE GEOMETRY SUCCEEDED AND IS DELIBERATELY NOT COMMITTED — see
+             * the `dropElement` parameter. The draws are spent either way, which
+             * is why this arm produces a level and not an error.
+             */
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm, ran: false, placed: Object.freeze([]),
+                refused: Object.freeze({
+                    reason: 'the-skeleton-does-not-solve-with-the-element',
+                    detail: 'the gadget FITS this room and the solver cannot certify it, so '
+                        + 'the level was generated WITHOUT it. ⛓ The refusal is the arc\'s own '
+                        + 'dependency, published: `procgenSeedlingElements.js`\'s docblock and '
+                        + 'the arc-3 as-built §10 carry the three solver gaps and the S1 work '
+                        + 'order. ⛔ Nothing here solves around it.',
+                }),
+            });
+        } else {
+            const p = out.placed;
+            base = withTerrain(base, p.painted);
+            const withGoal = withEntities(base, [{
+                type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+            }]);
+            const taken = [Number.parseInt(d.goalTag, 10)];
+            const realised = seedlingElementEntities({
+                placed: p,
+                groupIdFor: (at) => placementGroupId(at, d.height),
+                tagFor: (...more) => placementTagId(withGoal, [...taken, ...more]),
+                ids: elementPlan.ids,
+            });
+            elementEntities = Object.freeze(realised.entities.map((e) => Object.freeze({
+                type: e.type, ...oelAtTile(e.tx, e.ty),
+                ...(e.attrs ? { attrs: Object.freeze({ ...e.attrs }) } : {}),
+            })));
+            /**
+             * ⛔ EVERY CELL OF THE RESERVED RECTANGLE AND OF THE TUNNEL IS OFF
+             * LIMITS TO PASS 2, and it is a REFUSAL BY NAME rather than a hope.
+             * `freeRefusal` alone would let a template wall the push lane (it is
+             * untouched `ground` with no entity on it) and `carveCellRefusal`
+             * alone would let one CARVE through the ring (in `base` the ring is
+             * wall, so the untouched-skeleton test passes) — either would break
+             * a gadget the level was built around, and the loop would only find
+             * out from a solve it then reverted.
+             */
+            const rr = reservedRect(p.site);
+            for (let y = rr.y; y < rr.y + rr.h; y += 1) {
+                for (let x = rr.x; x < rr.x + rr.w; x += 1) elementCells.add(`${x},${y}`);
+            }
+            for (const c of p.tunnel) elementCells.add(`${c.x},${c.y}`);
+            elementInfo = Object.freeze({
+                spec: elementSpecNorm,
+                ran: true,
+                placed: Object.freeze([Object.freeze({
+                    element: elementPlan.concrete.name,
+                    family: elementPlan.concrete.family,
+                    instance: elementPlan.concrete.instance,
+                    index: 0,
+                    /** ⛓ A RECORD IS `{params, site, drawsAtConstruct}` + the
+                     *  level's SEED (arc-2 §9.1/§10.5.1). `drawsBefore` is kept
+                     *  beside it because it says where the element's whole draw
+                     *  span began. */
+                    params: Object.freeze({ ...elementPlan.params }),
+                    drawsBefore: elementPlan.drawsBefore,
+                    drawsAtConstruct: elementPlan.drawsAtConstruct,
+                    groups: realised.groups,
+                    tags: realised.tags,
+                    ids: elementPlan.ids,
+                    ...p,
+                })]),
+                refused: null,
+            });
+        }
+    }
 
     const skeleton = () => withEntities(base, [{
         type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
-    }]);
+    }, ...elementEntities]);
 
     /**
      * ⚠ "FREE" IS FOUR CLAIMS AND THEY ARE ASKED SEPARATELY: the cell is
@@ -450,11 +677,41 @@ export function seedlingModel({
      * and none per accepted one — and a large footprint fails on its first cell.
      * Measured on six ladders to step 6: 7.2 s before, 7.1 s after.
      */
+    /**
+     * ⛓⛓ **A CELL THE ELEMENT OWNS IS NOT PASS 2's** — PROCGEN ELEMENTS arc 3,
+     * slice 3. The reserved rectangle (site + its ring) and the connector tunnel
+     * are the geometry the gadget's own certification is about, and a template
+     * that painted any of it would break a puzzle the level was BUILT AROUND
+     * (⚖ design ruling 2: elements first, connectors and decorators after).
+     *
+     * ⛔ IT IS ASKED IN BOTH LEGALITY RULES, because neither alone covers it:
+     * `freeRefusal`'s untouched-`ground` test would let a wall segment land in
+     * the push lane, and `carveCellRefusal`'s untouched-SKELETON test would let a
+     * pocket be CARVED out of the ring (in `base` the ring IS wall, so the
+     * comparison passes). ⛓ AND AT `--elements=none` THE SET IS EMPTY, so this
+     * is a code path that returns `null` on its first line rather than a
+     * comparison that happens to pass — which is what keeps every committed pair
+     * byte-identical.
+     */
+    const elementRefusalAt = (tx, ty) => {
+        if (elementCells.size === 0 || !elementCells.has(`${tx},${ty}`)) return null;
+        const p = elementInfo.placed[0];
+        return `(${tx},${ty}) belongs to the ELEMENT ${p.instance} — its reserved rectangle `
+            + `(${p.site.w + 2}x${p.site.h + 2} at (${p.site.x - 1},${p.site.y - 1})) or the `
+            + `${p.tunnel.length}-cell tunnel that joins its entry mouth. ⛔ An element is `
+            + 'placed FIRST and the level is built AROUND it (⚖ design ruling 2), so pass 2 '
+            + 'may not paint, carve or occupy any of it: the gadget\'s door is a CUT of this '
+            + 'room, and a template that opened the ring or walled the push lane would break '
+            + 'the puzzle the level exists to pose.';
+    };
+
     const freeRefusal = (record, tx, ty) => {
         if (!(tx > 0 && ty > 0 && tx < record.width - 1 && ty < record.height - 1)) {
             return `(${tx},${ty}) is not in the room's INTERIOR — the border ring is wall, so `
                 + `the placeable cells are (1,1) to (${record.width - 2},${record.height - 2}).`;
         }
+        const claimed = elementRefusalAt(tx, ty);
+        if (claimed) return claimed;
         if (reserved.has(`${tx},${ty}`)) {
             const which = tx === d.start.tx && ty === d.start.ty ? 'START' : 'GOAL';
             return `(${tx},${ty}) is the ${which} cell. A pickup does not change the terrain `
@@ -765,6 +1022,8 @@ export function seedlingModel({
                 + `the placeable cells are (1,1) to (${record.width - 2},${record.height - 2}). `
                 + '⛔ A CARVE may not open the ring: the ring is what makes the room a room.';
         }
+        const claimed = elementRefusalAt(tx, ty);
+        if (claimed) return claimed;
         if (reserved.has(`${tx},${ty}`)) {
             const which = tx === d.start.tx && ty === d.start.ty ? 'START' : 'GOAL';
             return `(${tx},${ty}) is the ${which} cell, whose terrain is not a template's to `
@@ -1029,6 +1288,15 @@ export function seedlingModel({
         skeletonSpec: skeletonSpecNorm,
         /** What the carve actually ran — `null` at the open room. */
         carve: carved ? Object.freeze({ ...carved.carve }) : null,
+        /**
+         * ⛓⛓ THE ELEMENT BINDING'S WHOLE ANSWER (arc 3, slice 3) — the spec that
+         * ran, whether a gadget is in this room, its record, and the graded
+         * refusal BY NAME when one is not. ⛔ `certified` is NOT here: the model
+         * cannot solve (the oracle takes the model), so certification lives on
+         * `summary.elements[]` where `generateSeedlingLevel` puts it.
+         */
+        elements: elementInfo,
+        elementSpec: elementSpecNorm,
         goalCell: Object.freeze({ ...goalCell }),
         goalOel: Object.freeze({ ...goalOel }),
         goals: Object.freeze([Object.freeze(collectGoal(goalOel.x, goalOel.y))]),
@@ -1275,16 +1543,78 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } 
  */
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
-    skeleton = DEFAULT_SKELETON,
+    skeleton = DEFAULT_SKELETON, elements = DEFAULT_ELEMENTS,
 } = {}) {
-    const model = seedlingModel({ seed, defaults, skeleton });
-    const oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
+    let model = seedlingModel({ seed, defaults, skeleton, elements });
+    let oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
+    /**
+     * ⛓⛓⛓ **THE CERTIFICATION SOLVE — PROCGEN ELEMENTS arc 3, slice 3 (D4), AND
+     * IT IS WHERE THE ARC'S DEPENDENCY IS PUBLISHED RATHER THAN HIDDEN.**
+     *
+     * The element is part of the SKELETON, so the solve that certifies it is the
+     * one `generateLevel` runs at step 0 — *the control that must solve before
+     * any template is drawn*. ⛔ It is run HERE FIRST, before `generateLevel`,
+     * for one reason: the loop's step-0 failure is a THROW (*"THE SKELETON DID
+     * NOT SOLVE"*), and a solver capability this arc does not have must arrive as
+     * a GRADED REFUSAL with the solve's own words, not as an exception a caller
+     * reads as a broken room builder.
+     *
+     * ⛔⛔ **TODAY IT ALWAYS REFUSES, AND THAT IS THE MEASUREMENT.** ⚖ Ruling
+     * 22's chain — block on `button`(A) HOLDS `lock`(A) → the player reaches
+     * `buttonroom`(B) → `lock`(B)s open → collect — needs the solver to raise a
+     * SHOVE as a SUB-ORDER of reaching another obstacle's stance, and it cannot:
+     * `procgenSeedlingElements.js`'s docblock and the arc-3 as-built §10 carry
+     * the three gaps, the fixture arm that shows each, and the S1 work order.
+     * `procgenSeedlingElementsCertify.test.js` asserts today's REFUSED verdict BY
+     * NAME so S1 flips it green rather than discovering it.
+     *
+     * ⇒ on a refusal the level is regenerated with the element DROPPED — the
+     * same draws spent, the composite not committed — so `--elements=guard`
+     * yields a real level, the pass-2 ladder is comparable to the `none` arm, and
+     * the GEOMETRY the census measured is carried on the certification so no
+     * number is lost. ⛔ `certified` is never `true` and nothing here retries,
+     * relaxes a bound or widens a catch.
+     */
+    let certification = null;
+    if (model.elements.ran) {
+        const cert = oracle.solve(model.skeleton(), { templates: [] });
+        certification = Object.freeze({
+            certified: cert.verdict === VERDICT.SOLVED,
+            verdict: cert.verdict,
+            classifiedBy: cert.classifiedBy ?? null,
+            reasonText: cert.reasonText ?? null,
+            ticks: cert.ticks ?? cert.ticksSpent ?? null,
+            strategies: Object.freeze((cert.records ?? []).map((r) => r.strategy)),
+            /** ⛓ THE LIFTED CLAIM (arc-2 §9.4, translated): a block was on
+             *  `button`(A) at the tick the player FIRST entered `lock`(A)'s cell.
+             *  `null` = the route never crossed the door, which is what an
+             *  uncertified gadget looks like from the plan's side. */
+            heldAtDoor: cert.verdict === VERDICT.SOLVED
+                ? liftedClaimFrom(cert, model.elements.placed[0]) : null,
+            /** ⛓ THE GEOMETRY, carried across the drop so the census survives it. */
+            geometry: model.elements.placed,
+            gap: cert.verdict === VERDICT.SOLVED ? null
+                : 'the-solver-does-not-chain (S1: nested openers)',
+        });
+        if (!certification.certified) {
+            model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });
+            oracle = seedlingOracle({ model, items: palette.items ?? null, budget });
+        }
+    }
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     return {
         ...out,
         model,
+        certification,
         summary: Object.freeze({
             ...out.summary,
+            /**
+             * ⛓ ⚖ DESIGN RULING 20's SOLVER-WORK RECORDS for the element, on the
+             * key the design gives them. ⛔ Omitted entirely at `--elements=none`,
+             * which is what keeps the payload byte-identical there.
+             */
+            ...(model.elementSpec.name === ELEMENTS_NONE ? {}
+                : { elements: elementSummaryOf(model, { certification }) }),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.defaults.goalClass,
