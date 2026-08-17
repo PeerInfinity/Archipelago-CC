@@ -43,7 +43,10 @@
  *     clear no tape can declare) draws EVERY frame of its walk. Before slice
  *     5's stepper option the page collected 270 of 379 and reported a throw;
  *     the failure mode is a plausible SHORT replay, so the frame count is the
- *     only thing that shows it.
+ *     only thing that shows it. ⛓ ARC 3 SLICE 2c adds the ✕: the same walk,
+ *     scrubbed to the tick its scratch clear names and to the tick before it,
+ *     asserting the DRAWN world-state mark on the kill lock appears exactly
+ *     there.
  *  4. **`?gen=`** — a payload emitted by the CLI is reproduced in the browser
  *     byte-identically, which is a determinism statement across two runtimes.
  *  6. **⛓⛓⛓ THE CATALOGUE + VERB 1 (RESTRICT)** (slice 4) — the page lists
@@ -848,6 +851,65 @@ const catalogueOf = () => page.evaluate(() => ({
     check(web.gen.frames === web.gen.ticks + 1,
         'the SCRUB DRAWS EVERY FRAME of the walk it solved (the scrub fork, §13.4)',
         `${web.gen.frames} frame(s) for a ${web.gen.ticks}-tick walk`);
+    /**
+     * ⛓⛓⛓ ARC 3 SLICE 2c — THE KILL LOCK'S ✕, READ OFF THE OVERLAY AT TWO
+     * TICKS. ⚖ The user's own report (2026-08-16): every other lock gets a
+     * struck-through box when its group is pressed and this one never did.
+     *
+     * ⛔ A VALUE CLAIM, NOT AN ECHO (trap 269 / arc-2 §11's §317). The subject
+     * is `drawn.worldstate.changes` — what the DRAW ITSELF put on the canvas
+     * on the tick the scrubber is showing — not a sentence about it and not
+     * the run's own ledger. The tick comes from the run's `scratchClears[].at`
+     * above, so the two ends of the claim are independent: the ENGINE says
+     * when the flag went off, the PICTURE says whether it is marked.
+     *
+     * ⛔⛔ AND IT IS A PAIR. A mark present at `at` proves nothing on its own —
+     * a layer that struck through every lock it was handed would pass. The
+     * tick BEFORE must be clean, and before this slice BOTH ticks were.
+     */
+    const clear = (web.gen.scratchClears ?? [])[0] ?? null;
+    if (!clear) {
+        check(false, '⛓ the kill lock\'s ✕ — NO SCRATCH CLEAR TO SCRUB TO',
+            'the claim below has no subject; re-scan the CARRIER pool');
+    } else {
+        const markAt = async (t) => page.evaluate((tick) => {
+            const s = document.getElementById('scrub');
+            s.value = String(tick);
+            s.dispatchEvent(new Event('input'));
+            const d = window.__editorOverlays.drawn.worldstate;
+            return {
+                // ⚠ THE SCRUBBER'S OWN VALUE. `__editorShot.tick` is the
+                // cursor CAPTURED AT MOUNT and never moves — reading it here
+                // reports `undefined`/0 for every seek, which is a claim about
+                // nothing (measured on the first cut of this row).
+                at: Number(document.getElementById('scrub').value),
+                changes: d.changes.map((c) => ({ id: c.id, effect: c.effect, verb: c.verb })),
+                why: d.why,
+                placed: window.__editorOverlays.changeCounts?.placed ?? null,
+            };
+        }, t);
+        const before = await markAt(clear.at - 1);
+        const after = await markAt(clear.at);
+        const hit = (m) => m.changes.find((c) => c.id === clear.lock);
+        check(before.at === clear.at - 1 && !hit(before),
+            `⛓ the tick BEFORE the clear (${clear.at - 1}) draws NO mark on ${clear.lock} — `
+            + 'the lock is standing and the run has not opened it',
+            `t${before.at}: ${json(before.changes)} placed=${before.placed}`);
+        check(after.at === clear.at && Boolean(hit(after)) && hit(after).effect === 'gone'
+            && /^CLEARED/.test(hit(after).verb ?? ''),
+            `⛓⛓⛓ and from the clear's own tick (${clear.at}) the canvas STRIKES IT `
+            + 'THROUGH — the same `gone` glyph a group-pressed lock gets, decided in the '
+            + 'one place the marker is decided',
+            `t${after.at}: ${json(after.changes)} placed=${after.placed} why=${after.why}`);
+        // ⛔ THE RESTORE (trap 299): the next claim re-navigates, but a block
+        // that left the cursor parked mid-walk would couple every later read
+        // to the order of this one.
+        await page.evaluate(() => {
+            const s = document.getElementById('scrub');
+            s.value = '0';
+            s.dispatchEvent(new Event('input'));
+        });
+    }
     check(errors.length === 0, 'and no page errors while it did',
         errors.join(' | ') || 'none');
 }

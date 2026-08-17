@@ -342,6 +342,36 @@ export const WORLD_STATE_FAMILIES = Object.freeze([
 ]);
 
 /**
+ * ⛓⛓⛓ EVERY SOLID THIS LAYER CAN MARK, in ONE list — the five table families
+ * plus the turret arm, keyed and boxed.
+ *
+ * ⛔ IT EXISTS BECAUSE THE LAYER ASKS THE QUESTION TWICE, of two different
+ * worlds. `sampleMovers` asks it of the world THE RUN IS IN (which of these
+ * has the run changed?) and `worldChangesAt` asks it of the world THE PAGE IS
+ * DRAWING (which of these does the run no longer have at all?). Two spellings
+ * of "a solid whose state this layer reports" would drift the moment a family
+ * is added, and the second reader would then quietly stop marking it.
+ *
+ * ⚠ `pushables` IS NOT HERE and must not be: its join is a RECT COMPARISON
+ * against `run.pushables`, not membership, and a block is never removed from a
+ * world by a persistence clear — `PERSISTENCE_RESPONSE` has no `remove` for
+ * one. Including it would make every pushable read as "cleared away".
+ */
+export function changeableSolidsOf(world) {
+    const out = [];
+    for (const s of world?.solids ?? []) {
+        for (const f of WORLD_STATE_FAMILIES) {
+            const id = s[f.key];
+            if (id) out.push({ id, family: f.set, tag: s.tag ?? null, rect: s.rect });
+        }
+        if (s.turretId) {
+            out.push({ id: s.turretId, family: 'turrets', tag: s.tag ?? null, rect: s.rect });
+        }
+    }
+    return out;
+}
+
+/**
  * The attack keys, by name — the edges the ACTION layer marks.
  *
  * ⚠ `primary` is X (`Player.attack`) and `secondary` is C (the item slot).
@@ -496,8 +526,26 @@ export function sampleMovers(run) {
      */
     const changes = [];
     let changeCounts = null;
+    /**
+     * ⛓⛓⛓ SLICE 2c — WHICH OF THEM THE RUN'S WORLD STILL BUILDS AT ALL, and
+     * it is a different question from every one above.
+     *
+     * The five families and the turret arm all ask "is this solid's state
+     * changed?" of a solid that is STANDING. A persistence clear does not
+     * change a lock's state — `Lock.check()` is `tag >= 0 && tSet < 0 &&
+     * !checkPersistence(tag) -> remove(this)`, so `levelRun.applyClearNow`
+     * rebuilds the room and the lock is not built. It leaves EVERY set above,
+     * `placed` drops to zero, and the layer had nothing left to mark.
+     *
+     * ⚠ `null`, NEVER `[]`: a run with no world (the v1 engine) cannot answer
+     * "which solids stand here", which is not the same fact as "none do" —
+     * and `worldChangesAt` would otherwise read the absence as "the run has
+     * cleared every one of them".
+     */
+    let built = null;
     const world = typeof run.worldFor === 'function' ? run.worldFor(run.level) : null;
     if (world) {
+        built = changeableSolidsOf(world).map((e) => e.id);
         const sets = {};
         // `null` is `noclip`: the run steps none of these families and reports
         // no set at all, which is a different fact from an empty one (the
@@ -735,6 +783,7 @@ export function sampleMovers(run) {
         census,
         changes,
         changeCounts,
+        built,
     };
 }
 
@@ -792,6 +841,8 @@ export function collectRun(tape, levelSource, { scratchPersistence = false } = {
                     census: null,
                     changes: [],
                     changeCounts: null,
+                    // ⚠ `null`, not `[]` — see `sampleMovers`' own `built`.
+                    built: null,
                     // ⛓ GROUP B: `undefined`, not `null`. The v1 engine has no
                     // run and therefore no ceremony CHANNEL — a different fact
                     // from "no ceremony is running", and `dialogueAt` says
@@ -1194,6 +1245,63 @@ export function hammerLinesAt(samples, cursor, level) {
 // ── the SLICE 9 layers ───────────────────────────────────────────────────
 
 /**
+ * ⛓⛓⛓ SLICE 2c — THE SOLIDS THE RUN HAS CLEARED AWAY, which is the ONE
+ * change no set membership can report.
+ *
+ * ⛔ THE DEFECT THIS FIXES, MEASURED FIRST. On the watch page a lock whose
+ * GROUP is pressed gets a struck-through box: it stands in the run's world and
+ * its id joins `run.openActivators`. A KILL LOCK (`tset -1`, opened by the
+ * spinner's death through the 4b scratch layer) got NOTHING — reproduced in
+ * node on the sweep's own room: `changeCounts.placed` is 1 up to tick 316 and
+ * **0 from tick 317**, `changes` is `[]` at every tick of the walk, and the
+ * page went on to print *"no lock … stands in this room — the drawn world is
+ * not stale here, it is simply right"* while drawing a lock the run had
+ * removed 130 ticks earlier. The clear is on `run.scratchClears` and reaches
+ * neither the change channel nor `earnedClears`.
+ *
+ * ⛓ SO THE TWO CLEARS REACH THE PAGE THROUGH DIFFERENT RECORDS, and only one
+ * of them is a record at all: a group press is a MEMBERSHIP the layer reads
+ * per tick, and a kill lock's clear is a WORLD REBUILD — the solid stops
+ * existing. This asks the only question that can see the second one: which
+ * markable solids does the PICTURE hold that the RUN's world no longer builds?
+ *
+ * ⛔ NO RENDERER FORK. The entry is an ordinary `effect: 'gone'` change, so it
+ * is the same glyph, on the same layer, in the same op stream as an opened
+ * chest — the mark says the base is no longer true and un-draws nothing.
+ *
+ * ⚠ THE TWO WORLDS DIFFER IN EXACTLY ONE INPUT, which is what makes the
+ * subtraction sound rather than a guess. `watchViewer.makeWorldFor` and
+ * `levelRun` build from the same `levelSource` with the same
+ * `rolesForStaging(staging)`; the picture's `cleared` list is the staging's
+ * boot persistence and the run's is that PLUS what it has earned since. So a
+ * boot-cleared lock is absent from both (no mark, correctly — the picture
+ * never drew it) and only a MID-RUN clear can land here.
+ *
+ * ⚠ AND IT DEGRADES TO NOTHING, BY CONSTRUCTION, wherever the page draws the
+ * run's own world (MANUAL): base and run agree, so the difference is empty.
+ *
+ * @param {?object} drawnWorld the world the renderer is painting, or `null`
+ * @param {object} sample      the tick's sample; `built === null` is a run
+ *                             that cannot answer, and answers nothing
+ */
+function clearedAwayFrom(drawnWorld, sample) {
+    if (!drawnWorld || !sample.built) return [];
+    const standing = new Set(sample.built);
+    return changeableSolidsOf(drawnWorld)
+        .filter((e) => !standing.has(e.id))
+        .map((e) => ({
+            id: e.id,
+            family: e.family,
+            tag: e.tag,
+            effect: 'gone',
+            verb: 'CLEARED — the run turned this persistence flag off and the level '
+                + 'no longer builds it',
+            base: e.rect,
+            rect: null,
+        }));
+}
+
+/**
  * ⛓⛓⛓ WHAT THE RUN HAS CHANGED over the build-time base, at this tick.
  *
  * ⛔ EVERY ENTRY IS A MARK ON A BOX THE RENDERER ALREADY DREW. `base` is the
@@ -1209,10 +1317,10 @@ export function hammerLinesAt(samples, cursor, level) {
  *
  * @returns {{changes: Array, why: string|null}}
  */
-export function worldChangesAt(samples, cursor, level) {
+export function worldChangesAt(samples, cursor, level, drawnWorld = null) {
     const s = samples[cursor];
     if (!s || s.level !== level) return { changes: [], why: null };
-    const changes = s.changes ?? [];
+    const changes = [...(s.changes ?? []), ...clearedAwayFrom(drawnWorld, s)];
     if (changes.length > 0) return { changes, why: null };
     const c = s.changeCounts;
     // A sample with no world at all (the v1 engine, a unit-test fake) is an

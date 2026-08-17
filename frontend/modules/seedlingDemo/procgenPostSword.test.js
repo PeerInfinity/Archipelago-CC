@@ -364,7 +364,17 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
             time: null,
         });
         expect(out.verdict).not.toBe('SOLVED');
-        expect(out.reasonText).toMatch(/hammer disc/);
+        /**
+         * ⛓⛓⛓ SLICE 2c — AND THIS IS THE ONE ARM WHERE THE UNION IS THE TRUTH.
+         * With `time: null` the clock refuses, `clearOfHammersAt` falls back to
+         * the 13 px rect over all 45 phases, and the refusal says so. Its twin
+         * in `procgenCountableClock.test.js` asserts the LINE on the same
+         * sentence with the clock declared — the two arms are one code path
+         * with one argument different, which is what makes either assertion
+         * mean anything.
+         */
+        expect(out.reasonText).toMatch(/13 px hammer's union over all 45 phases/);
+        expect(out.reasonText).not.toMatch(/hammer line/);
     });
 
     /**

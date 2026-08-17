@@ -217,6 +217,11 @@ describe('sampleMovers', () => {
             // changeable objects stand in the room, and `0` would be a claim
             // that it counted and found none.
             changes: [], changeCounts: null,
+            // ⛓ SLICE 2c, and the third `null` of the same family: a fake
+            // with no world cannot say WHICH changeable solids stand here,
+            // and `[]` would be a claim that it looked and found none — which
+            // `worldChangesAt` would read as "the run has cleared them all".
+            built: null,
         });
     });
 
@@ -1077,6 +1082,71 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         const none = { level: 1, changes: [], changeCounts: { placed: 4, byFamily: {}, changed: 0, blind: 0, families: 7 } };
         const sentences = new Set([bare, blind, none].map((s) => worldChangesAt([s], 0, 1).why));
         expect(sentences.size).toBe(3);
+    });
+
+    /**
+     * ⛓⛓⛓ SLICE 2c — THE KILL LOCK'S ✕, and the pair is the whole row.
+     *
+     * A `tset -1` lock is cleared by the spinner's DEATH, not by a group
+     * press: `levelRun.applyClearNow` rebuilds the room and `Lock.check()`
+     * (`tag >= 0 && tSet < 0 && !checkPersistence(tag)`) does not build it. So
+     * it leaves every set the five families read, `placed` falls to 0, and
+     * before this slice the layer marked nothing for the rest of the walk
+     * while the picture went on drawing the lock.
+     *
+     * ⛔ THE SUBJECT IS THE TICK BOUNDARY, not the presence of a mark. One
+     * picture cannot tell a layer that TRACKS the clear from one that marks
+     * every lock it is handed — the same reason the chest row above is a pair.
+     */
+    it('⛓⛓⛓ a `tset -1` lock cleared at tick t: unmarked at t-1, GONE from t', () => {
+        // the world the PAGE paints — built from the staging's boot clears, so
+        // the lock stands in it at every tick of the walk
+        const drawn = {
+            level: 900,
+            solids: [{ activatorId: 'lock@80,80', tag: 'lock', rect: { x: 80, y: 80, w: 16, h: 16, right: 96, bottom: 96 } }],
+        };
+        const counts = (placed) => ({ placed, byFamily: placed ? { openActivators: 1 } : {}, changed: 0, blind: 0, families: 7 });
+        // t-1: the run's world still builds it — measured on the sweep's own
+        // room, `placed` is 1 up to the tick before the clear
+        const before = { level: 900, changes: [], changeCounts: counts(1), built: ['lock@80,80'] };
+        // t: the clear landed, the rebuild dropped the lock, `placed` is 0
+        const after = { level: 900, changes: [], changeCounts: counts(0), built: [] };
+
+        const b = worldChangesAt([before, after], 0, 900, drawn);
+        expect(b.changes).toEqual([]);
+        expect(b.why).toMatch(/^1 changeable object\(s\) stand in this room and the run has changed NONE/);
+
+        const a = worldChangesAt([before, after], 1, 900, drawn);
+        expect(a.why).toBe(null);
+        expect(a.changes).toEqual([{
+            id: 'lock@80,80',
+            family: 'openActivators',
+            tag: 'lock',
+            effect: 'gone',
+            verb: expect.stringMatching(/^CLEARED — the run turned this persistence flag off/),
+            base: { x: 80, y: 80, w: 16, h: 16, right: 96, bottom: 96 },
+            rect: null,
+        }]);
+        // ⛔ AND THE OLD SENTENCE IS WHAT THE PAGE PRINTED INSTEAD: with no
+        // world to subtract from, the layer still says "no lock … stands in
+        // this room — the drawn world is not stale here, it is simply right"
+        // over a lock the run had removed.
+        expect(worldChangesAt([before, after], 1, 900).why)
+            .toMatch(/^no lock, chest, rock, tree, rope, ice turret or pushable block/);
+    });
+
+    /**
+     * ⚠ AND `built: null` ANSWERS NOTHING. A run with no world (the v1 engine)
+     * cannot say which solids stand here, and reading that absence as "the run
+     * cleared every one of them" would strike through the whole room.
+     */
+    it('⚠ a run that cannot answer marks nothing — `built: null` is not `[]`', () => {
+        const drawn = { level: 1, solids: [{ activatorId: 'lock@0,0', rect: { x: 0, y: 0, w: 16, h: 16, right: 16, bottom: 16 } }] };
+        const blind = { level: 1, changes: [], changeCounts: null, built: null };
+        expect(worldChangesAt([blind], 0, 1, drawn)).toEqual({ changes: [], why: null });
+        // …and a run that CAN answer, drawn against the same world, marks it.
+        const empty = { level: 1, changes: [], changeCounts: null, built: [] };
+        expect(worldChangesAt([empty], 0, 1, drawn).changes).toHaveLength(1);
     });
 
     it('is THIS TICK ONLY and filtered to the level being drawn', () => {

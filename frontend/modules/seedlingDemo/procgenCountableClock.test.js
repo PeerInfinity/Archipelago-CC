@@ -45,6 +45,8 @@ import {
 import { createRunForStaging, solveStaging } from './tapeRunner.js';
 import { POST_SWORD_ITEMS } from './procgenPalette.js';
 import { SPINNER } from './spinner.js';
+// ⛓ SLICE 2c: the classifier's KEY, read from where it is stamped.
+import { HAMMER_SAFETY, SolverBotError } from './solverBot.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { parseTape } from './tapeFormat.js';
@@ -285,7 +287,17 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
         ]));
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.errorName).toBe('SolverBotError');
-        expect(out.reasonText).toMatch(/hammer disc/);
+        /**
+         * ⛓⛓⛓ SLICE 2c — AND THE SENTENCE NAMES THE TEST THAT RAN. This room
+         * declares the clock (case 4 above), so `clearOfHammersAt` priced the
+         * 7x7 body and `hammerHitsPlayer`'s exact `collideLine` at ONE phase.
+         * Until 2c the text said "13 px hammer disc" — the `at === null`
+         * fallback's union — which is the wrong test named at the right
+         * moment, and the disc's own words must not appear on this arm.
+         */
+        expect(out.reasonText).toMatch(/13 px hammer line at that tick's own phase/);
+        expect(out.reasonText).toMatch(/7x7/);
+        expect(out.reasonText).not.toMatch(/disc|union over all 45/);
         expect(out.classifiedBy).toMatch(/HAMMER SAFETY/);
         // ⛓ It is NOT a budget exhaustion: the refusal names no tick budget.
         expect(out.budgetKind).toBeUndefined();
@@ -298,8 +310,14 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
      * row) and says nothing about a hammer. It must still PROPAGATE — a loop
      * that reverted it would hide the undiagnosed keylock family behind "that
      * candidate didn't work out".
+     *
+     * ⛓⛓ SLICE 2c — AND IT IS NOW THE MUTANT GATE FOR THE RE-KEYED CLASSIFIER.
+     * `isHammerSafetyRefusal` reads `err.code === 'HAMMER_SAFETY'` instead of
+     * grepping the English, and the one way to get that wrong is to widen it
+     * to "any `SolverBotError`". This row is what would redden: the code is
+     * absent here, and it is the ABSENCE that is asserted, not a phrase.
      */
-    it('a NON-hammer `SolverBotError` still propagates', () => {
+    it('a NON-hammer `SolverBotError` still propagates — and carries NO code', () => {
         let thrown = null;
         try {
             solveRoom(room([
@@ -308,6 +326,26 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
         } catch (e) { thrown = e; }
         expect(thrown).toBeTruthy();
         expect(thrown.name).toBe('SolverBotError');
-        expect(thrown.message).not.toMatch(/hammer disc/);
+        expect(thrown.code).toBe(null);
+        // ⚠ NOT a bare `/hammer/`: the SOLVE'S OWN NAME is "hammer-safety" and
+        // rides in the prefix of every message this helper produces, so the
+        // loose form passes for a reason that has nothing to do with the test.
+        expect(thrown.message).not.toMatch(/hammer line|hammer's union/);
+    });
+
+    /**
+     * ⛓⛓⛓ SLICE 2c — THE STAMP ITSELF, AS A UNIT, so the classifier's key is
+     * gated by something cheaper than a 400-tick solve.
+     *
+     * ⛔ THE PAIR IS THE ROW. A synthetic throw WITH the code is caught and one
+     * WITHOUT is not; either half alone passes under a classifier that answers
+     * the same thing to everything.
+     */
+    it('⛓ `SolverBotError.code` is the key — stamped on the hammer sites, `null` elsewhere', () => {
+        expect(HAMMER_SAFETY).toBe('HAMMER_SAFETY');
+        expect(new SolverBotError('anything', { code: HAMMER_SAFETY }).code).toBe(HAMMER_SAFETY);
+        // ⚠ The DEFAULT is the half that keeps the catch narrow: a throw that
+        // says nothing about a code says `null`, never "probably fine".
+        expect(new SolverBotError('a bosslock with no key').code).toBe(null);
     });
 });

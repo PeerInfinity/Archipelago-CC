@@ -149,9 +149,33 @@ export function assertTransitSamplesCarryEtas(samples, startTick,
     };
 }
 
+/**
+ * ⛓⛓⛓ ARC 3 SLICE 2c — `code`, AND IT DISCHARGES A NAMED RESIDUE.
+ *
+ * `procgenOracle.isHammerSafetyRefusal` decides which of these becomes a
+ * candidate REVERT instead of a run abort, and until this slice it decided by
+ * grepping the English (`/hammer disc/`). Its own docblock named the fix and
+ * the condition for making it: *"the structured fix is a field on the throw
+ * (`err.hammerSafety`) … the day `solverBot` is open for another reason, stamp
+ * the four sites and this predicate becomes a field read."* This slice rewords
+ * those very sentences, so the day arrived: a classifier keyed on prose would
+ * have turned every hammer-safety refusal into a `GenerationAborted` the
+ * moment the words moved.
+ *
+ * ⚠ `null` ON EVERY OTHER THROW, and that is what keeps the catch NARROW — an
+ * unkeyed `bosslock`'s `SolverBotError` still propagates, because it carries
+ * no code rather than because it happens to say nothing about a hammer.
+ */
 export class SolverBotError extends Error {
-    constructor(message) { super(message); this.name = 'SolverBotError'; }
+    constructor(message, { code = null } = {}) {
+        super(message);
+        this.name = 'SolverBotError';
+        this.code = code;
+    }
 }
+
+/** The one `code` this file stamps: `procgenOracle`'s four-site catch. */
+export const HAMMER_SAFETY = 'HAMMER_SAFETY';
 
 /**
  * ⛔ THE NAMED REFUSAL. "No path and no strategy" never stalls silently —
@@ -215,7 +239,7 @@ export class SolverRefusal extends Error {
     }
 }
 
-const fail = (m) => { throw new SolverBotError(m); };
+const fail = (m, opts) => { throw new SolverBotError(m, opts); };
 
 /**
  * ── THE STRATEGY CATALOG — the seam slice 3 extends ───────────────────
@@ -2471,10 +2495,10 @@ function derivePressKill(run, bodies, contacts) {
             option: 'a strike schedule',
             why: `no (cell, tick) in level ${run.level} over the next `
                 + `${strikeHorizon(run)} ticks puts the whole five-dispatch train inside `
-                + `${SLASH_REACH} px of a body while the player box stays outside every `
-                + `${SPINNER.hammerLength} px hammer disc AND is reachable in time along `
-                + `a transit-safe corridor. ${first?.considered ?? 0} opportunit(ies) `
-                + 'were considered.',
+                + `${SLASH_REACH} px of a body while the player box stays clear of every `
+                + `body's 7x7 rect and of ${hammerTestAt(run)} AND is reachable in time `
+                + `along a transit-safe corridor. ${first?.considered ?? 0} `
+                + 'opportunit(ies) were considered.',
         });
         if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
         return null;
@@ -2538,6 +2562,36 @@ function walkableCells(run, contacts) {
  * every stance against the previous tick's hammer, which is a wrong answer
  * that looks right 44 times in 45.
  */
+/**
+ * ⛓⛓⛓ ARC 3 SLICE 2c — WHICH HAMMER TEST ACTUALLY DECIDED, in the refusal's
+ * own words. ⚖ The user's own catch (2026-08-16), settled by probe 2b.
+ *
+ * ⛔ THE SENTENCES USED TO NAME A TEST THAT NO LONGER RUNS. Three refusals
+ * below said *"the 13 px hammer disc"* — the UNION over all 45 phases, which
+ * is `clearOfHammersAt`'s `at === null` FALLBACK and nothing else. Every
+ * procgen boot declares `time = GENERATED_BOOT_TIME` (`procgenOracle
+ * .bootStaging`), so on that path `gameTimeAt` never returns `null` and what
+ * refused was the 7x7 BODY plus `hammerHitsPlayer`'s exact `collideLine` at
+ * one phase. Measured, not reasoned: over probe 2b's 91 stored refusal texts
+ * the disc's own markers (`UNION over all`, `not countable`) appear **0**
+ * times and `hammer disc` appears **28**, all of them these sentences'
+ * English. A reader taking them at face value concluded the solver was
+ * conservative-by-disc; it is not.
+ *
+ * ⛔ SO IT IS ASKED, NOT ASSUMED. A tape that declares no `save.time` really
+ * does get the union, and a sentence hard-coded to "the line" would be the
+ * same defect pointing the other way — [[feedback_report_channel_borrows_gate_vocabulary]].
+ * One `gameTimeAt(0)`, on the refusal path only, and the fallback branch is
+ * the ONLY text that says "union over all 45 phases".
+ */
+function hammerTestAt(run) {
+    const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(0) : null;
+    return at === null
+        ? `the ${SPINNER.hammerLength} px hammer's union over all 45 phases (this tape `
+            + 'declares no `Game.time`, so no one phase is knowable)'
+        : `the ${SPINNER.hammerLength} px hammer line at that tick's own phase`;
+}
+
 function clearOfHammersAt(run, box, forecast, i) {
     const step = forecast[i];
     if (!step) return false;
@@ -2936,17 +2990,19 @@ function safeStep(run, held, alternatives, what, bodyId) {
     if (lands(held)) return held;
     if (held.has('primary')) {
         return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
-            + 'player box inside a hammer disc on the next tick. A press whose own '
-            + 'landing cell is unsafe is a strike the schedule should not have planned — '
-            + 'swapping it for a dodge would hide that.');
+            + `player box on a body's 7x7 rect or on ${hammerTestAt(run)}, on the next `
+            + 'tick. A press whose own landing cell is unsafe is a strike the schedule '
+            + 'should not have planned — swapping it for a dodge would hide that.',
+        { code: HAMMER_SAFETY });
     }
     for (const alt of alternatives) {
         if (lands(alt)) return alt;
     }
     return fail(`${what}: every key set — the plan's own and `
-        + `${alternatives.length} alternative(s) — lands the player box inside a hammer `
-        + `disc on the next tick, at (${run.state.x.toFixed(2)},`
-        + `${run.state.y.toFixed(2)}) in level ${run.level}. There is no step out.`);
+        + `${alternatives.length} alternative(s) — lands the player box on a body's 7x7 `
+        + `rect or on ${hammerTestAt(run)}, on the next tick, at `
+        + `(${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) in level ${run.level}. `
+        + 'There is no step out.', { code: HAMMER_SAFETY });
 }
 
 /** The four facings, at `presses.slashRect`'s own indices. */
@@ -3604,9 +3660,10 @@ function execKillByPress(run, perTick, resolved, ctx) {
                         refuge = deriveRefuge(run, contacts, window);
                         if (!refuge) {
                             fail(`${ctx.what}: no reachable cell in level ${run.level} is `
-                                + `clear of every ${SPINNER.hammerLength} px hammer disc `
-                                + `for the next ${window} tick(s), and no strike on `
-                                + `${plan.id} is derivable. The room has nowhere to be.`);
+                                + 'clear of every live body\'s 7x7 rect and of '
+                                + `${hammerTestAt(run)} for the next ${window} tick(s), `
+                                + `and no strike on ${plan.id} is derivable. The room has `
+                                + 'nowhere to be.', { code: HAMMER_SAFETY });
                         }
                     }
                 }

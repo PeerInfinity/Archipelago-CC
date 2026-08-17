@@ -81,7 +81,7 @@ import { VERDICT } from '../procgenCore/levelGenerator.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
-import { SolverBotError, SolverRefusal } from './solverBot.js';
+import { HAMMER_SAFETY, SolverBotError, SolverRefusal } from './solverBot.js';
 import { atlasOf } from './procgenLevel.js';
 import { solveForPage } from './watchSolve.js';
 
@@ -389,22 +389,27 @@ const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
  * cannot be offered to the loop (§13.7.iv), so this is the difference between
  * a family the palette can carry and one it cannot.
  *
- * ── WHY THESE FOUR SITES ARE A REFUSAL AND NOT A DEFECT ───────────────
+ * ── WHY THESE SITES ARE A REFUSAL AND NOT A DEFECT ────────────────────
  *
- * The four are `solverBot`'s hammer-SAFETY refusals, and every one is a claim
+ * They are `solverBot`'s hammer-SAFETY refusals, and every one is a claim
  * about the LEVEL — "there is nowhere in this room to stand, step or strike
  * from" — which is exactly what `VERDICT.REFUSED` means. They throw
  * `SolverBotError` rather than `SolverRefusal` because of WHERE they are
  * raised (inside the kill schedule, below the goal loop), not because of what
- * they claim:
+ * they claim. The three that throw, each stamped `code: HAMMER_SAFETY`:
  *
- *   `deriveStrike`  :2475  no cell outside every hammer disc is reachable in
- *                          time to press from
- *   `safeStep`      :2939  the derived PRESS tick's own landing cell is unsafe
- *   `safeStep`      :2947  every key set — the plan's and its alternatives —
- *                          lands in a hammer on the next tick
- *   `deriveRefuge`  :3607  no reachable cell is hammer-clear for the window,
- *                          and no strike is derivable ("nowhere to be")
+ *   `safeStep`      the derived PRESS tick's own landing cell is unsafe
+ *   `safeStep`      every key set — the plan's and its alternatives — lands on
+ *                   a body or a hammer on the next tick
+ *   `deriveRefuge`  no reachable cell is body- and hammer-clear for the
+ *                   window, and no strike is derivable ("nowhere to be")
+ *
+ * ⚠ AND A FOURTH THAT IS NOT ONE (slice 2c, from reading the source to re-key
+ * this): `derivePressKill`'s *"no (cell, tick) … puts the whole five-dispatch
+ * train inside 16 px of a body"* is a `rejected.push`, folded into a
+ * `SolverRefusal` at PLANNING time. It never reaches this predicate — which is
+ * also why probe 2b's 23 corridor reverts read "no arrow trap" about rooms
+ * where a ceiling was never the candidate (its R9 item (ii)).
  *
  * ⛔⛔ **AND NOTHING ELSE WIDENS.** A `LevelWorldError`, a `TypeError`, the
  * dialogue-ceremony guard's bare `Error`, an unkeyed `bosslock`'s
@@ -414,24 +419,31 @@ const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
  * didn't work out" (traps 171/173, which forbid widening CASUALLY and not
  * widening at all).
  *
- * ⚠⚠ NAMED BOUND — THIS IS THE FILE'S SECOND TEXT TEST, and it is weaker than
- * `namesTickBudget` because the string is prose rather than a number the caller
- * passed in. It is used anyway, and the alternative is stated rather than
- * hidden: the structured fix is a field on the throw (`err.hammerSafety`, the
- * shape `err.undeclaredKillLock` already has), which is an ENGINE edit
- * `solverBot` would have to carry and this slice is not entitled to make.
- * ⇒ RESIDUE, recorded: the day `solverBot` is open for another reason, stamp
- * the four sites and this predicate becomes a field read.
+ * ⛓⛓⛓ ARC 3 SLICE 2c — THE RESIDUE ABOVE IS DISCHARGED, AND ITS OWN CONDITION
+ * IS WHAT DISCHARGED IT.
  *
- * ⛓ AND A FINDING THE PREDICATE DEPENDS ON, WHICH IS ITSELF STALE PROSE: three
- * of the four messages say "13 px hammer disc" even when the clock is counting
- * and `clearOfHammersAt` decided on the exact `collideLine`. The DECISION is
- * the line; the SENTENCE still names the union. Reported, not fixed —
- * `solverBot` is a read surface this slice (⚖ the charge's own boundary) — and
- * it is why this predicate keys on the phrase both eras share.
+ * This predicate used to read `/hammer disc/.test(e.message)`, and the note
+ * here said so: *"the structured fix is a field on the throw … the day
+ * `solverBot` is open for another reason, stamp the four sites and this
+ * predicate becomes a field read."* Slice 2c opened `solverBot` to REWORD
+ * exactly those sentences — three of them named the 45-phase disc while
+ * `clearOfHammersAt` was deciding on the exact `collideLine` — so a prose key
+ * would have turned every hammer-safety refusal into a run abort on the same
+ * commit that fixed the prose.
+ *
+ * ⛔ THE CATCH IS STILL EXACTLY AS NARROW, and now by CONSTRUCTION rather than
+ * by vocabulary: `SolverBotError.code` is `null` on every throw but the three
+ * `fail()` sites that stamp `HAMMER_SAFETY`, so an unkeyed `bosslock`'s
+ * `SolverBotError`, a `LevelWorldError` and a `TypeError` all still propagate.
+ *
+ * ⚠ THE FOURTH SITE IS NOT ONE, and reading the source to re-key said so:
+ * `derivePressKill`'s *"no (cell, tick) … stays clear of every body's 7x7 rect"*
+ * is a `rejected.push`, folded into a **`SolverRefusal`** at planning time — it
+ * never reaches this predicate at all. The docblock above called it a fourth
+ * throw; it is a fourth REFUSAL of a different class.
  */
 const isHammerSafetyRefusal = (e) => e instanceof SolverBotError
-    && /hammer disc/.test(e.message ?? '');
+    && e.code === HAMMER_SAFETY;
 
 /**
  * SOLVE ONE LEVEL — the §3.2 seam's oracle half.

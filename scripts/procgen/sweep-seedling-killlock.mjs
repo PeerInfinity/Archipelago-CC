@@ -146,7 +146,11 @@ function attemptAt(tx, ty) {
     } catch (e) {
         let cls = `THREW:${e.name}`;
         if (e.undeclaredKillLock) cls = 'THREW:undeclared-clear';
-        else if (e.name === 'SolverBotError' && /hammer disc/.test(e.message)) cls = 'THREW:transit';
+        // ⛓ SLICE 2c: the NAMED code, not the English. `procgenOracle`'s own
+        // classifier was re-keyed the same way when the refusal sentences
+        // stopped saying "hammer disc" — a second copy grepping the prose
+        // would have silently reclassified every one of these as a bare throw.
+        else if (e.name === 'SolverBotError' && e.code === 'HAMMER_SAFETY') cls = 'THREW:transit';
         return { cls, ticks: null, strategies: [], scratchClears: [], reason: e.message };
     }
 }

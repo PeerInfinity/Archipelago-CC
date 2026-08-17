@@ -1010,7 +1010,10 @@ function makeRenderer(canvas) {
              * the only evidence that the picture needed correcting at all.
              */
             if (opts.on.has('worldstate')) {
-                const w = worldChangesAt(samples, cursor, world.level);
+                // ⛓ SLICE 2c: the world being PAINTED is handed over too, so
+                // the layer can mark a solid the run has cleared AWAY — one
+                // that is in this picture and in no set the run keeps.
+                const w = worldChangesAt(samples, cursor, world.level, world);
                 drawn.worldstate = { changes: [], why: w.why };
                 for (const ch of w.changes) {
                     const b = ch.base;
