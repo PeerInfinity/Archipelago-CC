@@ -9554,3 +9554,30 @@ hard-coded, so a `time: null` tape still reads "union over all 45 phases".
 the residue its own docblock named, discharged by the day arriving, because a
 classifier grepping the English would have turned every one of those refusals
 into a run abort on the commit that fixed the English.
+
+### Arc 3, slice 2d — the spinner forecast is MEMOISED, and the strike bound is a NAMED refusal (2026-08-17)
+
+⛓⛓ **THE MEMO IS BYTE-INERT AND THE COST IT REMOVES IS NARROWER THAN THE
+PROFILE PROMISED.** `levelRun.spinnerForecast` now keeps ONE forecast per tick
+(keyed on the spinner state BY IDENTITY, `level`, `world`, `firstTickInWorld`
+and `ticksCompleted`; nulled as `advance`'s first statement — sound because
+`advance` is the run object's ONLY mutating member), extended on demand and
+sliced for shorter asks, because probe 2b found `deriveStrike` →
+`dangerDuringTransit` re-simulating the bodies per danger query. Every md5, the
+R8 tape sweep and all 125 per-anchor outcomes are IDENTICAL; the probe falls
+724.9 s → 561.7 s (1.29x, THREW class 2.16x) — but **five of the seven >20 s
+solves do not move at all and the arc's 21m47s item is unchanged**, because
+§9b.2 had profiled one anchor and that anchor is the one that improved 2.97x.
+Re-profiled, what dominates now is `previewWalk` → `playerPhysicsV2.step`
+(85.9% / 56.8% self) with `stepSpinner` at 0.6% — **that is R9's next line**.
+
+⛓⛓ **AND THE KILL FAMILY'S SECOND UNCAUGHT ABORT CLASS IS NOW A REVERT.**
+`execKillByPress`'s bound-exhaustion `fail()` — the schedule ran its whole
+`SPINNER.hitsMax * (strikeHorizon + HOLD_SLACK)` tick bound and the body
+outlived it — stamps `code: STRIKE_BOUND_EXHAUSTED` plus the bound, and
+`procgenOracle` classifies it `VERDICT.BUDGET_EXHAUSTED` with
+`budgetKind: 'strike-schedule bound (2010 driven ticks)'`. ⛔ A NAMED widening
+in 2c's own mechanism and never a catch-all: `e.code` is `null` on every other
+`SolverBotError`, which still aborts. Measured on probe 2b's own worst item
+(`winding` post-sword seed 1): `THREW GenerationAborted` → **`SATURATED`**, the
+candidate reverting instead of killing the run.
