@@ -7078,6 +7078,7 @@ omission — re-derived at close from the committed expectations' own
 | **the design AI / procedural generator** (the pivot's horizon) | untouched by design — it needs the solver first, and the solver now exists and has crossed every mechanic room the hand pipeline solved | **R9+**, the horizon |
 | **the L40 chain** (links 5–11, boss key 2) | untouched; still scheduled, still priced at 2,500–4,000 ticks | **R9+** |
 | **the TIME rung is attempted against danger it can never dodge** | ⛔ **NOT R8's finding — added 2026-08-14 from the procgen determinism slice.** `arrowDanger`'s ARMED-LANE arm takes `horizon` and never reads it, so `forbiddenByDanger` returns true at every tick a search can ask about. TIME then spends up to its whole 40,000-expansion budget looking for a timing window the model has already declared cannot exist (**measured: 12,267 ms on one dash; 73,851 ms at a 200,000 cap**). See §"The TIME rung's applicability" below | **R9**, when the ladder is open |
+| **NESTED OPENERS — a solver capability that landed OUTSIDE a rung** | ⛔ **NOT R8's; added 2026-08-17 by PROCGEN ELEMENTS arc 3 slice S1**, under the user's own authorisation. `solverBot` gained three things a rung would normally own: a stance derivation may return a **PREREQUISITE** and `walkTo` raises it as an order (`stancePrerequisite`, `NESTED_OPENER_DEPTH = 2` — the two-deep opener chain ⚖ ruling 22's gadget needs); **guard (iii)** on `stanceHypothesis`, which refuses to hypothesise an activator nothing can discharge DURABLY (an opener whose only order is a non-latching `hold` shuts the moment the walker leaves — 797 driven ticks → 0); and a **dwell-only `weigh`** for a gadget that arrives already solved. ⛓ **No tape was recorded for any of it and none moved**: the `--win --only=<the 20>` sweep is 534/0/67 ALL CHECKS PASSED, because the capability fires only where a stance was UNREACHABLE and a prerequisite exists — which no passing tape ever needed. Gated by vitest and by `procgenSeedlingElementsCertify.test.js`. R9 INHERITS IT, and with it two named residues: the trace MERGE eats a stance walk's corridor entirely (changing it re-records committed traces), and the opener-chain counter is per GOAL, so a room with two independent two-deep chains refuses at the second. As-built: arc-3 kickoff §11 | **R9 inherits (built outside a rung)** |
 | **the ladder has no rung for a SWITCH-ARMED trap** | ⚖ **User, 2026-08-14: *"we shouldn't be searching for a path through arrows. Arrows move too fast to dodge. The only way through is to deactivate the switch that activates the arrows, either by stepping off the switch or moving the block off the switch."*** `AVOID → TIME → BAIT → KILL` has no member for it: BAIT lures a LIVE BODY (the measured room's live roster was `[empty]`), KILL kills one. A trap armed by a switch is neither | **R9**, a new rung |
 | **`TIME_RUNG.reach` and `TIME_RUNG.maxExpansions` disagree, measured** | `reach: 48` is taken from `MOVER_RANGE`'s last row and the rung's refusal text cites it — but that table is ASSERTED at `maxExpansions: 60000` and production grants **40,000**. 48 px at dwell 4 costs **42,253** expansions on open ground. ⇒ **production cannot reach its own declared reach** | **R9**, with the ladder |
 | **`crusherDanger` may freeze the crusher** — UNVERIFIED | it takes no `horizon` and reads `run.crushers` LIVE positions, while the search asks about future ticks without advancing the run. If that reading is right, TIME cannot time a crusher either, and may plan through a cell the crusher moves into. ⚠ **Flagged as a question, not a finding** — nobody has checked whether something downstream compensates | **R9**, check before trusting TIME |
@@ -9373,7 +9374,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED and the solver slice S1 follows**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED and slice S1 CERTIFIED it**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9687,3 +9688,48 @@ LIVE so S1 FLIPS it green rather than rediscovering the problem.
   strictly greater whenever a gadget is asked for, placed or refused. The battery,
   the acceptance batch, the maze dump, the `empty` pairs and the generated set are
   all byte-identical.
+
+### Arc 3, slice S1 — NESTED OPENERS: the solver certifies the guard (2026-08-17)
+
+Slice 3 shipped the element binding UNCERTIFIED and published `guarded = 0` as
+the honest measurement of the arc's dependency. S1 is the ⚖ user-authorised
+SOLVER slice that closes it. **The same placement now certifies**:
+`--elements='guard;len=2'` on `winding` seed 7 prints `CERTIFIED: true — SOLVED`
+with records `['weigh','hold','collect']` and the lifted claim **true**. As-built:
+`NewDocs/plans/procgen-elements-arc3-kickoff.md` §11.
+
+- **A STANCE DERIVATION MAY RETURN A PREREQUISITE.** `deriveHoldStance` could
+  ask *does a corridor reach this stance* and *does one reach it under the
+  hypothesis*; the third question is **is it reachable once ONE obstacle has been
+  REALLY discharged by an order somebody executes first?** Two arms, in this
+  order: the MECHANISM (an activator whose own verb is a `weigh`, probed with its
+  block parked on the presser) then the GEOMETRY (a `pushableblock`, probed
+  through `deriveShove`). ⛔ Mechanism first is load-bearing — in ⚖ ruling 22's
+  gadget the block in the lane IS the lock's opener material, so a geometry-first
+  policy buys a corridor by spending the mechanism.
+- **ONE CONSUMER, NO SECOND FRONTIER.** `walkTo`'s plan application is the one
+  place a stance becomes a walk, so the prerequisite's order REPLACES that
+  round's plan and the loop `continue`s — the original obstacle is re-identified
+  and re-derived against the world the prerequisite changed. The bound is
+  `NESTED_OPENER_DEPTH = 2`, counted from the frontier and tracked per GOAL.
+- **GUARD (iii): NO OPTIMISM WITHOUT A DISCHARGE THAT OUTLIVES THE WALKER.** An
+  activator whose verb is `weigh` and whose weigh no block can serve is a WALL
+  for `stanceHypothesis`, because the only order left for it is a `hold` on a
+  republishing `Button` that shuts the moment the walker leaves to use it. ⛔ The
+  arc-3 kickoff's own §10.3 attributed that budget burn to a MISSING order; the
+  trace shows the order raised on tick 0, and what is missing is its durability.
+  Measured: 797 driven ticks → **0**, median 430 ms → 180 ms.
+- **THE DWELL ARM.** A gadget can arrive already solved; `resolveWeighStrategy`
+  now resolves a pre-parked block to `runDwell` alone — the weigh minus its
+  shove, with no stance at all — and the record carries `parked` so the lifted
+  claim can still read which block is on which button.
+- **THE CERTIFICATION FOUND TWO DEFECTS IN THE READER SLICE 3 SHIPPED UNEXERCISED**
+  (a row's `path` is string-pulled WAYPOINTS, and its corridor starts where the
+  player STANDS, not at waypoint 0), and turned the certification's `gap` field
+  from a constant into a classification computed from the solve's own structured
+  fields.
+- **NOTHING COMMITTED MOVED.** R8 `--win --only=<the 20 tapes>`: **534 PASS /
+  0 FAIL / 67 SKIP, ALL CHECKS PASSED**. battery / maze / batch / `empty` pairs
+  md5s byte-identical, and the yield table's `none` arms reproduce §10.9 cell for
+  cell — the capability fires only where a stance was UNREACHABLE and a
+  prerequisite exists.
