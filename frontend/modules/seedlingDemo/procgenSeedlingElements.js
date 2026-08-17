@@ -12,39 +12,40 @@
  * (`{tx,ty}` anchors, terrain records, `tset`/`tag` attributes,
  * `placementGroupId`/`placementTagId`).
  *
- * ── ⛔⛔ THE CERTIFICATION GAP, STATED FIRST BECAUSE IT DECIDES EVERY
- *    NUMBER THIS FILE PRODUCES ─────────────────────────────────────────
+ * ── ⛓⛓⛓ THE CERTIFICATION GAP — MEASURED BY SLICE 3, CLOSED BY SLICE S1 ──
  *
  * ⚖ Design ruling 22's shape is *block on `Button`(A) HOLDS `Lock`(A) open →
  * the player reaches `ButtonRoom`(B) → pressing it PERMANENTLY opens the
- * level's `Lock`(B)s → collect*. **THE SOLVER AS IT STANDS CANNOT DRIVE THAT
- * CHAIN**, and slice 3's D1(a) measured it on a hand-drawn room (arc-3 kickoff
- * §10.1) rather than discovering it from a yield table:
+ * level's `Lock`(B)s → collect*. Slice 3 shipped this binding UNCERTIFIED
+ * because the solver could not drive that chain, and measured why on a
+ * hand-drawn room (arc-3 kickoff §10.2) rather than discovering it from a yield
+ * table. **Slice S1 ("nested openers") built the capability**, and the same
+ * placements now certify — 16 of 18 at `len=2`, 16 of 16 at `len=3`, every one
+ * with the lifted claim `true`. The three gaps and what closed each:
  *
- *   · the frontier names `lock`(B), `refineStrategy` correctly KEEPS `hold`
- *     (the presser is a LATCHING `buttonroom`, `activators.localPublish`), and
- *     `deriveHoldStance` then refuses BY NAME —
- *     *"no REACHABLE stance inside buttonroom@…: … A hold that cannot be stood
- *     on is not a strategy for this obstacle."*
- *   · the cell that blocks it is **the gadget's own BLOCK**, not `lock`(A):
- *     `stanceHypothesis` hypothesises every unopened ACTIVATOR discharged, so a
- *     stance behind `lock`(A) IS derived — but a `pushableblock` is a Solid no
- *     hypothesis removes and no SUB-ORDER shoves, and the reverse-pull geometry
- *     puts the block in the entry lane by construction (`entry0 =
- *     stances[len]`, the block is `path[len]`). Measured by ablation: the arm
- *     with `lock`(A) removed refuses with the IDENTICAL sentence, and the arm
- *     with the BLOCK removed SOLVES.
- *   · where the hypothesis does apply the optimism is worse than a refusal: the
- *     walk sets off for a stance behind a lock nothing opens and grinds on it
- *     for the whole 400-tick per-target budget (BUDGET_EXHAUSTED).
+ *   · **NO SUB-ORDER FOR A BLOCK IN THE WAY OF ANOTHER OBSTACLE'S STANCE.** The
+ *     frontier names `lock`(B), `refineStrategy` correctly KEEPS `hold` (the
+ *     presser is a LATCHING `buttonroom`, `activators.localPublish`), and
+ *     `deriveHoldStance` refused BY NAME. The cell that blocked it was **the
+ *     gadget's own BLOCK**, not `lock`(A) — measured by ablation, one entity at
+ *     a time — because the reverse-pull geometry puts the block in the entry
+ *     lane by construction (`entry0 = stances[len]`, the block is `path[len]`).
+ *     ⇒ S1's `stancePrerequisite`: the derivation may answer *"reachable once
+ *     `<id>` is discharged"*, and `walkTo` — the ONE place a stance becomes a
+ *     walk — raises that as an order, executes it, and re-derives. Its MECHANISM
+ *     arm is what keeps this element's block from being spent as scenery: the
+ *     prerequisite is `lock`(A), whose own `weigh` parks the block on
+ *     `button`(A) and clears the lane in the same act.
+ *   · **AN OPTIMISTIC HYPOTHESIS WITH NO DURABLE REDEEMER.** ⇒ guard (iii) in
+ *     `stanceHypothesis`: an activator whose verb is `weigh` and whose weigh no
+ *     block can serve is a WALL, because the only order left for it is a `hold`
+ *     the walker shuts again by leaving.
+ *   · **NO "ALREADY HOME" ARM.** ⇒ the dwell-only `weigh`.
  *
- * ⇒ **THIS BINDING NEVER CLAIMS A CERTIFIED GADGET.** It places the element,
- * records every geometry fact, runs the certification solve, and reports
- * `certified: false` with the SOLVE'S OWN refusal text. ⚖ The orchestrating
- * session's ruling: that IS the measurement of the arc's dependency — published,
- * not hidden — and the work order is a named SOLVER slice (S1, "nested
- * openers"), which is the user's to authorise. ⛔ Nothing here solves around it:
- * no template-side trick, no solver line, no widened catch.
+ * ⛔ THE BINDING ITSELF DID NOT CHANGE FOR ANY OF IT. Certification is still the
+ * solve's own verdict, a refusal is still published with the solve's own words,
+ * and a refused gadget is still DROPPED rather than forced: no template-side
+ * trick, no widened catch, no gate on `span`/`len` that hides a class.
  *
  * ── ⛓ THE FLAG'S VERB IS `hold`, NOT `touch` — a DELTA against §3.4 ────
  *
@@ -578,10 +579,68 @@ export function liftedClaimFrom({ records = [], trace = null }, { block, button,
         if (s && s.id && block.id && s.id === block.id) return false;
         if (s && sameTile(s.from, buttonTile)) return false;
     }
-    const cross = (trace?.rows ?? []).find((row) => (row.path ?? []).some(
-        (p) => Math.floor(p.x / 16) === door.x && Math.floor(p.y / 16) === door.y));
+    const cross = (trace?.rows ?? []).find((row) => rowCrosses(row, door));
     if (!cross) return null;
     return park <= cross.tick;
+}
+
+/**
+ * ⛓⛓⛓ **DOES THIS DECISION ROW'S CORRIDOR PASS THROUGH THE DOOR CELL?** — and
+ * slice S1 is what proved the first cut of this test could not answer it, in TWO
+ * separate ways that both look identical from outside: *"the route never crossed
+ * it"* on a route that plainly did.
+ *
+ * ⛔ (1) A ROW'S `path` IS ITS **WAYPOINTS**, NOT ITS CELLS. `planWaypoints`
+ * STRING-PULLS, so a corridor running straight down a lane arrives as two points
+ * with every tile between them unmentioned. The first cut tested the door cell
+ * for MEMBERSHIP in that list, which asks *"did a waypoint land on the door"*.
+ *
+ * ⛔ (2) A ROW'S CORRIDOR STARTS WHERE THE PLAYER **STANDS**, not at waypoint 0.
+ * `drive` walks from the live position to `path[0]`, and that leading leg is a
+ * real part of the route the row describes — it is where the walk out of the
+ * flag's own cell crosses the guard door, measured on seed 7 `winding`: the row
+ * `saw` (136.9, 135.9) with `path[0]` (136, 104), and the door cell (8,7)
+ * sitting between them.
+ *
+ * ⛔⛔ AND THE READER'S FIVE SYNTHETIC ROWS COULD NOT SEE EITHER, because every
+ * one of them put the door cell exactly ON a waypoint. ⇒ a reader written for a
+ * route that does not exist yet is untested precisely where it will be used, and
+ * the fixture is what has to make the two readings differ.
+ * [[feedback_fixture_must_discriminate_two_builds]]
+ *
+ * ⚠ THE TRACE MERGE IS WHY THE LEADING LEG MATTERS SO MUCH HERE. Rows sharing a
+ * tick are merged and a SUBSTANTIVE decision outranks a `walk`, so the corridor
+ * to a stance the same decision derived is not a row of its own at all
+ * (`solverBot`'s merge docblock). The rows that survive with a `path` are the
+ * ones that re-planned later — and for this element that is the walk OUT of the
+ * flag, whose crossing lives entirely in the leading leg.
+ *
+ * ⛓ THE SAMPLE PITCH IS EIGHT PIXELS, for `probeCorridor`'s own reason: eight is
+ * finer than any 16-px tile, so no cell a segment passes through can fall between
+ * two samples. ⚠ This is still the SUFFICIENT condition §10.8 states — the row's
+ * `tick` is when the corridor was PLANNED and the walk follows after it, so an
+ * estimate that is EARLIER than the true crossing only makes `park <= cross`
+ * harder to satisfy, never easier.
+ */
+function rowCrosses(row, door) {
+    const inDoor = (x, y) => Math.floor(x / 16) === door.x && Math.floor(y / 16) === door.y;
+    const pts = [];
+    if (row?.saw && Number.isFinite(row.saw.x) && Number.isFinite(row.saw.y)) {
+        pts.push({ x: row.saw.x, y: row.saw.y });
+    }
+    for (const p of (row?.path ?? [])) pts.push(p);
+    if (pts.length === 0) return false;
+    if (pts.length === 1) return inDoor(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i += 1) {
+        const a = pts[i - 1];
+        const b = pts[i];
+        const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 8));
+        for (let s = 0; s <= steps; s += 1) {
+            if (inDoor(a.x + ((b.x - a.x) * s) / steps,
+                a.y + ((b.y - a.y) * s) / steps)) return true;
+        }
+    }
+    return false;
 }
 
 /**

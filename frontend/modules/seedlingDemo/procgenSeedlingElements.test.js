@@ -500,6 +500,42 @@ describe('⛓⛓⛓ THE LIFTED CLAIM\'S READER, on a SYNTHETIC record set', () =
             geom)).toBe(null);
     });
 
+    /**
+     * ⛓⛓⛓ THE TWO WAYS A CORRIDOR CROSSES THE DOOR WITHOUT A WAYPOINT ON IT —
+     * arc 3 slice S1, and BOTH were live defects the five rows above could not
+     * see, because every one of them puts the door cell exactly ON a waypoint.
+     * Each row here is the mutant its own fix has to survive.
+     */
+    it('⛓ the door BETWEEN two waypoints ⇒ still a crossing (a path is WAYPOINTS, '
+        + 'string-pulled, not cells)', () => {
+        // (6,5) is the door; the walk runs straight down column 6 past it, and
+        // neither endpoint is in it.
+        const trace = { rows: [{ tick: 120, strategy: { verb: 'walk' },
+            path: [{ x: 104, y: 24 }, { x: 104, y: 136 }] }] };
+        expect(liftedClaimFrom({ records: [weighRecord(0, 40)], trace }, geom)).toBe(true);
+        // CONTROL: the same two waypoints one column over cross nothing.
+        const beside = { rows: [{ tick: 120, strategy: { verb: 'walk' },
+            path: [{ x: 120, y: 24 }, { x: 120, y: 136 }] }] };
+        expect(liftedClaimFrom({ records: [weighRecord(0, 40)], trace: beside }, geom))
+            .toBe(null);
+    });
+
+    it('⛓ the door on the LEADING LEG — between where the player STANDS and '
+        + 'waypoint 0 ⇒ still a crossing', () => {
+        // The player is below the door and the first waypoint is above it, so the
+        // whole crossing lives in the leg `drive` walks before waypoint 0. This is
+        // the shape a real certified route produced (seed 7 `winding`).
+        const trace = { rows: [{ tick: 120, saw: { x: 104, y: 136 },
+            strategy: { verb: 'walk' }, path: [{ x: 104, y: 24 }] }] };
+        expect(liftedClaimFrom({ records: [weighRecord(0, 40)], trace }, geom)).toBe(true);
+        // CONTROL: the same row with the player standing beside the lane crosses
+        // nothing — so the leg is being read, not merely assumed.
+        const beside = { rows: [{ tick: 120, saw: { x: 120, y: 136 },
+            strategy: { verb: 'walk' }, path: [{ x: 120, y: 24 }] }] };
+        expect(liftedClaimFrom({ records: [weighRecord(0, 40)], trace: beside }, geom))
+            .toBe(null);
+    });
+
     it('⛔ a LATER shove that moves the block OFF the button ⇒ false — the first two '
         + 'facts alone would credit a plan for a block it had since shoved away', () => {
         const later = { goal: 'collect-placement', strategy: 'shove',

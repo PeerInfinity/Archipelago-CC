@@ -1563,6 +1563,36 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } 
  *   the one the certification solve runs on, so a caller counting solves counts
  *   that one too — it is a real solve of a real room.
  */
+/**
+ * ⛓⛓⛓ **WHY A CERTIFICATION SOLVE DID NOT CERTIFY — CLASSIFIED FROM THE
+ * SOLVE'S OWN STRUCTURED FIELDS, NEVER FROM ITS PROSE.**
+ *
+ * ⛔ Slice 3 wrote this field as a CONSTANT, `'the-solver-does-not-chain (S1:
+ * nested openers)'`, and that was honest exactly while every refusal had one
+ * cause. Slice S1 gave the solver the chain, and the FIRST run of the six-arm
+ * yield table under it produced a refusal that constant would have MISLABELLED:
+ * `rooms` seed 4, whose sentence is *"Obstacle: pickup:torchpickup … Strategy
+ * 'collect'…"* — the goal's own APPROACH is blocked (trap 348's class), which has
+ * nothing to do with opener chaining. A label that survives the cause it names is
+ * a label that lies.
+ *
+ * ⛔ AND IT KEYS ON `verdict` AND `obstacle.kind`, NOT ON THE SENTENCE. A
+ * prose-keyed classifier makes a wording fix a behaviour change (trap 337); these
+ * two fields are what `procgenOracle.solve` already returns as data, and
+ * `reasonText` rides alongside verbatim for the reader.
+ */
+function certificationGap(cert) {
+    if (cert.verdict === VERDICT.SOLVED) return null;
+    if (cert.verdict === VERDICT.BUDGET_EXHAUSTED) {
+        return `the-certification-solve-exhausted-${cert.budgetKind ?? 'a-budget'}`;
+    }
+    const kind = cert.obstacle?.kind ?? null;
+    if (kind === 'pickup') return 'the-goal-approach-is-blocked';
+    if (kind === 'proximity-hazard') return 'no-reachable-stance-and-no-prerequisite';
+    if (kind === 'solid') return 'a-frontier-obstacle-with-no-usable-order';
+    return 'the-certification-solve-refused';
+}
+
 export function seedlingSeam({
     seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
     elements = DEFAULT_ELEMENTS, wrapOracle = (o) => o,
@@ -1581,21 +1611,23 @@ export function seedlingSeam({
      * a GRADED REFUSAL with the solve's own words, not as an exception a caller
      * reads as a broken room builder.
      *
-     * ⛔⛔ **TODAY IT ALWAYS REFUSES, AND THAT IS THE MEASUREMENT.** ⚖ Ruling
-     * 22's chain — block on `button`(A) HOLDS `lock`(A) → the player reaches
-     * `buttonroom`(B) → `lock`(B)s open → collect — needs the solver to raise a
-     * SHOVE as a SUB-ORDER of reaching another obstacle's stance, and it cannot:
-     * `procgenSeedlingElements.js`'s docblock and the arc-3 as-built §10 carry
-     * the three gaps, the fixture arm that shows each, and the S1 work order.
-     * `procgenSeedlingElementsCertify.test.js` asserts today's REFUSED verdict BY
-     * NAME so S1 flips it green rather than discovering it.
+     * ⛓⛓⛓ **SLICE S1 MADE IT CERTIFY.** ⚖ Ruling 22's chain — block on
+     * `button`(A) HOLDS `lock`(A) → the player reaches `buttonroom`(B) →
+     * `lock`(B)s open → collect — needed the solver to raise an order as the
+     * PREREQUISITE of reaching another obstacle's stance, and slice 3 measured
+     * that it could not. S1 built it (`solverBot.stancePrerequisite`,
+     * `NESTED_OPENER_DEPTH`, guard (iii), the dwell arm), and the certification
+     * solve now returns `SOLVED` with `['weigh','hold','collect']` on the
+     * ordinary placement: 16 of 18 at `len=2` and 16 of 16 at `len=3` over the
+     * yield table's own bound, with the lifted claim `true` on every one.
      *
-     * ⇒ on a refusal the level is regenerated with the element DROPPED — the
-     * same draws spent, the composite not committed — so `--elements=guard`
-     * yields a real level, the pass-2 ladder is comparable to the `none` arm, and
-     * the GEOMETRY the census measured is carried on the certification so no
-     * number is lost. ⛔ `certified` is never `true` and nothing here retries,
-     * relaxes a bound or widens a catch.
+     * ⇒ on a refusal the level is STILL regenerated with the element DROPPED —
+     * the same draws spent, the composite not committed — so `--elements=guard`
+     * yields a real level, the pass-2 ladder stays comparable to the `none` arm,
+     * and the GEOMETRY the census measured is carried on the certification so no
+     * number is lost. ⛔ Nothing here retries, relaxes a bound or widens a catch:
+     * the two cells that refuse, refuse, and `certificationGap` says which kind
+     * of refusal it was from the solve's own structured fields.
      */
     let certification = null;
     if (model.elements.ran) {
@@ -1615,8 +1647,9 @@ export function seedlingSeam({
                 ? liftedClaimFrom(cert, model.elements.placed[0]) : null,
             /** ⛓ THE GEOMETRY, carried across the drop so the census survives it. */
             geometry: model.elements.placed,
-            gap: cert.verdict === VERDICT.SOLVED ? null
-                : 'the-solver-does-not-chain (S1: nested openers)',
+            /** ⛓ THE OBSTACLE THE SOLVE NAMED — structured, beside the prose. */
+            obstacle: cert.obstacle ?? null,
+            gap: certificationGap(cert),
         });
         if (!certification.certified) {
             model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });

@@ -1,20 +1,23 @@
 /**
  * seedlingDemo/procgenSeedlingElementsCertify.test — **THE SIX-ARM FIXTURE THAT
- * SAYS WHAT THE SOLVER CANNOT DO YET, AND IT ASSERTS TODAY'S REFUSAL BY NAME.**
+ * GRADED SLICE S1, AND IT NOW ASSERTS THE CERTIFICATION BY NAME.**
  *
- * PROCGEN ELEMENTS arc 3, slice 3, D1(a). ⚖ Ruling 22's shape is
+ * PROCGEN ELEMENTS arc 3. ⚖ Ruling 22's shape is
  *
  *     goal <- lock B <- buttonroom B (the FLAG) <- lock A <- button A <- weigh the block
  *
- * and the solver as it stands cannot drive it. This file is the MEASUREMENT that
- * says so, kept as a committed fixture rather than as a paragraph, for the reason
- * the orchestrating session gave: **the solver slice S1 ("nested openers") must
- * FLIP these rows green, not rediscover the problem.**
+ * Slice 3 measured that the solver could not drive it and committed this file as
+ * the MEASUREMENT — four REFUSED verdicts asserted by sentence, two positive
+ * controls — precisely so that **slice S1 ("nested openers") would have to FLIP
+ * these rows rather than rediscover the problem.** It did: ARMS 1, 2 and 5 now
+ * SOLVE with the records §10.3 named, and ARM 4's budget burn became a fast named
+ * refusal.
  *
- * ⛔ SO EVERY ARM IS A LIVE ROW WITH NO `.skip`. The four that refuse assert the
- * REFUSAL SENTENCE, and the two that solve are the positive controls that keep
- * the four honest — without OPEN and ONE this file would be a room that does not
- * work for reasons nobody had localised.
+ * ⛔ SO EVERY ARM IS STILL A LIVE ROW WITH NO `.skip`, AND THE TWO CONTROLS ARE
+ * UNCHANGED. ARM 3 (the room with nothing in the way) and ARM 6 (the decoration
+ * flag) are what keep the other four honest — without them this file would be a
+ * room that works for reasons nobody had localised, which is the same defect as
+ * one that fails for them.
  *
  * ── THE ROOM, DRAWN OUT ───────────────────────────────────────────────
  *
@@ -50,7 +53,9 @@ import {
     DEFAULT_BUDGET, VERDICT, bootStaging, collectGoal, solve,
 } from './procgenOracle.js';
 import { PRE_SWORD_ITEMS } from './procgenPalette.js';
-import { SEEDLING_DEFAULTS } from './procgenSeedling.js';
+import { SEEDLING_DEFAULTS, seedlingSeam } from './procgenSeedling.js';
+import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
+import { parseElementSpec } from '../procgenCore/elementSpec.js';
 
 const START = SEEDLING_DEFAULTS.start;
 const GOAL = { tx: 3, ty: 8 };
@@ -288,5 +293,71 @@ describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own
         const out = solveArm('slice3-decoration', { lockB: false });
         expect(out.verdict).toBe(VERDICT.SOLVED);
         expect([...verbsOf(out)]).toEqual(['collect']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **AND THE SAME CHAIN THROUGH THE BINDING, ON A GENERATED ROOM** — arc 3
+ * slice S1. The six arms above are a HAND-DRAWN room: they say the solver can
+ * drive ⚖ ruling 22's chain. This says the thing the arc actually ships does,
+ * end to end, through `seedlingSeam` — the one place that answers *"is this
+ * gadget certified"* for both callers.
+ *
+ * ⛔ THE SEED IS A MEASURED PLACING ONE, not a lucky one: `winding` seed 7 is the
+ * example the slice-3 as-built published as a PLACED-and-REFUSED gadget (§10.15),
+ * so this row is the same room reading the opposite verdict.
+ */
+describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', () => {
+    it('winding seed 7, `guard;len=2`: certified, `[weigh, hold, collect]`, and the '
+        + 'LIFTED CLAIM is true', () => {
+        const seam = seedlingSeam({
+            seed: 7,
+            items: PRE_SWORD_ITEMS,
+            skeleton: parseSkeleton('winding', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=2'),
+        });
+        const c = seam.certification;
+        expect(c).not.toBeNull();
+        expect(c.certified).toBe(true);
+        expect(c.verdict).toBe(VERDICT.SOLVED);
+        expect([...c.strategies]).toEqual(['weigh', 'hold', 'collect']);
+        expect(c.gap).toBeNull();
+        /**
+         * ⛔⛔ THE LIFTED CLAIM IS THE NON-VACUOUS HALF, and it is the assertion
+         * slice 3 could not make: `certified` alone says the level was beaten,
+         * and this says the GADGET was the thing that let it be — a block on the
+         * button at the tick the route first crossed the guard door.
+         */
+        expect(c.heldAtDoor).toBe(true);
+        // ⛓ and the element really SHIPPED: a certified gadget is not dropped.
+        expect(seam.model.elements.placed).toHaveLength(1);
+        expect(seam.model.elements.placed[0].door).toEqual({ x: 8, y: 7 });
+    });
+
+    /**
+     * ⛔ THE CONTROL FOR THE ROW ABOVE: the arc's OWN refusing cell. `rooms`
+     * seed 4 places a gadget and its certification solve refuses — and the
+     * `gap` it reports is **not** an opener-chain one, which is the whole reason
+     * slice 3's constant label had to become a classification. A build that
+     * labelled every refusal `the-solver-does-not-chain` would print the same
+     * string here and be wrong about it.
+     */
+    it('rooms seed 4, `guard;len=2`: still REFUSES — and the gap is classified from '
+        + 'the solve\'s own obstacle, not from a constant', () => {
+        const seam = seedlingSeam({
+            seed: 4,
+            items: PRE_SWORD_ITEMS,
+            skeleton: parseSkeleton('rooms', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=2'),
+        });
+        const c = seam.certification;
+        expect(c.certified).toBe(false);
+        expect(c.gap).toBe('the-goal-approach-is-blocked');
+        expect(c.obstacle).toMatchObject({ kind: 'pickup', id: 'torchpickup@96,32' });
+        expect(c.heldAtDoor).toBeNull();
+        // ⛓ …and the geometry SURVIVES the drop, which is what keeps the census
+        // numbers comparable across a refusal.
+        expect(c.geometry).toHaveLength(1);
+        expect(seam.model.elements.placed).toHaveLength(0);
     });
 });

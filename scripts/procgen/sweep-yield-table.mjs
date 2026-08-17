@@ -192,12 +192,18 @@ const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
  * ⛓⛓ **BOTH SUBSTRATES TAKE IT SINCE ARC 3 SLICE 3.** Seedling used to refuse it
  * by name ("the element binding is the MAZE's in this arc"); its own binding is
  * `seedlingDemo/procgenSeedlingElements.js`, and the columns below say what the
- * two arms measure. ⛔⛔ AND THE SEEDLING ARM'S `guarded` COLUMN IS **0 BY
- * CONSTRUCTION TODAY**: the solver cannot drive ⚖ ruling 22's opener chain, so
- * every placed gadget is `certified: false` with the solve's own refusal text
- * (arc-3 as-built §10, the S1 work order). That zero is THE MEASUREMENT of the
- * arc's dependency, published rather than hidden — a `guarded` column that read
- * anything else would be the one thing slice 3 must not ship.
+ * two arms measure.
+ *
+ * ⛓⛓⛓ **THE SEEDLING ARM'S `guarded` COLUMN WAS `0` BY CONSTRUCTION UNTIL SLICE
+ * S1, AND IT IS NOT ANY MORE.** Slice 3 shipped the binding UNCERTIFIED because
+ * the solver could not drive ⚖ ruling 22's opener chain, and published that zero
+ * as the measurement of the arc's dependency. S1 ("nested openers") built the
+ * capability, and the same command now reports 16 of 18 placements certified at
+ * `len=2` and 16 of 16 at `len=3`, every one of them with `heldAtDoor: true`.
+ * ⛔ The cells that still refuse still print `certified: false` with the solve's
+ * own words and a `gap` classified from its structured fields — see
+ * `procgenSeedling.certificationGap`, which replaced the constant slice 3 could
+ * honestly write when every refusal had one cause.
  */
 const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
 if (REQUIRE && AREAS.keys === 0) {
@@ -442,7 +448,8 @@ if (CELL !== '') {
             certVerdict: seedlingCertification?.verdict ?? null,
             certReason: (seedlingCertification?.reasonText ?? '').slice(0, 200) || null,
             gap: seedlingCertification?.gap ?? null,
-            /** ⛔ 0 BY CONSTRUCTION TODAY — see this file's `--elements=` docblock. */
+            /** ⛓ NON-ZERO SINCE ARC 3 SLICE S1 — see this file's `--elements=`
+             *  docblock for what it read before, and why. */
             guarded: seedlingCertification?.certified ? 1 : 0,
             heldAtDoor: seedlingCertification?.heldAtDoor ?? null,
             params: p ? p.params : null,
