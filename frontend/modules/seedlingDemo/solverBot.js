@@ -464,6 +464,31 @@ export const STRATEGY_EXECUTORS = Object.freeze({
 const MAX_STRATEGIES_PER_GOAL = 4;
 
 /**
+ * ⛓⛓⛓ **PROCGEN ELEMENTS arc 3, SLICE S1 — HOW MANY OPENERS ONE ORDER MAY
+ * NEST, AND IT IS A NUMBER RATHER THAN A LOOP.**
+ *
+ * ⚖ Ruling 22's gadget is a TWO-DEEP chain: the goal is behind `lock`(B), whose
+ * opener is a `buttonroom` behind `lock`(A), whose opener is a `button` a BLOCK
+ * has to be weighed onto. Reaching the buttonroom's stance therefore needs one
+ * order raised for ANOTHER order's stance — which is one level of nesting and
+ * exactly one.
+ *
+ * ⛔ THE CHAIN IS COUNTED FROM THE FRONTIER, NOT FROM THE PREREQUISITE. The
+ * order the frontier raises is link **1**; a prerequisite raised so that link 1's
+ * stance can be reached is link **2**; a prerequisite of THAT is link 3 and
+ * REFUSES BY NAME. So this number is the length of the deepest chain the policy
+ * will drive, and setting it to 1 turns the capability off entirely — which is
+ * what the mutant does.
+ *
+ * ⛔ AND THREE-DEEP IS NOT "unsupported", IT IS **REFUSED WITH A SENTENCE**
+ * naming the prerequisite it would not resolve. A bound that ran out silently
+ * would look exactly like a room with no answer. Deeper chains are arc 4's
+ * (bent pushes) and they arrive with their own ruling, not by raising this
+ * number.
+ */
+export const NESTED_OPENER_DEPTH = 2;
+
+/**
  * ⛓⛓⛓ R8 SLICE 3b — THE TABLE NAMES A STRATEGY BY TAG; LIVE STATE REFINES IT.
  *
  * ⛔ A `lock` AND A KILL-LOCK ARE THE SAME TAG AND OPPOSITE PROBLEMS, and L5
@@ -569,12 +594,20 @@ function resolveHoldStrategy(run, obstacle, contacts, blocked = [], alsoRejected
     const presser = opener.presser;
     const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
         `solverBot hold (${obstacle.id})`);
-    const { stance, exempt } = deriveHoldStance(run, resolvedPresser, contacts, blocked);
+    /**
+     * ⛓ THE ONE CALLER THAT ASKS FOR A PREREQUISITE (arc 3 slice S1, gap 1) —
+     * because it is the one whose result reaches `walkTo`, the ONE place that
+     * consumes one. See `deriveHoldStance`'s own arm for why the other two
+     * callers must not be given it.
+     */
+    const { stance, exempt, prerequisite } = deriveHoldStance(run, resolvedPresser, contacts,
+        blocked, { prerequisites: true });
     return {
         strategy: 'hold',
         target: { x: presser.x, y: presser.y },
         stance,
         exempt,
+        ...(prerequisite ? { prerequisite } : {}),
         hold: deriveHold(run, resolvedPresser, opener),
         rejected: [{
             option: 'route-around',
@@ -2136,7 +2169,7 @@ const HOLD_SLACK = 30;
  * `planWaypoints` itself — the same instrument the walk then follows, so the
  * stance picked and the stance reachable cannot be two claims.
  */
-function deriveHoldStance(run, presser, contacts, blocked = []) {
+function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites = false } = {}) {
     const exempt = new Set([...contacts, `proximity-hazard:${presser.tag}@${presser.x},${presser.y}`]);
     const pitch = DEFAULT_LATTICE;
     const centre = {
@@ -2168,13 +2201,169 @@ function deriveHoldStance(run, presser, contacts, blocked = []) {
             };
         }
     }
+    /**
+     * ⛓⛓⛓ **THE PREREQUISITE — PROCGEN ELEMENTS arc 3, SLICE S1, GAP 1.**
+     *
+     * Every candidate has failed in the world as it is AND under the hypothesis,
+     * so before S1 this threw. The question it never asked is the one ⚖ ruling
+     * 22's gadget needs: *is this stance reachable once ONE obstacle has been
+     * REALLY discharged by an order somebody executes first?* — which is not the
+     * hypothesis. A hypothesis says "assume the rest of the plan works"; a
+     * PREREQUISITE says "this is the work, do it now, then ask me again".
+     *
+     * ⛔ IT IS OPT-IN, and the opt-in is the "ONE place" law honoured at BOTH
+     * ends. Two other callers of this derivation (`deriveKillByCeiling` and the
+     * ceiling-bait presser search) destructure `{stance, exempt}` and would
+     * silently DROP a prerequisite, driving a walk on the strength of work
+     * nobody had done — the exact optimism gap 2 is about. Only
+     * `resolveHoldStrategy`, whose result reaches the one consumer in `walkTo`,
+     * asks for it.
+     *
+     * ⛔ AND IT COSTS NOTHING WHERE IT DOES NOT FIRE: the arm runs only after
+     * every candidate has already refused, so no walk that plans today pays a
+     * probe for it. (Arc-2 §9d's cost work is why that sentence is here.)
+     */
+    const pre = prerequisites
+        ? stancePrerequisite(run, candidates, exempt, hypothesis, contacts, blocked) : null;
+    if (pre) {
+        return {
+            stance: pre.stance,
+            exempt,
+            discharged: [],
+            prerequisite: pre.prerequisite,
+        };
+    }
     throw new SolverRefusal(
         `solverBot: no REACHABLE stance inside ${presser.tag}@${presser.x},${presser.y} `
         + `in level ${run.level} — ${candidates.length} cell(s) land the player box in `
         + 'the button and none of them plans a corridor from '
         + `(${run.state.x},${run.state.y}). A hold that cannot be stood on is not a `
-        + 'strategy for this obstacle.',
+        + 'strategy for this obstacle.'
+        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis, blocked) : ''),
         { obstacle: { kind: 'proximity-hazard', id: `${presser.tag}@${presser.x},${presser.y}` } });
+}
+
+/**
+ * ⛓⛓⛓ **IS THIS STANCE REACHABLE ONCE ONE OBSTACLE IS REALLY DISCHARGED?** —
+ * arc 3 slice S1 gap 1, and the answer is a SUB-ORDER, not a longer hypothesis.
+ *
+ * TWO ARMS, IN THIS ORDER, and the order is the design decision:
+ *
+ *  (a) **THE MECHANISM.** An activator already in the hypothesis whose own verb
+ *      is a `weigh` — a lock whose group only publishes while a Solid sits on its
+ *      button. Its resolution MOVES A BLOCK to a cell the mechanism names, so the
+ *      probe is the corridor with that activator discharged AND its block parked
+ *      on the presser (`bagWithBlockAt`, the same instrument `deriveShove`'s own
+ *      hypothesis uses). ⇒ the prerequisite is the ACTIVATOR.
+ *  (b) **THE GEOMETRY.** A walk-family `pushableblock` that simply stands in the
+ *      lane. `deriveShove` is the probe, unchanged and un-copied: it already
+ *      scans for the minimum `k` at which a corridor to this aim appears. ⇒ the
+ *      prerequisite is the BLOCK.
+ *
+ * ⛔ **MECHANISM BEFORE GEOMETRY, AND NOT AS A PREFERENCE.** In ⚖ ruling 22's
+ * gadget the block in the lane IS the opener's own material: arm (b) would shove
+ * it "out of the way", spend the one block the room has, and leave the lock it
+ * was going to open still shut — a corridor bought by destroying the mechanism
+ * that was the puzzle. Asking the mechanism first means a block is only ever
+ * treated as scenery once nothing needs it.
+ *
+ * ⚠ THE CANDIDATE LIST IS THE CALLER'S OWN, IN ITS OWN ORDER, so the stance a
+ * prerequisite buys is the same stance the plain probe would have taken. Trying
+ * a different cell here would make "the stance is reachable" and "the stance we
+ * picked" two claims again (§11.7's law).
+ */
+function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, blocked) {
+    const bagH = bagWithDischarged(run, run.liveGeometryOpts(), hypothesis);
+    const weighable = hypothesis.filter((h) => h.kind === 'activator' && h.strategy === 'weigh');
+    for (const h of weighable) {
+        const opener = openerPresserFor(run, { id: h.id, tag: h.tag });
+        if (!opener) continue;
+        const onto = {
+            tx: Math.floor(opener.presser.x / TILE_SIZE),
+            ty: Math.floor(opener.presser.y / TILE_SIZE),
+        };
+        const derived = deriveWeigh(run, onto, contacts, blocked);
+        if (!derived.plan) continue;
+        const bag = bagWithBlockAt(bagH, derived.plan.blockId, onto, false);
+        for (const c of candidates) {
+            if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+                solverPlanOpts(run, exempt, { liveBag: bag }))) continue;
+            return {
+                stance: { x: c.x, y: c.y },
+                prerequisite: {
+                    id: h.id,
+                    kind: 'solid',
+                    tag: h.tag,
+                    via: 'mechanism',
+                    why: `the stance is reachable once ${h.id} is REALLY open, and its own `
+                        + `verb is \`weigh\`: ${derived.plan.blockId} is shoved `
+                        + `${derived.plan.dir} k=${derived.plan.k} onto `
+                        + `${opener.presser.tag}@${opener.presser.x},${opener.presser.y} `
+                        + `(${onto.tx},${onto.ty}) and the group stays published while the `
+                        + 'walker leaves. ⛔ Asked BEFORE the geometry arm, because that '
+                        + 'block is the opener\'s own material — shoving it aside would buy '
+                        + 'a corridor by spending the mechanism.',
+                },
+            };
+        }
+    }
+    for (const row of (run.world.pushables ?? [])) {
+        if (row.family !== 'walk' || blocked.includes(row.id)) continue;
+        const live = run.pushables?.get(row.id);
+        if (!live || live.removed) continue;
+        for (const c of candidates) {
+            const derived = deriveShove(run, row, { x: c.x, y: c.y }, null, exempt, blocked);
+            if (!derived?.plan) continue;
+            return {
+                stance: { x: c.x, y: c.y },
+                prerequisite: {
+                    id: row.id,
+                    kind: 'solid',
+                    tag: row.tag,
+                    via: 'geometry',
+                    why: `the stance is reachable once ${row.id} is out of the lane: a `
+                        + `\`shove\` ${derived.plan.dir} k=${derived.plan.k} to `
+                        + `(${derived.plan.to.tx},${derived.plan.to.ty}) plans the corridor, `
+                        + 'and a parked block stays parked. No activator in the hypothesis '
+                        + 'wanted this block, so it is scenery rather than material.',
+                },
+            };
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓ THE CLAUSE A PREREQUISITE-AWARE REFUSAL OWES — *"and here is what could not
+ * be resolved"*. ⛔ Without it the sentence is the pre-S1 one and a reader
+ * cannot tell "there was nothing to try" from "the one thing to try failed",
+ * which are the two answers this whole slice exists to separate.
+ */
+function prerequisiteRefusalClause(run, hypothesis, blocked) {
+    const parts = [];
+    for (const h of hypothesis) {
+        if (h.kind !== 'activator') continue;
+        if (!openerPresserFor(run, { id: h.id, tag: h.tag })) {
+            parts.push(`${h.id} (no presser publishes its tSet group at all, so nothing `
+                + 'in this room can open it)');
+        } else if (h.strategy === 'weigh') {
+            parts.push(`${h.id} (its \`weigh\` has no block that reaches)`);
+        }
+    }
+    const blocks = (run.world.pushables ?? []).filter((row) => {
+        if (row.family !== 'walk' || blocked.includes(row.id)) return false;
+        const live = run.pushables?.get(row.id);
+        return Boolean(live) && !live.removed;
+    });
+    for (const row of blocks) parts.push(`${row.id} (no shove of it plans the corridor)`);
+    if (parts.length === 0) {
+        return ` ⛔ AND NO PREREQUISITE EXISTS TO RAISE: level ${run.level} holds no `
+            + 'walk-family pushable and no hypothesised activator whose own verb moves one, '
+            + 'so there is nothing an order could discharge to open this stance (arc 3 '
+            + 'slice S1, gap 1 — the bound this sweep ran over is the room\'s own roster).';
+    }
+    return ' ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: '
+        + `${parts.join('; ')}.`;
 }
 
 /** `rectsOverlap`, local so this module keeps its own import list honest. */
@@ -2219,7 +2408,14 @@ function stanceHypothesis(run, blocked = []) {
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
         if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
-        out.push({ id: a.id, kind: 'activator', strategy });
+        /**
+         * ⛓ arc 3 slice S1 — THE TAG RIDES ALONG. A hypothesis entry used to be
+         * read for its id alone; a PREREQUISITE has to be turned back into an
+         * OBSTACLE (`{kind, tag, id}`) so the same table that selected its verb
+         * here can select it again there, and an entry without the tag resolves
+         * to `OBSTACLE_STRATEGIES['solid']`, which is nothing at all.
+         */
+        out.push({ id: a.id, kind: 'activator', tag: a.tag, strategy });
     }
     for (const b of (run.world.shieldBosses ?? [])) {
         if (wall.has(b.id)) continue;
@@ -4922,6 +5118,13 @@ export function solveSegment({
     const exemptions = new Set();
     /** The strategies applied for the CURRENT goal, for the bound below. */
     let applied = [];
+    /**
+     * ⛓ arc 3 slice S1 — the OPENER CHAIN raised for the current goal, one entry
+     * per prerequisite redeemed. Its length is what `NESTED_OPENER_DEPTH` bounds,
+     * and it lives beside `applied` because it is the same kind of fact: a count
+     * of work done for ONE goal, reset when the goal changes.
+     */
+    let openerChain = [];
     const grazes = [];
     const records = [];
 
@@ -5160,6 +5363,92 @@ export function solveSegment({
                 : 'No strategy row exists for this obstacle.'} `
             + `Planner said: ${planError.message.slice(0, 300)}`,
         { goal, obstacle, considered });
+    };
+
+    /**
+     * ⛓⛓⛓ **TURN A DERIVATION'S PREREQUISITE INTO AN ORDER** — arc 3 slice S1,
+     * gap 1. The plan this returns REPLACES the round's plan and is applied by
+     * the ordinary statements; the loop then re-plans and re-identifies, so the
+     * original obstacle is re-derived against the changed world.
+     *
+     * ⛔ THREE WAYS TO REFUSE, AND EVERY ONE NAMES THE PREREQUISITE:
+     *  · the chain is DEEPER than `NESTED_OPENER_DEPTH`;
+     *  · the prerequisite has no SELECTED and REGISTERED strategy (guard (i)'s
+     *    own language: an obstacle with no verb is a wall, here too);
+     *  · the strategy is registered and could not bind against live state.
+     * A bound that ran out silently, or a resolver that returned `null` into a
+     * generic "no corridor", would both print a sentence about the room when the
+     * fact is about one obstacle in it.
+     */
+    const prerequisiteOrder = (goal, aim, identified, contacts, allowTeleporter, what) => {
+        const p = identified.resolved.prerequisite;
+        const link = openerChain.length + 2;
+        const chainText = `${identified.obstacle.id} <- ${p.id}`;
+        if (link > NESTED_OPENER_DEPTH) {
+            refuse(`${what}: ${identified.obstacle.id}'s stance is reachable only once `
+                + `${p.id} is discharged (${p.via}: ${p.why}), and redeeming it would be `
+                + `link ${link} of an opener chain bounded at NESTED_OPENER_DEPTH = `
+                + `${NESTED_OPENER_DEPTH}. The chain so far is `
+                + `[${openerChain.map((c) => c.chain).join(' | ')}]. ⛔ A deeper chain is `
+                + 'not unsupported, it is REFUSED: this policy drives two-deep openers and '
+                + 'says so, and raising the number is a ruling rather than a tuning.',
+            { goal, obstacle: { kind: p.kind, tag: p.tag, id: p.id } });
+        }
+        const sub = { kind: p.kind, tag: p.tag, id: p.id };
+        const key = p.tag ? `${p.kind}:${p.tag}` : p.kind;
+        const strategy = refineStrategy(run,
+            OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[p.kind] ?? null, sub);
+        if (!strategy || !STRATEGY_EXECUTORS[strategy]) {
+            refuse(`${what}: ${identified.obstacle.id}'s stance needs ${p.id} discharged `
+                + `first (${p.via}: ${p.why}), and ${p.id} has `
+                + `${strategy ? `strategy '${strategy}', which is NOT REGISTERED this slice`
+                    : 'NO strategy row at all'} — so the prerequisite is a WALL and the `
+                + 'stance is unreachable. ⚖ Guard (i): an obstacle with no verb is a wall '
+                + 'for this quantifier, not an optimistic gap.',
+            { goal, obstacle: { kind: p.kind, tag: p.tag, id: p.id } });
+        }
+        /**
+         * ⛔⛔ THE SUB-ORDER'S AIM IS THE **STANCE IT UNLOCKS**, NOT THE GOAL.
+         * `resolveShoveStrategy`'s post-condition is `clear-path`, and the path
+         * this order is for is the one to `${identified.obstacle.id}`'s stance —
+         * a shove scanned against the GOAL's aim asks whether moving the block
+         * opens a corridor all the way through, which is a question no
+         * prerequisite was ever the answer to (measured: ARM 2 returned `null`
+         * from the resolver for exactly this reason). ⚠ Inert for the mechanism
+         * arm, whose destination the presser names.
+         */
+        const subAim = identified.resolved.stance ?? aim;
+        /**
+         * ⛔ AND WITH THE **DERIVATION'S OWN EXEMPTIONS**, for trap 147's reason
+         * read one order down: the stance this order is for lies INSIDE the
+         * presser's volume, and A* refuses to route onto an avoid volume unless
+         * it is exempted — so a `shove` scanned without them finds no `k` at all
+         * and the resolver returns `null` (measured: ARM 2, before this line).
+         * The stance, the exemption and the order that reaches it are ONE
+         * decision, which is the same law `walkTo` already applies when it walks
+         * to a stance with `contactsOverride`.
+         */
+        const subContacts = identified.resolved.exempt ?? contacts;
+        const resolved = resolveObstacleStrategy(run, strategy, sub, subContacts, subAim,
+            allowTeleporter, [...refusedOrders]);
+        if (!resolved) {
+            refuse(`${what}: ${identified.obstacle.id}'s stance needs ${p.id} discharged `
+                + `first (${p.via}: ${p.why}), strategy '${strategy}' is SELECTED and `
+                + 'REGISTERED for it, and it could NOT be resolved against live state — the '
+                + 'census row the derivation named is not one this executor can bind.',
+            { goal, obstacle: { kind: p.kind, tag: p.tag, id: p.id } });
+        }
+        openerChain.push({ chain: chainText, id: p.id, via: p.via, link });
+        resolved.rejected = [{
+            option: `walking to ${identified.obstacle.id}'s stance first`,
+            why: `⛓ arc 3 slice S1 (gap 1): that stance does not plan a corridor until `
+                + `${p.id} is discharged — ${p.why} — so this order is link ${link} of the `
+                + `opener chain ${chainText}, raised by the DERIVATION rather than by the `
+                + 'flood, and executed BEFORE the stance it unlocks. The original obstacle '
+                + 'is then re-identified and re-derived against the world this changed, '
+                + 'never against a promise about it.',
+        }, ...(resolved.rejected ?? [])];
+        return { obstacle: sub, strategy: resolved.strategy ?? strategy, resolved, key };
     };
 
     /**
@@ -5639,7 +5928,30 @@ export function solveSegment({
                     solverPlanOpts(run, contacts));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
-                const plan = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
+                const identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
+                /**
+                 * ⛓⛓⛓ **THE PREREQUISITE IS CONSUMED HERE AND NOWHERE ELSE** —
+                 * PROCGEN ELEMENTS arc 3, slice S1, gap 1.
+                 *
+                 * A resolution may come back saying *"my stance is reachable once
+                 * `<id>` has been discharged"*. This is the ONE place a stance
+                 * becomes a walk, so it is the one place that may answer: the
+                 * order for `<id>` REPLACES this round's plan, is applied by the
+                 * statements below exactly as any frontier order is, and the loop
+                 * then `continue`s — so the original obstacle is RE-IDENTIFIED and
+                 * RE-DERIVED against the world the prerequisite changed, rather
+                 * than against a promise about it.
+                 *
+                 * ⛔ THAT RE-ENTRY IS THE WHOLE REASON THERE IS NO SECOND
+                 * FRONTIER. The bounded `applied` count, the hypothesis ledger,
+                 * the trace row, the shut-before snapshot and the exemption carry
+                 * are all the ones already here; a prerequisite is an ordinary
+                 * order that happened to be named by a derivation instead of by a
+                 * flood.
+                 */
+                const plan = identified.resolved.prerequisite
+                    ? prerequisiteOrder(goal, aim, identified, contacts, allowTeleporter, what)
+                    : identified;
                 /**
                  * ⛔ THE APPLICATION IS BOUNDED, AND THE BOUND IS NAMED. A
                  * policy that re-identified for ever would look exactly like
@@ -5838,6 +6150,7 @@ export function solveSegment({
         // The bound is PER GOAL: clearing L4's button for the crossing says
         // nothing about how many obstacles the next room's goal may need.
         applied = [];
+        openerChain = [];
         if (goal.kind === 'reach-exit') {
             const { index, teleporter } = findExit(run.world, goal.exit);
             const centre = {

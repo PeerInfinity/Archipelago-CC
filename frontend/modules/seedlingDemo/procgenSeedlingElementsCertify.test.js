@@ -109,30 +109,66 @@ const verbsOf = (out) => new Set((out.records ?? []).map((r) => r.strategy));
 
 describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own gate', () => {
     /**
-     * ⛓⛓⛓ ARM 1 — THE CHAIN. ⛔ WHEN S1 LANDS THIS ROW FLIPS: the expected
-     * verdict becomes `SOLVED` and the records become
-     * `['weigh', 'hold', 'collect']` — a `{strategy:'weigh'}` naming this
-     * element's block and button, then a `{strategy:'hold'}` naming its
-     * buttonroom, then the collect. That is the certification S1 owes.
+     * ⛓⛓⛓ ARM 1 — THE CHAIN, **AND S1 CERTIFIES IT.** Slice 3 measured this row
+     * as REFUSED at the FLAG's own stance; the certification arc-3 §10.3 owed is
+     * exactly this record, so the row is written as the record rather than as a
+     * verdict:
+     *
+     *   `weigh`  — THIS element's block onto THIS element's button, `shove.to`
+     *              the button tile, raised as the PREREQUISITE of the flag's own
+     *              stance (`deriveHoldStance` -> `stancePrerequisite`, mechanism
+     *              arm) and executed BEFORE the walk to it;
+     *   `hold`   — the presser is THIS element's buttonroom, and `lock`(B) is
+     *              what it opens;
+     *   `collect`.
      */
-    it('ARM 1 — the whole chain REFUSES, at the FLAG\'s own stance', () => {
+    it('ARM 1 — the whole chain SOLVES, `weigh` -> `hold` -> `collect`', () => {
         const out = solveArm('slice3-chain', {});
-        expect(out.verdict).toBe(VERDICT.REFUSED);
-        expect(out.reasonText).toMatch(/no REACHABLE stance inside buttonroom@/);
-        expect(out.reasonText).toMatch(/A hold that cannot be stood on is not a strategy/);
-        expect(out.obstacle).toEqual({ kind: 'proximity-hazard', id: 'buttonroom@48,48' });
-        expect(out.records ?? []).toEqual([]);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['weigh', 'hold', 'collect']);
+        const weigh = out.records.find((r) => r.strategy === 'weigh');
+        // ⛔ THIS element's block onto THIS element's button — not "a weigh".
+        expect(weigh.shove).toMatchObject({
+            id: 'pushableblock@96,80',
+            from: { tx: BLOCK.tx, ty: BLOCK.ty },
+            to: { tx: BUTTON_A.tx, ty: BUTTON_A.ty },
+            destroys: false,
+        });
+        expect(weigh.presser).toEqual({ x: BUTTON_A.tx * 16, y: BUTTON_A.ty * 16 });
+        // …and the dwell's own observable is `lock`(A), the door the weigh buys.
+        expect(weigh.dwell.until).toMatch(/group t=1 \[lock@64,48\] is open/);
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({
+            x: FLAG.tx * 16, y: FLAG.ty * 16, tag: 'buttonroom', t: B,
+        });
+        // ⛓ and the FLAG is what opened `lock`(B) — the guard is real, not a
+        // route that happened to arrive.
+        expect(held.opened).toEqual(['lock@80,128']);
     });
 
     /**
-     * ⛓⛓ ARM 2 — THE ATTRIBUTION, HALF ONE. `lock`(A) removed and the BLOCK left
-     * in the lane: the refusal is the SAME SENTENCE, so `lock`(A) is not the gate
-     * that stops the chain.
+     * ⛓⛓ ARM 2 — THE ATTRIBUTION, HALF ONE, **AND IT TAKES THE OTHER
+     * PREREQUISITE ARM.** With `lock`(A) removed the block is still in the lane,
+     * and slice 3 measured the SAME refusal sentence — which is what proved the
+     * BLOCK, not the door, was the gate. S1 answers it through the GEOMETRY arm:
+     * no activator wants this block, so it is scenery, and a bare `shove` clears
+     * the lane.
+     *
+     * ⛔ THE VERB IS THE DISCRIMINATOR. If this row ever produced `weigh` it
+     * would mean the mechanism arm had fired on a room with no mechanism to fire
+     * on — which is the failure mode "mechanism before geometry" is ordered to
+     * avoid, read from the other side.
      */
-    it('ARM 2 — with lock A REMOVED it refuses IDENTICALLY ⇒ lock A is not the gate', () => {
+    it('ARM 2 — with lock A REMOVED the BLOCK is the prerequisite, and a `shove` '
+        + 'clears it', () => {
         const out = solveArm('slice3-nolockA', { lockA: false });
-        expect(out.verdict).toBe(VERDICT.REFUSED);
-        expect(out.reasonText).toMatch(/no REACHABLE stance inside buttonroom@/);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['shove', 'hold', 'collect']);
+        const shove = out.records.find((r) => r.strategy === 'shove');
+        expect(shove.id).toBe('pushableblock@96,80');
+        expect(shove.from).toEqual({ tx: BLOCK.tx, ty: BLOCK.ty });
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({ x: FLAG.tx * 16, y: FLAG.ty * 16 });
     });
 
     /**
