@@ -15,9 +15,25 @@
  * the slice it is supposed to gate, which is the shape of a fixture nobody
  * trusts.
  *
+ * ⛓⛓ `--biomes=` EXISTS BECAUSE ITS ABSENCE COST 2.8 HOURS (arc-3 slice 3, trap
+ * 350). The carved-kinds bound is the arc's most expensive gate, and half of it
+ * is the post-sword palette that carries the arc's own 20-minute item. Slice 3
+ * wrote `--biomes=pre-sword` believing it scoped that half away; there was no
+ * such flag, the run was the FULL both-palette bound, and the scoping rule the
+ * author was obeying is the thing the missing flag broke. ⇒ before relying on a
+ * flag to BOUND something, grep the script for it — and where the bound is real,
+ * give the script the flag.
+ *
+ * ⛔ ABSENT MEANS BOTH, AND THE OUTPUT IS BYTE-IDENTICAL TO THE PRE-FLAG ONE.
+ * The default is `BIOME_NAMES` itself, the header prints WHICH palettes ran (so a
+ * scoped dump can never be mistaken for a full one in a diff), and an unknown
+ * name is a refusal rather than a silently empty sweep — a dump that quietly ran
+ * zero palettes would print a header, no rows, and a perfectly stable md5.
+ *
  * Usage:
  *   node scripts/procgen/dump-seedling-kind-pairs.mjs                  # empty, 1..40, both palettes
  *   node scripts/procgen/dump-seedling-kind-pairs.mjs --kinds=winding,rooms --seeds=1-12 --count=4
+ *   node scripts/procgen/dump-seedling-kind-pairs.mjs --biomes=pre-sword   # HALF the bound
  *   … | md5sum
  */
 import crypto from 'node:crypto';
@@ -46,13 +62,27 @@ const seedRange = (spec) => {
 const KINDS = arg('kinds', 'empty').split(',').map((s) => s.trim()).filter(Boolean);
 const SEEDS = seedRange(arg('seeds', '1-40'));
 const COUNT = Number(arg('count', '3'));
+/**
+ * ⛔ THE DEFAULT IS THE FULL LIST, NOT A COPY OF IT — so the both-palette dump is
+ * the same iteration it always was and the md5 cannot drift with this edit.
+ */
+const BIOMES = arg('biomes', BIOME_NAMES.join(','))
+    .split(',').map((s) => s.trim()).filter(Boolean);
+const unknown = BIOMES.filter((b) => !BIOME_NAMES.includes(b));
+if (unknown.length || BIOMES.length === 0) {
+    console.error(`dump-seedling-kind-pairs: --biomes=${unknown.join(',') || '<empty>'} names `
+        + `no palette. The roster is [${BIOME_NAMES.join(', ')}]; absent means all of them. `
+        + 'A dump that ran zero palettes would print a header, no rows, and a perfectly '
+        + 'stable md5 — which is why this is a refusal and not a filter.');
+    process.exit(2);
+}
 const md5 = (s) => crypto.createHash('md5').update(s).digest('hex');
 
 console.log(`# dump-seedling-kind-pairs kinds=${KINDS.join(',')} seeds=${SEEDS[0]}..`
-    + `${SEEDS[SEEDS.length - 1]} palettes=${BIOME_NAMES.join(',')} count=${COUNT}`);
+    + `${SEEDS[SEEDS.length - 1]} palettes=${BIOMES.join(',')} count=${COUNT}`);
 for (const kindSpec of KINDS) {
     const skeleton = parseSkeleton(kindSpec, { simulator: false, substrate: 'this dump' });
-    for (const biome of BIOME_NAMES) {
+    for (const biome of BIOMES) {
         for (const seed of SEEDS) {
             let row;
             try {
