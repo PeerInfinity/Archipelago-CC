@@ -9530,3 +9530,27 @@ where the tracked record starts.
   `sweep-yield-table.mjs` — without that last one the acceptance gate *"the
   door families on carved kinds"* was unprintable for the post-sword-only
   kill family.
+
+### Arc 3, slice 2c — the kill lock gets its ✕, and the hammer refusals name the LINE (2026-08-16)
+
+Two user-reported fixes, page + text only; ⛔ no solver behaviour moved (the R8
+battery md5 is unchanged and the acceptance batch is byte-identical against a
+control run in the same tree). ⛓⛓ **THE ✕: the two clears reach the page through
+different records, and only one of them is a record.** A lock whose GROUP is
+pressed stands in the run's world and its id joins `run.openActivators`, so the
+world-state layer strikes it through; a KILL LOCK (`tset -1`) is opened by the
+spinner's death through the 4b scratch layer, `levelRun.applyClearNow` rebuilds
+the room and `Lock.check()` does not build the lock at all — so it leaves every
+set that layer reads and `changeCounts.placed` drops to 0. Fixed in the ONE
+place the marker is decided: `watchOverlays.worldChangesAt` is also handed the
+world the renderer is PAINTING and marks every markable solid in it that the
+run's world no longer builds (same `effect: 'gone'` glyph, no renderer fork).
+⛓⛓ **THE SENTENCES**: three hammer-safety refusals said *"the 13 px hammer
+disc"* — the 45-phase union, which is only `clearOfHammersAt`'s `at === null`
+fallback — and now say which test actually ran, ASKED per refusal rather than
+hard-coded, so a `time: null` tape still reads "union over all 45 phases".
+⛔ `SolverBotError` gained `code`, the three `fail()` sites stamp
+`HAMMER_SAFETY` and `procgenOracle.isHammerSafetyRefusal` is a FIELD READ —
+the residue its own docblock named, discharged by the day arriving, because a
+classifier grepping the English would have turned every one of those refusals
+into a run abort on the commit that fixed the English.
