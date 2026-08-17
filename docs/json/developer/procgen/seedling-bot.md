@@ -9374,7 +9374,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, and slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, and slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9804,3 +9804,73 @@ every table is arc-3 kickoff §12.
   `kill` in the whole table. With a default spec on, **27 certified doors in 72
   cells pre-sword and 21 post-sword**, at a MAX single solve of 5.6 s against
   the shipped 29.8 s. Nothing was removed from the palette.
+
+### Arc 3, slice 4c — THE CLEANUP: the three door TEMPLATES retire, the default is a biome ELEMENT SPEC, and the goal is a pass-1 decision (2026-08-17)
+
+⚖ The user ruled three changes together (the generation review §3/§4), and ⚖ the
+orchestrator ruled they land as ONE commit — *"commit each step" is a rule against
+unreviewable diffs, not against a step whose green depends on the next.* The
+as-built with every table is arc-3 kickoff **§13**.
+
+- ⛓⛓⛓ **THE GOAL IS DRAWN ≥ 3 CELLS FROM THE START, AND IT IS A PROOF RATHER
+  THAN A MARGIN.** `GOAL_MIN_FROM_START = 3`: the same ONE `pick`, still the room
+  stream's FIRST draw, still before the carve — only the candidate list narrows
+  (63 → 58). At Manhattan `m` the shortest path is ≥ `m+1` cells, so `m ≥ 3`
+  gives `start,p1,p2,goal` and `manhattan(p1,goal) ≥ 2` ⇒ **a door element is
+  never refused for the goal's position alone.** Slice 4a had measured 4 of 12
+  seeds refusing every door element on every kind; after the rule `no-cut-cell`
+  (20) and `goal-too-close` (19) are GONE from the whole 10-kind × 12-seed
+  census, killgate places 61 → **90** of 120 and blockpocket 62 → **76**.
+  ⚠ THE PRICE IS A FINDING, NOT A LEVER: the `guard`'s census falls 29 → 21,
+  because a more central goal leaves fewer 4×4/5×5 AXIS-ALIGNED rectangles
+  avoiding both endpoints (`no-site-fits-this-room` 80 → 130). Arc 5's
+  room-aware SITE PICK is what recovers it.
+- ⛔ **THE THREE DOOR TEMPLATES ARE GONE**, each an exclusion row carrying the
+  measurement that retired it. `KILL_LOCK_TEMPLATES` is EMPTY (the array kept for
+  arc 5's arena), seven constants lost their last caller, and `doorGeometry`
+  STAYS because the door census must measure a door the pipeline can produce.
+  ⇒ **41/45 instantiations → 23/23, three DECORATION families, and the two
+  palettes now differ ONLY in `items`.** The biome IS the boot plus the elements'
+  `needs`. ⚠ A future biome-specific TEMPLATE must declare `needs` the way an
+  element does — one mechanism — rather than re-growing a second array.
+- ⛓ **AND THE DEFAULT GENERATOR HAS DOORS AGAIN, WHICH IS WHAT MADE THE
+  RETIREMENT SAFE.** `procgenSeedling.defaultElementsFor(items)` — ONE place, the
+  SEAM, because the model has no items: `guard;len=2+blockpocket` pre-sword,
+  `guard;len=2+killgate+blockpocket` post-sword, a `+` list meaning ONE of these
+  drawn. The CLI, the sweep and the page follow by passing `undefined`;
+  `--elements=none` stays selectable and stays inert relative to ITSELF (not to
+  the pre-4c default — the goal draw moved in the same commit).
+- **`PREFER_DISCHARGE` RETIRED ON SEEDLING.** The `<d|s>` policy letter left the
+  URL grammar and an old link REFUSES by name with the corrected spelling. Two
+  independent reasons: S1 measured the `solved-only` class empty, and no template
+  either roster still holds has a VERB to discharge. `KEEP_POLICY` stays in
+  `levelGenerator.js` for the MAZE.
+- ⛔⛔ **ONE ABORT THE DEFAULT INTRODUCES, PUBLISHED RATHER THAN SMOOTHED**:
+  post-sword seed 38 at target 6 aborts with a `PhysicsV2Error` (the player
+  DROWNED) escaping the oracle — 1 of 160 (biome, seed) cells, against 0 of 160
+  at `--elements=none` and 0 over seeds 41..120. `--elements=killgate` ALONE at
+  that seed does NOT abort; the default does because a `+` list spends one extra
+  draw and lands a different room. ⇒ the pre-existing armed-hazard class, not the
+  element's. ⚖ Ruled: ship the default, name it in R9's engine residue, widen no
+  catch.
+- ⛓ **THE SUITE CAME BACK FASTER THAN IT LEFT**: 555 s → **431.6 s** (131 files,
+  4760 tests), and `procgenPalette.test.js` 21.7 s → 13.3 s. In the intermediate
+  state (goal moved, templates not yet retired) that one file took **43 minutes**
+  from two rows the retirement deletes — the third independent argument for the
+  one-commit ruling.
+- ⛔ **ZERO COMMITTED R8 TAPES MOVED** (534 / 0 / 67, identical), the battery and
+  the maze byte-identity are byte-identical, and the four non-GENERATE browser
+  rows are unchanged — the retirement stayed inside the GENERATE arm.
+- ⛓⛓⛓ **THE CARVED-PAIRS DUMP WENT 9,151 s → 224 s (40×)**, which is 2b/2d's
+  cost story closing: the 24 attempts per cell that used to run the planner to
+  its dash cap before refusing are now NO_ANCHOR-cheap. ⛔ CONTROLLED, because a
+  40× collapse is either a finding or a broken run — a worktree at the previous
+  commit, both trees on the same scoped axes, row for row: **the EMPTY kept sets
+  on bare corridor kinds are NOT new.** They are slice 1's site vocabulary
+  (`wall-segment`/`water-pool`/`pit-patch` are `site:'chamber'` and a
+  corridor-only skeleton has no chamber), and the door families were the only
+  `site:'any'` rows that could anchor there. ⚠ The reader's sentence: **on the
+  bare tree kinds the default level is the skeleton + one certified ELEMENT + no
+  pass-2 decoration — pass 2 has no AREA to decorate** (⚖ ruling 24: area is pass
+  1's). The remedy is a design residue — a non-zero default `chambers=k` for the
+  carved kinds — and NOT slice 4c's to make.
