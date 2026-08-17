@@ -33,12 +33,21 @@ describe('⛓⛓⛓ THE GOAL DRAW — `manhattan >= 3` from the START', () => {
         expect(GOAL_MIN_FROM_START).toBe(3);
     });
 
+    /**
+     * ⛔ THE LITERAL 3, NOT `GOAL_MIN_FROM_START` — and the mutant is what said
+     * so. Slice 4c's mutant (b) dropped the constant to 1; SIX of this file's
+     * seven rows reddened and this one did NOT, because phrased against the
+     * constant it asserts `>= 1` of a draw that is `>= 1` by arithmetic. The
+     * row above pins the constant, so the PAIR always caught it — but a row
+     * that reads the value it is testing is trap 269's ECHO, and it costs one
+     * word to remove.
+     */
     it('every drawn goal, 40 seeds x 4 kinds, is at least 3 cells from the start', () => {
         for (const k of KINDS) {
             for (let seed = 1; seed <= 40; seed += 1) {
                 const m = seedlingModel({ seed, skeleton: kindOf(k) });
                 expect(manhattan(m.goalCell), `${k}/${seed} ${JSON.stringify(m.goalCell)}`)
-                    .toBeGreaterThanOrEqual(GOAL_MIN_FROM_START);
+                    .toBeGreaterThanOrEqual(3);
             }
         }
     });
