@@ -123,9 +123,16 @@ function pocketFor(room, cand, wall, { preferOpen }) {
     return { refused: sawCandidate ? 'pocket-not-legal' : 'no-pocket' };
 }
 
-/** ⛓ The refusal a run of candidates deserves: the DEEPEST stage any reached. */
-const STAGES = Object.freeze(['goal-too-close', 'wall-does-not-seal',
-    'no-pocket', 'pocket-not-legal']);
+/**
+ * ⛓ The refusal a run of candidates deserves: the DEEPEST stage any reached.
+ * ⛔ THE ORDER IS THE PIPELINE'S OWN, and the first cut had it wrong: the
+ * pocket is searched BEFORE the law is asked, so a room where every candidate
+ * found a pocket and every wall failed to cut would have been reported as
+ * `pocket-not-legal`. A "deepest stage" list that does not match the order the
+ * stages run in names the wrong one.
+ */
+const STAGES = Object.freeze(['goal-too-close', 'no-pocket', 'pocket-not-legal',
+    'wall-does-not-seal']);
 const deepest = (seen) => STAGES.filter((s) => seen.has(s)).pop() ?? 'no-cut-cell';
 
 /**

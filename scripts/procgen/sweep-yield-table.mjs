@@ -103,7 +103,7 @@ const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
     await M('procgenCore/areaSpec.js');
 /** ⛓ arc 2 slice 3 — and the same argument: ONE `--elements=` for the whole
  *  sweep, because an element is not a property of the skeleton kind. */
-const { NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec } =
+const { NONE: ELEMENTS_NONE, formatElementSpec, isElementList, parseElementSpec } =
     await M('procgenCore/elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -435,10 +435,41 @@ if (CELL !== '') {
      * is sometimes true and the second never is, so a single "kept" column would
      * have averaged a fact with its own refutation.
      */
-    if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
+    if (SUBSTRATE === 'seedling' && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
         const geometry = seedlingCertification?.geometry ?? model.elements.placed;
         const p = geometry[0] ?? null;
+        /**
+         * ⛓ TWO PHASES, TWO GEOMETRIES (arc 3, slice 4a). A `pre-carve` gadget
+         * has a SITE, a tunnel and two groups; an `on-connector` door has a door
+         * cell, a clearer, a grown wall and a carve. ⛔ Written as two shapes
+         * rather than one with `undefined`s, for the same reason
+         * `elementSummaryOf` is: a column that reads `site: null` on every row
+         * of an arm says nothing about the arm and something false about the
+         * element.
+         */
+        const shape = p && p.phase === 'on-connector' ? {
+            phase: 'on-connector',
+            doorCell: p.doorCell,
+            clearer: p.clearer,
+            wall: p.wall,
+            carved: p.carved,
+            candidates: p.cost.candidates,
+            push: p.cost.push ?? null,
+            tags: p.tags,
+        } : {
+            phase: 'pre-carve',
+            site: p ? `${p.site.w}x${p.site.h}@${p.site.x},${p.site.y}` : null,
+            tunnel: p ? p.tunnel.length : null,
+            carveOverwrote: p ? p.carveOverwrote : null,
+            tags: p ? p.tags : null,
+            groups: p ? p.groups : null,
+            flagLockCell: p ? p.flagLockCell : null,
+        };
         elementRow = {
+            /** ⛓ WHICH HEAD THE STREAM DREW — the same as the spec for a bare
+             *  head, the drawn member for a `+` list. */
+            head: formatElementSpec(model.elementHead),
+            element: p ? p.element : null,
             /** the GEOMETRY held (whether or not the level shipped with it) */
             placed: geometry.length,
             /** what the model says about the room that was actually generated */
@@ -453,12 +484,7 @@ if (CELL !== '') {
             guarded: seedlingCertification?.certified ? 1 : 0,
             heldAtDoor: seedlingCertification?.heldAtDoor ?? null,
             params: p ? p.params : null,
-            site: p ? `${p.site.w}x${p.site.h}@${p.site.x},${p.site.y}` : null,
-            tunnel: p ? p.tunnel.length : null,
-            carveOverwrote: p ? p.carveOverwrote : null,
-            tags: p ? p.tags : null,
-            groups: p ? p.groups : null,
-            flagLockCell: p ? p.flagLockCell : null,
+            ...shape,
         };
     }
     if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
@@ -901,17 +927,21 @@ if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
  *                printed so the column cannot be read as "it did not work out".
  *   GUARDED    — certified AND the flag behind the door. 0 by the same line.
  */
-if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
+if (SUBSTRATE === 'seedling' && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
     say(`## THE SEEDLING ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS)}\``);
     say('');
+    /** ⛓ arc 3 slice 4a — `tunnel`/`overwrote` are the PRE-CARVE phase's own
+     *  numbers and `wall`/`carved`/`offered` are the `on-connector` phase's, so
+     *  the table carries both columns and each arm fills the pair it has. */
     say('| kind | N | PLACED | CERTIFIED | guarded | max tunnel | mean overwrote '
-        + '| heldAtDoor true/null |');
-    say('|---|---|---|---|---|---|---|---|');
+        + '| wall/carved | door cells offered | heldAtDoor true/null |');
+    say('|---|---|---|---|---|---|---|---|---|---|');
     const seen = new Map();
     for (const r of results) {
         if (!seen.has(r.kind)) {
             seen.set(r.kind, { kind: r.kind, n: 0, placed: 0, certified: 0, guarded: 0,
-                tunnel: 0, over: [], held: 0, never: 0, why: {}, certWhy: {} });
+                tunnel: 0, over: [], held: 0, never: 0, why: {}, certWhy: {},
+                wall: 0, carved: 0, offered: [] });
         }
         const c = seen.get(r.kind);
         c.n += 1;
@@ -930,14 +960,22 @@ if (SUBSTRATE === 'seedling' && ELEMENTS.name !== ELEMENTS_NONE) {
         }
         c.guarded += e.guarded;
         c.tunnel = Math.max(c.tunnel, e.tunnel ?? 0);
-        if (e.carveOverwrote !== null) c.over.push(e.carveOverwrote);
+        if (e.carveOverwrote != null) c.over.push(e.carveOverwrote);
+        if (e.phase === 'on-connector') {
+            c.wall += (e.wall ?? []).length;
+            c.carved += (e.carved ?? []).length;
+            if (e.candidates != null) c.offered.push(e.candidates);
+        }
         if (e.heldAtDoor === true) c.held += 1; else if (e.heldAtDoor === null) c.never += 1;
     }
     for (const c of seen.values()) {
         const meanOver = c.over.length
             ? (c.over.reduce((a, b) => a + b, 0) / c.over.length).toFixed(1) : '—';
+        const offered = c.offered.length
+            ? `${Math.min(...c.offered)}..${Math.max(...c.offered)}` : '—';
         say(`| ${c.kind} | ${c.n} | **${c.placed}** | **${c.certified}** | ${c.guarded} | `
-            + `${c.tunnel} | ${meanOver} | ${c.held}/${c.never} |`);
+            + `${c.tunnel} | ${meanOver} | ${c.wall}/${c.carved} | ${offered} `
+            + `| ${c.held}/${c.never} |`);
     }
     say('');
     say('### the element REFUSALS, by name (the GEOMETRY half)');
