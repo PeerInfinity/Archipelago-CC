@@ -587,11 +587,16 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
          *
          * ⛓ THAT IS SLICE 4's OLD HEDGE RETURNING AS A MEASUREMENT (*"a
          * discharged clearer IN a post-sword level, NOT a post-sword-EXCLUSIVE
-         * one"*), and it is asserted as what it IS: **no seed in 1..40 produces
-         * `cause: 'sword'`** under the shipped default — seed 29 is the only
-         * seed whose head is `killgate`, certifies, and keeps >= 5 over >= 3
-         * families at all. ⛔ Written as a two-value set so the row REDS the day
-         * a sword-caused clear becomes reachable, which is the outcome a reader
+         * one"*). ⛔ AND THE CAUSE IS A PROPERTY OF THE BOUNDS RATHER THAN OF
+         * THE ELEMENT: at **target 1** this very seed clears with
+         * `cause: 'sword'` in 403 ticks (so does post-sword 60, at 551; 38
+         * clears by `pit`). It is only once pass 2 has put a water pool in the
+         * room that the pool gets to the spinner first. ⇒ *a kill gate in a
+         * FURNISHED room may be cleared by the furniture* — a finding about the
+         * level, not about the gate.
+         *
+         * ⛔ Written as a two-value set so the row REDS the day a sword-caused
+         * clear becomes reachable AT THESE BOUNDS, which is the outcome a reader
          * of this file actually wants to hear about.
          */
         expect(['sword', 'water']).toContain(out.scratchClears[0].cause);

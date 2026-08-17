@@ -39,8 +39,10 @@
  *     text node recorded, character for character (⚖ §7.4; trap 202 — the
  *     refusals are the evidence channel).
  *  3. **⛓⛓⛓ THE SCRUB FORK, IN A BROWSER** — a post-sword CARRIER (a level
- *     holding `wall-gap-spinner-killlock-*`, whose solve banks a scratch
- *     clear no tape can declare) draws EVERY frame of its walk. Before slice
+ *     whose ELEMENT is a certified `killgate`, whose solve banks a scratch
+ *     clear no tape can declare; ⛓ it was a level holding
+ *     `wall-gap-spinner-killlock-*` until slice 4c retired that template)
+ *     draws EVERY frame of its walk. Before slice
  *     5's stepper option the page collected 270 of 379 and reported a throw;
  *     the failure mode is a plausible SHORT replay, so the frame count is the
  *     only thing that shows it. ⛓ ARC 3 SLICE 2c adds the ✕: the same walk,
@@ -101,7 +103,6 @@ const CORE = (p) => import(join(REPO, 'frontend/modules/procgenCore', p));
 const {
     DIRECTED_ANCHOR_TRIES, generateStep, generateWithDirectives, paletteFor,
 } = await M('watchGenerate.js');
-const { KEEP_POLICY } = await CORE('levelGenerator.js');
 // ⛓ SLICE 6: a pure READER of a record, used to say WHERE the clicked
 // template's footprint actually landed. Both records it is asked about came out
 // of the BROWSER, so this is an independent read of the browser's own answer.
@@ -142,8 +143,37 @@ const { terrainAt } = await M('procgenLevel.js');
  * walk (388 ticks against 412–452)** — the same tie-break, so the subject moves
  * and the rule does not.
  */
-const PRE = { seed: 4, biome: 'pre-sword', count: 2 };
-const CARRIER = { seed: 61, biome: 'post-sword', count: 1 };
+/**
+ * ⛓⛓⛓ **BOTH SUBJECTS RE-PICKED AT ARC 3 SLICE 4c, BY THEIR OWN SCANS** (trap
+ * 285 — the scan, the target and the count are named). ⚖ The user retired the
+ * three door TEMPLATES into the room-aware ELEMENTS and gave the generator a
+ * biome DEFAULT SPEC, which moved every level in this file.
+ *
+ * `PRE` — the cheapest pre-sword case that VETOES something, which claim 2 needs
+ * because it asserts the veto text is VERBATIM. ⛔ **NOT ONE SEED IN 1..12
+ * VETOES AT TARGET 2 OR 3 ANY MORE**, which is the retirement's own consequence
+ * said once more: a roster of three DECORATION families is reverted far less
+ * often than one holding three door families, so a short ladder now keeps
+ * everything it draws. RE-SCANNED at targets 4/5/6 over seeds 1..20: **exactly
+ * TWO seeds veto — 2 and 18, once each, at every one of the three targets** —
+ * and both REACH. **Seed 2 at target 4** is taken: the cheapest target that has
+ * a veto at all. (Was seed 4 at target 2, which vetoed twice.)
+ *
+ * `CARRIER` — a post-sword level whose walk banks a SCRATCH CLEAR no tape can
+ * declare, kept at step **1** so the scrub-fork claim is affordable in a
+ * browser. ⛔ ITS SUBJECT CHANGED KIND: there is no kill TEMPLATE to keep, so
+ * the carrier is now a level whose ELEMENT is a CERTIFIED `killgate`.
+ * RE-SCANNED (post-sword, step 1, seeds 1..72) for a certified kill gate whose
+ * final solve carries a `kill` record AND a scratch clear: **three qualify — 29
+ * (403 ticks, `cause: 'sword'`), 38 (377, `cause: 'pit'`) and 60 (551,
+ * `sword`)**. **Seed 29 is taken**: it is the cheapest of the two whose clear is
+ * the SWORD's, and the cause is what makes it a post-sword carrier rather than
+ * a level a hazard happened to clear. ⚠ 38 is cheaper in ticks and clears by
+ * `pit` — a swordless boot would clear it too — so the tie-break is the cause
+ * and not the clock, which is a change from the old rule and is said here.
+ */
+const PRE = { seed: 2, biome: 'pre-sword', count: 4 };
+const CARRIER = { seed: 29, biome: 'post-sword', count: 1 };
 
 /**
  * ⛓ THE ROUND-TRIP SUBJECT, AND EVERY FIELD OF IT MOVES.
@@ -194,38 +224,42 @@ const ROUND_BUDGET = { maxTicksPerTarget: ROUND.tickbudget };
 /**
  * ⛓⛓⛓ CLAIM 6's SUBJECT — THE CATALOGUE AND VERB 1 (slice 4).
  *
- * `pre-sword seed 3 at target 2` under `templates=wall-gap-lock-weigh,water-pool`.
  * ⛓ MEASURED, and the property that matters is asserted below before the claim
- * uses it: the unrestricted run of the SAME seed keeps `pit-patch` and
- * `wall-gap-block`, and the restricted one keeps `water-pool` and
- * `wall-gap-lock-weigh` — **two DISJOINT kept lists**. ⛓ RE-MEASURED at arc 3
- * slice 1: `arrow-lane` left the roster (⚖ design ruling 9), which moved every
- * draw and therefore the unrestricted list (it was `pit-patch` + `arrow-lane`).
- * SCANNED seeds 1..14 at these bounds — SIX are still disjoint (3, 4, 6, 8, 9,
- * 10) and **seed 3 is KEPT**, so the subject did not have to move at all. A restriction the page
- * read, echoed and did not PASS to the loop is therefore visible in the kept
- * list itself and not only in a hash (trap 235: a subject that agrees with its
- * fallback cannot fail).
+ * uses it: the two kept lists are **DISJOINT**, so a restriction the page read,
+ * echoed and did not PASS to the loop is visible in the kept list itself and not
+ * only in a hash (trap 235: a subject that agrees with its fallback cannot
+ * fail). The seed's own re-pick is on the `RESTRICT` literal below.
  *
  * ⚠ The two members were chosen for what they exercise, not for size: the
- * water pool is the only pin-declaring family (`sound`), and the weigh lock is
- * the pre-sword template that uses BOTH sentinel slots. So the restricted run
- * goes through the whole certification path rather than a quiet corner of it.
- * It is also cheap — 68 ms in node — which a browser row has to care about.
+ * water pool is the only pin-declaring family (`sound`), so the restricted run
+ * goes through the whole PIN UNION rather than a quiet corner of it. ⛓ SLICE 4c:
+ * the second member was the weigh lock (the pre-sword row that used BOTH
+ * sentinel slots) until that template retired; `pit-patch` takes its place and
+ * the sentinel half of the claim moved to `procgenPalette.test.js`'s
+ * `SLOT_DOOR` rows, which is where the mechanism still has a subject.
  */
 const RESTRICT = {
-    seed: 3,
+    /**
+     * ⛓⛓ RE-PICKED AT SLICE 4c. `wall-gap-lock-weigh` retired, and seed 3 stopped
+     * discriminating (restricted and unrestricted now keep the SAME two water
+     * pools, so "kept ⊆ restriction" would pass vacuously). RE-SCANNED over
+     * seeds 1..12 at target 2 under `pit,water`: eight discriminate and **seed
+     * 8's two kept lists are FULLY DISJOINT — `water-pool`+`water-pool`
+     * restricted against `wall-segment`+`wall-segment` whole** — the strongest
+     * form of the property this claim needs.
+     */
+    seed: 8,
     biome: 'pre-sword',
     count: 2,
-    templates: ['wall-gap-lock-weigh', 'water-pool'],
+    templates: ['pit-patch', 'water-pool'],
     /**
-     * ⛓ THE COARSE SPELLING OF THE SAME SUB-ROSTER. `water` + `weigh` are
+     * ⛓ THE COARSE SPELLING OF THE SAME SUB-ROSTER. `water` + `pit` are
      * exactly the families of those two templates, so `?families=` must
      * produce the SAME level — and must SURVIVE a press rather than being
      * rewritten as `?templates=`, which would freeze a membership whose whole
      * point is that it is by family.
      */
-    families: ['water', 'weigh'],
+    families: ['pit', 'water'],
 };
 const RESTRICT_ROSTER = { axis: 'templates', names: [...RESTRICT.templates].sort() };
 const RESTRICT_BOUNDS = { obstacleTarget: RESTRICT.count };
@@ -270,18 +304,48 @@ const RESTRICT_BOUNDS = { obstacleTarget: RESTRICT.count };
  * different instance rather than coinciding with the right one — trap 235, at
  * the directive.
  */
+/**
+ * ⛓⛓⛓ **RE-POINTED AT A SURVIVING TEMPLATE AT SLICE 4c.** `wall-gap-block`
+ * retired; `wall-segment(ori=v,len=4)` takes its place and keeps the property
+ * that made the old instance a subject — **NON-DEFAULT IN BOTH POSITIONS**
+ * (`ori=h,len=3` is the declared default), so a URL that dropped its parameters
+ * rebuilds a visibly different instance rather than coinciding with the right
+ * one (trap 235, at the directive).
+ *
+ * ⛔ AND THE DISCHARGE CLAIM IS GONE WITH THE POLICY. `PREFER_DISCHARGE` retired
+ * on Seedling in this slice (arc-3 §13.5): every directive runs under
+ * `first-solved`, `walkAnchors` never asks the predicate, and `keptKind` is
+ * `null` — which `levelGenerator`'s own docblock calls the ANSWER (*the walk
+ * never asked*) rather than a missing value. The spec therefore names no policy
+ * at all; naming one is REFUSED by `applyDirective`.
+ */
 const DIRECT = {
-    seed: 9,
+    /**
+     * ⛔⛔ **AND THE BASE MOVED FROM STEP 0 TO STEP 3, WHICH IS THE FINDING.**
+     * Claim 7's pane assertion needs a walk longer than ONE anchor, and slice
+     * 4c measured that **no step-0 subject can produce one** — every
+     * instantiation of every remaining template over seeds 1..20, directed onto
+     * the BARE skeleton, walks exactly one anchor. The three families that could
+     * SEAL a bare room were the door templates; what remains is decoration, and
+     * a bare 10x10 room solves around all of it at every anchor.
+     *
+     * ⇒ the subject is a room that ALREADY HOLDS OBSTACLES, which is where the
+     * bound was ever spent for real. RE-SCANNED at steps 3 and 5: **pre-sword
+     * seed 2 at step 3 walks THREE of five offered anchors — `d1a1` REVERTED,
+     * `d1a2` REVERTED, `d1a3` KEPT at (8,5)** — the richest of the five hits and
+     * the only one that ends in a KEEP.
+     */
+    seed: 2,
     biome: 'pre-sword',
-    step: 0,
-    template: 'wall-gap-block',
-    params: { ori: 'v', gap: 1 },
+    step: 3,
+    bounds: { obstacleTarget: 3 },
+    template: 'wall-segment',
+    params: { ori: 'v', len: 4 },
 };
 const DIRECT_SPEC = {
     template: DIRECT.template,
     params: DIRECT.params,
     anchor: null,
-    keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
     bound: DIRECTED_ANCHOR_TRIES,
 };
 /**
@@ -324,11 +388,27 @@ const DIRECT_SPEC = {
  * `ILLEGAL_CLICK` is seed 9's GOAL cell, so the refusal is a class the model
  * names rather than a footprint that happens not to fit.
  */
-const CLICK = { tx: 6, ty: 1 };
-const ILLEGAL_CLICK = { tx: 8, ty: 5 };
+/**
+ * ⛓⛓ RE-MEASURED AT SLICE 4c ON `DIRECT`'s OWN BASE (pre-sword seed 2 at step
+ * 3). That room offers **five** legal cells for the subject instance — (5,4)
+ * (8,4) (1,5) (5,5) (8,5) — and all five were clicked: **(5,4) and (1,5)
+ * REVERT**, the other three KEEP, and a SEARCHED directive lands on **(8,5)**.
+ * ⇒ **(8,4)** is LEGAL, KEEPS, is NOT the searched answer, is not the START
+ * (1,1) and is not the GOAL — which is **(6,5)** here, and is therefore
+ * `ILLEGAL_CLICK`.
+ */
+const CLICK = { tx: 8, ty: 4 };
+const ILLEGAL_CLICK = { tx: 6, ty: 5 };
 
-const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
-    template: 'wall-gap-block', params: { ori: 'v', gap: 1 } };
+/**
+ * ⛓⛓ RE-SCANNED AT SLICE 4c over seeds 1..8 x steps {0,2,4} x all 23
+ * instantiations — 552 directed attempts: **533 KEPT, 14 NO_ANCHOR, 5
+ * REVERTED, 0 ILLEGAL_PLACEMENT**, and `keptKind` is `null` on every one of
+ * them (see `DIRECT`'s docblock). The two cases below are the first NO_ANCHOR
+ * and the REVERTED that walks its WHOLE offered list.
+ */
+const NO_ANCHOR_CASE = { seed: 2, biome: 'pre-sword', step: 2,
+    template: 'water-pool', params: { w: 3, h: 3 } };
 /**
  * ⛓⛓ RE-PICKED at PROCGEN ELEMENTS arc 3 slice 1 (trap 285 — the scan, the
  * target and the count are named). `arrow-lane` leaving the roster moved every
@@ -348,9 +428,18 @@ const NO_ANCHOR_CASE = { seed: 1, biome: 'pre-sword', step: 2,
  * ⚠ AND `wall-gap-block` NO LONGER PRODUCES ONE AT ALL in that space: the
  * REVERTED class is now reached only through the weigh lock. Named rather than
  * left for the next slice to rediscover.
+ *
+ * ⛓⛓⛓ **RE-SCANNED AT SLICE 4c, and both of those templates are gone.** Over
+ * seeds 1..8 x steps {0,2,4} x all 23 remaining instantiations — 552 directed
+ * attempts — the class is reached **FIVE times**: `water-pool(3,2)` and
+ * `pit-patch(3,2)` at seed 2 step 4 (2 of 2 each), the same two at seed 4 step 4
+ * (1 of 1 each), and `wall-segment(ori=v,len=5)` at **seed 7 step 4, walking 2
+ * of 2**. ⛔ THE LAST IS TAKEN, by the SAME tie-break the old subject won on: it
+ * walks its whole offered list and then reverts, so the claim grades a walk that
+ * really exhausted the room rather than one anchor that happened to fail.
  */
-const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 0,
-    template: 'wall-gap-lock-weigh', params: { ori: 'v' } };
+const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 4,
+    template: 'wall-segment', params: { ori: 'v', len: 5 } };
 /**
  * ⛓⛓⛓ **RETIRED AT ARC 3 SLICE 2 — THE CLASS IS EMPTY, AND THAT IS THE
  * MEASUREMENT** (trap 312: replace a vacated claim with the sentence that still
@@ -365,21 +454,29 @@ const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 0,
  * `KEPT/solved-no-verb`, 599 `NO_ANCHOR`, 286 `KEPT/discharged`, 78 `REVERTED`,
  * and **ZERO `KEPT/solved-only`**.
  *
- * ⛔ SO THE ROW BELOW GRADES THE ABSENCE, which is a claim with content and a
- * claim that can FAIL: if a later slice re-opens the class (arc 3's element
- * binding brings a clearer that is NOT its own door — the obvious candidate),
- * this row reds and the reader is sent back here. The page's `solved-only`
- * READOUT is deliberately NOT deleted; `watchGenerate.test.js` drives it on a
- * synthetic state, which is the only place it can be driven now.
- * ⚖ RESIDUE for the design session: is `PREFER_DISCHARGE` still earning its
- * complexity on Seedling?
+ * ⛓⛓⛓ **AND THE RESIDUE IT LEFT WAS ANSWERED IN SLICE 4c: NO.** Its last line
+ * asked *"is `PREFER_DISCHARGE` still earning its complexity on Seedling?"* — ⚖
+ * the user ruled it OUT (arc-3 §13.5), for two reasons that compound: the class
+ * this row measured empty, and the retirement of the last three templates with a
+ * VERB at all. `keptKind` is now `null` on EVERY directed attempt because
+ * `walkAnchors` never asks the predicate under `first-solved`.
+ *
+ * ⛔ SO THE ROW BELOW GRADES A STRONGER ABSENCE, and it is one that can still
+ * FAIL. It no longer asks *"did any attempt come back `solved-only`"* — nothing
+ * can, by a code path that does not execute — it asks that **no directed attempt
+ * reports a `keptKind` at all**, which is the observable form of *the policy is
+ * gone*. A build that quietly restored the preference (or a caller that slipped
+ * a `keepPolicy` past `applyDirective`'s refusal) would produce a non-null value
+ * here and red. ⛓ The page's `describeKeptKind` readout is deliberately NOT
+ * deleted: it still has three live branches for the MAZE, and
+ * `watchGenerate.test.js` drives all of them on synthetic states.
  */
 const SOLVED_ONLY_PROBE = Object.freeze({
     biome: 'pre-sword', seeds: [1, 2, 3, 4, 5, 6], steps: [0, 2],
     instances: Object.freeze([
-        ['wall-gap-block', { ori: 'v', gap: 1 }], ['wall-gap-block', { ori: 'h', gap: 2 }],
-        ['wall-gap-block', { ori: 'v', gap: 3 }], ['wall-gap-block', { ori: 'h', gap: 5 }],
-        ['wall-gap-lock-weigh', { ori: 'h' }], ['wall-gap-lock-weigh', { ori: 'v' }],
+        ['wall-segment', { ori: 'v', len: 4 }], ['wall-segment', { ori: 'h', len: 2 }],
+        ['water-pool', { w: 3, h: 3 }], ['water-pool', { w: 1, h: 1 }],
+        ['pit-patch', { w: 3, h: 2 }], ['pit-patch', { w: 1, h: 1 }],
     ]),
 });
 
@@ -421,9 +518,22 @@ console.log(`node: skeleton goal cell (${nodeSkeleton.model.goalCell.tx},`
     + `${nodeFull.summary.attempts} attempt(s)`);
 console.log(`node: carrier seed ${CARRIER.seed} keeps `
     + `${nodeCarrier.summary.kept.map((k) => k.template).join(', ')}`);
-check(nodeCarrier.summary.kept.some((k) => k.family === 'kill'),
-    'the carrier subject really holds a KILL template — otherwise claim 3 is vacuous',
-    nodeCarrier.summary.kept.map((k) => `${k.template}(${k.family})`).join(', '));
+/**
+ * ⛓⛓⛓ THE CARRIER'S OWN PROPERTY, RE-AIMED AT SLICE 4c. It used to be *"the
+ * level keeps a KILL TEMPLATE"*; the kill family retired into the `killgate`
+ * ELEMENT, so what makes this level a carrier is that its ELEMENT is a
+ * CERTIFIED kill gate — which is what banks the scratch clear no tape can
+ * declare. ⛔ Asserted BEFORE claim 3 uses it, and both halves: the head that
+ * was drawn, and that its certification SOLVED (an uncertified element is
+ * DROPPED and the walk would have nothing to clear).
+ */
+check(nodeCarrier.model.elementHead?.name === 'killgate',
+    'the carrier subject\'s element really IS a KILL GATE — otherwise claim 3 is vacuous',
+    `${nodeCarrier.model.elementHead?.name}; kept `
+    + `${nodeCarrier.summary.kept.map((k) => `${k.template}(${k.family})`).join(', ')}`);
+check(nodeCarrier.summary.elements?.certification?.certified === true,
+    '…and it CERTIFIED, so the gate is in the level rather than dropped',
+    json(nodeCarrier.summary.elements?.certification?.gap ?? 'certified'));
 const nodeRestricted = generateStep({
     seed: RESTRICT.seed, biome: RESTRICT.biome, step: RESTRICT.count,
     bounds: RESTRICT_BOUNDS, roster: RESTRICT_ROSTER,
@@ -459,13 +569,15 @@ check(nodeRound.summary.keptCount === ROUND.count && !nodeRound.saturated,
  * would pass on a build that ignored the ruling entirely.
  */
 const nodeDirect = generateWithDirectives({
-    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [DIRECT_SPEC],
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
+    directed: [DIRECT_SPEC],
 });
 {
     const d = nodeDirect.directives[0];
-    check(d.outcome === 'KEPT' && d.keptKind === 'discharged',
-        '⛓ the DIRECTED subject really DISCHARGES its verb — otherwise claim 7 is a claim '
-        + 'about a keep, not about the ruling', `${d.outcome}/${d.keptKind}`);
+    check(d.outcome === 'KEPT' && d.keptKind === null,
+        '⛓ the DIRECTED subject really KEEPS, and reports NO `keptKind` — arc-3 slice 4c '
+        + 'retired the discharge preference on Seedling, so `null` is the walk\'s answer '
+        + 'rather than a missing value', `${d.outcome}/${d.keptKind}`);
     /**
      * ⛓⛓⛓ **THIS ROW USED TO BE THE DISCRIMINATOR AND ITS CLASS IS NOW EMPTY.**
      * It asserted that the walk PASSED OVER an anchor that SOLVED on its way to
@@ -502,14 +614,15 @@ const nodeDirect = generateWithDirectives({
 }
 
 /**
- * ⛓⛓⛓ THE `solved-only` ABSENCE, MEASURED HERE RATHER THAN ASSERTED IN A
+ * ⛓⛓⛓ THE `keptKind` ABSENCE, MEASURED HERE RATHER THAN ASSERTED IN A
  * DOCBLOCK — and BOUNDED OUT LOUD (`feedback_bounded_sweep_must_name_what_it_
- * bounded`). The full scan behind `SOLVED_ONLY_PROBE`'s docblock was 2056
- * directed attempts over both biomes and seeds 1..12; this row re-drives a
- * stated SLICE of it — pre-sword, 6 seeds × 2 steps × 6 door instantiations =
- * **72 attempts** — because a browser row may not spend the full sweep, and a
- * row that claimed the whole space while checking part of it would be worse
- * than one that says which part.
+ * bounded`). The full scan behind slice 4c's tally was 552 directed attempts
+ * over seeds 1..8 × steps {0,2,4} × all 23 instantiations (533 KEPT, 14
+ * NO_ANCHOR, 5 REVERTED, 0 ILLEGAL_PLACEMENT, and `keptKind` null on every
+ * one); this row re-drives a stated SLICE of it — pre-sword, 6 seeds × 2 steps
+ * × 6 instantiations = **72 attempts** — because a browser row may not spend
+ * the full sweep, and a row that claimed the whole space while checking part of
+ * it would be worse than one that says which part.
  */
 {
     let solvedOnly = 0;
@@ -525,31 +638,40 @@ const nodeDirect = generateWithDirectives({
                     });
                 } catch { continue; }
                 attempts += 1;
-                if (out.directives[0]?.keptKind === 'solved-only') solvedOnly += 1;
+                // ⛓ SLICE 4c: ANY non-null `keptKind`, not just `solved-only`.
+                // Under `first-solved` the walk never asks the predicate, so a
+                // value here means the preference came back.
+                if (out.directives[0]?.keptKind != null) solvedOnly += 1;
             }
         }
     }
     check(attempts >= 60 && solvedOnly === 0,
-        '⛓⛓⛓ THE `solved-only` OUTCOME CLASS IS EMPTY — ⚖ ruling 17\'s door law refuses '
-        + 'every anchor where a door SOLVES without being cleared, because that is a wall '
-        + 'the walk goes ROUND. ⛔ Graded as an ABSENCE on purpose: the page still KNOWS '
-        + 'the class, and this row is what reds if a later slice re-opens it',
-        `${solvedOnly} solved-only of ${attempts} directed attempts (pre-sword, seeds `
+        '⛓⛓⛓ NO DIRECTED ATTEMPT REPORTS A `keptKind` AT ALL — ⚖ `PREFER_DISCHARGE` '
+        + 'retired on Seedling in arc-3 slice 4c, so `walkAnchors` never asks the '
+        + 'discharge predicate and `null` is the ANSWER rather than a missing value. '
+        + '⛔ Graded as an ABSENCE on purpose: the readout still KNOWS the three kinds '
+        + '(the MAZE has the policy), and this row is what reds if the preference — or a '
+        + '`keepPolicy` slipped past `applyDirective`\'s refusal — comes back',
+        `${solvedOnly} non-null keptKind of ${attempts} directed attempts (pre-sword, seeds `
         + `${SOLVED_ONLY_PROBE.seeds.join(',')}, steps ${SOLVED_ONLY_PROBE.steps.join(',')}, `
-        + `${SOLVED_ONLY_PROBE.instances.length} door instantiations)`);
+        + `${SOLVED_ONLY_PROBE.instances.length} instantiations)`);
 }
 
 // ── node's answers for CLAIM 8, and the clicked cell's own properties ──
 const CLICK_SPEC = { ...DIRECT_SPEC, anchor: CLICK, bound: 1 };
 const ILLEGAL_SPEC = { ...DIRECT_SPEC, anchor: ILLEGAL_CLICK, bound: 1 };
 const nodeClicked = generateWithDirectives({
-    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [CLICK_SPEC],
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
+    directed: [CLICK_SPEC],
 });
 const nodeIllegal = generateWithDirectives({
-    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, directed: [ILLEGAL_SPEC],
+    seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
+    directed: [ILLEGAL_SPEC],
 });
 {
-    const skel = generateStep({ seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step });
+    const skel = generateStep({
+        seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
+    });
     const instance = paletteFor(DIRECT.biome).templates
         .find((t) => t.name === DIRECT.template).instantiate(null, DIRECT.params);
     check(skel.model.refusalAt(skel.record, instance, CLICK.tx, CLICK.ty) === null
@@ -677,11 +799,11 @@ async function load(query, { timeout = 300000, step = null, seed = null } = {}) 
  * 6's own control: press AT…, then click the tile. ⛔ Replaced, not relaxed —
  * the CLAIM is the same `ILLEGAL_PLACEMENT` sentence at the same measured cell.
  *
- * ⚠ THE CLICK BUILDS `{bound: 1, keepPolicy: PREFER_DISCHARGE}` (`watchViewer`'s
- * `spec`), where the retired URL spelled `@1s`. Both are moot for a placement
- * the MODEL refuses before any solve — but the node side below is built with
- * the policy the PAGE uses, so the two are the same directive rather than two
- * that happen to agree.
+ * ⚠ THE CLICK BUILDS `{bound: 1}` (`watchViewer`'s `spec`), where the retired
+ * URL spelled `@1s`. ⛓ SLICE 4c: it used to build a `keepPolicy` too, and does
+ * not any more — `PREFER_DISCHARGE` retired on Seedling and `applyDirective`
+ * REFUSES a spec that names a policy. The node side below is built the same
+ * way, so the two are the same directive rather than two that happen to agree.
  *
  * ⛔ AND THE RECTANGLE IS RE-READ BEFORE EVERY CLICK: the identity line above
  * the canvas grows as clauses appear, the header re-wraps and the canvas moves
@@ -1232,7 +1354,16 @@ const catalogueOf = () => page.evaluate(() => ({
      *     would happen BEFORE the press;
      *  f. CLEAR returns to the ladder.
      */
-    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`;
+    /**
+     * ⛓⛓ SLICE 4c: THE PAGE HAS TO REACH `DIRECT.step` BEFORE THE PRESS. The
+     * subject moved from the BARE skeleton to a room already holding three
+     * obstacles, because no step-0 subject can make the walk longer than one
+     * anchor any more (see `DIRECT`'s docblock). `count=<step>&run=1` is how
+     * the URL spells a run to that target — `stepFromParams` reads `run ?
+     * count : 0` — so the page and node start from the same room.
+     */
+    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}`
+        + `&count=${DIRECT.step}&run=1`;
     await load(q);
 
     // ── 7a: the form is built FROM the row's declared schema ─────────
@@ -1315,8 +1446,10 @@ const catalogueOf = () => page.evaluate(() => ({
     const nd = nodeDirect.directives[0];
     check(after.gen.directives?.length === 1
         && after.gen.directives[0].outcome === 'KEPT'
-        && after.gen.directives[0].keptKind === 'discharged',
-        '⛓⛓ the readout says WHICH KIND OF KEEP it was — `discharged`, not a bare KEPT',
+        && after.gen.directives[0].keptKind === null,
+        '⛓⛓ the readout carries the keep KIND field and it is `null` — arc-3 slice 4c '
+        + 'retired the discharge preference on Seedling, and `null` is the walk\'s own '
+        + 'answer (*it never asked*) rather than a value the page dropped',
         json(after.gen.directives?.[0] && {
             outcome: after.gen.directives[0].outcome,
             keptKind: after.gen.directives[0].keptKind,
@@ -1350,10 +1483,12 @@ const catalogueOf = () => page.evaluate(() => ({
             `${dPane.length} rows: ${dPane.map((t) => t.trim().slice(0, 24)).join(' | ')}`);
     }
     check(after.dRows.length === 1
-        && after.dRows[0].includes('kept:discharged')
+        && after.dRows[0].includes('the keep policy was first-SOLVED')
         && after.dRows[0].includes(`walked ${nd.anchorsWalked} of ${nd.anchorsOffered}`),
-        'the directives list names the keep KIND and how many anchors were walked',
-        after.dRows[0]?.slice(0, 140));
+        '⛓ the directives list SAYS WHY there is no keep kind, and how many anchors were '
+        + 'walked — `describeKeptKind`\'s `null` branch, which is the sentence that '
+        + 'survived the policy (trap 312)',
+        after.dRows[0]?.slice(0, 160));
     check(json(after.level) === json(nodeDirect.record)
         && json(after.trace) === json(nodeDirect.trace),
         '⛓⛓ and the level the browser built IS node\'s directed level, byte for byte '
@@ -1427,17 +1562,28 @@ const catalogueOf = () => page.evaluate(() => ({
          * writer still emitted the parameter would reproduce the construction
          * here and redden this line.
          */
-        const back = await load(after.url.replace(/^\?/, ''));
+        // ⛓ SLICE 4c: WAIT FOR THE LADDER TO SETTLE at `DIRECT.step`. The row
+        // used to compare against the SKELETON, which a freshly-loaded page is
+        // already showing — so `load()` without a `step` was enough. The
+        // subject is a step-3 ladder now and the auto-run is asynchronous; a
+        // comparison taken before it settles reads the skeleton and reports a
+        // mismatch that is about the WAIT rather than about the URL.
+        const back = await load(after.url.replace(/^\?/, ''),
+            { step: DIRECT.step, seed: DIRECT.seed });
         const backPanel = await panelOf();
         const ladderOnly = generateStep({
-            seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step,
+            seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
         });
         check((back.gen.directives ?? []).length === 0
             && json(back.level) === json(ladderOnly.record),
         '⛓⛓ a COPIED URL reproduces the LADDER ALONE, byte for byte — the launch it names, '
             + 'and not the construction the payload carries',
         `${(back.gen.directives ?? []).length} directive(s), `
-            + `level matches the ladder: ${json(back.level) === json(ladderOnly.record)}`);
+            + `level matches the ladder: ${json(back.level) === json(ladderOnly.record)} `
+            + `· page kept [${(back.gen.summary?.kept ?? []).map((k) => k.instance).join(', ')}]`
+            + ` · node kept [${ladderOnly.summary.kept.map((k) => k.instance).join(', ')}]`
+            + ` · page ents ${(back.level?.entities ?? []).length}`
+            + ` node ents ${ladderOnly.record.entities.length}`);
         check(!back.gen.identity.includes('NOT a reproduction'),
             '⛔ …and the identity line drops the warning, because on THIS level the URL is a '
             + 'reproduction again', back.gen.identity.slice(0, 120));
@@ -1475,8 +1621,7 @@ const catalogueOf = () => page.evaluate(() => ({
             paneRows: [...document.querySelectorAll('#genTrace .tr')]
                 .map((e) => e.textContent).filter((t) => /^d1/.test(t.trim())),
         }));
-        check(got.d.outcome === expect
-            && (label !== 'solved-only' || got.d.keptKind === 'solved-only'),
+        check(got.d.outcome === expect && got.d.keptKind == null,
             `⛓ the ${label} class is REACHED and reported distinctly`,
             `${got.d.outcome}${got.d.keptKind ? `/${got.d.keptKind}` : ''}, `
             + `walked ${got.d.anchorsWalked} of ${got.d.anchorsOffered}`);
@@ -1570,7 +1715,8 @@ const catalogueOf = () => page.evaluate(() => ({
 
     // ── 7f: CLEAR returns to the ladder ──────────────────────────────
     {
-        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`);
+        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}`
+            + `&count=${DIRECT.step}&run=1`);
         await page.evaluate(({ template, params }) => {
             const row = [...document.querySelectorAll('#genRoster .catRow')]
                 .find((r) => r.querySelector(`button[data-attempt="${template}"]`));
@@ -1595,10 +1741,15 @@ const catalogueOf = () => page.evaluate(() => ({
             level: window.__editorGenerated?.level ?? null,
             url: window.location.search,
         }));
-        const skel = generateStep({ seed: DIRECT.seed, biome: DIRECT.biome, step: 0 });
+        // ⛓ SLICE 4c: the ladder here is `DIRECT.step`, not the skeleton — the
+        // subject moved off step 0 because no step-0 walk is longer than one
+        // anchor any more (see `DIRECT`'s docblock).
+        const skel = generateStep({
+            seed: DIRECT.seed, biome: DIRECT.biome, step: DIRECT.step, bounds: DIRECT.bounds,
+        });
         check((cleared.gen.directives ?? []).length === 0
             && json(cleared.level) === json(skel.record),
-            'CLEAR returns the page to the ladder — here the SKELETON, byte for byte',
+            `CLEAR returns the page to the ladder — here step ${DIRECT.step}, byte for byte`,
             `${(cleared.gen.directives ?? []).length} directive(s), level matches: `
             + `${json(cleared.level) === json(skel.record)}`);
         check(new URLSearchParams(cleared.url).get('directed') === null
@@ -1635,7 +1786,10 @@ const catalogueOf = () => page.evaluate(() => ({
      * its middle. A pixel-to-tile off-by-one is invisible to a middle-of-tile
      * click and is exactly what a boundary click catches.
      */
-    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`;
+    // ⛓ SLICE 4c: the click block shares `DIRECT`'s base, so it reaches the
+    // same step — see claim 7's `q` for why the subject is not step 0.
+    const q = `source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}`
+        + `&count=${DIRECT.step}&run=1`;
     await load(q);
 
     // ── 8a: the AT… control, from the roster ─────────────────────────
@@ -1833,7 +1987,8 @@ const catalogueOf = () => page.evaluate(() => ({
 
     // ── 8e: the ILLEGAL cell, refused BY NAME with NO solve ──────────
     {
-        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}&count=0`);
+        await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}`
+            + `&count=${DIRECT.step}&run=1`);
         const skeletonLevel = await page.evaluate(() => window.__editorGenerated.level);
         await armRow();
         const bad = lastPixelOf(ILLEGAL_CLICK.tx, ILLEGAL_CLICK.ty);
@@ -1981,7 +2136,17 @@ if (!host) {
  */
 {
     const KIND = 'winding';
-    const CARVED = { seed: 3, biome: 'pre-sword', count: 1, tries: 1, k: 1 };
+    /**
+     * ⛓⛓ RE-PICKED AT ARC 3 SLICE 4c (trap 285 — the scan and the count are
+     * named). The seal claim needs a `winding` skeleton on which a 2-or-3 cell
+     * wall segment SEALS the room, found by this file's own INDEPENDENT flood;
+     * the GOAL DRAW moved every `winding` room and **seed 3 no longer has one**
+     * — its own precondition row is what said so, which is why that row is
+     * there. RE-SCANNED over seeds 1..12: **eleven of the twelve have a sealer**
+     * (3 is the only one that does not), and **seed 1 is taken** — the first,
+     * with `wall-segment(ori=h,len=2)` at (1,3).
+     */
+    const CARVED = { seed: 1, biome: 'pre-sword', count: 1, tries: 1, k: 1 };
     const nodeCarvedSkeleton = generateStep({
         seed: CARVED.seed, biome: CARVED.biome, step: 0, skeleton: { kind: KIND },
     });
@@ -2197,12 +2362,15 @@ if (!host) {
                 + `${SEALER.ty})` : 'NONE — the claim below has no subject');
         if (SEALER) {
             /**
-             * ⛓ SLICE 12 — the spec is the one THE CLICK BUILDS (bound 1,
-             * prefer-discharge), so node and the page ask the same question.
+             * ⛓ SLICE 12 — the spec is the one THE CLICK BUILDS (bound 1), so
+             * node and the page ask the same question. ⛓⛓ SLICE 4c: the click
+             * no longer builds a `keepPolicy` at all — Seedling runs every
+             * directive under `first-solved` and `applyDirective` REFUSES a spec
+             * that names one, so a policy here would make this row ask a
+             * question the page cannot.
              */
             const spec = { template: 'wall-segment', params: { ori: SEALER.ori, len: SEALER.len },
-                anchor: { tx: SEALER.tx, ty: SEALER.ty }, bound: 1,
-                keepPolicy: KEEP_POLICY.PREFER_DISCHARGE };
+                anchor: { tx: SEALER.tx, ty: SEALER.ty }, bound: 1 };
             const nodeSealed = generateWithDirectives({
                 seed: CARVED.seed, biome: CARVED.biome, step: 0,
                 skeleton: { kind: KIND }, directed: [spec],
@@ -2345,9 +2513,9 @@ if (!host) {
             + `wall-segment(ori=${OPEN.ori},len=${OPEN.len})@(${OPEN.tx},${OPEN.ty})`
             : 'NONE — the claim below has no subject, and the scan has to be widened');
     if (OPEN) {
+        // ⛓ SLICE 4c: no `keepPolicy` — see the sealing spec above.
         const spec = { template: 'wall-segment', params: { ori: OPEN.ori, len: OPEN.len },
-            anchor: { tx: OPEN.tx, ty: OPEN.ty }, bound: 1,
-            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE };
+            anchor: { tx: OPEN.tx, ty: OPEN.ty }, bound: 1 };
         const nodeOpenSealed = generateWithDirectives({
             seed: OPEN.seed, biome: OPEN_BIOME, step: OPEN.step, directed: [spec],
         });
