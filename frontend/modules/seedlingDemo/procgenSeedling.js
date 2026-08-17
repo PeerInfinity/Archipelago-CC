@@ -1297,6 +1297,21 @@ export function seedlingModel({
          */
         elements: elementInfo,
         elementSpec: elementSpecNorm,
+        /**
+         * ⛓⛓ **HOW MANY DRAWS THE ROOM STREAM SPENT** — the COUNTING instrument
+         * the byte-inertness claim is really about (arc-1 §9's rule: count the
+         * draws, do not compare the tiles). At `--elements=none` it is exactly
+         * what it was before this slice existed, because the element branch is
+         * not entered; with a gadget asked for it is strictly greater, whether the
+         * gadget was placed or REFUSED — a refused element spends its draws
+         * (arc-2 §10.3), and that is why `--elements=guard` at a refusing seed is
+         * a different level from `--elements=none`.
+         *
+         * ⛔ It is read AFTER the carve, so it is the whole room's count and not
+         * the element's alone; the element's own span is
+         * `drawsAtConstruct - drawsBefore` on its record.
+         */
+        roomDraws: roomRng.draws,
         goalCell: Object.freeze({ ...goalCell }),
         goalOel: Object.freeze({ ...goalOel }),
         goals: Object.freeze([Object.freeze(collectGoal(goalOel.x, goalOel.y))]),
