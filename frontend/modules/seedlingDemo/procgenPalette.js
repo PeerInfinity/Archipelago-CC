@@ -131,7 +131,7 @@
  * arm's path in the browser.
  */
 
-import { SINGLE_SCREEN_TILES, TERRAIN } from './procgenLevel.js';
+import { TERRAIN } from './procgenLevel.js';
 /**
  * ⛓ THE TEMPLATE CONTRACT — `procgenCore/`, since CONSTRUCTIVE-MODE slice 2.
  * Imported for this file's OWN use (the roster below is built with
@@ -349,52 +349,37 @@ export function dischargesVerb(family, records) {
 export const PRE_SWORD_ITEMS = Object.freeze({ hasSword: false, hasShield: false });
 
 /**
- * ⛓ THE INTERIOR'S OWN SPAN, DERIVED — the width of a single-screen room minus
- * its border ring, read from `procgenLevel`'s room size rather than typed.
- * `GAP_OFFSET` is a declared choice (the middle-ish column), not a measurement.
- *
- * ⛓⛓⛓ **ARC 3 SLICE 2 RE-EXPRESSED WHAT THIS CONSTANT IS FOR.** It used to
- * carry the LAW: *"the `wall-gap-block` pair must cross the whole interior to be
- * a door rather than a decoration"* — GENERATE-UI ruling 3's span law, ruled for
- * the OPEN room, where a wall that crosses the interior is the only wall that
- * cuts it. ⚖ Design ruling 17 replaced it with the fact it was a proxy for:
- * **a door must be a CUT** (`procgenSeedling`'s door law, one flood, every
- * kind). The span law is not overturned, it is re-derived — *a shorter wall is
- * decoration* is *a non-cut is decoration* — and on a CORRIDOR the lock cell
- * alone is the door.
- *
- * ⇒ what stays here is a GEOMETRY default, not a legality claim: 8 is the span
- * at which a wall crosses THIS room, and it is the value every door family's
- * `span` measured back as the one the open room can use.
- */
-const INTERIOR_SPAN = SINGLE_SCREEN_TILES.width - 2;
-const GAP_OFFSET = 4;
-
-/**
- * ⛓⛓⛓ **THE DOOR GEOMETRY — ONE FUNCTION, THREE FAMILIES AND THE CENSUS**
- * (PROCGEN ELEMENTS arc 3, slice 2).
+ * ⛓⛓⛓ **THE DOOR GEOMETRY — ONE FUNCTION, AND SINCE SLICE 4c ITS ONLY CALLER IS
+ * THE CENSUS** (PROCGEN ELEMENTS arc 3, slice 2; re-homed in slice 4c).
  *
  * *`span` cells in a line down the template's own axis, all of them written
  * `wall` except the one at `gap`, which is the DOOR CELL.* All three door
  * families were spelling that out separately — three `lineCells` + three
- * `filter(along !== gap)` — which was harmless while the length was the frozen
- * `INTERIOR_SPAN`, and stops being harmless the moment the length is a
- * PARAMETER whose domain a sweep certifies.
+ * `filter(along !== gap)` — which was harmless while the length was a frozen
+ * constant and stopped being harmless the moment it was a PARAMETER whose
+ * domain a sweep certifies.
  *
- * ⛔ AND THE CENSUS IS THE REAL REASON IT IS EXPORTED. `census-seedling-doors
- * .mjs` sizes the `span` domain by counting anchors where a bare wall-and-gap
- * CUTS the room; a census that built its own door shape could measure a door no
- * template can produce, and the domain it certified would be a claim about the
- * census's geometry (`feedback_code_sweep_misses_the_data`, from the instrument
- * side).
+ * ⛔ **THE THREE FAMILIES RETIRED IN SLICE 4c AND THIS FUNCTION DID NOT**, and
+ * the reason is the second paragraph rather than sentiment.
+ * `census-seedling-doors.mjs` sizes a door's `span` by counting anchors where a
+ * bare wall-and-gap CUTS the room; a census that built its own door shape would
+ * measure a door no *element* can produce either, and the number it published
+ * would be a claim about the census's geometry
+ * (`feedback_code_sweep_misses_the_data`, from the instrument side). ⇒ its
+ * callers today are that census and `procgenSeedlingDoorCut.test.js`'s door-LAW
+ * rows, which drive the law on this shape because it is the shape the census
+ * measured.
  *
  * ⚠ `span = 1` IS THE DEGENERATE CASE AND IT IS THE POINT: one cell, `gap = 0`,
  * NO wall written at all. On a corridor the lock cell IS the door — ⚖ design
  * ruling 17 — and the geometry says so by producing an empty `wall` list rather
- * than by a special case somewhere else.
+ * than by a special case somewhere else. It is also what the room-aware
+ * `killgate` element GROWS to on a corridor (0 wall cells), which is the same
+ * statement with the room asked instead of a parameter drawn.
  *
  * @param {'h'|'v'} ori
- * @param {number} span how many cells the wall spans, `1..INTERIOR_SPAN`
+ * @param {number} span how many cells the wall spans, `>= 1` (the interior of a
+ *   single screen is 8, which is where the census's span-8 column comes from)
  * @param {number} gap  which cell along it is the door, `0..span-1`
  */
 export function doorGeometry(ori, span, gap) {
@@ -416,32 +401,6 @@ export function doorGeometry(ori, span, gap) {
         wall: paint(cells.filter((c) => along(c) !== gap), 'wall'),
     });
 }
-
-/**
- * ⛓⛓⛓ PoC SLICE 3b — THE WEIGH TEMPLATE'S THREE OFFSETS, and every one of
- * them is a CONSTRAINT rather than a preference.
- *
- * The lock sits in the door's gap; the button and the block stand in the lane
- * one cell back from the wall, on the START side of it. Along that lane:
- *
- *   `BLOCK_OFFSET - 1`  the STANCE. `runShove`'s lean needs the player box on
- *                       the block's ±1 px probe, so the cell behind the block
- *                       must be standable — which is why the block is not at
- *                       the lane's first cell.
- *   `BLOCK_OFFSET`      the block.
- *   between them        the SLIDE PATH, declared as `clearance` (below).
- *   `BUTTON_OFFSET`     the button, and therefore the block's destination.
- *
- * ⛔ THE TWO MUST SHARE THE LANE, because a lean moves a block along ONE axis
- * (`runShove` asserts it) — a template whose block and button shared neither
- * coordinate would be L16's shape, which needs a CHAIN nobody has ruled on.
- */
-const BLOCK_OFFSET = 1;
-const BUTTON_OFFSET = 5;
-/** The cells the block slides THROUGH — free, and not written. */
-const SLIDE_PATH = Object.freeze(
-    Array.from({ length: BUTTON_OFFSET - BLOCK_OFFSET - 1 }, (_, i) => BLOCK_OFFSET + 1 + i),
-);
 
 /**
  * ⛓⛓⛓ THE PER-PLACEMENT GROUP SLOT — the one attribute a FROZEN template
@@ -837,310 +796,6 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
             };
         },
     }),
-    /**
-     * ⛓⛓⛓ THE DOOR — PoC slice 3's promotion, and the palette's first CLEARER.
-     *
-     * ⚖ Slice 2 excluded every clearer family because `deriveStance` refused a
-     * corridor-blocking obstacle before its verb was ever selected (§9.1). ⚖
-     * The user ruled that a bug; slice 3 fixed it (`238f0dbe9` routes the
-     * collect stance through `walkTo`'s own ladder, `b3522f6fd` stops the
-     * derivation choosing a stance the pickup cannot be collected from). With
-     * both in, a block in the only gap of a wall is SHOVED and the goal
-     * COLLECTED — measured at 204, 204 and 202 ticks in three geometries.
-     *
-     * ⛔ THE WALL MUST SPAN THE WHOLE INTERIOR, and that is not a size choice.
-     * A shorter wall is walked around, the block is never in anyone's way, and
-     * the template becomes an obstacle that obstructs nothing — the same
-     * ingredient failure `shoot="0"` would have been for the arrow lane
-     * (traps 171/173). The span is the interior's own width, so the room's
-     * border ring closes both ends and the gap is genuinely the only way
-     * through. ⇒ the anchor is forced to the interior's first column (or row),
-     * which is a consequence of the span rather than a rule of its own.
-     *
-     * ⚠ NO CLEARANCE RULE, for `wall-segment-h3`'s reason, now measured on
-     * this template too: with the goal in the gap's own COLUMN the shove
-     * slides the block onto it and the collect refuses — *"approaching
-     * torchpickup@64,128, the sweep was blocked by pushableblock at (64,80)"*.
-     * That is a candidate the keep-or-revert loop exists to REJECT, with its
-     * reason in the trace. Pre-filtering it here would hide from the loop the
-     * one placement of this template that fails, and a family whose failures
-     * have been filtered out reports a keep rate that is about the filter.
-     *
-     * ⛓⛓⛓ PoC SLICE 4 — §11.7's VACUITY FINDING IS SUPERSEDED, AND WHAT WAS
-     * WRONG WAS THE INSTRUMENT.
-     *
-     * Slice 3b split this family's generated-room rows by whether the goal
-     * lies beyond the template's own wall from the start, read 0 KEPT / 4
-     * REVERTED on the FAR side, and concluded that `wall-gap-block` is *"KEPT
-     * exactly when it is IRRELEVANT"*. That label is computed from the
-     * template IN ISOLATION; in a room already holding five other obstacles it
-     * does not mean "the door is on the route", because the route detours and
-     * a NEAR door can be squarely on it.
-     *
-     * ⛔ THE NON-VACUOUS INSTRUMENT IS THE FINAL LEVEL'S OWN SOLVE — a
-     * `{strategy:'shove'}` RECORD naming this template's own block, which an
-     * obstacle nobody walked into cannot produce. Measured over seeds 1..40:
-     * discharged in seeds 10, 21, 27 and 38 (27 and 38 keep no `weigh`
-     * template at all, so the pushable is unambiguously this one's).
-     *
-     * ⛔ AND THE FOUR FAR REFUSALS WERE ALL CORRECT. Each candidate re-placed
-     * ALONE at the same anchor SOLVES (216/216/207/211 ticks), so the cause is
-     * INTERACTION, not this template and not the verb; an ablation through the
-     * same oracle attributes each one — seeds 9 and 13 are sealed by the
-     * candidate's WALL (the room refuses with the block deleted too), seed 15
-     * by the block having no resting cell that leaves a corridor. Nothing to
-     * fix here, and `procgenShoveEvidence.test.js` is where all of it is
-     * driven.
-     */
-    /**
-     * ⛓⛓⛓ ⚖ RULING 4's SWEEP, AT `SPINNER_OFFSET`'s OWN BOUND — a CLEARER
-     * family, so the column that matters is `discharged` (§12.1: a
-     * `{strategy:'shove'}` RECORD naming this template's own block, which an
-     * obstacle nobody walked into cannot produce). `node
-     * scripts/procgen/sweep-seedling-wave1-domains.mjs --seeds=12
-     * --anchors=all --only=wall-gap-block`, every legal anchor of seeds 1..12:
-     *
-     *   ori=h  gap     0    1    2    3    4    5    6    7
-     *          solved 72   68   70   70   70   72   73   70
-     *          refused 2    6    4    4    4    2    1    4
-     *          discharged 23 19  21   21   21   23   24   21
-     *
-     *   ori=v  gap     0    1    2    3    4    5    6    7
-     *          solved 69   69   72   70   69   72   70   72
-     *          refused 5    5    2    4    5    2    4    2
-     *          discharged 18 18  21   19   18   21   19   21
-     *
-     * **ZERO THROWS at all sixteen values**, and every value discharges the
-     * verb in roughly a quarter of its legal anchors. ⇒ the whole span is a
-     * usable domain and no value is a special case.
-     *
-     * ⚠⚠ THE THIN-BOUND TABLE IS KEPT TOO, BECAUSE IT SAYS SOMETHING THE WIDE
-     * ONE HIDES. At `--anchors=first` (one anchor per seed, which is what the
-     * LOOP actually spends) the same sweep reads `ori=h` discharging 3–4 of 12
-     * and `ori=v` discharging 1–2 of 12 — a gap that vanishes when every anchor
-     * is tried. ⇒ the vertical door is not worse; the FIRST anchor the shuffle
-     * hands it is. That is a fact about the ONE-ANCHOR bound and it is
-     * exactly what slice 3's `anchorTriesPerCandidate` is for
-     * (`feedback_bounded_sweep_must_name_what_it_bounded` — the bound was
-     * producing the finding).
-     */
-    defineTemplate({
-        name: 'wall-gap-block',
-        family: 'shove',
-        params: [
-            { key: 'ori', domain: ['h', 'v'], default: 'h',
-                why: '`wall-gap-block-h` and `-v`, collapsed — ⚖ ruling 3\'s wave-1 item. '
-                    + 'The two are the same door transposed, and writing them once is what '
-                    + 'keeps them the same door' },
-            { key: 'gap',
-                domain: Object.freeze(Array.from({ length: INTERIOR_SPAN }, (_, i) => i)),
-                default: GAP_OFFSET,
-                why: 'WHERE the single gap sits along the wall. The frozen row used '
-                    + '`GAP_OFFSET = 4`, which its own docblock called "a declared choice '
-                    + '(the middle-ish column), not a measurement" — so the choice becomes '
-                    + 'a domain, and the domain is the WHOLE SPAN, derived from '
-                    + '`INTERIOR_SPAN` rather than typed. ⛓⛓ THE ENDS WERE GOING TO BE '
-                    + 'EXCLUDED AND THE SWEEP REFUSED THAT: the first draft of this line '
-                    + 'argued that 0 and 7 sit against the room\'s border ring and would '
-                    + 'lose anchors. Measured (every legal anchor, seeds 1..12): gap 0 '
-                    + 'gives 72 solved / 2 refused / 23 discharged and gap 7 gives '
-                    + '70 / 4 / 21, against a mid-domain 70 / 4 / 21 — the ends are '
-                    + 'INDISTINGUISHABLE from the middle, and gap 6 is the best value in '
-                    + 'the table. The argument was wrong, so the domain follows the '
-                    + 'measurement rather than the argument' },
-        ],
-        why: 'a Stone wall across the whole interior with ONE gap, and a `pushableblock` '
-            + 'standing in it — the corridor exists only after the block is shoved, so '
-            + '`walkTo`\'s ladder selects `shove` and the collect follows',
-        build: ({ ori, gap }) => {
-            const g = doorGeometry(ori, INTERIOR_SPAN, gap);
-            return {
-                /**
-                 * ⛓⛓⛓ ARC 3 SLICE 2 — **THIS ROW DECLARES `door` FOR THE FIRST
-                 * TIME**, and ⚖ ruling 17 is the whole argument: *a non-cut is
-                 * decoration*. Until this slice only the kill-lock family
-                 * carried `door`, because only IT aborted a run when the goal
-                 * sat on the start's side of the wall. The other two merely
-                 * placed a wall the walk went round — an obstacle that
-                 * obstructs nothing, kept by the loop and reported as a placed
-                 * obstacle. ⛓ THE COST OF SAYING SO IS MEASURED, not asserted:
-                 * the isolated differential in the arc-3 kickoff §9.4 names
-                 * every `empty` pair this declaration moved and re-runs the old
-                 * `doorClear` predicate on each moved anchor.
-                 *
-                 * ⛔ THE BLOCK STANDS IN THE DOOR CELL, so `clearer` is EMPTY —
-                 * there is no separate thing to reach. That is not an omission:
-                 * clause 2 of the law asks whether the CLEARER is on the start's
-                 * side, and this family's clearer is the door.
-                 */
-                door: ori,
-                doorCells: Object.freeze([g.doorCell]),
-                clearer: Object.freeze([]),
-                footprint: g.cells,
-                clearance: Object.freeze([]),
-                terrain: g.wall,
-                entities: Object.freeze([Object.freeze({
-                    ...g.doorCell, type: 'pushableblock',
-                })]),
-                pins: Object.freeze([]),
-            };
-        },
-    }),
-    /**
-     * ⛓⛓⛓ THE LOCKED DOOR — PoC slice 3b's promotion, and L15's mechanism in
-     * a room this arc can generate (⚖ kickoff §1.9).
-     *
-     * A Stone wall across the whole interior with ONE gap, a `lock` standing
-     * in the gap, and — in the lane one cell back on the START side — the
-     * `button` that opens its group and a `pushableblock` sharing that lane.
-     * ⚖ §1.2's atomic placement in its fullest form so far: the obstacle, its
-     * opener, AND the thing that works the opener, placed together, because
-     * any two of the three without the third is a room with no answer.
-     *
-     * ⛔ WHY THE BLOCK IS NOT OPTIONAL. `Button.update` re-collides
-     * `["Player","Enemy","Solid"]` EVERY tick (`Button.as:27-39`), so the
-     * group is published only while something is standing there — and the
-     * player's whole errand is to be on the FAR side of the lock. Slice 3
-     * measured the consequence and excluded the button+lock pair for it (the
-     * walk spends its entire per-target budget grazing the lock it just
-     * opened). The third member of the collide list is the answer:
-     * `PushableBlock.as:27` is `type = "Solid"`, so a block parked on the
-     * button holds it for ever. `button-lock-pair` stays in `EXCLUDED_TEMPLATES`
-     * precisely because it is this template MINUS the block.
-     *
-     * ⛔⛔ THE SLIDE PATH IS `clearance`, AND THAT IS THE S1 GUARD — encoded as
-     * template LEGALITY rather than as a solver special case. `legalAt` tests
-     * footprint ∪ clearance with `isFree`, and `isFree` refuses the start and
-     * the goal cells; so declaring the cells the block slides through (and the
-     * button cell it lands on, which is footprint) makes it structurally
-     * impossible for this template to be anchored where the shove would put a
-     * block on the goal. ⚠ Slice 3 met that shape on `wall-gap-block` and
-     * correctly left it to the LOOP to reject, because there the block's
-     * destination is derived per-room and cannot be known at anchor time.
-     * Here it can: the destination is the button, and the button is part of
-     * the template. Same law, different information.
-     *
-     * ⚠ NO CLEARANCE ON THE FAR SIDE, deliberately. A wall that seals the goal
-     * off is exactly the candidate the keep-or-revert loop exists to reject
-     * (`wall-segment-h3`'s precedent), and pre-filtering it would hide this
-     * family's only real failure from the loop (traps 171/173).
-     *
-     * Attrs transcribed from L15 (`Dungeon2/2.oel:110-111`), the room the game
-     * built around this mechanism: `button {tset: "0"}`, `lock {tset: "0",
-     * tag: "0"}`.
-     *
-     * ⛔ THE GROUP IS THE ONE FIELD THAT DOES NOT SURVIVE THE TRANSCRIPTION,
-     * and the user's 2026-08-13 report is why: L15 holds ONE pair, so its
-     * `tset: "0"` is a room's private group; a PALETTE row is placed many
-     * times in one room, where the same literal is one shared group and every
-     * button opens every lock. Both entities carry `PLACEMENT_GROUP` and
-     * `groups: 1` declares the slot — see the sentinel's own docblock.
-     *
-     * ⚠ `tag: '0'` IS LEFT AS THE TRANSCRIPTION SAYS, and it is a SEPARATE
-     * OPEN QUESTION rather than a field this slice cleared. It is the
-     * PERSISTENCE flag, not the broadcast group: a plain `Lock` that fades
-     * open writes `Game.setPersistence(tag, false)` (`activators.js`'s
-     * transcription of `turnOff()`'s third line), and `SEEDLING_DEFAULTS`
-     * `goalTag` is ALSO `'0'` — the very collision `KILL_LOCK_TEMPLATES`
-     * discharges by construction with its `tag: '1'` ("a clear is a FLAG, so a
-     * lock on the goal's own tag removes the GOAL"). ⛔ NOT FIXED HERE, and
-     * NOT because it was judged harmless: the right value is not a literal
-     * either (`'1'` is the kill-lock's, so two placements would collide there
-     * instead), so it wants this same per-placement treatment on a field whose
-     * blast radius — the goal, the scratch layer, `botDriverV1`'s v9 `at`
-     * declarations — has not been measured. ⚖ Reported to the user with the
-     * evidence, 2026-08-13; the slot mechanism above is field-agnostic and
-     * will serve `tag` unchanged when that measurement exists.
-     */
-    /**
-     * ⛓⛓ ⚖ RULING 4's SWEEP for this family — `--anchors=all --seeds=12`,
-     * every legal anchor:
-     *
-     *   ori          h     v
-     *   solved      44    50
-     *   refused     14    10
-     *   threw        0     0
-     *   discharged   4     6
-     *
-     * ⇒ both orientations place, certify and DISCHARGE `weigh`, and the
-     * vertical one does so slightly more often. ⚠ The discharge rate is much
-     * lower than `wall-gap-block`'s (4–6 of ~58 against ~20 of ~74), and that
-     * is the family's own geometry rather than a defect: this template
-     * declares its whole slide path as `clearance`, so `legalAt` refuses every
-     * anchor where the block's destination would matter — the S1 guard,
-     * working. ⛔ THE OFFSETS THAT SET THAT RATE (`BLOCK_OFFSET`,
-     * `BUTTON_OFFSET`, `GAP_OFFSET`) ARE ⚖ WAVE 2, each owing this same table.
-     */
-    defineTemplate({
-        name: 'wall-gap-lock-weigh',
-        family: 'weigh',
-        params: [
-            { key: 'ori', domain: ['h', 'v'], default: 'h',
-                why: '`wall-gap-lock-weigh-h` and `-v`, collapsed. ⛓ THE OLD `-v` ROW\'s '
-                    + 'own `why` is the argument for keeping this a real parameter rather '
-                    + 'than a mirror nobody draws: the vertical lane is "a SOUTH lean '
-                    + 'rather than an EAST one, which is a different `SHOVE_STEP` row". '
-                    + '⛔ THE LANE OFFSETS THEMSELVES (`BLOCK_OFFSET`, `BUTTON_OFFSET`) '
-                    + 'AND `GAP_OFFSET` STAY CONSTANTS — ⚖ ruling 3 puts them in WAVE 2, '
-                    + 'each with its own re-sweep, and they are the three numbers this '
-                    + 'template\'s docblock calls CONSTRAINTS rather than preferences' },
-        ],
-        why: 'a Stone wall across the whole interior with a `lock` in its ONE gap, plus '
-            + 'the `button` that opens the lock\'s group and a `pushableblock` sharing '
-            + 'the button\'s lane — the corridor exists only after the block is parked on '
-            + 'the button, so `refineStrategy` selects `weigh` and the player walks '
-            + 'through a lock nobody is holding',
-        build: ({ ori }) => {
-            const g = doorGeometry(ori, INTERIOR_SPAN, GAP_OFFSET);
-            return {
-                /**
-                 * ⛓⛓⛓ ARC 3 SLICE 2 — `door` DECLARED, and this family is where
-                 * clause 2 of the law has something to bite on. Its clearer is
-                 * not one cell but a LANE: the block, the button it is shoved
-                 * onto, the stance cell behind the block and the slide path
-                 * between them. Every one of them must be reachable from the
-                 * START with the lock cell walled — on the open room that is
-                 * implied (the lane runs one cell back on the start's side of a
-                 * full-span wall), and it is exactly the thing that stops being
-                 * implied the moment the wall is shorter than the room.
-                 */
-                door: ori,
-                doorCells: Object.freeze([g.doorCell]),
-                clearer: Object.freeze([
-                    at(ori, BLOCK_OFFSET, -1),
-                    at(ori, BUTTON_OFFSET, -1),
-                    at(ori, BLOCK_OFFSET - 1, -1),
-                    ...SLIDE_PATH.map((o) => at(ori, o, -1)),
-                ]),
-                groups: 1,
-                tags: 1,
-                footprint: Object.freeze([
-                    ...g.cells,
-                    at(ori, BLOCK_OFFSET, -1),
-                    at(ori, BUTTON_OFFSET, -1),
-                ]),
-                clearance: Object.freeze([
-                    at(ori, BLOCK_OFFSET - 1, -1),
-                    ...SLIDE_PATH.map((o) => at(ori, o, -1)),
-                ]),
-                terrain: g.wall,
-                entities: Object.freeze([
-                    Object.freeze({
-                        ...g.doorCell,
-                        type: 'lock',
-                        attrs: Object.freeze({ tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG }),
-                    }),
-                    Object.freeze({
-                        ...at(ori, BUTTON_OFFSET, -1),
-                        type: 'button',
-                        attrs: Object.freeze({ tset: PLACEMENT_GROUP }),
-                    }),
-                    Object.freeze({ ...at(ori, BLOCK_OFFSET, -1), type: 'pushableblock' }),
-                ]),
-                pins: Object.freeze([]),
-            };
-        },
-    }),
 ]);
 
 /**
@@ -1307,6 +962,86 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
         wouldNeed: 'a recording channel — which ⚖ kickoff §3.3 rules out by contract: '
             + 'nothing whose clear only the game can date',
     }),
+    /**
+     * ⛓⛓⛓ **THE TWO PRE-SWORD DOOR TEMPLATES — RETIRED IN SLICE 4c** (⚖ user,
+     * 2026-08-16/17; PROCGEN ELEMENTS arc 3). They are the second and third rows
+     * in this file whose cause is a RULING rather than an oracle that could not
+     * adjudicate them, and unlike `arrow-lane` they were not ruled out for what
+     * they DID — they were SUPERSEDED by a mechanism that can do it.
+     *
+     * ⛔ WHAT MADE THE RULING MEASURABLE was slice 2's door law (*a door is a
+     * CUT*) and the `on-connector` element phase slice 4a built. A pass-2
+     * TEMPLATE writes a RELATIVE footprint at an anchor somebody else offers, so
+     * it can carry a `span` but cannot ask the room how long the wall should be,
+     * and cannot carve the cell the mechanism needs. Both rows below spent their
+     * whole lives NO_ANCHOR on every carved kind for exactly that reason, and the
+     * yield table could not tell them apart from a template that worked until the
+     * door law made the difference legible.
+     *
+     * ⚠ THE `+` LIST AND THE BIOME DEFAULT ARE WHAT MAKE THE RETIREMENT SAFE:
+     * `--elements=` now defaults to a CHOICE over the certified elements per
+     * biome (`procgenSeedling.defaultElementsFor`), so retiring these rows does
+     * NOT leave the default generator without doors — which is the coupling ⚖ D5
+     * refused to execute blind.
+     */
+    Object.freeze({
+        name: 'wall-gap-block',
+        family: 'shove',
+        cause: '⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `blockpocket` ELEMENT does '
+            + 'what this row could not: it carves the block\'s REST CELL',
+        measured: '⛓ ITS OWN CENSUS IS WHAT RETIRED IT. Slice 2 §9.2 counted 170 CUT anchors '
+            + 'for a span-1 door on `winding` and the sweep could use NONE of them, because a '
+            + 'span-1 block in a 1-wide corridor is shoved to the next bend and SEALS it '
+            + '(§9.11). This row therefore kept its `INTERIOR_SPAN` constant and NOTHING on '
+            + 'any carved kind at any span: **0 KEPT on the eight carved kinds in every arm '
+            + 'of S1\'s six-arm yield table (§11.9), 2 per arm on `empty`.** The element '
+            + 'places on ALL TEN kinds — **62 of 120 (kind, seed) cells**, `empty` 8/12 and '
+            + '`winding` 7/12 — and certifies with `shove` on every placement, with the '
+            + 'lifted claim TRUE (arc-3 §12).',
+        /**
+         * ⛔ `null`, AND THE PARENTHESIS BELONGS IN `measured`. This field is the
+         * VERBATIM text of a probe REFUSAL — the arc's evidence channel — and
+         * the three original rows here carry one. This row never THREW: it was
+         * kept on `empty` and NO_ANCHOR everywhere else, which is exactly why a
+         * keep-count could not tell it apart from a template that worked. Slice
+         * 2's door law made the difference legible; §12's element made it
+         * useful. A prose sentence in this field would read, to `catalogueRows`
+         * and to the row that counts measured refusals, as a refusal that
+         * happened.
+         */
+        refusalText: null,
+        wouldNeed: 'nothing this palette can give it. A pass-2 TEMPLATE writes a RELATIVE '
+            + 'footprint at an anchor somebody else offers, so it cannot know where the '
+            + 'corridor bends — and the rest cell is exactly that. The room-aware element '
+            + 'walks the straight run and CARVES the bend (`procgenCore/elements/'
+            + 'blockPocket.js`), which is design catalogue #2 and needs the `on-connector` '
+            + 'phase to be possible at all. ⛓ Its wave-1 `ori`/`gap` domain sweep (every '
+            + 'legal anchor of seeds 1..12, zero throws at all sixteen values) is preserved '
+            + 'in the arc-3 kickoff §13.6.',
+    }),
+    Object.freeze({
+        name: 'wall-gap-lock-weigh',
+        family: 'weigh',
+        cause: '⚖ SUPERSEDED (user, 2026-08-16) — the `guard` ELEMENT brings its own lane '
+            + 'and CARVES it; this row demanded one the room already had',
+        measured: '⛓ ⚖ Q2 WAS ANSWERED BY MEASUREMENT AND THE ANSWER WAS ZERO. Its clearer '
+            + 'is a SIX-CELL LANE at across `-1`, and no corridor has a straight run beside '
+            + 'a bridge cell: **0 KEPT on the eight carved kinds in every arm of S1\'s '
+            + 'six-arm table (§11.9), 1-2 per arm on `empty`.** Slice 2 §9.5b swept every '
+            + 'span and it kept NOTHING at any of them. The reverse-pull element carries its '
+            + 'own lane into the room and certifies: 16 of 18 placements at `len=2` and 16 '
+            + 'of 16 at `len=3`, `heldAtDoor` TRUE on every one (§11.8).',
+        /** ⛔ `null` — NO_ANCHOR on every carved kind, so no refusal text exists.
+         *  The lane is refused by `legalAt` before a solve is spent, which is the
+         *  S1 guard working exactly as its docblock says. See `wall-gap-block`'s
+         *  row above for why this field is not a place for prose. */
+        refusalText: null,
+        wouldNeed: 'a room that already has a six-cell straight lane beside a cut cell. That '
+            + 'is what pass 1 does NOT build, and asking pass 2 to find one is asking a '
+            + 'decorator to be a constructor. ⛓ The element is the same mechanism with the '
+            + 'lane brought along (⚖ design ruling 2), and the yield table above is the '
+            + 'before it should be read against.',
+    }),
 ]);
 
 export const PRE_SWORD_PALETTE = Object.freeze({
@@ -1386,382 +1121,25 @@ export const PRE_SWORD_PALETTE = Object.freeze({
 export const POST_SWORD_ITEMS = Object.freeze({ hasSword: true, hasShield: false });
 
 /**
- * ⛓⛓⛓ SLICE 4e — THE SPINNER OFFSET, AND IT IS MEASURED RATHER THAN CHOSEN.
+ * ⛓⛓⛓ **THE POST-SWORD-EXCLUSIVE ROSTER, AND IT IS EMPTY** — PROCGEN ELEMENTS
+ * arc 3, slice 4c (⚖ user, 2026-08-17: all three door TEMPLATES retire together
+ * once the room-aware elements land).
  *
- * The spinner stands one cell back from the wall on the START side, and WHERE
- * along that lane decides how many anchors the family can certify at. Swept on
- * the dedicated door geometry, seeds 1..4, every legal anchor:
+ * Slice 4e created this array for `wall-gap-spinner-killlock`, the arc's first
+ * sword-gated family. Slice 4c retired that row (`POST_SWORD_EXCLUDED_TEMPLATES`
+ * carries its measurement) and the room-aware `killgate` ELEMENT does its job
+ * with the same boot gate spelled as `needs: ['hasSword']` in
+ * `procgenCore/elementSpec.ELEMENT_TABLE`.
  *
- *   offset      1      2      3      5      6
- *   discharged  7      5      8      9     12
- *   refused    13     15     12     11      8
- *
- * Zero throws at every offset (the door rule below is what buys that), so the
- * offset is a YIELD parameter and not a safety one. Six is the far end of the
- * wall, the end away from the start corner — which is the room the strike
- * derivation needs, and the sweep is what says so.
+ * ⛔ **THE ARRAY STAYS, EMPTY, RATHER THAN THE SEAM BEING DELETED.** Two reasons,
+ * both structural: `POST_SWORD_TEMPLATES` is a SPREAD of it, so the containment
+ * claim `procgenPostSword.test.js` drives keeps holding by construction with no
+ * edit; and the next sword-gated family (arc 5's arena) has a declared home
+ * rather than a seam to re-invent. ⚠ What it costs to say it this way is one
+ * honest sentence: **today the two biomes ship the SAME roster, and the biome IS
+ * the BOOT ITEMS plus the elements' `needs`** — `assertPalette` drives that.
  */
-const SPINNER_OFFSET = 6;
-
-/**
- * ⛓⛓⛓ **THE `span` DOMAIN — MEASURED, NOT CHOSEN, AND THE TWO VALUES ARE FOR
- * TWO DIFFERENT ROOMS** (PROCGEN ELEMENTS arc 3, slice 2; ⚖ ruling 4 certifies a
- * domain by SWEEPING it; trap 254 measures the subject before sizing a knob).
- *
- * ── THE CENSUS FIRST (`scripts/procgen/census-seedling-doors.mjs`) ────
- *
- * A bare wall-and-gap at every span, ten kinds x twelve seeds x both
- * orientations x every gap, counting the anchors where walling the gap
- * DISCONNECTS the goal:
- *
- *   `empty`   span 8: **384** cut anchors.  spans 1..7: **0**. Every one.
- *   winding   span 1: **170**.              span 8: **0**.
- *   branchy   span 1: 170 · bushy 182 · loopy 74 · open 44 — and 0 at span 8.
- *
- * ⇒ THE OPEN ROOM AND A CORRIDOR WANT DISJOINT SPANS. That is GENERATE-UI
- * ruling 3's span law (*a shorter wall is decoration*) and ⚖ design ruling 17's
- * cut law (*a non-cut is decoration*) turning out to be the same statement on
- * the room the first was ruled for, and different everywhere else.
- *
- * ── THEN THE PER-VALUE SWEEP, on THIS template with its spinner and its lock
- *    (`sweep-seedling-wave1-domains.mjs --anchors=all --kinds=…`), every legal
- *    anchor SOLVED, counting DISCHARGES of `kill`:
- *
- *   span 1  17 discharges, spread over branchy/bushy/loopy/open/rooms/
- *           rooms;minRoom=4 / WINDING / winding;chambers=2 — and 0 on `empty`
- *   spans 2..7  **ONE** discharge in the whole table (winding;chambers=2 at 2)
- *   span 8  24 discharges, 23 of them on `empty`
- *
- * ⇒ **`{1, 8}`**. ⛔ Spans 2..7 are EXCLUDED on the measurement rather than on
- * the argument that made them plausible: a wall of 3 or 4 cells is long enough
- * to want a room and short enough not to cut one, so it is legal in the middle
- * ground and useful in neither. Under D2's letter span 2 qualifies on its single
- * discharge; it is not shipped because every value that is not 8 costs `empty` a
- * burned draw (below) and one discharge on one knobbed kind does not buy that.
- *
- * ⚠ **THE PRICE, STATED**: a killlock draw on `empty` picks span 1 half the
- * time, and a span-1 door NEVER cuts an open room — so half this family's
- * `empty` attempts are now NO_ANCHOR by construction. The yield table before and
- * after is where that is paid, and it is published in the arc-3 kickoff §9.8.
- * A room-aware span (draw from the values this SKELETON supports) is an ELEMENT
- * question, not a template one — ⚖ residue for slice 3.
- */
-const KILL_LOCK_SPANS = Object.freeze([1, INTERIOR_SPAN]);
-const KILL_LOCK_SPAN_WHY = 'HOW MANY CELLS the wall spans, and the two values are for two '
-    + 'different rooms. MEASURED (⚖ ruling 4): the door census says `empty` cuts at span 8 '
-    + 'and at NO shorter span (384 anchors vs 0), and every bare tree kind cuts at span 1 '
-    + 'and NOT at span 8; the per-value sweep then says span 1 DISCHARGES `kill` on eight '
-    + 'carved kinds (17 discharges) and span 8 on `empty` (23), while spans 2..7 produce '
-    + 'ONE discharge in the whole table. ⛔ 8 is the OPEN room\'s value and 1 is the '
-    + 'CORRIDOR\'s: at span 1 there is no wall at all, the lock cell IS the door, and the '
-    + 'spinner stands in a one-cell nub the template CARVES. ⚠ The price is that half this '
-    + 'family\'s `empty` draws are now NO_ANCHOR by construction — a room-aware span is an '
-    + 'ELEMENT question (arc 3 slice 3), not a template one';
-
-/**
- * ⛓⛓⛓ SLICE 4e — THE POST-SWORD-EXCLUSIVE FAMILY, AND THE ARC'S FIRST ONE.
- *
- * A wall across the whole interior, a `tset:-1` KILL LOCK in its one gap, and a
- * `spinner` standing behind the wall on the start's side. The lock opens when
- * the room's enemy count reaches zero, so the only way past is to KILL — with
- * the sword, which is what makes this the first template in the arc that a
- * pre-sword boot cannot clear.
- *
- * ── WHAT HAD TO HAPPEN BEFORE THIS ROW COULD EXIST ────────────────────
- *
- * Three causes excluded it, and they were discharged one slice at a time:
- *
- *  1. **THE DECLARATION** (slice 4 §12.3.ii) — the durable clear was a v9 TAPE
- *     declaration a generated level has none of. Discharged by 4b's scratch
- *     persistence layer: the model is the one writer of a slot no tape owns.
- *  2. **THE TAG COLLISION** (4b §13.7.2) — *a clear is a FLAG*, so a lock on
- *     the goal's own tag removes the GOAL. Discharged first by a LITERAL
- *     (`tag: '1'` against `SEEDLING_DEFAULTS.goalTag` `'0'`), and since
- *     GENERATE-mode UI slice 3 by the PER-PLACEMENT SLOT — see the block below.
- *  3. **THE THROW** (4b §13.7.iv) — the hammer-transit refusal ABORTED the run,
- *     and *a family the loop cannot REJECT is not one the palette can OFFER*.
- *     Discharged TWICE OVER at slice 4e: the countable clock retired 19 of the
- *     sweep's 26 transit throws (the 13 px all-phases disc was manufacturing
- *     them — traps 171/173, third arrival), and `procgenOracle` now classifies
- *     the seven that remain as REFUSALS.
- *
- * ⛔ AND A FOURTH THE PROMOTION ITSELF EXPOSED: with the goal on the START's
- * side of the wall, the walk collects the torch while the spinner is still
- * alive and `levelRun.assertDialogueFreeSpinnerRoom` kills the run by name.
- * That is why these two rows carry `door`, and the rule is in
- * `procgenSeedling.legalAt` beside `laneClear` — the model's own legality, not
- * a hope. Measured: three of twelve legal anchors before the rule, zero after.
- *
- * ── THE EVIDENCE, TO THE ARC'S OWN STANDARD (§12.1) ───────────────────
- *
- * ⚠ Slice 3 promoted on dedicated probes; 3b re-cut that evidence standard; 4
- * re-cut the instrument. So this row is certified by DISCHARGE EXISTENCE in the
- * FINAL level's own solve, never by keep-counts:
- *
- *  · DEDICATED, seeds 1..24, every legal anchor of both rows: **81 SOLVED and
- *    discharged, 41 REFUSED, ZERO THROWN.**
- *  · GENERATED, seed 3 at target 6: the loop KEEPS `-h` at (1,2), and the
- *    finished six-obstacle level re-solves in 378 ticks with a
- *    `{strategy:'kill'}` record AND
- *    `scratchClears [{tag:1, by:'spinner@112,16', lock:'lock@80,32'}]` — the
- *    template's OWN spinner and its OWN lock, which an obstacle nobody had to
- *    clear can produce neither of.
- *  · REACH, seeds 1..72 at target 6: **13 seeds keep one** (3, 27, 31, 36, 44,
- *    45, 49, 60, 61, 66, 69, 70, 71), so the family is not a probe curiosity.
- *
- * ── ⚠⚠ THE COST THIS ROW SHIPS WITH, MEASURED AND NOT SOFTENED ────────
- *
- * The same 72 seeds at target 6, like for like:
- *
- *   the committed nine-template roster    **1 of 72** runs ABORT (seed 66)
- *   this eleven-template roster           **6 of 72** (15, 20, 25, 54, 55, 57)
- *
- * Every one is a `PhysicsV2Error` — §9.3's own sentence, *the approach drive
- * clips lethal terrain the corridor planner routed around* — and the class is
- * PRE-EXISTING: it fires at the committed roster with no spinner anywhere in
- * the room. What this row changes is the FREQUENCY, and the honest statement of
- * that is: **direction consistent, not excluded, not proven** (n=72 a side,
- * p≈0.11). One of the aborting rooms (seed 15) provably held a kill template;
- * a hazard-driven step is a plausible mechanism and is not a demonstrated one.
- *
- * ⛔ THE CATCH IS NOT WIDENED TO IT, and that is deliberate: a `PhysicsV2Error`
- * is the ENGINE saying the route stepped where it must not, and classifying it
- * would hide a real defect behind "that candidate didn't work out"
- * (traps 171/173). ⚖ Endorsed by the orchestrator, 2026-08-12, and recorded as
- * a SOLVER question for R9 — the approach drive, now measured at three separate
- * moments (§9.3, the committed 1/72, this 6/72).
- *
- * ⛓ ⚖ AND SLICE 5's BATCH INHERITS AN OBLIGATION: an aborting seed is VISIBLE
- * (the CLI exits 3) and is simply not chosen — so the acceptance batch must
- * REPORT how many seeds it skipped and why. A batch that quietly picks five
- * clean levels out of thirteen carriers reads as "generation is abort-free"
- * when it is not (`feedback_bounded_sweep_must_name_what_it_bounded`).
- */
-/**
- * ⛓⛓ ⚖ RULING 4's SWEEP for the ORIENTATION parameter — the same command and
- * the same bound `SPINNER_OFFSET`'s own table used, so the two are readable
- * side by side (`--anchors=all --seeds=12`, every legal anchor, post-sword
- * boot):
- *
- *   ori          h     v
- *   noAnchor     5     5     (seeds where the `door` rule refuses EVERY anchor)
- *   solved      23     7
- *   refused      2    16
- *   threw        0     0
- *   discharged  23     7
- *
- * ⇒ ZERO THROWS at both values — which is the number this family exists to
- * keep at zero (4b §13.7.iv: *a family the loop cannot REJECT is not one the
- * palette can OFFER*) — and **every SOLVE is a DISCHARGE**, at both
- * orientations: this door is never crossed without killing the spinner.
- *
- * ⚠ THE VERTICAL VALUE IS THE LOW-YIELD ONE (7 discharges against 23) AND IT
- * IS A FINDING, NOT A DEFECT — ⚖ ruling 4 says so explicitly, so it is
- * recorded rather than pruned. The mechanism is visible in the same row: `v`
- * refuses 16 of its 23 legal anchors where `h` refuses 2. The `door` rule
- * already removed the anchors that would ABORT; what remains is that a
- * vertical wall in a room whose start is the NW corner puts the spinner's lane
- * across the approach far more often.
- */
-/**
- * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — **THE LITERAL TAG BECAME THE
- * PER-PLACEMENT SLOT**, and every sentence below is a measurement rather than
- * an argument (`scripts/procgen/measure-seedling-killlock-tag.mjs`).
- *
- * ⚖ THE HISTORY, because the field was ruled on twice. The literal `tag: '1'`
- * was defensible while only one kill lock could ever be kept: it is not the
- * goal's `'0'`, which is the one law this family had to satisfy. Slice 2
- * measured that the LATENCY argument had died — under the parameterized roster
- * **post-sword seed 12 at target 6 keeps TWO**, both on the literal — and the
- * conversion was ⚖ DEFERRED by the user (2026-08-13) pending a blast-radius
- * measurement, then ⚖ APPROVED CONDITIONALLY (2026-08-14): convert if the
- * measurement is clean, escalate if it is not. It was clean; this is it.
- *
- * ── WHAT THE COLLISION ACTUALLY DID, DRIVEN (seed 12, target 6) ───────
- *
- *  · **The second lock does NOT open on the first spinner's death.** A
- *    `tset == -1` lock opens on `totalEnemies()` reaching ZERO, which is a
- *    GLOBAL condition — so with two spinners in the room the first death opens
- *    nothing (measured as an ABSENCE: no scratch row names that body) and BOTH
- *    locks open on the last, in ONE event *(`why: "2 kill lock(s) OPEN:
- *    totalEnemies() went 2 -> 0"`)*. ⇒ neither spinner is an obstacle that
- *    obstructs nothing, and the walk really kills both.
- *  · **What it DID produce is a duplicate persistence write**: two
- *    `scratchClears` rows, same `level`, same `tag`, same `at`, same opener.
- *    Idempotent, so the RUN is unaffected — but `levelRun`'s own
- *    `assertScratchSlotIsFree` docblock says *"two writers of one persistence
- *    slot is the exact thing it must not become"*, and that guard is scoped to
- *    DECLARED-vs-scratch and cannot see scratch-vs-scratch. ⛓ And the v9 parser
- *    WOULD have refused the pair by name (*"persistence[1] duplicates level 3
- *    tag 1"*) — the model was emitting a ledger the tape format calls a
- *    bookkeeping error.
- *  · **No v9 `at` row can carry it anyway**: `tapeFormat` bounds
- *    `persistence[].level` to 0..115 and a generated level is 900, so the fold
- *    emits nothing (driven, both refusals quoted in the script).
- *  · **The goal's flag was never touched** — tag 0 is held by the
- *    `torchpickup` alone and no scratch clear wrote it.
- *
- * ── ⛔ AND THE FAMILY IS BROADER THAN THE TWO-KILL CASE ───────────────
- *
- * A weigh lock takes its tag from `placementTagId`, which reads the RECORD —
- * so a weigh lock placed BEFORE a kill lock would be allocated tag **1** and
- * the kill lock's literal would land on top of it. Measured over post-sword
- * seeds 1..40 at target 6: 5 levels hold a kill lock, 13 hold a weigh lock,
- * **2 hold both (seeds 15 and 25) — and in both the KILL landed first**, so
- * the allocator dodged the literal and the cross-family collision never
- * appeared in the sample. It was draw order, not a law. That is the strongest
- * argument for the slot: the literal's safety depended on which template the
- * stream happened to pick first.
- *
- * ── WHAT MOVED WHEN IT LANDED, MEASURED ───────────────────────────────
- *
- * `placementTagId` allocates the LOWEST FREE slot and the goal's 0 is always
- * taken, so a level with ONE tag-bearing template gets **1** — the same value
- * the literal had. ⇒ only levels holding TWO of them move, and only in the
- * `tag` attribute. ⛔ No rng draw changes: the allocator reads the record, not
- * the stream, and the trace's `drawsBefore`/`rngStateBefore` columns are
- * unchanged (compared run-to-run rather than argued).
- */
-const KILL_LOCK_TEMPLATES = Object.freeze([
-    defineTemplate({
-        name: 'wall-gap-spinner-killlock',
-        family: 'kill',
-        params: [
-            { key: 'ori', domain: ['h', 'v'], default: 'h',
-                why: '`wall-gap-spinner-killlock-h` and `-v`, collapsed. ⛔ `door` IS THIS '
-                    + 'PARAMETER — the legality rule in `procgenSeedling.legalAt` reads '
-                    + '\'h\' or \'v\' and the wall it is about is the one this value '
-                    + 'orients, so deriving it here is what makes a mismatch impossible '
-                    + 'rather than merely unlikely (the field\'s own docblock calls a typo '
-                    + 'there "a legality gate that does not gate"). ⛔ `SPINNER_OFFSET` '
-                    + 'stays a constant on its own measured sweep — ⚖ ruling 3 puts the '
-                    + 'lane offsets in WAVE 2' },
-            { key: 'span', domain: KILL_LOCK_SPANS, default: INTERIOR_SPAN,
-                why: KILL_LOCK_SPAN_WHY },
-        ],
-        why: 'a Stone wall across the whole interior with a KILL LOCK in its ONE gap and '
-            + 'the spinner whose death opens it standing behind the wall — `refineStrategy` '
-            + 'takes the `tset == -1` lock to `kill`, the press schedule strikes on '
-            + '`KILL_PRESS_CADENCE`, and the durable clear is written by 4b\'s scratch '
-            + 'layer on the tick the lock\'s own fade names. ⛓ THE ONLY TEMPLATE IN THE '
-            + 'ARC A PRE-SWORD BOOT CANNOT CLEAR: `weaponForPress` returns null with no '
-            + 'sword slot, so the press is a silent no-op and the lock never opens',
-        build: ({ ori, span }) => {
-            /**
-             * ⛓⛓⛓ **THE CORRIDOR FORM — span 1, AND IT IS THE ARC'S FIRST
-             * CARVE** (⚖ design ruling 17, *templates may CARVE*).
-             *
-             * With no wall there is no "behind the wall" for the spinner to
-             * stand in, so the geometry is different in kind rather than in
-             * degree, and it is written out rather than clamped out of the
-             * wall form:
-             *
-             *     (0,-1)  the CORRIDOR CELL the player fights from — declared
-             *             `clearance`, so it must be untouched walkable ground
-             *             (this is what makes the row NO_ANCHOR wherever the
-             *             corridor runs the other way)
-             *     (1,-1)  the NUB — one cell written `ground`. Where the
-             *             skeleton left WALL that write is a CARVE and
-             *             `carveRefusal` demands it be a DEAD END with exactly
-             *             one mouth; where the skeleton left GROUND it is a
-             *             no-op and the cell is simply a side corridor the
-             *             oracle adjudicates.
-             *     (0,0)   the DOOR — the lock cell itself. On a corridor the
-             *             lock IS the door; there is nothing else to be one.
-             *
-             * ⛔ CLAUSE 2 OF THE DOOR LAW IS WHAT PUTS THE NUB ON THE RIGHT
-             * SIDE. Nothing in this geometry says which side of the lock the
-             * player approaches from — the flood does, by demanding the spinner
-             * be reachable from the START with the lock cell walled. A nub
-             * carved on the GOAL side is a body nobody can reach until the door
-             * it guards is already open, and the law refuses it by name.
-             *
-             * ⚠ Both cells are transposed by `at`, so `ori:'v'` is the same
-             * gadget rotated: `h` fits a corridor running NORTH-SOUTH through
-             * the lock (the lane is the row above), `v` one running EAST-WEST
-             * (the lane is the column to the left). Between them the two
-             * orientations cover both corridor directions, which is why `ori`
-             * is not redundant here even though the wall is gone.
-             */
-            if (span === 1) {
-                const door = at(ori, 0, 0);
-                const lane = at(ori, 0, -1);
-                const nub = at(ori, 1, -1);
-                return {
-                    door: ori,
-                    doorCells: Object.freeze([door]),
-                    clearer: Object.freeze([nub]),
-                    tags: 1,
-                    footprint: Object.freeze([door, nub]),
-                    clearance: Object.freeze([lane]),
-                    terrain: paint([nub], 'ground'),
-                    entities: Object.freeze([
-                        Object.freeze({
-                            ...door,
-                            type: 'lock',
-                            attrs: Object.freeze({ tset: '-1', tag: PLACEMENT_TAG }),
-                        }),
-                        Object.freeze({
-                            ...nub, type: 'spinner', attrs: Object.freeze({ tag: '-1' }),
-                        }),
-                    ]),
-                    pins: Object.freeze([]),
-                };
-            }
-            /**
-             * ⛓ THE WALL FORM — span 2..8, and at `span = INTERIOR_SPAN` it is
-             * TODAY'S GEOMETRY BYTE FOR BYTE. Both offsets are CLAMPED into the
-             * span rather than re-swept: `GAP_OFFSET` and `SPINNER_OFFSET` are
-             * ⚖ ruling 3's WAVE-2 constants measured against the full span, and
-             * a shorter wall cannot hold an offset past its own end. At span 8
-             * neither clamp binds (4 and 6 are both < 7), which is what makes
-             * the default instance identical.
-             */
-            const g = doorGeometry(ori, span, Math.min(GAP_OFFSET, span - 1));
-            const spin = at(ori, Math.min(SPINNER_OFFSET, span - 1), -1);
-            return {
-                door: ori,
-                /**
-                 * ⛓⛓⛓ ARC 3 SLICE 2 — the row now NAMES what `doorClear` used
-                 * to infer from the compass: the lock's own cell is the DOOR,
-                 * and the spinner is the CLEARER. ⛓ The two are what make this
-                 * family's `empty` rows BYTE-IDENTICAL under the new law (the
-                 * isolated differential, kickoff §9.4): a full-span wall's gap
-                 * is a cut exactly when the goal is beyond it, and the spinner
-                 * at across `-1` is on the start's side by construction.
-                 */
-                doorCells: Object.freeze([g.doorCell]),
-                clearer: Object.freeze([spin]),
-                /**
-                 * ⛓⛓⛓ GENERATE-mode UI slice 3, TRACK C — THE LITERAL TAG IS
-                 * GONE. See the `tags: 1` line below and this template's
-                 * docblock for the measurement that bought it.
-                 */
-                tags: 1,
-                footprint: Object.freeze([...g.cells, spin]),
-                clearance: Object.freeze([]),
-                terrain: g.wall,
-                entities: Object.freeze([
-                    Object.freeze({
-                        ...g.doorCell,
-                        type: 'lock',
-                        // ⛔ `tset: '-1'` IS THE KILL LOCK (L5/L18's own
-                        // spelling). ⛓ The tag was the LITERAL `'1'` until
-                        // slice 3 track C; it is now the per-placement slot,
-                        // for the same reason the weigh lock's is.
-                        attrs: Object.freeze({ tset: '-1', tag: PLACEMENT_TAG }),
-                    }),
-                    Object.freeze({
-                        ...spin,
-                        type: 'spinner',
-                        attrs: Object.freeze({ tag: '-1' }),
-                    }),
-                ]),
-                pins: Object.freeze([]),
-            };
-        },
-    }),
-]);
+const KILL_LOCK_TEMPLATES = Object.freeze([]);
 
 /**
  * ⛔⛔ NO LONGER SHARED BY REFERENCE — SLICE 4e, and this is the roster split
@@ -1927,6 +1305,41 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'cure the message itself offers — *"collect after the removal"* — is a '
             + 'template that guarantees the boss dies FIRST, which is an ORDER between a '
             + 'clearer and the goal that a depth-1 loop with one goal cannot express.',
+    }),
+    /**
+     * ⛓⛓⛓ **THE THIRD DOOR TEMPLATE — RETIRED IN SLICE 4c WITH THE OTHER TWO**
+     * (⚖ user, 2026-08-16/17). ⛔ It is the row slice 4e PROMOTED into
+     * `KILL_LOCK_TEMPLATES` — the arc's first and only sword-gated family — so
+     * its retirement is what leaves that array empty and the biome split resting
+     * on the BOOT ITEMS plus the elements' `needs`.
+     */
+    Object.freeze({
+        name: 'wall-gap-spinner-killlock',
+        family: 'kill',
+        cause: '⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `killgate` ELEMENT GROWS '
+            + 'its wall to the room instead of drawing a `span` from a two-value domain',
+        measured: '⛓ THE `span` PARAMETER WAS A PROXY FOR A MEASUREMENT THE ROOM CAN MAKE '
+            + 'ITSELF. Slice 2 measured its domain as `{1, 8}` — two values for two rooms — '
+            + 'and published the price: *"half this family\'s `empty` draws are now '
+            + 'NO_ANCHOR by construction"* (§9.11). The element grows 0 cells on a corridor, '
+            + '7 on the open 10x10 room and a chamber\'s walls in a chamber, draws NO '
+            + 'parameter at all, and places on ALL TEN kinds — **61 of 120 (kind, seed) '
+            + 'cells** against the template\'s 39 legal span-1 anchors on `winding` and 0 '
+            + 'anywhere at span 8 except `empty` (§9.5).',
+        /** ⛔ `null`. ⚠ Its THROW class survives it and is NOT this row's to fix:
+         *  the pocket-corner `swing … collideLine("Solid")` abort is PRE-EXISTING
+         *  solver behaviour, measured four times (§9.5c, §9b.3) and ⚖ endorsed as
+         *  an R9 exception — the ELEMENT meets it too (arc-3 §12's yield table).
+         *  That is a fact about the solver, not a refusal this template produced,
+         *  so it is not written into the evidence field. */
+        refusalText: null,
+        wouldNeed: 'nothing. ⛔ AND THE ELEMENT DOES NOT DISCHARGE THE CLASS — it inherits '
+            + 'it. What retires this row is that the `span` domain, the `SPINNER_OFFSET` '
+            + 'constant and the `gap` clamp all become facts about the ROOM rather than '
+            + 'draws, which is the whole point of the `on-connector` phase. ⛓ The two '
+            + 'measurements that sized its constants — the `SPINNER_OFFSET` sweep and the '
+            + '`span` domain\'s per-value discharge table — are preserved in the arc-3 '
+            + 'kickoff §13.6.',
     }),
 ]);
 

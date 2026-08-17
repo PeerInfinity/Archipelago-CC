@@ -393,8 +393,17 @@ describe('⛔ `turns > 0` IS THE CHAIN — arc 4, and it REFUSES BY NAME', () =>
 });
 
 describe('⛓⛓⛓ THE RECORD ROUND-TRIPS — `{params, site, drawsAtConstruct}` + the seed', () => {
-    /** The one (kind, seed, len) the census says places through the real stream. */
-    const PLACING = { seed: 3, kind: 'rooms', len: 2 };
+    /**
+     * The one (kind, seed, len) the census says places through the real stream.
+     *
+     * ⛓⛓ RE-PICKED AT ARC 3 SLICE 4c (trap 285 — the scan and the count are
+     * named). The GOAL DRAW (`manhattan >= 3`) moved 34 of 40 seeds' goals and
+     * with them the guard's reserved-rectangle search; `rooms` seed 3 no longer
+     * places. RE-SCANNED over `rooms` seeds 1..12 x `len` in {2,3}: **three
+     * cells place — 7/len2, 9/len3, 12/len2** — and **seed 7 at len 2 is
+     * taken**, the first of them and the same `len` the file used before.
+     */
+    const PLACING = { seed: 7, kind: 'rooms', len: 2 };
     const placedModel = () => seedlingModel({ seed: PLACING.seed,
         skeleton: parseSkeleton(PLACING.kind, { simulator: false }),
         elements: { name: 'guard', params: { len: PLACING.len } } });
@@ -548,7 +557,8 @@ describe('⛓⛓⛓ THE LIFTED CLAIM\'S READER, on a SYNTHETIC record set', () =
 
 describe('⛔ A CELL THE ELEMENT OWNS IS NOT PASS 2\'s', () => {
     it('every reserved-rectangle cell and every tunnel cell is refused BY NAME', () => {
-        const m = seedlingModel({ seed: 3, skeleton: parseSkeleton('rooms', { simulator: false }),
+        // ⛓ SLICE 4c: seed 3 -> 7 for the same reason as `PLACING` above.
+        const m = seedlingModel({ seed: 7, skeleton: parseSkeleton('rooms', { simulator: false }),
             elements: { name: 'guard', params: { len: 2 } } });
         expect(m.elements.ran).toBe(true);
         const p = m.elements.placed[0];
@@ -572,7 +582,8 @@ describe('⛔ A CELL THE ELEMENT OWNS IS NOT PASS 2\'s', () => {
 
     it('and a CARVE into the element\'s ring is refused too — the untouched-SKELETON '
         + 'test alone would let it through, because the ring IS wall in `base`', () => {
-        const m = seedlingModel({ seed: 3, skeleton: parseSkeleton('rooms', { simulator: false }),
+        // ⛓ SLICE 4c: seed 3 -> 7 for the same reason as `PLACING` above.
+        const m = seedlingModel({ seed: 7, skeleton: parseSkeleton('rooms', { simulator: false }),
             elements: { name: 'guard', params: { len: 2 } } });
         const p = m.elements.placed[0];
         const rec = m.skeleton();

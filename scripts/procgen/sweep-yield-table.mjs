@@ -185,9 +185,15 @@ const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
 /**
  * ⛓⛓⛓ PROCGEN ELEMENTS arc 2 slice 3 — THE ELEMENT FOR EVERY CELL, through the
  * ONE codec (`procgenCore/elementSpec.js`): `--elements='guard;len=3;turns=1'`.
- * ⛔ The default is `none` and at `none` the binding constructs nothing and
- * spends no draw, so every column below is unchanged from the run before
- * elements existed.
+ * ⛓⛓⛓ **ABSENT IS NOT `none` ON THE SEEDLING ARM SINCE ARC-3 SLICE 4c.** The
+ * flag is read as *"was it typed"*: absent passes `undefined`, and each
+ * substrate's own binding then says what that means. The MAZE's says `none`
+ * (`mazeModel`'s destructuring default — untouched by 4c, ⛔ its own arc);
+ * SEEDLING's says `defaultElementsFor(palette.items)` — the biome-dependent
+ * default that replaced the three retired door TEMPLATES. ⇒ a bare
+ * `--substrate=seedling` sweep now measures the DEFAULT generator, which is the
+ * arm a reader of this table actually wants, and `--elements=none` is how the
+ * pre-4c element-free arm is asked for by name.
  *
  * ⛓⛓ **BOTH SUBSTRATES TAKE IT SINCE ARC 3 SLICE 3.** Seedling used to refuse it
  * by name ("the element binding is the MAZE's in this arc"); its own binding is
@@ -205,7 +211,8 @@ const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
  * `procgenSeedling.certificationGap`, which replaced the constant slice 3 could
  * honestly write when every refusal had one cause.
  */
-const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
+const ELEMENTS = process.argv.some((a) => a.startsWith('--elements='))
+    ? parseElementSpec(arg('elements', ELEMENTS_NONE)) : undefined;
 if (REQUIRE && AREAS.keys === 0) {
     note('sweep-yield-table: --require= without --areas= — every cell would refuse with '
         + '`the-directive-needs-the-area-graph`, which is a column that means one thing at '
@@ -241,6 +248,25 @@ if (SUBSTRATE === 'maze' && process.argv.some((a) => a.startsWith('--palette='))
     note('sweep-yield-table: --palette= is the SEEDLING binding\'s — the maze has one palette.');
     process.exit(2);
 }
+
+/**
+ * ⛓⛓⛓ **THE SPEC THIS RUN ACTUALLY MEASURES** — arc-3 slice 4c. Every column,
+ * header and census below reads THIS and never the raw flag, because absent no
+ * longer means `none` on the Seedling arm: it means the biome's default. ⛔ It
+ * is DERIVED from `procgenSeedling.defaultElementsFor` and the palette's own
+ * `items` rather than re-spelled here — a sweep that typed the default would be
+ * a second answer to *"what does the default generator build"*, and the first
+ * time the two drifted the table would be reporting the sweep.
+ */
+const ELEMENTS_EFFECTIVE = await (async () => {
+    if (ELEMENTS !== undefined) return ELEMENTS;
+    if (SUBSTRATE !== 'seedling') return { name: ELEMENTS_NONE };
+    const { defaultElementsFor } = await M('seedlingDemo/procgenSeedling.js');
+    const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
+    return defaultElementsFor(
+        (PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).items,
+    );
+})();
 
 const CELL = arg('cell', '');
 if (CELL !== '') {
@@ -279,7 +305,7 @@ if (CELL !== '') {
             seed, width: size.width, height: size.height, skeleton: parseSkeleton(kind,
                 { simulator: true, substrate: 'the maze binding' }),
             areas: AREAS,
-            elements: ELEMENTS,
+            elements: ELEMENTS_EFFECTIVE,
         });
         palette = MAZE_PALETTE;
         /** ⛓ WRAPPED HERE, ONCE. The Seedling arm's `seedlingSeam` wraps its
@@ -311,7 +337,7 @@ if (CELL !== '') {
         const seam = seedlingSeam({
             seed,
             skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
-            elements: ELEMENTS,
+            elements: ELEMENTS_EFFECTIVE,
             items: palette.items ?? null,
             wrapOracle: wrap,
         });
@@ -435,7 +461,8 @@ if (CELL !== '') {
      * is sometimes true and the second never is, so a single "kept" column would
      * have averaged a fact with its own refutation.
      */
-    if (SUBSTRATE === 'seedling' && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
+    if (SUBSTRATE === 'seedling'
+        && (isElementList(ELEMENTS_EFFECTIVE) || ELEMENTS_EFFECTIVE.name !== ELEMENTS_NONE)) {
         const geometry = seedlingCertification?.geometry ?? model.elements.placed;
         const p = geometry[0] ?? null;
         /**
@@ -487,7 +514,7 @@ if (CELL !== '') {
             ...shape,
         };
     }
-    if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
+    if (SUBSTRATE === 'maze' && ELEMENTS_EFFECTIVE.name !== ELEMENTS_NONE) {
         const { mazeCostRecords } = await M('mazeRoom/procgenMaze.js');
         const info = model.elements;
         const rows = (out && info.ran)
@@ -673,7 +700,7 @@ for (const c of cells) {
     note(`[stderr] ${SUBSTRATE} ${c.kind} ${c.size.label} seed ${c.seed} `
         + `(${denom.attempted}/${cells.length})…`);
     const childArgs = [SELF, `--substrate=${SUBSTRATE}`, `--areas=${formatAreaSpec(AREAS)}`,
-        `--elements=${formatElementSpec(ELEMENTS)}`,
+        `--elements=${formatElementSpec(ELEMENTS_EFFECTIVE)}`,
         // ⛓ arc 3 slice 2 — the biome travels to the worker, or every cell of a
         // `--palette=post-sword` run would silently be a pre-sword one.
         ...(SUBSTRATE === 'seedling' ? [`--palette=${PALETTE_NAME}`] : []),
@@ -863,8 +890,8 @@ if (SUBSTRATE === 'maze') {
  * is the NON-VACUITY witness of the fixed registration — cells the carve had
  * written differently from what the element wants.
  */
-if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
-    say(`## THE ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS)}\``);
+if (SUBSTRATE === 'maze' && ELEMENTS_EFFECTIVE.name !== ELEMENTS_NONE) {
+    say(`## THE ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS_EFFECTIVE)}\``);
     say('');
     say('| kind | size | N | placed | guarded | worst nodes | max pushes | max tunnel '
         + '| mean overwrote | heldAtDoor true/null |');
@@ -927,8 +954,10 @@ if (SUBSTRATE === 'maze' && ELEMENTS.name !== ELEMENTS_NONE) {
  *                printed so the column cannot be read as "it did not work out".
  *   GUARDED    — certified AND the flag behind the door. 0 by the same line.
  */
-if (SUBSTRATE === 'seedling' && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
-    say(`## THE SEEDLING ELEMENTS CENSUS — \`--elements=${formatElementSpec(ELEMENTS)}\``);
+if (SUBSTRATE === 'seedling'
+    && (isElementList(ELEMENTS_EFFECTIVE) || ELEMENTS_EFFECTIVE.name !== ELEMENTS_NONE)) {
+    const spec = formatElementSpec(ELEMENTS_EFFECTIVE);
+    say(`## THE SEEDLING ELEMENTS CENSUS — \`--elements=${spec}\``);
     say('');
     /** ⛓ arc 3 slice 4a — `tunnel`/`overwrote` are the PRE-CARVE phase's own
      *  numbers and `wall`/`carved`/`offered` are the `on-connector` phase's, so

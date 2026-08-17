@@ -200,14 +200,29 @@ describe('the ops, applied — PURE, and the record before is untouched', () => 
             { op: 'place', tx: 4, ty: 6, type: 'button', attrs: { tset: '0' } },
             { op: 'place', tx: 4, ty: 6, type: 'lock', attrs: { tset: '1' } },
         ]);
-        expect(withTwo.entities.length).toBe(3);
+        /**
+         * ⛓⛓ RE-COUNTED AT ARC-3 SLICE 4c. The step-0 record is the SEAM's
+         * model now (`generateStep`), and the biome's DEFAULT ELEMENT SPEC puts
+         * an element in the skeleton — so the room this file edits starts with
+         * the goal PLUS whatever the element placed, rather than with the goal
+         * alone. ⛔ The count is therefore taken FROM the record instead of
+         * being a literal: the claim is *two placed entities arrive and the
+         * remove takes the LAST one*, which is about `applyEdit` and not about
+         * how furnished the room was.
+         */
+        const before = s.record.entities.length;
+        expect(withTwo.entities.length).toBe(before + 2);
         const gone = applyEdit(withTwo, { op: 'remove', tx: 4, ty: 6 });
-        expect(gone.entities.map((e) => e.type)).toEqual(['torchpickup', 'button']);
+        expect(gone.entities.map((e) => e.type))
+            .toEqual([...s.record.entities.map((e) => e.type), 'button']);
         expect(() => applyEdit(s.record, { op: 'remove', tx: 9, ty: 9 }))
             .toThrow(/holds no entity/);
         // ⚠ and the GOAL itself is removable — the oracle then refuses, loudly.
+        // ⛓ SLICE 4c: the room may hold an ELEMENT's entities too, so the claim
+        // is that the GOAL is gone rather than that the room is empty.
         const noGoal = applyEdit(s.record, { op: 'remove', tx: goal.tx, ty: goal.ty });
-        expect(noGoal.entities).toEqual([]);
+        expect(noGoal.entities.some((e) => e.type === 'torchpickup')).toBe(false);
+        expect(noGoal.entities).toHaveLength(s.record.entities.length - 1);
     });
 
     it('attrs REPLACES rather than merges — clearing is spelled by leaving out', () => {

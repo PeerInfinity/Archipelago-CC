@@ -161,9 +161,6 @@ import { formatSkeleton, normalizeSkeleton } from '../procgenCore/skeletonKinds.
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
 import { catalogueRows, restrictPalette } from './procgenPalette.js';
-// ⛓ SLICE 5: the keep policy verb 2 presses under — ⚖ the user's ruling
-// (*verb 2 PREFERS DISCHARGE*). The free ladder never names one.
-import { KEEP_POLICY } from '../procgenCore/levelGenerator.js';
 // ⛓ SLICE 11 adds `TERRAIN_NAMES` — the edit tool's terrain picker is mounted
 // from the four-terrain vocabulary itself, so this file keeps no second list.
 import { atlasOf, TERRAIN_NAMES } from './procgenLevel.js';
@@ -5670,7 +5667,13 @@ async function runGenerate(params, lifetime) {
                  * why the bound goes with it rather than staying global.
                  */
                 anchor,
-                keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+                /**
+                 * ⛔ NO `keepPolicy` SINCE ARC-3 SLICE 4c. Seedling runs every
+                 * directive under `first-solved`: the three templates with a
+                 * VERB retired into ELEMENTS, so `prefer-discharge` has nothing
+                 * to prefer over. `applyDirective` REFUSES a spec that names
+                 * one — see its docblock for the two reasons.
+                 */
                 bound: anchor ? 1 : DIRECTED_ANCHOR_TRIES,
             };
             $('status').className = '';

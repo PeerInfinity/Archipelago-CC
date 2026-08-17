@@ -43,6 +43,8 @@ import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procge
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { generateSeedlingLevel, interiorCells, seedlingModel } from './procgenSeedling.js';
 import { defineTemplate } from '../procgenCore/templateContract.js';
+/** ⛓ SLICE 4c: the ONE policy a Seedling directive runs under, now a constant. */
+import { DIRECTIVE_KEEP_POLICY } from '../procgenCore/urlParams.js';
 
 const json = (v) => JSON.stringify(v);
 
@@ -288,12 +290,34 @@ describe('the ladder cost — stated BEFORE it is spent', () => {
 });
 
 describe('step 0 — the SKELETON, and it is the LOOP\'s own room', () => {
-    it('is the bordered room with the goal and nothing else', () => {
+    /**
+     * ⛓⛓⛓ **"AND NOTHING ELSE" STOPPED BEING TRUE AT ARC-3 SLICE 4c**, and the
+     * row is re-stated rather than relaxed. Step 0 is `seedlingSeam(…).model` —
+     * the room the LOOP checks — and the biome's DEFAULT ELEMENT SPEC puts an
+     * element in that room (`procgenSeedling.defaultElementsFor`). ⛔ It is
+     * still *the bordered room BEFORE ANY TEMPLATE*, which is what the row is
+     * for: no trace, no summary, and nothing pass 2 drew.
+     *
+     * ⛓ THE GOAL IS ASSERTED AS PRESENT-AND-UNIQUE rather than as the only
+     * entity, and the element's own entities are asserted to be the seam's —
+     * so a step-0 branch that DREW an element and never dropped it (the exact
+     * defect the seam-vs-model change fixes) still reds here.
+     */
+    it('is the bordered room with the goal, before any TEMPLATE', () => {
         const s = generateStep({ seed: 9, biome: 'pre-sword', step: 0 });
         expect(s.trace).toEqual([]);
         expect(s.summary).toBeNull();
-        expect(s.record.entities).toHaveLength(1);
-        expect(s.record.entities[0].type).toBe('torchpickup');
+        expect(s.record.entities.filter((e) => e.type === 'torchpickup')).toHaveLength(1);
+        /**
+         * ⛔ EVERY OTHER ENTITY IS THE ELEMENT'S, asserted by DIFFERENCE against
+         * the same room built with `--elements=none` — which is the only claim
+         * that can distinguish *the seam placed an element* from *pass 2 drew
+         * something*, and is what this row exists for.
+         */
+        const bare = seedlingModel({ seed: 9, elements: { name: 'none' } }).skeleton();
+        expect(bare.entities.map((e) => e.type)).toEqual(['torchpickup']);
+        expect(s.model.elements.ran).toBe(true);
+        expect(s.record.entities.length).toBeGreaterThan(bare.entities.length);
     });
 
     /**
@@ -487,15 +511,20 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
     it('the label carries the ANCHOR ordinal, so one candidate\'s rows are distinguishable',
         () => {
             /**
-             * ⛓ RE-PICKED (arc 3 slice 1, trap 285). `arrow-lane` leaving the
-             * roster moved every draw. SCANNED: pre-sword, step 6,
-             * `anchorTriesPerCandidate: 3`, seeds 1..20 — SEVEN still walk
-             * (4, 9, 10, 12, 13, 14, 15); **seed 9 is taken because it walks
-             * THREE rows**, the most of any, so the loop below grades more than
-             * one label.
+             * ⛓ RE-PICKED TWICE, SAME SCAN (trap 285). Arc 3 slice 1:
+             * `arrow-lane` leaving moved every draw and seed 9 was taken because
+             * it walked THREE rows. ⛓⛓ ARC 3 SLICE 4c: the retirement and the
+             * goal draw moved them again and seed 9 walks NONE.
+             *
+             * RE-SCANNED: pre-sword, step 6, `anchorTriesPerCandidate: 3`, seeds
+             * 1..30 — **FIVE walk (2, 18, 21, 24, 30)** and **seed 21 walks
+             * TWO**, the most of any; the other four walk one each. ⚠ Thinner
+             * than the old roster's seven-with-a-three, which is the same
+             * shadow the rescue row records: three decoration families revert
+             * less, so there is less for a wider anchor walk to rescue.
              */
             const s = generateStep({
-                seed: 9,
+                seed: 21,
                 biome: 'pre-sword',
                 step: 6,
                 bounds: { anchorTriesPerCandidate: 3 },
@@ -503,7 +532,7 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
             const rows = generationRows(s.trace);
             const walked = rows.filter((r) => r.anchorsOffered > 1 && r.anchorTry > 1);
             expect(walked.length, 'the subject must WALK for this case to mean anything')
-                .toBe(3);
+                .toBe(2);
             for (const r of walked) {
                 expect(r.label).toBe(`${r.step}.${r.try}a${r.anchorTry}`);
                 const siblings = rows.filter((x) => x.step === r.step && x.try === r.try);
@@ -571,15 +600,21 @@ describe('saturation — ⚖ §7.5\'s other case, reported and never silent', ()
      * going green the wrong way round.
      *
      * ⛓⛓ RE-MEASURED AT SLICE 2 (the parameterized-template migration expired
-     * every seed→level pair, ⚖ ruling 5). At these bounds over seeds 1..10 the
-     * split is now **3, 6 and 9 REACH the target and the other seven
-     * SATURATE** — it used to be 4 and 7 that reached. Seed 1 is still on the
-     * saturating side (kept 3 of 6), so the subject SURVIVES its own
-     * re-measurement rather than being kept on the old measurement's word.
+     * every seed→level pair, ⚖ ruling 5): the split became 3/6/9 REACHING and
+     * the other seven SATURATING, and seed 1 survived on the saturating side.
+     *
+     * ⛓⛓⛓ RE-MEASURED AGAIN AT SLICE 4c, AND THE SPLIT **INVERTED**. Over seeds
+     * 1..12 at these bounds only **2 and 3 SATURATE** (kept 3 of 6); the other
+     * ten REACH the target, seed 1 among them. ⇒ **seed 2 is the subject.**
+     * ⚠ THE INVERSION IS ITSELF THE RETIREMENT'S SHADOW and is worth the
+     * sentence: a roster of three DECORATION families reverts far less than one
+     * holding three door families, so a room saturates far less often. A slice
+     * that read this row's re-pick as noise would be missing a real change in
+     * what the default generator does.
      */
     it('a rung that keeps fewer than it asked for is SATURATED, and says which', () => {
         const s = generateStep({
-            seed: 1,
+            seed: 2,
             biome: 'pre-sword',
             step: 6,
             bounds: { triesPerStep: 1, saturationK: 1 },
@@ -648,8 +683,8 @@ describe('?families= / ?templates= — the sub-roster, in the ONE reader', () =>
     });
 
     it('reads either spelling and NORMALIZES it — sorted, deduped', () => {
-        expect(readGenerateParams('?biome=pre-sword&families=weigh,water,weigh').roster)
-            .toEqual({ axis: 'families', names: ['water', 'weigh'] });
+        expect(readGenerateParams('?biome=pre-sword&families=pit,water,pit').roster)
+            .toEqual({ axis: 'families', names: ['pit', 'water'] });
         expect(readGenerateParams('?biome=pre-sword&templates= water-pool , pit-patch ').roster)
             .toEqual({ axis: 'templates', names: ['pit-patch', 'water-pool'] });
     });
@@ -671,10 +706,31 @@ describe('?families= / ?templates= — the sub-roster, in the ONE reader', () =>
             .toThrow(/names "kill".*does not offer/s);
         expect(() => readGenerateParams('?biome=pre-sword&templates=wall-segement'))
             .toThrow(/names "wall-segement"/);
-        // ⚠ …and the SAME name is legal in the other biome, which is why this
-        // is validated against the BIOME'S palette and not a global list.
-        expect(readGenerateParams('?biome=post-sword&families=kill').roster)
-            .toEqual({ axis: 'families', names: ['kill'] });
+        /**
+         * ⛓⛓⛓ **THE SECOND HALF LOST ITS SUBJECT AT SLICE 4c, AND IS REPLACED
+         * RATHER THAN DELETED** (trap 312). It read *"…and the SAME name is
+         * legal in the other biome, which is why this is validated against the
+         * BIOME'S palette and not a global list"* — driven with `kill`, a family
+         * only `POST_SWORD_TEMPLATES` held. The retirement emptied
+         * `KILL_LOCK_TEMPLATES`, so **no name is in one roster and not the
+         * other**: the biome is the BOOT ITEMS plus the elements' `needs`.
+         *
+         * ⛔ WHAT SURVIVES IS THE MECHANISM, and it is still worth a gate: the
+         * validation takes the BIOME'S OWN palette, so a name is adjudicated
+         * against the roster the run will actually draw from. Driven by asking
+         * both biomes about a RETIRED name and getting each palette's own
+         * sentence — which a global list could not produce.
+         */
+        expect(() => readGenerateParams('?biome=post-sword&families=kill'))
+            .toThrow(/names "kill".*post-sword.*does not offer/s);
+        expect(() => readGenerateParams('?biome=pre-sword&families=kill'))
+            .toThrow(/names "kill".*pre-sword.*does not offer/s);
+        // ⛓ …and a name BOTH hold is accepted by both, which is the other side
+        // of the same claim now that the two rosters agree.
+        for (const biome of ['pre-sword', 'post-sword']) {
+            expect(readGenerateParams(`?biome=${biome}&families=pit`).roster)
+                .toEqual({ axis: 'families', names: ['pit'] });
+        }
     });
 
     it('⛔ REFUSES an EMPTY value rather than reading it as absent', () => {
@@ -687,7 +743,7 @@ describe('writeGenerateParams — the sub-roster travels, and refuses what the r
     const bounds = {
         obstacleTarget: 2, triesPerStep: 5, saturationK: 2, anchorTriesPerCandidate: 4,
     };
-    const roster = { axis: 'families', names: ['water', 'weigh'] };
+    const roster = { axis: 'families', names: ['pit', 'water'] };
 
     it('writes the axis it was given and the reader reads it back', () => {
         const search = writeGenerateParams('?source=generate', {
@@ -749,24 +805,28 @@ describe('writeGenerateParams — the sub-roster travels, and refuses what the r
 
 describe('generateStep under a restriction — the SAME loop, a smaller roster', () => {
     /**
-     * ⛓ THE SUBJECT, MEASURED (the same one `procgenPalette.test.js` drives
-     * end to end): pre-sword seed 3 at target 2 keeps `pit-patch` and
-     * `wall-gap-block` unrestricted, and `water-pool` + `wall-gap-lock-weigh`
-     * under `families:water,weigh`. ⛓ RE-MEASURED at arc 3 slice 1 — the
-     * unrestricted half moved when `arrow-lane` left the roster; seed 3 stays
-     * disjoint, so the subject did not. ⛔ The two kept lists are DISJOINT, which
-     * is what makes a restriction the loop ignored visible here rather than
-     * only in a hash.
+     * ⛓ THE SUBJECT, MEASURED. ⛓⛓ RE-MEASURED AT ARC 3 SLICE 4c: `weigh` left
+     * the roster with its template, so the restriction is `families:pit,water`
+     * now, and seed 3 stopped discriminating (restricted and unrestricted both
+     * keep two water pools — the same level, so "kept ⊆ restriction" would pass
+     * vacuously).
+     *
+     * RE-SCANNED over seeds 1..12 at target 2: eight discriminate and
+     * **seed 8's two kept lists are FULLY DISJOINT — `water-pool`+`water-pool`
+     * restricted against `wall-segment`+`wall-segment` whole** — which is the
+     * strongest form of the property this block wants and the reason it is
+     * taken. ⛔ Disjoint is what makes a restriction the loop ignored visible
+     * here rather than only in a hash.
      */
-    const ROSTER = { axis: 'families', names: ['water', 'weigh'] };
+    const ROSTER = { axis: 'families', names: ['pit', 'water'] };
     const at = (roster) => generateStep({
-        seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster,
+        seed: 8, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster,
     });
 
     it('the state carries the roster and the DERIVED palette name', () => {
         const s = at(ROSTER);
         expect(s.roster).toEqual(ROSTER);
-        expect(s.palette.name).toBe('pre-sword[families:water,weigh]');
+        expect(s.palette.name).toBe('pre-sword[families:pit,water]');
         expect(s.summary.palette).toBe(s.palette.name);
         expect(at(null).roster).toBe(null);
         expect(at(null).palette.name).toBe('pre-sword');
@@ -789,7 +849,7 @@ describe('generateStep under a restriction — the SAME loop, a smaller roster',
     });
 
     it('`describeState` NAMES the roster the run drew from', () => {
-        expect(describeState(at(ROSTER))).toMatch(/palette: pre-sword\[families:water,weigh\]/);
+        expect(describeState(at(ROSTER))).toMatch(/palette: pre-sword\[families:pit,water\]/);
         expect(describeState(at(null))).toMatch(/palette: pre-sword \(the WHOLE roster/);
     });
 
@@ -798,19 +858,22 @@ describe('generateStep under a restriction — the SAME loop, a smaller roster',
     });
 
     it('the SKELETON is the same room under a restriction — it holds no template', () => {
-        const a = generateStep({ seed: 3, biome: 'pre-sword', step: 0, roster: ROSTER });
-        const b = generateStep({ seed: 3, biome: 'pre-sword', step: 0 });
+        const a = generateStep({ seed: 8, biome: 'pre-sword', step: 0, roster: ROSTER });
+        const b = generateStep({ seed: 8, biome: 'pre-sword', step: 0 });
         expect(json(a.record)).toBe(json(b.record));
         // ⚠ …and it still SAYS which roster it would draw from, because the
         // next press is the one that spends it.
-        expect(a.palette.name).toBe('pre-sword[families:water,weigh]');
+        expect(a.palette.name).toBe('pre-sword[families:pit,water]');
     });
 });
 
 describe('agreementWithPayload — the roster is an IDENTITY field', () => {
-    const ROSTER = { axis: 'families', names: ['water', 'weigh'] };
+    // ⛓ SLICE 4c: seed 3 -> 8, the same re-pick as the block above and for the
+    // same reason — at seed 3 the restricted and whole runs now produce the
+    // SAME level, so `level` could not appear as a difference.
+    const ROSTER = { axis: 'families', names: ['pit', 'water'] };
     const state = generateStep({
-        seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster: ROSTER,
+        seed: 8, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 }, roster: ROSTER,
     });
     const payloadOf = (s) => ({
         seed: s.seed, biome: s.biome, roster: s.roster, level: s.record, trace: s.trace,
@@ -828,7 +891,7 @@ describe('agreementWithPayload — the roster is an IDENTITY field', () => {
      */
     it('names `roster` when the page regenerated under a different one', () => {
         const whole = generateStep({
-            seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
+            seed: 8, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
         });
         const out = agreementWithPayload(payloadOf(state), whole);
         expect(out.agrees).toBe(false);
@@ -843,7 +906,7 @@ describe('agreementWithPayload — the roster is an IDENTITY field', () => {
      */
     it('an OLD payload with no `roster` field agrees with an unrestricted run', () => {
         const whole = generateStep({
-            seed: 3, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
+            seed: 8, biome: 'pre-sword', step: 2, bounds: { obstacleTarget: 2 },
         });
         const old = payloadOf(whole);
         delete old.roster;
@@ -857,23 +920,23 @@ describe('agreementWithPayload — the roster is an IDENTITY field', () => {
  *
  * ⛓ THE SUBJECT IS CHOSEN BY MEASUREMENT, not by taste
  * (`sweep-seedling-directed-bound.mjs`, and the probe recorded in kickoff
- * §12): `wall-gap-block(ori=v,gap=1)` on the pre-sword SKELETON at seed 6
+ * §12): `wall-segment(ori=v,len=4)` on the pre-sword SKELETON at seed 6
  * SOLVES at anchor 1 and DISCHARGES only at anchor 6 of 6.
  *
  * ⚠ IT DISCRIMINATES ON BOTH CLAIMS AT ONCE, which is why it is this one:
  *   · the POLICY claim — first-SOLVED keeps anchor 1, prefer-discharge keeps
  *     anchor 6, so a build that ignored discharge lands somewhere else;
- *   · the PARAMS claim — `ori=v,gap=1` differs from the base's DEFAULT
- *     instance (`ori=h,gap=4`) in BOTH parameters, so a URL that dropped its
+ *   · the PARAMS claim — `ori=v,len=4` differs from the base's DEFAULT
+ *     instance (`ori=h,len=3`) in BOTH parameters, so a URL that dropped its
  *     params rebuilds a visibly different instance. ⛔ Trap 235's shape: a
  *     subject that agreed with its own fallback could not fail.
  */
 const SUBJECT = Object.freeze({ seed: 6, biome: 'pre-sword', step: 0 });
 const DIRECTIVE = Object.freeze({
-    template: 'wall-gap-block',
-    params: Object.freeze({ ori: 'v', gap: 1 }),
+    template: 'wall-segment',
+    params: Object.freeze({ ori: 'v', len: 4 }),
     anchor: null,
-    keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+    keepPolicy: DIRECTIVE_KEEP_POLICY,
     bound: DIRECTED_ANCHOR_TRIES,
 });
 
@@ -881,20 +944,20 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     const palette = paletteFor('pre-sword');
 
     it('round-trips a directive through parse and format', () => {
-        const text = 'wall-gap-block(ori=v,gap=1)@12d';
+        const text = 'wall-segment(ori=v,len=4)@12';
         const [d] = parseDirectives(text, palette);
-        expect(d.template).toBe('wall-gap-block');
-        expect(d.params).toEqual({ ori: 'v', gap: 1 });
-        expect(d.keepPolicy).toBe(KEEP_POLICY.PREFER_DISCHARGE);
+        expect(d.template).toBe('wall-segment');
+        expect(d.params).toEqual({ ori: 'v', len: 4 });
+        expect(d.keepPolicy).toBe(DIRECTIVE_KEEP_POLICY);
         expect(d.bound).toBe(12);
         expect(d.anchor).toBeNull();
         expect(formatDirectives([d], palette)).toBe(text);
     });
 
-    it('⚠ TYPES COME FROM THE SCHEMA: `gap=1` is the NUMBER 1, `ori=v` a string', () => {
-        const [d] = parseDirectives('wall-gap-block(ori=v,gap=1)@12d', palette);
-        expect(d.params.gap).toBe(1);
-        expect(d.params.gap).not.toBe('1');
+    it('⚠ TYPES COME FROM THE SCHEMA: `len=4` is the NUMBER 4, `ori=v` a string', () => {
+        const [d] = parseDirectives('wall-segment(ori=v,len=4)@12', palette);
+        expect(d.params.len).toBe(4);
+        expect(d.params.len).not.toBe('4');
         expect(d.params.ori).toBe('v');
     });
 
@@ -918,21 +981,21 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
                 build: () => ({ footprint: [{ dx: 0, dy: 0 }], terrain: [], entities: [] }),
             })],
         };
-        const [d] = parseDirectives('bare@12d', soloPalette);
+        const [d] = parseDirectives('bare@12', soloPalette);
         expect(d.template).toBe('bare');
         expect(d.params).toEqual({});
-        expect(formatDirectives([d], soloPalette)).toBe('bare@12d');
+        expect(formatDirectives([d], soloPalette)).toBe('bare@12');
         // ⛔ and the SHIPPED roster no longer holds one, which is why the
         // fixture is here rather than a palette row.
         expect(palette.templates.some((t) => t.params.length === 0)).toBe(false);
     });
 
     it('carries several directives in ORDER', () => {
-        // ⛓ ARC 3 SLICE 1: the middle member was `arrow-lane@4s`; it left with
+        // ⛓ ARC 3 SLICE 1: the middle member was `arrow-lane@4`; it left with
         // ⚖ design ruling 9, so a shipped template with a parameter clause
         // takes its place. The claim — ORDER survives a round trip — is
-        // unchanged, and `@4s` still rides on the middle one.
-        const text = 'water-pool(w=1,h=3)@12d;pit-patch(w=2,h=1)@4s;wall-segment(ori=v,len=5)@12d';
+        // unchanged, and `@4` still rides on the middle one.
+        const text = 'water-pool(w=1,h=3)@12;pit-patch(w=2,h=1)@4;wall-segment(ori=v,len=5)@12';
         const ds = parseDirectives(text, palette);
         expect(ds.map((d) => d.template))
             .toEqual(['water-pool', 'pit-patch', 'wall-segment']);
@@ -942,7 +1005,7 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     });
 
     it('⛓ SLICE 6\'s ANCHOR SUFFIX already parses and round-trips', () => {
-        const text = 'wall-segment(ori=h,len=2)@1s!4,6';
+        const text = 'wall-segment(ori=h,len=2)@1!4,6';
         const [d] = parseDirectives(text, palette);
         expect(d.anchor).toEqual({ tx: 4, ty: 6 });
         expect(formatDirectives([d], palette)).toBe(text);
@@ -953,29 +1016,31 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
             // ⛔ The fixed point depends on this: a value DRAWN by an "any"
             // choice and one typed into the form must spell identically, or the
             // second load of a copied link would rewrite the bar.
-            const backwards = { ...DIRECTIVE, params: { gap: 1, ori: 'v' } };
+            const backwards = { ...DIRECTIVE, params: { len: 4, ori: 'v' } };
             expect(formatDirectives([backwards], palette))
-                .toBe('wall-gap-block(ori=v,gap=1)@12d');
+                .toBe('wall-segment(ori=v,len=4)@12');
         });
 
     describe('every refusal is BY NAME, and they are four different mistakes', () => {
         it('an unknown TEMPLATE names it and lists the roster', () => {
-            expect(() => parseDirectives('wall-gap-blork(ori=v)@12d', palette))
-                .toThrow(/names template "wall-gap-blork", which palette/);
+            // ⛓ SLICE 4c: the RETIRED `wall-gap-block` is the realistic unknown
+            // now — somebody's saved link — and it exercises the same refusal.
+            expect(() => parseDirectives('wall-gap-block(ori=v,gap=1)@12', palette))
+                .toThrow(/names template "wall-gap-block", which palette/);
         });
         it('an unknown PARAMETER names it and lists what the template declares', () => {
-            expect(() => parseDirectives('wall-gap-block(orientation=v)@12d', palette))
+            expect(() => parseDirectives('wall-segment(orientation=v)@12', palette))
                 .toThrow(/has no parameter "orientation"/);
         });
         it('a value OUTSIDE the declared domain refuses BEFORE any solve', () => {
-            expect(() => parseDirectives('wall-gap-block(ori=diagonal,gap=1)@12d', palette))
+            expect(() => parseDirectives('wall-segment(ori=diagonal,len=4)@12', palette))
                 .toThrow(/not in its declared domain \[h, v\]/);
-            expect(() => parseDirectives('wall-gap-block(ori=v,gap=99)@12d', palette))
-                .toThrow(/not in its declared domain \[0, 1, 2, 3, 4, 5, 6, 7\]/);
+            expect(() => parseDirectives('wall-segment(ori=v,len=99)@12', palette))
+                .toThrow(/not in its declared domain \[2, 3, 4, 5\]/);
         });
         it('a MALFORMED directive quotes it and states the spelling', () => {
-            for (const bad of ['wall-gap-block', 'wall-gap-block@12', 'wall-gap-block@12x',
-                'wall-gap-block(ori=v@12d', '@12d']) {
+            for (const bad of ['wall-segment', 'wall-segment@12x', 'wall-segment@',
+                'wall-segment(ori=v@12', '@12']) {
                 expect(() => parseDirectives(bad, palette)).toThrow(/is not a directive/);
             }
         });
@@ -983,7 +1048,7 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
             expect(() => parseDirectives('', palette)).toThrow(/names nothing/);
         });
         it('a duplicated parameter refuses — two values for one setting', () => {
-            expect(() => parseDirectives('wall-gap-block(ori=v,ori=h)@12d', palette))
+            expect(() => parseDirectives('wall-segment(ori=v,ori=h)@12', palette))
                 .toThrow(/names parameter "ori" twice/);
         });
     });
@@ -991,11 +1056,11 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     describe('⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6\'s law)', () => {
         it('a directive MISSING a parameter value REFUSES, never writes the default', () => {
             expect(() => formatDirectives([{ ...DIRECTIVE, params: { ori: 'v' } }], palette))
-                .toThrow(/carries no value for "gap"/);
+                .toThrow(/carries no value for "len"/);
         });
         it('a value outside the domain refuses on the way OUT too', () => {
             expect(() => formatDirectives(
-                [{ ...DIRECTIVE, params: { ori: 'v', gap: 42 } }], palette,
+                [{ ...DIRECTIVE, params: { ori: 'v', len: 42 } }], palette,
             )).toThrow(/outside its declared domain/);
         });
         it('an unknown template refuses on the way OUT too', () => {
@@ -1016,11 +1081,11 @@ describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
      */
     it('⛔ the reader REFUSES ?directed= by name, and names the way in', () => {
         expect(() => readGenerateParams(
-            '?source=generate&seed=6&biome=pre-sword&directed=wall-gap-block(ori=v,gap=1)@12d',
+            '?source=generate&seed=6&biome=pre-sword&directed=wall-segment(ori=v,len=4)@12',
         )).toThrow(/no longer a URL parameter/);
-        expect(() => readGenerateParams('?source=generate&directed=x@1d'))
+        expect(() => readGenerateParams('?source=generate&directed=x@1'))
             .toThrow(/directives ride the PAYLOAD/);
-        expect(() => readGenerateParams('?source=generate&directed=x@1d'))
+        expect(() => readGenerateParams('?source=generate&directed=x@1'))
             .toThrow(/the Seedling page/);
     });
 
@@ -1034,12 +1099,12 @@ describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
             .toThrow(/no longer a URL parameter/);
         // ⛔ and it refuses BEFORE any other parameter is adjudicated: a link
         // carrying both a stale directive and a bad skeleton says THIS first.
-        expect(() => readGenerateParams('?source=generate&directed=x@1d&skeleton=corridor'))
+        expect(() => readGenerateParams('?source=generate&directed=x@1&skeleton=corridor'))
             .toThrow(/no longer a URL parameter/);
     });
 
     it('⛔ the WRITER never emits it, and DROPS one it inherited', () => {
-        const q = writeGenerateParams('directed=wall-gap-block(ori=v,gap=1)@12d', {
+        const q = writeGenerateParams('directed=wall-segment(ori=v,len=4)@12', {
             seed: 1, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
         });
         expect(new URLSearchParams(q).get('directed')).toBeNull();
@@ -1087,73 +1152,75 @@ describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
 
 describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () => {
     /**
-     * ⛓⛓⛓ **ARC 3 SLICE 2 EMPTIED THIS ROW'S SUBJECT CLASS, AND THE MEASUREMENT
-     * IS THE NEW CLAIM** (trap 312 — replace a vacated claim with the sentence
-     * that still has content).
+     * ⛓⛓⛓ **A ROW STOOD HERE AND ITS POLICY RETIRED** — *"every KEPT door
+     * DISCHARGES — the merely-SOLVES class is empty under the cut law"* (arc 3,
+     * slice 4c; ⚖ user, 2026-08-17).
      *
-     * This row used to assert that `PREFER_DISCHARGE` walks PAST an anchor that
-     * merely SOLVES to reach one that DISCHARGES, with `FIRST_SOLVED` as the
-     * control that stops at the first. Under the DOOR LAW there is no such
-     * anchor to walk past, and the reason is the law itself: **an anchor where
-     * the door SOLVED without discharging was a door the walk went ROUND** — a
-     * wall that cuts nothing, kept because the room still solves. That is
-     * exactly the class ⚖ ruling 17 calls DECORATION, and the cut law removes
-     * it from the LEGAL set before any solve.
+     * THE LINEAGE, because it is the arc's argument twice over. The row was
+     * originally *"`PREFER_DISCHARGE` walks PAST an anchor that merely SOLVES to
+     * reach one that DISCHARGES"*. Arc-3 slice 2's DOOR LAW emptied that class
+     * for a door family and MEASURED it — over seeds 1..12 x every
+     * instantiation of the two weigh/shove doors x EVERY legal anchor, placed
+     * alone and solved: **338 SOLVED-and-DISCHARGED, 0 SOLVED-without-
+     * discharging, 80 refused, 0 threw** — because an anchor where a door SOLVED
+     * without discharging was a door the walk went ROUND, which is ⚖ ruling 17's
+     * DECORATION and is refused before any solve. The row was rewritten to
+     * assert the two facts that survived: the directive discharges, and the
+     * control AGREES.
      *
-     * ⛓ MEASURED rather than argued, over seeds 1..12 × every instantiation of
-     * `wall-gap-block` and `wall-gap-lock-weigh` × EVERY legal anchor, each
-     * placed alone and solved: **338 SOLVED-and-DISCHARGED, 0 SOLVED-without-
-     * discharging, 80 refused, 0 threw.** The solved-only class is EMPTY for a
-     * door family. So the two policies cannot disagree here, and a row that
-     * asserted they do would be asserting a build defect.
+     * ⛔ SLICE 4c EMPTIES IT A SECOND TIME AND STRUCTURALLY. The three families
+     * with a VERB (`shove`, `weigh`, `kill`) retired into ELEMENTS, so
+     * `dischargesVerb` answers `null` — `NO_VERB` — for EVERY row either roster
+     * holds. There is no directive that can discharge anything, and
+     * `PREFER_DISCHARGE` is gone from Seedling entirely: `applyDirective` runs
+     * every directive under `first-solved` and REFUSES a spec that names a
+     * policy. A row that drove the preference now would be driving a value the
+     * codec cannot spell.
      *
-     * ⛔ THE POLICY IS NOT RETIRED and this row does not pretend it is dead
-     * code: `PREFER_DISCHARGE` still decides the walk, `NO_VERB` still has its
-     * own row below, and a family whose clearer is NOT its door (arc 3's
-     * element binding, slices 3+) can re-open the class. What the row asserts
-     * now is the pair of facts that remain TRUE and are worth a gate: the
-     * directive discharges, and the control AGREES — which is a claim about the
-     * law, checked against the same subject.
+     * ⛓ WHAT SURVIVES IT IS THE ROW DIRECTLY BELOW — `NO_VERB` is reported as
+     * `solved-no-verb` rather than as `solved-only` — which was always the
+     * sharper half of the pair, and is now the whole of it.
      */
-    it('⛓⛓ every KEPT door DISCHARGES — the merely-SOLVES class is empty under the cut law',
-        () => {
-            const base = generateStep(SUBJECT);
-            const preferred = applyDirective(base, DIRECTIVE, 0);
-            const [d] = preferred.directives;
-            expect(d.outcome).toBe(ATTEMPT.KEPT);
-            expect(d.keptKind).toBe(KEPT_KIND.DISCHARGED);
 
-            const firstSolved = applyDirective(
-                base, { ...DIRECTIVE, keepPolicy: KEEP_POLICY.FIRST_SOLVED }, 0,
-            );
-            expect(firstSolved.directives[0].outcome).toBe(ATTEMPT.KEPT);
-            // ⛓ THE CONTROL AGREES, and that IS the finding: with no
-            // solved-only anchor to prefer away from, the first solved anchor
-            // is already the discharging one.
-            expect(firstSolved.directives[0].at).toEqual(d.at);
-            expect(firstSolved.directives[0].anchorsWalked).toBe(d.anchorsWalked);
-            expect(preferred.record).toEqual(firstSolved.record);
-
-            /**
-             * ⛔ AND THE NON-VACUITY GUARD THE ROW NOW NEEDS: "the two agree"
-             * would also be true of a build where the directive kept NOTHING.
-             * It kept, it discharged, and it really placed geometry.
-             */
-            expect(d.at).not.toBeNull();
-            expect(preferred.record).not.toEqual(base.record);
-        });
-
-    it('⛔ a template with NO VERB reports `solved-no-verb`, not `solved-only`', () => {
+    /**
+     * ⛓⛓⛓ **RE-STATED AT SLICE 4c, AND THE NEW SENTENCE IS THE HONEST ONE**
+     * (trap 312). The row asserted `keptKind === NO_VERB` — the walk's answer
+     * *"this family has no verb, so first-SOLVED is its whole criterion"*. That
+     * value is produced only under `PREFER_DISCHARGE`, which Seedling retired:
+     * under `FIRST_SOLVED` `walkAnchors` never asks the predicate and
+     * `keptKind` is **`null`**, which `levelGenerator`'s own docblock calls the
+     * answer rather than a missing one — *the walk never asked*.
+     *
+     * ⛔ SO THE CLAIM MOVES TO THE READOUT, where it can still fail: a `null`
+     * `keptKind` must read as *"the keep policy was first-SOLVED, so nothing
+     * asked"* and must NOT read as `solved-only` (a shortfall nobody looked
+     * for) or as `solved-no-verb` (a claim about a family). `describeKeptKind`
+     * is the ONE spelling both pages and both CLIs share, so this is asked of
+     * it directly.
+     */
+    it('⛔ a KEPT directive reports that NOTHING ASKED — not `solved-only`, not '
+        + '`solved-no-verb`', () => {
         const base = generateStep(SUBJECT);
         const out = applyDirective(base, {
             template: 'wall-segment',
             params: { ori: 'h', len: 2 },
             anchor: null,
-            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
             bound: DIRECTED_ANCHOR_TRIES,
         }, 0);
-        expect(out.directives[0].outcome).toBe(ATTEMPT.KEPT);
-        expect(out.directives[0].keptKind).toBe(KEPT_KIND.NO_VERB);
+        const [d] = out.directives;
+        expect(d.outcome).toBe(ATTEMPT.KEPT);
+        expect(d.keptKind).toBeNull();
+        expect(describeKeptKind(d)).toMatch(/the keep policy was first-SOLVED/);
+        expect(describeKeptKind(d)).not.toMatch(/solved-only/);
+        expect(describeKeptKind(d)).not.toMatch(/NO verb to discharge/);
+        // ⛔ …and a spec that NAMES a policy is refused rather than ignored.
+        expect(() => applyDirective(base, {
+            template: 'wall-segment',
+            params: { ori: 'h', len: 2 },
+            anchor: null,
+            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            bound: DIRECTED_ANCHOR_TRIES,
+        }, 0)).toThrow(/Seedling runs every directive under/);
     });
 
     it('⛓ the KEPT instance joins `keptTemplates`, so the PIN UNION sees it', () => {
@@ -1168,7 +1235,7 @@ describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () =
             template: 'water-pool',
             params: { w: 1, h: 1 },
             anchor: null,
-            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            keepPolicy: DIRECTIVE_KEEP_POLICY,
             bound: DIRECTED_ANCHOR_TRIES,
         }, 0);
         expect(out.directives[0].outcome).toBe(ATTEMPT.KEPT);
@@ -1189,19 +1256,29 @@ describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () =
     it('the directive\'s rows are labelled d<n>a<k> and carry the pane\'s row shape', () => {
         /**
          * ⛓⛓ ARC 3 SLICE 2 — THIS ROW NEEDS A SUBJECT THAT WALKS MORE THAN ONE
-         * ANCHOR, and seed 6 stopped being one. The DOOR LAW leaves seed 6 with
-         * exactly ONE legal anchor for this directive ((2,1); its goal at (3,1)
-         * makes every column east of 2 a wall the walk goes round), so the walk
-         * is one row and `d1a2` never exists — the label branch under test would
-         * go undriven while the row still passed everything else.
+         * ANCHOR, and seed 6 stopped being one under the DOOR LAW. Seed 9 at
+         * step 0 took over.
          *
-         * ⛓ RE-SCANNED (pre-sword, `wall-gap-block(ori=v,gap=1)`, seeds 1..40):
-         * **seed 9** keeps six legal anchors and its directed search WALKS 2
-         * before it keeps. ⛔ Its own subject, not the file's `SUBJECT`, for the
-         * click block's reason: seed 6 is what a dozen unrelated rows here are
-         * measured against.
+         * ⛓⛓⛓ **ARC 3 SLICE 4c — AND NO STEP-0 SUBJECT EXISTS ANY MORE.**
+         * RE-SCANNED exhaustively: EVERY instantiation of EVERY remaining
+         * pre-sword template x seeds 1..20, directed onto the bare skeleton —
+         * **not one walk is longer than a single anchor.** That is the
+         * retirement's own consequence and the same finding
+         * `procgenPalette.test.js` records where its unit-level anchor row used
+         * to be: the three families that could SEAL a bare room were the door
+         * templates, and `wall-segment`/`water-pool`/`pit-patch` are decoration
+         * — a bare 10x10 room solves around all three at every anchor.
+         *
+         * ⛔ SO THE SUBJECT MOVES TO A ROOM THAT ALREADY HOLDS OBSTACLES, which
+         * is where the bound was ever spent for real. RE-SCANNED at step 3 and
+         * step 5 over the same grid: **step 3, `wall-segment(ori=v,len=4)`,
+         * seed 2 walks THREE rows — `d1a1` REVERTED, `d1a2` REVERTED, `d1a3`
+         * KEPT** — the richest of the five hits and the only one that ends in a
+         * KEEP, which this row needs for its "exactly ONE says KEPT" assertion.
          */
-        const base = generateStep({ seed: 9, biome: 'pre-sword', step: 0 });
+        const base = generateStep({
+            seed: 2, biome: 'pre-sword', step: 3, bounds: { obstacleTarget: 3 },
+        });
         const out = applyDirective(base, DIRECTIVE, 0);
         const rows = generationRows(out.trace).filter((r) => r.directive === 1);
         expect(rows.length).toBeGreaterThan(1);
@@ -1303,7 +1380,7 @@ describe('⛓⛓⛓ REPRODUCTION — a copied identity rebuilds the whole constr
          */
         const pressed = applyDirective(generateStep(SUBJECT), DIRECTIVE, 0);
         const defaulted = applyDirective(generateStep(SUBJECT), {
-            ...DIRECTIVE, params: { ori: 'h', gap: 4 },
+            ...DIRECTIVE, params: { ori: 'h', len: 3 },
         }, 0);
         expect(defaulted.record).not.toEqual(pressed.record);
     });
@@ -1320,10 +1397,10 @@ describe('⛓⛓⛓ REPRODUCTION — a copied identity rebuilds the whole constr
          * nothing on the page able to say why.
          */
         const base = generateStep(SUBJECT);
-        // `gap` is left to be DRAWN; `ori` is named.
+        // `len` is left to be DRAWN; `ori` is named.
         const drawn = applyDirective(base, { ...DIRECTIVE, params: { ori: 'v' } }, 0);
         const rec = drawn.directives[0];
-        expect(Object.keys(rec.params).sort()).toEqual(['gap', 'ori']);
+        expect(Object.keys(rec.params).sort()).toEqual(['len', 'ori']);
         // …and replaying the RECORDED values reproduces it byte for byte.
         const replayed = applyDirective(base, { ...DIRECTIVE, params: rec.params }, 0);
         expect(replayed.record).toEqual(drawn.record);
@@ -1449,8 +1526,8 @@ describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound
     const palette = paletteFor('pre-sword');
 
     it('round-trips the anchor at bound 1 under BOTH policies', () => {
-        for (const text of ['wall-segment(ori=h,len=2)@1s!4,6',
-            'wall-gap-block(ori=v,gap=1)@1d!7,1']) {
+        for (const text of ['wall-segment(ori=h,len=2)@1!4,6',
+            'wall-segment(ori=v,len=4)@1!7,1']) {
             const [d] = parseDirectives(text, palette);
             expect(d.anchor).toEqual({ tx: Number(text.split('!')[1].split(',')[0]),
                 ty: Number(text.split('!')[1].split(',')[1]) });
@@ -1461,7 +1538,7 @@ describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound
 
     it('⛔ an explicit anchor beside a bound above 1 REFUSES — in the reader AND the writer',
         () => {
-            expect(() => parseDirectives('wall-gap-block(ori=v,gap=1)@12d!7,1', palette))
+            expect(() => parseDirectives('wall-segment(ori=v,len=4)@12!7,1', palette))
                 .toThrow(/explicit cell is a walk of ONE cell/);
             expect(() => formatDirectives(
                 [{ ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 12 }], palette,
@@ -1479,7 +1556,7 @@ describe('⛓⛓⛓ `?directed=`\'s `!tx,ty` — the CLICKED cell, and its bound
         () => {
             const clicked = { ...DIRECTIVE, anchor: { tx: 7, ty: 1 }, bound: 1 };
             const text = formatDirectives([clicked], palette);
-            expect(text).toBe('wall-gap-block(ori=v,gap=1)@1d!7,1');
+            expect(text).toBe('wall-segment(ori=v,len=4)@1!7,1');
             expect(parseDirectives(text, palette)[0].anchor).toEqual({ tx: 7, ty: 1 });
             // ⛔ AND THE URL IS NOT A CHANNEL FOR IT — the writer emits nothing
             // and the reader refuses the key.
@@ -1505,30 +1582,27 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
      * subject cannot carry this block at all — the clicked cell would BE the
      * searched cell, and trap 235's whole point is that it must not be.
      *
-     * ⛓ RE-SCANNED (pre-sword, `wall-gap-block(ori=v,gap=1)`, seeds 1..40,
-     * every interior cell through `legalAt`): seeds **7 and 9** carry six legal
-     * anchors each — the same count seed 6 used to have. **Seed 9** is the
-     * subject: goal (8,5), legal at (2,1) (3,1) (4,1) (5,1) (6,1) (7,1), and a
-     * SEARCHED directive lands on **(4,1)**.
+     * ⛓⛓ RE-SCANNED AT SLICE 4c, and the block keeps SEED 9 while every number
+     * in it moves. The directive is `wall-segment(ori=v,len=4)` now (the door
+     * template it used retired), and a wall segment has no DOOR LAW narrowing
+     * its legal set — so seed 9 offers **13 legal anchors**, not six.
      *
-     * ⛓ THE CLICK MOVES (7,1) → **(6,1)**, and the reason is a SECOND property
-     * this block needs that a legality scan alone cannot see: the clicked cell
-     * must also KEEP. Driven, all six anchors clicked: (2,1) (3,1) (4,1) (5,1)
-     * (6,1) all KEEP and DISCHARGE, and **(7,1) REVERTS** — the oracle refuses
-     * the room, which is a working loop and not a bad cell, but it is not the
-     * subject a row asserting `KEPT` can use. (6,1) is the last of the five that
-     * keep, so it is the furthest from the searched answer: still not (4,1), not
-     * the start (1,1), not the goal (8,5).
+     * MEASURED, all 13 clicked: **(1,5) REVERTS** — the oracle refuses that
+     * room, which is a working loop and not a bad cell, but it is not a subject
+     * a row asserting `KEPT` can use — and the other twelve KEEP. A SEARCHED
+     * directive lands on **(3,5)**. ⛔ The CLICK is **(8,4)**: it keeps, it is
+     * not where the search goes, it is not the start (1,1) and it is not the
+     * goal — seed 9's goal is **(2,6)** under the new draw.
      *
      * ⚠ THE BLOCK KEEPS ITS OWN SUBJECT rather than moving the file's `SUBJECT`:
      * seed 6 is what a dozen unrelated rows in this file are measured against,
      * and moving it would re-pick every one of them to fix two.
      */
     const CLICK_SUBJECT = Object.freeze({ seed: 9, biome: 'pre-sword', step: 0 });
-    const CLICK = Object.freeze({ tx: 6, ty: 1 });
+    const CLICK = Object.freeze({ tx: 8, ty: 4 });
     const clicked = Object.freeze({ ...DIRECTIVE, anchor: CLICK, bound: 1 });
 
-    it('⛓ the SUBJECT\'s own properties first — (6,1) is legal and is NOT where a search goes',
+    it('⛓ the SUBJECT\'s own properties first — (8,4) is legal and is NOT where a search goes',
         () => {
             const base = generateStep(CLICK_SUBJECT);
             const template = paletteFor(CLICK_SUBJECT.biome).templates
@@ -1539,9 +1613,14 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
             // ⛓ ARC 3 SLICE 2 — the property the re-pick was FOR, asserted so a
             // future law that narrows the legal set again reds HERE rather than
             // three rows down: the clicked cell is one of SEVERAL, not the only.
+            // ⛓ ARC 3 SLICE 2 -> 4c: 6 -> 13. The subject is a `wall-segment`
+            // now and no DOOR LAW narrows its legal set; the property the
+            // assertion is FOR is unchanged — the clicked cell is one of
+            // SEVERAL, not the only one — so a future law that narrows the set
+            // again still reds HERE rather than three rows down.
             expect(base.model.interiorCells(base.record)
                 .filter((c) => base.model.legalAt(base.record, template, c.tx, c.ty)))
-                .toHaveLength(6);
+                .toHaveLength(13);
             const searched = applyDirective(base, DIRECTIVE, 0).directives[0];
             expect(searched.at).not.toEqual(CLICK);
         });
@@ -1571,12 +1650,12 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
     it('⛔ an ILLEGAL cell refuses BY NAME, the record does NOT move, and no solve is spent',
         () => {
             const base = generateStep(CLICK_SUBJECT);
-            // ⛓ (8,5) is seed 9's GOAL cell — measured, and asserted here so
+            // ⛓ (2,6) is seed 9's GOAL cell — measured, and asserted here so
             // this is the goal class rather than whatever else that cell might
-            // be. (Was (3,1) on seed 6, before the door law re-picked the
-            // subject; the CLASS the row grades is unchanged.)
-            expect(base.model.goalCell).toEqual({ tx: 8, ty: 5 });
-            const out = applyDirective(base, { ...clicked, anchor: { tx: 8, ty: 5 } }, 0);
+            // be. (Was (3,1) on seed 6 and (8,5) before slice 4c's goal draw;
+            // the CLASS the row grades is unchanged.)
+            expect(base.model.goalCell).toEqual({ tx: 2, ty: 6 });
+            const out = applyDirective(base, { ...clicked, anchor: { tx: 2, ty: 6 } }, 0);
             const [d] = out.directives;
             expect(d.outcome).toBe(ATTEMPT.ILLEGAL_PLACEMENT);
             expect(d.at).toBeNull();
@@ -1593,8 +1672,8 @@ describe('⛓⛓⛓ VERB 2 AT A CLICKED CELL — the template lands THERE, or re
             const rows = out.trace.filter((r) => r.directive === 1);
             expect(rows).toHaveLength(1);
             expect(rows[0].reasonText)
-                .toBe(base.model.refusalAt(base.record, template, 8, 5));
-            expect(rows[0].reasonText).toMatch(/\(8,5\) is the GOAL cell/);
+                .toBe(base.model.refusalAt(base.record, template, 2, 6));
+            expect(rows[0].reasonText).toMatch(/\(2,6\) is the GOAL cell/);
             expect(rows[0].verdict).toBeNull();
         });
 
@@ -1984,15 +2063,15 @@ describe('⛓⛓⛓ THE ORDERING RULE — edits come AFTER all directives', () =
     it('applyDirective REFUSES on an edited state, and names the way out', () => {
         const st = editStates(generateStep({ seed: 6, biome: 'pre-sword', step: 0 }),
             [{ op: 'paint', tx: 5, ty: 5, terrain: 'wall' }]);
-        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+        expect(() => applyDirective(st, { template: 'wall-segment', params: {} }, 0))
             .toThrow(/UNDO the edits, or download the payload first/);
-        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+        expect(() => applyDirective(st, { template: 'wall-segment', params: {} }, 0))
             .toThrow(/ladder → directives → edits/);
     });
 
     it('…and the same directive on the UNEDITED state is fine', () => {
         const st = generateStep({ seed: 6, biome: 'pre-sword', step: 0 });
-        expect(() => applyDirective(st, { template: 'wall-gap-block', params: {} }, 0))
+        expect(() => applyDirective(st, { template: 'wall-segment', params: {} }, 0))
             .not.toThrow();
     });
 });

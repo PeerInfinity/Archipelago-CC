@@ -303,18 +303,38 @@ describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own
  * end to end, through `seedlingSeam` — the one place that answers *"is this
  * gadget certified"* for both callers.
  *
- * ⛔ THE SEED IS A MEASURED PLACING ONE, not a lucky one: `winding` seed 7 is the
- * example the slice-3 as-built published as a PLACED-and-REFUSED gadget (§10.15),
- * so this row is the same room reading the opposite verdict.
+ * ⛔ THE SEED IS A MEASURED PLACING ONE, not a lucky one.
+ *
+ * ⛓⛓⛓ **RE-PICKED AT ARC 3 SLICE 4c, BY THE RULE 4a WROTE DOWN** (its §13.0.5
+ * stale-subject warning: *re-pick by the same rule that chose them — the
+ * CHEAPEST CERTIFYING CELL under the NEW draw, measured, not guessed*). The old
+ * subject was `winding` seed 7 — the slice-3 as-built's own PLACED-and-REFUSED
+ * example (§10.15) — and the GOAL DRAW (`manhattan >= 3`) moved it: the guard no
+ * longer PLACES there at all, so the row read `certification === null`.
+ *
+ * RE-SCANNED: `rooms`/`rooms;minRoom=4`/`winding`/`branchy`/`empty` x seeds
+ * 1..12 x `len` in {2,3} for the cells that PLACE (fifteen), then each through
+ * the seam with its solve, timed:
+ *
+ *   **branchy/12/len3  282 ms  CERTIFIED**   <- taken (cheapest certifying)
+ *   empty/12/len2      298 ms  CERTIFIED
+ *   rooms;minRoom=4/12/len2 313 ms CERTIFIED · winding/12/len3 335 ms CERTIFIED
+ *   branchy/9/len3 403 · rooms;minRoom=4/9/len3 446 · rooms;minRoom=4/7/len2 458
+ *   winding/9/len3 501 · winding/3/len2 509 · branchy/3/len2 441
+ *   rooms/9/len3 681 · rooms/7/len2 810
+ *   **rooms/12/len2 215 ms REFUSED** · branchy/7/len2 558 ms REFUSED
+ *
+ * ⚠ 13 of the 15 placing cells CERTIFY, where slice 3 could certify none — that
+ * is S1's capability showing up in a re-pick rather than in a yield table.
  */
 describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', () => {
-    it('winding seed 7, `guard;len=2`: certified, `[weigh, hold, collect]`, and the '
+    it('branchy seed 12, `guard;len=3`: certified, `[weigh, hold, collect]`, and the '
         + 'LIFTED CLAIM is true', () => {
         const seam = seedlingSeam({
-            seed: 7,
+            seed: 12,
             items: PRE_SWORD_ITEMS,
-            skeleton: parseSkeleton('winding', { simulator: false, substrate: 'certify test' }),
-            elements: parseElementSpec('guard;len=2'),
+            skeleton: parseSkeleton('branchy', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=3'),
         });
         const c = seam.certification;
         expect(c).not.toBeNull();
@@ -331,21 +351,27 @@ describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', ()
         expect(c.heldAtDoor).toBe(true);
         // ⛓ and the element really SHIPPED: a certified gadget is not dropped.
         expect(seam.model.elements.placed).toHaveLength(1);
-        expect(seam.model.elements.placed[0].door).toEqual({ x: 8, y: 7 });
+        expect(seam.model.elements.placed[0].door).toEqual({ x: 7, y: 2 });
     });
 
     /**
-     * ⛔ THE CONTROL FOR THE ROW ABOVE: the arc's OWN refusing cell. `rooms`
-     * seed 4 places a gadget and its certification solve refuses — and the
-     * `gap` it reports is **not** an opener-chain one, which is the whole reason
-     * slice 3's constant label had to become a classification. A build that
-     * labelled every refusal `the-solver-does-not-chain` would print the same
-     * string here and be wrong about it.
+     * ⛔ THE CONTROL FOR THE ROW ABOVE: the arc's OWN refusing cell. It places a
+     * gadget and its certification solve refuses — and the `gap` it reports is
+     * **not** an opener-chain one, which is the whole reason slice 3's constant
+     * label had to become a classification. A build that labelled every refusal
+     * `the-solver-does-not-chain` would print the same string here and be wrong
+     * about it.
+     *
+     * ⛓⛓ RE-PICKED AT SLICE 4c FROM THE SAME SCAN AS THE ROW ABOVE. `rooms` seed
+     * 4 no longer places; **`rooms` seed 12 at `len=2` is the cheapest of the
+     * two refusing cells (215 ms vs `branchy`/7/len2's 558)** and it refuses
+     * with the SAME gap class the row has always asserted, which is what makes
+     * it a replacement rather than a different claim.
      */
-    it('rooms seed 4, `guard;len=2`: still REFUSES — and the gap is classified from '
+    it('rooms seed 12, `guard;len=2`: still REFUSES — and the gap is classified from '
         + 'the solve\'s own obstacle, not from a constant', () => {
         const seam = seedlingSeam({
-            seed: 4,
+            seed: 12,
             items: PRE_SWORD_ITEMS,
             skeleton: parseSkeleton('rooms', { simulator: false, substrate: 'certify test' }),
             elements: parseElementSpec('guard;len=2'),
@@ -353,7 +379,7 @@ describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', ()
         const c = seam.certification;
         expect(c.certified).toBe(false);
         expect(c.gap).toBe('the-goal-approach-is-blocked');
-        expect(c.obstacle).toMatchObject({ kind: 'pickup', id: 'torchpickup@96,32' });
+        expect(c.obstacle).toMatchObject({ kind: 'pickup', id: 'torchpickup@32,128' });
         expect(c.heldAtDoor).toBeNull();
         // ⛓ …and the geometry SURVIVES the drop, which is what keeps the census
         // numbers comparable across a refusal.

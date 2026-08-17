@@ -57,7 +57,7 @@
 
 import { DEFAULT_BUDGET, assertBudget, bootStaging } from './procgenOracle.js';
 import {
-    DEFAULT_BOUNDS, KEEP_POLICY, STOP, directedAttempt,
+    DEFAULT_BOUNDS, STOP, directedAttempt,
 } from '../procgenCore/levelGenerator.js';
 /**
  * ⛓⛓⛓ THE URL GRAMMAR AND THE PANE VOCABULARY LEFT THIS FILE IN
@@ -84,20 +84,19 @@ import {
  * ladder step + roster; the maze's is room size + expansions + manual edits).
  */
 import {
-    ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
+    ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
     readBounds, readRosterSpec, readSkeleton, refuseDirectedParam, writeBounds, writeInt,
     writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, dischargesVerb, instantiateKept, normalizeRoster,
-    restrictPalette,
+    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster, restrictPalette,
 } from './procgenPalette.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
     skeletonCatalogue,
 } from '../procgenCore/skeletonKinds.js';
 import {
-    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingModel, seedlingOracle,
+    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingOracle, seedlingSeam,
 } from './procgenSeedling.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 /**
@@ -447,10 +446,23 @@ export function writeGenerateParams(search, {
  * and it is the loop's own control (`generateLevel` refuses to start if the
  * skeleton does not solve), so the page shows the same room the loop checks.
  *
- * ⛔ THE STEP-0 MODEL IS `seedlingModel({seed})` — the SAME constructor
- * `generateSeedlingLevel` calls with the same argument, so the goal cell at
- * step 0 is the goal cell at every later step BY CONSTRUCTION rather than by
- * agreement. The test drives that equality.
+ * ⛔ THE STEP-0 MODEL IS `seedlingSeam(…).model` — the SAME construction
+ * `generateSeedlingLevel` runs, so the goal cell at step 0 is the goal cell at
+ * every later step BY CONSTRUCTION rather than by agreement. The test drives
+ * that equality.
+ *
+ * ⛓⛓⛓ **IT BECAME THE SEAM IN ARC-3 SLICE 4c, AND IT HAD TO.** Until then step 0
+ * was `seedlingModel({seed, skeleton})` — a bare room — which was the same room
+ * because no element was in it: `--elements=` defaulted to `none`. Slice 4c gave
+ * the DEFAULT a biome-dependent element spec (`procgenSeedling.defaultElementsFor`),
+ * so the skeleton the loop checks now CONTAINS an element, and an element that
+ * fails its certification solve is DROPPED. A step-0 branch that skipped the seam
+ * would draw the element and never drop it, and the page would show, as "the
+ * room before any template", a room step 1 does not have.
+ *
+ * ⚠ THE PRICE IS ONE CERTIFICATION SOLVE AT STEP 0 where there used to be none —
+ * the very solve step 1 spends, no more. That is the honest cost of showing the
+ * room the loop actually checks.
  */
 export function generateStep({
     seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
@@ -487,7 +499,9 @@ export function generateStep({
             + 'Step 0 is the SKELETON and step k is a run to obstacleTarget=k.');
     }
     if (step === 0) {
-        const model = seedlingModel({ seed, skeleton: skel });
+        const { model } = seedlingSeam({
+            seed, items: palette.items ?? null, budget: b, skeleton: skel,
+        });
         return Object.freeze({
             seed,
             biome,
@@ -637,7 +651,38 @@ export function applyDirective(state, spec, index) {
             + `which the ${state.biome} palette does not hold — it offers `
             + `[${palette.templates.map((t) => t.name).join(', ')}].`);
     }
-    const keepPolicy = spec.keepPolicy ?? KEEP_POLICY.PREFER_DISCHARGE;
+    /**
+     * ⛓⛓⛓ **`PREFER_DISCHARGE` LEFT SEEDLING IN ARC-3 SLICE 4c** (⚖ user,
+     * 2026-08-17). Two independent reasons, and the second is what made the
+     * first unarguable:
+     *
+     *  1. S1 §11.9 measured the `solved-only` class STRUCTURALLY EMPTY here —
+     *     the preference had nothing to prefer over.
+     *  2. Slice 4c retired the last three templates that have a VERB at all
+     *     (`wall-gap-block`/`shove`, `wall-gap-lock-weigh`/`weigh`,
+     *     `wall-gap-spinner-killlock`/`kill` — they became ELEMENTS). Every row
+     *     the two palettes still hold is `wall`/`water`/`pit`, for which
+     *     `dischargesVerb` answers `null` ⇒ `KEPT_KIND.NO_VERB` ⇒ taken
+     *     immediately. The two policies now choose identically at every anchor,
+     *     by construction rather than by measurement.
+     *
+     * ⛔ A SPEC MAY NOT NAME ONE. It refuses rather than being ignored: a caller
+     * that asked for `prefer-discharge` and silently got `first-solved` would
+     * get the outcome it asked to improve on with nothing able to say why — the
+     * same argument `walkAnchors` makes about a missing predicate.
+     *
+     * ⛓ `KEEP_POLICY` STAYS IN `levelGenerator.js` FOR THE MAZE, which has not
+     * measured its own `solved-only` class and whose palette still holds verbs.
+     * This is a SEEDLING retirement, not the mechanism's.
+     */
+    if (spec.keepPolicy !== undefined && spec.keepPolicy !== DIRECTIVE_KEEP_POLICY) {
+        fail(`watchGenerate: a directive names keep policy ${JSON.stringify(spec.keepPolicy)}. `
+            + `Seedling runs every directive under ${JSON.stringify(DIRECTIVE_KEEP_POLICY)} `
+            + 'since PROCGEN ELEMENTS arc 3 slice 4c: no template either palette still holds '
+            + 'has a VERB to discharge, so `prefer-discharge` would prefer nothing. ⛔ Say '
+            + 'nothing, rather than saying a policy this substrate cannot honour.');
+    }
+    const keepPolicy = DIRECTIVE_KEEP_POLICY;
     const bound = spec.bound ?? DIRECTED_ANCHOR_TRIES;
     /**
      * ⛓ THE PARAMETER STREAM — its own, so an "any" choice that DRAWS a value
@@ -665,10 +710,13 @@ export function applyDirective(state, spec, index) {
         anchor: spec.anchor ?? null,
         bound,
         keepPolicy,
-        // ⛓ THE ONE DISCHARGE TEST (`procgenPalette`), injected — `levelGenerator`
-        // imports nothing, so the predicate reaches it as an argument. It is the
-        // same function the batch and both sweeps ask.
-        discharges: dischargesVerb,
+        /**
+         * ⛔ NO `discharges` PREDICATE ANY MORE (slice 4c). `walkAnchors` REQUIRES
+         * one under `prefer-discharge` and IGNORES it under `first-solved`, so
+         * passing it here would be an argument that decides nothing — and a
+         * reader would take its presence for the policy still being live.
+         * `dischargesVerb` itself stays: the batch and both sweeps ask it.
+         */
         rowBase: { directive: index + 1, step: state.step, try: null },
     });
     /**

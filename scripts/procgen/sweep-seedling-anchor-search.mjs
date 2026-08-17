@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * ⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The
+ * user retired the three door TEMPLATES into the room-aware ELEMENTS, and this
+ * instrument's SUBJECT went with them: its whole question is *does a WIDER anchor walk recover discharges the one-anchor bound was losing* — and `discharge` is a property of a CLEARER family. All three retired into ELEMENTS (arc-3 §13.2), so `verbOf` answers `null` for every row either roster holds and every column it prints would be structurally zero.
+ *
+ * ⛓ ITS LAST MEASUREMENT LIVES IN arc-3 kickoff §13.6(a) (the wave-1 domain sweep it was built from) and §13.7 (the exhaustive re-scan that found 0 refusing first anchors in 240 cells).
+ *
+ * ⛔ IT REFUSES TO RUN rather than printing a table of zeros. A sweep whose
+ * subject no longer exists still produces a well-formed table, and a reader
+ * who found that table in an as-built would read the zeros as a FINDING. The
+ * body below is kept verbatim — it is the record of how the measurement was
+ * made, and the day a comparable subject ships it is what a new instrument
+ * should be written against.
+ */
+process.stderr.write(
+    'sweep-seedling-anchor-search: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
+    + 'retired with the three door TEMPLATES. See this file\'s header for where its '
+    + 'last measurement lives. ⛔ It refuses rather than printing a table of zeros.\n',
+);
+process.exit(2);
+/* eslint-disable */
+/**
  * sweep-seedling-anchor-search — ⛓ **DOES THE ANCHOR SEARCH RECOVER WHAT THE
  * ONE-ANCHOR BOUND WAS LOSING?** (Seedling GENERATE-mode UI arc, slice 3,
  * track B.)

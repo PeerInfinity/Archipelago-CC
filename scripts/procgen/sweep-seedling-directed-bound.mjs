@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * ⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The
+ * user retired the three door TEMPLATES into the room-aware ELEMENTS, and this
+ * instrument's SUBJECT went with them: it measures HOW FAR DOWN THE ANCHOR LIST the first DISCHARGING anchor is — a bound for `KEEP_POLICY.PREFER_DISCHARGE`, which Seedling retired in slice 4c (arc-3 §13.5). ⚠ NOT LISTED IN THE SLICE'S CHARGE; it is here because the policy's retirement makes it vacuous by the same argument as the four above, and an instrument left runnable would print a bound for a choice the codec can no longer spell.
+ *
+ * ⛓ ITS LAST MEASUREMENT LIVES IN arc-3 kickoff §13.5, and the MAZE still has the policy — a maze-side bound is a new instrument's question, not this one's.
+ *
+ * ⛔ IT REFUSES TO RUN rather than printing a table of zeros. A sweep whose
+ * subject no longer exists still produces a well-formed table, and a reader
+ * who found that table in an as-built would read the zeros as a FINDING. The
+ * body below is kept verbatim — it is the record of how the measurement was
+ * made, and the day a comparable subject ships it is what a new instrument
+ * should be written against.
+ */
+process.stderr.write(
+    'sweep-seedling-directed-bound: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
+    + 'retired with the three door TEMPLATES. See this file\'s header for where its '
+    + 'last measurement lives. ⛔ It refuses rather than printing a table of zeros.\n',
+);
+process.exit(2);
+/* eslint-disable */
+/**
  * sweep-seedling-directed-bound — ⛓ **HOW FAR DOWN THE ANCHOR LIST IS THE
  * FIRST ANCHOR THAT DISCHARGES?** (Seedling GENERATE-mode UI arc, slice 5,
  * verb 2 — the directed attempt.)

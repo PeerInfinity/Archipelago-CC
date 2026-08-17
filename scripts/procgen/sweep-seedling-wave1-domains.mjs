@@ -54,9 +54,30 @@
  * `discharged` count means something different per-anchor than per-seed
  * (`feedback_bounded_sweep_must_name_what_it_bounded`).
  *
+ * ── ⛓⛓⛓ RE-POINTED IN ARC 3 SLICE 4c, AND THE `discharged` COLUMN IS NOW
+ * ── STRUCTURALLY ZERO ────────────────────────────────────────────────
+ *
+ * ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS
+ * (arc-3 kickoff §13.2). They were this script's three CLEARER families and the
+ * only reason `--anchors=all` existed. What remains parameterized is
+ * `wall-segment(ori, len)`, `water-pool(w, h)` and `pit-patch(w, h)` — 23
+ * instantiations between them, all of them DECORATION — so `verbOf` answers
+ * `null` for every family it can sweep and `discharged` prints `-` throughout.
+ *
+ * ⛔ IT IS RE-POINTED RATHER THAN RETIRED, because its FIRST question survives
+ * its second: *is every value in a declared domain one the generator can
+ * actually use?* is a claim about `solved`/`refused`/`no-anchor`, and those
+ * three columns still mean exactly what they meant. ⚠ The `--anchors=all` bound
+ * now buys nothing (it was for the verb) and is left runnable and labelled
+ * rather than removed — a 9-value pit domain over every legal anchor is
+ * affordable and the table stays comparable to the ones in §13.6.
+ *
+ * ⛓ THE CLEARER FAMILIES' OWN TABLES — the ones this script produced and the
+ * exclusion rows cite — are preserved verbatim in the arc-3 kickoff §13.6.
+ *
  * Run:
  *   node scripts/procgen/sweep-seedling-wave1-domains.mjs
- *   node scripts/procgen/sweep-seedling-wave1-domains.mjs --anchors=all --only=wall-gap-block
+ *   node scripts/procgen/sweep-seedling-wave1-domains.mjs --anchors=all --only=pit-patch
  */
 
 import { dirname, join } from 'node:path';

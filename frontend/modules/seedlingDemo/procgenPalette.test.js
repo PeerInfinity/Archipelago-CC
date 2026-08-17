@@ -20,15 +20,16 @@ import { ROLES, TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
 import { arrowLaneForPlacement, arrowLaneRect, arrowTrapEntityPoint } from './arrowTrap.js';
 import { ProcgenLevelError, terrainAt } from './procgenLevel.js';
 import {
-    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_PALETTE,
-    POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES, PaletteRosterError,
+    EXCLUDED_TEMPLATES, PLACEMENT_GROUP, PLACEMENT_TAG, POST_SWORD_EXCLUDED_TEMPLATES,
+    POST_SWORD_PALETTE, POST_SWORD_TEMPLATES, PRE_SWORD_PALETTE, PRE_SWORD_TEMPLATES,
+    PaletteRosterError,
     ProcgenPaletteError,
-    assertPalette, catalogueRows, defineTemplate, dischargesVerb, enumerateInstantiations,
-    enumerateValues, instantiateKept, restrictPalette, verbOf,
+    assertPalette, catalogueRows, defineTemplate, dischargesVerb, doorGeometry,
+    enumerateInstantiations, enumerateValues, instantiateKept, restrictPalette, verbOf,
 } from './procgenPalette.js';
 import {
     SEEDLING_DEFAULTS, generateSeedlingLevel, placementGroupId, placementTagId,
-    seedlingModel, seedlingOracle,
+    seedlingModel, seedlingOracle, seedlingSeam,
 } from './procgenSeedling.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
@@ -48,6 +49,56 @@ const instanceOf = (name, values = {}) => byName(name).instantiate(null, values)
 
 /** Place a concrete instance at a chosen anchor, ignoring the draw. */
 const placedAt = (m, name, at, values = {}) => m.place(m.skeleton(), instanceOf(name, values), at);
+
+/**
+ * ⛓⛓⛓ **THE SLOT FIXTURE — arc 3, slice 4c, and it exists because the slot's
+ * only SHIPPED consumer retired.**
+ *
+ * `PLACEMENT_GROUP` and `PLACEMENT_TAG` were built for two USER-REPORTED
+ * DEFECTS (2026-08-13: *"both of the switches open both of the doors"*, and the
+ * weigh lock toggling the GOAL's persistence tag) and every driven row for them
+ * used `wall-gap-lock-weigh` as its subject. Slice 4c retired that template into
+ * the `guard` ELEMENT. ⛔ THE MECHANISM DID NOT RETIRE WITH IT — `place`,
+ * `placementGroupId`, `placementTagId` and `assertPalette`'s three invariants
+ * are all still live, and arc 5's arena is the next row that will want them.
+ *
+ * ⇒ the rows below are RE-POINTED at this fixture rather than deleted. A
+ * regression test for a shipped defect is not something to drop because the
+ * template that first exhibited it left; what it costs is one honest sentence,
+ * which is this one: **the slot has no shipped consumer today**, and the row
+ * just below `enumerateInstantiations` says exactly that and would fail the day
+ * a roster row arrived carrying the slot without a verification (trap 199's own
+ * structure, inverted).
+ *
+ * The shape is the weigh row's, reduced to what the slot needs: a LOCK on both
+ * slots standing in the anchor cell (invariant 3 — a group-bearing row must
+ * OCCUPY AND WRITE its own anchor), and a BUTTON on the group slot two cells
+ * along. No `door`, so the door law does not run; no block, because the shove
+ * lane was the retired template's geometry and not the slot's.
+ */
+const SLOT_DOOR = defineTemplate({
+    name: 'slot-door-fixture',
+    family: 'slot-fixture',
+    site: 'straight',
+    params: [],
+    why: 'a slot-bearing fixture — the mechanism\'s subject after slice 4c retired its only '
+        + 'shipped consumer',
+    build: () => ({
+        groups: 1,
+        tags: 1,
+        footprint: [{ dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }],
+        terrain: [{ dx: 1, dy: 0, terrain: 'wall' }],
+        entities: [
+            {
+                dx: 0, dy: 0, type: 'lock', attrs: { tset: PLACEMENT_GROUP, tag: PLACEMENT_TAG },
+            },
+            { dx: 2, dy: 0, type: 'button', attrs: { tset: PLACEMENT_GROUP } },
+        ],
+        pins: [],
+    }),
+});
+
+const slotDoor = () => SLOT_DOOR.instantiate(null, {});
 
 /** A minimal well-formed base, for the negative cases below. */
 const fakeTemplate = (over = {}) => defineTemplate({
@@ -188,18 +239,20 @@ describe('the palette itself is well formed', () => {
          * ⛓ THE ENUMERATION COUNTS `assertPalette`'s DOCBLOCK STATES, asserted
          * FROM the roster so the table cannot go stale silently (trap 199).
          */
-        it('enumerates 41 pre-sword and 45 post-sword instantiations at module load', () => {
+        it('enumerates 23 instantiations at module load, and BOTH biomes ship the SAME '
+            + 'roster', () => {
             // ⛓ ARC 3 SLICE 1: 42/44 before `arrow-lane`'s ONE zero-parameter
             // instantiation left with the row (⚖ design ruling 9).
-            // ⛓⛓ ARC 3 SLICE 2: post-sword 43 -> 45. `wall-gap-spinner-killlock`
-            // gained a MEASURED `span` domain of TWO values, so its ori(2) row
-            // became ori(2) x span(2) = 4. ⛔ The PRE-SWORD count does NOT move:
-            // the kill family is post-sword only, and `wall-gap-block` /
-            // `wall-gap-lock-weigh` keep `INTERIOR_SPAN` as a CONSTANT because
-            // their measured domain is ONE value and a one-value `rng.pick`
-            // still spends a draw.
-            expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(41);
-            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(45);
+            // ⛓⛓ ARC 3 SLICE 2: post-sword 43 -> 45 (`wall-gap-spinner-killlock`
+            // gained a MEASURED two-value `span`), pre-sword stayed 41.
+            // ⛓⛓⛓ ARC 3 SLICE 4c: 41/45 -> 23/23. The THREE DOOR TEMPLATES
+            // retired into ELEMENTS (⚖ user, 2026-08-16/17), taking 16 + 2
+            // pre-sword instantiations and the post-sword kill family's 4 with
+            // them. ⛔ THE TWO COUNTS ARE NOW EQUAL AND THAT IS THE HEADLINE:
+            // `KILL_LOCK_TEMPLATES` is empty, so the BIOME is the BOOT ITEMS
+            // plus the elements' `needs` and nothing else.
+            expect(enumerateInstantiations(PRE_SWORD_PALETTE)).toHaveLength(23);
+            expect(enumerateInstantiations(POST_SWORD_PALETTE)).toHaveLength(23);
             const perTemplate = Object.fromEntries(
                 PRE_SWORD_TEMPLATES.map((t) => [t.name, enumerateValues(t).length]),
             );
@@ -207,8 +260,6 @@ describe('the palette itself is well formed', () => {
                 'wall-segment': 8,
                 'water-pool': 9,
                 'pit-patch': 6,
-                'wall-gap-block': 16,
-                'wall-gap-lock-weigh': 2,
             });
             // ⛔ every instance label is unique across the whole palette, which
             // is what lets a pane row identify a geometry rather than a key.
@@ -307,31 +358,40 @@ describe('the palette itself is well formed', () => {
         });
 
         /**
-         * ⛓ SLICE 2 COLLAPSED THE WEIGH PAIR INTO ONE PARAMETERIZED ROW, so
-         * the carriers are counted over INSTANTIATIONS rather than over table
-         * rows — and every instantiation must carry the slot, not just the one
-         * the default happens to build.
+         * ⛓⛓⛓ **NO SHIPPED ROW CARRIES THE SLOT SINCE SLICE 4c**, and saying so
+         * is the row rather than deleting it.
+         *
+         * Until 4c the carriers were exactly the weigh family (`wall-gap-lock-
+         * weigh(ori=h)` and `(ori=v)`, two of them, `groups: 1` each). That
+         * template retired into the `guard` ELEMENT, and the elements carry
+         * their OWN ids (`procgenCore/elements.guardIdsFor`) rather than this
+         * palette's sentinel. ⛔ The mechanism is untouched: the three
+         * invariants above still refuse, and `SLOT_DOOR` (this file's fixture)
+         * is what the driven rows below place.
+         *
+         * ⚠ THE CLAIM IS AN EMPTY SET, WHICH IS THE WEAKEST KIND — so it is
+         * paired with the one that can fail: EVERY carrier, if one ever
+         * arrives, must declare `groups` and put the sentinel on at least two
+         * entities. A roster row added with the sentinel and no declaration
+         * lands here as a FAILING test rather than as an uncounted row.
          */
-        it('the shipped instantiations that carry the slot are exactly the weigh family', () => {
-            const carriers = enumerateInstantiations(PRE_SWORD_PALETTE)
+        it('NO shipped instantiation carries the group slot today — and any that did '
+            + 'would have to declare it', () => {
+            const carriers = enumerateInstantiations(POST_SWORD_PALETTE)
                 .filter((t) => t.groups !== undefined);
-            expect([...new Set(carriers.map((t) => t.name))]).toEqual(['wall-gap-lock-weigh']);
-            expect(carriers.map((t) => t.instance)).toEqual([
-                'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
-            ]);
-            // ⚠ BY NAME rather than by count: a new switch/door template that
-            // forgot the slot would keep the count where it is and arrive
-            // silently.
-            for (const t of carriers) {
-                expect(t.groups).toBe(1);
-                expect(t.entities.filter(
+            expect(carriers.map((t) => t.instance)).toEqual([]);
+            const sentinelled = enumerateInstantiations(POST_SWORD_PALETTE).filter(
+                (t) => (t.entities ?? []).some(
                     (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
-                )).toHaveLength(2);
-            }
-            // ⛔ AND EVERY value of the family's own domain is a carrier — a
-            // `build` that dropped the slot for ONE orientation would place a
-            // lock in a private group and a button in group 0.
-            expect(carriers).toHaveLength(enumerateValues(byName('wall-gap-lock-weigh')).length);
+                ),
+            );
+            expect(sentinelled.map((t) => t.instance)).toEqual([]);
+            // ⛓ and the fixture the driven rows use IS a carrier, so the
+            // assertion above is about the ROSTER and not about the check.
+            expect(slotDoor().groups).toBe(1);
+            expect(slotDoor().entities.filter(
+                (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_GROUP),
+            )).toHaveLength(2);
         });
     });
 
@@ -388,134 +448,50 @@ describe('the palette itself is well formed', () => {
             })).toBe(true);
         });
 
-        it('the shipped instantiations that carry the tag slot are exactly the weigh family',
-            () => {
-                const carriers = enumerateInstantiations(PRE_SWORD_PALETTE)
-                    .filter((t) => t.tags !== undefined);
-                expect(carriers.map((t) => t.instance)).toEqual([
-                    'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
-                ]);
-                for (const t of carriers) expect(t.tags).toBe(1);
-            });
-
-        /**
-         * ⛓ …AND POST-SWORD IT IS THE WEIGH FAMILY **PLUS THE KILL FAMILY**
-         * (slice 3 track C). Built FROM the roster so a third tag-bearing
-         * family arriving without a case here is a MISSING test rather than an
-         * uncounted one (trap 199).
-         */
-        it('post-sword, the kill family is on the slot too — the literal is GONE', () => {
-            const carriers = enumerateInstantiations(POST_SWORD_PALETTE)
-                .filter((t) => t.tags !== undefined);
-            expect(carriers.map((t) => t.instance)).toEqual([
-                'wall-gap-lock-weigh(ori=h)', 'wall-gap-lock-weigh(ori=v)',
-                // ⛓ ARC 3 SLICE 2 — the kill row's label carries its `span` now.
-                'wall-gap-spinner-killlock(ori=h,span=1)',
-                'wall-gap-spinner-killlock(ori=h,span=8)',
-                'wall-gap-spinner-killlock(ori=v,span=1)',
-                'wall-gap-spinner-killlock(ori=v,span=8)',
-            ]);
-            for (const t of carriers) expect(t.tags).toBe(1);
-        });
-
-        /**
-         * ⛓⛓⛓ **THE COLLISION THAT WAS PINNED HERE IS FIXED** — GENERATE-mode
-         * UI slice 3, track C, and this case is its replacement rather than its
-         * relaxation.
-         *
-         * THE HISTORY IN THREE LINES. Slice 4e shipped the kill lock on a
-         * LITERAL `tag: '1'` with the argument that only one could ever be
-         * kept, so the collision was LATENT. Slice 2 measured that the argument
-         * had died — post-sword **seed 12 at target 6 keeps TWO**, both on the
-         * literal — and escalated rather than converting, because the field had
-         * been ⚖ deferred by the user. Slice 3 took the blast-radius
-         * measurement (`scripts/procgen/measure-seedling-killlock-tag.mjs`),
-         * the user's ⚖ conditional approval applied, and the literal is gone.
-         *
-         * ⛓ WHAT THE MEASUREMENT FOUND, because it is not what the escalation
-         * assumed: lock 2 does NOT open on spinner 1's death — a `tset == -1`
-         * lock opens on `totalEnemies()` reaching ZERO, a GLOBAL condition, so
-         * both open on the LAST death in one event. The collision's real
-         * product was a DUPLICATE persistence write (two `scratchClears` rows
-         * naming one slot), which the v9 parser would refuse by name. The
-         * driven case below is the one that would have caught it.
-         */
-        it('⛓ the kill lock is on the PER-PLACEMENT slot — no literal, no shared flag', () => {
-            const killLocks = enumerateInstantiations(POST_SWORD_PALETTE)
-                .filter((t) => t.family === 'kill');
-            // ⛓ ARC 3 SLICE 2: 2 -> 4, ori(2) x the measured `span` domain {1,8}.
-            expect(killLocks).toHaveLength(4);
-            for (const t of killLocks) {
-                expect(t.tags).toBe(1);
-                const lock = t.entities.find((e) => e.type === 'lock');
-                expect(lock.attrs.tag).toBe(PLACEMENT_TAG);
-                // ⛓ the spinner keeps its literal `-1` — the game's own
-                // spelling of UNTAGGED, which `assertTagSlot` allows on purpose.
-                expect(t.entities.find((e) => e.type === 'spinner').attrs.tag).toBe('-1');
+        it('NO shipped instantiation carries the tag slot today, in EITHER biome', () => {
+            // ⛓⛓ SLICE 4c: the carriers were the weigh family pre-sword and the
+            // weigh + kill families post-sword; all three retired into ELEMENTS.
+            // ⛔ BOTH biomes are asked, because the post-sword list is where the
+            // kill row lived and an empty-set claim about the smaller one would
+            // not cover it.
+            for (const palette of [PRE_SWORD_PALETTE, POST_SWORD_PALETTE]) {
+                expect(enumerateInstantiations(palette)
+                    .filter((t) => t.tags !== undefined).map((t) => t.instance)).toEqual([]);
+                expect(enumerateInstantiations(palette).filter(
+                    (t) => (t.entities ?? []).some(
+                        (e) => Object.values(e.attrs ?? {}).includes(PLACEMENT_TAG),
+                    ),
+                ).map((t) => t.instance)).toEqual([]);
             }
+            expect(slotDoor().tags).toBe(1);
         });
 
         /**
-         * ⛓⛓ THE DRIVEN HALF, and it is the half that can FAIL. The structural
-         * case above only says the sentinel is in the table; this one places
-         * TWO kill locks in ONE room and reads the tags off the RECORD.
+         * ⛓⛓⛓ **THREE ROWS STOOD HERE AND THEY WENT WITH THEIR SUBJECT** (arc 3
+         * slice 4c) — *"post-sword, the kill family is on the slot too"*, *"the
+         * kill lock is on the PER-PLACEMENT slot — no literal, no shared flag"*
+         * and *"DRIVEN: seed 31 keeps THREE tag-bearing locks and they take
+         * DISTINCT tags"*. All three asserted about `wall-gap-spinner-killlock`
+         * and `wall-gap-lock-weigh`, which retired into the `killgate` and
+         * `guard` ELEMENTS.
          *
-         * ⚠ THE SUBJECT IS THE MEASURED COLLISION ITSELF — post-sword seed 12
-         * at target 6, the level slice 2 found keeping two. A seed that keeps
-         * ONE cannot distinguish the two builds at all: `placementTagId`
-         * allocates the LOWEST free slot and the goal always holds 0, so a
-         * single kill lock is allocated **1** — exactly the value the literal
-         * had (trap 235's shape, one field over).
+         * ⛔ WHAT THE THIRD ONE PROVED IS NOT LOST, AND THAT IS WHY THIS
+         * TOMBSTONE NAMES IT. It was the DRIVEN half of the tag collision (⚖
+         * GENERATE-mode UI slice 3 track C: a LITERAL `tag: '1'` on two kept
+         * kill locks wrote two `scratchClears` rows for one slot), and its
+         * subject was a GENERATED ROOM holding two tag-bearing placements. No
+         * generated room can hold one now — the roster has no tag-bearing row at
+         * all — so the claim moved DOWN a layer rather than sideways: `⛔ every
+         * placement gets a PRIVATE tag, and none of them is the goal's` places
+         * THREE `SLOT_DOOR`s in one record and reads the tags off it, which is
+         * the same question asked of `place` instead of of the loop.
+         *
+         * ⚠ WHAT IS HONESTLY WEAKER: nothing now drives the LOOP's own
+         * two-placements-in-one-generated-level path. It cannot be driven until
+         * a slot-bearing row ships again (arc 5's arena), and inventing a
+         * roster row to keep a test green would be a fixture pretending to be a
+         * product.
          */
-        it('⛓ DRIVEN: seed 31 keeps THREE tag-bearing locks and they take DISTINCT tags', () => {
-            /**
-             * ⛓⛓ RE-PICKED, AND THE SUBJECT'S SHAPE CHANGED (arc 3 slice 1,
-             * trap 285 — the target and the count are named). `arrow-lane`
-             * leaving the roster moved every draw, and the property seed 12 had
-             * is now RARE: SCANNED post-sword at `obstacleTarget: 6` over seeds
-             * 1..60, **NOT ONE seed keeps two KILL locks** (eight keep exactly
-             * one: 13, 14, 15, 19, 32, 41, 49, 54).
-             *
-             * ⛔ SO THE SUBJECT IS RE-STATED RATHER THAN RELAXED. What
-             * `placementTagId` actually claims is *"only levels holding TWO
-             * TAG-BEARING TEMPLATES move, and their tags differ"* — and a KILL
-             * lock plus a WEIGH lock is exactly two tag-bearing placements.
-             * THREE seeds had that (15, 19, 32) and **15 was taken**.
-             *
-             * ⛓⛓⛓ **RE-SCANNED AT ARC 3 SLICE 2, AND THE ORIGINAL SUBJECT SHAPE
-             * CAME BACK.** The door law and the `span` domain moved every
-             * post-sword level again, so the scan was re-run over seeds 1..60 at
-             * the same bounds: **seed 31 now keeps TWO KILL LOCKS** — the exact
-             * property slice 1 recorded as extinct (*"NOT ONE seed keeps two
-             * KILL locks"*) — and is the only seed in 1..60 holding two
-             * tag-bearing placements at all — and it holds a WEIGH lock as
-             * well, so the row grades THREE distinct tags where it has never
-             * graded more than two. ⇒ the subject is seed 31 and the assertion
-             * goes back to the STRONGER form: two locks of the SAME family,
-             * which is the collision `tag: '1'` used to cause.
-             * ⚠ Named rather than left as a coincidence: the reason it returned
-             * is that span 1 gives the kill family anchors on kinds and cells it
-             * never had, so two of them now fit where one did.
-             */
-            const out = generateSeedlingLevel({
-                seed: 31, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
-            });
-            // the subject's own property, asserted BEFORE the claim about it
-            const families = out.summary.kept.map((k) => k.family);
-            expect(families.filter((f) => f === 'kill')).toHaveLength(2);
-            expect(families.filter((f) => f === 'weigh')).toHaveLength(1);
-            const locks = out.record.entities.filter((e) => e.type === 'lock');
-            // ⛓ THREE tag-bearing placements, which is a STRONGER subject than
-            // the two this row has ever had: two kill locks (the collision the
-            // literal `tag: '1'` caused) AND a weigh lock beside them.
-            expect(locks).toHaveLength(3);
-            const tags = locks.map((l) => l.attrs.tag);
-            expect(new Set(tags).size).toBe(3);
-            for (const t of tags) {
-                expect(t).not.toBe(SEEDLING_DEFAULTS.goalTag);
-                expect(Number.parseInt(t, 10)).toBeGreaterThanOrEqual(0);
-            }
-        });
     });
 
     it('every family in the roster is represented, and the count comes FROM the roster', () => {
@@ -523,10 +499,44 @@ describe('the palette itself is well formed', () => {
         // ⛓ PoC slice 3b added `weigh` — the palette's SECOND clearer family
         // and the first whose template places three cooperating entities.
         // ⛓ ARC 3 SLICE 1: `arrow-lane` (a family AND a template) is gone.
-        expect([...families].sort())
-            .toEqual(['pit', 'shove', 'wall', 'water', 'weigh']);
+        // ⛓⛓⛓ ARC 3 SLICE 4c: `shove` and `weigh` left with their templates
+        // (and `kill` left the post-sword list), so the shipped roster is THREE
+        // DECORATION families and NO clearer. That is the retirement stated as
+        // a set: what pass 2 still does is decorate, and every MECHANISM the
+        // generator ships is an ELEMENT built in pass 1.
+        expect([...families].sort()).toEqual(['pit', 'wall', 'water']);
         expect(PRE_SWORD_PALETTE.templates).toBe(PRE_SWORD_TEMPLATES);
         expect(PRE_SWORD_PALETTE.items).toEqual({ hasSword: false, hasShield: false });
+    });
+
+    /**
+     * ⛓⛓⛓ **THE BIOME IS THE BOOT ITEMS PLUS THE ELEMENTS' `needs` — ONE
+     * ROSTER, TWO INVENTORIES** (arc 3, slice 4c; ⚖ user, 2026-08-17).
+     *
+     * Slice 4e split the two rosters for `wall-gap-spinner-killlock`, the arc's
+     * only sword-gated FAMILY. 4c retired it, so `KILL_LOCK_TEMPLATES` is empty
+     * and `POST_SWORD_TEMPLATES` is a spread of a list with nothing added. ⛔
+     * The seam is kept (an empty array with its docblock) rather than deleted —
+     * arc 5's arena is the next sword-gated family — but a reader must not be
+     * left thinking the two biomes still differ in what they can DRAW.
+     *
+     * ⚠ ASSERTED BY VALUE AND NOT BY IDENTITY: `POST_SWORD_TEMPLATES` is a NEW
+     * frozen array (the spread), so `toBe` would fail for a reason that has
+     * nothing to do with the claim. What is claimed is that the two rosters name
+     * the same rows in the same order, and that the ONLY difference between the
+     * biomes is the boot.
+     */
+    it('⛓⛓ BOTH biomes ship the SAME roster — the biome is the BOOT ITEMS', () => {
+        expect(POST_SWORD_TEMPLATES.map((t) => t.name))
+            .toEqual(PRE_SWORD_TEMPLATES.map((t) => t.name));
+        // ⛔ the same frozen ROW objects, not equal-looking copies — a second
+        // instantiation of one template is the two-cost-models shape.
+        for (const [i, t] of POST_SWORD_TEMPLATES.entries()) {
+            expect(t).toBe(PRE_SWORD_TEMPLATES[i]);
+        }
+        // ...and the boot is where the two differ, which is the whole split now.
+        expect(PRE_SWORD_PALETTE.items).toEqual({ hasSword: false, hasShield: false });
+        expect(POST_SWORD_PALETTE.items).toEqual({ hasSword: true, hasShield: false });
     });
 });
 
@@ -612,137 +622,25 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * GENERATOR's use of it, which is what the ruling was about.
      */
     /**
-     * ⛓⛓ THE DOOR — slice 3's promotion, verified the same way as the other
-     * five: what the template CLAIMS, asked of the built world.
+     * ⛓⛓⛓ **THREE ROWS STOOD HERE AND RETIRED WITH THE DOOR TEMPLATES** (arc 3,
+     * slice 4c) — *"wall-gap-block(ori=h) walls the whole interior but one cell,
+     * and stands a block in it"*, *"wall-gap-block(ori=v) is the same door on
+     * end, at every declared gap"* and *"wall-gap-lock-weigh(ori=h|v) stands a
+     * lock in the gap and a block that can reach its button"*.
      *
-     * Two claims, and the second is the one that makes it a door rather than a
-     * decoration: the wall's cells are Stone in `world.solids`, and the gap
-     * holds a `pushableblock` in `world.pushables` — at the gap's own cell, so
-     * the block really is standing in the one hole the wall leaves.
-     */
-    it('wall-gap-block(ori=h) walls the whole interior but one cell, and stands a block in it',
-        () => {
-        const m = model();
-        const t = instanceOf('wall-gap-block', { ori: 'h', gap: 4 });
-        const at = { tx: 1, ty: 4 };
-        const world = worldFor(m.place(m.skeleton(), t, at));
-        const gapDx = t.entities[0].dx;
-
-        // ⚠ SCOPED TO THE TEMPLATE'S OWN CELLS. The room's BORDER RING is
-        // Stone too and sits on every row, so an unscoped filter counts the
-        // two border columns and reports 9 where the template wrote 7 — a
-        // count about the room, not about the template.
-        const cols = new Set(t.terrain.map((c) => (at.tx + c.dx) * TILE_SIZE));
-        const row = world.solids.filter((s) => s.tag === 'tile:Stone'
-            && s.rect.y === at.ty * TILE_SIZE && cols.has(s.rect.x));
-        // The count comes FROM the template, never from a number typed here.
-        expect(row).toHaveLength(t.terrain.length);
-        // ⛔ and the gap is a HOLE in that row, not a cell the paint missed
-        // elsewhere: no Stone stands at the gap column.
-        expect(row.some((s) => s.rect.x === (at.tx + gapDx) * TILE_SIZE)).toBe(false);
-
-        // ⚠ A `pushables` row carries the OEL POINT (`x`/`y`), not a `rect` —
-        // unlike a `solids` row two assertions up, whose `x`/`y` are its
-        // CENTRE. Two rosters, two conventions, and the id spells the point.
-        expect(world.pushables).toHaveLength(1);
-        const block = world.pushables[0];
-        expect(block.tag).toBe('pushableblock');
-        expect({ x: block.x, y: block.y })
-            .toEqual({ x: (at.tx + gapDx) * TILE_SIZE, y: at.ty * TILE_SIZE });
-        expect(block.id).toBe(`pushableblock@${block.x},${block.y}`);
-    });
-
-    /**
-     * ⛓ THE SAME DOOR ON END, AT EVERY DECLARED GAP — because `gap` is what
-     * decides WHICH cell is the hole, and a `build` that painted the wall from
-     * one value and placed the block from another would still produce a wall
-     * and a block. The two are compared to each other rather than to a
-     * literal.
-     */
-    it('wall-gap-block(ori=v) is the same door on end, at every declared gap', () => {
-        for (const { gap } of enumerateValues(byName('wall-gap-block'))
-            .filter((v) => v.ori === 'v')) {
-            const m = model();
-            const t = instanceOf('wall-gap-block', { ori: 'v', gap });
-            const at = { tx: 4, ty: 1 };
-            const world = worldFor(m.place(m.skeleton(), t, at));
-            const gapDy = t.entities[0].dy;
-            expect(gapDy, `gap=${gap}`).toBe(gap);
-            const rows = new Set(t.terrain.map((c) => (at.ty + c.dy) * TILE_SIZE));
-            const column = world.solids.filter((s) => s.tag === 'tile:Stone'
-                && s.rect.x === at.tx * TILE_SIZE && rows.has(s.rect.y));
-            expect(column, `gap=${gap}`).toHaveLength(t.terrain.length);
-            expect(column.some((s) => s.rect.y === (at.ty + gapDy) * TILE_SIZE)).toBe(false);
-            // ⛔ and the block really stands IN the hole the wall left.
-            expect(world.pushables).toHaveLength(1);
-            expect(world.pushables[0].y).toBe((at.ty + gap) * TILE_SIZE);
-        }
-    });
-
-    /**
-     * ⛓⛓⛓ THE LOCKED DOOR — PoC slice 3b's promotion, verified the same way.
+     * ⛔ DELETED RATHER THAN TOMBSTONED WITH A LESSON, because what they asked
+     * was *does this template's build write the geometry it claims* — a question
+     * about a row that no longer exists. What the two doors TAUGHT is on their
+     * `EXCLUDED_TEMPLATES` rows (`procgenPalette.js`) with the numbers that
+     * retired them, and the mechanisms themselves are driven where they now
+     * live: `procgenDoorElements.test.js` (the kill gate and the block pocket,
+     * built and CERTIFIED) and `procgenSeedlingElements.test.js` (the guard's
+     * lock/button pair, its lane and its round trip).
      *
-     * Three claims, because it places three things and any two without the
-     * third is a room with no answer (⚖ §1.2's atomic placement at its
-     * fullest): the LOCK is in the wall's gap and in `world.activators`; the
-     * BUTTON is in `world.pressers` and in the SAME tSet group; the BLOCK is
-     * in `world.pushables` and shares the button's lane so a single lean
-     * reaches it. The last one is the constraint `runShove` enforces — a lean
-     * moves a block along ONE axis — and it is asserted here rather than
-     * trusted, because a template whose block and button shared neither
-     * coordinate would be L16's shape, which needs a chain nobody has ruled on.
+     * ⚠ THE ONE CLAIM THAT WAS NEITHER GEOMETRY NOR MECHANISM — *the button
+     * publishes the LOCK's own group* — is the group slot's, and it is driven
+     * below on `SLOT_DOOR`.
      */
-    for (const [ori, at, axis] of [
-        ['h', { tx: 1, ty: 4 }, 'row'],
-        ['v', { tx: 4, ty: 1 }, 'column'],
-    ]) {
-        it(`wall-gap-lock-weigh(ori=${ori}) stands a lock in the gap and a block that can `
-            + 'reach its button', () => {
-            const m = model();
-            const t = instanceOf('wall-gap-lock-weigh', { ori });
-            const world = worldFor(m.place(m.skeleton(), t, at));
-            const entityAt = (type) => {
-                const e = t.entities.find((x) => x.type === type);
-                return { tx: at.tx + e.dx, ty: at.ty + e.dy };
-            };
-
-            // ── the LOCK, in the gap the wall leaves ──────────────────
-            const lockCell = entityAt('lock');
-            expect(world.activators).toHaveLength(1);
-            const lock = world.activators[0];
-            expect(lock.tag).toBe('lock');
-            expect(lock.id).toBe(`lock@${lockCell.tx * TILE_SIZE},${lockCell.ty * TILE_SIZE}`);
-            // ⛔ and it really is in a HOLE: the template paints no wall there.
-            expect(t.terrain.some((c) => at.tx + c.dx === lockCell.tx
-                && at.ty + c.dy === lockCell.ty)).toBe(false);
-
-            // ── the BUTTON, publishing the lock's OWN group ───────────
-            expect(world.pressers).toHaveLength(1);
-            const button = world.pressers[0];
-            expect(button.tag).toBe('button');
-            // ⛔ THE GROUP IS COMPARED, NOT ASSUMED. A button in a different
-            // tSet would build perfectly and open nothing — the template
-            // would place an obstacle and a decoration.
-            expect(button.t).toBe(lock.t);
-
-            // ── the BLOCK, in the button's own lane ───────────────────
-            expect(world.pushables).toHaveLength(1);
-            const block = world.pushables[0];
-            expect(block.tag).toBe('pushableblock');
-            expect(block.family).toBe('walk');
-            const blockTile = { tx: block.x / TILE_SIZE, ty: block.y / TILE_SIZE };
-            const buttonTile = {
-                tx: Math.floor(button.x / TILE_SIZE), ty: Math.floor(button.y / TILE_SIZE),
-            };
-            if (axis === 'row') {
-                expect(blockTile.ty).toBe(buttonTile.ty);
-                expect(buttonTile.tx).toBeGreaterThan(blockTile.tx);
-            } else {
-                expect(blockTile.tx).toBe(buttonTile.tx);
-                expect(buttonTile.ty).toBeGreaterThan(blockTile.ty);
-            }
-        });
-    }
 
     /**
      * ⛔⛔⛔ THE CLAIM THE ONE ABOVE COULD NOT MAKE — and the user's
@@ -758,12 +656,17 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
      * `lock@80,48 t=0`, `button@96,32 t=0`, `lock@80,80 t=0`,
      * `button@96,64 t=0` — one group, four entities, and
      * `activators.js`'s setter publishes to every one of them.
+     *
+     * ⛓⛓ RE-POINTED AT `SLOT_DOOR` IN SLICE 4c — the subject was the weigh
+     * template, which retired into the `guard` ELEMENT. ⛔ The DEFECT is a fact
+     * about `place` and `placementGroupId`, not about that template, so the row
+     * stays and its subject is the fixture. See `SLOT_DOOR`'s docblock.
      */
     it('⛔ TWO placements are TWO groups — the user-reported defect, as a test', () => {
         const m = model();
         const two = m.place(
-            m.place(m.skeleton(), instanceOf('wall-gap-lock-weigh', { ori: 'h' }), { tx: 1, ty: 3 }),
-            instanceOf('wall-gap-lock-weigh', { ori: 'h' }), { tx: 1, ty: 6 },
+            m.place(m.skeleton(), slotDoor(), { tx: 1, ty: 3 }),
+            slotDoor(), { tx: 1, ty: 6 },
         );
         const world = worldFor(two);
         expect(world.activators).toHaveLength(2);
@@ -803,7 +706,8 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
     it('the group is a function of the ANCHOR — not of what the loop tried first', () => {
         const m = model();
         const at = { tx: 2, ty: 5 };
-        const t = instanceOf('wall-gap-lock-weigh', { ori: 'h' });
+        // ⛓ SLICE 4c: `SLOT_DOOR`, for the reason in its docblock.
+        const t = slotDoor();
         const lockOf = (record) => worldFor(record).activators[0].t;
 
         const straight = lockOf(m.place(m.skeleton(), t, at));
@@ -840,8 +744,11 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
     it('⛔ every placement gets a PRIVATE tag, and none of them is the goal\'s', () => {
         const m = model();
         let record = m.skeleton();
-        for (const at of [{ tx: 1, ty: 3 }, { tx: 1, ty: 6 }, { tx: 1, ty: 9 }]) {
-            record = m.place(record, instanceOf('wall-gap-lock-weigh', { ori: 'h' }), at);
+        // ⛓ SLICE 4c: three `SLOT_DOOR`s, for the reason in its docblock — and
+        // this is also where the retired *"seed 31 keeps THREE tag-bearing
+        // locks"* row's claim now lives, asked of `place` rather than the loop.
+        for (const at of [{ tx: 1, ty: 3 }, { tx: 1, ty: 6 }, { tx: 1, ty: 8 }]) {
+            record = m.place(record, slotDoor(), at);
         }
         const tags = record.entities
             .map((e) => tagOf(e.type, e.attrs))
@@ -867,7 +774,7 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('the tag is a function of the RECORD — not of what the loop tried first', () => {
         const m = model();
-        const t = instanceOf('wall-gap-lock-weigh', { ori: 'h' });
+        const t = slotDoor();
         const at = { tx: 1, ty: 6 };
         const lockTagOf = (record) => record.entities
             .filter((e) => e.type === 'lock').map((e) => tagOf(e.type, e.attrs)).pop();
@@ -895,243 +802,59 @@ describe('every template builds what it claims — asked of the BUILT WORLD', ()
 
     it('⛔ NO SENTINEL SURVIVES INTO A LEVEL — an unresolved slot parses as group 0', () => {
         const m = model();
-        const record = m.place(m.skeleton(), instanceOf('wall-gap-lock-weigh', { ori: 'v' }), { tx: 4, ty: 1 });
+        const record = m.place(m.skeleton(), slotDoor(), { tx: 4, ty: 1 });
         for (const e of record.entities) {
             for (const v of Object.values(e.attrs ?? {})) expect(v).not.toBe(PLACEMENT_GROUP);
         }
         // And the guard is real: a template carrying the slot with no `groups`
         // declaration is refused BY NAME rather than written as a literal.
-        const undeclared = {
-            ...instanceOf('wall-gap-lock-weigh', { ori: 'v' }), name: 'undeclared', groups: undefined,
-        };
+        const undeclared = { ...slotDoor(), name: 'undeclared', groups: undefined };
         expect(() => m.place(m.skeleton(), undeclared, { tx: 4, ty: 1 }))
             .toThrow(/declares no `groups`/);
     });
 
     /**
-     * ⛔⛔ THE S1 GUARD, AND IT IS TEMPLATE LEGALITY RATHER THAN A SOLVER
-     * SPECIAL CASE. `legalAt` tests footprint ∪ clearance with `isFree`, and
-     * `isFree` refuses the start and the goal cells — so declaring the cells
-     * the block slides THROUGH (clearance) and the cell it lands ON (the
-     * button, footprint) makes it structurally impossible to anchor this
-     * template where the shove would put a block on the goal.
+     * ⛓⛓⛓ **FOUR ROWS STOOD HERE AND ALL FOUR RETIRED WITH THE DOOR
+     * TEMPLATES** (arc 3, slice 4c). Named, because two of them cost real money
+     * and one of them taught something:
      *
-     * ⚠ Slice 3 met that shape on `wall-gap-block` and correctly left it to
-     * the LOOP to reject, because there the destination is derived per-room
-     * and unknowable at anchor time. Here the destination IS the button and
-     * the button is part of the template. Same law, different information —
-     * which is why this assertion can exist for one family and not the other.
+     *  · *"the weigh templates declare the whole slide path, so no anchor can
+     *    land the block on the goal"* — the S1 GUARD, and it was TEMPLATE
+     *    legality rather than a solver special case. ⛓ THE LAW SURVIVES ITS
+     *    SUBJECT AND IS NOW THE ELEMENT'S: `blockPocket` refuses by name when
+     *    the straight run reaches the goal, and `procgenDoorElements.test.js`
+     *    drives it. The difference is that the element MEASURES the run instead
+     *    of declaring a footprint that covers it.
+     *  · *"every door instantiation is a LINE with exactly ONE gap, and the gap
+     *    is the DOOR CELL"* — asked of `doorGeometry`'s output through the three
+     *    door rows. `doorGeometry` itself is untouched and
+     *    `procgenSeedlingDoorCut.test.js` still drives it directly, which is
+     *    where it now has its only callers (that file and the door census).
+     *  · *"every CLEARER family is KEPT in a generated room that certifies its
+     *    collect"* and *"⛔ the weigh door is CROSSED in a generated room, not
+     *    merely kept beside one"*. ⛔⛔ **THESE TWO WERE THE 118x SUITE COST**
+     *    (§13.0.4): each scanned `seed = 1..20` calling
+     *    `generateSeedlingLevel({bounds:{obstacleTarget: 6}})` until a kept
+     *    `shove`/`weigh` template appeared, and the goal draw made that rarer
+     *    before the retirement made it impossible. There is no clearer family
+     *    in either roster now, so the loop would run all twenty seeds and find
+     *    nothing — a row that cannot pass rather than a row that is slow.
+     *    ⛓ WHAT THEY PROVED — *a mechanism is not merely KEPT beside the route,
+     *    it is USED by the solve* — is the CERTIFICATION's job now, and it is a
+     *    stronger form of the same claim: `seedlingSeam` runs the element's own
+     *    solve and records the `{strategy}` it discharged plus the LIFTED CLAIM,
+     *    and `procgenDoorElements.test.js` / `procgenSeedlingElementsCertify
+     *    .test.js` assert both. A kept-count could never say which; a lifted
+     *    claim says it by construction.
      */
-    it('the weigh templates declare the whole slide path, so no anchor can '
-        + 'land the block on the goal', () => {
-        // ⛓ SLICE 2: over every INSTANTIATION of the family, so the guard has to
-        // hold for each value of `ori` rather than for the two rows somebody
-        // happened to write.
-        for (const t of enumerateInstantiations(PRE_SWORD_PALETTE)
-            .filter((x) => x.family === 'weigh')) {
-            const name = t.instance;
-            const block = t.entities.find((e) => e.type === 'pushableblock');
-            const button = t.entities.find((e) => e.type === 'button');
-            const declared = new Set([...t.footprint, ...t.clearance]
-                .map((c) => `${c.dx},${c.dy}`));
-            // Every cell from the block to the button INCLUSIVE — the ones the
-            // block occupies at some point during the lean.
-            const dx = Math.sign(button.dx - block.dx);
-            const dy = Math.sign(button.dy - block.dy);
-            const steps = Math.max(Math.abs(button.dx - block.dx),
-                Math.abs(button.dy - block.dy));
-            for (let i = 0; i <= steps; i += 1) {
-                const key = `${block.dx + dx * i},${block.dy + dy * i}`;
-                expect(declared, `${name}: slide cell ${key} is not declared, so an anchor `
-                    + 'could put the goal there').toContain(key);
-            }
-            // AND the stance behind the block, or the lean cannot start.
-            expect(declared).toContain(`${block.dx - dx},${block.dy - dy}`);
-        }
-    });
-
-    /**
-     * ⛔ THE SPAN IS THE INTERIOR'S, AND THAT IS THE WHOLE DESIGN. A shorter
-     * wall is walked around, the block is never in the way, and the template
-     * becomes an obstacle that obstructs nothing (traps 171/173 — the same
-     * failure `shoot="0"` would have been for the arrow lane). Asserted
-     * against the ROOM's own size rather than against 8.
-     */
-    /**
-     * ⛓⛓⛓ **ARC 3 SLICE 2 RETIRED THIS ROW'S OLD CLAIM AND REPLACED IT** — trap
-     * 312, and the replacement is the sentence that still has content.
-     *
-     * The row asserted *"every door instantiation spans the WHOLE INTERIOR —
-     * anything less obstructs nothing"*, which was GENERATE-UI ruling 3's span
-     * law written as a test. ⚖ Design ruling 17 replaced that law with **a door
-     * is a CUT**, and `wall-gap-spinner-killlock(span=1)` is a door that spans
-     * ONE cell and obstructs everything — on a corridor the lock cell IS the
-     * door. Keeping the old assertion would have been keeping a law the arc
-     * deliberately overturned.
-     *
-     * ⛔ WHAT SURVIVES IS THE STRUCTURAL HALF, and it is the half that was doing
-     * the work: **a door's wall is a CONTIGUOUS LINE down its own axis with
-     * EXACTLY ONE GAP, and the DOOR CELL is that gap.** A row with two gaps is a
-     * wall with a corridor round the obstacle; a row whose declared `doorCells`
-     * is not the gap would have the flood walling a cell the wall already holds.
-     * ⛓ AND THE SPAN CLAIM IS NOT LOST — it moved to where it is now true: the
-     * span law holds on the OPEN ROOM, which `procgenSeedlingDoorCut.test.js`
-     * asserts by flooding (a span-4 wall cuts nothing at any anchor of `empty`),
-     * and the `span` domain rows there assert the two shipped values.
-     */
-    it('every door instantiation is a LINE with exactly ONE gap, and the gap is the DOOR CELL',
-        () => {
-            const doors = enumerateInstantiations(POST_SWORD_PALETTE)
-                .filter((t) => ['shove', 'weigh', 'kill'].includes(t.family));
-            // Built FROM the roster: a fourth door family arrives here as a
-            // count that moved rather than as an unchecked row (trap 199).
-            expect(doors.length).toBeGreaterThanOrEqual(16);
-            for (const t of doors) {
-                // The wall runs down the template's own axis; `ori` says which,
-                // and the gap is a hole IN that same line.
-                const axis = t.params.ori === 'h' ? 'dx' : 'dy';
-                const cross = t.params.ori === 'h' ? 'dy' : 'dx';
-                const wall = t.footprint.filter((c) => c[cross] === 0);
-                const offsets = wall.map((c) => c[axis]).sort((a, b) => a - b);
-                // ⛔ CONTIGUOUS FROM THE ANCHOR — a line with a hole in its
-                // FOOTPRINT is two walls, and the flood would read the space
-                // between them as a route nobody reserved.
-                expect(offsets, t.instance)
-                    .toEqual(offsets.map((_, i) => i));
-                // ⛔ EXACTLY ONE HOLE, and it is what the row DECLARES as its
-                // door. A row whose `doorCells` named some other cell would have
-                // the law wall a cell the wall already holds.
-                const painted = new Set(t.terrain
-                    .filter((c) => c.terrain !== 'ground').map((c) => c[axis]));
-                const gaps = wall.map((c) => c[axis]).filter((o) => !painted.has(o));
-                expect(gaps, t.instance).toHaveLength(1);
-                expect(t.doorCells, t.instance).toHaveLength(1);
-                expect(t.doorCells[0][axis], t.instance).toBe(gaps[0]);
-                expect(t.doorCells[0][cross], t.instance).toBe(0);
-            }
-        });
-
-    /**
-     * ⛓⛓⛓ AND IT CERTIFIES IN A ROOM THE LOOP ACTUALLY BUILT — the standard
-     * every other family met (kickoff §9.2), which "the template builds what
-     * it claims" does not reach: a door that builds correctly and is never
-     * shoved would pass every assertion above.
-     *
-     * ⛔ THIS IS THE ROW SLICE 2 COULD NOT HAVE WRITTEN. Its measurement was
-     * that `shove` is never SELECTED under a collect-only goal; here the loop
-     * places the door, the solver shoves the block, and the run certifies its
-     * collect — end to end, from the generator's own seed.
-     */
-    /**
-     * ⛔ BOUND NAMED: seeds 1..20 at `obstacleTarget: 6`, and the search stops
-     * at the first run that keeps the family. The bound is stated because a
-     * search that found nothing and a search that was never run print the same
-     * thing otherwise. [[feedback_bounded_sweep_must_name_what_it_bounded]]
-     *
-     * ⛓ Slice 3b widened this from ONE PINNED SEED to a named search, because
-     * the palette is part of the draw stream: adding the two `weigh` templates
-     * moved what seed 1 draws, and a test pinned to one seed is a test about
-     * the draw order rather than about the family.
-     *
-     * ⛔⛔⛔ AND THE TICK CLAIM MOVED WITH IT, BECAUSE THE OLD ONE WAS NOT TRUE
-     * OF THE FAMILY — it was true of one seed. `trace[].ticks` is the WHOLE
-     * ROOM's solve after that placement, so it rises only when the obstacle is
-     * on the route at all, and a full-span door with the goal on the START's
-     * side is kept (the room still solves) having cost nothing. Comparing a
-     * kept row against the SKELETON also mis-attributes: at seed 1 the water
-     * pool placed after a weigh door reports the door's 330 as its own. The
-     * honest comparison is against the row BEFORE it, and the honest claim is
-     * an EXISTENCE one.
-     */
-    it('every CLEARER family is KEPT in a generated room that certifies its collect', () => {
-        // Built FROM the roster's clearer families, so a third one added
-        // without a case here is a missing test rather than an uncounted one.
-        const clearers = [...new Set(PRE_SWORD_TEMPLATES.map((t) => t.family))]
-            .filter((f) => f === 'shove' || f === 'weigh');
-        expect(clearers.sort()).toEqual(['shove', 'weigh']);
-        for (const family of clearers) {
-            let found = null;
-            for (let seed = 1; seed <= 20 && !found; seed += 1) {
-                const out = generateSeedlingLevel({ seed, bounds: { obstacleTarget: 6 } });
-                const kept = out.trace.filter((r) => r.family === family
-                    && r.outcome === 'KEPT');
-                if (kept.length) found = { out, kept };
-            }
-            expect(found, `no ${family} template was KEPT in seeds 1..20 at target 6`)
-                .not.toBeNull();
-            for (const d of found.kept) {
-                expect(d.verdict).toBe('SOLVED');
-                expect(d.ticks).toBeGreaterThan(0);
-            }
-        }
-    });
-
-    /**
-     * ⛓⛓⛓ NON-VACUITY — the `weigh` door is not merely KEPT in generated
-     * rooms, it is CROSSED in one.
-     *
-     * ⛔ THIS IS THE ASSERTION THE `shove` FAMILY WOULD FAIL, and finding that
-     * out is what this test exists for. Measured over seeds 1..20 at target 6
-     * (2026-08-12), splitting kept/reverted rows by whether the goal is beyond
-     * the template's wall from the start:
-     *
-     *   | family | NEAR (goal on the start's side) | FAR (goal beyond it) |
-     *   |---|---|---|
-     *   | `weigh` | 15 KEPT, 0 REVERTED | **3 KEPT**, 3 REVERTED |
-     *   | `shove` | 11 KEPT, 0 REVERTED | **0 KEPT**, 4 REVERTED |
-     *
-     * ⇒ `wall-gap-block` is kept in a generated room exactly when it is
-     * IRRELEVANT, and refuses every time it is the room's actual door
-     * (*"Obstacle: solid:pushableblock … Strategy 'shove' failed to apply"*).
-     * Slice 3 promoted it on three dedicated probe geometries, which were
-     * real; the GENERATED-room evidence for it has always been vacuous, and a
-     * KEPT row looks identical whether or not the obstacle was ever in the
-     * way. ⚠ NOT slice 3b's to fix — the family and its derivation are slice
-     * 3's — but recorded here so the next slice starts from a measurement
-     * rather than from a keep-count. [[feedback_graceful_skip_hides_the_surface]]
-     *
-     * The assertion is deliberately the EXISTENCE one for `weigh` only: a
-     * count asserted here would be a test about the draw order again.
-     */
-    it('⛔ the weigh door is CROSSED in a generated room, not merely kept beside one', () => {
-        let crossing = null;
-        for (let seed = 1; seed <= 20 && !crossing; seed += 1) {
-            const out = generateSeedlingLevel({ seed, bounds: { obstacleTarget: 6 } });
-            const goal = seedlingModel({ seed }).goalCell;
-            let prev = out.trace.find((r) => r.family === 'skeleton').ticks;
-            for (const r of out.trace) {
-                if (r.outcome !== 'KEPT' || r.family === 'skeleton') continue;
-                /**
-                 * ⛓⛓ SLICE 2: THE ORIENTATION COMES FROM `r.params.ori`, and
-                 * the old spelling was `r.template.endsWith('-h')`. ⚠ THAT
-                 * WOULD HAVE PASSED VACUOUSLY: with the pair collapsed, no
-                 * template name ends in `-h` any more, so every row would have
-                 * been read as VERTICAL and the "goal beyond the wall" test
-                 * would have been asking about the wrong axis. A check that
-                 * still goes green after the thing it inspects changed shape is
-                 * the migration's own trap, and this is where it bit.
-                 */
-                const isFar = r.params.ori === 'h'
-                    ? goal.ty > r.at.ty : goal.tx > r.at.tx;
-                if (r.family === 'weigh' && isFar && r.ticks > prev) {
-                    crossing = { seed, template: r.template, before: prev, after: r.ticks };
-                    break;
-                }
-                prev = r.ticks;
-            }
-        }
-        expect(crossing, 'no generated room in seeds 1..20 placed a `weigh` door BEYOND '
-            + 'which the goal lay AND paid ticks for it — the family would then be kept '
-            + 'only where it is irrelevant, which is what `shove` does').not.toBeNull();
-        // The measured instance, as the record of what "crossed" cost.
-        expect(crossing.after).toBeGreaterThan(crossing.before);
-    });
-
     it('EVERY template in the roster is verified above — by name, not by count', () => {
         // The list this test compares against is the one the cases assert on.
-        const verified = ['wall-segment', 'water-pool', 'pit-patch',
-            'wall-gap-block', 'wall-gap-lock-weigh'];
+        // ⛓ SLICE 4c: the two door rows left it with their templates.
+        const verified = ['wall-segment', 'water-pool', 'pit-patch'];
         expect(PRE_SWORD_TEMPLATES.map((t) => t.name).sort()).toEqual([...verified].sort());
+        // ⛔ AND THE POST-SWORD ROSTER IS VERIFIED BY THE SAME LIST NOW, which
+        // is the retirement's headline said once more where it can fail.
+        expect(POST_SWORD_TEMPLATES.map((t) => t.name).sort()).toEqual([...verified].sort());
     });
 });
 
@@ -1172,18 +895,26 @@ describe('the bindings place atomically and refuse illegally', () => {
     it('never anchors on a cell an earlier ENTITY template occupies', () => {
         const m = model();
         /**
-         * ⛓ RE-PICKED (arc 3 slice 1): the subject was `arrow-lane`, the only
-         * one-cell entity template, and it left the roster. `wall-gap-lock-weigh`
-         * is the pre-sword row that places entities, so the cell is FOUND from
-         * the record rather than hard-coded — the claim is "an entity's cell is
-         * not free", and reading the offset off the template would make it a
-         * claim about this row's geometry instead.
+         * ⛓ RE-PICKED TWICE. Arc 3 slice 1: the subject was `arrow-lane`, the
+         * only one-cell entity template, and it left the roster;
+         * `wall-gap-lock-weigh` took over. ⛓⛓ ARC 3 SLICE 4c: that row retired
+         * too, and **NO SHIPPED TEMPLATE PLACES AN ENTITY ANY MORE** — the three
+         * that did are the door families, now ELEMENTS. So the subject is
+         * `SLOT_DOOR`, this file's fixture.
+         *
+         * ⛔ THAT IS THE RIGHT SUBJECT RATHER THAN A CONVENIENT ONE: the claim
+         * is *an entity's cell is not free*, which is a fact about `place` and
+         * `isFree`. It was never a fact about the template, and the two earlier
+         * re-picks were chasing whichever roster row happened to carry an
+         * entity. ⚠ The cell is still FOUND from the record rather than
+         * hard-coded, so reading an offset off the fixture cannot turn this into
+         * a claim about the fixture's geometry.
          */
-        const once = placedAt(m, 'wall-gap-lock-weigh', { tx: 1, ty: 3 }, { ori: 'h' });
-        const block = once.entities.find((e) => e.type === 'pushableblock');
-        expect(block).toBeTruthy();
-        const tx = Math.floor(block.x / TILE_SIZE);
-        const ty = Math.floor(block.y / TILE_SIZE);
+        const once = m.place(m.skeleton(), slotDoor(), { tx: 1, ty: 3 });
+        const lock = once.entities.find((e) => e.type === 'lock');
+        expect(lock).toBeTruthy();
+        const tx = Math.floor(lock.x / TILE_SIZE);
+        const ty = Math.floor(lock.y / TILE_SIZE);
         expect(m.isFree(m.skeleton(), tx, ty)).toBe(true);
         expect(m.isFree(once, tx, ty)).toBe(false);
     });
@@ -1266,57 +997,63 @@ describe('the bindings place atomically and refuse illegally', () => {
         });
 
     /**
-     * ⛓⛓⛓ THE DEDICATED CASE THE SEARCH EXISTS FOR — a template the FIRST
-     * anchor refuses and the SECOND accepts.
+     * ⛓⛓⛓ **A ROW STOOD HERE AND ITS SUBJECT CANNOT BE REBUILT** — *"⛓ seed 7:
+     * the plain door REFUSES at anchor 1 and SOLVES at anchor 2"* (arc 3, slice
+     * 4c). It was the UNIT-level case the anchor search exists for: one
+     * template, one bare skeleton, the first anchor refusing and the second
+     * solving. Its subject was `wall-gap-block(ori=v,gap=0)`, retired.
      *
-     * ⚠ THE SUBJECT IS MEASURED, NOT CHOSEN FOR CONVENIENCE. Walking every
-     * legal anchor of `wall-gap-block(ori=v,gap=0)` over seeds 1..12, the first
-     * anchor SOLVES at eleven of them; seed 7 is the one where it does not
-     * (`firstSolve` = 2 of 6 legal). A subject whose first anchor already
-     * solved could not distinguish the two bounds at all.
+     * ⛔ **RE-PICKED BY ITS OWN SCAN, AND THE SCAN CAME BACK EMPTY** (trap 285 —
+     * the target and the count are named). Every instantiation of every
+     * remaining pre-sword row, walked over its first three legal anchors on the
+     * bare skeleton, seeds 1..30: **240 (instance, seed) cells tested, 0 with a
+     * refusing first anchor.** That is not bad luck, it is the retirement's own
+     * consequence: the three families that could SEAL a bare room were the door
+     * templates, and `wall-segment`/`water-pool`/`pit-patch` are decoration —
+     * a bare 10x10 room solves around all three at every anchor.
+     *
+     * ⛓ WHAT THE CLAIM BECOMES is the row below, which is the same question
+     * asked where it still has an answer: **a room that already holds
+     * obstacles**. That is where a candidate's first anchor can fail, and it is
+     * also the only place the bound was ever spent for real. ⇒ deleted rather
+     * than weakened to a case that cannot fail (⚖ a vacuous row is worse than
+     * no row), and the deletion is recorded here with the number.
      */
-    it('⛓ seed 7: the plain door REFUSES at anchor 1 and SOLVES at anchor 2', () => {
-        const m = seedlingModel({ seed: 7 });
-        const door = PRE_SWORD_PALETTE.templates.find((t) => t.name === 'wall-gap-block')
-            .instantiate(null, { ori: 'v', gap: 0 });
-        const oracle = seedlingOracle({ model: m, items: PRE_SWORD_PALETTE.items ?? null });
-        const sk = m.skeleton();
-        const two = m.anchorsFor(sk, door, rngFor(7), 2);
-        expect(two).toHaveLength(2);
-        // the one-anchor bound sees ONLY the first, and it refuses
-        expect(m.anchorsFor(sk, door, rngFor(7), 1)).toEqual([two[0]]);
-        expect(oracle.solve(m.place(sk, door, two[0]), { templates: [door] }).verdict)
-            .not.toBe('SOLVED');
-        expect(oracle.solve(m.place(sk, door, two[1]), { templates: [door] }).verdict)
-            .toBe('SOLVED');
-    });
 
     /**
-     * ⛓⛓⛓ …AND THE SAME THING THROUGH THE WHOLE LOOP. Pre-sword seed 5 at
-     * target 6 with `anchorTriesPerCandidate: 3` KEEPS a candidate at its
-     * SECOND anchor that the default bound REVERTS — measured over seeds 1..12
-     * (seeds 2, 4, 5 and 12 produce such a rescue; 5 produces two).
+     * ⛓⛓⛓ …AND THIS IS NOW THE ONLY PLACE THE BOUND IS DRIVEN (see the
+     * tombstone above). Pre-sword at target 6 with `anchorTriesPerCandidate: 3`
+     * KEEPS a candidate at a later anchor that the default bound REVERTS.
      *
      * ⛔ THE ROW PAIR IS THE CLAIM. The rescued row shares `step`/`try` with the
      * refusal before it and differs in `anchorTry` AND in `at`: a search that
      * re-tested the FIRST anchor would produce the same two rows with the same
      * ordinals and the same verdicts, and only the CELL separates them.
      */
-    it('⛓ DRIVEN: seed 9 keeps at anchor 2+ a candidate the default bound reverts', () => {
+    it('⛓ DRIVEN: seed 18 keeps at anchor 2+ a candidate the default bound reverts', () => {
         /**
-         * ⛓ RE-PICKED (arc 3 slice 1, trap 285 — the target and the count are
-         * named). `arrow-lane` leaving the roster moved every draw, so seed 5's
-         * rescue is gone. SCANNED: pre-sword, `obstacleTarget: 6`,
-         * `anchorTriesPerCandidate: 3`, seeds 1..30 — EIGHT seeds still produce
-         * a rescue (4, 9, 10, 13, 15, 22, 23, 25) and all eight discriminate
-         * against the default bound. **Seed 9 is taken because it produces
-         * THREE**, the most of any, so the loop below is not a claim about one
-         * lucky row.
+         * ⛓ RE-PICKED TWICE, BOTH TIMES BY THE SAME SCAN (trap 285 — the target
+         * and the count are named). Arc 3 slice 1: `arrow-lane` left and seed 5's
+         * rescue went with it; eight seeds still produced one and seed 9 was
+         * taken because it produced THREE.
+         *
+         * ⛓⛓ ARC 3 SLICE 4c: the retirement and the goal draw moved every level
+         * again. RE-SCANNED at the same bounds over seeds 1..30 through the
+         * SHIPPED default generator (the biome's element spec included — this is
+         * the generator a reader gets): **FOUR seeds produce a rescue — 18, 21,
+         * 24 and 30 — one each, and none produces more.** ⇒ **seed 18** is
+         * taken, and the expected count falls from 3 to 1 because that is what
+         * the roster now yields, not because the row was relaxed.
+         *
+         * ⚠ THE THINNING IS ITSELF THE RETIREMENT'S SHADOW and is said rather
+         * than absorbed: eight seeds with three rescues at the top became four
+         * with one. A room drawing from three decoration families reverts less
+         * often, so there is less for a wider anchor walk to rescue.
          */
         const bounds = { obstacleTarget: 6, anchorTriesPerCandidate: 3 };
-        const wide = generateSeedlingLevel({ seed: 9, palette: PRE_SWORD_PALETTE, bounds });
+        const wide = generateSeedlingLevel({ seed: 18, palette: PRE_SWORD_PALETTE, bounds });
         const rescued = wide.trace.filter((r) => r.outcome === 'KEPT' && r.anchorTry > 1);
-        expect(rescued.length).toBe(3);
+        expect(rescued.length).toBe(1);
         for (const r of rescued) {
             const i = wide.trace.indexOf(r);
             const before = wide.trace[i - 1];
@@ -1330,7 +1067,7 @@ describe('the bindings place atomically and refuse illegally', () => {
         }
         // and the default bound really does lose it: same (step,try), REVERTED
         const narrow = generateSeedlingLevel({
-            seed: 9, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 18, palette: PRE_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         const first = rescued[0];
         const same = narrow.trace.find((r) => r.step === first.step && r.try === first.try);
@@ -1357,33 +1094,71 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
         ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).templates
         .find((t) => t.name === name).instantiate(null, overrides);
 
+    /**
+     * ⛓⛓⛓ **THE DOOR SUBJECT IS A BARE WALL-AND-GAP NOW** (arc 3, slice 4c).
+     *
+     * Every row in this block used to take its door from the ROSTER
+     * (`wall-gap-block(ori=v,gap=1)` and `wall-gap-spinner-killlock(ori=h,
+     * span=8)`), and all three door templates retired into the elements. ⛔ The
+     * rows are about `refusalAt`'s VOCABULARY — the free/painted/occupied walk,
+     * the interior walk, the DOOR law — which is the model's and not any
+     * template's, so the subject is rebuilt from `doorGeometry`: the SAME
+     * function the retired rows called and the SAME shape
+     * `census-seedling-doors.mjs` measures the `span` domain with.
+     *
+     * ⚠ NOT A HAND-DRAWN LITERAL, and that is the whole reason `doorGeometry`
+     * stayed exported: a fixture that built its own wall would drive the door
+     * law on a door nothing in the pipeline can produce.
+     */
+    const bareDoor = (ori, span, gap) => defineTemplate({
+        name: 'bare-door',
+        family: 'door-fixture',
+        site: 'straight',
+        params: [],
+        why: 'the census\'s own door shape, as a fixture — arc 3 slice 4c',
+        build: () => {
+            const g = doorGeometry(ori, span, gap);
+            return {
+                door: ori,
+                doorCells: [g.doorCell],
+                /** ⛓ EMPTY is the right answer for a door whose clearer stands
+                 *  IN the door cell — `assertDoorCells` says so in as many
+                 *  words, and it has to be SAID rather than omitted. */
+                clearer: [],
+                footprint: g.cells,
+                terrain: g.wall,
+                entities: [],
+                pins: [],
+            };
+        },
+    }).instantiate(null, {});
+
     it('⛔ answers `null` for a LEGAL anchor and a SENTENCE for an illegal one', () => {
         const m = seedlingModel({ seed: 6 });
         const sk = m.skeleton();
-        const door = instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 });
+        const door = bareDoor('v', 8, 1);
         /**
-         * ⛓⛓ RE-MEASURED AT ARC 3 SLICE 2, and the move is the slice's own
-         * point. Seed 6's goal is at (3,1), so the old subject (7,1) is a wall
-         * with the goal on the START's side of it — a DECORATION door, which
-         * the CUT law now refuses (⚖ design ruling 17). Re-scanned: of the
-         * eight interior columns exactly ONE anchor survives, **(2,1)**, the
-         * only column with the goal beyond it whose footprint is also free.
+         * ⛓⛓ RE-MEASURED AT ARC 3 SLICE 2 (the CUT law), AND AGAIN AT SLICE 4c
+         * (the GOAL DRAW). Seed 6's goal moved from (3,1) to **(5,1)** — the
+         * `manhattan >= 3` rule — so the legal columns moved with it. Re-scanned
+         * over all eight interior columns with this exact door: **(2,1), (3,1)
+         * and (4,1) are legal** and (6,1) is the first NOT-A-CUT (the goal is on
+         * the START's side of a wall that far along).
          * ⛔ REPLACED, NEVER RELAXED: the assertion is still `toBeNull()`.
          */
         expect(m.refusalAt(sk, door, 2, 1)).toBeNull();
         expect(typeof m.refusalAt(sk, door, 1, 1)).toBe('string');
-        // ⛓ and the OLD subject is now a sentence — the same cell, the new law.
-        expect(m.refusalAt(sk, door, 7, 1)).toMatch(/it is NOT A CUT/);
+        // ⛓ a column with the goal on the START's side is a sentence, not a door.
+        expect(m.refusalAt(sk, door, 6, 1)).toMatch(/it is NOT A CUT/);
     });
 
     it('⛔⛔ `legalAt` AGREES WITH IT ON EVERY INTERIOR CELL — one adjudication', () => {
-        for (const [biome, name, overrides] of [
-            ['pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }],
-            ['pre-sword', 'water-pool', { w: 3, h: 3 }],
-            ['post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 }],
+        for (const t of [
+            bareDoor('v', 8, 1),
+            instance('pre-sword', 'water-pool', { w: 3, h: 3 }),
+            bareDoor('h', 8, 4),
         ]) {
             const m = seedlingModel({ seed: 6 });
-            const t = instance(biome, name, overrides);
             const record = m.skeleton();
             let disagreed = 0;
             for (const c of m.interiorCells(record)) {
@@ -1403,18 +1178,23 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
     describe('the classes, each driven and each named by its own rule', () => {
         it('the START cell, and it says the terrain check is NOT what refused it', () => {
             const m = seedlingModel({ seed: 6 });
-            const why = m.refusalAt(m.skeleton(),
-                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 1, 1);
+            const why = m.refusalAt(m.skeleton(), bareDoor('v', 8, 1), 1, 1);
             expect(why).toMatch(/\(1,1\) is the START cell/);
             expect(why).toMatch(/about GEOMETRY rather than about the template/);
         });
 
-        it('the GOAL cell — seed 6 puts it at (3,1)', () => {
+        /**
+         * ⛓⛓ RE-PICKED AT SLICE 4c BECAUSE THE GOAL DRAW MOVED IT (trap 285 —
+         * the cell is NAMED and asserted before it is used). Seed 6's goal was
+         * (3,1) and is **(5,1)**: (3,1) is at Manhattan 2 from the start and the
+         * `GOAL_MIN_FROM_START = 3` rule excludes it. ⛔ The row is unchanged in
+         * what it claims; only the cell follows the measurement.
+         */
+        it('the GOAL cell — seed 6 puts it at (5,1)', () => {
             const m = seedlingModel({ seed: 6 });
-            expect(m.goalCell).toEqual({ tx: 3, ty: 1 });
-            expect(m.refusalAt(m.skeleton(),
-                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 3, 1))
-                .toMatch(/\(3,1\) is the GOAL cell/);
+            expect(m.goalCell).toEqual({ tx: 5, ty: 1 });
+            expect(m.refusalAt(m.skeleton(), bareDoor('v', 8, 1), 5, 1))
+                .toMatch(/\(5,1\) is the GOAL cell/);
         });
 
         it('a footprint cell OUTSIDE the interior names the cell, not the anchor', () => {
@@ -1422,8 +1202,7 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
             // the anchor (5,5) is itself free; the vertical door's 8th cell is
             // (5,12), which is not a cell of this room at all.
             expect(m.isFree(m.skeleton(), 5, 5)).toBe(true);
-            const why = m.refusalAt(m.skeleton(),
-                instance('pre-sword', 'wall-gap-block', { ori: 'v', gap: 1 }), 5, 5);
+            const why = m.refusalAt(m.skeleton(), bareDoor('v', 8, 1), 5, 5);
             expect(why).toMatch(/anchored at \(5,5\) needs FOOTPRINT cell \(5,9\)/);
             expect(why).toMatch(/not in the room's INTERIOR/);
             expect(why).toMatch(/\(1,1\) to \(8,8\)/);
@@ -1439,12 +1218,13 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
                 .map((c) => m.refusalAt(st.record, wall, c.tx, c.ty))
                 .filter((w) => w && /already holds/.test(w));
             expect(hits.length).toBeGreaterThan(0);
-            // ⛓ RE-MEASURED at arc 3 slice 2: the levels moved (the door law), so
-        // seed 6 at target 2 now keeps `wall-segment(h,5)` + `water-pool(2,1)`
-        // and the first painted cell this walk meets holds WATER, not wall.
-        // ⛔ The claim is unchanged — "it names the terrain it holds" — and the
-        // quoted terrain follows the measurement rather than the other way.
-        expect(hits[0]).toMatch(/already holds "water" and not untouched `ground`/);
+            // ⛓ RE-MEASURED at arc 3 slice 2 (the door law) and again at slice 4c
+        // (the goal draw + the retirement): the first painted cell this walk
+        // meets now holds WALL. ⛔ The claim is unchanged — "it names the
+        // terrain it holds" — and the quoted terrain follows the measurement
+        // rather than the other way. ⚠ It has been "wall" and "water" at
+        // different commits, which is the point of quoting a MEASURED value.
+        expect(hits[0]).toMatch(/already holds "wall" and not untouched `ground`/);
             expect(hits[0]).toMatch(/an earlier template painted it/);
         });
 
@@ -1456,13 +1236,16 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          * pre-check, and the DOOR rule below.
          */
         /**
-         * ⛓ MEASURED SUBJECT: post-sword seed 6's goal is at (3,1), so EVERY
-         * anchor whose footprint fits is refused by the door rule — (1,4) is
-         * one, and its footprint cells are all free (asserted).
+         * ⛓ MEASURED SUBJECT: seed 6's goal is at (5,1) (slice 4c's draw), so a
+         * HORIZONTAL full-span wall at row 4 has the goal on the START's side of
+         * it and every such anchor is refused by the door rule — (1,4) is one,
+         * and its footprint cells are all free (asserted). ⛓ RE-SCANNED at 4c:
+         * NO horizontal span-8 anchor is legal at this seed at all (7 of 7 are
+         * NOT-A-CUT), which is the same fact the row has always driven.
          */
         it('the DOOR LAW — walling the gap leaves the goal reachable, so it is NOT A CUT', () => {
             const m = seedlingModel({ seed: 6 });
-            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 });
+            const kill = bareDoor('h', 8, 4);
             const sk = m.skeleton();
             for (const c of kill.footprint) expect(m.isFree(sk, 1 + c.dx, 4 + c.dy)).toBe(true);
             const why = m.refusalAt(sk, kill, 1, 4);
@@ -1477,10 +1260,14 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
              */
             expect(why).toMatch(/declares a door, and it is NOT A CUT/);
             expect(why).toMatch(/with its door cell\(s\) \(5,4\) walled/);
-            expect(why).toMatch(/the GOAL \(3,1\) is STILL reachable from the START \(1,1\)/);
+            expect(why).toMatch(/the GOAL \(5,1\) is STILL reachable from the START \(1,1\)/);
             expect(why).toMatch(/DECORATION rather than a door/);
-            // ⛓ the kill family's own consequence survives the rewrite whole.
-            expect(why).toMatch(/RUN ABORT/);
+            // ⛓ the KILL GATE's own consequence survives BOTH rewrites — slice
+            // 2's flood and slice 4c's retirement. The sentence names the
+            // ELEMENT now (`a KILL GATE`) because the family it used to name
+            // left the palette, and a constant label that outlives its cause is
+            // a reader pointed at nothing (trap 354).
+            expect(why).toMatch(/for a KILL GATE that is a RUN ABORT/);
         });
 
         /**
@@ -1492,7 +1279,7 @@ describe('⛓⛓⛓ `refusalAt` — the model says WHY, and `legalAt` is derived
          */
         it('⛔ a cell on the BORDER RING is a sentence, and the FOOTPRINT walk is why', () => {
             const m = seedlingModel({ seed: 6 });
-            const kill = instance('post-sword', 'wall-gap-spinner-killlock', { ori: 'h', span: 8 });
+            const kill = bareDoor('h', 8, 4);
             expect(m.refusalAt(m.skeleton(), kill, 0, 0))
                 .toMatch(/\(0,0\) is not in the room's INTERIOR/);
             /**
@@ -1569,21 +1356,41 @@ describe('the water template obliges the `sound` pin, by argument', () => {
      * whose water pool is kept LAST would have no later solve to be wrong
      * about, and the case would pass over a loop that still dropped the union.
      */
-    it('⛓ seed 24: every solve AFTER the pool is kept still carries `sound`', () => {
+    it('⛓ seed 21: every solve AFTER the pool is kept still carries `sound`', () => {
         /**
-         * ⛓ RE-PICKED (arc 3 slice 1, trap 285). `arrow-lane` leaving moved
-         * seed 9's kept list, and with it the solve↔kept-row mapping this case
-         * depends on. SCANNED: pre-sword, `obstacleTarget: 4`, seeds 1..30, for
-         * a seed that KEEPS a water pool BEFORE its last row **and** keeps its
-         * FIRST candidate at every step (so solve k really is kept row k-1) —
-         * SEVEN qualify (5, 18, 24, 26, 27, 29, 30). **Seed 24 is taken because
-         * its pool is kept at index 1**: one pin-FREE solve before it and three
-         * pinned solves after, so the case has both arms rather than one.
+         * ⛓ RE-PICKED TWICE, BY THE SAME SCAN BOTH TIMES (trap 285 — the target
+         * and the count are named). Arc 3 slice 1: `arrow-lane` leaving moved
+         * seed 9's kept list, and seed 24 was taken. ⛓⛓ ARC 3 SLICE 4c: the
+         * retirement and the goal draw moved every level again and seed 24's
+         * pool is now kept LAST — which the subject-property guard below caught,
+         * exactly as it is there to (*"and it must be kept before the LAST
+         * one"*).
+         *
+         * RE-SCANNED through the SHIPPED default generator: pre-sword,
+         * `obstacleTarget: 4`, seeds 1..30, for a seed that KEEPS a water pool
+         * BEFORE its last row **and** keeps its FIRST candidate at every step
+         * (so solve k really is kept row k-1) — **TEN qualify** (4, 9, 13, 14,
+         * 15, 19, 21, 23, 25, 27). **Seed 21 is taken because its pool is kept
+         * at index 1**: one pin-FREE solve before it and three pinned solves
+         * after, so the case has both arms rather than one — the same rule that
+         * chose seed 24.
          */
-        const seed = 24;
+        /**
+         * ⛓⛓⛓ RE-WIRED AT SLICE 4c, AND THE ROW'S OWN BYTE-COMPARISON IS WHAT
+         * CAUGHT IT. The instrument built its model with `seedlingModel({seed})`
+         * — a BARE room — which was the same model `generateSeedlingLevel` used
+         * while `--elements=` defaulted to `none`. The biome default puts an
+         * ELEMENT in the skeleton and DROPS it when its certification refuses,
+         * so the shipped model is `seedlingSeam(…).model` and nothing else.
+         * ⛔ The instrument now takes both the model AND the oracle from the
+         * seam, which is exactly what `generateSeedlingLevel` does, and the
+         * record/trace comparison below is what says so.
+         */
+        const seed = 21;
         const bounds = { obstacleTarget: 4 };
-        const m = seedlingModel({ seed });
-        const base = seedlingOracle({ model: m, items: PRE_SWORD_PALETTE.items ?? null });
+        const seam = seedlingSeam({ seed, items: PRE_SWORD_PALETTE.items ?? null });
+        const m = seam.model;
+        const base = seam.oracle;
         const perSolve = [];
         const spy = {
             ...base,
@@ -1635,6 +1442,33 @@ describe('the exclusions are a list with measurements in it', () => {
         expect(names).not.toContain('pushable-block');
         expect(names).toContain('button-lock-pair');
         expect(names).toContain('arrow-ceiling-killlock');
+        /**
+         * ⛓⛓⛓ SLICE 4c — THE THREE DOOR TEMPLATES JOINED THE LIST (⚖ user,
+         * 2026-08-16/17), and their cause is a THIRD kind: not a mechanism the
+         * oracle could not adjudicate (`button-lock-pair`), not a RULING against
+         * the mechanism itself (`arrow-lane`), but SUPERSESSION — the room-aware
+         * ELEMENTS do what a pass-2 template could not, and each row carries the
+         * measurement that retired it.
+         *
+         * ⛔ THE KILL ROW IS ON THE **POST-SWORD** LIST, because that is where
+         * the template lived (`KILL_LOCK_TEMPLATES`, now empty). An exclusion is
+         * a claim about a palette, and putting it on the pre-sword list would
+         * say the pre-sword biome had considered and rejected a family it never
+         * held.
+         */
+        expect(names).toContain('wall-gap-block');
+        expect(names).toContain('wall-gap-lock-weigh');
+        expect(names).not.toContain('wall-gap-spinner-killlock');
+        expect(POST_SWORD_EXCLUDED_TEMPLATES.map((x) => x.name))
+            .toContain('wall-gap-spinner-killlock');
+        for (const x of [...EXCLUDED_TEMPLATES, ...POST_SWORD_EXCLUDED_TEMPLATES]
+            .filter((r) => /^wall-gap-/.test(r.name))) {
+            expect(x.cause).toMatch(/SUPERSEDED \(user, 2026-08-16\)/);
+            // ⛔ each names the ELEMENT that superseded it — a row that said
+            // only "superseded" would send a reader nowhere.
+            expect(x.wouldNeed + x.cause + x.measured)
+                .toMatch(/blockpocket|guard|killgate|blockPocket/);
+        }
         for (const x of EXCLUDED_TEMPLATES) {
             expect(typeof x.cause).toBe('string');
             expect(x.cause.length).toBeGreaterThan(0);
@@ -1668,17 +1502,24 @@ describe('the exclusions are a list with measurements in it', () => {
         }
     });
 
-    it('NOTHING excluded is also in the palette', () => {
-        const paletteFamilies = new Set(PRE_SWORD_TEMPLATES.map((t) => t.family));
+    it('NOTHING excluded is also in the palette — in EITHER biome', () => {
+        const paletteFamilies = new Set(POST_SWORD_TEMPLATES.map((t) => t.family));
         for (const x of EXCLUDED_TEMPLATES) {
             expect(PRE_SWORD_TEMPLATES.some((t) => t.name === x.name)).toBe(false);
         }
-        // ⛓ `shove` is NO LONGER on this list — slice 3 promoted it. The
-        // families still out are the ones whose measurement still says so.
-        for (const family of ['hold', 'kill', 'break', 'chaser']) {
+        // ⛓ SLICE 4c: the post-sword list is asked too, because that is where
+        // the kill row went and the pre-sword walk above cannot see it.
+        for (const x of POST_SWORD_EXCLUDED_TEMPLATES) {
+            expect(POST_SWORD_TEMPLATES.some((t) => t.name === x.name)).toBe(false);
+        }
+        // ⛓ `shove` WAS promoted by slice 3 and RETIRED by slice 4c, and it is
+        // named here rather than dropped: the list of out-families is the
+        // palette's own account of what it decided against, and `shove` is now
+        // on it for a different reason from the other four (superseded by an
+        // ELEMENT, not un-adjudicable).
+        for (const family of ['hold', 'kill', 'break', 'chaser', 'shove', 'weigh']) {
             expect(paletteFamilies.has(family)).toBe(false);
         }
-        expect(paletteFamilies.has('shove')).toBe(true);
     });
 });
 
@@ -1688,14 +1529,18 @@ describe('the exclusions are a list with measurements in it', () => {
 
 describe('restrictPalette — the sub-roster a run may draw from', () => {
     it('narrows by FAMILY and keeps ROSTER ORDER and the SAME frozen objects', () => {
+        // ⛓ SLICE 4c: the pair used to be `weigh` + `water`; `weigh` retired
+        // into the `guard` ELEMENT, so the second family is `pit`. ⛔ The pair
+        // is still given OUT OF ROSTER ORDER on purpose — the claim is that the
+        // result keeps the ROSTER's order and not the caller's.
         const r = restrictPalette(PRE_SWORD_PALETTE, {
-            axis: 'families', names: ['weigh', 'water'],
+            axis: 'families', names: ['pit', 'water'],
         });
         // ⛔ FROM THE ROSTER, never a literal (trap 199): the expected list is
         // the palette's own order filtered, so a template added to the `water`
         // family arrives here without an edit.
         const expected = PRE_SWORD_TEMPLATES.filter(
-            (t) => ['water', 'weigh'].includes(t.family));
+            (t) => ['water', 'pit'].includes(t.family));
         expect(r.templates.map((t) => t.name)).toEqual(expected.map((t) => t.name));
         // ⛓ IDENTITY, not equality. `rng.pick` indexes this list and
         // `instantiateKept` looks a base up in it, so a COPY of a template
@@ -1707,17 +1552,17 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
 
     it('narrows by TEMPLATE, and the two axes can name the SAME sub-roster', () => {
         const byFamily = restrictPalette(PRE_SWORD_PALETTE, {
-            axis: 'families', names: ['water', 'weigh'],
+            axis: 'families', names: ['water', 'pit'],
         });
         const byName_ = restrictPalette(PRE_SWORD_PALETTE, {
-            axis: 'templates', names: ['water-pool', 'wall-gap-lock-weigh'],
+            axis: 'templates', names: ['water-pool', 'pit-patch'],
         });
         expect(byName_.templates).toEqual(byFamily.templates);
         // ⚠ …and they are still DIFFERENT restrictions, because the NAME says
         // which question was asked. A run's palette name rides in
         // `summary.palette`, the payload and the readout.
-        expect(byFamily.name).toBe('pre-sword[families:water,weigh]');
-        expect(byName_.name).toBe('pre-sword[templates:wall-gap-lock-weigh,water-pool]');
+        expect(byFamily.name).toBe('pre-sword[families:pit,water]');
+        expect(byName_.name).toBe('pre-sword[templates:pit-patch,water-pool]');
     });
 
     it('⛔ SPELLS ITS AXIS — and the collision that FORCED that is now GONE', () => {
@@ -1750,11 +1595,11 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
 
     it('SORTS and DEDUPES, so one sub-roster has exactly one name', () => {
         const a = restrictPalette(PRE_SWORD_PALETTE, {
-            axis: 'families', names: ['weigh', 'water', 'weigh'],
+            axis: 'families', names: ['pit', 'water', 'pit'],
         });
-        const b = restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['water', 'weigh'] });
+        const b = restrictPalette(PRE_SWORD_PALETTE, { axis: 'families', names: ['water', 'pit'] });
         expect(a.name).toBe(b.name);
-        expect(a.roster.names).toEqual(['water', 'weigh']);
+        expect(a.roster.names).toEqual(['pit', 'water']);
     });
 
     it('null means THE WHOLE ROSTER and hands back the palette itself', () => {
@@ -1774,14 +1619,33 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
         // refusals carry ITS class — the same shape `templateContract` took in
         // slice 2. ⛔ The row is REPOINTED, not relaxed: it still asserts a
         // typed refusal, and the message is asserted unchanged beside it.
+        /**
+         * ⛓⛓ RE-PICKED AT SLICE 4c, AND THE SUBJECT HAD TO CHANGE SHAPE. The
+         * unknown name used to be `wall-gap-spinner-killlock` — a row the
+         * pre-sword palette did not hold and the post-sword one did, so ONE
+         * name drove both halves. The retirement emptied
+         * `KILL_LOCK_TEMPLATES`, so **no name is in one roster and not the
+         * other any more** (the biome is the BOOT now).
+         *
+         * ⛔ SO THE TWO HALVES ARE SEPARATED RATHER THAN THE ROW WEAKENED: the
+         * refusal is driven with a name NEITHER palette holds (a RETIRED one,
+         * which is the realistic typo — somebody's old link), and the
+         * "accepted where it IS held" half is driven with a name both hold.
+         * ⚠ The `templates` axis no longer distinguishes the two biomes at all,
+         * and that is asserted just above (`BOTH biomes ship the SAME roster`)
+         * rather than left as a silence here.
+         */
         expect(() => restrictPalette(PRE_SWORD_PALETTE, {
             axis: 'templates', names: ['wall-gap-spinner-killlock'],
         })).toThrow(PaletteRosterError);
         expect(() => restrictPalette(PRE_SWORD_PALETTE, {
             axis: 'templates', names: ['wall-gap-spinner-killlock'],
         })).toThrow(/names "wall-gap-spinner-killlock", which palette "pre-sword" does not offer/);
-        expect(restrictPalette(POST_SWORD_PALETTE, {
+        expect(() => restrictPalette(POST_SWORD_PALETTE, {
             axis: 'templates', names: ['wall-gap-spinner-killlock'],
+        })).toThrow(/which palette "post-sword" does not offer/);
+        expect(restrictPalette(POST_SWORD_PALETTE, {
+            axis: 'templates', names: ['pit-patch'],
         }).templates).toHaveLength(1);
     });
 
@@ -1802,15 +1666,18 @@ describe('restrictPalette — the sub-roster a run may draw from', () => {
     });
 
     it('the restricted palette still passes `assertPalette` — every instantiation', () => {
-        const r = restrictPalette(POST_SWORD_PALETTE, { axis: 'families', names: ['kill', 'water'] });
+        const r = restrictPalette(POST_SWORD_PALETTE, { axis: 'families', names: ['pit', 'water'] });
         expect(() => assertPalette(r)).not.toThrow();
-        // ⛓ AND the sentinel slots survive the subset: the kill lock's tag and
-        // the group slot are properties of the TEMPLATE OBJECT, which is the
-        // same object, so a restricted run cannot lose them.
-        const kill = r.templates.find((t) => t.family === 'kill');
-        const rows = enumerateValues(kill).map((v) => kill.instantiate(null, v));
-        expect(rows.some((row) => row.entities.some((e) => e.attrs?.tag === PLACEMENT_TAG)))
-            .toBe(true);
+        /**
+         * ⛓⛓ THE SENTINEL HALF OF THIS ROW RETIRED WITH THE KILL FAMILY (slice
+         * 4c). It asserted that a restricted subset keeps the tag slot, on the
+         * ground that the templates are the SAME frozen objects — and that
+         * ground is what is asserted instead, of every row in the subset. ⛔ A
+         * sentinel assertion re-pointed at `SLOT_DOOR` would be testing this
+         * file's fixture against `restrictPalette`, which never sees it.
+         */
+        for (const t of r.templates) expect(POST_SWORD_TEMPLATES).toContain(t);
+        expect(r.templates.map((t) => t.name)).toEqual(['water-pool', 'pit-patch']);
     });
 });
 
@@ -1898,26 +1765,30 @@ describe('catalogueRows — ⚖ ruling 1\'s "a list of things that can be genera
 
 describe('⛓ a RESTRICTED run through the whole certification path', () => {
     /**
-     * ⛓ THE SUBJECT IS MEASURED, NOT PICKED. `families:water,weigh` at
-     * pre-sword seed 3, target 2 is the cheapest scanned case (68 ms, 2
-     * attempts) that keeps BOTH a water pool — the only pin-declaring family,
-     * so `summary.pins` has something to be wrong about — and a weigh lock,
-     * which is the pre-sword template that uses BOTH sentinel slots
-     * (`PLACEMENT_GROUP` and `PLACEMENT_TAG`). Scanned over seeds 1..6: 1, 2,
-     * 3 and 6 keep both; 4 and 5 keep two pools.
+     * ⛓ THE SUBJECT IS MEASURED, NOT PICKED — and it was re-measured at slice
+     * 4c, because `weigh` retired into the `guard` ELEMENT and half the old
+     * restriction stopped existing.
      *
-     * ⛔ AND THE UNRESTRICTED RUN OF THE SAME SEED KEEPS NEITHER — it keeps
-     * `pit-patch` and `wall-gap-block` (⛓ RE-MEASURED at arc 3 slice 1; it was
-     * `pit-patch` and `arrow-lane` until ⚖ design ruling 9 took that row out,
-     * and seed 3 is still one of six disjoint seeds in 1..14). That is what
-     * makes this a DISCRIMINATOR
+     * RE-SCANNED (trap 285 — the target and the count are named): `families:
+     * water,pit` at target 2 through the SHIPPED default generator, seeds 1..12.
+     * Eight of the twelve keep a water pool — the only pin-declaring family, so
+     * `summary.pins` has something to be wrong about — and **seed 6 is the
+     * cheapest that keeps ONE OF EACH family in the restriction (54 ms, 2
+     * attempts, `water-pool` + `pit-patch`)**. Seed 8 is marginally cheaper (46
+     * ms) and keeps two pools, which would leave half the restriction unexercised.
+     *
+     * ⛔ AND THE UNRESTRICTED RUN OF THE SAME SEED KEEPS A `wall-segment`,
+     * which the restriction forbids. That is what makes this a DISCRIMINATOR
      * (trap 235): a restriction the loop ignored would show up as kept
-     * templates that are not in the restriction at all.
+     * templates that are not in the restriction at all. ⚠ Four of the twelve
+     * seeds do NOT discriminate (3, 9, 10, 12 — the unrestricted run happens to
+     * keep only allowed rows), which is a thinner margin than the old roster
+     * gave and is why the seed is named rather than assumed.
      */
-    const ROSTER = Object.freeze({ axis: 'families', names: ['water', 'weigh'] });
+    const ROSTER = Object.freeze({ axis: 'families', names: ['water', 'pit'] });
     const restricted = () => restrictPalette(PRE_SWORD_PALETTE, ROSTER);
     const run = (palette) => generateSeedlingLevel({
-        seed: 3, palette, bounds: { obstacleTarget: 2 },
+        seed: 6, palette, bounds: { obstacleTarget: 2 },
     });
 
     it('draws ONLY from the restriction, and the unrestricted run proves it is a subset', () => {
@@ -1933,7 +1804,7 @@ describe('⛓ a RESTRICTED run through the whole certification path', () => {
     });
 
     it('the derived palette name rides in `summary.palette`', () => {
-        expect(run(restricted()).summary.palette).toBe('pre-sword[families:water,weigh]');
+        expect(run(restricted()).summary.palette).toBe('pre-sword[families:pit,water]');
         expect(run(PRE_SWORD_PALETTE).summary.palette).toBe('pre-sword');
     });
 
@@ -1952,35 +1823,29 @@ describe('⛓ a RESTRICTED run through the whole certification path', () => {
         }
     });
 
-    it('the SENTINEL SLOTS are resolved per placement, restricted or not', () => {
-        /**
-         * ⛓⛓ RE-MEASURED AT ARC 3 SLICE 2 — and the `expect(weigh).toBeTruthy()`
-         * guard below is what caught it, which is the whole reason it is there.
-         * The weigh lock is a DOOR now (⚖ ruling 17), so seed 3's restricted run
-         * keeps two water pools and no lock at all, and the tag assertion would
-         * have passed VACUOUSLY over an empty list. Re-scanned seeds 1..14 under
-         * this same restriction: **1, 2, 9 and 13 keep a weigh**, and 1 is the
-         * first — its lock comes out `{tset:'16', tag:'1'}`. ⛔ The seed moves,
-         * the assertion does not.
-         */
-        const r = generateSeedlingLevel({
-            seed: 1, palette: restricted(), bounds: { obstacleTarget: 2 },
-        });
-        const weigh = r.summary.kept.find((k) => k.family === 'weigh');
-        expect(weigh).toBeTruthy();
-        const world = worldFor(r.record);
-        // the lock and its button share ONE allocated group, and the goal's
-        // own tag 0 is not what the lock was given.
-        const tags = world.magicalLocks.map((l) => tagOf(l));
-        expect(tags.every((t) => t !== PLACEMENT_TAG)).toBe(true);
-    });
-
+    /**
+     * ⛓⛓⛓ **A ROW STOOD HERE AND ITS SUBJECT RETIRED** — *"the SENTINEL SLOTS
+     * are resolved per placement, restricted or not"* (arc 3, slice 4c). It
+     * placed a WEIGH lock through a restricted run and read the resolved tag off
+     * the built world; the weigh family became the `guard` ELEMENT, and no
+     * shipped row carries a sentinel to resolve.
+     *
+     * ⛓ IT WAS ALREADY GUARDED AGAINST GOING VACUOUS — `expect(weigh)
+     * .toBeTruthy()` caught exactly this at slice 2 — and that guard is what
+     * says the row must go rather than be re-seeded: there is no seed at which
+     * it is non-vacuous now. ⛔ The claim it made (*a sentinel never survives
+     * into a level; each placement gets its own*) is driven on `SLOT_DOOR` in
+     * the placement block above, at the layer where it is a fact about `place`.
+     * What is NOT covered any more is the interaction of a RESTRICTION with the
+     * slots, and that is a nothing: `restrictPalette` hands back the SAME frozen
+     * template objects, which the row just above asserts directly.
+     */
     it('is DETERMINISTIC under the restriction — same roster, same level', () => {
         expect(run(restricted()).record).toEqual(run(restricted()).record);
         // ⚠ and the two SPELLINGS of one sub-roster produce one level, because
         // the subset and its ORDER are what the rng indexes.
         const byName_ = restrictPalette(PRE_SWORD_PALETTE, {
-            axis: 'templates', names: ['wall-gap-lock-weigh', 'water-pool'],
+            axis: 'templates', names: ['pit-patch', 'water-pool'],
         });
         expect(run(byName_).record).toEqual(run(restricted()).record);
     });
@@ -2004,10 +1869,25 @@ describe('⛓ `verbOf` / `dischargesVerb` — ⚖ §12.1\'s evidence standard, o
         }
     });
 
-    it('names the verb of every CLEARER family', () => {
+    /**
+     * ⛓⛓⛓ **THE MAP OUTLIVED ITS TEMPLATES, ON PURPOSE** (arc 3, slice 4c). The
+     * three families it names all retired into ELEMENTS, so `CLEARER_STRATEGY`
+     * answers for nothing in either roster today. It STAYS because its readers
+     * did not retire with them: `batch-seedling-acceptance.mjs` and
+     * `sweep-seedling-anchor-search.mjs` key on it, the elements' own
+     * certification records carry the SAME three verb words
+     * (`{strategy:'shove'|'weigh'|'kill'}`), and arc 5's arena is the next row
+     * that will want one. ⛔ A map deleted for having no caller this week is a
+     * vocabulary somebody re-invents next week with different words.
+     */
+    it('names the verb of every CLEARER family — which no shipped TEMPLATE is today', () => {
         expect(verbOf('shove')).toBe('shove');
         expect(verbOf('weigh')).toBe('weigh');
         expect(verbOf('kill')).toBe('kill');
+        // ⛔ …and NOT ONE of them is a family either roster still holds. Said
+        // here, where a reader meets the map, rather than left to be discovered.
+        const shipped = new Set(POST_SWORD_TEMPLATES.map((t) => t.family));
+        for (const f of ['shove', 'weigh', 'kill']) expect(shipped.has(f)).toBe(false);
     });
 
     it('is true only when a `{strategy}` RECORD names that family\'s own verb', () => {
@@ -2035,9 +1915,17 @@ describe('⛓ `verbOf` / `dischargesVerb` — ⚖ §12.1\'s evidence standard, o
                 const v = verbOf(f);
                 expect(v === null || typeof v === 'string').toBe(true);
             }
-            // ⛔ AND THE ROSTER REALLY HOLDS BOTH KINDS, or this case would be
-            // asserting about an empty half of its own claim.
-            expect(families.filter((f) => verbOf(f) !== null).length).toBeGreaterThan(0);
-            expect(families.filter((f) => verbOf(f) === null).length).toBeGreaterThan(0);
+            /**
+             * ⛓⛓ THE OLD SECOND HALF ASSERTED THE ROSTER HOLDS **BOTH** KINDS,
+             * and slice 4c made that false: every shipped family is verb-less.
+             * ⛔ REPLACED RATHER THAN DELETED (trap 312) — the sentence that
+             * survives is the one that can still fail, and it is the STRONGER
+             * half of the pair. `verbOf` must answer `null` and never
+             * `undefined`, which is exactly the case a `?? null` dropped from
+             * its body produces, and the whole roster now drives it.
+             */
+            for (const f of families) expect(verbOf(f)).toBeNull();
+            // ⛓ …and the OTHER kind is asserted where it still exists — on the
+            // map itself, in the row above.
         });
 });

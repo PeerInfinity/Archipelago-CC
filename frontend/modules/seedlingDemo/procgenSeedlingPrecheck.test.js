@@ -213,7 +213,7 @@ const wallSeg = (ori, len) => {
  * So the subject is built here, explicitly, from the model's own `place`:
  * **seed 3's `empty` room, one `wall-segment(ori=v,len=5)` at (2,1)** — legal,
  * and it leaves (2,6)..(2,8) open so the room still connects. Column x=2 is the
- * column that isolates the START (1,1) from the GOAL (3,4), which this file
+ * column that isolates the START (1,1) from the GOAL (6,4), which this file
  * asserts rather than assumes.
  */
 const accumulatedOpenRoom = (seed) => {
@@ -241,7 +241,10 @@ describe('procgenSeedling — ⛔ THE RULE RUNS AT EVERY KIND, `empty` INCLUDED 
         expect(why).toMatch(SEAL);
         // ⛓ A VALUE claim on the SENTENCE (trap 269): it names this room's own
         // kind, the start and the goal THIS FILE computed, and the cell count.
-        expect(why).toMatch(/no ground path from the START \(1,1\) to the GOAL \(3,4\)/);
+        // ⛓ SLICE 4c: seed 3's goal moved from (3,4) to (6,4) under the
+        // `manhattan >= 3` draw. ⛔ The CLAIM is the sentence's shape — it names
+        // THIS room's start and goal — and the cells follow the measurement.
+        expect(why).toMatch(/no ground path from the START \(1,1\) to the GOAL \(6,4\)/);
         expect(why).toMatch(/once the 3 wall\/water\/pit cell\(s\) it writes are painted/);
         expect(why).toMatch(/at EVERY skeleton kind — this room is "empty"/);
         // …and `legalAt`/`anchorsFor` inherit it at `empty` too.

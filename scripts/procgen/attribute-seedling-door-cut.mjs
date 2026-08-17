@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * ⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The
+ * user retired the three door TEMPLATES into the room-aware ELEMENTS, and this
+ * instrument's SUBJECT went with them: it names WHICH ANCHORS THE DOOR LAW MOVED, per door-family instantiation — and there are no door TEMPLATES left to enumerate (arc-3 §13.2). ⛓ The LAW is untouched and is asked of every `on-connector` element placement by the same binding; what retired is the enumeration over a roster.
+ *
+ * ⛓ ITS LAST MEASUREMENT LIVES IN arc-3 kickoff §9.4 (the movers it named when the law landed) and §13.6(c).
+ *
+ * ⛔ IT REFUSES TO RUN rather than printing a table of zeros. A sweep whose
+ * subject no longer exists still produces a well-formed table, and a reader
+ * who found that table in an as-built would read the zeros as a FINDING. The
+ * body below is kept verbatim — it is the record of how the measurement was
+ * made, and the day a comparable subject ships it is what a new instrument
+ * should be written against.
+ */
+process.stderr.write(
+    'attribute-seedling-door-cut: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
+    + 'retired with the three door TEMPLATES. See this file\'s header for where its '
+    + 'last measurement lives. ⛔ It refuses rather than printing a table of zeros.\n',
+);
+process.exit(2);
+/* eslint-disable */
+/**
  * attribute-seedling-door-cut — **WHICH ANCHORS THE DOOR LAW MOVED, AND WHY**.
  *
  * PROCGEN ELEMENTS arc 3, slice 2. The `empty`-kind pairs move when the door

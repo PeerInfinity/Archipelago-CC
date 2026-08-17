@@ -121,6 +121,15 @@ export class ProcgenSeedlingError extends Error {
 const fail = (message) => { throw new ProcgenSeedlingError(message); };
 
 /**
+ * ⛓⛓⛓ **HOW FAR THE GOAL IS DRAWN FROM THE START, IN MANHATTAN CELLS** —
+ * arc 3, slice 4c (⚖ user, 2026-08-17). See `seedlingModel`'s goal-draw block
+ * for the proof that 3 is the smallest value that carries the claim, and
+ * `procgenGoalDraw.test.js` for the rows that drive it. ⛔ It is EXPORTED
+ * because the census and the browser rows read it rather than retyping a 3.
+ */
+export const GOAL_MIN_FROM_START = 3;
+
+/**
  * ⛓⛓⛓ **THE DOOR LAW — A DOOR IS A CUT** (PROCGEN ELEMENTS arc 3, slice 2;
  * ⚖ design ruling 17, taken whole). ONE flood-based law, every kind, every door
  * family — it REPLACES `doorClear` and re-expresses `INTERIOR_SPAN`'s *"must
@@ -195,8 +204,8 @@ export function doorLawRefusal({
             + `${doorList} walled, the GOAL (${goal.x},${goal.y}) is STILL `
             + `reachable from the START (${start.x},${start.y}) — so the wall is `
             + 'DECORATION rather than a door. ⛔ Nothing is gated by the clearer: the '
-            + 'walk goes round, and for the kill-lock family that is a RUN ABORT (the '
-            + 'walk collects the torch with the spinner still alive). ⚖ Ruling 17\'s own '
+            + 'walk goes round, and for a KILL GATE that is a RUN ABORT (the walk '
+            + 'collects the torch with the spinner still alive). ⚖ Ruling 17\'s own '
             + 'words — a non-cut is decoration. The law reads the FLOOD, not the compass.';
     }
     const reach = reachableFrom(width, height, walled, start);
@@ -512,8 +521,59 @@ export function seedlingModel({
      */
     const roomRng = rngFor(seed);
     const blank = emptyLevel({ level: d.level, width: d.width, height: d.height });
+    /**
+     * ⛓⛓⛓ **THE GOAL IS A PASS-1 DECISION NOW** (⚖ user, 2026-08-17, the
+     * generation review §3 row 2 / §4 item 2) — arc 3, slice 4c.
+     *
+     * ⛔ THE RULE: the goal is drawn from the interior cells at MANHATTAN
+     * DISTANCE ≥ `GOAL_MIN_FROM_START` (3) from the start. Still ONE `pick`,
+     * still the room stream's FIRST draw, still before the carve — only the
+     * CANDIDATE LIST is narrower.
+     *
+     * ── ⛓⛓ WHY 3, AND IT IS A PROOF RATHER THAN A MARGIN ──────────────
+     *
+     * Slice 4a measured that **4 of 12 seeds refused every door element on
+     * every kind** (§12.5): seeds 8 and 11 put the goal ADJACENT to the start
+     * (`no-cut-cell` — the main path is two cells, so there is no interior cell
+     * to stand a door on at all) and seeds 5 and 6 put it two away
+     * (`goal-too-close` — the one interior cell is 1 from the goal, and a lock
+     * on the goal's doorstep breaks the COLLECT ceremony's approach sweep,
+     * trap 348). The goal draw knew nothing of either rule.
+     *
+     * At Manhattan `m` the shortest path is at least `m + 1` cells, so `m ≥ 3`
+     * gives a path of at least four: `start, p1, p2, goal`. `p1`'s graph
+     * distance to the goal is then ≥ 2, and on a grid Manhattan and graph
+     * distance share a PARITY and Manhattan ≤ graph distance — so
+     * `manhattan(p1, goal)` is exactly 2 when the distance is 2, and more when
+     * it is more. ⇒ **at m ≥ 3 at least one door candidate survives
+     * `goal-too-close` on every kind and every carve.** At m = 2 the single
+     * interior cell is 1 from the goal and none does; at m = 1 there is no
+     * candidate. The constant is the smallest that carries the claim, and the
+     * claim is the whole of it: *a door element is never refused for the goal's
+     * position alone.*
+     *
+     * ⛔ **MANHATTAN, NOT BFS, AND THAT IS FORCED.** The goal is the room
+     * stream's FIRST draw and the carve has not run — there is no room to flood
+     * through yet. ⚖ The brief's alternative (draw the goal AFTER the connector,
+     * as a site) would move the carve's own position in the stream and the
+     * design's declared draw order; it is not needed, because Manhattan
+     * recovers all four seeds (§13.2's census).
+     *
+     * ⚠ **IT MOVES EVERY COMMITTED PAIR**, and that is the point of bundling it
+     * with the retirement: one re-record, not two (⚖ review §4 item 2).
+     */
     const goalCandidates = interiorCells(blank)
-        .filter((c) => !(c.tx === d.start.tx && c.ty === d.start.ty));
+        .filter((c) => !(c.tx === d.start.tx && c.ty === d.start.ty))
+        .filter((c) => Math.abs(c.tx - d.start.tx) + Math.abs(c.ty - d.start.ty)
+            >= GOAL_MIN_FROM_START);
+    if (goalCandidates.length === 0) {
+        fail(`procgenSeedling: no interior cell of this ${d.width}x${d.height} room is `
+            + `${GOAL_MIN_FROM_START} or more cells (Manhattan) from the START `
+            + `(${d.start.tx},${d.start.ty}), so there is nowhere to put a goal that a door `
+            + 'element could ever stand in front of. ⛔ Refused rather than falling back to '
+            + 'the whole interior: a fallback would put the arc back where slice 4a found it '
+            + 'and would do it silently, on exactly the rooms where it matters most.');
+    }
     const goalCell = roomRng.pick(goalCandidates);
     const goalOel = oelAtTile(goalCell.tx, goalCell.ty);
     const reserved = new Set([
@@ -1915,10 +1975,76 @@ function certificationGap(cert) {
     return 'the-certification-solve-refused';
 }
 
+/**
+ * ⛓⛓⛓ **THE DEFAULT ELEMENT SPEC, BY BIOME — ONE PLACE, AND THE PLACE IS THE
+ * SEAM** (PROCGEN ELEMENTS arc 3, slice 4c; ⚖ user, 2026-08-17).
+ *
+ * ── ⛔ WHY THIS EXISTS AT ALL ──────────────────────────────────────────
+ *
+ * Slice 4c RETIRED the three door TEMPLATES (`procgenPalette`'s exclusion rows
+ * carry each one's measurement). Retiring them while `--elements=` still
+ * defaulted to `none` would leave the DEFAULT generator with no doors at all —
+ * a regression at every default seed, and the exact coupling ⚖ D5 refused to
+ * execute blind. The default spec is the other half of the ruling: what the
+ * templates stopped doing, the elements now do BY DEFAULT.
+ *
+ * ── THE SPEC ──────────────────────────────────────────────────────────
+ *
+ *   pre-sword   `guard;len=2+blockpocket`
+ *   post-sword  `guard;len=2+killgate+blockpocket`
+ *
+ * ⛓ It is a `+` LIST, which is a CHOICE and not a conjunction (`elementSpec`'s
+ * own law: ONE BLOCK PER LEVEL, and two of the three heads put a `pushableblock`
+ * in the room). ⇒ one element per level, drawn from the set certified for this
+ * biome — which is D5's proposal as measured, not a new design.
+ *
+ * ⛔ **`killgate` IS ABSENT PRE-SWORD BECAUSE IT WOULD BE A FREE REFUSAL**, not
+ * because it is worse there: `ELEMENT_TABLE.killgate.needs = ['hasSword']` and
+ * the seam refuses it for free before a solve. A pre-sword list that named it
+ * would spend a third of its draws on a head that cannot certify, and the yield
+ * table would be measuring the boot rather than the elements.
+ *
+ * ⛓ `len=2` IS A NAMED PARAMETER AND THAT IS LOAD-BEARING (`namedParams`): a
+ * named parameter is an OVERRIDE that spends NO draw, an omitted one is DRAWN.
+ * `len=2` is the guard size S1 certified 16 of 18 placements at (§11.8) and it
+ * is stated rather than drawn so the default is ONE run and not a distribution
+ * over four sizes, three of which are un-measured at this default.
+ *
+ * ⛔ **`none` STAYS SELECTABLE AND STAYS BYTE-INERT RELATIVE TO ITSELF.**
+ * `--elements=none` runs no element machinery, spends no draw and produces the
+ * same bytes it always did FOR THAT ARM. ⚠ It is NOT byte-identical to the
+ * pre-4c default any more, and it never could be: the goal draw moved in the
+ * same commit. That is said here because "`none` is inert" was a GATE for three
+ * slices and the sentence it now makes is a weaker one.
+ *
+ * ── ⛔ AND THE ONE PLACE IS `seedlingSeam`, NOT `seedlingModel` ────────
+ *
+ * The model has no items — the boot is the SEAM's argument, which is the same
+ * reason the item gate below lives here. A model asked for a default it cannot
+ * name would have to be told the biome twice. ⇒ `seedlingModel({seed})` still
+ * builds a bare room, and every caller that reaches a BIOME (the CLI, the sweep,
+ * the batch, the pairs dump, the page's ladder) gets the default from here.
+ *
+ * @param {object|null} items the biome's boot flags (`palette.items`)
+ */
+export function defaultElementsFor(items) {
+    const heads = [{ name: 'guard', params: { len: 2 } }];
+    if (items?.hasSword === true) heads.push({ name: 'killgate' });
+    heads.push({ name: 'blockpocket' });
+    return normalizeElementSpec({ any: heads });
+}
+
 export function seedlingSeam({
     seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
-    elements = DEFAULT_ELEMENTS, wrapOracle = (o) => o,
+    elements, wrapOracle = (o) => o,
 } = {}) {
+    /**
+     * ⛔ `undefined` MEANS "NOBODY SAID", AND ONLY THAT REACHES THE BIOME
+     * DEFAULT. An explicit `{name:'none'}` is a CHOICE and is honoured; `null`
+     * keeps the model's own `?? DEFAULT_ELEMENTS` meaning (`none`), which is what
+     * every caller that spells "no element" already writes.
+     */
+    if (elements === undefined) elements = defaultElementsFor(items);
     let model = seedlingModel({ seed, defaults, skeleton, elements });
     let oracle = wrapOracle(seedlingOracle({ model, items, budget }));
     /**
@@ -2025,7 +2151,7 @@ export function seedlingSeam({
  */
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
-    skeleton = DEFAULT_SKELETON, elements = DEFAULT_ELEMENTS,
+    skeleton = DEFAULT_SKELETON, elements,
 } = {}) {
     const { model, oracle, certification } = seedlingSeam({
         seed, items: palette.items ?? null, budget, defaults, skeleton, elements,

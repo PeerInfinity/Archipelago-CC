@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * ⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The
+ * user retired the three door TEMPLATES into the room-aware ELEMENTS, and this
+ * instrument's SUBJECT went with them: its subject is the span-1 corridor form of `wall-gap-spinner-killlock`, retired into the `killgate` ELEMENT (arc-3 §13.2) — which GROWS 0 wall cells on a corridor rather than drawing `span=1`, so there is no parameter left for an outcome x cost x geometry table to be about.
+ *
+ * ⛓ ITS LAST MEASUREMENT LIVES IN arc-3 kickoff §9b (this probe's own findings, in full) and §13.6(c).
+ *
+ * ⛔ IT REFUSES TO RUN rather than printing a table of zeros. A sweep whose
+ * subject no longer exists still produces a well-formed table, and a reader
+ * who found that table in an as-built would read the zeros as a FINDING. The
+ * body below is kept verbatim — it is the record of how the measurement was
+ * made, and the day a comparable subject ships it is what a new instrument
+ * should be written against.
+ */
+process.stderr.write(
+    'probe-seedling-killlock-span1: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
+    + 'retired with the three door TEMPLATES. See this file\'s header for where its '
+    + 'last measurement lives. ⛔ It refuses rather than printing a table of zeros.\n',
+);
+process.exit(2);
+/* eslint-disable */
+/**
  * probe-seedling-killlock-span1 — **THE OUTCOME × COST × GEOMETRY TABLE** for
  * the span-1 corridor kill lock (`wall-gap-spinner-killlock`, `span=1`).
  *

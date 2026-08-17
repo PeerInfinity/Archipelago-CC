@@ -23,17 +23,75 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, ProcgenPaletteError, assertPalette,
-    defineTemplate, doorGeometry, enumerateValues,
+    PRE_SWORD_PALETTE, ProcgenPaletteError, assertPalette, defineTemplate, doorGeometry,
 } from './procgenPalette.js';
 import { seedlingModel } from './procgenSeedling.js';
 import { terrainAt } from './procgenLevel.js';
 import { shortestPath } from '../procgenCore/gridFlood.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 
-const kill = (ori, span) => POST_SWORD_PALETTE.templates
-    .find((t) => t.name === 'wall-gap-spinner-killlock')
-    .instantiate(null, { ori, span });
+/**
+ * ⛓⛓⛓ **THE KILL-LOCK SHAPE, AS A FIXTURE** — PROCGEN ELEMENTS arc 3, slice 4c.
+ *
+ * Every door-LAW row below used to take its subject from the ROSTER
+ * (`wall-gap-spinner-killlock`), and ⚖ the user retired all three door TEMPLATES
+ * into the room-aware ELEMENTS. ⛔ The LAW did not retire with them — it is
+ * `procgenSeedling`'s, it is asked of every `on-connector` element placement by
+ * the SAME binding (arc-3 §12's D1: *one law, both callers*), and it is what
+ * these rows exist to drive.
+ *
+ * So the subject is rebuilt here, byte for byte as the template built it, from
+ * `doorGeometry` — the function that stayed exported for exactly this and for
+ * `census-seedling-doors.mjs`. The two forms are the two the law has always had
+ * to handle, and they are the two the `killgate` ELEMENT now GROWS:
+ *
+ *   `span = 1`  the CORRIDOR form: no wall at all, the lock cell IS the door,
+ *               and the spinner stands in a one-cell NUB the row CARVES. The
+ *               element grows 0 wall cells on a corridor — the same geometry
+ *               with the room asked instead of a parameter drawn.
+ *   `span = 8`  the OPEN-ROOM form: a full-interior wall with the gap at 4 and
+ *               the spinner at 6, one cell back on the start's side. The element
+ *               grows 7 cells on the open 10x10 room, which is this wall.
+ *
+ * ⛔ NOT A HAND-DRAWN LITERAL: a fixture that painted its own wall would drive
+ * the law on a door nothing in the pipeline can produce, which is the same
+ * argument that keeps `doorGeometry` alive (see its docblock).
+ */
+const at = (ori, along, across) => (ori === 'h'
+    ? { dx: along, dy: across } : { dx: across, dy: along });
+
+const kill = (ori, span) => {
+    if (span === 1) {
+        const door = at(ori, 0, 0);
+        const nub = at(ori, 1, -1);
+        return {
+            name: 'kill-shape',
+            instance: `kill-shape(ori=${ori},span=1)`,
+            family: 'probe',
+            door: ori,
+            doorCells: [door],
+            clearer: [nub],
+            footprint: [door, nub],
+            clearance: [at(ori, 0, -1)],
+            terrain: [{ ...nub, terrain: 'ground' }],
+            entities: [],
+        };
+    }
+    const g = doorGeometry(ori, span, Math.min(4, span - 1));
+    const spin = at(ori, Math.min(6, span - 1), -1);
+    return {
+        name: 'kill-shape',
+        instance: `kill-shape(ori=${ori},span=${span})`,
+        family: 'probe',
+        door: ori,
+        doorCells: [g.doorCell],
+        clearer: [spin],
+        footprint: [...g.cells, spin],
+        clearance: [],
+        terrain: g.wall,
+        entities: [],
+    };
+};
 
 const carved = (kind, seed) => seedlingModel({
     seed, skeleton: parseSkeleton(kind, { simulator: false, substrate: 'this test' }),
@@ -67,7 +125,7 @@ const WINDING_1 = [
     '#####.####',
     '###...####',
     '###.######',
-    '###...####',
+    '###....###',
     '##########',
     '##########',
 ].join('\n');
@@ -77,7 +135,10 @@ describe('⛓⛓⛓ THE ROOM THESE LAWS ARE DRIVEN ON — literal, and asserted 
         const m = carved('winding', 1);
         expect(ascii(m.skeleton())).toBe(WINDING_1);
         expect(m.defaults.start).toEqual({ tx: 1, ty: 1 });
-        expect(m.goalCell).toEqual({ tx: 5, ty: 7 });
+        // ⛓ SLICE 4c: (5,7) -> (6,7). The goal draw's `manhattan >= 3` rule
+        // narrowed the candidate list and moved 34 of 40 seeds' goals; this
+        // room's own corridor moved one cell with it (row 7, above).
+        expect(m.goalCell).toEqual({ tx: 6, ty: 7 });
     });
 });
 
@@ -127,8 +188,22 @@ describe('⛓⛓⛓ THE DOOR LAW ON A CORRIDOR — where `doorClear` had nothing
      * and the lock gates nothing.
      */
     it('a span-1 door OFF the route is NOT A CUT — the same sentence as a short wall', () => {
-        const m = carved('winding', 2);
-        const why = m.refusalAt(m.skeleton(), kill('h', 1), 7, 6);
+        /**
+         * ⛓⛓ RE-PICKED AT SLICE 4c BY ITS OWN SCAN (trap 285). The subject was
+         * `winding` seed 2's (7,6) — a stub the goal route did not need. The
+         * GOAL DRAW moved seed 2's goal to (6,5) and that cell is now refused by
+         * CLAUSE 2 instead (its nub lands on the goal's side), which is a
+         * different sentence and would have made this row assert the wrong law.
+         *
+         * RE-SCANNED for a span-1 cell whose refusal is NOT-A-CUT, over
+         * `winding`/`branchy`/`bushy` seeds 1..6, both orientations: **`winding`
+         * offers NONE at any of its six seeds** — its corridors are thin enough
+         * that nearly every ground cell is a bridge — and `branchy` seed 1
+         * offers SEVEN at `ori=h` (7,2 · 7,3 · 1,4 · 7,4 · 7,5 · 7,6 · 7,7).
+         * **(7,2) is taken**, the first of them.
+         */
+        const m = carved('branchy', 1);
+        const why = m.refusalAt(m.skeleton(), kill('h', 1), 7, 2);
         expect(why).toMatch(/declares a door, and it is NOT A CUT/);
         expect(why).toMatch(/is STILL reachable from the START/);
         expect(why).toMatch(/DECORATION rather than a door/);
@@ -138,13 +213,23 @@ describe('⛓⛓⛓ THE DOOR LAW ON A CORRIDOR — where `doorClear` had nothing
 describe('⛓⛓⛓ THE DOOR LAW ON THE OPEN ROOM — the span law, re-derived', () => {
     const open = () => seedlingModel({ seed: 6 });
 
-    it('a FULL-SPAN wall with the goal BEYOND it is legal — and at exactly one anchor', () => {
+    /**
+     * ⛓⛓ RE-MEASURED AT SLICE 4c. Seed 6's goal moved from (3,1) to **(5,1)**
+     * (the `manhattan >= 3` rule), so the columns with the goal BEYOND them are
+     * now 2, 3 and 4 rather than 2 alone. ⛔ The claim is unchanged and the
+     * count follows the measurement: the legal set is exactly the columns
+     * strictly left of the goal whose footprint fits.
+     */
+    it('a FULL-SPAN wall with the goal BEYOND it is legal — and at exactly three anchors', () => {
         const m = open();
         const rec = m.skeleton();
-        expect(m.goalCell).toEqual({ tx: 3, ty: 1 });
+        expect(m.goalCell).toEqual({ tx: 5, ty: 1 });
         const legal = m.interiorCells(rec)
             .filter((c) => m.legalAt(rec, kill('v', 8), c.tx, c.ty));
-        expect(legal).toEqual([{ tx: 2, ty: 1 }]);
+        expect(legal).toEqual([{ tx: 2, ty: 1 }, { tx: 3, ty: 1 }, { tx: 4, ty: 1 }]);
+        // ⛔ and every one of them really is left of the goal — the property the
+        // count is a consequence of, said so the number is not the whole claim.
+        for (const c of legal) expect(c.tx).toBeLessThan(m.goalCell.tx);
     });
 
     it('⛔ the goal on the START\'s side is DECORATION — `doorClear`\'s own case', () => {
@@ -152,9 +237,10 @@ describe('⛓⛓⛓ THE DOOR LAW ON THE OPEN ROOM — the span law, re-derived',
         const why = m.refusalAt(m.skeleton(), kill('h', 8), 1, 4);
         expect(why).toMatch(/it is NOT A CUT/);
         expect(why).toMatch(/with its door cell\(s\) \(5,4\) walled/);
-        expect(why).toMatch(/the GOAL \(3,1\) is STILL reachable from the START \(1,1\)/);
-        // ⛓ the kill family's own consequence, carried over from `doorClear`
-        expect(why).toMatch(/RUN ABORT/);
+        expect(why).toMatch(/the GOAL \(5,1\) is STILL reachable from the START \(1,1\)/);
+        // ⛓ the KILL GATE's own consequence, carried over from `doorClear` and
+        // re-worded at slice 4c when the FAMILY it named left the palette.
+        expect(why).toMatch(/for a KILL GATE that is a RUN ABORT/);
     });
 
     /**
@@ -183,9 +269,22 @@ describe('⛓⛓⛓ THE DOOR LAW ON THE OPEN ROOM — the span law, re-derived',
             .filter((c) => m.legalAt(rec, short, c.tx, c.ty));
         expect(legal).toEqual([]);
         expect(m.refusalAt(rec, short, 2, 1)).toMatch(/it is NOT A CUT/);
-        // ⛔ and the DOMAIN really does refuse the value, so the row above is
-        // testing the law rather than routing round a template that would work.
-        expect(() => kill('v', 4)).toThrow(/not in its declared domain \[1, 8\]/);
+        /**
+         * ⛓⛓ THE OLD THIRD ASSERTION WAS ABOUT A DOMAIN, AND THE DOMAIN
+         * RETIRED WITH ITS TEMPLATE (slice 4c). It read
+         * `expect(() => kill('v', 4)).toThrow(/not in its declared domain/)` —
+         * the shipped `span` domain was `{1, 8}` and refused 4 by name, so the
+         * row could say it was testing the LAW rather than routing round a
+         * template that would have worked. ⛔ REPLACED BY THE SENTENCE THAT
+         * SURVIVES (trap 312): the room-aware element does not DRAW a span at
+         * all — it GROWS its wall to the room, 0 cells on a corridor and 7 on
+         * this one — so a span-4 wall is not a run anything in the pipeline can
+         * ask for, and this row's `short` fixture is the only way to state the
+         * law about one. That is asserted where it can fail: the two spans the
+         * ELEMENT produces both cut, and the middle one does not.
+         */
+        expect(m.interiorCells(rec).some((c) => m.legalAt(rec, kill('v', 8), c.tx, c.ty)))
+            .toBe(true);
     });
 });
 
@@ -206,15 +305,19 @@ const PROBE = Object.freeze({
 });
 
 describe('⛓⛓⛓ THE CARVE RULE — one blob, one mouth, no shortcut', () => {
-    it('a one-cell pocket with ONE mouth is legal; the room offers 16 of them', () => {
+    it('a one-cell pocket with ONE mouth is legal; the room offers 18 of them', () => {
         const m = carved('winding', 1);
         const rec = m.skeleton();
         const legal = m.interiorCells(rec)
             .filter((c) => terrainAt(rec, c.tx, c.ty) === 'wall'
                 && m.legalAt(rec, PROBE, c.tx, c.ty))
             .map((c) => `${c.tx},${c.ty}`);
+        // ⛓ SLICE 4c: 16 -> 18. The goal draw moved this room's last corridor
+        // row, so two more wall cells became one-mouth pockets. ⛔ The LIST is
+        // asserted rather than the count, so a change that swapped one pocket
+        // for another could not hide behind the total.
         expect(legal).toEqual(['2,1', '3,2', '4,2', '5,2', '6,3', '1,4', '2,4', '6,4',
-            '2,5', '6,5', '2,6', '2,7', '6,7', '3,8', '4,8', '5,8']);
+            '2,5', '6,5', '2,6', '6,6', '2,7', '7,7', '3,8', '4,8', '5,8', '6,8']);
     });
 
     /**
@@ -236,7 +339,7 @@ describe('⛓⛓⛓ THE CARVE RULE — one blob, one mouth, no shortcut', () => 
         expect(why).toMatch(/A pocket with two mouths is a TUNNEL/);
     });
 
-    it('…and the NO-SHORTCUT clause is INERT against it — the path is 14 either way', () => {
+    it('…and the NO-SHORTCUT clause is INERT against it — the path is 15 either way', () => {
         const m = carved('winding', 1);
         const rec = m.skeleton();
         const walk = (x, y) => terrainAt(rec, x, y) === 'ground';
@@ -245,8 +348,11 @@ describe('⛓⛓⛓ THE CARVE RULE — one blob, one mouth, no shortcut', () => 
         const to = { x: m.goalCell.tx, y: m.goalCell.ty };
         const before = shortestPath(rec.width, rec.height, walk, from, to);
         const after = shortestPath(rec.width, rec.height, opened, from, to);
-        expect(before.length - 1).toBe(14);
-        expect(after.length - 1).toBe(14);
+        // ⛓ SLICE 4c: 14 -> 15 steps, because the goal moved one cell along the
+        // corridor. ⛔ The CLAIM is that the two are EQUAL — the clause is inert
+        // — and that is what makes the number a detail rather than the point.
+        expect(before.length - 1).toBe(15);
+        expect(after.length - 1).toBe(15);
     });
 
     it('⛔ a pocket with NO mouth is floor nothing can walk to', () => {
@@ -306,9 +412,21 @@ describe('⛔ `refusalAt`\'s ORDER — a row that fails TWO rules gets the EARLI
      * *ground* and refuses for a third, unrelated reason.)
      */
     it('the CARVE rule is asked before the DOOR law', () => {
-        const m = carved('winding', 2);
+        /**
+         * ⛓⛓ RE-PICKED AT SLICE 4c BY ITS OWN RULE (trap 285). The subject was
+         * `winding` seed 2's (6,5) with `ori='v'`; the GOAL DRAW put seed 2's
+         * GOAL on that very cell, so it now refuses with the goal-cell sentence
+         * and the row would have been asserting about the footprint walk.
+         *
+         * RE-SCANNED for a cell that fails BOTH rules — a 2-MOUTH carve AND a
+         * door the flood says is not a cut — over `winding`/`branchy`/`bushy`
+         * seeds 1..3, both orientations: **eleven qualify**, all on `branchy`
+         * and `bushy` (`winding`'s 2-mouth cells are all real cuts). **`branchy`
+         * seed 1's (4,1) at `ori='v'` is taken**, the first of them.
+         */
+        const m = carved('branchy', 1);
         const rec = m.skeleton();
-        const why = m.refusalAt(rec, kill('v', 1), 6, 5);
+        const why = m.refusalAt(rec, kill('v', 1), 4, 1);
         expect(why).toMatch(/2 MOUTH\(S\)/);
         expect(why).not.toMatch(/NOT A CUT/);
         // …and the door law really WOULD have refused the same cell, so the
@@ -319,7 +437,7 @@ describe('⛔ `refusalAt`\'s ORDER — a row that fails TWO rules gets the EARLI
             door: 'v', doorCells: [g.doorCell], clearer: [],
             footprint: g.cells, clearance: [], terrain: g.wall, entities: [],
         };
-        expect(m.refusalAt(rec, bareDoor, 6, 5)).toMatch(/it is NOT A CUT/);
+        expect(m.refusalAt(rec, bareDoor, 4, 1)).toMatch(/it is NOT A CUT/);
     });
 
     it('the FOOTPRINT walk is asked before the CARVE rule', () => {
@@ -413,76 +531,33 @@ describe('⛓⛓ `doorGeometry` — the ONE door shape, and its degenerate case'
     });
 });
 
-describe('⛓⛓⛓ THE `span` DOMAIN — measured, and a ONE-VALUE domain is a CONSTANT', () => {
-    /**
-     * ⛔⛔ ⚖ D2's RULE, ASSERTED BY READING `params` RATHER THAN BY BELIEVING A
-     * DOCBLOCK. A one-value `rng.pick` still SPENDS A DRAW, so a parameter whose
-     * measured domain came back with one member would move every seed's level
-     * for nothing. The two families whose measured domain is `{8}` therefore
-     * keep `INTERIOR_SPAN` as a constant and declare NO `span` at all — and this
-     * row is what stops a later slice from "tidying" that into a domain.
-     */
-    it('`wall-gap-block` and `wall-gap-lock-weigh` declare NO `span` — their domain is one value', () => {
-        for (const name of ['wall-gap-block', 'wall-gap-lock-weigh']) {
-            const base = PRE_SWORD_PALETTE.templates.find((t) => t.name === name);
-            expect(base.params.map((p) => p.key)).not.toContain('span');
-        }
-    });
+/**
+ * ⛓⛓⛓ **THE `span` DOMAIN BLOCK RETIRED WITH ITS TEMPLATES** — arc 3, slice 4c.
+ * Four rows stood here and every one of them was a claim about a ROSTER ROW:
+ *
+ *  · *"`wall-gap-block` and `wall-gap-lock-weigh` declare NO `span` — their
+ *    domain is one value"* (⚖ D2's rule: a one-value `rng.pick` still SPENDS a
+ *    draw, so a measured domain of one member stays a CONSTANT);
+ *  · *"`wall-gap-spinner-killlock` declares a MULTI-VALUE `span`, so it is a
+ *    real parameter"*;
+ *  · *"⛔ span 8 IS the pre-slice row, byte for byte — a captured literal"*;
+ *  · *"every declared (ori, span) instantiation is well-formed"*.
+ *
+ * ⛔ THE RULE THEY ENFORCED IS NOT GONE — it is `templateContract`'s, it is
+ * asserted at load by `assertParamSchema`, and `procgenPalette.test.js` drives
+ * it on the rows that remain. What went is its SUBJECT.
+ *
+ * ⛓⛓ AND THE MEASUREMENT THAT SIZED THE DOMAIN IS WHAT RETIRED IT, which is
+ * worth stating once here because it is the arc's own argument in miniature:
+ * `span`'s domain was `{1, 8}` — TWO VALUES FOR TWO ROOMS — and the price was
+ * published at the time (*"half this family's `empty` draws are now NO_ANCHOR
+ * by construction"*, §9.11). A room-aware element asks the ROOM instead: 0 wall
+ * cells on a corridor, 7 on the open room, a chamber's walls in a chamber, and
+ * NO parameter at all. The domain was a proxy for a measurement the room can
+ * make itself. Both numbers are preserved on the `wall-gap-spinner-killlock`
+ * exclusion row and in the arc-3 kickoff §13.6.
+ */
 
-    it('`wall-gap-spinner-killlock` declares a MULTI-VALUE `span`, so it is a real parameter', () => {
-        const base = POST_SWORD_PALETTE.templates
-            .find((t) => t.name === 'wall-gap-spinner-killlock');
-        const span = base.params.find((p) => p.key === 'span');
-        expect(span).toBeTruthy();
-        expect(span.domain.length).toBeGreaterThan(1);
-        // ⛔ every declared value is one the sweep measured — the domain and the
-        // `why` are read together so a value added without a measurement shows.
-        expect(span.why).toMatch(/measured/i);
-        expect(span.domain).toContain(1);
-        expect(span.domain).toContain(8);
-    });
-
-    /**
-     * ⛓⛓⛓ **THE BYTE-IDENTITY OF THE DEFAULT INSTANCE, AS A CAPTURED LITERAL.**
-     * `span = 8` must be `c4ca4ed40`'s row exactly — the geometry, the offsets
-     * and the entity attributes — or every post-sword level that keeps a kill
-     * lock at the default has silently moved. ⛔ Written out rather than
-     * compared against `INTERIOR_SPAN`/`GAP_OFFSET`/`SPINNER_OFFSET`: trap 305 —
-     * a row phrased against the named constant cannot see that constant change.
-     */
-    it('⛔ span 8 IS the pre-slice row, byte for byte — a captured literal', () => {
-        const t = kill('h', 8);
-        expect(t.door).toBe('h');
-        expect(t.footprint).toEqual([
-            { dx: 0, dy: 0 }, { dx: 1, dy: 0 }, { dx: 2, dy: 0 }, { dx: 3, dy: 0 },
-            { dx: 4, dy: 0 }, { dx: 5, dy: 0 }, { dx: 6, dy: 0 }, { dx: 7, dy: 0 },
-            { dx: 6, dy: -1 },
-        ]);
-        expect(t.terrain).toEqual([
-            { dx: 0, dy: 0, terrain: 'wall' }, { dx: 1, dy: 0, terrain: 'wall' },
-            { dx: 2, dy: 0, terrain: 'wall' }, { dx: 3, dy: 0, terrain: 'wall' },
-            { dx: 5, dy: 0, terrain: 'wall' }, { dx: 6, dy: 0, terrain: 'wall' },
-            { dx: 7, dy: 0, terrain: 'wall' },
-        ]);
-        expect(t.clearance).toEqual([]);
-        expect(t.doorCells).toEqual([{ dx: 4, dy: 0 }]);
-        expect(t.clearer).toEqual([{ dx: 6, dy: -1 }]);
-        expect(t.entities.map((e) => [e.type, e.dx, e.dy, e.attrs.tset ?? null]))
-            .toEqual([['lock', 4, 0, '-1'], ['spinner', 6, -1, null]]);
-    });
-
-    it('every declared (ori, span) instantiation is well-formed — the load-time check covers them', () => {
-        const base = POST_SWORD_PALETTE.templates
-            .find((t) => t.name === 'wall-gap-spinner-killlock');
-        const rows = enumerateValues(base).map((v) => base.instantiate(null, v));
-        expect(rows.length).toBe(base.params[0].domain.length * base.params[1].domain.length);
-        for (const t of rows) {
-            const fp = new Set(t.footprint.map((c) => `${c.dx},${c.dy}`));
-            for (const c of t.doorCells) expect(fp.has(`${c.dx},${c.dy}`)).toBe(true);
-            for (const e of t.entities) expect(fp.has(`${e.dx},${e.dy}`)).toBe(true);
-        }
-    });
-});
 
 describe('⛓⛓ THE DOOR CENSUS\'S OWN COUNTS, re-derived through the model', () => {
     /**
@@ -522,7 +597,12 @@ describe('⛓⛓ THE DOOR CENSUS\'S OWN COUNTS, re-derived through the model', (
      */
     it('⛔ the OPEN room cuts at span 8 and at NO shorter span — the census\'s headline', () => {
         const m = seedlingModel({ seed: 6 });
-        expect(count(m, bare('v', 8, 0))).toBe(1);
+        // ⛓ SLICE 4c: THREE cutting anchors rather than one, and for a reason
+        // that is not about the census — the GOAL DRAW moved seed 6's goal from
+        // (3,1) to (5,1), so three columns have it beyond them instead of one.
+        // ⛔ The HEADLINE is unchanged and is the shape of the row, not the
+        // number: span 8 cuts and NO shorter span does.
+        expect(count(m, bare('v', 8, 0))).toBe(3);
         for (let span = 1; span <= 7; span += 1) {
             expect({ span, cuts: count(m, bare('v', span, 0)) }).toEqual({ span, cuts: 0 });
         }

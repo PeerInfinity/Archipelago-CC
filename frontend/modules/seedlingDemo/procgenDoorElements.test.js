@@ -83,9 +83,23 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
      */
     it('a bare head spends NO list draw; a list spends exactly one MORE than the head it drew',
         () => {
-            const list = seedlingModel({ seed: 3, skeleton: kindOf('winding'),
+            /**
+             * ⛓⛓ RE-PICKED AT SLICE 4c (trap 285). The GOAL DRAW moved
+             * `winding` seed 3's room and the head it draws there now REFUSES,
+             * which puts the row back in the exact trap its own docblock
+             * describes — measuring the list pick AND the placement at once.
+             * RE-SCANNED over `winding`/`branchy`/`rooms`/`empty` seeds 1..8
+             * for a cell whose drawn head PLACES: **`winding` seed 1 is the
+             * first**, and the relation holds at 11 of the 12 `winding`/
+             * `branchy` cells that place. ⚠ It does NOT hold on `rooms` (there
+             * the site pick's own draws differ between the two runs) — which is
+             * a fact about that skeleton's stream and is why the subject is
+             * NAMED rather than looped over every kind.
+             */
+            const list = seedlingModel({ seed: 1, skeleton: kindOf('winding'),
                 elements: parseElementSpec('killgate+blockpocket') });
-            const bare = seedlingModel({ seed: 3, skeleton: kindOf('winding'),
+            expect(list.elements.ran, 'the subject\'s drawn head must PLACE').toBe(true);
+            const bare = seedlingModel({ seed: 1, skeleton: kindOf('winding'),
                 elements: { name: list.elementHead.name } });
             expect(list.roomDraws).toBe(bare.roomDraws + 1);
         });
@@ -93,12 +107,27 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
     /** ⛓⛓ AND AN `on-connector` ELEMENT THAT REFUSES SPENDS **NOTHING** — it
      *  returns before its own `pick`. ⛔ Which is the opposite of the pre-carve
      *  rule (arc-2 §10.3) and is why §12.7's level shas match. */
+    /**
+     * ⛓⛓⛓ **RE-PICKED, AND THE OLD SUBJECT WAS A REFUSAL SLICE 4c ABOLISHED**
+     * (trap 312 — replace with the sentence that survives). It drove `winding`
+     * seed 8 asserting `no-cut-cell`: seed 8 put the goal ADJACENT to the start,
+     * so the main path was two cells and there was no interior cell to stand a
+     * door on. The GOAL DRAW's `manhattan >= 3` rule makes that state
+     * UNREACHABLE — `no-cut-cell` and `goal-too-close` are both gone from the
+     * whole 10-kind x 12-seed census (`procgenGoalDraw.test.js` drives it).
+     *
+     * ⛔ THE ROW'S CLAIM IS ABOUT DRAWS, NOT ABOUT THAT NAME, so it takes a
+     * refusal that still exists. RE-SCANNED over ten kinds x seeds 1..12: two
+     * names remain — **`wall-does-not-seal` (27 cells, every `loopy`/`open`
+     * kind: a room with two routes is not cut by one line) and
+     * `pocket-not-legal` (3)**. `loopy` seed 1 is the first of the 27.
+     */
     it('a REFUSED on-connector element spends no draw at all', () => {
-        const plain = seedlingModel({ seed: 8, skeleton: kindOf('winding') });
-        const asked = seedlingModel({ seed: 8, skeleton: kindOf('winding'),
+        const plain = seedlingModel({ seed: 1, skeleton: kindOf('loopy') });
+        const asked = seedlingModel({ seed: 1, skeleton: kindOf('loopy'),
             elements: { name: 'killgate' } });
         expect(asked.elements.ran).toBe(false);
-        expect(asked.elements.refused.reason).toBe('no-cut-cell');
+        expect(asked.elements.refused.reason).toBe('wall-does-not-seal');
         expect(asked.roomDraws).toBe(plain.roomDraws);
     });
 });
@@ -371,15 +400,24 @@ describe('⛓⛓⛓ THE SEAM — the item gate, and the two elements certifying'
 
     /**
      * ⛓ THE CHEAPEST CERTIFYING CELL IN THE TABLE, and the choice is a
-     * MEASUREMENT rather than taste: `winding;chambers=2` seed 3 certifies in
-     * **698 ms**, `branchy` 2 in 2.6 s, `winding` 2 in 3.9 s and `winding` 1 in
-     * **126 SECONDS** — which is why the yield table's 120 s cell budget
-     * TIMEOUT-ABORTS two `killgate` cells and why the corridor kill lock's cost
-     * (§9b) is the element's inheritance too. A row that drove seed 1 would be a
-     * two-minute test asserting nothing seed 3 does not.
+     * MEASUREMENT rather than taste.
+     *
+     * ⛓⛓ RE-MEASURED AT SLICE 4c BY THE SAME RULE (4a's own stale-subject
+     * warning). `winding;chambers=2` seed 3 certified in 698 ms under the old
+     * goal draw and REFUSES under the new one (145 ms). RE-SCANNED over seven
+     * kinds x seeds 1..4, timed through the seam:
+     *
+     *   **winding/4      651 ms  CERTIFIED**  <- taken
+     *   rooms;minRoom=4/3  995 · rooms/3 1043 · bushy/3 1431
+     *   winding;chambers=2/2 2044 · empty/2 **8163**
+     *   ⚠ bushy/2 spends **48.7 SECONDS** to REFUSE, and `winding` 1/2 and
+     *   `branchy` 1 THROW the pocket-corner `collideLine` class (§9b.3, ⚖
+     *   endorsed as an R9 exception — the element inherits it, it does not
+     *   discharge it). A row that drove any of those would be a minute-long
+     *   test asserting nothing `winding` 4 does not.
      */
     it('post-sword: the kill gate certifies, with `kill` and the claim TRUE', () => {
-        const out = seedlingSeam({ seed: 3, skeleton: kindOf('winding;chambers=2'),
+        const out = seedlingSeam({ seed: 4, skeleton: kindOf('winding'),
             items: POST_SWORD_ITEMS, elements: { name: 'killgate' } });
         expect(out.certification.certified).toBe(true);
         expect(out.certification.strategies).toContain('kill');

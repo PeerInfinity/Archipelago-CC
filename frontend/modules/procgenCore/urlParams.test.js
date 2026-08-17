@@ -18,7 +18,8 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
-    ANCHOR_SALT, PARAM_SALT, UrlParamsError, directiveSeed, dropDirectedParam, formatDirectives,
+    ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, UrlParamsError, directiveSeed,
+    dropDirectedParam, formatDirectives,
     intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readRequire,
     readRosterSpec, readSkeleton, refuseDirectedParam, stepFromParams, writeAreasParam,
     writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
@@ -138,49 +139,83 @@ describe('urlParams — the run/count step encoding', () => {
 });
 
 describe('urlParams — the directive grammar', () => {
-    it('parses the instance label, the bound and the policy letter', () => {
-        expect(parseDirective('block(ori=v,len=3)@12d', PALETTE)).toEqual({
+    /**
+     * ⛓⛓⛓ **THE `<d|s>` POLICY LETTER LEFT THE GRAMMAR IN ARC-3 SLICE 4c** (⚖
+     * user, 2026-08-17). It named `PREFER_DISCHARGE` vs `FIRST_SOLVED`, and the
+     * preference is structurally vacuous on Seedling: S1 §11.9 measured the
+     * `solved-only` class empty, and 4c retired the last three templates with a
+     * VERB into ELEMENTS, so `dischargesVerb` answers `NO_VERB` for every row
+     * either roster holds. ⛔ The policy is a CONSTANT the directive still
+     * RECORDS (a payload is a report) and the URL no longer spells.
+     */
+    it('parses the instance label and the bound — and the policy is a CONSTANT', () => {
+        expect(parseDirective('block(ori=v,len=3)@12', PALETTE)).toEqual({
             template: 'block',
             params: { ori: 'v', len: 3 },
             anchor: null,
-            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE,
+            keepPolicy: DIRECTIVE_KEEP_POLICY,
             bound: 12,
         });
-        expect(parseDirective('bare@4s', PALETTE)).toMatchObject({
+        expect(DIRECTIVE_KEEP_POLICY).toBe(KEEP_POLICY.FIRST_SOLVED);
+        expect(parseDirective('bare@4', PALETTE)).toMatchObject({
             template: 'bare', params: {}, keepPolicy: KEEP_POLICY.FIRST_SOLVED, bound: 4,
         });
     });
 
+    /**
+     * ⛔ AN OLD LINK CARRYING THE LETTER REFUSES BY NAME rather than being read
+     * with it stripped: `@12s` and `@12d` were DIFFERENT questions and only one
+     * survives, so answering the other one silently is exactly the
+     * reinterpretation a versioned grammar exists to prevent. ⛓ The refusal
+     * hands back the corrected spelling, anchor and all.
+     */
+    it('⛔ a directive that still carries the RETIRED policy letter refuses, and says '
+        + 'what to type instead', () => {
+        expect(() => parseDirective('block(ori=v,len=3)@12d', PALETTE))
+            .toThrow(/ends its bound with "d" — the KEEP-POLICY letter/);
+        expect(() => parseDirective('bare@4s', PALETTE))
+            .toThrow(/Drop the letter — `bare@4`/);
+        // ⛓ …including the explicit-anchor spelling, which is the one a
+        // click-to-anchor link carries.
+        expect(() => parseDirective('bare@1d!3,4', PALETTE))
+            .toThrow(/Drop the letter — `bare@1!3,4`/);
+    });
+
     it('⚠ the VALUE\'s type comes from the SCHEMA, not from the text', () => {
-        const d = parseDirective('block(ori=h,len=2)@1d', PALETTE);
+        const d = parseDirective('block(ori=h,len=2)@1', PALETTE);
         expect(d.params.len).toBe(2);
         expect(typeof d.params.len).toBe('number');
         expect(typeof d.params.ori).toBe('string');
     });
 
     it('⛔ four different mistakes, four different refusals, each naming what was on offer', () => {
-        expect(() => parseDirective('nope@12d', PALETTE)).toThrow(/does not hold — it offers/);
-        expect(() => parseDirective('block(orient=v)@12d', PALETTE))
+        expect(() => parseDirective('nope@12', PALETTE)).toThrow(/does not hold — it offers/);
+        expect(() => parseDirective('block(orient=v)@12', PALETTE))
             .toThrow(/has no parameter "orient" — it declares \[ori, len\]/);
-        expect(() => parseDirective('block(ori=q)@12d', PALETTE))
+        expect(() => parseDirective('block(ori=q)@12', PALETTE))
             .toThrow(/not in its declared domain \[h, v\]/);
         expect(() => parseDirective('block@12x', PALETTE)).toThrow(/is not a directive/);
-        expect(() => parseDirective('block(ori=h,ori=v)@12d', PALETTE))
+        expect(() => parseDirective('block(ori=h,ori=v)@12', PALETTE))
             .toThrow(/names parameter "ori" twice/);
         expect(() => parseDirectives('', PALETTE)).toThrow(/names nothing/);
     });
 
     it('⛓ an EXPLICIT anchor is a walk of ONE cell, and any other bound refuses', () => {
-        expect(parseDirective('bare@1d!3,4', PALETTE).anchor).toEqual({ tx: 3, ty: 4 });
-        expect(() => parseDirective('bare@12d!3,4', PALETTE))
+        expect(parseDirective('bare@1!3,4', PALETTE).anchor).toEqual({ tx: 3, ty: 4 });
+        expect(() => parseDirective('bare@12!3,4', PALETTE))
             .toThrow(/explicit cell is a walk of ONE cell/);
     });
 
     it('⛔ formatDirectives writes in SCHEMA ORDER, so the fixed point holds', () => {
         // params inserted in the WRONG order on purpose
         const d = { template: 'block', params: { len: 3, ori: 'v' }, anchor: null,
-            keepPolicy: KEEP_POLICY.PREFER_DISCHARGE, bound: 12 };
-        expect(formatDirectives([d], PALETTE)).toBe('block(ori=v,len=3)@12d');
+            keepPolicy: DIRECTIVE_KEEP_POLICY, bound: 12 };
+        expect(formatDirectives([d], PALETTE)).toBe('block(ori=v,len=3)@12');
+        // ⛔ §8.6: the writer refuses what the reader would refuse — and since
+        // slice 4c the URL has no letter for any other policy, so a directive
+        // carrying one cannot be written at all.
+        expect(() => formatDirectives([{ ...d, keepPolicy: KEEP_POLICY.PREFER_DISCHARGE }],
+            PALETTE)).toThrow(/Seedling runs every directive under/);
         expect(parseDirective(formatDirectives([d], PALETTE), PALETTE).params)
             .toEqual({ ori: 'v', len: 3 });
     });

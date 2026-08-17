@@ -23,7 +23,7 @@
  *     slice 4 measured that)
  *   · `run=1` iff a run is on screen, DELETED at step 0 rather than `run=0`;
  *     and `run ? count : 0` as the ONE reader of which step a link names
- *   · the whole DIRECTIVE grammar — `template(k=v,…)@<bound><d|s>[!tx,ty]`,
+ *   · the whole DIRECTIVE grammar — `template(k=v,…)@<bound>[!tx,ty]`,
  *     its four distinguished refusals, `formatDirectives`' schema-order write,
  *     and the two salted streams a directive derives (`directiveSeed`)
  *   · `?source=` / `?gen=` as the arm selector
@@ -57,7 +57,7 @@
  *
  * ⛔ So the reader REFUSES the key by name (`refuseDirectedParam`) and the
  * writer DROPS it (`dropDirectedParam`). ⛓ Nothing about the GRAMMAR moved:
- * `parseDirective`/`parseDirectives`/`formatDirectives`/`POLICY_LETTER`/
+ * `parseDirective`/`parseDirectives`/`formatDirectives`/
  * `directiveSeed` are exactly what they were, because the same text still
  * arrives on the two CLIs' `--directed=` (a launch surface for scripts and
  * tests) and still labels a payload's recorded instances. What changed is
@@ -530,11 +530,25 @@ export function writeRunFlag(q, step) {
  * zero-parameter template has no clause at all, exactly as its label is its
  * bare name.
  *
- * `<policy>` is `d` (prefer-discharge) or `s` (first-solved) and `<bound>` is
- * the anchor bound — ⚖ a bounded walk NAMES its bound, and a directive is a
- * bounded walk somebody may re-run years later. ⛔ They are per-directive
- * rather than global because a click-to-anchor is a directive at bound 1, and a
- * construction mixing the two must still be nameable in one string.
+ * `<bound>` is the anchor bound — ⚖ a bounded walk NAMES its bound, and a
+ * directive is a bounded walk somebody may re-run years later. ⛔ It is
+ * per-directive rather than global because a click-to-anchor is a directive at
+ * bound 1, and a construction mixing the two must still be nameable in one
+ * string.
+ *
+ * ⛓⛓⛓ **THE `<d|s>` POLICY LETTER LEFT THE GRAMMAR IN ARC-3 SLICE 4c** (⚖ user,
+ * 2026-08-17). It named `KEEP_POLICY.PREFER_DISCHARGE` vs `FIRST_SOLVED`, and
+ * the preference is now STRUCTURALLY VACUOUS on Seedling for two independent
+ * reasons: S1 §11.9 measured the `solved-only` class EMPTY, and slice 4c retired
+ * the last three templates with a VERB at all (`shove`/`weigh`/`kill` moved to
+ * the elements), so `dischargesVerb` answers `null` — `NO_VERB` — for every row
+ * the palette still holds. A letter that names a choice with one reachable
+ * value is an input nobody can act on.
+ *
+ * ⛔ AN OLD LINK CARRYING THE LETTER **REFUSES BY NAME** rather than being read
+ * with it stripped. `@12s` and `@12d` were different questions; only one of them
+ * survives, and silently answering the other one is exactly the reinterpretation
+ * a versioned grammar exists to prevent. The refusal says to drop the letter.
  *
  * ⛔ **ONLY THE INPUTS ARE ENCODED.** `outcome` and `keptKind` are RESULTS —
  * what re-running produces, not what it takes — and a text that carried them
@@ -545,16 +559,17 @@ export function writeRunFlag(q, step) {
  * draw and come back byte-identical.
  */
 
-const POLICY_LETTER = Object.freeze({
-    d: KEEP_POLICY.PREFER_DISCHARGE,
-    s: KEEP_POLICY.FIRST_SOLVED,
-});
-const LETTER_FOR_POLICY = Object.freeze({
-    [KEEP_POLICY.PREFER_DISCHARGE]: 'd',
-    [KEEP_POLICY.FIRST_SOLVED]: 's',
-});
+/**
+ * ⛓ THE ONE POLICY A SEEDLING DIRECTIVE RUNS UNDER, since arc-3 slice 4c — a
+ * CONSTANT rather than a parsed letter. ⛔ It is still recorded on the directive
+ * (a payload is a REPORT and must say what was run) and still passed to
+ * `directedAttempt` explicitly rather than left to that function's own default,
+ * so the day the maze's measurement gives Seedling the preference back, the one
+ * line to change is here and not in three call sites.
+ */
+const DIRECTIVE_KEEP_POLICY = KEEP_POLICY.FIRST_SOLVED;
 
-export { POLICY_LETTER, LETTER_FOR_POLICY };
+export { DIRECTIVE_KEEP_POLICY };
 
 /**
  * ⛓⛓ **TWO DERIVED STREAMS PER DIRECTIVE, AND THE SPLIT IS LOAD-BEARING.**
@@ -614,16 +629,32 @@ export function directiveSeed(seed, index, salt, seedMax) {
  */
 export function parseDirective(text, palette) {
     const raw = String(text).trim();
-    const m = /^([A-Za-z0-9_-]+)(?:\(([^)]*)\))?@(\d+)([ds])(?:!(\d+),(\d+))?$/.exec(raw);
+    /**
+     * ⛔ THE RETIRED LETTER IS MATCHED FIRST AND REFUSED WITH ITS OWN SENTENCE,
+     * because the generic *"is not a directive"* text would send a reader who
+     * pasted a working 2026-08 link looking for a typo that is not there.
+     */
+    const stale = /^([A-Za-z0-9_-]+)(?:\(([^)]*)\))?@(\d+)([ds])(?:!(\d+),(\d+))?$/.exec(raw);
+    if (stale) {
+        const [, sName, sParams, sBound, sLetter, sx, sy] = stale;
+        const fixed = `${sName}${sParams === undefined ? '' : `(${sParams})`}@${sBound}`
+            + `${sx === undefined ? '' : `!${sx},${sy}`}`;
+        fail(`urlParams: the directive ${JSON.stringify(raw)} ends its bound with `
+            + `"${sLetter}" — the KEEP-POLICY letter, which left the grammar in PROCGEN `
+            + 'ELEMENTS arc 3 slice 4c. ⛓ Seedling runs every directive under '
+            + '`first-solved` now: the `prefer-discharge` preference is vacuous here, '
+            + 'because no template this palette still holds has a VERB to discharge (the '
+            + `three door families became ELEMENTS). ⛔ Drop the letter — \`${fixed}\`.`);
+    }
+    const m = /^([A-Za-z0-9_-]+)(?:\(([^)]*)\))?@(\d+)(?:!(\d+),(\d+))?$/.exec(raw);
     if (!m) {
         fail(`urlParams: ${JSON.stringify(raw)} is not a directive. The spelling is `
-            + '`template(key=value,…)@<bound><d|s>` — the parenthesised clause is the '
-            + 'INSTANCE LABEL the pane already prints, `<bound>` is how many legal anchors '
-            + 'the attempt may be solved at, and the letter is the keep policy (`d` = prefer '
-            + 'discharge, `s` = first solved). A zero-parameter template omits the clause '
-            + 'entirely, e.g. `arrow-lane@12d`.');
+            + '`template(key=value,…)@<bound>` — the parenthesised clause is the '
+            + 'INSTANCE LABEL the pane already prints and `<bound>` is how many legal '
+            + 'anchors the attempt may be solved at. A zero-parameter template omits the '
+            + 'clause entirely, e.g. `arrow-lane@12`.');
     }
-    const [, name, paramText, boundText, letter, tx, ty] = m;
+    const [, name, paramText, boundText, tx, ty] = m;
     const base = (palette?.templates ?? []).find((t) => t.name === name);
     if (!base) {
         fail(`urlParams: the directive names template ${JSON.stringify(name)}, which palette `
@@ -673,14 +704,14 @@ export function parseDirective(text, palette) {
      * ⛓ AN EXPLICIT ANCHOR IS A WALK OF ONE CELL, SO IT IS SPELLED `@1`. ⛔
      * `levelGenerator.directedAttempt` refuses any other bound beside an
      * explicit cell, and the reader refuses it HERE — before any solve —
-     * because `@12d!3,4` names a twelve-anchor search this attempt does not
+     * because `@12!3,4` names a twelve-anchor search this attempt does not
      * perform, and a link that means something different from what it says is
      * the failure this whole grammar exists to avoid.
      */
     if (tx !== undefined && bound !== 1) {
         fail(`urlParams: the directive for "${name}" names the EXPLICIT anchor `
             + `!${tx},${ty} and bound ${bound}. An explicit cell is a walk of ONE cell — `
-            + `spell it \`@1${letter}!${tx},${ty}\`. Any other bound names a search this `
+            + `spell it \`@1!${tx},${ty}\`. Any other bound names a search this `
             + 'attempt does not perform.');
     }
     return Object.freeze({
@@ -688,7 +719,8 @@ export function parseDirective(text, palette) {
         params: Object.freeze(params),
         /** The CLICKED cell, or `null` for a search. */
         anchor: tx === undefined ? null : Object.freeze({ tx: Number(tx), ty: Number(ty) }),
-        keepPolicy: POLICY_LETTER[letter],
+        /** ⛓ A CONSTANT since slice 4c — recorded, not chosen. See above. */
+        keepPolicy: DIRECTIVE_KEEP_POLICY,
         bound,
     });
 }
@@ -720,11 +752,19 @@ export function formatDirectives(directives, palette) {
                 + 'would refuse to read it back. A URL this page cannot reload is not a link '
                 + 'to the construction it is showing.');
         }
-        const letter = LETTER_FOR_POLICY[d.keepPolicy];
-        if (!letter) {
+        /**
+         * ⛔ §8.6's law, applied to a field the URL no longer spells: a
+         * directive whose policy is not the one Seedling runs cannot be written,
+         * because the link would read back as a DIFFERENT construction and
+         * nothing on the page could say so. ⛓ Since slice 4c that is a
+         * one-value check rather than a two-letter table — which is exactly what
+         * "the class is structurally empty" looks like from the writer's side.
+         */
+        if (d.keepPolicy !== undefined && d.keepPolicy !== DIRECTIVE_KEEP_POLICY) {
             fail(`urlParams: cannot write a directive whose keep policy is `
-                + `${JSON.stringify(d.keepPolicy)} — the URL spells only `
-                + `[${Object.keys(POLICY_LETTER).join(', ')}].`);
+                + `${JSON.stringify(d.keepPolicy)} — Seedling runs every directive under `
+                + `${JSON.stringify(DIRECTIVE_KEEP_POLICY)} since PROCGEN ELEMENTS arc 3 `
+                + 'slice 4c, and the URL grammar has no letter to spell any other.');
         }
         // ⛓ §8.6's law again: the writer refuses what the reader would refuse.
         // An explicit anchor beside a bound above 1 is a URL `parseDirective`
@@ -753,7 +793,7 @@ export function formatDirectives(directives, palette) {
             }
             return `${p.key}=${v}`;
         }).join(',');
-        return `${d.template}${clause ? `(${clause})` : ''}@${d.bound}${letter}`
+        return `${d.template}${clause ? `(${clause})` : ''}@${d.bound}`
             + (d.anchor ? `!${d.anchor.tx},${d.anchor.ty}` : '');
     }).join(';');
 }

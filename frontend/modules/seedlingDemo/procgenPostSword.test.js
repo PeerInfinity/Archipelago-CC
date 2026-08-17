@@ -41,8 +41,10 @@ import {
     bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain,
 } from './procgenLevel.js';
 import { DEFAULT_BUDGET, bootStaging, collectGoal, solve } from './procgenOracle.js';
+/** ⛓ SLICE 4c: the sword gate moved from a ROSTER SPLIT to an element's `needs`. */
+import { ELEMENT_TABLE } from '../procgenCore/elementSpec.js';
 import {
-    SEEDLING_DEFAULTS, generateSeedlingLevel, seedlingModel, seedlingOracle,
+    SEEDLING_DEFAULTS, generateSeedlingLevel, seedlingModel, seedlingOracle, seedlingSeam,
 } from './procgenSeedling.js';
 
 const START = SEEDLING_DEFAULTS.start;
@@ -138,32 +140,37 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * that it reaches ONE biome — so the identity is now exactly the wrong
      * invariant, and what survives it is CONTAINMENT plus a named difference.
      */
-    it('is a strict SUPERSET of the pre-sword roster, and the extra is sword-gated', () => {
+    /**
+     * ⛓⛓⛓ **AND THE EXTRA IS BACK TO NOTHING — ARC 3, SLICE 4c** (⚖ user,
+     * 2026-08-17). `wall-gap-spinner-killlock` retired into the room-aware
+     * `killgate` ELEMENT, so `KILL_LOCK_TEMPLATES` is EMPTY and the post-sword
+     * array is a spread of the pre-sword one with nothing added.
+     *
+     * ⛔ THE OLD IDENTITY CLAIM IS **NOT** RESTORED, and that is deliberate.
+     * `expect(POST_SWORD_TEMPLATES).toBe(PRE_SWORD_TEMPLATES)` would be true of
+     * a build that DELETED the seam, and the seam is kept on purpose (arc 5's
+     * arena is the next sword-gated family). What survives is CONTAINMENT plus
+     * a named difference of ZERO — the two rosters hold the same frozen row
+     * objects in the same order, and the biome is the BOOT.
+     */
+    it('is a superset of the pre-sword roster — and the extra is EMPTY since 4c', () => {
         expect(POST_SWORD_TEMPLATES).not.toBe(PRE_SWORD_TEMPLATES);
         // ⛓ SLICE 2: the containment is still BY CONSTRUCTION — the post-sword
         // array spreads the same frozen BASE objects — so identity holds and
         // this is the assertion that keeps it holding.
         for (const t of PRE_SWORD_TEMPLATES) expect(POST_SWORD_TEMPLATES).toContain(t);
         const extra = POST_SWORD_TEMPLATES.filter((t) => !PRE_SWORD_TEMPLATES.includes(t));
-        // ⛓ The `-h`/`-v` PAIR became ONE parameterized row at slice 2; what
-        // was two names is one name with an `ori` domain of two.
-        expect(extra.map((t) => t.name)).toEqual(['wall-gap-spinner-killlock']);
-        // ⛔ Every added INSTANTIATION is the KILL family and every one is a
-        // DOOR — the two properties the promotion rests on, now asserted over
-        // the domain rather than over two literals, because `door` is DERIVED
-        // from `ori` and a `build` that dropped it would silently disable the
-        // legality rule that keeps this family from aborting runs.
-        const rows = extra.flatMap((t) => enumerateValues(t).map((v) => t.instantiate(null, v)));
-        // ⛓ ARC 3 SLICE 2: 2 -> 4. The row gained a MEASURED `span` domain of
-        // two values ({1, 8} — the corridor's and the open room's), so ori(2)
-        // became ori(2) x span(2). ⛔ The properties below hold over ALL of them,
-        // which is the point of asserting over the domain rather than the row.
-        expect(rows).toHaveLength(4);
-        for (const t of rows) {
-            expect(t.family).toBe('kill');
-            expect(t.door, t.instance).toBe(t.params.ori);
-            expect(['h', 'v']).toContain(t.door);
-        }
+        expect(extra.map((t) => t.name)).toEqual([]);
+        /**
+         * ⛔ THE SWORD GATE MOVED RATHER THAN VANISHING, and this is where a
+         * reader meets it: `ELEMENT_TABLE.killgate.needs` is `['hasSword']`, and
+         * `seedlingSeam` refuses that element FOR FREE — before a solve — under a
+         * boot that does not grant one. ⛓ Asserted here so an empty `extra`
+         * cannot be read as *"the biome split is gone"*.
+         */
+        expect(ELEMENT_TABLE.killgate.needs).toEqual(['hasSword']);
+        expect(ELEMENT_TABLE.guard.needs ?? null).toBeNull();
+        expect(ELEMENT_TABLE.blockpocket.needs ?? null).toBeNull();
         expect(assertPalette(POST_SWORD_PALETTE)).toBe(true);
     });
 
@@ -172,17 +179,28 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * Asserted as a RELATION between the two, never as two literals: a slice
      * that changed the goal tag would otherwise leave this passing.
      */
-    it('every kill lock takes a tag the GOAL does not own', () => {
-        // ⛓ SLICE 2: over every INSTANTIATION — the law has to hold for each
-        // value of the family's domain, not for the row the default builds.
-        const locks = enumerateInstantiations(POST_SWORD_PALETTE)
-            .filter((t) => t.family === 'kill')
-            .flatMap((t) => t.entities.filter((e) => e.type === 'lock'));
+    /**
+     * ⛓⛓ RE-POINTED AT THE ELEMENT AT SLICE 4c. The TEMPLATE this drove
+     * retired, and its `expect(locks.length).toBeGreaterThan(0)` guard is what
+     * says so — the row cannot be re-seeded, only re-aimed. ⛔ The LAW is
+     * unchanged and is now the KILL GATE's: a `tset:'-1'` lock whose persistence
+     * tag is not the goal's. It is asked of a real placement rather than of a
+     * table, which is a stronger subject than the one it replaces.
+     */
+    it('every kill lock takes a tag the GOAL does not own — now the ELEMENT\'s', () => {
+        const m = seedlingModel({ seed: 1, elements: { name: 'killgate' } });
+        expect(m.elements.ran, 'the subject must PLACE for this row to mean anything')
+            .toBe(true);
+        const locks = m.skeleton().entities.filter((e) => e.type === 'lock');
         expect(locks.length).toBeGreaterThan(0);
         for (const l of locks) {
             expect(l.attrs.tset).toBe('-1');
             expect(l.attrs.tag).not.toBe(SEEDLING_DEFAULTS.goalTag);
         }
+        // ⛔ AND NO SHIPPED TEMPLATE CARRIES ONE ANY MORE — the other half of
+        // the same fact, said where it can fail.
+        expect(enumerateInstantiations(POST_SWORD_PALETTE)
+            .filter((t) => t.family === 'kill')).toEqual([]);
     });
 
     it('each biome carries its OWN exclusions, and they are different lists', () => {
@@ -191,14 +209,32 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
         // ⛓ SLICE 4e: `spinner-killlock` LEFT THIS LIST — it is a template now.
         // The list is asserted whole rather than by length so a row that
         // vanished silently would still be a failure.
+        // ⛓⛓ SLICE 4c: `wall-gap-spinner-killlock` came BACK to this list, and
+        // its cause is a THIRD kind — SUPERSEDED by the room-aware `killgate`
+        // ELEMENT, not un-adjudicable and not ruled out. It is on the POST-SWORD
+        // list because that is the palette that held it.
         expect(post).toEqual([
             'chest-in-the-gap', 'key-keylock-pair', 'shieldboss-door',
+            'wall-gap-spinner-killlock',
         ]);
         expect(post).not.toContain('spinner-killlock');
         for (const x of POST_SWORD_EXCLUDED_TEMPLATES) {
-            for (const field of ['cause', 'measured', 'refusalText', 'wouldNeed']) {
+            for (const field of ['cause', 'measured', 'wouldNeed']) {
                 expect(typeof x[field]).toBe('string');
                 expect(x[field].length).toBeGreaterThan(0);
+            }
+            /**
+             * ⛓⛓ `refusalText` IS THE ONE FIELD THAT MAY BE `null`, and slice 4c
+             * is where that started mattering on THIS list. It is the VERBATIM
+             * text of a probe refusal — the arc's evidence channel — and a row
+             * excluded by SUPERSESSION never produced one. ⛔ A parenthetical
+             * explaining that there is none would read, to `catalogueRows` and
+             * to `procgenPalette.test.js`'s measured-row count, as a refusal
+             * that happened; the explanation belongs in `measured`.
+             */
+            expect(x.refusalText === null || typeof x.refusalText === 'string').toBe(true);
+            if (typeof x.refusalText === 'string') {
+                expect(x.refusalText.length).toBeGreaterThan(0);
             }
             // ⛔ NOTHING excluded is also offered.
             expect(POST_SWORD_TEMPLATES.some((t) => t.name === x.name)).toBe(false);
@@ -406,16 +442,36 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
             .toMatch(/ceremony began in level 900 while the ShieldBoss/);
     });
 
-    /** Trap 199: a row added without a driven case is a FAILING test. */
-    it('every excluded row above is one this file actually drove', () => {
-        // ⛓ SLICE 4e: `spinner-killlock` is DRIVEN TWICE in this file and is on
-        // NEITHER list — it left the exclusions for the palette, and the two
-        // cases above became its promotion's evidence.
+    /**
+     * Trap 199: a row added without a driven case is a FAILING test.
+     *
+     * ⛓⛓⛓ SLICE 4c ADDS ONE **NAMED EXEMPTION**, and it is exempt for a reason
+     * this rule was never about. `wall-gap-spinner-killlock` came back to the
+     * exclusions SUPERSEDED rather than un-adjudicable: it worked, and its own
+     * measurements retired it. There is no probe geometry to drive here, because
+     * the row's evidence is a COMPARISON against the element that replaced it —
+     * the door census (§9.2), the `span` sweep (§9.5) and the element's own
+     * placement census (§12), none of which is a refusal in a probe room.
+     *
+     * ⛔ SO THE EXEMPTION IS SPELLED, NOT ASSUMED: it must be exactly this row,
+     * it must carry `refusalText: null` (there is no refusal to quote), and its
+     * `measured` must name the element that superseded it. A second superseded
+     * row arriving without a case would land here as a failure, which is what
+     * the rule is for.
+     */
+    it('every excluded row above is one this file actually drove — or a NAMED supersession', () => {
         const driven = new Set([
             'chest-in-the-gap', 'key-keylock-pair', 'shieldboss-door',
         ]);
-        for (const x of POST_SWORD_EXCLUDED_TEMPLATES) expect(driven.has(x.name)).toBe(true);
-        expect(driven.size).toBe(POST_SWORD_EXCLUDED_TEMPLATES.length);
+        const superseded = ['wall-gap-spinner-killlock'];
+        for (const x of POST_SWORD_EXCLUDED_TEMPLATES) {
+            if (superseded.includes(x.name)) {
+                expect(x.cause).toMatch(/SUPERSEDED/);
+                expect(x.refusalText).toBeNull();
+                expect(x.measured + x.wouldNeed).toMatch(/killgate|`span`/);
+            } else expect(driven.has(x.name)).toBe(true);
+        }
+        expect(driven.size + superseded.length).toBe(POST_SWORD_EXCLUDED_TEMPLATES.length);
     });
 });
 
@@ -462,21 +518,51 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
      * three-time-re-pinned seed subject is that it is expensive to maintain.
      * ⇒ ⚖ residue: this demonstration wants a scan-and-pick helper rather than a
      * literal, or a wider seed range, the next time it expires.
+     *
+     * ⛓⛓⛓ **RE-PINNED A FOURTH TIME AT ARC 3 SLICE 4c, AND THE SWORD-GATED
+     * THING IS NO LONGER A TEMPLATE.** ⚖ The user retired all three door
+     * TEMPLATES; the kill mechanism is the room-aware `killgate` ELEMENT, which
+     * the biome's DEFAULT SPEC draws (`guard;len=2+killgate+blockpocket`
+     * post-sword) and which `seedlingSeam` refuses FOR FREE under a swordless
+     * boot. So `kept.filter(family === 'kill')` can never be non-empty again and
+     * the row is re-aimed rather than re-seeded.
+     *
+     * RE-SCANNED, post-sword seeds 1..40 at target 6 through the SHIPPED
+     * DEFAULT, for a seed whose drawn head is `killgate` AND certifies AND whose
+     * level keeps >= 5 over >= 3 families: **exactly ONE — seed 29** (6 kept
+     * over all 3 families, certification SOLVED, one `kill` record, one scratch
+     * clear). ⚠ Eleven of the forty draw `killgate` and certify FALSE; the
+     * one-member class warning above stands, doubled.
+     *
+     * ⛔ AND ONE SEED IN THE FORTY **ABORTS** — post-sword seed 38, a
+     * `PhysicsV2Error` ("the player DROWNED") escaping the oracle. It is the
+     * pre-existing armed-hazard class, not this element's: `--elements=killgate`
+     * alone at that seed does NOT abort, and the default does only because a `+`
+     * list spends ONE EXTRA DRAW before instantiate and lands a different room.
+     * Recorded in the arc-3 kickoff §13 with its command; NOT this slice's to
+     * fix (traps 171/173 — no widening of the oracle's catch).
      */
-    it('seed 35: >= 5 kept obstacles over >= 3 families, and `kill` is DISCHARGED', () => {
+    it('seed 29: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 35, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 29, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
         const families = new Set(gen.summary.kept.map((k) => k.family));
         expect(families.size).toBeGreaterThanOrEqual(3);
         expect(gen.summary.items).toEqual(POST_SWORD_ITEMS);
-        // ⛔ THE SWORD-GATED FAMILY IS ACTUALLY IN THE LEVEL.
-        const killKept = gen.summary.kept.filter((k) => k.family === 'kill');
-        expect(killKept).toHaveLength(1);
+        /**
+         * ⛔ THE SWORD-GATED MECHANISM IS ACTUALLY IN THE LEVEL — and it is an
+         * ELEMENT, so it is asked of the SEAM's certification rather than of the
+         * kept list. ⛓ A CERTIFIED element is not dropped, which is what makes
+         * the final solve below able to meet it at all.
+         */
+        expect(gen.model.elementHead.name).toBe('killgate');
+        expect(gen.certification.certified).toBe(true);
+        expect(gen.summary.kept.filter((k) => k.family === 'kill')).toEqual([]);
 
-        const model = seedlingModel({ seed: 35 });
+        // ⛔ THE SEAM's model, not a bare one: the element is in the skeleton.
+        const { model } = seedlingSeam({ seed: 29, items: POST_SWORD_PALETTE.items });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
             templates: gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k)),
         });
@@ -489,7 +575,27 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         const kills = (out.records ?? []).filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(out.scratchClears).toHaveLength(1);
-        expect(out.scratchClears[0].cause).toBe('sword');
+        /**
+         * ⛔⛔ **THE CAUSE IS `water`, NOT `sword`, AND THAT IS A FINDING RATHER
+         * THAN A FIXED EXPECTATION** (arc 3, slice 4c). At seed 29 the kill
+         * gate's own spinner DROWNS in a kept `water-pool` instead of being cut
+         * down. The lifted claim still holds — this gate's own body cleared this
+         * gate's own lock, before the crossing — and the `kill` RECORD above is
+         * the solver planning that clear; what does not hold is that the level
+         * is post-sword-EXCLUSIVE, because a swordless boot would have cleared
+         * that body too.
+         *
+         * ⛓ THAT IS SLICE 4's OLD HEDGE RETURNING AS A MEASUREMENT (*"a
+         * discharged clearer IN a post-sword level, NOT a post-sword-EXCLUSIVE
+         * one"*), and it is asserted as what it IS: **no seed in 1..40 produces
+         * `cause: 'sword'`** under the shipped default — seed 29 is the only
+         * seed whose head is `killgate`, certifies, and keeps >= 5 over >= 3
+         * families at all. ⛔ Written as a two-value set so the row REDS the day
+         * a sword-caused clear becomes reachable, which is the outcome a reader
+         * of this file actually wants to hear about.
+         */
+        expect(['sword', 'water']).toContain(out.scratchClears[0].cause);
+        expect(out.scratchClears[0].cause).toBe('water');
         expect(out.scratchClears[0].by).toMatch(/^spinner@/);
         expect(out.scratchClears[0].lock).toMatch(/^lock@/);
         // ⛓ …and the flag it cleared is NOT the goal's (the tag law, driven in

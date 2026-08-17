@@ -181,16 +181,29 @@ describe('the site vocabulary is enforced where a template declares it', () => {
         for (const a of anchors) expect(chamberKeys.has(`${a.tx},${a.ty}`)).toBe(true);
     });
 
-    it('⛓ THIS SLICE\'S SCOPE, SAID OUT LOUD: the door families stay `any`', () => {
+    /**
+     * ⛓⛓⛓ **THE `any` HALF OF THIS CLAIM RETIRED WITH THE DOOR TEMPLATES** (arc
+     * 3, slice 4c). Slice 1 gave the three DECORATION families `site: 'chamber'`
+     * and deliberately left the three DOOR families on `any`, because a door
+     * wants a corridor CUT and not a room. All three doors became room-aware
+     * ELEMENTS, which pick their own cell from the main path and never ask
+     * `anchorsFor` at all — so the SITE vocabulary now has exactly one value in
+     * the shipped roster.
+     *
+     * ⛔ SAID AS AN EXHAUSTIVE MAP RATHER THAN AS THREE `chamber` ASSERTIONS: a
+     * template added without a declared class would arrive here as a failure,
+     * which is the whole reason this row is written from the roster.
+     */
+    it('⛓ EVERY shipped row is `chamber` since 4c — the `any` rows became ELEMENTS', () => {
         expect(Object.fromEntries(POST_SWORD_TEMPLATES.map((t) => [t.name, t.site])))
             .toEqual({
                 'wall-segment': 'chamber',
                 'water-pool': 'chamber',
                 'pit-patch': 'chamber',
-                'wall-gap-block': 'any',
-                'wall-gap-lock-weigh': 'any',
-                'wall-gap-spinner-killlock': 'any',
             });
+        // ⛔ and the vocabulary itself is unchanged — `any` is still a declared
+        // class `assertPalette` accepts, which is what a new row would use.
+        expect(SITE_CLASSES).toContain('any');
     });
 });
 

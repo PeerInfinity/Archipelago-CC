@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * ⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The
+ * user retired the three door TEMPLATES into the room-aware ELEMENTS, and this
+ * instrument's SUBJECT went with them: it measures the BLAST RADIUS of the kill lock's literal `tag:'1'` — a literal that was converted to the per-placement slot in GENERATE-UI slice 3 track C, on a template that retired in slice 4c (arc-3 §13.2). Two removals deep.
+ *
+ * ⛓ ITS LAST MEASUREMENT LIVES IN arc-3 kickoff §13.2, and `procgenPalette.test.js`'s slot-fixture rows, which kept the mechanism's regression coverage when its subject left.
+ *
+ * ⛔ IT REFUSES TO RUN rather than printing a table of zeros. A sweep whose
+ * subject no longer exists still produces a well-formed table, and a reader
+ * who found that table in an as-built would read the zeros as a FINDING. The
+ * body below is kept verbatim — it is the record of how the measurement was
+ * made, and the day a comparable subject ships it is what a new instrument
+ * should be written against.
+ */
+process.stderr.write(
+    'measure-seedling-killlock-tag: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
+    + 'retired with the three door TEMPLATES. See this file\'s header for where its '
+    + 'last measurement lives. ⛔ It refuses rather than printing a table of zeros.\n',
+);
+process.exit(2);
+/* eslint-disable */
+/**
  * measure-seedling-killlock-tag — ⚖ THE KILL-LOCK LITERAL `tag:'1'` BLAST
  * RADIUS, MEASURED (Seedling GENERATE-mode UI arc, slice 3 TRACK C).
  *

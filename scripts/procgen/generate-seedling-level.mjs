@@ -119,9 +119,22 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  * same one slice 5's `?elements=` will read: `--elements=guard`,
  * `--elements='guard;len=2'` (quote it — `;` is the shell's).
  *
- * ⛔ The default is `none`, and at `none` the binding draws no site, constructs
- * nothing and spends no draw, so this CLI's payload is byte-identical to the one
- * it printed before elements existed.
+ * ⛓⛓⛓ **THE DEFAULT FOLLOWS THE BIOME SINCE ARC-3 SLICE 4c** (⚖ user,
+ * 2026-08-17). ABSENT is not `none` any more: it is
+ * `procgenSeedling.defaultElementsFor(palette.items)` —
+ * `guard;len=2+blockpocket` pre-sword, `guard;len=2+killgate+blockpocket`
+ * post-sword, a `+` LIST meaning ONE of these, drawn. ⛔ That is the other half
+ * of the retirement of the three door TEMPLATES: what they stopped doing, the
+ * elements now do by default.
+ *
+ * ⛔ `--elements=none` IS STILL SELECTABLE and still draws no site, constructs
+ * nothing and spends no draw. ⚠ It is no longer byte-identical to what this CLI
+ * printed before elements existed — the GOAL DRAW moved in the same commit.
+ *
+ * ⛔ THE FLAG IS READ AS "WAS IT TYPED", not as a value with a default: absent
+ * passes `undefined` to `generateSeedlingLevel`, which is the ONE place that
+ * knows the biome. A default spelled here would be a second answer to "what
+ * does this run build" and the sweep would need a third.
  *
  * ⚠ `turns` IS NOT A KNOB HERE even though the codec carries it: ⚖ arc-3 ruling
  * 1 gives Seedling the STRAIGHT LANE only, so the binding forces `turns = 0` and
@@ -133,7 +146,8 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  * so with the SOLVE'S OWN refusal text; see `procgenSeedlingElements.js`'s
  * docblock and the arc-3 as-built §10 (the S1 "nested openers" work order).
  */
-const ELEMENTS = parseElementSpec(arg('elements', ELEMENTS_NONE));
+const ELEMENTS_ARG = arg('elements', '');
+const ELEMENTS = ELEMENTS_ARG === '' ? undefined : parseElementSpec(ELEMENTS_ARG);
 
 /**
  * ⛓ WHAT EACH ELEMENT'S LIFTED CLAIM ACTUALLY CLAIMS — the discriminating
@@ -280,7 +294,8 @@ const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, pale
  * through it is family K (slice 5, `?elements=`), and a flag that was accepted
  * and ignored would produce a payload naming a gadget the level does not hold.
  */
-if (DIRECTED && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
+if (DIRECTED && ELEMENTS !== undefined
+    && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
     process.stderr.write('generate-seedling-level: --elements= and --directed= do not compose '
         + 'yet. The directed path is `watchGenerate.generateWithDirectives` (the page\'s), and '
         + 'the element binding reaches it in slice 5 with `?elements=`. Say one or the other.\n');
@@ -385,14 +400,22 @@ if (has('json')) {
      * placement, because the two differ today and hiding the difference is the
      * one thing this slice must not do.
      */
-    if (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE) {
+    /**
+     * ⛔ KEYED ON THE **RESOLVED** SPEC, NOT ON THE FLAG (arc-3 slice 4c). The
+     * flag is absent at the biome default and the run still holds an element;
+     * a readout that asked the flag would print nothing about the very thing
+     * the default just built — the ECHO-vs-VALUE shape (trap 269) with the two
+     * ends swapped.
+     */
+    const SPEC = out.model.elementSpec;
+    if (isElementList(SPEC) || SPEC.name !== ELEMENTS_NONE) {
         const e = s?.elements ?? null;
         const p = e?.placed?.[0] ?? null;
         /**
          * ⛓ A `+` LIST NAMES SEVERAL HEADS AND THE STREAM DREW ONE, so the line
          * prints both: what was asked for, and what this seed got.
          */
-        const asked = formatElementSpec(ELEMENTS);
+        const asked = formatElementSpec(SPEC);
         const drew = formatElementSpec(out.model.elementHead);
         const head = asked === drew ? asked : `${asked} -> drew \`${drew}\``;
         /**
