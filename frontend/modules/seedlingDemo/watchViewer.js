@@ -225,8 +225,29 @@ import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
-/** Paths are resolved against the REPO ROOT — the dev server's cwd. */
-const ATLAS_URL = '/frontend/modules/flashPanel/atlases/seedling-map.json';
+/**
+ * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
+ * THE ORIGIN'S ROOT. The dev server serves the REPO root, but GitHub Pages
+ * (`.github/workflows/deploy-gh-pages.yml`) publishes `frontend/` AS its root
+ * under `/<repo>/`, so a root-absolute `/frontend/…` is a 404 there — measured
+ * 2026-08-18: every demo-catalogue URL on Pages refused with
+ * `atlas: /frontend/modules/flashPanel/atlases/seedling-map.json — HTTP 404`.
+ * `import.meta.url` is right in both worlds because `watch.html` loads this
+ * module directly (not through the bundle): a repo path under `frontend/` is
+ * resolved against the `frontend/` directory this file sits two levels below,
+ * and anything outside `frontend/` (only reachable on the dev server anyway)
+ * against the repo root. ONE resolver; every fetch of a repo path goes
+ * through it.
+ */
+const FRONTEND_ROOT = new URL('../../', import.meta.url);
+const REPO_ROOT = new URL('../../../', import.meta.url);
+function repoUrl(path) {
+    const p = String(path).replace(/^\/+/, '');
+    return p.startsWith('frontend/')
+        ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
+        : new URL(p, REPO_ROOT).href;
+}
+const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json');
 const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap/game.html';
 
 const PIT = HAZARD_STATES.pit;
@@ -659,7 +680,7 @@ async function stagingForMount(boxEl, params) {
     }
     if (params.boot) {
         const path = params.boot.replace(/^\/+/, '');
-        return { staging: stagingFromJson(await fetchJson(`/${path}`, 'boot')), origin: path, kept: false };
+        return { staging: stagingFromJson(await fetchJson(repoUrl(path), 'boot')), origin: path, kept: false };
     }
     return {
         staging: await trueStartStaging(),
@@ -1303,7 +1324,7 @@ async function runJs(params, lifetime) {
     // IN PLACE — through the same `replayLoadedTape` hook every arm sets, and
     // against this same level source (`armPrelude`).
     const { levelSource } = await armPrelude(params, lifetime);
-    const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
+    const tape = await fetchJson(repoUrl(params.tape), 'tape');
     if (!lifetime.alive()) return undefined;
     return replayTape(tape, params.tape, params, levelSource,
         await fetchTraceSidecar(params.tape));
@@ -1327,7 +1348,7 @@ async function fetchTraceSidecar(tapePath) {
     const { path, why } = traceSidecarPath(tapePath);
     if (!path) return { trace: null, why };
     try {
-        const res = await fetch(`/${path}`);
+        const res = await fetch(repoUrl(path));
         if (!res.ok) {
             return { trace: null, why: `${path} — HTTP ${res.status} (only the solver's `
                 + 'tapes carry a trace sidecar)' };
@@ -2288,7 +2309,7 @@ function mountTracePane(source, seekTo) {
  * would present the fallback as the game's start.
  */
 const trueStartStaging = async () =>
-    stagingFromJson(await fetchJson(`/${DEFAULT_TAPE_DIR}/${TRUE_START_SEGMENT}.json`,
+    stagingFromJson(await fetchJson(repoUrl(`${DEFAULT_TAPE_DIR}/${TRUE_START_SEGMENT}.json`),
         `the true game start (${TRUE_START_SEGMENT})`));
 
 /**
@@ -6486,7 +6507,7 @@ async function runGenerate(params, lifetime) {
  * visible cause.
  */
 async function runWasm(params, lifetime) {
-    const tape = await fetchJson(`/${params.tape.replace(/^\/+/, '')}`, 'tape');
+    const tape = await fetchJson(repoUrl(params.tape), 'tape');
 
     // Say WHICH path is missing rather than showing a blank frame — the
     // artifact is gitignored and machine-local, so "nothing happened" is the
@@ -6684,7 +6705,7 @@ const DEFAULT_TAPE_DIR = 'frontend/modules/seedlingDemo/fixtures/tapes';
 async function loadTapeIndex(dir) {
     let names = [];
     try {
-        const res = await fetch(`/${dir}/`);
+        const res = await fetch(`${repoUrl(dir)}/`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html = await res.text();
         names = [...html.matchAll(/href="([^"?/]+\.json)"/g)]
@@ -6697,7 +6718,7 @@ async function loadTapeIndex(dir) {
     const records = await Promise.all(names.map(async (n) => {
         const name = n.replace(/\.json$/, '');
         try {
-            return { name, file: n, path: `${dir}/${n}`, tape: await (await fetch(`/${dir}/${n}`)).json() };
+            return { name, file: n, path: `${dir}/${n}`, tape: await (await fetch(repoUrl(`${dir}/${n}`))).json() };
         } catch (e) {
             // Kept in the list WITHOUT a tape: the file exists, and a
             // roster that hid the one it could not read would be lying

@@ -27,6 +27,14 @@
  *   - **Facts:** `<id>,<id>`             ← optional: TICK these fact lines
  *   - **Layer:** `<off|sites|elements|areas|all>`  ← optional: the overlay
  *   - **Claim:** `<path> <op> <value>`   ← asserted off the page's readout
+ *   - **Live:** <https://…>              ← optional: the SAME run on GitHub Pages
+ *
+ * ⛓ `Live:` is the entry's URL on the deployed site (`deploy-gh-pages.yml`
+ * publishes `frontend/` as the Pages ROOT, so `/frontend/modules/…` becomes
+ * `<base>/modules/…`). It is not typed by hand either: this row asserts that
+ * every `Live:` link is EXACTLY `<base> + Page (minus /frontend) + ? + URL`,
+ * so the live link and the local URL cannot drift apart. `--pages=<base>` runs
+ * the whole catalogue AGAINST the deployed site instead of a local server.
  *
  * `Page` selects the readout: `watch.html` publishes `window.__editorGenerate`,
  * `lab.html` publishes `window.__mazeLab`. Everything else in an entry (the CLI
@@ -55,6 +63,7 @@
  * Run: node scripts/procgen/check-procgen-demos.mjs
  *      node scripts/procgen/check-procgen-demos.mjs --host=http://localhost:8000
  *      node scripts/procgen/check-procgen-demos.mjs --only=7
+ *      node scripts/procgen/check-procgen-demos.mjs --pages=https://peerinfinity.github.io/Archipelago-CC
  */
 
 import { chromium } from '@playwright/test';
@@ -105,6 +114,9 @@ function parseCatalogue(text) {
          *  about its own `URL:`. It exists so that the coverage rule below can
          *  stay absolute: every URL in the file is an entry's. */
         const also = field(part, 'Also');
+        /** ⛓ The deployed link — `- **Live:** <https://…>` — kept honest below. */
+        const liveM = part.match(/^- \*\*Live:\*\* <([^>\n]+)>/m);
+        const live = liveM ? liveM[1] : null;
         /**
          * ⛔ AN ENTRY WITH NO `Page:`/`URL:` IS NOT AN OMISSION — it is a
          * PROSE entry (the pointer at an existing doc), and the file says so
@@ -115,7 +127,7 @@ function parseCatalogue(text) {
             out.push({ title, prose: true });
             continue;
         }
-        out.push({ title, page, url, claim, phase, layer, also,
+        out.push({ title, page, url, claim, phase, layer, also, live,
             facts: facts ? facts.split(',') : [] });
     }
     return out;
@@ -166,8 +178,21 @@ console.log(`catalogue: ${entries.length} entr(ies) in demos.md `
 
 let server = null;
 const host = arg('host', '');
-if (!host) server = await serveRepoRoot({});
-const origin = host || `http://127.0.0.1:${server.address().port}`;
+/**
+ * ⛓ `--pages=<base>` drives the DEPLOYED site. GitHub Pages publishes the
+ * `frontend/` directory as its root (`.github/workflows/deploy-gh-pages.yml`),
+ * so an entry's `/frontend/modules/…` page lives at `<base>/modules/…` there.
+ * The Live-link consistency claim below uses the SAME base — the default is
+ * this fork's, so a bare run still checks the links even when it loads the
+ * catalogue from a local server.
+ */
+const PAGES_DEFAULT_BASE = 'https://peerinfinity.github.io/Archipelago-CC';
+const pages = arg('pages', '');
+const pagesBase = (pages || PAGES_DEFAULT_BASE).replace(/\/$/, '');
+const pagePath = (p) => (pages ? p.replace(/^\/frontend(?=\/)/, '') : p);
+if (!host && !pages) server = await serveRepoRoot({});
+const origin = pages ? pagesBase : (host || `http://127.0.0.1:${server.address().port}`);
+const liveLinkFor = (entry) => `${pagesBase}${entry.page.replace(/^\/frontend(?=\/)/, '')}?${entry.url}`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
@@ -207,8 +232,16 @@ try {
         const q = new URLSearchParams(entry.url);
         const step = q.get('run') === '1' ? Number(q.get('count') ?? 0) : 0;
         errors.length = 0;
-        const url = `${origin}${entry.page}?${entry.url}`;
+        const url = `${origin}${pagePath(entry.page)}?${entry.url}`;
         console.log(`\n${entry.title}\n  ${url}\n  claim: ${entry.claim}`);
+        /** ⛓ THE LIVE LINK IS DERIVED, NOT TYPED — an entry that carries one
+         *  must carry exactly the one its Page + URL spell on Pages. */
+        if (entry.live !== null) {
+            check(entry.live === liveLinkFor(entry),
+                `"${entry.title}" Live: link is exactly Pages base + Page + URL`,
+                entry.live === liveLinkFor(entry) ? entry.live
+                    : `have ${entry.live}\n    want ${liveLinkFor(entry)}`);
+        }
         // eslint-disable-next-line no-await-in-loop
         await page.goto(url, { waitUntil: 'domcontentloaded' });
         let got;
@@ -278,7 +311,7 @@ try {
         if (entry.also) {
             errors.length = 0;
             // eslint-disable-next-line no-await-in-loop
-            await page.goto(`${origin}${entry.page}?${entry.also}`,
+            await page.goto(`${origin}${pagePath(entry.page)}?${entry.also}`,
                 { waitUntil: 'domcontentloaded' });
             // eslint-disable-next-line no-await-in-loop
             await page.waitForFunction((r) => Boolean(window[r]), readout, { timeout: 300000 })
