@@ -109,6 +109,7 @@ const { GENERATE_BIOMES, generateStep, keptTemplatesOf } = await M('watchGenerat
 // per-site BEFORE the merge (kickoff §12): the three declarations were
 // character-identical and both use shapes agreed on every driven subject.
 const { dischargesVerb, verbOf } = await M('procgenPalette.js');
+const { ITEM_LABELS, requirementsFor } = await M('procgenRequirements.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -188,17 +189,6 @@ const PHASES = Object.freeze({
         { name: 'the naturals, EXCLUDING every carrier — the control arm',
             seeds: NATURALS.filter((s) => !CARRIER_SEEDS.includes(s)), take: 2 },
     ],
-});
-
-/**
- * The AP item name behind each boot flag — the vocabulary the REPORT speaks,
- * because "requires `hasSword`" is a sentence about a seam field and
- * "requires Progressive Sword" is a sentence about the game.
- * ⛓ Taken from `worlds/seedling/Items.py`'s own table, not invented here.
- */
-const ITEM_LABELS = Object.freeze({
-    hasSword: 'Progressive Sword',
-    hasShield: 'Progressive Shield',
 });
 
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
@@ -308,124 +298,25 @@ function certify(state, out) {
 // ── ⚖ THE REQUIREMENTS REPORT ────────────────────────────────────────
 
 /**
- * The with/without differential for ONE level, at the SAME budget.
+ * ⛓⛓⛓ **LIFTED OUT OF THIS FILE — PROCGEN ELEMENTS arc 3, slice 4d (D2).**
  *
- * ⛔ THE CANDIDATE SET IS THE BOOT'S OWN TRUE FLAGS. "Removing" an item the
- * boot never declared is not a differential, it is the same run twice — so a
- * biome whose flags are all false yields an EMPTY candidate set, and the
- * report answers "none established" WITH THE REASON rather than printing
- * nothing (an empty layer owes a `why`).
+ * The with/without differential was written here, for this batch, and this
+ * script was its ONE caller for the whole PoC arc. Slice 4d gave it a SECOND —
+ * the `require:[X]` directive on the Seedling seam, which has to GRADE the item
+ * it was asked to require — and two implementations of one differential is the
+ * failure mode this repo keeps recording.
+ *
+ * ⛔ SO THE BODY MOVED VERBATIM to `seedlingDemo/procgenRequirements.js` and
+ * this file became a CALLER. The proof that it is a MOVE and not a rewrite is
+ * this script's own stdout md5, `ab540ac463dbab0584d552fe6a51f731`, compared on
+ * the same tree before and after the lift with nothing else changed.
+ *
+ * ⛓ The ONE argument that had to become explicit is the BUDGET: it was module
+ * scope here and it is the SAME frozen object either way, passed in rather than
+ * closed over, because the seam's caller runs under the oracle's budget and a
+ * differential that reached for a batch constant would be measuring a bound its
+ * caller never set.
  */
-function requirementsFor(state, withOut) {
-    const items = state.palette.items ?? {};
-    const candidates = Object.keys(items).filter((k) => items[k] === true);
-    const boot = state.model.boot();
-    const pins = state.summary.pins;
-    const rows = [];
-    for (const flag of candidates) {
-        const without = attempt(() => solve(state.record,
-            bootStaging({ boot, items: { ...items, [flag]: false }, pins }),
-            state.model.goals, BUDGET, { name: `req-s${state.seed}-no-${flag}` }));
-        const withoutVerdict = without.ok
-            ? without.value.verdict
-            // ⚠ A THROW IS NOT A REFUSAL and the row says which it was. It
-            // still counts as "did not solve" for the differential, because
-            // the differential's question is whether the goal was reached.
-            : `THREW:${without.error.name}`;
-        const withoutSolved = without.ok && without.value.verdict === 'SOLVED'
-            && without.value.certification?.certified === true;
-        const required = withOut.verdict === 'SOLVED' && !withoutSolved;
-        /**
-         * ⛔⛔ THE THREE WAYS A WITHOUT-ARM CAN FAIL ARE NOT EQUALLY STRONG
-         * EVIDENCE, and the batch MEASURED all three on its three carriers —
-         * one REFUSED, one BUDGET_EXHAUSTED, one THREW. Printing "REQUIRED"
-         * three times over three different facts would be the report agreeing
-         * with itself.
-         *
-         *  · **REFUSED** — the solver, within budget, said there is no way.
-         *    This is the datum ⚖ §1.10a describes, and it is the strong one.
-         *  · **BUDGET_EXHAUSTED** — the solver ran out. The verdict stands
-         *    (⚖ §1.10a: "a refusal at standard budget IS the datum", and NO
-         *    escalation exists here to find out otherwise), but the BOUND is
-         *    visibly load-bearing on this row in a way it is not on the one
-         *    above. Named so a reader can see which rows rest on it.
-         *  · **THREW** — the ENGINE said the route stepped where it must not
-         *    (`PhysicsV2Error` = §15.9's approach-drive question, measured at
-         *    three separate moments in this arc). ⛔ That is not a statement
-         *    about the LEVEL at all. The differential's verdict is still what
-         *    it is — with the item the goal is reached and without it the goal
-         *    is not — but this row's evidence is the WEAKEST of the three and
-         *    it says so rather than borrowing the strong one's authority.
-         */
-        const evidence = !required ? 'n/a'
-            : (without.ok
-                ? (without.value.verdict === 'REFUSED' ? 'STRONG (solver refusal)'
-                    : 'BOUND-DEPENDENT (the budget is what ended it)')
-                : 'WEAK (an ENGINE throw, not a claim about the level)');
-        rows.push({
-            flag,
-            item: ITEM_LABELS[flag] ?? flag,
-            withVerdict: withOut.verdict,
-            withTicks: withOut.ticks,
-            withoutVerdict,
-            withoutTicks: without.ok ? (without.value.ticks ?? null) : null,
-            withoutReason: without.ok
-                ? (without.value.reasonText ?? null) : without.error.message,
-            verdict: required ? 'REQUIRED' : 'rule not established',
-            evidence,
-            /**
-             * ⛓ AND THE CONTROL'S OWN STRONGER STATEMENT. When both arms
-             * solve, "no rule established" is the verdict — but EQUAL TICK
-             * COUNTS say more: the item did not merely fail to be necessary,
-             * it changed nothing about the walk at all. That is the inertness
-             * §12.2 measured for the whole biome, arriving per level.
-             */
-            inert: !required && without.ok && without.value.ticks === withOut.ticks,
-            /**
-             * ⛔⛔ THE SOLVER-RELATIVE LABEL, IN THE ROW. ⚖ §1.10a makes it
-             * mandatory and the reason is the user's own: on the bounce and
-             * runner substrates, impossibility-proving by exhaustive search
-             * was the failure mode. This claim is not that the level is
-             * unsolvable without the item; it is that THIS SOLVER, at THIS
-             * budget, did not solve it. No budget was escalated to find out.
-             */
-            label: required
-                ? `SOLVER-RELATIVE, BOUNDED: this solver, at maxTicksPerTarget=`
-                    + `${BUDGET.maxTicksPerTarget}, solves this level WITH `
-                    + `${ITEM_LABELS[flag] ?? flag} and does not solve it WITHOUT. It is `
-                    + 'NOT a proof that the level is unsolvable without it — no exhaustive '
-                    + 'search exists anywhere in this design, and no budget was escalated.'
-                : `SOLVER-RELATIVE, BOUNDED: the level solved BOTH with and without `
-                    + `${ITEM_LABELS[flag] ?? flag} at this budget, so no rule is `
-                    + 'established. That is an answer, not an absence.',
-            /**
-             * ⚠ §15.8's warning, carried in the row that needs it: without the
-             * sword the press is a SILENT NO-OP, so the without-arm's text is
-             * budget- or corridor-shaped. The VERDICT is what speaks.
-             */
-            howToReadTheText: flag === 'hasSword'
-                ? 'without the sword `weaponForPress` returns null and the press is a '
-                    + 'SILENT NO-OP, so this refusal is budget/corridor-shaped by '
-                    + 'construction. Do not read it as a different KIND of failure — the '
-                    + 'differential\'s VERDICT is the datum.'
-                : null,
-        });
-    }
-    return {
-        candidates,
-        rows,
-        /** ⛓ An empty layer owes a `why`, and this is it. */
-        why: candidates.length === 0
-            ? `the ${state.biome} biome declares NO item flag true `
-                + `(${JSON.stringify(items)}), so there is nothing to remove and the `
-                + 'with/without differential has no subject on this level. "none '
-                + 'established" here is a fact about the BIOME, not a failed measurement.'
-            : null,
-        verdict: rows.some((r) => r.verdict === 'REQUIRED')
-            ? rows.filter((r) => r.verdict === 'REQUIRED').map((r) => `requires ${r.item}`).join('; ')
-            : 'none established',
-    };
-}
 
 // ── determinism, in two SEPARATE processes ───────────────────────────
 
@@ -484,7 +375,7 @@ for (const biome of Object.keys(GENERATE_BIOMES)) {
 
         const cert = certify(c.state, c.out);
         const det = twoProcessIdentity(seed, biome);
-        const req = requirementsFor(c.state, c.out);
+        const req = requirementsFor(c.state, c.out, { budget: BUDGET });
         const payload = {
             generator: 'scripts/procgen/batch-seedling-acceptance.mjs',
             seed,
