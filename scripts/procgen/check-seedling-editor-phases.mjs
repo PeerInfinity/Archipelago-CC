@@ -343,6 +343,169 @@ const atPhase = async (index) => {
         '…and it is on the page where a reader is looking');
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 6 — THE FOUR INTERMEDIATE RESULTS SLICE 5a PRICED AND DID NOT
+ *               CARRY (arc 3, slice 5b — D1, D2, D3, D4)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ EVERY ONE OF THESE IS A **VALUE** CLAIM AND NOT AN ECHO: the anchor is
+ * node's own ledger for the same URL, and the comparison is CELL FOR CELL
+ * against the very object `drawPaintables` consumed. A page that listed the
+ * line and painted something else dies here.
+ *
+ * ⛓ AND NO PAINTER CODE WAS ADDED FOR ANY OF THEM. `drawPaintables` already
+ * switches on `cells|outline|path|flood` and the readout's lines are already
+ * the control, so a phase that learns a new fact reaches the screen with no
+ * page change at all — which is what ⚖ the 2026-08-18 ruling bought.
+ */
+{
+    const rows = nodeSubject.ledger;
+    await load(`source=generate&seed=${SUBJECT.seed}&biome=${SUBJECT.biome}`
+        + `&count=0&elements=${SUBJECT.elements}`);
+    const goTo = async (name) => {
+        const k = rows.findIndex((r) => r.phase === name);
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        return { k, at: await atPhase(k) };
+    };
+    const tickAll = async (k) => {
+        await page.evaluate(() => {
+            const b = [...document.querySelectorAll('#genPhaseFacts input[data-fact]')]
+                .find((x) => x.dataset.fact === '__all');
+            if (!b.checked) b.click();
+        });
+        return atPhase(k);
+    };
+    const sel = (at, id) => at.gen.phase.selected.find((f) => f.id === id) ?? null;
+    const nodeFact = (name, id) => rows.find((r) => r.phase === name)
+        .data.facts.find((f) => f.id === id) ?? null;
+
+    /* ── D3: the ON-CONNECTOR candidate funnel ───────────────────────── */
+    {
+        const { k, at } = await goTo('on-connector');
+        const ids = at.facts.filter((f) => f !== '__all');
+        for (const id of ['door-candidates-offered', 'door-candidates-tried',
+            'door-candidates-legal']) {
+            check(ids.includes(id), `⛓ the on-connector row LISTS \`${id}\` as a selectable line`,
+                json(ids));
+        }
+        const after = await tickAll(k);
+        const legal = sel(after, 'door-candidates-legal');
+        const tried = sel(after, 'door-candidates-tried');
+        const offered = sel(after, 'door-candidates-offered');
+        check(json(legal?.cells) === json(nodeFact('on-connector', 'door-candidates-legal').cells),
+            '⛓⛓⛓ …and the LEGAL set the painter consumed is node\'s, cell for cell',
+            `${legal?.cells.length} cell(s)`);
+        check(legal?.cells.length === rows.find((r) => r.phase === 'on-connector')
+            .data.candidates,
+        '⛓⛓⛓ …and it is EXACTLY the set the element\'s ONE draw picked from '
+            + '(`cost.candidates`) — the equality that says it was CARRIED',
+        `${legal?.cells.length} vs ${rows.find((r) => r.phase === 'on-connector').data.candidates}`);
+        const key = (c) => `${c.x},${c.y}`;
+        const off = new Set(offered.cells.map(key));
+        const tri = new Set(tried.cells.map(key));
+        check(tried.cells.every((c) => off.has(key(c)))
+            && legal.cells.every((c) => tri.has(key(c))),
+        '⛓⛓ …and the funnel NARROWS on the page: offered ⊇ tried ⊇ legal',
+        `${off.size} ⊇ ${tri.size} ⊇ ${legal.cells.length}`);
+        check(legal.pick && tri.has(key(legal.pick)),
+            '⛔ …with the PICK outlined, and it is one of the legal cells', json(legal.pick));
+    }
+
+    /* ── D1: the door law's two floods, on the COMPOSITE row ─────────── */
+    {
+        const k = rows.map((r) => r.phase).lastIndexOf('composite');
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const s = sel(at, 'door-flood-start');
+        const g = sel(at, 'door-flood-goal');
+        check(s && g, '⛓ the composite row carries BOTH sides of the door law\'s cut',
+            json(at.gen.phase.selected.map((f) => f.id)));
+        check(s.kind === 'flood' && g.kind === 'flood',
+            '…as `flood` paintables, which the existing painter already draws');
+        const key = (c) => `${c.x},${c.y}`;
+        const sk = new Set(s.cells.map(key));
+        check(g.cells.every((c) => !sk.has(key(c))),
+            '⛓⛓⛓ …and the two are DISJOINT on the page\'s own data — which IS clause 1',
+            `${s.cells.length} + ${g.cells.length}`);
+        const door = rows.find((r) => r.phase === 'on-connector').data.doorCell;
+        check(!sk.has(key(door)) && !g.cells.some((c) => key(c) === key(door)),
+            '⛔ …and the DOOR cell is in neither — it is the thing that was walled',
+            json(door));
+    }
+
+    /* ── D4: the certification's ROUTE ───────────────────────────────── */
+    {
+        const k = rows.findIndex((r) => r.phase === 'certification');
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const route = sel(at, 'certification-route');
+        check(route !== null, '⛓ the CERTIFICATION row carries the solve\'s own ROUTE',
+            json(at.facts));
+        check(route.kind === 'path' && route.cells.length > 1,
+            '…as a `path`, which is the one thing a cell SET cannot say',
+            `${route.cells.length} cell(s)`);
+        check(json(route.cells) === json(nodeFact('certification', 'certification-route').cells),
+            '⛓⛓⛓ …and it is node\'s route, waypoint for waypoint');
+        check(route.note === null || /GAP/.test(route.note),
+            '⛔ …and a discontinuity is NAMED in the note rather than bridged',
+            (route.note ?? '(none)').slice(0, 60));
+        const lines = rows.find((r) => r.phase === 'certification').data.recordLines;
+        check(Array.isArray(lines) && lines.length > 0,
+            '⛓ …with the solve\'s RECORDS as reader\'s lines beside it', json(lines));
+    }
+
+    /* ── D2: the level-n floods and the VESTIBULE, on the AREAS subject ─ */
+    {
+        await load(`source=generate&seed=${AREAS.seed}&biome=${AREAS.biome}`
+            + `&count=0&skeleton=${AREAS.skeleton}&areas=${AREAS.areas}`);
+        const arows = nodeAreas.ledger;
+        const k = arows.findIndex((r) => r.phase === 'realisation');
+        check(k >= 0, '⛓ the AREAS subject reached REALISATION',
+            json(arows.map((r) => r.phase)));
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const ves = at.gen.phase.selected.find((f) => f.id === 'goal-vestibule') ?? null;
+        const levels = at.gen.phase.selected.filter((f) => /^level-\d+-reach$/.test(f.id));
+        check(ves !== null, '⛓⛓ …and its REALISATION row carries the goal\'s VESTIBULE',
+            json(at.facts));
+        check(levels.length > 0, '⛓⛓ …and one LEVEL-n flood per key level asked',
+            json(levels.map((f) => `${f.id}:${f.count}`)));
+        /**
+         * ⛓⛓⛓ THE CLAIM THE FLOOD EXISTS FOR: level 0 is what the entrance
+         * reaches with every level->=1 lock walled, so it must be SMALLER than
+         * the next level up. A picture that painted the same set twice would
+         * pass a "the line is there" row and fail this one.
+         */
+        if (levels.length > 1) {
+            check(levels[0].count < levels[1].count,
+                '⛓⛓⛓ …and level 0 reaches STRICTLY FEWER cells than level 1 — the locks cut',
+                `${levels[0].count} < ${levels[1].count}`);
+        }
+        const nodeVes = arows[k].data.facts.find((f) => f.id === 'goal-vestibule');
+        check(json(ves.cells) === json(nodeVes.cells),
+            '⛓⛓ …cell for cell against node\'s own ledger');
+    }
+}
+
 check(errors.length === 0, 'no page errors across the whole row', errors.slice(0, 3).join(' | '));
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
