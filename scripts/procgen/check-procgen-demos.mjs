@@ -28,6 +28,7 @@
  *   - **Layer:** `<off|sites|elements|areas|all>`  ← optional: the overlay
  *   - **Claim:** `<path> <op> <value>`   ← asserted off the page's readout
  *   - **Live:** <https://…>              ← optional: the SAME run on GitHub Pages
+ *   - **Live (also):** <https://…>       ← optional: the Also: URL on Pages
  *
  * ⛓ `Live:` is the entry's URL on the deployed site (`deploy-gh-pages.yml`
  * publishes `frontend/` as the Pages ROOT, so `/frontend/modules/…` becomes
@@ -117,6 +118,8 @@ function parseCatalogue(text) {
         /** ⛓ The deployed link — `- **Live:** <https://…>` — kept honest below. */
         const liveM = part.match(/^- \*\*Live:\*\* <([^>\n]+)>/m);
         const live = liveM ? liveM[1] : null;
+        const liveAlsoM = part.match(/^- \*\*Live \(also\):\*\* <([^>\n]+)>/m);
+        const liveAlso = liveAlsoM ? liveAlsoM[1] : null;
         /**
          * ⛔ AN ENTRY WITH NO `Page:`/`URL:` IS NOT AN OMISSION — it is a
          * PROSE entry (the pointer at an existing doc), and the file says so
@@ -127,7 +130,7 @@ function parseCatalogue(text) {
             out.push({ title, prose: true });
             continue;
         }
-        out.push({ title, page, url, claim, phase, layer, also, live,
+        out.push({ title, page, url, claim, phase, layer, also, live, liveAlso,
             facts: facts ? facts.split(',') : [] });
     }
     return out;
@@ -192,7 +195,7 @@ const pagesBase = (pages || PAGES_DEFAULT_BASE).replace(/\/$/, '');
 const pagePath = (p) => (pages ? p.replace(/^\/frontend(?=\/)/, '') : p);
 if (!host && !pages) server = await serveRepoRoot({});
 const origin = pages ? pagesBase : (host || `http://127.0.0.1:${server.address().port}`);
-const liveLinkFor = (entry) => `${pagesBase}${entry.page.replace(/^\/frontend(?=\/)/, '')}?${entry.url}`;
+const liveLinkFor = (entry, url = entry.url) => `${pagesBase}${entry.page.replace(/^\/frontend(?=\/)/, '')}?${url}`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
@@ -241,6 +244,12 @@ try {
                 `"${entry.title}" Live: link is exactly Pages base + Page + URL`,
                 entry.live === liveLinkFor(entry) ? entry.live
                     : `have ${entry.live}\n    want ${liveLinkFor(entry)}`);
+        }
+        if (entry.liveAlso !== null) {
+            const want = entry.also ? liveLinkFor(entry, entry.also) : null;
+            check(want !== null && entry.liveAlso === want,
+                `"${entry.title}" Live (also): link is exactly Pages base + Page + Also`,
+                entry.liveAlso === want ? entry.liveAlso : `have ${entry.liveAlso}\n    want ${want}`);
         }
         // eslint-disable-next-line no-await-in-loop
         await page.goto(url, { waitUntil: 'domcontentloaded' });

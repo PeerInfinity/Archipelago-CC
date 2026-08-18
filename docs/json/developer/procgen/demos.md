@@ -15,6 +15,18 @@ python -m http.server 8000          # only if one is not already up on :8000
 ```
 
 Then open `http://localhost:8000` + the entry's **Page** + `?` + its **URL**.
+
+**Or skip the server: every entry also carries a `Live:` link to the same run on
+GitHub Pages** (<https://peerinfinity.github.io/Archipelago-CC/>, deployed from
+`main` by `.github/workflows/deploy-gh-pages.yml`, which publishes the
+`frontend/` directory as the site root — so `/frontend/modules/…` here is
+`/Archipelago-CC/modules/…` there). The live links are not typed by hand
+either: `check-procgen-demos.mjs` asserts each one is exactly base + Page + `?`
++ URL, and `--pages=<base>` runs the whole catalogue against the deployed site
+(⛓ 2026-08-18: 54/0 on Pages, after `watch.html` learned to resolve its repo
+paths from its own URL rather than the origin's root). ⚠ Pages serves the tree
+as of the last push to `main`, so a demo that reads a claim off a page changed
+locally but not yet pushed will show the older behaviour there.
 Every URL below is the spelling the page's OWN writer produces
 (`watchGenerate.writeGenerateParams` / `mazeLab.writeLabParams`), so pasting one
 back into the bar is a fixed point — the page reloads exactly the run the link
@@ -67,6 +79,7 @@ never about legality — nothing is refused for standing off one.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --count=0`
 - **Layer:** `sites`
 - **Claim:** `overlays.counts.sites >= 10`
@@ -94,6 +107,8 @@ against 19 at the default**.
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D0&count=0&tries=8&k=3&anchortries=1`
 - **Also:** `source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D1&count=0&tries=8&k=3&anchortries=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D0&count=0&tries=8&k=3&anchortries=1>
+- **Live (also):** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D1&count=0&tries=8&k=3&anchortries=1>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=1 --skeleton='winding;chambers=0' --count=1 | head -3`
 - **Phase:** `carve`
 - **Claim:** `phase.row.data.params.chambers == 0`
@@ -120,6 +135,7 @@ certification solve comes back `['weigh','hold','collect']`.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=12&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=guard%3Blen%3D2`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=12&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=guard%3Blen%3D2>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=12 --biome=pre-sword --elements='guard;len=2' --count=0`
 - **Phase:** `composite`
 - **Facts:** `flag-and-lock,flag-lock-flood-start,flag-lock-flood-goal`
@@ -148,6 +164,7 @@ moves in and the walls that keep it there, which pass 2 may not make lethal.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=2&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=2&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --elements=killgate --count=0`
 - **Phase:** `on-connector`
 - **Facts:** `door-candidates-offered,door-candidates-tried,door-candidates-legal`
@@ -177,6 +194,7 @@ and the run ends at the FIRST cell along the push where the room reconnects.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=1&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=blockpocket`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=1&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=blockpocket>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --elements=blockpocket --count=0`
 - **Phase:** `on-connector`
 - **Facts:** `door-candidates-legal`
@@ -202,6 +220,7 @@ area of radius 2 grown so that no lock can land on the goal's doorstep.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --areas=1 --count=2`
 - **Phase:** `realisation`
 - **Facts:** `area-locks,goal-vestibule,level-0-reach`
@@ -234,6 +253,7 @@ with the flag off, solved, and compared.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=30&biome=post-sword&count=6&tries=8&k=3&anchortries=1&require=hasSword&run=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=30&biome=post-sword&count=6&tries=8&k=3&anchortries=1&require=hasSword&run=1>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=post-sword --require=hasSword --count=6`
 - **Claim:** `require.grade == "STRONG"`
 
@@ -272,6 +292,7 @@ ordinary level that the run really made.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=30&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&require=hasSword`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=30&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&require=hasSword>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=pre-sword --require=hasSword --count=0; echo $?`
 - **Claim:** `require.refused.reason matches the-biome`
 
@@ -293,6 +314,7 @@ element group at all — the REASON is a LEGEND row.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=1&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=1&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate>
 - **CLI:** `node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=post-sword --elements=killgate --count=0`
 - **Layer:** `elements`
 - **Claim:** `elements.refused.reason == "the-skeleton-does-not-solve-with-the-element"`
@@ -316,6 +338,7 @@ handed to the existing renderer. ⛔ Nothing is re-run.
 
 - **Page:** `/frontend/modules/seedlingDemo/watch.html`
 - **URL:** `source=generate&seed=12&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html?source=generate&seed=12&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1>
 - **Claim:** `phase.count >= 6`
 
 **How to run it.** Press `PHASE ▶` from the start and read each row's own
@@ -361,6 +384,7 @@ page names an area-graph SYMBOL rather than an item flag.
 
 - **Page:** `/frontend/modules/mazeRoom/lab.html`
 - **URL:** `source=generate&seed=1&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&require=K0&expansions=20000&run=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/mazeRoom/lab.html?source=generate&seed=1&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&require=K0&expansions=20000&run=1>
 - **CLI:** `node scripts/procgen/generate-maze-level.mjs --seed=1 --width=15 --height=15 --skeleton=rooms --areas=1 --require=K0 --count=2`
 - **Claim:** `areaGraph.ran == true`
 
@@ -382,6 +406,7 @@ step-through of the SOLVE (as opposed to the generation).
 
 - **Page:** `/frontend/modules/mazeRoom/lab.html`
 - **URL:** `source=generate&seed=2&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&elements=guard%3Blen%3D2%3Bturns%3D1&expansions=20000&run=1`
+- **Live:** <https://peerinfinity.github.io/Archipelago-CC/modules/mazeRoom/lab.html?source=generate&seed=2&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&elements=guard%3Blen%3D2%3Bturns%3D1&expansions=20000&run=1>
 - **CLI:** `node scripts/procgen/generate-maze-level.mjs --seed=2 --width=15 --height=15 --skeleton=rooms --areas=1 --elements='guard;len=2;turns=1' --count=2`
 - **Claim:** `elementInfo.ran == true`
 
