@@ -224,6 +224,13 @@ import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 // sentence. See `watchOverlays`' `SLASH_HIT_TICKS` import block.
 import { SLASH_HIT_TICKS } from './presses.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
+/**
+ * ⛓ PROCGEN DOCS P2 — THE GLOSSARY, AS TOOLTIPS ONLY. `data-term` in the
+ * markup names a slug; the SENTENCE comes from the one module that holds it.
+ * ⛔ Nothing here is a readout and nothing here changes a control or a label.
+ */
+import { applyGlossaryTips, legendTipFor } from '../procgenDocs/glossaryTips.js';
+
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
@@ -5091,9 +5098,14 @@ async function runGenerate(params, lifetime) {
      */
     function renderLegend() {
         const data = overlayData();
+        /** ⛓ P2: each row carries the GLOSSARY sentence for the thing it
+         *  names, as a `title=`. ⛔ THE ROW'S TEXT DOES NOT CHANGE — three
+         *  acceptance rows assert it — and a group id the map does not know
+         *  simply gets no tooltip. */
         $('genLegend').innerHTML = data.legend.length === 0
             ? (genLayer === 'off' ? '' : '<span class="note">nothing to draw at this layer</span>')
-            : data.legend.map((row) => `<div class="tr">`
+            : data.legend.map((row) => `<div class="tr"${legendTipFor(row.id)
+                ? ` title="${esc(legendTipFor(row.id))}"` : ''}>`
                 + (row.color
                     ? `<span style="display:inline-block;width:1em;height:1em;`
                         + `background:${row.color};vertical-align:middle"></span> ` : '⛔ ')
@@ -7224,6 +7236,10 @@ export async function main() {
         window.__editorParams = { status: 'refused', message: e.message };
         return;
     }
+    // ⛓ P2: the section summaries' `title=` tooltips, filled from the
+    // glossary. ⛔ Before any arm mounts and after the refusal branch, because
+    // a refused URL should still be able to explain its own vocabulary.
+    applyGlossaryTips(document);
     // ⛓ FIRST, AND NOT AWAITED: the stamp is a diagnostic ABOUT the page and
     // must not delay the page. A failure in it may not stop an arm mounting.
     stampSource().catch(() => {});

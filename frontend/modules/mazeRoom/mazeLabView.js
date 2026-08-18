@@ -68,6 +68,13 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 // ⛓ SLICE 7: the ONE normalizer for a skeleton spec — this form, the identity
 // line and the URL bar all spell a room the same way.
 import { normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
+/**
+ * ⛓ PROCGEN DOCS P2 — THE GLOSSARY, AS TOOLTIPS ONLY. `data-term` in the
+ * markup names a slug; the SENTENCE comes from the one module that holds it.
+ * ⛔ Nothing here is a readout and nothing here changes a control or a label.
+ */
+import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
+
 // ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
 // the URL bar and both CLIs spell a graph the same way.
 import {
@@ -104,6 +111,10 @@ const WORST_CASE_SOLVE_MS = 3;
 const PLAY_FRAME_MS = 110;
 
 export function main() {
+    // ⛓ P2: the summaries' and the two legend boxes' `title=` tooltips,
+    // filled from the glossary. ⛔ A link and a tooltip are the whole of this
+    // page's share of P2 — no readout of it moves.
+    applyGlossaryTips(document);
     const lifetimes = createLifetimeHolder({
         publish: (snap) => { window.__mazeLabLifetime = snap; },
     });

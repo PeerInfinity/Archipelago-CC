@@ -17,6 +17,7 @@ It is now ONE data module with TWO readers, and this page is a pointer at them:
 | | |
 |---|---|
 | **the DATA** | [`frontend/modules/procgenDocs/demos.js`](../../../../frontend/modules/procgenDocs/demos.js) — a frozen array, one entry per demo. ⛔ **Edit the catalogue HERE and nowhere else.** |
+| **the GLOSSARY** | Every entry carries a `terms:` line, and each term links to its definition on <https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html> — 140 of them, data in [`frontend/modules/procgenDocs/glossary.js`](../../../../frontend/modules/procgenDocs/glossary.js). ⛓ An entry names glossary SLUGS; the glossary page computes the back-links, so the two directions cannot drift. |
 | **the PAGE** | `frontend/modules/procgenDocs/demos.html` — renders the module in a browser. Read it at <https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html>, or locally at `http://localhost:8000/frontend/modules/procgenDocs/demos.html`. |
 | **the ROW** | [`scripts/procgen/check-procgen-demos.mjs`](../../../../scripts/procgen/check-procgen-demos.mjs) — IMPORTS the same module, loads every link the page shows and asserts every entry's own claim off the page's readout. |
 

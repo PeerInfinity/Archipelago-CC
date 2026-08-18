@@ -53,6 +53,15 @@
  * links — measured off ITS DOM, not echoed from the import. That is what
  * replaced the old coverage-over-a-markdown-file claim.
  *
+ * ⛓⛓⛓ **AND SO IS THE GLOSSARY PAGE** (PROCGEN DOCS P2). `glossary.html` is
+ * the same shape one module over — `procgenDocs/glossary.js` rendered in a
+ * browser — and this row is where the two catalogues MEET: every `terms:`
+ * link `demos.html` prints must be an anchor `glossary.html` really has.
+ * ⛔ The anchor check reads BOTH pages' DOM rather than comparing two imports:
+ * two modules agreeing in node says nothing about what a reader can click.
+ * The filter box is exercised for one VALUE claim, because a control nobody
+ * presses is a control nobody has gated.
+ *
  * ⛓ `--pages=<base>` runs the whole catalogue AGAINST THE DEPLOYED SITE
  * (`deploy-gh-pages.yml` publishes `frontend/` as the Pages ROOT, so an entry's
  * `/frontend/modules/…` lives at `<base>/modules/…` there — the mapping is
@@ -80,10 +89,13 @@ import { chromium } from '@playwright/test';
 import {
     DEMOS, PAGES_BASE, READOUTS, pagesHref, parseClaim,
 } from '../../frontend/modules/procgenDocs/demos.js';
+import { AREAS, TERMS, termById } from '../../frontend/modules/procgenDocs/glossary.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
 /** ⛓ The catalogue PAGE — the module's other reader, gated below. */
 const DEMOS_PAGE = '/frontend/modules/procgenDocs/demos.html';
+/** ⛓ And the GLOSSARY page (P2), the same shape one module over. */
+const GLOSSARY_PAGE = '/frontend/modules/procgenDocs/glossary.html';
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -323,6 +335,139 @@ try {
     check(false, 'the catalogue PAGE check THREW', e.stack ?? e.message);
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE GLOSSARY PAGE — THE OTHER DATA MODULE'S OTHER READER (P2).
+ *
+ * ⚖ The user, 2026-08-18: a glossary *"linked from the document and the demo
+ * pages … served on GitHub Pages"*. Three things can rot independently and
+ * each has a claim here: the page can stop rendering the module, an entry's
+ * `terms:` link can point at an anchor the glossary does not have, and the
+ * filter — the only control on the page — can stop filtering.
+ * ══════════════════════════════════════════════════════════════════════ */
+try {
+    const url = pages ? `${pagesBase}${pagePath(GLOSSARY_PAGE)}` : `${origin}${GLOSSARY_PAGE}`;
+    console.log(`\nthe GLOSSARY page\n  ${url}`);
+    errors.length = 0;
+    const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+    check(response?.status() === 200, '⛓ the glossary page RESOLVES (HTTP 200)',
+        `status ${response?.status() ?? 'none'}`);
+    await page.waitForFunction(() => window.__procgenGlossaryPage?.ready === true,
+        undefined, { timeout: 60000 }).catch(() => {});
+    const seen = await page.evaluate(() => window.__procgenGlossaryPage ?? null);
+    check(errors.length === 0, '…with ZERO console errors and ZERO pageerrors',
+        errors.join(' | '));
+    check(seen?.count === TERMS.length,
+        '…and it RENDERED one entry per term in the module',
+        `page ${seen?.count ?? 'none'} vs module ${TERMS.length}`);
+    /** ⛔⛔ **GROUPING REORDERS, so this asserts the SET and then the order
+     *  WITHIN each group** — not one flat sequence. The page prints one block
+     *  per area, and the module's declaration order interleaves the
+     *  lock-and-key terms among the level-gen ones, so a flat comparison fails
+     *  on a page that is rendering perfectly. ⛓ Found by running it: the first
+     *  cut asserted the flat order and reddened with 140 correct entries on
+     *  screen. What actually matters — every term present exactly once, and
+     *  each area's terms in the order the module declares them — is two
+     *  claims, and both are here. */
+    const pageIds = seen?.ids ?? [];
+    const wantSet = [...TERMS.map((e) => e.id)].sort().join(',');
+    const gotSet = [...pageIds].sort().join(',');
+    check(gotSet === wantSet && pageIds.length === TERMS.length,
+        '…the same terms, every one of them exactly once (its ids, off its DOM)',
+        gotSet === wantSet ? `${TERMS.length} ids`
+            : `page has ${pageIds.length}; symmetric difference: ${
+                [...TERMS.map((e) => e.id).filter((i) => !pageIds.includes(i)),
+                    ...pageIds.filter((i) => !TERMS.some((e) => e.id === i))].join(', ')}`);
+    const wantGrouped = AREAS.flatMap((a) => TERMS.filter((e) => e.area === a.id).map((e) => e.id));
+    check(pageIds.join(',') === wantGrouped.join(','),
+        '…grouped by AREA, each area in the order the module declares it',
+        pageIds.join(',') === wantGrouped.join(',')
+            ? `${AREAS.length} blocks, ${TERMS.length} terms`
+            : `page [${pageIds.slice(0, 6).join(',')}…]\n    want [${
+                wantGrouped.slice(0, 6).join(',')}…]`);
+    const wantAreas = AREAS.map((a) => a.id).join(',');
+    check((seen?.areas ?? []).join(',') === wantAreas,
+        `…and one BLOCK per area (${AREAS.length} of them)`,
+        (seen?.areas ?? []).join(',') === wantAreas ? wantAreas
+            : `page [${(seen?.areas ?? []).join(',')}]\n    want [${wantAreas}]`);
+    /** ⛓ THE FILTER IS THE PAGE'S ONE CONTROL, so it is PRESSED. The subject
+     *  is a term whose `plain` sentence nothing else shares, and the expected
+     *  answer is computed from the module the same way the page computes it —
+     *  ⛔ NOT hardcoded to 1: a term that later gains a namesake would then
+     *  red for the wrong reason. */
+    const probe = 'vestibule';
+    const wantVisible = TERMS.filter((e) => `${e.term} ${e.aliases.join(' ')} ${e.plain}`
+        .toLowerCase().includes(probe)).length;
+    await page.fill('#filter', probe);
+    await page.waitForFunction((n) => window.__procgenGlossaryPage?.visible === n,
+        wantVisible, { timeout: 30000 }).catch(() => {});
+    const narrowed = await page.evaluate(() => window.__procgenGlossaryPage?.visible ?? null);
+    check(narrowed === wantVisible && wantVisible < TERMS.length,
+        `⛓⛓ …and the FILTER narrows to ${wantVisible} of ${TERMS.length} on "${probe}"`,
+        `visible ${narrowed}`);
+    await page.fill('#filter', '');
+    await page.waitForFunction((n) => window.__procgenGlossaryPage?.visible === n,
+        TERMS.length, { timeout: 30000 }).catch(() => {});
+    const restored = await page.evaluate(() => window.__procgenGlossaryPage?.visible ?? null);
+    check(restored === TERMS.length, '…and CLEARING it brings every entry back',
+        `visible ${restored}`);
+    /** ⛓⛓ THE TWO CATALOGUES MEET HERE. `demos.html` prints a `terms:` link
+     *  per slug; this asserts each of those anchors EXISTS on the glossary
+     *  page — measured off the glossary's own DOM, not off the module. */
+    const anchors = new Set(seen?.anchors ?? []);
+    const wantAnchors = [...new Set(DEMOS.flatMap((e) => e.terms))];
+    const dead = wantAnchors.filter((a) => !anchors.has(a));
+    check(dead.length === 0,
+        `⛓⛓ …and every catalogue TERM link has an anchor here (${wantAnchors.length} distinct)`,
+        dead.length ? `dead: ${dead.join(', ')}` : 'all present');
+    /** ⛔ And the display forms the catalogue page prints are the module's, not
+     *  a second spelling — checked by asking the glossary page for the same
+     *  slugs the catalogue names and comparing against `termById`. */
+    const mismatched = wantAnchors.filter((a) => !termById(a));
+    check(mismatched.length === 0,
+        '…and every one of them RESOLVES in the module too',
+        mismatched.length ? mismatched.join(', ') : 'all resolve');
+} catch (e) {
+    check(false, 'the GLOSSARY page check THREW', e.stack ?? e.message);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ AND THE CATALOGUE PAGE'S OWN `terms:` LINES ARE RENDERED. ⛔ Without
+ * this the anchors above could all exist while `demos.html` printed none of
+ * them — the two halves of the link are on two pages and only one of them is
+ * measured by the other block.
+ * ══════════════════════════════════════════════════════════════════════ */
+try {
+    const url = pages ? `${pagesBase}${pagePath(DEMOS_PAGE)}` : `${origin}${DEMOS_PAGE}`;
+    errors.length = 0;
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__procgenDemosPage?.ready === true,
+        undefined, { timeout: 60000 }).catch(() => {});
+    const printed = await page.evaluate(() => [...document.querySelectorAll('details.entry')]
+        .map((el) => ({
+            id: el.dataset.demoId,
+            terms: [...el.querySelectorAll('.terms a')]
+                .map((a) => a.getAttribute('href')),
+            dead: el.querySelectorAll('.terms .dead').length,
+        })));
+    const wantPerEntry = new Map(DEMOS.map((e) => [e.id, e.terms.length]));
+    const short = printed.filter((r) => r.terms.length !== wantPerEntry.get(r.id));
+    check(short.length === 0,
+        `⛓ the catalogue page PRINTS every entry's terms line (${
+            DEMOS.reduce((a, e) => a + e.terms.length, 0)} links over ${DEMOS.length} entries)`,
+        short.length ? short.map((r) => `${r.id}: ${r.terms.length} vs ${
+            wantPerEntry.get(r.id)}`).join(' | ') : 'all rendered');
+    const deadOnes = printed.filter((r) => r.dead > 0);
+    check(deadOnes.length === 0,
+        '…and NONE of them rendered as a dead slug the glossary does not define',
+        deadOnes.map((r) => r.id).join(', '));
+    const bad = printed.flatMap((r) => r.terms.filter((h) => !/glossary\.html#[a-z0-9-]+$/.test(h)));
+    check(bad.length === 0, '…each one an anchor into glossary.html',
+        bad.slice(0, 4).join(' | '));
+    check(errors.length === 0, '…with ZERO console errors on the catalogue page',
+        errors.join(' | '));
+} catch (e) {
+    check(false, 'the catalogue TERMS check THREW', e.stack ?? e.message);
+}
 
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);
 await finish(failed === 0 ? 0 : 1);

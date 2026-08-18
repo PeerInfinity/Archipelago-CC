@@ -247,6 +247,17 @@
 <body>
 <header>
   <h1>Maze — lab <span>generate · edit · solve</span></h1>
+  <!-- ⛓ THE GLOSSARY / DEMO LINKS (PROCGEN DOCS P2). ⛔ RELATIVE, and that is
+       the whole reason they are static HTML: `../procgenDocs/…` is the same
+       string on the dev server (rooted at the repo) and on Pages (rooted at
+       `frontend/`), so neither needs the `repoUrl` resolver and neither can
+       404 on one host while working on the other. ⛔ They change no readout —
+       a link and a `title=` are the whole of this page's share of P2. -->
+  <div id="docLinks" class="note">
+    <a href="../procgenDocs/glossary.html">glossary</a> ·
+    <a href="../procgenDocs/demos.html">demos</a>
+    <span class="note">— every term on this page is defined there</span>
+  </div>
   <div>
     <label for="source">source</label>
     <select id="source">
@@ -271,12 +282,12 @@
     <div id="labAreaNote"></div>
     <!-- ⚠ ONE ROW PER **SYMBOL**, never a label per cell: door counts are not
          small (up to 50 over eight 15x15 cells — the yield table). -->
-    <div id="labAreaLegend"></div>
+    <div id="labAreaLegend" data-term="area-graph"></div>
     <!-- ⛓⛓ THE GADGET'S OWN BOX — what it PLACED, or the binding's VERBATIM
          REFUSAL. ⚠ Most seeds refuse (§10.11.5) and the refusal is what this
          page has to say on them; ⛔ no bound is widened to make it prettier. -->
     <div id="labElementNote"></div>
-    <div id="labElementLegend"></div>
+    <div id="labElementLegend" data-term="element"></div>
 
     <!-- ⛓ EVERY CONTROL HERE IS A BOUND THE LOOP RUNS UNDER, and every one of
          them is echoed into the trace and the readout — a knob whose value
@@ -397,7 +408,7 @@
 
     <!-- ⛔ THE PAGE NEVER WRITES fixtures/ OR ANY REPO PATH. -->
     <details id="labIO" open>
-      <summary>save / load — the payload in your hands (this page NEVER writes fixtures/)</summary>
+      <summary data-term="payload">save / load — the payload in your hands (this page NEVER writes fixtures/)</summary>
       <div class="line">
         <button id="labDownload">Download</button>
         <button id="labLoad">Load from box</button>
