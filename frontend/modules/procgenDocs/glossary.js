@@ -1261,19 +1261,6 @@ export const TERMS = Object.freeze([
         seeAlso: ['door-law', 'block-pocket', 'cut', 'door-cells'],
     }),
     t({
-        id: 'door-cells',
-        term: '`doorCells`',
-        aliases: ['the door cell'],
-        area: 'lock-and-key',
-        plain: 'The exact squares the door occupies — the ones the law walls off to test it.',
-        detail: 'A row declares them; the [door law](#door-law) walls them and floods. On the '
-            + '[maze lab](#maze-lab) an [area](#area) lock is placed on **every boundary '
-            + 'cell** of the locked area rather than on one edge, which is what makes it a '
-            + 'cut a player cannot simply walk around.',
-        where: [{ label: 'maze.md § The area graph', doc: MAZE_AREAS }],
-        seeAlso: ['door-law', 'lock', 'area', 'clearer'],
-    }),
-    t({
         id: 'site',
         term: 'a site',
         aliases: ['`site:`', 'SITES'],
@@ -1437,6 +1424,19 @@ export const TERMS = Object.freeze([
             + 'around. **Nothing is carved and nothing is walled to make this true.**',
         where: [{ label: 'maze.md § The area graph', doc: MAZE_AREAS }],
         seeAlso: ['flag', 'symbol', 'area-graph', 'cut', 'door-cells'],
+    }),
+    t({
+        id: 'door-cells',
+        term: '`doorCells`',
+        aliases: ['the door cell'],
+        area: 'lock-and-key',
+        plain: 'The exact squares the door occupies — the ones the law walls off to test it.',
+        detail: 'A row declares them; the [door law](#door-law) walls them and floods. On the '
+            + '[maze lab](#maze-lab) an [area](#area) lock is placed on **every boundary '
+            + 'cell** of the locked area rather than on one edge, which is what makes it a '
+            + 'cut a player cannot simply walk around.',
+        where: [{ label: 'maze.md § The area graph', doc: MAZE_AREAS }],
+        seeAlso: ['door-law', 'lock', 'area', 'clearer'],
     }),
     t({
         id: 'flag',

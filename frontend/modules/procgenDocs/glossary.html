@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<!--
+  procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per
+  term the procgen docs and the two lab pages use as vocabulary: a
+  plain-language sentence first, then the concrete rule and where it lives.
+
+  ⚖ The user, 2026-08-18: *"demos.md and the demo pages are dense with
+  technical jargon — a new document that defines each of the technical terms,
+  linked from the document and the demo pages … served on GitHub Pages …
+  covering ALL of procgen, not just the Seedling substrate"*.
+
+  ⛔⛔ THE DATA IS `./glossary.js` AND THIS PAGE ONLY RENDERS IT. No fetch, no
+  build step, no second copy of a definition. The same module is imported by
+  `scripts/procgen/check-procgen-demos.mjs` (which loads this page and asserts
+  it renders what the module holds), by `demos.html` (whose entries link their
+  `terms` here), and by the two lab pages (whose section summaries carry a
+  term's `plain` sentence as a `title=` tooltip).
+
+  ⛓ IT IMPORTS BOTH CATALOGUES. `demos.js` is read only to COMPUTE the
+  "shown in demo" back-links: an entry names glossary slugs, and this page
+  inverts that mapping rather than anyone maintaining a second list.
+
+  Serve from the REPO ROOT, or read it on Pages:
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/procgenDocs/glossary.html
+      https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Procgen glossary — the vocabulary, defined</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+  h1 span { color: #7fe0ff; font-weight: 400; }
+  #count, #where, #also { font-size: 11px; color: #8a8a98; }
+  #where, #also { color: #6a6a78; margin-top: 2px; }
+  main { padding: 10px 14px 40px; max-width: 96ch; }
+  a { color: #7fe0ff; }
+  code { color: #ffd75f; }
+  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
+    overflow-x: auto; margin: 6px 0; }
+  pre code { color: #d8d8e0; }
+  p { margin: 6px 0; }
+  .note { color: #8a8a98; font-size: 11px; }
+  #filterBox { margin: 10px 0 4px; display: flex; gap: 8px; align-items: baseline;
+    flex-wrap: wrap; }
+  #filter { background: #101014; color: #d8d8e0; border: 1px solid #2a2a36;
+    padding: 3px 6px; width: 24ch; font: inherit; }
+  #filterNote { color: #7fd88f; }
+  #index { margin: 6px 0 14px; }
+  #index a { margin-right: 10px; white-space: nowrap; }
+  #index .n { color: #8a8a98; }
+  h2 { font-size: 13px; margin: 18px 0 2px; color: #7fe0ff; font-weight: 600;
+    border-top: 1px solid #24242c; padding-top: 10px; }
+  h2 .n { color: #6a6a78; font-weight: 400; }
+  .blurb { color: #8a8a98; font-size: 11px; margin: 0 0 6px; }
+  details.entry { margin: 8px 0; border: 1px solid #1e1e26; background: #0e0e12;
+    padding: 6px 10px; }
+  details.entry > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
+  details.entry > summary .alias { color: #6a6a78; font-weight: 400; margin-left: 8px; }
+  .body { padding: 4px 0 6px 14px; }
+  .plain { color: #e8e8f0; border-left: 2px solid #2a4a3a; padding-left: 8px;
+    margin: 4px 0 8px; }
+  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 10px; display: block; margin: 8px 0 1px; }
+  .where a { word-break: break-all; }
+  .where .k { color: #7fd88f; }
+  .see a { color: #9fff9f; }
+  .demo a { color: #ffd75f; }
+  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
+    font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Procgen glossary — <span>the vocabulary, defined</span></h1>
+  <div id="count" class="note"></div>
+  <div id="where" class="note"></div>
+  <div id="also" class="note"></div>
+</header>
+
+<main>
+  <p>Every entry is TWO LEVELS. The first line is one sentence for someone who
+    has read none of the records; <b>in this project</b> is the concrete rule —
+    the number, the refusal's own name — and <b>where it lives</b> points at the
+    tracked doc and the module. ⛔ Nothing here is invented: every entry comes
+    from a doc or from a string one of the lab pages puts on your screen.</p>
+
+  <div id="filterBox">
+    <label for="filter">filter</label>
+    <input id="filter" type="search" placeholder="door, area, draw…"
+      autocomplete="off" spellcheck="false">
+    <span id="filterNote" class="note"></span>
+  </div>
+
+  <div id="index" class="note"></div>
+  <div id="entries"></div>
+</main>
+
+<footer id="foot"></footer>
+
+<script type="module">
+import { DEMOS, PAGES_BASE, docHref, pagesHref } from './demos.js';
+import { AREAS, TERMS, hrefFor, termById, termsInArea } from './glossary.js';
+import { esc, inline, prose } from './markdownLite.js';
+
+/**
+ * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL — the same
+ * resolver `demos.html` and `watchViewer.js` use, for the same reason: the dev
+ * server serves the REPO root, Pages publishes `frontend/` AS its root, so a
+ * root-absolute `/frontend/…` is a 404 there.
+ */
+const FRONTEND_ROOT = new URL('../../', import.meta.url);
+function repoUrl(path) {
+    const p = String(path).replace(/^\/+/, '');
+    return p.startsWith('frontend/')
+        ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
+        : new URL(p, new URL('../../../', import.meta.url)).href;
+}
+const onPages = repoUrl('frontend/modules/procgenDocs/glossary.html').startsWith(PAGES_BASE);
+
+const label = (h) => `<span class="lbl">${h}</span>`;
+
+/**
+ * ⛓⛓ **THE BACK-LINKS ARE INVERTED, NOT MAINTAINED.** A catalogue entry names
+ * glossary slugs in its `terms`; this is the only place the other direction
+ * exists. ⛔ Nobody has to remember to add a term to a demo's list AND a demo
+ * to a term's list — the second one cannot fall out of step because it is
+ * computed.
+ */
+const DEMOS_BY_TERM = new Map();
+for (const entry of DEMOS) {
+    for (const slug of entry.terms) {
+        if (!DEMOS_BY_TERM.has(slug)) DEMOS_BY_TERM.set(slug, []);
+        DEMOS_BY_TERM.get(slug).push(entry);
+    }
+}
+
+/** A `where` row: a tracked doc, or a repo code path — both on GitHub, because
+ *  Pages publishes `frontend/` alone and neither `docs/` nor `scripts/` is
+ *  served there at all. */
+function whereRow(w) {
+    const target = w.doc ?? w.code;
+    return `<div class="where"><span class="k">${w.doc ? 'DOC ' : 'CODE'}</span> `
+        + `<a href="${esc(docHref(String(target).split('#')[0]))}`
+        + `${w.doc && String(w.doc).includes('#') ? `#${esc(String(w.doc).split('#')[1])}` : ''}">`
+        + `${inline(w.label)}</a></div>`;
+}
+
+function renderTerm(entry) {
+    const d = document.createElement('details');
+    d.className = 'entry';
+    d.id = entry.id;
+    d.dataset.termId = entry.id;
+    d.open = true;
+    const aliases = entry.aliases.length
+        ? `<span class="alias">— also: ${entry.aliases.map((a) => inline(a)).join(' · ')}</span>`
+        : '';
+    const parts = [`<summary>${inline(entry.term)}${aliases}</summary>`, '<div class="body">'];
+    parts.push(`<div class="plain">${inline(entry.plain)}</div>`);
+    parts.push(label('in this project'), prose(entry.detail));
+    parts.push(label('where it lives'));
+    for (const w of entry.where) parts.push(whereRow(w));
+    if (entry.seeAlso.length) {
+        parts.push(label('see also'));
+        parts.push(`<div class="see">${entry.seeAlso.map((id) => {
+            const t = termById(id);
+            return `<a href="${esc(hrefFor(id))}">${inline(t.term)}</a>`;
+        }).join(' · ')}</div>`);
+    }
+    const shown = DEMOS_BY_TERM.get(entry.id) ?? [];
+    if (shown.length) {
+        parts.push(label('shown in the demo catalogue'));
+        parts.push(`<div class="demo">${shown.map((e) => `<a href="${
+            esc(`${repoUrl('frontend/modules/procgenDocs/demos.html')}#${e.id}`)
+        }">#${e.n} ${inline(e.title)}</a>`).join('<br>')}</div>`);
+    }
+    parts.push('</div>');
+    d.innerHTML = parts.join('');
+    return d;
+}
+
+/* ══════════ THE RENDER ══════════════════════════════════════════════ */
+
+const host = document.getElementById('entries');
+for (const area of AREAS) {
+    const rows = termsInArea(area.id);
+    const h = document.createElement('h2');
+    h.id = `area-${area.id}`;
+    h.innerHTML = `${esc(area.title)} <span class="n">— ${rows.length}</span>`;
+    host.appendChild(h);
+    const blurb = document.createElement('p');
+    blurb.className = 'blurb';
+    blurb.innerHTML = inline(area.blurb);
+    host.appendChild(blurb);
+    const box = document.createElement('div');
+    box.dataset.areaId = area.id;
+    for (const entry of rows) box.appendChild(renderTerm(entry));
+    host.appendChild(box);
+}
+
+document.getElementById('index').innerHTML = AREAS.map((a) =>
+    `<a href="#area-${a.id}">${esc(a.title)}</a> <span class="n">${termsInArea(a.id).length}</span>`)
+    .join(' ');
+
+/* ══════════ THE FILTER — CLIENT-SIDE, NO FETCH ══════════════════════
+ * ⛓ It matches the TERM, its ALIASES and its `plain` sentence — the three
+ * things a reader could be searching with. A heading whose whole block is
+ * filtered out is hidden with it, so the page never shows an empty area. */
+const ENTRY_ELS = [...document.querySelectorAll('details.entry')];
+const HAYSTACK = new Map(TERMS.map((e) => [e.id,
+    `${e.term} ${e.aliases.join(' ')} ${e.plain}`.toLowerCase()]));
+
+function applyFilter(raw) {
+    const q = String(raw ?? '').trim().toLowerCase();
+    let visible = 0;
+    for (const el of ENTRY_ELS) {
+        const hit = !q || (HAYSTACK.get(el.dataset.termId) ?? '').includes(q);
+        el.hidden = !hit;
+        if (hit) visible += 1;
+    }
+    for (const area of AREAS) {
+        const box = document.querySelector(`[data-area-id="${area.id}"]`);
+        const any = [...box.querySelectorAll('details.entry')].some((e) => !e.hidden);
+        box.hidden = !any;
+        document.getElementById(`area-${area.id}`).hidden = !any;
+        document.getElementById(`area-${area.id}`).nextElementSibling.hidden = !any;
+    }
+    document.getElementById('filterNote').textContent = q
+        ? `${visible} of ${TERMS.length} entries match ${JSON.stringify(q)}`
+        : `${TERMS.length} entries — type to narrow by term, alias or plain sentence`;
+    return visible;
+}
+
+const filterInput = document.getElementById('filter');
+filterInput.addEventListener('input', () => {
+    publish(applyFilter(filterInput.value));
+});
+
+/* ══════════ THE HEADER LINES ════════════════════════════════════════ */
+
+const areaCounts = AREAS.map((a) => `${a.title} ${termsInArea(a.id).length}`).join(' · ');
+document.getElementById('count').textContent =
+    `${TERMS.length} entries over ${AREAS.length} areas — ${areaCounts}.`;
+document.getElementById('where').innerHTML =
+    `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
+    + ` · the data is <a href="${esc(docHref('frontend/modules/procgenDocs/glossary.js'))}">`
+    + 'frontend/modules/procgenDocs/glossary.js</a>, and this page only renders it'
+    + ` · always at <a href="${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}">`
+    + `${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}</a>`;
+document.getElementById('also').innerHTML =
+    'every term here is used somewhere you can actually run — see '
+    + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">the demo catalogue</a>`
+    + `, and the two lab pages it links: <a href="${esc(pagesHref(
+        DEMOS.find((e) => e.id === 'sites')))}">the Seedling watch page</a> and `
+    + `<a href="${esc(pagesHref(DEMOS.find((e) => e.id === 'maze-area-graph')))}">the maze lab</a>`;
+document.getElementById('foot').innerHTML =
+    '⛔ Do not edit this page to change a definition — edit <code>glossary.js</code>. '
+    + 'The glossary is ONE module with several readers: this page, '
+    + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">demos.html</a>, `
+    + 'the two lab pages\' tooltips, and '
+    + `<a href="${esc(docHref('scripts/procgen/check-procgen-demos.mjs'))}">check-procgen-demos.mjs</a>, `
+    + 'which loads this page and asserts it renders what the module holds. '
+    + 'The candidate set it was chosen FROM is measured by '
+    + `<a href="${esc(docHref('scripts/procgen/harvest-procgen-terms.mjs'))}">harvest-procgen-terms.mjs</a>.`;
+
+/**
+ * ⛓⛓ THE READOUT IS MEASURED OFF THE DOM, NOT ECHOED FROM `TERMS` (trap 269).
+ * The row asserts this page renders the entries the module holds; a readout
+ * copied from the import would hold even with the render deleted. `visible` is
+ * recomputed by the filter, so the row can type into the box and read the
+ * answer the page itself computed.
+ */
+function publish(visible) {
+    const rendered = [...document.querySelectorAll('details.entry')];
+    window.__procgenGlossaryPage = Object.freeze({
+        ids: Object.freeze(rendered.map((el) => el.dataset.termId)),
+        count: rendered.length,
+        areas: Object.freeze([...document.querySelectorAll('[data-area-id]')]
+            .map((el) => el.dataset.areaId)),
+        anchors: Object.freeze(rendered.map((el) => el.id)),
+        visible,
+        ready: true,
+    });
+}
+publish(applyFilter(''));
+</script>
+</body>
+</html>

@@ -68,6 +68,9 @@
   .drive b { color: #7fe0ff; font-weight: 600; }
   .claim { color: #a8e6c4; }
   .warn { border-left: 2px solid #6d5a2a; padding-left: 8px; color: #e6d7a8; }
+  .terms { color: #8a8a98; }
+  .terms a { color: #9fff9f; }
+  .dead { color: #ff9f5f; }
   footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
     font-size: 11px; }
 </style>
@@ -77,6 +80,7 @@
   <h1>Procgen demonstrations — <span>a catalogue</span></h1>
   <div id="count" class="note"></div>
   <div id="where" class="note"></div>
+  <div id="also" class="note"></div>
 </header>
 
 <main>
@@ -150,6 +154,8 @@ node scripts/procgen/check-procgen-demos.mjs --pages=https://peerinfinity.github
 
 <script type="module">
 import { DEMOS, PAGES_BASE, docHref, pagesHref } from './demos.js';
+import { hrefFor, termById } from './glossary.js';
+import { esc, inline, prose } from './markdownLite.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM THE
@@ -168,45 +174,10 @@ function repoUrl(path) {
 /** The entry on THIS host — whichever of the two worlds we are in. */
 const hereHref = (entry, url = entry.url) => `${repoUrl(entry.page)}?${url}`;
 
-/* ══════════ THE MARKDOWN SUBSET ═════════════════════════════════════
- * ⛔ The data holds STRINGS, never HTML. Everything is escaped first and only
- * these five things are then un-escaped into markup: fenced code blocks,
- * `code`, **bold**, *italic*, [text](url) and <url>. A doc cannot inject a
- * tag. */
-const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-
-function inline(text) {
-    /* ⛓ Code spans come OUT first, so a `**` inside one is not bold. */
-    /* ⛔ The placeholder is NUL-delimited, not ` 3 `: the prose is full of
-       bare numbers between spaces ("arc 3, slice 1", "19 ground cells"), and a
-       digit-in-spaces placeholder would have eaten every one of them. */
-    const spans = [];
-    const held = String(text).replace(/`([^`]+)`/g, (_, c) => {
-        spans.push(c);
-        return `\u0000${spans.length - 1}\u0000`;
-    });
-    return esc(held)
-        .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>')
-        .replace(/&lt;(https?:\/\/[^\s&]+)&gt;/g, '<a href="$1">$1</a>')
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-        .replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${esc(spans[Number(i)])}</code>`);
-}
-
-/** Blank-line paragraphs; a single newline inside one is a soft wrap. */
-function prose(text) {
-    if (!text) return '';
-    const out = [];
-    for (const chunk of String(text).split(/```/)) {
-        if (out.length % 2 === 1) {                     // inside a fence
-            out.push(`<pre><code>${esc(chunk.replace(/^\w*\n/, ''))}</code></pre>`);
-            continue;
-        }
-        out.push(chunk.split(/\n\s*\n/).filter((p) => p.trim())
-            .map((p) => `<p>${inline(p.replace(/\n/g, ' ').trim())}</p>`).join(''));
-    }
-    return out.join('');
-}
+/* ⛓⛓ THE MARKDOWN SUBSET MOVED OUT (P2). It was inline here in P1, and
+ * P1's own as-built said a glossary link "belongs in the same inline() and
+ * nowhere else" — with two doc pages, "the same one" has to be a module.
+ * `markdownLite.js` is that module; nothing about the six forms changed. */
 
 /* ══════════ THE RENDER ══════════════════════════════════════════════ */
 
@@ -244,6 +215,26 @@ function driveLine(entry) {
     return bits.length ? `${label('HOW TO DRIVE IT')}<div class="drive">${bits.join(' · ')}</div>` : '';
 }
 
+/**
+ * ⛓⛓ **THE TERMS LINE — COMPUTED, NEVER TYPED.** An entry names glossary
+ * SLUGS; the link and the display form both come from `glossary.js`, so a
+ * term renamed there is renamed here in the same commit. ⛔ A slug that
+ * resolves to nothing is shown as a dead literal rather than silently
+ * dropped — the unit row is what refuses it, and a page that hid the problem
+ * would let the row be the only place anyone could see it.
+ */
+function termsLine(entry) {
+    if (!entry.terms.length) return '';
+    const bits = entry.terms.map((slug) => {
+        const t = termById(slug);
+        return t
+            ? `<a href="${esc(hrefFor(slug))}">${inline(t.term)}</a>`
+            : `<span class="dead">${esc(slug)} — NOT IN THE GLOSSARY</span>`;
+    });
+    return `${label('TERMS — each one defined in the glossary')}`
+        + `<div class="terms">${bits.join(' · ')}</div>`;
+}
+
 function renderEntry(entry) {
     const d = document.createElement('details');
     d.className = `entry${entry.prose ? ' prose' : ''}`;
@@ -270,6 +261,7 @@ function renderEntry(entry) {
         parts.push(label('HOW TO RUN IT'), prose(entry.howToRun));
     }
     parts.push(label('WHAT IS HAPPENING'), prose(entry.whatIsHappening));
+    parts.push(termsLine(entry));
     for (const n of entry.notes) parts.push(`<div class="warn">${prose(n)}</div>`);
     if (!entry.prose) {
         parts.push(label('RUN THE ROW FOR THIS ENTRY'));
@@ -292,6 +284,9 @@ document.getElementById('where').innerHTML =
     `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
     + ` · the data is <a href="${esc(docHref('frontend/modules/procgenDocs/demos.js'))}">`
     + 'frontend/modules/procgenDocs/demos.js</a>, and this page only renders it';
+document.getElementById('also').innerHTML =
+    'the words below are defined in <a href="glossary.html">the procgen glossary</a>'
+    + ' — every entry\'s <b>TERMS</b> line links straight into it';
 document.getElementById('foot').innerHTML =
     '⛔ Do not edit this page to change a demo — edit <code>demos.js</code>. '
     + 'The catalogue is ONE module with two readers: this page and '
