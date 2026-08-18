@@ -215,6 +215,7 @@ const M = {
     oracle: await import('../../frontend/modules/seedlingDemo/procgenOracle.js'),
     mazeLab: await import('../../frontend/modules/mazeRoom/mazeLab.js'),
     maze: await import('../../frontend/modules/mazeRoom/procgenMaze.js'),
+    glossary: await import('../../frontend/modules/procgenDocs/glossary.js'),
 };
 
 const SOURCES = {
@@ -250,8 +251,38 @@ function urlParamsFunctions() {
     const out = {};
     for (const m of allMatches(text, /^export function ([a-zA-Z]+)\(/gm)) {
         const region = regionOf(text, new RegExp(`^export function ${m[1]}\\(`), { what: m[1] });
-        out[m[1]] = { params: paramsIn(region.text), fromLine: region.fromLine };
+        out[m[1]] = { params: paramsIn(region.text), fromLine: region.fromLine, body: region.text };
     }
+    /**
+     * ⛓⛓⛓ **A PROJECTION OWNS WHAT THE FUNCTION IT PROJECTS OWNS** — and this
+     * was FOUND BY READING THE RENDER, which is the only way it could have been.
+     * `readSkeleton` is one line: `return readSkeletonTyped(q, …).spec`, and
+     * `q.get('skeleton')` happens ONCE, in the typed reader. So a per-body scan
+     * gave `readSkeleton` no parameters at all, and the maze lab's `?skeleton=`
+     * row rendered with a WRITER and no READER — a table that said the page
+     * never reads a key it reads on every load. `readElements` / `readRequire`
+     * are the same shape.
+     *
+     * ⛔ Propagated to a FIXED POINT rather than one level: a second projection
+     * of a projection would otherwise be the same defect one call deeper.
+     */
+    const names = Object.keys(out);
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const fn of names) {
+            for (const other of names) {
+                if (other === fn) continue;
+                if (!new RegExp(`\\b${other}\\(`).test(out[fn].body)) continue;
+                for (const [name, how] of out[other].params) {
+                    if (out[fn].params.has(name)) continue;
+                    out[fn].params.set(name, how);
+                    changed = true;
+                }
+            }
+        }
+    }
+    for (const fn of names) delete out[fn].body;
     return out;
 }
 
@@ -308,16 +339,16 @@ const PARAM_NOTES = {
     seed: { field: { watch: 'seed', lab: 'seed' }, codec: 'intParam', terms: ['seed', 'rng-stream'] },
     biome: { field: { watch: 'biome', lab: 'biome' }, codec: 'a lower-cased name', terms: ['biome', 'palette'] },
     count: { field: { watch: 'bounds.obstacleTarget', lab: 'bounds.obstacleTarget' }, codec: 'intParam', terms: ['obstacle-target', 'keep-or-revert'] },
-    tries: { field: { watch: 'bounds.triesPerStep', lab: 'bounds.triesPerStep' }, codec: 'intParam', terms: ['tries-per-step'] },
+    tries: { field: { watch: 'bounds.triesPerStep', lab: 'bounds.triesPerStep' }, codec: 'intParam', terms: ['keep-or-revert'] },
     k: { field: { watch: 'bounds.saturationK', lab: 'bounds.saturationK' }, codec: 'intParam', terms: ['saturation'] },
     anchortries: { field: { watch: 'bounds.anchorTriesPerCandidate', lab: 'bounds.anchorTriesPerCandidate' }, codec: 'intParam', terms: ['anchor', 'anchor-search'] },
     families: { field: { watch: 'roster', lab: 'roster' }, codec: 'a comma list, validated against the palette', terms: ['family', 'roster', 'restrict'] },
     templates: { field: { watch: 'roster', lab: 'roster' }, codec: 'a comma list, validated against the palette', terms: ['template', 'roster', 'restrict'] },
-    skeleton: { field: { watch: 'skeleton', lab: 'skeleton' }, codec: 'parseSkeleton', terms: ['skeleton', 'skeleton-kind', 'kind-parameters'] },
+    skeleton: { field: { watch: 'skeleton', lab: 'skeleton' }, codec: 'parseSkeleton', terms: ['skeleton', 'skeleton-kind', 'the-carve'] },
     elements: {
         field: { watch: 'elements', lab: 'elements' },
         codec: 'parseElementSpec',
-        terms: ['element', 'element-head', 'element-list'],
+        terms: ['element', 'element-head', 'draw'],
         absentMeans: {
             watch: '⛔ ABSENT IS NOT `none` HERE. The reader answers `undefined` — *nobody '
                 + 'said* — and `seedlingSeam` turns that into the BIOME DEFAULT (see '
@@ -328,25 +359,25 @@ const PARAM_NOTES = {
                 + 'site drawn, nothing constructed, no draw spent (⚖ arc-2 ruling 5).',
         },
     },
-    areas: { field: { watch: 'areas', lab: 'areas' }, codec: 'parseAreaSpec', terms: ['area-graph', 'area-spec', 'key-level'] },
+    areas: { field: { watch: 'areas', lab: 'areas' }, codec: 'parseAreaSpec', terms: ['area-graph', 'area-partition', 'key-level'] },
     require: { field: { watch: 'require', lab: 'require' }, codec: 'parseRequireList / parseItemRequireList', terms: ['require-directive', 'symbol', 'flag'] },
-    run: { field: { watch: 'run', lab: 'run' }, codec: 'the literal `1`', terms: ['run-all', 'ladder'] },
-    gen: { field: { watch: 'gen', lab: 'gen' }, codec: 'a path to a payload JSON', terms: ['payload', 'agreement'] },
-    tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'budget-exhausted'] },
-    expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'budget-exhausted'] },
-    width: { field: { watch: null, lab: 'width' }, codec: 'intParam', terms: ['room'] },
-    height: { field: { watch: null, lab: 'height' }, codec: 'intParam', terms: ['room'] },
-    tape: { field: { watch: 'tape', lab: null }, codec: 'a path to a tape JSON', terms: ['tape', 'replay'] },
-    side: { field: { watch: 'side', lab: null }, codec: 'a lower-cased enum', terms: ['differential'] },
+    run: { field: { watch: 'run', lab: 'run' }, codec: 'the literal `1`', terms: ['generation-ladder'] },
+    gen: { field: { watch: 'gen', lab: 'gen' }, codec: 'a path to a payload JSON', terms: ['payload'] },
+    tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
+    expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
+    width: { field: { watch: null, lab: 'width' }, codec: 'intParam', terms: ['skeleton'] },
+    height: { field: { watch: null, lab: 'height' }, codec: 'intParam', terms: ['skeleton'] },
+    tape: { field: { watch: 'tape', lab: null }, codec: 'a path to a tape JSON', terms: ['tape'] },
+    side: { field: { watch: 'side', lab: null }, codec: 'a lower-cased enum', terms: ['seedling-differential'] },
     speed: { field: { watch: 'speed', lab: null }, codec: 'Number()', terms: [] },
-    layers: { field: { watch: 'layers', lab: null }, codec: 'parseLayersParam (a comma list)', terms: ['overlay'] },
+    layers: { field: { watch: 'layers', lab: null }, codec: 'parseLayersParam (a comma list)', terms: ['overlay-layer'] },
     attackhold: { field: { watch: 'attackHold', lab: null }, codec: 'parseAttackHold', terms: [] },
     level: { field: { watch: 'level', lab: null }, codec: 'Number()', terms: [] },
-    boot: { field: { watch: 'boot', lab: null }, codec: 'a JSON boot block', terms: ['boot'] },
+    boot: { field: { watch: 'boot', lab: null }, codec: 'a JSON boot block', terms: ['boot-items'] },
     goals: { field: { watch: 'goals', lab: null }, codec: 'a goal list', terms: ['solver'] },
     name: { field: { watch: 'name', lab: null }, codec: 'a string', terms: [] },
     solve: { field: { watch: 'solve', lab: null }, codec: 'the literal `1`', terms: ['solver'] },
-    tick: { field: { watch: 'tick', lab: null }, codec: 'readViewParams (a whole tick index)', terms: ['tick'] },
+    tick: { field: { watch: 'tick', lab: null }, codec: 'readViewParams (a whole tick index)', terms: [] },
     shot: { field: { watch: 'shot', lab: null }, codec: 'the literal `1`', terms: [] },
     directed: { field: { watch: null, lab: null }, codec: 'RETIRED — refuses by name', terms: ['directive', 'directed-attempt'] },
     budgetms: { field: { watch: null, lab: null }, codec: 'RETIRED — warns and is ignored', terms: [] },
@@ -465,6 +496,14 @@ function buildUrlGrammar() {
                 }
                 isUndefined = hit.value === undefined;
                 value = isUndefined ? null : hit.value;
+            }
+            for (const t of note?.terms ?? []) {
+                if (!M.glossary.termById(t)) {
+                    throw new Error(`generate-procgen-reference: PARAM_NOTES.${row.name}.terms `
+                        + `names ${JSON.stringify(t)}, which the GLOSSARY does not define. ⛔ A `
+                        + 'dead slug would render as a link a reader cannot follow — say a real '
+                        + 'term or say none, and the page names the parameters that have none.');
+                }
             }
             return {
                 name: row.name,

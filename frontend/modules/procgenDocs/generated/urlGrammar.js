@@ -144,7 +144,7 @@ export const URL_GRAMMAR = frz({
                     "retired": false,
                     "terms": [
                         "area-graph",
-                        "area-spec",
+                        "area-partition",
                         "key-level"
                     ],
                     "via": [
@@ -219,7 +219,7 @@ export const URL_GRAMMAR = frz({
                     "name": "boot",
                     "retired": false,
                     "terms": [
-                        "boot"
+                        "boot-items"
                     ],
                     "via": [
                         {
@@ -315,11 +315,17 @@ export const URL_GRAMMAR = frz({
                     "name": "elements",
                     "retired": false,
                     "terms": [
+                        "draw",
                         "element",
-                        "element-head",
-                        "element-list"
+                        "element-head"
                     ],
                     "via": [
+                        {
+                            "file": "frontend/modules/procgenCore/urlParams.js",
+                            "fn": "readGenerateParams → urlParams.readElements",
+                            "how": "get",
+                            "role": "read"
+                        },
                         {
                             "file": "frontend/modules/procgenCore/urlParams.js",
                             "fn": "readGenerateParams → urlParams.readElementsTyped",
@@ -373,7 +379,6 @@ export const URL_GRAMMAR = frz({
                     "name": "gen",
                     "retired": false,
                     "terms": [
-                        "agreement",
                         "payload"
                     ],
                     "via": [
@@ -449,7 +454,7 @@ export const URL_GRAMMAR = frz({
                     "name": "layers",
                     "retired": false,
                     "terms": [
-                        "overlay"
+                        "overlay-layer"
                     ],
                     "via": [
                         {
@@ -537,8 +542,7 @@ export const URL_GRAMMAR = frz({
                     "name": "run",
                     "retired": false,
                     "terms": [
-                        "ladder",
-                        "run-all"
+                        "generation-ladder"
                     ],
                     "via": [
                         {
@@ -612,7 +616,7 @@ export const URL_GRAMMAR = frz({
                     "name": "side",
                     "retired": false,
                     "terms": [
-                        "differential"
+                        "seedling-differential"
                     ],
                     "via": [
                         {
@@ -635,9 +639,9 @@ export const URL_GRAMMAR = frz({
                     "name": "skeleton",
                     "retired": false,
                     "terms": [
-                        "kind-parameters",
                         "skeleton",
-                        "skeleton-kind"
+                        "skeleton-kind",
+                        "the-carve"
                     ],
                     "via": [
                         {
@@ -737,7 +741,6 @@ export const URL_GRAMMAR = frz({
                     "name": "tape",
                     "retired": false,
                     "terms": [
-                        "replay",
                         "tape"
                     ],
                     "via": [
@@ -787,9 +790,7 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "tick",
                     "retired": false,
-                    "terms": [
-                        "tick"
-                    ],
+                    "terms": [],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchManual.js",
@@ -809,7 +810,7 @@ export const URL_GRAMMAR = frz({
                     "name": "tickbudget",
                     "retired": false,
                     "terms": [
-                        "budget-exhausted",
+                        "solver",
                         "tick-budget"
                     ],
                     "via": [
@@ -831,7 +832,7 @@ export const URL_GRAMMAR = frz({
                     "name": "tries",
                     "retired": false,
                     "terms": [
-                        "tries-per-step"
+                        "keep-or-revert"
                     ],
                     "via": [
                         {
@@ -961,7 +962,7 @@ export const URL_GRAMMAR = frz({
                     "retired": false,
                     "terms": [
                         "area-graph",
-                        "area-spec",
+                        "area-partition",
                         "key-level"
                     ],
                     "via": [
@@ -1075,11 +1076,17 @@ export const URL_GRAMMAR = frz({
                     "name": "elements",
                     "retired": false,
                     "terms": [
+                        "draw",
                         "element",
-                        "element-head",
-                        "element-list"
+                        "element-head"
                     ],
                     "via": [
+                        {
+                            "file": "frontend/modules/procgenCore/urlParams.js",
+                            "fn": "readLabParams → urlParams.readElements",
+                            "how": "get",
+                            "role": "read"
+                        },
                         {
                             "file": "frontend/modules/procgenCore/urlParams.js",
                             "fn": "writeLabParams → urlParams.writeElementsParam",
@@ -1099,7 +1106,7 @@ export const URL_GRAMMAR = frz({
                     "retired": false,
                     "terms": [
                         "bfs-oracle",
-                        "budget-exhausted"
+                        "certification"
                     ],
                     "via": [
                         {
@@ -1155,7 +1162,6 @@ export const URL_GRAMMAR = frz({
                     "name": "gen",
                     "retired": false,
                     "terms": [
-                        "agreement",
                         "payload"
                     ],
                     "via": [
@@ -1183,7 +1189,7 @@ export const URL_GRAMMAR = frz({
                     "name": "height",
                     "retired": false,
                     "terms": [
-                        "room"
+                        "skeleton"
                     ],
                     "via": [
                         {
@@ -1266,8 +1272,7 @@ export const URL_GRAMMAR = frz({
                     "name": "run",
                     "retired": false,
                     "terms": [
-                        "ladder",
-                        "run-all"
+                        "generation-ladder"
                     ],
                     "via": [
                         {
@@ -1324,11 +1329,17 @@ export const URL_GRAMMAR = frz({
                     "name": "skeleton",
                     "retired": false,
                     "terms": [
-                        "kind-parameters",
                         "skeleton",
-                        "skeleton-kind"
+                        "skeleton-kind",
+                        "the-carve"
                     ],
                     "via": [
+                        {
+                            "file": "frontend/modules/procgenCore/urlParams.js",
+                            "fn": "readLabParams → urlParams.readSkeleton",
+                            "how": "get",
+                            "role": "read"
+                        },
                         {
                             "file": "frontend/modules/procgenCore/urlParams.js",
                             "fn": "writeLabParams → urlParams.writeSkeletonParam",
@@ -1403,7 +1414,7 @@ export const URL_GRAMMAR = frz({
                     "name": "tries",
                     "retired": false,
                     "terms": [
-                        "tries-per-step"
+                        "keep-or-revert"
                     ],
                     "via": [
                         {
@@ -1430,7 +1441,7 @@ export const URL_GRAMMAR = frz({
                     "name": "width",
                     "retired": false,
                     "terms": [
-                        "room"
+                        "skeleton"
                     ],
                     "via": [
                         {
@@ -1572,7 +1583,9 @@ export const URL_GRAMMAR = frz({
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readElements",
             "line": 435,
-            "params": []
+            "params": [
+                "elements"
+            ]
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
@@ -1603,7 +1616,9 @@ export const URL_GRAMMAR = frz({
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readSkeleton",
             "line": 212,
-            "params": []
+            "params": [
+                "skeleton"
+            ]
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",

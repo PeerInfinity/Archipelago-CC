@@ -144,6 +144,14 @@ const PLAYBACK = 'docs/json/developer/procgen/playback-and-debugging.md';
 const LOOPREC = 'docs/json/developer/procgen/loop-recording.md';
 const DEMOS_DOC = 'docs/json/developer/procgen/demos.md';
 
+/** ⛓ THE GENERATED REFERENCE PAGE (PROCGEN DOCS P3a). ⛔ A CODE path, not a
+ *  `doc`: it is not a tracked `.md` under `DOC_ROOT` — it is a page in
+ *  `frontend/`, rendered from three modules that `scripts/procgen/
+ *  generate-procgen-reference.mjs` writes out of the code itself. The terms
+ *  below whose answer is a TABLE point at it, because the table there cannot
+ *  drift from the code and a re-typed one always does. */
+const REFERENCE = 'frontend/modules/procgenDocs/reference.html';
+
 const TWO_PASS = `${ARCH}#level-generation-two-passes-over-one-loop-core`;
 const PASS1 = `${ARCH}#pass-1--the-skeleton-in-draw-order`;
 const PASS2 = `${ARCH}#pass-2--the-keep-or-revert-loop-site-typed`;
@@ -1002,6 +1010,7 @@ export const TERMS = Object.freeze([
             + '[palette](#palette). ⛔ Changing it RESETS the ladder, because the room a '
             + 'ladder is built in is part of the level\'s identity.',
         where: [
+            { label: 'the REFERENCE page § Skeleton kinds — codec vs EFFECTIVE defaults per substrate, generated', code: REFERENCE },
             { label: 'maze.md § Kind parameters', doc: `${MAZE}#kind-parameters-constructive-mode-slice-7` },
             { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
         ],
@@ -1093,6 +1102,7 @@ export const TERMS = Object.freeze([
             + 'CHOICE that turns it off. An element that fails '
             + '[certification](#certification) is DROPPED, never shipped uncertified.',
         where: [
+            { label: 'the REFERENCE page § Elements — every head, its `needs` and its parameters, generated', code: REFERENCE },
             { label: 'architecture.md § Pass 1', doc: PASS1 },
             { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
         ],
@@ -1585,6 +1595,7 @@ export const TERMS = Object.freeze([
             + 'RUN, never a retry; the CLI exits **6**. ⛓ On a graded refusal the carved room '
             + 'is left exactly as the carve left it.',
         where: [
+            { label: 'the REFERENCE page § The refusal vocabulary — every name a run can refuse by, generated', code: REFERENCE },
             { label: 'maze.md § The area graph', doc: MAZE_AREAS },
             { label: 'seedling-bot.md § The standing laws', doc: STANDING_LAWS },
         ],
@@ -1603,7 +1614,8 @@ export const TERMS = Object.freeze([
             + 'ROW** — the old frozen-row shape — stamped with `params` (the VALUES) and '
             + '`instance` (the derived label, `wall-segment(ori=v,len=4)`). ⚠ `params` means '
             + 'the SCHEMA ARRAY on a base and the VALUES OBJECT on an instance.',
-        where: [{ label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` }],
+        where: [
+            { label: 'the REFERENCE page § Templates — every roster row with its parameter domains, generated', code: REFERENCE },{ label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` }],
         seeAlso: ['instantiation', 'family', 'palette', 'roster', 'anchor'],
     }),
     t({
@@ -2299,6 +2311,7 @@ export const TERMS = Object.freeze([
             + 'this page cannot reload must not be writable. ⛓ [View settings](#view-setting) '
             + 'are NOT parameters.',
         where: [
+            { label: 'the REFERENCE page § The URL grammar — every parameter of both lab pages, generated', code: REFERENCE },
             { label: 'seedling-bot.md § The URL parameters, whole and current', doc: URL_TABLE },
             { label: 'seedling-bot.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE },
         ],

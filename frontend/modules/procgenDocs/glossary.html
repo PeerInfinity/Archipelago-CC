@@ -260,7 +260,11 @@ document.getElementById('also').innerHTML =
     + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">the demo catalogue</a>`
     + `, and the two lab pages it links: <a href="${esc(pagesHref(
         DEMOS.find((e) => e.id === 'sites')))}">the Seedling watch page</a> and `
-    + `<a href="${esc(pagesHref(DEMOS.find((e) => e.id === 'maze-area-graph')))}">the maze lab</a>`;
+    + `<a href="${esc(pagesHref(DEMOS.find((e) => e.id === 'maze-area-graph')))}">the maze lab</a>`
+    + ' · and the tables the code itself knows — every URL parameter, template, '
+    + `element and refusal name — are <a href="${esc(repoUrl(
+        'frontend/modules/procgenDocs/reference.html'))}">the reference</a>, `
+    + 'GENERATED from the code and gated by regenerate = no diff';
 document.getElementById('foot').innerHTML =
     '⛔ Do not edit this page to change a definition — edit <code>glossary.js</code>. '
     + 'The glossary is ONE module with several readers: this page, '

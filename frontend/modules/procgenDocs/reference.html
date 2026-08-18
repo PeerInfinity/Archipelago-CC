@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<!--
+  procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE
+  CODE.** Three tables nobody should ever author by hand, because the code
+  already knows the answer: the URL parameter grammar of the two lab pages, the
+  generation catalogue, and the refusal vocabulary.
+
+  ⚖ The user, 2026-08-18: the docs that are DATA IN DISGUISE become pages *"that
+  interact with the scripts directly, rather than having to be manually
+  edited"*. P1 did that for the demo catalogue and P2 for the glossary — both by
+  AUTHORING a data module. P3a does it for the tables a HUMAN was keeping in
+  step with `urlParams.js`, `procgenPalette.js` and a dozen refusal sites.
+
+  ⛔⛔ THE DATA IS `./generated/{urlGrammar,catalogue,refusals}.js` AND THIS PAGE
+  ONLY RENDERS IT. Those three modules are OUTPUT — written by
+  `scripts/procgen/generate-procgen-reference.mjs`, committed so a browser can
+  import them with no build step, and gated by
+
+      node scripts/procgen/generate-procgen-reference.mjs --check
+
+  which regenerates into memory and refuses if what is on disk differs. To
+  change what this page says, change the CODE it reads and regenerate.
+
+  ⛓ IT IMPORTS THE GLOSSARY (P2) for the `terms:` links, and `demos.js` for the
+  ONE spelling of the Pages mapping — the same two modules `glossary.html` and
+  `demos.html` share, for the same reason: a mapping spelled twice is a mapping
+  that can disagree with itself.
+
+  Serve from the REPO ROOT, or read it on Pages:
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/procgenDocs/reference.html
+      https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Procgen reference — the URL grammar, the catalogue, the refusals</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+  h1 span { color: #7fe0ff; font-weight: 400; }
+  #count, #where, #also { font-size: 11px; color: #8a8a98; }
+  #where, #also { color: #6a6a78; margin-top: 2px; }
+  main { padding: 10px 14px 40px; max-width: 110ch; }
+  a { color: #7fe0ff; }
+  code { color: #ffd75f; }
+  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
+    overflow-x: auto; margin: 6px 0; }
+  pre code { color: #d8d8e0; }
+  p { margin: 6px 0; }
+  .note { color: #8a8a98; font-size: 11px; }
+  #filterBox { margin: 10px 0 4px; display: flex; gap: 8px; align-items: baseline;
+    flex-wrap: wrap; }
+  #filter { background: #101014; color: #d8d8e0; border: 1px solid #2a2a36;
+    padding: 3px 6px; width: 26ch; font: inherit; }
+  #filterNote { color: #7fd88f; }
+  #index { margin: 6px 0 14px; }
+  #index a { margin-right: 10px; white-space: nowrap; }
+  #index .n { color: #8a8a98; }
+  h2 { font-size: 13px; margin: 20px 0 2px; color: #7fe0ff; font-weight: 600;
+    border-top: 1px solid #24242c; padding-top: 10px; }
+  h2 .n { color: #6a6a78; font-weight: 400; }
+  h3 { font-size: 12px; margin: 14px 0 4px; color: #c8c8d4; font-weight: 600; }
+  .blurb { color: #8a8a98; font-size: 11px; margin: 0 0 6px; }
+  details.row { margin: 6px 0; border: 1px solid #1e1e26; background: #0e0e12;
+    padding: 5px 10px; }
+  details.row > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
+  details.row > summary .sub { color: #6a6a78; font-weight: 400; margin-left: 8px; }
+  details.row.retired > summary { color: #a08a8a; text-decoration: line-through; }
+  details.row.finding { border-color: #6a3a3a; background: #140e10; }
+  details.row.finding > summary { color: #ff9f9f; }
+  .body { padding: 4px 0 6px 14px; }
+  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 10px; display: block; margin: 8px 0 1px; }
+  table { border-collapse: collapse; margin: 4px 0; font-size: 12px; }
+  th, td { border: 1px solid #1e1e26; padding: 2px 8px; text-align: left;
+    vertical-align: top; }
+  th { color: #8a8a98; font-weight: 600; }
+  td.k { color: #7fd88f; white-space: nowrap; }
+  .terms a { margin-right: 8px; }
+  .dead { color: #ff9f9f; }
+  .warn { color: #ffb86c; }
+  .prov { color: #6a6a78; font-size: 11px; }
+  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
+    font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Procgen reference — <span>the URL grammar, the catalogue, the refusals</span></h1>
+  <div id="count" class="note"></div>
+  <div id="where" class="note"></div>
+  <div id="also" class="note"></div>
+</header>
+
+<main>
+  <p>⛔⛔ <b>Every table on this page is GENERATED from the code it describes</b>,
+    and none of it is typed by anybody. A default is what the page's own reader
+    answers on an empty search; <i>absent is the default</i> is what the page's
+    own writer emits when it sits at its defaults; a retired parameter's refusal
+    is the refusal <b>run</b> and caught. Where a hand-kept list and the code
+    DISAGREE, this page prints the code's answer and the disagreement is a
+    <a href="#findings">named finding</a> — never a quiet fix.</p>
+
+  <pre><code>node scripts/procgen/generate-procgen-reference.mjs           # regenerate
+node scripts/procgen/generate-procgen-reference.mjs --check   # the gate: regenerate = no diff
+node scripts/procgen/check-procgen-reference.mjs              # …and this page renders it</code></pre>
+
+  <div id="filterBox">
+    <label for="filter">filter</label>
+    <input id="filter" type="search" placeholder="areas, killgate, no-pocket…"
+      autocomplete="off" spellcheck="false">
+    <span id="filterNote" class="note"></span>
+  </div>
+
+  <div id="index" class="note"></div>
+  <div id="sections"></div>
+</main>
+
+<footer id="foot"></footer>
+
+<script type="module">
+import { PAGES_BASE, docHref, pagesUrl } from './demos.js';
+import { hrefFor, termById } from './glossary.js';
+import { esc, inline, prose } from './markdownLite.js';
+import { URL_GRAMMAR } from './generated/urlGrammar.js';
+import { CATALOGUE } from './generated/catalogue.js';
+import { REFUSALS } from './generated/refusals.js';
+
+/**
+ * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL — the resolver
+ * `demos.html`, `glossary.html` and `watchViewer.js` all use, for the same
+ * reason: the dev server serves the REPO root, Pages publishes `frontend/` AS
+ * its root, so a root-absolute `/frontend/…` is a 404 there.
+ */
+const FRONTEND_ROOT = new URL('../../', import.meta.url);
+function repoUrl(path) {
+    const p = String(path).replace(/^\/+/, '');
+    return p.startsWith('frontend/')
+        ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
+        : new URL(p, new URL('../../../', import.meta.url)).href;
+}
+const onPages = repoUrl('frontend/modules/procgenDocs/reference.html').startsWith(PAGES_BASE);
+
+const label = (h) => `<span class="lbl">${h}</span>`;
+const codeUrl = (path) => docHref(String(path).replace(/^\/+/, ''));
+
+/** ⛓ A stable anchor for any row name. ⛔ The two composed refusal names carry
+ *  spaces and an ellipsis; a slug that dropped them would collide. */
+const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+/** ⛓ THE TERMS LINE — COMPUTED, NEVER TYPED (`demos.html`'s rule). A slug that
+ *  resolves to nothing renders as a DEAD literal rather than being dropped: the
+ *  row is what refuses it, and a page that hid the problem would let the row be
+ *  the only place anybody could see it. */
+function termsLine(terms, { none = 'none — the glossary does not define this one' } = {}) {
+    if (!terms.length) return `<div class="terms note">${esc(none)}</div>`;
+    return `<div class="terms">${terms.map((s) => {
+        const t = termById(s);
+        return t ? `<a href="${esc(hrefFor(s))}">${inline(t.term)}</a>`
+            : `<span class="dead">${esc(s)} — NOT IN THE GLOSSARY</span>`;
+    }).join(' · ')}</div>`;
+}
+
+const val = (v) => (v === null ? '<i>null</i>' : `<code>${esc(JSON.stringify(v))}</code>`);
+
+function table(head, rows) {
+    if (!rows.length) return '';
+    return `<table><tr>${head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr>`
+        + rows.map((r) => `<tr>${r.map((c, i) => `<td${i === 0 ? ' class="k"' : ''}>${c}</td>`)
+            .join('')}</tr>`).join('') + '</table>';
+}
+
+/* ══════════ THE SECTIONS ════════════════════════════════════════════ */
+
+const host = document.getElementById('sections');
+const SECTIONS = [];
+
+function section(id, title, blurb) {
+    /** ⛔ THE HEADING GETS ITS TEXT HERE, and the first cut did not — the page
+     *  rendered twelve EMPTY `<h2>`s with every row correctly under them, and
+     *  only reading the render found it (the readout counts rows, not
+     *  headings). The row count is appended by `numberTheHeadings()` once the
+     *  rows exist. */
+    const h = document.createElement('h2');
+    h.id = `section-${id}`;
+    h.dataset.sectionTitle = title;
+    h.innerHTML = esc(title);
+    host.appendChild(h);
+    const b = document.createElement('p');
+    b.className = 'blurb';
+    b.innerHTML = inline(blurb);
+    host.appendChild(b);
+    const box = document.createElement('div');
+    box.dataset.sectionId = id;
+    host.appendChild(box);
+    const s = { id, title, box, heading: h, blurb: b };
+    SECTIONS.push(s);
+    return s;
+}
+
+function row(box, { anchor, title, sub = '', kind = '', body, hay }) {
+    const d = document.createElement('details');
+    d.className = `row${kind ? ` ${kind}` : ''}`;
+    d.id = anchor;
+    d.dataset.rowId = anchor;
+    d.dataset.hay = String(hay ?? `${title} ${sub}`).toLowerCase();
+    d.open = true;
+    d.innerHTML = `<summary>${title}${sub ? `<span class="sub">${sub}</span>` : ''}</summary>`
+        + `<div class="body">${body}</div>`;
+    box.appendChild(d);
+    return d;
+}
+
+/* ── 1. THE URL GRAMMAR ─────────────────────────────────────────────── */
+
+const urlSec = section('url', 'The URL grammar — what a link to a lab page NAMES',
+    'One block per parameter, with a row per page that reads it. ⛔ Sourced from the '
+    + 'CODE: the reader and writer names come from a declared scan of the two pages\' own '
+    + 'functions, the DEFAULT is what the reader answers on an empty search, and *absent is '
+    + 'the default* is what the writer emits sitting at its defaults.');
+
+/** ⛓ ONE BLOCK PER PARAMETER NAME, across pages — a reader looks a key up, not a
+ *  page. The per-page differences (`?elements=` absent means two different
+ *  things) are the interesting half and they are inside the block. */
+const PARAM_NAMES = [...new Set(URL_GRAMMAR.pages.flatMap((p) => p.params.map((q) => q.name)))]
+    .sort();
+
+for (const name of PARAM_NAMES) {
+    const perPage = URL_GRAMMAR.pages
+        .map((p) => ({ page: p, q: p.params.find((x) => x.name === name) }))
+        .filter((x) => x.q);
+    const anyRetired = perPage.some((x) => x.q.retired);
+    const terms = [...new Set(perPage.flatMap((x) => x.q.terms))].sort();
+    const parts = [];
+    parts.push(table(
+        ['page', 'default', 'at the default', 'value grammar'],
+        perPage.map(({ page, q }) => [
+            esc(page.title),
+            q.defaultIsUndefined
+                ? '<i>undefined</i> — <b>nobody said</b>'
+                : (q.defaultField ? val(q.defaultValue) : '<span class="note">—</span>'),
+            esc(q.atDefault),
+            q.codec ? `<code>${esc(q.codec)}</code>` : '',
+        ]),
+    ));
+    for (const { page, q } of perPage) {
+        if (q.absentMeans) {
+            parts.push(`<div class="warn">${esc(page.title)}: ${inline(q.absentMeans)}</div>`);
+        }
+    }
+    parts.push(label('read / written by'));
+    parts.push(table(['function', 'page', 'role', 'how'], perPage.flatMap(({ page, q }) =>
+        q.via.map((v) => [
+            `<a href="${esc(codeUrl(v.file))}"><code>${esc(v.fn)}</code></a>`,
+            esc(page.id), esc(v.role), `<code>${esc(v.how)}</code>`,
+        ]))));
+    parts.push(label('defined in the glossary as'));
+    parts.push(termsLine(terms));
+    row(urlSec.box, {
+        anchor: `url-${slug(name)}`,
+        title: `?${esc(name)}=`,
+        sub: anyRetired ? 'RETIRED' : perPage.map((x) => x.page.id).join(' · '),
+        kind: anyRetired ? 'retired' : '',
+        body: parts.join(''),
+        hay: `${name} ${terms.join(' ')} ${perPage.map((x) => x.q.codec).join(' ')}`,
+    });
+}
+
+/* the RETIRED parameters, with the refusal each one RUNS */
+const retiredSec = section('retired', 'Retired parameters — refused BY NAME',
+    'A URL names the LAUNCH parameters a person types. When one stops being that, it is '
+    + 'REFUSED rather than ignored: a link somebody saved names a run, and a page that '
+    + 'silently dropped the key would show something other than what the address promises. '
+    + '⛓ Every sentence below is the refusal RUN by the generator and caught — not a copy.');
+
+for (const r of URL_GRAMMAR.retired) {
+    row(retiredSec.box, {
+        anchor: `retired-${slug(r.name)}`,
+        title: esc(r.name),
+        sub: esc(r.retiredBy),
+        kind: 'retired',
+        body: `${label('what it used to name')}<p>${inline(r.what)}</p>`
+            + `${label('the way in now')}<p>${inline(r.wayIn)}</p>`
+            + label('the refusal, verbatim')
+            + r.refusals.map((x) => `<p class="note">${esc(x.page)}</p>`
+                + `<pre><code>${esc(x.text)}</code></pre>`).join(''),
+        hay: `${r.name} ${r.what} ${r.wayIn}`,
+    });
+}
+
+/* the codecs, and the two pages' readers/writers */
+const codecSec = section('codecs', 'The value codecs, and who reads the bar',
+    'A parameter\'s NAME, its default and its delete-at-default live in `urlParams.js`; what '
+    + 'a VALUE means lives beside the table it validates against, because the same string '
+    + 'arrives on three channels — the URL, both CLIs\' flags, and the sweeps.');
+
+for (const c of URL_GRAMMAR.codecs) {
+    row(codecSec.box, {
+        anchor: `codec-${slug(c.id)}`,
+        title: `<code>${esc(c.id)}</code>`,
+        sub: esc(c.module),
+        body: table(['function'], c.functions.map((f) => [`<code>${esc(f)}</code>`])),
+        hay: `${c.id} ${c.module} ${c.functions.join(' ')}`,
+    });
+}
+for (const p of URL_GRAMMAR.pages) {
+    row(codecSec.box, {
+        anchor: `page-${slug(p.id)}`,
+        title: esc(p.title),
+        sub: esc(p.page),
+        body: `<p>${inline(p.blurb)}</p>`
+            + label('readers')
+            + table(['function', 'file', 'line'], p.readers.map((r) => [
+                `<code>${esc(r.fn)}</code>`,
+                `<a href="${esc(codeUrl(r.file))}">${esc(r.file)}</a>`, String(r.line)]))
+            + label('writers')
+            + table(['function', 'file', 'line'], p.writers.map((r) => [
+                `<code>${esc(r.fn)}</code>`,
+                `<a href="${esc(codeUrl(r.file))}">${esc(r.file)}</a>`, String(r.line)]))
+            + label('what the writer emits sitting at its own defaults')
+            + `<pre><code>?${esc(p.writtenAtDefaults)}</code></pre>`
+            + label('what the reader answers on an EMPTY search')
+            + `<pre><code>${esc(JSON.stringify(p.defaultsOnEmpty, null, 2))}</code></pre>`,
+        hay: `${p.id} ${p.title} ${p.page}`,
+    });
+}
+
+/* ── 2. THE CATALOGUE ───────────────────────────────────────────────── */
+
+const bioSec = section('biomes', 'The generation catalogue — biomes, templates, kinds',
+    'What a run may DRAW FROM. A biome is its BOOT ITEMS plus the elements\' `needs`; the '
+    + 'templates are pass 2\'s roster, the EXCLUDED rows are what was measured and ruled out, '
+    + 'and the skeleton kinds are the rooms a ladder can start in.');
+
+for (const b of CATALOGUE.biomes) {
+    const parts = [];
+    parts.push(table(['', ''], [
+        ['substrate', esc(b.substrate)],
+        ['lab page', `<a href="${esc(repoUrl(b.page))}"><code>${esc(b.page)}</code></a>`],
+        ['boot items', val(b.items)],
+        ['default elements', `<code>${esc(b.defaultElements)}</code>`],
+        ['templates', String(b.templates.length)],
+        ['excluded', String(b.excluded.length)],
+        ['skeleton kinds offered', `${b.skeletonKinds.filter((k) => k.offered).length} of `
+            + `${b.skeletonKinds.length}`],
+    ]));
+    row(bioSec.box, {
+        anchor: `biome-${slug(b.id)}`,
+        title: esc(b.id),
+        sub: `${b.substrate} · ${b.templates.length} templates · ${b.excluded.length} excluded`,
+        body: parts.join(''),
+        hay: `${b.id} ${b.substrate} ${b.defaultElements}`,
+    });
+}
+
+const tmplSec = section('templates', 'Templates — the pass-2 roster',
+    'A template is a FUNCTION: `{name, family, site, params}` plus an `instantiate` that '
+    + 'returns a concrete row. `site` is the site class it may be offered; every parameter '
+    + 'carries its declared DOMAIN, its default, and the measurement behind them.');
+
+for (const b of CATALOGUE.biomes) {
+    for (const t of b.templates) {
+        row(tmplSec.box, {
+            anchor: `template-${slug(b.id)}-${slug(t.name)}`,
+            title: `<code>${esc(t.name)}</code>`,
+            sub: `${esc(b.id)} · family <code>${esc(t.family)}</code>`
+                + (t.site ? ` · site <code>${esc(t.site)}</code>` : ''),
+            body: (t.why ? `${label('why it is in the roster')}${prose(t.why)}` : '')
+                + label('parameters')
+                + (t.params.length
+                    ? table(['key', 'domain', 'default', 'why'], t.params.map((p) => [
+                        `<code>${esc(p.key)}</code>`,
+                        `<code>${esc(JSON.stringify(p.domain))}</code>`,
+                        `<code>${esc(JSON.stringify(p.default))}</code>`,
+                        p.why ? inline(p.why) : '']))
+                    : '<p class="note">none — its label is its bare name</p>'),
+            hay: `${t.name} ${t.family} ${t.site ?? ''} ${b.id} ${t.params.map((p) => p.key).join(' ')}`,
+        });
+    }
+}
+
+const exclSec = section('excluded', 'Excluded templates — what was measured and ruled out',
+    'A greyed catalogue row with its `cause`, its `measured` and what it `wouldNeed`. ⛔ Kept '
+    + 'rather than deleted: a catalogue that showed only what is available cannot answer '
+    + '*"why can\'t I pick that?"*, and the geometry each one measures is what a later slice '
+    + 'would otherwise re-discover by building the thing.');
+
+const seenExcluded = new Set();
+for (const b of CATALOGUE.biomes) {
+    for (const t of b.excluded) {
+        const anchor = `excluded-${slug(t.name)}`;
+        if (seenExcluded.has(anchor)) continue;
+        seenExcluded.add(anchor);
+        row(exclSec.box, {
+            anchor,
+            title: `<code>${esc(t.name)}</code>`,
+            sub: `family <code>${esc(t.family)}</code>`,
+            kind: 'retired',
+            body: `${label('cause')}${prose(t.cause)}`
+                + `${label('measured')}${prose(t.measured)}`
+                + `${label('what it would need')}${prose(t.wouldNeed)}`
+                + (t.hasRefusalText
+                    ? '<p class="note">⛓ The row also carries the solver\'s own REFUSAL TEXT, '
+                        + 'verbatim and captured at the commit before it was removed — it is '
+                        + 'in <code>procgenPalette.js</code>, not here, because it runs to '
+                        + 'paragraphs.</p>'
+                    : ''),
+            hay: `${t.name} ${t.family} ${t.cause}`,
+        });
+    }
+}
+
+const elSec = section('elements', 'Elements — the pass-1 heads',
+    'A head names what the thing DOES (`guard`), never the module that builds it. `needs` is '
+    + 'the boot flag a clearer wants: an element whose need the biome does not grant is '
+    + 'refused BY NAME and for free, before a solve. A `+` list is a CHOICE, not a '
+    + 'conjunction — ONE element per level.');
+
+for (const e of CATALOGUE.elements) {
+    row(elSec.box, {
+        anchor: `element-${slug(e.head)}`,
+        title: `<code>${esc(e.head)}</code>`,
+        sub: e.needs.length ? `needs ${e.needs.map((n) => `<code>${esc(n)}</code>`).join(', ')}`
+            : 'needs nothing',
+        body: `${label('what it is')}${prose(e.why)}`
+            + (e.module ? `${label('module')}<p><code>${esc(e.module)}</code></p>` : '')
+            + label('parameters')
+            + (e.params.length
+                ? table(['key', 'domain', 'default', 'why'], e.params.map((p) => [
+                    `<code>${esc(p.key)}</code>`,
+                    `<code>${esc(JSON.stringify(p.domain))}</code>`,
+                    `<code>${esc(JSON.stringify(p.default))}</code>`,
+                    p.why ? inline(p.why) : '']))
+                : '<p class="note">⛔ NONE, and that is the finding rather than an omission: '
+                    + 'an on-connector element GROWS to the room it stands in, so the '
+                    + 'parameters its pass-2 predecessors carried have nothing left to say.</p>'),
+        hay: `${e.head} ${e.needs.join(' ')} ${e.params.map((p) => p.key).join(' ')}`,
+    });
+}
+
+const kindSec = section('kinds', 'Skeleton kinds — the room a ladder starts in',
+    '⚠ A kind a substrate cannot run is LISTED with its reason rather than hidden. ⛓⛓ And the '
+    + 'two DEFAULT columns are the point: the codec\'s default and the BINDING\'s effective '
+    + 'one differ (Seedling forces `chambers = 1` on five carved kinds), which is why the '
+    + 'Seedling writer spells those keys explicitly in a link.');
+
+for (const b of CATALOGUE.biomes) {
+    if (b.id === 'post-sword') continue; /* identical to pre-sword — the same substrate */
+    for (const k of b.skeletonKinds) {
+        row(kindSec.box, {
+            anchor: `kind-${slug(b.substrate)}-${slug(k.kind)}`,
+            title: `<code>${esc(k.kind)}</code>`,
+            sub: `${esc(b.substrate)} · ${k.offered ? 'offered' : 'NOT offered here'}`
+                + (k.isDefault ? ' · the DEFAULT' : ''),
+            kind: k.offered ? '' : 'retired',
+            body: `<p>${inline(k.description)}</p>`
+                + table(['', ''], [
+                    ['backend', `<code>${esc(k.backend)}</code>`],
+                    ['post-processors', k.postProcessors.length
+                        ? `<code>${esc(k.postProcessors.join(', '))}</code>` : '—'],
+                    ['codec defaults', val(k.codecDefaults)],
+                    ['EFFECTIVE defaults here', val(k.effectiveDefaults)],
+                    ['spelled explicitly in the URL', k.spelledExplicitlyInTheUrl.length
+                        ? `<code>${esc(k.spelledExplicitlyInTheUrl.join(', '))}</code>`
+                        : '<span class="note">none</span>'],
+                ])
+                + (k.needs ? `<div class="warn">⛔ NOT offered: ${inline(k.needs)}</div>` : '')
+                + label('parameters')
+                + (k.params.length
+                    ? table(['key', 'domain', 'default', 'why'], k.params.map((p) => [
+                        `<code>${esc(p.key)}</code>`,
+                        `<code>${esc(JSON.stringify(p.domain))}</code>`,
+                        `<code>${esc(JSON.stringify(p.default))}</code>`,
+                        p.why ? inline(p.why) : '']))
+                    : '<p class="note">none declared</p>'),
+            hay: `${k.kind} ${k.backend} ${b.substrate} ${k.name}`,
+        });
+    }
+}
+
+/* ── 3. THE REFUSALS ────────────────────────────────────────────────── */
+
+const findSec = section('findings',
+    'FINDINGS — where a hand-kept list and the code DISAGREE',
+    '⛔ The generator never edits the code it reads. Each row below is a disagreement it '
+    + 'MEASURED between a `*_REFUSALS` constant and a declared scan of the module that '
+    + 'constant describes.');
+
+for (const f of REFUSALS.findings) {
+    row(findSec.box, {
+        anchor: `finding-${slug(f.source)}-${slug(f.name)}`,
+        title: esc(f.name),
+        sub: `${esc(f.severity ?? '')} · ${esc(f.source)}`,
+        kind: 'finding',
+        body: prose(f.what),
+        hay: `${f.name} ${f.source} ${f.what}`,
+    });
+}
+
+const srcSec = section('refusal-sources', 'Where the refusal vocabulary comes from',
+    '⛓⛓ A source is either a LIST CONSTANT (imported, then scanned — the scan is the '
+    + 'non-vacuity witness for the constant) or a set of string literals scattered through '
+    + 'one function, found by a declared regex. Saying which is which is half of what this '
+    + 'table is for: only the first kind can be counted by a census.');
+
+for (const s of REFUSALS.sources) {
+    row(srcSec.box, {
+        anchor: `refusal-source-${slug(s.id)}`,
+        title: esc(s.title),
+        sub: `${esc(s.kind)}${s.constant ? ` · <code>${esc(s.constant)}</code>` : ''}`,
+        body: table(['', ''], [
+            ['where', `<a href="${esc(codeUrl(s.file))}">${esc(s.where)}</a>`],
+            ['channel', inline(s.channel)],
+            ['declared in a constant', s.declaredCount === null ? '— (no constant)'
+                : String(s.declaredCount)],
+            ['found by the scan', String(s.scannedCount)],
+            ['the declared pattern', s.patterns.map((p) => `<code>${esc(p)}</code>`).join('<br>')],
+        ]),
+        hay: `${s.id} ${s.title} ${s.kind} ${s.constant ?? ''}`,
+    });
+}
+
+const refSec = section('refusals', 'The refusal vocabulary — every name a run can refuse BY',
+    'One row per name, with its own sentence QUOTED from the source where the source has '
+    + 'one. ⚠ A row with no sentence is a name that names ITSELF — the constant lists it and '
+    + 'the code raises it, and nothing beside it says more.');
+
+for (const r of REFUSALS.rows) {
+    row(refSec.box, {
+        anchor: `refusal-${slug(r.name)}`,
+        title: `<code>${esc(r.name)}</code>`,
+        sub: `${esc(r.sourceTitle)}${r.named ? '' : ' · UNNAMED'}`,
+        body: (r.meaning
+            ? `${label('what it says')}${prose(r.meaning)}`
+            : '<p class="note">⚠ No sentence in the source — the name is the whole '
+                + 'message.</p>')
+            + table(['', ''], [
+                ['where it fires', `<a href="${esc(codeUrl(r.file))}">${esc(r.where)}</a>`],
+                ['channel', inline(r.channel)],
+                ['source kind', `<code>${esc(r.kind)}</code>`
+                    + (r.constant ? ` (<code>${esc(r.constant)}</code>)` : '')],
+                ['in the constant', r.inTheConstant === null ? '— (no constant)'
+                    : (r.inTheConstant ? 'yes' : '<b class="dead">NO — a finding</b>')],
+                ['the scan found it firing here', r.scanFound ? 'yes'
+                    : '<b class="dead">no</b>'],
+                ['also fires in', r.alsoFiresIn.length ? esc(r.alsoFiresIn.join(', ')) : '—'],
+            ]),
+        hay: `${r.name} ${r.sourceTitle} ${r.meaning ?? ''}`,
+    });
+}
+
+const enumSec = section('enums', 'The loop core\'s own vocabulary — verdicts, outcomes, stops',
+    'Not refusals, and the table says so: these are the ENUMS a readout prints beside one. '
+    + 'A REFUSAL is a claim about the LEVEL; a BUDGET EXHAUSTION is a claim about the SEARCH '
+    + 'and never a proof of unsolvability.');
+
+for (const e of REFUSALS.enums) {
+    row(enumSec.box, {
+        anchor: `enum-${slug(e.id)}`,
+        title: `<code>${esc(e.id)}</code>`,
+        sub: esc(e.title),
+        body: table(['key', 'value'], e.values.map((v) => [
+            `<code>${esc(v.key)}</code>`, `<code>${esc(v.value)}</code>`]))
+            + `${label('channel')}<p>${inline(e.channel)}</p>`
+            + `<p class="prov"><a href="${esc(codeUrl(e.file))}">${esc(e.file)}</a></p>`,
+        hay: `${e.id} ${e.title} ${e.values.map((v) => v.value).join(' ')}`,
+    });
+}
+
+/* ══════════ THE INDEX, THE FILTER AND THE HEADER ════════════════════ */
+
+const rowsOf = (s) => [...s.box.querySelectorAll('details.row')];
+
+for (const s of SECTIONS) {
+    s.heading.innerHTML = `${esc(s.title)} <span class="n">— ${rowsOf(s).length}</span>`;
+}
+
+document.getElementById('index').innerHTML = SECTIONS.map((s) =>
+    `<a href="#section-${s.id}">${esc(s.title.split(' — ')[0])}</a> `
+    + `<span class="n">${rowsOf(s).length}</span>`).join(' ');
+
+const ALL_ROWS = [...document.querySelectorAll('details.row')];
+
+function applyFilter(raw) {
+    const q = String(raw ?? '').trim().toLowerCase();
+    let visible = 0;
+    for (const el of ALL_ROWS) {
+        const hit = !q || el.dataset.hay.includes(q);
+        el.hidden = !hit;
+        if (hit) visible += 1;
+    }
+    for (const s of SECTIONS) {
+        const any = rowsOf(s).some((e) => !e.hidden);
+        s.box.hidden = !any;
+        s.heading.hidden = !any;
+        s.blurb.hidden = !any;
+    }
+    document.getElementById('filterNote').textContent = q
+        ? `${visible} of ${ALL_ROWS.length} rows match ${JSON.stringify(q)}`
+        : `${ALL_ROWS.length} rows — type to narrow by name, source or sentence`;
+    return visible;
+}
+
+const filterInput = document.getElementById('filter');
+filterInput.addEventListener('input', () => { publish(applyFilter(filterInput.value)); });
+
+const COUNTS = {
+    urlParams: PARAM_NAMES.length,
+    retired: URL_GRAMMAR.retired.length,
+    codecs: URL_GRAMMAR.codecs.length,
+    pages: URL_GRAMMAR.pages.length,
+    biomes: CATALOGUE.biomes.length,
+    templates: CATALOGUE.biomes.reduce((a, b) => a + b.templates.length, 0),
+    excluded: seenExcluded.size,
+    elements: CATALOGUE.elements.length,
+    kinds: CATALOGUE.biomes.filter((b) => b.id !== 'post-sword')
+        .reduce((a, b) => a + b.skeletonKinds.length, 0),
+    findings: REFUSALS.findings.length,
+    refusalSources: REFUSALS.sources.length,
+    refusals: REFUSALS.rows.length,
+    enums: REFUSALS.enums.length,
+};
+
+document.getElementById('count').textContent =
+    `${COUNTS.urlParams} URL parameters over ${COUNTS.pages} pages (${COUNTS.retired} retired, `
+    + `${COUNTS.codecs} codecs) · ${COUNTS.biomes} biomes, ${COUNTS.templates} templates, `
+    + `${COUNTS.excluded} excluded, ${COUNTS.elements} element heads, ${COUNTS.kinds} skeleton `
+    + `kinds · ${COUNTS.refusals} refusal names over ${COUNTS.refusalSources} sources, `
+    + `${COUNTS.enums} enums, ${COUNTS.findings} findings.`;
+document.getElementById('where').innerHTML =
+    `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
+    + ' · ⛔ the data is GENERATED — '
+    + `<a href="${esc(docHref('scripts/procgen/generate-procgen-reference.mjs'))}">`
+    + 'scripts/procgen/generate-procgen-reference.mjs</a> writes '
+    + `<a href="${esc(docHref('frontend/modules/procgenDocs/generated/'))}">`
+    + 'frontend/modules/procgenDocs/generated/</a>, this page only renders it, and '
+    + '<code>--check</code> is the gate that they agree'
+    + ` · always at <a href="${esc(pagesUrl('/frontend/modules/procgenDocs/reference.html'))}">`
+    + `${esc(pagesUrl('/frontend/modules/procgenDocs/reference.html'))}</a>`;
+document.getElementById('also').innerHTML =
+    'the words on this page are defined in <a href="glossary.html">the procgen glossary</a>'
+    + ' · every feature it names can be RUN from '
+    + '<a href="demos.html">the demo catalogue</a>';
+document.getElementById('foot').innerHTML =
+    '⛔ Do not edit this page, and do not edit <code>generated/</code> — both are readers of '
+    + 'the CODE. To change a default, a domain or a refusal, change the module that declares '
+    + 'it and run <code>node scripts/procgen/generate-procgen-reference.mjs</code>; '
+    + `<a href="${esc(docHref('scripts/procgen/check-procgen-reference.mjs'))}">`
+    + 'check-procgen-reference.mjs</a> loads this page and asserts it renders what those '
+    + 'modules hold, and <code>generated.test.js</code> asserts the modules are what the code '
+    + 'says.';
+
+/**
+ * ⛓⛓ THE READOUT IS MEASURED OFF THE DOM, NOT ECHOED FROM THE IMPORTS (trap
+ * 269). The row asserts this page renders what the three modules hold; a
+ * readout copied from the import would hold with the render deleted.
+ */
+function publish(visible) {
+    const rendered = [...document.querySelectorAll('details.row')];
+    window.__procgenReferencePage = Object.freeze({
+        sections: Object.freeze(SECTIONS.map((s) => Object.freeze({
+            id: s.id,
+            rows: s.box.querySelectorAll('details.row').length,
+        }))),
+        anchors: Object.freeze(rendered.map((el) => el.id)),
+        count: rendered.length,
+        glossaryLinks: Object.freeze([...document.querySelectorAll('.terms a')]
+            .map((a) => a.getAttribute('href'))),
+        deadTerms: document.querySelectorAll('.terms .dead').length,
+        visible,
+        ready: true,
+    });
+}
+publish(applyFilter(''));
+</script>
+</body>
+</html>
