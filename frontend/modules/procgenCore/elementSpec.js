@@ -43,6 +43,7 @@
 import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
+import { parseRequireList } from './areaSpec.js';
 import { assertParamSchema, enumerateValues } from './templateContract.js';
 
 export class ElementSpecError extends Error {
@@ -504,4 +505,187 @@ export function parseElementSpec(value) {
         params[key] = typed;
     }
     return normalizeElementSpec({ name, params });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **`require:[X]` — THE RULE-DIRECTED RUN** (PROCGEN ELEMENTS arc 3,
+ * slice 4d, D1; ⚖ design §3.5 *"`require:['hasSword']` (family J′)"*)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * A directive is a property of the WHOLE RUN — it is MET, or the run is
+ * REFUSED BY NAME (arc-1 §10.1, the maze's own `require:[K]`, one substrate
+ * over). Nothing here retries, relaxes a bound or picks a second seed.
+ *
+ * ── ⛔⛔ ONE MECHANISM: THE HEAD IS DERIVED FROM `needs` ───────────────
+ *
+ * `--require=hasSword` does NOT name an element. It names an ITEM, and the
+ * ELEMENT is looked up: the heads whose `needs` include it. Today that is
+ * exactly `killgate`, and the point of deriving it rather than writing it is
+ * that a SECOND sword-gated element is a row in `ELEMENT_TABLE` and nothing
+ * else — no second table, no `if (item === 'hasSword')` anywhere.
+ *
+ * ⚠ AND THE DIRECTIVE THEREFORE MOVES THE ROOM. A biome DEFAULT is a `+` list
+ * and a list spends ONE `pick` before `instantiate`; a FORCED head is a BARE
+ * head and spends NONE (arc-2's law, `drawElementHead`). ⇒ `--require=hasSword`
+ * at seed S and the bare default at seed S are DIFFERENT ROOMS even when the
+ * default happens to draw `killgate` — the stream position of every geometry
+ * draw after the head differs by one. That is trap 321's shape (a named
+ * parameter spends no draw) and it is SAID rather than hidden: the identity
+ * line names the spec the run actually used.
+ *
+ * ── THE REFUSALS, EACH BY NAME ────────────────────────────────────────
+ *
+ * `no-element-needs-this-item`             nothing in the catalogue is gated on it
+ * `no-single-element-can-carry-every-required-item`
+ *                                          two items, no ONE head needs both —
+ *                                          and ONE ELEMENT PER LEVEL is arc-2's
+ *                                          standing law, not a limitation here
+ * `the-biome-lacks-the-item`               the boot does not grant it. ⛔ THE
+ *                                          SAME item gate the seam already
+ *                                          asks (`needs` vs `items`), asked
+ *                                          earlier — never a second one
+ * `the-directive-and-the-spec-disagree`    an explicit `--elements=` that is
+ *                                          not a BARE required head
+ *
+ * The three the RUN can only discover afterwards — the element was refused, it
+ * did not certify, the differential did not grade it REQUIRED — belong to the
+ * caller that has a finished level, not here.
+ */
+
+/**
+ * ⛓ THE ITEMS THE CATALOGUE KNOWS HOW TO REQUIRE — the union of every head's
+ * `needs`, READ FROM THE TABLE. ⛔ Never spelled a second time: a new gated
+ * element widens this by existing.
+ */
+export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
+    Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
+
+/** The heads whose `needs` include this item, in the TABLE's own order. */
+export function headsNeeding(item, table = ELEMENT_TABLE) {
+    return Object.freeze(Object.keys(table)
+        .filter((n) => (table[n].needs ?? []).includes(item)));
+}
+
+/**
+ * ⛓ The item `require` list, through the ONE grammar (`areaSpec.parseRequireList`).
+ *
+ * ⛔ `member` IS `null` — any well-formed name parses. Membership is the RUN's
+ * refusal by name (`no-element-needs-this-item`), which is arc-1's own split
+ * between a PARSE error at the parameter (exit 2) and a DIRECTIVE the room
+ * could not meet (exit 6). A parser that refused an unknown item would collapse
+ * the two and report a room's failure as a typo.
+ */
+export function parseItemRequireList(value) {
+    return parseRequireList(value, {
+        what: 'item flag',
+        member: null,
+        vocabulary: () => `The items some element NEEDS are [${ITEMS_ELEMENTS_NEED.join(', ')}].`,
+    });
+}
+
+/**
+ * Resolve `require:[…]` against the biome's boot flags and whatever the caller
+ * asked for in `elements`.
+ *
+ * @returns {{asked, heads, elements, forced, refused}}  `refused` is
+ *   `{reason, detail}` or `null`; `elements` is the spec the run should use —
+ *   the FORCED head when the directive holds and the caller said nothing, and
+ *   otherwise EXACTLY what the caller passed (a refused directive still shows
+ *   what the run produced, arc-1's rule).
+ */
+export function resolveRequireDirective({ require, elements, items, table = ELEMENT_TABLE } = {}) {
+    const asked = Object.freeze([...(require ?? [])]);
+    const out = (refused, spec = elements, heads = []) => Object.freeze({
+        asked, heads: Object.freeze(heads), elements: spec, forced: false, refused,
+    });
+    if (asked.length === 0) return out(null);
+
+    for (const item of asked) {
+        if (headsNeeding(item, table).length === 0) {
+            return out(Object.freeze({
+                reason: 'no-element-needs-this-item',
+                detail: `nothing in the element catalogue declares \`needs\` on `
+                    + `${JSON.stringify(item)}. The items some element needs are `
+                    + `[${[...new Set(Object.values(table).flatMap((e) => e.needs ?? []))]
+                        .sort().join(', ') || '(none)'}]. ⛔ A directive is met by an ELEMENT `
+                    + 'whose clearer wants the item; an item no element is gated on names no '
+                    + 'run this generator can build, so it is refused rather than quietly '
+                    + 'satisfied by a level that happens to grant it.',
+            }));
+        }
+    }
+    /**
+     * ⛔ ONE ELEMENT PER LEVEL is arc-2's standing law (two heads put a
+     * `pushableblock` in the room and the solver's own bound is one free
+     * block), so two required items must be carried by ONE head.
+     */
+    const heads = Object.keys(table)
+        .filter((n) => asked.every((item) => (table[n].needs ?? []).includes(item)));
+    if (heads.length === 0) {
+        return out(Object.freeze({
+            reason: 'no-single-element-can-carry-every-required-item',
+            detail: `each of [${asked.join(', ')}] is needed by some element and NO ONE `
+                + 'element needs them all. ⛔ A level holds ONE element (arc-2\'s standing '
+                + 'law: two heads put a `pushableblock` in the room and the solver\'s bound '
+                + 'is one free block), so a directive naming items that live in different '
+                + 'elements cannot be met by any room this generator builds.',
+        }));
+    }
+    for (const item of asked) {
+        if (items?.[item] !== true) {
+            return out(Object.freeze({
+                reason: 'the-biome-lacks-the-item',
+                detail: `the run's boot does not grant ${JSON.stringify(item)} `
+                    + `(items: ${JSON.stringify(items ?? null)}), and [${heads.join(', ')}] `
+                    + 'needs it. ⛔ THIS IS THE SEAM\'S OWN ITEM GATE ASKED EARLIER, not a '
+                    + 'second one: the element would be refused for free anyway '
+                    + '(`the-element-needs-an-item-this-biome-does-not-grant`), and the '
+                    + 'directive says so BEFORE a room is built rather than after.',
+            }, ), elements, heads);
+        }
+    }
+    /**
+     * ⛓⛓ **NOBODY SAID ⇒ THE DIRECTIVE SAYS.** An omitted `elements` reaches
+     * the biome default; a directive REPLACES that default with the required
+     * head — a BARE head when exactly one qualifies (spending NO draw), a `+`
+     * list of them when more than one does (spending exactly one `pick`, over
+     * heads every one of which meets the directive).
+     */
+    if (elements === undefined) {
+        return Object.freeze({
+            asked,
+            heads: Object.freeze(heads),
+            elements: heads.length === 1
+                ? { name: heads[0] } : { any: heads.map((n) => ({ name: n })) },
+            forced: true,
+            refused: null,
+        });
+    }
+    /**
+     * ⛔⛔ **AN EXPLICIT SPEC IS NEVER SILENTLY OVERRIDDEN, AND NEVER NARROWED.**
+     * The only explicit spec that can meet the directive is a BARE required
+     * head. A `+` LIST is a DISTRIBUTION and the directive is a property of the
+     * WHOLE RUN: a list that might draw a non-required member cannot be
+     * guaranteed to meet it, and narrowing it to the required member would both
+     * override what the caller wrote and MOVE THE STREAM (a list spends a pick,
+     * a bare head does not). ⇒ refused by name, with the two spellings that
+     * work.
+     */
+    const norm = normalizeElementSpec(elements);
+    if (!isElementList(norm) && heads.includes(norm.name)) {
+        return Object.freeze({
+            asked, heads: Object.freeze(heads), elements, forced: false, refused: null,
+        });
+    }
+    return out(Object.freeze({
+        reason: 'the-directive-and-the-spec-disagree',
+        detail: `the directive requires [${asked.join(', ')}], which only `
+            + `[${heads.join(', ')}] can carry, and the run was given `
+            + `\`elements=${formatElementSpec(norm)}\`. ⛔ An explicit spec is honoured or `
+            + 'refused, never narrowed: a `+` list is a DISTRIBUTION and a directive is a '
+            + 'property of the WHOLE RUN, so a list that might draw a member the directive '
+            + 'does not accept cannot meet it — and narrowing it would move the draw stream '
+            + `as well as override the caller. Ask for \`--elements=${heads[0]}\`, or leave `
+            + '`--elements=` out entirely and let the directive pick the head.',
+    }));
 }

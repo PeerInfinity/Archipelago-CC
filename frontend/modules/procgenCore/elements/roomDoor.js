@@ -163,3 +163,76 @@ export function writesOf(tiles) {
 }
 
 export { TILE_FLOOR, TILE_WALL };
+
+/**
+ * ⛓⛓⛓ **THE BODY'S REGION — the cells an element's live BODY can be in, and
+ * the walls that keep it there** (PROCGEN ELEMENTS arc 3, slice 4d, D3).
+ *
+ * The 4-connected flood of FLOOR from `from`, over the room with `writes`
+ * applied and every cell of `walled` treated as solid, plus the WALL cells
+ * 4-adjacent to it.
+ *
+ * ── ⛔⛔ WHY A FLOOD AND NOT A LANE, MEASURED ──────────────────────────
+ *
+ * The slice brief proposed *"the corridor cells along the spinner's bounce axis
+ * until the first non-ground cell in each direction"*, and the body is not
+ * axis-aligned: `spinner.SPINNER.heading` is `-PI/4`, so the ctor velocity is
+ * `(0.7071, -0.7071)` and every tick moves BOTH axes, reflecting per axis on a
+ * solid. A lane would have named 2–4 cells; the body's own stepper covers
+ * **7–13 cells on a carved kind and 12–26 on the open 10x10 room** (measured,
+ * `scripts/procgen/census-seedling-killgate-clears.mjs`, 224 cells).
+ *
+ * ── ⛓ WHY THE FLOOD CONTAINS THE BODY, AS AN ARGUMENT ─────────────────
+ *
+ * The body's box lives inside the cell its centre is in (a 7x7 box, ±4 about
+ * the centre, in a 16x16 cell), so the centre can only be in a NON-SOLID cell;
+ * and to move between two cells the box straddles their shared EDGE, which a
+ * diagonal-only contact does not offer. ⇒ the centre's cell path is 4-connected
+ * through non-solid cells, and this flood contains it. **MEASURED, not left as
+ * an argument: the flood is a superset of the stepped set on 10 of 10 certified
+ * gates, and EQUAL to it on all six carved ones.**
+ *
+ * ── ⛓ AND THE BOUNDARY IS PART OF THE ANSWER ──────────────────────────
+ *
+ * Pass 2 may CARVE (⚖ design ruling 17). A carve on a wall cell touching the
+ * region would let the body OUT of the set this was computed on, which would
+ * make a demand computed at construct time false about the level that ships.
+ * So the walls are returned with the region and the element demands them too.
+ *
+ * ⛔ NO DRAW, NO SIMULATION — a walk on the SKELETON, a pure function of the
+ * room. ⚠ It is deliberately NOT the body's own stepper: this file is
+ * substrate-agnostic and does not know its body is a `Spinner`. The price of
+ * that is measured and published (the flood over-forbids on 1 of the 10).
+ *
+ * @returns {{region: Set<string>, boundary: Set<string>}} both as `cellKey`s
+ */
+export function bodyRegion(room, from, { writes = new Map(), walled = [] } = {}) {
+    const shut = new Set(walled.map((c) => cellKey(c.x, c.y)));
+    const floorAt = (x, y) => {
+        if (!inInterior(room, x, y)) return false;
+        if (shut.has(cellKey(x, y))) return false;
+        const w = writes.get(cellKey(x, y));
+        return w === undefined ? room.floorAt(x, y) : w === TILE_FLOOR;
+    };
+    const region = new Set([cellKey(from.x, from.y)]);
+    const boundary = new Set();
+    const stack = [{ x: from.x, y: from.y }];
+    while (stack.length > 0) {
+        const c = stack.pop();
+        for (const [dx, dy] of NB4) {
+            const x = c.x + dx;
+            const y = c.y + dy;
+            const k = cellKey(x, y);
+            if (!floorAt(x, y)) {
+                /** ⛓ Only a cell INSIDE the room can be carved, so only those
+                 *  are worth demanding; the border ring is the room's own. */
+                if (inInterior(room, x, y) && !shut.has(k)) boundary.add(k);
+                continue;
+            }
+            if (region.has(k)) continue;
+            region.add(k);
+            stack.push({ x, y });
+        }
+    }
+    return { region, boundary };
+}

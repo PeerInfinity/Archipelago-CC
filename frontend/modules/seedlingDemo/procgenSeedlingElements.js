@@ -568,6 +568,36 @@ export function compositeSeedlingOnConnector({
         return { refused: { reason: 'the-elements-carve-is-not-legal', detail: carveWhy } };
     }
 
+    /**
+     * ── ⛓⛓⛓ (iia) `demand` — THE SAME CLAUSE THE PRE-CARVE COMPOSITE ASKS,
+     *     ONE PHASE OVER (arc 3, slice 4d, D3) ─────────────────────────
+     *
+     * The element's claim about cells it does NOT write. For the kill gate that
+     * is the BODY'S REGION (`floor`) and the walls that keep the body in it
+     * (`wall`) — see `killGate.placementOf`'s own docblock for why.
+     *
+     * ⛔ IT HOLDS BY CONSTRUCTION HERE and is asked anyway. The element computed
+     * the region from the room it is being placed into, so this reads as a
+     * self-consistency check — and that is exactly its value: the day the
+     * element's geometry and its demand are computed from two different pictures
+     * of the room, this is the line that says so, instead of pass 2 silently
+     * enforcing a claim about a room that never existed. ⛓ The PRE-CARVE
+     * composite has had this clause since arc 2 and a phase without it would be
+     * two answers to what a `demand` means (trap 272's shape).
+     */
+    for (const dm of placement.demand ?? []) {
+        if (dm.x < 0 || dm.y < 0 || dm.x >= width || dm.y >= height) continue;
+        if (at(dm.x, dm.y) !== (dm.must === 'floor')) {
+            return { refused: { reason: 'the-elements-demand-is-not-met',
+                detail: `the element demands ${dm.must} at (${dm.x},${dm.y}) and the room it `
+                    + 'was placed into has the other. ⛔ An `on-connector` element reads the '
+                    + 'room it is standing in, so this clause holds BY CONSTRUCTION — a '
+                    + 'refusal here means the geometry and the demand were computed from two '
+                    + 'different pictures of the room, which is a defect in the element and '
+                    + 'not a property of the level.' } };
+        }
+    }
+
     // ── (iii) THE DOOR LAW — both clauses, plus the open half ───────────
     const doorWhy = doorLaw({
         paintedFor: (walled) => (x, y) => {
@@ -588,6 +618,19 @@ export function compositeSeedlingOnConnector({
         wall: Object.freeze(placement.tiles.filter((t) => t.tile !== TILE_FLOOR)
             .map((t) => Object.freeze({ x: t.x, y: t.y }))),
         carved: Object.freeze(carved.map((c) => Object.freeze({ ...c }))),
+        /**
+         * ⛔⛔ **THE `demand` IS DELIBERATELY *NOT* ON `placed`** (arc 3, slice
+         * 4d), and the first cut had it here. `procgenSeedling` copies this
+         * whole object onto `certification.geometry`, which `elementSummaryOf`
+         * ships in the PAYLOAD — so a `demand` field here put a CELL LIST of
+         * 7–40 entries into every payload holding an `on-connector` element, and
+         * an empty `demand: []` into every one holding a BLOCK POCKET. Measured:
+         * it moved the acceptance batch's PRE-SWORD rows, which have no kill
+         * gate at all and could not possibly have been moved by the demand
+         * itself. ⇒ arc 1's payload rule, met head-on: a payload carries what a
+         * reader CANNOT re-derive, and this is a function of the level and the
+         * geometry. The binding reads it off the PLACEMENT instead.
+         */
         entities: Object.freeze([
             ...placement.entities.blocks.map((b) => Object.freeze({ role: 'block', ...b })),
             ...placement.entities.obstacles.map((o) => Object.freeze({ role: 'obstacle', ...o })),

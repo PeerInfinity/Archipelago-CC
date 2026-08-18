@@ -200,3 +200,44 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET } = {}
             : 'none established',
     };
 }
+
+/**
+ * ⛓⛓⛓ **THE ONE-WORD GRADE, DERIVED FROM THE ROW'S STRUCTURED FIELDS** —
+ * PROCGEN ELEMENTS arc 3, slice 4d.
+ *
+ * ⛔ IT IS A SEPARATE FUNCTION AND NOT A FIELD ON THE ROW, for one measurable
+ * reason: the acceptance batch's stdout md5 (`ab540ac4…`) is the proof that the
+ * LIFT was a move, and a new field in the row would move it. A caller that
+ * wants one word asks for one word.
+ *
+ * ⛔ AND IT READS `withoutVerdict`, NEVER `evidence` (trap 337/354 — fields,
+ * never prose). The two are derived from the SAME field and therefore agree by
+ * construction; `procgenRequirements.test.js` drives that agreement so a future
+ * edit to either cannot quietly separate them.
+ *
+ *   STRONG           the without-arm was REFUSED within budget — ⚖ §1.10a's own
+ *                    datum, the strong one
+ *   BOUND-DEPENDENT  the without-arm exhausted the BUDGET; the verdict stands
+ *                    and the bound is visibly load-bearing on this row
+ *   WEAK             the without-arm THREW; the ENGINE said the route stepped
+ *                    where it must not, which is not a claim about the level
+ *   INERT            both arms solved at the SAME tick count — the item did not
+ *                    merely fail to be necessary, it changed nothing
+ *   NOT-ESTABLISHED  both arms solved, and the tick counts differ
+ *
+ * ⛔ `SHORTENS` IS NOT HERE. See the file docblock: nothing in the pipeline can
+ * produce one today, and a grade nothing can reach is not a grade (trap 355).
+ * When arc 5 ships an item-gated shortcut, it is `NOT-ESTABLISHED` with fewer
+ * ticks WITH the item, and THAT is the row this word will be carved out of.
+ */
+export function gradeOf(row) {
+    if (row.verdict !== 'REQUIRED') return row.inert ? 'INERT' : 'NOT-ESTABLISHED';
+    if (row.withoutVerdict === 'REFUSED') return 'STRONG';
+    if (row.withoutVerdict === 'BUDGET_EXHAUSTED') return 'BOUND-DEPENDENT';
+    return 'WEAK';
+}
+
+/** ⛓ The grades a `require:[X]` directive accepts as MET — ⚖ D1: STRONG or
+ *  BOUND-DEPENDENT. A WEAK row's evidence is an ENGINE throw and is not a
+ *  statement about the level at all, so it does not meet a directive. */
+export const REQUIRING_GRADES = Object.freeze(['STRONG', 'BOUND-DEPENDENT']);

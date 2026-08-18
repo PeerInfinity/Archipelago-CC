@@ -103,8 +103,13 @@ const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
     await M('procgenCore/areaSpec.js');
 /** ⛓ arc 2 slice 3 — and the same argument: ONE `--elements=` for the whole
  *  sweep, because an element is not a property of the skeleton kind. */
-const { NONE: ELEMENTS_NONE, formatElementSpec, isElementList, parseElementSpec } =
-    await M('procgenCore/elementSpec.js');
+const {
+    NONE: ELEMENTS_NONE, formatElementSpec, isElementList, parseElementSpec,
+    parseItemRequireList,
+} = await M('procgenCore/elementSpec.js');
+/** ⛓ arc 3, slice 4d — the budget the Seedling directive's WITHOUT arm runs
+ *  under when a cell's oracle does not carry one. */
+const { DEFAULT_BUDGET } = await M('seedlingDemo/procgenOracle.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -180,8 +185,19 @@ const AREAS = parseAreaSpec(arg('areas', '0'));
  * ablation arm of the cost record the area binding already computes, so the
  * column below is a REPORT of a differential rather than a second measurement.
  */
+/**
+ * ⛓⛓⛓ **TWO VOCABULARIES, ONE FLAG** (arc 3, slice 4d). The MAZE requires
+ * AREA-GRAPH SYMBOLS (`K0`); SEEDLING requires BOOT ITEM FLAGS (`hasSword`) and
+ * DERIVES the element head from the catalogue's `needs`. The grammar is one
+ * (`areaSpec.parseRequireList`); the vocabulary is the substrate's, so the
+ * parse is too — a `--require=hasSword` handed to the maze's parser would be
+ * refused as *"not an area-graph symbol"*, which is true and is the wrong
+ * sentence.
+ */
 const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
-    ? parseRequireList(arg('require', '')) : null;
+    ? (SUBSTRATE === 'seedling'
+        ? parseItemRequireList(arg('require', '')) : parseRequireList(arg('require', '')))
+    : null;
 /**
  * ⛓⛓⛓ PROCGEN ELEMENTS arc 2 slice 3 — THE ELEMENT FOR EVERY CELL, through the
  * ONE codec (`procgenCore/elementSpec.js`): `--elements='guard;len=3;turns=1'`.
@@ -213,7 +229,12 @@ const REQUIRE = process.argv.some((a) => a.startsWith('--require='))
  */
 const ELEMENTS = process.argv.some((a) => a.startsWith('--elements='))
     ? parseElementSpec(arg('elements', ELEMENTS_NONE)) : undefined;
-if (REQUIRE && AREAS.keys === 0) {
+/**
+ * ⛔ THE MAZE'S DIRECTIVE IS A PROPERTY OF THE AREA GRAPH and needs one.
+ * SEEDLING's is a property of the ELEMENT, so it does not — which is the whole
+ * difference between requiring a KEY and requiring an ITEM.
+ */
+if (REQUIRE && SUBSTRATE !== 'seedling' && AREAS.keys === 0) {
     note('sweep-yield-table: --require= without --areas= — every cell would refuse with '
         + '`the-directive-needs-the-area-graph`, which is a column that means one thing at '
         + 'every row. Say --areas=<n> too.');
@@ -229,11 +250,19 @@ if (REQUIRE && AREAS.keys === 0) {
  * ⛔ `--require=` IS STILL THE MAZE'S ALONE — the directive is slice 4d's, and
  * a flag accepted here and ignored would print a column with nothing behind it.
  */
-if (SUBSTRATE === 'seedling' && REQUIRE) {
-    note('sweep-yield-table: --require= is the MAZE binding\'s. The Seedling directive is '
-        + 'arc 3 slice 4d; running it here would print a column that is empty at every row.');
-    process.exit(2);
-}
+/**
+ * ⛓⛓ **THE SEEDLING ARM HONOURS `--require=` NOW** (arc 3, slice 4d). It used to
+ * refuse it by name (*"the Seedling directive is arc 3 slice 4d; running it here
+ * would print a column that is empty at every row"*), and that sentence's
+ * condition is met: `seedlingSeam` takes a `require` list and
+ * `procgenSeedling.requireVerdict` grades it on the FINAL level.
+ *
+ * ⚠ AND IT COSTS ONE EXTRA SOLVE PER CELL, unlike the maze's — which is free
+ * because its proof is an ablation the area binding already computes. Seedling's
+ * WITHOUT arm is a real solve of the real level with `hasSword:false`. Said
+ * here because the timing columns of a `--require=` sweep are not comparable to
+ * those of one without it.
+ */
 
 /**
  * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 2 — **THE BIOME IS AN AXIS NOW**, and it had
@@ -271,10 +300,22 @@ const ELEMENTS_EFFECTIVE = await (async () => {
     if (ELEMENTS !== undefined) return ELEMENTS;
     if (SUBSTRATE !== 'seedling') return { name: ELEMENTS_NONE };
     const { defaultElementsFor } = await M('seedlingDemo/procgenSeedling.js');
+    const { resolveRequireDirective } = await M('procgenCore/elementSpec.js');
     const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
-    return defaultElementsFor(
-        (PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).items,
-    );
+    const items = (PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).items;
+    /**
+     * ⛓⛓⛓ **A DIRECTIVE REPLACES THE BIOME DEFAULT** (arc 3, slice 4d), and
+     * this readout has to say so or it would label a `--require=hasSword` sweep
+     * with the head the default WOULD have drawn. ⛔ Through the SAME
+     * `resolveRequireDirective` the seam calls — this is a label, not a second
+     * decision, and a refused directive falls through to the default because
+     * that is the run it will actually make.
+     */
+    if (REQUIRE) {
+        const dir = resolveRequireDirective({ require: REQUIRE, elements: undefined, items });
+        if (!dir.refused) return dir.elements;
+    }
+    return defaultElementsFor(items);
 })();
 
 const CELL = arg('cell', '');
@@ -306,6 +347,11 @@ if (CELL !== '') {
     /** ⛓ arc 3 slice 3 — the element's certification, from the shared seam. */
     let seedlingCertification = null;
     let seedlingAreaCertification = null;
+    /** ⛓ arc 3, slice 4d — the DIRECTIVE's resolution and the ONE function that
+     *  grades it, both taken from the seam rather than re-derived here. */
+    let seedlingRequireDir = null;
+    let seedlingRequireVerdict = null;
+    let seedlingPalette = null;
     if (SUBSTRATE === 'maze') {
         const {
             MAZE_PALETTE, mazeModel, mazeOracle,
@@ -349,15 +395,27 @@ if (CELL !== '') {
             /** ⛓ arc 3 slice 4b — the SEEDLING resolver, so the five carved tree
              *  kinds get their `chambers` default and a typed 0 survives. */
             skeleton: seedlingSkeletonSpec(kind),
-            elements: ELEMENTS_EFFECTIVE,
+            /**
+             * ⛔ WHEN A DIRECTIVE IS TYPED AND `--elements=` IS NOT, THE SEAM
+             * GETS `undefined` — *nobody said* — so the directive FORCES the
+             * head and spends NO draw. Handing it `ELEMENTS_EFFECTIVE` (which
+             * already resolved to that head) would make the seam read an
+             * EXPLICIT spec, which is a different fact: `forced` would report
+             * false and a reader would be told the caller chose it.
+             */
+            elements: (REQUIRE && ELEMENTS === undefined) ? undefined : ELEMENTS_EFFECTIVE,
             areas: AREAS,
             items: palette.items ?? null,
+            require: REQUIRE ?? undefined,
             wrapOracle: wrap,
         });
         model = seam.model;
         oracle = seam.oracle;
         seedlingCertification = seam.certification;
         seedlingAreaCertification = seam.areaCertification;
+        seedlingRequireDir = seam.require;
+        seedlingPalette = palette;
+        seedlingRequireVerdict = (await M('seedlingDemo/procgenSeedling.js')).requireVerdict;
         const sk = model.skeleton();
         const cells = interiorCells(sk);
         floorPct = Math.round((100 * cells.filter((c) => terrainAt(sk, c.tx, c.ty) === 'ground')
@@ -589,6 +647,39 @@ if (CELL !== '') {
         };
     }
     let requireRow = null;
+    /**
+     * ⛓⛓⛓ **THE SEEDLING DIRECTIVE'S COLUMN** (arc 3, slice 4d). ⛔ Graded by
+     * `procgenSeedling.requireVerdict`, the SAME function `generateSeedlingLevel`
+     * calls — this file composes the seam and the loop by hand so it can time
+     * the oracle, and a private copy of the verdict here would be a second
+     * answer to *"was the directive met"*.
+     *
+     * ⚠ AN ABORTED CELL HAS NO LEVEL, so it has no verdict either: the row is
+     * `null` and the ABORT column is where that cell is counted. A directive
+     * reported as "not met" on a run that never finished would blame the
+     * directive for the engine.
+     */
+    if (REQUIRE && SUBSTRATE === 'seedling' && out && seedlingRequireDir) {
+        const v = seedlingRequireVerdict({
+            dir: seedlingRequireDir,
+            model,
+            certification: seedlingCertification,
+            out,
+            palette: seedlingPalette,
+            seed,
+            budget: oracle.budget ?? DEFAULT_BUDGET,
+        });
+        requireRow = {
+            asked: v.asked,
+            element: v.element,
+            forced: v.forced,
+            met: v.met,
+            grades: [].concat(v.grade ?? []),
+            withTicks: v.with?.ticks ?? null,
+            without: [].concat(v.without ?? []).map((w) => w?.verdict ?? null),
+            refused: v.refused?.reason ?? null,
+        };
+    }
     if (REQUIRE && SUBSTRATE === 'maze') {
         const { mazeCostRecords, requireOutcome } = await M('mazeRoom/procgenMaze.js');
         const elements = (out && model.areas?.ran)
@@ -888,35 +979,58 @@ if (SUBSTRATE === 'maze') {
             + `| ${c.reduce((a, x) => a + x.graphifyEdges, 0)} |`);
     }
     say('');
-    if (REQUIRE) {
-        say(`## THE DIRECTIVE — \`--require=${formatRequireList(REQUIRE)}\` (slice 3)`);
-        say('');
-        say('⛓ MET = every asked symbol placed AND proved a cut by the KEY ablation (remove '
+}
+
+/**
+ * ⛓⛓⛓ **THE DIRECTIVE'S TABLE — BOTH SUBSTRATES SINCE ARC 3, SLICE 4d.** It
+ * used to live INSIDE the maze-only area-census block, which is where it was
+ * written (slice 3) and is not where it belongs: `--require=` is now a flag both
+ * bindings take and a table printed only for one of them would report a
+ * Seedling sweep as though nothing had been asked.
+ */
+if (REQUIRE) {
+    say(`## THE DIRECTIVE — \`--require=${formatRequireList(REQUIRE)}\``
+        + `${SUBSTRATE === 'seedling' ? ' (arc 3, slice 4d)' : ' (arc 1, slice 3)'}`);
+    say('');
+    say(SUBSTRATE === 'seedling'
+        ? '⛓ MET = the required ITEM\'s ELEMENT (derived from `ELEMENT_TABLE.needs`) was '
+            + 'PLACED, CERTIFIED by the seam\'s own solve, and graded REQUIRED by the '
+            + 'requirements differential on the FINAL level — STRONG (the without-arm was '
+            + 'REFUSED within budget) or BOUND-DEPENDENT (it exhausted the budget). ⛔ WEAK '
+            + '(the without-arm THREW) does not meet a directive: an ENGINE throw is not a '
+            + 'claim about the level. ⚠ THE WITHOUT-ARM IS A REAL SOLVE and costs one per '
+            + 'cell, so this sweep\'s timing columns are not comparable to one without '
+            + '`--require=`.'
+        : '⛓ MET = every asked symbol placed AND proved a cut by the KEY ablation (remove '
             + '`key_K`, keep the doors, re-solve → the goal is unreachable). The grade is '
             + 'STRONG whenever the ablation refuses, which on this substrate is the only '
             + 'grade reachable — the BFS differential is a PROOF here, and the graded half is '
             + 'exercised in its trivial case (⚖ design §4.5 / PoC §16.6).');
-        say('');
-        say('| kind | size | MET | REFUSED | by reason | grades |');
-        say('|---|---|---|---|---|---|');
-        for (const [key, rows] of groups) {
-            const [kind, size] = key.split('|');
-            const ok = rows.filter((r) => r.require && !r.aborted);
-            if (!ok.length) continue;
-            const met = ok.filter((r) => r.require.refused === null);
-            const why = {};
-            for (const r of ok) {
-                if (r.require.refused) why[r.require.refused] = (why[r.require.refused] ?? 0) + 1;
-            }
-            const grades = {};
-            for (const r of met) for (const g of r.require.grades) grades[g] = (grades[g] ?? 0) + 1;
-            say(`| ${kind} | ${size} | ${met.length}/${ok.length} `
-                + `| ${ok.length - met.length}/${ok.length} `
-                + `| ${Object.entries(why).map(([k, n]) => `\`${k}\` ${n}`).join('<br>') || '-'} `
-                + `| ${Object.entries(grades).map(([g, n]) => `${g} ${n}`).join(', ') || '-'} |`);
+    say('');
+    say('| kind | size | MET | REFUSED | by reason | grades |');
+    say('|---|---|---|---|---|---|');
+    for (const [key, rows] of groups) {
+        const [kind, size] = key.split('|');
+        const ok = rows.filter((r) => r.require && !r.aborted);
+        if (!ok.length) continue;
+        const met = ok.filter((r) => r.require.refused === null);
+        const why = {};
+        for (const r of ok) {
+            if (r.require.refused) why[r.require.refused] = (why[r.require.refused] ?? 0) + 1;
         }
-        say('');
+        const grades = {};
+        for (const r of met) for (const g of r.require.grades) grades[g] = (grades[g] ?? 0) + 1;
+        say(`| ${kind} | ${size} | ${met.length}/${ok.length} `
+            + `| ${ok.length - met.length}/${ok.length} `
+            + `| ${Object.entries(why).map(([k, n]) => `\`${k}\` ${n}`).join('<br>') || '-'} `
+            + `| ${Object.entries(grades).map(([g, n]) => `${g} ${n}`).join(', ') || '-'} |`);
     }
+    say('');
+}
+
+/** ⛓ The area refusals are the MAZE's own block, re-opened after the directive
+ *  table moved out from between them (arc 3, slice 4d). */
+if (SUBSTRATE === 'maze') {
     say('## THE AREA REFUSALS, by reason');
     say('');
     const refusals = {};

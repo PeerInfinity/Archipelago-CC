@@ -85,9 +85,16 @@ import { deriveSites, siteCells, siteSummaryOf } from '../procgenCore/sites.js';
  * binding maps its tiles and symbols onto Seedling's parts and nothing more.
  */
 import {
-    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, isElementList,
-    namedParams, normalizeElementSpec, resolveElementSpec,
+    DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, formatElementSpec,
+    isElementList, namedParams, normalizeElementSpec, resolveElementSpec,
+    resolveRequireDirective,
 } from '../procgenCore/elementSpec.js';
+/**
+ * ⛓ THE REQUIREMENTS DIFFERENTIAL — arc 3, slice 4d. ⛔ ONE implementation,
+ * lifted out of `batch-seedling-acceptance.mjs` (whose stdout md5 proved the
+ * move); this file is its SECOND caller and the batch is still its first.
+ */
+import { REQUIRING_GRADES, gradeOf, requirementsFor } from './procgenRequirements.js';
 import {
     SITE_MARGIN_STRAIGHT, compositeSeedlingElement, compositeSeedlingOnConnector,
     elementSummaryOf, liftedClaimFor, reservedRect, seedlingElementEntities,
@@ -1156,6 +1163,11 @@ export function seedlingModel({
     });
     let elementEntities = Object.freeze([]);
     let elementCells = new Set();
+    /** ⛓ arc 3, slice 4d — `"x,y" -> 'floor'|'wall'`, EMPTY unless a placed
+     *  element declared a `demand`. At `--elements=none` and for every element
+     *  that declares none it stays empty, which is what keeps `elementRefusalAt`
+     *  a function that returns on its first line. */
+    const elementDemand = new Map();
     if (elementPlan) {
         const out = compositeSeedlingElement({
             width: d.width, height: d.height,
@@ -1316,6 +1328,14 @@ export function seedlingModel({
              *  would take a corridor's worth of room away from pass 2 for a door
              *  that occupies two cells. */
             for (const c of p.owned) elementCells.add(`${c.x},${c.y}`);
+            /** ⛓ THE DEMAND, INDEXED (arc 3, slice 4d) — `elementRefusalAt`'s
+             *  second question. ⛔ A cell can be DEMANDED without being OWNED,
+             *  which is the whole difference: pass 2 may stand on it, it may
+             *  even carve it to ground, but it may not make it something the
+             *  element's body cannot survive. */
+            for (const dm of onConnectorPlan.placement.demand ?? []) {
+                elementDemand.set(`${dm.x},${dm.y}`, dm.must);
+            }
             elementInfo = Object.freeze({
                 spec: elementSpecNorm,
                 ran: true,
@@ -1873,8 +1893,48 @@ export function seedlingModel({
      * comparison that happens to pass — which is what keeps every committed pair
      * byte-identical.
      */
-    const elementRefusalAt = (tx, ty) => {
-        if (elementCells.size === 0 || !elementCells.has(`${tx},${ty}`)) return null;
+    const elementRefusalAt = (tx, ty, writing = null) => {
+        if (!elementCells.has(`${tx},${ty}`)) {
+            /**
+             * ⛓⛓⛓ **THE ELEMENT'S `demand` — arc 3, slice 4d (D3), AND IT IS
+             * THE SECOND QUESTION THIS FUNCTION ASKS.**
+             *
+             * A demanded cell is NOT owned: pass 2 may put an entity on it and
+             * may carve it to ground. What it may not do is write a terrain the
+             * element's claim forbids — for the kill gate, anything that is not
+             * `floor` inside the BODY'S REGION (water and a pit KILL the
+             * spinner; a wall would change where it goes), and anything that is
+             * not `wall` on the walls that keep the body in that region (a
+             * CARVE there would let it out of the set the demand was computed
+             * on).
+             *
+             * ⛔ THE PROBLEM IS MEASURED, NOT SUPPOSED. Over 224 cells, ten kill
+             * gates certified and all ten had their lock cleared — **two of them
+             * by `water`**, i.e. a gate that opened because pass-2 furniture
+             * DROWNED its spinner rather than because anybody swung a sword. The
+             * predictor was exact: lethal terrain inside the body's own stepped
+             * path ⟺ `cause:'water'`, 2 for 2 both ways.
+             *
+             * ⛔ IT NEEDS THE INTENDED TERRAIN, which is why this function grew
+             * an argument. `freeRefusal` and `carveCellRefusal` are asked about
+             * a CELL; a demand is about what would be WRITTEN there. A caller
+             * that does not know (the page's click, `isFree`) passes nothing and
+             * gets `null` — correctly: the cell really is free for an entity or
+             * for a ground write.
+             */
+            const must = elementDemand.get(`${tx},${ty}`);
+            if (!must || writing === null || writing === must) return null;
+            const p = elementInfo.placed[0];
+            return `(${tx},${ty}) is DEMANDED \`${must}\` by the ELEMENT ${p.instance} and `
+                + `this writes \`${writing}\`. ⛔ It is not the element's cell — pass 2 may `
+                + 'stand on it — but it is inside the region the element\'s BODY moves in, '
+                + 'or one of the walls that keeps the body there. A pool or a pit in that '
+                + 'region '
+                + 'DROWNS the body, and a kill lock whose enemy drowned opens for a reason the '
+                + 'level did not pose — measured at 2 of 10 certified kill gates before this '
+                + 'demand existed. A carve on the boundary would let the body out of the '
+                + 'region the demand was computed on.';
+        }
         const p = elementInfo.placed[0];
         /**
          * ⛓ AN `on-connector` ELEMENT OWNS CELLS, NOT A RECTANGLE — the door,
@@ -1899,12 +1959,12 @@ export function seedlingModel({
             + 'the puzzle the level exists to pose.';
     };
 
-    const freeRefusal = (record, tx, ty) => {
+    const freeRefusal = (record, tx, ty, writing = null) => {
         if (!(tx > 0 && ty > 0 && tx < record.width - 1 && ty < record.height - 1)) {
             return `(${tx},${ty}) is not in the room's INTERIOR — the border ring is wall, so `
                 + `the placeable cells are (1,1) to (${record.width - 2},${record.height - 2}).`;
         }
-        const claimed = elementRefusalAt(tx, ty);
+        const claimed = elementRefusalAt(tx, ty, writing);
         if (claimed) return claimed;
         if (reserved.has(`${tx},${ty}`)) {
             const which = tx === d.start.tx && ty === d.start.ty ? 'START' : 'GOAL';
@@ -2152,12 +2212,16 @@ export function seedlingModel({
      * the room, and neither endpoint is terrain a template may re-decide.
      */
     const carveCellRefusal = (record, tx, ty) => {
+        /** ⛓ A CARVE WRITES `ground`, always — which is why this caller names
+         *  the terrain as a constant rather than taking it. A demanded `floor`
+         *  cell is therefore never refused by a carve, and a demanded `wall` one
+         *  always is: that is the boundary clause doing its job. */
         if (!(tx > 0 && ty > 0 && tx < record.width - 1 && ty < record.height - 1)) {
             return `(${tx},${ty}) is not in the room's INTERIOR — the border ring is wall, so `
                 + `the placeable cells are (1,1) to (${record.width - 2},${record.height - 2}). `
                 + '⛔ A CARVE may not open the ring: the ring is what makes the room a room.';
         }
-        const claimed = elementRefusalAt(tx, ty);
+        const claimed = elementRefusalAt(tx, ty, 'floor');
         if (claimed) return claimed;
         if (reserved.has(`${tx},${ty}`)) {
             const which = tx === d.start.tx && ty === d.start.ty ? 'START' : 'GOAL';
@@ -2248,12 +2312,23 @@ export function seedlingModel({
          */
         const groundWrites = new Set((template.terrain ?? [])
             .filter((w) => w.terrain === 'ground').map((w) => `${w.dx},${w.dy}`));
+        /**
+         * ⛓ WHAT THIS CANDIDATE WOULD WRITE AT EACH OFFSET (arc 3, slice 4d) —
+         * the element's `demand` is about the TERRAIN, not about the cell, so
+         * the adjudicator has to be told. ⛔ A footprint cell with no terrain
+         * write holds an ENTITY and leaves the terrain alone; it is passed as
+         * `'floor'`, because that is what the cell will still be.
+         */
+        const writeAt = new Map((template.terrain ?? [])
+            .map((w) => [`${w.dx},${w.dy}`, w.terrain === 'ground' ? 'floor' : w.terrain]));
         for (const [part, cells] of [['FOOTPRINT', template.footprint],
             ['CLEARANCE', template.clearance ?? []]]) {
             for (const c of cells) {
+                const writing = part === 'FOOTPRINT'
+                    ? (writeAt.get(`${c.dx},${c.dy}`) ?? 'floor') : null;
                 const why = (part === 'FOOTPRINT' && groundWrites.has(`${c.dx},${c.dy}`))
                     ? carveCellRefusal(record, tx + c.dx, ty + c.dy)
-                    : freeRefusal(record, tx + c.dx, ty + c.dy);
+                    : freeRefusal(record, tx + c.dx, ty + c.dy, writing);
                 if (why) {
                     return `"${template.instance ?? template.name}" anchored at (${tx},${ty}) `
                         + `needs ${part} cell ${why}`;
@@ -2724,8 +2799,25 @@ export function defaultElementsFor(items) {
 
 export function seedlingSeam({
     seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
-    elements, areas = DEFAULT_AREAS, wrapOracle = (o) => o,
+    elements, areas = DEFAULT_AREAS, require, wrapOracle = (o) => o,
 } = {}) {
+    /**
+     * ⛓⛓⛓ **THE DIRECTIVE IS RESOLVED FIRST, BECAUSE IT FORCES THE HEAD**
+     * (PROCGEN ELEMENTS arc 3, slice 4d, D1). `resolveRequireDirective` is the
+     * ONE resolution and it lives in `elementSpec` beside the `needs` it reads;
+     * this is its Seedling call site.
+     *
+     * ⛔ IT RUNS BEFORE THE BIOME DEFAULT, and the order is the whole point: a
+     * default applied first would spend the list's `pick` and the directive
+     * would then be narrowing a draw that had already happened.
+     *
+     * ⚠ A REFUSED DIRECTIVE STILL BUILDS A LEVEL (arc 1's rule — *a refused
+     * directive shows what the run produced, labelled*): `dir.elements` is the
+     * caller's own spec unchanged on every refusal, so the run below is the run
+     * that would have happened, and the refusal rides out on `seam.require`.
+     */
+    const dir = resolveRequireDirective({ require, elements, items });
+    if (dir.asked.length > 0 && !dir.refused) elements = dir.elements;
     /**
      * ⛔ `undefined` MEANS "NOBODY SAID", AND ONLY THAT REACHES THE BIOME
      * DEFAULT. An explicit `{name:'none'}` is a CHOICE and is honoured; `null`
@@ -2893,7 +2985,7 @@ export function seedlingSeam({
             oracle = wrapOracle(seedlingOracle({ model, items, budget }));
         }
     }
-    return { model, oracle, certification, areaCertification };
+    return { model, oracle, certification, areaCertification, require: dir };
 }
 
 /**
@@ -2941,6 +3033,122 @@ export function areaSummaryOf(areaInfo, { certification = null } = {}) {
 }
 
 /**
+ * ⛓⛓⛓ **THE `require:[X]` VERDICT — PROCGEN ELEMENTS arc 3, slice 4d (D1).**
+ *
+ * A directive is MET or the RUN IS REFUSED BY NAME. There are SIX ways it can
+ * fail and each is a different fact, so each has its own name; three are
+ * decided before a room exists (`elementSpec.resolveRequireDirective`) and
+ * three can only be known from a finished level, which is why they are here:
+ *
+ *   `the-required-element-was-refused: <its own refusal>`
+ *        the head was forced and the ROOM could not host it — `no-cut-cell`,
+ *        `wall-does-not-seal`, `no-pocket`… carried VERBATIM, because "the
+ *        directive failed" and "this 10x10 room has no main-path cut whose wall
+ *        seals it" are different things to a caller choosing a seed.
+ *   `the-required-element-did-not-certify: <gap>`
+ *        it fit and the SOLVER could not walk it, so the level shipped with the
+ *        element DROPPED. ⛔ Checked EXPLICITLY and not inferred from the drop:
+ *        a directive met on an uncertified element would be a run claiming a
+ *        gate nobody proved is crossable.
+ *   `the-item-is-not-required: <grade>`
+ *        the element is there, certified, and the WITHOUT-arm SOLVED ANYWAY —
+ *        which on this arc's own corpus is not hypothetical: 4c measured a kill
+ *        lock cleared by pass-2 water. The grade says which kind of not.
+ *
+ * ⛓ THE WITH-ARM SPENDS NO SOLVE. `summary.finalTicks` is `levelGenerator`'s
+ * LAST solve, and that solve is a solve of the FINAL RECORD by the loop's own
+ * structure: a rejected candidate leaves the record unchanged, and `lastSolve`
+ * only advances when a candidate is KEPT. Its verdict is `SOLVED` by the same
+ * structure — the loop keeps only SOLVED anchors, and a skeleton that does not
+ * solve THROWS rather than returning. ⇒ the with-arm is stated, not re-run.
+ *
+ * ⚠ THE PRICE, SAID PLAINLY: the WITHOUT arm is real and costs ONE SOLVE PER
+ * TRUE BOOT FLAG. Post-sword grants exactly one (`hasSword`), so a
+ * `--require=hasSword` run costs exactly one extra solve.
+ *
+ * ⛓ EXPORTED because `generateSeedlingLevel` is not the only caller that
+ * composes the seam with the loop: `sweep-yield-table.mjs` builds the two by
+ * hand so it can time the oracle, and a private copy of this verdict there
+ * would be a second answer to *"was the directive met"*.
+ */
+export function requireVerdict({ dir, model, certification, out, palette, seed, budget }) {
+    const base = {
+        asked: dir.asked,
+        element: dir.heads.length === 1 ? dir.heads[0] : dir.heads,
+        forced: dir.forced,
+        spec: formatElementSpec(model.elementSpec),
+    };
+    const no = (reason, detail) => Object.freeze({
+        ...base, met: false, grade: null, evidence: null,
+        with: null, without: null, refused: Object.freeze({ reason, detail }),
+    });
+    if (dir.refused) return no(dir.refused.reason, dir.refused.detail);
+
+    /**
+     * ⛔⛔ THE ORDER IS THE PIPELINE'S OWN, and the first cut had it wrong.
+     * A DROPPED element leaves `elements.ran === false` with the refusal
+     * `the-skeleton-does-not-solve-with-the-element`, so a placement check
+     * asked first reports every UNCERTIFIED gate as one the room could not
+     * HOST — which is the opposite fact (it fit perfectly; the solver could not
+     * walk it) and the one a caller picking a seed would act on wrongly.
+     * ⇒ certification is asked FIRST, because a `certification` object exists
+     * only when the element PLACED. Trap 357's shape: a "deepest stage" list
+     * that does not match the order the stages run in names the wrong one.
+     */
+    const head = model.elementHead?.name ?? null;
+    if (certification && certification.certified !== true) {
+        return no(`the-required-element-did-not-certify: ${certification.gap ?? 'no-solve'}`,
+            certification.reasonText ?? 'the certification solve did not reach the goal, so '
+                + 'the level shipped with the element DROPPED. ⛔ A directive is never met on '
+                + 'an element the solver could not walk.');
+    }
+    if (!model.elements.ran || !dir.heads.includes(head)) {
+        const why = model.elements.refused;
+        return no(`the-required-element-was-refused: ${why?.reason ?? 'it-did-not-run'}`,
+            why?.detail ?? `the run's element head is ${JSON.stringify(head)} and the `
+                + `directive needs one of [${dir.heads.join(', ')}].`);
+    }
+    /**
+     * ⛓ THE DIFFERENTIAL — the ONE implementation (`procgenRequirements`), on
+     * the FINAL level, both arms at the SAME budget the seam ran under.
+     */
+    const report = requirementsFor({
+        record: out.record,
+        model,
+        palette,
+        summary: out.summary,
+        seed,
+        biome: palette.name,
+    }, { verdict: VERDICT.SOLVED, ticks: out.summary.finalTicks }, { budget });
+    const rows = dir.asked.map((flag) => report.rows.find((r) => r.flag === flag) ?? null);
+    const graded = rows.map((r) => (r ? gradeOf(r) : 'NOT-MEASURED'));
+    const met = graded.every((g) => REQUIRING_GRADES.includes(g));
+    const one = (pick) => (dir.asked.length === 1 ? pick(0) : dir.asked.map((_, i) => pick(i)));
+    const report1 = Object.freeze({
+        ...base,
+        met,
+        grade: one((i) => graded[i]),
+        evidence: one((i) => rows[i]?.evidence ?? null),
+        with: Object.freeze({ verdict: VERDICT.SOLVED, ticks: out.summary.finalTicks ?? null }),
+        without: one((i) => (rows[i] ? Object.freeze({
+            verdict: rows[i].withoutVerdict, ticks: rows[i].withoutTicks,
+        }) : null)),
+        refused: met ? null : Object.freeze({
+            reason: `the-item-is-not-required: ${[].concat(graded).join(', ')}`,
+            detail: `the element is placed and CERTIFIED and the differential did not grade `
+                + `[${dir.asked.join(', ')}] as REQUIRED at maxTicksPerTarget=`
+                + `${budget.maxTicksPerTarget}: the level solved WITHOUT it too. ⛔ THAT IS A `
+                + 'REAL ANSWER, not a missing measurement — 4c measured a kill lock cleared '
+                + 'by pass-2 WATER, which is a level whose gate opens for a reason the '
+                + 'directive did not ask for. ⚠ The claim is SOLVER-RELATIVE and BOUNDED: no '
+                + 'budget was escalated and no exhaustive search exists anywhere in this '
+                + 'design.',
+        }),
+    });
+    return report1;
+}
+
+/**
  * GENERATE ONE SEEDLING LEVEL — the whole seam, wired.
  *
  * ⛔ TWO STREAMS, TWO SEEDS FROM ONE. The model's room stream and the loop's
@@ -2950,17 +3158,31 @@ export function areaSummaryOf(areaInfo, { certification = null } = {}) {
  */
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
-    skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS,
+    skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require,
 } = {}) {
-    const { model, oracle, certification, areaCertification } = seedlingSeam({
+    const { model, oracle, certification, areaCertification, require: dir } = seedlingSeam({
         seed, items: palette.items ?? null, budget, defaults, skeleton, elements, areas,
+        require,
     });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
+    /**
+     * ⛓⛓⛓ **THE DIRECTIVE'S VERDICT, ON THE FINAL LEVEL** (arc 3, slice 4d,
+     * D1/D2) — and the level has to be FINISHED for it to mean anything.
+     *
+     * ⛔ A SKELETON-TIME DIFFERENTIAL WOULD BE BLIND TO THE THING 4c FOUND: the
+     * arc's only rich post-sword seed had its kill lock cleared because PASS-2
+     * FURNITURE DROWNED THE SPINNER (`cause:'water'`), so the item was not
+     * required at all on the level that shipped, while it plainly was on the
+     * skeleton. ⇒ both arms run here, after the ladder.
+     */
+    const requireReport = dir.asked.length === 0
+        ? null : requireVerdict({ dir, model, certification, out, palette, seed, budget });
     return {
         ...out,
         model,
         certification,
         areaCertification,
+        require: requireReport,
         summary: Object.freeze({
             ...out.summary,
             /**
@@ -2981,6 +3203,13 @@ export function generateSeedlingLevel({
              */
             ...(!isElementList(model.elementSpec) && model.elementSpec.name === ELEMENTS_NONE
                 ? {} : { elements: elementSummaryOf(model, { certification }) }),
+            /**
+             * ⛓⛓ **THE DIRECTIVE'S BLOCK** (arc 3, slice 4d) — the maze's
+             * `summary.require`, one substrate over. ⛔ OMITTED ENTIRELY when
+             * nothing was asked, which is what keeps every committed payload
+             * byte-identical (arc-1 §10.2's own rule).
+             */
+            ...(requireReport ? { require: requireReport } : {}),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.defaults.goalClass,

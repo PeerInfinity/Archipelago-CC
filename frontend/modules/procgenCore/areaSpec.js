@@ -291,8 +291,41 @@ export function symbolIndex(symbol) {
  * that must hold, not a set to be normalized — and a writer that sorted would
  * rewrite a bar the reader had just read (the `?families=` sort is the other
  * choice, made there because a ROSTER really is a set).
+ *
+ * ── ⛓⛓⛓ TWO VOCABULARIES, ONE GRAMMAR (arc 3, slice 4d) ──────────────
+ *
+ * The MAZE requires AREA-GRAPH SYMBOLS (`K0`); SEEDLING requires BOOT ITEM
+ * FLAGS (`hasSword`, ⚖ design §3.5's `require:['hasSword']`). What the two
+ * share is the GRAMMAR — comma separated, no empty list, no empty clause, no
+ * duplicate, order preserved — and duplicating six lines of it would be two
+ * answers to *"what does a `require` string mean"*, which is exactly what this
+ * codec exists to prevent.
+ *
+ * ⛔ SO THE VOCABULARY IS AN ARGUMENT AND THE GRAMMAR IS NOT. `what` names the
+ * thing in the refusals and `member(text)` decides whether a name is IN the
+ * vocabulary; the defaults are the maze's own, so every message on that channel
+ * is byte-identical to the one slice 3 shipped.
+ *
+ * ⚠ AND SEEDLING'S `member` ACCEPTS ANY WELL-FORMED FLAG NAME ON PURPOSE. Arc
+ * 1's split is that a PARSE error is about the parameter (exit 2) and a
+ * DIRECTIVE that cannot be met is a refused RUN with a named reason (exit 6);
+ * *"no element in the catalogue needs that item"* and *"this biome does not
+ * grant it"* are facts about the RUN, so they are refused there and not here.
+ *
+ * @param {*} value the raw string
+ * @param {object} [o]
+ * @param {string} [o.what] what one entry IS, in the refusal sentences
+ * @param {function|null} [o.member] `(text) => boolean`, or `null` for
+ *   "any non-empty name is well formed" — see the paragraph above
+ * @param {function} [o.vocabulary] `() => string`, the sentence that names the
+ *   vocabulary when `member` says no
  */
-export function parseRequireList(value) {
+export function parseRequireList(value, {
+    what = 'area-graph symbol',
+    member = (text) => symbolIndex(text) !== null,
+    vocabulary = () => 'The symbols are `K0`, `K1`, … in the graph\'s own creation order, '
+        + `and a key count of N declares exactly [${symbolsForKeys(3).join(', ')}, …] up to K{N-1}.`,
+} = {}) {
     const raw = String(value ?? '').trim();
     if (raw === '') {
         fail('areaSpec: an EMPTY `require` list. A run with no directive is spelled by '
@@ -306,10 +339,8 @@ export function parseRequireList(value) {
             fail(`areaSpec: the require list ${JSON.stringify(raw)} carries an EMPTY entry. `
                 + 'Entries are area-graph symbols separated by `,` — `K0,K1`.');
         }
-        if (symbolIndex(text) === null) {
-            fail(`areaSpec: ${JSON.stringify(text)} is not an area-graph symbol. The symbols `
-                + 'are `K0`, `K1`, … in the graph\'s own creation order, and a key count of N '
-                + `declares exactly [${symbolsForKeys(3).join(', ')}, …] up to K{N-1}.`);
+        if (member && !member(text)) {
+            fail(`areaSpec: ${JSON.stringify(text)} is not an ${what}. ${vocabulary()}`);
         }
         if (out.includes(text)) {
             fail(`areaSpec: the require list ${JSON.stringify(raw)} names "${text}" TWICE. `

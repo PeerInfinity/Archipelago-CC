@@ -79,7 +79,8 @@ const {
 } = await M('watchGenerate.js');
 const { restrictPalette } = await M('procgenPalette.js');
 const {
-    NONE: ELEMENTS_NONE, formatElementSpec, isElementList, parseElementSpec,
+    ITEMS_ELEMENTS_NEED, NONE: ELEMENTS_NONE, formatElementSpec, isElementList,
+    parseElementSpec, parseItemRequireList,
 } = await CORE('elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -172,6 +173,28 @@ const ELEMENTS = ELEMENTS_ARG === '' ? undefined : parseElementSpec(ELEMENTS_ARG
  * GRAPH still shows its carved level*).
  */
 const AREAS = parseAreaSpec(arg('areas', '0'));
+
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 4d — **`--require=hasSword`, THE
+ * RULE-DIRECTED RUN** (⚖ design §3.5's family J′; the maze CLI's `--require=K0`
+ * one substrate over, and the same grammar — `areaSpec.parseRequireList` with
+ * the ITEM vocabulary).
+ *
+ * ⛔ IT NAMES AN ITEM, NEVER AN ELEMENT. The element is DERIVED from the
+ * catalogue's `needs` (today `killgate`), so a second sword-gated element is a
+ * row in `ELEMENT_TABLE` and nothing else.
+ *
+ * ⚠ AND IT MOVES THE ROOM AT THE SAME SEED. The biome DEFAULT is a `+` list
+ * that spends one `pick`; a FORCED head is a BARE head and spends none, so
+ * `--require=hasSword` and the bare default draw different streams even when
+ * the default happens to land `killgate`. The identity line names the spec the
+ * run actually used, which is where a reader sees it.
+ *
+ * ⛔ A DIRECTIVE THAT CANNOT BE MET IS A REFUSED RUN — exit 6, the level still
+ * printed (arc 1's rule), the reason NAMED.
+ */
+const REQUIRE_ARG = arg('require', '');
+const REQUIRE = REQUIRE_ARG === '' ? undefined : parseItemRequireList(REQUIRE_ARG);
 
 /**
  * ⛓ WHAT EACH ELEMENT'S LIFTED CLAIM ACTUALLY CLAIMS — the discriminating
@@ -326,6 +349,14 @@ if (DIRECTED && AREAS.keys > 0) {
         + 'not hold.\n');
     process.exit(2);
 }
+if (DIRECTED && REQUIRE !== undefined) {
+    process.stderr.write('generate-seedling-level: --require= and --directed= do not compose. '
+        + 'A directive is a property of the WHOLE RUN and it FORCES the element head before '
+        + 'the model exists; the directed path is `watchGenerate.generateWithDirectives` (the '
+        + `page's), which builds its own model. The items some element needs are `
+        + `[${ITEMS_ELEMENTS_NEED.join(', ')}].\n`);
+    process.exit(2);
+}
 if (DIRECTED && ELEMENTS !== undefined
     && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
     process.stderr.write('generate-seedling-level: --elements= and --directed= do not compose '
@@ -349,6 +380,7 @@ try {
             seed: SEED, palette: PALETTE, bounds, budget: BUDGET, skeleton: SKELETON,
             areas: AREAS,
             elements: ELEMENTS,
+            require: REQUIRE,
         });
 } catch (e) {
     /**
@@ -446,6 +478,25 @@ if (has('json')) {
      * one substrate over. ⛔ Printed only when the graph was ASKED for, so a run
      * without `--areas=` says nothing new.
      */
+    /**
+     * ⛓⛓ THE DIRECTIVE'S OWN LINE (arc 3, slice 4d) — the maze CLI's `requires:`
+     * block, one substrate over. ⛔ Printed only when a directive was ASKED for,
+     * so a run without `--require=` says nothing new, and it names the GRADE
+     * rather than a bare met/not: STRONG and BOUND-DEPENDENT are both "met" and
+     * a reader picking a demo seed wants to know which.
+     */
+    if (s?.require) {
+        const r = s.require;
+        say(`requires: ${[].concat(r.asked).join(', ')} — `
+            + `${r.met ? 'MET' : 'NOT MET'} via the ${[].concat(r.element).join('/')} element `
+            + `(${r.forced ? 'head FORCED by the directive, no draw spent' : 'as asked'}; `
+            + `spec ${r.spec})`
+            + (r.met
+                ? `; grade ${[].concat(r.grade).join(', ')} — WITH the item ${r.with.ticks} `
+                    + `tick(s) SOLVED, WITHOUT it `
+                    + `${[].concat(r.without).map((w) => w?.verdict ?? 'n/a').join(', ')}`
+                : `; ⛔ ${r.refused.reason}`));
+    }
     if (AREAS.keys > 0) {
         const a = s?.areas;
         say(`areas:  ${formatAreaSpec(AREAS)} — ${a?.partition?.areaCount ?? 0} area(s) `
@@ -662,6 +713,23 @@ note(`[timing, stderr only] ${elapsedMs} ms for ${out.trace.length} solve(s); `
  * level the solver could not walk, and it ships without the graph — so a caller
  * that reads only the exit code is told the same thing either way.
  */
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 4d — **A DIRECTIVE THAT WAS NOT MET IS A
+ * REFUSED RUN**, exit 6 (the maze CLI's own code for exactly this, and the one
+ * the area graph took one slice earlier). The payload and the LEVEL are still
+ * printed: arc 1's rule is that a refused directive shows what the run
+ * produced, LABELLED, and the evidence for the refusal is in it.
+ *
+ * ⛔ THE CHECK RUNS BEFORE THE AREA GRAPH'S so a run that asked for both and
+ * failed the DIRECTIVE says so — the two exit with the same code and the
+ * stderr line is what distinguishes them.
+ */
+const REQ = out.summary?.require ?? null;
+if (REQ && !REQ.met) {
+    note(`generate-seedling-level: ⛔ REQUIRE REFUSED — ${REQ.refused.reason}: `
+        + `${REQ.refused.detail}`);
+    process.exit(6);
+}
 if (AREAS.keys > 0 && !(out.summary?.areas?.ran && out.summary.areas.certified)) {
     const a = out.summary?.areas;
     note(`generate-seedling-level: ⛔ AREAS REFUSED — ${a?.refused

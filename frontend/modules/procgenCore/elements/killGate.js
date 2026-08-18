@@ -56,7 +56,7 @@
 
 import { defineElement } from '../elements.js';
 import {
-    DOOR_GOAL_MIN, NB4, cellKey, doorCandidates, floorNeighboursAfter, growWall,
+    DOOR_GOAL_MIN, NB4, bodyRegion, cellKey, doorCandidates, floorNeighboursAfter, growWall,
     inInterior, tilesFor, writesOf,
 } from './roomDoor.js';
 
@@ -153,7 +153,17 @@ export function buildKillGate(room, { preferOpen = POCKET_PREFERS_OPEN } = {}) {
         const why = room.doorLaw({ paint: tiles,
             doorCells: [cand.cell], clearer: [pocket.cell] });
         if (why) { seen.add('wall-does-not-seal'); continue; }
-        ok.push(Object.freeze({ cand, wall: Object.freeze(wall), pocket, tiles }));
+        /**
+         * ⛓⛓⛓ **THE DEMAND'S GEOMETRY — WHERE THE BODY CAN BE** (slice 4d, D3).
+         * The flood from the pocket, over the room this element has just
+         * written, with the DOOR CELL SHUT: while the body lives the lock is
+         * closed and is `Solid`, so the body is confined to the start side BY
+         * CONSTRUCTION — the same fact clause 2 of the door law asserts about
+         * the player's reach.
+         */
+        const body = bodyRegion(room, pocket.cell,
+            { writes: writesOf(tiles), walled: [cand.cell] });
+        ok.push(Object.freeze({ cand, wall: Object.freeze(wall), pocket, tiles, body }));
     }
     if (ok.length === 0) {
         const reason = deepest(seen);
@@ -166,6 +176,31 @@ export function buildKillGate(room, { preferOpen = POCKET_PREFERS_OPEN } = {}) {
                 + 'not sealed by one line. The law decides that, not the geometry.' } };
     }
     return { candidates: Object.freeze(ok) };
+}
+
+/**
+ * The demand rows for one candidate — see `placementOf`'s `demand` docblock for
+ * what they claim. ⛔ Sorted by cell so the placement is a function of the room
+ * and not of a `Set`'s insertion order, which a flood's stack order would make
+ * it (two rooms that differ only in walk order would ship different `demand`
+ * arrays and the payload would move for nothing).
+ */
+function demandOf(pick) {
+    const mine = new Set([
+        cellKey(pick.cand.cell.x, pick.cand.cell.y),
+        cellKey(pick.pocket.cell.x, pick.pocket.cell.y),
+        ...pick.tiles.map((t) => cellKey(t.x, t.y)),
+    ]);
+    const rows = [];
+    for (const [set, must] of [[pick.body.region, 'floor'], [pick.body.boundary, 'wall']]) {
+        for (const k of set) {
+            if (mine.has(k)) continue;
+            const [x, y] = k.split(',').map(Number);
+            rows.push({ x, y, must });
+        }
+    }
+    rows.sort((a, b) => (a.y - b.y) || (a.x - b.x) || a.must.localeCompare(b.must));
+    return Object.freeze(rows.map((r) => Object.freeze(r)));
 }
 
 /** One chosen candidate → the contract's placement. Absolute cells throughout. */
@@ -183,7 +218,49 @@ function placementOf(pick, count) {
         },
         doorCells: [{ x: pick.cand.cell.x, y: pick.cand.cell.y }],
         clearer: [{ x: pick.pocket.cell.x, y: pick.pocket.cell.y }],
-        demand: [],
+        /**
+         * ⛓⛓⛓ **THE DEMAND — arc 3, slice 4d, D3(ii). MEASURED FIRST.**
+         *
+         * ⛔ THE PROBLEM IT SOLVES IS NOT HYPOTHETICAL. Over 224 (kind, arm,
+         * seed) cells, TEN kill gates placed and certified and all ten had
+         * their lock CLEARED — **eight by `sword` and TWO by `water`**. A gate
+         * whose spinner drowns in a pool pass 2 painted opens for a reason the
+         * level did not pose, and the level's own `require:['hasSword']`
+         * differential then grades the sword not required. ⇒ *"the spinner was
+         * cut down"* has to be ENSURED, not hoped for.
+         *
+         * TWO CLAUSES, and the second is what makes the first hold on the level
+         * that actually ships:
+         *
+         *  · every cell of the BODY'S REGION must be `floor` — so pass 2 may
+         *    not paint water, a pit, lava or a wall anywhere the body goes;
+         *  · every WALL cell touching that region must stay `wall` — pass 2 may
+         *    CARVE (⚖ ruling 17), and a carve on the edge would let the body
+         *    out of the region this was computed on.
+         *
+         * ⛓ THE PREDICTOR IS EXACT ON THE MEASURED CORPUS: over the ten
+         * certified gates, *lethal terrain inside the BODY'S OWN STEPPED PATH*
+         * ⟺ `cause:'water'`, 2 for 2 both ways. The REGION is a superset of
+         * that path (10 of 10, and EQUAL on all six carved kinds), so it is
+         * sound; on the open 10x10 room it is wider (32 cells against the
+         * stepped 24, median) and the price of the difference is measured: it
+         * would forbid a placement on ONE gate whose lock a sword really did
+         * open. ⛔ Published rather than tuned.
+         *
+         * ⚠ `must:'floor'` FORBIDS A WALL TOO, which is stricter than the drown
+         * mechanism needs — a `wall-segment` in the region changes the bounce
+         * and kills nothing. It is kept because `floor`/`wall` is the CONTRACT's
+         * whole vocabulary and inventing a third word for "not lethal" would
+         * make every binding decide what lethal means; the price is on the yield
+         * table with everything else.
+         *
+         * ⛔ THE ELEMENT'S OWN CELLS ARE EXCLUDED, because `assertPlacement
+         * Shape` refuses a demand on a cell the element WRITES — *"demanding
+         * one's own write is a claim that can never fail"* — and because
+         * `elementRefusalAt` already owns the door, the clearer, the wall and
+         * the carve.
+         */
+        demand: demandOf(pick),
         area: null,
         symbols: { holds: [], grants: [] },
         /** ⛓ WHAT IT COST THE ROOM, in the units the room measures: how much
@@ -196,6 +273,17 @@ function placementOf(pick, count) {
             candidates: count,
             goalDistance: pick.cand.goalDistance,
         },
+        /**
+         * ⛔⛔ **THE DEMAND'S SIZE IS DELIBERATELY NOT IN `cost`** (arc 3, slice
+         * 4d). It belongs there by meaning — it IS what this element costs the
+         * room — and putting it there would move the `elements` block of EVERY
+         * payload that holds a kill gate, for a number a reader can re-derive
+         * from the level and the geometry (`demand.length`, or `roomDoor
+         * .bodyRegion` run again). Arc 1's payload rule is that a payload
+         * carries what cannot be re-derived; the byte-inertness of every
+         * committed kill-gate row is worth more than a convenience field, and
+         * the instruments read the MODEL rather than the payload.
+         */
     };
 }
 
