@@ -7704,6 +7704,12 @@ stack rows, the chest differential, and the V2 close).
 
 ## The procgen PoC arc — the Cloudberry loop, in the editor (CLOSED 2026-08-12)
 
+> ⚠ **HISTORICAL (2026-08-18)** — this § describes the generator as it stood at the PoC arc's close. Its PALETTE
+> is no longer the shipped one (the `arrow-lane` family was retired by ⚖ design ruling 9 in arc 3 slice 1, and all
+> three door TEMPLATES — `wall-gap-block`, `wall-gap-lock-weigh`, `wall-gap-spinner-killlock` — retired in arc 3
+> slice 4c into pass-1 ELEMENTS), and pass 1 no longer exists only as "the room". The current shape is
+> § *The procgen ELEMENTS design* below. ⛔ Kept unrewritten: its measurements are the record of what was true.
+
 ⚖ Ruled by the user after the editor arc and BEFORE R9: a **proof of concept
 of the Cloudberry Kingdom algorithm** (source: the interview in
 `NewDocs/plans/procedural-platformer/`), built in `watch.html`, limited to the
@@ -7739,6 +7745,11 @@ Cloudberry needs. Real search becomes interesting with the full goal queue,
 which v1 does not have (collect-placement is its only goal).
 
 ### The palette, and what it EXCLUDES by measurement
+
+> ⚠ **HISTORICAL (2026-08-18)** — the roster named here is the PoC arc's. Today the pass-2 roster is **23/23
+> instantiations over three DECORATION families** (wall · water · pit, all `site:'chamber'`) and the two biome
+> palettes differ only in `items`; the `avoidable arrow lane`, `shove`, `weigh` and `kill` families all left, the
+> last three becoming pass-1 elements. See *Arc 3, slice 1* and *Arc 3, slice 4c* below.
 
 Six families / nine templates in the **pre-sword** biome — wall · water · pit ·
 avoidable arrow lane · `shove` (a pushable in a wall gap) · `weigh` (a block
@@ -7860,6 +7871,11 @@ answered one by one with their evidence**.
 ---
 
 ## The switch arc — the page stops reloading itself (TOOLING; user-directed, 2026-08-12)
+
+> ⚠ **HISTORICAL for the GENERATOR (2026-08-18)** — the arc's own subject (the page's teardown, its overlays and
+> the ceremony text) is current; the TEMPLATES several of its findings are stated about are not. The three door
+> templates retired in arc 3 slice 4c and their group/tag defects are now the ELEMENT bindings' to get right —
+> see § *The procgen ELEMENTS design* → *Arc 3, slices 3, 4a, 4b*.
 
 A user-directed follow-on to the editor and PoC arcs, in four slices. It built
 no game behaviour and no claim. The ask was one sentence — *keep the level data
@@ -8379,6 +8395,10 @@ never reached me" are the same sentence.
 
 ### Every generated switch opened every generated door (2026-08-13)
 
+> ⚠ **HISTORICAL (2026-08-18)** — `wall-gap-lock-weigh-h`/`-v` no longer exist (arc 3 slice 4c). The FIX's rule
+> survived them and is now the elements' law: a placement's groups come from `placementGroupId` at its own anchor
+> cells, two per guard placement, and a collision THROWS. See *Arc 3, slice 3* below.
+
 ⚖ The user's report, in their words: *"when the generator generates two
 different pairs of switches and switch-opened doors, both of the switches open
 both of the doors. Each switch should only affect its own door."*
@@ -8719,6 +8739,12 @@ data as a test case is what falsified it. See also §9.3 of that plan.
 
 ## The GENERATE-mode UI arc — the catalogue, parameterized templates, and the directed attempt (TOOLING; CLOSED 2026-08-15)
 
+> ⚠ **MIXED (2026-08-18)** — *The URL parameters, whole and current*, *arc 3, slice 5b*, *⚖ What a URL is FOR* and
+> *The standing laws* are kept CURRENT and were last updated by arc 3 slices 5a/5b. Everything else in this § is
+> the arc's own close and describes a roster and a keep-policy that have since changed: the three door templates
+> retired (arc 3 slice 4c), `PREFER_DISCHARGE` is OFF on Seedling and the `<d|s>` URL letter is gone. Current
+> shape: § *The procgen ELEMENTS design*.
+
 ⚖ Ruled by the user on 2026-08-14, after the procgen PoC arc and BEFORE the
 constructive mode: `watch.html`'s GENERATE arm grows from *"run the loop over
 the whole palette"* into **a catalogue of generatable things** — *"a list of
@@ -8870,9 +8896,13 @@ construction — it names the LADDER alone; the PAYLOAD is"*.
 - ⛔ **ONE DISCHARGE TEST.** `procgenPalette`'s `CLEARER_STRATEGY` / `verbOf` /
   `dischargesVerb`, which the batch, both sweeps and the page all ask.
 - ⛔ **ONE ADJUDICATION OF LEGALITY.** `seedlingModel.refusalAt`; `legalAt` and
-  `isFree` are derived from it. The rule ORDER (footprint ∪ clearance → lane →
-  door) is load-bearing: `doorClear` refuses by THROWING north-west of the
-  start, so the footprint walk must reject the border ring first.
+  `isFree` are derived from it. ⛓ **The rule ORDER is now footprint ∪ clearance
+  → CARVE → SEAL → DOOR** (arc 3 slice 2): `laneClear` left with `arrow-lane`
+  and `doorClear` was replaced by the one flood-based DOOR LAW. The order stays
+  load-bearing for the same reason it always was — the footprint walk is what
+  rejects the border ring, and every rule after it assumes an in-bounds
+  record — plus one new one: the SEAL check's answer IS the door law's open
+  half, so the law runs one flood rather than two.
 - ⛔ **THE PAGE NEVER WRITES `fixtures/`.** A generated or directed level lives
   in the tab, the save box and the Download button.
 - ⛔ **RAW TRUTH.** Refusals ride VERBATIM; the four attempt outcomes are never
@@ -8937,6 +8967,12 @@ together with the ARC CLOSE — §13.2 the exit criteria answered one by one, an
 ---
 
 ## The constructive-mode arc — the loop core moves out, and the maze becomes its second substrate (⛓ CLOSED 2026-08-16 @ `244e6df0a`; opened 2026-08-15)
+
+> ⚠ **HISTORICAL for the GENERATOR (2026-08-18)** — the arc's own subject (the loop core in `procgenCore/`, the
+> maze as its second substrate, `?skeleton=`, free editing, the URL diet) is current and load-bearing. Its
+> statements about what Seedling's pass 2 KEEPS are not: they were measured before ⚖ design ruling 24 made area
+> pass 1's job, before the door law, and before the door templates retired. Read the per-slice banners below and
+> then § *The procgen ELEMENTS design*.
 
 **⛓ CLOSED 2026-08-16.** Nine slices shipped (`067746b9a`..`244e6df0a`, shared
 submodule @ `917e4de`): the shared maze algorithms · the loop core in
@@ -9013,6 +9049,11 @@ produced it and the whole `?gen=` comparison runs unchanged. Panel README:
 `frontend/modules/procgenLabPanel/README.md`.
 
 ### Slice 5 — the CARVED SKELETON KINDS, and `?skeleton=`
+
+> ⚠ **HISTORICAL in one respect (2026-08-18)** — the kinds and the `?skeleton=<kind>[;k=v]` grammar are current,
+> but Seedling's five carved TREE kinds now DEFAULT to `chambers = 1` (⚖ user, 2026-08-17; arc 3 slice 4b), so an
+> old `?skeleton=winding` link builds a different room and the page writes `winding;chambers=1`. The "0 kept over
+> 24 attempts" numbers here are bare-kind numbers and were the argument FOR that default.
 
 **The second mode's first half is live in both substrates.** ⚖ Ruling 2 —
 *"reuse the maze algorithms, and keep the naming consistent"* — is now literal:
@@ -9096,6 +9137,12 @@ reproducible end to end: `generate-seedling-level.mjs --seed=3 --count=1
 on the maze keeps doors and reverts walls. That asymmetry is slice 6's subject.
 
 ### Slice 6 — the YIELD TABLE, and the CONNECTIVITY PRE-CHECK
+
+> ⚠ **HISTORICAL (2026-08-18)** — the yield table and the pre-check are current; the RULE ORDER and the door
+> families this § names are not. `laneClear` left with `arrow-lane` (arc 3 slice 1) and `doorClear` was replaced
+> by ONE flood-based DOOR LAW (arc 3 slice 2); the order is now footprint/clearance → CARVE → SEAL → DOOR. The
+> cost headline ("every expensive Seedling solve is an `arrow-lane` REVERT, 77.8 s") is the measurement that
+> retired the template — it no longer describes a shipped roster.
 
 **The instrument first.** `scripts/procgen/sweep-yield-table.mjs` is the arc's
 one yield instrument, for both substrates
@@ -9223,6 +9270,12 @@ skipped-seed table already treats an aborting seed as visible-and-not-chosen, an
 neither seed is a batch member.
 
 ### Slice 7 — CHAMBERS, and the KIND PARAMETERS
+
+> ⚠ **HISTORICAL (2026-08-18)** — the `chambers`/`minRoom`/`prune` knobs are current. The statements that **doors
+> do NOT arrive with chambers** and that `wall-gap-block`/`wall-gap-lock-weigh` stay **0 KEPT on every carved
+> kind** were TRUE of the templates and are the measurements that retired them: doors arrive now as pass-1
+> ELEMENTS (guard certified 32/34, block pocket 36/36, kill gate 6/28 post-sword). "0 KEPT is slice 8's subject"
+> was answered by arc 3 slices 3 / S1 / 4a / 4c instead — see § *The procgen ELEMENTS design*.
 
 The carve side gains its first **knobs**, declared per kind on the table in
 `procgenCore/skeletonKinds.js` in the SAME `[{key, domain, default, why}]` schema
@@ -9411,7 +9464,9 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC, slice 4b lifted the AREA PARTITION into `procgenCore/` and bound the AREA GRAPH to Seedling with a `chambers=1` default on the carved kinds, and slice 4d made the generator RULE-DIRECTED — `--require=hasSword`, with a kill gate that now DEMANDS its body's region stay survivable**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; **ARCS 1, 2 AND 3 ARE CLOSED** — arcs 1–2 on the maze, see [`maze.md`](./maze.md); **arc 3 = Seedling, CLOSED 2026-08-18 over fourteen slices**, and *⛓⛓⛓ ARC 3 IS CLOSED* at the end of this § is its summary; arc 4 = THE CHAIN, ⛔ ask-first; arc 5 = shortcuts / density / arenas)
+
+⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [Demonstrations — a catalogue](./demos.md) has a URL for every piece of this that can be shown in a browser (13 entries, all loaded by `scripts/procgen/check-procgen-demos.mjs`); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -10041,3 +10096,149 @@ acceptance batch and every committed R8 tape are UNCHANGED (534 / 0 / 67). Three
 dump rows moved and each is a post-sword level that held a certified kill gate —
 `empty` seeds 29 and 38, `winding` seed 9. Full record in the arc-3 kickoff §15.
 
+
+### Arc 3, slices 5a and 5b — the PAGE: the three parameters, the LEDGER, the step-through, the overlays, and the DEMO CATALOGUE (2026-08-18)
+
+The two slices that made the arc's work *visible*. As-builts: arc-3 kickoff §16
+and §17. Their page-facing halves are recorded above, with the parameters they
+added, in *The URL parameters, whole and current* and *arc 3, slice 5b — the DEMO
+CATALOGUE, and the four intermediate results*; what a reader of **this** § needs:
+
+- **`?elements=` / `?areas=` / `?require=` REACH THE MODEL** (5a), each through
+  the ONE reader/writer in `procgenCore/urlParams.js`, value-claimed page against
+  node. ⛔ **ABSENT ≠ `none` on Seedling** — absent is *nobody said* and reaches
+  the biome default, so the writer SPELLS `none`. ⛓ Two `procgenCore` defects the
+  rows found: `readRequire` **and** `writeRequireParam` were validating against
+  the MAZE's area-graph vocabulary, so `?require=hasSword` refused by name; both
+  now take a `grammar` (*a codec argument added for one channel is a defect in
+  every channel that did not get it*).
+- **THE GENERATION LEDGER** (5a), `model.ledger` in
+  `seedlingDemo/procgenLedger.js`: one row per phase, appended **by** the phase,
+  each carrying its own sentence, its tiles/entities delta, its draw span and its
+  refusal by name. ⛔ BYTE-INERT on three separate claims — a counting SPY over
+  336 pairs / 0 moved, zero payload mentions, every committed identity unchanged.
+  Its cost was measured against its OWN control in ONE process (a cross-tree ratio
+  measures the machine, and said 0.94×): **1.078×** at 5a, and after 5b's floods
+  a RANGE rather than a point — median **1.048× → 1.129×**, worst observed
+  **1.190×** against the 1.25× gate, n = 5 on both builds.
+- **THE PHASE LADDER** (5a): phase *k* is everything up to and including ledger
+  row *k*, rebuilt from the row DELTAS by `foldLedger` and handed to the EXISTING
+  renderer. ⛔ Nothing is re-run and the renderer is not changed. At the last
+  pass-1 row the label hands over to the existing pass-2 STEP.
+- ⚖⚖ **THE USER'S RULING OF 2026-08-18 IS THE SHAPE OF THE WHOLE THING**:
+  *"only display the visual representation when the corresponding TEXT
+  DESCRIPTION is selected"*. So every intermediate result is a uniform
+  **PAINTABLE** (`{id, label, kind, cells, pick, hue}`) in its ledger row's
+  `data`, ONE generic painter draws them, and the phase readout's fact LINES are
+  the control. Three cumulative sibling overlays (`seedlingDemo/watchGenOverlay.js`,
+  an `afterDraw` callback — `makeRenderer.draw` and `OVERLAY_LAYERS` untouched), a
+  legend, ZERO `fillText`, and a DROPPED element draws nothing.
+- ⛓⛓⛓ **AND THAT RULING IS WHY 5b COST NO PAGE CODE AT ALL.** 5b carried four
+  more intermediate results — the door law's two floods, the level-*n* floods and
+  the goal's vestibule, the on-connector candidate funnel, the certification
+  solve's route — and `watchViewer.js`/`watchGenOverlay.js` were **not touched**:
+  they reached the screen as selectable lines because the painter is generic.
+  That is the measurable return on the ruling.
+- **THE DEMO CATALOGUE** (5b) — [`docs/json/developer/procgen/demos.md`](./demos.md),
+  TRACKED, **13 entries** over both lab pages, each with its page, the URL the
+  page's own writer spells, the CLI command, which phase to step to, which fact
+  lines to tick, which overlay layer, how to run it, what is happening, and the
+  ONE claim it asserts. `scripts/procgen/check-procgen-demos.mjs` PARSES the
+  document and loads every URL in it — **54 claims / 0 fail** — so an entry cannot
+  rot quietly, and a query string in the file that no entry declares is a FAILURE
+  rather than a skip.
+
+#### The ledger's phases and paintables, as of the arc's close
+
+⛔ This supersedes arc-3 kickoff §16.5's table, which was written before 5b and
+is one row short: **a REFUSING realisation now writes a row** (three exits — the
+doorstep refusal, the door-law refusal and the level-flood mismatch — each
+carrying the refusal by name, and the mismatch carrying the level flood that
+disagreed). Sizes are for a 10×10 room.
+
+| phase | paintables (`id`, typical size) |
+|---|---|
+| `goal` | `goal-candidates` (58 on the open room; pick = the goal) |
+| `element-head` | *(none — a head draw has no cells)* |
+| `pre-carve` | `site-candidates` (3 at `len=2`; pick = the site taken) · `site-picked` (16 = 4×4) |
+| `carve` | *(none — the carve's result IS the row's tiles delta)* |
+| `on-connector` | `main-path` (10) · `door-cell` (1, pick) · `clearer` (0–1) · `demand-region` (15 on the kill gate) · **5b:** `door-candidates-offered` (8) ⊇ `door-candidates-tried` (7) ⊇ `door-candidates-legal` (6) |
+| `composite` (pre-carve) | `tunnel` (0–6) · `reserved-rect` (36 = 6×6) · `flag-and-lock` (2, pick = the flag) · **5b:** `flag-lock-flood-start` / `flag-lock-flood-goal` · `carve-mouth` |
+| `composite` (on-connector) | `owned` (9) · `pocket` (0–1) · `demand-region` (15) · **5b:** `door-flood-start` (16) · `door-flood-goal` (40) |
+| `partition` | one `area-<id>` per area, 1–40 cells (outline when SYNTHETIC) |
+| `graph` | *(none — the graph is over AREAS, not cells)* |
+| `realisation` | `area-locks` (7 on the accepting subject) · `area-flags` (1) · **5b:** `goal-vestibule` (7) · one `level-<n>-reach` per key level (19 / 42) · on the doorstep refusal, `goal-doorstep` with the offending lock as the pick |
+| `certification` | **5b:** `certification-route` (10, drawn ONLY when the solve HELD) |
+| `area-certification` | *(none)* |
+
+⛔ **THE FLOODS ARE ON THE PHASE THAT ASKS THE LAW OF THE COMMITTED PLACEMENT**,
+which is `composite`, not the `on-connector` row that runs before the pick — the
+ledger is what settled that. ⛔ **The route's GAPS are counted and named, never
+bridged**: the trace merge lets a substantive decision outrank a `walk` on a
+shared tick, so a stance walk's corridor is missing and the route jumps; a
+straight line between two ends the solver never walked would be the picture
+inventing a route (R9's, under an attributed licence). ⛔ **One paintable is
+computed rather than carried and the code says so**: the guard's
+`flag-lock-flood-*`, because `flagLockCellFor` adjudicates with an early-exit
+`connected` that builds no set. ⛔ **The fifth intermediate result is
+deliberately NOT here**: pass-2's per-anchor refusals stay `out.trace`, and the
+ledger does not duplicate the pass-2 half.
+
+### ⛓⛓⛓ ARC 3 IS CLOSED (2026-08-18)
+
+Fourteen slices — 1 · 2 · 2b · 2c · 2d · 3 · S1 · 4a · 4c · 4b · 4d · 5a · 5b ·
+5c — over `4e0ac0690`..`main`. §7's eight acceptance gates are answered one by
+one in arc-3 kickoff **§18**, which also carries the arc's whole RESIDUE in one
+deduplicated list (for R9, for arc 4, for arc 5 and for the user). ⚠ NewDocs is
+gitignored; this § is the tracked record.
+
+**What the Seedling generator IS now**, in one paragraph. Pass 1 draws the GOAL
+at Manhattan ≥ 3 from the start, then an ELEMENT head from the biome default
+spec (`guard;len=2+blockpocket`, `+killgate` post-sword — a `+` list is a
+CHOICE), builds any `pre-carve` element, runs THE CARVE (the five carved tree
+kinds defaulting to `chambers = 1`), builds any `on-connector` element against a
+read-only room probe, optionally partitions the room into AREAS and realises an
+area GRAPH (locks on every boundary cell, the goal in a radius-2 vestibule),
+composites, and CERTIFIES the result with the substrate's own solver — a failure
+is a graded refusal by name and the element is DROPPED, never shipped
+uncertified. Pass 2 is the same keep-or-revert loop it always was, now
+site-typed, with a door = CUT law and bounded carving, over a roster that is
+**23/23 instantiations across three DECORATION families**. The whole
+construction is recorded in a byte-inert LEDGER the lab page steps through, and
+every demonstrable piece of it has a URL in [`demos.md`](./demos.md).
+
+**The numbers that define it** (each stated where it was measured, above):
+guard certified **32/34** · block pocket **36/36** · kill gate **6/28**
+post-sword, and **17/17** of its certified clears caused by `sword` after the
+demand (2 of 10 were `water` before) · killgate census **90/120**, block pocket
+**76/120**, guard **21/360** · pass-2 roster **41/45 → 23/23** · `chambers=1`
+kept **4 → 102** (pre) / **4 → 105** (post) of 120 · `--areas=1` accepts on
+**0–4 of 12** seeds per kind, tag budget **2 per key**, worst case 8 of 30 ·
+door law vs the retired span predicate, **0 disagreements** over 40 seeds × 20
+instantiations · the maze's own symbols **148 cuts / 148** · ledger cost median
+**1.048× → 1.129×**, worst **1.190×** · demo catalogue **13 entries, 54/0**.
+
+**What did NOT move, at every slice**: the R8 battery md5
+(`1fedb0ab35b7cd74accecf0345bdc893`, exit 1), the maze byte-identity dump, and
+every committed R8 tape (`534 PASS / 0 FAIL / 67 SKIP`, zero moved) — through
+fourteen slices including a SOLVER slice. ⛔ The oracle's catch was never
+widened; every named widening is one class with its own code
+(`HAMMER_SAFETY`, `STRIKE_BOUND_EXHAUSTED`).
+
+**What is NOT fixed, and is named rather than smoothed**: the DROWN /
+armed-hazard engine class (`drownTimer` never resets off-hazard and the planner
+treats an armed hazard as forbidden floor) — the kill gate's demand took 7
+aborts to 0 by moving which cell meets it, not by fixing it, and 1 abort in 160
+survives under the shipped default · the kill gate's 22 refusals, one
+pre-existing solver class, so **6/28 is the number to beat** · the trace MERGE
+eating a stance walk's corridor · the maze's pass-2 `door-key`, still not
+cut-checked. All of them, with their §§, are in arc-3 kickoff §18's residue list.
+
+**Next**: ⛔ **arc 4 is THE CHAIN — a bent push path on Seedling — and it stays
+ASK-FIRST** (⚖ design ruling 17 / arc-3 ruling 1). `turns > 0` refuses
+`the-chain-is-arc-4` by name today and spends no draw, which is the seam it will
+land in. **Arc 5** is shortcuts / density / arenas, and it already owns four
+named items: the room-aware SITE PICK (which is what recovers the guard's
+29 → 21), ELEMENTS-as-area / density / arenas (the area COUNT on a 10×10 room is
+the ceiling on everything the area graph can accept), the differential's
+SHORTENS grade, and an EXACT (stepped) demand for a moving body.

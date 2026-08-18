@@ -80,8 +80,29 @@ no world ever holds a door whose key was never placed).
 ⛔ What palette v1 is **not** yet: it does not check that a door is a **cut
 vertex** — `placeGateAndKey` does that, and generalising it is a later slice. A
 door the walk can simply walk around is a kept candidate that happens to be
-decoration, which the arc's yield table measures rather than assumes. There are
-no hazards and no pushable blocks yet — those are later slices of the same arc.
+decoration, which the arc's yield table measures rather than assumes.
+
+⚠ **Updated 2026-08-18 (procgen ELEMENTS arcs 1–3).** Two halves of that
+paragraph have moved and one has not:
+
+- **Pushable blocks and hazards ARRIVED** — arc 2 gave the engine
+  `blocks`/`buttons`/`buttonLib` and the BFS a `(player, blocks, inventory)`
+  state, and arc 2's element realises the reverse-pull gadget on the maze. See
+  *Blocks, buttons and the flag switch* and *The first element* below.
+- **The CUT-VERTEX rule EXISTS, and on the maze it is the AREA GRAPH's rather
+  than the palette's**: every symbol the graph realises is a lock on every
+  boundary cell of an area at key level ≥ 1, which is a cut **by construction
+  and measured — 148 symbols, 148 cuts, 0 non-cuts** (§ *The area graph*).
+- ⛔ **`door-key` ITSELF IS STILL NOT CUT-CHECKED, and that is a live residue.**
+  The one flood-based **door law** (*with the door cells walled the goal is
+  unreachable from the start, and every clearer cell is still reachable*) was
+  built for Seedling in arc 3 slice 2 and is substrate-neutral, but nothing
+  binds it on the maze's pass-2 palette. So a `door-key` the walk goes round is
+  still a kept candidate that happens to be decoration. The two candidate fixes
+  — bind `doorLawRefusal` here, or retire `door-key` in favour of `--areas=` —
+  are named in the generation review (2026-08-17, §3 row 7) and neither is
+  measured. See [Seedling Real-Game Bot](./seedling-bot.md) § *The procgen
+  ELEMENTS design* → *Arc 3, slice 2* for the law as built.
 
 ### The connectivity pre-check (constructive-mode slice 6)
 
@@ -261,7 +282,19 @@ An **element** (`procgenCore/elements.js`) is a template that exists **before**
 the carve: it is constructed in absolute coordinates inside a rectangle the
 binding offers, writes its own floor *and* wall, declares the **ports** a
 connector may attach to, the cells outside itself it needs kept (`demand`), and
-the **area** it is. The first one is the **reverse-pull block gadget**
+the **area** it is.
+
+⚠ **Updated 2026-08-18 — that description is the `pre-carve` PHASE, which is now
+one of two.** Arc 3 slice 4a gave `defineElement` a `phase` field, default
+`pre-carve` (the paragraph above, unchanged byte for byte). An **`on-connector`**
+element is constructed *after* the carve, is handed a read-only `room` probe
+(`floorAt`, `mainPath`, `isCut`, `connectedWith` and the binding's own
+`doorLaw`), and **writes SPARSELY**: its `tiles` may be empty, an entity may
+stand on a cell the skeleton already floored, it declares **no ports** and
+`area: null` — *a door does not MAKE an area, it CUTS one*. Both phases ship on
+Seedling (the kill gate and the block pocket); the maze binds only `pre-carve`
+today. See [Seedling Real-Game Bot](./seedling-bot.md) § *The procgen ELEMENTS
+design* → *Arc 3, slice 4a*. The first one is the **reverse-pull block gadget**
 (`procgenCore/elements/reversePullBlock.js`): a block put on its button and
 pulled backwards `len` steps with `turns` direction changes, carving the block's
 cells, every stance cell, a corner cell at each turn and a bypass cell round the
@@ -641,9 +674,16 @@ state rather than something to tune away.
 
 ### What is not here yet
 
-- **the yield table and the connectivity pre-check**, and the **cut-vertex
-  rule** — a door the walk can walk around is a KEPT candidate that happens to
-  be decoration today.
+- ~~**the yield table and the connectivity pre-check**~~ — both LANDED
+  (constructive-mode slices 6/6b; the pre-check is in `refusalAt`, see *The
+  connectivity pre-check* above, and `scripts/procgen/sweep-yield-table.mjs` is
+  the instrument every procgen arc measures with).
+- **the cut-vertex rule ON `door-key`** — still open, and the only item of the
+  three that is. The door LAW exists (arc 3 slice 2, Seedling, substrate-neutral)
+  and the AREA GRAPH's own locks are cuts by construction (148/148), but nothing
+  asks the law of the maze's pass-2 `door-key`, so one the walk can walk around
+  is a KEPT candidate that happens to be decoration today. Named as residue in
+  the generation review (2026-08-17, §3 row 7) and unmeasured.
 - ~~**kind parameters**~~ — landed in slice 7; see *Kind parameters* above.
 
 ## The action queue (`mazeRoomQueue.js`)
