@@ -210,8 +210,37 @@ export function writeBounds(q, bounds) {
  * @param {string} o.substrate   what the refusal calls this page.
  */
 export function readSkeleton(q, { simulator = false, substrate = 'this page' } = {}) {
+    return readSkeletonTyped(q, { simulator, substrate }).spec;
+}
+
+/**
+ * ⛓⛓⛓ **THE SAME READER, PLUS THE STRING AS TYPED** — PROCGEN ELEMENTS arc 3,
+ * slice 5a (D2), ⚖ ruled by the orchestrating session on 2026-08-18: *"the
+ * reader hands the resolver the spec AS TYPED and normalisation happens in the
+ * binding."*
+ *
+ * ⛔ **IT IS ONE READER WITH ONE MORE FIELD, NOT A SECOND READER.** `q.get(
+ * 'skeleton')` happens HERE and nowhere else; `readSkeleton` is a projection of
+ * this, so the refusal, the offer list and the default are all still stated
+ * once. The maze takes the projection and is byte-identical.
+ *
+ * ⛔ **WHY THE RAW STRING IS LOAD-BEARING.** `parseSkeleton` returns
+ * `normalizeSkeleton`'s answer, which spells a value AT THE CODEC'S DEFAULT BY
+ * ABSENCE — so `winding;chambers=0` and a bare `winding` come back as the SAME
+ * object. A binding whose own default differs from the codec's (Seedling:
+ * `chambers = 1` on five carved kinds) therefore cannot tell *nobody said* from
+ * *the caller typed 0*, and 4d §15.2 measured the consequence: a typed
+ * `chambers=0` was UNSPELLABLE IN A LINK. `seedlingSkeletonSpec` already
+ * accepts a STRING as typed (4b wrote it that way for the CLI); this hands it
+ * one.
+ *
+ * @returns {{spec: object, raw: string|null}} `raw` is `null` when the
+ *   parameter is absent — which is what *nobody said* looks like, and it is a
+ *   different fact from any string.
+ */
+export function readSkeletonTyped(q, { simulator = false, substrate = 'this page' } = {}) {
     const raw = q.get('skeleton');
-    if (raw === null || raw === '') return { kind: DEFAULT_SKELETON_KIND };
+    if (raw === null || raw === '') return { spec: { kind: DEFAULT_SKELETON_KIND }, raw: null };
     /**
      * ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL. The offer list, the
      * unknown-kind sentence and every parameter refusal are
@@ -221,7 +250,7 @@ export function readSkeleton(q, { simulator = false, substrate = 'this page' } =
      * with it in front and the original text verbatim.
      */
     try {
-        return parseSkeleton(raw, { simulator, substrate });
+        return { spec: parseSkeleton(raw, { simulator, substrate }), raw };
     } catch (e) {
         fail(`urlParams: ?skeleton=${JSON.stringify(raw)} — ${e.message}`);
         return null;
@@ -232,7 +261,9 @@ export function readSkeleton(q, { simulator = false, substrate = 'this page' } =
  * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing law) —
  * so it runs the same `assertKind`, against the same offer list.
  */
-export function writeSkeletonParam(q, skeleton, { simulator = false, substrate = 'this page' } = {}) {
+export function writeSkeletonParam(q, skeleton, {
+    simulator = false, substrate = 'this page', explicit = [],
+} = {}) {
     const norm = normalizeSkeleton(skeleton ?? { kind: DEFAULT_SKELETON_KIND });
     /**
      * ⛔ IT REFUSES WHAT THE READER WOULD REFUSE — so it re-parses its own
@@ -242,9 +273,18 @@ export function writeSkeletonParam(q, skeleton, { simulator = false, substrate =
      * be written in the first place. (A kind this binding cannot run is caught
      * here too, by the same `assertKind` inside it.)
      */
-    const value = formatSkeleton(norm);
+    /**
+     * ⛓⛓ `explicit` (slice 5a, D2) — the keys this BINDING spells even at the
+     * codec's default, so a typed `chambers=0` survives the round trip. ⛔ It
+     * is the CALLER's list, passed down from the binding that owns the default;
+     * this file has no table of anybody's defaults. A caller that passes none
+     * gets the spelling this writer has always produced — which is why the maze
+     * is byte-identical (`check-maze-lab` 122/0 and the maze md5s are the gate).
+     * ⚠ `norm` is still what the DELETE-at-default question is asked of.
+     */
+    const value = formatSkeleton(skeleton ?? { kind: DEFAULT_SKELETON_KIND }, { explicit });
     parseSkeleton(value, { simulator, substrate });
-    if (value === DEFAULT_SKELETON_KIND) q.delete('skeleton');
+    if (formatSkeleton(norm) === DEFAULT_SKELETON_KIND) q.delete('skeleton');
     else q.set('skeleton', value);
     return q;
 }

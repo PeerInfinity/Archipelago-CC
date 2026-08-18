@@ -466,10 +466,36 @@ export function normalizeSkeleton(spec, { validate = true } = {}) {
  * `rooms;minRoom=2;chambers=1` — the ONE spelling, used by the URL writer, both
  * CLIs, the identity line and the sweep's row labels. A kind at all defaults
  * formats as its bare id.
+ *
+ * ── ⛓⛓⛓ `explicit` — **THE KEYS A BINDING SPELLS EVEN AT THE CODEC'S DEFAULT**
+ *
+ * PROCGEN ELEMENTS arc 3, slice 5a (D2), and it exists because a binding may
+ * have a DIFFERENT default from the codec's. Seedling's five carved tree kinds
+ * default `chambers` to **1** (`SEEDLING_PARAM_DEFAULTS`, 4b) while
+ * `CHAMBERS_PARAM.default` is **0**, so *"omitted"* means 1 on that binding and
+ * a typed 0 spells IDENTICALLY to omitted under the default-by-absence rule —
+ * ⛔ which made `?skeleton=winding;chambers=0` **unspellable in a link** (4d
+ * §15.2 measured it: the URL produced the 19-ground `chambers=1` room).
+ *
+ * ⛔ **THE LIST IS AN ARGUMENT, NEVER A TABLE IN THIS FILE.** `procgenCore` does
+ * not know Seedling's defaults and must not learn them — the page derives the
+ * list from `seedlingSkeletonSpec` itself (`seedlingExplicitSkeletonParams`) and
+ * passes it down. A caller that passes nothing gets exactly the spelling this
+ * function has always produced, which is what keeps the MAZE byte-identical
+ * (its `chambers` default is 0 on both sides, so the question does not arise).
+ *
+ * ⚠ Keys are emitted in DECLARATION order whether they are explicit or merely
+ * non-default, so one room still has exactly one spelling.
  */
-export function formatSkeleton(spec) {
+export function formatSkeleton(spec, { explicit = [] } = {}) {
     const norm = normalizeSkeleton(spec);
-    const parts = Object.entries(norm.params ?? {}).map(([k, v]) => `${k}=${v}`);
+    const full = BIOMES[norm.kind] ? resolveSkeletonParams(norm.kind, spec?.params ?? {}) : {};
+    const parts = [];
+    for (const p of paramSchemaFor(norm.kind)) {
+        const named = Object.prototype.hasOwnProperty.call(norm.params ?? {}, p.key);
+        if (!named && !explicit.includes(p.key)) continue;
+        parts.push(`${p.key}=${named ? norm.params[p.key] : full[p.key]}`);
+    }
     return parts.length === 0 ? norm.kind : `${norm.kind};${parts.join(';')}`;
 }
 

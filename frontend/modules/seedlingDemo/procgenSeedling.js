@@ -267,6 +267,30 @@ export function seedlingSkeletonSpec(input) {
 }
 
 /**
+ * ⛓⛓⛓ **THE KEYS SEEDLING SPELLS EXPLICITLY IN A LINK** — PROCGEN ELEMENTS arc
+ * 3, slice 5a (D2). ⚖ Ruled by the orchestrating session on 2026-08-18: a typed
+ * `;chambers=0` must be SPELLABLE, and the way it becomes spellable is that the
+ * page's writer names the key even at the CODEC's default.
+ *
+ * ⛔ **IT IS DERIVED FROM THE RESOLVER, NEVER A SECOND COPY OF THE RULE.**
+ * `seedlingSkeletonSpec({kind})` — the resolver, asked with no parameters — is
+ * exactly *"which keys does this binding force"*, so a sixth kind joining
+ * `SEEDLING_CHAMBERS_KINDS` (or a second forced key) reaches the URL writer
+ * without anybody editing this function. A hand-written `['chambers']` would be
+ * trap 367's shape: a constant that agrees with the rule until the day it does
+ * not.
+ *
+ * ⚠ `rooms` DECLARES `chambers` and is NOT in `SEEDLING_CHAMBERS_KINDS`, so it
+ * gets an EMPTY list and its URL spelling is unmoved — which is the difference
+ * between *the codec declares this knob* and *this binding overrides its
+ * default*.
+ */
+export function seedlingExplicitSkeletonParams(kind) {
+    if (!kind || !SEEDLING_CHAMBERS_KINDS.includes(kind)) return Object.freeze([]);
+    return Object.freeze(Object.keys(seedlingSkeletonSpec({ kind }).params ?? {}));
+}
+
+/**
  * ⛓⛓⛓ **HOW FAR AN AREA LOCK MUST STAY FROM THE GOAL, IN GRAPH STEPS** —
  * arc 3, slice 4b. ⛔ It is §10.6(c)'s rule restated for a set of cells rather
  * than for one: *a lock 4-ADJACENT to the goal breaks the COLLECT ceremony's

@@ -21,7 +21,8 @@ import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, UrlParamsError, directiveSeed,
     dropDirectedParam, formatDirectives,
     intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readRequire,
-    readRosterSpec, readSkeleton, refuseDirectedParam, stepFromParams, writeAreasParam,
+    readRosterSpec, readSkeleton, readSkeletonTyped, refuseDirectedParam, stepFromParams,
+    writeAreasParam,
     writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
     writeSkeletonParam,
 } from './urlParams.js';
@@ -520,6 +521,79 @@ describe('urlParams — ?skeleton=', () => {
             .toThrow(/not in its declared domain \[2, 3, 4\]/);
         expect(() => writeSkeletonParam(q(''), { kind: 'branchy', params: { prune: 1 } }))
             .toThrow(/"branchy" has no parameter "prune"/);
+    });
+
+    /* ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 5a (D2) — THE STRING AS TYPED ── */
+
+    /**
+     * ⛔ THE VALUES ARE LITERALS THIS FILE STATES. `readSkeletonTyped` exists
+     * because `parseSkeleton` spells a value at the CODEC's default BY ABSENCE,
+     * so a binding whose own default differs cannot tell *nobody said* from
+     * *the caller typed the codec's default* — the two-streams rule
+     * (`feedback_two_streams_for_drawn_or_typed`) at the URL boundary.
+     */
+    it('⛓ readSkeletonTyped hands back the STRING AS TYPED beside the parsed spec', () => {
+        expect(readSkeletonTyped(q(''))).toEqual({ spec: { kind: 'empty' }, raw: null });
+        expect(readSkeletonTyped(q('skeleton='))).toEqual({ spec: { kind: 'empty' }, raw: null });
+        expect(readSkeletonTyped(q('skeleton=winding')))
+            .toEqual({ spec: { kind: 'winding' }, raw: 'winding' });
+        /** ⛔ THE ROW THE WHOLE FIELD EXISTS FOR: the parsed spec has DROPPED
+         *  the typed 0 and the raw string still carries it. */
+        expect(readSkeletonTyped(q('skeleton=winding;chambers=0')))
+            .toEqual({ spec: { kind: 'winding' }, raw: 'winding;chambers=0' });
+        expect(readSkeletonTyped(q('skeleton=winding;chambers=2')))
+            .toEqual({ spec: { kind: 'winding', params: { chambers: 2 } },
+                raw: 'winding;chambers=2' });
+    });
+
+    it('⛔ readSkeleton is a PROJECTION of it — one reader of the parameter', () => {
+        for (const search of ['', 'skeleton=winding', 'skeleton=rooms;minRoom=2',
+            'skeleton=winding;chambers=0']) {
+            expect(readSkeleton(q(search))).toEqual(readSkeletonTyped(q(search)).spec);
+        }
+        /** ⛓ …including the refusal, which is still stated once. */
+        expect(() => readSkeletonTyped(q('skeleton=spiral')))
+            .toThrow(/\?skeleton="spiral"/);
+    });
+
+    /**
+     * ⛓⛓⛓ `explicit` — the keys a BINDING spells even at the codec's default.
+     * ⛔ The MAZE passes none, and this row is what says the maze's spelling did
+     * not move: every value below is the one this file already asserted before
+     * slice 5a existed.
+     */
+    it('⛓ writeSkeletonParam spells an `explicit` key at its default — and NOTHING else moves',
+        () => {
+            expect(writeSkeletonParam(q(''), { kind: 'winding' },
+                { explicit: ['chambers'] }).get('skeleton')).toBe('winding;chambers=0');
+            expect(writeSkeletonParam(q(''), { kind: 'winding', params: { chambers: 0 } },
+                { explicit: ['chambers'] }).get('skeleton')).toBe('winding;chambers=0');
+            expect(writeSkeletonParam(q(''), { kind: 'winding', params: { chambers: 2 } },
+                { explicit: ['chambers'] }).get('skeleton')).toBe('winding;chambers=2');
+            /** ⛔ WITHOUT the argument — the maze's own call — the spelling is
+             *  the pre-5a one, key for key. */
+            expect(writeSkeletonParam(q(''), { kind: 'winding' }).get('skeleton'))
+                .toBe('winding');
+            expect(writeSkeletonParam(q(''), { kind: 'rooms', params: { minRoom: 2 } })
+                .get('skeleton')).toBe('rooms;minRoom=2');
+            /** ⛔ AND THE DELETE-AT-DEFAULT QUESTION IS STILL ASKED OF THE
+             *  CANONICAL SPELLING: `empty` declares no parameters, so an
+             *  `explicit` list cannot resurrect it. */
+            expect(writeSkeletonParam(q('skeleton=winding'), { kind: 'empty' },
+                { explicit: ['chambers'] }).get('skeleton')).toBe(null);
+        });
+
+    it('⛓ the explicit spelling is a FIXED POINT — and it is asserted after the literals', () => {
+        for (const spec of [{ kind: 'winding', params: { chambers: 0 } },
+            { kind: 'winding', params: { chambers: 1 } },
+            { kind: 'bushy', params: { chambers: 0, prune: 1 } }]) {
+            const written = writeSkeletonParam(q(''), spec, { explicit: ['chambers'] });
+            const back = readSkeletonTyped(written);
+            expect(writeSkeletonParam(q(''), { kind: spec.kind, params: spec.params },
+                { explicit: ['chambers'] }).toString()).toBe(written.toString());
+            /** ⛓ …and the RAW string is what carries the typed default back. */
+            expect(back.raw).toBe(written.get('skeleton'));
+        }
     });
 });
 

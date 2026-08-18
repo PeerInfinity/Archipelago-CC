@@ -1770,10 +1770,18 @@ describe('watchGenerate — the skeleton kind', () => {
          */
         expect(generateStep(args({ skeleton: { kind: 'winding' } })).skeleton)
             .toEqual({ kind: 'winding', params: { chambers: 1 } });
-        /** ⛔ AND A TYPED 0 SURVIVES — the TWO STREAMS `seedlingSkeletonSpec`
-         *  exists to keep apart, driven from the page's own entry point. */
+        /**
+         * ⛔⛔ AND A TYPED 0 SURVIVES **ONTO THE STATE** — arc 3, slice 5a (D2).
+         * ⛓ THIS ROW MOVED BECAUSE THE FEATURE SHIPPED (trap 356), and the
+         * claim got STRONGER rather than looser: until 5a the state carried the
+         * CANONICAL spelling, in which a typed 0 is spelled BY ABSENCE and is
+         * therefore indistinguishable from an omitted `chambers` — the very
+         * collision that made `?skeleton=winding;chambers=0` unspellable in a
+         * link (4d §15.2). The state now carries the EFFECTIVE spec, so the two
+         * are different objects and the row below says so.
+         */
         expect(generateStep(args({ skeleton: { kind: 'winding', params: { chambers: 0 } } }))
-            .skeleton).toEqual({ kind: 'winding' });
+            .skeleton).toEqual({ kind: 'winding', params: { chambers: 0 } });
         /**
          * ⚠ AT THE SMALLEST BOUNDS THE LOOP TAKES, and the reason is Probe 2's
          * measurement: a candidate that SEALS a corridor makes the planner run
@@ -1801,13 +1809,27 @@ describe('watchGenerate — the skeleton kind', () => {
      */
     it('reads and writes ?skeleton= — the literal value, and ABSENCE at the default', () => {
         expect(readGenerateParams('?source=generate&seed=3').skeleton).toEqual({ kind: 'empty' });
+        /**
+         * ⛓⛓⛓ SLICE 5a (D2) — THE READER RESOLVES SEEDLING'S OWN DEFAULT, so
+         * an omitted `chambers` comes back as the 1 the room is actually carved
+         * at, and a TYPED 0 comes back as 0. ⛔ Both literals are stated here;
+         * the fixed point below is asserted only after them (trap 250).
+         */
         expect(readGenerateParams('?source=generate&skeleton=winding').skeleton)
-            .toEqual({ kind: 'winding' });
+            .toEqual({ kind: 'winding', params: { chambers: 1 } });
+        expect(readGenerateParams('?source=generate&skeleton=winding;chambers=0').skeleton)
+            .toEqual({ kind: 'winding', params: { chambers: 0 } });
         const written = writeGenerateParams('', {
             seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
-            skeleton: { kind: 'winding' },
+            skeleton: { kind: 'winding', params: { chambers: 1 } },
         });
-        expect(written).toContain('skeleton=winding');
+        expect(written).toContain('skeleton=winding%3Bchambers%3D1');
+        /** ⛔ THE TYPED 0 IS SPELLED, which is the whole of D2: before it, this
+         *  writer emitted a bare `winding` and the reader gave back 1. */
+        expect(writeGenerateParams('', {
+            seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
+            skeleton: { kind: 'winding', params: { chambers: 0 } },
+        })).toContain('skeleton=winding%3Bchambers%3D0');
         expect(writeGenerateParams('', {
             seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
         })).not.toContain('skeleton');
@@ -1857,9 +1879,15 @@ describe('watchGenerate — the skeleton kind', () => {
         const line = describeState(generateStep(args({ skeleton: { kind: 'winding' } })));
         expect(line).toMatch(/skeleton: winding;chambers=1 \(CARVED, not the open room\)/);
         expect(line).toMatch(/the SKELETON — a winding;chambers=1 CARVE and its goal/);
+        /**
+         * ⛓⛓ SLICE 5a (D2) — the line spells the typed 0 too, because the page
+         * prints what the BAR says and the bar now carries it. ⛔ A line that
+         * said `winding` beside a link saying `winding;chambers=0` would be two
+         * answers to *which room is this*.
+         */
         const zero = describeState(generateStep(args({
             skeleton: { kind: 'winding', params: { chambers: 0 } } })));
-        expect(zero).toMatch(/skeleton: winding \(CARVED, not the open room\)/);
+        expect(zero).toMatch(/skeleton: winding;chambers=0 \(CARVED, not the open room\)/);
     });
 
     it('offers the catalogue with the two simulator-bound kinds GREYED and reasoned', () => {

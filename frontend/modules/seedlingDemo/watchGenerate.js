@@ -85,7 +85,8 @@ import {
  */
 import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
-    readBounds, readRosterSpec, readSkeleton, refuseDirectedParam, writeBounds, writeInt,
+    readBounds, readRosterSpec, readSkeleton, readSkeletonTyped, refuseDirectedParam,
+    writeBounds, writeInt,
     writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
@@ -96,8 +97,8 @@ import {
     skeletonCatalogue,
 } from '../procgenCore/skeletonKinds.js';
 import {
-    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingOracle, seedlingSeam,
-    seedlingSkeletonSpec,
+    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingExplicitSkeletonParams,
+    seedlingOracle, seedlingSeam, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 /**
@@ -264,7 +265,25 @@ export function readGenerateParams(search) {
          * HERE, at read time, with the list Seedling offers — before any solve
          * and before the page draws anything.
          */
-        skeleton: readSkeleton(q, { simulator: false, substrate: 'the Seedling page' }),
+        /**
+         * ⛓⛓⛓ ARC 3 SLICE 5a (D2) — **THE STRING AS TYPED REACHES THE ONE
+         * RESOLVER**, and `readSkeletonTyped` is the same reader with one more
+         * field (⚖ orchestrator, 2026-08-18). `parseSkeleton`'s answer spells a
+         * value at the CODEC's default by ABSENCE, and Seedling's own default
+         * for `chambers` is 1 — so a page that resolved the NORMALIZED object
+         * could not tell *nobody said* from *the caller typed 0*, and 4d §15.2
+         * measured that a typed `?skeleton=winding;chambers=0` built the
+         * `chambers=1` room. ⛔ `seedlingSkeletonSpec` accepts the STRING as
+         * typed (4b wrote it that way for the CLI); this hands it one, so the
+         * URL, the CLI and the object channel now agree.
+         *
+         * ⚠ THE SPEC ON THE STATE IS THE **EFFECTIVE** ONE (`chambers` always
+         * explicit on the five carved kinds) — see `generateStep`.
+         */
+        skeleton: seedlingSkeletonSpec(
+            readSkeletonTyped(q, { simulator: false, substrate: 'the Seedling page' }).raw
+            ?? { kind: DEFAULT_SKELETON_KIND },
+        ),
         /** ⛓ The four the loop runs under — `urlParams.readBounds`, shared. */
         bounds: readBounds(q),
         /**
@@ -377,7 +396,18 @@ export function writeGenerateParams(search, {
      * spelled by absence, the same rule the whole roster follows), and refused
      * on the way OUT by the same `assertKind` the reader runs.
      */
-    writeSkeletonParam(q, skeleton, { simulator: false, substrate: 'the Seedling page' });
+    /**
+     * ⛓⛓⛓ SLICE 5a (D2) — AND IT SPELLS `chambers` EXPLICITLY on the five
+     * carved tree kinds, 0 and 1 alike. ⛔ The list is `seedlingExplicit
+     * SkeletonParams`' — DERIVED from the resolver rather than written out —
+     * and `procgenCore/urlParams.js` never learns it, which is what keeps the
+     * MAZE's own `?skeleton=` byte-identical.
+     */
+    writeSkeletonParam(q, skeleton, {
+        simulator: false,
+        substrate: 'the Seedling page',
+        explicit: seedlingExplicitSkeletonParams(skeleton?.kind),
+    });
     // ⛓ SLICE 3: the anchor-search bound is a BOUND like the other three, so it
     // rides with them in `urlParams.writeBounds` (§8.6's standing law: every new
     // control arrives WITH its parameter in the one writer). The integer refusal
@@ -495,7 +525,23 @@ export function generateStep({
          */
         params: skeleton?.params ?? {},
     });
-    const skel = normalizeSkeleton(skelEffective);
+    /**
+     * ⛓⛓⛓ SLICE 5a (D2) — **THE STATE NOW CARRIES `skelEffective`**, and `skel`
+     * (the canonical, default-by-absence spelling) survives only as what
+     * `agreementWithPayload` normalizes both sides down to.
+     *
+     * ⛔ THE REASON IS A TYPED 0. `normalizeSkeleton({kind:'winding',
+     * params:{chambers:0}})` is `{kind:'winding'}`, which `seedlingSkeletonSpec`
+     * reads back as *nobody said* and resolves to 1 — so a state, a payload or a
+     * step-k call carrying the CANONICAL spelling loses a deliberate 0 on every
+     * round trip. ⚠ It is byte-inert everywhere the 0 is not typed: on the five
+     * carved kinds the effective value is 1, which is OFF the codec's default
+     * and therefore already present in the canonical spelling, and on every
+     * other kind the two objects are identical.
+     *
+     * ⛔ `normalizeSkeleton` STILL RUNS, in `agreementWithPayload`, on BOTH
+     * sides — which is what keeps an old payload from falsely diverging.
+     */
     /**
      * ⛓ SLICE 4: THE SUB-ROSTER IS APPLIED HERE AND NOWHERE ELSE. `paletteFor`
      * chooses the biome, `restrictPalette` narrows it, and the SAME loop takes
@@ -544,8 +590,9 @@ export function generateStep({
              * them (⚖ ruling 9) — see `writeGenerateParams`.
              */
             edits: Object.freeze([]),
-            /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from. */
-            skeleton: skel,
+            /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from.
+             *  ⛓ SLICE 5a: the EFFECTIVE spelling — see above. */
+            skeleton: skelEffective,
             stop: null,
             saturated: false,
             budget: b,
@@ -557,7 +604,10 @@ export function generateStep({
         palette,
         bounds: { ...DEFAULT_BOUNDS, ...(bounds ?? {}), obstacleTarget: step },
         budget: b,
-        skeleton: skel,
+        /** ⛓ SLICE 5a (D2) — the EFFECTIVE spec, so a typed `chambers=0` reaches
+         *  the carve. `seedlingSkeletonSpec` is idempotent, so the model
+         *  re-resolving it moves nothing. */
+        skeleton: skelEffective,
     });
     return Object.freeze({
         seed,
@@ -573,7 +623,7 @@ export function generateStep({
         directives: Object.freeze([]),
         /** ⛓⛓ SLICE 11 — see the step-0 branch for why it is a list and not absent. */
         edits: Object.freeze([]),
-        skeleton: skel,
+        skeleton: skelEffective,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.
@@ -1016,6 +1066,15 @@ export function agreementWithPayload(payload, state) {
  */
 export function describeState(state, solved = null) {
     const s = state.summary;
+    /**
+     * ⛓⛓ SLICE 5a (D2) — ONE SPELLING, AND IT IS THE BAR'S. `formatSkeleton`
+     * alone drops a value at the CODEC's default, so a level built with a typed
+     * `chambers=0` would print `winding` while the address bar said
+     * `winding;chambers=0` — two answers to *which room is this*, which is the
+     * defect this line exists to prevent.
+     */
+    const spellSkeleton = (spec) => formatSkeleton(spec ?? DEFAULT_SKELETON,
+        { explicit: seedlingExplicitSkeletonParams(spec?.kind) });
     const bits = [
         /**
          * ⛓⛓ SLICE 5: THE IDENTITY LINE SAYS WHAT THE LEVEL IS — ⚖ §3.5's own
@@ -1040,8 +1099,8 @@ export function describeState(state, solved = null) {
          * is not.
          */
         `seed ${state.seed} · ${state.biome} · step ${state.step}`
-            + (state.skeleton && formatSkeleton(state.skeleton) !== DEFAULT_SKELETON_KIND
-                ? ` · skeleton: ${formatSkeleton(state.skeleton)} (CARVED, not the open room)`
+            + (state.skeleton && spellSkeleton(state.skeleton) !== DEFAULT_SKELETON_KIND
+                ? ` · skeleton: ${spellSkeleton(state.skeleton)} (CARVED, not the open room)`
                 : '')
             + ((state.directives ?? []).length
                 ? `, then ${state.directives.length} directed attempt(s)` : '')
@@ -1065,7 +1124,7 @@ export function describeState(state, solved = null) {
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`
             : `the SKELETON — ${state.skeleton?.kind === DEFAULT_SKELETON_KIND
-                ? 'the bordered room' : `a ${formatSkeleton(state.skeleton)} CARVE`} and its `
+                ? 'the bordered room' : `a ${spellSkeleton(state.skeleton)} CARVE`} and its `
                 + 'goal, before any template',
         `bounds: target=${state.bounds.obstacleTarget} tries=${state.bounds.triesPerStep} `
             + `k=${state.bounds.saturationK} `

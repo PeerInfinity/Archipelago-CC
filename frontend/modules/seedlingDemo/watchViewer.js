@@ -156,7 +156,17 @@ import {
 } from './watchGenerate.js';
 // ⛓ SLICE 7: the ONE formatter/normalizer for a skeleton spec — the identity
 // line, the URL bar and this form all spell a room the same way.
-import { formatSkeleton, normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
+import { formatSkeleton } from '../procgenCore/skeletonKinds.js';
+/**
+ * ⛓⛓ ARC 3 SLICE 5a (D2) — the ONE resolver of a Seedling skeleton spec and the
+ * ONE list of the keys this binding spells explicitly. ⛔ The form used to
+ * `normalizeSkeleton` its own read, which spells a value at the CODEC's default
+ * by ABSENCE — so the `chambers` control SHOWED 0 while the run used Seedling's
+ * own default of 1, and a typed 0 was indistinguishable from an omitted one.
+ */
+import {
+    seedlingExplicitSkeletonParams, seedlingSkeletonSpec,
+} from './procgenSeedling.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
@@ -5520,11 +5530,22 @@ async function runGenerate(params, lifetime) {
          * ⛔ The comparison is against the NORMALIZED spelling, so a form left
          * at its defaults does not read as a change on the first press.
          */
-        const nextSkeleton = normalizeSkeleton({
+        /**
+         * ⛓⛓⛓ SLICE 5a (D2) — RESOLVED, NOT NORMALIZED. The form's selects
+         * ALWAYS name every knob the kind declares, so `readSkeletonParams`
+         * hands the resolver a TYPED value for `chambers` — including a typed
+         * 0, which `normalizeSkeleton` would have spelled by absence and
+         * `seedlingSkeletonSpec` would then have re-defaulted to 1.
+         */
+        const nextSkeleton = seedlingSkeletonSpec({
             kind: nextKind, params: readSkeletonParams(nextKind),
         });
+        /** ⛓ COMPARED IN THE BAR'S OWN SPELLING, so `chambers=0` and `chambers=1`
+         *  read as the different rooms they are. */
+        const spell = (spec) => formatSkeleton(spec,
+            { explicit: seedlingExplicitSkeletonParams(spec?.kind) });
         const reset = nextSeed !== seed || nextBiome !== biome
-            || formatSkeleton(nextSkeleton) !== formatSkeleton(skeleton);
+            || spell(nextSkeleton) !== spell(skeleton);
         seed = nextSeed;
         biome = nextBiome;
         skeleton = nextSkeleton;

@@ -15,7 +15,7 @@ import { DEFAULT_SKELETON_KIND } from '../procgenCore/skeletonKinds.js';
 import { terrainAt } from './procgenLevel.js';
 import {
     SEEDLING_CHAMBERS_KINDS, SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, interiorCells,
-    seedlingModel, seedlingSkeletonSpec,
+    seedlingExplicitSkeletonParams, seedlingModel, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
 
 const CARVING = SEEDLING_SKELETON_KINDS.filter((k) => k !== DEFAULT_SKELETON_KIND);
@@ -298,6 +298,53 @@ describe('procgenSeedling — the kind parameters', () => {
         expect(typedZero.skeletonSpec).toEqual({ kind: 'winding' });
         expect(render(seedlingModel({ seed: 4, skeleton: typedZero.skeletonSpec }).skeleton()))
             .not.toBe(render(typedZero.skeleton()));
+    });
+
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 5a (D2) — **THE KEYS A LINK MUST SPELL
+     * EXPLICITLY**, and they are DERIVED from the resolver rather than listed.
+     *
+     * ⛔ THE LITERALS ARE STATED HERE, so a build whose `SEEDLING_CHAMBERS_KINDS`
+     * silently lost a member reds this row rather than quietly writing a URL
+     * that means a different room. ⚠ `rooms` DECLARES `chambers` and is NOT one
+     * of the five — the difference between *the codec declares this knob* and
+     * *this binding overrides its default*.
+     */
+    it('⛓ the EXPLICIT key list is the resolver\'s own, kind by kind', () => {
+        for (const kind of ['winding', 'branchy', 'bushy', 'loopy', 'open']) {
+            expect(seedlingExplicitSkeletonParams(kind)).toEqual(['chambers']);
+        }
+        for (const kind of ['empty', 'rooms', 'classic', 'corridor']) {
+            expect(seedlingExplicitSkeletonParams(kind)).toEqual([]);
+        }
+        expect(seedlingExplicitSkeletonParams(undefined)).toEqual([]);
+        /** ⛔ AND IT IS EXACTLY THE KEY SET THE RESOLVER FORCES — asked of the
+         *  resolver, so the two cannot drift. */
+        for (const kind of ['winding', 'rooms', 'empty', 'bushy']) {
+            expect(seedlingExplicitSkeletonParams(kind))
+                .toEqual(kind === 'rooms' || kind === 'empty'
+                    ? [] : Object.keys(seedlingSkeletonSpec({ kind }).params ?? {}));
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ THE DISCRIMINATING PAIR, AS A **VALUE** (trap 269): a typed 0 and an
+     * omitted `chambers` build DIFFERENT ROOMS, counted in ground cells rather
+     * than compared as spellings.
+     */
+    it('⛔ a TYPED chambers=0 is a different room from an omitted one', () => {
+        const ground = (spec) => {
+            const rec = seedlingModel({ seed: 1, skeleton: spec }).skeleton();
+            let n = 0;
+            for (let ty = 1; ty < rec.height - 1; ty += 1) {
+                for (let tx = 1; tx < rec.width - 1; tx += 1) {
+                    if (terrainAt(rec, tx, ty) === 'ground') n += 1;
+                }
+            }
+            return n;
+        };
+        expect(ground(seedlingSkeletonSpec('winding'))).toBe(23);
+        expect(ground(seedlingSkeletonSpec('winding;chambers=0'))).toBe(16);
     });
 
     /**
