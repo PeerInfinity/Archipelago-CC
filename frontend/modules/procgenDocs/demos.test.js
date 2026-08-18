@@ -36,8 +36,18 @@ describe('the catalogue as data', () => {
         for (const id of ids) expect(id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
     });
 
-    it('leaves `terms` EMPTY on every entry — P2 (the glossary) fills it', () => {
-        for (const e of DEMOS) expect(e.terms).toEqual([]);
+    it('⛓ names GLOSSARY terms on every entry — P2 filled the field P1 reserved', () => {
+        /** ⛔ The slugs are RESOLVED against `glossary.js` in
+         *  `glossary.test.js`, not here: this file gates the catalogue's own
+         *  shape and must not need the other module to say whether an entry is
+         *  well-formed. What it does assert is that the field is a frozen flat
+         *  array of slug-shaped strings with no repeats. */
+        for (const e of DEMOS) {
+            expect(Object.isFrozen(e.terms), e.id).toBe(true);
+            expect(e.terms.length, e.id).toBeGreaterThan(0);
+            expect(new Set(e.terms).size, e.id).toBe(e.terms.length);
+            for (const slug of e.terms) expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+        }
     });
 
     it('keeps the prose free of HTML — the renderer handles markdown, the data holds none', () => {

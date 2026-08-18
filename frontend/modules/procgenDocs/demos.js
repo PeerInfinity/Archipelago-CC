@@ -19,6 +19,10 @@
  *   - `scripts/procgen/check-procgen-demos.mjs` IMPORTS it, loads every URL
  *     and asserts every entry's own claim off the page's readout.
  *
+ * ⛓ And ONE module is read BY it: `procgenDocs/glossary.js`, through each
+ * entry's `terms` (P2). The catalogue names glossary slugs; the glossary
+ * computes the back-links. Neither imports the other's entry list.
+ *
  * ⛓ Because both read the same module there is no second spelling to drift:
  * a URL edited here is the URL the page links AND the URL the row loads, in
  * the same commit. The old markdown carried a hand-kept `Live:` line per
@@ -43,9 +47,12 @@
  *   notes           prose — trailing ⚠ notes (a published bar, an acceptance
  *                   rate); may contain a fenced code block
  *   pointsAt        PROSE ENTRIES ONLY: the docs this one defers to
- *   terms           ⛔ EMPTY, reserved for P2 (the glossary). An entry names
- *                   the glossary terms it uses and the page links each to its
- *                   definition; nothing reads it yet.
+ *   terms           the GLOSSARY slugs this entry's prose uses — a flat array
+ *                   of ids from `procgenDocs/glossary.js`. The page renders
+ *                   them as a `terms:` line of anchor links into
+ *                   `glossary.html`, and `glossary.test.js` asserts every one
+ *                   RESOLVES. ⛔ Filled by PROCGEN DOCS P2; an entry naming a
+ *                   term nobody defined reds the unit row.
  *   prose           true for an entry that names no URL of its own
  *
  * ⛔ THE PROSE IS STRINGS, NEVER HTML. The renderer handles a light markdown
@@ -74,12 +81,21 @@ export function localHref(entry, { origin = '', url = entry.url } = {}) {
     return `${origin}${entry.page}?${url}`;
 }
 
-/** ⛓⛓ **THE ONE SPELLING OF THE PAGES MAPPING.** `<base>/modules/…?<url>` —
- *  the SAME run on the deployed site. The row imports this rather than
- *  keeping its own copy, which is what the old `Live:` consistency claim was
- *  for; a mapping spelled once cannot disagree with itself. */
+/** ⛓⛓ **THE ONE SPELLING OF THE PAGES MAPPING.** A repo path `/frontend/x`
+ *  is `<base>/x` on the deployed site, because `deploy-gh-pages.yml`
+ *  publishes `frontend/` AS the Pages root. ⛓ `pagesHref` below and
+ *  `glossary.js`'s `hrefFor` are both spelled through THIS function rather
+ *  than each carrying the strip — a mapping spelled once cannot disagree with
+ *  itself, which is what the old hand-typed `Live:` lines proved the hard
+ *  way. */
+export function pagesUrl(page, { base = PAGES_BASE } = {}) {
+    return `${String(base).replace(/\/$/, '')}${String(page).replace(/^\/frontend(?=\/)/, '')}`;
+}
+
+/** `<base>/modules/…?<url>` — the SAME run on the deployed site. The row
+ *  imports this rather than keeping its own copy. */
 export function pagesHref(entry, { base = PAGES_BASE, url = entry.url } = {}) {
-    return `${base.replace(/\/$/, '')}${entry.page.replace(/^\/frontend(?=\/)/, '')}?${url}`;
+    return `${pagesUrl(entry.page, { base })}?${url}`;
 }
 
 /** A repo-relative doc path on GitHub — a prose entry's `pointsAt` targets. */
@@ -131,7 +147,17 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open the URL, then set the `overlay` select to `sites`. The\nlegend under the canvas names every group drawn and its cell count.',
         whatIsHappening: '`rooms` is the one tree kind that reliably leaves a 10×10\nSeedling room with chambers in it, so it is the kind with something to show:\nthe chamber cells are the wide blobs, the corridor cells are the one-wide lanes\nbetween them, and the branch stubs are the dead ends the carver left. Pass 1\nproposes; the loop\'s own legality rules dispose.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'site',
+            'chamber',
+            'corridor',
+            'the-carve',
+            'skeleton-kind',
+            'overlay-layer',
+            'legend',
+            'pass-1',
+            'level',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -150,7 +176,16 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open the URL and press `PHASE ▶` until the label says\n`carve`. Then open the **Also** link beside it — the same seed at the DEFAULT\n`chambers=1` — and compare the same phase.',
         whatIsHappening: 'The `carve` row is the CONNECTOR\'s: it names the kind and\nthe effective parameters and its tile delta IS the carve. The two links differ\nin one parameter and the rooms differ in five ground cells; a link that could\nnot spell the typed 0 would have shown you the other room.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'the-carve',
+            'chambers',
+            'skeleton-kind',
+            'connector',
+            'phase-ladder',
+            'ledger',
+            'url-parameter',
+            'draw',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -173,7 +208,18 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open the URL, press `PHASE ▶` to `pre-carve` (the SITE\ncandidates and the site taken), then again to `composite`. Tick *the FLAG and\nits LOCK* and both *flag LOCK\'s cut* lines: the two floods are the room with the\nlock cell walled, and the flag is in the START-side one. Step on to\n`certification` and tick *the CERTIFICATION solve\'s ROUTE*.',
         whatIsHappening: 'The lock is a CUT, not decoration (⚖ ruling 17): with its\none cell walled the room falls into two components and the goal is in the far\none. The flag that opens it has to be in the near one, which is exactly what\nthe two floods show. The route is the solve\'s own walk — see the note on the\nline for why it has holes in it.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'guard',
+            'pre-carve-element',
+            'flag',
+            'lock',
+            'cut',
+            'flood',
+            'certification',
+            'fact-line',
+            'paintable',
+            'solver',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -196,7 +242,17 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open the URL and step to `on-connector`. Tick the three\ncandidate lines in order and watch the funnel narrow: what the room OFFERED\n(every interior main-path cell), what reached the DOOR LAW (the rest were cut\nearlier — too near the goal, or no legal pocket), and what PASSED it. The PICK\nis outlined in the second colour. Step on to `composite` and tick the two\n*door law* floods and the DEMAND.',
         whatIsHappening: 'The element\'s ONE draw is a choice among candidates that\nhave ALL already passed every rule — a pick that landed on one the law would\nrefuse would be a draw spent to fail. `cost.candidates` on the payload carries\nonly the last number; the three lines are the only place the whole funnel is\nvisible, and every one of them is CARRIED out of the construct\'s own law calls\nrather than re-derived.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'kill-gate',
+            'on-connector-element',
+            'candidate-funnel',
+            'demand',
+            'door-law',
+            'cut',
+            'certification',
+            'draw',
+            'pass-2',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -217,7 +273,15 @@ export const DEMOS = Object.freeze([
         howToRun: 'Step to `on-connector` for the funnel, then to `composite`\nfor the cells the element OWNS and the carve\'s ONE MOUTH.',
         whatIsHappening: 'Clause (a) of the carve law admits a DEAD END and nothing\nelse: exactly one 4-neighbour of the whole carved blob is walkable once the\nplacement is painted. Two mouths would be a TUNNEL — a change to the room\'s\nconnectivity rather than a place to stand — and the `carve-mouth` line is that\nclause as a picture.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'block-pocket',
+            'on-connector-element',
+            'clearer',
+            'mouth',
+            'the-carve',
+            'composite',
+            'candidate-funnel',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -242,7 +306,20 @@ export const DEMOS = Object.freeze([
         notes: Object.freeze([
             '⚠ Acceptance on a 10×10 Seedling room is **0–4 of 12 per kind** and the cause is\nthe AREA COUNT (4b §14.3) — published, not tuned. Most seeds refuse with\n`the-partition-yields-one-area-or-fewer`.',
         ]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'area-graph',
+            'area-partition',
+            'area',
+            'key-level',
+            'lock',
+            'flag',
+            'vestibule',
+            'synthetic-area',
+            'realisation',
+            'flood',
+            'graded-refusal',
+            'chamber',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -264,7 +341,17 @@ export const DEMOS = Object.freeze([
             '⚠ **THE BAR IS PUBLISHED, NOT TUNED.** The search that found it asked for\n`certified, cause=sword, grade=STRONG, kept>=5, families>=3, noabort` over seeds\n1–40 and N ≥ 3 was stated before the run. It returned **1 hit — seed 30** — and\nthe binding clause is the predicted one: of the five CERTIFIED cells only one\nkeeps templates from three families. Relaxing exactly that clause to\n`families>=2` gives **four** STRONG hits — seeds **2, 23, 30, 36** — plus seed\n**20** at BOUND-DEPENDENT, which still MEETS the directive. All five are listed\nhere rather than one being promoted quietly.',
             '```bash\nnode scripts/procgen/find-seedling-seeds.mjs --seeds=1-40 --biome=post-sword \\\n    --require=hasSword \\\n    --where=\'certified,cause=sword,grade=STRONG,kept>=5,families>=3,noabort\'\n```',
         ]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'require-directive',
+            'grade',
+            'requirements-differential',
+            'element-head',
+            'demand',
+            'biome',
+            'generation-ladder',
+            'sweep',
+            'family',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -283,7 +370,14 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open it and read the identity line: `requires: hasSword — ⛔\nREFUSED: the-biome-lacks-the-item`, with the level drawn underneath.',
         whatIsHappening: 'A pre-sword boot does not grant `hasSword`, so no element\nin the table can be forced to need it and the directive is refused BY NAME\nbefore a room exists. The CLI\'s exit code is 6 and it prints the level too.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'require-directive',
+            'graded-refusal',
+            'biome',
+            'boot-items',
+            'maze-lab',
+            'lab-page',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -302,7 +396,16 @@ export const DEMOS = Object.freeze([
         howToRun: 'Set the overlay to `elements` and look at the legend: no\ngroup, one note naming the refusal.',
         whatIsHappening: 'A picture of a gadget that is not in the level would be\nthe overlay disagreeing with the room. ⛓ The GEOMETRY the census measured is\nstill carried on the certification, so no number is lost — it is simply not on\nthe canvas.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'certification',
+            'element',
+            'kill-gate',
+            'graded-refusal',
+            'overlay-layer',
+            'legend',
+            'census',
+            'draw',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -321,7 +424,16 @@ export const DEMOS = Object.freeze([
         howToRun: 'Press `PHASE ▶` from the start and read each row\'s own\nsentence, its tile/entity delta and its draw span. `the FINISHED level` returns\nto the end. At the last pass-1 row the label says *"pass 2 — use STEP"*, which\nis where the generation ladder takes over.',
         whatIsHappening: 'Every phase of pass 1 leaves a row behind it, written BY\nthat phase with the facts it had already computed. ⛔ A phase that is never\nREACHED writes NO ROW, which is what makes the omission visible — and folding\nback to phase *k* is NOT the same as re-running without what phase *k* did (a\n`pre-carve` element spends its draws before the carve, so the two reach the\ncarver at different stream positions).',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'phase-ladder',
+            'ledger',
+            'paintable',
+            'fact-line',
+            'generation-ladder',
+            'pre-carve-element',
+            'draw',
+            'byte-inert',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -344,7 +456,14 @@ export const DEMOS = Object.freeze([
             Object.freeze({ label: 'Seedling Real-Game Bot', doc: 'docs/json/developer/procgen/seedling-bot.md', why: 'the STEP control, the generation pane and the scrub bar' }),
             Object.freeze({ label: 'Playback and Debugging Tools', doc: 'docs/json/developer/procgen/playback-and-debugging.md', why: 'the playback contract underneath them' }),
         ]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'solver',
+            'generation-ladder',
+            'phase-ladder',
+            'playback-bot',
+            'tape',
+            'seedling',
+        ]),
         prose: true,
     }),
     Object.freeze({
@@ -363,7 +482,17 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open it; the area layer control beside the canvas paints the\npartition, the doors and the keys. `?areas=1&require=K1` is the refusal — and on\nTHIS page a refused directive offers no level and no payload.',
         whatIsHappening: 'The graph is over AREAS, not cells: a locked edge cuts\nthe tree, the doors go on area-side boundary cells, and the level-n flood is the\ncheck that the grid agrees.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'maze-lab',
+            'area-graph',
+            'symbol',
+            'require-directive',
+            'key-level',
+            'lock',
+            'flag',
+            'bfs-oracle',
+            'grade',
+        ]),
         prose: false,
     }),
     Object.freeze({
@@ -382,7 +511,16 @@ export const DEMOS = Object.freeze([
         howToRun: 'Open it, then press the solve controls to walk the plan a\nstep at a time.',
         whatIsHappening: 'The element CONTRACT is one shape across three bindings\n(arc 2 §9.2, unchanged): the maze maps its tiles and symbols onto grid tiles and\narea symbols, Seedling maps them onto blocks, buttons and locks, and neither\nre-derives the gadget\'s geometry.',
         notes: Object.freeze([]),
-        terms: Object.freeze([]),
+        terms: Object.freeze([
+            'maze-lab',
+            'element',
+            'guard',
+            'binding',
+            'solver',
+            'bfs-oracle',
+            'maze-substrate',
+            'certification',
+        ]),
         prose: false,
     }),
 ]);
