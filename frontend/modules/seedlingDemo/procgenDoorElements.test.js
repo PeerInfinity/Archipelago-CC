@@ -118,13 +118,18 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
      *
      * ⛔ THE ROW'S CLAIM IS ABOUT DRAWS, NOT ABOUT THAT NAME, so it takes a
      * refusal that still exists. RE-SCANNED over ten kinds x seeds 1..12: two
-     * names remain — **`wall-does-not-seal` (27 cells, every `loopy`/`open`
-     * kind: a room with two routes is not cut by one line) and
-     * `pocket-not-legal` (3)**. `loopy` seed 1 is the first of the 27.
+     * names remain — **`wall-does-not-seal` (a room with two routes is not cut
+     * by one line) and `pocket-not-legal`**.
+     *
+     * ⛓ **RE-SCANNED AGAIN IN SLICE 4b**, because the `chambers` default moved
+     * every carved room: `loopy` seed 1 now PLACES. The same scan over nine
+     * kinds x seeds 1..12 finds **22 `wall-does-not-seal` cells and 4
+     * `pocket-not-legal`**, and `branchy` seed 7 is the first of the 22. The
+     * class is what it always was; the members moved with the rooms.
      */
     it('a REFUSED on-connector element spends no draw at all', () => {
-        const plain = seedlingModel({ seed: 1, skeleton: kindOf('loopy') });
-        const asked = seedlingModel({ seed: 1, skeleton: kindOf('loopy'),
+        const plain = seedlingModel({ seed: 7, skeleton: kindOf('branchy') });
+        const asked = seedlingModel({ seed: 7, skeleton: kindOf('branchy'),
             elements: { name: 'killgate' } });
         expect(asked.elements.ran).toBe(false);
         expect(asked.elements.refused.reason).toBe('wall-does-not-seal');
@@ -135,7 +140,14 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
 /* ── the room probe ───────────────────────────────────────────────────── */
 
 describe('⛓⛓ THE ROOM PROBE — what a door is allowed to know', () => {
-    const model = seedlingModel({ seed: 1, skeleton: kindOf('winding') });
+    /**
+     * ⛓ PINNED AT `chambers: 0` SINCE SLICE 4b — the last row of this block is
+     * about a **ONE-WIDE CORRIDOR**, and that room is spelled `{chambers: 0}`
+     * now that Seedling's carved tree kinds default the stamp ON (D6). The
+     * subject did not move; its spelling did.
+     */
+    const model = seedlingModel({ seed: 1,
+        skeleton: { ...kindOf('winding'), params: { chambers: 0 } } });
     const room = model.roomProbe();
 
     it('is memoised, and its main path runs START -> GOAL over the SKELETON', () => {
@@ -415,18 +427,33 @@ describe('⛓⛓⛓ THE SEAM — the item gate, and the two elements certifying'
      *   endorsed as an R9 exception — the element inherits it, it does not
      *   discharge it). A row that drove any of those would be a minute-long
      *   test asserting nothing `winding` 4 does not.
+     *
+     * ⛓⛓ **RE-SCANNED AGAIN AT SLICE 4b** — the `chambers` default (D6) moved
+     * every carved room, and `winding` seed 4 stopped certifying. Same rule,
+     * same seven kinds x seeds 1..4, timed through the seam; the certifying
+     * cells with the claim TRUE are
+     *
+     *   **open/2 555 ms**  <- taken   ·  rooms/3 770 · branchy/3 792
+     *   rooms;minRoom=4/3 947 · bushy/3 1342
      */
     it('post-sword: the kill gate certifies, with `kill` and the claim TRUE', () => {
-        const out = seedlingSeam({ seed: 4, skeleton: kindOf('winding'),
+        const out = seedlingSeam({ seed: 2, skeleton: kindOf('open'),
             items: POST_SWORD_ITEMS, elements: { name: 'killgate' } });
         expect(out.certification.certified).toBe(true);
         expect(out.certification.strategies).toContain('kill');
         expect(out.certification.heldAtDoor).toBe(true);
     });
 
-    /** ⛓ THE BLOCK POCKET NEEDS NO ITEM — a shove is a pre-sword verb. */
+    /**
+     * ⛓ THE BLOCK POCKET NEEDS NO ITEM — a shove is a pre-sword verb.
+     *
+     * ⛓ RE-PICKED AT SLICE 4b BY THE SAME SCAN: `winding` seed 1 stopped
+     * certifying when the `chambers` default moved its room. **17 of the 28
+     * scanned cells certify with the claim TRUE**, and `winding` seed 3 is the
+     * cheapest at 95 ms.
+     */
     it('pre-sword: the block pocket certifies, with `shove` and the claim TRUE', () => {
-        const out = seedlingSeam({ seed: 1, skeleton: kindOf('winding'),
+        const out = seedlingSeam({ seed: 3, skeleton: kindOf('winding'),
             items: PRE_SWORD_ITEMS, elements: { name: 'blockpocket' } });
         expect(out.certification.certified).toBe(true);
         expect(out.certification.strategies).toContain('shove');

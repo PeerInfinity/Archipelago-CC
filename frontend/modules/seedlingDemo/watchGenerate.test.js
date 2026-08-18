@@ -1759,8 +1759,21 @@ describe('watchGenerate — the skeleton kind', () => {
 
     it('carries the kind onto every state, and defaults to the open room', () => {
         expect(generateStep(args()).skeleton).toEqual({ kind: 'empty' });
+        /**
+         * ⛓⛓ ARC 3, SLICE 4b — **THE STATE CARRIES THE EFFECTIVE ROOM, AND ON
+         * A CARVED TREE KIND THAT NOW INCLUDES `chambers: 1`** (D6, ⚖ user
+         * 2026-08-17). The page's own `?skeleton=` READER is unchanged; what
+         * changed is what an OMITTED `chambers` resolves to on this substrate.
+         * ⛔ The state's block is the CANONICAL spelling (default by absence),
+         * so `chambers: 1` appears precisely because 1 is not the codec's
+         * default — which is the same rule `minRoom=2` already followed.
+         */
         expect(generateStep(args({ skeleton: { kind: 'winding' } })).skeleton)
-            .toEqual({ kind: 'winding' });
+            .toEqual({ kind: 'winding', params: { chambers: 1 } });
+        /** ⛔ AND A TYPED 0 SURVIVES — the TWO STREAMS `seedlingSkeletonSpec`
+         *  exists to keep apart, driven from the page's own entry point. */
+        expect(generateStep(args({ skeleton: { kind: 'winding', params: { chambers: 0 } } }))
+            .skeleton).toEqual({ kind: 'winding' });
         /**
          * ⚠ AT THE SMALLEST BOUNDS THE LOOP TAKES, and the reason is Probe 2's
          * measurement: a candidate that SEALS a corridor makes the planner run
@@ -1773,7 +1786,7 @@ describe('watchGenerate — the skeleton kind', () => {
             step: 1,
             skeleton: { kind: 'winding' },
             bounds: { ...DEFAULT_BOUNDS, triesPerStep: 1, saturationK: 1 },
-        })).skeleton).toEqual({ kind: 'winding' });
+        })).skeleton).toEqual({ kind: 'winding', params: { chambers: 1 } });
     });
 
     it('REFUSES a kind Seedling cannot build, by name, before any solve', () => {
@@ -1839,9 +1852,14 @@ describe('watchGenerate — the skeleton kind', () => {
      */
     it('names the kind in the identity line — and only when it is carved', () => {
         expect(describeState(generateStep(args()))).not.toMatch(/skeleton: /);
+        /** ⛓ SLICE 4b — the line prints the EFFECTIVE spec, which on a carved
+         *  tree kind carries Seedling's own `chambers` default. */
         const line = describeState(generateStep(args({ skeleton: { kind: 'winding' } })));
-        expect(line).toMatch(/skeleton: winding \(CARVED, not the open room\)/);
-        expect(line).toMatch(/the SKELETON — a winding CARVE and its goal/);
+        expect(line).toMatch(/skeleton: winding;chambers=1 \(CARVED, not the open room\)/);
+        expect(line).toMatch(/the SKELETON — a winding;chambers=1 CARVE and its goal/);
+        const zero = describeState(generateStep(args({
+            skeleton: { kind: 'winding', params: { chambers: 0 } } })));
+        expect(zero).toMatch(/skeleton: winding \(CARVED, not the open room\)/);
     });
 
     it('offers the catalogue with the two simulator-bound kinds GREYED and reasoned', () => {
@@ -1883,18 +1901,44 @@ describe('watchGenerate — the skeleton kind', () => {
      * ROOM. The subject is the count of `ground` cells in step 0's record,
      * counted here.
      */
-    it('`chambers=2` opens more GROUND; `chambers=0` is byte-identical to absence', () => {
+    it('`chambers=2` opens more GROUND than `chambers=0`; and OMITTED is `chambers=1` '
+        + 'on this substrate', () => {
         const ground = (st) => interiorCells(st.record)
             .filter((c) => terrainAt(st.record, c.tx, c.ty) === 'ground').length;
-        const bare = generateStep(args({ skeleton: { kind: 'winding' } }));
-        const wide = generateStep(args({
-            skeleton: { kind: 'winding', params: { chambers: 2 } },
-        }));
-        expect(ground(wide)).toBeGreaterThan(ground(bare));
-        const zero = generateStep(args({
-            skeleton: { kind: 'winding', params: { chambers: 0 } },
-        }));
-        expect(JSON.stringify(zero.record)).toBe(JSON.stringify(bare.record));
+        /**
+         * ⛔⛔ ARC 3, SLICE 4b — **THE BASELINE OF THIS VALUE CLAIM MOVED, AND
+         * IT IS THE CLAIM'S SUBJECT THAT MOVED RATHER THAN ITS TRUTH.** The row
+         * asked "does `chambers` change the ROOM", against a bare `{kind}` that
+         * used to mean `chambers = 0`. Seedling now resolves an OMITTED
+         * `chambers` to 1, so the un-stamped room is `{chambers: 0}` and that
+         * is what a monotone claim has to compare against. ⛓ The claim is
+         * strictly STRONGER now: it names three points on the ladder, not two.
+         */
+        const at = (seed, params) => ground(generateStep(args({ seed,
+            skeleton: { kind: 'winding', ...(params ? { params } : {}) } })));
+        /**
+         * ⚠ MONOTONE OVER THE LADDER, STRICT SOMEWHERE — and the weaker
+         * quantifier is MEASURED, not defensive. `chambers` stamps k squares at
+         * drawn centres; a second stamp can land where the first already opened
+         * ground, so `k = 2` is not strictly wider than `k = 1` at every seed
+         * (seed 3 is exactly that cell: 23 ground cells at both). The claim the
+         * knob supports is a ladder that never goes DOWN and does go UP.
+         */
+        let strictlyWider = 0;
+        for (let seed = 1; seed <= 8; seed += 1) {
+            expect(at(seed, { chambers: 0 }), `seed ${seed}`)
+                .toBeLessThanOrEqual(at(seed, undefined));
+            expect(at(seed, undefined)).toBeLessThanOrEqual(at(seed, { chambers: 2 }));
+            if (at(seed, { chambers: 2 }) > at(seed, undefined)) strictlyWider += 1;
+        }
+        expect(strictlyWider).toBeGreaterThan(0);
+        expect(at(3, undefined)).toBeGreaterThan(at(3, { chambers: 0 }));
+        const omitted = generateStep(args({ skeleton: { kind: 'winding' } }));
+        /** ⛔ AND OMITTED IS EXACTLY `chambers: 1` — byte for byte, not merely
+         *  "more ground". That is the D6 default's own value claim. */
+        expect(JSON.stringify(omitted.record)).toBe(JSON.stringify(generateStep(args({
+            skeleton: { kind: 'winding', params: { chambers: 1 } },
+        })).record));
     });
 
     it('names the non-default PARAMETERS in the identity line, and only those', () => {

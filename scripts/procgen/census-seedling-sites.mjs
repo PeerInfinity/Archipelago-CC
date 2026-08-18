@@ -33,7 +33,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules', p));
 
-const { seedlingModel } = await M('seedlingDemo/procgenSeedling.js');
+const { seedlingModel, seedlingSkeletonSpec } = await M('seedlingDemo/procgenSeedling.js');
 const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -82,7 +82,7 @@ say('');
 const rows = [];
 for (const kindSpec of KINDS) {
     for (const seed of SEEDS) {
-        const skeleton = parseSkeleton(kindSpec);
+        const skeleton = seedlingSkeletonSpec(kindSpec);
         let model = null;
         let error = null;
         try {

@@ -98,7 +98,7 @@ import {
 } from '../procgenCore/elements.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
-    normalizeSkeleton,
+    normalizeSkeleton, paramSchemaFor, parseSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import {
     TILE_FLOOR, TILE_WALL, getTile, setTile,
@@ -141,6 +141,123 @@ const fail = (message) => { throw new ProcgenSeedlingError(message); };
  * because the census and the browser rows read it rather than retyping a 3.
  */
 export const GOAL_MIN_FROM_START = 3;
+
+/**
+ * ⛓⛓⛓ **SEEDLING'S OWN DEFAULT FOR `chambers`** — arc 3, slice 4b (D6;
+ * ⚖ user, 2026-08-17).
+ *
+ * ⛔ **IT IS NOT IN `CHAMBERS_PARAM`.** That schema row is SHARED BY REFERENCE
+ * across six kinds AND ACROSS BOTH BINDINGS (`procgenCore/skeletonKinds.js`
+ * says so in its own docblock), so moving its `default` would move the MAZE —
+ * whose byte-identity md5 is a gate for this very slice. The default a
+ * SUBSTRATE wants is a fact about that substrate's rooms, and it lives here.
+ *
+ * ── ⛓⛓ WHY A NON-ZERO DEFAULT AT ALL, AND IT IS A MEASUREMENT ─────────
+ *
+ * 4c §13.11.1's reader-facing sentence: *on the bare tree kinds the default
+ * level is the skeleton plus one certified ELEMENT plus NO pass-2 decoration —
+ * pass 2 has no AREA to decorate.* That is ⚖ ruling 24 (**area is pass 1's**)
+ * meeting slice 1's site vocabulary: `wall-segment`/`water-pool`/`pit-patch`
+ * are all `site: 'chamber'`, and a 10x10 room carved by a bare tree kind has NO
+ * all-ground 2x2 square on 10 of 12 seeds (§8.3). ⚖ The user ruled the remedy
+ * is a non-zero default here — *a bare corridor plus one element is the OTHER
+ * extreme of ruling 12 ("not all levels are dense mazes"), not its intent* —
+ * and §8.4b measured 17-24 kept where pass 1 stamps a chamber against 1-2 bare.
+ *
+ * ── ⛔ THE FIVE KINDS, AND WHY NOT THE OTHER TWO ──────────────────────
+ *
+ * `winding`, `branchy`, `bushy`, `loopy` and `open` are the CARVED TREE kinds:
+ * they leave 1-wide corridor almost everywhere. `empty` declares no parameters
+ * at all (it carves nothing — the open bordered room IS one big chamber), and
+ * `rooms` declares `chambers` but does not want it: `recursive_division`
+ * already makes rooms and the census measures 1.7-2.0 real chambers there
+ * against 0.1-0.2 on a bare tree kind. A default that stamped into `rooms`
+ * would be adding area to the one kind that has some.
+ */
+/**
+ * ── ⛓⛓⛓ **k = 1, AND THE PICK RULE WAS STATED BEFORE THE RUN** ────────
+ *
+ * *k = 1 if its summed kept over the five kinds recovers >= 3/4 of k = 2's;
+ * else k = 2.* Yield table, five carved tree kinds x seeds 1..8, count 3 /
+ * tries 4 / k 3 / anchortries 1 / cellbudget 120, DEFAULT elements, both
+ * biomes, three arms:
+ *
+ *   arm         pre-sword KEPT/120   post-sword KEPT/120   saturated/40   threw
+ *   chambers=0            4                    4            40 / 38         0
+ *   chambers=1          102                  105            11 /  8         0
+ *   chambers=2          113                  103             4 /  3         1
+ *
+ * 102/113 = **90%** pre-sword and 105/103 = **102%** post-sword, both far past
+ * the 3/4 bar. ⇒ **k = 1**, the smaller that recovers most, in the user's own
+ * words. ⛓ AND TWO NUMBERS BEYOND THE RULE POINT THE SAME WAY: `chambers=2`
+ * THREW once post-sword where `chambers=1` threw zero in both biomes, and the
+ * control arm reproduces 4c §13.11.1's reader-facing sentence exactly — **4
+ * kept of 120, 40 of 40 cells SATURATED** on the bare kinds.
+ */
+export const SEEDLING_CHAMBERS_KINDS = Object.freeze([
+    'winding', 'branchy', 'bushy', 'loopy', 'open',
+]);
+export const SEEDLING_PARAM_DEFAULTS = Object.freeze({ chambers: 1 });
+
+/**
+ * ⛔⛔ **THE KEYS A SPEC STRING ACTUALLY NAMED** — and this is TWO STREAMS, not
+ * one (`feedback_two_streams_for_drawn_or_typed`, from the other side).
+ *
+ * `normalizeSkeleton` spells a value AT ITS DEFAULT BY ABSENCE, so
+ * `winding;chambers=0` and a bare `winding` normalize to the SAME object — and
+ * a default applied after normalisation cannot tell "nobody said" from "the
+ * caller typed the shared default". ⇒ the default is resolved BEFORE
+ * normalisation, and what it needs is the set of keys the caller named.
+ *
+ * ⛔ THE SPLIT IS NOT A SECOND GRAMMAR. `parseSkeleton` has already VALIDATED
+ * the string (every clause is `key=value`, every key is declared, every value is
+ * in its domain, no key twice) and thrown by name if it was not; this reads the
+ * key names out of a string that is known to be well formed. A second parser
+ * here would be a second answer to what a clause means.
+ */
+const namedSkeletonKeys = (value) => new Set(String(value ?? '').split(';').slice(1)
+    .map((c) => c.slice(0, c.indexOf('=')).trim())
+    .filter(Boolean));
+
+/**
+ * ⛓⛓⛓ **THE ONE PLACE A SEEDLING SKELETON SPEC IS RESOLVED** — every Seedling
+ * caller passes through it: `seedlingModel`, the CLI, the sweep, the kind-pairs
+ * dump, the censuses and `watchGenerate`'s reader. ⛔ NOT the maze, which has
+ * its own defaults and whose md5 is this slice's gate.
+ *
+ * Takes a STRING (`'winding;chambers=2'`) or an OBJECT (`{kind, params}`) as the
+ * CALLER TYPED IT, and returns `{kind, params}` with `chambers` ALWAYS EXPLICIT
+ * on the five kinds above — which is what makes it IDEMPOTENT: feeding its own
+ * output back names `chambers`, so the default is not re-applied over a
+ * deliberate 0.
+ *
+ * ⚠ **ITS OUTPUT IS AN INPUT, AND `model.skeletonSpec` IS NOT.** The model
+ * keeps the CANONICAL spelling (`normalizeSkeleton`'s, default-by-absence) for
+ * the payload and the identity line, because that is the ONE spelling a link
+ * and a payload compare by. Feeding THAT back in would lose a typed 0 exactly
+ * as feeding a bare `parseSkeleton` result would.
+ *
+ * ⛓ An explicit `chambers: 0` is BYTE-INERT by `carveSkeleton`'s own law (`if
+ * (v === p.default) continue` — the post-processor is not appended), so the
+ * always-explicit shape costs no draw and moves no tile.
+ */
+export function seedlingSkeletonSpec(input) {
+    const spec = typeof input === 'string'
+        ? parseSkeleton(input, { simulator: false, substrate: 'the Seedling binding' })
+        : normalizeSkeleton(input ?? DEFAULT_SKELETON);
+    const named = typeof input === 'string'
+        ? namedSkeletonKeys(input) : new Set(Object.keys(input?.params ?? {}));
+    if (!SEEDLING_CHAMBERS_KINDS.includes(spec.kind)) return spec;
+    const params = { ...(spec.params ?? {}) };
+    if (!named.has('chambers')) params.chambers = SEEDLING_PARAM_DEFAULTS.chambers;
+    else if (params.chambers === undefined) {
+        /** ⛓ the caller TYPED the shared default and `normalizeSkeleton` spelled
+         *  it by absence; putting it back is what keeps this idempotent. */
+        params.chambers = paramSchemaFor(spec.kind)
+            .find((p) => p.key === 'chambers').default;
+    }
+    return Object.freeze({ kind: spec.kind, params: Object.freeze(params) });
+}
 
 /**
  * ⛓⛓⛓ **HOW FAR AN AREA LOCK MUST STAY FROM THE GOAL, IN GRAPH STEPS** —
@@ -677,9 +794,20 @@ export function seedlingModel({
      * grid exists, because a link that names a room nobody can build should not
      * reach the carver at all.
      */
-    const skeletonSpecNorm = normalizeSkeleton({
+    /**
+     * ⛓⛓⛓ **SEEDLING'S OWN `chambers` DEFAULT IS APPLIED HERE, AND HERE IS THE
+     * ONE PLACE** (arc 3, slice 4b, D6) — `seedlingSkeletonSpec` is idempotent,
+     * so a caller that already resolved (the CLI, the sweep, the dump, the
+     * page's reader) is unmoved and a caller that did not gets the default.
+     * ⛔ `skeletonEffective` carries `chambers` EXPLICITLY (an explicit 0 is
+     * byte-inert by `carveSkeleton`'s own law) and is what the CARVE receives;
+     * `skeletonSpecNorm` is the CANONICAL spelling — default by absence — and is
+     * what the payload, the identity line and `agreementWithPayload` compare by.
+     */
+    const skeletonEffective = seedlingSkeletonSpec({
         kind: skeletonKind, params: skeletonSpec?.params ?? {},
     });
+    const skeletonSpecNorm = normalizeSkeleton(skeletonEffective);
 
     const carveRoom = () => {
         const gw = { width: d.width, height: d.height };
@@ -706,7 +834,7 @@ export function seedlingModel({
          * of the two substrates. The border check below is what proves it.
          */
         const carve = carveSkeleton(skeletonKind, grid, roomRng, {
-            params: skeletonSpecNorm.params ?? {}, margin: 1,
+            params: skeletonEffective.params ?? {}, margin: 1,
         });
         const ground = [];
         for (let ty = 0; ty < gw.height; ty += 1) {
@@ -2173,6 +2301,14 @@ export function seedlingModel({
         /** ⛓ The kind that BUILT this room, and the block a payload carries. */
         skeletonKind,
         skeletonSpec: skeletonSpecNorm,
+        /**
+         * ⛓ THE EFFECTIVE SPEC (arc 3, slice 4b) — `chambers` explicit on the
+         * five carved tree kinds, which is what the CARVE ran with. ⛔ It is
+         * what a reader who asks "what room did this actually build" wants;
+         * `skeletonSpec` is what a LINK and a PAYLOAD compare by, and the two
+         * differ exactly when the caller left `chambers` unsaid.
+         */
+        skeletonEffective,
         /** What the carve actually ran — `null` at the open room. */
         carve: carved ? Object.freeze({ ...carved.carve }) : null,
         /**

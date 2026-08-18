@@ -97,6 +97,7 @@ import {
 } from '../procgenCore/skeletonKinds.js';
 import {
     SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingOracle, seedlingSeam,
+    seedlingSkeletonSpec,
 } from './procgenSeedling.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 /**
@@ -472,7 +473,17 @@ export function generateStep({
      * validated ONCE here so step 0 and step k cannot disagree about it, and
      * refused by name for a kind Seedling cannot build.
      */
-    const skel = normalizeSkeleton({
+    /**
+     * ⛓⛓⛓ ARC 3, SLICE 4b — **THE SEEDLING `chambers` DEFAULT IS RESOLVED
+     * HERE, BEFORE NORMALISATION**, because `normalizeSkeleton` spells a value
+     * at its default BY ABSENCE and a default applied after it cannot tell
+     * *nobody said* from *the caller typed 0*. `seedlingSkeletonSpec` is
+     * idempotent, so a state rebuilt from its own `skeleton` block is unmoved.
+     * ⛔ `skelEffective` (with `chambers` explicit) is what the SEAM receives;
+     * `skel` is the CANONICAL spelling the state, the payload and
+     * `agreementWithPayload` carry.
+     */
+    const skelEffective = seedlingSkeletonSpec({
         kind: assertKind(skeleton?.kind ?? DEFAULT_SKELETON_KIND,
             { simulator: false, substrate: 'the Seedling binding' }),
         /**
@@ -484,6 +495,7 @@ export function generateStep({
          */
         params: skeleton?.params ?? {},
     });
+    const skel = normalizeSkeleton(skelEffective);
     /**
      * ⛓ SLICE 4: THE SUB-ROSTER IS APPLIED HERE AND NOWHERE ELSE. `paletteFor`
      * chooses the biome, `restrictPalette` narrows it, and the SAME loop takes
@@ -500,7 +512,7 @@ export function generateStep({
     }
     if (step === 0) {
         const { model } = seedlingSeam({
-            seed, items: palette.items ?? null, budget: b, skeleton: skel,
+            seed, items: palette.items ?? null, budget: b, skeleton: skelEffective,
         });
         return Object.freeze({
             seed,

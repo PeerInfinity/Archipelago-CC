@@ -93,8 +93,27 @@ const kill = (ori, span) => {
     };
 };
 
+/**
+ * ⛓⛓⛓ **EVERY ROOM IN THIS FILE IS PINNED AT `chambers = 0`, AND THAT IS A
+ * RE-POINTING RATHER THAN A RE-PICK** — arc 3, slice 4b.
+ *
+ * This file's subject is a **1-WIDE CORRIDOR ROOM**: the door law exists
+ * because `doorClear` had nothing to say about one, and every fixture below
+ * names cells of a room with no width anywhere. Slice 4b gave Seedling's five
+ * carved TREE kinds a DEFAULT of `chambers = 1` (⚖ user, 2026-08-17; D6), so a
+ * bare `{kind: 'winding'}` is a room WITH a chamber and is not this file's
+ * subject at all.
+ *
+ * ⛔ THE SUBJECT DID NOT MOVE — ITS SPELLING DID (the other side of trap 285).
+ * Pinning the knob keeps the fixtures literal and keeps the laws driven on the
+ * geometry they were written for; re-picking a seed would have replaced a room
+ * a reader can check by eye with one nobody has read. ⚠ A reader should know
+ * that the generator's DEFAULT `winding` room is no longer this one.
+ */
 const carved = (kind, seed) => seedlingModel({
-    seed, skeleton: parseSkeleton(kind, { simulator: false, substrate: 'this test' }),
+    seed,
+    skeleton: { ...parseSkeleton(kind, { simulator: false, substrate: 'this test' }),
+        params: { chambers: 0 } },
 });
 
 /** The room as a reader sees it — `.` walkable ground, `#` wall. */

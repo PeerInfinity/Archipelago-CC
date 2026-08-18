@@ -328,7 +328,7 @@ if (CELL !== '') {
             / sk.tiles.length);
     } else {
         const {
-            interiorCells, seedlingSeam,
+            interiorCells, seedlingSeam, seedlingSkeletonSpec,
         } = await M('seedlingDemo/procgenSeedling.js');
         const {
             POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
@@ -346,7 +346,9 @@ if (CELL !== '') {
          */
         const seam = seedlingSeam({
             seed,
-            skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
+            /** ⛓ arc 3 slice 4b — the SEEDLING resolver, so the five carved tree
+             *  kinds get their `chambers` default and a typed 0 survives. */
+            skeleton: seedlingSkeletonSpec(kind),
             elements: ELEMENTS_EFFECTIVE,
             areas: AREAS,
             items: palette.items ?? null,

@@ -72,7 +72,7 @@ const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
 const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
-const { generateSeedlingLevel } = await M('procgenSeedling.js');
+const { generateSeedlingLevel, seedlingSkeletonSpec } = await M('procgenSeedling.js');
 const {
     DEFAULT_SKELETON, GENERATE_BIOMES, describeKeptKind, directedCost, generateWithDirectives,
     paletteFor, parseDirectives,
@@ -112,8 +112,13 @@ const ANCHOR_TRIES = num('anchor-tries', 1);
  * ⛔ ONE PARSER (`skeletonKinds.parseSkeleton`), so a CLI and a link cannot
  * disagree about what a value means.
  */
-const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
-    { simulator: false, substrate: 'the Seedling CLI' });
+/**
+ * ⛓⛓ ARC 3, SLICE 4b — **THROUGH THE SEEDLING RESOLVER**, not bare
+ * `parseSkeleton`: the five carved TREE kinds default to `chambers=1` on this
+ * substrate (D6), and the default must be applied BEFORE normalisation or a
+ * typed `chambers=0` is indistinguishable from an omitted one.
+ */
+const SKELETON = seedlingSkeletonSpec(arg('skeleton', 'empty'));
 /**
  * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 3 — **THE ELEMENT**, through the ONE codec
  * (`procgenCore/elementSpec.js`), the same string the maze CLI takes and the

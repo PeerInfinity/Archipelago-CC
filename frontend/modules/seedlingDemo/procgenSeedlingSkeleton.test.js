@@ -14,7 +14,8 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_SKELETON_KIND } from '../procgenCore/skeletonKinds.js';
 import { terrainAt } from './procgenLevel.js';
 import {
-    SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, interiorCells, seedlingModel,
+    SEEDLING_CHAMBERS_KINDS, SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, interiorCells,
+    seedlingModel, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
 
 const CARVING = SEEDLING_SKELETON_KINDS.filter((k) => k !== DEFAULT_SKELETON_KIND);
@@ -53,9 +54,25 @@ describe('procgenSeedling — which kinds this binding offers', () => {
         expect(open.carve).toBeNull();
         const carved = seedlingModel({ seed: 3, skeleton: { kind: 'winding' } });
         expect(carved.skeletonKind).toBe('winding');
+        /**
+         * ⛓⛓ ARC 3, SLICE 4b — **`chambers` IS IN THE POST-PROCESSOR LIST NOW,
+         * BECAUSE SEEDLING DEFAULTS IT TO 1** on the five carved TREE kinds
+         * (D6). ⛔ The list is the EFFECTIVE carve's, which is the point of the
+         * row: it says what actually ran, and what actually runs on this
+         * substrate is the stamp.
+         */
         expect(carved.carve).toMatchObject({
-            kind: 'winding', backend: 'recursive_backtracker', postProcessors: ['pruneDeadEnds'],
+            kind: 'winding',
+            backend: 'recursive_backtracker',
+            postProcessors: ['pruneDeadEnds', 'chambers'],
         });
+        expect(carved.skeletonEffective).toEqual({ kind: 'winding', params: { chambers: 1 } });
+        /** ⛔ AND THE CODEC'S OWN DEFAULT IS STILL 0 — a caller who says so gets
+         *  the bare backend and the post-processor is not appended at all. */
+        const bare = seedlingModel({ seed: 3,
+            skeleton: { kind: 'winding', params: { chambers: 0 } } });
+        expect(bare.carve).toMatchObject({ postProcessors: ['pruneDeadEnds'] });
+        expect(bare.skeletonSpec).toEqual({ kind: 'winding' });
     });
 });
 
@@ -180,9 +197,20 @@ describe('procgenSeedling — what a carved room looks like', () => {
      * that is true until somebody changes the room size and nothing says so.
      */
     it('leaves the lattice dead strip (col 8 / row 8) walled for the TREE kinds', () => {
+        /**
+         * ⚠⚠ ARC 3, SLICE 4b — **ASKED AT `chambers: 0`, AND THAT IS THE ONLY
+         * ARM THE CLAIM WAS EVER ABOUT.** The dead strip is a property of the
+         * tree BACKENDS' 4x4 lattice; `chambers` is a STAMP that runs after
+         * them and is bounded only by `margin: 1` (the wall ring), so it may
+         * legitimately open cells in column 8 or row 8. Seedling now defaults
+         * that stamp ON (D6), so a bare `{kind}` no longer isolates the
+         * backend — and re-pointing the row is the honest edit rather than
+         * weakening the claim to one the stamp cannot violate.
+         */
         for (const kind of ['branchy', 'bushy', 'winding']) {
             for (let seed = 1; seed <= 8; seed += 1) {
-                const model = seedlingModel({ seed, skeleton: { kind } });
+                const model = seedlingModel({ seed,
+                    skeleton: { kind, params: { chambers: 0 } } });
                 const r = model.skeleton();
                 const onStrip = groundCells(r).filter((c) => c.tx === 8 || c.ty === 8);
                 // ⛓ …except where `connectFixedTiles` had to L-carve the GOAL
@@ -212,14 +240,64 @@ describe('procgenSeedling — the kind parameters', () => {
      * with the defaults spelled out — because the question is whether the room
      * a link WITHOUT parameters builds is the room that shipped.
      */
-    it('every kind at its DEFAULTS is the room the kind built before the knobs existed', () => {
-        for (const kind of CARVING) {
+    it('⛓⛓⛓ SLICE 4b — the SEEDLING default is `chambers = 1` on the five carved '
+        + 'TREE kinds, and NOTHING ELSE MOVED', () => {
+        /**
+         * ⛔⛔ **THIS ROW REPLACES "every kind at its DEFAULTS is the room the
+         * kind built before the knobs existed", WHICH IS THE CLAIM D6
+         * DELIBERATELY RETIRES** — and it is stated as a replacement rather
+         * than deleted, because a reader of slice 7's records needs to know
+         * which sentence stopped being true and why.
+         *
+         * ⚖ The user ruled (2026-08-17) that Seedling's carved kinds default to
+         * `chambers = k > 0`: *a bare corridor plus one element is the OTHER
+         * extreme of ruling 12, not its intent.* The yield table picked k = 1
+         * (102 kept of 120 against `chambers=2`'s 113 pre-sword, 105 against
+         * 103 post-sword; the control keeps 4).
+         *
+         * ⛔ THE CODEC'S DEFAULT IS UNMOVED AT 0 — `CHAMBERS_PARAM` is shared BY
+         * REFERENCE with the maze, whose byte-identity md5 is this slice's gate.
+         * What moved is one substrate's resolution of an OMITTED value.
+         */
+        for (const kind of SEEDLING_CHAMBERS_KINDS) {
             for (const seed of [1, 2, 3, 4, 5, 6]) {
-                const bare = render(room(kind, seed, undefined));
-                expect(render(room(kind, seed, {}))).toBe(bare);
-                expect(render(room(kind, seed, { chambers: 0 }))).toBe(bare);
+                const omitted = render(room(kind, seed, undefined));
+                expect(render(room(kind, seed, {}))).toBe(omitted);
+                expect(render(room(kind, seed, { chambers: 1 }))).toBe(omitted);
+                /** ⛔ AND TYPED-0 IS A DIFFERENT ROOM — the TWO STREAMS the
+                 *  resolver exists to keep apart. */
+                expect(render(room(kind, seed, { chambers: 0 }))).not.toBe(omitted);
             }
         }
+        /** ⛓ `rooms` DECLARES `chambers` AND THE DEFAULT DOES NOT REACH IT:
+         *  `recursive_division` already makes rooms (the census measures 1.7-2.0
+         *  real chambers there against 0.1-0.2 on a bare tree kind), so the
+         *  byte-inert claim survives intact on the kind the default leaves
+         *  alone. */
+        for (const seed of [1, 2, 3, 4, 5, 6]) {
+            const bare = render(room('rooms', seed, undefined));
+            expect(render(room('rooms', seed, {}))).toBe(bare);
+            expect(render(room('rooms', seed, { chambers: 0 }))).toBe(bare);
+        }
+    });
+
+    it('⛔ the RESOLVER is idempotent, and its output is what a caller passes on', () => {
+        for (const spelling of ['winding', 'winding;chambers=0', 'winding;chambers=2', 'rooms']) {
+            const once = seedlingSkeletonSpec(spelling);
+            expect(seedlingSkeletonSpec(once)).toEqual(once);
+            expect(render(seedlingModel({ seed: 4, skeleton: once }).skeleton()))
+                .toBe(render(seedlingModel({ seed: 4, skeleton: spelling === 'rooms'
+                    ? { kind: 'rooms' } : seedlingSkeletonSpec(spelling) }).skeleton()));
+        }
+        /** ⛔ AND `model.skeletonSpec` IS **NOT** AN INPUT — it is the canonical
+         *  spelling (default by absence), so feeding it back would lose a typed
+         *  0 exactly as a bare `parseSkeleton` result would. Driven, so the
+         *  contract is a row rather than a docblock. */
+        const typedZero = seedlingModel({ seed: 4,
+            skeleton: seedlingSkeletonSpec('winding;chambers=0') });
+        expect(typedZero.skeletonSpec).toEqual({ kind: 'winding' });
+        expect(render(seedlingModel({ seed: 4, skeleton: typedZero.skeletonSpec }).skeleton()))
+            .not.toBe(render(typedZero.skeleton()));
     });
 
     /**

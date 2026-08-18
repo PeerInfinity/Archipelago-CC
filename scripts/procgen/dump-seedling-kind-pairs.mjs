@@ -44,7 +44,8 @@ const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const mod = async (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 
 const { BIOME_NAMES, paletteFor } = await mod('frontend/modules/seedlingDemo/watchGenerate.js');
-const { generateSeedlingLevel } = await mod('frontend/modules/seedlingDemo/procgenSeedling.js');
+const { generateSeedlingLevel, seedlingSkeletonSpec } =
+    await mod('frontend/modules/seedlingDemo/procgenSeedling.js');
 const { parseSkeleton } = await mod('frontend/modules/procgenCore/skeletonKinds.js');
 
 const argv = process.argv.slice(2);
@@ -81,7 +82,8 @@ const md5 = (s) => crypto.createHash('md5').update(s).digest('hex');
 console.log(`# dump-seedling-kind-pairs kinds=${KINDS.join(',')} seeds=${SEEDS[0]}..`
     + `${SEEDS[SEEDS.length - 1]} palettes=${BIOMES.join(',')} count=${COUNT}`);
 for (const kindSpec of KINDS) {
-    const skeleton = parseSkeleton(kindSpec, { simulator: false, substrate: 'this dump' });
+    /** ⛓ arc 3 slice 4b — the SEEDLING resolver (the `chambers` default). */
+    const skeleton = seedlingSkeletonSpec(kindSpec);
     for (const biome of BIOMES) {
         for (const seed of SEEDS) {
             let row;

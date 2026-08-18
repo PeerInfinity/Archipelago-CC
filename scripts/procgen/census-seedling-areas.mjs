@@ -39,7 +39,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const M = (p) => import(join(REPO, 'frontend/modules', p));
 
-const { defaultElementsFor, seedlingModel } = await M('seedlingDemo/procgenSeedling.js');
+const { defaultElementsFor, seedlingModel, seedlingSkeletonSpec } =
+    await M('seedlingDemo/procgenSeedling.js');
 const { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
 const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
 const { TAGS_PER_LEVEL } = await M('seedlingDemo/breakableRocks.js');
@@ -106,8 +107,7 @@ const rows = [];
 for (const kindSpec of KINDS) {
     for (const [biome, palette] of BIOMES) {
         for (const seed of SEEDS) {
-            const skeleton = parseSkeleton(kindSpec,
-                { simulator: false, substrate: 'the area census' });
+            const skeleton = seedlingSkeletonSpec(kindSpec);
             let model = null;
             let error = null;
             try {

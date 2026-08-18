@@ -155,9 +155,20 @@ describe('the site vocabulary is enforced where a template declares it', () => {
      *
      * ⛔ SO ≈0 KEPT ON A CORRIDOR-ONLY SKELETON IS THE TRUTH ABOUT THAT ROOM,
      * and this test asserts the refusal rather than working around it.
+     *
+     * ⚠⚠ **THE SPELLING OF "A CORRIDOR-ONLY ROOM" CHANGED IN ARC 3 SLICE 4b**,
+     * and the row is re-pointed rather than re-picked (trap 285's other side:
+     * this is not a subject that MOVED, it is a subject that acquired a name).
+     * Seedling's five carved TREE kinds now DEFAULT to `chambers = 1` (D6, the
+     * remedy for 4c §13.11.1's *"pass 2 has no AREA to decorate"*), so a bare
+     * `{kind: 'winding'}` is a room WITH a chamber. The room this ruling is
+     * about — the one the census measured, with no all-ground 2x2 square
+     * anywhere — is spelled `{chambers: 0}` now, and the ruling it demonstrates
+     * is unchanged: where a class is empty there is NO FALLBACK.
      */
     it('⛔ a class this skeleton has NONE of is an honest NO_ANCHOR — no fallback', () => {
-        const m = seedlingModel({ seed: 1, skeleton: { kind: 'winding' } });
+        const m = seedlingModel({ seed: 1,
+            skeleton: { kind: 'winding', params: { chambers: 0 } } });
         const rec = m.skeleton();
         expect(m.sites.chamber).toEqual([]);
         expect(m.anchorsFor(rec, probe('chamber'), rngFor(2), 20)).toEqual([]);
@@ -172,7 +183,11 @@ describe('the site vocabulary is enforced where a template declares it', () => {
      * the yield table publishes beside the bare one (as-built §8.4).
      */
     it('⛓ …and a STAMPED chamber gives the same row somewhere to go', () => {
+        /** ⛓ AND SINCE SLICE 4b THIS IS WHAT A BARE `winding` DOES — the same
+         *  model, reached by omitting the knob rather than by naming it. */
         const m = seedlingModel({ seed: 1, skeleton: { kind: 'winding', params: { chambers: 1 } } });
+        expect(m.skeleton()).toEqual(seedlingModel({ seed: 1,
+            skeleton: { kind: 'winding' } }).skeleton());
         const rec = m.skeleton();
         expect(m.sites.chamber.length).toBeGreaterThan(0);
         const anchors = m.anchorsFor(rec, probe('chamber'), rngFor(2), 20);
