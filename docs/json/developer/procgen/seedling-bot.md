@@ -10175,6 +10175,29 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   with their reason rather than left silent. ⛔ The lab pages gained a link and
   `title=` tooltips and **nothing else**: all six of their browser rows are the
   number they were (199 / 81 / 61 / 50 / 122 / 57).
+- **THE REFERENCE** — ⛓ 2026-08-18 (PROCGEN DOCS **P3a**), and it is the first
+  of the three that is **GENERATED rather than authored**. ⚖ The same ruling:
+  the docs that are DATA IN DISGUISE become pages that *"interact with the
+  scripts directly"*. The two hand-kept URL tables (this file's § *The URL
+  parameters, whole and current* and [maze.md](./maze.md)'s § *The URL grammar*)
+  are now POINTERS at
+  [**the reference page**](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html),
+  which renders three modules that
+  [`scripts/procgen/generate-procgen-reference.mjs`](../../../../scripts/procgen/generate-procgen-reference.mjs)
+  writes out of the code itself: **33 URL parameters** over the two pages (3
+  retired, 4 codecs), the whole **generation catalogue** (3 biomes · 8 template
+  rows · 12 excluded · 3 element heads · 18 skeleton kinds, with the codec's
+  defaults AND the binding's effective ones side by side), and the **refusal
+  vocabulary** — **101 names** over 10 sources, 27 of them from a list constant
+  and 74 literal-scanned. ⛔ **The rule is `--check` = regenerate-no-diff**, the
+  same shape as a recorded md5, and the generator NEVER edits the code it reads:
+  where a hand-kept list and the code disagree the page prints the code's answer
+  and NAMES the disagreement — which is how P3a found that
+  `the-tunnel-shortens-the-way-to-the-goal` fires in
+  `procgenSeedlingElements.js` and is missing from `SEEDLING_ELEMENT_REFUSALS`,
+  so a census keyed on that constant cannot count it. The row is
+  `scripts/procgen/check-procgen-reference.mjs` — **19 claims / 0 fail** — and
+  the lab pages gained a third header link and **nothing else**.
 
 #### The ledger's phases and paintables, as of the arc's close
 
