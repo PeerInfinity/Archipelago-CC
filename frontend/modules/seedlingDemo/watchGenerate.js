@@ -700,6 +700,12 @@ export function generateStep({
              * directive that met nothing.
              */
             require: seam.require?.asked?.length ? seam.require : null,
+            /**
+             * ⛓⛓ SLICE 5a (D3/D4) — **THE PASS-1 LEDGER**, model rows plus the
+             * seam's certification. ⛔ It is on the STATE and NOT on `summary`,
+             * so it reaches the page and no payload (4d §15.13's false mover).
+             */
+            ledger: seam.ledger,
             stop: null,
             saturated: false,
             budget: b,
@@ -744,6 +750,9 @@ export function generateStep({
         elements: out.summary.elements ?? null,
         areas: out.summary.areas ?? null,
         require: out.summary.require ?? null,
+        /** ⛓⛓ SLICE 5a — the PASS-1 ledger; pass 2 is `trace` and is not
+         *  duplicated here. */
+        ledger: out.ledger,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.

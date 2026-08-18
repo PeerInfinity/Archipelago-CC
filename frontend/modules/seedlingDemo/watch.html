@@ -561,6 +561,55 @@
       <button id="genReset">RESET to the skeleton</button>
       <button id="genDownload">Download level JSON + trace</button>
     </div>
+    <!--
+      ⛓⛓⛓ THE PHASE LADDER + THE OVERLAYS (PROCGEN ELEMENTS arc 3, slice 5a,
+      D4/D4'/D5) — ⚖ the user's own requirement on the 2026-08-17 generation
+      review: *"a step-through of the WHOLE generation — a button per step and a
+      report at each"*.
+
+      ⛔ IT IS A **VIEW** SETTING, NOT A RUN. It reveals a phase from the LEDGER
+      the model recorded at construction; it re-DRAWS and never regenerates, it
+      is not written to the URL, and it does not touch the ladder. Today's STEP
+      (obstacleTarget = k, re-run) is pass 2's and is unchanged — this ladder
+      sits in FRONT of it and hands over at the last pass-1 row.
+
+      ⛔ AND THE PHASE CONTROLS ARE IN THEIR OWN BOX. `#layers` holds one input
+      per `OVERLAY_LAYERS` row and three acceptance rows ENUMERATE it (the
+      group-B lesson); a phase control dropped in there would count as a layer.
+    -->
+    <div class="line">
+      <b>generation phases</b>
+      <button id="genPhasePrev">◀ PHASE</button>
+      <input id="genPhase" type="range" min="0" max="0" step="1" style="width:14em">
+      <button id="genPhaseNext">PHASE ▶</button>
+      <button id="genPhaseEnd">the FINISHED level</button>
+      <span id="genPhaseLabel" class="note"></span>
+    </div>
+    <!-- ⛓⛓ THE ROW'S OWN SENTENCE, its counts and its refusal BY NAME, plus one
+         SELECTABLE line per intermediate result. ⚖ The user's ruling of
+         2026-08-18: *"only display the visual representation when the
+         corresponding TEXT DESCRIPTION is selected"* — so the picture is
+         selection-driven and one hue plus an outlined pick is enough. -->
+    <div id="genPhaseNote" class="note"></div>
+    <div id="genPhaseFacts"></div>
+    <!-- ⛓⛓ THE THREE OVERLAYS, cumulative, as ONE stepper — the maze lab's own
+         control (`labAreaLayer`), one substrate over. A VIEW setting: it
+         re-draws, never resets, and is not in the URL. -->
+    <div class="line">
+      <label for="genLayer">overlay</label>
+      <select id="genLayer">
+        <option value="off">off — the level as the renderer left it</option>
+        <option value="sites">sites — every site class, hue-coded</option>
+        <option value="elements">+ elements — the gadget's own geometry</option>
+        <option value="areas">+ areas — the partition, its locks and its flags</option>
+        <option value="all">all</option>
+      </select>
+      <button id="genLayerNext">next layer</button>
+      <span id="genLayerNote" class="note"></span>
+    </div>
+    <!-- ⛔ NO TEXT ON THE CANVAS (arc-1's rule): the symbols are named ONCE
+         each here and the picture carries only colour. -->
+    <div id="genLegend"></div>
     <!-- ⛓⛓⛓ THE BRIDGE (switch slice 4): hand the level you are looking at
          to the arms that take one. In memory and in place — a generated room
          is not in the atlas and not on disk, so the alternative was a

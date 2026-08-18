@@ -1362,6 +1362,13 @@ export function seedlingModel({
                     kind: 'outline',
                     cells: pl.clearer,
                 }),
+                pl && (pl.wall?.length ?? 0) > 0 && paintable({
+                    id: 'wall-grown',
+                    label: `${pl.wall.length} cell(s) of WALL the element GREW — what makes the `
+                        + 'door a CUT rather than a decoration',
+                    kind: 'cells',
+                    cells: pl.wall,
+                }),
                 pl && (pl.demand?.length ?? 0) > 0 && paintable({
                     id: 'demand-region',
                     label: `the DEMAND — ${pl.demand.length} cell(s) the element's BODY moves `

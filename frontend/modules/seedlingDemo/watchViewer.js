@@ -170,13 +170,30 @@ import {
 /** ⛓ SLICE 5a (D1) — the `?gen=` path re-parses the AREA spec, which
  *  `areaSummaryOf` reports as a STRING (arc-2 §11.5's asymmetry). */
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
+/**
+ * ⛓⛓⛓ ARC 3 SLICE 5a (D4/D5) — the STEP-THROUGH's fold and the three SIBLING
+ * overlays. ⛔ `drawGenOverlay`/`drawPaintables` are called AFTER
+ * `renderer.draw` on the same canvas; `makeRenderer.draw` and `OVERLAY_LAYERS`
+ * are untouched, so the world row's `drawn.*` readouts are unmoved.
+ */
+import { foldLedger } from './procgenLedger.js';
+import {
+    GEN_LAYERS, drawGenOverlay, drawPaintables, genOverlaysFor,
+} from './watchGenOverlay.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
 import { catalogueRows, restrictPalette } from './procgenPalette.js';
 // ⛓ SLICE 11 adds `TERRAIN_NAMES` — the edit tool's terrain picker is mounted
 // from the four-terrain vocabulary itself, so this file keeps no second list.
-import { atlasOf, TERRAIN_NAMES } from './procgenLevel.js';
+/**
+ * ⛓ SLICE 5a adds `emptyLevel`/`withTerrain`/`withEntities` — the STEP-THROUGH
+ * rebuilds phase k's room from the ledger's DELTAS through the record's own
+ * pure writers, never by a second construction.
+ */
+import {
+    atlasOf, emptyLevel, TERRAIN_NAMES, withEntities, withTerrain,
+} from './procgenLevel.js';
 /**
  * ⛓⛓⛓ SLICE 11 (constructive-mode arc) — FREE TILE / OBJECT EDITING. ⚖ Ruling
  * 8 + §3.8. The ops are PURE and live there; this file is the tool UI, the one
@@ -1595,8 +1612,19 @@ function mountLayerControls(on, redraw) {
  *   reports "no solver ran" by NAME rather than drawing an empty picture that
  *   looks like a calm room (trap 196, and item 9 names the sentence).
  */
+/**
+ * ⛓⛓⛓ `afterDraw` — **THE SIBLING-OVERLAY SEAM** (PROCGEN ELEMENTS arc 3,
+ * slice 5a, D5). ⛔ It is a CALLBACK and not a new `view` field on the renderer:
+ * `makeRenderer.draw`'s contract is that every option says how to PRESENT THE
+ * WORLD IT WAS HANDED, and a site class or an area partition is a fact about
+ * the MODEL that produced the world — the renderer's other callers (SOLVE,
+ * MANUAL, the panel) have no model at all. Extending the renderer would also
+ * expire the world row's `drawn.*` readouts, which are a gate. ⇒ the GENERATE
+ * arm is the ONE caller that passes this, and it draws AFTER every
+ * `renderer.draw`, including every scrub frame.
+ */
 async function replayTape(tape, label, params, levelSource, traceSource = null,
-    dangerQueries = null, { scratchPersistence = false } = {}) {
+    dangerQueries = null, { scratchPersistence = false, afterDraw = null } = {}) {
     replayGeneration += 1;
     const myGeneration = replayGeneration;
     const canvas = $('canvas');
@@ -1723,6 +1751,9 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
             live: { crushers: f.crushers, crusherScans: f.crusherScans },
             dangerQueries,
         });
+        // ⛓ SLICE 5a — THE SIBLINGS, after every draw including every scrub
+        // frame. `null` on every arm but GENERATE.
+        afterDraw?.(canvas);
         // ⛓ GROUP B: scrubbing a REPLAY through a pickup shows its text too —
         // the same call the manual arm makes, over the same sample channel.
         dialogue = renderDialogue(samples, cursor, f.observation.level);
@@ -2556,7 +2587,7 @@ function chooseSpawn(levelSource, block, level) {
  * still finish mounting, or a bad `?level=` would leave you with no panel to
  * fix it in.
  */
-function previewLevel(levelSource, staging, layers, lifetime) {
+function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) {
     try {
         const run = createRunForStaging(solveStaging(staging), levelSource,
             { scratchPersistence: isHeldLevel(staging.boot.level) });
@@ -2584,6 +2615,8 @@ function previewLevel(levelSource, staging, layers, lifetime) {
             // is told to SAY so rather than drawing a calm room.
             dangerQueries: null,
         });
+        // ⛓ SLICE 5a (D5) — the SIBLING overlays, on the same canvas.
+        afterDraw?.($('canvas'));
         /**
          * ⛓⛓⛓ WHERE THE PLAYER ACTUALLY IS IN THE DRAWN ROOM, AND WHETHER
          * THEY FIT — ⚖ the entrances item's own witness.
@@ -4669,6 +4702,32 @@ async function runGenerate(params, lifetime) {
      */
     let armed = null;
     /**
+     * ── ⛓⛓⛓ SLICE 5a (D4/D4'/D5) — **THE PHASE LADDER AND THE OVERLAYS, AS
+     * ── VIEW STATE** ────────────────────────────────────────────────────
+     *
+     * ⛔ ALL THREE ARE VIEW SETTINGS: they RE-DRAW, they never regenerate, and
+     * NONE of them is written to the URL (the maze lab's layer stepper is the
+     * pattern, arc-1 §10). A phase index in the bar would name a picture rather
+     * than a run, and the run is what a link is for.
+     *
+     *   `phaseIndex`  `null` = the FINISHED level (what the page has always
+     *                 shown); an integer = *everything up to and including
+     *                 ledger row k*, rebuilt from the row DELTAS and handed to
+     *                 the EXISTING renderer. ⛔ Nothing is re-run.
+     *   `genLayer`    `off → sites → elements → areas → all`, cumulative.
+     *   `selectedFacts` the paintable ids the reader has TICKED — ⚖ the user's
+     *                 ruling of 2026-08-18: the picture follows the TEXT
+     *                 selection, so overlapping facts are the reader's problem
+     *                 to sequence rather than the palette's to distinguish.
+     *
+     * ⛔ Declared HERE with `state` and `armed` for the measured reason (trap
+     * 252): the mount-time render reads them, and a `let` declared below would
+     * throw in the temporal dead zone.
+     */
+    let phaseIndex = null;
+    let genLayer = 'off';
+    let selectedFacts = new Set();
+    /**
      * ⛓⛓⛓ SLICE 11 — **THE CERTIFICATION, AS PAGE STATE** (⚖ §3.8(b)).
      *
      *   `null`               NOBODY HAS ASKED about the record now on screen
@@ -4964,6 +5023,179 @@ async function runGenerate(params, lifetime) {
      * ⚠ IT RETURNS THE READOUT RATHER THAN SETTING IT, so RUN-ALL can decide
      * what to do next from the same object the acceptance row reads.
      */
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ SLICE 5a — THE PHASE LADDER, THE OVERLAYS AND THE LEGEND
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /** ⛓ The pass-1 ledger of the state on screen — EMPTY before the first
+     *  generation, which is what the controls are disabled on. */
+    const ledgerOf = () => state?.ledger ?? [];
+
+    /**
+     * ⛓⛓⛓ **THE OVERLAY DATA — AND IT IS THE PICTURE'S ARGUMENT.**
+     * `window.__editorGenerate.overlays` publishes THIS object, the very one
+     * `drawGenOverlay` consumed, so a browser row asserting a cell list is
+     * asserting something about the canvas (arc-2 §11.2's law: two functions
+     * would let the picture be wrong while the readout stayed right).
+     */
+    const overlayData = () => genOverlaysFor(state?.model ?? null,
+        { layer: genLayer, phase: phaseIndex });
+
+    /** ⛓ The paintables the reader has TICKED, in the row's own order. ⚖ The
+     *  2026-08-18 ruling: the picture follows the TEXT selection. */
+    const selectedPaintables = () => {
+        const row = phaseIndex === null ? null : ledgerOf()[phaseIndex];
+        return (row?.data.facts ?? []).filter((f) => selectedFacts.has(f.id));
+    };
+
+    /**
+     * ⛔ THE SIBLING DRAW. `tilePx` is derived from the CANVAS the renderer
+     * just sized (`canvas.width / world.width`) rather than from the
+     * renderer's private scale — one reading, and it is the picture's own
+     * geometry.
+     */
+    const afterDrawGen = (canvas) => {
+        const cols = state?.record?.width ?? 0;
+        if (!cols || !canvas?.width) return;
+        const view = { tilePx: canvas.width / cols };
+        const ctx = canvas.getContext('2d');
+        drawGenOverlay(ctx, overlayData(), view);
+        drawPaintables(ctx, selectedPaintables(), view);
+    };
+
+    /**
+     * ⛓⛓ THE LEGEND — one row per SYMBOL, never per cell (arc-1's rule), and
+     * DERIVED from the overlay data so the page cannot name something the draw
+     * did not paint.
+     */
+    function renderLegend() {
+        const data = overlayData();
+        $('genLegend').innerHTML = data.legend.length === 0
+            ? (genLayer === 'off' ? '' : '<span class="note">nothing to draw at this layer</span>')
+            : data.legend.map((row) => `<div class="tr">`
+                + (row.color
+                    ? `<span style="display:inline-block;width:1em;height:1em;`
+                        + `background:${row.color};vertical-align:middle"></span> ` : '⛔ ')
+                + `${esc(row.label)}${row.count ? ` — ${row.count} cell(s)` : ''}`
+                + `${row.note ? ` <span class="note">(${esc(row.note)})</span>` : ''}</div>`)
+                .join('');
+        $('genLayerNote').textContent = genLayer === 'off' ? ''
+            : `${data.groups.length} group(s), ${data.counts.sites + data.counts.elements
+                + data.counts.areas} cell(s) drawn`;
+    }
+
+    /**
+     * ⛓⛓⛓ **THE PHASE READOUT — THE ROW'S OWN SENTENCE**, its counts and its
+     * refusal BY NAME, plus one SELECTABLE line per intermediate result.
+     *
+     * ⛔ THE SENTENCE IS THE PHASE'S, VERBATIM. Nothing here re-narrates a
+     * phase: a page that wrote its own summary of what the carve did would be a
+     * second answer to the question the ledger exists to answer once.
+     */
+    function renderPhaseNote() {
+        const rows = ledgerOf();
+        const at = phaseIndex;
+        $('genPhase').max = String(Math.max(0, rows.length - 1));
+        $('genPhase').disabled = rows.length === 0;
+        /**
+         * ⛔ **`◀ PHASE` FROM THE FINISHED LEVEL ENTERS AT THE LAST ROW AND
+         * `PHASE ▶` AT THE FIRST**, so neither is dead on arrival — the state a
+         * reader starts in IS the finished one, and a disabled pair there would
+         * make the ladder look like it had not been built. Only the ENDS
+         * disable.
+         */
+        $('genPhasePrev').disabled = rows.length === 0 || at === 0;
+        $('genPhaseNext').disabled = rows.length === 0 || at === rows.length - 1;
+        $('genPhaseEnd').disabled = at === null;
+        if (at === null) {
+            $('genPhaseLabel').textContent = rows.length
+                ? `the FINISHED level — ${rows.length} pass-1 phase(s) recorded; `
+                    + 'STEP is pass 2'
+                : 'no generation yet';
+            $('genPhaseNote').textContent = '';
+            $('genPhaseFacts').innerHTML = '';
+            return;
+        }
+        const row = rows[at];
+        $('genPhase').value = String(at);
+        $('genPhaseLabel').textContent = `phase ${at + 1} of ${rows.length} — `
+            + `${row.phase}${at === rows.length - 1
+                ? '  ·  pass 2 — use STEP' : ''}`;
+        /**
+         * ⛓ THE DELTA IS THE ROW'S OWN, not a recount of the picture: `changed`
+         * is what THIS phase wrote over the one before it.
+         */
+        $('genPhaseNote').textContent = `${row.sentence}`
+            + `  ·  ${row.tiles.changed.length} tile(s) changed, `
+            + `${row.entities.added.length} entit(y|ies) added`
+            + `${row.entities.removed.length ? `, ${row.entities.removed.length} removed` : ''}`
+            + `  ·  draws ${row.draws.before} → ${row.draws.after}`
+            + (row.refusal ? `  ·  ⛔ REFUSED: ${row.refusal.reason}` : '');
+        $('genPhaseFacts').innerHTML = row.data.facts.length === 0
+            ? '<span class="note">this phase recorded no paintable intermediate result</span>'
+            : `<label class="note"><input type="checkbox" data-fact="__all"`
+                + `${row.data.facts.every((f) => selectedFacts.has(f.id)) ? ' checked' : ''}>`
+                + ' ALL of this phase\'s facts</label>'
+                + row.data.facts.map((f) => `<label class="tr">`
+                    + `<input type="checkbox" data-fact="${esc(f.id)}"`
+                    + `${selectedFacts.has(f.id) ? ' checked' : ''}> ${esc(f.label)}`
+                    + ` — ${f.count} cell(s)${f.pick ? `, pick (${f.pick.x},${f.pick.y})` : ''}`
+                    + `${f.note ? ` <span class="note">(${esc(f.note)})</span>` : ''}</label>`)
+                    .join('');
+    }
+
+    /**
+     * ⛓⛓⛓ **PHASE k, DRAWN — AND NOTHING IS RE-RUN.** The room is rebuilt from
+     * the ledger's own DELTAS (`foldLedger`) and handed to the EXISTING
+     * renderer as a still frame. ⛔ The renderer is not changed and the model is
+     * not rebuilt: a step-through that regenerated would be a second generator
+     * with its own answer.
+     */
+    async function showPhase() {
+        const rows = ledgerOf();
+        const at = phaseIndex;
+        if (at === null || !rows.length) return;
+        const folded = foldLedger(rows, at,
+            { width: state.record.width, height: state.record.height });
+        const walled = emptyLevel({ level: state.record.level, width: state.record.width,
+            height: state.record.height, floor: 'wall' });
+        const record = withEntities(withTerrain(walled, folded.terrain), folded.entities);
+        const staging = { ...displayStaging(state), boot: displayStaging(state).boot };
+        const why = previewLevel(levelSourceFromAtlas(atlasOf(record)),
+            { ...staging, boot: { ...staging.boot, level: record.level } },
+            layerSetFor(params), lifetime, afterDrawGen).why;
+        $('status').className = why ? 'bad' : '';
+        $('status').textContent = why
+            ? `phase ${at + 1}/${rows.length} (${rows[at].phase}) would not BUILD: ${why}`
+            : `phase ${at + 1}/${rows.length} — ${rows[at].phase} (a VIEW; nothing was re-run)`;
+        renderPhaseNote();
+        renderLegend();
+        publishPhase(record);
+    }
+
+    /**
+     * ⛔ THE READOUT PUBLISHES THE **SAME OBJECTS** THE DRAW CONSUMED — the row,
+     * the selected paintables and the overlay data — so a browser row asserting
+     * a cell list is asserting something about the canvas (value ≠ echo).
+     */
+    function publishPhase(record = null) {
+        const rows = ledgerOf();
+        window.__editorGenerate = {
+            ...(window.__editorGenerate ?? {}),
+            phase: {
+                index: phaseIndex,
+                count: rows.length,
+                phases: rows.map((r) => r.phase),
+                row: phaseIndex === null ? null : rows[phaseIndex],
+                selected: selectedPaintables(),
+                level: record,
+            },
+            layer: genLayer,
+            overlays: overlayData(),
+            legend: overlayData().legend,
+        };
+    }
+
     async function show(why, { certifying = false } = {}) {
         const edited = (state.edits ?? []).length > 0;
         const solving = !edited || certifying;
@@ -5132,10 +5364,11 @@ async function runGenerate(params, lifetime) {
                 { trace: solved.trace, why: null }, solved.dangerQueries,
                 // ⛓ THE SCRUB FORK — see `replayTape`'s own note. This arm is the
                 // one caller: the tape it is scrubbing came from a scratch solve.
-                { scratchPersistence: true }));
+                // ⛓ SLICE 5a: and the SIBLING overlays, after every scrub frame.
+                { scratchPersistence: true, afterDraw: afterDrawGen }));
         } else {
             stillWhy = previewLevel(levelSource, displayStaging(state),
-                layerSetFor(params), lifetime).why;
+                layerSetFor(params), lifetime, afterDrawGen).why;
         }
 
         $('status').className = stillWhy ? 'bad' : 'ok';
@@ -5297,6 +5530,15 @@ async function runGenerate(params, lifetime) {
             agreement,
             payloadCheck: payload?.__check ?? null,
         };
+        /**
+         * ⛓⛓ SLICE 5a — THE PHASE BLOCK AND THE OVERLAYS RIDE THE ORDINARY
+         * READOUT. ⛔ Written AFTER the readout above rather than into it,
+         * because `publishPhase` is also what the phase controls call on their
+         * own — one writer of these three fields, whichever path got here.
+         */
+        publishPhase(null);
+        renderPhaseNote();
+        renderLegend();
         window.__editorGenerated = lastPayload;
         /**
          * ── ⛓⛓⛓ THE DRAWN LEVEL **IS** THE PAGE'S LEVEL (group A, item 1) ──
@@ -5984,6 +6226,66 @@ async function runGenerate(params, lifetime) {
         readForm();
         await resetToSkeleton('RESET — the skeleton');
     };
+
+    /* ── ⛓⛓⛓ SLICE 5a — THE PHASE LADDER AND THE OVERLAY STEPPER ───────
+     *
+     * ⛔ EVERY ONE OF THESE IS A **VIEW** CONTROL: it re-DRAWS, it never
+     * regenerates, it does not touch the ladder and it is not written to the
+     * URL (arc-1's law for the maze's layer stepper, one substrate over). ⛓ And
+     * they hand over: at the LAST pass-1 row the label says *"pass 2 — use
+     * STEP"*, and today's STEP (obstacleTarget = k, re-run) is unchanged.
+     */
+    const goToPhase = async (next) => {
+        const rows = ledgerOf();
+        if (!rows.length) return;
+        const at = next === null ? null
+            : Math.max(0, Math.min(rows.length - 1, next));
+        /** ⛔ THE SELECTION IS SCOPED TO ITS ROW. A fact id is unique within a
+         *  phase and not across them, so carrying ticks forward would paint a
+         *  cell list from a phase the reader is no longer looking at. */
+        if (at !== phaseIndex) selectedFacts = new Set();
+        phaseIndex = at;
+        if (at === null) {
+            /** ⛓ BACK TO THE FINISHED LEVEL — through the page's ONE display
+             *  path, so the level on screen is the level the state holds. */
+            await show('back to the FINISHED level');
+        } else {
+            await showPhase();
+        }
+    };
+    lifetime.on($('genPhase'), 'input', () => goToPhase(Number($('genPhase').value)));
+    lifetime.on($('genPhasePrev'), 'click',
+        () => goToPhase(phaseIndex === null ? ledgerOf().length - 1 : phaseIndex - 1));
+    lifetime.on($('genPhaseNext'), 'click',
+        () => goToPhase(phaseIndex === null ? 0 : phaseIndex + 1));
+    lifetime.on($('genPhaseEnd'), 'click', () => goToPhase(null));
+    /**
+     * ⛓⛓⛓ ⚖ THE USER'S RULING OF 2026-08-18 — *"only display the visual
+     * representation when the corresponding TEXT DESCRIPTION is selected"*. The
+     * readout's lines ARE the control, and one generic painter draws whichever
+     * are ticked; there is no per-fact drawing code and therefore no per-fact
+     * hue vocabulary to keep in step.
+     */
+    lifetime.on($('genPhaseFacts'), 'change', async (e) => {
+        const id = e.target?.dataset?.fact;
+        if (!id) return;
+        const row = phaseIndex === null ? null : ledgerOf()[phaseIndex];
+        if (id === '__all') {
+            selectedFacts = e.target.checked
+                ? new Set((row?.data.facts ?? []).map((f) => f.id)) : new Set();
+        } else if (e.target.checked) selectedFacts.add(id);
+        else selectedFacts.delete(id);
+        await showPhase();
+    });
+    const setLayer = async (next) => {
+        genLayer = next;
+        $('genLayer').value = next;
+        if (phaseIndex === null) await show(`overlay: ${next}`);
+        else await showPhase();
+    };
+    lifetime.on($('genLayer'), 'change', () => setLayer($('genLayer').value));
+    lifetime.on($('genLayerNext'), 'click',
+        () => setLayer(GEN_LAYERS[(GEN_LAYERS.indexOf(genLayer) + 1) % GEN_LAYERS.length]));
     /**
      * ⛔ THE DOWNLOAD IS THE CLI'S OWN PAYLOAD SHAPE, so a level generated in
      * the page can be handed straight back to `--gen=` (and to the batch's
