@@ -8784,6 +8784,17 @@ warns and is ignored — the wall clock it set no longer exists).
 | `?tickbudget=` | the per-solve budget. No control on the form, and PRESERVED across every rewrite |
 | `?run=1` | RUN-ALL on load. DELETED at step 0 rather than spelt `run=0` |
 | `?gen=PATH` | a CLI payload to REPRODUCE and COMPARE — a determinism check across node and the browser, not a picture of a file |
+| `?skeleton=<kind>[;k=v]…` | the ROOM the ladder starts from. ⛓⛓ **A TYPED `;chambers=0` IS SPELLABLE** (arc 3, slice 5a): Seedling's five carved tree kinds default `chambers` to **1** while the codec's default is 0, so the reader takes the string AS TYPED and the writer spells `chambers` EXPLICITLY on those five. `winding` → `winding;chambers=1`; `winding;chambers=0` stays a typed 0 and builds a different room |
+| `?elements=<name>[;k=v]…` | ⛓⛓ **arc 3, slice 5a.** The pass-1 ELEMENT. ⛔ **ABSENT ≠ `none` HERE**: absent is *nobody said* and reaches the BIOME DEFAULT (`guard;len=2+blockpocket`, plus `killgate` post-sword), while `?elements=none` is a CHOICE that turns it off — so the writer SPELLS `none` where the maze deletes it. ⚠ A NAMED parameter at its default is KEPT (`guard` ≠ `guard;len=2`: a named parameter spends no draw, an omitted one is DRAWN) |
+| `?areas=<keys>[;k=v]…` | ⛓ **arc 3, slice 5a.** The AREA GRAPH. Absent ≡ `0` ≡ the module does not run at all, and the writer deletes it there |
+| `?require=<item>[,<item>]` | ⛓ **arc 3, slice 5a.** The rule-directed run — an ITEM FLAG (`hasSword`), not the maze's area-graph symbol. Absent is NO directive; an EMPTY value REFUSES. ⛔ A REFUSED directive still SHOWS the level the run produced, labelled — the CLI's own exit-6 behaviour, which is where the Seedling page follows the CLI rather than arc-1's maze rule |
+
+⛓⛓⛓ **THE PHASE LADDER AND THE OVERLAYS ARE *NOT* URL PARAMETERS** (arc 3,
+slice 5a). `#genPhase` (the generation phase on screen), `#genLayer` (the
+`off → sites → elements → areas → all` overlay) and the per-phase FACT
+selection are **VIEW settings**: they re-DRAW, they never regenerate, they do
+not touch the ladder, and none of them is written to the bar — a phase index in
+a link would name a picture rather than a run, and a run is what a link is for.
 
 `generate-seedling-level.mjs` carries the same set as flags
 (`--anchor-tries=`, `--families=`, `--templates=`, `--directed=`), parsed by the
@@ -8794,7 +8805,10 @@ SAME functions, so the two runtimes cannot disagree about what a construction is
 ⚖ **RULED by the user**: a URL names **the launch parameters a person types**,
 and nothing else. That list is `source · seed · biome · count/tries/k/anchortries
 · families|templates · skeleton;params · tickbudget` (the maze adds
-`width/height/expansions/areas/require`) `· gen`.
+`width/height/expansions`) `· gen`. ⛓ **Arc 3, slice 5a added
+`elements · areas · require` to the SEEDLING list too** — they are launch
+parameters by the same test (a person types them, and the run is what they
+name), and the page now READS all three rather than copying them forward.
 
 The **PAYLOAD is the construction**: `directives` + `edits`, in that order,
 replayed by `?gen=` and by the host's `procgenLab:load` on **both** lab pages.

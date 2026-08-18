@@ -1362,12 +1362,21 @@ export function seedlingModel({
                     kind: 'outline',
                     cells: pl.clearer,
                 }),
-                pl && (pl.wall?.length ?? 0) > 0 && paintable({
-                    id: 'wall-grown',
-                    label: `${pl.wall.length} cell(s) of WALL the element GREW — what makes the `
-                        + 'door a CUT rather than a decoration',
+                /**
+                 * ⛓⛓ **THE TILES THE ELEMENT DECLARES IT WILL WRITE** — its
+                 * grown wall and its carved pocket, together, in the CONTRACT's
+                 * own field. ⛔ NOT `placement.wall`: the raw placement has no
+                 * such field — `wall` and `carved` are the COMPOSITE's, split
+                 * out when it adjudicates — so a paintable reading it here
+                 * would be a guard clause that never fires under a label that
+                 * claims otherwise. The composite's own row carries `owned`.
+                 */
+                pl && (pl.tiles?.length ?? 0) > 0 && paintable({
+                    id: 'tiles-declared',
+                    label: `${pl.tiles.length} cell(s) the element DECLARES it will write — `
+                        + 'what makes the door a CUT rather than a decoration',
                     kind: 'cells',
-                    cells: pl.wall,
+                    cells: pl.tiles,
                 }),
                 pl && (pl.demand?.length ?? 0) > 0 && paintable({
                     id: 'demand-region',
