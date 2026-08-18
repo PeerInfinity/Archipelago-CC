@@ -688,13 +688,15 @@ try {
         text: document.getElementById('sourceStamp')?.textContent ?? '',
         cls: document.getElementById('sourceStamp')?.className ?? '',
     }));
-    check(/downloaded fresh|REVALIDATED|FROM YOUR BROWSER'S CACHE|no timing entry/
+    // ⛓ 2026-08-18: the cache state has THREE spellings now — cached AND
+    // current (a note), STALE (both dates, red), or unreadable (the old caution).
+    check(/downloaded fresh|REVALIDATED|served from your browser's cache|STALE SCRIPT|FROM YOUR BROWSER'S CACHE|no timing entry/
         .test(stamp.text),
-    '⛓⛓ the page STAMPS which copy of its own script is running — cache, 304 or network',
+    '⛓⛓ the page STAMPS which copy of its own script is running — cache (current / stale / unreadable), 304 or network',
     stamp.text.slice(0, 100));
-    check(/server copy |server answered no HEAD/.test(stamp.text),
+    check(/server copy |server's copy|both dated|server answered no HEAD/.test(stamp.text),
         '⛓ …beside the server\'s current copy, so "mine is older" is answerable at a glance',
-        /server copy [^·]*/.exec(stamp.text)?.[0]?.trim() ?? stamp.text.slice(-40));
+        /(server copy |server's copy is dated |both dated )[^·(]*/.exec(stamp.text)?.[0]?.trim() ?? stamp.text.slice(-40));
     check(errs.length === 0, 'no page errors on the opening frame',
         errs.slice(0, 2).join(' | ') || 'clean');
     await fresh.close();

@@ -7120,7 +7120,10 @@ async function stampSource() {
      * is false, and would have called it "cached/stale" just as wrongly.
      *
      *   `transferSize === 0`              taken from cache WITHOUT asking — the
-     *                                     only state that can be stale
+     *                                     only state that CAN be stale, so it
+     *                                     is measured further below (the
+     *                                     cached copy's own date vs the
+     *                                     server's) before it is called so
      *   `0 < transferSize < decoded`      REVALIDATED (304) — cached AND current
      *   `transferSize >= decodedBodySize` downloaded in full
      */
@@ -7146,16 +7149,40 @@ async function stampSource() {
     } catch { /* offline or blocked — reported as an absence below */ }
     const disk = onDisk ? `server copy ${onDisk}` : 'server answered no HEAD';
     if (state === 'cache') {
+        /**
+         * ⛓⛓ A CACHE HIT IS NOT YET A STALE COPY — MEASURE, THEN SAY WHICH
+         * (2026-08-18, after the message read as an alarm on GitHub Pages,
+         * where the host sends `Cache-Control: max-age=600` and a warm reload
+         * is SUPPOSED to come from cache). The cached copy's own
+         * `Last-Modified` is readable: `cache: 'only-if-cached'` (same-origin
+         * only) answers from the cache and never touches the network. Compared
+         * with the no-store HEAD's `Last-Modified` above there are three
+         * honest answers, and only ONE of them is the warning:
+         *   equal    ⇒ cached AND current — a plain note, no reload asked
+         *   differ   ⇒ STALE — both dates printed, HARD RELOAD asked
+         *   unreadable ⇒ the old caution, in the server's words, not "disk"
+         * ⛔ Still REPORTED, never acted on.
+         */
+        let cachedDate = null;
+        try {
+            const c = await fetch(href, { method: 'HEAD', cache: 'only-if-cached', mode: 'same-origin' });
+            if (c.ok) cachedDate = c.headers.get('last-modified');
+        } catch { /* the cache would not answer — reported as unreadable below */ }
+        const reload = 'HARD RELOAD (Ctrl+Shift+R) before believing anything about the page\'s behaviour';
+        if (cachedDate && onDisk && cachedDate === onDisk) {
+            el.className = 'note';
+            el.textContent = `script served from your browser's cache (transferSize 0) — and it is `
+                + `CURRENT: the cached copy and the server's copy are both dated ${onDisk} `
+                + '(this host allows caching; no reload needed)';
+            return;
+        }
         el.className = 'note bad';
-        // ⚠ IT SAYS WHAT IT MEASURED, AND NOT WHY. The browser's own timing
-        // entry is evidence that the body came from cache; WHICH header let it
-        // is not something this reading asked about, and a message that
-        // blamed the server would be a second claim with no measurement under
-        // it. The remedy is the same either way.
-        el.textContent = `⚠ THIS PAGE'S SCRIPT CAME FROM YOUR BROWSER'S CACHE WITHOUT `
-            + `ASKING THE SERVER (transferSize 0), so it may be older than what is on `
-            + `disk — HARD RELOAD (Ctrl+Shift+R) before believing anything about the `
-            + `page's behaviour. ${disk}`;
+        el.textContent = cachedDate && onDisk
+            ? `⚠ STALE SCRIPT: your browser's cached copy is dated ${cachedDate} but the `
+                + `server's copy is dated ${onDisk} — ${reload}.`
+            : `⚠ THIS PAGE'S SCRIPT CAME FROM YOUR BROWSER'S CACHE WITHOUT ASKING THE SERVER `
+                + `(transferSize 0) and the cached copy's date could not be read, so it may be `
+                + `older than the server's — ${reload}. ${disk}`;
         return;
     }
     el.className = 'note';
