@@ -314,6 +314,29 @@ describe('⛓⛓ D4 — the guard\'s flag is ADOPTED and its placeholder lock SU
         }
     });
 
+    /**
+     * ⛔⛔ **A MUTANT FOUND THIS ROW MISSING.** Dropping the `binds === 'item'`
+     * clause from `capacity.item` — so every area may hold a symbol whatever
+     * the element says — left all 23 rows of this file GREEN: the guarded class
+     * still had its one member, because a guard's area can win on merit.
+     *
+     * ⛓ THE CLAIM THAT DISCRIMINATES IS THE **RESTRICTION**, not the outcome:
+     * at `binds=item` the gadget's declared area is the ONLY one with
+     * `capacity.item`, so on a run where a guard declared an area AND the graph
+     * accepted, EVERY symbol must be in it. Measured: **1 of 1 at HEAD, 1 of 5
+     * under the mutant.**
+     */
+    it('⛔ `binds=item` RESTRICTS — where a guard declared an area and the graph ran, '
+        + 'EVERY flag is in it', () => {
+        const cells = scan((m) => m.areas.ran && m.elements.ran
+            && Boolean(m.elements.placed[0].areaCells),
+        { elements: defaultElementsFor(PRE_SWORD_PALETTE.items) });
+        expect(cells.length, 'no cell placed a guard AND accepted a graph').toBeGreaterThan(0);
+        for (const { kind, seed, model } of cells) {
+            expect(model.areas.flags.every((f) => f.guarded), `${kind} seed ${seed}`).toBe(true);
+        }
+    });
+
     it('⛓⛓⛓ the placeholder LOCK MOVED — it is gone from its cut cell, its tag is now '
         + 'the boundary locks\', and the cut cell WAS one of the boundary cells anyway', () => {
         for (const { model } of guarded) {

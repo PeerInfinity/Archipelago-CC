@@ -9374,7 +9374,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, and slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC, and slice 4b lifted the AREA PARTITION into `procgenCore/` and bound the AREA GRAPH to Seedling with a `chambers=1` default on the carved kinds**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9874,3 +9874,71 @@ as-built with every table is arc-3 kickoff **§13**.
   pass-2 decoration — pass 2 has no AREA to decorate** (⚖ ruling 24: area is pass
   1's). The remedy is a design residue — a non-zero default `chambers=k` for the
   carved kinds — and NOT slice 4c's to make.
+
+### Arc 3, slice 4b — the Seedling AREA BINDING, and the carved kinds get a `chambers` DEFAULT (2026-08-17)
+
+The as-built is arc-3 kickoff §14. What a reader of this file needs:
+
+- **ONE AREA PARTITION, TWO SUBSTRATES.** `procgenCore/areaPartition.js` now
+  holds the rule arc 1 wrote inside `mazeRoom/procgenMaze.js` — *a cell is WIDE
+  iff it belongs to at least one all-floor 2×2 square; an AREA is a maximal
+  4-connected blob of WIDE cells; every other floor cell is a CORRIDOR cell, an
+  EDGE* — together with the level-n flood. `partitionMazeAreas` and
+  `verifyAreaLevels` keep their names and are ADAPTERS supplying the maze's
+  terrain and obstacle readings. `procgenCore/sites.js`'s `chamber` class calls
+  the same blob primitive instead of its own copy. ⛔ The maze is byte-identical
+  across the move (its dump md5, its nine per-kind CLI md5s, 35 unit rows and
+  `check-maze-lab`), and an offline differential compared the two partitions
+  field for field over 240 cells with 0 diffs.
+- **`--areas=<keys>[;graphify=;goalShortcut=]` ON SEEDLING**, through arc 1's ONE
+  codec, on `seedlingModel`/`seedlingSeam`/`generateSeedlingLevel`, the CLI
+  (exit 6 on a refused or uncertified graph, the level still printed), the
+  sweep and the census. **At `keys: 0` the module is not called at all** — a
+  counting spy, not a comparison.
+- **THE REALISATION IS ARC 1's LAW**: for every area at key level L ≥ 1, a
+  `lock {tset: K{L-1}}` on EVERY BOUNDARY CELL, area-side; the flag is a
+  `buttonroom {tset: K, flip:'0', room:'-1'}` at a drawn interior cell of the
+  area that holds the symbol. ⛓ **This is what 4c's `wall-does-not-seal` was
+  waiting for** — a room with two routes is not cut by one line, and a lock on
+  every way in is more than one line.
+- **THE GOAL'S VESTIBULE** — a Seedling rule the maze does not need. A corridor
+  goal (10–11 of 12 seeds on a bare tree kind) gets a SYNTHETIC one-cell area
+  whose only boundary cell IS the goal, and a lock there breaks the COLLECT
+  ceremony's approach sweep (trap 348). So the binding DECLARES a ball of radius
+  2 around the goal as its area, putting the locks at distance exactly 2.
+  `GOAL_MIN_FROM_START = 3` is what guarantees the ball has a frontier. A REAL
+  area whose boundary reaches the doorstep REFUSES BY NAME
+  (`a-lock-on-the-goals-doorstep`) — never a skipped cell, which would be a hole
+  in the cut.
+- **THE GUARD'S `buttonroom` IS THE FLAG.** When the graph gives a symbol to the
+  element's declared area (`binds=item`, the default) the binding ADOPTS the
+  gadget's existing flag — its cell, its group and its tag — and its slice-3
+  placeholder lock MOVES from one main-path cut cell to every boundary cell.
+  ⛓ Measured: the placeholder's cell is IN the boundary set on **10 of 10**
+  cells where both ran, and by construction rather than luck — a 1-cell cut on
+  the main path IS a boundary cell of the area it seals.
+- **THE TAG RULE, FROM THE ENGINE**: a lock needs *a* tag (`tagOf` answers -1
+  for a missing one and `Lock.turnOff()` writes it unconditionally, so an
+  untagged lock clears the PREVIOUS level's last slot), and all the locks of ONE
+  group may SHARE one (`ButtonRoom`'s local publish LATCHES the group, so they
+  transition once, together). ⇒ **two tags per key** — the flag's and the
+  group's — plus the guard's three; worst case 8 of `TAGS_PER_LEVEL`'s 30.
+- **ACCEPTANCE, PUBLISHED NOT TUNED**: `--areas=1` runs on 0–4 of 12 seeds per
+  kind on a 10×10 room, and the dominant refusal is
+  `no-area-at-that-key-level-can-hold-its-key` — the entrance and the goal have
+  already taken two of the 2–4 areas such a room offers. ⛔ Not a bound to
+  widen (⚖ arc-3 ruling 7: the room does not grow); the lever is area, which is
+  pass 1's.
+- ⚖ **AND SEEDLING'S FIVE CARVED TREE KINDS NOW DEFAULT TO `chambers = 1`**
+  (`winding`, `branchy`, `bushy`, `loopy`, `open`; ⚖ user, 2026-08-17) — the
+  remedy 4c named for *"pass 2 has no AREA to decorate"*. Measured on the yield
+  table before it was picked: kept over the five kinds **4 → 102** (pre-sword)
+  and **4 → 105** (post-sword) of 120, against `chambers=2`'s 113 and 103, so
+  the smaller k recovers 90% and 102% and is the one that ships. ⛔ The knob is
+  the SEEDLING BINDING's (`SEEDLING_PARAM_DEFAULTS`), not `CHAMBERS_PARAM`'s,
+  which is shared by reference with the maze. `seedlingSkeletonSpec` is the one
+  resolver every Seedling caller passes through, and it runs BEFORE
+  normalisation because `winding` and `winding;chambers=0` normalize to the same
+  object — the two streams a default has to keep apart. ⚠ **An old
+  `?skeleton=winding` link now builds a different room**, and the identity line
+  prints the EFFECTIVE spec (`winding;chambers=1`).
