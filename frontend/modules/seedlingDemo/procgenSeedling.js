@@ -104,13 +104,28 @@ import {
  */
 import { REQUIRING_GRADES, gradeOf, requirementsFor } from './procgenRequirements.js';
 import {
-    SITE_MARGIN_STRAIGHT, compositeSeedlingElement, compositeSeedlingOnConnector,
-    elementSummaryOf, liftedClaimFor, reservedRect, seedlingElementEntities,
-    seedlingElementSiteCandidates, seedlingOnConnectorEntities, vestibuleCellsAround,
+    SITE_MARGIN_STRAIGHT, certificationRouteCells, compositeSeedlingElement,
+    compositeSeedlingOnConnector, elementSummaryOf, liftedClaimFor, reservedRect,
+    seedlingElementEntities, seedlingElementSiteCandidates, seedlingOnConnectorEntities,
+    vestibuleCellsAround,
 } from './procgenSeedlingElements.js';
 import {
     PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
 } from '../procgenCore/elements.js';
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 5b (D3) — **THE OFFERED CANDIDATE SET, FROM
+ * THE FUNCTION THE ELEMENTS THEMSELVES CALL.** `doorCandidates(room)` is a WALK
+ * OF `room.mainPath`, which the probe has already computed and frozen — it
+ * floods nothing, so asking it at the ledger site is free. ⛔ Spelling the rule
+ * a second time here (*"the interior cells of the main path"*) would be trap
+ * 357's shape one function down: the list and the rule would drift.
+ *
+ * ⚠ §16.5 priced this item as *"one `isCut` FLOOD PER MAIN-PATH CELL"*. That
+ * price is `buildKillGate`/`buildBlockPocket`'s, not `doorCandidates`'; the
+ * OFFERED set alone costs nothing, and the LEGAL subset is carried out of the
+ * construct's own law calls rather than re-derived. Corrected here, in the file.
+ */
+import { doorCandidates } from '../procgenCore/elements/roomDoor.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, formatSkeleton,
     kindsOffered, normalizeSkeleton, paramSchemaFor, parseSkeleton,
@@ -417,14 +432,23 @@ export function doorLawRefusal({
             + 'template gets for free from `sealRefusal`.';
     }
     const walled = walkableFor(doorKeys);
+    /**
+     * ⛓ THE SINK PATH SPENDS **TWO** FLOODS, NOT FOUR. The start-side set it
+     * fills is the same one clause 2 asks below, and `connected(start, goal)` is
+     * `goal ∈ reachableFrom(start)` — so when a sink is passed both are read off
+     * the one walk. ⛔ When it is NOT passed nothing here runs and the law keeps
+     * its early-exit `connected`, which is what every candidate the elements try
+     * pays for.
+     */
+    const startReach = sets ? reachableFrom(width, height, walled, start) : null;
     if (sets) {
         sets.walled = Object.freeze([...doorKeys].map(cellOfKey));
-        sets.startSide = Object.freeze(
-            [...reachableFrom(width, height, walled, start)].map(cellOfKey));
+        sets.startSide = Object.freeze([...startReach].map(cellOfKey));
         sets.goalSide = Object.freeze(
             [...reachableFrom(width, height, walled, goal)].map(cellOfKey));
     }
-    if (connected(width, height, walled, start, goal)) {
+    if (startReach ? startReach.has(`${goal.x},${goal.y}`)
+        : connected(width, height, walled, start, goal)) {
         return `${name} declares a door, and it is NOT A CUT: with its door cell(s) `
             + `${doorList} walled, the GOAL (${goal.x},${goal.y}) is STILL `
             + `reachable from the START (${start.x},${start.y}) — so the wall is `
@@ -433,7 +457,7 @@ export function doorLawRefusal({
             + 'collects the torch with the spinner still alive). ⚖ Ruling 17\'s own '
             + 'words — a non-cut is decoration. The law reads the FLOOD, not the compass.';
     }
-    const reach = reachableFrom(width, height, walled, start);
+    const reach = startReach ?? reachableFrom(width, height, walled, start);
     for (const key of clearerKeys) {
         if (!reach.has(key)) {
             return `${name} declares a door at ${doorList}, and its CLEARER cell (${key}) `
@@ -1291,6 +1315,16 @@ export function seedlingModel({
      * adjudicated by. An element does not re-derive a law — it asks it.
      */
     let probeMemo = null;
+    /**
+     * ⛓⛓⛓ SLICE 5b (D3) — **THE DOOR LAW'S CANDIDATE STASH.** `null` except for
+     * the span of the ON-CONNECTOR construct, so nothing else that asks the law
+     * (`elementRefusalAt`, the composite's commit) writes into it. ⛔ IT ADDS NO
+     * FLOOD: each entry is the door cell the element ASKED about and the law's
+     * OWN verdict, which is exactly `buildKillGate`/`buildBlockPocket`'s accept
+     * test (`ok.push` happens iff that call returned falsy). ⇒ the legal subset
+     * is CARRIED out of the construct rather than re-derived by a second search.
+     */
+    let doorLawStash = null;
     const roomProbeFor = () => {
         const mainPath = shortestPath(d.width, d.height,
             (x, y) => terrainAt(skeletonBase, x, y) === 'ground',
@@ -1333,6 +1367,25 @@ export function seedlingModel({
             },
         });
     };
+    /** ⛓ SLICE 5b (D3) — the stash's own wrapper, so `roomProbeFor` above stays
+     *  the ONE spelling of the law's arguments. */
+    const probeWithStash = () => {
+        const probe = roomProbeFor();
+        return Object.freeze({
+            ...probe,
+            doorLaw: (o) => {
+                const text = probe.doorLaw(o);
+                if (doorLawStash) {
+                    doorLawStash.push(Object.freeze({
+                        cells: Object.freeze((o?.doorCells ?? [])
+                            .map((c) => Object.freeze({ x: c.x, y: c.y }))),
+                        legal: text === null,
+                    }));
+                }
+                return text;
+            },
+        });
+    };
 
     /**
      * ⛓ THE `on-connector` CONSTRUCT — after the carve, on the room's INTERIOR,
@@ -1346,8 +1399,11 @@ export function seedlingModel({
         const concrete = entry.element.instantiate(roomRng,
             namedParams(elementHead, { elementOnly: true }));
         const drawsAtConstruct = roomRng.draws;
-        const site = { x: 1, y: 1, w: d.width - 2, h: d.height - 2, room: roomProbeFor() };
+        const site = { x: 1, y: 1, w: d.width - 2, h: d.height - 2, room: probeWithStash() };
+        doorLawStash = recordLedger ? [] : null;
         const placement = concrete.construct(site);
+        const lawTried = doorLawStash ?? [];
+        doorLawStash = null;
         if (placement.refused) {
             elementRefusal = { reason: placement.refused.reason,
                 detail: placement.refused.detail };
@@ -1363,6 +1419,9 @@ export function seedlingModel({
          */
         const probe = roomProbeFor();
         const pl = onConnectorPlan?.placement ?? null;
+        /** ⛓ SLICE 5b (D3) — the OFFERED set, from the elements' own function. */
+        const offered = recordLedger
+            ? doorCandidates(probe).map((c) => c.cell) : [];
         ledger.phase('on-connector', {
             sentence: elementRefusal
                 ? `the ON-CONNECTOR element REFUSED: ${elementRefusal.reason} — `
@@ -1425,6 +1484,38 @@ export function seedlingModel({
                         + 'in, plus the walls that keep it there (arc 3, slice 4d)',
                     kind: 'flood',
                     cells: pl.demand,
+                }),
+                /**
+                 * ⛓⛓⛓ SLICE 5b (D3) — **THE FUNNEL, IN THREE LINES.** What the
+                 * ROOM offered, what actually reached the DOOR LAW, and what the
+                 * law PASSED — which is the set the element's one draw picked
+                 * from. ⛔ Every one of them is carried: the first is a walk of a
+                 * path already computed, the other two are the construct's own
+                 * calls. `cost.candidates` carries only the last one's COUNT,
+                 * which cannot say whether a candidate was never tried or tried
+                 * and refused.
+                 */
+                offered.length > 0 && paintable({
+                    id: 'door-candidates-offered',
+                    label: `${offered.length} interior MAIN-PATH cell(s) the room OFFERED — `
+                        + 'every cell of the path but its two endpoints',
+                    kind: 'cells',
+                    cells: offered,
+                }),
+                lawTried.length > 0 && paintable({
+                    id: 'door-candidates-tried',
+                    label: `${lawTried.length} of them reached the DOOR LAW — the rest were cut `
+                        + 'earlier (too near the goal, or no legal pocket)',
+                    kind: 'cells',
+                    cells: lawTried.flatMap((t) => t.cells),
+                }),
+                lawTried.some((t) => t.legal) && paintable({
+                    id: 'door-candidates-legal',
+                    label: `${lawTried.filter((t) => t.legal).length} PASSED it — the set the `
+                        + 'ONE draw chose among',
+                    kind: 'cells',
+                    cells: lawTried.filter((t) => t.legal).flatMap((t) => t.cells),
+                    pick: pl?.doorCells?.[0] ?? null,
                 }),
             ],
         });
@@ -3499,6 +3590,17 @@ export function seedlingSeam({
      */
     let certification = null;
     /**
+     * ⛓⛓ SLICE 5b (D4) — **THE SOLVE'S OWN TRACE AND RECORDS, HELD FOR THE
+     * LEDGER ROW AND FOR NOTHING ELSE.** ⛔ They are LOCALS and not fields on
+     * `certification`: §15.13's false mover measured that a field on the
+     * certification rides `geometry` into every payload, and a trace on a
+     * payload would move the batch md5 for a picture. The oracle already hands
+     * both back (`procgenOracle`'s SOLVED return), so no second solve and no
+     * new field on the seam's return.
+     */
+    let certTrace = null;
+    let certRecords = null;
+    /**
      * ⛓⛓⛓ **THE ITEM GATE — REFUSED FOR FREE, BEFORE A SOLVE IS SPENT** (arc 3,
      * slice 4a). The kill gate is the only element in the arc a PRE-SWORD boot
      * cannot clear: `weaponForPress` returns null with no sword slot, so the
@@ -3533,6 +3635,8 @@ export function seedlingSeam({
         oracle = wrapOracle(seedlingOracle({ model, items, budget }));
     } else if (model.elements.ran) {
         const cert = oracle.solve(model.skeleton(), { templates: [] });
+        certTrace = cert.trace ?? null;
+        certRecords = cert.records ?? null;
         certification = Object.freeze({
             certified: cert.verdict === VERDICT.SOLVED,
             verdict: cert.verdict,
@@ -3663,7 +3767,38 @@ export function seedlingSeam({
                 strategies: [...certification.strategies],
                 heldAtDoor: certification.heldAtDoor,
                 gap: certification.gap ?? null,
+                /** ⛓ SLICE 5b (D4) — the solve's RECORDS as reader's lines, one
+                 *  per record, in the order the solver made them. */
+                recordLines: (certRecords ?? []).map((r, i) => `${i + 1}. ${r.goal ?? '?'}`
+                    + ` — ${r.strategy ?? '(no strategy)'}${r.target ? ` (${r.target})` : ''}`),
             },
+            /**
+             * ⛓⛓⛓ SLICE 5b (D4) — **THE ROUTE, AND ONLY WHEN THE SOLVE HELD.**
+             * ⛔ On a refusal the model is REBUILT with the element dropped and
+             * `model.ledger` is that rebuild's, so a route taken through the
+             * room that FAILED would be painted over a different room. The row's
+             * sentence already says the rebuild happened; a picture that lied
+             * about which room it belonged to would be worse than none.
+             */
+            facts: certification.certified
+                ? [(() => {
+                    const route = certificationRouteCells(certTrace);
+                    if (route.cells.length < 2) return null;
+                    return paintable({
+                        id: 'certification-route',
+                        label: `the CERTIFICATION solve's ROUTE — ${route.cells.length} cell(s) `
+                            + `over ${route.rows} decision row(s) that carried a corridor`,
+                        kind: 'path',
+                        cells: route.cells,
+                        note: route.gaps === 0 ? null
+                            : `⚠ ${route.gaps} GAP(S): the trace MERGE lets a substantive `
+                                + 'decision outrank a `walk` on a shared tick, so the walk to a '
+                                + 'stance is never a `path` row at all (arc-3 §11.6). ⛔ The '
+                                + 'holes are NOT bridged — a straight line the solver never '
+                                + 'walked would be the picture inventing a route.',
+                    });
+                })()].filter(Boolean)
+                : [],
         }));
     }
     if (areaCertification) {

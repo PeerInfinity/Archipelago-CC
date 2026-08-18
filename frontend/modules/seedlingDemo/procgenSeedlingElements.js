@@ -883,24 +883,84 @@ export function liftedClaimFrom({ records = [], trace = null }, { block, button,
  * harder to satisfy, never easier.
  */
 function rowCrosses(row, door) {
-    const inDoor = (x, y) => Math.floor(x / 16) === door.x && Math.floor(y / 16) === door.y;
+    return corridorTilesOf(row).some((c) => c.x === door.x && c.y === door.y);
+}
+
+/** ⛓ The pitch and the tile, named once — see `rowCrosses`' docblock for why 8. */
+export const CORRIDOR_SAMPLE_PX = 8;
+const ROUTE_TILE_PX = 16;
+
+/**
+ * ⛓⛓⛓ **ONE DECISION ROW'S CORRIDOR, AS THE TILES IT PASSES THROUGH** (arc 3,
+ * slice 5b, D4) — the body §11.6's reader was, LIFTED so that the two callers
+ * cannot disagree about what a row's corridor is. `rowCrosses` above asks
+ * MEMBERSHIP of it; the certification's ROUTE paintable asks for the whole
+ * sequence. ⛔ A second sampler would be trap 375's shape one file over: two
+ * spellings of *"where did the walk go"*, drifting the moment either is fixed.
+ *
+ * The leading leg from `saw` to `path[0]` is part of the corridor (that is
+ * §11.6's second defect) and consecutive duplicates are dropped, so the answer
+ * is a cell PATH rather than a sample list.
+ */
+export function corridorTilesOf(row) {
     const pts = [];
     if (row?.saw && Number.isFinite(row.saw.x) && Number.isFinite(row.saw.y)) {
         pts.push({ x: row.saw.x, y: row.saw.y });
     }
     for (const p of (row?.path ?? [])) pts.push(p);
-    if (pts.length === 0) return false;
-    if (pts.length === 1) return inDoor(pts[0].x, pts[0].y);
+    const out = [];
+    const push = (px, py) => {
+        const c = { x: Math.floor(px / ROUTE_TILE_PX), y: Math.floor(py / ROUTE_TILE_PX) };
+        const last = out[out.length - 1];
+        if (last && last.x === c.x && last.y === c.y) return;
+        out.push(Object.freeze(c));
+    };
+    if (pts.length === 0) return out;
+    if (pts.length === 1) { push(pts[0].x, pts[0].y); return out; }
     for (let i = 1; i < pts.length; i += 1) {
         const a = pts[i - 1];
         const b = pts[i];
-        const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 8));
+        const steps = Math.max(1,
+            Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / CORRIDOR_SAMPLE_PX));
         for (let s = 0; s <= steps; s += 1) {
-            if (inDoor(a.x + ((b.x - a.x) * s) / steps,
-                a.y + ((b.y - a.y) * s) / steps)) return true;
+            push(a.x + ((b.x - a.x) * s) / steps, a.y + ((b.y - a.y) * s) / steps);
         }
     }
-    return false;
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ **THE CERTIFICATION SOLVE'S ROUTE** (arc 3, slice 5b, D4) — the trace's
+ * decision rows, in order, each one's corridor appended to the last.
+ *
+ * ⛔⛔ **AND IT IS NOT CONTINUOUS, WHICH IS A FACT ABOUT THE TRACE AND NOT A BUG
+ * IN THE READER.** §11.6's third finding, measured and deliberately not acted
+ * on: the trace MERGE lets a substantive decision outrank a `walk` on a shared
+ * tick, so *the walk to a stance is never a `path` row at all*. Its corridor is
+ * therefore missing from the rows that survive, and the route jumps. ⇒ the gaps
+ * are COUNTED and NAMED in the paintable's note. ⛔ Nothing bridges them: a
+ * straight line drawn between two ends the solver never walked would be the
+ * reader inventing a route, which is worse than a route with holes in it.
+ *
+ * @returns {{cells: Array<{x,y}>, gaps: number, rows: number}}
+ */
+export function certificationRouteCells(trace) {
+    const cells = [];
+    let gaps = 0;
+    let rows = 0;
+    for (const row of (trace?.rows ?? [])) {
+        const tiles = corridorTilesOf(row);
+        if (tiles.length === 0) continue;
+        rows += 1;
+        const last = cells[cells.length - 1];
+        if (last && Math.abs(last.x - tiles[0].x) + Math.abs(last.y - tiles[0].y) > 1) gaps += 1;
+        for (const c of tiles) {
+            const prev = cells[cells.length - 1];
+            if (prev && prev.x === c.x && prev.y === c.y) continue;
+            cells.push(c);
+        }
+    }
+    return { cells, gaps, rows };
 }
 
 /**
