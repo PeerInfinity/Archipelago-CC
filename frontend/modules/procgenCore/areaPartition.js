@@ -378,12 +378,21 @@ export function partitionAreas({
  *   `L` is entered with `K{L-1}` in hand, so its doors are `door_K{L-1}` and
  *   the LEVEL of that door is `L`. The two spellings are the same arithmetic
  *   seen from two sides and a second one is how an off-by-one gets in.
+ * @param {object|null} [o.sets] ⛓⛓ PROCGEN ELEMENTS arc 3, slice 5b (D2) — an
+ *   OPTIONAL OUT-PARAMETER. When present it is filled with `levels: [{level,
+ *   reached, expected}]`, one row per key level ASKED, in the order they were
+ *   asked and INCLUDING the level that refused. ⛔ It is an out-parameter and
+ *   not a second return value for one reason: every existing caller's read has
+ *   to stay byte-identical, and the maze's adapter passes nothing and therefore
+ *   allocates nothing. The sets are what the flood ALREADY computed — a refused
+ *   level-n flood is exactly the picture a reader wants and re-deriving it
+ *   afterwards would be a second answer to the same question.
  * @returns {null | {level, missing, extra, detail}} a REFUSAL naming the first
  *   offending cell, or `null`. ⛔ Never a throw: a mismatch is something the
  *   CLI and the lab page must be able to PRINT.
  */
 export function verifyAreaLevels({
-    width, height, isFloor, entrance, partition, levelOfArea, doorLevelAt,
+    width, height, isFloor, entrance, partition, levelOfArea, doorLevelAt, sets = null,
 } = {}) {
     const levelOf = new Map();
     let maxLevel = 0;
@@ -416,6 +425,16 @@ export function verifyAreaLevels({
             return level === null || level <= n;
         };
         const actual = reachableFrom(width, height, walkable, from);
+        /** ⛓ SLICE 5b (D2) — CARRIED, never re-derived: this is the flood the
+         *  verdict is computed FROM. */
+        if (sets) {
+            if (!sets.levels) sets.levels = [];
+            sets.levels.push(Object.freeze({
+                level: n,
+                reached: Object.freeze([...actual]),
+                expected: Object.freeze([...expected]),
+            }));
+        }
         const missing = [...expected].filter((k) => !actual.has(k)).sort();
         const extra = [...actual].filter((k) => !expected.has(k)).sort();
         if (missing.length || extra.length) {

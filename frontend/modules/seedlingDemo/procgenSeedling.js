@@ -318,6 +318,16 @@ export const LOCK_MIN_FROM_GOAL = 2;
  */
 export const GOAL_VESTIBULE_RADIUS = LOCK_MIN_FROM_GOAL;
 
+/**
+ * ⛓ **A FLOOD KEY BACK INTO A CELL** — arc 3, slice 5b. `gridFlood` answers in
+ * `"x,y"` strings and a PAINTABLE takes `{x,y}`, so the translation is stated
+ * once here rather than inline at each of the six sites that carry a flood.
+ */
+const cellOfKey = (k) => {
+    const [x, y] = String(k).split(',').map(Number);
+    return Object.freeze({ x, y });
+};
+
 /** ⛓ The id the goal's grown area carries, so a reader can tell it from a
  *  discovered chamber (`A{n}`) and from an element's (`E{n}`). */
 export const GOAL_AREA_ID = 'GOAL';
@@ -379,9 +389,24 @@ export const GOAL_AREA_ID = 'GOAL';
  * @param {Function} o.walkableFor `(walledKeys|null) => (x,y) => boolean` — the
  *   caller's own painted-terrain predicate with a key set forced solid. ⛔ ONE
  *   builder per caller, so "what blocks" is still stated once.
+ *
+ * @param {object|null} [o.sets] ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 5b (D1) — **AN
+ *   OPTIONAL OUT-PARAMETER, AND THE RETURN VALUE IS UNTOUCHED.** When present it
+ *   is filled with `{walled, startSide, goalSide}` — the door cell(s), and the
+ *   two components the cut makes — so a phase can PAINT the law's own answer
+ *   without asking a second question. ⛔ It is a sink rather than a second
+ *   return value because every existing caller reads the TEXT and must keep
+ *   reading exactly that; a caller that passes nothing runs the identical code.
+ *
+ *   ⚠ **THE PRICE, NAMED: the start-side flood is walked TWICE on the sink
+ *   path.** The not-a-cut test below is `connected`, an EARLY-EXIT BFS, and
+ *   swapping it for a full `reachableFrom` would make every candidate the
+ *   elements try pay for a set nobody asked for. One repeated flood, at the one
+ *   call site that passes a sink, is the cheaper of the two.
  */
 export function doorLawRefusal({
     width, height, walkableFor, start, goal, doorKeys, clearerKeys, name, askOpenHalf = false,
+    sets = null,
 }) {
     const doorList = [...doorKeys].map((k) => `(${k})`).join(' ');
     if (askOpenHalf && !connected(width, height, walkableFor(null), start, goal)) {
@@ -392,6 +417,13 @@ export function doorLawRefusal({
             + 'template gets for free from `sealRefusal`.';
     }
     const walled = walkableFor(doorKeys);
+    if (sets) {
+        sets.walled = Object.freeze([...doorKeys].map(cellOfKey));
+        sets.startSide = Object.freeze(
+            [...reachableFrom(width, height, walled, start)].map(cellOfKey));
+        sets.goalSide = Object.freeze(
+            [...reachableFrom(width, height, walled, goal)].map(cellOfKey));
+    }
     if (connected(width, height, walled, start, goal)) {
         return `${name} declares a door, and it is NOT A CUT: with its door cell(s) `
             + `${doorList} walled, the GOAL (${goal.x},${goal.y}) is STILL `
@@ -451,9 +483,13 @@ export function doorLawRefusal({
  * the wrong cell.
  */
 export function carveLawRefusal({
-    width, height, carved, walkableAfter, walkableBefore, start, goal, name,
+    width, height, carved, walkableAfter, walkableBefore, start, goal, name, sets = null,
 }) {
     if (carved.length === 0) return null;
+    /** ⛓ SLICE 5b (D1) — the sink, filled with what THIS rule computes and
+     *  nothing else: a carve with no cells never reaches here, and a carve that
+     *  fails clause (a) never reaches clause (b)'s two paths. */
+    if (sets) sets.blob = Object.freeze(carved.map((c) => Object.freeze({ x: c.x, y: c.y })));
     const inBlob = new Set(carved.map((c) => `${c.x},${c.y}`));
     // (a1) ONE blob — a flood over the carved set alone.
     const seen = new Set([`${carved[0].x},${carved[0].y}`]);
@@ -488,6 +524,7 @@ export function carveLawRefusal({
             if (walkableAfter(nx, ny)) mouths.add(k);
         }
     }
+    if (sets) sets.mouths = Object.freeze([...mouths].map(cellOfKey));
     if (mouths.size !== 1) {
         return `${name}: its CARVE (${list}) has `
             + `${mouths.size} MOUTH(S)${mouths.size ? ` — ${[...mouths]
@@ -502,6 +539,10 @@ export function carveLawRefusal({
     // (b) NO SHORTCUT.
     const before = shortestPath(width, height, walkableBefore, start, goal);
     const after = shortestPath(width, height, walkableAfter, start, goal);
+    if (sets) {
+        sets.pathBefore = Object.freeze((before ?? []).map((c) => Object.freeze({ x: c.x, y: c.y })));
+        sets.pathAfter = Object.freeze((after ?? []).map((c) => Object.freeze({ x: c.x, y: c.y })));
+    }
     if (before && after && after.length < before.length) {
         return `${name}: its CARVE would SHORTEN the start→goal path from `
             + `${before.length - 1} steps to ${after.length - 1}. A pocket is somewhere `
@@ -1506,6 +1547,28 @@ export function seedlingModel({
          * than leaves to be inferred from two equal numbers.
          */
         const cp = elementInfo.ran ? elementInfo.placed[0] : null;
+        /**
+         * ⛓⛓⛓ SLICE 5b (D1) — **THE FLAG LOCK'S CUT, AND IT IS THE ONE PAINTABLE
+         * IN THIS SLICE THAT IS COMPUTED RATHER THAN CARRIED.** ⛔ Said plainly
+         * because the slice's own law is *carry what the phase had in hand*:
+         * `flagLockCellFor` adjudicates its cut with `connected`, an EARLY-EXIT
+         * BFS that never builds a set, so there is nothing to carry — a sink
+         * there would have had to change the decision code's flood, which is a
+         * behaviour change for a picture. ⇒ the two floods are taken HERE, at
+         * the ledger site, only when recording, only for the cell that WON, and
+         * they spend no draw. The alternative (no picture for the guard's own
+         * cut, which is what the whole element exists to make) is worse.
+         */
+        const flagLockSets = (recordLedger && cp) ? (() => {
+            const walkable = (x, y) => terrainAt(base, x, y) === 'ground'
+                && !(x === cp.flagLockCell.x && y === cp.flagLockCell.y);
+            return {
+                startSide: [...reachableFrom(d.width, d.height, walkable,
+                    { x: d.start.tx, y: d.start.ty })].map(cellOfKey),
+                goalSide: [...reachableFrom(d.width, d.height, walkable,
+                    { x: goalCell.tx, y: goalCell.ty })].map(cellOfKey),
+            };
+        })() : null;
         ledger.phase('composite', {
             sentence: cp
                 ? `the COMPOSITE committed \`${cp.instance}\`: the reserved rectangle was `
@@ -1547,6 +1610,22 @@ export function seedlingModel({
                     kind: 'outline',
                     cells: [cp.flagCell, cp.flagLockCell],
                     pick: cp.flagCell }),
+                flagLockSets?.startSide?.length && paintable({
+                    id: 'flag-lock-flood-start',
+                    label: `the START side of the flag LOCK's cut — `
+                        + `${flagLockSets.startSide.length} cell(s) reachable with `
+                        + `(${cp.flagLockCell.x},${cp.flagLockCell.y}) walled`,
+                    kind: 'flood',
+                    cells: flagLockSets.startSide,
+                    note: 'the FLAG has to be on this side, or the lock guards nothing',
+                }),
+                flagLockSets?.goalSide?.length && paintable({
+                    id: 'flag-lock-flood-goal',
+                    label: `the GOAL side of the same cut — `
+                        + `${flagLockSets.goalSide.length} cell(s)`,
+                    kind: 'flood',
+                    cells: flagLockSets.goalSide,
+                }),
             ] : [],
         });
     }
@@ -1560,6 +1639,15 @@ export function seedlingModel({
      * throw.
      */
     if (onConnectorPlan) {
+        /**
+         * ⛓⛓⛓ SLICE 5b (D1) — **THE SINKS, AND THEY ARE THE COMMIT'S OWN CALL.**
+         * The door law and the carve law are each asked exactly ONCE here, on
+         * the placement that is about to be committed, so the sets they compute
+         * describe the room that ships. ⛔ `null` when recording is off, which
+         * is what keeps the spy's arm free of the goal-side flood.
+         */
+        const doorSets = recordLedger ? {} : null;
+        const carveSets = recordLedger ? {} : null;
         const out = compositeSeedlingOnConnector({
             width: d.width,
             height: d.height,
@@ -1578,6 +1666,7 @@ export function seedlingModel({
                 clearerKeys,
                 name: `the element "${onConnectorPlan.concrete.instance}"`,
                 askOpenHalf: true,
+                sets: doorSets,
             }),
             carveLaw: ({ carved: cells, walkableAfter, walkableBefore }) => carveLawRefusal({
                 width: d.width,
@@ -1588,6 +1677,7 @@ export function seedlingModel({
                 start: { x: d.start.tx, y: d.start.ty },
                 goal: { x: goalCell.tx, y: goalCell.ty },
                 name: `the element "${onConnectorPlan.concrete.instance}"`,
+                sets: carveSets,
             }),
         });
         if (out.refused) {
@@ -1684,10 +1774,37 @@ export function seedlingModel({
                     label: `the DEMAND — ${elementDemand.size} cell(s) the body moves in plus `
                         + 'the walls that keep it there',
                     kind: 'flood',
-                    cells: [...elementDemand.keys()].map((k) => {
-                        const [x, y] = k.split(',').map(Number);
-                        return { x, y };
-                    }) }),
+                    cells: [...elementDemand.keys()].map(cellOfKey) }),
+                /**
+                 * ⛓⛓⛓ SLICE 5b (D1) — **THE DOOR LAW'S OWN TWO FLOODS**, carried
+                 * out of the commit's single call. ⛔ This is what "the door is a
+                 * CUT" MEANS as a picture: with the door cell(s) walled the room
+                 * is two components, the START's and the GOAL's, and the clearer
+                 * has to be in the first one.
+                 */
+                doorSets?.startSide?.length && paintable({
+                    id: 'door-flood-start',
+                    label: `the START side of the cut — ${doorSets.startSide.length} cell(s) `
+                        + 'reachable from the start with the door cell(s) WALLED',
+                    kind: 'flood',
+                    cells: doorSets.startSide,
+                    note: 'clause 2 of the door law asks that every CLEARER cell be in here',
+                }),
+                doorSets?.goalSide?.length && paintable({
+                    id: 'door-flood-goal',
+                    label: `the GOAL side of the cut — ${doorSets.goalSide.length} cell(s) `
+                        + 'reachable from the goal with the same cell(s) walled',
+                    kind: 'flood',
+                    cells: doorSets.goalSide,
+                    note: 'the two sides are DISJOINT, and that disjointness IS clause 1',
+                }),
+                carveSets?.mouths?.length && paintable({
+                    id: 'carve-mouth',
+                    label: `the carve's ${carveSets.mouths.length} MOUTH(S) — clause (a) of the `
+                        + 'carve law admits exactly one',
+                    kind: 'outline',
+                    cells: carveSets.mouths,
+                }),
             ] : [],
         });
     }
@@ -1776,6 +1893,10 @@ export function seedlingModel({
         exclude: declaredAreas.flatMap((a) => a.cells),
     });
     let partitionMemo = null;
+    /** ⛓ SLICE 5b (D2) — the VESTIBULE's cells, STASHED where they are computed.
+     *  `goalVestibule()` is a bounded neighbourhood walk and calling it a second
+     *  time for a picture would be a second answer to the same question. */
+    let goalVestibuleCells = null;
     /**
      * ⛓ ONE PARTITION PER MODEL, MEMOIZED — the census, the binding below and
      * (slice 5a) the page all read this one answer. ⛔ It spends NO draw, so
@@ -1792,6 +1913,7 @@ export function seedlingModel({
         const goalArea = bare.areas.find((a) => a.id === bare.goalArea) ?? null;
         if (goalArea === null || !goalArea.synthetic) { partitionMemo = bare; return bare; }
         const cells = goalVestibule();
+        goalVestibuleCells = cells;
         partitionMemo = partitionAreas({
             width: d.width, height: d.height, isFloor: areaGround,
             entrance: { x: d.start.tx, y: d.start.ty }, goal: { x: goalCell.tx, y: goalCell.ty },
@@ -2116,7 +2238,74 @@ export function seedlingModel({
                     const nearKeys = new Set(near.map((c) => `${c.x},${c.y}`));
                     const doorstep = locks.find((l) => nearKeys.has(`${l.x},${l.y}`));
 
+                    /**
+                     * ⛓⛓⛓ SLICE 5b (D2) — **THE REALISATION'S PAINTABLES, BUILT
+                     * ONCE AND EMITTED ON EVERY EXIT.** ⛔ A refused realisation
+                     * used to write NO ROW at all, so the one picture a reader
+                     * most wants — *which level-n flood disagreed, and where* —
+                     * did not exist. Trap 386's shape: WHICH phase refuses is a
+                     * finding, and a phase that refuses silently cannot report
+                     * one. The row now exists on all three exits and carries the
+                     * refusal by name.
+                     */
+                    const realisationFacts = (levelSets = null) => [
+                        locks.length > 0 && paintable({
+                            id: 'area-locks',
+                            label: `${locks.length} LOCK(s) — every boundary cell of every `
+                                + 'locked area',
+                            kind: 'outline',
+                            cells: locks,
+                        }),
+                        flags.length > 0 && paintable({
+                            id: 'area-flags',
+                            label: `${flags.length} FLAG(s) — what opens them`,
+                            kind: 'outline',
+                            cells: flags,
+                        }),
+                        goalVestibuleCells?.length && paintable({
+                            id: 'goal-vestibule',
+                            label: `the GOAL's VESTIBULE — ${goalVestibuleCells.length} cell(s) `
+                                + `within ${GOAL_VESTIBULE_RADIUS} step(s) of the goal, grown `
+                                + 'into a SYNTHETIC area so that no lock can land on the '
+                                + 'goal\'s doorstep (trap 348)',
+                            kind: 'outline',
+                            cells: goalVestibuleCells,
+                        }),
+                        ...(levelSets?.levels ?? []).map((lv) => paintable({
+                            id: `level-${lv.level}-reach`,
+                            label: `at key level ${lv.level} the entrance reaches `
+                                + `${lv.reached.length} floor cell(s); the partition says it `
+                                + `should reach ${lv.expected.length}`,
+                            kind: 'flood',
+                            cells: lv.reached.map(cellOfKey),
+                            note: lv.reached.length === lv.expected.length ? null
+                                : 'these two numbers DISAGREE — this level is the refusal',
+                        })),
+                    ];
+
                     if (doorstep) {
+                        ledger.phase('realisation', {
+                            sentence: 'the REALISATION REFUSED: a lock landed on the GOAL\'s '
+                                + `doorstep — area ${doorstep.area}'s boundary cell `
+                                + `(${doorstep.x},${doorstep.y}) is within `
+                                + `${LOCK_MIN_FROM_GOAL} cell(s) of the goal`,
+                            draws: roomRng.draws,
+                            refusal: { reason: 'a-lock-on-the-goals-doorstep',
+                                detail: `(${doorstep.x},${doorstep.y}), area ${doorstep.area}, `
+                                    + `key level ${doorstep.level}` },
+                            data: { locks: locks.length, flags: flags.length },
+                            facts: [
+                                ...realisationFacts(),
+                                paintable({
+                                    id: 'goal-doorstep',
+                                    label: `the ${near.length} cell(s) NO lock may stand on — `
+                                        + `within ${LOCK_MIN_FROM_GOAL - 1} step(s) of the goal`,
+                                    kind: 'outline',
+                                    cells: near,
+                                    pick: { x: doorstep.x, y: doorstep.y },
+                                }),
+                            ],
+                        });
                         areaInfo = refuseArea('a-lock-on-the-goals-doorstep',
                             `area ${doorstep.area} is at key level ${doorstep.level}, so every `
                             + `one of its ${partition.areas.find((a) => a.id === doorstep.area)
@@ -2173,6 +2362,8 @@ export function seedlingModel({
                          * certification solve is what asks it.
                          */
                         const levelAt = new Map(locks.map((l) => [`${l.x},${l.y}`, l.level]));
+                        /** ⛓ SLICE 5b (D2) — the sink; `null` off the recording arm. */
+                        const levelSets = recordLedger ? {} : null;
                         const mismatch = lawRefusal ? null : verifyAreaLevels({
                             width: d.width,
                             height: d.height,
@@ -2181,8 +2372,23 @@ export function seedlingModel({
                             partition,
                             levelOfArea: (id) => graph.areas[id]?.keyLevel ?? 0,
                             doorLevelAt: (x, y) => levelAt.get(`${x},${y}`) ?? null,
+                            sets: levelSets,
                         });
                         if (lawRefusal || mismatch) {
+                            ledger.phase('realisation', {
+                                sentence: `the REALISATION REFUSED after putting `
+                                    + `${locks.length} LOCK(s) and ${flags.length} FLAG(s): `
+                                    + (lawRefusal ? lawRefusal.detail : mismatch.detail),
+                                draws: roomRng.draws,
+                                refusal: lawRefusal
+                                    ? { reason: lawRefusal.reason, detail: lawRefusal.detail }
+                                    : { reason: 'the-level-flood-disagrees-with-the-partition',
+                                        detail: mismatch.detail },
+                                data: { locks: locks.length,
+                                    flags: flags.length,
+                                    level: mismatch?.level ?? null },
+                                facts: realisationFacts(levelSets),
+                            });
                             areaInfo = refuseArea(
                                 lawRefusal ? lawRefusal.reason
                                     : 'the-level-flood-disagrees-with-the-partition',
@@ -2230,21 +2436,7 @@ export function seedlingModel({
                                     flags: flags.length,
                                     supersededFlagLock,
                                 },
-                                facts: [
-                                    locks.length > 0 && paintable({
-                                        id: 'area-locks',
-                                        label: `${locks.length} LOCK(s) — every boundary cell of `
-                                            + 'every locked area',
-                                        kind: 'outline',
-                                        cells: locks,
-                                    }),
-                                    flags.length > 0 && paintable({
-                                        id: 'area-flags',
-                                        label: `${flags.length} FLAG(s) — what opens them`,
-                                        kind: 'outline',
-                                        cells: flags,
-                                    }),
-                                ],
+                                facts: realisationFacts(levelSets),
                             });
                             areaInfo = Object.freeze({
                                 spec: areaSpecNorm,
