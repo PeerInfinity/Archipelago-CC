@@ -10153,6 +10153,23 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   `frontend/modules/procgenDocs/demos.js` — with two readers: [the catalogue page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html)
   and the row, which IMPORTS it rather than parsing markdown — **94 claims / 0
   fail**. [`demos.md`](./demos.md) is now the pointer at both.
+- **THE GLOSSARY** — ⛓ 2026-08-18 (PROCGEN DOCS **P2**), ⚖ the user: *"demos.md
+  and the demo pages are dense with technical jargon — a new document that
+  defines each of the technical terms … covering ALL of procgen, not just the
+  Seedling substrate"*. The same shape one module over:
+  `frontend/modules/procgenDocs/glossary.js` — **140 terms over 8 areas**, each
+  with a plain-language sentence FIRST and the concrete rule (with its number
+  and its refusal's own name) second — rendered at
+  [**the glossary page**](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html)
+  and read by four more places: every catalogue entry's `terms:` line, both lab
+  pages' header links and section tooltips, and the row, which now stands at
+  **108 claims / 0 fail** locally AND against the deployed site. ⛔ The term
+  list is a CHOICE from a MEASURED candidate set —
+  `scripts/procgen/harvest-procgen-terms.mjs`, **6261 candidates**, of which 315
+  touch a page a reader actually opens — and the ones NOT defined are published
+  with their reason rather than left silent. ⛔ The lab pages gained a link and
+  `title=` tooltips and **nothing else**: all six of their browser rows are the
+  number they were (199 / 81 / 61 / 50 / 122 / 57).
 
 #### The ledger's phases and paintables, as of the arc's close
 
