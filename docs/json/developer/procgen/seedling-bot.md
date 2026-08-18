@@ -10220,8 +10220,8 @@ instantiations · the maze's own symbols **148 cuts / 148** · ledger cost media
 
 **What did NOT move, at every slice**: the R8 battery md5
 (`1fedb0ab35b7cd74accecf0345bdc893`, exit 1), the maze byte-identity dump, and
-every committed R8 tape (`534 PASS / 0 FAIL / 67 SKIP`, zero moved) — through
-fourteen slices including a SOLVER slice. ⛔ The oracle's catch was never
+every committed R8 tape (`534 PASS / 0 FAIL / 67 SKIP`, zero moved) — at every
+code-touching slice of the arc, the SOLVER slice S1 included. ⛔ The oracle's catch was never
 widened; every named widening is one class with its own code
 (`HAMMER_SAFETY`, `STRIKE_BOUND_EXHAUSTED`).
 

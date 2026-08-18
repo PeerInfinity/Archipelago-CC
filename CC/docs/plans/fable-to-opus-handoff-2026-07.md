@@ -3203,7 +3203,8 @@ block visibly moves onto its button — and a maze EDIT became an OP, closing
 constructive §18.2's residue). Arc-2 kickoff §11.10 answers §7 gate by gate and
 §11.11 is what arc 3 starts from.
 
-⛓⛓⛓ **ARC 3 (SEEDLING) IS CLOSED 2026-08-18 @ `cfe0fd095`** — **fourteen
+⛓⛓⛓ **ARC 3 (SEEDLING) IS CLOSED 2026-08-18**, slice 5c's docs pass at
+`18301241a`..`main` — **fourteen
 slices** (1 · 2 · 2b · 2c · 2d · 3 · S1 · 4a · 4c · 4b · 4d · 5a · 5b · 5c),
 as-builts §8–§18 in `procgen-elements-arc3-kickoff.md`, and **§18 answers §7's
 eight acceptance gates one by one** and carries the arc's whole residue in ONE
