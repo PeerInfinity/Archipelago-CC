@@ -8740,7 +8740,8 @@ data as a test case is what falsified it. See also §9.3 of that plan.
 ## The GENERATE-mode UI arc — the catalogue, parameterized templates, and the directed attempt (TOOLING; CLOSED 2026-08-15)
 
 > ⚠ **MIXED (2026-08-18)** — *The URL parameters, whole and current*, *arc 3, slice 5b*, *⚖ What a URL is FOR* and
-> *The standing laws* are kept CURRENT and were last updated by arc 3 slices 5a/5b. Everything else in this § is
+> *The standing laws* are kept CURRENT and were last updated by arc 3 slices 5a/5b. ⛓ *The URL parameters* is a
+> POINTER since PROCGEN DOCS P3a: its table is GENERATED and lives on the reference page. Everything else in this § is
 > the arc's own close and describes a roster and a keep-policy that have since changed: the three door templates
 > retired (arc 3 slice 4c), `PREFER_DISCHARGE` is OFF on Seedling and the `<d|s>` URL letter is gone. Current
 > shape: § *The procgen ELEMENTS design*.
@@ -8795,25 +8796,29 @@ tiles."* Six slices, one mechanism family each.
 
 ### The URL parameters, whole and current
 
-⛔ Checked field by field against `readGenerateParams` at the arc's close; the
-same list is in `watch.html`'s own header docblock. `?budgetms=` is **GONE** (it
-warns and is ignored — the wall clock it set no longer exists).
+⛔ **THIS § IS A POINTER NOW.** The table it held was checked field by field
+against `readGenerateParams` at the arc's close, and the same list sat in
+`watch.html`'s own header docblock — three copies of one fact, kept in step by
+hand, which is the shape PROCGEN DOCS P3a exists to end.
 
-| parameter | what it names |
-|---|---|
-| `?source=generate` | the arm. ⚠ Also selected by a bare `?gen=`, which is why a press that drops `?gen=` writes `source=generate` in its place |
-| `?seed=` `?biome=` | the level's identity and the BOOT INVENTORY |
-| `?count=` `?tries=` `?k=` | obstacle target · tries per step · saturation K |
-| `?anchortries=` | how many LEGAL anchors one candidate may be SOLVED at (1 = the pre-search behaviour). ⚠ Not `?anchors=` — that is the domain sweep's ENUMERATION MODE |
-| `?families=` / `?templates=` | the sub-roster (comma list). ABSENT is the whole roster; an EMPTY value refuses; ⛔ BOTH present REFUSES |
-| ~~`?directed=`~~ | ⛔ **RETIRED by constructive-mode slice 12** (⚖ §3.9). It REFUSES BY NAME and names the way in. The GRAMMAR is unchanged and still spoken by `--directed=` and by the payload's `instance` labels — see *What a URL is FOR* below |
-| `?tickbudget=` | the per-solve budget. No control on the form, and PRESERVED across every rewrite |
-| `?run=1` | RUN-ALL on load. DELETED at step 0 rather than spelt `run=0` |
-| `?gen=PATH` | a CLI payload to REPRODUCE and COMPARE — a determinism check across node and the browser, not a picture of a file |
-| `?skeleton=<kind>[;k=v]…` | the ROOM the ladder starts from. ⛓⛓ **A TYPED `;chambers=0` IS SPELLABLE** (arc 3, slice 5a): Seedling's five carved tree kinds default `chambers` to **1** while the codec's default is 0, so the reader takes the string AS TYPED and the writer spells `chambers` EXPLICITLY on those five. `winding` → `winding;chambers=1`; `winding;chambers=0` stays a typed 0 and builds a different room |
-| `?elements=<name>[;k=v]…` | ⛓⛓ **arc 3, slice 5a.** The pass-1 ELEMENT. ⛔ **ABSENT ≠ `none` HERE**: absent is *nobody said* and reaches the BIOME DEFAULT (`guard;len=2+blockpocket`, plus `killgate` post-sword), while `?elements=none` is a CHOICE that turns it off — so the writer SPELLS `none` where the maze deletes it. ⚠ A NAMED parameter at its default is KEPT (`guard` ≠ `guard;len=2`: a named parameter spends no draw, an omitted one is DRAWN) |
-| `?areas=<keys>[;k=v]…` | ⛓ **arc 3, slice 5a.** The AREA GRAPH. Absent ≡ `0` ≡ the module does not run at all, and the writer deletes it there |
-| `?require=<item>[,<item>]` | ⛓ **arc 3, slice 5a.** The rule-directed run — an ITEM FLAG (`hasSword`), not the maze's area-graph symbol. Absent is NO directive; an EMPTY value REFUSES. ⛔ A REFUSED directive still SHOWS the level the run produced, labelled — the CLI's own exit-6 behaviour, which is where the Seedling page follows the CLI rather than arc-1's maze rule |
+⛓⛓⛓ **THE TABLE THAT WAS HERE IS GENERATED NOW** (PROCGEN DOCS · P3a,
+2026-08-18). It listed every parameter, its default and its delete-at-default
+by hand, checked field by field against `readGenerateParams` — which is exactly
+the shape a reader cannot trust a week later. It lives at
+
+> **<https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-url>**
+> · locally `http://localhost:8000/frontend/modules/procgenDocs/reference.html`
+
+— one block per parameter, with a row per PAGE, generated from
+[`procgenCore/urlParams.js`](../../../../frontend/modules/procgenCore/urlParams.js)
+and the two pages' own readers and writers by
+[`scripts/procgen/generate-procgen-reference.mjs`](../../../../scripts/procgen/generate-procgen-reference.mjs).
+⛔ **Do not re-type it here.** Every value there is the code's own answer: a
+DEFAULT is what the reader returns on an empty search, *absent is the default*
+is what the writer emits sitting at its defaults, and a RETIRED parameter's
+refusal is the refusal RUN and caught. The gate is
+`node scripts/procgen/generate-procgen-reference.mjs --check` — regenerate = no
+diff — so the table cannot drift from the code the way this one could.
 
 ⛓⛓⛓ **THE PHASE LADDER AND THE OVERLAYS ARE *NOT* URL PARAMETERS** (arc 3,
 slice 5a). `#genPhase` (the generation phase on screen), `#genLayer` (the

@@ -511,12 +511,30 @@ three through the same functions a press uses (`applyDirective`,
 still refuses, by name, and points at the LOAD box — which takes any level as it
 stands.
 
-Maze-only, each with the line that forced it:
+⛓⛓⛓ **THE PER-PARAMETER TABLE IS GENERATED NOW** (PROCGEN DOCS · P3a,
+2026-08-18) — every parameter of BOTH lab pages, one block each, with this
+page's own reader and writer named, the default this page's reader answers on an
+empty search, and whether the writer WRITES or DELETES it at that default:
 
-| parameter | why it exists here and not on `watch.html` |
-|---|---|
-| `?width=` / `?height=` | the ROOM. The v1 palette on the default 11×11 room reverts **nothing** over seeds 1–12; reverts appear at 5×5/target 12 and saturation at 4×4. Without this the REVERTED and SATURATED panes are unreachable and a reader would conclude the palette refuses nothing. Try `?width=5&height=5&count=12&run=1`. |
-| `?expansions=` | the BFS **node cap**. Seedling's budget is `?tickbudget=`, denominated in solver *ticks*; one word for both would be two spellings of "the budget". The default (20000) never binds on a v1 level — the state space is `cells × 2^items` = 242 — so `?expansions=1` is how `BUDGET_EXHAUSTED` is reached on purpose. |
+> **<https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-url>**
+
+⛔ **Do not re-type it here.** It is generated from `procgenCore/urlParams.js`
+and `mazeLab.readLabParams`/`writeLabParams` by
+[`scripts/procgen/generate-procgen-reference.mjs`](../../../../scripts/procgen/generate-procgen-reference.mjs)
+and gated by `--check` (regenerate = no diff). What stays HERE is the ARGUMENT —
+why each maze-only parameter exists at all:
+
+- **`?width=` / `?height=`** — the ROOM. The v1 palette on the default 11×11
+  room reverts **nothing** over seeds 1–12; reverts appear at 5×5/target 12 and
+  saturation at 4×4. Without this the REVERTED and SATURATED panes are
+  unreachable and a reader would conclude the palette refuses nothing. Try
+  `?width=5&height=5&count=12&run=1`.
+- **`?expansions=`** — the BFS **node cap**, and ⛔ never spelled `?tickbudget=`:
+  Seedling's budget is denominated in solver *ticks* and these are two different
+  quantities, so one word for both would be the two-spellings failure at its
+  most expensive. The default never binds on a v1 level — the state space is
+  `cells × 2^items` = 242 — so `?expansions=1` is how `BUDGET_EXHAUSTED` is
+  reached on purpose.
 
 `?biome=` selects the **palette** (`maze-v1` today), not a wall backend. The
 maze's own biome vocabulary is `?skeleton=`; spelling it `?biome=` would have
