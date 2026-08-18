@@ -541,10 +541,43 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
      * list spends ONE EXTRA DRAW before instantiate and lands a different room.
      * Recorded in the arc-3 kickoff §13 with its command; NOT this slice's to
      * fix (traps 171/173 — no widening of the oracle's catch).
+     *
+     * ⛓⛓⛓ **RE-PINNED A FIFTH TIME AT ARC 3 SLICE 4d — AND THIS ONE DISCHARGES
+     * EVERY HEDGE THE FOUR ABOVE ACCUMULATED.**
+     *
+     * The kill gate now declares a `demand`: the region its BODY can reach must
+     * stay `floor` and the walls that keep it there must stay `wall`, so pass 2
+     * may not drop a pool or a pit where the spinner patrols. It was MEASURED
+     * before it was designed (`scripts/procgen/census-seedling-killgate-clears
+     * .mjs`, 224 cells): **two of ten certified kill gates had their lock opened
+     * by `water` rather than by a sword**, and afterwards it is **17 of 17
+     * `sword`**.
+     *
+     * ⇒ THREE THINGS THIS ROW SAID MOVED AT ONCE, and all three are the demand:
+     *
+     *  1. **SEED 29 LOST A FAMILY.** Its water pools stood in the body's region;
+     *     refused, the loop relocated them and the level now keeps 6 over
+     *     **TWO** families. It is still CERTIFIED — it is no longer RICH.
+     *  2. **SEED 38 STOPPED ABORTING.** The `water-pool` that drowned the
+     *     PLAYER at (1,3) was in the same region, and refusing it is what lets
+     *     the run finish. ⛔ THE ABORT CLASS IS NOT FIXED — nothing here touches
+     *     `playerPhysicsV2` or the oracle's catch; the demand MOVES which cell
+     *     meets it, which is 4c §13.4's own sentence one slice on.
+     *  3. **THE CAUSE IS `sword`.** The two-value set below was written *"so the
+     *     row REDS the day a sword-caused clear becomes reachable AT THESE
+     *     BOUNDS"*. It did.
+     *
+     * RE-SCANNED, same rule, same bounds, post-sword seeds 1..40 through the
+     * SHIPPED DEFAULT: **13 of 40 draw `killgate`, TWO certify (29 and 38), and
+     * exactly ONE keeps >= 5 over >= 3 families — seed 38** (6 kept over 3
+     * families, SOLVED, CERTIFIED, one `kill` record, one scratch clear,
+     * `cause: 'sword'`). **ZERO of the forty abort**, where one did before.
+     * ⚠ The one-member-class warning from the third re-pin STANDS: this is a
+     * class of one, and the residue below is unchanged.
      */
-    it('seed 29: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED', () => {
+    it('seed 38: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 29, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 38, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
@@ -562,7 +595,7 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         expect(gen.summary.kept.filter((k) => k.family === 'kill')).toEqual([]);
 
         // ⛔ THE SEAM's model, not a bare one: the element is in the skeleton.
-        const { model } = seedlingSeam({ seed: 29, items: POST_SWORD_PALETTE.items });
+        const { model } = seedlingSeam({ seed: 38, items: POST_SWORD_PALETTE.items });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
             templates: gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k)),
         });
@@ -576,31 +609,28 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         expect(kills).toHaveLength(1);
         expect(out.scratchClears).toHaveLength(1);
         /**
-         * ⛔⛔ **THE CAUSE IS `water`, NOT `sword`, AND THAT IS A FINDING RATHER
-         * THAN A FIXED EXPECTATION** (arc 3, slice 4c). At seed 29 the kill
-         * gate's own spinner DROWNS in a kept `water-pool` instead of being cut
-         * down. The lifted claim still holds — this gate's own body cleared this
-         * gate's own lock, before the crossing — and the `kill` RECORD above is
-         * the solver planning that clear; what does not hold is that the level
-         * is post-sword-EXCLUSIVE, because a swordless boot would have cleared
-         * that body too.
+         * ⛓⛓⛓ **THE CAUSE IS `sword`, AND THIS IS THE ASSERTION THE WHOLE ARC
+         * WAS AIMING AT** (arc 3, slice 4d).
          *
-         * ⛓ THAT IS SLICE 4's OLD HEDGE RETURNING AS A MEASUREMENT (*"a
-         * discharged clearer IN a post-sword level, NOT a post-sword-EXCLUSIVE
-         * one"*). ⛔ AND THE CAUSE IS A PROPERTY OF THE BOUNDS RATHER THAN OF
-         * THE ELEMENT: at **target 1** this very seed clears with
-         * `cause: 'sword'` in 403 ticks (so does post-sword 60, at 551; 38
-         * clears by `pit`). It is only once pass 2 has put a water pool in the
-         * room that the pool gets to the spinner first. ⇒ *a kill gate in a
-         * FURNISHED room may be cleared by the furniture* — a finding about the
-         * level, not about the gate.
+         * ⛔ IT USED TO BE `water`, AND THAT WAS A FINDING RATHER THAN A FIXED
+         * EXPECTATION: at seed 29 the kill gate's own spinner DROWNED in a kept
+         * `water-pool` instead of being cut down, so the level was not
+         * post-sword-EXCLUSIVE at all — a swordless boot would have cleared that
+         * body too. 4c wrote it as a TWO-VALUE SET *"so the row REDS the day a
+         * sword-caused clear becomes reachable AT THESE BOUNDS"*, and slice 4d's
+         * `demand` is what made it reachable: pass 2 may no longer paint lethal
+         * terrain in the region the body patrols.
          *
-         * ⛔ Written as a two-value set so the row REDS the day a sword-caused
-         * clear becomes reachable AT THESE BOUNDS, which is the outcome a reader
-         * of this file actually wants to hear about.
+         * ⛓ MEASURED ACROSS THE CHANGE, not asserted from it: over 224 (kind,
+         * arm, seed) cells the certified kill gates' causes went **8 `sword` / 2
+         * `water`** to **17 `sword` / 0 `water`**
+         * (`scripts/procgen/census-seedling-killgate-clears.mjs`).
+         *
+         * ⛔ THE SET STAYS TWO-VALUED, and it is now a guard in the OTHER
+         * direction: the row reds the day furniture gets to a spinner again.
          */
         expect(['sword', 'water']).toContain(out.scratchClears[0].cause);
-        expect(out.scratchClears[0].cause).toBe('water');
+        expect(out.scratchClears[0].cause).toBe('sword');
         expect(out.scratchClears[0].by).toMatch(/^spinner@/);
         expect(out.scratchClears[0].lock).toMatch(/^lock@/);
         // ⛓ …and the flag it cleared is NOT the goal's (the tag law, driven in
