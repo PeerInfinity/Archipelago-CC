@@ -9374,7 +9374,7 @@ means giving them an OP shape like Seedling's four.
 place (`certify` on a REFUSED verdict). One spelling across the substrates, which
 is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
-## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC, and slice 4b lifted the AREA PARTITION into `procgenCore/` and bound the AREA GRAPH to Seedling with a `chambers=1` default on the carved kinds**)
+## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; arcs 1-2 CLOSED on the maze — see `maze.md`; **arc 3 = Seedling, in progress; slice 3 landed the element binding UNCERTIFIED, slice S1 CERTIFIED it, slice 4a added the two ROOM-AWARE DOOR ELEMENTS through an `on-connector` phase, slice 4c RETIRED the three door TEMPLATES into them with a biome DEFAULT SPEC, slice 4b lifted the AREA PARTITION into `procgenCore/` and bound the AREA GRAPH to Seedling with a `chambers=1` default on the carved kinds, and slice 4d made the generator RULE-DIRECTED — `--require=hasSword`, with a kill gate that now DEMANDS its body's region stay survivable**)
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -9942,3 +9942,65 @@ The as-built is arc-3 kickoff §14. What a reader of this file needs:
   object — the two streams a default has to keep apart. ⚠ **An old
   `?skeleton=winding` link now builds a different room**, and the identity line
   prints the EFFECTIVE spec (`winding;chambers=1`).
+
+### Arc 3, slice 4d — RULE-DIRECTED: `--require=hasSword`, and the kill gate DEMANDS its body's region (2026-08-17)
+
+The slice that lets a caller ask for a property of the WHOLE RUN and be told, by
+name, when the room cannot give it — and the slice that found out how often the
+generator's own furniture was answering the question for it.
+
+- **`--require=hasSword` NAMES AN ITEM; THE ELEMENT IS DERIVED.** The directive
+  looks up the heads whose `ELEMENT_TABLE.needs` include the item (today exactly
+  `killgate`), FORCES that head when nobody said `--elements=`, and grades the
+  result with the requirements differential run on the FINAL level. A directive
+  that cannot be met is a REFUSED RUN with one of seven named reasons and **exit
+  6**, with the level still printed. ⛔ A second sword-gated element is a row in
+  the table and nothing else — there is no `if (item === 'hasSword')` anywhere.
+  ⚠ A directive MOVES THE ROOM at the same seed: the biome default is a `+` list
+  that spends a `pick` and a forced head spends none.
+- **THE REQUIREMENTS DIFFERENTIAL LEFT THE SCRIPT.** `requirementsFor` moved
+  verbatim from `scripts/procgen/batch-seedling-acceptance.mjs` into
+  `frontend/modules/seedlingDemo/procgenRequirements.js`; the batch is a caller,
+  and its stdout md5 (`ab540ac4…`, unchanged) is both the proof it was a MOVE and
+  now a live gate on the lifted code. Grades: STRONG / BOUND-DEPENDENT / WEAK /
+  INERT / NOT-ESTABLISHED. **SHORTENS is named and NOT computed** — nothing in
+  the pipeline can produce one, and a grade nothing can reach is not a grade.
+- ⛓⛓⛓ **THE KILL GATE'S SPINNER WAS DROWNING, AND IT WAS MEASURED BEFORE IT WAS
+  FIXED.** Over 224 (kind, arm, seed) cells, ten kill gates placed and certified
+  and every one had its lock cleared — **eight by `sword` and TWO by `water`**: a
+  gate whose enemy fell in a pool pass 2 painted opens for a reason the level did
+  not pose. The predictor was exact (lethal terrain inside the body's own stepped
+  path ⟺ `cause:'water'`, 2 for 2 both ways). The gate now declares a **demand**:
+  the connected region its body can reach must stay `floor`, and the walls that
+  keep it there must stay `wall` (pass 2 may carve). Afterwards: **17 of 17
+  `sword`, 0 `water`**.
+  ⚠ The body is a DIAGONAL BILLIARD (`SPINNER.heading = -PI/4`), not an
+  axis-runner, so the demand is a REGION of 7–26 cells rather than a lane of 2–4.
+- ⛔ **AND SEVEN `GenerationAborted` CELLS BECAME REAL LEVELS** (7 of 224 → 0),
+  because every abort in the corpus was a lethal pool landing in the same region.
+  **The armed-hazard class is NOT fixed** — no `playerPhysicsV2`, `solverBot` or
+  oracle line changed; the demand moves which cell meets it. Control: 0 aborts in
+  312 non-kill-gate cells.
+- **TWO NEW MEASUREMENT INSTRUMENTS, both permanent, both asserting nothing.**
+  `find-seedling-seeds.mjs --where='certified,cause=sword,grade=STRONG,kept>=5,
+  families>=3,noabort'` searches a seed range by a NAMED vocabulary (an unknown
+  property is a usage error, exit 2) and prints each hit with the command that
+  reproduces it. `census-seedling-enemies.mjs` puts each of 23 engine-buildable
+  enemy classes alone in a room and reports what the solver does.
+- ⛔ **THE DEMO SEARCH'S OWN GATE FAILED AND THE NUMBER IS PUBLISHED**: 1 hit in
+  40, not the ≥ 3 predicted. `families>=3` is the clause that cuts it (4 → 1).
+  The demo row that exists — seed **30** — is the seed the demand rescued: before
+  it, that level's lock cleared by `water` and its directive graded WEAK.
+- ⛓ **AND THE ENEMY CENSUS'S FIRST ROOM MEASURED THE ROOM.** A body at the centre
+  of a 6×6 chamber is walked AROUND: 20 of 23 classes solved at the empty room's
+  own tick count. A second arm (a 1-wide corridor the route must cross) is where
+  the question is really asked — 20 of 23 REFUSE there. **The one row where a
+  `kill` fires is the kill gate's own geometry**, and the same spinner with NO
+  lock refuses while one in an open chamber throws (*"live spinners AND a
+  DIALOGUED ceremony"*). The kill LOCK is what makes killing the body the goal.
+
+⛔ Byte identities: the battery, the maze, the nine per-kind maze CLI md5s, the
+acceptance batch and every committed R8 tape are UNCHANGED (534 / 0 / 67). Three
+dump rows moved and each is a post-sword level that held a certified kill gate —
+`empty` seeds 29 and 38, `winding` seed 9. Full record in the arc-3 kickoff §15.
+
