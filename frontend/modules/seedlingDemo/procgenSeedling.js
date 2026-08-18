@@ -1316,9 +1316,391 @@ export function seedlingModel({
         return partitionMemo;
     };
 
+    let areaInfo = Object.freeze({
+        spec: areaSpecNorm, ran: false, calledModule: false, partition: null, graph: null,
+        locks: Object.freeze([]), flags: Object.freeze([]), refused: null,
+    });
+    let areaEntities = Object.freeze([]);
+    if (areaValues.keys > 0) {
+        const partition = areaPartitionOf();
+        const summary = Object.freeze({
+            areaCount: partition.areas.length,
+            syntheticCount: partition.areas.filter((a) => a.synthetic).length,
+            elementCount: partition.areas.filter((a) => a.kind === 'element').length,
+            adjacencyCount: partition.adjacency.length,
+            corridorComponents: partition.corridorComponents.length,
+            entranceArea: partition.entranceArea,
+            goalArea: partition.goalArea,
+            deadFloorCells: partition.deadFloorCells,
+        });
+        const refuseArea = (reason, detail, extra = {}) => Object.freeze({
+            spec: areaSpecNorm, ran: false, calledModule: false, partitionSummary: summary,
+            partition, graph: null, locks: Object.freeze([]), flags: Object.freeze([]),
+            ...extra, refused: Object.freeze({ reason, detail }),
+        });
+        const isEnd = (c) => (c.x === d.start.tx && c.y === d.start.ty)
+            || (c.x === goalCell.tx && c.y === goalCell.ty);
+        const freeCellsOf = (area) => {
+            const b = new Set(area.boundary.map((c) => `${c.x},${c.y}`));
+            return area.cells.filter((c) => !b.has(`${c.x},${c.y}`) && !isEnd(c));
+        };
+        if (partition.areas.length <= 1) {
+            areaInfo = refuseArea('the-partition-yields-one-area-or-fewer',
+                `the ${skeletonKind} room partitions into ${partition.areas.length} area(s), and `
+                + 'a lock-and-key graph needs at least two. ⛓ The AREA CENSUS measured this: on '
+                + 'a BARE TREE KIND a 10x10 Seedling room has no all-ground 2x2 square at all '
+                + 'on most seeds (§8.3), so the two areas are the entrance\'s and the goal\'s '
+                + 'and there is nothing between them to lock. ⛔ Area is PASS 1\'s (⚖ ruling '
+                + '24): `chambers=k`, `rooms`, or an element is what provides it.');
+        } else if (partition.entranceArea === partition.goalArea) {
+            areaInfo = refuseArea('the-entrance-and-the-goal-share-one-area',
+                `both the START (${d.start.tx},${d.start.ty}) and the GOAL (${goalCell.tx},`
+                + `${goalCell.ty}) fall in area ${partition.entranceArea}. ⛔ `
+                + '`buildAreaGraph` refuses `entrance === goal` by name, so the binding does '
+                + 'not call it — the goal is drawn by pass 1 (⚖ arc-1 ruling 2) and moving it '
+                + 'to a second area is exactly what that ruling forbids.');
+        } else {
+            const graph = buildAreaGraph({
+                rng: roomRng,
+                areas: partition.areas.map((a) => ({
+                    id: a.id,
+                    capacity: {
+                        /**
+                         * ⛓⛓⛓ **`binds=item` — THE GADGET'S AREA IS THE ONLY
+                         * ONE THAT MAY HOLD A SYMBOL** (arc-2 §10.4's law,
+                         * carried whole). ⚖ Ruling 22 says the gadget GUARDS the
+                         * flag switch; whether it does is decided by
+                         * `placeKeys`, and the maze measured that when it
+                         * competes freely it wins about one accepted run in
+                         * seven. `capacity` is the module's own lever for
+                         * exactly this, so the run declares it — and the
+                         * acceptance it costs is PUBLISHED (the census's two
+                         * `binds` arms), never bought back by widening a bound.
+                         */
+                        item: (elementInfo.ran && declaredAreas.length > 0
+                            && elementValues.binds === 'item' ? a.kind === 'element' : true)
+                            && freeCellsOf(a).length > 0,
+                        switch: false,
+                    },
+                })),
+                adjacency: partition.adjacency.map((e) => [e.a, e.b]),
+                entrance: partition.entranceArea,
+                goal: partition.goalArea,
+                bounds: {
+                    maxKeys: areaValues.keys,
+                    graphifyProbability: areaValues.graphify,
+                    allowGoalShortcut: areaValues.goalShortcut === 1,
+                    maxSwitches: 0,
+                },
+            });
+            if (graph.refused) {
+                areaInfo = Object.freeze({
+                    spec: areaSpecNorm, ran: false, calledModule: true, partitionSummary: summary,
+                    partition, graph, locks: Object.freeze([]), flags: Object.freeze([]),
+                    refused: Object.freeze({
+                        reason: graph.refused.reason,
+                        detail: `${graph.refused.detail} (${graph.refused.attempts} attempt(s) `
+                            + `over ${partition.areas.length} area(s) at maxKeys `
+                            + `${areaValues.keys}) — ⛓ \`maxKeys\` is a TARGET, not a ceiling: `
+                            + 'a space that grows fewer key levels REFUSES rather than settling '
+                            + 'for fewer keys (arc-1 slice 1 deviation 10).',
+                    }),
+                });
+            } else {
+                /**
+                 * ⛓⛓⛓ **THE REALISATION — THE LOCK IS A PROPERTY OF THE AREA**
+                 * (arc-1 §9.3's law, one substrate over, and the two grid facts
+                 * that forced it there force it here too: a corridor component
+                 * can touch three areas, and the adjacency graph has cycles the
+                 * tree did not take).
+                 *
+                 *   for every area X at key level L >= 1, `lock {tset: K{L-1}}`
+                 *   goes on EVERY BOUNDARY CELL of X — the AREA-side cell, never
+                 *   the corridor mouth (a mouth can be adjacent to two areas at
+                 *   once and one cell holds one entity).
+                 *
+                 * ⛓⛓⛓ **AND THIS IS WHERE `wall-does-not-seal` STOPS BEING A
+                 * REFUSAL** (4c §13.13 residue ii): 27 of the door census's
+                 * refusals carry that name, every one on a `loopy`/`open` kind —
+                 * *a room with two routes is not cut by one line.* A lock on
+                 * EVERY boundary cell is more than one line, which is exactly
+                 * what those kinds need, and it is this slice's own mechanism.
+                 */
+                const symbolGroup = new Map();
+                const symbolFlagTag = new Map();
+                const symbolLockTag = new Map();
+                const flags = [];
+                let supersededFlagLock = null;
+                /**
+                 * ⛓ THE TAG LEDGER. The record already holds the goal pickup and
+                 * the element's entities, so `placementTagId` sees their tags;
+                 * `taken` carries the ones this loop has just handed out and the
+                 * goal's DECLARED slot (§'s own rule: the record is the live
+                 * answer, the reserved list is the declared one).
+                 */
+                const recordSoFar = withEntities(base, [{
+                    type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+                }, ...elementEntities]);
+                const taken = [Number.parseInt(d.goalTag, 10)];
+                const takeTag = () => {
+                    const t = placementTagId(recordSoFar, [...taken]);
+                    taken.push(t);
+                    return t;
+                };
+                /**
+                 * ⛔⛔ **THE TAG BUDGET IS COUNTED BEFORE IT IS SPENT** (D5).
+                 * `placementTagId` REFUSES BY THROWING when all 30 slots are
+                 * taken, and a throw here would read as a broken room builder;
+                 * the honest answer is a graded refusal that says how many were
+                 * wanted and how many were left. ⛓ THE COST MODEL, in one
+                 * sentence: **one tag per KEY GROUP — one for the `buttonroom`
+                 * that latches it and ONE SHARED BY ALL OF THAT GROUP'S LOCKS —
+                 * plus the guard's three when one is placed, plus the goal's 0.**
+                 * (Why the locks may share: `ButtonRoom`'s local publish LATCHES
+                 * the group — the author's own *"Can't be reset to false!!"* —
+                 * so every lock of one group transitions ONCE, together, and
+                 * each writes `Game.setPersistence(tag, false)` idempotently;
+                 * `returnToNormal`'s TRUE write is unreachable for a latched
+                 * group. Why they may not go UNTAGGED: `tagOf` answers -1 for a
+                 * missing attribute and `Lock.turnOff()` writes its tag
+                 * unconditionally, so an untagged lock clears `(level-1, 29)` —
+                 * an out-of-band write into the PREVIOUS level's last slot.)
+                 */
+                const guardBound = (sym) => (elementInfo.ran && declaredAreas.length > 0
+                    && graph.areas[declaredAreas[0].id]?.item === sym);
+                const wanted = graph.symbols.reduce((n, sym) => n + (guardBound(sym) ? 0 : 2), 0);
+                const usedNow = new Set(taken);
+                for (const e of recordSoFar.entities ?? []) {
+                    const t = tagOf(e.type, e.attrs);
+                    if (t >= 0) usedNow.add(t);
+                }
+                if (usedNow.size + wanted > TAGS_PER_LEVEL) {
+                    areaInfo = refuseArea('the-tag-budget-is-exceeded',
+                        `this level already uses ${usedNow.size} of ${TAGS_PER_LEVEL} `
+                        + `persistence tags and the area graph wants ${wanted} more (one `
+                        + `\`buttonroom\` and one shared lock slot per key group, over `
+                        + `${graph.symbols.length} symbol(s)). ⛔ Refused by NAME rather than `
+                        + 'wrapped: `Game.tagsPerLevel` is 30 and the game indexes one flat '
+                        + 'array as `level * 30 + tag` with NO bounds check, so a 31st tag '
+                        + 'writes the NEXT level\'s first slot — and a modulo would collide '
+                        + 'two placements silently, which is the defect the allocator exists '
+                        + 'to end.');
+                } else {
+                    let refusal = null;
+                    for (const sym of graph.symbols) {
+                        const areaId = Object.keys(graph.areas)
+                            .find((id) => graph.areas[id].item === sym);
+                        if (areaId === undefined) {
+                            refusal = { reason: 'no-area-holds-this-symbol',
+                                detail: `the graph declares ${sym} but no area carries it.` };
+                            break;
+                        }
+                        const area = partition.areas.find((a) => a.id === areaId);
+                        /**
+                         * ⛓⛓⛓ **D4 — THE GUARD'S `buttonroom` IS THE FLAG, AND
+                         * SLICE 3's `flagLockCellFor` PLACEHOLDER IS SUPERSEDED.**
+                         *
+                         * At `binds=item` the gadget's area is the only one with
+                         * `capacity.item`, so the graph puts K0 there — and the
+                         * gadget ALREADY holds a `buttonroom` at a cell chosen by
+                         * the rule that matters (one step BEYOND the guard door,
+                         * never drawn, arc-2 §10.4). ⇒ the binding does not add a
+                         * second flag; it ADOPTS the guard's, group and tag.
+                         *
+                         * ⛔ AND THE FLAG'S LOCK **MOVES** RATHER THAN
+                         * DISAPPEARING: slice 3 put ONE `lock {tset:B}` on a
+                         * main-path cut cell chosen by `flagLockCellFor` (its own
+                         * docblock calls itself *"the placeholder that made the
+                         * flag testable before the area graph exists"*, and ⚖
+                         * hands WHICH CELL to this slice). The same group and the
+                         * same tag now sit on EVERY BOUNDARY CELL of the area the
+                         * flag really opens. One mechanism, one group, one tag —
+                         * a cut the room's own shape defines instead of a single
+                         * line across the main path.
+                         */
+                        if (guardBound(sym)) {
+                            const p = elementInfo.placed[0];
+                            symbolGroup.set(sym, p.groups.B);
+                            symbolFlagTag.set(sym, p.tags.flag);
+                            symbolLockTag.set(sym, p.tags.lockB);
+                            supersededFlagLock = { x: p.flagLockCell.x, y: p.flagLockCell.y };
+                            flags.push(Object.freeze({ symbol: sym, area: areaId,
+                                x: p.flagCell.x, y: p.flagCell.y, guarded: true }));
+                            continue;
+                        }
+                        const free = freeCellsOf(area);
+                        if (free.length === 0) {
+                            refusal = { reason: 'the-flag-area-has-no-cell-that-can-hold-it',
+                                detail: `${sym} belongs in area ${areaId}, whose `
+                                    + `${area.cells.length} cell(s) are all boundary cells `
+                                    + '(where its own locks go), the START or the GOAL. A flag '
+                                    + 'under its own lock is a flag nobody can reach.' };
+                            break;
+                        }
+                        const at = roomRng.pick(free);
+                        symbolGroup.set(sym, placementGroupId({ tx: at.x, ty: at.y }, d.height));
+                        symbolFlagTag.set(sym, takeTag());
+                        symbolLockTag.set(sym, takeTag());
+                        flags.push(Object.freeze({ symbol: sym, area: areaId,
+                            x: at.x, y: at.y, guarded: false }));
+                    }
+                    if (refusal) {
+                        areaInfo = refuseArea(refusal.reason, refusal.detail);
+                    } else {
+                    const locks = [];
+                    for (const area of partition.areas) {
+                        const level = graph.areas[area.id]?.keyLevel ?? 0;
+                        if (level < 1) continue;
+                        const sym = `K${level - 1}`;
+                        if (!symbolGroup.has(sym)) continue;
+                        for (const c of area.boundary) {
+                            locks.push(Object.freeze({ symbol: sym, area: area.id,
+                                x: c.x, y: c.y, level }));
+                        }
+                    }
+                    /**
+                     * ⛔⛔ **TRAP 348 ON THE LOCK CELLS — A REFUSAL BY NAME, AND
+                     * NEVER A SKIPPED CELL.** A lock at graph distance < 2 from
+                     * the goal breaks the COLLECT ceremony's approach sweep
+                     * (§10.6(c)'s measured sentence). ⛔ The wrong fix is to drop
+                     * that boundary cell: a skipped boundary cell is a HOLE IN
+                     * THE CUT, and the level-n flood two paragraphs down would
+                     * then report it — correctly — as the graph lying about where
+                     * the ways in are. So the whole graph refuses, and the level
+                     * ships carved.
+                     *
+                     * ⚠ It can only fire for a REAL area whose boundary reaches
+                     * the goal's doorstep; the SYNTHETIC goal area is grown into
+                     * a VESTIBULE of radius 2 above precisely so that it cannot.
+                     */
+                    const near = vestibuleCellsAround({ width: d.width, height: d.height,
+                        walkable: areaGround, goal: { x: goalCell.tx, y: goalCell.ty },
+                        radius: LOCK_MIN_FROM_GOAL - 1, exclude: [] });
+                    const nearKeys = new Set(near.map((c) => `${c.x},${c.y}`));
+                    const doorstep = locks.find((l) => nearKeys.has(`${l.x},${l.y}`));
+
+                    if (doorstep) {
+                        areaInfo = refuseArea('a-lock-on-the-goals-doorstep',
+                            `area ${doorstep.area} is at key level ${doorstep.level}, so every `
+                            + `one of its ${partition.areas.find((a) => a.id === doorstep.area)
+                                .boundary.length} boundary cell(s) takes a lock — and `
+                            + `(${doorstep.x},${doorstep.y}) is within `
+                            + `${LOCK_MIN_FROM_GOAL} cell(s) of the GOAL (${goalCell.tx},`
+                            + `${goalCell.ty}). ⛔ Trap 348: a lock on the goal's doorstep `
+                            + 'breaks the COLLECT ceremony\'s approach sweep — *"approaching '
+                            + 'torchpickup, the sweep was blocked by lock"* — and the level '
+                            + 'would be unsolvable for a reason nobody would attribute to the '
+                            + 'area graph. ⛔ The cell is NOT skipped: a skipped boundary cell '
+                            + 'is a hole in the cut.');
+                    } else {
+                        /**
+                         * ⛓⛓ **THE DOOR LAW, ASKED ON THE WHOLE SET, ONCE PER
+                         * SYMBOL** — slice 2's `doorLawRefusal`, which is the
+                         * Seedling voice of arc-1's *"sealed at the boundary"*.
+                         * ⛔ Grouped by SYMBOL and not by AREA: two areas at one
+                         * key level are opened by ONE flag, and walling only one
+                         * of them would ask whether half a cut is a cut.
+                         */
+                        const bySymbol = new Map();
+                        for (const l of locks) {
+                            if (!bySymbol.has(l.symbol)) bySymbol.set(l.symbol, []);
+                            bySymbol.get(l.symbol).push(l);
+                        }
+                        let lawRefusal = null;
+                        for (const [sym, ls] of bySymbol) {
+                            const flag = flags.find((f) => f.symbol === sym);
+                            const text = doorLawRefusal({
+                                width: d.width,
+                                height: d.height,
+                                walkableFor: (walled) => walkableWith(base, new Map(), walled),
+                                start: { x: d.start.tx, y: d.start.ty },
+                                goal: { x: goalCell.tx, y: goalCell.ty },
+                                doorKeys: new Set(ls.map((l) => `${l.x},${l.y}`)),
+                                clearerKeys: flag ? [`${flag.x},${flag.y}`] : [],
+                                name: `the area lock ${sym}`,
+                                askOpenHalf: true,
+                            });
+                            if (text) {
+                                lawRefusal = { reason: 'the-area-locks-do-not-cut-the-level',
+                                    detail: text };
+                                break;
+                            }
+                        }
+                        /**
+                         * ⛓⛓⛓ **THE LEVEL-n FLOOD** (arc-1 §9.4, lifted with the
+                         * partition): with every lock of level > n treated as
+                         * wall, the entrance reaches EXACTLY the areas of level
+                         * <= n plus their corridors. ⚠ A claim about TERRAIN AND
+                         * LOCKS at an assumed inventory — whether the flags can
+                         * be pressed IN ORDER is the ORACLE's question, and the
+                         * certification solve is what asks it.
+                         */
+                        const levelAt = new Map(locks.map((l) => [`${l.x},${l.y}`, l.level]));
+                        const mismatch = lawRefusal ? null : verifyAreaLevels({
+                            width: d.width,
+                            height: d.height,
+                            isFloor: areaGround,
+                            entrance: { x: d.start.tx, y: d.start.ty },
+                            partition,
+                            levelOfArea: (id) => graph.areas[id]?.keyLevel ?? 0,
+                            doorLevelAt: (x, y) => levelAt.get(`${x},${y}`) ?? null,
+                        });
+                        if (lawRefusal || mismatch) {
+                            areaInfo = refuseArea(
+                                lawRefusal ? lawRefusal.reason
+                                    : 'the-level-flood-disagrees-with-the-partition',
+                                lawRefusal ? lawRefusal.detail : mismatch.detail,
+                                lawRefusal ? {} : { level: mismatch.level,
+                                    missing: mismatch.missing, extra: mismatch.extra });
+                        } else {
+                            areaEntities = Object.freeze([
+                                ...flags.filter((f) => !f.guarded).map((f) => Object.freeze({
+                                    type: 'buttonroom', ...oelAtTile(f.x, f.y),
+                                    attrs: Object.freeze({ tset: String(symbolGroup.get(f.symbol)),
+                                        tag: String(symbolFlagTag.get(f.symbol)),
+                                        flip: '0', room: '-1' }),
+                                })),
+                                ...locks.map((l) => Object.freeze({
+                                    type: 'lock', ...oelAtTile(l.x, l.y),
+                                    attrs: Object.freeze({ tset: String(symbolGroup.get(l.symbol)),
+                                        tag: String(symbolLockTag.get(l.symbol)) }),
+                                })),
+                            ]);
+                            if (supersededFlagLock) {
+                                elementEntities = Object.freeze(elementEntities.filter(
+                                    (e) => !(e.type === 'lock'
+                                        && Math.floor(e.x / TILE_SIZE) === supersededFlagLock.x
+                                        && Math.floor(e.y / TILE_SIZE) === supersededFlagLock.y),
+                                ));
+                            }
+                            areaInfo = Object.freeze({
+                                spec: areaSpecNorm,
+                                ran: true,
+                                calledModule: true,
+                                partitionSummary: summary,
+                                partition,
+                                graph,
+                                locks: Object.freeze(locks),
+                                flags: Object.freeze(flags),
+                                groups: Object.freeze(Object.fromEntries(symbolGroup)),
+                                tags: Object.freeze(Object.fromEntries(
+                                    [...symbolFlagTag].map(([s, t]) => [s,
+                                        { flag: t, lock: symbolLockTag.get(s) }]))),
+                                supersededFlagLock: supersededFlagLock
+                                    ? Object.freeze({ ...supersededFlagLock }) : null,
+                                refused: null,
+                            });
+                        }
+                    }
+                    }
+                }
+            }
+        }
+    }
+
     const skeleton = () => withEntities(base, [{
         type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
-    }, ...elementEntities]);
+    }, ...elementEntities, ...areaEntities]);
 
     /**
      * ⚠ "FREE" IS FOUR CLAIMS AND THEY ARE ASKED SEPARATELY: the cell is
@@ -1802,6 +2184,14 @@ export function seedlingModel({
          */
         elements: elementInfo,
         /**
+         * ⛓⛓ **THE AREA BINDING'S WHOLE ANSWER** (arc 3, slice 4b) — the spec
+         * that ran, the partition, the graph, the locks and flags it realised,
+         * and the graded refusal BY NAME when it did not run. ⛔ `certified` is
+         * NOT here: the model cannot solve, so the area graph's certification
+         * lives on `summary.areas` where `generateSeedlingLevel` puts it.
+         */
+        areas: areaInfo,
+        /**
          * ⛓⛓ **THE ROOM PROBE, ON THE SURFACE** (arc 3, slice 4a) — the same
          * READ-ONLY view an `on-connector` element is handed, memoised so a
          * caller that asks twice reads one answer.
@@ -2198,7 +2588,7 @@ export function defaultElementsFor(items) {
 
 export function seedlingSeam({
     seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
-    elements, wrapOracle = (o) => o,
+    elements, areas = DEFAULT_AREAS, wrapOracle = (o) => o,
 } = {}) {
     /**
      * ⛔ `undefined` MEANS "NOBODY SAID", AND ONLY THAT REACHES THE BIOME
@@ -2207,7 +2597,7 @@ export function seedlingSeam({
      * every caller that spells "no element" already writes.
      */
     if (elements === undefined) elements = defaultElementsFor(items);
-    let model = seedlingModel({ seed, defaults, skeleton, elements });
+    let model = seedlingModel({ seed, defaults, skeleton, elements, areas });
     let oracle = wrapOracle(seedlingOracle({ model, items, budget }));
     /**
      * ⛓⛓⛓ **THE CERTIFICATION SOLVE — PROCGEN ELEMENTS arc 3, slice 3 (D4), AND
@@ -2271,7 +2661,7 @@ export function seedlingSeam({
             gap: 'the-element-needs-an-item-this-biome-does-not-grant',
             needs: Object.freeze(needed),
         });
-        model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });
+        model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
         oracle = wrapOracle(seedlingOracle({ model, items, budget }));
     } else if (model.elements.ran) {
         const cert = oracle.solve(model.skeleton(), { templates: [] });
@@ -2296,11 +2686,122 @@ export function seedlingSeam({
             gap: certificationGap(cert),
         });
         if (!certification.certified) {
-            model = seedlingModel({ seed, defaults, skeleton, elements, dropElement: true });
+            model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
             oracle = wrapOracle(seedlingOracle({ model, items, budget }));
         }
     }
-    return { model, oracle, certification };
+    /**
+     * ⛓⛓⛓ **THE AREA GRAPH'S OWN CERTIFICATION — PROCGEN ELEMENTS arc 3, slice
+     * 4b (D3), AND IT IS ATTRIBUTED RATHER THAN BLAMED.**
+     *
+     * The locks and the flag are part of the SKELETON, so the solve that
+     * certifies them is the one above — and when an element ran, that solve has
+     * ALREADY seen them. What this block adds is the case the element branch
+     * does not cover (a graph with no element) and, when both ran and the solve
+     * failed, THE ATTRIBUTION: rebuild with `areas: {keys: 0}` and ask again.
+     *
+     *  · it now solves ⇒ the GRAPH is what the solver could not do. The level
+     *    ships with its element and WITHOUT the graph, `areas.refused` naming
+     *    `the-area-graph-does-not-certify`.
+     *  · it still does not ⇒ the ELEMENT is, and the ordinary `dropElement`
+     *    path above has already run.
+     *
+     * ⛔ THE ELEMENT SURVIVES THE GRAPH'S DROP, and that is the point of
+     * rebuilding with `areas: {keys: 0}` rather than with `dropElement` (⚖ arc
+     * 1: *a refused GRAPH still shows its carved level*). ⚠ THE PRICE, said
+     * plainly: a level where BOTH ran and the solve fails costs up to three
+     * solves. It buys an attribution nothing else in the pipeline can make, and
+     * it is spent only on failure.
+     */
+    let areaCertification = null;
+    if (model.areas.ran) {
+        /**
+         * ⛓ WHETHER A SOLVE HAS ALREADY SEEN THIS ROOM. The locks and the flag
+         * are part of the SKELETON, so when an element ran and CERTIFIED, the
+         * solve above already walked past every one of them — asking again
+         * would be a second answer to one question and a second full budget.
+         * When the element was DROPPED the model was rebuilt (with the graph
+         * still on it) and no solve has seen the rebuild, so this one is real.
+         */
+        const alreadySolved = certification !== null && certification.certified;
+        const cert = alreadySolved ? null
+            : oracle.solve(model.skeleton(), { templates: [] });
+        const solved = alreadySolved || cert.verdict === VERDICT.SOLVED;
+        areaCertification = Object.freeze({
+            certified: solved,
+            verdict: cert?.verdict ?? (alreadySolved ? VERDICT.SOLVED : null),
+            classifiedBy: cert?.classifiedBy ?? null,
+            reasonText: cert?.reasonText ?? null,
+            ticks: cert?.ticks ?? cert?.ticksSpent ?? null,
+            strategies: Object.freeze((cert?.records ?? []).map((r) => r.strategy)),
+            /** ⛓ HOW THE VERDICT WAS REACHED, because two of them are not a
+             *  solve of this room: `lifted-from-the-elements-solve` means the
+             *  element's own certification already crossed every lock. */
+            source: alreadySolved ? 'lifted-from-the-elements-solve' : 'its-own-solve',
+            /** ⛓ THE GRAPH'S OWN ANSWER, CARRIED ACROSS THE DROP so the census
+             *  and the payload survive it — the rule the element's `geometry`
+             *  already follows. */
+            areas: model.areas,
+        });
+        if (!solved) {
+            /**
+             * ⛔ REBUILT WITH `areas: {keys: 0}` AND **NOT** WITH
+             * `dropElement` — ⚖ arc 1: *a refused GRAPH still shows its carved
+             * level*, and here it also still shows its ELEMENT. The element's
+             * own drop is the branch above's decision and is preserved
+             * verbatim; this one only takes the graph away.
+             */
+            model = seedlingModel({ seed, defaults, skeleton, elements,
+                areas: { keys: 0 },
+                dropElement: certification !== null && !certification.certified });
+            oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+        }
+    }
+    return { model, oracle, certification, areaCertification };
+}
+
+/**
+ * ⛓⛓ **THE AREA BINDING'S REPORT — COUNTS AND NAMES, NEVER CELL LISTS.**
+ *
+ * Arc 1's rule for what a payload may carry, carried whole: *a shipped cell
+ * list is a second copy of the terrain that can go stale against it, and a
+ * reader who wants the cells re-derives them from the level* (here with
+ * `model.areaPartition()`, which is the ONE derivation). ⛔ The LOCK and FLAG
+ * cells ARE carried, and the exception is deliberate: they are the two things a
+ * reader cannot re-derive — which boundary cell took a lock is a fact about the
+ * GRAPH, not about the terrain.
+ */
+export function areaSummaryOf(areaInfo, { certification = null } = {}) {
+    return Object.freeze({
+        spec: formatAreaSpec(areaInfo.spec),
+        ran: areaInfo.ran,
+        calledModule: areaInfo.calledModule,
+        ...(areaInfo.partitionSummary ? { partition: areaInfo.partitionSummary } : {}),
+        ...(areaInfo.graph ? {
+            symbols: Object.freeze([...areaInfo.graph.symbols]),
+            draws: areaInfo.graph.draws,
+            attempts: areaInfo.graph.attempts,
+            graphifyEdges: areaInfo.graph.edges.filter((e) => e.kind === 'graphify').length,
+        } : {}),
+        lockCount: areaInfo.locks.length,
+        locks: Object.freeze(areaInfo.locks.map((l) => Object.freeze({ ...l }))),
+        flags: Object.freeze(areaInfo.flags.map((f) => Object.freeze({ ...f }))),
+        ...(areaInfo.groups ? { groups: areaInfo.groups, tags: areaInfo.tags } : {}),
+        ...(areaInfo.supersededFlagLock
+            ? { supersededFlagLock: areaInfo.supersededFlagLock } : {}),
+        refused: areaInfo.refused ? Object.freeze({ ...areaInfo.refused }) : null,
+        ...(certification ? {
+            certified: certification.certified,
+            certification: Object.freeze({
+                verdict: certification.verdict,
+                classifiedBy: certification.classifiedBy,
+                reasonText: certification.reasonText,
+                ticks: certification.ticks,
+                strategies: certification.strategies,
+                source: certification.source,
+            }),
+        } : {}),
+    });
 }
 
 /**
@@ -2313,18 +2814,30 @@ export function seedlingSeam({
  */
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
-    skeleton = DEFAULT_SKELETON, elements,
+    skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS,
 } = {}) {
-    const { model, oracle, certification } = seedlingSeam({
-        seed, items: palette.items ?? null, budget, defaults, skeleton, elements,
+    const { model, oracle, certification, areaCertification } = seedlingSeam({
+        seed, items: palette.items ?? null, budget, defaults, skeleton, elements, areas,
     });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     return {
         ...out,
         model,
         certification,
+        areaCertification,
         summary: Object.freeze({
             ...out.summary,
+            /**
+             * ⛓⛓ **THE AREA BINDING'S REPORT** (arc 3, slice 4b) — the maze's
+             * `summary.areas` block, one substrate over. ⛔ OMITTED ENTIRELY at
+             * `keys: 0`, which is what keeps every committed payload
+             * byte-identical, and it carries the graph's own answer FROM BEFORE
+             * the drop (`areaCertification.areas`) so a refused certification is
+             * still a readable report rather than an absence.
+             */
+            ...(resolveAreaSpec(normalizeAreaSpec(areas ?? DEFAULT_AREAS)).keys === 0 ? {}
+                : { areas: areaSummaryOf(areaCertification?.areas ?? model.areas,
+                    { certification: areaCertification }) }),
             /**
              * ⛓ ⚖ DESIGN RULING 20's SOLVER-WORK RECORDS for the element, on the
              * key the design gives them. ⛔ Omitted entirely at `--elements=none`,

@@ -70,6 +70,7 @@ const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore'
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
+const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const {
@@ -148,6 +149,24 @@ const SKELETON = parseSkeleton(arg('skeleton', 'empty'),
  */
 const ELEMENTS_ARG = arg('elements', '');
 const ELEMENTS = ELEMENTS_ARG === '' ? undefined : parseElementSpec(ELEMENTS_ARG);
+
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 4b — **THE AREA GRAPH**, through arc 1's
+ * ONE codec (`procgenCore/areaSpec.js`), the same string the MAZE CLI takes and
+ * the same one slice 5a's `?areas=` will read: `--areas=1`,
+ * `--areas='2;graphify=0.5;goalShortcut=0'` (quote it — `;` is the shell's).
+ *
+ * ⛔ THE DEFAULT IS `0`, WHICH MEANS THE MODULE DOES NOT RUN AT ALL — not "runs
+ * and returns early". No partition is computed, `buildAreaGraph` is not called
+ * and the rng is not touched, so a run without this flag is byte-identical to
+ * the one this CLI printed before the flag existed.
+ *
+ * ⛔ A REFUSED GRAPH IS A REFUSED RUN AND SAYS SO IN THE EXIT CODE (6, the maze
+ * CLI's own), while the LEVEL is still printed — the evidence for the refusal is
+ * in it, and a level shipped without its graph is arc 1's own rule (*a refused
+ * GRAPH still shows its carved level*).
+ */
+const AREAS = parseAreaSpec(arg('areas', '0'));
 
 /**
  * ⛓ WHAT EACH ELEMENT'S LIFTED CLAIM ACTUALLY CLAIMS — the discriminating
@@ -294,6 +313,14 @@ const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, pale
  * through it is family K (slice 5, `?elements=`), and a flag that was accepted
  * and ignored would produce a payload naming a gadget the level does not hold.
  */
+if (DIRECTED && AREAS.keys > 0) {
+    process.stderr.write('generate-seedling-level: --areas= and --directed= do not compose. '
+        + 'The directed path is `watchGenerate.generateWithDirectives` (the page\'s), which '
+        + 'builds its own model; the area binding reaches it in slice 5a with `?areas=`. A '
+        + 'flag accepted and ignored would produce a payload naming a graph the level does '
+        + 'not hold.\n');
+    process.exit(2);
+}
 if (DIRECTED && ELEMENTS !== undefined
     && (isElementList(ELEMENTS) || ELEMENTS.name !== ELEMENTS_NONE)) {
     process.stderr.write('generate-seedling-level: --elements= and --directed= do not compose '
@@ -315,6 +342,7 @@ try {
         })
         : generateSeedlingLevel({
             seed: SEED, palette: PALETTE, bounds, budget: BUDGET, skeleton: SKELETON,
+            areas: AREAS,
             elements: ELEMENTS,
         });
 } catch (e) {
@@ -408,6 +436,39 @@ if (has('json')) {
      * ends swapped.
      */
     const SPEC = out.model.elementSpec;
+    /**
+     * ⛓⛓ THE AREA BINDING'S OWN LINE (arc 3, slice 4b) — the MAZE CLI's block,
+     * one substrate over. ⛔ Printed only when the graph was ASKED for, so a run
+     * without `--areas=` says nothing new.
+     */
+    if (AREAS.keys > 0) {
+        const a = s?.areas;
+        say(`areas:  ${formatAreaSpec(AREAS)} — ${a?.partition?.areaCount ?? 0} area(s) `
+            + `(${a?.partition?.syntheticCount ?? 0} synthetic, `
+            + `${a?.partition?.elementCount ?? 0} declared by an element), `
+            + `${a?.partition?.adjacencyCount ?? 0} adjacency pair(s); `
+            + (a?.ran
+                ? `${a.symbols.length} symbol(s) [${a.symbols.join(', ')}], `
+                    + `${a.lockCount} lock(s) on area boundaries, ${a.flags.length} flag(s) `
+                    + `${a.flags.map((f) => `${f.symbol}@(${f.x},${f.y})`
+                        + `${f.guarded ? ' GUARDED by the element' : ''}`).join(' ')}, `
+                    + `${a.graphifyEdges} graphify edge(s); ${a.draws} draw(s) over `
+                    + `${a.attempts} attempt(s); tags `
+                    + `${Object.entries(a.tags ?? {}).map(([k, t]) => `${k}{flag ${t.flag}, `
+                        + `locks ${t.lock}}`).join(' ')}`
+                    + (a.supersededFlagLock
+                        ? `; ⛓ the element's own flag-lock at (${a.supersededFlagLock.x},`
+                            + `${a.supersededFlagLock.y}) was SUPERSEDED by the boundary locks`
+                        : '')
+                : `⛔ REFUSED: ${a?.refused?.reason} — ${a?.refused?.detail}`));
+        if (a?.ran) {
+            say(`        ⛔⛔ CERTIFIED: ${a.certified} — ${a.certification.verdict}`
+                + ` (${a.certification.source})`);
+            if (a.certification.reasonText) {
+                say(`        the solve's own words: ${a.certification.reasonText}`);
+            }
+        }
+    }
     if (isElementList(SPEC) || SPEC.name !== ELEMENTS_NONE) {
         const e = s?.elements ?? null;
         const p = e?.placed?.[0] ?? null;
@@ -581,3 +642,26 @@ const ceilingMs = (bounds.obstacleTarget > 0 ? costModel(bounds, 139).worstCaseT
     + (DIRECTED ?? []).reduce((n, d) => n + directedCost(d.bound, 139).worstCaseTotalMs, 0);
 note(`[timing, stderr only] ${elapsedMs} ms for ${out.trace.length} solve(s); `
     + `cost model said <= ${ceilingMs} ms`);
+
+/**
+ * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 4b — **A REFUSED GRAPH IS A REFUSED RUN,
+ * AND IT SAYS SO IN THE EXIT CODE** (6, the maze CLI's own, and for its
+ * reason). The payload and the LEVEL are still printed, because the evidence
+ * for the refusal is in them and arc 1's rule is that a refused graph still
+ * ships its carved level; what the exit code carries is that the run did not
+ * produce what was asked for. ⛔ Distinct from 3 (an abort inside the
+ * generator) and 4 (a two-process drift): those are defects, this is the honest
+ * answer to a room that cannot host the graph.
+ *
+ * ⚠ AN UNCERTIFIED GRAPH IS THE SAME ANSWER. `ran: true, certified: false` is a
+ * level the solver could not walk, and it ships without the graph — so a caller
+ * that reads only the exit code is told the same thing either way.
+ */
+if (AREAS.keys > 0 && !(out.summary?.areas?.ran && out.summary.areas.certified)) {
+    const a = out.summary?.areas;
+    note(`generate-seedling-level: ⛔ AREAS REFUSED — ${a?.refused
+        ? `${a.refused.reason}: ${a.refused.detail}`
+        : `the-area-graph-does-not-certify: ${a?.certification?.reasonText
+            ?? a?.certification?.classifiedBy ?? 'the solve did not reach the goal'}`}`);
+    process.exit(6);
+}

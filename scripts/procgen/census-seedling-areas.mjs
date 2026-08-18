@@ -71,6 +71,18 @@ const SEEDS = (() => {
     return spec.split(',').map(Number);
 })();
 const JSON_OUT = arg('json', '');
+/**
+ * ⛓⛓ **THE GRAPH ARM** (`--areas=1`, `--areas=2`) — the SAME census with the
+ * area binding actually RUN, so the structural prediction above and the
+ * binding's own answer sit in one table. ⛔ Still NO SOLVE: certification costs
+ * a full oracle budget per cell and is the yield table's column, not this one's.
+ * A comma list runs several key counts in one pass.
+ */
+const KEYS = arg('areas', '0').split(',').map(Number).filter((n) => n > 0);
+/** ⛓ `binds` is the ELEMENT's knob (which area may hold a symbol) and it is an
+ *  AXIS here, because arc 2 measured the two arms on the maze and this slice
+ *  owes the same two numbers on Seedling. */
+const BINDS = arg('binds', 'item').split(',').filter(Boolean);
 const BIOMES = [['pre', PRE_SWORD_PALETTE], ['post', POST_SWORD_PALETTE]];
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
@@ -106,6 +118,41 @@ for (const kindSpec of KINDS) {
             }
             if (error) { rows.push({ kind: kindSpec, biome, seed, error }); continue; }
             const p = model.areaPartition();
+            /**
+             * ⛓ THE GRAPH ARMS — one model per (keys, binds), each a fresh
+             * `seedlingModel` because the graph draws from the ROOM stream and
+             * asking it twice on one model would be one answer read twice.
+             */
+            const graphArms = {};
+            for (const keys of KEYS) {
+                for (const binds of BINDS) {
+                    /**
+                     * ⛓ THE `+` LIST'S OWN SHAPE IS `{any: [members]}` (the
+                     * codec's, read from it rather than assumed), and `binds`
+                     * rides on the GUARD member only — it is the knob for
+                     * "which area may hold a symbol" and the other two heads
+                     * declare no area at all.
+                     */
+                    const spec = defaultElementsFor(palette.items);
+                    const withBinds = binds === 'item' ? spec
+                        : { any: spec.any.map((mm) => (mm.name === 'guard'
+                            ? { ...mm, params: { ...(mm.params ?? {}), binds } } : mm)) };
+                    let a = null;
+                    try {
+                        a = seedlingModel({ seed, skeleton,
+                            elements: withBinds, areas: { keys } }).areas;
+                    } catch (e) { a = { ran: false, refused: { reason: `THREW ${e.name}` } }; }
+                    graphArms[`${keys}|${binds}`] = {
+                        ran: a.ran,
+                        refused: a.refused?.reason ?? null,
+                        locks: a.locks?.length ?? 0,
+                        flags: a.flags?.length ?? 0,
+                        guarded: (a.flags ?? []).filter((f) => f.guarded).length,
+                        superseded: a.supersededFlagLock ? 1 : 0,
+                        tags: Object.values(a.tags ?? {}).reduce((n) => n + 2, 0),
+                    };
+                }
+            }
             const real = p.areas.filter((a) => a.kind === 'chamber' && !a.synthetic);
             const element = p.areas.filter((a) => a.kind === 'element');
             const vestibule = p.areas.filter((a) => a.kind === 'goal');
@@ -179,6 +226,7 @@ for (const kindSpec of KINDS) {
                         && !(c.x === model.defaults.start.tx && c.y === model.defaults.start.ty)
                         && !(c.x === model.goalCell.tx && c.y === model.goalCell.ty));
                 }).length,
+                graphArms,
             });
         }
     }
@@ -268,6 +316,40 @@ for (const [k, rs] of byCell) {
         + `| **${rs.filter((r) => predict(r, 1) === 'ADMITS').length}/${rs.length}** `
         + `| ${rs.filter((r) => predict(r, 2) === 'ADMITS').length}/${rs.length} `
         + `| ${Object.entries(why).map(([n, c]) => `${n} ${c}`).join(' · ') || '—'} |`);
+}
+
+if (KEYS.length) {
+    say('');
+    say(`## THE GRAPH ARM — \`--areas=${KEYS.join(',')}\` x \`binds=${BINDS.join(',')}\`, `
+        + 'MEASURED (no solve)');
+    say('');
+    say('| kind | biome | arm | RAN | locks (max) | flags GUARDED | superseded | tags (max) '
+        + '| the refusals it met |');
+    say('|---|---|---|---|---|---|---|---|---|');
+    for (const [k, rs] of byCell) {
+        const [kind, biome] = k.split('|');
+        const good = rs.filter((r) => !r.error);
+        if (!good.length) continue;
+        for (const keys of KEYS) {
+            for (const binds of BINDS) {
+                const arm = good.map((r) => r.graphArms[`${keys}|${binds}`]).filter(Boolean);
+                if (!arm.length) continue;
+                const why = {};
+                for (const a of arm) if (a.refused) why[a.refused] = (why[a.refused] ?? 0) + 1;
+                const ran = arm.filter((a) => a.ran);
+                say(`| \`${kind}\` | ${biome} | keys=${keys} binds=${binds} `
+                    + `| **${ran.length}/${arm.length}** `
+                    + `| ${Math.max(0, ...arm.map((a) => a.locks))} `
+                    + `| ${ran.reduce((n, a) => n + a.guarded, 0)}/`
+                        + `${ran.reduce((n, a) => n + a.flags, 0)} `
+                    + `| ${arm.reduce((n, a) => n + a.superseded, 0)} `
+                    + `| ${Math.max(0, ...arm.map((a) => a.tags))} `
+                    + `| ${Object.entries(why).map(([n, c]) => `\`${n}\` ${c}`).join(' · ')
+                        || '—'} |`);
+            }
+        }
+    }
+    say('');
 }
 
 if (JSON_OUT) {

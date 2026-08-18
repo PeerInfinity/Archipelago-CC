@@ -219,10 +219,19 @@ if (REQUIRE && AREAS.keys === 0) {
         + 'every row. Say --areas=<n> too.');
     process.exit(2);
 }
-if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
-    note('sweep-yield-table: --areas= is the MAZE binding\'s (PROCGEN ELEMENTS arc 1, slice 2). '
-        + 'Seedling gets the area graph in arc 3; running it here would print an area column '
-        + 'that is zero for a reason nobody stated.');
+/**
+ * ⛓ PROCGEN ELEMENTS arc 3, slice 4b — **THE SEEDLING ARM HONOURS `--areas=`
+ * NOW.** It used to refuse it by name ("Seedling gets the area graph in arc 3;
+ * running it here would print an area column that is zero for a reason nobody
+ * stated"), and that sentence's condition is met: `seedlingSeam` takes an
+ * `areas` spec and reports on `summary.areas`.
+ *
+ * ⛔ `--require=` IS STILL THE MAZE'S ALONE — the directive is slice 4d's, and
+ * a flag accepted here and ignored would print a column with nothing behind it.
+ */
+if (SUBSTRATE === 'seedling' && REQUIRE) {
+    note('sweep-yield-table: --require= is the MAZE binding\'s. The Seedling directive is '
+        + 'arc 3 slice 4d; running it here would print a column that is empty at every row.');
     process.exit(2);
 }
 
@@ -296,6 +305,7 @@ if (CELL !== '') {
     let siteCensus = null;
     /** ⛓ arc 3 slice 3 — the element's certification, from the shared seam. */
     let seedlingCertification = null;
+    let seedlingAreaCertification = null;
     if (SUBSTRATE === 'maze') {
         const {
             MAZE_PALETTE, mazeModel, mazeOracle,
@@ -338,12 +348,14 @@ if (CELL !== '') {
             seed,
             skeleton: parseSkeleton(kind, { simulator: false, substrate: 'the Seedling binding' }),
             elements: ELEMENTS_EFFECTIVE,
+            areas: AREAS,
             items: palette.items ?? null,
             wrapOracle: wrap,
         });
         model = seam.model;
         oracle = seam.oracle;
         seedlingCertification = seam.certification;
+        seedlingAreaCertification = seam.areaCertification;
         const sk = model.skeleton();
         const cells = interiorCells(sk);
         floorPct = Math.round((100 * cells.filter((c) => terrainAt(sk, c.tx, c.ty) === 'ground')
@@ -439,6 +451,46 @@ if (CELL !== '') {
             symbols: model.areas.graph?.symbols.length ?? 0,
             graphifyEdges: model.areas.graph
                 ? model.areas.graph.edges.filter((e) => e.kind === 'graphify').length : 0,
+        };
+    }
+    /**
+     * ⛓⛓⛓ THE SEEDLING AREA CENSUS COLUMNS (arc 3, slice 4b) — the maze's block
+     * one substrate over, and it reads `model.areaPartition()` rather than
+     * building its own (the ONE derivation). ⛔ The graph's own answer is taken
+     * from the CERTIFICATION when there is one, because a refused certification
+     * REBUILDS the model without the graph and `model.areas` on the rebuild is
+     * an absence rather than a report.
+     */
+    if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
+        const part = model.areaPartition();
+        const info = seedlingAreaCertification?.areas ?? model.areas;
+        const deg = new Map(part.areas.map((a) => [a.id, 0]));
+        for (const e of part.adjacency) {
+            deg.set(e.a, deg.get(e.a) + 1);
+            deg.set(e.b, deg.get(e.b) + 1);
+        }
+        areaCensus = {
+            areas: part.areas.length,
+            real: part.areas.filter((a) => a.kind === 'chamber' && !a.synthetic).length,
+            vestibule: part.areas.filter((a) => a.kind === 'goal').length,
+            element: part.areas.filter((a) => a.kind === 'element').length,
+            adjacency: part.adjacency.length,
+            maxDegree: Math.max(0, ...deg.values()),
+            junctions3: part.corridorComponents.filter((c) => c.touches.length >= 3).length,
+            deadFloor: part.deadFloorCells,
+            ran: info.ran,
+            refused: info.refused?.reason ?? null,
+            certified: seedlingAreaCertification?.certified ?? null,
+            certSource: seedlingAreaCertification?.source ?? null,
+            locks: info.locks?.length ?? 0,
+            flags: info.flags?.length ?? 0,
+            guardedFlags: (info.flags ?? []).filter((f) => f.guarded).length,
+            superseded: info.supersededFlagLock ? 1 : 0,
+            symbols: info.graph?.symbols.length ?? 0,
+            graphifyEdges: info.graph
+                ? info.graph.edges.filter((e) => e.kind === 'graphify').length : 0,
+            tagsUsed: Object.values(info.tags ?? {})
+                .reduce((n, t) => n + (t.flag !== undefined ? 1 : 0) + 1, 0),
         };
     }
     /**
@@ -876,6 +928,62 @@ if (SUBSTRATE === 'maze') {
         say('| n | reason |');
         say('|---|---|');
         for (const [k, n] of refusalRows) say(`| ${n} | \`${k}\` |`);
+    }
+    say('');
+}
+
+/**
+ * ⛓⛓⛓ THE SEEDLING AREA TABLE (arc 3, slice 4b) — its own block rather than a
+ * widened maze one, because the two bindings report DIFFERENT things: the maze
+ * counts DOORS and asks whether the entrance and the goal are IN an area; the
+ * Seedling arm counts BOUNDARY LOCKS, the goal's VESTIBULE, the element's
+ * declared area, whether the flag is GUARDED and whether the graph CERTIFIED.
+ * ⛔ A shared table would have to leave half its columns blank on each
+ * substrate, which is a table that means two things at two rows.
+ */
+if (SUBSTRATE === 'seedling' && AREAS.keys > 0) {
+    say(`## THE SEEDLING AREA TABLE — \`--areas=${formatAreaSpec(AREAS)}\``);
+    say('');
+    say('| kind | areas (min/mean/max) | REAL | vestibule | element | RAN | CERTIFIED '
+        + '| locks | flags GUARDED | superseded | graphify | tags |');
+    say('|---|---|---|---|---|---|---|---|---|---|---|---|');
+    for (const [key, rows] of groups) {
+        const [kind] = key.split('|');
+        const ok = rows.filter((r) => r.areaCensus && !r.aborted);
+        if (!ok.length) continue;
+        const c = ok.map((r) => r.areaCensus);
+        const n = (f) => c.map(f);
+        const ran = c.filter((x) => x.ran);
+        say(`| \`${kind}\` | ${Math.min(...n((x) => x.areas))}/`
+            + `${mean(n((x) => x.areas))}/${Math.max(...n((x) => x.areas))} `
+            + `| ${mean(n((x) => x.real))} `
+            + `| ${c.filter((x) => x.vestibule > 0).length}/${c.length} `
+            + `| ${c.filter((x) => x.element > 0).length}/${c.length} `
+            + `| **${ran.length}/${c.length}** `
+            + `| **${c.filter((x) => x.certified).length}/${c.length}** `
+            + `| ${ran.reduce((a, x) => a + x.locks, 0)} `
+            + `| ${ran.reduce((a, x) => a + x.guardedFlags, 0)}/`
+                + `${ran.reduce((a, x) => a + x.flags, 0)} `
+            + `| ${c.reduce((a, x) => a + x.superseded, 0)} `
+            + `| ${c.reduce((a, x) => a + x.graphifyEdges, 0)} `
+            + `| ${Math.max(0, ...n((x) => x.tagsUsed))} |`);
+    }
+    say('');
+    say('## THE SEEDLING AREA REFUSALS, by reason');
+    say('');
+    const why = {};
+    for (const r of results) {
+        const name = r.areaCensus?.refused
+            ?? (r.areaCensus && r.areaCensus.ran && r.areaCensus.certified === false
+                ? 'the-area-graph-does-not-certify' : null);
+        if (name) why[name] = (why[name] ?? 0) + 1;
+    }
+    const rowsW = Object.entries(why).sort((a, b) => b[1] - a[1]);
+    if (!rowsW.length) say('(no cell refused an area graph in this sweep.)');
+    else {
+        say('| n | reason |');
+        say('|---|---|');
+        for (const [k, n] of rowsW) say(`| ${n} | \`${k}\` |`);
     }
     say('');
 }
