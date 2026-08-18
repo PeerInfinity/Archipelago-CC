@@ -78,6 +78,14 @@ import {
  */
 import { deriveSites, siteCells, siteSummaryOf } from '../procgenCore/sites.js';
 /**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 5a (D3) — **THE GENERATION LEDGER**, ⚖ the
+ * user's own requirement on the 2026-08-17 generation review (§4 item 6). ⛔ It
+ * is BYTE-INERT: nothing here is handed an rng, no row reaches `summary` (and
+ * therefore no payload), and every appender call sits AFTER its phase's own
+ * work. See `procgenLedger.js`'s docblock for the three claims and the spy.
+ */
+import { makeLedger, paintable, phaseRow } from './procgenLedger.js';
+/**
  * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 3 — THE ELEMENT SPEC's ONE CODEC (shared
  * with the maze CLI, the sweep and slice 5's `?elements=`) and the Seedling
  * BINDING of the reverse-pull gadget. ⛔ The element itself is
@@ -104,8 +112,8 @@ import {
     PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
 } from '../procgenCore/elements.js';
 import {
-    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
-    normalizeSkeleton, paramSchemaFor, parseSkeleton,
+    DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, formatSkeleton,
+    kindsOffered, normalizeSkeleton, paramSchemaFor, parseSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import {
     TILE_FLOOR, TILE_WALL, getTile, setTile,
@@ -691,9 +699,21 @@ export function interiorCells(record) {
 export function seedlingModel({
     seed, defaults = SEEDLING_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
     elements: elementSpec = DEFAULT_ELEMENTS, areas: areaSpec = DEFAULT_AREAS,
-    dropElement = false,
+    dropElement = false, ledger: recordLedger = true,
 } = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
+    /**
+     * ⛓⛓⛓ **THE LEDGER** (slice 5a, D3) — one row per PHASE, appended BY the
+     * phase as it runs. ⛔ Never assembled afterwards from a list of names
+     * (trap 357: a "deepest stage" list is a second spelling of the pipeline's
+     * order, and the two drift). A phase that is never REACHED writes no row,
+     * which is the honest report and is what makes the omission visible.
+     *
+     * ⛔ `ledger: false` IS THE SPY'S ARM AND THE COST LEVER, not a knob:
+     * nothing in the shipped callers passes it, and it exists so a test can
+     * prove that a model with recording OFF emits a byte-identical `--json`.
+     */
+    const ledger = makeLedger({ width: d.width, height: d.height, enabled: recordLedger });
     /**
      * ⛔ THE GOAL CELL IS DRAWN FROM ITS OWN STREAM, not from the loop's.
      *
@@ -766,6 +786,29 @@ export function seedlingModel({
         `${d.start.tx},${d.start.ty}`,
         `${goalCell.tx},${goalCell.ty}`,
     ]);
+    /** ⛓ THE GOAL ENTITY, built once — the row below records it as the level's
+     *  first entity and `skeleton()` writes the identical object. */
+    const goalEntity = { type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag } };
+    ledger.phase('goal', {
+        sentence: `the GOAL is (${goalCell.tx},${goalCell.ty}), ONE \`pick\` over the `
+            + `${goalCandidates.length} interior cell(s) at Manhattan >= `
+            + `${GOAL_MIN_FROM_START} from the START (${d.start.tx},${d.start.ty}) — the room `
+            + 'stream\'s FIRST draw, and it happens BEFORE the carve',
+        draws: roomRng.draws,
+        record: blank,
+        entities: [goalEntity],
+        data: { candidates: goalCandidates.length, minFromStart: GOAL_MIN_FROM_START,
+            pick: { x: goalCell.tx, y: goalCell.ty },
+            start: { x: d.start.tx, y: d.start.ty } },
+        facts: [paintable({
+            id: 'goal-candidates',
+            label: `${goalCandidates.length} goal candidate(s) — the interior minus the start, `
+                + `minus everything within ${GOAL_MIN_FROM_START} of it`,
+            kind: 'cells',
+            cells: goalCandidates,
+            pick: goalCell,
+        })],
+    });
 
     /**
      * ── ⛓⛓⛓ SLICE 5: THE CARVE. ONE PASS, AT MODEL CONSTRUCTION ────────
@@ -1023,8 +1066,33 @@ export function seedlingModel({
     const elementValues = resolveElementSpec(elementHead);
     const elementPhase = elementValues.name === ELEMENTS_NONE ? null
         : ELEMENT_TABLE[elementValues.name].element.phase;
+    if (elementValues.name !== ELEMENTS_NONE) {
+        /** ⛓ THE LIST DRAW — ONE `pick` over a `+` spec's members, and NOTHING
+         *  at all for a bare head. The row exists either way so a reader can
+         *  see that the head was not drawn. */
+        ledger.phase('element-head', {
+            sentence: isElementList(elementSpecNorm)
+                ? `the spec is the \`+\` LIST \`${formatElementSpec(elementSpecNorm)}\` and `
+                    + `the stream DREW \`${formatElementSpec(elementHead)}\` — ONE \`pick\`, `
+                    + 'which is a CHOICE and not a conjunction (one block per level)'
+                : `the head is \`${formatElementSpec(elementHead)}\` — a BARE head, which `
+                    + 'spends no draw',
+            draws: roomRng.draws,
+            data: {
+                asked: formatElementSpec(elementSpecNorm),
+                drew: formatElementSpec(elementHead),
+                isList: isElementList(elementSpecNorm),
+                members: elementSpecNorm.any?.map((m2) => formatElementSpec(m2)) ?? null,
+                phase: elementPhase,
+            },
+        });
+    }
     let elementPlan = null;
     let elementRefusal = null;
+    /** ⛓ HOISTED SO THE `pre-carve` ROW CAN BE WRITTEN BY THE PHASE at the end
+     *  of its own branch — the site candidates and the `len` live in the inner
+     *  scopes that computed them. */
+    let preCarveRow = null;
     if (elementPhase === PHASE_PRE_CARVE) {
         const named = namedParams(elementHead, { elementOnly: true });
         if (named.turns !== undefined && named.turns !== 0) {
@@ -1042,6 +1110,13 @@ export function seedlingModel({
             const sites = seedlingElementSiteCandidates({
                 width: d.width, height: d.height, start: d.start, goal: goalCell, size,
             });
+            preCarveRow = {
+                len: concrete.params.len,
+                size,
+                candidates: sites.length,
+                sites,
+                drawsBefore,
+            };
             if (sites.length === 0) {
                 elementRefusal = { reason: 'no-site-fits-this-room',
                     detail: `a len=${concrete.params.len} straight gadget needs a ${size}x${size} `
@@ -1053,6 +1128,7 @@ export function seedlingModel({
                         + 'goal, and D1(b)\'s census publishes how often each `len` fits.' };
             } else {
                 const site = roomRng.pick(sites);
+                preCarveRow.site = site;
                 /**
                  * ⛓ THE STREAM POSITION AT `construct` IS ITS OWN FIELD (arc-2
                  * §10.5.1, measured there rather than reasoned): the SITE PICK
@@ -1073,10 +1149,84 @@ export function seedlingModel({
                 }
             }
         }
+        /**
+         * ⛓ THE `pre-carve` ROW, WRITTEN BY THE PHASE at the end of its own
+         * branch — with the facts it already computed for its own purposes.
+         * ⛔ Nothing is re-derived here; `sites` is the very list the `pick`
+         * chose from.
+         */
+        ledger.phase('pre-carve', {
+            sentence: elementRefusal
+                ? `the PRE-CARVE element REFUSED: ${elementRefusal.reason} — `
+                    + `${elementRefusal.detail}`
+                : `\`${elementPlan.concrete.instance}\` drew len=${preCarveRow.len}, picked a `
+                    + `${preCarveRow.size}x${preCarveRow.size} SITE at `
+                    + `(${preCarveRow.site.x},${preCarveRow.site.y}) out of `
+                    + `${preCarveRow.candidates} snug candidate(s), and CONSTRUCTED it — the `
+                    + `site pick sits BETWEEN \`instantiate\` and \`construct\`, both of `
+                    + 'which draw',
+            draws: roomRng.draws,
+            refusal: elementRefusal,
+            data: {
+                len: preCarveRow?.len ?? null,
+                size: preCarveRow?.size ?? null,
+                candidates: preCarveRow?.candidates ?? 0,
+                site: preCarveRow?.site ?? null,
+                drawsAtConstruct: elementPlan?.drawsAtConstruct ?? null,
+            },
+            facts: [
+                preCarveRow && preCarveRow.candidates > 0 && paintable({
+                    id: 'site-candidates',
+                    label: `${preCarveRow.candidates} snug SITE candidate(s) — their top-left `
+                        + `corners, for a ${preCarveRow.size}x${preCarveRow.size} rectangle `
+                        + 'with a one-cell ring',
+                    kind: 'cells',
+                    cells: preCarveRow.sites.map((c) => ({ x: c.x, y: c.y })),
+                    pick: preCarveRow.site ?? null,
+                }),
+                preCarveRow?.site && paintable({
+                    id: 'site-picked',
+                    label: `the SITE this run took — ${preCarveRow.site.w}x`
+                        + `${preCarveRow.site.h} at (${preCarveRow.site.x},`
+                        + `${preCarveRow.site.y})`,
+                    kind: 'outline',
+                    cells: (() => {
+                        const out = [];
+                        const r = preCarveRow.site;
+                        for (let y = r.y; y < r.y + r.h; y += 1) {
+                            for (let x = r.x; x < r.x + r.w; x += 1) out.push({ x, y });
+                        }
+                        return out;
+                    })(),
+                }),
+            ],
+        });
     }
 
     const carved = skeletonKind === DEFAULT_SKELETON_KIND ? null : carveRoom();
     let base = carved ? carved.record : blank;
+    /**
+     * ⛓ THE CARVE ROW. ⛔ Written for `empty` TOO, and the sentence says what
+     * happened: `empty` is not "the `empty` backend", it is the open bordered
+     * room this file has always built, and a ledger that skipped the row would
+     * make the reader wonder which phase ate the carve.
+     */
+    ledger.phase('carve', {
+        sentence: carved
+            ? `the CONNECTOR carved the interior — kind \`${formatSkeleton(skeletonEffective,
+                { explicit: Object.keys(skeletonEffective.params ?? {}) })}\`, leaving `
+                + `${carved.record.entities?.length ?? 0} entit(y|ies) and the ring walled`
+            : 'no carve — `empty` is the OPEN BORDERED ROOM this binding has always built, '
+                + 'and the backend is not called at all',
+        draws: roomRng.draws,
+        record: base,
+        entities: [goalEntity],
+        data: {
+            kind: skeletonKind,
+            params: skeletonEffective.params ?? {},
+            carved: Boolean(carved),
+        },
+    });
     /** ⛓ THE SKELETON, FROZEN BEFORE ANY ELEMENT WRITE — what "untouched
      *  skeleton terrain" means for the `on-connector` carve rule, and what the
      *  `room` probe reads. `base` itself is reassigned by both composites. */
@@ -1164,6 +1314,63 @@ export function seedlingModel({
             onConnectorPlan = { concrete, placement, drawsBefore, drawsAtConstruct,
                 params: concrete.params };
         }
+        /**
+         * ⛓ THE `on-connector` ROW — the element's own numbers, which its
+         * `cost` block already carries: how many door cells the room OFFERED
+         * (whether the one draw was a choice or a formality), how much wall it
+         * grew and whether the pocket was a CARVE.
+         */
+        const probe = roomProbeFor();
+        const pl = onConnectorPlan?.placement ?? null;
+        ledger.phase('on-connector', {
+            sentence: elementRefusal
+                ? `the ON-CONNECTOR element REFUSED: ${elementRefusal.reason} — `
+                    + `${elementRefusal.detail}`
+                : `\`${concrete.instance}\` took the door cell `
+                    + `(${pl.doorCells[0].x},${pl.doorCells[0].y}) — ONE \`pick\` among the `
+                    + `${pl.cost.candidates} cut cell(s) the room offered equally — grew `
+                    + `${pl.cost.wall} cell(s) of wall and carved ${pl.cost.carved}`,
+            draws: roomRng.draws,
+            refusal: elementRefusal,
+            data: {
+                candidates: pl?.cost?.candidates ?? null,
+                wall: pl?.cost?.wall ?? null,
+                carved: pl?.cost?.carved ?? null,
+                goalDistance: pl?.cost?.goalDistance ?? null,
+                push: pl?.cost?.push ?? null,
+                doorCell: pl?.doorCells?.[0] ?? null,
+                demandCells: pl?.demand?.length ?? 0,
+            },
+            facts: [
+                paintable({
+                    id: 'main-path',
+                    label: `the MAIN PATH the door must cut — ${probe.mainPath.length} cell(s), `
+                        + 'start to goal',
+                    kind: 'path',
+                    cells: probe.mainPath,
+                }),
+                pl && paintable({
+                    id: 'door-cell',
+                    label: `the DOOR cell — chosen from ${pl.cost.candidates} equal candidate(s)`,
+                    kind: 'outline',
+                    cells: pl.doorCells,
+                    pick: pl.doorCells[0],
+                }),
+                pl && (pl.clearer?.length ?? 0) > 0 && paintable({
+                    id: 'clearer',
+                    label: `${pl.clearer.length} CLEARER cell(s) — what opens the door`,
+                    kind: 'outline',
+                    cells: pl.clearer,
+                }),
+                pl && (pl.demand?.length ?? 0) > 0 && paintable({
+                    id: 'demand-region',
+                    label: `the DEMAND — ${pl.demand.length} cell(s) the element's BODY moves `
+                        + 'in, plus the walls that keep it there (arc 3, slice 4d)',
+                    kind: 'flood',
+                    cells: pl.demand,
+                }),
+            ],
+        });
     }
 
     /**
@@ -1276,6 +1483,56 @@ export function seedlingModel({
                 refused: null,
             });
         }
+        /**
+         * ⛓ THE COMPOSITE ROW — the ring re-walled, the entry mouth JOINED by
+         * the shortest tunnel, the exit mouth SEALED, and the flag's LOCK put
+         * on a main-path cut. ⛔ It spends NO draw, which the row states rather
+         * than leaves to be inferred from two equal numbers.
+         */
+        const cp = elementInfo.ran ? elementInfo.placed[0] : null;
+        ledger.phase('composite', {
+            sentence: cp
+                ? `the COMPOSITE committed \`${cp.instance}\`: the reserved rectangle was `
+                    + `re-walled, a ${cp.tunnel.length}-cell TUNNEL joined the entry mouth at `
+                    + `(${cp.entryMouth.x},${cp.entryMouth.y}), the exit mouth was SEALED, the `
+                    + `FLAG sits at (${cp.flagCell.x},${cp.flagCell.y}) and its LOCK on the `
+                    + `main-path cut (${cp.flagLockCell.x},${cp.flagLockCell.y}). The carve `
+                    + `had written ${cp.carveOverwrote} of these cells differently. ⛔ NO draw.`
+                : `the COMPOSITE REFUSED: ${elementInfo.refused?.reason} — `
+                    + `${elementInfo.refused?.detail}`,
+            draws: roomRng.draws,
+            record: base,
+            entities: [goalEntity, ...elementEntities],
+            refusal: elementInfo.ran ? null : elementInfo.refused,
+            data: {
+                tunnel: cp?.tunnel.length ?? null,
+                carveOverwrote: cp?.carveOverwrote ?? null,
+                entities: elementEntities.length,
+                dropped: dropElement,
+            },
+            facts: cp ? [
+                paintable({ id: 'tunnel', label: `the ${cp.tunnel.length}-cell entry TUNNEL`,
+                    kind: 'cells', cells: cp.tunnel }),
+                paintable({ id: 'reserved-rect',
+                    label: `the RESERVED rectangle — ${cp.site.w + 2}x${cp.site.h + 2} at `
+                        + `(${cp.site.x - 1},${cp.site.y - 1}); pass 2 may not touch any of it`,
+                    kind: 'outline',
+                    cells: (() => {
+                        const out = [];
+                        for (let y = cp.site.y - 1; y < cp.site.y + cp.site.h + 1; y += 1) {
+                            for (let x = cp.site.x - 1; x < cp.site.x + cp.site.w + 1; x += 1) {
+                                out.push({ x, y });
+                            }
+                        }
+                        return out;
+                    })() }),
+                paintable({ id: 'flag-and-lock',
+                    label: 'the FLAG (buttonroom) and its LOCK on the main-path cut',
+                    kind: 'outline',
+                    cells: [cp.flagCell, cp.flagLockCell],
+                    pick: cp.flagCell }),
+            ] : [],
+        });
     }
 
     /**
@@ -1378,6 +1635,45 @@ export function seedlingModel({
                 refused: null,
             });
         }
+        /** ⛓ THE `on-connector` COMPOSITE ROW — the same three steps
+         *  (adjudicate, paint, realise) against a room that already exists. */
+        const op = elementInfo.ran ? elementInfo.placed[0] : null;
+        ledger.phase('composite', {
+            sentence: op
+                ? `the COMPOSITE committed \`${op.instance}\`: the door law and the carve law `
+                    + `were both asked and both held; it OWNS ${op.owned.length} cell(s) — the `
+                    + `door (${op.doorCell.x},${op.doorCell.y}), ${op.clearer.length} `
+                    + `clearer cell(s), ${op.wall.length} of grown wall and ${op.carved.length} `
+                    + `it CARVED — and DEMANDS ${elementDemand.size} more. ⛔ NO draw.`
+                : `the COMPOSITE REFUSED: ${elementInfo.refused?.reason} — `
+                    + `${elementInfo.refused?.detail}`,
+            draws: roomRng.draws,
+            record: base,
+            entities: [goalEntity, ...elementEntities],
+            refusal: elementInfo.ran ? null : elementInfo.refused,
+            data: {
+                owned: op?.owned.length ?? null,
+                demanded: elementDemand.size,
+                entities: elementEntities.length,
+                dropped: dropElement,
+            },
+            facts: op ? [
+                paintable({ id: 'owned', label: `${op.owned.length} cell(s) the element OWNS — `
+                    + 'pass 2 may not paint, carve or occupy any of them',
+                kind: 'cells', cells: op.owned }),
+                paintable({ id: 'pocket', label: `${op.carved.length} cell(s) CARVED for the `
+                    + 'pocket', kind: 'cells', cells: op.carved }),
+                elementDemand.size > 0 && paintable({
+                    id: 'demand-region',
+                    label: `the DEMAND — ${elementDemand.size} cell(s) the body moves in plus `
+                        + 'the walls that keep it there',
+                    kind: 'flood',
+                    cells: [...elementDemand.keys()].map((k) => {
+                        const [x, y] = k.split(',').map(Number);
+                        return { x, y };
+                    }) }),
+            ] : [],
+        });
     }
 
 
@@ -1505,6 +1801,40 @@ export function seedlingModel({
             goalArea: partition.goalArea,
             deadFloorCells: partition.deadFloorCells,
         });
+        /**
+         * ⛓ THE PARTITION ROW — no draw, and it reads the room the COMPOSITES
+         * left (a partition taken before them would find chambers the finished
+         * room does not have).
+         */
+        ledger.phase('partition', {
+            sentence: `the PARTITION found ${summary.areaCount} area(s) `
+                + `(${summary.syntheticCount} synthetic, ${summary.elementCount} declared by an `
+                + `element), ${summary.adjacencyCount} adjacency pair(s) over `
+                + `${summary.corridorComponents} corridor component(s); entrance in `
+                + `${summary.entranceArea}, goal in ${summary.goalArea}, `
+                + `${summary.deadFloorCells} dead floor cell(s). ⛔ NO draw — it reads tiles.`,
+            draws: roomRng.draws,
+            data: { ...summary },
+            facts: [
+                ...partition.areas.map((area, i) => paintable({
+                    id: `area-${area.id}`,
+                    label: `area ${area.id} — ${area.cells.length} cell(s), `
+                        + `${area.boundary.length} on its boundary`
+                        + `${area.synthetic ? ' (SYNTHETIC — grown, not a chamber)' : ''}`,
+                    kind: area.synthetic ? 'outline' : 'cells',
+                    cells: area.cells,
+                    note: i === 0 ? 'the boundary cells are where this area\'s locks go' : null,
+                })),
+                partition.deadFloorCells > 0 && paintable({
+                    id: 'dead-floor',
+                    label: `${partition.deadFloorCells} DEAD floor cell(s) — ground the `
+                        + 'entrance cannot reach',
+                    kind: 'cells',
+                    cells: [],
+                    note: 'the partition counts them; it does not list them',
+                }),
+            ],
+        });
         const refuseArea = (reason, detail, extra = {}) => Object.freeze({
             spec: areaSpecNorm, ran: false, calledModule: false, partitionSummary: summary,
             partition, graph: null, locks: Object.freeze([]), flags: Object.freeze([]),
@@ -1563,6 +1893,25 @@ export function seedlingModel({
                     graphifyProbability: areaValues.graphify,
                     allowGoalShortcut: areaValues.goalShortcut === 1,
                     maxSwitches: 0,
+                },
+            });
+            ledger.phase('graph', {
+                sentence: graph.refused
+                    ? `the AREA GRAPH REFUSED: ${graph.refused.reason} — `
+                        + `${graph.refused.detail} (${graph.refused.attempts} attempt(s))`
+                    : `the AREA GRAPH placed ${graph.symbols.length} symbol(s) `
+                        + `[${graph.symbols.join(', ')}] over ${partition.areas.length} area(s) `
+                        + `in ${graph.attempts} attempt(s), spending ${graph.draws} draw(s); `
+                        + `${graph.edges.filter((e2) => e2.kind === 'graphify').length} `
+                        + 'graphify edge(s) RECORDED, none carved',
+                draws: roomRng.draws,
+                refusal: graph.refused ? { reason: graph.refused.reason,
+                    detail: graph.refused.detail } : null,
+                data: {
+                    symbols: graph.symbols ? [...graph.symbols] : [],
+                    attempts: graph.attempts,
+                    draws: graph.draws,
+                    maxKeys: areaValues.keys,
                 },
             });
             if (graph.refused) {
@@ -1845,6 +2194,42 @@ export function seedlingModel({
                                         && Math.floor(e.y / TILE_SIZE) === supersededFlagLock.y),
                                 ));
                             }
+                            ledger.phase('realisation', {
+                                sentence: `the REALISATION put ${locks.length} LOCK(s) on `
+                                    + 'every boundary cell of every area at key level >= 1, and '
+                                    + `${flags.length} FLAG(s) `
+                                    + `${flags.map((f) => `${f.symbol}@(${f.x},${f.y})`
+                                        + `${f.guarded ? ' GUARDED by the element' : ''}`)
+                                        .join(' ')}`
+                                    + (supersededFlagLock
+                                        ? `; the element's own flag-lock at `
+                                            + `(${supersededFlagLock.x},`
+                                            + `${supersededFlagLock.y}) was SUPERSEDED`
+                                        : ''),
+                                draws: roomRng.draws,
+                                record: base,
+                                entities: [goalEntity, ...elementEntities, ...areaEntities],
+                                data: {
+                                    locks: locks.length,
+                                    flags: flags.length,
+                                    supersededFlagLock,
+                                },
+                                facts: [
+                                    locks.length > 0 && paintable({
+                                        id: 'area-locks',
+                                        label: `${locks.length} LOCK(s) — every boundary cell of `
+                                            + 'every locked area',
+                                        kind: 'outline',
+                                        cells: locks,
+                                    }),
+                                    flags.length > 0 && paintable({
+                                        id: 'area-flags',
+                                        label: `${flags.length} FLAG(s) — what opens them`,
+                                        kind: 'outline',
+                                        cells: flags,
+                                    }),
+                                ],
+                            });
                             areaInfo = Object.freeze({
                                 spec: areaSpecNorm,
                                 ran: true,
@@ -2440,6 +2825,29 @@ export function seedlingModel({
          * side.
          */
         roomProbe: () => { probeMemo ??= roomProbeFor(); return probeMemo; },
+        /**
+         * ⛓⛓⛓ **THE GENERATION LEDGER** (arc 3, slice 5a, D3) — one frozen row
+         * per phase, in the order the phases RAN, each with the tiles/entities
+         * DELTA against the row before it and its own sentence.
+         *
+         * ⛔ **IT IS NOT ON `summary` AND THEREFORE NOT ON ANY PAYLOAD.** 4d
+         * §15.13's false mover is the reason it is stated: a field that reaches
+         * `certification.geometry` reaches the payload, and the acceptance
+         * batch moved on five rows before anybody noticed. The ledger reaches
+         * the MODEL and the seam's own return, and nothing else.
+         */
+        ledger: ledger.rows(),
+        /**
+         * ⛓⛓ **THE ELEMENT'S DEMAND, AS CELLS** (arc 3, slice 4d's region, made
+         * readable in 5a). ⛔ It lives HERE and NOT on `placed`, because
+         * §15.13 measured that a `demand` on the placement rides
+         * `certification.geometry` into every payload that holds a kill gate.
+         * The page's overlay reads this; the payload never sees it.
+         */
+        elementDemand: () => Object.freeze([...elementDemand].map(([k, must]) => {
+            const [x, y] = k.split(',').map(Number);
+            return Object.freeze({ x, y, must });
+        })),
         elementSpec: elementSpecNorm,
         /**
          * ⛓ **WHICH HEAD THIS RUN ACTUALLY DREW** — the same object as
@@ -3009,7 +3417,73 @@ export function seedlingSeam({
             oracle = wrapOracle(seedlingOracle({ model, items, budget }));
         }
     }
-    return { model, oracle, certification, areaCertification, require: dir };
+    /**
+     * ⛓⛓⛓ **THE LEDGER'S LAST PASS-1 ROW IS THE CERTIFICATION'S** (slice 5a,
+     * D3) — the seam's own phase, appended to the FINAL model's ledger.
+     *
+     * ⛔ THE MODEL'S LEDGER IS THE ONE THAT SHIPPED. On a refused certification
+     * the model is REBUILT (with the element dropped, or with the graph taken
+     * away), and `model.ledger` is that rebuild's — so the rows describe the
+     * room on screen and not the one that failed. The row below is what says
+     * the first one existed.
+     *
+     * ⛔ AND IT IS NOT ON `summary`: the ledger reaches the model and this
+     * return, never a payload (4d §15.13's false mover).
+     */
+    const certRows = [];
+    if (certification) {
+        certRows.push(phaseRow({
+            index: model.ledger.length,
+            phase: 'certification',
+            sentence: certification.certified
+                ? `the CERTIFICATION solve SOLVED the skeleton-with-element in `
+                    + `${certification.ticks} tick(s) via `
+                    + `[${certification.strategies.join(', ')}]; the lifted claim is `
+                    + `${certification.heldAtDoor}`
+                : `the CERTIFICATION did NOT hold — ${certification.gap ?? certification.verdict}`
+                    + `${certification.reasonText ? `: ${certification.reasonText}` : ''}. ⇒ the `
+                    + 'level was regenerated WITHOUT the element (its draws were spent either '
+                    + 'way), and the rows above are that rebuild\'s.',
+            draws: model.roomDraws,
+            refusal: certification.certified ? null
+                : { reason: certification.gap ?? 'the-certification-did-not-hold',
+                    detail: certification.reasonText ?? String(certification.verdict) },
+            data: {
+                certified: certification.certified,
+                verdict: certification.verdict,
+                ticks: certification.ticks,
+                strategies: [...certification.strategies],
+                heldAtDoor: certification.heldAtDoor,
+                gap: certification.gap ?? null,
+            },
+        }));
+    }
+    if (areaCertification) {
+        certRows.push(phaseRow({
+            index: model.ledger.length + certRows.length,
+            phase: 'area-certification',
+            sentence: `the AREA GRAPH's certification came back `
+                + `${areaCertification.certified} (${areaCertification.source})`
+                + `${areaCertification.reasonText
+                    ? ` — ${areaCertification.reasonText}` : ''}`,
+            draws: model.roomDraws,
+            refusal: areaCertification.certified ? null
+                : { reason: 'the-area-graph-does-not-certify',
+                    detail: areaCertification.reasonText ?? String(areaCertification.verdict) },
+            data: {
+                certified: areaCertification.certified,
+                verdict: areaCertification.verdict,
+                ticks: areaCertification.ticks,
+                source: areaCertification.source,
+            },
+        }));
+    }
+    return { model,
+        oracle,
+        certification,
+        areaCertification,
+        require: dir,
+        ledger: Object.freeze([...model.ledger, ...certRows]) };
 }
 
 /**
@@ -3184,7 +3658,8 @@ export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require,
 } = {}) {
-    const { model, oracle, certification, areaCertification, require: dir } = seedlingSeam({
+    const { model, oracle, certification, areaCertification, require: dir,
+        ledger: seamLedger } = seedlingSeam({
         seed, items: palette.items ?? null, budget, defaults, skeleton, elements, areas,
         require,
     });
@@ -3207,6 +3682,15 @@ export function generateSeedlingLevel({
         certification,
         areaCertification,
         require: requireReport,
+        /**
+         * ⛓ THE PASS-1 LEDGER, from the seam. ⛔ The PASS-2 half is `out.trace`
+         * as it stands — attempt rows with the template, its params, the
+         * anchors offered, the per-anchor refusal BY NAME, the solve and the
+         * keep/revert — and the ledger deliberately does NOT duplicate it. The
+         * page's phase ladder hands over to the existing STEP at the last
+         * pass-1 row.
+         */
+        ledger: seamLedger,
         summary: Object.freeze({
             ...out.summary,
             /**
