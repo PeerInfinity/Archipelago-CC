@@ -107,6 +107,18 @@ const {
 // template's footprint actually landed. Both records it is asked about came out
 // of the BROWSER, so this is an independent read of the browser's own answer.
 const { terrainAt } = await M('procgenLevel.js');
+/**
+ * ⛓⛓ ARC 3 SLICE 4b's `chambers` DEFAULT reached this file's claims — see the
+ * `KIND` block below. `seedlingSkeletonSpec` is the ONE resolver that turns
+ * `{kind:'winding'}` into the spec the model actually carves, and
+ * `formatSkeleton` is the ONE writer of its URL spelling. ⛔ Both are used here
+ * so the claims stay NODE-against-BROWSER — two runtimes evaluating one
+ * resolver — rather than becoming a literal `chambers=1` this file asserts
+ * against itself (trap 367: a gate phrased against the constant it tests is an
+ * echo).
+ */
+const { seedlingSkeletonSpec } = await M('procgenSeedling.js');
+const { formatSkeleton } = await CORE('skeletonKinds.js');
 
 /**
  * ⛓ THE SUBJECTS ARE MEASURED, NOT PICKED.
@@ -2137,6 +2149,27 @@ if (!host) {
 {
     const KIND = 'winding';
     /**
+     * ⛓⛓⛓ **ARC 3 SLICE 4b's `chambers = 1` DEFAULT, AND WHY FIVE CLAIMS IN
+     * THIS BLOCK MOVED — 4d, attributed.**
+     *
+     * `791c3f796` made `chambers = 1` the DEFAULT for Seedling's five carved
+     * tree kinds (`SEEDLING_PARAM_DEFAULTS`). `seedlingSkeletonSpec` resolves
+     * `{kind:'winding'}` to `{kind:'winding', params:{chambers:1}}` BEFORE the
+     * model normalises it, and `formatSkeleton` therefore writes
+     * `winding;chambers=1` — 1 is not the CODEC's default and the URL spells
+     * non-defaults. So the state object, the identity line and the address bar
+     * all say something this file was asserting the pre-4b spelling of.
+     *
+     * ⛔ THESE ROWS REDDENED BECAUSE THE FEATURE SHIPPED, NOT BECAUSE ANYTHING
+     * BROKE (trap 356), and the reason they were green in 4b's own re-record is
+     * that the browser rows were measured BEFORE `791c3f796` landed — **a gate
+     * measured before its mover is not a gate for that mover**. Repaired at 4d
+     * with the SPELLING derived from the two shipped functions rather than
+     * written out, so the claims stay NODE-against-BROWSER.
+     */
+    const RESOLVED = seedlingSkeletonSpec({ kind: KIND });
+    const SPELLED = formatSkeleton(RESOLVED);
+    /**
      * ⛓⛓ RE-PICKED AT ARC 3 SLICE 4c (trap 285 — the scan and the count are
      * named). The seal claim needs a `winding` skeleton on which a 2-or-3 cell
      * wall segment SEALS the room, found by this file's own INDEPENDENT flood;
@@ -2157,8 +2190,8 @@ if (!host) {
     const web = await load(q);
     check(web.gen.status === 'ok', 'the arm mounted under ?skeleton=' + KIND,
         web.gen.message ?? web.gen.status);
-    check(json(web.gen.skeleton) === json({ kind: KIND }),
-        `⛓ ?skeleton=${KIND} reached the MODEL — the state names the kind`,
+    check(json(web.gen.skeleton) === json(RESOLVED),
+        `⛓ ?skeleton=${KIND} reached the MODEL — the state names the kind, RESOLVED`,
         json(web.gen.skeleton));
     /**
      * ⛔ THE CLAIM THAT CANNOT BE SATISFIED BY ECHOING THE PARAMETER: the room
@@ -2170,13 +2203,14 @@ if (!host) {
     check(json(web.level) !== json(nodeOpenSkeleton.record),
         '⛔ …and it is NOT the open room the same seed builds — the parameter did work, '
         + 'not just get echoed');
-    check(/skeleton: winding \(CARVED, not the open room\)/.test(web.gen.identity ?? ''),
-        'the identity line NAMES the carved kind', web.gen.identity);
+    check(web.gen.identity?.includes(`skeleton: ${SPELLED} (CARVED, not the open room)`),
+        'the identity line NAMES the carved kind, in the resolver\'s own spelling',
+        web.gen.identity);
     // ⚠ `load()`'s object has no address bar in it — `panelOf()` is where this
     // page reads one, and it is the same helper every other URL claim uses.
     const carvedPanel = await panelOf();
-    check(new URLSearchParams(carvedPanel.url).get('skeleton') === KIND,
-        '⛓ the bar still names it — ?skeleton=winding', carvedPanel.url);
+    check(new URLSearchParams(carvedPanel.url).get('skeleton') === SPELLED,
+        `⛓ the bar still names it — ?skeleton=${SPELLED}`, carvedPanel.url);
 
     /** ⛓ THE SELECTOR shows the kind the URL asked for, and greys what Seedling cannot run. */
     const selector = await page.evaluate(() => {
@@ -2215,7 +2249,7 @@ if (!host) {
         '⛓ STEP on a CARVED room produces attempt row(s) — a saturating pass 2 is still a '
         + 'pass 2, and the page shows what happened',
         `step ${stepped.step}, ${stepped.rows} row(s), ${json(stepped.vetoes)}`);
-    check(json(stepped.skeleton) === json({ kind: KIND }),
+    check(json(stepped.skeleton) === json(RESOLVED),
         '…and the kind survived the press', json(stepped.skeleton));
 
     /** ⛔ THE DEFAULT IS SPELLED BY ABSENCE. */
@@ -2238,10 +2272,47 @@ if (!host) {
      * page that copied `;chambers=2` into its readout and its bar while carving
      * without it fails this claim and no other.
      */
-    const roomyQ = `source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=0`
+    const CHAMBERS_SEED = 2;
+    const roomyQ = `source=generate&seed=${CHAMBERS_SEED}&biome=${CARVED.biome}&count=0`
         + `&skeleton=${encodeURIComponent(`${KIND};chambers=2`)}`;
-    const plainQ = `source=generate&seed=${CARVED.seed}&biome=${CARVED.biome}&count=0`
-        + `&skeleton=${KIND}`;
+    /**
+     * ⛓⛓⛓ **RE-PICKED AT 4d — BOTH ARMS ARE NOW SPELLED, AND THE SEED MOVED.**
+     *
+     * The control used to be a BARE `?skeleton=winding`, which MEANT "no
+     * chambers" until arc 3 slice 4b made 1 the Seedling default. Against the
+     * new default the claim measured `2 > 1` and came back **19 ground cells vs
+     * 19** — not merely red, VACUOUS: the subject class the control named moved
+     * out from under it (trap 365), so this is a RE-PICK and not a re-spelling.
+     *
+     * ⛔⛔ THE OBVIOUS RE-PICK — a TYPED `;chambers=0` — IS NOT AVAILABLE ON
+     * THIS CHANNEL, and finding that out is what the re-pick bought. 4b's "two
+     * streams" (a typed 0 is not an omitted parameter) holds for the OBJECT
+     * channel and for the CLI, which hands `seedlingSkeletonSpec` the RAW
+     * STRING — measured: `--skeleton='winding;chambers=0'` prints
+     * `skeleton winding (CARVED)` and builds the 14-ground room while a bare
+     * `--skeleton=winding` prints `winding;chambers=1` and builds the
+     * 19-ground one. It does NOT hold on the URL: `urlParams.readSkeleton`
+     * returns `parseSkeleton`'s NORMALIZED object, which spells a value at its
+     * CODEC default by absence, so `?skeleton=winding;chambers=0` reaches
+     * `generateStep` as `{kind:'winding'}` and gets the Seedling default 1.
+     * ⛓ Measured through this very page: it produced 19 ground cells, the
+     * `chambers=1` room. ⇒ **a typed `chambers=0` is UNSPELLABLE IN A LINK** —
+     * recorded for slice 5a (it is the URL reader's shape, and `urlParams.js`
+     * is shared with the maze), NOT fixed here.
+     *
+     * ⇒ both arms are spelled with values the URL can carry, `chambers=1` and
+     * `chambers=2`, and the SEED is re-picked to one where they differ.
+     * SCANNED, counted (`winding`, pre-sword, step 0, seeds 1..12, ground cells
+     * at chambers 1 vs 2): **8 of 12 are strictly MORE at 2** (2, 4, 5, 7, 8,
+     * 10, 11, 12), **3 are EQUAL** (1, 3, 6) and **seed 9 is FEWER** (32 vs
+     * 29) — trap 372, a monotone knob is not STRICTLY monotone, and seed 1 was
+     * one of the equal ones. **Seed 2 is the first strict cell** (27 vs 31).
+     * ⛓ The discriminating half survives whole: a page that copied
+     * `;chambers=2` into its readout and its bar while carving without it
+     * fails this claim and no other.
+     */
+    const plainQ = `source=generate&seed=${CHAMBERS_SEED}&biome=${CARVED.biome}&count=0`
+        + `&skeleton=${encodeURIComponent(`${KIND};chambers=1`)}`;
     const plainRoom = await load(plainQ);
     const roomyRoom = await load(roomyQ);
     /**
@@ -2261,11 +2332,12 @@ if (!host) {
         return n;
     };
     check(groundIn(roomyRoom.level) > groundIn(plainRoom.level),
-        `⛓⛓ ?skeleton=${KIND};chambers=2 produces MORE GROUND than ?skeleton=${KIND} at the `
-        + 'same seed — counted from the LEVEL the page built, not from the URL it echoed',
+        `⛓⛓ ?skeleton=${KIND};chambers=2 produces MORE GROUND than `
+        + `?skeleton=${KIND};chambers=1 at the same seed — counted from the LEVEL the page `
+        + 'built, not from the URL it echoed',
         `${groundIn(roomyRoom.level)} ground cells vs ${groundIn(plainRoom.level)}`);
     const nodeRoomy = generateStep({
-        seed: CARVED.seed, biome: CARVED.biome, step: 0,
+        seed: CHAMBERS_SEED, biome: CARVED.biome, step: 0,
         skeleton: { kind: KIND, params: { chambers: 2 } },
     });
     check(json(roomyRoom.level) === json(nodeRoomy.record),
