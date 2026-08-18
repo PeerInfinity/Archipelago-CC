@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * check-procgen-demos — **EVERY URL IN THE DEMO CATALOGUE IS LOADED, AND EVERY
- * ENTRY'S OWN NAMED CLAIM IS ASSERTED OFF THE PAGE'S READOUT** (PROCGEN
- * ELEMENTS arc 3, slice 5b, D5).
+ * check-procgen-demos — **EVERY LINK IN THE DEMO CATALOGUE IS LOADED, AND
+ * EVERY ENTRY'S OWN NAMED CLAIM IS ASSERTED OFF THE PAGE'S READOUT** (PROCGEN
+ * ELEMENTS arc 3, slice 5b; rebuilt on the data module by PROCGEN DOCS P1).
  *
  * ⚖ The user's requirement of 2026-08-17 on the generation review (§4 item 6):
  * *"interactive DEMONSTRATIONS of every demonstrable feature — URL + how to run
@@ -11,40 +11,34 @@
  * stops reading one — each would leave a link that opens something other than
  * what the prose beside it promises, and nothing would say so.
  *
- * ⛔⛔ **THE DOC IS THE INPUT, NOT A COPY OF IT.** This row PARSES
- * `docs/json/developer/procgen/demos.md` and drives what it finds there. A URL
- * added to the file is loaded by the next run without anybody editing this
- * script, and a URL this script cannot parse is a FAILURE rather than a skip —
- * "the row passed because it did not look at the entry" is the one outcome a
- * rot detector must not have.
+ * ⛔⛔ **THE CATALOGUE IS `frontend/modules/procgenDocs/demos.js`, AND THIS ROW
+ * IMPORTS IT.** ⚖ The user, 2026-08-18: *"change demos.md to an html file, so
+ * that it can interact with the scripts directly, rather than having to be
+ * manually edited"*. Until then this row PARSED `demos.md` and the file
+ * carried a hand-kept `Live:` link per entry that a claim here checked for
+ * drift. Now there is ONE module and TWO readers of it — this row, and
+ * `procgenDocs/demos.html`, which renders it in a browser. An entry edited in
+ * the module is the link the page shows AND the link this row loads, in the
+ * same commit; there is no second copy to drift, and no markdown to parse.
  *
- * ── THE ENTRY SHAPE (the parser's whole contract) ─────────────────────
+ * ── WHAT AN ENTRY GIVES THIS ROW ──────────────────────────────────────
  *
- *   ### <n>. <title>
- *   - **Page:** `<repo path to the .html>`
- *   - **URL:** `<query string>`          ← the page's OWN writer's spelling
- *   - **Phase:** `<phase name>`          ← optional: step the ladder to it
- *   - **Facts:** `<id>,<id>`             ← optional: TICK these fact lines
- *   - **Layer:** `<off|sites|elements|areas|all>`  ← optional: the overlay
- *   - **Claim:** `<path> <op> <value>`   ← asserted off the page's readout
- *   - **Live:** <https://…>              ← optional: the SAME run on GitHub Pages
- *   - **Live (also):** <https://…>       ← optional: the Also: URL on Pages
+ *   page     the repo path to the .html — must be one of `READOUTS`
+ *   url      the query string, the page's OWN writer's spelling
+ *   also     an optional SECOND url, LOADED for contrast and asserted clean
+ *   phase    optional: step the ladder to it
+ *   facts    optional: TICK these fact lines
+ *   layer    optional: the overlay select
+ *   claim    `<path> <op> <value>`, asserted off the page's readout
+ *   prose    an entry that names no url of its own (it points at a doc)
  *
- * ⛓ `Live:` is the entry's URL on the deployed site (`deploy-gh-pages.yml`
- * publishes `frontend/` as the Pages ROOT, so `/frontend/modules/…` becomes
- * `<base>/modules/…`). It is not typed by hand either: this row asserts that
- * every `Live:` link is EXACTLY `<base> + Page (minus /frontend) + ? + URL`,
- * so the live link and the local URL cannot drift apart. `--pages=<base>` runs
- * the whole catalogue AGAINST the deployed site instead of a local server.
+ * `page` selects the readout: `watch.html` publishes `window.__editorGenerate`,
+ * `lab.html` publishes `window.__mazeLab`. Everything else on an entry (the CLI
+ * command, how to run it, what is happening) is for the READER — except that an
+ * entry with NO claim is a FAILURE, because ⚖ the brief's own rule is that *a
+ * catalogue entry without a claim is not an entry*.
  *
- * `Page` selects the readout: `watch.html` publishes `window.__editorGenerate`,
- * `lab.html` publishes `window.__mazeLab`. Everything else in an entry (the CLI
- * command, how to run it, what is happening) is for the READER and is not
- * parsed — with one exception: an entry with NO `Claim:` line is a failure,
- * because ⚖ the brief's own rule is that *a catalogue entry without a claim is
- * not an entry*.
- *
- * ⛓⛓ **`Phase`/`Facts`/`Layer` ARE DRIVEN, NOT DECORATION.** They are the three
+ * ⛓⛓ **`phase`/`facts`/`layer` ARE DRIVEN, NOT DECORATION.** They are the three
  * things a catalogue entry has to tell a reader (⚖ the brief: *which PHASE to
  * step to, which FACT LINES to select, which overlay layer*), so the row
  * PRESSES them — the phase slider, the fact checkboxes, the overlay select —
@@ -52,6 +46,19 @@
  * would be looking at. An entry naming a phase the ledger does not have, or a
  * fact id the phase did not record, FAILS: that is exactly the rot this row is
  * for.
+ *
+ * ⛓⛓⛓ **AND THE CATALOGUE PAGE ITSELF IS LOADED.** `demos.html` is the other
+ * reader of the module, so a rendering bug is a catalogue failure: the row
+ * asserts the page renders the same entries, in the same order, with the same
+ * links — measured off ITS DOM, not echoed from the import. That is what
+ * replaced the old coverage-over-a-markdown-file claim.
+ *
+ * ⛓ `--pages=<base>` runs the whole catalogue AGAINST THE DEPLOYED SITE
+ * (`deploy-gh-pages.yml` publishes `frontend/` as the Pages ROOT, so an entry's
+ * `/frontend/modules/…` lives at `<base>/modules/…` there — the mapping is
+ * `pagesHref()` in the data module, spelled ONCE and imported here). Every
+ * navigation asserts a 200, so under `--pages=` this row is the check that the
+ * links the page SHOWS are links that load.
  *
  * ⛔ THE WAIT IS ON THE CLAIM'S OWN PRE-CONDITION, never on existence (trap
  * 246): both pages publish their readout at the SKELETON, before `?run=1`'s
@@ -63,20 +70,21 @@
  *
  * Run: node scripts/procgen/check-procgen-demos.mjs
  *      node scripts/procgen/check-procgen-demos.mjs --host=http://localhost:8000
+ *      node scripts/procgen/check-procgen-demos.mjs --only=sword-gated
  *      node scripts/procgen/check-procgen-demos.mjs --only=7
  *      node scripts/procgen/check-procgen-demos.mjs --pages=https://peerinfinity.github.io/Archipelago-CC
  */
 
 import { chromium } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
+import {
+    DEMOS, PAGES_BASE, READOUTS, pagesHref, parseClaim,
+} from '../../frontend/modules/procgenDocs/demos.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = join(HERE, '..', '..');
-const CATALOGUE = join(REPO, 'docs/json/developer/procgen/demos.md');
+/** ⛓ The catalogue PAGE — the module's other reader, gated below. */
+const DEMOS_PAGE = '/frontend/modules/procgenDocs/demos.html';
+
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
@@ -86,74 +94,10 @@ const check = (ok, what, detail) => {
     if (!ok) failed++;
 };
 
-/* ══════════ THE PARSER ══════════════════════════════════════════════ */
-
-/** ⛓ One `- **Field:** \`value\`` line, or `null`. */
-const field = (block, name) => {
-    const m = block.match(new RegExp(`^- \\*\\*${name}:\\*\\*\\s+\`([^\`]*)\``, 'm'));
-    return m ? m[1] : null;
-};
-
-const READOUTS = new Map([
-    ['/frontend/modules/seedlingDemo/watch.html', '__editorGenerate'],
-    ['/frontend/modules/mazeRoom/lab.html', '__mazeLab'],
-]);
-
-function parseCatalogue(text) {
-    const out = [];
-    const parts = text.split(/^### /m).slice(1);
-    for (const part of parts) {
-        const title = part.split('\n', 1)[0].trim();
-        const page = field(part, 'Page');
-        const url = field(part, 'URL');
-        const claim = field(part, 'Claim');
-        const phase = field(part, 'Phase');
-        const facts = field(part, 'Facts');
-        const layer = field(part, 'Layer');
-        /** ⛓ A SECOND URL an entry loads for CONTRAST (the carve's typed 0 against
-         *  its default). It is LOADED and asserted CLEAN; the entry's claim is
-         *  about its own `URL:`. It exists so that the coverage rule below can
-         *  stay absolute: every URL in the file is an entry's. */
-        const also = field(part, 'Also');
-        /** ⛓ The deployed link — `- **Live:** <https://…>` — kept honest below. */
-        const liveM = part.match(/^- \*\*Live:\*\* <([^>\n]+)>/m);
-        const live = liveM ? liveM[1] : null;
-        const liveAlsoM = part.match(/^- \*\*Live \(also\):\*\* <([^>\n]+)>/m);
-        const liveAlso = liveAlsoM ? liveAlsoM[1] : null;
-        /**
-         * ⛔ AN ENTRY WITH NO `Page:`/`URL:` IS NOT AN OMISSION — it is a
-         * PROSE entry (the pointer at an existing doc), and the file says so
-         * with `- **Page:** _(none — …)_` rather than by leaving the line out.
-         * A missing line is a parse failure; an explicit none is a decision.
-         */
-        if (page === null && url === null && /\*\*Page:\*\* _\(none/.test(part)) {
-            out.push({ title, prose: true });
-            continue;
-        }
-        out.push({ title, page, url, claim, phase, layer, also, live, liveAlso,
-            facts: facts ? facts.split(',') : [] });
-    }
-    return out;
-}
-
-/* ══════════ THE CLAIM GRAMMAR ═══════════════════════════════════════ */
-
-const OPS = ['>=', '<=', '!=', '==', '>', '<', 'includes', 'matches'];
-
-/** `a.b.c OP value` → `{path, op, value}`; a malformed claim THROWS. */
-function parseClaim(text) {
-    for (const op of OPS) {
-        const at = text.indexOf(` ${op} `);
-        if (at < 0) continue;
-        const path = text.slice(0, at).trim();
-        const raw = text.slice(at + op.length + 2).trim();
-        let value;
-        try { value = JSON.parse(raw); } catch { value = raw; }
-        return { path, op, value };
-    }
-    throw new Error(`the claim ${JSON.stringify(text)} has no operator — one of `
-        + `[${OPS.join(' ')}] with a space each side`);
-}
+/* ══════════ THE CLAIM GRAMMAR ═══════════════════════════════════════
+ * ⛓ `parseClaim` lives in the data module now, beside the claims it parses,
+ * so the page, this row and the unit test all agree on what a well-formed
+ * entry is. What stays here is the half that needs a live readout. */
 
 const dig = (obj, path) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj);
 
@@ -174,28 +118,36 @@ function holds({ op, value }, got) {
 
 /* ══════════ THE RUN ═════════════════════════════════════════════════ */
 
-const entries = parseCatalogue(readFileSync(CATALOGUE, 'utf8'));
 const only = arg('only', '');
-console.log(`catalogue: ${entries.length} entr(ies) in demos.md `
-    + `(${entries.filter((e) => e.prose).length} prose)`);
+const chosen = only
+    ? DEMOS.filter((e) => e.id === only || String(e.n) === only)
+    : DEMOS;
+console.log(`catalogue: ${DEMOS.length} entr(ies) in procgenDocs/demos.js `
+    + `(${DEMOS.filter((e) => e.prose).length} prose)`
+    + (only ? ` — --only=${only} selects ${chosen.length}` : ''));
+if (only && chosen.length === 0) {
+    console.log(`\n--only=${only} matched NO entry; ids: [${DEMOS.map((e) => e.id).join(', ')}]`);
+    process.exit(1);
+}
 
 let server = null;
 const host = arg('host', '');
 /**
- * ⛓ `--pages=<base>` drives the DEPLOYED site. GitHub Pages publishes the
- * `frontend/` directory as its root (`.github/workflows/deploy-gh-pages.yml`),
- * so an entry's `/frontend/modules/…` page lives at `<base>/modules/…` there.
- * The Live-link consistency claim below uses the SAME base — the default is
- * this fork's, so a bare run still checks the links even when it loads the
- * catalogue from a local server.
+ * ⛓ `--pages=<base>` drives the DEPLOYED site, and `pagesHref()` from the data
+ * module is the ONE spelling of the mapping (`frontend/` is the Pages root, so
+ * `/frontend/modules/…` is `<base>/modules/…`). ⛔ The row does not keep its
+ * own copy of that rule any more — a second spelling was exactly what the old
+ * hand-typed `Live:` lines and their consistency claim existed to police.
  */
-const PAGES_DEFAULT_BASE = 'https://peerinfinity.github.io/Archipelago-CC';
 const pages = arg('pages', '');
-const pagesBase = (pages || PAGES_DEFAULT_BASE).replace(/\/$/, '');
-const pagePath = (p) => (pages ? p.replace(/^\/frontend(?=\/)/, '') : p);
+const pagesBase = (pages || PAGES_BASE).replace(/\/$/, '');
+const pagePath = (path) => (pages ? path.replace(/^\/frontend(?=\/)/, '') : path);
 if (!host && !pages) server = await serveRepoRoot({});
 const origin = pages ? pagesBase : (host || `http://127.0.0.1:${server.address().port}`);
-const liveLinkFor = (entry, url = entry.url) => `${pagesBase}${entry.page.replace(/^\/frontend(?=\/)/, '')}?${url}`;
+/** ⛓ The link for THIS run: on `--pages=` it IS `pagesHref(entry)`. */
+const hrefFor = (entry, url = entry.url) => (pages
+    ? pagesHref(entry, { base: pagesBase, url })
+    : `${origin}${pagePath(entry.page)}?${url}`);
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
@@ -210,49 +162,37 @@ const finish = async (code) => {
 };
 
 try {
-    for (const entry of entries) {
-        if (only && !entry.title.startsWith(`${only}.`)) continue;
-        if (entry.prose) {
-            check(true, `⛓ "${entry.title}" is a PROSE entry — it points at an existing `
-                + 'document and names no URL of its own');
-            continue;
-        }
-        if (!entry.page || !entry.url) {
-            check(false, `"${entry.title}" is missing its **Page:** or **URL:** line`);
-            continue;
-        }
-        if (!entry.claim) {
-            check(false, `"${entry.title}" names NO CLAIM — ⚖ a catalogue entry without a `
-                + 'claim is not an entry');
-            continue;
-        }
+    for (const entry of chosen) {
+        const name = `${entry.n}. ${entry.title}`;
+        /* ── the two SHAPE claims, asserted for every entry the catalogue
+         *    holds. ⛔ They replace the parser's failure branches: a module
+         *    cannot be "missing a **URL:** line", but it can very easily hold
+         *    an entry nothing can load, and the old coverage claim over the
+         *    markdown is what used to notice. */
+        check(entry.prose || Boolean(entry.claim),
+            `⛓ "${name}" NAMES A CLAIM — ⚖ a catalogue entry without one is not an entry`,
+            entry.prose ? 'prose entry — it points at a doc and names no URL of its own'
+                : entry.claim);
+        if (entry.prose) continue;
+        check(READOUTS.has(entry.page),
+            `…and names a page this row knows how to READ`,
+            READOUTS.has(entry.page) ? `${entry.page} → window.${READOUTS.get(entry.page)}`
+                : `${entry.page}; known: [${[...READOUTS.keys()].join(', ')}]`);
         const readout = READOUTS.get(entry.page);
-        if (!readout) {
-            check(false, `"${entry.title}" names a page this row does not know how to read`,
-                `${entry.page}; known: [${[...READOUTS.keys()].join(', ')}]`);
-            continue;
-        }
+        if (!readout || !entry.claim) continue;
         const q = new URLSearchParams(entry.url);
         const step = q.get('run') === '1' ? Number(q.get('count') ?? 0) : 0;
         errors.length = 0;
-        const url = `${origin}${pagePath(entry.page)}?${entry.url}`;
-        console.log(`\n${entry.title}\n  ${url}\n  claim: ${entry.claim}`);
-        /** ⛓ THE LIVE LINK IS DERIVED, NOT TYPED — an entry that carries one
-         *  must carry exactly the one its Page + URL spell on Pages. */
-        if (entry.live !== null) {
-            check(entry.live === liveLinkFor(entry),
-                `"${entry.title}" Live: link is exactly Pages base + Page + URL`,
-                entry.live === liveLinkFor(entry) ? entry.live
-                    : `have ${entry.live}\n    want ${liveLinkFor(entry)}`);
-        }
-        if (entry.liveAlso !== null) {
-            const want = entry.also ? liveLinkFor(entry, entry.also) : null;
-            check(want !== null && entry.liveAlso === want,
-                `"${entry.title}" Live (also): link is exactly Pages base + Page + Also`,
-                entry.liveAlso === want ? entry.liveAlso : `have ${entry.liveAlso}\n    want ${want}`);
-        }
+        const url = hrefFor(entry);
+        console.log(`\n${name}\n  ${url}\n  claim: ${entry.claim}`);
         // eslint-disable-next-line no-await-in-loop
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+        /** ⛓⛓ THE LINK THE PAGE SHOWS IS A LINK THAT LOADS. Under `--pages=`
+         *  this url IS `pagesHref(entry)` — the exact string `demos.html`
+         *  puts in its PAGES anchor — so a 404 on the deployed site is a
+         *  catalogue failure rather than something a reader discovers. */
+        check(response?.status() === 200,
+            `…and the link RESOLVES (HTTP 200)`, `status ${response?.status() ?? 'none'}`);
         let got;
         let waitError = null;
         try {
@@ -270,7 +210,7 @@ try {
         // eslint-disable-next-line no-await-in-loop
         const state = await page.evaluate((r) => window[r] ?? null, readout);
         check(waitError === null,
-            `⛓ "${entry.title}" — the page REACHED the state its URL names (step ${step})`,
+            `⛓ "${name}" — the page REACHED the state its URL names (step ${step})`,
             waitError ?? '');
         check(errors.length === 0, '…with ZERO console errors and ZERO pageerrors',
             errors.join(' | '));
@@ -320,7 +260,7 @@ try {
         if (entry.also) {
             errors.length = 0;
             // eslint-disable-next-line no-await-in-loop
-            await page.goto(`${origin}${pagePath(entry.page)}?${entry.also}`,
+            await page.goto(hrefFor(entry, entry.also),
                 { waitUntil: 'domcontentloaded' });
             // eslint-disable-next-line no-await-in-loop
             await page.waitForFunction((r) => Boolean(window[r]), readout, { timeout: 300000 })
@@ -340,22 +280,49 @@ try {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
- * ⛓⛓⛓ COVERAGE — **EVERY URL IN THE FILE IS AN ENTRY'S, AND EVERY ENTRY'S IS
- * LOADED.** ⛔ Without this the row would be satisfied by a catalogue that
- * mentioned six links and declared two: the rot would be in the prose, where
- * a reader reads it, and the gate would be green.
+ * ⛓⛓⛓ THE CATALOGUE PAGE IS THE MODULE'S OTHER READER, SO IT IS GATED HERE.
+ * ⛔ Without this the row would be satisfied by a module whose page renders
+ * nothing: the entries would be correct, every link would load, and a reader
+ * opening `demos.html` would see an empty document. The old coverage claim
+ * asked the same question of a markdown file — "is what a READER sees the
+ * thing this row checked?" — and this is that question about the page.
+ *
+ * ⛓ The page publishes `__procgenDemosPage` MEASURED OFF ITS OWN DOM (ids,
+ * count, every rendered href). A readout echoed from the import would hold
+ * with the render deleted (trap 269).
  * ══════════════════════════════════════════════════════════════════════ */
-if (!only) {
-    const declared = new Set(entries.flatMap((e) => [e.url, e.also].filter(Boolean)));
-    const text = readFileSync(CATALOGUE, 'utf8');
-    const looksLikeUrl = /`(source=[^`]+|seed=\d[^`]*)`/g;
-    const found = new Set();
-    for (const m of text.matchAll(looksLikeUrl)) found.add(m[1]);
-    const stray = [...found].filter((u) => !declared.has(u));
-    check(stray.length === 0,
-        '⛓⛓⛓ every query string in demos.md is DECLARED by an entry (and therefore LOADED)',
-        stray.length ? `undeclared: ${stray.map((u) => u.slice(0, 60)).join(' | ')}` : `${found.size} URL(s)`);
+try {
+    const url = pages ? `${pagesBase}${pagePath(DEMOS_PAGE)}` : `${origin}${DEMOS_PAGE}`;
+    console.log(`\nthe catalogue PAGE\n  ${url}`);
+    errors.length = 0;
+    const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+    check(response?.status() === 200, '⛓ the catalogue page RESOLVES (HTTP 200)',
+        `status ${response?.status() ?? 'none'}`);
+    await page.waitForFunction(() => window.__procgenDemosPage?.ready === true,
+        undefined, { timeout: 60000 }).catch(() => {});
+    const seen = await page.evaluate(() => window.__procgenDemosPage ?? null);
+    check(errors.length === 0, '…with ZERO console errors and ZERO pageerrors',
+        errors.join(' | '));
+    check(seen?.count === DEMOS.length,
+        '…and it RENDERED one section per entry in the module',
+        `page ${seen?.count ?? 'none'} vs module ${DEMOS.length}`);
+    const wantIds = DEMOS.map((e) => e.id).join(',');
+    check((seen?.ids ?? []).join(',') === wantIds,
+        '…the same entries, in the same order (its ids, off its DOM)',
+        (seen?.ids ?? []).join(',') === wantIds ? wantIds
+            : `page [${(seen?.ids ?? []).join(',')}]\n    want [${wantIds}]`);
+    /** ⛓ And the PAGES link beside every entry is the one this row loads —
+     *  one function, two readers, no third spelling. */
+    const wantLinks = DEMOS.filter((e) => !e.prose)
+        .flatMap((e) => [e.url, e.also].filter(Boolean).map((u) => pagesHref(e, { url: u })));
+    const missing = wantLinks.filter((l) => !(seen?.links ?? []).includes(l));
+    check(missing.length === 0,
+        `…and SHOWS every entry's Pages link (${wantLinks.length} of them)`,
+        missing.length ? `missing: ${missing.join(' | ')}` : 'all rendered');
+} catch (e) {
+    check(false, 'the catalogue PAGE check THREW', e.stack ?? e.message);
 }
+
 
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);
 await finish(failed === 0 ? 0 : 1);
