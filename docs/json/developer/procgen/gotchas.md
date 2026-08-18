@@ -170,6 +170,26 @@ route was built rather than when the graph was floodable:
    shrinkage rather than a routing difficulty. Sweep every opener the map
    offers before reporting it — one at a time AND all at once.
 
+## "The `empty` pairs are UNCHANGED" is a gate only for a change that spends no draw
+
+The Seedling seed→level pair dumps (`scripts/procgen/dump-seedling-kind-pairs.mjs`) are the cheap "nothing else moved" belt, and the `empty`-kind arm is the one most often quoted. It answers exactly one question: *did this change move a draw?* It cannot answer *is this change correct*, and it is **guaranteed to move** — correctly — by anything that changes the ROSTER or the DRAW ORDER, because `rng.pick(palette.templates)` then lands somewhere else on every kind including `empty`.
+
+Arc 3 hit this three times in a row. Removing `arrow-lane` shrank the roster, so the gate as briefed ("`empty` pairs unchanged at the site default") was untestable as written; the claim it was reaching for — *the SITE change alone is byte-inert* — needed an **isolated differential**: the same tree, the three rows put back to `site:'any'`, everything else identical. Same shape for the goal draw and for the door-template retirement.
+
+**How to handle one:** decide first whether your change spends a draw. If it does not, the dump is a real gate. If it does, the dump must move, and the byte-inert claim you actually want is carried by a **control run in the same tree** (a `git worktree` at the base commit, submodules initialised) or by a **counting spy** on the stream (`model.roomDraws`) rather than by a tile comparison. See the procgen ELEMENTS arcs in [Seedling Real-Game Bot](./seedling-bot.md) § *The procgen ELEMENTS design*.
+
+## A SCHEMA DEFAULT is a spelling rule, not a construction rule
+
+`CHAMBERS_PARAM.default` looks like the place to change what a carved room is. It is not: `carveSkeleton` appends the chamber post-processor only when the value is **off** its default, so moving the default there changes the URL SPELLING (which parameters get written out, which are implied) and produces a byte-identical maze. The mutant that moved it did not move the maze md5 at all.
+
+The construction knob is the **binding's** resolved spec — `SEEDLING_PARAM_DEFAULTS`, resolved by `seedlingSkeletonSpec` before normalisation, which is why Seedling's five carved tree kinds could default to `chambers = 1` while the maze stayed byte-identical. ⚠ And a default that differs from the codec's forces a second rule on the reader: `winding` and `winding;chambers=0` normalise to the same object, so the URL reader must hand the string **as typed** to the resolver, and the writer must spell the parameter explicitly, or a typed `0` is unspellable in a link.
+
+## A payload-SHAPE mover and a BEHAVIOUR mover are indistinguishable in an md5
+
+An artifact hash that moves tells you *something* changed; it does not tell you *what kind* of thing. Arc 3 slice 4d added a `demand` to an element, and the acceptance batch md5 moved on five rows — three of them **pre-sword**, where no kill gate can exist. The cause was not behaviour: the new field reached `certification.geometry` and therefore the printed payload, so the rows changed shape without changing a single generated tile.
+
+**How to handle one:** before believing an md5 move is a behaviour change, diff the ROWS against a `git worktree` at the base commit and read what actually differs. A false mover found this way is worth naming in the record — it is the difference between "the demand changed 5 levels" and "the demand changed 2 levels and added a field to 5 payloads".
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
