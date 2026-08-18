@@ -41,6 +41,9 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
 import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
+/** ⛓ SLICE 5a (D1) — the ANCHOR for the `?elements=` VALUE claim is the SEAM's
+ *  own answer for the same arguments, never a literal cell this file invents. */
+import { seedlingSeam } from './procgenSeedling.js';
 import { generateSeedlingLevel, interiorCells, seedlingModel } from './procgenSeedling.js';
 import { defineTemplate } from '../procgenCore/templateContract.js';
 /** ⛓ SLICE 4c: the ONE policy a Seedling directive runs under, now a constant. */
@@ -2145,5 +2148,198 @@ describe('⛓⛓⛓ THE ORDERING RULE — edits come AFTER all directives', () =
         const st = generateStep({ seed: 6, biome: 'pre-sword', step: 0 });
         expect(() => applyDirective(st, { template: 'wall-segment', params: {} }, 0))
             .not.toThrow();
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 5a (D1) — `?elements=`, `?areas=`,
+ * `?require=` ON THE SEEDLING PAGE
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ EVERY VALUE BELOW IS A LITERAL THIS FILE STATES, and the two round-trip
+ * rows come AFTER them (trap 250: a fixed point tests self-consistency and
+ * never correctness).
+ */
+describe('watchGenerate — the three parameters (arc 3, slice 5a)', () => {
+    const read = (search) => readGenerateParams(`?source=generate&seed=1&${search}`);
+
+    /**
+     * ⛓⛓⛓ THE ONE DISTINCTION THE WHOLE FEATURE RESTS ON. `seedlingSeam` reads
+     * `elements === undefined` as *nobody said* and applies the BIOME DEFAULT
+     * (4c §13.3); an explicit `{name:'none'}` is a CHOICE it honours. A reader
+     * that collapsed the two would turn the default off on every load.
+     */
+    it('⛔ ABSENT `?elements=` is `undefined` — NOT `{name:"none"}`', () => {
+        expect(read('').elements).toBe(undefined);
+        expect(read('elements=none').elements).toEqual({ name: 'none' });
+        expect(read('elements=killgate').elements).toEqual({ name: 'killgate' });
+    });
+
+    /**
+     * ⚠ A NAMED PARAMETER AT ITS DEFAULT IS KEPT — arc-2 §11.5's law: a named
+     * parameter is an override that spends NO draw and an omitted one is DRAWN,
+     * so `guard` and `guard;len=2` are different runs even when `len` resolves
+     * to 2 in both.
+     */
+    it('⛓ a NAMED parameter at its default survives the read — it is not tidied', () => {
+        expect(read('elements=guard').elements).toEqual({ name: 'guard' });
+        expect(read('elements=guard;len=2').elements).toEqual({ name: 'guard', params: { len: 2 } });
+    });
+
+    it('⛓ `?areas=` and `?require=` — absence, and the EMPTY directive refuses', () => {
+        expect(read('').areas).toEqual({ keys: 0 });
+        expect(read('areas=1').areas).toEqual({ keys: 1 });
+        expect(read('').require).toBe(null);
+        expect(read('require=hasSword').require).toEqual(['hasSword']);
+        /** ⛔ A directive somebody EMPTIED is not the same as no directive. */
+        expect(() => read('require=')).toThrow(/an EMPTY `require` list/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE VALUE CLAIM** (trap 269) — the parameter reaches the MODEL, not
+     * just the state: `?elements=killgate` on a post-sword biome puts a kill
+     * gate at the very cell `generate-seedling-level.mjs` puts it at, and the
+     * bare default at the same seed does not.
+     */
+    /**
+     * ⚠ THE SUBJECT IS SCANNED, NOT PICKED: `killgate` must actually be PLACED
+     * (not dropped by its certification) for the door cell to exist. Scanned,
+     * post-sword, step 0, seeds 1..5 — **only seed 2 places**; the other four
+     * come back `the-skeleton-does-not-solve-with-the-element`, which is the
+     * arc's published rate and not this row's business.
+     */
+    it('⛔ `?elements=killgate` reaches the MODEL — the door cell, not an echo', () => {
+        const p = read('biome=post-sword&elements=killgate');
+        const st = generateStep({ seed: 2, biome: 'post-sword', step: 0, elements: p.elements });
+        expect(st.elements.spec).toEqual({ name: 'killgate' });
+        expect(st.elements.ran).toBe(true);
+        expect(st.elements.placed[0].phase).toBe('on-connector');
+        /** ⛓ THE ANCHOR IS THE SEAM'S OWN ANSWER FOR THE SAME ARGUMENTS — two
+         *  callers of one resolver, never a literal cell this file invents. */
+        const cli = seedlingSeam({
+            seed: 2, items: paletteFor('post-sword').items, elements: { name: 'killgate' },
+        });
+        expect(st.elements.placed[0].doorCell).toEqual(cli.model.elements.placed[0].doorCell);
+        /** ⛔ AND THE BARE DEFAULT AT THE SAME SEED IS A DIFFERENT RUN — a page
+         *  that echoed the parameter without passing it would pass every row
+         *  above and fail this one. */
+        const bare = generateStep({ seed: 2, biome: 'post-sword', step: 0 });
+        expect(bare.elements.spec).not.toEqual({ name: 'killgate' });
+    });
+
+    it('⛓ `?require=hasSword` reaches the seam — it FORCES the head, by name', () => {
+        const st = generateStep({
+            seed: 1, biome: 'post-sword', step: 0, require: read('require=hasSword').require,
+        });
+        expect(st.require.asked).toEqual(['hasSword']);
+        expect(st.require.forced).toBe(true);
+        expect(st.elements.spec).toEqual({ name: 'killgate' });
+        /** ⛔ AND A BIOME THAT CANNOT GRANT IT REFUSES **BY NAME**, with the
+         *  level still built (arc-1's law, and the CLI's exit 6). */
+        const pre = generateStep({ seed: 1, biome: 'pre-sword', step: 0, require: ['hasSword'] });
+        expect(pre.require.refused.reason).toBe('the-biome-lacks-the-item');
+        expect(pre.record).toBeTruthy();
+    });
+
+    it('⛔ the three blocks are `null` when nobody asked — never `{}`', () => {
+        const st = generateStep({ seed: 1, biome: 'pre-sword', step: 0, elements: { name: 'none' } });
+        expect(st.elements).toBe(null);
+        expect(st.areas).toBe(null);
+        expect(st.require).toBe(null);
+    });
+
+    /**
+     * ⛔ THE WRITER — and the one asymmetry that is Seedling's own: `none` is
+     * WRITTEN here, where the maze deletes it, because absence means the BIOME
+     * DEFAULT on this substrate and `none` means *turn it off*.
+     */
+    it('⛓⛓ the writer spells all three — and `none` is a VALUE, not an absence', () => {
+        const write = (o) => new URLSearchParams(writeGenerateParams('', {
+            seed: 1, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0, ...o,
+        }));
+        expect(write({}).get('elements')).toBe(null);
+        expect(write({ elements: { name: 'none' } }).get('elements')).toBe('none');
+        expect(write({ elements: { name: 'guard', params: { len: 3 } } }).get('elements'))
+            .toBe('guard;len=3');
+        expect(write({}).get('areas')).toBe(null);
+        expect(write({ areas: { keys: 2 } }).get('areas')).toBe('2');
+        expect(write({}).get('require')).toBe(null);
+        expect(write({ require: ['hasSword'] }).get('require')).toBe('hasSword');
+    });
+
+    /** ⛓ THE FIXED POINT, AFTER the literals above. */
+    it('⛓ round-trips: what the writer wrote, the reader reads back', () => {
+        for (const asked of [{}, { elements: { name: 'none' } },
+            { elements: { name: 'guard', params: { len: 2 } } },
+            { elements: { name: 'killgate' }, areas: { keys: 1 } },
+            { require: ['hasSword'], areas: { keys: 2 } }]) {
+            const url = writeGenerateParams('', {
+                seed: 1, biome: 'post-sword', bounds: DEFAULT_BOUNDS, step: 0, ...asked,
+            });
+            const back = readGenerateParams(`?${url}`);
+            expect(back.elements).toEqual(asked.elements);
+            expect(back.areas).toEqual(asked.areas ?? { keys: 0 });
+            expect(back.require).toEqual(asked.require ?? null);
+            /** ⛔ AND IT IS A FIXED POINT OF THE WRITER TOO — a delete-then-set
+             *  that appended a key would round-trip once and move the bar on
+             *  the next load (trap 245). */
+            expect(writeGenerateParams(`?${url}`, {
+                seed: 1, biome: 'post-sword', bounds: DEFAULT_BOUNDS, step: 0, ...asked,
+            })).toBe(url);
+        }
+    });
+
+    /**
+     * ⛓⛓ `?gen=` — the three are IDENTITY fields, each in ITS OWN SPELLING.
+     * ⛔ `elements.spec` is the normalized OBJECT and `areas.spec` is ALREADY A
+     * STRING (arc-2 §11.5's *"a REPORT, not a SPEC"*, which this slice reads
+     * rather than fixes because unifying them would move every payload).
+     */
+    it('⛓⛓ agreementWithPayload compares the three, in the shapes the payload carries', () => {
+        const st = generateStep({
+            seed: 1, biome: 'post-sword', step: 1, elements: { name: 'killgate' },
+        });
+        const good = {
+            seed: st.seed, biome: st.biome, roster: st.roster, directives: st.directives,
+            skeleton: st.skeleton, level: st.record, trace: st.trace,
+            summary: { elements: { spec: st.elements.spec } },
+        };
+        expect(agreementWithPayload(good, st).differences).not.toContain('elements');
+        const wrong = { ...good, summary: { elements: { spec: { name: 'blockpocket' } } } };
+        expect(agreementWithPayload(wrong, st).differences).toContain('elements');
+        /** ⛓ THE AREA SPEC IS COMPARED AS THE STRING IT IS REPORTED AS. */
+        const withAreas = generateStep({
+            seed: 1, biome: 'post-sword', step: 1, elements: { name: 'killgate' },
+            areas: { keys: 1 },
+        });
+        expect(withAreas.areas.spec).toBe('1');
+        const areaPayload = {
+            seed: withAreas.seed, biome: withAreas.biome, roster: withAreas.roster,
+            directives: withAreas.directives, skeleton: withAreas.skeleton,
+            level: withAreas.record, trace: withAreas.trace,
+            summary: { elements: { spec: withAreas.elements.spec }, areas: { spec: '1' } },
+        };
+        expect(agreementWithPayload(areaPayload, withAreas).differences).not.toContain('areas');
+        expect(agreementWithPayload({ ...areaPayload,
+            summary: { ...areaPayload.summary, areas: { spec: '2' } } }, withAreas)
+            .differences).toContain('areas');
+    });
+
+    /**
+     * ⚠ A PAYLOAD WITH NO `summary` AT ALL MAKES NO CLAIM — that is a hand-built
+     * or step-0 file, not a run in which the element did not happen. A payload
+     * that HAS a summary and no `elements` block is the second case, and it is
+     * named.
+     */
+    it('⚠ an OLD payload does not falsely diverge — and a pre-4c one is NAMED', () => {
+        const st = generateStep({ seed: 1, biome: 'pre-sword', step: 1 });
+        const bare = {
+            seed: st.seed, biome: st.biome, roster: st.roster, directives: st.directives,
+            skeleton: st.skeleton, level: st.record, trace: st.trace,
+        };
+        expect(agreementWithPayload(bare, st).differences).toEqual([]);
+        const pre4c = { ...bare, summary: { keptCount: 1 } };
+        expect(agreementWithPayload(pre4c, st).differences.join(' '))
+            .toMatch(/elements \(the payload predates the biome DEFAULT element spec/);
     });
 });

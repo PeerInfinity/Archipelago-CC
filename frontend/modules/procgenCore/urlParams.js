@@ -364,12 +364,31 @@ export function writeAreasParam(q, areas) {
     return q;
 }
 
-/** ⛓ `?require=K0,K1` → a frozen list, or `null` when the parameter is absent. */
-export function readRequire(q) {
+/**
+ * ⛓ `?require=K0,K1` → a frozen list, or `null` when the parameter is absent.
+ *
+ * ⛓⛓⛓ **THE VOCABULARY IS AN ARGUMENT** — PROCGEN ELEMENTS arc 3, slice 5a
+ * (D1), and it had to become one the moment the SEEDLING page read this
+ * parameter. `require` names an AREA-GRAPH SYMBOL on the maze (`K0`) and an
+ * ITEM FLAG on Seedling (`hasSword` — 4d D1), and 4d already made
+ * `areaSpec.parseRequireList` take the vocabulary as an argument for exactly
+ * that reason (`elementSpec.parseItemRequireList` is the Seedling spelling).
+ * This reader was the one channel that had not been given it, and until it was
+ * `?require=hasSword` refused with the maze's sentence — measured by this
+ * slice's own unit row before it was written.
+ *
+ * ⛔ THE DEFAULT IS THE MAZE's, so `mazeLab.js` is unchanged and byte-identical.
+ * ⛔ AND THE PARSER IS STILL `areaSpec`'s — one grammar, three channels; what
+ * differs is which names it will accept, which is the SUBSTRATE's fact.
+ *
+ * @param {object} [o.grammar] a `(value) => frozen list` — `parseItemRequire
+ *   List` on Seedling. Defaults to the area-graph symbol vocabulary.
+ */
+export function readRequire(q, { grammar = parseRequireList } = {}) {
     const raw = q.get('require');
     if (raw === null) return null;
     try {
-        return parseRequireList(raw);
+        return grammar(raw);
     } catch (e) {
         fail(`urlParams: ?require=${JSON.stringify(raw)} — ${e.message}`);
         return null;
@@ -414,11 +433,35 @@ export function readRequire(q) {
  * reader must not "tidy" it.
  */
 export function readElements(q) {
+    return readElementsTyped(q).spec;
+}
+
+/**
+ * ⛓⛓⛓ **THE SAME READER, PLUS WHETHER THE PARAMETER WAS THERE AT ALL** —
+ * PROCGEN ELEMENTS arc 3, slice 5a (D1), and it is `readSkeletonTyped`'s shape
+ * for the same class of reason.
+ *
+ * ⛔ **ON THE MAZE, ABSENT ≡ `none`. ON SEEDLING IT IS NOT.** Arc-2 ruling 5
+ * made `?elements=` absent mean *the machinery does not run*, which on the maze
+ * IS the default. Arc-3 slice 4c gave Seedling a BIOME-DEPENDENT default
+ * (`defaultElementsFor(items)` — `guard;len=2+blockpocket`, plus `killgate`
+ * post-sword), resolved in the SEAM, and the seam distinguishes `undefined`
+ * (*nobody said* ⇒ the biome default) from an explicit `{name:'none'}` (a
+ * CHOICE, honoured). A page that could only hand it `readElements`' answer
+ * could never ask for the default at all — it would spell `none` on every
+ * load and silently turn the default off.
+ *
+ * ⛔ ONE READER STILL: `q.get('elements')` happens HERE, `readElements` is the
+ * projection, and the maze is unmoved.
+ *
+ * @returns {{spec: object, raw: string|null}}
+ */
+export function readElementsTyped(q) {
     const raw = q.get('elements');
-    if (raw === null || raw === '') return DEFAULT_ELEMENTS;
+    if (raw === null || raw === '') return { spec: DEFAULT_ELEMENTS, raw: null };
     /** ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL — `readSkeleton`'s rule. */
     try {
-        return parseElementSpec(raw);
+        return { spec: parseElementSpec(raw), raw };
     } catch (e) {
         fail(`urlParams: ?elements=${JSON.stringify(raw)} — ${e.message}`);
         return null;
@@ -430,19 +473,44 @@ export function readElements(q) {
  * formats through the one formatter and hands the string back to the SAME
  * parser, so a spec the reader could not read back cannot be written.
  */
-export function writeElementsParam(q, elements) {
+export function writeElementsParam(q, elements, { deleteAt = DEFAULT_ELEMENTS.name } = {}) {
+    /**
+     * ⛓⛓ SLICE 5a (D1) — `undefined` IS *NOBODY SAID* AND ALWAYS DELETES, on
+     * every substrate. It is the only spelling of *absent* a caller has, and a
+     * writer that turned it into `none` would put a CHOICE in the bar that the
+     * reader would then hand to a seam expecting silence.
+     */
+    if (elements === undefined) { q.delete('elements'); return q; }
     const value = formatElementSpec(normalizeElementSpec(elements ?? DEFAULT_ELEMENTS));
     parseElementSpec(value);
-    if (value === DEFAULT_ELEMENTS.name) q.delete('elements');
+    /**
+     * ⛓⛓⛓ `deleteAt` — **WHICH VALUE THIS BINDING SPELLS BY ABSENCE**, and on
+     * Seedling the answer is NONE OF THEM. The maze's default IS `none`, so
+     * `?elements=none` and no parameter are two spellings of one run and the
+     * writer drops it (trap 245's in-place rewrite). Seedling's default is the
+     * BIOME's spec, so `?elements=none` is *turn the default off* — a different
+     * run — and dropping it would hand back a link that regenerates with the
+     * gadget the reader just removed. ⛔ The caller says which, because only the
+     * caller knows what its own absence means.
+     */
+    if (deleteAt !== null && value === deleteAt) q.delete('elements');
     else q.set('elements', value);
     return q;
 }
 
-/** ⛔ DELETED when there is no directive; re-parsed on the way out. */
-export function writeRequireParam(q, require) {
+/**
+ * ⛔ DELETED when there is no directive; re-parsed on the way out.
+ *
+ * ⛓⛓ **AND WITH THE SAME `grammar` THE READER WAS GIVEN** (slice 5a, D1) —
+ * §8.6's standing law is that the writer refuses what the READER would refuse,
+ * and once the reader's vocabulary became the substrate's, a writer still
+ * holding the maze's would refuse `hasSword` on the way out of a page that had
+ * just accepted it on the way in. Measured by this slice's own unit row.
+ */
+export function writeRequireParam(q, require, { grammar = parseRequireList } = {}) {
     const value = formatRequireList(require);
     if (value === '') { q.delete('require'); return q; }
-    parseRequireList(value);
+    grammar(value);
     q.set('require', value);
     return q;
 }

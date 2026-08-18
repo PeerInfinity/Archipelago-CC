@@ -167,6 +167,9 @@ import { formatSkeleton } from '../procgenCore/skeletonKinds.js';
 import {
     seedlingExplicitSkeletonParams, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
+/** ⛓ SLICE 5a (D1) — the `?gen=` path re-parses the AREA spec, which
+ *  `areaSummaryOf` reports as a STRING (arc-2 §11.5's asymmetry). */
+import { parseAreaSpec } from '../procgenCore/areaSpec.js';
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
@@ -4404,6 +4407,23 @@ async function runGenerate(params, lifetime) {
      * `winding` room and step 4 of an `open` one are not two rungs of one run.
      */
     let skeleton = { ...gp.skeleton };
+    /**
+     * ── ⛓⛓⛓ ARC 3, SLICE 5a (D1) — THE THREE PARAMETERS, AS PAGE STATE ─────
+     *
+     * ⛔ `elements` IS `undefined` WHEN NOBODY SAID, and that is not a
+     * placeholder: `seedlingSeam` reads `undefined` as *apply the BIOME
+     * DEFAULT* and an explicit `{name:'none'}` as *turn it off* (4c §13.3). A
+     * page that spelled the absence as `null` or `{name:'none'}` would silently
+     * disable the default on every load.
+     *
+     * ⚠ THEY HAVE NO FORM CONTROLS THIS SLICE — the URL is the channel, as it
+     * is for `?tickbudget=`. The reader resolves them, the writer spells them
+     * and the state carries their REPORTS; 5b's demo catalogue is what will
+     * hand a reader the links.
+     */
+    let elements = gp.elements;
+    let areas = gp.areas;
+    let require = gp.require;
 
     /**
      * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
@@ -4477,6 +4497,31 @@ async function runGenerate(params, lifetime) {
          * directives" is exactly what a plain ladder run has.
          */
         pendingDirected = payload.directives ?? null;
+        /**
+         * ── ⛓⛓⛓ SLICE 5a (D1) — **THE PAYLOAD'S OWN THREE SPECS**, for the
+         * ── reason the roster and the directives are already adopted: `?gen=`
+         * ── REGENERATES and compares, so a payload made WITH a kill gate and
+         * ── reproduced under a different element spec would report a level
+         * ── divergence whose real cause is that a different run was asked for.
+         *
+         * ⛔ **EACH IS READ IN ITS OWN SPELLING** (see `agreementWithPayload`):
+         * `elements.spec` is the normalized OBJECT and `areas.spec` is ALREADY
+         * A STRING (`areaSummaryOf` formats it) — arc-2 §11.5's *"a REPORT, not
+         * a SPEC"* asymmetry, which this slice READS rather than fixes because
+         * unifying it would move `summary` on every committed payload.
+         *
+         * ⚠ `undefined` IS PRESERVED: a payload with no `elements` block asked
+         * for no element, and on a pre-4c file that is the truth. A payload
+         * whose block IS there hands its spec straight back.
+         *
+         * ⛓ AND THE SKELETON WITH THEM — a carved payload reproduced in the
+         * open room would have reported a `level` divergence with a `skeleton`
+         * one beside it, which is two findings for one cause.
+         */
+        if (payload.skeleton) skeleton = seedlingSkeletonSpec(payload.skeleton);
+        if (payload.summary?.elements) elements = payload.summary.elements.spec;
+        if (payload.summary?.areas) areas = parseAreaSpec(payload.summary.areas.spec);
+        if (payload.summary?.require) require = [...payload.summary.require.asked];
     }
 
     $('genSeed').value = String(seed);
@@ -5170,6 +5215,28 @@ async function runGenerate(params, lifetime) {
             skeleton: state.skeleton ?? null,
             skeletons: skeletonCatalogue({ simulator: false }),
             /**
+             * ⛓⛓⛓ SLICE 5a (D1) — **THE THREE BLOCKS, READ OFF THE STATE**, in
+             * the CLI's own shapes (`elementSummaryOf`, `areaSummaryOf`,
+             * `summary.require`). ⛔ `null` when the thing was not asked for,
+             * NEVER `{}` — *the graph was never asked* and *the graph ran and
+             * found nothing* are different facts, and the browser row asserts
+             * the `null` explicitly.
+             */
+            elements: state.elements ?? null,
+            areas: state.areas ?? null,
+            require: state.require ?? null,
+            /**
+             * ⛓ AND WHAT THE **CALLER** ASKED FOR, beside what the run
+             * resolved. `undefined` is *nobody said* and JSON cannot carry it,
+             * so it is spelled `null` HERE and the field beside it says which:
+             * a page that reported only the resolved spec could not be
+             * distinguished from one that had spelled the biome default into
+             * its own URL.
+             */
+            elementsAsked: elements ?? null,
+            areasAsked: areas ?? null,
+            requireAsked: require ?? null,
+            /**
              * ⛓ SLICE 5: the construction, and WHICH KIND OF KEEP each
              * directive was. ⛔ `keptKind` is reported RAW — the row asserts on
              * it, and a readout that collapsed `solved-no-verb` into
@@ -5297,6 +5364,22 @@ async function runGenerate(params, lifetime) {
             // screen was really CARVED from, so a link cannot name a skeleton
             // the page did not build. DELETED at the open room by the writer.
             skeleton: state.skeleton,
+            /**
+             * ⛓⛓ SLICE 5a (D1) — THE THREE, from the RUN's own arguments.
+             *
+             * ⛔ `elements` COMES FROM THE LOCAL, NOT FROM `state.elements`, and
+             * the difference is the whole of *nobody said*: the state carries
+             * the REPORT of whatever the seam resolved (which under 4c's biome
+             * default is a `+` list on every level), while what the link has to
+             * name is what the CALLER asked for. Writing the resolved default
+             * back would freeze the biome's spec into the URL and a post-sword
+             * link would then reproduce a pre-sword element list.
+             * ⛓ `areas`/`require` are the caller's too, for the same reason,
+             * and both are also byte-identical to their reports' `spec`.
+             */
+            elements,
+            areas,
+            require,
             // ⛓ SLICE 4: from the STATE, like every other parameter here — the
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
@@ -5614,7 +5697,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton, elements, areas, require });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -5635,7 +5718,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require });
         await show(why);
     };
     /**
@@ -5842,7 +5925,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, elements, areas, require });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -5999,7 +6082,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require });
     await show('the SKELETON');
 
     if (gp.run || payload) {

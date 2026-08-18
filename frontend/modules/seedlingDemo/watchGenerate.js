@@ -85,8 +85,9 @@ import {
  */
 import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
-    readBounds, readRosterSpec, readSkeleton, readSkeletonTyped, refuseDirectedParam,
-    writeBounds, writeInt,
+    readAreas, readBounds, readElementsTyped, readRequire, readRosterSpec, readSkeleton,
+    readSkeletonTyped, refuseDirectedParam, writeAreasParam, writeBounds, writeElementsParam,
+    writeInt, writeRequireParam,
     writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
@@ -97,9 +98,14 @@ import {
     skeletonCatalogue,
 } from '../procgenCore/skeletonKinds.js';
 import {
-    SEEDLING_SKELETON_KINDS, generateSeedlingLevel, seedlingExplicitSkeletonParams,
-    seedlingOracle, seedlingSeam, seedlingSkeletonSpec,
+    SEEDLING_SKELETON_KINDS, areaSummaryOf, generateSeedlingLevel,
+    seedlingExplicitSkeletonParams, seedlingOracle, seedlingSeam, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
+import { ELEMENTS_NONE, elementSummaryOf } from './procgenSeedlingElements.js';
+import { DEFAULT_AREAS, normalizeAreaSpec, parseAreaSpec } from '../procgenCore/areaSpec.js';
+import {
+    formatElementSpec, isElementList, parseItemRequireList,
+} from '../procgenCore/elementSpec.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 /**
  * ⛓⛓ CONSTRUCTIVE SLICE 11 — THE ONE EDIT FOLD. ⛔ `watchEdit.js` imports
@@ -284,6 +290,39 @@ export function readGenerateParams(search) {
             readSkeletonTyped(q, { simulator: false, substrate: 'the Seedling page' }).raw
             ?? { kind: DEFAULT_SKELETON_KIND },
         ),
+        /**
+         * ── ⛓⛓⛓ ARC 3, SLICE 5a (D1) — **THE THREE PARAMETERS THE PAGE WAS
+         * ── MISSING**, each through the ONE reader `procgenCore/urlParams.js`
+         * ── already had (4d §15.14: *"`?require=` and `?elements=` are the
+         * ── page's missing half"*).
+         *
+         * ⛔ **`undefined` IS NOT `{name:'none'}`, AND ON SEEDLING THE
+         * DIFFERENCE IS THE WHOLE FEATURE.** `seedlingSeam` reads `elements ===
+         * undefined` as *nobody said* and applies the BIOME DEFAULT (4c §13.3);
+         * an explicit `none` is a CHOICE it honours. `readElementsTyped`'s
+         * `raw === null` is the only honest test of which one a URL asked, and
+         * it is why this is not `readElements(q)`.
+         *
+         * ⚠ A NAMED PARAMETER AT ITS DEFAULT IS **KEPT** (arc-2 §11.5's law,
+         * carried whole): `guard` and `guard;len=2` are different runs, because
+         * a named parameter is an override that spends NO draw and an omitted
+         * one is DRAWN. The reader must not tidy it.
+         */
+        elements: readElementsTyped(q).raw === null ? undefined : readElementsTyped(q).spec,
+        /**
+         * ⛓ `?areas=` — absent ≡ `{keys: 0}` ≡ *the module does not run at all*
+         * (⚖ arc-1 ruling 3), which IS Seedling's default, so absence needs no
+         * second spelling here.
+         */
+        areas: readAreas(q),
+        /**
+         * ⛓ `?require=` — `null` when ABSENT, and an EMPTY one REFUSES rather
+         * than reading as absent (a directive somebody emptied is not the same
+         * as no directive). ⛔ The pair `?require=` + `?elements=` is NOT
+         * adjudicated here: `seedlingSeam.resolveRequireDirective` knows both
+         * and refuses BY NAME with the vocabulary in the sentence.
+         */
+        require: readRequire(q, { grammar: parseItemRequireList }),
         /** ⛓ The four the loop runs under — `urlParams.readBounds`, shared. */
         bounds: readBounds(q),
         /**
@@ -382,7 +421,7 @@ export function readGenerateParams(search) {
  */
 export function writeGenerateParams(search, {
     seed, biome, bounds, step, roster = null, payloadOwned = false,
-    skeleton = DEFAULT_SKELETON,
+    skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require = null,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -465,6 +504,28 @@ export function writeGenerateParams(search, {
      * never left to infer it from an address that looks complete.
      */
     dropDirectedParam(q);
+    /**
+     * ── ⛓⛓⛓ SLICE 5a (D1) — **THE THREE PARAMETERS ARE OWNED NOW, NOT COPIED**
+     *
+     * ⛔ Until this slice `?elements=` "survived" a rewrite only because this
+     * writer COPIES what it does not own (the docblock above): it was never
+     * read, never reached the model, and a page that had merely TOUCHED a
+     * control would have carried it forward as decoration. Now the reader
+     * resolves all three and the writer spells all three FROM THE STATE.
+     *
+     * ⛔ REWRITE IN PLACE, never delete-then-set — the fixed-point rows. Each
+     * writer already does that; what is passed differs per parameter:
+     *   `elements` — `undefined` (nobody said) DELETES; anything else, INCLUDING
+     *                `none`, is SET. ⛓ `deleteAt: null` is Seedling saying *no
+     *                value of mine is spelled by absence*, because absence
+     *                means the BIOME DEFAULT here and not `none`.
+     *   `areas`    — deleted at `0`, which IS *the module does not run*.
+     *   `require`  — deleted when there is no directive; an EMPTY one cannot be
+     *                written because `formatRequireList([])` is `''`.
+     */
+    writeElementsParam(q, elements, { deleteAt: null });
+    writeAreasParam(q, areas);
+    writeRequireParam(q, require, { grammar: parseItemRequireList });
     writeRunFlag(q, step);
     return q.toString();
 }
@@ -495,8 +556,30 @@ export function writeGenerateParams(search, {
  * the very solve step 1 spends, no more. That is the honest cost of showing the
  * room the loop actually checks.
  */
+/**
+ * ⛓⛓⛓ SLICE 5a (D1) — **THE THREE BLOCKS THE STATE CARRIES, AND `null` WHEN
+ * NOBODY ASKED.**
+ *
+ * ⛔ `null`, NEVER `{}`. *"The area graph was not asked for"* and *"the area
+ * graph ran and found nothing"* are different facts, and a readout that spelled
+ * both as an empty object would be the page answering a question it was never
+ * asked. The browser row asserts `null` explicitly, which is why it is stated
+ * here rather than left to a `?.`.
+ *
+ * ⛔ AND THE SHAPES ARE THE **CLI's OWN** (`elementSummaryOf`, `areaSummaryOf`,
+ * `summary.require`), so the page's readout and `generate-seedling-level.mjs
+ * --json` are one shape rather than two that agree today.
+ */
+const elementsBlockOf = (model, certification) => {
+    const spec = model?.elementSpec ?? null;
+    if (!spec) return null;
+    if (!isElementList(spec) && spec.name === ELEMENTS_NONE) return null;
+    return elementSummaryOf(model, { certification });
+};
+
 export function generateStep({
     seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
+    elements, areas = DEFAULT_AREAS, require = null,
 } = {}) {
     /**
      * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — the room this ladder starts from,
@@ -557,9 +640,16 @@ export function generateStep({
             + 'Step 0 is the SKELETON and step k is a run to obstacleTarget=k.');
     }
     if (step === 0) {
-        const { model } = seedlingSeam({
+        /**
+         * ⛓ SLICE 5a (D1) — the three parameters reach the SEAM exactly as the
+         * CLI passes them: `elements === undefined` is *nobody said* and is the
+         * only thing that reaches the biome default (4c §13.3).
+         */
+        const seam = seedlingSeam({
             seed, items: palette.items ?? null, budget: b, skeleton: skelEffective,
+            elements, areas, require,
         });
+        const { model } = seam;
         return Object.freeze({
             seed,
             biome,
@@ -593,6 +683,23 @@ export function generateStep({
             /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from.
              *  ⛓ SLICE 5a: the EFFECTIVE spelling — see above. */
             skeleton: skelEffective,
+            /** ⛓⛓ SLICE 5a (D1) — the three blocks, `null` when not asked. */
+            elements: elementsBlockOf(model, seam.certification),
+            areas: areas?.keys > 0
+                ? areaSummaryOf(seam.areaCertification?.areas ?? model.areas,
+                    { certification: seam.areaCertification })
+                : null,
+            /**
+             * ⛓⛓ AT STEP 0 A DIRECTIVE IS **RESOLVED, NOT YET GRADED** — and
+             * the two are different facts. `requireVerdict` runs on the FINISHED
+             * level (4d D1/D2: a skeleton-time differential would be blind to a
+             * kill lock that pass-2 furniture opened), so the skeleton can only
+             * report what the directive DID to the head: which element it
+             * forced, or its refusal BY NAME. ⛔ `null` when nothing was asked —
+             * never the seam's empty resolution, which would read as a
+             * directive that met nothing.
+             */
+            require: seam.require?.asked?.length ? seam.require : null,
             stop: null,
             saturated: false,
             budget: b,
@@ -608,6 +715,10 @@ export function generateStep({
          *  the carve. `seedlingSkeletonSpec` is idempotent, so the model
          *  re-resolving it moves nothing. */
         skeleton: skelEffective,
+        /** ⛓ SLICE 5a (D1) — and the three parameters, as the CLI passes them. */
+        elements,
+        areas,
+        require,
     });
     return Object.freeze({
         seed,
@@ -624,6 +735,15 @@ export function generateStep({
         /** ⛓⛓ SLICE 11 — see the step-0 branch for why it is a list and not absent. */
         edits: Object.freeze([]),
         skeleton: skelEffective,
+        /**
+         * ⛓⛓ SLICE 5a (D1) — READ OFF `out.summary`, which is where
+         * `generateSeedlingLevel` already puts the CLI's own three blocks. ⛔ A
+         * second derivation here would be a second answer to *what did the
+         * element do*, one refactor from disagreeing with the payload.
+         */
+        elements: out.summary.elements ?? null,
+        areas: out.summary.areas ?? null,
+        require: out.summary.require ?? null,
         stop: out.summary.stop,
         /**
          * ⚠ TWO SPELLINGS OF ONE FACT, AND ONLY ONE OF THEM IS RELIABLE HERE.
@@ -1043,6 +1163,46 @@ export function agreementWithPayload(payload, state) {
      * the only way an edited Seedling level can round-trip at all, and it buys
      * the stronger claim in exchange.
      */
+    /**
+     * ── ⛓⛓⛓ SLICE 5a (D1) — **THE THREE PARAMETERS ARE IDENTITY FIELDS**, on
+     * ── the roster's own terms, and each is asked in its OWN SPELLING ──────
+     *
+     * ⛔ COMPARED ONLY WHEN THE PAYLOAD CARRIES THE BLOCK. A payload written
+     * before a block existed is not a payload that asked for nothing — it is a
+     * payload from a run in which the thing did not exist — so the honest
+     * report is *"this page's run HAS one and yours did not"*, named, rather
+     * than a divergence in a field the file could not have had. That is D1's
+     * *"refuse by name a payload that predates them only if it also carried a
+     * non-default"*, said from the other end.
+     *
+     * ⚠ THE SPELLINGS DIFFER AND THE COMPARISON RESPECTS IT (see
+     * `describeState`): `elements.spec` is the normalized OBJECT and
+     * `areas.spec` is ALREADY THE STRING. ⛔ A comparison that formatted both
+     * would report `0` against `1` on every `--areas=` payload.
+     */
+    /**
+     * ⚠ **A PAYLOAD WITH NO `summary` AT ALL MAKES NO CLAIM HERE**, and that is
+     * a different case from one that has a summary WITHOUT the block. The
+     * second is a run in which the thing genuinely did not happen — a pre-4c
+     * file, from before the biome default put an element in every level — and
+     * it is named. The first is a hand-built or step-0 payload that never
+     * reported a summary at all, and inventing a divergence for it would be
+     * this check firing on its own fixtures.
+     */
+    if (payload.summary?.elements) {
+        cmp('elements', payload.summary.elements.spec, state.elements?.spec ?? null);
+    } else if (payload.summary && state.elements) {
+        differences.push('elements (the payload predates the biome DEFAULT element spec — its '
+            + 'run held no element and this one does)');
+    }
+    if (payload.summary?.areas) {
+        cmp('areas', payload.summary.areas.spec, state.areas?.spec ?? null);
+    } else if (payload.summary && state.areas) {
+        differences.push('areas (the payload asked for no area graph and this run did)');
+    }
+    /** ⛓ `?? null` ON BOTH SIDES — *no directive* is what a plain run has, so
+     *  an old payload does not falsely diverge. */
+    cmp('require', payload.summary?.require?.asked ?? null, state.require?.asked ?? null);
     cmp('edits', payload.edits ?? [], state.edits ?? []);
     cmp('level', payload.level, state.record);
     cmp('trace', payload.trace, state.trace);
@@ -1131,6 +1291,71 @@ export function describeState(state, solved = null) {
             + `anchortries=${state.bounds.anchorTriesPerCandidate}`,
         `budget: ${state.budget.maxTicksPerTarget} ticks per target (⛓ TICKS, not ms)`,
     ];
+    /**
+     * ── ⛓⛓⛓ SLICE 5a (D1) — **THE THREE CLAUSES, IN THE CLI's OWN WORDS** ──
+     *
+     * ⛔ Printed only when the thing was ASKED FOR (or, for the element,
+     * whenever one RAN — which under 4c's biome default is nearly always), the
+     * same rule `skeleton:` follows: a clause on every line is a clause a
+     * reader stops reading. ⛓ The vocabulary is `generate-seedling-level.mjs`'s
+     * — `requires: … MET/NOT MET … grade`, `areas: <spec> — N area(s) …`,
+     * `element: <asked> -> drew <head> … CERTIFIED` — so the page and the CLI
+     * say one sentence about one level rather than two that agree.
+     */
+    /**
+     * ⛔⛔ **THE TWO BLOCKS SPELL THEIR SPEC DIFFERENTLY, AND THIS SLICE READS
+     * RATHER THAN FIXES IT** — arc-2 §11.5/§11.11's *"a REPORT, not a SPEC"*
+     * residue, arriving on Seedling.
+     *
+     *   `summary.elements.spec` is the normalized OBJECT   (`{name, params}`)
+     *   `summary.areas.spec`    is ALREADY THE STRING      (`areaSummaryOf`)
+     *
+     * ⛔ Unifying them would move `summary` on EVERY committed payload — under
+     * 4c's biome default every Seedling level carries an `elements` block — so
+     * the acceptance batch, both `empty` dumps and the carved dump would all
+     * re-record for a spelling. ⇒ each is read in its own shape here, the
+     * asymmetry is stated, and `agreementWithPayload` below does the same.
+     * ⚠ A reader building a `?gen=` payload must carry BOTH: the element's spec
+     * OBJECT and the area's spec STRING.
+     */
+    const e = state.elements ?? null;
+    if (e) {
+        const asked = formatElementSpec(e.spec);
+        /** ⛓ A `+` LIST NAMES SEVERAL HEADS AND THE STREAM DREW ONE, so the
+         *  line prints both — the CLI's own sentence. */
+        const drew = state.model?.elementHead ? formatElementSpec(state.model.elementHead) : null;
+        bits.push(`element: ${asked}`
+            + (drew && drew !== asked ? ` -> drew \`${drew}\`` : '')
+            + (e.ran
+                ? ` — PLACED, CERTIFIED: ${e.certified}`
+                : ` — ⛔ REFUSED: ${e.refused?.reason ?? '(no reason)'}`));
+    }
+    const a = state.areas ?? null;
+    if (a) {
+        bits.push(`areas: ${a.spec} — `
+            + (a.ran
+                ? `${a.symbols?.length ?? 0} symbol(s), ${a.lockCount ?? 0} lock(s), `
+                    + `${a.flags?.length ?? 0} flag(s); CERTIFIED: ${a.certified}`
+                : `⛔ REFUSED: ${a.refused?.reason ?? '(no reason)'}`));
+    }
+    const r = state.require ?? null;
+    if (r) {
+        /**
+         * ⛓⛓ TWO SHAPES, AND THE LINE SAYS WHICH IT IS LOOKING AT. At step 0 a
+         * directive is RESOLVED (it forced a head, or refused by name); the
+         * GRADE only exists on a finished level, so a skeleton that printed
+         * "NOT MET" would be reporting a verdict nobody has measured.
+         */
+        bits.push(r.met === undefined
+            ? `requires: ${[].concat(r.asked).join(', ')} — `
+                + (r.refused
+                    ? `⛔ REFUSED: ${r.refused.reason}`
+                    : `RESOLVED to the ${[].concat(r.heads).join('/')} element `
+                        + '(the GRADE is measured on the FINISHED level, not on the skeleton)')
+            : `requires: ${[].concat(r.asked).join(', ')} — ${r.met ? 'MET' : 'NOT MET'}`
+                + (r.met ? `, grade ${[].concat(r.grade).join(', ')}`
+                    : `; ⛔ ${r.refused?.reason ?? '(no reason)'}`));
+    }
     /**
      * ⛓⛓⛓ SLICE 11 — ⚖ RULING 9, SAID ON THE PAGE. The URL writer never learns
      * about edits, so once there are any the address bar names the RECIPE and

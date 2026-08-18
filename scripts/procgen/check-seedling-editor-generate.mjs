@@ -117,7 +117,7 @@ const { terrainAt } = await M('procgenLevel.js');
  * against itself (trap 367: a gate phrased against the constant it tests is an
  * echo).
  */
-const { seedlingSkeletonSpec } = await M('procgenSeedling.js');
+const { seedlingSeam, seedlingSkeletonSpec } = await M('procgenSeedling.js');
 const { formatSkeleton } = await CORE('skeletonKinds.js');
 
 /**
@@ -2665,6 +2665,200 @@ if (!host) {
         || window.__editorGenerate === null),
     '⛔ …and NO run happened: a refused parameter does not fall through to a level nobody '
         + 'asked for');
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 10 — `?elements=` / `?areas=` / `?require=` ON THE SEEDLING PAGE
+ * (PROCGEN ELEMENTS arc 3, slice 5a — D1) AND THE TYPED `;chambers=0` (D2)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ **VALUE CLAIMS, NOT ECHOES** (trap 269, and arc-2 §11's own finding: *"the
+ * mutant that reaches the bar and the state but not the model DIES at the first
+ * VALUE claim"*). Each parameter is followed BAR → STATE → **MODEL**: the door
+ * cell the page's own level holds, the ground-cell count of the room it carved,
+ * the grade the directive earned — every one of them compared against NODE's
+ * answer for the same arguments, computed in this process.
+ */
+{
+    /* ── 10a: `?elements=` reaches the MODEL ──────────────────────────── */
+    /**
+     * ⚠ THE SUBJECT IS SCANNED: `killgate` must be PLACED rather than dropped
+     * by its certification for a door cell to exist at all. Scanned post-sword
+     * at step 0 over seeds 1..5 — **only seed 2 places** (the other four report
+     * `the-skeleton-does-not-solve-with-the-element`, which is the arc's own
+     * published rate and not this row's business).
+     */
+    const EL = { seed: 2, biome: 'post-sword' };
+    const nodeKill = generateStep({ ...EL, step: 0, elements: { name: 'killgate' } });
+    const nodeBare = generateStep({ ...EL, step: 0 });
+    const web = await load(`source=generate&seed=${EL.seed}&biome=${EL.biome}&count=0`
+        + '&elements=killgate');
+    check(web.gen.status === 'ok', 'the arm mounted under ?elements=killgate',
+        web.gen.message ?? web.gen.status);
+    check(json(web.gen.elementsAsked) === json({ name: 'killgate' }),
+        '⛓ ?elements=killgate reached the STATE as the caller\'s own spec',
+        json(web.gen.elementsAsked));
+    check(json(web.gen.elements?.spec) === json({ name: 'killgate' }),
+        '…and the RESOLVED block names it too', json(web.gen.elements?.spec));
+    /**
+     * ⛔ THE CLAIM AN ECHO CANNOT SATISFY: the DOOR CELL of the element in the
+     * level the browser built is node's, and the room is NOT the one the bare
+     * biome default builds at the same seed.
+     */
+    check(json(web.gen.elements?.placed?.[0]?.doorCell)
+        === json(nodeKill.elements.placed[0].doorCell),
+    '⛓⛓ …and the element\'s DOOR CELL is node\'s, cell for cell',
+    json(web.gen.elements?.placed?.[0]?.doorCell));
+    check(json(web.level) === json(nodeKill.record),
+        '⛓⛓ …and the ROOM on screen IS node\'s killgate skeleton, byte for byte');
+    check(json(web.level) !== json(nodeBare.record),
+        '⛔ …and it is NOT the room the bare biome default builds at this seed — the '
+        + 'parameter did WORK, not just get echoed');
+    /** ⛓ THE IDENTITY LINE AND THE BAR SAY THE SAME THING. */
+    check(/element: killgate — PLACED/.test(web.gen.identity ?? ''),
+        'the identity line NAMES the element spec and what it did', web.gen.identity);
+    const elPanel = await panelOf();
+    check(new URLSearchParams(elPanel.url).get('elements') === 'killgate',
+        '⛓ the bar still names it after the page rewrote the URL', elPanel.url);
+
+    /* ── 10b: ABSENT ≠ `none` on Seedling ─────────────────────────────── */
+    /**
+     * ⛔⛔ THE SEEDLING-ONLY ASYMMETRY, DRIVEN. On the maze `?elements=` absent
+     * ≡ `none`; here absence means the BIOME DEFAULT (4c §13.3) and `none`
+     * means *turn it off*. A page that spelled the absence as `none` would
+     * disable the default silently, and this pair is what says it does not.
+     */
+    const nodeNone = generateStep({ ...EL, step: 0, elements: { name: 'none' } });
+    const noneWeb = await load(`source=generate&seed=${EL.seed}&biome=${EL.biome}&count=0`
+        + '&elements=none');
+    check(noneWeb.gen.elements === null,
+        '⛔ ?elements=none reports NO element block — `null`, never an empty object',
+        json(noneWeb.gen.elements));
+    check(json(noneWeb.level) === json(nodeNone.record),
+        '⛓⛓ …and the room is node\'s `none` room, byte for byte');
+    check(json(noneWeb.level) !== json(nodeBare.record),
+        '⛔ …and it DIFFERS from the room the same URL without the parameter builds — '
+        + 'absence is the BIOME DEFAULT here, not `none`');
+    const nonePanel = await panelOf();
+    check(new URLSearchParams(nonePanel.url).get('elements') === 'none',
+        '⛔ …and the writer KEEPS `none` in the bar rather than deleting it (the maze '
+        + 'deletes it; on Seedling it is a choice)', nonePanel.url);
+    const bareWeb = await load(`source=generate&seed=${EL.seed}&biome=${EL.biome}&count=0`);
+    const barePanel = await panelOf();
+    check(new URLSearchParams(barePanel.url).get('elements') === null,
+        '⛔ …while an ABSENT parameter stays absent — *nobody said* has no spelling',
+        barePanel.url);
+    check(json(bareWeb.level) === json(nodeBare.record),
+        '…and the bare page is node\'s biome-default room, byte for byte');
+
+    /* ── 10c: `?require=` — the ITEM vocabulary, and the GRADE ────────── */
+    /**
+     * ⚠ SEED 30 IS 4d's OWN DEMO SEED (§15.8: the one hit of its 40-cell
+     * search, and the seed the kill gate's demand rescued). The claim is the
+     * GRADE, which only exists on a FINISHED level — so this one runs the
+     * ladder rather than stopping at the skeleton.
+     */
+    const REQ = { seed: 30, biome: 'post-sword', count: 1 };
+    const nodeReq = generateStep({ seed: REQ.seed, biome: REQ.biome, step: REQ.count,
+        bounds: { obstacleTarget: REQ.count, triesPerStep: 8, saturationK: 3,
+            anchorTriesPerCandidate: 1 },
+        require: ['hasSword'] });
+    const reqWeb = await load(`source=generate&seed=${REQ.seed}&biome=${REQ.biome}`
+        + `&count=${REQ.count}&tries=8&k=3&require=hasSword&run=1`,
+    { step: REQ.count, seed: REQ.seed });
+    check(json(reqWeb.gen.require?.asked) === json(['hasSword']),
+        '⛓ ?require=hasSword reached the STATE — the ITEM vocabulary, not the maze\'s '
+        + 'K0/K1', json(reqWeb.gen.require?.asked));
+    check(reqWeb.gen.require?.met === nodeReq.require.met
+        && json(reqWeb.gen.require?.grade) === json(nodeReq.require.grade),
+    '⛓⛓ …and the GRADE the browser measured IS node\'s',
+    `${reqWeb.gen.require?.met} / ${json(reqWeb.gen.require?.grade)}`);
+    check(json(reqWeb.gen.elements?.spec) === json({ name: 'killgate' }),
+        '⛔ …and the directive FORCED the head — a `+` list would have spent a pick',
+        json(reqWeb.gen.elements?.spec));
+    check(json(reqWeb.level) === json(nodeReq.record),
+        '⛓⛓ …and the level IS node\'s directed level, byte for byte');
+    const reqPanel = await panelOf();
+    check(new URLSearchParams(reqPanel.url).get('require') === 'hasSword',
+        '⛓ the bar still names the directive', reqPanel.url);
+    /** ⛔ AND A REFUSED DIRECTIVE SHOWS THE LEVEL, LABELLED — the CLI's own
+     *  behaviour at exit 6, which is where the page follows the CLI and not
+     *  arc-1's maze rule ("a refused directive shows no level"). */
+    const refusedReq = await load('source=generate&seed=1&biome=pre-sword&count=0'
+        + '&require=hasSword');
+    check(refusedReq.gen.status === 'ok' && refusedReq.level !== null,
+        '⛔ a REFUSED directive still SHOWS the level the run produced — the CLI prints '
+        + 'it at exit 6, and the page follows the CLI', refusedReq.gen.status);
+    check(refusedReq.gen.require?.refused?.reason === 'the-biome-lacks-the-item',
+        '…labelled with the refusal BY NAME', json(refusedReq.gen.require?.refused?.reason));
+    check(/requires: hasSword — ⛔ REFUSED: the-biome-lacks-the-item/
+        .test(refusedReq.gen.identity ?? ''),
+    '…and the identity line says so where a reader is looking', refusedReq.gen.identity);
+
+    /* ── 10d: `?areas=` reaches the MODEL ─────────────────────────────── */
+    const nodeAreas = generateStep({ ...EL, step: 0, areas: { keys: 1 } });
+    const areaWeb = await load(`source=generate&seed=${EL.seed}&biome=${EL.biome}&count=0`
+        + '&areas=1');
+    check(areaWeb.gen.areas?.spec === nodeAreas.areas.spec,
+        '⛓ ?areas=1 reached the STATE — and the block spells its spec the way the CLI '
+        + 'does (a STRING, `areaSummaryOf`\'s own shape)', json(areaWeb.gen.areas?.spec));
+    check(areaWeb.gen.areas?.ran === nodeAreas.areas.ran
+        && json(areaWeb.gen.areas?.refused?.reason)
+            === json(nodeAreas.areas.refused?.reason),
+    '⛓⛓ …and the graph\'s VERDICT is node\'s — ran/refused, by name',
+    `${areaWeb.gen.areas?.ran} / ${json(areaWeb.gen.areas?.refused?.reason)}`);
+    check(bareWeb.gen.areas === null,
+        '⛔ …while a page that did not ask reports `null`, never an empty block');
+
+    /* ── 10e: D2 — a TYPED `;chambers=0` IS SPELLABLE, AS A VALUE ─────── */
+    /**
+     * ⛓⛓⛓ 4d §15.2's RESIDUE, CLOSED AND DRIVEN. It measured that
+     * `?skeleton=winding;chambers=0` produced the `chambers=1` room through
+     * this very page. The pair below is the same measurement with the fix in:
+     * the ground-cell counts DIFFER, both spellings round-trip, and the numbers
+     * come from the LEVEL the browser built rather than from the URL it echoed.
+     */
+    const groundOf = (level) => {
+        if (!level) return -1;
+        let n = 0;
+        for (let ty = 1; ty < level.height - 1; ty += 1) {
+            for (let tx = 1; tx < level.width - 1; tx += 1) {
+                if (terrainAt(level, tx, ty) === 'ground') n += 1;
+            }
+        }
+        return n;
+    };
+    const zeroQ = 'source=generate&seed=1&biome=pre-sword&count=0'
+        + `&skeleton=${encodeURIComponent('winding;chambers=0')}`;
+    const oneQ = 'source=generate&seed=1&biome=pre-sword&count=0'
+        + `&skeleton=${encodeURIComponent('winding;chambers=1')}`;
+    const zeroWeb = await load(zeroQ);
+    const zeroPanel = await panelOf();
+    const oneWeb = await load(oneQ);
+    const onePanel = await panelOf();
+    const nodeZero = generateStep({ seed: 1, biome: 'pre-sword', step: 0,
+        skeleton: { kind: 'winding', params: { chambers: 0 } } });
+    check(json(zeroWeb.gen.skeleton) === json({ kind: 'winding', params: { chambers: 0 } }),
+        '⛓ a TYPED ?skeleton=winding;chambers=0 reaches the STATE as a typed 0',
+        json(zeroWeb.gen.skeleton));
+    check(groundOf(zeroWeb.level) !== groundOf(oneWeb.level),
+        '⛓⛓⛓ …and it builds a DIFFERENT ROOM from `chambers=1` — counted in ground '
+        + 'cells off the level the page built (4d §15.2 measured them EQUAL)',
+        `${groundOf(zeroWeb.level)} ground cells at 0 vs ${groundOf(oneWeb.level)} at 1`);
+    check(json(zeroWeb.level) === json(nodeZero.record),
+        '⛓⛓ …and the typed-0 room IS node\'s, byte for byte');
+    check(new URLSearchParams(zeroPanel.url).get('skeleton') === 'winding;chambers=0',
+        '⛔ …and the bar SPELLS the typed 0 — the fixed point 4d could not have',
+        zeroPanel.url);
+    check(new URLSearchParams(onePanel.url).get('skeleton') === 'winding;chambers=1',
+        '…while the default spelling is unmoved', onePanel.url);
+    /** ⛓ AND THE FORM SHOWS WHAT THE RUN USED — it used to show the CODEC's 0
+     *  while the room was carved at Seedling's 1. */
+    const chambersControl = await page.evaluate(() => document.querySelector(
+        '#genSkeletonParams select[data-skel-param="chambers"]')?.value ?? null);
+    check(chambersControl === '1',
+        '⛔ the CHAMBERS control shows the value the room was CARVED at, not the codec\'s '
+        + 'default', json(chambersControl));
 }
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
