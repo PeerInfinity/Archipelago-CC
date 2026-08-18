@@ -1,0 +1,153 @@
+/**
+ * procgenDocs/demos — **THE CATALOGUE IS DATA, SO IT CAN BE GATED WITHOUT A
+ * BROWSER.** (PROCGEN DOCS slice P1, D5.)
+ *
+ * ⛓ `check-procgen-demos.mjs` is the expensive gate: it LOADS every URL and
+ * asserts every claim off the live page. This file is the cheap one that runs
+ * in every unit sweep — the entry shape, the claim grammar, and the ONE
+ * spelling of the Pages mapping. A malformed entry should red here in a
+ * second rather than 4 minutes into a Playwright row.
+ *
+ * ⛔ The Pages rows below are LITERAL, not `pagesHref` applied twice: a test
+ * that computed its expectation with the function under test would pass with
+ * the `/frontend` strip deleted (trap 367 — a gate phrased against the
+ * constant it tests is an ECHO).
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import {
+    CLAIM_OPS, DEMOS, PAGES_BASE, READOUTS, REPO_URL, docHref, localHref, pagesHref, parseClaim,
+} from './demos.js';
+
+describe('the catalogue as data', () => {
+    it('is FROZEN, entries and all — a reader cannot edit the source of truth', () => {
+        expect(Object.isFrozen(DEMOS)).toBe(true);
+        for (const e of DEMOS) expect(Object.isFrozen(e)).toBe(true);
+    });
+
+    it('numbers its entries 1..N with no gaps, in order', () => {
+        expect(DEMOS.map((e) => e.n)).toEqual(DEMOS.map((_, i) => i + 1));
+    });
+
+    it('gives every entry a UNIQUE slug — it is the anchor AND the --only= key', () => {
+        const ids = DEMOS.map((e) => e.id);
+        expect(new Set(ids).size).toBe(ids.length);
+        for (const id of ids) expect(id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    });
+
+    it('leaves `terms` EMPTY on every entry — P2 (the glossary) fills it', () => {
+        for (const e of DEMOS) expect(e.terms).toEqual([]);
+    });
+
+    it('keeps the prose free of HTML — the renderer handles markdown, the data holds none', () => {
+        for (const e of DEMOS) {
+            for (const p of [e.demonstrates, e.howToRun, e.whatIsHappening, ...e.notes]) {
+                if (p) expect(p).not.toMatch(/<\/?[a-zA-Z][^>]*>/);
+            }
+        }
+    });
+});
+
+describe('every non-prose entry is loadable by the row', () => {
+    const real = DEMOS.filter((e) => !e.prose);
+
+    it('has 12 of them, and exactly one PROSE entry', () => {
+        expect(real).toHaveLength(12);
+        expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
+    });
+
+    it.each(real.map((e) => [e.n, e.id, e]))('%i %s — page, url and claim', (_n, _id, e) => {
+        expect(READOUTS.has(e.page)).toBe(true);
+        expect(e.url.length).toBeGreaterThan(0);
+        expect(e.url.startsWith('?')).toBe(false);
+        const claim = parseClaim(e.claim);
+        expect(CLAIM_OPS).toContain(claim.op);
+        expect(claim.path.length).toBeGreaterThan(0);
+        if (e.also) expect(e.also.startsWith('?')).toBe(false);
+        if (e.layer) expect(['off', 'sites', 'elements', 'areas', 'all']).toContain(e.layer);
+    });
+
+    it('⛔ the PROSE entry names no URL and points somewhere instead', () => {
+        const [p] = DEMOS.filter((e) => e.prose);
+        expect(p.page).toBeNull();
+        expect(p.url).toBeNull();
+        expect(p.claim).toBeNull();
+        expect(p.pointsAt.length).toBeGreaterThan(0);
+        for (const t of p.pointsAt) expect(t.doc).toMatch(/^docs\/.*\.md$/);
+    });
+});
+
+describe('the claim grammar', () => {
+    it('splits path / op / value and JSON-parses the value where it can', () => {
+        expect(parseClaim('overlays.counts.sites >= 10'))
+            .toEqual({ path: 'overlays.counts.sites', op: '>=', value: 10 });
+        expect(parseClaim('elements.certified == true'))
+            .toEqual({ path: 'elements.certified', op: '==', value: true });
+        expect(parseClaim('require.grade == "STRONG"'))
+            .toEqual({ path: 'require.grade', op: '==', value: 'STRONG' });
+    });
+
+    it('keeps a BARE word as a string — `matches the-biome` is a regex, not JSON', () => {
+        expect(parseClaim('require.refused.reason matches the-biome'))
+            .toEqual({ path: 'require.refused.reason', op: 'matches', value: 'the-biome' });
+    });
+
+    it('THROWS on a claim with no operator rather than passing it through', () => {
+        expect(() => parseClaim('elements.certified')).toThrow(/no operator/);
+    });
+});
+
+describe('the two hrefs — ONE spelling of the Pages mapping', () => {
+    const sites = DEMOS.find((e) => e.id === 'sites');
+    const maze = DEMOS.find((e) => e.id === 'maze-area-graph');
+
+    it('local = origin + the REPO path + ? + url', () => {
+        expect(localHref(sites, { origin: 'http://localhost:8000' })).toBe(
+            'http://localhost:8000/frontend/modules/seedlingDemo/watch.html'
+            + '?source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1');
+    });
+
+    it('⛓⛓ Pages STRIPS /frontend — the workflow publishes it AS the root', () => {
+        expect(pagesHref(sites)).toBe(
+            'https://peerinfinity.github.io/Archipelago-CC/modules/seedlingDemo/watch.html'
+            + '?source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1');
+        expect(pagesHref(maze)).toBe(
+            'https://peerinfinity.github.io/Archipelago-CC/modules/mazeRoom/lab.html'
+            + '?source=generate&seed=1&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3'
+            + '&anchortries=1&skeleton=rooms&areas=1&require=K0&expansions=20000&run=1');
+    });
+
+    it('⛔ strips ONE leading /frontend and never a nested one', () => {
+        expect(pagesHref({ page: '/frontend/modules/frontend/x.html', url: 'a=1' }))
+            .toBe(`${PAGES_BASE}/modules/frontend/x.html?a=1`);
+    });
+
+    it('takes an alternate base (the row\'s --pages=) and drops its trailing slash', () => {
+        expect(pagesHref(sites, { base: 'http://example.test/' }))
+            .toMatch(/^http:\/\/example\.test\/modules\/seedlingDemo\/watch\.html\?/);
+    });
+
+    it('spells the ALSO url through the same two functions', () => {
+        const carve = DEMOS.find((e) => e.id === 'the-carve');
+        expect(pagesHref(carve, { url: carve.also })).toContain('chambers%3D1');
+        expect(pagesHref(carve)).toContain('chambers%3D0');
+        expect(localHref(carve, { origin: '', url: carve.also }))
+            .toBe(`${carve.page}?${carve.also}`);
+    });
+
+    it('every entry\'s Pages href is under the deployed base and carries its url', () => {
+        for (const e of DEMOS) {
+            if (e.prose) continue;
+            const href = pagesHref(e);
+            expect(href.startsWith(`${PAGES_BASE}/modules/`)).toBe(true);
+            expect(href).not.toContain('/frontend/');
+            expect(href.endsWith(`?${e.url}`)).toBe(true);
+        }
+    });
+
+    it('docHref points a prose entry\'s target at the repo on GitHub', () => {
+        expect(docHref('docs/json/developer/procgen/seedling-bot.md'))
+            .toBe(`${REPO_URL}/docs/json/developer/procgen/seedling-bot.md`);
+    });
+});
