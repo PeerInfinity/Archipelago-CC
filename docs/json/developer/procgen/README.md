@@ -6,6 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 |----------|-------------|
 | [Architecture](./architecture.md) | Orientation: the pipeline, drivers, substrates, rules.json extensions, runtime, and Python round-trip. Read this first. |
 | [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the seven substrates and a checklist for adding one. |
+| [Demonstrations — a catalogue](./demos.md) | Every demonstrable feature of the two procgen lab pages, one entry each: the URL that shows it, the CLI command that reproduces it, which control to press and what you are looking at. Every URL is loaded by `scripts/procgen/check-procgen-demos.mjs`, which asserts each entry's own claim. |
 | [Gotchas and Disambiguations](./gotchas.md) | The things most likely to mislead someone orienting in the procgen code — naming overlaps, shared-code-vs-shared-identity, invariants. |
 | [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
 | [Runner Substrate](./runner.md) | The auto-runner platformer substrate: the GMTK toolkit physics port, the canRun solver and its doom/touch/launch model, strip generation and spec planning, and the greedy re-plan bot. |

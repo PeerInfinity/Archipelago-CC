@@ -8800,6 +8800,29 @@ a link would name a picture rather than a run, and a run is what a link is for.
 (`--anchor-tries=`, `--families=`, `--templates=`, `--directed=`), parsed by the
 SAME functions, so the two runtimes cannot disagree about what a construction is.
 
+### arc 3, slice 5b — the DEMO CATALOGUE, and the four intermediate results
+
+⚖ The user's requirement of 2026-08-17 (generation review §4 item 6):
+*"interactive DEMONSTRATIONS of every demonstrable feature — URL + how to run +
+what is happening"*. It is a TRACKED document —
+[**docs/json/developer/procgen/demos.md**](./demos.md) — with one entry per
+feature of BOTH lab pages, each carrying its page, the URL the page's own writer
+spells, the CLI command from a REPRODUCE block, which PHASE to step to, which
+FACT LINES to tick, which overlay layer, and the ONE claim it asserts. ⛔ Every
+URL in that file is LOADED by `scripts/procgen/check-procgen-demos.mjs` and
+every claim asserted off the page's readout, so a catalogue entry cannot rot
+quietly — and a URL in the file that no entry declares is a FAILURE, not a skip.
+
+⛓ The same slice made four of §16.5's five uncarried intermediate results
+PAINTABLE: the door law's two floods (the START side and the GOAL side with the
+door walled, on the `composite` row where the law is actually asked of the
+committed placement), the LEVEL-n floods and the goal's VESTIBULE on
+`realisation` — which now writes a row even when it REFUSES, because the flood
+that disagreed is exactly the picture the refusal is about — the ON-CONNECTOR
+candidate FUNNEL (offered ⊇ reached-the-law ⊇ passed-it, carried out of the
+construct's own calls and never re-derived), and the CERTIFICATION solve's
+ROUTE, whose gaps are counted and named rather than bridged.
+
 ### ⚖ What a URL is FOR (the URL diet — constructive-mode slice 12, 2026-08-15)
 
 ⚖ **RULED by the user**: a URL names **the launch parameters a person types**,
