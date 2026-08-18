@@ -43,6 +43,10 @@ import {
 } from '../seedlingDemo/procgenPalette.js';
 import { MAZE_PALETTE } from '../mazeRoom/procgenMaze.js';
 
+import {
+    findMarkdownRegion, markdownMarkers, spliceMarkdownRegion,
+} from '../../../scripts/procgen/reference/lib.mjs';
+
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
@@ -317,5 +321,86 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
         const incomplete = REFUSALS.findings.find((f) => f.severity === 'the list is INCOMPLETE');
         expect(incomplete.name).toBe('the-tunnel-shortens-the-way-to-the-goal');
         expect(SEEDLING_ELEMENT_REFUSALS).not.toContain(incomplete.name);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE MARKDOWN GENERATED REGION (P3b, D1) — ON A FIXTURE
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ ASKED OF A FIXTURE, NOT OF THE REAL DOCS. The real files are gated by
+ * `--check` (regenerate = no diff); what this block gates is the WRITER'S OWN
+ * CONTRACT — that prose outside the markers survives byte-for-byte, that
+ * writing twice is the same file, and that a malformed marker pair REFUSES BY
+ * NAME rather than being skipped or rewritten. A test that used the real
+ * README could not exhibit a missing marker without breaking the README.
+ */
+
+describe('the markdown GENERATED REGION writer', () => {
+    const TABLE = 'fixture-table';
+    const { begin, end } = markdownMarkers(TABLE);
+    const doc = [
+        '# A document somebody wrote',
+        '',
+        'A paragraph the generator must never touch.',
+        '',
+        begin,
+        '',
+        '| old | table |',
+        '|---|---|',
+        '| a | b |',
+        '',
+        end,
+        '',
+        'The prose AFTER the region, also untouched.',
+        '',
+    ].join('\n');
+
+    it('⛓⛓ replaces ONLY the text between the markers — the prose survives '
+        + 'byte-for-byte', () => {
+        const out = spliceMarkdownRegion(doc, TABLE, '| new |\n|---|\n| rows |');
+        expect(out.startsWith('# A document somebody wrote\n\n'
+            + 'A paragraph the generator must never touch.\n')).toBe(true);
+        expect(out).toContain('The prose AFTER the region, also untouched.');
+        expect(out).not.toContain('| old | table |');
+        expect(out).toContain('| new |');
+        expect(out.endsWith('\n')).toBe(true);
+    });
+
+    it('⛔ is IDEMPOTENT — writing the same body twice is the same file, which '
+        + 'is what makes `--check` = regenerate-no-diff meaningful', () => {
+        const once = spliceMarkdownRegion(doc, TABLE, 'BODY');
+        const twice = spliceMarkdownRegion(once, TABLE, 'BODY');
+        expect(twice).toBe(once);
+        expect(findMarkdownRegion(once, TABLE).body).toBe('BODY');
+    });
+
+    it('⛔ REFUSES BY NAME when the BEGIN marker is missing', () => {
+        expect(() => findMarkdownRegion('# nothing here\n', TABLE, { what: 'fixture.md' }))
+            .toThrow(/markdown region fixture\.md: the BEGIN marker is MISSING/);
+    });
+
+    it('⛔ REFUSES BY NAME when the END marker is missing', () => {
+        expect(() => findMarkdownRegion(`# x\n${begin}\nbody\n`, TABLE, { what: 'fixture.md' }))
+            .toThrow(/markdown region fixture\.md: the END marker is MISSING/);
+    });
+
+    it('⛔ REFUSES BY NAME when a marker is DUPLICATED — two regions for one '
+        + 'table is a file where half the table rots unwatched', () => {
+        expect(() => findMarkdownRegion(`${doc}\n${begin}\n${end}\n`, TABLE,
+            { what: 'fixture.md' })).toThrow(/the BEGIN marker appears 2 TIMES/);
+    });
+
+    it('⛔ REFUSES BY NAME when the markers are INVERTED', () => {
+        expect(() => findMarkdownRegion(`# x\n${end}\n${begin}\n`, TABLE,
+            { what: 'fixture.md' })).toThrow(/comes BEFORE the/);
+    });
+
+    it('⛔ the markers name the GENERATOR, so a reader who finds one knows what '
+        + 'rewrites it', () => {
+        expect(begin).toContain('scripts/procgen/generate-procgen-reference.mjs');
+        expect(begin).toContain('do not edit; regenerate');
+        expect(begin).toContain(`GENERATED:${TABLE} BEGIN`);
+        expect(end).toBe(`<!-- GENERATED:${TABLE} END -->`);
     });
 });

@@ -140,3 +140,80 @@ export function moduleText({ file, exportName, doc, value }) {
         + `export const ${exportName} = frz(${stableJson(value, 0)});\n\n`
         + `export default ${exportName};\n`;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE MARKDOWN GENERATED REGION (P3b, D1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Two of P3b's three tables belong in files people read ON GITHUB — the
+ * capability matrix inside `substrate-registry.md`, the index inside
+ * `README.md` — and only `frontend/` is published to Pages, so a page alone
+ * would not reach those readers. A `.md` therefore stays a `.md`: its prose is
+ * untouched and only the text BETWEEN TWO MARKERS is written.
+ *
+ * ⛔ THE MARKERS ARE THE CONTRACT, and a file that does not carry exactly one
+ * pair REFUSES BY NAME rather than being rewritten or skipped. Skipping would
+ * silently un-gate a table (the region would rot with nobody watching);
+ * rewriting would let the generator decide where a doc's own prose goes.
+ *
+ * ⛔ AND THE ANNOTATIONS STAY OUTSIDE. A matrix row the code does not carry —
+ * "host proxy → in-game bot driver", "arc D", "the recording is a plan" — is a
+ * human's reading of the code, not the code's answer, and it lives in a
+ * hand-kept paragraph BELOW the region where a regeneration cannot eat it.
+ */
+
+/** The exact marker pair for one table. ⛔ Spelled ONCE: a marker written by
+ *  the generator and matched by a different string is a region nothing gates. */
+export function markdownMarkers(table) {
+    return {
+        begin: `<!-- GENERATED:${table} BEGIN — by scripts/procgen/`
+            + 'generate-procgen-reference.mjs; do not edit; regenerate -->',
+        end: `<!-- GENERATED:${table} END -->`,
+    };
+}
+
+/**
+ * Find the ONE region a table owns. ⛔ Missing, duplicated or inverted markers
+ * are each a NAMED failure — the caller prints the name, and no file is
+ * written.
+ */
+export function findMarkdownRegion(source, table, { what = table } = {}) {
+    const { begin, end } = markdownMarkers(table);
+    const lines = source.split('\n');
+    const begins = [];
+    const ends = [];
+    lines.forEach((l, i) => {
+        if (l.trim() === begin) begins.push(i);
+        if (l.trim() === end) ends.push(i);
+    });
+    const fail = (why) => { throw new Error(`markdown region ${what}: ${why}`); };
+    if (begins.length === 0) fail(`the BEGIN marker is MISSING — the file must carry\n  ${begin}`);
+    if (ends.length === 0) fail(`the END marker is MISSING — the file must carry\n  ${end}`);
+    if (begins.length > 1) fail(`the BEGIN marker appears ${begins.length} TIMES `
+        + `(lines ${begins.map((i) => i + 1).join(', ')}) — exactly one region per table`);
+    if (ends.length > 1) fail(`the END marker appears ${ends.length} TIMES `
+        + `(lines ${ends.map((i) => i + 1).join(', ')}) — exactly one region per table`);
+    if (ends[0] < begins[0]) fail(`the END marker (line ${ends[0] + 1}) comes BEFORE the `
+        + `BEGIN marker (line ${begins[0] + 1})`);
+    return {
+        beginLine: begins[0] + 1,
+        endLine: ends[0] + 1,
+        /** The body BETWEEN the markers, with the blank lines the markers'
+         *  own formatting adds stripped from both ends. */
+        body: lines.slice(begins[0] + 1, ends[0]).join('\n').replace(/^\n+|\n+$/g, ''),
+    };
+}
+
+/** The whole file with `body` standing between the markers. Everything outside
+ *  them is returned byte-for-byte. */
+export function spliceMarkdownRegion(source, table, body, { what = table } = {}) {
+    const region = findMarkdownRegion(source, table, { what });
+    const lines = source.split('\n');
+    return [
+        ...lines.slice(0, region.beginLine),
+        '',
+        ...String(body).replace(/^\n+|\n+$/g, '').split('\n'),
+        '',
+        ...lines.slice(region.endLine - 1),
+    ].join('\n');
+}
