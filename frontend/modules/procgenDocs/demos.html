@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<!--
+  procgenDocs/demos.html — **THE PROCGEN DEMO CATALOGUE, RENDERED.** One entry
+  per demonstrable feature of the two procgen lab pages, each with the link
+  that shows it (here AND on the deployed site), the CLI command that
+  reproduces it in node, which control to press, and what you are looking at.
+
+  ⚖ The user, 2026-08-18: *"change demos.md to an html file, so that it can
+  interact with the scripts directly, rather than having to be manually
+  edited"*. Before that the catalogue was prose in
+  `docs/json/developer/procgen/demos.md` that a browser row PARSED, with a
+  hand-kept `Live:` link per entry.
+
+  ⛔⛔ THE DATA IS `./demos.js` AND THIS PAGE ONLY RENDERS IT. There is no
+  fetch, no build step and no second copy of a URL: the same module is
+  imported by `scripts/procgen/check-procgen-demos.mjs`, which loads every
+  link this page shows and asserts every claim it prints. A link that rots
+  here reds there, in the same commit.
+
+  Serve from the REPO ROOT, or read it on Pages:
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/procgenDocs/demos.html
+      https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html
+
+  ⛓ IT RESOLVES ITS OWN LOCATION, the way `watchViewer.js`'s `repoUrl` does:
+  the dev server serves the REPO root, GitHub Pages publishes `frontend/` AS
+  its root, so a root-absolute `/frontend/…` is a 404 there. `import.meta.url`
+  is right in both worlds.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Procgen demonstrations — a catalogue</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+  h1 span { color: #7fe0ff; font-weight: 400; }
+  #count { font-size: 11px; color: #8a8a98; }
+  #where { font-size: 11px; color: #6a6a78; margin-top: 2px; }
+  main { padding: 10px 14px 40px; max-width: 96ch; }
+  a { color: #7fe0ff; }
+  code { color: #ffd75f; }
+  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
+    overflow-x: auto; margin: 6px 0; }
+  pre code { color: #d8d8e0; }
+  p { margin: 6px 0; }
+  .note { color: #8a8a98; font-size: 11px; }
+  details.sec { margin: 8px 0; border-left: 2px solid #2a2a36; padding-left: 8px; }
+  details.sec > summary { font-weight: 600; color: #c8c8d4; cursor: pointer; }
+  details.entry { margin: 10px 0; border: 1px solid #1e1e26; background: #0e0e12;
+    padding: 6px 10px; }
+  details.entry > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
+  details.entry > summary b { color: #8a8a98; font-weight: 400; margin-right: 6px; }
+  details.entry.prose > summary { color: #8a8a98; }
+  .body { padding: 4px 0 6px 14px; }
+  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 10px; display: block; margin: 8px 0 1px; }
+  .open { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+  .open .k { color: #7fd88f; }
+  .open a { word-break: break-all; }
+  .drive { color: #d8d8e0; }
+  .drive b { color: #7fe0ff; font-weight: 600; }
+  .claim { color: #a8e6c4; }
+  .warn { border-left: 2px solid #6d5a2a; padding-left: 8px; color: #e6d7a8; }
+  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
+    font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Procgen demonstrations — <span>a catalogue</span></h1>
+  <div id="count" class="note"></div>
+  <div id="where" class="note"></div>
+</header>
+
+<main>
+  <details class="sec" open>
+    <summary>How to run any of these</summary>
+    <p>Every entry carries two links. <span class="k">HERE</span> is the entry
+      on the host this page is being served from — a dev server rooted at the
+      repo, or the deployed site. <span class="k">PAGES</span> is always the
+      same run on
+      <a href="https://peerinfinity.github.io/Archipelago-CC/">GitHub Pages</a>,
+      deployed from <code>main</code> by
+      <code>.github/workflows/deploy-gh-pages.yml</code>, which publishes the
+      <code>frontend/</code> directory as the site root — so
+      <code>/frontend/modules/…</code> in the repo is
+      <code>/Archipelago-CC/modules/…</code> there.</p>
+    <p>To serve it yourself:</p>
+    <pre><code>python -m http.server 8000          # only if one is not already up on :8000</code></pre>
+    <p>⚠ Pages serves the tree as of the last push to <code>main</code>, so a
+      demo that reads a claim off a page changed locally but not yet pushed
+      will show the older behaviour there.</p>
+    <p>Every URL below is the spelling the page's OWN writer produces
+      (<code>watchGenerate.writeGenerateParams</code> /
+      <code>mazeLab.writeLabParams</code>), so pasting one back into the bar is
+      a fixed point — the page reloads exactly the run the link names. ⛔ None
+      of them was typed by hand, and neither link is: both are computed from
+      the entry by the two helpers in <code>demos.js</code>.</p>
+    <p>Two controls appear in nearly every entry and are worth learning once:</p>
+    <p>— <b>the PHASE ladder</b> (<code>◀ PHASE</code> / the slider /
+      <code>PHASE ▶</code> / <code>the FINISHED level</code>) walks the
+      GENERATION, one phase at a time. Phase <em>k</em> is the room as of
+      ledger row <em>k</em>, rebuilt from the row deltas — ⛔ nothing is
+      re-run, and the readout under it carries that phase's own sentence, its
+      tile/entity delta and its refusal by name.</p>
+    <p>— <b>the FACT LINES</b> under the phase readout are the phase's
+      INTERMEDIATE RESULTS — every candidate set, flood, region and pick it
+      computed. ⚖ Ticking a line draws it (the user's ruling of 2026-08-18:
+      <em>"only display the visual representation when the corresponding text
+      description is selected"</em>). The <code>overlay</code> select beside
+      them is a separate, cumulative picture of the finished level
+      (<code>off → sites → elements → areas → all</code>).</p>
+    <p>⛔ Neither is a URL parameter. They are VIEW settings: they re-draw, they
+      never regenerate. A link names a RUN.</p>
+  </details>
+
+  <details class="sec" open>
+    <summary>How to read an entry</summary>
+    <p>⛓ <b>This page is a RENDERER, not the catalogue.</b> The catalogue is
+      <code>frontend/modules/procgenDocs/demos.js</code> — a frozen array of
+      entries — and this page and
+      <code>scripts/procgen/check-procgen-demos.mjs</code> are its two readers.
+      The row IMPORTS the same module, LOADS every link shown here and asserts
+      each entry's own <span class="claim">claim</span> off the page's readout,
+      so an entry whose seed stops behaving the way the prose says goes RED
+      rather than rotting quietly. <b>Phase</b>, <b>Facts</b> and <b>Layer</b>
+      are DRIVEN by that row when present — it presses the slider, ticks the
+      boxes and sets the select before it asserts. Everything else is for
+      you.</p>
+    <pre><code>node scripts/procgen/check-procgen-demos.mjs                 # the whole catalogue
+node scripts/procgen/check-procgen-demos.mjs --only=sword-gated
+node scripts/procgen/check-procgen-demos.mjs --pages=https://peerinfinity.github.io/Archipelago-CC</code></pre>
+    <p>⛔ <b>A catalogue entry without a claim is not an entry</b>, and the row
+      fails on one. Adding or regenerating an entry is documented in
+      <code>docs/json/developer/procgen/demos.md</code> — ⛔ never hand-spell a
+      URL.</p>
+  </details>
+
+  <div id="entries"></div>
+</main>
+
+<footer id="foot"></footer>
+
+<script type="module">
+import { DEMOS, PAGES_BASE, docHref, pagesHref } from './demos.js';
+
+/**
+ * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM THE
+ * ORIGIN'S ROOT — the same resolver `watchViewer.js` uses, for the same
+ * reason: the dev server serves the REPO root, Pages publishes `frontend/` AS
+ * its root, and a root-absolute `/frontend/…` is a 404 there.
+ */
+const FRONTEND_ROOT = new URL('../../', import.meta.url);
+const REPO_ROOT = new URL('../../../', import.meta.url);
+function repoUrl(path) {
+    const p = String(path).replace(/^\/+/, '');
+    return p.startsWith('frontend/')
+        ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
+        : new URL(p, REPO_ROOT).href;
+}
+/** The entry on THIS host — whichever of the two worlds we are in. */
+const hereHref = (entry, url = entry.url) => `${repoUrl(entry.page)}?${url}`;
+
+/* ══════════ THE MARKDOWN SUBSET ═════════════════════════════════════
+ * ⛔ The data holds STRINGS, never HTML. Everything is escaped first and only
+ * these five things are then un-escaped into markup: fenced code blocks,
+ * `code`, **bold**, *italic*, [text](url) and <url>. A doc cannot inject a
+ * tag. */
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+function inline(text) {
+    /* ⛓ Code spans come OUT first, so a `**` inside one is not bold. */
+    /* ⛔ The placeholder is NUL-delimited, not ` 3 `: the prose is full of
+       bare numbers between spaces ("arc 3, slice 1", "19 ground cells"), and a
+       digit-in-spaces placeholder would have eaten every one of them. */
+    const spans = [];
+    const held = String(text).replace(/`([^`]+)`/g, (_, c) => {
+        spans.push(c);
+        return `\u0000${spans.length - 1}\u0000`;
+    });
+    return esc(held)
+        .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>')
+        .replace(/&lt;(https?:\/\/[^\s&]+)&gt;/g, '<a href="$1">$1</a>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${esc(spans[Number(i)])}</code>`);
+}
+
+/** Blank-line paragraphs; a single newline inside one is a soft wrap. */
+function prose(text) {
+    if (!text) return '';
+    const out = [];
+    for (const chunk of String(text).split(/```/)) {
+        if (out.length % 2 === 1) {                     // inside a fence
+            out.push(`<pre><code>${esc(chunk.replace(/^\w*\n/, ''))}</code></pre>`);
+            continue;
+        }
+        out.push(chunk.split(/\n\s*\n/).filter((p) => p.trim())
+            .map((p) => `<p>${inline(p.replace(/\n/g, ' ').trim())}</p>`).join(''));
+    }
+    return out.join('');
+}
+
+/* ══════════ THE RENDER ══════════════════════════════════════════════ */
+
+const onPages = repoUrl(DEMOS.find((e) => !e.prose).page).startsWith(PAGES_BASE);
+const label = (h) => `<span class="lbl">${h}</span>`;
+
+function pairOfLinks(entry, url) {
+    const here = hereHref(entry, url);
+    const live = pagesHref(entry, { url });
+    const same = here === live
+        ? ' <span class="note">(this page IS on Pages — the two are one link)</span>'
+        : '';
+    return `<div class="open"><span class="k">HERE</span>`
+        + `<a href="${esc(here)}">${esc(here)}</a></div>`
+        + `<div class="open"><span class="k">PAGES</span>`
+        + `<a href="${esc(live)}">${esc(live)}</a>${same}</div>`;
+}
+
+function openLinks(entry) {
+    let out = pairOfLinks(entry, entry.url);
+    if (entry.also) {
+        out += label('ALSO — the contrast link this entry compares against')
+            + pairOfLinks(entry, entry.also);
+    }
+    return out;
+}
+
+function driveLine(entry) {
+    const bits = [];
+    if (entry.phase) bits.push(`step the PHASE ladder to <b>${esc(entry.phase)}</b>`);
+    if (entry.facts.length) {
+        bits.push(`tick the fact line(s) ${entry.facts.map((f) => `<b>${esc(f)}</b>`).join(', ')}`);
+    }
+    if (entry.layer) bits.push(`set the overlay select to <b>${esc(entry.layer)}</b>`);
+    return bits.length ? `${label('HOW TO DRIVE IT')}<div class="drive">${bits.join(' · ')}</div>` : '';
+}
+
+function renderEntry(entry) {
+    const d = document.createElement('details');
+    d.className = `entry${entry.prose ? ' prose' : ''}`;
+    d.id = entry.id;
+    d.dataset.demoId = entry.id;
+    d.open = true;
+    const parts = [`<summary><b>${entry.n}.</b>${inline(entry.title)}</summary>`,
+        '<div class="body">'];
+    parts.push(label('WHAT IT DEMONSTRATES'), prose(entry.demonstrates));
+    if (entry.prose) {
+        parts.push(label('WHERE IT IS DOCUMENTED'));
+        parts.push('<p>This one names no URL of its own — it points at the docs '
+            + 'where it already lives:</p><ul>');
+        for (const t of entry.pointsAt) {
+            parts.push(`<li><a href="${esc(docHref(t.doc))}">${esc(t.label)}</a> — ${inline(t.why)}</li>`);
+        }
+        parts.push('</ul>');
+    } else {
+        parts.push(label('OPEN IT'), openLinks(entry));
+        if (entry.cli) parts.push(label('CLI'), `<pre><code>${esc(entry.cli)}</code></pre>`);
+        parts.push(driveLine(entry));
+        parts.push(label('CLAIM — asserted off the page\'s readout by the row'));
+        parts.push(`<p class="claim"><code>${esc(entry.claim)}</code></p>`);
+        parts.push(label('HOW TO RUN IT'), prose(entry.howToRun));
+    }
+    parts.push(label('WHAT IS HAPPENING'), prose(entry.whatIsHappening));
+    for (const n of entry.notes) parts.push(`<div class="warn">${prose(n)}</div>`);
+    if (!entry.prose) {
+        parts.push(label('RUN THE ROW FOR THIS ENTRY'));
+        parts.push('<pre><code>node scripts/procgen/check-procgen-demos.mjs '
+            + `--only=${esc(entry.id)}</code></pre>`);
+    }
+    parts.push('</div>');
+    d.innerHTML = parts.join('');
+    return d;
+}
+
+const host = document.getElementById('entries');
+for (const entry of DEMOS) host.appendChild(renderEntry(entry));
+
+const real = DEMOS.filter((e) => !e.prose).length;
+document.getElementById('count').textContent =
+    `${DEMOS.length} entries — ${real} with a link and a claim, ${DEMOS.length - real} prose. `
+    + 'Every one of them is loaded and asserted by scripts/procgen/check-procgen-demos.mjs.';
+document.getElementById('where').innerHTML =
+    `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
+    + ` · the data is <a href="${esc(docHref('frontend/modules/procgenDocs/demos.js'))}">`
+    + 'frontend/modules/procgenDocs/demos.js</a>, and this page only renders it';
+document.getElementById('foot').innerHTML =
+    '⛔ Do not edit this page to change a demo — edit <code>demos.js</code>. '
+    + 'The catalogue is ONE module with two readers: this page and '
+    + `<a href="${esc(docHref('scripts/procgen/check-procgen-demos.mjs'))}">check-procgen-demos.mjs</a>, `
+    + 'which loads every link above.';
+
+/**
+ * ⛓⛓ THE READOUT IS MEASURED OFF THE DOM, NOT ECHOED FROM `DEMOS` (trap 269).
+ * The row asserts this page renders the same entries the module holds; a
+ * readout copied from the import would hold even with the render deleted.
+ */
+const rendered = [...document.querySelectorAll('details.entry')];
+window.__procgenDemosPage = Object.freeze({
+    ids: Object.freeze(rendered.map((el) => el.dataset.demoId)),
+    count: rendered.length,
+    links: Object.freeze(rendered.flatMap((el) => [...el.querySelectorAll('.open a')].map((a) => a.href))),
+    ready: true,
+});
+</script>
+</body>
+</html>
