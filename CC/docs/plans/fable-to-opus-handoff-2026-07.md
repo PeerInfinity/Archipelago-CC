@@ -3270,8 +3270,10 @@ recommendation 5 is what slice 5c executed). Memory: `project_procgen_elements`.
 Tracked summary: `docs/json/developer/procgen/seedling-bot.md` § *The procgen
 ELEMENTS design* (closed-state, with the corrected phase table);
 **orientation**: `docs/json/developer/procgen/architecture.md` § *Level
-generation: two passes over one loop core*; **demonstrations**:
-`docs/json/developer/procgen/demos.md`.
+generation: two passes over one loop core*; **demonstrations**: the catalogue
+page <https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html>,
+its data `frontend/modules/procgenDocs/demos.js` (⛓ PROCGEN DOCS P1,
+2026-08-18 — `docs/json/developer/procgen/demos.md` is now a pointer at it).
 
 ⚖ The user's rulings, in one breath: the maze algorithms are a ROUGH FIRST
 DRAFT of pass 1 (connectors, not the whole); block-push puzzles are

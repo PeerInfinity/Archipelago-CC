@@ -8830,14 +8830,18 @@ SAME functions, so the two runtimes cannot disagree about what a construction is
 
 ⚖ The user's requirement of 2026-08-17 (generation review §4 item 6):
 *"interactive DEMONSTRATIONS of every demonstrable feature — URL + how to run +
-what is happening"*. It is a TRACKED document —
-[**docs/json/developer/procgen/demos.md**](./demos.md) — with one entry per
-feature of BOTH lab pages, each carrying its page, the URL the page's own writer
-spells, the CLI command from a REPRODUCE block, which PHASE to step to, which
-FACT LINES to tick, which overlay layer, and the ONE claim it asserts. ⛔ Every
-URL in that file is LOADED by `scripts/procgen/check-procgen-demos.mjs` and
-every claim asserted off the page's readout, so a catalogue entry cannot rot
-quietly — and a URL in the file that no entry declares is a FAILURE, not a skip.
+what is happening"*. It is a TRACKED data module —
+`frontend/modules/procgenDocs/demos.js`, rendered at
+[**the catalogue page**](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html)
+and pointed at by [docs/json/developer/procgen/demos.md](./demos.md) — with one
+entry per feature of BOTH lab pages, each carrying its page, the URL the page's
+own writer spells, the CLI command from a REPRODUCE block, which PHASE to step
+to, which FACT LINES to tick, which overlay layer, and the ONE claim it asserts.
+⛔ Every link in it is LOADED by `scripts/procgen/check-procgen-demos.mjs`,
+which IMPORTS the same module, and every claim asserted off the page's readout,
+so a catalogue entry cannot rot quietly — and the row loads the catalogue PAGE
+too, so a rendering bug is a catalogue failure rather than something a reader
+discovers.
 
 ⛓ The same slice made four of §16.5's five uncarried intermediate results
 PAINTABLE: the door law's two floods (the START side and the GOAL side with the
@@ -9466,7 +9470,7 @@ is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; **ARCS 1, 2 AND 3 ARE CLOSED** — arcs 1–2 on the maze, see [`maze.md`](./maze.md); **arc 3 = Seedling, CLOSED 2026-08-18 over fourteen slices**, and *⛓⛓⛓ ARC 3 IS CLOSED* at the end of this § is its summary; arc 4 = THE CHAIN, ⛔ ask-first; arc 5 = shortcuts / density / arenas)
 
-⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [Demonstrations — a catalogue](./demos.md) has a URL for every piece of this that can be shown in a browser (13 entries, all loaded by `scripts/procgen/check-procgen-demos.mjs`); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
+⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (13 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -10139,14 +10143,16 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   solve's route — and `watchViewer.js`/`watchGenOverlay.js` were **not touched**:
   they reached the screen as selectable lines because the painter is generic.
   That is the measurable return on the ruling.
-- **THE DEMO CATALOGUE** (5b) — [`docs/json/developer/procgen/demos.md`](./demos.md),
-  TRACKED, **13 entries** over both lab pages, each with its page, the URL the
-  page's own writer spells, the CLI command, which phase to step to, which fact
-  lines to tick, which overlay layer, how to run it, what is happening, and the
-  ONE claim it asserts. `scripts/procgen/check-procgen-demos.mjs` PARSES the
-  document and loads every URL in it — **54 claims / 0 fail** — so an entry cannot
-  rot quietly, and a query string in the file that no entry declares is a FAILURE
-  rather than a skip.
+- **THE DEMO CATALOGUE** (5b) — TRACKED, **13 entries** over both lab pages,
+  each with its page, the URL the page's own writer spells, the CLI command,
+  which phase to step to, which fact lines to tick, which overlay layer, how to
+  run it, what is happening, and the ONE claim it asserts.
+  `scripts/procgen/check-procgen-demos.mjs` loads every URL in it — **54 claims
+  / 0 fail** at the arc's close — so an entry cannot rot quietly. ⛓ 2026-08-18
+  (PROCGEN DOCS P1) it became a DATA module —
+  `frontend/modules/procgenDocs/demos.js` — with two readers: [the catalogue page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html)
+  and the row, which IMPORTS it rather than parsing markdown — **94 claims / 0
+  fail**. [`demos.md`](./demos.md) is now the pointer at both.
 
 #### The ledger's phases and paintables, as of the arc's close
 
@@ -10205,7 +10211,7 @@ uncertified. Pass 2 is the same keep-or-revert loop it always was, now
 site-typed, with a door = CUT law and bounded carving, over a roster that is
 **23/23 instantiations across three DECORATION families**. The whole
 construction is recorded in a byte-inert LEDGER the lab page steps through, and
-every demonstrable piece of it has a URL in [`demos.md`](./demos.md).
+every demonstrable piece of it has an entry in [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) (its data in `frontend/modules/procgenDocs/demos.js`, pointed at by [`demos.md`](./demos.md)).
 
 **The numbers that define it** (each stated where it was measured, above):
 guard certified **32/34** · block pocket **36/36** · kill gate **6/28**
