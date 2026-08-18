@@ -326,6 +326,14 @@
   #solveGoals { color: #7fe0ff; }
   #solveTime { color: #7fd88f; }
   summary { color: #8a8a98; cursor: pointer; }
+  /* ⛓ THE GENERATE ARM'S SECTIONS ARE COLLAPSIBLE (user, 2026-08-18): every
+     section is a <details class="genSection">, open by default except the
+     CATALOGUE. A closed section keeps its DOM (the browser rows drive the
+     catalogue's rows by DOM click, never by visibility), it is a VIEW setting,
+     and it is not in the URL. */
+  details.genSection { margin: 0.4em 0; border-left: 2px solid #2a2a36; padding-left: 0.5em; }
+  details.genSection > summary { font-weight: bold; color: #c8c8d4; }
+  details.genSection > summary .note { font-weight: normal; }
   #genTrace { max-height: 34vh; overflow-y: auto; border: 1px solid #1a1a20;
     margin-bottom: 8px; }
   #genTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
@@ -524,6 +532,8 @@
        is echoed into the trace and the readout — a knob whose value nobody
        could reproduce would be a bound nobody named (⚖ kickoff §5). -->
   <div id="generatePanel" class="armPanel" hidden>
+    <details class="genSection" open>
+    <summary>run — seed, biome, skeleton, bounds, STEP / RUN-ALL / RESET</summary>
     <div class="line">
       <label>seed <input id="genSeed" type="number" step="1" style="width:6em"></label>
       <label for="genBiome">biome</label>
@@ -561,6 +571,7 @@
       <button id="genReset">RESET to the skeleton</button>
       <button id="genDownload">Download level JSON + trace</button>
     </div>
+    </details>
     <!--
       ⛓⛓⛓ THE PHASE LADDER + THE OVERLAYS (PROCGEN ELEMENTS arc 3, slice 5a,
       D4/D4'/D5) — ⚖ the user's own requirement on the 2026-08-17 generation
@@ -577,8 +588,9 @@
       per `OVERLAY_LAYERS` row and three acceptance rows ENUMERATE it (the
       group-B lesson); a phase control dropped in there would count as a layer.
     -->
+    <details class="genSection" open>
+    <summary>generation phases <span class="note">— the ledger's step-through; tick a fact line to draw it</span></summary>
     <div class="line">
-      <b>generation phases</b>
       <button id="genPhasePrev">◀ PHASE</button>
       <input id="genPhase" type="range" min="0" max="0" step="1" style="width:14em">
       <button id="genPhaseNext">PHASE ▶</button>
@@ -592,9 +604,12 @@
          selection-driven and one hue plus an outlined pick is enough. -->
     <div id="genPhaseNote" class="note"></div>
     <div id="genPhaseFacts"></div>
+    </details>
     <!-- ⛓⛓ THE THREE OVERLAYS, cumulative, as ONE stepper — the maze lab's own
          control (`labAreaLayer`), one substrate over. A VIEW setting: it
          re-draws, never resets, and is not in the URL. -->
+    <details class="genSection" open>
+    <summary>overlay <span class="note">— sites / elements / areas on the finished level, and its legend</span></summary>
     <div class="line">
       <label for="genLayer">overlay</label>
       <select id="genLayer">
@@ -610,16 +625,20 @@
     <!-- ⛔ NO TEXT ON THE CANVAS (arc-1's rule): the symbols are named ONCE
          each here and the picture carries only colour. -->
     <div id="genLegend"></div>
+    </details>
     <!-- ⛓⛓⛓ THE BRIDGE (switch slice 4): hand the level you are looking at
          to the arms that take one. In memory and in place — a generated room
          is not in the atlas and not on disk, so the alternative was a
          download and a re-import, or regenerating it from the seed in a
          second code path. -->
+    <details class="genSection" open>
+    <summary>hand this level to another arm</summary>
     <div class="line">
       <button id="genToSolve" disabled>SOLVE this level</button>
       <button id="genToManual" disabled>DRIVE it by hand</button>
       <span id="genBridgeNote" class="note"></span>
     </div>
+    </details>
     <!--
       ⛓⛓⛓ THE CATALOGUE + VERB 1 (slice 4, ⚖ ruling 1: *"a list of things
       that can be generated"* + *"choose the sub-roster a run may draw from"*).
@@ -632,13 +651,19 @@
       A catalogue checkbox is not a layer, not a boot flag, and not a trace
       row, so it is in none of their boxes.
     -->
+    <!-- ⛓ COLLAPSED BY DEFAULT (user, 2026-08-18): the roster is the longest
+         block on the panel and a reader stepping through a demo rarely needs
+         it open. ⛔ Its buttons live INSIDE the details, not in the summary —
+         a control inside a <summary> would toggle the section on every press. -->
+    <details class="genSection" id="genCatalogueSection">
+    <summary>catalogue <span class="note">— what this biome can generate, by family;
+        untick to RESTRICT the roster this run may draw from</span></summary>
     <div class="line">
-      <b>catalogue</b> <span class="note">— what this biome can generate, by family;
-        untick to RESTRICT the roster this run may draw from</span>
       <button id="genRosterAll">select ALL — the whole roster</button>
       <span id="genRosterNote" class="note"></span>
     </div>
     <div id="genRoster"></div>
+    </details>
     <!--
       ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPTS (slice 5, ⚖ ruling 1: *"a button to
       make the generator attempt to generate that specific thing"*).
@@ -653,9 +678,10 @@
       and `#bootForm` are ENUMERATED by acceptance rows, and a directive's
       controls are neither a layer nor a boot flag.
     -->
+    <details class="genSection" open>
+    <summary>directed attempts <span class="note">— press ATTEMPT on a catalogue row
+        to place THAT template on the level below, or AT… and then click a tile</span></summary>
     <div class="line">
-      <b>directed attempts</b> <span class="note">— press ATTEMPT on a catalogue row
-        to place THAT template on the level below, or AT… and then click a tile</span>
       <button id="genDirectivesClear">CLEAR the directives</button>
       <span id="genDirectivesNote" class="note"></span>
     </div>
@@ -674,6 +700,7 @@
       <span id="genArmNote" class="note"></span>
     </div>
     <div id="genDirectives"></div>
+    </details>
     <!--
       ⛓⛓⛓ FREE TILE / OBJECT EDITING (constructive-mode slice 11, ⚖ ruling 8
       + §3.8). The other side of ruling 6's tile boundary: click-to-anchor
@@ -694,8 +721,9 @@
       either disarms the other and Escape clears whichever is live. A tool
       STAYS armed across clicks (a brush); AT… does not (it spends a solve).
     -->
+    <details class="genSection" open>
+    <summary>free editing <span class="note">— paint a tile, place / edit / remove an entity; SOLVE re-certifies</span></summary>
     <div class="line">
-      <b>free editing</b>
       <label for="genEditTool">tool</label>
       <select id="genEditTool">
         <option value="off">off — clicks do nothing</option>
@@ -723,6 +751,7 @@
       <span id="genEditCert" class="note"></span>
     </div>
     <div id="genEdits"></div>
+    </details>
     <div id="genNote" class="note"></div>
   </div>
   <!--
@@ -803,11 +832,15 @@
          class, verbatim refusal — with no tick and nothing to seek to. See
          `mountGenerationPane`. -->
     <div id="genTraceSection" hidden>
-      <h2>generation trace</h2>
+      <details class="genSection" open>
+      <summary><h2 style="display:inline">generation trace</h2></summary>
       <div id="genTrace"></div>
+      </details>
     </div>
-    <h2>decision trace</h2>
+    <details class="genSection" open>
+    <summary><h2 style="display:inline">decision trace</h2></summary>
     <div id="trace"></div>
+    </details>
   </div>
 </main>
 <script type="module">

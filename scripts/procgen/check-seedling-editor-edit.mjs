@@ -575,6 +575,11 @@ try {
     await clickCell(PAINT_OK);
     await settledEdits(1);
     const beforeAttempt = await read();
+    /** ⛓ The CATALOGUE section is COLLAPSED by default (user, 2026-08-18) and
+     *  Playwright's click wants a VISIBLE target — so this row does what a
+     *  reader does first: it opens the section. (The generate row's catalogue
+     *  presses are DOM `.click()`s inside `evaluate` and need no such step.) */
+    await page.evaluate(() => { document.getElementById('genCatalogueSection').open = true; });
     await page.click('#genRoster button[data-attempt]');
     await page.waitForFunction(() => /REFUSED/.test(
         document.getElementById('status').textContent), null, { timeout: 300000 });
