@@ -55,6 +55,7 @@
  * ⛔ NO DOM AND NO NODE IMPORTS: both lab pages load this in a browser.
  */
 
+import { wideBlobs } from './areaPartition.js';
 import { reachableFrom, shortestPath } from './gridFlood.js';
 
 export class SitesError extends Error {
@@ -278,41 +279,41 @@ export function deriveSites(width, height, isGround, { from, to } = {}) {
     }
 
     // ── chambers (the WIDE rule) + corridor + tips ────────────────────
-    const wide = (x, y) => {
-        if (!ground(x, y)) return false;
-        for (const [ox, oy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]]) {
-            if (ground(x + ox, y + oy) && ground(x + ox + 1, y + oy)
-                && ground(x + ox, y + oy + 1) && ground(x + ox + 1, y + oy + 1)) return true;
-        }
-        return false;
-    };
-    const chambers = [];
-    const claimed = new Set();
+    /**
+     * ⛔⛔ **THE 2x2 RULE IS `procgenCore/areaPartition.wideBlobs`, NOT A COPY
+     * OF IT** — PROCGEN ELEMENTS arc 3, slice 4b (D1). Until that slice this
+     * loop held its own transcription of arc-1 §9.1's rule ("a cell is WIDE iff
+     * it belongs to at least one all-ground 2x2 square; a chamber is a maximal
+     * 4-connected blob of WIDE cells"), which is the SAME rule the maze's area
+     * partition runs. ⛓ Two copies agreed for as long as nobody edited either,
+     * and the day one of them grew a diagonal the partition and the site
+     * vocabulary would have disagreed while both claimed to be "the 2x2 rule".
+     *
+     * ⛓ THE TWO CALLERS STILL DIFFER, AND THE DIFFERENCES LIVE ABOVE THE
+     * PRIMITIVE — which is exactly why one primitive is enough:
+     *  · the partition EXCLUDES an element's DECLARED cells from the blob rule
+     *    (a 1-wide push lane is not a chamber, and a gadget cell left in the
+     *    set could complete a neighbouring chamber's square); a site derivation
+     *    has no declared areas and hands in the whole live ground;
+     *  · the partition GROWS synthetic 1-cell areas on the entrance and the
+     *    goal; a site does not — a 1-cell "chamber" nobody can decorate is not
+     *    a place.
+     *
+     * ⛔ The blob order and each blob's ROW-MAJOR cell order are the
+     * primitive's, unchanged — `anchorsFor` shuffles the list AS GIVEN, so a
+     * different order is a different level from the same seed.
+     */
+    const chambers = wideBlobs(width, height, ground)
+        .map((cells) => Object.freeze({ cells: Object.freeze(cells.map((c) => cell(c.x, c.y))) }));
+    const chamberKeys = new Set();
+    for (const c of chambers) for (const p of c.cells) chamberKeys.add(key(p.x, p.y));
     const tip = [];
     const corridor = [];
     for (let y = 0; y < height; y += 1) {
         for (let x = 0; x < width; x += 1) {
             if (!ground(x, y)) continue;
             if (degree(x, y) === 1) tip.push(cell(x, y));
-            if (!wide(x, y)) { corridor.push(cell(x, y)); continue; }
-            if (claimed.has(key(x, y))) continue;
-            /**
-             * ⛔ THE BLOB IS `gridFlood.reachableFrom` OVER THE WIDE CELLS —
-             * ⚖ the one-of-everything law: a private BFS here would be a
-             * second spelling of 4-connectivity, and the day one of them grew
-             * a diagonal the partition and the pre-check would disagree while
-             * both claimed to be "the flood".
-             */
-            const blob = reachableFrom(width, height, wide, { x, y });
-            for (const k of blob) claimed.add(k);
-            chambers.push(Object.freeze({
-                cells: Object.freeze([...blob]
-                    .map((k) => {
-                        const [bx, by] = k.split(',').map(Number);
-                        return cell(bx, by);
-                    })
-                    .sort(rowMajor)),
-            }));
+            if (!chamberKeys.has(key(x, y))) corridor.push(cell(x, y));
         }
     }
     const chamber = chambers.flatMap((c) => c.cells);

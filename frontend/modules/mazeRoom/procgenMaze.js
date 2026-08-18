@@ -57,6 +57,14 @@
  */
 
 import { buildAreaGraph } from '../procgenCore/areaGraph.js';
+/**
+ * ⛓ PROCGEN ELEMENTS arc 3, slice 4b — THE ONE PARTITION AND THE ONE
+ * LEVEL-n FLOOD, lifted out of this file into `procgenCore/` so the Seedling
+ * binding runs the same rule rather than a second copy of it. The two
+ * functions below (`partitionMazeAreas`, `verifyAreaLevels`) keep their names
+ * and are now adapters that supply the maze's terrain and obstacle readings.
+ */
+import { partitionAreas, verifyAreaLevels as verifyLevels } from '../procgenCore/areaPartition.js';
 import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec, parseAreaSpec,
     parseRequireList, resolveAreaSpec, symbolIndex, symbolsForKeys,
@@ -361,284 +369,47 @@ export function deserializeMazeLevel(payload) {
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE AREA PARTITION — PROCGEN ELEMENTS arc 1, slice 2 (§3.2)
+ *   ⛓ LIFTED WHOLE into `procgenCore/areaPartition.js` by arc 3, slice 4b.
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
- * ⛓⛓⛓ **WHAT AN AREA IS, DEFINED RATHER THAN GESTURED AT** — ⚖ arc-1 kickoff
- * §3.2 / design ⚖ open question 2, whose default ("chambers") this function
- * spells out and whose census (§9.1 of the arc kickoff) measured.
+ * ⛓⛓⛓ **THE MAZE'S ADAPTER ONTO THE ONE PARTITION.** The RULE — *a cell is
+ * WIDE iff it belongs to at least one all-floor 2x2 square; an AREA is a
+ * maximal 4-connected blob of WIDE cells; every other floor cell is a CORRIDOR
+ * cell* — and every measurement that forced it now live in
+ * `procgenCore/areaPartition.partitionAreas`, together with the synthetic
+ * entrance/goal areas, the declared-area rule, the adjacency and the boundary.
  *
- *   **A cell is WIDE iff it belongs to at least one all-floor 2x2 square.**
- *   **An AREA is a maximal 4-connected blob of WIDE cells.**
- *   **Every other floor cell is a CORRIDOR cell — it is an EDGE, never an area.**
+ * ⛔ THIS FUNCTION IS WHAT IS LEFT WHEN THE RULE MOVES: the maze's terrain
+ * predicate (`getTile === TILE_FLOOR`) and the entrance default. Arc 1's own
+ * docblock said this would happen — *"⚠ ARC 3 WILL WANT THIS FOR SEEDLING and
+ * will have to LIFT it into `procgenCore/`… the rule is stated in grid
+ * vocabulary precisely so the lift is a move rather than a rewrite"* — and the
+ * PROOF that it was a move is that `dump-maze-byteidentity`, the nine per-kind
+ * CLI md5s, `procgenMazeAreas.test.js`'s 35 rows and `check-maze-lab`'s 122 are
+ * byte-identical across it.
  *
- * ⛔ THE BRIEF'S FIRST WORDING WAS TRIED AND REJECTED BY ARITHMETIC. "a floor
- * cell with >= 2 floor neighbours in BOTH axes" keeps only the CENTRE of a 3x3
- * chamber (its top-middle cell has two floor neighbours in x and one in y), so
- * `chambers`' own 3x3 stamp would have reduced to a ONE-cell area and its other
- * eight cells to corridor. The 2x2 rule keeps the whole stamp, keeps every
- * `recursive_division` room (they are at least `minRoom` on a side), and refuses
- * every 1-wide corridor cell, every corner and every T-junction — which is
- * exactly the "prefer the definition under which `rooms`' division rooms and
- * `chambers`' stamps are areas and 1-wide corridors are edges" the brief asked
- * for. ⛓ `minArea` is therefore not a separate bound: the smallest possible
- * blob IS a 2x2, so `minArea = 4` is implied by the rule rather than chosen
- * beside it.
- *
- * ── ⛓ THE ENTRANCE AND THE GOAL GET A 1-CELL AREA WHEN THEY NEED ONE ──
- *
- * §3.2: *"the entrance's cell and the goal's cell must each lie IN an area (else
- * the model grows a 1-cell area around them — stated)."* On the maze they
- * usually do NOT: the entrance is the corner (0,0), the goal is drawn from the
- * whole grid, and both are attached to a carved skeleton by
- * `connectFixedTiles`' L-carve — a 1-wide stub. So a SYNTHETIC one-cell area is
- * grown on each, and it is marked `synthetic: true` in the output so no reader
- * mistakes it for a chamber. ⛔ It is grown BEFORE the corridor components are
- * found, because it removes its cell from the corridor set and would otherwise
- * split one component into two.
- *
- * ── ADJACENCY ─────────────────────────────────────────────────────────
- *
- * Two areas are adjacent iff some CORRIDOR COMPONENT touches both (⇒ a walk
- * from one to the other crosses no third area), or iff two of their cells are
- * 4-adjacent (a zero-corridor edge, reachable only through a synthetic area,
- * since two touching WIDE cells are by construction one blob). A corridor
- * component touching three areas makes all three pairs adjacent: it is a
- * junction, and from any of them the other two are reachable without entering
- * the third.
- *
- * ⛔ ONE FLOOD (⚖ arc ruling 5): every blob and every component here is
- * `procgenCore/gridFlood.reachableFrom`, the same function the level-n
- * verification runs.
- *
- * ⚠ ARC 3 WILL WANT THIS FOR SEEDLING and will have to LIFT it into
- * `procgenCore/`. It is written here because slice 2 binds ONE substrate and a
- * module in `procgenCore/` with a single maze caller would be a shared home
- * nobody shares; the rule above is stated in grid vocabulary (`isFloor` + a
- * width and a height) precisely so the lift is a move rather than a rewrite.
+ * ⛔ IT KEEPS ITS NAME AND ITS SIGNATURE so the 35 rows drive the LIFTED body
+ * rather than a second copy of it.
  *
  * @param {object} world a maze world (only `width`, `height` and its tiles are
  *   read — obstacles and items are the ORACLE's, exactly as in `gridFlood`).
- * @param {{x,y}} entrance
- * @param {{x,y}} goal
- * @returns {{areas, adjacency, labelAt, corridorComponents, cellCount}}
+ * @param {{x,y}} [entrance] defaults to the world's own.
+ * @param {{x,y}} goal ⛔ REQUIRED.
+ * @param {Array<{id, cells}>} [declared]
  */
 export function partitionMazeAreas(world, { entrance, goal, declared = [] } = {}) {
-    const { width, height } = world;
     const start = entrance ?? { x: world.entrance.x, y: world.entrance.y };
-    const end = goal ?? null;
-    if (!end) fail('procgenMaze: partitionMazeAreas needs the GOAL cell — it is what decides '
+    if (!goal) fail('procgenMaze: partitionMazeAreas needs the GOAL cell — it is what decides '
         + 'whether a synthetic area has to be grown, and guessing it from the exits map would '
         + 'be a second reading of a fact the model already owns.');
-    const key = (x, y) => `${x},${y}`;
-    const onGrid = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
-    /**
-     * ⛓⛓⛓ **ONLY THE FLOOR THE ENTRANCE CAN REACH IS PARTITIONED — AND A
-     * MEASUREMENT IS WHAT PUT THIS LINE HERE.**
-     *
-     * ⛔ A carved room can hold floor cells NOTHING CAN WALK TO.
-     * `recursive_division` calls `repairConnectivity`, whose own comment says it
-     * repairs *"the rare disconnect after the fact"* — and what it repairs is
-     * `allTargetsReachable`, i.e. the EXITS and the ITEMS, not every floor cell.
-     * Measured on `rooms` seed 6 at 11x11: rows 7-10 are an eight-cell-wide
-     * pocket behind a solid wall row, four floor blobs' worth, and the level is
-     * perfectly solvable because the goal is not in them.
-     *
-     * ⛓ The first draft of this function partitioned them anyway, and
-     * `buildAreaGraph` THREW: *"2 area(s) are not reachable from the entrance"*
-     * — its `assertSpace` refuses a stranded area by name, because a tree grown
-     * outward from the entrance would drop it silently. That throw is the
-     * module doing its job; the DEFECT was here, and it is the kind that a
-     * binding which only ever ran `rooms` seeds 1-5 would have shipped.
-     *
-     * ⇒ dead floor is not wall and it is not an area: it is NOT PART OF THE
-     * LEVEL, and `deadFloorCells` says how much of it there was.
-     */
-    const live = reachableFrom(width, height,
-        (x, y) => getTile(world, x, y) === TILE_FLOOR, start);
-    const floor = (x, y) => onGrid(x, y) && live.has(key(x, y));
-    /**
-     * ⛓⛓⛓ **arc 2 slice 3 — A DECLARED AREA IS NOT DISCOVERED, IT IS TOLD**
-     * (§9.9.5). An element's push lane is 1 wide, so it contains no all-floor
-     * 2x2 square and the blob rule below would never find it — it would be
-     * shredded into corridor cells and the graph would have nothing to lock.
-     *
-     * ⛔ ITS CELLS BELONG TO IT AND TO NOTHING ELSE, so they are excluded from
-     * the blob rule ENTIRELY — not merely skipped when the loop reaches them.
-     * A gadget cell left inside `blobFloor` could complete some neighbouring
-     * chamber's 2x2 square and pull a corridor cell into an area for a reason
-     * that is about the gadget's geometry rather than about the room's.
-     */
-    const declaredKeys = new Set();
-    for (const dArea of declared) for (const c of dArea.cells) declaredKeys.add(key(c.x, c.y));
-    const blobFloor = (x, y) => floor(x, y) && !declaredKeys.has(key(x, y));
-    /** ⛓ THE WIDE RULE, in one line: some all-floor 2x2 square contains (x,y). */
-    const wide = (x, y) => {
-        if (!blobFloor(x, y)) return false;
-        for (const [ox, oy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]]) {
-            if (blobFloor(x + ox, y + oy) && blobFloor(x + ox + 1, y + oy)
-                && blobFloor(x + ox, y + oy + 1) && blobFloor(x + ox + 1, y + oy + 1)) return true;
-        }
-        return false;
-    };
-
-    const label = new Map();          // "x,y" -> area id
-    const areas = [];
-    /**
-     * ⛔ CELLS ARE SORTED **ROW-MAJOR**, not left in the flood's BFS order. The
-     * flood's order is deterministic but it is an artefact of where the blob
-     * was entered; row-major is the order a reader checking a fixture by eye
-     * expects, and it is the order the payload and every drift fixture then
-     * carry. (The test that asserted the literal cell list is what asked.)
-     */
-    const claim = (id, cells, synthetic, kind = 'chamber') => {
-        for (const k of cells) label.set(k, id);
-        areas.push({
-            id,
-            cells: [...cells]
-                .map((k) => {
-                    const [x, y] = k.split(',').map(Number);
-                    return Object.freeze({ x, y });
-                })
-                .sort((a, bb) => (a.y - bb.y) || (a.x - bb.x)),
-            synthetic,
-            kind,
-        });
-    };
-    /**
-     * ⛓ THE DECLARED AREAS FIRST — they exist before the partition runs, which
-     * is the whole point of an element. ⛔ Only their LIVE cells are claimed: a
-     * declared cell the entrance cannot reach is dead floor by the same rule
-     * every other cell obeys, and `buildAreaGraph` refuses a stranded area.
-     *
-     * ⛓ THE `A` COUNTER IS ITS OWN, NOT `areas.length`. Claiming a declared area
-     * first would otherwise renumber every chamber on the level, and the ids are
-     * what the payload, the census and the drift fixtures carry.
-     */
-    let nextA = 0;
-    for (const dArea of declared) {
-        const cells = new Set(dArea.cells.map((c) => key(c.x, c.y)).filter((k) => live.has(k)));
-        if (cells.size === 0) continue;
-        claim(dArea.id, cells, false, 'element');
-    }
-    for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
-            if (!wide(x, y) || label.has(key(x, y))) continue;
-            nextA += 1;
-            claim(`A${nextA - 1}`, reachableFrom(width, height, wide, { x, y }), false);
-        }
-    }
-    /** ⛓ The synthetic ones, in a FIXED order (entrance then goal) so two runs agree. */
-    for (const p of [start, end]) {
-        if (!floor(p.x, p.y) || label.has(key(p.x, p.y))) continue;
-        nextA += 1;
-        claim(`A${nextA - 1}`, new Set([key(p.x, p.y)]), true);
-    }
-
-    const corridor = (x, y) => floor(x, y) && !label.has(key(x, y));
-    const corridorComponents = [];
-    const seenCorridor = new Set();
-    const NEIGHBOURS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
-    for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
-            if (!corridor(x, y) || seenCorridor.has(key(x, y))) continue;
-            const cells = reachableFrom(width, height, corridor, { x, y });
-            for (const k of cells) seenCorridor.add(k);
-            const touches = new Set();
-            for (const k of cells) {
-                const [cx, cy] = k.split(',').map(Number);
-                for (const [dx, dy] of NEIGHBOURS) {
-                    const id = label.get(key(cx + dx, cy + dy));
-                    if (id !== undefined) touches.add(id);
-                }
-            }
-            corridorComponents.push(Object.freeze({
-                cells: Object.freeze([...cells]),
-                size: cells.size,
-                touches: Object.freeze([...touches].sort()),
-            }));
-        }
-    }
-
-    const pairs = new Map();
-    const addPair = (a, b, via) => {
-        if (a === b) return;
-        const k = a < b ? `${a}|${b}` : `${b}|${a}`;
-        const prev = pairs.get(k);
-        if (prev) { prev.via.push(via); return; }
-        pairs.set(k, { a: a < b ? a : b, b: a < b ? b : a, via: [via] });
-    };
-    for (const [i, comp] of corridorComponents.entries()) {
-        for (let a = 0; a < comp.touches.length; a += 1) {
-            for (let b = a + 1; b < comp.touches.length; b += 1) {
-                addPair(comp.touches[a], comp.touches[b], { kind: 'corridor', component: i,
-                    corridorCells: comp.size });
-            }
-        }
-    }
-    /** ⛓ ZERO-CORRIDOR adjacency — only a synthetic area can produce one. */
-    for (const area of areas) {
-        for (const c of area.cells) {
-            for (const [dx, dy] of NEIGHBOURS) {
-                const other = label.get(key(c.x + dx, c.y + dy));
-                if (other !== undefined && other !== area.id) {
-                    addPair(area.id, other, { kind: 'touch', corridorCells: 0 });
-                }
-            }
-        }
-    }
-
-    /**
-     * ⛓⛓⛓ EVERY AREA'S **BOUNDARY** CELLS — its own cells that touch a floor
-     * cell NOT its own. ⛔ NOT "cells that touch a CORRIDOR cell", and the
-     * difference is load-bearing: a SYNTHETIC area can sit directly against a
-     * chamber (a zero-corridor adjacency), and a boundary defined by corridors
-     * alone would miss that side and leave the realisation's door with an
-     * unguarded way in. Measured in the census as the `0` bucket of the
-     * corridor-cell histogram.
-     *
-     * ⛓ THE BOUNDARY IS WHERE THE DOOR GOES, and it is an AREA-side cell rather
-     * than a corridor-side one, which is what makes the door cell UNAMBIGUOUS: a
-     * corridor mouth cell can be adjacent to TWO areas at once (a
-     * `recursive_division` gap cell is exactly that — it touches both rooms),
-     * and one cell can hold one obstacle. An area cell belongs to exactly one
-     * area by construction.
-     */
-    for (const area of areas) {
-        const boundary = [];
-        for (const c of area.cells) {
-            for (const [dx, dy] of NEIGHBOURS) {
-                const other = label.get(key(c.x + dx, c.y + dy));
-                if (floor(c.x + dx, c.y + dy) && other !== area.id) { boundary.push(c); break; }
-            }
-        }
-        area.boundary = Object.freeze(boundary);
-        area.size = area.cells.length;
-        Object.freeze(area.cells);
-        Object.freeze(area);
-    }
-
-    return Object.freeze({
-        areas: Object.freeze(areas),
-        adjacency: Object.freeze([...pairs.values()].map((p) => Object.freeze({
-            a: p.a, b: p.b, via: Object.freeze(p.via),
-        }))),
-        corridorComponents: Object.freeze(corridorComponents),
-        labelAt: (x, y) => label.get(key(x, y)) ?? null,
-        entranceArea: label.get(key(start.x, start.y)) ?? null,
-        goalArea: label.get(key(end.x, end.y)) ?? null,
-        cellCount: label.size,
-        liveFloorCells: live.size,
-        /** ⛓ Floor the entrance cannot reach — see `live` above. */
-        deadFloorCells: (() => {
-            let n = 0;
-            for (let y = 0; y < height; y += 1) {
-                for (let x = 0; x < width; x += 1) {
-                    if (getTile(world, x, y) === TILE_FLOOR && !live.has(key(x, y))) n += 1;
-                }
-            }
-            return n;
-        })(),
+    return partitionAreas({
+        width: world.width,
+        height: world.height,
+        isFloor: (x, y) => getTile(world, x, y) === TILE_FLOOR,
+        entrance: start,
+        goal,
+        declared,
     });
 }
 
@@ -756,98 +527,47 @@ export function areaLibraries(symbols, {
 
 /**
  * ⛓⛓⛓ **THE VERIFICATION, ONCE, BY THE ONE FLOOD** — ⚖ arc-1 kickoff §3.2,
- * trap 272's shape: *the partition claim is CHECKED, not believed.*
- *
- * For each key level `n`, with every door of level > `n` treated as WALL, the
- * set of floor cells the entrance reaches must be EXACTLY
- *
- *   { every cell of every area whose keyLevel <= n }
- *   ∪ { every cell of every corridor component that touches such an area }
- *
- * ⛓ §3.2 said *"the union of areas of level <= n plus their internal
- * corridors"*; this is that sentence made checkable. A corridor component is
- * freely walkable (no door ever sits on one — the doors are on AREA-side
- * boundary cells), so the ones the player reaches are exactly the ones adjacent
- * to an area they can enter, and a component touching only high-level areas is
- * unreachable until those open. ⚠ It is a claim about TERRAIN AND DOORS with an
- * assumed inventory, NOT about whether the keys can actually be collected in
- * order — that is the ORACLE's question and the skeleton solve is what asks it.
+ * trap 272's shape: *the partition claim is CHECKED, not believed.* ⛓ THE
+ * FLOOD ITSELF WAS LIFTED into `procgenCore/areaPartition.verifyAreaLevels`
+ * (arc 3, slice 4b), where both bindings run it; this is the maze's adapter
+ * and the one thing it adds is the OBSTACLE-ID-to-LEVEL map below.
  *
  * @returns {null | {level, missing, extra, detail}} a REFUSAL naming the first
  *   offending cell, or `null`. ⛔ Never a throw: a mismatch is something the
  *   CLI and the lab page must be able to PRINT.
  */
 export function verifyAreaLevels(world, { partition, graph, doorLevels = null }) {
-    const { width, height } = world;
     /**
-     * ⛓⛓⛓ **arc 2 slice 3 — THE GUARD'S DOOR IS NOT A KEY DOOR, AND IT NEEDS
-     * ITS OWN LEVEL.** `doorLevelOf` reads the level out of the id `door_K{n}`,
-     * which is the whole arithmetic for a key door. A gadget's `door_A0` has no
-     * `n` in its name: it is HELD by a block, and the block lives inside the
-     * area, so a player who can stand in that area can always open it.
-     *
-     * ⇒ its level is **the level of the symbol it guards** (⚖ §3.3), passed in
-     * by the binding. For the guarded symbol `K{n}` that is `n` — the level the
-     * flag itself sits at — so at every level `>= n` the terrain flood walks
+     * ⛓⛓⛓ **THE GUARD'S DOOR IS NOT A KEY DOOR, AND IT NEEDS ITS OWN LEVEL**
+     * (arc 2, slice 3). `doorLevelOf` reads the level out of the id
+     * `door_K{n}`, which is the whole arithmetic for a key door. A gadget's
+     * `door_A0` has no `n` in its name: it is HELD by a block, and the block
+     * lives inside the area, so a player who can stand in that area can always
+     * open it. ⇒ its level is **the level of the symbol it guards**, passed in
+     * by the binding — so at every level `>= n` the terrain flood walks
      * straight through it and at every level below, the whole area is out of
-     * reach anyway. ⛔ THE GUARD'S CUT IS THEREFORE **NOT** THIS FLOOD'S CLAIM:
-     * this one is about terrain and KEYS. The cut is proved separately, with the
-     * door treated as wall, and finally by the skeleton solve over block state.
+     * reach anyway. ⛔ THE GUARD'S CUT IS THEREFORE NOT THIS FLOOD'S CLAIM:
+     * this one is about terrain and KEYS. The cut is proved separately, with
+     * the door treated as wall, and finally by the skeleton solve.
+     *
+     * ⛔ THE MAP FROM AN OBSTACLE ID TO A LEVEL IS THE ONLY MAZE-SHAPED PART
+     * OF THE CHECK, which is why it is what stayed here when the flood itself
+     * was lifted into `procgenCore/areaPartition.verifyAreaLevels` (arc 3,
+     * slice 4b): the Seedling binding has no obstacle layer at all — its locks
+     * are entities keyed by group — and it hands the same flood its own
+     * `doorLevelAt`.
      */
     const levelOfDoor = (id) => (doorLevels?.has(id) === true
         ? doorLevels.get(id) : doorLevelOf(id));
-    const levelOf = new Map();
-    let maxLevel = 0;
-    for (const area of partition.areas) {
-        const l = graph.areas[area.id]?.keyLevel ?? 0;
-        levelOf.set(area.id, l);
-        if (l > maxLevel) maxLevel = l;
-    }
-    const from = { x: world.entrance.x, y: world.entrance.y };
-    for (let n = 0; n <= maxLevel; n += 1) {
-        const expected = new Set();
-        for (const area of partition.areas) {
-            if (levelOf.get(area.id) > n) continue;
-            for (const c of area.cells) expected.add(`${c.x},${c.y}`);
-        }
-        for (const comp of partition.corridorComponents) {
-            if (!comp.touches.some((id) => levelOf.get(id) <= n)) continue;
-            for (const k of comp.cells) expected.add(k);
-        }
-        const walkable = (x, y) => {
-            if (getTile(world, x, y) !== TILE_FLOOR) return false;
-            const level = levelOfDoor(getObstacle(world, x, y));
-            /**
-             * ⛔ `> n`, AND THE COMPARISON IS THE WHOLE CLAIM. A door of level
-             * exactly `n` is one the player at level `n` has the key for
-             * (`door_K{n-1}`); walling it too would be an off-by-one that reads
-             * as "the lock is one level too strong" — the mutant the slice ran.
-             */
-            return level === null || level <= n;
-        };
-        const actual = reachableFrom(width, height, walkable, from);
-        const missing = [...expected].filter((k) => !actual.has(k)).sort();
-        const extra = [...actual].filter((k) => !expected.has(k)).sort();
-        if (missing.length || extra.length) {
-            return {
-                level: n,
-                missing: Object.freeze(missing),
-                extra: Object.freeze(extra),
-                detail: `at key level ${n} the entrance reaches ${actual.size} floor cell(s) `
-                    + `and the partition says it should reach ${expected.size}. `
-                    + (missing.length
-                        ? `UNREACHABLE but claimed: (${missing[0]})${missing.length > 1
-                            ? ` and ${missing.length - 1} more` : ''}. ` : '')
-                    + (extra.length
-                        ? `REACHED but not claimed: (${extra[0]})${extra.length > 1
-                            ? ` and ${extra.length - 1} more` : ''}. ` : '')
-                    + '⛓ A locked edge is a CUT by construction of the tree; this is the check '
-                    + 'that the GRID agrees, which is the one thing construction cannot '
-                    + 'promise (trap 272).',
-            };
-        }
-    }
-    return null;
+    return verifyLevels({
+        width: world.width,
+        height: world.height,
+        isFloor: (x, y) => getTile(world, x, y) === TILE_FLOOR,
+        entrance: { x: world.entrance.x, y: world.entrance.y },
+        partition,
+        levelOfArea: (id) => graph.areas[id]?.keyLevel ?? 0,
+        doorLevelAt: (x, y) => levelOfDoor(getObstacle(world, x, y)),
+    });
 }
 
 /**
