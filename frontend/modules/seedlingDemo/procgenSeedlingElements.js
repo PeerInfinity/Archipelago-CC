@@ -225,6 +225,62 @@ export function flagLockCellFor({ width, height, walkable, start, goal, reserved
 }
 
 /**
+ * ⛓⛓⛓ **THE CELLS WITHIN `radius` STEPS OF A CELL** — PROCGEN ELEMENTS arc 3,
+ * slice 4b, and it lives here because it is what SUPERSEDES `flagLockCellFor`
+ * above: where that rule picked ONE main-path cut cell, this one describes the
+ * neighbourhood the area graph's locks must stay OUT of, and the VESTIBULE the
+ * goal's own synthetic area is grown into so that they can.
+ *
+ * ⛔ **IT IS A BOUNDED NEIGHBOURHOOD, NOT A SECOND FLOOD.** `gridFlood` is the
+ * ONE flood family and it has no distance member — `reachableFrom` answers
+ * *which cells*, never *how far*. This asks a different question: the cells at
+ * graph distance <= a CONSTANT, expanded `radius` times over the 4-neighbours
+ * and never asking reachability at all. Adding a distance map to `gridFlood`
+ * for one caller would put a member on the shared surface that only this rule
+ * reads; stating the expansion here, bounded by a constant the caller names,
+ * keeps the flood family at one.
+ *
+ * @param {object} o
+ * @param {number} o.width
+ * @param {number} o.height
+ * @param {(x,y)=>boolean} o.walkable the room's ground predicate.
+ * @param {{x,y}} o.goal the centre — always included, walkable or not (a goal
+ *   cell is ground by construction, and asking would make the rule depend on a
+ *   fact the caller already guarantees).
+ * @param {number} o.radius how many steps out. `0` is the goal alone.
+ * @param {Array<{x,y}>} [o.exclude] cells that belong to somebody else (the
+ *   element's declared area) and may not be taken.
+ * @returns {Array<{x,y}>} row-major, frozen.
+ */
+export function vestibuleCellsAround({ width, height, walkable, goal, radius, exclude = [] }) {
+    const key = (x, y) => `${x},${y}`;
+    const blocked = new Set(exclude.map((c) => key(c.x, c.y)));
+    const seen = new Set([key(goal.x, goal.y)]);
+    let frontier = [{ x: goal.x, y: goal.y }];
+    for (let step = 0; step < radius; step += 1) {
+        const next = [];
+        for (const c of frontier) {
+            for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+                const nx = c.x + dx;
+                const ny = c.y + dy;
+                const k = key(nx, ny);
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                if (seen.has(k) || blocked.has(k) || !walkable(nx, ny)) continue;
+                seen.add(k);
+                next.push({ x: nx, y: ny });
+            }
+        }
+        frontier = next;
+    }
+    return Object.freeze([...seen]
+        .map((k) => {
+            const [x, y] = k.split(',').map(Number);
+            return Object.freeze({ x, y });
+        })
+        .sort((a, b) => (a.y - b.y) || (a.x - b.x)));
+}
+
+/**
  * ⛓⛓⛓ **THE COMPOSITE + EVERY CHECK ON THE WAY OUT** (trap 272's shape), in
  * the maze's order and with the maze's reasons — see `procgenMaze.js`'s section
  * docblock for the four decisions the ELEMENTS CENSUS took (the ring is the

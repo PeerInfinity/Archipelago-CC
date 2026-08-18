@@ -159,7 +159,7 @@ export function wideBlobs(width, height, isBlobGround) {
  * @param {{x,y}} o.goal ⛔ REQUIRED — it is what decides whether a synthetic
  *   area has to be grown, and guessing it from an exits map would be a second
  *   reading of a fact the model already owns.
- * @param {Array<{id, cells}>} [o.declared] areas that EXIST BEFORE the
+ * @param {Array<{id, cells, kind}>} [o.declared] areas that EXIST BEFORE the
  *   partition runs (an element's own cells). Their cells are excluded from the
  *   blob rule entirely — see the file docblock, difference 1.
  */
@@ -224,7 +224,14 @@ export function partitionAreas({
     for (const dArea of declared) {
         const cells = dArea.cells.filter((c) => live.has(key(c.x, c.y)));
         if (cells.length === 0) continue;
-        claim(dArea.id, cells, false, 'element');
+        /**
+         * ⛓ A DECLARED AREA MAY NAME ITS OWN `kind`. The default is `element`
+         * (what arc 2 declared and what the maze still passes), and arc 3's
+         * Seedling binding uses `goal` for the vestibule it grows around the
+         * torch — two declared areas that mean different things, and a reader
+         * of a census column has to be able to tell them apart.
+         */
+        claim(dArea.id, cells, false, dArea.kind ?? 'element');
     }
     for (const blob of wideBlobs(width, height, blobFloor)) {
         nextA += 1;

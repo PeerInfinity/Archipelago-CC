@@ -59,6 +59,19 @@ import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
 /**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 4b — **THE ONE PARTITION AND THE ONE
+ * LEVEL-n FLOOD**, lifted out of `mazeRoom/procgenMaze.js` by this slice so
+ * that both bindings run the SAME rule (`procgenCore/areaPartition.js`'s own
+ * docblock carries the rule and the two callers' differences). ⛔ The Seedling
+ * side hands in `terrainAt === 'ground'` — wall, water AND pit all block, which
+ * is the pre-check's own vocabulary and not a second reading of it.
+ */
+import { partitionAreas, verifyAreaLevels } from '../procgenCore/areaPartition.js';
+import { buildAreaGraph } from '../procgenCore/areaGraph.js';
+import {
+    DEFAULT_AREAS, formatAreaSpec, normalizeAreaSpec, resolveAreaSpec,
+} from '../procgenCore/areaSpec.js';
+/**
  * ⛓ PROCGEN ELEMENTS arc 3, slice 1 — the SITE vocabulary, in `procgenCore/`
  * because it is stated in grid vocabulary and the maze will bind it next. ⛔ A
  * site is a fact about the SEARCH, never about legality; see that file's law.
@@ -78,7 +91,7 @@ import {
 import {
     SITE_MARGIN_STRAIGHT, compositeSeedlingElement, compositeSeedlingOnConnector,
     elementSummaryOf, liftedClaimFor, reservedRect, seedlingElementEntities,
-    seedlingElementSiteCandidates, seedlingOnConnectorEntities,
+    seedlingElementSiteCandidates, seedlingOnConnectorEntities, vestibuleCellsAround,
 } from './procgenSeedlingElements.js';
 import {
     PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
@@ -128,6 +141,30 @@ const fail = (message) => { throw new ProcgenSeedlingError(message); };
  * because the census and the browser rows read it rather than retyping a 3.
  */
 export const GOAL_MIN_FROM_START = 3;
+
+/**
+ * ⛓⛓⛓ **HOW FAR AN AREA LOCK MUST STAY FROM THE GOAL, IN GRAPH STEPS** —
+ * arc 3, slice 4b. ⛔ It is §10.6(c)'s rule restated for a set of cells rather
+ * than for one: *a lock 4-ADJACENT to the goal breaks the COLLECT ceremony's
+ * approach sweep* (trap 348, measured — "approaching torchpickup@128,128, the
+ * sweep was blocked by lock at (128,112)"), so a lock cell must be at graph
+ * distance >= 2 from the goal. A lock at distance exactly 2 is FINE, which is
+ * what makes the vestibule below the right size.
+ */
+export const LOCK_MIN_FROM_GOAL = 2;
+
+/**
+ * ⛓⛓⛓ **THE GOAL'S VESTIBULE RADIUS** — arc 3, slice 4b, and it is
+ * `LOCK_MIN_FROM_GOAL` rather than a second number, because the vestibule
+ * exists for exactly one reason: to put the goal area's BOUNDARY cells one step
+ * beyond the forbidden ring. A ball of radius `r` has its boundary at distance
+ * `r`, so `r = LOCK_MIN_FROM_GOAL` is the smallest that carries the claim.
+ */
+export const GOAL_VESTIBULE_RADIUS = LOCK_MIN_FROM_GOAL;
+
+/** ⛓ The id the goal's grown area carries, so a reader can tell it from a
+ *  discovered chamber (`A{n}`) and from an element's (`E{n}`). */
+export const GOAL_AREA_ID = 'GOAL';
 
 /**
  * ⛓⛓⛓ **THE DOOR LAW — A DOOR IS A CUT** (PROCGEN ELEMENTS arc 3, slice 2;
@@ -505,7 +542,8 @@ export function interiorCells(record) {
  */
 export function seedlingModel({
     seed, defaults = SEEDLING_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
-    elements: elementSpec = DEFAULT_ELEMENTS, dropElement = false,
+    elements: elementSpec = DEFAULT_ELEMENTS, areas: areaSpec = DEFAULT_AREAS,
+    dropElement = false,
 } = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
     /**
@@ -1170,6 +1208,114 @@ export function seedlingModel({
         }
     }
 
+
+    /**
+     * ── ⛓⛓⛓ PROCGEN ELEMENTS ARC 3, SLICE 4b: **THE AREA BINDING**, HERE
+     *    AND IN THIS ORDER ──────────────────────────────────────────────
+     *
+     * ⛓ **THE DRAW ORDER, DECLARED** (the order IS the identity):
+     *   0-7  as above — the list draw, the goal, the element, the CARVE, the
+     *        on-connector construct, the composites
+     *   8  the PARTITION      — spends NO draw (it reads tiles)
+     *   9  `buildAreaGraph`   — its own declared five phases (arc-1 §8.2)
+     *  10  the REALISATION    — one `pick` per UNFORCED flag cell. The LOCKS
+     *                           draw nothing (every boundary cell of a locked
+     *                           area takes one) and nothing is carved, so
+     *                           `graphify` spends no realisation draw either.
+     *
+     * ⛔ **IT IS LAST, AND THAT IS FORCED.** The partition reads the room the
+     * COMPOSITES left: an `on-connector` element grows wall and carves a pocket,
+     * and a partition taken before it would find chambers the finished room does
+     * not have. The guard's own area is DECLARED into the partition for the
+     * opposite reason — its push lane is 1 wide, so the blob rule would shred it.
+     *
+     * ⛔ **AND AT `keys: 0` NONE OF 8-10 HAPPENS.** Not "runs and returns early":
+     * the branch is not entered, no partition is computed, the module is not
+     * called and the rng is not touched — so every committed Seedling md5 is
+     * unchanged by a code path that does not execute (⚖ arc-1 ruling 3, one
+     * substrate over). `procgenSeedlingAreas.test.js` drives it with a COUNTING
+     * SPY rather than by comparing tiles.
+     *
+     * ⛔ **EVERY FAILURE IS A GRADED REFUSAL BY NAME**, never a throw: the room
+     * keeps its carved skeleton and its element, `areas.refused` names the
+     * reason, and the CLI and the page can print it. ⚖ Arc 1's own words — *a
+     * refused GRAPH still ships its carved level.*
+     */
+    const areaSpecNorm = normalizeAreaSpec(areaSpec ?? DEFAULT_AREAS);
+    const areaValues = resolveAreaSpec(areaSpecNorm);
+    const areaGround = (x, y) => x >= 0 && y >= 0 && x < d.width && y < d.height
+        && terrainAt(base, x, y) === 'ground';
+    /**
+     * ⛓⛓ THE ELEMENT'S AREA IS **DECLARED** INTO THE PARTITION (arc-2 §9.9.5),
+     * with the id `E{index}`. ⛔ Only the PRE-CARVE guard has one: an
+     * `on-connector` element owns a door, a clearer, some wall and a carved cell
+     * — cells, not an AREA — and declaring a two-cell door as an area would give
+     * the graph somewhere to put a key that is not a place.
+     */
+    const declaredAreas = elementInfo.ran && elementInfo.placed[0].areaCells
+        ? [{ id: `E${elementInfo.placed[0].index}`,
+            cells: elementInfo.placed[0].areaCells.map((c) => ({ x: c.x, y: c.y })) }]
+        : [];
+    /**
+     * ⛓⛓⛓ **THE GOAL'S VESTIBULE — TRAP 348 ON THE LOCK CELLS, AND IT IS A
+     * SEEDLING RULE THE MAZE DOES NOT NEED.**
+     *
+     * A corridor goal gets a SYNTHETIC ONE-CELL area, whose only boundary cell
+     * IS THE GOAL — so `door on every boundary cell` would put a `lock` on the
+     * torch. On the maze that is merely odd; on Seedling it is trap 348: a lock
+     * within 2 cells of the goal breaks the COLLECT ceremony's approach sweep
+     * (§10.6(c), measured — *"approaching torchpickup@128,128, the sweep was
+     * blocked by lock at (128,112)"*), and the level is unsolvable for a reason
+     * no reader would attribute to the area graph.
+     *
+     * ⇒ when the goal is not already inside a real area, the binding DECLARES a
+     * VESTIBULE — the goal plus every live ground cell within GRAPH DISTANCE
+     * `GOAL_VESTIBULE_RADIUS` (2) of it — so the area's boundary cells sit at
+     * distance exactly 2 and the locks land where §10.6(c) allows them.
+     *
+     * ⛓ **THE ARITHMETIC THAT SAYS THE VESTIBULE ALWAYS HAS A BOUNDARY.**
+     * `GOAL_MIN_FROM_START = 3` puts the start at MANHATTAN >= 3 from the goal,
+     * and Manhattan <= graph distance on a grid, so the START is at graph
+     * distance >= 3 — outside the ball. A ball that reached every live cell
+     * would mean the room's whole walkable set lies within 2 of the goal, which
+     * cannot contain a start 3 away. ⇒ some live cell is at distance >= 3, the
+     * ball has a frontier, and the frontier's inside is the boundary.
+     *
+     * ⚠ **AND A LOCK ADJACENT TO THE *START* IS LEGAL** — the start is not a
+     * pickup and has no approach sweep. The entrance's own area is level 0 and
+     * is never locked; what a level->=1 lock beside it means is "the first step
+     * out of the room is gated", which is a level, not a defect.
+     */
+    const goalVestibule = () => vestibuleCellsAround({
+        width: d.width, height: d.height, walkable: areaGround,
+        goal: { x: goalCell.tx, y: goalCell.ty }, radius: GOAL_VESTIBULE_RADIUS,
+        exclude: declaredAreas.flatMap((a) => a.cells),
+    });
+    let partitionMemo = null;
+    /**
+     * ⛓ ONE PARTITION PER MODEL, MEMOIZED — the census, the binding below and
+     * (slice 5a) the page all read this one answer. ⛔ It spends NO draw, so
+     * asking it does not move a level; it is a GETTER for `sites`' own reason
+     * (a model nobody asks pays nothing).
+     */
+    const areaPartitionOf = () => {
+        if (partitionMemo) return partitionMemo;
+        const bare = partitionAreas({
+            width: d.width, height: d.height, isFloor: areaGround,
+            entrance: { x: d.start.tx, y: d.start.ty }, goal: { x: goalCell.tx, y: goalCell.ty },
+            declared: declaredAreas,
+        });
+        const goalArea = bare.areas.find((a) => a.id === bare.goalArea) ?? null;
+        if (goalArea === null || !goalArea.synthetic) { partitionMemo = bare; return bare; }
+        const cells = goalVestibule();
+        partitionMemo = partitionAreas({
+            width: d.width, height: d.height, isFloor: areaGround,
+            entrance: { x: d.start.tx, y: d.start.ty }, goal: { x: goalCell.tx, y: goalCell.ty },
+            declared: [...declaredAreas, { id: GOAL_AREA_ID, cells, kind: 'goal' }],
+        });
+        return partitionMemo;
+    };
+
     const skeleton = () => withEntities(base, [{
         type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
     }, ...elementEntities]);
@@ -1708,6 +1854,22 @@ export function seedlingModel({
          * decomposition `sites.chamber` flattens.
          */
         get sites() { return sitesOf(); },
+        /**
+         * ⛓⛓⛓ **THE AREA PARTITION OF THE FINISHED ROOM** (arc 3, slice 4b) —
+         * `procgenCore/areaPartition.partitionAreas` over the room the
+         * composites left, with the element's area DECLARED and the goal's
+         * VESTIBULE grown when it needs one. ⛔ It spends NO draw, it is
+         * MEMOIZED, and it is a GETTER-style closure for `sites`' own reason: a
+         * model nobody asks pays nothing, and at `--areas=0` nobody asks.
+         *
+         * ⛔ IT IS THE **ONE** DERIVATION. The census
+         * (`census-seedling-areas.mjs`), the binding below and (slice 5a) the
+         * page all read this answer rather than each building their own — a
+         * census that partitioned its own room would be measuring a level the
+         * generator does not generate (`feedback_code_sweep_misses_the_data`,
+         * from the instrument side).
+         */
+        areaPartition: () => areaPartitionOf(),
         /**
          * ⛓ COUNTS ONLY — what a census, a report or (later) a payload may
          * carry. ⛔ Never the cell lists: a shipped cell list is a second copy
