@@ -3201,17 +3201,76 @@ the palette gains block/button/flag, `?elements=` in the ONE reader/writer with
 a byte comparison against the CLI, the SOLVE steps through its plan and the
 block visibly moves onto its button — and a maze EDIT became an OP, closing
 constructive §18.2's residue). Arc-2 kickoff §11.10 answers §7 gate by gate and
-§11.11 is what arc 3 starts from. NEXT: **arc 3 (Seedling)** — sites, door=cut,
-carve legality, the straight-lane gadget, kill gate + spinner, the area binding —
-kickoff to be written by the design session; its named later item is §7b,
-BLOCK-SEARCH REDUCTIONS.** Plan docs *(NewDocs)*:
-`procgen-elements-design.md` (the DESIGN — §1 rulings 1–20, §3 the Cloudberry
+§11.11 is what arc 3 starts from.
+
+⛓⛓⛓ **ARC 3 (SEEDLING) IS CLOSED 2026-08-18 @ `cfe0fd095`** — **fourteen
+slices** (1 · 2 · 2b · 2c · 2d · 3 · S1 · 4a · 4c · 4b · 4d · 5a · 5b · 5c),
+as-builts §8–§18 in `procgen-elements-arc3-kickoff.md`, and **§18 answers §7's
+eight acceptance gates one by one** and carries the arc's whole residue in ONE
+deduplicated list (R9 · arc 4 · arc 5 · ⚖ the user · code-only). What the
+Seedling generator IS now: pass 1 draws the GOAL at Manhattan **≥ 3** from the
+start, then an ELEMENT head from the biome DEFAULT SPEC (`guard;len=2+
+blockpocket` pre-sword, `+killgate` post-sword — a `+` list is a CHOICE), builds
+any `pre-carve` element, runs THE CARVE (the five carved tree kinds defaulting
+to **`chambers = 1`**), builds any `on-connector` element against a read-only
+room probe, optionally partitions the room into AREAS and realises an area GRAPH
+(locks on every boundary cell; the goal in a radius-2 VESTIBULE), composites, and
+**CERTIFIES with the substrate's own solver** — a failure is a graded refusal by
+name and the element is DROPPED, never shipped uncertified. Pass 2 is the same
+keep-or-revert loop, now SITE-TYPED, with a **door = CUT** law and bounded
+carving, over a roster that is **23/23 instantiations across three DECORATION
+families**. The construction is recorded in a byte-inert LEDGER the lab page
+steps through, selection-driven per ⚖ the user's 2026-08-18 ruling, and every
+demonstrable piece has a URL in the tracked catalogue
+**`docs/json/developer/procgen/demos.md`** (13 entries, `check-procgen-demos.mjs`
+**54 / 0**). THE NUMBERS: guard certified **32/34** · block pocket **36/36** ·
+kill gate **6/28** post-sword and **17/17** of its certified clears caused by
+`sword` after the demand · pass-2 roster **41/45 → 23/23** · `chambers=1` kept
+**4 → 102/105** of 120 · `--areas=1` accepts **0–4 of 12** seeds per kind, tag
+budget **2 per key** · door law vs the retired span predicate **0 disagreements**
+· ledger cost median **1.048× → 1.129×**. ⛔ **NOTHING COMMITTED MOVED** at any
+slice: battery `1fedb0ab…` (exit 1), the maze dump, and every R8 tape
+(**534 / 0 / 67**) — through a SOLVER slice included; the oracle's catch was
+never widened. ⛔ **NOT FIXED, named rather than smoothed**: the DROWN /
+armed-hazard engine class (1 abort in 160 under the shipped default — the kill
+gate's demand MOVED which cell meets it, 7 → 0, and fixed nothing), the kill
+gate's 22 refusals (one pre-existing solver class ⇒ **6/28 is the number to
+beat**), the trace MERGE eating a stance walk's corridor, and the maze's pass-2
+`door-key` still not cut-checked.
+
+⚖ **FIVE THINGS ARE THE USER's** (§18.2 bucket D): (i) **FORM CONTROLS** for
+`?elements=`/`?areas=`/`?require=` — deliberately NOT built, the URL is their
+channel as for `?tickbudget=`; (ii) the demo bar **`families>=2` vs `>=3`** — the
+stated N ≥ 3 gate returned **1 hit in 40** and both sets are published, labelled,
+rather than the bar being tuned; (iii) **arc 4's GO-AHEAD**; (iv)
+`PREFER_DISCHARGE` on the **MAZE** (retired on Seedling; still there and
+unmeasured on the maze); (v) the maze's **`door-key` cut check** — two candidate
+fixes, neither measured.
+
+**NEXT: ⛔ arc 4 is THE CHAIN — a bent push path on Seedling — and it stays
+ASK-FIRST** (⚖ design ruling 17 / arc-3 ruling 1). `turns > 0` refuses
+`the-chain-is-arc-4` by name today and spends no draw, which is the seam it lands
+in. **Arc 5** (shortcuts / density / arenas) needs no new ⚖ and already owns four
+named items: the room-aware SITE PICK (recovers the guard's 29 → 21),
+ELEMENTS-as-area / density / arenas (the AREA COUNT on a 10×10 room is the
+ceiling on everything the area graph can accept), the differential's SHORTENS
+grade, and an EXACT (stepped) demand for a moving body. The design's own named
+later item is §7b, BLOCK-SEARCH REDUCTIONS.
+
+Plan docs *(NewDocs)*:
+`procgen-elements-design.md` (the DESIGN — §1 rulings 1–24, §3 the Cloudberry
 re-read + the MetaZelda read, §4 the three layers, §5 the element catalogue
-from the ActionScript source, §6 the roadmap of arcs, §7 open questions) and
-`procgen-elements-arc1-kickoff.md` (arc 1) and `procgen-elements-arc2-kickoff.md`
-(arc 2, as-builts §8–§11). Memory: `project_procgen_elements`.
+from the ActionScript source, §6 the roadmap of arcs, §7 open questions),
+`procgen-elements-arc1-kickoff.md` (arc 1), `procgen-elements-arc2-kickoff.md`
+(arc 2, as-builts §8–§11) and **`procgen-elements-arc3-kickoff.md`** (arc 3,
+as-builts §8–§18), plus the review `procgen-generation-review-2026-08-17.md`
+(what the code does, what the tests test, and the twelve stale assumptions — its
+recommendation 5 is what slice 5c executed). Memory: `project_procgen_elements`.
 Tracked summary: `docs/json/developer/procgen/seedling-bot.md` § *The procgen
-elements design*.
+ELEMENTS design* (closed-state, with the corrected phase table);
+**orientation**: `docs/json/developer/procgen/architecture.md` § *Level
+generation: two passes over one loop core*; **demonstrations**:
+`docs/json/developer/procgen/demos.md`.
 
 ⚖ The user's rulings, in one breath: the maze algorithms are a ROUGH FIRST
 DRAFT of pass 1 (connectors, not the whole); block-push puzzles are
@@ -3239,9 +3298,11 @@ Arcs: **1** area graph on the maze (absorbs constructive slice 10-maze — HELD 
 §5f) · **2** the reverse-pull block→switch gadget on the maze (BFS with block
 state; the element contract) · **3** Seedling: sites + door=cut + carve legality
 + pre-check widened + `arrow-lane` removed + the straight-lane gadget + kill
-gate + area binding + rule-directed `hasSword` · **4** the CHAIN (⛔ ask-first)
-· **5** shortcuts / density / arenas · later: hammers, chain traps, turrets,
-Sokoban-proper, keylock once diagnosed (R9+). Depends on §5f slice 6 (LANDED —
+gate + area binding + rule-directed `hasSword` — ⛓ **ALL THREE CLOSED** (1
+@ `cbd4327b5`, 2 @ `4e0ac0690`, 3 @ `cfe0fd095`) · **4** the CHAIN (⛔ ask-first,
+NOT authorised) · **5** shortcuts / density / arenas — **the next arc that needs
+no ⚖** · later: hammers, chain traps, turrets, Sokoban-proper, keylock once
+diagnosed (R9+). Depends on §5f slice 6 (LANDED —
 the flood + yield table are the instrument) and uses slice 7 as a knob;
 independent of 11/12.
 
