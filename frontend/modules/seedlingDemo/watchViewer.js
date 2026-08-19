@@ -6521,15 +6521,19 @@ async function runGenerate(params, lifetime) {
 async function runWasm(params, lifetime) {
     const tape = await fetchJson(repoUrl(params.tape), 'tape');
 
-    // Say WHICH path is missing rather than showing a blank frame — the
-    // artifact is gitignored and machine-local, so "nothing happened" is the
-    // expected experience on a fresh checkout.
+    // Say WHICH path is missing rather than showing a blank frame.
+    // ⛓ 2026-08-19: the build is no longer gitignored — it is the submodule
+    // PeerInfinity/seedling-wasm, checked out by the deploy and by CI, so on
+    // the live site this branch should not be reachable at all. It stays
+    // because a local clone without `--recurse-submodules` still lands here,
+    // and because it is the witness that the submodule is doing its job: the
+    // Pages-shaped root WITHOUT the submodule contents prints exactly this.
     const probe = await fetch(WASM_PAGE, { method: 'HEAD' }).catch(() => null);
     if (!probe || !probe.ok) {
         fatal('the wasm build is not on this machine',
             `${WASM_PAGE} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
-            + 'It is gitignored and built locally — see '
-            + '~/CC/seedling_bot_build/build_bot.sh. Use &side=js meanwhile.');
+            + 'Run `git submodule update --init '
+            + 'frontend/modules/flashPanel/wasm`. Use &side=js meanwhile.');
         return;
     }
 

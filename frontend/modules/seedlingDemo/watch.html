@@ -17,9 +17,11 @@
           &side=js
 
   side=js    the JS engine, drawn on canvas. Works anywhere.
-  side=wasm  the real recompiled game in an iframe. LOCAL ONLY — the wasm
-             artifact is gitignored, and the page says so by name when it
-             is absent rather than showing a blank frame.
+  side=wasm  the real recompiled game in an iframe. The build ships in the
+             submodule PeerInfinity/seedling-wasm at
+             frontend/modules/flashPanel/wasm/, so this works on the live
+             Pages site too; a clone without `--recurse-submodules` gets a
+             named message rather than a blank frame.
 
   ── SOURCE = SOLVE (editor arc slice 1) ─────────────────────────────────
 
