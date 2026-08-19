@@ -176,6 +176,16 @@ import { parseAreaSpec } from '../procgenCore/areaSpec.js';
  * `renderer.draw` on the same canvas; `makeRenderer.draw` and `OVERLAY_LAYERS`
  * are untouched, so the world row's `drawn.*` readouts are unmoved.
  */
+/**
+ * ⛓⛓⛓ THE WASM SHIP — one mechanism, four callers (REPLAY's `?side=wasm` and
+ * the ▶ load-in-wasm button in SOLVE, MANUAL and GENERATE). ⛔ `WASM_PAGE`
+ * lives THERE now, beside the sequence that loads it, so the build is named
+ * once in the page rather than in a constant one file away from its only use.
+ */
+import {
+    END_STATE_TOLERANCE, levelSetDisagreement, roomOfGeneratedLevel, shipToWasm,
+    stagesOf, VERDICT_SCOPE, verdictLine, WASM_PAGE, WASM_STAGES, verdictOf,
+} from './watchWasm.js';
 import { foldLedger } from './procgenLedger.js';
 import {
     GEN_LAYERS, drawGenOverlay, drawPaintables, genOverlaysFor,
@@ -255,16 +265,6 @@ function repoUrl(path) {
         : new URL(p, REPO_ROOT).href;
 }
 const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json');
-// ⛓ p4b, NOT `seedling_bot_ap`, SINCE THE WASM-HYGIENE SLICE. p4b's bridge
-// surface is a strict SUPERSET (it adds botForgeSaveStamp, botLevelSet and
-// botLoadLevels), and it was MEASURED to be the same game where it counts:
-// the R8 tape gate — `verify-seedling-bot-differential.mjs --win --only=<the
-// 20 r8-* tapes>`, whose expectations are seedling_bot_ap's OWN oracle
-// recordings — reads 534 PASS / 0 FAIL / 67 SKIP on BOTH builds, and the two
-// logs agree line for line except in two free-running clocks whose control
-// arm (the same build re-run) varies at least as much. So the page loads one
-// build instead of two and the submodule pins one fewer 33 MB artifact.
-const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4b/game.html';
 
 const PIT = HAZARD_STATES.pit;
 
@@ -6516,185 +6516,129 @@ async function runGenerate(params, lifetime) {
 // ── side=wasm ────────────────────────────────────────────────────────────
 
 /**
- * Drive the recompiled game in an iframe.
+ * ⛓⛓⛓ THE REPLAY ARM IS NOW A **CALLER** OF `watchWasm.shipToWasm`.
  *
- * Same origin, so `frame.contentWindow.__swfBridge.game.*` is reachable
- * from here — which is what lets this page add nothing to the gitignored
- * deploy artifact. ZERO changes there, ZERO AS3.
+ * ⛔ THE MECHANISM MOVED, THE BEHAVIOUR DID NOT. Every string this arm printed
+ * it still prints, in the same order, at the same stage — because what moved
+ * is the SEQUENCE (probe → runtime → the user's Start → tape → running →
+ * finished) and what stayed is the READOUT, which is now an interface this
+ * function supplies. `check-seedling-wasm-pages.mjs` reads those exact strings
+ * off the live DOM and is the gate on that claim.
  *
- * ⚠ ONE REAL CLICK IS REQUIRED before starting. The runtime wants user
- * activation, and the existing Playwright driver clicks `#btn-start` for
- * exactly this reason; a page that tried to autostart would hang with no
- * visible cause.
+ * ⛔ AND THE READOUT HAD TO BECOME AN INTERFACE RATHER THAN A DEFAULT. The
+ * ▶ load-in-wasm button ships from SOLVE, MANUAL and GENERATE, where `#status`
+ * and `#hud` already hold the JS run's own answer — a ship that painted them
+ * would delete the certification it is meant to be printed BESIDE (⚖ D3).
+ * REPLAY is the one arm that owns the whole page, so it is the one arm whose
+ * readout writes there.
  */
 async function runWasm(params, lifetime) {
     const tape = await fetchJson(repoUrl(params.tape), 'tape');
-
-    // Say WHICH path is missing rather than showing a blank frame.
-    // ⛓ 2026-08-19: the build is no longer gitignored — it is the submodule
-    // PeerInfinity/seedling-wasm, checked out by the deploy and by CI, so on
-    // the live site this branch should not be reachable at all. It stays
-    // because a local clone without `--recurse-submodules` still lands here,
-    // and because it is the witness that the submodule is doing its job: the
-    // Pages-shaped root WITHOUT the submodule contents prints exactly this.
-    const probe = await fetch(WASM_PAGE, { method: 'HEAD' }).catch(() => null);
-    if (!probe || !probe.ok) {
-        fatal('the wasm build is not on this machine',
-            `${WASM_PAGE} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
-            + 'Run `git submodule update --init '
-            + 'frontend/modules/flashPanel/wasm`. Use &side=js meanwhile.');
-        return;
-    }
-
     const frame = $('frame');
-    frame.src = WASM_PAGE;
-    frame.style.display = 'block';
-    $('canvas').style.display = 'none';
-    $('status').textContent = 'loading the runtime…';
-    /**
-     * ⛓⛓ THE ONE TEARDOWN THE RELOAD WAS ACTUALLY PROTECTING.
-     * `populatePicker`'s docblock states it: the wasm side cannot rewind the
-     * GAME — `botReset` forgets the tape, not the world — so every tape needs
-     * a fresh runtime. `about:blank` gives it one: the iframe's document is
-     * discarded, which takes the runtime, its own rAF chain and its audio
-     * with it. That is the whole of the wasm side's claim on a page reload,
-     * and it is satisfiable from here.
-     */
-    lifetime.onRetire(() => {
-        frame.src = 'about:blank';
-        frame.style.display = 'none';
-        $('canvas').style.display = '';
-    });
+    await shipToWasm(
+        { tape, label: params.tape, expect: null, expectWhy: 'replay' },
+        { frame, lifetime, readout: replayWasmReadout(lifetime), tolerance: END_STATE_TOLERANCE },
+    );
+}
 
-    const win = () => frame.contentWindow;
-    const bot = (name, arg) => {
-        const g = win() && win().__swfBridge && win().__swfBridge.game;
-        if (!g || typeof g[name] !== 'function') return null;
-        return arg === undefined ? g[name]() : g[name](arg);
-    };
-    const botJson = (name, arg) => {
-        const raw = bot(name, arg);
-        try { return raw ? JSON.parse(raw) : null; } catch { return null; }
-    };
-    /**
-     * ⚠ A THREE-MINUTE POLL IS A LOOP WITH A LONG FUSE. Retired, it would go
-     * on asking a discarded iframe for `__runtimeReady` every 200 ms and then
-     * TIME OUT under some other arm, painting a wasm refusal over whatever
-     * that arm had drawn. So the chain stops with the lifetime, and the
-     * promise REJECTS rather than hanging: an `await` nobody will ever
-     * resolve is a leak that looks like a slow load.
-     */
-    const until = (what, pred, ms = 180000) => new Promise((resolve, reject) => {
-        const t0 = Date.now();
-        const tick = lifetime.guard('wasm-until', () => {
-            let v = null;
-            try { v = pred(); } catch { v = null; }
-            if (v) return resolve(v);
-            if (Date.now() - t0 > ms) return reject(new Error(`timed out waiting for ${what}`));
-            return setTimeout(tick, 200);
-        });
-        lifetime.onRetire(() => reject(new Error(
-            `the wasm arm was retired while waiting for ${what}`)));
-        tick();
-    });
+/** One HUD row, in the wasm arm's own spelling. */
+const wasmRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
 
-    await until('__runtimeReady', () => win() && win().__runtimeReady);
+/**
+ * ⛓ THE LIVE `botStatus` BLOCK AS HUD ROWS — ONE rendering, two consumers.
+ *
+ * REPLAY paints it into the shared `#hud`; a SHIP paints it into its own
+ * `#wasmHud` beside the JS run's. ⛔ A second copy of these eleven rows would
+ * be two opinions about what the game is reporting, and the one nobody looks
+ * at is the one that would rot.
+ */
+function wasmHudRows(st, tape) {
+    const items = st.items || {};
+    return [
+        wasmRow('tick', `${st.tick ?? '?'} / ${tape.tick_count}`),
+        wasmRow('level', st.level ?? '?'),
+        wasmRow('position', `${fmt(st.x)}, ${fmt(st.y)}`),
+        // Shown, not elided: the fade frames are real frames the tick counter
+        // skips, and how many there were is a fact about the run.
+        wasmRow('dead frames', st.dead_frames ?? 0),
+        wasmRow('receive input', String(st.receive_input)),
+        wasmRow('saw input refused', String(st.saw_input_refused)),
+        wasmRow('auto advance', st.saw_auto_advance ?? 0),
+        wasmRow('grants', (st.grants || [])
+            .map((g) => `L${g.level} ${(g.items || []).join('+')}@${g.t}`).join(' ') || '—'),
+        wasmRow('items', Object.entries(items)
+            .filter(([k, v]) => v === true && k !== 'hitsMax')
+            .map(([k]) => k).join(' ') || '—'),
+        wasmRow('hitsMax', items.hitsMax ?? '?'),
+        wasmRow('finished', String(st.finished)),
+    ].join('');
+}
 
-    // ⚠⚠ THE PARENT MUST NOT START THE GAME. NOT EVEN AS A FALLBACK.
-    //
-    // The frame's start path is
-    //     __swfBridgeStart = function () {
-    //         if (started || !__runtimeReady) return false;
-    //         started = true;
-    //         btn.style.display = 'none';
-    //         Module.ccall('runSWF', ...);
-    //     }
-    // and its own comment says it "MUST run within a user-gesture handler in
-    // this document (WebGPU renderer init + AudioContext consume the
-    // activation)".
-    //
-    // A first cut here called `btn.click()` from the parent as a harmless-
-    // looking convenience. It is not harmless: it LATCHES `started = true`
-    // and HIDES the button, so `runSWF` is invoked with no user activation
-    // (the renderer never comes up, `game.botStatus` never appears) AND the
-    // user's real click is now impossible — the button is gone and the latch
-    // refuses a second start. It burns the one chance it was trying to save.
-    // The symptom is maximally unhelpful: `__swfBridge.game` exists, so the
-    // shim looks fine, and the wait just spins.
-    //
-    // So the parent does exactly nothing here except ask, and poll.
-    $('play').style.display = 'none';
-    $('status').textContent = 'runtime ready — press ▶ Start inside the frame below. '
-        + 'One REAL click: the renderer and the audio context consume the user '
-        + 'activation, and nothing this page can do substitutes for it.';
-
-    try {
-        await until('the game\'s bot callbacks (press Start in the frame)',
-            () => bot('botStatus') !== null);
-    } catch (e) {
-        fatal('the tape never started', `${e.message}. The frame is up but the SWF `
-            + 'has not begun, which is what a missed Start looks like.');
-        return;
-    }
-
-    try {
-        const loaded = bot('botLoadTape', JSON.stringify(tape));
-        if (loaded !== 'ok') throw new Error(`botLoadTape: ${loaded}`);
-        const started = bot('botStart');
-        if (started !== 'ok') throw new Error(`botStart: ${started}`);
-    } catch (e) {
-        fatal('could not start the tape', e.message);
-        return;
-    }
-    $('status').className = 'ok';
-    $('status').textContent = `${params.tape} — running in the real game`;
-    /**
-     * ⚠ THE WRAPPER CALLS `poll` THROUGH AN ARROW rather than wrapping it
-     * directly, for the same temporal-dead-zone reason the note below gives:
-     * `poll` is hoisted and readable here, but only from inside a body that
-     * runs later.
-     */
-    const pollTick = lifetime.guard('wasm-poll', () => poll());
-    pollTick();
-
-    // A function DECLARATION, not a const arrow: `poll()` is called above
-    // this line and a `const` would be in its temporal dead zone. Caught by
-    // the real-GPU Windows run, which is the only place the wasm path gets
-    // far enough to execute it.
-    function row(k, v) { return `<div class="r"><span>${k}</span><b>${v}</b></div>`; }
-    function poll() {
-        const st = botJson('botStatus');
-        if (st) {
-            const pct = Math.round(100 * (st.tick ?? 0) / Math.max(1, tape.tick_count));
-            $('bar').style.width = `${pct}%`;
-            const items = st.items || {};
-            $('hud').innerHTML = [
-                row('tick', `${st.tick ?? '?'} / ${tape.tick_count}`),
-                row('level', st.level ?? '?'),
-                row('position', `${fmt(st.x)}, ${fmt(st.y)}`),
-                // Shown, not elided: the fade frames are real frames the
-                // tick counter skips, and how many there were is a fact
-                // about the run.
-                row('dead frames', st.dead_frames ?? 0),
-                row('receive input', String(st.receive_input)),
-                row('saw input refused', String(st.saw_input_refused)),
-                row('auto advance', st.saw_auto_advance ?? 0),
-                row('grants', (st.grants || [])
-                    .map((g) => `L${g.level} ${(g.items || []).join('+')}@${g.t}`).join(' ') || '—'),
-                row('items', Object.entries(items)
-                    .filter(([k, v]) => v === true && k !== 'hitsMax')
-                    .map(([k]) => k).join(' ') || '—'),
-                row('hitsMax', items.hitsMax ?? '?'),
-                row('finished', String(st.finished)),
-            ].join('');
-            if (st.finished) {
-                $('status').textContent += ' — finished';
+/**
+ * ⛓ THE REPLAY ARM'S READOUT — the page's shared chrome, with the strings it
+ * has always printed.
+ *
+ * ⚠ `onStage('runtime')` IS DELIBERATELY QUIET. The original sequence printed
+ * "loading the runtime…" when the frame was pointed at the build and the
+ * "press ▶ Start" line only once the runtime was up and the wait was about to
+ * begin — which is `probe` and `start` here. A line at `runtime` would be a
+ * third readout state the live row has never seen.
+ */
+function replayWasmReadout(lifetime) {
+    return {
+        onStage(stage, message) {
+            if (stage === 'probe') {
+                $('canvas').style.display = 'none';
+                $('status').textContent = 'loading the runtime…';
+                // ⛓ The canvas comes back when this arm goes; the frame's own
+                // teardown is `shipToWasm`'s (it owns the iframe).
+                lifetime.onRetire(() => { $('canvas').style.display = ''; });
                 return;
             }
-        }
-        setTimeout(pollTick, 250);
-    }
+            if (stage === 'start') {
+                $('play').style.display = 'none';
+                $('status').textContent = 'runtime ready — press ▶ Start inside the frame below. '
+                    + 'One REAL click: the renderer and the audio context consume the user '
+                    + 'activation, and nothing this page can do substitutes for it.';
+                return;
+            }
+            if (stage === 'running') {
+                $('status').className = 'ok';
+                // ⛔ THE SHIP'S OWN LABEL, not a second derivation of it off
+                // `#title`: two spellings of "which tape is this" is exactly
+                // the shape this page keeps paying for.
+                $('status').textContent = message;
+            }
+        },
+        onRefusal(stage, reason, detail) {
+            if (stage === 'probe') {
+                fatal('the wasm build is not on this machine', detail);
+                return;
+            }
+            if (stage === 'start') {
+                fatal('the tape never started', detail);
+                return;
+            }
+            if (stage === 'runtime') {
+                fatal('the wasm runtime never came up', `${reason} — ${detail}`);
+                return;
+            }
+            fatal('could not start the tape', reason);
+        },
+        onTick(st, tape) {
+            const pct = Math.round(100 * (st.tick ?? 0) / Math.max(1, tape.tick_count));
+            $('bar').style.width = `${pct}%`;
+            $('hud').innerHTML = wasmHudRows(st, tape);
+        },
+        onVerdict(v) {
+            // ⛔ REPLAY HAS NO EXPECTATION and says the same three words it
+            // always did. The end-state verdict is the BUTTON's channel (⚖ D3);
+            // adding a line here would move a readout the live row asserts on.
+            if (v.kind !== 'not-finished') $('status').textContent += ' — finished';
+        },
+    };
 }
+
 
 // ── entry ────────────────────────────────────────────────────────────────
 

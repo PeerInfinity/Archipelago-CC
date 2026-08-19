@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -247,7 +247,26 @@ describe('⛔ every listener in the page goes through a lifetime', () => {
      */
     const source = (name) => readFileSync(join(HERE, name), 'utf8');
 
-    it('watchViewer.js calls addEventListener nowhere directly', () => {
+    /**
+     * ⛓⛓ THE SCAN NAMES ITS MEMBERS AND HOW IT ENUMERATED THEM (trap 401).
+     *
+     * ⛔ IT USED TO NAME EXACTLY ONE FILE, `watchViewer.js`, and that was true
+     * while the page WAS one file. The ▶ load-in-wasm slice split the wasm arm
+     * out into `watchWasm.js`, which registers a listener of its own (the
+     * iframe's `load`, for the fresh-frame wait) — so a rule scoped to one
+     * filename would have gone quiet on the very file that grew a new one.
+     * ⇒ the roster is the DIRECTORY, filtered to the page's own modules, so a
+     * file added tomorrow is covered without anybody remembering to add it.
+     */
+    const PAGE_MODULES = () => readdirSync(HERE)
+        .filter((f) => f.endsWith('.js') && !f.endsWith('.test.js'))
+        // ⚠ The re-export is excluded BY NAME and with its reason: it is three
+        // lines of `export {}` and the only `addEventListener` in it is in a
+        // sentence about this very rule.
+        .filter((f) => f !== 'watchLifetime.js')
+        .sort();
+
+    it('NO module of this page calls addEventListener directly', () => {
         /**
          * ⚠ THE FIRST CUT OF THIS ROW PASSED VACUOUSLY, and the pattern is
          * worth keeping: it matched `/(?<![\w.])addEventListener\(/`, whose
@@ -258,12 +277,18 @@ describe('⛔ every listener in the page goes through a lifetime', () => {
          * was written for is a check of nothing; this one is deliberately
          * blunt, and the only legal call site lives in another file.
          */
-        const offenders = source('watchViewer.js')
+        const files = PAGE_MODULES();
+        const offenders = files.flatMap((f) => source(f)
             .split('\n')
             .map((line, i) => ({ line: line.trim(), n: i + 1 }))
             .filter((r) => /addEventListener\s*\(/.test(r.line))
-            .map((r) => `watchViewer.js:${r.n}  ${r.line}`);
+            .map((r) => `${f}:${r.n}  ${r.line}`));
         expect(offenders).toEqual([]);
+        // ⛔ AND THE SCAN IS NOT VACUOUS: it must actually have read the two
+        // files that DO register listeners. A roster that silently emptied
+        // would pass this row for the worst possible reason.
+        expect(files).toContain('watchViewer.js');
+        expect(files).toContain('watchWasm.js');
     });
 
     it('the lifetime module is the ONE place that calls it', () => {
