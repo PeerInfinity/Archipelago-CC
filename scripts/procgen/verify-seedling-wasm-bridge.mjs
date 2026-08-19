@@ -19,10 +19,14 @@
  *
  * Prereqs:
  *   - dev server on :8000 (python -m http.server 8000 at repo root)
- *   - the UNCOMMITTED wasm artifact staged at
- *     frontend/modules/flashPanel/wasm/seedling_teleport_ap/
- *     (copy command in frontend/modules/flashPanel/README.md);
- *     the script SKIPs (exit 0) when it is absent — CI has no wasm.
+ *   - the wasm build at
+ *     frontend/modules/flashPanel/wasm/seedling_teleport_ap/, which since
+ *     2026-08-19 ships in the submodule PeerInfinity/seedling-wasm
+ *     (`git submodule update --init frontend/modules/flashPanel/wasm`).
+ *     ⛓ The script SKIPs (exit 0) when the SUBMODULE IS NOT CHECKED OUT.
+ *     It used to say "CI has no wasm"; CI does now — .github/workflows/
+ *     seedling-wasm.yml checks it out and runs this row NON-GATING, to find
+ *     out whether the page boots on a runner with no GPU.
  *
  * Runs headless: WebGPU comes up on swiftshader with
  * --enable-unsafe-webgpu --enable-unsafe-swiftshader --use-angle=swiftshader
@@ -40,8 +44,8 @@ const ARTIFACT = join(HERE, '..', '..', 'frontend', 'modules', 'flashPanel',
     'wasm', 'seedling_teleport_ap');
 if (!existsSync(join(ARTIFACT, 'game.html'))
     || !existsSync(join(ARTIFACT, 'seedling_teleport_ap.wasm'))) {
-    console.log(`SKIP: seedling wasm artifact not staged at ${ARTIFACT}`
-        + ' — see frontend/modules/flashPanel/README.md for the copy command');
+    console.log(`SKIP: the seedling-wasm submodule is not checked out at ${ARTIFACT}`
+        + ' — run `git submodule update --init frontend/modules/flashPanel/wasm`');
     process.exit(0);
 }
 

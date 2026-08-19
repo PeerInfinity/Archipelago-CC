@@ -1,0 +1,186 @@
+name: Seedling wasm submodule
+
+# ⛓ The builds under frontend/modules/flashPanel/wasm/ are the submodule
+# PeerInfinity/seedling-wasm. This workflow answers three questions, and only
+# the first of them is allowed to stop a push.
+#
+#   1. GATING — do the four views of "which builds are pinned" agree?
+#      (tracked references / whitelist / what git tracks / builds.json)
+#      Cheap, deterministic, no browser: a real gate.
+#   2. NON-GATING — does the game actually BOOT on a runner? WebGPU on
+#      swiftshader, no GPU. Genuinely unknown until measured, which is why
+#      it is here and why it cannot fail the build.
+#   3. NON-GATING — can a runner READ DATA out of the wasm?
+#
+# ⛔ NOTHING THAT RUNS THE GAME GATES A PUSH (⚖ user, 2026-08-19: "reading
+# data only, not running the game — or try it and see how far we get
+# (non-gating)"). Steps 2 and 3 are continue-on-error and report what got how
+# far; a red X on them is information, not a broken main.
+
+on:
+  push:
+    paths:
+      - 'frontend/modules/flashPanel/wasm'
+      - '.gitmodules'
+      - 'scripts/procgen/check-seedling-wasm-pins.mjs'
+      - '.github/workflows/seedling-wasm.yml'
+  pull_request:
+    paths:
+      - 'frontend/modules/flashPanel/wasm'
+      - '.gitmodules'
+      - 'scripts/procgen/check-seedling-wasm-pins.mjs'
+      - '.github/workflows/seedling-wasm.yml'
+  workflow_dispatch:
+
+jobs:
+  seedling-wasm:
+    name: Pin gate (gating) + boot and read-data (non-gating)
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── the cost of the submodule, measured rather than guessed ──────
+      # ~127 MB of wasm now comes down on every checkout that asks for
+      # submodules. That price is worth publishing: it is the argument
+      # anyone will want when deciding whether a future workflow should
+      # pass `submodules: recursive` at all.
+      - name: Stamp the checkout start
+        run: echo "CHECKOUT_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Measure the checkout cost
+        run: |
+          ELAPSED=$(( $(date +%s) - CHECKOUT_START ))
+          SUB=frontend/modules/flashPanel/wasm
+          SIZE=$(du -sh "$SUB" | cut -f1)
+          GITSIZE=$(du -sh .git/modules/frontend/modules/flashPanel/wasm 2>/dev/null | cut -f1 || echo n/a)
+          echo "CHECKOUT_ELAPSED=$ELAPSED" >> "$GITHUB_ENV"
+          {
+            echo "## Checkout cost (submodules: recursive)"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| whole checkout, wall clock | ${ELAPSED}s |"
+            echo "| \`$SUB\` working tree | $SIZE |"
+            echo "| its git dir | $GITSIZE |"
+            echo ""
+            echo "Builds checked out:"
+            echo ""
+            echo '```'
+            ls -1 "$SUB"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── STEP 1 — GATING ─────────────────────────────────────────────
+      - name: 'STEP 1 (gating) — the pin gate'
+        id: pins
+        run: |
+          set -o pipefail
+          node scripts/procgen/check-seedling-wasm-pins.mjs 2>&1 | tee /tmp/pins.log
+        continue-on-error: false
+
+      - name: 'STEP 1 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 1 — pin gate (GATING) — \`${{ steps.pins.outcome }}\`"
+            echo ""
+            echo '```'
+            cat /tmp/pins.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── STEP 2 — NON-GATING: does the game boot on a runner? ─────────
+      - name: Install Chromium for Playwright
+        if: always()
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+
+      - name: 'STEP 2 (non-gating) — does the bridge come up headless?'
+        id: boot
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          node scripts/procgen/verify-seedling-wasm-bridge.mjs 2>&1 | tee /tmp/boot.log
+          RC=$?
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: 'STEP 2 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 2 — headless boot (NON-GATING) — \`${{ steps.boot.outcome }}\`"
+            echo ""
+            echo "Does the SWFRecomp page come up on a runner with no GPU"
+            echo "(WebGPU via swiftshader)? Answer, verbatim:"
+            echo ""
+            echo '```'
+            tail -60 /tmp/boot.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── STEP 3 — NON-GATING: can a runner read data out of the wasm? ─
+      # ⚠ EXPECTED TO REFUSE, and that refusal is the finding rather than a
+      # surprise: check-seedling-vanilla-manifest.mjs drives REAL-GPU WINDOWS
+      # CHROME through /mnt/c/Windows/py.exe (⚖ a standing user rule for that
+      # row, recorded in its own docblock). A Linux runner has no py.exe, so
+      # the row cannot complete here at all. It is run anyway, because "try it
+      # and see how far we get" was the instruction and an untried assumption
+      # is worth less than a logged outcome.
+      - name: 'STEP 3 (non-gating) — read data out of the wasm'
+        id: readdata
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd3.log 2>&1 &
+          echo $! > /tmp/httpd3.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          node scripts/procgen/check-seedling-vanilla-manifest.mjs 2>&1 | tee /tmp/readdata.log
+          RC=$?
+          kill "$(cat /tmp/httpd3.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: 'STEP 3 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 3 — read data out of the wasm (NON-GATING) — \`${{ steps.readdata.outcome }}\`"
+            echo ""
+            echo "\`check-seedling-vanilla-manifest.mjs\` drives real-GPU Windows"
+            echo "Chrome via \`/mnt/c/Windows/py.exe\` by standing rule, so a Linux"
+            echo "runner is expected to refuse it. Logged rather than assumed:"
+            echo ""
+            echo '```'
+            tail -40 /tmp/readdata.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Outcomes** — step 1 \`${{ steps.pins.outcome }}\` (gating) ·"
+            echo "step 2 \`${{ steps.boot.outcome }}\` · step 3 \`${{ steps.readdata.outcome }}\`;"
+            echo "checkout ${{ env.CHECKOUT_ELAPSED }}s."
+          } >> "$GITHUB_STEP_SUMMARY"
