@@ -218,7 +218,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — |
 | `exitGateVeto` | — | — | fn | fn | — | — | — | — |
 | `gateHostingHint` | — | — | fn | fn | — | — | — | — |
-| `gateableItems` | — | — | null | 5 items | — | — | — | — |
+| `gateableItems` | — | — | `null` | 5 items | — | — | — | — |
 | `generateZoneForSpecs` | — | — | fn | fn | — | — | — | — |
 | `generateZoneForSpecsGen` | — | — | fn | fn | — | — | — | — |
 | `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — |

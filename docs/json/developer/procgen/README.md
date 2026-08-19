@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 3 pages · 156,853 words.**
+**17 documents · 3 pages · 154,613 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -14,8 +14,8 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 
 | Document | Description | Words |
 |---|---|---|
-| [Procedural Generation Architecture](./architecture.md) | This is the orientation document for the procedural-generation ("procgen") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces. | 3720 |
-| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one. | 5680 |
+| [Procedural Generation Architecture](./architecture.md) | This is the orientation document for the procedural-generation ("procgen") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces. | 3537 |
+| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one. | 3623 |
 | [Procgen demonstrations — a catalogue](./demos.md) | Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at. | 859 |
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report. | 3975 |
 | [Bounce Substrate](./bounce.md) | Bounce ("Bounce Demo", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`. | 2365 |
@@ -38,7 +38,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 |---|---|
 | [Procgen demonstrations — a catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) | procgenDocs/demos.html — **THE PROCGEN DEMO CATALOGUE, RENDERED.** One entry per demonstrable feature of the two procgen lab pages, each with the link that shows it (here AND on the deployed site), the CLI command that reproduces it in node, which control to press, and what you are looking at. |
 | [Procgen glossary — the vocabulary, defined](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html) | procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per term the procgen docs and the two lab pages use as vocabulary: a plain-language sentence first, then the concrete rule and where it lives. |
-| [Procgen reference — the URL grammar, the catalogue, the refusals](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html) | procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE CODE.** Three tables nobody should ever author by hand, because the code already knows the answer: the URL parameter grammar of the two lab pages, the generation catalogue, and the refusal vocabulary. |
+| [Procgen reference — the six generated tables](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html) | procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE CODE.** Six tables nobody should ever author by hand, because the code already knows the answer: the URL parameter grammar of the two lab pages, the generation catalogue, the refusal vocabulary, the substrate-registry capability matrix, the ins… |
 
 <!-- GENERATED:procgen-docs-index END -->
 
