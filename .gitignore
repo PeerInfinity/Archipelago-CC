@@ -336,10 +336,13 @@ scripts/procgen/.jta-roundtrip-templates/
 worlds/jta_loctest_roundtrip_worldgen/
 frontend/presets/jta_loctest_roundtrip_worldgen/
 
-# SWFRecomp-recompiled game pages for the flashPanel wasm transport: the
-# built artifacts (23.8 MB wasm) are never committed — copy them from
-# SWFRecomp-CC (see frontend/modules/flashPanel/README.md for the command).
-frontend/modules/flashPanel/wasm/
+# ⛓ RETIRED 2026-08-19 — frontend/modules/flashPanel/wasm/ used to be ignored
+# here (hand-copied SWFRecomp artifacts). It is now the SUBMODULE
+# PeerInfinity/seedling-wasm, so it must NOT be ignored: the whole point is
+# that GitHub Pages and CI check the builds out at that exact path. The
+# submodule carries its own .gitignore — a WHITELIST — under which historical
+# builds sitting in the same directory stay untracked and locally reachable
+# by SEEDLING_PAGE=<name>. See frontend/modules/flashPanel/README.md.
 
 # ⛓ The procgen documents staged into the Pages artifact by
 # .github/workflows/deploy-gh-pages.yml (`docs.html` fetches them from a

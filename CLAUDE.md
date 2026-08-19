@@ -40,7 +40,7 @@ source .venv/bin/activate
   - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
 - **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill, list the strays and kill those too — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'`.
 
-- **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
+- **Submodule paths**: `frontend/modules/shared/`, `frontend/modules/textAdventureEngine/` and `frontend/modules/flashPanel/wasm/` (the SWFRecomp Seedling builds, `PeerInfinity/seedling-wasm`) are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
 ---
 

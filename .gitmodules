@@ -16,3 +16,6 @@
 	path = frontend/modules/cavernous-ii
 	url = https://github.com/PeerInfinity/cavernous-ii.git
 	branch = substrate
+[submodule "frontend/modules/flashPanel/wasm"]
+	path = frontend/modules/flashPanel/wasm
+	url = https://github.com/PeerInfinity/seedling-wasm.git
