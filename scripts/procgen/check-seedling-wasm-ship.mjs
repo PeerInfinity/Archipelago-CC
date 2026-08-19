@@ -231,14 +231,24 @@ if (wasm) {
      * runtimes share (trap 389).
      */
     const verdictText = res.reads?.verdictText ?? '';
+    /**
+     * ⛔ THE DETAIL MUST BE THE LINE THAT CARRIES THE MATCH, NOT LINE 0. The
+     * readout is TWO lines now — the per-tick headline and the end-state one,
+     * each with its own scope — and printing the first line as evidence for a
+     * claim about the second reports a string that does not contain what the
+     * claim just asserted. Caught on this row's own first green run: both scope
+     * claims passed while quoting a line neither of them was about.
+     */
+    const lineWith = (re) => verdictText.split('\n').find((l) => re.test(l))
+        ?? `(no line matched ${re} in: ${verdictText.split('\n')[0]})`;
     check(/end state only/.test(verdictText),
         '⛔ …and the page prints the END-STATE bound beside it',
-        verdictText.split('\n')[0]);
+        lineWith(/end state only/));
     check(/per tick against the JS MODEL/.test(verdictText)
         && /invisible here/.test(verdictText),
         '⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what '
         + 'both runtimes SHARE',
-        verdictText.split('\n')[0]);
+        lineWith(/per tick against the JS MODEL/));
     check(wasm.status?.tick === solve?.tickCount,
         'the game ran the SAME number of ticks the solve produced',
         `game ${wasm.status?.tick} vs solve ${solve?.tickCount}`);
