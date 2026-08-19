@@ -15,6 +15,8 @@ import {
   buildCategoryGrid,
   DEFAULT_TILEMAP_PATH,
   DEFAULT_CONFIG_PATH,
+  TileMapDataMissingError,
+  isDefaultDataPath,
 } from './tileMapDataManager.js';
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
@@ -59,10 +61,39 @@ export class TileMapAnalyzerUI {
     // Kick off the load. We don't gate on app:readyForUiDataLoad —
     // the analyzer's data lives entirely in static files under
     // frontend/presets/, so it's safe to load immediately.
-    this._loadAndRender().catch((e) => {
-      log('error', 'load failed', e);
-      this._setStatus(`error: ${e.message}`);
-    });
+    this._loadAndRender().catch((e) => this._reportLoadFailure(e, 'load'));
+  }
+
+  /**
+   * ── ⛓⛓⛓ AN ABSENT **DEFAULT** IS NOT AN ERROR, AND SAYING SO IS THE FIX ──
+   *
+   * The default preset's two files are gitignored (`.gitignore`:
+   * `*_tilemap.json`, `*_tiles.json`), so GitHub Pages cannot serve them and
+   * this panel printed a red `error: failed to fetch … 404` to every visitor's
+   * console on open. ⛔ The absence is the FACT and the panel should state it:
+   * an INFO line and a status the reader can act on ("point it at a preset").
+   *
+   * ⛔ AND ONLY FOR THE DEFAULT. A 404 on a path somebody TYPED is a real
+   * error and stays one — the whole point of the class carrying its path.
+   *
+   * ⚠ THE OTHER OPTION WAS TO DROP THE MODULE FROM `modules-flash.json`, which
+   * is one line shorter. It is not smaller in what matters: the panel WORKS on
+   * the machine that has the data, so unregistering it would delete a working
+   * local capability in order to silence a message about data that is missing
+   * on purpose.
+   */
+  _reportLoadFailure(e, what) {
+    if (e instanceof TileMapDataMissingError && isDefaultDataPath(e.path)) {
+      log('info',
+        `[tileMapAnalyzer] no default tilemap here — ${e.path} is not served on this host. `
+        + 'The extractor output is gitignored (it is large and re-derivable), so it exists '
+        + 'only where it was produced. Point the panel at a preset that IS served.');
+      this._setStatus('no default tilemap here — the default preset is gitignored, so it is '
+        + 'not served on this host. Point the panel at a preset that is.');
+      return;
+    }
+    log('error', `${what} failed`, e);
+    this._setStatus(`error: ${e.message}`);
   }
 
   getRootElement() {
@@ -88,10 +119,7 @@ export class TileMapAnalyzerUI {
     };
 
     toolbar.appendChild(mkBtn('Reload', () => {
-      this._loadAndRender().catch((e) => {
-        log('error', 'reload failed', e);
-        this._setStatus(`error: ${e.message}`);
-      });
+      this._loadAndRender().catch((e) => this._reportLoadFailure(e, 'reload'));
     }));
 
     toolbar.appendChild(mkBtn('Compute', () => {

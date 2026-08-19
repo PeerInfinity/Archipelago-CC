@@ -13,8 +13,36 @@ export const DEFAULT_TILEMAP_PATH =
 export const DEFAULT_CONFIG_PATH =
   `${DEFAULT_PRESET_DIR}/robotkitty_tiles.json`;
 
+/**
+ * ⛓⛓ THE DEFAULT PRESET IS **GITIGNORED**, so a deployed site can never have it.
+ *
+ * `.gitignore` excludes `*_tilemap.json` and `*_tiles.json` (the extractor's
+ * output is large and re-derivable), which means `robotkitty_tilemap.json` and
+ * `robotkitty_tiles.json` exist on the machine that produced them and NOWHERE
+ * ELSE. On GitHub Pages the panel therefore opened, fetched two files that are
+ * not there, and printed `error: failed to fetch … 404` to the console of every
+ * visitor — a red line about a file that is absent BY DESIGN.
+ *
+ * ⛔ A 404 IS A DIFFERENT FACT FROM A BAD RESPONSE, so it gets its own class
+ * rather than a string match at the call site. And it carries the PATH, because
+ * the caller's question is "was this the default, or something the user
+ * chose?" — a 404 on a path somebody typed is a real error and stays one.
+ */
+export class TileMapDataMissingError extends Error {
+  constructor(path) {
+    super(`${path} is not served here (HTTP 404)`);
+    this.name = 'TileMapDataMissingError';
+    this.path = path;
+  }
+}
+
+/** Is this one of the two paths that are gitignored and therefore optional? */
+export const isDefaultDataPath = (path) =>
+  path === DEFAULT_TILEMAP_PATH || path === DEFAULT_CONFIG_PATH;
+
 async function fetchJson(path) {
   const res = await fetch(path);
+  if (res.status === 404) throw new TileMapDataMissingError(path);
   if (!res.ok) {
     throw new Error(`failed to fetch ${path}: ${res.status} ${res.statusText}`);
   }
