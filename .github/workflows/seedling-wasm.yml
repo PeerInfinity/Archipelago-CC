@@ -16,6 +16,14 @@ name: Seedling wasm submodule
 # data only, not running the game — or try it and see how far we get
 # (non-gating)"). Steps 2 and 3 are continue-on-error and report what got how
 # far; a red X on them is information, not a broken main.
+#
+# ⚠ HOW TO READ THIS RUN. `continue-on-error` rewrites a step's CONCLUSION to
+# `success`, so the job listing (and `gh run view --json jobs`) shows every
+# step green even when steps 2 and 3 both failed — measured on run
+# 32257668821, where they did. The truth lives in two places only: the run's
+# ANNOTATIONS, and the step summary below, which is built from
+# `steps.<id>.outcome` (the pre-override result) precisely for this reason.
+# ⛔ Do not conclude "all green" from the job listing of this workflow.
 
 on:
   push:
@@ -103,10 +111,22 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       # ── STEP 2 — NON-GATING: does the game boot on a runner? ─────────
+      # ⛔ NOT `npx playwright install`. The lockfile carries TWO playwrights:
+      # top-level `playwright` 1.57.0 (browser build 1200) and, nested under
+      # `@playwright/test` 1.56.0, another at 1.56.0 (build 1194).
+      # `node_modules/.bin/playwright` is @playwright/test's CLI, so `npx`
+      # downloads 1194 — while this repo's browser scripts do
+      # `import { chromium } from 'playwright'` and get 1.57.0, which then
+      # refuses: "Executable doesn't exist at …chromium_headless_shell-1200".
+      # ⚠ Measured, in the first run of this very workflow. It passed locally
+      # because that tree still had a stale 1.56.0 at node_modules/playwright;
+      # `npm ci` on a runner honours the lock and does not. The other nine
+      # `npx playwright install` call sites in .github/workflows/ are fine as
+      # they are: they drive @playwright/test suites, which want 1194.
       - name: Install Chromium for Playwright
         if: always()
         continue-on-error: true
-        run: npx playwright install --with-deps chromium
+        run: node node_modules/playwright/cli.js install --with-deps chromium
 
       - name: 'STEP 2 (non-gating) — does the bridge come up headless?'
         id: boot
@@ -120,8 +140,12 @@ jobs:
             curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
             sleep 1
           done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the
+          # kill below were unreachable on exactly the path that needs them.
+          set +e
           node scripts/procgen/verify-seedling-wasm-bridge.mjs 2>&1 | tee /tmp/boot.log
           RC=$?
+          set -e
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
           exit $RC
 
@@ -159,8 +183,12 @@ jobs:
             curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
             sleep 1
           done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the
+          # kill below were unreachable on exactly the path that needs them.
+          set +e
           node scripts/procgen/check-seedling-vanilla-manifest.mjs 2>&1 | tee /tmp/readdata.log
           RC=$?
+          set -e
           kill "$(cat /tmp/httpd3.pid)" 2>/dev/null || true
           exit $RC
 
