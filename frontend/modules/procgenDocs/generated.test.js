@@ -52,6 +52,8 @@ import {
     DOC_DIR, PAGE_DIR, README_ORDER,
 } from '../../../scripts/procgen/reference/docsIndex.mjs';
 
+import { termById } from './glossary.js';
+
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
 import { DOCS_INDEX } from './generated/docsIndex.js';
@@ -148,6 +150,31 @@ describe('urlGrammar names every reader/writer and every parameter they own', ()
     const readersAndWriters = Object.keys(urlParams)
         .filter((k) => typeof urlParams[k] === 'function' && /^(read|write)/.test(k))
         .sort();
+
+    /**
+     * ⛔⛔ **EVERY PARAMETER NAMES A GLOSSARY TERM** (PROCGEN DOCS · P5). Seven
+     * rows carried `terms: []` and rendered a blank cell, which is the shape a
+     * complete-looking table takes when it is not: a reader who follows 30
+     * links and finds 7 blanks concludes those 7 have no definition, and until
+     * P5 they did not. ⛓ Asked of the SOURCE glossary, not of the table: a
+     * declared term that no entry defines reds here as well as in the
+     * generator's own guard.
+     */
+    it('⛓⛓ every URL parameter names at least one glossary term, and every '
+        + 'term it names EXISTS', () => {
+        const blank = [];
+        const missing = [];
+        for (const page of URL_GRAMMAR.pages) {
+            for (const row of page.params) {
+                if (!row.terms.length) blank.push(`${page.id}:${row.name}`);
+                for (const id of row.terms) {
+                    if (!termById(id)) missing.push(`${page.id}:${row.name} → ${id}`);
+                }
+            }
+        }
+        expect(blank).toEqual([]);
+        expect(missing).toEqual([]);
+    });
 
     it(`⛓⛓ every read*/write* export of urlParams.js is named `
         + `(${readersAndWriters.length} of them)`, () => {

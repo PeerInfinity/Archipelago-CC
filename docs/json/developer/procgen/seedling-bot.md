@@ -10165,7 +10165,7 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   and the demo pages are dense with technical jargon — a new document that
   defines each of the technical terms … covering ALL of procgen, not just the
   Seedling substrate"*. The same shape one module over:
-  `frontend/modules/procgenDocs/glossary.js` — **140 terms over 8 areas**, each
+  `frontend/modules/procgenDocs/glossary.js` — **149 terms over 8 areas**, each
   with a plain-language sentence FIRST and the concrete rule (with its number
   and its refusal's own name) second — rendered at
   [**the glossary page**](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html)

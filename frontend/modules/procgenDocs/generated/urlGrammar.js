@@ -171,7 +171,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "attackhold",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "attack-hold",
+                        "view-setting"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchViewer.js",
@@ -239,7 +242,11 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "budgetms",
                     "retired": true,
-                    "terms": [],
+                    "terms": [
+                        "determinism",
+                        "tick-budget",
+                        "wall-clock-budget"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchGenerate.js",
@@ -474,7 +481,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "level",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "boot-items",
+                        "staged-level"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchSolve.js",
@@ -493,7 +503,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "name",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "tape",
+                        "tape-name"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchSolve.js",
@@ -596,7 +609,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": false,
                     "name": "shot",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "browser-row",
+                        "screenshot-flag"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchManual.js",
@@ -721,7 +737,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": 1,
                     "name": "speed",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "playback-speed",
+                        "view-setting"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchViewer.js",
@@ -790,7 +809,10 @@ export const URL_GRAMMAR = frz({
                     "defaultValue": null,
                     "name": "tick",
                     "retired": false,
-                    "terms": [],
+                    "terms": [
+                        "tick",
+                        "view-setting"
+                    ],
                     "via": [
                         {
                             "file": "frontend/modules/seedlingDemo/watchManual.js",

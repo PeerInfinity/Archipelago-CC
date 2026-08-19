@@ -2366,6 +2366,163 @@ export const TERMS = Object.freeze([
         seeAlso: ['demo-catalogue', 'lab-page', 'browser-row'],
     }),
 
+    /* ══════════ P5 — THE NINE THE 140 CEILING LEFT OUT ══════════════
+     *
+     * ⚖ THE CEILING IS LIFTED FOR THESE NINE (user, via the P5 charge). Seven
+     * are URL parameters the generated URL-grammar table reported as having NO
+     * glossary term at all — a table that links a term for 30 of 37 rows and
+     * silently blanks the other 7 is a table that looks complete. The last two
+     * are `component` and `a wall backend`, which P2 WROTE and then DROPPED to
+     * land inside D5's 80–140 band; §18.8 named them as the first two back if
+     * the ceiling ever moved.
+     */
+
+    t({
+        id: 'attack-hold',
+        term: 'the attack hold',
+        aliases: ['`?attackhold=`', 'the afterimage'],
+        area: 'pages',
+        plain: 'How long a swing stays drawn on screen after the game has stopped swinging.',
+        detail: 'A count of TICKS, not a duration — `?attackhold=N` keeps a fired attack rect '
+            + 'painted for `N` ticks after the engine dropped it, so a five-tick swing can be '
+            + 'seen at all. ⛔ It is a [view setting](#view-setting) and it makes NO claim: '
+            + 'held rects are drawn in different ink and `attackRectsAt` never returns one, so '
+            + 'the two channels partition the presses. ⚠ ABSENT and `?attackhold=0` are '
+            + 'DIFFERENT — absent is the page\'s default, 0 is a reader asking for the raw '
+            + 'picture — and a bad value is REPORTED rather than refused or ignored, because '
+            + 'throwing would take the page down over a typo in a query string.',
+        where: [{ label: 'seedlingDemo/watchOverlays.js — `parseAttackHold`', code: 'frontend/modules/seedlingDemo/watchOverlays.js' }],
+        seeAlso: ['url-parameter', 'view-setting', 'overlay-layer', 'tick'],
+    }),
+    t({
+        id: 'tick',
+        term: 'a tick',
+        aliases: ['`?tick=`', 'the cursor', 'a frame'],
+        area: 'pages',
+        plain: 'One step of the game clock — and, in a link, which step the viewer opens at.',
+        detail: 'The unit everything on these pages is counted in: a [tape](#tape) is a list of '
+            + 'ticks, a [solve](#solver)\'s cost is ticks, and the [tick budget](#tick-budget) '
+            + 'bounds a solve in ticks precisely so a busy machine cannot change what is kept. '
+            + '`?tick=N` is the VIEW half — a whole index ≥ 0 that sets the cursor. ⚠ It is '
+            + 'CLAMPED **and says so**: a tape shorter than the request usually means the run '
+            + 'threw early, and landing silently on the last frame would present a truncated '
+            + 'run as a complete one.',
+        where: [{ label: 'seedlingDemo/watchManual.js — `readViewParams` / `clampTick`', code: 'frontend/modules/seedlingDemo/watchManual.js' }],
+        seeAlso: ['url-parameter', 'view-setting', 'tape', 'tick-budget', 'playback-speed'],
+    }),
+    t({
+        id: 'playback-speed',
+        term: 'the playback speed',
+        aliases: ['`?speed=`'],
+        area: 'pages',
+        plain: 'How fast the viewer replays a recording — 1 is real time.',
+        detail: 'A plain multiplier read with `Number()`, defaulting to 1. ⛔ A '
+            + '[view setting](#view-setting): it changes how fast you WATCH and never what was '
+            + 'recorded, so nothing it does can reach a [tape](#tape) or a claim about one. '
+            + '⚠ Not to be confused with a [browser row](#browser-row)\'s wall-clock cost — a '
+            + 'wasm differential leg runs at ~0.5 frames/sec whatever this says.',
+        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        seeAlso: ['url-parameter', 'view-setting', 'tick', 'tape'],
+    }),
+    t({
+        id: 'screenshot-flag',
+        term: 'the screenshot flag',
+        aliases: ['`?shot=1`'],
+        area: 'pages',
+        plain: 'Tells the page it is being photographed by a script rather than read by a '
+            + 'person.',
+        detail: 'The literal `1`, and nothing else counts. It is how the lab page\'s CLI arm '
+            + 'exports a view as a PNG an agent can read — the one channel by which a '
+            + 'human-facing page becomes evidence in a record. ⛔ A [view setting](#view-setting) '
+            + 'like [`?tick=`](#tick): it selects a PICTURE, never a run.',
+        where: [{ label: 'seedlingDemo/watchManual.js — `readViewParams`', code: 'frontend/modules/seedlingDemo/watchManual.js' }],
+        seeAlso: ['url-parameter', 'view-setting', 'tick', 'browser-row'],
+    }),
+    t({
+        id: 'staged-level',
+        term: 'the staged level',
+        aliases: ['`?level=`', 'the staging'],
+        area: 'pages',
+        plain: 'Which level of the real game the SOLVE arm loads before it starts playing.',
+        detail: 'A number naming one of the real game\'s levels, read by the SOLVE arm together '
+            + 'with [`?boot=`](#boot-items) — what the player HAS — and `?goals=`. ⛔ Its '
+            + 'presence is what SELECTS the arm: `?source=` overrides, but a bare '
+            + '[`?tape=`](#tape) is REPLAY and a `?level=` is SOLVE, so the arm is inferred '
+            + 'rather than being a fourth thing to remember. ⚠ A GENERATED level is 900, which '
+            + 'is outside the real game\'s 116 and is why a scratch run\'s clears do not ride '
+            + 'into a tape.',
+        where: [{ label: 'seedlingDemo/watchSolve.js — `readSolveParams`', code: 'frontend/modules/seedlingDemo/watchSolve.js' }],
+        seeAlso: ['url-parameter', 'boot-items', 'solver', 'tape'],
+    }),
+    t({
+        id: 'tape-name',
+        term: 'the tape name',
+        aliases: ['`?name=`'],
+        area: 'pages',
+        plain: 'The label written into the recording the SOLVE arm produces.',
+        detail: 'A plain string, carried into `buildStagedTape` so a saved [tape](#tape) says '
+            + 'what it is. ⛓ It names the ARTIFACT and never the run: two solves of the same '
+            + '[seed](#seed) with different `?name=` are the same solve, which is why it is '
+            + 'the one SOLVE parameter that cannot change what is generated.',
+        where: [{ label: 'seedlingDemo/watchSolve.js — `readSolveParams`', code: 'frontend/modules/seedlingDemo/watchSolve.js' }],
+        seeAlso: ['url-parameter', 'tape', 'staged-level'],
+    }),
+    t({
+        id: 'wall-clock-budget',
+        term: 'the wall-clock budget (RETIRED)',
+        aliases: ['`?budgetms=`', '`wallClockMs`'],
+        area: 'pages',
+        plain: 'A bound on generation measured in SECONDS — removed, because it made a busy '
+            + 'computer generate a different level.',
+        detail: '⛔ **GONE, and the parameter WARNS rather than refusing.** Elapsed time is not '
+            + 'a property of a candidate, so a keep-or-revert loop bounded by it kept different '
+            + 'obstacles under load and [determinism](#determinism) died silently. Its '
+            + 'successor is the [tick budget](#tick-budget), counted in [ticks](#tick). ⚠ The '
+            + 'reader tolerates the old key on purpose — a stale link should say where its '
+            + 'bound went, not fail — which is the opposite of `?directed=`, a key whose '
+            + 'CHANNEL moved and which therefore refuses by name.',
+        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` }],
+        seeAlso: ['tick-budget', 'determinism', 'url-parameter', 'keep-or-revert'],
+    }),
+    t({
+        id: 'component',
+        term: 'a component',
+        aliases: ['a connected component', 'a corridor component'],
+        area: 'level-gen',
+        plain: 'One blob of squares that are all reachable from each other and from nothing '
+            + 'outside it.',
+        detail: 'What a [flood](#flood) returns: the maximal set of walkable cells joined to a '
+            + 'start. ⛓ It is the unit almost every geometric claim here is really about — '
+            + 'a [cut](#cut) is a wall that SPLITS the level into two components, an '
+            + '[area](#area) is a component of the partition, and *the room is connected* means '
+            + '*there is one component*. ⛔ And it inherits the flood\'s blindness: a component '
+            + 'is computed over a SYMMETRIC neighbour relation, so a one-way mechanic joins two '
+            + 'cells the walk cannot travel between.',
+        where: [
+            { label: 'gotchas.md § A component flood cannot see a ONE-WAY mechanic', doc: `${GOTCHAS}#a-component-flood-cannot-see-a-one-way-mechanic-and-it-lies-optimistically` },
+            { label: 'procgenCore/gridFlood.js', code: 'frontend/modules/procgenCore/gridFlood.js' },
+        ],
+        seeAlso: ['flood', 'cut', 'area', 'area-partition', 'door-law'],
+    }),
+    t({
+        id: 'wall-backend',
+        term: 'a wall backend',
+        aliases: ['a backend', 'a maze algorithm'],
+        area: 'maze',
+        plain: 'One strategy for drawing the walls of a room — the actual maze algorithm.',
+        detail: 'Registered by id in `shared/procgen/mazeAlgorithms/registry.js` (kept in '
+            + '`shared/` so a future grid substrate can reuse it) and selected through a '
+            + '[skeleton kind](#skeleton-kind), which bundles a backend with its parameters '
+            + 'and post-processors. ⛔ **A backend is not a biome and not a kind**: adding a '
+            + 'biome over an existing backend is one line in `skeletonKinds.js`; adding a '
+            + 'BACKEND is a new file. ⚠ Two defaults live in that table and must not be '
+            + 'collapsed — `DEFAULT_BIOME_ID` (`classic`) is what an unconfigured AP region '
+            + 'generates, `DEFAULT_SKELETON_KIND` (`empty`) is what the constructive loop '
+            + 'starts from.',
+        where: [{ label: 'maze.md § Biomes and wall backends', doc: `${MAZE}#biomes-and-wall-backends` }],
+        seeAlso: ['skeleton-kind', 'skeleton', 'biome', 'the-carve'],
+    }),
+
     /* ══════════ INSTRUMENTS, GATES AND ROWS ═════════════════════════ */
 
     t({

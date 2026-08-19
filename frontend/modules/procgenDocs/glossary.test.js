@@ -99,10 +99,21 @@ describe('the glossary as data', () => {
 
     /** ⚖ D5's band. ⛓ The count is NAMED rather than merely bounded: a slice
      *  that adds a term should have to look at this line. */
-    it('holds 140 entries — inside D5\'s 80–140 band, and every one is filed', () => {
-        expect(TERMS).toHaveLength(140);
+    /**
+     * ⛓⛓ **THE CEILING MOVED, 140 → 149** (⚖ user, via the PROCGEN DOCS · P5
+     * charge). P2 chose 140 to land inside D5's 80–140 band and named what it
+     * had to drop to get there. P5 spends the nine the charge authorised: the
+     * SEVEN URL parameters the generated URL-grammar table reported as having
+     * no glossary term at all (`?attackhold=`, `?tick=`, `?speed=`, `?shot=`,
+     * `?level=`, `?name=`, `?budgetms=`) and the TWO §18.8 named as first back
+     * if the ceiling ever lifted — `component` and `a wall backend`.
+     * ⛔ The upper bound is now 149 and it is still a BOUND: the next slice that
+     * wants an entry comes here and says whose licence it is spending.
+     */
+    it('holds 149 entries — 140 + P5\'s nine, and every one is filed', () => {
+        expect(TERMS).toHaveLength(149);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(140);
+        expect(TERMS.length).toBeLessThanOrEqual(149);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 
