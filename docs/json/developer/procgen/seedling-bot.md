@@ -932,6 +932,26 @@ out* — the builds ship in `PeerInfinity/seedling-wasm` at
 `frontend/modules/flashPanel/wasm/`, and CI does check them out
 (`.github/workflows/seedling-wasm.yml`).
 
+⛓ **The build it runs against is `seedling_bot_ap_p4b`, and that move is
+itself a measurement.** It defaulted to `seedling_bot_ap` — the R8 bot build
+every expectation under `fixtures/expectations/` was recorded from — until
+the wasm-hygiene slice ran this very sweep on both, back to back, with
+nothing edited in between: **534 PASS / 0 FAIL / 67 SKIP, ALL CHECKS PASSED
+on each**, 602 check lines agreeing in order and in text but for 13
+free-running clocks, which a control arm (the same build re-run) moved at
+least as far. p4b's bridge surface is a strict superset of the eight verbs,
+so `seedling_bot_ap` retired from the submodule; it stays reachable as
+`SEEDLING_PAGE=seedling_bot_ap` on a machine that still has the directory.
+⛔ No expectation, tape or battery byte moved, then or since.
+
+⚠ `PAGE_BASE` — the payload filename — is read out of `game.html`'s own
+`<script src>` rather than being a constant. Both halves of that rule have
+bitten: a variant directory can carry the ORIGINAL payload name (so
+`${PAGE_NAME}.wasm` skips silently), and a build can carry a payload named
+after ITS OWN directory (so a hardcoded `seedling_bot_ap` skips just as
+silently). Either way the sweep exits 0 having checked nothing, which reads
+exactly like a green run.
+
 **Always pass `--only=` when recording.** `--record` does not compare
 before it writes, so recording one new fixture otherwise rewrites every
 already-oracle-recorded expectation on the way past — a genuine drift in a
