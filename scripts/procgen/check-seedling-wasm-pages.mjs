@@ -10,7 +10,7 @@
  * `watch.html?side=wasm` HEAD-probed the game page, got a 404, and printed
  *
  *     the wasm build is not on this machine
- *     …/seedling_bot_ap/game.html is missing (HTTP 404).
+ *     …/<build>/game.html is missing (HTTP 404).
  *
  * to every visitor. Making the directory the submodule PeerInfinity/
  * seedling-wasm is what retires that readout, and this row is what says so:
@@ -45,7 +45,7 @@ const LABEL = arg('label', ROOT);
 const EXPECT_MISSING = process.argv.includes('--expect-missing');
 if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1); }
 
-const BUILD = 'seedling_bot_ap';   // the build watch.html's WASM_PAGE names
+const BUILD = 'seedling_bot_ap_p4b';   // the build watch.html's WASM_PAGE names
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';

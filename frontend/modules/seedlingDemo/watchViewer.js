@@ -255,7 +255,16 @@ function repoUrl(path) {
         : new URL(p, REPO_ROOT).href;
 }
 const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json');
-const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap/game.html';
+// ⛓ p4b, NOT `seedling_bot_ap`, SINCE THE WASM-HYGIENE SLICE. p4b's bridge
+// surface is a strict SUPERSET (it adds botForgeSaveStamp, botLevelSet and
+// botLoadLevels), and it was MEASURED to be the same game where it counts:
+// the R8 tape gate — `verify-seedling-bot-differential.mjs --win --only=<the
+// 20 r8-* tapes>`, whose expectations are seedling_bot_ap's OWN oracle
+// recordings — reads 534 PASS / 0 FAIL / 67 SKIP on BOTH builds, and the two
+// logs agree line for line except in two free-running clocks whose control
+// arm (the same build re-run) varies at least as much. So the page loads one
+// build instead of two and the submodule pins one fewer 33 MB artifact.
+const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4b/game.html';
 
 const PIT = HAZARD_STATES.pit;
 

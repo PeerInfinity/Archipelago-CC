@@ -83,13 +83,12 @@ and `CC/docs/plans/region-atlas-plan.md`.
 [`PeerInfinity/seedling-wasm`](https://github.com/PeerInfinity/seedling-wasm)
 (Unlicense, public), mounted at exactly the path every loader already used. It
 was a hand-copied gitignored directory until 2026-08-19, which is why the live
-GitHub Pages site could not boot the game at all: `watch.html` HEAD-probes
-`wasm/seedling_bot_ap/game.html` and printed *"… is missing"* to every visitor,
-because nothing published the bytes. Nothing about the placement changed a
-single path — `WASM_DIR`, `WASM_PAGE`, the presets' `flash_panel.wasm` and
-every script's `PAGE_NAME` are untouched; `actions/checkout` with
-`submodules: recursive` (which the deploy and CI already pass) now puts the
-files where those paths point.
+GitHub Pages site could not boot the game at all: `watch.html` HEAD-probes the
+build's `game.html` and printed *"… is missing"* to every visitor, because
+nothing published the bytes. The move itself changed no path — `WASM_DIR`,
+`WASM_PAGE`, the presets' `flash_panel.wasm` and every script's `PAGE_NAME`
+were untouched; `actions/checkout` with `submodules: recursive` (which the
+deploy and CI already pass) puts the files where those paths point.
 
 ```sh
 git submodule update --init frontend/modules/flashPanel/wasm
@@ -115,24 +114,41 @@ this; it keeps a separate `PAGE_BASE` for exactly that reason.)
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
 
-Four qualify today:
+Three qualify today:
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap` | `seedlingDemo/watchViewer.js` (`WASM_PAGE`) + ~24 `scripts/procgen/{probe,plan,solve,run,verify}-seedling-*.mjs` |
+| `seedling_bot_ap_p4b` | `seedlingDemo/watchViewer.js` (`WASM_PAGE`), the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs` and of ~23 `scripts/procgen/{probe,plan,solve,run}-seedling-*.mjs`, and `check-seedling-wasm-pages.mjs`'s `BUILD` |
 | `seedling_teleport_ap` | the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, two verify rows |
-| `seedling_bot_ap_p4b` | the `SEEDLING_PAGE` **default** of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs` |
 | `seedling_bot_ap_phase3` | the `SEEDLING_PAGE` **default** of `probe-seedling-level-set-transport.mjs` |
 
-A default *is* a pin — the environment variable is only an override, and that
-probe's own header makes the build identity load-bearing (it asserts the older
-build fails arms 2–6, which is the whole claim). `scripts/procgen/check-seedling-wasm-pins.mjs`
-gates the agreement between the tracked-reference set, the submodule's
-whitelist `.gitignore`, what git tracks there, and `builds.json`; it runs in
-`.github/workflows/seedling-wasm.yml`. Its reference scan enumerates all three
-spellings that occur here — the literal `wasm/<name>` path, a preset's
-`"wasm": "<name>/game.html"`, and a `PAGE_NAME = process.env.SEEDLING_PAGE || '<name>'`
-default.
+⛓ **`seedling_bot_ap` was retired on 2026-08-19, and the retirement was
+EARNED rather than assumed.** It was the R8 bot build every one of those
+paths named. `seedling_bot_ap_p4b`'s bridge surface is a strict superset of
+its verbs (`botForgeSaveStamp`, `botLevelSet`, `botLoadLevels` on top of the
+eight), so the question was only whether it is the same GAME — and the gate
+that pinned the old build answered it: the R8 tape sweep
+(`verify-seedling-bot-differential.mjs --win --only=<the 20 r8-* tapes>`,
+comparing against `seedling_bot_ap`'s **own** oracle recordings) read
+**534 PASS / 0 FAIL / 67 SKIP, ALL CHECKS PASSED** on both builds, run back
+to back with nothing edited in between. All 602 check lines agree in order and
+in text but for 13, and every one of those 13 is a free-running clock
+(`game_time`, `hits_timer`) whose control arm — the *same* build re-run —
+moved at least as far. ⛔ No expectation, tape or battery byte moved. The
+directory stays on developers' disks, untracked, reachable as
+`SEEDLING_PAGE=seedling_bot_ap`.
+
+A default *is* a pin — the environment variable is only an override, and the
+`_phase3` probe's own header makes the build identity load-bearing (it asserts
+the older build fails arms 2–6, which is the whole claim).
+`scripts/procgen/check-seedling-wasm-pins.mjs` gates the agreement between the
+tracked-reference set, the submodule's whitelist `.gitignore`, what git tracks
+there, and `builds.json`; it runs in `.github/workflows/seedling-wasm.yml`. Its
+reference scan enumerates **four** spellings, because all four occur here: the
+literal `wasm/<name>` path, a preset's `"wasm": "<name>/game.html"`, a
+`process.env.SEEDLING_PAGE || '<name>'` default, and a bare
+`PAGE_NAME = '<name>'` constant — the last added by the retirement slice, which
+found 23 files naming a build in a spelling the scan could not see.
 
 Historical builds (`seedling_bot_ap_3b`, `_m0`, `_mut`, `_p4`) are **not**
 pinned and are not in the submodule. They stay on a developer's disk in that

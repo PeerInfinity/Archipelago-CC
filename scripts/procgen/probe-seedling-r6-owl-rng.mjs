@@ -83,7 +83,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + 'seedling_bot_ap/game.html';
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b'}/game.html`;
 
 const outArg = process.argv.indexOf('--out');
 const OUT = outArg >= 0

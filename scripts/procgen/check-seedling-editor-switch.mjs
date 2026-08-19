@@ -515,11 +515,15 @@ try {
      * A row waiting on it here would hang on any machine that HAS the wasm
      * artifact and pass on any machine that does not.
      *
-     * ⚠ AND NOTHING IS ASSERTED ABOUT THE ARTIFACT'S PRESENCE. It is
-     * gitignored and machine-local: this box has it, CI does not, and a claim
-     * that flips on that is a claim about the machine. What is asserted is the
-     * SWITCH — a new arm named for its engine, the old one retired, the URL
-     * moved — which is true either way.
+     * ⚠ AND NOTHING IS ASSERTED ABOUT THE ARTIFACT'S PRESENCE — which used
+     * to be because it was gitignored and machine-local, and is now for a
+     * smaller reason. Since `0aa7878e8` the builds are the submodule
+     * PeerInfinity/seedling-wasm at that exact path, so a `--recurse-
+     * submodules` checkout HAS them and the live Pages site serves them;
+     * `check-seedling-wasm-pins.mjs` and `check-seedling-wasm-pages.mjs` are
+     * the rows that assert that, and duplicating it here would only mean two
+     * rows to move next time. What is asserted here is the SWITCH — a new arm
+     * named for its engine, the old one retired, the URL moved.
      */
     const replayUrl = `${origin}${PAGE_PATH}?tape=${BOOT}&side=js`;
     console.log(`\npage: ${replayUrl}`);
@@ -530,6 +534,25 @@ try {
     check((await page.evaluate(() => window.__editorLifetime.current.name)) === 'replay-js',
         'and the live arm is named for its engine',
         await page.evaluate(() => window.__editorLifetime.current.name));
+
+    /**
+     * ⛓ THE OPTION'S OWN WORDS, READ OFF THE PAGE. It said
+     * *"wasm — the real recompiled game (LOCAL ONLY)"*, and `(LOCAL ONLY)`
+     * stopped being true at `0aa7878e8`: the build ships in the submodule and
+     * the live site serves it. A label is the only part of this page most
+     * people ever read, so a false one is a defect with a wide blast radius
+     * and no test — which is exactly what this was.
+     *
+     * ⛔ NOT ASSERTED AGAINST THE STRING CONSTANT, which would be an echo of
+     * the same edit (trap 367). The text comes out of the rendered DOM, in
+     * another file entirely, and the claim is about its MEANING: it must not
+     * call the wasm side machine-local, and it must still say what it is.
+     */
+    const wasmLabel = await page.evaluate(() => (
+        document.querySelector('#side option[value="wasm"]')?.textContent ?? ''));
+    check(!/LOCAL[\s-]*ONLY/i.test(wasmLabel) && /recompiled game/.test(wasmLabel),
+        '⛓ the engine picker no longer calls the wasm side LOCAL ONLY — the submodule '
+        + 'ships the build and Pages serves it', wasmLabel);
 
     await page.selectOption('#side', 'wasm');
     await page.waitForFunction(

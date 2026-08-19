@@ -36,8 +36,20 @@
  *
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
- *   - the uncommitted wasm artifact at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap/
+ *   - the wasm artifact at
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4b/ — no longer
+ *     uncommitted: since `0aa7878e8` that directory is the submodule
+ *     PeerInfinity/seedling-wasm, so a `--recurse-submodules` checkout has it.
+ *     ⛓ AND THE DEFAULT MOVED OFF `seedling_bot_ap` at the wasm-hygiene
+ *     slice. This gate is what earned the move: 20 r8-* tapes, `--win`, the
+ *     expectations being seedling_bot_ap's OWN oracle recordings, run on both
+ *     builds back to back with nothing edited between them —
+ *     534 PASS / 0 FAIL / 67 SKIP on each, 602 check lines agreeing in order
+ *     and in text but for 13, every one of them a free-running clock
+ *     (`game_time`, `hits_timer`) whose CONTROL arm — the same build re-run —
+ *     moved at least as far. `seedling_bot_ap` is retired from the submodule;
+ *     it stays reachable here as `SEEDLING_PAGE=seedling_bot_ap` on any box
+ *     that still has the directory on disk.
  *
  * Runs headless: WebGPU comes up on swiftshader with the same flags as
  * verify-seedling-wasm-bridge.mjs. The page needs a real user gesture to
@@ -114,14 +126,30 @@ const REPO = join(HERE, '..', '..');
 // sweep against both, and swapping directories on disk to do that is how a
 // baseline gets lost. The artifact identity rides in the checkpoint
 // fingerprint below, so a resumed run can never reuse another build's verdict.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
-// ⚠ THE DIRECTORY IS RENAMED, THE FILES INSIDE IT ARE NOT. `deploy_wasm_avm2.sh`
-// names the payload after the BUILD, not the folder, so every staged variant
-// holds `seedling_bot_ap.js/.wasm` and `game.html` loads it by that name. A
-// check for `${PAGE_NAME}.wasm` would SKIP silently on every variant build —
-// which reads exactly like a green run.
-const PAGE_BASE = 'seedling_bot_ap';
+// ⚠ THE DIRECTORY IS NOT THE PAYLOAD NAME, IN EITHER DIRECTION.
+// `deploy_wasm_avm2.sh` names the payload after the BUILD, not the folder, so
+// a renamed variant directory still holds `seedling_bot_ap.js/.wasm` — which
+// is why a check for `${PAGE_NAME}.wasm` would SKIP silently on it, reading
+// exactly like a green run. That was the whole reason this was a CONSTANT.
+//
+// ⛓ BUT A CONSTANT IS THE OTHER HALF OF THE SAME MISTAKE: builds whose
+// payload really IS named after their directory (`seedling_bot_ap_p4b`) then
+// SKIP just as silently, and the wasm-hygiene slice needed exactly that
+// comparison. So the name is read where the browser reads it — out of
+// `game.html`'s own <script src>, the authority `check-seedling-wasm-pins.mjs`
+// already uses — and only falls back to the old constant when there is no
+// page to read (in which case the existsSync below SKIPs anyway).
+function payloadBase() {
+    const page = join(ARTIFACT, 'game.html');
+    if (!existsSync(page)) return 'seedling_bot_ap';
+    const srcs = [...readFileSync(page, 'utf8').matchAll(/<script\s+src="([^"]+)"/g)]
+        .map((m) => m[1]);
+    const glue = srcs.find((s) => s !== 'swf_bridge_avm2.js' && s.endsWith('.js'));
+    return glue ? glue.slice(0, -'.js'.length) : 'seedling_bot_ap';
+}
+const PAGE_BASE = payloadBase();
 
 if (!existsSync(join(ARTIFACT, 'game.html'))
     || !existsSync(join(ARTIFACT, `${PAGE_BASE}.wasm`))) {

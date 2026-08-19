@@ -33,10 +33,43 @@
  *   1. the literal path      .../wasm/<name>
  *   2. a preset's wiring     "wasm": "<name>/game.html"
  *   3. a script's DEFAULT    process.env.SEEDLING_PAGE || '<name>'
+ *   4. a BARE constant       PAGE_NAME = '<name>'
+ *
+ * …over a text in which ADJACENT STRING LITERALS HAVE BEEN JOINED FIRST.
+ * That is not a fifth spelling, it is the repair of a blind spot in the
+ * first: seven probes write the URL as
+ *
+ *     const PAGE_URL = 'http://localhost:8000/…/flashPanel/wasm/'
+ *         + '<name>/game.html';
+ *
+ * and the line break falls EXACTLY on the `wasm/` boundary, so spelling 1 —
+ * which needs `wasm/` and the name adjacent — matched none of them. Seven
+ * tracked files loaded a build and the gate could not see one of them. The
+ * scan now collapses `' + '` (and `" + "`) before matching, so a reference
+ * assembled from adjacent literals reads the same as one written whole.
  *
  * ⛔ Spelling 3 reads the DEFAULT, never the environment. The default is
- * the pin; SEEDLING_PAGE is only an override. Three check rows and one
- * probe pin their build this way and no other.
+ * the pin; SEEDLING_PAGE is only an override.
+ *
+ * ⛓ SPELLING 4 WAS A HOLE, FOUND BY THE SLICE THAT RETIRED A BUILD.
+ * Twenty-three probes and solvers wrote `const PAGE_NAME = '<name>';` — no
+ * `wasm/` path, no `process.env`, nothing spellings 1-3 can see. They are all
+ * on the composed form now, so spelling 3 covers them today; the spelling
+ * stays anyway, because the failure it enables is the bad kind. The
+ * three literal path references could be removed while 23 files went on
+ * loading that build, and the gate would have reported it UNREFERENCED and
+ * cleared it for retirement. (⚠ This paragraph cannot SPELL the example, and
+ * finding that out was the joke's punchline: written with the path in it,
+ * this docblock matched spelling 1 and pinned a retired build from inside the
+ * gate that reads it.) Same lesson as the `_phase3`
+ * miss (§18.13): a reference is a reference however it is spelled.
+ *
+ * ⚠ SCOPED TO `PAGE_NAME`, deliberately, and that is measured rather than
+ * cautious. The general form — any quoted `'seedling_*'` — matches
+ * `PRESET_ID = 'seedling_atlas_maze'` in verify-seedling-atlas-maze.mjs,
+ * which is a PRESET, not a build directory, and would invent a pin for a
+ * build that does not exist. Scoped to `PAGE_NAME` the sweep over the tracked
+ * tree returns exactly the 23 files and exactly one build name.
  *
  * ⛔ A build's payload filename is NOT its directory name. Alone among
  * the pinned builds, seedling_bot_ap_phase3/ carries seedling_bot_ap.js
@@ -83,9 +116,18 @@ function note(name, how) {
     referenced.get(name).add(how);
 }
 const SPELLINGS = [
-    [/(?:^|[^\w/])wasm\/(seedling_[a-z0-9_]+)/g, 'literal wasm/<name> path'],
+    // ⛔ THE LOOKBEHIND IS THE FIX FOR A GATE THAT MATCHED ALMOST NOTHING.
+    // This was `(?:^|[^\w/])wasm\/…`, and the `/` inside that negative class
+    // excluded the one character that ALWAYS precedes this path in real code:
+    // the separator. Measured — `'../flashPanel/wasm/<name>/game.html'`,
+    // `frontend/modules/flashPanel/wasm/<name>/` and the localhost URL all
+    // failed it; the only thing it ever matched was prose writing `wasm/<name>`
+    // with nothing in front. `-` stays excluded so a hypothetical `not-wasm/`
+    // directory cannot pass as this one.
+    [/(?<![\w-])wasm\/(seedling_[a-z0-9_]+)/g, 'literal wasm/<name> path'],
     [/"wasm"\s*:\s*"(seedling_[a-z0-9_]+)\/game\.html"/g, 'preset flash_panel.wasm'],
     [/process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/g, 'SEEDLING_PAGE default'],
+    [/PAGE_NAME\s*=\s*'(seedling_[a-z0-9_]+)'/g, 'bare PAGE_NAME constant'],
 ];
 const trackedFiles = git(['ls-files', '-z', '--', ...SCAN_ROOTS]).split('\0').filter(Boolean);
 for (const rel of trackedFiles) {
@@ -94,6 +136,12 @@ for (const rel of trackedFiles) {
     let text;
     try { text = readFileSync(join(REPO, rel), 'utf8'); } catch { continue; }
     if (text.includes('\0')) continue;   // binary
+    // ⛓ JOIN ADJACENT STRING LITERALS BEFORE MATCHING. See the docblock:
+    // a URL broken across a line at the `wasm/` boundary is the same
+    // reference as one written on one line, and seven files wrote it that
+    // way. This can only ever CREATE a match by making a build name
+    // adjacent to the path that precedes it, which is exactly the case.
+    text = text.replace(/'\s*\+\s*'/g, '').replace(/"\s*\+\s*"/g, '');
     for (const [re, how] of SPELLINGS) {
         re.lastIndex = 0;
         for (let m; (m = re.exec(text));) note(m[1], `${how} — ${rel}`);

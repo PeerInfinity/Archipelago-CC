@@ -46,11 +46,42 @@
  *      and the arm asserts the table grew with it. Kept rather than deleted — a
  *      rule that stops applying deserves a witness that it stopped.
  *
- * Run (dev server on :8000, the phase-3 artifact staged, Windows Playwright
- * installed per SWFRecomp-CC tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md):
+ * ⛓⛓ THE DEFAULT MOVED OFF `seedling_bot_ap_phase3` ON 2026-08-19, AND THE
+ * MEASUREMENT THAT MOVED IT IS A FINDING ABOUT THIS PROBE.
+ *
+ * The wasm-hygiene slice ran all three arms on real-GPU Windows Chrome:
+ *
+ *   seedling_bot_ap_phase3  (the default)   26 PASS / 2 FAIL
+ *   seedling_bot_ap_p4b                     28 PASS / 0 FAIL
+ *   seedling_bot_ap         (the control)   16 PASS / 12 FAIL
+ *
+ * ⛔ The default was RED, and had been since phase 4 landed. The two arms it
+ * failed are 6 (a 117-room set mounts and the table grows with it) and 7b (a
+ * DELIVERED set's `moonrock_target` is what the game reports) — both of them
+ * arms this docblock itself describes as FLIPPED BY PHASE 4. A phase-3 build
+ * cannot satisfy a phase-4 claim, so the probe was pinned to a build two of
+ * its own arms had already retired, and nothing noticed because nothing runs
+ * this row automatically: it drives Windows Chrome through `py.exe`, which a
+ * Linux CI runner does not have.
+ *
+ * ⇒ the default is `seedling_bot_ap_p4b`, on which every arm passes, and
+ * `seedling_bot_ap_phase3` is retired from the submodule. The CONTROL is what
+ * still makes this a claim rather than a description, and it still refuses:
+ * an older build fails twelve arms including the positive control.
+ *
+ * ⚠ BOTH NAMED BUILDS BELOW ARE NOW DEVELOPER-LOCAL. They are not in
+ * `PeerInfinity/seedling-wasm` any more — an env EXAMPLE in a docblock is
+ * deliberately not a pin (only a DEFAULT is), which is the same rule that
+ * keeps `_3b`, `_m0`, `_mut` and `_p4` out. Reproducing the contrast needs a
+ * box that still has the directory on disk.
+ *
+ * Run (dev server on :8000, Windows Playwright installed per SWFRecomp-CC
+ * tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md):
  *   node scripts/procgen/probe-seedling-level-set-transport.mjs
  *   SEEDLING_PAGE=seedling_bot_ap node scripts/procgen/…   # the OLD build,
  *       which should FAIL arms 2-6 — that is what makes this probe a claim
+ *   SEEDLING_PAGE=seedling_bot_ap_phase3 node scripts/procgen/…  # 26/2, the
+ *       state that moved the default
  */
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
@@ -59,7 +90,7 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_phase3';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
 const SEEDLING = process.env.SEEDLING_SRC || join(process.env.HOME, 'CC', 'seedling');
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
