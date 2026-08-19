@@ -39,11 +39,28 @@ on:
       - 'scripts/procgen/check-seedling-wasm-pins.mjs'
       - '.github/workflows/seedling-wasm.yml'
   workflow_dispatch:
+    inputs:
+      with_deps:
+        description: >-
+          Pass --with-deps to `playwright install`? The arm is echoed into the
+          step log as MEASURED-ARM so a run can be attributed afterwards. On a
+          push event this input is empty and the default below applies.
+        type: boolean
+        default: true
 
 jobs:
   seedling-wasm:
     name: Pin gate (gating) + boot and read-data (non-gating)
     runs-on: ubuntu-latest
+    # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES. Measured
+    # 2026-08-19: this job hung 38 min in `Install Chromium for Playwright`
+    # (an apt stall inside `--with-deps`) with the GATING pin gate already
+    # green at 1 s, and was killed BY HAND — nothing would have stopped it for
+    # six hours, and the step that stalls is `continue-on-error`, so it reports
+    # nothing anybody reads. 25 is chosen against the measurements, not a
+    # round number: a healthy whole job is 1 m 26 s – 2 m, and the slowest
+    # HONEST browser install ever seen here was 10 m 19 s.
+    timeout-minutes: 25
 
     steps:
       # ── the cost of the submodule, measured rather than guessed ──────
@@ -136,10 +153,31 @@ jobs:
       # a step that fails fast reads exactly like one that passed fast. The
       # nine `npx playwright install` call sites in .github/workflows/ drive
       # @playwright/test suites, which want 1194 either way.
+      # ⛔ A STEP THAT CAN HANG GETS ITS OWN CAP. The job cap above would
+      # eventually stop a stall, but it would stop it as a JOB timeout, which
+      # reports `cancelled` and names neither the step nor the cause. 12 min
+      # here fails the STEP by name, leaves the job's remaining budget to the
+      # steps after it, and still clears the 10 m 19 s honest install.
       - name: Install Chromium for Playwright
         if: always()
         continue-on-error: true
-        run: node node_modules/playwright/cli.js install --with-deps chromium
+        timeout-minutes: 12
+        env:
+          # Empty on a `push` event (no inputs exist there), so the fallback
+          # below is the DEFAULT this workflow ships with. ⛔ It is `true` in
+          # THIS commit deliberately: the four-run measurement that decides it
+          # has not been taken yet, and a CI-config change first runs in
+          # production — the default does not move on a hypothesis. See §18.16
+          # of the arc-3 kickoff for the table and the decision.
+          WITH_DEPS: ${{ github.event.inputs.with_deps || 'true' }}
+        run: |
+          if [ "$WITH_DEPS" = "true" ]; then
+            echo "MEASURED-ARM: --with-deps"
+            node node_modules/playwright/cli.js install --with-deps chromium
+          else
+            echo "MEASURED-ARM: no --with-deps"
+            node node_modules/playwright/cli.js install chromium
+          fi
 
       - name: 'STEP 2 (non-gating) — does the bridge come up headless?'
         id: boot
