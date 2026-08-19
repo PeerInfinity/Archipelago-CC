@@ -66,6 +66,10 @@ jobs:
           SIZE=$(du -sh "$SUB" | cut -f1)
           GITSIZE=$(du -sh .git/modules/frontend/modules/flashPanel/wasm 2>/dev/null | cut -f1 || echo n/a)
           echo "CHECKOUT_ELAPSED=$ELAPSED" >> "$GITHUB_ENV"
+          # ⛔ Also to stdout. A measurement that exists only in the step
+          # summary cannot be quoted in a commit or a record — the summary is
+          # a rendered attachment, not something `gh run view --log` returns.
+          echo "MEASURED: checkout ${ELAPSED}s · working tree $SIZE · git dir $GITSIZE"
           {
             echo "## Checkout cost (submodules: recursive)"
             echo ""
