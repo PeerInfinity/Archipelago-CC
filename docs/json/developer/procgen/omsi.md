@@ -14,7 +14,7 @@ The iframe boots with `?managed=1`, which makes the fork call `IdleLoopsManaged.
 | **D1** — loops mode | `loopSupport`, the step gate, per-region authored queues, Record capture and Playback replay | outer repo only |
 | **D2** — the Bot | the fork's own automation planner as the `walkTo` solver, plus the per-region Explore rescale it needs | outer repo (slices 1/2/3) + fork (slice 2b) |
 
-Arc E (multi-town travel) and F (a panel queue editor) are not built. **Instant shipped** in slice 1 of the Instant-policy pass (2026-07-25), superseding the old "omsi Instant is last of all substrates" ruling and its premise that the fork has no fast-step surface — it has `step(n)`, and the bridge already owns the clock that calls it. See [Instant](#instant-a-pump-not-a-skip) below.
+Arc E (multi-town travel) and F (a panel queue editor) are not built. **Instant shipped** in slice 1 of the Instant-policy pass (2026-07-25), superseding the old "omsi Instant is last of all substrates" ruling and its premise that the fork has no fast-step surface — it has `step(n)`, and the bridge already owns the clock that calls it. See [Instant](#instant--a-pump-not-a-skip) below.
 
 **The fork byte-gate.** Fork-side changes are gated on reproducing the reference planner run exactly: `CC/scripts/omsi-stats/run-planner.mjs` at seed 12345 must still report **461 loops / 5,195,188 ticks / final-state hash `9d9952e68bc8373c` / 0 RNG draws**. ⚠ Run it with `--worktree`: the harness sims `git archive HEAD`, so without the flag a green gate is testing the *parent* commit.
 

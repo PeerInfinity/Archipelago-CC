@@ -20,6 +20,10 @@
  * — the em dash is DROPPED and each space around it becomes a hyphen, which is
  * exactly what a first attempt (keeping every Unicode dash) got wrong.
  *
+ * ⛓ P4 MOVED THE RULE ITSELF to `ghSlug.js` so the docs PAGE renders the same
+ * anchors this file checks. The pin did not move: these six pairs are the
+ * external evidence, and they now gate the shared function.
+ *
  * ⛔ And a fragment whose heading begins with a stripped symbol (`## ⚖ What a
  * URL is FOR…`) would start with a hyphen, where NO tracked link evidences
  * what GitHub answers. Those are refused by name below rather than guessed at.
@@ -31,6 +35,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { DEMOS } from './demos.js';
+import { ghSlug } from './ghSlug.js';
 import {
     AREAS, AREA_IDS, DOC_ROOT, GLOSSARY_PAGE, PAGES_BASE, TERMS,
     assertGlossary, hrefFor, oneLinerFor, termById, termsInArea,
@@ -39,12 +44,12 @@ import {
 /** ⛓ Repo root from this file: `frontend/modules/procgenDocs/` → up three. */
 const ROOT = new URL('../../../', import.meta.url).pathname;
 
-/** ⛓ THE RULE, stated once. Lowercase; DROP every character that is not a
- *  letter, a number, a space, a hyphen-minus or an underscore; spaces →
- *  hyphens. Pinned to real tracked links in the first describe below. */
-const ghSlug = (heading) => heading.trim().toLowerCase()
-    .replace(/[^\p{L}\p{N} \-_]/gu, '')
-    .replace(/ /g, '-');
+/** ⛓⛓ THE RULE NOW LIVES IN `ghSlug.js`, BECAUSE A PAGE NEEDS IT TOO (P4,
+ *  D2): `docs.html` renders these same documents and has to spell `#a-
+ *  fragment` the way this file says it is spelled. ⛔ The six-link pin below
+ *  STAYS HERE and is the reason to believe the rule — it is evidence written
+ *  by people outside these slices, and sharing a function with the page is
+ *  only safe while that pin is external. */
 
 /** Every `##`–`####` heading of a doc, as its slug. ⛔ Fenced blocks skipped:
  *  a `# comment` inside one is not a heading. */

@@ -92,6 +92,33 @@ export function pagesUrl(page, { base = PAGES_BASE } = {}) {
     return `${String(base).replace(/\/$/, '')}${String(page).replace(/^\/frontend(?=\/)/, '')}`;
 }
 
+/** ⛓⛓ **THE INVERSE OF THAT MAPPING, AND IT IS SPELLED THROUGH IT.** A page
+ *  under `procgenDocs/` needs to know where the SITE root is so it can fetch
+ *  something that is not beside it — `docs.html` fetches the tracked `.md`s
+ *  from `<siteRoot>/docs/json/developer/procgen/`, which is the repo root when
+ *  the dev server is serving this tree and the Pages base when it is not.
+ *
+ *  ⛔ The strip is NOT written out a second time here. `pagesUrl(page, {base:
+ *  ''})` already answers "what does this repo path look like on the deployed
+ *  site"; this function just asks which of the two spellings the pathname it
+ *  was handed actually ends with, and returns everything before it. A hand-
+ *  written regex here would be a second answer to the same question, which is
+ *  the exact failure the `Live:` lines proved the hard way.
+ *
+ *      /frontend/modules/procgenDocs/docs.html      →  ''  (repo root served)
+ *      /Archipelago-CC/modules/procgenDocs/docs.html →  '/Archipelago-CC'
+ *      /modules/procgenDocs/docs.html                →  ''  (frontend/ served)
+ *
+ *  ⛓ The repo-rooted form is tried FIRST, because a repo-rooted pathname ends
+ *  with the Pages-shaped one too. */
+export function siteRoot(pathname, { page = '/frontend/modules/procgenDocs/docs.html' } = {}) {
+    const p = String(pathname);
+    for (const tail of [page, pagesUrl(page, { base: '' })]) {
+        if (p.endsWith(tail)) return p.slice(0, -tail.length);
+    }
+    return '';
+}
+
 /** `<base>/modules/…?<url>` — the SAME run on the deployed site. The row
  *  imports this rather than keeping its own copy. */
 export function pagesHref(entry, { base = PAGES_BASE, url = entry.url } = {}) {
