@@ -1,7 +1,10 @@
-# The Seedling Real-Game Bot (v1 + v2 + R0 + R1)
+# The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`
 
 How we drive the **real recompiled Seedling** with a scripted input tape and
-check a JavaScript model of its physics against what the game actually did.
+check a JavaScript model of its physics against what the game actually did —
+movement, collision, room transitions and A\* pathing. This file is also the
+tracked record of the procgen arcs built on `watch.html`, § *The procgen
+ELEMENTS design* being the current one.
 
 This is the region-atlas Phase 8 "real-game surface". The maze-surface bot
 ([maze.md](./maze.md)) proves generated worlds beatable on the *projected*

@@ -1,6 +1,6 @@
 # JtA Substrate
 
-The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game, included as the `frontend/modules/journey-to-ascension/` git submodule — in a same-origin iframe as a loop-mode substrate.
+The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering.
 
 ## Zone-based mapping
 

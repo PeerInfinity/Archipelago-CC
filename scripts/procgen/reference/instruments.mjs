@@ -36,7 +36,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve as resolvePath } from 'node:path';
 
-import { REPO, src } from './lib.mjs';
+import { REPO, firstSentence, src } from './lib.mjs';
 
 export const SCRIPT_DIR = 'scripts/procgen';
 const DOC_DIR = 'docs/json/developer/procgen';
@@ -196,20 +196,6 @@ export function docblockOf(header) {
         };
     }
     return null;
-}
-
-/**
- * ⛓ THE ONE-LINER — the first SENTENCE of the first paragraph, where a
- * sentence ends at `.`/`?`/`!` followed by a space and a capital, or at the end
- * of the paragraph. ⛔ A `.` inside `e.g.` / `i.e.` / a file name / a decimal
- * does not end one, because those are how this tree writes.
- */
-export function firstSentence(text) {
-    const para = text.split(/\n\s*\n/)[0].replace(/\s+/g, ' ').trim();
-    const re = /(?<!\be\.g|\bi\.e|\bcf|\bvs|\b[A-Z]|\d)[.?!](?=\s+[A-Z⛓⛔⚠⚖]|$)/;
-    const at = re.exec(para);
-    const cut = at ? para.slice(0, at.index + 1) : para;
-    return cut.length > 320 ? `${cut.slice(0, 317)}…` : cut;
 }
 
 /* ══════════════════════════════════════════════════════════════════════

@@ -75,8 +75,11 @@ import {
     INSTRUMENTS_DOC, buildInstruments, instrumentsMarkdown,
 } from './reference/instruments.mjs';
 
+import { INDEX_DOC, buildDocsIndex, docsIndexMarkdown } from './reference/docsIndex.mjs';
+
 const REGISTRY = await buildRegistry();
 const INSTRUMENTS = buildInstruments();
+const DOCS_INDEX = buildDocsIndex();
 
 const OUT = resolve(arg('out', DEFAULT_OUT));
 const files = [
@@ -132,6 +135,16 @@ const files = [
             + 'at no file here.',
         value: INSTRUMENTS,
     },
+    {
+        file: 'docsIndex.js',
+        exportName: 'DOCS_INDEX',
+        doc: '**THE PROCGEN DOCUMENTATION INDEX** — one row per `.md` in '
+            + '`docs/json/developer/procgen/` (README excepted, since it is the file the '
+            + 'index goes in) with its own H1, its own first paragraph and its word count, '
+            + 'in the reading order README declares; plus one row per page under '
+            + '`frontend/modules/procgenDocs/`, which are not `.md` files at all.',
+        value: DOCS_INDEX,
+    },
 ].map((f) => ({ ...f, text: moduleText(f) }));
 
 /**
@@ -149,6 +162,11 @@ const regions = [
         file: INSTRUMENTS_DOC,
         table: 'procgen-instruments',
         body: instrumentsMarkdown(INSTRUMENTS),
+    },
+    {
+        file: INDEX_DOC,
+        table: 'procgen-docs-index',
+        body: docsIndexMarkdown(DOCS_INDEX),
     },
 ].map((r) => ({ ...r, path: join(REPO, r.file) }));
 
@@ -251,3 +269,6 @@ console.log(`instruments: ${INSTRUMENTS.counts.files} files over `
 for (const f of INSTRUMENTS.findings) {
     console.log(`  FINDING [instruments] ${f.name} — ${f.severity}`);
 }
+console.log(`docsIndex:  ${DOCS_INDEX.counts.docs} documents (`
+    + `${DOCS_INDEX.counts.words.toLocaleString('en-US')} words) + `
+    + `${DOCS_INDEX.counts.pages} pages`);

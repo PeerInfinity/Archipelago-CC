@@ -823,7 +823,6 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/README.md",
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/demos.md",
                 "docs/json/developer/procgen/seedling-bot.md"

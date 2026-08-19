@@ -48,9 +48,13 @@ import {
 } from '../../../scripts/procgen/reference/lib.mjs';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { SCRIPT_DIR } from '../../../scripts/procgen/reference/instruments.mjs';
+import {
+    DOC_DIR, PAGE_DIR, README_ORDER,
+} from '../../../scripts/procgen/reference/docsIndex.mjs';
 
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
+import { DOCS_INDEX } from './generated/docsIndex.js';
 import { INSTRUMENTS } from './generated/instruments.js';
 import { REGISTRY } from './generated/registry.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
@@ -66,6 +70,7 @@ const MODULES = [
     { file: 'refusals.js', value: REFUSALS },
     { file: 'registry.js', value: REGISTRY },
     { file: 'instruments.js', value: INSTRUMENTS },
+    { file: 'docsIndex.js', value: DOCS_INDEX },
 ];
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -589,5 +594,61 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
             'cited without a path; it lives elsewhere in the tree: regenerate-r4-tapes.mjs',
             'no docblock: verify-runner-smoke.mjs',
         ]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE DOCS INDEX, ASKED OF THE DOCS DIRECTORY (P3b)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the docs index is one row per .md in the procgen docs directory', () => {
+    const mdOnDisk = readdirSync(join(ROOT, DOC_DIR))
+        .filter((f) => f.endsWith('.md') && f !== 'README.md').sort();
+    const htmlOnDisk = readdirSync(join(ROOT, PAGE_DIR))
+        .filter((f) => f.endsWith('.html')).sort();
+
+    it(`⛓⛓ every \`.md\` on disk is a row, README excepted (${mdOnDisk.length})`, () => {
+        expect(DOCS_INDEX.docs.map((d) => d.file).sort()).toEqual(mdOnDisk);
+        expect(DOCS_INDEX.docs.map((d) => d.file)).not.toContain('README.md');
+    });
+
+    it('⛓⛓ …in the DECLARED reading order, not alphabetically — and the '
+        + 'declaration covers the directory exactly, so a new document cannot '
+        + 'arrive unindexed', () => {
+        expect(DOCS_INDEX.docs.map((d) => d.file)).toEqual([...README_ORDER]);
+        expect([...README_ORDER].sort()).toEqual(mdOnDisk);
+    });
+
+    it('⛓⛓ every PAGE is a row too — three of README\'s entries point at a '
+        + 'page rather than a `.md`, and dropping them would be a table that '
+        + 'stopped covering its subject', () => {
+        expect(DOCS_INDEX.pages.map((p) => p.file)).toEqual(htmlOnDisk);
+        for (const p of DOCS_INDEX.pages) {
+            expect(p.title, `${p.file} has no <title>`).toBeTruthy();
+            expect(p.description, `${p.file} has no description`).toBeTruthy();
+            expect(p.url).toContain('/modules/procgenDocs/');
+        }
+    });
+
+    it('⛔ every row carries the document\'s OWN H1 and its OWN first '
+        + 'paragraph — read out of the file, never a summary kept here', () => {
+        for (const d of DOCS_INDEX.docs) {
+            const text = readFileSync(join(ROOT, DOC_DIR, d.file), 'utf8');
+            expect(text.split('\n')[0]).toBe(`# ${d.h1}`);
+            expect(d.description.length, `${d.file} has an empty description`)
+                .toBeGreaterThan(40);
+            /* ⛓ the description is a PREFIX of what the document actually says */
+            const head = text.replace(/\s+/g, ' ');
+            const opening = d.description.replace(/…$/, '');
+            expect(head, `${d.file}'s description is not its own text`).toContain(opening);
+            expect(d.words).toBeGreaterThan(100);
+        }
+    });
+
+    it('⛓ the word count is the file\'s own, and the totals add up', () => {
+        const sum = DOCS_INDEX.docs.reduce((a, d) => a + d.words, 0);
+        expect(DOCS_INDEX.counts.words).toBe(sum);
+        expect(DOCS_INDEX.counts.docs).toBe(DOCS_INDEX.docs.length);
+        expect(DOCS_INDEX.counts.pages).toBe(DOCS_INDEX.pages.length);
     });
 });

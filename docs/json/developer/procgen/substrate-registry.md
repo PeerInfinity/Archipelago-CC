@@ -1,6 +1,6 @@
 # Substrate Registry Reference
 
-The substrate registry (`frontend/modules/shared/procgen/substrateRegistry.js`) is the dispatch hub between the procgen pipeline, the runtime player, and the substrates. Substrates register an **entry** describing their capabilities; the pipeline and player look entries up by `id` and never import substrate modules directly. This document is the reference for that entry contract, compiled from the registry and the seven registered entries.
+`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.
 
 ## Registry mechanics
 

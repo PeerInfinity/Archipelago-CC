@@ -1,6 +1,6 @@
 # Procedural Generation Architecture
 
-This is the orientation document for the procedural-generation ("procgen") system: how a world is generated in the browser, what it compiles to, and how it is played back. Read this first; the other documents in this section go deeper on individual pieces.
+This is the orientation document for the procedural-generation ("procgen") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces.
 
 ## What procgen is in this fork
 
