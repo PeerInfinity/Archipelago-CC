@@ -50,15 +50,17 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * ⚠ FROM `@playwright/test`, NOT FROM `playwright`, and the difference is
- * not stylistic. `package.json` PINS `@playwright/test` at 1.56.0 and
- * FLOATS `playwright` at ^1.57.0; the two resolve to different browser
- * builds, and only the pinned one's build is in `~/.cache/ms-playwright`
- * on a machine that has run `npm ci` without `npx playwright install`.
- * The sibling probes import `playwright` and currently die on
- * "Executable doesn't exist … chromium_headless_shell-1200" before they
- * reach their first check. Importing the pinned package is what makes
- * this row runnable on a fresh checkout.
+ * ⛓ FROM `@playwright/test`, WHICH USED TO BE THE ONLY RUNNABLE CHOICE AND
+ * IS NOW MERELY THE EXPLICIT ONE. `package.json` pinned `@playwright/test`
+ * at 1.56.0 while FLOATING `playwright` at ^1.57.0, so the two resolved to
+ * different browser builds (1194 vs 1200) and only the pinned one's build
+ * was in `~/.cache/ms-playwright` after an `npm ci` — the sibling probes,
+ * which import `playwright`, died on "Executable doesn't exist …
+ * chromium_headless_shell-1200" before their first check.
+ * ⇒ 2026-08-19 `playwright` is pinned to EXACTLY 1.56.0 as well, `npm ls`
+ * shows one of them, and both imports now resolve to the same install. The
+ * import stays as it is: naming the package whose browser build the pin is
+ * about costs nothing and survives the next dependency move.
  */
 import { chromium } from '@playwright/test';
 

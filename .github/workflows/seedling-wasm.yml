@@ -115,18 +115,27 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       # ── STEP 2 — NON-GATING: does the game boot on a runner? ─────────
-      # ⛔ NOT `npx playwright install`. The lockfile carries TWO playwrights:
-      # top-level `playwright` 1.57.0 (browser build 1200) and, nested under
-      # `@playwright/test` 1.56.0, another at 1.56.0 (build 1194).
-      # `node_modules/.bin/playwright` is @playwright/test's CLI, so `npx`
-      # downloads 1194 — while this repo's browser scripts do
-      # `import { chromium } from 'playwright'` and get 1.57.0, which then
-      # refuses: "Executable doesn't exist at …chromium_headless_shell-1200".
-      # ⚠ Measured, in the first run of this very workflow. It passed locally
-      # because that tree still had a stale 1.56.0 at node_modules/playwright;
-      # `npm ci` on a runner honours the lock and does not. The other nine
-      # `npx playwright install` call sites in .github/workflows/ are fine as
-      # they are: they drive @playwright/test suites, which want 1194.
+      # ⛓ THE SPLIT THIS GUARDED IS CLOSED, AND THIS LINE STAYS ANYWAY.
+      # The lockfile used to carry TWO playwrights: top-level `playwright`
+      # 1.57.0 (browser build 1200) and, nested under `@playwright/test`
+      # 1.56.0, another at 1.56.0 (build 1194). `node_modules/.bin/playwright`
+      # is @playwright/test's CLI, so `npx` downloaded 1194 — while this
+      # repo's browser scripts do `import { chromium } from 'playwright'` and
+      # got 1.57.0, which then refused: "Executable doesn't exist at
+      # …chromium_headless_shell-1200". Measured in the first run of this
+      # workflow, and re-measured locally 2026-08-19 before the fix (`npm ci`
+      # on the old lock → 1.57.0 → exactly that refusal; `npx playwright
+      # install chromium` installed 1194 and never 1200).
+      # ⇒ `package.json` now pins `playwright` to EXACTLY 1.56.0, the version
+      # `@playwright/test` is pinned to (`9df8ca7b0`: the cloud environment's
+      # cached chromium-1194), so `npm ls playwright` shows ONE of them and
+      # `npx playwright install` would be correct here too.
+      # ⛔ NOT SWITCHED BACK TO `npx`, deliberately. `cli.js` is the CLI of the
+      # package the scripts import — it cannot disagree with them however the
+      # dependency graph moves. `npx` is correct only while the pin holds, and
+      # a step that fails fast reads exactly like one that passed fast. The
+      # nine `npx playwright install` call sites in .github/workflows/ drive
+      # @playwright/test suites, which want 1194 either way.
       - name: Install Chromium for Playwright
         if: always()
         continue-on-error: true
