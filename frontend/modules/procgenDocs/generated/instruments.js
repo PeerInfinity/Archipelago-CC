@@ -170,7 +170,7 @@ export const INSTRUMENTS = frz({
         "files": 225,
         "lineStyle": 19,
         "withDocblock": 225,
-        "withFlags": 133
+        "withFlags": 134
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1390,7 +1390,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-wasm-pins.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "self-test"
+                }
+            ],
             "oneLiner": "check-seedling-wasm-pins — the gate on the seedling-wasm SUBMODULE's contents.",
             "path": "scripts/procgen/check-seedling-wasm-pins.mjs"
         },
