@@ -11,7 +11,7 @@
  * ⛔⛔ **THE CENTRAL CLAIM IS TWO INDEPENDENT READERS AGREEING.** `ghSlug.js`
  * reads headings out of the SOURCE with a regex; `marked` reads them out of a
  * parsed document. Neither was written from the other. P4 found them
- * disagreeing in exactly one place out of 606 — a heading containing
+ * disagreeing in exactly one place out of 607 — a heading containing
  * `[maze.md](./maze.md)`, where the source reader kept the URL's characters
  * and GitHub does not — and that disagreement is the reason `headingText`
  * exists. A single-reader test would have shipped that anchor wrong.
@@ -49,7 +49,7 @@ describe('every tracked document renders', () => {
     });
 });
 
-describe('⛓⛓ the anchors — two readers, 606 headings, one answer', () => {
+describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
     it('the page\'s heading ids ARE ghSlug\'s, document by document', () => {
         let total = 0;
         for (const f of DOC_FILES) {
@@ -57,7 +57,11 @@ describe('⛓⛓ the anchors — two readers, 606 headings, one answer', () => {
             expect(idsOf(RENDERS.get(f).html), f).toEqual(want);
             total += want.length;
         }
-        expect(total).toBe(606);
+        // ⚠ 606 → 607 with the per-tick slice: `seedling-bot.md` § ▶ LOAD IN
+        // WASM gained *The PER-TICK verdict — and the two limits it names*.
+        // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
+        // into what it measures is the pin WORKING (trap 410).
+        expect(total).toBe(607);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -205,10 +209,11 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 393 headings and its slugs are unique', () => {
+    it('seedling-bot.md renders 394 headings and its slugs are unique', () => {
+        // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(393);
-        expect(new Set(ids).size).toBe(393);
+        expect(ids).toHaveLength(394);
+        expect(new Set(ids).size).toBe(394);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
