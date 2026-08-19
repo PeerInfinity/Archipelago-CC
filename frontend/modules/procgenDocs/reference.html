@@ -518,6 +518,27 @@ for (const f of ALL_FINDINGS) {
     });
 }
 
+/**
+ * ⛔⛔ **AN EMPTY FINDINGS SECTION MUST SAY SO IN WORDS.** P3b's own lesson
+ * (twelve `<h2>`s rendered blank and no row-counting readout could see it) has a
+ * second half: a section whose rows all went away renders as a heading, a blurb
+ * and NOTHING, and a reader cannot tell that from a section that failed to
+ * build. ⛓ The count row still reads 0, so this paragraph is not a row and no
+ * readout moves — it is the sentence a person needs.
+ */
+if (!ALL_FINDINGS.length) {
+    const empty = document.createElement('p');
+    empty.className = 'note';
+    empty.id = 'no-findings';
+    empty.innerHTML = inline('⛓ **No findings.** Every disagreement these tables have '
+        + 'measured — the incomplete refusal constants, the six registry fields no procgen '
+        + 'document named, the bare and dead script citations, the file with no docblock — '
+        + 'has been FIXED in the code or the prose it was about (PROCGEN DOCS · P5). ⛔ This '
+        + 'is not a claim that nothing is wrong: it is a claim that the six scans above found '
+        + 'nothing, and a NEW disagreement appears here and reds `generated.test.js`.');
+    findSec.box.appendChild(empty);
+}
+
 const srcSec = section('refusal-sources', 'Where the refusal vocabulary comes from',
     '⛓⛓ A source is either a LIST CONSTANT (imported, then scanned — the scan is the '
     + 'non-vacuity witness for the constant) or a set of string literals scattered through '

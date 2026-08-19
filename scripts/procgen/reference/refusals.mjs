@@ -300,59 +300,86 @@ export function buildRefusals() {
         });
     }
 
-    /* ⛓⛓ THE UNNAMED HALF — `urlParams` refuses in SENTENCES, not in names, so
-     * a row here is addressed by its enclosing function rather than by a slug.
-     * ⛔ No name is invented for one: the address is a fact, a name would not
-     * be. That every one of them is unnamed is itself the finding. */
+    /**
+     * ⛓⛓⛓ **THE URL GRAMMAR — NAMED SINCE PROCGEN DOCS · P5.** Every refusal in
+     * `urlParams.js` used to be a SENTENCE with no slug, and this block invented
+     * none: it addressed each by its enclosing function (`urlParams.readRosterSpec
+     * #1`), which is a fact but not a name a census can count. That was the
+     * largest un-countable block in the vocabulary and the one finding this table
+     * could never retire.
+     *
+     * ⛔ Now `fail(code, message)` stamps a kebab slug at every site and
+     * `URL_PARAM_REFUSALS` declares them, so this source is a CONSTANT like the
+     * others — scanned by the CODE ARGUMENT, which is the first argument
+     * precisely so one pass can see it past a multi-line template message. The
+     * `where` still names the enclosing function, because *which reader refused*
+     * is the other half of what a person holding a bad link needs.
+     */
     const urlText = src(SOURCES.urlParams);
-    const unnamed = [];
+    const urlDeclared = [...M.urlParams.URL_PARAM_REFUSALS];
+    const urlRows = [];
+    const urlSeen = new Set();
     for (const m of allMatches(urlText, /^export function ([a-zA-Z]+)\(/gm)) {
         const region = regionOf(urlText, new RegExp(`^export function ${m[1]}\\(`), { what: m[1] });
-        const fails = allMatches(region.text, /\bfail\(/g);
-        fails.forEach((f, i) => {
+        for (const f of allMatches(region.text, /\bfail\('([a-z][a-z0-9-]+)',/g)) {
             const text = stringRunAt(region.text, f.index + f[0].length);
-            if (!text) return;
-            unnamed.push({
-                name: `urlParams.${m[1]}${fails.length > 1 ? ` #${i + 1}` : ''}`,
+            urlSeen.add(f[1]);
+            urlRows.push({
+                name: f[1],
                 source: 'url-params',
                 sourceTitle: 'The URL grammar itself',
                 file: SOURCES.urlParams,
                 where: `urlParams.${m[1]}`,
-                kind: 'literal-scan',
-                constant: null,
-                inTheConstant: null,
+                kind: 'constant',
+                constant: 'URL_PARAM_REFUSALS',
+                inTheConstant: urlDeclared.includes(f[1]),
                 scanFound: true,
                 alsoFiresIn: [],
                 meaning: text,
                 channel: 'a `UrlParamsError` thrown at READ time — the page\'s fatal line, '
-                    + 'and the CLI\'s stderr',
-                named: false,
+                    + 'and the CLI\'s stderr. `error.code` IS the name in this column.',
+                named: true,
             });
-        });
+        }
     }
     sources.push({
         id: 'url-params',
         title: 'The URL grammar itself',
-        kind: 'literal-scan',
+        kind: 'constant',
         file: SOURCES.urlParams,
         where: 'every `export function` in urlParams.js',
-        constant: null,
-        channel: 'a `UrlParamsError` thrown at READ time',
-        declaredCount: null,
-        scannedCount: unnamed.length,
-        patterns: ['/\\bfail\\(/g + the string run after it'],
+        constant: 'URL_PARAM_REFUSALS',
+        channel: 'a `UrlParamsError` thrown at READ time; `error.code` is the name',
+        declaredCount: urlDeclared.length,
+        scannedCount: urlRows.length,
+        spansModules: false,
+        patterns: ['/\\bfail\\(\'([a-z][a-z0-9-]+)\',/g + the string run after it'],
     });
-    if (unnamed.length) {
+    /** ⛔ The SAME two-way comparison every other constant gets — a stamped code
+     *  the list lacks, and a declared name no site stamps, are both findings. */
+    for (const name of urlSeen) {
+        if (urlDeclared.includes(name)) continue;
         findings.push({
             source: 'url-params',
-            name: '(the whole source)',
-            severity: 'the vocabulary is UNNAMED',
-            what: `${unnamed.length} refusals in \`urlParams.js\` are SENTENCES with no name. `
-                + 'Every other refusal in this table is addressable by a slug a census can '
-                + 'count; these can only be addressed by their function. ⇒ **wants a '
-                + 'constant.**',
+            name,
+            severity: 'the list is INCOMPLETE',
+            what: `\`${name}\` is stamped on a \`fail(\` site in \`urlParams.js\` and is not `
+                + 'in `URL_PARAM_REFUSALS`, so a census keyed on the constant cannot count '
+                + 'it. ⛔ Reported, not fixed: the generator never edits the code it reads.',
         });
     }
+    for (const name of urlDeclared) {
+        if (urlSeen.has(name)) continue;
+        findings.push({
+            source: 'url-params',
+            name,
+            severity: 'unreached',
+            what: `\`${name}\` is declared in \`URL_PARAM_REFUSALS\` and no \`fail(\` site `
+                + 'in `urlParams.js` stamps it — it is dead, or it was renamed at the site '
+                + 'and not in the list.',
+        });
+    }
+    const unnamed = urlRows;
 
     return {
         rows: [...rows, ...unnamed].sort((a, b) => a.name.localeCompare(b.name)),

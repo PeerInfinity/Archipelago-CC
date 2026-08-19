@@ -44,6 +44,7 @@ import {
 
 import { REASONS } from './areaGraph.js';
 import { REQUIRE_DIRECTIVE_REFUSALS } from './elementSpec.js';
+import { URL_PARAM_REFUSALS } from './urlParams.js';
 import { KILL_GATE_REFUSALS } from './elements/killGate.js';
 import { BLOCK_POCKET_REFUSALS } from './elements/blockPocket.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
@@ -92,6 +93,7 @@ const SOURCES = {
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
     elementSpec: 'frontend/modules/procgenCore/elementSpec.js',
     areaGraph: 'frontend/modules/procgenCore/areaGraph.js',
+    urlParams: 'frontend/modules/procgenCore/urlParams.js',
 };
 
 /**
@@ -134,6 +136,19 @@ const KEYS = [
         declared: REQUIRE_DIRECTIVE_REFUSALS,
         text: () => regionFrom(read(SOURCES.elementSpec),
             /^export function resolveRequireDirective\(/),
+    },
+    {
+        /**
+         * ⛔⛔ THE ONE THAT IS NOT A REFUSAL-NAME SCAN. `urlParams.js` refuses
+         * through `fail(code, message)`, so its census is scanned by the CODE
+         * ARGUMENT — which is why the code is the FIRST argument: the messages
+         * are multi-line template concatenations and a trailing argument would
+         * be invisible to any single-pass regex.
+         */
+        constant: 'URL_PARAM_REFUSALS',
+        declared: URL_PARAM_REFUSALS,
+        patterns: [/\bfail\('([a-z][a-z0-9-]+)'/g],
+        text: () => read(SOURCES.urlParams),
     },
     {
         constant: 'areaGraph.REASONS',
@@ -186,6 +201,10 @@ describe('the refusal CENSUS KEYS cover the scan of their own source', () => {
         }
         for (const n of scan(regionFrom(read(SOURCES.areaGraph),
             /^export const REASONS = Object\.freeze\(\{/), [REASON_TABLE_RE])) {
+            everywhere.add(n);
+        }
+        /* ⛓ …and `urlParams`' names, which only the `fail(` code pattern sees */
+        for (const n of scan(read(SOURCES.urlParams), [/\bfail\('([a-z][a-z0-9-]+)'/g])) {
             everywhere.add(n);
         }
         const dead = [];

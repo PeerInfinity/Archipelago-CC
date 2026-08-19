@@ -273,6 +273,29 @@ try {
         '…and its own total agrees (measured off its DOM, never echoed from the import)',
         `page ${seen?.count ?? 'none'}`);
 
+    /**
+     * ⛔⛔ **A SECTION WITH NO ROWS MUST STILL SAY SOMETHING** (PROCGEN DOCS ·
+     * P5). Every finding these six scans had is fixed, so `findings` renders 0
+     * rows — and a heading + blurb + nothing is indistinguishable from a
+     * section that failed to build. The row COUNT cannot see the difference (it
+     * is 0 either way), which is P3b's empty-`<h2>` lesson one turn on, so the
+     * claim is about the TEXT.
+     */
+    const emptyNote = await page.evaluate(() => {
+        const el = document.getElementById('no-findings');
+        return el ? el.textContent.trim() : null;
+    });
+    if (ALL_FINDINGS.length === 0) {
+        check(typeof emptyNote === 'string' && emptyNote.length > 80
+            && /No findings/.test(emptyNote),
+        '⛓⛓ …and the EMPTY findings section says so IN WORDS, not by being blank',
+        (emptyNote ?? '(absent)').slice(0, 90));
+    } else {
+        check(emptyNote === null,
+            '⛓ …and the empty-findings note is ABSENT while there are findings',
+            `${ALL_FINDINGS.length} findings, note ${emptyNote === null ? 'absent' : 'PRESENT'}`);
+    }
+
     /** ⛓ THE ANCHORS ARE THE LINKABLE HALF — a reader saves
      *  `reference.html#refusal-no-pocket`, and a slug that moved silently is a
      *  dead bookmark nothing else notices. */

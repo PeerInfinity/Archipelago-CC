@@ -32,6 +32,7 @@ import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import * as urlParams from '../procgenCore/urlParams.js';
+import { URL_PARAM_REFUSALS } from '../procgenCore/urlParams.js';
 import { ELEMENT_TABLE, ELEMENT_NAMES } from '../procgenCore/elementSpec.js';
 import { KEEP_POLICY, KEPT_KIND, STOP, VERDICT, ATTEMPT } from '../procgenCore/levelGenerator.js';
 import { kindsOffered } from '../procgenCore/skeletonKinds.js';
@@ -364,7 +365,16 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
          * ⛓ What is LEFT is `urlParams`, until its 26 refusals have names.
          */
         const bySource = REFUSALS.findings.map((f) => `${f.source}/${f.name}`).sort();
-        expect(bySource).toEqual(['url-params/(the whole source)']);
+        expect(bySource).toEqual([]);
+        /** ⛓⛓ AND THE LAST ONE WENT IN ITEM 5: every refusal on this page is
+         *  addressable by a slug a census can count. ⛔ This is the row that
+         *  would red if `urlParams`' names were ever taken away again. */
+        expect(REFUSALS.rows.filter((r) => !r.named)).toEqual([]);
+        expect(URL_PARAM_REFUSALS.length).toBe(28);
+        for (const r of REFUSALS.rows.filter((x) => x.source === 'url-params')) {
+            expect(URL_PARAM_REFUSALS, r.name).toContain(r.name);
+            expect(r.where, r.name).toMatch(/^urlParams\./);
+        }
         /** ⛓ The fix is asked of the CONSTANT, not of the table that reported
          *  it — the table agreeing with itself would prove nothing (trap 250). */
         expect(SEEDLING_ELEMENT_REFUSALS).toContain('the-tunnel-shortens-the-way-to-the-goal');
@@ -388,10 +398,19 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
      * without an artifact re-record: `budgetKind` reaches the trace whose sha
      * is a determinism payload, arc-3 §9d).
      */
-    it('⛓⛓ exactly TWO refusal sources are still a literal scan, and they are '
-        + 'the two the record names', () => {
-        expect(REFUSALS.sources.filter((s) => s.kind === 'literal-scan').map((s) => s.id).sort())
-            .toEqual(['oracle-budget', 'url-params']);
+    it('⛓⛓ exactly ONE refusal source is still a literal scan, and it is the '
+        + 'one the record names as DELIBERATELY not fixed', () => {
+        /**
+         * ⛔⛔ `budgetKindFor` composes one of its two answers into a SENTENCE
+         * with the bound's own number in it — `strike-schedule bound (N driven
+         * ticks)` — and it is ⛔ NOT fixable here: `budgetKind` REACHES THE
+         * TRACE whose sha is a determinism payload (arc-3 §9d), so naming it
+         * would re-record a committed artifact. NAMED, not made.
+         */
+        expect(REFUSALS.sources.filter((s) => s.kind === 'literal-scan').map((s) => s.id))
+            .toEqual(['oracle-budget']);
+        expect(REFUSALS.rows.filter((r) => r.source === 'oracle-budget').map((r) => r.name))
+            .toEqual(['per-target-ticks', 'strike-schedule bound (… driven ticks)']);
         /* ⛓ …and every OTHER source names the constant it was given. */
         for (const s of REFUSALS.sources.filter((x) => x.kind === 'constant')) {
             expect(s.constant, s.id).toBeTruthy();

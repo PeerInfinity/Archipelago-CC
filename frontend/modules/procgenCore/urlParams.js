@@ -81,13 +81,78 @@ import {
 } from './skeletonKinds.js';
 
 export class UrlParamsError extends Error {
-    constructor(message) {
+    /** ⛓ `code` is the kebab SLUG a census counts — see `URL_PARAM_REFUSALS`. */
+    constructor(message, code) {
         super(message);
         this.name = 'UrlParamsError';
+        this.code = code;
     }
 }
 
-const fail = (message) => { throw new UrlParamsError(message); };
+/**
+ * ⛔⛔ **EVERY REFUSAL IN THIS FILE CARRIES A NAME** (PROCGEN DOCS · P5).
+ *
+ * ⛓ THE CODE COMES FIRST, AND THAT IS THE WHOLE DESIGN. This grammar's 28
+ * refusals were SENTENCES with no slug — the single largest un-countable block
+ * in the refusal vocabulary, and the one finding the generated reference table
+ * could never retire. A trailing `code` argument would have been invisible to a
+ * scan, because the messages are multi-line template concatenations; a LEADING
+ * one is matched by `/\bfail\('([a-z][a-z0-9-]+)'/` in one pass, which is what
+ * `procgenCore/refusalCensus.test.js` runs to prove the list below covers every
+ * site.
+ *
+ * ⛔ **THE MESSAGES DID NOT MOVE.** A refusal NAME is a field; the SENTENCE is
+ * what a person reads and what a browser row matches on, and every one of them
+ * is byte-identical to what it was before this slice.
+ */
+const fail = (code, message) => { throw new UrlParamsError(message, code); };
+
+/**
+ * ⛓⛓⛓ **THE CENSUS KEY FOR THE URL GRAMMAR** — every name this file can refuse
+ * by, grouped by what the refusal is ABOUT rather than by which function raises
+ * it, because a reader who has just been handed one is asking *what did I get
+ * wrong*, not *where does this live*.
+ *
+ * ⛓ Gate: `procgenCore/refusalCensus.test.js` asserts this list ⊇ the literal
+ * scan of every `fail(` site in this file, and that no member is unreachable.
+ */
+export const URL_PARAM_REFUSALS = Object.freeze([
+    /* ── the SHAPE of the query, before any value is read ── */
+    'duplicate-url-parameter',
+    'directed-is-retired',
+    /* ── an INTEGER, read and written ── */
+    'not-an-integer',
+    'cannot-write-a-non-integer',
+    'bounds-key-unknown',
+    'cannot-write-a-run-flag-for-that-step',
+    /* ── a sub-grammar this file DELEGATES to, refusing under its own name ── */
+    'skeleton-spec-refused',
+    'area-spec-refused',
+    'require-list-refused',
+    'element-spec-refused',
+    /* ── the ROSTER axes ── */
+    'both-roster-axes-are-present',
+    'a-roster-axis-names-nothing',
+    /* ── a DIRECTIVE, parsed (the CLI's `--directed=` and a payload's labels) ── */
+    'not-a-directive',
+    'the-palette-does-not-hold-this-template',
+    'a-clause-is-not-a-key-value-pair',
+    'the-template-has-no-such-parameter',
+    'the-value-is-outside-the-declared-domain',
+    'a-parameter-is-named-twice',
+    'the-bound-is-not-a-positive-integer',
+    'the-bound-ends-with-the-keep-policy-letter',
+    'an-explicit-anchor-with-a-bound',
+    'the-directive-list-names-nothing',
+    /* ── a DIRECTIVE, written — the writer refuses what the reader would ── */
+    'cannot-write-a-template-the-palette-lacks',
+    'cannot-write-that-keep-policy',
+    'cannot-write-both-an-explicit-anchor-and-a-bound',
+    'cannot-write-a-parameter-with-no-value',
+    'cannot-write-a-value-outside-the-domain',
+    /* ── the RNG seam ── */
+    'directive-seed-needs-the-seed-max',
+]);
 
 /* ══════════════════════════════════════════════════════════════════════
  * INTEGERS, AND THE BOUNDS THEY SPELL
@@ -108,7 +173,8 @@ export function intParam(q, name, fallback) {
     if (raw === null || raw === '') return fallback;
     const n = Number(raw);
     if (!Number.isInteger(n)) {
-        fail(`urlParams: ?${name}=${JSON.stringify(raw)} is not an integer. Every bound this `
+        fail('not-an-integer',
+            `urlParams: ?${name}=${JSON.stringify(raw)} is not an integer. Every bound this `
             + 'loop runs under is named in its own trace (⚖ kickoff §5), so there is no value '
             + 'that means "whatever".');
     }
@@ -139,7 +205,8 @@ export function readBounds(q, defaults = DEFAULT_BOUNDS) {
  */
 export function writeInt(q, name, value) {
     if (!Number.isInteger(value)) {
-        fail(`urlParams: cannot write ?${name}=${JSON.stringify(value)} — it is not an integer, `
+        fail('cannot-write-a-non-integer',
+            `urlParams: cannot write ?${name}=${JSON.stringify(value)} — it is not an integer, `
             + 'and the reader would refuse to read it back. A URL this page cannot reload is '
             + 'not a link to the run it is showing.');
     }
@@ -183,7 +250,8 @@ export function writeBounds(q, bounds) {
     const known = BOUNDS_KEYS.map(([long]) => long);
     const unknown = Object.keys(bounds ?? {}).filter((k) => !known.includes(k));
     if (unknown.length) {
-        fail(`urlParams: writeBounds was handed ${JSON.stringify(unknown)}, which `
+        fail('bounds-key-unknown',
+            `urlParams: writeBounds was handed ${JSON.stringify(unknown)}, which `
             + `${unknown.length === 1 ? 'is not a bound' : 'are not bounds'} it can write. `
             + `The four keys are the LONG names — ${known.map((k) => `\`${k}\``).join(', ')} `
             + `— and NOT the short spellings the URL uses `
@@ -293,7 +361,8 @@ export function readSkeletonTyped(q, { simulator = false, substrate = 'this page
     try {
         return { spec: parseSkeleton(raw, { simulator, substrate }), raw };
     } catch (e) {
-        fail(`urlParams: ?skeleton=${JSON.stringify(raw)} — ${e.message}`);
+        fail('skeleton-spec-refused',
+            `urlParams: ?skeleton=${JSON.stringify(raw)} — ${e.message}`);
         return null;
     }
 }
@@ -387,7 +456,8 @@ export function readAreas(q) {
     try {
         return parseAreaSpec(raw);
     } catch (e) {
-        fail(`urlParams: ?areas=${JSON.stringify(raw)} — ${e.message}`);
+        fail('area-spec-refused',
+            `urlParams: ?areas=${JSON.stringify(raw)} — ${e.message}`);
         return null;
     }
 }
@@ -431,7 +501,8 @@ export function readRequire(q, { grammar = parseRequireList } = {}) {
     try {
         return grammar(raw);
     } catch (e) {
-        fail(`urlParams: ?require=${JSON.stringify(raw)} — ${e.message}`);
+        fail('require-list-refused',
+            `urlParams: ?require=${JSON.stringify(raw)} — ${e.message}`);
         return null;
     }
 }
@@ -504,7 +575,8 @@ export function readElementsTyped(q) {
     try {
         return { spec: parseElementSpec(raw), raw };
     } catch (e) {
-        fail(`urlParams: ?elements=${JSON.stringify(raw)} — ${e.message}`);
+        fail('element-spec-refused',
+            `urlParams: ?elements=${JSON.stringify(raw)} — ${e.message}`);
         return null;
     }
 }
@@ -582,7 +654,8 @@ export function readRosterSpec(q) {
     const families = q.get('families');
     const templates = q.get('templates');
     if (families !== null && templates !== null) {
-        fail(`urlParams: ?families=${JSON.stringify(families)} AND `
+        fail('both-roster-axes-are-present',
+            `urlParams: ?families=${JSON.stringify(families)} AND `
             + `?templates=${JSON.stringify(templates)} are BOTH present, and they are two `
             + 'spellings of one setting — a sub-roster. They do not compose: say it one '
             + 'way. (?families= is the coarse, stable spelling; ?templates= names the '
@@ -593,7 +666,8 @@ export function readRosterSpec(q) {
     const value = families !== null ? families : templates;
     const names = value.split(',').map((s) => s.trim()).filter((s) => s !== '');
     if (names.length === 0) {
-        fail(`urlParams: ?${axis}=${JSON.stringify(value)} names nothing. The WHOLE roster is `
+        fail('a-roster-axis-names-nothing',
+            `urlParams: ?${axis}=${JSON.stringify(value)} names nothing. The WHOLE roster is `
             + 'spelled by leaving the parameter out; an empty list is a restriction somebody '
             + 'emptied, and the loop refuses an empty palette as a finding ABOUT THE PALETTE.');
     }
@@ -649,7 +723,8 @@ export function stepFromParams(params) {
 /** `run=1` iff a run is on screen; DELETED at step 0 — never a second absence. */
 export function writeRunFlag(q, step) {
     if (!Number.isInteger(step)) {
-        fail(`urlParams: cannot write the run flag for step ${JSON.stringify(step)} — the step `
+        fail('cannot-write-a-run-flag-for-that-step',
+            `urlParams: cannot write the run flag for step ${JSON.stringify(step)} — the step `
             + 'must be a non-negative integer.');
     }
     if (step >= 1) q.set('run', '1');
@@ -750,7 +825,8 @@ export { PARAM_SALT, ANCHOR_SALT };
 
 export function directiveSeed(seed, index, salt, seedMax) {
     if (!Number.isInteger(seedMax) || seedMax <= 1) {
-        fail(`urlParams: directiveSeed needs the RNG source's own seedMax, got `
+        fail('directive-seed-needs-the-seed-max',
+            `urlParams: directiveSeed needs the RNG source's own seedMax, got `
             + `${JSON.stringify(seedMax)}. The two substrates' seed orbits differ, so a `
             + 'constant here would be one generator\'s fact imposed on the other.');
     }
@@ -788,7 +864,8 @@ export function parseDirective(text, palette) {
         const [, sName, sParams, sBound, sLetter, sx, sy] = stale;
         const fixed = `${sName}${sParams === undefined ? '' : `(${sParams})`}@${sBound}`
             + `${sx === undefined ? '' : `!${sx},${sy}`}`;
-        fail(`urlParams: the directive ${JSON.stringify(raw)} ends its bound with `
+        fail('the-bound-ends-with-the-keep-policy-letter',
+            `urlParams: the directive ${JSON.stringify(raw)} ends its bound with `
             + `"${sLetter}" — the KEEP-POLICY letter, which left the grammar in PROCGEN `
             + 'ELEMENTS arc 3 slice 4c. ⛓ Seedling runs every directive under '
             + '`first-solved` now: the `prefer-discharge` preference is vacuous here, '
@@ -797,7 +874,8 @@ export function parseDirective(text, palette) {
     }
     const m = /^([A-Za-z0-9_-]+)(?:\(([^)]*)\))?@(\d+)(?:!(\d+),(\d+))?$/.exec(raw);
     if (!m) {
-        fail(`urlParams: ${JSON.stringify(raw)} is not a directive. The spelling is `
+        fail('not-a-directive',
+            `urlParams: ${JSON.stringify(raw)} is not a directive. The spelling is `
             + '`template(key=value,…)@<bound>` — the parenthesised clause is the '
             + 'INSTANCE LABEL the pane already prints and `<bound>` is how many legal '
             + 'anchors the attempt may be solved at. A zero-parameter template omits the '
@@ -806,7 +884,8 @@ export function parseDirective(text, palette) {
     const [, name, paramText, boundText, tx, ty] = m;
     const base = (palette?.templates ?? []).find((t) => t.name === name);
     if (!base) {
-        fail(`urlParams: the directive names template ${JSON.stringify(name)}, which palette `
+        fail('the-palette-does-not-hold-this-template',
+            `urlParams: the directive names template ${JSON.stringify(name)}, which palette `
             + `"${palette?.name}" does not hold — it offers `
             + `[${(palette?.templates ?? []).map((t) => t.name).join(', ')}]. ⛔ An unknown `
             + 'template is REFUSED rather than skipped: a dropped directive would reproduce '
@@ -817,27 +896,31 @@ export function parseDirective(text, palette) {
         for (const clause of paramText.split(',')) {
             const eq = clause.indexOf('=');
             if (eq <= 0) {
-                fail(`urlParams: ${JSON.stringify(clause)} in the directive for `
+                fail('a-clause-is-not-a-key-value-pair',
+                    `urlParams: ${JSON.stringify(clause)} in the directive for `
                     + `"${name}" is not a \`key=value\` pair.`);
             }
             const key = clause.slice(0, eq).trim();
             const valueText = clause.slice(eq + 1).trim();
             const p = base.params.find((q) => q.key === key);
             if (!p) {
-                fail(`urlParams: template "${name}" has no parameter ${JSON.stringify(key)} `
+                fail('the-template-has-no-such-parameter',
+                    `urlParams: template "${name}" has no parameter ${JSON.stringify(key)} `
                     + `— it declares [${base.params.map((q) => q.key).join(', ') || 'none'}]. `
                     + 'A silently ignored parameter is a link that names one instance and '
                     + 'builds another.');
             }
             const hit = p.domain.find((v) => String(v) === valueText);
             if (hit === undefined) {
-                fail(`urlParams: template "${name}" parameter "${key}" was given `
+                fail('the-value-is-outside-the-declared-domain',
+                    `urlParams: template "${name}" parameter "${key}" was given `
                     + `${JSON.stringify(valueText)}, which is not in its declared domain `
                     + `[${p.domain.join(', ')}]. Every value in a domain is one a sweep `
                     + 'measured; a value outside it is one nobody has adjudicated.');
             }
             if (Object.prototype.hasOwnProperty.call(params, key)) {
-                fail(`urlParams: the directive for "${name}" names parameter `
+                fail('a-parameter-is-named-twice',
+                    `urlParams: the directive for "${name}" names parameter `
                     + `${JSON.stringify(key)} twice. Two values for one parameter is two `
                     + 'spellings of one setting, in the smallest place it can happen.');
             }
@@ -846,7 +929,8 @@ export function parseDirective(text, palette) {
     }
     const bound = Number(boundText);
     if (!Number.isInteger(bound) || bound <= 0) {
-        fail(`urlParams: the directive for "${name}" names bound `
+        fail('the-bound-is-not-a-positive-integer',
+            `urlParams: the directive for "${name}" names bound `
             + `${JSON.stringify(boundText)}, which is not a positive integer.`);
     }
     /**
@@ -858,7 +942,8 @@ export function parseDirective(text, palette) {
      * the failure this whole grammar exists to avoid.
      */
     if (tx !== undefined && bound !== 1) {
-        fail(`urlParams: the directive for "${name}" names the EXPLICIT anchor `
+        fail('an-explicit-anchor-with-a-bound',
+            `urlParams: the directive for "${name}" names the EXPLICIT anchor `
             + `!${tx},${ty} and bound ${bound}. An explicit cell is a walk of ONE cell — `
             + `spell it \`@1!${tx},${ty}\`. Any other bound names a search this `
             + 'attempt does not perform.');
@@ -878,7 +963,8 @@ export function parseDirective(text, palette) {
 export function parseDirectives(value, palette) {
     const text = String(value ?? '').trim();
     if (text === '') {
-        fail('urlParams: --directed= names nothing. A level with no directives is '
+        fail('the-directive-list-names-nothing',
+            'urlParams: --directed= names nothing. A level with no directives is '
             + 'spelled by leaving the flag out — an empty value is a construction '
             + 'somebody emptied, which is the same rule ?families= follows.');
     }
@@ -896,7 +982,8 @@ export function formatDirectives(directives, palette) {
     return (directives ?? []).map((d) => {
         const base = (palette?.templates ?? []).find((t) => t.name === d.template);
         if (!base) {
-            fail(`urlParams: cannot write a directive for ${JSON.stringify(d.template)} — `
+            fail('cannot-write-a-template-the-palette-lacks',
+                `urlParams: cannot write a directive for ${JSON.stringify(d.template)} — `
                 + `palette "${palette?.name}" does not hold it, so the reader `
                 + 'would refuse to read it back. A URL this page cannot reload is not a link '
                 + 'to the construction it is showing.');
@@ -910,7 +997,8 @@ export function formatDirectives(directives, palette) {
          * "the class is structurally empty" looks like from the writer's side.
          */
         if (d.keepPolicy !== undefined && d.keepPolicy !== DIRECTIVE_KEEP_POLICY) {
-            fail(`urlParams: cannot write a directive whose keep policy is `
+            fail('cannot-write-that-keep-policy',
+                `urlParams: cannot write a directive whose keep policy is `
                 + `${JSON.stringify(d.keepPolicy)} — Seedling runs every directive under `
                 + `${JSON.stringify(DIRECTIVE_KEEP_POLICY)} since PROCGEN ELEMENTS arc 3 `
                 + 'slice 4c, and the URL grammar has no letter to spell any other.');
@@ -919,7 +1007,8 @@ export function formatDirectives(directives, palette) {
         // An explicit anchor beside a bound above 1 is a URL `parseDirective`
         // rejects, so it must not be writable.
         if (d.anchor && d.bound !== 1) {
-            fail(`urlParams: cannot write a directive for "${d.template}" that names both `
+            fail('cannot-write-both-an-explicit-anchor-and-a-bound',
+                `urlParams: cannot write a directive for "${d.template}" that names both `
                 + `the EXPLICIT anchor (${d.anchor.tx},${d.anchor.ty}) and bound ${d.bound}. `
                 + 'An explicit cell is a walk of ONE cell; the reader would refuse '
                 + 'to read this back.');
@@ -929,14 +1018,16 @@ export function formatDirectives(directives, palette) {
         const clause = base.params.map((p) => {
             const v = d.params?.[p.key];
             if (v === undefined) {
-                fail(`urlParams: the directive for "${d.template}" carries no value for `
+                fail('cannot-write-a-parameter-with-no-value',
+                    `urlParams: the directive for "${d.template}" carries no value for `
                     + `"${p.key}". ⛔ It REFUSES rather than writing the default: a link that `
                     + 'silently filled a parameter would reproduce a different instance under '
                     + 'the same address, and the pin union cannot tell two instances of one '
                     + 'template apart.');
             }
             if (!p.domain.includes(v)) {
-                fail(`urlParams: the directive for "${d.template}" gives "${p.key}" the `
+                fail('cannot-write-a-value-outside-the-domain',
+                    `urlParams: the directive for "${d.template}" gives "${p.key}" the `
                     + `value ${JSON.stringify(v)}, which is outside its declared domain `
                     + `[${p.domain.join(', ')}].`);
             }
@@ -998,7 +1089,8 @@ export function refuseDuplicateParams(q, { substrate = 'this page' } = {}) {
         seen.add(key);
     }
     if (dup.length) {
-        fail(`urlParams: ${dup.map((k) => `?${k}=`).join(', ')} `
+        fail('duplicate-url-parameter',
+            `urlParams: ${dup.map((k) => `?${k}=`).join(', ')} `
             + `${dup.length === 1 ? 'appears' : 'appear'} TWICE in this URL, and `
             + `${substrate} reads only the first. ⛔ A parameter given two values is two `
             + 'runs asked for in one link; say which one by giving it once. ⚠ Both writers '
@@ -1010,7 +1102,8 @@ export function refuseDuplicateParams(q, { substrate = 'this page' } = {}) {
 
 export function refuseDirectedParam(q, { substrate = 'this page' } = {}) {
     if (q.get('directed') === null) return q;
-    fail(`urlParams: ?directed= is no longer a URL parameter (⚖ constructive-mode slice 12). `
+    fail('directed-is-retired',
+        `urlParams: ?directed= is no longer a URL parameter (⚖ constructive-mode slice 12). `
         + `A URL names the LAUNCH parameters a person types; a directive list is a `
         + `CONSTRUCTION, and ${substrate} takes one from the PAYLOAD — ${DIRECTED_RETIRED}.`);
     return q;
