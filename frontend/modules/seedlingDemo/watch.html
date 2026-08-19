@@ -458,6 +458,13 @@
     <span id="replayPick">
       <label for="tapes">tape</label>
       <select id="tapes" disabled><option>loading…</option></select>
+      <!-- ⛓ WHICH SOURCE THE ROSTER CAME FROM. Two mechanisms fill the picker
+           — the generated fixtures/tapes/index.json and, where there is none,
+           the server's own directory listing — and they are meant to agree. A
+           reader who cannot tell them apart cannot tell a working manifest
+           from a silent fall-back to a listing that works here and not on
+           Pages, which is the exact failure this whole item exists to fix. -->
+      <span id="tapesrc"></span>
       <!-- ⛓ THE ENGINE, AS A CONTROL (group A, item 11). Replay-only: the
            other three arms build JS worlds, and the wasm side drives the
            recompiled game instead of building any. -->

@@ -42,10 +42,28 @@ export const EXPECTATIONS_DIR = join(HERE, 'expectations');
 /** Suffix marking an expectation as JS-generated rather than oracle-recorded. */
 export const PROVISIONAL_SUFFIX = '.provisional.json';
 
+/**
+ * ⛔ THE ONE `.json` IN `tapes/` THAT IS NOT A TAPE.
+ *
+ * `tapes/index.json` is the GENERATED roster `watch.html`'s picker reads —
+ * GitHub Pages emits no directory listing, so without it the published site
+ * could not enumerate the tapes it was already serving. It has to live in
+ * the directory it indexes to be fetchable by a relative URL, and this
+ * directory is ENUMERATED: without the exclusion below, `fixtureNames()`
+ * reports a fixture named `index` and every tape suite, the tier tables and
+ * `verify-seedling-bot-differential.mjs` red on a file that is not a tape.
+ *
+ * The name is a constant rather than a literal because three readers have to
+ * agree about it: this filter, `scripts/procgen/generate-tape-index.mjs`
+ * (which writes it), and `watchViewer.js`'s listing branch (which must not
+ * offer it as a tape). `tapeIndexManifest.test.js` asserts the agreement.
+ */
+export const TAPE_INDEX_FILE = 'index.json';
+
 /** Fixture names, sorted, derived from what is on disk. */
 export function fixtureNames() {
     return readdirSync(TAPES_DIR)
-        .filter((f) => f.endsWith('.json'))
+        .filter((f) => f.endsWith('.json') && f !== TAPE_INDEX_FILE)
         .map((f) => f.slice(0, -'.json'.length))
         .sort();
 }

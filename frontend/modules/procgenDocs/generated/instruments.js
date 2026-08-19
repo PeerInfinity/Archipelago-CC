@@ -74,7 +74,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 3,
+            "count": 4,
             "id": "generate"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 205,
+        "blockStyle": 206,
         "browser": 71,
         "cited": 58,
-        "files": 224,
+        "files": 225,
         "lineStyle": 19,
-        "withDocblock": 224,
-        "withFlags": 132
+        "withDocblock": 225,
+        "withFlags": 133
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1350,6 +1350,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "expect-listing"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "expect-missing"
                 },
                 {
@@ -1357,6 +1363,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "label"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-play"
                 },
                 {
                     "how": [
@@ -2121,6 +2133,27 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "generate-seedling-level — THE PoC's CLI TWIN (kickoff §3.5, slice 2).",
             "path": "scripts/procgen/generate-seedling-level.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "generate",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "generate-tape-index.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "oneLiner": "generate-tape-index — the committed tape roster, as a file a static host can serve.",
+            "path": "scripts/procgen/generate-tape-index.mjs"
         },
         {
             "argvHelpers": [

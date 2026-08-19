@@ -129,10 +129,111 @@ const SPELLINGS = [
     [/process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/g, 'SEEDLING_PAGE default'],
     [/PAGE_NAME\s*=\s*'(seedling_[a-z0-9_]+)'/g, 'bare PAGE_NAME constant'],
 ];
+/**
+ * ⛓⛓ ONE SEEN/NOT-SEEN CASE PER SPELLING — `--self-test`.
+ *
+ * ⛔ THE SCAN NEEDS THIS BECAUSE THE SCAN IS WHERE THE BUGS WERE. Every view
+ * but REFERENCED reads a list: the whitelist's lines, `git ls-tree`, the
+ * manifest's names. REFERENCED reads PROSE AND CODE with regexes, and it was
+ * wrong three times in two slices — the `_phase3` composed default (§18.13),
+ * then the `/` in spelling 1's negative class and the concatenated URL, both
+ * found only because a build was being retired and someone asked which files
+ * actually named it. A blind scan does not red; it QUIETLY SHRINKS the
+ * referenced set, which reads as "this build is free to retire".
+ *
+ * Each case is a string lifted from real code, with the build name replaced
+ * by a probe name that exists nowhere else, so a case cannot pass by
+ * accidentally matching the tree. The NOT-SEEN cases are the other half: a
+ * spelling that matched everything would satisfy every SEEN case.
+ *
+ * Run: node scripts/procgen/check-seedling-wasm-pins.mjs --self-test
+ */
+/**
+ * ⛓ ONE normaliser, used by the scan AND by `--self-test`.
+ *
+ * ⛔ It was two — the self-test carried its own copy of the `' + '` join, so
+ * a mutant that disabled the production one left the self-test GREEN. A
+ * detector spelled differently from the path it is meant to detect tests
+ * itself; caught by running that very mutant and finding it inert.
+ */
+function scannable(text) {
+    return text.replace(/'\s*\+\s*'/g, '').replace(/"\s*\+\s*"/g, '');
+}
+
+const SELF_TEST = [
+    // spelling 1 — the forms that were ALL invisible until 2026-08-19
+    ["const WASM_PAGE = '../flashPanel/wasm/seedling_probe_x/game.html';", 'seedling_probe_x'],
+    [' *     frontend/modules/flashPanel/wasm/seedling_probe_x/', 'seedling_probe_x'],
+    ['http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_probe_x/game.html', 'seedling_probe_x'],
+    ['`wasm/seedling_probe_x/game.html`', 'seedling_probe_x'],
+    // spelling 1, assembled from adjacent literals across a line break —
+    // seven probes write it exactly this way
+    ["const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'\n    + 'seedling_probe_x/game.html';", 'seedling_probe_x'],
+    ['const U = "…/flashPanel/wasm/" + "seedling_probe_x/game.html";', 'seedling_probe_x'],
+    // spelling 2 — a preset's wiring
+    ['      "wasm": "seedling_probe_x/game.html",', 'seedling_probe_x'],
+    // spelling 3 — the composed default
+    ["const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_probe_x';", 'seedling_probe_x'],
+    // spelling 4 — the bare constant
+    ["const PAGE_NAME = 'seedling_probe_x';", 'seedling_probe_x'],
+];
+const SELF_TEST_NOT_SEEN = [
+    // `-` must stay excluded, or a differently-named directory passes as this one
+    ['some/not-wasm/seedling_probe_x/game.html', 'a not-wasm/ directory'],
+    ['somewasm/seedling_probe_x/', 'a name merely ENDING in wasm'],
+    // ⛔ THE RULE THAT KEEPS THE HISTORICAL BUILDS OUT: an env EXAMPLE in a
+    // docblock is not a pin. Only a DEFAULT is. Widening spelling 4 to any
+    // quoted name would break this, and would also match PRESET_ID.
+    [' *   SEEDLING_PAGE=seedling_probe_x node scripts/procgen/…', 'an env example in prose'],
+    ["const PRESET_ID = 'seedling_probe_x';", 'a PRESET id, which is not a build'],
+];
+if (process.argv.includes('--self-test')) {
+    let bad = 0;
+    const scan = (text) => {
+        const t = scannable(text);
+        const hits = new Set();
+        for (const [re, how] of SPELLINGS) {
+            re.lastIndex = 0;
+            for (let m; (m = re.exec(t));) hits.add(`${m[1]}|${how}`);
+        }
+        return hits;
+    };
+    for (const [text, want] of SELF_TEST) {
+        const hit = [...scan(text)].some((h) => h.startsWith(`${want}|`));
+        console.log(`${hit ? 'PASS' : 'FAIL'}: SEEN — ${text.replace(/\n/g, ' ⏎ ').slice(0, 92)}`);
+        if (!hit) bad++;
+    }
+    for (const [text, why] of SELF_TEST_NOT_SEEN) {
+        const hit = scan(text).size > 0;
+        console.log(`${hit ? 'FAIL' : 'PASS'}: NOT SEEN (${why}) — ${text.slice(0, 76)}`);
+        if (hit) bad++;
+    }
+    console.log(bad === 0
+        ? `\nSELF-TEST ALL PASS — ${SELF_TEST.length} seen, ${SELF_TEST_NOT_SEEN.length} not seen`
+        : `\n${bad} SELF-TEST FAILURE(S)`);
+    process.exit(bad === 0 ? 0 : 1);
+}
+
 const trackedFiles = git(['ls-files', '-z', '--', ...SCAN_ROOTS]).split('\0').filter(Boolean);
 for (const rel of trackedFiles) {
-    // The submodule is a gitlink, not a tree of blobs, so its own files are
-    // not in this list — its README naming a build could never self-pin.
+    /**
+     * ⛔ THIS FILE IS EXCLUDED FROM ITS OWN SCAN, and that is not tidiness —
+     * it is a defect this slice hit THREE TIMES before naming it.
+     *
+     * A gate that documents four spellings has to SPELL them, and the
+     * `--self-test` fixtures above have to spell them in the exact forms the
+     * scan must SEE. Both are documentation, neither loads anything, and both
+     * read as references: twice a docblock example pinned a build that had
+     * just been retired, and then the self-test fixtures pinned
+     * `seedling_probe_x`, a build that has never existed — measured, the gate
+     * failed on itself. A check script is not a consumer of a build; the
+     * question this view asks is "what does the APP load", and the answer can
+     * never be "the thing that asks the question".
+     *
+     * (The submodule needs no such exclusion: it is a gitlink, not a tree of
+     * blobs, so its own files never appear in this list at all.)
+     */
+    if (rel === 'scripts/procgen/check-seedling-wasm-pins.mjs') continue;
     let text;
     try { text = readFileSync(join(REPO, rel), 'utf8'); } catch { continue; }
     if (text.includes('\0')) continue;   // binary
@@ -141,7 +242,7 @@ for (const rel of trackedFiles) {
     // reference as one written on one line, and seven files wrote it that
     // way. This can only ever CREATE a match by making a build name
     // adjacent to the path that precedes it, which is exactly the case.
-    text = text.replace(/'\s*\+\s*'/g, '').replace(/"\s*\+\s*"/g, '');
+    text = scannable(text);
     for (const [re, how] of SPELLINGS) {
         re.lastIndex = 0;
         for (let m; (m = re.exec(text));) note(m[1], `${how} — ${rel}`);
