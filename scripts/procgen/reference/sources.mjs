@@ -13,6 +13,7 @@ export const M = {
     skeletonKinds: await import('../../../frontend/modules/procgenCore/skeletonKinds.js'),
     elementSpec: await import('../../../frontend/modules/procgenCore/elementSpec.js'),
     areaSpec: await import('../../../frontend/modules/procgenCore/areaSpec.js'),
+    areaGraph: await import('../../../frontend/modules/procgenCore/areaGraph.js'),
     killGate: await import('../../../frontend/modules/procgenCore/elements/killGate.js'),
     blockPocket: await import('../../../frontend/modules/procgenCore/elements/blockPocket.js'),
     palette: await import('../../../frontend/modules/seedlingDemo/procgenPalette.js'),

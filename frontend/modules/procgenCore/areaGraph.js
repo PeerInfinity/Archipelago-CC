@@ -417,7 +417,18 @@ function assertSpace({ areas, adjacency, entrance, goal }) {
 
 /* ── One attempt ──────────────────────────────────────────────────────── */
 
-const REASONS = Object.freeze({
+/**
+ * ⛓⛓ **THE CENSUS KEY FOR THE AREA GRAPH** — every name `buildAreaGraph` can
+ * refuse by, and nothing else refuses by one of these.
+ *
+ * ⛔ EXPORTED SINCE PROCGEN DOCS · P5. It was a frozen table nothing outside
+ * this module could import, so the reference generator SCANNED a `const` it
+ * could have read — and a scan is a weaker witness than a list: it can only
+ * find what a regex spells. The gate that keeps the two honest is
+ * `procgenCore/refusalCensus.test.js` (this table ⊇ the literal scan of its own
+ * declaration).
+ */
+export const REASONS = Object.freeze({
     KEY_BUDGET_UNSPENT: 'the-space-grew-fewer-key-levels-than-maxKeys',
     GOAL_NOT_TOP: 'goal-area-is-not-at-the-highest-key-level',
     NO_ROOM_FOR_KEY: 'no-area-at-that-key-level-can-hold-its-key',

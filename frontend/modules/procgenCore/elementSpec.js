@@ -593,6 +593,23 @@ export function parseItemRequireList(value) {
  *   otherwise EXACTLY what the caller passed (a refused directive still shows
  *   what the run produced, arc-1's rule).
  */
+/**
+ * ⛓⛓ **THE CENSUS KEY FOR THE `?require=` DIRECTIVE (the ITEM vocabulary)** —
+ * every name `resolveRequireDirective` can refuse by (PROCGEN DOCS · P5).
+ *
+ * ⛔ It lives HERE and not in a Seedling module because this codec is
+ * `procgenCore`'s and the maze reads it too; the maze's own directive answers
+ * in a different vocabulary (AREA-GRAPH SYMBOLS) and keeps its own list,
+ * `mazeRoom/procgenMaze.js`'s `MAZE_REQUIRE_REFUSALS`. ⛓ Gate:
+ * `procgenCore/refusalCensus.test.js`.
+ */
+export const REQUIRE_DIRECTIVE_REFUSALS = Object.freeze([
+    'no-element-needs-this-item',
+    'no-single-element-can-carry-every-required-item',
+    'the-biome-lacks-the-item',
+    'the-directive-and-the-spec-disagree',
+]);
+
 export function resolveRequireDirective({ require, elements, items, table = ELEMENT_TABLE } = {}) {
     const asked = Object.freeze([...(require ?? [])]);
     const out = (refused, spec = elements, heads = []) => Object.freeze({

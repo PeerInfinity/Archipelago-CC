@@ -164,6 +164,46 @@ export class ProcgenSeedlingError extends Error {
 const fail = (message) => { throw new ProcgenSeedlingError(message); };
 
 /**
+ * ⛓⛓⛓ **THE CENSUS KEY FOR THIS MODULE** — every refusal name
+ * `procgenSeedling.js` can raise, in one frozen list (PROCGEN DOCS · P5).
+ *
+ * ⛔⛔ THE AXIS IS THE **MODULE**, not the mechanism, and that is deliberate:
+ * a reader who lands here after reading a refusal on `watch.html` wants to know
+ * whether this file is where it came from. Three of the names below are ALSO in
+ * `procgenSeedlingElements.js`'s `SEEDLING_ELEMENT_REFUSALS`, whose axis is the
+ * Seedling ELEMENT PATH wherever it fires — `the-chain-is-arc-4`,
+ * `no-site-fits-this-room` and `the-skeleton-does-not-solve-with-the-element`
+ * are declared there and RAISED here, and both lists are true.
+ *
+ * ⛓ THE GATE IS `procgenCore/refusalCensus.test.js` — the reference
+ * generator's own literal scan over this file, asserted ⊆ this list. Before
+ * P5 this module had 19 refusal names and no list at all; the generated
+ * reference table found them only by scanning, and named "wants a constant" as
+ * the residue.
+ */
+export const SEEDLING_AREA_REFUSALS = Object.freeze([
+    'a-budget',
+    'a-lock-on-the-goals-doorstep',
+    'it-did-not-run',
+    'its-own-solve',
+    'lifted-from-the-elements-solve',
+    'no-area-holds-this-symbol',
+    'no-site-fits-this-room',
+    'no-solve',
+    'the-area-graph-does-not-certify',
+    'the-area-locks-do-not-cut-the-level',
+    'the-certification-did-not-hold',
+    'the-certification-solve-exhausted',
+    'the-chain-is-arc-4',
+    'the-entrance-and-the-goal-share-one-area',
+    'the-flag-area-has-no-cell-that-can-hold-it',
+    'the-level-flood-disagrees-with-the-partition',
+    'the-partition-yields-one-area-or-fewer',
+    'the-skeleton-does-not-solve-with-the-element',
+    'the-tag-budget-is-exceeded',
+]);
+
+/**
  * ⛓⛓⛓ **HOW FAR THE GOAL IS DRAWN FROM THE START, IN MANHATTAN CELLS** —
  * arc 3, slice 4c (⚖ user, 2026-08-17). See `seedlingModel`'s goal-draw block
  * for the proof that 3 is the smallest value that carries the claim, and

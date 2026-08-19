@@ -115,6 +115,47 @@ const fail = (message) => { throw new ProcgenMazeError(message); };
 const refuse = (message) => { throw new MazePlacementError(message); };
 
 /**
+ * ⛓⛓ **THE `?require=` DIRECTIVE'S OWN NAMES** — the AREA-GRAPH SYMBOL
+ * vocabulary, which `requireOutcome` answers with (PROCGEN DOCS · P5). Kept as
+ * its own list because it is the half of this module's vocabulary a reader
+ * meets through `summary.require.refused` and the CLI's exit 6, rather than
+ * through a placement.
+ */
+export const MAZE_REQUIRE_REFUSALS = Object.freeze([
+    'no-key-level-admits-this-symbol-within-maxkeys',
+    'the-area-graph-refused',
+    'the-directive-needs-the-area-graph',
+    'the-required-symbol-is-not-a-cut',
+    'the-required-symbol-was-not-placed',
+]);
+
+/**
+ * ⛓⛓⛓ **THE CENSUS KEY FOR THIS MODULE** — every refusal name
+ * `procgenMaze.js` can raise, the directive's five included (PROCGEN DOCS ·
+ * P5).
+ *
+ * ⛔⛔ THE AXIS IS THE **MODULE**. Six of these names are ALSO declared in
+ * `seedlingDemo/procgenSeedlingElements.js`'s `SEEDLING_ELEMENT_REFUSALS`,
+ * whose axis is the ELEMENT PATH: the maze has its own element binding and it
+ * refuses by the same names, so both lists are true and neither is a copy of
+ * the other. ⛓ The gate is `procgenCore/refusalCensus.test.js` — the reference
+ * generator's own literal scan of this file, asserted ⊆ this list. Before P5
+ * this module had 14 refusal names and no list at all.
+ */
+export const MAZE_REFUSALS = Object.freeze([
+    ...MAZE_REQUIRE_REFUSALS,
+    'no-area-holds-this-symbol',
+    'no-site-fits-this-room',
+    'the-cell-beyond-the-guard-door-is-not-floor',
+    'the-elements-demand-is-not-met',
+    'the-entry-port-cannot-be-joined',
+    'the-guard-is-not-a-cut-of-the-level',
+    'the-key-area-has-no-cell-that-can-hold-it',
+    'the-level-flood-disagrees-with-the-partition',
+    'the-reserved-rectangle-seals-the-room',
+]);
+
+/**
  * ⚖ THE ROOM, DECLARED IN ONE PLACE so the CLI, the tests and any later lab
  * page cannot each pick their own and call the difference a finding.
  *

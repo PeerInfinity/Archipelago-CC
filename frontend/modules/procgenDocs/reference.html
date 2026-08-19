@@ -535,6 +535,12 @@ for (const s of REFUSALS.sources) {
             ['declared in a constant', s.declaredCount === null ? '— (no constant)'
                 : String(s.declaredCount)],
             ['found by the scan', String(s.scannedCount)],
+            /** ⛓ P5 — a census key whose axis is a MECHANISM rather than a
+             *  file says so here, and the names it declares for another module
+             *  are in `REFUSALS.spans` (each row's *also fires in* names them). */
+            ['spans modules', s.spansModules
+                ? 'yes — a declared name may be RAISED one module over'
+                : '—'],
             ['the declared pattern', s.patterns.map((p) => `<code>${esc(p)}</code>`).join('<br>')],
         ]),
         hay: `${s.id} ${s.title} ${s.kind} ${s.constant ?? ''}`,

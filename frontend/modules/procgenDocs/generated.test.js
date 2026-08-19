@@ -319,20 +319,57 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
      * the ones P3a found means a LATER slice that fixes one has to come here and
      * say so, and a NEW one reds instead of joining a list nobody reads.
      */
-    it('⛓⛓ the P3a findings, pinned', () => {
+    it('⛓⛓ the P3a findings, pinned — FOUR OF FIVE FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3a pinned FIVE. P5 fixed four of them, in two different ways:
+         *
+         *  - `the-tunnel-shortens-the-way-to-the-goal` was the DEFECT — it
+         *    fires in `procgenSeedlingElements.js` and the constant's own
+         *    docblock claimed to name *every* refusal that path can produce. It
+         *    is in the list now, and `procgenCore/refusalCensus.test.js` is the
+         *    gate that keeps the word *every* checked.
+         *  - the three "reaches ACROSS a module" rows were never defects: they
+         *    said, correctly and permanently, that this list's axis is the
+         *    element PATH rather than one file. A finding that can only ever be
+         *    re-reported is not a finding, so the source DECLARES `spansModules`
+         *    and they are published as `REFUSALS.spans` instead.
+         *
+         * ⛓ What is LEFT is `urlParams`, until its 26 refusals have names.
+         */
         const bySource = REFUSALS.findings.map((f) => `${f.source}/${f.name}`).sort();
-        expect(bySource).toEqual([
-            'seedling-element-binding/no-site-fits-this-room',
-            'seedling-element-binding/the-chain-is-arc-4',
-            'seedling-element-binding/the-skeleton-does-not-solve-with-the-element',
-            'seedling-element-binding/the-tunnel-shortens-the-way-to-the-goal',
-            'url-params/(the whole source)',
+        expect(bySource).toEqual(['url-params/(the whole source)']);
+        /** ⛓ The fix is asked of the CONSTANT, not of the table that reported
+         *  it — the table agreeing with itself would prove nothing (trap 250). */
+        expect(SEEDLING_ELEMENT_REFUSALS).toContain('the-tunnel-shortens-the-way-to-the-goal');
+        /** ⛓⛓ AND THE SPANS ARE PINNED TOO, with where each one fires: a span
+         *  that quietly became "fires nowhere" would otherwise be invisible,
+         *  which is the hole `spansModules` could have opened. */
+        expect(REFUSALS.spans.map((s) => `${s.name} → ${s.firesIn.join(',')}`)).toEqual([
+            'no-site-fits-this-room → seedling-area-binding,maze-area-binding',
+            'the-chain-is-arc-4 → seedling-area-binding',
+            'the-skeleton-does-not-solve-with-the-element → seedling-area-binding',
         ]);
-        /** ⛓ The one that is a DEFECT rather than a shape note: the constant's
-         *  own docblock says it names every refusal the binding can produce. */
-        const incomplete = REFUSALS.findings.find((f) => f.severity === 'the list is INCOMPLETE');
-        expect(incomplete.name).toBe('the-tunnel-shortens-the-way-to-the-goal');
-        expect(SEEDLING_ELEMENT_REFUSALS).not.toContain(incomplete.name);
+        for (const s of REFUSALS.spans) expect(s.constant).toBe('SEEDLING_ELEMENT_REFUSALS');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE "WANTS A CONSTANT" RESIDUE, AS A ROW.** P3a's split named four
+     * sources that had no list at all; P5 gave three of them one and exported
+     * the fourth. What is still scanned rather than declared is exactly two
+     * sources, and both are named in the record with their reason —
+     * `urlParams` (item 5's subject) and `budgetKindFor` (⛔ NOT fixable
+     * without an artifact re-record: `budgetKind` reaches the trace whose sha
+     * is a determinism payload, arc-3 §9d).
+     */
+    it('⛓⛓ exactly TWO refusal sources are still a literal scan, and they are '
+        + 'the two the record names', () => {
+        expect(REFUSALS.sources.filter((s) => s.kind === 'literal-scan').map((s) => s.id).sort())
+            .toEqual(['oracle-budget', 'url-params']);
+        /* ⛓ …and every OTHER source names the constant it was given. */
+        for (const s of REFUSALS.sources.filter((x) => x.kind === 'constant')) {
+            expect(s.constant, s.id).toBeTruthy();
+            expect(s.declaredCount, s.id).toBeGreaterThan(0);
+        }
     });
 });
 

@@ -81,13 +81,24 @@ const REFUSAL_SOURCES = [
         constant: 'SEEDLING_ELEMENT_REFUSALS',
         names: M.seedlingElements.SEEDLING_ELEMENT_REFUSALS,
         file: SOURCES.seedlingElements,
+        /** ⛓⛓ ITS AXIS IS THE ELEMENT **PATH**, NOT THIS FILE — the constant's
+         *  own docblock says so and names the three it declares for modules
+         *  one door over. So a declared name the scan finds firing in ANOTHER
+         *  scanned source is published as a SPAN, not as a finding; a declared
+         *  name firing NOWHERE is still a finding, which is the half that keeps
+         *  this from being a licence to declare anything. (P5 — before it, the
+         *  three spans were three permanent findings that said the same true
+         *  thing about the list every time it was generated.) */
+        spansModules: true,
         channel: '`summary.elementInfo.refused` on `watch.html`; '
             + '`generate-seedling-level.mjs --json` `elementInfo.refused`',
     },
     {
         id: 'require-directive',
         title: 'The `?require=` directive (the ITEM vocabulary)',
-        kind: 'literal-scan',
+        kind: 'constant',
+        constant: 'REQUIRE_DIRECTIVE_REFUSALS',
+        names: M.elementSpec.REQUIRE_DIRECTIVE_REFUSALS,
         file: SOURCES.elementSpec,
         region: /^export function resolveRequireDirective\(/,
         regionName: 'elementSpec.resolveRequireDirective',
@@ -96,7 +107,9 @@ const REFUSAL_SOURCES = [
     {
         id: 'maze-require-directive',
         title: 'The `?require=` directive (the AREA-GRAPH SYMBOL vocabulary)',
-        kind: 'literal-scan',
+        kind: 'constant',
+        constant: 'MAZE_REQUIRE_REFUSALS',
+        names: M.maze.MAZE_REQUIRE_REFUSALS,
         file: SOURCES.maze,
         region: /^export function requireOutcome\(/,
         regionName: 'procgenMaze.requireOutcome',
@@ -105,17 +118,21 @@ const REFUSAL_SOURCES = [
     {
         id: 'area-graph',
         title: 'The AREA GRAPH itself',
-        kind: 'literal-scan',
+        kind: 'constant',
+        constant: 'REASONS',
+        names: Object.values(M.areaGraph.REASONS),
         file: SOURCES.areaGraph,
-        region: /^const REASONS = Object\.freeze\(\{/,
-        regionName: 'areaGraph.REASONS (an UNEXPORTED constant)',
+        region: /^export const REASONS = Object\.freeze\(\{/,
+        regionName: 'areaGraph.REASONS',
         pattern: REASON_TABLE_RE,
         channel: '`buildAreaGraph(...).refused.reason` → `summary.areaGraph.refused` on both pages',
     },
     {
         id: 'seedling-area-binding',
         title: 'The SEEDLING area binding',
-        kind: 'literal-scan',
+        kind: 'constant',
+        constant: 'SEEDLING_AREA_REFUSALS',
+        names: M.seedling.SEEDLING_AREA_REFUSALS,
         file: SOURCES.seedling,
         regionName: 'procgenSeedling.js (the whole module)',
         channel: '`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`',
@@ -123,7 +140,9 @@ const REFUSAL_SOURCES = [
     {
         id: 'maze-area-binding',
         title: 'The MAZE area + element binding',
-        kind: 'literal-scan',
+        kind: 'constant',
+        constant: 'MAZE_REFUSALS',
+        names: M.maze.MAZE_REFUSALS,
         file: SOURCES.maze,
         regionName: 'procgenMaze.js (the whole module)',
         channel: '`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`',
@@ -197,6 +216,7 @@ export function buildRefusals() {
     const firesIn = (name, exceptId) => scans
         .filter((x) => x.s.id !== exceptId && x.scanned.has(name)).map((x) => x.s.id);
 
+    const spans = [];
     for (const { s, patterns, scanned, declared } of scans) {
         if (declared) {
             for (const name of [...scanned.keys()]) {
@@ -216,6 +236,19 @@ export function buildRefusals() {
             for (const name of declared) {
                 if (scanned.has(name)) continue;
                 const elsewhere = firesIn(name, s.id);
+                /**
+                 * ⛓⛓ A SOURCE THAT DECLARES `spansModules` HAS SAID SO IN ITS
+                 * OWN DOCBLOCK: its axis is a mechanism, not a file, and a
+                 * declared name raised one module over is the list working as
+                 * designed. That is a SPAN, published beside the source rather
+                 * than as a finding. ⛔ A declared name firing NOWHERE is still
+                 * a finding under either flag — which is what stops
+                 * `spansModules` from being a licence to declare anything.
+                 */
+                if (s.spansModules && elsewhere.length) {
+                    spans.push({ source: s.id, constant: s.constant, name, firesIn: elsewhere });
+                    continue;
+                }
                 findings.push({
                     source: s.id,
                     name,
@@ -262,6 +295,7 @@ export function buildRefusals() {
             channel: s.channel,
             declaredCount: declared ? declared.length : null,
             scannedCount: scanned.size,
+            spansModules: Boolean(s.spansModules),
             patterns: patterns.map(String),
         });
     }
@@ -331,6 +365,9 @@ export function buildRefusals() {
             values: Object.entries(e.values).map(([k, v]) => ({ key: k, value: v })),
         })),
         findings,
+        /** ⛓ Where a `spansModules` census key's names are actually raised —
+         *  the fact the three permanent findings used to carry. */
+        spans: spans.sort((a, b) => a.name.localeCompare(b.name)),
         patterns: {
             literal: String(REFUSAL_LITERAL_RE),
             template: String(REFUSAL_TEMPLATE_RE),

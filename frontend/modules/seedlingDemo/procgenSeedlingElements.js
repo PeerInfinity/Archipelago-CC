@@ -96,7 +96,32 @@ const fail = (message) => { throw new ProcgenSeedlingElementError(message); };
  */
 export const SITE_MARGIN_STRAIGHT = 2;
 
-/** Every refusal this binding can produce, BY NAME — what the census counts. */
+/**
+ * ⛓⛓⛓ **THE CENSUS KEY FOR THE SEEDLING ELEMENT PATH** — every refusal name
+ * any Seedling ELEMENT path can produce, WHEREVER IT FIRES.
+ *
+ * ⛔⛔ IT IS A CENSUS KEY, NOT A DESCRIPTION OF THIS MODULE, and the difference
+ * is a fact the generated refusal table publishes rather than a detail. THREE
+ * of the names below are raised by a DIFFERENT module and never by this one:
+ *
+ *   `the-chain-is-arc-4`                          `procgenSeedling.js`
+ *   `the-skeleton-does-not-solve-with-the-element` `procgenSeedling.js`
+ *   `no-site-fits-this-room`                       `procgenSeedling.js` AND
+ *                                                  `mazeRoom/procgenMaze.js`
+ *
+ * They belong here because the census that counts a Seedling run's element
+ * refusals is keyed on THIS list, and a name it cannot count is a hole in the
+ * count — which is exactly what `the-tunnel-shortens-the-way-to-the-goal` was
+ * until PROCGEN DOCS · P5. The generated table found it: the constant said
+ * *every*, the literal scan of this file found a name the constant lacked, and
+ * the finding sat on the reference page for two slices before it was fixed.
+ *
+ * ⛓ THE GATE IS `procgenCore/refusalCensus.test.js` — it runs the reference
+ * generator's OWN literal scan over the named sources and asserts this
+ * constant ⊇ the scan. ⛔ The generator never edits the code it reads, so the
+ * gate is what makes the docblock's *every* a checked word rather than a
+ * hopeful one.
+ */
 export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-chain-is-arc-4',
     'no-site-fits-this-room',
@@ -115,6 +140,11 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-elements-carve-is-not-legal',
     'the-elements-door-is-not-a-cut',
     'the-elements-write-lands-on-the-start-or-the-goal',
+    /** ⛓⛓ P5 — THE NAME THE LIST WAS MISSING, and unlike the three above it
+     *  this one FIRES ON REAL DATA: slice 2's carve rule's NO-SHORTCUT clause,
+     *  re-asked of the whole composite, refused 4 of the census's cells. It is
+     *  raised in this file, by `compositeSeedlingElement`'s clause (vi). */
+    'the-tunnel-shortens-the-way-to-the-goal',
 ]);
 
 /** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
