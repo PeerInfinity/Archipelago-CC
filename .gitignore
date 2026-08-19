@@ -340,3 +340,9 @@ frontend/presets/jta_loctest_roundtrip_worldgen/
 # built artifacts (23.8 MB wasm) are never committed — copy them from
 # SWFRecomp-CC (see frontend/modules/flashPanel/README.md for the command).
 frontend/modules/flashPanel/wasm/
+
+# ⛓ The procgen documents staged into the Pages artifact by
+# .github/workflows/deploy-gh-pages.yml (`docs.html` fetches them from a
+# site-root-relative path, and only `frontend/` is published). ⛔ Build output,
+# never a source: the documents live in docs/json/developer/procgen/.
+frontend/docs/

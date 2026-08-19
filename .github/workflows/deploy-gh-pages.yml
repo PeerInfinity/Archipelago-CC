@@ -39,6 +39,23 @@ jobs:
       - name: Build frontend bundle
         run: npm run build
 
+      # ⛓⛓ THE PROCGEN DOCUMENTS ARE PART OF THE SITE, and this is the only
+      # step that makes that true. `frontend/modules/procgenDocs/docs.html`
+      # FETCHES the tracked `.md` files at run time from a site-root-relative
+      # path — `<siteRoot>/docs/json/developer/procgen/<file>`. Locally that
+      # resolves because the dev server serves the REPO ROOT. Here only
+      # `./frontend` is uploaded, so without this copy the same path 404s and
+      # every one of the eighteen documents fails to load.
+      #
+      # ⛔ `frontend/docs/` is in .gitignore, so this copy exists only in the
+      # artifact and a local one can never be committed by accident.
+      # ⛓ Proved before it ever ran, by building this exact shape locally and
+      # running `scripts/procgen/check-procgen-docs.mjs --host=` against it.
+      - name: Stage the procgen documents into the site
+        run: |
+          mkdir -p frontend/docs/json/developer
+          cp -r docs/json/developer/procgen frontend/docs/json/developer/procgen
+
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0
 
