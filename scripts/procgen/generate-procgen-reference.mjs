@@ -230,6 +230,15 @@ if (flag('check')) {
     process.exit(bad === 0 ? 0 : 1);
 }
 
+/**
+ * ⛔ EVERY REGION'S MARKERS ARE VALIDATED BEFORE ANY FILE IS WRITTEN. The
+ * mutant that deleted README's BEGIN marker refused correctly — but only
+ * AFTER the six modules and the two earlier regions had been written, which
+ * is a half-done run somebody has to reason about. A refusal that costs
+ * nothing is a refusal that can be trusted.
+ */
+for (const r of regions) regionBody(r);
+
 mkdirSync(OUT, { recursive: true });
 for (const f of files) {
     writeFileSync(join(OUT, f.file), f.text);
