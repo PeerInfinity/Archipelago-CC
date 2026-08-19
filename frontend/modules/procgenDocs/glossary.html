@@ -256,7 +256,9 @@ document.getElementById('where').innerHTML =
     + ` · always at <a href="${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}">`
     + `${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}</a>`;
 document.getElementById('also').innerHTML =
-    'every term here is used somewhere you can actually run — see '
+    'the seventeen narrative documents every term is drawn from are '
+    + '<a href="docs.html">rendered here</a> · '
+    + 'every term here is used somewhere you can actually run — see '
     + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">the demo catalogue</a>`
     + `, and the two lab pages it links: <a href="${esc(pagesHref(
         DEMOS.find((e) => e.id === 'sites')))}">the Seedling watch page</a> and `
