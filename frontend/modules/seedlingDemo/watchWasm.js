@@ -32,7 +32,8 @@
  *   tape      `botLoadTape` returned `'ok'`
  *   running   `botStart` returned `'ok'`; the `botStatus` poll is live
  *   finished  `botStatus.finished`
- *   verdict   the END-STATE comparison, when an expectation was given
+ *   drain     `botDrain`, read ONCE — the game's WHOLE observation stream
+ *   verdict   the END-STATE comparison, and then the PER-TICK differential
  *
  * ⛔ EVERY REFUSAL IS A NAMED STATE (trap 403): a ship that stopped and an
  * empty readout are indistinguishable otherwise, and the reader cannot tell
@@ -64,6 +65,18 @@
  */
 
 /**
+ * ⛔⛔ ONE COMPARATOR, ONE OBSERVATION VOCABULARY, IMPORTED — NEVER RE-SPELLED.
+ *
+ * `diffObservationStreams` is the function `verify-seedling-bot-differential.mjs`
+ * feeds, and `gameStreamFromDrain` is the wrap that turns `botDrain`'s payload
+ * into the vocabulary it eats (`Bot.as` hardcodes `transitions: []`, so the
+ * entries are DERIVED from the ticks — see the docblock over there). A page
+ * that assembled either with a lookalike would be measuring a different
+ * subject and reporting it under the same word (trap 383).
+ */
+import { diffObservationStreams, gameStreamFromDrain } from './tapeFormat.js';
+
+/**
  * The build `watch.html` ships to.
  *
  * ⛓ p4b, NOT `seedling_bot_ap`, SINCE THE WASM-HYGIENE SLICE. p4b's bridge
@@ -87,7 +100,8 @@ export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4b/game.html';
 
 /** ⛓ The ordered stage vocabulary. The rows assert on these names. */
 export const WASM_STAGES = Object.freeze([
-    'probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished', 'verdict',
+    'probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished', 'drain',
+    'verdict',
 ]);
 
 /**
@@ -183,6 +197,39 @@ export function roomOfGeneratedLevel(level, roomCount, order = null) {
     return { room: null, remapped: false, why: `level ${level} is outside this ${roomCount}-room set and no set order was given` };
 }
 
+/**
+ * ── ⛓⛓⛓ THE STREAM A GENERATED ROOM'S MODEL WALK BECOMES ─────────────
+ *
+ * The end-state verdict remaps ONE level field (`roomOfGeneratedLevel`); the
+ * per-tick differential compares a whole stream, and every observation in it
+ * carries the same 900. ⛔ So the remap is applied to the STREAM through the
+ * one function that owns it — a second subtraction written here would be two
+ * answers to "which room is this", which is the defect `roomOfGeneratedLevel`
+ * was extracted to prevent in the first place.
+ *
+ * ⛔ AND IT REFUSES, LOUDLY, exactly as the scalar does: a level this set does
+ * not contain cannot be mapped to a room, and mapping it to 0 would invent an
+ * agreement at every tick.
+ *
+ * @throws {Error} with `roomOfGeneratedLevel`'s own `why`
+ */
+export function remapStreamRooms(stream, roomCount, order = null) {
+    const cache = new Map();
+    const roomFor = (level) => {
+        if (cache.has(level)) return cache.get(level);
+        const m = roomOfGeneratedLevel(level, roomCount, order);
+        if (m.room === null) throw new Error(m.why);
+        cache.set(level, m.room);
+        return m.room;
+    };
+    return {
+        ticks: (stream?.ticks ?? []).map((o) => ({ ...o, level: roomFor(o.level) })),
+        transitions: (stream?.transitions ?? []).map((tr) => ({
+            ...tr, from_level: roomFor(tr.from_level), to_level: roomFor(tr.to_level),
+        })),
+    };
+}
+
 /** The items an expectation names, as a sorted list of the keys it holds. */
 const heldItems = (items) => Object.entries(items ?? {})
     .filter(([k, v]) => v === true && k !== 'hitsMax').map(([k]) => k).sort();
@@ -256,9 +303,245 @@ export function verdictOf(expect, status, tol = END_STATE_TOLERANCE, opts = {}) 
 /** One line for the ledger/readout, with the bound this verdict is NOT. */
 export const verdictLine = (v) => `wasm verdict: ${v.text}`;
 
-/** ⛓ Said everywhere the verdict is, because it is the whole of its limit. */
+/** ⛓ Said everywhere the END-STATE verdict is, because it is the whole of its limit. */
 export const VERDICT_SCOPE =
-    'end state only; the per-tick differential is the next slice';
+    'end state only — two runs can meet on the last frame having disagreed on '
+    + 'every tick between';
+
+/**
+ * ⛓⛓ THE PER-TICK VERDICT'S OWN SCOPE — **TWO** LIMITS, BOTH NAMED (⚖ D3).
+ *
+ * 1. It is a comparison against **the JS MODEL of this same tape**, not against
+ *    a committed expectation. `verify-seedling-bot-differential.mjs` compares
+ *    the game against RECORDED oracles; this compares two live runs, which is
+ *    a weaker claim and a different one.
+ * 2. ⛔ Trap 389: a cross-runtime identity claim cannot see a defect in code
+ *    BOTH runtimes share. The tape both sides run and the observation
+ *    vocabulary both sides are read in are this repo's; a bug in what they
+ *    SHARE agrees with itself.
+ */
+export const PER_TICK_SCOPE =
+    'per tick against the JS MODEL of this same tape, not against a recorded '
+    + 'expectation; and both sides share this repo’s tape and observation code, '
+    + 'so a defect in what they SHARE is invisible here';
+
+/**
+ * ⛔⛔ WHICH end-state disagreements CONTRADICT a per-tick agreement — and
+ * which are findings about a channel the streams never carried.
+ *
+ * ⚖ D2 says a per-tick `agrees` beside a wrong end state must be IMPOSSIBLE to
+ * print. It is a contradiction only where the two instruments describe the same
+ * quantity: an observation is `{t, x, y, level}`, so if every observation agrees
+ * then the LAST one does, and `botStatus` at `finished` is reporting that same
+ * frame — a level or a position that disagrees means `botStatus` and `botDrain`
+ * disagree with each other, which is a defect in the comparison and not a
+ * finding about the run.
+ *
+ * ⛓ ITEMS ARE NOT IN THE STREAM AT ALL. `missing hasSword` beside a per-tick
+ * agreement is not a contradiction — it is the end-state check answering a
+ * question the per-tick one never asked, and calling it "internally
+ * inconsistent" would relabel a real finding as a bug in the instrument.
+ * ⇒ this is the ONE refinement of D2 this slice made, and the reason is here.
+ */
+function endStateContradiction(endState) {
+    if (!endState || endState.kind !== 'disagrees') return null;
+    const d = endState.deltas ?? {};
+    const parts = [];
+    if (d.level !== d.expectedLevel) parts.push(`level ${d.level}≠${d.expectedLevel}`);
+    if (Number(d.dx) > 0) parts.push(`x Δ${d.dx}`);
+    if (Number(d.dy) > 0) parts.push(`y Δ${d.dy}`);
+    return parts.length
+        ? `botStatus and botDrain disagree about the same frame: ${parts.join('; ')}`
+        : null;
+}
+
+/**
+ * ── ⛓⛓⛓ THE PER-TICK VERDICT ─────────────────────────────────────────
+ *
+ * ⛔ ONE COMPARATOR. `diffObservationStreams` from `tapeFormat.js` — the same
+ * function `verify-seedling-bot-differential.mjs` feeds, fed the same
+ * vocabulary: the GAME's side through `gameStreamFromDrain` (because `Bot.as`
+ * hardcodes `transitions: []` and the entries are derived from the ticks), the
+ * MODEL's side straight off the walk the page already made. Nothing here
+ * re-spells "differs" (trap 417), which is also why there is no count of how
+ * many divergences FOLLOW the first: getting one would need either a second
+ * equality predicate or a regex over this comparator's prose (trap 409). The
+ * first divergence is reported VERBATIM, with both stream lengths beside it.
+ *
+ * ⛓ `botDrain` IS READ ONCE, AFTER `finished` — it is a BUFFERED stream, not a
+ * poll, so both sides are complete and no wall-clock sampling is involved. (The
+ * 250 ms `botStatus` poll beside it would MISS ticks at ~18.6 ticks/s; §18.15.10
+ * residue 3 is why this reads the drain instead.)
+ *
+ * @param {object} args
+ * @param {{ticks,transitions}|null} args.modelStream   the JS walk of the SAME tape
+ * @param {string|null} args.modelStreamWhy  why there is none, in the arm's words
+ * @param {object|null} args.drained  `botDrain`'s parsed JSON, or null
+ * @param {object|null} args.endState `verdictOf`'s result — asked FIRST, always
+ * @returns {{kind, agrees, text, observations, transitions, diff, why}}
+ */
+export function perTickVerdictOf({
+    modelStream = null, modelStreamWhy = null, drained = null, endState = null,
+    notFinished = null,
+} = {}) {
+    /**
+     * ⛔ A SHIP THAT REFUSED NEVER DRAINED, AND THAT IS A DIFFERENT ANSWER FROM
+     * "this build has no botDrain". `perTick: null` would read identically to
+     * "nobody asked" (trap 262/403), so a refusal gets a per-tick state too,
+     * carrying the stage machine's own reason.
+     */
+    if (notFinished) {
+        return {
+            kind: 'not-finished',
+            agrees: null,
+            observations: null,
+            transitions: null,
+            diff: null,
+            text: `not finished (${notFinished}) — the game never ran to the end, `
+                + 'so there was nothing to drain',
+            why: notFinished,
+        };
+    }
+    /**
+     * ⛔ A BUILD WITHOUT THE VERB DEGRADES TO THE END-STATE VERDICT, AND SAYS SO.
+     * `botDrain` has shipped since v1, but the page can be pointed at an older
+     * artifact and an absent verb must be a LABEL rather than a silent
+     * "agrees per tick (0 observations)".
+     */
+    if (!drained || !Array.isArray(drained.ticks)) {
+        return {
+            kind: 'unavailable',
+            agrees: null,
+            observations: null,
+            transitions: null,
+            diff: null,
+            text: 'end-state only (no drain on this build)',
+            why: 'botDrain answered nothing this page could read',
+        };
+    }
+    let game = null;
+    try {
+        game = gameStreamFromDrain(drained);
+    } catch (e) {
+        return {
+            kind: 'refused',
+            agrees: null,
+            observations: drained.ticks.length,
+            transitions: null,
+            diff: null,
+            text: `per-tick comparison refused: ${e.message}`,
+            why: e.message,
+        };
+    }
+    const observations = game.stream.ticks.length;
+    const transitions = game.stream.transitions.length;
+    /**
+     * ⛓ A BUILD THAT FILLS `transitions` IN FOR REAL IS A NAMED FAILURE TO
+     * RECONCILE, not something the derivation overwrites — the same rule the
+     * node differential states, made here in this harness's own words.
+     */
+    if (game.reported.length > 0 && !game.agrees) {
+        return {
+            kind: 'refused',
+            agrees: null,
+            observations,
+            transitions,
+            diff: null,
+            text: `per-tick comparison refused: ${game.detail}`,
+            why: game.detail,
+        };
+    }
+    if (!modelStream) {
+        return {
+            kind: 'none',
+            agrees: null,
+            observations,
+            transitions,
+            diff: null,
+            text: `no per-tick comparison (${modelStreamWhy
+                ?? 'this arm produced no model stream'}) — `
+                + `${observations} observation(s) drained from the game`,
+            why: modelStreamWhy,
+        };
+    }
+    let diff = null;
+    try {
+        diff = diffObservationStreams(modelStream, game.stream);
+    } catch (e) {
+        return {
+            kind: 'refused',
+            agrees: null,
+            observations,
+            transitions,
+            diff: null,
+            text: `per-tick comparison refused: ${e.message}`,
+            why: e.message,
+        };
+    }
+    if (diff) {
+        return {
+            kind: 'diverges',
+            agrees: false,
+            observations,
+            transitions,
+            diff,
+            text: `diverges — ${diff} (model ${modelStream.ticks.length} `
+                + `observation(s), game ${observations})`,
+            why: null,
+        };
+    }
+    const contradiction = endStateContradiction(endState);
+    if (contradiction) {
+        return {
+            kind: 'inconsistent',
+            agrees: false,
+            observations,
+            transitions,
+            diff: null,
+            text: `verdict-internally-inconsistent — all ${observations} observation(s) `
+                + `agree, but the END STATE does not: ${endState.text}. ${contradiction}`,
+            why: contradiction,
+        };
+    }
+    return {
+        kind: 'agrees',
+        agrees: true,
+        observations,
+        transitions,
+        diff: null,
+        text: `agrees per tick (${observations} observations)`,
+        why: null,
+    };
+}
+
+/** The per-tick kinds that are an ANSWER about ticks, rather than an absence. */
+const PER_TICK_ANSWERED = new Set(['agrees', 'diverges', 'inconsistent', 'refused']);
+
+/**
+ * ⛓⛓ THE WHOLE READOUT BLOCK, AS A PURE FUNCTION — every line the page prints
+ * beside the JS certification, with the scope its own line's claim needs.
+ *
+ * ⛔ THE END-STATE LINE IS NEVER DROPPED. It is the check that runs FIRST and
+ * the one a `verdict-internally-inconsistent` is inconsistent WITH, so printing
+ * only the headline would hide the half that makes the refusal legible. ⛓ And
+ * it is why the `end state only` sentence is on screen for every ship, which
+ * is what `check-seedling-wasm-ship.mjs` has always asserted.
+ */
+export function verdictBlock(v, note = null) {
+    const pt = v?.perTick ?? null;
+    const lines = [];
+    if (pt && PER_TICK_ANSWERED.has(pt.kind)) {
+        lines.push(`wasm verdict: ${pt.text}  —  ${PER_TICK_SCOPE}`);
+        lines.push(`end state: ${v.text}  —  ${VERDICT_SCOPE}`);
+    } else {
+        lines.push(`${verdictLine(v)}  —  ${VERDICT_SCOPE}`);
+        // ⛓ A REFUSAL'S per-tick line would repeat the headline word for word —
+        // the end-state verdict already reads `not finished (<reason>)`.
+        if (pt && pt.kind !== 'not-finished') lines.push(`per tick: ${pt.text}`);
+    }
+    if (note) lines.push(note);
+    return lines.join('\n');
+}
 
 /**
  * ⛓ THE READBACK COMPARISON — the proof a set MOUNTED rather than merely
@@ -295,6 +578,13 @@ export function levelSetDisagreement(sent, back) {
  * @param {object|null} payload.expect    the JS model's end state, or null
  * @param {string|null} payload.expectWhy why there is none (`manual`), for the
  *   verdict's own words — an absence with a reason beside it
+ * @param {{ticks,transitions}|null} payload.modelStream  the JS model's WHOLE
+ *   observation stream for this same tape, in the vocabulary
+ *   `diffObservationStreams` eats — `watchOverlays.modelStreamOf` of the walk
+ *   the arm already made, remapped to the shipped set's room ids where the arm
+ *   ships a generated room. ⛔ Never a second walk and never a second spelling.
+ * @param {string|null} payload.modelStreamWhy  why there is none, in the arm's
+ *   own words (MANUAL: nothing has been driven yet)
  * @param {string} payload.label          what is being shipped, for the readout
  * @param {string|null} payload.note      a one-line fact the readout prints beside
  *   the verdict (the GENERATE ship's level remap)
@@ -309,7 +599,7 @@ export function levelSetDisagreement(sent, back) {
 export async function shipToWasm(payload, host) {
     const {
         levelSet = null, chunks = null, tape, expect = null, expectWhy = null, label = '',
-        note = null,
+        note = null, modelStream = null, modelStreamWhy = null,
     } = payload;
     const { frame, lifetime, readout, tolerance = END_STATE_TOLERANCE } = host;
     const state = {
@@ -328,6 +618,13 @@ export async function shipToWasm(payload, host) {
         note,
         status: null,
         verdict: null,
+        /**
+         * ⛓ WHAT THE GAME HANDED OVER, as a fact rather than as a stream: the
+         * rows read `__watch`, and shipping a few thousand observations through
+         * it would make every readout publish a megabyte. The stream itself is
+         * consumed by the comparator and the DIFF is what survives.
+         */
+        drain: null,
         set: levelSet ? { set_id: levelSet.set_id, rooms: levelSet.rooms.length } : null,
     };
     const enter = (stage, message) => {
@@ -344,8 +641,12 @@ export async function shipToWasm(payload, host) {
          * identically to one nobody asked about — and the whole point of the
          * stage machine is that the reader can tell those apart.
          */
-        state.verdict = verdictOf(expect, null, tolerance,
-            { noExpectWhy: expectWhy, refusal: state.refusal });
+        state.verdict = {
+            ...verdictOf(expect, null, tolerance,
+                { noExpectWhy: expectWhy, refusal: state.refusal }),
+            perTick: perTickVerdictOf({ notFinished: reason }),
+            drain: null,
+        };
         readout.onRefusal(stage, reason, detail, state);
         readout.onVerdict(state.verdict, state);
         return state;
@@ -518,7 +819,45 @@ export async function shipToWasm(payload, host) {
             if (st.finished) {
                 state.stage = 'finished';
                 state.reached.push('finished');
-                const v = verdictOf(expect, st, tolerance, { noExpectWhy: expectWhy });
+                /**
+                 * ⛔⛔ THE END-STATE CHECK RUNS FIRST, AND IT ALWAYS RUNS (⚖ D2).
+                 * It is the check the per-tick one may not silently contradict,
+                 * and a `verdict-internally-inconsistent` is inconsistent WITH
+                 * this — so it cannot be computed after, or conditionally.
+                 */
+                const endState = verdictOf(expect, st, tolerance,
+                    { noExpectWhy: expectWhy });
+                /**
+                 * ── ⛓⛓⛓ drain — ONCE, AND ONLY ONCE ────────────────────
+                 *
+                 * `botDrain` is a BUFFERED stream the game has been filling
+                 * since `botStart`, not a sample: reading it after `finished`
+                 * yields every observation of the run. ⛔ THAT IS WHY THE
+                 * PER-TICK VERDICT READS IT AND NOT THE 250 ms `botStatus`
+                 * POLL ABOVE — at ~18.6 ticks/s on a real GPU that poll sees
+                 * roughly one tick in four, so a "per-tick" record built from
+                 * it would be a subsample reported as a stream (§18.15.10
+                 * residue 3). Reading it TWICE is not an option either: the
+                 * verb drains, so a second call answers about nothing.
+                 */
+                const drained = botJson('botDrain');
+                state.drain = drained && Array.isArray(drained.ticks)
+                    ? {
+                        observations: drained.ticks.length,
+                        reportedTransitions: (drained.transitions ?? []).length,
+                    }
+                    : null;
+                enter('drain', state.drain
+                    ? `${state.drain.observations} observation(s) drained from the game`
+                    : 'this build answered no botDrain — the verdict falls back to '
+                        + 'END STATE, labelled');
+                const v = {
+                    ...endState,
+                    perTick: perTickVerdictOf({
+                        modelStream, modelStreamWhy, drained, endState,
+                    }),
+                    drain: state.drain,
+                };
                 state.verdict = v;
                 state.stage = 'verdict';
                 state.reached.push('verdict');

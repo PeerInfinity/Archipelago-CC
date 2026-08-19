@@ -20,8 +20,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    END_STATE_TOLERANCE, levelSetDisagreement, roomOfGeneratedLevel, stagesOf,
-    VERDICT_SCOPE, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES,
+    END_STATE_TOLERANCE, levelSetDisagreement, PER_TICK_SCOPE, perTickVerdictOf,
+    remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE, verdictBlock,
+    verdictLine, verdictOf, WASM_PAGE, WASM_STAGES,
 } from './watchWasm.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -39,10 +40,21 @@ const expected = (over = {}) => ({
 });
 
 describe('the stage vocabulary', () => {
-    it('names the eight stages in the order a ship reaches them', () => {
+    it('names the nine stages in the order a ship reaches them', () => {
+        // ⛓ `drain` landed between `finished` and `verdict` with the per-tick
+        // slice: `botDrain` is read ONCE, after the run ends, and the verdict
+        // is computed from what it handed over.
         expect(WASM_STAGES).toEqual([
-            'probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished', 'verdict',
+            'probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished', 'drain',
+            'verdict',
         ]);
+    });
+
+    it('⛓ `drain` sits AFTER `finished` and BEFORE `verdict`, always', () => {
+        const s = stagesOf({});
+        expect(s.indexOf('drain')).toBe(s.indexOf('finished') + 1);
+        expect(s.indexOf('verdict')).toBe(s.indexOf('drain') + 1);
+        expect(stagesOf({ levelSet: { set_id: 'x', rooms: [{}] } })).toContain('drain');
     });
 
     it('⛓ `levels` appears ONLY when a level set is being shipped', () => {
@@ -121,7 +133,11 @@ describe('verdictOf — the END-STATE comparison', () => {
 
     it('⛔ the SCOPE is a constant this file owns — a verdict is END STATE ONLY', () => {
         expect(VERDICT_SCOPE).toMatch(/end state only/);
-        expect(VERDICT_SCOPE).toMatch(/per-tick differential/);
+        // ⚠ It used to say "the per-tick differential is the next slice". It
+        // landed, so the sentence had to stop promising it and start bounding
+        // what the END-STATE line alone can mean (trap 354's family: a constant
+        // whose words outlive the state they described).
+        expect(VERDICT_SCOPE).toMatch(/disagreed on every tick between/);
         expect(verdictLine(verdictOf(expected(), status(), 0))).toBe('wasm verdict: agrees');
     });
 
@@ -249,5 +265,210 @@ describe('⛔⛔ THE PARENT NEVER STARTS THE GAME — the law, as a TEST', () =>
             '    const btn = win().document.getElementById(\'btn-start\'); btn.click();'];
         const seen = mutant.filter((line) => FORBIDDEN.some((re) => re.test(line)));
         expect(seen).toHaveLength(2);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE PER-TICK VERDICT ─────────────────────────────────────────
+ *
+ * ⛔ THE COMPARATOR IS `tapeFormat.diffObservationStreams` AND NOTHING HERE
+ * RE-SPELLS IT. What these rows assert is the DECISION around it: which of the
+ * five answers a ship gets, what each one says, and the one answer the design
+ * exists to make impossible (a per-tick `agrees` printed beside an end state
+ * that disagrees about the same frame).
+ */
+describe('the per-tick verdict', () => {
+    /** A stream in the vocabulary both sides are read in. */
+    const streamOf = (rows, transitions = []) => ({
+        ticks: rows.map((r, t) => ({ t, x: r[0], y: r[1], level: r[2] ?? 0 })),
+        transitions,
+    });
+    const model = streamOf([[80, 128], [82, 128], [84, 128]]);
+    /** What `botDrain` really returns: the ticks, and `transitions` hardcoded []. */
+    const drainOf = (s) => ({ ticks: s.ticks, transitions: [] });
+
+    it('⛓⛓⛓ AGREES PER TICK, and says how many observations that was', () => {
+        const v = perTickVerdictOf({
+            modelStream: model, drained: drainOf(model), endState: verdictOf(expected(), status()),
+        });
+        expect(v.kind).toBe('agrees');
+        expect(v.agrees).toBe(true);
+        expect(v.observations).toBe(3);
+        expect(v.text).toBe('agrees per tick (3 observations)');
+    });
+
+    it('⛓ M-first: a divergence at tick k is reported AT k, verbatim, with both lengths', () => {
+        const game = structuredClone(model);
+        game.ticks[2].x = 90;
+        const v = perTickVerdictOf({ modelStream: model, drained: drainOf(game) });
+        expect(v.kind).toBe('diverges');
+        expect(v.agrees).toBe(false);
+        // The comparator's OWN sentence — this module does not paraphrase it.
+        expect(v.diff).toMatch(/^tick 2 differs: expected \(x=84, y=128, level=0\), got \(x=90/);
+        expect(v.text).toMatch(/^diverges — tick 2 differs/);
+        expect(v.text).toMatch(/\(model 3 observation\(s\), game 3\)$/);
+    });
+
+    it('⛔ M-fallback: no drain ⇒ the END-STATE verdict, LABELLED as the fallback', () => {
+        const v = perTickVerdictOf({ modelStream: model, drained: null });
+        expect(v.kind).toBe('unavailable');
+        expect(v.text).toBe('end-state only (no drain on this build)');
+        expect(v.observations).toBeNull();
+        expect(perTickVerdictOf({ modelStream: model, drained: { ticks: 'nope' } }).kind)
+            .toBe('unavailable');
+    });
+
+    it('⛔ MANUAL is VACUOUS and says so — with the drained count beside it', () => {
+        // A zero-input tape has no run to reproduce. A per-tick comparison over
+        // it would be agreement on the boot frame, printed as if the real game
+        // had reproduced something.
+        const v = perTickVerdictOf({
+            modelStream: null, modelStreamWhy: 'manual — nothing has been driven in JS',
+            drained: drainOf(streamOf([[80, 128]])),
+        });
+        expect(v.kind).toBe('none');
+        expect(v.agrees).toBeNull();
+        expect(v.observations).toBe(1);
+        expect(v.text).toMatch(/no per-tick comparison \(manual — nothing has been driven in JS\)/);
+        expect(v.text).toMatch(/1 observation\(s\) drained from the game/);
+    });
+
+    it('⛓ a ship that REFUSED gets a per-tick state too — never a bare null', () => {
+        const v = perTickVerdictOf({ notFinished: 'start-never-pressed' });
+        expect(v.kind).toBe('not-finished');
+        expect(v.text).toMatch(/not finished \(start-never-pressed\)/);
+        expect(v.text).toMatch(/nothing to drain/);
+    });
+
+    it('⛓⛓ M-vocab: a stream in a DIFFERENT vocabulary is REFUSED, by field name', () => {
+        // The proof that the vocabulary is CHECKED and not assumed: rename one
+        // observation's field and the comparator's own validator names it.
+        const renamed = structuredClone(model);
+        delete renamed.ticks[1].x;
+        renamed.ticks[1].xx = 82;
+        const v = perTickVerdictOf({ modelStream: renamed, drained: drainOf(model) });
+        expect(v.kind).toBe('refused');
+        expect(v.text).toMatch(/per-tick comparison refused:.*ticks\[1\]\.x/);
+    });
+
+    it('⛔ a build that FILLS `transitions` in for real is a refusal to reconcile', () => {
+        const drained = { ticks: model.ticks, transitions: [{ t: 1, from_level: 0, to_level: 4 }] };
+        const v = perTickVerdictOf({ modelStream: model, drained });
+        expect(v.kind).toBe('refused');
+        expect(v.text).toMatch(/needs revisiting/);
+    });
+
+    /**
+     * ── ⛔⛔ THE ONE ANSWER THIS DESIGN EXISTS TO MAKE IMPOSSIBLE (⚖ D2) ──
+     */
+    describe('the consistency gate', () => {
+        it('M-consistent: per tick agrees + the END STATE disagrees about the same '
+            + 'frame ⇒ verdict-internally-inconsistent, NEVER `agrees`', () => {
+            // `botStatus` says one thing about the last frame and `botDrain`
+            // says another. That is a defect in the comparison, not a finding
+            // about the run, and it must be impossible to print as agreement.
+            const endState = verdictOf(expected({ x: 84, y: 128, level: 0, items: {} }),
+                status({ x: 90, y: 128, level: 0, items: {} }));
+            expect(endState.kind).toBe('disagrees');
+            const v = perTickVerdictOf({ modelStream: model, drained: drainOf(model), endState });
+            expect(v.kind).toBe('inconsistent');
+            expect(v.agrees).toBe(false);
+            expect(v.text).toMatch(/verdict-internally-inconsistent/);
+            expect(v.text).toMatch(/botStatus and botDrain disagree about the same frame/);
+            expect(v.text).not.toMatch(/^agrees/);
+        });
+
+        it('⛓ …but an ITEMS-ONLY disagreement is a FINDING, not an inconsistency', () => {
+            // An observation is {t,x,y,level} and carries NO items, so
+            // `missing hasSword` is the end-state check answering a question
+            // the per-tick one never asked. Calling that "internally
+            // inconsistent" would relabel a real finding as an instrument bug.
+            const endState = verdictOf(
+                expected({ x: 84, y: 128, level: 0, items: { hasSword: true } }),
+                status({ x: 84, y: 128, level: 0, items: {} }));
+            expect(endState.kind).toBe('disagrees');
+            expect(endState.text).toMatch(/missing hasSword/);
+            const v = perTickVerdictOf({ modelStream: model, drained: drainOf(model), endState });
+            expect(v.kind).toBe('agrees');
+        });
+    });
+});
+
+/**
+ * ⛓⛓ THE REMAP, ACROSS A WHOLE STREAM — every observation of a generated walk
+ * carries 900, not just the last one.
+ */
+describe('a generated room\'s stream, remapped to the shipped set', () => {
+    const gen = {
+        ticks: [
+            { t: 0, x: 16, y: 16, level: 900 },
+            { t: 1, x: 18, y: 16, level: 900 },
+        ],
+        transitions: [],
+    };
+
+    it('maps every tick through the ONE function that owns the mapping', () => {
+        expect(remapStreamRooms(gen, 1, [900]).ticks)
+            .toEqual([{ t: 0, x: 16, y: 16, level: 0 }, { t: 1, x: 18, y: 16, level: 0 }]);
+    });
+
+    it('maps the TRANSITIONS\' endpoints too, not only the ticks', () => {
+        const two = {
+            ticks: [{ t: 0, x: 1, y: 1, level: 900 }, { t: 1, x: 1, y: 1, level: 901 }],
+            transitions: [{ t: 1, from_level: 900, to_level: 901 }],
+        };
+        expect(remapStreamRooms(two, 2, [900, 901]).transitions)
+            .toEqual([{ t: 1, from_level: 0, to_level: 1 }]);
+    });
+
+    it('⛔ REFUSES a level the set does not contain rather than inventing room 0', () => {
+        expect(() => remapStreamRooms(gen, 1, [42]))
+            .toThrow(/level 900 is not in this set's order/);
+    });
+});
+
+/**
+ * ⛓ THE PRINTED BLOCK — asserted as TEXT, because that is what a reader gets.
+ */
+describe('what the page prints beside the JS certification', () => {
+    const end = verdictOf(expected(), status());
+
+    it('⛓⛓ prints BOTH verdicts, each with the scope its own claim needs', () => {
+        const v = { ...end, perTick: { kind: 'agrees', text: 'agrees per tick (3 observations)' } };
+        const lines = verdictBlock(v).split('\n');
+        expect(lines[0]).toBe(`wasm verdict: agrees per tick (3 observations)  —  ${PER_TICK_SCOPE}`);
+        expect(lines[1]).toBe(`end state: agrees  —  ${VERDICT_SCOPE}`);
+    });
+
+    it('⛔ the END-STATE line is NEVER dropped — it is what an inconsistency is '
+        + 'inconsistent WITH', () => {
+        const v = { ...end, perTick: { kind: 'inconsistent', text: 'verdict-internally-inconsistent — …' } };
+        expect(verdictBlock(v)).toMatch(/\nend state: agrees {2}— {2}/);
+        expect(verdictBlock(v)).toMatch(/end state only/);
+    });
+
+    it('falls back to ONE line when nothing per-tick was answered', () => {
+        const v = { ...end, perTick: { kind: 'unavailable', text: 'end-state only (no drain on this build)' } };
+        const lines = verdictBlock(v, 'level remapped 900→0').split('\n');
+        expect(lines[0]).toBe(`wasm verdict: agrees  —  ${VERDICT_SCOPE}`);
+        expect(lines[1]).toBe('per tick: end-state only (no drain on this build)');
+        expect(lines[2]).toBe('level remapped 900→0');
+    });
+
+    it('⛓ a refusal does not repeat itself on a second line', () => {
+        const refused = verdictOf(null, null, END_STATE_TOLERANCE,
+            { refusal: { reason: 'wasm-build-missing' } });
+        const v = { ...refused, perTick: perTickVerdictOf({ notFinished: 'wasm-build-missing' }) };
+        expect(verdictBlock(v).split('\n')).toHaveLength(1);
+    });
+
+    it('⛔⛔ the SCOPES name BOTH limits the per-tick verdict has (⚖ D3)', () => {
+        // 1. it is against the MODEL, not against a recorded expectation;
+        // 2. trap 389 — both sides share this repo's tape and observation code.
+        expect(PER_TICK_SCOPE).toMatch(/JS MODEL/);
+        expect(PER_TICK_SCOPE).toMatch(/not against a recorded expectation/);
+        expect(PER_TICK_SCOPE).toMatch(/share/);
+        expect(PER_TICK_SCOPE).toMatch(/invisible/);
+        expect(VERDICT_SCOPE).toMatch(/end state only/);
     });
 });
