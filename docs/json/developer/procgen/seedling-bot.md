@@ -10249,6 +10249,35 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   `budgetKind` reaches the trace whose sha is a determinism payload, so naming
   it would re-record a committed artifact.
 
+- ⛓⛓⛓ **AND THEN THE NARRATIVE DOCUMENTS WENT ON PAGES TOO** — 2026-08-19
+  (PROCGEN DOCS **P4**), ⚖ the user. Until now only the three GENERATED pages
+  were readable on the site; the seventeen `.md` files that hold the actual
+  record — this one included — were readable only on GitHub. Now
+  [**the documents page**](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/docs.html)
+  renders every one of them, with GitHub's heading anchors, a nav in README's
+  declared reading order, a contents off the render, and **every relative link
+  resolving somewhere a reader can click**: a sibling `.md` stays in the viewer,
+  a `frontend/**.html` goes to the live page, everything else in the repo goes
+  to a GitHub blob. ⛔ Nothing is pre-rendered and no document is copied into
+  `frontend/`: the page FETCHES the tracked file, and the deploy stages the
+  directory into the artifact — so **the file in this directory stays the one
+  and only source**. `?doc=` is allow-listed by the generated index and refuses
+  anything else by name.
+  ⛓ The measurements that made it honest: the corpus is **211 links** (144
+  sibling · 32 repo, all of which exist · 22 http · 13 same-doc · 0 pages) and
+  the census found **two dead fragments**, both plain typos and both dead on
+  GitHub too — now fixed. The anchor rule lives in `ghSlug.js` and is still
+  pinned by six links nobody in these slices wrote. ⚖ GitHub's `-N` duplicate
+  suffix is REACHED here (8 collisions, all in this file) but **nothing tracked
+  links to one**, so it ships documented and unpinned, and a test says so.
+  ⛓ The defect worth carrying off: `marked` reads a heading's TEXT CONTENT and
+  the source reader read the SOURCE, and over 600 headings they disagreed
+  **once** — a heading in this file containing `[maze.md](./maze.md)`, where
+  GitHub keeps only the link text. Two readers now agree 600/600 and the render
+  re-checks them, refusing by name rather than shipping anchors nothing points
+  at. `check-procgen-docs.mjs` is the gate: **128 claims off the DOM**, green
+  locally and on the deployed site. This file renders in **171ms**.
+
 #### The ledger's phases and paintables, as of the arc's close
 
 ⛔ This supersedes arc-3 kickoff §16.5's table, which was written before 5b and

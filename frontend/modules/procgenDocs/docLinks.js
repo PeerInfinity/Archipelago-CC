@@ -140,8 +140,14 @@ export function resolveDocLink(href, { doc, siteRoot = '' } = {}) {
 
 /**
  * ⛓ Every link a markdown source contains, as `{ href, text }`, with fenced
- * blocks removed first — a `[a](b)` inside a fence is a code sample, and
- * rewriting it would edit what the document SAYS.
+ * blocks AND inline code spans removed first — a `[a](b)` inside either is a
+ * code sample, and rewriting it would edit what the document SAYS.
+ *
+ * ⛔ The inline-code half was MISSING until P4's own pointer paragraph in
+ * `seedling-bot.md` wrote a link inside backticks to talk ABOUT a link. The
+ * census counted 145 sibling links where the render emitted 144, and the
+ * difference was exactly that one. A reader that strips fences but not code
+ * spans has answered "is this a link?" two different ways in one function.
  *
  * ⛔ This is a census reader for the tests and the row, NOT the page's
  * renderer: the page gets its links from `marked`, which is the only thing
@@ -155,7 +161,9 @@ export function linksIn(markdown) {
     const body = lines.map((l) => {
         if (l.trimStart().startsWith('```')) { fenced = !fenced; return ''; }
         return fenced ? '' : l;
-    }).join('\n');
+    }).join('\n')
+        /** ⛓ Inline code spans out too — same reason as the fences. */
+        .replace(/`[^`\n]*`/g, '');
 
     const out = [];
     for (const m of body.matchAll(/(!?)\[((?:[^[\]]|\[[^\]]*\])*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)) {

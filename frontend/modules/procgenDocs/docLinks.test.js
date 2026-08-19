@@ -2,7 +2,7 @@
  * procgenDocs/docLinks — **EVERY LINK IN THE CORPUS, RESOLVED, COUNTED AND
  * PINNED** (PROCGEN DOCS · P4, D3).
  *
- * ⛓ `resolveDocLink` is pure, so it can be run over all 211 links the
+ * ⛓ `resolveDocLink` is pure, so it can be run over all 212 links the
  * seventeen tracked documents contain without a browser and without a server.
  * That is the whole reason it is a separate function from the page: the page
  * can only ever show one document at a time, and a resolver nobody ran over
@@ -50,7 +50,7 @@ const RESOLVED = CORPUS.map((l) => ({ ...l, ...resolveDocLink(l.href, { doc: l.d
 const SLUGS = new Map(FILES.map((f) => [f, new Set(headingsOf(read(f)).map((h) => h.slug))]));
 
 describe('the corpus census — printed, then pinned', () => {
-    it('resolves all 211 links into five kinds and no others', () => {
+    it('resolves all 212 links into five kinds and no others', () => {
         const by = {};
         for (const r of RESOLVED) by[r.kind] = (by[r.kind] ?? 0) + 1;
         // eslint-disable-next-line no-console
@@ -66,17 +66,28 @@ describe('the corpus census — printed, then pinned', () => {
          * is the failure it prevents, and this line is where a first such link
          * would announce itself.
          */
-        /** ⛓ 22 external, not 21: P4's own page added a row to README's
-         *  GENERATED index table, and that row carries the page's Pages URL.
-         *  The pin caught it, which is what a pinned census is for. */
+        /**
+         * ⛓ THIS PIN HAS MOVED TWICE IN ONE SLICE, BOTH TIMES CORRECTLY, and
+         * both times because P4 WROTE INTO THE CORPUS IT MEASURES:
+         *   210 → 211  `docs.html` became a row in README's GENERATED index
+         *              table, and that row carries the page's Pages URL.
+         *   211 → 212  `seedling-bot.md`'s tracked record gained P4's own
+         *              pointer paragraph — one more Pages URL, one more
+         *              sibling link, and one link written INSIDE BACKTICKS
+         *              that `linksIn` used to count and the render never
+         *              emitted. That third one was a DEFECT in the census
+         *              reader, not a link: see `linksIn`'s docblock.
+         * ⛔ That is the pin working, not the pin being noisy: a census nobody
+         * has to update is a census that stopped being measured.
+         */
         expect(by).toEqual({
             'same-doc': 13,
             doc: 144,
-            external: 22,
+            external: 23,
             repo: 32,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(211);
+        expect(CORPUS.length).toBe(212);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
