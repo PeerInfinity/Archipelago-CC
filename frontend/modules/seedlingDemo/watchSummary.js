@@ -58,9 +58,12 @@ export function noLevelIdentity(source) {
  * @param {string} args.href       `window.location.href`
  * @param {object|null} args.generate   `window.__editorGenerate`
  * @param {object|null} args.generated  `window.__editorGenerated` (the payload)
+ * @param {object|null} args.wasm       `window.__editorWasm` (the ▶ load-in-wasm ship)
  * @returns {object} the summary published as `window.__watch`
  */
-export function watchSummary({ source, href, generate = null, generated = null }) {
+export function watchSummary({
+    source, href, generate = null, generated = null, wasm = null,
+}) {
     /**
      * ⛔ `status: 'refused'` IS NOT A LEVEL. Both `__editorGenerate` refusal
      * shapes (`{status:'refused', message}` from `mountArm`'s catch, and the
@@ -92,5 +95,19 @@ export function watchSummary({ source, href, generate = null, generated = null }
         /** The reproduction verdict when a payload owned this run, else null. */
         payloadCheck: ok ? (generate.payloadCheck ?? null) : null,
         status: generate?.status ?? 'none',
+        /**
+         * ⛓⛓ THE ▶ LOAD-IN-WASM SHIP, CARRIED WHOLE — and `null` when nobody
+         * has pressed it.
+         *
+         * ⛔ IT IS NOT GATED ON `ok` THE WAY THE GENERATE FIELDS ARE. Those
+         * describe a LEVEL, and a refused generate has none; a ship's readout
+         * is at its most valuable exactly when the ship refused, because the
+         * stage it stopped at is the finding. Dropping it under a refusal
+         * would hide the channel in the case it exists for.
+         *
+         * ⚠ TRAP 262 AT THE BOUNDARY, AGAIN: `null` here means "no ship on
+         * this page", never "the ship disagreed".
+         */
+        wasm: wasm ?? null,
     };
 }

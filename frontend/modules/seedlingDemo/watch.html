@@ -290,6 +290,13 @@
      a keystroke in the browser rather than a change to the code. */
   #sourceStamp { font-size: 11px; color: #6a6a78; }
   #sourceStamp.bad { color: #ff8080; }
+  /* ⛓ The wasm verdict reads like the status bar because it IS a verdict:
+     agrees is green, disagrees is red, and "not finished"/"no expectation"
+     are neither — an absence must not wear an answer's colour. */
+  #wasmVerdict { font-size: 11px; white-space: pre-wrap; margin: 2px 0; }
+  #wasmVerdict.ok { color: #7ee787; }
+  #wasmVerdict.bad { color: #ff8080; }
+  #wasmStages { font-family: ui-monospace, monospace; }
   #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
   main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
   #stage { flex: 1 1 auto; min-width: 0; }
@@ -474,6 +481,19 @@
         <option value="wasm">wasm — the real recompiled game</option>
       </select>
       <span id="sidenote"></span>
+    </span>
+    <!-- ⛓⛓⛓ ▶ LOAD IN WASM (⚖ user, 2026-08-19) — a SEPARATE BUTTON, not a
+         fifth SOURCE and not a sixth engine. SOLVE, MANUAL and GENERATE each
+         hold something the real recompiled game could run; REPLAY already has
+         the ENGINE selector for exactly that, so the button is hidden there
+         rather than being a second way to do one thing.
+         ⛔ NO `?`-PARAMETER OPENS IT. A URL that auto-shipped would have to
+         auto-press ▶ Start, and the frame's own law is that the parent may
+         never do that — so this is a GESTURE, and the demo catalogue says
+         "press ▶ load in wasm, then ▶ Start". -->
+    <span id="wasmShip">
+      <button id="loadWasm" disabled>&#9654; load in wasm</button>
+      <span id="loadWasmNote" class="note"></span>
     </span>
   </div>
   <!-- ⛓⛓⛓ ONE BOOT PANEL, SHARED BY SOLVE AND MANUAL (switch slice 3).
@@ -859,6 +879,21 @@
   </div>
   <div id="panel">
     <div id="hud"></div>
+    <!-- ⛓⛓ THE SHIP'S OWN READOUT — its own block, BESIDE the JS run's, never
+         over it. `#status` and `#hud` hold the solve's tick count, the scrub
+         HUD and the generator's identity line; ⚖ D3 prints the wasm verdict
+         beside the JS certification, and a ship that painted over them would
+         delete the thing the verdict is compared with.
+         ⛔ EVERY STAGE IS LISTED, reached or not, so a ship that stopped is
+         visibly a ship that stopped AT A NAMED PLACE rather than a readout
+         that simply says nothing (trap 403). -->
+    <div id="wasmPanel" hidden>
+      <h2>THE REAL GAME</h2>
+      <div id="wasmStage" class="note"></div>
+      <div id="wasmStages" class="note"></div>
+      <div id="wasmVerdict"></div>
+      <div id="wasmHud"></div>
+    </div>
     <!-- ⛔ TWO PANES BECAUSE THERE ARE TWO TRACES. The decision trace is the
          SOLVER's, one row per obstacle it reasoned about, indexed by TICK and
          clickable. A generation row is an ATTEMPT — template, anchor, verdict

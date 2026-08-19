@@ -131,6 +131,15 @@
  */
 import { buildLevelWorld, LevelWorldError, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
+/**
+ * ⛓ THE ▶ LOAD-IN-WASM PAYLOAD BUILDERS — the ONE fold (`buildStagedTape`) and
+ * the ONE exporter/validator/chunker the CLI rows already use. ⛔ All four are
+ * headless-safe by their own docblocks (no `node:` imports, no DOM), which is
+ * why a browser page may import them at all.
+ */
+import { buildStagedTape } from './botDriverV1.js';
+import { buildLevelSet } from './levelSetExporter.js';
+import { planLevelSetChunks, validateLevelSet } from './levelSetValidator.js';
 import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
@@ -596,6 +605,20 @@ function resetPageChrome() {
     // left. Cleared here, it becomes the honest thing to wait on: it reappears
     // only when the ARRIVING arm is done (see `mountArm`).
     delete window.__editorArm;
+    /**
+     * ⛓ AND THE SHIP'S READOUT, WITH ITS PANEL. A `wasm verdict: agrees` left
+     * standing over the arm you switched TO would be a statement about a run
+     * that is no longer on screen — the RAW TRUTH law's plainest violation,
+     * and the one this readout is most likely to commit because a ship
+     * outlives the press that started it.
+     */
+    delete window.__editorWasm;
+    $('wasmPanel').hidden = true;
+    $('wasmStage').textContent = '';
+    $('wasmStages').textContent = '';
+    $('wasmVerdict').textContent = '';
+    $('wasmVerdict').className = '';
+    $('wasmHud').innerHTML = '';
     // ⛓ SLICE 4: `__watch` is a PROJECTION of the four above, so it goes with
     // them — a summary that outlived its sources would be the one readout on
     // this page describing a run nobody can see.
@@ -650,6 +673,9 @@ function publishWatch(source) {
         href: window.location.href,
         generate: window.__editorGenerate ?? null,
         generated: window.__editorGenerated ?? null,
+        // ⛓ The ship's readout, PROJECTED like the other four — `watchSummary`
+        // adds no truth of its own, it quotes what the page already wrote.
+        wasm: window.__editorWasm ?? null,
     });
     hostBridge?.announce();
     return window.__watch;
@@ -3504,6 +3530,14 @@ async function runSolve(params, lifetime) {
     // ── SOLVE ────────────────────────────────────────────────────────
     async function solveNow() {
         $('solveGo').disabled = true;
+        /**
+         * ⛔ THE PREVIOUS SOLVE'S TAPE STOPS BEING SHIPPABLE THE MOMENT THIS
+         * PRESS STARTS. Left standing, a solve that then REFUSED would leave
+         * the button enabled over a tape from the room before the one in the
+         * box — a ship that works, reports `agrees`, and is about the wrong
+         * level.
+         */
+        setShippable({ why: 'solving\u2026' });
         // ⛔ THE BOX, RE-READ AT PRESS — see `stagingNow`. A refusal here is
         // the tape parser's own message, exactly as the MANUAL arm's is.
         let block;
@@ -3697,6 +3731,25 @@ async function runSolve(params, lifetime) {
         // The pane reads the object above directly; this is the same trace,
         // exposed for a CLI or a console that wants the rows without the DOM.
         window.__editorTrace = solved.out.trace;
+        /**
+         * ⛓⛓ AND IT IS NOW SHIPPABLE. ⛔ THE TAPE IS `solved.tape` — the fold
+         * `buildStagedTape` already made, the same one `?side=wasm` would
+         * replay if it had been committed. Building a second tape here from
+         * `perTick` would be a second fold of one walk.
+         *
+         * ⛓ THE EXPECTATION IS THE FRAMES THE SCRUB IS ALREADY SHOWING, so
+         * "where the JS model ended" is literally the last frame on screen —
+         * not a re-walk that could differ from it.
+         */
+        setShippable({
+            what: `\u25b6 ship the solve's own tape \u2014 ${name}, `
+                + `${solved.tape.tick_count} tick(s) in level ${block.boot.level}`,
+            build: () => ({
+                tape: solved.tape,
+                expect: expectFromFrames(frames),
+                label: `${name} \u2014 the solve's own tape`,
+            }),
+        });
         $('solveGo').disabled = false;
     }
 
@@ -3756,6 +3809,44 @@ async function runManual(params, lifetime) {
             + `⚠ ?layers= names ${layers.unknown.length} unknown layer(s): `
             + `${layers.unknown.join(', ')} — the roster is ${LAYER_IDS.join(', ')}`;
     }
+
+    /**
+     * ── ⛓⛓⛓ MANUAL'S SHIP: A **ZERO-INPUT** TAPE, AND THEN IT IS YOURS ────
+     *
+     * ⚖ THE USER MEASURED THIS (2026-08-19): the keyboard drives the real game
+     * once a wasm replay has finished, so shipping a tape with `tick_count: 0`
+     * and no inputs is the whole of "put me in this room, in this state, and
+     * give me the controls". ⛔ No new wasm verb was needed and none was added.
+     *
+     * ⛔ THE BLOCK IS RE-READ AT PRESS TIME, exactly as START re-reads it. A
+     * block captured at mount would ship the room you arrived in while the box
+     * showed the one you edited — the defect slice 5 found in SOLVE, in the
+     * same page, one control over.
+     *
+     * ⚠ A BLOCK HANDED OVER BY GENERATE BOOTS AT LEVEL 900, which the real
+     * game does not have. That is a NAMED refusal at the `tape` stage
+     * (`botLoadTape: <the game's own bounds message>`) and not a silent
+     * failure — and it is the honest answer: a generated room reaches the real
+     * game through the GENERATE arm's ship, which mounts it as a level SET.
+     */
+    setShippable({
+        what: '\u25b6 ship these starting conditions as a ZERO-INPUT tape \u2014 '
+            + 'after which the keyboard drives the REAL game',
+        build: () => {
+            const block = solveStaging(stagingFromJson(JSON.parse($('bootBox').value)));
+            return {
+                tape: buildStagedTape({ staging: block, perTick: [], name }),
+                // ⛔ NO EXPECTATION, and the verdict SAYS so rather than
+                // reporting a vacuous agreement: nothing has been driven yet,
+                // so there is no JS run to agree with.
+                expect: null,
+                expectWhy: 'manual',
+                label: `${name} \u2014 your starting conditions, zero input`,
+                note: 'the run is YOURS from here \u2014 the keyboard drives the real game '
+                    + 'in the frame below (\u2696 user-measured, 2026-08-19)',
+            };
+        },
+    });
 
     const canvas = $('canvas');
     let session = null;
@@ -5686,6 +5777,39 @@ async function runGenerate(params, lifetime) {
         // the frame's address and the host's "open standalone" is built from
         // it, so publishing before `replaceState` would hand out a link to the
         // run before this one.
+        /**
+         * ── ⛓⛓⛓ AND THIS ROOM IS SHIPPABLE — AS A **ONE-ROOM LEVEL SET** ──
+         *
+         * ⛔ THE TAPE IS THE CERTIFICATION SOLVE'S OWN. `procgenOracle.solve`
+         * returns `tape` on a SOLVED verdict (it is `solveForPage`'s fold,
+         * carried straight out), so nothing is re-solved here and
+         * `watchGenerate.test.js`'s display-solve == certification claim is
+         * untouched. MEASURED: seed 1 pre-sword step 4 → SOLVED, 166 ticks,
+         * `boot {level:900,x:16,y:16}`, 27 inputs.
+         *
+         * ⛔ AND **NO `link`**, MEASURED. `buildLevelSet([oneEntry])` with no
+         * `link`, with `link:true`, and with `{topology:'chain',regions:[1]}`
+         * produce a BYTE-IDENTICAL set (content hash `4ac90eaa` all three; 0
+         * doors, 1 chunk, `validateLevelSet` ok, reachability 1/1) —
+         * `linkGeneratedRooms` plans no transition for a one-room chain. So
+         * passing one would be a bound nobody applies.
+         *
+         * ⚠ THE LEVEL IS REMAPPED AND THE READOUT SAYS SO. The record is level
+         * 900 and the exporter assigns dense ids, so the game reports room 0;
+         * `roomOfGeneratedLevel` is the ONE place that mapping is written (⚖
+         * the orchestrator, 2026-08-19 — the per-tick slice inherits it).
+         */
+        setShippable(solved?.tape ? {
+            what: `\u25b6 ship this room as a ONE-ROOM level set + its certification tape `
+                + `\u2014 seed ${state.seed}, ${state.biome}, step ${state.step}`,
+            build: () => buildGenerateShip(state, solved),
+        } : {
+            why: engineError
+                ? `this record would not BUILD (${engineError.name}) \u2014 there is no `
+                    + 'certification tape to ship'
+                : `the display solve did not SOLVE (verdict ${solved?.verdict ?? 'none'}) `
+                    + '\u2014 there is no certification tape to ship',
+        });
         publishWatch('generate');
         return { solved, agreement, drew: true };
     }
@@ -6513,6 +6637,252 @@ async function runGenerate(params, lifetime) {
     }
 }
 
+/**
+ * ⛓⛓⛓ THE GENERATE SHIP'S PAYLOAD — a ONE-ROOM set, its chunks, and the
+ * certification tape rebooted into room 0.
+ *
+ * ⛔ IT LIVES AT MODULE LEVEL, not inside `runGenerate`, for one reason: it is
+ * the only part of the ship a unit test could ever reach without a browser,
+ * and burying it in a 1,200-line arm closure would make it reachable only
+ * through the DOM. The arm hands it `state` and the display solve; everything
+ * else it derives from those two.
+ *
+ * ⛔ EVERY REFUSAL IS A THROW WITH THE PRODUCER'S OWN MESSAGE. `shipToWasmNow`
+ * turns it into the `payload` stage's named refusal, so "the set would not
+ * validate" and "the game rejected the tape" are different findings with
+ * different names — which is the whole of the stage machine's promise.
+ */
+function buildGenerateShip(state, solved) {
+    const entryName = `${state.biome}_seed${state.seed}_step${state.step}`;
+    const { set } = buildLevelSet(
+        [{ seed: state.seed, record: state.record, summary: state.summary, name: entryName }],
+        {
+            setId: `watch-oneroom-${state.biome}-${state.seed}-${state.step}`,
+            generator: 'watch.html ▶ load in wasm',
+            provenance: {
+                biome: state.biome, seed: state.seed, step: state.step, bounds: state.bounds,
+            },
+        },
+    );
+    const v = validateLevelSet(set);
+    if (!v.ok) {
+        throw new Error(`the one-room set would not validate on the SENDER: ${v.errors.join(' | ')}`);
+    }
+    const { chunks, oversized } = planLevelSetChunks(set);
+    if (oversized.length) {
+        throw new Error('a room exceeds the proven chunk envelope on its own: '
+            + JSON.stringify(oversized));
+    }
+    /**
+     * ⛓ THE SET'S ORDER IS ITS IDENTITY — position is the room id, which is
+     * `buildLevelSet`'s own rule. One entry, so the order is one record.
+     */
+    const mapped = roomOfGeneratedLevel(state.record.level, set.rooms.length,
+        [state.record.level]);
+    if (mapped.room === null) throw new Error(mapped.why);
+    /**
+     * ⛔ THE MODEL'S END STATE COMES FROM THE **UNREMAPPED** TAPE, walked in
+     * the level source that HAS level 900 — the model has no room 0 to walk.
+     * Only the expectation's `level` is remapped; its x, y and items are the
+     * model's own. Walking the remapped tape here would ask the JS engine for
+     * a room it does not have and refuse.
+     */
+    const walked = collectRun(solved.tape, levelSourceFromAtlas(atlasOf(state.record)),
+        { scratchPersistence: true });
+    if (walked.error) {
+        throw new Error('the JS model would not re-walk the certification tape, so there is '
+            + `no end state to compare against: ${walked.error.message}`);
+    }
+    const modelEnd = expectFromFrames(walked.frames);
+    return {
+        levelSet: set,
+        chunks,
+        // ⛓ The generated room REPLACES the vanilla set as room 0, so the tape
+        // that certified it boots there.
+        tape: { ...solved.tape, boot: { ...solved.tape.boot, level: mapped.room } },
+        expect: { ...modelEnd, level: mapped.room },
+        label: `${entryName} — the certification tape, in a ONE-ROOM set (${set.set_id})`,
+        note: mapped.why,
+    };
+}
+
+// ── ▶ LOAD IN WASM — the button, and what each arm hands it ──────────────
+
+/**
+ * ── ⛓⛓⛓ WHAT THIS PAGE HOLDS THAT COULD BE SHIPPED, OR WHY NOT ───────
+ *
+ * ⛔ IT IS A **BUILDER**, NOT A PAYLOAD. The block a MANUAL ship sends is
+ * whatever is in the box AT PRESS TIME — the same law `solveNow` learned the
+ * hard way (slice 5: the arm solved a closure copy while the page showed an
+ * editable one, so every edit anybody made was silently discarded). A payload
+ * captured when the arm mounted would ship the room you arrived in, and it
+ * would look exactly like a working ship.
+ *
+ * ⛔ AND THE DISABLED STATE CARRIES ITS REASON. "Greyed out" is a refusal with
+ * no name on it — the reader cannot tell "press SOLVE first" from "this level
+ * would not certify" from "the arm has not finished mounting". `why` is the
+ * button's `title` and the note beside it (trap 403's shape, at the control
+ * rather than at the readout).
+ *
+ *   what    one line: what pressing it will send
+ *   why     one line: what is missing, when nothing can be sent
+ *   build   `() => payload` for `shipToWasm`, re-read at press time
+ */
+let shippable = null;
+
+/** The disabled reason each arm starts a mount with. */
+const NOTHING_TO_SHIP = Object.freeze({
+    replay: 'REPLAY ships through the ENGINE selector — pick `wasm` above',
+    solve: 'no solve yet — press SOLVE, then this ships the tape it produced',
+    manual: 'the boot panel has not mounted yet',
+    generate: 'no generated level yet — STEP or RUN-ALL first',
+});
+
+function setShippable(next) {
+    shippable = next && next.build ? next : null;
+    const btn = $('loadWasm');
+    if (!btn) return;
+    btn.disabled = !shippable;
+    btn.title = shippable ? shippable.what : (next?.why ?? 'nothing to ship');
+    $('loadWasmNote').textContent = shippable ? '' : (next?.why ?? '');
+}
+
+/**
+ * ⛓ THE JS MODEL'S END STATE, from the frames the page already collected.
+ *
+ * ⛔ ONE DERIVATION. `collectRun` is what `replayTape` walks and what the
+ * GENERATE arm re-walks for its certification tape, so both callers read the
+ * SAME last frame rather than each forming an opinion about where the model
+ * ended.
+ */
+function expectFromFrames(frames) {
+    const f = frames[frames.length - 1];
+    if (!f) return null;
+    return {
+        level: f.observation.level,
+        x: f.observation.x,
+        y: f.observation.y,
+        // ⚠ The inventory the frame carries, not a set of names: `verdictOf`
+        // reads it exactly as it reads `botStatus.items`, so "held" means one
+        // thing on both sides of the comparison.
+        items: f.inventory ?? {},
+    };
+}
+
+/**
+ * ⛓ THE SHIP'S OWN READOUT — its own block, beside the JS run's, never over it.
+ *
+ * ⛔ `#status` AND `#hud` ARE NOT TOUCHED. In SOLVE they hold the solve's tick
+ * count and the scrub HUD; in GENERATE they hold the identity line and the
+ * certification. ⚖ D3 puts the wasm verdict BESIDE those, and a ship that
+ * painted over them would delete the very thing the verdict is compared with.
+ */
+function shipReadout(source, lifetime) {
+    const paintStages = (state) => {
+        $('wasmStages').textContent = state.stages
+            .map((s) => (state.reached.includes(s) ? `✓ ${s}` : `· ${s}`)).join('   ');
+    };
+    const publish = (state) => {
+        window.__editorWasm = {
+            stage: state.stage,
+            stages: state.stages,
+            reached: [...state.reached],
+            refusal: state.refusal,
+            verdict: state.verdict,
+            label: state.label,
+            set: state.set,
+            status: state.status,
+            scope: VERDICT_SCOPE,
+        };
+        if (lifetime.alive()) publishWatch(source);
+    };
+    return {
+        onStage(stage, message, state) {
+            $('wasmStage').textContent = `${stage} — ${message}`;
+            paintStages(state);
+            publish(state);
+        },
+        onRefusal(stage, reason, detail, state) {
+            $('wasmStage').textContent = `⛔ REFUSED at ${stage}: ${reason}`;
+            $('wasmVerdict').textContent = detail;
+            $('wasmVerdict').className = 'bad';
+            paintStages(state);
+            publish(state);
+            $('loadWasm').disabled = !shippable;
+        },
+        onTick(st, tape, state) {
+            $('wasmHud').innerHTML = wasmHudRows(st, tape);
+            state.status = st;
+        },
+        onVerdict(v, state) {
+            paintStages(state);
+            $('wasmVerdict').className = v.agrees === false ? 'bad' : (v.agrees ? 'ok' : '');
+            /**
+             * ⛔⛔ THE SCOPE RIDES WITH THE VERDICT, ALWAYS. An `agrees` with no
+             * bound beside it reads as "the real game reproduced the model",
+             * which is a claim this comparison cannot make: it looks at ONE
+             * frame and two runs can meet there having disagreed on every tick
+             * in between.
+             */
+            $('wasmVerdict').textContent = `${verdictLine(v)}  —  ${VERDICT_SCOPE}`
+                + (state.note ? `\n${state.note}` : '');
+            publish(state);
+            $('loadWasm').disabled = !shippable;
+        },
+    };
+}
+
+/**
+ * ⛓ PRESS IT. One ship at a time, and each one starts from a fresh iframe.
+ *
+ * ⛔ THE BUTTON IS DISABLED FOR THE DURATION rather than queueing a second
+ * ship. The wasm cannot rewind, so two ships in flight would be two runs
+ * writing one readout — and the second one's `botStatus` would describe a
+ * world the first one left behind.
+ */
+async function shipToWasmNow(source, lifetime) {
+    if (!shippable || !lifetime.alive()) return null;
+    const btn = $('loadWasm');
+    btn.disabled = true;
+    $('wasmPanel').hidden = false;
+    $('wasmVerdict').className = '';
+    $('wasmVerdict').textContent = '';
+    $('wasmHud').innerHTML = '';
+    const readout = shipReadout(source, lifetime);
+    let payload;
+    try {
+        payload = await shippable.build();
+    } catch (e) {
+        /**
+         * ⛔ A PAYLOAD THAT WOULD NOT BUILD IS A NAMED STAGE TOO. It happens
+         * BEFORE `shipToWasm` gets a chance to name one — an unparseable boot
+         * block, a set that will not validate — and an unnamed failure here
+         * would be the one hole in the stage machine.
+         */
+        readout.onRefusal('payload', 'the page could not build a payload', e.message, {
+            stage: 'payload', stages: WASM_STAGES, reached: [],
+            refusal: { stage: 'payload', reason: 'payload-would-not-build', detail: e.message },
+            verdict: verdictOf(null, null, END_STATE_TOLERANCE,
+                { refusal: { reason: 'payload-would-not-build' } }),
+            label: shippable.what, set: null, status: null,
+        });
+        return null;
+    }
+    return shipToWasm(payload, {
+        frame: $('frame'), lifetime, readout, tolerance: END_STATE_TOLERANCE,
+    });
+}
+
+/**
+ * ⛓ WIRE THE BUTTON FOR THIS MOUNT — and RESET it, which is the half that
+ * matters. An arm that arrives holding nothing must not inherit the previous
+ * arm's `shippable`: pressing it would ship the run you switched away from.
+ */
+function wireShipButton(params, lifetime) {
+    setShippable({ why: NOTHING_TO_SHIP[params.source] ?? 'this arm holds nothing shippable' });
+    $('loadWasm').onclick = () => shipToWasmNow(params.source, lifetime);
+}
+
 // ── side=wasm ────────────────────────────────────────────────────────────
 
 /**
@@ -6844,6 +7214,14 @@ const PANELS = Object.freeze({
     solveGoalLine: (s) => s === 'solve',
     manualActions: (s) => s === 'manual',
     generatePanel: (s) => s === 'generate',
+    /**
+     * ⛓ ▶ LOAD IN WASM is up for the three arms that HOLD something, and down
+     * for REPLAY — where the ENGINE selector already ships the tape and a
+     * second control for one act would be two answers to "how do I run this in
+     * the real game". ⚖ The user's 2026-08-19 ruling: a separate button, not
+     * the SIDE selector.
+     */
+    wasmShip: (s) => s !== 'replay',
     // ⛓ The generation pane only exists for the arm that produces one — a
     // permanently empty "GENERATION TRACE" heading on the REPLAY page would
     // be a channel with nothing in it and no way to tell why.
@@ -6925,6 +7303,14 @@ const ARMS = Object.freeze({
  * where the readout still shows it.
  */
 async function mountArm(params, lifetime) {
+    /**
+     * ⛔ BEFORE THE BODY, BECAUSE THE RESET IS THE HALF THAT MATTERS. An arm
+     * that arrives holding nothing must not inherit the previous arm's
+     * `shippable`: the button would still be enabled and pressing it would
+     * ship the run the reader just switched away from, with this arm's
+     * readout around it.
+     */
+    wireShipButton(params, lifetime);
     try {
         await mountArmBody(params, lifetime);
     } finally {
