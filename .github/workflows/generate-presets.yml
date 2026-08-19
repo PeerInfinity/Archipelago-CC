@@ -141,11 +141,6 @@ jobs:
             git checkout -b generated-presets origin/main
           fi
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
         uses: actions/cache@v6.1.0
         id: cache-venv

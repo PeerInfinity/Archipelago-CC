@@ -115,11 +115,6 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
         uses: actions/cache@v6.1.0
         id: cache-venv
@@ -234,11 +229,6 @@ jobs:
         with:
           python-version: '~3.12.7'
           check-latest: true
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
         uses: actions/cache@v6.1.0
@@ -429,11 +419,6 @@ jobs:
         with:
           python-version: '~3.12.7'
           check-latest: true
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
         uses: actions/cache@v6.1.0
