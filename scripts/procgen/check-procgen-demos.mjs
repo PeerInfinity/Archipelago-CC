@@ -29,6 +29,8 @@
  *   phase    optional: step the ladder to it
  *   facts    optional: TICK these fact lines
  *   layer    optional: the overlay select
+ *   control  optional: a CSS selector the entry tells the reader to press —
+ *            asserted to EXIST on the page (never pressed; see below)
  *   claim    `<path> <op> <value>`, asserted off the page's readout
  *   prose    an entry that names no url of its own (it points at a doc)
  *
@@ -262,6 +264,25 @@ try {
             // eslint-disable-next-line no-await-in-loop
             await page.waitForFunction(([r, l]) => window[r]?.layer === l,
                 [readout, entry.layer], { timeout: 60000 });
+        }
+        /**
+         * ⛓⛓ THE CONTROL THE ENTRY TELLS A READER TO PRESS — asserted to
+         * EXIST on the page the entry loads.
+         *
+         * ⛔ EXISTS, NOT PRESSED. `#loadWasm` starts a wasm boot that needs a
+         * real ▶ Start inside the game frame; that is
+         * `check-seedling-wasm-pages.mjs`'s arm and this row cannot give it.
+         * What this row CAN answer is the question the catalogue is for: a
+         * page telling people to press a button that has since been renamed is
+         * prose nobody gated, and it would read exactly like working prose.
+         */
+        if (entry.control) {
+            // eslint-disable-next-line no-await-in-loop
+            const present = await page.evaluate(
+                (sel) => Boolean(document.querySelector(sel)), entry.control);
+            check(present,
+                `⛓ …and the CONTROL it tells you to press EXISTS (\`${entry.control}\`)`,
+                present ? 'on the page' : 'no element matches — the catalogue names a dead control');
         }
         if (entry.phase || entry.facts.length || entry.layer) {
             // eslint-disable-next-line no-await-in-loop

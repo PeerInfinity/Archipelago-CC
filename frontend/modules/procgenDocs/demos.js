@@ -40,6 +40,13 @@
  *   phase           optional: step the phase ladder to it
  *   facts           optional: TICK these fact lines
  *   layer           optional: the overlay select
+ *   control         optional: a control the entry asks the reader to PRESS,
+ *                   as a CSS selector. ⛔ The row asserts it EXISTS on the
+ *                   page — a catalogue that told people to press a button
+ *                   that had been renamed would be prose nobody gated. It
+ *                   is not PRESSED by the row: `#loadWasm` starts a wasm
+ *                   boot, which is `check-seedling-wasm-pages.mjs`'s job
+ *                   and needs a real ▶ Start the catalogue row cannot give.
  *   claim           `<path> <op> <value>`, asserted off the page's readout
  *   demonstrates    prose — what the entry shows
  *   howToRun        prose — which controls to press
@@ -547,6 +554,38 @@ export const DEMOS = Object.freeze([
             'bfs-oracle',
             'maze-substrate',
             'certification',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'load-in-wasm',
+        n: 14,
+        title: '▶ LOAD IN WASM — the certified room, in the REAL recompiled game',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        url: 'source=generate&seed=1&biome=pre-sword&count=4&tries=8&k=3&anchortries=1&run=1',
+        also: null,
+        cli: 'node scripts/procgen/check-seedling-wasm-ship.mjs',
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        control: '#loadWasm',
+        claim: 'certified == true',
+        demonstrates: 'The room this page generated and CERTIFIED, mounted in the\nreal SWFRecomp-recompiled Seedling as a ONE-ROOM level set, with the\ncertification solve replayed into it — and an END-STATE VERDICT printed beside\nthe JS certification.',
+        howToRun: 'Open it and let the loop run. Then press **▶ load in wasm**\nbeside the SOURCE selector — the frame below the canvas fills with the real\ngame — and then press **▶ Start** INSIDE that frame.\n\n⛔ The page CANNOT press ▶ Start for you and does not try: the WebGPU renderer\nand the AudioContext consume the user activation, and a parent-side click\nlatches the button without ever supplying one. That is also why there is no\n`?`-parameter that ships automatically — a URL that did would have to press it.',
+        whatIsHappening: 'The ship is a stage machine and every stage is a named\nstate the page prints: `probe` (the build is served) → `runtime` → `start`\n(yours) → `levels` (the set is delivered in chunks and then READ BACK out of\nthe artifact and diffed against what was sent) → `tape` → `running` →\n`finished` → `verdict`. A refusal at any stage is a NAMED reason, never a\nstopped readout.\n\nThe generated record is level 900 and the exporter assigns dense room ids, so\nthe expectation\'s level is remapped 900→0 and the readout says so.',
+        notes: Object.freeze([
+            '⛔ **A VERDICT IS END STATE ONLY, and the page says so in the same breath.**\nIt compares ONE frame — where the real game ended against where the JS model\nended — and two runs can meet there having disagreed on every tick in between.\nThe per-tick differential is `verify-seedling-bot-differential.mjs`.',
+            '⚠ The tolerance is **0 px**, and it is a measurement rather than a round\nfigure: five committed tapes through both sides on real-GPU Windows Chrome gave\nmax |Δx| = max |Δy| = 0, floats included. A number chosen above what was\nmeasured would be a bound nothing can reach.',
+            'The button is also up in **SOLVE** (it ships the solve\'s own tape) and in\n**MANUAL** (a ZERO-INPUT tape, after which the keyboard drives the real game).\nIt is hidden in REPLAY, where the ENGINE selector already does it.',
+        ]),
+        terms: Object.freeze([
+            'seedling',
+            'tape',
+            'certification',
+            'solver',
+            'readout',
+            'browser-row',
+            'github-pages',
         ]),
         prose: false,
     }),

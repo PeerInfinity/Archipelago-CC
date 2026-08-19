@@ -68,6 +68,14 @@ const { ITEM_FORM_FIELDS } = await M('watchSolve.js');
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 /** A committed segment tape, so SOLVE and MANUAL both boot into a real room. */
 const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-1.json';
+/**
+ * ⛓ AND THE ONE THE SHIP CLAIMS USE — `check-seedling-editor-solve.mjs`'s own
+ * accepted segment, so a red in those claims is about the BUTTON and not about
+ * a solve nobody else runs.
+ */
+const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+const SHIP_GOALS = 'exit:64,16';
+const SHIP_NAME = 'r8-solve-4';
 
 let failed = 0;
 const check = (ok, what, detail) => {
@@ -596,6 +604,66 @@ try {
     check(errors.length === 0 || errors.every((e) => /404/.test(e)),
         'no page errors beyond the wasm artifact\'s own fetches',
         errors.slice(0, 2).join(' | ') || 'none');
+
+    // ── ⛓⛓ ▶ LOAD IN WASM — NEW UI ON THE PAGE THIS ROW OWNS ─────────
+    /**
+     * ⛔ THREE CLAIMS, AND THE MIDDLE ONE IS THE LOAD-BEARING ONE. A greyed-out
+     * control with no reason on it is a refusal nobody can act on — the reader
+     * cannot tell "press SOLVE first" from "this level would not certify" from
+     * "the arm has not finished mounting" (trap 403, at the control rather than
+     * at the readout).
+     *
+     * ⚠ AND THE FIRST IS ASSERTED *HERE*, in REPLAY, because that is where the
+     * button must be ABSENT: the ENGINE selector already ships the tape, and a
+     * second control for one act would be two answers to one question.
+     */
+    const hiddenInReplay = await page.evaluate(
+        () => document.getElementById('wasmShip').hidden);
+    check(hiddenInReplay === true,
+        '⛓ ▶ load in wasm is HIDDEN in REPLAY — the ENGINE selector already ships a tape',
+        `#wasmShip hidden = ${hiddenInReplay}`);
+
+    const shipUrl = `${origin}${PAGE_PATH}?source=solve&level=4&boot=${SHIP_BOOT}`
+        + `&goals=${encodeURIComponent(SHIP_GOALS)}&name=${SHIP_NAME}`;
+    console.log(`\npage: ${shipUrl}`);
+    await page.goto(shipUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorArm?.source === 'solve',
+        null, { timeout: 120000 });
+    const shipButton = () => page.evaluate(() => ({
+        hidden: document.getElementById('wasmShip').hidden,
+        disabled: document.getElementById('loadWasm').disabled,
+        title: document.getElementById('loadWasm').title,
+        note: document.getElementById('loadWasmNote').textContent,
+    }));
+    const beforeSolve = await shipButton();
+    check(beforeSolve.hidden === false && beforeSolve.disabled === true
+        && /press SOLVE/i.test(beforeSolve.title),
+    '⛓⛓ …and in SOLVE it is UP but DISABLED **WITH ITS REASON** before a solve',
+    `hidden ${beforeSolve.hidden}, disabled ${beforeSolve.disabled}, title "${beforeSolve.title}"`);
+    /**
+     * ⛔ NON-EMPTY **AND** EQUAL, and the mutant is why. The first cut asserted
+     * only `note === title`, which is satisfied by two EMPTY strings — so
+     * blanking the reason (the M-button mutation) left this claim GREEN while
+     * the two beside it went red. A check that passes when the thing it guards
+     * is absent is a check of nothing.
+     */
+    check(beforeSolve.note.length > 0 && beforeSolve.note === beforeSolve.title,
+        '⛔ …and the reason is ON THE PAGE, not only in a tooltip nobody hovers',
+        beforeSolve.note || '(EMPTY — the button gives no reason at all)');
+
+    await page.click('#solveGo');
+    await page.waitForFunction(() => window.__editorSolve?.status === 'ok',
+        null, { timeout: 180000 });
+    const afterSolve = await shipButton();
+    /**
+     * ⛔ THE TITLE IS ASSERTED FOR WHAT IT SAYS, not for equality with a
+     * constant this row also holds — that would be an echo of the same edit
+     * (trap 367). The claim is its MEANING: it must name the tape that will be
+     * shipped and the level it runs in.
+     */
+    check(afterSolve.disabled === false && /tick\(s\) in level 4/.test(afterSolve.title),
+        '⛓⛓⛓ …and a SOLVE ENABLES it, with the tape it would ship NAMED in the title',
+        `disabled ${afterSolve.disabled}, title "${afterSolve.title}"`);
 
     // ── ⛓ THE SELECTOR ROUTE OUT OF GENERATE (item 1) ────────────────
     /**

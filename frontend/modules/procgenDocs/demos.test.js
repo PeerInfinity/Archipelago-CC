@@ -62,8 +62,8 @@ describe('the catalogue as data', () => {
 describe('every non-prose entry is loadable by the row', () => {
     const real = DEMOS.filter((e) => !e.prose);
 
-    it('has 12 of them, and exactly one PROSE entry', () => {
-        expect(real).toHaveLength(12);
+    it('has 13 of them, and exactly one PROSE entry', () => {
+        expect(real).toHaveLength(13);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 
@@ -76,6 +76,10 @@ describe('every non-prose entry is loadable by the row', () => {
         expect(claim.path.length).toBeGreaterThan(0);
         if (e.also) expect(e.also.startsWith('?')).toBe(false);
         if (e.layer) expect(['off', 'sites', 'elements', 'areas', 'all']).toContain(e.layer);
+        // ⛓ A control is a SELECTOR, because the row queries the page with it —
+        // a prose label ("the load button") would resolve to nothing and the
+        // row would report a missing control that is right there.
+        if (e.control) expect(e.control).toMatch(/^[#.]/);
     });
 
     it('⛔ the PROSE entry names no URL and points somewhere instead', () => {

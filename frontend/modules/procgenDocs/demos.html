@@ -212,6 +212,10 @@ function driveLine(entry) {
         bits.push(`tick the fact line(s) ${entry.facts.map((f) => `<b>${esc(f)}</b>`).join(', ')}`);
     }
     if (entry.layer) bits.push(`set the overlay select to <b>${esc(entry.layer)}</b>`);
+    // ⛓ A control the entry asks the reader to PRESS. Rendered as the selector
+    // the page really carries, so the words on this page and the id in the DOM
+    // are one string — `check-procgen-demos.mjs` asserts it resolves.
+    if (entry.control) bits.push(`press <b>${esc(entry.control)}</b>`);
     return bits.length ? `${label('HOW TO DRIVE IT')}<div class="drive">${bits.join(' · ')}</div>` : '';
 }
 

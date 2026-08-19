@@ -59,6 +59,26 @@
  *                         expected to go dark instead.
  *   --no-play             skip the last arm (the live tape load), for a
  *                         quick structural pass.
+ *   --no-ship             skip the ▶ load-in-wasm arms (three more wasm boots,
+ *                         one per arm) — the same escape, one item down.
+ *
+ * ── ⛓⛓ AND THE BUTTON, ON THIS ROOT ─────────────────────────────────
+ *
+ * `watch.html` gained a ▶ load-in-wasm button: SOLVE, MANUAL and GENERATE each
+ * ship what they hold into the real game. What a machine with NO GPU can
+ * honestly witness is everything up to the first tick — the build probed, the
+ * runtime up, the user's ▶ Start accepted, a one-room level SET mounted and
+ * READ BACK, the tape accepted, the run started. ⛔ It cannot witness a
+ * VERDICT: 255 ticks at ~0.5 ticks/s on swiftshader is eight minutes of
+ * software rasterising, and a deadline over that measures machine load rather
+ * than the game. `check-seedling-wasm-ship.mjs` is the real-GPU arm that
+ * finishes the sentence.
+ *
+ * ⛓ MANUAL IS THE ONE ARM THAT REACHES `finished` HERE, and that is why it is
+ * here: its tape is ZERO-INPUT, so the only frames between `running` and
+ * `finished` are the world-load fade. Which makes `receive_input: true` after
+ * `finished` — ⚖ the user's measured fact that the keyboard drives the real
+ * game once a replay ends — assertable without a GPU.
  *
  * Run:
  *   node scripts/procgen/check-seedling-wasm-pages.mjs \
@@ -77,12 +97,21 @@ const LABEL = arg('label', ROOT);
 const EXPECT_MISSING = process.argv.includes('--expect-missing');
 const EXPECT_LISTING = process.argv.includes('--expect-listing');
 const NO_PLAY = process.argv.includes('--no-play');
+const NO_SHIP = process.argv.includes('--no-ship');
 if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1); }
 
 const BUILD = 'seedling_bot_ap_p4b';   // the build watch.html's WASM_PAGE names
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';
+/**
+ * ⛓ THE SHIP ARMS' SEGMENT — `check-seedling-editor-solve.mjs`'s own accepted
+ * one. ⛔ Reused rather than invented: a red here is then about the SHIP and
+ * not about a solve nobody else runs.
+ */
+const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+const SHIP_GOALS = 'exit:64,16';
+const SHIP_NAME = 'r8-solve-4';
 const WATCH = `${ROOT}/modules/seedlingDemo/watch.html?tape=${encodeURIComponent(TAPE)}&side=wasm`;
 
 let bad = 0;
@@ -257,6 +286,185 @@ if (!NO_PLAY && !EXPECT_MISSING) {
         say('⛓ one tape LOADS AND RUNS in the live wasm — botLoadTape/botStart both ok',
             false, `stopped at: ${stage} (${e.message.split('\n')[0]})`);
     }
+}
+
+
+/**
+ * ── ⛓⛓⛓ ▶ LOAD IN WASM, ON THIS ROOT — THE HEADLESS HALF ─────────────
+ *
+ * The button ships what the page holds into the real game. What a machine with
+ * no GPU can honestly witness is everything up to the first tick: the build
+ * probed, the runtime up, the user's ▶ Start accepted, a level set MOUNTED and
+ * read back, the tape accepted, the run started. ⛔ It cannot witness a
+ * VERDICT — 255 ticks at ~0.5 ticks/s on swiftshader is eight minutes of
+ * software rasterising, and a deadline over that is a race against machine load
+ * rather than a fact. `check-seedling-wasm-ship.mjs` is the real-GPU arm that
+ * finishes the sentence, and it says so.
+ *
+ * ⛔ ONE ARM = ONE FRESH PAGE. The wasm cannot rewind — `botReset` forgets the
+ * tape, not the world — so a second ship in the same document would start from
+ * wherever the first one stopped and report it as data.
+ *
+ * ⛓ MANUAL IS THE EXCEPTION THAT REACHES `finished`, and it is why the arm is
+ * here at all: its tape is ZERO-INPUT, so the only frames between `running` and
+ * `finished` are the world-load fade. That is what makes `receive_input: true`
+ * after `finished` — ⚖ the user's measured fact that the keyboard drives the
+ * real game once a replay ends — assertable on a machine with no GPU.
+ */
+async function shipArm({ name, url, steps, want }) {
+    const p = await browser.newPage();
+    const errs = [];
+    p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+    let stage = 'the page never mounted its arm';
+    try {
+        await p.goto(url, { waitUntil: 'domcontentloaded' });
+        for (const step of steps) {
+            stage = step.what;
+            if (step.wait) {
+                // eslint-disable-next-line no-await-in-loop
+                await p.waitForFunction(step.wait, null, { timeout: step.ms ?? 180000 });
+            } else if (step.click) {
+                // eslint-disable-next-line no-await-in-loop
+                await p.click(step.click, { timeout: 60000 });
+            } else if (step.frameClick) {
+                /**
+                 * ⛔ THE ONE CLICK THE PAGE MAY NEVER MAKE, AND THE ROW MAY.
+                 * Playwright's click is a real input event with real user
+                 * activation; a parent-side click latches `started` and hides
+                 * the button without ever supplying one.
+                 */
+                // eslint-disable-next-line no-await-in-loop
+                const gf = p.frames().find((f) => f.url().includes('/game.html'));
+                if (!gf) throw new Error('the game iframe never appeared');
+                // eslint-disable-next-line no-await-in-loop
+                await gf.click(step.frameClick, { timeout: 60000 });
+            }
+        }
+        stage = 'done';
+    } catch (e) {
+        stage = `${stage} (${e.message.split('\n')[0]})`;
+    }
+    const wasm = await p.evaluate(() => window.__watch?.wasm ?? null).catch(() => null);
+    console.log(`  ${name}: stage=${wasm?.stage ?? 'none'} reached=${
+        JSON.stringify(wasm?.reached ?? [])} refusal=${JSON.stringify(wasm?.refusal ?? null)}`);
+    await p.close().catch(() => {});
+    /**
+     * ⛔ A STOPPED ARM PRINTS THE STAGE IT REACHED, never a bare FAIL. A ship
+     * that died on the runtime and one that died on the tape are different
+     * findings, and the whole design is that the page can tell you which.
+     */
+    want(wasm, stage === 'done' ? '' : `stopped at: ${stage}`, errs);
+}
+
+if (!NO_SHIP && !EXPECT_MISSING) {
+    const watchAt = (q) => `${ROOT}/modules/seedlingDemo/watch.html?${q}`;
+    const reached = (w, s) => Boolean(w?.reached?.includes(s));
+
+    // ── SOLVE: a tiny committed staging, solved in the page, then shipped ──
+    await shipArm({
+        name: 'SOLVE',
+        url: watchAt(`source=solve&level=4&boot=${SHIP_BOOT}`
+            + `&goals=${encodeURIComponent(SHIP_GOALS)}&solve=1&name=${SHIP_NAME}`),
+        steps: [
+            { what: 'the solve finished in the page', ms: 240000,
+                wait: "window.__editorSolve && window.__editorSolve.status === 'ok'" },
+            { what: '▶ load in wasm became enabled', ms: 60000,
+                wait: "!document.getElementById('loadWasm').disabled" },
+            { what: 'press ▶ load in wasm', click: '#loadWasm' },
+            { what: 'the ship reached `runtime`', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('runtime')" },
+            { what: 'press ▶ Start inside the frame', frameClick: '#btn-start' },
+            { what: 'the ship reached `running`', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('running')" },
+        ],
+        want: (w, stopped) => {
+            say('⛓ SOLVE ships its own tape — probe and runtime reached',
+                reached(w, 'probe') && reached(w, 'runtime'),
+                stopped || `reached ${JSON.stringify(w?.reached)}`);
+            say('⛓ …and after a REAL ▶ Start the game accepted the tape and started it',
+                reached(w, 'tape') && reached(w, 'running'),
+                stopped || JSON.stringify(w?.refusal ?? w?.reached));
+        },
+    });
+
+    // ── GENERATE: a small seed, shipped as a ONE-ROOM level SET ────────────
+    await shipArm({
+        name: 'GENERATE',
+        url: watchAt('source=generate&seed=1&biome=pre-sword&count=4&tries=8&k=3'
+            + '&anchortries=1&run=1'),
+        steps: [
+            /**
+             * ⛔ WAIT FOR THE LADDER TO FINISH, NOT FOR ITS FIRST `ok`.
+             * `?run=1&count=4` publishes `status: 'ok'` at EVERY step, so a
+             * row that pressed on the first one would ship step 1 and read a
+             * `set_id` naming step 4 — measured: the title said `step 3` while
+             * the mounted set said `-4-`. `#genRunAll` re-enabling is the
+             * page's own "the ladder is done" (the demo row waits on it too).
+             */
+            { what: 'the generator ran its whole ladder and certified the room', ms: 300000,
+                wait: "window.__editorGenerate?.status === 'ok'"
+                    + " && window.__editorGenerate?.step === 4"
+                    + " && !document.getElementById('genRunAll').disabled"
+                    + " && !document.getElementById('loadWasm').disabled" },
+            { what: 'press ▶ load in wasm', click: '#loadWasm' },
+            { what: 'the ship reached `runtime`', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('runtime')" },
+            { what: 'press ▶ Start inside the frame', frameClick: '#btn-start' },
+            { what: 'the one-room set MOUNTED and was read back', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('levels')"
+                    + " || window.__watch?.wasm?.refusal" },
+        ],
+        want: (w, stopped) => {
+            /**
+             * ⛔ THE READBACK IS THE CLAIM, not the delivery. Reading the set
+             * back out of the artifact is the only check that does not share
+             * the producer's assumptions — the `levels` stage is only entered
+             * once `botLevelSet` AGREED with what was sent, field by field.
+             */
+            say('⛓⛓ GENERATE ships a ONE-ROOM level SET, and the artifact reads it BACK',
+                reached(w, 'levels'),
+                stopped || `refusal ${JSON.stringify(w?.refusal ?? null)}`);
+            say('…with exactly one room in it, under the set_id the exporter stamped',
+                w?.set?.rooms === 1 && typeof w?.set?.set_id === 'string'
+                    && w.set.set_id.startsWith('watch-oneroom-'),
+                JSON.stringify(w?.set ?? null));
+        },
+    });
+
+    // ── MANUAL: a ZERO-INPUT tape, and the keyboard afterwards ─────────────
+    await shipArm({
+        name: 'MANUAL',
+        url: watchAt(`source=manual&boot=${SHIP_BOOT}`),
+        steps: [
+            { what: 'the boot panel mounted', ms: 240000,
+                wait: "window.__editorArm?.source === 'manual'"
+                    + " && !document.getElementById('loadWasm').disabled" },
+            { what: 'press ▶ load in wasm', click: '#loadWasm' },
+            { what: 'the ship reached `runtime`', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('runtime')" },
+            { what: 'press ▶ Start inside the frame', frameClick: '#btn-start' },
+            { what: 'the zero-input tape finished', ms: 420000,
+                wait: "window.__watch?.wasm?.reached?.includes('finished')"
+                    + " || window.__watch?.wasm?.refusal" },
+        ],
+        want: (w, stopped) => {
+            say('⛓ MANUAL ships a ZERO-INPUT tape and the game accepts it',
+                reached(w, 'tape'), stopped || JSON.stringify(w?.refusal ?? null));
+            /**
+             * ⚖ THE USER'S MEASURED FACT, OFF `botStatus`: the keyboard drives
+             * the real game once a replay has finished. That is what makes a
+             * zero-input tape a complete answer to "put me in this room and
+             * give me the controls" — and it is why no new wasm verb was added.
+             */
+            say('⛓⛓ …and `receive_input` is TRUE once it has FINISHED — the keyboard is yours',
+                reached(w, 'finished') && w?.status?.receive_input === true,
+                stopped || `finished=${w?.status?.finished} receive_input=${
+                    w?.status?.receive_input}`);
+            say('⛔ …with NO expectation, said out loud rather than reported as agreement',
+                w?.verdict?.kind === 'none' && /manual/.test(w?.verdict?.text ?? ''),
+                w?.verdict?.text ?? '(no verdict)');
+        },
+    });
 }
 
 await browser.close();

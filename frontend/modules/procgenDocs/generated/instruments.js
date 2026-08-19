@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 18,
-            "count": 23,
+            "count": 24,
             "id": "check"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 206,
+        "blockStyle": 207,
         "browser": 71,
         "cited": 58,
-        "files": 225,
+        "files": 226,
         "lineStyle": 19,
-        "withDocblock": 225,
-        "withFlags": 134
+        "withDocblock": 226,
+        "withFlags": 135
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1224,7 +1224,8 @@ export const INSTRUMENTS = frz({
         {
             "argvHelpers": [
                 "arg",
-                "check"
+                "check",
+                "shipButton"
             ],
             "browser": true,
             "category": "check",
@@ -1372,6 +1373,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "no-ship"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "root"
@@ -1400,6 +1407,29 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-wasm-pins — the gate on the seedling-wasm SUBMODULE's contents.",
             "path": "scripts/procgen/check-seedling-wasm-pins.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-wasm-ship.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE `wasm verdict: agrees`.**",
+            "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
         },
         {
             "argvHelpers": [
