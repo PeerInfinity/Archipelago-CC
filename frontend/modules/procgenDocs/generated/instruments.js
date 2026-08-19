@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 17,
-            "count": 21,
+            "browser": 18,
+            "count": 23,
             "id": "check"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 203,
-        "browser": 70,
+        "blockStyle": 205,
+        "browser": 71,
         "cited": 57,
-        "files": 222,
+        "files": 224,
         "lineStyle": 19,
-        "withDocblock": 222,
-        "withFlags": 131
+        "withDocblock": 224,
+        "withFlags": 132
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1331,6 +1331,54 @@ export const INSTRUMENTS = frz({
             "flags": [],
             "oneLiner": "check-seedling-vanilla-manifest — the built-in `seedling-vanilla` manifest, read out of the BUILT ARTIFACT and compared with the committed JSON twin.",
             "path": "scripts/procgen/check-seedling-vanilla-manifest.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "label",
+                "root"
+            ],
+            "file": "check-seedling-wasm-pages.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "expect-missing"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "label"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "root"
+                }
+            ],
+            "oneLiner": "check-seedling-wasm-pages — is the Seedling wasm build actually SERVED at the site root, and does watch.html therefore stop saying it isn't?",
+            "path": "scripts/procgen/check-seedling-wasm-pages.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-wasm-pins.mjs",
+            "flags": [],
+            "oneLiner": "check-seedling-wasm-pins — the gate on the seedling-wasm SUBMODULE's contents.",
+            "path": "scripts/procgen/check-seedling-wasm-pins.mjs"
         },
         {
             "argvHelpers": [
