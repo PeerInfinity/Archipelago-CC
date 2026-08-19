@@ -9509,7 +9509,9 @@ is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; **ARCS 1, 2 AND 3 ARE CLOSED** — arcs 1–2 on the maze, see [`maze.md`](./maze.md); **arc 3 = Seedling, CLOSED 2026-08-18 over fourteen slices**, and *⛓⛓⛓ ARC 3 IS CLOSED* at the end of this § is its summary; arc 4 = THE CHAIN, ⛔ ask-first; arc 5 = shortcuts / density / arenas)
 
-⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (13 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
+⇒ ⛓ **AND THE ROOM THIS DESIGN GENERATES NOW REACHES THE REAL GAME.** [▶ LOAD IN WASM](#-load-in-wasm--what-this-page-holds-run-in-the-real-recompiled-game-tooling--user-2026-08-19) at the end of this document is the button: a certified room mounts in the recompiled Seedling as a one-room level SET and its certification solve replays into it, with an END-STATE verdict beside the JS one. ⛔ Read that §'s *what the verdict does NOT mean* before quoting an `agrees`.
+
+⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (14 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
@@ -10403,3 +10405,119 @@ named items: the room-aware SITE PICK (which is what recovers the guard's
 29 → 21), ELEMENTS-as-area / density / arenas (the area COUNT on a 10×10 room is
 the ceiling on everything the area graph can accept), the differential's
 SHORTENS grade, and an EXACT (stepped) demand for a moving body.
+
+## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
+
+`watch.html` has always been able to run a **committed tape** in the real
+SWFRecomp-recompiled Seedling: `?side=wasm` iframes the build and drives it
+through `__swfBridge.game`. What it could never do is run **what the page is
+holding right now** — a solve it just produced, a room it just generated, a
+starting state you just typed. This § is that button.
+
+> ⚖ The user's rulings, 2026-08-19: a **SEPARATE BUTTON**, not the SIDE
+> selector; **end-state agreement now**, the per-tick differential in the page
+> is the NEXT slice; **a one-room set per ship**; recording FROM the wasm and an
+> "original game by default" build are deferred.
+
+### What it is
+
+One button — **▶ load in wasm** — beside the SOURCE selector, up in SOLVE,
+MANUAL and GENERATE and hidden in REPLAY (where the ENGINE selector already
+ships the tape, and two controls for one act would be two answers). What each
+arm sends:
+
+| arm | what is shipped | the expectation |
+|---|---|---|
+| **SOLVE** | the solve's own tape (`solved.tape` — the fold `buildStagedTape` already made) | the last frame of the scrub you are looking at |
+| **MANUAL** | the starting-conditions block as a **ZERO-INPUT** tape (`tick_count: 0`, `inputs: []`) | **none** — after it finishes, the keyboard drives the real game (⚖ user-measured) |
+| **GENERATE** | the room as a **ONE-ROOM LEVEL SET** (`buildLevelSet`, chunked, mounted, read back) plus the certification tape rebooted into room 0 | the JS model's end state, with its level remapped 900 → 0 |
+
+⛔ **There is no `?`-parameter that ships.** A URL that shipped automatically
+would have to press ▶ Start, and the frame's own law is that the parent may
+never do that — the WebGPU renderer and the AudioContext consume the user
+activation, and a parent-side click latches `started` and hides the button
+without ever supplying one. So it is a **gesture**: press ▶ load in wasm, then
+press ▶ Start inside the frame.
+
+### The stage machine
+
+One mechanism (`seedlingDemo/watchWasm.js`, `shipToWasm`), and the REPLAY arm
+is now a caller of it. Every stage is a **named state** the readout prints and
+`__watch.wasm` carries; every refusal is a **named reason**, never a stopped
+readout:
+
+```
+probe    the build is SERVED (HEAD)          ⇒ wasm-build-missing
+runtime  __runtimeReady in the frame          ⇒ runtime-never-ready
+start    the USER pressed ▶ Start             ⇒ start-never-pressed
+levels   (a level set only) botLoadLevels per chunk, then botLevelSet READ
+         BACK and diffed field by field       ⇒ set-readback-disagrees (<field>)
+tape     botLoadTape returned 'ok'            ⇒ botLoadTape:<what it said>
+running  botStart returned 'ok'               ⇒ botStart:<what it said>
+finished botStatus.finished
+verdict  the END-STATE comparison
+```
+
+⛓ **The readback is the proof a set MOUNTED** rather than merely arrived —
+Phase 3b's manifest gate caught `new Array(45)` that way, a defect no tape and
+no unit test could see because both were reading the same wrong object.
+
+⛓ **A ship is always a fresh iframe.** The wasm cannot rewind (`botReset`
+forgets the tape, not the world), so a second ship on a page that already ran
+one would start from wherever the first stopped and report it as data.
+
+### ⛔ What the verdict MEANS — and what it does NOT
+
+`wasm verdict: agrees` says **the real game ended where the JS model ended**:
+same level, position within the tolerance, and an item set that is a superset
+of what the model held. It is printed with its bound attached, always:
+
+> *end state only; the per-tick differential is the next slice*
+
+⛔ **It is NOT a certification and it is NOT a differential.** It compares ONE
+frame. Two runs can meet on the last frame having disagreed on every tick in
+between — a route that took a different path to the same door is invisible to
+it. The instrument that compares tick by tick is
+`verify-seedling-bot-differential.mjs`, and it runs against committed
+expectations, not against a live page.
+
+The other three answers are answers, not absences:
+
+- `disagrees (level 3≠0; x Δ4 > 0; missing hasSword)` — the comparison ran and
+  the two ends differ, with every difference named;
+- `no expectation (manual)` — nothing was driven in JS, so there is nothing to
+  agree with. ⛔ Reported as an absence rather than as agreement;
+- `not finished (<the refusal's own reason>)` — the ship stopped, and the
+  sentence says where.
+
+### The tolerance is **0 px**, and it is a measurement
+
+Five committed tapes replayed through the JS model (`tapeRunner.runTape`) and
+through `seedling_bot_ap_p4b` on real-GPU Windows Chrome (`intel / gen-9`),
+comparing the model's last observation against `botStatus` at `finished`:
+
+| tape | ticks | level | x | y | Δ |
+|---|---|---|---|---|---|
+| `friction-stop` | 30 | 0 | 100.50000000000001 | 136 | 0 / 0 |
+| `collide-up-rock` | 45 | 0 | 88 | 130.05 | 0 / 0 |
+| `r3-collect-shield` | 54 | 20 | 120 | 59.500000000000014 | 0 / 0, `[hasShield]` both sides |
+| `r7-act2-2` | 47 | 3 (a TRANSITION) | 72 | 24 | 0 / 0 |
+| `cross-level-leg` | 257 | 0 | 24 | 136 | 0 / 0 |
+
+⇒ **max |Δx| = max |Δy| = 0**, floats included. ⛔ So the tolerance is 0, which
+is the measurement and not a round figure: a number chosen above what was
+measured would be a bound nothing can reach, and would pass a real divergence
+in silence. A sixth tape showing a non-zero delta is a **finding to publish**,
+not a reason to widen this.
+
+### Which arm can see what
+
+| row | machine | the furthest it can honestly get |
+|---|---|---|
+| `check-seedling-editor-switch.mjs` | headless | the BUTTON — present, hidden in REPLAY, disabled-with-a-reason before a solve, enabled after |
+| `check-seedling-wasm-pages.mjs` | headless (any root, incl. Pages) | `probe`→`runtime`→(a real ▶ Start)→`levels` + readback, `tape`, `running`; and MANUAL's zero-input tape all the way to `finished` |
+| `check-seedling-wasm-ship.mjs` | **real-GPU Windows Chrome** (`py.exe`) | `finished` and the **VERDICT** |
+
+⚠ The split is not tidiness. WSL's own chromium is SwiftShader at ~0.5 ticks/s,
+so a 255-tick solve is eight minutes of software rasterising and any deadline
+over it is a race against machine load rather than a fact.
