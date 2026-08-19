@@ -425,6 +425,15 @@ describe('a generated room\'s stream, remapped to the shipped set', () => {
         expect(() => remapStreamRooms(gen, 1, [42]))
             .toThrow(/level 900 is not in this set's order/);
     });
+
+    it('⛔ …and refuses an ABSENT stream rather than remapping an empty one', () => {
+        // `modelStreamOf` answers null for a walk that did not finish, and
+        // `{ticks: []}` diffs as "tick count differs: expected 0, got 256" —
+        // a confident sentence about a comparison that never happened.
+        expect(() => remapStreamRooms(null, 1, [900])).toThrow(/no model stream to remap/);
+        expect(() => remapStreamRooms({ ticks: [] }, 1, [900]))
+            .toThrow(/no model stream to remap/);
+    });
 });
 
 /**

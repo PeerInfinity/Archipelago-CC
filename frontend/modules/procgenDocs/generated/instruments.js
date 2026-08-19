@@ -1432,7 +1432,7 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
-            "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE `wasm verdict: agrees`.**",
+            "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
         },
         {

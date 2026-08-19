@@ -214,6 +214,17 @@ export function roomOfGeneratedLevel(level, roomCount, order = null) {
  * @throws {Error} with `roomOfGeneratedLevel`'s own `why`
  */
 export function remapStreamRooms(stream, roomCount, order = null) {
+    /**
+     * ⛔ AN ABSENT STREAM IS A REFUSAL, NOT AN EMPTY ONE. `modelStreamOf`
+     * answers `null` for a walk that did not finish, and `{ticks: []}` handed
+     * to the comparator diffs as "tick count differs: expected 0, got 256" —
+     * a confident sentence about a comparison that never happened, which is the
+     * same defect `gameStreamFromDrain` refuses on the game's side.
+     */
+    if (!stream || !Array.isArray(stream.ticks) || !Array.isArray(stream.transitions)) {
+        throw new Error('there is no model stream to remap — the JS walk did not finish, '
+            + 'so there is nothing to compare the real game against tick by tick');
+    }
     const cache = new Map();
     const roomFor = (level) => {
         if (cache.has(level)) return cache.get(level);
@@ -223,8 +234,8 @@ export function remapStreamRooms(stream, roomCount, order = null) {
         return m.room;
     };
     return {
-        ticks: (stream?.ticks ?? []).map((o) => ({ ...o, level: roomFor(o.level) })),
-        transitions: (stream?.transitions ?? []).map((tr) => ({
+        ticks: stream.ticks.map((o) => ({ ...o, level: roomFor(o.level) })),
+        transitions: stream.transitions.map((tr) => ({
             ...tr, from_level: roomFor(tr.from_level), to_level: roomFor(tr.to_level),
         })),
     };

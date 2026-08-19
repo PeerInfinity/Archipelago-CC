@@ -7013,7 +7013,12 @@ async function runWasm(params, lifetime) {
             modelStream,
             modelStreamWhy,
         },
-        { frame, lifetime, readout: replayWasmReadout(lifetime), tolerance: END_STATE_TOLERANCE },
+        {
+            frame,
+            lifetime,
+            readout: replayWasmReadout(lifetime, params.source),
+            tolerance: END_STATE_TOLERANCE,
+        },
     );
 }
 
@@ -7060,14 +7065,14 @@ function wasmHudRows(st, tape) {
  * begin — which is `probe` and `start` here. A line at `runtime` would be a
  * third readout state the live row has never seen.
  */
-function replayWasmReadout(lifetime) {
+function replayWasmReadout(lifetime, source = 'replay') {
     /**
      * ⛓ THE CHANNEL, NOT THE CHROME. This arm's `#status` strings are what the
      * live pages row asserts on and none of them move; what is ADDED is
      * `__watch.wasm`, which this arm never published — so `?side=wasm` becomes
      * assertable on the same fields the button's ships are (⚖ D4).
      */
-    const publish = (state) => publishShip(state ?? {}, 'replay', lifetime);
+    const publish = (state) => publishShip(state ?? {}, source, lifetime);
     return {
         onStage(stage, message, state) {
             publish(state);

@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 /**
- * check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE `wasm verdict: agrees`.**
+ * check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**
  *
  * `watch.html`'s ▶ load-in-wasm button ships what the page holds into the real
- * recompiled Seedling, and prints an END-STATE VERDICT beside the JS run's own
- * answer: did the real game finish where the model finished. This row drives
- * one SOLVE ship all the way to `finished` and reads that verdict off the page.
+ * recompiled Seedling and prints TWO verdicts beside the JS run's own answer:
+ * the END STATE (did the real game finish where the model finished) and, since
+ * the per-tick slice, the whole run TICK BY TICK. This row drives one SOLVE
+ * ship all the way to `finished`, past the `drain`, and reads both off the page.
+ *
+ * ⚠ IT IS NO LONGER THE ONLY ARM THAT CAN SEE `agrees per tick`.
+ * `check-seedling-wasm-pages.mjs` now drives a 30-tick COMMITTED tape through
+ * `?side=wasm` headless, on any root, and sees one there. What is still only
+ * visible here is a **SOLVE's** verdict — 255 ticks that the page produced
+ * itself, which swiftshader would spend eight minutes rasterising.
  *
  * ── ⛔ WHY IT IS A SEPARATE ROW AND NOT A FLAG ON THE PAGES ROW ──────────────
  *
@@ -23,11 +30,12 @@
  *                          honestly reach
  *   THIS row (real GPU)    the ship reaches `finished`, and the VERDICT is real
  *
- * ⛔ A VERDICT IS END STATE ONLY, and the page says so in the same breath. Two
- * runs can meet on the last frame having disagreed on every tick in between;
- * the per-tick differential is `verify-seedling-bot-differential.mjs` and a
- * separate slice. This row asserts the page NEVER prints the verdict without
- * that sentence beside it.
+ * ⛔ EACH VERDICT IS PRINTED WITH ITS OWN BOUND, and this row asserts BOTH are
+ * on screen: the end-state line compares ONE frame, and the per-tick line is
+ * against the JS MODEL of this same tape rather than a recorded expectation —
+ * and it is blind to any defect in the code both runtimes SHARE (trap 389).
+ * The instrument that compares the game against RECORDED oracles is still
+ * `verify-seedling-bot-differential.mjs`.
  *
  * ⚠ REAL-GPU WINDOWS CHROME ONLY. WSL's own chromium is SwiftShader at ~0.5
  * ticks/s, so a 255-tick solve would take eight minutes of software rasterising
@@ -173,7 +181,8 @@ if (wasm) {
      * reached six of seven stages and a ship that reached six DIFFERENT ones
      * both report six.
      */
-    const want = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'verdict'];
+    const want = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain',
+        'verdict'];
     check(JSON.stringify(wasm.reached) === JSON.stringify(want),
         '⛓ every stage was reached, in order, and none was skipped',
         `${JSON.stringify(wasm.reached)}`);
@@ -186,17 +195,50 @@ if (wasm) {
      * headless; this line is not.
      */
     check(wasm.verdict?.agrees === true,
-        '⛓⛓⛓ wasm verdict: AGREES — the real game ended where the JS model ended',
+        '⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS model ended',
         `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
         + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
     /**
-     * ⛔ AND THE BOUND IS ON SCREEN WITH IT. An `agrees` with no scope beside it
-     * reads as "the real game reproduced the model", which is a claim ONE frame
-     * cannot make.
+     * ── ⛓⛓⛓ THE CLAIM THE PER-TICK SLICE EXISTS FOR ─────────────────────────
+     *
+     * ⛔ THE DRAIN IS ASSERTED NON-EMPTY, SEPARATELY FROM THE VERDICT. A build
+     * whose `botDrain` answered nothing degrades to the labelled end-state
+     * verdict BY DESIGN, and a row that only read the verdict could not tell
+     * that fallback from a real per-tick agreement — the fallback would read as
+     * a quieter pass on the one claim this row is for (trap 403's shape at the
+     * claim rather than at the readout).
      */
-    check(/end state only/.test(res.reads?.verdictText ?? ''),
-        '⛔ …and the page prints the SCOPE beside it — a verdict is END STATE ONLY',
-        (res.reads?.verdictText ?? '(no verdict text)').split('\n')[0]);
+    check((wasm.drain?.observations ?? 0) > 0,
+        '⛓ the game DRAINED its whole observation stream — a buffered read, once',
+        `${wasm.drain?.observations ?? 'no drain'} observation(s), `
+        + `${wasm.drain?.reportedTransitions ?? '?'} reported transition(s)`);
+    check(wasm.verdict?.perTick?.kind === 'agrees',
+        '⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model '
+        + 'observation for observation',
+        `${wasm.verdict?.perTick?.text} (kind ${wasm.verdict?.perTick?.kind})`);
+    /**
+     * ⛓ THE TWO SIDES COUNTED THE SAME RUN. `botStatus.tick` is the game's own
+     * counter and the drain is what it handed over; a stream shorter than the
+     * run would make a per-tick `agrees` a claim about a prefix.
+     */
+    check(wasm.drain?.observations === (wasm.status?.tick ?? -1) + 1,
+        '…and the drained stream is the WHOLE run, not a prefix of it',
+        `${wasm.drain?.observations} observation(s) vs tick ${wasm.status?.tick} + 1`);
+    /**
+     * ⛔ AND BOTH BOUNDS ARE ON SCREEN. An `agrees` with no scope beside it
+     * reads as "the real game reproduced the model" without saying against
+     * WHAT, and a per-tick agreement still cannot see a defect in the code both
+     * runtimes share (trap 389).
+     */
+    const verdictText = res.reads?.verdictText ?? '';
+    check(/end state only/.test(verdictText),
+        '⛔ …and the page prints the END-STATE bound beside it',
+        verdictText.split('\n')[0]);
+    check(/per tick against the JS MODEL/.test(verdictText)
+        && /invisible here/.test(verdictText),
+        '⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what '
+        + 'both runtimes SHARE',
+        verdictText.split('\n')[0]);
     check(wasm.status?.tick === solve?.tickCount,
         'the game ran the SAME number of ticks the solve produced',
         `game ${wasm.status?.tick} vs solve ${solve?.tickCount}`);

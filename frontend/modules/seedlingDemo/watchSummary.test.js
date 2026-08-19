@@ -148,3 +148,65 @@ describe('watchBridge — the projection onto stateChanged', () => {
         expect(watchBridgeSummary(undefined)).toBe(null);
     });
 });
+
+/**
+ * ── ⛓⛓ THE SHIP'S CHANNEL IS CARRIED **WHOLE**, AND THAT IS A ROW NOW ────
+ *
+ * ⛔ The browser rows read `__watch.wasm`, not the DOM — so every field a ship
+ * publishes has to survive the projection UNCHANGED. The per-tick slice added
+ * `verdict.perTick` and `drain` to what a ship writes, and a projection that
+ * whitelisted fields would have dropped them silently: the rows would then be
+ * asserting `undefined === 'agrees'` and reading it as a page that never got
+ * there. `watchSummary` adds no truth of its own, and this is the gate on it.
+ */
+describe('the ▶ load-in-wasm ship, projected', () => {
+    const SHIP = Object.freeze({
+        stage: 'verdict',
+        stages: ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain', 'verdict'],
+        reached: ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain', 'verdict'],
+        refusal: null,
+        drain: { observations: 256, reportedTransitions: 0 },
+        verdict: {
+            kind: 'agrees',
+            agrees: true,
+            text: 'agrees',
+            deltas: { dx: 0, dy: 0, level: 5, expectedLevel: 5, missing: [] },
+            perTick: {
+                kind: 'agrees', agrees: true, observations: 256, transitions: 1, diff: null,
+                text: 'agrees per tick (256 observations)',
+            },
+            drain: { observations: 256, reportedTransitions: 0 },
+        },
+        label: 'r8-solve-4 — the solve\'s own tape',
+        set: null,
+        status: { finished: true, tick: 255 },
+        scope: 'end state only — …',
+    });
+
+    it('⛓ carries the ship block field for field, including the PER-TICK verdict', () => {
+        const w = watchSummary({ source: 'solve', href: HREF, wasm: SHIP });
+        expect(w.wasm).toBe(SHIP);
+        expect(w.wasm.verdict.perTick.kind).toBe('agrees');
+        expect(w.wasm.verdict.perTick.observations).toBe(256);
+        expect(w.wasm.drain.observations).toBe(256);
+        expect(w.wasm.reached).toContain('drain');
+    });
+
+    it('⛔ carries it under a REFUSED generate too — the stage it stopped at is the '
+        + 'finding, so hiding the channel there would hide it where it matters', () => {
+        const refused = { stage: 'levels', stages: SHIP.stages, reached: ['probe'], drain: null,
+            refusal: { stage: 'levels', reason: 'set-readback-disagrees' },
+            verdict: { kind: 'not-finished', perTick: { kind: 'not-finished' } } };
+        const w = watchSummary({
+            source: 'generate', href: HREF,
+            generate: { status: 'refused', message: 'nope' }, wasm: refused,
+        });
+        expect(w.wasm).toBe(refused);
+        expect(w.wasm.verdict.perTick.kind).toBe('not-finished');
+    });
+
+    it('⚠ `null` means NO SHIP ON THIS PAGE — never "the ship disagreed" (trap 262)', () => {
+        expect(watchSummary({ source: 'solve', href: HREF }).wasm).toBe(null);
+    });
+});
+

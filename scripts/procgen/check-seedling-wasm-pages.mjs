@@ -109,6 +109,14 @@ const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.jso
  * one. ⛔ Reused rather than invented: a red here is then about the SHIP and
  * not about a solve nobody else runs.
  */
+/**
+ * ⛓ THE REPLAY ARM'S TAPE — 30 ticks, COMMITTED, and its stream is already an
+ * ORACLE (`tapeRunner.test.js` pins the JS model against the recorded
+ * expectation). Short enough that swiftshader's ~0.5 ticks/s is a minute
+ * rather than the eight a 255-tick solve would cost, which is what makes a
+ * PER-TICK verdict reachable on a machine with no GPU at all.
+ */
+const REPLAY_TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/friction-stop.json';
 const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
 const SHIP_GOALS = 'exit:64,16';
 const SHIP_NAME = 'r8-solve-4';
@@ -463,6 +471,83 @@ if (!NO_SHIP && !EXPECT_MISSING) {
             say('⛔ …with NO expectation, said out loud rather than reported as agreement',
                 w?.verdict?.kind === 'none' && /manual/.test(w?.verdict?.text ?? ''),
                 w?.verdict?.text ?? '(no verdict)');
+            /**
+             * ── ⛓⛓ THE HEADLESS HALF OF THE PER-TICK SLICE ──────────────
+             *
+             * MANUAL is the one arm a machine with no GPU can drive to
+             * `finished`, so it is the one that can witness the DRAIN at all.
+             * ⛔ The drain is asserted SEPARATELY from the verdict: a build
+             * whose `botDrain` answered nothing degrades to the labelled
+             * end-state fallback by design, and a row that read only the
+             * verdict could not tell that fallback from a real answer.
+             */
+            say('⛓⛓ the game DRAINS its whole observation stream — read ONCE, after '
+                + '`finished`, and it is a BUFFERED stream rather than a sample',
+                reached(w, 'drain') && (w?.drain?.observations ?? 0) > 0,
+                stopped || `drain ${JSON.stringify(w?.drain ?? null)}`);
+            /**
+             * ⛔ AND A ZERO-INPUT TAPE IS VACUOUS PER TICK, WHICH IS AN ANSWER.
+             * Nothing was driven in JS, so there is no run to reproduce —
+             * reporting agreement on the boot frame would be a per-tick claim
+             * about a comparison that had nothing to compare.
+             */
+            say('⛔ …and the PER-TICK verdict says WHY there is none rather than '
+                + 'reporting a vacuous agreement — with the drained count beside it',
+                w?.verdict?.perTick?.kind === 'none'
+                    && /manual/.test(w?.verdict?.perTick?.text ?? '')
+                    && /observation\(s\) drained/.test(w?.verdict?.perTick?.text ?? ''),
+                w?.verdict?.perTick?.text ?? '(no per-tick verdict)');
+        },
+    });
+
+    /**
+     * ── ⛓⛓⛓ REPLAY — THE ONE ARM THAT CAN SEE `agrees per tick` HEADLESS ──
+     *
+     * ⛔ AND IT IS THE CHEAPEST WITNESS THERE IS, on ANY root including the
+     * deployed site: `friction-stop` is a COMMITTED 30-tick tape whose stream
+     * is already an oracle (`tapeRunner.test.js` pins the JS model against the
+     * recorded expectation), so a divergence here is attributable without
+     * generating or solving anything. Thirty ticks is also short enough that
+     * swiftshader's ~0.5 ticks/s is a minute rather than the eight the SOLVE
+     * arm would cost.
+     *
+     * ⚠ `?side=wasm` SHIPS ON LOAD — no `#loadWasm` press. The stage machine
+     * is the same one, which is why this arm is assertable on the same fields.
+     */
+    await shipArm({
+        name: 'REPLAY',
+        url: watchAt(`side=wasm&tape=${encodeURIComponent(REPLAY_TAPE)}`),
+        steps: [
+            { what: 'the ship reached `runtime`', ms: 300000,
+                wait: "window.__watch?.wasm?.reached?.includes('runtime')" },
+            { what: 'press ▶ Start inside the frame', frameClick: '#btn-start' },
+            { what: 'the committed tape finished and was drained', ms: 420000,
+                wait: "window.__watch?.wasm?.reached?.includes('drain')"
+                    + " || window.__watch?.wasm?.refusal" },
+        ],
+        want: (w, stopped) => {
+            say('⛓ REPLAY publishes `__watch.wasm` — the same channel the button\'s '
+                + 'ships do, which is what makes this arm assertable at all',
+                reached(w, 'drain') && (w?.drain?.observations ?? 0) > 0,
+                stopped || `drain ${JSON.stringify(w?.drain ?? null)}`);
+            /**
+             * ⛓⛓⛓ THE CLAIM THE SLICE EXISTS FOR, ON A MACHINE WITH NO GPU.
+             */
+            say('⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the JS '
+                + 'model observation for observation, on a COMMITTED tape',
+                w?.verdict?.perTick?.kind === 'agrees',
+                stopped || `${w?.verdict?.perTick?.text} `
+                    + `(end state: ${w?.verdict?.text})`);
+            /**
+             * ⛔ AND THE END-STATE CHECK RAN TOO, AND AGREES. A per-tick
+             * agreement beside an end state that disagrees about the same frame
+             * is `verdict-internally-inconsistent` by construction — this is
+             * the row that would see it.
+             */
+            say('⛔ …and the END-STATE check ran FIRST and agrees with it — never '
+                + '`verdict-internally-inconsistent`',
+                w?.verdict?.agrees === true && w?.verdict?.perTick?.kind !== 'inconsistent',
+                stopped || `${w?.verdict?.text} / ${w?.verdict?.perTick?.kind}`);
         },
     });
 }
