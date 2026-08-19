@@ -1999,8 +1999,24 @@ const catalogueOf = () => page.evaluate(() => ({
 
     // ── 8e: the ILLEGAL cell, refused BY NAME with NO solve ──────────
     {
+        /**
+         * ⛔⛔ **WAIT FOR THE SETTLED STEP, NOT FOR THE ARM TO EXIST** — PROCGEN
+         * DOCS · P5, and this is TRAP 246 in the one claim slice 6's sweep
+         * missed. `?run=1` runs the ladder ASYNCHRONOUSLY; a bare `load()`
+         * returns as soon as `window.__editorGenerate` is published, which is at
+         * the SKELETON. So `skeletonLevel` was sometimes step 0's record and
+         * sometimes the finished step-3 one, while the click below always sees
+         * the finished one — and the comparison then reddened a page that was
+         * perfectly correct.
+         *
+         * ⛓ MEASURED BEFORE THE FIX: the claim failed **2 of 6** solo runs
+         * (4, 5), and in BOTH the very next claim — *the page SAYS the level on
+         * screen is UNCHANGED* — PASSED. The page and the row disagreed because
+         * the ROW was holding a mid-run snapshot, which is what says the defect
+         * is here and not on the page.
+         */
         await load(`source=generate&seed=${DIRECT.seed}&biome=${DIRECT.biome}`
-            + `&count=${DIRECT.step}&run=1`);
+            + `&count=${DIRECT.step}&run=1`, { step: DIRECT.step, seed: DIRECT.seed });
         const skeletonLevel = await page.evaluate(() => window.__editorGenerated.level);
         await armRow();
         const bad = lastPixelOf(ILLEGAL_CLICK.tx, ILLEGAL_CLICK.ty);
@@ -2450,8 +2466,14 @@ if (!host) {
             const nodeWhy = nodeSealed.trace.find((r) => r.directive === 1).reasonText;
             // ⛓⛓ DRIVEN THROUGH THE PAGE'S AT… CONTROL AND A CLICK — the
             // affordance §3.9 leaves for naming a cell (it was `?directed=…!x,y`).
+            /** ⛓ P5 — the settled step, for the same reason as claim 8e above.
+             *  ⚠ This one has no `?run=1` and asks for step 0, so it was never
+             *  observed to fail; the wait is made explicit anyway, because "it
+             *  happens not to race today" is not a property a row should rest
+             *  on. */
             const sealedWeb = await load(`source=generate&seed=${CARVED.seed}`
-                + `&biome=${CARVED.biome}&count=0&skeleton=${KIND}`);
+                + `&biome=${CARVED.biome}&count=0&skeleton=${KIND}`,
+            { step: 0, seed: CARVED.seed });
             await armTemplate('wall-segment', { ori: SEALER.ori, len: SEALER.len });
             await clickTile(SEALER.tx, SEALER.ty);
             await page.waitForFunction(

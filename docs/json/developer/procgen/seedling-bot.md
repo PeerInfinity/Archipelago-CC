@@ -10226,6 +10226,28 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   better first paragraph (`architecture.md`, `substrate-registry.md` — which
   still said SEVEN registered entries — `jta.md`, and this file, whose H1 was
   eight rungs stale).
+- ⛓⛓⛓ **AND THEN THE FINDINGS WERE FIXED** — 2026-08-19 (PROCGEN DOCS **P5**),
+  ⚖ the user: *"first, let's fix the issues we discovered so far"*. The three
+  generated tables between them PRINTED **19** disagreements between a
+  hand-kept list, a document and the code, and every one is now fixed **in the
+  thing it was about**: the page's finding count is **19 → 0**, and `#findings`
+  says so in words rather than rendering an empty section. What moved:
+  `SEEDLING_ELEMENT_REFUSALS` names the refusal it was missing and its docblock
+  says out loud that it is a CENSUS KEY for the element PATH (three of its names
+  fire one module over); `areaGraph.REASONS` is EXPORTED and
+  `procgenSeedling.js`, `procgenMaze.js` and `elementSpec.js` each grew the
+  census key they never had; **`urlParams.js`'s 26 unnamed refusals have
+  NAMES** — `fail(code, message)` at every site, `URL_PARAM_REFUSALS` as the
+  list, and every message byte-identical; six registry fields, four bare script
+  citations and one missing docblock are documented; and the glossary's ceiling
+  moved 140 → 149 for the seven URL parameters whose term cell rendered BLANK.
+  ⛓ The durable half is the GATES, not the edits:
+  `procgenCore/refusalCensus.test.js` asks every census key to cover the literal
+  scan of its own source — using the generator's PATTERNS but never its OUTPUT,
+  because a table agreeing with itself proves nothing. ⛔ NOT fixed and NAMED:
+  `procgenOracle.budgetKindFor` composes its answer into a sentence, and
+  `budgetKind` reaches the trace whose sha is a determinism payload, so naming
+  it would re-record a committed artifact.
 
 #### The ledger's phases and paintables, as of the arc's close
 
