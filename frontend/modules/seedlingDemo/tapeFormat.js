@@ -2045,6 +2045,56 @@ export function deriveTransitions(ticks) {
 }
 
 /**
+ * ── ⛓⛓⛓ THE GAME'S OBSERVATION STREAM, FROM WHAT `botDrain` HANDED OVER ──
+ *
+ * ⛔ ONE SPELLING, EVERY CALLER. `deriveTransitions` above has always been the
+ * one derivation; what was NOT in one place was the three-line WRAP around it —
+ * "take the drained ticks, derive the transitions, and make a NAMED failure of
+ * a build that starts reporting the field for real". That wrap was spelled in
+ * `verify-seedling-bot-differential.mjs` (`withDerivedTransitions`) and again in
+ * `run-seedling-director.mjs` (`streamDiff`), and the per-tick verdict on
+ * `watch.html` would have been the third — in a page whose whole claim is that
+ * the browser and the node differential feed the SAME comparator the SAME
+ * vocabulary. A stream assembled by a lookalike is a different subject
+ * (trap 383).
+ *
+ * ⛔ IT REFUSES A DRAIN IT CANNOT READ rather than returning an empty stream.
+ * `{ticks: [], transitions: []}` from a null drain would diff as
+ * "tick count differs: expected 256, got 0" — a confident sentence about a
+ * comparison that never happened. The CALLER decides what a missing drain
+ * means: the node script never sees one (a dead VM throws earlier), and the
+ * page degrades to its labelled end-state verdict.
+ *
+ * ⚠ `agrees`/`detail` ARE REPORTED, NOT ACTED ON. `Bot.as` hardcodes
+ * `transitions: []`, so `reported` is empty on every build that exists today
+ * and `agrees` is trivially true. If a future build fills the field in, that
+ * must be a named failure to RECONCILE — which is a claim each caller makes in
+ * its own harness (`check(...)` in node, a refused verdict in the page), not
+ * something this function can quietly overwrite.
+ *
+ * @param {{ticks: Array, transitions?: Array}} drained  `botDrain`'s parsed JSON
+ * @returns {{stream: {ticks: Array, transitions: Array}, reported: Array,
+ *            derived: Array, agrees: boolean, detail: string}}
+ */
+export function gameStreamFromDrain(drained) {
+    if (!drained || typeof drained !== 'object' || !Array.isArray(drained.ticks)) {
+        fail('botDrain did not hand over a stream: expected { ticks: [...] }, got '
+            + `${JSON.stringify(drained)}`);
+    }
+    const derived = deriveTransitions(drained.ticks);
+    const reported = drained.transitions ?? [];
+    return {
+        stream: { ticks: drained.ticks, transitions: derived },
+        reported,
+        derived,
+        agrees: JSON.stringify(reported) === JSON.stringify(derived),
+        detail: `botDrain reported ${JSON.stringify(reported)}, derived `
+            + `${JSON.stringify(derived)} — Bot.as used to hardcode [], so this build `
+            + 'reports the field for real and the derivation needs revisiting',
+    };
+}
+
+/**
  * Validate an observation stream's SHAPE (not its values).
  *
  * `transitions` carries `{t, from_level, to_level}` per §1 ruling 2. The

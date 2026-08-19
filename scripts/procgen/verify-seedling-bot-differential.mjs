@@ -160,7 +160,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 }
 
 const {
-    deriveTransitions, diffObservationStreams, gameVisibleTape,
+    diffObservationStreams, gameStreamFromDrain, gameVisibleTape,
     serializeObservationStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const {
@@ -694,18 +694,21 @@ function runWindowsDriver(name, tapeObj) {
  * spread: if a future AS3 build starts reporting transitions for real, that
  * should be a NAMED failure to reconcile, not something the derivation
  * quietly overwrites.
+ *
+ * ⛓⛓ THE WRAP ITSELF MOVED TO `tapeFormat.gameStreamFromDrain` (the per-tick
+ * slice, 2026-08-19) AND THIS IS NOW ITS `check`. It was spelled here and
+ * again in `run-seedling-director.mjs`, and `watch.html`'s per-tick verdict
+ * would have been the third — in a page whose whole claim is that it feeds the
+ * SAME comparator the SAME vocabulary this script does. ⛔ What stayed here is
+ * the only part that is this harness's: turning the disagreement into a row.
  */
 function withDerivedTransitions(name, drained) {
-    const derived = deriveTransitions(drained.ticks);
-    const reported = drained.transitions ?? [];
-    if (reported.length > 0) {
+    const game = gameStreamFromDrain(drained);
+    if (game.reported.length > 0) {
         check(`${name}: the game's own transitions agree with the derivation`,
-            JSON.stringify(reported) === JSON.stringify(derived),
-            `botDrain reported ${JSON.stringify(reported)}, derived `
-            + `${JSON.stringify(derived)} — Bot.as used to hardcode [], so this build `
-            + 'reports the field for real and the derivation needs revisiting');
+            game.agrees, game.detail);
     }
-    return { ticks: drained.ticks, transitions: derived };
+    return game.stream;
 }
 
 /**

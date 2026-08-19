@@ -16,6 +16,7 @@ import {
     diffObservationStreams,
     FORBIDDEN_KEYS,
     GAME_VISIBLE_DROPS,
+    gameStreamFromDrain,
     gameVisibleTape,
     heldKeysAt,
     KEY_CODES,
@@ -629,6 +630,69 @@ describe('transition records', () => {
         expect(diffObservationStreams(crossing, elsewhere)).toMatch(/0->12/);
         expect(diffObservationStreams(crossing, { ...crossing, transitions: [] }))
             .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE WRAP AROUND THE DERIVATION — the whole of the GAME's side, in ONE
+ * place, because three callers now need it (the node differential, the
+ * director, and `watch.html`'s per-tick verdict).
+ *
+ * ⛔ THESE ARE THE ROWS THAT MAKE `gameStreamFromDrain` A CONTRACT rather than
+ * a convenience: a caller that assembled the stream itself would agree with
+ * this until somebody edited one of them.
+ */
+describe('the game\'s stream, out of botDrain', () => {
+    const drained = {
+        ticks: [
+            { t: 0, x: 88, y: 136, level: 0 },
+            { t: 1, x: 87, y: 136, level: 0 },
+            { t: 2, x: 296, y: 168, level: 94 },
+        ],
+        // ⛓ WHAT `Bot.as` REALLY SENDS. The field is hardcoded empty on every
+        // build that exists; the entries below are DERIVED.
+        transitions: [],
+    };
+
+    it('derives the transitions the game does not send, and keeps the ticks', () => {
+        const g = gameStreamFromDrain(drained);
+        expect(g.stream.ticks).toBe(drained.ticks);
+        expect(g.stream.transitions).toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+        expect(g.stream.transitions).toEqual(deriveTransitions(drained.ticks));
+    });
+
+    it('⛓⛓ M-transitions: WITHOUT the wrap a crossing diverges SPURIOUSLY', () => {
+        // The mutant, kept as a row rather than run once and thrown away: hand
+        // the comparator what `botDrain` literally returns and the transitions
+        // leg reports a difference that is not about the run at all. This is
+        // why the wrap is load-bearing for every tape with a level change, and
+        // why a page that forgot it would go red on real agreement.
+        const model = { ticks: drained.ticks, transitions: [{ t: 2, from_level: 0, to_level: 94 }] };
+        expect(diffObservationStreams(model, drained))
+            .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
+        expect(diffObservationStreams(model, gameStreamFromDrain(drained).stream)).toBeNull();
+    });
+
+    it('⛔ REFUSES a drain it cannot read rather than returning an empty stream', () => {
+        // `{ticks: [], transitions: []}` would diff as "tick count differs:
+        // expected N, got 0" — a confident sentence about a comparison that
+        // never happened. The CALLER decides what a missing drain means.
+        expect(() => gameStreamFromDrain(null)).toThrow(/did not hand over a stream/);
+        expect(() => gameStreamFromDrain({})).toThrow(/did not hand over a stream/);
+        expect(() => gameStreamFromDrain({ ticks: 'nope' })).toThrow(/did not hand over a stream/);
+    });
+
+    it('REPORTS a build that fills the field in — it never overwrites it', () => {
+        const agreeing = { ...drained, transitions: [{ t: 2, from_level: 0, to_level: 94 }] };
+        expect(gameStreamFromDrain(agreeing).agrees).toBe(true);
+        const wrong = { ...drained, transitions: [{ t: 1, from_level: 0, to_level: 94 }] };
+        const g = gameStreamFromDrain(wrong);
+        expect(g.agrees).toBe(false);
+        expect(g.reported).toEqual([{ t: 1, from_level: 0, to_level: 94 }]);
+        // ⛓ And the DERIVATION still wins in the stream: a caller that ignored
+        // `agrees` would compare the derivation, which is the old behaviour.
+        expect(g.stream.transitions).toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+        expect(g.detail).toMatch(/needs revisiting/);
     });
 });
 

@@ -22,7 +22,8 @@ import {
     ACTION_KEYS, activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt,
     attackRectsAt, bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt,
     defaultLayerSet, dialogueAt, extractMarkers, hammerLinesAt, keyEdges, LAYER_IDS, MARKER_GLYPHS,
-    markersVisibleAt, OVERLAY_LAYERS, overlaysFor, parseAttackHold, parseLayersParam,
+    markersVisibleAt, modelStreamOf, OVERLAY_LAYERS, overlaysFor, parseAttackHold,
+    parseLayersParam,
     pathPointsUpTo, sampleMovers, SWING_WINDOW_NOTE, traceRowFields, traceSidecarPath,
     visibleDialogueText, worldChangesAt,
 } from './watchOverlays.js';
@@ -37,7 +38,7 @@ import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
 // (for the engine differential, which needs the run at the tick the change
 // lands on rather than at the end of the walk), and the SOLVE arm.
 import { detectionRects } from './crusher.js';
-import { createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { createTapeStepper, runTapeToStream, stagingFromTape } from './tapeRunner.js';
 import { solveForPage } from './watchSolve.js';
 import { parseTape } from './tapeFormat.js';
 
@@ -1708,5 +1709,41 @@ describe('group B — the ceremony text channel', () => {
         expect(new Set(counts).size).toBeGreaterThan(1);
         // …and the objects are not the same object
         expect(live[0].d.ceremony.dialogue).not.toBe(live[1].d.ceremony.dialogue);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ THE MODEL'S OBSERVATION STREAM — **PINNED TO THE INSTRUMENT THE NODE
+ * ── DIFFERENTIAL USES**, not asserted to match it in a comment ───────────
+ *
+ * ⛔ TRAP 383'S GATE. `watch.html`'s per-tick verdict feeds
+ * `diffObservationStreams` a stream taken off the walk the page ALREADY made;
+ * `verify-seedling-bot-differential.mjs` feeds it `runTapeToStream`. If those
+ * two ever stop being the same thing, the page would be comparing a different
+ * subject and reporting it under the same word — so the equality is a ROW,
+ * over a committed tape with a real level crossing in it.
+ */
+describe('the model stream a collected walk carries', () => {
+    it('⛓⛓⛓ is EQUAL to runTapeToStream — one walk, one vocabulary', () => {
+        const t = tape('cross-level-leg');
+        const walked = collectRun(t, levelSourceForTests);
+        expect(walked.error).toBeNull();
+        const stream = modelStreamOf(walked);
+        expect(stream).toEqual(runTapeToStream(t, { levelSource: levelSourceForTests }));
+        // ⛓ And it is not a degenerate agreement: this tape CROSSES, so the
+        // transitions leg is carrying something.
+        expect(stream.transitions.length).toBeGreaterThan(0);
+        expect(stream.ticks.length).toBe(t.tick_count + 1);
+    });
+
+    it('⛔ a PARTIAL walk has NO stream — `finished` is the whole condition', () => {
+        // `collectRun` RETURNS a mid-walk throw instead of raising it, so the
+        // frames are whatever it got. Handing those over as a stream would let
+        // the per-tick verdict report "tick count differs" about a walk that
+        // stopped — a confident sentence about a comparison that never ran.
+        expect(modelStreamOf({ finished: null, frames: [{}, {}] })).toBeNull();
+        expect(modelStreamOf(null)).toBeNull();
+        expect(modelStreamOf({})).toBeNull();
+        expect(modelStreamOf({ finished: { ticks: [], transitions: null } })).toBeNull();
     });
 });

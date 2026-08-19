@@ -867,6 +867,36 @@ export function collectRun(tape, levelSource, { scratchPersistence = false } = {
 }
 
 /**
+ * ── ⛓⛓⛓ THE MODEL'S OBSERVATION STREAM, OUT OF THE WALK THE PAGE ALREADY
+ * ── MADE — **NOT A SECOND WALK, AND NOT A SECOND VOCABULARY** ────────
+ *
+ * ⛔ THIS IS A PROJECTION, and that is the whole of its content.
+ * `collectRun` drives `createTapeStepper` to completion and keeps the
+ * generator's RETURN value in `finished` — which is `runTape`'s own result,
+ * which is what `runTapeToStream` slices `{ticks, transitions}` out of. So
+ * the stream this hands the comparator is byte-identical to the one
+ * `verify-seedling-bot-differential.mjs` feeds it for the same tape, and
+ * `watchOverlays.test.js` PINS that against `runTapeToStream` rather than
+ * asserting it in a comment (trap 383: a subject found with a different
+ * instrument is a different subject).
+ *
+ * ⛔ A PARTIAL WALK HAS NO STREAM. `collectRun` RETURNS a mid-walk throw
+ * instead of raising it, so `finished` is null and the frames are whatever
+ * it got. Handing those frames over as a stream would be an observation
+ * stream the run never completed — the per-tick verdict would report
+ * "tick count differs" about a walk that stopped, which is a confident
+ * sentence about a comparison that never happened.
+ *
+ * @param {object} collected  `collectRun`'s return value
+ * @returns {{ticks: Array, transitions: Array}|null}
+ */
+export function modelStreamOf(collected) {
+    const done = collected?.finished ?? null;
+    if (!done || !Array.isArray(done.ticks) || !Array.isArray(done.transitions)) return null;
+    return { ticks: done.ticks, transitions: done.transitions };
+}
+
+/**
  * Every marker a collected walk implies — the ledgers, placed on the frames.
  *
  * The page and the acceptance script both call THIS; neither reaches into
