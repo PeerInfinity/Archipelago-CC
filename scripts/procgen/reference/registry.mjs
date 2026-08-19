@@ -47,6 +47,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { REPO, src } from './lib.mjs';
+import { M } from './sources.mjs';
 
 /** ⛓ THE DOC THIS TABLE LIVES IN — its headings group the rows, and its
  *  "Capability matrix" section is the region the generator writes. */
@@ -177,6 +178,10 @@ function mentionedElsewhere(name) {
  *  more: its body is not this table's subject. */
 function cellOf(value) {
     if (value === undefined) return { present: false, type: 'absent', value: null, short: '—' };
+    /** ⛔ `null` IS A VALUE HERE, not an absence: bounce declares
+     *  `gateableItems: null`, and the doc's own bullet says what it means —
+     *  *null ⇒ full vocabulary*. Reading it as an object crashed the page. */
+    if (value === null) return { present: true, type: 'null', value: null, short: '`null`' };
     if (typeof value === 'function') {
         return { present: true, type: 'function', value: null, short: 'fn' };
     }
@@ -230,7 +235,23 @@ function expandablePrefixes(documented) {
     return out;
 }
 
+/**
+ * ⛓ THE GLOSSARY TERMS THIS TABLE IS ABOUT — declared here, CHECKED against
+ * `procgenDocs/glossary.js` (a dead slug renders as a link a reader cannot
+ * follow, so it is a hard error, exactly as it is for a URL parameter).
+ */
+export const REGISTRY_TERMS = Object.freeze([
+    'substrate', 'substrate-registry', 'playback-controller', 'loop-mode', 'content-source',
+    'zone',
+]);
+
 export async function buildRegistry() {
+    for (const t of REGISTRY_TERMS) {
+        if (!M.glossary.termById(t)) {
+            throw new Error(`generate-procgen-reference: REGISTRY_TERMS names ${JSON.stringify(t)}`
+                + ', which the GLOSSARY does not define');
+        }
+    }
     const { entries, libraries } = await loadRegistry();
     const documented = documentedFields();
     const expandable = expandablePrefixes(documented);
@@ -308,6 +329,7 @@ export async function buildRegistry() {
         .sort((a, b) => a.order - b.order).map((d) => d.section)), UNDOCUMENTED];
 
     return {
+        terms: [...REGISTRY_TERMS].sort(),
         columns: entries.map((e) => {
             const lib = libraries.find((l) => l.registered.includes(e.id));
             return {

@@ -23,9 +23,9 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "lines": 13118,
+        "lines": 12969,
         "pages": 3,
-        "words": 156853
+        "words": 154613
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -34,7 +34,7 @@ export const DOCS_INDEX = frz({
             "description": "This is the orientation document for the procedural-generation (\"procgen\") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces.",
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
-            "lines": 188,
+            "lines": 180,
             "links": [
                 "demos.md",
                 "maze.md",
@@ -42,13 +42,13 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 3720
+            "words": 3537
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
-            "lines": 305,
+            "lines": 164,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -57,7 +57,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5680
+            "words": 3623
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -282,7 +282,6 @@ export const DOCS_INDEX = frz({
             "description": "procgenDocs/demos.html — **THE PROCGEN DEMO CATALOGUE, RENDERED.** One entry per demonstrable feature of the two procgen lab pages, each with the link that shows it (here AND on the deployed site), the CLI command that reproduces it in node, which control to press, and what you are looking at.",
             "file": "demos.html",
             "h1": "Procgen demonstrations — a catalogue",
-            "lines": 313,
             "path": "frontend/modules/procgenDocs/demos.html",
             "title": "Procgen demonstrations — a catalogue",
             "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html"
@@ -291,20 +290,22 @@ export const DOCS_INDEX = frz({
             "description": "procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per term the procgen docs and the two lab pages use as vocabulary: a plain-language sentence first, then the concrete rule and where it lives.",
             "file": "glossary.html",
             "h1": "Procgen glossary — the vocabulary, defined",
-            "lines": 301,
             "path": "frontend/modules/procgenDocs/glossary.html",
             "title": "Procgen glossary — the vocabulary, defined",
             "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html"
         },
         {
-            "description": "procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE CODE.** Three tables nobody should ever author by hand, because the code already knows the answer: the URL parameter grammar of the two lab pages, the generation catalogue, and the refusal vocabulary.",
+            "description": "procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE CODE.** Six tables nobody should ever author by hand, because the code already knows the answer: the URL parameter grammar of the two lab pages, the generation catalogue, the refusal vocabulary, the substrate-registry capability matrix, the ins…",
             "file": "reference.html",
-            "h1": "Procgen reference — the URL grammar, the catalogue, the refusals",
-            "lines": 686,
+            "h1": "Procgen reference — six tables, generated from the code they describe",
             "path": "frontend/modules/procgenDocs/reference.html",
-            "title": "Procgen reference — the URL grammar, the catalogue, the refusals",
+            "title": "Procgen reference — the six generated tables",
             "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html"
         }
+    ],
+    "terms": [
+        "demo-catalogue",
+        "lab-page"
     ]
 });
 

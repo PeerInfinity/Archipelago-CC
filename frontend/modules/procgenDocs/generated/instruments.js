@@ -5775,6 +5775,14 @@ export const INSTRUMENTS = frz({
             "oneLiner": "In-app end-to-end verify for \"World persistence across reloads\".",
             "path": "scripts/procgen/verify-world-persistence-reload.mjs"
         }
+    ],
+    "terms": [
+        "browser-row",
+        "byte-identity",
+        "census",
+        "determinism",
+        "sweep",
+        "yield-table"
     ]
 });
 

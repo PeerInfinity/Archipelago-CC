@@ -37,6 +37,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve as resolvePath } from 'node:path';
 
 import { REPO, firstSentence, src } from './lib.mjs';
+import { M } from './sources.mjs';
 
 export const SCRIPT_DIR = 'scripts/procgen';
 const DOC_DIR = 'docs/json/developer/procgen';
@@ -233,7 +234,18 @@ function findEverywhere(root, basename, rel = '', out = []) {
     return out.sort();
 }
 
+/** ⛓ The glossary terms this table is about — declared, and CHECKED. */
+export const INSTRUMENT_TERMS = Object.freeze([
+    'browser-row', 'census', 'sweep', 'yield-table', 'byte-identity', 'determinism',
+]);
+
 export function buildInstruments() {
+    for (const t of INSTRUMENT_TERMS) {
+        if (!M.glossary.termById(t)) {
+            throw new Error('generate-procgen-reference: INSTRUMENT_TERMS names '
+                + `${JSON.stringify(t)}, which the GLOSSARY does not define`);
+        }
+    }
     const names = readdirSync(join(REPO, SCRIPT_DIR))
         .filter((f) => f.endsWith('.mjs')).sort();
     /**
@@ -350,6 +362,7 @@ export function buildInstruments() {
     }));
 
     return {
+        terms: [...INSTRUMENT_TERMS].sort(),
         dir: SCRIPT_DIR,
         rows,
         categories,

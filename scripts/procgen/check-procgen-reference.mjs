@@ -43,6 +43,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -53,6 +54,13 @@ import { termById } from '../../frontend/modules/procgenDocs/glossary.js';
 import { URL_GRAMMAR } from '../../frontend/modules/procgenDocs/generated/urlGrammar.js';
 import { CATALOGUE } from '../../frontend/modules/procgenDocs/generated/catalogue.js';
 import { REFUSALS } from '../../frontend/modules/procgenDocs/generated/refusals.js';
+import { REGISTRY } from '../../frontend/modules/procgenDocs/generated/registry.js';
+import { INSTRUMENTS } from '../../frontend/modules/procgenDocs/generated/instruments.js';
+import { DOCS_INDEX } from '../../frontend/modules/procgenDocs/generated/docsIndex.js';
+import { markdownMarkers } from './reference/lib.mjs';
+import { REGISTRY_DOC } from './reference/registry.mjs';
+import { INSTRUMENTS_DOC } from './reference/instruments.mjs';
+import { INDEX_DOC } from './reference/docsIndex.mjs';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -89,6 +97,14 @@ const PARAM_NAMES = [...new Set(URL_GRAMMAR.pages.flatMap((p) => p.params.map((q
 const EXCLUDED_NAMES = [...new Set(CATALOGUE.biomes.flatMap((b) => b.excluded.map((t) => t.name)))];
 const KIND_BIOMES = CATALOGUE.biomes.filter((b) => b.id !== 'post-sword');
 
+/** ⛓ ALL SIX TABLES' findings share one section — the same list the page
+ *  builds, derived here the same way rather than copied. */
+const ALL_FINDINGS = [
+    ...REFUSALS.findings.map((f) => ({ source: f.source, name: f.name })),
+    ...REGISTRY.findings.map((f) => ({ source: 'registry', name: f.name })),
+    ...INSTRUMENTS.findings.map((f) => ({ source: 'instruments', name: f.name })),
+];
+
 const EXPECTED_SECTIONS = [
     { id: 'url', rows: PARAM_NAMES.length },
     { id: 'retired', rows: URL_GRAMMAR.retired.length },
@@ -98,10 +114,13 @@ const EXPECTED_SECTIONS = [
     { id: 'excluded', rows: EXCLUDED_NAMES.length },
     { id: 'elements', rows: CATALOGUE.elements.length },
     { id: 'kinds', rows: KIND_BIOMES.reduce((a, b) => a + b.skeletonKinds.length, 0) },
-    { id: 'findings', rows: REFUSALS.findings.length },
+    { id: 'findings', rows: ALL_FINDINGS.length },
     { id: 'refusal-sources', rows: REFUSALS.sources.length },
     { id: 'refusals', rows: REFUSALS.rows.length },
     { id: 'enums', rows: REFUSALS.enums.length },
+    { id: 'registry', rows: REGISTRY.columns.length },
+    { id: 'instruments', rows: INSTRUMENTS.rows.length },
+    { id: 'docs', rows: DOCS_INDEX.docs.length + DOCS_INDEX.pages.length },
 ];
 
 const EXPECTED_ANCHORS = [
@@ -116,14 +135,22 @@ const EXPECTED_ANCHORS = [
     ...CATALOGUE.elements.map((e) => `element-${slug(e.head)}`),
     ...KIND_BIOMES.flatMap((b) => b.skeletonKinds
         .map((k) => `kind-${slug(b.substrate)}-${slug(k.kind)}`)),
-    ...REFUSALS.findings.map((f) => `finding-${slug(f.source)}-${slug(f.name)}`),
+    ...ALL_FINDINGS.map((f) => `finding-${slug(f.source)}-${slug(f.name)}`),
     ...REFUSALS.sources.map((s) => `refusal-source-${slug(s.id)}`),
     ...REFUSALS.rows.map((r) => `refusal-${slug(r.name)}`),
     ...REFUSALS.enums.map((e) => `enum-${slug(e.id)}`),
+    ...REGISTRY.columns.map((c) => `registry-${slug(c.id)}`),
+    ...INSTRUMENTS.rows.map((r) => `script-${slug(r.file.replace(/\.mjs$/, ''))}`),
+    ...DOCS_INDEX.docs.map((d) => `doc-${slug(d.file.replace(/\.md$/, ''))}`),
+    ...DOCS_INDEX.pages.map((p) => `docpage-${slug(p.file.replace(/\.html$/, ''))}`),
 ];
 
-const EXPECTED_TERMS = [...new Set(URL_GRAMMAR.pages
-    .flatMap((p) => p.params.flatMap((q) => q.terms)))].sort();
+/** ⛓ Every glossary slug the page is entitled to print — the URL parameters'
+ *  own `terms:` lines, PLUS the three P3b tables' declared ones. */
+const EXPECTED_TERMS = [...new Set([
+    ...URL_GRAMMAR.pages.flatMap((p) => p.params.flatMap((q) => q.terms)),
+    ...REGISTRY.terms, ...INSTRUMENTS.terms, ...DOCS_INDEX.terms,
+])].sort();
 
 /* ══════════════════════════════════════════════════════════════════════ */
 
@@ -134,7 +161,9 @@ const pagePath = (path) => (pages ? path.replace(/^\/frontend(?=\/)/, '') : path
 
 console.log(`the generated modules: ${PARAM_NAMES.length} URL parameters, `
     + `${CATALOGUE.biomes.length} biomes, ${REFUSALS.rows.length} refusal names, `
-    + `${REFUSALS.findings.length} findings — ${EXPECTED_ANCHORS.length} anchors expected`);
+    + `${REGISTRY.columns.length} registry entries, ${INSTRUMENTS.rows.length} instruments, `
+    + `${DOCS_INDEX.docs.length} documents, ${ALL_FINDINGS.length} findings — `
+    + `${EXPECTED_ANCHORS.length} anchors expected`);
 
 /* ── 1. THE GATE ITSELF ─────────────────────────────────────────────── */
 
@@ -155,6 +184,43 @@ if (pages) {
         '⛓⛓⛓ the checked-in modules AND the markdown regions ARE what the code says '
         + '(`--check` = regenerate, no diff)',
         code === 0 ? (/ALL [^\n]*/.exec(out) ?? [''])[0] : out.trim().split('\n').slice(0, 8).join(' | '));
+}
+
+/* ── 1b. THE MARKDOWN REGIONS ───────────────────────────────────────── */
+
+/**
+ * ⛓⛓ THREE OF THE SIX TABLES ALSO LIVE IN A `.md` PEOPLE READ ON GITHUB, and
+ * `--check` above already proved their CONTENT. What this claim adds is that
+ * the region is still THERE and still has its markers: a `.md` whose markers
+ * somebody deleted would make the generator refuse, and a reader of that file
+ * would meanwhile be reading a table nothing regenerates.
+ *
+ * ⛔ Skipped under `--pages=`, for the same reason `--check` is: these files
+ * are in THIS tree, and the deployed site is a copy of a past commit.
+ */
+const MD_REGIONS = [
+    { file: REGISTRY_DOC, table: 'substrate-capability-matrix' },
+    { file: INSTRUMENTS_DOC, table: 'procgen-instruments' },
+    { file: INDEX_DOC, table: 'procgen-docs-index' },
+];
+
+if (!pages) {
+    const bad = [];
+    for (const r of MD_REGIONS) {
+        const text = readFileSync(join(REPO, r.file), 'utf8');
+        const { begin, end } = markdownMarkers(r.table);
+        const begins = text.split('\n').filter((l) => l.trim() === begin).length;
+        const ends = text.split('\n').filter((l) => l.trim() === end).length;
+        const body = (new RegExp(`${begin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([\\s\\S]*?)`
+            + end.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).exec(text) ?? [])[1] ?? '';
+        if (begins !== 1 || ends !== 1 || body.trim().length < 100) {
+            bad.push(`${r.file}: ${begins} begin / ${ends} end / ${body.trim().length} chars`);
+        }
+    }
+    check(bad.length === 0,
+        `⛓⛓ the ${MD_REGIONS.length} markdown GENERATED REGIONS are present, with exactly one `
+        + 'marker pair each and a non-empty body',
+        bad.length ? bad.join(' | ') : MD_REGIONS.map((r) => r.table).join(' · '));
 }
 
 let server = null;

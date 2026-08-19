@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <!--
   procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE
-  CODE.** Three tables nobody should ever author by hand, because the code
+  CODE.** Six tables nobody should ever author by hand, because the code
   already knows the answer: the URL parameter grammar of the two lab pages, the
-  generation catalogue, and the refusal vocabulary.
+  generation catalogue, the refusal vocabulary, the substrate-registry
+  capability matrix, the instruments index and the documentation index.
 
   ⚖ The user, 2026-08-18: the docs that are DATA IN DISGUISE become pages *"that
   interact with the scripts directly, rather than having to be manually
@@ -11,8 +12,8 @@
   AUTHORING a data module. P3a does it for the tables a HUMAN was keeping in
   step with `urlParams.js`, `procgenPalette.js` and a dozen refusal sites.
 
-  ⛔⛔ THE DATA IS `./generated/{urlGrammar,catalogue,refusals}.js` AND THIS PAGE
-  ONLY RENDERS IT. Those three modules are OUTPUT — written by
+  ⛔⛔ THE DATA IS `./generated/*.js` AND THIS PAGE ONLY RENDERS IT. Those six
+  modules are OUTPUT — written by
   `scripts/procgen/generate-procgen-reference.mjs`, committed so a browser can
   import them with no build step, and gated by
 
@@ -35,7 +36,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Procgen reference — the URL grammar, the catalogue, the refusals</title>
+<title>Procgen reference — the six generated tables</title>
 <style>
   :root { color-scheme: dark; }
   body {
@@ -93,7 +94,7 @@
 </head>
 <body>
 <header>
-  <h1>Procgen reference — <span>the URL grammar, the catalogue, the refusals</span></h1>
+  <h1>Procgen reference — <span>six tables, generated from the code they describe</span></h1>
   <div id="count" class="note"></div>
   <div id="where" class="note"></div>
   <div id="also" class="note"></div>
@@ -132,6 +133,9 @@ import { esc, inline, prose } from './markdownLite.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
+import { REGISTRY } from './generated/registry.js';
+import { INSTRUMENTS } from './generated/instruments.js';
+import { DOCS_INDEX } from './generated/docsIndex.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL — the resolver
@@ -489,19 +493,28 @@ for (const b of CATALOGUE.biomes) {
 /* ── 3. THE REFUSALS ────────────────────────────────────────────────── */
 
 const findSec = section('findings',
-    'FINDINGS — where a hand-kept list and the code DISAGREE',
-    '⛔ The generator never edits the code it reads. Each row below is a disagreement it '
-    + 'MEASURED between a `*_REFUSALS` constant and a declared scan of the module that '
-    + 'constant describes.');
+    'FINDINGS — where a hand-kept list, a document and the code DISAGREE',
+    '⛔ The generator never edits the code or the prose it reads. Each row below is a '
+    + 'disagreement it MEASURED — between a `*_REFUSALS` constant and a scan of the module '
+    + 'it describes, between a registry ENTRY and the document that claims to describe every '
+    + 'field, or between a document\'s citation and what is on disk.');
 
-for (const f of REFUSALS.findings) {
+/** ⛓ ALL SIX TABLES' findings in one place, because a reader looking for
+ *  "what disagrees with what" should not have to know which table found it. */
+const ALL_FINDINGS = [
+    ...REFUSALS.findings.map((f) => ({ ...f, table: 'refusals' })),
+    ...REGISTRY.findings.map((f) => ({ ...f, source: 'registry', table: 'registry' })),
+    ...INSTRUMENTS.findings.map((f) => ({ ...f, source: 'instruments', table: 'instruments' })),
+];
+
+for (const f of ALL_FINDINGS) {
     row(findSec.box, {
         anchor: `finding-${slug(f.source)}-${slug(f.name)}`,
         title: esc(f.name),
         sub: `${esc(f.severity ?? '')} · ${esc(f.source)}`,
         kind: 'finding',
         body: prose(f.what),
-        hay: `${f.name} ${f.source} ${f.what}`,
+        hay: `${f.name} ${f.source} ${f.table} ${f.what}`,
     });
 }
 
@@ -575,6 +588,145 @@ for (const e of REFUSALS.enums) {
     });
 }
 
+/* ── 4. THE SUBSTRATE REGISTRY ──────────────────────────────────────── */
+
+const regSec = section('registry', 'The substrate registry — every entry, every field',
+    'One block per entry `substrateRegistry.getAll()` returns, in REGISTRATION order, with '
+    + 'every field it carries grouped by the `###` heading of `substrate-registry.md` that '
+    + 'documents it. ⛔ The rows are `Object.keys(entry)`, so a field a substrate grows '
+    + 'appears here without anybody editing a table — and a field NO document names is a '
+    + 'finding rather than a quiet omission.');
+
+/** ⛓ The full value, not the shortened cell the `.md` region carries — a page
+ *  can afford `supportedFeatures` in full and a markdown table cannot. */
+function registryValue(cell) {
+    if (!cell.present) return '<span class="note">—</span>';
+    if (cell.type === 'function') return '<code>function</code>';
+    /** ⛓ `null` is a VALUE — bounce's `gateableItems: null` means *the full
+     *  vocabulary*, and rendering it as an empty object crashed this page. */
+    if (cell.type === 'null') return '<code>null</code>';
+    if (cell.type === 'array') {
+        return cell.value.length
+            ? `<code>${esc(cell.value.join(', '))}</code>`
+            : '<span class="note">empty</span>';
+    }
+    if (cell.type === 'object') return `<code>{${esc(cell.value.join(', '))}}</code>`;
+    return `<code>${esc(JSON.stringify(cell.value))}</code>`;
+}
+
+regSec.blurb.insertAdjacentHTML('afterend',
+    `${label('defined in the glossary as')}${termsLine([...REGISTRY.terms])}`);
+
+for (const col of REGISTRY.columns) {
+    const parts = [];
+    parts.push(table(['', ''], [
+        ['label', esc(col.label ?? '—')],
+        ['fields carried', String(col.fields)],
+        ['registered by', col.registeredBy
+            ? `<a href="${esc(codeUrl(col.registeredBy))}"><code>${esc(col.registeredBy)}</code></a>`
+            : '<span class="note">—</span>'],
+    ]));
+    for (const g of REGISTRY.groups) {
+        const rows = g.rows
+            .map((name) => ({ name, r: REGISTRY.rows.find((x) => x.name === name) }))
+            .filter(({ r }) => r.cells.find((c) => c.id === col.id)?.present);
+        if (!rows.length) continue;
+        parts.push(label(g.title));
+        parts.push(table(['field', 'value'], rows.map(({ name, r }) => [
+            `<code>${esc(name)}</code>`,
+            registryValue(r.cells.find((c) => c.id === col.id)),
+        ])));
+    }
+    row(regSec.box, {
+        anchor: `registry-${slug(col.id)}`,
+        title: `<code>${esc(col.id)}</code>`,
+        sub: `${esc(col.label ?? '')} · ${col.fields} fields`,
+        body: parts.join(''),
+        hay: `${col.id} ${col.label ?? ''} ${col.registeredBy ?? ''}`,
+    });
+}
+
+/* ── 5. THE INSTRUMENTS ─────────────────────────────────────────────── */
+
+const instSec = section('instruments', 'The instruments — every script in scripts/procgen/',
+    'One row per `.mjs` on disk: the one-liner from its OWN docblock, the flags it reads out '
+    + 'of `argv`, whether it needs a browser, and which document cites it. ⛔ The DIRECTORY '
+    + 'LISTING is the source — a file that lands there is a row here the moment it exists.');
+
+instSec.blurb.insertAdjacentHTML('afterend',
+    `${label('defined in the glossary as')}${termsLine([...INSTRUMENTS.terms])}`);
+
+for (const r of INSTRUMENTS.rows) {
+    row(instSec.box, {
+        anchor: `script-${slug(r.file.replace(/\.mjs$/, ''))}`,
+        title: `<code>${esc(r.file)}</code>`,
+        sub: `${esc(r.category)}${r.browser ? ' · BROWSER' : ''}`
+            + `${r.flags.length ? ` · ${r.flags.length} flags` : ''}`,
+        kind: r.oneLiner ? '' : 'finding',
+        body: (r.oneLiner
+            ? `<p>${inline(r.oneLiner)}</p>`
+            : '<p class="dead">⛔ NO DOCBLOCK — this file opens with no comment at all, and '
+                + 'that is a finding rather than an empty cell.</p>')
+            + table(['', ''], [
+                ['path', `<a href="${esc(codeUrl(r.path))}"><code>${esc(r.path)}</code></a>`],
+                ['flags it reads', r.flags.length
+                    ? r.flags.map((f) => `<code>--${esc(f.name)}</code>`).join(' ')
+                    : '<span class="note">none</span>'],
+                ['its own <code>Run:</code> block shows', r.documentedFlags.length
+                    ? r.documentedFlags.map((f) => `<code>--${esc(f)}</code>`).join(' ')
+                    : '<span class="note">none</span>'],
+                ['needs a browser', r.browser ? 'yes — it imports playwright' : 'no'],
+                ['cited by', r.citedBy.length
+                    ? r.citedBy.map((d) => `<code>${esc(d)}</code>`).join('<br>')
+                    : '<span class="note">no procgen document names it</span>'],
+            ]),
+        hay: `${r.file} ${r.category} ${r.oneLiner ?? ''} ${r.flags.map((f) => f.name).join(' ')}`,
+    });
+}
+
+/* ── 6. THE DOCUMENTS ───────────────────────────────────────────────── */
+
+const docSec = section('docs', 'The procgen documents — the index, generated',
+    'One row per `.md` in `docs/json/developer/procgen/` in README\'s declared reading order, '
+    + 'then the three PAGES, which are not `.md` files at all. ⛔ Each description is the '
+    + 'document\'s OWN first paragraph — if one reads thin, the fix is a better opening '
+    + 'paragraph in that document.');
+
+docSec.blurb.insertAdjacentHTML('afterend',
+    `${label('defined in the glossary as')}${termsLine([...DOCS_INDEX.terms])}`);
+
+for (const d of DOCS_INDEX.docs) {
+    row(docSec.box, {
+        anchor: `doc-${slug(d.file.replace(/\.md$/, ''))}`,
+        title: `<code>${esc(d.file)}</code>`,
+        sub: `${esc(d.h1 ?? '')} · ${d.words} words`,
+        body: `<p>${inline(d.description)}</p>`
+            + table(['', ''], [
+                ['path', `<a href="${esc(codeUrl(d.path))}"><code>${esc(d.path)}</code></a>`],
+                ['length', `${d.words} words, ${d.lines} lines`],
+                ['links to', d.links.length
+                    ? d.links.map((f) => `<code>${esc(f)}</code>`).join(' ')
+                    : '<span class="note">no other procgen document</span>'],
+            ]),
+        hay: `${d.file} ${d.h1 ?? ''} ${d.description}`,
+    });
+}
+
+for (const p of DOCS_INDEX.pages) {
+    row(docSec.box, {
+        anchor: `docpage-${slug(p.file.replace(/\.html$/, ''))}`,
+        title: `<code>${esc(p.file)}</code>`,
+        sub: `a PAGE · ${esc(p.title ?? '')}`,
+        body: `<p>${inline(p.description)}</p>`
+            + table(['', ''], [
+                ['path', `<a href="${esc(codeUrl(p.path))}"><code>${esc(p.path)}</code></a>`],
+                ['on Pages', `<a href="${esc(p.url)}">${esc(p.url)}</a>`],
+                ['here', `<a href="${esc(p.file)}">${esc(p.file)}</a>`],
+            ]),
+        hay: `${p.file} ${p.title ?? ''} ${p.description}`,
+    });
+}
+
 /* ══════════ THE INDEX, THE FILTER AND THE HEADER ════════════════════ */
 
 const rowsOf = (s) => [...s.box.querySelectorAll('details.row')];
@@ -623,18 +775,24 @@ const COUNTS = {
     elements: CATALOGUE.elements.length,
     kinds: CATALOGUE.biomes.filter((b) => b.id !== 'post-sword')
         .reduce((a, b) => a + b.skeletonKinds.length, 0),
-    findings: REFUSALS.findings.length,
+    findings: ALL_FINDINGS.length,
     refusalSources: REFUSALS.sources.length,
     refusals: REFUSALS.rows.length,
     enums: REFUSALS.enums.length,
+    entries: REGISTRY.columns.length,
+    entryFields: REGISTRY.rows.length,
+    instruments: INSTRUMENTS.rows.length,
+    documents: DOCS_INDEX.docs.length + DOCS_INDEX.pages.length,
 };
 
 document.getElementById('count').textContent =
-    `${COUNTS.urlParams} URL parameters over ${COUNTS.pages} pages (${COUNTS.retired} retired, `
-    + `${COUNTS.codecs} codecs) · ${COUNTS.biomes} biomes, ${COUNTS.templates} templates, `
-    + `${COUNTS.excluded} excluded, ${COUNTS.elements} element heads, ${COUNTS.kinds} skeleton `
-    + `kinds · ${COUNTS.refusals} refusal names over ${COUNTS.refusalSources} sources, `
-    + `${COUNTS.enums} enums, ${COUNTS.findings} findings.`;
+    `SIX generated tables. ${COUNTS.urlParams} URL parameters over ${COUNTS.pages} pages (`
+    + `${COUNTS.retired} retired, ${COUNTS.codecs} codecs) · ${COUNTS.biomes} biomes, `
+    + `${COUNTS.templates} templates, ${COUNTS.excluded} excluded, ${COUNTS.elements} element `
+    + `heads, ${COUNTS.kinds} skeleton kinds · ${COUNTS.refusals} refusal names over `
+    + `${COUNTS.refusalSources} sources, ${COUNTS.enums} enums · ${COUNTS.entries} registry `
+    + `entries over ${COUNTS.entryFields} fields · ${COUNTS.instruments} instruments · `
+    + `${COUNTS.documents} documents and pages · ${COUNTS.findings} findings.`;
 document.getElementById('where').innerHTML =
     `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
     + ' · ⛔ the data is GENERATED — '

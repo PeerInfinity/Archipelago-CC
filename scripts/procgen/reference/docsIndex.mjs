@@ -34,6 +34,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { REPO, firstSentence, src } from './lib.mjs';
+import { M } from './sources.mjs';
 
 export const DOC_DIR = 'docs/json/developer/procgen';
 export const PAGE_DIR = 'frontend/modules/procgenDocs';
@@ -104,11 +105,19 @@ function pageRow(file) {
         h1: h1 ? h1.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : null,
         description: firstSentence(comment.split('\n')
             .map((l) => l.replace(/^\s{0,2}/, '')).join('\n').trim()),
-        lines: text.split('\n').length,
     };
 }
 
+/** ⛓ The glossary terms this table is about — declared, and CHECKED. */
+export const DOCS_TERMS = Object.freeze(['lab-page', 'demo-catalogue']);
+
 export function buildDocsIndex() {
+    for (const t of DOCS_TERMS) {
+        if (!M.glossary.termById(t)) {
+            throw new Error(`generate-procgen-reference: DOCS_TERMS names ${JSON.stringify(t)}`
+                + ', which the GLOSSARY does not define');
+        }
+    }
     const onDisk = readdirSync(join(REPO, DOC_DIR))
         .filter((f) => f.endsWith('.md') && f !== 'README.md').sort();
 
@@ -128,7 +137,16 @@ export function buildDocsIndex() {
     }
 
     const docs = README_ORDER.map((file) => {
-        const text = src(`${DOC_DIR}/${file}`);
+        /**
+         * ⛓⛓ THE DOCUMENT AS ITS AUTHORS WROTE IT — every GENERATED REGION is
+         * cut out first. ⛔ Two of these documents CARRY a generated region, so
+         * counting their words with it included would make this table depend
+         * on a table written later in the same run: `--check` would red once
+         * after every regeneration and go green on the second. A word count
+         * that moves because a generator ran is not a fact about the document.
+         */
+        const text = src(`${DOC_DIR}/${file}`)
+            .replace(/<!-- GENERATED:[\s\S]*?END -->/g, '');
         const h1 = (/^#\s+(.+)$/m.exec(text) ?? [])[1] ?? null;
         return {
             file,
@@ -148,6 +166,7 @@ export function buildDocsIndex() {
         .map(pageRow);
 
     return {
+        terms: [...DOCS_TERMS].sort(),
         dir: DOC_DIR,
         pageDir: PAGE_DIR,
         indexIn: INDEX_DOC,

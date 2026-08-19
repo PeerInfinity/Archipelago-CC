@@ -1477,8 +1477,8 @@ export const REGISTRY = frz({
                 {
                     "id": "bounce",
                     "present": true,
-                    "short": "null",
-                    "type": "object",
+                    "short": "`null`",
+                    "type": "null",
                     "value": null
                 },
                 {
@@ -4639,7 +4639,15 @@ export const REGISTRY = frz({
             "name": "zoneCount"
         }
     ],
-    "shortValueRule": "a cell in the markdown region is SHORT: a function is `fn`, a boolean is yes/no, an array of at most 3 short values is the list and any longer one is its count, an object is its key set or its key count. The reference page prints the full value."
+    "shortValueRule": "a cell in the markdown region is SHORT: a function is `fn`, a boolean is yes/no, an array of at most 3 short values is the list and any longer one is its count, an object is its key set or its key count. The reference page prints the full value.",
+    "terms": [
+        "content-source",
+        "loop-mode",
+        "playback-controller",
+        "substrate",
+        "substrate-registry",
+        "zone"
+    ]
 });
 
 export default REGISTRY;
