@@ -10201,6 +10201,31 @@ CATALOGUE, and the four intermediate results*; what a reader of **this** § need
   so a census keyed on that constant cannot count it. The row is
   `scripts/procgen/check-procgen-reference.mjs` — **19 claims / 0 fail** — and
   the lab pages gained a third header link and **nothing else**.
+- **THREE MORE GENERATED TABLES** — ⛓ 2026-08-18 (PROCGEN DOCS **P3b**), and
+  the new thing is *where they live*: two of them belong in files people read
+  ON GITHUB, so a `.md` can now carry a **GENERATED REGION** between two
+  markers — its prose is untouched, only the region is written, and `--check`
+  gates the region exactly as it gates a module. The three are the
+  **substrate-registry capability matrix** (8 entries × 60 fields, grouped by
+  `substrate-registry.md`'s own `###` headings — the rows are
+  `Object.keys(entry)`, so a field a substrate grows appears without an edit;
+  the hand-written annotations the code does NOT carry stay in a labelled
+  table outside the region), the **instruments index** (one row per
+  `scripts/procgen/*.mjs` — **221** of them, with the one-liner from each
+  file's own docblock, the flags it reads out of `argv`, whether it drives a
+  browser, and which document cites it) and the **documentation index**
+  (README's whole table: 17 documents in a declared reading order + the 3
+  pages, each described by its OWN first paragraph). ⛔ Six generated tables,
+  three markdown regions, **470 rows on the page**, row **20 / 0** local and
+  **18 / 0** on Pages. ⛓ 13 findings joined the page: 8 registry fields the
+  reference documents nowhere, a script with no docblock, four citations that
+  point at no file in `scripts/procgen/` — and the matrix contradicted the
+  prose above it, which said the driver-facing adapter hooks were bounce's
+  alone when runner carries **15 of the 18**. ⛓ Comparing README's hand
+  descriptions against each document's own opening also gave four documents a
+  better first paragraph (`architecture.md`, `substrate-registry.md` — which
+  still said SEVEN registered entries — `jta.md`, and this file, whose H1 was
+  eight rungs stale).
 
 #### The ledger's phases and paintables, as of the arc's close
 
