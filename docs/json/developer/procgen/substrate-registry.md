@@ -97,6 +97,9 @@ Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`
 |-------|---------|
 | `zoneCount` | **Pool size** — how many discrete entries exist. Layout drivers (currently `arrangeShuffledSpiral`) refuse to allocate more regions than this to the source, and the quota-vs-pool check keys on it. |
 | `extractZoneRules(zoneIdx, ctx)` | **Instantiate** — the single per-ordinal content channel: produces the entry's locations, per-side exit rules/paths, obstacle defs, and `playable_payload` fragment in one call. jta folds its `{ jtaZone: zoneIdx }` sidecar ordinal into this channel's payload (region-library C1 absorbed the former standalone `synthesizeZonePayload` hook — `jtaZone` stays the first payload key); bounce/runner emit their winnable geometry's locations and rules. |
+| `getSpiralContent()` | **The installed content document**, for the stepped pipeline's ② content step to materialise onto the envelope as the editable artifact. Returns `null` when no document is active — a content source that declares `emitsSpiralContent` unconditionally (jta does) is still a *no-content* world until one is installed. Declared by jta. |
+| `applyPipelineConfig(cfg)` | **Install this source's pipeline config** — the ① arrange step calls it through `applySubstrateConfig` so the quota-vs-`zoneCount` check sees a configured dataset's real zone count. Every field defers to its setter's own default, so `applyPipelineConfig({})` resets the vanilla path exactly. Declared by jta and omsi. ⛓ Documented in full one door down, at its consumer: [The Stepped Pipeline § *Spiral mode — four steps*](./stepped-pipeline.md#spiral-mode--four-steps). |
+| `onContentEdit(doc)` | **Restamp a hand-edited content document** — recompute its content hash, rewrite its id suffix and validate; idempotent, so an unchanged document restamps to the same id. The spiral descriptor calls it on every envelope deserialize, and a CHANGED id is what clears the downstream `regions`/`compile`. Declared by jta. ⛓ Documented in full one door down, at its consumer: [The Stepped Pipeline § *Spiral mode — four steps*](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `victoryItem` | Name of the item the source's entry table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
 
 **Content-source residency in the stepped pipeline.** A content source that also feeds a *document* into the pipeline (jta's synthetic dataset; a loaded region library) declares `emitsSpiralContent: true` and names the config field its document rides under with `spiralContentConfigKey` (default `datasetDoc`). The stepped spiral's ② content step materialises that document onto the envelope, restamps it on hand-edit, and clears downstream on a real id change — see [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). A content source with no such document (a vanilla-table jta world) leaves ② a byte-identical no-op.
@@ -104,6 +107,20 @@ Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`
 **The "zone" reframing (region-library audit, 2026-07-13).** "Zone" historically conflated two orthogonal things: an *interface* ("no tile-procedural hooks → give this region fictional `exit_<side>` geometry"; `assembleZoneRegion`) and a *content model* (a finite ordered pool, Nth region = zone N, each used once). Only jta is genuinely pre-built-by-reference (indices into one stateful game build — excluded from the region library by nature); bounce/runner *generate* their "zones" (`extractZoneRules` / `generateZoneForSpecs`), payload-by-value and self-contained. The interface half (synthetic exits, location replacement, exit reconnection via `stitchGrid` + `wallOffUnusedExits`) is already substrate-agnostic and is **not** what distinguishes a content source; the two irreducible differences a reuse design must handle are **access-rule realisation** (a procedural substrate makes geometry match a rule via `placeFromRules`; fixed content must annotate/negotiate) and **exit-geometry decoupling** (a synthetic or `sidePortals`-relabelled exit moves freely; a maze exit is a real hole in a real wall). The region library (`docs/json/developer/procgen/…`, plan `CC/docs/plans/region-library-plan.md`) is the first content source that is *data, not code*.
 
 **Out of scope (the eventual direction, not built).** Unifying the ordinal-driven `extractZoneRules` (substrate decides) with the spec-driven `generateZoneForSpecs` (engine decides) into one spec-driven content contract, and running jta on the sphere-growth driver, are the natural next steps once a second data-backed content source exists. They are deliberately deferred.
+
+### Build-time — region library entries (capture / instantiate / validate)
+
+A **region library** stores a generated region as a reusable *entry* and re-instantiates it into a later world's slot. The three substrates that can be captured — maze, bounce and runner — expose the same four-hook contract, plus one more for the region atlas. (These six field rows were added on 2026-08-19: the generated matrix showed the entries carrying them while no procgen document named them at all.)
+
+| Field | Meaning |
+|-------|---------|
+| `captureLibraryEntry(region, meta)` | **Capture** — turn a generated region into a library entry. What an entry stores is the substrate's own choice and it is the one real split: maze stores the serialized world geometry alone (`carried_rules: null`) because instantiation can re-derive the rules from it; bounce and runner carry their emitted rules **verbatim**, because their geometry is not re-derivable. |
+| `instantiateLibraryEntry(entry, ctx)` | **Instantiate, plain** — rebuild a playable region from an entry for a slot. ⛔ It draws **no rng**: maze reuses the captured slot *positions* rather than re-running `placeFromRules`, and bounce/runner re-assemble their synthetic-exit region through `assembleZoneRegion` for the slot's sides. That is what keeps a library-backed walk byte-identical. |
+| `instantiateLibraryEntryForSpecs(entry, ctx)` | **Instantiate, requirement-aware** (region-library F6a/F6c) — the sphere-placement variant: it relabels the captured openings/portals onto the slot's child sides and reassigns the node's items, and the engine overlays each child gate as an `access_rule`. |
+| `validateLibraryEntry(entry)` | **Validate** — refuse an entry this substrate cannot instantiate (for the tile substrates, by deserializing it) before a world is built on it. |
+| `instantiateAtlasEntryForSpecs(entry, ctx)` | **Instantiate an ATLAS entry** (region-atlas Phase 6) — the third capture contract, and maze's alone. An atlas entry is a piece of a real game map, so its payload is re-derivable geometry but its rules are **authored** and ride in with the entry; surplus exits are pruned (a real region has more ways out than a sphere cell has sides) and locations keep their game names. |
+
+The implementations live in each substrate's `*LibraryEntry.js` (`mazeLibraryEntry.js`, `bounceLibraryEntry.js`, `runnerLibraryEntry.js`), over the shared tile-grid helpers; the atlas pool is `procgenPipeline/regionAtlasPool.js`.
 
 ### Build-time — driver-facing adapter hooks (bounce and runner)
 
@@ -127,7 +144,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 60 fields · 9 groups · 8 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 60 fields · 9 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -198,11 +215,24 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
+| `applyPipelineConfig` | — | — | — | — | — | — | fn | fn |
 | `emitsSpiralContent` | — | — | — | — | — | — | yes | — |
 | `extractZoneRules` | — | — | fn | fn | — | — | fn | fn |
+| `getSpiralContent` | — | — | — | — | — | — | fn | — |
+| `onContentEdit` | — | — | — | — | — | — | fn | — |
 | `spiralContentConfigKey` | — | — | — | — | — | — | datasetDoc | — |
 | `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
 | `zoneCount` | — | — | 5 | 6 | — | — | 30 | 1 |
+
+**Build-time — region library entries (capture / instantiate / validate)**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `captureLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+| `instantiateAtlasEntryForSpecs` | fn | — | — | — | — | — | — | — |
+| `instantiateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+| `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — |
+| `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
 
 **Build-time — driver-facing adapter hooks (bounce and runner)**
 
@@ -227,19 +257,6 @@ Groups are this document's own § headings, matched to a field by the section th
 | `prepareSphereGrowth` | — | — | fn | — | — | — | — | — |
 | `renderProcgenParams` | — | — | fn | fn | — | — | — | — |
 
-**Not documented in the registry reference**
-
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `applyPipelineConfig` | — | — | — | — | — | — | fn | fn |
-| `captureLibraryEntry` | fn | — | fn | fn | — | — | — | — |
-| `getSpiralContent` | — | — | — | — | — | — | fn | — |
-| `instantiateAtlasEntryForSpecs` | fn | — | — | — | — | — | — | — |
-| `instantiateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
-| `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — |
-| `onContentEdit` | — | — | — | — | — | — | fn | — |
-| `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
-
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
 
 | Library | Registers | Loads headless |
@@ -252,19 +269,6 @@ Groups are this document's own § headings, matched to a field by the section th
 | `frontend/modules/flashPanel/flashSeedlingLibrary.js` | `flash_seedling` | yes |
 | `frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js` | `jta` | yes |
 | `frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js` | `omsi` | yes |
-
-**8 findings — where an ENTRY and this document disagree.** ⛔ Printed, never fixed: the generator does not edit the code or the prose it reads.
-
-| Field | What |
-|---|---|
-| `applyPipelineConfig` | `applyPipelineConfig` is carried by [jta, omsi] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `captureLibraryEntry` | `captureLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `getSpiralContent` | `getSpiralContent` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `instantiateAtlasEntryForSpecs` | `instantiateAtlasEntryForSpecs` is carried by [maze] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `instantiateLibraryEntry` | `instantiateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `instantiateLibraryEntryForSpecs` | `instantiateLibraryEntryForSpecs` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `onContentEdit` | `onContentEdit` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
-| `validateLibraryEntry` | `validateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
 
 <!-- GENERATED:substrate-capability-matrix END -->
 

@@ -1,3 +1,39 @@
+/**
+ * verify-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS,
+ * RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL
+ * FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in
+ * it.
+ *
+ * ⛓ WRITTEN AS A DOCBLOCK BY PROCGEN DOCS P5. The sentences below were already
+ * in this file, as `//` lines AFTER the imports, which is why the instruments
+ * index reported this as the one script of 221 with no docblock: the scan's
+ * header stops at the first executable line, and a multi-line `import {`'s
+ * continuation line is not one the scan could read as header. The prose moved
+ * up; nothing it says changed.
+ *
+ * The three things it proves, in order:
+ *
+ *   1. `?game=runner_worldgen&seed=1` boots, procgenPlayer builds the
+ *      warehouse from `preset_sidecars`, publishes `runner:loadRegion`, the
+ *      iframe bridge handshakes (`appReady`) and `configure()` lands — all
+ *      proven by the game page's status line naming the start region.
+ *   2. The region actually renders (canvas non-blank screenshot).
+ *   3. A SOLVER WITNESS is replayed as the input tape: the `canRun` edge
+ *      witnesses for the start region's level are position-triggered jump
+ *      policies (`jump@X+HOLD`), fed to the live game as keyboard presses when
+ *      the player crosses each trigger x. The start level's only route runs
+ *      seg0→seg1→seg2→tip0 (no direct seg2→seg3 edge — the branch tip hosts
+ *      the mandatory landing), so one clean life collects `loc_0` on seg2 (a
+ *      real `user:locationCheck`) and then touches the tip's branch portal
+ *      `exit_br0` (a real `user:regionMove`, side S → `region_1_1`).
+ *
+ * Run:
+ *
+ *     node scripts/procgen/verify-runner-smoke.mjs
+ *
+ * ⚠ Requires the dev server on :8000.
+ */
+
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 import {
@@ -5,25 +41,6 @@ import {
     policiesFor,
 } from '../../frontend/modules/runnerDemo/canRun.js';
 import { createGameSession } from '../../frontend/modules/runnerDemo/gameCore.js';
-
-// Runner phase-7 gate (plan §5 row 7) — the shuffled-spiral runner world
-// in the REAL frontend, no manual play:
-//   1. ?game=runner_worldgen&seed=1 boots, procgenPlayer builds the
-//      warehouse from preset_sidecars, publishes runner:loadRegion, the
-//      iframe bridge handshakes (appReady) and configure() lands — all
-//      proven by the game page's status line naming the start region.
-//   2. The region actually renders (canvas non-blank screenshot).
-//   3. A SOLVER WITNESS is replayed as the input tape: the canRun edge
-//      witnesses for the start region's level are position-triggered
-//      jump policies (`jump@X+HOLD`), fed to the live game as keyboard
-//      presses when the player crosses each trigger x. The start
-//      level's only route runs seg0→seg1→seg2→tip0 (no direct
-//      seg2→seg3 edge — the branch tip hosts the mandatory landing),
-//      so one clean life collects loc_0 on seg2 (a real
-//      user:locationCheck) and then touches the tip's branch portal
-//      exit_br0 (a real user:regionMove, side S → region_1_1).
-//
-// Requires the dev server on :8000.
 
 const PRESET = 'frontend/presets/runner_worldgen/AP_14089154938208861744/'
     + 'AP_14089154938208861744_rules.json';

@@ -220,6 +220,27 @@ const categoryOf = (file) => (/^([a-z]+)-/.exec(file) ?? [])[1] ?? NO_PREFIX;
  */
 const CITE_RE = /(?<![\w/*.-])(?:scripts\/procgen\/)?([a-z][a-zA-Z0-9-]*\.mjs)\b/g;
 
+/**
+ * ⛓⛓ A CITATION A DOCUMENT MARKS AS **NEVER WRITTEN** IS NOT A CITATION OF A
+ * FILE — it is a citation of a PLAN, and the two are different facts about a
+ * document (PROCGEN DOCS · P5).
+ *
+ * ⛔ The marker exists because the alternative was worse. `seedling-bot.md`'s
+ * R7-close table names `plan-seedling-segment.mjs --from <AP-path-step>` as a
+ * horizon that was superseded before anybody wrote it, and this scan called it
+ * a DEAD citation. The smaller edit by line count was to delete the `.mjs` from
+ * the row — which would have deleted the exact command a reader would type if
+ * M2 ever ships, to satisfy a tool. So the ROW keeps its spelling and says
+ * `(never written)`, and the scan reads that: a marked citation is dropped
+ * before either direction of the table sees it, and the count of them is
+ * published so a marker cannot quietly hide a real dead citation.
+ *
+ * ⚠ WITHIN 120 CHARACTERS AND ON THE SAME LINE. A marker further away than
+ * that would be a sentence about something else.
+ */
+const NEVER_WRITTEN_RE = /\(never written\)/;
+const NEVER_WRITTEN_WINDOW = 120;
+
 /** ⛓ Every path in the repo with this basename — `node_modules`, `.git` and
  *  the build output are not part of the tree a doc could mean. */
 function findEverywhere(root, basename, rel = '', out = []) {
@@ -265,8 +286,22 @@ export function buildInstruments() {
 
     /* ⛓ WHICH DOC CITES WHICH SCRIPT — built once, both directions at once. */
     const citedBy = new Map();
+    const markedNeverWritten = new Map();
     for (const d of docs) {
-        for (const name of new Set(allOf(d.text, CITE_RE))) {
+        const cited = new Set();
+        for (const m of allOf2(d.text, CITE_RE)) {
+            const after = d.text.slice(m.index + m[0].length,
+                m.index + m[0].length + NEVER_WRITTEN_WINDOW).split('\n')[0];
+            if (NEVER_WRITTEN_RE.test(after)) {
+                if (!markedNeverWritten.has(m[1])) markedNeverWritten.set(m[1], []);
+                if (!markedNeverWritten.get(m[1]).includes(d.file)) {
+                    markedNeverWritten.get(m[1]).push(d.file);
+                }
+                continue;
+            }
+            cited.add(m[1]);
+        }
+        for (const name of cited) {
             if (!citedBy.has(name)) citedBy.set(name, []);
             citedBy.get(name).push(d.file);
         }
@@ -367,6 +402,10 @@ export function buildInstruments() {
         rows,
         categories,
         findings,
+        /** ⛓ Every citation a document MARKED `(never written)` — published so
+         *  the marker cannot quietly retire a real dead citation. */
+        neverWritten: [...markedNeverWritten].sort()
+            .map(([name, where]) => ({ name, citedBy: where.sort() })),
         counts: {
             files: rows.length,
             withDocblock: rows.filter((r) => r.oneLiner).length,
@@ -383,6 +422,9 @@ export function buildInstruments() {
                 + '`--${…}` template',
             documented: String(DOCUMENTED_FLAG_RE),
             cite: String(CITE_RE),
+            neverWritten: `${String(NEVER_WRITTEN_RE)} within ${NEVER_WRITTEN_WINDOW} `
+                + 'characters after a citation, on the same line — the citation is then of a '
+                + 'PLAN and is dropped from both directions of the table',
         },
         docblockRule: 'the file\'s HEADER is everything before its first executable line '
             + '(blank lines, `#!`, comments and `import`/`export` lines are header), and the '

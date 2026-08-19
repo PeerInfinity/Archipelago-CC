@@ -72,48 +72,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
         }
     ],
-    "findings": [
-        {
-            "name": "applyPipelineConfig",
-            "severity": "documented in another doc, not in the registry reference",
-            "what": "`applyPipelineConfig` is carried by [jta, omsi] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "captureLibraryEntry",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`captureLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "getSpiralContent",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`getSpiralContent` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "instantiateAtlasEntryForSpecs",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`instantiateAtlasEntryForSpecs` is carried by [maze] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "instantiateLibraryEntry",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`instantiateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "instantiateLibraryEntryForSpecs",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`instantiateLibraryEntryForSpecs` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "onContentEdit",
-            "severity": "documented in another doc, not in the registry reference",
-            "what": "`onContentEdit` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        },
-        {
-            "name": "validateLibraryEntry",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`validateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        }
-    ],
+    "findings": [],
     "groups": [
         {
             "rows": [
@@ -176,13 +135,26 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "applyPipelineConfig",
                 "emitsSpiralContent",
                 "extractZoneRules",
+                "getSpiralContent",
+                "onContentEdit",
                 "spiralContentConfigKey",
                 "victoryItem",
                 "zoneCount"
             ],
             "title": "Build-time — content sources (zone-based substrates)"
+        },
+        {
+            "rows": [
+                "captureLibraryEntry",
+                "instantiateAtlasEntryForSpecs",
+                "instantiateLibraryEntry",
+                "instantiateLibraryEntryForSpecs",
+                "validateLibraryEntry"
+            ],
+            "title": "Build-time — region library entries (capture / instantiate / validate)"
         },
         {
             "rows": [
@@ -206,19 +178,6 @@ export const REGISTRY = frz({
                 "renderProcgenParams"
             ],
             "title": "Build-time — driver-facing adapter hooks (bounce and runner)"
-        },
-        {
-            "rows": [
-                "applyPipelineConfig",
-                "captureLibraryEntry",
-                "getSpiralContent",
-                "instantiateAtlasEntryForSpecs",
-                "instantiateLibraryEntry",
-                "instantiateLibraryEntryForSpecs",
-                "onContentEdit",
-                "validateLibraryEntry"
-            ],
-            "title": "Not documented in the registry reference"
         }
     ],
     "libraries": [
@@ -416,8 +375,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
             "name": "applyPipelineConfig"
         },
         {
@@ -885,8 +844,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "captureLibraryEntry"
         },
         {
@@ -1863,8 +1822,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
             "name": "getSpiralContent"
         },
         {
@@ -2139,8 +2098,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "instantiateAtlasEntryForSpecs"
         },
         {
@@ -2207,8 +2166,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "instantiateLibraryEntry"
         },
         {
@@ -2275,8 +2234,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "instantiateLibraryEntryForSpecs"
         },
         {
@@ -3490,8 +3449,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
             "name": "onContentEdit"
         },
         {
@@ -4496,8 +4455,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "validateLibraryEntry"
         },
         {

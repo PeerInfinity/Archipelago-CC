@@ -2261,7 +2261,7 @@ the byte ceiling and 63% of the span one. §11.4 priced the rung at ~95 KB
 against 90 before the route existed; what closed the gap is the route being
 SHORTER than the one that was priced (no L71 cluster, no Dungeon 7 tail), not
 the plan being denser. No span diet, no chunk-parse AS3 batch, no
-claim-shape change. `regenerate-r4-tapes.mjs` prints the measurement for
+claim-shape change. `frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs` prints the measurement for
 every tape whether or not it is over, because *how much headroom is left* is
 the fact the next rung needs and a silent pass does not carry it.
 
@@ -6009,7 +6009,7 @@ roster stands at **133 tapes** (123 gate, 10 legacy) against R6's 118.
 | **`noDamage` roster-wide retirement** | retires BY CONSTRUCTION on the chain (segments declare nothing); the flag disappears as superseded tapes retire | **R8+**, no separate campaign |
 | the **noclip legacy walks** | evaluated at close, **NO DEMOTION** — the R4 ENDS-MEET set has a hole the chain does not fill, and two mechanism witnesses stay unconditionally | **R8** re-evaluates when the campaign covers the rest |
 | **M3** (the live reactive bot) | named horizon, untouched — ⚖ and **PROMOTED to R8** by the ruling below; `normalizeLive`'s remaining consumers are its first stone | **R8** |
-| **M2** (`plan-seedling-segment.mjs --from <AP-path-step>`) | named horizon, untouched; `buildTape`'s v5 cap is its first obstacle | ⚠ superseded by the M3 promotion — a live bot needs no tape generator |
+| **M2** (`plan-seedling-segment.mjs --from <AP-path-step>` — a PLANNED driver, **(never written)**) | named horizon, untouched; `buildTape`'s v5 cap is its first obstacle | ⚠ superseded by the M3 promotion — a live bot needs no tape generator |
 | **LightBoss / TentacleBeast / LavaBoss** | measured OUT — the exclusion costs nothing, in the strict arm as well as the loose one, against a positive control that does register a loss. L57/L69 have NO EXIT until the boss dies ⇒ never-enter | deferred, now with evidence |
 | **L93's bridge, live** | still unit-witnessed on L63 only; it rides the spear or the ghostsword | R8+ |
 | **the BobBoss encounter script** | `KILL_ARM_POLICY.BobBoss` still `refused` | R8+ |

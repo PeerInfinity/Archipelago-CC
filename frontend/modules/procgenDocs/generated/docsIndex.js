@@ -23,9 +23,9 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "lines": 12994,
+        "lines": 13015,
         "pages": 3,
-        "words": 154898
+        "words": 155527
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -48,7 +48,7 @@ export const DOCS_INDEX = frz({
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
-            "lines": 164,
+            "lines": 181,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -57,7 +57,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 3623
+            "words": 4171
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -179,7 +179,7 @@ export const DOCS_INDEX = frz({
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules.",
             "file": "paths-and-obstacles.md",
             "h1": "Paths and Obstacles",
-            "lines": 61,
+            "lines": 63,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -187,20 +187,20 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/paths-and-obstacles.md",
-            "words": 882
+            "words": 914
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps.",
             "file": "stepped-pipeline.md",
             "h1": "The Stepped Pipeline",
-            "lines": 59,
+            "lines": 61,
             "links": [
                 "architecture.md",
                 "bounce.md",
                 "sphere-growth.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 1480
+            "words": 1523
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood it is a *tile-grid world wearing a text skin* — its build-time hooks reuse the shared tile-grid adapter primitives verbatim, so its sidecar shape is identical to the maze's; only the panel differs.",
@@ -228,7 +228,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 101411
+            "words": 101417
         },
         {
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",

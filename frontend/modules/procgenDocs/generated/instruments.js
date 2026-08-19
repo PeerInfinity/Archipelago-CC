@@ -164,49 +164,26 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 201,
+        "blockStyle": 202,
         "browser": 69,
         "cited": 56,
         "files": 221,
         "lineStyle": 19,
-        "withDocblock": 220,
+        "withDocblock": 221,
         "withFlags": 130
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [
+    "findings": [],
+    "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
+    "neverWritten": [
         {
-            "name": "verify-runner-smoke.mjs",
-            "severity": "no docblock",
-            "what": "`scripts/procgen/verify-runner-smoke.mjs` opens with no comment at all — neither a `/** */` block nor a run of `//` lines before its first executable line. Every other instrument in this directory says what it is in its first sentence; this row has nothing to say and the table prints that rather than an empty cell."
-        },
-        {
-            "name": "driver.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`driver.mjs` is named in [docs/json/developer/procgen/jta.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [CC/scripts/jta-stats/driver.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        },
-        {
-            "name": "export-vanilla-dataset.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`export-vanilla-dataset.mjs` is named in [docs/json/developer/procgen/jta.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [frontend/modules/jtaSubstrateWrapper/export-vanilla-dataset.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        },
-        {
-            "name": "make-ap-config.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`make-ap-config.mjs` is named in [docs/json/developer/procgen/jta.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [CC/scripts/jta-stats/make-ap-config.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        },
-        {
-            "name": "plan-seedling-segment.mjs",
-            "severity": "cited by a doc, NOWHERE in the tree",
-            "what": "`plan-seedling-segment.mjs` is named in [docs/json/developer/procgen/seedling-bot.md] and there is no such file in `scripts/procgen/`. It is nowhere in this repository: the citation is DEAD — renamed, removed, or never written. ⛔ Reported, not fixed."
-        },
-        {
-            "name": "regenerate-r4-tapes.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`regenerate-r4-tapes.mjs` is named in [docs/json/developer/procgen/seedling-bot.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "name": "plan-seedling-segment.mjs"
         }
     ],
-    "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
         "documented": "/--([a-zA-Z][a-zA-Z0-9-]*)[=\\s]/g",
@@ -214,7 +191,8 @@ export const INSTRUMENTS = frz({
             "includes: /\\bincludes\\(\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g",
             "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g"
         ],
-        "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template"
+        "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template",
+        "neverWritten": "/\\(never written\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN and is dropped from both directions of the table"
     },
     "rows": [
         {
@@ -5556,11 +5534,11 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/runner.md"
             ],
-            "docblockStyle": null,
+            "docblockStyle": "block",
             "documentedFlags": [],
             "file": "verify-runner-smoke.mjs",
             "flags": [],
-            "oneLiner": null,
+            "oneLiner": "verify-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
             "path": "scripts/procgen/verify-runner-smoke.mjs"
         },
         {

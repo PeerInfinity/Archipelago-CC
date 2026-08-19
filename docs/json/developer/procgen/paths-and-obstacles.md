@@ -2,6 +2,8 @@
 
 Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — "to reach this goal you cross these obstacles" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the actual geometry, and *compiled* to Rule Builder JSON only at the end.
 
+⛓ **Every word this document uses as vocabulary — *obstacle*, *clearer*, *goal*, *requirement*, *region*, *`rules.json`* — is defined in [the procgen glossary](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html)**, one plain-language sentence before the rule; the data is [`frontend/modules/procgenDocs/glossary.js`](../../../../frontend/modules/procgenDocs/glossary.js).
+
 The shape:
 
 - A goal's access is an **OR over paths** (alternative routes).

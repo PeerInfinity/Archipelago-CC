@@ -506,20 +506,37 @@ describe('the registry matrix is one column per ENTRY and one row per FIELD', ()
      * and say so, and a NEW disagreement reds instead of joining a list nobody
      * reads.
      */
-    it('⛓⛓ the P3b registry findings, pinned', () => {
-        expect(REGISTRY.findings.map((f) => f.name).sort()).toEqual([
-            'applyPipelineConfig',
-            'captureLibraryEntry',
-            'getSpiralContent',
-            'instantiateAtlasEntryForSpecs',
-            'instantiateLibraryEntry',
-            'instantiateLibraryEntryForSpecs',
-            'onContentEdit',
-            'validateLibraryEntry',
-        ]);
-        /* ⛓ the two that ARE documented — one door down, in another doc */
-        expect(REGISTRY.findings.filter((f) => /another doc/.test(f.severity))
-            .map((f) => f.name)).toEqual(['applyPipelineConfig', 'onContentEdit']);
+    it('⛓⛓ the P3b registry findings, pinned — ALL EIGHT FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3b pinned EIGHT: `captureLibraryEntry`, `getSpiralContent`,
+         * `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntry`,
+         * `instantiateLibraryEntryForSpecs` and `validateLibraryEntry` were
+         * carried by an entry and named by NO procgen doc at all;
+         * `applyPipelineConfig` and `onContentEdit` were documented one door
+         * down, in `stepped-pipeline.md`. P5 wrote all eight into
+         * `substrate-registry.md` § *Entry contract* — the six under a new
+         * *Build-time — region library entries* heading, the other two as
+         * pointer rows in the content-sources table. ⛓ The list is EMPTY now
+         * and stays asserted: a NEW disagreement reds here rather than joining
+         * a list nobody reads.
+         */
+        expect(REGISTRY.findings.map((f) => f.name).sort()).toEqual([]);
+        /* ⛓ NON-VACUITY: the six really are in a real group, not in the
+         * UNDOCUMENTED catch-all — which is the only way the list could go
+         * empty by accident. */
+        const grouped = new Map();
+        for (const g of REGISTRY.groups) for (const r of g.rows) grouped.set(r, g.title);
+        for (const f of ['captureLibraryEntry', 'instantiateLibraryEntry',
+            'instantiateLibraryEntryForSpecs', 'validateLibraryEntry',
+            'instantiateAtlasEntryForSpecs']) {
+            expect(grouped.get(f), f).toBe(
+                'Build-time — region library entries (capture / instantiate / validate)',
+            );
+        }
+        for (const f of ['getSpiralContent', 'applyPipelineConfig', 'onContentEdit']) {
+            expect(grouped.get(f), f)
+                .toBe('Build-time — content sources (zone-based substrates)');
+        }
     });
 });
 
@@ -585,15 +602,45 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
         expect(row.documentedFlags.filter((d) => !names.includes(d))).toEqual([]);
     });
 
-    it('⛓⛓ the P3b instrument findings, pinned', () => {
-        expect(INSTRUMENTS.findings.map((f) => `${f.severity}: ${f.name}`).sort()).toEqual([
-            'cited by a doc, NOWHERE in the tree: plan-seedling-segment.mjs',
-            'cited without a path; it lives elsewhere in the tree: driver.mjs',
-            'cited without a path; it lives elsewhere in the tree: export-vanilla-dataset.mjs',
-            'cited without a path; it lives elsewhere in the tree: make-ap-config.mjs',
-            'cited without a path; it lives elsewhere in the tree: regenerate-r4-tapes.mjs',
-            'no docblock: verify-runner-smoke.mjs',
+    it('⛓⛓ the P3b instrument findings, pinned — ALL SIX FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3b pinned SIX. P5 fixed every one: the four bare citations got
+         * their paths (`CC/scripts/jta-stats/driver.mjs`,
+         * `frontend/modules/jtaSubstrateWrapper/export-vanilla-dataset.mjs`,
+         * `CC/scripts/jta-stats/make-ap-config.mjs`,
+         * `frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs`),
+         * `verify-runner-smoke.mjs` got a leading docblock, and
+         * `plan-seedling-segment.mjs` — a driver that was PLANNED and never
+         * written — is now MARKED `(never written)` in the row that names it,
+         * which this scan reads.
+         */
+        expect(INSTRUMENTS.findings.map((f) => `${f.severity}: ${f.name}`).sort()).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ THE `(never written)` MARKER IS NOT A SILENCER. A marker that could
+     * drop a citation without saying so would let the next author retire a real
+     * dead citation by typing three words, so the marked set is PUBLISHED and
+     * pinned here — and the row it names is asked of the DOC, not of the table.
+     */
+    it('⛓⛓ a citation MARKED `(never written)` is dropped, and the marked set '
+        + 'is published', () => {
+        expect(INSTRUMENTS.neverWritten.map((n) => n.name)).toEqual([
+            'plan-seedling-segment.mjs',
         ]);
+        expect(INSTRUMENTS.neverWritten[0].citedBy)
+            .toEqual(['docs/json/developer/procgen/seedling-bot.md']);
+        /* ⛓ asked of the DOCUMENT: the row really does carry both the name and
+         * the marker, on one line, within the declared window. */
+        const doc = readFileSync(join(ROOT, DOC_DIR, 'seedling-bot.md'), 'utf8');
+        const line = doc.split('\n').find((l) => l.includes('plan-seedling-segment.mjs'));
+        expect(line).toBeTruthy();
+        expect(line).toContain('(never written)');
+        /* ⛓ …and NO OTHER doc line in the directory carries the marker, so the
+         * published set is the whole of it. */
+        const marked = readdirSync(join(ROOT, DOC_DIR)).filter((f) => f.endsWith('.md'))
+            .filter((f) => /\(never written\)/.test(readFileSync(join(ROOT, DOC_DIR, f), 'utf8')));
+        expect(marked).toEqual(['seedling-bot.md']);
     });
 });
 
