@@ -89,6 +89,25 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
      * this file's own directive rows. What this asserts is that the address bar
      * is not a channel for it on the maze page either.
      */
+    /**
+     * ⛔⛔ PROCGEN DOCS · P5 — the query's own SHAPE, in the one spelling both
+     * pages speak. `run=1&run=1` used to be accepted silently by both readers
+     * (arc 3 §17.15(3)); only a REFUSING reader tells the person holding the
+     * link, because the writer repairs it silently on the way out.
+     */
+    it('⛔ a DUPLICATED key REFUSES BY NAME, and names the key and the page', () => {
+        expect(() => readLabParams('?source=generate&seed=1&run=1&run=1'))
+            .toThrow(/\?run= appears TWICE/);
+        expect(() => readLabParams('?source=generate&seed=1&run=1&run=1'))
+            .toThrow(/the maze lab page reads only the first/);
+        expect(() => readLabParams('?source=generate&seed=1&seed=2'))
+            .toThrow(/\?seed= appears TWICE/);
+        /* ⛓ a clean URL is untouched, and `?directed=` still answers first */
+        expect(() => readLabParams('?source=generate&seed=1&run=1')).not.toThrow();
+        expect(() => readLabParams('?directed=x@1&run=1&run=1'))
+            .toThrow(/no longer a URL parameter/);
+    });
+
     it('⛔ ?directed= REFUSES BY NAME, whatever it says, and names the way in', () => {
         expect(() => readLabParams('?directed=wall-segment(ori=v,len=3)@12d'))
             .toThrow(/no longer a URL parameter/);

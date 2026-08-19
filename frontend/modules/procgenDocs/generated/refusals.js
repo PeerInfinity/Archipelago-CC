@@ -128,7 +128,7 @@ export const REFUSALS = frz({
             "name": "(the whole source)",
             "severity": "the vocabulary is UNNAMED",
             "source": "url-params",
-            "what": "26 refusals in `urlParams.js` are SENTENCES with no name. Every other refusal in this table is addressable by a slug a census can count; these can only be addressed by their function. ⇒ **wants a constant.**"
+            "what": "28 refusals in `urlParams.js` are SENTENCES with no name. Every other refusal in this table is addressable by a slug a census can count; these can only be addressed by their function. ⇒ **wants a constant.**"
         }
     ],
     "patterns": {
@@ -1674,6 +1674,36 @@ export const REFUSALS = frz({
             "file": "frontend/modules/procgenCore/urlParams.js",
             "inTheConstant": null,
             "kind": "literal-scan",
+            "meaning": "urlParams: …… … TWICE in this URL, and … reads only the first. ⛔ A parameter given two values is two runs asked for in one link; say which one by giving it once. ⚠ Both writers already emit `run=1` when the step is past 0, so appending it by hand is how this happens.",
+            "name": "urlParams.refuseDuplicateParams",
+            "named": false,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.refuseDuplicateParams"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr",
+            "constant": null,
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": null,
+            "kind": "literal-scan",
+            "meaning": "urlParams: writeBounds was handed …, which … it can write. The four keys are the LONG names — …`…` — and NOT the short spellings the URL uses (…`…`), which is the mistake this refusal exists to name.",
+            "name": "urlParams.writeBounds",
+            "named": false,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.writeBounds"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr",
+            "constant": null,
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": null,
+            "kind": "literal-scan",
             "meaning": "urlParams: cannot write ?…=… — it is not an integer, and the reader would refuse to read it back. A URL this page cannot reload is not a link to the run it is showing.",
             "name": "urlParams.writeInt",
             "named": false,
@@ -1879,7 +1909,7 @@ export const REFUSALS = frz({
             "patterns": [
                 "/\\bfail\\(/g + the string run after it"
             ],
-            "scannedCount": 26,
+            "scannedCount": 28,
             "title": "The URL grammar itself",
             "where": "every `export function` in urlParams.js"
         }

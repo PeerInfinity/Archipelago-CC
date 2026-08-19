@@ -161,4 +161,34 @@ describe('procgenCore/areaSpec — `require`', () => {
         expect(() => parseRequireList('door_K0')).toThrow(/is not an area-graph symbol/);
         expect(() => parseRequireList('K0,hasSword')).toThrow(/"hasSword" is not an area-graph/);
     });
+
+    /**
+     * ⛔⛔ **THE WRITER REFUSES A NON-ARRAY BY NAME** (PROCGEN DOCS · P5, arc 3
+     * §17.15(1)). It used to die with `TypeError: (list ?? []).join is not a
+     * function` — which names neither the parameter nor the shape it wanted —
+     * and the shape people actually pass is the one the REPORTS carry
+     * (`{asked: […]}`), because `summary.require.asked` is what they have just
+     * been reading. A `TypeError` from a codec is a defect in the codec.
+     */
+    it('⛔ formatRequireList REFUSES a non-array BY NAME — `{asked:[…]}` is the '
+        + 'shape that cost a run', () => {
+        for (const bad of [{ asked: ['K0'] }, 'K0', 0, true, new Set(['K0'])]) {
+            expect(() => formatRequireList(bad), JSON.stringify(bad)).toThrow(AreaSpecError);
+            expect(() => formatRequireList(bad)).toThrow(/is not an ARRAY/);
+        }
+        /* ⛓ the NAME, not just the sentence — a census counts the slug */
+        try {
+            formatRequireList({ asked: ['K0'] });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e.code).toBe('require-list-not-an-array');
+        }
+        /* ⛔ …and the two absences STILL mean "nothing asked" — the writer
+         * deletes the parameter, it does not refuse the caller who never set
+         * one. This is the half a blanket `Array.isArray` guard breaks. */
+        expect(formatRequireList(null)).toBe('');
+        expect(formatRequireList(undefined)).toBe('');
+        expect(formatRequireList([])).toBe('');
+        expect(formatRequireList(['K0', 'K1'])).toBe('K0,K1');
+    });
 });

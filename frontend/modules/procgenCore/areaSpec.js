@@ -44,13 +44,18 @@
 import { assertParamSchema, enumerateValues } from './templateContract.js';
 
 export class AreaSpecError extends Error {
-    constructor(message) {
+    /** ⛓ `code` is a kebab SLUG a census can count, and it is OPTIONAL: P5
+     *  added it for `formatRequireList`, the one codec on this page that died
+     *  with a `TypeError` instead of refusing, and did not retro-name the
+     *  refusals that were already sentences. */
+    constructor(message, code = null) {
         super(message);
         this.name = 'AreaSpecError';
+        this.code = code;
     }
 }
 
-const fail = (message) => { throw new AreaSpecError(message); };
+const fail = (message, code = null) => { throw new AreaSpecError(message, code); };
 
 /**
  * ⛓ THE HEAD'S DOMAIN. `maxKeys` is a **TARGET, not a ceiling** (slice 1's
@@ -351,7 +356,31 @@ export function parseRequireList(value, {
     return Object.freeze(out);
 }
 
-/** `['K0','K1']` → `K0,K1`; `null`/`[]` → `''` (the parameter is DELETED). */
+/**
+ * `['K0','K1']` → `K0,K1`; `null`/`[]` → `''` (the parameter is DELETED).
+ *
+ * ⛔⛔ **IT REFUSES BY NAME ON A NON-ARRAY** (`require-list-not-an-array`), and
+ * that is PROCGEN DOCS · P5 paying a debt arc 3 §17.15(1) recorded after it
+ * cost a run: `require` is a BARE ARRAY OF STRINGS, but the reports on
+ * `summary.require` and `__editorGenerate.require` carry `.asked`, so the
+ * natural guess is that the writer takes the same shape. It does not — and it
+ * used to die with `TypeError: (list ?? []).join is not a function`, which
+ * names neither the parameter nor the shape it wanted. Every other codec on
+ * this page refuses by name; this one was the exception.
+ *
+ * ⚠ `null` and `undefined` STILL MEAN "nothing asked" and still return `''`.
+ * They are the absence the writer spells by deleting the parameter, and a
+ * refusal there would break every caller that passes an unset field.
+ */
 export function formatRequireList(list) {
-    return (list ?? []).join(',');
+    if (list === null || list === undefined) return '';
+    if (!Array.isArray(list)) {
+        fail(`areaSpec: the require list ${JSON.stringify(list)} is not an ARRAY. `
+            + '`require` is a bare array of strings — `[\'K0\',\'K1\']` — and NOT the '
+            + '`{asked:[…]}` shape the reports on `summary.require` and '
+            + '`__editorGenerate.require` carry. ⛔ `null` and `undefined` are the only '
+            + 'other things it accepts, and both mean "nothing asked".',
+        'require-list-not-an-array');
+    }
+    return list.join(',');
 }

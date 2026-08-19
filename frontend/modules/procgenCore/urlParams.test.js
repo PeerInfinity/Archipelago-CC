@@ -19,6 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND } from './levelGenerator.js';
 import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, UrlParamsError, directiveSeed,
+    refuseDuplicateParams,
     dropDirectedParam, formatDirectives,
     intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readRequire,
     readRosterSpec, readSkeleton, readSkeletonTyped, refuseDirectedParam, stepFromParams,
@@ -71,6 +72,32 @@ describe('urlParams — integers and bounds', () => {
             .toThrow(/cannot write \?k="lots"/);
     });
 
+    /**
+     * ⛔⛔ **AN UNKNOWN KEY REFUSES BY NAME** (PROCGEN DOCS · P5, arc 3
+     * §17.15(2)). ⚠ And the record of that debt was WRONG about the symptom:
+     * it said a wrong key name "writes NOTHING rather than complaining". The
+     * SHORT spellings threw a misattributed integer refusal
+     * (`cannot write ?count=undefined`), and what really passed in silence was
+     * an EXTRA key beside the four.
+     */
+    it('⛔ writeBounds REFUSES an unknown key BY NAME — the URL\'s own SHORT '
+        + 'spellings are the mistake it exists to name', () => {
+        const short = { count: 6, tries: 8, k: 3, anchortries: 1 };
+        expect(() => writeBounds(q(''), short)).toThrow(UrlParamsError);
+        expect(() => writeBounds(q(''), short))
+            .toThrow(/\["count","tries","k","anchortries"\], which are not bounds/);
+        /* ⛓ …and it says what the four ARE, and which short spelling each takes */
+        expect(() => writeBounds(q(''), short)).toThrow(/`obstacleTarget`/);
+        expect(() => writeBounds(q(''), short)).toThrow(/`\?anchortries=`/);
+        /* ⛔ AN EXTRA KEY BESIDE THE FOUR — the one that used to be silent */
+        expect(() => writeBounds(q(''), { ...DEFAULT_BOUNDS, count: 6 }))
+            .toThrow(/\["count"\], which is not a bound/);
+        /* ⛓ the rule is EXACTLY the four, and both real callers hand it the
+         * object `readBounds` returned — which is exactly the four. */
+        expect(writeBounds(q(''), readBounds(q(''))).toString())
+            .toContain('count=');
+    });
+
     it('⛓ writeBounds carries ALL FOUR — including anchortries', () => {
         // ⛔ Named, because a writer that dropped one and a reader that
         // defaulted it would round-trip perfectly and generate a different
@@ -82,6 +109,47 @@ describe('urlParams — integers and bounds', () => {
             expect(s, k).toContain(k);
         }
         expect(readBounds(q(s)).anchorTriesPerCandidate).toBe(3);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛔⛔ A DUPLICATED PARAMETER (PROCGEN DOCS · P5, arc 3 §17.15(3))
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('urlParams — a duplicated key', () => {
+    it('⛔ REFUSES `run=1&run=1` BY NAME, and names the key', () => {
+        expect(() => refuseDuplicateParams(q('?run=1&run=1'))).toThrow(UrlParamsError);
+        expect(() => refuseDuplicateParams(q('?run=1&run=1'))).toThrow(/\?run= appears TWICE/);
+        expect(() => refuseDuplicateParams(q('?seed=1&seed=2'), { substrate: 'the maze lab page' }))
+            .toThrow(/the maze lab page reads only the first/);
+    });
+
+    it('⛓ names EVERY duplicated key, once each — two bad keys are two facts', () => {
+        expect(() => refuseDuplicateParams(q('?run=1&run=1&seed=1&seed=2&run=1')))
+            .toThrow(/\?run=, \?seed= appear TWICE/);
+    });
+
+    it('⛓ a clean query passes through UNCHANGED — the guard is not a filter', () => {
+        const bar = q('?source=generate&seed=1&run=1');
+        expect(refuseDuplicateParams(bar)).toBe(bar);
+        expect(bar.toString()).toBe('source=generate&seed=1&run=1');
+        expect(refuseDuplicateParams(q('')).toString()).toBe('');
+    });
+
+    /**
+     * ⛓⛓⛓ **WHY IT CANNOT BE A ROUND-TRIP CLAIM.** The writer never emits a
+     * duplicate, so writing back what was read repairs it silently and the
+     * person holding the bad link never learns. Only a REFUSING reader tells
+     * them — which is why this row asserts the reader's answer and not the
+     * writer's output (trap: a fixed point tests self-consistency, never
+     * correctness).
+     */
+    it('⛔ the WRITER never emits one, which is exactly why the READER must '
+        + 'refuse', () => {
+        const written = writeRunFlag(writeBounds(q(''), DEFAULT_BOUNDS), 6).toString();
+        expect(written.match(/(^|&)run=/g)).toHaveLength(1);
+        expect(() => refuseDuplicateParams(q(`?${written}`))).not.toThrow();
+        expect(() => refuseDuplicateParams(q(`?${written}&run=1`))).toThrow(/appears TWICE/);
     });
 });
 

@@ -1073,6 +1073,50 @@ describe('⛓⛓ `?directed=` — the grammar, and it is the instance label', ()
     });
 });
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛔⛔ A DUPLICATED PARAMETER, AT THE READER (PROCGEN DOCS · P5)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛔ `run=1&run=1` — a duplicated key REFUSES at the reader', () => {
+    /**
+     * ⛓ Arc 3 §17.15(3): both generate-param writers already emit `run=1` when
+     * `step > 0`, so appending `&run=1` by hand produces a duplicate — and the
+     * reader ACCEPTED it, because `URLSearchParams.get` answers with the first
+     * and never mentions the second. A hand-built catalogue URL could carry it
+     * forever.
+     */
+    it('⛔ the reader refuses a duplicated `?run=`, and names the key', () => {
+        expect(() => readGenerateParams('?source=generate&seed=1&run=1&run=1'))
+            .toThrow(/\?run= appears TWICE/);
+        expect(() => readGenerateParams('?source=generate&seed=1&run=1&run=1'))
+            .toThrow(/the Seedling page reads only the first/);
+    });
+
+    it('⛓ any key, not just `?run=` — the claim is about the URL\'s SHAPE', () => {
+        expect(() => readGenerateParams('?source=generate&seed=1&seed=2'))
+            .toThrow(/\?seed= appears TWICE/);
+    });
+
+    it('⛓⛓ the WRITER\'s own output is accepted — it emits `run=1` ONCE, which '
+        + 'is why appending it by hand is how this happens', () => {
+        const written = writeGenerateParams('', {
+            seed: 30, biome: 'post-sword', step: 6,
+            bounds: { obstacleTarget: 6, triesPerStep: 8, saturationK: 3,
+                anchorTriesPerCandidate: 1 },
+        });
+        expect(written.match(/(^|&)run=/g)).toHaveLength(1);
+        expect(() => readGenerateParams(`?${written}`)).not.toThrow();
+        expect(() => readGenerateParams(`?${written}&run=1`)).toThrow(/appears TWICE/);
+    });
+
+    /** ⛔ AFTER `?directed=`, deliberately: a retired key a person can DELETE
+     *  is a more useful FIRST answer than a duplicate they have to hunt for. */
+    it('⛓ `?directed=` still answers FIRST when a link carries both', () => {
+        expect(() => readGenerateParams('?source=generate&directed=x@1&run=1&run=1'))
+            .toThrow(/no longer a URL parameter/);
+    });
+});
+
 describe('⛓⛓⛓ SLICE 12 — `?directed=` LEFT THE URL (⚖ §3.9)', () => {
     /**
      * ⛔ REPLACE, NEVER RELAX (trap 62/199). Slice 5's three rows here drove the
@@ -1922,8 +1966,20 @@ describe('watchGenerate — the skeleton kind', () => {
             seed: 3, biome: 'pre-sword', bounds: DEFAULT_BOUNDS, step: 0,
             skeleton: { kind: 'rooms', params: { minRoom: 3 } },
         })).get('skeleton')).toBe('rooms');
-        // ⛓ the fixed point, AFTER the two literals
-        expect(readGenerateParams(`?source=generate&${written}`).skeleton)
+        /**
+         * ⛓ the fixed point, AFTER the two literals.
+         *
+         * ⛔ P5 — THE `?source=generate&` PREFIX IS GONE FROM THIS LINE, and
+         * removing it is a FIX rather than a tidy: `written` already carries
+         * `source=generate` (the writer writes it), so the old spelling handed
+         * the reader `source=generate&source=generate`. The reader ACCEPTED it
+         * — `URLSearchParams.get` answers with the first and never mentions the
+         * second — which is precisely the defect arc 3 §17.15(3) named and this
+         * slice fixed. ⚠ A grep over URL LITERALS did not find it: the
+         * duplicate is COMPOSED at run time, and only running the suite against
+         * the new refusal could see it.
+         */
+        expect(readGenerateParams(`?${written}`).skeleton)
             .toEqual({ kind: 'rooms', params: { minRoom: 2, chambers: 1 } });
     });
 

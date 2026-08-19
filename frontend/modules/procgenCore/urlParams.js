@@ -147,8 +147,49 @@ export function writeInt(q, name, value) {
     return q;
 }
 
-/** The four bounds, written. One writer. */
+/**
+ * ⛓⛓ **THE FOUR KEYS `writeBounds` SPELLS**, in the order it writes them, with
+ * the URL name each one takes. Declared rather than implied so the refusal
+ * below can print both halves.
+ */
+export const BOUNDS_KEYS = Object.freeze([
+    ['obstacleTarget', 'count'],
+    ['triesPerStep', 'tries'],
+    ['saturationK', 'k'],
+    ['anchorTriesPerCandidate', 'anchortries'],
+]);
+
+/**
+ * The four bounds, written. One writer.
+ *
+ * ⛔⛔ **AN UNKNOWN KEY REFUSES BY NAME** (`bounds-key-unknown`) — PROCGEN
+ * DOCS · P5, arc 3 §17.15(2)'s debt, and ⚠ the record of it was WRONG about
+ * what happened. It said a wrong key name "writes NOTHING rather than
+ * complaining". Measured: `{count, tries, k, anchortries}` — the URL's own
+ * short spellings, which is exactly the mistake a reader of a URL makes —
+ * threw `urlParams: cannot write ?count=undefined — it is not an integer`,
+ * which MISATTRIBUTES: it reads as *your count is bad* when the KEY is bad.
+ * What really passed silently was an EXTRA key: `{…the four, count: 6}` wrote
+ * the four and said nothing.
+ *
+ * ⚠ THE RULE IS "EXACTLY THE FOUR", not "the four must be present", and that
+ * is a MEASURED choice: both callers (`watchGenerate.js`'s
+ * `writeGenerateParams`, `mazeLab.js`'s `writeLabParams`) hand it the object
+ * `readBounds` returned, which has exactly these four keys, and the unit rows
+ * hand it `{...DEFAULT_BOUNDS, …}`. No caller legitimately passes an extra, so
+ * an extra is a bug at the call site and this says which one.
+ */
 export function writeBounds(q, bounds) {
+    const known = BOUNDS_KEYS.map(([long]) => long);
+    const unknown = Object.keys(bounds ?? {}).filter((k) => !known.includes(k));
+    if (unknown.length) {
+        fail(`urlParams: writeBounds was handed ${JSON.stringify(unknown)}, which `
+            + `${unknown.length === 1 ? 'is not a bound' : 'are not bounds'} it can write. `
+            + `The four keys are the LONG names — ${known.map((k) => `\`${k}\``).join(', ')} `
+            + `— and NOT the short spellings the URL uses `
+            + `(${BOUNDS_KEYS.map(([, short]) => `\`?${short}=\``).join(', ')}), which is `
+            + 'the mistake this refusal exists to name.');
+    }
     writeInt(q, 'count', bounds.obstacleTarget);
     writeInt(q, 'tries', bounds.triesPerStep);
     writeInt(q, 'k', bounds.saturationK);
@@ -929,6 +970,44 @@ export const DIRECTED_RETIRED = 'directives ride the PAYLOAD — load it via ?ge
  * ⚠ AN EMPTY `?directed=` REFUSES TOO. The key being PRESENT is the whole test:
  * there is no value of a retired parameter that means anything.
  */
+/**
+ * ⛔⛔ **A DUPLICATED PARAMETER IS REFUSED BY NAME** (`duplicate-url-parameter`)
+ * — PROCGEN DOCS · P5, arc 3 §17.15(3)'s debt.
+ *
+ * ⛓ THE SHAPE THAT COST A RUN: both generate-param writers already emit
+ * `run=1` when `step > 0`, so appending `&run=1` by hand produces `run=1&run=1`
+ * — and the reader ACCEPTED it, because `URLSearchParams.get` answers with the
+ * first and never mentions the second. A hand-built URL could then carry the
+ * duplicate forever, and the demo catalogue's coverage row would hold it as the
+ * declared string.
+ *
+ * ⚠ IT IS NOT A ROUND-TRIP DEFECT AND THAT IS THE POINT. The writer never
+ * emits one, so writing what was read fixes it silently; only a reader that
+ * REFUSES tells the person holding the link. ⛔ Measured before it shipped: no
+ * URL in any browser row, fixture, demo-catalogue entry or procgen document
+ * carries a duplicated key (0 of 1,538 files scanned).
+ *
+ * @param q  the `URLSearchParams` the reader built — asked BEFORE any value is
+ *           read, so the first answer a bad link gets is about its own shape.
+ */
+export function refuseDuplicateParams(q, { substrate = 'this page' } = {}) {
+    const seen = new Set();
+    const dup = [];
+    for (const key of q.keys()) {
+        if (seen.has(key) && !dup.includes(key)) dup.push(key);
+        seen.add(key);
+    }
+    if (dup.length) {
+        fail(`urlParams: ${dup.map((k) => `?${k}=`).join(', ')} `
+            + `${dup.length === 1 ? 'appears' : 'appear'} TWICE in this URL, and `
+            + `${substrate} reads only the first. ⛔ A parameter given two values is two `
+            + 'runs asked for in one link; say which one by giving it once. ⚠ Both writers '
+            + 'already emit `run=1` when the step is past 0, so appending it by hand is how '
+            + 'this happens.');
+    }
+    return q;
+}
+
 export function refuseDirectedParam(q, { substrate = 'this page' } = {}) {
     if (q.get('directed') === null) return q;
     fail(`urlParams: ?directed= is no longer a URL parameter (⚖ constructive-mode slice 12). `

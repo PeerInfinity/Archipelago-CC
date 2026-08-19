@@ -63,6 +63,7 @@ import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/
 import {
     ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam, readAreas, readBounds,
     readElements, readRequire, readRosterSpec, readSkeleton, refuseDirectedParam, writeAreasParam,
+    refuseDuplicateParams,
     writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
     writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
@@ -221,6 +222,9 @@ export function readLabParams(search) {
      * directives went. ⚖ §3.9, in the one spelling both pages speak.
      */
     refuseDirectedParam(q, { substrate: 'the maze lab page' });
+    /** ⛓ P5 — the query's own SHAPE, in the one spelling both pages speak.
+     *  `run=1&run=1` used to be accepted silently by both readers. */
+    refuseDuplicateParams(q, { substrate: 'the maze lab page' });
     const biome = (q.get('biome') || DEFAULT_MAZE_BIOME).toLowerCase();
     const roster = normalizeRoster(paletteFor(biome), readRosterSpec(q));
     return {

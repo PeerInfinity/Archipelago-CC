@@ -86,7 +86,8 @@ import {
 import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
     readAreas, readBounds, readElementsTyped, readRequire, readRosterSpec, readSkeleton,
-    readSkeletonTyped, refuseDirectedParam, writeAreasParam, writeBounds, writeElementsParam,
+    readSkeletonTyped, refuseDirectedParam, refuseDuplicateParams, writeAreasParam,
+    writeBounds, writeElementsParam,
     writeInt, writeRequireParam,
     writeRosterParam, writeRunFlag, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
@@ -236,6 +237,13 @@ export function readGenerateParams(search) {
      * also carries.
      */
     refuseDirectedParam(q, { substrate: 'the Seedling page' });
+    /**
+     * ⛓ P5 — AND THEN THE SHAPE OF THE QUERY ITSELF, before any value is
+     * read: `run=1&run=1` used to be accepted silently. ⛔ AFTER
+     * `refuseDirectedParam`, deliberately: a retired key a person can DELETE
+     * is a more useful first answer than a duplicate they have to find.
+     */
+    refuseDuplicateParams(q, { substrate: 'the Seedling page' });
     if (q.get('budgetms') !== null) {
         // eslint-disable-next-line no-console
         console.warn('watchGenerate: ?budgetms is GONE and was IGNORED. Elapsed time no '
