@@ -428,7 +428,7 @@
   },
   "flash_panel": {
     "config": "seedling.json",
-    "wasm": "seedling_teleport_ap/game.html"
+    "wasm": "seedling_bot_ap_p4b/game.html"
   },
   "preset_sidecars": {
     "1": {

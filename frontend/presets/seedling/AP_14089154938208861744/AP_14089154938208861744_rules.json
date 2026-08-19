@@ -4,7 +4,7 @@
   "game_directory": "seedling",
   "flash_panel": {
     "config": "seedling.json",
-    "wasm": "seedling_teleport_ap/game.html"
+    "wasm": "seedling_bot_ap_p4b/game.html"
   },
   "archipelago_version": "0.6.8",
   "generation_seed": 1,

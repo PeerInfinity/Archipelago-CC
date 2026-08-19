@@ -344,7 +344,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
 
     it('stamps the flashPanel wiring so a regeneration can no longer drop it', () => {
         expect(rules.flash_panel).toEqual({
-            config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html',
+            config: 'seedling.json', wasm: 'seedling_bot_ap_p4b/game.html',
         });
         // The flavour is named now that there are two of them (Phase 5b).
         expect(formatCompileReport(report).join('\n'))

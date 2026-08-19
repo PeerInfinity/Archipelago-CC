@@ -355,7 +355,11 @@ for (const f of TOP_LEVEL_FILES) {
 // ── verdict ─────────────────────────────────────────────────────────
 console.log('');
 if (problems.length === 0) {
-    console.log(`ALL PASS — ${MANIFEST.size} pinned builds, four views in agreement`);
+    // ⚠ The pin set reached ONE on 2026-08-19, and the sentence had never had
+    // to be singular before. Nothing keys on this string (grepped), so the
+    // plural is a reading fix and not a behaviour change (trap 337).
+    console.log(`ALL PASS — ${MANIFEST.size} pinned build${MANIFEST.size === 1 ? '' : 's'}, `
+        + 'four views in agreement');
     process.exit(0);
 }
 console.log(`${problems.length} PROBLEM(S):`);

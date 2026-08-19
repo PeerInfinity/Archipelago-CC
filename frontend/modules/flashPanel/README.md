@@ -34,7 +34,7 @@ A world's preset `rules.json` carries a `flash_panel` section:
 "flash_panel": {
   "config": "seedling.json",
   "swf": "seedling_injected.swf",
-  "wasm": "seedling_teleport_ap/game.html"
+  "wasm": "seedling_bot_ap_p4b/game.html"
 }
 ```
 
@@ -114,13 +114,21 @@ this; it keeps a separate `PAGE_BASE` for exactly that reason.)
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
 
-Three qualify today:
+**ONE qualifies today**, and the number is the gate's, not this table's — run
+`node scripts/procgen/check-seedling-wasm-pins.mjs` and it prints the count off
+four independent views.
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap_p4b` | `seedlingDemo/watchViewer.js` (`WASM_PAGE`), the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs` and of ~23 `scripts/procgen/{probe,plan,solve,run}-seedling-*.mjs`, and `check-seedling-wasm-pages.mjs`'s `BUILD` |
-| `seedling_teleport_ap` | the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, two verify rows |
-| `seedling_bot_ap_phase3` | the `SEEDLING_PAGE` **default** of `probe-seedling-level-set-transport.mjs` |
+| `seedling_bot_ap_p4b` | `seedlingDemo/watchWasm.js` (`WASM_PAGE`), the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~23 `scripts/procgen/{probe,plan,solve,run}-seedling-*.mjs`, `check-seedling-wasm-pages.mjs`'s `BUILD`, and three verify rows |
+
+⚠ **THIS TABLE WAS STALE FOR A DAY, AND THAT IS THE ARGUMENT FOR THE GATE.**
+It said *"Three qualify today"* and listed `seedling_bot_ap_phase3` after that
+build had already retired (the wasm-hygiene slice, 2026-08-19: its own probe's
+arms 6 and 7b FAIL on it and pass on p4b). The whitelist, `builds.json` and
+`git ls-files` had all moved; only the prose had not, because prose is the one
+view nothing reads back. ⇒ **believe the gate's count, not this table's**, and
+when they disagree the table is the bug.
 
 ⛓ **`seedling_bot_ap` was retired on 2026-08-19, and the retirement was
 EARNED rather than assumed.** It was the R8 bot build every one of those

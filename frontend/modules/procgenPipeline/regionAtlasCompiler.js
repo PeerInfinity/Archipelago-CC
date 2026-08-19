@@ -89,7 +89,7 @@ export const substrateIdFor = (game) => `flash_${String(game).toLowerCase().repl
 // the item/location maps, and now the position signals the crossing detector
 // reads. Games with no wiring here compile graph-only.
 export const FLASH_PANEL_WIRING = Object.freeze({
-    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html' }),
+    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4b/game.html' }),
 });
 
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;

@@ -20,7 +20,7 @@
  * Prereqs:
  *   - dev server on :8000 (python -m http.server 8000 at repo root)
  *   - the wasm build at
- *     frontend/modules/flashPanel/wasm/seedling_teleport_ap/, which since
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4b/, which since
  *     2026-08-19 ships in the submodule PeerInfinity/seedling-wasm
  *     (`git submodule update --init frontend/modules/flashPanel/wasm`).
  *     ⛓ The script SKIPs (exit 0) when the SUBMODULE IS NOT CHECKED OUT.
@@ -32,6 +32,18 @@
  * --enable-unsafe-webgpu --enable-unsafe-swiftshader --use-angle=swiftshader
  * (verified locally; the game loop runs fine on the software adapter).
  *
+ * ⛓⛓ AND THE BUILD MOVED, 2026-08-19. The flash panel loaded
+ * `seedling_teleport_ap` — a variant that skips the preloader and the title
+ * screen — because that is what was on hand when the panel was written. This
+ * row is what retired it: with the three presets, `regionAtlasCompiler`'s
+ * default and this script all pointed at `seedling_bot_ap_p4b`, every one of
+ * the twelve checks passes, **including the teleport one the variant is named
+ * for** (`teleport new_instance applied by BridgeGeneric`). The different boot
+ * path costs nothing here: the panel already waits for the user's ▶ Start and
+ * for the bridge handshake to reach `ready` before it configures anything, so
+ * a build that shows a title screen first arrives at the same place a little
+ * later. ⇒ two pinned builds became one.
+ *
  * Run: node scripts/procgen/verify-seedling-wasm-bridge.mjs
  */
 import { chromium } from 'playwright';
@@ -41,9 +53,9 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ARTIFACT = join(HERE, '..', '..', 'frontend', 'modules', 'flashPanel',
-    'wasm', 'seedling_teleport_ap');
+    'wasm', 'seedling_bot_ap_p4b');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_teleport_ap.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4b.wasm'))) {
     console.log(`SKIP: the seedling-wasm submodule is not checked out at ${ARTIFACT}`
         + ' — run `git submodule update --init frontend/modules/flashPanel/wasm`');
     process.exit(0);
@@ -93,7 +105,7 @@ async function waitFor(desc, fn, timeoutMs = 30000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_teleport_ap/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4b/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -192,7 +204,7 @@ await page.evaluate(async (src) => {
 
 // ── acceptance 2: handshake ─────────────────────────────────────────
 await waitFor('wasm iframe mounted', async () =>
-    page.frames().some((fr) => fr.url().includes('seedling_teleport_ap/game.html')));
+    page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4b/game.html')));
 await waitFor('start button enabled', () =>
     gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');
