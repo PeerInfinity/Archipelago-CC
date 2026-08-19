@@ -61,10 +61,19 @@ console.log(`# ${LABEL}\n# root ${ROOT}${EXPECT_MISSING ? '  [--expect-missing]'
 for (const [name, url] of [['game.html', GAME], [`${BUILD}.wasm`, WASM]]) {
     const r = await fetch(url, { method: 'HEAD' })
         .catch((e) => ({ status: `unreachable (${e.message})`, ok: false, headers: new Map() }));
+    // ⛔ content-length is the TRANSFER size, not the file size. Node's fetch
+    // sends Accept-Encoding: gzip, and GitHub Pages compresses — the live
+    // 33,604,931-byte wasm reports 12,574,313 here while a local
+    // python http.server (no compression) reports the true 33,604,931. Two
+    // runs of this row disagreeing about "bytes" is the encoding, not the
+    // file; say which is which rather than print a number nobody can compare.
     const len = r.headers?.get?.('content-length');
+    const enc = r.headers?.get?.('content-encoding');
+    const size = len
+        ? `, ${Number(len).toLocaleString()} bytes ${enc ? `over the wire (${enc}; the file is larger)` : 'on the wire = the file size (identity encoding)'}`
+        : '';
     say(`${name} ${EXPECT_MISSING ? '404s (submodule absent)' : 'is served'}`,
-        EXPECT_MISSING ? !r.ok : r.ok,
-        `HTTP ${r.status}${len ? `, ${Number(len).toLocaleString()} bytes` : ''}`);
+        EXPECT_MISSING ? !r.ok : r.ok, `HTTP ${r.status}${size}`);
 }
 
 const browser = await chromium.launch({ args: ['--no-sandbox'] });
