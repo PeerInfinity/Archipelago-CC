@@ -71,8 +71,12 @@ import { buildUrlGrammar } from './reference/urlGrammar.mjs';
 import { buildCatalogue } from './reference/catalogue.mjs';
 import { buildRefusals } from './reference/refusals.mjs';
 import { REGISTRY_DOC, buildRegistry, registryMarkdown } from './reference/registry.mjs';
+import {
+    INSTRUMENTS_DOC, buildInstruments, instrumentsMarkdown,
+} from './reference/instruments.mjs';
 
 const REGISTRY = await buildRegistry();
+const INSTRUMENTS = buildInstruments();
 
 const OUT = resolve(arg('out', DEFAULT_OUT));
 const files = [
@@ -117,6 +121,17 @@ const files = [
             + 'that document disagree.',
         value: REGISTRY,
     },
+    {
+        file: 'instruments.js',
+        exportName: 'INSTRUMENTS',
+        doc: '**THE INSTRUMENTS INDEX** — one row per `scripts/procgen/*.mjs`: its category '
+            + '(the file-name prefix), the one-liner from its own leading docblock, the '
+            + 'flags it reads out of `argv` (found through the helpers each file defines for '
+            + 'itself), whether it drives a browser, and which of the procgen documents cite '
+            + 'it. `findings` holds the files with no docblock and the citations that point '
+            + 'at no file here.',
+        value: INSTRUMENTS,
+    },
 ].map((f) => ({ ...f, text: moduleText(f) }));
 
 /**
@@ -129,6 +144,11 @@ const regions = [
         file: REGISTRY_DOC,
         table: 'substrate-capability-matrix',
         body: registryMarkdown(REGISTRY),
+    },
+    {
+        file: INSTRUMENTS_DOC,
+        table: 'procgen-instruments',
+        body: instrumentsMarkdown(INSTRUMENTS),
     },
 ].map((r) => ({ ...r, path: join(REPO, r.file) }));
 
@@ -224,3 +244,10 @@ console.log(`registry:   ${REGISTRY.columns.length} entries `
     + `${REGISTRY.groups.length} groups, ${REGISTRY.libraries.filter((l) => !l.loadable).length} `
     + `library/libraries NOT loadable headless, ${REGISTRY.findings.length} FINDING(S)`);
 for (const f of REGISTRY.findings) console.log(`  FINDING [registry] ${f.name} — ${f.severity}`);
+console.log(`instruments: ${INSTRUMENTS.counts.files} files over `
+    + `${INSTRUMENTS.categories.length} categories, ${INSTRUMENTS.counts.browser} browser rows, `
+    + `${INSTRUMENTS.counts.withFlags} with flags, ${INSTRUMENTS.counts.cited} cited by a doc, `
+    + `${INSTRUMENTS.findings.length} FINDING(S)`);
+for (const f of INSTRUMENTS.findings) {
+    console.log(`  FINDING [instruments] ${f.name} — ${f.severity}`);
+}

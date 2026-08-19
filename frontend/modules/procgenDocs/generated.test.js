@@ -26,7 +26,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -47,9 +47,11 @@ import {
     findMarkdownRegion, markdownMarkers, spliceMarkdownRegion,
 } from '../../../scripts/procgen/reference/lib.mjs';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { SCRIPT_DIR } from '../../../scripts/procgen/reference/instruments.mjs';
 
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
+import { INSTRUMENTS } from './generated/instruments.js';
 import { REGISTRY } from './generated/registry.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
 
@@ -63,6 +65,7 @@ const MODULES = [
     { file: 'catalogue.js', value: CATALOGUE },
     { file: 'refusals.js', value: REFUSALS },
     { file: 'registry.js', value: REGISTRY },
+    { file: 'instruments.js', value: INSTRUMENTS },
 ];
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -512,5 +515,79 @@ describe('the registry matrix is one column per ENTRY and one row per FIELD', ()
         /* ⛓ the two that ARE documented — one door down, in another doc */
         expect(REGISTRY.findings.filter((f) => /another doc/.test(f.severity))
             .map((f) => f.name)).toEqual(['applyPipelineConfig', 'onContentEdit']);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE INSTRUMENTS INDEX, ASKED OF THE DIRECTORY (P3b)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the instruments index is one row per file in scripts/procgen', () => {
+    const onDisk = readdirSync(join(ROOT, SCRIPT_DIR)).filter((f) => f.endsWith('.mjs')).sort();
+
+    it('⛓⛓ the DIRECTORY LISTING is the source — every `.mjs` on disk is a row, '
+        + `in order (${onDisk.length} of them)`, () => {
+        expect(INSTRUMENTS.rows.map((r) => r.file)).toEqual(onDisk);
+    });
+
+    it('⛔ every row carries a category, a path and a docblock STYLE or an '
+        + 'explicit null — never a blank row', () => {
+        for (const r of INSTRUMENTS.rows) {
+            expect(r.category, `${r.file} has no category`).toBeTruthy();
+            expect(r.path).toBe(`${SCRIPT_DIR}/${r.file}`);
+            expect(r.oneLiner === null ? r.docblockStyle : typeof r.oneLiner)
+                .toBe(r.oneLiner === null ? null : 'string');
+            expect(typeof r.browser).toBe('boolean');
+        }
+    });
+
+    it('⛓⛓ a BROWSER row is exactly a file that imports playwright — asked of '
+        + 'the files, not of the table', () => {
+        const wrong = [];
+        for (const r of INSTRUMENTS.rows) {
+            const text = readFileSync(join(ROOT, SCRIPT_DIR, r.file), 'utf8');
+            const imports = /from '(?:@playwright\/test|playwright)'/.test(text);
+            if (imports !== r.browser) wrong.push(r.file);
+        }
+        expect(wrong).toEqual([]);
+        expect(INSTRUMENTS.counts.browser).toBeGreaterThan(20);
+    });
+
+    it('⛓ the categories partition the rows, and the counts add up', () => {
+        const sum = INSTRUMENTS.categories.reduce((a, c) => a + c.count, 0);
+        expect(sum).toBe(INSTRUMENTS.rows.length);
+        for (const c of INSTRUMENTS.categories) {
+            expect(INSTRUMENTS.rows.filter((r) => r.category === c.id).length).toBe(c.count);
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE FLAG SCAN IS SPOT-CHECKED HERE TOO**, on the file whose flags
+     * this repository's own instructions name. The scan reads argv through the
+     * helpers a file DEFINES FOR ITSELF, and its first three cuts each missed
+     * a shape: `has()`/`list()` (a hand list of helper names), `num()` (a
+     * helper that DELEGATES to a helper — the projection trap), and
+     * `arg`/`flag` IMPORTED from a sibling module.
+     */
+    it('⛓⛓ the flags of `generate-seedling-level.mjs`, by hand', () => {
+        const row = INSTRUMENTS.rows.find((r) => r.file === 'generate-seedling-level.mjs');
+        const names = row.flags.map((f) => f.name);
+        for (const flag of ['seed', 'count', 'biome', 'skeleton', 'elements', 'areas',
+            'require', 'families', 'templates', 'json', 'cost', 'out', 'tries', 'k']) {
+            expect(names, `--${flag}= is missing`).toContain(flag);
+        }
+        /* ⛓ …and every flag its own `Run:` block shows a reader typing */
+        expect(row.documentedFlags.filter((d) => !names.includes(d))).toEqual([]);
+    });
+
+    it('⛓⛓ the P3b instrument findings, pinned', () => {
+        expect(INSTRUMENTS.findings.map((f) => `${f.severity}: ${f.name}`).sort()).toEqual([
+            'cited by a doc, NOWHERE in the tree: plan-seedling-segment.mjs',
+            'cited without a path; it lives elsewhere in the tree: driver.mjs',
+            'cited without a path; it lives elsewhere in the tree: export-vanilla-dataset.mjs',
+            'cited without a path; it lives elsewhere in the tree: make-ap-config.mjs',
+            'cited without a path; it lives elsewhere in the tree: regenerate-r4-tapes.mjs',
+            'no docblock: verify-runner-smoke.mjs',
+        ]);
     });
 });

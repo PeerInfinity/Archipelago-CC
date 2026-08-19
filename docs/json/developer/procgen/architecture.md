@@ -78,7 +78,17 @@ Seedling's model is `seedlingDemo/procgenSeedling.js`; the maze's is `mazeRoom/p
 
 The model records a **generation ledger** (`seedlingDemo/procgenLedger.js`) as it constructs — one row per phase, appended *by* the phase, byte-inert (proved by a counting spy on the draw stream, 336 pairs / 0 moved). Each row carries its own sentence plus its intermediate results as uniform **paintables**: the door law's two floods, the level-n floods and the goal's vestibule, the on-connector candidate funnel (offered ⊇ tried ⊇ legal) and the certification solve's route with its gaps named. The lab page rebuilds phase *k* from the row deltas and hands it to the existing renderer — nothing is re-run — and ⚖ per the user's ruling of 2026-08-18 an intermediate result is drawn **when its text line is selected**. Ledger cost, measured five times on each build in one tree: median **1.048× → 1.129×**, worst observed 1.190× (§ *Arc 3, slices 5a and 5b*).
 
-Headless equivalents of everything the pages do live in `scripts/procgen/`: `generate-seedling-level.mjs` and `generate-maze-level.mjs` (`--elements=` · `--areas=` · `--require=` · `--skeleton=`), `sweep-yield-table.mjs` (the yield table — the arc's primary instrument), the censuses (`census-seedling-{sites,doors,elements,areas,enemies}.mjs`, `census-seedling-doors-elements.mjs`, `census-seedling-killgate-clears.mjs`), `find-seedling-seeds.mjs --where=` (search by named property), and `check-procgen-demos.mjs`, which IMPORTS the catalogue module (`frontend/modules/procgenDocs/demos.js`), loads every link it holds — the same links `procgenDocs/demos.html` renders — and asserts each entry's own claim.
+Headless equivalents of everything the pages do live in `scripts/procgen/`. The two that matter most here are `generate-seedling-level.mjs` and `generate-maze-level.mjs` (`--elements=` · `--areas=` · `--require=` · `--skeleton=`), with `sweep-yield-table.mjs` — the yield table, the arc's primary instrument — beside them; `check-procgen-demos.mjs` IMPORTS the catalogue module (`frontend/modules/procgenDocs/demos.js`), loads every link it holds — the same links `procgenDocs/demos.html` renders — and asserts each entry's own claim. ⛔ The rest is no longer a list anybody keeps by hand:
+
+<!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
+
+**221 instruments** live in `scripts/procgen/`, by prefix: `probe-` 54 (21 browser) · `verify-` 49 (30 browser) · `plan-` 33 (1 browser) · `check-` 20 (16 browser) · `census-` 9 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `solve-` 5 · `extract-` 3 · `generate-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `find-` 1 · `harvest-` 1 · `measure-` 1 · `mine-` 1 · no prefix 1 · `prove-` 1 · `run-` 1 · `show-` 1 · `stamp-` 1 · `survey-` 1.
+
+69 of them drive a real browser; 130 accept at least one `--flag`; 56 are cited by one of these documents; and 1 opens with no comment at all.
+
+One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
+
+<!-- GENERATED:procgen-instruments END -->
 
 ⚠ **Two different "step-throughs" share a word.** The [stepped pipeline](#the-stepped-pipeline) below steps the *world* drivers (plan → allocate → … → compile) and is editable between steps. The generation ledger's phase ladder steps a *single level's* construction and is a read-only replay of what already happened. They do not interact.
 
