@@ -25,6 +25,17 @@
  * numbers this prose is full of ("arc 3, slice 1", "19 ground cells") — found
  * by READING the render, not by a test.
  *
+ * ⛔⛔ **THIS IS NOT THE RENDERER `docs.html` USES, AND IT IS NOT ITS
+ * PREDECESSOR.** P4 added `docsRender.js`, a full `marked` configuration, for
+ * the tracked `.md` files under `docs/json/developer/procgen/`. The two exist
+ * at two TRUST LEVELS, and that is the whole distinction: this module renders
+ * strings held in `demos.js` and `glossary.js`, where the law above means an
+ * entry cannot inject a tag no matter who writes it; `docsRender.js` renders
+ * SOURCE FILES reviewed in diffs like code, whose HTML is trusted the way
+ * GitHub trusts it — and which use tables, nested lists and blockquotes that a
+ * six-form subset would render as soup. ⛔ Neither is a candidate to replace
+ * the other.
+ *
  * ⛔ No DOM and no node imports: this runs on a page and in a unit runner.
  */
 

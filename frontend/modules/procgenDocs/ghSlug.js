@@ -69,6 +69,27 @@ export function ghSlugs(headings) {
 }
 
 /**
+ * ⛓⛓ **A HEADING SLUGS FROM ITS TEXT CONTENT, NOT ITS SOURCE** — so a link
+ * written inside a heading contributes its TEXT and not its URL.
+ *
+ * ⛔ This is not a guess. P4 rendered all 600 headings of the corpus through
+ * `marked` and compared its answer with this file's, and they differed in
+ * EXACTLY ONE place: a `seedling-bot.md` heading containing
+ * `[maze.md](./maze.md)`, where reading the source gave `…mazemdmazemd` and
+ * reading the text content gave `…mazemd`. GitHub answers the second, so the
+ * source reader was the wrong one and this line is the fix. `docsRender.test.js`
+ * now asserts the two readers agree on all 600 — two independent
+ * implementations, which is worth more than either alone.
+ *
+ * ⛔ Only the link form is reduced. Everything else GitHub strips —
+ * backticks, asterisks, quotes — `ghSlug` already drops as characters, so
+ * reducing them would change nothing and pretending to parse inline markdown
+ * here would be a renderer nobody tested.
+ */
+export const headingText = (text) => String(text)
+    .replace(/!?\[((?:[^[\]]|\[[^\]]*\])*)\]\([^)\s]*(?:\s+"[^"]*")?\)/g, '$1');
+
+/**
  * ⛓ THE HEADINGS OF A MARKDOWN SOURCE, in document order, as
  * `{ level, text, slug }`.
  *
@@ -87,6 +108,6 @@ export function headingsOf(markdown) {
         const m = /^(#{1,6})\s+(.*)$/.exec(line);
         if (m) out.push({ level: m[1].length, text: m[2].trim() });
     }
-    const slugs = ghSlugs(out.map((h) => h.text));
+    const slugs = ghSlugs(out.map((h) => headingText(h.text)));
     return out.map((h, i) => ({ ...h, slug: slugs[i] }));
 }
