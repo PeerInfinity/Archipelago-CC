@@ -6810,9 +6810,11 @@ function shipReadout(source, lifetime) {
             publish(state);
             $('loadWasm').disabled = !shippable;
         },
-        onTick(st, tape, state) {
+        onTick(st, tape) {
+            // ⛔ NO `state.status = st` HERE. `shipToWasm`'s poll already wrote
+            // it before calling this; a second writer of one field is exactly
+            // the shape this page keeps paying for.
             $('wasmHud').innerHTML = wasmHudRows(st, tape);
-            state.status = st;
         },
         onVerdict(v, state) {
             paintStages(state);

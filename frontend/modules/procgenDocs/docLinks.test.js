@@ -2,7 +2,7 @@
  * procgenDocs/docLinks — **EVERY LINK IN THE CORPUS, RESOLVED, COUNTED AND
  * PINNED** (PROCGEN DOCS · P4, D3).
  *
- * ⛓ `resolveDocLink` is pure, so it can be run over all 212 links the
+ * ⛓ `resolveDocLink` is pure, so it can be run over all 213 links the
  * seventeen tracked documents contain without a browser and without a server.
  * That is the whole reason it is a separate function from the page: the page
  * can only ever show one document at a time, and a resolver nobody ran over
@@ -50,7 +50,7 @@ const RESOLVED = CORPUS.map((l) => ({ ...l, ...resolveDocLink(l.href, { doc: l.d
 const SLUGS = new Map(FILES.map((f) => [f, new Set(headingsOf(read(f)).map((h) => h.slug))]));
 
 describe('the corpus census — printed, then pinned', () => {
-    it('resolves all 212 links into five kinds and no others', () => {
+    it('resolves all 213 links into five kinds and no others', () => {
         const by = {};
         for (const r of RESOLVED) by[r.kind] = (by[r.kind] ?? 0) + 1;
         // eslint-disable-next-line no-console
@@ -77,17 +77,21 @@ describe('the corpus census — printed, then pinned', () => {
          *              that `linksIn` used to count and the render never
          *              emitted. That third one was a DEFECT in the census
          *              reader, not a link: see `linksIn`'s docblock.
+         *   212 → 213  the ▶ LOAD-IN-WASM slice: `seedling-bot.md`'s ELEMENTS
+         *              § gained a SAME-DOC pointer into the new section
+         *              (`same-doc` 13 → 14), because the room that design
+         *              generates now reaches the real game.
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 13,
+            'same-doc': 14,
             doc: 144,
             external: 23,
             repo: 32,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(212);
+        expect(CORPUS.length).toBe(213);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
