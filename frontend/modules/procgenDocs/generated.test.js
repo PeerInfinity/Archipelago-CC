@@ -29,7 +29,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import * as urlParams from '../procgenCore/urlParams.js';
 import { ELEMENT_TABLE, ELEMENT_NAMES } from '../procgenCore/elementSpec.js';
@@ -46,9 +46,11 @@ import { MAZE_PALETTE } from '../mazeRoom/procgenMaze.js';
 import {
     findMarkdownRegion, markdownMarkers, spliceMarkdownRegion,
 } from '../../../scripts/procgen/reference/lib.mjs';
+import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 
 import { CATALOGUE } from './generated/catalogue.js';
 import { REFUSALS } from './generated/refusals.js';
+import { REGISTRY } from './generated/registry.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
 
 /** ⛓ Repo root from this file: `frontend/modules/procgenDocs/` → up three. */
@@ -60,6 +62,7 @@ const MODULES = [
     { file: 'urlGrammar.js', value: URL_GRAMMAR },
     { file: 'catalogue.js', value: CATALOGUE },
     { file: 'refusals.js', value: REFUSALS },
+    { file: 'registry.js', value: REGISTRY },
 ];
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -76,7 +79,8 @@ describe('the generated modules ARE what the code says', () => {
             code = e.status ?? 1;
             out = `${e.stdout ?? ''}${e.stderr ?? ''}`;
         }
-        expect(`${code}\n${out}`).toContain('ALL 3 GENERATED MODULES MATCH THE CODE');
+        expect(`${code}\n${out}`).toContain('GENERATED MODULES AND');
+        expect(`${code}\n${out}`).toContain('MATCH THE CODE');
         expect(code).toBe(0);
     });
 
@@ -402,5 +406,111 @@ describe('the markdown GENERATED REGION writer', () => {
         expect(begin).toContain('do not edit; regenerate');
         expect(begin).toContain(`GENERATED:${TABLE} BEGIN`);
         expect(end).toBe(`<!-- GENERATED:${TABLE} END -->`);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE REGISTRY MATRIX, ASKED OF THE REGISTRY (P3b)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE SUBJECT IS `substrateRegistry.getAll()`, NOT `registry.js`. The
+ * modules import the eight libraries the same way the generator does — a
+ * side effect of importing a `*Library.js` — and then ask the registry what it
+ * holds. A test that compared the module to itself would be the fixed point
+ * trap 250 names: self-consistent and never correct.
+ */
+
+describe('the registry matrix is one column per ENTRY and one row per FIELD', () => {
+    let entries = null;
+    let substrateRegistry = null;
+
+    beforeAll(async () => {
+        for (const rel of REGISTRY_LIBRARIES) {
+            // eslint-disable-next-line no-await-in-loop
+            await import(join(ROOT, rel));
+        }
+        ({ substrateRegistry } = await import('../shared/procgen/substrateRegistry.js'));
+        entries = substrateRegistry.getAll();
+    });
+
+    it('⛓⛓ every entry the REGISTRY returns is a column, in the same order', () => {
+        expect(REGISTRY.columns.map((c) => c.id)).toEqual(entries.map((e) => e.id));
+        expect(entries.length).toBeGreaterThan(6);
+    });
+
+    it('⛓⛓ every FIELD on every entry is a row — the union of `Object.keys`, '
+        + 'so a substrate that grows a field lands here without an edit', () => {
+        const rows = new Set(REGISTRY.rows.map((r) => r.name));
+        const missing = [];
+        for (const e of entries) {
+            for (const k of Object.keys(e)) if (!rows.has(k)) missing.push(`${e.id}.${k}`);
+        }
+        expect(missing).toEqual([]);
+    });
+
+    it('⛓⛓ every `loopSupport.*` flag any entry declares is its OWN row — the '
+        + 'expandable parents are derived from the doc, never listed', () => {
+        const rows = new Set(REGISTRY.rows.map((r) => r.name));
+        const missing = [];
+        for (const e of entries) {
+            for (const k of Object.keys(e.loopSupport ?? {})) {
+                if (!rows.has(`loopSupport.${k}`)) missing.push(`${e.id}.loopSupport.${k}`);
+            }
+        }
+        expect(missing).toEqual([]);
+        expect(rows.has('loopSupport.requiresLoopMode')).toBe(true);
+        expect(rows.has('loopSupport.executeVia')).toBe(true);
+    });
+
+    it('⛔ a cell says PRESENT exactly when the entry carries the field', () => {
+        const wrong = [];
+        for (const row of REGISTRY.rows) {
+            for (const cell of row.cells) {
+                const e = entries.find((x) => x.id === cell.id);
+                let v = e;
+                for (const k of row.name.split('.')) {
+                    v = (v && typeof v === 'object' && k in v) ? v[k] : undefined;
+                }
+                if ((v !== undefined) !== cell.present) wrong.push(`${cell.id}.${row.name}`);
+            }
+        }
+        expect(wrong).toEqual([]);
+    });
+
+    it('⛔ every library the generator imports LOADED headless — and a failure '
+        + 'would be NAMED rather than a quietly missing column', () => {
+        expect(REGISTRY.libraries.map((l) => l.file)).toEqual([...REGISTRY_LIBRARIES]);
+        expect(REGISTRY.libraries.filter((l) => !l.loadable).map((l) => l.file)).toEqual([]);
+        /* ⛓ every registered id is claimed by exactly one library */
+        const claimed = REGISTRY.libraries.flatMap((l) => l.registered).sort();
+        expect(claimed).toEqual(REGISTRY.columns.map((c) => c.id).sort());
+    });
+
+    it('⛔ every row is in a GROUP, and the groups partition the rows', () => {
+        const inAGroup = REGISTRY.groups.flatMap((g) => g.rows).sort();
+        expect(inAGroup).toEqual(REGISTRY.rows.map((r) => r.name).sort());
+        expect(new Set(inAGroup).size).toBe(inAGroup.length);
+    });
+
+    /**
+     * ⛔⛔ **THE P3b REGISTRY FINDINGS, PINNED** — the same discipline as the
+     * refusal findings: a slice that documents one of these has to come here
+     * and say so, and a NEW disagreement reds instead of joining a list nobody
+     * reads.
+     */
+    it('⛓⛓ the P3b registry findings, pinned', () => {
+        expect(REGISTRY.findings.map((f) => f.name).sort()).toEqual([
+            'applyPipelineConfig',
+            'captureLibraryEntry',
+            'getSpiralContent',
+            'instantiateAtlasEntryForSpecs',
+            'instantiateLibraryEntry',
+            'instantiateLibraryEntryForSpecs',
+            'onContentEdit',
+            'validateLibraryEntry',
+        ]);
+        /* ⛓ the two that ARE documented — one door down, in another doc */
+        expect(REGISTRY.findings.filter((f) => /another doc/.test(f.severity))
+            .map((f) => f.name)).toEqual(['applyPipelineConfig', 'onContentEdit']);
     });
 });

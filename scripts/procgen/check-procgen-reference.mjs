@@ -150,9 +150,11 @@ if (pages) {
         code = e.status ?? 1;
         out = `${e.stdout ?? ''}${e.stderr ?? ''}`;
     }
-    check(code === 0 && out.includes('ALL 3 GENERATED MODULES MATCH THE CODE'),
-        '⛓⛓⛓ the checked-in modules ARE what the code says (`--check` = regenerate, no diff)',
-        code === 0 ? '3 modules' : out.trim().split('\n').slice(0, 8).join(' | '));
+    check(code === 0 && /ALL \d+ GENERATED MODULES AND \d+ MARKDOWN REGIONS? MATCH THE CODE/
+        .test(out),
+        '⛓⛓⛓ the checked-in modules AND the markdown regions ARE what the code says '
+        + '(`--check` = regenerate, no diff)',
+        code === 0 ? (/ALL [^\n]*/.exec(out) ?? [''])[0] : out.trim().split('\n').slice(0, 8).join(' | '));
 }
 
 let server = null;

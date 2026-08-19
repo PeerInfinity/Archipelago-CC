@@ -105,9 +105,9 @@ Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`
 
 **Out of scope (the eventual direction, not built).** Unifying the ordinal-driven `extractZoneRules` (substrate decides) with the spec-driven `generateZoneForSpecs` (engine decides) into one spec-driven content contract, and running jta on the sphere-growth driver, are the natural next steps once a second data-backed content source exists. They are deliberately deferred.
 
-### Build-time — driver-facing adapter hooks (bounce)
+### Build-time — driver-facing adapter hooks (bounce and runner)
 
-The sphere-growth driver and the Procgen Pipeline panel read a further set of optional hooks so the generic engine never names a substrate directly. Today only bounce implements them; they are listed here so readers recognize them in the entry, with the semantics documented at their consumers in `procgenPipelineEngine.js` / `sphereConfigHooks.js`:
+The sphere-growth driver and the Procgen Pipeline panel read a further set of optional hooks so the generic engine never names a substrate directly. **Bounce and runner both implement them** — runner carries 15 of the 18, all but `canHostExitGatesBraid`, `driftItems` and `prepareSphereGrowth` — and the generated matrix below is the authority on which entry carries which. (This sentence said *"today only bounce implements them"* until 2026-08-18, when generating the matrix from the entries showed otherwise; the hand-kept matrix it replaced said the same thing on its "Sphere-growth adapter hooks" row.) The semantics are documented at their consumers in `procgenPipelineEngine.js` / `sphereConfigHooks.js`:
 
 - **Requirement-targeted zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (null ⇒ full vocabulary; non-geometry gate terms become bridge-evaluated locks).
 - **Gate-structure vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
@@ -117,24 +117,172 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 
 ## Capability matrix
 
-| Capability | `maze` | `bounce` | `runner` | `text_adventure` (wrapper) | `flash` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|
-| Panel / load event | `mazeRoomPanel` / `maze:loadRegion` | `bounceDemoPanel` / `bounce:loadRegion` | `runnerDemoPanel` / `runner:loadRegion` | `textAdventureSubstrateWrapperPanel` / `textAdventure:loadRegion` | shared flash panel / `flash:loadRegion` | `jtaSubstrateWrapperPanel` / `jta:loadRegion` | `omsiSubstrateWrapperPanel` / `omsi:loadRegion` |
-| Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | host proxy → iframe bridge | host proxy → iframe bridge |
-| Loop queue actions | move, check, explore | move, check (`executeVia: 'solver'`) | move, check (`executeVia: 'solver'`) | move, check, explore | move | move (`executeVia: 'solver'`) | move (`executeVia: 'solver'`) |
-| Manual loop play | yes | yes | yes | yes | yes | yes | yes |
-| Record / Playback | **yes** (fine-grained recorder) | **yes** (summary, M5) | **yes** (summary, M5) | **yes** (coarse-only) | no | **yes** (fine-grained, M4) | **yes** (fine-grained, arc D — the recording is a plan) |
-| Instant | **yes** | no (summary: inherently instant) | no (summary: inherently instant) | **yes** | no | **yes** | no (no fork fast-step surface) |
-| Bot (solver, M6) | **yes** (delegation) | **yes** (`walkTo`) | **yes** (`walkTo`) | no | no | **yes** (`walkTo`, honors Instant) | **yes** (`walkTo` — arc D2; the solver engages the FORK's own planner) |
-| `requiresLoopMode` | no | no | no | no | no | **yes** | **yes** |
-| Custom queues | **yes** | no | no | no | no | no | no |
-| Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no | no |
-| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `extractZoneRules`, `victoryItem`) | yes (`zoneCount` = region-split count or town count, `extractZoneRules`, `victoryItem`) |
-| Sphere-growth adapter hooks | no | **yes** | **yes** | no | no | no | no |
+⛔⛔ **THE TABLE BELOW IS GENERATED FROM THE REGISTRY AND CHECKED IN.** It is not a human's selection of interesting capabilities any more: it is one column per entry `substrateRegistry.getAll()` returns and one row per field an entry actually carries, written by `scripts/procgen/generate-procgen-reference.mjs` and gated by
 
-Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `flashPanel/flashSeedlingLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`.
+```
+node scripts/procgen/generate-procgen-reference.mjs --check   # regenerate = no diff
+```
 
-`flash_seedling` is not a column of its own above: it inherits the `flash` column verbatim (`arbitrary_ap_locations`, no playback, move-only loop support, no build hooks) and differs only in panel identity, load event, and the host-side glue that turns the game's own level changes into region moves.
+Everything outside the two markers — including the hand-kept annotations below — is prose the generator never touches. The same data, with every full value rather than a shortened cell, is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-registry).
+
+<!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
+
+**8 registered entries · 60 fields · 9 groups · 8 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+
+Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
+
+Cell values: a cell in the markdown region is SHORT: a function is `fn`, a boolean is yes/no, an array of at most 3 short values is the list and any longer one is its count, an object is its key set or its key count. The reference page prints the full value.
+
+Groups are this document's own § headings, matched to a field by the section that documents it.
+
+**Identity**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `id` | maze | flash | bounce | runner | text_adventure | flash_seedling | jta | omsi |
+| `label` | Maze | Flash | Bounce Demo | Runner Demo | Text Adventure | Seedling (region atlas) | JtA | Idle Loops |
+
+**Runtime**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |
+| `iframeId` | — | flashSubstrate | bounceDemo | runnerDemo | — | — | jtaSubstrateWrapper | omsiSubstrateWrapper |
+| `loadRegionEvent` | maze:loadRegion | flash:loadRegion | bounce:loadRegion | runner:loadRegion | textAdventure:loadRegion | flashSeedling:loadRegion | jta:loadRegion | omsi:loadRegion |
+| `panelComponentType` | mazeRoomPanel | flashSubstratePanel | bounceDemoPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel | flashPanel | jtaSubstrateWrapperPanel | omsiSubstrateWrapperPanel |
+| `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |
+| `supportedFeatures` | 7 items | arbitrary_ap_locations | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, runner_abilities | 6 items | arbitrary_ap_locations | 2 items | 2 items |
+
+**Playback**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn |
+
+**Loop mode**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `loopSupport` | 6 keys | {customQueues, manual, queueActions} | 8 keys | 8 keys | 6 keys | {customQueues, manual, queueActions} | 8 keys | 8 keys |
+| `loopSupport.customQueues` | yes | no | no | no | no | no | no | no |
+| `loopSupport.executeVia` | — | — | solver | solver | — | — | solver | solver |
+| `loopSupport.instant` | yes | — | yes | yes | yes | — | yes | yes |
+| `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playback` | yes | — | yes | yes | yes | — | yes | yes |
+| `loopSupport.queueActions` | regionMove, locationCheck, explore | regionMove | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck, explore | regionMove | regionMove | regionMove |
+| `loopSupport.record` | yes | — | yes | yes | yes | — | yes | yes |
+| `loopSupport.requiresLoopMode` | — | — | — | — | — | — | yes | yes |
+| `loopSupport.summaryRecording` | — | — | yes | yes | — | — | — | — |
+| `takeLastRecording` | fn | — | — | — | — | — | fn | fn |
+
+**Cross-substrate sharing**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `sharing` | {mana} | — | — | — | {mana} | — | {items, mana} | {items, mana} |
+| `sharing.items` | — | — | — | — | — | — | {getTypes} | {types} |
+| `sharing.mana` | {loopActionDelegation} | — | — | — | {} | — | {} | {} |
+| `sharing.mana.loopActionDelegation` | yes | — | — | — | — | — | — | — |
+
+**Build-time — procedural substrates**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `applyContentModules` | fn | — | — | — | — | — | — | — |
+| `extractPathsAndObstacles` | fn | — | — | — | fn | — | — | — |
+| `generateRegionCore` | fn | — | — | — | fn | — | — | — |
+| `placeFromItems` | fn | — | — | — | fn | — | — | — |
+| `placeFromRules` | fn | — | — | — | fn | — | — | — |
+
+**Build-time — content sources (zone-based substrates)**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `emitsSpiralContent` | — | — | — | — | — | — | yes | — |
+| `extractZoneRules` | — | — | fn | fn | — | — | fn | fn |
+| `spiralContentConfigKey` | — | — | — | — | — | — | datasetDoc | — |
+| `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
+| `zoneCount` | — | — | 5 | 6 | — | — | 30 | 1 |
+
+**Build-time — driver-facing adapter hooks (bounce and runner)**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `backPortalGated` | — | — | fn | fn | — | — | — | — |
+| `buildRegionContract` | — | — | fn | fn | — | — | — | — |
+| `buildRegionParams` | — | — | fn | fn | — | — | — | — |
+| `buildZoneSpecs` | — | — | fn | fn | — | — | — | — |
+| `canHostExitGates` | — | — | fn | fn | — | — | — | — |
+| `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — |
+| `defaultProcgenParams` | — | — | 10 keys | 8 keys | — | — | — | — |
+| `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — |
+| `exitGateVeto` | — | — | fn | fn | — | — | — | — |
+| `gateHostingHint` | — | — | fn | fn | — | — | — | — |
+| `gateableItems` | — | — | null | 5 items | — | — | — | — |
+| `generateZoneForSpecs` | — | — | fn | fn | — | — | — | — |
+| `generateZoneForSpecsGen` | — | — | fn | fn | — | — | — | — |
+| `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — |
+| `libraryItems` | — | — | 7 keys | 6 keys | — | — | 48 keys | {Victory} |
+| `libraryObstacles` | — | — | 6 keys | 5 keys | — | — | — | — |
+| `prepareSphereGrowth` | — | — | fn | — | — | — | — | — |
+| `renderProcgenParams` | — | — | fn | fn | — | — | — | — |
+
+**Not documented in the registry reference**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `applyPipelineConfig` | — | — | — | — | — | — | fn | fn |
+| `captureLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+| `getSpiralContent` | — | — | — | — | — | — | fn | — |
+| `instantiateAtlasEntryForSpecs` | fn | — | — | — | — | — | — | — |
+| `instantiateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+| `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — |
+| `onContentEdit` | — | — | — | — | — | — | fn | — |
+| `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+
+**Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
+
+| Library | Registers | Loads headless |
+|---|---|---|
+| `frontend/modules/mazeRoom/mazeRoomLibrary.js` | `maze` | yes |
+| `frontend/modules/bounceDemo/bounceDemoLibrary.js` | `flash`, `bounce` | yes |
+| `frontend/modules/runnerDemo/runnerDemoLibrary.js` | `runner` | yes |
+| `frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js` | `text_adventure` | yes |
+| `frontend/modules/flashSubstrate/flashSubstrateLibrary.js` | — (nothing new) | yes |
+| `frontend/modules/flashPanel/flashSeedlingLibrary.js` | `flash_seedling` | yes |
+| `frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js` | `jta` | yes |
+| `frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js` | `omsi` | yes |
+
+**8 findings — where an ENTRY and this document disagree.** ⛔ Printed, never fixed: the generator does not edit the code or the prose it reads.
+
+| Field | What |
+|---|---|
+| `applyPipelineConfig` | `applyPipelineConfig` is carried by [jta, omsi] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `captureLibraryEntry` | `captureLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `getSpiralContent` | `getSpiralContent` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `instantiateAtlasEntryForSpecs` | `instantiateAtlasEntryForSpecs` is carried by [maze] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `instantiateLibraryEntry` | `instantiateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `instantiateLibraryEntryForSpecs` | `instantiateLibraryEntryForSpecs` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `onContentEdit` | `onContentEdit` is carried by [jta] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. It IS named in [stepped-pipeline.md] — so the field is documented, one door down from the reference a reader of an ENTRY would open. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+| `validateLibraryEntry` | `validateLibraryEntry` is carried by [maze, bounce, runner] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
+
+<!-- GENERATED:substrate-capability-matrix END -->
+
+### Hand-kept — the annotations the code does not carry
+
+⛔ **These are NOT fields, which is why they are outside the region.** A field says `getPlaybackController` is a function; whether that function returns *the live panel's own controller* or *a host-side proxy to an in-game bot driver* is a reading of the code that no `Object.keys()` produces. The generated matrix says what each substrate DECLARES; this table says what those declarations MEAN, and a regeneration cannot eat it.
+
+| Substrate | What the declarations mean |
+|---|---|
+| `maze` | Playback controller is the **live panel's own** — no proxy, no bridge. Fine-grained recorder (`takeLastRecording`), so it owns its live-play drain natively (per tile, gated on loops' `livePlayRegion()`). Bot mode works by **delegation** rather than by driving `walkTo`. Its procedural build hooks include hazards, applied through `applyContentModules`. |
+| `bounce` | Playback controller is a **host-side proxy** publishing `bounce:playbackControl`; the in-game bot driver plays real physics from input synthesis. Record/Playback is the **summary** contract (M5) — the capture is the visit's net result, Playback applies it instantly, and because summary Playback is inherently instant the substrate declares `instant` for the focus-suppression seam but shows no checkbox. `zoneCount` comes from its zone table. The sphere-growth adapter hooks (the `generateZoneForSpecs` / gate-veto / pipeline-panel families) are bounce's alone. |
+| `runner` | Same **summary** story as bounce (M5), same host-proxy → in-game bot driver, and its `zoneCount` comes from a **lazy** zone table. |
+| `text_adventure` | The surviving wrapper (the direct-panel `textAdventureSubstrate` was deleted 2026-07-26); its `loopSupport` is pinned by `textAdventureSubstrateWrapperLibrary.test.js`. Playback controller is a host proxy → iframe bridge, publishing `textAdventureSubstrateWrapper:control`. **Coarse-only** capture: no recorder and no saved actions — the block's own queue entries *are* the recording (since M4 with an actions-less saved entry for the economy metadata). Its build hooks are the shared `adapterPrimitives.js` tile-grid implementations. |
+| `flash` | `getPlaybackController` exists and returns **`null`** — the field's presence is not playback support. Built by `createFlashSubstrateEntry`, one entry per Flash game. |
+| `flash_seedling` | The same factory as `flash` (2026-07-27), and since P3b it has **its own column** rather than inheriting flash's: it renders in the **flashPanel** panel with its own `flashSeedling:loadRegion` event and drops the inherited `iframeId`. What the matrix cannot show is the host-side glue that turns the game's own level changes into region moves — see [Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions). |
+| `jta` | Fine-grained recorder since M4; the Bot honours Instant (`walkTo` on a fine substrate). Genuinely pre-built-by-reference — indices into one stateful game build — which is why it is excluded from the region library by nature. |
+| `omsi` | Fine-grained since arc D, and **the recording is a plan**: the capture is the region's authored plan rather than a performed log, because the genre makes a performed log redundant. Bot mode is arc D2 — the solver engages the **fork's own planner**. No Instant: the fork has no fast-step surface. `zoneCount` is the region-split count or the town count. |
+
 
 ## Adding a substrate
 

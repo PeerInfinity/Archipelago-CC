@@ -64,10 +64,15 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-import { DEFAULT_OUT, arg, flag, moduleText } from './reference/lib.mjs';
+import {
+    DEFAULT_OUT, REPO, arg, findMarkdownRegion, flag, moduleText, spliceMarkdownRegion,
+} from './reference/lib.mjs';
 import { buildUrlGrammar } from './reference/urlGrammar.mjs';
 import { buildCatalogue } from './reference/catalogue.mjs';
 import { buildRefusals } from './reference/refusals.mjs';
+import { REGISTRY_DOC, buildRegistry, registryMarkdown } from './reference/registry.mjs';
+
+const REGISTRY = await buildRegistry();
 
 const OUT = resolve(arg('out', DEFAULT_OUT));
 const files = [
@@ -101,7 +106,37 @@ const files = [
             + 'scan. `findings` is where the two disagree.',
         value: buildRefusals(),
     },
+    {
+        file: 'registry.js',
+        exportName: 'REGISTRY',
+        doc: '**THE SUBSTRATE-REGISTRY CAPABILITY MATRIX** — one column per entry '
+            + '`substrateRegistry.getAll()` returns (in REGISTRATION order, which is the '
+            + 'order the generator imports the libraries that self-register them) and one '
+            + 'row per field an entry CARRIES, grouped by the `###` heading of '
+            + '`substrate-registry.md` that documents it. `findings` is where an entry and '
+            + 'that document disagree.',
+        value: REGISTRY,
+    },
 ].map((f) => ({ ...f, text: moduleText(f) }));
+
+/**
+ * ⛓⛓ THE MARKDOWN GENERATED REGIONS (P3b, D1). A `.md` people read on GitHub
+ * keeps its prose; only the text between the two markers is written, and
+ * `--check` diffs a region exactly as it diffs a module.
+ */
+const regions = [
+    {
+        file: REGISTRY_DOC,
+        table: 'substrate-capability-matrix',
+        body: registryMarkdown(REGISTRY),
+    },
+].map((r) => ({ ...r, path: join(REPO, r.file) }));
+
+/** ⛔ A region whose markers are missing or duplicated REFUSES BY NAME rather
+ *  than being skipped — a skipped region is a table nothing gates. */
+function regionBody(r) {
+    return findMarkdownRegion(readFileSync(r.path, 'utf8'), r.table, { what: r.file }).body;
+}
 
 if (flag('check')) {
     let bad = 0;
@@ -122,9 +157,38 @@ if (flag('check')) {
         }
         if (a.length !== b.length) console.log(`  (${a.length} lines on disk, ${b.length} from the code)`);
     }
+    for (const r of regions) {
+        let onDisk = null;
+        try {
+            onDisk = regionBody(r);
+        } catch (e) {
+            bad += 1;
+            console.log(`FAIL: ${r.file} — ${e.message}`);
+            continue;
+        }
+        if (onDisk === r.body) {
+            console.log(`PASS: ${r.file} § GENERATED:${r.table} is what the code says`);
+            continue;
+        }
+        bad += 1;
+        console.log(`FAIL: ${r.file} § GENERATED:${r.table} DIFFERS from what the code says`);
+        const a = onDisk.split('\n');
+        const b = r.body.split('\n');
+        let shown = 0;
+        for (let i = 0; i < Math.max(a.length, b.length) && shown < 20; i += 1) {
+            if (a[i] === b[i]) continue;
+            console.log(`  region line ${i + 1}\n    on disk: ${a[i] ?? '(none)'}\n`
+                + `    the code: ${b[i] ?? '(none)'}`);
+            shown += 1;
+        }
+        if (a.length !== b.length) {
+            console.log(`  (${a.length} region lines on disk, ${b.length} from the code)`);
+        }
+    }
     console.log(bad === 0
-        ? `\nALL ${files.length} GENERATED MODULES MATCH THE CODE`
-        : `\n${bad} GENERATED MODULE(S) DIFFER — run the generator with no --check`);
+        ? `\nALL ${files.length} GENERATED MODULES AND ${regions.length} MARKDOWN `
+            + `REGION${regions.length === 1 ? '' : 'S'} MATCH THE CODE`
+        : `\n${bad} GENERATED MODULE(S)/REGION(S) DIFFER — run the generator with no --check`);
     process.exit(bad === 0 ? 0 : 1);
 }
 
@@ -132,6 +196,13 @@ mkdirSync(OUT, { recursive: true });
 for (const f of files) {
     writeFileSync(join(OUT, f.file), f.text);
     console.log(`wrote ${join(OUT, f.file)} (${f.text.split('\n').length} lines)`);
+}
+for (const r of regions) {
+    const before = readFileSync(r.path, 'utf8');
+    const after = spliceMarkdownRegion(before, r.table, r.body, { what: r.file });
+    if (after !== before) writeFileSync(r.path, after);
+    console.log(`${after === before ? 'unchanged' : 'wrote'} ${r.file} `
+        + `§ GENERATED:${r.table} (${r.body.split('\n').length} lines)`);
 }
 const g = files[0].value;
 const c = files[1].value;
@@ -148,3 +219,8 @@ console.log(`refusals:   ${r.rows.length} rows over ${r.sources.length} sources 
     + `${r.rows.filter((x) => !x.named).length} unnamed), `
     + `${r.enums.length} enums, ${r.findings.length} FINDING(S)`);
 for (const f of r.findings) console.log(`  FINDING [${f.source}] ${f.name}`);
+console.log(`registry:   ${REGISTRY.columns.length} entries `
+    + `(${REGISTRY.columns.map((c) => c.id).join(', ')}), ${REGISTRY.rows.length} fields over `
+    + `${REGISTRY.groups.length} groups, ${REGISTRY.libraries.filter((l) => !l.loadable).length} `
+    + `library/libraries NOT loadable headless, ${REGISTRY.findings.length} FINDING(S)`);
+for (const f of REGISTRY.findings) console.log(`  FINDING [registry] ${f.name} — ${f.severity}`);
