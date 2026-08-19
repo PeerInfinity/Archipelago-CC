@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 3 pages · 155,774 words.**
+**17 documents · 4 pages · 155,774 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -32,11 +32,12 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | [JtA Substrate](./jta.md) | The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering. | 4814 |
 | [Omsi Substrate (Idle Loops)](./omsi.md) | The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) hosts the **`PeerInfinity/omsi-loops` fork of dmchurch's Idle Loops** — included as the `frontend/modules/omsi-loops/` git submodule, pinned at `2bda39b` — in a same-origin iframe as a loop-mode substrate. | 7217 |
 
-**The three pages.** These are not `.md` files: they render a DATA module in a browser, and only `frontend/` is published to Pages.
+**The four pages.** These are not `.md` files: they render in a browser, and only `frontend/` is published to Pages.
 
 | Page | What it renders |
 |---|---|
 | [Procgen demonstrations — a catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) | procgenDocs/demos.html — **THE PROCGEN DEMO CATALOGUE, RENDERED.** One entry per demonstrable feature of the two procgen lab pages, each with the link that shows it (here AND on the deployed site), the CLI command that reproduces it in node, which control to press, and what you are looking at. |
+| [Procgen documents — the tracked records, rendered](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/docs.html) | procgenDocs/docs.html — **THE PROCGEN NARRATIVE DOCUMENTS, ON PAGES.** One viewer for the seventeen tracked `.md` files under `docs/json/developer/procgen/` plus the README that indexes them: GitHub's heading anchors, a nav in README's declared reading order, a table of contents off the render, and every relative li… |
 | [Procgen glossary — the vocabulary, defined](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html) | procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per term the procgen docs and the two lab pages use as vocabulary: a plain-language sentence first, then the concrete rule and where it lives. |
 | [Procgen reference — the six generated tables](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html) | procgenDocs/reference.html — **THE PROCGEN REFERENCE, GENERATED FROM THE CODE.** Six tables nobody should ever author by hand, because the code already knows the answer: the URL parameter grammar of the two lab pages, the generation catalogue, the refusal vocabulary, the substrate-registry capability matrix, the ins… |
 

@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 16,
-            "count": 20,
+            "browser": 17,
+            "count": 21,
             "id": "check"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 202,
-        "browser": 69,
+        "blockStyle": 203,
+        "browser": 70,
         "cited": 56,
-        "files": 221,
+        "files": 222,
         "lineStyle": 19,
-        "withDocblock": 221,
-        "withFlags": 130
+        "withDocblock": 222,
+        "withFlags": 131
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -834,6 +834,36 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-procgen-demos — **EVERY LINK IN THE DEMO CATALOGUE IS LOADED, AND EVERY ENTRY'S OWN NAMED CLAIM IS ASSERTED OFF THE PAGE'S READOUT** (PROCGEN ELEMENTS arc 3, slice 5b; rebuilt on the data module by PROCGEN DOCS P1).",
             "path": "scripts/procgen/check-procgen-demos.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "pages"
+            ],
+            "file": "check-procgen-docs.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pages"
+                }
+            ],
+            "oneLiner": "check-procgen-docs — **THE SEVENTEEN TRACKED DOCUMENTS RENDER ON THE PAGE, WITH THE ANCHORS THEIR OWN LINKS POINT AT** (PROCGEN DOCS · P4, D4).",
+            "path": "scripts/procgen/check-procgen-docs.mjs"
         },
         {
             "argvHelpers": [

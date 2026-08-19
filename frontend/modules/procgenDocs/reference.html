@@ -734,6 +734,11 @@ for (const d of DOCS_INDEX.docs) {
                 ['links to', d.links.length
                     ? d.links.map((f) => `<code>${esc(f)}</code>`).join(' ')
                     : '<span class="note">no other procgen document</span>'],
+                /** ⛓ P4: the document is no longer only a file on GitHub —
+                 *  `docs.html` renders it on this same site, so a reader can
+                 *  go from a row here to the prose without leaving Pages. */
+                ['read here', `<a href="docs.html?doc=${esc(encodeURIComponent(d.file))}">`
+                    + `docs.html?doc=${esc(d.file)}</a>`],
             ]),
         hay: `${d.file} ${d.h1 ?? ''} ${d.description}`,
     });

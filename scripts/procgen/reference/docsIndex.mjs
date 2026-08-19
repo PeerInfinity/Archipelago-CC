@@ -4,9 +4,11 @@
  *
  * ⛓ ONE ROW PER `docs/json/developer/procgen/*.md` (README itself excepted —
  * it is the file the index goes IN), plus one per page under
- * `frontend/modules/procgenDocs/*.html`, because three of README's rows point
+ * `frontend/modules/procgenDocs/*.html`, because some of README's rows point
  * at a PAGE rather than at a `.md` and dropping them would be a table that
- * quietly stopped covering its subject.
+ * quietly stopped covering its subject. ⛓ P4 added a fourth page (`docs.html`,
+ * which renders the narrative documents themselves) and the only edit that
+ * needed was to stop TYPING the number — see `docsIndexMarkdown` below.
  *
  *   the H1          the document's own title line
  *   the DESCRIPTION the document's own first paragraph
@@ -209,9 +211,19 @@ export function docsIndexMarkdown(v) {
     for (const d of v.docs) {
         out.push(`| [${mdCell(d.h1)}](./${d.file}) | ${mdCell(d.description)} | ${d.words} |`);
     }
+    /**
+     * ⛔⛔ **THE COUNT IS COUNTED, NOT TYPED.** This sentence said "The three
+     * pages" while `v.pages` came from a `readdirSync` — so the moment P4 added
+     * `docs.html` the prose and the table below it disagreed, and nothing in
+     * the gate could see it (`--check` compares the region with itself
+     * regenerated, and a typed word regenerates identically). A table that
+     * stops covering its subject needs a second gate; the cheaper fix is to
+     * never write a number a reader could check against the rows underneath.
+     */
+    const n = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
     out.push('',
-        '**The three pages.** These are not `.md` files: they render a DATA module in a '
-        + 'browser, and only `frontend/` is published to Pages.',
+        `**The ${n[v.pages.length] ?? v.pages.length} pages.** These are not \`.md\` files: `
+        + 'they render in a browser, and only `frontend/` is published to Pages.',
         '',
         '| Page | What it renders |', '|---|---|');
     for (const p of v.pages) {

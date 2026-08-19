@@ -24,7 +24,7 @@ export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
         "lines": 13037,
-        "pages": 3,
+        "pages": 4,
         "words": 155774
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
@@ -285,6 +285,14 @@ export const DOCS_INDEX = frz({
             "path": "frontend/modules/procgenDocs/demos.html",
             "title": "Procgen demonstrations — a catalogue",
             "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html"
+        },
+        {
+            "description": "procgenDocs/docs.html — **THE PROCGEN NARRATIVE DOCUMENTS, ON PAGES.** One viewer for the seventeen tracked `.md` files under `docs/json/developer/procgen/` plus the README that indexes them: GitHub's heading anchors, a nav in README's declared reading order, a table of contents off the render, and every relative li…",
+            "file": "docs.html",
+            "h1": "Procgen documents — the tracked records, rendered",
+            "path": "frontend/modules/procgenDocs/docs.html",
+            "title": "Procgen documents — the tracked records, rendered",
+            "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/docs.html"
         },
         {
             "description": "procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per term the procgen docs and the two lab pages use as vocabulary: a plain-language sentence first, then the concrete rule and where it lives.",

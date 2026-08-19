@@ -16,7 +16,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ghSlug, ghSlugs, headingsOf } from './ghSlug.js';
+import { ghSlug, ghSlugs, headingText, headingsOf } from './ghSlug.js';
 
 const ROOT = new URL('../../../', import.meta.url).pathname;
 const DIR = 'docs/json/developer/procgen';
@@ -99,7 +99,15 @@ describe('the corpus — what this repo can and cannot check', () => {
          *  heading something other than its own bare slug". */
         const collisions = [];
         for (const f of FILES) {
-            for (const h of headingsOf(read(f))) if (h.slug !== ghSlug(h.text)) collisions.push(h.slug);
+            for (const h of headingsOf(read(f))) {
+                /** ⛔ The base is `ghSlug(headingText(...))`, NOT `ghSlug(text)`.
+                 *  The slug path reduces an inline link to its text, so
+                 *  comparing against the unreduced source calls the one heading
+                 *  containing `[maze.md](./maze.md)` a duplicate. Second time
+                 *  this detection has been wrong in the same way: the base must
+                 *  be spelled exactly as the slug path spells it. */
+                if (h.slug !== ghSlug(headingText(h.text))) collisions.push(h.slug);
+            }
         }
         expect(collisions.length).toBeGreaterThan(0);
         expect(collisions).toEqual([

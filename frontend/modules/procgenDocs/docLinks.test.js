@@ -2,7 +2,7 @@
  * procgenDocs/docLinks — **EVERY LINK IN THE CORPUS, RESOLVED, COUNTED AND
  * PINNED** (PROCGEN DOCS · P4, D3).
  *
- * ⛓ `resolveDocLink` is pure, so it can be run over all 210 links the
+ * ⛓ `resolveDocLink` is pure, so it can be run over all 211 links the
  * seventeen tracked documents contain without a browser and without a server.
  * That is the whole reason it is a separate function from the page: the page
  * can only ever show one document at a time, and a resolver nobody ran over
@@ -50,7 +50,7 @@ const RESOLVED = CORPUS.map((l) => ({ ...l, ...resolveDocLink(l.href, { doc: l.d
 const SLUGS = new Map(FILES.map((f) => [f, new Set(headingsOf(read(f)).map((h) => h.slug))]));
 
 describe('the corpus census — printed, then pinned', () => {
-    it('resolves all 210 links into five kinds and no others', () => {
+    it('resolves all 211 links into five kinds and no others', () => {
         const by = {};
         for (const r of RESOLVED) by[r.kind] = (by[r.kind] ?? 0) + 1;
         // eslint-disable-next-line no-console
@@ -66,14 +66,17 @@ describe('the corpus census — printed, then pinned', () => {
          * is the failure it prevents, and this line is where a first such link
          * would announce itself.
          */
+        /** ⛓ 22 external, not 21: P4's own page added a row to README's
+         *  GENERATED index table, and that row carries the page's Pages URL.
+         *  The pin caught it, which is what a pinned census is for. */
         expect(by).toEqual({
             'same-doc': 13,
             doc: 144,
-            external: 21,
+            external: 22,
             repo: 32,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(210);
+        expect(CORPUS.length).toBe(211);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
