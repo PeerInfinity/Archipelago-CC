@@ -9509,7 +9509,7 @@ is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
 ## The procgen ELEMENTS design — pass 1 = elements + connectors, an intra-level area graph, pass 2 site-typed (DESIGNED 2026-08-15; **ARCS 1, 2 AND 3 ARE CLOSED** — arcs 1–2 on the maze, see [`maze.md`](./maze.md); **arc 3 = Seedling, CLOSED 2026-08-18 over fourteen slices**, and *⛓⛓⛓ ARC 3 IS CLOSED* at the end of this § is its summary; arc 4 = THE CHAIN, ⛔ ask-first; arc 5 = shortcuts / density / arenas)
 
-⇒ ⛓ **AND THE ROOM THIS DESIGN GENERATES NOW REACHES THE REAL GAME.** [▶ LOAD IN WASM](#-load-in-wasm--what-this-page-holds-run-in-the-real-recompiled-game-tooling--user-2026-08-19) at the end of this document is the button: a certified room mounts in the recompiled Seedling as a one-room level SET and its certification solve replays into it, with an END-STATE verdict beside the JS one. ⛔ Read that §'s *what the verdict does NOT mean* before quoting an `agrees`.
+⇒ ⛓ **AND THE ROOM THIS DESIGN GENERATES NOW REACHES THE REAL GAME.** [▶ LOAD IN WASM](#-load-in-wasm--what-this-page-holds-run-in-the-real-recompiled-game-tooling--user-2026-08-19) at the end of this document is the button: a certified room mounts in the recompiled Seedling as a one-room level SET and its certification solve replays into it, with an END-STATE verdict AND a PER-TICK differential beside the JS one. ⛔ Read that §'s *the two limits it names* before quoting an `agrees`.
 
 ⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (14 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
 
@@ -10418,6 +10418,11 @@ starting state you just typed. This § is that button.
 > selector; **end-state agreement now**, the per-tick differential in the page
 > is the NEXT slice; **a one-room set per ship**; recording FROM the wasm and an
 > "original game by default" build are deferred.
+>
+> ⛓ **The per-tick differential LANDED** (the next slice, same day). Everything
+> below about the end-state verdict still holds — it still runs, and it runs
+> FIRST — but it is no longer the only answer the page gives. See
+> *The PER-TICK verdict* below.
 
 ### What it is
 
@@ -10455,8 +10460,17 @@ levels   (a level set only) botLoadLevels per chunk, then botLevelSet READ
 tape     botLoadTape returned 'ok'            ⇒ botLoadTape:<what it said>
 running  botStart returned 'ok'               ⇒ botStart:<what it said>
 finished botStatus.finished
-verdict  the END-STATE comparison
+drain    botDrain, read ONCE — the game's WHOLE observation stream
+verdict  the END-STATE comparison, and then the PER-TICK differential
 ```
+
+⛓ **`botDrain` is a BUFFERED stream, not a sample**, so reading it once after
+`finished` yields every observation of the run and both sides are complete —
+there is no wall-clock join. ⛔ That is why the per-tick verdict reads the drain
+and **not** the 250 ms `botStatus` poll beside it: at ~18.6 ticks/s on a real
+GPU that poll sees roughly one tick in four, and a "per-tick" record built from
+it would be a subsample reported as a stream. Reading the drain twice is not an
+option either — the verb drains.
 
 ⛓ **The readback is the proof a set MOUNTED** rather than merely arrived —
 Phase 3b's manifest gate caught `new Array(45)` that way, a defect no tape and
@@ -10466,20 +10480,18 @@ no unit test could see because both were reading the same wrong object.
 forgets the tape, not the world), so a second ship on a page that already ran
 one would start from wherever the first stopped and report it as data.
 
-### ⛔ What the verdict MEANS — and what it does NOT
+### ⛔ What the END-STATE verdict MEANS — and what it does NOT
 
-`wasm verdict: agrees` says **the real game ended where the JS model ended**:
+`end state: agrees` says **the real game ended where the JS model ended**:
 same level, position within the tolerance, and an item set that is a superset
 of what the model held. It is printed with its bound attached, always:
 
-> *end state only; the per-tick differential is the next slice*
+> *end state only — two runs can meet on the last frame having disagreed on
+> every tick between*
 
-⛔ **It is NOT a certification and it is NOT a differential.** It compares ONE
-frame. Two runs can meet on the last frame having disagreed on every tick in
-between — a route that took a different path to the same door is invisible to
-it. The instrument that compares tick by tick is
-`verify-seedling-bot-differential.mjs`, and it runs against committed
-expectations, not against a live page.
+⛔ **It is NOT a certification.** It compares ONE frame — a route that took a
+different path to the same door is invisible to it. That is what the per-tick
+verdict below is for.
 
 The other three answers are answers, not absences:
 
@@ -10489,6 +10501,71 @@ The other three answers are answers, not absences:
   agree with. ⛔ Reported as an absence rather than as agreement;
 - `not finished (<the refusal's own reason>)` — the ship stopped, and the
   sentence says where.
+
+### ⛓⛓⛓ The PER-TICK verdict — and the two limits it names
+
+After `finished`, the page drains the game's whole observation stream and diffs
+it against the JS model's stream for the SAME tape, through the SAME comparator
+the node differential uses — `tapeFormat.diffObservationStreams`, imported, never
+re-spelled. ⛓ **The model's stream is not a second walk**: it is the `finished`
+block of the walk the page already made for its overlays, which is literally
+what `runTapeToStream` returns, and `watchOverlays.test.js` pins that equality
+rather than asserting it in a comment. ⛓ **The game's stream is the drain plus
+the derived transitions** — `Bot.as` hardcodes `transitions: []`, so the entries
+are derived from the ticks by `tapeFormat.gameStreamFromDrain`, the one spelling
+the node differential now calls too. Without that derivation, every tape with a
+level change diverges spuriously at the crossing.
+
+The headline is one of five, and each is an answer:
+
+- `agrees per tick (N observations)`;
+- `diverges — tick 143 differs: expected (x=88, y=130, level=0), got (x=90, …)
+  [dx=2, dy=0] (model 256 observation(s), game 256)` — the comparator's own
+  sentence, verbatim, at the FIRST divergence;
+- `no per-tick comparison (<the arm's reason>) — N observation(s) drained from
+  the game` — MANUAL's zero-input tape has no run to reproduce;
+- `end-state only (no drain on this build)` — the labelled fallback for an
+  older artifact without the verb;
+- `verdict-internally-inconsistent — …` — see below.
+
+⛔ **The end-state check runs FIRST, and it always runs.** A per-tick `agrees`
+printed beside an end state that disagrees **about the same frame** would be a
+defect in the comparison — `botStatus` and `botDrain` disagreeing with each
+other — not a finding about the run, so it prints
+`verdict-internally-inconsistent` and never `agrees`. Both lines stay on screen,
+because that is what the refusal is a refusal *about*.
+
+⚖ **An items-only disagreement is NOT an inconsistency.** An observation is
+`{t, x, y, level}` and carries no items, so `missing hasSword` beside a per-tick
+agreement is the end-state check answering a question the per-tick one never
+asked. Which verdict answered which question is the whole point of printing
+both: the per-tick line owns position and level over the whole run, the
+end-state line owns the item set at the last frame.
+
+⛔ **The scope rides with it, and it names TWO limits:**
+
+> *per tick against the JS MODEL of this same tape, not against a recorded
+> expectation; and both sides share this repo's tape and observation code, so a
+> defect in what they SHARE is invisible here*
+
+The second is trap 389 and it is not a formality: the tape both runtimes execute
+and the vocabulary both streams are read in are this repo's, so a bug in what
+they share agrees with itself. The instrument that compares the game against
+**recorded** oracles is still `verify-seedling-bot-differential.mjs`.
+
+⚠ **There is no count of how many divergences follow the first**, deliberately.
+Producing one needs either a second equality predicate — a detector with its own
+copy of the production comparison, which tests itself — or a regex over
+`diffObservationStreams`' prose to recover the tick index. That function returns
+a sentence, not a structure. The first divergence verbatim, both stream lengths,
+and the end-state leg beside it are what actually answer *one tick, or
+everything*.
+
+⛓ **`?side=wasm&tape=<committed>` gets the per-tick verdict too**, and it is the
+cheapest witness there is: a committed tape's stream is KNOWN, so a divergence
+there is attributable without generating or solving anything. It is published on
+`__watch.wasm` rather than painted over that arm's own readout, which the live
+browser rows assert on.
 
 ### The tolerance is **0 px**, and it is a measurement
 
@@ -10516,7 +10593,7 @@ not a reason to widen this.
 |---|---|---|
 | `check-seedling-editor-switch.mjs` | headless | the BUTTON — present, hidden in REPLAY, disabled-with-a-reason before a solve, enabled after |
 | `check-seedling-wasm-pages.mjs` | headless (any root, incl. Pages) | `probe`→`runtime`→(a real ▶ Start)→`levels` + readback, `tape`, `running`; and MANUAL's zero-input tape all the way to `finished` |
-| `check-seedling-wasm-ship.mjs` | **real-GPU Windows Chrome** (`py.exe`) | `finished` and the **VERDICT** |
+| `check-seedling-wasm-ship.mjs` | **real-GPU Windows Chrome** (`py.exe`) | `finished`, the `drain`, and BOTH **VERDICTS** |
 
 ⚠ The split is not tidiness. WSL's own chromium is SwiftShader at ~0.5 ticks/s,
 so a 255-tick solve is eight minutes of software rasterising and any deadline

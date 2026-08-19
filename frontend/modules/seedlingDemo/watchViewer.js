@@ -149,7 +149,8 @@ import {
 import {
     activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt, attackRectsAt,
     bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt, defaultLayerSet,
-    hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, OVERLAY_LAYERS, overlaysFor,
+    hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, modelStreamOf,
+    OVERLAY_LAYERS, overlaysFor,
     parseAttackHold, parseLayersParam, pathPointsUpTo, SWING_WINDOW_NOTE, traceRowFields,
     traceSidecarPath, worldChangesAt, dialogueAt,
 } from './watchOverlays.js';
@@ -192,8 +193,8 @@ import { parseAreaSpec } from '../procgenCore/areaSpec.js';
  * once in the page rather than in a constant one file away from its only use.
  */
 import {
-    END_STATE_TOLERANCE, levelSetDisagreement, roomOfGeneratedLevel, shipToWasm,
-    stagesOf, VERDICT_SCOPE, verdictLine, WASM_PAGE, WASM_STAGES, verdictOf,
+    END_STATE_TOLERANCE, levelSetDisagreement, remapStreamRooms, roomOfGeneratedLevel,
+    shipToWasm, stagesOf, VERDICT_SCOPE, verdictBlock, WASM_PAGE, WASM_STAGES, verdictOf,
 } from './watchWasm.js';
 import { foldLedger } from './procgenLedger.js';
 import {
@@ -2802,9 +2803,18 @@ const isHeldLevel = (level) =>
  * hook at it. The copies were identical, which is how they stayed correct —
  * and is exactly why the fifth one would not have been.
  */
+/**
+ * ⛓ THE PAGE'S LEVEL SOURCE, IN ONE PLACE. `armPrelude` builds it for every arm
+ * that draws; the `?side=wasm` arm now needs the same one to walk the JS MODEL
+ * of the tape it is shipping, and a second composition there would be a second
+ * opinion about which world a committed tape runs in.
+ */
+const pageLevelSource = (atlas) =>
+    levelSourceWithHeld(levelSourceFromAtlas(atlas), heldGeneratedLevel);
+
 async function armPrelude(params, lifetime) {
     const atlas = await loadAtlas();
-    const levelSource = levelSourceWithHeld(levelSourceFromAtlas(atlas), heldGeneratedLevel);
+    const levelSource = pageLevelSource(atlas);
     replayLoadedTape = (t, lbl) => replayTape(t, lbl, params, levelSource, null,
         undefined, { scratchPersistence: isHeldLevel(t?.boot?.level) })
         .catch((e) => lifetime.report(`a loaded tape would not replay: ${e.message}`,
@@ -3669,11 +3679,12 @@ async function runSolve(params, lifetime) {
         // replay, exactly as its trace does — the solve holds both in memory,
         // and a page that went looking for either on disk would be looking for
         // an artifact that was never written.
-        const { frames } = await replayTape(solved.tape, name, params, levelSource,
+        const replayed = await replayTape(solved.tape, name, params, levelSource,
             { trace: solved.out.trace, why: null }, solved.out.dangerQueries,
             // ⛓ The tape being scrubbed came from a scratch solve iff the
             // solve above was one — the same fork, kept in step by construction.
             { scratchPersistence: isHeldLevel(block.boot.level) });
+        const { frames } = replayed;
         const replayMs = Math.round(performance.now() - replayT0);
 
         /**
@@ -3747,6 +3758,17 @@ async function runSolve(params, lifetime) {
             build: () => ({
                 tape: solved.tape,
                 expect: expectFromFrames(frames),
+                /**
+                 * ⛓⛓ AND THE WHOLE STREAM, FROM THE SAME WALK — not a second
+                 * one. `replayTape` returns the stepper's own `finished` block,
+                 * which IS `runTape`'s result, which is what `runTapeToStream`
+                 * hands the node differential. So the per-tick verdict compares
+                 * the run THIS SCRUB IS SHOWING against the real game, in the
+                 * one observation vocabulary (trap 383).
+                 */
+                modelStream: modelStreamOf(replayed),
+                modelStreamWhy: modelStreamOf(replayed) ? null
+                    : 'the model walk did not finish — the scrub shows what it got',
                 label: `${name} \u2014 the solve's own tape`,
             }),
         });
@@ -3841,6 +3863,19 @@ async function runManual(params, lifetime) {
                 // so there is no JS run to agree with.
                 expect: null,
                 expectWhy: 'manual',
+                /**
+                 * ⛔ AND NO MODEL STREAM EITHER, FOR THE SAME REASON THE
+                 * EXPECTATION IS ABSENT. A zero-input tape has nothing to
+                 * disagree about — a per-tick comparison over it would be
+                 * vacuous agreement on the boot frame, printed as if the real
+                 * game had reproduced a run. The verdict says `no per-tick
+                 * comparison (…)` and still reports how many observations the
+                 * game drained, which is the honest fact this arm has.
+                 */
+                modelStream: null,
+                modelStreamWhy: 'manual — nothing has been driven in JS, and a '
+                    + 'zero-input tape has no run to reproduce; the keyboard is yours '
+                    + 'from here',
                 label: `${name} \u2014 your starting conditions, zero input`,
                 note: 'the run is YOURS from here \u2014 the keyboard drives the real game '
                     + 'in the frame below (\u2696 user-measured, 2026-08-19)',
@@ -6694,6 +6729,18 @@ function buildGenerateShip(state, solved) {
             + `no end state to compare against: ${walked.error.message}`);
     }
     const modelEnd = expectFromFrames(walked.frames);
+    /**
+     * ⛓⛓⛓ AND THE WHOLE STREAM, REMAPPED THE SAME WAY THE EXPECTATION IS.
+     *
+     * ⛔ EVERY observation of a generated walk carries level 900, not just the
+     * last one — so the per-tick differential needs the remap applied across
+     * the stream, through the ONE function that owns it. A raw comparison would
+     * print `tick 0 differs: … level=900 … level=0` on a ship that worked
+     * perfectly, which is a verdict about two id spaces at every tick instead
+     * of at one (§18.15.3's reason, one instrument further along).
+     */
+    const modelStream = remapStreamRooms(modelStreamOf(walked), set.rooms.length,
+        [state.record.level]);
     return {
         levelSet: set,
         chunks,
@@ -6701,6 +6748,8 @@ function buildGenerateShip(state, solved) {
         // that certified it boots there.
         tape: { ...solved.tape, boot: { ...solved.tape.boot, level: mapped.room } },
         expect: { ...modelEnd, level: mapped.room },
+        modelStream,
+        modelStreamWhy: null,
         label: `${entryName} — the certification tape, in a ONE-ROOM set (${set.set_id})`,
         note: mapped.why,
     };
@@ -6777,25 +6826,38 @@ function expectFromFrames(frames) {
  * certification. ⚖ D3 puts the wasm verdict BESIDE those, and a ship that
  * painted over them would delete the very thing the verdict is compared with.
  */
+/**
+ * ⛓⛓ WHAT A SHIP PUBLISHES — **ONE SPELLING, BOTH READOUTS.**
+ *
+ * The button's panel and REPLAY's shared chrome paint different things on
+ * purpose (⚖ D3), but "what a ship published" must not be two answers: the
+ * browser rows read `__watch.wasm`, not the DOM, and a channel that existed in
+ * one arm and not the other would make a REPLAY per-tick verdict unassertable
+ * — which is exactly the witness ⚖ D4 wants it for.
+ */
+function publishShip(state, source, lifetime) {
+    window.__editorWasm = {
+        stage: state.stage ?? null,
+        stages: state.stages ?? [],
+        reached: [...(state.reached ?? [])],
+        refusal: state.refusal ?? null,
+        verdict: state.verdict ?? null,
+        /** ⛓ What the game handed over, as COUNTS — the rows read `__watch`. */
+        drain: state.drain ?? null,
+        label: state.label ?? null,
+        set: state.set ?? null,
+        status: state.status ?? null,
+        scope: VERDICT_SCOPE,
+    };
+    if (lifetime.alive()) publishWatch(source);
+}
+
 function shipReadout(source, lifetime) {
     const paintStages = (state) => {
         $('wasmStages').textContent = state.stages
             .map((s) => (state.reached.includes(s) ? `✓ ${s}` : `· ${s}`)).join('   ');
     };
-    const publish = (state) => {
-        window.__editorWasm = {
-            stage: state.stage,
-            stages: state.stages,
-            reached: [...state.reached],
-            refusal: state.refusal,
-            verdict: state.verdict,
-            label: state.label,
-            set: state.set,
-            status: state.status,
-            scope: VERDICT_SCOPE,
-        };
-        if (lifetime.alive()) publishWatch(source);
-    };
+    const publish = (state) => publishShip(state, source, lifetime);
     return {
         onStage(stage, message, state) {
             $('wasmStage').textContent = `${stage} — ${message}`;
@@ -6826,8 +6888,14 @@ function shipReadout(source, lifetime) {
              * frame and two runs can meet there having disagreed on every tick
              * in between.
              */
-            $('wasmVerdict').textContent = `${verdictLine(v)}  —  ${VERDICT_SCOPE}`
-                + (state.note ? `\n${state.note}` : '');
+            /**
+             * ⛓⛓ TWO LINES NOW, EACH WITH ITS OWN SCOPE, and `verdictBlock` is
+             * where that layout lives so the unit rows assert the printed text
+             * rather than a reconstruction of it. The END-STATE line is never
+             * dropped: it is the check that ran FIRST and the one a
+             * `verdict-internally-inconsistent` is inconsistent WITH.
+             */
+            $('wasmVerdict').textContent = verdictBlock(v, state.note);
             publish(state);
             $('loadWasm').disabled = !shippable;
         },
@@ -6907,8 +6975,44 @@ function wireShipButton(params, lifetime) {
 async function runWasm(params, lifetime) {
     const tape = await fetchJson(repoUrl(params.tape), 'tape');
     const frame = $('frame');
+    /**
+     * ── ⛓⛓⛓ ⚖ D4 — REPLAY GETS THE PER-TICK VERDICT FREE, AND IT IS THE
+     * ── CHEAPEST WITNESS THERE IS ────────────────────────────────────────
+     *
+     * A committed tape's stream is KNOWN: the r8-* fixtures carry RECORDED
+     * oracle streams, and `tapeRunner.test.js` already pins the model against
+     * them. So a divergence printed here is attributable without generating or
+     * solving anything, which is what makes this arm the one to run first when
+     * the verdict ever goes red.
+     *
+     * ⛔ AND IT MAY NOT COST THE ARM ITS EXISTING BEHAVIOUR (⚖ D4's second
+     * half). The walk is WRAPPED: an atlas that will not load, or a committed
+     * tape the JS engine refuses (a legacy fixture, an undeclared clear),
+     * degrades to `no per-tick comparison (<the reason>)` — and every string
+     * this arm has always printed is still printed, in the same order, because
+     * none of this touches the readout.
+     */
+    let modelStream = null;
+    let modelStreamWhy = null;
+    let expect = null;
+    try {
+        const collected = collectRun(tape, pageLevelSource(await loadAtlas()));
+        if (collected.error) throw collected.error;
+        modelStream = modelStreamOf(collected);
+        expect = expectFromFrames(collected.frames);
+    } catch (e) {
+        modelStreamWhy = `the JS model would not walk this tape — ${e.message}`;
+    }
+    if (!lifetime.alive()) return;
     await shipToWasm(
-        { tape, label: params.tape, expect: null, expectWhy: 'replay' },
+        {
+            tape,
+            label: params.tape,
+            expect,
+            expectWhy: expect ? null : (modelStreamWhy ?? 'replay'),
+            modelStream,
+            modelStreamWhy,
+        },
         { frame, lifetime, readout: replayWasmReadout(lifetime), tolerance: END_STATE_TOLERANCE },
     );
 }
@@ -6957,8 +7061,16 @@ function wasmHudRows(st, tape) {
  * third readout state the live row has never seen.
  */
 function replayWasmReadout(lifetime) {
+    /**
+     * ⛓ THE CHANNEL, NOT THE CHROME. This arm's `#status` strings are what the
+     * live pages row asserts on and none of them move; what is ADDED is
+     * `__watch.wasm`, which this arm never published — so `?side=wasm` becomes
+     * assertable on the same fields the button's ships are (⚖ D4).
+     */
+    const publish = (state) => publishShip(state ?? {}, 'replay', lifetime);
     return {
-        onStage(stage, message) {
+        onStage(stage, message, state) {
+            publish(state);
             if (stage === 'probe') {
                 $('canvas').style.display = 'none';
                 $('status').textContent = 'loading the runtime…';
@@ -6982,7 +7094,8 @@ function replayWasmReadout(lifetime) {
                 $('status').textContent = message;
             }
         },
-        onRefusal(stage, reason, detail) {
+        onRefusal(stage, reason, detail, state) {
+            publish(state);
             if (stage === 'probe') {
                 fatal('the wasm build is not on this machine', detail);
                 return;
@@ -7002,10 +7115,15 @@ function replayWasmReadout(lifetime) {
             $('bar').style.width = `${pct}%`;
             $('hud').innerHTML = wasmHudRows(st, tape);
         },
-        onVerdict(v) {
-            // ⛔ REPLAY HAS NO EXPECTATION and says the same three words it
-            // always did. The end-state verdict is the BUTTON's channel (⚖ D3);
-            // adding a line here would move a readout the live row asserts on.
+        onVerdict(v, state) {
+            publish(state);
+            /**
+             * ⛔ THE CHROME STILL SAYS THE SAME THREE WORDS. The verdict's own
+             * sentences are the BUTTON's channel (⚖ D3) and `__watch.wasm`'s;
+             * adding a line here would move a readout the live row asserts on,
+             * which ⚖ D4 forbids. The per-tick answer IS published — it is just
+             * not painted over a readout that predates it.
+             */
             if (v.kind !== 'not-finished') $('status').textContent += ' — finished';
         },
     };
