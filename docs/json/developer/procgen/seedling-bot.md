@@ -926,8 +926,11 @@ node scripts/procgen/verify-seedling-bot-differential.mjs --record --win \
     --only=collide-up-rock,transition-west-return
 ```
 
-SKIPs (exit 0) when the wasm artifact is absent, like every other seedling
-verifier — CI has no wasm and stays green.
+SKIPs (exit 0) when the wasm build is absent, like every other seedling
+verifier. ⛓ 2026-08-19: "absent" now means *the submodule is not checked
+out* — the builds ship in `PeerInfinity/seedling-wasm` at
+`frontend/modules/flashPanel/wasm/`, and CI does check them out
+(`.github/workflows/seedling-wasm.yml`).
 
 **Always pass `--only=` when recording.** `--record` does not compare
 before it writes, so recording one new fixture otherwise rewrites every
@@ -984,7 +987,13 @@ plausible garbage.
 
 `~/CC/seedling_bot_build/build_bot.sh` builds the SWF; its header documents
 the rest (inject → SWFRecomp → `build_wasm_avm2.sh` → `deploy_wasm_avm2.sh`
-→ copy into `frontend/modules/flashPanel/wasm/`, which is gitignored).
+→ copy into `frontend/modules/flashPanel/wasm/`). ⛓ 2026-08-19: that
+directory is no longer gitignored — it is the submodule
+`PeerInfinity/seedling-wasm`, so a rebuilt build is **committed and pushed
+there**, then the pointer is bumped here in its own commit. A build belongs
+in the submodule iff a tracked file of this repo names it, and
+`scripts/procgen/check-seedling-wasm-pins.mjs` gates that; see
+`frontend/modules/flashPanel/README.md` for the add/retire steps.
 Budget roughly ten minutes and **batch AS3 edits** — that cost is the entire
 reason `Bot.as` is a generic interpreter. Neither v2 slice needed one; R0
 needed exactly one batch, of six changes; **R1 needed exactly one LINE.**
@@ -8034,8 +8043,10 @@ any other way is not a measurement.*
 
 ⚠ **A machine-dependent claim is not a claim.** The engine picker's row asserts
 the SWITCH (arm named for its engine, old one retired, URL moved) and says
-nothing about whether the wasm artifact is present — it is gitignored and
-machine-local. And it waits on the LIFETIME, not `__editorArm`: that marker
+nothing about whether the wasm build is present. ⛓ 2026-08-19 that build
+ships in a submodule rather than being machine-local, which makes the row's
+silence a *design* choice rather than a necessity — it still asserts only the
+switch, so a clone without `--recurse-submodules` cannot redden it. And it waits on the LIFETIME, not `__editorArm`: that marker
 means "the mount function returned", and `runWasm` does not return until the
 tape starts, which needs one real click by design.
 

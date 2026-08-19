@@ -166,7 +166,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 205,
         "browser": 71,
-        "cited": 57,
+        "cited": 58,
         "files": 224,
         "lineStyle": 19,
         "withDocblock": 224,
@@ -1372,7 +1372,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-wasm-pins.mjs",
