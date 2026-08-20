@@ -20,9 +20,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    END_STATE_TOLERANCE, levelSetDisagreement, PER_TICK_SCOPE, perTickVerdictOf,
-    remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE, verdictBlock,
-    verdictLine, verdictOf, WASM_PAGE, WASM_STAGES,
+    END_STATE_TOLERANCE, lastObservationOf, levelSetDisagreement, PER_TICK_SCOPE,
+    perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
+    verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES,
 } from './watchWasm.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -146,6 +146,91 @@ describe('verdictOf — the END-STATE comparison', () => {
         // A tolerance above what was measured is a bound nothing can reach.
         expect(END_STATE_TOLERANCE).toBe(0);
         expect(verdictOf(expected(), status({ x: 88.5 })).agrees).toBe(false);
+    });
+
+    /**
+     * ── ⛓⛓⛓ THE FRAME THE END STATE IS ABOUT — arc 5, slice 0 ─────────
+     *
+     * ⛔ THE NUMBERS BELOW ARE THE MEASURED ONES, not invented ones. Seed 38,
+     * post-sword, a generated room with a CERTIFIED KILL GATE, its 360-tick
+     * certification tape shipped through ▶ load in wasm: 361 drained
+     * observations, every one agreeing with the JS model, and `botStatus`
+     * reporting a position 1.4987×/1.4988× the model's own last step BEYOND the
+     * stream's last frame — pure coasting, because the game keeps simulating
+     * after a replay ends and `botStatus` is a LIVE read.
+     */
+    const MODEL_LAST = { x: 131.2235153194668, y: 105.234587921385, level: 0 };
+    const GAME_POLL = { x: 133.00921415423176, y: 106.59101527875195 };
+
+    it('⛓⛓⛓ the END STATE compares the DRAINED frame, not the live `botStatus`', () => {
+        const expectEnd = expected({ ...MODEL_LAST });
+        const live = status({ ...GAME_POLL, level: 0 });
+        // the old behaviour, kept as the CONTROL: the live poll disagrees…
+        const drifted = verdictOf(expectEnd, live, END_STATE_TOLERANCE);
+        expect(drifted.agrees).toBe(false);
+        expect(drifted.frameSource).toBe('botStatus');
+        expect(drifted.text).toMatch(/x Δ1\.7856988347649576 > 0/);
+        // …and the drained frame, which is what the per-tick check compares,
+        // agrees exactly.
+        const v = verdictOf(expectEnd, live, END_STATE_TOLERANCE,
+            { finalFrame: { t: 360, ...MODEL_LAST } });
+        expect(v.agrees).toBe(true);
+        expect(v.frameSource).toBe('drain');
+        expect(v.deltas.dx).toBe(0);
+        expect(v.deltas.dy).toBe(0);
+    });
+
+    it('⛔ …and the drained frame is BELIEVED even when the live poll would agree', () => {
+        // The other direction, so the row cannot pass by ignoring `finalFrame`:
+        // a status that matches beside a drained frame that does not must
+        // DISAGREE. A check that only ever saw the first direction would pass
+        // on an implementation that quietly kept using `status`.
+        const v = verdictOf(expected(), status(), END_STATE_TOLERANCE,
+            { finalFrame: { t: 166, x: 90, y: 130.05, level: 0 } });
+        expect(v.agrees).toBe(false);
+        expect(v.text).toBe('disagrees (x Δ2 > 0)');
+        expect(verdictOf(expected(), status(), END_STATE_TOLERANCE,
+            { finalFrame: { t: 166, x: 88, y: 130.05, level: 3 } }).text)
+            .toBe('disagrees (level 3≠0)');
+    });
+
+    it('⛔ ITEMS still come from `botStatus` — the stream does not carry them', () => {
+        // An observation is `{t, x, y, level}`. The frame swap must move
+        // position and level and nothing else, or a real missing-item finding
+        // would vanish with it.
+        const v = verdictOf(expected(), status({ items: { hitsMax: 3 } }),
+            END_STATE_TOLERANCE, { finalFrame: { t: 166, ...expected() } });
+        expect(v.text).toBe('disagrees (missing hasSword)');
+    });
+
+    it('⛓ a build with NO drain falls back to `botStatus`, and SAYS which', () => {
+        // The labelled fallback, the same shape the per-tick verdict's
+        // `unavailable` uses: an absent channel is an answer, not a silence.
+        const v = verdictOf(expected(), status(), END_STATE_TOLERANCE,
+            { finalFrame: lastObservationOf(null) });
+        expect(v.agrees).toBe(true);
+        expect(v.frameSource).toBe('botStatus');
+    });
+});
+
+describe('lastObservationOf — the frame the end state is about', () => {
+    it('is the LAST tick of the drain, and it is the comparator\'s own object', () => {
+        // `gameStreamFromDrain`'s `stream.ticks` IS `drained.ticks`; only
+        // `transitions` is derived. So this is the same object the per-tick
+        // comparison reads, not a second reading of it.
+        const ticks = [{ t: 0, x: 1, y: 2, level: 0 }, { t: 1, x: 3, y: 4, level: 0 }];
+        expect(lastObservationOf({ ticks })).toBe(ticks[1]);
+    });
+
+    it('⛔ answers null rather than throwing, on every shape it cannot read', () => {
+        // A verdict that died here would take the whole ship's readout with it,
+        // and "this build has no botDrain" is the FALLBACK's business.
+        expect(lastObservationOf(null)).toBe(null);
+        expect(lastObservationOf({})).toBe(null);
+        expect(lastObservationOf({ ticks: [] })).toBe(null);
+        expect(lastObservationOf({ ticks: [null] })).toBe(null);
+        expect(lastObservationOf({ ticks: [{ t: 0, y: 2 }] })).toBe(null);
+        expect(lastObservationOf({ ticks: [{ t: 0, x: 'NaN', y: 2 }] })).toBe(null);
     });
 });
 

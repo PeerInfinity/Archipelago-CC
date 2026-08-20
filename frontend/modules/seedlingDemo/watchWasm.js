@@ -132,6 +132,19 @@ export const WASM_STAGES = Object.freeze([
  * observed agreement of two implementations at one frame. If a sixth tape ever
  * shows a non-zero delta, the honest move is to publish the tape — not to widen
  * this (trap 410).
+ *
+ * ⛔⛔ **ARC 5 SLICE 0 FOUND THAT SIXTH TAPE — AND IT IS ALSO WHY THE FIVE
+ * AGREED.** A generated room's 360-tick certification tape (seed 38,
+ * post-sword, a certified kill gate) reported `x Δ1.7856988347649576,
+ * y Δ1.3564273573669539` against a run whose **361 drained observations ALL
+ * agreed with the model**. The five above end AT REST; this one ends MOVING,
+ * and `botStatus` — a LIVE read of a game that keeps simulating after a replay
+ * ends — had coasted ~1.5 ticks past the stream's last frame by the time the
+ * 250 ms poll asked (1.4987×/1.4988× the model's own last step, the same ratio
+ * on both axes). ⇒ the tolerance stays **0** and the END-STATE comparison now
+ * reads the DRAINED frame instead (`verdictOf`'s `finalFrame`). The tape was
+ * published, as residue 2 asked; the publication is a fix to the instrument,
+ * not a wider bound (traps 355/410).
  */
 export const END_STATE_TOLERANCE = 0;
 
@@ -259,10 +272,16 @@ const heldItems = (items) => Object.entries(items ?? {})
  *   (MANUAL drives the real game by hand and there is nothing to agree with).
  * @param {object|null} status  the game's `botStatus` block.
  * @param {number} tol  the positional tolerance, in pixels.
- * @returns {{kind, agrees, text, deltas}}
+ * @param {object} [opts]
+ * @param {object|null} [opts.finalFrame]  ⛓⛓⛓ THE LAST DRAINED OBSERVATION —
+ *   `{x, y, level}` — which is the frame this comparison is ABOUT. See
+ *   `lastObservationOf`. When absent (a build with no `botDrain`, or a caller
+ *   that has not drained) the comparison falls back to `status`, which is what
+ *   it always did.
+ * @returns {{kind, agrees, text, deltas, frameSource}}
  */
 export function verdictOf(expect, status, tol = END_STATE_TOLERANCE, opts = {}) {
-    const { noExpectWhy = null, refusal = null } = opts;
+    const { noExpectWhy = null, refusal = null, finalFrame = null } = opts;
     /**
      * ⛔ "NOT FINISHED" IS ASKED FIRST, because an unfinished status still
      * carries an x, a y and a level — comparing them would produce a
@@ -290,13 +309,50 @@ export function verdictOf(expect, status, tol = END_STATE_TOLERANCE, opts = {}) 
             text: noExpectWhy ? `no expectation (${noExpectWhy})` : 'no expectation',
         };
     }
-    const dx = Math.abs(Number(status.x) - Number(expect.x));
-    const dy = Math.abs(Number(status.y) - Number(expect.y));
+    /**
+     * ── ⛓⛓⛓ **POSITION AND LEVEL COME FROM THE DRAINED FRAME; ITEMS COME
+     * ── FROM `botStatus`** — and the split is a MEASUREMENT, not taste ──
+     *
+     * ⛔ `botStatus` IS A LIVE READ OF A GAME THAT KEEPS RUNNING. `botDrain` is
+     * a BUFFERED stream that ends at the tape's last tick; `botStatus` is
+     * whatever the world looks like at the moment the 250 ms poll asked, and
+     * the game does not stop when a replay does (`receive_input` goes true —
+     * the keyboard is yours from there). So for any tape whose last frame has
+     * NON-ZERO VELOCITY the two channels describe DIFFERENT MOMENTS, and
+     * comparing the live one against the model's last observation reports the
+     * gap as a disagreement between two runtimes that in fact agreed.
+     *
+     * ⛓⛓ MEASURED, arc 5 slice 0. A generated room's 360-tick certification
+     * tape (seed 38, post-sword, a certified kill gate) shipped through
+     * ▶ load in wasm: **all 361 drained observations AGREE with the model**,
+     * and `botStatus` reported `x Δ1.7856988347649576, y Δ1.3564273573669539`
+     * past it. The model's own last step was `dx 1.1914669260872301,
+     * dy 0.9050452979409442` — so the drift is **1.4987× / 1.4988×** that step,
+     * the SAME ratio on both axes, i.e. pure continuation along the final
+     * velocity. The page printed `verdict-internally-inconsistent`, which is
+     * the contradiction gate catching its own instrument.
+     *
+     * ⛔ AND THIS IS WHY `END_STATE_TOLERANCE` STAYS **0**. §18.15.10 residue 2
+     * says the next tape that disagrees is a finding to publish; this is that
+     * tape, and the finding is that the five that agreed all ended AT REST.
+     * Widening the tolerance to cover a drift that grows with how long the poll
+     * took would be a bound nothing can reach (trap 355) hiding a real
+     * divergence (trap 410). The fix is to ask both instruments about the SAME
+     * FRAME.
+     *
+     * ⚠ ITEMS STAY ON `botStatus`, because the stream does not carry them: an
+     * observation is `{t, x, y, level}`. That is the same split §18.17.4 made
+     * for the contradiction gate — the per-tick line owns position and level,
+     * the end-state line owns the item set.
+     */
+    const frame = finalFrame ?? status;
+    const dx = Math.abs(Number(frame.x) - Number(expect.x));
+    const dy = Math.abs(Number(frame.y) - Number(expect.y));
     const want = heldItems(expect.items);
     const got = heldItems(status.items);
     const missing = want.filter((k) => !got.includes(k));
     const why = [];
-    if (status.level !== expect.level) why.push(`level ${status.level}\u2260${expect.level}`);
+    if (frame.level !== expect.level) why.push(`level ${frame.level}\u2260${expect.level}`);
     if (!(dx <= tol)) why.push(`x \u0394${dx} > ${tol}`);
     if (!(dy <= tol)) why.push(`y \u0394${dy} > ${tol}`);
     // ⛔ SUPERSET, not equality: the real game may hold items the segment's own
@@ -306,9 +362,36 @@ export function verdictOf(expect, status, tol = END_STATE_TOLERANCE, opts = {}) 
     return {
         kind: why.length ? 'disagrees' : 'agrees',
         agrees: why.length === 0,
-        deltas: { dx, dy, level: status.level, expectedLevel: expect.level, missing },
+        deltas: { dx, dy, level: frame.level, expectedLevel: expect.level, missing },
+        /**
+         * ⛓ WHICH CHANNEL THE POSITION CAME FROM, as a field rather than as an
+         * inference. A reader auditing an `agrees` needs to know whether it was
+         * the buffered frame or the live poll, and a build with no `botDrain`
+         * still answers — labelled, the way the per-tick fallback is.
+         */
+        frameSource: finalFrame ? 'drain' : 'botStatus',
         text: why.length ? `disagrees (${why.join('; ')})` : 'agrees',
     };
+}
+
+/**
+ * ⛓ THE LAST OBSERVATION OF A DRAIN, or `null` — the frame the END-STATE
+ * comparison is about.
+ *
+ * ⛔ IT READS `drained.ticks` RAW, which is exactly what `gameStreamFromDrain`
+ * hands the comparator (`stream.ticks` IS `drained.ticks`; only `transitions`
+ * is derived). So the end-state check and the per-tick check are looking at the
+ * same object, not at two readings of it. ⛔ And it never throws: a drain this
+ * page cannot read is the `unavailable` FALLBACK's business, and a verdict that
+ * died here would take the whole ship's readout with it.
+ */
+export function lastObservationOf(drained) {
+    const ticks = drained && Array.isArray(drained.ticks) ? drained.ticks : null;
+    if (!ticks || ticks.length === 0) return null;
+    const last = ticks[ticks.length - 1];
+    if (!last || typeof last !== 'object') return null;
+    if (!Number.isFinite(Number(last.x)) || !Number.isFinite(Number(last.y))) return null;
+    return last;
 }
 
 /** One line for the ledger/readout, with the bound this verdict is NOT. */
@@ -343,10 +426,27 @@ export const PER_TICK_SCOPE =
  * ⚖ D2 says a per-tick `agrees` beside a wrong end state must be IMPOSSIBLE to
  * print. It is a contradiction only where the two instruments describe the same
  * quantity: an observation is `{t, x, y, level}`, so if every observation agrees
- * then the LAST one does, and `botStatus` at `finished` is reporting that same
- * frame — a level or a position that disagrees means `botStatus` and `botDrain`
- * disagree with each other, which is a defect in the comparison and not a
- * finding about the run.
+ * then the LAST one does — and since arc 5 slice 0 the end-state check is asked
+ * about that same last DRAINED observation, so a position or level that
+ * disagrees is a defect in the comparison and not a finding about the run.
+ *
+ * ⛔⛔ **THE ASSUMPTION THIS DOCBLOCK USED TO STATE WAS FALSE.** It said
+ * *"`botStatus` at `finished` is reporting that same frame"*. It is not:
+ * `botStatus` is a LIVE read of a game that keeps simulating after a replay
+ * ends, so on a tape whose last frame carries velocity it reports a LATER
+ * moment — measured at 1.4987×/1.4988× the model's own last step on a 360-tick
+ * generated certification tape, both axes, which is pure coasting. ⇒ the gate
+ * FIRED on a run where the two runtimes agreed at every one of 361
+ * observations, which is the gate doing exactly its job: it caught the
+ * INSTRUMENT, not the game.
+ *
+ * ⛓ WITH THE FRAMES ALIGNED IT CAN NO LONGER FIRE ON POSITION OR LEVEL FROM A
+ * REAL RUN — if every observation agrees, the last one does, and that is now
+ * what the end state compares. **Said out loud rather than left to be
+ * discovered** (trap 373: a guard its own cost model makes unreachable): it
+ * survives as a guard against a change that de-aligns the two frames again, it
+ * is exercised by `watchWasm.test.js`'s rows, and §18.17.6's M-consistent
+ * mutant is what keeps it honest.
  *
  * ⛓ ITEMS ARE NOT IN THE STREAM AT ALL. `missing hasSword` beside a per-tick
  * agreement is not a contradiction — it is the end-state check answering a
@@ -831,14 +931,6 @@ export async function shipToWasm(payload, host) {
                 state.stage = 'finished';
                 state.reached.push('finished');
                 /**
-                 * ⛔⛔ THE END-STATE CHECK RUNS FIRST, AND IT ALWAYS RUNS (⚖ D2).
-                 * It is the check the per-tick one may not silently contradict,
-                 * and a `verdict-internally-inconsistent` is inconsistent WITH
-                 * this — so it cannot be computed after, or conditionally.
-                 */
-                const endState = verdictOf(expect, st, tolerance,
-                    { noExpectWhy: expectWhy });
-                /**
                  * ── ⛓⛓⛓ drain — ONCE, AND ONLY ONCE ────────────────────
                  *
                  * `botDrain` is a BUFFERED stream the game has been filling
@@ -850,6 +942,17 @@ export async function shipToWasm(payload, host) {
                  * it would be a subsample reported as a stream (§18.15.10
                  * residue 3). Reading it TWICE is not an option either: the
                  * verb drains, so a second call answers about nothing.
+                 *
+                 * ⛓⛓ ARC 5 SLICE 0 MOVED THIS **ABOVE** THE END-STATE CHECK,
+                 * and the reason is measured in `verdictOf`'s own docblock:
+                 * `botStatus` keeps moving after `finished` and the drained
+                 * stream does not, so the END STATE has to be asked about the
+                 * drained frame or the two instruments describe two moments.
+                 * ⛔ The STAGE ORDER is unchanged — `finished`, `drain`,
+                 * `verdict`, exactly what the browser rows assert — and the
+                 * end-state check still runs FIRST of the two verdicts and
+                 * still runs UNCONDITIONALLY (⚖ D2); it is the READ that moved,
+                 * not the comparison's place in the answer.
                  */
                 const drained = botJson('botDrain');
                 state.drain = drained && Array.isArray(drained.ticks)
@@ -862,6 +965,14 @@ export async function shipToWasm(payload, host) {
                     ? `${state.drain.observations} observation(s) drained from the game`
                     : 'this build answered no botDrain — the verdict falls back to '
                         + 'END STATE, labelled');
+                /**
+                 * ⛔⛔ THE END-STATE CHECK RUNS FIRST, AND IT ALWAYS RUNS (⚖ D2).
+                 * It is the check the per-tick one may not silently contradict,
+                 * and a `verdict-internally-inconsistent` is inconsistent WITH
+                 * this — so it cannot be computed after, or conditionally.
+                 */
+                const endState = verdictOf(expect, st, tolerance,
+                    { noExpectWhy: expectWhy, finalFrame: lastObservationOf(drained) });
                 const v = {
                     ...endState,
                     perTick: perTickVerdictOf({
