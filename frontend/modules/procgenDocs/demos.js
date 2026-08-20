@@ -36,7 +36,15 @@
  *   page            REPO path to the .html (`/frontend/modules/…`)
  *   url             the query string — ⛔ the page WRITER's own spelling
  *   also            an optional SECOND URL the entry loads for contrast
- *   cli             the headless equivalent
+ *   cli             the headless equivalent. ⚠ **AT `--count=1`, NEVER
+ *                   `--count=0`, even where the URL says `count=0`**:
+ *                   `levelGenerator` refuses `obstacleTarget: 0` by name
+ *                   (*"there is no default that means unbounded"*), so a
+ *                   step-0 URL's headless twin is the ONE-step ladder — the
+ *                   element and the room are pass 1's either way. ⛔ Six
+ *                   entries carried `--count=0` from the catalogue's first
+ *                   day and every one of them THREW (exit 1); the row does
+ *                   NOT run this field, which is why nobody noticed.
  *   phase           optional: step the phase ladder to it
  *   facts           optional: TICK these fact lines
  *   layer           optional: the overlay select
@@ -172,7 +180,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --count=0',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --count=1',
         phase: null,
         facts: Object.freeze([]),
         layer: 'sites',
@@ -229,7 +237,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=12&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=guard%3Blen%3D2',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=12 --biome=pre-sword --elements=\'guard;len=2\' --count=0',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=12 --biome=pre-sword --elements=\'guard;len=2\' --count=1',
         phase: 'composite',
         facts: Object.freeze([
             'flag-and-lock',
@@ -263,7 +271,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=2&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --elements=killgate --count=0',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --elements=killgate --count=1',
         phase: 'on-connector',
         facts: Object.freeze([
             'door-candidates-offered',
@@ -296,7 +304,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=blockpocket',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --elements=blockpocket --count=0',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --elements=blockpocket --count=1',
         phase: 'on-connector',
         facts: Object.freeze([
             'door-candidates-legal',
@@ -323,9 +331,9 @@ export const DEMOS = Object.freeze([
         n: 6,
         title: 'THE AREA GRAPH — the partition, the level-n floods and the vestibule',
         page: '/frontend/modules/seedlingDemo/watch.html',
-        url: 'source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1',
+        url: 'source=generate&seed=14&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --areas=1 --count=2',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=14 --skeleton=rooms --areas=1 --count=1',
         phase: 'realisation',
         facts: Object.freeze([
             'area-locks',
@@ -361,18 +369,18 @@ export const DEMOS = Object.freeze([
         n: 7,
         title: 'A SWORD-GATED LEVEL — `require:[\'hasSword\']`, graded STRONG',
         page: '/frontend/modules/seedlingDemo/watch.html',
-        url: 'source=generate&seed=30&biome=post-sword&count=6&tries=8&k=3&anchortries=1&require=hasSword&run=1',
+        url: 'source=generate&seed=25&biome=post-sword&count=6&tries=8&k=3&anchortries=1&require=hasSword&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=post-sword --require=hasSword --count=6',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=25 --biome=post-sword --require=hasSword --count=6',
         phase: null,
         facts: Object.freeze([]),
         layer: null,
         claim: 'require.grade == "STRONG"',
         demonstrates: '⛓ Arc 3, slice 4d: the generator is RULE-DIRECTED. You\nname an ITEM and it DERIVES the element head from `ELEMENT_TABLE.needs`, then\ngrades the finished level with a differential — the same run generated again\nwith the flag off, solved, and compared.',
         howToRun: 'Open the URL — it carries `run=1`, so the ladder runs to step\n6 on load. The identity line and the `require` block say `MET` and name the\ngrade.',
-        whatIsHappening: 'Seed 30 is the seed the DEMAND rescued: before 4d\'s D3\nits kill lock was cleared by pass-2 *water* and the directive graded WEAK. The\ngate now DECLARES a demand on its body\'s region and the same seed grades STRONG.',
+        whatIsHappening: 'The gate DECLARES a demand on its body\'s region — the\ncells the spinner moves in and the walls that keep it there — so pass-2 furniture\ncannot drown it and clear the lock for free. That is what makes the WITHOUT arm\nunsolvable rather than merely slower, which is what STRONG means.',
         notes: Object.freeze([
-            '⚠ **THE BAR IS PUBLISHED, NOT TUNED.** The search that found it asked for\n`certified, cause=sword, grade=STRONG, kept>=5, families>=3, noabort` over seeds\n1–40 and N ≥ 3 was stated before the run. It returned **1 hit — seed 30** — and\nthe binding clause is the predicted one: of the five CERTIFIED cells only one\nkeeps templates from three families. Relaxing exactly that clause to\n`families>=2` gives **four** STRONG hits — seeds **2, 23, 30, 36** — plus seed\n**20** at BOUND-DEPENDENT, which still MEETS the directive. All five are listed\nhere rather than one being promoted quietly.',
+            '⚠ **THE BAR IS PUBLISHED, NOT TUNED — AND RE-RUNNING IT IS WHY THIS ENTRY\nMOVED.** The search below was stated before arc 3 ran it, and it returned **1\nhit, seed 30**, with `families>=3` the binding clause. Re-run unchanged at the\nclose of arc 5 it returns **3 hits — seeds 25, 33 and 38** — and seed 30 is no\nlonger one of them: since arc 5 slice 4 gave `arena` a `needs:[\'hasSword\']`,\n`--require=hasSword` FORCES the two-member list `killgate+arena` and spends a\npick, so seed 30 now draws the arena and refuses `no-cut-for-the-kill-lock`. ⛔\nEvery `--require=hasSword` number published before that slice is about a\nDIFFERENT spec. The entry is re-pointed at the first hit of the same scan rather\nthan at a relaxed bar.',
             '```bash\nnode scripts/procgen/find-seedling-seeds.mjs --seeds=1-40 --biome=post-sword \\\n    --require=hasSword \\\n    --where=\'certified,cause=sword,grade=STRONG,kept>=5,families>=3,noabort\'\n```',
         ]),
         terms: Object.freeze([
@@ -395,7 +403,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=30&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&require=hasSword',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=pre-sword --require=hasSword --count=0; echo $?',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=pre-sword --require=hasSword --count=1; echo $?',
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -421,7 +429,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=post-sword --elements=killgate --count=0',
+        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=post-sword --elements=killgate --count=1',
         phase: null,
         facts: Object.freeze([]),
         layer: 'elements',
