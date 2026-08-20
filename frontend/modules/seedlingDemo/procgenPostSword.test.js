@@ -284,6 +284,14 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * §13.12 mutant (a)) — a sentinel that fires on 6 seeds in 40 is worth
      * knowing about, and the next re-pick should re-run the same scan rather
      * than guess a seed.
+     *
+     * ⛓ **RE-MEASURED AT SEEDLING BOT R9 SLICE 1** (the D1 re-record moved the
+     * biome default to `guard;len=2|3|4`), and the class is UNCHANGED — still
+     * **6 of 40**, still exactly **(1, 17, 29, 31, 36, 38)**, so seed 1 stands
+     * without a re-pick. ⛔ AND IT IS NO LONGER THE ONLY STRUCTURAL SENTINEL:
+     * `procgenDoorElements.test.js`' literal default-membership row asserts
+     * that the two biomes' element lists differ by EXACTLY the sword-gated
+     * head, which is the other half of the same split and costs no solve.
      */
     it('⛔ no longer generates the pre-sword level — the roster split is REAL', () => {
         const bounds = { obstacleTarget: 6 };

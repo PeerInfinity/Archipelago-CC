@@ -7232,6 +7232,17 @@ function publishShip(state, source, lifetime) {
         verdict: state.verdict ?? null,
         /** ⛓ What the game handed over, as COUNTS — the rows read `__watch`. */
         drain: state.drain ?? null,
+        /**
+         * ⛓⛓⛓ **THE VERDICT'S OWN NOTE** (SEEDLING BOT R9, slice 1, E5-bucket
+         * item E3). `verdictBlock(v, state.note)` paints it beside the verdict —
+         * *"level remapped 900→0"* is the live example — and until this slice
+         * the projection dropped it, so the ship row had to REGEX
+         * `verdictText`, i.e. assert a fact about the mapping by pattern-matching
+         * the painted string. ⛔ A claim about what the readout NAMES still has
+         * to read the readout; a claim about WHICH MAPPING WAS APPLIED is about
+         * the ship, and now has a field of its own.
+         */
+        note: state.note ?? null,
         label: state.label ?? null,
         set: state.set ?? null,
         status: state.status ?? null,

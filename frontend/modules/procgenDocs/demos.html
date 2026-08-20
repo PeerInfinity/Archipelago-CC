@@ -258,7 +258,16 @@ function renderEntry(entry) {
         parts.push('</ul>');
     } else {
         parts.push(label('OPEN IT'), openLinks(entry));
-        if (entry.cli) parts.push(label('CLI'), `<pre><code>${esc(entry.cli)}</code></pre>`);
+        /* ⛓ R9 slice 1 (E1) — `cli` is `{command, exit[, skip]}` now, and the
+           page prints what the ROW asserts: the command, the exit it must
+           produce, and the reason when the row declines to run it. */
+        if (entry.cli) {
+            const tail = entry.cli.skip
+                ? ` — ⛔ NOT RUN by the row: ${esc(entry.cli.skip)}`
+                : ` — the row RUNS this and expects exit <code>${esc(String(entry.cli.exit))}</code>`;
+            parts.push(label('CLI'),
+                `<pre><code>${esc(entry.cli.command)}</code></pre><p class="claim">${tail}</p>`);
+        }
         parts.push(driveLine(entry));
         parts.push(label('CLAIM — asserted off the page\'s readout by the row'));
         parts.push(`<p class="claim"><code>${esc(entry.claim)}</code></p>`);

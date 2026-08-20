@@ -287,6 +287,52 @@ describe('levelSetDisagreement — the readback is the proof a set MOUNTED', () 
     });
 });
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SEEDLING BOT R9, SLICE 1 (E3) — **WHAT A SHIP PUBLISHES**, and the
+ * field the ship row had to REGEX for want of it.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the remap has a field', () => {
+    /**
+     * ⛔ ASSERTED OVER THE SOURCE, for `watchWasm.test.js`' own reason one
+     * describe below: `publishShip` is a closure inside `watchViewer.js` with no
+     * import surface, and the fact under test is *which keys the projection
+     * carries* — a question about the code, not about a run. ⚠ Comments are
+     * stripped first: this file and `watchViewer.js` both DISCUSS the missing
+     * `note`, and a scan that could not see a comment would pass on the prose.
+     */
+    const projectionKeys = () => {
+        const body = source('watchViewer.js')
+            .split('function publishShip(')[1]
+            .split('\n}')[0]
+            .split('\n')
+            .filter((l) => !/^\s*(\*|\/\/|\/\*)/.test(l));
+        return body.join('\n').match(/^\s{8}(\w+):/gm).map((m) => m.trim().replace(':', ''));
+    };
+
+    it('⛓⛓ carries `note` — the field the ship row reads STRUCTURALLY', () => {
+        expect(projectionKeys()).toContain('note');
+    });
+
+    /**
+     * ⛓ THE WHOLE PROJECTION, PINNED. ⛔ A ship publishes ONE shape in both arms
+     * (the button's panel and REPLAY's shared chrome), and a key that appeared
+     * in one and not the other is exactly what made a REPLAY per-tick verdict
+     * unassertable. A literal list is what notices a key quietly leaving.
+     */
+    it('⛔ and the projection is these keys, exactly', () => {
+        expect(projectionKeys().sort()).toEqual([
+            'drain', 'label', 'note', 'reached', 'refusal', 'scope', 'set', 'stage',
+            'stages', 'status', 'verdict',
+        ]);
+    });
+
+    /** ⚠ AND THE SCAN IS NOT VACUOUS — it sees a key that is not there. */
+    it('\u26a0 the scan is NOT vacuous — it does not report a key nobody wrote', () => {
+        expect(projectionKeys()).not.toContain('thereIsNoSuchKey');
+    });
+});
+
 describe('⛔⛔ THE PARENT NEVER STARTS THE GAME — the law, as a TEST', () => {
     /**
      * ⛓⛓⛓ M-start. This was a COMMENT for the whole of the editor arc, and a

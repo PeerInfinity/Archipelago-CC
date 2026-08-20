@@ -88,6 +88,43 @@ describe('every non-prose entry is loadable by the row', () => {
         // a prose label ("the load button") would resolve to nothing and the
         // row would report a missing control that is right there.
         if (e.control) expect(e.control).toMatch(/^[#.]/);
+        /**
+         * ⛓⛓ R9 slice 1 (E1) — `cli` is `{command, exit[, skip]}` and the
+         * BROWSER ROW RUNS IT. ⛔ The shape is pinned here because the row
+         * spawns whatever this field holds: a bare string would become
+         * `bash -c undefined`, and a missing `exit` would compare against
+         * `undefined` and pass for any command that crashed.
+         */
+        if (e.cli) {
+            expect(typeof e.cli.command).toBe('string');
+            expect(e.cli.command.length).toBeGreaterThan(0);
+            expect(Number.isInteger(e.cli.exit)).toBe(true);
+            // ⛔ a skip is a REASON, never a bare flag
+            if ('skip' in e.cli) expect(e.cli.skip.length).toBeGreaterThan(20);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ONE ENTRY THAT DECLARES A NON-ZERO EXIT, AS A LITERAL.** A
+     * refused directive is the catalogue's only headless twin that must FAIL,
+     * and its exit code is the refusal's own vocabulary (`generate-seedling-
+     * level.mjs` exits 6 on a refused `--require=`). ⛔ Pinned because the
+     * command carried a `; echo $?` tail until R9 slice 1 — which made the
+     * SHELL exit 0 and would have let the row assert a 0 forever.
+     */
+    it('⛔ `refused-directive` is the ONE entry that expects a NON-ZERO exit — 6', () => {
+        const refused = DEMOS.find((e) => e.id === 'refused-directive');
+        expect(refused.cli.exit).toBe(6);
+        expect(refused.cli.command).not.toMatch(/echo \$\?/);
+        expect(real.filter((e) => e.cli && e.cli.exit !== 0).map((e) => e.id))
+            .toEqual(['refused-directive']);
+    });
+
+    /** ⛓ …and the ONE entry the row declines to run names WHY. */
+    it('⛓ exactly one CLI is SKIPPED, and it says why', () => {
+        const skipped = real.filter((e) => e.cli?.skip);
+        expect(skipped.map((e) => e.id)).toEqual(['load-in-wasm']);
+        expect(skipped[0].cli.skip).toMatch(/WINDOWS/);
     });
 
     it('⛔ the PROSE entry names no URL and points somewhere instead', () => {

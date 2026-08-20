@@ -36,15 +36,24 @@
  *   page            REPO path to the .html (`/frontend/modules/…`)
  *   url             the query string — ⛔ the page WRITER's own spelling
  *   also            an optional SECOND URL the entry loads for contrast
- *   cli             the headless equivalent. ⚠ **AT `--count=1`, NEVER
- *                   `--count=0`, even where the URL says `count=0`**:
- *                   `levelGenerator` refuses `obstacleTarget: 0` by name
- *                   (*"there is no default that means unbounded"*), so a
- *                   step-0 URL's headless twin is the ONE-step ladder — the
- *                   element and the room are pass 1's either way. ⛔ Six
- *                   entries carried `--count=0` from the catalogue's first
- *                   day and every one of them THREW (exit 1); the row does
- *                   NOT run this field, which is why nobody noticed.
+ *   cli             the headless equivalent, AND THE ROW RUNS IT — ⛓ SEEDLING
+ *                   BOT R9 slice 1 (E1). `{command, exit}`: the exact command
+ *                   line and the exit code it must produce, asserted in a
+ *                   child shell by `check-procgen-demos.mjs`. A third key,
+ *                   `skip: '<why>'`, declines the run and PRINTS the reason —
+ *                   an entry the row cannot honestly execute says so instead
+ *                   of quietly not being executed. `null` where no headless
+ *                   twin exists.
+ *                   ⚠ **AT `--count=1`, NEVER `--count=0`, even where the URL
+ *                   says `count=0`**: `levelGenerator` refuses
+ *                   `obstacleTarget: 0` by name (*"there is no default that
+ *                   means unbounded"*), so a step-0 URL's headless twin is the
+ *                   ONE-step ladder — the element and the room are pass 1's
+ *                   either way. ⛔ Six entries carried `--count=0` from the
+ *                   catalogue's first day and every one of them THREW (exit
+ *                   1) while nothing ran the field. That is the class this
+ *                   slice closed: a catalogue field nothing EXECUTES is
+ *                   prose (trap 476).
  *   phase           optional: step the phase ladder to it
  *   facts           optional: TICK these fact lines
  *   layer           optional: the overlay select
@@ -180,7 +189,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=2&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --skeleton=rooms --count=1', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: 'sites',
@@ -209,7 +218,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D0&count=0&tries=8&k=3&anchortries=1',
         also: 'source=generate&seed=1&biome=pre-sword&skeleton=winding%3Bchambers%3D1&count=0&tries=8&k=3&anchortries=1',
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --skeleton=\'winding;chambers=0\' --count=1 | head -3',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --skeleton=\'winding;chambers=0\' --count=1 | head -3', exit: 0 },
         phase: 'carve',
         facts: Object.freeze([]),
         layer: null,
@@ -237,7 +246,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=12&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=guard%3Blen%3D2',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=12 --biome=pre-sword --elements=\'guard;len=2\' --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=12 --biome=pre-sword --elements=\'guard;len=2\' --count=1', exit: 0 },
         phase: 'composite',
         facts: Object.freeze([
             'flag-and-lock',
@@ -271,7 +280,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=2&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --elements=killgate --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --elements=killgate --count=1', exit: 0 },
         phase: 'on-connector',
         facts: Object.freeze([
             'door-candidates-offered',
@@ -304,7 +313,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=blockpocket',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --elements=blockpocket --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --elements=blockpocket --count=1', exit: 0 },
         phase: 'on-connector',
         facts: Object.freeze([
             'door-candidates-legal',
@@ -333,7 +342,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=14&biome=pre-sword&skeleton=rooms&count=0&tries=8&k=3&anchortries=1&areas=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=14 --skeleton=rooms --areas=1 --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=14 --skeleton=rooms --areas=1 --count=1', exit: 0 },
         phase: 'realisation',
         facts: Object.freeze([
             'area-locks',
@@ -371,7 +380,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=25&biome=post-sword&count=6&tries=8&k=3&anchortries=1&require=hasSword&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=25 --biome=post-sword --require=hasSword --count=6',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=25 --biome=post-sword --require=hasSword --count=6', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -403,7 +412,14 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=30&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&require=hasSword',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=pre-sword --require=hasSword --count=1; echo $?',
+        /**
+         * ⛔ THE `; echo $?` TAIL IS GONE (R9 slice 1, E1) AND IT IS A FINDING,
+         * not a tidy-up: it made the SHELL's exit the `echo`'s, so the command
+         * this entry published exited **0** while its own prose says the CLI's
+         * exit code is 6. Nothing ran the field, so nothing could notice. The
+         * row now runs it and asserts the 6.
+         */
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=30 --biome=pre-sword --require=hasSword --count=1', exit: 6 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -429,7 +445,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=post-sword&count=0&tries=8&k=3&anchortries=1&elements=killgate',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=post-sword --elements=killgate --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=post-sword --elements=killgate --count=1', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: 'elements',
@@ -515,7 +531,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/mazeRoom/lab.html',
         url: 'source=generate&seed=1&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&require=K0&expansions=20000&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-maze-level.mjs --seed=1 --width=15 --height=15 --skeleton=rooms --areas=1 --require=K0 --count=2',
+        cli: { command: 'node scripts/procgen/generate-maze-level.mjs --seed=1 --width=15 --height=15 --skeleton=rooms --areas=1 --require=K0 --count=2', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -544,7 +560,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/mazeRoom/lab.html',
         url: 'source=generate&seed=2&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1&elements=guard%3Blen%3D2%3Bturns%3D1&expansions=20000&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-maze-level.mjs --seed=2 --width=15 --height=15 --skeleton=rooms --areas=1 --elements=\'guard;len=2;turns=1\' --count=2',
+        cli: { command: 'node scripts/procgen/generate-maze-level.mjs --seed=2 --width=15 --height=15 --skeleton=rooms --areas=1 --elements=\'guard;len=2;turns=1\' --count=2', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -572,7 +588,19 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=pre-sword&count=4&tries=8&k=3&anchortries=1&run=1',
         also: null,
-        cli: 'node scripts/procgen/check-seedling-wasm-ship.mjs',
+        /**
+         * ⛔ SKIPPED BY NAME, WITH ITS REASON. This is the WINDOWS ship row: the
+         * real recompiled game needs a real GPU and a ▶ Start only a human can
+         * press. Headless on Linux it exits 0 in ~108 s without ever shipping —
+         * a green that proves nothing, which is worse than a skip that says so.
+         */
+        cli: {
+            command: 'node scripts/procgen/check-seedling-wasm-ship.mjs',
+            exit: 0,
+            skip: 'the WINDOWS ship row — it needs a real GPU and a user-activated ▶ Start; '
+                + 'headless it exits 0 without shipping, so running it here would be a green '
+                + 'that measured nothing',
+        },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -615,7 +643,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=28&biome=pre-sword&skeleton=winding%3Bchambers%3D1&width=12&fill=shell&count=1&tries=8&k=3&anchortries=1&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=28 --biome=pre-sword --skeleton=\'winding;chambers=1\' --width=12 --height=10 --fill=shell --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=28 --biome=pre-sword --skeleton=\'winding;chambers=1\' --width=12 --height=10 --fill=shell --count=1', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -645,7 +673,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=3&biome=pre-sword&count=0&tries=8&k=3&anchortries=1&elements=guard%3Blen%3D4',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=3 --biome=pre-sword --elements=\'guard;len=4\' --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=3 --biome=pre-sword --elements=\'guard;len=4\' --count=1', exit: 0 },
         phase: 'pre-carve',
         facts: Object.freeze([]),
         layer: null,
@@ -674,7 +702,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=1&biome=pre-sword&skeleton=branchy%3Bchambers%3D1&count=0&tries=8&k=3&anchortries=1&elements=chamber%3Bw%3D2%3Bh%3D3&areas=1',
         also: 'source=generate&seed=1&biome=pre-sword&skeleton=branchy%3Bchambers%3D1&count=0&tries=8&k=3&anchortries=1&elements=none&areas=1',
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --skeleton=\'branchy;chambers=1\' --elements=\'chamber;w=2;h=3\' --areas=1 --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=1 --biome=pre-sword --skeleton=\'branchy;chambers=1\' --elements=\'chamber;w=2;h=3\' --areas=1 --count=1', exit: 0 },
         phase: 'composite',
         facts: Object.freeze([]),
         layer: null,
@@ -705,7 +733,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=6&biome=post-sword&skeleton=bushy%3Bchambers%3D1&width=15&height=15&count=0&tries=8&k=3&anchortries=1&elements=arena%3Bw%3D5%3Bh%3D5%3Bbodies%3D2',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=6 --biome=post-sword --skeleton=\'bushy;chambers=1\' --width=15 --height=15 --elements=\'arena;w=5;h=5;bodies=2\' --count=1',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=6 --biome=post-sword --skeleton=\'bushy;chambers=1\' --width=15 --height=15 --elements=\'arena;w=5;h=5;bodies=2\' --count=1', exit: 0 },
         phase: 'composite',
         facts: Object.freeze([]),
         layer: null,
@@ -736,7 +764,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/mazeRoom/lab.html',
         url: 'source=generate&seed=8&biome=maze-v1&width=11&height=11&count=4&tries=8&k=3&anchortries=1&skeleton=rooms&areas=1%3Bshortcut%3D1&expansions=20000&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-maze-level.mjs --seed=8 --width=11 --height=11 --skeleton=rooms --areas=\'1;shortcut=1\' --count=4',
+        cli: { command: 'node scripts/procgen/generate-maze-level.mjs --seed=8 --width=11 --height=11 --skeleton=rooms --areas=\'1;shortcut=1\' --count=4', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -768,7 +796,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=2&biome=post-sword&count=6&tries=8&k=3&anchortries=1&run=1',
         also: null,
-        cli: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --count=6 --density',
+        cli: { command: 'node scripts/procgen/generate-seedling-level.mjs --seed=2 --biome=post-sword --count=6 --density', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,
@@ -806,7 +834,7 @@ export const DEMOS = Object.freeze([
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'source=generate&seed=3&biome=post-sword&count=1&tries=8&k=3&anchortries=1&run=1',
         also: null,
-        cli: 'node scripts/procgen/check-seedling-editor-generate.mjs',
+        cli: { command: 'node scripts/procgen/check-seedling-editor-generate.mjs', exit: 0 },
         phase: null,
         facts: Object.freeze([]),
         layer: null,

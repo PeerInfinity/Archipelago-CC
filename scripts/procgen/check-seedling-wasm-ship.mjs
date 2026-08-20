@@ -608,16 +608,35 @@ function perTickClaims(wasm, arm) {
          * which mapping was applied instead of inferring it from an agreement.
          *
          * ⛔ AND THE CHANNEL IS THE ONE THE CLAIM NAMES. The first cut asserted
-         * `__watch.wasm.note` and FAILED on this row's own first Windows run —
-         * `publishShip` projects `{drain, label, reached, refusal, scope, set,
-         * stage, stages, status, verdict}` and `note` is not in it, so the field
-         * was `undefined` while the readout said the line perfectly. A claim
-         * about what the READOUT names has to read the readout (trap 430's
-         * family: read the channel you are making the claim about).
+         * `__watch.wasm.note` and FAILED on this row's own first Windows run,
+         * because `publishShip` projected `{drain, label, reached, refusal,
+         * scope, set, stage, stages, status, verdict}` and `note` was not in it:
+         * the field was `undefined` while the readout said the line perfectly.
+         * ⛓ **R9 slice 1 (E3) ADDED THE FIELD RATHER THAN KEEPING THE REGEX**,
+         * so both claims are now askable of their own channel — the STRUCTURAL
+         * one below reads `wasm.note`, and the READOUT one still reads the
+         * painted text, because *does a reader SEE it* is a different question
+         * from *which mapping did the ship apply* (trap 430's family: read the
+         * channel you are making the claim about).
          */
         const genVerdictText = res.reads?.verdictText ?? '';
+        /**
+         * ⛓⛓⛓ **READ STRUCTURALLY SINCE R9 SLICE 1 (E3)** — `publishShip` now
+         * projects `note`, so the claim *which mapping was applied* is asserted
+         * off the SHIP's own field instead of by regexing the painted string.
+         * ⛔ THE READOUT CLAIM STAYS BESIDE IT and is still a regex, because it
+         * is a different claim: *does the reader SEE the mapping named*. Two
+         * facts, two channels — the row that collapsed them into one regex was
+         * asserting the second and being credited for the first.
+         */
+        check(wasm.note !== null && wasm.note !== undefined,
+            'GENERATE: ⛓⛓ the SHIP PUBLISHES its verdict note — a field, not a painted string',
+            JSON.stringify(wasm.note));
+        check(typeof wasm.note === 'string' && /remapped 900\u21920/.test(wasm.note),
+            'GENERATE: ⛓⛓⛓ …and the note IS the 900→0 remap, read STRUCTURALLY',
+            String(wasm.note));
         check(/remapped 900\u21920/.test(genVerdictText),
-            'GENERATE: ⛔ the readout NAMES the 900→0 remap beside the verdict',
+            'GENERATE: ⛔ …and the readout NAMES it beside the verdict, where a reader sees it',
             lineWith(genVerdictText, /remapped/));
         check(wasm.verdict?.agrees === true,
             'GENERATE: ⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS '

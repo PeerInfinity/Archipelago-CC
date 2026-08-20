@@ -87,6 +87,10 @@
  */
 
 import { chromium } from '@playwright/test';
+// ⛓ R9 slice 1 (E1) — the `cli` field is EXECUTED now, in a child shell.
+import { spawnSync } from 'node:child_process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
     DEMOS, PAGES_BASE, READOUTS, pagesHref, parseClaim,
@@ -101,6 +105,25 @@ const GLOSSARY_PAGE = '/frontend/modules/procgenDocs/glossary.html';
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+/**
+ * ⛓⛓⛓ **THE `cli` FIELD IS RUN, NOT PRINTED** (SEEDLING BOT R9, slice 1, E1;
+ * trap 476 — *a catalogue field nothing EXECUTES is prose*).
+ *
+ * ⛔ ONE TIMEOUT FOR EVERY ROW, and it is sized from a measurement rather than
+ * guessed: the slowest command the catalogue holds is `form-controls`' own
+ * browser gate at **129 s**, then `load-in-wasm` at 108 s (skipped), the kill
+ * gate's ladder at 28 s and the arena's at 17 s. 300 s is that worst case with
+ * room for a loaded box, and a row that hits it FAILS BY NAME rather than
+ * hanging the gate.
+ *
+ * ⚠ It runs through `bash -c` because the field is a COMMAND LINE a reader
+ * copies — two of them carry a pipe and several carry quoted `;`-clauses, and
+ * a row that split on spaces would be asserting a different command from the
+ * one the page prints.
+ */
+const CLI_TIMEOUT_MS = 300000;
 
 let failed = 0;
 const check = (ok, what, detail) => {
@@ -188,6 +211,33 @@ try {
             entry.prose ? 'prose entry — it points at a doc and names no URL of its own'
                 : entry.claim);
         if (entry.prose) continue;
+        /**
+         * ⛓⛓⛓ E1 — THE HEADLESS TWIN, EXECUTED. ⛔ It runs BEFORE the page is
+         * loaded so that a catalogue whose CLI has rotted says so first: the
+         * URL and the CLI are two spellings of one run, and the cheaper one
+         * failing is the more useful first answer.
+         */
+        if (entry.cli && !pages) {
+            if (entry.cli.skip) {
+                check(true, `⛓ "${name}" — its CLI is NOT RUN, by name`, entry.cli.skip);
+            } else {
+                const t0 = Date.now();
+                const r = spawnSync('bash', ['-c', entry.cli.command], {
+                    cwd: REPO, timeout: CLI_TIMEOUT_MS, encoding: 'utf8',
+                    stdio: ['ignore', 'pipe', 'pipe'],
+                });
+                const secs = ((Date.now() - t0) / 1000).toFixed(1);
+                const timedOut = r.error?.code === 'ETIMEDOUT' || r.signal === 'SIGTERM';
+                const code = r.status;
+                check(!timedOut && code === entry.cli.exit,
+                    `⛓⛓ …and its CLI RUNS with the exit it declares (${entry.cli.exit})`,
+                    timedOut
+                        ? `TIMED OUT after ${CLI_TIMEOUT_MS / 1000} s — \`${entry.cli.command}\``
+                        : `exit ${code} in ${secs}s — \`${entry.cli.command}\`${
+                            code === entry.cli.exit ? '' : ` · stderr: ${
+                                (r.stderr ?? '').trim().split('\n').slice(-2).join(' | ')}`}`);
+            }
+        }
         check(READOUTS.has(entry.page),
             `…and names a page this row knows how to READ`,
             READOUTS.has(entry.page) ? `${entry.page} → window.${READOUTS.get(entry.page)}`
