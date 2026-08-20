@@ -458,6 +458,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "sizes"
                 }
             ],
             "oneLiner": "census-seedling-areas — **THE AREA CENSUS**: how many AREAS a Seedling skeleton offers, per kind, per knob, per seed, per biome — and what a lock on every boundary cell would cost out of the 30 persistence tags.",

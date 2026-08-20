@@ -84,6 +84,23 @@ const KEYS = arg('areas', '0').split(',').map(Number).filter((n) => n > 0);
  *  AXIS here, because arc 2 measured the two arms on the maze and this slice
  *  owes the same two numbers on Seedling. */
 const BINDS = arg('binds', 'item').split(',').filter(Boolean);
+/**
+ * ⛓⛓⛓ **THE SIZE AXIS** (PROCGEN ELEMENTS arc 5, slice 1; ⚖ ruling 1). Arc 3
+ * measured `--areas=1` accepting 0–4 of 12 and named the reason: *a 10x10 room
+ * offers 2–4 areas*. That number is a fact about a ROOM SIZE, and size is a knob
+ * now — so the census that priced it has to be re-runnable at the sizes the
+ * generator can build, or a 10x10 acceptance rate would be quoted about a 20x20
+ * room (trap 383). ⛔ The default is `10x10`, so every committed number of this
+ * census is reproduced by the same command that produced it.
+ */
+const SIZES = arg('sizes', '10x10').split(',').filter(Boolean).map((spec) => {
+    const m = /^(\d+)x(\d+)$/.exec(spec.trim());
+    if (!m) {
+        process.stderr.write(`census-seedling-areas: --sizes= member "${spec}" is not WxH.\n`);
+        process.exit(2);
+    }
+    return { width: Number(m[1]), height: Number(m[2]), label: `${m[1]}x${m[2]}` };
+});
 const BIOMES = [['pre', PRE_SWORD_PALETTE], ['post', POST_SWORD_PALETTE]];
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
@@ -99,12 +116,14 @@ say('biomes: pre-sword and post-sword, each at its OWN default element spec '
     + `(\`${formatElementSpec(defaultElementsFor(PRE_SWORD_PALETTE.items))}\` / `
     + `\`${formatElementSpec(defaultElementsFor(POST_SWORD_PALETTE.items))}\`) `
     + '— ⛓ slice 4c §13.3');
-say('room:   10x10, one screen — ⛔ not an axis, ⚖ arc-3 ruling 7');
+say(`sizes:  ${SIZES.map((z) => z.label).join(', ')} — ⛓ an AXIS since arc-5 slice 1 `
+    + '(⚖ ruling 1 supersedes arc-3 ruling 7; the default 10x10 is one screen)');
 say('cost:   one carve + one element construction + the partition per cell; '
     + 'NO area graph, NO template, NO solve.');
 say('');
 const rows = [];
 for (const kindSpec of KINDS) {
+  for (const size of SIZES) {
     for (const [biome, palette] of BIOMES) {
         for (const seed of SEEDS) {
             const skeleton = seedlingSkeletonSpec(kindSpec);
@@ -112,11 +131,15 @@ for (const kindSpec of KINDS) {
             let error = null;
             try {
                 model = seedlingModel({ seed, skeleton,
+                    defaults: { width: size.width, height: size.height },
                     elements: defaultElementsFor(palette.items) });
             } catch (e) {
                 error = `${e.name}: ${e.message.slice(0, 70)}`;
             }
-            if (error) { rows.push({ kind: kindSpec, biome, seed, error }); continue; }
+            if (error) {
+                rows.push({ kind: kindSpec, size: size.label, biome, seed, error });
+                continue;
+            }
             const p = model.areaPartition();
             /**
              * ⛓ THE GRAPH ARMS — one model per (keys, binds), each a fresh
@@ -140,6 +163,7 @@ for (const kindSpec of KINDS) {
                     let a = null;
                     try {
                         a = seedlingModel({ seed, skeleton,
+                            defaults: { width: size.width, height: size.height },
                             elements: withBinds, areas: { keys } }).areas;
                     } catch (e) { a = { ran: false, refused: { reason: `THREW ${e.name}` } }; }
                     graphArms[`${keys}|${binds}`] = {
@@ -177,6 +201,10 @@ for (const kindSpec of KINDS) {
                 ? Object.keys(model.elements.placed[0].tags ?? {}).length : 0;
             rows.push({
                 kind: kindSpec,
+                /** ⛓ arc 5, slice 1 — the SIZE is a column, and the roll-ups key
+                 *  on it: an acceptance rate measured at 10x10 is not an
+                 *  acceptance rate at 20x20. */
+                size: size.label,
                 biome,
                 seed,
                 areas: p.areas.length,
@@ -230,6 +258,7 @@ for (const kindSpec of KINDS) {
             });
         }
     }
+  }
 }
 
 const ok = rows.filter((r) => !r.error);
@@ -240,15 +269,19 @@ say('| kind | biome | areas | REAL | elem | synth | dead floor | adj | largest b
 say('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
 const byCell = new Map();
 for (const r of rows) {
-    const k = `${r.kind}|${r.biome}`;
+    /** ⛓ arc 5, slice 1 — kind x SIZE x biome; averaging two sizes into one row
+     *  would be a number about neither. */
+    const k = `${r.kind}|${r.size}|${r.biome}`;
     if (!byCell.has(k)) byCell.set(k, []);
     byCell.get(k).push(r);
 }
 for (const [k, rs] of byCell) {
-    const [kind, biome] = k.split('|');
+    const [kind, size, biome] = k.split('|');
     const good = rs.filter((r) => !r.error);
-    if (good.length === 0) { say(`| ${kind} | ${biome} | ALL ${rs.length} THREW |`); continue; }
-    say(`| \`${kind}\` | ${biome} `
+    if (good.length === 0) {
+        say(`| ${kind} @ ${size} | ${biome} | ALL ${rs.length} THREW |`); continue;
+    }
+    say(`| \`${kind}\` @ ${size} | ${biome} `
         + `| ${fmt(mean(good.map((r) => r.areas)))} (${range(good.map((r) => r.areas))}) `
         + `| **${fmt(mean(good.map((r) => r.real)))}** (${range(good.map((r) => r.real))}) `
         + `| ${good.filter((r) => r.element > 0).length}/${good.length} `
@@ -265,15 +298,15 @@ for (const [k, rs] of byCell) {
 say('');
 say(`## THE TAG WORST CASE — against \`TAGS_PER_LEVEL\` = ${TAGS_PER_LEVEL}`);
 say('');
-say('| kind | biome | element tags | boundary cells (max) | ONE TAG PER CELL (max) | '
+say('| kind | size | biome | element tags | boundary cells (max) | ONE TAG PER CELL (max) | '
     + 'ONE TAG PER GROUP, 1 key | 2 keys |');
-say('|---|---|---|---|---|---|---|');
+say('|---|---|---|---|---|---|---|---|');
 for (const [k, rs] of byCell) {
-    const [kind, biome] = k.split('|');
+    const [kind, size, biome] = k.split('|');
     const good = rs.filter((r) => !r.error);
     if (good.length === 0) continue;
     const worstCell = Math.max(...good.map((r) => r.tagsPerCell));
-    say(`| \`${kind}\` | ${biome} `
+    say(`| \`${kind}\` | ${size} | ${biome} `
         + `| ${range(good.map((r) => r.elementTags))} `
         + `| ${Math.max(...good.map((r) => r.boundaryCells))} `
         + `| ${worstCell}${worstCell > TAGS_PER_LEVEL ? ' ⛔ OVER' : ''} `
@@ -281,7 +314,7 @@ for (const [k, rs] of byCell) {
         + `| ${Math.max(...good.map((r) => r.tagsPerGroup2))} |`);
 }
 say('');
-say('## Per cell — kind x biome x seed');
+say('## Per cell — kind x size x biome x seed');
 say('');
 say('| kind | biome | seed | areas | REAL | elem | synth | goal area | ent==goal | '
     + 'largest boundary | holders | dead | element |');
@@ -303,16 +336,16 @@ const predict = (r, keys) => {
     if (r.holders < keys) return 'no-area-can-hold-its-key';
     return 'ADMITS';
 };
-say('| kind | biome | admits 1 key | admits 2 keys | the refusals it meets at 1 key |');
-say('|---|---|---|---|---|');
+say('| kind | size | biome | admits 1 key | admits 2 keys | the refusals it meets at 1 key |');
+say('|---|---|---|---|---|---|');
 for (const [k, rs] of byCell) {
-    const [kind, biome] = k.split('|');
+    const [kind, size, biome] = k.split('|');
     const why = {};
     for (const r of rs) {
         const p1 = predict(r, 1);
         if (p1 !== 'ADMITS') why[p1] = (why[p1] ?? 0) + 1;
     }
-    say(`| \`${kind}\` | ${biome} `
+    say(`| \`${kind}\` | ${size} | ${biome} `
         + `| **${rs.filter((r) => predict(r, 1) === 'ADMITS').length}/${rs.length}** `
         + `| ${rs.filter((r) => predict(r, 2) === 'ADMITS').length}/${rs.length} `
         + `| ${Object.entries(why).map(([n, c]) => `${n} ${c}`).join(' · ') || '—'} |`);
@@ -323,11 +356,13 @@ if (KEYS.length) {
     say(`## THE GRAPH ARM — \`--areas=${KEYS.join(',')}\` x \`binds=${BINDS.join(',')}\`, `
         + 'MEASURED (no solve)');
     say('');
-    say('| kind | biome | arm | RAN | locks (max) | flags GUARDED | superseded | tags (max) '
-        + '| the refusals it met |');
-    say('|---|---|---|---|---|---|---|---|---|');
+    say('| kind | size | biome | arm | RAN | locks (max) | flags GUARDED | superseded '
+        + '| tags (max) | the refusals it met |');
+    say('|---|---|---|---|---|---|---|---|---|---|');
     for (const [k, rs] of byCell) {
-        const [kind, biome] = k.split('|');
+        /** ⛓ arc 5, slice 1 — kind x SIZE x biome, and the SIZE is its own
+         *  column: an acceptance rate is a number about a room. */
+        const [kind, size, biome] = k.split('|');
         const good = rs.filter((r) => !r.error);
         if (!good.length) continue;
         for (const keys of KEYS) {
@@ -337,7 +372,7 @@ if (KEYS.length) {
                 const why = {};
                 for (const a of arm) if (a.refused) why[a.refused] = (why[a.refused] ?? 0) + 1;
                 const ran = arm.filter((a) => a.ran);
-                say(`| \`${kind}\` | ${biome} | keys=${keys} binds=${binds} `
+                say(`| \`${kind}\` | ${size} | ${biome} | keys=${keys} binds=${binds} `
                     + `| **${ran.length}/${arm.length}** `
                     + `| ${Math.max(0, ...arm.map((a) => a.locks))} `
                     + `| ${ran.reduce((n, a) => n + a.guarded, 0)}/`
