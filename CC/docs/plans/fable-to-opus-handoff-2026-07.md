@@ -3309,6 +3309,64 @@ diagnosed (R9+). Depends on §5f slice 6 (LANDED —
 the flood + yield table are the instrument) and uses slice 7 as a knob;
 independent of 11/12.
 
+### ⛓⛓⛓ ARC 5 IS CLOSED (2026-08-20) — the room stops being one small box
+
+Eight slices — 0 · 1 · 2 · 3 · 4 · 5 · 6a · 6b — over `422e0b9d7`..`main`.
+§7's NINE acceptance gates are answered one by one in
+`NewDocs/plans/procgen-elements-arc5-kickoff.md` **§15.8**, which also carries
+the arc's whole residue in ONE deduplicated list (**§15.9**: R9 · arc 4 · future
+arcs · ⚖ the user · code-only). Tracked summary:
+`docs/json/developer/procgen/seedling-bot.md` § *⛓⛓⛓ ARC 5 IS CLOSED*.
+
+**What shipped**: the ROOM CONTRACT (width/height separate knobs to the vanilla
+max 60×60, default PINNED 10×10; the sparse SHELL format under a CLOSURE LAW —
+*no floor cell 4-adjacent to null* — refused by name) · the ORIENTED SITE PICK
+(an element declares its own snug footprint; guard census **21 → 62 of 360**,
+`no-site-fits-this-room` **130 → 0**) · the `chamber` ELEMENT, an element that IS
+space, declaring its blob as an AREA through the EXISTING seam (bare tree kinds'
+`--areas=1` **0/24 → 4·8·2·4·4 of 24**) · the `arena` and `bodies ∈ {1,2}`,
+priced BEFORE the domain was offered (3 REFUSED) · **SHORTENS computed at last**
+and REACHED on four generated MAZE levels · the DENSITY IDENTITY BLOCK, six
+levers on one line from one function in four readouts, with its own census.
+One planned re-record, spent at 6a on the biome default
+(`guard+killgate+blockpocket+chamber;w=2;h=3`, the guard's `len` DRAWN) with its
+mover set predicted first and matched exactly.
+
+**⛔ The two refutations, published rather than smoothed**: the exact stepped
+demand (C4) is exact about a BOUND and not about the body, and switching aborts
+3 corpus rows; and the Seedling SHORTENS venue is REFUTED on three measurements
+(rock invisible to the solver 244/244 · combat ladder EXHAUSTED · A10 throws at
+tick 215), so its module ships complete and unit-tested but is deliberately NOT
+a catalogue head.
+
+**⚖ WHAT IS THE USER'S AT THIS CLOSE** (§15.9 bucket D, each decidable from its
+own sentence): a PER-SPEC PARAMETER DOMAIN (*"draw from this SUBSET"*) — one
+mechanism answering the guard's 10-of-600 thinness, `len` 5/6 placing nothing,
+and the chamber having to NAME its params · removing `KEEP_POLICY`/`KEPT_KIND`
+from the LOOP CORE now that both substrates have retired `PREFER_DISCHARGE`
+(~207 refs across 35 files) · whether `arena` joins the biome default, which
+should wait for its lock to grow a wall (2 of 20 certify today) · arc 4's
+go-ahead · form controls · the maze `door-key` cut check and `derivePressKill`'s
+reported WHY.
+
+**⇒ R9's PRIORITY BY GENERATOR LEVERAGE** (⚖ recorded at the user's ask;
+§15.9 bucket A): **(1)** a DERIVED `break` verb — highest leverage, it registers
+the Seedling `shortcut` head with ONE line in `ELEMENT_TABLE` (a ROCK-gated
+shortcut has NO A10 dependency) AND opens the item-gated lock family for
+rule-directed levels · **(2)** the PRESS ARM already first on R9's list — 22 of
+22 kill-gate and 11 of 13 arena certification refusals are that one class; ⚠ the
+arena also needs the generator-side lock-wall growth, and neither alone moves it
+· **(3)** an A10 fix (a ladder that pays a cheap kill, or a non-dialogued goal
+class = a re-record) · **(4)** new enemy classes arriving as demand-bearing
+elements, which is what gives arenas real inhabitants · **(5)** swim certifiable
+in a generated room, which makes the water shortcut gradable through slice 5's
+shipped machinery. ⛔ NOT R9's, so nobody waits on it: the A8 two-area-elements
+`+`-list codec question · grow-to-fit's draw-order circularity · the per-spec
+parameter domain (⚖ the user's).
+
+**NEXT**: arc 4 (the CHAIN) is ⛔ ask-first and unauthorised; everything else in
+§5g's ladder is closed.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
@@ -3337,7 +3395,7 @@ world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
 seedling generate-UI slices 1–6 (§5e, ALL SHIPPED — arc CLOSED 2026-08-15) ──► constructive-mode arc §5f (OPENED 2026-08-15: shared refactor ──► loop move + maze bindings ──► maze lab page ──► iframe hosting ──► skeleton kinds ──► yield table/pre-check ──► chambers ──► corridor doors [⚖ ruling] ──► reach-cell ──► rule-directed; free editing + URL diet after slice 4)  ──► ⚖ ruling 11 hands Seedling pass 2 to §5g
-procgen ELEMENTS §5g (DESIGNED 2026-08-15): arc 1 area graph (maze, CLOSED) ──► arc 2 reverse-pull block gadget (maze, CLOSED 2026-08-16) ──► arc 3 Seedling sites/door=cut/gadget/arrow-lane out (NEXT) ──► arc 4 CHAIN (ask) ──► arc 5 shortcuts/density/arenas ; R9 independent of all three
+procgen ELEMENTS §5g (DESIGNED 2026-08-15): arc 1 area graph (maze, CLOSED) ──► arc 2 reverse-pull block gadget (maze, CLOSED 2026-08-16) ──► arc 3 Seedling sites/door=cut/gadget/arrow-lane out (CLOSED 2026-08-18) ──► arc 5 room contract/oriented pick/chamber/arena/SHORTENS/density (CLOSED 2026-08-20, eight slices) ──► arc 4 CHAIN (⛔ ask-first, NOT authorised) ; R9 independent of all four, and §5g's close ranks R9's items by generator leverage
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
   projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)
