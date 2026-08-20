@@ -5,14 +5,31 @@
  * `watch.html`'s ▶ load-in-wasm button ships what the page holds into the real
  * recompiled Seedling and prints TWO verdicts beside the JS run's own answer:
  * the END STATE (did the real game finish where the model finished) and, since
- * the per-tick slice, the whole run TICK BY TICK. This row drives one SOLVE
- * ship all the way to `finished`, past the `drain`, and reads both off the page.
+ * the per-tick slice, the whole run TICK BY TICK. This row drives TWO ships all
+ * the way to `finished`, past the `drain`, and reads both verdicts off the page.
+ *
+ * ── ⛓⛓⛓ TWO PLANS, AND THE SECOND ONE IS THE POINT ───────────────
+ *
+ *   SOLVE     a committed staging, solved IN the page, its tape shipped. The
+ *             tape's rooms are the atlas's own, so nothing is remapped.
+ *   GENERATE  a room the page GENERATED, shipped as a one-room level SET plus
+ *             the certification tape that proved it — and the model's whole
+ *             observation stream carries level **900** while the mounted set
+ *             calls the same room **0**. The per-tick verdict therefore rides
+ *             `watchWasm.remapStreamRooms` at EVERY observation rather than at
+ *             one, and until this plan existed that remap had never been
+ *             witnessed across a stream against the real game (arc-3 §18.17.9
+ *             residue 6: *"the GENERATE arm's per-tick verdict has never been
+ *             SEEN"*). ⛔ It is a ROW gap, not a mechanism gap: the mechanism
+ *             shipped with the per-tick slice and is unit-tested; what was
+ *             missing was an arm that could run it against the real game.
  *
  * ⚠ IT IS NO LONGER THE ONLY ARM THAT CAN SEE `agrees per tick`.
  * `check-seedling-wasm-pages.mjs` now drives a 30-tick COMMITTED tape through
  * `?side=wasm` headless, on any root, and sees one there. What is still only
- * visible here is a **SOLVE's** verdict — 255 ticks that the page produced
- * itself, which swiftshader would spend eight minutes rasterising.
+ * visible HERE is a verdict over a tape THE PAGE PRODUCED ITSELF — 255 ticks
+ * from a solve, 360 from a generated room's certification — which swiftshader
+ * would spend eight and twelve minutes rasterising respectively.
  *
  * ── ⛔ WHY IT IS A SEPARATE ROW AND NOT A FLAG ON THE PAGES ROW ──────────────
  *
@@ -29,6 +46,8 @@
  *                          up to the first tick, which is all ~0.5 ticks/s can
  *                          honestly reach
  *   THIS row (real GPU)    the ship reaches `finished`, and the VERDICT is real
+ *                          — for a SOLVE's tape and for a GENERATED room's
+ *                          certification tape, both produced in the page
  *
  * ⛔ EACH VERDICT IS PRINTED WITH ITS OWN BOUND, and this row asserts BOTH are
  * on screen: the end-state line compares ONE frame, and the per-tick line is
@@ -95,7 +114,7 @@ if (!alive) {
  * polls; every expression below is this row's claim about what the page should
  * be doing at that moment.
  */
-const steps = [
+const SOLVE_STEPS = [
     {
         what: 'the SOLVE arm mounted and solved in the page',
         wait: "window.__editorSolve && window.__editorSolve.status === 'ok'",
@@ -132,126 +151,119 @@ const steps = [
     { read: 'window.__editorSolve', as: 'solve' },
 ];
 
+/**
+ * ── ⛓⛓⛓ THE GENERATE PLAN — THE SUBJECT, AND WHY IT IS THIS SEED ─────
+ *
+ * ⛔ THE ROOM MUST HOLD AN ELEMENT AND ITS CERTIFICATION MUST HAVE PRODUCED A
+ * TAPE, because the tape IS what gets shipped: the GENERATE arm sends the
+ * one-room level set plus `displaySolve`'s tape, and a room whose display solve
+ * refused arms no button at all (`setShippable`'s `why`). The biome DEFAULT
+ * post-sword spec is `guard;len=2+killgate+blockpocket`, so which element a seed
+ * draws is a DRAW and not a choice — this one was measured rather than assumed:
+ *
+ *   node scripts/procgen/generate-seedling-level.mjs --seed=38 --biome=post-sword
+ *   ⇒ element: guard;len=2+killgate+blockpocket -> drew `killgate` —
+ *     kill-gate door (5,6) [tag 1]; clearer (4,5); wall GREW 7 cell(s)
+ *     ⛔⛔ CERTIFIED: true — SOLVED
+ *     kept: 6 obstacle(s) over 11 attempt(s); solve 383 (skeleton) -> 360 (final)
+ *
+ * ⇒ a CERTIFIED KILL GATE — a room whose lock is opened by killing a live
+ * spinner — and a 360-tick certification tape, which is ~19 s of real game at
+ * the rig's measured ~18.6 ticks/s. ⛔ `--count=` is omitted above because the
+ * CLI's default obstacle target IS 6; the URL names `count=6` because the ROW
+ * has to wait for `step === 6` and a wait cannot read a default it did not name
+ * (the two-streams law, from the instrument's side).
+ *
+ * ⛔⛔ AND THE WAIT IS FOR THE LADDER TO **FINISH**, NOT FOR ITS FIRST `ok`
+ * (arc-3 §18.15.5, MEASURED there rather than reasoned): `?run=1&count=N`
+ * publishes `status: 'ok'` at EVERY step, so a row that pressed on the first one
+ * would ship step 1 while the mounted set named step N — the button title said
+ * `step 3` and the set said `-4-`. Three independent readings say the ladder is
+ * done: the published `step` equals the target, `#genRunAll` is re-enabled (the
+ * page's own "the ladder is over"), and ▶ load in wasm is armed.
+ */
+const GEN_SEED = 38;
+const GEN_BIOME = 'post-sword';
+const GEN_COUNT = 6;
+const GEN_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
+    + `?source=generate&seed=${GEN_SEED}&biome=${GEN_BIOME}&count=${GEN_COUNT}&run=1`;
+
+const GENERATE_STEPS = [
+    {
+        what: '⛔ the generator ran its WHOLE ladder — not merely its first `ok`',
+        wait: "window.__editorGenerate?.status === 'ok'"
+            + ` && window.__editorGenerate?.step === ${GEN_COUNT}`
+            + " && !document.getElementById('genRunAll').disabled"
+            + " && !document.getElementById('loadWasm').disabled",
+        sec: 300,
+    },
+    { read: 'window.__editorGenerate.step', as: 'genStep' },
+    { read: 'window.__editorGenerate.ticks', as: 'genTicks' },
+    { read: 'window.__editorGenerate.certified', as: 'genCertified' },
+    { read: 'window.__editorGenerate.elements.certified', as: 'elementCertified' },
+    {
+        read: '(window.__editorGenerate.elements.placed ?? []).map((p) => p.family)',
+        as: 'elementFamilies',
+    },
+    { read: "document.getElementById('loadWasm').title", as: 'buttonTitle' },
+    { click: '#loadWasm', what: 'press ▶ load in wasm' },
+    {
+        what: 'the ship reached `runtime` and is waiting for a REAL ▶ Start',
+        wait: "window.__watch?.wasm?.reached?.includes('runtime')",
+        sec: 300,
+    },
+    { frame_click: '#btn-start', frame: '/game.html', what: 'press ▶ Start INSIDE the frame' },
+    {
+        what: '⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact',
+        wait: "window.__watch?.wasm?.reached?.includes('levels') || window.__watch?.wasm?.refusal",
+        sec: 300,
+    },
+    {
+        what: '⛓ the ship reached `finished` — the real game ran the certification tape out',
+        wait: "window.__watch?.wasm?.verdict && window.__watch.wasm.verdict.kind !== 'not-finished'",
+        sec: 900,
+    },
+    { read: 'window.__watch.wasm', as: 'wasm' },
+    { read: "document.getElementById('wasmVerdict').textContent", as: 'verdictText' },
+];
+
 mkdirSync(WIN_WSL, { recursive: true });
 writeFileSync(join(WIN_WSL, 'seedling-watch-ship-win.py'), readFileSync(DRIVER));
-const planWsl = join(WIN_WSL, 'watch-ship-plan.json');
-const outWsl = join(WIN_WSL, 'watch-ship-results.json');
-writeFileSync(planWsl, JSON.stringify({ url: PAGE, steps }));
-try { unlinkSync(outWsl); } catch { /* first run */ }
 
-console.log('# ▶ load in wasm, driven to `finished` on real-GPU Windows Chrome');
-console.log(`  ${PAGE}\n`);
+/**
+ * ⛔ ONE PLAN = ONE BROWSER = ONE SHIP. The wasm cannot rewind (`botReset`
+ * forgets the tape, not the world), so two ships in one document would make the
+ * second one start wherever the first stopped and report it as data. The driver
+ * opens and closes a browser per invocation, which is what keeps that law free.
+ *
+ * @returns {object|null} the driver's own results record, or null if it died
+ *   before writing one — which is a RESULT and is claimed as such.
+ */
+function drive(label, url, steps, stem) {
+    const planWsl = join(WIN_WSL, `${stem}-plan.json`);
+    const outWsl = join(WIN_WSL, `${stem}-results.json`);
+    writeFileSync(planWsl, JSON.stringify({ url, steps }));
+    try { unlinkSync(outWsl); } catch { /* first run */ }
 
-let driverOut = '';
-try {
-    driverOut = execFileSync(WIN_PY, [
-        '-3.12', `${WIN_DOS}\\seedling-watch-ship-win.py`,
-        '--plan', `${WIN_DOS}\\watch-ship-plan.json`,
-        '--out', `${WIN_DOS}\\watch-ship-results.json`,
-    ], { cwd: WIN_WSL, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-} catch (e) {
-    driverOut = [e.stdout, e.stderr].filter(Boolean).join('\n');
-    console.log(`DRIVER FAILED: ${e.message}`);
-}
-driverOut.replace(/\r/g, '').split('\n')
-    .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
-    .forEach((l) => console.log(`  ${l}`));
+    console.log(`\n# ${label}`);
+    console.log(`  ${url}\n`);
 
-let res = null;
-try { res = JSON.parse(readFileSync(outWsl, 'utf8')); } catch { /* named below */ }
-console.log('');
-check(res !== null && res.crashed !== true, 'the driver completed every step',
-    res === null ? 'no results file — the driver died before writing one'
-        : (res.error ?? `${res.steps.length} step(s)`));
-if (res === null) { console.log('\n1 FAILURE(S)'); process.exit(1); }
-
-const wasm = res.reads?.wasm ?? null;
-const solve = res.reads?.solve ?? null;
-check(res.reads?.buttonHiddenInSolve === false,
-    '⛓ the ▶ load-in-wasm button is UP in SOLVE (it is hidden only in REPLAY)',
-    `#wasmShip hidden = ${res.reads?.buttonHiddenInSolve}`);
-check(typeof res.reads?.buttonTitle === 'string' && /ship the solve/i.test(res.reads.buttonTitle),
-    '…and its title NAMES what pressing it will send',
-    res.reads?.buttonTitle ?? '(no title)');
-
-check(wasm !== null, 'the page published `__watch.wasm`', wasm ? wasm.stage : 'null');
-if (wasm) {
-    /**
-     * ⛔ THE STAGES ARE ASSERTED AS A SEQUENCE, NOT AS A COUNT. A ship that
-     * reached six of seven stages and a ship that reached six DIFFERENT ones
-     * both report six.
-     */
-    const want = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain',
-        'verdict'];
-    check(JSON.stringify(wasm.reached) === JSON.stringify(want),
-        '⛓ every stage was reached, in order, and none was skipped',
-        `${JSON.stringify(wasm.reached)}`);
-    check(wasm.refusal === null, 'no stage refused', JSON.stringify(wasm.refusal));
-    check(wasm.status?.finished === true, 'the game reports the run FINISHED',
-        `tick ${wasm.status?.tick}, level ${wasm.status?.level}, `
-        + `(${wasm.status?.x}, ${wasm.status?.y})`);
-    /**
-     * ⛓⛓⛓ THE CLAIM THIS ROW EXISTS FOR. Everything above is reachable
-     * headless; this line is not.
-     */
-    check(wasm.verdict?.agrees === true,
-        '⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS model ended',
-        `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
-        + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
-    /**
-     * ── ⛓⛓⛓ THE CLAIM THE PER-TICK SLICE EXISTS FOR ─────────────────────────
-     *
-     * ⛔ THE DRAIN IS ASSERTED NON-EMPTY, SEPARATELY FROM THE VERDICT. A build
-     * whose `botDrain` answered nothing degrades to the labelled end-state
-     * verdict BY DESIGN, and a row that only read the verdict could not tell
-     * that fallback from a real per-tick agreement — the fallback would read as
-     * a quieter pass on the one claim this row is for (trap 403's shape at the
-     * claim rather than at the readout).
-     */
-    check((wasm.drain?.observations ?? 0) > 0,
-        '⛓ the game DRAINED its whole observation stream — a buffered read, once',
-        `${wasm.drain?.observations ?? 'no drain'} observation(s), `
-        + `${wasm.drain?.reportedTransitions ?? '?'} reported transition(s)`);
-    check(wasm.verdict?.perTick?.kind === 'agrees',
-        '⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model '
-        + 'observation for observation',
-        `${wasm.verdict?.perTick?.text} (kind ${wasm.verdict?.perTick?.kind})`);
-    /**
-     * ⛓ THE TWO SIDES COUNTED THE SAME RUN. `botStatus.tick` is the game's own
-     * counter and the drain is what it handed over; a stream shorter than the
-     * run would make a per-tick `agrees` a claim about a prefix.
-     */
-    check(wasm.drain?.observations === (wasm.status?.tick ?? -1) + 1,
-        '…and the drained stream is the WHOLE run, not a prefix of it',
-        `${wasm.drain?.observations} observation(s) vs tick ${wasm.status?.tick} + 1`);
-    /**
-     * ⛔ AND BOTH BOUNDS ARE ON SCREEN. An `agrees` with no scope beside it
-     * reads as "the real game reproduced the model" without saying against
-     * WHAT, and a per-tick agreement still cannot see a defect in the code both
-     * runtimes share (trap 389).
-     */
-    const verdictText = res.reads?.verdictText ?? '';
-    /**
-     * ⛔ THE DETAIL MUST BE THE LINE THAT CARRIES THE MATCH, NOT LINE 0. The
-     * readout is TWO lines now — the per-tick headline and the end-state one,
-     * each with its own scope — and printing the first line as evidence for a
-     * claim about the second reports a string that does not contain what the
-     * claim just asserted. Caught on this row's own first green run: both scope
-     * claims passed while quoting a line neither of them was about.
-     */
-    const lineWith = (re) => verdictText.split('\n').find((l) => re.test(l))
-        ?? `(no line matched ${re} in: ${verdictText.split('\n')[0]})`;
-    check(/end state only/.test(verdictText),
-        '⛔ …and the page prints the END-STATE bound beside it',
-        lineWith(/end state only/));
-    check(/per tick against the JS MODEL/.test(verdictText)
-        && /invisible here/.test(verdictText),
-        '⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what '
-        + 'both runtimes SHARE',
-        lineWith(/per tick against the JS MODEL/));
-    check(wasm.status?.tick === solve?.tickCount,
-        'the game ran the SAME number of ticks the solve produced',
-        `game ${wasm.status?.tick} vs solve ${solve?.tickCount}`);
+    let driverOut = '';
+    try {
+        driverOut = execFileSync(WIN_PY, [
+            '-3.12', `${WIN_DOS}\\seedling-watch-ship-win.py`,
+            '--plan', `${WIN_DOS}\\${stem}-plan.json`,
+            '--out', `${WIN_DOS}\\${stem}-results.json`,
+        ], { cwd: WIN_WSL, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    } catch (e) {
+        driverOut = [e.stdout, e.stderr].filter(Boolean).join('\n');
+        console.log(`DRIVER FAILED: ${e.message}`);
+    }
+    driverOut.replace(/\r/g, '').split('\n')
+        .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
+        .forEach((l) => console.log(`  ${l}`));
+    console.log('');
+    try { return JSON.parse(readFileSync(outWsl, 'utf8')); } catch { return null; }
 }
 
 /**
@@ -270,13 +282,247 @@ if (wasm) {
  * one it was is now answerable.
  */
 const IGNORABLE_404 = /\/favicon\.ico(\?|$)/;
-const pageErrors = (res.console ?? []).filter((l) => /pageerror/i.test(l));
-check(pageErrors.length === 0, 'no uncaught page errors during the ship',
-    pageErrors.slice(0, 2).join(' | ') || 'none');
-const bad = (res.bad_responses ?? []).filter((r) => !IGNORABLE_404.test(r));
-check(bad.length === 0, 'and nothing the page ASKED FOR came back 4xx/5xx',
-    bad.slice(0, 3).join(' | ')
-    || `none (${(res.bad_responses ?? []).length} ignorable, e.g. the favicon)`);
+function pageHygiene(res, arm) {
+    const pageErrors = (res.console ?? []).filter((l) => /pageerror/i.test(l));
+    check(pageErrors.length === 0, `${arm}: no uncaught page errors during the ship`,
+        pageErrors.slice(0, 2).join(' | ') || 'none');
+    const bad = (res.bad_responses ?? []).filter((r) => !IGNORABLE_404.test(r));
+    check(bad.length === 0, `${arm}: and nothing the page ASKED FOR came back 4xx/5xx`,
+        bad.slice(0, 3).join(' | ')
+        || `none (${(res.bad_responses ?? []).length} ignorable, e.g. the favicon)`);
+}
+
+/**
+ * ⛔ THE DETAIL MUST BE THE LINE THAT CARRIES THE MATCH, NOT LINE 0. The
+ * readout is THREE lines on a GENERATE ship — the per-tick headline, the
+ * end-state one, and the remap note, each with its own scope — and printing the
+ * first line as evidence for a claim about the third reports a string that does
+ * not contain what the claim just asserted. Caught on this row's own first
+ * green run at the per-tick slice; kept as one spelling since.
+ */
+const lineWith = (text, re) => text.split('\n').find((l) => re.test(l))
+    ?? `(no line matched ${re} in: ${text.split('\n')[0]})`;
+
+/**
+ * ── ⛓⛓⛓ THE CLAIMS BOTH SHIPS OWE, AND THE ONE THAT IS NOT AN ECHO ───
+ *
+ * ⛔ THE PER-TICK SENTENCE'S **OWN COUNT** IS PARSED AND COMPARED, not merely
+ * its kind. `verdict.perTick.kind === 'agrees'` is the same word an END-STATE
+ * agreement uses, so a row that asserted only that could not tell the two
+ * verdicts apart — it would pass on a build whose per-tick channel was never
+ * asked, exactly the way a `perTick: null` reads like "nobody asked" (trap
+ * 403's shape, one level up at the CLAIM). The sentence carries the number of
+ * observations the COMPARATOR saw; `botStatus.tick + 1` is the GAME's own
+ * account of the same run and `drain.observations` is a third. Three accounts,
+ * asserted equal, is what stops `agrees per tick` from being a claim about a
+ * PREFIX.
+ */
+function perTickClaims(wasm, arm) {
+    check((wasm.drain?.observations ?? 0) > 0,
+        `${arm}: ⛓ the game DRAINED its whole observation stream — a buffered read, once`,
+        `${wasm.drain?.observations ?? 'no drain'} observation(s), `
+        + `${wasm.drain?.reportedTransitions ?? '?'} reported transition(s)`);
+    check(wasm.verdict?.perTick?.kind === 'agrees',
+        `${arm}: ⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model `
+        + 'observation for observation',
+        `${wasm.verdict?.perTick?.text} (kind ${wasm.verdict?.perTick?.kind})`);
+    const said = /agrees per tick \((\d+) observations?\)/.exec(
+        wasm.verdict?.perTick?.text ?? '');
+    const n = said ? Number(said[1]) : null;
+    check(n !== null && n === (wasm.status?.tick ?? -1) + 1
+        && n === wasm.drain?.observations,
+        `${arm}: ⛔⛔ …and the PER-TICK sentence's OWN count is the whole run — three `
+        + 'independent accounts of how long it was',
+        `sentence ${n} · drain ${wasm.drain?.observations} · game tick `
+        + `${wasm.status?.tick} + 1`);
+    /**
+     * ⛔ AND BOTH BOUNDS ARE ON SCREEN. An `agrees` with no scope beside it
+     * reads as "the real game reproduced the model" without saying against
+     * WHAT, and a per-tick agreement still cannot see a defect in the code both
+     * runtimes share (trap 389).
+     *
+     * ⛔ THE DETAIL MUST BE THE LINE THAT CARRIES THE MATCH, NOT LINE 0. The
+     * readout is TWO lines now — the per-tick headline and the end-state one,
+     * each with its own scope — and printing the first line as evidence for a
+     * claim about the second reports a string that does not contain what the
+     * claim just asserted. Caught on this row's own first green run: both scope
+     * claims passed while quoting a line neither of them was about.
+     */
+    const verdictText = wasm.__verdictText ?? '';
+    check(/end state only/.test(verdictText),
+        `${arm}: ⛔ …and the page prints the END-STATE bound beside it`,
+        lineWith(verdictText, /end state only/));
+    check(/per tick against the JS MODEL/.test(verdictText)
+        && /invisible here/.test(verdictText),
+        `${arm}: ⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what `
+        + 'both runtimes SHARE',
+        lineWith(verdictText, /per tick against the JS MODEL/));
+}
+
+// ── ARM 1: SOLVE — a tape the page produced itself ───────────────────────
+{
+    const res = drive('▶ load in wasm, SOLVE, driven to `finished` on real-GPU Windows Chrome',
+        PAGE, SOLVE_STEPS, 'watch-ship');
+    check(res !== null && res.crashed !== true, 'SOLVE: the driver completed every step',
+        res === null ? 'no results file — the driver died before writing one'
+            : (res.error ?? `${res.steps.length} step(s)`));
+    if (res === null) { console.log('\n1 FAILURE(S)'); process.exit(1); }
+
+    const wasm = res.reads?.wasm ?? null;
+    const solve = res.reads?.solve ?? null;
+    check(res.reads?.buttonHiddenInSolve === false,
+        '⛓ the ▶ load-in-wasm button is UP in SOLVE (it is hidden only in REPLAY)',
+        `#wasmShip hidden = ${res.reads?.buttonHiddenInSolve}`);
+    check(typeof res.reads?.buttonTitle === 'string' && /ship the solve/i.test(res.reads.buttonTitle),
+        '…and its title NAMES what pressing it will send',
+        res.reads?.buttonTitle ?? '(no title)');
+
+    check(wasm !== null, 'SOLVE: the page published `__watch.wasm`', wasm ? wasm.stage : 'null');
+    if (wasm) {
+        wasm.__verdictText = res.reads?.verdictText ?? '';
+        /**
+         * ⛔ THE STAGES ARE ASSERTED AS A SEQUENCE, NOT AS A COUNT. A ship that
+         * reached six of seven stages and a ship that reached six DIFFERENT ones
+         * both report six.
+         */
+        const want = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain',
+            'verdict'];
+        check(JSON.stringify(wasm.reached) === JSON.stringify(want),
+            'SOLVE: ⛓ every stage was reached, in order, and none was skipped',
+            `${JSON.stringify(wasm.reached)}`);
+        check(wasm.refusal === null, 'SOLVE: no stage refused', JSON.stringify(wasm.refusal));
+        check(wasm.status?.finished === true, 'SOLVE: the game reports the run FINISHED',
+            `tick ${wasm.status?.tick}, level ${wasm.status?.level}, `
+            + `(${wasm.status?.x}, ${wasm.status?.y})`);
+        /**
+         * ⛓⛓⛓ THE CLAIM THIS ROW EXISTS FOR. Everything above is reachable
+         * headless; this line is not.
+         */
+        check(wasm.verdict?.agrees === true,
+            'SOLVE: ⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS model ended',
+            `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
+            + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
+        perTickClaims(wasm, 'SOLVE');
+        check(wasm.status?.tick === solve?.tickCount,
+            'SOLVE: the game ran the SAME number of ticks the solve produced',
+            `game ${wasm.status?.tick} vs solve ${solve?.tickCount}`);
+    }
+    pageHygiene(res, 'SOLVE');
+}
+
+/**
+ * ── ⛓⛓⛓ ARM 2: GENERATE — A ROOM THIS PAGE MADE, IN THE REAL GAME ────
+ *
+ * ⛔ WHAT THIS ARM CAN SEE THAT THE SOLVE ONE CANNOT: the 900→room-0 remap
+ * across a WHOLE observation stream. Every observation of a generated walk
+ * carries `level: 900` (`SEEDLING_DEFAULTS.level`) while `buildLevelSet` calls
+ * the same room `0`, so a raw comparison would print `tick 0 differs … level=900
+ * … level=0` on a ship that worked perfectly — a verdict about two id spaces, at
+ * every tick instead of at one. `watchWasm.remapStreamRooms` is the one place
+ * that mapping is written; this is the first arm that runs it against the real
+ * game rather than against a fixture.
+ */
+{
+    const res = drive('▶ load in wasm, GENERATE, driven to `finished` on real-GPU Windows Chrome',
+        GEN_PAGE, GENERATE_STEPS, 'watch-ship-generate');
+    check(res !== null && res.crashed !== true, 'GENERATE: the driver completed every step',
+        res === null ? 'no results file — the driver died before writing one'
+            : (res.error ?? `${res.steps.length} step(s)`));
+    if (res === null) { console.log(`\n${failed} FAILURE(S)`); process.exit(1); }
+
+    const wasm = res.reads?.wasm ?? null;
+    /**
+     * ⛔ THE LADDER FINISHED, ASSERTED AS A NUMBER RATHER THAN AS A WAIT. The
+     * wait above is what the driver blocked on; this is the row saying which
+     * step the page was showing when the button was pressed, so a reader of the
+     * log can tell a ship of step 6 from a ship of step 1 (§18.15.5's measured
+     * defect, in the readout instead of in the reasoning).
+     */
+    check(res.reads?.genStep === GEN_COUNT,
+        'GENERATE: ⛔ the room that shipped is the LADDER\'S LAST step, not its first',
+        `step ${res.reads?.genStep} of ${GEN_COUNT}`);
+    /**
+     * ⛓ AND THE ROOM HOLDS AN ELEMENT WHOSE CERTIFICATION MADE THE TAPE. A
+     * generated room with no element still ships and still verdicts — and would
+     * witness the remap just as well — but it would not witness it over a room
+     * whose puzzle is a live body the real game has to simulate.
+     */
+    check(res.reads?.elementFamilies?.length === 1
+        && res.reads.elementFamilies[0] === 'killgate',
+        'GENERATE: ⛓ the shipped room holds a KILL GATE — a lock opened by killing a live body',
+        `placed families ${JSON.stringify(res.reads?.elementFamilies)}`);
+    check(res.reads?.elementCertified === true && res.reads?.genCertified === true,
+        '…and BOTH certifications passed — the element\'s and the level\'s',
+        `element ${res.reads?.elementCertified}, level ${res.reads?.genCertified}, `
+        + `${res.reads?.genTicks} ticks`);
+    check(typeof res.reads?.buttonTitle === 'string'
+        && /ship this room as a ONE-ROOM level set/i.test(res.reads.buttonTitle),
+        'GENERATE: …and the button title NAMES what pressing it will send',
+        res.reads?.buttonTitle ?? '(no title)');
+
+    check(wasm !== null, 'GENERATE: the page published `__watch.wasm`', wasm ? wasm.stage : 'null');
+    if (wasm) {
+        wasm.__verdictText = res.reads?.verdictText ?? '';
+        /** ⛓ `levels` IS IN THIS SEQUENCE AND NOT IN SOLVE'S — it is conditional
+         *  on DATA (a level set was given), never on a flag. */
+        const want = ['probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished',
+            'drain', 'verdict'];
+        check(JSON.stringify(wasm.reached) === JSON.stringify(want),
+            'GENERATE: ⛓ every stage was reached, in order, `levels` included',
+            `${JSON.stringify(wasm.reached)}`);
+        check(wasm.refusal === null, 'GENERATE: no stage refused', JSON.stringify(wasm.refusal));
+        /**
+         * ⛔ THE READBACK IS THE CLAIM, NOT THE DELIVERY. `levels` is only
+         * entered once `botLevelSet` AGREED with what was sent, field by field —
+         * the only check that does not share the sender's assumptions.
+         */
+        check(wasm.set?.rooms === 1 && typeof wasm.set?.set_id === 'string'
+            && wasm.set.set_id.startsWith('watch-oneroom-'),
+            'GENERATE: ⛓⛓ exactly ONE room mounted, under the set_id the exporter stamped',
+            JSON.stringify(wasm.set ?? null));
+        check(wasm.status?.finished === true, 'GENERATE: the game reports the run FINISHED',
+            `tick ${wasm.status?.tick}, level ${wasm.status?.level}, `
+            + `(${wasm.status?.x}, ${wasm.status?.y})`);
+        /**
+         * ⛔⛔ THE REMAP IS PRINTED, AND THE ROW READS IT **OFF THE READOUT**. A
+         * verdict about two id spaces would print `disagrees (level 0≠900)` on a
+         * perfect ship; the note beside the verdict is what lets a reader audit
+         * which mapping was applied instead of inferring it from an agreement.
+         *
+         * ⛔ AND THE CHANNEL IS THE ONE THE CLAIM NAMES. The first cut asserted
+         * `__watch.wasm.note` and FAILED on this row's own first Windows run —
+         * `publishShip` projects `{drain, label, reached, refusal, scope, set,
+         * stage, stages, status, verdict}` and `note` is not in it, so the field
+         * was `undefined` while the readout said the line perfectly. A claim
+         * about what the READOUT names has to read the readout (trap 430's
+         * family: read the channel you are making the claim about).
+         */
+        const genVerdictText = res.reads?.verdictText ?? '';
+        check(/remapped 900\u21920/.test(genVerdictText),
+            'GENERATE: ⛔ the readout NAMES the 900→0 remap beside the verdict',
+            lineWith(genVerdictText, /remapped/));
+        check(wasm.verdict?.agrees === true,
+            'GENERATE: ⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS '
+            + 'model ended, in the REMAPPED room',
+            `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
+            + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
+        perTickClaims(wasm, 'GENERATE');
+        /**
+         * ⛓⛓⛓ AND THE REMAP HELD AT EVERY TICK. The model's stream is all 900s
+         * and the game's is all 0s; a per-tick `agrees` over the whole run is
+         * the remap witnessed at each observation, and the game's own last
+         * `level` says which id space the game was in while it agreed.
+         */
+        check(wasm.status?.level === 0,
+            'GENERATE: ⛔⛔ …and the GAME was in room 0 the whole time — the remap is what '
+            + 'made a stream of 900s agree with it',
+            `game level ${wasm.status?.level}, model record level 900`);
+        check(wasm.status?.tick === res.reads?.genTicks,
+            'GENERATE: the game ran the SAME number of ticks the certification produced',
+            `game ${wasm.status?.tick} vs certification ${res.reads?.genTicks}`);
+    }
+    pageHygiene(res, 'GENERATE');
+}
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);
