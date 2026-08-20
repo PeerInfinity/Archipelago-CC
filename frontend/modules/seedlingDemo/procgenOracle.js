@@ -422,9 +422,16 @@ const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
  * ⚠ AND A FOURTH THAT IS NOT ONE (slice 2c, from reading the source to re-key
  * this): `derivePressKill`'s *"no (cell, tick) … puts the whole five-dispatch
  * train inside 16 px of a body"* is a `rejected.push`, folded into a
- * `SolverRefusal` at PLANNING time. It never reaches this predicate — which is
- * also why probe 2b's 23 corridor reverts read "no arrow trap" about rooms
- * where a ceiling was never the candidate (its R9 item (ii)).
+ * `SolverRefusal` at PLANNING time. It never reaches this predicate.
+ *
+ * ⛓⛓ **AND THE SECOND HALF OF THAT SENTENCE IS NOW FIXED** (SEEDLING BOT R9,
+ * slice 1 — arc-3 A3). Probe 2b's 23 corridor reverts read *"no arrow trap"*
+ * about rooms where a ceiling was never the candidate because
+ * `derivePressKill` DISCARDED its accumulated `rejected` at every `return
+ * null`, and the caller then fell through to `deriveCeilingWeapon`'s sentence —
+ * the only one left. It now returns `{first: null, rejected}` on every arm and
+ * the fallthrough reports BOTH, **the press arm's first**. ⛔ Nothing about
+ * which rooms refuse changed; what changed is which arm the refusal names.
  *
  * ⛔⛔ **AND NOTHING ELSE WIDENS.** A `LevelWorldError`, a `TypeError`, the
  * dialogue-ceremony guard's bare `Error`, an unkeyed `bosslock`'s

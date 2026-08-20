@@ -53,8 +53,10 @@ import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
     ESCALATION_LADDER,
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, SolverRefusal,
-    solveSegment,
+    resolveKillStrategy, solveSegment,
 } from './solverBot.js';
+// ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
+import { KILL_LOCK_TSET } from './combat.js';
 import {
     deathJumpFindings, parseDecisionTrace, traceTapeAgreementFindings,
 } from './decisionTrace.js';
@@ -609,6 +611,68 @@ describe('the refusal shapes — never a silent stall', () => {
             run, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 96 } }],
             name: 'probe-blind', boot: t.boot,
         })).toThrow(/NO COMBAT CENSUS/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SEEDLING BOT R9, SLICE 1 — **A3: `derivePressKill` REPORTS ITS OWN
+ * WHY.** The press arm is asked FIRST and needs nothing from the room; the
+ * ceiling arm is the fallback. Until this slice `derivePressKill` accumulated
+ * three sentences and DISCARDED them at every `return null`, so a room that
+ * refused in the press arm reported *"level N has NO arrow trap"* — an answer
+ * about the arm nobody asked for, and the reason probe 2b's 23 corridor
+ * reverts all read that way (`procgenOracle.js` § the fourth-that-is-not-one).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow trap', () => {
+    /** ⛓ The smallest room that reaches both arms: a `tset == -1` lock, one
+     *  counted body, and NO arrow trap — so neither arm can answer. */
+    const roomWithNoTrap = () => ({
+        level: 7,
+        world: {
+            activators: [{ id: 'lock@3,4', t: KILL_LOCK_TSET, x: 3, y: 4 }],
+            combat: { enemies: [{ tag: 'spinner', x: 5, y: 5, counted: true }] },
+            arrowTraps: [],
+            pressers: [],
+        },
+        spinnerBodies: [],
+        chasers: [],
+        chaserRoomVerdict: () => ({ stepped: false }),
+    });
+
+    it('⛔ reports BOTH arms, the PRESS arm FIRST', () => {
+        const out = resolveKillStrategy(roomWithNoTrap(), { id: 'lock@3,4' }, []);
+        expect(out.weapon).toBe(null);
+        expect(out.rejected).toHaveLength(2);
+        /** ⛓⛓ THE ORDER IS THE CLAIM: the arm that was tried first is the one
+         *  a reader needs first. */
+        expect(out.rejected[0].option).toBe('press a body');
+        expect(out.rejected[0].why).toMatch(/tracks NO live spinner bodies/);
+        expect(out.rejected[1].option).toBe('kill-by-ceiling');
+        expect(out.rejected[1].why).toMatch(/has NO arrow trap/);
+    });
+
+    /** ⛔⛔ THE REGRESSION, SAID AS AN ABSENCE: the ceiling sentence must not be
+     *  the ONLY thing this room says. That is the defect exactly — it was true,
+     *  it was alone, and it named the wrong arm. */
+    it('⛔ the ceiling sentence is never the ONLY why the room gives', () => {
+        const { rejected } = resolveKillStrategy(roomWithNoTrap(), { id: 'lock@3,4' }, []);
+        const ceilingOnly = rejected.length === 1 && /arrow trap/.test(rejected[0].why);
+        expect(ceilingOnly).toBe(false);
+        expect(rejected.some((r) => /press/i.test(r.option))).toBe(true);
+    });
+
+    /** ⛓ …and the OTHER press-arm refusal reaches the reader too: a body whose
+     *  `KILL_ARM_POLICY` row is not `modelled` says SO, rather than being
+     *  reported as a room with no ceiling. */
+    it('⛓ an un-modelled body\'s own sentence survives the fallthrough', () => {
+        const run = roomWithNoTrap();
+        run.world.combat.enemies = [{ tag: 'bob', x: 5, y: 5, counted: true }];
+        run.spinnerBodies = [{ id: 'bob@5,5', x: 5, y: 5 }];
+        const { rejected } = resolveKillStrategy(run, { id: 'lock@3,4' }, []);
+        expect(rejected[0].option).toMatch(/^press /);
+        expect(rejected[0].why).toMatch(/KILL_ARM_POLICY/);
+        expect(rejected.at(-1).option).toBe('kill-by-ceiling');
     });
 });
 

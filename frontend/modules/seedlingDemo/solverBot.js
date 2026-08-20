@@ -2749,7 +2749,14 @@ const persistTagOf = (e) => {
  * (`lanesOver(playerBox)` EMPTY — a leg holding a button under a lane is
  * standing in its own volley).
  */
-function resolveKillStrategy(run, obstacle, contacts) {
+/**
+ * ⛓ EXPORTED FOR ONE ROW (SEEDLING BOT R9, slice 1 — arc-3 A3): the two-arm
+ * refusal this function produces is what A3 fixed, and pinning it through
+ * `solveSegment` would need a whole recorded room to assert one sentence.
+ * ⛔ It is not part of the solver's call surface — `resolveObstacleStrategy` is
+ * the only caller and stays the only caller.
+ */
+export function resolveKillStrategy(run, obstacle, contacts) {
     const world = run.world;
     const row = (world.activators ?? []).find((a) => a.id === obstacle.id);
     if (!row || row.t !== KILL_LOCK_TSET) return null;
@@ -2766,7 +2773,9 @@ function resolveKillStrategy(run, obstacle, contacts) {
      * these themselves", and only if not does it go looking for a ceiling.
      */
     const press = derivePressKill(run, bodies, contacts);
-    if (press) {
+    /** ⛓ R9 slice 1 — `first === null` IS the refusal now, and `press.rejected`
+     *  carries the press arm's own whys either way (see `derivePressKill`). */
+    if (press.first) {
         return {
             strategy: 'kill',
             arm: 'press',
@@ -2804,7 +2813,18 @@ function resolveKillStrategy(run, obstacle, contacts) {
         return {
             strategy: 'kill',
             weapon: null,
-            rejected: [{ option: 'kill-by-ceiling', why: weapon.why }],
+            /**
+             * ⛓⛓⛓ **BOTH ARMS' WHYS, THE PRESS ARM'S FIRST** (R9 slice 1 —
+             * arc-3 A3). ⛔ Until this slice this row was
+             * `[{option:'kill-by-ceiling', why: weapon.why}]` alone, and
+             * `weapon.why` on a room with no arrow trap reads *"level N has NO
+             * arrow trap, so it has no ceiling to arm"* — which is TRUE and is
+             * an answer about the arm this room was never going to use. The
+             * press arm is asked FIRST (see the order above), so its refusal is
+             * the one a reader needs first; the ceiling's follows as the second
+             * option that was also unavailable.
+             */
+            rejected: [...press.rejected, { option: 'kill-by-ceiling', why: weapon.why }],
         };
     }
     return {
@@ -2823,12 +2843,19 @@ function resolveKillStrategy(run, obstacle, contacts) {
                 + '`checkEnemies()` opens it when `Game.totalEnemies()` reaches zero. A '
                 + 'policy that went looking for a presser for THIS lock would find none '
                 + 'and report the obstacle unresolvable (§12.8).',
-        }, {
+        },
+        /**
+         * ⛓ R9 slice 1 (arc-3 A3) — THE PRESS ARM'S **MEASURED** WHYS, not a
+         * generic sentence about it. The press arm ran first and refused; it
+         * knows exactly why, and it is now able to say so. The generic line
+         * stands only when the arm produced nothing to report.
+         */
+        ...(press.rejected.length > 0 ? press.rejected : [{
             option: 'a PRESS arm against the bodies',
             why: 'the room\'s own ceiling is the weapon this rung uses; a press arm is a '
                 + '`KILL_ARM_POLICY` question and a refusal retired without a driven '
                 + 'witness is trap 101.',
-        }],
+        }])],
     };
 }
 
@@ -2878,8 +2905,29 @@ function resolveKillStrategy(run, obstacle, contacts) {
  *   END     OBSERVED: the body gone from `run.spinnerBodies` (§11.7).
  */
 function derivePressKill(run, bodies, contacts) {
+    /**
+     * ⛓⛓⛓ **IT ALWAYS RETURNS ITS WHYS** (SEEDLING BOT R9, slice 1 — arc-3 A3).
+     * Until this slice every refusing arm was `return null`, so the three
+     * sentences this function had already written were DISCARDED and the caller
+     * fell through to the ceiling arm's *"level N has NO arrow trap"* — a
+     * refusal that names the arm nobody asked about. ⛔ `first === null` is now
+     * the refusal, and `rejected` rides out of every arm: a refusal that names
+     * its next work order is the cheapest planning instrument there is, and one
+     * that names the WRONG arm sends the reader to the wrong room.
+     *
+     * @returns {{first:object|null, plans:Array, rejected:Array}} `first` is
+     *   null on every refusal; `rejected` is never empty on one.
+     */
+    const no = (rejected) => ({ first: null, plans: [], rejected });
     const live = run.spinnerBodies ?? [];
-    if (live.length === 0) return null;
+    if (live.length === 0) {
+        return no([{
+            option: 'press a body',
+            why: `level ${run.level} tracks NO live spinner bodies in this run, so there is `
+                + 'no position to schedule a strike against — the press arm needs the body\'s '
+                + 'position at the press, not its census cell (trap 157).',
+        }]);
+    }
     const liveById = new Map(live.map((b) => [b.id, b]));
     const rejected = [];
     for (const e of bodies) {
@@ -2892,7 +2940,7 @@ function derivePressKill(run, bodies, contacts) {
                     + 'body\'s POSITION at the press, and the census placement is a cell '
                     + 'it left on tick one (trap 157).',
             });
-            return null;
+            return no(rejected);
         }
         // ⚠ `KILL_ARM_POLICY`'s VALUE IS A ROW, NOT A STRING — `{policy, why}`.
         // Compared as a string this read `undefined !== 'modelled'` for every
@@ -2904,7 +2952,7 @@ function derivePressKill(run, bodies, contacts) {
                     + `"${KILL_ARM_POLICY[as3]?.policy ?? 'absent'}", not "modelled" — a `
                     + 'refusal retired without a driven witness is trap 101.',
             });
-            return null;
+            return no(rejected);
         }
     }
     /**
@@ -2926,7 +2974,7 @@ function derivePressKill(run, bodies, contacts) {
                 + 'opportunit(ies) were considered.',
         });
         if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
-        return null;
+        return no(rejected);
     }
     return {
         first,
