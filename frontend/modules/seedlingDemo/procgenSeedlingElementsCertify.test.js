@@ -305,36 +305,48 @@ describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own
  *
  * ⛔ THE SEED IS A MEASURED PLACING ONE, not a lucky one.
  *
- * ⛓⛓⛓ **RE-PICKED AT ARC 3 SLICE 4c, BY THE RULE 4a WROTE DOWN** (its §13.0.5
+ * ⛓⛓⛓ **RE-PICKED TWICE NOW, BY THE RULE 4a WROTE DOWN** (its §13.0.5
  * stale-subject warning: *re-pick by the same rule that chose them — the
- * CHEAPEST CERTIFYING CELL under the NEW draw, measured, not guessed*). The old
- * subject was `winding` seed 7 — the slice-3 as-built's own PLACED-and-REFUSED
- * example (§10.15) — and the GOAL DRAW (`manhattan >= 3`) moved it: the guard no
- * longer PLACES there at all, so the row read `certification === null`.
+ * CHEAPEST CERTIFYING CELL under the NEW draw, measured, not guessed*).
  *
- * RE-SCANNED: `rooms`/`rooms;minRoom=4`/`winding`/`branchy`/`empty` x seeds
- * 1..12 x `len` in {2,3} for the cells that PLACE (fifteen), then each through
- * the seam with its solve, timed:
+ *   4a  → `winding` seed 7, killed by the GOAL DRAW (`manhattan >= 3`).
+ *   4c  → `branchy` seed 12 `len = 3`, killed by ARC 5 SLICE 2's ORIENTED SITE
+ *         PICK: a len-3 gadget is now offered 5x4 and 4x5 rather than 5x5, the
+ *         site it draws is a different rectangle, and the composite refuses —
+ *         the cell stopped PLACING, so the row read `certification === null`.
  *
- *   **branchy/12/len3  282 ms  CERTIFIED**   <- taken (cheapest certifying)
- *   empty/12/len2      298 ms  CERTIFIED
- *   rooms;minRoom=4/12/len2 313 ms CERTIFIED · winding/12/len3 335 ms CERTIFIED
- *   branchy/9/len3 403 · rooms;minRoom=4/9/len3 446 · rooms;minRoom=4/7/len2 458
- *   winding/9/len3 501 · winding/3/len2 509 · branchy/3/len2 441
- *   rooms/9/len3 681 · rooms/7/len2 810
- *   **rooms/12/len2 215 ms REFUSED** · branchy/7/len2 558 ms REFUSED
+ * RE-SCANNED under the oriented pick, same rule, same axes:
+ * `rooms`/`rooms;minRoom=4`/`winding`/`branchy`/`empty` x seeds 1..12 x `len`
+ * in {2,3}, the cells that PLACE (now **23**, up from 15), each through the
+ * seam with its solve, timed:
  *
- * ⚠ 13 of the 15 placing cells CERTIFY, where slice 3 could certify none — that
- * is S1's capability showing up in a re-pick rather than in a yield table.
+ *   **empty/12/len2         215 ms  CERTIFIED**  <- taken (cheapest certifying)
+ *   rooms;minRoom=4/12/len2 229 · empty/12/len3 244 · branchy/8/len3 287
+ *   rooms;minRoom=4/8/len3 293 · winding/3/len3 303 · winding/8/len3 311
+ *   empty/8/len3 311 · rooms/8/len3 317 · winding/3/len2 330 · branchy/9/len3 330
+ *   branchy/3/len3 338 · winding/9/len3 355 · rooms;minRoom=4/9/len3 358
+ *   branchy/3/len2 379 · branchy/7/len3 382 · rooms;minRoom=4/7/len2 420
+ *   rooms/7/len2 476 · rooms/2/len3 536 · rooms/9/len3 536
+ *   **rooms/12/len2 145 ms REFUSED** (still the cheapest refusing cell, and
+ *   still the control below) · branchy/5/len3 435 REFUSED · branchy/7/len2 456
+ *
+ * ⚠ **20 of the 23 placing cells CERTIFY** (13 of 15 before), and the placing
+ * count itself rose because the oriented pick offers a snug rectangle where it
+ * used to offer a square.
+ *
+ * ⚠ THE TAKEN CELL IS `len = 2`, WHOSE FOOTPRINT **IS** THE OLD SQUARE — so
+ * this subject is one arc 5 slice 2 could not have moved, which makes it a
+ * steadier pin than a `len = 3` one. The cheapest certifying len-3 cell is
+ * `empty`/12 at 244 ms if a longer lane is ever wanted here.
  */
 describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', () => {
-    it('branchy seed 12, `guard;len=3`: certified, `[weigh, hold, collect]`, and the '
+    it('empty seed 12, `guard;len=2`: certified, `[weigh, hold, collect]`, and the '
         + 'LIFTED CLAIM is true', () => {
         const seam = seedlingSeam({
             seed: 12,
             items: PRE_SWORD_ITEMS,
-            skeleton: parseSkeleton('branchy', { simulator: false, substrate: 'certify test' }),
-            elements: parseElementSpec('guard;len=3'),
+            skeleton: parseSkeleton('empty', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=2'),
         });
         const c = seam.certification;
         expect(c).not.toBeNull();
@@ -351,7 +363,7 @@ describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', ()
         expect(c.heldAtDoor).toBe(true);
         // ⛓ and the element really SHIPPED: a certified gadget is not dropped.
         expect(seam.model.elements.placed).toHaveLength(1);
-        expect(seam.model.elements.placed[0].door).toEqual({ x: 7, y: 2 });
+        expect(seam.model.elements.placed[0].door).toEqual({ x: 6, y: 3 });
     });
 
     /**

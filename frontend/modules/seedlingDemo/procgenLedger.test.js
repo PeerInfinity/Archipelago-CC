@@ -255,14 +255,27 @@ describe('seedlingModel.ledger — the rows the phases actually wrote', () => {
         expect(refusing[0].refusal.reason).toBe(m.elements.refused.reason);
         expect(refusing[0].sentence).toContain(m.elements.refused.reason);
         expect(refusing[0].phase).toBe('composite');
-        /** ⛔ AND A SITE-LESS REFUSAL LANDS IN `pre-carve` INSTEAD — the same
-         *  claim, one phase earlier. ⚠ SCANNED at seed 1 over `len` 2..6:
-         *  2 refuses at the COMPOSITE (`no-cut-for-the-flag-lock`), 3 likewise
-         *  (`the-entry-port-cannot-be-joined`), and **4 is the first that
-         *  refuses at `pre-carve`** (`no-site-fits-this-room` — a len=4 gadget
-         *  wants a 6x6 site with a ring, and the 10x10 interior has none that
-         *  clears the start and the goal). */
-        const nofit = seedlingModel({ seed: 1, elements: { name: 'guard', params: { len: 4 } } });
+        /**
+         * ⛔ AND A SITE-LESS REFUSAL LANDS IN `pre-carve` INSTEAD — the same
+         * claim, one phase earlier.
+         *
+         * ⛓⛓ **RE-PINNED IN ARC 5, SLICE 2, AND THE OLD SUBJECT IS THE
+         * SLICE'S OWN RESULT.** This used to be `len = 4` on the DEFAULT
+         * 10x10 room: a len-4 gadget wanted a 6x6 site with a ring and the
+         * 8x8 interior offered none that cleared both the start and the goal.
+         * The ORIENTED site pick offers 6x4 and 4x6 instead, `no-site-fits-
+         * this-room` went **130 of 360 census cells to 0**, and the subject
+         * stopped existing at that size.
+         *
+         * ⇒ the refusal is not dead, it moved: it now fires on a room too
+         * SMALL to hold the lane at all. A 6x6 room has a 4x4 interior and a
+         * len-4 gadget needs 6 cells on one axis whichever way round it is
+         * offered — so the refusal is decided by the ROOM and not by where
+         * the goal happened to fall, which makes it a steadier subject than
+         * the one it replaces.
+         */
+        const nofit = seedlingModel({ seed: 1, defaults: { width: 6, height: 6 },
+            elements: { name: 'guard', params: { len: 4 } } });
         const early = nofit.ledger.filter((r) => r.refusal !== null);
         expect(early[0].phase).toBe('pre-carve');
         expect(early[0].refusal.reason).toBe(nofit.elements.refused.reason);
