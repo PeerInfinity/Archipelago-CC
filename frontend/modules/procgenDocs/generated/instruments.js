@@ -599,7 +599,8 @@ export const INSTRUMENTS = frz({
                 "json",
                 "kinds",
                 "lens",
-                "seeds"
+                "seeds",
+                "sizes"
             ],
             "file": "census-seedling-elements.mjs",
             "flags": [
@@ -626,9 +627,15 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "sizes"
                 }
             ],
-            "oneLiner": "census-seedling-elements — **DOES A REVERSE-PULL GADGET FIT A 10x10 SEEDLING ROOM AT ALL?** — PROCGEN ELEMENTS arc 3, slice 3, D1(b).",
+            "oneLiner": "census-seedling-elements — **DOES A REVERSE-PULL GADGET FIT A SEEDLING ROOM AT ALL, AND IN WHICH ORIENTATION?** — PROCGEN ELEMENTS arc 3 slice 3 D1(b), extended by arc 5 slice 2 (the oriented pick) and slice 1's SIZE axis.",
             "path": "scripts/procgen/census-seedling-elements.mjs"
         },
         {

@@ -10454,6 +10454,68 @@ an edge with, and those are kept under either rule — so the diagonal walls are
 kept because multi-solid collision resolution is `levelWorld`'s claim to make,
 not this format's.
 
+### Arc 5, slice 2 — THE ORIENTED SITE PICK, and an EXACT DEMAND MEASURED AND REFUSED (2026-08-19)
+
+**The site pick.** A `pre-carve` element used to be offered a SQUARE: the
+Seedling binding sized it `len + SITE_MARGIN_STRAIGHT` on both axes because
+that is the longest extent a straight reverse-pull gadget has. Across the pull
+axis the gadget never needed more than `EXIT_RUN + 1 = 4`. ⇒ the ELEMENT now
+declares its own **snug footprint per orientation** — an optional
+`footprint(values) → [{w, h, orient}]` on the element contract — and
+`seedlingElementSiteCandidates` enumerates every orientation, row-major, with
+the draw still ONE `pick` over a longer list. A len-4 gadget is offered `6x4`
+AND `4x6` where it used to be offered `6x6` alone.
+
+**What it recovered, same census, same command** (`census-seedling-elements
+.mjs`, 10 kinds × 12 seeds × len 2/3/4 = 360 cells, 10×10):
+
+| | before | after |
+|---|---|---|
+| DRAWN `PLACED` | 21 of 360 | **62 of 360** |
+| `no-site-fits-this-room` | **130** of 360 | **0** |
+| placements at `len = 4` | 0 on every kind | 22 |
+| orientation drawn | — | `wide` 29 · `tall` 23 · `square` 10 |
+
+⛓ Arc-3 §18.2 C1 asked for exactly this and predicted "recovers most of" the
+29 → 21 the goal draw cost. It recovers all of it and doubles it. The `len = 2`
+rows are UNMOVED, cell for cell, because at `len = 2` the snug footprint IS the
+4×4 square the binding already sized — which is the control that says the whole
+recovery is the orientation and nothing else. The census gained a `--sizes=`
+axis with it: PLACED is 62 / 71 / 78 / 128 at 10×10 / 12×12 / 15×15 / 20×20.
+
+⛔ **AND NO COMMITTED ARTIFACT MOVED — ⚖ ruling 6's ONE re-record is NOT
+SPENT.** `defaultElementsFor` pins the biome default's guard at `len = 2`, so
+no default run draws a footprint that differs from the square. The battery, the
+maze byte-identity dump, the acceptance batch, both `empty` pair dumps and the
+145 carved rows are byte-identical. ⚠ An earlier form of the change carried the
+orientation LABEL inside the site object, which rides `summary.elements.placed[]
+.site` and `certification.geometry[].site` into every payload holding a guard:
+the batch's seed-12 row moved, and a field-by-field diff of that payload found
+**two added keys and not one moved cell**. The label lives beside the site on
+the model instead. A payload-shape mover and a behaviour mover are the same md5
+(trap 375); only the row diff tells them apart.
+
+**The exact demand — §18.2 C4, MEASURED AND REFUTED.** C4 asked to replace the
+kill gate's `bodyRegion` flood with the body's own STEPPED path, priced at "one
+false positive in ten". Three measurements closed it the other way:
+
+1. **The stepped set is a function of a TICK BOUND, and the bound is the
+   solver's.** The 400 it was measured at is `DEFAULT_BUDGET.maxTicksPerTarget`
+   — how long the SOLVER may spend on one target. Stepped longer, the set grows
+   into the flood and reaches it *exactly*: `empty` seed 29 is 25 / 37 / 40 / 40
+   cells at 400 / 800 / 1600 / 3200 against a 40-cell region. On all 7 corpus
+   gates the difference is 0 by tick 3200, and the stepper never leaves the
+   flood at any bound. ⇒ the flood is not an over-approximation of where the
+   body goes; it is the LIMIT of it.
+2. **So the published "24 % over-forbidding" is a bound artefact** — those are
+   cells the body reaches after tick 400, not cells it never reaches.
+3. **And relaxing costs levels.** A build that switched turned 3 rows of the
+   410-row committed corpus from levels into `GenerationAborted`: pass 2
+   painted a `water-pool` in a cell only the flood forbade and the PLAYER
+   DROWNED walking the kill. ⛓ The SAME build with the bound at 4000 reproduces
+   every committed row byte for byte — which is what says the BOUND, not the
+   switch, is the mover.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real

@@ -13,7 +13,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
-import { REVERSE_PULL_BLOCK } from '../procgenCore/elements/reversePullBlock.js';
+import {
+    EXIT_RUN, REVERSE_PULL_BLOCK, SITE_MARGIN_PULL, reversePullFootprint,
+} from '../procgenCore/elements/reversePullBlock.js';
 import { connected } from '../procgenCore/gridFlood.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import { rngFor } from './procgenRng.js';
@@ -90,16 +92,17 @@ describe('⛓ THE PLACEMENT\'S PICTURE — a literal fixture (trap 250)', () => 
         // avoid both the start and any goal.
         expect(SITE_MARGIN_STRAIGHT).toBe(2);
         const goal = { tx: 8, ty: 8 };
+        const sq = (n) => [{ w: n, h: n, orient: 'square' }];
         expect(seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
-            size: 3 + 4 })).toEqual([]);
+            footprints: sq(3 + 4) })).toEqual([]);
         expect(seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
-            size: 3 + SITE_MARGIN_STRAIGHT }).length).toBeGreaterThan(0);
+            footprints: sq(3 + SITE_MARGIN_STRAIGHT) }).length).toBeGreaterThan(0);
     });
 
     it('⛔ a site whose RESERVED RECTANGLE holds the start or the goal is not offered', () => {
         const goal = { tx: 8, ty: 8 };
         const cands = seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
-            size: 4 });
+            footprints: [{ w: 4, h: 4, orient: 'square' }] });
         for (const s of cands) {
             const r = reservedRect(s);
             const holds = (c) => c.tx >= r.x && c.tx < r.x + r.w && c.ty >= r.y && c.ty < r.y + r.h;
@@ -109,6 +112,146 @@ describe('⛓ THE PLACEMENT\'S PICTURE — a literal fixture (trap 250)', () => 
         // and the list is ROW-MAJOR, which is what a `pick` indexes
         const keys = cands.map((s) => s.y * 100 + s.x);
         expect(keys).toEqual([...keys].sort((a, b) => a - b));
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE ORIENTED SITE PICK** — PROCGEN ELEMENTS arc 5, slice 2 (§3.2),
+ * arc-3 §18.2 C1 spent.
+ *
+ * ⛔ Every row here is an ARITHMETIC claim about a room a reader can count, not
+ * a comparison of the binding with itself.
+ */
+describe('⛓⛓⛓ THE ORIENTED SITE PICK — the element declares its snug extents', () => {
+    const goal = { tx: 8, ty: 8 };
+
+    it('⛔ the reverse-pull block declares `len+2` ALONG the pull axis by '
+        + '`EXIT_RUN+1 = 4` ACROSS, both ways round', () => {
+        expect(SITE_MARGIN_PULL).toBe(2);
+        expect(EXIT_RUN + 1).toBe(4);
+        expect(reversePullFootprint({ len: 4, turns: 0 })).toEqual([
+            { w: 6, h: 4, orient: 'wide' },
+            { w: 4, h: 6, orient: 'tall' },
+        ]);
+        // ⛔ at len 2 the two orientations ARE the same rectangle, and the
+        // contract refuses a list that names one rectangle twice — so ONE.
+        expect(reversePullFootprint({ len: 2, turns: 0 }))
+            .toEqual([{ w: 4, h: 4, orient: 'square' }]);
+        // ⛔ and a BENT walk has no rectangle to declare before the draw.
+        expect(reversePullFootprint({ len: 4, turns: 1 })).toBe(null);
+    });
+
+    /**
+     * ⛓⛓ **THE ROW MUTANT (a) REDDENS** — the enumerator falling back to the
+     * square. A `len = 4` gadget offered `6x6` fits 3x3 = 9 positions in an 8x8
+     * interior and every one of them is refused once the goal at (8,8) is
+     * ringed out; offered `6x4` and `4x6` it fits 15 each. ⛔ The claim is the
+     * COUNT and the SHAPES, so a fallback to the square cannot pass it.
+     */
+    it('⛓ a len-4 gadget has TWO square sites on this room and FOURTEEN oriented ones', () => {
+        // 6x6 in an 8x8 interior: x,y in 1..3 = 9 positions. The ring
+        // (x-1,y-1,8,8) holds the START when x <= 2 AND y <= 2, and the GOAL
+        // when x >= 2 AND y >= 2 — which leaves exactly (3,1) and (1,3).
+        const square = seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
+            footprints: [{ w: 6, h: 6, orient: 'square' }] });
+        expect(square.map((c) => `${c.x},${c.y}`)).toEqual(['3,1', '1,3']);
+        // 6x4: x in 1..3, y in 1..5 = 15; the ring (x-1,y-1,8,6) holds the
+        // START when x <= 2 AND y <= 2 (four of them) and the GOAL when
+        // x >= 2 AND y >= 4 (four more) ⇒ 7. 4x6 is the same count transposed.
+        const oriented = seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
+            footprints: reversePullFootprint({ len: 4, turns: 0 }) });
+        expect(oriented.filter((s) => s.orient === 'wide').length).toBe(7);
+        expect(oriented.filter((s) => s.orient === 'tall').length).toBe(7);
+        expect(oriented.length).toBe(14);
+        for (const s of oriented) {
+            expect(`${s.w}x${s.h}`).toBe(s.orient === 'wide' ? '6x4' : '4x6');
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ORDER IS ROW-MAJOR FIRST, ORIENTATION SECOND** — and the row
+     * asserts the LITERAL SEQUENCE rather than the set, because the list is
+     * what ONE `pick` indexes: the same set in another order is another site
+     * for the same draw. (`feedback_grouping_reorders_so_assert_the_set`, from
+     * the side where the ORDER is the claim; mutant (b)'s gate.)
+     */
+    it('⛓ the candidate list is ROW-MAJOR, and both orientations at one cell '
+        + 'come in the element\'s declaration order', () => {
+        const cands = seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
+            footprints: reversePullFootprint({ len: 4, turns: 0 }) });
+        // ⛓ row y = 1 first: (1,1) and (2,1) are ringed out for BOTH shapes by
+        // the start, (3,1) offers both, then (4,1) and (5,1) offer only the
+        // `tall` one (a 6-wide site cannot start past x = 3). Then y = 2.
+        expect(cands.slice(0, 6)).toEqual([
+            { x: 3, y: 1, w: 6, h: 4, orient: 'wide' },
+            { x: 3, y: 1, w: 4, h: 6, orient: 'tall' },
+            { x: 4, y: 1, w: 4, h: 6, orient: 'tall' },
+            { x: 5, y: 1, w: 4, h: 6, orient: 'tall' },
+            { x: 3, y: 2, w: 6, h: 4, orient: 'wide' },
+            { x: 3, y: 2, w: 4, h: 6, orient: 'tall' },
+        ]);
+        const keys = cands.map((s) => s.y * 100 + s.x);
+        expect(keys).toEqual([...keys].sort((a, b) => a - b));
+    });
+
+    /**
+     * ⛓⛓ **A SINGLE SQUARE FOOTPRINT IS THE OLD LIST, EXACTLY** — the claim
+     * that makes "an element that declares no footprint is unmoved" checkable
+     * rather than hopeful. ⛔ The old signature took `size`; the rectangles it
+     * produced are these, with the orientation NAMED.
+     */
+    it('⛓ one square footprint reproduces the pre-orientation list', () => {
+        const cands = seedlingElementSiteCandidates({ width: W, height: H, start: START, goal,
+            footprints: [{ w: 4, h: 4, orient: 'square' }] });
+        expect(cands.every((s) => s.w === 4 && s.h === 4 && s.orient === 'square')).toBe(true);
+        // 8x8 interior, a 4x4 site fits x,y in 1..5 = 25 positions; the ring
+        // (x-1,y-1,6,6) holds the START when x <= 2 AND y <= 2 (four) and the
+        // GOAL when x >= 4 AND y >= 4 (four more) ⇒ 17.
+        expect(cands.length).toBe(17);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE REFUSAL NAMES THE TRUE EXTENTS** — mutant (c)'s gate. A
+     * refusal that says `6x6` about a gadget the binding offers `6x4` and `4x6`
+     * describes a geometry that no longer exists (trap 405's shape), and the
+     * only instrument that can see it is a row that READS THE SENTENCE.
+     */
+    it('⛓ `no-site-fits-this-room` names the ORIENTED extents, not a square', () => {
+        // ⛓ A 6x6 ROOM has a 4x4 interior, and a len-4 gadget needs 6 cells on
+        // one axis whichever way round it is offered — so the refusal fires for
+        // a reason that has nothing to do with where the goal fell, and the
+        // sentence is the only thing under test.
+        const mod = seedlingModel({ seed: 1, defaults: { width: 6, height: 6 },
+            skeleton: parseSkeleton('empty', { simulator: false, substrate: 'test' }),
+            elements: { name: 'guard', params: { len: 4 } } });
+        expect(mod.elements.ran).toBe(false);
+        expect(mod.elements.refused.reason).toBe('no-site-fits-this-room');
+        expect(mod.elements.refused.detail).toContain('6x4 or 4x6');
+        expect(mod.elements.refused.detail).not.toContain('6x6 site');
+    });
+
+    /**
+     * ⛓⛓ **AND THE BINDING REALLY ASKS THE ELEMENT** — mutant (a)'s OTHER
+     * gate, one layer up from the enumerator: the site the run took is one of
+     * the element's declared rectangles, never the square.
+     */
+    it('⛓ the site the binding picks for a len-4 gadget is 6x4 or 4x6', () => {
+        const skeleton = parseSkeleton('empty', { simulator: false, substrate: 'test' });
+        const shapes = new Set();
+        for (let seed = 1; seed <= 12; seed += 1) {
+            const mod = seedlingModel({ seed, skeleton,
+                elements: { name: 'guard', params: { len: 4 } } });
+            if (!mod.elements.ran) continue;
+            const site = mod.elements.placed[0].site;
+            shapes.add(`${site.w}x${site.h}`);
+            // ⛔ THE SITE ITSELF IS `{x, y, w, h}` AND NOTHING ELSE — it rides
+            // every payload that holds a guard, so the orientation LABEL sits
+            // beside it on the model and never inside it.
+            expect(Object.keys(site).sort()).toEqual(['h', 'w', 'x', 'y']);
+            expect(['wide', 'tall']).toContain(mod.elements.siteOrient);
+        }
+        expect(shapes.size).toBeGreaterThan(0);
+        for (const sh of shapes) expect(['6x4', '4x6']).toContain(sh);
     });
 });
 

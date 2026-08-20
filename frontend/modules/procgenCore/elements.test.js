@@ -19,8 +19,8 @@ import { describe, expect, it } from 'vitest';
 
 import { ProcgenRng } from './procgenRng.js';
 import {
-    DIR_DELTA, ElementContractError, PORT_DIRS, assertElement, defineElement,
-    enumerateElementInstantiations,
+    DIR_DELTA, ElementContractError, PORT_DIRS, assertElement, assertFootprints,
+    defineElement, enumerateElementInstantiations,
 } from './elements.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
@@ -463,5 +463,86 @@ describe('the direction vocabulary is ONE vocabulary', () => {
         expect(PORT_DIRS).toEqual(['N', 'S', 'E', 'W']);
         expect(PORT_DIRS.map((d) => [DIR_DELTA[d].dx, DIR_DELTA[d].dy]))
             .toEqual([[0, -1], [0, 1], [1, 0], [-1, 0]]);
+    });
+});
+
+
+/**
+ * ⛓⛓⛓ **THE SNUG FOOTPRINT** — PROCGEN ELEMENTS arc 5, slice 2.
+ *
+ * ⛔ The rows are about the CONTRACT, not about any element's arithmetic: what
+ * an element may declare, what it may decline to declare, and the two shapes
+ * that are refused BY NAME because a binding could not act on them.
+ */
+describe('⛓⛓ the SNUG FOOTPRINT, per orientation', () => {
+    const withFootprint = (fp) => defineElement({
+        name: 'fp-toy', family: 'toy', why: 'the footprint contract',
+        params: [{ key: 'len', domain: [2, 3], default: 2, why: 'size' }],
+        construct: (values, site) => ({
+            tiles: [{ x: site.x, y: site.y, tile: TILE_FLOOR }],
+            entities: { blocks: [], buttons: [], obstacles: [], items: [] },
+            ports: [], demand: [], area: null, symbols: { holds: [], grants: [] }, cost: {},
+        }),
+        footprint: fp,
+    });
+
+    it('⛔ ABSENT is a legal declaration, and it is what every pre-arc-5 element '
+        + 'says — the binding sizes the site itself', () => {
+        const bare = defineElement({ name: 'bare', family: 'toy', why: 'no footprint',
+            construct: () => ({ tiles: [{ x: 2, y: 3, tile: TILE_FLOOR }],
+                entities: { blocks: [], buttons: [], obstacles: [], items: [] },
+                ports: [], demand: [], area: null,
+                symbols: { holds: [], grants: [] }, cost: {} }) });
+        expect(bare.declaresFootprint).toBe(false);
+        expect(bare.instantiate(rngFor(1), {}).footprint()).toBe(null);
+    });
+
+    it('⛓ a declared footprint reaches the CONCRETE element, per values', () => {
+        const el = withFootprint(({ len }) => [{ w: len + 2, h: 4, orient: 'wide' }]);
+        expect(el.declaresFootprint).toBe(true);
+        expect(el.instantiate(rngFor(1), { len: 3 }).footprint())
+            .toEqual([{ w: 5, h: 4, orient: 'wide' }]);
+        expect(el.instantiate(rngFor(1), { len: 2 }).footprint())
+            .toEqual([{ w: 4, h: 4, orient: 'wide' }]);
+    });
+
+    /** ⛔ `null` and `[]` are DIFFERENT CLAIMS and the contract keeps them
+     *  apart: "I cannot state one for these values" versus "there is none",
+     *  which no binding could act on. */
+    it('⛓ `null` is "no rectangle for THESE values"; an EMPTY list is refused', () => {
+        expect(withFootprint(() => null).instantiate(rngFor(1), { len: 2 }).footprint())
+            .toBe(null);
+        expect(() => withFootprint(() => []).instantiate(rngFor(1), { len: 2 }).footprint())
+            .toThrow(/NON-EMPTY array/);
+    });
+
+    it('⛔ the SAME RECTANGLE twice is refused — one `pick`, so it would be drawn '
+        + 'twice as often', () => {
+        expect(() => withFootprint(() => [
+            { w: 4, h: 4, orient: 'wide' }, { w: 4, h: 4, orient: 'tall' },
+        ]).instantiate(rngFor(1), { len: 2 }).footprint()).toThrow(/declared 4x4 TWICE/);
+    });
+
+    it('⛔ an UNNAMED or REPEATED orientation is refused — the name is what a '
+        + 'census counts by', () => {
+        expect(() => withFootprint(() => [{ w: 4, h: 5 }])
+            .instantiate(rngFor(1), { len: 2 }).footprint()).toThrow(/with no `orient` name/);
+        expect(() => withFootprint(() => [
+            { w: 4, h: 5, orient: 'wide' }, { w: 5, h: 4, orient: 'wide' },
+        ]).instantiate(rngFor(1), { len: 2 }).footprint())
+            .toThrow(/orientation name "wide" twice/);
+    });
+
+    it('⛔ a non-integer or non-positive extent is refused', () => {
+        expect(() => assertFootprints([{ w: 4, h: 0, orient: 'x' }], 'row'))
+            .toThrow(/positive integer extent/);
+        expect(() => assertFootprints([{ w: 4.5, h: 4, orient: 'x' }], 'row'))
+            .toThrow(/positive integer extent/);
+    });
+
+    it('⛔ a `footprint` that is not a function is refused at DEFINE time', () => {
+        expect(() => defineElement({ name: 'x', family: 'toy', why: 'w',
+            construct: () => ({}), footprint: [{ w: 4, h: 4, orient: 'square' }] }))
+            .toThrow(/must be a function of its VALUES/);
     });
 });

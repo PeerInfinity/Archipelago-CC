@@ -1190,8 +1190,12 @@ export const TERMS = Object.freeze([
             + '[carve](#the-carve) then runs over the whole grid and its answer inside that '
             + 'rectangle is discarded. The one shipped is the reverse-pull block gadget '
             + '([the guard](#guard)) at `turns = 0`; `turns > 0` refuses '
-            + '`the-chain-is-arc-4` by name and spends no draw. ⚠ Its site margin is MEASURED, '
-            + 'not inherited: `SITE_MARGIN_STRAIGHT = 2` against the maze\'s 4.',
+            + '`the-chain-is-arc-4` by name and spends no draw. ⚠ Its rectangle is the '
+            + 'ELEMENT\'s own declared SNUG FOOTPRINT, offered in every orientation: a '
+            + 'straight lane is `len+2` along the pull axis by 4 across, so a len-4 gadget '
+            + 'is offered 6x4 AND 4x6 rather than the 6x6 square the binding used to size. '
+            + 'An element that declares none is offered the binding\'s square, which is how '
+            + 'the maze binding stayed byte-identical.',
         where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
         seeAlso: ['guard', 'the-carve', 'on-connector-element', 'element'],
     }),

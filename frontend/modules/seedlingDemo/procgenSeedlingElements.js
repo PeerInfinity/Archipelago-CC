@@ -71,6 +71,28 @@
  * gadget then fits `MIN_SITE` (4x4) exactly. ⛔ No bound was widened and the
  * room did not grow (⚖ arc-3 ruling 7); the margin was measured and the census
  * publishes both arms.
+ *
+ * ── ⛓⛓⛓ ARC 5 SLICE 2: **AND THE SNUG SIZE WAS ONLY SNUG ON ONE AXIS** ──
+ *
+ * `len + 2` is the PULL axis's number and the square applied it to the other
+ * one, which never needed more than 4. Arc-3 §18.2 C1 measured what that cost
+ * — the guard census fell 29 → 21 of 360 when the goal draw moved goals
+ * centrally, with `no-site-fits-this-room` at **130 of 360** and ZERO
+ * placements at `len = 4` on every kind — and named a snug, non-corner-aligned
+ * site as the recovery.
+ *
+ * ⇒ the ELEMENT now declares its own footprint per orientation
+ * (`procgenCore/elements.assertFootprints`; the gadget's is
+ * `reversePullFootprint`) and `seedlingElementSiteCandidates` enumerates every
+ * orientation. Measured on the same census, same command: **`no-site-fits-
+ * this-room` 130 → 0 and PLACED 21 → 62 of 360**, with all three declared
+ * orientations drawn (`wide` 29 · `tall` 23 · `square` 10).
+ *
+ * ⛔ **AND IT MOVED NO COMMITTED ARTIFACT**, which is a fact about the DEFAULT
+ * and not a claim about the change: `defaultElementsFor` pins the biome's
+ * guard at `len = 2`, whose snug footprint IS the 4x4 square the binding
+ * already sized. The recovery is entirely in `len` 3 and 4, which no default
+ * draws. ⇒ ⚖ ruling 6's ONE re-record is NOT spent here.
  */
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
@@ -157,8 +179,8 @@ const NB4 = Object.freeze([[0, -1], [0, 1], [-1, 0], [1, 0]]);
 
 /**
  * ⛓⛓ EVERY LEGAL SITE, ROW-MAJOR — the list ONE `pick` draws from, and a
- * function of the ROOM and the SIZE alone (never of the carve), so the site is
- * decided before a single wall exists. The maze's three conditions, in
+ * function of the ROOM and the FOOTPRINTS alone (never of the carve), so the
+ * site is decided before a single wall exists. The maze's three conditions, in
  * Seedling's vocabulary:
  *
  *  1. the site is off the room's own BORDER RING (which is wall and must stay
@@ -167,14 +189,41 @@ const NB4 = Object.freeze([[0, -1], [0, 1], [-1, 0], [1, 0]]);
  *     cells the level needs and the ring walls everything it covers;
  *  3. (implied by 1) the ring may overlap the border ring, which costs nothing:
  *     writing `wall` over wall is a no-op.
+ *
+ * ── ⛓⛓⛓ ARC 5, SLICE 2: **ORIENTED RECTANGLES, ONE LIST, STILL ONE `pick`** ──
+ *
+ * `footprints` is the element's own snug extents per orientation
+ * (`procgenCore/elements.assertFootprints`) — `[{w, h, orient}]`, never a
+ * single `size`. The enumeration is still ROW-MAJOR over the room and the draw
+ * is still ONE `pick`; what changed is that the LIST is longer, because a
+ * `len = 4` gadget that really needs 6x4 fits 15 positions each way where the
+ * 6x6 square it used to be offered fit 9.
+ *
+ * ⛔ **THE ORDER IS ROW-MAJOR FIRST, ORIENTATION SECOND**, and that is the
+ * shape of the identity: at ONE cell the footprints are offered in the
+ * element's own declaration order, then the walk moves on. A list assembled
+ * footprint-by-footprint would hold the same SET in a different ORDER, which
+ * is a different `pick` for the same draw — the `feedback_grouping_reorders_
+ * so_assert_the_set` law read from the other side, so the unit row asserts the
+ * literal order and not the set.
+ *
+ * ⛔ **A SINGLE SQUARE FOOTPRINT REPRODUCES THE OLD LIST EXACTLY**, which is
+ * what lets a binding with no footprint-declaring element keep its stream: the
+ * caller passes `[{w: size, h: size, orient: 'square'}]` and the walk below is
+ * the walk that was here before the orientation existed.
+ *
+ * @param {Array<{w,h,orient}>} o.footprints the element's snug extents.
  */
-export function seedlingElementSiteCandidates({ width, height, start, goal, size }) {
+export function seedlingElementSiteCandidates({ width, height, start, goal, footprints }) {
     const out = [];
-    for (let y = 1; y + size <= height - 1; y += 1) {
-        for (let x = 1; x + size <= width - 1; x += 1) {
-            const r = reservedRect({ x, y, w: size, h: size });
-            if (inRect(r, start.tx, start.ty) || inRect(r, goal.tx, goal.ty)) continue;
-            out.push(Object.freeze({ x, y, w: size, h: size }));
+    for (let y = 1; y < height - 1; y += 1) {
+        for (let x = 1; x < width - 1; x += 1) {
+            for (const f of footprints) {
+                if (x + f.w > width - 1 || y + f.h > height - 1) continue;
+                const r = reservedRect({ x, y, w: f.w, h: f.h });
+                if (inRect(r, start.tx, start.ty) || inRect(r, goal.tx, goal.ty)) continue;
+                out.push(Object.freeze({ x, y, w: f.w, h: f.h, orient: f.orient }));
+            }
         }
     }
     return out;

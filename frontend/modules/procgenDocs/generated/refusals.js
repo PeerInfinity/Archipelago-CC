@@ -822,7 +822,7 @@ export const REFUSALS = frz({
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
             "inTheConstant": true,
             "kind": "constant",
-            "meaning": "a len=… straight gadget needs a …x… site with a one-cell ring around it, and no such rectangle fits inside the …x… room's interior while leaving the START (…,…) and the GOAL (…,…) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does NOT grow — the honest answer is a shorter gadget or a different goal, and D1(b)'s census publishes how often each `len` fits.",
+            "meaning": "a len=… straight gadget needs a … site with a one-cell ring around it, and no such rectangle fits inside the …x… room's interior while leaving the START (…,…) and the GOAL (…,…) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does NOT grow — the honest answer is a shorter gadget or a different goal, and D1(b)'s census publishes how often each `len` fits. ⛓ The extents are the ELEMENT's own declaration (arc 5, slice 2): a straight lane is `len+2` along the pull axis and `EXIT_RUN+1 = 4` across, offered BOTH ways round.",
             "name": "no-site-fits-this-room",
             "named": true,
             "scanFound": true,

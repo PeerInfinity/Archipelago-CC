@@ -247,6 +247,85 @@ export function assertSite(site, owner) {
     return site;
 }
 
+/**
+ * ⛓⛓⛓ **THE SNUG FOOTPRINT, PER ORIENTATION** — PROCGEN ELEMENTS arc 5, slice
+ * 2 (§3.2), and it exists because a BINDING that has to guess an element's
+ * extents guesses a SQUARE.
+ *
+ * The Seedling binding sized its site `len + SITE_MARGIN_STRAIGHT` on BOTH
+ * axes because that is the longest extent a straight reverse-pull gadget has;
+ * across the pull axis the gadget only ever needed `EXIT_RUN + 1 = 4`. On a
+ * 10x10 room's 8x8 interior that difference is the whole game: a 6x6 site fits
+ * 3x3 = 9 positions and a 6x4 fits 3x5 = 15, twice with the orientation
+ * swapped. ⛔ The census measured what the square cost — `no-site-fits-this-
+ * room` 130 of 360 cells, and ZERO placements at `len = 4` on every kind —
+ * which is arc-3 §18.2 C1's *"a snug site that need not be corner-aligned
+ * recovers most of it"*, spent.
+ *
+ * ⛔ **ABSENT MEANS TODAY'S SQUARE, AND THAT IS WHY THE MAZE IS UNTOUCHED.**
+ * `footprint` is OPTIONAL: an element that declares none is offered whatever
+ * rectangle its binding decides on, exactly as before. The maze binding
+ * (`mazeRoom/procgenMaze.js`) never asks, so its `len + SITE_MARGIN` squares —
+ * and every md5 that hashes them — cannot move.
+ *
+ * ⛔ **AND `null` IS A LEGAL ANSWER FOR SOME PARAMETERS.** A `footprint` is a
+ * function of the element's own VALUES, and an element may know its snug
+ * extents for some of them and not others — the reverse-pull block knows them
+ * for `turns = 0` and cannot state them for a bent walk, whose bounding box
+ * depends on WHICH steps turn and is drawn inside `construct`. Answering
+ * `null` there says so; inventing a rectangle would be a claim the geometry
+ * does not make.
+ *
+ * THE TWO LAWS, both refusals rather than repairs:
+ *   · **NO TWO ENTRIES MAY BE THE SAME RECTANGLE.** The binding enumerates one
+ *     candidate per (position, footprint) and draws ONE `pick` over the list,
+ *     so a rectangle named twice is a rectangle drawn twice as often. An
+ *     element whose orientations COINCIDE (the reverse-pull block at `len = 2`,
+ *     where `len + 2` is already 4) declares ONE.
+ *   · **EVERY ENTRY IS NAMED, AND THE NAMES ARE DISTINCT.** `orient` is what a
+ *     census counts by and what a ledger row prints; a placement that could not
+ *     say WHICH declared shape it realised would make "the pick never chooses
+ *     the tall one" an unaskable question.
+ *
+ * @param {Array<{w:number,h:number,orient:string}>|null} list
+ * @returns the frozen list, or `null`
+ */
+export function assertFootprints(list, owner) {
+    if (list === null || list === undefined) return null;
+    if (!Array.isArray(list) || list.length === 0) {
+        fail(`elements: ${owner}'s \`footprint\` returned ${JSON.stringify(list)}. It is a `
+            + 'NON-EMPTY array of `{w, h, orient}` — the snug extents the element really '
+            + 'needs, one entry per orientation — or `null` for "these values have no '
+            + 'single snug rectangle", which is not the same claim as an empty list.');
+    }
+    const shapes = new Set();
+    const names = new Set();
+    for (const f of list) {
+        if (!Number.isInteger(f?.w) || !Number.isInteger(f?.h) || f.w <= 0 || f.h <= 0) {
+            fail(`elements: ${owner} declared the footprint ${JSON.stringify(f)}. Each entry `
+                + 'is `{w, h, orient}` with a positive integer extent on both axes.');
+        }
+        if (typeof f.orient !== 'string' || !f.orient) {
+            fail(`elements: ${owner} declared a footprint ${f.w}x${f.h} with no \`orient\` `
+                + 'name. The name is what the census counts by and what the ledger prints — '
+                + 'an unnamed orientation is a placement nobody can attribute.');
+        }
+        const shape = `${f.w}x${f.h}`;
+        if (shapes.has(shape)) {
+            fail(`elements: ${owner} declared ${shape} TWICE. The binding offers one candidate `
+                + 'per (position, footprint) and draws ONE `pick` over the list, so the same '
+                + 'rectangle named twice is the same rectangle drawn twice as often — the '
+                + 'element whose orientations coincide declares ONE.');
+        }
+        if (names.has(f.orient)) {
+            fail(`elements: ${owner} used the orientation name "${f.orient}" twice.`);
+        }
+        shapes.add(shape);
+        names.add(f.orient);
+    }
+    return Object.freeze(list.map((f) => Object.freeze({ w: f.w, h: f.h, orient: f.orient })));
+}
+
 const inSite = (site, x, y) => x >= site.x && x < site.x + site.w
     && y >= site.y && y < site.y + site.h;
 
@@ -582,12 +661,16 @@ function assertConstructOutput(out, ctx) {
  * @param {Function} [o.assertPlacement]  `(placement, {values, site, fail})` —
  *   the invariants only THIS element can state. Run on every construct, beside
  *   the contract's own.
+ * @param {Function} [o.footprint]  `(values) → [{w, h, orient}] | null` — the SNUG
+ *   extents this element really needs, per orientation, for those values. ABSENT
+ *   (or `null`) leaves the binding to size the site as it always did, which is
+ *   what keeps every existing binding byte-identical. See `assertFootprints`.
  * @param {'pre-carve'|'on-connector'} [o.phase]  WHEN the binding constructs it
  *   — see the file docblock. Defaults to `pre-carve`, which is every element
  *   written before arc-3 slice 4a and is unchanged byte for byte.
  */
 export function defineElement({ name, family, params = [], why, construct,
-    assertPlacement = null, phase = PHASE_PRE_CARVE }) {
+    assertPlacement = null, footprint = null, phase = PHASE_PRE_CARVE }) {
     if (typeof name !== 'string' || !name) {
         fail('elements: an element needs a name — it is the catalogue key, the cost record\'s '
             + '`element` field and what a spec string asks for.');
@@ -599,6 +682,12 @@ export function defineElement({ name, family, params = [], why, construct,
     }
     if (assertPlacement !== null && typeof assertPlacement !== 'function') {
         fail(`elements: element "${name}"'s \`assertPlacement\` must be a function.`);
+    }
+    if (footprint !== null && typeof footprint !== 'function') {
+        fail(`elements: element "${name}"'s \`footprint\` must be a function of its VALUES — `
+            + 'the snug extents depend on the parameters (a len-4 lane is longer than a '
+            + 'len-2 one), so a fixed list would be a claim about one instantiation '
+            + 'printed over all of them.');
     }
     if (!ELEMENT_PHASES.includes(phase)) {
         fail(`elements: element "${name}" declared phase ${JSON.stringify(phase)}; the phases `
@@ -619,6 +708,9 @@ export function defineElement({ name, family, params = [], why, construct,
         phase,
         params: base.params,
         why,
+        /** ⛓ `null` when the element declares none — the binding then sizes the
+         *  site itself, which is every binding written before arc 5. */
+        declaresFootprint: footprint !== null,
         /**
          * ⛔ THE PARAMETER DRAWS ARE `defineTemplate`'s, VERBATIM — schema
          * order, one `pick` each, an override spends none. What is added here
@@ -634,6 +726,18 @@ export function defineElement({ name, family, params = [], why, construct,
                 params: row.params,
                 instance: row.instance,
                 why: row.why,
+                /**
+                 * ⛓⛓ THE SNUG EXTENTS FOR **THESE** VALUES — asked of the
+                 * element, checked by the contract, and `null` both when the
+                 * element declares no footprint at all and when it declines to
+                 * state one for these particular values (the two are different
+                 * facts and `declaresFootprint` tells them apart).
+                 */
+                footprint() {
+                    if (footprint === null) return null;
+                    return assertFootprints(footprint(row.params),
+                        `element "${name}" ${JSON.stringify(row.params)}`);
+                },
                 construct(site) {
                     assertSite(site, `element "${name}"`);
                     /** ⛔ THE PROBE IS PART OF THE SITE for this phase, and it

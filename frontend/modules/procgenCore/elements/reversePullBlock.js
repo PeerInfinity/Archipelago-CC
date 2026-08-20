@@ -101,6 +101,9 @@ export const DOOR_GAP = 2;
 export const EXIT_RUN = 3;
 /** Below this the corridor and one pull cannot both fit on any axis. */
 export const MIN_SITE = 4;
+/** ⛓ The pull axis costs `len + 1` block cells plus the last stance — the
+ *  `+2` the SNUG FOOTPRINT below is built from, named rather than retyped. */
+export const SITE_MARGIN_PULL = 2;
 /** ⛔ NAMED, and the refusal says it. A retry loop with no bound is the shape
  *  ⚖ ruling 6 forbids everywhere else in this arc. */
 export const MAX_WALK_ATTEMPTS = 40;
@@ -363,6 +366,50 @@ function assertReversePullPlacement(placement, { values, fail }) {
     }
 }
 
+/**
+ * ⛓⛓⛓ **THE SNUG FOOTPRINT — READ OFF THE GEOMETRY ABOVE, NOT GUESSED**
+ * (PROCGEN ELEMENTS arc 5, slice 2; `elements.assertFootprints` states the
+ * contract this answers).
+ *
+ * At `turns = 0` the walk is a straight lane and the two axes are DIFFERENT
+ * lengths, which is the whole finding:
+ *
+ *   along the PULL axis   `path[0..len]` is `len + 1` cells and the last
+ *                         stance is one more ⇒ **`len + 2`**. The entry
+ *                         corridor runs OUT from that stance, so it costs
+ *                         nothing further inside the site.
+ *   across it             the button plus `EXIT_RUN` cells of exit corridor
+ *                         ⇒ **`EXIT_RUN + 1 = 4`**. The bypass cell sits one
+ *                         step along each axis and is already inside both.
+ *
+ * ⛔ The BINDING used to size a `len + 2` SQUARE on both axes, which is the
+ * pull-axis number applied to an axis that never needed it: at `len = 4` that
+ * is 6x6 where 6x4 would do, and on a 10x10 room's 8x8 interior the difference
+ * is 9 positions against 15-and-15. Arc-3 §18.2 C1 is the measurement that
+ * asked for this.
+ *
+ * ⛔ **AT `len = 2` THE TWO ORIENTATIONS ARE THE SAME RECTANGLE** (`len + 2`
+ * is already 4), and the contract refuses a list that names one rectangle
+ * twice — so this returns ONE entry there, named `square` because that is what
+ * it is.
+ *
+ * ⛔ **AND AT `turns > 0` IT ANSWERS `null`.** A bent walk's bounding box is a
+ * function of WHICH steps turn, and that is drawn inside `construct` — there
+ * is no rectangle to declare before the draw. The maze, which is where bent
+ * gadgets live, never asks (it sizes its own `len + SITE_MARGIN` square), so
+ * `null` costs nothing and a made-up number would have cost the truth.
+ */
+export function reversePullFootprint({ len, turns }) {
+    if (turns !== 0) return null;
+    const along = len + SITE_MARGIN_PULL;
+    const across = EXIT_RUN + 1;
+    if (along === across) return [{ w: along, h: across, orient: 'square' }];
+    return [
+        { w: along, h: across, orient: 'wide' },
+        { w: across, h: along, orient: 'tall' },
+    ];
+}
+
 export const REVERSE_PULL_BLOCK = defineElement({
     name: 'reverse-pull-block',
     family: 'guard',
@@ -385,5 +432,6 @@ export const REVERSE_PULL_BLOCK = defineElement({
         const out = buildReversePull(values, site, rng);
         return out.refused ? out : out.placement;
     },
+    footprint: reversePullFootprint,
     assertPlacement: assertReversePullPlacement,
 });

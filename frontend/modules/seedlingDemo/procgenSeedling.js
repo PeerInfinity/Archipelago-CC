@@ -1225,28 +1225,71 @@ export function seedlingModel({
             const drawsBefore = roomRng.draws;
             const concrete = entry.element.instantiate(roomRng, { ...named, turns: 0 });
             const size = concrete.params.len + SITE_MARGIN_STRAIGHT;
+            /**
+             * ⛓⛓⛓ **THE SNUG FOOTPRINT, ASKED OF THE ELEMENT** (arc 5, slice
+             * 2, §3.2). The element states its true extents per orientation;
+             * an element that declares none — or declines to for these values,
+             * as the gadget does at `turns > 0` — is offered the SQUARE this
+             * binding has always sized, so the fallback is not a new shape but
+             * the old one, named.
+             */
+            const declared = concrete.footprint?.() ?? null;
+            const footprints = declared
+                ?? [{ w: size, h: size, orient: 'square' }];
             const sites = seedlingElementSiteCandidates({
-                width: d.width, height: d.height, start: d.start, goal: goalCell, size,
+                width: d.width, height: d.height, start: d.start, goal: goalCell, footprints,
             });
             preCarveRow = {
                 len: concrete.params.len,
                 size,
+                footprints,
+                shape: footprints.map((f) => `${f.w}x${f.h}`).join(' or '),
                 candidates: sites.length,
                 sites,
                 drawsBefore,
             };
             if (sites.length === 0) {
                 elementRefusal = { reason: 'no-site-fits-this-room',
-                    detail: `a len=${concrete.params.len} straight gadget needs a ${size}x${size} `
+                    detail: `a len=${concrete.params.len} straight gadget needs a `
+                        + `${preCarveRow.shape} `
                         + 'site with a one-cell ring around it, and no such rectangle fits '
                         + `inside the ${d.width}x${d.height} room's interior while leaving the `
                         + `START (${d.start.tx},${d.start.ty}) and the GOAL (${goalCell.tx},`
                         + `${goalCell.ty}) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does `
                         + 'NOT grow — the honest answer is a shorter gadget or a different '
-                        + 'goal, and D1(b)\'s census publishes how often each `len` fits.' };
+                        + 'goal, and D1(b)\'s census publishes how often each `len` fits. '
+                        + '⛓ The extents are the ELEMENT\'s own declaration (arc 5, slice 2): '
+                        + 'a straight lane is `len+2` along the pull axis and `EXIT_RUN+1 = 4` '
+                        + 'across, offered BOTH ways round.' };
             } else {
-                const site = roomRng.pick(sites);
-                preCarveRow.site = site;
+                const picked = roomRng.pick(sites);
+                preCarveRow.site = picked;
+                /**
+                 * ⛓⛓⛓ **THE ORIENTATION IS THE CANDIDATE'S, NOT THE SITE'S —
+                 * AND THAT IS WHY THIS SLICE SPENDS NO RE-RECORD** (arc 5,
+                 * slice 2; ⚖ ruling 6).
+                 *
+                 * A site is `{x, y, w, h}` — the four fields `assertSite`
+                 * names and the rectangle the element writes into. The
+                 * `orient` LABEL is the enumeration's own word for WHICH
+                 * declared footprint this rectangle realises, and it is
+                 * recoverable from `(w, h)` alone because the contract
+                 * refuses a footprint list that names one rectangle twice.
+                 *
+                 * ⛔ CARRYING IT ON THE SITE WAS MEASURED AND REVERSED. The
+                 * site rides `summary.elements.placed[].site` AND
+                 * `certification.geometry[].site` into every payload that
+                 * holds a guard, so a field there moves committed md5s for a
+                 * WORD: the acceptance batch's seed-12 row moved, and a
+                 * field-by-field diff of that payload found exactly two
+                 * additions and not one moved cell (trap 375 — a payload-shape
+                 * mover and a behaviour mover are indistinguishable in an
+                 * md5). The label lives on the LEDGER row instead, which
+                 * reaches no payload at all.
+                 */
+                const site = Object.freeze({
+                    x: picked.x, y: picked.y, w: picked.w, h: picked.h,
+                });
                 /**
                  * ⛓ THE STREAM POSITION AT `construct` IS ITS OWN FIELD (arc-2
                  * §10.5.1, measured there rather than reasoned): the SITE PICK
@@ -1263,6 +1306,10 @@ export function seedlingModel({
                             + `(${site.x},${site.y}))` };
                 } else {
                     elementPlan = { concrete, site, placement, drawsBefore, drawsAtConstruct,
+                        /** ⛓ BESIDE the site, never inside it — the model's own
+                         *  readers (the census's orientation column) get the
+                         *  word and `elementSummaryOf` does not carry it. */
+                        siteOrient: picked.orient ?? null,
                         params: concrete.params, ids: guardIdsFor(0) };
                 }
             }
@@ -1278,9 +1325,10 @@ export function seedlingModel({
                 ? `the PRE-CARVE element REFUSED: ${elementRefusal.reason} — `
                     + `${elementRefusal.detail}`
                 : `\`${elementPlan.concrete.instance}\` drew len=${preCarveRow.len}, picked a `
-                    + `${preCarveRow.size}x${preCarveRow.size} SITE at `
-                    + `(${preCarveRow.site.x},${preCarveRow.site.y}) out of `
-                    + `${preCarveRow.candidates} snug candidate(s), and CONSTRUCTED it — the `
+                    + `${preCarveRow.site.w}x${preCarveRow.site.h} \`${preCarveRow.site.orient}\` `
+                    + `SITE at (${preCarveRow.site.x},${preCarveRow.site.y}) out of `
+                    + `${preCarveRow.candidates} snug candidate(s) over the footprint(s) `
+                    + `${preCarveRow.shape}, and CONSTRUCTED it — the `
                     + `site pick sits BETWEEN \`instantiate\` and \`construct\`, both of `
                     + 'which draw',
             draws: roomRng.draws,
@@ -1288,6 +1336,7 @@ export function seedlingModel({
             data: {
                 len: preCarveRow?.len ?? null,
                 size: preCarveRow?.size ?? null,
+                footprints: preCarveRow?.footprints ?? null,
                 candidates: preCarveRow?.candidates ?? 0,
                 site: preCarveRow?.site ?? null,
                 drawsAtConstruct: elementPlan?.drawsAtConstruct ?? null,
@@ -1296,8 +1345,8 @@ export function seedlingModel({
                 preCarveRow && preCarveRow.candidates > 0 && paintable({
                     id: 'site-candidates',
                     label: `${preCarveRow.candidates} snug SITE candidate(s) — their top-left `
-                        + `corners, for a ${preCarveRow.size}x${preCarveRow.size} rectangle `
-                        + 'with a one-cell ring',
+                        + `corners, over the ${preCarveRow.shape} footprint(s) `
+                        + 'each with a one-cell ring',
                     kind: 'cells',
                     cells: preCarveRow.sites.map((c) => ({ x: c.x, y: c.y })),
                     pick: preCarveRow.site ?? null,
@@ -1664,6 +1713,19 @@ export function seedlingModel({
             elementInfo = Object.freeze({
                 spec: elementSpecNorm,
                 ran: true,
+                /**
+                 * ⛓⛓ **WHICH DECLARED FOOTPRINT THE SITE PICK TOOK** (arc 5,
+                 * slice 2) — the census's orientation column reads it here.
+                 *
+                 * ⛔ ON `elements`, NOT ON THE PLACEMENT, and the difference is
+                 * measured rather than stylistic: `certification.geometry` IS
+                 * `model.elements.placed`, verbatim, and rides into every
+                 * payload that holds a guard — so a field on the placement
+                 * moves committed md5s while a field beside it does not.
+                 * `elementSummaryOf` names the fields it carries one by one
+                 * and this is not among them.
+                 */
+                siteOrient: elementPlan.siteOrient,
                 placed: Object.freeze([Object.freeze({
                     element: elementPlan.concrete.name,
                     family: elementPlan.concrete.family,
