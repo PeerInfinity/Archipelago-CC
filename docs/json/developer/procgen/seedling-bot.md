@@ -10762,6 +10762,91 @@ committed identity runs a directive. The md5s say *the generator did not move*;
 what gates the retirement is the census, two re-pinned unit rows, and the maze
 lab's browser row.
 
+### Arc 5, slice 6a — THE DEFAULT ROOM GETS A DIFFERENT CONTRAPTION: the guard's size is DRAWN, and every room can be given a chamber (2026-08-20)
+
+**What a level generated at the default now contains.** Ask the generator for a
+Seedling level without saying what should be in it, and until this slice it drew
+one of two or three things: a guard gadget *at one fixed size*, a block pocket,
+and — after the sword — a kill gate. It now draws from one more, and the guard is
+no longer stuck at one size:
+
+```
+pre-sword    guard+blockpocket+chamber;w=2;h=3
+post-sword   guard+killgate+blockpocket+chamber;w=2;h=3
+```
+
+> ⚖ The user's ruling, 2026-08-20: the arc's **ONE** planned re-record executes
+> BOTH changes together — the guard's `len` pin comes off, and `chamber` joins
+> the list. **`arena` was NOT ruled in and is NOT in.**
+
+**Why the pin came off, in one number.** The guard was pinned at `len = 2`
+because that was the size an earlier slice had certified. Arc 5 then taught the
+placer to fit a gadget's real shape into a room rather than a square, which
+tripled how often a *longer* guard fits — and the pinned default was the one
+value that gain could not reach. Measured on the pinned 10×10 room, 120 rooms per
+size: a `len = 2` guard reaches a room 7 times and 5 of those survive their
+solve; drawing the size instead reaches a room **15** times with 12 surviving.
+**Twice as many default rooms get a contraption in them**, and the pinned
+default had been hiding that the whole time.
+
+⛔ **And two of the five sizes never fit at all, which is published rather than
+hidden.** A `len = 5` or `len = 6` lane needs a strip the default room does not
+have, so it places nothing on any skeleton — its entry mouth ends up on the
+room's border ring, or the port cannot be joined. About two draws in five
+therefore end with the level shipping *element-less*, through the ordinary
+refusal path. That is the price of drawing, it is inside the "15 of 120" above,
+and the way to spend those draws better — letting a spec name a SUBSET of a
+parameter's domain — is a mechanism nobody has designed.
+
+**Why the chamber names its size where the guard draws its own.** A chamber is an
+open floor blob declared as an AREA, so a room whose skeleton offers no chamber
+at all has somewhere a key can live. Its width and height also run to 6 — and a
+6×6 blob reserves the *entire interior* of the default room, so a bare chamber in
+this list would refuse five times in six. It therefore goes in as
+`chamber;w=2;h=3`, and that pair is measured rather than assumed: against
+`w=2;h=2` it places slightly less often and converts **more** of its placements
+into an accepted area graph (28 of 120 against 24), at a higher certification
+rate and a marginally lower cost. ⛓ So the two heads differ on purpose — the
+guard's sizes fit the default room and are drawn, the chamber's do not and are
+named.
+
+**What a chamber in the default buys, and what it costs.** Bare tree skeletons —
+`winding`, `branchy`, `bushy`, `loopy`, `open` — grow corridor, not rooms, so
+asking one for a key-and-lock area used to fail almost always. With a chamber in
+the list, `--areas=1` acceptance rises from 4 rooms in 120 to 45, and every
+accepted graph also certifies. It costs about a third more generation time.
+⚠ One thing it does NOT buy: a `keys=2` level. One chamber is ONE area.
+
+**THE DEFAULT IS A PIN, AND A PIN NOW HAS A ROW.** Three deliberately broken
+builds — a bare chamber, the old `len` pin put back, and `arena` slipped into the
+post-sword list — showed that **nothing in the repository asserted what the
+default contains**. The only thing that reddened was the generated documentation
+going stale, which one regeneration silences, plus a handful of seed-pinned rows
+a re-pinning pass would have quietly updated. A head could have been added to
+either biome and every gate would have gone green while every recorded artifact
+moved underneath it. There is now a row that pins both spec strings literally —
+the spelling, the ORDER, and which parameters are named rather than drawn.
+
+**What moved, and what did not.** Everything recorded at the default moved and
+nothing else did: the acceptance batch (19 of its 106 rows), the two `empty` pair
+dumps (40 of 81 each), the carved pairs (105 of 145), the area census, the
+exported six-room set and the generated catalogue. Byte-identical, and predicted
+so before the change was made: the bot battery, every maze identity, the guard
+census (it *names* a size, so it reads the other stream), the enemy census, and
+the three levels generated with `--elements=killgate` spelled out. ⛓ **Saying a
+size out loud has always been a different run from leaving it unsaid, and this is
+the slice where that law paid for itself** — it is what let the deciding
+measurements be taken before anything was landed, and re-taken afterwards
+unchanged.
+
+**On real hardware.** The ship row passes 58 claims with three per-tick verdicts
+— and the interesting one is the GENERATE plan, whose level is generated AT the
+default this slice changed: it reproduces its earlier numbers exactly (360 ticks,
+361 observations), because the list's single pick happened to land on the same
+head. The multi-screen shell room's tape did grow (154 → 197 ticks), and the
+page's own identity line now says why: it drew the chamber, and the chamber
+refused.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real
