@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 18,
-            "count": 24,
+            "browser": 19,
+            "count": 25,
             "id": "check"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 207,
-        "browser": 71,
+        "blockStyle": 208,
+        "browser": 72,
         "cited": 60,
-        "files": 226,
+        "files": 227,
         "lineStyle": 19,
-        "withDocblock": 226,
-        "withFlags": 135
+        "withDocblock": 227,
+        "withFlags": 136
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1359,6 +1359,88 @@ export const INSTRUMENTS = frz({
             "flags": [],
             "oneLiner": "check-seedling-vanilla-manifest — the built-in `seedling-vanilla` manifest, read out of the BUILT ARTIFACT and compared with the committed JSON twin.",
             "path": "scripts/procgen/check-seedling-vanilla-manifest.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "areas",
+                "elements",
+                "height",
+                "seed",
+                "skeleton",
+                "width"
+            ],
+            "file": "check-seedling-wasm-element.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "areas"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "biome"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "count"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "elements"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "height"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seed"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shipsec"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "skeleton"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "width"
+                }
+            ],
+            "oneLiner": "check-seedling-wasm-element — **ONE GENERATED LEVEL CONTAINING A NAMED ELEMENT, SHIPPED TO THE REAL GAME AND VERDICTED PER TICK — HEADLESS.**",
+            "path": "scripts/procgen/check-seedling-wasm-element.mjs"
         },
         {
             "argvHelpers": [
