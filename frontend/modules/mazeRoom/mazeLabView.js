@@ -1102,6 +1102,22 @@ export function main() {
                     solutionPath: state.model.areas.graph.solutionPath,
                 }
                 : { ran: false, refused: state.model?.areas?.refused ?? null },
+            /**
+             * ⛓⛓⛓ ARC 5, SLICE 6b — **THE SHORTCUT, AS A CHANNEL A ROW CAN
+             * READ.** Slice 5 computed the arc's fifth grade and REACHED it on
+             * four generated maze levels, and slice 5's own residue named the
+             * gap this closes: the shortcut had no demo-catalogue row because
+             * it had no readout to claim on. ⛔ `lengths` is the pair the
+             * shortcut law measured (the route with the extra edge OPEN, and
+             * with it WALLED), which is the mechanism itself rather than a flag
+             * saying it happened — a `shortcut: true` would be an echo of the
+             * parameter (trap 269).
+             *
+             * ⛔ `null` when `shortcut=0` (the default), never `{}`: *nobody
+             * asked* and *it was asked and refused* are different facts, and the
+             * refusal rides `areaGraph.refused` as every other one does.
+             */
+            shortcut: state.model?.areas?.shortcut ?? null,
             areaLegend: areaLegend(state.model?.areas ?? null),
             areaLayer,
             areaNote: $('labAreaNote').textContent,

@@ -1895,9 +1895,41 @@ export const TERMS = Object.freeze([
         detail: '`?count=` is the target, `?tries=` the tries per step, `?k=` the '
             + '[saturation](#saturation) K. A `count=0` run generates the '
             + '[skeleton](#skeleton) and stops, which is why nearly every demo entry that '
-            + 'wants to show a pass-1 [element](#element) carries it.',
+            + 'wants to show a pass-1 [element](#element) carries it. ⚠ **ON THE PAGE '
+            + 'ONLY**: `levelGenerator` refuses `obstacleTarget: 0` by name (*"there is no '
+            + 'default that means unbounded"*), so the CLI\'s headless twin of a `count=0` '
+            + 'URL is `--count=1`.',
         where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['keep-or-revert', 'saturation', 'obstacle', 'url-parameter'],
+    }),
+    t({
+        id: 'density-block',
+        term: 'the density block',
+        aliases: ['the density dial', '`--density`', 'the density identity block'],
+        area: 'level-gen',
+        plain: 'One line that names every setting deciding how big a room is and how much is '
+            + 'in it.',
+        detail: 'Six levers, one order, always all six: `kind=` · `chambers=` · `size=` · '
+            + '`fill=` · `element=` (the [head](#element-head) AS RESOLVED, not the `+` list '
+            + 'that was asked for) · `target=` ([obstacleTarget](#obstacle-target)). ⛓ ONE '
+            + 'function, `procgenCore/densityBlock.js`, spells it for BOTH lab pages\' '
+            + 'identity lines and BOTH CLIs (under `--density`, which is opt-in and '
+            + '[byte-inert](#byte-inert) when omitted), so four readouts of one run cannot '
+            + 'drift — a [browser row](#browser-row) asserts the page\'s line against a CLI '
+            + 'child process\'s, character for character. ⛔ **IT READS; IT DOES NOT '
+            + 'COMPUTE**: the size is the record\'s, the fill is the DECLARED word and never '
+            + 'a guess from the written-cell count (a `fill=shell` open room can write every '
+            + 'cell), and it adds NO payload field. ⛓ The block is the DIAL POSITION; '
+            + '`census-seedling-density.mjs` is the table that says what each position buys '
+            + '— size is the lever that matters (26.7 → 174.8 ground cells from 10x10 to '
+            + '20x20), while [`fill=shell`](#room-fill) buys 15–18% of the record\'s cells '
+            + 'and changes nothing else.',
+        where: [
+            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+            { label: 'architecture.md § Pass 1', doc: PASS1 },
+        ],
+        seeAlso: ['obstacle-target', 'room-size', 'room-fill', 'chambers', 'element-head',
+            'census', 'readout'],
     }),
     t({
         id: 'directed-attempt',

@@ -10847,6 +10847,173 @@ head. The multi-screen shell room's tape did grow (154 → 197 ticks), and the
 page's own identity line now says why: it drew the chamber, and the chamber
 refused.
 
+### Arc 5, slice 6b — DENSITY IS ONE DECLARED BLOCK, and the catalogue pays the arc's demo debt (2026-08-20)
+
+**The problem the block solves.** By the end of this arc a generated room had six
+independent settings deciding how big it is and how much is in it — which
+skeleton carves it, how many chambers that skeleton is asked for, its width and
+height, whether it is written densely or as a shell, which element the biome
+default's `+` list drew, and how many obstacles pass 2 was asked for. All six
+were *readable*, scattered over three lines of the identity, two lines of the CLI
+report and a URL. None of them were readable **together**, which is the one thing
+a dial needs.
+
+There is now one line, on both lab pages and (opt-in) on both CLIs:
+
+```
+density: kind=winding · chambers=2 · size=20x12 · fill=shell · element=chamber;w=2;h=3 · target=1
+```
+
+⛓ **ONE FUNCTION** — `procgenCore/densityBlock.js` — spells it for all four
+readouts, and a browser row asserts the page's line against a CLI CHILD
+PROCESS's, character for character, on two subjects. A second spelling could not
+survive that row: a deliberately broken build in which the page read the element
+`+` LIST where the CLI read the head the list RESOLVED to reddened it
+immediately, on exactly two claims and nothing else.
+
+**It READS. It does not compute, and it stores nothing.** The size is the
+RECORD's own room, the fill is the DECLARED word, and the element is the
+RESOLVED head. ⛔ The fill clause is the one worth spelling out, because the
+obvious shortcut is wrong: `fill=shell` on an OPEN room with no element strips
+**0%** — every wall of the border ring touches floor, so the record is
+byte-for-byte the dense room — and a block that inferred the word from the
+written-cell count would print `dense` about a run generated `shell`. That room
+is the browser row's SECOND subject, and it is there because the first one could
+not tell the two builds apart: with the mutant in place the 20×12 shell room
+still agreed and only the open room went red.
+
+⛓ And the block adds **no payload field**. The arc's one planned re-record was
+spent by slice 6a on the biome default itself, so the line is spelled at PRINT
+time out of fields the record already carries. For the same reason `--density` on
+either CLI is OPT-IN: those two reports' checksums are fifteen of this arc's
+published byte-inertia identities, and a line printed unconditionally would have
+re-recorded all fifteen for a projection.
+
+**What each position of the dial buys, measured.** A new instrument,
+`census-seedling-density.mjs`, sweeps kinds × two sizes × two fills × two element
+arms and prints the BLOCK beside the four numbers it moved. Over 96 cells:
+
+| size | fill | elements | written | ground | kept/target | element placed |
+|---|---|---|---|---|---|---|
+| 10x10 | dense | default | 100 of 100 (100%) | 26.7 | 3.8/6 | 10/12 |
+| 10x10 | dense | none | 100 of 100 (100%) | 28.8 | 4.1/6 | 0/12 |
+| 10x10 | shell | default | 84.7 of 100 (85%) | 26.7 | 3.8/6 | 10/12 |
+| 10x10 | shell | none | 83 of 100 (83%) | 28.8 | 4.1/6 | 0/12 |
+| 20x20 | dense | default | 400 of 400 (100%) | 174.8 | 5.6/6 | 9/12 |
+| 20x20 | dense | none | 400 of 400 (100%) | 174.6 | 5.3/6 | 0/12 |
+| 20x20 | shell | default | 338.3 of 400 (85%) | 174.8 | 5.6/6 | 9/12 |
+| 20x20 | shell | none | 327.7 of 400 (82%) | 174.6 | 5.3/6 | 0/12 |
+
+⛓ **SIZE is the lever that matters.** Going from the pinned 10×10 to 20×20 takes
+a room from 26.7 standable cells to 174.8 — six and a half times the space — and
+the ladder starts *reaching* its target (5.6 of 6 obstacles kept, against 3.8).
+`fill=shell` buys 15–18% of the record's cells and changes NOTHING else, which is
+what it was designed to do: it is a serialization saving, not a level change. An
+element costs about two standable cells on the small room and none on the big
+one.
+
+⛔ **AND THE BLOCK CAUGHT THE CENSUS'S OWN FIRST BUILD.** That build passed
+`width`/`height` keys `generateSeedlingLevel` does not take, so every cell of the
+size axis ran at 10×10 while the harness labelled half of them `20x20` — and the
+only thing that said so was the density block, which reads the RECORD while the
+column read the ASK. The disagreement is a named refusal in the instrument now.
+
+**The catalogue pays five slices' debt.** Every slice of this arc from 1 onward
+closed with the same residue line — *no demo-catalogue row names this* — because
+the close owns the docs pass. Six entries went in (13 → **19** loadable entries):
+the room contract (a 12×10 multi-screen room, 79 of 120 cells written), the
+oriented site pick (a `len=4` guard in a room that had no square for it),
+`chamber` beside the SAME room without it (`--areas=1` CERTIFIES against
+`no-area-at-that-key-level-can-hold-its-key`), `arena` with two bodies, the maze
+SHORTENS witness with the two routes it compares, and the density block itself on
+the default's new shape. The glossary gained `density-block` (156 → 157 terms).
+
+⛔ **Three catalogue defects were found by running it, and all three are older
+than this slice.** Two entries had ROTTED — the area-graph entry's seed stopped
+producing an accepted graph (which also removed the `realisation` ledger row its
+prose tells you to step to), and the sword-gated entry's grade went `null` when
+slice 4 made `--require=hasSword` force a two-member list. Both were re-picked by
+their own published scans. And **six entries carried a `--count=0` command that
+THREW** (`obstacleTarget` must be positive), from the catalogue's first day —
+because the row loads an entry's URL and asserts its claim but has never run its
+CLI line. The commands are `--count=1` now and the file says why.
+
+**The hosting row had been crashing for two arcs.**
+`check-procgen-lab-hosting.mjs` builds a DIRECTED payload to send through the
+panel bus, and its directive spec was a typed literal naming a door template that
+arc 3 slice 4c retired and a keep-policy letter that left the grammar in the same
+slice. It did not rot quietly — it CRASHED BY NAME before its first check — and
+nothing noticed, because no per-slice gate list names that row. The spec is now
+SPELLED BY THE PALETTE (the first two templates it offers, each parameter at the
+first value of its own declared domain), so a retired name cannot appear in it
+again; if the palette ever offers fewer than two templates the row throws its own
+named error rather than claiming about a one-directive replay.
+
+### ⛓⛓⛓ ARC 5 IS CLOSED (2026-08-20)
+
+Eight slices — 0 · 1 · 2 · 3 · 4 · 5 · 6a · 6b. §7's nine acceptance gates are
+answered one by one in arc-5 kickoff **§15**, which also carries the arc's whole
+RESIDUE in one deduplicated list (for R9, for arc 4, for future arcs, for the
+user, and code-only). ⚠ NewDocs is gitignored; this § is the tracked record.
+
+**What the Seedling generator IS now**, against what arc 3 closed with. The ROOM
+is no longer one small box: width and height are separate knobs up to the vanilla
+maximum **60×60** (the default stays a PINNED 10×10), and a record may be a SHAPE
+— floor plus a proven-closed wall SHELL plus nothing at all beyond, vanilla's own
+sparse form — under a CLOSURE LAW that refuses by name if any floor cell ends up
+4-adjacent to an absent one. Elements are placed by their own DECLARED oriented
+footprint rather than the square that bounds them. An element may BE space: the
+`chamber` head opens a floor blob and declares it an AREA through the same line
+the guard's area already used, so a corridor-only skeleton can hold a
+lock-and-key graph. A fight can have space and more than one body in it (the
+`arena`, `bodies ∈ {1,2}`). The differential can compute its fifth grade,
+SHORTENS, and REACHES it on real generated maze levels. And density is ONE
+declared block, printed by one function in four places and measured by its own
+census.
+
+**The numbers that define it.** Guard census **21 → 62 of 360** and
+`no-site-fits-this-room` **130 → 0** · `--areas=1` on bare tree kinds **0/24 →
+4·8·2·4·4 of 24** with a named chamber, and **4 → 45 of 120** with one in the
+biome default · the four-mouth contract took the chamber's ring refusal **28 → 0**
+at 10×10 and its placements **14 → 37 of 84**, a STRICT EXTENSION (35 rows
+change, all of them former refusals; 107 placed levels byte-identical) · the
+drawn `len` doubles the default room's contraption rate (**7/120 placed, 5
+certified → 15/120, 12**) · `bodies` priced before it was offered (1 → 462
+ticks/600 ms, 2 → 602/1060, **3 REFUSED**) · SHORTENS reached on **four**
+generated maze levels (37/39, 43/45, 57/59, 67/69) with three real negatives ·
+the `shell` strip **0%** on an open room, **15–18%** of the record on a carved
+one · the wasm ship row **12 → 58 claims**, three per-tick verdicts, `agrees per
+tick` at 256 · 361 · 198 observations · demo catalogue **13 → 19** entries,
+glossary **149 → 157** terms.
+
+**What did NOT move.** The R8 battery md5
+(`1fedb0ab35b7cd74accecf0345bdc893`, exit 1) and the maze byte-identity dump are
+unchanged at every slice of the arc. Slices 0, 1, 2, 3, 4 and 6b are byte-inert
+on every default — every new channel is opt-in, and an omitted knob is the same
+stream it always was. **Exactly one slice moved a committed artifact**: 6a's
+ruled re-record, whose mover set was written down BEFORE the change and matched
+EXACTLY — zero movers outside the prediction and zero predicted non-movers that
+moved.
+
+**What is NOT fixed, and is named rather than smoothed.** The arena's kill lock
+cannot GROW a wall the way the kill gate's can, so 49–70% of its refusals are
+`no-cut-for-the-kill-lock` and it is in no biome default · **SHORTENS is REFUTED
+on Seedling**, on three measurements (the breakable rock is invisible to the
+solver on 244 of 244 probes, the combat ladder is EXHAUSTED in a corridor, and
+the ladder prefers AVOID over KILL so the shortcut throws at tick 215) — the
+module ships complete and unit-tested but is deliberately NOT a catalogue head ·
+`len` 5 and 6 place nothing at the pinned room, so about two guard draws in five
+end element-less, and the mechanism that would fix it — letting a spec name a
+SUBSET of a parameter's domain — is designed by nobody · `keys=2` is unmoved at
+0 of 264, because one chamber is ONE area and a `+` list is a CHOICE · the kill
+gate's **6/28** is still R9's number. All of them, with their §§, are in arc-5
+kickoff §15's residue list.
+
+**Next**: ⛔ **arc 4 is THE CHAIN and it stays ASK-FIRST.** The user's standing
+items are the per-spec parameter DOMAIN, removing `KEEP_POLICY`/`KEPT_KIND` from
+the loop core now that both substrates have retired them, whether `arena` joins
+the biome default once its lock can grow a wall, and arc 3's own A3/A5 pair.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real

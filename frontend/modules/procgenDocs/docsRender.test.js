@@ -57,6 +57,10 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
             expect(idsOf(RENDERS.get(f).html), f).toEqual(want);
             total += want.length;
         }
+        // ⚠ 613 → 615 with arc-5 slice 6b (the ARC CLOSE): `seedling-bot.md` gains
+        // TWO — § *Arc 5, slice 6b — DENSITY IS ONE DECLARED BLOCK* and
+        // § *⛓⛓⛓ ARC 5 IS CLOSED*, which is the arc's own summary in the shape
+        // arc 3's close set. Before it:
         // ⚠ 612 → 613 with arc-5 slice 6a: `seedling-bot.md` § *Arc 5, slice 6a
         // — THE DEFAULT ROOM GETS A DIFFERENT CONTRAPTION*, the § the arc's ONE
         // re-record owes the tracked record. Before it:
@@ -75,7 +79,7 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         // WASM gained *The PER-TICK verdict — and the two limits it names*.
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
-        expect(total).toBe(613);
+        expect(total).toBe(615);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -223,7 +227,9 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 400 headings and its slugs are unique', () => {
+    it('seedling-bot.md renders 402 headings and its slugs are unique', () => {
+        // ⚠ 400 → 402: arc-5 slice 6b's TWO §§ (the density block, and the arc's
+        // own CLOSED summary).
         // ⚠ 399 → 400: arc-5 slice 6a's § (the biome default's new shape).
         // ⚠ 398 → 399: arc-5 slice 5's § (SHORTENS).
         // ⚠ 396 → 397: arc-5 slice 3's § (elements-as-area, the chamber
@@ -231,8 +237,8 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   slice 1's (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(400);
-        expect(new Set(ids).size).toBe(400);
+        expect(ids).toHaveLength(402);
+        expect(new Set(ids).size).toBe(402);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

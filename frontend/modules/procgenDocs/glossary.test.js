@@ -150,11 +150,11 @@ describe('the glossary as data', () => {
      * generator for. Folding them would make "a chamber" ambiguous in exactly
      * the table this glossary exists to disambiguate.
      */
-    it('holds 156 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
-        + 'and every one is filed', () => {
-        expect(TERMS).toHaveLength(156);
+    it('holds 157 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
+        + 'and 6b\'s `density-block`, and every one is filed', () => {
+        expect(TERMS).toHaveLength(157);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(156);
+        expect(TERMS.length).toBeLessThanOrEqual(157);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

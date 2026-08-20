@@ -62,8 +62,12 @@ describe('the catalogue as data', () => {
 describe('every non-prose entry is loadable by the row', () => {
     const real = DEMOS.filter((e) => !e.prose);
 
-    it('has 13 of them, and exactly one PROSE entry', () => {
-        expect(real).toHaveLength(13);
+    /** ⛓ 13 → **19** at PROCGEN ELEMENTS arc 5 slice 6b: the arc's close pays the
+     *  per-slice demo debt every slice from 1 on left behind (the room contract,
+     *  the oriented site pick, `chamber`, `arena`, the maze SHORTENS witness and
+     *  the density block beside the default's new shape). */
+    it('has 19 of them, and exactly one PROSE entry', () => {
+        expect(real).toHaveLength(19);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 
