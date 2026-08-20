@@ -1270,6 +1270,7 @@ export const CATALOGUE = frz({
         "chamber",
         "arena"
     ],
+    "elementSubsetSeparator": "|",
     "elements": [
         {
             "head": "guard",

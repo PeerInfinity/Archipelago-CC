@@ -45,8 +45,8 @@ const {
 const { reach } = await import('../shared/simulatorCore.js');
 const { connected } = await import('../procgenCore/gridFlood.js');
 const {
-    DEFAULT_ELEMENTS, ELEMENT_TABLE, formatElementSpec, namedParams, normalizeElementSpec,
-    parseElementSpec, resolveElementSpec,
+    DEFAULT_ELEMENTS, ELEMENT_TABLE, formatElementSpec, formatParamValue, isParamSubset,
+    namedParams, normalizeElementSpec, paramSubset, parseElementSpec, resolveElementSpec,
 } = await import('../procgenCore/elementSpec.js');
 const { rngFor } = await import('./procgenRng.js');
 const {
@@ -161,6 +161,148 @@ describe('elementSpec — ONE grammar for every channel', () => {
             .toBe(own[0].domain.at(-1));
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SUBSET — the codec's THIRD spelling of a parameter (SEEDLING BOT
+ * R9, slice 1, D1). ⛔ The rows that GRADE it are the literal ones and the
+ * DRAW ones; the fixed point below grades only that the two halves agree
+ * (⚖ the standing law — a fixed point tests self-consistency, never
+ * correctness).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('elementSpec — `len=2|3|4`, a SUBSET of the declared domain', () => {
+    /** ⛓ THE LITERAL: the exact string, the exact object, the domain's own
+     *  TYPES (the numbers 2/3/4, never the strings). */
+    it('parses a subset to the marker, carrying the domain\'s own typed members', () => {
+        const spec = parseElementSpec('guard;len=2|3|4');
+        expect(spec).toEqual({ name: 'guard', params: { len: { pick: [2, 3, 4] } } });
+        expect(isParamSubset(spec.params.len)).toBe(true);
+        expect(spec.params.len.pick.every((v) => typeof v === 'number')).toBe(true);
+    });
+
+    /**
+     * ⛓⛓ THE FIXED POINT over the three spellings and their combinations — and
+     * `len=4|2` is in it ON PURPOSE: ORDER IS KEPT AS WRITTEN, because the draw
+     * is `rng.pick` over that array and a sorted format would silently be a
+     * different run.
+     */
+    it('round-trips every spelling it accepts, ORDER KEPT (a fixed point)', () => {
+        for (const s of ['guard;len=2|3|4', 'guard;len=4|2', 'guard;len=2|3|4|5|6',
+            'guard;turns=0|1', 'guard;len=3;turns=0|1', 'guard;len=2|3;binds=any',
+            'chamber;w=2|3;h=3', 'arena;w=4|5;h=4|5;bodies=1|2',
+            'guard;len=2|3+killgate+chamber;w=2;h=3']) {
+            expect(formatElementSpec(parseElementSpec(s))).toBe(s);
+        }
+    });
+
+    /** ⛓ ONE MEMBER **IS** THE PIN — byte-identical, both paths. There is no
+     *  way to WRITE one (`len=2|` is an empty member), so the object path is
+     *  where it can arrive, and it must arrive as the pin. */
+    it('collapses a ONE-MEMBER subset to the PIN, byte-identically', () => {
+        expect(formatElementSpec({ name: 'guard', params: { len: paramSubset([4]) } }))
+            .toBe('guard;len=4');
+        expect(namedParams({ name: 'guard', params: { len: paramSubset([4]) } }))
+            .toEqual(namedParams(parseElementSpec('guard;len=4')));
+    });
+
+    /**
+     * ⛔⛔ THE WHOLE DOMAIN SPELLED AS A SUBSET IS **NOT** THE BARE PARAMETER,
+     * and this is the two-streams law's third face: both spend ONE draw over the
+     * same five values, and `namedParams` still reports one as NAMED and the
+     * other as omitted. `format` therefore keeps it as written — the same rule
+     * that keeps `len=3` at its own default value.
+     */
+    it('keeps a WHOLE-DOMAIN subset as a NAMED spelling, not the bare head', () => {
+        const whole = parseElementSpec('guard;len=2|3|4|5|6');
+        const bare = parseElementSpec('guard');
+        expect(formatElementSpec(whole)).toBe('guard;len=2|3|4|5|6');
+        expect(formatElementSpec(bare)).toBe('guard');
+        expect(namedParams(whole, { elementOnly: true })).toEqual({ len: paramSubset([2, 3, 4, 5, 6]) });
+        expect(namedParams(bare, { elementOnly: true })).toEqual({});
+    });
+
+    it.each([
+        ['guard;len=2|9', /is not in its declared domain \[2, 3, 4, 5, 6\]/],
+        ['guard;len=2|2', /names 2 TWICE in the subset/],
+        ['guard;len=2|', /EMPTY subset member/],
+        ['guard;len=|2', /EMPTY subset member/],
+        ['guard;binds=item|any', /is the BINDING's own knob/],
+    ])('refuses %s BY NAME', (spec, re) => {
+        expect(() => parseElementSpec(spec)).toThrow(re);
+    });
+
+    /** ⛓ `binds` is RESOLVED, never drawn (`namedParams({elementOnly})` drops
+     *  it), so a subset on it would name a draw with no stream to come out of.
+     *  The object path meets the same sentence. */
+    it('refuses a subset on a BINDING knob from the object path too', () => {
+        expect(() => resolveElementSpec({ name: 'guard', params: { binds: paramSubset(['item', 'any']) } }))
+            .toThrow(/is the BINDING's own knob/);
+    });
+
+    it('spells a subset with `|` wherever a value is printed', () => {
+        expect(formatParamValue(paramSubset([2, 3, 4]))).toBe('2|3|4');
+        expect(formatParamValue(4)).toBe('4');
+    });
+
+    /**
+     * ⛓ A SUBSET HAS NO SINGLE RESOLVED VALUE, and `resolveElementSpec` says so
+     * by handing the marker back: it is a DRAW INSTRUCTION, and the concrete
+     * value only exists after `instantiate` has spent the draw.
+     */
+    it('resolves a subset to ITSELF — the concrete value is the draw\'s', () => {
+        expect(resolveElementSpec(parseElementSpec('guard;len=2|3')))
+            .toEqual({ name: 'guard', len: paramSubset([2, 3]), turns: 1, binds: 'item' });
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE DRAW LAW, MEASURED BY A COUNTING SPY — the whole point of the
+ * subset is WHERE IT SPENDS ITS DRAW, and a row that only compared strings
+ * could not see it (arc-5 §9.2's pattern).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the subset spends ONE draw, exactly where the bare parameter spends its own', () => {
+    /** ⛓ A REAL `rng.pick` over the array it was handed, COUNTED — not a stub
+     *  that returns a constant, because the member it lands on is half the
+     *  claim. */
+    const spy = () => {
+        let n = 0;
+        return { draws: () => n, pick(arr) { n += 1; return arr[n % arr.length]; } };
+    };
+    const drawsFor = (s) => {
+        const r = spy();
+        const row = ELEMENT_TABLE.guard.element
+            .instantiate(r, namedParams(parseElementSpec(s), { elementOnly: true }));
+        return { draws: r.draws(), params: row.params };
+    };
+
+    it('counts 2 for the bare head, 1 for a pin, and 2 for a subset', () => {
+        expect(drawsFor('guard').draws).toBe(2);           // len + turns
+        expect(drawsFor('guard;len=2').draws).toBe(1);      // turns only — the PIN spends none
+        expect(drawsFor('guard;len=2|3|4').draws).toBe(2);  // the SUBSET spends the same one
+        expect(drawsFor('guard;len=2|3|4;turns=0').draws).toBe(1);
+    });
+
+    it('lands INSIDE the subset, and a one-member subset spends NO draw at all', () => {
+        const { params } = drawsFor('guard;len=2|3');
+        expect([2, 3]).toContain(params.len);
+        const r = spy();
+        const row = ELEMENT_TABLE.guard.element
+            .instantiate(r, { len: paramSubset([5]), turns: 0 });
+        expect(r.draws()).toBe(0);
+        expect(row.params.len).toBe(5);
+    });
+
+    /** ⛔ The refusals belong to the CONTRACT, not only to the codec: a caller
+     *  that builds the marker by hand meets them at the draw. */
+    it('refuses an empty subset and an out-of-domain member AT THE DRAW', () => {
+        expect(() => ELEMENT_TABLE.guard.element.instantiate(spy(), { len: paramSubset([]) }))
+            .toThrow(/EMPTY subset/);
+        expect(() => ELEMENT_TABLE.guard.element.instantiate(spy(), { len: paramSubset([2, 9]) }))
+            .toThrow(/not in its declared domain/);
+    });
+});
+
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE SITE — drawn before a wall exists, snug, off the ring

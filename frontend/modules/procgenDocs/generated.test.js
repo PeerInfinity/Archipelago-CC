@@ -33,7 +33,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import * as urlParams from '../procgenCore/urlParams.js';
 import { URL_PARAM_REFUSALS } from '../procgenCore/urlParams.js';
-import { ELEMENT_TABLE, ELEMENT_NAMES } from '../procgenCore/elementSpec.js';
+import {
+    ELEMENT_TABLE, ELEMENT_NAMES, formatElementSpec, parseElementSpec,
+} from '../procgenCore/elementSpec.js';
 import { KEEP_POLICY, KEPT_KIND, STOP, VERDICT, ATTEMPT } from '../procgenCore/levelGenerator.js';
 import { kindsOffered } from '../procgenCore/skeletonKinds.js';
 import { KILL_GATE_REFUSALS } from '../procgenCore/elements/killGate.js';
@@ -267,6 +269,18 @@ describe('catalogue names every template, element head and skeleton kind', () =>
         expect(killgate.needs).toEqual(['hasSword']);
         const guard = CATALOGUE.elements.find((e) => e.head === 'guard');
         expect(guard.params.map((p) => p.key)).toContain('binds');
+        /**
+         * ⛓⛓ R9 slice 1 (D1) — **THE TWO SEPARATORS ARE THE GRAMMAR THE
+         * CATALOGUE STATES**, and both are pinned as literals here: `+` chooses
+         * between heads (ONE `pick`), `|` narrows a parameter's domain (ONE
+         * `pick` over the members). A catalogue that named neither would leave
+         * the page's only grammar reference to prose.
+         */
+        expect(CATALOGUE.elementListSeparator).toBe('+');
+        expect(CATALOGUE.elementSubsetSeparator).toBe('|');
+        expect(formatElementSpec(parseElementSpec(
+            `guard;len=2${CATALOGUE.elementSubsetSeparator}3`,
+        ))).toBe('guard;len=2|3');
     });
 
     it('⛓⛓ every SKELETON KIND, per substrate, with `offered` telling the two apart', () => {

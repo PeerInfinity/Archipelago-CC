@@ -114,6 +114,14 @@ export function buildCatalogue() {
         elements,
         elementNames: [...M.elementSpec.ELEMENT_NAMES],
         elementListSeparator: '+',
+        /**
+         * ⛓ R9 slice 1 (D1) — the codec's THIRD spelling of a parameter:
+         * `guard;len=2|3|4` draws ONE value from that SUBSET of the declared
+         * domain, exactly where the bare parameter draws one from the whole of
+         * it. A pin (`len=4`) still spends no draw, and a subset naming the
+         * whole domain is a NAMED spelling rather than the bare parameter.
+         */
+        elementSubsetSeparator: '|',
         itemsElementsNeed: [...M.elementSpec.ITEMS_ELEMENTS_NEED],
         killLockTemplates: {
             count: M.palette.POST_SWORD_TEMPLATES.length - M.palette.PRE_SWORD_TEMPLATES.length,

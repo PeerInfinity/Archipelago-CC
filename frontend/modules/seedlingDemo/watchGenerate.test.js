@@ -43,6 +43,8 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveForPage } from './watchSolve.js';
 import { ATTEMPT, DEFAULT_BOUNDS, KEEP_POLICY, KEPT_KIND, STOP } from '../procgenCore/levelGenerator.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
+// ⛓ R9 slice 1 — the SUBSET spelling, for the control's read-only list state.
+import { paramSubset, parseElementSpec } from '../procgenCore/elementSpec.js';
 /** ⛓ SLICE 5a (D1) — the ANCHOR for the `?elements=` VALUE claim is the SEAM's
  *  own answer for the same arguments, never a literal cell this file invents. */
 import { seedlingSeam } from './procgenSeedling.js';
@@ -2599,12 +2601,40 @@ describe('watchGenerate — the form controls (R9 slice 0)', () => {
         expect(elementsFromControl(ELEMENTS_CONTROL_LIST)).toBeUndefined();
     });
 
+    /**
+     * ⛓⛓⛓ **AND THE LIST THE SENTINEL HOLDS IS NOW THE BIOME DEFAULT'S OWN**
+     * (R9 slice 1, D1): its guard member carries a SUBSET, `guard;len=2|3|4`.
+     * ⛔ The read-only state must carry it back UNCHANGED — a control that
+     * round-tripped a subset into a pin, or into the bare head, would silently
+     * change how many draws the next press spends.
+     */
+    it('⛓ the read-only list carries a SUBSET member back unchanged (D1)', () => {
+        const withSubset = parseElementSpec('guard;len=2|3|4+killgate+chamber;w=2;h=3');
+        expect(elementsControlValue(withSubset)).toBe(ELEMENTS_CONTROL_LIST);
+        expect(elementsFromControl(ELEMENTS_CONTROL_LIST, { list: withSubset })).toBe(withSubset);
+        expect(elementsAskSpelling(elementsFromControl(ELEMENTS_CONTROL_LIST, { list: withSubset })))
+            .toBe('guard;len=2|3|4+killgate+chamber;w=2;h=3');
+        /** ⛓ and a SINGLE head's sub-form can carry one too — the params object
+         *  is the NAMED set and a subset is one of the three things it holds. */
+        expect(elementsAskSpelling(elementsFromControl('guard', { params: { len: paramSubset([2, 3, 4]) } })))
+            .toBe('guard;len=2|3|4');
+    });
+
     /** ⛓ THE PAIR IS AN INVERSE over the control's whole vocabulary. */
     it('⛓ control value ↔ ask is a round trip for every state', () => {
         for (const spec of [undefined, { name: 'none' }, { name: 'guard' },
-            { name: 'chamber', params: { w: 2, h: 3 } }, list]) {
+            { name: 'chamber', params: { w: 2, h: 3 } }, list,
+            /** ⛓ R9 slice 1 — the third kind of parameter value rides the pair
+             *  like the other two, on a head AND inside a list. */
+            parseElementSpec('guard;len=2|3|4'), parseElementSpec('guard;len=2|3+killgate')]) {
             const v = elementsControlValue(spec);
-            const back = elementsFromControl(v, { params: spec?.params ?? {}, list });
+            /** ⛔ THE LIST THE SENTINEL IS HANDED IS THE SPEC ITSELF when the
+             *  spec IS a list — the control only ever shows the list the page
+             *  was loaded with, so a fixed one would be a different page. */
+            const back = elementsFromControl(v, {
+                params: spec?.params ?? {},
+                list: Array.isArray(spec?.any) ? spec : list,
+            });
             expect(elementsAskSpelling(back)).toBe(elementsAskSpelling(spec));
         }
     });

@@ -46,7 +46,9 @@ import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { parseRequireList } from './areaSpec.js';
-import { assertParamSchema, enumerateValues } from './templateContract.js';
+import {
+    assertParamSchema, enumerateValues, isParamSubset, paramSubset,
+} from './templateContract.js';
 
 export class ElementSpecError extends Error {
     constructor(message) {
@@ -269,6 +271,53 @@ export const isElementList = (spec) => Boolean(spec && typeof spec === 'object'
 
 const LIST_SEP = '+';
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **`len=2|3|4` — THE SUBSET, THE CODEC'S THIRD SPELLING OF A
+ * PARAMETER** (SEEDLING BOT R9, slice 1, D1; arc-5 §14.12(2) is the
+ * measurement that asked for it).
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The SHAPE is `templateContract`'s (`{pick:[…]}`, where the draw is spent);
+ * this is the only file that knows how it is WRITTEN. The three spellings, and
+ * the stream each one spends:
+ *
+ *   `guard`          OMITTED  — ONE `rng.pick` over the whole declared domain
+ *   `guard;len=2|3|4` SUBSET  — ONE `rng.pick` over the members, as written
+ *   `guard;len=4`    PIN      — the value, and NO draw at all
+ *
+ * ⛔ **THE WHOLE DOMAIN SPELLED AS A SUBSET IS NOT THE BARE PARAMETER.** They
+ * spend the same draw and land on the same distribution, and they are still two
+ * different specs: `namedParams` reports the first as NAMED and the second as
+ * omitted, which is the two-streams law (`namedParams`' docblock) and not a
+ * cosmetic difference — `format` keeps a subset exactly as it was written, the
+ * way it keeps a named parameter at its default value.
+ *
+ * ⛓ **ORDER IS KEPT AS WRITTEN**, so `len=4|2` formats back as `len=4|2`:
+ * `format` is the fixed point of `parse`, and the draw is `rng.pick` over that
+ * array, so re-ordering the members would silently be a different run.
+ *
+ * ⛓ A ONE-MEMBER SUBSET IS THE PIN and collapses to it in `namedParams` (there
+ * is no way to WRITE one — `len=2|` is an empty member and refuses — but the
+ * object path can build it, and the two paths must agree).
+ *
+ * ⚖ `|` rather than `,`: `,` is taken twice OUTSIDE this codec (`--elements=`
+ * splits on it into ARMS in `census-seedling-areas.mjs`, and
+ * `parseItemRequireList` reads a comma list), and `|` is unused by every
+ * grammar on the loop. It rides through a URL percent-encoded whole, like every
+ * other character in this value. There is no `2..4` range sugar: one spelling.
+ */
+const SUBSET_SEP = '|';
+
+/** ⛓ RE-EXPORTED from `templateContract` (where the draw is spent) so a reader
+ *  of the CODEC has one import for the spelling AND the shape. */
+export { isParamSubset, paramSubset };
+
+/** ⛓ How a parameter VALUE is spelled — a subset by its members, in order; any
+ *  other value by itself. ⛔ ONE function, so the identity line, the payload,
+ *  the density block, the URL writer and the catalogue cannot disagree. */
+export const formatParamValue = (value) => (isParamSubset(value)
+    ? value.pick.join(SUBSET_SEP) : String(value));
+
 function assertList(members, raw) {
     if (members.length < 2) {
         fail(`elementSpec: ${JSON.stringify(raw)} is a "${LIST_SEP}" list with `
@@ -333,6 +382,55 @@ const outOfDomain = (name, p, value) => `elementSpec: parameter "${p.key}" of el
     + `"${name}" was given ${JSON.stringify(value)}, which is not in its declared domain `
     + `[${p.domain.join(', ')}].`;
 
+/** ⛓ The parameters the ELEMENT itself declares — the ones `instantiate` DRAWS.
+ *  The binding's own knobs (`binds`) are resolved, never drawn, which is the
+ *  fact the subset refusal below turns on. */
+const drawsParam = (name, key) => (ELEMENT_TABLE[name]?.element.params ?? [])
+    .some((q) => q.key === key);
+
+/**
+ * ⛓⛓ **ONE CHECK FOR A PARAMETER VALUE, AND IT KNOWS ABOUT ALL THREE
+ * SPELLINGS** — used by the object path and, through `normalizeElementSpec`, by
+ * the string path, so `guard;len=9` and `{params:{len:9}}` meet ONE sentence.
+ *
+ * ⛔ A SUBSET ON A KNOB NOBODY DRAWS REFUSES BY NAME. `binds` is the BINDING's
+ * question (which area may hold a symbol) and `namedParams({elementOnly})` drops
+ * it before `instantiate` ever sees it — so `binds=item|any` would name a draw
+ * that has no stream to come out of, and would silently resolve to the default
+ * instead. That is exactly the "a link that names a gadget it did not build"
+ * failure this codec refuses everywhere else.
+ */
+function assertParamValue(name, p, value) {
+    if (!isParamSubset(value)) {
+        if (!p.domain.includes(value)) fail(outOfDomain(name, p, value));
+        return;
+    }
+    if (!drawsParam(name, p.key)) {
+        fail(`elementSpec: parameter "${p.key}" of element "${name}" was given the SUBSET `
+            + `${JSON.stringify(formatParamValue(value))}, and "${p.key}" is the BINDING's `
+            + 'own knob — it is RESOLVED, never DRAWN, so there is no draw for a subset to '
+            + `narrow. Name ONE value (\`${p.key}=${p.domain[0]}\`) or leave it out.`);
+    }
+    const members = value.pick;
+    if (members.length === 0) {
+        fail(`elementSpec: parameter "${p.key}" of element "${name}" was given an EMPTY `
+            + 'subset. A subset is the set of values the draw may land on; omit the '
+            + `parameter to draw from its whole declared domain [${p.domain.join(', ')}].`);
+    }
+    const seen = new Set();
+    for (const m of members) {
+        if (!p.domain.includes(m)) fail(outOfDomain(name, p, m));
+        if (seen.has(m)) {
+            fail(`elementSpec: parameter "${p.key}" of element "${name}" names `
+                + `${JSON.stringify(m)} TWICE in the subset `
+                + `${JSON.stringify(formatParamValue(value))}. A subset is a SET — a `
+                + 'repeated member would WEIGHT the draw, and weighting is not a thing this '
+                + 'codec offers.');
+        }
+        seen.add(m);
+    }
+}
+
 /**
  * ⛓⛓ THE ONE VALIDATOR — an unknown head, an unknown key or an out-of-domain
  * value refuses BY NAME, with what WAS declared.
@@ -372,7 +470,7 @@ export function resolveElementSpec(spec = {}) {
                 + `declares [${schema.map((q) => q.key).join(', ')}]. ⛔ A silently ignored `
                 + 'parameter is a link that names a gadget it did not build.');
         }
-        if (!p.domain.includes(values[key])) fail(outOfDomain(name, p, values[key]));
+        assertParamValue(name, p, values[key]);
     }
     const out = { name };
     for (const p of schema) {
@@ -413,7 +511,15 @@ export function namedParams(spec, { elementOnly = false } = {}) {
         ? (ELEMENT_TABLE[name]?.element.params ?? []) : paramSchemaFor(name);
     const out = {};
     for (const p of schema) {
-        if (Object.prototype.hasOwnProperty.call(given, p.key)) out[p.key] = given[p.key];
+        if (!Object.prototype.hasOwnProperty.call(given, p.key)) continue;
+        const v = given[p.key];
+        /**
+         * ⛓⛓ **A ONE-MEMBER SUBSET COLLAPSES TO THE PIN, HERE, ONCE** — so
+         * `format` prints `len=2` and `instantiate` spends NO draw for it,
+         * whichever door the spec came through. `templateContract` asserts the
+         * same law at the draw itself; this is the SPELLING half of it.
+         */
+        out[p.key] = (isParamSubset(v) && v.pick.length === 1) ? v.pick[0] : v;
     }
     return out;
 }
@@ -461,7 +567,7 @@ export function formatElementSpec(spec) {
     const params = norm.params ?? {};
     const parts = paramSchemaFor(norm.name)
         .filter((p) => Object.prototype.hasOwnProperty.call(params, p.key))
-        .map((p) => `${p.key}=${params[p.key]}`);
+        .map((p) => `${p.key}=${formatParamValue(params[p.key])}`);
     return parts.length === 0 ? norm.name : `${norm.name};${parts.join(';')}`;
 }
 
@@ -563,6 +669,34 @@ export function parseElementSpec(value) {
         if (!p) {
             fail(`elementSpec: element "${name}" has no parameter ${JSON.stringify(key)}. It `
                 + `declares [${schema.map((q) => q.key).join(', ') || '(nothing)'}].`);
+        }
+        /**
+         * ⛓⛓⛓ THE SUBSET (R9 slice 1, D1) — `len=2|3|4`. Split on `|`, each
+         * member matched BY STRING against the domain exactly as a single value
+         * is, so the object carries the domain's OWN typed members (the numbers
+         * `2, 3, 4`, never the strings) and the round trip and a payload
+         * comparison stay comparable. ⛔ An EMPTY member refuses here rather
+         * than downstream, because `len=2|` is a typo a reader can fix and a
+         * silently dropped member would be a narrower draw than the link says.
+         * Membership, duplication and the binding-knob rule are
+         * `assertParamValue`'s, through `normalizeElementSpec` below — ONE set
+         * of sentences for both paths.
+         */
+        if (rawValue.includes(SUBSET_SEP)) {
+            const members = rawValue.split(SUBSET_SEP).map((m) => m.trim());
+            for (const m of members) {
+                if (m === '') {
+                    fail(`elementSpec: the clause ${JSON.stringify(text)} in `
+                        + `${JSON.stringify(raw)} carries an EMPTY subset member. A subset `
+                        + `is \`key=v1${SUBSET_SEP}v2\` — the values the draw may land on.`);
+                }
+            }
+            params[key] = paramSubset(members.map((m) => {
+                const t = p.domain.find((v) => String(v) === m);
+                if (t === undefined) fail(outOfDomain(name, p, m));
+                return t;
+            }));
+            continue;
         }
         const typed = p.domain.find((v) => String(v) === rawValue);
         if (typed === undefined) fail(outOfDomain(name, p, rawValue));

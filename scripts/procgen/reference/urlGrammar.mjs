@@ -143,7 +143,10 @@ const PARAM_NOTES = {
     skeleton: { field: { watch: 'skeleton', lab: 'skeleton' }, codec: 'parseSkeleton', terms: ['skeleton', 'skeleton-kind', 'the-carve'] },
     elements: {
         field: { watch: 'elements', lab: 'elements' },
-        codec: 'parseElementSpec',
+        codec: 'parseElementSpec — `head[;key=value]…`, `+` between heads is a CHOICE '
+            + '(one `pick`), and a value may be a SUBSET of the declared domain written '
+            + '`key=v1|v2|v3` (ONE draw over those members; a single value is a PIN and '
+            + 'spends none)',
         terms: ['element', 'element-head', 'draw'],
         absentMeans: {
             watch: '⛔ ABSENT IS NOT `none` HERE. The reader answers `undefined` — *nobody '

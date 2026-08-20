@@ -320,7 +320,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "absentMeans": "⛔ ABSENT IS NOT `none` HERE. The reader answers `undefined` — *nobody said* — and `seedlingSeam` turns that into the BIOME DEFAULT (see `catalogue.js` → the biome's `defaultElements`). An explicit `?elements=none` is a CHOICE that turns the default OFF, so the writer SPELLS it where the maze deletes it (`deleteAt: null`).",
                     "atDefault": "DELETED at the default",
-                    "codec": "parseElementSpec",
+                    "codec": "parseElementSpec — `head[;key=value]…`, `+` between heads is a CHOICE (one `pick`), and a value may be a SUBSET of the declared domain written `key=v1|v2|v3` (ONE draw over those members; a single value is a PIN and spends none)",
                     "defaultField": "elements",
                     "defaultIsUndefined": true,
                     "defaultValue": null,
@@ -1166,7 +1166,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "absentMeans": "Absent ≡ `{name: 'none'}` ≡ the element machinery does not run at all: no site drawn, nothing constructed, no draw spent (⚖ arc-2 ruling 5).",
                     "atDefault": "DELETED at the default",
-                    "codec": "parseElementSpec",
+                    "codec": "parseElementSpec — `head[;key=value]…`, `+` between heads is a CHOICE (one `pick`), and a value may be a SUBSET of the declared domain written `key=v1|v2|v3` (ONE draw over those members; a single value is a PIN and spends none)",
                     "defaultField": "elements",
                     "defaultIsUndefined": false,
                     "defaultValue": {

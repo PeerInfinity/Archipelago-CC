@@ -825,6 +825,22 @@ describe('urlParams — ?elements=', () => {
     });
 
     /**
+     * ⛓⛓⛓ **THE SUBSET RIDES THE URL UNCHANGED** (R9 slice 1, D1). The value is
+     * percent-encoded WHOLE, so `|` needs nothing from this layer — which is the
+     * claim this row makes rather than assumes: the reader gets the marker, the
+     * writer spells it back, and the address bar carries `%7C`.
+     */
+    it('reads and writes a SUBSET value — `|` rides the encoding whole', () => {
+        expect(readElements(q('elements=guard%3Blen%3D2%7C3%7C4')))
+            .toEqual({ name: 'guard', params: { len: { pick: [2, 3, 4] } } });
+        const written = writeElementsParam(q(''),
+            { name: 'guard', params: { len: { pick: [2, 3, 4] } } }).toString();
+        expect(written).toBe('elements=guard%3Blen%3D2%7C3%7C4');
+        expect(readElements(q(written)))
+            .toEqual({ name: 'guard', params: { len: { pick: [2, 3, 4] } } });
+    });
+
+    /**
      * ⛓⛓⛓ **A PARAMETER AT ITS DEFAULT IS KEPT, AND THAT IS THE ONE PLACE THIS
      * PARAMETER DIFFERS FROM `?areas=` AND `?skeleton=`.** For an element a
      * NAMED parameter is an override that spends NO draw and an omitted one is

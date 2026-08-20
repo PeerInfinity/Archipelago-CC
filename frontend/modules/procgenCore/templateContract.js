@@ -50,6 +50,9 @@
  * `instantiate` draws each declared parameter from the SAME injected stream,
  * **in `params` array order** (schema order), one `rng.pick(domain)` per
  * parameter — and a parameter supplied through `overrides` consumes NO draw.
+ * ⛓ R9 slice 1 adds a THIRD kind of override, `{pick:[…]}` — a SUBSET of the
+ * domain, which spends the SAME one draw the omitted parameter spends (see
+ * `isParamSubset` below); a one-member subset is the pin and spends none.
  * The loop's order within one attempt is therefore: pick the base template,
  * draw its parameters in schema order, then ask the model for an anchor. ⚠ The
  * number of draws an attempt spends is TEMPLATE-DEPENDENT, which is harmless
@@ -68,6 +71,85 @@ export class TemplateContractError extends Error {
 }
 
 const fail = (message) => { throw new TemplateContractError(message); };
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **THE THIRD KIND OF PARAMETER VALUE — A SUBSET OF THE DOMAIN**
+ * (SEEDLING BOT R9, slice 1, D1; ⚖ arc-5 §14.12(2) named the mechanism and
+ * deliberately did NOT invent it.)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Until now a caller had exactly two things to say about a parameter, and the
+ * difference between them is a DRAW:
+ *
+ *   OMITTED   → `rng.pick(p.domain)` — ONE draw over everything declared
+ *   OVERRIDE  → the value, and NO draw at all
+ *
+ * Arc 5 measured what is missing between them: the guard's `len` 5 and 6 place
+ * NOTHING in a 10x10 room, so a bare `guard` spends ~40% of its draws on a
+ * value that cannot land, and the chamber's `w`/`h` run to 6 where the default
+ * room holds 3 — which is why the chamber had to be PINNED rather than drawn,
+ * losing the distribution the element was built to have. One mechanism answers
+ * both: **draw from THIS SUBSET**.
+ *
+ *   SUBSET    → `rng.pick(subset)` — ONE draw, exactly where the bare
+ *               parameter spends its own
+ *
+ * ⛔ THE SHAPE LIVES HERE AND THE SPELLING LIVES IN THE CODEC. `{pick: […]}` is
+ * what `instantiate` reads; `elementSpec` is the only thing that knows a subset
+ * is written `len=2|3|4`. A caller that builds the object directly gets the
+ * same draw law as one that typed the string, because there is ONE place the
+ * draw is spent and this is it.
+ *
+ * ⛓⛓ **A ONE-MEMBER SUBSET IS THE PIN, AND SPENDS NO DRAW.** `{pick:[4]}` and
+ * `4` name the same run and must be byte-identical — a `rng.pick` over one
+ * member would look harmless and move every draw after it (trap 321's shape).
+ * The collapse is asserted here rather than left to each caller's normalizer.
+ */
+/** Is this override value a SUBSET instruction rather than a value? */
+export const isParamSubset = (value) => Boolean(value) && typeof value === 'object'
+    && Array.isArray(value.pick);
+
+/** The canonical subset marker — members frozen IN THE ORDER GIVEN, because the
+ *  draw is `rng.pick` over that array and order is therefore load-bearing. */
+export const paramSubset = (members) => Object.freeze({
+    pick: Object.freeze([...members]),
+});
+
+/**
+ * ⛔ ONE SENTENCE PER REFUSAL, and every one names the parameter, the subset and
+ * what WAS declared — the same discipline `elementSpec.outOfDomain` follows one
+ * layer up, so a caller meets one vocabulary whichever door it came through.
+ */
+function drawFromSubset(rng, owner, p, members) {
+    if (members.length === 0) {
+        fail(`templateContract: ${owner} parameter "${p.key}" was given an EMPTY subset. A `
+            + 'subset is the set of values the draw may land on; an empty one names no run '
+            + `— omit the parameter to draw from its whole declared domain `
+            + `[${p.domain.join(', ')}].`);
+    }
+    const seen = new Set();
+    for (const m of members) {
+        if (!p.domain.includes(m)) {
+            fail(`templateContract: ${owner} parameter "${p.key}" was given the subset member `
+                + `${JSON.stringify(m)}, which is not in its declared domain `
+                + `[${p.domain.join(', ')}]. A subset NARROWS a domain; it cannot widen one.`);
+        }
+        if (seen.has(m)) {
+            fail(`templateContract: ${owner} parameter "${p.key}" names ${JSON.stringify(m)} `
+                + 'TWICE in its subset. A subset is a SET — a repeated member would weight '
+                + 'the draw, and weighting is not a thing this contract offers.');
+        }
+        seen.add(m);
+    }
+    // ⛓ THE PIN — one member is a value, not a draw. See the docblock above.
+    if (members.length === 1) return members[0];
+    if (!rng || typeof rng.pick !== 'function') {
+        fail(`templateContract: ${owner} needs a DRAW for "${p.key}" — it was given a `
+            + `SUBSET [${members.join(', ')}] and no rng. A subset spends the same ONE `
+            + 'draw the omitted parameter does; it is a narrower domain, not a value.');
+    }
+    return rng.pick(members);
+}
 
 /** `wall-segment(ori=v,len=4)` — the label a pane row and a reader identify an
  *  instance by. A zero-parameter template's label IS its name. */
@@ -220,6 +302,17 @@ export function defineTemplate({ name, family, site = 'any', params = [], why, b
             for (const p of schema) {
                 if (Object.prototype.hasOwnProperty.call(overrides ?? {}, p.key)) {
                     const v = overrides[p.key];
+                    /**
+                     * ⛓⛓⛓ THE THIRD KIND (R9 slice 1, D1) — a SUBSET spends the
+                     * ONE draw the omitted parameter spends, in the same place
+                     * in the stream. ⛔ It is checked BEFORE the domain test
+                     * below because `{pick:[…]}` is not a member of any domain
+                     * and would otherwise refuse as an out-of-domain value.
+                     */
+                    if (isParamSubset(v)) {
+                        values[p.key] = drawFromSubset(rng, `template "${name}"`, p, v.pick);
+                        continue;
+                    }
                     if (!p.domain.includes(v)) {
                         fail(`templateContract: template "${name}" parameter "${p.key}" was `
                             + `overridden with ${JSON.stringify(v)}, which is not in its `

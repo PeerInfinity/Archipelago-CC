@@ -96,8 +96,8 @@ import { makeLedger, paintable, phaseRow } from './procgenLedger.js';
  */
 import {
     DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, formatElementSpec,
-    isElementList, namedParams, normalizeElementSpec, resolveElementSpec,
-    resolveRequireDirective,
+    formatParamValue, isElementList, isParamSubset, namedParams, normalizeElementSpec,
+    resolveElementSpec, resolveRequireDirective,
 } from '../procgenCore/elementSpec.js';
 /**
  * ⛓ THE REQUIREMENTS DIFFERENTIAL — arc 3, slice 4d. ⛔ ONE implementation,
@@ -1232,9 +1232,20 @@ export function seedlingModel({
     let preCarveRow = null;
     if (elementPhase === PHASE_PRE_CARVE) {
         const named = namedParams(elementHead, { elementOnly: true });
-        if (named.turns !== undefined && named.turns !== 0) {
+        /**
+         * ⛓ R9 slice 1 — `turns` can now be a SUBSET (`turns=0|1`), and a
+         * subset that can DRAW a bend is a bent lane the same way a pin on one
+         * is: the test is *"could this spec produce turns != 0"*, and the
+         * sentence spells the ask with `formatParamValue` so the reader sees
+         * `turns=0|1` rather than an object.
+         */
+        const asksTurns = isParamSubset(named.turns)
+            ? named.turns.pick.some((t) => t !== 0)
+            : (named.turns !== undefined && named.turns !== 0);
+        if (asksTurns) {
             elementRefusal = { reason: 'the-chain-is-arc-4',
-                detail: `the spec names turns=${named.turns}. ⚖ Arc-3 ruling 1: Seedling gets `
+                detail: `the spec names turns=${formatParamValue(named.turns)}. ⚖ Arc-3 `
+                    + `ruling 1: Seedling gets `
                     + 'the STRAIGHT LANE only — `turns = 0`, which `weigh` certifies today. A '
                     + 'bent push path is the CHAIN, which is arc 4 and ASK-FIRST (design '
                     + 'ruling 17): it needs a solver that can plan a push around a corner, '
