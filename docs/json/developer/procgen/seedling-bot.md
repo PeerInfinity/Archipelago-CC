@@ -10661,6 +10661,107 @@ identity is byte-identical. ⚠ One behaviour DID change: it carries
 `killgate+arena` instead of a bare `killgate`, and a list spends one `pick` where
 a bare head spends none.
 
+### Arc 5, slice 5 — SHORTENS COMPUTED AT LAST: the shortcut law, the grade REACHED on the maze, and the Seedling venue REFUTED (2026-08-20)
+
+**The fifth grade stopped being a promise.** Arc 3 NAMED `SHORTENS` — *both arms
+solve, fewer ticks WITH the item* (design §4.5) — and deliberately did not
+compute it, on trap 355's rule that *a grade nothing can reach is not a grade*:
+nothing in the pipeline granted a shortcut. This slice computed it, reached it
+on generated levels, and the arithmetic lives in ONE place for both substrates
+(`procgenCore/differentialGrade.js`) because SHORTENS arrived on both venues on
+the same day, which is exactly when a second spelling of *which arm is cheaper*
+would have got in. Seedling's `procgenRequirements.gradeOf` hands it TICKS; the
+maze's `mazeCostRecords` hands it BFS PLAN LENGTH.
+
+**THE SHORTCUT LAW, SPELLED ONCE, BESIDE THE DOOR LAW AND NOT INSTEAD OF IT.**
+`gridFlood.shortcutLawRefusal` is arc-3 §9's door law with clause 1's quantifier
+FLIPPED, in the same argument shape so neither law can be handed a picture of the
+room the other never saw. Four clauses: the open half, **still connected**
+(walled, the goal REMAINS reachable — else it is a DOOR and the cut law is its
+rule), **strictly shorter** (else the lock is decoration with a key in front of
+it), and start-side. ⛔ It costs `shortestPath` TWICE where the door law costs
+one early-exit `connected`, and that is the price the fifth grade charges.
+
+**⛓⛓⛓ THE MAZE REACHES IT.** `areas=<n>;shortcut=1` (default **0**, so every
+committed `--areas=` payload and all nine per-kind CLI md5s are byte-identical)
+puts a `door_SC` on a cell that is not a cut and a `key_SC` where the player can
+reach it without using the door. Four generated levels witness the grade:
+
+| command (`generate-maze-level.mjs --skeleton=rooms --areas='1;shortcut=1'`) | with the key | without | grade |
+|---|---|---|---|
+| `--seed=8 --width=11 --height=11` | **37** | **39** | **SHORTENS** |
+| `--seed=2 --width=15 --height=15` | 43 | 45 | **SHORTENS** |
+| `--seed=1 --width=20 --height=20` | 57 | 59 | **SHORTENS** |
+| `--seed=10 --width=20 --height=20` | 67 | 69 | **SHORTENS** |
+
+⛓ **And the NEGATIVE rows are real levels too, which is better than a mutant.**
+Seed 9 at 11×11 places a shortcut the TERRAIN law accepts (geometry 4 open, 26
+walled) whose BFS without-arm cannot solve at all — the route to the OTHER key
+runs through it — and the grade says **STRONG**: *a cut graded STRONG never
+SHORTENS*, witnessed. `gridFlood`'s standing blindness is that ENTITIES ARE NOT
+TERRAIN, so a cell the law calls a cycle edge can be a cut of the OBSTACLE graph,
+and the GRADE is what catches it. Seed 1 saves two steps of geometry and **zero
+of plan** (20 either way) and grades INERT.
+
+⛔ **A SHORTCUT LOCKED BY AN EXISTING `K{n}` IS UNGRADEABLE, AND THAT IS A
+RESULT.** ⚖ Design ruling 16 spells the post-solve shortcut as an edge *locked by
+K_goal*; on this substrate `door_K{n-1}` also sits on every boundary cell of
+every area at level `n` and the goal is at the highest level, so removing
+`key_K{n}` seals the goal and the symbol grades STRONG. The same argument kills
+every symbol on the solution path — which is all of them. The only symbol whose
+differential can SEE a shortcut is one whose ONLY doors are the shortcut's.
+
+⛓⛓ **THE `graphify` ARM IS EMPTY ON EVERY MEASURED ROOM.** The brief's letter is
+*a door on a recorded graphify edge*, and those edges name CORRIDOR COMPONENTS —
+one-wide by the partition's own definition, so walling one cuts its corridor.
+Over `rooms` × {11, 15, 20} × seeds 1..8 at `graphify=1` the recorded edges
+offered 14, 8 and 27 cells and **every one failed the law**. What places is any
+free floor cell the law accepts, and `via` records which arm. ⛔ It cannot
+trivialise anything: this is not an extra EDGE, it is an extra OBSTACLE on a cell
+that already exists, and a clause of its own proves it takes NO cell off the
+level-n flood.
+
+**⛔⛔⛔ AND THE SEEDLING VENUE IS REFUTED, ON THREE MEASUREMENTS.** The element
+(`procgenCore/elements/shortcut.js`) is complete — the kill gate with one law
+swapped — and is **NOT registered as an `elementSpec` head**, because a
+registered `--elements=shortcut` would ABORT a real generation with an engine
+THROW rather than refuse by name. Each probe is a loop room whose short arc
+carries the blocker and whose long arc is clear:
+
+| blocker | measured | why |
+|---|---|---|
+| `breakablerock` | **both arms 244 ticks** (empty room: 129) | the solver DERIVES no break — a rock press is named by OEL coordinate in a hand-written leg, and `refineStrategy`'s verbs are `shove`/`weigh`/`kill`. To this solver the rock is a WALL, sword or no sword |
+| kill lock, long arc past the body | **both arms REFUSED** | *"the combat ladder is EXHAUSTED … the corridor passes through danger"* |
+| kill lock, long arc clear | **both arms THREW** at tick 215 | ⚖ §11.8a's ladder prefers AVOID over KILL, so the walk goes round and reaches the goal with the spinner ALIVE — `assertDialogueFreeSpinnerRoom`, A10 for the fourth time |
+
+⇒ **a spinner nobody is FORCED to kill cannot ship, and a shortcut is by
+definition a level where nobody is forced.** The chain closes: the differential's
+only Seedling candidate is `hasSword`, the only solver verb `hasSword` gates is
+`kill`, and an optional kill throws at the ceremony. It is slice 4's *"the kill
+LOCK is load-bearing"* read one turn further — the arena is solvable for exactly
+the reason the shortcut is not. The head is ONE LINE on the day R9 lands a
+derived break verb, a ladder that will pay a cheap kill, or a non-dialogued goal
+class. ⛓ Because it is unregistered, `--require=hasSword` is **UNMOVED** at
+`killgate+arena` and no directive subject was re-scanned.
+
+**`PREFER_DISCHARGE` RETIRED ON THE MAZE, AT A MEASURED ZERO** (⚖ arc-5 ruling 4).
+`census-maze-keeps.mjs` swept the policy's OWN subjects — the maze's directed
+attempts, 9 kinds × seeds 1..6 × steps {0, 2} × all 18 enumerated instantiations
+of both v1 templates — and counted the `solved-only` class at **0 of 1944**, zero
+STRUCTURALLY: the v1 palette declares no verb on either template, so
+`walkAnchors` reads the discharge as `NO_VERB` and never as `solved-only`. Every
+maze directive now runs under `first-solved`, an old spec asking for the retired
+policy REFUSES by name, and `keptKind` stays on the record as `null` — which is
+what that policy has always meant.
+
+⛔⛔ **And the md5-identity proof does NOT gate that retirement, which is worth
+knowing before the next one.** Forcing the class non-empty (324 of 324) leaves
+all nine per-kind CLI md5s and the maze dump byte-identical, because
+`KEEP_POLICY` is reachable only through the lab page's `applyDirective` and no
+committed identity runs a directive. The md5s say *the generator did not move*;
+what gates the retirement is the census, two re-pinned unit rows, and the maze
+lab's browser row.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real
