@@ -851,6 +851,19 @@ const header = [
     `command: \`node scripts/procgen/sweep-yield-table.mjs --substrate=${SUBSTRATE} `
         + `--kinds=${KINDS.join(',')} --sizes=${SIZES.map((s) => s.label).join(',')} `
         + `${AREAS.keys > 0 ? `--areas='${formatAreaSpec(AREAS)}' ` : ''}`
+        /**
+         * ⛓⛓⛓ **THE ELEMENT ARM IS PART OF THE COMMAND** — PROCGEN ELEMENTS arc
+         * 5, slice 6a. ⛔ It was MISSING, and the omission broke this file's own
+         * law 1 (*"a reader who finds the table in an as-built can re-run exactly
+         * it"*) on the axis that changes the table most: §11.9's two tables — the
+         * biome default and `chamber;w=2;h=3` — printed the SAME `command:` line,
+         * so the pair could not be told apart by the thing that is supposed to
+         * identify them. ⚠ It is `ELEMENTS_EFFECTIVE` and not the raw flag, so an
+         * OMITTED `--elements=` prints the biome default it resolved to, which is
+         * the string the run actually used.
+         */
+        + `--elements='${formatElementSpec(ELEMENTS_EFFECTIVE)}' `
+        + `${REQUIRE ? `--require=${formatRequireList(REQUIRE)} ` : ''}`
         + `${SUBSTRATE === 'seedling' ? `--palette=${PALETTE_NAME} ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
         + `--tries=${BOUNDS.triesPerStep} --k=${BOUNDS.saturationK} `

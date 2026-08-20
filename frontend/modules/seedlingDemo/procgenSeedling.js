@@ -3793,8 +3793,43 @@ function certificationGap(cert) {
  *
  * ── THE SPEC ──────────────────────────────────────────────────────────
  *
- *   pre-sword   `guard;len=2+blockpocket`
- *   post-sword  `guard;len=2+killgate+blockpocket`
+ *   pre-sword   `guard+blockpocket+chamber;w=2;h=3`
+ *   post-sword  `guard+killgate+blockpocket+chamber;w=2;h=3`
+ *
+ * ⛓⛓⛓ **AND IT MOVED ONCE, DELIBERATELY — PROCGEN ELEMENTS arc 5, slice 6a
+ * (⚖ user, 2026-08-20, ruling 8; the arc's ONE bundled re-record).** Two
+ * changes, one commit, every committed artifact the change explains re-recorded
+ * with its command:
+ *
+ *   1. **`len` IS NO LONGER PINNED — the guard member is BARE and DRAWS it.**
+ *      The `len = 2` pin was S1's measured size and it was honest when it was
+ *      written; arc 5's oriented site pick (slice 2 §10.5) then measured that a
+ *      len-2 gadget's snug footprint IS the old square, so the pin was the one
+ *      value the recovery could not reach. The census over the WHOLE declared
+ *      domain at the pinned 10x10 room says it plainly (600 cells, geometry
+ *      only): len 2 places 10 of 120, len 3 places **30** of 120, len 4
+ *      places **22** of 120, and len 5 and len 6 place **0** of 120 each.
+ *      ⇒ drawing over `[2..6]` places 62 of 600 = 10.3% where the pin
+ *      places 8.3%: the pinned default was hiding a real improvement (trap
+ *      447), and it stays hidden until the head goes bare.
+ *
+ *      ⛔ **THE TWO ZEROS ARE PUBLISHED, NOT PAPERED OVER.** Two of the five
+ *      drawn values cannot place in a 10x10 room at all (a len-6 lane's snug
+ *      rectangle is 8x4, and its entry mouth lands on the room's border ring),
+ *      so ~40% of the guard's draws end as a GRADED DROP and the level ships
+ *      element-less — which is the ordinary refusal path, priced in the 10.3%
+ *      above. A per-spec DOMAIN would be the way to spend those draws better,
+ *      and no such mechanism exists: `elementSpec` params carry ONE value.
+ *
+ *   2. **`chamber` JOINS THE LIST, WITH NAMED SMALL PARAMS.** Slice 3 §11.9
+ *      measured the case: at the same 120 cells the chamber head raises
+ *      `--areas=1` acceptance from **4** to **45**, every accepted graph also
+ *      certifies, and it costs +33% wall clock. ⛔ It carries `w=2;h=3` rather
+ *      than going bare for the reason §11.9 flagged as a pathology: `w`/`h` run
+ *      to 6 and a 6x6 blob's reserved rectangle is 8x8 — the whole interior of
+ *      the pinned room — so a BARE chamber in this list would refuse five times
+ *      in six. The two heads therefore differ on purpose: the guard's domain
+ *      FITS the default room and is drawn, the chamber's does not and is named.
  *
  * ⛓ It is a `+` LIST, which is a CHOICE and not a conjunction (`elementSpec`'s
  * own law: ONE BLOCK PER LEVEL, and two of the three heads put a `pushableblock`
@@ -3807,11 +3842,13 @@ function certificationGap(cert) {
  * would spend a third of its draws on a head that cannot certify, and the yield
  * table would be measuring the boot rather than the elements.
  *
- * ⛓ `len=2` IS A NAMED PARAMETER AND THAT IS LOAD-BEARING (`namedParams`): a
- * named parameter is an OVERRIDE that spends NO draw, an omitted one is DRAWN.
- * `len=2` is the guard size S1 certified 16 of 18 placements at (§11.8) and it
- * is stated rather than drawn so the default is ONE run and not a distribution
- * over four sizes, three of which are un-measured at this default.
+ * ⛓ **WHICH PARAMETERS ARE NAMED IS LOAD-BEARING** (`namedParams`): a named
+ * parameter is an OVERRIDE that spends NO draw, an omitted one is DRAWN. So
+ * `guard` and `chamber;w=2;h=3` are not a style choice — the first is a
+ * DISTRIBUTION over five lane sizes and the second is ONE blob, and each is
+ * what its own measurement at the pinned room asked for (above). ⚠ A caller who
+ * types `--elements='guard;len=2'` is still on the OTHER stream and always was:
+ * a NAMED spec never reads this function.
  *
  * ⛔ **`none` STAYS SELECTABLE AND STAYS BYTE-INERT RELATIVE TO ITSELF.**
  * `--elements=none` runs no element machinery, spends no draw and produces the
@@ -3831,9 +3868,10 @@ function certificationGap(cert) {
  * @param {object|null} items the biome's boot flags (`palette.items`)
  */
 export function defaultElementsFor(items) {
-    const heads = [{ name: 'guard', params: { len: 2 } }];
+    const heads = [{ name: 'guard' }];
     if (items?.hasSword === true) heads.push({ name: 'killgate' });
     heads.push({ name: 'blockpocket' });
+    heads.push({ name: 'chamber', params: { w: 2, h: 3 } });
     return normalizeElementSpec({ any: heads });
 }
 

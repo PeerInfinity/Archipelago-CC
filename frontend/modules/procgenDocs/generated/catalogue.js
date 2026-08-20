@@ -23,7 +23,7 @@ const frz = (v) => {
 export const CATALOGUE = frz({
     "biomes": [
         {
-            "defaultElements": "guard;len=2+blockpocket",
+            "defaultElements": "guard+blockpocket+chamber;w=2;h=3",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -458,7 +458,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2+killgate+blockpocket",
+            "defaultElements": "guard+killgate+blockpocket+chamber;w=2;h=3",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",

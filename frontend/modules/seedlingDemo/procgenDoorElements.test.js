@@ -15,7 +15,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    SEEDLING_DEFAULTS, carveLawRefusal, doorLawRefusal, seedlingModel, seedlingSeam,
+    SEEDLING_DEFAULTS, carveLawRefusal, defaultElementsFor, doorLawRefusal, seedlingModel,
+    seedlingSeam,
 } from './procgenSeedling.js';
 import {
     compositeSeedlingOnConnector, liftedClaimFor, seedlingOnConnectorEntities,
@@ -54,6 +55,53 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(spec.any[0].params).toEqual({ len: 2 });
         expect(formatElementSpec(spec)).toBe('guard;len=2+killgate+blockpocket');
         expect(parseElementSpec(formatElementSpec(spec))).toEqual(spec);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE BIOME DEFAULT IS A PIN, AND A PIN WANTS A ROW** — PROCGEN
+     * ELEMENTS arc 5, slice 6a.
+     *
+     * ⛔ Until this slice NOTHING asserted what the default CONTAINS. The
+     * nearest row (`procgenDocs/generated.test.js`) only checked that the
+     * post-sword string contains `killgate` and the pre-sword one does not, so
+     * a head could have been added to either list — including one no ruling
+     * covers, `arena` being the live example — and every gate in the tree would
+     * have stayed green while every committed artifact moved underneath it.
+     * That is what mutant (c) measured, and this row is the answer.
+     *
+     * ⛓ IT IS LITERAL ON PURPOSE, on the `ELEMENT_NAMES` precedent above: the
+     * SPELLING, the ORDER (the `+` list's `pick` reads the members in the order
+     * the caller wrote them, so order is part of the run), and WHICH PARAMETERS
+     * ARE NAMED — because a named parameter spends no draw and an omitted one
+     * is DRAWN, so `guard` and `guard;len=2` are different defaults even when
+     * `len` resolves to 2.
+     */
+    it('⛔ the BIOME DEFAULT spec, both biomes, pinned LITERALLY — spelling, '
+        + 'order, and which parameters are NAMED', () => {
+        expect(formatElementSpec(defaultElementsFor(PRE_SWORD_ITEMS)))
+            .toBe('guard+blockpocket+chamber;w=2;h=3');
+        expect(formatElementSpec(defaultElementsFor(POST_SWORD_ITEMS)))
+            .toBe('guard+killgate+blockpocket+chamber;w=2;h=3');
+        /** ⛓ the two biomes differ by EXACTLY the sword-gated head. */
+        const pre = defaultElementsFor(PRE_SWORD_ITEMS).any.map((m) => m.name);
+        const post = defaultElementsFor(POST_SWORD_ITEMS).any.map((m) => m.name);
+        expect(pre).toEqual(['guard', 'blockpocket', 'chamber']);
+        expect(post).toEqual(['guard', 'killgate', 'blockpocket', 'chamber']);
+        expect(post.filter((n) => !pre.includes(n))).toEqual(['killgate']);
+        /**
+         * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC: the guard
+         * member carries NO `params` key at all (⇒ `len` and `turns` are both
+         * drawn), and the chamber member carries BOTH of its own (⇒ it spends
+         * no draw on either). `normalizeElementSpec` omits `params` entirely
+         * when the caller named nothing, which is exactly the distinction.
+         */
+        const memberOf = (spec, name) => spec.any.find((m) => m.name === name);
+        expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'guard').params)
+            .toBeUndefined();
+        expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'chamber').params)
+            .toEqual({ w: 2, h: 3 });
+        expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'killgate').params)
+            .toBeUndefined();
     });
 
     /** ⛔ `none` IS A LEGAL MEMBER — *"and sometimes nothing"* is sayable, which

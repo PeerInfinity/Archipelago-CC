@@ -171,6 +171,13 @@ const { formatSkeleton } = await CORE('skeletonKinds.js');
  * and both REACH. **Seed 2 at target 4** is taken: the cheapest target that has
  * a veto at all. (Was seed 4 at target 2, which vetoed twice.)
  *
+ * ⛓⛓⛓ **RE-SCANNED AGAIN AT ARC 5 SLICE 6a** — same scan, same three targets,
+ * same twenty seeds, after the biome default's `+` list grew a `chamber` and
+ * its guard member started DRAWING `len`. The class kept its SHAPE and changed
+ * its MEMBERS: **exactly TWO seeds still veto — 1 and 18, once each, at every
+ * one of 4/5/6.** ⇒ **seed 1 at target 4**, by the same two tie-breaks (the
+ * cheapest target that vetoes at all, then the smaller seed). (Was seed 2.)
+ *
  * `CARRIER` — a post-sword level whose walk banks a SCRATCH CLEAR no tape can
  * declare, kept at step **1** so the scrub-fork claim is affordable in a
  * browser. ⛔ ITS SUBJECT CHANGED KIND: there is no kill TEMPLATE to keep, so
@@ -184,7 +191,7 @@ const { formatSkeleton } = await CORE('skeletonKinds.js');
  * `pit` — a swordless boot would clear it too — so the tie-break is the cause
  * and not the clock, which is a change from the old rule and is said here.
  */
-const PRE = { seed: 2, biome: 'pre-sword', count: 4 };
+const PRE = { seed: 1, biome: 'pre-sword', count: 4 };
 const CARRIER = { seed: 29, biome: 'post-sword', count: 1 };
 
 /**
@@ -346,8 +353,32 @@ const DIRECT = {
      * seed 2 at step 3 walks THREE of five offered anchors — `d1a1` REVERTED,
      * `d1a2` REVERTED, `d1a3` KEPT at (8,5)** — the richest of the five hits and
      * the only one that ends in a KEEP.
+     *
+     * ⛓⛓⛓ **RE-SCANNED AT ARC 5 SLICE 6a, AND THE SEED RANGE HAD TO GROW —
+     * BECAUSE THIS BASE SERVES TWO RULES AT ONCE.** The biome default's new draw
+     * moved every room in the grid, and the two clauses this constant has to
+     * satisfy stopped meeting in seeds 1..20:
+     *
+     *   · CLAIM 7 wants a DIRECTED WALK longer than one anchor that ends KEPT.
+     *     Over steps {3,4,5,6} x seeds 1..20 exactly ONE base qualifies — seed
+     *     18 at step 5, walking 2 — and it offers only TWO legal cells, whose
+     *     only KEEPING one IS the searched answer.
+     *   · CLAIM 8 wants >= 3 legal cells with a KEEPING one that is NOT the
+     *     searched answer. Every base that has that walks exactly ONE anchor.
+     *
+     * ⛔ So the scan was extended to seeds 21..40 — the smallest extension that
+     * restores a base satisfying BOTH — and **three qualify: seed 29 at steps 3
+     * and 4, and seed 38 at step 3**. **Seed 29 at step 3** is taken: it is the
+     * richest on claim 8's side (15 legal cells, 12 of them KEEPING, 11 of those
+     * neither the search's answer nor the goal) at the lowest step. It walks
+     * `d1a1` then `d1a2` KEPT.
+     *
+     * ⚠ THE ALTERNATIVE WAS TO SPLIT THIS CONSTANT IN TWO. It is not taken
+     * because claim 8's whole point is that the CLICK and the SEARCH are asked
+     * of the same room — two bases would make "not where a search goes" a
+     * comparison between different rooms.
      */
-    seed: 2,
+    seed: 29,
     biome: 'pre-sword',
     step: 3,
     bounds: { obstacleTarget: 3 },
@@ -408,9 +439,21 @@ const DIRECT_SPEC = {
  * ⇒ **(8,4)** is LEGAL, KEEPS, is NOT the searched answer, is not the START
  * (1,1) and is not the GOAL — which is **(6,5)** here, and is therefore
  * `ILLEGAL_CLICK`.
+ *
+ * ⛓⛓⛓ **RE-MEASURED AT ARC 5 SLICE 6a ON `DIRECT`'s NEW BASE (pre-sword seed
+ * 29 at step 3), AND THE CLICKED CELL DID NOT HAVE TO MOVE.** That room offers
+ * **fifteen** legal cells; all fifteen were clicked and **twelve KEEP**; a
+ * SEARCHED directive lands on **(2,2)**. Of the eleven cells that KEEP, are not
+ * the search's answer, are not (1,1) and are not the goal, **(8,4) is one** — so
+ * the constant survives its own re-measurement rather than by inertia, which is
+ * said explicitly because an unchanged constant is exactly what a re-pick can
+ * fail to notice it never checked.
+ *
+ * ⛔ `ILLEGAL_CLICK` DOES move: it is defined as this seed's GOAL cell, and the
+ * goal is now **(8,3)**.
  */
 const CLICK = { tx: 8, ty: 4 };
-const ILLEGAL_CLICK = { tx: 6, ty: 5 };
+const ILLEGAL_CLICK = { tx: 8, ty: 3 };
 
 /**
  * ⛓⛓ RE-SCANNED AT SLICE 4c over seeds 1..8 x steps {0,2,4} x all 23
@@ -449,9 +492,25 @@ const NO_ANCHOR_CASE = { seed: 2, biome: 'pre-sword', step: 2,
  * of 2**. ⛔ THE LAST IS TAKEN, by the SAME tie-break the old subject won on: it
  * walks its whole offered list and then reverts, so the claim grades a walk that
  * really exhausted the room rather than one anchor that happened to fail.
+ *
+ * ⛓⛓⛓ **RE-SCANNED AT ARC 5 SLICE 6a — THE SAME 552 DIRECTED ATTEMPTS** (seeds
+ * 1..8 x steps {0,2,4} x all 23 instantiations), after the biome default's new
+ * draw. **The class has TWO members left**, both at seed 4 step 4 and both
+ * walking 1 of 1: `water-pool(w=3,h=2)` and `pit-patch(w=3,h=2)`. The old
+ * subject (`wall-segment(ori=v,len=5)` seed 7 step 4) now KEEPS, which is the
+ * red that sent this scan.
+ *
+ * ⛔ `water-pool(w=3,h=2)` IS TAKEN — the tie-break is unchanged (a walk that
+ * exhausted its whole offered list), and with the list length down to one the
+ * two survivors tie, so the first in scan order wins. ⚠ THE CLASS IS THINNER
+ * THAN IT HAS EVER BEEN — five members at 4c, two now — and the reason is the
+ * same one the `PRE` veto row records: a room the default has already put an
+ * element in offers fewer anchors, so more directed attempts end NO_ANCHOR
+ * before they can be reverted. Named so the next slice re-runs the scan rather
+ * than assuming the class is still there.
  */
-const REVERTED_CASE = { seed: 7, biome: 'pre-sword', step: 4,
-    template: 'wall-segment', params: { ori: 'v', len: 5 } };
+const REVERTED_CASE = { seed: 4, biome: 'pre-sword', step: 4,
+    template: 'water-pool', params: { w: 3, h: 2 } };
 /**
  * ⛓⛓⛓ **RETIRED AT ARC 3 SLICE 2 — THE CLASS IS EMPTY, AND THAT IS THE
  * MEASUREMENT** (trap 312: replace a vacated claim with the sentence that still

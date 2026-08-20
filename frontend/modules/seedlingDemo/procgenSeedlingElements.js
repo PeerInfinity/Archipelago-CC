@@ -88,11 +88,17 @@
  * this-room` 130 → 0 and PLACED 21 → 62 of 360**, with all three declared
  * orientations drawn (`wide` 29 · `tall` 23 · `square` 10).
  *
- * ⛔ **AND IT MOVED NO COMMITTED ARTIFACT**, which is a fact about the DEFAULT
- * and not a claim about the change: `defaultElementsFor` pins the biome's
- * guard at `len = 2`, whose snug footprint IS the 4x4 square the binding
- * already sized. The recovery is entirely in `len` 3 and 4, which no default
- * draws. ⇒ ⚖ ruling 6's ONE re-record is NOT spent here.
+ * ⛔ **AND IT MOVED NO COMMITTED ARTIFACT AT THE TIME**, which was a fact about
+ * the DEFAULT and not a claim about the change: `defaultElementsFor` then pinned
+ * the biome's guard at `len = 2`, whose snug footprint IS the 4x4 square the
+ * binding already sized. The recovery lived entirely in `len` 3 and 4, which no
+ * default drew.
+ *
+ * ⛓⛓⛓ **AND THAT IS EXACTLY WHY THE PIN CAME OFF AT THE CLOSE** (arc 5, slice
+ * 6a; ⚖ ruling 8): a default that could not reach the recovery was a default
+ * hiding a real improvement (trap 447). The biome guard member is now BARE and
+ * draws `len` over `[2..6]`, and the arc's ONE re-record — reserved by ⚖ ruling
+ * 6, left unspent by slice 2 — is what paid for it.
  */
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';

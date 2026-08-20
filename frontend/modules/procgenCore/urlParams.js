@@ -699,8 +699,8 @@ export function readElements(q) {
  * ⛔ **ON THE MAZE, ABSENT ≡ `none`. ON SEEDLING IT IS NOT.** Arc-2 ruling 5
  * made `?elements=` absent mean *the machinery does not run*, which on the maze
  * IS the default. Arc-3 slice 4c gave Seedling a BIOME-DEPENDENT default
- * (`defaultElementsFor(items)` — `guard;len=2+blockpocket`, plus `killgate`
- * post-sword), resolved in the SEAM, and the seam distinguishes `undefined`
+ * (`defaultElementsFor(items)` — `guard+blockpocket+chamber;w=2;h=3`, plus
+ * `killgate` post-sword), resolved in the SEAM, and the seam distinguishes `undefined`
  * (*nobody said* ⇒ the biome default) from an explicit `{name:'none'}` (a
  * CHOICE, honoured). A page that could only hand it `readElements`' answer
  * could never ask for the default at all — it would spell `none` on every

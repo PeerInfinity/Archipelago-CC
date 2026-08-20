@@ -1170,8 +1170,10 @@ export const TERMS = Object.freeze([
         plain: 'Which contraption this level gets — picked from what the player is already '
             + 'carrying when the level begins.',
         detail: 'With nothing asked, `defaultElementsFor(items)` supplies the **biome default '
-            + 'spec**: `guard;len=2+blockpocket` pre-sword, `guard;len=2+killgate+blockpocket` '
-            + 'post-sword. ⛓ **A `+` list is a CHOICE** — one `rng.pick`, because one block '
+            + 'spec**: `guard+blockpocket+chamber;w=2;h=3` pre-sword, '
+            + '`guard+killgate+blockpocket+chamber;w=2;h=3` post-sword (arc 5 slice 6a — the '
+            + 'guard DRAWS its `len`, the chamber NAMES its blob). '
+            + '⛓ **A `+` list is a CHOICE** — one `rng.pick`, because one block '
             + 'per level forbids a conjunction. `ELEMENT_TABLE.<head>.needs` gates a head '
             + 'against the biome\'s [boot items](#boot-items) for free: a pre-sword '
             + '`killgate` refuses without spending a solve.',

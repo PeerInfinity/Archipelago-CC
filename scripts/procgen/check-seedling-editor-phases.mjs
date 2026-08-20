@@ -77,6 +77,19 @@ const json = (v) => JSON.stringify(v);
  * is the smaller. Seed 3 accepts only without an element, which is why this row
  * reddened before the re-scan rather than after.
  *
+ * ⛓⛓⛓ **RE-SCANNED AGAIN AT ARC 5 SLICE 6a** (trap 285), by the SAME rule
+ * through the SAME entry point, because the biome default changed shape again
+ * (the guard member draws its `len`, and a `chamber` joined the `+` list). The
+ * scan is unchanged — 2 biomes × 7 kinds × seeds 1..12 through `generateStep`
+ * — and its answer moved wholesale:
+ *
+ *     before   `rooms` seed 2 (7 locks, 1 flag) · `rooms` seed 12 (9, 1)
+ *     after    `loopy` seed 2 (5 locks, 1 flag) · `bushy` seed 7 (7, 1)
+ *
+ * ⛔ `rooms` ACCEPTS NOWHERE in the grid any more, so this is a kind change and
+ * not only a seed change. `loopy` seed 2 is taken on the rule that always
+ * applied — the smaller seed, and here also the smaller lock count.
+ *
  * ⛓ 4b §14.3 published the ceiling this is measured against (acceptance 0–4 of
  * 12 per kind, cause = the AREA COUNT on a 10x10 room).
  *
@@ -84,7 +97,7 @@ const json = (v) => JSON.stringify(v);
  * the *"a dropped element draws NOTHING"* claim needs a live subject for.
  */
 const SUBJECT = { seed: 2, biome: 'post-sword', elements: 'killgate' };
-const AREAS = { seed: 2, biome: 'pre-sword', skeleton: 'rooms', areas: 1 };
+const AREAS = { seed: 2, biome: 'pre-sword', skeleton: 'loopy', areas: 1 };
 const DROPPED = { seed: 1, biome: 'post-sword', elements: 'killgate' };
 
 const nodeSubject = generateStep({ seed: SUBJECT.seed, biome: SUBJECT.biome, step: 0,

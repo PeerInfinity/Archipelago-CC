@@ -171,8 +171,9 @@ const FILL = (() => {
  * ⛓⛓⛓ **THE DEFAULT FOLLOWS THE BIOME SINCE ARC-3 SLICE 4c** (⚖ user,
  * 2026-08-17). ABSENT is not `none` any more: it is
  * `procgenSeedling.defaultElementsFor(palette.items)` —
- * `guard;len=2+blockpocket` pre-sword, `guard;len=2+killgate+blockpocket`
- * post-sword, a `+` LIST meaning ONE of these, drawn. ⛔ That is the other half
+ * `guard+blockpocket+chamber;w=2;h=3` pre-sword,
+ * `guard+killgate+blockpocket+chamber;w=2;h=3` post-sword (arc 5 slice 6a), a
+ * `+` LIST meaning ONE of these, drawn. ⛔ That is the other half
  * of the retirement of the three door TEMPLATES: what they stopped doing, the
  * elements now do by default.
  *

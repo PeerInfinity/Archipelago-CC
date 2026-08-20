@@ -166,14 +166,25 @@ const SOLVE_STEPS = [
  * TAPE, because the tape IS what gets shipped: the GENERATE arm sends the
  * one-room level set plus `displaySolve`'s tape, and a room whose display solve
  * refused arms no button at all (`setShippable`'s `why`). The biome DEFAULT
- * post-sword spec is `guard;len=2+killgate+blockpocket`, so which element a seed
- * draws is a DRAW and not a choice — this one was measured rather than assumed:
+ * post-sword spec is `guard+killgate+blockpocket+chamber;w=2;h=3`, so which
+ * element a seed draws is a DRAW and not a choice — this one was measured
+ * rather than assumed:
  *
  *   node scripts/procgen/generate-seedling-level.mjs --seed=38 --biome=post-sword
- *   ⇒ element: guard;len=2+killgate+blockpocket -> drew `killgate` —
+ *   ⇒ element: guard+killgate+blockpocket+chamber;w=2;h=3 -> drew `killgate` —
  *     kill-gate door (5,6) [tag 1]; clearer (4,5); wall GREW 7 cell(s)
  *     ⛔⛔ CERTIFIED: true — SOLVED
  *     kept: 6 obstacle(s) over 11 attempt(s); solve 383 (skeleton) -> 360 (final)
+ *
+ * ⛓⛓⛓ **AND ARC 5 SLICE 6a MOVED THAT SPEC WITHOUT MOVING THIS SUBJECT** — the
+ * default's `+` list went from three heads to four and its guard member started
+ * drawing `len`, and seed 38's dump is **byte-identical apart from the spec's own
+ * printed name**: the same `killgate`, the same door, the same clearer, the same
+ * 7-cell grown wall, the same 360-tick tape, the same level sha. The list's ONE
+ * `pick` landed on the same head, and `killgate` declares no parameter, so every
+ * draw after the pick stayed where it was. ⇒ the subject did not need
+ * re-picking and was not re-picked; the claim below
+ * (`elementFamilies === ['killgate']`) stands as written.
  *
  * ⇒ a CERTIFIED KILL GATE — a room whose lock is opened by killing a live
  * spinner — and a 360-tick certification tape, which is ~19 s of real game at
@@ -266,6 +277,26 @@ const GENERATE_STEPS = [
  * what puts this claim inside a HEADLESS row's reach — slice 0's residue 4,
  * discharged: 154 ticks is under half of seed 38's 360, which headless ran in
  * ~20 minutes.
+ *
+ * ⛓⛓ **RE-MEASURED AT ARC 5 SLICE 6a, AND THE SUBJECT IS KEPT RATHER THAN
+ * RE-PICKED — with the clause that could not be re-run NAMED.** The new biome
+ * default draws a `chamber;w=2;h=3` into this room, where it REFUSES
+ * (`the-entry-port-cannot-be-joined`), so the room ships element-less as before
+ * — but pass 2 then keeps a different obstacle and the two numbers above move:
+ *
+ *     display solve   154 ticks  ->  **197 ticks**   (still under the 200 filter)
+ *     cells written    40 of 120 ->  **79 of 120**   (41 still ABSENT)
+ *
+ * ⛔ THE "SHORTEST" HALF IS UNVERIFIED AND THAT IS SAID RATHER THAN IMPLIED.
+ * Re-running the scan headlessly reproduces every clause except *"whose model
+ * camera actually MOVES"*: the solve hands back an INPUT tape, not a position
+ * trace, so the camera range cannot be derived without replaying the world. On
+ * the two clauses that ARE computable the reconstruction picks `winding` 12x10
+ * seed 26 at 73 ticks on BOTH sides of the change — i.e. it disagrees with the
+ * published pick at the BASE commit too, which is how the missing clause was
+ * identified rather than guessed. ⇒ seed 28 still satisfies every clause this
+ * slice could check (carved, multi-screen, shell, under 200 ticks) and is KEPT;
+ * a genuine re-pick wants a camera replay nobody has built.
  */
 const ROOM_SEED = 28;
 const ROOM_BIOME = 'pre-sword';

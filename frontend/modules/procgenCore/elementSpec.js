@@ -174,9 +174,14 @@ export const ELEMENT_TABLE = Object.freeze({
      *  · `needs` names an ITEM the biome must grant. A chamber is floor: a
      *    pre-sword boot walks into it exactly as a post-sword one does.
      *
-     * ⛔ AND IT IS NOT IN ANY BIOME DEFAULT this arc (§6 Q2) — a default
-     * change re-records every committed artifact, and that re-record is the
-     * orchestrator's to spend at the arc's close, with the measured case.
+     * ⛓⛓⛓ **AND IT JOINED BOTH SEEDLING BIOME DEFAULTS AT THE ARC'S CLOSE**
+     * (slice 6a; ⚖ ruling 8), which is the re-record ⚖ ruling 6 reserved and
+     * slice 2 left unspent. ⛔ It goes in as `chamber;w=2;h=3` and NOT bare,
+     * and the named params are the measurement rather than a preference: `w`
+     * and `h` run to 6, a 6x6 blob's reserved rectangle is 8x8 — the whole
+     * interior of the pinned 10x10 room — so a bare head in that list would
+     * refuse five times in six (§11.9). ⚠ A caller who types the head bare on
+     * a CLI still gets the full domain; only the default is named.
      */
     chamber: Object.freeze({
         element: OPEN_CHAMBER,

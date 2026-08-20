@@ -525,9 +525,24 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
              * than the old roster's seven-with-a-three, which is the same
              * shadow the rescue row records: three decoration families revert
              * less, so there is less for a wider anchor walk to rescue.
+             *
+             * ⛓⛓⛓ **RE-PICKED A THIRD TIME AT ARC 5 SLICE 6a** (trap 285), and
+             * the standing range had to be widened — which is stated, not
+             * absorbed. Same scan, same bounds, after the biome default gained
+             * a drawn `len` and a `chamber`:
+             *
+             *     seeds 1..30   THREE walk (1, 18, 29) and the RICHEST WALKS ONE
+             *     seeds 1..40   seed 38 walks **FOUR** — richer than seed 21 ever was
+             *
+             * ⛔ A max of ONE would make the `siblings` half of this row a claim
+             * about a single pair, so the range is extended to 1..40 — the
+             * smallest extension that restores a multi-walk subject — and seed
+             * 38 is taken under the rule that always applied: THE RICHEST.
+             * (Cost: 3.6 s against seed 29's 1.3 s, paid for four walked rows
+             * instead of one.)
              */
             const s = generateStep({
-                seed: 21,
+                seed: 38,
                 biome: 'pre-sword',
                 step: 6,
                 bounds: { anchorTriesPerCandidate: 3 },
@@ -535,7 +550,7 @@ describe('the pane rows — verbatim, and the bounds beside them', () => {
             const rows = generationRows(s.trace);
             const walked = rows.filter((r) => r.anchorsOffered > 1 && r.anchorTry > 1);
             expect(walked.length, 'the subject must WALK for this case to mean anything')
-                .toBe(2);
+                .toBe(4);
             for (const r of walked) {
                 expect(r.label).toBe(`${r.step}.${r.try}a${r.anchorTry}`);
                 const siblings = rows.filter((x) => x.step === r.step && x.try === r.try);
@@ -1322,9 +1337,18 @@ describe('⛓⛓⛓ VERB 2, APPLIED — the ruling\'s two clauses, driven', () =
          * seed 2 walks THREE rows — `d1a1` REVERTED, `d1a2` REVERTED, `d1a3`
          * KEPT** — the richest of the five hits and the only one that ends in a
          * KEEP, which this row needs for its "exactly ONE says KEPT" assertion.
+         *
+         * ⛓⛓⛓ **RE-PICKED AT ARC 5 SLICE 6a** (trap 285) — the biome default's
+         * new draw moved every room in the grid. THE SAME SCAN, unchanged
+         * (steps 3 and 5 × seeds 1..20, the same directive): **exactly ONE cell
+         * still walks more than one anchor — step 5, seed 18, TWO rows with
+         * exactly one KEPT.** ⚠ The class fell from five hits with a three to
+         * one hit with a two, which is the same thinning the anchor-ordinal row
+         * above records; the row's assertions are unchanged because the one
+         * survivor satisfies all of them.
          */
         const base = generateStep({
-            seed: 2, biome: 'pre-sword', step: 3, bounds: { obstacleTarget: 3 },
+            seed: 18, biome: 'pre-sword', step: 5, bounds: { obstacleTarget: 3 },
         });
         const out = applyDirective(base, DIRECTIVE, 0);
         const rows = generationRows(out.trace).filter((r) => r.directive === 1);

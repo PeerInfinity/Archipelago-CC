@@ -23,6 +23,13 @@
  * generator does not generate. ⚠ A REFUSED element declares nothing, which is
  * why the `elem` column counts placements rather than specs.
  *
+ * ⛔⛔ **AND SINCE ARC 5 SLICE 6a THE DEFAULT ITSELF CONTAINS A `chamber`**, so
+ * the `--elements=chamber;w=2;h=3` ARM below is no longer *"the chamber versus
+ * nothing"* — it is *"the chamber ALWAYS versus the chamber ONE DRAW IN FOUR"*.
+ * The header prints whichever spec each biome resolved to, so the table says
+ * which comparison a given run actually made; a reader of an OLDER table must
+ * read its own header rather than assume this one.
+ *
  * ⛓ IT NAMES WHAT IT BOUNDED (`feedback_bounded_sweep_must_name_what_it_
  * bounded`): the kinds, the seeds and the biomes are printed in the header.
  *

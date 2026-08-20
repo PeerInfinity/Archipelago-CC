@@ -248,10 +248,25 @@ describe('the ops, applied — PURE, and the record before is untouched', () => 
 });
 
 describe('⛓⛓⛓ THE FOLD IS THE IDENTITY', () => {
+    /**
+     * ⛓⛓⛓ **THE WATER CELL MOVED (6,6) → (8,6) AT ARC 5 SLICE 6a**, re-picked
+     * by its own rule rather than by hand (trap 285).
+     *
+     * ⛔ THE ROW BELOW IS ABOUT A LIST OF EDITS THAT ALL LAND, and `editState`
+     * drops an op that moved no bytes on purpose (*"§3.8 is a law about
+     * CHANGES"*, above). Slice 6a's biome default puts a `chamber` in this
+     * subject's room, and `paint water (6,6)` became a NO-OP — the page's fold
+     * then carried three ops where the raw fold carried four, which is the row
+     * reporting a real difference about a list nobody meant to shorten.
+     *
+     * ⛓ THE RULE: the NEXT cell in row-major order at which the same op still
+     * changes the record. On `seed 3`/`pre-sword`/step 2 the no-op block is
+     * exactly (5..7, 6..7) — ten cells of a hundred — so the answer is (8,6).
+     */
     const OPS = [
         { op: 'paint', tx: 5, ty: 5, terrain: 'wall' },
         { op: 'place', tx: 4, ty: 6, type: 'pushableblock', attrs: {} },
-        { op: 'paint', tx: 6, ty: 6, terrain: 'water' },
+        { op: 'paint', tx: 8, ty: 6, terrain: 'water' },
         { op: 'attrs', tx: 4, ty: 6, attrs: { tset: '2' } },
     ];
 
@@ -260,7 +275,7 @@ describe('⛓⛓⛓ THE FOLD IS THE IDENTITY', () => {
         const forward = applyEdits(base, [OPS[0], OPS[2]]);
         const reversed = applyEdits(base, [OPS[2], OPS[0]]);
         expect(terrainAt(forward, 5, 5)).toBe('wall');
-        expect(terrainAt(forward, 6, 6)).toBe('water');
+        expect(terrainAt(forward, 8, 6)).toBe('water');
         // ⚠ these two happen to commute; the point of the row is that both ran.
         expect(j(forward)).toBe(j(reversed));
         const paintTwice = applyEdits(base, [

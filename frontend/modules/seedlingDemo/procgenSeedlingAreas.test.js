@@ -49,10 +49,15 @@ const groundOf = (rec) => (x, y) => x >= 0 && y >= 0 && x < rec.width && y < rec
     && terrainAt(rec, x, y) === 'ground';
 
 /** Every (kind, seed) whose model satisfies `want`, in a fixed order. */
-const scan = (want, { keys = 1, elements } = {}) => {
+/**
+ * ⛓ `seeds` IS AN OPTION SINCE ARC 5 SLICE 6a, and only the D4 block passes it
+ * — see the scan rule written above that block. Every other caller keeps the
+ * file's own twelve.
+ */
+const scan = (want, { keys = 1, elements, seeds = SEEDS } = {}) => {
     const out = [];
     for (const k of KINDS) {
-        for (const seed of SEEDS) {
+        for (const seed of seeds) {
             let model = null;
             try { model = seedlingModel({ seed, skeleton: sk(k), elements, areas: { keys } }); }
             catch { continue; }
@@ -293,9 +298,29 @@ describe('⛓ D5 — THE TAG RULE, ASKED OF THE ENGINE', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ **THE SUBJECT RANGE IS RE-PICKED BY ITS OWN SCAN — arc 5, slice 6a**
+ * (trap 285), and the reason is the biome default's new shape rather than
+ * anything about D4.
+ *
+ * ⛔ The default is now a FOUR-WAY (post-sword) / THREE-WAY (pre-sword) `+`
+ * list whose guard member DRAWS its `len`, so a guard reaches a room far less
+ * often than it did under `guard;len=2+blockpocket`. Measured over these
+ * fifteen kinds at `keys: 1`: seeds 1..40 place `blockpocket` 121 times,
+ * `chamber` 126 and **`guard` 10** — and exactly ONE cell in 600 has a guard
+ * that declared an area on a run where the graph also ran (`bushy` seed 16).
+ *
+ * ⇒ THE RULE: the SMALLEST seed prefix at which the guarded class is not
+ * empty. That is **1..24** (empty at 1..12, one member at 1..24, still one at
+ * 1..40), and the member is `bushy`/16 where the pre-6a subject was
+ * `rooms;minRoom=2`/10. ⛔ Only this block widens; the file's other scans keep
+ * the twelve so the suite does not pay for a range only D4 needs.
+ */
+const D4_SEEDS = Array.from({ length: 24 }, (_, i) => i + 1);
+
 describe('⛓⛓ D4 — the guard\'s flag is ADOPTED and its placeholder lock SUPERSEDED', () => {
     const guarded = scan((m) => m.areas.ran && m.areas.flags.some((f) => f.guarded),
-        { elements: defaultElementsFor(PRE_SWORD_PALETTE.items) });
+        { elements: defaultElementsFor(PRE_SWORD_PALETTE.items), seeds: D4_SEEDS });
 
     it('⛔ the subject class is not empty', () => {
         expect(guarded.length).toBeGreaterThan(0);
@@ -326,11 +351,23 @@ describe('⛓⛓ D4 — the guard\'s flag is ADOPTED and its placeholder lock SU
      * accepted, EVERY symbol must be in it. Measured: **1 of 1 at HEAD, 1 of 5
      * under the mutant.**
      */
+    /**
+     * ⛔⛔ **AND THE PREDICATE HAD TO NAME THE FAMILY — arc 5, slice 6a.** It
+     * used to read *"the placed element declared an area"*, which identified a
+     * GUARD only because the guard was the only element that declared one.
+     * Slice 3's `chamber` IS an area and slice 6a put it in the default, so the
+     * old predicate started matching chambers — and a chamber has no door, so
+     * its flag is placed the ordinary way and `guarded` is false (§11.9 said
+     * this in a table before it said it in a red row). ⛓ The row's own words
+     * always said *"where a GUARD declared an area"*; the predicate now says it
+     * too.
+     */
     it('⛔ `binds=item` RESTRICTS — where a guard declared an area and the graph ran, '
         + 'EVERY flag is in it', () => {
         const cells = scan((m) => m.areas.ran && m.elements.ran
+            && m.elements.placed[0].family === 'guard'
             && Boolean(m.elements.placed[0].areaCells),
-        { elements: defaultElementsFor(PRE_SWORD_PALETTE.items) });
+        { elements: defaultElementsFor(PRE_SWORD_PALETTE.items), seeds: D4_SEEDS });
         expect(cells.length, 'no cell placed a guard AND accepted a graph').toBeGreaterThan(0);
         for (const { kind, seed, model } of cells) {
             expect(model.areas.flags.every((f) => f.guarded), `${kind} seed ${seed}`).toBe(true);

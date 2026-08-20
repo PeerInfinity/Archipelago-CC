@@ -264,10 +264,31 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
      * the pre-sword run must still contain NO kill template, which is the claim
      * that would actually be broken if the split leaked.
      */
+    /**
+     * ⛓⛓⛓ **THE SEED IS RE-PICKED BY ITS OWN SCAN — arc 5, slice 6a** (trap
+     * 285), and the scan's SIZE is the part worth writing down.
+     *
+     * ⛔ The two boots can only differ where the DRAW differs, and both defaults
+     * are one `pick` over a `+` list: pre-sword picks from three heads,
+     * post-sword from four. A pick that lands on the same head leaves the rest
+     * of the stream aligned and the two records identical — so this row's
+     * subject class was never the whole seed range. Measured over seeds 1..40
+     * at `obstacleTarget: 6`:
+     *
+     *     before slice 6a   8 of 40 differ  (4, 9, 18, 23, 27, 29, 35, 38)
+     *     after  slice 6a   6 of 40 differ  (1, 17, 29, 31, 36, 38)
+     *
+     * ⇒ seed 9 left the class and the CHEAPEST member of the new one is seed 1
+     * (2.8 s; the other five are 3.0-7.1 s). ⚠ The census is recorded here
+     * because *"this row is the ONLY sentinel for the whole biome split"* (4c
+     * §13.12 mutant (a)) — a sentinel that fires on 6 seeds in 40 is worth
+     * knowing about, and the next re-pick should re-run the same scan rather
+     * than guess a seed.
+     */
     it('⛔ no longer generates the pre-sword level — the roster split is REAL', () => {
         const bounds = { obstacleTarget: 6 };
-        const pre = generateSeedlingLevel({ seed: 9, palette: PRE_SWORD_PALETTE, bounds });
-        const post = generateSeedlingLevel({ seed: 9, palette: POST_SWORD_PALETTE, bounds });
+        const pre = generateSeedlingLevel({ seed: 1, palette: PRE_SWORD_PALETTE, bounds });
+        const post = generateSeedlingLevel({ seed: 1, palette: POST_SWORD_PALETTE, bounds });
         expect(JSON.stringify(post.record)).not.toBe(JSON.stringify(pre.record));
         // ⛔ THE SWORD-GATED FAMILY CANNOT REACH THE PRE-SWORD BIOME. This is
         // the claim the old by-reference roster used to make structurally.
